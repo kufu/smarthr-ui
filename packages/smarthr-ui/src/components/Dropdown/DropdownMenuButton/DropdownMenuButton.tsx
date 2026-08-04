@@ -19,7 +19,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { Dropdown, DropdownContext } from '../Dropdown'
@@ -156,7 +156,6 @@ const MemoizedTriggerButton = memo<
     }
   }
 >(({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
-  const { localize } = useIntl()
   const { active } = useContext(DropdownContext)
 
   return (
@@ -169,17 +168,19 @@ const MemoizedTriggerButton = memo<
         suffix={
           !onlyIconTrigger && (
             <FaCaretDownIcon
-              alt={localize(
-                active
-                  ? {
-                      id: 'smarthr-ui/DropdownMenuButton/triggerActive',
-                      defaultText: '候補を閉じる',
-                    }
-                  : {
-                      id: 'smarthr-ui/DropdownMenuButton/triggerInactive',
-                      defaultText: '候補を開く',
-                    },
-              )}
+              alt={
+                active ? (
+                  <Localizer
+                    id="smarthr-ui/DropdownMenuButton/triggerActive"
+                    defaultText="候補を閉じる"
+                  />
+                ) : (
+                  <Localizer
+                    id="smarthr-ui/DropdownMenuButton/triggerInactive"
+                    defaultText="候補を開く"
+                  />
+                )
+              }
             />
           )
         }

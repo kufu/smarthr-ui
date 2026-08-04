@@ -7,26 +7,18 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   memo,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { getIsInclude, mapToKeyArray } from '../../libs/map'
+import { getIsInclude } from '../../libs/map'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
-import {
-  focusFirstSibling,
-  focusLastSibling,
-  focusNextSibling,
-  focusPreviousSibling,
-  getNewExpandedItems,
-} from './accordionPanelHelper'
 
 import type { TextProps } from '../Text'
 
@@ -50,8 +42,8 @@ const classNameGenerator = tv({
       'disabled:shr-cursor-not-allowed disabled:shr-bg-white-darken disabled:shr-text-disabled',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
-      // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
-      '[.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
+      // Panel 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Panel に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
+      '[.smarthr-ui-Panel_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Panel_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
     ],
     leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',
     rightIcon: 'group-aria-expanded:-shr-rotate-180',
@@ -84,93 +76,66 @@ export const AccordionPanelTrigger: FC<Props> = ({
   }, [className])
 
   const { name, contentId, triggerId } = useContext(AccordionPanelItemContext)
-  const {
-    iconPosition,
-    expandedItems,
-    onClickTrigger,
-    onClickProps,
-    expandableMultiply,
-    parentRef,
-  } = useContext(AccordionPanelContext)
+  const { iconPosition, expandedItems, handleClickTrigger, handleKeyDown } =
+    useContext(AccordionPanelContext)
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
-  const actualOnClickTrigger = useMemo(
-    () =>
-      onClickTrigger
-        ? (e: MouseEvent<HTMLButtonElement>) => onClickTrigger(e.currentTarget.value, !isExpanded)
-        : undefined,
-    [isExpanded, onClickTrigger],
-  )
-  const actualOnClickProps = useMemo(
-    () =>
-      onClickProps
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            const newExpandedItems = getNewExpandedItems(
-              expandedItems,
-              e.currentTarget.value,
-              !isExpanded,
-              expandableMultiply,
-            )
-            onClickProps(mapToKeyArray(newExpandedItems))
-          }
-        : undefined,
-    [isExpanded, expandedItems, expandableMultiply, onClickProps],
-  )
-  const handleClick = useMemo(() => {
-    if (actualOnClickTrigger) {
-      if (actualOnClickProps) {
-        return (e: MouseEvent<HTMLButtonElement>) => {
-          actualOnClickTrigger(e)
-          actualOnClickProps(e)
-        }
-      }
-
-      return actualOnClickTrigger
-    } else if (actualOnClickProps) {
-      return actualOnClickProps
-    }
-
-    return undefined
-  }, [actualOnClickProps, actualOnClickTrigger])
-
-  const handleKeyDown: KeyboardEventHandler<HTMLButtonElement> = useCallback(
-    (e): void => {
-      if (!parentRef?.current) {
-        return
-      }
-
-      const item = e.target as HTMLElement
-
-      switch (e.key) {
-        case 'Home': {
-          e.preventDefault()
-          focusFirstSibling(parentRef.current)
-          break
-        }
-        case 'End': {
-          e.preventDefault()
-          focusLastSibling(parentRef.current)
-          break
-        }
-        case 'ArrowLeft':
-        case 'ArrowUp': {
-          e.preventDefault()
-          focusPreviousSibling(item, parentRef.current)
-          break
-        }
-        case 'ArrowRight':
-        case 'ArrowDown': {
-          e.preventDefault()
-          focusNextSibling(item, parentRef.current)
-          break
-        }
-      }
-    },
-    [parentRef],
-  )
-
   return (
+    <MemoizedHeadingButton
+      {...rest}
+      name={name}
+      triggerId={triggerId}
+      isExpanded={isExpanded}
+      contentId={contentId}
+      handleClickTrigger={handleClickTrigger}
+      handleKeyDown={handleKeyDown}
+      classNames={classNames}
+      iconPosition={iconPosition}
+      headingType={headingType}
+      unrecommendedHeadingTag={unrecommendedHeadingTag}
+    >
+      {children}
+    </MemoizedHeadingButton>
+  )
+}
+
+const MemoizedHeadingButton = memo<
+  PropsWithChildren<
+    Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'onKeyDown'> & {
+      name: string
+      triggerId: string
+      isExpanded: boolean
+      contentId: string
+      handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
+      handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
+      classNames: {
+        button: string
+        titleWrapper: string
+        leftIcon: string
+        rightIcon: string
+        title: string
+      }
+      iconPosition: 'left' | 'right'
+      headingType: Exclude<TextProps['styleType'], 'screenTitle'>
+      unrecommendedHeadingTag?: HeadingTagTypes
+    }
+  >
+>(
+  ({
+    children,
+    name,
+    triggerId,
+    isExpanded,
+    contentId,
+    handleClickTrigger,
+    handleKeyDown,
+    classNames,
+    iconPosition,
+    headingType,
+    unrecommendedHeadingTag,
+    ...rest
+  }) => (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading unrecommendedTag={unrecommendedHeadingTag} type={headingType}>
       <button
@@ -180,28 +145,18 @@ export const AccordionPanelTrigger: FC<Props> = ({
         id={triggerId}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        onClick={handleClick}
+        onClick={handleClickTrigger}
         onKeyDown={handleKeyDown}
         className={classNames.button}
         data-component="AccordionHeaderButton"
       >
-        <MemoizedTitle iconPosition={iconPosition} classNames={classNames}>
-          {children}
-        </MemoizedTitle>
+        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+        <Cluster className={classNames.titleWrapper} align="center" as="span">
+          {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
+          <span className={classNames.title}>{children}</span>
+          {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
+        </Cluster>
       </button>
     </Heading>
-  )
-}
-
-const MemoizedTitle = memo<
-  PropsWithChildren<{
-    iconPosition: undefined | 'left' | 'right'
-    classNames: { leftIcon: string; rightIcon: string; title: string; titleWrapper: string }
-  }>
->(({ classNames, iconPosition, children }) => (
-  <Cluster className={classNames.titleWrapper} align="center" as="span">
-    {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
-    <span className={classNames.title}>{children}</span>
-    {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}
-  </Cluster>
-))
+  ),
+)

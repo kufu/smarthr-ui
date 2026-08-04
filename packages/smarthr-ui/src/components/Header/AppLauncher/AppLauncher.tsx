@@ -3,7 +3,7 @@
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -156,45 +156,26 @@ export const AppLauncher: FC<Props> = ({
 
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'enableNew' | 'triggerLabel'> & { className: string }
->(({ enableNew, triggerLabel, className }) => {
-  const { localize } = useIntl()
-
-  const actualTriggerLabel = useMemo(
-    () =>
-      triggerLabel ??
-      localize({
-        id: 'smarthr-ui/AppLauncher/triggerLabel',
-        defaultText: 'アプリ',
-      }),
-    [triggerLabel, localize],
-  )
-
-  return (
-    <DropdownTrigger>
-      <Button
-        prefix={enableNew ?? <FaToolboxIcon />}
-        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-        className={className}
-      >
-        {actualTriggerLabel}
-      </Button>
-    </DropdownTrigger>
-  )
-})
+>(({ enableNew, triggerLabel, className }) => (
+  <DropdownTrigger>
+    <Button
+      prefix={enableNew ?? <FaToolboxIcon />}
+      suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+      className={className}
+    >
+      {triggerLabel ?? <Localizer id="smarthr-ui/AppLauncher/triggerLabel" defaultText="アプリ" />}
+    </Button>
+  </DropdownTrigger>
+))
 
 const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) => {
-    const { localize } = useIntl()
-
     if (!href) return null
 
     return (
       <div className={className}>
         <TextLink href={href} style={{ width: 'fit-content' }}>
-          {localize({
-            id: 'smarthr-ui/AppLauncher/showAllText',
-            defaultText: 'すべて見る',
-          })}
+          <Localizer id="smarthr-ui/AppLauncher/showAllText" defaultText="すべて見る" />
         </TextLink>
       </div>
     )

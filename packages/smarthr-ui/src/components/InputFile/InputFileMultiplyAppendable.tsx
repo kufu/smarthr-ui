@@ -15,11 +15,11 @@ import {
 } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
-import { useIntl } from '../../intl'
-import { BaseColumn } from '../Base'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
 import { classNameGenerator } from './style'
 
@@ -28,35 +28,22 @@ import type { Props } from './types'
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
-  (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
-    ref,
-  ) => {
+  ({ className, size, label, hasFileList = true, onChange, disabled, error, ...rest }, ref) => {
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
-    const { localize } = useIntl()
-
-    const destroyLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/InputFile/destroy',
-          defaultText: '削除',
-        }),
-      [localize],
-    )
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),
-        inputWrapper: inputWrapper({ size, disabled }),
+        inputWrapper: inputWrapper({ size }),
         fileList: fileList(),
         fileItem: fileItem(),
         input: input(),
         prefix: prefix(),
       }
-    }, [disabled, size, className])
+    }, [size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
@@ -118,20 +105,19 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
-        {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+        {hasFileList && !disabled && files.length > 0 && (
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
                 key={index}
                 value={index}
                 handleDeleteClick={functions.handleDelete}
-                destroyLabel={destroyLabel}
                 className={classNames.fileItem}
               >
                 {file.name}
               </FileListItem>
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input
@@ -157,12 +143,11 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 type FileListItemProps = PropsWithChildren<{
   value: number
   handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
-  destroyLabel: string
   className: string
 }>
 
 const FileListItem = memo<FileListItemProps>(
-  ({ value, handleDeleteClick, destroyLabel, className, children }) => (
+  ({ value, handleDeleteClick, className, children }) => (
     <li className={className}>
       <span className="smarthr-ui-InputFile-fileName">{children}</span>
       <Button
@@ -172,7 +157,7 @@ const FileListItem = memo<FileListItemProps>(
         onClick={handleDeleteClick}
         className="smarthr-ui-InputFile-deleteButton"
       >
-        {destroyLabel}
+        <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
       </Button>
     </li>
   ),

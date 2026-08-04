@@ -12,7 +12,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { useIntl } from '../../../intl'
+import { Localizer, useAvailableLocales } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -44,7 +44,7 @@ const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayL
   return (currentIndex + 1) % arrayLength
 }
 
-const onDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }
@@ -104,22 +104,15 @@ export const LanguageSwitcher: FC<Props> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize, availableLocales } = useIntl()
+  const availableLocales = useAvailableLocales()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
     [localeMap, availableLocales],
-  )
-
-  const checkIconAlt = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/LanguageSwitcher/checkIconAlt',
-        defaultText: '選択中',
-      }),
-    [localize],
   )
 
   const currentLang = locale || defaultLocale || defaultCurrentLang
@@ -137,11 +130,12 @@ export const LanguageSwitcher: FC<Props> = ({
   const latest = useLatest({ onLanguageSelect })
 
   const hasOnLanguageSelect = !!onLanguageSelect
-
   const functions = useMemo(
     () => ({
       handleClickLanguageSelect: hasOnLanguageSelect
-        ? (e: MouseEvent<HTMLButtonElement>) => latest.onLanguageSelect?.(e.currentTarget.value)
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onLanguageSelect!(e.currentTarget.value)
+          }
         : undefined,
     }),
     [hasOnLanguageSelect, latest],
@@ -155,17 +149,15 @@ export const LanguageSwitcher: FC<Props> = ({
         className={classNames.switchButton}
         label="Language"
       />
-      <DropdownContent onKeyDown={onDelegateKeyDownContent}>
+      <DropdownContent onKeyDown={handleDelegateKeyDownContent}>
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
               key={code}
               code={code}
-              className={classNames.languageItem}
-              buttonStyle={classNames.languageButton}
               current={currentLang === code}
               handleClick={functions.handleClickLanguageSelect}
-              iconAlt={checkIconAlt}
+              classNames={classNames}
             >
               {label}
             </LanguageListItemButton>
@@ -179,19 +171,27 @@ export const LanguageSwitcher: FC<Props> = ({
 const LanguageListItemButton = memo<{
   code: string
   children: string
-  className: string
-  buttonStyle: string
   current: boolean
-  iconAlt: ReactNode
   handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, handleClick }) => (
-  <li key={code} className={className} aria-current={current} lang={code}>
+  classNames: {
+    languageItem: string
+    languageButton: string
+  }
+}>(({ code, children, current, handleClick, classNames }) => (
+  <li className={classNames.languageItem} aria-current={current} lang={code}>
     <Button
       value={code}
       onClick={handleClick}
       wide
-      prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
-      className={buttonStyle}
+      prefix={
+        current ? (
+          <FaCheckIcon
+            color="MAIN"
+            alt={<Localizer id="smarthr-ui/LanguageSwitcher/checkIconAlt" defaultText="選択中" />}
+          />
+        ) : null
+      }
+      className={classNames.languageButton}
     >
       {children}
     </Button>
@@ -201,15 +201,16 @@ const LanguageListItemButton = memo<{
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: string }
 >(({ narrow, invert, className, label }) => {
+  const Icon = invert ? LanguageIcon : FaGlobeIcon
   let prefix: ReactNode = undefined
   let body: ReactNode = label
 
   if (narrow) {
     // narrowの時はprefixなし、bodyにアイコン
-    body = invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />
+    body = <Icon alt={label} />
   } else {
     // narrowでない時はprefixにアイコン、bodyはlabel
-    prefix = invert ? <LanguageIcon /> : <FaGlobeIcon />
+    prefix = <Icon />
   }
 
   return (

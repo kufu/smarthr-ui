@@ -116,7 +116,11 @@ const getExportedDirectoryComponents = async (
       node.forEachChild((child) => {
         if (ts.isNamedExports(child)) {
           child.elements.forEach((element) => {
-            exportComponents.push(`${element.name.escapedText}`)
+            // エイリアス前の元の名前を取得（export { A as B } の場合、Aを取得）
+            const componentName = element.propertyName
+              ? `${element.propertyName.escapedText}`
+              : `${element.name.escapedText}`
+            exportComponents.push(componentName)
           })
         }
       })

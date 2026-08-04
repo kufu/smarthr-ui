@@ -13,7 +13,7 @@ import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
-import { useIntl } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -90,24 +90,16 @@ export const Content: FC<
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      latestReleaseNotes: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-        defaultText: '最新のリリースノート',
-      }),
-      closeMenu: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/closeMenu',
-        defaultText: 'メニューを閉じる',
-      }),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    launcherListText: {
+      id: 'smarthr-ui/AppHeader/Launcher/listText',
+      defaultText: 'アプリ一覧',
+    },
+    latestReleaseNotes: {
+      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
+      defaultText: '最新のリリースノート',
+    },
+  })
 
   const latest = useLatest({
     setIsOpen,
@@ -164,7 +156,14 @@ export const Content: FC<
           )}
 
           <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
-            <FaXmarkIcon alt={translated.closeMenu} />
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/closeMenu"
+                  defaultText="メニューを閉じる"
+                />
+              }
+            />
           </Button>
         </Cluster>
       </div>

@@ -28,21 +28,18 @@ export const Td = memo<Props>(
 
       return `${base} ${shadow}`
     }, [align, className, fixed, nullable, vAlign])
-    const actualStyle = useMemo(() => {
-      if (typeof contentWidth === 'object') {
-        return {
-          ...style,
-          width: convertContentWidth(contentWidth.base),
-          minWidth: convertContentWidth(contentWidth.min),
-          maxWidth: convertContentWidth(contentWidth.max),
-        }
-      }
-
-      return {
-        ...style,
-        width: convertContentWidth(contentWidth),
-      }
-    }, [style, contentWidth])
+    const actualStyle =
+      typeof contentWidth === 'object'
+        ? {
+            ...style,
+            width: convertContentWidth(contentWidth.base),
+            minWidth: convertContentWidth(contentWidth.min),
+            maxWidth: convertContentWidth(contentWidth.max),
+          }
+        : {
+            ...style,
+            width: convertContentWidth(contentWidth),
+          }
 
     return <td {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle} />
   },

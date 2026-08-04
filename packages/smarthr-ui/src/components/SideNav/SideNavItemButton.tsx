@@ -98,18 +98,17 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   ...rest
 }) => {
   const context = useSideNavContext()
-  const size = context?.size ?? 'M'
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size }),
+      button: button({ size: context.size }),
       body: body(),
       bodyText: bodyText(),
     }
-  }, [className, size])
+  }, [context.size, className])
 
   return (
     <li {...rest} id={id} data-current={!!current} className={classNames.wrapper}>
@@ -134,18 +133,17 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   ...rest
 }: AnchorProps<T>) => {
   const context = useSideNavContext()
-  const size = context?.size ?? 'M'
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size }),
+      button: button({ size: context.size }),
       body: body(),
       bodyText: bodyText(),
     }
-  }, [className, size])
+  }, [context.size, className])
 
   const Anchor = elementAs || 'a'
 

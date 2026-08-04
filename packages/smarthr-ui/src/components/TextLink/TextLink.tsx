@@ -8,12 +8,11 @@ import {
   type Ref,
   forwardRef,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { OpenInNewTabIcon } from '../Icon'
 
 import type { ElementRef, ElementRefProps } from '../../types'
@@ -92,21 +91,22 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     const actualRel = rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel
     const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
 
-    const onClickRef = useRef(onClick)
-    onClickRef.current = onClick
+    const latest = useLatest({ onClick, href })
 
-    const actualOnClick = useCallback(
-      (e: MouseEvent) => {
-        if (!onClickRef.current) {
-          return
-        }
+    const hasOnClick = !!onClick
 
-        if (!href) {
-          e.preventDefault()
-        }
-        onClickRef.current(e)
-      },
-      [href],
+    const functions = useMemo(
+      () => ({
+        handleClick: hasOnClick
+          ? (e: MouseEvent) => {
+              if (!latest.href) {
+                e.preventDefault()
+              }
+              latest.onClick?.(e)
+            }
+          : undefined,
+      }),
+      [hasOnClick, latest],
     )
 
     return (
@@ -116,7 +116,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={actualHref}
         target={target}
         rel={actualRel}
-        onClick={onClick && actualOnClick}
+        onClick={functions.handleClick}
         className={anchorClassName}
       >
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
