@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
 
@@ -29,7 +29,7 @@ export function usePartialRendering<T>({
   }
 }
 
-export const Intersection: FC<{ handleIntersect: () => void }> = ({ handleIntersect }) => {
+export const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,4 +52,4 @@ export const Intersection: FC<{ handleIntersect: () => void }> = ({ handleInters
   }, [handleIntersect])
 
   return <div ref={ref} />
-}
+})
