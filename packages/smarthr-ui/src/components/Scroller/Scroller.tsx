@@ -15,12 +15,12 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../SectioningContent'
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
     as?: string | ComponentType<any>
   }
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'tabIndex'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'tabIndex'>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Scroller',

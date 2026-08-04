@@ -1,11 +1,11 @@
 import { type ComponentPropsWithoutRef, memo } from 'react'
 
-type AbstractProps = {
+type BaseProps = {
   alt?: string
   width?: number | string
   height?: number | string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof AbstractProps | 'fill'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps | 'fill'>
 
 export const SmartHRAILogo = memo<Props>(({ alt, width, height, ...rest }) => (
   <svg

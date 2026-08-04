@@ -9,15 +9,15 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type AbstractProps<AsElement extends ElementType> = PropsWithChildren<{
+type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
   elementAs?: AsElement
   current?: boolean
   prefix?: ReactNode
   suffix?: ReactNode
 }>
 
-type Props<AsElement extends ElementType = 'a'> = AbstractProps<AsElement> &
-  Omit<ComponentPropsWithoutRef<AsElement>, keyof AbstractProps<AsElement>>
+type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
+  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
 
 const classNameGenerator = tv({
   slots: {

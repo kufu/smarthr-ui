@@ -15,6 +15,13 @@ import type { ComponentProps } from 'react'
  * true     true  なし    あり    なし    あり         なし
  * false    true  あり    なし    あり    あり         あり
  * false    true  あり    なし    なし    なし         なし
+ *
+ * readOnly cases (disabled と readOnly は両立させない)
+ * readOnly error prefix suffix bgColor placeholder width
+ * true     false なし    なし    なし    なし         なし
+ * true     false あり    なし    なし    なし         なし
+ * true     false なし    あり    なし    なし         なし
+ * true     false なし    なし    あり    なし         なし
  */
 const _cases: Array<ComponentProps<typeof Input>> = [
   {
@@ -77,6 +84,43 @@ const _cases: Array<ComponentProps<typeof Input>> = [
     prefix: <FaMagnifyingGlassIcon alt="検索" />,
     suffix: undefined,
     bgColor: undefined,
+    placeholder: undefined,
+    width: undefined,
+  },
+  // readOnly cases
+  {
+    readOnly: true,
+    error: undefined,
+    prefix: undefined,
+    suffix: undefined,
+    bgColor: undefined,
+    placeholder: undefined,
+    width: undefined,
+  },
+  {
+    readOnly: true,
+    error: undefined,
+    prefix: <FaMagnifyingGlassIcon alt="検索" />,
+    suffix: undefined,
+    bgColor: undefined,
+    placeholder: undefined,
+    width: undefined,
+  },
+  {
+    readOnly: true,
+    error: undefined,
+    prefix: undefined,
+    suffix: <FaMagnifyingGlassIcon alt="検索" />,
+    bgColor: undefined,
+    placeholder: undefined,
+    width: undefined,
+  },
+  {
+    readOnly: true,
+    error: undefined,
+    prefix: undefined,
+    suffix: undefined,
+    bgColor: 'BACKGROUND',
     placeholder: undefined,
     width: undefined,
   },

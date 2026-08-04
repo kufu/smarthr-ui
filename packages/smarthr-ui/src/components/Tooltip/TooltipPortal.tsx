@@ -157,12 +157,12 @@ const calculateHorizontal = (
   const portalHalfWidth = portalWidth / 2
   const edgeSpacing = theme.spacingByChar(0.5)
 
+  const leftSpacing = triggerAlignCenter - portalHalfWidth
+  const rightSpacingEdge = document.body.clientWidth - SPACING
+
   // トリガを中心に左右に十分な余白がある場合
-  if (
-    triggerAlignCenter - portalHalfWidth > SPACING &&
-    triggerAlignCenter + portalHalfWidth < document.body.clientWidth - SPACING
-  ) {
-    const insetInlineStart = `${triggerAlignCenter - portalHalfWidth}px`
+  if (leftSpacing > SPACING && triggerAlignCenter + portalHalfWidth < rightSpacingEdge) {
+    const insetInlineStart = `${leftSpacing}px`
 
     return {
       insetInlineStart,
@@ -185,7 +185,7 @@ const calculateHorizontal = (
   }
 
   // トリガが画面右寄りの場合
-  const insetInlineEnd = `${document.body.clientWidth - parentRect.right - scrollX - SPACING}px`
+  const insetInlineEnd = `${rightSpacingEdge - parentRect.right - scrollX}px`
 
   return {
     insetInlineStart: undefined,

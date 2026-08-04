@@ -102,7 +102,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
                 <CommonButton
                   elementAs="button"
                   type="button"
-                  onClick={functions.dialogOpen}
+                  handleClick={functions.dialogOpen}
                   prefix={<FaGlobeIcon />}
                   // eslint-disable-next-line smarthr/require-i18n-text
                 >
