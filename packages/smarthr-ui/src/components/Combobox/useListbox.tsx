@@ -324,15 +324,7 @@ export const ListBox = memo(
       Math.max(OPTION_INCREMENT_AMOUNT, minLength),
     )
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
-    const latest = useLatest({ minLength })
-    const handleIntersect = useCallback(() => {
-      setCurrentItemLength((current) =>
-        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-      )
-    }, [latest])
-    useEffect(() => {
-      setCurrentItemLength((current) => Math.max(current, minLength))
-    }, [minLength])
+
     const styles = useMemo(() => {
       const { top, left, height } = listBoxRect
       const dropdownListWidth = dropdownWidth || triggerWidth
@@ -351,6 +343,18 @@ export const ListBox = memo(
         },
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
+
+    const latest = useLatest({ minLength })
+
+    const handleIntersect = useCallback(() => {
+      setCurrentItemLength((current) =>
+        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+      )
+    }, [latest])
+
+    useEffect(() => {
+      setCurrentItemLength((current) => Math.max(current, minLength))
+    }, [minLength])
 
     return createPortal(
       <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
