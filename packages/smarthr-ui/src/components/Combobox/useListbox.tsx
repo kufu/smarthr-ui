@@ -180,7 +180,7 @@ export const useListbox = <T,>({
         })
         setTriggerWidth(rect.width)
       },
-      onKeyDownListBox: (e: KeyboardEvent<HTMLElement>) => {
+      handleKeyDownListBox: (e: KeyboardEvent<HTMLElement>) => {
         setNavigationType('key')
 
         if (KEY_DOWN_REGEX.test(e.key)) {
@@ -299,7 +299,7 @@ export const useListbox = <T,>({
       dropdownWidth,
     },
     activeOption,
-    onKeyDownListBox: functions.onKeyDownListBox,
+    handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
