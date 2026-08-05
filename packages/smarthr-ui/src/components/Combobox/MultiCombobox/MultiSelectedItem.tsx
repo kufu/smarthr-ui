@@ -58,21 +58,7 @@ const classNameGenerator = tv({
   },
 })
 
-export function MultiSelectedItem<T>({
-  item,
-  disabled,
-  onDelete,
-  enableEllipsis,
-  buttonRef,
-}: Props<T>) {
-  const [needsTooltip, setNeedsTooltip] = useState(false)
-  const labelRef = useRef<HTMLDivElement>(null)
-  const idPrefix = useId()
-  const labelId = `${idPrefix}-item-label`
-  const destroySuffixTextId = `${idPrefix}-item-destroy-button-suffix`
-
-  const { deletable = true } = item
-
+export function MultiSelectedItem<T>({ enableEllipsis, disabled, ...rest }: Props<T>) {
   const classNames = useMemo(() => {
     const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
 
@@ -84,15 +70,64 @@ export function MultiSelectedItem<T>({
     }
   }, [disabled, enableEllipsis])
 
-  useEffect(() => {
-    if (enableEllipsis && labelRef.current) {
-      const elem = labelRef.current
+  const commonAttrs = {
+    disabled,
+    classNames,
+  }
 
+  return enableEllipsis ? (
+    <EllipsisMultiSelectedItem {...rest} {...commonAttrs} />
+  ) : (
+    <ActualMultiSelectedItem {...rest} {...commonAttrs} />
+  )
+}
+
+type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'enableEllipsis'> & {
+  labelRef?: RefObject<HTMLSpanElement>
+  classNames: {
+    wrapper: string
+    itemLabel: string
+    deleteButton: string
+    deleteButtonIcon: string
+  }
+}
+
+const EllipsisMultiSelectedItem = <T,>({ item, ...rest }: LowerMultiSelectedItemProps<T>) => {
+  const [needsTooltip, setNeedsTooltip] = useState(false)
+  const labelRef = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const elem = labelRef.current
+
+    if (elem) {
       setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
     }
-  }, [enableEllipsis])
+  }, [])
 
-  const body = (
+  const body = <ActualMultiSelectedItem {...rest} labelRef={labelRef} item={item} />
+
+  if (needsTooltip) {
+    return <Tooltip message={item.label}>{body}</Tooltip>
+  }
+
+  return body
+}
+
+const ActualMultiSelectedItem = <T,>({
+  buttonRef,
+  labelRef,
+  item,
+  disabled,
+  onDelete,
+  classNames,
+}: LowerMultiSelectedItemProps<T>) => {
+  const idPrefix = useId()
+  const labelId = `${idPrefix}-item-label`
+  const destroySuffixTextId = `${idPrefix}-item-destroy-button-suffix`
+
+  const { deletable = true } = item
+
+  return (
     <Chip disabled={disabled} className={classNames.wrapper}>
       <span ref={labelRef} id={labelId} className={classNames.itemLabel}>
         {item.label}
@@ -112,12 +147,6 @@ export function MultiSelectedItem<T>({
       )}
     </Chip>
   )
-
-  if (needsTooltip) {
-    return <Tooltip message={item.label}>{body}</Tooltip>
-  }
-
-  return body
 }
 
 const typedMemo: <T>(c: T) => T = memo
