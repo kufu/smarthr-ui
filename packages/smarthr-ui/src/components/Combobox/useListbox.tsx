@@ -109,7 +109,7 @@ export const useListbox = <T,>({
   const activeRef = useRef<HTMLButtonElement>(null)
 
   const hasOnAdd = !!onAdd
-  const latest = useLatest({ onAdd, onSelect, activeOption, options })
+  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef })
 
   const functions = useMemo(() => {
     const moveActiveOptionIndex = (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
@@ -142,10 +142,10 @@ export const useListbox = <T,>({
 
     return {
       calculateRect: () => {
-        if (!listBoxRef.current || !triggerRef.current) {
+        if (!listBoxRef.current || !latest.triggerRef.current) {
           return
         }
-        const rect = triggerRef.current.getBoundingClientRect()
+        const rect = latest.triggerRef.current.getBoundingClientRect()
         const bottomSpace = window.innerHeight - rect.bottom
         const topSpace = rect.top
         const listBoxHeight = Math.min(
@@ -222,7 +222,7 @@ export const useListbox = <T,>({
         setActiveOption(option)
       },
     }
-  }, [hasOnAdd, triggerRef, latest])
+  }, [hasOnAdd, latest])
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
