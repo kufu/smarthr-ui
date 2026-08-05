@@ -98,18 +98,17 @@ export function MultiSelectedItem<T>({
     }
   }, [disabled, enableEllipsis])
 
-  const commonAttrs = {
-    itemLabel: item.label,
-    itemDeletable: item.deletable ?? true,
-    disabled,
-    functions,
-    classNames,
-  }
+  const Component = enableEllipsis ? EllipsisMultiSelectedItem : ActualMultiSelectedItem
 
-  return enableEllipsis ? (
-    <EllipsisMultiSelectedItem {...rest} {...commonAttrs} />
-  ) : (
-    <ActualMultiSelectedItem {...rest} {...commonAttrs} />
+  return (
+    <Component
+      {...rest}
+      itemLabel={item.label}
+      itemDeletable={item.deletable ?? true}
+      disabled={disabled}
+      functions={functions}
+      classNames={classNames}
+    />
   )
 }
 
