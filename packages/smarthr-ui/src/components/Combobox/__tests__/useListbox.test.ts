@@ -42,7 +42,7 @@ describe('useListbox', () => {
   const mockKeyEvent = (key: string) => ({ key, stopPropagation: vi.fn() }) as any
 
   it('options が変更されても activeOption が維持されること', () => {
-    act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowDown')))
+    act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
     expect(result.current.activeOption).toEqual(options[0])
     rerender({
       ...initialProps,
@@ -55,7 +55,7 @@ describe('useListbox', () => {
   })
 
   it('options から activeOption と一致する option が消えたとき、activeOption がリセットされること', () => {
-    act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowDown')))
+    act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
     expect(result.current.activeOption).toEqual(options[0])
     rerender({
       ...initialProps,
@@ -71,19 +71,19 @@ describe('useListbox', () => {
 
   describe('ArrowDown キーで moveActiveOptionIndex(+1)', () => {
     it('activeOption が未設定のとき、最初に先頭のアイテムが選択されること', () => {
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowDown')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
       expect(result.current.activeOption).toEqual(options[0])
     })
 
     it('disabled な option が飛ばされること', () => {
       act(() => result.current.listBoxProps.handleHoverOption(options[1]))
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowDown')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
       expect(result.current.activeOption).toEqual(options[3])
     })
 
     it('末尾の option から先頭の option にループすること', () => {
       act(() => result.current.listBoxProps.handleHoverOption(options[options.length - 1]))
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowDown')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
       expect(result.current.activeOption).toEqual(options[0])
     })
   })
@@ -92,14 +92,14 @@ describe('useListbox', () => {
     it('activeOption を変更できること', () => {
       expect(result.current.activeOption).toBeNull()
 
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowUp')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowUp')))
       expect(result.current.activeOption).toEqual(options[3])
 
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowUp')))
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowUp')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowUp')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowUp')))
       expect(result.current.activeOption).toEqual(options[0])
 
-      act(() => result.current.onKeyDownListBox(mockKeyEvent('ArrowUp')))
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowUp')))
       expect(result.current.activeOption).toEqual(options[3])
     })
   })
