@@ -191,6 +191,15 @@ const ActualMultiCombobox = <T,>(
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
 
+  const { options } = useMultiOptions({
+    items,
+    selected: selectedItems,
+    creatable,
+    inputValue,
+    isItemSelected,
+  })
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+
   const latest = useLatest({
     onChange,
     onChangeInput,
@@ -207,14 +216,7 @@ const ActualMultiCombobox = <T,>(
     highlighted,
     isComposing,
   })
-  const { options } = useMultiOptions({
-    items,
-    selected: selectedItems,
-    creatable,
-    inputValue,
-    isItemSelected,
-  })
-  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+
   const actualOnDelete = useCallback(
     (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
