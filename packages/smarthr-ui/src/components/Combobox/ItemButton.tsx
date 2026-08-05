@@ -49,7 +49,7 @@ const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Pro
     id: option.id,
     label: option.item.label,
     activeRef,
-    onMouseOver: functions.handleMouseOver,
+    handleMouseOver: functions.handleMouseOver,
   }
 
   return option.isNew ? (
@@ -59,7 +59,7 @@ const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Pro
       {...commonAttrs}
       disabled={option.item.disabled}
       selected={option.selected}
-      onClick={functions.handleSelectClick}
+      handleClick={functions.handleSelectClick}
     />
   )
 }
@@ -72,8 +72,8 @@ const AddButton = memo<{
   label: ReactNode
   activeRef: RefObject<HTMLButtonElement> | undefined
   onClick?: () => void
-  onMouseOver: () => void
-}>(({ id, label, activeRef, onClick, onMouseOver }) => {
+  handleMouseOver: () => void
+}>(({ id, label, activeRef, onClick, handleMouseOver }) => {
   const className = classNameGenerator({
     new: true,
   })
@@ -88,7 +88,7 @@ const AddButton = memo<{
       data-active={!!activeRef}
       onClick={onClick}
       // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      onMouseOver={onMouseOver}
+      onMouseOver={handleMouseOver}
       className={className}
     >
       <MemoizedNewIconWithText label={label} />
@@ -112,9 +112,9 @@ const SelectButton = memo<{
   disabled?: boolean
   selected: boolean
   activeRef: RefObject<HTMLButtonElement> | undefined
-  onClick: () => void
-  onMouseOver: () => void
-}>(({ id, label, disabled, selected, activeRef, onClick, onMouseOver }) => {
+  handleClick: () => void
+  handleMouseOver: () => void
+}>(({ id, label, disabled, selected, activeRef, handleClick, handleMouseOver }) => {
   const className = classNameGenerator({
     new: false,
   })
@@ -128,9 +128,9 @@ const SelectButton = memo<{
       disabled={disabled}
       aria-selected={selected}
       data-active={!!activeRef}
-      onClick={onClick}
+      onClick={handleClick}
       // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      onMouseOver={onMouseOver}
+      onMouseOver={handleMouseOver}
       className={className}
     >
       {label}
