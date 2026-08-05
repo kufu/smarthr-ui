@@ -128,7 +128,12 @@ type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' |
   }
 }
 
-const EllipsisMultiSelectedItem = <T,>({ itemLabel, ...rest }: LowerMultiSelectedItemProps<T>) => {
+const typedMemo: <T>(c: T) => T = memo
+
+const BaseEllipsisMultiSelectedItem = <T,>({
+  itemLabel,
+  ...rest
+}: LowerMultiSelectedItemProps<T>) => {
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const labelRef = useRef<HTMLSpanElement>(null)
 
@@ -148,8 +153,9 @@ const EllipsisMultiSelectedItem = <T,>({ itemLabel, ...rest }: LowerMultiSelecte
 
   return body
 }
+const EllipsisMultiSelectedItem = typedMemo(BaseEllipsisMultiSelectedItem)
 
-const ActualMultiSelectedItem = <T,>({
+const BaseActualMultiSelectedItem = <T,>({
   buttonRef,
   labelRef,
   itemLabel,
@@ -180,11 +186,11 @@ const ActualMultiSelectedItem = <T,>({
     </Chip>
   )
 }
+const ActualMultiSelectedItem = typedMemo(BaseActualMultiSelectedItem)
 
-const typedMemo: <T>(c: T) => T = memo
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
-const BaseDestroyButton = <T,>({
+const DestroyButton = <T,>({
   buttonRef,
   labelId,
   suffixTextId,
@@ -213,4 +219,3 @@ const BaseDestroyButton = <T,>({
     />
   </UnstyledButton>
 )
-const DestroyButton = typedMemo(BaseDestroyButton)
