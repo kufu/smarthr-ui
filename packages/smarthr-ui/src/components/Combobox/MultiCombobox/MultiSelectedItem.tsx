@@ -99,7 +99,8 @@ export function MultiSelectedItem<T>({
   }, [disabled, enableEllipsis])
 
   const commonAttrs = {
-    item,
+    itemLabel: item.label,
+    itemDeletable: item.deletable ?? true,
     disabled,
     functions,
     classNames,
@@ -112,8 +113,10 @@ export function MultiSelectedItem<T>({
   )
 }
 
-type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'enableEllipsis' | 'onDelete'> & {
+type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' | 'onDelete'> & {
   labelRef?: RefObject<HTMLSpanElement>
+  itemLabel: ComboboxItem<T>['label']
+  itemDeletable: boolean
   functions: {
     handleClick: () => void
     handleKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void
@@ -126,7 +129,7 @@ type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'enableEllipsis' | 'onDelet
   }
 }
 
-const EllipsisMultiSelectedItem = <T,>({ item, ...rest }: LowerMultiSelectedItemProps<T>) => {
+const EllipsisMultiSelectedItem = <T,>({ itemLabel, ...rest }: LowerMultiSelectedItemProps<T>) => {
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const labelRef = useRef<HTMLSpanElement>(null)
 
@@ -138,10 +141,10 @@ const EllipsisMultiSelectedItem = <T,>({ item, ...rest }: LowerMultiSelectedItem
     }
   }, [])
 
-  const body = <ActualMultiSelectedItem {...rest} labelRef={labelRef} item={item} />
+  const body = <ActualMultiSelectedItem {...rest} labelRef={labelRef} itemLabel={itemLabel} />
 
   if (needsTooltip) {
-    return <Tooltip message={item.label}>{body}</Tooltip>
+    return <Tooltip message={itemLabel}>{body}</Tooltip>
   }
 
   return body
@@ -150,30 +153,28 @@ const EllipsisMultiSelectedItem = <T,>({ item, ...rest }: LowerMultiSelectedItem
 const ActualMultiSelectedItem = <T,>({
   buttonRef,
   labelRef,
-  item,
+  itemLabel,
+  itemDeletable,
   disabled,
   functions,
   classNames,
 }: LowerMultiSelectedItemProps<T>) => {
   const idPrefix = useId()
   const labelId = `${idPrefix}-item-label`
-  const destroySuffixTextId = `${idPrefix}-item-destroy-button-suffix`
-
-  const { deletable = true } = item
 
   return (
     <Chip disabled={disabled} className={classNames.wrapper}>
       <span ref={labelRef} id={labelId} className={classNames.itemLabel}>
-        {item.label}
+        {itemLabel}
       </span>
 
-      {deletable && (
+      {itemDeletable && (
         <DestroyButton
+          buttonRef={buttonRef}
           labelId={labelId}
-          suffixTextId={destroySuffixTextId}
+          suffixTextId={`${idPrefix}-item-destroy-button-suffix`}
           functions={functions}
           disabled={disabled}
-          buttonRef={buttonRef}
           classNames={classNames}
         />
       )}
