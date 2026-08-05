@@ -199,7 +199,7 @@ const ActualSingleCombobox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
-  const outerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -246,7 +246,7 @@ const ActualSingleCombobox = <T,>(
       },
       isExpanded,
       isLoading,
-      triggerRef: outerRef,
+      triggerRef,
       noResultText,
     },
   )
@@ -403,7 +403,7 @@ const ActualSingleCombobox = <T,>(
       : theme.textColor.grey
 
   useClick(
-    useMemo(() => [outerRef, listBoxRef, clearButtonRef], [listBoxRef]),
+    useMemo(() => [triggerRef, listBoxRef, clearButtonRef], [listBoxRef]),
     isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
     functions.unfocus,
   )
@@ -441,7 +441,7 @@ const ActualSingleCombobox = <T,>(
   }, [hasSelectedItem, disabled, readOnly, className])
 
   return (
-    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
+    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={triggerRef}>
       <Input
         {...rest}
         ref={inputRef}
