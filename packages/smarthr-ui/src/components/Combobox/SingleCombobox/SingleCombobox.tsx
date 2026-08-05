@@ -357,11 +357,11 @@ const ActualSingleCombobox = <T,>(
           latest.onChangeSelected?.(null)
         }
       },
+      handleCompositionStart: () => setIsComposing(true),
+      handleCompositionEnd: () => setIsComposing(false),
     }
   }, [latest])
 
-  const onCompositionStart = useCallback(() => setIsComposing(true), [])
-  const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (latest.isComposing) {
@@ -471,8 +471,8 @@ const ActualSingleCombobox = <T,>(
         onClick={functions.handleClickInput}
         onChange={functions.handleChangeInput}
         onFocus={isFocused ? undefined : functions.handleFocus}
-        onCompositionStart={onCompositionStart}
-        onCompositionEnd={onCompositionEnd}
+        onCompositionStart={functions.handleCompositionStart}
+        onCompositionEnd={functions.handleCompositionEnd}
         onKeyDown={onKeyDownInput}
         onKeyPress={handleKeyPress}
         error={error}
