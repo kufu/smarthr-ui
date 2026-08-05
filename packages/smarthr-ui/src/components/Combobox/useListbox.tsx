@@ -142,7 +142,7 @@ export const useListbox = <T,>({
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded, setActiveOption])
+  }, [isExpanded])
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
@@ -258,7 +258,7 @@ export const useListbox = <T,>({
         setActiveOption(null)
       }
     },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect],
   )
 
   const listBoxId = useId()
@@ -282,13 +282,10 @@ export const useListbox = <T,>({
     },
     [onSelect],
   )
-  const handleHoverOption = useCallback(
-    (option: ComboboxOption<T>) => {
-      setNavigationType('pointer')
-      setActiveOption(option)
-    },
-    [setActiveOption],
-  )
+  const handleHoverOption = useCallback((option: ComboboxOption<T>) => {
+    setNavigationType('pointer')
+    setActiveOption(option)
+  }, [])
 
   return {
     listBoxProps: {
