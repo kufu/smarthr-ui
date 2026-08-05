@@ -58,6 +58,8 @@ const classNameGenerator = tv({
   },
 })
 
+const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
+
 export function MultiSelectedItem<T>({
   item,
   enableEllipsis,
@@ -69,10 +71,10 @@ export function MultiSelectedItem<T>({
 
   const functions = useMemo(
     () => ({
-      handleClick: () => {
+      handleDestroyClick: () => {
         latest.onDelete(latest.item)
       },
-      handleKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
+      handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
         if (EXEC_DESTROY_KEY.test(e.key)) {
           e.stopPropagation()
 
@@ -115,8 +117,8 @@ type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' |
   itemLabel: ComboboxItem<T>['label']
   itemDeletable: boolean
   functions: {
-    handleClick: () => void
-    handleKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void
+    handleDestroyClick: () => void
+    handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void
   }
   classNames: {
     wrapper: string
@@ -186,8 +188,6 @@ const BaseActualMultiSelectedItem = <T,>({
 }
 const ActualMultiSelectedItem = typedMemo(BaseActualMultiSelectedItem)
 
-const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
-
 const DestroyButton = <T,>({
   buttonRef,
   labelId,
@@ -204,8 +204,8 @@ const DestroyButton = <T,>({
     disabled={disabled}
     tabIndex={-1}
     aria-labelledby={`${labelId} ${suffixTextId}`}
-    onClick={functions.handleClick}
-    onKeyDown={functions.handleKeyDown}
+    onClick={functions.handleDestroyClick}
+    onKeyDown={functions.handleDestroyKeyDown}
     className={classNames.deleteButton}
   >
     <VisuallyHiddenText id={suffixTextId}>
