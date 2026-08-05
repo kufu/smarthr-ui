@@ -119,7 +119,7 @@ const classNameGenerator = tv({
 })
 
 type SuffixButtonsProps = {
-  onClickClear: (e: MouseEvent) => void
+  handleClickClear: (e: MouseEvent) => void
   clearButtonRef: RefObject<HTMLButtonElement>
   onClickIcon: (e: MouseEvent) => void
   caretIconColor: string
@@ -133,7 +133,7 @@ type SuffixButtonsProps = {
 
 const SuffixButtons = memo<SuffixButtonsProps>(
   ({
-    onClickClear,
+    handleClickClear,
     clearButtonRef,
     onClickIcon: onDelegateClickIcon,
     caretIconColor,
@@ -141,7 +141,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
   }) => (
     <>
       <UnstyledButton
-        onClick={onClickClear}
+        onClick={handleClickClear}
         ref={clearButtonRef}
         className={classNames.clearButton}
       >
@@ -306,35 +306,32 @@ const ActualSingleCombobox = <T,>(
           selectDefaultItem()
         }
       },
+      handleClickClear: (e: MouseEvent) => {
+        e.stopPropagation()
+
+        let isExecutedPreventDefault = false
+
+        latest.onClearClick?.({
+          ...e,
+          preventDefault: () => {
+            e.preventDefault()
+            isExecutedPreventDefault = true
+          },
+        })
+
+        if (!isExecutedPreventDefault) {
+          latest.onClear?.()
+          latest.onChangeSelected?.(null)
+
+          inputRef.current?.focus()
+
+          setIsFocused(true)
+          setIsExpanded(true)
+        }
+      },
     }
   }, [latest])
 
-  const onClickClear = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation()
-
-      let isExecutedPreventDefault = false
-
-      latest.onClearClick?.({
-        ...e,
-        preventDefault: () => {
-          e.preventDefault()
-          isExecutedPreventDefault = true
-        },
-      })
-
-      if (!isExecutedPreventDefault) {
-        latest.onClear?.()
-        latest.onChangeSelected?.(null)
-
-        inputRef.current?.focus()
-
-        setIsFocused(true)
-        setIsExpanded(true)
-      }
-    },
-    [latest],
-  )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
       if (latest.disabled || latest.readOnly) {
@@ -488,16 +485,11 @@ const ActualSingleCombobox = <T,>(
         prefix={prefix}
         suffix={
           <SuffixButtons
-            onClickClear={onClickClear}
             clearButtonRef={clearButtonRef}
-            onClickIcon={onClickInput}
             caretIconColor={caretIconColor}
-            classNames={{
-              clearButton: classNames.clearButton,
-              clearButtonIcon: classNames.clearButtonIcon,
-              caretDownLayout: classNames.caretDownLayout,
-              caretDownIcon: classNames.caretDownIcon,
-            }}
+            handleClickClear={functions.handleClickClear}
+            onClickIcon={onClickInput}
+            classNames={classNames}
           />
         }
         className={classNames.input}
