@@ -119,10 +119,10 @@ const classNameGenerator = tv({
 })
 
 type SuffixButtonsProps = {
-  handleClickClear: (e: MouseEvent) => void
   clearButtonRef: RefObject<HTMLButtonElement>
-  onClickIcon: (e: MouseEvent) => void
   caretIconColor: string
+  handleClickClear: (e: MouseEvent) => void
+  handleClickIcon: (e: MouseEvent) => void
   classNames: {
     clearButton: string
     clearButtonIcon: string
@@ -133,10 +133,10 @@ type SuffixButtonsProps = {
 
 const SuffixButtons = memo<SuffixButtonsProps>(
   ({
-    handleClickClear,
     clearButtonRef,
-    onClickIcon: onDelegateClickIcon,
     caretIconColor,
+    handleClickClear,
+    handleClickIcon: handleDelegateClickIcon,
     classNames,
   }) => (
     <>
@@ -155,7 +155,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
       </UnstyledButton>
       <span
         role="presentation"
-        onClick={onDelegateClickIcon}
+        onClick={handleDelegateClickIcon}
         className={classNames.caretDownLayout}
       >
         <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
@@ -329,25 +329,22 @@ const ActualSingleCombobox = <T,>(
           setIsExpanded(true)
         }
       },
+      handleClickInput: (e: MouseEvent) => {
+        if (latest.disabled || latest.readOnly) {
+          e.stopPropagation()
+
+          return
+        }
+
+        inputRef.current?.focus()
+
+        if (!latest.isExpanded) {
+          setIsExpanded(true)
+        }
+      },
     }
   }, [latest])
 
-  const onClickInput = useCallback(
-    (e: MouseEvent) => {
-      if (latest.disabled || latest.readOnly) {
-        e.stopPropagation()
-
-        return
-      }
-
-      inputRef.current?.focus()
-
-      if (!latest.isExpanded) {
-        setIsExpanded(true)
-      }
-    },
-    [latest],
-  )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       latest.onChange?.(e)
@@ -474,7 +471,7 @@ const ActualSingleCombobox = <T,>(
         aria-autocomplete="list"
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
         placeholder={placeholder}
-        onClick={onClickInput}
+        onClick={functions.handleClickInput}
         onChange={actualOnChangeInput}
         onFocus={isFocused ? undefined : functions.handleFocus}
         onCompositionStart={onCompositionStart}
@@ -488,7 +485,7 @@ const ActualSingleCombobox = <T,>(
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}
             handleClickClear={functions.handleClickClear}
-            onClickIcon={onClickInput}
+            handleClickIcon={functions.handleClickInput}
             classNames={classNames}
           />
         }
