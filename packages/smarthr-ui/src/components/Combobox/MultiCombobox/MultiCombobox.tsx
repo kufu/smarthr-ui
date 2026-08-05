@@ -519,7 +519,7 @@ const ActualMultiCombobox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                onDelete={actualOnDelete}
+                handleDelete={actualOnDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
               />

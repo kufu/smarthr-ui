@@ -53,6 +53,27 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
+
+  const common = {
+    wrapper: wrapper(),
+    deleteButton: deleteButton(),
+    deleteButtonIcon: deleteButtonIcon(),
+  }
+
+  return {
+    enableEllipsis: {
+      ...common,
+      itemLabel: itemLabel({ enableEllipsis: true }),
+    },
+    noEllipsis: {
+      ...common,
+      itemLabel: itemLabel({ enableEllipsis: false }),
+    },
+  }
+})()
+
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
 export function MultiSelectedItem<T>({
@@ -89,17 +110,6 @@ export function MultiSelectedItem<T>({
     [itemDeletable, latest],
   )
 
-  const classNames = useMemo(() => {
-    const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      itemLabel: itemLabel({ enableEllipsis }),
-      deleteButton: deleteButton(),
-      deleteButtonIcon: deleteButtonIcon(),
-    }
-  }, [enableEllipsis])
-
   const Component = enableEllipsis ? EllipsisMultiSelectedItem : ActualMultiSelectedItem
 
   return (
@@ -109,7 +119,7 @@ export function MultiSelectedItem<T>({
       itemDeletable={itemDeletable}
       disabled={disabled}
       functions={functions}
-      classNames={classNames}
+      classNames={CLASS_NAMES[enableEllipsis ? 'enableEllipsis' : 'noEllipsis']}
     />
   )
 }
