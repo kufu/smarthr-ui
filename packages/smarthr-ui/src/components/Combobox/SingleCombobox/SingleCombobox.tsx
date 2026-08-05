@@ -209,6 +209,16 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
+
+  const { options } = useSingleOptions({
+    items,
+    selected: selectedItem,
+    creatable,
+    inputValue,
+    isFilteringDisabled: !isEditing,
+  })
+
   const latest = useLatest({
     onChange,
     onChangeInput,
@@ -226,16 +236,6 @@ const ActualSingleCombobox = <T,>(
     isExpanded,
     isComposing,
     isEditing,
-  })
-
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
-
-  const { options } = useSingleOptions({
-    items,
-    selected: selectedItem,
-    creatable,
-    inputValue,
-    isFilteringDisabled: !isEditing,
   })
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
