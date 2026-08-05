@@ -64,7 +64,7 @@ const ItemButton = <T,>({
   }
 
   return option.isNew ? (
-    <AddButton {...commonAttrs} onClick={functions.handleAddClick} />
+    <AddButton {...commonAttrs} handleClick={functions.handleAddClick} />
   ) : (
     <SelectButton
       {...commonAttrs}
@@ -77,39 +77,6 @@ const ItemButton = <T,>({
 const typedMemo: <T>(c: T) => T = memo
 const Memoized = typedMemo(ItemButton)
 export { Memoized as ItemButton }
-
-const AddButton = memo<{
-  id: string
-  label: ReactNode
-  activeRef: RefObject<HTMLButtonElement> | undefined
-  onClick?: () => void
-  handleMouseOver: () => void
-}>(({ id, label, activeRef, onClick, handleMouseOver }) => (
-  <button
-    ref={activeRef}
-    type="button"
-    role="option"
-    aria-selected={false}
-    id={id}
-    data-active={!!activeRef}
-    onClick={onClick}
-    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-    onMouseOver={handleMouseOver}
-    className={CLASS_NAMES.new}
-  >
-    <MemoizedNewIconWithText label={label} />
-  </button>
-))
-
-const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
-  <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
-    <Localizer
-      id="smarthr-ui/Combobox/addItemButtonLabel"
-      defaultText="「{name}」を追加"
-      values={{ name: label }}
-    />
-  </Text>
-))
 
 const SelectButton = memo<{
   id: string
@@ -135,4 +102,37 @@ const SelectButton = memo<{
   >
     {label}
   </button>
+))
+
+const AddButton = memo<{
+  id: string
+  label: ReactNode
+  activeRef: RefObject<HTMLButtonElement> | undefined
+  handleClick?: () => void
+  handleMouseOver: () => void
+}>(({ id, label, activeRef, handleClick, handleMouseOver }) => (
+  <button
+    ref={activeRef}
+    type="button"
+    role="option"
+    aria-selected={false}
+    id={id}
+    data-active={!!activeRef}
+    onClick={handleClick}
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+    onMouseOver={handleMouseOver}
+    className={CLASS_NAMES.new}
+  >
+    <MemoizedNewIconWithText label={label} />
+  </button>
+))
+
+const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
+  <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
+    <Localizer
+      id="smarthr-ui/Combobox/addItemButtonLabel"
+      defaultText="「{name}」を追加"
+      values={{ name: label }}
+    />
+  </Text>
 ))
