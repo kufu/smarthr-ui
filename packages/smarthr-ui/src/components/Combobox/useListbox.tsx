@@ -15,6 +15,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
@@ -25,8 +26,6 @@ import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
-import { useActiveOption } from './useActiveOption'
-import { Intersection, usePartialRendering } from './usePartialRendering'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -51,6 +50,8 @@ type Rect = {
 
 const KEY_DOWN_REGEX = /^(Arrow)?Down$/
 const KEY_UP_REGEX = /^(Arrow)?Up/
+
+const OPTION_INCREMENT_AMOUNT = 100
 
 const classNameGenerator = tv({
   slots: {
@@ -94,14 +95,54 @@ export const useListbox = <T,>({
   noResultText,
 }: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const { activeOption, setActiveOption, moveActiveOptionIndex } = useActiveOption({ options })
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+
+  useEffect(() => {
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return options.find((option) => current.id === option.id) ?? null
+    })
+  }, [options])
+
+  const moveActiveOptionIndex = useCallback(
+    (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
+      if (options.every((option) => option.item.disabled)) {
+        return
+      }
+
+      const currentActiveIndex =
+        currentActive === null ? -1 : options.findIndex((option) => option.id === currentActive.id)
+      let nextIndex = 0
+
+      if (currentActiveIndex !== -1) {
+        nextIndex = (currentActiveIndex + delta + options.length) % options.length
+      } else if (delta !== 1) {
+        nextIndex = options.length - 1
+      }
+
+      const nextActive = options[nextIndex]
+
+      if (nextActive) {
+        if (nextActive.item.disabled) {
+          moveActiveOptionIndex(nextActive, delta)
+        } else {
+          setActiveOption(nextActive)
+        }
+      }
+    },
+    [options],
+  )
 
   useEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded, setActiveOption])
+  }, [isExpanded])
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
@@ -217,7 +258,7 @@ export const useListbox = <T,>({
         setActiveOption(null)
       }
     },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect, setActiveOption],
+    [activeOption, moveActiveOptionIndex, onAdd, onSelect],
   )
 
   const listBoxId = useId()
@@ -241,13 +282,10 @@ export const useListbox = <T,>({
     },
     [onSelect],
   )
-  const handleHoverOption = useCallback(
-    (option: ComboboxOption<T>) => {
-      setNavigationType('pointer')
-      setActiveOption(option)
-    },
-    [setActiveOption],
-  )
+  const handleHoverOption = useCallback((option: ComboboxOption<T>) => {
+    setNavigationType('pointer')
+    setActiveOption(option)
+  }, [])
 
   return {
     listBoxProps: {
@@ -313,15 +351,15 @@ export const ListBox = memo(
     const { createPortal } = usePortal()
     const theme = useTheme()
 
-    const { items, handleIntersect } = usePartialRendering({
-      items: options,
-      minLength: useMemo(
-        () =>
-          (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) +
-          1,
-        [activeOptionId, options],
-      ),
-    })
+    const minLength = useMemo(
+      () =>
+        (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
+      [activeOptionId, options],
+    )
+    const [currentItemLength, setCurrentItemLength] = useState(() =>
+      Math.max(OPTION_INCREMENT_AMOUNT, minLength),
+    )
+    const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {
       const { top, left, height } = listBoxRect
@@ -341,6 +379,18 @@ export const ListBox = memo(
         },
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
+
+    const latest = useLatest({ minLength })
+
+    const handleIntersect = useCallback(() => {
+      setCurrentItemLength((current) =>
+        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+      )
+    }, [latest])
+
+    useEffect(() => {
+      setCurrentItemLength((current) => Math.max(current, minLength))
+    }, [minLength])
 
     return createPortal(
       <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
@@ -393,9 +443,33 @@ export const ListBox = memo(
               ))
             )
           ) : null}
-          {handleIntersect && <Intersection handleIntersect={handleIntersect} />}
+          {currentItemLength < options.length && <Intersection handleIntersect={handleIntersect} />}
         </Scroller>
       </div>,
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
+
+const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const target = ref.current
+
+    if (target === null) {
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        handleIntersect()
+      }
+    })
+
+    observer.observe(target)
+
+    return () => observer.disconnect()
+  }, [handleIntersect])
+
+  return <div ref={ref} />
+})
