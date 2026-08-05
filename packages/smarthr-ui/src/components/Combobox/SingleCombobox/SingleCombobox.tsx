@@ -97,6 +97,7 @@ const classNameGenerator = tv({
       'shr-group/clearButton',
       'shr-me-0.5',
       'focus-visible:shr-shadow-none',
+      '[[data-clear-button-hidden=true]_&]:shr-hidden',
     ],
     clearButtonIcon: [
       'shr-block',
@@ -107,11 +108,6 @@ const classNameGenerator = tv({
     disabled: {
       true: {
         wrapper: 'shr-cursor-not-allowed',
-      },
-    },
-    hidden: {
-      true: {
-        clearButton: 'shr-hidden',
       },
     },
   },
@@ -414,8 +410,6 @@ const ActualSingleCombobox = <T,>(
     setInputValue(selectedItemLabelText)
   }, [selectedItemLabelText])
 
-  const hasSelectedItem = selectedItem !== null
-
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
       classNameGenerator()
@@ -425,12 +419,10 @@ const ActualSingleCombobox = <T,>(
       input: input(),
       caretDownLayout: caretDownLayout(),
       caretDownIcon: caretDownIcon(),
-      clearButton: clearButton({
-        hidden: !hasSelectedItem || disabled || readOnly,
-      }),
+      clearButton: clearButton(),
       clearButtonIcon: clearButtonIcon(),
     }
-  }, [hasSelectedItem, disabled, readOnly, className])
+  }, [disabled, className])
 
   return (
     <div
@@ -440,6 +432,7 @@ const ActualSingleCombobox = <T,>(
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      data-clear-button-hidden={(selectedItem === null || disabled || readOnly).toString()}
       ref={triggerRef}
     >
       <Input
