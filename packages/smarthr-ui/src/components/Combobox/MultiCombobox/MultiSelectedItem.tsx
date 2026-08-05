@@ -174,8 +174,7 @@ const ActualMultiSelectedItem = <T,>({
           functions={functions}
           disabled={disabled}
           buttonRef={buttonRef}
-          className={classNames.deleteButton}
-          iconStyle={classNames.deleteButtonIcon}
+          classNames={classNames}
         />
       )}
     </Chip>
@@ -191,13 +190,10 @@ const BaseDestroyButton = <T,>({
   suffixTextId,
   disabled,
   functions,
-  className,
-  iconStyle,
-}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'buttonRef'> & {
+  classNames,
+}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'buttonRef' | 'classNames'> & {
   labelId: string
   suffixTextId: string
-  className: string
-  iconStyle: string
 }) => (
   <UnstyledButton
     ref={buttonRef}
@@ -206,12 +202,15 @@ const BaseDestroyButton = <T,>({
     aria-labelledby={`${labelId} ${suffixTextId}`}
     onClick={functions.handleClick}
     onKeyDown={functions.handleKeyDown}
-    className={className}
+    className={classNames.deleteButton}
   >
     <VisuallyHiddenText id={suffixTextId}>
       <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />
     </VisuallyHiddenText>
-    <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
+    <FaCircleXmarkIcon
+      color={disabled ? 'TEXT_DISABLED' : 'inherit'}
+      className={classNames.deleteButtonIcon}
+    />
   </UnstyledButton>
 )
 const DestroyButton = typedMemo(BaseDestroyButton)
