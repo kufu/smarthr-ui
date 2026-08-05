@@ -243,14 +243,12 @@ export const useListbox = <T,>({
   }, [isExpanded])
 
   useEffect(() => {
-    if (!triggerRef.current) {
-      return
+    const trigger = latest.triggerRef.current
+
+    if (trigger) {
+      setTriggerWidth(trigger.getBoundingClientRect().width)
     }
-
-    const rect = triggerRef.current.getBoundingClientRect()
-
-    setTriggerWidth(rect.width)
-  }, [isExpanded, triggerRef])
+  }, [isExpanded, latest])
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
