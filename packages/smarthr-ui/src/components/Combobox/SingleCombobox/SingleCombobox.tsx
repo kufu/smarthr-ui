@@ -84,7 +84,8 @@ const EMPTY_INPUT_CHANGE_EVENT = {
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-SingleCombobox shr-inline-block',
+    wrapper:
+      'smarthr-ui-SingleCombobox shr-inline-block [&:has(.smarthr-ui-Input-input:disabled)]:shr-cursor-not-allowed',
     input: 'smarthr-ui-SingleCombobox-input shr-w-full',
     caretDownLayout: [
       'shr-relative -shr-me-0.5 shr-p-0.5',
@@ -104,13 +105,7 @@ const classNameGenerator = tv({
       'group-focus-visible/clearButton:shr-focus-indicator group-focus-visible/clearButton:shr-rounded-full',
     ],
   },
-  variants: {
-    disabled: {
-      true: {
-        wrapper: 'shr-cursor-not-allowed',
-      },
-    },
-  },
+  variants: {},
 })
 
 type SuffixButtonsProps = {
@@ -415,25 +410,25 @@ const ActualSingleCombobox = <T,>(
       classNameGenerator()
 
     return {
-      wrapper: wrapper({ disabled, className }),
+      wrapper: wrapper({ className }),
       input: input(),
       caretDownLayout: caretDownLayout(),
       caretDownIcon: caretDownIcon(),
       clearButton: clearButton(),
       clearButtonIcon: clearButtonIcon(),
     }
-  }, [disabled, className])
+  }, [className])
 
   return (
     <div
+      ref={triggerRef}
       role="group"
       className={classNames.wrapper}
       style={{
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
-      data-clear-button-hidden={(selectedItem === null || disabled || readOnly).toString()}
-      ref={triggerRef}
+      data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
     >
       <Input
         {...rest}
