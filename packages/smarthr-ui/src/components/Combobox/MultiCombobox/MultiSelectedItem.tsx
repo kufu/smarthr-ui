@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Chip } from '../../Chip'
@@ -64,15 +65,12 @@ export function MultiSelectedItem<T>({
   onDelete,
   ...rest
 }: Props<T>) {
-  const onDeleteRef = useRef(onDelete)
-  onDeleteRef.current = onDelete
-  const itemRef = useRef(item)
-  itemRef.current = item
+  const latest = useLatest({ onDelete, item })
 
   const functions = useMemo(
     () => ({
       handleClick: () => {
-        onDeleteRef.current(itemRef.current)
+        latest.onDelete(latest.item)
       },
       handleKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
         if (EXEC_DESTROY_KEY.test(e.key)) {
@@ -80,11 +78,11 @@ export function MultiSelectedItem<T>({
 
           // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
           // このタイミングで明示的に削除処理を実行する
-          onDeleteRef.current(itemRef.current)
+          latest.onDelete(latest.item)
         }
       },
     }),
-    [],
+    [latest],
   )
 
   const classNames = useMemo(() => {
