@@ -32,6 +32,11 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = {
+  new: classNameGenerator({ new: true }),
+  select: classNameGenerator({ new: false }),
+}
+
 const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
   const latest = useLatest({ onAdd, onSelect, onMouseOver, option })
   const hasHandleAdd = !!onAdd
@@ -73,28 +78,22 @@ const AddButton = memo<{
   activeRef: RefObject<HTMLButtonElement> | undefined
   onClick?: () => void
   handleMouseOver: () => void
-}>(({ id, label, activeRef, onClick, handleMouseOver }) => {
-  const className = classNameGenerator({
-    new: true,
-  })
-
-  return (
-    <button
-      ref={activeRef}
-      type="button"
-      role="option"
-      aria-selected={false}
-      id={id}
-      data-active={!!activeRef}
-      onClick={onClick}
-      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      onMouseOver={handleMouseOver}
-      className={className}
-    >
-      <MemoizedNewIconWithText label={label} />
-    </button>
-  )
-})
+}>(({ id, label, activeRef, onClick, handleMouseOver }) => (
+  <button
+    ref={activeRef}
+    type="button"
+    role="option"
+    aria-selected={false}
+    id={id}
+    data-active={!!activeRef}
+    onClick={onClick}
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+    onMouseOver={handleMouseOver}
+    className={CLASS_NAMES.new}
+  >
+    <MemoizedNewIconWithText label={label} />
+  </button>
+))
 
 const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
   <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
@@ -114,26 +113,20 @@ const SelectButton = memo<{
   activeRef: RefObject<HTMLButtonElement> | undefined
   handleClick: () => void
   handleMouseOver: () => void
-}>(({ id, label, disabled, selected, activeRef, handleClick, handleMouseOver }) => {
-  const className = classNameGenerator({
-    new: false,
-  })
-
-  return (
-    <button
-      ref={activeRef}
-      type="button"
-      role="option"
-      id={id}
-      disabled={disabled}
-      aria-selected={selected}
-      data-active={!!activeRef}
-      onClick={handleClick}
-      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      onMouseOver={handleMouseOver}
-      className={className}
-    >
-      {label}
-    </button>
-  )
-})
+}>(({ id, label, disabled, selected, activeRef, handleClick, handleMouseOver }) => (
+  <button
+    ref={activeRef}
+    type="button"
+    role="option"
+    id={id}
+    disabled={disabled}
+    aria-selected={selected}
+    data-active={!!activeRef}
+    onClick={handleClick}
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+    onMouseOver={handleMouseOver}
+    className={CLASS_NAMES.select}
+  >
+    {label}
+  </button>
+))
