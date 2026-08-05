@@ -271,7 +271,7 @@ export const useListbox = <T,>({
     } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
-  }, [activeOption, listBoxRef, navigationType])
+  }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
     if (isExpanded) {
