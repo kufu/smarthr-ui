@@ -108,8 +108,8 @@ export const useListbox = <T,>({
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
 
-  const hasOnAdd = !!onAdd
   const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef })
+  const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
     const moveActiveOptionIndex = (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
