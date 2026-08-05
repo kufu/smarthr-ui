@@ -34,14 +34,15 @@ const classNameGenerator = tv({
 
 const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
   const latest = useLatest({ onAdd, onSelect, onMouseOver, option })
+  const hasHandleAdd = !!onAdd
 
   const functions = useMemo(
     () => ({
       handleMouseOver: () => latest.onMouseOver(latest.option),
-      handleAddClick: () => latest.onAdd?.(latest.option),
+      handleAddClick: hasHandleAdd ? () => latest.onAdd?.(latest.option) : undefined,
       handleSelectClick: () => latest.onSelect(latest.option),
     }),
-    [latest],
+    [hasHandleAdd, latest],
   )
 
   const commonAttrs = {
