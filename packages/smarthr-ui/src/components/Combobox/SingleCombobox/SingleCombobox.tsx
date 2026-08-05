@@ -414,14 +414,6 @@ const ActualSingleCombobox = <T,>(
     setInputValue(selectedItemLabelText)
   }, [selectedItemLabelText])
 
-  const wrapperStyle = useMemo(
-    () => ({
-      ...style,
-      width: typeof width === 'number' ? `${width}px` : width,
-    }),
-    [style, width],
-  )
-
   const hasSelectedItem = selectedItem !== null
 
   const classNames = useMemo(() => {
@@ -441,7 +433,15 @@ const ActualSingleCombobox = <T,>(
   }, [hasSelectedItem, disabled, readOnly, className])
 
   return (
-    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={triggerRef}>
+    <div
+      role="group"
+      className={classNames.wrapper}
+      style={{
+        ...style,
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
+      ref={triggerRef}
+    >
       <Input
         {...rest}
         ref={inputRef}
