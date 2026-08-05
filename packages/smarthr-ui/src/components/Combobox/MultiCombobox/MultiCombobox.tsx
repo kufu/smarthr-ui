@@ -184,7 +184,7 @@ const ActualMultiCombobox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const outerRef = useRef<HTMLDivElement>(null)
-  const [isFocused, setIsFocused] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
@@ -203,7 +203,7 @@ const ActualMultiCombobox = <T,>(
     onKeyPress,
     isItemSelected,
     selectedItems,
-    isFocused,
+    isExpanded,
     highlighted,
     isComposing,
   })
@@ -269,7 +269,7 @@ const ActualMultiCombobox = <T,>(
     dropdownWidth,
     onAdd,
     onSelect: actualOnSelect,
-    isExpanded: isFocused,
+    isExpanded,
     isLoading,
     triggerRef: outerRef,
     noResultText,
@@ -335,13 +335,13 @@ const ActualMultiCombobox = <T,>(
 
   const focus = useCallback(() => {
     latest.onFocus?.()
-    setIsFocused(true)
+    setIsExpanded(true)
   }, [latest])
 
   const blur = useCallback(() => {
-    if (latest.isFocused) {
+    if (latest.isExpanded) {
       latest.onBlur?.()
-      setIsFocused(false)
+      setIsExpanded(false)
       resetDeletionButtonFocus()
     }
   }, [resetDeletionButtonFocus, latest])
@@ -359,10 +359,10 @@ const ActualMultiCombobox = <T,>(
   }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
 
   useEffect(() => {
-    if (isFocused) {
+    if (isExpanded) {
       inputRef.current?.focus()
     }
-  }, [isFocused, setInputValueIfUncontrolled, selectedItems, inputRef])
+  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
 
   const isInputEmpty = !inputValue
 
@@ -373,7 +373,7 @@ const ActualMultiCombobox = <T,>(
       e.stopPropagation()
       blur()
     } else if (e.key === 'Tab') {
-      if (isFocused) {
+      if (isExpanded) {
         // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
         inputRef.current?.focus()
       }
@@ -410,7 +410,7 @@ const ActualMultiCombobox = <T,>(
 
   const onDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
-      if (!disabled && !latest.isFocused) {
+      if (!disabled && !latest.isExpanded) {
         if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
           focus()
         }
@@ -428,7 +428,7 @@ const ActualMultiCombobox = <T,>(
     [setInputValueIfUncontrolled, latest],
   )
   const onFocusInput = useCallback(() => {
-    if (latest.isFocused) {
+    if (latest.isExpanded) {
       resetDeletionButtonFocus()
     } else {
       resetDeletionButtonFocus()
@@ -477,16 +477,16 @@ const ActualMultiCombobox = <T,>(
     } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ focused: isFocused, disabled, className }),
+      wrapper: wrapper({ focused: isExpanded, disabled, className }),
       inputArea: inputArea(),
       selectedList: selectedList(),
-      inputWrapper: inputWrapper({ hidden: !isFocused }),
+      inputWrapper: inputWrapper({ hidden: !isExpanded }),
       input: input(),
       placeholder: placeholderEl(),
       suffixWrapper: suffixWrapper({ disabled }),
       suffixIcon: suffixIcon(),
     }
-  }, [isFocused, disabled, className])
+  }, [isExpanded, disabled, className])
 
   const { selectedListAriaLabel } = useLocalize({
     selectedListAriaLabel: {
@@ -546,7 +546,7 @@ const ActualMultiCombobox = <T,>(
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
-            aria-expanded={isFocused}
+            aria-expanded={isExpanded}
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
@@ -554,14 +554,14 @@ const ActualMultiCombobox = <T,>(
           />
         </div>
 
-        {selectedItems.length === 0 && placeholder && !isFocused && (
+        {selectedItems.length === 0 && placeholder && !isExpanded && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
       </Scroller>
 
       <MemoizedCaretDown
         disabled={disabled}
-        isFocused={isFocused}
+        isExpanded={isExpanded}
         className={classNames.suffixWrapper}
         iconStyle={classNames.suffixIcon}
       />
@@ -577,10 +577,10 @@ const MemoizedCaretDown = memo<{
   className: string
   iconStyle: string
   disabled: boolean
-  isFocused: boolean
-}>(({ className, iconStyle, disabled, isFocused }) => {
+  isExpanded: boolean
+}>(({ className, iconStyle, disabled, isExpanded }) => {
   const theme = useTheme()
-  const caretIconColor = isFocused
+  const caretIconColor = isExpanded
     ? theme.textColor.black
     : disabled
       ? theme.textColor.disabled
