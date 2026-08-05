@@ -10,9 +10,9 @@ import type { ComboboxOption } from './types'
 
 type Props<T> = {
   option: ComboboxOption<T>
-  onAdd?: (option: ComboboxOption<T>) => void
-  onSelect: (option: ComboboxOption<T>) => void
-  onMouseOver: (option: ComboboxOption<T>) => void
+  handleAdd?: (option: ComboboxOption<T>) => void
+  handleSelect: (option: ComboboxOption<T>) => void
+  handleMouseOver: (option: ComboboxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement> | undefined
 }
 
@@ -37,15 +37,21 @@ const CLASS_NAMES = {
   select: classNameGenerator({ new: false }),
 }
 
-const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
-  const latest = useLatest({ onAdd, onSelect, onMouseOver, option })
-  const hasHandleAdd = !!onAdd
+const ItemButton = <T,>({
+  option,
+  handleAdd,
+  handleSelect,
+  handleMouseOver,
+  activeRef,
+}: Props<T>) => {
+  const latest = useLatest({ handleAdd, handleSelect, handleMouseOver, option })
+  const hasHandleAdd = !!handleAdd
 
   const functions = useMemo(
     () => ({
-      handleMouseOver: () => latest.onMouseOver(latest.option),
-      handleAddClick: hasHandleAdd ? () => latest.onAdd?.(latest.option) : undefined,
-      handleSelectClick: () => latest.onSelect(latest.option),
+      handleMouseOver: () => latest.handleMouseOver(latest.option),
+      handleAddClick: hasHandleAdd ? () => latest.handleAdd?.(latest.option) : undefined,
+      handleSelectClick: () => latest.handleSelect(latest.option),
     }),
     [hasHandleAdd, latest],
   )

@@ -428,9 +428,9 @@ export const ListBox = memo(
                 <ItemButton
                   key={option.id}
                   option={option}
-                  onAdd={handleAdd}
-                  onSelect={handleSelect}
-                  onMouseOver={handleHoverOption}
+                  handleAdd={handleAdd}
+                  handleSelect={handleSelect}
+                  handleMouseOver={handleHoverOption}
                   activeRef={option.id === activeOptionId ? activeRef : undefined}
                 />
               ))
