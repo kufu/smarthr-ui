@@ -1,4 +1,4 @@
-import { type ReactNode, type RefObject, memo, useCallback } from 'react'
+import { type ReactNode, type RefObject, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
@@ -35,33 +35,30 @@ const classNameGenerator = tv({
 const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
   const latest = useLatest({ onAdd, onSelect, onMouseOver, option })
 
-  const handleMouseOver = useCallback(() => {
-    latest.onMouseOver(latest.option)
-  }, [latest])
-
-  const handleAddClick = useCallback(() => {
-    latest.onAdd?.(latest.option)
-  }, [latest])
-
-  const handleSelectClick = useCallback(() => {
-    latest.onSelect(latest.option)
-  }, [latest])
+  const functions = useMemo(
+    () => ({
+      handleMouseOver: () => latest.onMouseOver(latest.option),
+      handleAddClick: () => latest.onAdd?.(latest.option),
+      handleSelectClick: () => latest.onSelect(latest.option),
+    }),
+    [latest],
+  )
 
   const commonAttrs = {
     id: option.id,
     label: option.item.label,
     activeRef,
-    onMouseOver: handleMouseOver,
+    onMouseOver: functions.handleMouseOver,
   }
 
   return option.isNew ? (
-    <AddButton {...commonAttrs} onClick={handleAddClick} />
+    <AddButton {...commonAttrs} onClick={functions.handleAddClick} />
   ) : (
     <SelectButton
       {...commonAttrs}
       disabled={option.item.disabled}
       selected={option.selected}
-      onClick={handleSelectClick}
+      onClick={functions.handleSelectClick}
     />
   )
 }
