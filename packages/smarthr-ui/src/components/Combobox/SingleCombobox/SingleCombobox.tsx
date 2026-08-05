@@ -279,9 +279,25 @@ const ActualSingleCombobox = <T,>(
         latest.onSelect(latest.defaultItem)
       }
     }
+    const unfocus = () => {
+      if (!latest.isFocused) return
+
+      latest.onBlur?.()
+
+      setIsFocused(false)
+      setIsExpanded(false)
+      setIsEditing(false)
+
+      if (latest.selectedItem) {
+        setInputValue(innerText(latest.selectedItem.label))
+      } else {
+        selectDefaultItem()
+      }
+    }
 
     return {
       selectDefaultItem,
+      unfocus,
       handleFocus: () => {
         latest.onFocus?.()
         inputRef.current?.focus()
@@ -289,21 +305,6 @@ const ActualSingleCombobox = <T,>(
 
         if (!latest.isFocused) {
           setIsExpanded(true)
-        }
-      },
-      unfocus: () => {
-        if (!latest.isFocused) return
-
-        latest.onBlur?.()
-
-        setIsFocused(false)
-        setIsExpanded(false)
-        setIsEditing(false)
-
-        if (latest.selectedItem) {
-          setInputValue(innerText(latest.selectedItem.label))
-        } else {
-          selectDefaultItem()
         }
       },
       handleClickClear: (e: MouseEvent) => {
@@ -359,38 +360,34 @@ const ActualSingleCombobox = <T,>(
       },
       handleCompositionStart: () => setIsComposing(true),
       handleCompositionEnd: () => setIsComposing(false),
+      handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (latest.isComposing) {
+          return
+        }
+
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
+          if (latest.isExpanded) {
+            e.stopPropagation()
+            setIsExpanded(false)
+          }
+        } else if (e.key === 'Tab') {
+          unfocus()
+        } else {
+          if (ARROW_UP_DOWN_REGEX.test(e.key)) {
+            e.preventDefault()
+          }
+
+          inputRef.current?.focus()
+
+          if (!latest.isExpanded) {
+            setIsExpanded(true)
+          }
+        }
+
+        latest.handleKeyDownListBox(e)
+      },
     }
   }, [latest])
-
-  const onKeyDownInput = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (latest.isComposing) {
-        return
-      }
-
-      if (ESCAPE_KEY_REGEX.test(e.key)) {
-        if (latest.isExpanded) {
-          e.stopPropagation()
-          setIsExpanded(false)
-        }
-      } else if (e.key === 'Tab') {
-        functions.unfocus()
-      } else {
-        if (ARROW_UP_DOWN_REGEX.test(e.key)) {
-          e.preventDefault()
-        }
-
-        inputRef.current?.focus()
-
-        if (!latest.isExpanded) {
-          setIsExpanded(true)
-        }
-      }
-
-      latest.handleKeyDownListBox(e)
-    },
-    [functions, latest],
-  )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
@@ -473,7 +470,7 @@ const ActualSingleCombobox = <T,>(
         onFocus={isFocused ? undefined : functions.handleFocus}
         onCompositionStart={functions.handleCompositionStart}
         onCompositionEnd={functions.handleCompositionEnd}
-        onKeyDown={onKeyDownInput}
+        onKeyDown={functions.handleKeyDownInput}
         onKeyPress={handleKeyPress}
         error={error}
         prefix={prefix}
