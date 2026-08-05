@@ -94,19 +94,19 @@ export const useListbox = <T,>({
   triggerRef,
   noResultText,
 }: Props<T>) => {
+  const listBoxId = useId()
+
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+  const [listBoxRect, setListBoxRect] = useState<Rect>({
+    top: 0,
+    left: 0,
+  })
+  // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
+  const [triggerWidth, setTriggerWidth] = useState(0)
 
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
-
-      return options.find((option) => current.id === option.id) ?? null
-    })
-  }, [options])
+  const listBoxRef = useRef<HTMLDivElement>(null)
+  const activeRef = useRef<HTMLButtonElement>(null)
 
   const moveActiveOptionIndex = useCallback(
     (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
@@ -136,31 +136,6 @@ export const useListbox = <T,>({
     },
     [options],
   )
-
-  useEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      setActiveOption(null)
-    }
-  }, [isExpanded])
-
-  const listBoxRef = useRef<HTMLDivElement>(null)
-  const [listBoxRect, setListBoxRect] = useState<Rect>({
-    top: 0,
-    left: 0,
-  })
-  // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
-  const [triggerWidth, setTriggerWidth] = useState(0)
-
-  useEffect(() => {
-    if (!triggerRef.current) {
-      return
-    }
-
-    const rect = triggerRef.current.getBoundingClientRect()
-
-    setTriggerWidth(rect.width)
-  }, [isExpanded, triggerRef])
 
   const calculateRect = useCallback(() => {
     if (!listBoxRef.current || !triggerRef.current) {
@@ -202,36 +177,6 @@ export const useListbox = <T,>({
     setTriggerWidth(rect.width)
   }, [listBoxRef, triggerRef])
 
-  const activeRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
-    if (
-      !activeRef.current ||
-      !listBoxRef.current ||
-      activeOption === null ||
-      navigationType !== 'key'
-    ) {
-      return
-    }
-
-    const activeRect = activeRef.current.getBoundingClientRect()
-    const containerRect = listBoxRef.current.getBoundingClientRect()
-
-    if (activeRect.top < containerRect.top) {
-      listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
-    } else if (activeRect.bottom > containerRect.bottom) {
-      listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
-    }
-  }, [activeOption, listBoxRef, navigationType])
-
-  useEnhancedEffect(() => {
-    if (isExpanded) {
-      // options の更新毎に座標を再計算する
-      calculateRect()
-    }
-  }, [calculateRect, isExpanded, options])
-
   const onKeyDownListBox = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
@@ -261,8 +206,6 @@ export const useListbox = <T,>({
     [activeOption, moveActiveOptionIndex, onAdd, onSelect],
   )
 
-  const listBoxId = useId()
-
   const handleAdd = useMemo(
     () =>
       onAdd
@@ -286,6 +229,62 @@ export const useListbox = <T,>({
     setNavigationType('pointer')
     setActiveOption(option)
   }, [])
+
+  useEffect(() => {
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return options.find((option) => current.id === option.id) ?? null
+    })
+  }, [options])
+
+  useEffect(() => {
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      setActiveOption(null)
+    }
+  }, [isExpanded])
+
+  useEffect(() => {
+    if (!triggerRef.current) {
+      return
+    }
+
+    const rect = triggerRef.current.getBoundingClientRect()
+
+    setTriggerWidth(rect.width)
+  }, [isExpanded, triggerRef])
+
+  useEffect(() => {
+    // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
+    if (
+      !activeRef.current ||
+      !listBoxRef.current ||
+      activeOption === null ||
+      navigationType !== 'key'
+    ) {
+      return
+    }
+
+    const activeRect = activeRef.current.getBoundingClientRect()
+    const containerRect = listBoxRef.current.getBoundingClientRect()
+
+    if (activeRect.top < containerRect.top) {
+      listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
+    } else if (activeRect.bottom > containerRect.bottom) {
+      listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
+    }
+  }, [activeOption, listBoxRef, navigationType])
+
+  useEnhancedEffect(() => {
+    if (isExpanded) {
+      // options の更新毎に座標を再計算する
+      calculateRect()
+    }
+  }, [calculateRect, isExpanded, options])
 
   return {
     listBoxProps: {
