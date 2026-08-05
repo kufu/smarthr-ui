@@ -1,6 +1,5 @@
 import {
   type KeyboardEvent,
-  type PropsWithChildren,
   type RefObject,
   memo,
   useCallback,
@@ -67,10 +66,12 @@ export function MultiSelectedItem<T>({
   buttonRef,
 }: Props<T>) {
   const [needsTooltip, setNeedsTooltip] = useState(false)
-  const { deletable = true } = item
+  const labelRef = useRef<HTMLDivElement>(null)
   const idPrefix = useId()
   const labelId = `${idPrefix}-item-label`
   const destroySuffixTextId = `${idPrefix}-item-destroy-button-suffix`
+
+  const { deletable = true } = item
 
   const classNames = useMemo(() => {
     const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
@@ -83,11 +84,19 @@ export function MultiSelectedItem<T>({
     }
   }, [disabled, enableEllipsis])
 
+  useEffect(() => {
+    if (enableEllipsis && labelRef.current) {
+      const elem = labelRef.current
+
+      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
+    }
+  }, [enableEllipsis])
+
   const body = (
     <Chip disabled={disabled} className={classNames.wrapper}>
-      <ItemLabel id={labelId} className={classNames.itemLabel} setNeedsTooltip={setNeedsTooltip}>
+      <span ref={labelRef} id={labelId} className={classNames.itemLabel}>
         {item.label}
-      </ItemLabel>
+      </span>
 
       {deletable && (
         <DestroyButton
@@ -110,31 +119,6 @@ export function MultiSelectedItem<T>({
 
   return body
 }
-
-const ItemLabel = memo<
-  PropsWithChildren<{
-    id: string
-    enableEllipsis?: boolean
-    setNeedsTooltip: (flg: boolean) => void
-    className: string
-  }>
->(({ children, id, enableEllipsis, setNeedsTooltip, className }) => {
-  const labelRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (enableEllipsis && labelRef.current) {
-      const elem = labelRef.current
-
-      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
-    }
-  }, [enableEllipsis, setNeedsTooltip])
-
-  return (
-    <span ref={labelRef} id={id} className={className}>
-      {children}
-    </span>
-  )
-})
 
 const typedMemo: <T>(c: T) => T = memo
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
