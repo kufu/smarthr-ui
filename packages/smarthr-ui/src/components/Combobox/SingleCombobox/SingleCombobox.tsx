@@ -9,7 +9,6 @@ import {
   type Ref,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -360,6 +359,14 @@ const ActualSingleCombobox = <T,>(
       },
       handleCompositionStart: () => setIsComposing(true),
       handleCompositionEnd: () => setIsComposing(false),
+      // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+      // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+      // submitイベントが発生し、formが送信される場合がある
+      handleKeyPress: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') e.preventDefault()
+
+        latest.onKeyPress?.(e)
+      },
       handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
         if (latest.isComposing) {
           return
@@ -388,18 +395,6 @@ const ActualSingleCombobox = <T,>(
       },
     }
   }, [latest])
-
-  // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
-  // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
-  // submitイベントが発生し、formが送信される場合がある
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') e.preventDefault()
-
-      latest.onKeyPress?.(e)
-    },
-    [latest],
-  )
 
   const caretIconColor = isFocused
     ? theme.textColor.black
@@ -471,7 +466,7 @@ const ActualSingleCombobox = <T,>(
         onCompositionStart={functions.handleCompositionStart}
         onCompositionEnd={functions.handleCompositionEnd}
         onKeyDown={functions.handleKeyDownInput}
-        onKeyPress={handleKeyPress}
+        onKeyPress={functions.handleKeyPress}
         error={error}
         prefix={prefix}
         suffix={
