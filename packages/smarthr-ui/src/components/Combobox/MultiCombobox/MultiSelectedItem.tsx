@@ -2,7 +2,6 @@ import {
   type KeyboardEvent,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -58,7 +57,36 @@ const classNameGenerator = tv({
   },
 })
 
-export function MultiSelectedItem<T>({ enableEllipsis, disabled, ...rest }: Props<T>) {
+export function MultiSelectedItem<T>({
+  item,
+  enableEllipsis,
+  disabled,
+  onDelete,
+  ...rest
+}: Props<T>) {
+  const onDeleteRef = useRef(onDelete)
+  onDeleteRef.current = onDelete
+  const itemRef = useRef(item)
+  itemRef.current = item
+
+  const functions = useMemo(
+    () => ({
+      handleClick: () => {
+        onDeleteRef.current(itemRef.current)
+      },
+      handleKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
+        if (EXEC_DESTROY_KEY.test(e.key)) {
+          e.stopPropagation()
+
+          // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+          // このタイミングで明示的に削除処理を実行する
+          onDeleteRef.current(itemRef.current)
+        }
+      },
+    }),
+    [],
+  )
+
   const classNames = useMemo(() => {
     const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
 
@@ -71,7 +99,9 @@ export function MultiSelectedItem<T>({ enableEllipsis, disabled, ...rest }: Prop
   }, [disabled, enableEllipsis])
 
   const commonAttrs = {
+    item,
     disabled,
+    functions,
     classNames,
   }
 
@@ -82,8 +112,12 @@ export function MultiSelectedItem<T>({ enableEllipsis, disabled, ...rest }: Prop
   )
 }
 
-type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'enableEllipsis'> & {
+type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'enableEllipsis' | 'onDelete'> & {
   labelRef?: RefObject<HTMLSpanElement>
+  functions: {
+    handleClick: () => void
+    handleKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void
+  }
   classNames: {
     wrapper: string
     itemLabel: string
@@ -118,7 +152,7 @@ const ActualMultiSelectedItem = <T,>({
   labelRef,
   item,
   disabled,
-  onDelete,
+  functions,
   classNames,
 }: LowerMultiSelectedItemProps<T>) => {
   const idPrefix = useId()
@@ -137,8 +171,7 @@ const ActualMultiSelectedItem = <T,>({
         <DestroyButton
           labelId={labelId}
           suffixTextId={destroySuffixTextId}
-          item={item}
-          onDelete={onDelete}
+          functions={functions}
           disabled={disabled}
           buttonRef={buttonRef}
           className={classNames.deleteButton}
@@ -153,54 +186,32 @@ const typedMemo: <T>(c: T) => T = memo
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
 const BaseDestroyButton = <T,>({
+  buttonRef,
   labelId,
   suffixTextId,
-  item,
-  onDelete,
   disabled,
-  buttonRef,
+  functions,
   className,
   iconStyle,
-}: Pick<Props<T>, 'item' | 'onDelete' | 'disabled' | 'buttonRef'> & {
+}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'buttonRef'> & {
   labelId: string
   suffixTextId: string
   className: string
   iconStyle: string
-}) => {
-  const onDeleteRef = useRef(onDelete)
-  onDeleteRef.current = onDelete
-  const itemRef = useRef(item)
-  itemRef.current = item
-
-  const onClick = useCallback(() => {
-    onDeleteRef.current(itemRef.current)
-  }, [])
-
-  const onKeyDown = useCallback((e: KeyboardEvent<HTMLButtonElement>) => {
-    if (EXEC_DESTROY_KEY.test(e.key)) {
-      e.stopPropagation()
-
-      // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
-      // このタイミングで明示的に削除処理を実行する
-      onDeleteRef.current(itemRef.current)
-    }
-  }, [])
-
-  return (
-    <UnstyledButton
-      ref={buttonRef}
-      disabled={disabled}
-      tabIndex={-1}
-      aria-labelledby={`${labelId} ${suffixTextId}`}
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      className={className}
-    >
-      <VisuallyHiddenText id={suffixTextId}>
-        <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />
-      </VisuallyHiddenText>
-      <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
-    </UnstyledButton>
-  )
-}
+}) => (
+  <UnstyledButton
+    ref={buttonRef}
+    disabled={disabled}
+    tabIndex={-1}
+    aria-labelledby={`${labelId} ${suffixTextId}`}
+    onClick={functions.handleClick}
+    onKeyDown={functions.handleKeyDown}
+    className={className}
+  >
+    <VisuallyHiddenText id={suffixTextId}>
+      <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />
+    </VisuallyHiddenText>
+    <FaCircleXmarkIcon color={disabled ? 'TEXT_DISABLED' : 'inherit'} className={iconStyle} />
+  </UnstyledButton>
+)
 const DestroyButton = typedMemo(BaseDestroyButton)
