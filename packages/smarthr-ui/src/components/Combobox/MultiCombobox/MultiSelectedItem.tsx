@@ -23,7 +23,7 @@ import type { ComboboxItem } from '../types'
 export type Props<T> = {
   item: ComboboxItem<T> & { deletable?: boolean }
   disabled: boolean
-  onDelete: (item: ComboboxItem<T>) => void
+  handleDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
 }
@@ -59,26 +59,26 @@ export function MultiSelectedItem<T>({
   item,
   enableEllipsis,
   disabled,
-  onDelete,
+  handleDelete,
   ...rest
 }: Props<T>) {
   const itemDeletable = item.deletable ?? true
-  const latest = useLatest({ onDelete, item })
+  const latest = useLatest({ handleDelete, item })
 
   const functions = useMemo(
     () =>
       itemDeletable
         ? {
             handleDestroyClick: () => {
-              latest.onDelete(latest.item)
+              latest.handleDelete(latest.item)
             },
             handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
               if (EXEC_DESTROY_KEY.test(e.key)) {
                 e.stopPropagation()
 
-                // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+                // HINT: イベントの伝播が止まる関係でonClickに設定したhandleDeleteは実行されない
                 // このタイミングで明示的に削除処理を実行する
-                latest.onDelete(latest.item)
+                latest.handleDelete(latest.item)
               }
             },
           }
@@ -114,7 +114,7 @@ export function MultiSelectedItem<T>({
   )
 }
 
-type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' | 'onDelete'> & {
+type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' | 'handleDelete'> & {
   labelRef?: RefObject<HTMLSpanElement>
   itemLabel: ComboboxItem<T>['label']
   itemDeletable: boolean
