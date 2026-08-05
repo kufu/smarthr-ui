@@ -27,11 +27,11 @@ import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
 import { areItemsEqual } from '../helper'
-import { useFocusControl } from '../useFocusControl'
 import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
+import { useFocusControl } from './useFocusControl'
 
 import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
