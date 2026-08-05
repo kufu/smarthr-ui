@@ -342,27 +342,24 @@ const ActualSingleCombobox = <T,>(
           setIsExpanded(true)
         }
       },
+      handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
+        latest.onChange?.(e)
+        latest.onChangeInput?.(e)
+
+        if (!latest.isEditing) setIsEditing(true)
+
+        const { value } = e.currentTarget
+
+        setInputValue(value)
+
+        if (value === '') {
+          latest.onClear?.()
+          latest.onChangeSelected?.(null)
+        }
+      },
     }
   }, [latest])
 
-  const actualOnChangeInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      latest.onChange?.(e)
-      latest.onChangeInput?.(e)
-
-      if (!latest.isEditing) setIsEditing(true)
-
-      const { value } = e.currentTarget
-
-      setInputValue(value)
-
-      if (value === '') {
-        latest.onClear?.()
-        latest.onChangeSelected?.(null)
-      }
-    },
-    [latest],
-  )
   const onCompositionStart = useCallback(() => setIsComposing(true), [])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback(
@@ -472,7 +469,7 @@ const ActualSingleCombobox = <T,>(
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
         placeholder={placeholder}
         onClick={functions.handleClickInput}
-        onChange={actualOnChangeInput}
+        onChange={functions.handleChangeInput}
         onFocus={isFocused ? undefined : functions.handleFocus}
         onCompositionStart={onCompositionStart}
         onCompositionEnd={onCompositionEnd}
