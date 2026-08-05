@@ -240,9 +240,7 @@ export const useListbox = <T,>({
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded])
 
-  useEffect(() => {
     const trigger = latest.triggerRef.current
 
     if (trigger) {
