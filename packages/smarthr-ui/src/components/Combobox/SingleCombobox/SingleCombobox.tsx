@@ -225,6 +225,7 @@ const ActualSingleCombobox = <T,>(
       dropdownHelpMessage,
       dropdownWidth,
       onAdd,
+      // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
       onSelect: (selected: ComboboxItem<T>) => {
         onSelect?.(selected)
         onChangeSelected?.(selected)
@@ -272,36 +273,42 @@ const ActualSingleCombobox = <T,>(
     readOnly,
   })
 
-  const selectDefaultItem = useCallback(() => {
-    if (latest.onSelect && latest.defaultItem) {
-      latest.onSelect(latest.defaultItem)
+  const functions = useMemo(() => {
+    const selectDefaultItem = () => {
+      if (latest.onSelect && latest.defaultItem) {
+        latest.onSelect(latest.defaultItem)
+      }
+    }
+
+    return {
+      selectDefaultItem,
+      handleFocus: () => {
+        latest.onFocus?.()
+        inputRef.current?.focus()
+        setIsFocused(true)
+
+        if (!latest.isFocused) {
+          setIsExpanded(true)
+        }
+      },
+      unfocus: () => {
+        if (!latest.isFocused) return
+
+        latest.onBlur?.()
+
+        setIsFocused(false)
+        setIsExpanded(false)
+        setIsEditing(false)
+
+        if (latest.selectedItem) {
+          setInputValue(innerText(latest.selectedItem.label))
+        } else {
+          selectDefaultItem()
+        }
+      },
     }
   }, [latest])
 
-  const focus = useCallback(() => {
-    latest.onFocus?.()
-    inputRef.current?.focus()
-    setIsFocused(true)
-
-    if (!latest.isFocused) {
-      setIsExpanded(true)
-    }
-  }, [latest])
-  const unfocus = useCallback(() => {
-    if (!latest.isFocused) return
-
-    latest.onBlur?.()
-
-    setIsFocused(false)
-    setIsExpanded(false)
-    setIsEditing(false)
-
-    if (latest.selectedItem) {
-      setInputValue(innerText(latest.selectedItem.label))
-    } else {
-      selectDefaultItem()
-    }
-  }, [selectDefaultItem, latest])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -376,7 +383,7 @@ const ActualSingleCombobox = <T,>(
           setIsExpanded(false)
         }
       } else if (e.key === 'Tab') {
-        unfocus()
+        functions.unfocus()
       } else {
         if (ARROW_UP_DOWN_REGEX.test(e.key)) {
           e.preventDefault()
@@ -391,7 +398,7 @@ const ActualSingleCombobox = <T,>(
 
       latest.handleKeyDownListBox(e)
     },
-    [unfocus, latest],
+    [functions, latest],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
@@ -414,8 +421,8 @@ const ActualSingleCombobox = <T,>(
 
   useClick(
     useMemo(() => [outerRef, listBoxRef, clearButtonRef], [listBoxRef]),
-    isFocused || selectedItem ? NOOP : selectDefaultItem,
-    unfocus,
+    isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
+    functions.unfocus,
   )
 
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
@@ -472,7 +479,7 @@ const ActualSingleCombobox = <T,>(
         placeholder={placeholder}
         onClick={onClickInput}
         onChange={actualOnChangeInput}
-        onFocus={isFocused ? undefined : focus}
+        onFocus={isFocused ? undefined : functions.handleFocus}
         onCompositionStart={onCompositionStart}
         onCompositionEnd={onCompositionEnd}
         onKeyDown={onKeyDownInput}
