@@ -219,25 +219,6 @@ const ActualSingleCombobox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const latest = useLatest({
-    onChange,
-    onChangeInput,
-    onAdd,
-    onSelect,
-    onClear,
-    onClearClick,
-    onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    defaultItem,
-    selectedItem,
-    isFocused,
-    isExpanded,
-    isComposing,
-    isEditing,
-  })
-
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
     {
       options,
@@ -269,6 +250,27 @@ const ActualSingleCombobox = <T,>(
       noResultText,
     },
   )
+
+  const latest = useLatest({
+    onChange,
+    onChangeInput,
+    onSelect,
+    onClear,
+    onClearClick,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    handleKeyDownListBox,
+    defaultItem,
+    selectedItem,
+    isFocused,
+    isExpanded,
+    isComposing,
+    isEditing,
+    disabled,
+    readOnly,
+  })
 
   const selectDefaultItem = useCallback(() => {
     if (latest.onSelect && latest.defaultItem) {
@@ -328,7 +330,7 @@ const ActualSingleCombobox = <T,>(
   )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
-      if (disabled || readOnly) {
+      if (latest.disabled || latest.readOnly) {
         e.stopPropagation()
 
         return
@@ -340,7 +342,7 @@ const ActualSingleCombobox = <T,>(
         setIsExpanded(true)
       }
     },
-    [disabled, readOnly, latest],
+    [latest],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -386,9 +388,10 @@ const ActualSingleCombobox = <T,>(
           setIsExpanded(true)
         }
       }
-      handleKeyDownListBox(e)
+
+      latest.handleKeyDownListBox(e)
     },
-    [unfocus, handleKeyDownListBox, latest],
+    [unfocus, latest],
   )
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
