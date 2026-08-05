@@ -39,6 +39,7 @@ const classNameGenerator = tv({
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
       'focus-visible:shr-outline-none',
+      'disabled:shr-cursor-not-allowed',
     ],
     deleteButtonIcon:
       'group-focus-visible/deleteButton:shr-focus-indicator--outer group-focus-visible/deleteButton:shr-rounded-full',
@@ -48,12 +49,6 @@ const classNameGenerator = tv({
       true: {
         itemLabel: 'shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap',
       },
-    },
-    disabled: {
-      true: {
-        deleteButton: 'shr-cursor-not-allowed',
-      },
-      false: {},
     },
   },
 })
@@ -100,10 +95,10 @@ export function MultiSelectedItem<T>({
     return {
       wrapper: wrapper(),
       itemLabel: itemLabel({ enableEllipsis }),
-      deleteButton: deleteButton({ disabled }),
+      deleteButton: deleteButton(),
       deleteButtonIcon: deleteButtonIcon(),
     }
-  }, [disabled, enableEllipsis])
+  }, [enableEllipsis])
 
   const Component = enableEllipsis ? EllipsisMultiSelectedItem : ActualMultiSelectedItem
 
