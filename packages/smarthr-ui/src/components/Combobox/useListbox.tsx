@@ -108,23 +108,28 @@ export const useListbox = <T,>({
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
 
-  const moveActiveOptionIndex = useCallback(
-    (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
-      if (options.every((option) => option.item.disabled)) {
+  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef })
+  const hasOnAdd = !!onAdd
+
+  const functions = useMemo(() => {
+    const moveActiveOptionIndex = (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
+      if (latest.options.every((option) => option.item.disabled)) {
         return
       }
 
       const currentActiveIndex =
-        currentActive === null ? -1 : options.findIndex((option) => option.id === currentActive.id)
+        currentActive === null
+          ? -1
+          : latest.options.findIndex((option) => option.id === currentActive.id)
       let nextIndex = 0
 
       if (currentActiveIndex !== -1) {
-        nextIndex = (currentActiveIndex + delta + options.length) % options.length
+        nextIndex = (currentActiveIndex + delta + latest.options.length) % latest.options.length
       } else if (delta !== 1) {
-        nextIndex = options.length - 1
+        nextIndex = latest.options.length - 1
       }
 
-      const nextActive = options[nextIndex]
+      const nextActive = latest.options[nextIndex]
 
       if (nextActive) {
         if (nextActive.item.disabled) {
@@ -133,102 +138,91 @@ export const useListbox = <T,>({
           setActiveOption(nextActive)
         }
       }
-    },
-    [options],
-  )
-
-  const calculateRect = useCallback(() => {
-    if (!listBoxRef.current || !triggerRef.current) {
-      return
-    }
-    const rect = triggerRef.current.getBoundingClientRect()
-    const bottomSpace = window.innerHeight - rect.bottom
-    const topSpace = rect.top
-    const listBoxHeight = Math.min(
-      listBoxRef.current.scrollHeight,
-      parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
-    )
-    const offset = 2
-
-    let top = 0
-    let height: number | undefined = undefined
-
-    if (bottomSpace >= listBoxHeight) {
-      // 下側に十分なスペースがある場合は下側に通常表示
-      top = rect.top + rect.height - offset + window.pageYOffset
-    } else if (topSpace >= listBoxHeight) {
-      // 上側に十分なスペースがある場合は上側に通常表示
-      top = rect.top - listBoxHeight + offset + window.pageYOffset
-    } else if (topSpace > bottomSpace) {
-      // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
-      top = rect.top - topSpace + offset + window.pageYOffset
-      height = topSpace
-    } else {
-      // 下側に縮めて表示
-      top = rect.top + rect.height - offset + window.pageYOffset
-      height = bottomSpace
     }
 
-    setListBoxRect({
-      top,
-      left: rect.left + window.pageXOffset,
-      height,
-    })
-    setTriggerWidth(rect.width)
-  }, [listBoxRef, triggerRef])
-
-  const onKeyDownListBox = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
-      setNavigationType('key')
-
-      if (KEY_DOWN_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(activeOption, 1)
-      } else if (KEY_UP_REGEX.test(e.key)) {
-        e.stopPropagation()
-        moveActiveOptionIndex(activeOption, -1)
-      } else if (e.key === 'Enter') {
-        if (activeOption === null) {
+    return {
+      calculateRect: () => {
+        if (!listBoxRef.current || !latest.triggerRef.current) {
           return
         }
+        const rect = latest.triggerRef.current.getBoundingClientRect()
+        const bottomSpace = window.innerHeight - rect.bottom
+        const topSpace = rect.top
+        const listBoxHeight = Math.min(
+          listBoxRef.current.scrollHeight,
+          parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
+        )
+        const offset = 2
 
-        e.stopPropagation()
+        let top = 0
+        let height: number | undefined = undefined
 
-        if (!activeOption.isNew) {
-          onSelect(activeOption.item)
-        } else if (onAdd) {
-          onAdd(activeOption.item.value)
+        if (bottomSpace >= listBoxHeight) {
+          // 下側に十分なスペースがある場合は下側に通常表示
+          top = rect.top + rect.height - offset + window.pageYOffset
+        } else if (topSpace >= listBoxHeight) {
+          // 上側に十分なスペースがある場合は上側に通常表示
+          top = rect.top - listBoxHeight + offset + window.pageYOffset
+        } else if (topSpace > bottomSpace) {
+          // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
+          top = rect.top - topSpace + offset + window.pageYOffset
+          height = topSpace
+        } else {
+          // 下側に縮めて表示
+          top = rect.top + rect.height - offset + window.pageYOffset
+          height = bottomSpace
         }
-      } else {
-        setActiveOption(null)
-      }
-    },
-    [activeOption, moveActiveOptionIndex, onAdd, onSelect],
-  )
 
-  const handleAdd = useMemo(
-    () =>
-      onAdd
+        setListBoxRect({
+          top,
+          left: rect.left + window.pageXOffset,
+          height,
+        })
+        setTriggerWidth(rect.width)
+      },
+      handleKeyDownListBox: (e: KeyboardEvent<HTMLElement>) => {
+        setNavigationType('key')
+
+        if (KEY_DOWN_REGEX.test(e.key)) {
+          e.stopPropagation()
+          moveActiveOptionIndex(latest.activeOption, 1)
+        } else if (KEY_UP_REGEX.test(e.key)) {
+          e.stopPropagation()
+          moveActiveOptionIndex(latest.activeOption, -1)
+        } else if (e.key === 'Enter') {
+          if (latest.activeOption === null) {
+            return
+          }
+
+          e.stopPropagation()
+
+          if (!latest.activeOption.isNew) {
+            latest.onSelect(latest.activeOption.item)
+          } else if (latest.onAdd) {
+            latest.onAdd(latest.activeOption.item.value)
+          }
+        } else {
+          setActiveOption(null)
+        }
+      },
+      handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
             // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
             requestAnimationFrame(() => {
-              onAdd(option.item.value)
+              latest.onAdd!(option.item.value)
             })
           }
         : undefined,
-    [onAdd],
-  )
-  const handleSelect = useCallback(
-    (option: ComboboxOption<T>) => {
-      onSelect(option.item)
-    },
-    [onSelect],
-  )
-  const handleHoverOption = useCallback((option: ComboboxOption<T>) => {
-    setNavigationType('pointer')
-    setActiveOption(option)
-  }, [])
+      handleSelect: (option: ComboboxOption<T>) => {
+        latest.onSelect(option.item)
+      },
+      handleHoverOption: (option: ComboboxOption<T>) => {
+        setNavigationType('pointer')
+        setActiveOption(option)
+      },
+    }
+  }, [hasOnAdd, latest])
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -282,9 +276,9 @@ export const useListbox = <T,>({
   useEnhancedEffect(() => {
     if (isExpanded) {
       // options の更新毎に座標を再計算する
-      calculateRect()
+      functions.calculateRect()
     }
-  }, [calculateRect, isExpanded, options])
+  }, [isExpanded, options, functions])
 
   return {
     listBoxProps: {
@@ -296,16 +290,16 @@ export const useListbox = <T,>({
       noResultText,
       listBoxId,
       listBoxRef,
-      handleAdd,
-      handleHoverOption,
-      handleSelect,
+      handleAdd: functions.handleAdd,
+      handleHoverOption: functions.handleHoverOption,
+      handleSelect: functions.handleSelect,
       activeRef,
       listBoxRect,
       triggerWidth,
       dropdownWidth,
     },
     activeOption,
-    onKeyDownListBox,
+    handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
     listBoxRef,
   }
@@ -434,9 +428,9 @@ export const ListBox = memo(
                 <ItemButton
                   key={option.id}
                   option={option}
-                  onAdd={handleAdd}
-                  onSelect={handleSelect}
-                  onMouseOver={handleHoverOption}
+                  handleAdd={handleAdd}
+                  handleSelect={handleSelect}
+                  handleMouseOver={handleHoverOption}
                   activeRef={option.id === activeOptionId ? activeRef : undefined}
                 />
               ))
