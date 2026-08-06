@@ -101,10 +101,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [])
 
   useEffect(() => {
-    if (latest.portalRoot) {
-      latest.portalRoot.setAttribute('id', contentId)
+    // latest.portalRoot は初回 null 後値がはいっても再レンダリングされないため、portalRootを見ている
+    if (portalRoot) {
+      portalRoot.setAttribute('id', contentId)
     }
+  }, [contentId, portalRoot])
 
+  useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
