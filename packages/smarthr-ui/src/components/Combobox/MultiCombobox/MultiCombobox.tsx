@@ -459,13 +459,6 @@ const ActualMultiCombobox = <T,>(
 
   const selectedListId = useId()
 
-  const wrapperStyle = useMemo(
-    () => ({
-      ...style,
-      width: typeof width === 'number' ? `${width}px` : width,
-    }),
-    [style, width],
-  )
   const classNames = useMemo(() => {
     const {
       wrapper,
@@ -506,7 +499,10 @@ const ActualMultiCombobox = <T,>(
       onKeyDown={onDelegateKeyDown}
       onKeyPress={onDelegateKeyPress}
       className={classNames.wrapper}
-      style={wrapperStyle}
+      style={{
+        ...style,
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
     >
       <Scroller className={classNames.inputArea}>
         <ul
