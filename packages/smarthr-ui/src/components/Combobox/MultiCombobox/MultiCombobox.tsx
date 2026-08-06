@@ -442,17 +442,16 @@ const ActualMultiCombobox = <T,>(
       handleDelegateClick,
       handleChangeInput,
       handleFocusInput,
+      handleCompositionStart: () => setIsComposing(true),
+      handleCompositionEnd: () => setIsComposing(false),
+      handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
+          // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
+          e.preventDefault()
+        }
+      },
     }
   }, [listBoxFunctions, latest])
-
-  const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
-  const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
-  const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
-      // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
-      e.preventDefault()
-    }
-  }, [])
 
   // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
@@ -563,9 +562,9 @@ const ActualMultiCombobox = <T,>(
             ref={inputRef}
             onChange={functions.handleChangeInput}
             onFocus={functions.handleFocusInput}
-            onCompositionStart={onCompositionStartInput}
-            onCompositionEnd={onCompositionEndInput}
-            onKeyDown={onKeyDownInput}
+            onCompositionStart={functions.handleCompositionStart}
+            onCompositionEnd={functions.handleCompositionEnd}
+            onKeyDown={functions.handleKeyDownInput}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
             role="combobox"
