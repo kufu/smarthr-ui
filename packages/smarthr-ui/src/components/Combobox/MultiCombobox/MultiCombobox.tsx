@@ -9,7 +9,6 @@ import {
   type Ref,
   createRef,
   memo,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -450,19 +449,15 @@ const ActualMultiCombobox = <T,>(
           e.preventDefault()
         }
       },
+      // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+      // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+      // submitイベントが発生し、formが送信される場合がある
+      handleDelegateKeyPress: (e: KeyboardEvent<HTMLInputElement>) => {
+        preventDefaultWithPressEnter(e)
+        latest.onKeyPress?.(e)
+      },
     }
   }, [listBoxFunctions, latest])
-
-  // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
-  // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
-  // submitイベントが発生し、formが送信される場合がある
-  const onDelegateKeyPress = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      preventDefaultWithPressEnter(e)
-      latest.onKeyPress?.(e)
-    },
-    [latest],
-  )
 
   useOuterClick(
     useMemo(() => [triggerRef, listBoxRef], [listBoxRef]),
@@ -524,7 +519,7 @@ const ActualMultiCombobox = <T,>(
       role="group"
       onClick={functions.handleDelegateClick}
       onKeyDown={functions.handleDelegateKeyDown}
-      onKeyPress={onDelegateKeyPress}
+      onKeyPress={functions.handleDelegateKeyPress}
       className={classNames.wrapper}
       style={{
         ...style,
