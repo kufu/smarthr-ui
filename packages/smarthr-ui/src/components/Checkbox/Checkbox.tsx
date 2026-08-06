@@ -129,12 +129,12 @@ const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
 
 const CheckIconArea = memo<
   Pick<Props, 'mixed'> & { classNames: { iconWrap: string; icon: string } }
->(({ mixed, classNames }) => (
-  <span className={classNames.iconWrap}>
-    {mixed ? (
-      <FaMinusIcon className={classNames.icon} />
-    ) : (
-      <FaCheckIcon className={classNames.icon} />
-    )}
-  </span>
-))
+>(({ mixed, classNames }) => {
+  const Icon = mixed ? FaMinusIcon : FaCheckIcon
+
+  return (
+    <span className={classNames.iconWrap}>
+      <Icon className={classNames.icon} />
+    </span>
+  )
+})
