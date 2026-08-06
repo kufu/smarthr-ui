@@ -217,7 +217,7 @@ const ActualMultiCombobox = <T,>(
     isComposing,
   })
 
-  const actualOnDelete = useCallback(
+  const handleDelete = useCallback(
     (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
@@ -258,11 +258,11 @@ const ActualMultiCombobox = <T,>(
           // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
           latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
-          actualOnDelete(selected)
+          handleDelete(selected)
         }
       })
     },
-    [actualOnDelete, latest],
+    [handleDelete, latest],
   )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
@@ -398,7 +398,7 @@ const ActualMultiCombobox = <T,>(
 
       const lastItem = selectedItems[selectedItems.length - 1]
 
-      actualOnDelete(lastItem)
+      handleDelete(lastItem)
       setHighlighted(true)
       setInputValueIfUncontrolled(innerText(lastItem.label))
     } else {
@@ -519,7 +519,7 @@ const ActualMultiCombobox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                onDelete={actualOnDelete}
+                handleDelete={handleDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
               />
@@ -561,12 +561,7 @@ const ActualMultiCombobox = <T,>(
         )}
       </Scroller>
 
-      <MemoizedCaretDown
-        disabled={disabled}
-        isExpanded={isExpanded}
-        className={classNames.suffixWrapper}
-        iconStyle={classNames.suffixIcon}
-      />
+      <MemoizedCaretDown disabled={disabled} isExpanded={isExpanded} classNames={classNames} />
 
       <ListBox {...listBoxProps} />
     </div>
@@ -576,11 +571,13 @@ const ActualMultiCombobox = <T,>(
 export const MultiCombobox = genericsForwardRef(ActualMultiCombobox)
 
 const MemoizedCaretDown = memo<{
-  className: string
-  iconStyle: string
   disabled: boolean
   isExpanded: boolean
-}>(({ className, iconStyle, disabled, isExpanded }) => {
+  className: {
+    suffixWrapper: string
+    suffixIcon: string
+  }
+}>(({ disabled, isExpanded, classNames }) => {
   const theme = useTheme()
   const caretIconColor = isExpanded
     ? theme.textColor.black
@@ -589,8 +586,8 @@ const MemoizedCaretDown = memo<{
       : theme.textColor.grey
 
   return (
-    <div className={className}>
-      <FaCaretDownIcon color={caretIconColor} className={iconStyle} />
+    <div className={classNames.suffixWrapper}>
+      <FaCaretDownIcon color={caretIconColor} className={classNames.suffixIcon} />
     </div>
   )
 })
