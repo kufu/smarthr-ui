@@ -204,6 +204,7 @@ const ActualMultiCombobox = <T,>(
   })
   const selectedItemLength = selectedItems.length
 
+  // TODO: 完全にcreateRefを作り直すのではなく、差分更新させたい
   const deletionButtonRefs = useMemo(() => {
     const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
 
@@ -308,7 +309,6 @@ const ActualMultiCombobox = <T,>(
   })
 
   const functions = useMemo(() => {
-    // TODO: 最終的にfunctions内からしか参照されなくなる
     const resetDeletionButtonFocus = () => {
       setFocusedIndex(null)
     }
@@ -410,10 +410,12 @@ const ActualMultiCombobox = <T,>(
         latest.handleKeyDownListBox(e)
       },
       handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
-        if (!latest.disabled && !latest.isExpanded) {
-          if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
-            focus()
-          }
+        if (
+          !latest.disabled &&
+          !latest.isExpanded &&
+          !(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')
+        ) {
+          focus()
         }
       },
       handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
