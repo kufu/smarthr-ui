@@ -215,48 +215,41 @@ const ActualMultiCombobox = <T,>(
 
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
+  const handleDelete = (item: ComboboxItem<T>) => {
+    const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
+
+    if (onDelete) {
+      handlers.push((deletingItem: ComboboxItem<T>) => onDelete(deletingItem))
+    }
+    if (onChangeSelected) {
+      handlers.push((deletingItem: ComboboxItem<T>) =>
+        onChangeSelected(
+          selectedItems.filter((selected) => !areItemsEqual(selected, deletingItem)),
+        ),
+      )
+    }
+
+    if (handlers.length > 0) {
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        handlers.forEach((h) => h(item))
+      })
+    }
+  }
+
   const latest = useLatest({
     onChange,
     onChangeInput,
-    onAdd,
     onSelect,
-    onDelete,
     onChangeSelected,
     onFocus,
     onBlur,
     onKeyPress,
-    isItemSelected,
     selectedItems,
     isExpanded,
     highlighted,
-    isComposing,
   })
-
-  const handleDelete = useCallback(
-    (item: ComboboxItem<T>) => {
-      const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
-
-      if (latest.onDelete) {
-        handlers.push((deletingItem: ComboboxItem<T>) => latest.onDelete!(deletingItem))
-      }
-      if (latest.onChangeSelected) {
-        handlers.push((deletingItem: ComboboxItem<T>) =>
-          latest.onChangeSelected!(
-            latest.selectedItems.filter((selected) => !areItemsEqual(selected, deletingItem)),
-          ),
-        )
-      }
-
-      if (handlers.length > 0) {
-        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
-          handlers.forEach((h) => h(item))
-        })
-      }
-    },
-    [latest],
-  )
   const actualOnSelect = useCallback(
     (selected: ComboboxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -277,7 +270,8 @@ const ActualMultiCombobox = <T,>(
         }
       })
     },
-    [handleDelete, latest],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [latest],
   )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
