@@ -295,6 +295,7 @@ const ActualMultiCombobox = <T,>(
     onFocus,
     onBlur,
     onKeyPress,
+    disabled,
     isExpanded,
     highlighted,
     isComposing,
@@ -407,6 +408,14 @@ const ActualMultiCombobox = <T,>(
       latest.handleKeyDownListBox(e)
     }
 
+    const handleDelegateClick = (e: MouseEvent<HTMLElement>) => {
+      if (!latest.disabled && !latest.isExpanded) {
+        if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
+          focus()
+        }
+      }
+    }
+
     return {
       resetDeletionButtonFocus,
       handleDelete,
@@ -415,19 +424,10 @@ const ActualMultiCombobox = <T,>(
       focus,
       blur,
       handleDelegateKeyDown,
+      handleDelegateClick,
     }
   }, [listBoxFunctions, latest])
 
-  const onDelegateClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      if (!disabled && !latest.isExpanded) {
-        if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
-          functions.focus()
-        }
-      }
-    },
-    [disabled, functions, latest],
-  )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
@@ -522,7 +522,7 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={triggerRef}
       role="group"
-      onClick={onDelegateClick}
+      onClick={functions.handleDelegateClick}
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={onDelegateKeyPress}
       className={classNames.wrapper}
