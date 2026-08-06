@@ -238,41 +238,33 @@ const ActualMultiCombobox = <T,>(
     }
   }
 
+  const actualOnSelect = (selected: ComboboxItem<T>) => {
+    // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+    // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+    requestAnimationFrame(() => {
+      const matchedSelectedItem = selectedItems.find((item) => areItemsEqual(item, selected))
+
+      if (matchedSelectedItem === undefined) {
+        onSelect?.(selected)
+        onChangeSelected?.(selectedItems.concat(selected))
+
+        // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+      } else if (matchedSelectedItem.deletable !== false) {
+        handleDelete(selected)
+      }
+    })
+  }
+
   const latest = useLatest({
     onChange,
     onChangeInput,
-    onSelect,
-    onChangeSelected,
     onFocus,
     onBlur,
     onKeyPress,
-    selectedItems,
     isExpanded,
     highlighted,
   })
-  const actualOnSelect = useCallback(
-    (selected: ComboboxItem<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        const matchedSelectedItem = latest.selectedItems.find((item) =>
-          areItemsEqual(item, selected),
-        )
-
-        if (matchedSelectedItem === undefined) {
-          latest.onSelect?.(selected)
-          latest.onChangeSelected?.(latest.selectedItems.concat(selected))
-
-          // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-        } else if (matchedSelectedItem.deletable !== false) {
-          handleDelete(selected)
-        }
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [latest],
-  )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
