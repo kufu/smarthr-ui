@@ -58,10 +58,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal()
+
+  const contentId = useId()
+  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal({
+    rootId: contentId,
+  })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
-  const contentId = useId()
 
   const latest = useLatest({
     active,
@@ -97,13 +100,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     // return focus to the Trigger
     getFirstTabbable(triggerElementRef)?.focus()
   }, [])
-
-  useEffect(() => {
-    // latest.portalRoot は初回 null 後値がはいっても再レンダリングされないため、portalRootを見ている
-    if (portalRoot) {
-      portalRoot.setAttribute('id', contentId)
-    }
-  }, [portalRoot, contentId])
 
   useEffect(() => {
     const onClickBody = (e: any) => {
