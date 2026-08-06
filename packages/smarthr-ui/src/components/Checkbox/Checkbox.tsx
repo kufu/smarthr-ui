@@ -81,6 +81,9 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
 
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const defaultId = useId()
+    const checkBoxId = id || defaultId
+
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
@@ -91,9 +94,6 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
         inputRef.current.indeterminate = !!(checked && mixed)
       }
     }, [checked, mixed])
-
-    const defaultId = useId()
-    const checkBoxId = id || defaultId
 
     return (
       <span data-disabled={disabled} className={classNames.wrapper}>
