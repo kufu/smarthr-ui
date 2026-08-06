@@ -183,13 +183,15 @@ const ActualMultiCombobox = <T,>(
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const outerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
+
+  const selectedListId = useId()
 
   const { options } = useMultiOptions({
     items,
@@ -198,7 +200,20 @@ const ActualMultiCombobox = <T,>(
     inputValue,
     isItemSelected,
   })
-  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+  const selectedItemLength = selectedItems.length
+
+  const deletionButtonRefs = useMemo(() => {
+    const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
+
+    for (let i = 0; i < selectedItemLength; i++) {
+      refs[i] = createRef<HTMLButtonElement>()
+    }
+
+    return refs
+  }, [selectedItemLength])
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
   const latest = useLatest({
     onChange,
@@ -273,24 +288,9 @@ const ActualMultiCombobox = <T,>(
     onSelect: actualOnSelect,
     isExpanded,
     isLoading,
-    triggerRef: outerRef,
+    triggerRef,
     noResultText,
   })
-
-  const selectedItemLength = selectedItems.length
-
-  const deletionButtonRefs = useMemo(() => {
-    const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
-
-    for (let i = 0; i < selectedItemLength; i++) {
-      refs[i] = createRef<HTMLButtonElement>()
-    }
-
-    return refs
-  }, [selectedItemLength])
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
   const focusPrevDeletionButton = useCallback(() => {
     if (selectedItemLength === 0) {
@@ -348,24 +348,10 @@ const ActualMultiCombobox = <T,>(
     }
   }, [resetDeletionButtonFocus, latest])
 
-  const outerClickRef = useMemo(() => [outerRef, listBoxRef], [listBoxRef])
+  const outerClickRef = useMemo(() => [triggerRef, listBoxRef], [listBoxRef])
   useOuterClick(outerClickRef, blur)
 
-  useEffect(() => {
-    if (latest.highlighted) {
-      setHighlighted(false)
-      inputRef.current?.select()
-    } else {
-      setInputValueIfUncontrolled('')
-    }
-  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
-
-  useEffect(() => {
-    if (isExpanded) {
-      inputRef.current?.focus()
-    }
-  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
-
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
 
   const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -457,7 +443,20 @@ const ActualMultiCombobox = <T,>(
     [latest],
   )
 
-  const selectedListId = useId()
+  useEffect(() => {
+    if (latest.highlighted) {
+      setHighlighted(false)
+      inputRef.current?.select()
+    } else {
+      setInputValueIfUncontrolled('')
+    }
+  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
+
+  useEffect(() => {
+    if (isExpanded) {
+      inputRef.current?.focus()
+    }
+  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
 
   const classNames = useMemo(() => {
     const {
@@ -493,7 +492,7 @@ const ActualMultiCombobox = <T,>(
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
-      ref={outerRef}
+      ref={triggerRef}
       role="group"
       onClick={onDelegateClick}
       onKeyDown={onDelegateKeyDown}
