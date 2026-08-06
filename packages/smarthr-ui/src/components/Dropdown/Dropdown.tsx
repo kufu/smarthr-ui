@@ -7,7 +7,6 @@ import {
   type ReactNode,
   createContext,
   createRef,
-  useCallback,
   useContext,
   useEffect,
   useId,
@@ -74,31 +73,33 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     createPortal,
   })
 
-  // This is the root container of a dropdown content located in outside the DOM tree
-  const DropdownContentRoot = useCallback<FC<{ children: ReactNode }>>(
-    (props) => (latest.active ? latest.createPortal(props.children) : null),
-    [latest],
-  )
-  DropdownContentRoot.displayName = 'DropdownContentRoot'
+  const functions = useMemo(() => {
+    // This is the root container of a dropdown content located in outside the DOM tree
+    const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
+      latest.active ? latest.createPortal(props.children) : null
+    DropdownContentRoot.displayName = 'DropdownContentRoot'
 
-  const memoizedOnClickTrigger = useCallback((rect: Rect) => {
-    setActive((current) => {
-      const newActive = !current
+    return {
+      DropdownContentRoot,
+      memoizedOnClickTrigger: (rect: Rect) => {
+        setActive((current) => {
+          const newActive = !current
 
-      if (newActive) {
-        setTriggerRect(rect)
-      }
+          if (newActive) {
+            setTriggerRect(rect)
+          }
 
-      return newActive
-    })
-  }, [])
+          return newActive
+        })
+      },
+      handleDelegateClickCloser: () => {
+        setActive(false)
 
-  const handleDelegateClickCloser = useCallback(() => {
-    setActive(false)
-
-    // return focus to the Trigger
-    getFirstTabbable(triggerElementRef)?.focus()
-  }, [])
+        // return focus to the Trigger
+        getFirstTabbable(triggerElementRef)?.focus()
+      },
+    }
+  }, [latest])
 
   useEffect(() => {
     if (latest.portalRoot) {
@@ -133,9 +134,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerRect,
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
-          memoizedOnClickTrigger,
-          handleDelegateClickCloser,
-          DropdownContentRoot,
+          memoizedOnClickTrigger: functions.memoizedOnClickTrigger,
+          handleDelegateClickCloser: functions.handleDelegateClickCloser,
+          DropdownContentRoot: functions.DropdownContentRoot,
           contentId,
         }}
       >
