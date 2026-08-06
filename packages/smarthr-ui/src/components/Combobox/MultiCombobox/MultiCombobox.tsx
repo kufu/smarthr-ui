@@ -490,7 +490,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isExpanded, disabled, className])
 
-  const { selectedListAriaLabel } = useLocalize({
+  const localized = useLocalize({
     selectedListAriaLabel: {
       id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
       defaultText: '選択済みアイテム',
@@ -511,7 +511,7 @@ const ActualMultiCombobox = <T,>(
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
-          aria-label={selectedListAriaLabel}
+          aria-label={localized.selectedListAriaLabel}
           className={classNames.selectedList}
         >
           {selectedItems.map((selectedItem, i) => (
