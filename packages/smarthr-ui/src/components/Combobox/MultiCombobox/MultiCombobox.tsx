@@ -431,11 +431,7 @@ const ActualMultiCombobox = <T,>(
     }
 
     return {
-      resetDeletionButtonFocus,
       handleDelete,
-      focusPrevDeletionButton,
-      focusNextDeletionButton,
-      focus,
       blur,
       handleDelegateKeyDown,
       handleDelegateClick,
