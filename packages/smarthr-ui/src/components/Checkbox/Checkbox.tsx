@@ -110,11 +110,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={classNames.box} />
-          <CheckIconArea
-            mixed={mixed}
-            className={classNames.iconWrap}
-            iconClassName={classNames.icon}
-          />
+          <CheckIconArea mixed={mixed} classNames={classNames} />
         </span>
 
         {children && (
@@ -131,14 +127,14 @@ const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClassName: string }>(
-  ({ mixed, className, iconClassName }) => (
-    <span className={className}>
-      {mixed ? (
-        <FaMinusIcon className={iconClassName} />
-      ) : (
-        <FaCheckIcon className={iconClassName} />
-      )}
-    </span>
-  ),
-)
+const CheckIconArea = memo<
+  Pick<Props, 'mixed'> & { classNames: { iconWrap: string; icon: string } }
+>(({ mixed, classNames }) => (
+  <span className={classNames.iconWrap}>
+    {mixed ? (
+      <FaMinusIcon className={classNames.icon} />
+    ) : (
+      <FaCheckIcon className={classNames.icon} />
+    )}
+  </span>
+))
