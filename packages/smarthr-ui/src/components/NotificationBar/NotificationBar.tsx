@@ -11,7 +11,6 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
 import { Button } from '../Button'
 import {
   FaCircleCheckIcon,
@@ -23,6 +22,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { Panel } from '../Panel'
 import { Text } from '../Text'
 
 const classNameGenerator = tv({
@@ -136,7 +136,7 @@ const classNameGenerator = tv({
 })
 
 type StyleVariants = VariantProps<typeof classNameGenerator>
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** コンポーネント右の領域 */
@@ -147,10 +147,10 @@ type AbstractProps = PropsWithChildren<
       role?: 'alert' | 'status'
     }
 >
-type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
-type Props = AbstractProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
-  Omit<BaseProps, keyof AbstractProps>
+type PanelLayerProps = Pick<ComponentProps<typeof Panel>, 'layer'>
+type Props = PanelLayerProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof PanelLayerProps> &
+  Omit<BaseProps, keyof PanelLayerProps>
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
@@ -189,13 +189,12 @@ export const NotificationBar: FC<Props> = ({
   let baseProps = {}
 
   if (base === 'base') {
-    WrapBase = Base
+    WrapBase = Panel
     baseProps = {
       layer,
-      overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
+      overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
     }
   }
-
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,

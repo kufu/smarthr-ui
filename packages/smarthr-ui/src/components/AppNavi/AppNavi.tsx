@@ -20,7 +20,7 @@ import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ラベルのテキスト */
   label?: ReactNode
   /** 表示するボタンの Props の配列
@@ -36,7 +36,7 @@ type AbstractProps = PropsWithChildren<{
   /** 追加の領域 */
   additionalArea?: ReactNode
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

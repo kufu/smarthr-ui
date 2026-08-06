@@ -22,7 +22,7 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 
 import type { TextProps } from '../Text'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
@@ -30,7 +30,7 @@ type AbstractProps = PropsWithChildren<{
    */
   unrecommendedHeadingTag?: HeadingTagTypes
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'button'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -42,8 +42,8 @@ const classNameGenerator = tv({
       'disabled:shr-cursor-not-allowed disabled:shr-bg-white-darken disabled:shr-text-disabled',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
-      // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
-      '[.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
+      // Panel 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Panel に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
+      '[.smarthr-ui-Panel_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Panel_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
     ],
     leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',
     rightIcon: 'group-aria-expanded:-shr-rotate-180',

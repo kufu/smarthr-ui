@@ -51,7 +51,7 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
-  onLoadError?: () => void
+  onLoadError?: (error: unknown) => void
 }
 
 export const FileViewer: FC<Props> = ({

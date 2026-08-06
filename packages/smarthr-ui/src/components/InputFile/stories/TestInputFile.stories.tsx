@@ -1,11 +1,11 @@
 import { useState } from 'react'
 
-import { BaseColumn } from '../../Base'
 import { Button } from '../../Button'
 import { FormControl } from '../../FormControl'
 import { Heading } from '../../Heading'
 import { InformationPanel } from '../../InformationPanel'
 import { Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { InputFile } from '../InputFile'
 
 import type { Meta } from '@storybook/react-webpack5'
@@ -54,9 +54,9 @@ export const ManualTest1 = () => {
         </Stack>
       </form>
       <Heading>送信結果</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{result}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }
@@ -102,9 +102,9 @@ export const ManualTest2 = () => {
         </Stack>
       </form>
       <Heading>送信結果</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{result}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }
@@ -139,9 +139,9 @@ export const ManualTest3 = () => {
         </FormControl>
       </form>
       <Heading>onChange</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{value.map((file) => file.name).join('\n')}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }
@@ -179,9 +179,9 @@ export const ManualTest4 = () => {
         </FormControl>
       </form>
       <Heading>onChange</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{value.map((file) => file.name).join('\n')}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }

@@ -9,16 +9,16 @@ import {
 } from './DropdownContentInner'
 
 export const DropdownContentContext = createContext<{
-  onClickCloser: () => void
+  handleDelegateClickCloser: () => void
   controllable: boolean
 }>({
-  onClickCloser: () => {
+  handleDelegateClickCloser: () => {
     /* noop */
   },
   controllable: false,
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
    *  この場合は、 `DropdownCloser` を用いてドロップダウンを閉じることができる。
@@ -26,14 +26,15 @@ type AbstractProps = PropsWithChildren<{
   controllable?: boolean
 }>
 
-type Props = AbstractProps & Omit<InnerElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<InnerElementProps, keyof BaseProps>
 
 export const DropdownContent: FC<Props> = ({ controllable = false, ...rest }) => {
-  const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
+  const { DropdownContentRoot, triggerRect, handleDelegateClickCloser } =
+    useContext(DropdownContext)
 
   return (
     <DropdownContentRoot>
-      <DropdownContentContext.Provider value={{ onClickCloser, controllable }}>
+      <DropdownContentContext.Provider value={{ handleDelegateClickCloser, controllable }}>
         <DropdownContentInner {...rest} triggerRect={triggerRect} controllable={controllable} />
       </DropdownContentContext.Provider>
     </DropdownContentRoot>

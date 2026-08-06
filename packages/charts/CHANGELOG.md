@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.7](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.6...smarthr-ui-charts-v0.1.7) (2026-08-06)
+
+
+### Features
+
+* **BarChart:** 棒グラフの柄を非表示にできる disablePatterns を追加 ([#6627](https://github.com/kufu/smarthr-ui/issues/6627)) ([cb1f00a](https://github.com/kufu/smarthr-ui/commit/cb1f00ad54d4f0515cdc93438e051d98247394e8))
+* **charts:** DoughnutChartとProgressDoughnutChartを追加 ([#6480](https://github.com/kufu/smarthr-ui/issues/6480)) ([0b0a7a8](https://github.com/kufu/smarthr-ui/commit/0b0a7a86798561d5ba629554372fa01d7dbf5ee0))
+* **charts:** peerDependencies に React 18 を追加 ([#6656](https://github.com/kufu/smarthr-ui/issues/6656)) ([31571e1](https://github.com/kufu/smarthr-ui/commit/31571e15dacfb0035c1bef6ee62250f41df1e765))
+
 ## [0.1.6](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.5...smarthr-ui-charts-v0.1.6) (2026-07-16)
 
 

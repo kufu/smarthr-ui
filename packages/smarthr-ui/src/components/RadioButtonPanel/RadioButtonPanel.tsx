@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
+import { Panel } from '../Panel'
 import { RadioButton } from '../RadioButton'
 
 type Props = ComponentProps<typeof RadioButton> & {
@@ -77,16 +77,9 @@ const isRadioButtonElementClicked = (path: EventTarget[], currentTarget: EventTa
   return false
 }
 
-export const RadioButtonPanel: FC<Props> = ({
-  onClick,
-  as,
-  className,
-  children,
-  label,
-  'aria-describedby': ariaDescribedby,
-  ...rest
-}) => {
+export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) => {
   const hasDescription = !!children
+
   const classNames = useMemo(() => {
     const { base, description, radio } = classNameGenerator({
       className,
@@ -94,11 +87,50 @@ export const RadioButtonPanel: FC<Props> = ({
     })
 
     return { base: base(), description: description(), radio: radio() }
-  }, [className, hasDescription])
+  }, [hasDescription, className])
 
+  return hasDescription ? (
+    <DescriptionRadioButtonPanel {...rest} classNames={classNames}>
+      {children}
+    </DescriptionRadioButtonPanel>
+  ) : (
+    <ActualRadioButtonPanel {...rest} classNames={classNames} />
+  )
+}
+
+type LowerProps = Omit<Props, 'className'> & {
+  classNames: {
+    base: string
+    description: string
+    radio: string
+  }
+}
+
+const DescriptionRadioButtonPanel: FC<LowerProps> = ({
+  'aria-describedby': ariaDescribedby,
+  classNames,
+  children,
+  ...rest
+}) => {
+  const descriptionId = useId()
+
+  return (
+    <ActualRadioButtonPanel
+      {...rest}
+      aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
+      classNames={classNames}
+    >
+      <div id={descriptionId} className={classNames.description}>
+        {children}
+      </div>
+    </ActualRadioButtonPanel>
+  )
+}
+
+const ActualRadioButtonPanel: FC<LowerProps> = ({ as, classNames, children, label, ...rest }) => {
   // 外側の装飾を押しても内側のラジオボタンが押せるようにする
   const innerRef = useRef<HTMLInputElement>(null)
-  const onDelegateClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleDelegateClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     // RadioButtonの要素（labelまたはinput）以外がクリックされた場合（description や Base の余白）
     if (!isRadioButtonElementClicked(e.nativeEvent.composedPath(), e.currentTarget)) {
       // Base要素のclickイベントは止める（実装の詳細を隠蔽し、input要素のclickのみを親に伝える）
@@ -110,24 +142,12 @@ export const RadioButtonPanel: FC<Props> = ({
     // （ブラウザの標準動作でinputがクリックされ、そのイベントが親に伝わる）
   }, [])
 
-  const descriptionId = useId()
-
   return (
-    <Base padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
-      <RadioButton
-        {...rest}
-        onClick={onClick}
-        ref={innerRef}
-        aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
-        className={classNames.radio}
-      >
+    <Panel padding={1} onClick={handleDelegateClick} as={as} className={classNames.base}>
+      <RadioButton {...rest} ref={innerRef} className={classNames.radio}>
         {label}
       </RadioButton>
-      {children && (
-        <div id={descriptionId} className={classNames.description}>
-          {children}
-        </div>
-      )}
-    </Base>
+      {children}
+    </Panel>
   )
 }

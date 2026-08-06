@@ -33,7 +33,7 @@ const getFullscreenElementOnSSR = () => null
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
   /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
@@ -47,8 +47,8 @@ type AbstractProps = PropsWithChildren<{
   /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby' | 'aria-labelledby'>
+type Props = BaseProps &
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby'>
 
 const classNameGenerator = tv({
   base: [
@@ -97,24 +97,12 @@ export const Tooltip: FC<Props> = ({
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
 
   const isLabel = type === 'label'
+  const isIcon = triggerType === 'icon'
 
-  useEnhancedEffect(() => {
-    setPortalRoot(fullscreenElement ?? document.body)
-  }, [fullscreenElement])
-
-  useEnhancedEffect(() => {
-    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
-
-    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
-
-    setIsFocusableChild(focusable)
-    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
-
-    // focusableな要素に直接aria属性を設定
-    if (focusable) {
-      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
-    }
-  }, [tabIndex, isLabel, messageId])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isIcon, className }),
+    [isIcon, className],
+  )
 
   const toShowAction = useCallback(
     (e: BaseSyntheticEvent) => {
@@ -146,11 +134,23 @@ export const Tooltip: FC<Props> = ({
     setIsVisible(false)
   }, [])
 
-  const isIcon = triggerType === 'icon'
-  const actualClassName = useMemo(
-    () => classNameGenerator({ isIcon, className }),
-    [isIcon, className],
-  )
+  useEnhancedEffect(() => {
+    setPortalRoot(fullscreenElement ?? document.body)
+  }, [fullscreenElement])
+
+  useEnhancedEffect(() => {
+    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
+
+    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
+
+    setIsFocusableChild(focusable)
+    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
+
+    // focusableな要素に直接aria属性を設定
+    if (focusable) {
+      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+    }
+  }, [tabIndex, isLabel, messageId])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions

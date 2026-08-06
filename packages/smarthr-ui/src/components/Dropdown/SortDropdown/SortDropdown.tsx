@@ -34,7 +34,7 @@ type ArgsOnApply = {
   newfields: SortFieldType[]
 }
 
-type AbstractProps = {
+type BaseProps = {
   /** 並び替え項目 */
   sortFields: SortFieldType[]
   /** 並び順の初期値 */
@@ -50,7 +50,7 @@ type AbstractProps = {
   /** キャンセル時に発火するイベント */
   onCancel?: MouseEventHandler<HTMLButtonElement>
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 
 const ON_SUBMIT = (e: FormEvent) => {
   e.preventDefault()
