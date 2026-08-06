@@ -297,10 +297,14 @@ const ActualMultiCombobox = <T,>(
     onKeyPress,
     isExpanded,
     highlighted,
+    isComposing,
+    isInputEmpty,
+    selectedItems,
     deletionButtonRefs,
     focusedIndex,
     selectedItemLength,
     setInputValueIfUncontrolled,
+    handleKeyDownListBox,
   })
 
   const functions = useMemo(() => {
@@ -309,99 +313,110 @@ const ActualMultiCombobox = <T,>(
       setFocusedIndex(null)
     }
 
-    return {
-      resetDeletionButtonFocus,
-      handleDelete: listBoxFunctions.handleDelete,
-      focusPrevDeletionButton: () => {
-        if (latest.selectedItemLength === 0) {
-          return
-        }
+    const handleDelete = listBoxFunctions.handleDelete
 
-        if (latest.focusedIndex !== null) {
-          const nextIndex = Math.max(latest.focusedIndex - 1, 0)
-
-          latest.deletionButtonRefs[nextIndex].current?.focus()
-          setFocusedIndex(nextIndex)
-        } else if (inputRef.current?.selectionStart === 0) {
-          const nextIndex = latest.deletionButtonRefs.length - 1
-
-          latest.deletionButtonRefs[nextIndex].current?.focus()
-          setFocusedIndex(nextIndex)
-        }
-      },
-      focusNextDeletionButton: () => {
-        if (latest.deletionButtonRefs.length === 0 || latest.focusedIndex === null) {
-          return
-        }
-
-        const nextIndex = latest.focusedIndex + 1
-
-        if (nextIndex < latest.deletionButtonRefs.length) {
-          latest.deletionButtonRefs[nextIndex].current?.focus()
-          setFocusedIndex(nextIndex)
-        } else {
-          setFocusedIndex(null)
-          // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
-          setTimeout(() => {
-            inputRef.current?.focus()
-          })
-        }
-      },
-      focus: () => {
-        latest.onFocus?.()
-        setIsExpanded(true)
-      },
-      blur: () => {
-        if (latest.isExpanded) {
-          latest.onBlur?.()
-          setIsExpanded(false)
-          resetDeletionButtonFocus()
-        }
-      },
-    }
-  }, [listBoxFunctions, latest])
-
-  const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (isComposing) return
-
-    if (ESCAPE_KEY_REGEX.test(e.key)) {
-      e.stopPropagation()
-      functions.blur()
-    } else if (e.key === 'Tab') {
-      if (isExpanded) {
-        // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-        inputRef.current?.focus()
+    const focusPrevDeletionButton = () => {
+      if (latest.selectedItemLength === 0) {
+        return
       }
 
-      functions.blur()
-    } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-      e.stopPropagation()
-      functions.focusPrevDeletionButton()
-    } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-      e.stopPropagation()
-      functions.focusNextDeletionButton()
-    } else if (
-      e.key === 'Backspace' &&
-      isInputEmpty &&
-      selectedItems.length > 0 &&
-      selectedItems[selectedItems.length - 1].deletable !== false
-    ) {
-      e.preventDefault()
-      e.stopPropagation()
+      if (latest.focusedIndex !== null) {
+        const nextIndex = Math.max(latest.focusedIndex - 1, 0)
 
-      const lastItem = selectedItems[selectedItems.length - 1]
+        latest.deletionButtonRefs[nextIndex].current?.focus()
+        setFocusedIndex(nextIndex)
+      } else if (inputRef.current?.selectionStart === 0) {
+        const nextIndex = latest.deletionButtonRefs.length - 1
 
-      functions.handleDelete(lastItem)
-      setHighlighted(true)
-      setInputValueIfUncontrolled(innerText(lastItem.label))
-    } else {
-      e.stopPropagation()
-      inputRef.current?.focus()
-      functions.resetDeletionButtonFocus()
+        latest.deletionButtonRefs[nextIndex].current?.focus()
+        setFocusedIndex(nextIndex)
+      }
     }
 
-    handleKeyDownListBox(e)
-  }
+    const focusNextDeletionButton = () => {
+      if (latest.deletionButtonRefs.length === 0 || latest.focusedIndex === null) {
+        return
+      }
+
+      const nextIndex = latest.focusedIndex + 1
+
+      if (nextIndex < latest.deletionButtonRefs.length) {
+        latest.deletionButtonRefs[nextIndex].current?.focus()
+        setFocusedIndex(nextIndex)
+      } else {
+        setFocusedIndex(null)
+        // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
+        setTimeout(() => {
+          inputRef.current?.focus()
+        })
+      }
+    }
+
+    const focus = () => {
+      latest.onFocus?.()
+      setIsExpanded(true)
+    }
+
+    const blur = () => {
+      if (latest.isExpanded) {
+        latest.onBlur?.()
+        setIsExpanded(false)
+        resetDeletionButtonFocus()
+      }
+    }
+
+    const handleDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+      if (latest.isComposing) return
+
+      if (ESCAPE_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        blur()
+      } else if (e.key === 'Tab') {
+        if (latest.isExpanded) {
+          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+          inputRef.current?.focus()
+        }
+
+        blur()
+      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        focusPrevDeletionButton()
+      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+        e.stopPropagation()
+        focusNextDeletionButton()
+      } else if (
+        e.key === 'Backspace' &&
+        latest.isInputEmpty &&
+        latest.selectedItems.length > 0 &&
+        latest.selectedItems[latest.selectedItems.length - 1].deletable !== false
+      ) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
+
+        handleDelete(lastItem)
+        setHighlighted(true)
+        latest.setInputValueIfUncontrolled(innerText(lastItem.label))
+      } else {
+        e.stopPropagation()
+        inputRef.current?.focus()
+        resetDeletionButtonFocus()
+      }
+
+      latest.handleKeyDownListBox(e)
+    }
+
+    return {
+      resetDeletionButtonFocus,
+      handleDelete,
+      focusPrevDeletionButton,
+      focusNextDeletionButton,
+      focus,
+      blur,
+      handleDelegateKeyDown,
+    }
+  }, [listBoxFunctions, latest])
 
   const onDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
@@ -508,7 +523,7 @@ const ActualMultiCombobox = <T,>(
       ref={triggerRef}
       role="group"
       onClick={onDelegateClick}
-      onKeyDown={onDelegateKeyDown}
+      onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={onDelegateKeyPress}
       className={classNames.wrapper}
       style={{
