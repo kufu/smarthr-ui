@@ -215,46 +215,64 @@ const ActualMultiCombobox = <T,>(
 
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
-  const handleDelete = (item: ComboboxItem<T>) => {
-    const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
+  // eslint-disable-next-line local-rules/best-practice-for-use-latest
+  const latestForListBox = useLatest({
+    onDelete,
+    onChangeSelected,
+    onSelect,
+    onChangeInput,
+    selectedItems,
+  })
 
-    if (onDelete) {
-      handlers.push((deletingItem: ComboboxItem<T>) => onDelete(deletingItem))
-    }
-    if (onChangeSelected) {
-      handlers.push((deletingItem: ComboboxItem<T>) =>
-        onChangeSelected(
-          selectedItems.filter((selected) => !areItemsEqual(selected, deletingItem)),
-        ),
-      )
-    }
+  const listBoxFunctions = useMemo(() => {
+    const handleDelete = (item: ComboboxItem<T>) => {
+      const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
-    if (handlers.length > 0) {
-      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        handlers.forEach((h) => h(item))
-      })
-    }
-  }
-
-  const handleSelect = (selected: ComboboxItem<T>) => {
-    // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-    // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-    requestAnimationFrame(() => {
-      const matchedSelectedItem = selectedItems.find((item) => areItemsEqual(item, selected))
-
-      if (matchedSelectedItem === undefined) {
-        onSelect?.(selected)
-        onChangeSelected?.(selectedItems.concat(selected))
-
-        // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-      } else if (matchedSelectedItem.deletable !== false) {
-        handleDelete(selected)
+      if (latestForListBox.onDelete) {
+        handlers.push((deletingItem: ComboboxItem<T>) => latestForListBox.onDelete!(deletingItem))
       }
-    })
-  }
+      if (latestForListBox.onChangeSelected) {
+        handlers.push((deletingItem: ComboboxItem<T>) =>
+          latestForListBox.onChangeSelected!(
+            latestForListBox.selectedItems.filter(
+              (selected) => !areItemsEqual(selected, deletingItem),
+            ),
+          ),
+        )
+      }
+
+      if (handlers.length > 0) {
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          handlers.forEach((h) => h(item))
+        })
+      }
+    }
+
+    return {
+      handleDelete,
+      handleSelect: (selected: ComboboxItem<T>) => {
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          const matchedSelectedItem = latestForListBox.selectedItems.find((item) =>
+            areItemsEqual(item, selected),
+          )
+
+          if (matchedSelectedItem === undefined) {
+            latestForListBox.onSelect?.(selected)
+            latestForListBox.onChangeSelected?.(latestForListBox.selectedItems.concat(selected))
+
+            // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+            latestForListBox.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          } else if (matchedSelectedItem.deletable !== false) {
+            handleDelete(selected)
+          }
+        })
+      },
+    }
+  }, [latestForListBox])
 
   const latest = useLatest({
     onChange,
@@ -271,7 +289,7 @@ const ActualMultiCombobox = <T,>(
     dropdownHelpMessage,
     dropdownWidth,
     onAdd,
-    onSelect: handleSelect,
+    onSelect: listBoxFunctions.handleSelect,
     isExpanded,
     isLoading,
     triggerRef,
@@ -370,7 +388,7 @@ const ActualMultiCombobox = <T,>(
 
       const lastItem = selectedItems[selectedItems.length - 1]
 
-      handleDelete(lastItem)
+      listBoxFunctions.handleDelete(lastItem)
       setHighlighted(true)
       setInputValueIfUncontrolled(innerText(lastItem.label))
     } else {
@@ -500,7 +518,7 @@ const ActualMultiCombobox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                handleDelete={handleDelete}
+                handleDelete={listBoxFunctions.handleDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
               />
