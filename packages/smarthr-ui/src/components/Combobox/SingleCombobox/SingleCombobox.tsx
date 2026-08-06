@@ -105,7 +105,6 @@ const classNameGenerator = tv({
       'group-focus-visible/clearButton:shr-focus-indicator group-focus-visible/clearButton:shr-rounded-full',
     ],
   },
-  variants: {},
 })
 
 type SuffixButtonsProps = {
