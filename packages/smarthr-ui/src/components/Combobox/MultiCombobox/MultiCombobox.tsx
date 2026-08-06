@@ -343,26 +343,19 @@ const ActualMultiCombobox = <T,>(
           })
         }
       },
+      focus: () => {
+        latest.onFocus?.()
+        setIsExpanded(true)
+      },
+      blur: () => {
+        if (latest.isExpanded) {
+          latest.onBlur?.()
+          setIsExpanded(false)
+          resetDeletionButtonFocus()
+        }
+      },
     }
   }, [listBoxFunctions, latest])
-
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
-
-  const focus = useCallback(() => {
-    latest.onFocus?.()
-    setIsExpanded(true)
-  }, [latest])
-
-  const blur = useCallback(() => {
-    if (latest.isExpanded) {
-      latest.onBlur?.()
-      setIsExpanded(false)
-      functions.resetDeletionButtonFocus()
-    }
-  }, [functions, latest])
-
-  const outerClickRef = useMemo(() => [triggerRef, listBoxRef], [listBoxRef])
-  useOuterClick(outerClickRef, blur)
 
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
@@ -372,14 +365,14 @@ const ActualMultiCombobox = <T,>(
 
     if (ESCAPE_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
-      blur()
+      functions.blur()
     } else if (e.key === 'Tab') {
       if (isExpanded) {
         // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
         inputRef.current?.focus()
       }
 
-      blur()
+      functions.blur()
     } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
       functions.focusPrevDeletionButton()
@@ -413,11 +406,11 @@ const ActualMultiCombobox = <T,>(
     (e: MouseEvent<HTMLElement>) => {
       if (!disabled && !latest.isExpanded) {
         if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
-          focus()
+          functions.focus()
         }
       }
     },
-    [disabled, focus, latest],
+    [disabled, functions, latest],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -432,9 +425,9 @@ const ActualMultiCombobox = <T,>(
     functions.resetDeletionButtonFocus()
 
     if (!latest.isExpanded) {
-      focus()
+      functions.focus()
     }
-  }, [focus, functions, latest])
+  }, [functions, latest])
   const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
@@ -454,6 +447,13 @@ const ActualMultiCombobox = <T,>(
     },
     [latest],
   )
+
+  useOuterClick(
+    useMemo(() => [triggerRef, listBoxRef], [listBoxRef]),
+    functions.blur,
+  )
+
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   useEffect(() => {
     if (latest.highlighted) {
