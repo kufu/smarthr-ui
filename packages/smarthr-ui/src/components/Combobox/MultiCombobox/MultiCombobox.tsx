@@ -186,12 +186,15 @@ const ActualMultiCombobox = <T,>(
   const triggerRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
-  const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
-  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
 
   const selectedListId = useId()
+
+  const isInputControlled = controlledInputValue !== undefined
+  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+  const isInputEmpty = !inputValue
 
   const { options } = useMultiOptions({
     items,
@@ -297,6 +300,7 @@ const ActualMultiCombobox = <T,>(
     deletionButtonRefs,
     focusedIndex,
     selectedItemLength,
+    setInputValueIfUncontrolled,
   })
 
   const functions = useMemo(() => {
@@ -357,9 +361,6 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const isInputEmpty = !inputValue
-
   const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (isComposing) return
 
@@ -417,9 +418,9 @@ const ActualMultiCombobox = <T,>(
       const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
 
       handlers.forEach((h) => h(e))
-      setInputValueIfUncontrolled(e.currentTarget.value)
+      latest.setInputValueIfUncontrolled(e.currentTarget.value)
     },
-    [setInputValueIfUncontrolled, latest],
+    [latest],
   )
   const onFocusInput = useCallback(() => {
     functions.resetDeletionButtonFocus()
@@ -468,7 +469,7 @@ const ActualMultiCombobox = <T,>(
     if (isExpanded) {
       inputRef.current?.focus()
     }
-  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
+  }, [isExpanded, selectedItems, isInputControlled, inputRef])
 
   const classNames = useMemo(() => {
     const {
