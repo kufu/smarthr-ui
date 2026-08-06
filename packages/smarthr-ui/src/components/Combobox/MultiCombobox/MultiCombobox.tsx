@@ -183,13 +183,15 @@ const ActualMultiCombobox = <T,>(
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const outerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
+
+  const selectedListId = useId()
 
   const { options } = useMultiOptions({
     items,
@@ -198,7 +200,20 @@ const ActualMultiCombobox = <T,>(
     inputValue,
     isItemSelected,
   })
-  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+  const selectedItemLength = selectedItems.length
+
+  const deletionButtonRefs = useMemo(() => {
+    const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
+
+    for (let i = 0; i < selectedItemLength; i++) {
+      refs[i] = createRef<HTMLButtonElement>()
+    }
+
+    return refs
+  }, [selectedItemLength])
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
   const latest = useLatest({
     onChange,
@@ -217,7 +232,7 @@ const ActualMultiCombobox = <T,>(
     isComposing,
   })
 
-  const actualOnDelete = useCallback(
+  const handleDelete = useCallback(
     (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
@@ -258,11 +273,11 @@ const ActualMultiCombobox = <T,>(
           // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
           latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         } else if (matchedSelectedItem.deletable !== false) {
-          actualOnDelete(selected)
+          handleDelete(selected)
         }
       })
     },
-    [actualOnDelete, latest],
+    [handleDelete, latest],
   )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
@@ -273,24 +288,9 @@ const ActualMultiCombobox = <T,>(
     onSelect: actualOnSelect,
     isExpanded,
     isLoading,
-    triggerRef: outerRef,
+    triggerRef,
     noResultText,
   })
-
-  const selectedItemLength = selectedItems.length
-
-  const deletionButtonRefs = useMemo(() => {
-    const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
-
-    for (let i = 0; i < selectedItemLength; i++) {
-      refs[i] = createRef<HTMLButtonElement>()
-    }
-
-    return refs
-  }, [selectedItemLength])
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
   const focusPrevDeletionButton = useCallback(() => {
     if (selectedItemLength === 0) {
@@ -348,24 +348,10 @@ const ActualMultiCombobox = <T,>(
     }
   }, [resetDeletionButtonFocus, latest])
 
-  const outerClickRef = useMemo(() => [outerRef, listBoxRef], [listBoxRef])
+  const outerClickRef = useMemo(() => [triggerRef, listBoxRef], [listBoxRef])
   useOuterClick(outerClickRef, blur)
 
-  useEffect(() => {
-    if (latest.highlighted) {
-      setHighlighted(false)
-      inputRef.current?.select()
-    } else {
-      setInputValueIfUncontrolled('')
-    }
-  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
-
-  useEffect(() => {
-    if (isExpanded) {
-      inputRef.current?.focus()
-    }
-  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
-
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
 
   const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -398,7 +384,7 @@ const ActualMultiCombobox = <T,>(
 
       const lastItem = selectedItems[selectedItems.length - 1]
 
-      actualOnDelete(lastItem)
+      handleDelete(lastItem)
       setHighlighted(true)
       setInputValueIfUncontrolled(innerText(lastItem.label))
     } else {
@@ -457,15 +443,21 @@ const ActualMultiCombobox = <T,>(
     [latest],
   )
 
-  const selectedListId = useId()
+  useEffect(() => {
+    if (latest.highlighted) {
+      setHighlighted(false)
+      inputRef.current?.select()
+    } else {
+      setInputValueIfUncontrolled('')
+    }
+  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
 
-  const wrapperStyle = useMemo(
-    () => ({
-      ...style,
-      width: typeof width === 'number' ? `${width}px` : width,
-    }),
-    [style, width],
-  )
+  useEffect(() => {
+    if (isExpanded) {
+      inputRef.current?.focus()
+    }
+  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
+
   const classNames = useMemo(() => {
     const {
       wrapper,
@@ -490,7 +482,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [isExpanded, disabled, className])
 
-  const { selectedListAriaLabel } = useLocalize({
+  const localized = useLocalize({
     selectedListAriaLabel: {
       id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
       defaultText: '選択済みアイテム',
@@ -500,18 +492,21 @@ const ActualMultiCombobox = <T,>(
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
-      ref={outerRef}
+      ref={triggerRef}
       role="group"
       onClick={onDelegateClick}
       onKeyDown={onDelegateKeyDown}
       onKeyPress={onDelegateKeyPress}
       className={classNames.wrapper}
-      style={wrapperStyle}
+      style={{
+        ...style,
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
     >
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
-          aria-label={selectedListAriaLabel}
+          aria-label={localized.selectedListAriaLabel}
           className={classNames.selectedList}
         >
           {selectedItems.map((selectedItem, i) => (
@@ -519,7 +514,7 @@ const ActualMultiCombobox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                handleDelete={actualOnDelete}
+                handleDelete={handleDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
               />
@@ -561,12 +556,7 @@ const ActualMultiCombobox = <T,>(
         )}
       </Scroller>
 
-      <MemoizedCaretDown
-        disabled={disabled}
-        isExpanded={isExpanded}
-        className={classNames.suffixWrapper}
-        iconStyle={classNames.suffixIcon}
-      />
+      <MemoizedCaretDown disabled={disabled} isExpanded={isExpanded} classNames={classNames} />
 
       <ListBox {...listBoxProps} />
     </div>
@@ -576,11 +566,13 @@ const ActualMultiCombobox = <T,>(
 export const MultiCombobox = genericsForwardRef(ActualMultiCombobox)
 
 const MemoizedCaretDown = memo<{
-  className: string
-  iconStyle: string
   disabled: boolean
   isExpanded: boolean
-}>(({ className, iconStyle, disabled, isExpanded }) => {
+  classNames: {
+    suffixWrapper: string
+    suffixIcon: string
+  }
+}>(({ disabled, isExpanded, classNames }) => {
   const theme = useTheme()
   const caretIconColor = isExpanded
     ? theme.textColor.black
@@ -589,8 +581,8 @@ const MemoizedCaretDown = memo<{
       : theme.textColor.grey
 
   return (
-    <div className={className}>
-      <FaCaretDownIcon color={caretIconColor} className={iconStyle} />
+    <div className={classNames.suffixWrapper}>
+      <FaCaretDownIcon color={caretIconColor} className={classNames.suffixIcon} />
     </div>
   )
 })
