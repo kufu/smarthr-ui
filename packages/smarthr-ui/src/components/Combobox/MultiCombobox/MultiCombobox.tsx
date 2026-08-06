@@ -568,7 +568,7 @@ export const MultiCombobox = genericsForwardRef(ActualMultiCombobox)
 const MemoizedCaretDown = memo<{
   disabled: boolean
   isExpanded: boolean
-  className: {
+  classNames: {
     suffixWrapper: string
     suffixIcon: string
   }
