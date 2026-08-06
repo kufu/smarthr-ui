@@ -5,6 +5,7 @@ import {
   type ComponentProps,
   type FC,
   type MouseEvent,
+  type PropsWithChildren,
   type ReactNode,
   memo,
   useCallback,
@@ -54,6 +55,26 @@ type Props = {
   onLoadError?: (error: unknown) => void
 }
 
+// 共通のprops（ImageとPDFで共有）
+type CommonViewerProps = {
+  file: FileForViewer
+  scale: number
+  rotation: number | undefined
+  loaded: boolean
+  width: number
+  hasWidth: boolean
+  setWidth: (value: number) => void
+  scaleSteps: number[] | undefined
+  functions: {
+    scaleUp: () => void
+    scaleDown: () => void
+    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
+    rotate: () => void
+    handleLoaded: () => void
+  }
+  onLoadError?: () => void
+}
+
 export const FileViewer: FC<Props> = ({
   file,
   scaleStep,
@@ -62,14 +83,12 @@ export const FileViewer: FC<Props> = ({
   onPassword,
   onLoadError,
 }) => {
-  const ref = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
-  const isPDF = file.contentType === 'application/pdf'
 
-  const search = usePDFSearch(file.url)
+  const hasWidth = fixedWidth !== undefined
 
   const latest = useLatest({ scaleStep, rotation })
 
@@ -97,12 +116,126 @@ export const FileViewer: FC<Props> = ({
     }
   }, [latest])
 
-  const handlePDFLoaded = useCallback((defaultRotation: number) => {
-    setRotation(defaultRotation)
-  }, [])
+  const commonAttrs = {
+    file,
+    scale,
+    rotation,
+    loaded,
+    width,
+    hasWidth,
+    setWidth,
+    scaleSteps,
+    functions,
+    onLoadError,
+  }
+
+  return file.contentType === 'application/pdf' ? (
+    <PDFFileViewer {...commonAttrs} setRotation={setRotation} onPassword={onPassword} />
+  ) : (
+    <ImageFileViewer {...commonAttrs} />
+  )
+}
+
+const PDFFileViewer: FC<
+  CommonViewerProps & {
+    setRotation: (value: number | undefined) => void
+    onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  }
+> = ({
+  file,
+  scale,
+  rotation,
+  loaded,
+  width,
+  hasWidth,
+  setWidth,
+  scaleSteps,
+  functions,
+  setRotation,
+  onPassword,
+  onLoadError,
+}) => {
+  const search = usePDFSearch(file.url)
+  const handlePDFLoaded = useCallback(
+    (defaultRotation: number) => {
+      setRotation(defaultRotation)
+    },
+    [setRotation],
+  )
+
+  return (
+    <ActualFileViewer
+      scale={scale}
+      loaded={loaded}
+      hasWidth={hasWidth}
+      setWidth={setWidth}
+      scaleSteps={scaleSteps}
+      functions={functions}
+      searchController={<SearchController search={search} />}
+    >
+      <PDFViewer
+        scale={scale}
+        rotation={rotation}
+        file={file}
+        width={width}
+        handleLoad={functions.handleLoaded}
+        handlePDFLoaded={handlePDFLoaded}
+        onPassword={onPassword}
+        onLoadError={onLoadError}
+        search={search}
+      />
+    </ActualFileViewer>
+  )
+}
+
+const ImageFileViewer: FC<CommonViewerProps> = ({
+  file,
+  scale,
+  rotation,
+  loaded,
+  width,
+  hasWidth,
+  setWidth,
+  scaleSteps,
+  functions,
+  onLoadError,
+}) => (
+  <ActualFileViewer
+    scale={scale}
+    loaded={loaded}
+    hasWidth={hasWidth}
+    setWidth={setWidth}
+    scaleSteps={scaleSteps}
+    functions={functions}
+  >
+    {file.contentType.startsWith('image/') ? (
+      <ImageViewer
+        scale={scale}
+        rotation={rotation}
+        file={file}
+        width={width}
+        handleLoad={functions.handleLoaded}
+        onLoadError={onLoadError}
+      />
+    ) : undefined}
+  </ActualFileViewer>
+)
+
+const ActualFileViewer: FC<
+  PropsWithChildren<
+    Pick<
+      CommonViewerProps,
+      'scale' | 'loaded' | 'hasWidth' | 'setWidth' | 'scaleSteps' | 'functions'
+    > & {
+      searchController?: ReactNode
+    }
+  >
+> = ({ scale, loaded, hasWidth, setWidth, scaleSteps, functions, searchController, children }) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const loading = children && !loaded
 
   useEffect(() => {
-    if (!ref.current || fixedWidth !== undefined) {
+    if (!ref.current || hasWidth) {
       return
     }
 
@@ -115,7 +248,7 @@ export const FileViewer: FC<Props> = ({
     return () => {
       resizeObserver.disconnect()
     }
-  }, [fixedWidth])
+  }, [hasWidth, setWidth])
 
   return (
     <Scroller
@@ -128,38 +261,17 @@ export const FileViewer: FC<Props> = ({
           scale={scale}
           scaleSteps={scaleSteps || defaultScaleSteps}
           functions={functions}
-          searchController={isPDF ? <SearchController search={search} /> : undefined}
+          searchController={searchController}
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
-        {!loaded && (
+        {loading && (
           <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
             <Loader type="light" size="M" />
           </div>
         )}
-        <div className={!loaded ? 'shr-invisible' : ''}>
-          {isPDF ? (
-            <PDFViewer
-              scale={scale}
-              rotation={rotation}
-              file={file}
-              width={width}
-              handleLoad={functions.handleLoaded}
-              handlePDFLoaded={handlePDFLoaded}
-              onPassword={onPassword}
-              onLoadError={onLoadError}
-              search={search}
-            />
-          ) : file.contentType.startsWith('image/') ? (
-            <ImageViewer
-              scale={scale}
-              rotation={rotation}
-              file={file}
-              width={width}
-              handleLoad={functions.handleLoaded}
-              onLoadError={onLoadError}
-            />
-          ) : (
+        <div className={loading ? 'shr-invisible' : ''}>
+          {children || (
             <Localizer
               id="smarthr-ui/FileViewer/unsupportedFileText"
               defaultText="サポートされていない形式のファイルです。"
