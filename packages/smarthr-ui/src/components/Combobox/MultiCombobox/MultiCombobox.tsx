@@ -319,28 +319,27 @@ const ActualMultiCombobox = <T,>(
           setFocusedIndex(nextIndex)
         }
       },
+      focusNextDeletionButton: () => {
+        if (latest.deletionButtonRefs.length === 0 || latest.focusedIndex === null) {
+          return
+        }
+
+        const nextIndex = latest.focusedIndex + 1
+
+        if (nextIndex < latest.deletionButtonRefs.length) {
+          latest.deletionButtonRefs[nextIndex].current?.focus()
+          setFocusedIndex(nextIndex)
+        } else {
+          setFocusedIndex(null)
+          // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
+          setTimeout(() => {
+            inputRef.current?.focus()
+          })
+        }
+      },
     }),
     [listBoxFunctions, latest],
   )
-
-  const focusNextDeletionButton = useCallback(() => {
-    if (deletionButtonRefs.length === 0 || focusedIndex === null) {
-      return
-    }
-
-    const nextIndex = focusedIndex + 1
-
-    if (nextIndex < deletionButtonRefs.length) {
-      deletionButtonRefs[nextIndex].current?.focus()
-      setFocusedIndex(nextIndex)
-    } else {
-      setFocusedIndex(null)
-      // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
-      setTimeout(() => {
-        inputRef.current?.focus()
-      })
-    }
-  }, [deletionButtonRefs, focusedIndex])
 
   const resetDeletionButtonFocus = useCallback(() => {
     setFocusedIndex(null)
@@ -385,7 +384,7 @@ const ActualMultiCombobox = <T,>(
       functions.focusPrevDeletionButton()
     } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
-      focusNextDeletionButton()
+      functions.focusNextDeletionButton()
     } else if (
       e.key === 'Backspace' &&
       isInputEmpty &&
