@@ -299,8 +299,14 @@ const ActualMultiCombobox = <T,>(
     selectedItemLength,
   })
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    // TODO: 最終的にfunctions内からしか参照されなくなる
+    const resetDeletionButtonFocus = () => {
+      setFocusedIndex(null)
+    }
+
+    return {
+      resetDeletionButtonFocus,
       handleDelete: listBoxFunctions.handleDelete,
       focusPrevDeletionButton: () => {
         if (latest.selectedItemLength === 0) {
@@ -337,13 +343,8 @@ const ActualMultiCombobox = <T,>(
           })
         }
       },
-    }),
-    [listBoxFunctions, latest],
-  )
-
-  const resetDeletionButtonFocus = useCallback(() => {
-    setFocusedIndex(null)
-  }, [])
+    }
+  }, [listBoxFunctions, latest])
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
@@ -356,9 +357,9 @@ const ActualMultiCombobox = <T,>(
     if (latest.isExpanded) {
       latest.onBlur?.()
       setIsExpanded(false)
-      resetDeletionButtonFocus()
+      functions.resetDeletionButtonFocus()
     }
-  }, [resetDeletionButtonFocus, latest])
+  }, [functions, latest])
 
   const outerClickRef = useMemo(() => [triggerRef, listBoxRef], [listBoxRef])
   useOuterClick(outerClickRef, blur)
@@ -402,7 +403,7 @@ const ActualMultiCombobox = <T,>(
     } else {
       e.stopPropagation()
       inputRef.current?.focus()
-      resetDeletionButtonFocus()
+      functions.resetDeletionButtonFocus()
     }
 
     handleKeyDownListBox(e)
@@ -428,13 +429,12 @@ const ActualMultiCombobox = <T,>(
     [setInputValueIfUncontrolled, latest],
   )
   const onFocusInput = useCallback(() => {
-    if (latest.isExpanded) {
-      resetDeletionButtonFocus()
-    } else {
-      resetDeletionButtonFocus()
+    functions.resetDeletionButtonFocus()
+
+    if (!latest.isExpanded) {
       focus()
     }
-  }, [resetDeletionButtonFocus, focus, latest])
+  }, [focus, functions, latest])
   const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
@@ -580,7 +580,7 @@ export const MultiCombobox = genericsForwardRef(ActualMultiCombobox)
 const MemoizedCaretDown = memo<{
   disabled: boolean
   isExpanded: boolean
-  className: {
+  classNames: {
     suffixWrapper: string
     suffixIcon: string
   }
