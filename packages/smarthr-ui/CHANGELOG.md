@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.0.0...smarthr-ui-v99.1.0) (2026-08-06)
+
+
+### Features
+
+* **InputFile:** プレビュー機能を追加 ([#6631](https://github.com/kufu/smarthr-ui/issues/6631)) ([b551db8](https://github.com/kufu/smarthr-ui/commit/b551db8dc30a415bd7d430f8cc3043f33aa1a4c2))
+
+
+### Bug Fixes
+
+* pnpm audit --prod の脆弱性検知に対応 ([#6673](https://github.com/kufu/smarthr-ui/issues/6673)) ([383cd92](https://github.com/kufu/smarthr-ui/commit/383cd929a6e1abb5f7d2629128f4cee85c713bef))
+* **RadioButtonPanel:** aria-describedbyの構築ロジックを修正・リファクタリング ([#6679](https://github.com/kufu/smarthr-ui/issues/6679)) ([9778ffe](https://github.com/kufu/smarthr-ui/commit/9778ffe7153a1f491756713b627c12f31df5bb06))
+* **SideNav:** SideNavContextにデフォルト値を設定し型の安全性を向上 ([#6678](https://github.com/kufu/smarthr-ui/issues/6678)) ([c12dc7b](https://github.com/kufu/smarthr-ui/commit/c12dc7b574414b57fbbf21e7ac33680eca1fb147))
+
 ## [99.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v98.1.1...smarthr-ui-v99.0.0) (2026-07-30)
 
 

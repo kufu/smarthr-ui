@@ -15,7 +15,8 @@ import { useSectionWrapper } from '../SectioningContent'
 import type { Gap } from '../../types'
 
 export const panelClassNameGenerator = tv({
-  base: 'smarthr-ui-Panel shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
+  // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
+  base: 'smarthr-ui-Panel smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock,
     paddingInline,
