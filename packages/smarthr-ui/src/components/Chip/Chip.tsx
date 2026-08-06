@@ -26,16 +26,13 @@ const classNameGenerator = tv({
       true: 'shr-bg-white/50 shr-text-disabled',
     },
   },
-  defaultVariants: {
-    size: 'S',
-    color: 'grey',
-  },
 })
 
 export const Chip: FC<Props> = ({ size, color, disabled, className, ...rest }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ size, color, disabled, className }),
+    () => classNameGenerator({ size: size || 'S', color: color || 'grey', disabled, className }),
     [size, color, disabled, className],
   )
+
   return <span {...rest} className={actualClassName} />
 }
