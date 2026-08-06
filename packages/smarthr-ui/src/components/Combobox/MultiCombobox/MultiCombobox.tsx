@@ -365,78 +365,70 @@ const ActualMultiCombobox = <T,>(
       }
     }
 
-    const handleDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-      if (latest.isComposing) return
-
-      if (ESCAPE_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        blur()
-      } else if (e.key === 'Tab') {
-        if (latest.isExpanded) {
-          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-          inputRef.current?.focus()
-        }
-
-        blur()
-      } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusPrevDeletionButton()
-      } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-        e.stopPropagation()
-        focusNextDeletionButton()
-      } else if (
-        e.key === 'Backspace' &&
-        latest.isInputEmpty &&
-        latest.selectedItems.length > 0 &&
-        latest.selectedItems[latest.selectedItems.length - 1].deletable !== false
-      ) {
-        e.preventDefault()
-        e.stopPropagation()
-
-        const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
-
-        handleDelete(lastItem)
-        setHighlighted(true)
-        latest.setInputValueIfUncontrolled(innerText(lastItem.label))
-      } else {
-        e.stopPropagation()
-        inputRef.current?.focus()
-        resetDeletionButtonFocus()
-      }
-
-      latest.handleKeyDownListBox(e)
-    }
-
-    const handleDelegateClick = (e: MouseEvent<HTMLElement>) => {
-      if (!latest.disabled && !latest.isExpanded) {
-        if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
-          focus()
-        }
-      }
-    }
-
-    const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-      const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
-
-      handlers.forEach((h) => h(e))
-      latest.setInputValueIfUncontrolled(e.currentTarget.value)
-    }
-
-    const handleFocusInput = () => {
-      resetDeletionButtonFocus()
-
-      if (!latest.isExpanded) {
-        focus()
-      }
-    }
-
     return {
       handleDelete,
       blur,
-      handleDelegateKeyDown,
-      handleDelegateClick,
-      handleChangeInput,
-      handleFocusInput,
+      handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+        if (latest.isComposing) return
+
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          blur()
+        } else if (e.key === 'Tab') {
+          if (latest.isExpanded) {
+            // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+            inputRef.current?.focus()
+          }
+
+          blur()
+        } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          focusPrevDeletionButton()
+        } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          focusNextDeletionButton()
+        } else if (
+          e.key === 'Backspace' &&
+          latest.isInputEmpty &&
+          latest.selectedItems.length > 0 &&
+          latest.selectedItems[latest.selectedItems.length - 1].deletable !== false
+        ) {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
+
+          handleDelete(lastItem)
+          setHighlighted(true)
+          latest.setInputValueIfUncontrolled(innerText(lastItem.label))
+        } else {
+          e.stopPropagation()
+          inputRef.current?.focus()
+          resetDeletionButtonFocus()
+        }
+
+        latest.handleKeyDownListBox(e)
+      },
+      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
+        if (!latest.disabled && !latest.isExpanded) {
+          if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
+            focus()
+          }
+        }
+      },
+      handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
+        const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
+
+        handlers.forEach((h) => h(e))
+        latest.setInputValueIfUncontrolled(e.currentTarget.value)
+      },
+      handleFocusInput: () => {
+        resetDeletionButtonFocus()
+
+        if (!latest.isExpanded) {
+          focus()
+        }
+      },
       handleCompositionStart: () => setIsComposing(true),
       handleCompositionEnd: () => setIsComposing(false),
       handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
