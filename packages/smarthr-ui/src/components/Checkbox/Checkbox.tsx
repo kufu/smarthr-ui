@@ -117,9 +117,11 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
           />
         </span>
 
-        <LabeledChildren htmlFor={checkBoxId} className={classNames.label}>
-          {children}
-        </LabeledChildren>
+        {children && (
+          <label htmlFor={checkBoxId} className={classNames.label}>
+            {children}
+          </label>
+        )}
       </span>
     )
   },
@@ -139,13 +141,4 @@ const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClass
       )}
     </span>
   ),
-)
-
-const LabeledChildren = memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
-  ({ children, htmlFor, className }) =>
-    children && (
-      <label htmlFor={htmlFor} className={className}>
-        {children}
-      </label>
-    ),
 )
