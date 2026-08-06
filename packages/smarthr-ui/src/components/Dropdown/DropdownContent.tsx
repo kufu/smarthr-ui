@@ -18,7 +18,7 @@ export const DropdownContentContext = createContext<{
   controllable: false,
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
    *  この場合は、 `DropdownCloser` を用いてドロップダウンを閉じることができる。
@@ -26,7 +26,7 @@ type AbstractProps = PropsWithChildren<{
   controllable?: boolean
 }>
 
-type Props = AbstractProps & Omit<InnerElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<InnerElementProps, keyof BaseProps>
 
 export const DropdownContent: FC<Props> = ({ controllable = false, ...rest }) => {
   const { DropdownContentRoot, triggerRect, handleDelegateClickCloser } =

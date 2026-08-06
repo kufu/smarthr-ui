@@ -34,7 +34,7 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -56,7 +56,7 @@ type AbstractProps = PropsWithChildren<{
   /** ファイル選択ボタンのラベル */
   selectButtonLabel?: string
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -65,20 +65,28 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 
 export const DropZone = forwardRef<HTMLInputElement, Props>(
   (
-    { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
+    {
+      children,
+      onSelectFiles,
+      multiple = true,
+      disabled,
+      error,
+      selectButtonLabel,
+      className,
+      ...rest
+    },
     ref,
   ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-    // FIXME: className を wrapper に適用するバグ修正時に className を依存配列に追加する
 
     const classNames = useMemo(() => {
       const { wrapper, button } = classNameGenerator()
       return {
-        wrapper: wrapper(),
+        wrapper: wrapper({ className }),
         button: button(),
       }
-    }, [])
+    }, [className])
 
     const latest = useLatest({ onSelectFiles })
 

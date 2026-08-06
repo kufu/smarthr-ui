@@ -25,7 +25,7 @@ import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type AbstractProps = {
+type BaseProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -45,7 +45,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'textarea'>, keyof BaseProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -124,9 +124,10 @@ const MaxLettersTextarea: FC<
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
   const counterSpanRef = useRef<HTMLSpanElement>(null)
-  const previousTextRef = useRef<string>('')
-  const currentValue = defaultValue || value
-  const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
+  const [count, setCount] = useState(() => {
+    const currentValue = defaultValue || value
+    return currentValue ? getStringLength(currentValue) : 0
+  })
   const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
   const countError = count > maxLetters
@@ -143,19 +144,36 @@ const MaxLettersTextarea: FC<
   })
 
   const functions = useMemo(() => {
-    const updateCount = debounce((newValue: TextareaValue) => {
+    // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
+    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+    const updateSrMessage = debounce(() => {
+      startTransition(() => {
+        if (counterSpanRef.current) {
+          setSrCounterMessage(counterSpanRef.current.textContent || '')
+        }
+      })
+    }, 1000)
+    const actualUpdateCount = debounce((newValue: TextareaValue) => {
       startTransition(() => {
         setCount(getStringLength(newValue))
       })
     }, 200)
 
+    // 初回レンダリング時はスクリーンリーダー向けメッセージなどを更新したくないためskipする
+    // (実際のユーザー操作による変更でのみ更新すれば良い)
+    // useEffectでupdateCountが必ず呼びだされる
+    let firstCallUpdateCount = true
+    const updateCount = (newValue: TextareaValue) => {
+      if (firstCallUpdateCount) {
+        firstCallUpdateCount = false
+        return
+      }
+
+      actualUpdateCount(newValue)
+      updateSrMessage()
+    }
+
     return {
-      // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-      updateSrMessage: debounce((text: string) => {
-        startTransition(() => {
-          setSrCounterMessage(text)
-        })
-      }, 1000),
       updateCount,
       handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
         updateCount(e.target.value)
@@ -164,23 +182,8 @@ const MaxLettersTextarea: FC<
     }
   }, [latest])
 
-  // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
   useEffect(() => {
-    if (!counterSpanRef.current) return
-
-    const currentText = counterSpanRef.current.textContent || ''
-
-    if (currentText !== previousTextRef.current) {
-      previousTextRef.current = currentText
-      functions.updateSrMessage(currentText)
-    }
-  }, [count, functions])
-
-  // value 変更時にもカウントを更新する
-  useEffect(() => {
-    if (value) {
-      functions.updateCount(value)
-    }
+    functions.updateCount(value ?? '')
   }, [value, functions])
 
   return (

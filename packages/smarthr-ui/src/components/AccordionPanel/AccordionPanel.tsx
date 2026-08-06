@@ -25,7 +25,7 @@ import {
   getNewExpandedItems,
 } from './accordionPanelHelper'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
   /** 複数のパネルを同時に開くことを許容するかどうか */
@@ -36,7 +36,7 @@ type AbstractProps = PropsWithChildren<{
   onClick?: (expandedItems: string[]) => void
 }> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const DEFAULT_EXPANDED_ARRAY: string[] = []
 const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)

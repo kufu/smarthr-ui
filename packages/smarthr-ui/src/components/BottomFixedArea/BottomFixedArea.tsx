@@ -26,7 +26,7 @@ export type ButtonType =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
 
-type AbstractProps = {
+type BaseProps = {
   /** この領域の説明 */
   description?: ReactNode
   /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
@@ -45,7 +45,7 @@ type AbstractProps = {
   /** コンポーネントに適用する z-index 値 */
   zIndex?: number
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

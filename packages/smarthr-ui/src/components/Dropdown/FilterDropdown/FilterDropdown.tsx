@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer, useIntl } from '../../../intl'
-import { Button, type AbstractProps as ButtonProps } from '../../Button'
+import { Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -29,7 +29,7 @@ type ObjectTriggerType = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type AbstractProps = {
+type BaseProps = {
   /** 引き金となるボタン */
   trigger?: ReactNode | ObjectTriggerType
   applyText?: ReactNode
@@ -48,7 +48,7 @@ type AbstractProps = {
   onOpen?: () => void
   onClose?: () => void
 }
-type Props = AbstractProps & Omit<ComponentProps<'button'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 

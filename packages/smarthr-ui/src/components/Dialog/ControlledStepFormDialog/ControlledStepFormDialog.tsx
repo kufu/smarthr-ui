@@ -17,8 +17,8 @@ import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import {
+  type BaseProps as BaseStepFormDialogContentInnerProps,
   StepFormDialogContentInner,
-  type AbstractProps as StepFormDialogContentInnerAbstractProps,
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
@@ -34,7 +34,7 @@ import type { DialogProps /** コンテンツなにもないDialogの基本props
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type AbstractProps = Omit<
+type BaseProps = Omit<
   StepFormDialogContentInnerProps,
   | 'heading'
   | 'activeStep'
@@ -50,11 +50,11 @@ type AbstractProps = Omit<
     submitButton: ButtonArgType | ObjectButtonType
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
-    onSubmit: StepFormDialogContentInnerAbstractProps['handleSubmit']
+    onSubmit: BaseStepFormDialogContentInnerProps['handleSubmit']
     onClickClose: () => void
     onClickBack?: () => void
   }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 

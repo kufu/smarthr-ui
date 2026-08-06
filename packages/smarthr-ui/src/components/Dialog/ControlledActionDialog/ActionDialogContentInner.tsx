@@ -39,7 +39,7 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
@@ -58,7 +58,7 @@ export type AbstractProps = PropsWithChildren<
   }
 >
 
-export type ActionDialogContentInnerProps = AbstractProps & {
+export type ActionDialogContentInnerProps = BaseProps & {
   handleClickClose: () => void
   responseStatus?: ResponseStatus
 }

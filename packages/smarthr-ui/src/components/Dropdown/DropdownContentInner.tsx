@@ -28,13 +28,13 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   triggerRect: Rect
   controllable: boolean
 }>
 
-export type ElementProps = Omit<ComponentProps<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+export type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
 type DropdownContentInnerContextType = {
   maxHeight: string

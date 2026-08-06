@@ -27,7 +27,7 @@ export type Option = {
   disabled?: boolean
 }
 
-type AbstractProps = {
+type BaseProps = {
   /** 選択肢の配列 */
   options: Option[]
   /** 選択中の値 */
@@ -37,7 +37,7 @@ type AbstractProps = {
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
