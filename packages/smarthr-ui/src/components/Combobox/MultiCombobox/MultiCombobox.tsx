@@ -7,15 +7,16 @@ import {
   type MouseEvent,
   type ReactNode,
   type Ref,
+  createRef,
   memo,
   useCallback,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
@@ -27,7 +28,6 @@ import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
 import { areItemsEqual } from '../helper'
-import { useFocusControl } from '../useFocusControl'
 import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
@@ -184,12 +184,21 @@ const ActualMultiCombobox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const outerRef = useRef<HTMLDivElement>(null)
-  const [isFocused, setIsFocused] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
+
+  const { options } = useMultiOptions({
+    items,
+    selected: selectedItems,
+    creatable,
+    inputValue,
+    isItemSelected,
+  })
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
 
   const latest = useLatest({
     onChange,
@@ -203,18 +212,11 @@ const ActualMultiCombobox = <T,>(
     onKeyPress,
     isItemSelected,
     selectedItems,
-    isFocused,
+    isExpanded,
     highlighted,
     isComposing,
   })
-  const { options } = useMultiOptions({
-    items,
-    selected: selectedItems,
-    creatable,
-    inputValue,
-    isItemSelected,
-  })
-  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+
   const actualOnDelete = useCallback(
     (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
@@ -269,31 +271,79 @@ const ActualMultiCombobox = <T,>(
     dropdownWidth,
     onAdd,
     onSelect: actualOnSelect,
-    isExpanded: isFocused,
+    isExpanded,
     isLoading,
     triggerRef: outerRef,
     noResultText,
   })
 
-  const {
-    deletionButtonRefs,
-    inputRef,
-    focusPrevDeletionButton,
-    focusNextDeletionButton,
-    resetDeletionButtonFocus,
-  } = useFocusControl(selectedItems.length)
+  const selectedItemLength = selectedItems.length
+
+  const deletionButtonRefs = useMemo(() => {
+    const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
+
+    for (let i = 0; i < selectedItemLength; i++) {
+      refs[i] = createRef<HTMLButtonElement>()
+    }
+
+    return refs
+  }, [selectedItemLength])
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
+
+  const focusPrevDeletionButton = useCallback(() => {
+    if (selectedItemLength === 0) {
+      return
+    }
+
+    if (focusedIndex !== null) {
+      const nextIndex = Math.max(focusedIndex - 1, 0)
+
+      deletionButtonRefs[nextIndex].current?.focus()
+      setFocusedIndex(nextIndex)
+    } else if (inputRef.current?.selectionStart === 0) {
+      const nextIndex = deletionButtonRefs.length - 1
+
+      deletionButtonRefs[nextIndex].current?.focus()
+      setFocusedIndex(nextIndex)
+    }
+  }, [deletionButtonRefs, focusedIndex, selectedItemLength])
+
+  const focusNextDeletionButton = useCallback(() => {
+    if (deletionButtonRefs.length === 0 || focusedIndex === null) {
+      return
+    }
+
+    const nextIndex = focusedIndex + 1
+
+    if (nextIndex < deletionButtonRefs.length) {
+      deletionButtonRefs[nextIndex].current?.focus()
+      setFocusedIndex(nextIndex)
+    } else {
+      setFocusedIndex(null)
+      // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
+      setTimeout(() => {
+        inputRef.current?.focus()
+      })
+    }
+  }, [deletionButtonRefs, focusedIndex])
+
+  const resetDeletionButtonFocus = useCallback(() => {
+    setFocusedIndex(null)
+  }, [])
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const focus = useCallback(() => {
     latest.onFocus?.()
-    setIsFocused(true)
+    setIsExpanded(true)
   }, [latest])
 
   const blur = useCallback(() => {
-    if (latest.isFocused) {
+    if (latest.isExpanded) {
       latest.onBlur?.()
-      setIsFocused(false)
+      setIsExpanded(false)
       resetDeletionButtonFocus()
     }
   }, [resetDeletionButtonFocus, latest])
@@ -311,10 +361,10 @@ const ActualMultiCombobox = <T,>(
   }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
 
   useEffect(() => {
-    if (isFocused) {
+    if (isExpanded) {
       inputRef.current?.focus()
     }
-  }, [isFocused, setInputValueIfUncontrolled, selectedItems, inputRef])
+  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
 
   const isInputEmpty = !inputValue
 
@@ -325,7 +375,7 @@ const ActualMultiCombobox = <T,>(
       e.stopPropagation()
       blur()
     } else if (e.key === 'Tab') {
-      if (isFocused) {
+      if (isExpanded) {
         // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
         inputRef.current?.focus()
       }
@@ -362,7 +412,7 @@ const ActualMultiCombobox = <T,>(
 
   const onDelegateClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
-      if (!disabled && !latest.isFocused) {
+      if (!disabled && !latest.isExpanded) {
         if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
           focus()
         }
@@ -380,7 +430,7 @@ const ActualMultiCombobox = <T,>(
     [setInputValueIfUncontrolled, latest],
   )
   const onFocusInput = useCallback(() => {
-    if (latest.isFocused) {
+    if (latest.isExpanded) {
       resetDeletionButtonFocus()
     } else {
       resetDeletionButtonFocus()
@@ -429,16 +479,16 @@ const ActualMultiCombobox = <T,>(
     } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ focused: isFocused, disabled, className }),
+      wrapper: wrapper({ focused: isExpanded, disabled, className }),
       inputArea: inputArea(),
       selectedList: selectedList(),
-      inputWrapper: inputWrapper({ hidden: !isFocused }),
+      inputWrapper: inputWrapper({ hidden: !isExpanded }),
       input: input(),
       placeholder: placeholderEl(),
       suffixWrapper: suffixWrapper({ disabled }),
       suffixIcon: suffixIcon(),
     }
-  }, [isFocused, disabled, className])
+  }, [isExpanded, disabled, className])
 
   const { selectedListAriaLabel } = useLocalize({
     selectedListAriaLabel: {
@@ -498,7 +548,7 @@ const ActualMultiCombobox = <T,>(
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
-            aria-expanded={isFocused}
+            aria-expanded={isExpanded}
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
@@ -506,14 +556,14 @@ const ActualMultiCombobox = <T,>(
           />
         </div>
 
-        {selectedItems.length === 0 && placeholder && !isFocused && (
+        {selectedItems.length === 0 && placeholder && !isExpanded && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
       </Scroller>
 
       <MemoizedCaretDown
         disabled={disabled}
-        isFocused={isFocused}
+        isExpanded={isExpanded}
         className={classNames.suffixWrapper}
         iconStyle={classNames.suffixIcon}
       />
@@ -529,10 +579,10 @@ const MemoizedCaretDown = memo<{
   className: string
   iconStyle: string
   disabled: boolean
-  isFocused: boolean
-}>(({ className, iconStyle, disabled, isFocused }) => {
+  isExpanded: boolean
+}>(({ className, iconStyle, disabled, isExpanded }) => {
   const theme = useTheme()
-  const caretIconColor = isFocused
+  const caretIconColor = isExpanded
     ? theme.textColor.black
     : disabled
       ? theme.textColor.disabled

@@ -240,17 +240,13 @@ export const useListbox = <T,>({
     if (!isExpanded) {
       setActiveOption(null)
     }
-  }, [isExpanded])
 
-  useEffect(() => {
-    if (!triggerRef.current) {
-      return
+    const trigger = latest.triggerRef.current
+
+    if (trigger) {
+      setTriggerWidth(trigger.getBoundingClientRect().width)
     }
-
-    const rect = triggerRef.current.getBoundingClientRect()
-
-    setTriggerWidth(rect.width)
-  }, [isExpanded, triggerRef])
+  }, [isExpanded, latest])
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
@@ -271,7 +267,7 @@ export const useListbox = <T,>({
     } else if (activeRect.bottom > containerRect.bottom) {
       listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
     }
-  }, [activeOption, listBoxRef, navigationType])
+  }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
     if (isExpanded) {
