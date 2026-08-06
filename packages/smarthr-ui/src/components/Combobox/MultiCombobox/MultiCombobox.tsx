@@ -423,6 +423,14 @@ const ActualMultiCombobox = <T,>(
       latest.setInputValueIfUncontrolled(e.currentTarget.value)
     }
 
+    const handleFocusInput = () => {
+      resetDeletionButtonFocus()
+
+      if (!latest.isExpanded) {
+        focus()
+      }
+    }
+
     return {
       resetDeletionButtonFocus,
       handleDelete,
@@ -433,16 +441,10 @@ const ActualMultiCombobox = <T,>(
       handleDelegateKeyDown,
       handleDelegateClick,
       handleChangeInput,
+      handleFocusInput,
     }
   }, [listBoxFunctions, latest])
 
-  const onFocusInput = useCallback(() => {
-    functions.resetDeletionButtonFocus()
-
-    if (!latest.isExpanded) {
-      functions.focus()
-    }
-  }, [functions, latest])
   const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
   const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
@@ -560,7 +562,7 @@ const ActualMultiCombobox = <T,>(
             required={required && selectedItems.length === 0}
             ref={inputRef}
             onChange={functions.handleChangeInput}
-            onFocus={onFocusInput}
+            onFocus={functions.handleFocusInput}
             onCompositionStart={onCompositionStartInput}
             onCompositionEnd={onCompositionEndInput}
             onKeyDown={onKeyDownInput}
