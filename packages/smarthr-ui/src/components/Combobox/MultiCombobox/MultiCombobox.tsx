@@ -274,16 +274,6 @@ const ActualMultiCombobox = <T,>(
     }
   }, [latestForListBox])
 
-  const latest = useLatest({
-    onChange,
-    onChangeInput,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    isExpanded,
-    highlighted,
-  })
-
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
@@ -296,23 +286,42 @@ const ActualMultiCombobox = <T,>(
     noResultText,
   })
 
-  const focusPrevDeletionButton = useCallback(() => {
-    if (selectedItemLength === 0) {
-      return
-    }
+  const latest = useLatest({
+    onChange,
+    onChangeInput,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    isExpanded,
+    highlighted,
+    deletionButtonRefs,
+    focusedIndex,
+    selectedItemLength,
+  })
 
-    if (focusedIndex !== null) {
-      const nextIndex = Math.max(focusedIndex - 1, 0)
+  const functions = useMemo(
+    () => ({
+      handleDelete: listBoxFunctions.handleDelete,
+      focusPrevDeletionButton: () => {
+        if (latest.selectedItemLength === 0) {
+          return
+        }
 
-      deletionButtonRefs[nextIndex].current?.focus()
-      setFocusedIndex(nextIndex)
-    } else if (inputRef.current?.selectionStart === 0) {
-      const nextIndex = deletionButtonRefs.length - 1
+        if (latest.focusedIndex !== null) {
+          const nextIndex = Math.max(latest.focusedIndex - 1, 0)
 
-      deletionButtonRefs[nextIndex].current?.focus()
-      setFocusedIndex(nextIndex)
-    }
-  }, [deletionButtonRefs, focusedIndex, selectedItemLength])
+          latest.deletionButtonRefs[nextIndex].current?.focus()
+          setFocusedIndex(nextIndex)
+        } else if (inputRef.current?.selectionStart === 0) {
+          const nextIndex = latest.deletionButtonRefs.length - 1
+
+          latest.deletionButtonRefs[nextIndex].current?.focus()
+          setFocusedIndex(nextIndex)
+        }
+      },
+    }),
+    [listBoxFunctions, latest],
+  )
 
   const focusNextDeletionButton = useCallback(() => {
     if (deletionButtonRefs.length === 0 || focusedIndex === null) {
@@ -373,7 +382,7 @@ const ActualMultiCombobox = <T,>(
       blur()
     } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
-      focusPrevDeletionButton()
+      functions.focusPrevDeletionButton()
     } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
       e.stopPropagation()
       focusNextDeletionButton()
@@ -388,7 +397,7 @@ const ActualMultiCombobox = <T,>(
 
       const lastItem = selectedItems[selectedItems.length - 1]
 
-      listBoxFunctions.handleDelete(lastItem)
+      functions.handleDelete(lastItem)
       setHighlighted(true)
       setInputValueIfUncontrolled(innerText(lastItem.label))
     } else {
@@ -518,7 +527,7 @@ const ActualMultiCombobox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                handleDelete={listBoxFunctions.handleDelete}
+                handleDelete={functions.handleDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
               />
