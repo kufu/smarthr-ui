@@ -9,7 +9,6 @@ import {
   type Ref,
   createRef,
   memo,
-  useCallback,
   useEffect,
   useId,
   useImperativeHandle,
@@ -186,12 +185,15 @@ const ActualMultiCombobox = <T,>(
   const triggerRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
-  const isInputControlled = controlledInputValue !== undefined
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
-  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
 
   const selectedListId = useId()
+
+  const isInputControlled = controlledInputValue !== undefined
+  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
+  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
+  const isInputEmpty = !inputValue
 
   const { options } = useMultiOptions({
     items,
@@ -202,6 +204,7 @@ const ActualMultiCombobox = <T,>(
   })
   const selectedItemLength = selectedItems.length
 
+  // TODO: 完全にcreateRefを作り直すのではなく、差分更新させたい
   const deletionButtonRefs = useMemo(() => {
     const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
 
@@ -215,34 +218,28 @@ const ActualMultiCombobox = <T,>(
 
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
-  const latest = useLatest({
-    onChange,
-    onChangeInput,
-    onAdd,
-    onSelect,
+  // eslint-disable-next-line local-rules/best-practice-for-use-latest
+  const latestForListBox = useLatest({
     onDelete,
     onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    isItemSelected,
+    onSelect,
+    onChangeInput,
     selectedItems,
-    isExpanded,
-    highlighted,
-    isComposing,
   })
 
-  const handleDelete = useCallback(
-    (item: ComboboxItem<T>) => {
+  const listBoxFunctions = useMemo(() => {
+    const handleDelete = (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
-      if (latest.onDelete) {
-        handlers.push((deletingItem: ComboboxItem<T>) => latest.onDelete!(deletingItem))
+      if (latestForListBox.onDelete) {
+        handlers.push((deletingItem: ComboboxItem<T>) => latestForListBox.onDelete!(deletingItem))
       }
-      if (latest.onChangeSelected) {
+      if (latestForListBox.onChangeSelected) {
         handlers.push((deletingItem: ComboboxItem<T>) =>
-          latest.onChangeSelected!(
-            latest.selectedItems.filter((selected) => !areItemsEqual(selected, deletingItem)),
+          latestForListBox.onChangeSelected!(
+            latestForListBox.selectedItems.filter(
+              (selected) => !areItemsEqual(selected, deletingItem),
+            ),
           ),
         )
       }
@@ -254,194 +251,210 @@ const ActualMultiCombobox = <T,>(
           handlers.forEach((h) => h(item))
         })
       }
-    },
-    [latest],
-  )
-  const actualOnSelect = useCallback(
-    (selected: ComboboxItem<T>) => {
-      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-      requestAnimationFrame(() => {
-        const matchedSelectedItem = latest.selectedItems.find((item) =>
-          areItemsEqual(item, selected),
-        )
+    }
 
-        if (matchedSelectedItem === undefined) {
-          latest.onSelect?.(selected)
-          latest.onChangeSelected?.(latest.selectedItems.concat(selected))
+    return {
+      handleDelete,
+      handleSelect: (selected: ComboboxItem<T>) => {
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          const matchedSelectedItem = latestForListBox.selectedItems.find((item) =>
+            areItemsEqual(item, selected),
+          )
 
-          // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-        } else if (matchedSelectedItem.deletable !== false) {
-          handleDelete(selected)
-        }
-      })
-    },
-    [handleDelete, latest],
-  )
+          if (matchedSelectedItem === undefined) {
+            latestForListBox.onSelect?.(selected)
+            latestForListBox.onChangeSelected?.(latestForListBox.selectedItems.concat(selected))
+
+            // 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+            latestForListBox.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          } else if (matchedSelectedItem.deletable !== false) {
+            handleDelete(selected)
+          }
+        })
+      },
+    }
+  }, [latestForListBox])
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
     onAdd,
-    onSelect: actualOnSelect,
+    onSelect: listBoxFunctions.handleSelect,
     isExpanded,
     isLoading,
     triggerRef,
     noResultText,
   })
 
-  const focusPrevDeletionButton = useCallback(() => {
-    if (selectedItemLength === 0) {
-      return
-    }
+  const latest = useLatest({
+    onChange,
+    onChangeInput,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    disabled,
+    isExpanded,
+    highlighted,
+    isComposing,
+    isInputEmpty,
+    selectedItems,
+    deletionButtonRefs,
+    focusedIndex,
+    selectedItemLength,
+    setInputValueIfUncontrolled,
+    handleKeyDownListBox,
+  })
 
-    if (focusedIndex !== null) {
-      const nextIndex = Math.max(focusedIndex - 1, 0)
-
-      deletionButtonRefs[nextIndex].current?.focus()
-      setFocusedIndex(nextIndex)
-    } else if (inputRef.current?.selectionStart === 0) {
-      const nextIndex = deletionButtonRefs.length - 1
-
-      deletionButtonRefs[nextIndex].current?.focus()
-      setFocusedIndex(nextIndex)
-    }
-  }, [deletionButtonRefs, focusedIndex, selectedItemLength])
-
-  const focusNextDeletionButton = useCallback(() => {
-    if (deletionButtonRefs.length === 0 || focusedIndex === null) {
-      return
-    }
-
-    const nextIndex = focusedIndex + 1
-
-    if (nextIndex < deletionButtonRefs.length) {
-      deletionButtonRefs[nextIndex].current?.focus()
-      setFocusedIndex(nextIndex)
-    } else {
+  const functions = useMemo(() => {
+    const resetDeletionButtonFocus = () => {
       setFocusedIndex(null)
-      // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
-      setTimeout(() => {
-        inputRef.current?.focus()
-      })
     }
-  }, [deletionButtonRefs, focusedIndex])
 
-  const resetDeletionButtonFocus = useCallback(() => {
-    setFocusedIndex(null)
-  }, [])
+    const handleDelete = listBoxFunctions.handleDelete
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
-
-  const focus = useCallback(() => {
-    latest.onFocus?.()
-    setIsExpanded(true)
-  }, [latest])
-
-  const blur = useCallback(() => {
-    if (latest.isExpanded) {
-      latest.onBlur?.()
-      setIsExpanded(false)
-      resetDeletionButtonFocus()
-    }
-  }, [resetDeletionButtonFocus, latest])
-
-  const outerClickRef = useMemo(() => [triggerRef, listBoxRef], [listBoxRef])
-  useOuterClick(outerClickRef, blur)
-
-  const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
-  const isInputEmpty = !inputValue
-
-  const onDelegateKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (isComposing) return
-
-    if (ESCAPE_KEY_REGEX.test(e.key)) {
-      e.stopPropagation()
-      blur()
-    } else if (e.key === 'Tab') {
-      if (isExpanded) {
-        // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-        inputRef.current?.focus()
+    const focusPrevDeletionButton = () => {
+      if (latest.selectedItemLength === 0) {
+        return
       }
 
-      blur()
-    } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
-      e.stopPropagation()
-      focusPrevDeletionButton()
-    } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
-      e.stopPropagation()
-      focusNextDeletionButton()
-    } else if (
-      e.key === 'Backspace' &&
-      isInputEmpty &&
-      selectedItems.length > 0 &&
-      selectedItems[selectedItems.length - 1].deletable !== false
-    ) {
-      e.preventDefault()
-      e.stopPropagation()
+      if (latest.focusedIndex !== null) {
+        const nextIndex = Math.max(latest.focusedIndex - 1, 0)
 
-      const lastItem = selectedItems[selectedItems.length - 1]
+        latest.deletionButtonRefs[nextIndex].current?.focus()
+        setFocusedIndex(nextIndex)
+      } else if (inputRef.current?.selectionStart === 0) {
+        const nextIndex = latest.deletionButtonRefs.length - 1
 
-      handleDelete(lastItem)
-      setHighlighted(true)
-      setInputValueIfUncontrolled(innerText(lastItem.label))
-    } else {
-      e.stopPropagation()
-      inputRef.current?.focus()
-      resetDeletionButtonFocus()
+        latest.deletionButtonRefs[nextIndex].current?.focus()
+        setFocusedIndex(nextIndex)
+      }
     }
 
-    handleKeyDownListBox(e)
-  }
+    const focusNextDeletionButton = () => {
+      if (latest.deletionButtonRefs.length === 0 || latest.focusedIndex === null) {
+        return
+      }
 
-  const onDelegateClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      if (!disabled && !latest.isExpanded) {
-        if (!(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')) {
+      const nextIndex = latest.focusedIndex + 1
+
+      if (nextIndex < latest.deletionButtonRefs.length) {
+        latest.deletionButtonRefs[nextIndex].current?.focus()
+        setFocusedIndex(nextIndex)
+      } else {
+        setFocusedIndex(null)
+        // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
+        setTimeout(() => {
+          inputRef.current?.focus()
+        })
+      }
+    }
+
+    const focus = () => {
+      latest.onFocus?.()
+      setIsExpanded(true)
+    }
+
+    const blur = () => {
+      if (latest.isExpanded) {
+        latest.onBlur?.()
+        setIsExpanded(false)
+        resetDeletionButtonFocus()
+      }
+    }
+
+    return {
+      handleDelete,
+      blur,
+      handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+        if (latest.isComposing) return
+
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          blur()
+        } else if (e.key === 'Tab') {
+          if (latest.isExpanded) {
+            // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+            inputRef.current?.focus()
+          }
+
+          blur()
+        } else if (ARROW_LEFT_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          focusPrevDeletionButton()
+        } else if (ARROW_RIGHT_KEY_REGEX.test(e.key)) {
+          e.stopPropagation()
+          focusNextDeletionButton()
+        } else if (
+          e.key === 'Backspace' &&
+          latest.isInputEmpty &&
+          latest.selectedItems.length > 0 &&
+          latest.selectedItems[latest.selectedItems.length - 1].deletable !== false
+        ) {
+          e.preventDefault()
+          e.stopPropagation()
+
+          const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
+
+          handleDelete(lastItem)
+          setHighlighted(true)
+          latest.setInputValueIfUncontrolled(innerText(lastItem.label))
+        } else {
+          e.stopPropagation()
+          inputRef.current?.focus()
+          resetDeletionButtonFocus()
+        }
+
+        latest.handleKeyDownListBox(e)
+      },
+      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
+        if (
+          !latest.disabled &&
+          !latest.isExpanded &&
+          !(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')
+        ) {
           focus()
         }
-      }
-    },
-    [disabled, focus, latest],
-  )
-  const actualOnChangeInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
+      },
+      handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
+        const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
 
-      handlers.forEach((h) => h(e))
-      setInputValueIfUncontrolled(e.currentTarget.value)
-    },
-    [setInputValueIfUncontrolled, latest],
-  )
-  const onFocusInput = useCallback(() => {
-    if (latest.isExpanded) {
-      resetDeletionButtonFocus()
-    } else {
-      resetDeletionButtonFocus()
-      focus()
-    }
-  }, [resetDeletionButtonFocus, focus, latest])
-  const onCompositionStartInput = useCallback(() => setIsComposing(true), [])
-  const onCompositionEndInput = useCallback(() => setIsComposing(false), [])
-  const onKeyDownInput = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
-      // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
-      e.preventDefault()
-    }
-  }, [])
+        handlers.forEach((h) => h(e))
+        latest.setInputValueIfUncontrolled(e.currentTarget.value)
+      },
+      handleFocusInput: () => {
+        resetDeletionButtonFocus()
 
-  // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
-  // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
-  // submitイベントが発生し、formが送信される場合がある
-  const onDelegateKeyPress = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      preventDefaultWithPressEnter(e)
-      latest.onKeyPress?.(e)
-    },
-    [latest],
+        if (!latest.isExpanded) {
+          focus()
+        }
+      },
+      handleCompositionStart: () => setIsComposing(true),
+      handleCompositionEnd: () => setIsComposing(false),
+      handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (ARROW_UP_AND_DOWN_KEY_REGEX.test(e.key)) {
+          // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
+          e.preventDefault()
+        }
+      },
+      // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+      // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+      // submitイベントが発生し、formが送信される場合がある
+      handleDelegateKeyPress: (e: KeyboardEvent<HTMLInputElement>) => {
+        preventDefaultWithPressEnter(e)
+        latest.onKeyPress?.(e)
+      },
+    }
+  }, [listBoxFunctions, latest])
+
+  useOuterClick(
+    useMemo(() => [triggerRef, listBoxRef], [listBoxRef]),
+    functions.blur,
   )
+
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   useEffect(() => {
     if (latest.highlighted) {
@@ -456,7 +469,7 @@ const ActualMultiCombobox = <T,>(
     if (isExpanded) {
       inputRef.current?.focus()
     }
-  }, [isExpanded, setInputValueIfUncontrolled, selectedItems, inputRef])
+  }, [isExpanded, selectedItems, isInputControlled, inputRef])
 
   const classNames = useMemo(() => {
     const {
@@ -494,9 +507,9 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={triggerRef}
       role="group"
-      onClick={onDelegateClick}
-      onKeyDown={onDelegateKeyDown}
-      onKeyPress={onDelegateKeyPress}
+      onClick={functions.handleDelegateClick}
+      onKeyDown={functions.handleDelegateKeyDown}
+      onKeyPress={functions.handleDelegateKeyPress}
       className={classNames.wrapper}
       style={{
         ...style,
@@ -514,7 +527,7 @@ const ActualMultiCombobox = <T,>(
               <MultiSelectedItem
                 item={selectedItem}
                 disabled={disabled}
-                handleDelete={handleDelete}
+                handleDelete={functions.handleDelete}
                 enableEllipsis={selectedItemEllipsis}
                 buttonRef={deletionButtonRefs[i]}
               />
@@ -532,11 +545,11 @@ const ActualMultiCombobox = <T,>(
             disabled={disabled}
             required={required && selectedItems.length === 0}
             ref={inputRef}
-            onChange={actualOnChangeInput}
-            onFocus={onFocusInput}
-            onCompositionStart={onCompositionStartInput}
-            onCompositionEnd={onCompositionEndInput}
-            onKeyDown={onKeyDownInput}
+            onChange={functions.handleChangeInput}
+            onFocus={functions.handleFocusInput}
+            onCompositionStart={functions.handleCompositionStart}
+            onCompositionEnd={functions.handleCompositionEnd}
+            onKeyDown={functions.handleKeyDownInput}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
             role="combobox"
