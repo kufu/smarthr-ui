@@ -14,13 +14,12 @@ import { tv } from 'tailwind-variants'
 import { useIntl } from '../../../intl'
 import { FaImageIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { DEFAULT_MIME_TYPES, matchesMimeType } from '../extensions/Image/mimeTypes'
 import { uploadAndInsertImage } from '../extensions/configureExtensions'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ImageUrlPopover } from './ImageUrlPopover'
 import { ToolbarButton } from './ToolbarButton'
-
-const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 const classNameGenerator = tv({
   slots: {
@@ -73,14 +72,16 @@ export const ImageInsertButton: FC<Props> = memo(
     const handleFileChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
-        if (file && onImageUpload) {
+        // accept 属性はダイアログの絞り込みヒントでしかなく利用者が回避できるため、
+        // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する
+        if (file && onImageUpload && matchesMimeType(file.type, mimeTypes)) {
           uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
         }
         if (e.target) {
           e.target.value = ''
         }
       },
-      [editor, onImageUpload, onImageUploadError],
+      [editor, mimeTypes, onImageUpload, onImageUploadError],
     )
 
     const handleUrlInsert = useCallback(

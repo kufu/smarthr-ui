@@ -68,6 +68,13 @@ type RichTextEditorBaseProps = {
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   /** 画像アップロード失敗時に呼ばれる。通知方法は利用者に委ねる。 */
   onImageUploadError?: (error: unknown, file: File) => void
+  /**
+   * 画像として受け付ける MIME type。`image/*` のようなワイルドカードを指定できる。
+   * 未指定のときは jpeg / png / gif / webp。
+   *
+   * ファイル選択ダイアログ・ドラッグ&ドロップ・貼り付けのすべてに適用される。
+   * 一致しないファイルのドロップ・貼り付けは無視される。
+   */
   acceptedMimeTypes?: string[]
 }
 

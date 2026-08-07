@@ -15,6 +15,7 @@ import {
   imageUploadPlaceholderPlugin,
   removeImagePlaceholder,
 } from './Image/imageUploadPlaceholder'
+import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
 import { LineHeight } from './LineHeight'
 import { CustomTable } from './Table/CustomTable'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
@@ -31,8 +32,6 @@ type ConfigureExtensionsOptions = {
   onFileDrop?: (file: File, pos: number | null) => void
   acceptedMimeTypes?: string[]
 }
-
-const DEFAULT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
 
@@ -145,16 +144,17 @@ export const configureExtensions = ({
       const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
 
       extensions.push(
+        // allowedMimeTypes は渡さない。FileHandler の判定が完全一致で `image/*` を通せず、
+        // ファイル選択ダイアログの accept 属性と挙動がずれるため、フィルタは自前で行う。
         FileHandler.configure({
-          allowedMimeTypes: mimeTypes,
           onDrop: (editor, files, pos) => {
-            const file = files.find((f) => mimeTypes.some((type) => f.type === type))
+            const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
             if (file) {
               uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
             }
           },
           onPaste: (editor, files) => {
-            const file = files.find((f) => mimeTypes.some((type) => f.type === type))
+            const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
             if (file) {
               uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
             }

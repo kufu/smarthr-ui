@@ -28,6 +28,18 @@ const getFileInput = () => {
   return fileInput as HTMLInputElement
 }
 
+// jsdom には DataTransfer が無いため、FileHandler と ProseMirror が読む分だけを持つ
+// clipboardData を組み立てて paste を発火させる。
+const pasteFile = (file: File) => {
+  fireEvent.paste(screen.getByRole('textbox'), {
+    clipboardData: {
+      files: [file],
+      types: ['Files'],
+      getData: () => '',
+    },
+  })
+}
+
 describe('画像アップロード', () => {
   it('成功時に画像がエディタへ挿入される', async () => {
     const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/a.png' })
@@ -70,5 +82,66 @@ describe('画像アップロード', () => {
       expect(onImageUploadError).toHaveBeenCalledTimes(1)
     })
     expect(document.querySelector('.ProseMirror img')).toBeNull()
+  })
+
+  it('acceptedMimeTypes に一致しないファイルはファイル選択からも受け付けない', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/a.png' })
+    render(
+      <RichTextEditor
+        features={['image']}
+        onImageUpload={onImageUpload}
+        acceptedMimeTypes={['image/*']}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    // accept 属性はダイアログの絞り込みヒントでしかなく、利用者は任意のファイルを選べる
+    const file = new File(['x'], 'a.pdf', { type: 'application/pdf' })
+    fireEvent.change(getFileInput(), { target: { files: [file] } })
+
+    await waitFor(() => {
+      expect(document.querySelector('.ProseMirror')).not.toBeNull()
+    })
+    expect(onImageUpload).not.toHaveBeenCalled()
+  })
+
+  it('acceptedMimeTypes のワイルドカードが貼り付けにも効く', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/pasted.png' })
+    render(
+      <RichTextEditor
+        features={['image']}
+        onImageUpload={onImageUpload}
+        acceptedMimeTypes={['image/*']}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    pasteFile(new File(['x'], 'a.png', { type: 'image/png' }))
+
+    await waitFor(() => {
+      expect(onImageUpload).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  it('acceptedMimeTypes に一致しないファイルの貼り付けは無視される', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/pasted.png' })
+    render(
+      <RichTextEditor
+        features={['image']}
+        onImageUpload={onImageUpload}
+        acceptedMimeTypes={['image/*']}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    pasteFile(new File(['x'], 'a.pdf', { type: 'application/pdf' }))
+
+    await waitFor(() => {
+      expect(document.querySelector('.ProseMirror')).not.toBeNull()
+    })
+    expect(onImageUpload).not.toHaveBeenCalled()
   })
 })
