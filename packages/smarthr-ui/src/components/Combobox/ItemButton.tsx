@@ -18,7 +18,7 @@ type Props<T> = {
 
 const classNameGenerator = tv({
   base: [
-    'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
+    'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight shr-text-black',
     'aria-selected:shr-text-white',
     'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
     'data-[active=true]:shr-bg-white-darken data-[active=true]:aria-selected:shr-bg-main-darken',
