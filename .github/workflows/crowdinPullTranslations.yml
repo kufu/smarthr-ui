@@ -17,6 +17,7 @@ jobs:
     name: Download translations from Crowdin
     runs-on: ubuntu-latest
     steps:
+      - uses: kufu/safe-chain-orb@90f4f6b5e801be1257a4e3ac1756f2136d023ef6 # main
       - name: Checkout branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

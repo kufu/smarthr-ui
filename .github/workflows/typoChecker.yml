@@ -6,6 +6,7 @@ jobs:
     name: Typo Checker
     runs-on: ubuntu-latest
     steps:
+    - uses: kufu/safe-chain-orb@90f4f6b5e801be1257a4e3ac1756f2136d023ef6 # main
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Use custom config file
       uses: crate-ci/typos@8a48f81b6c64dcfea44b3633223084c4be58ac5f # v1.49.0
