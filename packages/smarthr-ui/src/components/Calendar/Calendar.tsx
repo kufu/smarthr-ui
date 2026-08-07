@@ -7,7 +7,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -15,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer, useDateFormat } from '../../intl'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
@@ -227,14 +227,21 @@ const MonthDirectionCluster = memo<{
   setCurrentMonth: (day: DayJsType) => void
   className: string
 }>(({ isSelectingYear, directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
-  const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
-  const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
+  const latest = useLatest({ prev, next, setCurrentMonth })
+
+  const functions = useMemo(
+    () => ({
+      handleClickMonthPrev: () => latest.setCurrentMonth(latest.prev),
+      handleClickMonthNext: () => latest.setCurrentMonth(latest.next),
+    }),
+    [latest],
+  )
 
   return (
     <Cluster gap={0.5} className={className}>
       <Button
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
-        onClick={onClickMonthPrev}
+        onClick={functions.handleClickMonthPrev}
         size="S"
         className="smarthr-ui-Calendar-monthButtonPrev"
       >
@@ -244,7 +251,7 @@ const MonthDirectionCluster = memo<{
       </Button>
       <Button
         disabled={isSelectingYear || next.isAfter(to, 'month')}
-        onClick={onClickMonthNext}
+        onClick={functions.handleClickMonthNext}
         size="S"
         className="smarthr-ui-Calendar-monthButtonNext"
       >
