@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 
 const DISCLOSURE_CHANGE_EVENT = 'smarthr-ui:disclosure-change'
 type DisclosureChangeEventDetail = { id: string; expanded: boolean }
@@ -19,18 +21,31 @@ type UseDisclosureResult = [expanded: boolean, setExpanded: Setter]
  */
 export const useDisclosure = (id: string): UseDisclosureResult => {
   const [expanded, setExpanded] = useState(false)
+  const latest = useLatest({ id, expanded })
 
-  useEffect(() => {
-    document.dispatchEvent(
-      new CustomEvent<DisclosureChangeEventDetail>(DISCLOSURE_CHANGE_EVENT, {
-        detail: { id, expanded },
-      }),
-    )
-  }, [expanded, id])
+  const functions = useMemo(
+    () => ({
+      safeSetExpanded: (value: boolean | ((prev: boolean) => boolean)) => {
+        // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
+        requestAnimationFrame(() => {
+          const next = typeof value === 'function' ? value(latest.expanded) : value
+          if (next !== latest.expanded) {
+            setExpanded(next)
+            document.dispatchEvent(
+              new CustomEvent<DisclosureChangeEventDetail>(DISCLOSURE_CHANGE_EVENT, {
+                detail: { id: latest.id, expanded: next },
+              }),
+            )
+          }
+        })
+      },
+    }),
+    [latest],
+  )
 
   useEffect(() => {
     const handleDisclosureChange = (e: CustomEvent<DisclosureChangeEventDetail>) => {
-      if (id === e.detail.id) {
+      if (latest.id === e.detail.id) {
         setExpanded(e.detail.expanded)
       }
     }
@@ -39,14 +54,7 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     return () => {
       document.removeEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
     }
-  }, [id])
+  }, [latest])
 
-  const safeSetExpanded: Setter = useCallback((value) => {
-    // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
-    requestAnimationFrame(() => {
-      setExpanded(value)
-    })
-  }, [])
-
-  return [expanded, safeSetExpanded]
+  return [expanded, functions.safeSetExpanded]
 }
