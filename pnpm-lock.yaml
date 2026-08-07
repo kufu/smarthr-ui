@@ -9,7 +9,7 @@ overrides:
   esbuild@<=0.24.2: '>=0.28.1'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
   tar@<=7.5.15: '>=7.5.22'
-  react-draggable: 4.7.0
+  react-draggable: 4.7.1
   js-yaml@>=4.0.0 <=5.2.1: '>=5.2.2'
   '@babel/core@<=7.29.0': '>=8.0.1'
   sharp@<0.35.0: '>=0.35.3'
@@ -220,8 +220,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1
       react-draggable:
-        specifier: 4.7.0
-        version: 4.7.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: 4.7.1
+        version: 4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-icons:
         specifier: ^5.7.0
         version: 5.7.0(react@19.2.8)
@@ -5122,8 +5122,8 @@ packages:
     peerDependencies:
       react: ^19.2.8
 
-  react-draggable@4.7.0:
-    resolution: {integrity: sha512-kTpANmKWVnFXiZ76Ag2ZowiFStuBYnJ606PI1TbUsOg29/400/JNIxI9+CuenhiAqFuXWJffz6F4UI3R51kUug==}
+  react-draggable@4.7.1:
+    resolution: {integrity: sha512-wa3tzfFnYt3yaZLuyU58fl1TNunfWfBekDgWhZA1+gb2jnp42wZ0ymuopR6M5kqDYmm4hKmzGlcKWjZf3Zb6RQ==}
     peerDependencies:
       react: '>= 16.3.0'
       react-dom: '>= 16.3.0'
@@ -11312,7 +11312,7 @@ snapshots:
       react: 19.2.8
       scheduler: 0.27.0
 
-  react-draggable@4.7.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  react-draggable@4.7.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       clsx: 2.1.1
       prop-types: 15.8.1
