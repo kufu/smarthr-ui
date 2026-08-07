@@ -34,7 +34,7 @@ type ObjectActionButtonType = {
 
 type ObjectCloseButtonType = {
   /** 閉じるボタンのラベル */
-  text: ReactNode
+  text?: ReactNode
   /** 閉じるボタンを無効にするかどうか */
   disabled?: boolean
 }
