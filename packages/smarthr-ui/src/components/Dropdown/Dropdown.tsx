@@ -58,15 +58,16 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { createPortal, portalRoot, isPortalRootMounted, isChildPortal, PortalParentProvider } =
-    usePortal()
+
+  const contentId = useId()
+  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal({
+    rootId: contentId,
+  })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
-  const contentId = useId()
 
   const latest = useLatest({
     active,
-    isPortalRootMounted,
     isChildPortal,
     portalRoot,
     onOpen,
@@ -103,10 +104,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [latest])
 
   useEffect(() => {
-    if (latest.portalRoot) {
-      latest.portalRoot.setAttribute('id', contentId)
-    }
-
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
@@ -122,7 +119,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [contentId, latest])
 
   useEffect(() => {
-    if (latest.isPortalRootMounted()) {
+    if (latest.portalRoot) {
       latest[active ? 'onOpen' : 'onClose']?.()
     }
   }, [active, latest])
