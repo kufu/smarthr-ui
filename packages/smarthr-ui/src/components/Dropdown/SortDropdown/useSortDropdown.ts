@@ -1,14 +1,7 @@
-import {
-  type ChangeEventHandler,
-  type ComponentProps,
-  type MouseEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { type ChangeEvent, type ComponentProps, type MouseEvent, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
@@ -22,12 +15,23 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
+const CLASS_NAMES = (() => {
+  const { body, select, footer } = classNameGenerator()
+
+  return {
+    body: body(),
+    select: select(),
+    footer: footer(),
+  }
+})()
+
+type Props = ComponentProps<typeof SortDropdown>
 
 export const useSortDropdown = ({
   sortFields,
   defaultOrder,
   onApply,
+  onCancel,
   sortFieldLabel,
   sortOrderLegend,
   ascLabel,
@@ -79,93 +83,85 @@ export const useSortDropdown = ({
     [sortFieldLabel, sortOrderLegend, ascLabel, descLabel, applyText, cancelText, localize],
   )
 
+  const [defaultFieldLabel] = useState(
+    () => (sortFields.find((field) => field.selected) || sortFields[0])?.label || '',
+  )
+
   // 外向きの値
-  const [selectedLabel, setSelectedLabel] = useState<string>()
+  const [selectedLabel, setSelectedLabel] = useState<string>(defaultFieldLabel)
   const [checkedOrder, setCheckedOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   // 内部的な値
   const [innerFields, setInnerFields] = useState<Props['sortFields']>(sortFields)
-  const [innerSelectedField, setInnerSelectedField] = useState<string>()
+  const [innerSelectedField, setInnerSelectedField] = useState<string>(defaultFieldLabel)
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
-  useEffect(() => {
-    if (selectedLabel) return
+  const hasOnCancel = !!onCancel
 
-    // 初期値は option に紛れているので、選択されている項目を取得
-    const defaultField = sortFields.find((field) => field.selected) || sortFields[0]
+  const latest = useLatest({
+    innerCheckedOrder,
+    innerFields,
+    innerSelectedField,
+    onApply,
+    onCancel,
+  })
 
-    setSelectedLabel(defaultField.label)
-    setInnerSelectedField(defaultField.label)
-  }, [selectedLabel, sortFields])
+  const handler = useMemo(
+    () => ({
+      change: (e: ChangeEvent<HTMLSelectElement>) => {
+        const select = e.currentTarget
+        const newLabel = select.options[select.selectedIndex].label
 
-  // 外向きな値で構成
-  const triggerLabel = useMemo(
-    () => `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
-    [texts.ascLabel, texts.descLabel, selectedLabel, checkedOrder],
-  )
-
-  const SortIcon = useMemo(
-    () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
-    [checkedOrder],
-  )
-
-  const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
-    (e) => {
-      const select = e.currentTarget
-      const newLabel = select.options[select.selectedIndex].label
-
-      setInnerFields(
-        innerFields.map((field) => {
-          if (field.label === newLabel) {
-            if (!field.selected) {
+        setInnerFields((currentFields) =>
+          currentFields.map((field) => {
+            if (field.label === newLabel) {
+              if (!field.selected) {
+                return {
+                  ...field,
+                  selected: true,
+                }
+              }
+            } else if (field.selected) {
               return {
                 ...field,
-                selected: true,
+                selected: false,
               }
             }
-          } else if (field.selected) {
-            return {
-              ...field,
-              selected: false,
-            }
+
+            return field
+          }),
+        )
+        setInnerSelectedField(newLabel)
+      },
+      apply: () => {
+        setSelectedLabel(latest.innerSelectedField)
+        setCheckedOrder(latest.innerCheckedOrder)
+        latest.onApply({
+          field: latest.innerSelectedField || '',
+          order: latest.innerCheckedOrder,
+          newfields: latest.innerFields,
+        })
+      },
+      cancel: hasOnCancel
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onCancel!(e)
           }
-
-          return field
-        }),
-      )
-      setInnerSelectedField(newLabel)
-    },
-    [innerFields],
+        : undefined,
+      changeSortOrderRadio: (e: ChangeEvent<HTMLInputElement>) => {
+        setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
+      },
+    }),
+    [hasOnCancel, latest],
   )
-  const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedLabel(innerSelectedField)
-    setCheckedOrder(innerCheckedOrder)
-    onApply({ field: innerSelectedField || '', order: innerCheckedOrder, newfields: innerFields })
-  }, [innerCheckedOrder, innerFields, innerSelectedField, onApply])
-
-  const onChangeSortOrderRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
-    setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
-  }, [])
-
-  const classNames = useMemo(() => {
-    const { body, select, footer } = classNameGenerator()
-
-    return {
-      body: body(),
-      select: select(),
-      footer: footer(),
-    }
-  }, [])
 
   return {
-    onChangeSortOrderRadio,
     texts: {
       ...texts,
-      triggerLabel,
+      triggerLabel: `${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`,
     },
-    handler: { handleApply, handleChange },
+    handler,
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
-    SortIcon,
-    classNames,
+    SortIcon: checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon,
+    classNames: CLASS_NAMES,
   }
 }

@@ -15,7 +15,6 @@ import {
   useState,
 } from 'react'
 import { useId } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -43,7 +42,7 @@ type ObjectLabelType = {
   /** ラベルに適用する `id` 値 */
   id?: string
 }
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** グループのラベル名 */
   label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
@@ -66,8 +65,7 @@ type AbstractProps = PropsWithChildren<{
   disabled?: boolean
   as?: string | ComponentType<any>
 }>
-type Props = AbstractProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'aria-labelledby'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
 
 const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
@@ -87,7 +85,6 @@ const classNameGenerator = tv({
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
     errorMessage: ['smarthr-ui-FormControl-errorMessage'],
-    underLabelStack: ['[&&&]:shr-mt-0'],
     childrenWrapper: [],
   },
   variants: {
@@ -129,13 +126,6 @@ const classNameGenerator = tv({
       innerMargin: undefined,
       isFieldset: true,
       class: {
-        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-1',
-      },
-    },
-    {
-      innerMargin: undefined,
-      isFieldset: false,
-      class: {
         childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
       },
     },
@@ -169,6 +159,7 @@ export const ActualFormControl: FC<Props> = ({
   const managedHtmlFor = label.htmlFor || childInputId || defaultHtmlFor
   const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
+  const labelTextRef = useRef<HTMLElement>(null)
   const isFieldset = as === 'fieldset'
 
   const describedbyIds = useMemo(() => {
@@ -203,8 +194,6 @@ export const ActualFormControl: FC<Props> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const actualInnerMargin = useMemo(() => innerMargin ?? 0.5, [innerMargin])
-
   const classNames = useMemo(() => {
     const generators = classNameGenerator({ innerMargin, isFieldset })
 
@@ -216,7 +205,6 @@ export const ActualFormControl: FC<Props> = ({
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      underLabelStack: generators.underLabelStack(),
       childrenWrapper: generators.childrenWrapper(),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
@@ -298,69 +286,52 @@ export const ActualFormControl: FC<Props> = ({
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
   useEffect(() => {
-    if (!isFieldset || !inputWrapperRef.current) return
+    if (!isFieldset || !inputWrapperRef.current || !labelTextRef.current) return
 
-    const inputs =
-      inputWrapperRef.current.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
+    const updateAriaLabels = () => {
+      const labelText = labelTextRef.current?.textContent || ''
+      if (!labelText) return
 
-    if (!inputs.length) return
+      const inputs =
+        inputWrapperRef.current!.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
+      if (!inputs.length) return
 
-    const legendText = innerText(label.text)
+      inputs.forEach((input: HTMLInputElement) => {
+        const accessibleName =
+          input.getAttribute('aria-label') ||
+          (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
+            ? input.labels[0].textContent
+            : '')
 
-    if (!legendText) return
+        if (
+          accessibleName &&
+          !accessibleName.includes(labelText) &&
+          !labelText.includes(accessibleName)
+        ) {
+          input.setAttribute('aria-label', `${accessibleName} ${labelText}`)
+        }
+      })
+    }
 
-    inputs.forEach((input: HTMLInputElement) => {
-      const accessibleName =
-        input.getAttribute('aria-label') ||
-        (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
-          ? input.labels![0].textContent
-          : '')
+    // 初回実行
+    updateAriaLabels()
 
-      if (
-        accessibleName &&
-        !accessibleName.includes(legendText) &&
-        !legendText.includes(accessibleName)
-      ) {
-        input.setAttribute('aria-label', `${accessibleName} ${legendText}`)
-      }
+    // label要素の変更を監視
+    const observer = new MutationObserver(updateAriaLabels)
+    observer.observe(labelTextRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: true,
     })
-  }, [isFieldset, label.text])
 
-  let body = (
-    <>
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
-      <ErrorMessageList
-        errorMessages={actualErrorMessages}
-        managedHtmlFor={managedHtmlFor}
-        classNames={classNames}
-      />
-      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
-        {children}
-      </div>
-      <SupplementaryMessageText
-        supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={managedHtmlFor}
-      />
-    </>
-  )
-
-  // HINT: label.unrecommendedHideの場合、body以下の余白の計算を簡略化するため
-  // Stackをネストし、そのStackに対してmargin-top: 0を指定する
-  // こうすることでinner Stack以下の要素は擬似的にStackの最初の要素になる
-  if (label.unrecommendedHide) {
-    body = (
-      <Stack gap={actualInnerMargin} className={classNames.underLabelStack}>
-        {body}
-      </Stack>
-    )
-  }
+    return () => observer.disconnect()
+  }, [isFieldset])
 
   return (
     <Stack
       {...rest}
       as={as}
-      gap={actualInnerMargin}
+      gap={innerMargin ?? 0.5}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={classNames.wrapper}
     >
@@ -375,8 +346,22 @@ export const ActualFormControl: FC<Props> = ({
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
+        labelTextRef={labelTextRef}
       />
-      {body}
+      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
+      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <ErrorMessageList
+        errorMessages={actualErrorMessages}
+        managedHtmlFor={managedHtmlFor}
+        classNames={classNames}
+      />
+      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
+        {children}
+      </div>
+      <SupplementaryMessageText
+        supplementaryMessage={supplementaryMessage}
+        managedHtmlFor={managedHtmlFor}
+      />
     </Stack>
   )
 }
@@ -392,6 +377,7 @@ const LabelCluster = memo<
     managedLabelId: string
     labelClassName: string
     statusLabels: StatusLabelType[]
+    labelTextRef: React.RefObject<HTMLElement>
   }
 >(
   ({
@@ -405,67 +391,46 @@ const LabelCluster = memo<
     subActionArea,
     labelClassName,
     statusLabels,
+    labelTextRef,
   }) => {
     const body = (
       <>
         <Text styleType={labelType} icon={labelIcon}>
-          {label}
+          <span ref={labelTextRef}>{label}</span>
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
     )
 
-    const attrs = useMemo(() => {
-      if (unrecommendedHideLabel) {
-        return {
-          label: null,
-          visuallyHidden: isFieldset
-            ? {
-                as: 'legend',
-              }
-            : {
-                as: 'label',
-                htmlFor: managedHtmlFor,
-                id: managedLabelId,
-              },
-        }
-      }
+    const attrs: {
+      label: { 'aria-hidden': 'true' } | { as: 'label'; htmlFor: string; id: string } | null
+      visuallyHidden: { as: 'legend' | 'label'; htmlFor?: string; id?: string } | null
+    } = {
+      label: null,
+      visuallyHidden: null,
+    }
 
-      if (isFieldset) {
-        return {
-          label: { 'aria-hidden': 'true' } as const,
-          visuallyHidden: { as: 'legend' },
-        }
-      }
+    if (isFieldset) {
+      attrs.visuallyHidden = { as: 'legend' }
 
-      return {
-        label: {
-          as: 'label' as const,
-          htmlFor: managedHtmlFor,
-          id: managedLabelId,
-        },
-        visuallyHidden: null,
+      if (!unrecommendedHideLabel) {
+        attrs.label = { 'aria-hidden': 'true' } as const
       }
-    }, [managedLabelId, managedHtmlFor, unrecommendedHideLabel, isFieldset])
+    } else {
+      attrs[unrecommendedHideLabel ? 'visuallyHidden' : 'label'] = {
+        as: 'label',
+        htmlFor: managedHtmlFor,
+        id: managedLabelId,
+      }
+    }
 
     return (
       <>
         {attrs.visuallyHidden && (
-          <VisuallyHiddenText {...attrs.visuallyHidden}>
-            {
-              // HINT: innerTextでは正しく文字が取得できない場合がある
-              // 安全策としてinnerTextが空を取得してきたらbody自体を埋めこみます
-              innerText(body) || body
-            }
-          </VisuallyHiddenText>
+          <VisuallyHiddenText {...attrs.visuallyHidden}>{body}</VisuallyHiddenText>
         )}
         {attrs.label && (
-          <Cluster
-            justify="space-between"
-            // HINT: UI上、常にトップの要素になるため、Stackの計算が狂わないよう、
-            // 常にmargin-topを0にする
-            className="[&&&]:shr--mt-0"
-          >
+          <Cluster justify="space-between">
             <Cluster {...attrs.label} align="center" className={labelClassName}>
               {body}
             </Cluster>

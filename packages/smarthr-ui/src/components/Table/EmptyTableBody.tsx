@@ -10,11 +10,11 @@ import type { Gap } from '../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */
   padding?: Padding
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'tbody'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'tbody'>, keyof BaseProps>
 
 const tdClassNameGenerator = tv({
   base: 'shr-text-center',

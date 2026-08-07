@@ -1,7 +1,8 @@
+import { type ComponentProps, type FC, useCallback } from 'react'
+
+import { useLatest } from '../../hooks/useLatest'
 import { useIntl } from '../../intl'
 import { DatePicker } from '../DatePicker'
-
-import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<ComponentProps<typeof DatePicker>, 'showAlternative'>
 
@@ -18,11 +19,11 @@ const handleShowWareki = (date: Date | null, locale: string) => {
 
 export const WarekiPicker: FC<Props> = (props) => {
   const { locale } = useIntl()
-
-  return (
-    <DatePicker
-      {...props}
-      showAlternative={(date: Date | null) => handleShowWareki(date, locale)}
-    />
+  const latest = useLatest({ locale })
+  const showAlternative = useCallback(
+    (date: Date | null) => handleShowWareki(date, latest.locale),
+    [latest],
   )
+
+  return <DatePicker {...props} showAlternative={showAlternative} />
 }

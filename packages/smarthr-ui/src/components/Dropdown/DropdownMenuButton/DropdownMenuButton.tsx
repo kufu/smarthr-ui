@@ -19,8 +19,8 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { useIntl } from '../../../intl'
-import { type AnchorButton, Button, type AbstractProps as ButtonProps } from '../../Button'
+import { Localizer } from '../../../intl'
+import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { Dropdown, DropdownContext } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
@@ -54,7 +54,7 @@ type ObjectTriggerType = {
         component?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
       }
 }
-type AbstractProps = {
+type BaseProps = {
   /** 引き金となるボタン */
   trigger: ReactNode | ObjectTriggerType
   /** 操作群 */
@@ -64,8 +64,8 @@ type AbstractProps = {
   /** ドロップダウンメニューが閉じられた際のイベント */
   onClose?: () => void
 }
-type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
 const triggerObjectConverter = (trigger: ReactNode) => ({
   children: trigger,
@@ -156,8 +156,6 @@ const MemoizedTriggerButton = memo<
     }
   }
 >(({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
-  const { localize } = useIntl()
-
   const { active } = useContext(DropdownContext)
 
   return (
@@ -171,15 +169,17 @@ const MemoizedTriggerButton = memo<
           !onlyIconTrigger && (
             <FaCaretDownIcon
               alt={
-                active
-                  ? localize({
-                      id: 'smarthr-ui/DropdownMenuButton/triggerActive',
-                      defaultText: '候補を閉じる',
-                    })
-                  : localize({
-                      id: 'smarthr-ui/DropdownMenuButton/triggerInactive',
-                      defaultText: '候補を開く',
-                    })
+                active ? (
+                  <Localizer
+                    id="smarthr-ui/DropdownMenuButton/triggerActive"
+                    defaultText="候補を閉じる"
+                  />
+                ) : (
+                  <Localizer
+                    id="smarthr-ui/DropdownMenuButton/triggerInactive"
+                    defaultText="候補を開く"
+                  />
+                )
               }
             />
           )

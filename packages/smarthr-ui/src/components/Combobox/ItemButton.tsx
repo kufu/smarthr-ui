@@ -1,6 +1,7 @@
-import { type ReactNode, type RefObject, memo, useCallback, useMemo } from 'react'
+import { type ReactNode, type RefObject, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { FaCirclePlusIcon } from '../Icon'
 import { Text } from '../Text'
@@ -9,9 +10,9 @@ import type { ComboboxOption } from './types'
 
 type Props<T> = {
   option: ComboboxOption<T>
-  onAdd?: (option: ComboboxOption<T>) => void
-  onSelect: (option: ComboboxOption<T>) => void
-  onMouseOver: (option: ComboboxOption<T>) => void
+  handleAdd?: (option: ComboboxOption<T>) => void
+  handleSelect: (option: ComboboxOption<T>) => void
+  handleMouseOver: (option: ComboboxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement> | undefined
 }
 
@@ -31,72 +32,100 @@ const classNameGenerator = tv({
   },
 })
 
-const ItemButton = <T,>({ option, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) => {
-  const handleMouseOver = useCallback(() => {
-    onMouseOver(option)
-  }, [onMouseOver, option])
+const CLASS_NAMES = {
+  new: classNameGenerator({ new: true }),
+  select: classNameGenerator({ new: false }),
+}
 
-  const commonProps = {
-    option,
-    onMouseOver: handleMouseOver,
+const ItemButton = <T,>({
+  option,
+  handleAdd,
+  handleSelect,
+  handleMouseOver,
+  activeRef,
+}: Props<T>) => {
+  const latest = useLatest({ handleAdd, handleSelect, handleMouseOver, option })
+  const hasHandleAdd = !!handleAdd
+
+  const functions = useMemo(
+    () => ({
+      handleMouseOver: () => latest.handleMouseOver(latest.option),
+      handleAddClick: hasHandleAdd ? () => latest.handleAdd?.(latest.option) : undefined,
+      handleSelectClick: () => latest.handleSelect(latest.option),
+    }),
+    [hasHandleAdd, latest],
+  )
+
+  const commonAttrs = {
+    id: option.id,
+    label: option.item.label,
     activeRef,
+    handleMouseOver: functions.handleMouseOver,
   }
 
   return option.isNew ? (
-    <AddButton {...commonProps} onAdd={onAdd} />
+    <AddButton {...commonAttrs} handleClick={functions.handleAddClick} />
   ) : (
-    <SelectButton {...commonProps} onSelect={onSelect} />
+    <SelectButton
+      {...commonAttrs}
+      disabled={option.item.disabled}
+      selected={option.selected}
+      handleClick={functions.handleSelectClick}
+    />
   )
 }
 const typedMemo: <T>(c: T) => T = memo
 const Memoized = typedMemo(ItemButton)
 export { Memoized as ItemButton }
 
-type ButtonType<T> = Pick<Props<T>, 'option' | 'activeRef'> & {
-  onMouseOver: () => void
-}
+const SelectButton = memo<{
+  id: string
+  label: ReactNode
+  disabled?: boolean
+  selected: boolean
+  activeRef: RefObject<HTMLButtonElement> | undefined
+  handleClick: () => void
+  handleMouseOver: () => void
+}>(({ id, label, disabled, selected, activeRef, handleClick, handleMouseOver }) => (
+  <button
+    ref={activeRef}
+    type="button"
+    role="option"
+    id={id}
+    disabled={disabled}
+    aria-selected={selected}
+    data-active={!!activeRef}
+    onClick={handleClick}
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+    onMouseOver={handleMouseOver}
+    className={CLASS_NAMES.select}
+  >
+    {label}
+  </button>
+))
 
-const AddButton = <T,>({
-  activeRef,
-  option,
-  onAdd,
-  onMouseOver,
-}: ButtonType<T> & Pick<Props<T>, 'onAdd'>) => {
-  const className = useMemo(
-    () =>
-      classNameGenerator({
-        new: true,
-      }),
-    [],
-  )
-
-  const onClick = useMemo(
-    () =>
-      onAdd
-        ? () => {
-            onAdd(option)
-          }
-        : undefined,
-    [option, onAdd],
-  )
-
-  return (
-    <button
-      ref={activeRef}
-      type="button"
-      role="option"
-      aria-selected={false}
-      id={option.id}
-      data-active={!!activeRef}
-      onClick={onClick}
-      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      onMouseOver={onMouseOver}
-      className={className}
-    >
-      <MemoizedNewIconWithText label={option.item.label} />
-    </button>
-  )
-}
+const AddButton = memo<{
+  id: string
+  label: ReactNode
+  activeRef: RefObject<HTMLButtonElement> | undefined
+  handleClick?: () => void
+  handleMouseOver: () => void
+}>(({ id, label, activeRef, handleClick, handleMouseOver }) => (
+  <button
+    ref={activeRef}
+    type="button"
+    role="option"
+    aria-selected={false}
+    id={id}
+    data-active={!!activeRef}
+    onClick={handleClick}
+    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+    onMouseOver={handleMouseOver}
+    className={CLASS_NAMES.new}
+  >
+    <MemoizedNewIconWithText label={label} />
+  </button>
+))
 
 const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
   <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
@@ -107,40 +136,3 @@ const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
     />
   </Text>
 ))
-
-const SelectButton = <T,>({
-  activeRef,
-  option,
-  onSelect,
-  onMouseOver,
-}: ButtonType<T> & Pick<Props<T>, 'onSelect'>) => {
-  const className = useMemo(
-    () =>
-      classNameGenerator({
-        new: false,
-      }),
-    [],
-  )
-
-  const handleSelect = useCallback(() => {
-    onSelect(option)
-  }, [onSelect, option])
-
-  return (
-    <button
-      ref={activeRef}
-      type="button"
-      role="option"
-      id={option.id}
-      disabled={option.item.disabled}
-      aria-selected={option.selected}
-      data-active={!!activeRef}
-      onClick={handleSelect}
-      // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-      onMouseOver={onMouseOver}
-      className={className}
-    >
-      {option.item.label}
-    </button>
-  )
-}

@@ -11,7 +11,7 @@ type Props = {
 
 /** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
 export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
-  ({ disabled, error, readOnly, className, ...rest }, ref) => {
+  ({ error, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner } = classNameGenerator('DatetimeLocal')
 
@@ -28,10 +28,8 @@ export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Prop
           {...rest}
           ref={ref}
           type="datetime-local"
-          disabled={disabled}
-          readOnly={readOnly}
-          aria-invalid={error || undefined}
           className={classNames.inner}
+          aria-invalid={error || undefined}
           data-smarthr-ui-input="true"
         />
       </span>

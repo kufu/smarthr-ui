@@ -115,29 +115,24 @@ const ActualCluster = <T extends ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, layout, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLElement>,
 ) => {
-  const gaps = useMemo(() => {
-    if (gap instanceof Object) {
-      return gap
-    }
+  const actualClassName = useMemo(() => {
+    const gaps =
+      gap instanceof Object
+        ? gap
+        : {
+            row: gap,
+            column: gap,
+          }
 
-    return {
-      row: gap,
-      column: gap,
-    }
-  }, [gap])
-
-  const actualClassName = useMemo(
-    () =>
-      clusterClassNameGenerator({
-        inline,
-        rowGap: gaps.row,
-        columnGap: gaps.column,
-        align,
-        justify,
-        className,
-      }),
-    [inline, gaps.row, gaps.column, align, justify, className],
-  )
+    return clusterClassNameGenerator({
+      inline,
+      rowGap: gaps.row,
+      columnGap: gaps.column,
+      align,
+      justify,
+      className,
+    })
+  }, [gap, inline, align, justify, className])
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)

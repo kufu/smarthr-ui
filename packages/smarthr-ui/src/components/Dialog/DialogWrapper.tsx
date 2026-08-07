@@ -1,32 +1,36 @@
 'use client'
 
-import { type FC, type PropsWithChildren, createContext, useCallback, useState } from 'react'
+import { type FC, type PropsWithChildren, createContext, useMemo, useState } from 'react'
 
 type DialogContextType = {
-  onClickTrigger: () => void
-  onClickClose: () => void
+  handleDelegateClickTrigger: () => void
+  handleDelegateClickClose: () => void
   active: boolean
 }
 
 const noop = () => undefined
 export const DialogContext = createContext<DialogContextType>({
-  onClickTrigger: noop,
-  onClickClose: noop,
+  handleDelegateClickTrigger: noop,
+  handleDelegateClickClose: noop,
   active: false,
 })
 
 export const DialogWrapper: FC<PropsWithChildren> = (props) => {
   const [active, setActive] = useState(false)
 
-  const onClickTrigger = useCallback(() => setActive(true), [])
-  const onClickClose = useCallback(() => setActive(false), [])
+  const functions = useMemo(
+    () => ({
+      handleDelegateClickTrigger: () => setActive(true),
+      handleDelegateClickClose: () => setActive(false),
+    }),
+    [],
+  )
 
   return (
     <DialogContext.Provider
       {...props}
       value={{
-        onClickTrigger,
-        onClickClose,
+        ...functions,
         active,
       }}
     />

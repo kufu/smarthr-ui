@@ -2,6 +2,7 @@ import {
   type PropsWithChildren,
   type RefObject,
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -21,19 +22,25 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
   const innerRef = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 
+  const focus = useCallback(() => {
+    ;(firstFocusTarget?.current || dummyFocusRef.current)?.focus()
+  }, [firstFocusTarget])
+
   useImperativeHandle(ref, () => ({
-    focus: () => {
-      if (firstFocusTarget?.current) {
-        firstFocusTarget.current.focus()
-      } else {
-        dummyFocusRef.current?.focus()
-      }
-    },
+    focus,
   }))
 
   useEffect(() => {
+    // FocusTrap がマウントされた時点のフォーカス要素を保存
+    const triggerElement = document.activeElement
+
+    focus()
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || innerRef.current === null) {
+      // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
+      // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
+      // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
+      if (e.key !== 'Tab' || e.isComposing || innerRef.current === null) {
         return
       }
 
@@ -62,25 +69,12 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
-
-  useEffect(() => {
-    const triggerElement = document.activeElement
-
-    if (firstFocusTarget?.current) {
-      firstFocusTarget.current.focus()
-    } else {
-      dummyFocusRef.current?.focus()
-    }
-
-    return () => {
       // フォーカストラップ終了時にトリガにフォーカスを戻す
       if (triggerElement instanceof HTMLElement) {
         triggerElement.focus()
       }
     }
-  }, [firstFocusTarget])
+  }, [focus])
 
   return (
     <div ref={innerRef}>

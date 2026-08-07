@@ -1,9 +1,9 @@
 'use client'
 
+import { type ComponentProps, memo } from 'react'
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
 import type { typedJa } from './locales'
-import type { ComponentProps } from 'react'
 
 type Messages = Record<keyof typeof typedJa, string>
 
@@ -13,7 +13,7 @@ type Props<Id extends keyof Messages> = {
   values?: ComponentProps<typeof ReactIntlFormattedMessage>['values']
 }
 
-export const Localizer = <ID extends keyof Messages>({
+const LocalizerInner = <ID extends keyof Messages>({
   values,
   id,
   defaultText,
@@ -26,3 +26,7 @@ export const Localizer = <ID extends keyof Messages>({
     values={{ ...values, break: values?.break ?? <br /> }}
   />
 )
+
+// eslint-disable-next-line smarthr/best-practice-for-no-unnecessary-variable
+const typedMemo: <T>(c: T) => T = memo
+export const Localizer = typedMemo(LocalizerInner)

@@ -1,8 +1,8 @@
 import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
 import { Cluster, Stack } from '../Layout'
+import { Panel } from '../Panel'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
@@ -90,7 +90,7 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = {
+type BaseProps = {
   /** 表示する `Button` または `AnchorButton` コンポーネント */
   primaryButton: ReactNode
   /** 表示する `Button` または `AnchorButton` コンポーネント */
@@ -104,7 +104,7 @@ type AbstractProps = {
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const FloatArea: FC<Props> = ({
   primaryButton,
@@ -129,7 +129,7 @@ export const FloatArea: FC<Props> = ({
   const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Base {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
+    <Panel {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
       <Stack gap={0.5}>
         <Cluster>
           {tertiaryButton}
@@ -144,6 +144,6 @@ export const FloatArea: FC<Props> = ({
           </p>
         )}
       </Stack>
-    </Base>
+    </Panel>
   )
 }

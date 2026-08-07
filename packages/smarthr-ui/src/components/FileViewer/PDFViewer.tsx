@@ -1,13 +1,24 @@
 'use client'
 
-import { type ComponentProps, type FC, memo, useCallback, useMemo, useState } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 import { Scroller } from '../Scroller'
 
+import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
+import type { UsePDFSearch } from './usePDFSearch'
 
 if (typeof window !== 'undefined') {
   // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
@@ -42,9 +53,39 @@ const options = {
   cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-export const PDFViewer: FC<ViewerProps> = memo(
-  ({ scale, rotation, file, width, onLoad, onPDFLoaded, onPassword, onLoadError }) => {
+// pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer スコープで上書きし、検索ハイライト色を変更している。
+const HighlightOverrideStyle = () => (
+  <style>{`
+.textLayer {
+  --highlight-bg-color: rgba(255, 235, 0, 0.5);
+  --highlight-selected-bg-color: rgba(255, 140, 0, 0.6);
+}
+.textLayer mark.highlight {
+  color: transparent;
+}
+`}</style>
+)
+
+type Props = ViewerProps & {
+  search?: UsePDFSearch
+}
+
+export const PDFViewer: FC<Props> = memo(
+  ({
+    scale,
+    rotation,
+    file,
+    width,
+    handleLoad,
+    handlePDFLoaded,
+    onPassword,
+    onLoadError,
+    search,
+  }) => {
+    const matches = search?.matches
+    const currentMatchIndex = search?.currentMatchIndex
     const [pdfNumPages, setPdfNumPages] = useState(1)
+    const rootRef = useRef<HTMLDivElement>(null)
 
     const onDocumentLoadSuccess = useCallback<
       NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
@@ -53,26 +94,53 @@ export const PDFViewer: FC<ViewerProps> = memo(
     }, [])
 
     const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad && !onPDFLoaded) {
+      if (!handleLoad && !handlePDFLoaded) {
         return undefined
       }
 
       return (page) => {
-        if (onPDFLoaded && rotation === undefined) {
-          onPDFLoaded(page.rotate)
+        if (handlePDFLoaded && rotation === undefined) {
+          handlePDFLoaded(page.rotate)
         }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (onLoad && page.pageNumber === pdfNumPages) {
-          onLoad()
+        if (handleLoad && page.pageNumber === pdfNumPages) {
+          handleLoad()
         }
       }
-    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
+    }, [handleLoad, handlePDFLoaded, pdfNumPages, rotation])
+
+    useEffect(() => {
+      const root = rootRef.current
+      if (!root) return
+      root
+        .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
+        .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
+
+      if (currentMatchIndex === undefined || currentMatchIndex < 0) return
+
+      const start = performance.now()
+      let id = 0
+      const apply = () => {
+        const els = root.querySelectorAll(matchSelector(currentMatchIndex))
+        if (els.length > 0) {
+          els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
+          els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
+          return
+        }
+        if (performance.now() - start < 1000) {
+          id = requestAnimationFrame(apply)
+        }
+      }
+      id = requestAnimationFrame(apply)
+      return () => cancelAnimationFrame(id)
+    }, [currentMatchIndex, matches])
 
     return (
       <>
         {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
         <ReactPDFStyle />
-        <Scroller direction="both" className="shr-h-full">
+        <HighlightOverrideStyle />
+        <Scroller ref={rootRef} direction="both" className="shr-h-full">
           <Document
             options={options}
             file={file.url}
@@ -92,6 +160,8 @@ export const PDFViewer: FC<ViewerProps> = memo(
                 scale={scale}
                 className="shr-w-full"
                 onLoadSuccess={onPageLoad}
+                onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
+                customTextRenderer={search?.customTextRenderer}
                 loading={null}
               />
             ))}

@@ -9,15 +9,15 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type AbstractProps<AsElement extends ElementType> = PropsWithChildren<{
+type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
   elementAs?: AsElement
   current?: boolean
   prefix?: ReactNode
   suffix?: ReactNode
 }>
 
-type Props<AsElement extends ElementType = 'a'> = AbstractProps<AsElement> &
-  Omit<ComponentPropsWithoutRef<AsElement>, keyof AbstractProps<AsElement>>
+type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
+  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
 
 const classNameGenerator = tv({
   slots: {
@@ -58,13 +58,6 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   ...rest
 }: Props<AsElement>) => {
   const Component = elementAs ?? 'a'
-  const ariaCurrent = useMemo(() => {
-    if (!current || !href) {
-      return undefined
-    }
-
-    return href[0] === '#' ? true : 'page'
-  }, [current, href])
 
   const classNames = useMemo(() => {
     const { wrapper, content, iconWrapper } = classNameGenerator()
@@ -78,7 +71,11 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
 
   return (
     <li className={classNames.wrapper}>
-      <Component {...rest} href={href} aria-current={ariaCurrent}>
+      <Component
+        {...rest}
+        href={href}
+        aria-current={current && href ? (href[0] === '#' ? true : 'page') : undefined}
+      >
         <Text size="M" leading="TIGHT" className={classNames.content}>
           {prefix && <span className={classNames.iconWrapper}>{prefix}</span>}
           <Text weight={current ? 'bold' : undefined}>{children}</Text>

@@ -2,7 +2,8 @@ import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo
 import { type VariantProps, tv } from 'tailwind-variants'
 
 type Props = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & ComponentPropsWithoutRef<'span'>
+  VariantProps<typeof classNameGenerator> &
+    ComponentPropsWithoutRef<'span'> & { disabled?: boolean }
 >
 
 const classNameGenerator = tv({
@@ -10,6 +11,7 @@ const classNameGenerator = tv({
     'smarthr-ui-Chip',
     'shr-border-shorthand shr-rounded-full shr-bg-white shr-leading-none shr-text-black',
     'contrast-more:shr-border-high-contrast',
+    'data-[disabled]:shr-bg-white/50 data-[disabled]:shr-text-disabled',
   ],
   variants: {
     color: {
@@ -22,20 +24,14 @@ const classNameGenerator = tv({
     size: {
       S: 'shr-px-0.5 shr-py-0.25 shr-text-sm',
     },
-    disabled: {
-      true: 'shr-bg-white/50 shr-text-disabled',
-    },
-  },
-  defaultVariants: {
-    size: 'S',
-    color: 'grey',
   },
 })
 
 export const Chip: FC<Props> = ({ size, color, disabled, className, ...rest }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ size, color, disabled, className }),
-    [size, color, disabled, className],
+    () => classNameGenerator({ size: size || 'S', color: color || 'grey', className }),
+    [size, color, className],
   )
-  return <span {...rest} className={actualClassName} />
+
+  return <span {...rest} data-disabled={disabled || undefined} className={actualClassName} />
 }

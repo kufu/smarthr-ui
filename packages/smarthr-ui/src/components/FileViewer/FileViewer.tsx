@@ -4,6 +4,8 @@ import Decimal from 'decimal.js'
 import {
   type ComponentProps,
   type FC,
+  type MouseEvent,
+  type ReactNode,
   memo,
   useCallback,
   useEffect,
@@ -11,7 +13,10 @@ import {
   useRef,
   useState,
 } from 'react'
+import { tv } from 'tailwind-variants'
 
+import { useEnvironment } from '../../hooks/useEnvironment'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { DropdownMenuButton } from '../Dropdown'
@@ -27,10 +32,12 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
+import { SearchController } from './SearchController'
+import { usePDFSearch } from './usePDFSearch'
 
 import type { FileForViewer } from './types'
 
-const defaultScaleStep = new Decimal(0.2)
+const defaultScaleStep = 0.2
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
 type Props = {
@@ -44,7 +51,7 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
-  onLoadError?: () => void
+  onLoadError?: (error: unknown) => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -60,30 +67,35 @@ export const FileViewer: FC<Props> = ({
   const [loaded, setLoaded] = useState(false)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
+  const isPDF = file.contentType === 'application/pdf'
 
-  const internalScaleStep = useMemo(
-    () => (scaleStep ? new Decimal(scaleStep) : defaultScaleStep),
-    [scaleStep],
-  )
+  const search = usePDFSearch(file.url)
 
-  const scaleUp = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).add(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+  const latest = useLatest({ scaleStep, rotation })
 
-  const scaleDown = useCallback(() => {
-    setScale((currentScale) => new Decimal(currentScale).sub(internalScaleStep).toNumber())
-  }, [internalScaleStep])
+  const functions = useMemo(() => {
+    const calculateScale = (mode: 'add' | 'sub') => {
+      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+      setScale((currentScale) =>
+        new Decimal(currentScale)[mode](latest.scaleStep ?? defaultScaleStep).toNumber(),
+      )
+    }
 
-  const rotate = useCallback(() => {
-    // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
-    const currentRotation = rotation ?? 0
-    const newRotation = currentRotation === 0 ? 270 : currentRotation - 90
-    setRotation(newRotation)
-  }, [rotation])
-
-  const handleLoaded = useCallback(() => {
-    setLoaded(true)
-  }, [])
+    return {
+      scaleUp: () => calculateScale('add'),
+      scaleDown: () => calculateScale('sub'),
+      handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) =>
+        setScale(Number(e.currentTarget.value)),
+      rotate: () => {
+        // HINT: react-pdf側のAnnotationLayer.cssではマイナスの回転に対応しておらず、また0, 90, 180, 270度のみ対応しているため、-90度の場合は+270度として扱う
+        const currentRotation = latest.rotation ?? 0
+        setRotation(currentRotation === 0 ? 270 : currentRotation - 90)
+      },
+      handleLoaded: () => {
+        setLoaded(true)
+      },
+    }
+  }, [latest])
 
   const handlePDFLoaded = useCallback((defaultRotation: number) => {
     setRotation(defaultRotation)
@@ -114,11 +126,9 @@ export const FileViewer: FC<Props> = ({
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
         <Controller
           scale={scale}
-          setScale={setScale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          onClickScaleUpButton={scaleUp}
-          onClickScaleDownButton={scaleDown}
-          onClickRotateButton={rotate}
+          functions={functions}
+          searchController={isPDF ? <SearchController search={search} /> : undefined}
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
@@ -128,16 +138,17 @@ export const FileViewer: FC<Props> = ({
           </div>
         )}
         <div className={!loaded ? 'shr-invisible' : ''}>
-          {file.contentType === 'application/pdf' ? (
+          {isPDF ? (
             <PDFViewer
               scale={scale}
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
-              onPDFLoaded={handlePDFLoaded}
+              handleLoad={functions.handleLoaded}
+              handlePDFLoaded={handlePDFLoaded}
               onPassword={onPassword}
               onLoadError={onLoadError}
+              search={search}
             />
           ) : file.contentType.startsWith('image/') ? (
             <ImageViewer
@@ -145,7 +156,7 @@ export const FileViewer: FC<Props> = ({
               rotation={rotation}
               file={file}
               width={width}
-              onLoad={handleLoaded}
+              handleLoad={functions.handleLoaded}
               onLoadError={onLoadError}
             />
           ) : (
@@ -162,67 +173,87 @@ export const FileViewer: FC<Props> = ({
 
 type ControllerProps = {
   scale: number
-  setScale: (scale: number) => void
   scaleSteps: number[]
-  onClickScaleUpButton: () => void
-  onClickScaleDownButton: () => void
-  onClickRotateButton: () => void
+  functions: {
+    scaleUp: () => void
+    scaleDown: () => void
+    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
+    rotate: () => void
+  }
+  searchController?: ReactNode
 }
 
+const controllerClassNameGenerator = tv({
+  base: 'shr-sticky shr-grid shr-w-full shr-items-center shr-bg-scrim shr-py-0.5 shr-shadow-layer-1',
+  variants: {
+    mobile: {
+      true: 'shr-gap-0.5 shr-px-1',
+      false: 'shr-grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] shr-gap-1.5 shr-px-2',
+    },
+  },
+})
+
 const Controller: FC<ControllerProps> = memo(
-  ({
-    scale,
-    setScale,
-    scaleSteps,
-    onClickScaleUpButton,
-    onClickScaleDownButton,
-    onClickRotateButton,
-  }) => (
-    <div className="shr-sticky shr-flex shr-w-full shr-items-center shr-justify-center shr-justify-items-center shr-gap-0.5 shr-bg-scrim shr-p-0.5 shr-shadow-layer-1">
-      <Cluster gap={0.5}>
-        <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
-          <Button
-            onClick={onClickScaleDownButton}
-            disabled={scale <= scaleSteps[0]}
-            className="shr-rounded-r-none shr-border-none"
-          >
-            <FaMagnifyingGlassMinusIcon
-              alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
+  ({ scale, scaleSteps, functions, searchController }) => {
+    const { mobile } = useEnvironment()
+    const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
+
+    return (
+      <div className={className}>
+        {/* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */}
+        {!mobile && <div role="presentation" aria-hidden="true" />}
+        <Cluster gap={0.5} className="shr-justify-self-center">
+          <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
+            <Button
+              onClick={functions.scaleDown}
+              disabled={scale <= scaleSteps[0]}
+              className="shr-rounded-r-none shr-border-none"
+            >
+              <FaMagnifyingGlassMinusIcon
+                alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
+              />
+            </Button>
+            <DropdownMenuButton
+              trigger={
+                <>
+                  <VisuallyHiddenText>
+                    <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
+                  </VisuallyHiddenText>
+                  {`${(scale * 100).toFixed(0)}%`}
+                </>
+              }
+              className="shr-border-y-0 shr-border-[theme(borderColor.default)] [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
+            >
+              {scaleSteps.map((step) => (
+                <Button
+                  key={step.toString()}
+                  value={step}
+                  onClick={functions.handleClickScaleStep}
+                  className="shr-rounded-none shr-border-0"
+                >
+                  {`${(step * 100).toFixed(0)}%`}
+                </Button>
+              ))}
+            </DropdownMenuButton>
+            <Button onClick={functions.scaleUp} className="shr-rounded-l-none shr-border-0">
+              <FaMagnifyingGlassPlusIcon
+                alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
+              />
+            </Button>
+          </div>
+          <Button onClick={functions.rotate} className="shr-p-0.75">
+            <FaArrowRotateLeftIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
             />
           </Button>
-          <DropdownMenuButton
-            trigger={
-              <>
-                <VisuallyHiddenText>
-                  <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
-                </VisuallyHiddenText>
-                {`${(scale * 100).toFixed(0)}%`}
-              </>
-            }
-            className="shr-border-y-0 shr-border-[theme(borderColor.default)] [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
-          >
-            {scaleSteps.map((step) => (
-              <Button
-                key={step.toString()}
-                onClick={() => setScale(step)}
-                className="shr-rounded-none shr-border-0"
-              >
-                {`${(step * 100).toFixed(0)}%`}
-              </Button>
-            ))}
-          </DropdownMenuButton>
-          <Button onClick={onClickScaleUpButton} className="shr-rounded-l-none shr-border-0">
-            <FaMagnifyingGlassPlusIcon
-              alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
-            />
-          </Button>
-        </div>
-        <Button onClick={onClickRotateButton} className="shr-p-0.75">
-          <FaArrowRotateLeftIcon
-            alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
-          />
-        </Button>
-      </Cluster>
-    </div>
-  ),
+        </Cluster>
+        {searchController ? (
+          <div className="shr-min-w-0 shr-justify-self-stretch">{searchController}</div>
+        ) : (
+          /* PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー */
+          !mobile && <div role="presentation" aria-hidden="true" />
+        )}
+      </div>
+    )
+  },
 )

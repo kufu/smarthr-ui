@@ -9,7 +9,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** 件数 */
   count?: number
   /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
@@ -21,13 +21,15 @@ type AbstractProps = PropsWithChildren<{
   /** ドット表示するかどうか */
   dot?: boolean
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
-    pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums'],
-    dotElement: ['shr-h-[0.625em] shr-w-[0.625em]'],
+    pill: [
+      'shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums forced-colors:shr-outline',
+    ],
+    dotElement: ['shr-h-[0.625em] shr-w-[0.625em] forced-colors:shr-outline'],
   },
   variants: {
     color: {

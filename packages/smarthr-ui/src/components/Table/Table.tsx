@@ -4,14 +4,14 @@ import { type ComponentProps, type FC, type PropsWithChildren, useMemo, useRef }
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { TableReel } from './TableReel'
-import { TableScrollContext } from './TableScrollContext'
+import { TableScroller } from './TableScroller'
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
     reel?: boolean
   }
 >
-type Props = AbstractProps & Omit<ComponentProps<'table'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'table'>, keyof BaseProps>
 
 const ROUNDED = {
   t_l: '[&>thead:first-child>tr:first-child>th:first-child]:shr-rounded-tl-l [&>thead:first-child>tr:first-child>td:first-child]:shr-rounded-tl-l',
@@ -152,12 +152,12 @@ export const Table: FC<Props> = ({
   const renderedTable = <table {...rest} className={classNames.table} />
 
   return (
-    <TableScrollContext ref={tableWrapperRef} fixedHead={fixedHead}>
+    <TableScroller ref={tableWrapperRef} fixedHead={fixedHead}>
       {reel ? (
         <TableReel tableWrapperRef={tableWrapperRef}>{renderedTable}</TableReel>
       ) : (
         renderedTable
       )}
-    </TableScrollContext>
+    </TableScroller>
   )
 }
