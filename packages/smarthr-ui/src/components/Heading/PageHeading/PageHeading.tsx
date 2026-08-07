@@ -108,7 +108,8 @@ const AutoPageTitleHeading: FC<
     if (!h1) return
 
     const updateTitle = () => {
-      document.title = `${pageTitle || h1.textContent || ''}｜${pageTitleSuffix}`
+      const title = pageTitle || h1.textContent || ''
+      document.title = pageTitleSuffix ? `${title}｜${pageTitleSuffix}` : title
 
       // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
       // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない

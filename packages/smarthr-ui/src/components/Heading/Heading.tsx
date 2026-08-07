@@ -92,6 +92,8 @@ export const Heading = memo(
       )
       const typography = STYLE_TYPE_MAP[type]
 
+      // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
+      // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
       const commonProps = {
         as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
         role,

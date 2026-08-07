@@ -50,11 +50,11 @@ describe('PageHeading', () => {
     })
   })
 
-  test('pageTitleSuffixに空文字を渡すとsuffixを空にできる', async () => {
+  test('pageTitleSuffixに空文字を渡すと区切り文字を含めずsuffixを空にできる', async () => {
     render(<PageHeading pageTitleSuffix="">これはタイトルです</PageHeading>)
 
     await waitForAnimationFrame()
-    expect(document.title).toBe('これはタイトルです｜')
+    expect(document.title).toBe('これはタイトルです')
   })
 
   test('利用者が渡したrefにh1要素を設定する', async () => {

@@ -18,6 +18,7 @@ describe('Heading', () => {
     const ref = createRef<HTMLHeadingElement>()
     render(<Heading ref={ref}>見出し</Heading>)
 
+    expect(ref.current?.tagName).toBe('H1')
     expect(ref.current?.textContent).toBe('見出し')
   })
 
@@ -29,6 +30,7 @@ describe('Heading', () => {
       </Heading>,
     )
 
+    expect(ref.current?.tagName).toBe('H1')
     expect(ref.current?.textContent).toBe('見出し')
   })
 })
