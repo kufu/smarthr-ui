@@ -22,6 +22,7 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarButton } from './ToolbarButton'
+import { isHttpUrl, isMailtoUrl } from './urlValidation'
 
 const POPUP_CLASS = 'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'
 
@@ -92,7 +93,7 @@ export const LinkButton: FC<Props> = memo(
           setError(requiredMessage)
           return
         }
-        if (!/^https?:\/\//i.test(trimmed) && !/^mailto:/i.test(trimmed)) {
+        if (!isHttpUrl(trimmed) && !isMailtoUrl(trimmed)) {
           setError(invalidMessage)
           return
         }

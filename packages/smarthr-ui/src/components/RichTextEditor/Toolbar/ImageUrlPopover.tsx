@@ -19,6 +19,8 @@ import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 
+import { isHttpUrl } from './urlValidation'
+
 const POPUP_CLASS = 'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'
 
 type Props = {
@@ -93,7 +95,7 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
         return
       }
 
-      if (!/^https?:\/\//i.test(trimmed)) {
+      if (!isHttpUrl(trimmed)) {
         setError(invalidMessage)
 
         return
