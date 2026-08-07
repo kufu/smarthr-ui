@@ -99,6 +99,7 @@ type Props = {
   recentSectionLabel: string
   editButtonLabel: string
   resetButtonLabel: string
+  customSwatchLabel: (color: string) => string
   recentSwatchLabel: (color: string) => string
 }
 
@@ -122,6 +123,7 @@ export const ColorPickerPalette: FC<Props> = memo(
     recentSectionLabel,
     editButtonLabel,
     resetButtonLabel,
+    customSwatchLabel,
     recentSwatchLabel,
   }) => {
     const { localize } = useIntl()
@@ -148,6 +150,20 @@ export const ColorPickerPalette: FC<Props> = memo(
       [onApplyColor, pushRecent, setIsOpen, triggerRef],
     )
 
+    const applyCustomColor = useCallback(
+      (hex: string) => {
+        onApplyColor(hex)
+        // 標準パレットから選べる色は、標準スウォッチと同じく履歴に積まない
+        const normalized = normalizeHex(hex, defaultColor)
+        if (!colors.some((c) => normalizeHex(c.value, defaultColor) === normalized)) {
+          pushRecent(hex)
+        }
+        setIsOpen(false)
+        triggerRef.current?.focus()
+      },
+      [colors, defaultColor, onApplyColor, pushRecent, setIsOpen, triggerRef],
+    )
+
     const handleEditButtonClick = useCallback(() => {
       hiddenInputRef.current?.click()
     }, [])
@@ -160,19 +176,15 @@ export const ColorPickerPalette: FC<Props> = memo(
     )
 
     // popup マウント時に native の change イベントを listen し、ピッカー確定時のみ適用
+    // （native color input には確定とキャンセルを区別する手段がないため、
+    //   同じ色のまま確定した場合はここを通らない。その場合はカスタムスウォッチから適用できる）
     useEffect(() => {
       const el = hiddenInputRef.current
       if (!el) return
-      const handler = () => {
-        const next = el.value
-        onApplyColor(next)
-        pushRecent(next)
-        setIsOpen(false)
-        triggerRef.current?.focus()
-      }
+      const handler = () => applyCustomColor(el.value)
       el.addEventListener('change', handler)
       return () => el.removeEventListener('change', handler)
-    }, [onApplyColor, pushRecent, setIsOpen, triggerRef])
+    }, [applyCustomColor])
 
     const removeColor = useCallback(() => {
       onUnsetColor()
@@ -330,10 +342,15 @@ export const ColorPickerPalette: FC<Props> = memo(
         <div role="group" aria-label={customSectionLabel} className={classNames.section()}>
           <span className={classNames.sectionTitle()}>{customSectionLabel}</span>
           <div className={classNames.customRow()}>
-            <span
+            <button
+              type="button"
+              data-color-swatch="custom"
+              aria-label={customSwatchLabel(customColor)}
+              aria-pressed={customSelected}
               className={classNames.swatch()}
               style={{ backgroundColor: customColor }}
-              aria-hidden="true"
+              onClick={() => applyCustomColor(customColor)}
+              onKeyDown={handleSwatchKeyDown}
             >
               {customSelected && (
                 <FaCheckIcon
@@ -341,7 +358,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                   style={{ color: `contrast-color(${customColor})` }}
                 />
               )}
-            </span>
+            </button>
             <button
               type="button"
               className={classNames.editButton()}

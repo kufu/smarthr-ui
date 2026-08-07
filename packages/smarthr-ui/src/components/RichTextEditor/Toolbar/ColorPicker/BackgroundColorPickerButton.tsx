@@ -122,6 +122,17 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/backgroundColorEditButton',
       defaultText: '背景色を編集',
     })
+    const customSwatchLabel = useCallback(
+      (color: string) =>
+        localize(
+          {
+            id: 'smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel',
+            defaultText: '背景色カスタム: {color}',
+          },
+          { color },
+        ),
+      [localize],
+    )
     const recentSwatchLabel = useCallback(
       (color: string) =>
         localize(
@@ -183,6 +194,7 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
             recentSectionLabel={recentSectionLabel}
             editButtonLabel={editButtonLabel}
             resetButtonLabel={resetLabel}
+            customSwatchLabel={customSwatchLabel}
             recentSwatchLabel={recentSwatchLabel}
           />,
         )}
