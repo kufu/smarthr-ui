@@ -8,6 +8,7 @@ import { FaCaretDownIcon, FaHighlighterIcon } from '../../../Icon'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarState } from '../../hooks/useToolbarState'
+import { ToolbarTooltip } from '../ToolbarTooltip'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
@@ -147,7 +148,7 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
 
     return (
       <>
-        <span className="shr-relative shr-inline-block">
+        <ToolbarTooltip label={backgroundColorLabel} suppressed={isOpen || disabled}>
           <button
             ref={(el) => {
               triggerRef.current = el
@@ -173,7 +174,7 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
             </span>
             <FaCaretDownIcon className="shr-text-xs" />
           </button>
-        </span>
+        </ToolbarTooltip>
         {renderDropdown(
           <ColorPickerPalette
             paletteRef={paletteRef}

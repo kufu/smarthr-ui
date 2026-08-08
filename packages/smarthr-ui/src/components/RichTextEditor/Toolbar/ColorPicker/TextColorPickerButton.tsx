@@ -8,6 +8,7 @@ import { FaCaretDownIcon } from '../../../Icon'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarState } from '../../hooks/useToolbarState'
+import { ToolbarTooltip } from '../ToolbarTooltip'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
@@ -146,7 +147,7 @@ export const TextColorPickerButton: FC<Props> = memo(
 
     return (
       <>
-        <span className="shr-relative shr-inline-block">
+        <ToolbarTooltip label={colorLabel} suppressed={isOpen || disabled}>
           <button
             ref={(el) => {
               triggerRef.current = el
@@ -175,7 +176,7 @@ export const TextColorPickerButton: FC<Props> = memo(
             </span>
             <FaCaretDownIcon className="shr-text-xs" />
           </button>
-        </span>
+        </ToolbarTooltip>
         {renderDropdown(
           <ColorPickerPalette
             paletteRef={paletteRef}
