@@ -12,16 +12,40 @@ import {
   FaCaretDownIcon,
 } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
+import { toAriaKeyShortcuts } from './shortcutKeys'
 
+// shortcut は @tiptap/extension-text-align の既定バインドと対応する。
+// Tiptap は拡張のキーバインドを外部へ公開していないため二重管理になる。
 const ALIGN_OPTIONS = [
-  { value: 'left', labelId: 'smarthr-ui/RichTextEditor/alignLeft', defaultText: '左揃え' },
-  { value: 'center', labelId: 'smarthr-ui/RichTextEditor/alignCenter', defaultText: '中央揃え' },
-  { value: 'right', labelId: 'smarthr-ui/RichTextEditor/alignRight', defaultText: '右揃え' },
-  { value: 'justify', labelId: 'smarthr-ui/RichTextEditor/alignJustify', defaultText: '両端揃え' },
+  {
+    value: 'left',
+    labelId: 'smarthr-ui/RichTextEditor/alignLeft',
+    defaultText: '左揃え',
+    shortcut: 'Mod-Shift-L',
+  },
+  {
+    value: 'center',
+    labelId: 'smarthr-ui/RichTextEditor/alignCenter',
+    defaultText: '中央揃え',
+    shortcut: 'Mod-Shift-E',
+  },
+  {
+    value: 'right',
+    labelId: 'smarthr-ui/RichTextEditor/alignRight',
+    defaultText: '右揃え',
+    shortcut: 'Mod-Shift-R',
+  },
+  {
+    value: 'justify',
+    labelId: 'smarthr-ui/RichTextEditor/alignJustify',
+    defaultText: '両端揃え',
+    shortcut: 'Mod-Shift-J',
+  },
 ] as const
 
 const getAlignIcon = (value: string) => {
@@ -55,12 +79,6 @@ const classNameGenerator = tv({
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
     ],
-    optionWrapper: 'shr-group shr-relative shr-inline-block',
-    optionTooltip: [
-      'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr--translate-x-1/2 shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-white',
-      'shr-opacity-0 shr-transition-opacity group-focus-within:shr-opacity-100 group-hover:shr-opacity-100',
-    ],
   },
 })
 
@@ -76,6 +94,7 @@ export const TextAlignDropdown: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
+    const isApple = useIsApplePlatform()
     const state = useToolbarState(editor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const listboxRef = useRef<HTMLDivElement>(null)
@@ -215,22 +234,20 @@ export const TextAlignDropdown: FC<Props> = memo(
               const isSelected = option.value === currentAlign
 
               return (
-                <span key={option.value} className={classNames.optionWrapper()}>
+                <ToolbarTooltip key={option.value} label={label} shortcut={option.shortcut}>
                   <button
                     type="button"
                     role="option"
                     aria-selected={isSelected}
                     aria-label={label}
+                    aria-keyshortcuts={toAriaKeyShortcuts(option.shortcut, isApple)}
                     className={`${classNames.option()} ${isSelected ? 'shr-bg-white-darken' : ''}`}
                     onClick={() => selectOption(option.value)}
                     onKeyDown={handleOptionKeyDown}
                   >
                     {getAlignIcon(option.value)}
                   </button>
-                  <span aria-hidden="true" className={classNames.optionTooltip()}>
-                    {label}
-                  </span>
-                </span>
+                </ToolbarTooltip>
               )
             })}
           </div>,
