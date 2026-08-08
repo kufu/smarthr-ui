@@ -276,7 +276,7 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <FaLinkIcon />
                 </td>
-                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>Cmd+K</td>
                 <td style={tdStyle}>URL入力で自動リンク</td>
               </tr>
               <tr>
@@ -368,6 +368,55 @@ export const Overview: Story = {
                   Alt+Enter / Shift+F10（表の操作メニュー）
                 </td>
                 <td style={tdStyle}>なし</td>
+              </tr>
+            </tbody>
+          </table>
+        </Stack>
+
+        <Stack gap={0.5}>
+          <Text styleType="blockTitle">キーボード操作</Text>
+          <Text color="TEXT_GREY">
+            書式に紐づかない操作のキーボードショートカットです。Cmd は Windows / Linux では Ctrl
+            に読み替えてください。
+          </Text>
+          <table style={tableStyle}>
+            <thead>
+              <tr>
+                <th style={thStyle}>操作</th>
+                <th style={thStyle}>ショートカット</th>
+                <th style={thStyle}>説明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={tdStyle}>元に戻す</td>
+                <td style={tdStyle}>Cmd+Z</td>
+                <td style={tdStyle}>ツールバーの「元に戻す」と同じ</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>やり直す</td>
+                <td style={tdStyle}>Cmd+Shift+Z</td>
+                <td style={tdStyle}>ツールバーの「やり直す」と同じ</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>ツールバーへ移動</td>
+                <td style={tdStyle}>Alt+F10</td>
+                <td style={tdStyle}>
+                  本文からツールバーの先頭ボタンへフォーカスを移します。ツールバー内は左右矢印キーで移動し、Escape
+                  で本文へ戻ります。
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>リスト項目をネスト</td>
+                <td style={tdStyle}>Tab</td>
+                <td style={tdStyle}>先頭の項目では効きません（ネストする先が必要なため）。</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>リスト項目のネストを解除</td>
+                <td style={tdStyle}>Shift+Tab</td>
+                <td style={tdStyle}>
+                  ネストしていないときはリストを解除せず、フォーカスをツールバーへ移します。
+                </td>
               </tr>
             </tbody>
           </table>
