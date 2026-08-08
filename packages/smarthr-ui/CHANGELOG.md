@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.1.0...smarthr-ui-v99.1.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **Dialog:** closeButtonのtext型をオプショナルに変更 ([#6736](https://github.com/kufu/smarthr-ui/issues/6736)) ([ee24575](https://github.com/kufu/smarthr-ui/commit/ee24575566843b091373661d72426ef090019097))
+* **Dropdown:** aria-controlsの参照先要素が存在しない場合があるのを解消 ([#6729](https://github.com/kufu/smarthr-ui/issues/6729)) ([ea8a32f](https://github.com/kufu/smarthr-ui/commit/ea8a32fa983cd655425c317a7b75a1414920284a))
+* **DropZone:** className が hidden input ではなく wrapper div に適用されるよう修正 ([#6711](https://github.com/kufu/smarthr-ui/issues/6711)) ([7e28958](https://github.com/kufu/smarthr-ui/commit/7e28958a0b49e9a0ad4c9102f6a9a661dec62922))
+* **SortDropdown:** 初期値の計算をuseEffectからuseStateの遅延初期化に変更 ([#6635](https://github.com/kufu/smarthr-ui/issues/6635)) ([f9ef2c2](https://github.com/kufu/smarthr-ui/commit/f9ef2c26c271aa25586438aad2d4000e1ccffb4d))
+
 ## [99.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.0.0...smarthr-ui-v99.1.0) (2026-08-06)
 
 
