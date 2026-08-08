@@ -18,6 +18,7 @@ import {
 import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
 import { LineHeight } from './LineHeight'
 import { CustomTable } from './Table/CustomTable'
+import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
@@ -104,7 +105,9 @@ export const configureExtensions = ({
       link: { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto'] },
     }).extend({
       addExtensions() {
-        return (this.parent?.() ?? []).map(restrict)
+        // patch を restrict より先に通す。features にリストが無いとき restrict が
+        // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
+        return (this.parent?.() ?? []).map(patchListItemShiftTab).map(restrict)
       },
     }),
     restrict(
