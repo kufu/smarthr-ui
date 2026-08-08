@@ -30,7 +30,12 @@ const classNameGenerator = tv({
   variants: {
     active: {
       true: {
-        button: 'shr-bg-main/10 shr-text-main hover:shr-bg-main/20',
+        // shr-text-main（#0077c7）だと shr-bg-main/10 の上で 4.11:1、hover の
+        // shr-bg-main/20 では 3.70:1 となり 4.5:1 を下回る。1段暗くして
+        // 5.11:1 / 4.59:1 を確保する。
+        // textColor に main-darken が無いため theme() で colors から直接引く。
+        // プリセットにユーティリティを増やさず、この用途だけで閉じるため。
+        button: 'shr-bg-main/10 shr-text-[theme(colors.main-darken)] hover:shr-bg-main/20',
       },
     },
     visible: {
