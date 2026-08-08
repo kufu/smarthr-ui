@@ -17,6 +17,7 @@ import {
 } from './Image/imageUploadPlaceholder'
 import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
 import { LineHeight } from './LineHeight'
+import { LinkShortcut } from './LinkShortcut'
 import { CustomTable } from './Table/CustomTable'
 import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
@@ -131,6 +132,10 @@ export const configureExtensions = ({
       }),
     ),
   ]
+
+  if (has('link')) {
+    extensions.push(LinkShortcut)
+  }
 
   if (has('image')) {
     // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）

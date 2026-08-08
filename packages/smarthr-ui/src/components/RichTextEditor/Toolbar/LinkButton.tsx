@@ -85,6 +85,24 @@ export const LinkButton: FC<Props> = memo(
       triggerRef.current?.focus()
     }, [setIsOpen, triggerRef])
 
+    // ショートカット（Mod-K）からポップオーバーを開けるよう storage にハンドラを登録
+    useEffect(() => {
+      if (!editor.storage.linkShortcut) return
+
+      const handler = () => {
+        triggerRef.current?.focus()
+        setIsOpen(true)
+      }
+
+      editor.storage.linkShortcut.openLinkPopover = handler
+
+      return () => {
+        if (editor.storage.linkShortcut?.openLinkPopover === handler) {
+          editor.storage.linkShortcut.openLinkPopover = null
+        }
+      }
+    }, [editor, setIsOpen, triggerRef])
+
     const handleSubmit = useCallback(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -188,6 +206,7 @@ export const LinkButton: FC<Props> = memo(
           }}
           icon={<FaLinkIcon />}
           label={label}
+          shortcut="Mod-K"
           active={state.isLink}
           disabled={disabled}
           tabIndex={tabIndex}
