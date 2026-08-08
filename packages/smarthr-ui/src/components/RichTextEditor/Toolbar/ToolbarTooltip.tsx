@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, Fragment, type ReactNode, memo } from 'react'
+import { type FC, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
@@ -12,22 +12,36 @@ const classNameGenerator = tv({
     wrapper: 'shr-group shr-relative shr-inline-block',
     tooltip: [
       'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr--translate-x-1/2 shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-white',
+      'shr-flex shr--translate-x-1/2 shr-flex-col shr-items-center shr-gap-0.25',
+      'shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.5 shr-text-sm shr-text-white',
       'shr-opacity-0 shr-transition-opacity',
       'group-focus-within:shr-opacity-100 group-hover:shr-opacity-100',
     ],
-    // ラベルと区別が付くよう少し弱める。black 背景に対して 13:1 あり基準は満たす
-    shortcut: 'shr-ml-0.25 shr-text-white/80',
+    // 既定の line-height だと行ボックスに内包された余白の半分がラベル文字の上に乗り、
+    // キーの箱（leading-none で文字に密着）との対比で上の余白だけ広く見える。
+    // 行ボックスを文字に密着させて上下の余白を揃える。
+    label: 'shr-leading-none',
+    // ショートカットのキーを並べる行。ラベルの下に2行目として配置する
+    shortcutRow: 'shr-flex shr-items-center shr-gap-0.25',
+    // ツールチップ本体（黒背景）よりわずかに明るい半透明の箱。白文字とのコントラストは
+    // 黒背景上で実効的に #333333 相当になり約12:1 確保できる
+    // border-style を明示しないと、Tailwind preflight の border-style: solid リセットが
+    // 効いていないこのリポジトリでは border-width が 0 に落ちる（shr-border だけでは効かない）
+    // block のままだと、行ボックスよりフォントの content area が高いぶん文字が上に寄る。
+    // flex で中央揃えし、最小幅と高さを揃えてキーごとの箱の大きさのばらつきも抑える。
+    key: 'shr-inline-flex shr-h-[1.5em] shr-min-w-[1.5em] shr-items-center shr-justify-center shr-rounded-s shr-border shr-border-solid shr-border-white/30 shr-bg-white/20 shr-px-0.25 shr-text-xs shr-font-bold shr-leading-none shr-text-white',
   },
 })
 
 const CLASS_NAMES = (() => {
-  const { wrapper, tooltip, shortcut } = classNameGenerator()
+  const { wrapper, tooltip, label, shortcutRow, key } = classNameGenerator()
 
   return {
     wrapper: wrapper(),
     tooltip: tooltip(),
-    shortcut: shortcut(),
+    label: label(),
+    shortcutRow: shortcutRow(),
+    key: key(),
   }
 })()
 
@@ -53,16 +67,15 @@ export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, ch
       */}
       {!suppressed && (
         <span aria-hidden="true" className={CLASS_NAMES.tooltip}>
-          {label}
+          <span className={CLASS_NAMES.label}>{label}</span>
           {tokens.length > 0 && (
-            <span className={CLASS_NAMES.shortcut}>
+            // ラベルを1行目、キーを2行目に箱付きで並べる。
+            // 箱で区切りが分かるため + は挟まない
+            <span className={CLASS_NAMES.shortcutRow}>
               {tokens.map((token, index) => (
-                <Fragment key={token}>
-                  {/* Apple は記号を連結するのが慣習なので + を挟まない */}
-                  {index > 0 && !isApple && '+'}
-                  {/* kbd はブラウザ既定の等幅で描画され、ラベルと視覚的に区別できる */}
-                  <kbd>{token}</kbd>
-                </Fragment>
+                <kbd key={`${token}-${index}`} className={CLASS_NAMES.key}>
+                  {token}
+                </kbd>
               ))}
             </span>
           )}

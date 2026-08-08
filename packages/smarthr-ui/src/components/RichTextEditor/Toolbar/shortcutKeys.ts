@@ -14,11 +14,12 @@ const MODIFIER_ALIASES: Readonly<Record<string, Modifier>> = {
   meta: 'meta',
 }
 
-const APPLE_MODIFIER_SYMBOLS: Readonly<Record<Modifier, string>> = {
-  control: '⌃',
-  alt: '⌥',
-  shift: '⇧',
+/** ⌘ のみ記号。他は語で表す方が、記号を知らない利用者にも読み取りやすい */
+const APPLE_MODIFIER_LABELS: Readonly<Record<Modifier, string>> = {
   meta: '⌘',
+  control: 'Control',
+  alt: 'Option',
+  shift: 'Shift',
 }
 
 const NON_APPLE_MODIFIER_LABELS: Readonly<Record<Modifier, string>> = {
@@ -28,21 +29,19 @@ const NON_APPLE_MODIFIER_LABELS: Readonly<Record<Modifier, string>> = {
   meta: 'Meta',
 }
 
+/**
+ * ツールチップ表示用の並び順。そのプラットフォームの主要修飾キーを先頭に置く。
+ * aria-keyshortcuts の並び順（MODIFIER_ORDER）とは別物なので混同しないこと。
+ */
+const APPLE_MODIFIER_DISPLAY_ORDER: readonly Modifier[] = ['meta', 'control', 'alt', 'shift']
+const NON_APPLE_MODIFIER_DISPLAY_ORDER: readonly Modifier[] = ['control', 'alt', 'shift', 'meta']
+
 /** aria-keyshortcuts が受け付ける修飾キー名。記号は使えない */
 const ARIA_MODIFIER_NAMES: Readonly<Record<Modifier, string>> = {
   control: 'Control',
   alt: 'Alt',
   shift: 'Shift',
   meta: 'Meta',
-}
-
-const APPLE_KEY_SYMBOLS: Readonly<Record<string, string>> = {
-  enter: '⏎',
-  escape: '⎋',
-  backspace: '⌫',
-  delete: '⌦',
-  tab: '⇥',
-  space: '␣',
 }
 
 /** aria-keyshortcuts のキー名は DOM の KeyboardEvent.key に揃える */
@@ -94,20 +93,18 @@ const parseShortcut = (shortcut: string, isApple: boolean): ParsedShortcut => {
 const normalizeKeyLabel = (key: string) => (key.length === 1 ? key.toUpperCase() : key)
 
 /**
- * ツールチップに `<kbd>` として並べる表示トークンを返す。
- * Apple では記号のみを連結して表示する想定なので区切り文字は含めない。
+ * ツールチップに `<kbd>` として箱付きで並べる表示トークンを返す。
+ * 1つずつ枠で区切られるため、記号ではなく語で表した方が読み取りやすい。
  */
 export const formatShortcutTokens = (shortcut: string, isApple: boolean): string[] => {
   const { modifiers, key } = parseShortcut(shortcut, isApple)
   const lowerKey = key.toLowerCase()
+  const keyToken = ARIA_KEY_NAMES[lowerKey] ?? normalizeKeyLabel(key)
 
-  const keyToken = isApple
-    ? (APPLE_KEY_SYMBOLS[lowerKey] ?? normalizeKeyLabel(key))
-    : (ARIA_KEY_NAMES[lowerKey] ?? normalizeKeyLabel(key))
-
-  const modifierTokens = modifiers.map((m) =>
-    isApple ? APPLE_MODIFIER_SYMBOLS[m] : NON_APPLE_MODIFIER_LABELS[m],
-  )
+  const displayOrder = isApple ? APPLE_MODIFIER_DISPLAY_ORDER : NON_APPLE_MODIFIER_DISPLAY_ORDER
+  const labels = isApple ? APPLE_MODIFIER_LABELS : NON_APPLE_MODIFIER_LABELS
+  const foundModifiers = new Set(modifiers)
+  const modifierTokens = displayOrder.filter((m) => foundModifiers.has(m)).map((m) => labels[m])
 
   return [...modifierTokens, keyToken]
 }

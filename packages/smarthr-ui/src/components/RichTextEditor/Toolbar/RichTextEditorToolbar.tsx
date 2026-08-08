@@ -43,6 +43,12 @@ type ButtonItem = {
   active: boolean
   disabled: boolean
   action: () => void
+  /**
+   * Tiptap 表記のショートカット。Tiptap は拡張のキーバインドを外部へ公開して
+   * いないため、拡張側の定義と二重管理になる。値を変えるときは対応する拡張の
+   * addKeyboardShortcuts も確認すること。
+   */
+  shortcut?: string
 }
 
 type CustomItem = {
@@ -82,6 +88,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: false,
         disabled: !state.canUndo,
         action: () => editor.chain().focus().undo().run(),
+        shortcut: 'Mod-Z',
       },
       {
         type: 'button',
@@ -91,6 +98,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: false,
         disabled: !state.canRedo,
         action: () => editor.chain().focus().redo().run(),
+        shortcut: 'Shift-Mod-Z',
       },
     )
 
@@ -131,6 +139,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isBold,
         disabled: !state.canBold,
         action: () => editor.chain().focus().toggleBold().run(),
+        shortcut: 'Mod-B',
       })
     }
     if (has('italic')) {
@@ -142,6 +151,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isItalic,
         disabled: !state.canItalic,
         action: () => editor.chain().focus().toggleItalic().run(),
+        shortcut: 'Mod-I',
       })
     }
     if (has('underline')) {
@@ -153,6 +163,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isUnderline,
         disabled: !state.canUnderline,
         action: () => editor.chain().focus().toggleUnderline().run(),
+        shortcut: 'Mod-U',
       })
     }
     if (has('strike')) {
@@ -164,6 +175,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isStrike,
         disabled: !state.canStrike,
         action: () => editor.chain().focus().toggleStrike().run(),
+        shortcut: 'Mod-Shift-S',
       })
     }
     if (has('code')) {
@@ -175,6 +187,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isCode,
         disabled: !state.canCode,
         action: () => editor.chain().focus().toggleCode().run(),
+        shortcut: 'Mod-E',
       })
     }
 
@@ -219,6 +232,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isBulletList,
         disabled: !state.canBulletList || state.isNodeSelected,
         action: () => editor.chain().focus().toggleBulletList().run(),
+        shortcut: 'Mod-Shift-8',
       })
     }
     if (has('orderedList')) {
@@ -233,6 +247,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isOrderedList,
         disabled: !state.canOrderedList || state.isNodeSelected,
         action: () => editor.chain().focus().toggleOrderedList().run(),
+        shortcut: 'Mod-Shift-7',
       })
     }
     if (has('blockquote')) {
@@ -244,6 +259,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isBlockquote,
         disabled: !state.canBlockquote || state.isNodeSelected,
         action: () => editor.chain().focus().toggleBlockquote().run(),
+        shortcut: 'Mod-Shift-B',
       })
     }
     if (has('codeBlock')) {
@@ -258,6 +274,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         active: state.isCodeBlock,
         disabled: !state.canCodeBlock || state.isNodeSelected,
         action: () => editor.chain().focus().toggleCodeBlock().run(),
+        shortcut: 'Mod-Alt-C',
       })
     }
     if (has('horizontalRule')) {
@@ -366,6 +383,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
             label={buttonItem.label}
             active={buttonItem.active}
             disabled={buttonItem.disabled}
+            shortcut={buttonItem.shortcut}
             onClick={buttonItem.action}
           />
         )
