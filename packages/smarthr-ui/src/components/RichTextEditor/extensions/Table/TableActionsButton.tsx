@@ -14,6 +14,7 @@ import {
   FaTableColumnsIcon,
   FaTrashCanIcon,
 } from '../../../Icon'
+import { ToolbarTooltip } from '../../Toolbar/ToolbarTooltip'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarState } from '../../hooks/useToolbarState'
 
@@ -25,7 +26,6 @@ const classNameGenerator = tv({
   slots: {
     trigger: [
       'smarthr-ui-RichTextEditor-TableActionsButton',
-      'shr-absolute shr-z-overlap-base',
       'shr-inline-flex shr-items-center shr-justify-center',
       'shr-border-shorthand shr-h-1.5 shr-w-1.5 shr-cursor-pointer shr-rounded-m shr-bg-white shr-text-sm shr-text-black shr-shadow-layer-1',
       'hover:shr-bg-white-darken',
@@ -179,21 +179,24 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
 
   return (
     <>
-      <button
-        ref={triggerRef}
-        type="button"
-        aria-label={triggerLabel}
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-keyshortcuts="Alt+Enter Shift+F10"
-        className={classNames.trigger()}
-        style={{ top, left }}
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={() => (isOpen ? closeMenu() : openMenu(false))}
-        onKeyDown={handleTriggerKeyDown}
-      >
-        <FaEllipsisIcon alt="" />
-      </button>
+      <span className="shr-absolute shr-z-overlap-base" style={{ top, left }}>
+        <ToolbarTooltip label={triggerLabel} shortcut="Alt-Enter" suppressed={isOpen}>
+          <button
+            ref={triggerRef}
+            type="button"
+            aria-label={triggerLabel}
+            aria-haspopup="menu"
+            aria-expanded={isOpen}
+            aria-keyshortcuts="Alt+Enter Shift+F10"
+            className={classNames.trigger()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => (isOpen ? closeMenu() : openMenu(false))}
+            onKeyDown={handleTriggerKeyDown}
+          >
+            <FaEllipsisIcon alt="" />
+          </button>
+        </ToolbarTooltip>
+      </span>
       {renderDropdown(
         <div ref={menuRef} role="menu" aria-label={triggerLabel} className={classNames.menu()}>
           {/* ヘッダー設定 */}
