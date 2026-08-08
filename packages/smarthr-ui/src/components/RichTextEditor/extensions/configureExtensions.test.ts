@@ -200,4 +200,59 @@ describe('configureExtensions', () => {
       editor.destroy()
     })
   })
+
+  describe('リンク挿入のショートカット', () => {
+    it('features に link が無いとき linkShortcut 拡張は登録されない', () => {
+      const editor = createEditor(['bold'])
+
+      expect(editor.storage.linkShortcut).toBeUndefined()
+      editor.destroy()
+    })
+
+    it('Mod-K でハンドラが呼ばれる', () => {
+      const editor = createEditor(['link'])
+      let called = 0
+      editor.storage.linkShortcut!.openLinkPopover = () => {
+        called++
+      }
+
+      pressMod(editor, 'k')
+
+      expect(called).toBe(1)
+      editor.destroy()
+    })
+
+    // Caps Lock 有効時は event.key が大文字になる。小文字だけの登録では一致せず、
+    // keyCode からのフォールバックも ctrlKey を条件に含まないため Ctrl+K が効かなくなる
+    it('Caps Lock 相当（大文字 K）でもハンドラが呼ばれる', () => {
+      const editor = createEditor(['link'])
+      let called = 0
+      editor.storage.linkShortcut!.openLinkPopover = () => {
+        called++
+      }
+
+      pressMod(editor, 'K')
+
+      expect(called).toBe(1)
+      editor.destroy()
+    })
+
+    // ハンドラ未登録（hideToolbar やノード選択で LinkButton が disabled のとき）は
+    // ショートカットを握りつぶさず、ブラウザ既定の動作に委ねる
+    it('ハンドラ未登録なら preventDefault しない', () => {
+      const editor = createEditor(['link'])
+      editor.commands.selectAll()
+      const event = new KeyboardEvent('keydown', {
+        key: 'k',
+        ctrlKey: true,
+        bubbles: true,
+        cancelable: true,
+      })
+
+      editor.view.dom.dispatchEvent(event)
+
+      expect(event.defaultPrevented).toBe(false)
+      editor.destroy()
+    })
+  })
 })

@@ -85,9 +85,14 @@ export const LinkButton: FC<Props> = memo(
       triggerRef.current?.focus()
     }, [setIsOpen, triggerRef])
 
-    // ショートカット（Mod-K）からポップオーバーを開けるよう storage にハンドラを登録
+    // ショートカット（Mod-K）からポップオーバーを開けるよう storage にハンドラを登録。
+    //
+    // disabled のときは登録しない。disabled はノード選択中（画像・YouTube・水平線）にも
+    // 真になるが、エディタ自体は editable のままなのでショートカットは発火してしまう。
+    // 登録したままだと、選択中のノードを置き換える形でリンクが挿入され、キーボード操作
+    // だけで画像などが失われる。未登録なら拡張側が false を返して握りつぶさない。
     useEffect(() => {
-      if (!editor.storage.linkShortcut) return
+      if (disabled || !editor.storage.linkShortcut) return
 
       const handler = () => {
         triggerRef.current?.focus()
@@ -101,7 +106,7 @@ export const LinkButton: FC<Props> = memo(
           editor.storage.linkShortcut.openLinkPopover = null
         }
       }
-    }, [editor, setIsOpen, triggerRef])
+    }, [disabled, editor, setIsOpen, triggerRef])
 
     const handleSubmit = useCallback(
       (e: FormEvent<HTMLFormElement>) => {
