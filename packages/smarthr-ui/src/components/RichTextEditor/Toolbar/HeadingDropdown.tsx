@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useMemo, useRef, useState } from 'react'
+import { type FC, type KeyboardEvent, memo, useCallback, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
@@ -8,6 +8,8 @@ import { FaCaretDownIcon, FaCheckIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
+
+import { ToolbarTooltip } from './ToolbarTooltip'
 
 const ALL_OPTIONS = [
   { level: null, labelId: 'smarthr-ui/RichTextEditor/headingNormal', defaultText: '標準テキスト' },
@@ -36,18 +38,6 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
     ],
     checkIcon: 'shr-w-[1em] shr-shrink-0',
-    tooltip: [
-      'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr--translate-x-1/2 shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-white',
-      'shr-opacity-0 shr-transition-opacity',
-    ],
-  },
-  variants: {
-    tooltipVisible: {
-      true: {
-        tooltip: 'shr-opacity-100',
-      },
-    },
   },
 })
 
@@ -65,8 +55,6 @@ export const HeadingDropdown: FC<Props> = memo(
     const { localize } = useIntl()
     const state = useToolbarState(editor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const [isHovered, setIsHovered] = useState(false)
-    const [isFocused, setIsFocused] = useState(false)
     const listboxRef = useRef<HTMLDivElement>(null)
 
     const options = useMemo(
@@ -81,8 +69,7 @@ export const HeadingDropdown: FC<Props> = memo(
       defaultText: currentOption.defaultText,
     })
 
-    const tooltipVisible = (isHovered || isFocused) && !isOpen
-    const classNames = classNameGenerator({ tooltipVisible })
+    const classNames = classNameGenerator()
 
     const selectOption = useCallback(
       (level: 1 | 2 | 3 | 4 | null) => {
@@ -176,11 +163,7 @@ export const HeadingDropdown: FC<Props> = memo(
 
     return (
       <>
-        <span
-          className="shr-relative shr-inline-block"
-          onPointerEnter={() => setIsHovered(true)}
-          onPointerLeave={() => setIsHovered(false)}
-        >
+        <ToolbarTooltip label={dropdownLabel} suppressed={isOpen || disabled}>
           <button
             ref={(el) => {
               triggerRef.current = el
@@ -194,20 +177,13 @@ export const HeadingDropdown: FC<Props> = memo(
             disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
-            onFocus={() => {
-              setIsFocused(true)
-              onFocusProp?.()
-            }}
-            onBlur={() => setIsFocused(false)}
+            onFocus={onFocusProp}
             className={classNames.trigger()}
           >
             <span className="shr-flex-1">{currentLabel}</span>
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
           </button>
-          <span aria-hidden="true" className={classNames.tooltip()}>
-            {dropdownLabel}
-          </span>
-        </span>
+        </ToolbarTooltip>
         {renderDropdown(
           <div
             ref={listboxRef}

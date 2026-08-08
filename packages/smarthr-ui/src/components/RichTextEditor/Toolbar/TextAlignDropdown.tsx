@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useRef, useState } from 'react'
+import { type FC, type KeyboardEvent, memo, useCallback, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
@@ -14,6 +14,8 @@ import {
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
+
+import { ToolbarTooltip } from './ToolbarTooltip'
 
 const ALIGN_OPTIONS = [
   { value: 'left', labelId: 'smarthr-ui/RichTextEditor/alignLeft', defaultText: '左揃え' },
@@ -54,23 +56,11 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
     ],
     optionWrapper: 'shr-group shr-relative shr-inline-block',
-    tooltip: [
-      'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr--translate-x-1/2 shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-white',
-      'shr-opacity-0 shr-transition-opacity',
-    ],
     optionTooltip: [
       'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
       'shr--translate-x-1/2 shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-white',
       'shr-opacity-0 shr-transition-opacity group-focus-within:shr-opacity-100 group-hover:shr-opacity-100',
     ],
-  },
-  variants: {
-    tooltipVisible: {
-      true: {
-        tooltip: 'shr-opacity-100',
-      },
-    },
   },
 })
 
@@ -88,8 +78,6 @@ export const TextAlignDropdown: FC<Props> = memo(
     const { localize } = useIntl()
     const state = useToolbarState(editor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const [isHovered, setIsHovered] = useState(false)
-    const [isFocused, setIsFocused] = useState(false)
     const listboxRef = useRef<HTMLDivElement>(null)
 
     const currentAlign = state.currentTextAlign ?? 'left'
@@ -99,8 +87,7 @@ export const TextAlignDropdown: FC<Props> = memo(
       defaultText: currentOption.defaultText,
     })
 
-    const tooltipVisible = (isHovered || isFocused) && !isOpen
-    const classNames = classNameGenerator({ tooltipVisible })
+    const classNames = classNameGenerator()
 
     const dropdownLabel = localize({
       id: 'smarthr-ui/RichTextEditor/textAlignDropdownLabel',
@@ -194,11 +181,7 @@ export const TextAlignDropdown: FC<Props> = memo(
 
     return (
       <>
-        <span
-          className="shr-relative shr-inline-block"
-          onPointerEnter={() => setIsHovered(true)}
-          onPointerLeave={() => setIsHovered(false)}
-        >
+        <ToolbarTooltip label={dropdownLabel} suppressed={isOpen || disabled}>
           <button
             ref={(el) => {
               triggerRef.current = el
@@ -212,20 +195,13 @@ export const TextAlignDropdown: FC<Props> = memo(
             disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
-            onFocus={() => {
-              setIsFocused(true)
-              onFocusProp?.()
-            }}
-            onBlur={() => setIsFocused(false)}
+            onFocus={onFocusProp}
             className={classNames.trigger()}
           >
             {getAlignIcon(currentAlign)}
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
           </button>
-          <span aria-hidden="true" className={classNames.tooltip()}>
-            {dropdownLabel}
-          </span>
-        </span>
+        </ToolbarTooltip>
         {renderDropdown(
           <div
             ref={listboxRef}

@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useRef, useState } from 'react'
+import { type FC, type KeyboardEvent, memo, useCallback, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
@@ -8,6 +8,8 @@ import { FaCaretDownIcon, FaCheckIcon, FaTextHeightIcon } from '../../Icon'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
+
+import { ToolbarTooltip } from './ToolbarTooltip'
 
 // value=null はデフォルト（unset）。それ以外は LineHeight 拡張の allowlist と一致させる。
 const LINE_HEIGHT_OPTIONS = [
@@ -37,18 +39,6 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
     ],
     checkIcon: 'shr-w-[1em] shr-shrink-0',
-    tooltip: [
-      'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr--translate-x-1/2 shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-white',
-      'shr-opacity-0 shr-transition-opacity',
-    ],
-  },
-  variants: {
-    tooltipVisible: {
-      true: {
-        tooltip: 'shr-opacity-100',
-      },
-    },
   },
 })
 
@@ -66,16 +56,13 @@ export const LineHeightDropdown: FC<Props> = memo(
     const { localize } = useIntl()
     const state = useToolbarState(editor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const [isHovered, setIsHovered] = useState(false)
-    const [isFocused, setIsFocused] = useState(false)
     const listboxRef = useRef<HTMLDivElement>(null)
 
     // '1.75' は CSS デフォルト(RELAXED)と同値のため、デフォルト(null=未指定)として扱う。
     // これにより HTML/JSON 由来で attrs.lineHeight='1.75' が入っても「1.75（標準）」が選択表示になる。
     const currentValue = state.currentLineHeight === '1.75' ? null : state.currentLineHeight
 
-    const tooltipVisible = (isHovered || isFocused) && !isOpen
-    const classNames = classNameGenerator({ tooltipVisible })
+    const classNames = classNameGenerator()
 
     const dropdownLabel = localize({
       id: 'smarthr-ui/RichTextEditor/lineHeightDropdownLabel',
@@ -180,11 +167,7 @@ export const LineHeightDropdown: FC<Props> = memo(
 
     return (
       <>
-        <span
-          className="shr-relative shr-inline-block"
-          onPointerEnter={() => setIsHovered(true)}
-          onPointerLeave={() => setIsHovered(false)}
-        >
+        <ToolbarTooltip label={dropdownLabel} suppressed={isOpen || disabled}>
           <button
             ref={(el) => {
               triggerRef.current = el
@@ -198,20 +181,13 @@ export const LineHeightDropdown: FC<Props> = memo(
             disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
-            onFocus={() => {
-              setIsFocused(true)
-              onFocusProp?.()
-            }}
-            onBlur={() => setIsFocused(false)}
+            onFocus={onFocusProp}
             className={classNames.trigger()}
           >
             <FaTextHeightIcon />
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
           </button>
-          <span aria-hidden="true" className={classNames.tooltip()}>
-            {dropdownLabel}
-          </span>
-        </span>
+        </ToolbarTooltip>
         {renderDropdown(
           <div
             ref={listboxRef}
