@@ -29,7 +29,7 @@ const classNameGenerator = tv({
     // 効いていないこのリポジトリでは border-width が 0 に落ちる（shr-border だけでは効かない）
     // block のままだと、行ボックスよりフォントの content area が高いぶん文字が上に寄る。
     // flex で中央揃えし、最小幅と高さを揃えてキーごとの箱の大きさのばらつきも抑える。
-    key: 'shr-inline-flex shr-h-[1.5em] shr-min-w-[1.5em] shr-items-center shr-justify-center shr-rounded-s shr-border shr-border-solid shr-border-white/30 shr-bg-white/20 shr-px-0.25 shr-text-xs shr-font-bold shr-leading-none shr-text-white',
+    key: 'shr-inline-flex shr-h-[1.5em] shr-min-w-[1.5em] shr-items-center shr-justify-center shr-rounded-s shr-border shr-border-solid shr-border-white/50 shr-bg-white/20 shr-px-0.25 shr-text-xs shr-font-bold shr-leading-none shr-text-white',
   },
 })
 
