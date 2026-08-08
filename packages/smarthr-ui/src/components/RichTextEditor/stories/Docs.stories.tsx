@@ -395,21 +395,23 @@ export const Overview: Story = {
               </tr>
               <tr>
                 <td style={tdStyle}>やり直す</td>
-                <td style={tdStyle}>Cmd+Shift+Z</td>
+                <td style={tdStyle}>Cmd+Shift+Z / Cmd+Y</td>
                 <td style={tdStyle}>ツールバーの「やり直す」と同じ</td>
               </tr>
               <tr>
                 <td style={tdStyle}>ツールバーへ移動</td>
                 <td style={tdStyle}>Alt+F10</td>
                 <td style={tdStyle}>
-                  本文からツールバーの先頭ボタンへフォーカスを移します。ツールバー内は左右矢印キーで移動し、Escape
-                  で本文へ戻ります。
+                  本文からツールバーへフォーカスを移します。移動先は直前に操作したボタン（ツールバーを未操作なら先頭のボタン）です。ツールバー内は左右矢印キー・Home・End
+                  で移動し、Escape で本文へ戻ります。
                 </td>
               </tr>
               <tr>
                 <td style={tdStyle}>リスト項目をネスト</td>
                 <td style={tdStyle}>Tab</td>
-                <td style={tdStyle}>先頭の項目では効きません（ネストする先が必要なため）。</td>
+                <td style={tdStyle}>
+                  先頭の項目ではネストする先が無いため効かず、フォーカスが次の要素へ移ります。
+                </td>
               </tr>
               <tr>
                 <td style={tdStyle}>リスト項目のネストを解除</td>
