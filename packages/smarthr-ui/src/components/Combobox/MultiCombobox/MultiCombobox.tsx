@@ -301,9 +301,11 @@ const ActualMultiCombobox = <T,>(
           triggerRef.current.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME)
 
         if (buttons.length > 0) {
+          const actualButtons = Array.from(buttons)
+
           return {
-            buttons,
-            currentIndex: Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement),
+            buttons: actualButtons,
+            currentIndex: actualButtons.indexOf(document.activeElement as HTMLButtonElement),
           }
         }
       }
