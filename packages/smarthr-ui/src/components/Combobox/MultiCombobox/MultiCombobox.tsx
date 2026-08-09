@@ -478,7 +478,7 @@ const ActualMultiCombobox = <T,>(
       inputWrapper: inputWrapper(),
       input: input(),
       placeholder: placeholderEl(),
-      suffixWrapper: suffixWrapper({ disabled }),
+      suffixWrapper: suffixWrapper(),
       suffixIcon: suffixIcon(),
     }
   }, [disabled, className])
