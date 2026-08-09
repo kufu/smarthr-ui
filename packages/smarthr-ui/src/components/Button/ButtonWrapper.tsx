@@ -5,9 +5,9 @@ import {
   useButtonWrapper,
 } from './useButtonWrapper'
 
-import type { FC, MouseEvent } from 'react'
+import type { FC, SyntheticEvent } from 'react'
 
-export const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
+export const EVENT_CANCELLER = (e: SyntheticEvent) => {
   e.preventDefault()
   e.stopPropagation()
 }
