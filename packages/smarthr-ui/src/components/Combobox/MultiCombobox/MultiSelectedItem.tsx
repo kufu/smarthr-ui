@@ -77,13 +77,7 @@ const CLASS_NAMES = (() => {
 
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
-export function MultiSelectedItem<T>({
-  item,
-  enableEllipsis,
-  disabled,
-  handleDelete,
-  ...rest
-}: Props<T>) {
+export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDelete }: Props<T>) {
   const itemDeletable = item.deletable ?? true
   const latest = useLatest({ handleDelete, item })
 
@@ -115,7 +109,6 @@ export function MultiSelectedItem<T>({
 
   return (
     <Component
-      {...rest}
       itemLabel={item.label}
       itemDeletable={itemDeletable}
       disabled={disabled}
