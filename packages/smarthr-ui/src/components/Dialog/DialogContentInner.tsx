@@ -115,12 +115,8 @@ export const DialogContentInner: FC<Props> = ({
       background: background(),
     }
   }, [size, className])
-  const style = useMemo(() => {
-    // width は deprecated なので、size が指定されている場合は width を無視する
-    const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
-
-    return actualWidth ? { width: actualWidth } : undefined
-  }, [width, size])
+  // width は deprecated なので、size が指定されている場合は width を無視する
+  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
   const latest = useLatest({ onPressEscape, onClickOverlay })
 
@@ -154,7 +150,11 @@ export const DialogContentInner: FC<Props> = ({
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div id={id} className={classNames.layout} style={style}>
+      <div
+        id={id}
+        className={classNames.layout}
+        style={actualWidth ? { width: actualWidth } : undefined}
+      >
         <Overlay
           handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
           className={classNames.background}
