@@ -8,7 +8,6 @@ import {
   memo,
   useEffect,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -123,8 +122,6 @@ export const DialogContentInner: FC<Props> = ({
     return actualWidth ? { width: actualWidth } : undefined
   }, [width, size])
 
-  const innerRef = useRef<HTMLDivElement>(null)
-
   const latest = useLatest({ onPressEscape, onClickOverlay })
 
   const functions = useMemo(
@@ -164,7 +161,6 @@ export const DialogContentInner: FC<Props> = ({
         />
         <div
           {...rest}
-          ref={innerRef}
           role="dialog"
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
