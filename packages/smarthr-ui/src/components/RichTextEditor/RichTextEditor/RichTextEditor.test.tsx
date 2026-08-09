@@ -156,6 +156,60 @@ describe('RichTextEditor', () => {
         'YouTube動画を埋め込む',
       ])
     })
+
+    const getSeparatorCount = () =>
+      screen.getByRole('toolbar').querySelectorAll('.smarthr-ui-RichTextEditor-ToolbarSeparator')
+        .length
+
+    it('グループ間に区切り線を描画する', async () => {
+      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+
+      // 4グループの間なので3本。先頭と末尾には付かない
+      expect(getSeparatorCount()).toBe(3)
+    })
+
+    it('項目がすべて外れたグループの区切り線は描画しない', async () => {
+      const withoutInsertion = ALL_TOOLBAR_FEATURES.filter(
+        (feature) => !['horizontalRule', 'table', 'image', 'youtube'].includes(feature),
+      )
+      render(<RichTextEditor features={withoutInsertion} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+
+      // 「挿入」グループが空になり3グループになるので2本
+      expect(getSeparatorCount()).toBe(2)
+    })
+
+    it('区切り線は支援技術から隠す', async () => {
+      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+
+      const separators = screen
+        .getByRole('toolbar')
+        .querySelectorAll('.smarthr-ui-RichTextEditor-ToolbarSeparator')
+      for (const separator of separators) {
+        expect(separator).toHaveAttribute('aria-hidden', 'true')
+      }
+    })
+
+    it('左右矢印キーは区切り線を飛ばして次のグループの先頭へ移動する', async () => {
+      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+
+      // 「テキスト装飾」グループの末尾から「テキストの意味づけ」グループの先頭へ
+      screen.getByLabelText('テキスト配置: 左揃え').focus()
+      await userEvent.keyboard('{ArrowRight}')
+
+      expect(screen.getByLabelText('リンク')).toHaveFocus()
+    })
   })
 
   describe('disabled', () => {
