@@ -3,7 +3,8 @@
 import { type FC, type PropsWithChildren, useEffect, useRef } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { TRIGGER_EVENT } from '../useRemoteTrigger'
+
+import { TRIGGER_EVENT } from './useRemoteTrigger'
 
 const CAPTURE_OPTION = {
   capture: true,
