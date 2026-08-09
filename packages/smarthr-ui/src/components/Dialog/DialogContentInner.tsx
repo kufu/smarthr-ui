@@ -140,15 +140,18 @@ export const DialogContentInner: FC<Props> = ({
   useEffect(() => {
     if (!isOpen) return
 
-    const scrollBarWidth = window.innerWidth - document.body.clientWidth
-    const originalPaddingRight = getComputedStyle(document.body).getPropertyValue('padding-right')
+    const body = document.body
+    const scrollBarWidth = window.innerWidth - body.clientWidth
+    const originalPaddingRight = getComputedStyle(body).getPropertyValue('padding-right')
 
-    document.body.style.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
-    document.body.style.overflow = 'hidden'
+    const bodyStyle = body.style
+
+    bodyStyle.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
+    bodyStyle.overflow = 'hidden'
 
     return () => {
-      document.body.style.paddingInlineEnd = ''
-      document.body.style.overflow = ''
+      bodyStyle.paddingInlineEnd = ''
+      bodyStyle.overflow = ''
     }
   }, [isOpen])
 
