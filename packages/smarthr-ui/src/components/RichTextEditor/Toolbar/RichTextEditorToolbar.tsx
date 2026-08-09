@@ -321,7 +321,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
     // 各itemのdisabledを一括で上書きしてネイティブのdisabled状態に落とす
     if (disabled) {
       return filled.map((group) => ({
-        id: group.id,
+        ...group,
         items: group.items.map((item) => ({ ...item, disabled: true })),
       }))
     }

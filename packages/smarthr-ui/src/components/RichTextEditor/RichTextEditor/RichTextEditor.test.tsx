@@ -15,6 +15,29 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
+const ALL_FEATURES = [
+  'bold',
+  'italic',
+  'strike',
+  'underline',
+  'code',
+  'codeBlock',
+  'bulletList',
+  'orderedList',
+  'blockquote',
+  'horizontalRule',
+  'link',
+  'heading',
+  'color',
+  'backgroundColor',
+  'fontSize',
+  'lineHeight',
+  'textAlign',
+  'image',
+  'youtube',
+  'table',
+] as const
+
 describe('RichTextEditor', () => {
   it('renders the editor', async () => {
     render(<RichTextEditor />, { wrapper: Wrapper })
@@ -93,36 +116,18 @@ describe('RichTextEditor', () => {
   })
 
   describe('ツールバーのグルーピング', () => {
-    const ALL_TOOLBAR_FEATURES = [
-      'bold',
-      'italic',
-      'strike',
-      'underline',
-      'code',
-      'codeBlock',
-      'bulletList',
-      'orderedList',
-      'blockquote',
-      'horizontalRule',
-      'link',
-      'heading',
-      'color',
-      'backgroundColor',
-      'fontSize',
-      'lineHeight',
-      'textAlign',
-      'image',
-      'youtube',
-      'table',
-    ] as const
+    const SEPARATOR_SELECTOR = '.smarthr-ui-RichTextEditor-ToolbarSeparator'
 
     const getToolbarButtonLabels = () =>
       within(screen.getByRole('toolbar'))
         .getAllByRole('button')
         .map((button) => button.getAttribute('aria-label'))
 
+    const getSeparatorCount = () =>
+      screen.getByRole('toolbar').querySelectorAll(SEPARATOR_SELECTOR).length
+
     it('機能グループの順に項目が並ぶ', async () => {
-      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByRole('toolbar')).toBeInTheDocument()
       })
@@ -157,12 +162,8 @@ describe('RichTextEditor', () => {
       ])
     })
 
-    const getSeparatorCount = () =>
-      screen.getByRole('toolbar').querySelectorAll('.smarthr-ui-RichTextEditor-ToolbarSeparator')
-        .length
-
     it('グループ間に区切り線を描画する', async () => {
-      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByRole('toolbar')).toBeInTheDocument()
       })
@@ -172,7 +173,7 @@ describe('RichTextEditor', () => {
     })
 
     it('項目がすべて外れたグループの区切り線は描画しない', async () => {
-      const withoutInsertion = ALL_TOOLBAR_FEATURES.filter(
+      const withoutInsertion = ALL_FEATURES.filter(
         (feature) => !['horizontalRule', 'table', 'image', 'youtube'].includes(feature),
       )
       render(<RichTextEditor features={withoutInsertion} />, { wrapper: Wrapper })
@@ -185,21 +186,19 @@ describe('RichTextEditor', () => {
     })
 
     it('区切り線は支援技術から隠す', async () => {
-      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByRole('toolbar')).toBeInTheDocument()
       })
 
-      const separators = screen
-        .getByRole('toolbar')
-        .querySelectorAll('.smarthr-ui-RichTextEditor-ToolbarSeparator')
+      const separators = screen.getByRole('toolbar').querySelectorAll(SEPARATOR_SELECTOR)
       for (const separator of separators) {
         expect(separator).toHaveAttribute('aria-hidden', 'true')
       }
     })
 
     it('左右矢印キーは区切り線を飛ばして次のグループの先頭へ移動する', async () => {
-      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByRole('toolbar')).toBeInTheDocument()
       })
@@ -213,29 +212,6 @@ describe('RichTextEditor', () => {
   })
 
   describe('disabled', () => {
-    const ALL_FEATURES = [
-      'bold',
-      'italic',
-      'strike',
-      'underline',
-      'code',
-      'codeBlock',
-      'bulletList',
-      'orderedList',
-      'blockquote',
-      'horizontalRule',
-      'link',
-      'heading',
-      'color',
-      'backgroundColor',
-      'fontSize',
-      'lineHeight',
-      'textAlign',
-      'image',
-      'youtube',
-      'table',
-    ] as const
-
     it('ツールバーは表示したまま、すべてのボタンを無効化する', async () => {
       render(<RichTextEditor disabled features={ALL_FEATURES} />, { wrapper: Wrapper })
       await waitFor(() => {
