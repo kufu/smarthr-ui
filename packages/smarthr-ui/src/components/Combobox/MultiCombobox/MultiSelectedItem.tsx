@@ -27,13 +27,15 @@ export type Props<T> = {
   enableEllipsis?: boolean
 }
 
+export const DELETE_BUTTON_SELECTOR = 'smarthr-ui-MultiCombobox-deleteButton'
+
 const classNameGenerator = tv({
   slots: {
     wrapper:
       'smarthr-ui-MultiCombobox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
     itemLabel: 'smarthr-ui-MultiCombobox-selectedItemLabel',
     deleteButton: [
-      'smarthr-ui-MultiCombobox-deleteButton',
+      DELETE_BUTTON_SELECTOR,
       'shr-relative',
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',

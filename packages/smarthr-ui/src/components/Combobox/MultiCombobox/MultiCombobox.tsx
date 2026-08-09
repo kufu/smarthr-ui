@@ -29,7 +29,7 @@ import { areItemsEqual } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
-import { MultiSelectedItem } from './MultiSelectedItem'
+import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
 import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
@@ -91,6 +91,8 @@ const EMPTY_INPUT_CHANGE_EVENT = {
   currentTarget: { value: '' },
   target: { value: '' },
 } as ChangeEvent<HTMLInputElement>
+
+const DELETE_BUTTON_CLASSNAME = `.${DELETE_BUTTON_SELECTOR}`
 
 const classNameGenerator = tv({
   slots: {
@@ -294,9 +296,7 @@ const ActualMultiCombobox = <T,>(
     const handleDelete = listBoxFunctions.handleDelete
 
     const getDeletionButtons = () =>
-      triggerRef.current?.querySelectorAll<HTMLButtonElement>(
-        '.smarthr-ui-MultiCombobox-deleteButton',
-      ) ?? null
+      triggerRef.current?.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME) ?? null
 
     const focusPrevDeletionButton = () => {
       const buttons = getDeletionButtons()
@@ -392,7 +392,7 @@ const ActualMultiCombobox = <T,>(
         if (
           !latest.disabled &&
           !latest.isExpanded &&
-          !(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')
+          !(e.target as HTMLElement).closest(DELETE_BUTTON_CLASSNAME)
         ) {
           focus()
         }
