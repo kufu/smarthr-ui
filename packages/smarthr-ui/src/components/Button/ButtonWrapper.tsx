@@ -7,7 +7,7 @@ import {
 
 import type { FC, MouseEvent } from 'react'
 
-export const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
+const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }

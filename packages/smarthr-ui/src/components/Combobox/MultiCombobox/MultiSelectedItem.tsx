@@ -39,7 +39,7 @@ const classNameGenerator = tv({
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
       'focus-visible:shr-outline-none',
-      'aria-disabled:shr-cursor-not-allowed',
+      'disabled:shr-cursor-not-allowed',
     ],
     deleteButtonIcon:
       'group-focus-visible/deleteButton:shr-focus-indicator--outer group-focus-visible/deleteButton:shr-rounded-full',
