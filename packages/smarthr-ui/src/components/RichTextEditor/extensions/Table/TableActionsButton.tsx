@@ -27,7 +27,7 @@ const classNameGenerator = tv({
     trigger: [
       'smarthr-ui-RichTextEditor-TableActionsButton',
       'shr-inline-flex shr-items-center shr-justify-center',
-      'shr-border-shorthand shr-h-1.5 shr-w-1.5 shr-cursor-pointer shr-rounded-m shr-bg-white shr-text-sm shr-text-black shr-shadow-layer-1',
+      'shr-border-shorthand shr-h-2 shr-w-2 shr-cursor-pointer shr-rounded-m shr-bg-white shr-text-sm shr-text-black shr-shadow-layer-1',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
     ],

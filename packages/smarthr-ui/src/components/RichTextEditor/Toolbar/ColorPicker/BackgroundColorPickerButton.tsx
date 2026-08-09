@@ -9,6 +9,7 @@ import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarState } from '../../hooks/useToolbarState'
 import { ToolbarTooltip } from '../ToolbarTooltip'
+import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
@@ -17,14 +18,7 @@ const RECENT_LIMIT = 5
 
 const classNameGenerator = tv({
   slots: {
-    trigger: [
-      'smarthr-ui-RichTextEditor-BackgroundColorPickerButton',
-      'shr-inline-flex shr-cursor-pointer shr-items-center shr-gap-0.25',
-      'shr-rounded-m shr-border-none shr-bg-transparent shr-p-0.5',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
-    ],
+    trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-BackgroundColorPickerButton'],
     // border-shorthand で白(#fff)時にも視認できるようにする
     colorIndicator: 'shr-border-shorthand shr-h-[3px] shr-w-full shr-rounded-full',
   },

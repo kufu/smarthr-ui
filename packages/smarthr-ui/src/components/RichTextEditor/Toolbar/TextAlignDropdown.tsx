@@ -18,6 +18,7 @@ import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { toAriaKeyShortcuts } from './shortcutKeys'
+import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
 // shortcut は @tiptap/extension-text-align の既定バインドと対応する。
 // Tiptap は拡張のキーバインドを外部へ公開していないため二重管理になる。
@@ -64,12 +65,9 @@ const getAlignIcon = (value: string) => {
 const classNameGenerator = tv({
   slots: {
     trigger: [
+      TOOLBAR_ITEM_CLASS_NAME,
       'smarthr-ui-RichTextEditor-TextAlignDropdown',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-      'shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
+      'shr-text-sm',
     ],
     listbox: [
       'shr-border-shorthand shr-flex shr-items-center shr-gap-0.25 shr-rounded-m shr-bg-white shr-p-0.25 shr-shadow-layer-3',

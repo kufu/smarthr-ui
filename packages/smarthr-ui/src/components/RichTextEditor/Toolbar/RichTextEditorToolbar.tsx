@@ -74,11 +74,11 @@ type ToolbarGroup = {
   items: ToolbarItem[]
 }
 
-// グループの切れ目を示すだけの装飾要素。h-2（16px）はボタンの高さ24px・ドロップダウンの
-// 高さ約25pxに対して上下に余白が残る値。mx-0.5（4px）はツールバーのgap-0.25（2px）と
-// 合わせて左右6px空ける。折り返し前に潰れないようshrink-0を付ける。
+// グループの切れ目を示すだけの装飾要素。h-1.5（24px）は各項目の高さ32px（toolbarItemStyle）
+// に対して上下に余白が残る値。mx-0.5（8px）はツールバーのgap-0.25（4px）と
+// 合わせて左右12px空ける。折り返し前に潰れないようshrink-0を付ける。
 const SEPARATOR_CLASS_NAME =
-  'smarthr-ui-RichTextEditor-ToolbarSeparator shr-mx-0.5 shr-h-2 shr-w-px shr-shrink-0 shr-bg-border'
+  'smarthr-ui-RichTextEditor-ToolbarSeparator shr-mx-0.5 shr-h-1.5 shr-w-px shr-shrink-0 shr-bg-border'
 
 export const RichTextEditorToolbar: FC = memo(() => {
   const { editor, features, disabled } = useRichTextEditorContext()
@@ -416,7 +416,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
       role="toolbar"
       aria-label={toolbarLabel}
       aria-orientation="horizontal"
-      className="smarthr-ui-RichTextEditor-Toolbar shr-border-b-shorthand shr-flex shr-flex-wrap shr-items-center shr-gap-0.25 shr-px-0.5 shr-py-0.25"
+      className="smarthr-ui-RichTextEditor-Toolbar shr-border-b-shorthand shr-flex shr-flex-wrap shr-items-center shr-gap-0.25 shr-p-0.5"
     >
       {indexedGroups.map((group, groupIndex) => (
         <Fragment key={group.id}>

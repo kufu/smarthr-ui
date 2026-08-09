@@ -55,7 +55,7 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   const rowVisibleInViewport =
     rowTopMax >= targetInfo.viewport.top && targetInfo.rect.left + barThickness <= viewportRight
 
-  const buttonSize = 24
+  const buttonSize = 32
   const actionsGap = 4
   return (
     <>

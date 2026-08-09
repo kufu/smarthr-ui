@@ -10,6 +10,7 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
+import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
 // value=null はデフォルト（unset）。それ以外は LineHeight 拡張の allowlist と一致させる。
 const LINE_HEIGHT_OPTIONS = [
@@ -23,12 +24,9 @@ const LINE_HEIGHT_OPTIONS = [
 const classNameGenerator = tv({
   slots: {
     trigger: [
+      TOOLBAR_ITEM_CLASS_NAME,
       'smarthr-ui-RichTextEditor-LineHeightDropdown',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-      'shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
+      'shr-text-sm',
     ],
     listbox: [
       'shr-border-shorthand shr-max-h-[20em] shr-min-w-[7em] shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',

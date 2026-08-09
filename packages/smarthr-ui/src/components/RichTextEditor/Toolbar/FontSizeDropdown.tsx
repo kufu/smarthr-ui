@@ -10,6 +10,7 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
+import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
 const FONT_SIZES = [
   { value: '12px', label: '12' },
@@ -28,12 +29,9 @@ const FONT_SIZES = [
 const classNameGenerator = tv({
   slots: {
     trigger: [
+      TOOLBAR_ITEM_CLASS_NAME,
       'smarthr-ui-RichTextEditor-FontSizeDropdown',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-      'shr-min-w-[4em] shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
+      'shr-min-w-[4em] shr-text-sm',
     ],
     listbox: [
       'shr-border-shorthand shr-max-h-[20em] shr-min-w-[5em] shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',

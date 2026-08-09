@@ -7,16 +7,10 @@ import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { toAriaKeyShortcuts } from './shortcutKeys'
+import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
 const classNameGenerator = tv({
-  base: [
-    'smarthr-ui-RichTextEditor-ToolbarButton',
-    'shr-inline-flex shr-items-center shr-justify-center',
-    'shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-p-0.5 shr-text-base shr-text-black',
-    'hover:shr-bg-white-darken',
-    'focus-visible:shr-focus-indicator',
-    'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
-  ],
+  base: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-ToolbarButton'],
   variants: {
     active: {
       true: [

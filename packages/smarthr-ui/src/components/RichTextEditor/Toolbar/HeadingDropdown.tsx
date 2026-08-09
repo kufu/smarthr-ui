@@ -10,6 +10,7 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
+import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
 const ALL_OPTIONS = [
   { level: null, labelId: 'smarthr-ui/RichTextEditor/headingNormal', defaultText: '標準テキスト' },
@@ -22,12 +23,9 @@ const ALL_OPTIONS = [
 const classNameGenerator = tv({
   slots: {
     trigger: [
+      TOOLBAR_ITEM_CLASS_NAME,
       'smarthr-ui-RichTextEditor-HeadingDropdown',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-      'shr-min-w-[9em] shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
+      'shr-min-w-[9em] shr-text-sm',
     ],
     listbox: [
       'shr-border-shorthand shr-min-w-[10em] shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
