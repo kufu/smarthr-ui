@@ -1,8 +1,11 @@
 import {
   type ComponentProps,
   type ElementType,
+  type FC,
   type PropsWithChildren,
   type ReactNode,
+  type Ref,
+  forwardRef,
   memo,
   useMemo,
 } from 'react'
@@ -11,7 +14,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { Gap } from '../../types'
+import type { ElementRef, Gap } from '../../types'
 
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
@@ -170,66 +173,76 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   icon?: IconType
 }
 
+// HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
+type ActualTextProps<T extends ElementType> = PropsWithChildren<TextProps<T> & ComponentProps<T>>
+
+type TextComponent = <T extends ElementType = 'span'>(props: ActualTextProps<T>) => ReturnType<FC>
+
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 
-const ActualText = <T extends ElementType = 'span'>({
-  emphasis,
-  styleType,
-  icon: orgIcon,
-  weight = emphasis ? 'bold' : undefined,
-  as: Component = emphasis ? 'em' : 'span',
-  size,
-  italic,
-  color,
-  leading,
-  whiteSpace,
-  maxLines,
-  className,
-  children,
-  ...rest
-}: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
-    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
-  }
-
-  const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
-  const actualClassName = useMemo(() => {
-    const styleTypeValues = styleType
-      ? STYLE_TYPE_MAP[styleType as StyleType]
-      : UNDEFINED_STYLE_VALUES
-
-    return classNameGenerator({
-      size: size || styleTypeValues.size,
-      weight: weight || styleTypeValues.weight,
-      color: color || styleTypeValues.color,
-      leading: leading || styleTypeValues.leading,
+const ActualText: TextComponent = forwardRef(
+  <T extends ElementType = 'span'>(
+    {
+      emphasis,
+      styleType,
+      icon: orgIcon,
+      weight = emphasis ? 'bold' : undefined,
+      as: Component = emphasis ? 'em' : 'span',
+      size,
       italic,
+      color,
+      leading,
       whiteSpace,
       maxLines,
       className,
-    })
-  }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
-  const hasIcon = !!icon
-  const iconGap = icon?.gap
+      children,
+      ...rest
+    }: ActualTextProps<T>,
+    ref: Ref<ElementRef<T>>,
+  ) => {
+    if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
+      throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+    }
 
-  const wrapperClassName = useMemo(
-    () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
-    [hasIcon, iconGap],
-  )
+    const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
+    const actualClassName = useMemo(() => {
+      const styleTypeValues = styleType
+        ? STYLE_TYPE_MAP[styleType as StyleType]
+        : UNDEFINED_STYLE_VALUES
 
-  return (
-    <Component {...rest} className={actualClassName}>
-      {icon ? (
-        <span className={wrapperClassName}>
-          {icon.prefix}
-          {children}
-          {icon.suffix}
-        </span>
-      ) : (
-        children
-      )}
-    </Component>
-  )
-}
+      return classNameGenerator({
+        size: size || styleTypeValues.size,
+        weight: weight || styleTypeValues.weight,
+        color: color || styleTypeValues.color,
+        leading: leading || styleTypeValues.leading,
+        italic,
+        whiteSpace,
+        maxLines,
+        className,
+      })
+    }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
+    const hasIcon = !!icon
+    const iconGap = icon?.gap
+
+    const wrapperClassName = useMemo(
+      () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
+      [hasIcon, iconGap],
+    )
+
+    return (
+      <Component {...rest} ref={ref} className={actualClassName}>
+        {icon ? (
+          <span className={wrapperClassName}>
+            {icon.prefix}
+            {children}
+            {icon.suffix}
+          </span>
+        ) : (
+          children
+        )}
+      </Component>
+    )
+  },
+)
 
 export const Text = memo(ActualText) as typeof ActualText
