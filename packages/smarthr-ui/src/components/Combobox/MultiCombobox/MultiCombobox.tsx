@@ -295,15 +295,28 @@ const ActualMultiCombobox = <T,>(
   const functions = useMemo(() => {
     const handleDelete = listBoxFunctions.handleDelete
 
-    const getDeletionButtons = () =>
-      triggerRef.current?.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME) ?? []
+    const getDeletionButtons = () => {
+      if (triggerRef.current) {
+        const buttons =
+          triggerRef.current.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME)
+
+        if (buttons.length > 0) {
+          return {
+            buttons,
+            currentIndex: Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement),
+          }
+        }
+      }
+
+      return null
+    }
 
     const focusPrevDeletionButton = () => {
-      const buttons = getDeletionButtons()
+      const result = getDeletionButtons()
 
-      if (!buttons.length) return
+      if (!result) return
 
-      const currentIndex = Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement)
+      const { buttons, currentIndex } = result
 
       if (currentIndex !== -1) {
         buttons[Math.max(currentIndex - 1, 0)].focus()
@@ -313,11 +326,11 @@ const ActualMultiCombobox = <T,>(
     }
 
     const focusNextDeletionButton = () => {
-      const buttons = getDeletionButtons()
+      const result = getDeletionButtons()
 
-      if (!buttons.length) return
+      if (!result) return
 
-      const currentIndex = Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement)
+      const { buttons, currentIndex } = result
 
       if (currentIndex === -1) return
 
