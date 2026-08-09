@@ -25,7 +25,6 @@ export type Props<T> = {
   disabled: boolean
   handleDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
-  buttonRef: RefObject<HTMLButtonElement>
 }
 
 const classNameGenerator = tv({
@@ -168,7 +167,6 @@ const BaseEllipsisMultiSelectedItem = <T,>({
 const EllipsisMultiSelectedItem = typedMemo(BaseEllipsisMultiSelectedItem)
 
 const BaseActualMultiSelectedItem = <T,>({
-  buttonRef,
   labelRef,
   itemLabel,
   itemDeletable,
@@ -187,7 +185,6 @@ const BaseActualMultiSelectedItem = <T,>({
 
       {itemDeletable && (
         <DestroyButton
-          buttonRef={buttonRef}
           labelId={labelId}
           suffixTextId={`${idPrefix}-item-destroy-button-suffix`}
           functions={functions}
@@ -201,18 +198,16 @@ const BaseActualMultiSelectedItem = <T,>({
 const ActualMultiSelectedItem = typedMemo(BaseActualMultiSelectedItem)
 
 const DestroyButton = <T,>({
-  buttonRef,
   labelId,
   suffixTextId,
   disabled,
   functions,
   classNames,
-}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'buttonRef' | 'classNames'> & {
+}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'classNames'> & {
   labelId: string
   suffixTextId: string
 }) => (
   <UnstyledButton
-    ref={buttonRef}
     disabled={disabled}
     tabIndex={-1}
     aria-labelledby={`${labelId} ${suffixTextId}`}
