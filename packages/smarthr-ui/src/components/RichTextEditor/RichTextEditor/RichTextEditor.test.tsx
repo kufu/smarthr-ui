@@ -92,6 +92,72 @@ describe('RichTextEditor', () => {
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
   })
 
+  describe('ツールバーのグルーピング', () => {
+    const ALL_TOOLBAR_FEATURES = [
+      'bold',
+      'italic',
+      'strike',
+      'underline',
+      'code',
+      'codeBlock',
+      'bulletList',
+      'orderedList',
+      'blockquote',
+      'horizontalRule',
+      'link',
+      'heading',
+      'color',
+      'backgroundColor',
+      'fontSize',
+      'lineHeight',
+      'textAlign',
+      'image',
+      'youtube',
+      'table',
+    ] as const
+
+    const getToolbarButtonLabels = () =>
+      within(screen.getByRole('toolbar'))
+        .getAllByRole('button')
+        .map((button) => button.getAttribute('aria-label'))
+
+    it('機能グループの順に項目が並ぶ', async () => {
+      render(<RichTextEditor features={ALL_TOOLBAR_FEATURES} />, { wrapper: Wrapper })
+      await waitFor(() => {
+        expect(screen.getByRole('toolbar')).toBeInTheDocument()
+      })
+
+      expect(getToolbarButtonLabels()).toEqual([
+        // 履歴操作
+        '元に戻す',
+        'やり直す',
+        // テキスト装飾
+        '書式: 標準テキスト',
+        'フォントサイズ: 16',
+        '行送り: 1.75（標準）',
+        '太字',
+        '斜体',
+        '下線',
+        '打ち消し線',
+        '文字色',
+        '背景色',
+        'テキスト配置: 左揃え',
+        // テキストの意味づけ
+        'リンク',
+        '箇条書きリスト',
+        '番号付きリスト',
+        '引用',
+        'インラインコード',
+        'コードブロック',
+        // 挿入
+        '水平線',
+        'テーブルを挿入',
+        '画像を挿入',
+        'YouTube動画を埋め込む',
+      ])
+    })
+  })
+
   describe('disabled', () => {
     const ALL_FEATURES = [
       'bold',
