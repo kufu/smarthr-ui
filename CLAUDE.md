@@ -120,6 +120,24 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
+### コンポーネントのブラックボックス原則
+
+他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。
+
+```tsx
+// ❌ ClusterがdisplayなどのCSSでどう実装されているかを前提にした外部からのスタイル
+const Foo = () => (
+  <Cluster className="shr-items-center" />
+)
+
+// ✅ Clusterのpropsを使って意図を伝える
+const Foo = () => (
+  <Cluster align="center" />
+)
+```
+
+**理由:** 内部実装は予告なく変更される可能性があり、公開インターフェースのみが安定した契約として保証される。
+
 ### コミット
 - Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
   - type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `ci`, `perf`, `style`, `build`, `revert`
@@ -204,6 +222,32 @@ const classNames = useMemo(() => ({
 - Reactの再レンダリング時にclassNames全体の再計算が不要になる
 
 ### パフォーマンス最適化パターン
+
+#### unstableな値のmemo化
+
+コンポーネントに渡すオブジェクト・配列は、そのコンポーネントが `memo` 化されているかどうかに関わらず、可能な限りメモ化して安定化します。コンポーネントの内部実装（`memo` 化の有無）は知らない前提でコードを書くためです。
+
+毎レンダリングで新しい参照が生成されると、受け取ったコンポーネントが `React.memo` でラップされている場合に最適化が無効化され、不要な再レンダリングが発生します。
+
+ただし **ネイティブHTML要素**（`div`, `span`, `input` など）に渡す場合は除きます。ネイティブ要素は `memo` 化されていないことが確定しているため、参照の安定化は不要です。
+
+```tsx
+// ❌ インラインオブジェクト・配列を渡すとReact.memoが無効化される可能性がある
+const Foo = ({ color }: { color: string }) => (
+  <SomeComponent style={{ color }} />
+)
+
+// ✅ useMemoで安定化する
+const Foo = ({ color }: { color: string }) => {
+  const style = useMemo(() => ({ color }), [color])
+  return <SomeComponent style={style} />
+}
+
+// ✅ ネイティブHTML要素への場合はmemo化不要
+const Foo = ({ color }: { color: string }) => (
+  <div style={{ color }} />
+)
+```
 
 #### useLatest + functions パターン
 複数のイベントハンドラーやコールバックを安定化する際は、`useLatest` フックと `useMemo` で統合した `functions` オブジェクトを使用します。
