@@ -130,18 +130,10 @@ const classNameGenerator = tv({
           'shr-cursor-not-allowed shr-border-default/50 shr-bg-white-darken shr-text-disabled',
       },
       false: {
-        wrapper: 'shr-cursor-text shr-bg-white',
+        wrapper: 'shr-cursor-text shr-border-default shr-bg-white',
       },
     },
   },
-  compoundVariants: [
-    {
-      disabled: false,
-      className: {
-        wrapper: 'shr-border-default',
-      },
-    },
-  ],
 })
 
 const ActualMultiCombobox = <T,>(
