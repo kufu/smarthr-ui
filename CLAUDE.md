@@ -168,6 +168,41 @@ const classNames = useMemo(() => {
 - 即時関数（IIFE）で中間変数をスコープから隔離
 - `const`で再代入を防止
 
+#### classNamesのuseMemo依存配列の最適化
+
+`classNames` の `useMemo` には、ユーザー提供の `className` などの**安定した値のみ**を依存配列に含めます。state・props を問わずユーザー操作で変化し得る値は、CSS属性セレクタを使ってスタイルを表現し、依存配列から除外します。
+
+```typescript
+// ❌ 頻繁に変化する isExpanded・disabled を依存配列に含める
+const classNames = useMemo(() => ({
+  wrapper: wrapper({ focused: isExpanded, disabled, className }),
+  inputWrapper: inputWrapper({ hidden: !isExpanded }),
+}), [isExpanded, disabled, className])
+
+// ✅ CSS属性セレクタで表現し、依存配列から除外
+// classNameGenerator の base に記述:
+//   'has-[[role=combobox][aria-expanded=true]]:shr-focus-indicator'
+//   'has-[[role=combobox]:disabled]:shr-cursor-not-allowed'
+const classNames = useMemo(() => ({
+  wrapper: wrapper({ className }),
+}), [className])
+```
+
+**判断基準:**
+- **依存配列から除外する（CSS属性セレクタで表現）**: state・props を問わず、ユーザー操作で変化し得る値
+  - `isExpanded`（open/close のたびに変化）
+  - `disabled`（フォーム上の操作で入力可否が切り替わる場合など）
+- **依存配列に含める**: ユーザー提供の `className`（任意の値が入るためセレクタ化できない）
+
+**CSS属性セレクタの選び方:**
+- 対象要素に既存のARIA属性がある場合 → `:has([aria-expanded=true])` など
+- 対象要素に `disabled` 属性がある場合 → `:has([role=combobox]:disabled)` など
+- 要素自身に属性を追加できる場合 → `data-[disabled]:` など（Chip・Checkboxパターン）
+
+**理由:**
+- `classNameGenerator()` の再実行コストを削減
+- Reactの再レンダリング時にclassNames全体の再計算が不要になる
+
 ### パフォーマンス最適化パターン
 
 #### useLatest + functions パターン
