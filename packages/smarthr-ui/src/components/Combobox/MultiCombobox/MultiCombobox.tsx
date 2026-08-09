@@ -296,12 +296,12 @@ const ActualMultiCombobox = <T,>(
     const handleDelete = listBoxFunctions.handleDelete
 
     const getDeletionButtons = () =>
-      triggerRef.current?.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME) ?? null
+      triggerRef.current?.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME) ?? []
 
     const focusPrevDeletionButton = () => {
       const buttons = getDeletionButtons()
 
-      if (!buttons?.length) return
+      if (!buttons.length) return
 
       const currentIndex = Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement)
 
@@ -315,7 +315,7 @@ const ActualMultiCombobox = <T,>(
     const focusNextDeletionButton = () => {
       const buttons = getDeletionButtons()
 
-      if (!buttons?.length) return
+      if (!buttons.length) return
 
       const currentIndex = Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement)
 
