@@ -29,7 +29,7 @@ const classNameGenerator = tv({
     label: [
       'shr-font-bold shr-leading-none shr-text-grey',
       'group-hover/tabitem:shr-text-black',
-      'group-aria-disabled/tabitem:shr-text-grey/50',
+      'group-aria-disabled/tabitem:shr-text-grey/50 group-aria-disabled/tabitem:forced-colors:shr-text-[GrayText]',
       'group-aria-selected/tabitem:shr-text-black',
     ],
     suffixWrapper: [
