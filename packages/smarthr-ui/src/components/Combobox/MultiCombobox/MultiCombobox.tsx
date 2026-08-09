@@ -105,6 +105,7 @@ const classNameGenerator = tv({
       'has-[[role=combobox]:disabled]:shr-border-default/50',
       'has-[[role=combobox]:disabled]:shr-bg-white-darken',
       'has-[[role=combobox]:disabled]:shr-text-disabled',
+      // HINT: disabled と詳細度が同じ [0,2,0] のため、CSS ソース順でこちらを後に置くことで error 時の border 色を優先させる
       'has-[[role=combobox][aria-invalid]]:shr-border-danger',
     ],
     inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
