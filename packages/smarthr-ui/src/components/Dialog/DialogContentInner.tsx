@@ -6,6 +6,7 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
+  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -17,7 +18,6 @@ import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
-import { useBodyScrollLock } from './useBodyScrollLock'
 
 import type { DialogSize } from './types'
 
@@ -136,7 +136,21 @@ export const DialogContentInner: FC<Props> = ({
   )
 
   useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
-  useBodyScrollLock(isOpen)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const scrollBarWidth = window.innerWidth - document.body.clientWidth
+    const originalPaddingRight = getComputedStyle(document.body).getPropertyValue('padding-right')
+
+    document.body.style.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.paddingInlineEnd = ''
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   return (
     <DialogOverlap isOpen={isOpen}>
