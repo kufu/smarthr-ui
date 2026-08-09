@@ -25,7 +25,7 @@ const classNameGenerator = tv({
   slots: {
     button: [
       'smarthr-ui-RichTextEditor-AddColumnButton',
-      'shr-absolute shr-z-overlap-base',
+      'shr-absolute shr-z-0',
       'shr-flex shr-items-center shr-justify-center',
       'shr-border-shorthand shr-cursor-pointer shr-rounded-m shr-bg-white shr-text-base shr-text-grey shr-shadow-layer-1',
       'hover:shr-bg-white-darken',

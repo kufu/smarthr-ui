@@ -179,7 +179,7 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
 
   return (
     <>
-      <span className="shr-absolute shr-z-overlap-base" style={{ top, left }}>
+      <span className="shr-absolute shr-z-0" style={{ top, left }}>
         <ToolbarTooltip label={triggerLabel} shortcut="Alt-Enter" suppressed={isOpen}>
           <button
             ref={triggerRef}
