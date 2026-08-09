@@ -101,6 +101,11 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'has-[[aria-invalid]]:shr-border-danger',
       'has-[[role=combobox][aria-expanded=true]]:shr-focus-indicator',
+      'shr-cursor-text shr-border-default shr-bg-white',
+      'has-[[role=combobox]:disabled]:shr-cursor-not-allowed',
+      'has-[[role=combobox]:disabled]:shr-border-default/50',
+      'has-[[role=combobox]:disabled]:shr-bg-white-darken',
+      'has-[[role=combobox]:disabled]:shr-text-disabled',
     ],
     inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
     selectedList:
@@ -122,17 +127,6 @@ const classNameGenerator = tv({
       'before:shr-absolute before:shr-inset-x-0 before:shr-inset-y-0.25 before:shr-w-0 before:shr-border-0 before:shr-border-l before:shr-border-solid before:shr-border-default before:shr-content-[""]',
     ],
     suffixIcon: 'shr-block',
-  },
-  variants: {
-    disabled: {
-      true: {
-        wrapper:
-          'shr-cursor-not-allowed shr-border-default/50 shr-bg-white-darken shr-text-disabled',
-      },
-      false: {
-        wrapper: 'shr-cursor-text shr-border-default shr-bg-white',
-      },
-    },
   },
 })
 
@@ -472,7 +466,7 @@ const ActualMultiCombobox = <T,>(
     } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ disabled, className }),
+      wrapper: wrapper({ className }),
       inputArea: inputArea(),
       selectedList: selectedList(),
       inputWrapper: inputWrapper(),
@@ -481,7 +475,7 @@ const ActualMultiCombobox = <T,>(
       suffixWrapper: suffixWrapper(),
       suffixIcon: suffixIcon(),
     }
-  }, [disabled, className])
+  }, [className])
 
   const localized = useLocalize({
     selectedListAriaLabel: {
