@@ -324,8 +324,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@babel/core@8.0.1)
       chromatic:
-        specifier: ^16.2.0
-        version: 16.2.0
+        specifier: ^18.1.0
+        version: 18.1.0
       eslint-plugin-storybook:
         specifier: 9.1.20
         version: 9.1.20(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(storybook@9.1.20(@testing-library/dom@10.4.0)(prettier@3.9.6)(supports-color@10.2.2)(vite@7.3.6(@types/node@20.19.43)(jiti@2.7.0)(tsx@4.23.1)(yaml@2.9.0)))(supports-color@10.2.2)(typescript@5.9.3)
@@ -3139,16 +3139,20 @@ packages:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
 
-  chromatic@16.2.0:
-    resolution: {integrity: sha512-yFUC0iCumsw5JDQPmrNAgYuln25HRh79iGdJgm+dj87lv7kFatlRBgRcw8Kmzdw1si3qzGlzu36aCABS7Wg5aQ==}
+  chromatic@18.1.0:
+    resolution: {integrity: sha512-I9av8lUc5CQRlYzwKpmOG9cwYvZ4AFmTvtHeNrzOMC1353F9xYw45CHpSNIsNKuOiqqmzci9esXQd5akl0fi6w==}
+    engines: {node: '>=22.0.0'}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
       '@chromatic-com/playwright': ^0.*.* || ^1.0.0
+      '@chromatic-com/vitest': ^0.*.* || ^1.0.0
     peerDependenciesMeta:
       '@chromatic-com/cypress':
         optional: true
       '@chromatic-com/playwright':
+        optional: true
+      '@chromatic-com/vitest':
         optional: true
 
   cli-cursor@3.1.0:
@@ -9039,7 +9043,9 @@ snapshots:
 
   chownr@3.0.0: {}
 
-  chromatic@16.2.0: {}
+  chromatic@18.1.0:
+    dependencies:
+      semver: 7.8.5
 
   cli-cursor@3.1.0:
     dependencies:
