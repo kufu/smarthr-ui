@@ -238,7 +238,7 @@ const Controller: FC<ControllerProps> = memo(
         </Button>
       </Cluster>
       {searchController ? (
-        <div className="shr-min-w-0 shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-justify-end shr-justify-self-stretch shr-px-0.5 shr-pb-0.5">
+        <div className="shr-min-w-0 shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-justify-self-stretch shr-px-0.5 shr-pb-0.5">
           {searchController}
         </div>
       ) : (
