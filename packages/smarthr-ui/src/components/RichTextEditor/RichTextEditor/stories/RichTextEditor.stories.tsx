@@ -55,6 +55,12 @@ const meta = {
     readOnly: { description: '読み取り専用', type: 'boolean' },
     error: { description: 'エラー状態', type: 'boolean' },
     hideToolbar: { description: 'ツールバー非表示', type: 'boolean' },
+    width: { description: 'コンポーネント全体の幅。数値はpx', control: 'text' },
+    height: {
+      description: 'エディタ領域の高さ。数値はpx。resizableのときは初期値',
+      control: 'text',
+    },
+    resizable: { description: 'エディタ領域を縦方向にリサイズできるようにする', type: 'boolean' },
   },
   parameters: {
     layout: 'padded',
@@ -297,4 +303,77 @@ export const CustomHeadingLevels: Story = {
   args: {
     features: ['bold', 'italic', 'heading', 'bulletList', 'orderedList', 'link'],
   },
+}
+
+export const FixedSize: Story = {
+  name: 'サイズ指定（width / height）',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => (
+    <Stack gap={1.5}>
+      <FormControl label="高さ200px固定">
+        <RichTextEditor
+          {...rest}
+          height={200}
+          placeholder="内容が溢れたらスクロールします"
+          showCharacterCount
+        />
+      </FormControl>
+      <FormControl label="幅400px・高さ150px">
+        <RichTextEditor {...rest} width={400} height={150} placeholder="widthとheightを併用" />
+      </FormControl>
+      <FormControl label="高さを相対値で指定（30vh）">
+        <RichTextEditor {...rest} height="30vh" placeholder="文字列はそのままCSSの値になります" />
+      </FormControl>
+    </Stack>
+  ),
+}
+
+export const Resizable: Story = {
+  name: '縦リサイズ（resizable）',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => (
+    <Stack gap={1.5}>
+      <FormControl label="文字数カウントあり">
+        <RichTextEditor
+          {...rest}
+          resizable
+          height={200}
+          placeholder="右下のハンドルで高さを変えられます"
+          showCharacterCount
+        />
+      </FormControl>
+      <FormControl label="文字数カウントなし">
+        <RichTextEditor
+          {...rest}
+          resizable
+          height={200}
+          placeholder="文字数カウントが無くてもハンドルは右下に出ます"
+        />
+      </FormControl>
+      <FormControl label="readOnly（ハンドルなし）">
+        <RichTextEditor
+          {...rest}
+          resizable
+          readOnly
+          height={150}
+          defaultValue={{
+            type: 'doc',
+            content: [
+              {
+                type: 'paragraph',
+                content: [{ type: 'text', text: 'readOnlyのときはハンドルを表示しません' }],
+              },
+            ],
+          }}
+        />
+      </FormControl>
+      <FormControl label="disabled（ハンドルなし）">
+        <RichTextEditor
+          {...rest}
+          resizable
+          disabled
+          height={150}
+          placeholder="disabledのときはハンドルを表示しません"
+        />
+      </FormControl>
+    </Stack>
+  ),
 }

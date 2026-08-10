@@ -56,6 +56,12 @@ type RichTextEditorBaseProps = {
   placeholder?: string
   className?: string
   editorClassName?: string
+  /** コンポーネント全体の幅 */
+  width?: number | string
+  /** エディタ領域の高さ。resizable のときは初期値として扱う */
+  height?: number | string
+  /** エディタ領域を縦方向にリサイズできるようにする */
+  resizable?: boolean
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   showCharacterCount?: boolean
   /**

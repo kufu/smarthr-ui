@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
@@ -534,6 +534,166 @@ describe('RichTextEditor', () => {
       expect(html).toContain('#ff0000')
       expect(html).toContain('20px')
       expect(html).toContain('styled')
+    })
+  })
+
+  describe('サイズ指定', () => {
+    it('height を渡すとエディタ領域の高さを表す CSS 変数が設定される', () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} height={200} />, {
+        wrapper: Wrapper,
+      })
+
+      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')
+
+      expect(content!.style.getPropertyValue('--shr-rte-editor-height')).toBe('200px')
+    })
+
+    it('height に文字列を渡すとそのまま CSS 変数に反映される', () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} height="50vh" />, {
+        wrapper: Wrapper,
+      })
+
+      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')
+
+      expect(content!.style.getPropertyValue('--shr-rte-editor-height')).toBe('50vh')
+    })
+
+    it('height 未指定のとき CSS 変数は設定されない', () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
+
+      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')
+
+      expect(content!.style.getPropertyValue('--shr-rte-editor-height')).toBe('')
+    })
+
+    /*
+     * preflight 無効で既定が content-box のため、.ProseMirror を常時 border-box にすると
+     * min-h-[8em] に縦 padding が含まれ、高さ未指定時のデフォルト高さが縮む。
+     * jsdom はレイアウトを計算しないので、クラスの付与条件で退行を防ぐ。
+     */
+    const BOX_BORDER_CLASS = '[&_.ProseMirror]:shr-box-border'
+
+    it('height 未指定のとき .ProseMirror を border-box にしない', () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
+
+      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')
+
+      expect(content!.className).not.toContain(BOX_BORDER_CLASS)
+    })
+
+    it('height 指定時は .ProseMirror を border-box にする', () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} height={200} />, {
+        wrapper: Wrapper,
+      })
+
+      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')
+
+      expect(content!.className).toContain(BOX_BORDER_CLASS)
+    })
+
+    it('width を渡すとコンポーネント全体の幅に反映される', () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} width={400} />, {
+        wrapper: Wrapper,
+      })
+
+      expect(container.querySelector('.smarthr-ui-RichTextEditor')).toHaveStyle({ width: '400px' })
+    })
+
+    const HANDLE_SELECTOR = '.smarthr-ui-RichTextEditor-resizeHandle'
+
+    it('resizable のときリサイズハンドルが描画される', async () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable />, {
+        wrapper: Wrapper,
+      })
+
+      await waitFor(() => expect(container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument())
+    })
+
+    it('resizable 未指定のときリサイズハンドルは描画されない', async () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
+
+      await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+
+      expect(container.querySelector(HANDLE_SELECTOR)).not.toBeInTheDocument()
+    })
+
+    it('readOnly のときリサイズハンドルは描画されない', async () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable readOnly />, {
+        wrapper: Wrapper,
+      })
+
+      await waitFor(() =>
+        expect(container.querySelector('[data-smarthr-ui-input="true"]')).toBeInTheDocument(),
+      )
+
+      expect(container.querySelector(HANDLE_SELECTOR)).not.toBeInTheDocument()
+    })
+
+    it('disabled のときリサイズハンドルは描画されない', async () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable disabled />, {
+        wrapper: Wrapper,
+      })
+
+      await waitFor(() =>
+        expect(container.querySelector('[data-smarthr-ui-input="true"]')).toBeInTheDocument(),
+      )
+
+      expect(container.querySelector(HANDLE_SELECTOR)).not.toBeInTheDocument()
+    })
+
+    it('リサイズハンドルはアクセシビリティツリーに露出しない', async () => {
+      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable />, {
+        wrapper: Wrapper,
+      })
+
+      await waitFor(() => expect(container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument())
+
+      expect(container.querySelector(HANDLE_SELECTOR)).toHaveAttribute('aria-hidden', 'true')
+    })
+
+    it('文字数カウントの有無でリサイズハンドルの位置が変わらない', async () => {
+      const withCount = render(
+        <RichTextEditor features={ALL_FEATURES} resizable showCharacterCount />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() =>
+        expect(withCount.container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument(),
+      )
+      const withCountParent =
+        withCount.container.querySelector(HANDLE_SELECTOR)!.parentElement!.className
+
+      const withoutCount = render(<RichTextEditor features={ALL_FEATURES} resizable />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() =>
+        expect(withoutCount.container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument(),
+      )
+      const withoutCountParent =
+        withoutCount.container.querySelector(HANDLE_SELECTOR)!.parentElement!.className
+
+      // どちらも wrapper 直下に絶対配置される
+      expect(withCountParent).toBe(withoutCountParent)
+    })
+
+    it('ドラッグするとエディタ領域の高さを表す CSS 変数が更新される', async () => {
+      const { container } = render(
+        <RichTextEditor features={ALL_FEATURES} resizable height={200} />,
+        { wrapper: Wrapper },
+      )
+
+      await waitFor(() => expect(container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument())
+
+      const handle = container.querySelector(HANDLE_SELECTOR)!
+      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')!
+      const proseMirror = content.querySelector<HTMLElement>('.ProseMirror')!
+      proseMirror.getBoundingClientRect = () => ({ height: 200 }) as unknown as DOMRect
+
+      // fireEvent.pointerDown は jsdom で clientY を伝えないため MouseEvent を直接投げる
+      fireEvent(handle, new MouseEvent('pointerdown', { clientY: 100, bubbles: true }))
+      fireEvent(window, new MouseEvent('pointermove', { clientY: 160 }))
+      fireEvent(window, new MouseEvent('pointerup', {}))
+
+      expect(content.style.getPropertyValue('--shr-rte-editor-height')).toBe('260px')
     })
   })
 })

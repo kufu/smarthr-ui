@@ -338,3 +338,38 @@ export const VRTBrokenImage: Story = {
     </FormControl>
   ),
 }
+
+export const VRTSizeAndResize: Story = {
+  name: 'サイズ指定とリサイズハンドル',
+  render: () => (
+    <Stack gap={2}>
+      <FormControl label="高さ指定なし（最小高さ）">
+        <RichTextEditor features={ALL_FEATURES} />
+      </FormControl>
+      <FormControl label="高さ200px固定">
+        <RichTextEditor features={ALL_FEATURES} height={200} defaultValue={richContent} />
+      </FormControl>
+      <FormControl label="幅400px・高さ150px">
+        <RichTextEditor features={ALL_FEATURES} width={400} height={150} />
+      </FormControl>
+      <FormControl label="リサイズ可・文字数カウントあり">
+        <RichTextEditor features={ALL_FEATURES} resizable height={150} showCharacterCount />
+      </FormControl>
+      <FormControl label="リサイズ可・文字数カウントなし">
+        <RichTextEditor features={ALL_FEATURES} resizable height={150} />
+      </FormControl>
+      <FormControl label="リサイズ可・読み取り専用（ハンドルなし）">
+        <RichTextEditor
+          features={ALL_FEATURES}
+          resizable
+          readOnly
+          height={150}
+          defaultValue={richContent}
+        />
+      </FormControl>
+      <FormControl label="リサイズ可・無効（ハンドルなし）">
+        <RichTextEditor features={ALL_FEATURES} resizable disabled height={150} />
+      </FormControl>
+    </Stack>
+  ),
+}

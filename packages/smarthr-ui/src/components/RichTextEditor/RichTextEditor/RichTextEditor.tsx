@@ -17,6 +17,7 @@ import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
+import { useEditorResize } from '../hooks/useEditorResize'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { serializeToHTML } from '../serializers/serializeToHTML'
@@ -29,12 +30,15 @@ import type {
   RichTextJSON,
 } from '../types'
 import type { Editor } from '@tiptap/react'
+import type { CSSProperties } from 'react'
 
 const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-RichTextEditor',
-      'shr-border-shorthand shr-relative shr-rounded-m',
+      // box-border は width 指定時に枠線を含めた実寸にするため。
+      // Textarea・Input と揃えないと、同じ width を指定しても並べたときに幅がずれる。
+      'shr-border-shorthand shr-relative shr-box-border shr-rounded-m',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator--outer',
     ],
@@ -42,7 +46,9 @@ const classNameGenerator = tv({
     content: [
       'smarthr-ui-RichTextEditor-content',
       // editor area
-      '[&_.ProseMirror]:shr-min-h-[8em] [&_.ProseMirror]:shr-overflow-y-auto [&_.ProseMirror]:shr-px-0.75 [&_.ProseMirror]:shr-py-0.5 [&_.ProseMirror]:shr-text-base [&_.ProseMirror]:shr-leading-normal [&_.ProseMirror]:shr-text-black [&_.ProseMirror]:shr-outline-none',
+      // 高さは content div の CSS 変数から受ける。未指定なら auto に解決されるため、
+      // min-h との併用で「下限は常に 8em」が prop でもドラッグでも同じ経路で担保される。
+      '[&_.ProseMirror]:shr-h-[var(--shr-rte-editor-height,auto)] [&_.ProseMirror]:shr-min-h-[8em] [&_.ProseMirror]:shr-overflow-y-auto [&_.ProseMirror]:shr-px-0.75 [&_.ProseMirror]:shr-py-0.5 [&_.ProseMirror]:shr-text-base [&_.ProseMirror]:shr-leading-normal [&_.ProseMirror]:shr-text-black [&_.ProseMirror]:shr-outline-none',
       // placeholder
       '[&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-pointer-events-none [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-float-left [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-h-0 [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-text-grey [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-content-[attr(data-placeholder)]',
       // content styles (shared with RichTextViewer)
@@ -50,6 +56,16 @@ const classNameGenerator = tv({
     ],
     characterCountArea:
       'shr-border-t-shorthand shr-px-0.75 shr-py-0.5 shr-text-right shr-text-sm shr-text-grey',
+    resizeHandle: [
+      'smarthr-ui-RichTextEditor-resizeHandle',
+      // wrapper が shr-relative なので、文字数エリアの有無に関係なく右下に出る。
+      // 角丸からはみ出さないよう僅かに内側に寄せる。
+      // z-1 は TableFloatingUI / ImageFloatingUI が shr-z-0 で絶対配置されるため。
+      'shr-absolute shr-bottom-[2px] shr-right-[2px] shr-z-1',
+      'shr-flex shr-items-center shr-justify-center',
+      'shr-cursor-ns-resize shr-text-sm shr-text-grey',
+      'shr-touch-none',
+    ],
   },
   variants: {
     disabled: {
@@ -67,6 +83,22 @@ const classNameGenerator = tv({
     error: {
       true: {
         wrapper: 'shr-border-danger',
+      },
+    },
+    resizable: {
+      true: {
+        // 文字数テキストとハンドルが重ならないよう右側を広げる。
+        // shr-px-0.75 を確実に上書きするため、このファイルの既存作法の詳細度引き上げを使う。
+        characterCountArea: '[&&&]:shr-pr-2',
+      },
+    },
+    hasEditorHeight: {
+      true: {
+        // 指定した高さに padding を含めるため。
+        // 常時付けてはいけない。preflight 無効で既定が content-box のため、
+        // 常時 border-box にすると min-h-[8em] に縦 padding が含まれ、
+        // 高さ未指定時のデフォルト高さが 144px から 128px に縮む。
+        content: '[&_.ProseMirror]:shr-box-border',
       },
     },
   },
@@ -93,6 +125,9 @@ export const RichTextEditor = memo(
         showCharacterCount,
         className,
         editorClassName,
+        width,
+        height,
+        resizable,
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
@@ -251,7 +286,37 @@ export const RichTextEditor = memo(
         }
       }, [editor, error])
 
-      const classNames = classNameGenerator({ disabled, readOnly, error })
+      const wrapperStyle = useMemo(
+        () => ({ width: typeof width === 'number' ? `${width}px` : width }),
+        [width],
+      )
+
+      const isResizable = !!resizable && !readOnly && !disabled
+      const { draggedHeight, handlePointerDown } = useEditorResize({
+        contentRef,
+        enabled: isResizable,
+      })
+
+      const contentStyle = useMemo(() => {
+        const editorHeight =
+          draggedHeight !== null
+            ? `${draggedHeight}px`
+            : typeof height === 'number'
+              ? `${height}px`
+              : height
+
+        if (editorHeight === undefined) return undefined
+
+        return { '--shr-rte-editor-height': editorHeight } as CSSProperties
+      }, [draggedHeight, height])
+
+      const classNames = classNameGenerator({
+        disabled,
+        readOnly,
+        error,
+        resizable: isResizable,
+        hasEditorHeight: contentStyle !== undefined,
+      })
 
       // editorが未初期化でもwrapperは常に描画する
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
@@ -272,11 +337,12 @@ export const RichTextEditor = memo(
       )
 
       return (
-        <div ref={wrapperRef} className={classNames.wrapper({ className })}>
+        <div ref={wrapperRef} style={wrapperStyle} className={classNames.wrapper({ className })}>
           {toolbar}
           <div
             ref={contentRef}
             data-smarthr-ui-input="true"
+            style={contentStyle}
             className={classNames.content({ className: editorClassName })}
           >
             {editor && <EditorContent editor={editor} />}
@@ -290,10 +356,39 @@ export const RichTextEditor = memo(
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea()} />
           )}
+          {isResizable && (
+            <div
+              className={classNames.resizeHandle()}
+              aria-hidden="true"
+              onPointerDown={handlePointerDown}
+            >
+              <ResizeHandleGrip />
+            </div>
+          )}
         </div>
       )
     },
   ),
+)
+
+/**
+ * ネイティブの textarea のリサイズハンドルと同じ斜線グリップ。
+ *
+ * Icon コンポーネントを使わないのは、Font Awesome に斜線グリップのアイコンが無いため。
+ * 近い FaUpRightAndDownLeftFromCenterIcon は斜めの双方向矢印で見た目が別物になる。
+ * ブラウザ標準の resize に任せる方法も採らなかった。resize は overflow が visible 以外の
+ * 要素にしか効かず、wrapper に overflow を付けるとツールバーの sticky がページ追従しなくなり、
+ * wrapper 内に絶対配置しているテーブルの「+列」バーも clip されるため。
+ */
+const ResizeHandleGrip = () => (
+  <svg width="1em" height="1em" viewBox="0 0 10 10" focusable="false" aria-hidden="true">
+    {/*
+      strokeWidth は 1em(13.7px) / viewBox 10 の比率で約1pxになる値。ネイティブの線幅に合わせる。
+      斜線は viewBox いっぱいには引かない。掴む領域(1em)は保ったまま、
+      描画サイズだけネイティブ(約7px四方)に寄せるため。
+    */}
+    <path d="M9 3 3 9M9 6 6 9" stroke="currentColor" strokeWidth="0.75" fill="none" />
+  </svg>
 )
 
 const CharacterCount = memo(({ editor, className }: { editor: Editor; className: string }) => {

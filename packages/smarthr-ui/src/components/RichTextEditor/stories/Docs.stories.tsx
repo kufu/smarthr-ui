@@ -805,29 +805,73 @@ export const RefControl: Story = {
 }
 
 export const FixedHeight: Story = {
-  name: '高さ固定（editorClassName）',
+  name: '高さ固定（height）',
   parameters: {
     docs: {
       source: {
         language: 'tsx',
-        code: `<RichTextEditor
-  editorClassName="[&_.ProseMirror]:shr-h-[200px]"
-/>`,
+        code: `<RichTextEditor height={200} />`,
       },
     },
   },
   render: () => (
     <Stack gap={1.5}>
       <Text color="TEXT_GREY">
-        editorClassName propで ProseMirror の高さを固定できます。
-        内容が溢れた場合はスクロールします。
+        height propでエディタ領域の高さを固定できます。 内容が溢れた場合はスクロールします。
+        数値はpxとして扱われ、文字列はそのままCSSの値になります。
       </Text>
       <FormControl label="高さ200px固定">
         <RichTextEditor
           features={ALL_FEATURES}
-          editorClassName="[&_.ProseMirror]:shr-h-[200px]"
+          height={200}
           placeholder="高さ200pxで固定。内容が溢れたらスクロールします"
           showCharacterCount
+        />
+      </FormControl>
+      <FormControl label="幅400px・高さ150px">
+        <RichTextEditor
+          features={ALL_FEATURES}
+          width={400}
+          height={150}
+          placeholder="width と height を併用"
+        />
+      </FormControl>
+    </Stack>
+  ),
+}
+
+export const Resizable: Story = {
+  name: '縦リサイズ（resizable）',
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `<RichTextEditor resizable height={200} />`,
+      },
+    },
+  },
+  render: () => (
+    <Stack gap={1.5}>
+      <Text color="TEXT_GREY">
+        resizable propで、右下のハンドルからエディタ領域の高さを変えられます。
+        ツールバーと文字数エリアの高さは変わりません。
+        readOnly・disabledのときはハンドルを表示しません。
+      </Text>
+      <FormControl label="文字数カウントあり">
+        <RichTextEditor
+          features={ALL_FEATURES}
+          resizable
+          height={200}
+          placeholder="右下のハンドルで高さを変えられます"
+          showCharacterCount
+        />
+      </FormControl>
+      <FormControl label="文字数カウントなし">
+        <RichTextEditor
+          features={ALL_FEATURES}
+          resizable
+          height={200}
+          placeholder="文字数カウントが無くてもハンドルは右下に出ます"
         />
       </FormControl>
     </Stack>
