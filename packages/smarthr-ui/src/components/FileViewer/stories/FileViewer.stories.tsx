@@ -6,7 +6,8 @@ export default {
   title: 'Components/FileViewer',
   component: FileViewer,
   render: (args) => (
-    <div className="shr-h-[90vh]">
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div className="shr-h-[90vh] shr-w-full shr-resize shr-overflow-auto" tabIndex={0}>
       <FileViewer {...args} />
     </div>
   ),
