@@ -17,10 +17,9 @@ import { type typedJa, useIntl } from '../../../../intl'
 import { FaCheckIcon } from '../../../Icon'
 
 const SWATCHES_PER_ROW = 6
-const PALETTE_BUTTON_CLASSES = [
+const PALETTE_BUTTON_BASE_CLASSES = [
   'shr-border-shorthand shr-cursor-pointer shr-rounded-m shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
   'hover:shr-bg-white-darken',
-  'focus-visible:shr-focus-indicator',
 ]
 
 /**
@@ -65,9 +64,21 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
     ],
     customRow: 'shr-flex shr-items-center shr-gap-0.5',
-    editButton: PALETTE_BUTTON_CLASSES,
-    resetButton: PALETTE_BUTTON_CLASSES,
-    hiddenInput: 'shr-sr-only',
+    // input を重ねる基準にするため relative にする。フォーカスリングは中の input に当たるので
+    // focus-visible ではなく has-[:focus-visible] で外側に出す
+    editButton: [
+      ...PALETTE_BUTTON_BASE_CLASSES,
+      'shr-relative shr-inline-flex shr-items-center',
+      'has-[:focus-visible]:shr-focus-indicator',
+    ],
+    resetButton: [...PALETTE_BUTTON_BASE_CLASSES, 'focus-visible:shr-focus-indicator'],
+    // 「色を編集」の見た目に重ねる、透明な実寸の色入力。
+    // sr-only で隠して button から click() を中継する形は採れない。WebKit はネイティブの
+    // カラーピッカーを input の矩形にアンカーするため、clip された 1x1px の input では
+    // macOS Safari で無関係な位置に表示され、iOS Safari では何も起きない
+    // preflight を切っているため、m-0 を明示しないと input 既定のマージンぶん位置がずれる
+    colorInput:
+      'shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0',
   },
 })
 
@@ -127,7 +138,7 @@ export const ColorPickerPalette: FC<Props> = memo(
     recentSwatchLabel,
   }) => {
     const { localize } = useIntl()
-    const hiddenInputRef = useRef<HTMLInputElement>(null)
+    const colorInputRef = useRef<HTMLInputElement>(null)
 
     const classNames = classNameGenerator()
 
@@ -164,11 +175,7 @@ export const ColorPickerPalette: FC<Props> = memo(
       [colors, defaultColor, onApplyColor, pushRecent, setIsOpen, triggerRef],
     )
 
-    const handleEditButtonClick = useCallback(() => {
-      hiddenInputRef.current?.click()
-    }, [])
-
-    const handleHiddenInputInput = useCallback(
+    const handleColorInputChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         setCustomColor(e.target.value)
       },
@@ -179,7 +186,7 @@ export const ColorPickerPalette: FC<Props> = memo(
     // （native color input には確定とキャンセルを区別する手段がないため、
     //   同じ色のまま確定した場合はここを通らない。その場合はカスタムスウォッチから適用できる）
     useEffect(() => {
-      const el = hiddenInputRef.current
+      const el = colorInputRef.current
       if (!el) return
       const handler = () => applyCustomColor(el.value)
       el.addEventListener('change', handler)
@@ -359,24 +366,19 @@ export const ColorPickerPalette: FC<Props> = memo(
                 />
               )}
             </button>
-            <button
-              type="button"
-              className={classNames.editButton()}
-              onClick={handleEditButtonClick}
-            >
-              {editButtonLabel}
-            </button>
-            {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
-            <input
-              ref={hiddenInputRef}
-              type="color"
-              name="customColor"
-              value={customColor}
-              onChange={handleHiddenInputInput}
-              aria-hidden="true"
-              tabIndex={-1}
-              className={classNames.hiddenInput()}
-            />
+            <span className={classNames.editButton()}>
+              {/* ラベルは input の aria-label で読み上げるため、見た目側は読み上げ対象から外す */}
+              <span aria-hidden="true">{editButtonLabel}</span>
+              <input
+                ref={colorInputRef}
+                type="color"
+                name="customColor"
+                aria-label={editButtonLabel}
+                value={customColor}
+                onChange={handleColorInputChange}
+                className={classNames.colorInput()}
+              />
+            </span>
           </div>
         </div>
 
