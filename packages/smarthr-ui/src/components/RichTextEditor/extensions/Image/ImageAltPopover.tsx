@@ -60,8 +60,8 @@ export const ImageAltPopover: FC<Props> = memo(
       defaultText: '画像の内容を説明してください',
     })
     const applyLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageInsertButton',
-      defaultText: '挿入',
+      id: 'smarthr-ui/RichTextEditor/imageApplyButton',
+      defaultText: '適用',
     })
 
     useEffect(() => {

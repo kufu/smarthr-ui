@@ -168,6 +168,7 @@
   "smarthr-ui/RichTextEditor/imageAltHelp": "",
   "smarthr-ui/RichTextEditor/imageUploadError": "",
   "smarthr-ui/RichTextEditor/imageInsertButton": "",
+  "smarthr-ui/RichTextEditor/imageApplyButton": "",
   "smarthr-ui/RichTextEditor/imageWidth": "",
   "smarthr-ui/RichTextEditor/imageWidthLabel": "",
   "smarthr-ui/RichTextEditor/imageHeightLabel": "",

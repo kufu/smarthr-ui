@@ -168,6 +168,7 @@
   "smarthr-ui/RichTextEditor/imageAltHelp": "画像の内容を説明してください",
   "smarthr-ui/RichTextEditor/imageUploadError": "画像のアップロードに失敗しました。もう一度お試しください。",
   "smarthr-ui/RichTextEditor/imageInsertButton": "挿入",
+  "smarthr-ui/RichTextEditor/imageApplyButton": "適用",
   "smarthr-ui/RichTextEditor/imageWidth": "サイズ",
   "smarthr-ui/RichTextEditor/imageWidthLabel": "幅 (px)",
   "smarthr-ui/RichTextEditor/imageHeightLabel": "高さ (px)",

@@ -90,8 +90,8 @@ export const ImageWidthPopover: FC<Props> = memo(
       defaultText: 'リセット',
     })
     const applyLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageInsertButton',
-      defaultText: '挿入',
+      id: 'smarthr-ui/RichTextEditor/imageApplyButton',
+      defaultText: '適用',
     })
     const lockLabel = localize({
       id: 'smarthr-ui/RichTextEditor/imageAspectLocked',
