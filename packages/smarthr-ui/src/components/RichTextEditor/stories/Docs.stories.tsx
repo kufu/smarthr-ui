@@ -13,8 +13,8 @@ import {
   FaLinkIcon,
   FaListOlIcon,
   FaListUlIcon,
+  FaMinusIcon,
   FaQuoteLeftIcon,
-  FaRulerHorizontalIcon,
   FaStrikethroughIcon,
   FaTableIcon,
   FaUnderlineIcon,
@@ -261,7 +261,7 @@ export const Overview: Story = {
                 </td>
                 <td style={tdStyle}>水平線</td>
                 <td style={tdStyle}>
-                  <FaRulerHorizontalIcon />
+                  <FaMinusIcon />
                 </td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>

@@ -12,8 +12,8 @@ import {
   FaItalicIcon,
   FaListOlIcon,
   FaListUlIcon,
+  FaMinusIcon,
   FaQuoteLeftIcon,
-  FaRulerHorizontalIcon,
   FaStrikethroughIcon,
   FaUnderlineIcon,
 } from '../../Icon'
@@ -285,7 +285,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
       insertion.push({
         type: 'button',
         key: 'horizontalRule',
-        icon: <FaRulerHorizontalIcon />,
+        icon: <FaMinusIcon />,
         label: localize({
           id: 'smarthr-ui/RichTextEditor/horizontalRule',
           defaultText: '水平線',
