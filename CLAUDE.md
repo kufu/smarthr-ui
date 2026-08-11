@@ -138,6 +138,20 @@ const Foo = () => (
 
 **理由:** smarthr-ui は不特定多数が更新するパブリックなモジュールであり、実装の詳細をカプセル化することで、あるコンポーネントの内部変更が他のコンポーネントに影響しない状態を保ち、開発しやすくする。
 
+**例外: 同ディレクトリ内のローカルコンポーネント**
+
+`src/index.ts` からexportされていないローカルコンポーネントは、同じディレクトリ内の他のファイルからその内部仕様を知っていても構いません。
+
+例えば `Combobox/ItemButton.tsx` は外部にexportされていませんが、`Combobox/useListbox.tsx` はその props インターフェースや DOM 構造を前提としたコードを書いて良いです。
+
+```tsx
+// ✅ 同ディレクトリのローカルコンポーネントの仕様を知っている前提でOK
+// useListbox.tsx が ItemButton の id 属性でオプションを特定する
+return latest.options.find((o) => o.id === el.id) ?? null
+```
+
+この例外が成立する理由は、ローカルコンポーネントとその利用者が同じスコープ（ディレクトリ）内で管理されており、内部変更の影響範囲が同ディレクトリに限定されるためです。
+
 ### コミット
 - Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
   - type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `ci`, `perf`, `style`, `build`, `revert`
