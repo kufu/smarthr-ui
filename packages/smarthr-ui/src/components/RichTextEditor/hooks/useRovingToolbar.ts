@@ -95,8 +95,13 @@ export const useRovingToolbar = ({ disabledKeys, onEscape }: UseRovingToolbarOpt
 
   const getButtonProps = useCallback(
     (index: number, count: number) => {
+      // activeIndex < count も見る。disabledKeys は count 未満の index しか持たないため、
+      // 項目数が減ったあと（例: ブレークポイントを跨いで段組みが変わったとき）に
+      // isDisabled だけでは描画されない index を弾けず、全項目が tabIndex=-1 になる
       const effectiveActive =
-        activeIndex >= 0 && !isDisabled(activeIndex) ? activeIndex : findFirstEnabled(count)
+        activeIndex >= 0 && activeIndex < count && !isDisabled(activeIndex)
+          ? activeIndex
+          : findFirstEnabled(count)
 
       return {
         ref: setButtonRef(index),

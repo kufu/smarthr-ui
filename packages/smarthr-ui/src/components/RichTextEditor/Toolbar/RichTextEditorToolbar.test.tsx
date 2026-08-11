@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeAll, describe, expect, it } from 'vitest'
 
@@ -62,6 +62,21 @@ const renderMobileEditor = async () => {
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 }
 
+// mobile を切り替えて再レンダリングすることで、ツールバーの状態を保ったままブレークポイントの
+// 行き来を再現する。jsdom はレイアウトしないため matchMedia を差し替えても段組みは変わらない
+const SwitchableEditor = ({ mobile }: { mobile: boolean }) => (
+  <IntlProvider locale="ja">
+    <EnvironmentProvider environment={{ mobile }}>
+      <RichTextEditor features={ALL_FEATURES} />
+    </EnvironmentProvider>
+  </IntlProvider>
+)
+
+const tabStopsOf = (toolbar: HTMLElement) =>
+  within(toolbar)
+    .getAllByRole('button')
+    .filter((button) => button.getAttribute('tabindex') === '0')
+
 const heightClassNamesOf = (el: HTMLElement) =>
   Array.from(el.classList).filter((className) => /^shr-h-/.test(className))
 
@@ -88,7 +103,7 @@ describe('RichTextEditorToolbar', () => {
   it('モバイルではツールチップを描画しない', async () => {
     await renderMobileEditor()
 
-    // 段に overflow-x を付けるとツールチップがクリップされ縦スクロールが生じるため描画しない
+    // 段が overflow-y-hidden なので段の下に出るツールチップは見えなくなるため描画しない
     expect(screen.queryByText('太字')).not.toBeInTheDocument()
     // ボタン自体は aria-label で見つかる（支援技術への情報は失われていない）
     expect(screen.getByRole('button', { name: '太字' })).toBeInTheDocument()
@@ -218,5 +233,41 @@ describe('RichTextEditorToolbar', () => {
     await userEvent.keyboard('{ArrowLeft}')
 
     expect(toggle).toHaveFocus()
+  })
+
+  it('デスクトップからモバイルへ切り替えて項目数が減っても、Tabで到達できる項目が1つ残る', async () => {
+    const { rerender } = render(<SwitchableEditor mobile={false} />)
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    // モバイルでは2段目へ回る（かつ閉じている間は描画されない）項目にフォーカスを置く。
+    // 切り替え後の項目数を超える index が active に残る状況を作るため
+    act(() => within(screen.getByRole('toolbar')).getByRole('button', { name: '水平線' }).focus())
+
+    expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
+
+    rerender(<SwitchableEditor mobile />)
+
+    expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
+  })
+
+  it('モバイルで2段目を開いた状態からデスクトップへ切り替えても、Tabで到達できる項目が1つ残る', async () => {
+    const { rerender } = render(<SwitchableEditor mobile />)
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    const toggle = screen.getByRole('button', { name: 'その他の書式' })
+    await userEvent.click(toggle)
+
+    // 2段目を開いた状態の項目数はデスクトップより1つ多い（トグルの分）。その末尾を active にすると
+    // デスクトップへ戻したときに index が範囲外になる
+    const secondaryRow = document.getElementById(toggle.getAttribute('aria-controls')!)!
+    const secondaryButtons = within(secondaryRow).getAllByRole('button')
+
+    act(() => secondaryButtons[secondaryButtons.length - 1].focus())
+
+    expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
+
+    rerender(<SwitchableEditor mobile={false} />)
+
+    expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
   })
 })

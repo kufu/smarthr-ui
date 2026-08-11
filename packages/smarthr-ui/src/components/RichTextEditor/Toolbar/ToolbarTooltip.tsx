@@ -69,9 +69,8 @@ export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, ch
         suppressed のときは opacity で隠すのではなく要素ごと描画しない。
         CSS の group-hover / group-focus-within より強い指定を重ねる必要がなくなる。
 
-        mobile で描画しないのは、ツールバーの段が overflow-x-auto を持つため。
-        overflow-x が auto だと CSS 仕様上 overflow-y も auto に計算され、
-        top-full で段の下に出るこのツールチップがクリップされて段に縦スクロールが生じる。
+        mobile で描画しないのは、ツールバーの段が overflow-y-hidden を持つため。
+        top-full で段の下に出るこのツールチップはクリップされて見えなくなる。
         ポータル化する手もあるが、タッチ環境ではホバーが無く元々表示されず、
         ボタンには aria-label があるため支援技術への情報も失われないため採らない。
       */}

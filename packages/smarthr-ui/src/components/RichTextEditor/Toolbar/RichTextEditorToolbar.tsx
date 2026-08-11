@@ -110,9 +110,9 @@ const classNameGenerator = tv({
         // 段を縦に積む。items-stretch は各段を横幅いっぱいに広げてスクロール領域を確保するため
         toolbar: 'shr-flex-col shr-items-stretch',
         // 折り返しをやめて横スクロールにする。これが高さを1段分に固定する要。
-        // overflow-x が auto だと CSS 仕様上 overflow-y も auto に計算されるため、
-        // 段の内側に絶対配置されるツールチップは ToolbarTooltip 側で抑制している。
-        row: 'shr-flex shr-flex-nowrap shr-items-center shr-gap-0.25 shr-overflow-x-auto',
+        // overflow-y は auto に計算されるのに任せず hidden を明示する（Scroller と同じ組み合わせ）。
+        // 段の下に出るツールチップは ToolbarTooltip 側で抑制している。
+        row: 'shr-flex shr-flex-nowrap shr-items-center shr-gap-0.25 shr-overflow-x-auto shr-overflow-y-hidden',
         // 横スクロールしても常に見えるよう右端に固定する。背景はツールバーと同色にして
         // 下を流れる項目を隠す。pl-0.25 は隣の項目との間に隙間を作るため
         toggleWrapper:
