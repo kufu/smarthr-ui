@@ -423,7 +423,6 @@ export const ListBox = memo(
           aria-hidden={!isExpanded}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
-
           onMouseOver={functions.handleDelegateMouseOver}
           onClick={functions.handleDelegateClick}
         >
@@ -451,10 +450,12 @@ export const ListBox = memo(
                 )}
               </p>
             ) : (
-              items.map(({ item, id, ...optionRest }) => (
+              items.map(({ item: { label, value, disabled }, id, ...optionRest }) => (
                 <ItemButton
                   {...optionRest}
-                  {...item}
+                  label={label}
+                  value={value}
+                  disabled={disabled}
                   key={id}
                   id={id}
                   activeRef={id === activeOptionId ? activeRef : undefined}
