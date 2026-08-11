@@ -384,7 +384,7 @@ export const ListBox = memo(
     return createPortal(
       <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         {isExpanded && isLoading && (
-          <VisuallyHiddenText role="status">
+          <VisuallyHiddenText as="output" role="status">
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
           </VisuallyHiddenText>
         )}
