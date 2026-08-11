@@ -183,7 +183,9 @@ const MaxLettersTextarea: FC<
           values={{ maxLetters }}
         />
       </VisuallyHiddenText>
-      <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status">
+        {srCounterMessage}
+      </VisuallyHiddenText>
       <span
         ref={counterSpanRef}
         id={maxLettersId}
