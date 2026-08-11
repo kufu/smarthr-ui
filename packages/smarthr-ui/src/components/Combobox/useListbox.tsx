@@ -375,8 +375,7 @@ export const ListBox = memo(
       const resolveOption = (e: MouseEvent) => {
         for (const el of e.nativeEvent.composedPath()) {
           if (el instanceof HTMLButtonElement && el.role === 'option') {
-            if (el.disabled) return null
-            return latest.options.find((o) => o.id === el.id) ?? null
+            return el.disabled ? null : (latest.options.find((o) => o.id === el.id) ?? null)
           }
         }
         return null
