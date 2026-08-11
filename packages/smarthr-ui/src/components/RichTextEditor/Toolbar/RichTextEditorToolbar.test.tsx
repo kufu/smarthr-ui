@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react'
 import { beforeAll, describe, expect, it } from 'vitest'
 
+import { EnvironmentProvider } from '../../../hooks/useEnvironment'
 import { IntlProvider } from '../../../intl'
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
@@ -44,8 +45,19 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
+const MobileWrapper = ({ children }: { children: ReactNode }) => (
+  <IntlProvider locale="ja">
+    <EnvironmentProvider environment={{ mobile: true }}>{children}</EnvironmentProvider>
+  </IntlProvider>
+)
+
 const renderEditor = async () => {
   render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
+  await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+}
+
+const renderMobileEditor = async () => {
+  render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: MobileWrapper })
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 }
 
@@ -63,5 +75,21 @@ describe('RichTextEditorToolbar', () => {
     // 高さを明示していないと利用側の line-height でクリック領域の高さが変わるため、全項目で高さを固定する
     expect(heightClassNames.every((classNames) => classNames.length === 1)).toBe(true)
     expect(new Set(heightClassNames.map(([className]) => className)).size).toBe(1)
+  })
+
+  it('デスクトップではツールチップを描画する', async () => {
+    await renderEditor()
+
+    // ボタンの aria-label はテキストノードではないため、getByText はツールチップ本体だけに一致する
+    expect(screen.getByText('太字')).toBeInTheDocument()
+  })
+
+  it('モバイルではツールチップを描画しない', async () => {
+    await renderMobileEditor()
+
+    // 段に overflow-x を付けるとツールチップがクリップされ縦スクロールが生じるため描画しない
+    expect(screen.queryByText('太字')).not.toBeInTheDocument()
+    // ボタン自体は aria-label で見つかる（支援技術への情報は失われていない）
+    expect(screen.getByRole('button', { name: '太字' })).toBeInTheDocument()
   })
 })

@@ -3,6 +3,7 @@
 import { type FC, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useEnvironment } from '../../../hooks/useEnvironment'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 
 import { formatShortcutTokens } from './shortcutKeys'
@@ -58,6 +59,7 @@ type Props = {
 
 export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, children }) => {
   const isApple = useIsApplePlatform()
+  const { mobile } = useEnvironment()
   const tokens = shortcut ? formatShortcutTokens(shortcut, isApple) : []
 
   return (
@@ -66,8 +68,14 @@ export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, ch
       {/*
         suppressed のときは opacity で隠すのではなく要素ごと描画しない。
         CSS の group-hover / group-focus-within より強い指定を重ねる必要がなくなる。
+
+        mobile で描画しないのは、ツールバーの段が overflow-x-auto を持つため。
+        overflow-x が auto だと CSS 仕様上 overflow-y も auto に計算され、
+        top-full で段の下に出るこのツールチップがクリップされて段に縦スクロールが生じる。
+        ポータル化する手もあるが、タッチ環境ではホバーが無く元々表示されず、
+        ボタンには aria-label があるため支援技術への情報も失われないため採らない。
       */}
-      {!suppressed && (
+      {!suppressed && !mobile && (
         <span aria-hidden="true" className={CLASS_NAMES.tooltip}>
           <span className={CLASS_NAMES.label}>{label}</span>
           {tokens.length > 0 && (
