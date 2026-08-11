@@ -8,7 +8,7 @@ import { Text } from '../Text'
 import type { ComboboxOption } from './types'
 
 type Props = Omit<ComboboxOption<unknown>, 'item'> &
-  Omit<ComboboxOption<unknown>['item'], 'data'> & {
+  Omit<ComboboxOption<unknown>['item'], 'data' | 'value'> & {
     activeRef: RefObject<HTMLButtonElement> | undefined
   }
 
@@ -44,7 +44,6 @@ export const ItemButton = memo<Props>(({ disabled, selected, isNew, ...rest }) =
 const SelectButton: FC<{
   id: string
   label: ReactNode
-  value: string
   disabled?: boolean
   selected: boolean
   activeRef: RefObject<HTMLButtonElement> | undefined
@@ -65,7 +64,6 @@ const SelectButton: FC<{
 const AddButton: FC<{
   id: string
   label: ReactNode
-  value: string
   activeRef: RefObject<HTMLButtonElement> | undefined
 }> = ({ label, activeRef, ...rest }) => (
   <button

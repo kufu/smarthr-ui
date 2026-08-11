@@ -375,7 +375,7 @@ export const ListBox = memo(
       const resolveOption = (e: MouseEvent) => {
         const button = (e.target as HTMLElement).closest<HTMLButtonElement>('button[role="option"]')
         if (!button || button.disabled) return null
-        return latest.options.find((o) => o.item.value === button.value) ?? null
+        return latest.options.find((o) => o.id === button.id) ?? null
       }
 
       return {
@@ -448,11 +448,10 @@ export const ListBox = memo(
                 )}
               </p>
             ) : (
-              items.map(({ item: { label, value, disabled }, id, ...optionRest }) => (
+              items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
                   {...optionRest}
                   label={label}
-                  value={value}
                   disabled={disabled}
                   key={id}
                   id={id}
