@@ -1,4 +1,4 @@
-import { type ReactNode, type RefObject, memo } from 'react'
+import { type FC, type ReactNode, type RefObject, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -41,14 +41,14 @@ export const ItemButton = memo<Props>(({ disabled, selected, isNew, ...rest }) =
   ),
 )
 
-const SelectButton = memo<{
+const SelectButton: FC<{
   id: string
   label: ReactNode
   value: string
   disabled?: boolean
   selected: boolean
   activeRef: RefObject<HTMLButtonElement> | undefined
-}>(({ label, selected, activeRef, ...rest }) => (
+}> = ({ label, selected, activeRef, ...rest }) => (
   <button
     {...rest}
     ref={activeRef}
@@ -60,14 +60,14 @@ const SelectButton = memo<{
   >
     {label}
   </button>
-))
+)
 
-const AddButton = memo<{
+const AddButton: FC<{
   id: string
   label: ReactNode
   value: string
   activeRef: RefObject<HTMLButtonElement> | undefined
-}>(({ label, activeRef, ...rest }) => (
+}> = ({ label, activeRef, ...rest }) => (
   <button
     {...rest}
     ref={activeRef}
@@ -77,16 +77,12 @@ const AddButton = memo<{
     data-active={!!activeRef}
     className={CLASS_NAMES.new}
   >
-    <MemoizedNewIconWithText label={label} />
+    <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
+      <Localizer
+        id="smarthr-ui/Combobox/addItemButtonLabel"
+        defaultText="「{name}」を追加"
+        values={{ name: label }}
+      />
+    </Text>
   </button>
-))
-
-const MemoizedNewIconWithText = memo<{ label: ReactNode }>(({ label }) => (
-  <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
-    <Localizer
-      id="smarthr-ui/Combobox/addItemButtonLabel"
-      defaultText="「{name}」を追加"
-      values={{ name: label }}
-    />
-  </Text>
-))
+)
