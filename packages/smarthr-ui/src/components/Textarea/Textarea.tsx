@@ -62,28 +62,15 @@ const getStringLength = (value: TextareaValue) => {
 }
 
 const classNameGenerator = tv({
-  slots: {
-    textareaEl: [
-      'smarthr-ui-Textarea-textarea',
-      'shr-border-shorthand shr-my-[unset] shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
-      'contrast-more:shr-border-high-contrast',
-      'placeholder:shr-text-grey',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
-      'aria-[invalid]:shr-border-danger',
-    ],
-    counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black',
-  },
-  variants: {
-    error: {
-      true: {
-        counter: 'shr-text-danger',
-      },
-    },
-  },
-  defaultVariants: {
-    error: false,
-  },
+  base: [
+    'smarthr-ui-Textarea-textarea',
+    'shr-border-shorthand shr-my-[unset] shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
+    'contrast-more:shr-border-high-contrast',
+    'placeholder:shr-text-grey',
+    'focus-visible:shr-focus-indicator',
+    'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
+    'aria-[invalid]:shr-border-danger',
+  ],
 })
 
 const calculateIdealRows = (
@@ -131,13 +118,6 @@ const MaxLettersTextarea: FC<
   const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
   const countError = count > maxLetters
-  const classNames = useMemo(() => {
-    const { counter } = classNameGenerator()
-
-    return {
-      counter: counter({ error: !!countError }),
-    }
-  }, [countError])
 
   const latest = useLatest({
     onChange,
@@ -208,7 +188,8 @@ const MaxLettersTextarea: FC<
         ref={counterSpanRef}
         id={maxLettersId}
         aria-hidden={true}
-        className={classNames.counter}
+        data-error={countError || undefined}
+        className="smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black data-[error]:shr-text-danger"
       >
         {count > maxLetters ? (
           <Localizer
@@ -245,13 +226,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const [interimRows, setInterimRows] = useState(rows)
 
-  const classNames = useMemo(() => {
-    const { textareaEl } = classNameGenerator()
-
-    return {
-      textarea: textareaEl({ className }),
-    }
-  }, [className])
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const latest = useLatest({
     onChange,
@@ -311,7 +286,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
       ref={functions.callbackRef}
       aria-invalid={error || undefined}
       rows={interimRows}
-      className={classNames.textarea}
+      className={actualClassName}
       style={{ width: typeof width === 'number' ? `${width}px` : width }}
     />
   )
