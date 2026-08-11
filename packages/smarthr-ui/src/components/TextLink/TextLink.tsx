@@ -62,10 +62,6 @@ const classNameGenerator = tv({
     },
   },
 })
-const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
-const prefixWrapperClassName = prefixWrapper()
-const suffixWrapperClassName = suffixWrapper()
-
 const ActualTextLink: TextLinkComponent = forwardRef(
   <T extends ElementType = 'a'>(
     {
@@ -87,7 +83,14 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
-    const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
+    const classNames = useMemo(() => {
+      const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
+      return {
+        anchor: anchor({ size, className }),
+        prefixWrapper: prefixWrapper(),
+        suffixWrapper: suffixWrapper(),
+      }
+    }, [size, className])
 
     const latest = useLatest({ onClick, href })
 
@@ -115,11 +118,11 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
         onClick={functions.handleClick}
-        className={anchorClassName}
+        className={classNames.anchor}
       >
-        {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
+        {prefix && <span className={classNames.prefixWrapper}>{prefix}</span>}
         {children}
-        {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
+        {actualSuffix && <span className={classNames.suffixWrapper}>{actualSuffix}</span>}
       </Anchor>
     )
   },
