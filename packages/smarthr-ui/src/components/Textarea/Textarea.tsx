@@ -106,8 +106,9 @@ const MaxLettersTextarea: FC<
   Omit<LocalTextareaProps, 'maxLetters'> & {
     maxLetters: number
   }
-> = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
+> = ({ maxLetters, error, value, defaultValue, onChange, id, ...rest }) => {
   const maxLettersId = useId()
+  const textareaId = id || `${maxLettersId}-textarea`
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
   const counterSpanRef = useRef<HTMLSpanElement>(null)
@@ -170,6 +171,7 @@ const MaxLettersTextarea: FC<
     <span className="shr-relative">
       <ActualTextarea
         {...rest}
+        id={textareaId}
         value={value}
         defaultValue={defaultValue}
         onChange={functions.handleChange}
@@ -183,7 +185,7 @@ const MaxLettersTextarea: FC<
           values={{ maxLetters }}
         />
       </VisuallyHiddenText>
-      <VisuallyHiddenText as="output" role="status">
+      <VisuallyHiddenText as="output" role="status" htmlFor={textareaId}>
         {srCounterMessage}
       </VisuallyHiddenText>
       <span
