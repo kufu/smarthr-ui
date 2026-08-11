@@ -1,3 +1,6 @@
+import { within } from 'storybook/test'
+
+import { EnvironmentProvider } from '../../../../hooks/useEnvironment'
 import { FormControl } from '../../../FormControl'
 import { Stack } from '../../../Layout'
 import { RichTextEditor } from '../RichTextEditor'
@@ -372,4 +375,41 @@ export const VRTSizeAndResize: Story = {
       </FormControl>
     </Stack>
   ),
+}
+
+export const VRTMobileToolbar: Story = {
+  name: 'モバイルツールバー（2段目を閉じた状態）',
+  render: () => (
+    <EnvironmentProvider environment={{ mobile: true }}>
+      <Stack gap={2}>
+        <FormControl label="全機能・モバイル幅">
+          <RichTextEditor features={ALL_FEATURES} width={375} defaultValue={richContent} />
+        </FormControl>
+        <FormControl label="無効・モバイル幅">
+          <RichTextEditor features={ALL_FEATURES} width={375} disabled defaultValue={richContent} />
+        </FormControl>
+        <FormControl label="2段目に入る項目が無い（トグルなし）">
+          <RichTextEditor features={['bold', 'italic']} width={375} defaultValue={richContent} />
+        </FormControl>
+      </Stack>
+    </EnvironmentProvider>
+  ),
+}
+
+export const VRTMobileToolbarExpanded: Story = {
+  name: 'モバイルツールバー（2段目を開いた状態）',
+  render: () => (
+    <EnvironmentProvider environment={{ mobile: true }}>
+      <FormControl label="全機能・モバイル幅">
+        <RichTextEditor features={ALL_FEATURES} width={375} defaultValue={richContent} />
+      </FormControl>
+    </EnvironmentProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const toggle = await canvas.findByRole('button', { name: 'その他の書式' })
+    // userEvent.click ではなく click() を使うのは、ポインタ操作に伴う hover 状態が
+    // スナップショットに残ると背景色が変わって差分の原因になるため
+    toggle.click()
+  },
 }
