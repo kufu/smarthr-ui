@@ -40,6 +40,8 @@ type Props<T> = {
   triggerRef: RefObject<HTMLElement>
   /** 検索結果が0件の時に表示するコンテンツ */
   noResultText?: ReactNode
+  /** output要素のhtmlFor属性に使用するinput要素のid */
+  inputId?: string
 }
 
 type Rect = {
@@ -93,6 +95,7 @@ export const useListbox = <T,>({
   isLoading,
   triggerRef,
   noResultText,
+  inputId,
 }: Props<T>) => {
   const listBoxId = useId()
 
@@ -284,6 +287,7 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       noResultText,
+      inputId,
       listBoxId,
       listBoxRef,
       handleAdd: functions.handleAdd,
@@ -308,6 +312,7 @@ type ListBoxProps<T> = {
   isLoading?: boolean
   noResultText?: ReactNode
   dropdownHelpMessage?: ReactNode
+  inputId?: string
   listBoxId: string
   listBoxRef: RefObject<HTMLDivElement>
   handleAdd: ((option: ComboboxOption<T>) => void) | undefined
@@ -336,6 +341,7 @@ export const ListBox = memo(
     listBoxRect,
     triggerWidth,
     dropdownWidth,
+    inputId,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
@@ -384,7 +390,7 @@ export const ListBox = memo(
     return createPortal(
       <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         {isExpanded && isLoading && (
-          <VisuallyHiddenText as="output" role="status">
+          <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
           </VisuallyHiddenText>
         )}

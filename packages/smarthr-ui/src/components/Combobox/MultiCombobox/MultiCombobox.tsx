@@ -161,6 +161,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -171,6 +172,8 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
 
+  const generatedInputId = useId()
+  const inputId = id || generatedInputId
   const selectedListId = useId()
 
   const isInputControlled = controlledInputValue !== undefined
@@ -270,6 +273,7 @@ const ActualMultiCombobox = <T,>(
     isLoading,
     triggerRef,
     noResultText,
+    inputId,
   })
 
   const latest = useLatest({
@@ -521,6 +525,7 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
+            id={inputId}
             data-smarthr-ui-input="true"
             type="text"
             name={name}
