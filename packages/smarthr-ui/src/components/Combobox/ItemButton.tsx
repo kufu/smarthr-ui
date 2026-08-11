@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, type RefObject, memo } from 'react'
+import { type RefObject, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -33,54 +33,27 @@ const CLASS_NAMES = {
   select: classNameGenerator({ new: false }),
 }
 
-export const ItemButton = memo<Props>(({ disabled, selected, isNew, ...rest }) =>
-  isNew ? (
-    <AddButton {...rest} />
-  ) : (
-    <SelectButton {...rest} disabled={disabled} selected={selected} />
-  ),
-)
-
-const SelectButton: FC<{
-  id: string
-  label: ReactNode
-  disabled?: boolean
-  selected: boolean
-  activeRef: RefObject<HTMLButtonElement> | undefined
-}> = ({ label, selected, activeRef, ...rest }) => (
+export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, activeRef }) => (
   <button
-    {...rest}
     ref={activeRef}
     type="button"
     role="option"
-    aria-selected={selected}
+    id={id}
     data-active={!!activeRef}
-    className={CLASS_NAMES.select}
+    aria-selected={isNew ? false : selected}
+    disabled={isNew ? undefined : disabled}
+    className={isNew ? CLASS_NAMES.new : CLASS_NAMES.select}
   >
-    {label}
+    {isNew ? (
+      <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
+        <Localizer
+          id="smarthr-ui/Combobox/addItemButtonLabel"
+          defaultText="「{name}」を追加"
+          values={{ name: label }}
+        />
+      </Text>
+    ) : (
+      label
+    )}
   </button>
-)
-
-const AddButton: FC<{
-  id: string
-  label: ReactNode
-  activeRef: RefObject<HTMLButtonElement> | undefined
-}> = ({ label, activeRef, ...rest }) => (
-  <button
-    {...rest}
-    ref={activeRef}
-    type="button"
-    role="option"
-    aria-selected={false}
-    data-active={!!activeRef}
-    className={CLASS_NAMES.new}
-  >
-    <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>
-      <Localizer
-        id="smarthr-ui/Combobox/addItemButtonLabel"
-        defaultText="「{name}」を追加"
-        values={{ name: label }}
-      />
-    </Text>
-  </button>
-)
+))
