@@ -1,7 +1,6 @@
-import { type ReactNode, type RefObject, memo, useMemo } from 'react'
+import { type ReactNode, type RefObject, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { FaCirclePlusIcon } from '../Icon'
 import { Text } from '../Text'
@@ -10,9 +9,6 @@ import type { ComboboxOption } from './types'
 
 type Props<T> = {
   option: ComboboxOption<T>
-  handleAdd?: (option: ComboboxOption<T>) => void
-  handleSelect: (option: ComboboxOption<T>) => void
-  handleMouseOver: (option: ComboboxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement> | undefined
 }
 
@@ -37,43 +33,25 @@ const CLASS_NAMES = {
   select: classNameGenerator({ new: false }),
 }
 
-const ItemButton = <T,>({
-  option,
-  handleAdd,
-  handleSelect,
-  handleMouseOver,
-  activeRef,
-}: Props<T>) => {
-  const latest = useLatest({ handleAdd, handleSelect, handleMouseOver, option })
-  const hasHandleAdd = !!handleAdd
-
-  const functions = useMemo(
-    () => ({
-      handleMouseOver: () => latest.handleMouseOver(latest.option),
-      handleAddClick: hasHandleAdd ? () => latest.handleAdd?.(latest.option) : undefined,
-      handleSelectClick: () => latest.handleSelect(latest.option),
-    }),
-    [hasHandleAdd, latest],
-  )
-
-  const commonAttrs = {
-    id: option.id,
-    label: option.item.label,
-    activeRef,
-    handleMouseOver: functions.handleMouseOver,
-  }
-
-  return option.isNew ? (
-    <AddButton {...commonAttrs} handleClick={functions.handleAddClick} />
+const ItemButton = <T,>({ option, activeRef }: Props<T>) =>
+  option.isNew ? (
+    <AddButton
+      id={option.id}
+      label={option.item.label}
+      value={option.item.value}
+      activeRef={activeRef}
+    />
   ) : (
     <SelectButton
-      {...commonAttrs}
+      id={option.id}
+      label={option.item.label}
+      value={option.item.value}
       disabled={option.item.disabled}
       selected={option.selected}
-      handleClick={functions.handleSelectClick}
+      activeRef={activeRef}
     />
   )
-}
+
 const typedMemo: <T>(c: T) => T = memo
 const Memoized = typedMemo(ItemButton)
 export { Memoized as ItemButton }
@@ -81,23 +59,20 @@ export { Memoized as ItemButton }
 const SelectButton = memo<{
   id: string
   label: ReactNode
+  value: string
   disabled?: boolean
   selected: boolean
   activeRef: RefObject<HTMLButtonElement> | undefined
-  handleClick: () => void
-  handleMouseOver: () => void
-}>(({ id, label, disabled, selected, activeRef, handleClick, handleMouseOver }) => (
+}>(({ id, label, value, disabled, selected, activeRef }) => (
   <button
     ref={activeRef}
     type="button"
     role="option"
     id={id}
+    value={value}
     disabled={disabled}
     aria-selected={selected}
     data-active={!!activeRef}
-    onClick={handleClick}
-    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-    onMouseOver={handleMouseOver}
     className={CLASS_NAMES.select}
   >
     {label}
@@ -107,20 +82,17 @@ const SelectButton = memo<{
 const AddButton = memo<{
   id: string
   label: ReactNode
+  value: string
   activeRef: RefObject<HTMLButtonElement> | undefined
-  handleClick?: () => void
-  handleMouseOver: () => void
-}>(({ id, label, activeRef, handleClick, handleMouseOver }) => (
+}>(({ id, label, value, activeRef }) => (
   <button
     ref={activeRef}
     type="button"
     role="option"
     aria-selected={false}
     id={id}
+    value={value}
     data-active={!!activeRef}
-    onClick={handleClick}
-    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-    onMouseOver={handleMouseOver}
     className={CLASS_NAMES.new}
   >
     <MemoizedNewIconWithText label={label} />

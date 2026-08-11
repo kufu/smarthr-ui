@@ -2,10 +2,10 @@
 
 import {
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -369,12 +369,40 @@ export const ListBox = memo(
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-    const latest = useLatest({ minLength })
+    const latest = useLatest({ handleAdd, handleHoverOption, handleSelect, options, minLength })
 
-    const handleIntersect = useCallback(() => {
-      setCurrentItemLength((current) =>
-        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-      )
+    const functions = useMemo(() => {
+      const resolveOption = (e: MouseEvent) => {
+        const button = (e.target as HTMLElement).closest('button[role="option"]')
+        if (!button || button.hasAttribute('disabled')) return null
+        return (
+          latest.options.find((o) => o.item.value === (button as HTMLButtonElement).value) ?? null
+        )
+      }
+
+      return {
+        handleDelegateClick: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            if (option.isNew) {
+              latest.handleAdd?.(option)
+            } else {
+              latest.handleSelect(option)
+            }
+          }
+        },
+        handleDelegateMouseOver: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            latest.handleHoverOption(option)
+          }
+        },
+        handleIntersect: () => {
+          setCurrentItemLength((current) =>
+            Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+          )
+        },
+      }
     }, [latest])
 
     useEffect(() => {
@@ -395,6 +423,9 @@ export const ListBox = memo(
           aria-hidden={!isExpanded}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
+
+          onMouseOver={functions.handleDelegateMouseOver}
+          onClick={functions.handleDelegateClick}
         >
           {dropdownHelpMessage && (
             <Text
@@ -424,15 +455,14 @@ export const ListBox = memo(
                 <ItemButton
                   key={option.id}
                   option={option}
-                  handleAdd={handleAdd}
-                  handleSelect={handleSelect}
-                  handleMouseOver={handleHoverOption}
                   activeRef={option.id === activeOptionId ? activeRef : undefined}
                 />
               ))
             )
           ) : null}
-          {currentItemLength < options.length && <Intersection handleIntersect={handleIntersect} />}
+          {currentItemLength < options.length && (
+            <Intersection handleIntersect={functions.handleIntersect} />
+          )}
         </Scroller>
       </div>,
     )
