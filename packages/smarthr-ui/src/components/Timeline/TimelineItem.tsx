@@ -43,9 +43,14 @@ const classNameGenerator = tv({
     title: [
       // 日付と中央寄せにしやすくするために mark は title に生やす
       'before:shr-absolute before:shr-left-0 before:shr-size-[theme(fontSize.sm)] before:shr-rounded-full before:shr-bg-border before:shr-content-[""]',
-      'forced-colors:before:shr-bg-[ButtonBorder]',
       // aria-current="true" のときの mark スタイル
-      'group-aria-[current=true]:before:shr-left-[calc(theme(fontSize.sm)-theme(spacing[0.75]))] group-aria-[current=true]:before:shr-z-1 group-aria-[current=true]:before:shr-size-0.75 group-aria-[current=true]:before:shr-bg-main group-aria-[current=true]:before:shr-shadow-[0_0_0_2px_white,0_0_0_4px_theme(colors.main)]',
+      'group-aria-[current=true]:before:shr-left-[calc(theme(fontSize.sm)-theme(spacing[0.75]))]',
+      'group-aria-[current=true]:before:shr-z-1',
+      'group-aria-[current=true]:before:shr-size-0.75',
+      'group-aria-[current=true]:before:shr-bg-main',
+      'group-aria-[current=true]:before:shr-shadow-[0_0_0_2px_white,0_0_0_4px_theme(colors.main)]',
+
+      'forced-colors:before:shr-bg-[ButtonBorder]',
       'forced-colors:group-aria-[current=true]:before:shr-bg-[Mark]',
     ],
   },
