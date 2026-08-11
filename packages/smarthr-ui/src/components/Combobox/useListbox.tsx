@@ -19,6 +19,7 @@ import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
+import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
@@ -373,12 +374,9 @@ export const ListBox = memo(
 
     const functions = useMemo(() => {
       const resolveOption = (e: MouseEvent) => {
-        for (const el of e.nativeEvent.composedPath()) {
-          if (el instanceof HTMLButtonElement && el.role === 'option') {
-            return el.disabled ? null : (latest.options.find((o) => o.id === el.id) ?? null)
-          }
-        }
-        return null
+        const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+        if (!el || el.disabled) return null
+        return latest.options.find((o) => o.id === el.id) ?? null
       }
 
       return {
