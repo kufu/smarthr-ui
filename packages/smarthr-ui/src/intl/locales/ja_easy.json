@@ -97,6 +97,7 @@
   "smarthr-ui/Textarea/maxLettersExceeded": "{exceededLetters}文字　オーバー",
   "smarthr-ui/Textarea/screenReaderMaxLettersDescription": "いちばん多く　{maxLetters}文字　入れられます",
   "smarthr-ui/RichTextEditor/toolbarLabel": "",
+  "smarthr-ui/RichTextEditor/moreFormats": "",
   "smarthr-ui/RichTextEditor/undo": "",
   "smarthr-ui/RichTextEditor/redo": "",
   "smarthr-ui/RichTextEditor/bold": "",

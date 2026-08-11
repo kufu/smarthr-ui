@@ -97,6 +97,7 @@
   "smarthr-ui/Textarea/maxLettersExceeded": "{exceededLetters}글자 초과",
   "smarthr-ui/Textarea/screenReaderMaxLettersDescription": "최대 {maxLetters}글자 입력할 수 있습니다",
   "smarthr-ui/RichTextEditor/toolbarLabel": "",
+  "smarthr-ui/RichTextEditor/moreFormats": "",
   "smarthr-ui/RichTextEditor/undo": "",
   "smarthr-ui/RichTextEditor/redo": "",
   "smarthr-ui/RichTextEditor/bold": "",
