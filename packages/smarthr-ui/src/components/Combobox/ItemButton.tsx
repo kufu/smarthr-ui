@@ -7,10 +7,10 @@ import { Text } from '../Text'
 
 import type { ComboboxOption } from './types'
 
-type Props<T> = {
-  option: ComboboxOption<T>
-  activeRef: RefObject<HTMLButtonElement> | undefined
-}
+type Props = Omit<ComboboxOption<unknown>, 'item'> &
+  Omit<ComboboxOption<unknown>['item'], 'data'> & {
+    activeRef: RefObject<HTMLButtonElement> | undefined
+  }
 
 const classNameGenerator = tv({
   base: [
@@ -33,28 +33,13 @@ const CLASS_NAMES = {
   select: classNameGenerator({ new: false }),
 }
 
-const ItemButton = <T,>({ option, activeRef }: Props<T>) =>
-  option.isNew ? (
-    <AddButton
-      id={option.id}
-      label={option.item.label}
-      value={option.item.value}
-      activeRef={activeRef}
-    />
+export const ItemButton = memo<Props>(({ disabled, selected, isNew, ...rest }) =>
+  isNew ? (
+    <AddButton {...rest} />
   ) : (
-    <SelectButton
-      id={option.id}
-      label={option.item.label}
-      value={option.item.value}
-      disabled={option.item.disabled}
-      selected={option.selected}
-      activeRef={activeRef}
-    />
-  )
-
-const typedMemo: <T>(c: T) => T = memo
-const Memoized = typedMemo(ItemButton)
-export { Memoized as ItemButton }
+    <SelectButton {...rest} disabled={disabled} selected={selected} />
+  ),
+)
 
 const SelectButton = memo<{
   id: string
@@ -63,14 +48,12 @@ const SelectButton = memo<{
   disabled?: boolean
   selected: boolean
   activeRef: RefObject<HTMLButtonElement> | undefined
-}>(({ id, label, value, disabled, selected, activeRef }) => (
+}>(({ label, selected, activeRef, ...rest }) => (
   <button
+    {...rest}
     ref={activeRef}
     type="button"
     role="option"
-    id={id}
-    value={value}
-    disabled={disabled}
     aria-selected={selected}
     data-active={!!activeRef}
     className={CLASS_NAMES.select}
@@ -84,14 +67,13 @@ const AddButton = memo<{
   label: ReactNode
   value: string
   activeRef: RefObject<HTMLButtonElement> | undefined
-}>(({ id, label, value, activeRef }) => (
+}>(({ label, activeRef, ...rest }) => (
   <button
+    {...rest}
     ref={activeRef}
     type="button"
     role="option"
     aria-selected={false}
-    id={id}
-    value={value}
     data-active={!!activeRef}
     className={CLASS_NAMES.new}
   >

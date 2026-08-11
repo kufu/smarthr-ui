@@ -451,11 +451,13 @@ export const ListBox = memo(
                 )}
               </p>
             ) : (
-              items.map((option) => (
+              items.map(({ item, id, ...optionRest }) => (
                 <ItemButton
-                  key={option.id}
-                  option={option}
-                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                  {...optionRest}
+                  {...item}
+                  key={id}
+                  id={id}
+                  activeRef={id === activeOptionId ? activeRef : undefined}
                 />
               ))
             )
