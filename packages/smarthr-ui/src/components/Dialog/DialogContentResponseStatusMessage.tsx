@@ -17,12 +17,14 @@ export const DialogContentResponseStatusMessage: FC<{
      * @see https://www.sarasoueidan.com/blog/accessible-notifications-with-aria-live-regions-part-2/#make-sure-the-live-region-container-is-in-the-dom-as-early-as-possible
      */
     <>
+      {/* output要素はaria-live="polite"相当のため、即座に読み上げが必要なエラーにはrole="alert"のdivを使用する */}
       <div className={isError ? `${className} shr-mt-0.5` : className} role="alert">
         {isError && <ResponseMessage status="error">{responseStatus.message}</ResponseMessage>}
       </div>
-      <div className={isSuccess ? `${className} shr-mt-0.5` : className} role="status">
+      {/* APIレスポンスの成功結果を表示するoutput要素。output要素はaria-live="polite"相当のrole="status"を暗黙的に持つ */}
+      <output className={isSuccess ? `${className} shr-mt-0.5` : className}>
         {isSuccess && <ResponseMessage status="success">{responseStatus.message}</ResponseMessage>}
-      </div>
+      </output>
     </>
   )
 }
