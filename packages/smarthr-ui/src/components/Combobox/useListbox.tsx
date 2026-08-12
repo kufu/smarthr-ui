@@ -2,10 +2,10 @@
 
 import {
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -19,6 +19,7 @@ import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
+import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
@@ -369,12 +370,38 @@ export const ListBox = memo(
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-    const latest = useLatest({ minLength })
+    const latest = useLatest({ handleAdd, handleHoverOption, handleSelect, options, minLength })
 
-    const handleIntersect = useCallback(() => {
-      setCurrentItemLength((current) =>
-        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-      )
+    const functions = useMemo(() => {
+      const resolveOption = (e: MouseEvent) => {
+        const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+        if (!el || el.disabled) return null
+        return latest.options.find((o) => o.id === el.id) ?? null
+      }
+
+      return {
+        handleDelegateClick: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            if (option.isNew) {
+              latest.handleAdd?.(option)
+            } else {
+              latest.handleSelect(option)
+            }
+          }
+        },
+        handleDelegateMouseOver: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            latest.handleHoverOption(option)
+          }
+        },
+        handleIntersect: () => {
+          setCurrentItemLength((current) =>
+            Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+          )
+        },
+      }
     }, [latest])
 
     useEffect(() => {
@@ -395,6 +422,8 @@ export const ListBox = memo(
           aria-hidden={!isExpanded}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
+          onMouseOver={functions.handleDelegateMouseOver}
+          onClick={functions.handleDelegateClick}
         >
           {dropdownHelpMessage && (
             <Text
@@ -420,19 +449,21 @@ export const ListBox = memo(
                 )}
               </p>
             ) : (
-              items.map((option) => (
+              items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
-                  key={option.id}
-                  option={option}
-                  handleAdd={handleAdd}
-                  handleSelect={handleSelect}
-                  handleMouseOver={handleHoverOption}
-                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                  {...optionRest}
+                  label={label}
+                  disabled={disabled}
+                  key={id}
+                  id={id}
+                  activeRef={id === activeOptionId ? activeRef : undefined}
                 />
               ))
             )
           ) : null}
-          {currentItemLength < options.length && <Intersection handleIntersect={handleIntersect} />}
+          {currentItemLength < options.length && (
+            <Intersection handleIntersect={functions.handleIntersect} />
+          )}
         </Scroller>
       </div>,
     )
