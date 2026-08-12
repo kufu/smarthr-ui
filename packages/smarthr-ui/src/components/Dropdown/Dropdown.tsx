@@ -106,17 +106,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   useEffect(() => {
     if (!active) return
 
-    let lastAnimationFrame: ReturnType<typeof requestAnimationFrame> | undefined = undefined
-
     const handleClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
         setActive(false)
+
         if (latest.onClose) {
-          lastAnimationFrame = requestAnimationFrame(() => {
-            latest.onClose?.()
-            lastAnimationFrame = undefined
-          })
+          requestAnimationFrame(() => latest.onClose?.())
         }
       }
     }
@@ -133,10 +129,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     window.addEventListener('resize', updateTriggerRect, { passive: true })
 
     return () => {
-      if (lastAnimationFrame) {
-        cancelAnimationFrame(lastAnimationFrame)
-      }
-
       document.body.removeEventListener('click', handleClickBody, false)
       window.removeEventListener('scroll', updateTriggerRect, scrollOption)
       window.removeEventListener('resize', updateTriggerRect)
