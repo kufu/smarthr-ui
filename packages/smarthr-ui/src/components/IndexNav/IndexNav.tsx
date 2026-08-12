@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { type ComponentPropsWithoutRef, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
@@ -24,20 +24,22 @@ const classNameGenerator = tv({
   },
 })
 
+type BaseProps = {
+  /** ページ内リンクのアイテム */
+  items: IndexNavItem[]
+}
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'nav'>, keyof BaseProps>
+
 type IndexNavItem = {
   id: string
   label: ReactNode
 }
 
-type Props = {
-  items: IndexNavItem[]
-}
-
-export const IndexNav = ({ items }: Props) => {
+export const IndexNav = ({ items, className, ...rest }: Props) => {
   const classNames = useMemo(() => {
     const { wrapper, textLink } = classNameGenerator()
-    return { wrapper: wrapper(), textLink: textLink() }
-  }, [])
+    return { wrapper: wrapper({ className }), textLink: textLink() }
+  }, [className])
   const [activeId, setActiveId] = useState<string | null>(null)
   const { localize } = useIntl()
 
@@ -66,11 +68,12 @@ export const IndexNav = ({ items }: Props) => {
 
   return (
     <Stack
+      {...rest}
       as="nav"
       className={classNames.wrapper}
       aria-label={localize({
         id: 'smarthr-ui/IndexNav/ariaLabel',
-        defaultMessage: 'ページ内リンク',
+        defaultText: 'ページ内リンク',
       })}
     >
       {items.map((item) => (
