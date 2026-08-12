@@ -1,6 +1,6 @@
 'use client'
 
-import { type ButtonHTMLAttributes, forwardRef, memo, useMemo } from 'react'
+import { type ButtonHTMLAttributes, forwardRef, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/usePortal'
@@ -34,10 +34,13 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       className,
       children,
       loading = false,
+      id,
       ...rest
     },
     ref,
   ) => {
+    const generatedId = useId()
+    const buttonId = id || generatedId
     const classNames = useMemo(() => {
       const { wrapper } = classNameGenerator()
 
@@ -49,6 +52,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const button = (
       <ButtonWrapper
         {...rest}
+        id={buttonId}
         buttonRef={ref}
         type={type}
         size={size}
@@ -60,7 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         suffix={suffix}
         disabled={disabled}
       >
-        <LoadingStatus loading={loading} />
+        <LoadingStatus loading={loading} buttonId={buttonId} />
         {children}
       </ButtonWrapper>
     )
@@ -75,12 +79,12 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
 
-const LoadingStatus = memo<{ loading: boolean }>(({ loading }) => {
+const LoadingStatus = memo<{ loading: boolean; buttonId: string }>(({ loading, buttonId }) => {
   const { createPortal } = usePortal()
 
   // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
   return createPortal(
-    <VisuallyHiddenText as="output" role="status">
+    <VisuallyHiddenText as="output" role="status" htmlFor={buttonId}>
       {loading && <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />}
     </VisuallyHiddenText>,
   )
