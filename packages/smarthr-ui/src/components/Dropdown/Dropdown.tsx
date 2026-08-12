@@ -7,10 +7,10 @@ import {
   type ReactNode,
   createContext,
   createRef,
-  useCallback,
   useContext,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -75,33 +75,32 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     createPortal,
   })
 
-  // This is the root container of a dropdown content located in outside the DOM tree
-  const DropdownContentRoot = useCallback<FC<{ children: ReactNode }>>(
-    (props) => (latest.active ? latest.createPortal(props.children) : null),
-    [latest],
-  )
-  DropdownContentRoot.displayName = 'DropdownContentRoot'
+  const functions = useMemo(() => {
+    // This is the root container of a dropdown content located in outside the DOM tree
+    const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
+      latest.active ? latest.createPortal(props.children) : null
+    DropdownContentRoot.displayName = 'DropdownContentRoot'
 
-  const handleClickTrigger = useCallback(
-    (rect: Rect) => {
-      if (latest.active) {
+    return {
+      DropdownContentRoot,
+      handleClickTrigger: (rect: Rect) => {
+        if (latest.active) {
+          setActive(false)
+          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        } else {
+          setActive(true)
+          setTriggerRect(rect)
+          if (latest.onOpen) requestAnimationFrame(() => latest.onOpen?.())
+        }
+      },
+      handleDelegateClickCloser: () => {
         setActive(false)
         if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
-      } else {
-        setActive(true)
-        setTriggerRect(rect)
-        if (latest.onOpen) requestAnimationFrame(() => latest.onOpen?.())
-      }
-    },
-    [latest],
-  )
 
-  const handleDelegateClickCloser = useCallback(() => {
-    setActive(false)
-    if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
-
-    // return focus to the Trigger
-    getFirstTabbable(triggerElementRef)?.focus()
+        // return focus to the Trigger
+        getFirstTabbable(triggerElementRef)?.focus()
+      },
+    }
   }, [latest])
 
   useEffect(() => {
@@ -130,9 +129,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerRect,
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
-          handleClickTrigger,
-          handleDelegateClickCloser,
-          DropdownContentRoot,
+          handleClickTrigger: functions.handleClickTrigger,
+          handleDelegateClickCloser: functions.handleDelegateClickCloser,
+          DropdownContentRoot: functions.DropdownContentRoot,
           contentId,
         }}
       >
