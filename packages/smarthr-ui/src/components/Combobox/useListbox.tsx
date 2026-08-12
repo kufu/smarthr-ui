@@ -237,19 +237,6 @@ export const useListbox = <T,>({
   }, [options])
 
   useEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      setActiveOption(null)
-    }
-
-    const trigger = latest.triggerRef.current
-
-    if (trigger) {
-      setTriggerWidth(trigger.getBoundingClientRect().width)
-    }
-  }, [isExpanded, latest])
-
-  useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
     if (
       !activeRef.current ||
@@ -271,8 +258,10 @@ export const useListbox = <T,>({
   }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
-    if (isExpanded) {
-      // options の更新毎に座標を再計算する
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      setActiveOption(null)
+    } else {
       functions.calculateRect()
     }
   }, [isExpanded, options, functions])
