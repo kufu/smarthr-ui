@@ -125,15 +125,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   useEffect(() => {
     if (!active) return
 
-    const scrollOption = { capture: true, passive: true }
-
     document.body.addEventListener('click', functions.handleClickBody, false)
-    window.addEventListener('scroll', functions.updateTriggerRect, scrollOption)
+    window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
     window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
 
     return () => {
       document.body.removeEventListener('click', functions.handleClickBody, false)
-      window.removeEventListener('scroll', functions.updateTriggerRect, scrollOption)
+      window.removeEventListener('scroll', functions.updateTriggerRect)
       window.removeEventListener('resize', functions.updateTriggerRect)
     }
   }, [active, functions])
