@@ -7,6 +7,7 @@ import {
   type ReactNode,
   memo,
   useCallback,
+  useId,
 } from 'react'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -89,6 +90,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   subActionArea,
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
+  const actionButtonId = useId()
 
   return (
     <Section className={CLASS_NAMES.wrapper}>
@@ -105,12 +107,14 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             closeButton={closeButton}
             actionButton={actionButton}
             loading={calcedResponseStatus.isProcessing}
+            actionButtonId={actionButtonId}
             className={CLASS_NAMES.buttonArea}
           />
         </Cluster>
         <DialogContentResponseStatusMessage
           responseStatus={calcedResponseStatus}
           className={CLASS_NAMES.message}
+          actionButtonId={actionButtonId}
         />
       </div>
     </Section>
@@ -122,48 +126,62 @@ const ActionAreaCluster = memo<
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
+    actionButtonId: string
     className: string
   }
->(({ handleClickClose, handleClickAction, closeButton, actionButton, loading, className }) => {
-  const handleClickActionWithHelpers = useCallback(
-    (e: MouseEvent<Element>) => {
-      handleClickAction(e, { close: handleClickClose })
-    },
-    [handleClickAction, handleClickClose],
-  )
+>(
+  ({
+    handleClickClose,
+    handleClickAction,
+    closeButton,
+    actionButton,
+    loading,
+    actionButtonId,
+    className,
+  }) => {
+    const handleClickActionWithHelpers = useCallback(
+      (e: MouseEvent<Element>) => {
+        handleClickAction(e, { close: handleClickClose })
+      },
+      [handleClickAction, handleClickClose],
+    )
 
-  return (
-    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-      <CloseButton
-        handleClick={handleClickClose}
-        disabled={closeButton.disabled || loading}
-        text={closeButton.text}
-      />
-      <ActionButton
-        variant={actionButton.theme}
-        disabled={actionButton.disabled}
-        loading={loading}
-        handleClick={handleClickActionWithHelpers}
-      >
-        {actionButton.text}
-      </ActionButton>
-    </Cluster>
-  )
-})
+    return (
+      <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+        <CloseButton
+          handleClick={handleClickClose}
+          disabled={closeButton.disabled || loading}
+          text={closeButton.text}
+        />
+        <ActionButton
+          variant={actionButton.theme}
+          disabled={actionButton.disabled}
+          loading={loading}
+          id={actionButtonId}
+          handleClick={handleClickActionWithHelpers}
+        >
+          {actionButton.text}
+        </ActionButton>
+      </Cluster>
+    )
+  },
+)
 
 const ActionButton = memo<
   PropsWithChildren<{
     variant: ObjectActionButtonType['theme']
     disabled: ObjectActionButtonType['disabled']
     loading: boolean
+    id: string
     handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   }>
->(({ variant = 'primary', disabled, loading, handleClick, children }) => (
+>(({ variant = 'primary', disabled, loading, id, handleClick, children }) => (
   <Button
     type="submit"
     variant={variant}
     disabled={disabled}
     loading={loading}
+    id={id}
     onClick={handleClick}
     className="smarthr-ui-Dialog-actionButton"
   >

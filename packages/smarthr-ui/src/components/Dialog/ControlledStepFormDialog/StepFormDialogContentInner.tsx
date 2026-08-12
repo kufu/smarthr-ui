@@ -7,6 +7,7 @@ import {
   type ReactNode,
   memo,
   useContext,
+  useId,
   useMemo,
 } from 'react'
 
@@ -160,6 +161,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
+  const actionButtonId = useId()
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
@@ -203,6 +205,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
                     disabled={submitButton.disabled}
                     loading={calcedResponseStatus.isProcessing}
                     text={submitButton.text}
+                    id={actionButtonId}
                   />
                 )}
               </Cluster>
@@ -210,6 +213,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             <DialogContentResponseStatusMessage
               responseStatus={calcedResponseStatus}
               className={CLASS_NAMES.message}
+              actionButtonId={actionButtonId}
             />
           </div>
         </div>
@@ -255,12 +259,14 @@ const SubmitButton = memo<{
   disabled: boolean | undefined
   loading: boolean
   text: ReactNode
-}>(({ variant, disabled, loading, text }) => (
+  id: string
+}>(({ variant, disabled, loading, text, id }) => (
   <Button
     type="submit"
     variant={variant}
     disabled={disabled}
     loading={loading}
+    id={id}
     className="smarthr-ui-Dialog-actionButton"
   >
     {text}

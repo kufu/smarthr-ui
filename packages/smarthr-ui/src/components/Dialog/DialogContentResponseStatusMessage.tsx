@@ -6,7 +6,8 @@ import type { FC } from 'react'
 export const DialogContentResponseStatusMessage: FC<{
   responseStatus: ReturnType<typeof useResponseStatus>
   className?: string
-}> = ({ responseStatus, className }) => {
+  actionButtonId?: string
+}> = ({ responseStatus, className, actionButtonId }) => {
   const isError = responseStatus.message && responseStatus.status === 'error'
   const isSuccess = responseStatus.message && responseStatus.status === 'success'
 
@@ -22,7 +23,10 @@ export const DialogContentResponseStatusMessage: FC<{
         {isError && <ResponseMessage status="error">{responseStatus.message}</ResponseMessage>}
       </div>
       {/* APIレスポンスの成功結果を表示するoutput要素。output要素はaria-live="polite"相当のrole="status"を暗黙的に持つ */}
-      <output className={isSuccess ? `${className} shr-mt-0.5` : className}>
+      <output
+        className={isSuccess ? `${className} shr-mt-0.5` : className}
+        htmlFor={actionButtonId}
+      >
         {isSuccess && <ResponseMessage status="success">{responseStatus.message}</ResponseMessage>}
       </output>
     </>

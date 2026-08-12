@@ -1,4 +1,4 @@
-import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo } from 'react'
+import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo, useId } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -88,6 +88,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   subActionArea,
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
+  const actionButtonId = useId()
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
@@ -105,12 +106,14 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
               closeButton={closeButton}
               actionButton={actionButton}
               loading={calculatedResponseStatus.isProcessing}
+              actionButtonId={actionButtonId}
               className={CLASS_NAMES.buttonArea}
             />
           </Cluster>
           <DialogContentResponseStatusMessage
             responseStatus={calculatedResponseStatus}
             className={CLASS_NAMES.message}
+            actionButtonId={actionButtonId}
           />
         </div>
       </form>
@@ -123,16 +126,22 @@ const ActionAreaCluster = memo<
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
+    actionButtonId: string
     className: string
   }
->(({ handleClickClose, closeButton, actionButton, loading, className }) => (
+>(({ handleClickClose, closeButton, actionButton, loading, actionButtonId, className }) => (
   <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
     <CloseButton
       handleClick={handleClickClose}
       disabled={closeButton.disabled || loading}
       text={closeButton.text}
     />
-    <ActionButton variant={actionButton.theme} disabled={actionButton.disabled} loading={loading}>
+    <ActionButton
+      variant={actionButton.theme}
+      disabled={actionButton.disabled}
+      loading={loading}
+      id={actionButtonId}
+    >
       {actionButton.text}
     </ActionButton>
   </Cluster>
@@ -143,13 +152,15 @@ const ActionButton = memo<
     variant: ObjectActionButtonType['theme']
     disabled: ObjectActionButtonType['disabled']
     loading: boolean
+    id: string
   }>
->(({ variant = 'primary', disabled, loading, children }) => (
+>(({ variant = 'primary', disabled, loading, id, children }) => (
   <Button
     type="submit"
     variant={variant}
     disabled={disabled}
     loading={loading}
+    id={id}
     className="smarthr-ui-Dialog-actionButton"
   >
     {children}
