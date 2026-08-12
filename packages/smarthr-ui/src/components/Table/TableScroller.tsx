@@ -6,8 +6,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   useCallback,
-  useLayoutEffect,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -64,11 +62,8 @@ const FixedHeadTableScroller = ({
   direction,
   ...rest
 }: FixedHeadTableScrollerProps) => {
-  const innerRef = useRef<HTMLDivElement | null>(null)
-
   const setRefs = useCallback(
-    (node: HTMLDivElement) => {
-      innerRef.current = node
+    (node: HTMLDivElement | null) => {
       if (forwardedRef) {
         if (typeof forwardedRef === 'function') {
           forwardedRef(node)
@@ -76,19 +71,18 @@ const FixedHeadTableScroller = ({
           forwardedRef.current = node
         }
       }
+
+      // thead の高さ分だけ scroll-padding-top を設定
+      if (node) {
+        const thead = node.querySelector('thead')
+        if (thead) {
+          const { height } = thead.getBoundingClientRect()
+          node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
+        }
+      }
     },
     [forwardedRef],
   )
-
-  // thead の高さ分だけ scroll-padding-top を設定
-  useLayoutEffect(() => {
-    if (!innerRef.current) return
-    const thead = innerRef.current.querySelector('thead')
-    if (thead) {
-      const { height } = thead.getBoundingClientRect()
-      innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
-    }
-  }, [])
 
   return (
     <Scroller {...rest} ref={setRefs} direction={direction}>
