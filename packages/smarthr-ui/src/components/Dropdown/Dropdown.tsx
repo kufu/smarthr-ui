@@ -100,43 +100,26 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
       },
-      handleClickBody: (e: any) => {
-        // ignore events from events within DropdownTrigger and DropdownContent
-        if (
-          latest.active &&
-          !isEventFromChild(e, triggerElementRef.current) &&
-          !latest.isChildPortal(e.target)
-        ) {
-          setActive(false)
-
-          if (latest.onClose) {
-            requestAnimationFrame(() => latest.onClose?.())
-          }
-        }
-      },
-      updateTriggerRect: () => {
-        if (triggerElementRef.current) {
-          setTriggerRect(triggerElementRef.current.getBoundingClientRect())
-        }
-      },
     }
   }, [latest])
 
   useEffect(() => {
-    if (!active) return
+    const onClickBody = (e: any) => {
+      // ignore events from events within DropdownTrigger and DropdownContent
+      if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
+        if (latest.active) {
+          setActive(false)
+          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        }
+      }
+    }
 
-    const scrollOption = { capture: true, passive: true }
-
-    document.body.addEventListener('click', functions.handleClickBody, false)
-    window.addEventListener('scroll', functions.updateTriggerRect, scrollOption)
-    window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
+    document.body.addEventListener('click', onClickBody, false)
 
     return () => {
-      document.body.removeEventListener('click', functions.handleClickBody, false)
-      window.removeEventListener('scroll', functions.updateTriggerRect, scrollOption)
-      window.removeEventListener('resize', functions.updateTriggerRect)
+      document.body.removeEventListener('click', onClickBody, false)
     }
-  }, [active, functions])
+  }, [contentId, latest])
 
   return (
     <PortalParentProvider>
