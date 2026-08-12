@@ -1,9 +1,24 @@
 'use client'
 
 import { type ReactNode, useEffect, useState } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { Stack } from '../Layout'
 import { TextLink } from '../TextLink'
+
+const _classNameGenerator = tv({
+  base: [
+    'shr-block',
+    'shr-px-1 shr-py-0.5',
+    'shr-rounded',
+    'shr-text-black',
+    'shr-no-underline',
+    '!shr-shadow-none',
+    'shr-leading-[0px]',
+    'hover:shr-font-bold',
+    `before:shr-border-l-shorthand before:shr-border-l-[4px] before:shr-border-transparent before:shr-pl-0.5 before:shr-content-['']`,
+  ],
+})
 
 type IndexNavItem = {
   id: string
