@@ -29,6 +29,7 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
         // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
         requestAnimationFrame(() => {
           const next = typeof value === 'function' ? value(latest.expanded) : value
+
           if (next !== latest.expanded) {
             setExpanded(next)
             document.dispatchEvent(
@@ -39,22 +40,22 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
           }
         })
       },
+      handleDisclosureChange: (e: CustomEvent<DisclosureChangeEventDetail>) => {
+        if (latest.id === e.detail.id) {
+          setExpanded(e.detail.expanded)
+        }
+      },
     }),
     [latest],
   )
 
   useEffect(() => {
-    const handleDisclosureChange = (e: CustomEvent<DisclosureChangeEventDetail>) => {
-      if (latest.id === e.detail.id) {
-        setExpanded(e.detail.expanded)
-      }
-    }
+    document.addEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
 
-    document.addEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
     return () => {
-      document.removeEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
+      document.removeEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
     }
-  }, [latest])
+  }, [functions])
 
   return [expanded, functions.safeSetExpanded]
 }
