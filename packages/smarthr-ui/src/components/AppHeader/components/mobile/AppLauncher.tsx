@@ -88,7 +88,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
           </SearchResultText>
         ) : (
-          <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
+          <AppLauncherFilterDropdown page={page} handleSelectPage={changePage} />
         )}
 
         {(mode === 'search' || page === 'all') && (

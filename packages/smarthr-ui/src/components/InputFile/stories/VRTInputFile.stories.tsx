@@ -1,3 +1,5 @@
+import { userEvent } from 'storybook/test'
+
 import { Stack } from '../../Layout'
 import { InputFile } from '../InputFile'
 
@@ -47,6 +49,35 @@ export const VRT = {
 export const VRTForcedColors: StoryObj = {
   parameters: {
     ...VRT.parameters,
+    chromatic: { forcedColors: 'active' },
+  },
+}
+
+const previewablePlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const inputs = canvasElement.querySelectorAll<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+  const imageFile = new File([''], 'image.png', { type: 'image/png' })
+  const pdfFile = new File([''], 'document.pdf', { type: 'application/pdf' })
+  const textFile = new File([''], 'text.txt', { type: 'text/plain' })
+
+  for (const input of Array.from(inputs)) {
+    await userEvent.upload(input, [imageFile, pdfFile, textFile])
+  }
+}
+
+export const VRTPreviewable: StoryObj<typeof InputFile> = {
+  render: () => (
+    <Stack>
+      <InputFile label="previewable: false" name="previewablefalse" multiple previewable={false} />
+      <InputFile label="previewable: true" name="previewabletrue" multiple previewable />
+    </Stack>
+  ),
+  play: previewablePlay,
+}
+
+export const VRTPreviewableForcedColors: StoryObj<typeof InputFile> = {
+  render: VRTPreviewable.render,
+  play: previewablePlay,
+  parameters: {
     chromatic: { forcedColors: 'active' },
   },
 }

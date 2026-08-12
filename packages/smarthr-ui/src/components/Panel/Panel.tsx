@@ -15,7 +15,8 @@ import { useSectionWrapper } from '../SectioningContent'
 import type { Gap } from '../../types'
 
 export const panelClassNameGenerator = tv({
-  base: 'smarthr-ui-Panel shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
+  // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
+  base: 'smarthr-ui-Panel smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock,
     paddingInline,
@@ -49,7 +50,7 @@ export const panelClassNameGenerator = tv({
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<
     VariantProps<typeof panelClassNameGenerator>,
     'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
@@ -61,8 +62,8 @@ type AbstractProps = PropsWithChildren<
     as?: string | ComponentType<any>
   }
 >
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
-type Props = AbstractProps & ElementProps
+export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
 type SeparatePadding = {
   block?: Gap

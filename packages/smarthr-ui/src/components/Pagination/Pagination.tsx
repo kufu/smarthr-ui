@@ -72,8 +72,8 @@ type AnchorProps = CommonProps & {
   linkAs?: ElementType
 }
 
-type AbstractProps = ButtonProps | AnchorProps
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type BaseProps = ButtonProps | AnchorProps
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i

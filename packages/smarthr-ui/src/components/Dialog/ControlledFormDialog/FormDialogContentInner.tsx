@@ -26,12 +26,12 @@ type ObjectActionButtonType = {
 
 type ObjectCloseButtonType = {
   /** 閉じるボタンのラベル */
-  text: ReactNode
+  text?: ReactNode
   /** 閉じるボタンを無効にするかどうか */
   disabled?: boolean
 }
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
@@ -49,7 +49,7 @@ export type AbstractProps = PropsWithChildren<
   }
 >
 
-export type FormDialogContentInnerProps = AbstractProps & {
+export type FormDialogContentInnerProps = BaseProps & {
   handleClickClose: () => void
   responseStatus?: ResponseStatus
 }

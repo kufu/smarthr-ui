@@ -1,11 +1,4 @@
-import {
-  type ChangeEvent,
-  type ComponentProps,
-  type MouseEvent,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { type ChangeEvent, type ComponentProps, type MouseEvent, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -90,13 +83,17 @@ export const useSortDropdown = ({
     [sortFieldLabel, sortOrderLegend, ascLabel, descLabel, applyText, cancelText, localize],
   )
 
+  const [defaultFieldLabel] = useState(
+    () => (sortFields.find((field) => field.selected) || sortFields[0])?.label || '',
+  )
+
   // 外向きの値
-  const [selectedLabel, setSelectedLabel] = useState<string>('')
+  const [selectedLabel, setSelectedLabel] = useState<string>(defaultFieldLabel)
   const [checkedOrder, setCheckedOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   // 内部的な値
   const [innerFields, setInnerFields] = useState<Props['sortFields']>(sortFields)
-  const [innerSelectedField, setInnerSelectedField] = useState<string>('')
+  const [innerSelectedField, setInnerSelectedField] = useState<string>(defaultFieldLabel)
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   const hasOnCancel = !!onCancel
@@ -156,14 +153,6 @@ export const useSortDropdown = ({
     }),
     [hasOnCancel, latest],
   )
-
-  const defaultFieldLabel =
-    selectedLabel || (sortFields.find((field) => field.selected) || sortFields[0])?.label || ''
-
-  useEffect(() => {
-    setSelectedLabel(defaultFieldLabel)
-    setInnerSelectedField(defaultFieldLabel)
-  }, [defaultFieldLabel])
 
   return {
     texts: {

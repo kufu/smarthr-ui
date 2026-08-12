@@ -52,7 +52,7 @@ type Tenant = PropsWithChildren<{
   name: ReactNode
 }>
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ロゴ */
   logo?: ReactElement
   /** ロゴリンク */
@@ -71,7 +71,7 @@ type AbstractProps = PropsWithChildren<{
   enableNew?: boolean
 }> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'header'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'header'>, keyof BaseProps>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
 const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const
