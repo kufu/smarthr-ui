@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants'
 import { Stack } from '../Layout'
 import { TextLink } from '../TextLink'
 
-const _classNameGenerator = tv({
+const classNameGenerator = tv({
   base: [
     'shr-block',
     'shr-px-1 shr-py-0.5',
@@ -30,6 +30,7 @@ type Props = {
 }
 
 export const IndexNav = ({ items }: Props) => {
+  const actualClassName = useMemo(() => classNameGenerator(), [])
   const [activeId, setActiveId] = useState<string | null>(null)
   const { formatMessage } = useIntl()
 
@@ -70,7 +71,7 @@ export const IndexNav = ({ items }: Props) => {
           key={item.id}
           href={`#${item.id}`}
           // TODO: shr-border で対応している active時の表示を before 擬似要素を使って調整する
-          className={`${LINK_CLASSNAME} ${activeId === item.id ? 'shr-font-bold before:shr-border-link' : ''}`}
+          className={`${actualClassName} ${activeId === item.id ? 'shr-font-bold before:shr-border-link' : ''}`}
         >
           {item.label}
         </TextLink>
