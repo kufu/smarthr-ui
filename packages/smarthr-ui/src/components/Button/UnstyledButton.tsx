@@ -22,7 +22,7 @@ export const UnstyledButton = forwardRef<
       {...rest}
       ref={ref}
       type={type}
-      aria-disabled={disabled}
+      aria-disabled={disabled || undefined}
       onClick={disabled ? EVENT_CANCELLER : onClick}
       onKeyDown={disabled ? EVENT_CANCELLER : onKeyDown}
       className={actualClassName}
