@@ -260,10 +260,20 @@ export const useListbox = <T,>({
   useEnhancedEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
-      setActiveOption(null)
-    } else {
-      functions.calculateRect()
+      return setActiveOption(null)
     }
+
+    functions.calculateRect()
+
+    const scrollOption = { capture: true, passive: true }
+    window.addEventListener('scroll', functions.calculateRect, scrollOption)
+    window.addEventListener('resize', functions.calculateRect, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
+      window.removeEventListener('resize', functions.calculateRect)
+    }
+    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
   }, [isExpanded, options, functions])
 
   return {
