@@ -109,6 +109,14 @@ export const VRTComboboxScrollTracking: StoryObj<typeof DropdownMenuButton> = {
             onSelect={() => {}}
             onClearClick={() => {}}
           />
+          <Button>操作9</Button>
+          <Button>操作10</Button>
+          <Button>操作11</Button>
+          <Button>操作12</Button>
+          <Button>操作13</Button>
+          <Button>操作14</Button>
+          <Button>操作15</Button>
+          <Button>操作16</Button>
         </Stack>
       </DropdownContent>
     </Dropdown>
