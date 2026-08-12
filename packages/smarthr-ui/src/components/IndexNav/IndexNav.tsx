@@ -1,23 +1,27 @@
 'use client'
 
-import { type ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useIntl } from '../../intl'
 import { Stack } from '../Layout'
 import { TextLink } from '../TextLink'
 
 const classNameGenerator = tv({
-  base: [
-    'shr-block',
-    'shr-px-1 shr-py-0.5',
-    'shr-rounded',
-    'shr-text-black',
-    'shr-no-underline',
-    '!shr-shadow-none',
-    'shr-leading-[0px]',
-    'hover:shr-font-bold',
-    `before:shr-border-l-shorthand before:shr-border-l-[4px] before:shr-border-transparent before:shr-pl-0.5 before:shr-content-['']`,
-  ],
+  slots: {
+    wrapper: 'shr-sticky shr-top-4',
+    textLink: [
+      'shr-block',
+      'shr-px-1 shr-py-0.5',
+      'shr-rounded',
+      'shr-text-black',
+      'shr-no-underline',
+      '!shr-shadow-none',
+      'shr-leading-[0px]',
+      'hover:shr-font-bold',
+      `before:shr-border-l-shorthand before:shr-border-l-[4px] before:shr-border-transparent before:shr-pl-0.5 before:shr-content-['']`,
+    ],
+  },
 })
 
 type IndexNavItem = {
@@ -30,9 +34,12 @@ type Props = {
 }
 
 export const IndexNav = ({ items }: Props) => {
-  const actualClassName = useMemo(() => classNameGenerator(), [])
+  const classNames = useMemo(() => {
+    const { wrapper, textLink } = classNameGenerator()
+    return { wrapper: wrapper(), textLink: textLink() }
+  }, [])
   const [activeId, setActiveId] = useState<string | null>(null)
-  const { formatMessage } = useIntl()
+  const { localize } = useIntl()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,9 +67,9 @@ export const IndexNav = ({ items }: Props) => {
   return (
     <Stack
       as="nav"
-      className="shr-sticky shr-top-4"
-      aria-label={formatMessage({
-        id: 'requests/new/IndexNav/navLabel',
+      className={classNames.wrapper}
+      aria-label={localize({
+        id: 'smarthr-ui/IndexNav/ariaLabel',
         defaultMessage: 'ページ内リンク',
       })}
     >
@@ -71,7 +78,7 @@ export const IndexNav = ({ items }: Props) => {
           key={item.id}
           href={`#${item.id}`}
           // TODO: shr-border で対応している active時の表示を before 擬似要素を使って調整する
-          className={`${actualClassName} ${activeId === item.id ? 'shr-font-bold before:shr-border-link' : ''}`}
+          className={`${classNames.textLink} ${activeId === item.id ? 'shr-font-bold before:shr-border-link' : ''}`}
         >
           {item.label}
         </TextLink>
