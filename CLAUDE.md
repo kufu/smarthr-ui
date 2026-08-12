@@ -442,6 +442,52 @@ useEffect(() => {
   - 依存配列のチェックは前から順に行われるため、変更される可能性が高いものを前に配置すれば早期に変更を検出できる
   - 変更されにくいものを後ろに配置することで、無駄な比較処理を削減
 
+#### イベント移譲（Event Delegation）パターン
+
+大量の子要素に個別のイベントハンドラーを設定する代わりに、コンテナ1つにハンドラーを設定してイベントを受け取る手法です。
+
+**使用する判断基準:**
+- 子要素が多い（例: リスト、選択肢）かつ各要素のハンドラーが同種の処理をする場合
+
+**`findDelegateTarget` の使用（`src/libs/delegate.ts`）:**
+
+CSS selectorで対象要素を絞り込む汎用ユーティリティです。`e.target` ではなく `e.nativeEvent.composedPath()` を使うことで、イベントの実際の伝播パスのみを対象にし、発生元を正確に特定できます。
+
+```typescript
+import { findDelegateTarget } from '../../libs/delegate'
+
+// コンテナにdelegateハンドラーを設定
+<ul
+  onClick={functions.handleDelegateClick}
+  onMouseOver={functions.handleDelegateMouseOver}
+>
+  {items.map(({ id, label }) => (
+    <button key={id} id={id} role="option">{label}</button>
+  ))}
+</ul>
+
+// useLatest + functions パターンと組み合わせる
+const functions = useMemo(() => ({
+  handleDelegateClick: (e: MouseEvent) => {
+    const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+    if (!el || el.disabled) return
+    const item = latest.items.find((o) => o.id === el.id)
+    if (item) latest.onSelect(item)
+  },
+  handleDelegateMouseOver: (e: MouseEvent) => {
+    const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+    if (!el || el.disabled) return
+    latest.onHover(el.id)
+  },
+}), [latest])
+```
+
+**命名規則:** delegateハンドラーは `handleDelegateXxx` 形式
+
+**子要素の識別には `id` を使う:**
+- `id` は `useId()` ベースで一意性が保証される
+- `value` は重複の可能性があるため不適切
+
 ## スキル
 
 - **PR作成** (`.claude/skills/pr-creator/`): PR作成時にリポジトリのテンプレートに沿った本文を生成する
