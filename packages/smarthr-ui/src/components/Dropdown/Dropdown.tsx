@@ -84,18 +84,18 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     return {
       DropdownContentRoot,
       handleClickTrigger: (rect: Rect) => {
-        setActive((current) => {
-          const newActive = !current
-
-          if (newActive) {
-            setTriggerRect(rect)
-          }
-
-          return newActive
-        })
+        if (latest.active) {
+          setActive(false)
+          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        } else {
+          setActive(true)
+          setTriggerRect(rect)
+          if (latest.onOpen) requestAnimationFrame(() => latest.onOpen?.())
+        }
       },
       handleDelegateClickCloser: () => {
         setActive(false)
+        if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
 
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
@@ -107,7 +107,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
-        setActive(false)
+        if (latest.active) {
+          setActive(false)
+          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        }
       }
     }
 
@@ -119,10 +122,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [contentId, latest])
 
   useEffect(() => {
-    if (latest.portalRoot) {
-      latest[active ? 'onOpen' : 'onClose']?.()
-    }
-
     if (!active) return
 
     const updateTriggerRect = () => {
