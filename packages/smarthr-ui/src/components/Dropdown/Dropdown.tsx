@@ -122,6 +122,22 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     if (latest.portalRoot) {
       latest[active ? 'onOpen' : 'onClose']?.()
     }
+
+    if (!active) return
+
+    const updateTriggerRect = () => {
+      if (triggerElementRef.current) {
+        setTriggerRect(triggerElementRef.current.getBoundingClientRect())
+      }
+    }
+
+    window.addEventListener('scroll', updateTriggerRect, { capture: true, passive: true })
+    window.addEventListener('resize', updateTriggerRect, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateTriggerRect, { capture: true })
+      window.removeEventListener('resize', updateTriggerRect)
+    }
   }, [active, latest])
 
   return (
