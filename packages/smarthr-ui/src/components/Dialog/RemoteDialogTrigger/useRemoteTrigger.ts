@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useLatest } from '../../../hooks/useLatest'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
 

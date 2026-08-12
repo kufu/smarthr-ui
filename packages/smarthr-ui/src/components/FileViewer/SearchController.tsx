@@ -26,7 +26,6 @@ const classNameGenerator = tv({
       true: {},
       false: {
         wrapper: 'shr-justify-end',
-        inputArea: 'shr-max-w-[15em]',
       },
     },
   },
