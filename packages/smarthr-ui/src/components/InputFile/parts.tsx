@@ -19,7 +19,8 @@ export const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }
   </span>
 ))
 
-const FILE_NAME_BUTTON_CLASSNAME = 'smarthr-ui-InputFile-fileName'
+const FILE_NAME_BUTTON_CLASSNAME =
+  'smarthr-ui-InputFile-fileName shr-min-w-0 shr-break-words shr-whitespace-normal'
 const PREVIEW_BUTTON_CLASSNAME = `${FILE_NAME_BUTTON_CLASSNAME} shr-p-0 shr-font-normal shr-text-link`
 
 const PreviewButton: FC<{
