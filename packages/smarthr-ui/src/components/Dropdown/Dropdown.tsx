@@ -104,26 +104,22 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [latest])
 
   useEffect(() => {
-    const onClickBody = (e: any) => {
+    if (!active) return
+
+    let lastAnimationFrame: ReturnType<typeof requestAnimationFrame> | undefined = undefined
+
+    const handleClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
-        if (latest.active) {
-          setActive(false)
-          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        setActive(false)
+        if (latest.onClose) {
+          lastAnimationFrame = requestAnimationFrame(() => {
+            latest.onClose?.()
+            lastAnimationFrame = undefined
+          })
         }
       }
     }
-
-    document.body.addEventListener('click', onClickBody, false)
-
-    return () => {
-      document.body.removeEventListener('click', onClickBody, false)
-    }
-  }, [contentId, latest])
-
-  useEffect(() => {
-    if (!active) return
-
     const updateTriggerRect = () => {
       if (triggerElementRef.current) {
         setTriggerRect(triggerElementRef.current.getBoundingClientRect())
@@ -132,10 +128,16 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     const scrollOption = { capture: true, passive: true }
 
+    document.body.addEventListener('click', handleClickBody, false)
     window.addEventListener('scroll', updateTriggerRect, scrollOption)
     window.addEventListener('resize', updateTriggerRect, { passive: true })
 
     return () => {
+      if (lastAnimationFrame) {
+        cancelAnimationFrame(lastAnimationFrame)
+      }
+
+      document.body.removeEventListener('click', handleClickBody, false)
       window.removeEventListener('scroll', updateTriggerRect, scrollOption)
       window.removeEventListener('resize', updateTriggerRect)
     }
