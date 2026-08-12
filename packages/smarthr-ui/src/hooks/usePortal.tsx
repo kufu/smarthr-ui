@@ -21,7 +21,7 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-export function usePortal() {
+export function usePortal({ rootId }: { rootId?: string } = {}) {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
@@ -37,8 +37,16 @@ export function usePortal() {
 
   useEnhancedEffect(() => {
     // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
-    setPortalRoot(document.createElement('div'))
-  }, [])
+    setPortalRoot((current) => {
+      const root = current || document.createElement('div')
+
+      if (rootId) {
+        root.setAttribute('id', rootId)
+      }
+
+      return root
+    })
+  }, [rootId])
 
   useEnhancedEffect(() => {
     if (!portalRoot) {

@@ -2,12 +2,15 @@
 
 import {
   type FC,
+  type ForwardedRef,
   type PropsWithChildren,
   type ReactNode,
   type Ref,
+  forwardRef,
   memo,
   useEffect,
   useId,
+  useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
@@ -53,38 +56,60 @@ const classNameGenerator = tv({
   },
 })
 
-export const PageHeading = memo<Props>(
-  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, size = 'XL', children, ...rest }) =>
-    !IS_NEXT_JS && autoPageTitle ? (
-      <AutoPageTitleHeading
-        {...rest}
-        size={size}
-        pageTitleSuffix={pageTitleSuffix}
-        pageTitle={pageTitle}
-      >
-        {children}
-      </AutoPageTitleHeading>
-    ) : (
-      <ActualHeading {...rest} size={size}>
-        {children}
-      </ActualHeading>
-    ),
+export const PageHeading = memo(
+  forwardRef<HTMLHeadingElement, Props>(
+    (
+      {
+        autoPageTitle = true,
+        pageTitleSuffix = 'SmartHR（スマートHR）',
+        pageTitle,
+        size = 'XL',
+        children,
+        ...rest
+      },
+      ref,
+    ) =>
+      !IS_NEXT_JS && autoPageTitle ? (
+        <AutoPageTitleHeading
+          {...rest}
+          size={size}
+          pageTitleSuffix={pageTitleSuffix}
+          pageTitle={pageTitle}
+          outerRef={ref}
+        >
+          {children}
+        </AutoPageTitleHeading>
+      ) : (
+        <ActualHeading {...rest} size={size} headingRef={ref}>
+          {children}
+        </ActualHeading>
+      ),
+  ),
 )
 
 const AutoPageTitleHeading: FC<
-  Omit<Props, 'size' | 'autoPageTitle'> & {
+  Omit<Props, 'size' | 'autoPageTitle' | 'pageTitleSuffix' | 'ref'> & {
     size: TextProps['size']
+    pageTitleSuffix: string
+    outerRef?: ForwardedRef<HTMLHeadingElement>
   }
-> = ({ pageTitleSuffix, pageTitle, children, ...rest }) => {
+> = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
-  const ref = useRef<HTMLHeadingElement>(null)
+  // HINT: h1のテキストをMutationObserverで監視するために内部でrefを保持しつつ、利用者のrefにも要素を渡す
+  const innerRef = useRef<HTMLHeadingElement | null>(null)
+
+  useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
+    outerRef,
+    () => innerRef.current,
+  )
 
   useEffect(() => {
-    const h1 = ref.current
+    const h1 = innerRef.current
     if (!h1) return
 
     const updateTitle = () => {
-      document.title = `${pageTitle || h1.textContent || ''}｜${pageTitleSuffix || 'SmartHR（スマートHR）'}`
+      const title = pageTitle || h1.textContent || ''
+      document.title = pageTitleSuffix ? `${title}｜${pageTitleSuffix}` : title
 
       // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
       // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
@@ -120,7 +145,7 @@ const AutoPageTitleHeading: FC<
   }, [pageTitle, pageTitleSuffix, pseudoTitleId])
 
   return (
-    <ActualHeading {...rest} headingRef={ref}>
+    <ActualHeading {...rest} headingRef={innerRef}>
       {children}
     </ActualHeading>
   )
@@ -132,7 +157,7 @@ type ActualHeadingProps = {
   className?: string
   children: ReactNode
   headingRef?: Ref<HTMLHeadingElement>
-} & Omit<ElementProps, 'size' | 'className' | 'visuallyHidden' | 'children'>
+} & Omit<ElementProps, 'size' | 'className' | 'visuallyHidden' | 'children' | 'ref'>
 
 const ActualHeading: FC<ActualHeadingProps> = ({
   visuallyHidden,

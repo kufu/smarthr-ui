@@ -30,7 +30,7 @@ type DropdownContextType = {
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
-  memoizedOnClickTrigger: (rect: Rect) => void
+  handleClickTrigger: (rect: Rect) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
@@ -43,7 +43,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerRect: initialRect,
   triggerElementRef: createRef(),
   rootTriggerRef: null,
-  memoizedOnClickTrigger: () => {
+  handleClickTrigger: () => {
     /* noop */
   },
   handleDelegateClickCloser: () => {
@@ -58,10 +58,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal()
+
+  const contentId = useId()
+  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal({
+    rootId: contentId,
+  })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
-  const contentId = useId()
 
   const latest = useLatest({
     active,
@@ -79,7 +82,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   )
   DropdownContentRoot.displayName = 'DropdownContentRoot'
 
-  const memoizedOnClickTrigger = useCallback(
+  const handleClickTrigger = useCallback(
     (rect: Rect) => {
       if (latest.active) {
         setActive(false)
@@ -102,10 +105,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   }, [latest])
 
   useEffect(() => {
-    if (latest.portalRoot) {
-      latest.portalRoot.setAttribute('id', contentId)
-    }
-
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
       if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
@@ -131,7 +130,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerRect,
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
-          memoizedOnClickTrigger,
+          handleClickTrigger,
           handleDelegateClickCloser,
           DropdownContentRoot,
           contentId,

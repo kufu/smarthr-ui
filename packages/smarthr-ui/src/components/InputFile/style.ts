@@ -2,7 +2,7 @@ import { tv } from 'tailwind-variants'
 
 export const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-InputFile shr-block',
+    wrapper: 'smarthr-ui-InputFile',
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
     fileItem: 'shr-flex shr-items-center',
     inputWrapper: [

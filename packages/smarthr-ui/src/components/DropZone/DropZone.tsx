@@ -26,7 +26,7 @@ const classNameGenerator = tv({
       'smarthr-ui-DropZone',
       'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
-      'has-[.smarthr-ui-DropZone-Button:disabled]:shr-cursor-not-allowed',
+      'has-[.smarthr-ui-DropZone-Button[aria-disabled]]:shr-cursor-not-allowed',
       '[&:not([data-files-dragged-over])]:shr-border-dashed',
       'data-[files-dragged-over]:shr-border-main',
     ],
@@ -65,20 +65,28 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 
 export const DropZone = forwardRef<HTMLInputElement, Props>(
   (
-    { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
+    {
+      children,
+      onSelectFiles,
+      multiple = true,
+      disabled,
+      error,
+      selectButtonLabel,
+      className,
+      ...rest
+    },
     ref,
   ) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-    // FIXME: className を wrapper に適用するバグ修正時に className を依存配列に追加する
 
     const classNames = useMemo(() => {
       const { wrapper, button } = classNameGenerator()
       return {
-        wrapper: wrapper(),
+        wrapper: wrapper({ className }),
         button: button(),
       }
-    }, [])
+    }, [className])
 
     const latest = useLatest({ onSelectFiles })
 

@@ -228,3 +228,42 @@ export const chartJsOptionsExamples = {
     },
   },
 }
+
+/**
+ * Doughnut チャート用 - 構成比（4セグメント）
+ */
+export const doughnutSmall = {
+  labels: ['正社員', '契約社員', 'パート', '業務委託'],
+  datasets: [
+    {
+      label: '雇用形態',
+      data: [540, 180, 320, 60],
+    },
+  ],
+}
+
+/**
+ * Doughnut チャート用 - セグメント1つ（隙間を空ける相手がいないケース）
+ */
+export const doughnutSingleSegment = {
+  labels: ['正社員'],
+  datasets: [
+    {
+      label: '雇用形態',
+      data: [540],
+    },
+  ],
+}
+
+/**
+ * Doughnut チャート用 - 値0のセグメントを含む（隙間だけが残らないかの確認用）
+ */
+export const doughnutWithZero = {
+  labels: ['正社員', '契約社員', 'パート', '業務委託'],
+  datasets: [
+    {
+      label: '雇用形態',
+      data: [540, 0, 320, 60],
+    },
+  ],
+}
