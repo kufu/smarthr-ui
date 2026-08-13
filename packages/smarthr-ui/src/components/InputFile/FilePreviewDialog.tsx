@@ -66,10 +66,10 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, handleClose, handleDow
         isOpen={isOpen}
         onClickOverlay={handleClose}
         onPressEscape={handleClose}
-        size="FULL"
+        size="M"
         ariaLabel={file?.name ?? ''}
       >
-        <div className="shr-flex shr-h-[100dvh] shr-flex-col">
+        <div className="shr-flex shr-h-full shr-flex-col">
           <Cluster
             align="center"
             className="shr-border-b-shorthand shr-shrink-0 shr-px-1 shr-py-0.5"
