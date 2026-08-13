@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.1.0...smarthr-ui-v99.1.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **CalendarTable:** disabled:をaria-disabled:に変更 ([6b01c0b](https://github.com/kufu/smarthr-ui/commit/6b01c0bf699e305387e616c692c825bbe6a29c92))
+* **Combobox:** スクロール・リサイズ時に選択肢の位置が追従しない問題を修正 ([#6772](https://github.com/kufu/smarthr-ui/issues/6772)) ([225cdb6](https://github.com/kufu/smarthr-ui/commit/225cdb6550b7197ff1835ebcc5d7c34d12492759))
+* **Dialog:** closeButtonのtext型をオプショナルに変更 ([#6736](https://github.com/kufu/smarthr-ui/issues/6736)) ([ee24575](https://github.com/kufu/smarthr-ui/commit/ee24575566843b091373661d72426ef090019097))
+* **Dropdown:** aria-controlsの参照先要素が存在しない場合があるのを解消 ([#6729](https://github.com/kufu/smarthr-ui/issues/6729)) ([ea8a32f](https://github.com/kufu/smarthr-ui/commit/ea8a32fa983cd655425c317a7b75a1414920284a))
+* **Dropdown:** Dropdownコンテンツ内のスクロールが動作しない問題を修正 ([#6775](https://github.com/kufu/smarthr-ui/issues/6775)) ([74cefbb](https://github.com/kufu/smarthr-ui/commit/74cefbb85e0b848032c512844351ab4797281749))
+* DropdownとComboboxにforced-colors時のoutlineを追加 ([#6506](https://github.com/kufu/smarthr-ui/issues/6506)) ([acae3fd](https://github.com/kufu/smarthr-ui/commit/acae3fdd83440a0791ae57f4a8930df82911fc9c))
+* **Dropdown:** メニュー開放中のスクロール/リサイズでメニュー位置を追従させる ([#6769](https://github.com/kufu/smarthr-ui/issues/6769)) ([1fc6c8a](https://github.com/kufu/smarthr-ui/commit/1fc6c8a5c2823a633bc0176289f0bb00bc4e8ffd))
+* **DropZone:** className が hidden input ではなく wrapper div に適用されるよう修正 ([#6711](https://github.com/kufu/smarthr-ui/issues/6711)) ([7e28958](https://github.com/kufu/smarthr-ui/commit/7e28958a0b49e9a0ad4c9102f6a9a661dec62922))
+* **FileViewer:** レイアウトを調整し親の幅で折り返すよう修正 ([#6753](https://github.com/kufu/smarthr-ui/issues/6753)) ([30f1c39](https://github.com/kufu/smarthr-ui/commit/30f1c39ddd7f49209cb5b97746190ceecd4099d4))
+* **InputFile:** previewableでファイル名が長い場合に折り返されない問題を修正 ([#6768](https://github.com/kufu/smarthr-ui/issues/6768)) ([277a5f3](https://github.com/kufu/smarthr-ui/commit/277a5f3bfd002147911577c3abdb2e6ea3484fa5))
+* **ModelessDialog:** 画面サイズを超えてはみ出す問題を修正 ([#6773](https://github.com/kufu/smarthr-ui/issues/6773)) ([12a80c2](https://github.com/kufu/smarthr-ui/commit/12a80c2f6289fa29c85c77936ed4c5c4ceafe217))
+* **MultiSelectedItem:** disabled:をaria-disabled:に変更 ([1bb19e0](https://github.com/kufu/smarthr-ui/commit/1bb19e0c6a92af4f4ff4d95da04a783da1ca3190))
+* **PageHeading:** React 18でページタイトルが自動設定されない問題を修正 ([#6738](https://github.com/kufu/smarthr-ui/issues/6738)) ([65e76a0](https://github.com/kufu/smarthr-ui/commit/65e76a0ca79071cdc2ed88e781b4924054ee35a6))
+* **SortDropdown:** 初期値の計算をuseEffectからuseStateの遅延初期化に変更 ([#6635](https://github.com/kufu/smarthr-ui/issues/6635)) ([f9ef2c2](https://github.com/kufu/smarthr-ui/commit/f9ef2c26c271aa25586438aad2d4000e1ccffb4d))
+* **TabItem:** disabled:をaria-disabled:に変更 ([d5a88cf](https://github.com/kufu/smarthr-ui/commit/d5a88cf8f30cec24b91201990d25449bb92d0762))
+
 ## [99.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.0.0...smarthr-ui-v99.1.0) (2026-08-06)
 
 
