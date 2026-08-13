@@ -20,7 +20,7 @@ export const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }
 ))
 
 const FILE_NAME_BUTTON_CLASSNAME =
-  'smarthr-ui-InputFile-fileName shr-min-w-0 shr-break-words shr-whitespace-normal shr-text-left'
+  'smarthr-ui-InputFile-fileName shr-justify-start shr-min-w-0 shr-break-all shr-whitespace-normal shr-text-left'
 const PREVIEW_BUTTON_CLASSNAME = `${FILE_NAME_BUTTON_CLASSNAME} shr-p-0 shr-font-normal shr-text-link`
 
 const PreviewButton: FC<{
@@ -29,7 +29,7 @@ const PreviewButton: FC<{
 }> = ({ file, handlePreviewClick }) => (
   <Button
     variant="tertiary"
-    prefix={<FaFileLinesIcon />}
+    prefix={<FaFileLinesIcon className="shr-shrink-0" />}
     onClick={() => handlePreviewClick(file)}
     className={PREVIEW_BUTTON_CLASSNAME}
   >
@@ -60,7 +60,7 @@ const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
     <AnchorButton
       href={href}
       download={file.name}
-      prefix={<FaFileArrowDownIcon />}
+      prefix={<FaFileArrowDownIcon className="shr-shrink-0" />}
       variant="text"
       className={PREVIEW_BUTTON_CLASSNAME}
     >
@@ -102,7 +102,7 @@ export const FileListItem = memo<FileListItemProps>(
         prefix={<FaTrashCanIcon />}
         value={index}
         onClick={handleDeleteClick}
-        className="smarthr-ui-InputFile-deleteButton"
+        className="smarthr-ui-InputFile-deleteButton shr-shrink-0"
       >
         <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
       </Button>
