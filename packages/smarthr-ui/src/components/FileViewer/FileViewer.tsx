@@ -70,7 +70,7 @@ type CommonViewerProps = {
     rotate: () => void
     handleLoaded: () => void
   }
-  onLoadError?: () => void
+  onLoadError?: (error: unknown) => void
 }
 
 export const FileViewer: FC<Props> = ({
