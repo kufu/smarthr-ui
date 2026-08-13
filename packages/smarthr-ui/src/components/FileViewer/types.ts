@@ -26,5 +26,5 @@ export type ViewerProps = {
    * PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PdfViewerでのみ使用されます。
    */
   handlePassword?: ComponentProps<typeof Document>['onPassword']
-  handleLoadError?: () => void
+  handleLoadError?: (error: unknown) => void
 }

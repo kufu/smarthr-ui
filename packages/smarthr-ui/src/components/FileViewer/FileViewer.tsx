@@ -69,7 +69,7 @@ type CommonViewerProps = {
     rotate: () => void
     handleLoaded: () => void
   }
-  handleLoadError?: () => void
+  handleLoadError?: (error: unknown) => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -112,7 +112,7 @@ export const FileViewer: FC<Props> = ({
       handleLoaded: () => {
         setLoaded(true)
       },
-      handleLoadError: hasOnLoadError ? () => latest.onLoadError?.(undefined) : undefined,
+      handleLoadError: hasOnLoadError ? (error: unknown) => latest.onLoadError?.(error) : undefined,
       handlePassword: hasOnPassword
         ? (...rest: Parameters<NonNullable<typeof onPassword>>) => latest.onPassword?.(...rest)
         : undefined,
