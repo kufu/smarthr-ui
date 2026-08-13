@@ -13,9 +13,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/useEnvironment'
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
@@ -51,7 +49,7 @@ type Props = {
 
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
-  onLoadError?: () => void
+  onLoadError?: (error: unknown) => void
 }
 
 // 共通のprops（ImageとPDFで共有）
@@ -114,8 +112,10 @@ export const FileViewer: FC<Props> = ({
       handleLoaded: () => {
         setLoaded(true)
       },
-      handleLoadError: hasOnLoadError ? () => latest.onLoadError() : undefined,
-      handlePassword: hasOnPassword ? (...rest) => latest.onPassword(...rest) : undefined,
+      handleLoadError: hasOnLoadError ? () => latest.onLoadError?.(undefined) : undefined,
+      handlePassword: hasOnPassword
+        ? (...rest: Parameters<NonNullable<typeof onPassword>>) => latest.onPassword?.(...rest)
+        : undefined,
     }
   }, [hasOnLoadError, hasOnPassword, latest])
 
@@ -284,81 +284,82 @@ const ActualFileViewer: FC<
   )
 }
 
-type ControllerProps = Pick<CommonViewerProps, 'scale' | 'scaleSteps' | 'functions'> & {
+type ControllerProps = Omit<
+  Pick<CommonViewerProps, 'scale' | 'scaleSteps' | 'functions'>,
+  'scaleSteps'
+> & {
+  scaleSteps: number[]
   searchController?: ReactNode
 }
 
-const controllerClassNameGenerator = tv({
-  base: 'shr-sticky shr-grid shr-w-full shr-items-center shr-bg-scrim shr-py-0.5 shr-shadow-layer-1',
-  variants: {
-    mobile: {
-      true: 'shr-gap-0.5 shr-px-1',
-      false: 'shr-grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] shr-gap-1.5 shr-px-2',
-    },
-  },
-})
-
 const Controller: FC<ControllerProps> = memo(
-  ({ scale, scaleSteps, functions, searchController }) => {
-    const { mobile } = useEnvironment()
-    const className = useMemo(() => controllerClassNameGenerator({ mobile }), [mobile])
-    // HINT: PC 表示時のときに中央の操作ボタンたちを中央へ寄せるための空のスペーサー
-    const spacer = !mobile && <div role="presentation" aria-hidden="true" />
-
-    return (
-      <div className={className}>
-        {spacer}
-        <Cluster gap={0.5} className="shr-justify-self-center">
-          <div className="shr-border-shorthand shr-flex shr-divide-x shr-divide-solid shr-overflow-hidden shr-rounded-m">
-            <Button
-              onClick={functions.scaleDown}
-              disabled={scale <= scaleSteps[0]}
-              className="shr-rounded-r-none shr-border-none"
-            >
-              <FaMagnifyingGlassMinusIcon
-                alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
-              />
-            </Button>
-            <DropdownMenuButton
-              trigger={
-                <>
-                  <VisuallyHiddenText>
-                    <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
-                  </VisuallyHiddenText>
-                  {`${(scale * 100).toFixed(0)}%`}
-                </>
-              }
-              className="shr-border-y-0 shr-border-[theme(borderColor.default)] [&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-[transparent]"
-            >
-              {scaleSteps.map((step) => (
-                <Button
-                  key={step.toString()}
-                  value={step}
-                  onClick={functions.handleClickScaleStep}
-                  className="shr-rounded-none shr-border-0"
-                >
-                  {`${(step * 100).toFixed(0)}%`}
-                </Button>
-              ))}
-            </DropdownMenuButton>
-            <Button onClick={functions.scaleUp} className="shr-rounded-l-none shr-border-0">
-              <FaMagnifyingGlassPlusIcon
-                alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
-              />
-            </Button>
-          </div>
-          <Button onClick={functions.rotate} className="shr-p-0.75">
-            <FaArrowRotateLeftIcon
-              alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
+  ({ scale, scaleSteps, functions, searchController }) => (
+    <Cluster
+      gap={0}
+      align="end"
+      className="shr-sticky shr-box-border shr-w-full shr-justify-center shr-bg-scrim shr-px-0.5 shr-shadow-layer-1"
+    >
+      {/* 操作ボタンを中央へ寄せるための空のスペーサー */}
+      <div
+        role="presentation"
+        aria-hidden="true"
+        className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
+      />
+      <Cluster
+        gap={0.5}
+        className="shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-items-center shr-justify-center shr-justify-self-center shr-py-0.5"
+      >
+        <Cluster gap={0}>
+          <Button
+            onClick={functions.scaleDown}
+            disabled={scale <= scaleSteps[0]}
+            className="shr-rounded-r-none"
+          >
+            <FaMagnifyingGlassMinusIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
+            />
+          </Button>
+          <DropdownMenuButton
+            trigger={
+              <>
+                <VisuallyHiddenText>
+                  <Localizer id="smarthr-ui/FileViewer/scaleRateLabel" defaultText="拡大率" />
+                </VisuallyHiddenText>
+                {`${(scale * 100).toFixed(0)}%`}
+              </>
+            }
+            className="[&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-x-[0]"
+          >
+            {scaleSteps.map((step) => (
+              <Button key={step.toString()} value={step} onClick={functions.handleClickScaleStep}>
+                {`${(step * 100).toFixed(0)}%`}
+              </Button>
+            ))}
+          </DropdownMenuButton>
+          <Button onClick={functions.scaleUp} className="shr-rounded-l-none">
+            <FaMagnifyingGlassPlusIcon
+              alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
             />
           </Button>
         </Cluster>
-        {searchController ? (
-          <div className="shr-min-w-0 shr-justify-self-stretch">{searchController}</div>
-        ) : (
-          spacer
-        )}
-      </div>
-    )
-  },
+        <Button onClick={functions.rotate} className="shr-p-0.75">
+          <FaArrowRotateLeftIcon
+            alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
+          />
+        </Button>
+      </Cluster>
+      {searchController ? (
+        <div className="shr-min-w-0 shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-justify-self-stretch shr-px-0.5 shr-pb-0.5">
+          {searchController}
+        </div>
+      ) : (
+        // 操作ボタンを中央へ寄せるための空のスペーサー
+        <div
+          role="presentation"
+          aria-hidden="true"
+          className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
+        />
+      )}
+    </Cluster>
+  ),
 )

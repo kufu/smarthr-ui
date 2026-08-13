@@ -5,11 +5,11 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
@@ -23,6 +23,8 @@ const tenantDropdownTriggerButton = tv({
     '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
   ],
 })
+
+const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = tenantDropdownTriggerButton()
 
 type Props = {
   tenants?: ComponentProps<typeof Header>['tenants']
@@ -75,11 +77,15 @@ const ActualTenantSelector: FC<ActualProps> = ({
 const TenantDropdown: FC<
   Omit<ActualProps, 'onTenantSelect'> & Required<Pick<ActualProps, 'onTenantSelect'>>
 > = ({ tenants, currentTenantId, onTenantSelect, tenantName }) => {
-  const onClickTenantName = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      onTenantSelect(e.currentTarget.value)
-    },
-    [onTenantSelect],
+  const latest = useLatest({ onTenantSelect })
+
+  const functions = useMemo(
+    () => ({
+      handleClickTenantName: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onTenantSelect(e.currentTarget.value)
+      },
+    }),
+    [latest],
   )
 
   return (
@@ -97,7 +103,7 @@ const TenantDropdown: FC<
                 type="button"
                 value={tenant.id}
                 current={isCurrent}
-                onClick={isCurrent ? undefined : onClickTenantName}
+                handleClick={isCurrent ? undefined : functions.handleClickTenantName}
               >
                 {tenant.name}
               </CommonButton>
@@ -109,15 +115,11 @@ const TenantDropdown: FC<
   )
 }
 
-const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => {
-  const actualClassName = useMemo(() => tenantDropdownTriggerButton(), [])
-
-  return (
-    <DropdownTrigger>
-      <button type="button" className={actualClassName}>
-        {children}
-        <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
-      </button>
-    </DropdownTrigger>
-  )
-})
+const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
+  <DropdownTrigger>
+    <button type="button" className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}>
+      {children}
+      <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
+    </button>
+  </DropdownTrigger>
+))

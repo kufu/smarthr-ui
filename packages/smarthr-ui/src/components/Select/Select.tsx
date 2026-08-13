@@ -24,7 +24,7 @@ type Optgroup<T extends string> = {
   options: Array<Option<T>>
 } & OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type AbstractProps<T extends string> = {
+type BaseProps<T extends string> = {
   /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
   /** フォームの値が変わったときに発火するコールバック関数 */
@@ -41,8 +41,8 @@ type AbstractProps<T extends string> = {
   blankLabel?: string
 }
 
-type Props<T extends string> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof AbstractProps<string> | 'children'>
+type Props<T extends string> = BaseProps<T> &
+  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children'>
 
 const classNameGenerator = tv({
   slots: {

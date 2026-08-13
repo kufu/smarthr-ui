@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
-type AbstractProps = {
+type BaseProps = {
   /** ローダーの大きさ */
   size?: 'S' | 'M'
   /** 代替テキスト */
@@ -13,7 +13,7 @@ type AbstractProps = {
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
 }
-type Props = AbstractProps & Omit<ComponentProps<'span'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

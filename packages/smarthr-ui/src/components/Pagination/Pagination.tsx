@@ -11,7 +11,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
-import { useIntl } from '../../intl'
+import { useLocalize } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
 import { Nav } from '../SectioningContent'
@@ -72,8 +72,8 @@ type AnchorProps = CommonProps & {
   linkAs?: ElementType
 }
 
-type AbstractProps = ButtonProps | AnchorProps
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type BaseProps = ButtonProps | AnchorProps
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i
@@ -95,7 +95,6 @@ const ActualPagination: FC<Props> = ({
   linkAs,
   ...rest
 }) => {
-  const { localize } = useIntl()
   const classNames = useMemo(() => {
     const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } =
       classNameGenerator()
@@ -151,14 +150,12 @@ const ActualPagination: FC<Props> = ({
     [hasHrefTemplate, latest],
   )
 
-  const navigationLabel = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/Pagination/navigationLabel',
-        defaultText: 'ページネーション',
-      }),
-    [localize],
-  )
+  const { navigationLabel } = useLocalize({
+    navigationLabel: {
+      id: 'smarthr-ui/Pagination/navigationLabel',
+      defaultText: 'ページネーション',
+    },
+  })
 
   return (
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
