@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.1.1...smarthr-ui-v99.2.0) (2026-08-13)
+
+
+### Features
+
+* **InputFile:** モバイル環境でFilePreviewDialogをフルスクリーンDialogで表示する ([#6778](https://github.com/kufu/smarthr-ui/issues/6778)) ([e0d0355](https://github.com/kufu/smarthr-ui/commit/e0d03555bf5eb11fc2968813e5d24e40e8ec3cbf))
+
+
+### Bug Fixes
+
+* **InputFile:** previewable時のアイコン縮小と横方向オーバーフローを修正 ([#6777](https://github.com/kufu/smarthr-ui/issues/6777)) ([4a29134](https://github.com/kufu/smarthr-ui/commit/4a29134f303a30ab56539c783326390a96e694f0))
+
 ## [99.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.1.0...smarthr-ui-v99.1.1) (2026-08-13)
 
 
