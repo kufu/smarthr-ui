@@ -77,6 +77,11 @@ export const HasFileList: StoryObj<typeof InputFile> = {
   ),
 }
 
+export const Previewable: StoryObj<typeof InputFile> = {
+  name: 'previewable',
+  args: { previewable: true, multiple: { appendable: true } },
+}
+
 export const OnChange: StoryObj<typeof InputFile> = {
   name: 'onChange',
   args: { onChange: action('changed') },

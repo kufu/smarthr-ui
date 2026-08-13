@@ -9,7 +9,6 @@ import {
   useLayoutEffect,
   useRef,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { defaultHtmlFontSize } from '../../themes'
 import { Scroller } from '../Scroller'
@@ -19,37 +18,23 @@ type Props = PropsWithChildren &
     fixedHead?: boolean
   }
 
-const classNameGenerator = tv({
-  slots: {
-    // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
-    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
-  },
-})
-
-const classNames = (() => {
-  const { wrapper } = classNameGenerator()
-  return {
-    wrapper: wrapper(),
-  }
-})()
+const SCROLLER_PROPS = {
+  direction: 'both' as const,
+  // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
+  className: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
+}
 
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
-  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
-    const commonProps = {
-      direction: 'both' as const,
-      className: classNames.wrapper,
-    }
-
-    return fixedHead ? (
-      <FixedHeadTableScroller {...rest} {...commonProps} forwardedRef={forwardedRef}>
+  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) =>
+    fixedHead ? (
+      <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS} forwardedRef={forwardedRef}>
         {children}
       </FixedHeadTableScroller>
     ) : (
-      <Scroller {...rest} {...commonProps} ref={forwardedRef}>
+      <Scroller {...rest} {...SCROLLER_PROPS} ref={forwardedRef}>
         {children}
       </Scroller>
-    )
-  },
+    ),
 )
 
 type FixedHeadTableScrollerProps = PropsWithChildren &

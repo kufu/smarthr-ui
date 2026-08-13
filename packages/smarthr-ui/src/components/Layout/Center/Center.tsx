@@ -13,7 +13,7 @@ import { useSectionWrapper } from '../../SectioningContent'
 
 import type { Gap } from '../../../types'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** コンテンツの最小高さ */
   minHeight?: number | string
   /** コンテンツの最大幅 */
@@ -24,7 +24,7 @@ type AbstractProps = PropsWithChildren<{
   verticalCentering?: boolean
   as?: string | ComponentType<any>
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const centerClassNameGenerator = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',

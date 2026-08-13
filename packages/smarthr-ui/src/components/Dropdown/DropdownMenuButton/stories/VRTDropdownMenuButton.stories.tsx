@@ -1,9 +1,13 @@
 import { userEvent, within } from 'storybook/test'
 
 import { AnchorButton, Button } from '../../../Button'
+import { SingleCombobox } from '../../../Combobox'
 import { RemoteDialogTrigger } from '../../../Dialog'
 import { FaGearIcon } from '../../../Icon'
-import { Cluster } from '../../../Layout'
+import { Cluster, Stack } from '../../../Layout'
+import { Dropdown } from '../../Dropdown'
+import { DropdownContent } from '../../DropdownContent'
+import { DropdownTrigger } from '../../DropdownTrigger'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
@@ -72,4 +76,70 @@ export const VRTForcedColors: StoryObj<typeof DropdownMenuButton> = {
   parameters: {
     chromatic: { forcedColors: 'active' },
   },
+}
+
+const _comboboxItems = [
+  { label: 'option 1', value: 'value-1' },
+  { label: 'option 2', value: 'value-2' },
+  { label: 'option 3', value: 'value-3' },
+  { label: 'option 4', value: 'value-4' },
+  { label: 'option 5', value: 'value-5' },
+]
+
+export const VRTComboboxScrollTracking: StoryObj<typeof DropdownMenuButton> = {
+  render: () => (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button>その他の操作</Button>
+      </DropdownTrigger>
+      <DropdownContent controllable>
+        <Stack>
+          <Button>操作1</Button>
+          <Button>操作2</Button>
+          <Button>操作3</Button>
+          <Button>操作4</Button>
+          <Button>操作5</Button>
+          <Button>操作6</Button>
+          <Button>操作7</Button>
+          <Button>操作8</Button>
+          <SingleCombobox
+            name="combobox"
+            items={_comboboxItems}
+            selectedItem={null}
+            onSelect={() => {}}
+            onClearClick={() => {}}
+          />
+          <Button>操作9</Button>
+          <Button>操作10</Button>
+          <Button>操作11</Button>
+          <Button>操作12</Button>
+          <Button>操作13</Button>
+          <Button>操作14</Button>
+          <Button>操作15</Button>
+          <Button>操作16</Button>
+        </Stack>
+      </DropdownContent>
+    </Dropdown>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = canvasElement.ownerDocument.body
+
+    // Dropdown を開く
+    const trigger = await within(canvasElement).findByRole('button')
+    await userEvent.click(trigger)
+
+    // SingleCombobox のメニューを開く
+    const combobox = await within(body).findByRole('combobox')
+    await userEvent.click(combobox)
+
+    // Dropdown のコンテンツをスクロールし、Combobox メニューが追従するか確認する
+    const dropdownContent = body.querySelector('.smarthr-ui-Dropdown-content')
+    if (dropdownContent) {
+      dropdownContent.scrollTop += 80
+    }
+  },
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
+  tags: ['!autodocs'],
 }

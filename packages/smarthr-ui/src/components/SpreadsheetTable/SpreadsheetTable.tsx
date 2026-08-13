@@ -10,10 +10,10 @@ import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   data?: ReactNode[][]
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'table'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [

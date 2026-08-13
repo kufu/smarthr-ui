@@ -35,7 +35,7 @@ type StepFormHelpers = {
 
 type CommonButtonType = ReturnType<typeof useStepFormDialogButton>
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
@@ -56,7 +56,7 @@ export type AbstractProps = PropsWithChildren<
   }
 >
 
-export type StepFormDialogContentInnerProps = AbstractProps & {
+export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
   handleClickClose: () => void
   responseStatus?: ResponseStatus
