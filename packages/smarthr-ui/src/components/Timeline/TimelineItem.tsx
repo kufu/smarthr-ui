@@ -29,7 +29,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-TimelineItem',
-      'group',
+      'shr-group',
       // mark(1) + 余白(0.75) の分だけ padding
       'shr-relative shr-pl-[calc(theme(fontSize.sm)+theme(spacing[0.75]))]',
       'has-[+_&]:shr-pb-2',
