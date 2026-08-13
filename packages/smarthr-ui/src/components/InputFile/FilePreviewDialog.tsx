@@ -7,6 +7,7 @@ import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { Dialog, ModelessDialog } from '../Dialog'
 import { FileViewer } from '../FileViewer'
+import { Heading } from '../Heading'
 import { FaXmarkIcon } from '../Icon'
 import { Center, Cluster } from '../Layout'
 import { Loader } from '../Loader'
@@ -73,9 +74,10 @@ export const FilePreviewDialog: FC<Props> = memo(({ file, handleClose, handleDow
             align="center"
             className="shr-border-b-shorthand shr-shrink-0 shr-px-1 shr-py-0.5"
           >
-            <span className="shr-min-w-0 shr-grow shr-truncate shr-text-base shr-font-bold">
+            {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+            <Heading className="shr-min-w-0 shr-grow shr-truncate shr-text-base">
               {file?.name}
-            </span>
+            </Heading>
             <Button size="S" onClick={handleClose}>
               <FaXmarkIcon
                 alt={<Localizer id="smarthr-ui/InputFile/closePreview" defaultText="閉じる" />}
