@@ -284,11 +284,8 @@ const ActualFileViewer: FC<
   )
 }
 
-type ControllerProps = Omit<
-  Pick<CommonViewerProps, 'scale' | 'scaleSteps' | 'functions'>,
-  'scaleSteps'
-> & {
-  scaleSteps: number[]
+type ControllerProps = Pick<CommonViewerProps, 'scale' | 'functions'> & {
+  scaleSteps: NonNullable<CommonViewerProps['scaleSteps']>
   searchController?: ReactNode
 }
 
