@@ -6,12 +6,12 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** Checkboxのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = Omit<CheckboxProps, keyof AbstractProps> & AbstractProps
+type Props = Omit<CheckboxProps, keyof BaseProps> & BaseProps
 
 const classNameGenerator = tv({
   slots: {

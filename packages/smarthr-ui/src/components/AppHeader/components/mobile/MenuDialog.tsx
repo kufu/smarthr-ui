@@ -4,7 +4,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   type RefObject,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -13,7 +12,8 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { Localizer, useIntl } from '../../../../intl'
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer, useLocalize } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -90,33 +90,32 @@ export const Content: FC<
   const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
     useContext(AppLauncherContext)
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      latestReleaseNotes: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-        defaultText: '最新のリリースノート',
-      }),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    launcherListText: {
+      id: 'smarthr-ui/AppHeader/Launcher/listText',
+      defaultText: 'アプリ一覧',
+    },
+    latestReleaseNotes: {
+      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
+      defaultText: '最新のリリースノート',
+    },
+  })
 
-  const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
-  const clearAppLauncher = useCallback(
-    () => setIsAppLauncherSelected(false),
-    [setIsAppLauncherSelected],
-  )
-  const clearReleaseNote = useCallback(
-    () => setIsReleaseNoteSelected(false),
-    [setIsReleaseNoteSelected],
-  )
-  const clearNavigationGroup = useCallback(
-    () => setSelectedNavigationGroup(null),
-    [setSelectedNavigationGroup],
+  const latest = useLatest({
+    setIsOpen,
+    setIsAppLauncherSelected,
+    setIsReleaseNoteSelected,
+    setSelectedNavigationGroup,
+  })
+
+  const functions = useMemo(
+    () => ({
+      handleDialogClose: () => latest.setIsOpen(false),
+      clearAppLauncher: () => latest.setIsAppLauncherSelected(false),
+      clearReleaseNote: () => latest.setIsReleaseNoteSelected(false),
+      clearNavigationGroup: () => latest.setSelectedNavigationGroup(null),
+    }),
+    [latest],
   )
 
   // HINT: Contentをanimationで非表示にしたい
@@ -124,11 +123,11 @@ export const Content: FC<
   // unmount時に操作内容のclearを行う
   useEffect(
     () => () => {
-      clearReleaseNote()
-      clearAppLauncher()
-      clearNavigationGroup()
+      functions.clearReleaseNote()
+      functions.clearAppLauncher()
+      functions.clearNavigationGroup()
     },
-    [clearAppLauncher, clearReleaseNote, clearNavigationGroup],
+    [functions],
   )
 
   return (
@@ -136,21 +135,27 @@ export const Content: FC<
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
-            <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
+            <MenuSubHeading
+              title={translated.launcherListText}
+              handleClickBack={functions.clearAppLauncher}
+            />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading title={translated.latestReleaseNotes} onClickBack={clearReleaseNote} />
+            <MenuSubHeading
+              title={translated.latestReleaseNotes}
+              handleClickBack={functions.clearReleaseNote}
+            />
           ) : selectedNavigationGroup ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={selectedNavigationGroup.children}
-              onClickBack={clearNavigationGroup}
+              handleClickBack={functions.clearNavigationGroup}
             />
           ) : (
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="S" onClick={dialogClose}>
+          <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
             <FaXmarkIcon
               alt={
                 <Localizer
@@ -172,7 +177,7 @@ export const Content: FC<
           ) : selectedNavigationGroup ? (
             <Navigation
               navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={dialogClose}
+              handleClickNavigation={functions.handleDialogClose}
             />
           ) : (
             children

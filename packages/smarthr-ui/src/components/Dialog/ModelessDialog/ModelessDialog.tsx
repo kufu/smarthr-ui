@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -23,17 +22,17 @@ import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
-import { Base, type BaseElementProps } from '../../Base'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
+import { Panel, type PanelElementProps } from '../../Panel'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
 import type { DialogSize } from '../types'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
    */
@@ -88,10 +87,10 @@ type AbstractProps = PropsWithChildren<{
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
 }>
-type Props = AbstractProps &
-  Omit<DialogBodyProps, keyof AbstractProps> &
-  Omit<BaseElementProps, keyof AbstractProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
+type Props = BaseProps &
+  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<PanelElementProps, keyof BaseProps> &
+  Omit<VariantProps<typeof classNameGenerator>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -188,8 +187,7 @@ export const ModelessDialog: FC<Props> = ({
     x: 0,
     y: 0,
   })
-  const [draggableBounds, setDraggableBounds] =
-    useState<ComponentProps<typeof Draggable>['bounds']>()
+  const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
   const positionStyle = useMemo(
     () => ({
@@ -351,14 +349,15 @@ export const ModelessDialog: FC<Props> = ({
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
       <Draggable
+        {...Draggable.defaultProps}
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={functions.handleDragStart}
         onDrag={functions.handleDrag}
         position={position}
-        bounds={draggableBounds}
+        bounds={draggableBounds ?? false}
         nodeRef={wrapperRef}
       >
-        <Base
+        <Panel
           {...rest}
           ref={wrapperRef}
           role="dialog"
@@ -394,7 +393,7 @@ export const ModelessDialog: FC<Props> = ({
           </DialogBody>
           {footer && <div className={classNames.footer}>{footer}</div>}
           <LiveRegion regionText={debouncedLiveRegionText} />
-        </Base>
+        </Panel>
       </Draggable>
     </DialogOverlap>,
   )

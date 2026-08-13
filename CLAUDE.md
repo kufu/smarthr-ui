@@ -120,6 +120,38 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
+### コンポーネントのブラックボックス原則
+
+他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。
+
+```tsx
+// ❌ ClusterがdisplayなどのCSSでどう実装されているかを前提にした外部からのスタイル
+const Foo = () => (
+  <Cluster className="shr-items-center" />
+)
+
+// ✅ Clusterのpropsを使って意図を伝える
+const Foo = () => (
+  <Cluster align="center" />
+)
+```
+
+**理由:** smarthr-ui は不特定多数が更新するパブリックなモジュールであり、実装の詳細をカプセル化することで、あるコンポーネントの内部変更が他のコンポーネントに影響しない状態を保ち、開発しやすくする。
+
+**例外: 同ディレクトリ内のローカルコンポーネント**
+
+`src/index.ts` からexportされていないローカルコンポーネントは、同じディレクトリ内の他のファイルからその内部仕様を知っていても構いません。
+
+例えば `Combobox/ItemButton.tsx` は外部にexportされていませんが、`Combobox/useListbox.tsx` はその props インターフェースや DOM 構造を前提としたコードを書いて良いです。
+
+```tsx
+// ✅ 同ディレクトリのローカルコンポーネントの仕様を知っている前提でOK
+// useListbox.tsx が ItemButton の id 属性でオプションを特定する
+return latest.options.find((o) => o.id === el.id) ?? null
+```
+
+この例外が成立する理由は、ローカルコンポーネントとその利用者が同じスコープ（ディレクトリ）内で管理されており、内部変更の影響範囲が同ディレクトリに限定されるためです。
+
 ### コミット
 - Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
   - type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `ci`, `perf`, `style`, `build`, `revert`
@@ -168,7 +200,68 @@ const classNames = useMemo(() => {
 - 即時関数（IIFE）で中間変数をスコープから隔離
 - `const`で再代入を防止
 
+#### classNamesのuseMemo依存配列の最適化
+
+`classNames` の `useMemo` には、ユーザー提供の `className` などの**安定した値のみ**を依存配列に含めます。state・props を問わずユーザー操作で変化し得る値は、CSS属性セレクタを使ってスタイルを表現し、依存配列から除外します。
+
+```typescript
+// ❌ 頻繁に変化する isExpanded・disabled を依存配列に含める
+const classNames = useMemo(() => ({
+  wrapper: wrapper({ focused: isExpanded, disabled, className }),
+  inputWrapper: inputWrapper({ hidden: !isExpanded }),
+}), [isExpanded, disabled, className])
+
+// ✅ CSS属性セレクタで表現し、依存配列から除外
+// classNameGenerator の base に記述:
+//   'has-[[role=combobox][aria-expanded=true]]:shr-focus-indicator'
+//   'has-[[role=combobox]:disabled]:shr-cursor-not-allowed'
+const classNames = useMemo(() => ({
+  wrapper: wrapper({ className }),
+}), [className])
+```
+
+**判断基準:**
+- **依存配列から除外する（CSS属性セレクタで表現）**: state・props を問わず、ユーザー操作で変化し得る値
+  - `isExpanded`（open/close のたびに変化）
+  - `disabled`（フォーム上の操作で入力可否が切り替わる場合など）
+- **依存配列に含める**: ユーザー提供の `className`（任意の値が入るためセレクタ化できない）、`size`（実用上、一度表示されたコンポーネントのサイズがユーザー操作で変わる可能性はかなり低い）
+
+**CSS属性セレクタの選び方:**
+- 対象要素に既存のARIA属性がある場合 → `:has([aria-expanded=true])` など
+- 対象要素に `disabled` 属性がある場合 → `:has([role=combobox]:disabled)` など
+- 要素自身に属性を追加できる場合 → `data-[disabled]:` など（Chip・Checkboxパターン）
+
+**理由:**
+- `classNameGenerator()` の再実行コストを削減
+- Reactの再レンダリング時にclassNames全体の再計算が不要になる
+
 ### パフォーマンス最適化パターン
+
+#### unstableな値のmemo化
+
+コンポーネントに渡すオブジェクト・配列は、そのコンポーネントが `memo` 化されているかどうかに関わらず、可能な限りメモ化して安定化します。コンポーネントの内部実装（`memo` 化の有無）は知らない前提でコードを書くためです。
+
+毎レンダリングで新しい参照が生成されると、受け取ったコンポーネントが `React.memo` でラップされている場合に最適化が無効化され、不要な再レンダリングが発生します。
+
+ただし **ネイティブHTML要素**（`div`, `span`, `input` など）に渡す場合は除きます。ネイティブ要素は `memo` 化されていないことが確定しているため、参照の安定化は不要です。
+
+```tsx
+// ❌ インラインオブジェクト・配列を渡すとReact.memoが無効化される可能性がある
+const Foo = ({ color }: { color: string }) => (
+  <SomeComponent style={{ color }} />
+)
+
+// ✅ useMemoで安定化する
+const Foo = ({ color }: { color: string }) => {
+  const style = useMemo(() => ({ color }), [color])
+  return <SomeComponent style={style} />
+}
+
+// ✅ ネイティブHTML要素への場合はmemo化不要
+const Foo = ({ color }: { color: string }) => (
+  <div style={{ color }} />
+)
+```
 
 #### useLatest + functions パターン
 複数のイベントハンドラーやコールバックを安定化する際は、`useLatest` フックと `useMemo` で統合した `functions` オブジェクトを使用します。
@@ -348,6 +441,52 @@ useEffect(() => {
 - 再作成の可能性がより低いものを依存配列の後ろに配置することで、実行速度の最適化と可読性・意図の明確化を実現
   - 依存配列のチェックは前から順に行われるため、変更される可能性が高いものを前に配置すれば早期に変更を検出できる
   - 変更されにくいものを後ろに配置することで、無駄な比較処理を削減
+
+#### イベント移譲（Event Delegation）パターン
+
+大量の子要素に個別のイベントハンドラーを設定する代わりに、コンテナ1つにハンドラーを設定してイベントを受け取る手法です。
+
+**使用する判断基準:**
+- 子要素が多い（例: リスト、選択肢）かつ各要素のハンドラーが同種の処理をする場合
+
+**`findDelegateTarget` の使用（`src/libs/delegate.ts`）:**
+
+CSS selectorで対象要素を絞り込む汎用ユーティリティです。`e.target` ではなく `e.nativeEvent.composedPath()` を使うことで、イベントの実際の伝播パスのみを対象にし、発生元を正確に特定できます。
+
+```typescript
+import { findDelegateTarget } from '../../libs/delegate'
+
+// コンテナにdelegateハンドラーを設定
+<ul
+  onClick={functions.handleDelegateClick}
+  onMouseOver={functions.handleDelegateMouseOver}
+>
+  {items.map(({ id, label }) => (
+    <button key={id} id={id} role="option">{label}</button>
+  ))}
+</ul>
+
+// useLatest + functions パターンと組み合わせる
+const functions = useMemo(() => ({
+  handleDelegateClick: (e: MouseEvent) => {
+    const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+    if (!el || el.disabled) return
+    const item = latest.items.find((o) => o.id === el.id)
+    if (item) latest.onSelect(item)
+  },
+  handleDelegateMouseOver: (e: MouseEvent) => {
+    const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+    if (!el || el.disabled) return
+    latest.onHover(el.id)
+  },
+}), [latest])
+```
+
+**命名規則:** delegateハンドラーは `handleDelegateXxx` 形式
+
+**子要素の識別には `id` を使う:**
+- `id` は `useId()` ベースで一意性が保証される
+- `value` は重複の可能性があるため不適切
 
 ## スキル
 

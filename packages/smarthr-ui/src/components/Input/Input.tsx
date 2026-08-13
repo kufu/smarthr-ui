@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../hooks/useLatest'
 import { useTheme } from '../../hooks/useTheme'
 
-type AbstractProps = {
+type BaseProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +35,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
 
 export const backgroundColor = {
   BACKGROUND: 'background',
@@ -54,15 +54,10 @@ const wrapperClassNameGenerator = tv({
     'contrast-more:shr-border-high-contrast',
     'focus-within:shr-focus-indicator',
     'has-[[aria-invalid]]:shr-border-danger',
+    'has-[:disabled]:[&&&]:shr-border-default/50',
+    'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
+    'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
   ],
-  variants: {
-    disabled: {
-      true: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
-    },
-    readOnly: {
-      true: '[&&&]:shr-border-[theme(backgroundColor.column)] [&&&]:shr-bg-column',
-    },
-  },
 })
 const innerClassNameGenerator = tv({
   slots: {
@@ -76,14 +71,10 @@ const innerClassNameGenerator = tv({
       // マジックナンバーになるが、ほかに適切なプロパティがないため、min-widthで最低幅を指定することで防ぐ
       '[&[type="datetime-local"]]:shr-min-w-[11em] [&[type="month"]]:shr-min-w-[8em] [&[type="time"]]:shr-min-w-[5em]',
     ],
-    affix: 'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
-  },
-  variants: {
-    disabled: {
-      true: {
-        affix: 'shr-text-disabled shr-opacity-100',
-      },
-    },
+    affix: [
+      'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
+      '[.smarthr-ui-Input:has(:disabled)_&]:shr-text-disabled [.smarthr-ui-Input:has(:disabled)_&]:shr-opacity-100',
+    ],
   },
 })
 
@@ -140,15 +131,15 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
 
     const classNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator({ disabled })
+      const { input, affix } = innerClassNameGenerator()
 
       return {
-        wrapper: wrapperClassNameGenerator({ disabled, readOnly, className }),
+        wrapper: wrapperClassNameGenerator({ className }),
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
       }
-    }, [disabled, readOnly, className])
+    }, [className])
 
     const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
     const styleMaxWidth = typeof width === 'number' ? `${width}px` : width

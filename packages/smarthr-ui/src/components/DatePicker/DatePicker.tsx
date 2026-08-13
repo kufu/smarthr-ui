@@ -29,7 +29,7 @@ import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
 
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
-type AbstractProps = {
+type BaseProps = {
   /** input 要素の `value` 属性の値 */
   value?: string | null
   /** input 要素の `name` 属性の値 */
@@ -62,10 +62,10 @@ type AbstractProps = {
     other: { date: Date | null; formatValue: string; errors: string[] },
   ) => void
 }
-type Props = AbstractProps &
+type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<'input'>,
-    | keyof AbstractProps
+    | keyof BaseProps
     | 'type'
     | 'onChange'
     | 'onKeyPress'

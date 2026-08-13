@@ -6,7 +6,7 @@ import { Cluster, Sidebar, Stack } from '../Layout'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   datetime: Date | string
   /** 日付の代わりに表示するテキスト */
   dateLabel?: string
@@ -19,8 +19,8 @@ type AbstractProps = PropsWithChildren<{
   /** 現在のアイテムかどうか */
   current?: boolean
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<typeof Stack>, keyof AbstractProps | 'inline' | 'gap' | 'align' | 'as'>
+type Props = BaseProps &
+  Omit<ComponentProps<typeof Stack>, keyof BaseProps | 'inline' | 'gap' | 'align' | 'as'>
 
 const classNameGenerator = tv({
   slots: {
@@ -86,27 +86,33 @@ export const TimelineItem: React.FC<Props> = ({
   }, [datetime, timeFormat])
 
   const id = useId()
+  const timeContent = (
+    <Cluster align="center" as="time" dateTime={isoString} id={id} className={classNames.title}>
+      <Text styleType="blockTitle" leading="NONE">
+        {dateLabel || date}
+      </Text>
+      {time && <Text leading="NONE">{time}</Text>}
+    </Cluster>
+  )
+  const dateContent = dateSuffixArea ? (
+    <Sidebar align="center" gap={0.5} className={classNames.dateArea}>
+      {timeContent}
+      <div>{dateSuffixArea}</div>
+    </Sidebar>
+  ) : (
+    timeContent
+  )
 
   return (
     <Stack {...rest} as="li" gap={0.5} aria-current={current} className={classNames.wrapper}>
-      <Cluster align="center" justify="space-between">
-        <Sidebar align="center" gap={0.5} className={classNames.dateArea}>
-          <Cluster
-            align="center"
-            as="time"
-            dateTime={isoString}
-            id={id}
-            className={classNames.title}
-          >
-            <Text styleType="blockTitle" leading="NONE">
-              {dateLabel || date}
-            </Text>
-            {time && <Text leading="NONE">{time}</Text>}
-          </Cluster>
-          {dateSuffixArea && <div>{dateSuffixArea}</div>}
-        </Sidebar>
-        {sideActionArea}
-      </Cluster>
+      {sideActionArea ? (
+        <Cluster align="center" justify="space-between">
+          {dateContent}
+          {sideActionArea}
+        </Cluster>
+      ) : (
+        dateContent
+      )}
       {children && (
         // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
         <Section aria-labelledby={id}>{children}</Section>

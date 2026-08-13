@@ -55,8 +55,7 @@ export const StepCounter: FC<Props> = ({ statusType, statusText, current, stepNu
         {stepNumber}
       </span>
       <StepStatusIcon
-        statusType={statusType}
-        statusText={statusText}
+        status={statusText ? { type: statusType!, text: statusText } : statusType}
         className={classNames.statusIcon}
       />
     </span>

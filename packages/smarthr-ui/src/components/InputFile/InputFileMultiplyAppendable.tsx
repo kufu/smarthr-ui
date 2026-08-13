@@ -3,10 +3,7 @@
 import {
   type ChangeEvent,
   type MouseEvent,
-  type PropsWithChildren,
-  type ReactNode,
   forwardRef,
-  memo,
   useId,
   useImperativeHandle,
   useMemo,
@@ -15,12 +12,11 @@ import {
 } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
-import { Localizer } from '../../intl'
-import { BaseColumn } from '../Base'
-import { Button } from '../Button'
-import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
+import { FilePreviewDialog } from './FilePreviewDialog'
+import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
 import type { Props } from './types'
@@ -29,10 +25,21 @@ const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
   (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
+    {
+      className,
+      size,
+      label,
+      hasFileList = true,
+      previewable = false,
+      onChange,
+      disabled,
+      error,
+      ...rest
+    },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
+    const [previewFile, setPreviewFile] = useState<File | null>(null)
     const labelId = useId()
 
     const classNames = useMemo(() => {
@@ -40,13 +47,13 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
       return {
         wrapper: wrapper({ className }),
-        inputWrapper: inputWrapper({ size, disabled }),
+        inputWrapper: inputWrapper({ size }),
         fileList: fileList(),
         fileItem: fileItem(),
         input: input(),
         prefix: prefix(),
       }
-    }, [disabled, size, className])
+    }, [size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
@@ -57,7 +64,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       () => inputRef.current,
     )
 
-    const latest = useLatest({ onChange, files })
+    const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
       const updateFiles = (newFiles: File[]) => {
@@ -103,24 +110,39 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
           updateFiles(newFiles)
         },
+        handleClosePreview: () => {
+          setPreviewFile(null)
+        },
+        handleDownload: () => {
+          const file = latest.previewFile
+          if (!file) return
+
+          const url = URL.createObjectURL(file)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = file.name
+          a.click()
+          URL.revokeObjectURL(url)
+        },
       }
     }, [latest])
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
-        {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+        {hasFileList && !disabled && files.length > 0 && (
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
                 key={index}
-                value={index}
+                file={file}
+                index={index}
+                previewable={previewable}
                 handleDeleteClick={functions.handleDelete}
+                handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
-              >
-                {file.name}
-              </FileListItem>
+              />
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input
@@ -138,42 +160,14 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
+        {previewable && (
+          <FilePreviewDialog
+            file={previewFile}
+            handleClose={functions.handleClosePreview}
+            handleDownload={functions.handleDownload}
+          />
+        )}
       </Stack>
     )
   },
 )
-
-type FileListItemProps = PropsWithChildren<{
-  value: number
-  handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
-  className: string
-}>
-
-const FileListItem = memo<FileListItemProps>(
-  ({ value, handleDeleteClick, className, children }) => (
-    <li className={className}>
-      <span className="smarthr-ui-InputFile-fileName">{children}</span>
-      <Button
-        variant="text"
-        prefix={<FaTrashCanIcon />}
-        value={value}
-        onClick={handleDeleteClick}
-        className="smarthr-ui-InputFile-deleteButton"
-      >
-        <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
-      </Button>
-    </li>
-  ),
-)
-
-const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
-  <span className={className}>
-    <FaFolderOpenIcon />
-  </span>
-))
-
-const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }) => (
-  <span id={id} aria-hidden="true">
-    {label}
-  </span>
-))

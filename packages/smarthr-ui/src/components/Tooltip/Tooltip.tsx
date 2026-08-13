@@ -5,8 +5,10 @@ import {
   type ComponentProps,
   type FC,
   type PropsWithChildren,
+  type FocusEvent as ReactFocusEvent,
   type ReactNode,
-  useCallback,
+  type PointerEvent as ReactPointerEvent,
+  type TouchEvent as ReactTouchEvent,
   useId,
   useMemo,
   useRef,
@@ -17,6 +19,7 @@ import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useLatest } from '../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
 
@@ -33,7 +36,7 @@ const getFullscreenElementOnSSR = () => null
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
   /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
@@ -47,8 +50,8 @@ type AbstractProps = PropsWithChildren<{
   /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
-type Props = AbstractProps &
-  Omit<ComponentProps<'span'>, keyof AbstractProps | 'aria-describedby' | 'aria-labelledby'>
+type Props = BaseProps &
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby'>
 
 const classNameGenerator = tv({
   base: [
@@ -97,6 +100,78 @@ export const Tooltip: FC<Props> = ({
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
 
   const isLabel = type === 'label'
+  const isIcon = triggerType === 'icon'
+
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isIcon, className }),
+    [isIcon, className],
+  )
+
+  const latest = useLatest({
+    onPointerEnter,
+    onPointerLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
+    ellipsisOnly,
+  })
+
+  const functions = useMemo(() => {
+    const toShowAction = (e: BaseSyntheticEvent) => {
+      // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+      if (!ref.current?.contains(e.target)) {
+        return
+      }
+
+      if (latest.ellipsisOnly) {
+        const outerWidth = parseInt(
+          window
+            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+            .width.match(/\d+/)![0],
+          10,
+        )
+
+        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
+          return
+        }
+      }
+
+      setRect(ref.current.getBoundingClientRect())
+      setIsVisible(true)
+    }
+    const toCloseAction = () => {
+      setRect(null)
+      setIsVisible(false)
+    }
+
+    return {
+      handlePointerEnter: (e: ReactPointerEvent<HTMLSpanElement>) => {
+        latest.onPointerEnter?.(e)
+        toShowAction(e)
+      },
+      handleTouchStart: (e: ReactTouchEvent<HTMLSpanElement>) => {
+        latest.onTouchStart?.(e)
+        toShowAction(e)
+      },
+      handleFocus: (e: ReactFocusEvent<HTMLSpanElement>) => {
+        latest.onFocus?.(e)
+        toShowAction(e)
+      },
+      handlePointerLeave: (e: ReactPointerEvent<HTMLSpanElement>) => {
+        latest.onPointerLeave?.(e)
+        toCloseAction()
+      },
+      handleTouchEnd: (e: ReactTouchEvent<HTMLSpanElement>) => {
+        latest.onTouchEnd?.(e)
+        toCloseAction()
+      },
+      handleBlur: (e: ReactFocusEvent<HTMLSpanElement>) => {
+        latest.onBlur?.(e)
+        toCloseAction()
+      },
+    }
+  }, [latest])
 
   useEnhancedEffect(() => {
     setPortalRoot(fullscreenElement ?? document.body)
@@ -116,44 +191,8 @@ export const Tooltip: FC<Props> = ({
     }
   }, [tabIndex, isLabel, messageId])
 
-  const toShowAction = useCallback(
-    (e: BaseSyntheticEvent) => {
-      // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
-      if (!ref.current?.contains(e.target)) {
-        return
-      }
-
-      if (ellipsisOnly) {
-        const outerWidth = parseInt(
-          window
-            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-            .width.match(/\d+/)![0],
-          10,
-        )
-
-        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
-          return
-        }
-      }
-
-      setRect(ref.current.getBoundingClientRect())
-      setIsVisible(true)
-    },
-    [ellipsisOnly],
-  )
-  const toCloseAction = useCallback(() => {
-    setRect(null)
-    setIsVisible(false)
-  }, [])
-
-  const isIcon = triggerType === 'icon'
-  const actualClassName = useMemo(
-    () => classNameGenerator({ isIcon, className }),
-    [isIcon, className],
-  )
-
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
     <span
       {...rest}
       ref={ref}
@@ -161,30 +200,12 @@ export const Tooltip: FC<Props> = ({
       aria-describedby={
         isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
       }
-      onPointerEnter={(delegateEvent) => {
-        onPointerEnter?.(delegateEvent)
-        toShowAction(delegateEvent)
-      }}
-      onTouchStart={(delegateEvent) => {
-        onTouchStart?.(delegateEvent)
-        toShowAction(delegateEvent)
-      }}
-      onFocus={(delegateEvent) => {
-        onFocus?.(delegateEvent)
-        toShowAction(delegateEvent)
-      }}
-      onPointerLeave={(delegateEvent) => {
-        onPointerLeave?.(delegateEvent)
-        toCloseAction()
-      }}
-      onTouchEnd={(delegateEvent) => {
-        onTouchEnd?.(delegateEvent)
-        toCloseAction()
-      }}
-      onBlur={(delegateEvent) => {
-        onBlur?.(delegateEvent)
-        toCloseAction()
-      }}
+      onPointerEnter={functions.handlePointerEnter}
+      onTouchStart={functions.handleTouchStart}
+      onFocus={functions.handleFocus}
+      onPointerLeave={functions.handlePointerLeave}
+      onTouchEnd={functions.handleTouchEnd}
+      onBlur={functions.handleBlur}
       className={actualClassName}
     >
       {portalRoot &&

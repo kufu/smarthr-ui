@@ -5,7 +5,7 @@ import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
     /** 横スクロール時、カラムを左右いずれかに固定 */
     fixed?: 'left' | 'right'
@@ -13,7 +13,7 @@ export type AbstractProps = PropsWithChildren<
       CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
   }
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'td'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'td'>, keyof BaseProps>
 
 export const Td = memo<Props>(
   ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
@@ -28,21 +28,18 @@ export const Td = memo<Props>(
 
       return `${base} ${shadow}`
     }, [align, className, fixed, nullable, vAlign])
-    const actualStyle = useMemo(() => {
-      if (typeof contentWidth === 'object') {
-        return {
-          ...style,
-          width: convertContentWidth(contentWidth.base),
-          minWidth: convertContentWidth(contentWidth.min),
-          maxWidth: convertContentWidth(contentWidth.max),
-        }
-      }
-
-      return {
-        ...style,
-        width: convertContentWidth(contentWidth),
-      }
-    }, [style, contentWidth])
+    const actualStyle =
+      typeof contentWidth === 'object'
+        ? {
+            ...style,
+            width: convertContentWidth(contentWidth.base),
+            minWidth: convertContentWidth(contentWidth.min),
+            maxWidth: convertContentWidth(contentWidth.max),
+          }
+        : {
+            ...style,
+            width: convertContentWidth(contentWidth),
+          }
 
     return <td {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle} />
   },

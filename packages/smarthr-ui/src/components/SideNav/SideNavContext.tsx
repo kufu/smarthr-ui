@@ -6,7 +6,9 @@ type SideNavContextValue = {
   size: SideNavSizeType
 }
 
-const SideNavContext = createContext<SideNavContextValue | undefined>(undefined)
+const SideNavContext = createContext<SideNavContextValue>({
+  size: 'M',
+})
 
 export const useSideNavContext = () => useContext(SideNavContext)
 
