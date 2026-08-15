@@ -184,17 +184,15 @@ export const useListbox = <T,>({
         // 入力欄の右端を起点に左方向へ表示する場合に使える幅
         const leftSpace = rect.right
 
-        let left = 0
+        // ビューポートの左端を基準に計算
+        let left = window.pageXOffset
 
         if (listBoxWidth <= rightSpace) {
           // 右側に十分なスペースがある場合は入力欄の左端に揃えて通常表示
-          left = rect.left + window.pageXOffset
+          left += rect.left
         } else if (listBoxWidth <= leftSpace) {
-          // 右側に十分なスペースがなく左側に収まる場合は入力欄の右端に揃えて表示
-          left = rect.right - listBoxWidth + window.pageXOffset
-        } else {
-          // 左右いずれにも収まらない場合はビューポートの左端に揃えて表示
-          left = window.pageXOffset
+          // 左側に収まる場合は入力欄の右端に揃えて表示
+          left += rect.right - listBoxWidth
         }
 
         setListBoxRect({
