@@ -158,6 +158,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorBlue": "",
   "smarthr-ui/RichTextEditor/backgroundColorPurple": "",
   "smarthr-ui/RichTextEditor/backgroundColorMagenta": "",
+  "smarthr-ui/RichTextEditor/backgroundColorNone": "",
   "smarthr-ui/RichTextEditor/alignLeft": "",
   "smarthr-ui/RichTextEditor/alignCenter": "",
   "smarthr-ui/RichTextEditor/alignRight": "",

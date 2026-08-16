@@ -13,6 +13,7 @@ import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
+import { useCurrentColorLabel } from './useCurrentColorLabel'
 
 const RECENT_LIMIT = 5
 
@@ -116,6 +117,10 @@ export const TextColorPickerButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/colorEditButton',
       defaultText: '色を編集',
     })
+    const blackLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/colorBlack',
+      defaultText: '黒',
+    })
     const customSwatchLabel = useCallback(
       (color: string) =>
         localize(
@@ -139,6 +144,14 @@ export const TextColorPickerButton: FC<Props> = memo(
       [localize],
     )
 
+    // 未設定は黒が適用された状態と等価なため、パレットの選択状態と揃えて黒として読み上げる
+    const currentColorLabel = useCurrentColorLabel({
+      currentColor,
+      colors: EDITOR_COLORS,
+      defaultColor: DEFAULT_COLOR,
+      unsetLabel: blackLabel,
+    })
+
     return (
       <>
         <ToolbarTooltip label={colorLabel} suppressed={isOpen || disabled}>
@@ -148,7 +161,7 @@ export const TextColorPickerButton: FC<Props> = memo(
               refProp?.(el)
             }}
             type="button"
-            aria-label={colorLabel}
+            aria-label={`${colorLabel}: ${currentColorLabel}`}
             aria-expanded={isOpen}
             aria-haspopup="dialog"
             tabIndex={tabIndex}

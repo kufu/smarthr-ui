@@ -160,6 +160,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/backgroundColorBlue': '青',
   'smarthr-ui/RichTextEditor/backgroundColorPurple': '紫',
   'smarthr-ui/RichTextEditor/backgroundColorMagenta': 'マゼンタ',
+  'smarthr-ui/RichTextEditor/backgroundColorNone': 'なし',
   'smarthr-ui/RichTextEditor/alignLeft': '左揃え',
   'smarthr-ui/RichTextEditor/alignCenter': '中央揃え',
   'smarthr-ui/RichTextEditor/alignRight': '右揃え',

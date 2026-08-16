@@ -13,6 +13,7 @@ import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
+import { useCurrentColorLabel } from './useCurrentColorLabel'
 
 const RECENT_LIMIT = 5
 
@@ -117,6 +118,10 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/backgroundColorEditButton',
       defaultText: '背景色を編集',
     })
+    const noneLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorNone',
+      defaultText: 'なし',
+    })
     const customSwatchLabel = useCallback(
       (color: string) =>
         localize(
@@ -140,6 +145,14 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
       [localize],
     )
 
+    // 背景色パレットに白のスウォッチは無く、未設定はどの色も選ばれていない状態なので「なし」を読み上げる
+    const currentColorLabel = useCurrentColorLabel({
+      currentColor,
+      colors: EDITOR_BACKGROUND_COLORS,
+      defaultColor: DEFAULT_BACKGROUND_COLOR,
+      unsetLabel: noneLabel,
+    })
+
     return (
       <>
         <ToolbarTooltip label={backgroundColorLabel} suppressed={isOpen || disabled}>
@@ -149,7 +162,7 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
               refProp?.(el)
             }}
             type="button"
-            aria-label={backgroundColorLabel}
+            aria-label={`${backgroundColorLabel}: ${currentColorLabel}`}
             aria-expanded={isOpen}
             aria-haspopup="dialog"
             tabIndex={tabIndex}
