@@ -13,6 +13,7 @@ import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
+import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
 
 const RECENT_LIMIT = 5
@@ -20,8 +21,7 @@ const RECENT_LIMIT = 5
 const classNameGenerator = tv({
   slots: {
     trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-BackgroundColorPickerButton'],
-    // border-shorthand で白(#fff)時にも視認できるようにする
-    colorIndicator: 'shr-border-shorthand shr-h-[3px] shr-w-full shr-rounded-full',
+    colorIndicator: COLOR_INDICATOR_CLASS_NAME,
   },
 })
 

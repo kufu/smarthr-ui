@@ -12,6 +12,7 @@ import { ToolbarTooltip } from '../ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
+import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
 
@@ -20,7 +21,7 @@ const RECENT_LIMIT = 5
 const classNameGenerator = tv({
   slots: {
     trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-ColorPickerButton'],
-    colorIndicator: 'shr-h-[3px] shr-w-full shr-rounded-full',
+    colorIndicator: COLOR_INDICATOR_CLASS_NAME,
   },
 })
 
