@@ -38,6 +38,9 @@ const preview: Preview = {
     options: {
       isFullscreen: false,
       isToolshown: true,
+      storySort: {
+        method: 'alphabetical',
+      },
     },
     viewport: {
       viewports: {

@@ -159,3 +159,36 @@ export const VRTForcedColors: StoryObj<typeof SingleCombobox> = {
     backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
+
+const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textbox = await canvas.findByRole('combobox')
+
+  textbox.click()
+
+  const body = canvasElement.ownerDocument.body
+  const option = await within(body).findByText('option 1')
+  await userEvent.hover(option)
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+// 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
+export const VRTOnRightEdge: StoryObj<typeof SingleCombobox> = {
+  render: (args) => (
+    <div className="shr-flex shr-h-screen shr-justify-end">
+      <SingleCombobox
+        {...args}
+        name="onRightEdge"
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+        dropdownWidth="30rem"
+        selectedItem={null}
+      />
+    </div>
+  ),
+  play: playOnRightEdge,
+  parameters: {
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
+  },
+}

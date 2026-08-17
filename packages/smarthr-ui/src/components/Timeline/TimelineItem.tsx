@@ -86,27 +86,33 @@ export const TimelineItem: React.FC<Props> = ({
   }, [datetime, timeFormat])
 
   const id = useId()
+  const timeContent = (
+    <Cluster align="center" as="time" dateTime={isoString} id={id} className={classNames.title}>
+      <Text styleType="blockTitle" leading="NONE">
+        {dateLabel || date}
+      </Text>
+      {time && <Text leading="NONE">{time}</Text>}
+    </Cluster>
+  )
+  const dateContent = dateSuffixArea ? (
+    <Sidebar align="center" gap={0.5} className={classNames.dateArea}>
+      {timeContent}
+      <div>{dateSuffixArea}</div>
+    </Sidebar>
+  ) : (
+    timeContent
+  )
 
   return (
     <Stack {...rest} as="li" gap={0.5} aria-current={current} className={classNames.wrapper}>
-      <Cluster align="center" justify="space-between">
-        <Sidebar align="center" gap={0.5} className={classNames.dateArea}>
-          <Cluster
-            align="center"
-            as="time"
-            dateTime={isoString}
-            id={id}
-            className={classNames.title}
-          >
-            <Text styleType="blockTitle" leading="NONE">
-              {dateLabel || date}
-            </Text>
-            {time && <Text leading="NONE">{time}</Text>}
-          </Cluster>
-          {dateSuffixArea && <div>{dateSuffixArea}</div>}
-        </Sidebar>
-        {sideActionArea}
-      </Cluster>
+      {sideActionArea ? (
+        <Cluster align="center" justify="space-between">
+          {dateContent}
+          {sideActionArea}
+        </Cluster>
+      ) : (
+        dateContent
+      )}
       {children && (
         // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
         <Section aria-labelledby={id}>{children}</Section>

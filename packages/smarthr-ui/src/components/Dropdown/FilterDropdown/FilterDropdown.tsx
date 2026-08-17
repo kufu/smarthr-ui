@@ -59,7 +59,11 @@ const ON_SUBMIT = (e: FormEvent) => {
 
 const classNameGenerator = tv({
   slots: {
-    iconWrapper: ['smarthr-ui-Icon-extended', 'shr-relative shr-leading-none'],
+    iconWrapper: [
+      'smarthr-ui-Icon-extended',
+      'shr-relative shr-leading-none',
+      'data-[filtered=true]:shr-text-main',
+    ],
     filteredIcon: 'shr-absolute shr-bottom-[2px] shr-right-[-4px] shr-h-[0.5em] shr-w-[0.5em]',
     inner: 'shr-p-1.5',
     actionArea: 'shr-border-t-shorthand shr-sticky shr-bottom-0 shr-bg-white shr-px-1.5 shr-py-1',
@@ -68,11 +72,6 @@ const classNameGenerator = tv({
     message: 'shr-text-right',
   },
   variants: {
-    filtered: {
-      true: {
-        iconWrapper: 'shr-text-main',
-      },
-    },
     triggerSize: {
       M: {},
       S: {
@@ -115,7 +114,7 @@ export const FilterDropdown: FC<Props> = ({
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
-  const classNamesMapper = useMemo(() => {
+  const classNames = useMemo(() => {
     const {
       iconWrapper,
       filteredIcon,
@@ -126,7 +125,8 @@ export const FilterDropdown: FC<Props> = ({
       message,
     } = classNameGenerator()
 
-    const commonStyles = {
+    return {
+      iconWrapper: iconWrapper({ triggerSize: trigger.size }),
       filteredIcon: filteredIcon(),
       inner: inner(),
       actionArea: actionArea(),
@@ -134,57 +134,31 @@ export const FilterDropdown: FC<Props> = ({
       rightButtonArea: rightButtonArea(),
       message: message(),
     }
-
-    return {
-      filtered: {
-        ...commonStyles,
-        iconWrapper: iconWrapper({ filtered: true, triggerSize: trigger.size }),
-      },
-      unfiltered: {
-        ...commonStyles,
-        iconWrapper: iconWrapper({ filtered: false, triggerSize: trigger.size }),
-      },
-    }
   }, [trigger.size])
 
-  const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
+  const triggerText = trigger.text || (
+    <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+  )
 
-  const buttonValues = useMemo(() => {
-    const triggerText = trigger.text || (
-      <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
-    )
+  const FilterIcon = (
+    <span className={classNames.iconWrapper} data-filtered={!!filtered}>
+      <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
 
-    const FilterIcon = (
-      <span className={classNames.iconWrapper}>
-        <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
+      {filtered && (
+        // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
+        <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
+      )}
+    </span>
+  )
 
-        {filtered && (
-          // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-          <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
-        )}
-      </span>
-    )
-
-    if (trigger.onlyIcon) {
-      return {
-        suffix: undefined,
-        content: FilterIcon,
-        triggerText,
-      }
-    }
-
-    return {
-      suffix: FilterIcon,
-      content: triggerText,
-      triggerText,
-    }
-  }, [filtered, trigger.text, filteredIconAlt, trigger.onlyIcon, classNames])
+  const suffix = trigger.onlyIcon ? undefined : FilterIcon
+  const content = trigger.onlyIcon ? FilterIcon : triggerText
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: buttonValues.triggerText }}>
-        <Button {...rest} suffix={buttonValues.suffix} size={trigger.size}>
-          {buttonValues.content}
+      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: triggerText }}>
+        <Button {...rest} suffix={suffix} size={trigger.size}>
+          {content}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
