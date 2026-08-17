@@ -8,7 +8,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -154,12 +153,6 @@ const PDFFileViewer: FC<
   onLoadError,
 }) => {
   const search = usePDFSearch(file.url)
-  const handlePDFLoaded = useCallback(
-    (defaultRotation: number) => {
-      setRotation(defaultRotation)
-    },
-    [setRotation],
-  )
 
   return (
     <ActualFileViewer
@@ -177,7 +170,7 @@ const PDFFileViewer: FC<
         file={file}
         width={width}
         handleLoad={functions.handleLoaded}
-        handlePDFLoaded={handlePDFLoaded}
+        handlePDFLoaded={setRotation}
         onPassword={onPassword}
         onLoadError={onLoadError}
         search={search}
