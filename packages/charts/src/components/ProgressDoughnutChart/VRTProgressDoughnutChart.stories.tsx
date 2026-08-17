@@ -65,6 +65,44 @@ export default {
           thickness="L"
         />
       </div>
+
+      {/* パターン6: 極小値（0.3%）。角端では帯の長さどおりに描かれる */}
+      <div className="shr-h-[300px] shr-w-[300px]">
+        <ProgressDoughnutChart
+          data={{ labels: ['インストール済', '未インストール'], datasets: [{ data: [30, 9970] }] }}
+          thickness="S"
+        >
+          <Text size="XXL" weight="bold">
+            0%
+          </Text>
+        </ProgressDoughnutChart>
+      </div>
+
+      {/* パターン7: 丸端、65% */}
+      <div className="shr-h-[300px] shr-w-[300px]">
+        <ProgressDoughnutChart
+          data={{ labels: ['インストール済', '未インストール'], datasets: [{ data: [780, 420] }] }}
+          thickness="S"
+          rounded
+        >
+          <Text size="XXL" weight="bold">
+            65%
+          </Text>
+        </ProgressDoughnutChart>
+      </div>
+
+      {/* パターン8: 丸端かつ極小値。丸端が帯より大きな塊になる */}
+      <div className="shr-h-[300px] shr-w-[300px]">
+        <ProgressDoughnutChart
+          data={{ labels: ['インストール済', '未インストール'], datasets: [{ data: [30, 9970] }] }}
+          thickness="S"
+          rounded
+        >
+          <Text size="XXL" weight="bold">
+            0%
+          </Text>
+        </ProgressDoughnutChart>
+      </div>
     </Stack>
   ),
   parameters: {
