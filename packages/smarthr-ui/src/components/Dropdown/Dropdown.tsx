@@ -84,45 +84,57 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     return {
       DropdownContentRoot,
       handleClickTrigger: (rect: Rect) => {
-        setActive((current) => {
-          const newActive = !current
-
-          if (newActive) {
-            setTriggerRect(rect)
-          }
-
-          return newActive
-        })
+        if (latest.active) {
+          setActive(false)
+          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        } else {
+          setActive(true)
+          setTriggerRect(rect)
+          if (latest.onOpen) requestAnimationFrame(() => latest.onOpen?.())
+        }
       },
       handleDelegateClickCloser: () => {
         setActive(false)
+        if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
 
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
+      },
+      handleClickBody: (e: any) => {
+        // ignore events from events within DropdownTrigger and DropdownContent
+        if (
+          latest.active &&
+          !isEventFromChild(e, triggerElementRef.current) &&
+          !latest.isChildPortal(e.target)
+        ) {
+          setActive(false)
+
+          if (latest.onClose) {
+            requestAnimationFrame(() => latest.onClose?.())
+          }
+        }
+      },
+      updateTriggerRect: () => {
+        if (triggerElementRef.current) {
+          setTriggerRect(triggerElementRef.current.getBoundingClientRect())
+        }
       },
     }
   }, [latest])
 
   useEffect(() => {
-    const onClickBody = (e: any) => {
-      // ignore events from events within DropdownTrigger and DropdownContent
-      if (!isEventFromChild(e, triggerElementRef.current) && !latest.isChildPortal(e.target)) {
-        setActive(false)
-      }
-    }
+    if (!active) return
 
-    document.body.addEventListener('click', onClickBody, false)
+    document.body.addEventListener('click', functions.handleClickBody, false)
+    window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
+    window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
 
     return () => {
-      document.body.removeEventListener('click', onClickBody, false)
+      document.body.removeEventListener('click', functions.handleClickBody, false)
+      window.removeEventListener('scroll', functions.updateTriggerRect)
+      window.removeEventListener('resize', functions.updateTriggerRect)
     }
-  }, [contentId, latest])
-
-  useEffect(() => {
-    if (latest.portalRoot) {
-      latest[active ? 'onOpen' : 'onClose']?.()
-    }
-  }, [active, latest])
+  }, [active, functions])
 
   return (
     <PortalParentProvider>
