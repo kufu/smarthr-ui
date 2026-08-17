@@ -22,6 +22,7 @@ import { useLatest } from '../../../hooks/useLatest'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
+import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
@@ -390,7 +391,7 @@ const ActualMultiCombobox = <T,>(
         if (
           !latest.disabled &&
           !latest.isExpanded &&
-          !(e.target as HTMLElement).closest(DELETE_BUTTON_CLASSNAME)
+          !findDelegateTarget(e, DELETE_BUTTON_CLASSNAME)
         ) {
           focus()
         }
