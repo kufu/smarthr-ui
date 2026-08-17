@@ -161,3 +161,14 @@ export const NoResultText: StoryObj<typeof MultiCombobox> = {
     noResultText: '該当するユーザーが見つかりません',
   },
 }
+
+export const Deletable: StoryObj<typeof MultiCombobox> = {
+  name: 'deletable',
+  args: {
+    selectedItems: [
+      defaultItems['option 1'],
+      { ...defaultItems['option 2'], deletable: false },
+      { label: 'option 3', value: 'value-3' },
+    ],
+  },
+}
