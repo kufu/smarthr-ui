@@ -48,7 +48,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+  onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   onLoadError?: (error: unknown) => void
 }
 
@@ -69,7 +69,7 @@ type CommonViewerProps = {
     rotate: () => void
     handleLoaded: () => void
   }
-  onLoadError?: (error: unknown) => void
+  handleLoadError?: (error: unknown) => void
 }
 
 export const FileViewer: FC<Props> = ({
@@ -87,7 +87,9 @@ export const FileViewer: FC<Props> = ({
 
   const hasWidth = fixedWidth !== undefined
 
-  const latest = useLatest({ scaleStep, rotation })
+  const latest = useLatest({ scaleStep, rotation, onLoadError, onPassword })
+  const hasOnLoadError = !!onLoadError
+  const hasOnPassword = !!onPassword
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
@@ -110,8 +112,12 @@ export const FileViewer: FC<Props> = ({
       handleLoaded: () => {
         setLoaded(true)
       },
+      handleLoadError: hasOnLoadError ? (error: unknown) => latest.onLoadError?.(error) : undefined,
+      handlePassword: hasOnPassword
+        ? (...rest: Parameters<NonNullable<typeof onPassword>>) => latest.onPassword?.(...rest)
+        : undefined,
     }
-  }, [latest])
+  }, [hasOnLoadError, hasOnPassword, latest])
 
   const commonAttrs = {
     file,
@@ -123,11 +129,15 @@ export const FileViewer: FC<Props> = ({
     setWidth,
     scaleSteps,
     functions,
-    onLoadError,
+    handleLoadError: functions.handleLoadError,
   }
 
   return file.contentType === 'application/pdf' ? (
-    <PDFFileViewer {...commonAttrs} setRotation={setRotation} onPassword={onPassword} />
+    <PDFFileViewer
+      {...commonAttrs}
+      setRotation={setRotation}
+      handlePassword={functions.handlePassword}
+    />
   ) : (
     <ImageFileViewer {...commonAttrs} />
   )
@@ -136,7 +146,7 @@ export const FileViewer: FC<Props> = ({
 const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
-    onPassword?: ComponentProps<typeof PDFViewer>['onPassword']
+    handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   }
 > = ({
   file,
@@ -149,8 +159,8 @@ const PDFFileViewer: FC<
   scaleSteps,
   functions,
   setRotation,
-  onPassword,
-  onLoadError,
+  handlePassword,
+  handleLoadError,
 }) => {
   const search = usePDFSearch(file.url)
 
@@ -171,8 +181,8 @@ const PDFFileViewer: FC<
         width={width}
         handleLoad={functions.handleLoaded}
         handlePDFLoaded={setRotation}
-        onPassword={onPassword}
-        onLoadError={onLoadError}
+        handlePassword={handlePassword}
+        handleLoadError={handleLoadError}
         search={search}
       />
     </ActualFileViewer>
@@ -189,7 +199,7 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
   setWidth,
   scaleSteps,
   functions,
-  onLoadError,
+  handleLoadError,
 }) => (
   <ActualFileViewer
     scale={scale}
@@ -206,7 +216,7 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
         file={file}
         width={width}
         handleLoad={functions.handleLoaded}
-        onLoadError={onLoadError}
+        handleLoadError={handleLoadError}
       />
     ) : undefined}
   </ActualFileViewer>
@@ -274,15 +284,8 @@ const ActualFileViewer: FC<
   )
 }
 
-type ControllerProps = {
-  scale: number
-  scaleSteps: number[]
-  functions: {
-    scaleUp: () => void
-    scaleDown: () => void
-    handleClickScaleStep: (e: MouseEvent<HTMLButtonElement>) => void
-    rotate: () => void
-  }
+type ControllerProps = Pick<CommonViewerProps, 'scale' | 'functions'> & {
+  scaleSteps: NonNullable<CommonViewerProps['scaleSteps']>
   searchController?: ReactNode
 }
 
