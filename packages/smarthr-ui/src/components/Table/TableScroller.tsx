@@ -60,11 +60,8 @@ const FixedHeadTableScroller = ({
 
       if (forwardedRef) {
         if (typeof forwardedRef === 'function') {
-          if (node !== null) {
-            // React 19 では callback ref の戻り値を cleanup として使うため、返却する
-            return forwardedRef(node)
-          }
-          forwardedRef(null)
+          // React 19 では callback ref の戻り値を cleanup として使うため、返却する
+          return forwardedRef(node)
         } else {
           forwardedRef.current = node
         }
