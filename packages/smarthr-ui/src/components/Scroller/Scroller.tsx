@@ -83,7 +83,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
   ) => {
     const wrapperRef = useRef<HTMLDivElement>(null)
 
-    useImperativeHandle(ref, () => wrapperRef.current!)
+    useImperativeHandle(ref, () => wrapperRef.current!, [])
 
     const [tabIndex, setTabIndex] = useState<0 | undefined>(undefined)
 
