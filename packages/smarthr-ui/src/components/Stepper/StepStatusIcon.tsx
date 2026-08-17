@@ -4,8 +4,6 @@ import { tv } from 'tailwind-variants'
 import { Localizer } from '../../intl'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
-import type { Step } from './types'
-
 const classNameGenerator = tv({
   base: [
     'shr-rounded-full shr-bg-white shr-shadow-[0_0_0_theme(borderWidth.2)_theme(colors.white)]',
@@ -22,13 +20,14 @@ const classNameGenerator = tv({
   },
 })
 
-type StatusProps = { status?: Step['status'] }
-type BaseProps = ComponentProps<typeof FaCircleCheckIcon>
-type Props = BaseProps & StatusProps
-type ActualProps = BaseProps & Required<StatusProps>
+type ActualProps = ComponentProps<typeof FaCircleCheckIcon> & {
+  statusType: 'completed' | 'closed'
+  statusText?: string
+}
+type Props = Partial<ActualProps>
 
 export const StepStatusIcon: FC<Props> = (props) =>
-  props.status ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null
+  props.statusType ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null
 
 const ICON_MAPPER = {
   completed: {
@@ -41,11 +40,9 @@ const ICON_MAPPER = {
   },
 }
 
-const ActualStepStatusIcon: FC<ActualProps> = ({ status, className, ...rest }) => {
-  const isObject = typeof status === 'object'
-  const statusType = isObject ? status.type : status
+const ActualStepStatusIcon: FC<ActualProps> = ({ statusType, statusText, className, ...rest }) => {
   const { alt, Component } = ICON_MAPPER[statusType]
-  const actualAlt = isObject ? status.text || alt : alt
+  const actualAlt = statusText || alt
 
   const actualClassName = useMemo(
     () => classNameGenerator({ status: statusType, className }),
