@@ -49,20 +49,24 @@ const FixedHeadTableScroller = ({
 }: FixedHeadTableScrollerProps) => {
   const setRefs = useCallback(
     (node: HTMLDivElement | null) => {
-      if (forwardedRef) {
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(node)
-        } else {
-          forwardedRef.current = node
-        }
-      }
-
       // thead の高さ分だけ scroll-padding-top を設定
       if (node) {
         const thead = node.querySelector('thead')
         if (thead) {
           const { height } = thead.getBoundingClientRect()
           node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
+        }
+      }
+
+      if (forwardedRef) {
+        if (typeof forwardedRef === 'function') {
+          if (node !== null) {
+            // React 19 では callback ref の戻り値を cleanup として使うため、返却する
+            return forwardedRef(node)
+          }
+          forwardedRef(null)
+        } else {
+          forwardedRef.current = node
         }
       }
     },
