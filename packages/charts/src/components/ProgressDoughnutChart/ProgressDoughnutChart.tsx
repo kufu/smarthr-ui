@@ -162,6 +162,9 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         keyboardNavigation も持たない）。
       */}
       <Doughnut
+        // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
+        // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
+        className="shr-relative shr-z-1"
         aria-hidden="true"
         ref={chartRef}
         data={chartData}
