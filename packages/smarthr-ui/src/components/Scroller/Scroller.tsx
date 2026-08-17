@@ -83,7 +83,9 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
   ) => {
     const wrapperRef = useRef<HTMLDivElement>(null)
 
-    useImperativeHandle(ref, () => wrapperRef.current!, [])
+    // as が切り替わると DOM 要素が変わるため、Component を依存配列に含める
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useImperativeHandle(ref, () => wrapperRef.current!, [Component])
 
     const [tabIndex, setTabIndex] = useState<0 | undefined>(undefined)
 
