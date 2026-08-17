@@ -66,6 +66,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
+      [],
     )
 
     const latest = useLatest({ onChange, files, previewFile })
