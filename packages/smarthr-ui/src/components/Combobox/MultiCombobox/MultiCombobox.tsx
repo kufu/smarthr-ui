@@ -100,12 +100,24 @@ const classNameGenerator = tv({
       'smarthr-ui-MultiCombobox',
       'shr-box-border shr-inline-flex shr-min-w-[15em] shr-rounded-m shr-border shr-border-solid shr-px-0.5 shr-py-0.25 shr-align-bottom',
       'contrast-more:shr-border-high-contrast',
-      'has-[[aria-invalid]]:shr-border-danger',
+      'has-[[role=combobox][aria-expanded=true]]:shr-focus-indicator',
+      'shr-cursor-text shr-border-default shr-bg-white',
+      'has-[[role=combobox]:disabled]:shr-cursor-not-allowed',
+      'has-[[role=combobox]:disabled]:shr-border-default/50',
+      'has-[[role=combobox]:disabled]:shr-bg-white-darken',
+      'has-[[role=combobox]:disabled]:shr-text-disabled',
+      // HINT: disabled と詳細度が同じ [0,2,0] のため、CSS ソース順でこちらを後に置くことで error 時の border 色を優先させる
+      'has-[[role=combobox][aria-invalid]]:shr-border-danger',
     ],
     inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5',
     selectedList:
       'smarthr-ui-MultiCombobox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
-    inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
+    inputWrapper: [
+      'shr-flex shr-flex-1 shr-items-center',
+      'has-[[role=combobox][aria-expanded=false]]:shr-pointer-events-none',
+      'has-[[role=combobox][aria-expanded=false]]:shr-absolute',
+      'has-[[role=combobox][aria-expanded=false]]:shr-opacity-0',
+    ],
     input: [
       'smarthr-ui-MultiCombobox-input',
       'shr-w-full shr-min-w-[5em] shr-border-none shr-text-base shr-text-black shr-outline-none shr-outline-0',
@@ -118,35 +130,6 @@ const classNameGenerator = tv({
     ],
     suffixIcon: 'shr-block',
   },
-  variants: {
-    focused: {
-      true: {
-        wrapper: 'shr-focus-indicator',
-      },
-    },
-    disabled: {
-      true: {
-        wrapper:
-          'shr-cursor-not-allowed shr-border-default/50 shr-bg-white-darken shr-text-disabled',
-      },
-      false: {
-        wrapper: 'shr-cursor-text shr-bg-white',
-      },
-    },
-    hidden: {
-      true: {
-        inputWrapper: 'shr-pointer-events-none shr-absolute shr-opacity-0',
-      },
-    },
-  },
-  compoundVariants: [
-    {
-      disabled: false,
-      className: {
-        wrapper: 'shr-border-default',
-      },
-    },
-  ],
 })
 
 const ActualMultiCombobox = <T,>(
@@ -476,16 +459,16 @@ const ActualMultiCombobox = <T,>(
     } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ focused: isExpanded, disabled, className }),
+      wrapper: wrapper({ className }),
       inputArea: inputArea(),
       selectedList: selectedList(),
-      inputWrapper: inputWrapper({ hidden: !isExpanded }),
+      inputWrapper: inputWrapper(),
       input: input(),
       placeholder: placeholderEl(),
-      suffixWrapper: suffixWrapper({ disabled }),
+      suffixWrapper: suffixWrapper(),
       suffixIcon: suffixIcon(),
     }
-  }, [isExpanded, disabled, className])
+  }, [className])
 
   const localized = useLocalize({
     selectedListAriaLabel: {

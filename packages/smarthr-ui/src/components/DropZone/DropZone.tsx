@@ -26,7 +26,7 @@ const classNameGenerator = tv({
       'smarthr-ui-DropZone',
       'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
-      'has-[.smarthr-ui-DropZone-Button:disabled]:shr-cursor-not-allowed',
+      'has-[.smarthr-ui-DropZone-Button[aria-disabled]]:shr-cursor-not-allowed',
       '[&:not([data-files-dragged-over])]:shr-border-dashed',
       'data-[files-dragged-over]:shr-border-main',
     ],

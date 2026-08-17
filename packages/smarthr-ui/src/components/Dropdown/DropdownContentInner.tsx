@@ -19,7 +19,7 @@ import { type ContentBoxStyle, type Rect, getContentBoxStyle } from './dropdownH
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
+  base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3 forced-colors:shr-outline forced-colors:shr-outline-1',
   variants: {
     isActive: {
       true: 'shr-visible',

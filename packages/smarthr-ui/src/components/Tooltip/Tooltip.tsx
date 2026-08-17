@@ -5,8 +5,10 @@ import {
   type ComponentProps,
   type FC,
   type PropsWithChildren,
+  type FocusEvent as ReactFocusEvent,
   type ReactNode,
-  useCallback,
+  type PointerEvent as ReactPointerEvent,
+  type TouchEvent as ReactTouchEvent,
   useId,
   useMemo,
   useRef,
@@ -17,6 +19,7 @@ import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useLatest } from '../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
 
@@ -104,14 +107,24 @@ export const Tooltip: FC<Props> = ({
     [isIcon, className],
   )
 
-  const toShowAction = useCallback(
-    (e: BaseSyntheticEvent) => {
+  const latest = useLatest({
+    onPointerEnter,
+    onPointerLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
+    ellipsisOnly,
+  })
+
+  const functions = useMemo(() => {
+    const toShowAction = (e: BaseSyntheticEvent) => {
       // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
       if (!ref.current?.contains(e.target)) {
         return
       }
 
-      if (ellipsisOnly) {
+      if (latest.ellipsisOnly) {
         const outerWidth = parseInt(
           window
             .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
@@ -126,13 +139,39 @@ export const Tooltip: FC<Props> = ({
 
       setRect(ref.current.getBoundingClientRect())
       setIsVisible(true)
-    },
-    [ellipsisOnly],
-  )
-  const toCloseAction = useCallback(() => {
-    setRect(null)
-    setIsVisible(false)
-  }, [])
+    }
+    const toCloseAction = () => {
+      setRect(null)
+      setIsVisible(false)
+    }
+
+    return {
+      handlePointerEnter: (e: ReactPointerEvent<HTMLSpanElement>) => {
+        latest.onPointerEnter?.(e)
+        toShowAction(e)
+      },
+      handleTouchStart: (e: ReactTouchEvent<HTMLSpanElement>) => {
+        latest.onTouchStart?.(e)
+        toShowAction(e)
+      },
+      handleFocus: (e: ReactFocusEvent<HTMLSpanElement>) => {
+        latest.onFocus?.(e)
+        toShowAction(e)
+      },
+      handlePointerLeave: (e: ReactPointerEvent<HTMLSpanElement>) => {
+        latest.onPointerLeave?.(e)
+        toCloseAction()
+      },
+      handleTouchEnd: (e: ReactTouchEvent<HTMLSpanElement>) => {
+        latest.onTouchEnd?.(e)
+        toCloseAction()
+      },
+      handleBlur: (e: ReactFocusEvent<HTMLSpanElement>) => {
+        latest.onBlur?.(e)
+        toCloseAction()
+      },
+    }
+  }, [latest])
 
   useEnhancedEffect(() => {
     setPortalRoot(fullscreenElement ?? document.body)
@@ -153,7 +192,7 @@ export const Tooltip: FC<Props> = ({
   }, [tabIndex, isLabel, messageId])
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
     <span
       {...rest}
       ref={ref}
@@ -161,30 +200,12 @@ export const Tooltip: FC<Props> = ({
       aria-describedby={
         isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
       }
-      onPointerEnter={(delegateEvent) => {
-        onPointerEnter?.(delegateEvent)
-        toShowAction(delegateEvent)
-      }}
-      onTouchStart={(delegateEvent) => {
-        onTouchStart?.(delegateEvent)
-        toShowAction(delegateEvent)
-      }}
-      onFocus={(delegateEvent) => {
-        onFocus?.(delegateEvent)
-        toShowAction(delegateEvent)
-      }}
-      onPointerLeave={(delegateEvent) => {
-        onPointerLeave?.(delegateEvent)
-        toCloseAction()
-      }}
-      onTouchEnd={(delegateEvent) => {
-        onTouchEnd?.(delegateEvent)
-        toCloseAction()
-      }}
-      onBlur={(delegateEvent) => {
-        onBlur?.(delegateEvent)
-        toCloseAction()
-      }}
+      onPointerEnter={functions.handlePointerEnter}
+      onTouchStart={functions.handleTouchStart}
+      onFocus={functions.handleFocus}
+      onPointerLeave={functions.handlePointerLeave}
+      onTouchEnd={functions.handleTouchEnd}
+      onBlur={functions.handleBlur}
       className={actualClassName}
     >
       {portalRoot &&

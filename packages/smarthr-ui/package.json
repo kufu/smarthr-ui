@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "99.1.0",
+  "version": "99.2.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -49,7 +49,7 @@
     "autoprefixer": "^10.4.27",
     "babel-plugin-polyfill-corejs2": "^0.4.17",
     "babel-plugin-polyfill-regenerator": "^1.0.0",
-    "chromatic": "^16.2.0",
+    "chromatic": "^18.1.0",
     "eslint-plugin-storybook": "9.1.20",
     "glob": "13.0.6",
     "http-server": "^14.1.1",
