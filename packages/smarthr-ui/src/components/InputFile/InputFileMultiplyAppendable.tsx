@@ -55,6 +55,7 @@ export const InputFileMultiplyAppendable = forwardRef<
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
+      [],
     )
 
     const latest = useLatest({ onChange, files, previewFile })
