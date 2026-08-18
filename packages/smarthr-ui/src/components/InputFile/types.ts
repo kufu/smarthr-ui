@@ -10,7 +10,12 @@ type BaseProps = VariantProps<typeof classNameGenerator> & {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** ファイルのプレビュー機能を有効にするかどうか */
-  previewable?: boolean
+  previewable?:
+    | boolean
+    | {
+        /** プレビューダイアログ内のFileViewerで検索機能を有効にするかどうか */
+        searchable?: boolean
+      }
   error?: boolean
   multiple?:
     | boolean

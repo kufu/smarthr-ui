@@ -50,6 +50,8 @@ type Props = {
   scaleStep?: number
   onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
   onLoadError?: (error: unknown) => void
+  /** PDF表示時に検索ボックスを表示するかどうか */
+  searchable?: boolean
 }
 
 // 共通のprops（ImageとPDFで共有）
@@ -79,6 +81,7 @@ export const FileViewer: FC<Props> = ({
   width: fixedWidth,
   onPassword,
   onLoadError,
+  searchable = true,
 }) => {
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
@@ -137,6 +140,7 @@ export const FileViewer: FC<Props> = ({
       {...commonAttrs}
       setRotation={setRotation}
       handlePassword={functions.handlePassword}
+      searchable={searchable}
     />
   ) : (
     <ImageFileViewer {...commonAttrs} />
@@ -147,6 +151,7 @@ const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
     handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+    searchable?: boolean
   }
 > = ({
   file,
@@ -161,6 +166,7 @@ const PDFFileViewer: FC<
   setRotation,
   handlePassword,
   handleLoadError,
+  searchable = true,
 }) => {
   const search = usePDFSearch(file.url)
 
@@ -172,7 +178,7 @@ const PDFFileViewer: FC<
       setWidth={setWidth}
       scaleSteps={scaleSteps}
       functions={functions}
-      searchController={<SearchController search={search} />}
+      searchController={searchable ? <SearchController search={search} /> : undefined}
     >
       <PDFViewer
         scale={scale}
@@ -183,7 +189,7 @@ const PDFFileViewer: FC<
         handlePDFLoaded={setRotation}
         handlePassword={handlePassword}
         handleLoadError={handleLoadError}
-        search={search}
+        search={searchable ? search : undefined}
       />
     </ActualFileViewer>
   )

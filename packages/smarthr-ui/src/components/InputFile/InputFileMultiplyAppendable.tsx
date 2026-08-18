@@ -12,6 +12,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Stack } from '../Layout'
 import { Groupbox } from '../Panel'
 
@@ -38,6 +39,13 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     },
     ref,
   ) => {
+    const isPreviewable = !!previewable
+    const previewableAttrs = useObjectAttributes<
+      typeof previewable,
+      { searchable?: boolean } | undefined
+    >(previewable, () => undefined)
+    const fileViewerSearchable = previewableAttrs?.searchable
+
     const [files, setFiles] = useState<File[]>([])
     const [previewFile, setPreviewFile] = useState<File | null>(null)
     const labelId = useId()
@@ -136,7 +144,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                 key={index}
                 file={file}
                 index={index}
-                previewable={previewable}
+                previewable={isPreviewable}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
@@ -160,11 +168,12 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
-        {previewable && (
+        {isPreviewable && (
           <FilePreviewDialog
             file={previewFile}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
+            searchable={fileViewerSearchable}
           />
         )}
       </Stack>
