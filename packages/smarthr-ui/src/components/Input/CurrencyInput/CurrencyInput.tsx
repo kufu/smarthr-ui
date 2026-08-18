@@ -5,13 +5,13 @@ import {
   type FocusEvent,
   forwardRef,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
@@ -66,11 +66,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-      [],
-    )
+    const mergedRef = useMergeRefs(ref, innerRef)
 
     useEffect(() => {
       if (value === undefined && defaultValue !== undefined) {
@@ -100,7 +96,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         defaultValue={defaultValue}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
-        ref={innerRef}
+        ref={mergedRef}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )
