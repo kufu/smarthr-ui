@@ -35,6 +35,12 @@ type Props = {
   children?: React.ReactNode
   /** ドーナツの太さ。既定 'S' */
   thickness?: 'S' | 'M' | 'L'
+  /**
+   * 進捗の帯の端を丸くするか。既定 false。
+   * 丸端は進捗が極小のときに帯の長さより大きな塊として描かれ、実際の値より
+   * 多く見えてしまうため、既定は角端にしている。
+   */
+  rounded?: boolean
   /** 進捗色の濃淡。既定は基準色 tone=1 */
   tone?: 1 | 2 | 3 | 4 | 5
   className?: string
@@ -46,6 +52,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
   children,
   thickness = 'S',
   tone = 1,
+  rounded = false,
   className,
   options: externalOptions,
 }) => {
@@ -73,22 +80,23 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
       datasets: [
         {
           data: data.datasets[0].data,
-          // 進捗（index 0）の塗りは透明にし、見た目は roundedProgressPlugin が
+          // 丸端のときは進捗（index 0）の塗りを透明にし、見た目は roundedProgressPlugin が
           // 丸端付きの円弧ストロークで描く（hit 判定・キーボードナビ・tooltip は
-          // 透明でも arc として残る）。トラック（index 1）は chart.js が描く。
+          // 透明でも arc として残る）。角端のときはプラグインを止めて chart.js に塗らせる。
+          // トラック（index 1）は常に chart.js が描く。
           backgroundColor: [
-            'transparent',
+            rounded ? 'transparent' : colors.progress,
             colors.track,
           ] as ChartDataset<'doughnut'>['backgroundColor'],
           hoverBackgroundColor: [
-            'transparent',
+            rounded ? 'transparent' : colors.progressHover,
             colors.track,
           ] as ChartDataset<'doughnut'>['hoverBackgroundColor'],
-          // hover 時の枠はセグメント別に指定する。進捗（index 0）は透明にして
-          // プラグインが丸端付きの枠を描く（二重描画を避ける）。トラック（index 1）は
-          // 角端なので chart.js 標準の枠で強調する。
+          // hover 時の枠はセグメント別に指定する。丸端の進捗（index 0）は透明にして
+          // プラグインが丸端付きの枠を描く（二重描画を避ける）。角端の進捗と
+          // トラック（index 1）は chart.js 標準の枠で強調する。
           hoverBorderColor: [
-            'transparent',
+            rounded ? 'transparent' : SMARTHR_DEFAULT_COLORS.OUTLINE,
             SMARTHR_DEFAULT_COLORS.OUTLINE,
           ] as ChartDataset<'doughnut'>['hoverBorderColor'],
           hoverBorderWidth: 4,
@@ -99,7 +107,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         },
       ],
     }),
-    [data, colors],
+    [data, rounded, colors],
   )
 
   const chartOptions: ChartOptions<'doughnut'> = useMemo(
@@ -113,24 +121,28 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
           legend: { display: false },
           tooltip: {
             callbacks: {
-              // 進捗（index 0）の塗りは透明にしてプラグインで描いているため、
+              // 丸端のときは進捗（index 0）の塗りを透明にしてプラグインで描いているため、
               // tooltip の色マーカーが透明になってしまう。実際の進捗色／トラック色を返す。
+              // 角端のときは chart.js が実色で塗るため本来は不要だが、返す色は同じなので
+              // モードでは分岐しない。
               labelColor: (context: TooltipItem<'doughnut'>) => {
                 const segmentColor = context.dataIndex === 0 ? colors.progress : colors.track
                 return { borderColor: segmentColor, backgroundColor: segmentColor }
               },
             },
           },
-          roundedProgress: {
-            segmentIndex: 0,
-            color: colors.progress,
-            hoverColor: colors.progressHover,
-            hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
-            hoverBorderWidth: 4,
-          },
+          roundedProgress: rounded
+            ? {
+                segmentIndex: 0,
+                color: colors.progress,
+                hoverColor: colors.progressHover,
+                hoverBorderColor: SMARTHR_DEFAULT_COLORS.OUTLINE,
+                hoverBorderWidth: 4,
+              }
+            : false,
         },
       }) as ChartOptions<'doughnut'>,
-    [thickness, externalOptions, colors],
+    [thickness, rounded, externalOptions, colors],
   )
 
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
@@ -150,6 +162,9 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         keyboardNavigation も持たない）。
       */}
       <Doughnut
+        // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
+        // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
+        className="shr-relative shr-z-1"
         aria-hidden="true"
         ref={chartRef}
         data={chartData}
