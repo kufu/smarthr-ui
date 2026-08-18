@@ -17,6 +17,11 @@ export const useMergeRefs = <T>(ref1: MergeableRefType<T>, ref2: MergeableRefTyp
     (node: T | null) => {
       setRef(ref1, node)
       setRef(ref2, node)
+
+      return () => {
+        setRef(ref1, null)
+        setRef(ref2, null)
+      }
     },
     [ref1, ref2],
   )
