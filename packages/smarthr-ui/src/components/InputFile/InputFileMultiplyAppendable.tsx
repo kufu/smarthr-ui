@@ -39,11 +39,11 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     },
     ref,
   ) => {
-    const isPreviewable = !!previewable
     const previewableAttrs = useObjectAttributes<
       typeof previewable,
       { searchable?: boolean } | undefined
     >(previewable, () => undefined)
+    const isPreviewable = !!previewableAttrs
 
     const [files, setFiles] = useState<File[]>([])
     const [previewFile, setPreviewFile] = useState<File | null>(null)
