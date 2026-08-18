@@ -26,7 +26,7 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className = '', ...rest }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
