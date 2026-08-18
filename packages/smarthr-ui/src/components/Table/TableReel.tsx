@@ -43,37 +43,36 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
     let currentObserver: ResizeObserver | null = null
 
     const handleScroll = () => {
+      currentObserver?.disconnect()
+      currentObserver = null
+
       if (!wrapper.querySelector(HAS_FIXED_SELECTOR)) {
+        setShowShadow(false)
         return
       }
 
+      const observer = new ResizeObserver(handleScroll)
       let isVisible = false
+
       const commonAction = (
         cells: HTMLElement[] | NodeListOf<HTMLElement>,
         direction: 'left' | 'right',
         visible: boolean,
       ) => {
-        currentObserver?.disconnect()
+        let position = 0
 
-        const action = () => {
-          let position = 0
+        cells.forEach((cell, index) => {
+          if (cell.classList.toggle('fixed', visible)) {
+            isVisible = true
+            cell.style[direction] = `${position}px`
+            cell.style.zIndex = (index + 1).toString()
 
-          cells.forEach((cell, index) => {
-            if (cell.classList.toggle('fixed', visible)) {
-              isVisible = true
-              cell.style[direction] = `${position}px`
-              cell.style.zIndex = (index + 1).toString()
-
-              position += cell.offsetWidth
-            }
-          })
-        }
-
-        action()
-        currentObserver = new ResizeObserver(action)
+            position += cell.offsetWidth
+          }
+        })
 
         cells.forEach((cell) => {
-          currentObserver.observe(cell)
+          observer.observe(cell)
         })
       }
 
@@ -96,6 +95,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
         }
       })
 
+      currentObserver = observer
       setShowShadow(isVisible)
     }
 
