@@ -18,7 +18,11 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest },
   const { portalRoot, createPortal } = usePortal()
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
+  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(
+    ref,
+    () => containerRef.current,
+    [portalRoot], // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   const [style, setStyle] = useState(initialPosition)
 
