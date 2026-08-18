@@ -19,23 +19,16 @@ import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
-import type { Props } from './types'
+import type { LowerProps } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
+export const InputFileMultiplyAppendable = forwardRef<
+  HTMLInputElement,
+  Omit<LowerProps, 'multiple'>
+>(
   (
-    {
-      className,
-      size,
-      label,
-      hasFileList = true,
-      previewable = false,
-      onChange,
-      disabled,
-      error,
-      ...rest
-    },
+    { className, size, label, hasFileList = true, previewable, onChange, disabled, error, ...rest },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
@@ -136,7 +129,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                 key={index}
                 file={file}
                 index={index}
-                previewable={previewable}
+                previewable={!!previewable}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
@@ -165,6 +158,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
             file={previewFile}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
+            searchable={previewable?.searchable}
           />
         )}
       </Stack>

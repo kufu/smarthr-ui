@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.3.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.2.0...smarthr-ui-v99.3.0) (2026-08-18)
+
+
+### Features
+
+* **FileViewer:** searchable prop を追加して検索ボックスの表示/非表示を制御できるようにする ([#6798](https://github.com/kufu/smarthr-ui/issues/6798)) ([d7acb14](https://github.com/kufu/smarthr-ui/commit/d7acb14ae677c89aac566826707ab2eb4a89457c))
+
+
+### Bug Fixes
+
+* **AppHeader:** プラットフォーム固有のpropsがDOM要素に渡る問題を修正 ([#6779](https://github.com/kufu/smarthr-ui/issues/6779)) ([9f33263](https://github.com/kufu/smarthr-ui/commit/9f332635935b9d195979cb82f9f27a0050fd5d37))
+* **Combobox:** 画面の右端に寄せて配置した場合にドロップダウンが指定した幅で表示されない問題を修正 ([#6771](https://github.com/kufu/smarthr-ui/issues/6771)) ([174ecbf](https://github.com/kufu/smarthr-ui/commit/174ecbfd56d7469ca2f4cddd2337cb5dedd222ef))
+
 ## [99.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.1.1...smarthr-ui-v99.2.0) (2026-08-13)
 
 
