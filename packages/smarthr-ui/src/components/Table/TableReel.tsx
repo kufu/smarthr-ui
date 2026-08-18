@@ -94,7 +94,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
     const cellObserver = new ResizeObserver(handleScroll)
 
     handleScroll()
-    wrapper.addEventListener('scroll', handleScroll)
+    wrapper.addEventListener('scroll', handleScroll, { passive: true })
 
     const resizeObserver = new ResizeObserver(handleScroll)
     resizeObserver.observe(wrapper)
