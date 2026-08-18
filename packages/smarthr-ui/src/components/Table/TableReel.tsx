@@ -28,7 +28,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       wrapper: reelShadowClassNameGenerator({ showShadow, className: wrapper({ className }) }),
       inner: inner(),
     }
-  }, [className, showShadow])
+  }, [showShadow, className])
 
   return (
     <div className={classNames.wrapper}>
