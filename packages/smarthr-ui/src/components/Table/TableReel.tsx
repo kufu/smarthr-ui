@@ -73,9 +73,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
 
       wrapper.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
         const leftCells = tr.querySelectorAll<HTMLElement>(FIXED_LEFT_SELECTOR)
-        const rightCells = Array.from(
-          tr.querySelectorAll<HTMLElement>(FIXED_RIGHT_SELECTOR),
-        ).reverse()
+        const rightCells = tr.querySelectorAll<HTMLElement>(FIXED_RIGHT_SELECTOR)
 
         if (leftCells.length > 0) {
           commonAction(leftCells, 'left' as const, wrapper.scrollLeft > 0)
@@ -83,7 +81,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
 
         if (rightCells.length > 0) {
           commonAction(
-            rightCells,
+            Array.from(rightCells).reverse(),
             'right' as const,
             wrapper.scrollLeft < wrapper.scrollWidth - wrapper.clientWidth - 1,
           )
