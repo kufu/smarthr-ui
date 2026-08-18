@@ -112,6 +112,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => innerRef.current,
+      [],
     )
 
     const latest = useLatest({ autoFocus })
