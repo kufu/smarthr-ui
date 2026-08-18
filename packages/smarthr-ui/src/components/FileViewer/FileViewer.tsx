@@ -151,7 +151,7 @@ const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
     handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
-    searchable?: boolean
+    searchable: boolean
   }
 > = ({
   file,
