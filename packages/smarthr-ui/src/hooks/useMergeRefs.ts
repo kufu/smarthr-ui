@@ -15,20 +15,29 @@ type MergeableRefType<T> = Ref<T> | undefined
 export const useMergeRefs = <T>(ref1: MergeableRefType<T>, ref2: MergeableRefType<T>) =>
   useCallback(
     (node: T | null) => {
-      setRef(ref1, node)
-      setRef(ref2, node)
+      const cleanup1 = setRef(ref1, node)
+      const cleanup2 = setRef(ref2, node)
 
       return () => {
-        setRef(ref1, null)
-        setRef(ref2, null)
+        if (typeof cleanup1 === 'function') {
+          cleanup1()
+        } else {
+          setRef(ref1, null)
+        }
+
+        if (typeof cleanup2 === 'function') {
+          cleanup2()
+        } else {
+          setRef(ref2, null)
+        }
       }
     },
     [ref1, ref2],
   )
 
-const setRef = <T>(ref: Ref<T> | undefined, value: T | null) => {
+const setRef = <T>(ref: Ref<T> | undefined, value: T | null): void | (() => void) => {
   if (typeof ref === 'function') {
-    ref(value)
+    return ref(value)
   } else if (ref) {
     ;(ref as MutableRefObject<T | null>).current = value
   }
