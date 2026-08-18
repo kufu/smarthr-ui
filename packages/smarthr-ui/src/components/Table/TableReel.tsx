@@ -54,7 +54,6 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
         visible: boolean,
       ) => {
         currentObserver?.disconnect()
-        currentObserver = null
 
         const action = () => {
           let position = 0
@@ -71,13 +70,11 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
         }
 
         action()
-        const observer = new ResizeObserver(action)
+        currentObserver = new ResizeObserver(action)
 
         cells.forEach((cell) => {
-          observer.observe(cell)
+          currentObserver.observe(cell)
         })
-
-        currentObserver = observer
       }
 
       wrapper.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
