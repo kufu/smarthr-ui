@@ -2,17 +2,16 @@
 
 import {
   type ComponentPropsWithRef,
-  type MutableRefObject,
   type ReactNode,
   type WheelEvent,
   forwardRef,
-  useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useTheme } from '../../hooks/useTheme'
 
 type BaseProps = {
@@ -107,20 +106,15 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef: MutableRefObject<HTMLInputElement | null> = useRef(null)
+    const innerRef = useRef<HTMLInputElement | null>(null)
+    const mergedRef = useMergeRefs(ref, innerRef)
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-      [],
-    )
-
-    const latest = useLatest({ autoFocus })
+    const latest = useLatest({ autoFocus, mergedRef })
 
     const functions = useMemo(
       () => ({
-        handleInnerRef: (node: HTMLInputElement | null) => {
-          innerRef.current = node
+        callbackRef: (node: HTMLInputElement | null) => {
+          latest.mergedRef(node)
 
           if (latest.autoFocus && node) {
             node.focus()
@@ -170,7 +164,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           onBlur={onBlur}
           disabled={disabled}
           readOnly={readOnly}
-          ref={functions.handleInnerRef}
+          ref={functions.callbackRef}
           aria-invalid={error || undefined}
           className={classNames.input}
         />
