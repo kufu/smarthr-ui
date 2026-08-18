@@ -74,3 +74,10 @@ export const ScaleStep: Story = {
     scaleStep: 1,
   },
 }
+
+export const Searchable: Story = {
+  name: 'searchable',
+  args: {
+    searchable: false,
+  },
+}

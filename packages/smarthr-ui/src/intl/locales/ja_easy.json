@@ -64,6 +64,7 @@
   "smarthr-ui/InputFile/download": "ダウンロード",
   "smarthr-ui/InputFile/previewLabel": "{fileName}の　プレビューを　開く",
   "smarthr-ui/InputFile/downloadLabel": "{fileName}を　ダウンロード\"",
+  "smarthr-ui/InputFile/closePreview": "閉じる",
   "smarthr-ui/LanguageSwitcher/checkIconAlt": "えらんだ",
   "smarthr-ui/Loader/alt": "処理している",
   "smarthr-ui/MessageDialog/closeButtonLabel": "閉じる",

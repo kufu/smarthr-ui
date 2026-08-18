@@ -2,9 +2,9 @@ import {
   type PropsWithChildren,
   type RefObject,
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react'
 
@@ -22,19 +22,22 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
   const innerRef = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 
-  const focus = useCallback(() => {
-    ;(firstFocusTarget?.current || dummyFocusRef.current)?.focus()
-  }, [firstFocusTarget])
+  const functions = useMemo(
+    () => ({
+      focus: () => {
+        ;(firstFocusTarget?.current || dummyFocusRef.current)?.focus()
+      },
+    }),
+    [firstFocusTarget],
+  )
 
-  useImperativeHandle(ref, () => ({
-    focus,
-  }))
+  useImperativeHandle(ref, () => functions, [functions])
 
   useEffect(() => {
     // FocusTrap がマウントされた時点のフォーカス要素を保存
     const triggerElement = document.activeElement
 
-    focus()
+    functions.focus()
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
@@ -74,7 +77,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
         triggerElement.focus()
       }
     }
-  }, [focus])
+  }, [functions])
 
   return (
     <div ref={innerRef}>
