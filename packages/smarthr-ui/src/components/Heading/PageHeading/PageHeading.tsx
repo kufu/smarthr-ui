@@ -101,6 +101,7 @@ const AutoPageTitleHeading: FC<
   useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
     outerRef,
     () => innerRef.current,
+    [],
   )
 
   useEffect(() => {
