@@ -40,11 +40,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       return
     }
 
-    let cellCleans: Array<() => void> = []
-    const allClean = () => {
-      cellCleans.forEach((clean) => clean())
-      cellCleans = []
-    }
+    let currentObserver: ResizeObserver | null = null
 
     const handleScroll = () => {
       if (!wrapper.querySelector(HAS_FIXED_SELECTOR)) {
@@ -57,7 +53,8 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
         direction: 'left' | 'right',
         visible: boolean,
       ) => {
-        allClean()
+        currentObserver?.disconnect()
+        currentObserver = null
 
         const action = () => {
           let position = 0
@@ -80,11 +77,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
           observer.observe(cell)
         })
 
-        cellCleans.push(() => {
-          cells.forEach((cell) => {
-            observer.unobserve(cell)
-          })
-        })
+        currentObserver = observer
       }
 
       wrapper.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
@@ -126,7 +119,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       wrapper.removeEventListener('scroll', handleScroll)
       resizeObserver.unobserve(wrapper)
       mutationObserver.disconnect()
-      allClean()
+      currentObserver?.disconnect()
     }
   }, [tableWrapperRef])
 
