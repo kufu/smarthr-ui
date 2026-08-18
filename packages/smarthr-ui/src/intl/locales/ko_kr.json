@@ -64,6 +64,7 @@
   "smarthr-ui/InputFile/download": "다운로드",
   "smarthr-ui/InputFile/previewLabel": "{fileName}의 미리보기 열기",
   "smarthr-ui/InputFile/downloadLabel": "{fileName} 다운로드",
+  "smarthr-ui/InputFile/closePreview": "닫기",
   "smarthr-ui/LanguageSwitcher/checkIconAlt": "선택중",
   "smarthr-ui/Loader/alt": "처리중",
   "smarthr-ui/MessageDialog/closeButtonLabel": "닫기",
