@@ -91,3 +91,34 @@ export const VRTForcedColors: StoryObj = {
     chromatic: { forcedColors: 'active' },
   },
 }
+
+export const VRTSearchable: StoryObj = {
+  render: () => (
+    <Stack className="shr-h-[50vh]">
+      <div className="shr-h-[50%]">
+        <FileViewer
+          file={{
+            url: '/fixtures/sample-japanese-pdf.pdf',
+            contentType: 'application/pdf',
+          }}
+        />
+      </div>
+      <div className="shr-h-[50%]">
+        <FileViewer
+          file={{
+            url: '/fixtures/sample-japanese-pdf.pdf',
+            contentType: 'application/pdf',
+          }}
+          searchable={false}
+        />
+      </div>
+    </Stack>
+  ),
+}
+
+export const VRTSearchableForcedColors: StoryObj = {
+  ...VRTSearchable,
+  parameters: {
+    chromatic: { forcedColors: 'active' },
+  },
+}
