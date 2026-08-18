@@ -46,7 +46,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     const previewableAttrs = useObjectAttributes<
       typeof previewable,
       { searchable?: boolean } | undefined
-    >(previewable, () => undefined)
+    >(previewable, (original) => (original ? { searchable: true } : undefined))
     const isPreviewable = !!previewableAttrs
 
     const [files, setFiles] = useState<File[]>([])
