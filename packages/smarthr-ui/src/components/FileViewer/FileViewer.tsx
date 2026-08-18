@@ -166,7 +166,7 @@ const PDFFileViewer: FC<
   setRotation,
   handlePassword,
   handleLoadError,
-  searchable = true,
+  searchable,
 }) => {
   const search = usePDFSearch(file.url)
 
