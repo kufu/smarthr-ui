@@ -64,9 +64,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
 
             position += cell.offsetWidth
           }
-        })
 
-        cells.forEach((cell) => {
           cellObserver.observe(cell)
         })
       }
