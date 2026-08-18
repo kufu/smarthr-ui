@@ -284,6 +284,8 @@ export const ModelessDialog: FC<Props> = ({
     functions.debounceLiveRegionText(txt)
   }, [localize, wrapperPosition, functions])
 
+  useEffect(() => functions.debounceLiveRegionText.cancel, [functions])
+
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
       setWrapperPosition(wrapperRef.current.getBoundingClientRect())
