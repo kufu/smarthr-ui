@@ -82,6 +82,11 @@ export const Previewable: StoryObj<typeof InputFile> = {
   args: { previewable: true, multiple: { appendable: true } },
 }
 
+export const PreviewableSearchable: StoryObj<typeof InputFile> = {
+  name: 'previewable.searchable',
+  args: { previewable: { searchable: false }, multiple: { appendable: true } },
+}
+
 export const OnChange: StoryObj<typeof InputFile> = {
   name: 'onChange',
   args: { onChange: action('changed') },
