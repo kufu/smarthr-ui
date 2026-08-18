@@ -87,6 +87,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
+      [],
     )
 
     useEffect(() => {
