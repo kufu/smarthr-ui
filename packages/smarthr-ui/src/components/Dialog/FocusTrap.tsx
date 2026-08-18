@@ -26,9 +26,13 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     ;(firstFocusTarget?.current || dummyFocusRef.current)?.focus()
   }, [firstFocusTarget])
 
-  useImperativeHandle(ref, () => ({
-    focus,
-  }))
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus,
+    }),
+    [focus],
+  )
 
   useEffect(() => {
     // FocusTrap がマウントされた時点のフォーカス要素を保存
