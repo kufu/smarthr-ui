@@ -280,6 +280,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
     externalRef,
     () => textareaRef.current,
+    [],
   )
 
   return (
