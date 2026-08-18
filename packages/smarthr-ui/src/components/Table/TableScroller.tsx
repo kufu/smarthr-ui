@@ -6,8 +6,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   useCallback,
-  useLayoutEffect,
-  useRef,
 } from 'react'
 
 import { defaultHtmlFontSize } from '../../themes'
@@ -49,13 +47,20 @@ const FixedHeadTableScroller = ({
   direction,
   ...rest
 }: FixedHeadTableScrollerProps) => {
-  const innerRef = useRef<HTMLDivElement | null>(null)
-
   const setRefs = useCallback(
-    (node: HTMLDivElement) => {
-      innerRef.current = node
+    (node: HTMLDivElement | null) => {
+      // thead の高さ分だけ scroll-padding-top を設定
+      if (node) {
+        const thead = node.querySelector('thead')
+        if (thead) {
+          const { height } = thead.getBoundingClientRect()
+          node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
+        }
+      }
+
       if (forwardedRef) {
         if (typeof forwardedRef === 'function') {
+          // React 19 では callback ref の戻り値を cleanup として使うため、返却する
           forwardedRef(node)
         } else {
           forwardedRef.current = node
@@ -64,16 +69,6 @@ const FixedHeadTableScroller = ({
     },
     [forwardedRef],
   )
-
-  // thead の高さ分だけ scroll-padding-top を設定
-  useLayoutEffect(() => {
-    if (!innerRef.current) return
-    const thead = innerRef.current.querySelector('thead')
-    if (thead) {
-      const { height } = thead.getBoundingClientRect()
-      innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
-    }
-  }, [])
 
   return (
     <Scroller {...rest} ref={setRefs} direction={direction}>
