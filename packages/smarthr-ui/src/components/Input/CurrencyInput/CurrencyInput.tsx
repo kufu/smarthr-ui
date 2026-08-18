@@ -26,7 +26,7 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className = '', ...rest }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
@@ -91,12 +91,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
+        ref={mergedRef}
         type="text"
         value={value}
         defaultValue={defaultValue}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
-        ref={mergedRef}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )
