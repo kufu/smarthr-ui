@@ -15,7 +15,7 @@ allowBuilds:
 overrides:
   postcss@<8.5.10: ^8.5.25
   # esbuild@0.28.1 より新しいバージョンが minimumReleaseAge を超過したタイミングで削除可
-  esbuild@<=0.24.2: '>=0.28.1'
+  esbuild@<=0.24.2: '>=0.28.2'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
   tar@<=7.5.15: '>=7.5.22'
   js-yaml@>=4.0.0 <=5.2.1: '>=5.2.3'
