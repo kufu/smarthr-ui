@@ -48,7 +48,6 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       typeof previewable,
       { searchable?: boolean } | undefined
     >(previewable, () => undefined)
-    const fileViewerSearchable = previewableAttrs?.searchable
 
     const [files, setFiles] = useState<File[]>([])
     const [previewFile, setPreviewFile] = useState<File | null>(null)
@@ -164,7 +163,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
             file={previewFile}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
-            searchable={fileViewerSearchable}
+            searchable={previewableAttrs?.searchable}
           />
         )}
       </Stack>

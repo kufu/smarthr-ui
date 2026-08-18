@@ -44,7 +44,6 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
       typeof previewable,
       { searchable?: boolean } | undefined
     >(previewable, () => undefined)
-    const fileViewerSearchable = previewableAttrs?.searchable
 
     const [files, setFiles] = useState<File[]>([])
     const [previewFile, setPreviewFile] = useState<File | null>(null)
@@ -173,7 +172,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
             file={previewFile}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
-            searchable={fileViewerSearchable}
+            searchable={previewableAttrs?.searchable}
           />
         )}
       </Stack>
