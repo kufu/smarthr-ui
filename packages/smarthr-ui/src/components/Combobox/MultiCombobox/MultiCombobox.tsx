@@ -430,7 +430,11 @@ const ActualMultiCombobox = <T,>(
     functions.blur,
   )
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+    ref,
+    () => inputRef.current,
+    [],
+  )
 
   useEffect(() => {
     if (latest.highlighted) {
