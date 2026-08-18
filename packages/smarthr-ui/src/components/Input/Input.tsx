@@ -112,11 +112,13 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     const functions = useMemo(
       () => ({
         callbackRef: (node: HTMLInputElement | null) => {
-          latest.mergedRef(node)
+          const cleanup = latest.mergedRef(node)
 
-          if (latest.autoFocus && node) {
+          if (node && latest.autoFocus) {
             node.focus()
           }
+
+          return cleanup
         },
         handleDelegateClick: () => innerRef.current?.focus(),
       }),

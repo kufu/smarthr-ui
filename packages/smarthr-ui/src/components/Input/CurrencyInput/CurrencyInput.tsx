@@ -28,12 +28,17 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
   ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
+    const mergedRef = useMergeRefs(ref, innerRef)
+
     const [isFocused, setIsFocused] = useState(false)
 
     const latest = useLatest({
       onFocus,
       onBlur,
       onFormatValue,
+      value,
+      defaultValue,
+      mergedRef,
     })
 
     const functions = useMemo(() => {
@@ -43,11 +48,21 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
       }
+      const formatCurrencyValue = (raw = '') => {
+        formatValue(formatCurrency(raw))
+      }
 
       return {
-        formatCurrencyValue: (raw = '') => {
-          formatValue(formatCurrency(raw))
+        callbackRef: (node: HTMLInputElement | null) => {
+          const cleanup = latest.mergedRef(node)
+
+          if (node && latest.value === undefined && latest.defaultValue !== undefined) {
+            formatCurrencyValue(latest.defaultValue)
+          }
+
+          return cleanup
         },
+        formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
 
@@ -66,16 +81,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const mergedRef = useMergeRefs(ref, innerRef)
-
-    useEffect(() => {
-      if (value === undefined && defaultValue !== undefined) {
-        functions.formatCurrencyValue(defaultValue)
-      }
-      // when component did mount
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
     useEffect(() => {
       if (!isFocused) {
         if (value !== undefined) {
@@ -91,7 +96,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
-        ref={mergedRef}
+        ref={functions.callbackRef}
         type="text"
         value={value}
         defaultValue={defaultValue}
