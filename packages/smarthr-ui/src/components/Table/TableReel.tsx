@@ -93,6 +93,8 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       setShowShadow(isVisible)
     }
 
+    // HINT: cellObserverはhandleScroll先頭でdisconnect→再observeするため、
+    //       wrapperを監視するresizeObserverとは分けている
     const cellObserver = new ResizeObserver(handleScroll)
 
     handleScroll()
