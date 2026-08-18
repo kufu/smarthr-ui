@@ -69,6 +69,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => innerRef.current,
+      [],
     )
 
     useEffect(() => {
