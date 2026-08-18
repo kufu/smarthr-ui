@@ -40,10 +40,11 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       return
     }
 
-    let currentObserver: ResizeObserver | null = null
-
     const handleScroll = () => {
+      cellObserver.disconnect()
+
       if (!wrapper.querySelector(HAS_FIXED_SELECTOR)) {
+        setShowShadow(false)
         return
       }
 
@@ -53,27 +54,20 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
         direction: 'left' | 'right',
         visible: boolean,
       ) => {
-        currentObserver?.disconnect()
+        let position = 0
 
-        const action = () => {
-          let position = 0
+        cells.forEach((cell, index) => {
+          if (cell.classList.toggle('fixed', visible)) {
+            isVisible = true
+            cell.style[direction] = `${position}px`
+            cell.style.zIndex = (index + 1).toString()
 
-          cells.forEach((cell, index) => {
-            if (cell.classList.toggle('fixed', visible)) {
-              isVisible = true
-              cell.style[direction] = `${position}px`
-              cell.style.zIndex = (index + 1).toString()
-
-              position += cell.offsetWidth
-            }
-          })
-        }
-
-        action()
-        currentObserver = new ResizeObserver(action)
+            position += cell.offsetWidth
+          }
+        })
 
         cells.forEach((cell) => {
-          currentObserver.observe(cell)
+          cellObserver.observe(cell)
         })
       }
 
@@ -99,6 +93,8 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       setShowShadow(isVisible)
     }
 
+    const cellObserver = new ResizeObserver(handleScroll)
+
     handleScroll()
     wrapper.addEventListener('scroll', handleScroll)
 
@@ -116,7 +112,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       wrapper.removeEventListener('scroll', handleScroll)
       resizeObserver.unobserve(wrapper)
       mutationObserver.disconnect()
-      currentObserver?.disconnect()
+      cellObserver.disconnect()
     }
   }, [tableWrapperRef])
 
