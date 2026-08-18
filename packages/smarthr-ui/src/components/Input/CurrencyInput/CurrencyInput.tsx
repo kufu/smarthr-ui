@@ -28,9 +28,8 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
   ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
-    const mergedRef = useMergeRefs(ref, innerRef)
-
     const [isFocused, setIsFocused] = useState(false)
+    const executedDefaultValue = useRef(false)
 
     const latest = useLatest({
       onFocus,
@@ -38,7 +37,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       onFormatValue,
       value,
       defaultValue,
-      mergedRef,
     })
 
     const functions = useMemo(() => {
@@ -54,21 +52,22 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
       return {
         callbackRef: (node: HTMLInputElement | null) => {
-          const cleanup = latest.mergedRef(node)
-
-          if (node && latest.value === undefined && latest.defaultValue !== undefined) {
+          if (
+            node &&
+            latest.value === undefined &&
+            latest.defaultValue !== undefined &&
+            !executedDefaultValue.current
+          ) {
             formatCurrencyValue(latest.defaultValue)
+            executedDefaultValue.current = true
           }
-
-          return cleanup
         },
         formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
 
           if (innerRef.current) {
-            const commaExcluded = innerRef.current.value.replace(/,/g, '')
-            formatValue(commaExcluded)
+            formatValue(innerRef.current.value.replace(/,/g, ''))
           }
 
           latest.onFocus?.(e)
@@ -80,6 +79,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         },
       }
     }, [latest])
+
+    const mergedRef = useMergeRefs(ref, innerRef, functions.callbackRef)
 
     useEffect(() => {
       if (!isFocused) {
@@ -96,7 +97,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
-        ref={functions.callbackRef}
+        ref={mergedRef}
         type="text"
         value={value}
         defaultValue={defaultValue}

@@ -12,33 +12,38 @@ type MergeableRefType<T> = Ref<T> | undefined
  * const mergedRef = useMergeRefs(externalRef, internalRef)
  * return <input ref={mergedRef} />
  */
-export const useMergeRefs = <T>(ref1: MergeableRefType<T>, ref2: MergeableRefType<T>) =>
+// eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) =>
   useCallback(
     (node: T | null) => {
-      const cleanup1 = setRef(ref1, node)
-      const cleanup2 = setRef(ref2, node)
+      const cleanups = refs.map((ref) => setRef(ref, node))
 
       return () => {
-        if (typeof cleanup1 === 'function') {
-          cleanup1()
-        } else {
-          setRef(ref1, null)
-        }
-
-        if (typeof cleanup2 === 'function') {
-          cleanup2()
-        } else {
-          setRef(ref2, null)
-        }
+        refs.forEach((ref, i) => {
+          cleanupRef(ref, cleanups[i])
+        })
       }
     },
-    [ref1, ref2],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    refs,
   )
 
-const setRef = <T>(ref: Ref<T> | undefined, value: T | null): void | (() => void) => {
+const setRef = <T>(ref: MergeableRefType<T>, value: T | null) => {
   if (typeof ref === 'function') {
-    return ref(value)
+    const result = ref(value)
+
+    return typeof result === 'function' ? result : undefined
   } else if (ref) {
     ;(ref as MutableRefObject<T | null>).current = value
+  }
+
+  return undefined
+}
+
+const cleanupRef = <T>(ref: MergeableRefType<T>, cleanup: (() => void) | undefined) => {
+  if (typeof cleanup === 'function') {
+    cleanup()
+  } else {
+    setRef(ref, null)
   }
 }

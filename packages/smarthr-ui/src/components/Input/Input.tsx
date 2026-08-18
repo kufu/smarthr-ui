@@ -2,6 +2,7 @@
 
 import {
   type ComponentPropsWithRef,
+  type MouseEvent,
   type ReactNode,
   type WheelEvent,
   forwardRef,
@@ -104,26 +105,28 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef = useRef<HTMLInputElement | null>(null)
-    const mergedRef = useMergeRefs(ref, innerRef)
+    const executedAutoFocus = useRef(false)
 
-    const latest = useLatest({ autoFocus, mergedRef })
+    const latest = useLatest({ autoFocus })
 
     const functions = useMemo(
       () => ({
         callbackRef: (node: HTMLInputElement | null) => {
-          const cleanup = latest.mergedRef(node)
-
-          if (node && latest.autoFocus) {
+          if (node && latest.autoFocus && !executedAutoFocus.current) {
             node.focus()
+            executedAutoFocus.current = true
           }
-
-          return cleanup
         },
-        handleDelegateClick: () => innerRef.current?.focus(),
+        handleDelegateClick: (delegateEvent: MouseEvent<HTMLSpanElement>) => {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        },
       }),
       [latest],
     )
+
+    const mergedRef = useMergeRefs(ref, functions.callbackRef)
 
     const classNames = useMemo(() => {
       const { wrapper, input, affix } = classNameGenerator()
@@ -154,7 +157,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
-          ref={functions.callbackRef}
+          ref={mergedRef}
           type={type}
           disabled={disabled}
           readOnly={readOnly}
