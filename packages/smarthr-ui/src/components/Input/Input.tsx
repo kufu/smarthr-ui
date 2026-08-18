@@ -47,20 +47,18 @@ export const backgroundColor = {
   ACTION_BACKGROUND: 'action-background',
 } as const
 
-const wrapperClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Input',
-    'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
-    'contrast-more:shr-border-high-contrast',
-    'focus-within:shr-focus-indicator',
-    'has-[[aria-invalid]]:shr-border-danger',
-    'has-[:disabled]:[&&&]:shr-border-default/50',
-    'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
-    'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
-  ],
-})
-const innerClassNameGenerator = tv({
+const classNameGenerator = tv({
   slots: {
+    wrapper: [
+      'smarthr-ui-Input',
+      'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
+      'contrast-more:shr-border-high-contrast',
+      'focus-within:shr-focus-indicator',
+      'has-[[aria-invalid]]:shr-border-danger',
+      'has-[:disabled]:[&&&]:shr-border-default/50',
+      'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
+      'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
+    ],
     input: [
       'smarthr-ui-Input-input',
       'shr-inline-block shr-w-full shr-grow shr-border-none shr-bg-transparent shr-py-0.75 shr-text-base shr-leading-none shr-text-black shr-outline-none shr-outline-0',
@@ -132,10 +130,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
 
     const classNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator()
+      const { wrapper, input, affix } = classNameGenerator()
 
       return {
-        wrapper: wrapperClassNameGenerator({ className }),
+        wrapper: wrapper({ className }),
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
