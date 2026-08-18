@@ -81,3 +81,35 @@ export const VRTPreviewableForcedColors: StoryObj<typeof InputFile> = {
     chromatic: { forcedColors: 'active' },
   },
 }
+
+const previewableSearchablePlay = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const input = canvasElement.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+  if (!input) return
+  const pdfFile = new File([''], 'document.pdf', { type: 'application/pdf' })
+  await userEvent.upload(input, [pdfFile])
+  const previewButton = canvasElement.querySelector<HTMLButtonElement>(
+    '.smarthr-ui-InputFile-fileName',
+  )
+  if (previewButton) {
+    await userEvent.click(previewButton)
+  }
+}
+
+export const VRTPreviewableSearchable: StoryObj<typeof InputFile> = {
+  render: () => (
+    <InputFile
+      label="previewable: { searchable: false }"
+      name="previewablesearchable"
+      previewable={{ searchable: false }}
+    />
+  ),
+  play: previewableSearchablePlay,
+}
+
+export const VRTPreviewableSearchableForcedColors: StoryObj<typeof InputFile> = {
+  render: VRTPreviewableSearchable.render,
+  play: previewableSearchablePlay,
+  parameters: {
+    chromatic: { forcedColors: 'active' },
+  },
+}
