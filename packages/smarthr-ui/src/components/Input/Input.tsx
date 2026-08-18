@@ -160,18 +160,18 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
+          ref={functions.handleInnerRef}
           type={type}
-          data-smarthr-ui-input="true"
+          disabled={disabled}
+          readOnly={readOnly}
           max={
             max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
           }
+          aria-invalid={error || undefined}
+          data-smarthr-ui-input="true"
           onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}
           onBlur={onBlur}
-          disabled={disabled}
-          readOnly={readOnly}
-          ref={functions.handleInnerRef}
-          aria-invalid={error || undefined}
           className={classNames.input}
         />
         {suffix && <span className={classNames.suffix}>{suffix}</span>}

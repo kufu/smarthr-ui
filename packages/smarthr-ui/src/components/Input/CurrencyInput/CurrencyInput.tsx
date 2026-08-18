@@ -95,12 +95,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
+        ref={innerRef}
         type="text"
         value={value}
         defaultValue={defaultValue}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
-        ref={innerRef}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )
