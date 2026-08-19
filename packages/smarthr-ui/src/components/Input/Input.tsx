@@ -105,17 +105,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
   ) => {
     const theme = useTheme()
 
-    const functions = useMemo(
-      () => ({
-        handleDelegateClick: (delegateEvent: MouseEvent<HTMLSpanElement>) => {
-          delegateEvent.currentTarget
-            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
-            ?.focus()
-        },
-      }),
-      [],
-    )
-
     const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
       if (node && autoFocus) {
         node.focus()
@@ -141,7 +130,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={functions.handleDelegateClick}
+        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }}
         className={classNames.wrapper}
         style={{
           borderColor: styleColor,
