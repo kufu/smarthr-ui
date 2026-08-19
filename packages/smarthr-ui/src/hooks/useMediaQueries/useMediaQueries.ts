@@ -11,6 +11,7 @@ type MediaQueryMatches<T> = {
   [K in keyof T]: boolean
 }
 
+// TODO: EnvironmentProviderからしか利用されていないため、EnvironmentProviderに統合する
 export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQueryMatches<T> => {
   const lastSnapshotRef = useRef<MediaQueryMatches<T> | null>(null)
 
