@@ -14,29 +14,32 @@ type MediaQueryMatches<T> = {
 export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQueryMatches<T> => {
   const lastSnapshotRef = useRef<MediaQueryMatches<T> | null>(null)
 
-  const serverSnapshot = useMemo(
-    () =>
-      Object.keys(queries).reduce(
-        (acc, key) => {
+  const snapshots = useMemo(() => {
+    const queryEntries = Object.entries(queries)
+
+    return {
+      server: queryEntries.reduce(
+        (acc, [key]) => {
           acc[key] = false
           return acc
         },
         {} as Record<string, boolean>,
       ) as MediaQueryMatches<T>,
-    [queries],
-  )
+      queryEntries,
+    }
+  }, [queries])
 
-  const latest = useLatest({ queries, serverSnapshot })
+  const latest = useLatest({ snapshots })
 
   const functions = useMemo(
     () => ({
-      getServerSnapshot: (() => latest.serverSnapshot) satisfies () => MediaQueryMatches<T>,
+      getServerSnapshot: (() => latest.snapshots.server) satisfies () => MediaQueryMatches<T>,
       getSnapshot: (): MediaQueryMatches<T> => {
         if (typeof window === 'undefined' || !window.matchMedia) {
-          return latest.serverSnapshot
+          return latest.snapshots.server
         }
 
-        const ret = Object.entries(latest.queries).reduce(
+        const ret = latest.snapshots.queryEntries.reduce(
           (acc, [key, query]) => {
             acc[key] = window.matchMedia(query).matches
             return acc
@@ -57,7 +60,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
           return () => {}
         }
 
-        const mediaQueryList = Object.values(latest.queries).map((query) => {
+        const mediaQueryList = latest.snapshots.queryEntries.map(([, query]) => {
           const m = window.matchMedia(query)
           m.addEventListener('change', f)
           return m
