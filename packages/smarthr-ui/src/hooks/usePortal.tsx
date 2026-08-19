@@ -35,32 +35,6 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [currentSeq, parent.seqs])
 
-  useEnhancedEffect(() => {
-    // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
-    setPortalRoot((current) => {
-      const root = current || document.createElement('div')
-
-      if (rootId) {
-        root.setAttribute('id', rootId)
-      }
-
-      return root
-    })
-  }, [rootId])
-
-  useEnhancedEffect(() => {
-    if (!portalRoot) {
-      return
-    }
-
-    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
-    document.body.appendChild(portalRoot)
-
-    return () => {
-      portalRoot.remove()
-    }
-  }, [portalRoot, calculatedSeqs.portalChildOf])
-
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
     [currentSeq],
@@ -87,6 +61,32 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     },
     [portalRoot],
   )
+
+  useEnhancedEffect(() => {
+    // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
+    setPortalRoot((current) => {
+      const root = current || document.createElement('div')
+
+      if (rootId) {
+        root.setAttribute('id', rootId)
+      }
+
+      return root
+    })
+  }, [rootId])
+
+  useEnhancedEffect(() => {
+    if (!portalRoot) {
+      return
+    }
+
+    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
+    document.body.appendChild(portalRoot)
+
+    return () => {
+      portalRoot.remove()
+    }
+  }, [portalRoot, calculatedSeqs.portalChildOf])
 
   return {
     portalRoot,
