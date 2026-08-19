@@ -10,7 +10,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOnceCallback } from '../../hooks/useOnceCallback'
 import { useTheme } from '../../hooks/useTheme'
@@ -105,7 +104,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const latest = useLatest({ autoFocus })
 
     const functions = useMemo(
       () => ({
@@ -119,7 +117,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
 
     const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
-      if (node && latest.autoFocus) {
+      if (node && autoFocus) {
         node.focus()
       }
     })
