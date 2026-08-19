@@ -103,6 +103,30 @@ export default {
           </Text>
         </ProgressDoughnutChart>
       </div>
+      {/* パターン9: 母集団 0。トラックだけが満円で描かれる */}
+      <div className="shr-h-[300px] shr-w-[300px]">
+        <ProgressDoughnutChart
+          data={{ labels: ['インストール済', '未インストール'], datasets: [{ data: [0, 0] }] }}
+          thickness="S"
+        >
+          <Text size="XXL" weight="bold">
+            0%
+          </Text>
+        </ProgressDoughnutChart>
+      </div>
+
+      {/* パターン10: 丸端かつ母集団 0。角端と同じくトラックだけが描かれる */}
+      <div className="shr-h-[300px] shr-w-[300px]">
+        <ProgressDoughnutChart
+          data={{ labels: ['インストール済', '未インストール'], datasets: [{ data: [0, 0] }] }}
+          thickness="S"
+          rounded
+        >
+          <Text size="XXL" weight="bold">
+            0%
+          </Text>
+        </ProgressDoughnutChart>
+      </div>
     </Stack>
   ),
   parameters: {
