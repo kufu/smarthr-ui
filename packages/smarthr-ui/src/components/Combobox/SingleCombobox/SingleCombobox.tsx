@@ -397,7 +397,7 @@ const ActualSingleCombobox = <T,>(
       : theme.textColor.grey
 
   useClick(
-    useMemo(() => [triggerRef, listBoxRef, clearButtonRef], [listBoxRef]),
+    [triggerRef, listBoxRef, clearButtonRef],
     isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
     functions.unfocus,
   )

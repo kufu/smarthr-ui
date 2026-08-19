@@ -113,3 +113,26 @@ export const RoundedTinyValue: Story = {
     rounded: true,
   },
 }
+
+export const Empty: Story = {
+  name: 'with empty data',
+  args: {
+    data: {
+      labels: ['インストール済', '未インストール'],
+      datasets: [{ data: [0, 0] }],
+    },
+    children: (
+      <Text size="XXL" weight="bold">
+        0%
+      </Text>
+    ),
+  },
+}
+
+export const RoundedEmpty: Story = {
+  name: 'rounded with empty data',
+  args: {
+    ...Empty.args,
+    rounded: true,
+  },
+}

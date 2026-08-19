@@ -333,6 +333,20 @@ describe('createDoughnutChartOptions', () => {
     expect(result.cutout).toBe('85%')
   })
 
+  it('tooltipのenabledは保護対象外で、外部から無効化できること', () => {
+    const result = createDoughnutChartOptions({
+      plugins: {
+        tooltip: {
+          enabled: false,
+        } as ChartOptions<'doughnut'>['plugins']['tooltip'],
+      },
+    })
+
+    expect(result.plugins?.tooltip?.enabled).toBe(false)
+    // 装飾の内部設定は保護されたまま
+    expect(result.plugins?.tooltip?.backgroundColor).toBe(SMARTHR_DEFAULT_COLORS.BACKGROUND)
+  })
+
   it('その他のplugin設定は外部から追加できること', () => {
     const result = createDoughnutChartOptions({
       plugins: {
