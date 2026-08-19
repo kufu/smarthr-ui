@@ -169,9 +169,8 @@ const MaxLettersTextarea: FC<
 
   useEffect(() => {
     functions.updateCount(value ?? '')
+    return functions.cancelDebounce
   }, [value, functions])
-
-  useEffect(() => functions.cancelDebounce, [functions])
 
   return (
     <span className="shr-relative">

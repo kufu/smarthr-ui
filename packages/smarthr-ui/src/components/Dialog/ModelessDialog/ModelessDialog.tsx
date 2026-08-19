@@ -267,7 +267,7 @@ export const ModelessDialog: FC<Props> = ({
   useEffect(() => {
     if (!wrapperPosition) {
       setDebouncedLiveRegionText('')
-      return
+      return functions.debounceLiveRegionText.cancel
     }
 
     const txt = localize(
@@ -282,9 +282,9 @@ export const ModelessDialog: FC<Props> = ({
     )
 
     functions.debounceLiveRegionText(txt)
-  }, [localize, wrapperPosition, functions])
 
-  useEffect(() => functions.debounceLiveRegionText.cancel, [functions])
+    return functions.debounceLiveRegionText.cancel
+  }, [localize, wrapperPosition, functions])
 
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
