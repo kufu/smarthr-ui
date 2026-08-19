@@ -1,12 +1,4 @@
-import {
-  type FC,
-  type ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useEnhancedEffect } from './useEnhancedEffect'
@@ -36,10 +28,19 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [currentSeq, parent.seqs])
 
-  const latest = useLatest({ currentSeq, portalRoot })
+  const latest = useLatest({ currentSeq, portalRoot, calculatedSeqs })
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    const PortalParentProvider: FC<{ children: ReactNode }> = ({ children }) => {
+      const value: ParentContextValue = {
+        seqs: latest.calculatedSeqs.parentSeqs,
+      }
+
+      return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
+    }
+
+    return {
+      PortalParentProvider,
       isChildPortal: (element: HTMLElement | null) =>
         _isChildPortal(element, new RegExp(`(^|,)${latest.currentSeq}(,|$)`)),
       createPortal: (children: ReactNode) => {
@@ -49,20 +50,8 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
 
         return createPortal(children, latest.portalRoot)
       },
-    }),
-    [latest],
-  )
-
-  const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
-    ({ children }) => {
-      const value: ParentContextValue = {
-        seqs: calculatedSeqs.parentSeqs,
-      }
-
-      return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
-    },
-    [calculatedSeqs.parentSeqs],
-  )
+    }
+  }, [latest])
 
   useEnhancedEffect(() => {
     // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
@@ -93,7 +82,7 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
   return {
     portalRoot,
     isChildPortal: functions.isChildPortal,
-    PortalParentProvider,
+    PortalParentProvider: functions.PortalParentProvider,
     createPortal: functions.createPortal,
   }
 }
