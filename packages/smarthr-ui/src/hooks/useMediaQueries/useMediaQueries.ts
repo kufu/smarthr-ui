@@ -1,6 +1,5 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
 
-import { entries, fromEntries } from '../../libs/object'
 import { shallowEqual } from '../../libs/shallowEqual'
 import { useLatest } from '../useLatest'
 
@@ -17,7 +16,9 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
 
   const serverSnapshot = useMemo(
     () =>
-      fromEntries(entries(queries).map(([key]) => [key, false] as const)) as MediaQueryMatches<T>,
+      Object.fromEntries(
+        Object.entries(queries).map(([key]) => [key, false] as const),
+      ) as MediaQueryMatches<T>,
     [queries],
   )
 
@@ -25,7 +26,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
 
   const functions = useMemo(() => {
     const getMatchMediaList = () =>
-      entries(latest.queries).map(([key, query]) => [key, window.matchMedia(query)] as const)
+      Object.entries(latest.queries).map(([key, query]) => [key, window.matchMedia(query)] as const)
 
     return {
       getServerSnapshot: (() => latest.serverSnapshot) satisfies () => MediaQueryMatches<T>,
@@ -34,7 +35,9 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
           return latest.serverSnapshot
         }
 
-        const ret = fromEntries(getMatchMediaList().map(([key, m]) => [key, m.matches] as const))
+        const ret = Object.fromEntries(
+          getMatchMediaList().map(([key, m]) => [key, m.matches] as const),
+        ) as MediaQueryMatches<T>
 
         if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
           return lastSnapshotRef.current
