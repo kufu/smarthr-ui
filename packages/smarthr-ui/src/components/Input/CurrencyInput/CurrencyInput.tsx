@@ -46,11 +46,17 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
       }
+      const formatCurrencyValue = (raw = '') => {
+        formatValue(formatCurrency(raw))
+      }
 
       return {
-        formatCurrencyValue: (raw = '') => {
-          formatValue(formatCurrency(raw))
+        baseCallbackRef: (node: HTMLInputElement | null) => {
+          if (node && latest.value === undefined && latest.defaultValue !== undefined) {
+            formatCurrencyValue(latest.defaultValue)
+          }
         },
+        formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
 
@@ -68,11 +74,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
-      if (node && latest.value === undefined && latest.defaultValue !== undefined) {
-        functions.formatCurrencyValue(latest.defaultValue)
-      }
-    })
+    const callbackRef = useOnceCallback(functions.baseCallbackRef)
     const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
 
     useEffect(() => {
