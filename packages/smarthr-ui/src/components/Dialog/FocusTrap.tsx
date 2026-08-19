@@ -2,7 +2,6 @@ import {
   type PropsWithChildren,
   type RefObject,
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -23,25 +22,10 @@ const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
 
   const functions = useMemo(() => {
-    const findDummyFocus = () => innerRef.current?.querySelector(DUMMY_FOCUS_SELECTOR)
-
-    return {
-      findDummyFocus,
-      focus: () => {
-        ;(firstFocusTarget?.current || findDummyFocus())?.focus()
-      },
-    }
-  }, [firstFocusTarget])
-
-  useImperativeHandle(ref, () => functions, [functions])
-
-  useEffect(() => {
-    // FocusTrap がマウントされた時点のフォーカス要素を保存
-    const triggerElement = document.activeElement
-
-    functions.focus()
+    const findDummyFocus = () => innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
@@ -62,10 +46,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
       const currentFocused = tabbables.find((elm) => elm === e.target)
 
       if (e.shiftKey) {
-        if (
-          currentFocused === firstTabbable ||
-          document.activeElement === functions.findDummyFocus()
-        ) {
+        if (currentFocused === firstTabbable || document.activeElement === findDummyFocus()) {
           e.preventDefault()
           lastTabbable.focus()
         }
@@ -75,19 +56,41 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown)
+    return {
+      callbackRef: (node: HTMLDivElement | null) => {
+        // TODO: useMergeRefsが実装されたらcallbackRefから代入処理を取り除く
+        innerRef.current = node
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      // フォーカストラップ終了時にトリガにフォーカスを戻す
-      if (triggerElement instanceof HTMLElement) {
-        triggerElement.focus()
-      }
+        if (!triggerRef.current) {
+          // FocusTrap がマウントされた時点のフォーカス要素を保存
+          triggerRef.current =
+            document.activeElement instanceof HTMLElement ? document.activeElement : null
+        }
+
+        if (node) {
+          functions.focus()
+
+          window.addEventListener('keydown', handleKeyDown)
+        } else {
+          window.removeEventListener('keydown', handleKeyDown)
+
+          // フォーカストラップ終了時にトリガにフォーカスを戻す
+          if (triggerRef.current instanceof HTMLElement) {
+            triggerRef.current.focus()
+            triggerRef.current = null
+          }
+        }
+      },
+      focus: () => {
+        ;(firstFocusTarget?.current || findDummyFocus())?.focus()
+      },
     }
-  }, [functions])
+  }, [firstFocusTarget])
+
+  useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
 
   return (
-    <div ref={innerRef}>
+    <div ref={functions.callbackRef}>
       {!firstFocusTarget && (
         /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
         <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
