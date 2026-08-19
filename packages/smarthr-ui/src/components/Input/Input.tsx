@@ -7,12 +7,12 @@ import {
   type WheelEvent,
   forwardRef,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useOnceCallback } from '../../hooks/useOnceCallback'
 import { useTheme } from '../../hooks/useTheme'
 
 type BaseProps = {
@@ -105,28 +105,26 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const executedAutoFocus = useRef(false)
-
     const latest = useLatest({ autoFocus })
 
     const functions = useMemo(
       () => ({
-        callbackRef: (node: HTMLInputElement | null) => {
-          if (node && latest.autoFocus && !executedAutoFocus.current) {
-            node.focus()
-            executedAutoFocus.current = true
-          }
-        },
         handleDelegateClick: (delegateEvent: MouseEvent<HTMLSpanElement>) => {
           delegateEvent.currentTarget
             .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
             ?.focus()
         },
       }),
-      [latest],
+      [],
     )
 
-    const mergedRef = useMergeRefs(functions.callbackRef, ref)
+    const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+      if (node && latest.autoFocus) {
+        node.focus()
+      }
+    })
+
+    const mergedRef = useMergeRefs(callbackRef, ref)
 
     const classNames = useMemo(() => {
       const { wrapper, input, affix } = classNameGenerator()

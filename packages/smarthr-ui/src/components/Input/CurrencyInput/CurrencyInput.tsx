@@ -12,6 +12,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useMergeRefs } from '../../../hooks/useMergeRefs'
+import { useOnceCallback } from '../../../hooks/useOnceCallback'
 import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
@@ -29,7 +30,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
   ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
-    const executedDefaultValue = useRef(false)
 
     const latest = useLatest({
       onFocus,
@@ -46,23 +46,11 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
       }
-      const formatCurrencyValue = (raw = '') => {
-        formatValue(formatCurrency(raw))
-      }
 
       return {
-        callbackRef: (node: HTMLInputElement | null) => {
-          if (
-            node &&
-            latest.value === undefined &&
-            latest.defaultValue !== undefined &&
-            !executedDefaultValue.current
-          ) {
-            formatCurrencyValue(latest.defaultValue)
-            executedDefaultValue.current = true
-          }
+        formatCurrencyValue: (raw = '') => {
+          formatValue(formatCurrency(raw))
         },
-        formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
 
@@ -80,7 +68,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
+    const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+      if (node && latest.value === undefined && latest.defaultValue !== undefined) {
+        functions.formatCurrencyValue(latest.defaultValue)
+      }
+    })
+    const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
 
     useEffect(() => {
       if (!isFocused) {
