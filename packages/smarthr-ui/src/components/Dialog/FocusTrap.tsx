@@ -24,16 +24,16 @@ const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    const findDummyFocus = () => innerRef.current?.querySelector(DUMMY_FOCUS_SELECTOR)
+
+    return {
+      findDummyFocus,
       focus: () => {
-        ;(
-          firstFocusTarget?.current || innerRef.current?.querySelector(DUMMY_FOCUS_SELECTOR)
-        )?.focus()
+        ;(firstFocusTarget?.current || findDummyFocus())?.focus()
       },
-    }),
-    [firstFocusTarget],
-  )
+    }
+  }, [firstFocusTarget])
 
   useImperativeHandle(ref, () => functions, [functions])
 
@@ -64,7 +64,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
       if (e.shiftKey) {
         if (
           currentFocused === firstTabbable ||
-          document.activeElement === innerRef.current?.querySelector(DUMMY_FOCUS_SELECTOR)
+          document.activeElement === functions.findDummyFocus()
         ) {
           e.preventDefault()
           lastTabbable.focus()
