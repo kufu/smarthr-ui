@@ -16,8 +16,12 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
 
   const serverSnapshot = useMemo(
     () =>
-      Object.fromEntries(
-        Object.entries(queries).map(([key]) => [key, false] as const),
+      Object.keys(queries).reduce(
+        (acc, key) => {
+          acc[key] = false
+          return acc
+        },
+        {} as Record<string, boolean>,
       ) as MediaQueryMatches<T>,
     [queries],
   )
@@ -35,8 +39,12 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
           return latest.serverSnapshot
         }
 
-        const ret = Object.fromEntries(
-          getMatchMediaList().map(([key, m]) => [key, m.matches] as const),
+        const ret = Object.entries(latest.queries).reduce(
+          (acc, [key, query]) => {
+            acc[key] = window.matchMedia(query).matches
+            return acc
+          },
+          {} as Record<string, boolean>,
         ) as MediaQueryMatches<T>
 
         if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
