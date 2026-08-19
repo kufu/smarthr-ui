@@ -643,6 +643,49 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
 ```
 
+#### useOnceCallback
+
+渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnceCallback.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
+
+```tsx
+const latest = useLatest({ autoFocus })
+
+const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+  if (node && latest.autoFocus) {
+    node.focus()
+  }
+})
+
+const mergedRef = useMergeRefs(callbackRef, ref)
+```
+
+**手動で実行済みフラグを管理する実装との違い:**
+
+`useRef(false)` で実行済みフラグを自前管理する代わりに `useOnceCallback` を使うことで、フラグの読み書きやガード条件の重複を排除できます。
+
+```tsx
+// ❌ 実行済みフラグを手動管理
+const executedAutoFocus = useRef(false)
+
+const callbackRef = (node: HTMLInputElement | null) => {
+  if (node && latest.autoFocus && !executedAutoFocus.current) {
+    node.focus()
+    executedAutoFocus.current = true
+  }
+}
+
+// ✅ useOnceCallbackでラップし、実行済みかどうかの判定を委譲する
+const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+  if (node && latest.autoFocus) {
+    node.focus()
+  }
+})
+```
+
+**`useOnceCallback` 内での `latest` 参照は許容される**
+
+`local-rules/best-practice-for-use-latest` は `latest.xxx` のプロパティアクセスを `useEffect`/`useLayoutEffect`/`useCallback`/`useMemo`/`useOnceCallback` 内でのみ許可しています。`useOnceCallback` に渡す callback 内で `latest.xxx` を参照して問題ありません。
+
 ## スキル
 
 - **PR作成** (`.claude/skills/pr-creator/`): PR作成時にリポジトリのテンプレートに沿った本文を生成する
