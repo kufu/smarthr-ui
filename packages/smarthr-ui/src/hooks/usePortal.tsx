@@ -10,6 +10,7 @@ import {
 import { createPortal } from 'react-dom'
 
 import { useEnhancedEffect } from './useEnhancedEffect'
+import { useLatest } from './useLatest'
 
 type ParentContextValue = {
   seqs: number[]
@@ -35,9 +36,14 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [currentSeq, parent.seqs])
 
-  const isChildPortal = useCallback(
-    (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
-    [currentSeq],
+  const latest = useLatest({ currentSeq })
+
+  const functions = useMemo(
+    () => ({
+      isChildPortal: (element: HTMLElement | null) =>
+        _isChildPortal(element, new RegExp(`(^|,)${latest.currentSeq}(,|$)`)),
+    }),
+    [latest],
   )
 
   const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
@@ -90,7 +96,7 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
 
   return {
     portalRoot,
-    isChildPortal,
+    isChildPortal: functions.isChildPortal,
     PortalParentProvider,
     createPortal: wrappedCreatePortal,
   }
