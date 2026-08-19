@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useSyncExternalStore } from 'react'
 
 import { entries, fromEntries } from '../../libs/object'
 import { shallowEqual } from '../../libs/shallowEqual'
+import { useLatest } from '../useLatest'
 
 type MediaQueryListMap = {
   [key: string]: string
@@ -20,10 +21,17 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     [queries],
   )
 
-  const getMatchMediaList = useCallback(
-    () => entries(queries).map(([key, query]) => [key, window.matchMedia(query)] as const),
-    [queries],
-  )
+  const latest = useLatest({ queries })
+
+  const functions = useMemo(() => {
+    const getMatchMediaList = () =>
+      entries(latest.queries).map(([key, query]) => [key, window.matchMedia(query)] as const)
+
+    return {
+      getMatchMediaList,
+    }
+  }, [latest])
+
   const getServerSnapshot = useCallback(
     () => serverSnapshot,
     [serverSnapshot],
@@ -33,19 +41,21 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
       return serverSnapshot
     }
 
-    const ret = fromEntries(getMatchMediaList().map(([key, m]) => [key, m.matches] as const))
+    const ret = fromEntries(
+      functions.getMatchMediaList().map(([key, m]) => [key, m.matches] as const),
+    )
     if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
       return lastSnapshotRef.current
     }
     lastSnapshotRef.current = ret
     return ret
-  }, [getMatchMediaList, serverSnapshot])
+  }, [serverSnapshot, functions])
   const subscribe = useCallback(
     (f: () => void) => {
       if (typeof window === 'undefined' || !window.matchMedia) {
         return () => {}
       }
-      const matchMediaList = getMatchMediaList()
+      const matchMediaList = functions.getMatchMediaList()
       matchMediaList.forEach(([, m]) => {
         m.addEventListener('change', f)
       })
@@ -55,7 +65,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
         })
       }
     },
-    [getMatchMediaList],
+    [functions],
   )
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
