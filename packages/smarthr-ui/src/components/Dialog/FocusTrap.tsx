@@ -67,7 +67,9 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
         }
 
         if (node) {
-          functions.focus()
+          // カスケード更新（usePortalのportalRoot生成等）が完了し、DOMに接続された後にフォーカスするため
+          // 次の描画フレームまで遅延させる
+          requestAnimationFrame(functions.focus)
 
           window.addEventListener('keydown', handleKeyDown)
         } else {
