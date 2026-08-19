@@ -12,10 +12,6 @@ type MediaQueryMatches<T> = {
 }
 
 export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQueryMatches<T> => {
-  const getMatchMediaList = useCallback(
-    () => entries(queries).map(([key, query]) => [key, window.matchMedia(query)] as const),
-    [queries],
-  )
   const lastSnapshotRef = useRef<MediaQueryMatches<T> | null>(null)
 
   const serverSnapshot = useMemo(
@@ -24,11 +20,14 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     [queries],
   )
 
+  const getMatchMediaList = useCallback(
+    () => entries(queries).map(([key, query]) => [key, window.matchMedia(query)] as const),
+    [queries],
+  )
   const getServerSnapshot = useCallback(
     () => serverSnapshot,
     [serverSnapshot],
   ) satisfies () => MediaQueryMatches<T>
-
   const getSnapshot = useCallback((): MediaQueryMatches<T> => {
     if (typeof window === 'undefined' || !window.matchMedia) {
       return serverSnapshot
@@ -41,7 +40,6 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     lastSnapshotRef.current = ret
     return ret
   }, [getMatchMediaList, serverSnapshot])
-
   const subscribe = useCallback(
     (f: () => void) => {
       if (typeof window === 'undefined' || !window.matchMedia) {
