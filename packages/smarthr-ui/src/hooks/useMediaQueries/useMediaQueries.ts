@@ -1,7 +1,6 @@
 import { useMemo, useRef, useSyncExternalStore } from 'react'
 
 import { shallowEqual } from '../../libs/shallowEqual'
-import { useLatest } from '../useLatest'
 
 type MediaQueryListMap = {
   [key: string]: string
@@ -30,17 +29,18 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     }
   }, [queries])
 
-  const latest = useLatest({ snapshots })
-
+  // useLatest を使わず snapshots を直接依存配列に指定することで、
+  // queries が変わったときに functions が再作成され、
+  // useSyncExternalStore が subscribe を再実行して新しいメディアクエリを監視できる
   const functions = useMemo(
     () => ({
-      getServerSnapshot: (() => latest.snapshots.server) satisfies () => MediaQueryMatches<T>,
+      getServerSnapshot: (() => snapshots.server) satisfies () => MediaQueryMatches<T>,
       getSnapshot: (): MediaQueryMatches<T> => {
         if (typeof window === 'undefined' || !window.matchMedia) {
-          return latest.snapshots.server
+          return snapshots.server
         }
 
-        const ret = latest.snapshots.queryEntries.reduce(
+        const ret = snapshots.queryEntries.reduce(
           (acc, [key, query]) => {
             acc[key] = window.matchMedia(query).matches
             return acc
@@ -61,7 +61,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
           return () => {}
         }
 
-        const mediaQueryList = latest.snapshots.queryEntries.map(([, query]) => {
+        const mediaQueryList = snapshots.queryEntries.map(([, query]) => {
           const m = window.matchMedia(query)
           m.addEventListener('change', f)
           return m
@@ -72,7 +72,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
         }
       },
     }),
-    [latest],
+    [snapshots],
   )
 
   return useSyncExternalStore(
