@@ -22,7 +22,7 @@ const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
-  const triggerRef = useRef<HTMLElement | null>(null)
+  const triggerRef = useRef<Element | null>(null)
 
   const functions = useMemo(() => {
     const findDummyFocus = () => innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
@@ -63,8 +63,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
         if (!triggerRef.current) {
           // FocusTrap がマウントされた時点のフォーカス要素を保存
-          triggerRef.current =
-            document.activeElement instanceof HTMLElement ? document.activeElement : null
+          triggerRef.current = document.activeElement
         }
 
         if (node) {
