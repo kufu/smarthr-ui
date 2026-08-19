@@ -126,7 +126,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       [latest],
     )
 
-    const mergedRef = useMergeRefs(ref, functions.callbackRef)
+    const mergedRef = useMergeRefs(functions.callbackRef, ref)
 
     const classNames = useMemo(() => {
       const { wrapper, input, affix } = classNameGenerator()

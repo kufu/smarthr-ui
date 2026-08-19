@@ -80,7 +80,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const mergedRef = useMergeRefs(ref, innerRef, functions.callbackRef)
+    const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 
     useEffect(() => {
       if (!isFocused) {
