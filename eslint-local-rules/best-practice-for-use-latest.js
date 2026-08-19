@@ -41,8 +41,7 @@ module.exports = {
     const sourceCode = context.sourceCode || context.getSourceCode()
 
     // latest.xxxの使用や依存配列の位置チェックを許可するフック名
-    // useOnceCallbackはuseLatestと同様、渡したcallbackの初回呼び出し時にlatestの値を参照する用途で使うため許可する
-    const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo|OnceCallback)$/
+    const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo)$/
 
     /**
      * 識別子が useLatest() 呼び出しに束縛されているかチェック

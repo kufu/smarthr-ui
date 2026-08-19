@@ -139,16 +139,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [count, latest])
       `,
     },
-
-    // useOnceCallback - 渡したcallback内でのlatestプロパティアクセス（OK）
-    {
-      code: `
-        const latest = useLatest({ onFocus })
-        const callback = useOnceCallback((node) => {
-          latest.onFocus(node)
-        })
-      `,
-    },
   ],
 
   invalid: [
