@@ -76,9 +76,11 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
           window.removeEventListener('keydown', handleKeyDown)
 
           // フォーカストラップ終了時にトリガにフォーカスを戻す
-          if (triggerRef.current instanceof HTMLElement) {
-            triggerRef.current.focus()
-            triggerRef.current = null
+          const trigger = triggerRef.current
+          triggerRef.current = null
+
+          if (trigger instanceof HTMLElement) {
+            trigger.focus()
           }
         }
       },
