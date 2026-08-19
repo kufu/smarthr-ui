@@ -36,12 +36,19 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [currentSeq, parent.seqs])
 
-  const latest = useLatest({ currentSeq })
+  const latest = useLatest({ currentSeq, portalRoot })
 
   const functions = useMemo(
     () => ({
       isChildPortal: (element: HTMLElement | null) =>
         _isChildPortal(element, new RegExp(`(^|,)${latest.currentSeq}(,|$)`)),
+      createPortal: (children: ReactNode) => {
+        if (latest.portalRoot === null) {
+          return null
+        }
+
+        return createPortal(children, latest.portalRoot)
+      },
     }),
     [latest],
   )
@@ -55,17 +62,6 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
       return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
     },
     [calculatedSeqs.parentSeqs],
-  )
-
-  const wrappedCreatePortal = useCallback(
-    (children: ReactNode) => {
-      if (portalRoot === null) {
-        return null
-      }
-
-      return createPortal(children, portalRoot)
-    },
-    [portalRoot],
   )
 
   useEnhancedEffect(() => {
@@ -98,7 +94,7 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     portalRoot,
     isChildPortal: functions.isChildPortal,
     PortalParentProvider,
-    createPortal: wrappedCreatePortal,
+    createPortal: functions.createPortal,
   }
 }
 
