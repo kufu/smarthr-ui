@@ -23,7 +23,7 @@ let portalSeq = 0
 
 export function usePortal({ rootId }: { rootId?: string } = {}) {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
-  const currentSeq = useMemo(() => ++portalSeq, [])
+  const [currentSeq] = useState(() => ++portalSeq)
   const parent = useContext(ParentContext)
 
   const calculatedSeqs = useMemo(() => {
