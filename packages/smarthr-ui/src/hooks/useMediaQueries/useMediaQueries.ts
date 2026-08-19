@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useSyncExternalStore } from 'react'
+import { useMemo, useRef, useSyncExternalStore } from 'react'
 
 import { entries, fromEntries } from '../../libs/object'
 import { shallowEqual } from '../../libs/shallowEqual'
@@ -28,42 +28,45 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
       entries(latest.queries).map(([key, query]) => [key, window.matchMedia(query)] as const)
 
     return {
-      getMatchMediaList,
       getServerSnapshot: (() => latest.serverSnapshot) satisfies () => MediaQueryMatches<T>,
+      getSnapshot: (): MediaQueryMatches<T> => {
+        if (typeof window === 'undefined' || !window.matchMedia) {
+          return latest.serverSnapshot
+        }
+
+        const ret = fromEntries(getMatchMediaList().map(([key, m]) => [key, m.matches] as const))
+
+        if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
+          return lastSnapshotRef.current
+        }
+
+        lastSnapshotRef.current = ret
+
+        return ret
+      },
+      subscribe: (f: () => void) => {
+        if (typeof window === 'undefined' || !window.matchMedia) {
+          return () => {}
+        }
+
+        const matchMediaList = getMatchMediaList()
+
+        matchMediaList.forEach(([, m]) => {
+          m.addEventListener('change', f)
+        })
+
+        return () => {
+          matchMediaList.forEach(([, m]) => {
+            m.removeEventListener('change', f)
+          })
+        }
+      },
     }
   }, [latest])
 
-  const getSnapshot = useCallback((): MediaQueryMatches<T> => {
-    if (typeof window === 'undefined' || !window.matchMedia) {
-      return serverSnapshot
-    }
-
-    const ret = fromEntries(
-      functions.getMatchMediaList().map(([key, m]) => [key, m.matches] as const),
-    )
-    if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
-      return lastSnapshotRef.current
-    }
-    lastSnapshotRef.current = ret
-    return ret
-  }, [serverSnapshot, functions])
-  const subscribe = useCallback(
-    (f: () => void) => {
-      if (typeof window === 'undefined' || !window.matchMedia) {
-        return () => {}
-      }
-      const matchMediaList = functions.getMatchMediaList()
-      matchMediaList.forEach(([, m]) => {
-        m.addEventListener('change', f)
-      })
-      return () => {
-        matchMediaList.forEach(([, m]) => {
-          m.removeEventListener('change', f)
-        })
-      }
-    },
-    [functions],
+  return useSyncExternalStore(
+    functions.subscribe,
+    functions.getSnapshot,
+    functions.getServerSnapshot,
   )
-
-  return useSyncExternalStore(subscribe, getSnapshot, functions.getServerSnapshot)
 }
