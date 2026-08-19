@@ -1,0 +1,13 @@
+// キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
+// prettier-ignore
+export const locale = {
+  'smarthr-ui-charts/BarChart/ariaLabel': '棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+  'smarthr-ui-charts/BarChart/ariaLabelWithTitle': '{title} 棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+  'smarthr-ui-charts/LineChart/ariaLabel': '線グラフ {datasetCount}個のデータ {pointCount}個のポイント',
+  'smarthr-ui-charts/LineChart/ariaLabelWithTitle': '{title} 線グラフ {datasetCount}個のデータ {pointCount}個のポイント',
+  'smarthr-ui-charts/RadarChart/ariaLabel': 'レーダーチャート {datasetCount}個のデータ {axisCount}個の軸',
+  'smarthr-ui-charts/RadarChart/ariaLabelWithTitle': '{title} レーダーチャート {datasetCount}個のデータ {axisCount}個の軸',
+  'smarthr-ui-charts/DoughnutChart/ariaLabel': 'ドーナツグラフ {segmentCount}個の項目',
+  'smarthr-ui-charts/DoughnutChart/ariaLabelWithTitle': '{title} ドーナツグラフ {segmentCount}個の項目',
+  'smarthr-ui-charts/keyboardNavigation/liveRegionText': '{datasetLabel} {label} {value}',
+} as const

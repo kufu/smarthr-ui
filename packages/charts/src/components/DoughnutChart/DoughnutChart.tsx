@@ -11,6 +11,7 @@ import {
   SMARTHR_DEFAULT_COLORS,
   getChartColors,
 } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 import { doughnutSegmentDividerPlugin } from '../../plugins'
 import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
 
@@ -40,14 +41,33 @@ export const DoughnutChart: React.FC<Props> = ({
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
   const chartColors = useMemo(() => getChartColors<'doughnut'>(segmentCount), [segmentCount])
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
-  const ariaLabel = useMemo(() => {
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}ドーナツグラフ ${segmentCount}個の項目`
-  }, [title, segmentCount])
+  const ariaLabel = useMemo(
+    () =>
+      // titleの有無で別のメッセージを使う。ひとつの文章として翻訳できるようにするため、
+      // チャートの説明とtitleを後から連結していない
+      title
+        ? localize(
+            {
+              id: 'smarthr-ui-charts/DoughnutChart/ariaLabelWithTitle',
+              defaultText: '{title} ドーナツグラフ {segmentCount}個の項目',
+            },
+            { title, segmentCount },
+          )
+        : localize(
+            {
+              id: 'smarthr-ui-charts/DoughnutChart/ariaLabel',
+              defaultText: 'ドーナツグラフ {segmentCount}個の項目',
+            },
+            { segmentCount },
+          ),
+    [title, segmentCount, localize],
+  )
 
   const enhancedData: ChartData<'doughnut'> = useMemo(
     () => ({
@@ -78,6 +98,7 @@ export const DoughnutChart: React.FC<Props> = ({
           title: title ? { display: true, text: title } : { display: false },
           keyboardNavigation: {
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
           doughnutSegmentDivider: {
             // チャートは Base（WHITE）の上に置かれる前提。BACKGROUND は Base の背後に
@@ -87,7 +108,7 @@ export const DoughnutChart: React.FC<Props> = ({
           },
         },
       }) as ChartOptions<'doughnut'>,
-    [title, thickness, chartId, externalOptions],
+    [title, thickness, chartId, externalOptions, formatLiveRegionText],
   )
 
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
