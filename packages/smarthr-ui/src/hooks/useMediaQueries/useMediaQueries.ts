@@ -21,7 +21,7 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     [queries],
   )
 
-  const latest = useLatest({ queries })
+  const latest = useLatest({ queries, serverSnapshot })
 
   const functions = useMemo(() => {
     const getMatchMediaList = () =>
@@ -29,13 +29,10 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
 
     return {
       getMatchMediaList,
+      getServerSnapshot: (() => latest.serverSnapshot) satisfies () => MediaQueryMatches<T>,
     }
   }, [latest])
 
-  const getServerSnapshot = useCallback(
-    () => serverSnapshot,
-    [serverSnapshot],
-  ) satisfies () => MediaQueryMatches<T>
   const getSnapshot = useCallback((): MediaQueryMatches<T> => {
     if (typeof window === 'undefined' || !window.matchMedia) {
       return serverSnapshot
@@ -68,5 +65,5 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
     [functions],
   )
 
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  return useSyncExternalStore(subscribe, getSnapshot, functions.getServerSnapshot)
 }
