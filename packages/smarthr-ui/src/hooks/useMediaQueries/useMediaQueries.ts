@@ -28,11 +28,8 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
 
   const latest = useLatest({ queries, serverSnapshot })
 
-  const functions = useMemo(() => {
-    const getMatchMediaList = () =>
-      Object.entries(latest.queries).map(([key, query]) => [key, window.matchMedia(query)] as const)
-
-    return {
+  const functions = useMemo(
+    () => ({
       getServerSnapshot: (() => latest.serverSnapshot) satisfies () => MediaQueryMatches<T>,
       getSnapshot: (): MediaQueryMatches<T> => {
         if (typeof window === 'undefined' || !window.matchMedia) {
@@ -60,20 +57,19 @@ export const useMediaQueries = <T extends MediaQueryListMap>(queries: T): MediaQ
           return () => {}
         }
 
-        const matchMediaList = getMatchMediaList()
-
-        matchMediaList.forEach(([, m]) => {
+        const mediaQueryList = Object.values(latest.queries).map((query) => {
+          const m = window.matchMedia(query)
           m.addEventListener('change', f)
+          return m
         })
 
         return () => {
-          matchMediaList.forEach(([, m]) => {
-            m.removeEventListener('change', f)
-          })
+          mediaQueryList.forEach((m) => m.removeEventListener('change', f))
         }
       },
-    }
-  }, [latest])
+    }),
+    [latest],
+  )
 
   return useSyncExternalStore(
     functions.subscribe,
