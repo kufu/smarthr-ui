@@ -631,7 +631,7 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 
 **⚠️ 注意: ref の渡す順序が実行順序を決める**
 
-`useMergeRefs` は渡された ref を**配列の順序どおり**に処理します。マウント時は先頭から順に `setRef` が実行され、アンマウント時も同じ順序で cleanup が実行されます（逆順ではありません）。
+`useMergeRefs` は渡された ref を**配列の順序どおり**に処理します。マウント時は先頭から順に `setRef` が実行され、アンマウント時はその**逆順**で cleanup が実行されます。あるrefのcallbackが別のrefの`current`に依存する場合、依存先のrefは「設定は先に・後片付けは後に」行われる必要があるため、この逆順cleanupによって、mount時に成立していた依存関係の前提がcleanup時にも保たれます。
 
 あるコールバックが別の ref の `current` を参照する場合、参照される側の ref を**先に**渡す必要があります。上記の `CurrencyInput` の例では、`functions.callbackRef` が `innerRef.current` を読むため、`innerRef` を `functions.callbackRef` より前に渡しています。
 

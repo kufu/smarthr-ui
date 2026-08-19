@@ -19,9 +19,11 @@ export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) =>
       const cleanups = refs.map((ref) => setRef(ref, node))
 
       return () => {
-        refs.forEach((ref, i) => {
-          cleanupRef(ref, cleanups[i])
-        })
+        // mountとは逆順でcleanupする。後方のrefが前方のrefのcurrentに依存していても、
+        // その依存先がcleanupで先に消されないようにするため
+        for (let i = refs.length - 1; i >= 0; i--) {
+          cleanupRef(refs[i], cleanups[i])
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
