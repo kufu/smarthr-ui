@@ -18,14 +18,18 @@ export type FocusTrapRef = {
   focus: () => void
 }
 
+const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
+const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
+
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
-  const dummyFocusRef = useRef<HTMLDivElement>(null)
 
   const functions = useMemo(
     () => ({
       focus: () => {
-        ;(firstFocusTarget?.current || dummyFocusRef.current)?.focus()
+        ;(
+          firstFocusTarget?.current || innerRef.current?.querySelector(DUMMY_FOCUS_SELECTOR)
+        )?.focus()
       },
     }),
     [firstFocusTarget],
@@ -58,7 +62,10 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
       const currentFocused = tabbables.find((elm) => elm === e.target)
 
       if (e.shiftKey) {
-        if (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current) {
+        if (
+          currentFocused === firstTabbable ||
+          document.activeElement === innerRef.current?.querySelector(DUMMY_FOCUS_SELECTOR)
+        ) {
           e.preventDefault()
           lastTabbable.focus()
         }
@@ -83,7 +90,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     <div ref={innerRef}>
       {!firstFocusTarget && (
         /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
-        <div ref={dummyFocusRef} tabIndex={-1} />
+        <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
       )}
       {children}
     </div>
