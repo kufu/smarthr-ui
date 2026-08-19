@@ -1,7 +1,5 @@
 import { useCallback, useRef } from 'react'
 
-import { useLatest } from './useLatest'
-
 /**
  * 渡した callback を、初回の呼び出しでのみ実行されるようにラップするフック。
  * 2回目以降の呼び出しは何もしない。
@@ -23,19 +21,22 @@ import { useLatest } from './useLatest'
 export const useOnceCallback = <Args extends unknown[], Return>(
   callback: (...rest: Args) => Return,
 ) => {
-  const executed = useRef(false)
-  const latest = useLatest({ callback })
+  const innerRef = useRef({
+    executed: false,
+    callback,
+  })
+  innerRef.current = {
+    executed: innerRef.current.executed,
+    callback,
+  }
 
-  return useCallback(
-    (...rest: Args): Return | undefined => {
-      if (executed.current) {
-        return undefined
-      }
+  return useCallback((...rest: Args): Return | undefined => {
+    if (innerRef.current.executed) {
+      return undefined
+    }
 
-      executed.current = true
+    innerRef.current.executed = true
 
-      return latest.callback(...rest)
-    },
-    [latest],
-  )
+    return innerRef.current.callback(...rest)
+  }, [])
 }
