@@ -82,8 +82,8 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
   return {
     portalRoot,
     isChildPortal: functions.isChildPortal,
-    PortalParentProvider: functions.PortalParentProvider,
     createPortal: functions.createPortal,
+    PortalParentProvider: functions.PortalParentProvider,
   }
 }
 
