@@ -18,6 +18,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
@@ -101,12 +102,17 @@ export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
   const managedLabelId = label.id || `${baseId}-label`
   const inputWrapperRef = useRef<HTMLDivElement>(null)
 
+  // HINT: managedHtmlFor / managedLabelId はsetChildInputId経由（callbackRef内からのみ）でしか変化しないため、
+  // 実用上は不変値として扱える。callbackRefの依存配列から外して関数参照を安定させることで、
+  // mergedRefの再生成（ひいてはActualFormControl側のcallbackRefの不要な再実行）を防ぐ
+  const latest = useLatest({ managedHtmlFor, managedLabelId })
+
   const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (
         !node ||
         // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-        document.getElementById(managedHtmlFor)
+        document.getElementById(latest.managedHtmlFor)
       ) {
         return
       }
@@ -122,7 +128,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
       if (inputId) {
         setChildInputId(inputId)
       } else {
-        input.setAttribute('id', managedHtmlFor)
+        input.setAttribute('id', latest.managedHtmlFor)
       }
 
       if (input instanceof HTMLInputElement && input.type === 'file') {
@@ -131,11 +137,13 @@ export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
 
         if (inputLabelledByIds) {
           // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-          input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
+          input.setAttribute(attrName, `${inputLabelledByIds} ${latest.managedLabelId}`)
         }
       }
     },
-    [managedHtmlFor, managedLabelId],
+    // HINT: latestのみに依存させることで、managedHtmlFor / managedLabelId自体の値が
+    // 変化してもcallbackRefの関数参照は変わらない
+    [latest],
   )
 
   const mergedRef = useMergeRefs(inputWrapperRef, callbackRef)
