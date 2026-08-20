@@ -100,7 +100,6 @@ export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
   const [childInputId, setChildInputId] = useState<string>('')
   const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
   const managedLabelId = label.id || `${baseId}-label`
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
 
   // HINT: managedHtmlFor / managedLabelId はsetChildInputId経由（callbackRef内からのみ）でしか変化しないため、
   // 実用上は不変値として扱える。callbackRefの依存配列から外して関数参照を安定させることで、
@@ -146,13 +145,11 @@ export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
     [latest],
   )
 
-  const mergedRef = useMergeRefs(inputWrapperRef, callbackRef)
-
   return (
     <ActualFormControl
       {...rest}
       label={{ ...label, htmlFor: managedHtmlFor, id: managedLabelId }}
-      inputWrapperRef={mergedRef}
+      inputWrapperRef={callbackRef}
     />
   )
 }

@@ -1,4 +1,4 @@
-import { useCallback, useId, useRef } from 'react'
+import { useCallback, useId } from 'react'
 
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -27,7 +27,6 @@ export const Fieldset: FC<
     labelObjectConverter,
   )
   const baseId = useId()
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -77,7 +76,9 @@ export const Fieldset: FC<
     return () => observer.disconnect()
   }, [])
 
-  const mergedRef = useMergeRefs(inputWrapperRef, callbackRef)
+  // TODO: React v18にはcallback refのcleanup関数が実装されていないため、useMergeRefsを呼び出すことで
+  // 擬似的にcleanupを実施する。v18を切れるタイミングになったらuseMergeRefsは不要になる
+  const mergedRef = useMergeRefs(callbackRef)
 
   return (
     <ActualFormControl
