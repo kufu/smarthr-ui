@@ -52,10 +52,12 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
-    const inputRef = useRef<HTMLInputElement>(null)
+    const innerRef = useRef<HTMLInputElement>(null)
+
+    // TODO: useMergeRefsが実装されたら修正
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
-      () => inputRef.current,
+      () => innerRef.current,
       [],
     )
 
@@ -74,7 +76,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           }
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          if (!inputRef.current) {
+          if (!innerRef.current) {
             return
           }
 
@@ -90,7 +92,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           })
 
           isUpdatingFilesRef.current = true
-          inputRef.current.files = buff.files
+          innerRef.current.files = buff.files
           isUpdatingFilesRef.current = false
         },
         handleClosePreview: () => {
@@ -130,13 +132,13 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            data-smarthr-ui-input="true"
+            ref={innerRef}
             type="file"
-            onChange={functions.handleChange}
             disabled={disabled}
-            ref={inputRef}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
             className={classNames.input}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />

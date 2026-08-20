@@ -51,10 +51,12 @@ export const InputFileMultiplyAppendable = forwardRef<
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
-    const inputRef = useRef<HTMLInputElement>(null)
+    const innerRef = useRef<HTMLInputElement>(null)
+
+    // TODO: useMergeRefsが実装されたら修正
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
-      () => inputRef.current,
+      () => innerRef.current,
       [],
     )
 
@@ -62,7 +64,7 @@ export const InputFileMultiplyAppendable = forwardRef<
 
     const functions = useMemo(() => {
       const updateFiles = (newFiles: File[]) => {
-        if (!inputRef.current) {
+        if (!innerRef.current) {
           return
         }
 
@@ -74,7 +76,7 @@ export const InputFileMultiplyAppendable = forwardRef<
         })
 
         isUpdatingFilesRef.current = true
-        inputRef.current.files = buff.files
+        innerRef.current.files = buff.files
         isUpdatingFilesRef.current = false
 
         setFiles(newFiles)
@@ -92,7 +94,7 @@ export const InputFileMultiplyAppendable = forwardRef<
           updateFiles([...latest.files, ...newFiles])
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          if (!inputRef.current) {
+          if (!innerRef.current) {
             return
           }
 
@@ -100,7 +102,7 @@ export const InputFileMultiplyAppendable = forwardRef<
           const newFiles = latest.files.filter((_, i) => index !== i)
 
           // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-          inputRef.current.value = ''
+          innerRef.current.value = ''
 
           updateFiles(newFiles)
         },
@@ -141,14 +143,14 @@ export const InputFileMultiplyAppendable = forwardRef<
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            multiple
-            data-smarthr-ui-input="true"
+            ref={innerRef}
             type="file"
-            onChange={functions.handleChange}
             disabled={disabled}
-            ref={inputRef}
+            multiple
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
             className={classNames.input}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
