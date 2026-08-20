@@ -20,13 +20,20 @@ export const Fieldset: FC<
     disabled?: boolean
     legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
   }
-> = ({ legend: orgLegend, ...rest }) => {
+> = ({ legend: orgLegend, innerMargin, ...rest }) => {
   const legend = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
     orgLegend,
     labelObjectConverter,
   )
   const baseId = useId()
   const inputWrapperRef = useRef<HTMLDivElement>(null)
+
+  // TODO: innerMarginが未指定、初期値の場合、childrenの上部の余白を広げることで
+  // FormControlとの差をわかりやすくしている
+  // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
+  // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
+  const childrenWrapperClassName =
+    innerMargin === undefined ? '[:not([hidden])_~_&&&]:shr-mt-0.5' : undefined
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -82,6 +89,7 @@ export const Fieldset: FC<
   return (
     <ActualFormControl
       {...rest}
+      innerMargin={innerMargin}
       label={{
         ...legend,
         htmlFor: legend.htmlFor || `${baseId}-htmlFor`,
@@ -89,6 +97,7 @@ export const Fieldset: FC<
       }}
       as="fieldset"
       inputWrapperRef={inputWrapperRef}
+      childrenWrapperClassName={childrenWrapperClassName}
     />
   )
 }

@@ -85,49 +85,6 @@ const classNameGenerator = tv({
     errorMessage: ['smarthr-ui-FormControl-errorMessage'],
     childrenWrapper: [],
   },
-  variants: {
-    innerMargin: {
-      0: {},
-      0.25: {},
-      0.5: {},
-      0.75: {},
-      1: {},
-      1.25: {},
-      1.5: {},
-      2: {},
-      2.5: {},
-      3: {},
-      3.5: {},
-      4: {},
-      8: {},
-      X3S: {},
-      XXS: {},
-      XS: {},
-      S: {},
-      M: {},
-      L: {},
-      XL: {},
-      XXL: {},
-      X3L: {},
-    } as { [key in Gap]: string },
-    isFieldset: {
-      true: {},
-      false: {},
-    },
-  },
-  compoundVariants: [
-    // TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
-    // FormControltとの差をわかりやすくしている
-    // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
-    // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-    {
-      innerMargin: undefined,
-      isFieldset: true,
-      class: {
-        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
-      },
-    },
-  ],
 })
 
 export const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
@@ -195,6 +152,8 @@ export const ActualFormControl: FC<
     disabled?: boolean
     as?: string | ComponentType<any>
     inputWrapperRef: RefObject<HTMLDivElement>
+    /** `childrenWrapper` に追加するクラス名 */
+    childrenWrapperClassName?: string
   }
 > = ({
   label,
@@ -210,6 +169,7 @@ export const ActualFormControl: FC<
   className,
   children,
   inputWrapperRef,
+  childrenWrapperClassName,
   ...rest
 }) => {
   const isFieldset = as === 'fieldset'
@@ -257,10 +217,9 @@ export const ActualFormControl: FC<
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      // NOTE: innerMargin・isFieldsetはchildrenWrapperのスタイルにのみ影響するため、ここでのみ指定する
-      childrenWrapper: generators.childrenWrapper({ innerMargin, isFieldset }),
+      childrenWrapper: generators.childrenWrapper({ className: childrenWrapperClassName }),
     }
-  }, [innerMargin, isFieldset, label.unrecommendedHide, className])
+  }, [label.unrecommendedHide, className, childrenWrapperClassName])
 
   useEffect(() => {
     if (!describedbyIds || !inputWrapperRef.current) {
@@ -328,7 +287,7 @@ export const ActualFormControl: FC<
         managedHtmlFor={label.htmlFor}
         classNames={classNames}
       />
-      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
+      <div ref={inputWrapperRef} className={classNames.childrenWrapper}>
         {children}
       </div>
       <SupplementaryMessageText
