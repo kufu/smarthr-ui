@@ -157,8 +157,7 @@ export const ActualFormControl: FC<Props> = ({
     labelObjectConverter,
   )
   const baseId = useId()
-  const [childInputId, setChildInputId] = useState<string>('')
-  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
+  const managedHtmlFor = label.htmlFor || `${baseId}-htmlFor`
   const managedLabelId = label.id || `${baseId}-label`
   const labelTextRef = useRef<HTMLElement>(null)
   const isFieldset = as === 'fieldset'
@@ -209,41 +208,6 @@ export const ActualFormControl: FC<Props> = ({
       childrenWrapper: generators.childrenWrapper(),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
-
-  useEffect(() => {
-    if (
-      isFieldset ||
-      !inputWrapperRef.current ||
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      document.getElementById(managedHtmlFor)
-    ) {
-      return
-    }
-
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const inputId = input.getAttribute('id')
-
-    if (inputId) {
-      setChildInputId(inputId)
-    } else {
-      input.setAttribute('id', managedHtmlFor)
-    }
-
-    if (input instanceof HTMLInputElement && input.type === 'file') {
-      const attrName = 'aria-labelledby'
-      const inputLabelledByIds = input.getAttribute(attrName)
-
-      if (inputLabelledByIds) {
-        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-        input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
-      }
-    }
-  }, [managedHtmlFor, isFieldset, managedLabelId, inputWrapperRef])
 
   useEffect(() => {
     if (!describedbyIds || !inputWrapperRef.current) {
@@ -367,10 +331,61 @@ export const ActualFormControl: FC<Props> = ({
   )
 }
 
-export const FormControl: FC<Omit<Props, 'as' | 'disabled' | 'inputWrapperRef'>> = (props) => {
+export const FormControl: FC<Omit<Props, 'as' | 'disabled' | 'inputWrapperRef'>> = ({
+  label: orgLabel,
+  ...rest
+}) => {
+  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
+    orgLabel,
+    labelObjectConverter,
+  )
+  const baseId = useId()
+  const [childInputId, setChildInputId] = useState<string>('')
+  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
+  const managedLabelId = label.id || `${baseId}-label`
   const inputWrapperRef = useRef<HTMLDivElement>(null)
 
-  return <ActualFormControl {...props} inputWrapperRef={inputWrapperRef} />
+  useEffect(() => {
+    if (
+      !inputWrapperRef.current ||
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      document.getElementById(managedHtmlFor)
+    ) {
+      return
+    }
+
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+    if (!input) {
+      return
+    }
+
+    const inputId = input.getAttribute('id')
+
+    if (inputId) {
+      setChildInputId(inputId)
+    } else {
+      input.setAttribute('id', managedHtmlFor)
+    }
+
+    if (input instanceof HTMLInputElement && input.type === 'file') {
+      const attrName = 'aria-labelledby'
+      const inputLabelledByIds = input.getAttribute(attrName)
+
+      if (inputLabelledByIds) {
+        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+        input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
+      }
+    }
+  }, [managedHtmlFor, managedLabelId])
+
+  return (
+    <ActualFormControl
+      {...rest}
+      label={{ ...label, htmlFor: managedHtmlFor, id: managedLabelId }}
+      inputWrapperRef={inputWrapperRef}
+    />
+  )
 }
 
 const LabelCluster = memo<
