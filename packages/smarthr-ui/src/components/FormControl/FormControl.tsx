@@ -247,7 +247,7 @@ export const ActualFormControl: FC<
   }, [errorMessages])
 
   const classNames = useMemo(() => {
-    const generators = classNameGenerator({ innerMargin, isFieldset })
+    const generators = classNameGenerator()
 
     return {
       wrapper: generators.wrapper({ className }),
@@ -257,7 +257,8 @@ export const ActualFormControl: FC<
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      childrenWrapper: generators.childrenWrapper(),
+      // NOTE: innerMargin・isFieldsetはchildrenWrapperのスタイルにのみ影響するため、ここでのみ指定する
+      childrenWrapper: generators.childrenWrapper({ innerMargin, isFieldset }),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
