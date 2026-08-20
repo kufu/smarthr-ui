@@ -56,6 +56,10 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
       }
     }
 
+    const focus = () => {
+      ;(firstFocusTarget?.current || findDummyFocus())?.focus()
+    }
+
     return {
       callbackRef: (node: HTMLDivElement | null) => {
         // TODO: useMergeRefsが実装されたらcallbackRefから代入処理を取り除く
@@ -69,7 +73,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
         if (node) {
           // カスケード更新（usePortalのportalRoot生成等）が完了し、DOMに接続された後にフォーカスするため
           // 次の描画フレームまで遅延させる
-          requestAnimationFrame(functions.focus)
+          requestAnimationFrame(focus)
 
           window.addEventListener('keydown', handleKeyDown)
         } else {
@@ -84,9 +88,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
           }
         }
       },
-      focus: () => {
-        ;(firstFocusTarget?.current || findDummyFocus())?.focus()
-      },
+      focus,
     }
   }, [firstFocusTarget])
 
