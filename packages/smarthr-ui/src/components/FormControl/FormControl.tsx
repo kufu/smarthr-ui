@@ -8,6 +8,7 @@ import {
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  type RefObject,
   memo,
   useEffect,
   useMemo,
@@ -64,6 +65,7 @@ type BaseProps = PropsWithChildren<{
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
   as?: string | ComponentType<any>
+  inputWrapperRef: RefObject<HTMLDivElement>
 }>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
 
@@ -147,6 +149,7 @@ export const ActualFormControl: FC<Props> = ({
   as = 'div',
   className,
   children,
+  inputWrapperRef,
   ...rest
 }) => {
   const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
@@ -157,7 +160,6 @@ export const ActualFormControl: FC<Props> = ({
   const [childInputId, setChildInputId] = useState<string>('')
   const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
   const managedLabelId = label.id || `${baseId}-label`
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
   const labelTextRef = useRef<HTMLElement>(null)
   const isFieldset = as === 'fieldset'
 
@@ -211,7 +213,7 @@ export const ActualFormControl: FC<Props> = ({
   useEffect(() => {
     if (
       isFieldset ||
-      !inputWrapperRef?.current ||
+      !inputWrapperRef.current ||
       // HINT: 対象idを持つ要素が既に存在する場合、何もしない
       document.getElementById(managedHtmlFor)
     ) {
@@ -241,10 +243,10 @@ export const ActualFormControl: FC<Props> = ({
         input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
       }
     }
-  }, [managedHtmlFor, isFieldset, managedLabelId])
+  }, [managedHtmlFor, isFieldset, managedLabelId, inputWrapperRef])
 
   useEffect(() => {
-    if (!describedbyIds || !inputWrapperRef?.current) {
+    if (!describedbyIds || !inputWrapperRef.current) {
       return
     }
 
@@ -262,10 +264,10 @@ export const ActualFormControl: FC<Props> = ({
 
       input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
     }
-  }, [describedbyIds])
+  }, [describedbyIds, inputWrapperRef])
 
   useEffect(() => {
-    if (!autoBindErrorInput || !inputWrapperRef?.current) {
+    if (!autoBindErrorInput || !inputWrapperRef.current) {
       return
     }
 
@@ -280,7 +282,7 @@ export const ActualFormControl: FC<Props> = ({
         input.removeAttribute(attrName)
       }
     }
-  }, [actualErrorMessages.length, autoBindErrorInput])
+  }, [actualErrorMessages.length, autoBindErrorInput, inputWrapperRef])
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -324,7 +326,7 @@ export const ActualFormControl: FC<Props> = ({
     })
 
     return () => observer.disconnect()
-  }, [isFieldset])
+  }, [isFieldset, inputWrapperRef])
 
   return (
     <Stack
@@ -365,9 +367,11 @@ export const ActualFormControl: FC<Props> = ({
   )
 }
 
-export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = (props) => (
-  <ActualFormControl {...props} />
-)
+export const FormControl: FC<Omit<Props, 'as' | 'disabled' | 'inputWrapperRef'>> = (props) => {
+  const inputWrapperRef = useRef<HTMLDivElement>(null)
+
+  return <ActualFormControl {...props} inputWrapperRef={inputWrapperRef} />
+}
 
 const LabelCluster = memo<
   Pick<Props, 'subActionArea'> & {
