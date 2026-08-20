@@ -8,7 +8,6 @@ import {
   type Ref,
   forwardRef,
   memo,
-  useEffect,
   useId,
   useImperativeHandle,
   useMemo,
@@ -16,6 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
@@ -98,26 +98,25 @@ const AutoPageTitleHeading: FC<
   // HINT: h1のテキストをMutationObserverで監視するために内部でrefを保持しつつ、利用者のrefにも要素を渡す
   const innerRef = useRef<HTMLHeadingElement | null>(null)
 
-  useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
-    outerRef,
-    () => innerRef.current,
-    [],
-  )
+  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId })
 
-  useEffect(() => {
-    const h1 = innerRef.current
-    if (!h1) return
-
+  const functions = useMemo(() => {
     const updateTitle = () => {
-      const title = pageTitle || h1.textContent || ''
-      document.title = pageTitleSuffix ? `${title}｜${pageTitleSuffix}` : title
+      const node = innerRef.current
+
+      if (!node) {
+        return
+      }
+
+      const title = latest.pageTitle || node.textContent || ''
+      document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
 
       // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
       // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-      const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
+      const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
         document.createElement('div')) as HTMLDivElement
 
-      pseudoTitle.setAttribute('id', pseudoTitleId)
+      pseudoTitle.setAttribute('id', latest.pseudoTitleId)
       pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
       pseudoTitle.setAttribute('aria-live', 'polite')
       document.body.prepend(pseudoTitle)
@@ -126,27 +125,42 @@ const AutoPageTitleHeading: FC<
         pseudoTitle.textContent = document.title
       })
     }
-
-    updateTitle()
-
     const observer = new MutationObserver(updateTitle)
-    observer.observe(h1, {
-      characterData: true,
-      childList: true,
-      subtree: true,
-    })
 
-    return () => {
-      observer.disconnect()
-      const pseudoTitle = document.getElementById(pseudoTitleId)
-      if (pseudoTitle) {
-        pseudoTitle.remove()
-      }
+    return {
+      callbackRef: (node: HTMLHeadingElement | null) => {
+        // TODO: useMergeRefsが実装された修正
+        innerRef.current = node
+        updateTitle()
+
+        if (node) {
+          observer.observe(node, {
+            characterData: true,
+            childList: true,
+            subtree: true,
+          })
+        } else {
+          observer.disconnect()
+
+          const pseudoTitle = document.getElementById(latest.pseudoTitleId)
+
+          if (pseudoTitle) {
+            pseudoTitle.remove()
+          }
+        }
+      },
     }
-  }, [pageTitle, pageTitleSuffix, pseudoTitleId])
+  }, [latest])
+
+  // TODO: useMergeRefsが実装された修正
+  useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
+    outerRef,
+    () => innerRef.current,
+    [],
+  )
 
   return (
-    <ActualHeading {...rest} headingRef={innerRef}>
+    <ActualHeading {...rest} headingRef={functions.callbackRef}>
       {children}
     </ActualHeading>
   )
@@ -178,10 +192,10 @@ const ActualHeading: FC<ActualHeadingProps> = ({
     <Component
       {...rest}
       {...STYLE_TYPE_MAP.screenTitle}
-      size={size || STYLE_TYPE_MAP.screenTitle.size}
-      as="h1"
-      className={actualClassName}
       ref={headingRef}
+      size={size || STYLE_TYPE_MAP.screenTitle.size}
+      className={actualClassName}
+      as="h1"
     >
       {children}
     </Component>
