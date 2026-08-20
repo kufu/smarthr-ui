@@ -22,7 +22,13 @@ const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
   const innerRef = useRef<HTMLDivElement | null>(null)
-  const triggerRef = useRef<Element | null>(null)
+  const snapshotRef = useRef<{
+    trigger: Element | null
+    focusRAFId: number | null
+  }>({
+    trigger: null,
+    focusRAFId: null,
+  })
 
   const functions = useMemo(() => {
     const findDummyFocus = () => innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
@@ -65,23 +71,31 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
         // TODO: useMergeRefsが実装されたらcallbackRefから代入処理を取り除く
         innerRef.current = node
 
-        if (!triggerRef.current) {
+        if (!snapshotRef.current.trigger) {
           // FocusTrap がマウントされた時点のフォーカス要素を保存
-          triggerRef.current = document.activeElement
+          snapshotRef.current.trigger = document.activeElement
         }
 
         if (node) {
           // カスケード更新（usePortalのportalRoot生成等）が完了し、DOMに接続された後にフォーカスするため
           // 次の描画フレームまで遅延させる
-          requestAnimationFrame(focus)
+          snapshotRef.current.focusRAFId = requestAnimationFrame(focus)
 
           window.addEventListener('keydown', handleKeyDown)
         } else {
-          window.removeEventListener('keydown', handleKeyDown)
+          const { trigger, focusRAFId } = snapshotRef.current
 
           // フォーカストラップ終了時にトリガにフォーカスを戻す
-          const trigger = triggerRef.current
-          triggerRef.current = null
+          snapshotRef.current = {
+            trigger: null,
+            focusRAFId: null,
+          }
+
+          if (focusRAFId !== null) {
+            cancelAnimationFrame(focusRAFId)
+          }
+
+          window.removeEventListener('keydown', handleKeyDown)
 
           if (trigger instanceof HTMLElement) {
             trigger.focus()
