@@ -83,7 +83,6 @@ const classNameGenerator = tv({
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
     errorMessage: ['smarthr-ui-FormControl-errorMessage'],
-    childrenWrapper: [],
   },
 })
 
@@ -217,7 +216,7 @@ export const ActualFormControl: FC<
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      childrenWrapper: generators.childrenWrapper({ className: childrenWrapperClassName }),
+      childrenWrapper: childrenWrapperClassName,
     }
   }, [label.unrecommendedHide, className, childrenWrapperClassName])
 
