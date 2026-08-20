@@ -84,7 +84,17 @@ export const SegmentedControl: FC<Props> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+
+  const classNames = useMemo(() => {
+    const { container, buttonGroup, button } = classNameGenerator()
+
+    return {
+      container: container({ className }),
+      buttonGroup: buttonGroup(),
+      button: button({ size }),
+    }
+  }, [size, className])
 
   const latest = useLatest({ onClickOption, isFocused })
 
@@ -103,23 +113,13 @@ export const SegmentedControl: FC<Props> = ({
     [hasOnClickOption, latest],
   )
 
-  const classNames = useMemo(() => {
-    const { container, buttonGroup, button } = classNameGenerator()
-
-    return {
-      container: container({ className }),
-      buttonGroup: buttonGroup(),
-      button: button({ size }),
-    }
-  }, [size, className])
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!latest.isFocused || !containerRef.current || !document.activeElement) {
+      if (!latest.isFocused || !innerRef.current || !document.activeElement) {
         return
       }
 
-      let radios: NodeListOf<Element> | Element[] = containerRef.current.querySelectorAll(
+      let radios: NodeListOf<Element> | Element[] = innerRef.current.querySelectorAll(
         '[role="radio"]:not(:disabled)',
       )
 
@@ -177,7 +177,7 @@ export const SegmentedControl: FC<Props> = ({
   return (
     <div
       {...rest}
-      ref={containerRef}
+      ref={innerRef}
       role="toolbar"
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
