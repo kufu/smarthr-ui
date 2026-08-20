@@ -5,13 +5,14 @@ import {
   type FocusEvent,
   forwardRef,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
+import { useOnce } from '../../../hooks/useOnce'
 import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
@@ -34,6 +35,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       onFocus,
       onBlur,
       onFormatValue,
+      value,
+      defaultValue,
     })
 
     const functions = useMemo(() => {
@@ -43,17 +46,22 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
       }
+      const formatCurrencyValue = (raw = '') => {
+        formatValue(formatCurrency(raw))
+      }
 
       return {
-        formatCurrencyValue: (raw = '') => {
-          formatValue(formatCurrency(raw))
+        baseCallbackRef: (node: HTMLInputElement | null) => {
+          if (node && latest.value === undefined && latest.defaultValue !== undefined) {
+            formatCurrencyValue(latest.defaultValue)
+          }
         },
+        formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
 
           if (innerRef.current) {
-            const commaExcluded = innerRef.current.value.replace(/,/g, '')
-            formatValue(commaExcluded)
+            formatValue(innerRef.current.value.replace(/,/g, ''))
           }
 
           latest.onFocus?.(e)
@@ -66,19 +74,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-      [],
-    )
-
-    useEffect(() => {
-      if (value === undefined && defaultValue !== undefined) {
-        functions.formatCurrencyValue(defaultValue)
-      }
-      // when component did mount
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const callbackRef = useOnce(functions.baseCallbackRef)
+    const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
 
     useEffect(() => {
       if (!isFocused) {
@@ -95,7 +92,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
-        ref={innerRef}
+        ref={mergedRef}
         type="text"
         value={value}
         defaultValue={defaultValue}

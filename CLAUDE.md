@@ -532,6 +532,185 @@ useImperativeHandle(ref, () => wrapperRef.current!, [Component])
 useImperativeHandle(ref, () => innerRef.current)
 ```
 
+#### useMergeRefs
+
+複数の ref（`RefObject` や callback ref）を1つの callback ref に統合したい場合は `useMergeRefs`（`src/hooks/useMergeRefs.ts`）を使います。
+
+```typescript
+const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
+
+return <input ref={mergedRef} />
+```
+
+**外部から渡された `ref` は最後に配置する**
+
+外部から渡された `ref` は他の内部 ref の状態に依存しない独立した存在であることがほとんどです。常に最後に配置する規約にすることで、内部 ref 同士の依存関係だけを考慮すればよくなり、可読性・汎用性が上がります。
+
+**❌ useImperativeHandle を使うべきではないパターン: DOM ノードをそのまま外部 ref に渡すためだけの中継**
+
+外部から渡された `ref` に、内部の DOM ノードをそのまま渡したいだけの場合（＝独自の命令的 API を提供するわけではない場合）に `useImperativeHandle` を使うのはアンチパターンです。callback ref の中で `innerRef.current = node` のように無理やり別 ref の `current` に値を詰める実装も同様に避けます。
+
+```tsx
+// ❌ callbackRefでinnerRef.currentに無理やり詰めて、useImperativeHandleで中継するだけ
+const innerRef = useRef<HTMLInputElement>(null)
+
+useImperativeHandle(ref, () => innerRef.current, [])
+
+const functions = useMemo(
+  () => ({
+    handleInnerRef: (node: HTMLInputElement | null) => {
+      innerRef.current = node
+      if (latest.autoFocus && node) {
+        node.focus()
+      }
+    },
+  }),
+  [latest],
+)
+
+return <input ref={functions.handleInnerRef} />
+
+// ✅ useMergeRefsでrefをそのまま統合する。innerRefへの代入処理が不要になる
+const functions = useMemo(
+  () => ({
+    callbackRef: (node: HTMLInputElement | null) => {
+      if (node && latest.autoFocus) {
+        node.focus()
+      }
+    },
+  }),
+  [latest],
+)
+
+const mergedRef = useMergeRefs(functions.callbackRef, ref)
+
+return <input ref={mergedRef} />
+```
+
+このように `useMergeRefs` を使うことで、「別の ref の `current` に値を詰めるためだけの callback ref」と「外部 ref への中継のためだけの `useImperativeHandle`」の両方を排除できます。
+
+**✅ useImperativeHandle で良いパターン: 独自の命令的 API を公開する場合**
+
+DOM ノードそのものではなく、独自メソッドを持つオブジェクトを公開する場合は `useImperativeHandle` が適切です。この場合 `useMergeRefs` の出番はありません。
+
+```tsx
+const innerRef = useRef<HTMLDivElement | null>(null)
+
+const focus = useCallback(() => {
+  innerRef.current?.focus()
+}, [])
+
+useImperativeHandle(ref, () => ({ focus }), [focus])
+```
+
+**✅ useMergeRefs を使うそれ以外のパターン: 外部 ref・内部参照用 ref・マウント時処理用 callback ref の統合**
+
+`CurrencyInput` のように、外部から渡される `ref`、内部で値を読み書きするための `innerRef`、マウント時に副作用を実行する callback ref を同時に使いたい場合にも `useMergeRefs` が使えます。
+
+```tsx
+const innerRef = useRef<HTMLInputElement>(null)
+
+const functions = useMemo(() => {
+  const formatValue = (formatted = '') => {
+    if (innerRef.current && formatted !== innerRef.current.value) {
+      innerRef.current.value = formatted
+    }
+  }
+
+  return {
+    callbackRef: (node: HTMLInputElement | null) => {
+      if (node && latest.defaultValue !== undefined) {
+        formatValue(formatCurrency(latest.defaultValue))
+      }
+    },
+  }
+}, [latest])
+
+const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
+```
+
+**⚠️ 注意: ref の渡す順序が実行順序を決める**
+
+`useMergeRefs` は渡された ref を**配列の順序どおり**に処理します。マウント時は先頭から順に `setRef` が実行され、アンマウント時はその**逆順**で cleanup が実行されます。あるrefのcallbackが別のrefの`current`に依存する場合、依存先のrefは「設定は先に・後片付けは後に」行われる必要があるため、この逆順cleanupによって、mount時に成立していた依存関係の前提がcleanup時にも保たれます。
+
+あるコールバックが別の ref の `current` を参照する場合、参照される側の ref を**先に**渡す必要があります。上記の `CurrencyInput` の例では、`functions.callbackRef` が `innerRef.current` を読むため、`innerRef` を `functions.callbackRef` より前に渡しています。
+
+```tsx
+// ✅ innerRefが先に設定されるため、callbackRef実行時にはinnerRef.currentが利用可能
+const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
+
+// ❌ innerRefとcallbackRefの順序を逆にすると、callbackRef実行時点でinnerRef.currentがまだnullのまま
+const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
+```
+
+#### useOnce
+
+渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnce.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
+
+```tsx
+const callbackRef = useOnce((node: HTMLInputElement | null) => {
+  if (node && autoFocus) {
+    node.focus()
+  }
+})
+
+const mergedRef = useMergeRefs(callbackRef, ref)
+```
+
+**手動で実行済みフラグを管理する実装との違い:**
+
+`useRef(false)` で実行済みフラグを自前管理する代わりに `useOnce` を使うことで、フラグの読み書きやガード条件の重複を排除できます。
+
+```tsx
+// ❌ 実行済みフラグを手動管理
+const executedAutoFocus = useRef(false)
+
+const callbackRef = (node: HTMLInputElement | null) => {
+  if (node && autoFocus && !executedAutoFocus.current) {
+    node.focus()
+    executedAutoFocus.current = true
+  }
+}
+
+// ✅ useOnceでラップし、実行済みかどうかの判定を委譲する
+const callbackRef = useOnce((node: HTMLInputElement | null) => {
+  if (node && autoFocus) {
+    node.focus()
+  }
+})
+```
+
+**`useOnce` に渡す callback 内で `latest.xxx` を参照することはできない**
+
+`local-rules/best-practice-for-use-latest` は `latest.xxx` のプロパティアクセスを `useEffect`/`useLayoutEffect`/`useCallback`/`useMemo` 内でのみ許可しており、`useOnce` は対象外です。`latest.xxx` を参照したい場合は、既存の `functions` パターン（`useMemo`）の中で callback を定義し、それを `useOnce` に渡してください。
+
+```tsx
+// ❌ useOnceに渡すcallback内で直接latestを参照
+const latest = useLatest({ onFormatValue, defaultValue })
+
+const callbackRef = useOnce((node: HTMLInputElement | null) => {
+  if (node && latest.defaultValue !== undefined) {
+    latest.onFormatValue?.(latest.defaultValue)
+  }
+})
+
+// ✅ functionsパターンでlatestを参照するcallbackを定義し、それをuseOnceに渡す
+const latest = useLatest({ onFormatValue, defaultValue })
+
+const functions = useMemo(
+  () => ({
+    baseCallbackRef: (node: HTMLInputElement | null) => {
+      if (node && latest.defaultValue !== undefined) {
+        latest.onFormatValue?.(latest.defaultValue)
+      }
+    },
+  }),
+  [latest],
+)
+
+const callbackRef = useOnce(functions.baseCallbackRef)
+```
+
 ## スキル
 
 - **PR作成** (`.claude/skills/pr-creator/`): PR作成時にリポジトリのテンプレートに沿った本文を生成する
