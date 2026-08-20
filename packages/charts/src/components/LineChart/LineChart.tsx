@@ -6,6 +6,7 @@ import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createLineChartOptions, registerChartComponents } from '../../config'
 import { getLineChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
@@ -23,17 +24,37 @@ type Props = {
 export const LineChart: React.FC<Props> = ({ data, title, options: externalOptions }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'line'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const chartColors = useMemo(
     () => getLineChartColors(data.datasets.length),
     [data.datasets.length],
   )
 
   const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const pointCount = data.datasets[0].data.length
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
-  }, [title, data])
+    const counts = {
+      datasetCount: data.datasets.length,
+      pointCount: data.datasets[0].data.length,
+    }
+
+    // titleの有無で別のメッセージを使う。ひとつの文章として翻訳できるようにするため、
+    // チャートの説明とtitleを後から連結していない
+    return title
+      ? localize(
+          {
+            id: 'smarthr-ui-charts/LineChart/ariaLabelWithTitle',
+            defaultText: '{title} 線グラフ {datasetCount}個のデータ {pointCount}個のポイント',
+          },
+          { ...counts, title },
+        )
+      : localize(
+          {
+            id: 'smarthr-ui-charts/LineChart/ariaLabel',
+            defaultText: '線グラフ {datasetCount}個のデータ {pointCount}個のポイント',
+          },
+          counts,
+        )
+  }, [title, data, localize])
 
   const enhancedData: ChartData<'line'> = useMemo(
     () => ({
@@ -62,10 +83,11 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, formatLiveRegionText],
   )
 
   return (
