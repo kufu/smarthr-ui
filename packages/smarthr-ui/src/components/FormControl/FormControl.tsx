@@ -223,60 +223,70 @@ export const ActualFormControl: FC<
     }
   }, [label.unrecommendedHide, className, childrenWrapperClassName])
 
-  useEffect(() => {
-    if (!inputWrapperRef.current) {
-      return
-    }
-
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const attrName = 'aria-describedby'
-    const ariaDescribedBy = input.getAttribute(attrName) || ''
-    const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
-    // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
-    const externalTokens = currentTokens.filter(
-      (token) => !managedDescribedbyIdsRef.current.includes(token),
-    )
-    const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
-    const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
-
-    if (nextValue !== ariaDescribedBy) {
-      if (nextValue) {
-        input.setAttribute(attrName, nextValue)
-      } else {
-        input.removeAttribute(attrName)
-      }
-    }
-
-    managedDescribedbyIdsRef.current = describedbyIdTokens
-  }, [describedbyIds, inputWrapperRef])
-
-  const autoBindErrorCallbackRef = useCallback(
+  const ariaDescribedByCallbackRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (!node || !autoBindErrorInput) {
+      if (!node) {
         return
       }
 
       const input = node.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
-      if (input) {
-        const attrName = 'aria-invalid'
+      if (!input) {
+        return
+      }
 
-        if (actualErrorMessages.length > 0) {
-          input.setAttribute(attrName, 'true')
+      const attrName = 'aria-describedby'
+      const ariaDescribedBy = input.getAttribute(attrName) || ''
+      const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
+      // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
+      const externalTokens = currentTokens.filter(
+        (token) => !managedDescribedbyIdsRef.current.includes(token),
+      )
+      const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
+      const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
+
+      if (nextValue !== ariaDescribedBy) {
+        if (nextValue) {
+          input.setAttribute(attrName, nextValue)
         } else {
           input.removeAttribute(attrName)
         }
       }
+
+      managedDescribedbyIdsRef.current = describedbyIdTokens
     },
+    [describedbyIds],
+  )
+
+  const autoBindErrorCallbackRef = useMemo(
+    () =>
+      autoBindErrorInput
+        ? (node: HTMLDivElement | null) => {
+            if (!node) {
+              return
+            }
+
+            const input = node.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+            if (input) {
+              const attrName = 'aria-invalid'
+
+              if (actualErrorMessages.length > 0) {
+                input.setAttribute(attrName, 'true')
+              } else {
+                input.removeAttribute(attrName)
+              }
+            }
+          }
+        : undefined,
     [actualErrorMessages.length, autoBindErrorInput],
   )
 
-  const mergedRef = useMergeRefs(inputWrapperRef, autoBindErrorCallbackRef)
+  const mergedRef = useMergeRefs(
+    inputWrapperRef,
+    ariaDescribedByCallbackRef,
+    autoBindErrorCallbackRef,
+  )
 
   return (
     <Stack
