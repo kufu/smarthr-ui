@@ -8,10 +8,9 @@ import {
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
-  type RefObject,
+  type Ref,
   memo,
   useCallback,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -102,45 +101,50 @@ export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
   const managedLabelId = label.id || `${baseId}-label`
   const inputWrapperRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (
-      !inputWrapperRef.current ||
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      document.getElementById(managedHtmlFor)
-    ) {
-      return
-    }
-
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const inputId = input.getAttribute('id')
-
-    if (inputId) {
-      setChildInputId(inputId)
-    } else {
-      input.setAttribute('id', managedHtmlFor)
-    }
-
-    if (input instanceof HTMLInputElement && input.type === 'file') {
-      const attrName = 'aria-labelledby'
-      const inputLabelledByIds = input.getAttribute(attrName)
-
-      if (inputLabelledByIds) {
-        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-        input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
+  const callbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (
+        !node ||
+        // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+        document.getElementById(managedHtmlFor)
+      ) {
+        return
       }
-    }
-  }, [managedHtmlFor, managedLabelId])
+
+      const input = node.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+      if (!input) {
+        return
+      }
+
+      const inputId = input.getAttribute('id')
+
+      if (inputId) {
+        setChildInputId(inputId)
+      } else {
+        input.setAttribute('id', managedHtmlFor)
+      }
+
+      if (input instanceof HTMLInputElement && input.type === 'file') {
+        const attrName = 'aria-labelledby'
+        const inputLabelledByIds = input.getAttribute(attrName)
+
+        if (inputLabelledByIds) {
+          // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+          input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
+        }
+      }
+    },
+    [managedHtmlFor, managedLabelId],
+  )
+
+  const mergedRef = useMergeRefs(inputWrapperRef, callbackRef)
 
   return (
     <ActualFormControl
       {...rest}
       label={{ ...label, htmlFor: managedHtmlFor, id: managedLabelId }}
-      inputWrapperRef={inputWrapperRef}
+      inputWrapperRef={mergedRef}
     />
   )
 }
@@ -152,7 +156,7 @@ export const ActualFormControl: FC<
     /** `true` のとき、文字色を `TEXT_DISABLED` にする */
     disabled?: boolean
     as?: string | ComponentType<any>
-    inputWrapperRef: RefObject<HTMLDivElement>
+    inputWrapperRef: Ref<HTMLDivElement>
     /** `childrenWrapper` に追加するクラス名 */
     childrenWrapperClassName?: string
   }
