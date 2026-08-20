@@ -29,6 +29,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
   ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
+    const [actualDefaultValue] = useState(() =>
+      defaultValue !== undefined ? formatCurrency(defaultValue) : defaultValue,
+    )
 
     const latest = useLatest({
       onFocus,
@@ -72,25 +75,13 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       [],
     )
 
+    // HINT: valueは基本innerRef.current.valueと同等のため、innerRef.current.valueの変換だけでなりたつ
+    // controlledの場合、valueが変更された場合を検知する必要があるため依存関係に含める必要はある
     useEffect(() => {
-      if (value === undefined && defaultValue !== undefined) {
-        functions.formatCurrencyValue(defaultValue)
+      if (!isFocused && innerRef.current) {
+        functions.formatCurrencyValue(innerRef.current.value)
       }
-      // when component did mount
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    useEffect(() => {
-      if (!isFocused) {
-        if (value !== undefined) {
-          // for controlled component
-          functions.formatCurrencyValue(value)
-        } else if (innerRef.current) {
-          // for uncontrolled component
-          functions.formatCurrencyValue(innerRef.current.value)
-        }
-      }
-    }, [isFocused, value, functions])
+    }, [value, isFocused, functions])
 
     return (
       <Input
@@ -98,7 +89,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         ref={innerRef}
         type="text"
         value={value}
-        defaultValue={defaultValue}
+        defaultValue={actualDefaultValue}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
