@@ -643,12 +643,12 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
 ```
 
-#### useOnceCallback
+#### useOnce
 
-渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnceCallback.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
+渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnce.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
 
 ```tsx
-const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+const callbackRef = useOnce((node: HTMLInputElement | null) => {
   if (node && autoFocus) {
     node.focus()
   }
@@ -659,7 +659,7 @@ const mergedRef = useMergeRefs(callbackRef, ref)
 
 **手動で実行済みフラグを管理する実装との違い:**
 
-`useRef(false)` で実行済みフラグを自前管理する代わりに `useOnceCallback` を使うことで、フラグの読み書きやガード条件の重複を排除できます。
+`useRef(false)` で実行済みフラグを自前管理する代わりに `useOnce` を使うことで、フラグの読み書きやガード条件の重複を排除できます。
 
 ```tsx
 // ❌ 実行済みフラグを手動管理
@@ -672,29 +672,29 @@ const callbackRef = (node: HTMLInputElement | null) => {
   }
 }
 
-// ✅ useOnceCallbackでラップし、実行済みかどうかの判定を委譲する
-const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+// ✅ useOnceでラップし、実行済みかどうかの判定を委譲する
+const callbackRef = useOnce((node: HTMLInputElement | null) => {
   if (node && autoFocus) {
     node.focus()
   }
 })
 ```
 
-**`useOnceCallback` に渡す callback 内で `latest.xxx` を参照することはできない**
+**`useOnce` に渡す callback 内で `latest.xxx` を参照することはできない**
 
-`local-rules/best-practice-for-use-latest` は `latest.xxx` のプロパティアクセスを `useEffect`/`useLayoutEffect`/`useCallback`/`useMemo` 内でのみ許可しており、`useOnceCallback` は対象外です。`latest.xxx` を参照したい場合は、既存の `functions` パターン（`useMemo`）の中で callback を定義し、それを `useOnceCallback` に渡してください。
+`local-rules/best-practice-for-use-latest` は `latest.xxx` のプロパティアクセスを `useEffect`/`useLayoutEffect`/`useCallback`/`useMemo` 内でのみ許可しており、`useOnce` は対象外です。`latest.xxx` を参照したい場合は、既存の `functions` パターン（`useMemo`）の中で callback を定義し、それを `useOnce` に渡してください。
 
 ```tsx
-// ❌ useOnceCallbackに渡すcallback内で直接latestを参照
+// ❌ useOnceに渡すcallback内で直接latestを参照
 const latest = useLatest({ onFormatValue, defaultValue })
 
-const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+const callbackRef = useOnce((node: HTMLInputElement | null) => {
   if (node && latest.defaultValue !== undefined) {
     latest.onFormatValue?.(latest.defaultValue)
   }
 })
 
-// ✅ functionsパターンでlatestを参照するcallbackを定義し、それをuseOnceCallbackに渡す
+// ✅ functionsパターンでlatestを参照するcallbackを定義し、それをuseOnceに渡す
 const latest = useLatest({ onFormatValue, defaultValue })
 
 const functions = useMemo(
@@ -708,7 +708,7 @@ const functions = useMemo(
   [latest],
 )
 
-const callbackRef = useOnceCallback(functions.baseCallbackRef)
+const callbackRef = useOnce(functions.baseCallbackRef)
 ```
 
 ## スキル

@@ -12,7 +12,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useMergeRefs } from '../../../hooks/useMergeRefs'
-import { useOnceCallback } from '../../../hooks/useOnceCallback'
+import { useOnce } from '../../../hooks/useOnce'
 import { Input } from '../Input'
 
 import { formatCurrency } from './currencyInputHelper'
@@ -74,7 +74,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const callbackRef = useOnceCallback(functions.baseCallbackRef)
+    const callbackRef = useOnce(functions.baseCallbackRef)
     const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
 
     useEffect(() => {

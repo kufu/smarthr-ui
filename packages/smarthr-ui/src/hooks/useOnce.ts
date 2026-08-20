@@ -8,7 +8,7 @@ import { useCallback, useRef } from 'react'
  * マウント時に一度だけ実行したい場合などに使う。
  *
  * @example
- * const focusOnce = useOnceCallback((node: HTMLInputElement) => {
+ * const focusOnce = useOnce((node: HTMLInputElement) => {
  *   node.focus()
  * })
  *
@@ -18,9 +18,7 @@ import { useCallback, useRef } from 'react'
  *   }
  * }
  */
-export const useOnceCallback = <Args extends unknown[], Return>(
-  callback: (...rest: Args) => Return,
-) => {
+export const useOnce = <Args extends unknown[], Return>(callback: (...rest: Args) => Return) => {
   const innerRef = useRef({
     executed: false,
     callback,

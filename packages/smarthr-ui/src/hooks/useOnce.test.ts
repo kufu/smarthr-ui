@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react'
 
-import { useOnceCallback } from './useOnceCallback'
+import { useOnce } from './useOnce'
 
-describe('useOnceCallback', () => {
+describe('useOnce', () => {
   test('初回の呼び出しではcallbackが実行される', () => {
     const callback = vi.fn((value: string) => value.toUpperCase())
 
-    const { result } = renderHook(() => useOnceCallback(callback))
+    const { result } = renderHook(() => useOnce(callback))
 
     const returned = result.current('foo')
 
@@ -17,7 +17,7 @@ describe('useOnceCallback', () => {
   test('2回目以降の呼び出しではcallbackが実行されずundefinedを返す', () => {
     const callback = vi.fn((value: string) => value.toUpperCase())
 
-    const { result } = renderHook(() => useOnceCallback(callback))
+    const { result } = renderHook(() => useOnce(callback))
 
     result.current('foo')
     const returned = result.current('bar')
@@ -29,7 +29,7 @@ describe('useOnceCallback', () => {
   test('再レンダリングされても実行済みの状態は維持される', () => {
     const callback = vi.fn()
 
-    const { result, rerender } = renderHook(() => useOnceCallback(callback))
+    const { result, rerender } = renderHook(() => useOnce(callback))
 
     result.current()
     rerender()
@@ -42,7 +42,7 @@ describe('useOnceCallback', () => {
     const firstCallback = vi.fn()
     const secondCallback = vi.fn()
 
-    const { result, rerender } = renderHook(({ callback }) => useOnceCallback(callback), {
+    const { result, rerender } = renderHook(({ callback }) => useOnce(callback), {
       initialProps: { callback: firstCallback },
     })
 
@@ -54,7 +54,7 @@ describe('useOnceCallback', () => {
   })
 
   test('返り値の関数は再レンダリングされても同一の参照を保つ', () => {
-    const { result, rerender } = renderHook(() => useOnceCallback(vi.fn()))
+    const { result, rerender } = renderHook(() => useOnce(vi.fn()))
 
     const first = result.current
     rerender()

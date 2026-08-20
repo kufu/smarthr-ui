@@ -11,7 +11,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../hooks/useMergeRefs'
-import { useOnceCallback } from '../../hooks/useOnceCallback'
+import { useOnce } from '../../hooks/useOnce'
 import { useTheme } from '../../hooks/useTheme'
 
 type BaseProps = {
@@ -105,7 +105,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
   ) => {
     const theme = useTheme()
 
-    const callbackRef = useOnceCallback((node: HTMLInputElement | null) => {
+    const callbackRef = useOnce((node: HTMLInputElement | null) => {
       if (node && autoFocus) {
         node.focus()
       }
