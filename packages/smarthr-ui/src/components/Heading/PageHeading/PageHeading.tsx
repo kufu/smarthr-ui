@@ -121,6 +121,7 @@ const AutoPageTitleHeading: FC<
       pseudoTitle.setAttribute('aria-live', 'polite')
       document.body.prepend(pseudoTitle)
 
+      // TODO: cancelする
       requestAnimationFrame(() => {
         pseudoTitle.textContent = document.title
       })

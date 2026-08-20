@@ -86,16 +86,28 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       handleClickTrigger: (rect: Rect) => {
         if (latest.active) {
           setActive(false)
-          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+
+          if (latest.onClose) {
+            // TODO: cancelする
+            requestAnimationFrame(() => latest.onClose?.())
+          }
         } else {
           setActive(true)
           setTriggerRect(rect)
-          if (latest.onOpen) requestAnimationFrame(() => latest.onOpen?.())
+
+          if (latest.onOpen) {
+            // TODO: cancelする
+            requestAnimationFrame(() => latest.onOpen?.())
+          }
         }
       },
       handleDelegateClickCloser: () => {
         setActive(false)
-        if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+
+        if (latest.onClose) {
+          // TODO: cancelする
+          requestAnimationFrame(() => latest.onClose?.())
+        }
 
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
@@ -110,6 +122,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           setActive(false)
 
           if (latest.onClose) {
+            // TODO: cancelする
             requestAnimationFrame(() => latest.onClose?.())
           }
         }

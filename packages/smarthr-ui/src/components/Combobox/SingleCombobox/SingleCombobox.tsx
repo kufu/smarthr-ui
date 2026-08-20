@@ -225,6 +225,7 @@ const ActualSingleCombobox = <T,>(
 
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        // TODO: cancelする
         requestAnimationFrame(() => {
           setIsExpanded(false)
           // HINT:

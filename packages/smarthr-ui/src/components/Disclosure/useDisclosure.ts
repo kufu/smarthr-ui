@@ -27,6 +27,7 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     () => ({
       safeSetExpanded: (value: boolean | ((prev: boolean) => boolean)) => {
         // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
+        // TODO: cancelする
         requestAnimationFrame(() => {
           const next = typeof value === 'function' ? value(latest.expanded) : value
 

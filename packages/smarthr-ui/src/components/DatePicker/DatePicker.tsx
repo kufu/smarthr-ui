@@ -246,6 +246,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (ESCAPE_KEY_REGEX.test(e.key)) {
             e.stopPropagation()
             // delay hiding calendar because calendar will be displayed when input is focused
+            // TODO: cancelする
             requestAnimationFrame(closeCalendar)
 
             if (inputRef.current) inputRef.current.focus()
@@ -265,6 +266,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         handleSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
           updateDate(e, selected)
           // delay hiding calendar because calendar will be displayed when input is focused
+          // TODO: cancelする
           requestAnimationFrame(closeCalendar)
 
           if (inputRef.current) inputRef.current.focus()

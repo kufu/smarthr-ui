@@ -52,6 +52,7 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
   )
   const onClickClearSearchQuery = useCallback(() => {
     // HINT: 別のスレッドにしないとドロップダウンが閉じてしまう
+    // TODO: cancelする
     requestAnimationFrame(() => {
       changeSearchQuery('')
     })

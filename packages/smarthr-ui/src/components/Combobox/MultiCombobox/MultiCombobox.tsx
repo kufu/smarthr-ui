@@ -218,6 +218,7 @@ const ActualMultiCombobox = <T,>(
       if (handlers.length > 0) {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        // TODO: cancelする
         requestAnimationFrame(() => {
           handlers.forEach((h) => h(item))
         })
@@ -229,6 +230,7 @@ const ActualMultiCombobox = <T,>(
       handleSelect: (selected: ComboboxItem<T>) => {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        // TODO: cancelする
         requestAnimationFrame(() => {
           const matchedSelectedItem = latestForListBox.selectedItems.find((item) =>
             areItemsEqual(item, selected),
