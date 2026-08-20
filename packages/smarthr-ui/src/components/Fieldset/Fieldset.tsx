@@ -1,5 +1,6 @@
-import { useEffect, useId, useRef } from 'react'
+import { useCallback, useId, useRef } from 'react'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import {
   ActualFormControl,
@@ -28,31 +29,21 @@ export const Fieldset: FC<
   const baseId = useId()
   const inputWrapperRef = useRef<HTMLDivElement>(null)
 
-  // TODO: innerMarginが未指定、初期値の場合、childrenの上部の余白を広げることで
-  // FormControlとの差をわかりやすくしている
-  // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
-  // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-  const childrenWrapperClassName =
-    innerMargin === undefined ? '[:not([hidden])_~_&&&]:shr-mt-0.5' : undefined
-
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
-  useEffect(() => {
-    if (!inputWrapperRef.current) return
+  const callbackRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return
 
     // HINT: unrecommendedHideLabelがfalseの場合、同じテキストを持つ要素が2つレンダリングされるが
     // どちらも同一文字列のため、1つ目を取得すれば十分
-    const labelTextEl = inputWrapperRef.current.parentElement?.querySelector(
-      `.${SMARTHR_UI_LABEL_TEXT_SELECTOR}`,
-    )
+    const labelTextEl = node.parentElement?.querySelector(`.${SMARTHR_UI_LABEL_TEXT_SELECTOR}`)
     if (!labelTextEl) return
 
     const updateAriaLabels = () => {
       const labelText = labelTextEl.textContent || ''
       if (!labelText) return
 
-      const inputs =
-        inputWrapperRef.current!.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
+      const inputs = node.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
       if (!inputs.length) return
 
       inputs.forEach((input: HTMLInputElement) => {
@@ -86,6 +77,8 @@ export const Fieldset: FC<
     return () => observer.disconnect()
   }, [])
 
+  const mergedRef = useMergeRefs(inputWrapperRef, callbackRef)
+
   return (
     <ActualFormControl
       {...rest}
@@ -96,8 +89,14 @@ export const Fieldset: FC<
         id: legend.id || `${baseId}-legend`,
       }}
       as="fieldset"
-      inputWrapperRef={inputWrapperRef}
-      childrenWrapperClassName={childrenWrapperClassName}
+      inputWrapperRef={mergedRef}
+      // TODO: innerMarginが未指定、初期値の場合、childrenの上部の余白を広げることで
+      // FormControlとの差をわかりやすくしている
+      // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
+      // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
+      childrenWrapperClassName={
+        innerMargin === undefined ? '[:not([hidden])_~_&&&]:shr-mt-0.5' : undefined
+      }
     />
   )
 }
