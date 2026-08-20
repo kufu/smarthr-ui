@@ -118,10 +118,10 @@ export const FloatArea: FC<Props> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, mainButtonCluster, responseMessageWrapper } = classNameGenerator({ bottom })
+    const { wrapper, mainButtonCluster, responseMessageWrapper } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ className }),
+      wrapper: wrapper({ bottom, className }),
       mainButtonCluster: mainButtonCluster(),
       responseMessageWrapper: responseMessageWrapper(),
     }
