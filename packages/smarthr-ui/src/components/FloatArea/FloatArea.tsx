@@ -36,9 +36,6 @@ const classNameGenerator = tv({
       X3L: 'shr-bottom-4',
     } as { [key in CharRelativeSize | AbstractSize]: string },
   },
-  defaultVariants: {
-    bottom: 1.5,
-  },
 })
 
 type BaseProps = {
@@ -69,7 +66,7 @@ export const FloatArea: FC<Props> = ({
   ...rest
 }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ bottom, className }),
+    () => classNameGenerator({ bottom: bottom ?? 1.5, className }),
     [bottom, className],
   )
   const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
