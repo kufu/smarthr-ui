@@ -111,7 +111,7 @@ export const SegmentedControl: FC<Props> = ({
       buttonGroup: buttonGroup(),
       button: button({ size }),
     }
-  }, [className, size])
+  }, [size, className])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -175,11 +175,11 @@ export const SegmentedControl: FC<Props> = ({
   return (
     <div
       {...rest}
-      className={classNames.container}
-      onFocus={functions.handleDelegateFocus}
-      onBlur={functions.handleDelegateBlur}
       ref={containerRef}
       role="toolbar"
+      onFocus={functions.handleDelegateFocus}
+      onBlur={functions.handleDelegateBlur}
+      className={classNames.container}
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
@@ -190,12 +190,12 @@ export const SegmentedControl: FC<Props> = ({
             <SegmentedControlButton
               {...optionRest}
               key={option.value}
-              aria-label={ariaLabel}
-              handleClick={functions.handleClickOption}
-              size={size}
               checked={checked}
               tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              aria-label={ariaLabel}
               aria-checked={checked && !!value}
+              size={size}
+              handleClick={functions.handleClickOption}
               className={classNames.button}
             />
           )
