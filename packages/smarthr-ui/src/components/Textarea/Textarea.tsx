@@ -156,6 +156,10 @@ const MaxLettersTextarea: FC<
 
     return {
       updateCount,
+      cancelDebounce: () => {
+        updateSrMessage.cancel()
+        actualUpdateCount.cancel()
+      },
       handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
         updateCount(e.target.value)
         latest.onChange?.(e)
@@ -165,6 +169,7 @@ const MaxLettersTextarea: FC<
 
   useEffect(() => {
     functions.updateCount(value ?? '')
+    return functions.cancelDebounce
   }, [value, functions])
 
   return (
