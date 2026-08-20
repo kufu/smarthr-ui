@@ -365,6 +365,10 @@ export const ActualFormControl: FC<Props> = ({
   )
 }
 
+export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = (props) => (
+  <ActualFormControl {...props} />
+)
+
 const LabelCluster = memo<
   Pick<Props, 'subActionArea'> & {
     label: ReactNode
@@ -513,5 +517,3 @@ const SupplementaryMessageText = memo<
     </Text>
   ) : null,
 )
-
-export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = ActualFormControl
