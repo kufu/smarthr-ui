@@ -74,17 +74,17 @@ const classNameGenerator = tv({
 })
 
 const calculateIdealRows = (
-  element: HTMLTextAreaElement | null | undefined,
+  node: HTMLTextAreaElement | null | undefined,
   maxRows: number,
   lineHeightNormal: number,
 ): number => {
-  if (!element) {
+  if (!node) {
     return 0
   }
 
   // 現在の入力値に応じた行数
   const currentInputValueRows = Math.floor(
-    element.scrollHeight / (defaultHtmlFontSize * lineHeightNormal),
+    node.scrollHeight / (defaultHtmlFontSize * lineHeightNormal),
   )
 
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
@@ -174,9 +174,9 @@ const MaxLettersTextarea: FC<
         id={textareaId}
         value={value}
         defaultValue={defaultValue}
-        onChange={functions.handleChange}
         aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
         error={error || countError}
+        onChange={functions.handleChange}
       />
       <VisuallyHiddenText id={maxLettersNoticeId}>
         <Localizer
@@ -227,7 +227,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 }) => {
   const theme = useTheme()
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const innerRef = useRef<HTMLTextAreaElement | null>(null)
   const [interimRows, setInterimRows] = useState(rows)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
@@ -243,16 +243,18 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const functions = useMemo(
     () => ({
-      callbackRef: (element: HTMLTextAreaElement | null) => {
-        textareaRef.current = element
-        if (element) {
+      callbackRef: (node: HTMLTextAreaElement | null) => {
+        // TODO: useMergeRefs, useOnceCallbackが実装されたら適用する
+        innerRef.current = node
+
+        if (node) {
           // autoFocus時に、フォーカスを当てる
           if (latest.autoFocus) {
-            element.focus()
+            node.focus()
           }
           // autoResize時に、初期値での高さを指定
           if (latest.autoResize) {
-            setInterimRows(calculateIdealRows(element, latest.maxRows, latest.theme.leading.NORMAL))
+            setInterimRows(calculateIdealRows(node, latest.maxRows, latest.theme.leading.NORMAL))
           }
         }
       },
@@ -279,18 +281,18 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
     externalRef,
-    () => textareaRef.current,
+    () => innerRef.current,
     [],
   )
 
   return (
     <textarea
       {...rest}
-      data-smarthr-ui-input="true"
-      onChange={functions.handleChange}
       ref={functions.callbackRef}
       aria-invalid={error || undefined}
+      data-smarthr-ui-input="true"
       rows={interimRows}
+      onChange={functions.handleChange}
       className={actualClassName}
       style={{ width: typeof width === 'number' ? `${width}px` : width }}
     />
