@@ -12,8 +12,6 @@ import type { Gap } from '../../types'
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
-    mainButtonCluster: 'shr-ms-auto',
-    responseMessageWrapper: 'shr-ms-auto',
   },
   variants: {
     bottom: {
@@ -118,12 +116,10 @@ export const FloatArea: FC<Props> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, mainButtonCluster, responseMessageWrapper } = classNameGenerator()
+    const { wrapper } = classNameGenerator()
 
     return {
       wrapper: wrapper({ bottom, className }),
-      mainButtonCluster: mainButtonCluster(),
-      responseMessageWrapper: responseMessageWrapper(),
     }
   }, [bottom, className])
   const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
@@ -133,13 +129,13 @@ export const FloatArea: FC<Props> = ({
       <Stack gap={0.5}>
         <Cluster>
           {tertiaryButton}
-          <Cluster gap={1} className={classNames.mainButtonCluster}>
+          <Cluster gap={1} className="shr-ms-auto">
             {secondaryButton}
             {primaryButton}
           </Cluster>
         </Cluster>
         {responseStatus && (
-          <p className={classNames.responseMessageWrapper}>
+          <p className="shr-ms-auto">
             <ResponseMessage status={responseStatus.status}>{responseStatus.text}</ResponseMessage>
           </p>
         )}
