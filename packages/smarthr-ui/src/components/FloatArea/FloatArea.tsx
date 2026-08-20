@@ -69,10 +69,9 @@ export const FloatArea: FC<Props> = ({
     () => classNameGenerator({ bottom: bottom ?? 1.5, className }),
     [bottom, className],
   )
-  const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Panel {...rest} layer={3} padding={1} className={actualClassName} style={actualStyle}>
+    <Panel {...rest} layer={3} padding={1} className={actualClassName} style={{ ...style, zIndex }}>
       <Stack gap={0.5}>
         <Cluster>
           {tertiaryButton}
