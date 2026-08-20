@@ -30,7 +30,7 @@ export const Fieldset: FC<
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
-  const mergedRef = useCallbackRefCleanupForReact18(
+  const inputWrapperRef = useCallbackRefCleanupForReact18(
     useCallback((node: HTMLDivElement | null) => {
       if (!node) return
 
@@ -88,7 +88,7 @@ export const Fieldset: FC<
         id: legend.id || `${baseId}-legend`,
       }}
       as="fieldset"
-      inputWrapperRef={mergedRef}
+      inputWrapperRef={inputWrapperRef}
       // TODO: innerMarginが未指定、初期値の場合、childrenの上部の余白を広げることで
       // FormControlとの差をわかりやすくしている
       // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
