@@ -18,6 +18,7 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
@@ -188,6 +189,8 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
   })
   const inputRef = useRef<HTMLInputElement>(null)
+  const deleteFrame = useAnimationFrame()
+  const selectFrame = useAnimationFrame()
 
   // eslint-disable-next-line local-rules/best-practice-for-use-latest
   const latestForListBox = useLatest({
@@ -196,6 +199,8 @@ const ActualMultiCombobox = <T,>(
     onSelect,
     onChangeInput,
     selectedItems,
+    deleteFrame,
+    selectFrame,
   })
 
   const listBoxFunctions = useMemo(() => {
@@ -217,9 +222,8 @@ const ActualMultiCombobox = <T,>(
 
       if (handlers.length > 0) {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        // TODO: cancelする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        latestForListBox.deleteFrame.request(() => {
           handlers.forEach((h) => h(item))
         })
       }
@@ -229,9 +233,8 @@ const ActualMultiCombobox = <T,>(
       handleDelete,
       handleSelect: (selected: ComboboxItem<T>) => {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        // TODO: cancelする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        latestForListBox.selectFrame.request(() => {
           const matchedSelectedItem = latestForListBox.selectedItems.find((item) =>
             areItemsEqual(item, selected),
           )
@@ -249,6 +252,15 @@ const ActualMultiCombobox = <T,>(
       },
     }
   }, [latestForListBox])
+
+  // TODO: callbackRefにまとめたい
+  useEffect(
+    () => () => {
+      deleteFrame.cancel()
+      selectFrame.cancel()
+    },
+    [deleteFrame, selectFrame],
+  )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
