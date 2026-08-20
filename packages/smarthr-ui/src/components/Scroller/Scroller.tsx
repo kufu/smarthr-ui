@@ -126,7 +126,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
         setTabIndex(nextTabIndex)
       }
 
-      const resizeObserver = new ResizeObserver(autoTabIndex)
+      let resizeObserver: ResizeObserver
 
       return {
         callbackRef: (node: HTMLDivElement | null) => {
@@ -136,9 +136,10 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
           autoTabIndex()
 
           if (node) {
+            resizeObserver ??= new ResizeObserver(autoTabIndex)
             resizeObserver.observe(node)
           } else {
-            resizeObserver.disconnect()
+            resizeObserver?.disconnect()
           }
         },
       }
