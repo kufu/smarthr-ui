@@ -65,6 +65,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
+  const cancelFrameIdsRef = useRef<{
+    open: number | null
+    close: number | null
+  }>({
+    open: null,
+    close: null,
+  })
 
   const latest = useLatest({
     active,
@@ -80,34 +87,30 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
       latest.active ? latest.createPortal(props.children) : null
     DropdownContentRoot.displayName = 'DropdownContentRoot'
+    const actualClose = () => {
+      if (latest.onClose) {
+        cancelFrameIdsRef.current.close = requestAnimationFrame(() => latest.onClose?.())
+      }
+    }
 
     return {
       DropdownContentRoot,
       handleClickTrigger: (rect: Rect) => {
         if (latest.active) {
           setActive(false)
-
-          if (latest.onClose) {
-            // TODO: cancelする
-            requestAnimationFrame(() => latest.onClose?.())
-          }
+          actualClose()
         } else {
           setActive(true)
           setTriggerRect(rect)
 
           if (latest.onOpen) {
-            // TODO: cancelする
-            requestAnimationFrame(() => latest.onOpen?.())
+            cancelFrameIdsRef.current.open = requestAnimationFrame(() => latest.onOpen?.())
           }
         }
       },
       handleDelegateClickCloser: () => {
         setActive(false)
-
-        if (latest.onClose) {
-          // TODO: cancelする
-          requestAnimationFrame(() => latest.onClose?.())
-        }
+        actualClose()
 
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
@@ -120,11 +123,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           !latest.isChildPortal(e.target)
         ) {
           setActive(false)
-
-          if (latest.onClose) {
-            // TODO: cancelする
-            requestAnimationFrame(() => latest.onClose?.())
-          }
+          actualClose()
         }
       },
       updateTriggerRect: () => {
@@ -134,6 +133,20 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       },
     }
   }, [latest])
+
+  useEffect(
+    () => () => {
+      const { open, close } = cancelFrameIdsRef.current
+
+      if (open !== null) {
+        cancelAnimationFrame(open)
+      }
+      if (close !== null) {
+        cancelAnimationFrame(close)
+      }
+    },
+    [],
+  )
 
   useEffect(() => {
     if (!active) return
