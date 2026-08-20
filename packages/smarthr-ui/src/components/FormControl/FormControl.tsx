@@ -10,6 +10,7 @@ import {
   type ReactNode,
   type RefObject,
   memo,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -18,6 +19,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
@@ -253,23 +255,28 @@ export const ActualFormControl: FC<
     managedDescribedbyIdsRef.current = describedbyIdTokens
   }, [describedbyIds, inputWrapperRef])
 
-  useEffect(() => {
-    if (!autoBindErrorInput || !inputWrapperRef.current) {
-      return
-    }
-
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-    if (input) {
-      const attrName = 'aria-invalid'
-
-      if (actualErrorMessages.length > 0) {
-        input.setAttribute(attrName, 'true')
-      } else {
-        input.removeAttribute(attrName)
+  const autoBindErrorCallbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node || !autoBindErrorInput) {
+        return
       }
-    }
-  }, [actualErrorMessages.length, autoBindErrorInput, inputWrapperRef])
+
+      const input = node.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+      if (input) {
+        const attrName = 'aria-invalid'
+
+        if (actualErrorMessages.length > 0) {
+          input.setAttribute(attrName, 'true')
+        } else {
+          input.removeAttribute(attrName)
+        }
+      }
+    },
+    [actualErrorMessages.length, autoBindErrorInput],
+  )
+
+  const mergedRef = useMergeRefs(inputWrapperRef, autoBindErrorCallbackRef)
 
   return (
     <Stack
@@ -298,7 +305,7 @@ export const ActualFormControl: FC<
         managedHtmlFor={label.htmlFor}
         classNames={classNames}
       />
-      <div ref={inputWrapperRef} className={classNames.childrenWrapper}>
+      <div ref={mergedRef} className={classNames.childrenWrapper}>
         {children}
       </div>
       <SupplementaryMessageText
