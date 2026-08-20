@@ -223,7 +223,7 @@ export const ActualFormControl: FC<
     }
   }, [label.unrecommendedHide, className, childrenWrapperClassName])
 
-  const ariaDescribedByCallbackRef = useCallback(
+  const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) {
         return
@@ -235,8 +235,7 @@ export const ActualFormControl: FC<
         return
       }
 
-      const attrName = 'aria-describedby'
-      const ariaDescribedBy = input.getAttribute(attrName) || ''
+      const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
       const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
       // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
       const externalTokens = currentTokens.filter(
@@ -247,46 +246,26 @@ export const ActualFormControl: FC<
 
       if (nextValue !== ariaDescribedBy) {
         if (nextValue) {
-          input.setAttribute(attrName, nextValue)
+          input.setAttribute('aria-describedby', nextValue)
         } else {
-          input.removeAttribute(attrName)
+          input.removeAttribute('aria-describedby')
         }
       }
 
       managedDescribedbyIdsRef.current = describedbyIdTokens
+
+      if (autoBindErrorInput) {
+        if (actualErrorMessages.length > 0) {
+          input.setAttribute('aria-invalid', 'true')
+        } else {
+          input.removeAttribute('aria-invalid')
+        }
+      }
     },
-    [describedbyIds],
+    [actualErrorMessages.length, describedbyIds, autoBindErrorInput],
   )
 
-  const autoBindErrorCallbackRef = useMemo(
-    () =>
-      autoBindErrorInput
-        ? (node: HTMLDivElement | null) => {
-            if (!node) {
-              return
-            }
-
-            const input = node.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-            if (input) {
-              const attrName = 'aria-invalid'
-
-              if (actualErrorMessages.length > 0) {
-                input.setAttribute(attrName, 'true')
-              } else {
-                input.removeAttribute(attrName)
-              }
-            }
-          }
-        : undefined,
-    [actualErrorMessages.length, autoBindErrorInput],
-  )
-
-  const mergedRef = useMergeRefs(
-    inputWrapperRef,
-    ariaDescribedByCallbackRef,
-    autoBindErrorCallbackRef,
-  )
+  const mergedRef = useMergeRefs(inputWrapperRef, callbackRef)
 
   return (
     <Stack
