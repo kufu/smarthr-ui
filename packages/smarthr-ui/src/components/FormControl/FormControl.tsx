@@ -11,11 +11,11 @@ import {
   type RefObject,
   memo,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import { useId } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -30,7 +30,7 @@ import type { StatusLabel } from '../StatusLabel'
 type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 type IconType = ComponentProps<typeof Text>['icon']
 
-type ObjectLabelType = {
+export type ObjectLabelType = {
   text: ReactNode
   /** ラベルの表示タイプ */
   styleType?: TextProps['styleType']
@@ -69,7 +69,7 @@ type BaseProps = PropsWithChildren<{
 }>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
 
-const labelObjectConverter = (label: ReactNode) => ({ text: label })
+export const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 const classNameGenerator = tv({
   slots: {
@@ -136,8 +136,13 @@ const classNameGenerator = tv({
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
-export const ActualFormControl: FC<Props> = ({
-  label: orgLabel,
+export const ActualFormControl: FC<
+  Omit<Props, 'label'> & {
+    label: Omit<ObjectLabelType, 'htmlFor' | 'id'> &
+      Required<Pick<ObjectLabelType, 'htmlFor' | 'id'>>
+  }
+> = ({
+  label,
   subActionArea,
   innerMargin,
   statusLabels,
@@ -152,13 +157,6 @@ export const ActualFormControl: FC<Props> = ({
   inputWrapperRef,
   ...rest
 }) => {
-  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
-    orgLabel,
-    labelObjectConverter,
-  )
-  const baseId = useId()
-  const managedHtmlFor = label.htmlFor || `${baseId}-htmlFor`
-  const managedLabelId = label.id || `${baseId}-label`
   const labelTextRef = useRef<HTMLElement>(null)
   const isFieldset = as === 'fieldset'
 
@@ -166,20 +164,20 @@ export const ActualFormControl: FC<Props> = ({
     const temp = []
 
     if (helpMessage) {
-      temp.push(`${managedHtmlFor}_helpMessage`)
+      temp.push(`${label.htmlFor}_helpMessage`)
     }
     if (exampleMessage) {
-      temp.push(`${managedHtmlFor}_exampleMessage`)
+      temp.push(`${label.htmlFor}_exampleMessage`)
     }
     if (supplementaryMessage) {
-      temp.push(`${managedHtmlFor}_supplementaryMessage`)
+      temp.push(`${label.htmlFor}_supplementaryMessage`)
     }
     if (errorMessages) {
-      temp.push(`${managedHtmlFor}_errorMessages`)
+      temp.push(`${label.htmlFor}_errorMessages`)
     }
 
     return temp.join(' ')
-  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
+  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, label.htmlFor])
 
   const actualStatusLabels = useMemo(
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
@@ -302,8 +300,8 @@ export const ActualFormControl: FC<Props> = ({
     >
       <LabelCluster
         isFieldset={isFieldset}
-        managedHtmlFor={managedHtmlFor}
-        managedLabelId={managedLabelId}
+        managedHtmlFor={label.htmlFor}
+        managedLabelId={label.id}
         unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
         label={label.text}
@@ -313,11 +311,11 @@ export const ActualFormControl: FC<Props> = ({
         labelClassName={classNames.label}
         labelTextRef={labelTextRef}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
+      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
       <ErrorMessageList
         errorMessages={actualErrorMessages}
-        managedHtmlFor={managedHtmlFor}
+        managedHtmlFor={label.htmlFor}
         classNames={classNames}
       />
       <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
@@ -325,7 +323,7 @@ export const ActualFormControl: FC<Props> = ({
       </div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={managedHtmlFor}
+        managedHtmlFor={label.htmlFor}
       />
     </Stack>
   )

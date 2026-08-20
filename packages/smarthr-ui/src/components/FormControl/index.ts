@@ -1,1 +1,6 @@
-export { ActualFormControl, FormControl } from './FormControl'
+export {
+  ActualFormControl,
+  FormControl,
+  labelObjectConverter,
+  type ObjectLabelType,
+} from './FormControl'
