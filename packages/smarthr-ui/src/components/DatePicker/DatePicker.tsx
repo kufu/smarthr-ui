@@ -18,6 +18,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTheme'
@@ -148,6 +149,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       parseStringDate(value, parseInput),
     )
 
+    const closeFrame = useAnimationFrame()
+
     const latest = useLatest({
       onChange,
       onChangeDate,
@@ -157,6 +160,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       onBlur,
       isInputFocused,
       selectedDate,
+      closeFrame,
     })
 
     const functions = useMemo(() => {
@@ -246,8 +250,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (ESCAPE_KEY_REGEX.test(e.key)) {
             e.stopPropagation()
             // delay hiding calendar because calendar will be displayed when input is focused
-            // TODO: cancelする
-            requestAnimationFrame(closeCalendar)
+            latest.closeFrame.request(closeCalendar)
 
             if (inputRef.current) inputRef.current.focus()
           }
@@ -266,8 +269,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         handleSelectDateCalendar: (e: ChangeLikeEvent, selected: Date | null) => {
           updateDate(e, selected)
           // delay hiding calendar because calendar will be displayed when input is focused
-          // TODO: cancelする
-          requestAnimationFrame(closeCalendar)
+          latest.closeFrame.request(closeCalendar)
 
           if (inputRef.current) inputRef.current.focus()
         },
@@ -358,6 +360,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
       return () => {
         window.removeEventListener('keydown', handleKeyDown)
+        latest.closeFrame.cancel()
       }
     }, [functions, latest])
 
