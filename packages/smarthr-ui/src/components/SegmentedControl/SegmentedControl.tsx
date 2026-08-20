@@ -6,7 +6,6 @@ import {
   type MouseEvent,
   type ReactNode,
   memo,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -84,7 +83,7 @@ export const SegmentedControl: FC<Props> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
-  const innerRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement | null>(null)
 
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
@@ -100,20 +99,7 @@ export const SegmentedControl: FC<Props> = ({
 
   const hasOnClickOption = !!onClickOption
 
-  const functions = useMemo(
-    () => ({
-      handleClickOption: hasOnClickOption
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            latest.onClickOption?.(e.currentTarget.value)
-          }
-        : undefined,
-      handleDelegateFocus: () => setIsFocused(true),
-      handleDelegateBlur: () => setIsFocused(false),
-    }),
-    [hasOnClickOption, latest],
-  )
-
-  useEffect(() => {
+  const functions = useMemo(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!latest.isFocused || !innerRef.current || !document.activeElement) {
         return
@@ -165,19 +151,33 @@ export const SegmentedControl: FC<Props> = ({
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
+    return {
+      // TODO: useMergeRefsが実装された修正する
+      callbackRef: (node: HTMLDivElement | null) => {
+        innerRef.current = node
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
+        if (node) {
+          document.addEventListener('keydown', handleKeyDown)
+        } else {
+          document.removeEventListener('keydown', handleKeyDown)
+        }
+      },
+      handleClickOption: hasOnClickOption
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onClickOption?.(e.currentTarget.value)
+          }
+        : undefined,
+      handleDelegateFocus: () => setIsFocused(true),
+      handleDelegateBlur: () => setIsFocused(false),
     }
-  }, [latest])
+  }, [hasOnClickOption, latest])
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      ref={innerRef}
+      ref={functions.callbackRef}
       role="toolbar"
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
