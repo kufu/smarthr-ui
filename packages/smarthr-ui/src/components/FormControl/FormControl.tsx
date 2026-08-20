@@ -62,10 +62,6 @@ type BaseProps = PropsWithChildren<{
   autoBindErrorInput?: boolean
   /** フォームコントロールの下に表示する補足メッセージ */
   supplementaryMessage?: ReactNode
-  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
-  disabled?: boolean
-  as?: string | ComponentType<any>
-  inputWrapperRef: RefObject<HTMLDivElement>
 }>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
 
@@ -137,10 +133,68 @@ const classNameGenerator = tv({
 export const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 export const SMARTHR_UI_LABEL_TEXT_SELECTOR = 'smarthr-ui-FormControl-labelText'
 
+export const FormControl: FC<Props> = ({ label: orgLabel, ...rest }) => {
+  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
+    orgLabel,
+    labelObjectConverter,
+  )
+  const baseId = useId()
+  const [childInputId, setChildInputId] = useState<string>('')
+  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
+  const managedLabelId = label.id || `${baseId}-label`
+  const inputWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (
+      !inputWrapperRef.current ||
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      document.getElementById(managedHtmlFor)
+    ) {
+      return
+    }
+
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+    if (!input) {
+      return
+    }
+
+    const inputId = input.getAttribute('id')
+
+    if (inputId) {
+      setChildInputId(inputId)
+    } else {
+      input.setAttribute('id', managedHtmlFor)
+    }
+
+    if (input instanceof HTMLInputElement && input.type === 'file') {
+      const attrName = 'aria-labelledby'
+      const inputLabelledByIds = input.getAttribute(attrName)
+
+      if (inputLabelledByIds) {
+        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+        input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
+      }
+    }
+  }, [managedHtmlFor, managedLabelId])
+
+  return (
+    <ActualFormControl
+      {...rest}
+      label={{ ...label, htmlFor: managedHtmlFor, id: managedLabelId }}
+      inputWrapperRef={inputWrapperRef}
+    />
+  )
+}
+
 export const ActualFormControl: FC<
   Omit<Props, 'label'> & {
     label: Omit<ObjectLabelType, 'htmlFor' | 'id'> &
       Required<Pick<ObjectLabelType, 'htmlFor' | 'id'>>
+    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+    disabled?: boolean
+    as?: string | ComponentType<any>
+    inputWrapperRef: RefObject<HTMLDivElement>
   }
 > = ({
   label,
@@ -281,63 +335,6 @@ export const ActualFormControl: FC<
         managedHtmlFor={label.htmlFor}
       />
     </Stack>
-  )
-}
-
-export const FormControl: FC<Omit<Props, 'as' | 'disabled' | 'inputWrapperRef'>> = ({
-  label: orgLabel,
-  ...rest
-}) => {
-  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
-    orgLabel,
-    labelObjectConverter,
-  )
-  const baseId = useId()
-  const [childInputId, setChildInputId] = useState<string>('')
-  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
-  const managedLabelId = label.id || `${baseId}-label`
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (
-      !inputWrapperRef.current ||
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      document.getElementById(managedHtmlFor)
-    ) {
-      return
-    }
-
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const inputId = input.getAttribute('id')
-
-    if (inputId) {
-      setChildInputId(inputId)
-    } else {
-      input.setAttribute('id', managedHtmlFor)
-    }
-
-    if (input instanceof HTMLInputElement && input.type === 'file') {
-      const attrName = 'aria-labelledby'
-      const inputLabelledByIds = input.getAttribute(attrName)
-
-      if (inputLabelledByIds) {
-        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-        input.setAttribute(attrName, `${inputLabelledByIds} ${managedLabelId}`)
-      }
-    }
-  }, [managedHtmlFor, managedLabelId])
-
-  return (
-    <ActualFormControl
-      {...rest}
-      label={{ ...label, htmlFor: managedHtmlFor, id: managedLabelId }}
-      inputWrapperRef={inputWrapperRef}
-    />
   )
 }
 

@@ -3,6 +3,7 @@ import { useEffect, useId, useRef } from 'react'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import {
   ActualFormControl,
+  type FormControl,
   type ObjectLabelType,
   SMARTHR_UI_INPUT_SELECTOR,
   SMARTHR_UI_LABEL_TEXT_SELECTOR,
@@ -11,10 +12,12 @@ import {
 
 import type { ComponentProps, FC, ReactNode } from 'react'
 
-type FormControlType = ComponentProps<typeof ActualFormControl>
+type FormControlType = ComponentProps<typeof FormControl>
 
 export const Fieldset: FC<
-  Omit<FormControlType, 'as' | 'label' | 'inputWrapperRef'> & {
+  Omit<FormControlType, 'label'> & {
+    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+    disabled?: boolean
     legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
   }
 > = ({ legend: orgLegend, ...rest }) => {
