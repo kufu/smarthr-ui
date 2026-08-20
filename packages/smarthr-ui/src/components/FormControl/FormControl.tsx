@@ -134,7 +134,8 @@ const classNameGenerator = tv({
   ],
 })
 
-const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
+export const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
+export const SMARTHR_UI_LABEL_TEXT_SELECTOR = 'smarthr-ui-FormControl-labelText'
 
 export const ActualFormControl: FC<
   Omit<Props, 'label'> & {
@@ -157,7 +158,6 @@ export const ActualFormControl: FC<
   inputWrapperRef,
   ...rest
 }) => {
-  const labelTextRef = useRef<HTMLElement>(null)
   const isFieldset = as === 'fieldset'
 
   const describedbyIds = useMemo(() => {
@@ -249,10 +249,17 @@ export const ActualFormControl: FC<
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
   useEffect(() => {
-    if (!isFieldset || !inputWrapperRef.current || !labelTextRef.current) return
+    if (!isFieldset || !inputWrapperRef.current) return
+
+    // HINT: unrecommendedHideLabelがfalseの場合、同じテキストを持つ要素が2つレンダリングされるが
+    // どちらも同一文字列のため、1つ目を取得すれば十分
+    const labelTextEl = inputWrapperRef.current.parentElement?.querySelector(
+      `.${SMARTHR_UI_LABEL_TEXT_SELECTOR}`,
+    )
+    if (!labelTextEl) return
 
     const updateAriaLabels = () => {
-      const labelText = labelTextRef.current?.textContent || ''
+      const labelText = labelTextEl.textContent || ''
       if (!labelText) return
 
       const inputs =
@@ -281,7 +288,7 @@ export const ActualFormControl: FC<
 
     // label要素の変更を監視
     const observer = new MutationObserver(updateAriaLabels)
-    observer.observe(labelTextRef.current, {
+    observer.observe(labelTextEl, {
       childList: true,
       subtree: true,
       characterData: true,
@@ -309,7 +316,6 @@ export const ActualFormControl: FC<
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
-        labelTextRef={labelTextRef}
       />
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
@@ -397,7 +403,6 @@ const LabelCluster = memo<
     managedLabelId: string
     labelClassName: string
     statusLabels: StatusLabelType[]
-    labelTextRef: React.RefObject<HTMLElement>
   }
 >(
   ({
@@ -411,12 +416,11 @@ const LabelCluster = memo<
     subActionArea,
     labelClassName,
     statusLabels,
-    labelTextRef,
   }) => {
     const body = (
       <>
-        <Text styleType={labelType} icon={labelIcon}>
-          <span ref={labelTextRef}>{label}</span>
+        <Text styleType={labelType} icon={labelIcon} className={SMARTHR_UI_LABEL_TEXT_SELECTOR}>
+          {label}
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
