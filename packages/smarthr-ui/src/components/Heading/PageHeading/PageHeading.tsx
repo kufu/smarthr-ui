@@ -125,7 +125,7 @@ const AutoPageTitleHeading: FC<
         pseudoTitle.textContent = document.title
       })
     }
-    const observer = new MutationObserver(updateTitle)
+    let observer: MutationObserver
 
     return {
       callbackRef: (node: HTMLHeadingElement | null) => {
@@ -134,13 +134,14 @@ const AutoPageTitleHeading: FC<
         updateTitle()
 
         if (node) {
+          observer ??= new MutationObserver(updateTitle)
           observer.observe(node, {
             characterData: true,
             childList: true,
             subtree: true,
           })
         } else {
-          observer.disconnect()
+          observer?.disconnect()
 
           const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 
