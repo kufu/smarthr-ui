@@ -119,13 +119,15 @@ export const SegmentedControl: FC<Props> = ({
         return
       }
 
-      const radios = Array.from(
-        containerRef.current.querySelectorAll('[role="radio"]:not(:disabled)'),
+      let radios: NodeListOf<Element> | Element[] = containerRef.current.querySelectorAll(
+        '[role="radio"]:not(:disabled)',
       )
 
       if (radios.length < 2) {
         return
       }
+
+      radios = Array.from(radios)
 
       const focusedIndex = radios.indexOf(document.activeElement)
 
