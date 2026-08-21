@@ -3,7 +3,6 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
-  memo,
   useId,
   useMemo,
 } from 'react'
@@ -48,7 +47,17 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
     <li role="presentation" className={actualClassName}>
       {name ? (
         <>
-          <NameText id={subMenuId}>{name}</NameText>
+          <Text
+            size="S"
+            id={subMenuId}
+            weight="bold"
+            color="TEXT_GREY"
+            leading="NONE"
+            className="shr-px-1 shr-py-0.5"
+            as="div"
+          >
+            {name}
+          </Text>
           {subMenu}
         </>
       ) : (
@@ -57,17 +66,3 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
     </li>
   )
 }
-
-const NameText = memo<PropsWithChildren<{ id: string }>>(({ id, children }) => (
-  <Text
-    size="S"
-    id={id}
-    weight="bold"
-    color="TEXT_GREY"
-    leading="NONE"
-    className="shr-px-1 shr-py-0.5"
-    as="div"
-  >
-    {children}
-  </Text>
-))
