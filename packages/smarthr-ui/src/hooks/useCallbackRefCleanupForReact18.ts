@@ -39,9 +39,9 @@ import { useCallback, useRef } from 'react'
  * )
  */
 export const useCallbackRefCleanupForReact18 = <T>(
-  callback: (node: T | null) => (() => void) | void,
+  callback: (node: T | null) => (() => void) | undefined,
 ) => {
-  const cleanupRef = useRef<(() => void) | void>(undefined)
+  const cleanupRef = useRef<(() => void) | undefined>(undefined)
 
   return useCallback(
     (node: T | null) => {
