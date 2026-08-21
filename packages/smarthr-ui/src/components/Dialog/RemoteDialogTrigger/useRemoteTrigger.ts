@@ -36,11 +36,14 @@ export function useRemoteTrigger({
   const functions = useMemo(() => {
     const updateIsOpen = (newIsOpen: boolean) => {
       setIsOpen(newIsOpen)
-      // HINT: 利用者側でstateの更新が行われている可能性があるため、遅延させる
-      latest.toggleFrame.request(() => {
-        latest.onToggle?.(newIsOpen)
-        latest[newIsOpen ? 'onOpen' : 'onClose']?.()
-      })
+
+      if (latest.onToggle || latest[newIsOpen ? 'onOpen' : 'onClose']) {
+        // HINT: 利用者側でstateの更新が行われている可能性があるため、遅延させる
+        latest.toggleFrame.request(() => {
+          latest.onToggle?.(newIsOpen)
+          latest[newIsOpen ? 'onOpen' : 'onClose']?.()
+        })
+      }
     }
 
     return {
