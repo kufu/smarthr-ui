@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.0...smarthr-ui-charts-v0.2.1) (2026-08-20)
+
+
+### Features
+
+* **Chart:** disablePatterns propsを追加 ([#6828](https://github.com/kufu/smarthr-ui/issues/6828)) ([be4870d](https://github.com/kufu/smarthr-ui/commit/be4870d75e26a91e53757f7db7bc048866d55016))
+
 ## [0.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.7...smarthr-ui-charts-v0.2.0) (2026-08-20)
 
 
