@@ -152,6 +152,43 @@ return latest.options.find((o) => o.id === el.id) ?? null
 
 この例外が成立する理由は、ローカルコンポーネントとその利用者が同じスコープ（ディレクトリ）内で管理されており、内部変更の影響範囲が同ディレクトリに限定されるためです。
 
+### カスタムフックの切り出し
+
+1つのファイルからしか利用されていないcustom hookは作成せず、利用元のコンポーネントに直接実装します。
+
+```tsx
+// ❌ SortDropdown.tsxからしか使われていないのに別ファイルに切り出す
+// useSortDropdown.ts
+export const useSortDropdown = (props: Props) => {
+  // ...
+  return { selectedLabel, checkedOrder, functions }
+}
+
+// SortDropdown.tsx
+export const SortDropdown: FC<Props> = (props) => {
+  const { selectedLabel, checkedOrder, functions } = useSortDropdown(props)
+  // ...
+}
+
+// ✅ 利用元のコンポーネントに直接実装する
+// SortDropdown.tsx
+export const SortDropdown: FC<Props> = (props) => {
+  const [selectedLabel, setSelectedLabel] = useState(...)
+  const [checkedOrder, setCheckedOrder] = useState(...)
+  const functions = useMemo(() => ({ ... }), [...])
+  // ...
+}
+```
+
+**理由:**
+- ファイルを分割しても再利用性が生まれるわけではなく、ロジックが追いにくくなるだけの分割損になる
+- 複数のコンポーネントから利用される見込みが立った時点で切り出せば十分
+- フックに切り出すと、コンポーネント側からはフックの戻り値（`state`・`functions` など）しか参照できなくなるため、本来 `useMemo`/`useCallback`/`useEffect` の依存配列に含めなくても良いはずの値（`useRef` の `ref` オブジェクトなど、同一コンポーネント内であれば参照の安定性が明らかな値）まで、フックの戻り値経由になることで依存配列に含めざるを得なくなる場合がある
+
+**例外1:** 複数のコンポーネント・ファイルから実際に利用されているカスタムフック（例: `useLatest`, `useMergeRefs`, `useOnce` など `src/hooks/` 配下の汎用フック）はこの限りではありません。
+
+**例外2:** 同ディレクトリ内の複数コンポーネントから利用されるカスタムフックも対象外です。例えば `Disclosure/useDisclosure.ts` は `DisclosureContent.tsx` と `DisclosureTrigger.tsx` の両方から利用されているため、切り出しが妥当です。
+
 ### コミット
 - Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
   - type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `ci`, `perf`, `style`, `build`, `revert`
