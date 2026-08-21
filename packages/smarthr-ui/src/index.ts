@@ -17,7 +17,7 @@ export {
 } from './components/Dropdown'
 export { FileViewer } from './components/FileViewer'
 export { FloatArea } from './components/FloatArea'
-export { Input, CurrencyInput, formatNumericString, SearchInput } from './components/Input'
+export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
 export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
@@ -170,3 +170,6 @@ export {
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+
+// utils
+export { formatNumericString } from './libs/formatNumericString'
