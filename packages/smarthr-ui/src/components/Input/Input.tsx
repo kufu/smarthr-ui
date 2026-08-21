@@ -2,17 +2,16 @@
 
 import {
   type ComponentPropsWithRef,
-  type MutableRefObject,
+  type MouseEvent,
   type ReactNode,
   type WheelEvent,
   forwardRef,
-  useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useOnce } from '../../hooks/useOnce'
 import { useTheme } from '../../hooks/useTheme'
 
 type BaseProps = {
@@ -105,29 +104,14 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef: MutableRefObject<HTMLInputElement | null> = useRef(null)
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-      [],
-    )
+    const callbackRef = useOnce((node: HTMLInputElement | null) => {
+      if (node && autoFocus) {
+        node.focus()
+      }
+    })
 
-    const latest = useLatest({ autoFocus })
-
-    const functions = useMemo(
-      () => ({
-        handleInnerRef: (node: HTMLInputElement | null) => {
-          innerRef.current = node
-
-          if (latest.autoFocus && node) {
-            node.focus()
-          }
-        },
-        handleDelegateClick: () => innerRef.current?.focus(),
-      }),
-      [latest],
-    )
+    const mergedRef = useMergeRefs(callbackRef, ref)
 
     const classNames = useMemo(() => {
       const { wrapper, input, affix } = classNameGenerator()
@@ -146,7 +130,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={functions.handleDelegateClick}
+        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }}
         className={classNames.wrapper}
         style={{
           borderColor: styleColor,
@@ -158,7 +146,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
-          ref={functions.handleInnerRef}
+          ref={mergedRef}
           type={type}
           disabled={disabled}
           readOnly={readOnly}

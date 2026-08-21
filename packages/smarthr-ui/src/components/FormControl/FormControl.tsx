@@ -160,10 +160,11 @@ export const ActualFormControl: FC<Props> = ({
   const managedLabelId = label.id || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const labelTextRef = useRef<HTMLElement>(null)
+  const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
   const describedbyIds = useMemo(() => {
-    const temp = []
+    const temp: string[] = []
 
     if (helpMessage) {
       temp.push(`${managedHtmlFor}_helpMessage`)
@@ -245,24 +246,35 @@ export const ActualFormControl: FC<Props> = ({
   }, [managedHtmlFor, isFieldset, managedLabelId])
 
   useEffect(() => {
-    if (!describedbyIds || !inputWrapperRef?.current) {
+    if (!inputWrapperRef?.current) {
       return
     }
 
-    const inputWrapper = inputWrapperRef.current
+    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+
+    if (!input) {
+      return
+    }
+
     const attrName = 'aria-describedby'
+    const ariaDescribedBy = input.getAttribute(attrName) || ''
+    const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
+    // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
+    const externalTokens = currentTokens.filter(
+      (token) => !managedDescribedbyIdsRef.current.includes(token),
+    )
+    const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
+    const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
 
-    if (inputWrapper.querySelector(`[${attrName}="${describedbyIds}"]`)) {
-      return
+    if (nextValue !== ariaDescribedBy) {
+      if (nextValue) {
+        input.setAttribute(attrName, nextValue)
+      } else {
+        input.removeAttribute(attrName)
+      }
     }
 
-    const input = inputWrapper.querySelector(SMARTHR_UI_INPUT_SELECTOR)
-
-    if (input) {
-      const attribute = input.getAttribute(attrName)
-
-      input.setAttribute(attrName, attribute ? `${attribute} ${describedbyIds}` : describedbyIds)
-    }
+    managedDescribedbyIdsRef.current = describedbyIdTokens
   }, [describedbyIds])
 
   useEffect(() => {
