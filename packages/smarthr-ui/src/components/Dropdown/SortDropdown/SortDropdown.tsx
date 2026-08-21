@@ -16,7 +16,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { useIntl } from '../../../intl'
+import { Localizer, useIntl } from '../../../intl'
 import { Button } from '../../Button'
 import { Fieldset } from '../../Fieldset'
 import { FormControl } from '../../FormControl'
@@ -78,12 +78,6 @@ export const SortDropdown: FC<Props> = ({
 
   const texts = useMemo(
     () => ({
-      sortFieldLabel:
-        sortFieldLabel ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/sortFieldLabel',
-          defaultText: '並べ替え項目',
-        }),
       sortOrderLegend:
         sortOrderLegend ||
         localize({
@@ -115,7 +109,7 @@ export const SortDropdown: FC<Props> = ({
           defaultText: 'キャンセル',
         }),
     }),
-    [sortFieldLabel, sortOrderLegend, ascLabel, descLabel, applyText, cancelText, localize],
+    [sortOrderLegend, ascLabel, descLabel, applyText, cancelText, localize],
   )
 
   const [defaultFieldLabel] = useState(
@@ -200,7 +194,16 @@ export const SortDropdown: FC<Props> = ({
       <DropdownContent controllable>
         <form onSubmit={ON_SUBMIT}>
           <Stack className="shr-p-1.5">
-            <FormControl label={texts.sortFieldLabel}>
+            <FormControl
+              label={
+                sortFieldLabel || (
+                  <Localizer
+                    id="smarthr-ui/SortDropdown/sortFieldLabel"
+                    defaultText="並べ替え項目"
+                  />
+                )
+              }
+            >
               <Select
                 name="sortFields"
                 options={innerFields}
