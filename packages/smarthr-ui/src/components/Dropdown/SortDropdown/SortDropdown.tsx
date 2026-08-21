@@ -8,7 +8,6 @@ import {
   type MouseEvent,
   type MouseEventHandler,
   type OptionHTMLAttributes,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -16,7 +15,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Fieldset } from '../../Fieldset'
 import { FormControl } from '../../FormControl'
@@ -74,50 +73,6 @@ export const SortDropdown: FC<Props> = ({
   onCancel,
   ...rest
 }) => {
-  const { localize } = useIntl()
-
-  const texts = useMemo(
-    () => ({
-      sortFieldLabel:
-        sortFieldLabel ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/sortFieldLabel',
-          defaultText: '並べ替え項目',
-        }),
-      sortOrderLegend:
-        sortOrderLegend ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/sortOrderLegend',
-          defaultText: '並び順',
-        }),
-      ascLabel:
-        ascLabel ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/ascLabel',
-          defaultText: '昇順',
-        }),
-      descLabel:
-        descLabel ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/descLabel',
-          defaultText: '降順',
-        }),
-      applyText:
-        applyText ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/applyText',
-          defaultText: '適用',
-        }),
-      cancelText:
-        cancelText ||
-        localize({
-          id: 'smarthr-ui/SortDropdown/cancelText',
-          defaultText: 'キャンセル',
-        }),
-    }),
-    [sortFieldLabel, sortOrderLegend, ascLabel, descLabel, applyText, cancelText, localize],
-  )
-
   const [defaultFieldLabel] = useState(
     () => (sortFields.find((field) => field.selected) || sortFields[0])?.label || '',
   )
@@ -189,18 +144,33 @@ export const SortDropdown: FC<Props> = ({
   )
 
   const SortIcon = checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon
+  const actualAscLabel = ascLabel || (
+    <Localizer id="smarthr-ui/SortDropdown/ascLabel" defaultText="昇順" />
+  )
+  const actualDescLabel = descLabel || (
+    <Localizer id="smarthr-ui/SortDropdown/descLabel" defaultText="降順" />
+  )
 
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button {...rest} suffix={<SortIcon />}>
-          {`${selectedLabel}（${checkedOrder === 'asc' ? texts.ascLabel : texts.descLabel}）`}
+          {selectedLabel}（{checkedOrder === 'asc' ? actualAscLabel : actualDescLabel}）
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={ON_SUBMIT}>
           <Stack className="shr-p-1.5">
-            <FormControl label={texts.sortFieldLabel}>
+            <FormControl
+              label={
+                sortFieldLabel || (
+                  <Localizer
+                    id="smarthr-ui/SortDropdown/sortFieldLabel"
+                    defaultText="並べ替え項目"
+                  />
+                )
+              }
+            >
               <Select
                 name="sortFields"
                 options={innerFields}
@@ -208,7 +178,14 @@ export const SortDropdown: FC<Props> = ({
                 className="shr-min-w-[16em]"
               />
             </FormControl>
-            <Fieldset legend={texts.sortOrderLegend} innerMargin={0.5}>
+            <Fieldset
+              legend={
+                sortOrderLegend || (
+                  <Localizer id="smarthr-ui/SortDropdown/sortOrderLegend" defaultText="並び順" />
+                )
+              }
+              innerMargin={0.5}
+            >
               <Cluster gap={1.25}>
                 <RadioButton
                   name="sortOrder"
@@ -216,7 +193,7 @@ export const SortDropdown: FC<Props> = ({
                   checked={innerCheckedOrder === 'asc'}
                   onChange={functions.handleChangeSortOrderRadio}
                 >
-                  {texts.ascLabel}
+                  {actualAscLabel}
                 </RadioButton>
                 <RadioButton
                   name="sortOrder"
@@ -224,7 +201,7 @@ export const SortDropdown: FC<Props> = ({
                   checked={innerCheckedOrder === 'desc'}
                   onChange={functions.handleChangeSortOrderRadio}
                 >
-                  {texts.descLabel}
+                  {actualDescLabel}
                 </RadioButton>
               </Cluster>
             </Fieldset>
@@ -232,9 +209,8 @@ export const SortDropdown: FC<Props> = ({
           <Footer
             handleApply={functions.handleApply}
             handleCancel={functions.handleCancel}
-            cancelText={texts.cancelText}
-            applyText={texts.applyText}
-            className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
+            cancelText={cancelText}
+            applyText={applyText}
           />
         </form>
       </DropdownContent>
@@ -245,30 +221,27 @@ export const SortDropdown: FC<Props> = ({
 const Footer = memo<{
   handleApply: MouseEventHandler<HTMLButtonElement>
   handleCancel?: MouseEventHandler<HTMLButtonElement>
-  className: string
-  cancelText: ReactNode
-  applyText: ReactNode
-}>(({ className, handleApply, handleCancel, cancelText, applyText }) => (
-  <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
-    <CancelButton handleClick={handleCancel}>{cancelText}</CancelButton>
-    <ApplyButton handleClick={handleApply}>{applyText}</ApplyButton>
-  </Cluster>
-))
-
-const CancelButton = memo<
-  PropsWithChildren<{ handleClick?: MouseEventHandler<HTMLButtonElement> }>
->(({ handleClick, children }) => (
-  <DropdownCloser>
-    <Button onClick={handleClick}>{children}</Button>
-  </DropdownCloser>
-))
-
-const ApplyButton = memo<PropsWithChildren<{ handleClick: MouseEventHandler<HTMLButtonElement> }>>(
-  ({ handleClick, children }) => (
+  cancelText?: ReactNode
+  applyText?: ReactNode
+}>(({ handleApply, handleCancel, cancelText, applyText }) => (
+  <Cluster
+    gap={1}
+    align="center"
+    justify="flex-end"
+    as="footer"
+    className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
+  >
     <DropdownCloser>
-      <Button variant="primary" onClick={handleClick}>
-        {children}
+      <Button onClick={handleCancel}>
+        {cancelText || (
+          <Localizer id="smarthr-ui/SortDropdown/cancelText" defaultText="キャンセル" />
+        )}
       </Button>
     </DropdownCloser>
-  ),
-)
+    <DropdownCloser>
+      <Button variant="primary" onClick={handleApply}>
+        {applyText || <Localizer id="smarthr-ui/SortDropdown/applyText" defaultText="適用" />}
+      </Button>
+    </DropdownCloser>
+  </Cluster>
+))
