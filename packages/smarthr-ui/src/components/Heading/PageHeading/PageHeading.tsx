@@ -15,6 +15,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
@@ -98,7 +99,8 @@ const AutoPageTitleHeading: FC<
   // HINT: h1のテキストをMutationObserverで監視するために内部でrefを保持しつつ、利用者のrefにも要素を渡す
   const innerRef = useRef<HTMLHeadingElement | null>(null)
 
-  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId })
+  const titleFrame = useAnimationFrame()
+  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
 
   const functions = useMemo(() => {
     const updateTitle = () => {
@@ -121,7 +123,7 @@ const AutoPageTitleHeading: FC<
       pseudoTitle.setAttribute('aria-live', 'polite')
       document.body.prepend(pseudoTitle)
 
-      requestAnimationFrame(() => {
+      latest.titleFrame.request(() => {
         pseudoTitle.textContent = document.title
       })
     }
@@ -142,6 +144,7 @@ const AutoPageTitleHeading: FC<
           })
         } else {
           observer?.disconnect()
+          latest.titleFrame.cancel()
 
           const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 

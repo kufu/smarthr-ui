@@ -15,6 +15,7 @@ import {
   useState,
 } from 'react'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 
@@ -65,6 +66,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
+  const openFrame = useAnimationFrame()
+  const closeFrame = useAnimationFrame()
 
   const latest = useLatest({
     active,
@@ -73,6 +76,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     onOpen,
     onClose,
     createPortal,
+    openFrame,
+    closeFrame,
   })
 
   const functions = useMemo(() => {
@@ -80,22 +85,30 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
       latest.active ? latest.createPortal(props.children) : null
     DropdownContentRoot.displayName = 'DropdownContentRoot'
+    const actualClose = () => {
+      if (latest.onClose) {
+        latest.closeFrame.request(() => latest.onClose?.())
+      }
+    }
 
     return {
       DropdownContentRoot,
       handleClickTrigger: (rect: Rect) => {
         if (latest.active) {
           setActive(false)
-          if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+          actualClose()
         } else {
           setActive(true)
           setTriggerRect(rect)
-          if (latest.onOpen) requestAnimationFrame(() => latest.onOpen?.())
+
+          if (latest.onOpen) {
+            latest.openFrame.request(() => latest.onOpen?.())
+          }
         }
       },
       handleDelegateClickCloser: () => {
         setActive(false)
-        if (latest.onClose) requestAnimationFrame(() => latest.onClose?.())
+        actualClose()
 
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
@@ -108,10 +121,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           !latest.isChildPortal(e.target)
         ) {
           setActive(false)
-
-          if (latest.onClose) {
-            requestAnimationFrame(() => latest.onClose?.())
-          }
+          actualClose()
         }
       },
       updateTriggerRect: () => {
@@ -121,6 +131,14 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       },
     }
   }, [latest])
+
+  useEffect(
+    () => () => {
+      latest.openFrame.cancel()
+      latest.closeFrame.cancel()
+    },
+    [latest],
+  )
 
   useEffect(() => {
     if (!active) return
