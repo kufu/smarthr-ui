@@ -23,7 +23,8 @@ const ImageDisplay = memo<
     imgScale: number
     imageRef: Ref<HTMLImageElement>
     handleLoad?: (e: SyntheticEvent<HTMLImageElement>) => void
-  } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onError'>
+    handleError?: ComponentProps<'img'>['onError']
+  } & Pick<ComponentProps<'img'>, 'src' | 'alt'>
 >(
   ({
     wrapperWidth,
@@ -34,7 +35,7 @@ const ImageDisplay = memo<
     src,
     alt,
     handleLoad,
-    onError,
+    handleError,
   }) => (
     <div
       style={{
@@ -49,7 +50,7 @@ const ImageDisplay = memo<
         src={src}
         alt={alt}
         onLoad={handleLoad}
-        onError={onError}
+        onError={handleError}
         className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
         ref={imageRef}
         style={{
@@ -130,7 +131,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
         src={file.url}
         alt={file.alt}
         handleLoad={functions.handleLoad}
-        onError={handleLoadError}
+        handleError={handleLoadError}
       />
     )
   },
