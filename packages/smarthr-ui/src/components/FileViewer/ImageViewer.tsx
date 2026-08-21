@@ -1,66 +1,10 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type Ref,
-  type SyntheticEvent,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type SyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
 import type { ViewerProps } from './types'
-
-const ImageDisplay = memo<
-  {
-    wrapperWidth: number
-    wrapperHeight: number
-    rotation: number
-    imgScale: number
-    imageRef: Ref<HTMLImageElement>
-    handleLoad?: (e: SyntheticEvent<HTMLImageElement>) => void
-    handleError?: ComponentProps<'img'>['onError']
-  } & Pick<ComponentProps<'img'>, 'src' | 'alt'>
->(
-  ({
-    wrapperWidth,
-    wrapperHeight,
-    rotation,
-    imgScale,
-    imageRef,
-    src,
-    alt,
-    handleLoad,
-    handleError,
-  }) => (
-    <div
-      style={{
-        width: wrapperWidth,
-        height: wrapperHeight,
-      }}
-      className="shr-relative shr-h-full shr-w-full"
-    >
-      {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-      <img
-        src={src}
-        alt={alt}
-        onLoad={handleLoad}
-        onError={handleError}
-        className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
-        ref={imageRef}
-        style={{
-          rotate: `${rotation}deg`,
-          scale: `${imgScale}`,
-        }}
-      />
-    </div>
-  ),
-)
 
 export const ImageViewer: FC<ViewerProps> = memo(
   ({ scale, rotation, file, width, handleLoad, handleLoadError }) => {
@@ -125,14 +69,28 @@ export const ImageViewer: FC<ViewerProps> = memo(
     )
 
     return (
-      <ImageDisplay
-        {...viewConfig}
-        imageRef={callbackRef}
-        src={file.url}
-        alt={file.alt}
-        handleLoad={functions.handleLoad}
-        handleError={handleLoadError}
-      />
+      <div
+        style={{
+          width: viewConfig.wrapperWidth,
+          height: viewConfig.wrapperHeight,
+        }}
+        className="shr-relative shr-h-full shr-w-full"
+      >
+        {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+        <img
+          ref={callbackRef}
+          src={file.url}
+          alt={file.alt}
+          onLoad={functions.handleLoad}
+          onError={handleLoadError}
+          className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
+          style={{
+            rotate: `${viewConfig.rotation}deg`,
+            scale: `${viewConfig.imgScale}`,
+          }}
+        />
+      </div>
     )
   },
 )
