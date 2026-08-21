@@ -123,6 +123,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
+      [],
     )
 
     return (

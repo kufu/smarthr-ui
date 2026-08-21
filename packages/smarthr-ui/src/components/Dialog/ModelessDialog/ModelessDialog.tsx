@@ -95,7 +95,8 @@ type Props = BaseProps &
 const classNameGenerator = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
-    wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
+    wrapper:
+      'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-max-h-[calc(100svh-theme(spacing[0.5]))] shr-max-w-[calc(100vw-theme(spacing[0.5]))] shr-flex-col',
     headerEl: [
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
       'hover:shr-bg-white-darken',
@@ -266,7 +267,7 @@ export const ModelessDialog: FC<Props> = ({
   useEffect(() => {
     if (!wrapperPosition) {
       setDebouncedLiveRegionText('')
-      return
+      return functions.debounceLiveRegionText.cancel
     }
 
     const txt = localize(
@@ -281,6 +282,8 @@ export const ModelessDialog: FC<Props> = ({
     )
 
     functions.debounceLiveRegionText(txt)
+
+    return functions.debounceLiveRegionText.cancel
   }, [localize, wrapperPosition, functions])
 
   useEffect(() => {
@@ -302,8 +305,8 @@ export const ModelessDialog: FC<Props> = ({
       const rect = wrapperRef.current.getBoundingClientRect()
 
       setCentering({
-        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
-        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
+        top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+        left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
       })
     }
   }, [bottom, isOpen, left, right, top])

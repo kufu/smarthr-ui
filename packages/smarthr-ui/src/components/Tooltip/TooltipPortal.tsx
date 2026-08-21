@@ -74,6 +74,7 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
 
       return () => {
         window.removeEventListener('resize', debouncedAction)
+        debouncedAction.cancel()
       }
     },
     [parentRect, theme],

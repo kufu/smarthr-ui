@@ -1,15 +1,8 @@
-import {
-  type FC,
-  type ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useEnhancedEffect } from './useEnhancedEffect'
+import { useLatest } from './useLatest'
 
 type ParentContextValue = {
   seqs: number[]
@@ -23,7 +16,7 @@ let portalSeq = 0
 
 export function usePortal({ rootId }: { rootId?: string } = {}) {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
-  const currentSeq = useMemo(() => ++portalSeq, [])
+  const [currentSeq] = useState(() => ++portalSeq)
   const parent = useContext(ParentContext)
 
   const calculatedSeqs = useMemo(() => {
@@ -34,6 +27,31 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
       portalChildOf: parentSeqs.join(','),
     }
   }, [currentSeq, parent.seqs])
+
+  const latest = useLatest({ currentSeq, portalRoot, calculatedSeqs })
+
+  const functions = useMemo(() => {
+    const PortalParentProvider: FC<{ children: ReactNode }> = ({ children }) => {
+      const value: ParentContextValue = {
+        seqs: latest.calculatedSeqs.parentSeqs,
+      }
+
+      return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
+    }
+
+    return {
+      PortalParentProvider,
+      isChildPortal: (element: HTMLElement | null) =>
+        _isChildPortal(element, new RegExp(`(^|,)${latest.currentSeq}(,|$)`)),
+      createPortal: (children: ReactNode) => {
+        if (latest.portalRoot === null) {
+          return null
+        }
+
+        return createPortal(children, latest.portalRoot)
+      },
+    }
+  }, [latest])
 
   useEnhancedEffect(() => {
     // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
@@ -61,38 +79,11 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [portalRoot, calculatedSeqs.portalChildOf])
 
-  const isChildPortal = useCallback(
-    (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
-    [currentSeq],
-  )
-
-  const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
-    ({ children }) => {
-      const value: ParentContextValue = {
-        seqs: calculatedSeqs.parentSeqs,
-      }
-
-      return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
-    },
-    [calculatedSeqs.parentSeqs],
-  )
-
-  const wrappedCreatePortal = useCallback(
-    (children: ReactNode) => {
-      if (portalRoot === null) {
-        return null
-      }
-
-      return createPortal(children, portalRoot)
-    },
-    [portalRoot],
-  )
-
   return {
     portalRoot,
-    isChildPortal,
-    PortalParentProvider,
-    createPortal: wrappedCreatePortal,
+    isChildPortal: functions.isChildPortal,
+    createPortal: functions.createPortal,
+    PortalParentProvider: functions.PortalParentProvider,
   }
 }
 

@@ -6,7 +6,6 @@ import {
   type MouseEvent,
   type ReactNode,
   memo,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -84,24 +83,7 @@ export const SegmentedControl: FC<Props> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  const latest = useLatest({ onClickOption, isFocused })
-
-  const hasOnClickOption = !!onClickOption
-
-  const functions = useMemo(
-    () => ({
-      handleClickOption: hasOnClickOption
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            latest.onClickOption?.(e.currentTarget.value)
-          }
-        : undefined,
-      handleDelegateFocus: () => setIsFocused(true),
-      handleDelegateBlur: () => setIsFocused(false),
-    }),
-    [hasOnClickOption, latest],
-  )
+  const innerRef = useRef<HTMLDivElement | null>(null)
 
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
@@ -111,21 +93,27 @@ export const SegmentedControl: FC<Props> = ({
       buttonGroup: buttonGroup(),
       button: button({ size }),
     }
-  }, [className, size])
+  }, [size, className])
 
-  useEffect(() => {
+  const latest = useLatest({ onClickOption, isFocused })
+
+  const hasOnClickOption = !!onClickOption
+
+  const functions = useMemo(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!latest.isFocused || !containerRef.current || !document.activeElement) {
+      if (!latest.isFocused || !innerRef.current || !document.activeElement) {
         return
       }
 
-      const radios = Array.from(
-        containerRef.current.querySelectorAll('[role="radio"]:not(:disabled)'),
+      let radios: NodeListOf<Element> | Element[] = innerRef.current.querySelectorAll(
+        '[role="radio"]:not(:disabled)',
       )
 
       if (radios.length < 2) {
         return
       }
+
+      radios = Array.from(radios)
 
       const focusedIndex = radios.indexOf(document.activeElement)
 
@@ -163,23 +151,37 @@ export const SegmentedControl: FC<Props> = ({
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
+    return {
+      // TODO: useMergeRefsが実装された修正する
+      callbackRef: (node: HTMLDivElement | null) => {
+        innerRef.current = node
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
+        if (node) {
+          document.addEventListener('keydown', handleKeyDown)
+        } else {
+          document.removeEventListener('keydown', handleKeyDown)
+        }
+      },
+      handleClickOption: hasOnClickOption
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onClickOption?.(e.currentTarget.value)
+          }
+        : undefined,
+      handleDelegateFocus: () => setIsFocused(true),
+      handleDelegateBlur: () => setIsFocused(false),
     }
-  }, [latest])
+  }, [hasOnClickOption, latest])
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      className={classNames.container}
+      ref={functions.callbackRef}
+      role="toolbar"
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
-      ref={containerRef}
-      role="toolbar"
+      className={classNames.container}
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
@@ -190,12 +192,12 @@ export const SegmentedControl: FC<Props> = ({
             <SegmentedControlButton
               {...optionRest}
               key={option.value}
-              aria-label={ariaLabel}
-              handleClick={functions.handleClickOption}
-              size={size}
               checked={checked}
               tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              aria-label={ariaLabel}
               aria-checked={checked && !!value}
+              size={size}
+              handleClick={functions.handleClickOption}
               className={classNames.button}
             />
           )

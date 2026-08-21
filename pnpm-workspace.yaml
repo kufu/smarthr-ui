@@ -5,20 +5,20 @@ packages:
 minimumReleaseAge: 10080
 
 minimumReleaseAgeExclude:
-  # Security update: nanoid@3.3.17 (2026-08-03 公開。minimumReleaseAge 経過後に削除可)
-  - nanoid@3.3.17
+  # Security update: nanoid@3.3.18 (minimumReleaseAge 経過後に削除可)
+  - nanoid@3.3.18
 allowBuilds:
   '@swc/core': true
   canvas: true
   esbuild: true
   sharp: true
 overrides:
-  postcss@<8.5.10: ^8.5.25
+  postcss@<8.5.10: ^8.5.26
   # esbuild@0.28.1 より新しいバージョンが minimumReleaseAge を超過したタイミングで削除可
-  esbuild@<=0.24.2: '>=0.28.1'
-  esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
+  esbuild@<=0.24.2: '>=0.28.2'
+  esbuild@>=0.17.0 <0.28.1: '>=0.28.2'
   tar@<=7.5.15: '>=7.5.22'
-  js-yaml@>=4.0.0 <=5.2.1: '>=5.2.2'
+  js-yaml@>=4.0.0 <=5.2.1: '>=5.2.3'
   '@babel/core@<=7.29.0': '>=8.0.1'
   sharp@<0.35.0: '>=0.35.3'
-  nanoid@<3.3.17: '>=3.3.17 <4'
+  nanoid@<3.3.18: '>=3.3.18 <4'

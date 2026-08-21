@@ -21,6 +21,7 @@ const classNameGenerator = tv({
       left: 'shr-rounded-l-l',
     },
   },
+  // TODO: tailwindの場合のみdefault値が設定される挙動はバグの原因になりかねないので整理する
   defaultVariants: {
     bgColor: 'COLUMN',
     rounded: false,
