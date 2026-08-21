@@ -7,12 +7,12 @@ import {
   type ReactNode,
   memo,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { Button } from '../Button'
 
 export type Option = {
@@ -83,7 +83,6 @@ export const SegmentedControl: FC<Props> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
-  const innerRef = useRef<HTMLDivElement | null>(null)
 
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
@@ -99,66 +98,67 @@ export const SegmentedControl: FC<Props> = ({
 
   const hasOnClickOption = !!onClickOption
 
-  const functions = useMemo(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!latest.isFocused || !innerRef.current || !document.activeElement) {
-        return
-      }
-
-      let radios: NodeListOf<Element> | Element[] = innerRef.current.querySelectorAll(
-        '[role="radio"]:not(:disabled)',
-      )
-
-      if (radios.length < 2) {
-        return
-      }
-
-      radios = Array.from(radios)
-
-      const focusedIndex = radios.indexOf(document.activeElement)
-
-      if (focusedIndex === -1) {
-        return
-      }
-
-      switch (e.key) {
-        case 'Down':
-        case 'ArrowDown':
-        case 'Right':
-        case 'ArrowRight': {
-          const nextIndex = focusedIndex + 1
-          const nextRadio = radios[nextIndex % radios.length]
-
-          if (nextRadio instanceof HTMLButtonElement) {
-            nextRadio.focus()
-          }
-
-          break
-        }
-        case 'Up':
-        case 'ArrowUp':
-        case 'Left':
-        case 'ArrowLeft': {
-          const nextIndex = focusedIndex - 1
-          const nextRadio = radios[(nextIndex + radios.length) % radios.length]
-
-          if (nextRadio instanceof HTMLButtonElement) {
-            nextRadio.focus()
-          }
-
-          break
-        }
-      }
-    }
-
-    return {
-      // TODO: useMergeRefsが実装された修正する
+  const functions = useMemo(
+    () => ({
       callbackRef: (node: HTMLDivElement | null) => {
-        innerRef.current = node
+        if (!node) {
+          return
+        }
 
-        if (node) {
-          document.addEventListener('keydown', handleKeyDown)
-        } else {
+        const handleKeyDown = (e: KeyboardEvent) => {
+          if (!latest.isFocused || !document.activeElement) {
+            return
+          }
+
+          let radios: NodeListOf<Element> | Element[] = node.querySelectorAll(
+            '[role="radio"]:not(:disabled)',
+          )
+
+          if (radios.length < 2) {
+            return
+          }
+
+          radios = Array.from(radios)
+
+          const focusedIndex = radios.indexOf(document.activeElement)
+
+          if (focusedIndex === -1) {
+            return
+          }
+
+          switch (e.key) {
+            case 'Down':
+            case 'ArrowDown':
+            case 'Right':
+            case 'ArrowRight': {
+              const nextIndex = focusedIndex + 1
+              const nextRadio = radios[nextIndex % radios.length]
+
+              if (nextRadio instanceof HTMLButtonElement) {
+                nextRadio.focus()
+              }
+
+              break
+            }
+            case 'Up':
+            case 'ArrowUp':
+            case 'Left':
+            case 'ArrowLeft': {
+              const nextIndex = focusedIndex - 1
+              const nextRadio = radios[(nextIndex + radios.length) % radios.length]
+
+              if (nextRadio instanceof HTMLButtonElement) {
+                nextRadio.focus()
+              }
+
+              break
+            }
+          }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => {
           document.removeEventListener('keydown', handleKeyDown)
         }
       },
@@ -169,15 +169,18 @@ export const SegmentedControl: FC<Props> = ({
         : undefined,
       handleDelegateFocus: () => setIsFocused(true),
       handleDelegateBlur: () => setIsFocused(false),
-    }
-  }, [hasOnClickOption, latest])
+    }),
+    [hasOnClickOption, latest],
+  )
+
+  const mergedRef = useMergeRefs(functions.callbackRef)
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      ref={functions.callbackRef}
+      ref={mergedRef}
       role="toolbar"
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
