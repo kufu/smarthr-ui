@@ -21,6 +21,10 @@ type Props = {
     title?: string
     className?: string
     options?: Partial<ChartOptions<K>>
+    /**
+     * 棒グラフの柄を無効化するか（type="bar" のときのみ有効）
+     */
+    disablePatterns?: boolean
   }
 }[ChartType]
 
@@ -40,7 +44,14 @@ export const Chart: React.FC<Props> = ({ className, ...rest }) => {
 const InnerChart: React.FC<Props> = (props) => {
   switch (props.type) {
     case 'bar':
-      return <BarChart data={props.data} title={props.title} options={props.options} />
+      return (
+        <BarChart
+          data={props.data}
+          title={props.title}
+          options={props.options}
+          disablePatterns={props.disablePatterns}
+        />
+      )
     case 'line':
       return <LineChart data={props.data} title={props.title} options={props.options} />
     case 'radar':

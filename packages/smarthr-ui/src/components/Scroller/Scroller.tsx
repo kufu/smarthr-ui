@@ -5,7 +5,6 @@ import {
   type ComponentType,
   type PropsWithChildren,
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -81,9 +80,12 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
-    const wrapperRef = useRef<HTMLDivElement>(null)
+    const innerRef = useRef<HTMLDivElement | null>(null)
 
-    useImperativeHandle(ref, () => wrapperRef.current!)
+    // as が切り替わると DOM 要素が変わるため、Component を依存配列に含める
+    // TODO: useMergeRefsが実装されたら修正する
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useImperativeHandle(ref, () => innerRef.current!, [Component])
 
     const [tabIndex, setTabIndex] = useState<0 | undefined>(undefined)
 
@@ -97,11 +99,12 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       [direction, styleType, className],
     )
 
-    useEffect(() => {
-      const refCurrent = wrapperRef.current
-      if (!refCurrent) return
-
+    const functions = useMemo(() => {
       const autoTabIndex = () => {
+        const refCurrent = innerRef.current
+
+        if (!refCurrent) return
+
         let nextTabIndex: 0 | undefined = undefined
 
         switch (direction) {
@@ -123,19 +126,33 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
         setTabIndex(nextTabIndex)
       }
 
-      autoTabIndex()
+      let resizeObserver: ResizeObserver
 
-      const resizeObserver = new ResizeObserver(autoTabIndex)
-      resizeObserver.observe(refCurrent)
+      return {
+        callbackRef: (node: HTMLDivElement | null) => {
+          // TODO: useMergeRefsが実装されたら修正する
+          innerRef.current = node
 
-      return () => {
-        resizeObserver.unobserve(refCurrent)
+          autoTabIndex()
+
+          if (node) {
+            resizeObserver ??= new ResizeObserver(autoTabIndex)
+            resizeObserver.observe(node)
+          } else {
+            resizeObserver?.disconnect()
+          }
+        },
       }
     }, [direction])
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component {...rest} ref={wrapperRef} className={actualClassName} tabIndex={tabIndex}>
+      <Component
+        {...rest}
+        ref={functions.callbackRef}
+        tabIndex={tabIndex}
+        className={actualClassName}
+      >
         {children}
       </Component>
     )

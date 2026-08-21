@@ -19,27 +19,17 @@ import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
-import type { Props as CommonProps } from './types'
+import type { LowerProps } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-type Props = Omit<CommonProps, 'multiple'> & {
+type Props = Omit<LowerProps, 'multiple'> & {
   multiple?: boolean
 }
 
 export const InputFileNative = forwardRef<HTMLInputElement, Props>(
   (
-    {
-      className,
-      size,
-      label,
-      hasFileList = true,
-      previewable = false,
-      onChange,
-      disabled,
-      error,
-      ...rest
-    },
+    { className, size, label, hasFileList = true, previewable, onChange, disabled, error, ...rest },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
@@ -62,10 +52,13 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
-    const inputRef = useRef<HTMLInputElement>(null)
+    const innerRef = useRef<HTMLInputElement>(null)
+
+    // TODO: useMergeRefsが実装されたら修正
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
-      () => inputRef.current,
+      () => innerRef.current,
+      [],
     )
 
     const latest = useLatest({ onChange, files, previewFile })
@@ -83,7 +76,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           }
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          if (!inputRef.current) {
+          if (!innerRef.current) {
             return
           }
 
@@ -99,7 +92,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           })
 
           isUpdatingFilesRef.current = true
-          inputRef.current.files = buff.files
+          innerRef.current.files = buff.files
           isUpdatingFilesRef.current = false
         },
         handleClosePreview: () => {
@@ -128,7 +121,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                 key={index}
                 file={file}
                 index={index}
-                previewable={previewable}
+                previewable={!!previewable}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
@@ -139,13 +132,13 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            data-smarthr-ui-input="true"
+            ref={innerRef}
             type="file"
-            onChange={functions.handleChange}
             disabled={disabled}
-            ref={inputRef}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
             className={classNames.input}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
@@ -156,6 +149,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
             file={previewFile}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
+            searchable={previewable?.searchable}
           />
         )}
       </Stack>

@@ -1,6 +1,8 @@
 import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
+
 import { HorizontalStepItem } from './HorizontalStepItem'
 import { VerticalStepItem } from './VerticalStepItem'
 
@@ -9,6 +11,11 @@ import type {
   Step,
   VerticalStepper as VStepperProps,
 } from './types'
+
+type ObjectStepStatus = { type?: 'completed' | 'closed'; text?: string }
+const statusObjectConverter = (s: 'completed' | 'closed' | undefined): ObjectStepStatus => ({
+  type: s,
+})
 
 type Props = HStepperProps | VStepperProps
 
@@ -53,7 +60,11 @@ const StepItem: FC<
     previousStepStatus: Step['status'] | undefined
     index: number
   }
-> = ({ Component, step, previousStepStatus, index, activeIndex }) => {
+> = ({ Component, step: { status, ...stepRest }, previousStepStatus, index, activeIndex }) => {
+  const { type: statusType, text: statusText } = useObjectAttributes<
+    Step['status'],
+    ObjectStepStatus
+  >(status, statusObjectConverter)
   const isPrevStepCompleted = previousStepStatus
     ? (typeof previousStepStatus === 'object' ? previousStepStatus.type : previousStepStatus) ===
       'completed'
@@ -61,7 +72,9 @@ const StepItem: FC<
 
   return (
     <Component
-      {...step}
+      {...stepRest}
+      statusType={statusType}
+      statusText={statusText}
       isPrevStepCompleted={isPrevStepCompleted}
       stepNumber={index + 1}
       current={index === activeIndex}

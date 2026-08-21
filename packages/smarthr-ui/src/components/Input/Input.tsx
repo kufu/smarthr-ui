@@ -2,17 +2,16 @@
 
 import {
   type ComponentPropsWithRef,
-  type MutableRefObject,
+  type MouseEvent,
   type ReactNode,
   type WheelEvent,
   forwardRef,
-  useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useOnce } from '../../hooks/useOnce'
 import { useTheme } from '../../hooks/useTheme'
 
 type BaseProps = {
@@ -47,20 +46,18 @@ export const backgroundColor = {
   ACTION_BACKGROUND: 'action-background',
 } as const
 
-const wrapperClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Input',
-    'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
-    'contrast-more:shr-border-high-contrast',
-    'focus-within:shr-focus-indicator',
-    'has-[[aria-invalid]]:shr-border-danger',
-    'has-[:disabled]:[&&&]:shr-border-default/50',
-    'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
-    'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
-  ],
-})
-const innerClassNameGenerator = tv({
+const classNameGenerator = tv({
   slots: {
+    wrapper: [
+      'smarthr-ui-Input',
+      'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
+      'contrast-more:shr-border-high-contrast',
+      'focus-within:shr-focus-indicator',
+      'has-[[aria-invalid]]:shr-border-danger',
+      'has-[:disabled]:[&&&]:shr-border-default/50',
+      'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
+      'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
+    ],
     input: [
       'smarthr-ui-Input-input',
       'shr-inline-block shr-w-full shr-grow shr-border-none shr-bg-transparent shr-py-0.75 shr-text-base shr-leading-none shr-text-black shr-outline-none shr-outline-0',
@@ -107,34 +104,20 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef: MutableRefObject<HTMLInputElement | null> = useRef(null)
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-    )
+    const callbackRef = useOnce((node: HTMLInputElement | null) => {
+      if (node && autoFocus) {
+        node.focus()
+      }
+    })
 
-    const latest = useLatest({ autoFocus })
-
-    const functions = useMemo(
-      () => ({
-        handleInnerRef: (node: HTMLInputElement | null) => {
-          innerRef.current = node
-
-          if (latest.autoFocus && node) {
-            node.focus()
-          }
-        },
-        handleDelegateClick: () => innerRef.current?.focus(),
-      }),
-      [latest],
-    )
+    const mergedRef = useMergeRefs(callbackRef, ref)
 
     const classNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator()
+      const { wrapper, input, affix } = classNameGenerator()
 
       return {
-        wrapper: wrapperClassNameGenerator({ className }),
+        wrapper: wrapper({ className }),
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
@@ -147,7 +130,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={functions.handleDelegateClick}
+        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }}
         className={classNames.wrapper}
         style={{
           borderColor: styleColor,
@@ -159,18 +146,18 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
+          ref={mergedRef}
           type={type}
-          data-smarthr-ui-input="true"
+          disabled={disabled}
+          readOnly={readOnly}
           max={
             max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
           }
+          aria-invalid={error || undefined}
+          data-smarthr-ui-input="true"
           onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}
           onBlur={onBlur}
-          disabled={disabled}
-          readOnly={readOnly}
-          ref={functions.handleInnerRef}
-          aria-invalid={error || undefined}
           className={classNames.input}
         />
         {suffix && <span className={classNames.suffix}>{suffix}</span>}

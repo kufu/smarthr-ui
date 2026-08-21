@@ -8,6 +8,15 @@ import { StepCounter } from './StepCounter'
 
 import type { VerticalStep } from './types'
 
+type Props = Omit<VerticalStep, 'status'> & {
+  statusType?: 'completed' | 'closed'
+  statusText?: string
+  /** ステップ数 */
+  stepNumber: number
+  /** 現在地かどうか */
+  current: boolean
+}
+
 const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-group/stepItem',
@@ -53,18 +62,18 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = VerticalStep & {
-  /** ステップ数 */
-  stepNumber: number
-  /** 現在地かどうか */
-  current: boolean
-}
-
-export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
+export const VerticalStepItem: FC<Props> = ({
+  stepNumber,
+  label,
+  statusType,
+  statusText,
+  children,
+  current,
+}) => {
   const classNames = useMemo(() => {
     const { wrapper, section, headingWrapper, heading, body, inner, stepCounter } =
       classNameGenerator({
-        status: typeof status === 'object' ? status.type : status,
+        status: statusType,
         current,
       })
 
@@ -77,13 +86,18 @@ export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, childre
       inner: inner(),
       stepCounter: stepCounter(),
     }
-  }, [current, status])
+  }, [statusType, current])
 
   return (
     <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
       <Section className={classNames.section}>
         <div className={classNames.stepCounter}>
-          <StepCounter status={status} current={current} stepNumber={stepNumber} />
+          <StepCounter
+            statusType={statusType}
+            statusText={statusText}
+            current={current}
+            stepNumber={stepNumber}
+          />
         </div>
         <div className={classNames.body}>
           <div className={classNames.headingWrapper}>

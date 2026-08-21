@@ -275,6 +275,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => inputRef.current,
+      [],
     )
 
     useEffect(() => {
@@ -304,10 +305,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       inputRef.current.value = value || ''
     }, [value, isInputFocused, functions])
 
-    useOuterClick(
-      useMemo(() => [inputWrapperRef, calendarPortalRef], [inputWrapperRef, calendarPortalRef]),
-      functions.closeCalendar,
-    )
+    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {

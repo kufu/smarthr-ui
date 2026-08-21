@@ -198,7 +198,11 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+    ref,
+    () => inputRef.current,
+    [],
+  )
 
   const { options } = useSingleOptions({
     items,
@@ -393,7 +397,7 @@ const ActualSingleCombobox = <T,>(
       : theme.textColor.grey
 
   useClick(
-    useMemo(() => [triggerRef, listBoxRef, clearButtonRef], [listBoxRef]),
+    [triggerRef, listBoxRef, clearButtonRef],
     isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
     functions.unfocus,
   )
