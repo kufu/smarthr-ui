@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.3.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.1...smarthr-ui-v99.3.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* debounce を使用するコンポーネントで、アンマウント時にタイマーを取り残さずにキャンセルできるようにする ([#6803](https://github.com/kufu/smarthr-ui/issues/6803)) ([151c67a](https://github.com/kufu/smarthr-ui/commit/151c67a46a271ffbe0205b139e0fdb9e6c541f78))
+* **FocusTrap:** useImperativeHandle に [focus] を追加して不要な再実行を防止 ([#6797](https://github.com/kufu/smarthr-ui/issues/6797)) ([c048823](https://github.com/kufu/smarthr-ui/commit/c0488233820fac31ddd645ed863bd5f4e1fd20ae))
+* **MultiCombobox:** 選択ダイアログのフォーカス状態は色覚異常の方々には分かりづらい ([#6799](https://github.com/kufu/smarthr-ui/issues/6799)) ([25747d0](https://github.com/kufu/smarthr-ui/commit/25747d04fec30114af093429e3bf4adb1ebfd9a2))
+
 ## [99.3.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.0...smarthr-ui-v99.3.1) (2026-08-18)
 
 

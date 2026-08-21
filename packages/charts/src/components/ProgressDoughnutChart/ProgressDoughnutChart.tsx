@@ -60,17 +60,25 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
   const colors = useMemo(() => getProgressDoughnutColors(tone), [tone])
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
-  // 支援技術には円弧ではなく <progress> として見せるため、その属性を data から算出する。
-  const progress = useMemo(() => {
+  // 進捗と残りが両方 0 のときの扱いをここに集約する。<progress> は max=0 が不正になり、
+  // canvas は chart.js が全セグメントの角度を 0 と計算して進捗もトラックも描かず
+  // 空白になる。同じ「合計 0」への対処なので、利用側に [0, 1] を渡させず両方をここで吸収する。
+  const { isEmpty, segments, progress } = useMemo(() => {
     const [progressValue, remainingValue] = data.datasets[0].data
     const total = progressValue + remainingValue
+    const empty = total <= 0
 
     return {
-      // 進捗セグメントのラベルが「何の進捗か」を表す（例: インストール済）
-      label: data.labels[0],
-      // 進捗と残りが両方 0 だと max=0 で <progress> が不正になるため 1 に置き換える
-      max: total > 0 ? total : 1,
-      value: progressValue,
+      isEmpty: empty,
+      // 合計 0 でもトラックだけは見せたいので、残りを 1 とみなして満円のトラックを描かせる
+      segments: (empty ? [0, 1] : [progressValue, remainingValue]) as [number, number],
+      // 支援技術には円弧ではなく <progress> として見せるため、その属性を data から算出する。
+      progress: {
+        // 進捗セグメントのラベルが「何の進捗か」を表す（例: インストール済）
+        label: data.labels[0],
+        max: empty ? 1 : total,
+        value: progressValue,
+      },
     }
   }, [data])
 
@@ -79,7 +87,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
       labels: data.labels,
       datasets: [
         {
-          data: data.datasets[0].data,
+          data: segments,
           // 丸端のときは進捗（index 0）の塗りを透明にし、見た目は roundedProgressPlugin が
           // 丸端付きの円弧ストロークで描く（hit 判定・キーボードナビ・tooltip は
           // 透明でも arc として残る）。角端のときはプラグインを止めて chart.js に塗らせる。
@@ -99,7 +107,9 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
             rounded ? 'transparent' : SMARTHR_DEFAULT_COLORS.OUTLINE,
             SMARTHR_DEFAULT_COLORS.OUTLINE,
           ] as ChartDataset<'doughnut'>['hoverBorderColor'],
-          hoverBorderWidth: 4,
+          // 合計 0 のときはトラックしか描かれておらず選べるものがない。tooltip も出さないため、
+          // hover の枠だけ出て操作できるように見えるのを避ける。
+          hoverBorderWidth: isEmpty ? 0 : 4,
           borderWidth: 0,
           // 枠を arc の内側に描く。既定（center）だと外周の外側にはみ出し、canvas 端
           // ぎりぎりのリングでは hover 枠が見切れるため、inner で内側に寄せて防ぐ。
@@ -107,7 +117,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         },
       ],
     }),
-    [data, rounded, colors],
+    [data, segments, isEmpty, rounded, colors],
   )
 
   const chartOptions: ChartOptions<'doughnut'> = useMemo(
@@ -120,6 +130,10 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
           title: { display: false },
           legend: { display: false },
           tooltip: {
+            // 合計 0 のときは残りを 1 とみなして描いているため、tooltip を出すと実在しない
+            // 「残り: 1」を見せてしまう。events を空にする手もあるが、createDoughnutChartOptions
+            // の deepmerge が配列を連結するので既定の events が残り、効かない。
+            enabled: !isEmpty,
             callbacks: {
               // 丸端のときは進捗（index 0）の塗りを透明にしてプラグインで描いているため、
               // tooltip の色マーカーが透明になってしまう。実際の進捗色／トラック色を返す。
@@ -142,7 +156,7 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
             : false,
         },
       }) as ChartOptions<'doughnut'>,
-    [thickness, rounded, externalOptions, colors],
+    [thickness, rounded, isEmpty, externalOptions, colors],
   )
 
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を

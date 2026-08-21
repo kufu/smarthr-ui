@@ -306,7 +306,7 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
 export const useDateFormat = (): UseDateFormatReturn => {
   const intl = useReactIntl()
 
-  const functions = useMemo(() => {
+  return useMemo(() => {
     const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
 
     const formatDate = ({
@@ -405,6 +405,4 @@ export const useDateFormat = (): UseDateFormatReturn => {
       getWeekStartDay: (): number => DATE_FORMATS[locale].weekStartDay,
     }
   }, [intl])
-
-  return functions
 }

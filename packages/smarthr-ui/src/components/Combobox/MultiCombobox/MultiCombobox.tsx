@@ -425,10 +425,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  useOuterClick(
-    useMemo(() => [triggerRef, listBoxRef], [listBoxRef]),
-    functions.blur,
-  )
+  useOuterClick([triggerRef, listBoxRef], functions.blur)
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
     ref,
