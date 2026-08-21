@@ -13,9 +13,7 @@ import {
   memo,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -307,44 +305,43 @@ export const renderButtonList = (children: Actions) =>
   })
 
 const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
-  const ref = useRef<HTMLLIElement>(null)
-
-  useEffect(() => {
-    const listItem = ref.current
-    if (!listItem) {
-      return
-    }
-
-    const setupButton = () => {
-      const button = listItem.querySelector('button,a')
-
-      if (button) {
-        button.setAttribute('role', 'menuitem')
-        button.setAttribute(
-          'class',
-          actionListItemButton({ className: button.getAttribute('class') }),
-        )
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback((node: HTMLElement | null) => {
+      if (!node) {
+        return
       }
-    }
 
-    setupButton()
+      const setupButton = () => {
+        const button = node.querySelector('button,a')
 
-    const observer = new MutationObserver(setupButton)
-    observer.observe(listItem, {
-      childList: true,
-      subtree: true,
-      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-      attributes: true,
-      attributeFilter: ['disabled', 'aria-disabled'],
-    })
+        if (button) {
+          button.setAttribute('role', 'menuitem')
+          button.setAttribute(
+            'class',
+            actionListItemButton({ className: button.getAttribute('class') }),
+          )
+        }
+      }
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
+      setupButton()
+
+      const observer = new MutationObserver(setupButton)
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+        attributes: true,
+        attributeFilter: ['disabled', 'aria-disabled'],
+      })
+
+      return () => {
+        observer.disconnect()
+      }
+    }, []),
+  )
 
   return (
-    <li role="presentation" ref={ref}>
+    <li ref={callbackRef} role="presentation">
       <DropdownCloser>{children}</DropdownCloser>
     </li>
   )
