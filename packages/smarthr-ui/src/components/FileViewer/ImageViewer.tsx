@@ -4,10 +4,10 @@ import {
   type ComponentProps,
   type FC,
   type Ref,
+  type SyntheticEvent,
   memo,
   useCallback,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 
@@ -22,7 +22,7 @@ const ImageDisplay = memo<
     rotation: number
     imgScale: number
     imageRef: Ref<HTMLImageElement>
-    handleLoad?: () => void
+    handleLoad?: (e: SyntheticEvent<HTMLImageElement>) => void
   } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onError'>
 >(
   ({
@@ -77,13 +77,10 @@ export const ImageViewer: FC<ViewerProps> = memo(
       width,
     })
 
-    const imageRef = useRef<HTMLImageElement | null>(null)
     // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
     const functions = useMemo(() => {
-      const updateViewConfig = () => {
-        const img = imageRef.current
-
-        if (!img?.complete) {
+      const updateViewConfig = (img: HTMLImageElement) => {
+        if (!img.complete) {
           return
         }
 
@@ -108,8 +105,8 @@ export const ImageViewer: FC<ViewerProps> = memo(
 
       return {
         updateViewConfig,
-        handleLoad: () => {
-          updateViewConfig()
+        handleLoad: (e: SyntheticEvent<HTMLImageElement>) => {
+          updateViewConfig(e.currentTarget)
           latest.handleLoad?.()
         },
       }
@@ -117,8 +114,9 @@ export const ImageViewer: FC<ViewerProps> = memo(
 
     const callbackRef = useCallback(
       (node: HTMLImageElement | null) => {
-        imageRef.current = node
-        functions.updateViewConfig()
+        if (node) {
+          functions.updateViewConfig(node)
+        }
       },
       // scale, rotation, widthの変化時にもcallbackRefを再実行し、updateViewConfigを再計算させるために必要
       // eslint-disable-next-line react-hooks/exhaustive-deps
