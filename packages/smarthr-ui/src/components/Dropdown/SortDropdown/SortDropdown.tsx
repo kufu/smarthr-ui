@@ -8,7 +8,6 @@ import {
   type MouseEvent,
   type MouseEventHandler,
   type OptionHTMLAttributes,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -212,7 +211,6 @@ export const SortDropdown: FC<Props> = ({
             handleCancel={functions.handleCancel}
             cancelText={cancelText}
             applyText={applyText}
-            className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
           />
         </form>
       </DropdownContent>
@@ -223,34 +221,27 @@ export const SortDropdown: FC<Props> = ({
 const Footer = memo<{
   handleApply: MouseEventHandler<HTMLButtonElement>
   handleCancel?: MouseEventHandler<HTMLButtonElement>
-  className: string
   cancelText?: ReactNode
   applyText?: ReactNode
-}>(({ className, handleApply, handleCancel, cancelText, applyText }) => (
-  <Cluster gap={1} align="center" justify="flex-end" as="footer" className={className}>
-    <CancelButton handleClick={handleCancel}>
-      {cancelText || <Localizer id="smarthr-ui/SortDropdown/cancelText" defaultText="キャンセル" />}
-    </CancelButton>
-    <ApplyButton handleClick={handleApply}>
-      {applyText || <Localizer id="smarthr-ui/SortDropdown/applyText" defaultText="適用" />}
-    </ApplyButton>
-  </Cluster>
-))
-
-const CancelButton = memo<
-  PropsWithChildren<{ handleClick?: MouseEventHandler<HTMLButtonElement> }>
->(({ handleClick, children }) => (
-  <DropdownCloser>
-    <Button onClick={handleClick}>{children}</Button>
-  </DropdownCloser>
-))
-
-const ApplyButton = memo<PropsWithChildren<{ handleClick: MouseEventHandler<HTMLButtonElement> }>>(
-  ({ handleClick, children }) => (
+}>(({ handleApply, handleCancel, cancelText, applyText }) => (
+  <Cluster
+    gap={1}
+    align="center"
+    justify="flex-end"
+    as="footer"
+    className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
+  >
     <DropdownCloser>
-      <Button variant="primary" onClick={handleClick}>
-        {children}
+      <Button onClick={handleCancel}>
+        {cancelText || (
+          <Localizer id="smarthr-ui/SortDropdown/cancelText" defaultText="キャンセル" />
+        )}
       </Button>
     </DropdownCloser>
-  ),
-)
+    <DropdownCloser>
+      <Button variant="primary" onClick={handleApply}>
+        {applyText || <Localizer id="smarthr-ui/SortDropdown/applyText" defaultText="適用" />}
+      </Button>
+    </DropdownCloser>
+  </Cluster>
+))
