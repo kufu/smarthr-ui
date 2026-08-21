@@ -17,7 +17,7 @@ export {
 } from './components/Dropdown'
 export { FileViewer } from './components/FileViewer'
 export { FloatArea } from './components/FloatArea'
-export { Input, CurrencyInput, SearchInput } from './components/Input'
+export { Input, CurrencyInput, formatNumericString, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
 export { TextLink, HelpLink, UpwardLink } from './components/TextLink'
