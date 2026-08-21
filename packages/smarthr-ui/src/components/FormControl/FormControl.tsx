@@ -300,6 +300,10 @@ export const ActualFormControl: FC<Props> = ({
   useEffect(() => {
     if (!isFieldset || !inputWrapperRef.current || !labelTextRef.current) return
 
+    // HINT: legend変更のたびにaria-labelへ古いlegend文言が蓄積しないよう、
+    // 初回に確定したアクセシブルネームをinput要素ごとに保持しておく
+    const baseAccessibleNames = new WeakMap<HTMLInputElement, string>()
+
     const updateAriaLabels = () => {
       const labelText = labelTextRef.current?.textContent || ''
       if (!labelText) return
@@ -309,11 +313,16 @@ export const ActualFormControl: FC<Props> = ({
       if (!inputs.length) return
 
       inputs.forEach((input: HTMLInputElement) => {
-        const accessibleName =
-          input.getAttribute('aria-label') ||
-          (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
-            ? input.labels[0].textContent
-            : '')
+        let accessibleName = baseAccessibleNames.get(input)
+
+        if (accessibleName === undefined) {
+          accessibleName =
+            input.getAttribute('aria-label') ||
+            (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
+              ? input.labels[0].textContent || ''
+              : '')
+          baseAccessibleNames.set(input, accessibleName)
+        }
 
         if (
           accessibleName &&
