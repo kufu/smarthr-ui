@@ -11,8 +11,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
-import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { Button } from '../Button'
 
 export type Option = {
@@ -173,14 +173,14 @@ export const SegmentedControl: FC<Props> = ({
     [hasOnClickOption, latest],
   )
 
-  const mergedRef = useMergeRefs(functions.callbackRef)
+  const callbackRef = useCallbackRefCleanupForReact18(functions.callbackRef)
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      ref={mergedRef}
+      ref={callbackRef}
       role="toolbar"
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
