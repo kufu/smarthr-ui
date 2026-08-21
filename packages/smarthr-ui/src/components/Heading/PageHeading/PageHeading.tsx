@@ -9,13 +9,13 @@ import {
   forwardRef,
   memo,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
@@ -129,8 +129,6 @@ const AutoPageTitleHeading: FC<
 
     return {
       callbackRef: (node: HTMLHeadingElement | null) => {
-        // TODO: useMergeRefsが実装された修正
-        innerRef.current = node
         updateTitle()
 
         if (node) {
@@ -153,15 +151,10 @@ const AutoPageTitleHeading: FC<
     }
   }, [latest])
 
-  // TODO: useMergeRefsが実装された修正
-  useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
-    outerRef,
-    () => innerRef.current,
-    [],
-  )
+  const mergedRef = useMergeRefs(innerRef, functions.callbackRef, outerRef)
 
   return (
-    <ActualHeading {...rest} headingRef={functions.callbackRef}>
+    <ActualHeading {...rest} headingRef={mergedRef}>
       {children}
     </ActualHeading>
   )
