@@ -35,29 +35,21 @@ const classNameGenerator = tv({
         '[&:not(:first-child)]:before:shr-bg-border',
       ],
     ],
-    groupName: 'shr-px-1 shr-py-0.5',
-    subMenu: 'shr-list-none',
   },
 })
 
 export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
   const subMenuId = useId()
   const classNames = useMemo(() => {
-    const { group, groupName, subMenu } = classNameGenerator()
+    const { group } = classNameGenerator()
 
     return {
       group: group({ className }),
-      groupName: groupName(),
-      subMenu: subMenu(),
     }
   }, [className])
 
   const subMenu = (
-    <menu
-      role="group"
-      aria-labelledby={name ? subMenuId : undefined}
-      className={classNames.subMenu}
-    >
+    <menu role="group" aria-labelledby={name ? subMenuId : undefined} className="shr-list-none">
       {renderButtonList(children)}
     </menu>
   )
@@ -66,7 +58,7 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
     <li role="presentation" className={classNames.group}>
       {name ? (
         <>
-          <NameText id={subMenuId} className={classNames.groupName}>
+          <NameText id={subMenuId} className="shr-px-1 shr-py-0.5">
             {name}
           </NameText>
           {subMenu}
