@@ -682,6 +682,42 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
 ```
 
+#### callback ref の cleanup 関数と React 18/19 互換性
+
+React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。しかし React 18 にはこの仕組みがなく、返り値は無視されて `ref(null)` が呼ばれるだけです。smarthr-ui は `react: "^18.0.0 || ^19.0.0"` を peerDependency としてサポートしているため、callback ref から直接cleanup関数を返す実装は避けてください。
+
+```tsx
+// ❌ React 19でしか正しく動作しない（React 18ではcleanup関数が無視される）
+const callbackRef = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+
+  const observer = new MutationObserver(callback)
+  observer.observe(node, { childList: true })
+
+  return () => observer.disconnect()
+}, [])
+```
+
+**対応方法:**
+- 単一の ref を扱う場合は `useCallbackRefCleanupForReact18`（`src/hooks/useCallbackRefCleanupForReact18.ts`）でラップする
+- 複数の ref を1つに統合する場合は `useMergeRefs` を使う（内部で同じ仕組みを実装済み）
+
+どちらも「callback が返した cleanup 関数を自前で保持しておき、`node = null` で呼ばれたときに手動で実行する」という同じ仕組みで React 18/19 の挙動を統一しています。そのため、これらのフックを経由すれば callback ref の cleanup 関数はどちらのバージョンでも正しく動作します。
+
+```tsx
+// ✅ useCallbackRefCleanupForReact18でラップする
+const callbackRef = useCallbackRefCleanupForReact18(
+  useCallback((node: HTMLElement | null) => {
+    if (!node) return
+
+    const observer = new MutationObserver(callback)
+    observer.observe(node, { childList: true })
+
+    return () => observer.disconnect()
+  }, []),
+)
+```
+
 #### useOnce
 
 渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnce.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
@@ -749,6 +785,105 @@ const functions = useMemo(
 
 const callbackRef = useOnce(functions.baseCallbackRef)
 ```
+
+#### useEffectではなく他の手段で可能な場合
+
+`useEffect` は「Reactの外の世界と同期する」ための最終手段です。乱用すると処理のきっかけやタイミングが読み取りにくくなるため、以下のケースでは `useEffect` より適切な手段を優先してください。
+
+**1. DOM要素のmount/unmountに連動する処理 → callback ref化**
+
+```tsx
+// ❌ useRef + useEffectでDOM操作（要素との結びつきがref.current経由で間接的）
+const listRef = useRef<HTMLUListElement>(null)
+
+useEffect(() => {
+  if (!listRef.current) return
+  const observer = new MutationObserver(callback)
+  observer.observe(listRef.current, { childList: true })
+  return () => observer.disconnect()
+}, [])
+
+// ✅ callback refに直接書く（要素がアタッチされた瞬間に実行されることが一目でわかる）
+const callbackRef = useCallbackRefCleanupForReact18(
+  useCallback((node: HTMLUListElement | null) => {
+    if (!node) return
+    const observer = new MutationObserver(callback)
+    observer.observe(node, { childList: true })
+    return () => observer.disconnect()
+  }, []),
+)
+```
+
+**理由:** `ref.current` 経由の間接参照ではなく、要素のアタッチ/デタッチそのものにロジックを紐付けられる。cleanup関数を返す場合はReact 18互換のため `useCallbackRefCleanupForReact18`（または `useMergeRefs`）でラップする。
+
+**2. マウント時に一度だけ計算する初期値 → useStateの遅延初期化**
+
+```tsx
+// ❌ 空文字でレンダー→useEffectで正しい値に更新、という無駄な二度手間
+const [label, setLabel] = useState('')
+useEffect(() => {
+  setLabel((fields.find((f) => f.selected) || fields[0])?.label || '')
+}, [])
+
+// ✅ 遅延初期化なら初回から正しい値、計算も1回だけ
+const [label] = useState(() => (fields.find((f) => f.selected) || fields[0])?.label || '')
+```
+
+**理由:** `useEffect` 版は不要な再レンダリングが発生する。遅延初期化は初回レンダリング時に1回だけ実行される。
+
+**3. イベントに起因する遅延処理 → イベントハンドラ内でuseAnimationFrameを呼ぶ**
+
+```tsx
+// ❌ activeの変化を監視して間接的にrequestAnimationFrameを予約
+useEffect(() => {
+  if (active) {
+    const id = requestAnimationFrame(() => onOpen?.())
+    return () => cancelAnimationFrame(id)
+  }
+}, [active, onOpen])
+
+// ✅ イベントハンドラ内に書けば「何がきっかけで」「何を遅延実行するか」が同じ場所にある
+const openFrame = useAnimationFrame()
+const handleClickTrigger = () => {
+  setActive(true)
+  openFrame.request(() => onOpen?.())
+}
+```
+
+**理由:** `useEffect` 版はstateの変化という間接的なトリガーしか手がかりがなく、どの操作に起因する処理か追いにくい。
+
+**4. 外部ストア（ブラウザAPIなど）の購読 → useSyncExternalStore**
+
+```tsx
+// ❌ useState + useEffectでmatchMediaを購読
+const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+useEffect(() => {
+  const mql = window.matchMedia(query)
+  const handler = () => setMatches(mql.matches)
+  mql.addEventListener('change', handler)
+  return () => mql.removeEventListener('change', handler)
+}, [query])
+
+// ✅ useSyncExternalStoreならReactのレンダリングサイクルと正しく同期する
+const matches = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+```
+
+**理由:** `useState` + `useEffect` の組み合わせは、外部イベントとReactの再レンダリングタイミングがズレる場合がある（tearingの原因になりうる）。ブラウザAPIやDOM状態など「Reactの外にあるミュータブルな値」を購読する場合は `useSyncExternalStore` が本来の解決手段（実例: `useMediaQueries.ts`, `Tooltip.tsx`）。
+
+**5. props/stateから直接計算できる値 → レンダー中に計算する（or useMemo）**
+
+```tsx
+// ❌ 派生値をuseEffectでstateに同期
+const [fullName, setFullName] = useState('')
+useEffect(() => {
+  setFullName(`${firstName} ${lastName}`)
+}, [firstName, lastName])
+
+// ✅ レンダー中にそのまま計算する（stateにする必要がない）
+const fullName = `${firstName} ${lastName}`
+```
+
+**理由:** 単純な派生値のためだけに `state` と `useEffect` を使うと、レンダーが1回余分に発生し、値が一時的に古いまま表示される瞬間が生まれる。計算コストが高い場合のみ `useMemo` を使う。
 
 ## スキル
 
