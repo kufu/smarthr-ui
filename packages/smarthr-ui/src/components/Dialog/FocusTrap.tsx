@@ -7,6 +7,7 @@ import {
   useRef,
 } from 'react'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
@@ -68,9 +69,6 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
     return {
       callbackRef: (node: HTMLDivElement | null) => {
-        // TODO: useMergeRefsが実装されたらcallbackRefから代入処理を取り除く
-        innerRef.current = node
-
         if (!snapshotRef.current.trigger) {
           // FocusTrap がマウントされた時点のフォーカス要素を保存
           snapshotRef.current.trigger = document.activeElement
@@ -106,10 +104,12 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     }
   }, [firstFocusTarget])
 
+  const mergedRef = useMergeRefs(innerRef, functions.callbackRef)
+
   useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
 
   return (
-    <div ref={functions.callbackRef}>
+    <div ref={mergedRef}>
       {!firstFocusTarget && (
         /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
         <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
