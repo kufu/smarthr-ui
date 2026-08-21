@@ -15,6 +15,7 @@ import {
   useState,
 } from 'react'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 
@@ -65,13 +66,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
-  const cancelFrameIdsRef = useRef<{
-    open: number | null
-    close: number | null
-  }>({
-    open: null,
-    close: null,
-  })
+  const openFrame = useAnimationFrame()
+  const closeFrame = useAnimationFrame()
 
   const latest = useLatest({
     active,
@@ -80,6 +76,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     onOpen,
     onClose,
     createPortal,
+    openFrame,
+    closeFrame,
   })
 
   const functions = useMemo(() => {
@@ -89,7 +87,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     DropdownContentRoot.displayName = 'DropdownContentRoot'
     const actualClose = () => {
       if (latest.onClose) {
-        cancelFrameIdsRef.current.close = requestAnimationFrame(() => latest.onClose?.())
+        latest.closeFrame.request(() => latest.onClose?.())
       }
     }
 
@@ -104,7 +102,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           setTriggerRect(rect)
 
           if (latest.onOpen) {
-            cancelFrameIdsRef.current.open = requestAnimationFrame(() => latest.onOpen?.())
+            latest.openFrame.request(() => latest.onOpen?.())
           }
         }
       },
@@ -136,16 +134,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   useEffect(
     () => () => {
-      const { open, close } = cancelFrameIdsRef.current
-
-      if (open !== null) {
-        cancelAnimationFrame(open)
-      }
-      if (close !== null) {
-        cancelAnimationFrame(close)
-      }
+      latest.openFrame.cancel()
+      latest.closeFrame.cancel()
     },
-    [],
+    [latest],
   )
 
   useEffect(() => {
