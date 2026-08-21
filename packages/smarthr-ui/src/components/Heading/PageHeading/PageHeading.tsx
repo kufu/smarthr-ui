@@ -8,9 +8,9 @@ import {
   type Ref,
   forwardRef,
   memo,
+  useCallback,
   useId,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -95,63 +95,60 @@ const AutoPageTitleHeading: FC<
   }
 > = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
-  // HINT: h1のテキストをMutationObserverで監視するために内部でrefを保持しつつ、利用者のrefにも要素を渡す
-  const innerRef = useRef<HTMLHeadingElement | null>(null)
-
   const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId })
 
-  const functions = useMemo(() => {
-    const updateTitle = () => {
-      const node = innerRef.current
-
+  const callbackRef = useCallback(
+    (node: HTMLHeadingElement | null) => {
       if (!node) {
         return
       }
 
-      const title = latest.pageTitle || node.textContent || ''
-      document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
+      const updateTitle = () => {
+        const title = latest.pageTitle || node.textContent || ''
+        document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
 
-      // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
-      // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-      const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
-        document.createElement('div')) as HTMLDivElement
+        // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
+        // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
+        const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
+          document.createElement('div')) as HTMLDivElement
 
-      pseudoTitle.setAttribute('id', latest.pseudoTitleId)
-      pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
-      pseudoTitle.setAttribute('aria-live', 'polite')
-      document.body.prepend(pseudoTitle)
+        pseudoTitle.setAttribute('id', latest.pseudoTitleId)
+        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
+        pseudoTitle.setAttribute('aria-live', 'polite')
+        document.body.prepend(pseudoTitle)
 
-      requestAnimationFrame(() => {
-        pseudoTitle.textContent = document.title
+        requestAnimationFrame(() => {
+          pseudoTitle.textContent = document.title
+        })
+      }
+
+      updateTitle()
+
+      const observer = new MutationObserver(updateTitle)
+      observer.observe(node, {
+        characterData: true,
+        childList: true,
+        subtree: true,
       })
-    }
-    let observer: MutationObserver
 
-    return {
-      callbackRef: (node: HTMLHeadingElement | null) => {
-        updateTitle()
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      return () => {
+        observer.disconnect()
 
-        if (node) {
-          observer ??= new MutationObserver(updateTitle)
-          observer.observe(node, {
-            characterData: true,
-            childList: true,
-            subtree: true,
-          })
-        } else {
-          observer?.disconnect()
+        const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 
-          const pseudoTitle = document.getElementById(latest.pseudoTitleId)
-
-          if (pseudoTitle) {
-            pseudoTitle.remove()
-          }
+        if (pseudoTitle) {
+          pseudoTitle.remove()
         }
-      },
-    }
-  }, [latest])
+      }
+    },
+    [latest],
+  )
 
-  const mergedRef = useMergeRefs(innerRef, functions.callbackRef, outerRef)
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(callbackRef, outerRef)
 
   return (
     <ActualHeading {...rest} headingRef={mergedRef}>
@@ -180,8 +177,8 @@ const ActualHeading: FC<ActualHeadingProps> = ({
     () => classNameGenerator({ visuallyHidden, className }),
     [className, visuallyHidden],
   )
-
   const Component = visuallyHidden ? VisuallyHiddenText : Text
+
   return (
     <Component
       {...rest}
