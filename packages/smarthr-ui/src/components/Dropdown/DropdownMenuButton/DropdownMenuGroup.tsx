@@ -48,9 +48,7 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
     <li role="presentation" className={actualClassName}>
       {name ? (
         <>
-          <NameText id={subMenuId} className="shr-px-1 shr-py-0.5">
-            {name}
-          </NameText>
+          <NameText id={subMenuId}>{name}</NameText>
           {subMenu}
         </>
       ) : (
@@ -60,18 +58,16 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
   )
 }
 
-const NameText = memo<PropsWithChildren<{ id: string; className: string }>>(
-  ({ id, children, className }) => (
-    <Text
-      size="S"
-      id={id}
-      weight="bold"
-      color="TEXT_GREY"
-      leading="NONE"
-      className={className}
-      as="div"
-    >
-      {children}
-    </Text>
-  ),
-)
+const NameText = memo<PropsWithChildren<{ id: string }>>(({ id, children }) => (
+  <Text
+    size="S"
+    id={id}
+    weight="bold"
+    color="TEXT_GREY"
+    leading="NONE"
+    className="shr-px-1 shr-py-0.5"
+    as="div"
+  >
+    {children}
+  </Text>
+))
