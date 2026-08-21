@@ -7,7 +7,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -15,6 +14,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
@@ -120,11 +120,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
       [latest],
     )
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => fileRef.current,
-      [],
-    )
+    const mergedRef = useMergeRefs(fileRef, ref)
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
@@ -148,7 +144,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
-            ref={fileRef}
+            ref={mergedRef}
             type="file"
             multiple={multiple}
             disabled={disabled}
