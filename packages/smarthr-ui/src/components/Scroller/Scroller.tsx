@@ -5,13 +5,13 @@ import {
   type ComponentType,
   type PropsWithChildren,
   forwardRef,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useSectionWrapper } from '../SectioningContent'
 
 type BaseProps = PropsWithChildren<
@@ -81,12 +81,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
     ref,
   ) => {
     const innerRef = useRef<HTMLDivElement | null>(null)
-
-    // as が切り替わると DOM 要素が変わるため、Component を依存配列に含める
-    // TODO: useMergeRefsが実装されたら修正する
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useImperativeHandle(ref, () => innerRef.current!, [Component])
-
     const [tabIndex, setTabIndex] = useState<0 | undefined>(undefined)
 
     const actualClassName = useMemo(
@@ -130,9 +124,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
 
       return {
         callbackRef: (node: HTMLDivElement | null) => {
-          // TODO: useMergeRefsが実装されたら修正する
-          innerRef.current = node
-
           autoTabIndex()
 
           if (node) {
@@ -145,14 +136,13 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       }
     }, [direction])
 
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
+
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component
-        {...rest}
-        ref={functions.callbackRef}
-        tabIndex={tabIndex}
-        className={actualClassName}
-      >
+      <Component {...rest} ref={mergedRef} tabIndex={tabIndex} className={actualClassName}>
         {children}
       </Component>
     )
