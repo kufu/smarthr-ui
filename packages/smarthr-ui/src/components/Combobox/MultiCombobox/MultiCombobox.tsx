@@ -256,10 +256,10 @@ const ActualMultiCombobox = <T,>(
   // TODO: callbackRefにまとめたい
   useEffect(
     () => () => {
-      deleteFrame.cancel()
-      selectFrame.cancel()
+      latestForListBox.deleteFrame.cancel()
+      latestForListBox.selectFrame.cancel()
     },
-    [deleteFrame, selectFrame],
+    [latestForListBox],
   )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
