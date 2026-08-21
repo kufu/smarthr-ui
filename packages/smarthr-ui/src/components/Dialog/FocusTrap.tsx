@@ -22,46 +22,11 @@ const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
 const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
+  // TODO: innerRefを削除して、functionsのuseMemoの中にletで変数としてnodeの参照を持つことを検討
   const innerRef = useRef<HTMLDivElement | null>(null)
-  const snapshotRef = useRef<{
-    trigger: Element | null
-    focusRAFId: number | null
-  }>({
-    trigger: null,
-    focusRAFId: null,
-  })
 
   const functions = useMemo(() => {
     const findDummyFocus = () => innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
-      // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
-      // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
-      if (e.key !== 'Tab' || e.isComposing || innerRef.current === null) {
-        return
-      }
-
-      const tabbables = tabbable(innerRef.current).filter((elm) => elm.tabIndex >= 0)
-
-      if (tabbables.length === 0) {
-        return
-      }
-
-      const firstTabbable = tabbables[0]
-      const lastTabbable = tabbables[tabbables.length - 1]
-      const currentFocused = tabbables.find((elm) => elm === e.target)
-
-      if (e.shiftKey) {
-        if (currentFocused === firstTabbable || document.activeElement === findDummyFocus()) {
-          e.preventDefault()
-          lastTabbable.focus()
-        }
-      } else if (currentFocused === lastTabbable) {
-        e.preventDefault()
-        firstTabbable.focus()
-      }
-    }
 
     const focus = () => {
       ;(firstFocusTarget?.current || findDummyFocus())?.focus()
@@ -69,34 +34,54 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
     return {
       callbackRef: (node: HTMLDivElement | null) => {
-        if (!snapshotRef.current.trigger) {
-          // FocusTrap がマウントされた時点のフォーカス要素を保存
-          snapshotRef.current.trigger = document.activeElement
+        if (!node) {
+          return
         }
 
-        if (node) {
-          // カスケード更新（usePortalのportalRoot生成等）が完了し、DOMに接続された後にフォーカスするため
-          // 次の描画フレームまで遅延させる
-          snapshotRef.current.focusRAFId = requestAnimationFrame(focus)
+        // FocusTrap がマウントされた時点のフォーカス要素を保存
+        const triggerElement = document.activeElement
 
-          window.addEventListener('keydown', handleKeyDown)
-        } else {
-          const { trigger, focusRAFId } = snapshotRef.current
+        const rAFId = requestAnimationFrame(focus)
 
-          // フォーカストラップ終了時にトリガにフォーカスを戻す
-          snapshotRef.current = {
-            trigger: null,
-            focusRAFId: null,
+        const handleKeyDown = (e: KeyboardEvent) => {
+          // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
+          // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
+          // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
+          if (e.key !== 'Tab' || e.isComposing) {
+            return
           }
 
-          if (focusRAFId !== null) {
-            cancelAnimationFrame(focusRAFId)
+          const tabbables = tabbable(node).filter((elm) => elm.tabIndex >= 0)
+
+          if (tabbables.length === 0) {
+            return
           }
 
+          const firstTabbable = tabbables[0]
+          const lastTabbable = tabbables[tabbables.length - 1]
+          const currentFocused = tabbables.find((elm) => elm === e.target)
+
+          if (e.shiftKey) {
+            if (currentFocused === firstTabbable || document.activeElement === findDummyFocus()) {
+              e.preventDefault()
+              lastTabbable.focus()
+            }
+          } else if (currentFocused === lastTabbable) {
+            e.preventDefault()
+            firstTabbable.focus()
+          }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+
+        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+        return () => {
+          cancelAnimationFrame(rAFId)
           window.removeEventListener('keydown', handleKeyDown)
 
-          if (trigger instanceof HTMLElement) {
-            trigger.focus()
+          if (triggerElement instanceof HTMLElement) {
+            triggerElement.focus()
           }
         }
       },
@@ -104,6 +89,8 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     }
   }, [firstFocusTarget])
 
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(innerRef, functions.callbackRef)
 
   useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
