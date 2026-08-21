@@ -11,6 +11,7 @@ import {
   type ReactNode,
   isValidElement,
   memo,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -18,6 +19,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
@@ -162,8 +164,6 @@ export const DropdownMenuButton: FC<Props> = ({
     triggerObjectConverter,
   )
 
-  const containerRef = useRef<HTMLUListElement>(null)
-
   const classNames = useMemo(
     () => ({
       triggerWrapper: triggerWrapper({ className }),
@@ -173,38 +173,42 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!containerRef.current || !document.activeElement) {
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback((node: HTMLElement | null) => {
+      if (!node) {
         return
       }
 
-      let direction: -1 | 0 | 1 = 0
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (!document.activeElement) {
+          return
+        }
 
-      // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
-      if (e.key === 'Tab') {
-        // HINT: tbのデフォルトの挙動の場合のみ、preventDefaultが必要
-        e.preventDefault()
-        direction = e.shiftKey ? -1 : 1
-      } else if (KEY_UP_REGEX.test(e.key)) {
-        direction = -1
-      } else if (KEY_DOWN_REGEX.test(e.key)) {
-        direction = 1
+        let direction: -1 | 0 | 1 = 0
+
+        // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+        if (e.key === 'Tab') {
+          // HINT: tbのデフォルトの挙動の場合のみ、preventDefaultが必要
+          e.preventDefault()
+          direction = e.shiftKey ? -1 : 1
+        } else if (KEY_UP_REGEX.test(e.key)) {
+          direction = -1
+        } else if (KEY_DOWN_REGEX.test(e.key)) {
+          direction = 1
+        }
+
+        if (direction !== 0) {
+          moveFocus(node, direction)
+        }
       }
 
-      if (direction !== 0) {
-        moveFocus(containerRef.current, direction)
+      document.addEventListener('keydown', handleKeyDown)
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown)
       }
-    }
-
-    const eventKey = 'keydown'
-
-    document.addEventListener(eventKey, handleKeyDown)
-
-    return () => {
-      document.removeEventListener(eventKey, handleKeyDown)
-    }
-  }, [])
+    }, []),
+  )
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
@@ -217,7 +221,7 @@ export const DropdownMenuButton: FC<Props> = ({
         {triggerChildren}
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
-        <menu ref={containerRef} role="menu" className={classNames.actionList}>
+        <menu ref={callbackRef} role="menu" className={classNames.actionList}>
           {renderButtonList(children)}
         </menu>
       </DropdownContent>
