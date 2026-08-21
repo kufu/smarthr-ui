@@ -131,8 +131,6 @@ export const SortDropdown: FC<Props> = ({
   const [innerSelectedField, setInnerSelectedField] = useState<string>(defaultFieldLabel)
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
-  const hasOnCancel = !!onCancel
-
   const latest = useLatest({
     innerCheckedOrder,
     innerFields,
@@ -140,10 +138,11 @@ export const SortDropdown: FC<Props> = ({
     onApply,
     onCancel,
   })
+  const hasOnCancel = !!onCancel
 
-  const handler = useMemo(
+  const functions = useMemo(
     () => ({
-      change: (e: ChangeEvent<HTMLSelectElement>) => {
+      handleChange: (e: ChangeEvent<HTMLSelectElement>) => {
         const select = e.currentTarget
         const newLabel = select.options[select.selectedIndex].label
 
@@ -168,7 +167,7 @@ export const SortDropdown: FC<Props> = ({
         )
         setInnerSelectedField(newLabel)
       },
-      apply: () => {
+      handleApply: () => {
         setSelectedLabel(latest.innerSelectedField)
         setCheckedOrder(latest.innerCheckedOrder)
         latest.onApply({
@@ -177,12 +176,12 @@ export const SortDropdown: FC<Props> = ({
           newfields: latest.innerFields,
         })
       },
-      cancel: hasOnCancel
+      handleCancel: hasOnCancel
         ? (e: MouseEvent<HTMLButtonElement>) => {
             latest.onCancel!(e)
           }
         : undefined,
-      changeSortOrderRadio: (e: ChangeEvent<HTMLInputElement>) => {
+      handleChangeSortOrderRadio: (e: ChangeEvent<HTMLInputElement>) => {
         setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
       },
     }),
@@ -205,7 +204,7 @@ export const SortDropdown: FC<Props> = ({
               <Select
                 name="sortFields"
                 options={innerFields}
-                onChange={handler.change}
+                onChange={functions.handleChange}
                 className="shr-min-w-[16em]"
               />
             </FormControl>
@@ -215,7 +214,7 @@ export const SortDropdown: FC<Props> = ({
                   name="sortOrder"
                   value="asc"
                   checked={innerCheckedOrder === 'asc'}
-                  onChange={handler.changeSortOrderRadio}
+                  onChange={functions.handleChangeSortOrderRadio}
                 >
                   {texts.ascLabel}
                 </RadioButton>
@@ -223,7 +222,7 @@ export const SortDropdown: FC<Props> = ({
                   name="sortOrder"
                   value="desc"
                   checked={innerCheckedOrder === 'desc'}
-                  onChange={handler.changeSortOrderRadio}
+                  onChange={functions.handleChangeSortOrderRadio}
                 >
                   {texts.descLabel}
                 </RadioButton>
@@ -231,8 +230,8 @@ export const SortDropdown: FC<Props> = ({
             </Fieldset>
           </Stack>
           <Footer
-            handleApply={handler.apply}
-            handleCancel={handler.cancel}
+            handleApply={functions.handleApply}
+            handleCancel={functions.handleCancel}
             cancelText={texts.cancelText}
             applyText={texts.applyText}
             className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
