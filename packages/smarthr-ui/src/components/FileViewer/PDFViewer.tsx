@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, memo, useEffect, useMemo, useRef, useState } from 'react'
+import { type ComponentProps, type FC, memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
 import { useLatest } from '../../hooks/useLatest'
@@ -77,7 +77,6 @@ export const PDFViewer: FC<Props> = memo(
     const matches = search?.matches
     const currentMatchIndex = search?.currentMatchIndex
     const [pdfNumPages, setPdfNumPages] = useState(1)
-    const rootRef = useRef<HTMLDivElement>(null)
 
     const latest = useLatest({
       rotation,
@@ -108,38 +107,42 @@ export const PDFViewer: FC<Props> = memo(
       }
     }, [latest])
 
-    useEffect(() => {
-      const root = rootRef.current
-      if (!root) return
-      root
-        .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
-        .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
+    const cancelApplyIdRef = useRef<number | null>(null)
+    const callbackRef = useCallback(
+      (node: HTMLElement | null) => {
+        if (node) {
+          node
+            .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
+            .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
 
-      if (currentMatchIndex === undefined || currentMatchIndex < 0) return
+          if (currentMatchIndex === undefined || currentMatchIndex < 0) return
 
-      const start = performance.now()
-      let id = 0
-      const apply = () => {
-        const els = root.querySelectorAll(matchSelector(currentMatchIndex))
-        if (els.length > 0) {
-          els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
-          els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
-          return
+          const start = performance.now()
+          const apply = () => {
+            const els = node.querySelectorAll(matchSelector(currentMatchIndex))
+
+            if (els.length > 0) {
+              els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
+              els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
+            } else if (performance.now() - start < 1000) {
+              cancelApplyIdRef.current = requestAnimationFrame(apply)
+            }
+          }
+          cancelApplyIdRef.current = requestAnimationFrame(apply)
+        } else if (cancelApplyIdRef.current !== null) {
+          cancelAnimationFrame(cancelApplyIdRef.current)
         }
-        if (performance.now() - start < 1000) {
-          id = requestAnimationFrame(apply)
-        }
-      }
-      id = requestAnimationFrame(apply)
-      return () => cancelAnimationFrame(id)
-    }, [currentMatchIndex, matches])
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
+      },
+      [currentMatchIndex, matches],
+    )
 
     return (
       <>
         {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
         <ReactPDFStyle />
         <HighlightOverrideStyle />
-        <Scroller ref={rootRef} direction="both" className="shr-h-full">
+        <Scroller ref={callbackRef} direction="both" className="shr-h-full">
           <Document
             options={options}
             file={file.url}
