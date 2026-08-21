@@ -14,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
@@ -111,7 +112,9 @@ export const useListbox = <T,>({
 
   const theme = useTheme()
 
-  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme })
+  const addFrame = useAnimationFrame()
+
+  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
   const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
@@ -231,8 +234,8 @@ export const useListbox = <T,>({
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
+            // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            latest.addFrame.request(() => {
               latest.onAdd!(option.item.value)
             })
           }
@@ -246,6 +249,9 @@ export const useListbox = <T,>({
       },
     }
   }, [hasOnAdd, latest])
+
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => addFrame.cancel, [addFrame.cancel])
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
