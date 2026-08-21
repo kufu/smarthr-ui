@@ -1,29 +1,10 @@
 import { type ChangeEvent, type ComponentProps, type MouseEvent, useMemo, useState } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import type { SortDropdown } from './SortDropdown'
-
-const classNameGenerator = tv({
-  slots: {
-    body: 'shr-p-1.5',
-    select: 'shr-min-w-[16em]',
-    footer: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
-  },
-})
-
-const CLASS_NAMES = (() => {
-  const { body, select, footer } = classNameGenerator()
-
-  return {
-    body: body(),
-    select: select(),
-    footer: footer(),
-  }
-})()
 
 type Props = ComponentProps<typeof SortDropdown>
 
@@ -162,6 +143,5 @@ export const useSortDropdown = ({
     handler,
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },
     SortIcon: checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon,
-    classNames: CLASS_NAMES,
   }
 }

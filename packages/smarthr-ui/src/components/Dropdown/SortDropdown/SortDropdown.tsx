@@ -74,7 +74,6 @@ export const SortDropdown: FC<Props> = ({
     SortIcon,
     innerValues: { innerFields, innerCheckedOrder },
     handler,
-    classNames,
   } = useSortDropdown({
     sortFields,
     defaultOrder,
@@ -97,13 +96,13 @@ export const SortDropdown: FC<Props> = ({
       </DropdownTrigger>
       <DropdownContent controllable>
         <form onSubmit={ON_SUBMIT}>
-          <Stack className={classNames.body}>
+          <Stack className="shr-p-1.5">
             <FormControl label={texts.sortFieldLabel}>
               <Select
                 name="sortFields"
                 options={innerFields}
                 onChange={handler.change}
-                className={classNames.select}
+                className="shr-min-w-[16em]"
               />
             </FormControl>
             <Fieldset legend={texts.sortOrderLegend} innerMargin={0.5}>
@@ -132,7 +131,7 @@ export const SortDropdown: FC<Props> = ({
             handleCancel={handler.cancel}
             cancelText={texts.cancelText}
             applyText={texts.applyText}
-            className={classNames.footer}
+            className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
           />
         </form>
       </DropdownContent>
