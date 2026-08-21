@@ -3,9 +3,9 @@
 import {
   type ComponentProps,
   type FC,
-  type RefObject,
+  type Ref,
   memo,
-  useEffect,
+  useCallback,
   useMemo,
   useRef,
   useState,
@@ -21,7 +21,7 @@ const ImageDisplay = memo<
     wrapperHeight: number
     rotation: number
     imgScale: number
-    imageRef: RefObject<HTMLImageElement>
+    imageRef: Ref<HTMLImageElement>
     handleLoad?: () => void
   } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onError'>
 >(
@@ -63,13 +63,12 @@ const ImageDisplay = memo<
 
 export const ImageViewer: FC<ViewerProps> = memo(
   ({ scale, rotation, file, width, handleLoad, handleLoadError }) => {
-    const imageRef = useRef<HTMLImageElement>(null)
-    const [viewConfig, setViewConfig] = useState({
+    const [viewConfig, setViewConfig] = useState(() => ({
       wrapperWidth: 0,
       wrapperHeight: 0,
       imgScale: 1,
       rotation: 0,
-    })
+    }))
 
     const latest = useLatest({
       handleLoad,
@@ -78,6 +77,7 @@ export const ImageViewer: FC<ViewerProps> = memo(
       width,
     })
 
+    const imageRef = useRef<HTMLImageElement | null>(null)
     // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
     const functions = useMemo(() => {
       const updateViewConfig = () => {
@@ -115,18 +115,24 @@ export const ImageViewer: FC<ViewerProps> = memo(
       }
     }, [latest])
 
-    useEffect(() => {
-      functions.updateViewConfig()
-    }, [scale, rotation, width, functions])
+    const callbackRef = useCallback(
+      (node: HTMLImageElement | null) => {
+        imageRef.current = node
+        functions.updateViewConfig()
+      },
+      // scale, rotation, widthの変化時にもcallbackRefを再実行し、updateViewConfigを再計算させるために必要
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [scale, rotation, width, functions],
+    )
 
     return (
       <ImageDisplay
         {...viewConfig}
+        imageRef={callbackRef}
         src={file.url}
         alt={file.alt}
         handleLoad={functions.handleLoad}
         onError={handleLoadError}
-        imageRef={imageRef}
       />
     )
   },
