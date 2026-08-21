@@ -132,8 +132,8 @@ export const PDFViewer: FC<Props> = memo(
         } else if (cancelApplyIdRef.current !== null) {
           cancelAnimationFrame(cancelApplyIdRef.current)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
       [currentMatchIndex, matches],
     )
 
