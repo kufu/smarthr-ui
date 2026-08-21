@@ -189,6 +189,8 @@ export const SortDropdown: FC<Props> = (props) => {
 
 **例外2:** 同ディレクトリ内の複数コンポーネントから利用されるカスタムフックも対象外です。例えば `Disclosure/useDisclosure.ts` は `DisclosureContent.tsx` と `DisclosureTrigger.tsx` の両方から利用されているため、切り出しが妥当です。
 
+**テストについて:** ロジックにテストが必要な場合、フック単体をテストするのではなく、まず利用元のコンポーネント経由でテストできないか検討します。コンポーネント経由のテストは実際の利用形態（DOM操作やユーザー操作）に近く、フック単体のテストより実体に即した検証ができます。
+
 ### コミット
 - Conventional Commits 形式。commitlint (`@commitlint/config-conventional`) で検証される
   - type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `ci`, `perf`, `style`, `build`, `revert`
