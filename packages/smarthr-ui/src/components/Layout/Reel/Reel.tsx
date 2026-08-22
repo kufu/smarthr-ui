@@ -93,8 +93,8 @@ export const Reel = forwardRef<HTMLDivElement, Props>(
     const body = (
       <Scroller
         {...rest}
-        as={Component}
         ref={ref}
+        as={Component}
         direction="horizontal"
         className={actualClassName}
       >

@@ -498,28 +498,28 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={triggerRef}
       role="group"
-      onClick={functions.handleDelegateClick}
-      onKeyDown={functions.handleDelegateKeyDown}
-      onKeyPress={functions.handleDelegateKeyPress}
       className={classNames.wrapper}
       style={{
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      onClick={functions.handleDelegateClick}
+      onKeyDown={functions.handleDelegateKeyDown}
+      onKeyPress={functions.handleDelegateKeyPress}
     >
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
-          aria-label={localized.selectedListAriaLabel}
           className={classNames.selectedList}
+          aria-label={localized.selectedListAriaLabel}
         >
           {selectedItems.map((selectedItem) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
-                item={selectedItem}
                 disabled={disabled}
-                handleDelete={functions.handleDelete}
+                item={selectedItem}
                 enableEllipsis={selectedItemEllipsis}
+                handleDelete={functions.handleDelete}
               />
             </li>
           ))}
@@ -528,21 +528,16 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
-            data-smarthr-ui-input="true"
+            ref={inputRef}
+            role="combobox"
             type="text"
             name={name}
-            value={inputValue}
-            disabled={disabled}
             required={required && selectedItems.length === 0}
-            ref={inputRef}
-            onChange={functions.handleChangeInput}
-            onFocus={functions.handleFocusInput}
-            onCompositionStart={functions.handleCompositionStart}
-            onCompositionEnd={functions.handleCompositionEnd}
-            onKeyDown={functions.handleKeyDownInput}
+            disabled={disabled}
+            value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
-            role="combobox"
+            className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
@@ -550,7 +545,12 @@ const ActualMultiCombobox = <T,>(
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
-            className={classNames.input}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChangeInput}
+            onFocus={functions.handleFocusInput}
+            onCompositionStart={functions.handleCompositionStart}
+            onCompositionEnd={functions.handleCompositionEnd}
+            onKeyDown={functions.handleKeyDownInput}
           />
         </div>
 

@@ -22,8 +22,8 @@ const LocalizerInner = <ID extends keyof Messages>({
   <ReactIntlFormattedMessage
     {...rest}
     id={id}
-    defaultMessage={defaultText}
     values={{ ...values, break: values?.break ?? <br /> }}
+    defaultMessage={defaultText}
   />
 )
 

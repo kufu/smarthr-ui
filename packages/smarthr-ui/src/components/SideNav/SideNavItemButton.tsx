@@ -111,9 +111,9 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   }, [context.size, className])
 
   return (
-    <li {...rest} id={id} data-current={!!current} className={classNames.wrapper}>
-      <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
-        <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
+    <li {...rest} id={id} className={classNames.wrapper} data-current={!!current}>
+      <UnstyledButton value={id} className={classNames.button} onClick={onClick}>
+        <BodyCluster classNames={classNames} prefix={prefix} suffix={suffix}>
           {children}
         </BodyCluster>
       </UnstyledButton>
@@ -148,9 +148,9 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   const Anchor = elementAs || 'a'
 
   return (
-    <li {...rest} data-current={!!current} className={classNames.wrapper}>
-      <Anchor className={classNames.button} href={href} onClick={onClick}>
-        <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
+    <li {...rest} className={classNames.wrapper} data-current={!!current}>
+      <Anchor href={href} className={classNames.button} onClick={onClick}>
+        <BodyCluster classNames={classNames} prefix={prefix} suffix={suffix}>
           {children}
         </BodyCluster>
       </Anchor>
@@ -164,7 +164,7 @@ const BodyCluster = memo<
     classNames: { body: string; bodyText: string }
   }
 >(({ prefix, suffix, children, classNames }) => (
-  <Cluster inline align="center" className={classNames.body} as="span">
+  <Cluster as="span" inline align="center" className={classNames.body}>
     {prefix}
     <span className={classNames.bodyText}>{children}</span>
     {suffix}

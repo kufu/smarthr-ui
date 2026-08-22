@@ -134,17 +134,17 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     <div
       {...rest}
       role="application"
-      onKeyDown={functions.handleDelegateKeyDown}
       className={classNames.wrapper}
+      onKeyDown={functions.handleDelegateKeyDown}
     >
       {columns.map((colItems, index) => (
         <BrowserColumn
           key={index}
+          value={selectedPath[index]}
           items={colItems}
           index={index}
-          value={selectedPath[index]}
-          handleChangeInput={functions.handleChangeInput}
           className={classNames.column}
+          handleChangeInput={functions.handleChangeInput}
         />
       ))}
     </div>

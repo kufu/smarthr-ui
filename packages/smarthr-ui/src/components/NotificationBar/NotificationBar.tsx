@@ -214,9 +214,9 @@ export const NotificationBar: FC<Props> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...rest} className={classNames.wrapper} role={actualRole}>
+      <div {...rest} role={actualRole} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea bold={bold} type={type} classNames={classNames}>
+          <MessageArea type={type} bold={bold} classNames={classNames}>
             {children}
           </MessageArea>
           {subActionArea && (
@@ -226,7 +226,7 @@ export const NotificationBar: FC<Props> = ({
           )}
         </Cluster>
         {onClose && (
-          <Button variant="text" size="S" onClick={onClose} className={classNames.closeButton}>
+          <Button variant="text" size="S" className={classNames.closeButton} onClick={onClose}>
             <FaXmarkIcon
               alt={
                 <Localizer
@@ -251,12 +251,12 @@ const MessageArea = memo<
 
   return (
     <Text
+      as="div"
+      className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
-      className={classNames.messageArea}
-      as="div"
     >
       {children}
     </Text>

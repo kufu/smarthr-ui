@@ -350,41 +350,41 @@ export const ModelessDialog: FC<Props> = ({
   }, [])
 
   return createPortal(
-    <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
+    <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
       <Draggable
         {...Draggable.defaultProps}
+        nodeRef={wrapperRef}
         handle=".smarthr-ui-ModelessDialog-handle"
+        bounds={draggableBounds ?? false}
+        position={position}
         onStart={functions.handleDragStart}
         onDrag={functions.handleDrag}
-        position={position}
-        bounds={draggableBounds ?? false}
-        nodeRef={wrapperRef}
       >
         <Panel
           {...rest}
           ref={wrapperRef}
           role="dialog"
-          aria-labelledby={labelId}
           radius="m"
           layer={3}
           overflow="auto"
           className={classNames.wrapper}
           style={positionStyle}
+          aria-labelledby={labelId}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div tabIndex={-1} ref={focusTargetRef} />
+          <div ref={focusTargetRef} tabIndex={-1} />
           <div className={classNames.header}>
             <Handler
-              handleArrowKeyDown={functions.handleArrowKeyDown}
               className={classNames.dialogHandler}
+              handleArrowKeyDown={functions.handleArrowKeyDown}
             />
             <div id={labelId} className={classNames.heading}>
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
             <CloseButton
-              handleClick={functions.handleClickClose}
               className={classNames.closeButtonLayout}
+              handleClick={functions.handleClickClose}
             />
           </div>
           <DialogBody
@@ -426,7 +426,7 @@ const Handler = memo<{
       >
         <FaGripIcon />
       </button>
-      <div className="shr-hidden" id="handler-description">
+      <div id="handler-description" className="shr-hidden">
         {localize({
           id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
           defaultText: '矢印キーを押して上下左右に移動できます',
@@ -453,8 +453,8 @@ const CloseButton = memo<{
     <Button
       type="button"
       size="S"
-      onClick={handleClick}
       className="smarthr-ui-ModelessDialog-closeButton"
+      onClick={handleClick}
     >
       <FaXmarkIcon
         alt={<Localizer id="smarthr-ui/ModelessDialog/closeButtonIconAlt" defaultText="閉じる" />}

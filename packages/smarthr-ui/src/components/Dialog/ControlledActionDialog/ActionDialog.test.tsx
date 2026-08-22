@@ -17,12 +17,12 @@ describe('ControlledActionDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ControlledActionDialog</Button>
         <ControlledActionDialog
           isOpen={isOpen}
-          heading="ControlledActionDialog"
-          actionButton="保存"
           onClickClose={() => setIsOpen(false)}
           onClickAction={(_, { close }) => {
             close()
           }}
+          heading="ControlledActionDialog"
+          actionButton="保存"
         >
           <p>ControlledActionDialog の本文です。</p>
         </ControlledActionDialog>

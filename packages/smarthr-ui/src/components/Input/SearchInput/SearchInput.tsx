@@ -46,8 +46,8 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<SearchInputIcon />}
           className={classNames.input}
+          prefix={<SearchInputIcon />}
         />
       </label>
     )

@@ -10,16 +10,16 @@ export default {
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-within'].map((id) => (
-        <Stack id={id} key={id}>
+        <Stack key={id} id={id}>
           {[undefined, 'M', 'S'].map((size) =>
             [false, true].map((disabled) =>
               [false, true].map((error) => (
                 <InputFile
                   {...args}
-                  size={size as any}
+                  key={`${size}-${disabled}-${error}`}
                   disabled={disabled}
                   error={error}
-                  key={`${size}-${disabled}-${error}`}
+                  size={size as any}
                 />
               )),
             ),
@@ -67,8 +67,8 @@ const previewablePlay = async ({ canvasElement }: { canvasElement: HTMLElement }
 export const VRTPreviewable: StoryObj<typeof InputFile> = {
   render: () => (
     <Stack>
-      <InputFile label="previewable: false" name="previewablefalse" multiple previewable={false} />
-      <InputFile label="previewable: true" name="previewabletrue" multiple previewable />
+      <InputFile name="previewablefalse" multiple previewable={false} label="previewable: false" />
+      <InputFile name="previewabletrue" multiple previewable label="previewable: true" />
     </Stack>
   ),
   play: previewablePlay,
@@ -98,9 +98,9 @@ const previewableSearchablePlay = async ({ canvasElement }: { canvasElement: HTM
 export const VRTPreviewableSearchable: StoryObj<typeof InputFile> = {
   render: () => (
     <InputFile
-      label="previewable: { searchable: false }"
       name="previewablesearchable"
       previewable={{ searchable: false }}
+      label="previewable: { searchable: false }"
     />
   ),
   play: previewableSearchablePlay,

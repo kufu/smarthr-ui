@@ -48,7 +48,7 @@ export const ManualTest1 = () => {
       >
         <Stack>
           <FormControl title="ファイル">
-            <InputFile label="ファイルを選択" name="files" multiple hasFileList />
+            <InputFile name="files" multiple hasFileList label="ファイルを選択" />
           </FormControl>
           <Button type="submit">送信</Button>
         </Stack>
@@ -92,10 +92,10 @@ export const ManualTest2 = () => {
         <Stack>
           <FormControl title="ファイル">
             <InputFile
-              label="ファイルを選択"
               name="files"
               multiple={{ appendable: true }}
               hasFileList
+              label="ファイルを選択"
             />
           </FormControl>
           <Button type="submit">送信</Button>
@@ -128,13 +128,13 @@ export const ManualTest3 = () => {
       >
         <FormControl title="ファイル">
           <InputFile
+            name="files"
+            multiple
+            hasFileList
             onChange={(files) => {
               setValue(files)
             }}
             label="ファイルを選択"
-            name="files"
-            multiple
-            hasFileList
           />
         </FormControl>
       </form>
@@ -168,13 +168,13 @@ export const ManualTest4 = () => {
       >
         <FormControl title="ファイル">
           <InputFile
+            name="files"
+            multiple={{ appendable: true }}
+            hasFileList
             onChange={(files) => {
               setValue(files)
             }}
             label="ファイルを選択"
-            name="files"
-            multiple={{ appendable: true }}
-            hasFileList
           />
         </FormControl>
       </form>

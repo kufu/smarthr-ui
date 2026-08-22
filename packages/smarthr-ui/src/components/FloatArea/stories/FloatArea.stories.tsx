@@ -99,7 +99,7 @@ export const Bottom: StoryObj<typeof FloatArea> = {
   render: (args) => (
     <Stack gap={1.5}>
       {[...Array(15)].map((_, index) => (
-        <Panel padding={1.5} key={index}>
+        <Panel key={index} padding={1.5}>
           <p>bottom を確認するための Panel</p>
         </Panel>
       ))}

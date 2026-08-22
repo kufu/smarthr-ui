@@ -45,8 +45,8 @@ export const PaginationItemButton: FC<Props> = ({ page, disabled, hrefTemplate, 
     return (
       <AnchorButton
         {...commonAttr}
-        href={disabled ? undefined : hrefTemplate(page)}
         elementAs={disabled ? undefined : linkAs}
+        href={disabled ? undefined : hrefTemplate(page)}
       />
     )
   }

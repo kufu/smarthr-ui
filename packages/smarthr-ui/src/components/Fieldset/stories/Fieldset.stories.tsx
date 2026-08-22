@@ -87,6 +87,7 @@ export const LegendStyleType: StoryObj<typeof Fieldset> = {
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((legendType) => (
         <Fieldset
           {...args}
+          key={legendType}
           legend={
             legendType
               ? {
@@ -95,7 +96,6 @@ export const LegendStyleType: StoryObj<typeof Fieldset> = {
                 }
               : 'undefined'
           }
-          key={legendType}
         />
       ))}
     </Stack>

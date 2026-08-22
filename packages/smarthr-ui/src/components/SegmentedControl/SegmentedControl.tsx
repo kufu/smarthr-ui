@@ -179,9 +179,9 @@ export const SegmentedControl: FC<Props> = ({
       {...rest}
       ref={functions.callbackRef}
       role="toolbar"
+      className={classNames.container}
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
-      className={classNames.container}
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
@@ -194,11 +194,11 @@ export const SegmentedControl: FC<Props> = ({
               key={option.value}
               checked={checked}
               tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              size={size}
+              className={classNames.button}
               aria-label={ariaLabel}
               aria-checked={checked && !!value}
-              size={size}
               handleClick={functions.handleClickOption}
-              className={classNames.button}
             />
           )
         })}

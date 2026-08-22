@@ -67,10 +67,10 @@ export const FilePreviewDialog: FC<Props> = memo(
       return (
         <Dialog
           isOpen={isOpen}
-          onClickOverlay={handleClose}
-          onPressEscape={handleClose}
           size="M"
           ariaLabel={file?.name ?? ''}
+          onClickOverlay={handleClose}
+          onPressEscape={handleClose}
         >
           <div className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
             <Cluster
@@ -104,11 +104,11 @@ export const FilePreviewDialog: FC<Props> = memo(
     return (
       <ModelessDialog
         isOpen={isOpen}
+        resizable
+        size="M"
+        height="75svh"
         onClickClose={handleClose}
         heading={file?.name ?? ''}
-        height="75svh"
-        size="M"
-        resizable
         footer={
           <Cluster justify="end" className="shr-px-1.5 shr-py-1">
             <Button onClick={handleDownload}>

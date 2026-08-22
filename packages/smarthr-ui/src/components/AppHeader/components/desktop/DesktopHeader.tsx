@@ -65,11 +65,11 @@ export const DesktopHeader: FC<HeaderProps> = ({
     <>
       <Header
         {...rest}
+        currentTenantId={currentTenantId}
         enableNew={enableNew}
-        className={classNames.wrapper}
         featureName={appName}
         tenants={tenants}
-        currentTenantId={currentTenantId}
+        className={classNames.wrapper}
       >
         <Cluster align="center" className="shr--me-0.25">
           {!enableNew && (
@@ -91,8 +91,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
               {schoolUrl && (
                 <HeaderLink
                   href={schoolUrl}
-                  prefix={<FaGraduationCapIcon />}
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
+                  prefix={<FaGraduationCapIcon />}
                 >
                   <Translate>
                     <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
@@ -107,11 +107,11 @@ export const DesktopHeader: FC<HeaderProps> = ({
               href={helpPageUrl}
               rel="help"
               referrerPolicy="no-referrer-when-downgrade"
-              prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
+              enableNew={enableNew}
               className={
                 enableNew ? undefined : 'shr-flex shr-items-center shr-py-0.75 shr-leading-none'
               }
-              enableNew={enableNew}
+              prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
             >
               <Translate>
                 <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
@@ -123,8 +123,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
             <LanguageSwitcher
               localeMap={localeMap}
               locale={locale}
-              onLanguageSelect={localeProps.onSelectLocale as (locale: string) => void}
               enableNew={enableNew}
+              onLanguageSelect={localeProps.onSelectLocale as (locale: string) => void}
             />
           )}
 
@@ -133,8 +133,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
           {userInfo && (
             <UserInfo
               {...userInfo}
-              tenants={tenants}
               currentTenantId={currentTenantId}
+              tenants={tenants}
               desktopAdditionalContent={desktopAdditionalContent}
               enableNew={enableNew}
             />
@@ -159,7 +159,7 @@ const AppLauncherButton = memo<
   Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
 >(({ enableNew, children, className }) => (
   <DropdownTrigger>
-    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
+    <Button className={className} prefix={enableNew ?? <FaToolboxIcon />}>
       <Translate>{children}</Translate>
     </Button>
   </DropdownTrigger>

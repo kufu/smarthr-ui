@@ -163,9 +163,9 @@ describe('Dialog', () => {
         <Button onClick={() => setIsOpen(true)}>特定の要素をフォーカス</Button>
         <Dialog
           isOpen={isOpen}
-          onPressEscape={() => setIsOpen(false)}
           firstFocusTarget={inputRef}
           ariaLabel="特定の要素をフォーカスするダイアログ"
+          onPressEscape={() => setIsOpen(false)}
         >
           <form>
             <FormControl label="特定の要素をフォーカスするダイアログのInput">

@@ -81,9 +81,9 @@ export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, c
         <span hidden>{children}</span>
       </>
     }
+    className={trigger()}
     onOpen={onOpen}
     onClose={onClose}
-    className={trigger()}
   >
     {renderItemList(children)}
   </DropdownMenuButton>

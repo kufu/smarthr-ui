@@ -131,22 +131,22 @@ const SuffixButtons = memo<SuffixButtonsProps>(
   }) => (
     <>
       <UnstyledButton
-        onClick={handleClickClear}
         ref={clearButtonRef}
         className={classNames.clearButton}
+        onClick={handleClickClear}
       >
         <FaCircleXmarkIcon
-          color="TEXT_BLACK"
           alt={
             <Localizer id="smarthr-ui/SingleCombobox/destroyButtonIconAlt" defaultText="クリア" />
           }
+          color="TEXT_BLACK"
           className={classNames.clearButtonIcon}
         />
       </UnstyledButton>
       <span
         role="presentation"
-        onClick={handleDelegateClickIcon}
         className={classNames.caretDownLayout}
+        onClick={handleDelegateClickIcon}
       >
         <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
       </span>
@@ -442,21 +442,24 @@ const ActualSingleCombobox = <T,>(
       <Input
         {...rest}
         ref={inputRef}
-        type="text"
         role="combobox"
+        type="text"
         name={name}
-        value={inputValue}
+        required={required}
         disabled={disabled}
         readOnly={readOnly}
-        required={required}
+        value={inputValue}
         autoComplete={autoComplete ?? 'off'}
+        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
+        placeholder={placeholder}
+        error={error}
+        className={classNames.input}
         aria-haspopup="listbox"
         aria-controls={listBoxId}
         aria-expanded={isFocused}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
-        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-        placeholder={placeholder}
+        data-smarthr-ui-input="true"
         onClick={functions.handleClickInput}
         onChange={functions.handleChangeInput}
         onFocus={isFocused ? undefined : functions.handleFocus}
@@ -464,19 +467,16 @@ const ActualSingleCombobox = <T,>(
         onCompositionEnd={functions.handleCompositionEnd}
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
-        error={error}
         prefix={prefix}
         suffix={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}
+            classNames={classNames}
             handleClickClear={functions.handleClickClear}
             handleClickIcon={functions.handleClickInput}
-            classNames={classNames}
           />
         }
-        className={classNames.input}
-        data-smarthr-ui-input="true"
       />
       {!readOnly && <ListBox {...listBoxProps} />}
     </div>

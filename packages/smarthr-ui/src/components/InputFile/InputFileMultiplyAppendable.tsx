@@ -133,9 +133,9 @@ export const InputFileMultiplyAppendable = forwardRef<
                 file={file}
                 index={index}
                 previewable={!!previewable}
+                className={classNames.fileItem}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
-                className={classNames.fileItem}
               />
             ))}
           </Groupbox>
@@ -147,11 +147,11 @@ export const InputFileMultiplyAppendable = forwardRef<
             type="file"
             disabled={disabled}
             multiple
+            className={classNames.input}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
             data-smarthr-ui-input="true"
             onChange={functions.handleChange}
-            className={classNames.input}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
@@ -159,9 +159,9 @@ export const InputFileMultiplyAppendable = forwardRef<
         {previewable && (
           <FilePreviewDialog
             file={previewFile}
+            searchable={previewable?.searchable}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
-            searchable={previewable?.searchable}
           />
         )}
       </Stack>

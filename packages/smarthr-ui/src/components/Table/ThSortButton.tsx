@@ -30,7 +30,7 @@ export const ThSortButton = memo<Props>(({ align, sort, handleSort, children }) 
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
   return (
-    <UnstyledButton onClick={handleSort} className={className}>
+    <UnstyledButton className={className} onClick={handleSort}>
       {children}
       <SortIcon />
       {sort && (

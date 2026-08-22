@@ -127,15 +127,15 @@ export default {
     <Stack align="flex-start" gap={2} className="shr-h-screen">
       <Cluster>
         {_cases.map((props, i) => (
-          <SingleCombobox {...args} {...props} items={Object.values(defaultItems)} key={i} />
+          <SingleCombobox {...args} {...props} key={i} items={Object.values(defaultItems)} />
         ))}
       </Cluster>
       <SingleCombobox
         {...args}
         name="default"
+        selectedItem={null}
         items={Object.values(defaultItems)}
         dropdownHelpMessage="入力でフィルタリングできます。"
-        selectedItem={null}
       />
     </Stack>
   ),
@@ -180,10 +180,10 @@ export const VRTOnRightEdge: StoryObj<typeof SingleCombobox> = {
       <SingleCombobox
         {...args}
         name="onRightEdge"
-        items={Object.values(defaultItems)}
-        dropdownHelpMessage="入力でフィルタリングできます。"
-        dropdownWidth="30rem"
         selectedItem={null}
+        items={Object.values(defaultItems)}
+        dropdownWidth="30rem"
+        dropdownHelpMessage="入力でフィルタリングできます。"
       />
     </div>
   ),

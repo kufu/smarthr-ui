@@ -67,13 +67,13 @@ export const RadarChart: React.FC<Props> = ({ data, title, options: externalOpti
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
-      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      <VisuallyHiddenText id={chartId} aria-live="polite"></VisuallyHiddenText>
       <Radar
-        tabIndex={0}
-        role="application"
         ref={chartRef}
-        data={enhancedData}
+        role="application"
         options={chartOptions}
+        data={enhancedData}
+        tabIndex={0}
         aria-label={ariaLabel}
       />
     </div>

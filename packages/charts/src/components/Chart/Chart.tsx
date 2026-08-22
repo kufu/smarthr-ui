@@ -46,16 +46,16 @@ const InnerChart: React.FC<Props> = (props) => {
     case 'bar':
       return (
         <BarChart
-          data={props.data}
-          title={props.title}
           options={props.options}
+          data={props.data}
           disablePatterns={props.disablePatterns}
+          title={props.title}
         />
       )
     case 'line':
-      return <LineChart data={props.data} title={props.title} options={props.options} />
+      return <LineChart options={props.options} data={props.data} title={props.title} />
     case 'radar':
-      return <RadarChart data={props.data} title={props.title} options={props.options} />
+      return <RadarChart options={props.options} data={props.data} title={props.title} />
     default:
       return null
   }

@@ -50,7 +50,7 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <UnstyledButton aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
+        <UnstyledButton className={classNames.wrapper} aria-current={current ? 'page' : undefined}>
           {Icon && <Icon className={classNames.icon} />}
           {children}
           {displayCaret && <FaCaretDownIcon />}

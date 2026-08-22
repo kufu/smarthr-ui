@@ -117,8 +117,8 @@ const DescriptionRadioButtonPanel: FC<LowerProps> = ({
   return (
     <ActualRadioButtonPanel
       {...rest}
-      aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
       classNames={classNames}
+      aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
     >
       <div id={descriptionId} className={classNames.description}>
         {children}
@@ -143,7 +143,7 @@ const ActualRadioButtonPanel: FC<LowerProps> = ({ as, classNames, children, labe
   }, [])
 
   return (
-    <Panel padding={1} onClick={handleDelegateClick} as={as} className={classNames.base}>
+    <Panel as={as} padding={1} className={classNames.base} onClick={handleDelegateClick}>
       <RadioButton {...rest} ref={innerRef} className={classNames.radio}>
         {label}
       </RadioButton>

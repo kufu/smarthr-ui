@@ -136,12 +136,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
-          width="100%"
           value={searchQuery}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          title={translated.searchInputTitle}
+          width="100%"
           onChange={onChangeSearchQuery}
+          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
 
@@ -155,7 +155,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         />
         <div className={CLASS_NAMES.main}>
           <Section className={CLASS_NAMES.mainInner}>
-            <Cluster className={CLASS_NAMES.contentHead} align="center" justify="space-between">
+            <Cluster align="center" justify="space-between" className={CLASS_NAMES.contentHead}>
               <MemoizedSubSubBlockHeading>
                 {mode === 'search' ? (
                   <Localizer
@@ -233,14 +233,14 @@ const SideNavs = memo<
 
   return (
     <div className={CLASS_NAMES.side}>
-      <SideNav className={CLASS_NAMES.unselectedSideNav} size="S" aria-label={favoriteModeText}>
+      <SideNav size="S" className={CLASS_NAMES.unselectedSideNav} aria-label={favoriteModeText}>
         {unselectedItems.map((item) => (
           <SideNavItemButton
             key={item.id}
             id={item.id}
-            prefix={item.prefix}
             current={item.current}
             onClick={onClick}
+            prefix={item.prefix}
           >
             {item.title}
           </SideNavItemButton>
@@ -251,7 +251,7 @@ const SideNavs = memo<
 
       <Section>
         <MemoizedAppListHeading id={listHeadingId} className={CLASS_NAMES.sideNavHeading} />
-        <SideNav className={CLASS_NAMES.selectedSideNav} size="S" aria-labelledby={listHeadingId}>
+        <SideNav size="S" className={CLASS_NAMES.selectedSideNav} aria-labelledby={listHeadingId}>
           {selectedItems.map((item) => (
             <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
               {item.title}

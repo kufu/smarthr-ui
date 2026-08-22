@@ -179,8 +179,8 @@ const MaxLettersTextarea: FC<
         id={textareaId}
         value={value}
         defaultValue={defaultValue}
-        aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
         error={error || countError}
+        aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
         onChange={functions.handleChange}
       />
       <VisuallyHiddenText id={maxLettersNoticeId}>
@@ -196,9 +196,9 @@ const MaxLettersTextarea: FC<
       <span
         ref={counterSpanRef}
         id={maxLettersId}
+        className="smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black data-[error]:shr-text-danger"
         aria-hidden={true}
         data-error={countError || undefined}
-        className="smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black data-[error]:shr-text-danger"
       >
         {count > maxLetters ? (
           <Localizer
@@ -294,12 +294,12 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     <textarea
       {...rest}
       ref={functions.callbackRef}
-      aria-invalid={error || undefined}
-      data-smarthr-ui-input="true"
       rows={interimRows}
-      onChange={functions.handleChange}
       className={actualClassName}
       style={{ width: typeof width === 'number' ? `${width}px` : width }}
+      aria-invalid={error || undefined}
+      data-smarthr-ui-input="true"
+      onChange={functions.handleChange}
     />
   )
 }

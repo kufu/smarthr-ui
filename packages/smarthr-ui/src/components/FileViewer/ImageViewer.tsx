@@ -37,25 +37,25 @@ const ImageDisplay = memo<
     onError,
   }) => (
     <div
+      className="shr-relative shr-h-full shr-w-full"
       style={{
         width: wrapperWidth,
         height: wrapperHeight,
       }}
-      className="shr-relative shr-h-full shr-w-full"
     >
       {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <img
+        ref={imageRef}
         src={src}
         alt={alt}
-        onLoad={handleLoad}
-        onError={onError}
         className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
-        ref={imageRef}
         style={{
           rotate: `${rotation}deg`,
           scale: `${imgScale}`,
         }}
+        onLoad={handleLoad}
+        onError={onError}
       />
     </div>
   ),
@@ -122,11 +122,11 @@ export const ImageViewer: FC<ViewerProps> = memo(
     return (
       <ImageDisplay
         {...viewConfig}
+        imageRef={imageRef}
         src={file.url}
         alt={file.alt}
-        handleLoad={functions.handleLoad}
         onError={handleLoadError}
-        imageRef={imageRef}
+        handleLoad={functions.handleLoad}
       />
     )
   },
