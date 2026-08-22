@@ -36,9 +36,9 @@ export default {
       {/* パターン5: データラベル付き */}
       <div className="shr-h-[400px]">
         <RadarChart
+          options={chartJsOptionsExamples.datalabelsWithBorder}
           data={radarSingleSmall}
           title="データラベル付き"
-          options={chartJsOptionsExamples.datalabelsWithBorder}
         />
       </div>
 

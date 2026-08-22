@@ -112,8 +112,8 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
               key={i}
               value={value}
               selected={value === sortType}
-              onClick={onClickOption}
               className={CLASS_NAMES.contentButton}
+              onClick={onClickOption}
             >
               {children}
             </OptionButton>
@@ -130,10 +130,10 @@ const TriggerButton = memo<
   <DropdownTrigger>
     <Button
       ref={triggerRef}
-      size="S"
       variant="text"
-      suffix={<FaCaretDownIcon />}
+      size="S"
       className={className}
+      suffix={<FaCaretDownIcon />}
     >
       <Translate>{children}</Translate>
     </Button>
@@ -151,14 +151,14 @@ const OptionButton = memo<
   const theme = useTheme()
   return (
     <Button
-      value={value}
       role="option"
-      aria-selected={selected}
+      value={value}
       className={className}
+      aria-selected={selected}
+      onClick={onClick}
       prefix={
         selected && (
           <FaCheckIcon
-            color={theme.textColor.main}
             alt={
               <Translate>
                 <Localizer
@@ -167,10 +167,10 @@ const OptionButton = memo<
                 />
               </Translate>
             }
+            color={theme.textColor.main}
           />
         )
       }
-      onClick={onClick}
     >
       <Translate>{children}</Translate>
     </Button>

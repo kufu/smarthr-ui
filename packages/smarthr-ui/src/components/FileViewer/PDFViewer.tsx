@@ -146,25 +146,25 @@ export const PDFViewer: FC<Props> = memo(
           <Document
             options={options}
             file={file.url}
-            onLoadSuccess={functions.handleDocumentLoadSuccess}
-            onLoadError={handleLoadError}
             rotate={rotation}
-            className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             externalLinkTarget="_blank"
             loading={null}
+            className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
+            onLoadSuccess={functions.handleDocumentLoadSuccess}
+            onLoadError={handleLoadError}
             onPassword={handlePassword}
           >
             {Array.from({ length: pdfNumPages }).map((_, i) => (
               <Page
                 key={`page_${i}`}
                 pageNumber={i + 1}
-                width={width}
                 scale={scale}
+                customTextRenderer={search?.customTextRenderer}
+                loading={null}
+                width={width}
                 className="shr-w-full"
                 onLoadSuccess={functions.handlePageLoad}
                 onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
-                customTextRenderer={search?.customTextRenderer}
-                loading={null}
               />
             ))}
           </Document>

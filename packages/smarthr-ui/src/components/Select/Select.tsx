@@ -124,7 +124,6 @@ const ActualSelect = <T extends string>(
       <select
         {...rest}
         ref={ref}
-        disabled={disabled}
         // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
         //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
         //    - エラーメッセージが表示されない
@@ -132,6 +131,8 @@ const ActualSelect = <T extends string>(
         // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
         // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
         required={isIOS ? undefined : required}
+        disabled={disabled}
+        className={classNames.select}
         aria-invalid={error || undefined}
         data-smarthr-ui-input="true"
         onChange={(e: ChangeEvent<HTMLSelectElement>) => {
@@ -147,7 +148,6 @@ const ActualSelect = <T extends string>(
             }
           }
         }}
-        className={classNames.select}
       >
         <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (

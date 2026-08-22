@@ -35,13 +35,13 @@ export default {
   // icon            false                   1       s
   render: () => (
     <Stack>
-      <SegmentedControl options={iconOptions(true)} value={null} size="M" />
-      <SegmentedControl options={textOptions(false)} value={null} size="S" />
-      <SegmentedControl options={textOptions(true)} value="3" size="S" />
-      <SegmentedControl options={textOptions(false)} value="1" size="M" />
-      <SegmentedControl options={iconOptions(false)} value="3" size="M" />
-      <SegmentedControl options={iconOptions(true)} value="1" size="S" />
-      <SegmentedControl options={iconOptions(false)} value="1" size="S" />
+      <SegmentedControl value={null} options={iconOptions(true)} size="M" />
+      <SegmentedControl value={null} options={textOptions(false)} size="S" />
+      <SegmentedControl value="3" options={textOptions(true)} size="S" />
+      <SegmentedControl value="1" options={textOptions(false)} size="M" />
+      <SegmentedControl value="3" options={iconOptions(false)} size="M" />
+      <SegmentedControl value="1" options={iconOptions(true)} size="S" />
+      <SegmentedControl value="1" options={iconOptions(false)} size="S" />
     </Stack>
   ),
   parameters: {

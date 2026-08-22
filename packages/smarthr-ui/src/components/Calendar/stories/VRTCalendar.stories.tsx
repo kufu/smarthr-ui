@@ -12,14 +12,14 @@ export default {
     <Cluster gap="S">
       <Calendar value={dayjs('2024/10/06').toDate()} onSelectDate={args.onSelectDate} />
       <Calendar
-        from={dayjs('2024/10/03').toDate()}
         value={dayjs('2024/10/06').toDate()}
+        from={dayjs('2024/10/03').toDate()}
         to={dayjs('2024/10/09').toDate()}
         onSelectDate={args.onSelectDate}
       />
       <Calendar
-        from={dayjs('2010/10/03').toDate()}
         value={dayjs('2020/10/06').toDate()}
+        from={dayjs('2010/10/03').toDate()}
         to={dayjs('2022/10/09').toDate()}
         onSelectDate={args.onSelectDate}
       />
@@ -48,8 +48,8 @@ export const VRTFocusVisible: StoryObj<typeof Calendar> = {
   ...VRT,
   render: (args) => (
     <Calendar
-      from={dayjs('2024/10/03').toDate()}
       value={dayjs('2024/10/06').toDate()}
+      from={dayjs('2024/10/03').toDate()}
       to={dayjs('2024/10/09').toDate()}
       onSelectDate={args.onSelectDate}
     />

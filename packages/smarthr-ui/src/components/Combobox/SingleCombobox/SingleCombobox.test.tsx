@@ -32,6 +32,9 @@ describe('SingleCombobox', () => {
           <SingleCombobox
             {...rest}
             name={name || 'default'}
+            selectedItem={
+              selectedItem !== undefined ? selectedItem : { label: 'option 1', value: 'value-1' }
+            }
             items={
               items || [
                 { label: 'option 1', value: 'value-1' },
@@ -40,9 +43,6 @@ describe('SingleCombobox', () => {
                 { label: 'option 4', value: 'value-4' },
                 { label: 'option 5', value: 'value-5' },
               ]
-            }
-            selectedItem={
-              selectedItem !== undefined ? selectedItem : { label: 'option 1', value: 'value-1' }
             }
           />
         </FormControl>
@@ -171,11 +171,11 @@ describe('SingleCombobox', () => {
           <FormControl label="コンボボックス">
             <SingleCombobox
               name="default"
+              selectedItem={{ label: 'option 1', value: 'value-1' }}
               items={[
                 { label: 'option 1', value: 'value-1' },
                 { label: 'option 2', value: 'value-2' },
               ]}
-              selectedItem={{ label: 'option 1', value: 'value-1' }}
             />
           </FormControl>
         </form>
@@ -198,11 +198,11 @@ test('groupロールが付与されている', async () => {
         <FormControl label="コンボボックス">
           <SingleCombobox
             name="default"
+            selectedItem={{ label: 'option 1', value: 'value-1' }}
             items={[
               { label: 'option 1', value: 'value-1' },
               { label: 'option 2', value: 'value-2' },
             ]}
-            selectedItem={{ label: 'option 1', value: 'value-1' }}
             onClearClick={onClearClick}
           />
         </FormControl>

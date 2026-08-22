@@ -104,8 +104,8 @@ export const VRTComboboxScrollTracking: StoryObj<typeof DropdownMenuButton> = {
           <Button>操作8</Button>
           <SingleCombobox
             name="combobox"
-            items={_comboboxItems}
             selectedItem={null}
+            items={_comboboxItems}
             onSelect={() => {}}
             onClearClick={() => {}}
           />

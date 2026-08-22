@@ -94,7 +94,7 @@ export const TimelineItem: FC<Props> = ({
 
   const id = useId()
   const timeContent = (
-    <Cluster align="center" as="time" dateTime={isoString} id={id} className={classNames.title}>
+    <Cluster as="time" id={id} align="center" dateTime={isoString} className={classNames.title}>
       <Text styleType="blockTitle" leading="NONE">
         {dateLabel || date}
       </Text>
@@ -115,8 +115,8 @@ export const TimelineItem: FC<Props> = ({
       {...rest}
       as="li"
       gap={0.5}
-      aria-current={current || undefined}
       className={classNames.wrapper}
+      aria-current={current || undefined}
     >
       {sideActionArea ? (
         <Cluster align="center" justify="space-between">

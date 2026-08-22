@@ -38,7 +38,7 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   }, [current])
 
   return (
-    <Tag {...rest} aria-current={current ? 'page' : undefined} className={classNames.wrapper}>
+    <Tag {...rest} className={classNames.wrapper} aria-current={current ? 'page' : undefined}>
       {Icon && <Icon className={classNames.icon} />}
       {children}
     </Tag>

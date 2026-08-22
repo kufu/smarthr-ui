@@ -97,17 +97,17 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     }, [checked, mixed])
 
     return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
+      <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
           <input
             {...rest}
             ref={inputRef}
             type="checkbox"
             id={checkBoxId}
-            checked={checked}
             disabled={disabled}
-            aria-invalid={error || undefined}
+            checked={checked}
             className={classNames.input}
+            aria-invalid={error || undefined}
             data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={classNames.box} />

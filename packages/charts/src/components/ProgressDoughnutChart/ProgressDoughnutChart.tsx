@@ -176,14 +176,14 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
         keyboardNavigation も持たない）。
       */}
       <Doughnut
+        ref={chartRef}
+        options={chartOptions}
+        data={chartData}
+        plugins={plugins}
         // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
         // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
         className="shr-relative shr-z-1"
         aria-hidden="true"
-        ref={chartRef}
-        data={chartData}
-        options={chartOptions}
-        plugins={plugins}
       />
       {/*
         名前は <label> で囲まず aria-label で与える。<label> のテキストは
@@ -193,9 +193,9 @@ export const ProgressDoughnutChart: React.FC<Props> = ({
       */}
       <VisuallyHiddenText
         as="progress"
-        aria-label={progress.label}
-        max={progress.max}
         value={progress.value}
+        max={progress.max}
+        aria-label={progress.label}
       />
       {/*
         中央の内容は進捗を視覚的に言い換えたものなので、<progress> と二重に

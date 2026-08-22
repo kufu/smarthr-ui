@@ -36,18 +36,18 @@ export default {
       {/* パターン5: 単一データセット、タイトルあり、ラベルあり、標準サイズ、少データ */}
       <div className="shr-h-[400px]">
         <BarChart
+          options={chartJsOptionsExamples.datalabels}
           data={singleSmall}
           title="データラベル付き"
-          options={chartJsOptionsExamples.datalabels}
         />
       </div>
 
       {/* パターン6: 複数データセット(3個)、タイトルあり、ラベルあり、標準サイズ、少データ */}
       <div className="shr-h-[400px]">
         <BarChart
+          options={chartJsOptionsExamples.datalabels}
           data={multiSmall}
           title="複数データ・ラベル付き"
-          options={chartJsOptionsExamples.datalabels}
         />
       </div>
 
@@ -64,8 +64,6 @@ export default {
       {/* パターン9: chartjs-plugin-annotation options */}
       <div className="shr-h-[400px]">
         <BarChart
-          data={singleSmall}
-          title="chartjs-plugin-annotation options"
           options={{
             plugins: {
               annotation: {
@@ -81,6 +79,8 @@ export default {
               },
             },
           }}
+          data={singleSmall}
+          title="chartjs-plugin-annotation options"
         />
       </div>
     </Stack>

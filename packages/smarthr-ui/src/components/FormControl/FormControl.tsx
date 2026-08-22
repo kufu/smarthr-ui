@@ -353,35 +353,35 @@ export const ActualFormControl: FC<Props> = ({
       {...rest}
       as={as}
       gap={innerMargin ?? 0.5}
-      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={classNames.wrapper}
+      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
     >
       <LabelCluster
+        labelTextRef={labelTextRef}
+        managedLabelId={managedLabelId}
         isFieldset={isFieldset}
         managedHtmlFor={managedHtmlFor}
-        managedLabelId={managedLabelId}
         unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
-        label={label.text}
         labelIcon={label.icon}
         statusLabels={actualStatusLabels}
-        subActionArea={subActionArea}
         labelClassName={classNames.label}
-        labelTextRef={labelTextRef}
+        label={label.text}
+        subActionArea={subActionArea}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <HelpMessageParagraph managedHtmlFor={managedHtmlFor} helpMessage={helpMessage} />
+      <ExampleMessageText managedHtmlFor={managedHtmlFor} exampleMessage={exampleMessage} />
       <ErrorMessageList
         errorMessages={actualErrorMessages}
         managedHtmlFor={managedHtmlFor}
         classNames={classNames}
       />
-      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
+      <div ref={inputWrapperRef} className={classNames.childrenWrapper}>
         {children}
       </div>
       <SupplementaryMessageText
-        supplementaryMessage={supplementaryMessage}
         managedHtmlFor={managedHtmlFor}
+        supplementaryMessage={supplementaryMessage}
       />
     </Stack>
   )
@@ -465,7 +465,7 @@ const LabelCluster = memo<
 
 const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
   statusLabels.length === 0 ? null : (
-    <Cluster gap={0.25} as="span">
+    <Cluster as="span" gap={0.25}>
       {statusLabels}
     </Cluster>
   ),
@@ -474,7 +474,7 @@ const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLa
 const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
   ({ helpMessage, managedHtmlFor }) =>
     helpMessage ? (
-      <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
+      <p id={`${managedHtmlFor}_helpMessage`} className="smarthr-ui-FormControl-helpMessage">
         {helpMessage}
       </p>
     ) : null,
@@ -485,9 +485,9 @@ const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor
     exampleMessage ? (
       <Text
         as="p"
-        color="TEXT_GREY"
-        italic
         id={`${managedHtmlFor}_exampleMessage`}
+        italic
+        color="TEXT_GREY"
         className="smarthr-ui-FormControl-exampleMessage"
       >
         {exampleMessage}
@@ -505,7 +505,7 @@ const ErrorMessageList = memo<{
   }
 }>(({ errorMessages, managedHtmlFor, classNames }) =>
   errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
+    <div role="alert" id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList}>
       {errorMessages.map((message, index) => (
         <p key={index}>
           <Text
@@ -526,9 +526,9 @@ const SupplementaryMessageText = memo<
   supplementaryMessage ? (
     <Text
       as="p"
+      id={`${managedHtmlFor}_supplementaryMessage`}
       size="S"
       color="TEXT_GREY"
-      id={`${managedHtmlFor}_supplementaryMessage`}
       className="smarthr-ui-FormControl-supplementaryMessage"
     >
       {supplementaryMessage}

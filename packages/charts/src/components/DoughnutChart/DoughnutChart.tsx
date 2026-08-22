@@ -100,18 +100,18 @@ export const DoughnutChart: React.FC<Props> = ({
 
   return (
     <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
-      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      <VisuallyHiddenText id={chartId} aria-live="polite"></VisuallyHiddenText>
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Doughnut
+        ref={chartRef}
+        role="application"
+        options={chartOptions}
+        data={enhancedData}
+        plugins={plugins}
+        tabIndex={0}
         // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
         // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
         className="shr-relative shr-z-1"
-        tabIndex={0}
-        role="application"
-        ref={chartRef}
-        data={enhancedData}
-        options={chartOptions}
-        plugins={plugins}
         aria-label={ariaLabel}
       />
       <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>

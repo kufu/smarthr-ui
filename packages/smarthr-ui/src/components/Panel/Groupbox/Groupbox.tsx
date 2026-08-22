@@ -34,5 +34,5 @@ export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, 
     [bgColor, rounded, className],
   )
 
-  return <Panel {...rest} padding={padding} layer={0} className={actualClassName} />
+  return <Panel {...rest} layer={0} padding={padding} className={actualClassName} />
 }

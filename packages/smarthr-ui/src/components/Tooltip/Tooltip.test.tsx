@@ -26,7 +26,7 @@ describe('Tooltip', () => {
     it('tabIndex を明示的に指定した場合、その値が使われる', () => {
       render(
         // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-        <Tooltip message="説明" tabIndex={-1}>
+        <Tooltip tabIndex={-1} message="説明">
           <Button>ボタン</Button>
         </Tooltip>,
       )
@@ -57,7 +57,7 @@ describe('Tooltip', () => {
 
     it('children が focusable なとき ariaDescribedbyTarget="wrapper" を指定しても children の accessible description になる', () => {
       render(
-        <Tooltip message="説明テキスト" ariaDescribedbyTarget="wrapper">
+        <Tooltip ariaDescribedbyTarget="wrapper" message="説明テキスト">
           <Button>ボタン</Button>
         </Tooltip>,
       )

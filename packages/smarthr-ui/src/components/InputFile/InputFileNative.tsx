@@ -122,9 +122,9 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
                 file={file}
                 index={index}
                 previewable={!!previewable}
+                className={classNames.fileItem}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
-                className={classNames.fileItem}
               />
             ))}
           </Groupbox>
@@ -135,11 +135,11 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
             ref={innerRef}
             type="file"
             disabled={disabled}
+            className={classNames.input}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
             data-smarthr-ui-input="true"
             onChange={functions.handleChange}
-            className={classNames.input}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
@@ -147,9 +147,9 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         {previewable && (
           <FilePreviewDialog
             file={previewFile}
+            searchable={previewable?.searchable}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
-            searchable={previewable?.searchable}
           />
         )}
       </Stack>

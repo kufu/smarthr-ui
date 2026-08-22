@@ -55,8 +55,8 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
   const subMenu = (
     <menu
       role="group"
-      aria-labelledby={name ? subMenuId : undefined}
       className={classNames.subMenu}
+      aria-labelledby={name ? subMenuId : undefined}
     >
       {renderButtonList(children)}
     </menu>
@@ -81,13 +81,13 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
 const NameText = memo<PropsWithChildren<{ id: string; className: string }>>(
   ({ id, children, className }) => (
     <Text
-      size="S"
+      as="div"
       id={id}
+      size="S"
       weight="bold"
       color="TEXT_GREY"
       leading="NONE"
       className={className}
-      as="div"
     >
       {children}
     </Text>

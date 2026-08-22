@@ -374,20 +374,27 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
-        onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
-        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
         style={{
           width: typeof width === 'number' ? `${width}px` : width,
         }}
+        onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
+        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
       >
         <div ref={inputWrapperRef}>
           <Input
             {...rest}
-            data-smarthr-ui-input="true"
-            width="100%"
+            ref={inputRef}
             name={name}
+            disabled={disabled}
+            error={error}
+            width="100%"
+            className="smarthr-ui-DatePicker-inputContainer"
+            aria-expanded={isCalendarShown}
+            aria-controls={calenderId}
+            aria-haspopup={true}
+            data-smarthr-ui-input="true"
             onChange={isCalendarShown ? functions.closeCalendar : undefined}
             onKeyPress={functions.handleKeyPressInput}
             onFocus={functions.handleFocusInput}
@@ -399,17 +406,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
                 classNames={classNames}
               />
             }
-            disabled={disabled}
-            error={error}
-            ref={inputRef}
-            className="smarthr-ui-DatePicker-inputContainer"
-            aria-expanded={isCalendarShown}
-            aria-controls={calenderId}
-            aria-haspopup={true}
           />
         </div>
         {isCalendarShown && inputRect && (
-          <Portal inputRect={inputRect} ref={calendarPortalRef}>
+          <Portal ref={calendarPortalRef} inputRect={inputRect}>
             <Calendar
               id={calenderId}
               value={selectedDate || undefined}

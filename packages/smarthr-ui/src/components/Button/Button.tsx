@@ -51,14 +51,14 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         {...rest}
         buttonRef={ref}
         type={type}
+        disabled={disabled}
+        $loading={loading}
+        variant={variant}
         size={size}
         wide={wide}
-        variant={variant}
         className={classNames.wrapper}
-        $loading={loading}
         prefix={prefix}
         suffix={suffix}
-        disabled={disabled}
       >
         <LoadingStatus loading={loading} />
         {children}
@@ -66,7 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     )
 
     if (disabled && disabledReason) {
-      return <DisabledReason button={button} disabledReason={disabledReason} />
+      return <DisabledReason disabledReason={disabledReason} button={button} />
     }
 
     return button

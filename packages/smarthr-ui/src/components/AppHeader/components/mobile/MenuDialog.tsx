@@ -65,11 +65,11 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
 
   return (
     <CSSTransition
-      classNames="shr-sp-menu"
+      nodeRef={domRef}
       in={isOpen}
       timeout={300}
       unmountOnExit
-      nodeRef={domRef}
+      classNames="shr-sp-menu"
     >
       <div className="shr-fixed shr-z-overlap-base">
         <FocusTrap>
@@ -131,7 +131,7 @@ export const Content: FC<
   )
 
   return (
-    <Section role="dialog" aria-modal="true" className={CLASS_NAMES.wrapper} ref={domRef}>
+    <Section ref={domRef} role="dialog" className={CLASS_NAMES.wrapper} aria-modal="true">
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (

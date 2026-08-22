@@ -23,7 +23,7 @@ export default {
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
         <Fragment key={index}>
           {sizeCasse.map((size, i) => (
-            <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
+            <SideNav {...args} key={`${index}-${i}`} id={id} size={size}>
               {_sideNavItems.map((item) =>
                 i % 2 === 0 ? (
                   <SideNavItemButton {...item} key={item.id} />

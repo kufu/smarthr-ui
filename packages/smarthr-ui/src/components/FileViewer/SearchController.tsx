@@ -54,30 +54,30 @@ export const SearchController: FC<Props> = memo(({ search }) => {
       <div className={classNames.inputArea}>
         <SearchInput
           name="file_viewer_search"
+          value={query}
+          width="100%"
+          className="[&_.smarthr-ui-Input]:shr-rounded-e-none"
+          onChange={handleChangeQuery}
+          onKeyDown={handleKeyDownQuery}
           tooltipMessage={
             <Localizer
               id="smarthr-ui/FileViewer/searchInputTooltipMessage"
               defaultText="PDF内のテキストを検索"
             />
           }
-          value={query}
-          onChange={handleChangeQuery}
-          onKeyDown={handleKeyDownQuery}
-          width="100%"
           suffix={
             query !== '' ? (
-              <Text size="S" aria-live="polite" className="shr-tabular-nums">
+              <Text size="S" className="shr-tabular-nums" aria-live="polite">
                 {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
               </Text>
             ) : undefined
           }
-          className="[&_.smarthr-ui-Input]:shr-rounded-e-none"
         />
       </div>
       <Button
-        onClick={goPrev}
         disabled={noMatches}
         className="shr-rounded-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
+        onClick={goPrev}
       >
         <FaAngleUpIcon
           alt={
@@ -86,9 +86,9 @@ export const SearchController: FC<Props> = memo(({ search }) => {
         />
       </Button>
       <Button
-        onClick={goNext}
         disabled={noMatches}
         className="shr-rounded-s-none shr-border-s-0 shr-p-0.75 aria-disabled:!shr-border-default"
+        onClick={goNext}
       >
         <FaAngleDownIcon
           alt={<Localizer id="smarthr-ui/FileViewer/nextMatchAlt" defaultText="次の検索結果へ" />}

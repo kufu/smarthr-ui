@@ -117,8 +117,8 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={href ? href : onClick ? '' : undefined}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
-        onClick={functions.handleClick}
         className={classNames.anchor}
+        onClick={functions.handleClick}
       >
         {prefix && <span className={classNames.prefixWrapper}>{prefix}</span>}
         {children}

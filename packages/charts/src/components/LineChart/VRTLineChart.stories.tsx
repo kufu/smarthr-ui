@@ -36,18 +36,18 @@ export default {
       {/* パターン5: 単一データセット、タイトルあり、ラベルあり、標準サイズ、少データ */}
       <div className="shr-h-[400px]">
         <LineChart
+          options={chartJsOptionsExamples.datalabelsWithBorder}
           data={singleSmall}
           title="データラベル付き"
-          options={chartJsOptionsExamples.datalabelsWithBorder}
         />
       </div>
 
       {/* パターン6: 複数データセット(3個)、タイトルあり、ラベルあり、標準サイズ、少データ */}
       <div className="shr-h-[400px]">
         <LineChart
+          options={chartJsOptionsExamples.datalabelsWithBorder}
           data={multiSmall}
           title="複数データ・ラベル付き"
-          options={chartJsOptionsExamples.datalabelsWithBorder}
         />
       </div>
 

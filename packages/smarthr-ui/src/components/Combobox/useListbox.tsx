@@ -445,20 +445,20 @@ export const ListBox = memo(
           </VisuallyHiddenText>
         )}
         <Scroller
-          id={listBoxId}
           ref={listBoxRef}
           role="listbox"
-          aria-hidden={!isExpanded}
+          id={listBoxId}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
+          aria-hidden={!isExpanded}
           onMouseOver={functions.handleDelegateMouseOver}
           onClick={functions.handleDelegateClick}
         >
           {dropdownHelpMessage && (
             <Text
+              as="p"
               className={CLASS_NAMES.helpMessage}
               icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-              as="p"
             >
               {dropdownHelpMessage}
             </Text>
@@ -469,7 +469,7 @@ export const ListBox = memo(
                 <Loader aria-hidden />
               </div>
             ) : options.length === 0 ? (
-              <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
+              <p role="alert" className={CLASS_NAMES.noItems} aria-live="polite">
                 {noResultText ?? (
                   <Localizer
                     id="smarthr-ui/Combobox/noResultsText"
@@ -481,11 +481,11 @@ export const ListBox = memo(
               items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
                   {...optionRest}
-                  label={label}
-                  disabled={disabled}
                   key={id}
-                  id={id}
                   activeRef={id === activeOptionId ? activeRef : undefined}
+                  id={id}
+                  disabled={disabled}
+                  label={label}
                 />
               ))
             )

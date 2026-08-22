@@ -63,13 +63,13 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   return (
     <>
       <OpenButton
-        onClick={open}
         alt={
           <Localizer id="smarthr-ui/AppHeader/MobileHeader/openMenu" defaultText="メニューを開く" />
         }
+        onClick={open}
       />
       {createPortal(
-        <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
+        <MenuDialog isOpen={isOpen} tenantSelector={tenantSelector} setIsOpen={setIsOpen}>
           <FeatureButton className={className}>
             <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
           </FeatureButton>
@@ -97,7 +97,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 }
 
 const OpenButton = memo<{ alt: ReactNode; onClick: () => void }>(({ onClick, alt }) => (
-  <Button size="S" onClick={onClick} aria-haspopup="true">
+  <Button size="S" aria-haspopup="true" onClick={onClick}>
     <FaBarsIcon alt={alt} />
   </Button>
 ))
@@ -109,8 +109,8 @@ const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children
     features &&
     features.length > 0 && (
       <ActualFeatureButton
-        setIsAppLauncherSelected={setIsAppLauncherSelected}
         className={className}
+        setIsAppLauncherSelected={setIsAppLauncherSelected}
       >
         {children}
       </ActualFeatureButton>
@@ -128,9 +128,9 @@ const ActualFeatureButton: FC<
       <Button
         variant="secondary"
         wide
+        onClick={onClick}
         prefix={<FaToolboxIcon />}
         suffix={<FaAngleRightIcon className="shr-ms-auto" />}
-        onClick={onClick}
       >
         <Translate>{children}</Translate>
       </Button>
@@ -161,7 +161,7 @@ const ActualNavigationAccordion: FC<
 
   return (
     <div className={className}>
-      <MenuAccordion isOpen={isOpen} setIsOpen={setIsOpen} title={appName}>
+      <MenuAccordion isOpen={isOpen} title={appName} setIsOpen={setIsOpen}>
         {children}
       </MenuAccordion>
     </div>
@@ -177,7 +177,7 @@ const AdditionalContent: FC<PropsWithChildren<{ title: ReactNode; className: str
 
   return (
     <div className={className}>
-      <MenuAccordion isOpen={isOpen} setIsOpen={setIsOpen} title={title}>
+      <MenuAccordion isOpen={isOpen} title={title} setIsOpen={setIsOpen}>
         {children}
       </MenuAccordion>
     </div>
@@ -191,8 +191,8 @@ const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
     return (
       releaseNote && (
         <ActualReleaseNoteButton
-          setIsReleaseNoteSelected={setIsReleaseNoteSelected}
           className={className}
+          setIsReleaseNoteSelected={setIsReleaseNoteSelected}
         >
           {children}
         </ActualReleaseNoteButton>
