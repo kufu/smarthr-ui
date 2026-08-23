@@ -193,7 +193,7 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const positionFrame = useAnimationFrame()
+  const liveRegionFrame = useAnimationFrame()
   const latest = useLatest({
     isOpen,
     onClickClose,
@@ -202,8 +202,9 @@ export const ModelessDialog: FC<Props> = ({
     left,
     right,
     bottom,
+    defaultPosition,
     localize,
-    positionFrame,
+    liveRegionFrame,
   })
 
   const functions = useMemo(() => {
@@ -211,7 +212,7 @@ export const ModelessDialog: FC<Props> = ({
     const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
       setPosition(pos)
 
-      latest.positionFrame.request(() => {
+      latest.liveRegionFrame.request(() => {
         const wrapperPosition = wrapperRef.current
           ? wrapperRef.current.getBoundingClientRect()
           : undefined
@@ -249,8 +250,8 @@ export const ModelessDialog: FC<Props> = ({
     }
 
     return {
-      cleanup: () => {
-        latest.positionFrame.cancel()
+      cleanupLiveRegion: () => {
+        latest.liveRegionFrame.cancel()
         debounceLiveRegionText.cancel()
       },
       setActualPosition,
@@ -312,31 +313,6 @@ export const ModelessDialog: FC<Props> = ({
 
   useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
-  useEffect(() => functions.cleanup, [functions])
-
-  useEffect(() => {
-    // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen) {
-      return
-    }
-
-    const isXCenter = defaultPosition.left === undefined && defaultPosition.right === undefined
-    const isYCenter = defaultPosition.top === undefined && defaultPosition.bottom === undefined
-
-    if (isXCenter || isYCenter) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-
-      setCentering((current) => {
-        const temp = {
-          top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-          left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
-        }
-
-        return current.top === temp.top && current.left === temp.left ? current : temp
-      })
-    }
-  }, [isOpen, defaultPosition])
-
   useEffect(() => {
     if (isOpen) {
       setDraggableBounds((current: DraggableBounds | string | false) => {
@@ -361,23 +337,43 @@ export const ModelessDialog: FC<Props> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setDefaultPosition((current) => {
-        if (
-          current.top === latest.top &&
-          current.left === latest.left &&
-          current.right === latest.right &&
-          current.bottom === latest.bottom
-        ) {
-          return current
-        }
+      const oldDefaultPosition = latest.defaultPosition
+      const nextDefaultPosition =
+        oldDefaultPosition.top === latest.top &&
+        oldDefaultPosition.left === latest.left &&
+        oldDefaultPosition.right === latest.right &&
+        oldDefaultPosition.bottom === latest.bottom
+          ? oldDefaultPosition
+          : {
+              top: latest.top,
+              left: latest.left,
+              right: latest.right,
+              bottom: latest.bottom,
+            }
 
-        return {
-          top: latest.top,
-          left: latest.left,
-          right: latest.right,
-          bottom: latest.bottom,
+      setDefaultPosition(nextDefaultPosition)
+
+      // 中央寄せの座標計算を行う
+      if (wrapperRef.current) {
+        const isXCenter =
+          nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
+        const isYCenter =
+          nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+
+        if (isXCenter || isYCenter) {
+          const rect = wrapperRef.current.getBoundingClientRect()
+
+          setCentering((current) => {
+            const temp = {
+              top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+              left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+            }
+
+            return current.top === temp.top && current.left === temp.left ? current : temp
+          })
         }
-      })
+      }
+
       functions.setActualPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
@@ -391,7 +387,10 @@ export const ModelessDialog: FC<Props> = ({
 
     document.addEventListener('focus', focusHandler, true)
 
-    return () => document.removeEventListener('focus', focusHandler, true)
+    return () => {
+      functions.cleanupLiveRegion()
+      document.removeEventListener('focus', focusHandler, true)
+    }
   }, [isOpen, functions, latest])
 
   return createPortal(
