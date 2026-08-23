@@ -180,7 +180,6 @@ export const ModelessDialog: FC<Props> = ({
   }, [className, size, resizable])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const focusTargetRef = useRef<HTMLDivElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
   const [debouncedLiveRegionText, setDebouncedLiveRegionText] = useState<string>('')
@@ -370,10 +369,13 @@ export const ModelessDialog: FC<Props> = ({
               return current
             })
           }
+
+          node
+            .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')
+            ?.focus()
         }
 
         functions.setActualPosition({ x: 0, y: 0 })
-        focusTargetRef.current?.focus()
       }
 
       const focusHandler = (e: FocusEvent) => {
@@ -427,7 +429,7 @@ export const ModelessDialog: FC<Props> = ({
           }}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div tabIndex={-1} ref={focusTargetRef} />
+          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
           <div className={classNames.header}>
             <Handler
               handleArrowKeyDown={functions.handleArrowKeyDown}
