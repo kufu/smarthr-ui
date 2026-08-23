@@ -9,6 +9,7 @@ import {
   type Ref,
   type RefObject,
   memo,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -399,10 +400,11 @@ const ActualSingleCombobox = <T,>(
     functions.unfocus,
   )
 
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => selectFrame.cancel, [selectFrame.cancel])
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
 
-  const mergedRef = useMergeRefs(inputRef, ref)
+  const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
 
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
   const selectedItemLabelText = innerText(selectedItem?.label)
