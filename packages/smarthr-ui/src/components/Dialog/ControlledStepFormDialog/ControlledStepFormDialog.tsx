@@ -22,14 +22,11 @@ import {
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
-import {
-  type ButtonArgType,
-  type ObjectButtonType,
-  useStepFormDialogButton,
-} from './useStepFormDialogButton'
+import { useStepFormDialogButton } from './useStepFormDialogButton'
 
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
+import type { ButtonArgType, ObjectButtonType } from './type'
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
