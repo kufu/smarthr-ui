@@ -11,6 +11,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -22,11 +23,11 @@ import {
   type StepFormDialogContentInnerProps,
 } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
-import { useStepFormDialogButton } from './useStepFormDialogButton'
 
 import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
-import type { ButtonArgType, ObjectButtonType } from './type'
+import type { StepItem } from './StepFormDialogProvider'
+import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -54,6 +55,58 @@ type BaseProps = Omit<
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
+
+const buttonObjectConverter = (text: ButtonArgType): ObjectButtonType => ({
+  text,
+})
+
+type UseStepFormDialogButtonProps = {
+  button: ButtonArgType | ObjectButtonType
+  currentStep: StepItem
+  defaultValues: {
+    text: ReactNode
+    theme?: ButtonThemeType
+  }
+}
+
+const useStepFormDialogButton = ({
+  button,
+  currentStep,
+  defaultValues: { text: defaultText, theme: defaultTheme },
+}: UseStepFormDialogButtonProps): CommonButtonType => {
+  const temp = useObjectAttributes<ButtonArgType | ObjectButtonType, ObjectButtonType>(
+    button,
+    buttonObjectConverter,
+  )
+
+  const actualButton = useMemo((): CommonButtonType => {
+    let text = temp.text ?? defaultText
+    let textFunc = false
+
+    if (typeof text === 'function') {
+      textFunc = true
+      text = text(currentStep, defaultText)
+    }
+
+    const tempTheme = temp.theme || defaultTheme
+    const theme = typeof tempTheme === 'function' ? tempTheme(currentStep) : tempTheme
+    const disabled =
+      typeof temp.disabled === 'function' ? temp.disabled(currentStep) : temp.disabled
+    const hidden = typeof temp.hidden === 'function' ? temp.hidden(currentStep) : temp.hidden
+
+    return {
+      text,
+      theme,
+      disabled,
+      hidden,
+      functionCall: {
+        text: textFunc,
+      },
+    }
+  }, [currentStep, temp, defaultText, defaultTheme])
+
+  return actualButton
+}
 
 export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstStep, ...rest }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
