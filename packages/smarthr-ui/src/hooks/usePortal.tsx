@@ -79,12 +79,7 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [portalRoot, calculatedSeqs.portalChildOf])
 
-  return {
-    portalRoot,
-    isChildPortal: functions.isChildPortal,
-    createPortal: functions.createPortal,
-    PortalParentProvider: functions.PortalParentProvider,
-  }
+  return functions
 }
 
 function _isChildPortal(element: HTMLElement | SVGElement | null, seqRegex: RegExp): boolean {
