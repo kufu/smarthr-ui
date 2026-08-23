@@ -9,7 +9,7 @@ import {
   type RefObject,
   type SetStateAction,
   memo,
-  useEffect,
+  useCallback,
   useId,
   useMemo,
   useRef,
@@ -21,6 +21,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
@@ -312,84 +313,89 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (isOpen) {
+        const oldDefaultPosition = latest.defaultPosition
+        const nextDefaultPosition =
+          oldDefaultPosition.top === latest.top &&
+          oldDefaultPosition.left === latest.left &&
+          oldDefaultPosition.right === latest.right &&
+          oldDefaultPosition.bottom === latest.bottom
+            ? oldDefaultPosition
+            : {
+                top: latest.top,
+                left: latest.left,
+                right: latest.right,
+                bottom: latest.bottom,
+              }
 
-  useEffect(() => {
-    if (isOpen) {
-      const oldDefaultPosition = latest.defaultPosition
-      const nextDefaultPosition =
-        oldDefaultPosition.top === latest.top &&
-        oldDefaultPosition.left === latest.left &&
-        oldDefaultPosition.right === latest.right &&
-        oldDefaultPosition.bottom === latest.bottom
-          ? oldDefaultPosition
-          : {
-              top: latest.top,
-              left: latest.left,
-              right: latest.right,
-              bottom: latest.bottom,
+        setDefaultPosition(nextDefaultPosition)
+
+        // 中央寄せの座標計算を行う
+        if (node) {
+          const isXCenter =
+            nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
+          const isYCenter =
+            nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+
+          if (isXCenter || isYCenter) {
+            const rect = node.getBoundingClientRect()
+            const tempCentering = {
+              top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+              left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
             }
+            const nextCentering =
+              latest.centering.top === tempCentering.top &&
+              latest.centering.left === tempCentering.left
+                ? latest.centering
+                : tempCentering
 
-      setDefaultPosition(nextDefaultPosition)
+            setCentering(nextCentering)
+            setDraggableBounds((current: DraggableBounds | string | false) => {
+              if (nextCentering.top) {
+                const nextTop = nextCentering.top * -1
 
-      // 中央寄せの座標計算を行う
-      if (wrapperRef.current) {
-        const isXCenter =
-          nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
-        const isYCenter =
-          nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+                if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+                  return { top: nextTop }
+                }
+              } else {
+                const nextTop = node.getBoundingClientRect().top * -1
 
-        if (isXCenter || isYCenter) {
-          const rect = wrapperRef.current.getBoundingClientRect()
-          const tempCentering = {
-            top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-            left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+                if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+                  return { top: nextTop }
+                }
+              }
+
+              return current
+            })
           }
-          const nextCentering =
-            latest.centering.top === tempCentering.top &&
-            latest.centering.left === tempCentering.left
-              ? latest.centering
-              : tempCentering
+        }
 
-          setCentering(nextCentering)
-          setDraggableBounds((current: DraggableBounds | string | false) => {
-            if (nextCentering.top) {
-              const nextTop = nextCentering.top * -1
+        functions.setActualPosition({ x: 0, y: 0 })
+        focusTargetRef.current?.focus()
+      }
 
-              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-                return { top: nextTop }
-              }
-            } else if (wrapperRef.current) {
-              const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
-
-              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-                return { top: nextTop }
-              }
-            }
-
-            return current
-          })
+      const focusHandler = (e: FocusEvent) => {
+        // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
+        if (e.target instanceof HTMLElement && !node?.contains(e.target)) {
+          lastFocusElementRef.current = e.target
         }
       }
 
-      functions.setActualPosition({ x: 0, y: 0 })
-      focusTargetRef.current?.focus()
-    }
+      document.addEventListener('focus', focusHandler, true)
 
-    const focusHandler = (e: FocusEvent) => {
-      // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
-      if (e.target instanceof HTMLElement && !wrapperRef?.current?.contains(e.target)) {
-        lastFocusElementRef.current = e.target
+      return () => {
+        functions.cleanupLiveRegion()
+        document.removeEventListener('focus', focusHandler, true)
       }
-    }
+    },
+    [isOpen, functions, latest],
+  )
 
-    document.addEventListener('focus', focusHandler, true)
+  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
-    return () => {
-      functions.cleanupLiveRegion()
-      document.removeEventListener('focus', focusHandler, true)
-    }
-  }, [isOpen, functions, latest])
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
@@ -404,7 +410,7 @@ export const ModelessDialog: FC<Props> = ({
       >
         <Panel
           {...rest}
-          ref={wrapperRef}
+          ref={mergedRef}
           role="dialog"
           aria-labelledby={labelId}
           radius="m"
