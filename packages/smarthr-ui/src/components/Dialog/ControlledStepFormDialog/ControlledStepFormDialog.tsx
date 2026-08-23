@@ -74,13 +74,18 @@ const useStepFormDialogButton = ({
   currentStep,
   defaultValues: { text: defaultText, theme: defaultTheme },
 }: UseStepFormDialogButtonProps): CommonButtonType => {
-  const temp = useObjectAttributes<ButtonArgType | ObjectButtonType, ObjectButtonType>(
+  const {
+    text: tempText,
+    theme: tempTheme,
+    disabled: tempDisabled,
+    hidden: tempHidden,
+  } = useObjectAttributes<ButtonArgType | ObjectButtonType, ObjectButtonType>(
     button,
     buttonObjectConverter,
   )
 
   const actualButton = useMemo((): CommonButtonType => {
-    let text = temp.text ?? defaultText
+    let text = tempText ?? defaultText
     let textFunc = false
 
     if (typeof text === 'function') {
@@ -88,11 +93,11 @@ const useStepFormDialogButton = ({
       text = text(currentStep, defaultText)
     }
 
-    const tempTheme = temp.theme || defaultTheme
-    const theme = typeof tempTheme === 'function' ? tempTheme(currentStep) : tempTheme
-    const disabled =
-      typeof temp.disabled === 'function' ? temp.disabled(currentStep) : temp.disabled
-    const hidden = typeof temp.hidden === 'function' ? temp.hidden(currentStep) : temp.hidden
+    const actualTempTheme = tempTheme || defaultTheme
+    const theme =
+      typeof actualTempTheme === 'function' ? actualTempTheme(currentStep) : actualTempTheme
+    const disabled = typeof tempDisabled === 'function' ? tempDisabled(currentStep) : tempDisabled
+    const hidden = typeof tempHidden === 'function' ? tempHidden(currentStep) : tempHidden
 
     return {
       text,
@@ -103,7 +108,7 @@ const useStepFormDialogButton = ({
         text: textFunc,
       },
     }
-  }, [currentStep, temp, defaultText, defaultTheme])
+  }, [currentStep, tempText, tempTheme, tempDisabled, tempHidden, defaultText, defaultTheme])
 
   return actualButton
 }
