@@ -10,11 +10,6 @@ type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
-const initialStyle = {
-  top: '0px',
-  left: '0px',
-}
-
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest }, ref) => {
   const { portalRoot, createPortal } = usePortal()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -35,7 +30,6 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest },
       {...rest}
       ref={mergedRef}
       className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none"
-      style={initialStyle}
     />,
   )
 })
