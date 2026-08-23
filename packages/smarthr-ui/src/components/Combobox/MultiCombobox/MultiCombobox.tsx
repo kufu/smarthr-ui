@@ -8,7 +8,6 @@ import {
   type ReactNode,
   type Ref,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -231,6 +230,10 @@ const ActualMultiCombobox = <T,>(
     }
 
     return {
+      cleanupListBoxCallbackRef: () => () => {
+        latestForListBox.deleteFrame.cancel()
+        latestForListBox.selectFrame.cancel()
+      },
       handleDelete,
       handleSelect: (selected: ComboboxItem<T>) => {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -433,15 +436,7 @@ const ActualMultiCombobox = <T,>(
 
   useOuterClick([triggerRef, listBoxRef], functions.blur)
 
-  const cleanupListBoxCallbackRef = useCallback(
-    () => () => {
-      latestForListBox.deleteFrame.cancel()
-      latestForListBox.selectFrame.cancel()
-    },
-    [latestForListBox],
-  )
-
-  const mergedRef = useMergeRefs(inputRef, cleanupListBoxCallbackRef, ref)
+  const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 
   useEffect(() => {
     if (latest.highlighted) {
