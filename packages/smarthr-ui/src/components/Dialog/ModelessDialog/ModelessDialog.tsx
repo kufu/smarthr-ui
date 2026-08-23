@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import Draggable from 'react-draggable'
+import Draggable, { type DraggableBounds } from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
@@ -307,18 +307,24 @@ export const ModelessDialog: FC<Props> = ({
   }, [isOpen, defaultPosition])
 
   useEffect(() => {
-    if (!isOpen) return
+    if (isOpen) {
+      setDraggableBounds((current: DraggableBounds | string | false) => {
+        if (centering.top) {
+          const nextTop = centering.top * -1
 
-    if (centering.top) {
-      setDraggableBounds({ top: centering.top * -1 })
+          if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+            return { top: nextTop }
+          }
+        } else if (wrapperRef.current) {
+          const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
 
-      return
-    }
+          if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+            return { top: nextTop }
+          }
+        }
 
-    if (wrapperRef.current) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-
-      setDraggableBounds({ top: rect.top * -1 })
+        return current
+      })
     }
   }, [isOpen, centering.top])
 
