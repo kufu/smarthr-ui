@@ -7,6 +7,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
   type RefObject,
+  type SetStateAction,
   memo,
   useEffect,
   useId,
@@ -17,6 +18,7 @@ import {
 import Draggable, { type DraggableBounds } from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
@@ -191,11 +193,67 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const latest = useLatest({ isOpen, onClickClose, onPressEscape, top, left, right, bottom })
+  const positionFrame = useAnimationFrame()
+  const latest = useLatest({
+    isOpen,
+    onClickClose,
+    onPressEscape,
+    top,
+    left,
+    right,
+    bottom,
+    localize,
+    positionFrame,
+  })
 
-  const functions = useMemo(
-    () => ({
-      debounceLiveRegionText: debounce(setDebouncedLiveRegionText, 600),
+  const functions = useMemo(() => {
+    const debounceLiveRegionText = debounce(setDebouncedLiveRegionText, 600)
+    const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
+      setPosition(pos)
+
+      latest.positionFrame.request(() => {
+        const wrapperPosition = wrapperRef.current
+          ? wrapperRef.current.getBoundingClientRect()
+          : undefined
+
+        if (!wrapperPosition) {
+          setDebouncedLiveRegionText('')
+          return
+        }
+
+        const oldPosition = wrapperPositionRef.current
+
+        wrapperPositionRef.current = wrapperPosition
+
+        if (
+          oldPosition &&
+          wrapperPosition.top === oldPosition.top &&
+          wrapperPosition.left === oldPosition.left
+        ) {
+          return
+        }
+
+        const txt = latest.localize(
+          {
+            id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
+            defaultText: '上から{top}px、左から{left}px',
+          },
+          {
+            top: Math.trunc(wrapperPosition.top).toString(),
+            left: Math.trunc(wrapperPosition.left).toString(),
+          },
+        )
+
+        debounceLiveRegionText(txt)
+      })
+    }
+
+    return {
+      cleanup: () => {
+        latest.positionFrame.cancel()
+        debounceLiveRegionText.cancel()
+      },
+      setActualPosition,
       handleArrowKeyDown: (e: KeyboardEvent) => {
         if (!latest.isOpen || document.activeElement !== e.currentTarget) {
           return
@@ -205,28 +263,28 @@ export const ModelessDialog: FC<Props> = ({
 
         switch (e.key) {
           case 'ArrowUp':
-            setPosition((prev) => ({
+            setActualPosition((prev) => ({
               x: prev.x,
               y: prev.y - movingDistance,
             }))
             e.preventDefault()
             break
           case 'ArrowDown':
-            setPosition((prev) => ({
+            setActualPosition((prev) => ({
               x: prev.x,
               y: prev.y + movingDistance,
             }))
             e.preventDefault()
             break
           case 'ArrowLeft':
-            setPosition((prev) => ({
+            setActualPosition((prev) => ({
               x: prev.x - movingDistance,
               y: prev.y,
             }))
             e.preventDefault()
             break
           case 'ArrowRight':
-            setPosition((prev) => ({
+            setActualPosition((prev) => ({
               x: prev.x + movingDistance,
               y: prev.y,
             }))
@@ -242,56 +300,19 @@ export const ModelessDialog: FC<Props> = ({
         lastFocusElementRef.current?.focus()
         latest.onPressEscape?.()
       },
-      handleDragStart: (_: any, data: { x: number; y: number }) => setPosition(data),
+      handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
-        setPosition((prev) => ({
+        setActualPosition((prev) => ({
           x: prev.x + data.deltaX,
           y: prev.y + data.deltaY,
         }))
       },
-    }),
-    [latest],
-  )
+    }
+  }, [latest])
 
   useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
-  useEffect(() => {
-    const wrapperPosition = wrapperRef.current
-      ? wrapperRef.current.getBoundingClientRect()
-      : undefined
-
-    if (!wrapperPosition) {
-      setDebouncedLiveRegionText('')
-      return functions.debounceLiveRegionText.cancel
-    }
-
-    const oldPosition = wrapperPositionRef.current
-
-    wrapperPositionRef.current = wrapperPosition
-
-    if (
-      oldPosition &&
-      wrapperPosition.top === oldPosition.top &&
-      wrapperPosition.left === oldPosition.left
-    ) {
-      return
-    }
-
-    const txt = localize(
-      {
-        id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
-        defaultText: '上から{top}px、左から{left}px',
-      },
-      {
-        top: Math.trunc(wrapperPosition.top).toString(),
-        left: Math.trunc(wrapperPosition.left).toString(),
-      },
-    )
-
-    functions.debounceLiveRegionText(txt)
-
-    return functions.debounceLiveRegionText.cancel
-  }, [position, localize, functions])
+  useEffect(() => functions.cleanup, [functions])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
@@ -357,7 +378,7 @@ export const ModelessDialog: FC<Props> = ({
           bottom: latest.bottom,
         }
       })
-      setPosition({ x: 0, y: 0 })
+      functions.setActualPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
 
@@ -371,7 +392,7 @@ export const ModelessDialog: FC<Props> = ({
     document.addEventListener('focus', focusHandler, true)
 
     return () => document.removeEventListener('focus', focusHandler, true)
-  }, [isOpen, latest])
+  }, [isOpen, functions, latest])
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
