@@ -179,9 +179,7 @@ export const ModelessDialog: FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const [wrapperPosition, setWrapperPosition] = useState<{ top: number; left: number } | undefined>(
-    undefined,
-  )
+  const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
   const [debouncedLiveRegionText, setDebouncedLiveRegionText] = useState<string>('')
   const [centering, setCentering] = useState<{
     top?: number
@@ -256,9 +254,25 @@ export const ModelessDialog: FC<Props> = ({
   )
 
   useEffect(() => {
+    const wrapperPosition = wrapperRef.current
+      ? wrapperRef.current.getBoundingClientRect()
+      : undefined
+
     if (!wrapperPosition) {
       setDebouncedLiveRegionText('')
       return functions.debounceLiveRegionText.cancel
+    }
+
+    const oldPosition = wrapperPositionRef.current
+
+    wrapperPositionRef.current = wrapperPosition
+
+    if (
+      oldPosition &&
+      wrapperPosition.top === oldPosition.top &&
+      wrapperPosition.left === oldPosition.left
+    ) {
+      return
     }
 
     const txt = localize(
@@ -275,21 +289,7 @@ export const ModelessDialog: FC<Props> = ({
     functions.debounceLiveRegionText(txt)
 
     return functions.debounceLiveRegionText.cancel
-  }, [localize, wrapperPosition, functions])
-
-  useEffect(() => {
-    setWrapperPosition((current) => {
-      if (wrapperRef.current instanceof Element) {
-        const temp = wrapperRef.current.getBoundingClientRect()
-
-        if (!current || current.top !== temp.top || current.left !== temp.left) {
-          return temp
-        }
-      }
-
-      return current
-    })
-  }, [position])
+  }, [position, localize, functions])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
