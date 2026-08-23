@@ -203,6 +203,7 @@ export const ModelessDialog: FC<Props> = ({
     right,
     bottom,
     defaultPosition,
+    centering,
     localize,
     liveRegionFrame,
   })
@@ -315,28 +316,6 @@ export const ModelessDialog: FC<Props> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setDraggableBounds((current: DraggableBounds | string | false) => {
-        if (centering.top) {
-          const nextTop = centering.top * -1
-
-          if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-            return { top: nextTop }
-          }
-        } else if (wrapperRef.current) {
-          const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
-
-          if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-            return { top: nextTop }
-          }
-        }
-
-        return current
-      })
-    }
-  }, [isOpen, centering.top])
-
-  useEffect(() => {
-    if (isOpen) {
       const oldDefaultPosition = latest.defaultPosition
       const nextDefaultPosition =
         oldDefaultPosition.top === latest.top &&
@@ -362,14 +341,33 @@ export const ModelessDialog: FC<Props> = ({
 
         if (isXCenter || isYCenter) {
           const rect = wrapperRef.current.getBoundingClientRect()
+          const tempCentering = {
+            top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+            left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+          }
+          const nextCentering =
+            latest.centering.top === tempCentering.top &&
+            latest.centering.left === tempCentering.left
+              ? latest.centering
+              : tempCentering
 
-          setCentering((current) => {
-            const temp = {
-              top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-              left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+          setCentering(nextCentering)
+          setDraggableBounds((current: DraggableBounds | string | false) => {
+            if (nextCentering.top) {
+              const nextTop = nextCentering.top * -1
+
+              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+                return { top: nextTop }
+              }
+            } else if (wrapperRef.current) {
+              const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
+
+              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+                return { top: nextTop }
+              }
             }
 
-            return current.top === temp.top && current.left === temp.left ? current : temp
+            return current
           })
         }
       }
