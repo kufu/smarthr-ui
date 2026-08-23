@@ -295,9 +295,13 @@ export const ModelessDialog: FC<Props> = ({
     if (isXCenter || isYCenter) {
       const rect = wrapperRef.current.getBoundingClientRect()
 
-      setCentering({
-        top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-        left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+      setCentering((current) => {
+        const temp = {
+          top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+          left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+        }
+
+        return current.top === temp.top && current.left === temp.left ? current : temp
       })
     }
   }, [isOpen, defaultPosition])
