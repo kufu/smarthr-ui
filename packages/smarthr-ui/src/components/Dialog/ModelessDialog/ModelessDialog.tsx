@@ -264,6 +264,8 @@ export const ModelessDialog: FC<Props> = ({
     [latest],
   )
 
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
+
   useEffect(() => {
     if (!wrapperPosition) {
       setDebouncedLiveRegionText('')
@@ -332,11 +334,7 @@ export const ModelessDialog: FC<Props> = ({
       setPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
-  }, [isOpen])
 
-  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
-
-  useEffect(() => {
     const focusHandler = (e: FocusEvent) => {
       // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
       if (e.target instanceof HTMLElement && !wrapperRef?.current?.contains(e.target)) {
@@ -347,7 +345,7 @@ export const ModelessDialog: FC<Props> = ({
     document.addEventListener('focus', focusHandler, true)
 
     return () => document.removeEventListener('focus', focusHandler, true)
-  }, [])
+  }, [isOpen])
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
