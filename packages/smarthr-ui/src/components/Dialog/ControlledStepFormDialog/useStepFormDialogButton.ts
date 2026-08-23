@@ -3,20 +3,7 @@ import { type ReactNode, useMemo } from 'react'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 
 import type { StepItem } from './StepFormDialogProvider'
-
-type ButtonThemeType = 'primary' | 'secondary' | 'danger'
-export type ButtonArgType =
-  ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
-type VariableFunctionType<T> = (currentStep: StepItem) => T
-export type ObjectButtonType = {
-  text?: ButtonArgType
-  /** ボタンを非表示にするかどうか */
-  hidden?: boolean | VariableFunctionType<boolean>
-  /** ボタンを無効にするかどうか */
-  disabled?: boolean | VariableFunctionType<boolean>
-  /** ボタンのスタイル */
-  theme?: ButtonThemeType | VariableFunctionType<ButtonThemeType>
-}
+import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
 
 const buttonObjectConverter = (text: ButtonArgType): ObjectButtonType => ({
   text,
@@ -35,13 +22,13 @@ export const useStepFormDialogButton = ({
   button,
   currentStep,
   defaultValues: { text: defaultText, theme: defaultTheme },
-}: Props) => {
+}: Props): CommonButtonType => {
   const temp = useObjectAttributes<ButtonArgType | ObjectButtonType, ObjectButtonType>(
     button,
     buttonObjectConverter,
   )
 
-  const actualButton = useMemo(() => {
+  const actualButton = useMemo((): CommonButtonType => {
     let text = temp.text ?? defaultText
     let textFunc = false
 
