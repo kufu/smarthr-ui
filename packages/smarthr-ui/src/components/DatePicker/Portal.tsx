@@ -1,6 +1,5 @@
-import { type PropsWithChildren, forwardRef, useRef } from 'react'
+import { type PropsWithChildren, forwardRef, useCallback } from 'react'
 
-import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { usePortal } from '../../hooks/usePortal'
 
@@ -11,19 +10,21 @@ type Props = PropsWithChildren<{
 }>
 
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest }, ref) => {
-  const { portalRoot, createPortal } = usePortal()
-  const containerRef = useRef<HTMLDivElement>(null)
+  const { createPortal } = usePortal()
 
-  useEnhancedEffect(() => {
-    if (containerRef.current) {
-      const position = getPortalPosition(inputRect, containerRef.current.offsetHeight)
+  const callbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        const position = getPortalPosition(inputRect, node.offsetHeight)
 
-      containerRef.current.style.top = `${position.top}px`
-      containerRef.current.style.left = `${position.left}px`
-    }
-  }, [inputRect, portalRoot])
+        node.style.top = `${position.top}px`
+        node.style.left = `${position.left}px`
+      }
+    },
+    [inputRect],
+  )
 
-  const mergedRef = useMergeRefs(containerRef, ref)
+  const mergedRef = useMergeRefs(callbackRef, ref)
 
   return createPortal(
     <div
