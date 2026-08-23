@@ -2,11 +2,10 @@ import {
   type ComponentProps,
   type FC,
   type MouseEvent,
-  type RefObject,
+  type Ref,
   memo,
-  useEffect,
   useMemo,
-  useRef,
+  useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -57,6 +56,15 @@ const CLASS_NAMES = (() => {
   }
 })()
 
+const FOCUS_CALLBACK_REF = (node: HTMLButtonElement | null) => {
+  if (node) {
+    // HINT: 現在の年に一度focusを当てることでtab移動をしやすくする
+    // focusを当てたままでは違和感があるため、blurで解除している
+    node.focus()
+    node.blur()
+  }
+}
+
 export const YearPicker: FC<Props> = ({ isDisplayed, ...rest }) =>
   isDisplayed ? <ActualYearPicker {...rest} /> : null
 
@@ -68,9 +76,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   id,
   ...rest
 }) => {
-  const focusingRef = useRef<HTMLButtonElement>(null)
-
-  const thisYear = useMemo(() => new Date().getFullYear(), [])
+  const [thisYear] = useState(() => new Date().getFullYear())
   const yearArray = useMemo(() => {
     const length = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
     const result: number[] = []
@@ -82,25 +88,16 @@ const ActualYearPicker: FC<ActualProps> = ({
     return result
   }, [toYear, fromYear])
 
-  useEffect(() => {
-    if (focusingRef.current) {
-      // HINT: 現在の年に一度focusを当てることでtab移動をしやすくする
-      // focusを当てたままでは違和感があるため、blurで解除している
-      focusingRef.current.focus()
-      focusingRef.current.blur()
-    }
-  }, [])
-
   return (
     <div {...rest} id={id} className={CLASS_NAMES.overlay}>
       <Scroller className={CLASS_NAMES.container}>
         {yearArray.map((year) => (
           <YearButton
+            focusCallbackRef={FOCUS_CALLBACK_REF}
             key={year}
             year={year}
             thisYear={thisYear}
             selected={selectedYear === year}
-            focusingRef={focusingRef}
             className={CLASS_NAMES.yearButton}
             childrenStyle={CLASS_NAMES.yearWrapper}
             handleClick={handleSelectYear}
@@ -115,17 +112,17 @@ const YearButton = memo<{
   year: number
   thisYear: number
   selected: boolean
-  focusingRef: RefObject<HTMLButtonElement>
+  focusCallbackRef: Ref<HTMLButtonElement>
   className: string
   childrenStyle: string
   handleClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ year, thisYear, selected, focusingRef, handleClick, className, childrenStyle }) => {
+}>(({ year, thisYear, selected, focusCallbackRef, handleClick, className, childrenStyle }) => {
   const { localize } = useIntl()
   const isThisYear = thisYear === year
 
   return (
     <UnstyledButton
-      ref={isThisYear ? focusingRef : null}
+      ref={isThisYear ? focusCallbackRef : null}
       value={year}
       aria-pressed={selected}
       onClick={handleClick}
