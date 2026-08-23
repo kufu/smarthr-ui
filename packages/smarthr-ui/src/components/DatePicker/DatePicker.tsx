@@ -11,7 +11,6 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -20,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
@@ -276,11 +276,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-      [],
-    )
+    const mergedRef = useMergeRefs(inputRef, ref)
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
@@ -401,7 +397,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             }
             disabled={disabled}
             error={error}
-            ref={inputRef}
+            ref={mergedRef}
             className="smarthr-ui-DatePicker-inputContainer"
             aria-expanded={isCalendarShown}
             aria-controls={calenderId}
