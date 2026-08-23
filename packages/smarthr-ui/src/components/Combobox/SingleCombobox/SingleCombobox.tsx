@@ -10,7 +10,6 @@ import {
   type RefObject,
   memo,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -21,6 +20,7 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -199,12 +199,6 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-    ref,
-    () => inputRef.current,
-    [],
-  )
-
   const { options } = useSingleOptions({
     items,
     selected: selectedItem,
@@ -247,9 +241,6 @@ const ActualSingleCombobox = <T,>(
       noResultText,
     },
   )
-
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => selectFrame.cancel, [selectFrame.cancel])
 
   const latest = useLatest({
     onChange,
@@ -408,6 +399,11 @@ const ActualSingleCombobox = <T,>(
     functions.unfocus,
   )
 
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => selectFrame.cancel, [selectFrame.cancel])
+
+  const mergedRef = useMergeRefs(inputRef, ref)
+
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
   const selectedItemLabelText = innerText(selectedItem?.label)
   useEffect(() => {
@@ -441,7 +437,7 @@ const ActualSingleCombobox = <T,>(
     >
       <Input
         {...rest}
-        ref={inputRef}
+        ref={mergedRef}
         type="text"
         role="combobox"
         name={name}
