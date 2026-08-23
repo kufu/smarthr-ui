@@ -9,6 +9,7 @@ import {
   type ReactNode,
   forwardRef,
   memo,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -18,6 +19,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
@@ -276,7 +278,69 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const mergedRef = useMergeRefs(inputRef, ref)
+    const inputCallbackRef = useCallbackRefCleanupForReact18(
+      useCallback(
+        (node: HTMLInputElement | null) => {
+          if (!node) return
+
+          const handleKeyDown = (e: KeyboardEvent) => {
+            if (!calendarPortalRef.current || e.key !== 'Tab') {
+              return
+            }
+
+            const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
+
+            if (calendarButtons.length === 0) {
+              return
+            }
+
+            const firstCalendarButton = calendarButtons[0]
+
+            if (latest.isInputFocused) {
+              if (e.shiftKey) {
+                // move focus from Input to previous elements of DatePicker
+                functions.closeCalendar()
+
+                return
+              }
+
+              // move focus from Input to Calendar
+              e.preventDefault()
+              firstCalendarButton.focus()
+
+              return
+            }
+
+            const calendarButtonAry = Array.from(calendarButtons)
+            const currentFocused = calendarButtonAry.find((button) => button === e.target)
+
+            if (e.shiftKey) {
+              if (currentFocused === firstCalendarButton) {
+                // move focus from Calendar to Input
+                node.focus()
+                e.preventDefault()
+              }
+            } else if (currentFocused === calendarButtonAry.at(-1)) {
+              // move focus from Calendar to next elements of DatePicker
+              node.focus()
+              functions.closeCalendar()
+            }
+          }
+
+          window.addEventListener('keydown', handleKeyDown)
+
+          return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            latest.closeFrame.cancel()
+          }
+        },
+        [functions, latest],
+      ),
+    )
+
+    const mergedRef = useMergeRefs(inputRef, inputCallbackRef, ref)
+
+    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
@@ -304,61 +368,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
       inputRef.current.value = value || ''
     }, [value, isInputFocused, functions])
-
-    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
-
-    useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
-          return
-        }
-
-        const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
-
-        if (calendarButtons.length === 0) {
-          return
-        }
-
-        const firstCalendarButton = calendarButtons[0]
-
-        if (latest.isInputFocused) {
-          if (e.shiftKey) {
-            // move focus from Input to previous elements of DatePicker
-            functions.closeCalendar()
-
-            return
-          }
-
-          // move focus from Input to Calendar
-          e.preventDefault()
-          firstCalendarButton.focus()
-
-          return
-        }
-
-        const calendarButtonAry = Array.from(calendarButtons)
-        const currentFocused = calendarButtonAry.find((button) => button === e.target)
-
-        if (e.shiftKey) {
-          if (currentFocused === firstCalendarButton) {
-            // move focus from Calendar to Input
-            inputRef.current.focus()
-            e.preventDefault()
-          }
-        } else if (currentFocused === calendarButtonAry.at(-1)) {
-          // move focus from Calendar to next elements of DatePicker
-          inputRef.current.focus()
-          functions.closeCalendar()
-        }
-      }
-
-      window.addEventListener('keydown', handleKeyDown)
-
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-        latest.closeFrame.cancel()
-      }
-    }, [functions, latest])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
