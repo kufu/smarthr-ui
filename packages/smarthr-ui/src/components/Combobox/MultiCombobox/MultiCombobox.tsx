@@ -10,7 +10,6 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -20,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
@@ -253,15 +253,6 @@ const ActualMultiCombobox = <T,>(
     }
   }, [latestForListBox])
 
-  // TODO: callbackRefにまとめたい
-  useEffect(
-    () => () => {
-      latestForListBox.deleteFrame.cancel()
-      latestForListBox.selectFrame.cancel()
-    },
-    [latestForListBox],
-  )
-
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
@@ -441,10 +432,15 @@ const ActualMultiCombobox = <T,>(
 
   useOuterClick([triggerRef, listBoxRef], functions.blur)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-    ref,
-    () => inputRef.current,
-    [],
+  const mergedRef = useMergeRefs(inputRef, ref)
+
+  // TODO: callbackRefにまとめたい
+  useEffect(
+    () => () => {
+      latestForListBox.deleteFrame.cancel()
+      latestForListBox.selectFrame.cancel()
+    },
+    [latestForListBox],
   )
 
   useEffect(() => {
@@ -528,13 +524,13 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
+            ref={mergedRef}
             data-smarthr-ui-input="true"
             type="text"
             name={name}
             value={inputValue}
             disabled={disabled}
             required={required && selectedItems.length === 0}
-            ref={inputRef}
             onChange={functions.handleChangeInput}
             onFocus={functions.handleFocusInput}
             onCompositionStart={functions.handleCompositionStart}
