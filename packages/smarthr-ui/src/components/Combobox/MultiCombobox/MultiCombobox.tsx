@@ -8,6 +8,7 @@ import {
   type ReactNode,
   type Ref,
   memo,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -432,16 +433,15 @@ const ActualMultiCombobox = <T,>(
 
   useOuterClick([triggerRef, listBoxRef], functions.blur)
 
-  const mergedRef = useMergeRefs(inputRef, ref)
-
-  // TODO: callbackRefにまとめたい
-  useEffect(
+  const cleanupListBoxCallbackRef = useCallback(
     () => () => {
       latestForListBox.deleteFrame.cancel()
       latestForListBox.selectFrame.cancel()
     },
     [latestForListBox],
   )
+
+  const mergedRef = useMergeRefs(inputRef, cleanupListBoxCallbackRef, ref)
 
   useEffect(() => {
     if (latest.highlighted) {
