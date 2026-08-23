@@ -179,7 +179,9 @@ export const ModelessDialog: FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
+  const [wrapperPosition, setWrapperPosition] = useState<{ top: number; left: number } | undefined>(
+    undefined,
+  )
   const [debouncedLiveRegionText, setDebouncedLiveRegionText] = useState<string>('')
   const [centering, setCentering] = useState<{
     top?: number
@@ -278,9 +280,17 @@ export const ModelessDialog: FC<Props> = ({
   }, [localize, wrapperPosition, functions])
 
   useEffect(() => {
-    if (wrapperRef.current instanceof Element) {
-      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
-    }
+    setWrapperPosition((current) => {
+      if (wrapperRef.current instanceof Element) {
+        const temp = wrapperRef.current.getBoundingClientRect()
+
+        if (!current || current.top !== temp.top || current.left !== temp.left) {
+          return temp
+        }
+      }
+
+      return current
+    })
   }, [position])
 
   useEffect(() => {
