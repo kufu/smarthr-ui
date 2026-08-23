@@ -1,6 +1,7 @@
-import { type PropsWithChildren, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { type PropsWithChildren, forwardRef, useRef, useState } from 'react'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { usePortal } from '../../hooks/usePortal'
 
 import { getPortalPosition } from './datePickerHelper'
@@ -18,12 +19,6 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest },
   const { portalRoot, createPortal } = usePortal()
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(
-    ref,
-    () => containerRef.current,
-    [portalRoot], // eslint-disable-line react-hooks/exhaustive-deps
-  )
-
   const [style, setStyle] = useState(initialPosition)
 
   useEnhancedEffect(() => {
@@ -37,10 +32,12 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest },
     }
   }, [inputRect, portalRoot])
 
+  const mergedRef = useMergeRefs(containerRef, ref)
+
   return createPortal(
     <div
       {...rest}
-      ref={containerRef}
+      ref={mergedRef}
       className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none"
       style={style}
     />,
