@@ -191,18 +191,6 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const positionStyle = useMemo(
-    () => ({
-      top: centering.top ?? defaultPosition.top,
-      left: centering.left ?? defaultPosition.left,
-      right: defaultPosition.right,
-      bottom: defaultPosition.bottom,
-      width: size ? undefined : width,
-      height,
-    }),
-    [centering, width, height, defaultPosition, size],
-  )
-
   const latest = useLatest({ isOpen, onClickClose, onPressEscape, top, left, right, bottom })
 
   const functions = useMemo(
@@ -385,7 +373,14 @@ export const ModelessDialog: FC<Props> = ({
           layer={3}
           overflow="auto"
           className={classNames.wrapper}
-          style={positionStyle}
+          style={{
+            top: centering.top ?? defaultPosition.top,
+            left: centering.left ?? defaultPosition.left,
+            right: defaultPosition.right,
+            bottom: defaultPosition.bottom,
+            width: size ? undefined : width,
+            height,
+          }}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
