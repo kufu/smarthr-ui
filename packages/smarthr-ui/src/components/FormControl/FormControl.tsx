@@ -153,11 +153,10 @@ export const ActualFormControl: FC<Props> = ({
     orgLabel,
     labelObjectConverter,
   )
-  const defaultHtmlFor = useId()
-  const defaultLabelId = useId()
+  const baseId = useId()
   const [childInputId, setChildInputId] = useState<string>('')
-  const managedHtmlFor = label.htmlFor || childInputId || defaultHtmlFor
-  const managedLabelId = label.id || defaultLabelId
+  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
+  const managedLabelId = label.id || `${baseId}-label`
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const labelTextRef = useRef<HTMLElement>(null)
   const managedDescribedbyIdsRef = useRef<string[]>([])
