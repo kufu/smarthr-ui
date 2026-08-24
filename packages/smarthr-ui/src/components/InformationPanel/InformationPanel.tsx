@@ -134,10 +134,6 @@ export const InformationPanel: FC<Props> = ({
   const id = useId()
   const contentId = `${id}-content`
 
-  useEffect(() => {
-    setActive(activeProps)
-  }, [activeProps])
-
   const classNames = useMemo(() => {
     const {
       wrapper,
@@ -158,6 +154,10 @@ export const InformationPanel: FC<Props> = ({
       content: content(),
     }
   }, [type, bold, className])
+
+  useEffect(() => {
+    setActive(activeProps)
+  }, [activeProps])
 
   return (
     <Panel
