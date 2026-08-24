@@ -85,7 +85,7 @@ const classNameGenerator = tv({
     errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
     errorMessage: ['smarthr-ui-FormControl-errorMessage'],
-    childrenWrapper: [],
+    childrenWrapper: ['smarthr-ui-FormControl-childrenWrapper'],
   },
   variants: {
     innerMargin: {
@@ -133,6 +133,8 @@ const classNameGenerator = tv({
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
+const CHILDREN_WRAPPER_SELECTOR = '.smarthr-ui-FormControl-childrenWrapper'
+const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
 export const ActualFormControl: FC<Props> = ({
   label: orgLabel,
@@ -157,8 +159,7 @@ export const ActualFormControl: FC<Props> = ({
   const [childInputId, setChildInputId] = useState<string>('')
   const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
   const managedLabelId = label.id || `${baseId}-label`
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const labelTextRef = useRef<HTMLElement>(null)
+  const stackRef = useRef<HTMLDivElement>(null)
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
@@ -212,14 +213,16 @@ export const ActualFormControl: FC<Props> = ({
   useEffect(() => {
     if (
       isFieldset ||
-      !inputWrapperRef?.current ||
+      !stackRef.current ||
       // HINT: 対象idを持つ要素が既に存在する場合、何もしない
       document.getElementById(managedHtmlFor)
     ) {
       return
     }
 
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = stackRef.current
+      .querySelector(CHILDREN_WRAPPER_SELECTOR)
+      ?.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -245,11 +248,13 @@ export const ActualFormControl: FC<Props> = ({
   }, [managedHtmlFor, isFieldset, managedLabelId])
 
   useEffect(() => {
-    if (!inputWrapperRef?.current) {
+    if (!stackRef.current) {
       return
     }
 
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = stackRef.current
+      .querySelector(CHILDREN_WRAPPER_SELECTOR)
+      ?.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -277,11 +282,13 @@ export const ActualFormControl: FC<Props> = ({
   }, [describedbyIds])
 
   useEffect(() => {
-    if (!autoBindErrorInput || !inputWrapperRef?.current) {
+    if (!autoBindErrorInput || !stackRef.current) {
       return
     }
 
-    const input = inputWrapperRef.current.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = stackRef.current
+      .querySelector(CHILDREN_WRAPPER_SELECTOR)
+      ?.querySelector(SMARTHR_UI_INPUT_SELECTOR)
 
     if (input) {
       const attrName = 'aria-invalid'
@@ -297,18 +304,22 @@ export const ActualFormControl: FC<Props> = ({
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
   useEffect(() => {
-    if (!isFieldset || !inputWrapperRef.current || !labelTextRef.current) return
+    if (!isFieldset || !stackRef.current) return
+
+    const childrenWrapper = stackRef.current.querySelector(CHILDREN_WRAPPER_SELECTOR)
+    const labelTextEl = stackRef.current.querySelector(LABEL_TEXT_SELECTOR)
+
+    if (!childrenWrapper || !labelTextEl) return
 
     // HINT: legend変更のたびにaria-labelへ古いlegend文言が蓄積しないよう、
     // 初回に確定したアクセシブルネームをinput要素ごとに保持しておく
     const baseAccessibleNames = new WeakMap<HTMLInputElement, string>()
 
     const updateAriaLabels = () => {
-      const labelText = labelTextRef.current?.textContent || ''
+      const labelText = labelTextEl.textContent || ''
       if (!labelText) return
 
-      const inputs =
-        inputWrapperRef.current!.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
+      const inputs = childrenWrapper.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
       if (!inputs.length) return
 
       inputs.forEach((input: HTMLInputElement) => {
@@ -338,7 +349,7 @@ export const ActualFormControl: FC<Props> = ({
 
     // label要素の変更を監視
     const observer = new MutationObserver(updateAriaLabels)
-    observer.observe(labelTextRef.current, {
+    observer.observe(labelTextEl, {
       childList: true,
       subtree: true,
       characterData: true,
@@ -350,6 +361,7 @@ export const ActualFormControl: FC<Props> = ({
   return (
     <Stack
       {...rest}
+      ref={stackRef}
       as={as}
       gap={innerMargin ?? 0.5}
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
@@ -366,7 +378,6 @@ export const ActualFormControl: FC<Props> = ({
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
         labelClassName={classNames.label}
-        labelTextRef={labelTextRef}
       />
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
@@ -375,9 +386,7 @@ export const ActualFormControl: FC<Props> = ({
         managedHtmlFor={managedHtmlFor}
         classNames={classNames}
       />
-      <div className={classNames.childrenWrapper} ref={inputWrapperRef}>
-        {children}
-      </div>
+      <div className={classNames.childrenWrapper}>{children}</div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
         managedHtmlFor={managedHtmlFor}
@@ -397,7 +406,6 @@ const LabelCluster = memo<
     managedLabelId: string
     labelClassName: string
     statusLabels: StatusLabelType[]
-    labelTextRef: React.RefObject<HTMLElement>
   }
 >(
   ({
@@ -411,12 +419,11 @@ const LabelCluster = memo<
     subActionArea,
     labelClassName,
     statusLabels,
-    labelTextRef,
   }) => {
     const body = (
       <>
         <Text styleType={labelType} icon={labelIcon}>
-          <span ref={labelTextRef}>{label}</span>
+          <span className="smarthr-ui-FormControl-labelText">{label}</span>
         </Text>
         <StatusLabelCluster statusLabels={statusLabels} />
       </>
