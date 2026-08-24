@@ -123,14 +123,14 @@ export const InformationPanel: FC<Props> = ({
   heading,
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProp = true,
   bold,
   className,
   children,
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProps)
+  const [active, setActive] = useState(activeProp)
   const id = useId()
   const contentId = `${id}-content`
 
@@ -156,8 +156,8 @@ export const InformationPanel: FC<Props> = ({
   }, [type, bold, className])
 
   useEffect(() => {
-    setActive(activeProps)
-  }, [activeProps])
+    setActive(activeProp)
+  }, [activeProp])
 
   return (
     <Panel
