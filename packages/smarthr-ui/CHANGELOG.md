@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.4.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.2...smarthr-ui-v99.4.0) (2026-08-24)
+
+
+### Features
+
+* **Input:** CurrencyInputの数値フォーマット関数をformatNumericStringとして公開 ([#6847](https://github.com/kufu/smarthr-ui/issues/6847)) ([ce3db91](https://github.com/kufu/smarthr-ui/commit/ce3db91c635adb8433dc85cf93c49f992ca0b20f))
+
+
+### Bug Fixes
+
+* **Fieldset:** legend変更時にaria-labelへ古いlegend文言が蓄積する不具合を修正 ([#6855](https://github.com/kufu/smarthr-ui/issues/6855)) ([7b17e93](https://github.com/kufu/smarthr-ui/commit/7b17e93cb523bd9093b4735885b679f03a14acfa))
+* **FormControl:** aria-describedbyのid重複バグを修正 ([#6831](https://github.com/kufu/smarthr-ui/issues/6831)) ([25519fc](https://github.com/kufu/smarthr-ui/commit/25519fcbb4eb1da762a5e419d29fda72abc50fd0))
+* **MobileHeader:** 特定条件でのHeaderへのcurrentTenantId・onTenantSelect転送漏れがあったため修正 ([#6873](https://github.com/kufu/smarthr-ui/issues/6873)) ([35186fc](https://github.com/kufu/smarthr-ui/commit/35186fcfa273850a6b9a134e5749e71781e3bff2))
+* **RemoteDialogTrigger:** onOpen等のコールバックが状態更新前に発火する不具合を修正 ([#6848](https://github.com/kufu/smarthr-ui/issues/6848)) ([4a16d48](https://github.com/kufu/smarthr-ui/commit/4a16d486a186ec21144399c772ccebf59305fa84))
+
 ## [99.3.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.1...smarthr-ui-v99.3.2) (2026-08-20)
 
 
