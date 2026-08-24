@@ -133,7 +133,7 @@ const classNameGenerator = tv({
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
-const CHILDREN_WRAPPER_SELECTOR = '.smarthr-ui-FormControl-childrenWrapper'
+const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
 const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
 export const ActualFormControl: FC<Props> = ({
@@ -220,9 +220,7 @@ export const ActualFormControl: FC<Props> = ({
       return
     }
 
-    const input = wrapperRef.current
-      .querySelector(CHILDREN_WRAPPER_SELECTOR)
-      ?.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -251,9 +249,7 @@ export const ActualFormControl: FC<Props> = ({
       return
     }
 
-    const input = wrapperRef.current
-      .querySelector(CHILDREN_WRAPPER_SELECTOR)
-      ?.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
     if (!input) {
       return
@@ -284,9 +280,7 @@ export const ActualFormControl: FC<Props> = ({
       return
     }
 
-    const input = wrapperRef.current
-      .querySelector(CHILDREN_WRAPPER_SELECTOR)
-      ?.querySelector(SMARTHR_UI_INPUT_SELECTOR)
+    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
     if (input) {
       if (actualErrorMessages.length > 0) {
@@ -302,10 +296,9 @@ export const ActualFormControl: FC<Props> = ({
   useEffect(() => {
     if (!isFieldset || !wrapperRef.current) return
 
-    const childrenWrapper = wrapperRef.current.querySelector(CHILDREN_WRAPPER_SELECTOR)
     const labelTextEl = wrapperRef.current.querySelector(LABEL_TEXT_SELECTOR)
 
-    if (!childrenWrapper || !labelTextEl) return
+    if (!labelTextEl) return
 
     // HINT: legend変更のたびにaria-labelへ古いlegend文言が蓄積しないよう、
     // 初回に確定したアクセシブルネームをinput要素ごとに保持しておく
@@ -315,8 +308,10 @@ export const ActualFormControl: FC<Props> = ({
       const labelText = labelTextEl.textContent || ''
       if (!labelText) return
 
-      const inputs = childrenWrapper.querySelectorAll<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)
-      if (!inputs.length) return
+      const inputs = wrapperRef.current?.querySelectorAll<HTMLInputElement>(
+        CHILDREN_WRAPPER_INPUT_SELECTOR,
+      )
+      if (!inputs?.length) return
 
       inputs.forEach((input: HTMLInputElement) => {
         let accessibleName = baseAccessibleNames.get(input)
