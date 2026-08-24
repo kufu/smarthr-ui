@@ -81,11 +81,11 @@ const classNameGenerator = tv({
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
-    label: ['smarthr-ui-FormControl-label'],
-    errorList: ['shr-list-none'],
+    label: 'smarthr-ui-FormControl-label',
+    errorList: 'shr-list-none',
     errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
-    errorMessage: ['smarthr-ui-FormControl-errorMessage'],
-    childrenWrapper: ['smarthr-ui-FormControl-childrenWrapper'],
+    errorMessage: 'smarthr-ui-FormControl-errorMessage',
+    childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
   },
   variants: {
     innerMargin: {
