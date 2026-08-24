@@ -58,10 +58,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
-
-          if (innerRef.current) {
-            formatValue(innerRef.current.value.replace(/,/g, ''))
-          }
+          formatValue(e.currentTarget.value.replace(/,/g, ''))
 
           latest.onFocus?.(e)
         },
