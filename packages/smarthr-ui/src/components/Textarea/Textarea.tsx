@@ -247,7 +247,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const functions = useMemo(
     () => ({
-      callbackRef: (node: HTMLTextAreaElement | null) => {
+      baseCallbackRef: (node: HTMLTextAreaElement | null) => {
         if (node) {
           // autoFocus時に、フォーカスを当てる
           if (latest.autoFocus) {
@@ -280,7 +280,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     [latest],
   )
 
-  const mergedRef = useMergeRefs(useOnce(functions.callbackRef), externalRef)
+  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
   return (
     <textarea
