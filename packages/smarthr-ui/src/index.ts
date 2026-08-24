@@ -170,3 +170,6 @@ export {
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+
+// utils
+export { formatNumericString } from './libs/formatNumericString'

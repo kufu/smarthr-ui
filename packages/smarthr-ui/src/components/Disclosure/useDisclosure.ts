@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
 
 const DISCLOSURE_CHANGE_EVENT = 'smarthr-ui:disclosure-change'
@@ -21,13 +22,14 @@ type UseDisclosureResult = [expanded: boolean, setExpanded: Setter]
  */
 export const useDisclosure = (id: string): UseDisclosureResult => {
   const [expanded, setExpanded] = useState(false)
-  const latest = useLatest({ id, expanded })
+  const frame = useAnimationFrame()
+  const latest = useLatest({ id, expanded, frame })
 
   const functions = useMemo(
     () => ({
       safeSetExpanded: (value: boolean | ((prev: boolean) => boolean)) => {
         // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
-        requestAnimationFrame(() => {
+        latest.frame.request(() => {
           const next = typeof value === 'function' ? value(latest.expanded) : value
 
           if (next !== latest.expanded) {
@@ -53,9 +55,10 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     document.addEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
 
     return () => {
+      frame.cancel()
       document.removeEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
     }
-  }, [functions])
+  }, [frame, functions])
 
   return [expanded, functions.safeSetExpanded]
 }

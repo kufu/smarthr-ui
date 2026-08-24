@@ -9,6 +9,8 @@ import { Input } from '../../Input'
 
 import { ControlledFormDialog } from './ControlledFormDialog'
 
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
+
 describe('ControlledFormDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -38,6 +40,9 @@ describe('ControlledFormDialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'ControlledFormDialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ }')
@@ -92,6 +97,9 @@ describe('ControlledFormDialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: '開いた状態で投入されたダイアログ' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     expect(
       screen.getByRole('textbox', { name: 'isOpen=true の状態で DOM に投入した場合のダイアログ' }),

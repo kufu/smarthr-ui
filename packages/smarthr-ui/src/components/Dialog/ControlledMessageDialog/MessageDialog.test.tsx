@@ -7,6 +7,8 @@ import { Button } from '../../Button'
 
 import { ControlledMessageDialog } from './ControlledMessageDialog'
 
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
+
 describe('ControlledMessageDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -30,6 +32,9 @@ describe('ControlledMessageDialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'ControlledMessageDialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ }')
