@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { act } from 'react'
 
 import { IntlProvider } from '../../intl'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../FormGroup'
 
 import { WarekiPicker } from './WarekiPicker'
 

@@ -59,6 +59,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   } = useAppLauncher(baseFeatures)
 
   const { searchInputTitle } = useLocalize({
@@ -69,7 +70,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   })
 
   return (
-    <div className={CLASS_NAMES.wrapper}>
+    <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"

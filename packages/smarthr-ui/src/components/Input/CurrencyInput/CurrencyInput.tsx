@@ -13,9 +13,8 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useOnce } from '../../../hooks/useOnce'
+import { formatNumericString } from '../../../libs/formatNumericString'
 import { Input } from '../Input'
-
-import { formatCurrency } from './currencyInputHelper'
 
 type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
   /** 通貨の値 */
@@ -47,7 +46,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         }
       }
       const formatCurrencyValue = (raw = '') => {
-        formatValue(formatCurrency(raw))
+        formatValue(formatNumericString(raw))
       }
 
       return {
@@ -59,10 +58,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
-
-          if (innerRef.current) {
-            formatValue(innerRef.current.value.replace(/,/g, ''))
-          }
+          formatValue(e.currentTarget.value.replace(/,/g, ''))
 
           latest.onFocus?.(e)
         },

@@ -14,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
@@ -95,7 +96,8 @@ const AutoPageTitleHeading: FC<
   }
 > = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
-  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId })
+  const titleFrame = useAnimationFrame()
+  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
 
   const callbackRef = useCallback(
     (node: HTMLHeadingElement | null) => {
@@ -117,7 +119,7 @@ const AutoPageTitleHeading: FC<
         pseudoTitle.setAttribute('aria-live', 'polite')
         document.body.prepend(pseudoTitle)
 
-        requestAnimationFrame(() => {
+        latest.titleFrame.request(() => {
           pseudoTitle.textContent = document.title
         })
       }
@@ -135,6 +137,7 @@ const AutoPageTitleHeading: FC<
       // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         observer.disconnect()
+        latest.titleFrame.cancel()
 
         const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 

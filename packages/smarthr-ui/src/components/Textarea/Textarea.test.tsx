@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { useEffect, useState } from 'react'
 
 import { IntlProvider } from '../../intl'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../FormGroup'
 
 import { Textarea } from './Textarea'
 

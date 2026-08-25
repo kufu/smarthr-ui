@@ -102,8 +102,7 @@ export {
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl } from './components/SegmentedControl'
-export { FormControl } from './components/FormControl'
-export { Fieldset } from './components/Fieldset'
+export { FormControl, Fieldset } from './components/FormGroup'
 export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton, SideNavItemAnchor } from './components/SideNav'
 export { Text } from './components/Text'
@@ -170,3 +169,6 @@ export {
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+
+// utils
+export { formatNumericString } from './libs/formatNumericString'

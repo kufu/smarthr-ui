@@ -1,11 +1,11 @@
-import { ActualFormControl } from '../FormControl'
+import { FormGroup } from './FormGroup'
 
 import type { ComponentProps, FC, ReactNode } from 'react'
 
-type FormControlType = ComponentProps<typeof ActualFormControl>
+type FormControlType = ComponentProps<typeof FormGroup>
 
 export const Fieldset: FC<
   Omit<FormControlType, 'as' | 'label'> & {
     legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
   }
-> = ({ legend, ...rest }) => <ActualFormControl {...rest} label={legend} as="fieldset" />
+> = ({ legend, ...rest }) => <FormGroup {...rest} label={legend} as="fieldset" />

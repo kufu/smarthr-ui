@@ -18,6 +18,7 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
 import { useTheme } from '../../../hooks/useTheme'
@@ -212,6 +213,8 @@ const ActualSingleCombobox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
+  const selectFrame = useAnimationFrame()
+
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
     {
       options,
@@ -224,8 +227,8 @@ const ActualSingleCombobox = <T,>(
         onChangeSelected?.(selected)
 
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        selectFrame.request(() => {
           setIsExpanded(false)
           // HINT:
           // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
@@ -244,6 +247,9 @@ const ActualSingleCombobox = <T,>(
       noResultText,
     },
   )
+
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => selectFrame.cancel, [selectFrame.cancel])
 
   const latest = useLatest({
     onChange,

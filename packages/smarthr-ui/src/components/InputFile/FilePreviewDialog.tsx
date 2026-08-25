@@ -109,6 +109,7 @@ export const FilePreviewDialog: FC<Props> = memo(
         height="75svh"
         size="M"
         resizable
+        contentPadding={0}
         footer={
           <Cluster justify="end" className="shr-px-1.5 shr-py-1">
             <Button onClick={handleDownload}>
