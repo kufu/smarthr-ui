@@ -19,7 +19,9 @@ import type { ObjectLabelType } from './type'
 const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 export const FormControl: FC<
-  Omit<ComponentProps<typeof FormGroup>, 'as' | 'disabled' | 'wrapperRef'>
+  Omit<ComponentProps<typeof FormGroup>, 'as' | 'label' | 'disabled' | 'wrapperRef'> & {
+    label: ReactNode | ObjectLabelType
+  }
 > = ({ label: orgLabel, ...rest }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()

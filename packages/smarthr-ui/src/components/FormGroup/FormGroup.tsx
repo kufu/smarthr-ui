@@ -14,10 +14,8 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { useId } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text, type TextProps } from '../Text'
@@ -30,9 +28,9 @@ import type { IconType, ObjectLabelType } from './type'
 type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
 type BaseProps = PropsWithChildren<{
-  wrapperRef?: RefObject<HTMLDivElement>
+  wrapperRef: RefObject<HTMLDivElement>
   /** グループのラベル名 */
-  label: ReactNode | ObjectLabelType
+  label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
   /** タイトル右の領域 */
   subActionArea?: ReactNode
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
@@ -54,8 +52,6 @@ type BaseProps = PropsWithChildren<{
   as?: string | ComponentType<any>
 }>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
-
-const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 const classNameGenerator = tv({
   slots: {
@@ -125,8 +121,8 @@ export const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-children
 const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
 export const FormGroup: FC<Props> = ({
-  wrapperRef: orgWrapperRef,
-  label: orgLabel,
+  wrapperRef,
+  label,
   subActionArea,
   innerMargin,
   statusLabels,
@@ -140,15 +136,6 @@ export const FormGroup: FC<Props> = ({
   children,
   ...rest
 }) => {
-  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
-    orgLabel,
-    labelObjectConverter,
-  )
-  const baseId = useId()
-  const managedHtmlFor = label.htmlFor || `${baseId}-htmlFor`
-  const managedLabelId = label.id || `${baseId}-label`
-  const baseWrapperRef = useRef<HTMLDivElement>(null)
-  const wrapperRef = orgWrapperRef || baseWrapperRef
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
@@ -156,20 +143,20 @@ export const FormGroup: FC<Props> = ({
     const temp: string[] = []
 
     if (helpMessage) {
-      temp.push(`${managedHtmlFor}_helpMessage`)
+      temp.push(`${label.htmlFor}_helpMessage`)
     }
     if (exampleMessage) {
-      temp.push(`${managedHtmlFor}_exampleMessage`)
+      temp.push(`${label.htmlFor}_exampleMessage`)
     }
     if (supplementaryMessage) {
-      temp.push(`${managedHtmlFor}_supplementaryMessage`)
+      temp.push(`${label.htmlFor}_supplementaryMessage`)
     }
     if (errorMessages) {
-      temp.push(`${managedHtmlFor}_errorMessages`)
+      temp.push(`${label.htmlFor}_errorMessages`)
     }
 
     return temp.join(' ')
-  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
+  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, label.htmlFor])
 
   const actualStatusLabels = useMemo(
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
@@ -315,8 +302,8 @@ export const FormGroup: FC<Props> = ({
     >
       <LabelCluster
         isFieldset={isFieldset}
-        managedHtmlFor={managedHtmlFor}
-        managedLabelId={managedLabelId}
+        managedHtmlFor={label.htmlFor}
+        managedLabelId={label.id}
         unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
         label={label.text}
@@ -325,17 +312,17 @@ export const FormGroup: FC<Props> = ({
         subActionArea={subActionArea}
         labelClassName={classNames.label}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
+      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
       <ErrorMessageList
         errorMessages={actualErrorMessages}
-        managedHtmlFor={managedHtmlFor}
+        managedHtmlFor={label.htmlFor}
         classNames={classNames}
       />
       <div className={classNames.childrenWrapper}>{children}</div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={managedHtmlFor}
+        managedHtmlFor={label.htmlFor}
       />
     </Stack>
   )
