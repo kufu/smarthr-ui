@@ -89,8 +89,6 @@ const ActualYearPicker: FC<ActualProps> = ({
             year={year}
             thisYear={thisYear}
             selected={selectedYear === year}
-            className={CLASS_NAMES.yearButton}
-            childrenStyle={CLASS_NAMES.yearWrapper}
             handleClick={handleSelectYear}
           />
         ))}
@@ -103,10 +101,8 @@ const YearButton = memo<{
   year: number
   thisYear: number
   selected: boolean
-  className: string
-  childrenStyle: string
   handleClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ year, thisYear, selected, handleClick, className, childrenStyle }) => {
+}>(({ year, thisYear, selected, handleClick }) => {
   const { localize } = useIntl()
   const isThisYear = thisYear === year
 
@@ -116,7 +112,7 @@ const YearButton = memo<{
       value={year}
       aria-pressed={selected}
       onClick={handleClick}
-      className={className}
+      className={CLASS_NAMES.yearButton}
       data-this-year={isThisYear}
       aria-label={
         isThisYear
@@ -127,7 +123,7 @@ const YearButton = memo<{
           : undefined
       }
     >
-      <span className={childrenStyle}>{year}</span>
+      <span className={CLASS_NAMES.yearWrapper}>{year}</span>
     </UnstyledButton>
   )
 })
