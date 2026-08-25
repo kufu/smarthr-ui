@@ -8,11 +8,11 @@ import {
   type FunctionComponentElement,
   type PropsWithChildren,
   type ReactNode,
+  type RefObject,
   memo,
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import { useId } from 'react'
 import { tv } from 'tailwind-variants'
@@ -25,24 +25,12 @@ import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHidd
 
 import type { Gap } from '../../types'
 import type { StatusLabel } from '../StatusLabel'
+import type { IconType, ObjectLabelType } from './type'
 
 type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
-type IconType = ComponentProps<typeof Text>['icon']
 
-type ObjectLabelType = {
-  text: ReactNode
-  /** ラベルの表示タイプ */
-  styleType?: TextProps['styleType']
-  /** ラベル左に設置するアイコン */
-  icon?: IconType
-  /** ラベルを視覚的に隠すかどうか */
-  unrecommendedHide?: boolean
-  /** ラベルを紐づける入力要素のID属性と同じ値 */
-  htmlFor?: string
-  /** ラベルに適用する `id` 値 */
-  id?: string
-}
 type BaseProps = PropsWithChildren<{
+  wrapperRef?: RefObject<HTMLDivElement>
   /** グループのラベル名 */
   label: ReactNode | ObjectLabelType
   /** タイトル右の領域 */
@@ -133,10 +121,11 @@ const classNameGenerator = tv({
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
-const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
+export const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
 const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
 export const FormGroup: FC<Props> = ({
+  wrapperRef: orgWrapperRef,
   label: orgLabel,
   subActionArea,
   innerMargin,
@@ -156,10 +145,10 @@ export const FormGroup: FC<Props> = ({
     labelObjectConverter,
   )
   const baseId = useId()
-  const [childInputId, setChildInputId] = useState<string>('')
-  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
+  const managedHtmlFor = label.htmlFor || `${baseId}-htmlFor`
   const managedLabelId = label.id || `${baseId}-label`
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const baseWrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = orgWrapperRef || baseWrapperRef
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
@@ -211,40 +200,6 @@ export const FormGroup: FC<Props> = ({
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
   useEffect(() => {
-    if (
-      isFieldset ||
-      !wrapperRef.current ||
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      document.getElementById(managedHtmlFor)
-    ) {
-      return
-    }
-
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const inputId = input.getAttribute('id')
-
-    if (inputId) {
-      setChildInputId(inputId)
-    } else {
-      input.setAttribute('id', managedHtmlFor)
-    }
-
-    if (input instanceof HTMLInputElement && input.type === 'file') {
-      const inputLabelledByIds = input.getAttribute('aria-labelledby')
-
-      if (inputLabelledByIds) {
-        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-        input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${managedLabelId}`)
-      }
-    }
-  }, [managedHtmlFor, isFieldset, managedLabelId])
-
-  useEffect(() => {
     if (!wrapperRef.current) {
       return
     }
@@ -273,7 +228,7 @@ export const FormGroup: FC<Props> = ({
     }
 
     managedDescribedbyIdsRef.current = describedbyIdTokens
-  }, [describedbyIds])
+  }, [describedbyIds, wrapperRef])
 
   useEffect(() => {
     if (!autoBindErrorInput || !wrapperRef.current) {
@@ -289,7 +244,7 @@ export const FormGroup: FC<Props> = ({
         input.removeAttribute('aria-invalid')
       }
     }
-  }, [actualErrorMessages.length, autoBindErrorInput])
+  }, [actualErrorMessages.length, autoBindErrorInput, wrapperRef])
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -347,7 +302,7 @@ export const FormGroup: FC<Props> = ({
     })
 
     return () => observer.disconnect()
-  }, [isFieldset])
+  }, [isFieldset, wrapperRef])
 
   return (
     <Stack

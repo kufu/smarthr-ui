@@ -5,7 +5,7 @@ import type { ComponentProps, FC, ReactNode } from 'react'
 type FormControlType = ComponentProps<typeof FormGroup>
 
 export const Fieldset: FC<
-  Omit<FormControlType, 'as' | 'label'> & {
+  Omit<FormControlType, 'as' | 'label' | 'wrapperRef'> & {
     legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
   }
 > = ({ legend, ...rest }) => <FormGroup {...rest} label={legend} as="fieldset" />
