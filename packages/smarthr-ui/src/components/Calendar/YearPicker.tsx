@@ -1,12 +1,4 @@
-import {
-  type ComponentProps,
-  type FC,
-  type MouseEvent,
-  type Ref,
-  memo,
-  useMemo,
-  useState,
-} from 'react'
+import { type ComponentProps, type FC, type MouseEvent, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
@@ -93,7 +85,6 @@ const ActualYearPicker: FC<ActualProps> = ({
       <Scroller className={CLASS_NAMES.container}>
         {yearArray.map((year) => (
           <YearButton
-            focusCallbackRef={FOCUS_CALLBACK_REF}
             key={year}
             year={year}
             thisYear={thisYear}
@@ -112,17 +103,16 @@ const YearButton = memo<{
   year: number
   thisYear: number
   selected: boolean
-  focusCallbackRef: Ref<HTMLButtonElement>
   className: string
   childrenStyle: string
   handleClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ year, thisYear, selected, focusCallbackRef, handleClick, className, childrenStyle }) => {
+}>(({ year, thisYear, selected, handleClick, className, childrenStyle }) => {
   const { localize } = useIntl()
   const isThisYear = thisYear === year
 
   return (
     <UnstyledButton
-      ref={isThisYear ? focusCallbackRef : null}
+      ref={isThisYear ? FOCUS_CALLBACK_REF : null}
       value={year}
       aria-pressed={selected}
       onClick={handleClick}
