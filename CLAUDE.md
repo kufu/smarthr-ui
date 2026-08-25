@@ -831,7 +831,7 @@ const [label] = useState(() => (fields.find((f) => f.selected) || fields[0])?.la
 
 **理由:** `useEffect` 版は不要な再レンダリングが発生する。遅延初期化は初回レンダリング時に1回だけ実行される。
 
-**3. イベントに起因する遅延処理 → イベントハンドラ内でuseAnimationFrameを呼ぶ**
+**3. イベントに起因する遅延処理 → イベントハンドラ内でuseAnimationFrameのrequestを呼ぶ**
 
 ```tsx
 // ❌ activeの変化を監視して間接的にrequestAnimationFrameを予約
@@ -846,6 +846,7 @@ useEffect(() => {
 const openFrame = useAnimationFrame()
 const handleClickTrigger = () => {
   setActive(true)
+  // HINT: コンポーネントのunmount時にopenFrame.cancelを呼ぶことを忘れずに行う
   openFrame.request(() => onOpen?.())
 }
 ```
