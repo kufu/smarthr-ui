@@ -212,10 +212,17 @@ export const FormGroup: FC<Props> = ({
         </div>
       ) : null}
       <div className={classNames.childrenWrapper}>{children}</div>
-      <SupplementaryMessageText
-        supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={label.htmlFor}
-      />
+      {supplementaryMessage ? (
+        <Text
+          as="p"
+          size="S"
+          color="TEXT_GREY"
+          id={`${label.htmlFor}_supplementaryMessage`}
+          className="smarthr-ui-FormControl-supplementaryMessage"
+        >
+          {supplementaryMessage}
+        </Text>
+      ) : null}
     </Stack>
   )
 }
@@ -324,20 +331,4 @@ const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor
         {exampleMessage}
       </Text>
     ) : null,
-)
-
-const SupplementaryMessageText = memo<
-  Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
->(({ supplementaryMessage, managedHtmlFor }) =>
-  supplementaryMessage ? (
-    <Text
-      as="p"
-      size="S"
-      color="TEXT_GREY"
-      id={`${managedHtmlFor}_supplementaryMessage`}
-      className="smarthr-ui-FormControl-supplementaryMessage"
-    >
-      {supplementaryMessage}
-    </Text>
-  ) : null,
 )
