@@ -15,12 +15,9 @@ const classNameGenerator = tv({
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
   ({ tooltipMessage, width, className, ...rest }, ref) => {
-    const style = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
+    const style = {
+      width: typeof width === 'number' ? `${width}px` : width,
+    }
 
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 

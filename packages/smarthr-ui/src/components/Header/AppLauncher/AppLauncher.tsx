@@ -85,12 +85,12 @@ export const AppLauncher: FC<Props> = ({
   }, [apps])
 
   const classNames = useMemo(() => {
-    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator({
-      enableNew,
-    })
+    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator()
 
     return {
-      appsButton: appsButton(),
+      appsButton: appsButton({
+        enableNew,
+      }),
       contentWrapper: contentWrapper(),
       category: category(),
       appList: appList(),

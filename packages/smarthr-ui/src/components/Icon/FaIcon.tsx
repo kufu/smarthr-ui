@@ -146,6 +146,7 @@ import {
   FaPaintbrush,
   FaPaperPlane,
   FaPaperclip,
+  FaPaste,
   FaPen,
   FaPenToSquare,
   FaPencil,
@@ -355,6 +356,7 @@ export const FaMugHotIcon = /*#__PURE__*/ generateIcon(FaMugHot)
 export const FaPaintbrushIcon = /*#__PURE__*/ generateIcon(FaPaintbrush)
 export const FaPaperPlaneIcon = /*#__PURE__*/ generateIcon(FaPaperPlane)
 export const FaPaperclipIcon = /*#__PURE__*/ generateIcon(FaPaperclip)
+export const FaPasteIcon = /*#__PURE__*/ generateIcon(FaPaste)
 export const FaPenIcon = /*#__PURE__*/ generateIcon(FaPen)
 export const FaPenToSquareIcon = /*#__PURE__*/ generateIcon(FaPenToSquare)
 export const FaPencilIcon = /*#__PURE__*/ generateIcon(FaPencil)

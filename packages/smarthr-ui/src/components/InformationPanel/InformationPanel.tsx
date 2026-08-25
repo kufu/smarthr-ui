@@ -123,20 +123,16 @@ export const InformationPanel: FC<Props> = ({
   heading,
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProp = true,
   bold,
   className,
   children,
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProps)
+  const [active, setActive] = useState(activeProp)
   const id = useId()
   const contentId = `${id}-content`
-
-  useEffect(() => {
-    setActive(activeProps)
-  }, [activeProps])
 
   const classNames = useMemo(() => {
     const {
@@ -159,13 +155,12 @@ export const InformationPanel: FC<Props> = ({
     }
   }, [type, bold, className])
 
+  useEffect(() => {
+    setActive(activeProp)
+  }, [activeProp])
+
   return (
-    <Panel
-      {...rest}
-      as="section"
-      data-active={(active || false).toString()}
-      className={classNames.wrapper}
-    >
+    <Panel {...rest} as="section" data-active={active} className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading
