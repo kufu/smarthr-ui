@@ -85,13 +85,12 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
-  const actualErrorMessages = useMemo(() => {
-    if (!errorMessages) {
-      return []
-    }
-
-    return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
-  }, [errorMessages])
+  // HINT: memo化している箇所がないため毎回計算している
+  const actualErrorMessages = errorMessages
+    ? Array.isArray(errorMessages)
+      ? errorMessages
+      : [errorMessages]
+    : []
 
   const describedbyIds = useMemo(() => {
     const temp: string[] = []
