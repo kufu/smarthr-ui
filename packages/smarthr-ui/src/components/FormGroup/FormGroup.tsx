@@ -80,6 +80,19 @@ export const FormGroup: FC<Props> = ({
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
+  const actualStatusLabels = useMemo(
+    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
+    [statusLabels],
+  )
+
+  const actualErrorMessages = useMemo(() => {
+    if (!errorMessages) {
+      return []
+    }
+
+    return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
+  }, [errorMessages])
+
   const describedbyIds = useMemo(() => {
     const temp: string[] = []
 
@@ -99,19 +112,6 @@ export const FormGroup: FC<Props> = ({
     return temp.join(' ')
     // TODO: ReactNodeやarrayなど不安定な値をそのまま依存配列に含めているので調整する
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, label.htmlFor])
-
-  const actualStatusLabels = useMemo(
-    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
-    [statusLabels],
-  )
-
-  const actualErrorMessages = useMemo(() => {
-    if (!errorMessages) {
-      return []
-    }
-
-    return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
-  }, [errorMessages])
 
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
