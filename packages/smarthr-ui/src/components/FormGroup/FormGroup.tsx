@@ -193,9 +193,23 @@ export const FormGroup: FC<Props> = ({
         subActionArea={subActionArea}
         labelClassName={classNames.label}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
-      {actualErrorMessages.length > 0 ? (
+      {helpMessage && (
+        <p className="smarthr-ui-FormControl-helpMessage" id={`${label.htmlFor}_helpMessage`}>
+          {helpMessage}
+        </p>
+      )}
+      {exampleMessage && (
+        <Text
+          as="p"
+          color="TEXT_GREY"
+          italic
+          id={`${label.htmlFor}_exampleMessage`}
+          className="smarthr-ui-FormControl-exampleMessage"
+        >
+          {exampleMessage}
+        </Text>
+      )}
+      {actualErrorMessages.length > 0 && (
         <div id={`${label.htmlFor}_errorMessages`} className="shr-list-none" role="alert">
           {actualErrorMessages.map((message, index) => (
             <p key={index}>
@@ -210,9 +224,9 @@ export const FormGroup: FC<Props> = ({
             </p>
           ))}
         </div>
-      ) : null}
+      )}
       <div className={classNames.childrenWrapper}>{children}</div>
-      {supplementaryMessage ? (
+      {supplementaryMessage && (
         <Text
           as="p"
           size="S"
@@ -222,7 +236,7 @@ export const FormGroup: FC<Props> = ({
         >
           {supplementaryMessage}
         </Text>
-      ) : null}
+      )}
     </Stack>
   )
 }
@@ -257,7 +271,11 @@ const LabelCluster = memo<
         <Text styleType={labelType} icon={labelIcon}>
           <span className="smarthr-ui-FormControl-labelText">{label}</span>
         </Text>
-        <StatusLabelCluster statusLabels={statusLabels} />
+        {statusLabels.length > 0 && (
+          <Cluster gap={0.25} as="span">
+            {statusLabels}
+          </Cluster>
+        )}
       </>
     )
 
@@ -299,36 +317,4 @@ const LabelCluster = memo<
       </>
     )
   },
-)
-
-const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
-  statusLabels.length === 0 ? null : (
-    <Cluster gap={0.25} as="span">
-      {statusLabels}
-    </Cluster>
-  ),
-)
-
-const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
-  ({ helpMessage, managedHtmlFor }) =>
-    helpMessage ? (
-      <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
-        {helpMessage}
-      </p>
-    ) : null,
-)
-
-const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
-  ({ exampleMessage, managedHtmlFor }) =>
-    exampleMessage ? (
-      <Text
-        as="p"
-        color="TEXT_GREY"
-        italic
-        id={`${managedHtmlFor}_exampleMessage`}
-        className="smarthr-ui-FormControl-exampleMessage"
-      >
-        {exampleMessage}
-      </Text>
-    ) : null,
 )
