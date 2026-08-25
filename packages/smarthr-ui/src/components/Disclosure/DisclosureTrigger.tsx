@@ -26,6 +26,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
 
   const latest = useLatest({ onClick, setExpanded })
 
+  // HINT: callbackRefで実装しているが、外部からrefを受け取る様になったらuseEffect化が必要
   const callbackRef = useCallbackRefCleanupForReact18(
     useCallback(
       (node: HTMLElement | null) => {
