@@ -16,7 +16,6 @@ import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { CommonProps, IconType, ObjectLabelType, StatusLabelType } from './type'
-import type { Gap } from '../../types'
 
 type Props = CommonProps & {
   wrapperRef: RefObject<HTMLDivElement>
@@ -46,53 +45,21 @@ const classNameGenerator = tv({
     childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
   },
   variants: {
-    innerMargin: {
-      0: {},
-      0.25: {},
-      0.5: {},
-      0.75: {},
-      1: {},
-      1.25: {},
-      1.5: {},
-      2: {},
-      2.5: {},
-      3: {},
-      3.5: {},
-      4: {},
-      8: {},
-      X3S: {},
-      XXS: {},
-      XS: {},
-      S: {},
-      M: {},
-      L: {},
-      XL: {},
-      XXL: {},
-      X3L: {},
-    } as { [key in Gap]: string },
-    isFieldset: {
-      true: {},
-      false: {},
-    },
-  },
-  compoundVariants: [
     // TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
     // FormControltとの差をわかりやすくしている
     // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
     // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-    {
-      innerMargin: undefined,
-      isFieldset: true,
-      class: {
+    fieldsetWithDefaultMargin: {
+      true: {
         childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
       },
     },
-  ],
+  },
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 export const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
-const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
+export const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
 export const FormGroup: FC<Props> = ({
   wrapperRef,
@@ -157,7 +124,9 @@ export const FormGroup: FC<Props> = ({
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      childrenWrapper: generators.childrenWrapper({ innerMargin, isFieldset }),
+      childrenWrapper: generators.childrenWrapper({
+        fieldsetWithDefaultMargin: isFieldset && innerMargin === undefined,
+      }),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
@@ -207,64 +176,6 @@ export const FormGroup: FC<Props> = ({
       }
     }
   }, [actualErrorMessages.length, autoBindErrorInput, wrapperRef])
-
-  // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
-  // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
-  useEffect(() => {
-    if (!isFieldset || !wrapperRef.current) return
-
-    const labelTextEl = wrapperRef.current.querySelector(LABEL_TEXT_SELECTOR)
-
-    if (!labelTextEl) return
-
-    // HINT: legend変更のたびにaria-labelへ古いlegend文言が蓄積しないよう、
-    // 初回に確定したアクセシブルネームをinput要素ごとに保持しておく
-    const baseAccessibleNames = new WeakMap<HTMLInputElement, string>()
-
-    const updateAriaLabels = () => {
-      const labelText = labelTextEl.textContent || ''
-      if (!labelText) return
-
-      const inputs = wrapperRef.current?.querySelectorAll<HTMLInputElement>(
-        CHILDREN_WRAPPER_INPUT_SELECTOR,
-      )
-      if (!inputs?.length) return
-
-      inputs.forEach((input: HTMLInputElement) => {
-        let accessibleName = baseAccessibleNames.get(input)
-
-        if (accessibleName === undefined) {
-          accessibleName =
-            input.getAttribute('aria-label') ||
-            (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
-              ? input.labels[0].textContent || ''
-              : '')
-          baseAccessibleNames.set(input, accessibleName)
-        }
-
-        if (
-          accessibleName &&
-          !accessibleName.includes(labelText) &&
-          !labelText.includes(accessibleName)
-        ) {
-          input.setAttribute('aria-label', `${accessibleName} ${labelText}`)
-        }
-      })
-    }
-
-    // 初回実行
-    updateAriaLabels()
-
-    // label要素の変更を監視
-    const observer = new MutationObserver(updateAriaLabels)
-    observer.observe(labelTextEl, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    })
-
-    return () => observer.disconnect()
-  }, [isFieldset, wrapperRef])
 
   return (
     <Stack
