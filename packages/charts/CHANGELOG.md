@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.1...smarthr-ui-charts-v0.2.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* **charts:** smarthr-uiをdevDependenciesにも追加しビルド順序を保証 ([#6870](https://github.com/kufu/smarthr-ui/issues/6870)) ([b58edd0](https://github.com/kufu/smarthr-ui/commit/b58edd0850ea4b786235512c5933f722174f2264))
+
 ## [0.2.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.0...smarthr-ui-charts-v0.2.1) (2026-08-20)
 
 
