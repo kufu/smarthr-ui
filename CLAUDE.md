@@ -693,6 +693,42 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
 ```
 
+#### callback ref の cleanup 関数と React 18/19 互換性
+
+React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。しかし React 18 にはこの仕組みがなく、返り値は無視されて `ref(null)` が呼ばれるだけです。smarthr-ui は `react: "^18.0.0 || ^19.0.0"` を peerDependency としてサポートしているため、callback ref から直接cleanup関数を返す実装は避けてください。
+
+```tsx
+// ❌ React 19でしか正しく動作しない（React 18ではcleanup関数が無視される）
+const callbackRef = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+
+  const observer = new MutationObserver(callback)
+  observer.observe(node, { childList: true })
+
+  return () => observer.disconnect()
+}, [])
+```
+
+**対応方法:**
+- 単一の ref を扱う場合は `useCallbackRefCleanupForReact18`（`src/hooks/useCallbackRefCleanupForReact18.ts`）でラップする
+- 複数の ref を1つに統合する場合は `useMergeRefs` を使う（内部で同じ仕組みを実装済み）
+
+どちらも「callback が返した cleanup 関数を自前で保持しておき、`node = null` で呼ばれたときに手動で実行する」という同じ仕組みで React 18/19 の挙動を統一しています。そのため、これらのフックを経由すれば callback ref の cleanup 関数はどちらのバージョンでも正しく動作します。
+
+```tsx
+// ✅ useCallbackRefCleanupForReact18でラップする
+const callbackRef = useCallbackRefCleanupForReact18(
+  useCallback((node: HTMLElement | null) => {
+    if (!node) return
+
+    const observer = new MutationObserver(callback)
+    observer.observe(node, { childList: true })
+
+    return () => observer.disconnect()
+  }, []),
+)
+```
+
 #### useOnce
 
 渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnce.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
