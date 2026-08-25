@@ -1,75 +1,19 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type RefObject,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, type SyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
 import type { ViewerProps } from './types'
 
-const ImageDisplay = memo<
-  {
-    wrapperWidth: number
-    wrapperHeight: number
-    rotation: number
-    imgScale: number
-    imageRef: RefObject<HTMLImageElement>
-    handleLoad?: () => void
-  } & Pick<ComponentProps<'img'>, 'src' | 'alt' | 'onError'>
->(
-  ({
-    wrapperWidth,
-    wrapperHeight,
-    rotation,
-    imgScale,
-    imageRef,
-    src,
-    alt,
-    handleLoad,
-    onError,
-  }) => (
-    <div
-      style={{
-        width: wrapperWidth,
-        height: wrapperHeight,
-      }}
-      className="shr-relative shr-h-full shr-w-full"
-    >
-      {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-      <img
-        src={src}
-        alt={alt}
-        onLoad={handleLoad}
-        onError={onError}
-        className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
-        ref={imageRef}
-        style={{
-          rotate: `${rotation}deg`,
-          scale: `${imgScale}`,
-        }}
-      />
-    </div>
-  ),
-)
-
 export const ImageViewer: FC<ViewerProps> = memo(
   ({ scale, rotation, file, width, handleLoad, handleLoadError }) => {
-    const imageRef = useRef<HTMLImageElement>(null)
-    const [viewConfig, setViewConfig] = useState({
+    const [viewConfig, setViewConfig] = useState(() => ({
       wrapperWidth: 0,
       wrapperHeight: 0,
       imgScale: 1,
       rotation: 0,
-    })
+    }))
 
     const latest = useLatest({
       handleLoad,
@@ -80,10 +24,8 @@ export const ImageViewer: FC<ViewerProps> = memo(
 
     // CSSのみではscale, transformの値を親に適用してスクロールするようにできないため、計算している
     const functions = useMemo(() => {
-      const updateViewConfig = () => {
-        const img = imageRef.current
-
-        if (!img?.complete) {
+      const updateViewConfig = (img: HTMLImageElement) => {
+        if (!img.complete) {
           return
         }
 
@@ -108,26 +50,47 @@ export const ImageViewer: FC<ViewerProps> = memo(
 
       return {
         updateViewConfig,
-        handleLoad: () => {
-          updateViewConfig()
+        handleLoad: (e: SyntheticEvent<HTMLImageElement>) => {
+          updateViewConfig(e.currentTarget)
           latest.handleLoad?.()
         },
       }
     }, [latest])
 
-    useEffect(() => {
-      functions.updateViewConfig()
-    }, [scale, rotation, width, functions])
+    const callbackRef = useCallback(
+      (node: HTMLImageElement | null) => {
+        if (node) {
+          functions.updateViewConfig(node)
+        }
+      },
+      // scale, rotation, widthの変化時にもcallbackRefを再実行し、updateViewConfigを再計算させるために必要
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [scale, rotation, width, functions],
+    )
 
     return (
-      <ImageDisplay
-        {...viewConfig}
-        src={file.url}
-        alt={file.alt}
-        handleLoad={functions.handleLoad}
-        onError={handleLoadError}
-        imageRef={imageRef}
-      />
+      <div
+        style={{
+          width: viewConfig.wrapperWidth,
+          height: viewConfig.wrapperHeight,
+        }}
+        className="shr-relative shr-h-full shr-w-full"
+      >
+        {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+        <img
+          ref={callbackRef}
+          src={file.url}
+          alt={file.alt}
+          onLoad={functions.handleLoad}
+          onError={handleLoadError}
+          className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
+          style={{
+            rotate: `${viewConfig.rotation}deg`,
+            scale: `${viewConfig.imgScale}`,
+          }}
+        />
+      </div>
     )
   },
 )
