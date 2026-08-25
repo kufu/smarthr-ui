@@ -169,7 +169,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
 
       const dateToAlternativeFormat = (d: Date | null) => {
-        if (latest.showAlternative) return d ? latest.showAlternative(d) : null
+        if (d && latest.showAlternative) return latest.showAlternative(d)
         return null
       }
 
