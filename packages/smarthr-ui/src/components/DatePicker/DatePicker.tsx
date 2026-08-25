@@ -404,7 +404,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             onBlur={functions.handleBlur}
             suffix={
               <InputSuffixIcon
-                alternativeFormat={alternativeFormat}
+                alternativeFormat={showAlternative ? alternativeFormat : null}
                 caretIconColor={caretIconColor}
                 classNames={classNames}
               />
