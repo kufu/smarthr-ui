@@ -302,6 +302,17 @@ const Foo = ({ color }: { color: string }) => (
 )
 ```
 
+**例外: `Layout` ディレクトリ以下のコンポーネント**
+
+`src/components/Layout/` 以下のコンポーネント（`Stack`, `Cluster` など）はレイアウト用の薄いラッパーという特性上、今後も `React.memo` 化される見込みが皆無です。そのため、これらのコンポーネントに渡す `style` などのオブジェクト・配列をメモ化する必要はありません。
+
+```tsx
+// ✅ StackはLayout配下でmemo化されないため、styleのメモ化は不要
+const Foo = ({ maxColumns }: { maxColumns?: number }) => (
+  <Stack style={{ flexBasis: maxColumns ? `calc(100% / ${maxColumns})` : undefined }} />
+)
+```
+
 #### useLatest + functions パターン
 複数のイベントハンドラーやコールバックを安定化する際は、`useLatest` フックと `useMemo` で統合した `functions` オブジェクトを使用します。
 

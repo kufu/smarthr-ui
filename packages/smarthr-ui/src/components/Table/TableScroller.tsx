@@ -8,6 +8,7 @@ import {
   useCallback,
 } from 'react'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { defaultHtmlFontSize } from '../../themes'
 import { Scroller } from '../Scroller'
 
@@ -47,34 +48,23 @@ const FixedHeadTableScroller = ({
   direction,
   ...rest
 }: FixedHeadTableScrollerProps) => {
-  // TODO: useMergeRefsが作成されたら修正する
-  const callbackRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      // thead の高さ分だけ scroll-padding-top を設定
-      if (node) {
-        const thead = node.querySelector('thead')
+  const callbackRef = useCallback((node: HTMLDivElement | null) => {
+    // thead の高さ分だけ scroll-padding-top を設定
+    if (node) {
+      const thead = node.querySelector('thead')
 
-        if (thead) {
-          const { height } = thead.getBoundingClientRect()
+      if (thead) {
+        const { height } = thead.getBoundingClientRect()
 
-          node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
-        }
+        node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
       }
+    }
+  }, [])
 
-      if (forwardedRef) {
-        if (typeof forwardedRef === 'function') {
-          // React 19 では callback ref の戻り値を cleanup として使うため、返却する
-          forwardedRef(node)
-        } else {
-          forwardedRef.current = node
-        }
-      }
-    },
-    [forwardedRef],
-  )
+  const mergedRef = useMergeRefs(callbackRef, forwardedRef)
 
   return (
-    <Scroller {...rest} ref={callbackRef} direction={direction}>
+    <Scroller {...rest} ref={mergedRef} direction={direction}>
       {children}
     </Scroller>
   )

@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 
-import { FormControl } from '../FormControl'
 import { Input } from '../Input'
 
 import { Fieldset } from './Fieldset'
+import { FormControl } from './FormControl'
 
 describe('Fieldset', () => {
   it('子要素が可視ラベルを持つフォームコントロール要素の場合、アクセシブルネームは可視ラベルになる', async () => {
@@ -80,5 +80,29 @@ describe('Fieldset', () => {
       screen.getByRole('textbox', { name: '追加されないラベル1の子ラベル' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: '追加されないラベル2' })).toBeInTheDocument()
+  })
+
+  it('legendが変更されても、アクセシブルネームに古いlegend文言が蓄積されない', async () => {
+    const { rerender } = render(
+      <form>
+        <Fieldset legend="旧legend">
+          <Input name="test" aria-label="input-accessible-name" />
+        </Fieldset>
+      </form>,
+    )
+
+    rerender(
+      <form>
+        <Fieldset legend="新legend">
+          <Input name="test" aria-label="input-accessible-name" />
+        </Fieldset>
+      </form>,
+    )
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('textbox', { name: 'input-accessible-name 新legend' }),
+      ).toBeInTheDocument(),
+    )
   })
 })

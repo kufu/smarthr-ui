@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { Heading } from '../../Heading'
 import { InformationPanel } from '../../InformationPanel'
 import { Stack } from '../../Layout'
