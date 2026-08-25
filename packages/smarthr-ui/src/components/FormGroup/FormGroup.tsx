@@ -22,6 +22,8 @@ type Props = CommonProps & {
   /** グループのラベル名 */
   label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
   as?: string | ComponentType<any>
+  /** `true` のとき、childrenWrapperの上部余白を広げる（FieldsetがinnerMargin未指定の場合に使用） */
+  fieldsetWithDefaultMargin?: boolean
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
 }
@@ -72,6 +74,7 @@ export const FormGroup: FC<Props> = ({
   as = 'div',
   className,
   children,
+  fieldsetWithDefaultMargin,
   ...rest
 }) => {
   const managedDescribedbyIdsRef = useRef<string[]>([])
@@ -118,11 +121,9 @@ export const FormGroup: FC<Props> = ({
       label: generators.label({
         className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
       }),
-      childrenWrapper: generators.childrenWrapper({
-        fieldsetWithDefaultMargin: isFieldset && innerMargin === undefined,
-      }),
+      childrenWrapper: generators.childrenWrapper({ fieldsetWithDefaultMargin }),
     }
-  }, [innerMargin, isFieldset, label.unrecommendedHide, className])
+  }, [fieldsetWithDefaultMargin, label.unrecommendedHide, className])
 
   useEffect(() => {
     if (!wrapperRef.current) {

@@ -16,7 +16,7 @@ export const Fieldset: FC<
     /** `true` のとき、文字色を `TEXT_DISABLED` にする */
     disabled?: boolean
   }
-> = ({ legend: orgLegend, ...rest }) => {
+> = ({ legend: orgLegend, innerMargin, ...rest }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
@@ -90,5 +90,14 @@ export const Fieldset: FC<
     return () => observer.disconnect()
   }, [])
 
-  return <FormGroup {...rest} as="fieldset" wrapperRef={wrapperRef} label={legend} />
+  return (
+    <FormGroup
+      {...rest}
+      as="fieldset"
+      wrapperRef={wrapperRef}
+      label={legend}
+      innerMargin={innerMargin}
+      fieldsetWithDefaultMargin={innerMargin === undefined}
+    />
+  )
 }
