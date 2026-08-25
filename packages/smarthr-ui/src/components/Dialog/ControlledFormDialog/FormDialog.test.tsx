@@ -4,7 +4,7 @@ import { type FC, useRef, useState } from 'react'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { Input } from '../../Input'
 
 import { ControlledFormDialog } from './ControlledFormDialog'

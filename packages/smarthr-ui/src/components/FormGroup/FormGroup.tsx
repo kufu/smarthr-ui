@@ -136,7 +136,7 @@ const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
 const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
-export const ActualFormControl: FC<Props> = ({
+export const FormGroup: FC<Props> = ({
   label: orgLabel,
   subActionArea,
   innerMargin,
@@ -532,5 +532,3 @@ const SupplementaryMessageText = memo<
     </Text>
   ) : null,
 )
-
-export const FormControl: FC<Omit<Props, 'as' | 'disabled'>> = ActualFormControl

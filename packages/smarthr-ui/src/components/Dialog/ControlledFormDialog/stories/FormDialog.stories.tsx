@@ -2,7 +2,7 @@ import { type ComponentProps, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
-import { FormControl } from '../../../FormControl'
+import { FormControl } from '../../../FormGroup'
 import { Input } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
