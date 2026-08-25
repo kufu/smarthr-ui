@@ -6,7 +6,7 @@ import { FormGroup } from './FormGroup'
 
 import type { CommonProps, ObjectLabelType } from './type'
 
-const legendObjectConverter = (label: ReactNode) => ({ text: label })
+const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 
 export const Fieldset: FC<
   CommonProps & {
@@ -26,7 +26,7 @@ export const Fieldset: FC<
     ...baseLegend,
     // TODO: fieldsetなので本質的にhtmlForは不要なはず。調整する
     htmlFor: baseLegend.htmlFor || `${baseId}-htmlFor`,
-    id: baseLegend.id || `${baseId}-label`,
+    id: baseLegend.id || `${baseId}-legend`,
   }
 
   return <FormGroup {...rest} as="fieldset" wrapperRef={wrapperRef} label={legend} />
