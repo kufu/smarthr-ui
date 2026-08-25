@@ -40,3 +40,15 @@ export const VRTForcedColors: StoryObj<typeof ControlledStepFormDialog> = {
     chromatic: { forcedColors: 'active' },
   },
 }
+
+export const VRTMobileSheet: StoryObj<typeof ControlledStepFormDialog> = {
+  ...VRT,
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+  },
+}

@@ -140,6 +140,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   responseStatus,
   className,
   isOpen,
+  mobileType,
   ...rest
 }) => {
   const defaultTexts = useLocalize({
@@ -233,6 +234,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+      mobileType={mobileType}
     >
       <StepFormDialogContentInner
         activeStep={activeStep}
@@ -248,6 +250,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         submitButton={submitButton}
         closeButton={closeButton}
         backButton={backButton}
+        mobileType={mobileType}
       >
         {children}
       </StepFormDialogContentInner>
