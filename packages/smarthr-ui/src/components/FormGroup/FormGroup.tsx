@@ -39,9 +39,6 @@ const classNameGenerator = tv({
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
     label: 'smarthr-ui-FormControl-label',
-    errorList: 'shr-list-none',
-    errorIcon: ['smarthr-ui-FormControl-errorMessage-Icon', 'shr-text-danger'],
-    errorMessage: 'smarthr-ui-FormControl-errorMessage',
     childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
   },
   variants: {
@@ -121,9 +118,6 @@ export const FormGroup: FC<Props> = ({
       label: generators.label({
         className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
       }),
-      errorList: generators.errorList(),
-      errorIcon: generators.errorIcon(),
-      errorMessage: generators.errorMessage(),
       childrenWrapper: generators.childrenWrapper({
         fieldsetWithDefaultMargin: isFieldset && innerMargin === undefined,
       }),
@@ -200,11 +194,7 @@ export const FormGroup: FC<Props> = ({
       />
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
-      <ErrorMessageList
-        errorMessages={actualErrorMessages}
-        managedHtmlFor={label.htmlFor}
-        classNames={classNames}
-      />
+      <ErrorMessageList errorMessages={actualErrorMessages} managedHtmlFor={label.htmlFor} />
       <div className={classNames.childrenWrapper}>{children}</div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
@@ -323,19 +313,16 @@ const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor
 const ErrorMessageList = memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
-  classNames: {
-    errorList: string
-    errorIcon: string
-    errorMessage: string
-  }
-}>(({ errorMessages, managedHtmlFor, classNames }) =>
+}>(({ errorMessages, managedHtmlFor }) =>
   errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className={classNames.errorList} role="alert">
+    <div id={`${managedHtmlFor}_errorMessages`} className="shr-list-none" role="alert">
       {errorMessages.map((message, index) => (
         <p key={index}>
           <Text
-            className={classNames.errorMessage}
-            icon={<FaCircleExclamationIcon className={classNames.errorIcon} />}
+            className="smarthr-ui-FormControl-errorMessage"
+            icon={
+              <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
+            }
           >
             {message}
           </Text>
