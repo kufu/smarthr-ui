@@ -22,13 +22,11 @@ export function useLatest<T extends object>(values: T): Readonly<T> {
   const ref = useRef<T>(values)
   ref.current = values
 
-  const proxy = useMemo(
+  return useMemo(
     () =>
       new Proxy({} as T, {
         get: (_target, prop) => ref.current[prop as keyof T],
       }) as Readonly<T>,
     [],
   )
-
-  return proxy
 }

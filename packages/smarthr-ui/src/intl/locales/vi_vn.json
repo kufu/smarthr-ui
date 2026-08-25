@@ -64,6 +64,7 @@
   "smarthr-ui/InputFile/download": "Tải xuống",
   "smarthr-ui/InputFile/previewLabel": "Mở xem trước {fileName}",
   "smarthr-ui/InputFile/downloadLabel": "Tải xuống {fileName}",
+  "smarthr-ui/InputFile/closePreview": "Đóng",
   "smarthr-ui/LanguageSwitcher/checkIconAlt": "Đang chọn",
   "smarthr-ui/Loader/alt": "Đang xử lý",
   "smarthr-ui/MessageDialog/closeButtonLabel": "Đóng",

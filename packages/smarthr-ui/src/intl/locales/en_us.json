@@ -64,6 +64,7 @@
   "smarthr-ui/InputFile/download": "Download",
   "smarthr-ui/InputFile/previewLabel": "Open preview for {fileName}",
   "smarthr-ui/InputFile/downloadLabel": "Download {fileName}",
+  "smarthr-ui/InputFile/closePreview": "Close",
   "smarthr-ui/LanguageSwitcher/checkIconAlt": "Selected",
   "smarthr-ui/Loader/alt": "In Progress",
   "smarthr-ui/MessageDialog/closeButtonLabel": "Close",

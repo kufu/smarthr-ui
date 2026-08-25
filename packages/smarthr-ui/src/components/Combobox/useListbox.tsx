@@ -14,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
@@ -109,7 +110,11 @@ export const useListbox = <T,>({
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
 
-  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef })
+  const theme = useTheme()
+
+  const addFrame = useAnimationFrame()
+
+  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
   const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
@@ -174,9 +179,29 @@ export const useListbox = <T,>({
           height = bottomSpace
         }
 
+        // HINT: dropdownWidth は 'auto' や '%' などの CSS 値を取りうるため、算出済みの幅を実測して判定する
+        const listBoxWidth = listBoxRef.current.getBoundingClientRect().width
+        // ドロップダウンの幅は maxWidth でビューポート右端から余白分を残すよう制限しているため、位置の判定にも同じ余白を使う
+        const viewportMargin = parseInt(latest.theme.spacingByChar(0.5), 10)
+        // 入力欄の左端を起点に右方向へ表示する場合に使える幅
+        const rightSpace = window.innerWidth - rect.left - viewportMargin
+        // 入力欄の右端を起点に左方向へ表示する場合に使える幅
+        const leftSpace = rect.right
+
+        // ビューポートの左端を基準に計算
+        let left = window.pageXOffset
+
+        if (listBoxWidth <= rightSpace) {
+          // 右側に十分なスペースがある場合は入力欄の左端に揃えて通常表示
+          left += rect.left
+        } else if (listBoxWidth <= leftSpace) {
+          // 左側に収まる場合は入力欄の右端に揃えて表示
+          left += rect.right - listBoxWidth
+        }
+
         setListBoxRect({
           top,
-          left: rect.left + window.pageXOffset,
+          left,
           height,
         })
         setTriggerWidth(rect.width)
@@ -209,8 +234,8 @@ export const useListbox = <T,>({
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
+            // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            latest.addFrame.request(() => {
               latest.onAdd!(option.item.value)
             })
           }
@@ -224,6 +249,9 @@ export const useListbox = <T,>({
       },
     }
   }, [hasOnAdd, latest])
+
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => addFrame.cancel, [addFrame.cancel])
 
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
@@ -363,7 +391,9 @@ export const ListBox = memo(
         dropdownList: {
           width:
             typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-          maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
+          /* HINT: left に依存させると、算出した幅がさらに maxWidth を縮めて再計算の度に幅が縮んでいくため、
+          ビューポート幅のみから算出する */
+          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)})`,
           height: height ? `${height}px` : undefined,
         },
       }

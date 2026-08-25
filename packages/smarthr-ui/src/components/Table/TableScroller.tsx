@@ -6,8 +6,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   useCallback,
-  useLayoutEffect,
-  useRef,
 } from 'react'
 
 import { defaultHtmlFontSize } from '../../themes'
@@ -25,13 +23,13 @@ const SCROLLER_PROPS = {
 }
 
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
-  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) =>
+  ({ children, fixedHead, ...rest }, ref: ForwardedRef<HTMLDivElement>) =>
     fixedHead ? (
-      <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS} forwardedRef={forwardedRef}>
+      <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS} forwardedRef={ref}>
         {children}
       </FixedHeadTableScroller>
     ) : (
-      <Scroller {...rest} {...SCROLLER_PROPS} ref={forwardedRef}>
+      <Scroller {...rest} {...SCROLLER_PROPS} ref={ref}>
         {children}
       </Scroller>
     ),
@@ -49,13 +47,23 @@ const FixedHeadTableScroller = ({
   direction,
   ...rest
 }: FixedHeadTableScrollerProps) => {
-  const innerRef = useRef<HTMLDivElement | null>(null)
+  // TODO: useMergeRefsが作成されたら修正する
+  const callbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      // thead の高さ分だけ scroll-padding-top を設定
+      if (node) {
+        const thead = node.querySelector('thead')
 
-  const setRefs = useCallback(
-    (node: HTMLDivElement) => {
-      innerRef.current = node
+        if (thead) {
+          const { height } = thead.getBoundingClientRect()
+
+          node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
+        }
+      }
+
       if (forwardedRef) {
         if (typeof forwardedRef === 'function') {
+          // React 19 では callback ref の戻り値を cleanup として使うため、返却する
           forwardedRef(node)
         } else {
           forwardedRef.current = node
@@ -65,18 +73,8 @@ const FixedHeadTableScroller = ({
     [forwardedRef],
   )
 
-  // thead の高さ分だけ scroll-padding-top を設定
-  useLayoutEffect(() => {
-    if (!innerRef.current) return
-    const thead = innerRef.current.querySelector('thead')
-    if (thead) {
-      const { height } = thead.getBoundingClientRect()
-      innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
-    }
-  }, [])
-
   return (
-    <Scroller {...rest} ref={setRefs} direction={direction}>
+    <Scroller {...rest} ref={callbackRef} direction={direction}>
       {children}
     </Scroller>
   )

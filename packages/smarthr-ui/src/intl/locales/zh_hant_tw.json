@@ -64,6 +64,7 @@
   "smarthr-ui/InputFile/download": "下載",
   "smarthr-ui/InputFile/previewLabel": "開啟{fileName}的預覽",
   "smarthr-ui/InputFile/downloadLabel": "下載{fileName}",
+  "smarthr-ui/InputFile/closePreview": "關閉",
   "smarthr-ui/LanguageSwitcher/checkIconAlt": "已選擇",
   "smarthr-ui/Loader/alt": "處理中",
   "smarthr-ui/MessageDialog/closeButtonLabel": "關閉",

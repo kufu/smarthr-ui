@@ -13,7 +13,13 @@ const MAPPER = {
   '８': '8',
   '９': '9',
 } as const
-export function formatCurrency(value?: string) {
+/**
+ * 数値文字列をフォーマットする。
+ * 全角数字・ドット・マイナスを半角に変換し、整数部を3桁ごとにカンマ区切りにし、
+ * 整数部の先頭のゼロと小数部の末尾のゼロを除去する。
+ * 数値として解釈できない値が含まれる場合は、元の値をそのまま返す。
+ */
+export function formatNumericString(value?: string) {
   if (!value) {
     return ''
   }

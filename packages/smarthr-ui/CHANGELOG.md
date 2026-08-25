@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.3.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.1...smarthr-ui-v99.3.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* debounce を使用するコンポーネントで、アンマウント時にタイマーを取り残さずにキャンセルできるようにする ([#6803](https://github.com/kufu/smarthr-ui/issues/6803)) ([151c67a](https://github.com/kufu/smarthr-ui/commit/151c67a46a271ffbe0205b139e0fdb9e6c541f78))
+* **FocusTrap:** useImperativeHandle に [focus] を追加して不要な再実行を防止 ([#6797](https://github.com/kufu/smarthr-ui/issues/6797)) ([c048823](https://github.com/kufu/smarthr-ui/commit/c0488233820fac31ddd645ed863bd5f4e1fd20ae))
+* **MultiCombobox:** 選択ダイアログのフォーカス状態は色覚異常の方々には分かりづらい ([#6799](https://github.com/kufu/smarthr-ui/issues/6799)) ([25747d0](https://github.com/kufu/smarthr-ui/commit/25747d04fec30114af093429e3bf4adb1ebfd9a2))
+
+## [99.3.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.0...smarthr-ui-v99.3.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* **Checkbox:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6791](https://github.com/kufu/smarthr-ui/issues/6791)) ([174aa97](https://github.com/kufu/smarthr-ui/commit/174aa97fb2ba8b06c7757f2a4d9836d4913d6074))
+* **CurrencyInput:** useImperativeHandle に [] を追加して毎レンダリングの不要な再実行を防止 ([#6796](https://github.com/kufu/smarthr-ui/issues/6796)) ([b8e01e1](https://github.com/kufu/smarthr-ui/commit/b8e01e12bb615b1cd1d54ae1f6f74b4fb04e9917))
+* **DatePicker:** useImperativeHandle に [] を追加して毎レンダリングの不要な再実行を防止 ([#6793](https://github.com/kufu/smarthr-ui/issues/6793)) ([ee76fa6](https://github.com/kufu/smarthr-ui/commit/ee76fa67477ba4c17b2c7516522794a7ca9ec3b4))
+* **DropZone:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6787](https://github.com/kufu/smarthr-ui/issues/6787)) ([93c067a](https://github.com/kufu/smarthr-ui/commit/93c067a7a3755c75a58a4180aa06c4eccc8c78ba))
+* **InputFile:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6786](https://github.com/kufu/smarthr-ui/issues/6786)) ([a17c71c](https://github.com/kufu/smarthr-ui/commit/a17c71c7a5fe6ff9cf72caa51117a16e6ca9eba6))
+* **Input:** useImperativeHandle に [] を追加して毎レンダリングの不要な再実行を防止 ([#6795](https://github.com/kufu/smarthr-ui/issues/6795)) ([ebdeed9](https://github.com/kufu/smarthr-ui/commit/ebdeed9d6dc8de9126bef7bd9d4850b88d4c3b06))
+* **MultiCombobox:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6790](https://github.com/kufu/smarthr-ui/issues/6790)) ([93bc90d](https://github.com/kufu/smarthr-ui/commit/93bc90dc9f111cf7841ed19755323cda79ec70ab))
+* **PageHeading:** useImperativeHandle に [] を追加して毎レンダリングの不要な再実行を防止 ([#6794](https://github.com/kufu/smarthr-ui/issues/6794)) ([d835590](https://github.com/kufu/smarthr-ui/commit/d835590ab34b8b3159d0de05ca6bc073f0a9534d))
+* **Scroller, DatePicker:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6785](https://github.com/kufu/smarthr-ui/issues/6785)) ([497db1a](https://github.com/kufu/smarthr-ui/commit/497db1a5066158567cd1dce9df4ca9c911735f4d))
+* **SingleCombobox:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6789](https://github.com/kufu/smarthr-ui/issues/6789)) ([b43ed74](https://github.com/kufu/smarthr-ui/commit/b43ed7456c19f747e26061228013a5563363d08c))
+* **Textarea:** useImperativeHandleに[]を追加して毎レンダリングの不要な再実行を防止 ([#6788](https://github.com/kufu/smarthr-ui/issues/6788)) ([0dadf59](https://github.com/kufu/smarthr-ui/commit/0dadf591e89152864cc5c53ccd7611cecd527570))
+
+## [99.3.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.2.0...smarthr-ui-v99.3.0) (2026-08-18)
+
+
+### Features
+
+* **FileViewer:** searchable prop を追加して検索ボックスの表示/非表示を制御できるようにする ([#6798](https://github.com/kufu/smarthr-ui/issues/6798)) ([d7acb14](https://github.com/kufu/smarthr-ui/commit/d7acb14ae677c89aac566826707ab2eb4a89457c))
+
+
+### Bug Fixes
+
+* **AppHeader:** プラットフォーム固有のpropsがDOM要素に渡る問題を修正 ([#6779](https://github.com/kufu/smarthr-ui/issues/6779)) ([9f33263](https://github.com/kufu/smarthr-ui/commit/9f332635935b9d195979cb82f9f27a0050fd5d37))
+* **Combobox:** 画面の右端に寄せて配置した場合にドロップダウンが指定した幅で表示されない問題を修正 ([#6771](https://github.com/kufu/smarthr-ui/issues/6771)) ([174ecbf](https://github.com/kufu/smarthr-ui/commit/174ecbfd56d7469ca2f4cddd2337cb5dedd222ef))
+
 ## [99.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.1.1...smarthr-ui-v99.2.0) (2026-08-13)
 
 
