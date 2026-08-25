@@ -1,12 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
-  type FunctionComponentElement,
-  type PropsWithChildren,
   type ReactNode,
   type RefObject,
   memo,
@@ -21,37 +17,17 @@ import { Cluster, Stack } from '../Layout'
 import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
+import type { CommonProps, IconType, ObjectLabelType, StatusLabelType } from './type'
 import type { Gap } from '../../types'
-import type { StatusLabel } from '../StatusLabel'
-import type { IconType, ObjectLabelType } from './type'
 
-type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
-
-type BaseProps = PropsWithChildren<{
+type Props = CommonProps & {
   wrapperRef: RefObject<HTMLDivElement>
   /** グループのラベル名 */
   label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
-  /** タイトル右の領域 */
-  subActionArea?: ReactNode
-  /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
-  innerMargin?: Gap
-  /** タイトルの隣に表示する `StatusLabel` の配列 */
-  statusLabels?: StatusLabelType | StatusLabelType[]
-  /** タイトルの下に表示するヘルプメッセージ */
-  helpMessage?: ReactNode
-  /** タイトルの下に表示する入力例 */
-  exampleMessage?: ReactNode
-  /** タイトルの下に表示するエラーメッセージ */
-  errorMessages?: ReactNode | ReactNode[]
-  /** エラーがある場合に自動的に入力要素を error にするかどうか */
-  autoBindErrorInput?: boolean
-  /** フォームコントロールの下に表示する補足メッセージ */
-  supplementaryMessage?: ReactNode
+  as?: string | ComponentType<any>
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | ComponentType<any>
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
+}
 
 const classNameGenerator = tv({
   slots: {

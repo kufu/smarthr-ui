@@ -1,25 +1,17 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type ReactNode,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, type ReactNode, useEffect, useId, useRef, useState } from 'react'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, FormGroup } from './FormGroup'
 
-import type { ObjectLabelType } from './type'
+import type { CommonProps, ObjectLabelType } from './type'
 
 const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
 export const FormControl: FC<
-  Omit<ComponentProps<typeof FormGroup>, 'as' | 'label' | 'disabled' | 'wrapperRef'> & {
+  CommonProps & {
     label: ReactNode | ObjectLabelType
   }
 > = ({ label: orgLabel, ...rest }) => {
