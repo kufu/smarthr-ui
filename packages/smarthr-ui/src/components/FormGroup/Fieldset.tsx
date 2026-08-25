@@ -10,7 +10,7 @@ const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 
 export const Fieldset: FC<
   CommonProps & {
-    legend: ReactNode | ObjectLabelType
+    legend: ReactNode | Omit<ObjectLabelType, 'htmlFor'>
     /** `true` のとき、文字色を `TEXT_DISABLED` にする */
     disabled?: boolean
   }
@@ -24,8 +24,9 @@ export const Fieldset: FC<
   )
   const legend = {
     ...baseLegend,
-    // TODO: fieldsetなので本質的にhtmlForは不要なはず。調整する
-    htmlFor: baseLegend.htmlFor || `${baseId}-htmlFor`,
+    // HINT: Fieldsetなので本質的にhtmlForは不要なのだがhtmlForを使って
+    // 最初のinputと各種ヒントをaria-describedbyでつなげているため必要
+    htmlFor: `${baseId}-htmlFor`,
     id: baseLegend.id || `${baseId}-legend`,
   }
 
