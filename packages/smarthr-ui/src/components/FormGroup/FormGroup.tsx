@@ -16,7 +16,6 @@ import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { CommonProps, IconType, ObjectLabelType, StatusLabelType } from './type'
-import type { Gap } from '../../types'
 
 type Props = CommonProps & {
   wrapperRef: RefObject<HTMLDivElement>
@@ -46,48 +45,16 @@ const classNameGenerator = tv({
     childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
   },
   variants: {
-    innerMargin: {
-      0: {},
-      0.25: {},
-      0.5: {},
-      0.75: {},
-      1: {},
-      1.25: {},
-      1.5: {},
-      2: {},
-      2.5: {},
-      3: {},
-      3.5: {},
-      4: {},
-      8: {},
-      X3S: {},
-      XXS: {},
-      XS: {},
-      S: {},
-      M: {},
-      L: {},
-      XL: {},
-      XXL: {},
-      X3L: {},
-    } as { [key in Gap]: string },
-    isFieldset: {
-      true: {},
-      false: {},
-    },
-  },
-  compoundVariants: [
     // TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
     // FormControltとの差をわかりやすくしている
     // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
     // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-    {
-      innerMargin: undefined,
-      isFieldset: true,
-      class: {
+    fieldsetWithDefaultMargin: {
+      true: {
         childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
       },
     },
-  ],
+  },
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
@@ -157,7 +124,9 @@ export const FormGroup: FC<Props> = ({
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      childrenWrapper: generators.childrenWrapper({ innerMargin, isFieldset }),
+      childrenWrapper: generators.childrenWrapper({
+        fieldsetWithDefaultMargin: isFieldset && innerMargin === undefined,
+      }),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
