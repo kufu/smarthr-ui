@@ -193,14 +193,50 @@ export const FormGroup: FC<Props> = ({
         subActionArea={subActionArea}
         labelClassName={classNames.label}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
-      <ErrorMessageList errorMessages={actualErrorMessages} managedHtmlFor={label.htmlFor} />
+      {helpMessage && (
+        <p className="smarthr-ui-FormControl-helpMessage" id={`${label.htmlFor}_helpMessage`}>
+          {helpMessage}
+        </p>
+      )}
+      {exampleMessage && (
+        <Text
+          as="p"
+          color="TEXT_GREY"
+          italic
+          id={`${label.htmlFor}_exampleMessage`}
+          className="smarthr-ui-FormControl-exampleMessage"
+        >
+          {exampleMessage}
+        </Text>
+      )}
+      {actualErrorMessages.length > 0 && (
+        <div id={`${label.htmlFor}_errorMessages`} className="shr-list-none" role="alert">
+          {actualErrorMessages.map((message, index) => (
+            <p key={index}>
+              <Text
+                className="smarthr-ui-FormControl-errorMessage"
+                icon={
+                  <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
+                }
+              >
+                {message}
+              </Text>
+            </p>
+          ))}
+        </div>
+      )}
       <div className={classNames.childrenWrapper}>{children}</div>
-      <SupplementaryMessageText
-        supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={label.htmlFor}
-      />
+      {supplementaryMessage && (
+        <Text
+          as="p"
+          size="S"
+          color="TEXT_GREY"
+          id={`${label.htmlFor}_supplementaryMessage`}
+          className="smarthr-ui-FormControl-supplementaryMessage"
+        >
+          {supplementaryMessage}
+        </Text>
+      )}
     </Stack>
   )
 }
@@ -235,7 +271,11 @@ const LabelCluster = memo<
         <Text styleType={labelType} icon={labelIcon}>
           <span className="smarthr-ui-FormControl-labelText">{label}</span>
         </Text>
-        <StatusLabelCluster statusLabels={statusLabels} />
+        {statusLabels.length > 0 && (
+          <Cluster gap={0.25} as="span">
+            {statusLabels}
+          </Cluster>
+        )}
       </>
     )
 
@@ -277,74 +317,4 @@ const LabelCluster = memo<
       </>
     )
   },
-)
-
-const StatusLabelCluster = memo<{ statusLabels: StatusLabelType[] }>(({ statusLabels }) =>
-  statusLabels.length === 0 ? null : (
-    <Cluster gap={0.25} as="span">
-      {statusLabels}
-    </Cluster>
-  ),
-)
-
-const HelpMessageParagraph = memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
-  ({ helpMessage, managedHtmlFor }) =>
-    helpMessage ? (
-      <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
-        {helpMessage}
-      </p>
-    ) : null,
-)
-
-const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
-  ({ exampleMessage, managedHtmlFor }) =>
-    exampleMessage ? (
-      <Text
-        as="p"
-        color="TEXT_GREY"
-        italic
-        id={`${managedHtmlFor}_exampleMessage`}
-        className="smarthr-ui-FormControl-exampleMessage"
-      >
-        {exampleMessage}
-      </Text>
-    ) : null,
-)
-
-const ErrorMessageList = memo<{
-  errorMessages: ReactNode[]
-  managedHtmlFor: string
-}>(({ errorMessages, managedHtmlFor }) =>
-  errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className="shr-list-none" role="alert">
-      {errorMessages.map((message, index) => (
-        <p key={index}>
-          <Text
-            className="smarthr-ui-FormControl-errorMessage"
-            icon={
-              <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
-            }
-          >
-            {message}
-          </Text>
-        </p>
-      ))}
-    </div>
-  ) : null,
-)
-
-const SupplementaryMessageText = memo<
-  Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
->(({ supplementaryMessage, managedHtmlFor }) =>
-  supplementaryMessage ? (
-    <Text
-      as="p"
-      size="S"
-      color="TEXT_GREY"
-      id={`${managedHtmlFor}_supplementaryMessage`}
-      className="smarthr-ui-FormControl-supplementaryMessage"
-    >
-      {supplementaryMessage}
-    </Text>
-  ) : null,
 )
