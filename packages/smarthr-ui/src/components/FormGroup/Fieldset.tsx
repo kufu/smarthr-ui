@@ -1,11 +1,36 @@
+'use client'
+
+import { type FC, type ReactNode, useId, useRef } from 'react'
+
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
+
 import { FormGroup } from './FormGroup'
 
-import type { ComponentProps, FC, ReactNode } from 'react'
+import type { CommonProps, ObjectLabelType } from './type'
 
-type FormControlType = ComponentProps<typeof FormGroup>
+const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 
 export const Fieldset: FC<
-  Omit<FormControlType, 'as' | 'label'> & {
-    legend: Omit<Exclude<FormControlType['label'], ReactNode>, 'htmlFor'> | ReactNode
+  CommonProps & {
+    legend: ReactNode | Omit<ObjectLabelType, 'htmlFor'>
+    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+    disabled?: boolean
   }
-> = ({ legend, ...rest }) => <FormGroup {...rest} label={legend} as="fieldset" />
+> = ({ legend: orgLegend, ...rest }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const baseId = useId()
+
+  const baseLegend = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
+    orgLegend,
+    legendObjectConverter,
+  )
+  const legend = {
+    ...baseLegend,
+    // HINT: Fieldsetなので本質的にhtmlForは不要なのだがhtmlForを使って
+    // 最初のinputと各種ヒントをaria-describedbyでつなげているため必要
+    htmlFor: `${baseId}-htmlFor`,
+    id: baseLegend.id || `${baseId}-legend`,
+  }
+
+  return <FormGroup {...rest} as="fieldset" wrapperRef={wrapperRef} label={legend} />
+}

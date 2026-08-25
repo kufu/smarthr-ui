@@ -1,73 +1,31 @@
-'use client'
-
 import {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
-  type FunctionComponentElement,
-  type PropsWithChildren,
   type ReactNode,
+  type RefObject,
   memo,
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
-import { useId } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text, type TextProps } from '../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
+import type { CommonProps, IconType, ObjectLabelType, StatusLabelType } from './type'
 import type { Gap } from '../../types'
-import type { StatusLabel } from '../StatusLabel'
 
-type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
-type IconType = ComponentProps<typeof Text>['icon']
-
-type ObjectLabelType = {
-  text: ReactNode
-  /** ラベルの表示タイプ */
-  styleType?: TextProps['styleType']
-  /** ラベル左に設置するアイコン */
-  icon?: IconType
-  /** ラベルを視覚的に隠すかどうか */
-  unrecommendedHide?: boolean
-  /** ラベルを紐づける入力要素のID属性と同じ値 */
-  htmlFor?: string
-  /** ラベルに適用する `id` 値 */
-  id?: string
-}
-type BaseProps = PropsWithChildren<{
+type Props = CommonProps & {
+  wrapperRef: RefObject<HTMLDivElement>
   /** グループのラベル名 */
-  label: ReactNode | ObjectLabelType
-  /** タイトル右の領域 */
-  subActionArea?: ReactNode
-  /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
-  innerMargin?: Gap
-  /** タイトルの隣に表示する `StatusLabel` の配列 */
-  statusLabels?: StatusLabelType | StatusLabelType[]
-  /** タイトルの下に表示するヘルプメッセージ */
-  helpMessage?: ReactNode
-  /** タイトルの下に表示する入力例 */
-  exampleMessage?: ReactNode
-  /** タイトルの下に表示するエラーメッセージ */
-  errorMessages?: ReactNode | ReactNode[]
-  /** エラーがある場合に自動的に入力要素を error にするかどうか */
-  autoBindErrorInput?: boolean
-  /** フォームコントロールの下に表示する補足メッセージ */
-  supplementaryMessage?: ReactNode
+  label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
+  as?: string | ComponentType<any>
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  as?: string | ComponentType<any>
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'aria-labelledby'>
-
-const labelObjectConverter = (label: ReactNode) => ({ text: label })
+}
 
 const classNameGenerator = tv({
   slots: {
@@ -133,11 +91,12 @@ const classNameGenerator = tv({
 })
 
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
-const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
+export const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
 const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
 
 export const FormGroup: FC<Props> = ({
-  label: orgLabel,
+  wrapperRef,
+  label,
   subActionArea,
   innerMargin,
   statusLabels,
@@ -151,15 +110,6 @@ export const FormGroup: FC<Props> = ({
   children,
   ...rest
 }) => {
-  const label = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
-    orgLabel,
-    labelObjectConverter,
-  )
-  const baseId = useId()
-  const [childInputId, setChildInputId] = useState<string>('')
-  const managedHtmlFor = label.htmlFor || childInputId || `${baseId}-htmlFor`
-  const managedLabelId = label.id || `${baseId}-label`
-  const wrapperRef = useRef<HTMLDivElement>(null)
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
@@ -167,20 +117,21 @@ export const FormGroup: FC<Props> = ({
     const temp: string[] = []
 
     if (helpMessage) {
-      temp.push(`${managedHtmlFor}_helpMessage`)
+      temp.push(`${label.htmlFor}_helpMessage`)
     }
     if (exampleMessage) {
-      temp.push(`${managedHtmlFor}_exampleMessage`)
+      temp.push(`${label.htmlFor}_exampleMessage`)
     }
     if (supplementaryMessage) {
-      temp.push(`${managedHtmlFor}_supplementaryMessage`)
+      temp.push(`${label.htmlFor}_supplementaryMessage`)
     }
     if (errorMessages) {
-      temp.push(`${managedHtmlFor}_errorMessages`)
+      temp.push(`${label.htmlFor}_errorMessages`)
     }
 
     return temp.join(' ')
-  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
+    // TODO: ReactNodeやarrayなど不安定な値をそのまま依存配列に含めているので調整する
+  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, label.htmlFor])
 
   const actualStatusLabels = useMemo(
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
@@ -196,7 +147,7 @@ export const FormGroup: FC<Props> = ({
   }, [errorMessages])
 
   const classNames = useMemo(() => {
-    const generators = classNameGenerator({ innerMargin, isFieldset })
+    const generators = classNameGenerator()
 
     return {
       wrapper: generators.wrapper({ className }),
@@ -206,43 +157,9 @@ export const FormGroup: FC<Props> = ({
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      childrenWrapper: generators.childrenWrapper(),
+      childrenWrapper: generators.childrenWrapper({ innerMargin, isFieldset }),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
-
-  useEffect(() => {
-    if (
-      isFieldset ||
-      !wrapperRef.current ||
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      document.getElementById(managedHtmlFor)
-    ) {
-      return
-    }
-
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const inputId = input.getAttribute('id')
-
-    if (inputId) {
-      setChildInputId(inputId)
-    } else {
-      input.setAttribute('id', managedHtmlFor)
-    }
-
-    if (input instanceof HTMLInputElement && input.type === 'file') {
-      const inputLabelledByIds = input.getAttribute('aria-labelledby')
-
-      if (inputLabelledByIds) {
-        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-        input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${managedLabelId}`)
-      }
-    }
-  }, [managedHtmlFor, isFieldset, managedLabelId])
 
   useEffect(() => {
     if (!wrapperRef.current) {
@@ -273,7 +190,7 @@ export const FormGroup: FC<Props> = ({
     }
 
     managedDescribedbyIdsRef.current = describedbyIdTokens
-  }, [describedbyIds])
+  }, [describedbyIds, wrapperRef])
 
   useEffect(() => {
     if (!autoBindErrorInput || !wrapperRef.current) {
@@ -289,7 +206,7 @@ export const FormGroup: FC<Props> = ({
         input.removeAttribute('aria-invalid')
       }
     }
-  }, [actualErrorMessages.length, autoBindErrorInput])
+  }, [actualErrorMessages.length, autoBindErrorInput, wrapperRef])
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -347,7 +264,7 @@ export const FormGroup: FC<Props> = ({
     })
 
     return () => observer.disconnect()
-  }, [isFieldset])
+  }, [isFieldset, wrapperRef])
 
   return (
     <Stack
@@ -360,8 +277,8 @@ export const FormGroup: FC<Props> = ({
     >
       <LabelCluster
         isFieldset={isFieldset}
-        managedHtmlFor={managedHtmlFor}
-        managedLabelId={managedLabelId}
+        managedHtmlFor={label.htmlFor}
+        managedLabelId={label.id}
         unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
         label={label.text}
@@ -370,17 +287,17 @@ export const FormGroup: FC<Props> = ({
         subActionArea={subActionArea}
         labelClassName={classNames.label}
       />
-      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
-      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
+      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
       <ErrorMessageList
         errorMessages={actualErrorMessages}
-        managedHtmlFor={managedHtmlFor}
+        managedHtmlFor={label.htmlFor}
         classNames={classNames}
       />
       <div className={classNames.childrenWrapper}>{children}</div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
-        managedHtmlFor={managedHtmlFor}
+        managedHtmlFor={label.htmlFor}
       />
     </Stack>
   )
