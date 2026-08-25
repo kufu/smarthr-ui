@@ -80,6 +80,8 @@ export const FormGroup: FC<Props> = ({
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
+  // HINT: statusLabelsは設定されない場合が大半、かつ設定されてもRequiredLabelでmemo化されているため
+  // memo化がかなりの確率で有用
   const actualStatusLabels = useMemo(
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
     [statusLabels],
