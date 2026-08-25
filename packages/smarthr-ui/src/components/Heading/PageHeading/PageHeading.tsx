@@ -8,15 +8,15 @@ import {
   type Ref,
   forwardRef,
   memo,
+  useCallback,
   useId,
-  useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
@@ -96,75 +96,65 @@ const AutoPageTitleHeading: FC<
   }
 > = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
-  // HINT: h1のテキストをMutationObserverで監視するために内部でrefを保持しつつ、利用者のrefにも要素を渡す
-  const innerRef = useRef<HTMLHeadingElement | null>(null)
-
   const titleFrame = useAnimationFrame()
   const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
 
-  const functions = useMemo(() => {
-    const updateTitle = () => {
-      const node = innerRef.current
-
+  const callbackRef = useCallback(
+    (node: HTMLHeadingElement | null) => {
       if (!node) {
         return
       }
 
-      const title = latest.pageTitle || node.textContent || ''
-      document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
+      const updateTitle = () => {
+        const title = latest.pageTitle || node.textContent || ''
+        document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
 
-      // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
-      // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-      const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
-        document.createElement('div')) as HTMLDivElement
+        // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
+        // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
+        const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
+          document.createElement('div')) as HTMLDivElement
 
-      pseudoTitle.setAttribute('id', latest.pseudoTitleId)
-      pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
-      pseudoTitle.setAttribute('aria-live', 'polite')
-      document.body.prepend(pseudoTitle)
+        pseudoTitle.setAttribute('id', latest.pseudoTitleId)
+        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
+        pseudoTitle.setAttribute('aria-live', 'polite')
+        document.body.prepend(pseudoTitle)
 
-      latest.titleFrame.request(() => {
-        pseudoTitle.textContent = document.title
+        latest.titleFrame.request(() => {
+          pseudoTitle.textContent = document.title
+        })
+      }
+
+      updateTitle()
+
+      const observer = new MutationObserver(updateTitle)
+      observer.observe(node, {
+        characterData: true,
+        childList: true,
+        subtree: true,
       })
-    }
-    let observer: MutationObserver
 
-    return {
-      callbackRef: (node: HTMLHeadingElement | null) => {
-        // TODO: useMergeRefsが実装された修正
-        innerRef.current = node
-        updateTitle()
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      return () => {
+        observer.disconnect()
+        latest.titleFrame.cancel()
 
-        if (node) {
-          observer ??= new MutationObserver(updateTitle)
-          observer.observe(node, {
-            characterData: true,
-            childList: true,
-            subtree: true,
-          })
-        } else {
-          observer?.disconnect()
-          latest.titleFrame.cancel()
+        const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 
-          const pseudoTitle = document.getElementById(latest.pseudoTitleId)
-
-          if (pseudoTitle) {
-            pseudoTitle.remove()
-          }
+        if (pseudoTitle) {
+          pseudoTitle.remove()
         }
-      },
-    }
-  }, [latest])
-
-  // TODO: useMergeRefsが実装された修正
-  useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
-    outerRef,
-    () => innerRef.current,
-    [],
+      }
+    },
+    [latest],
   )
 
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(callbackRef, outerRef)
+
   return (
-    <ActualHeading {...rest} headingRef={functions.callbackRef}>
+    <ActualHeading {...rest} headingRef={mergedRef}>
       {children}
     </ActualHeading>
   )
@@ -190,8 +180,8 @@ const ActualHeading: FC<ActualHeadingProps> = ({
     () => classNameGenerator({ visuallyHidden, className }),
     [className, visuallyHidden],
   )
-
   const Component = visuallyHidden ? VisuallyHiddenText : Text
+
   return (
     <Component
       {...rest}
