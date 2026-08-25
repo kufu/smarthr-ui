@@ -1,6 +1,6 @@
 'use client'
 
-import { FormGroup } from '../FormGroup'
+import { FormGroup } from './FormGroup'
 
 import type { ComponentProps, FC } from 'react'
 

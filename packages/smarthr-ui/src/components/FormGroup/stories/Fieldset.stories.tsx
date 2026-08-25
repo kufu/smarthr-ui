@@ -1,4 +1,3 @@
-import { FormControl } from '../../FormControl'
 import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
@@ -6,6 +5,7 @@ import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Fieldset } from '../Fieldset'
+import { FormControl } from '../FormControl'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

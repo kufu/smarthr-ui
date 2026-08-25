@@ -1,4 +1,4 @@
-import { FormGroup } from '../FormGroup'
+import { FormGroup } from './FormGroup'
 
 import type { ComponentProps, FC, ReactNode } from 'react'
 
