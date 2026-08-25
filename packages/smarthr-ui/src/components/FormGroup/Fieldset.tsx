@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, type ReactNode, useId, useRef } from 'react'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
