@@ -195,7 +195,22 @@ export const FormGroup: FC<Props> = ({
       />
       <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={label.htmlFor} />
       <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={label.htmlFor} />
-      <ErrorMessageList errorMessages={actualErrorMessages} managedHtmlFor={label.htmlFor} />
+      {actualErrorMessages.length > 0 ? (
+        <div id={`${label.htmlFor}_errorMessages`} className="shr-list-none" role="alert">
+          {actualErrorMessages.map((message, index) => (
+            <p key={index}>
+              <Text
+                className="smarthr-ui-FormControl-errorMessage"
+                icon={
+                  <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
+                }
+              >
+                {message}
+              </Text>
+            </p>
+          ))}
+        </div>
+      ) : null}
       <div className={classNames.childrenWrapper}>{children}</div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
@@ -309,28 +324,6 @@ const ExampleMessageText = memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor
         {exampleMessage}
       </Text>
     ) : null,
-)
-
-const ErrorMessageList = memo<{
-  errorMessages: ReactNode[]
-  managedHtmlFor: string
-}>(({ errorMessages, managedHtmlFor }) =>
-  errorMessages.length > 0 ? (
-    <div id={`${managedHtmlFor}_errorMessages`} className="shr-list-none" role="alert">
-      {errorMessages.map((message, index) => (
-        <p key={index}>
-          <Text
-            className="smarthr-ui-FormControl-errorMessage"
-            icon={
-              <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
-            }
-          >
-            {message}
-          </Text>
-        </p>
-      ))}
-    </div>
-  ) : null,
 )
 
 const SupplementaryMessageText = memo<
