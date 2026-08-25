@@ -132,6 +132,7 @@ export const FormGroup: FC<Props> = ({
     }
 
     return temp.join(' ')
+    // TODO: ReactNodeやarrayなど不安定な値をそのまま依存配列に含めているので調整する
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, label.htmlFor])
 
   const actualStatusLabels = useMemo(
@@ -148,7 +149,7 @@ export const FormGroup: FC<Props> = ({
   }, [errorMessages])
 
   const classNames = useMemo(() => {
-    const generators = classNameGenerator({ innerMargin, isFieldset })
+    const generators = classNameGenerator()
 
     return {
       wrapper: generators.wrapper({ className }),
@@ -158,7 +159,7 @@ export const FormGroup: FC<Props> = ({
       errorList: generators.errorList(),
       errorIcon: generators.errorIcon(),
       errorMessage: generators.errorMessage(),
-      childrenWrapper: generators.childrenWrapper(),
+      childrenWrapper: generators.childrenWrapper({ innerMargin, isFieldset }),
     }
   }, [innerMargin, isFieldset, label.unrecommendedHide, className])
 
