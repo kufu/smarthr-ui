@@ -1,21 +1,11 @@
-import {
-  type ComponentType,
-  type FC,
-  type ReactNode,
-  type RefObject,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import { type ComponentType, type FC, type RefObject, useEffect, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon } from '../Icon'
-import { Cluster, Stack } from '../Layout'
-import { Text, type TextProps } from '../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
+import { Stack } from '../Layout'
+import { Text } from '../Text'
 
-import type { CommonProps, IconType, ObjectLabelType, StatusLabelType } from './type'
+import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 type Props = CommonProps & {
   wrapperRef: RefObject<HTMLDivElement>
@@ -26,6 +16,7 @@ type Props = CommonProps & {
   fieldsetWithDefaultMargin?: boolean
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
+  LabelComponent: FC<LabelComponentProps>
 }
 
 const classNameGenerator = tv({
@@ -40,7 +31,6 @@ const classNameGenerator = tv({
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
-    label: 'smarthr-ui-FormControl-label',
     childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
   },
   variants: {
@@ -75,6 +65,7 @@ export const FormGroup: FC<Props> = ({
   className,
   children,
   fieldsetWithDefaultMargin,
+  LabelComponent,
   ...rest
 }) => {
   const managedDescribedbyIdsRef = useRef<string[]>([])
@@ -126,12 +117,9 @@ export const FormGroup: FC<Props> = ({
 
     return {
       wrapper: generators.wrapper({ className }),
-      label: generators.label({
-        className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
-      }),
       childrenWrapper: generators.childrenWrapper({ fieldsetWithDefaultMargin }),
     }
-  }, [fieldsetWithDefaultMargin, label.unrecommendedHide, className])
+  }, [fieldsetWithDefaultMargin, className])
 
   useEffect(() => {
     if (!wrapperRef.current) {
@@ -189,8 +177,7 @@ export const FormGroup: FC<Props> = ({
       aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={classNames.wrapper}
     >
-      <LabelCluster
-        isFieldset={isFieldset}
+      <LabelComponent
         managedHtmlFor={label.htmlFor}
         managedLabelId={label.id}
         unrecommendedHideLabel={label.unrecommendedHide}
@@ -199,7 +186,6 @@ export const FormGroup: FC<Props> = ({
         labelIcon={label.icon}
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
-        labelClassName={classNames.label}
       />
       {helpMessage && (
         <p className="smarthr-ui-FormControl-helpMessage" id={helpMessageId}>
@@ -248,81 +234,3 @@ export const FormGroup: FC<Props> = ({
     </Stack>
   )
 }
-
-const LabelCluster = memo<
-  Pick<Props, 'subActionArea'> & {
-    label: ReactNode
-    labelType: TextProps['styleType']
-    labelIcon?: IconType
-    unrecommendedHideLabel?: boolean
-    isFieldset: boolean
-    managedHtmlFor: string
-    managedLabelId: string
-    labelClassName: string
-    statusLabels: StatusLabelType[]
-  }
->(
-  ({
-    isFieldset,
-    managedHtmlFor,
-    managedLabelId,
-    unrecommendedHideLabel,
-    labelType = 'blockTitle',
-    label,
-    labelIcon,
-    subActionArea,
-    labelClassName,
-    statusLabels,
-  }) => {
-    const body = (
-      <>
-        <Text styleType={labelType} icon={labelIcon}>
-          <span className="smarthr-ui-FormControl-labelText">{label}</span>
-        </Text>
-        {statusLabels.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabels}
-          </Cluster>
-        )}
-      </>
-    )
-
-    const attrs: {
-      label: { 'aria-hidden': 'true' } | { as: 'label'; htmlFor: string; id: string } | null
-      visuallyHidden: { as: 'legend' | 'label'; htmlFor?: string; id?: string } | null
-    } = {
-      label: null,
-      visuallyHidden: null,
-    }
-
-    if (isFieldset) {
-      attrs.visuallyHidden = { as: 'legend' }
-
-      if (!unrecommendedHideLabel) {
-        attrs.label = { 'aria-hidden': 'true' } as const
-      }
-    } else {
-      attrs[unrecommendedHideLabel ? 'visuallyHidden' : 'label'] = {
-        as: 'label',
-        htmlFor: managedHtmlFor,
-        id: managedLabelId,
-      }
-    }
-
-    return (
-      <>
-        {attrs.visuallyHidden && (
-          <VisuallyHiddenText {...attrs.visuallyHidden}>{body}</VisuallyHiddenText>
-        )}
-        {attrs.label && (
-          <Cluster justify="space-between">
-            <Cluster {...attrs.label} align="center" className={labelClassName}>
-              {body}
-            </Cluster>
-            {subActionArea && <div className="shr-grow">{subActionArea}</div>}
-          </Cluster>
-        )}
-      </>
-    )
-  },
-)

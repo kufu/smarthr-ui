@@ -1,12 +1,15 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useId, useRef } from 'react'
+import { type FC, type ReactNode, memo, useEffect, useId, useRef } from 'react'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
+import { Cluster } from '../Layout'
+import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, FormGroup, LABEL_TEXT_SELECTOR } from './FormGroup'
 
-import type { CommonProps, ObjectLabelType } from './type'
+import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 
@@ -96,8 +99,63 @@ export const Fieldset: FC<
       as="fieldset"
       wrapperRef={wrapperRef}
       label={legend}
+      LabelComponent={LabelComponent}
       innerMargin={innerMargin}
       fieldsetWithDefaultMargin={innerMargin === undefined}
     />
   )
 }
+
+const LabelComponent = memo<LabelComponentProps>(
+  ({
+    unrecommendedHideLabel,
+    labelType = 'blockTitle',
+    label,
+    labelIcon,
+    subActionArea,
+    statusLabels,
+  }) => {
+    const body = (
+      <>
+        <Text styleType={labelType} icon={labelIcon}>
+          <span className="smarthr-ui-FormControl-labelText">{label}</span>
+        </Text>
+        {statusLabels.length > 0 && (
+          <Cluster gap={0.25} as="span">
+            {statusLabels}
+          </Cluster>
+        )}
+      </>
+    )
+    const legend = <VisuallyHiddenText as="legend">{body}</VisuallyHiddenText>
+
+    if (unrecommendedHideLabel) {
+      return legend
+    }
+
+    const renderedLegend = (
+      <Cluster aria-hidden="true" align="center" className="smarthr-ui-FormControl-label">
+        {body}
+      </Cluster>
+    )
+
+    if (subActionArea) {
+      return (
+        <>
+          {legend}
+          <Cluster justify="space-between">
+            {renderedLegend}
+            <div className="shr-grow">{subActionArea}</div>
+          </Cluster>
+        </>
+      )
+    }
+
+    return (
+      <>
+        {legend}
+        {renderedLegend}
+      </>
+    )
+  },
+)
