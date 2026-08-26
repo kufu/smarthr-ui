@@ -113,7 +113,6 @@ const LabelComponent = memo<LabelComponentProps>(
     label,
     labelIcon,
     subActionArea,
-    labelClassName,
     statusLabels,
   }) => {
     const body = (
@@ -135,7 +134,7 @@ const LabelComponent = memo<LabelComponentProps>(
     }
 
     const renderedLegend = (
-      <Cluster aria-hidden="true" align="center" className={labelClassName}>
+      <Cluster aria-hidden="true" align="center" className="smarthr-ui-FormControl-label">
         {body}
       </Cluster>
     )

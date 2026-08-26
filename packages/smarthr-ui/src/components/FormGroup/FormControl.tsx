@@ -79,7 +79,6 @@ const LabelComponent = memo<LabelComponentProps>(
     label,
     labelIcon,
     subActionArea,
-    labelClassName,
     statusLabels,
   }) => {
     const body = (
@@ -106,7 +105,7 @@ const LabelComponent = memo<LabelComponentProps>(
     }
 
     const renderedLabel = (
-      <Cluster {...attrs} align="center" className={labelClassName}>
+      <Cluster {...attrs} align="center" className="smarthr-ui-FormControl-label">
         {body}
       </Cluster>
     )

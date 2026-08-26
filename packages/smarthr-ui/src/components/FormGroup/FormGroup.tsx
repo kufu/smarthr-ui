@@ -4,7 +4,6 @@ import { tv } from 'tailwind-variants'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
-import { visuallyHiddenTextClassName } from '../VisuallyHiddenText'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -32,7 +31,6 @@ const classNameGenerator = tv({
       '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
       '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
     ],
-    label: 'smarthr-ui-FormControl-label',
     childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
   },
   variants: {
@@ -119,12 +117,9 @@ export const FormGroup: FC<Props> = ({
 
     return {
       wrapper: generators.wrapper({ className }),
-      label: generators.label({
-        className: label.unrecommendedHide ? visuallyHiddenTextClassName : '',
-      }),
       childrenWrapper: generators.childrenWrapper({ fieldsetWithDefaultMargin }),
     }
-  }, [fieldsetWithDefaultMargin, label.unrecommendedHide, className])
+  }, [fieldsetWithDefaultMargin, className])
 
   useEffect(() => {
     if (!wrapperRef.current) {
@@ -191,7 +186,6 @@ export const FormGroup: FC<Props> = ({
         labelIcon={label.icon}
         statusLabels={actualStatusLabels}
         subActionArea={subActionArea}
-        labelClassName={classNames.label}
       />
       {helpMessage && (
         <p className="smarthr-ui-FormControl-helpMessage" id={helpMessageId}>

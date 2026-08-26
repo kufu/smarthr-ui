@@ -54,7 +54,6 @@ export type LabelComponentProps = {
   unrecommendedHideLabel?: boolean
   managedHtmlFor: string
   managedLabelId: string
-  labelClassName: string
   statusLabels: StatusLabelType[]
   subActionArea?: ReactNode
 }
