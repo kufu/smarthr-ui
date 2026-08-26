@@ -73,9 +73,10 @@ export const BrowserItem: FC<Props> = ({
 }) => {
   const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
   const classNames = useMemo(() => {
-    const { label, input } = classNameGenerator({ selected, hasChildren: itemHasChildren })
+    const { label, input } = classNameGenerator()
+
     return {
-      label: label(),
+      label: label({ selected, hasChildren: itemHasChildren }),
       input: input(),
     }
   }, [selected, itemHasChildren])
