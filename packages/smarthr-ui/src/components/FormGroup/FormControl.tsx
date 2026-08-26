@@ -10,17 +10,44 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { FormGroup } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
+import { useAutoBindErrorInput } from './useAutoBindErrorInput'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
-export const FormControl: FC<
-  CommonProps & {
-    label: ReactNode | ObjectLabelType
-  }
-> = ({
+type Props = CommonProps & {
+  label: ReactNode | ObjectLabelType
+}
+type LowerProps = Omit<Props, 'autoBindErrorInput'>
+
+// HINT: useAutoBindErrorInputを呼ぶ/呼ばないでコンポーネントを分けている。
+// FormGroup側で分岐すると、切り替え時にFormGroup配下のみが再マウントされ、
+// ActualFormControlのuseEffectがsetAttributeしたid・aria-describedbyが
+// 復元されなくなる。分岐を最上位に置くことで、再マウント時にそれらのuseEffectも
+// 再実行されるようにしている。
+export const FormControl: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
+  const Component = autoBindErrorInput ? AutoBindErrorFormControl : ActualFormControl
+
+  return <Component {...rest} />
+}
+
+const AutoBindErrorFormControl: FC<LowerProps> = (props) => {
+  const { wrapperRef, visibleErrorMessages, formGroupProps } = useFormControlProps(props)
+
+  useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
+
+  return <FormGroup {...formGroupProps} />
+}
+
+const ActualFormControl: FC<LowerProps> = (props) => {
+  const { formGroupProps } = useFormControlProps(props)
+
+  return <FormGroup {...formGroupProps} />
+}
+
+const useFormControlProps = ({
   label: orgLabel,
   errorMessages: orgErrorMessages,
   helpMessage,
@@ -28,7 +55,7 @@ export const FormControl: FC<
   supplementaryMessage,
   className,
   ...rest
-}) => {
+}: LowerProps) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -94,19 +121,21 @@ export const FormControl: FC<
     }
   }, [label.htmlFor, label.id])
 
-  return (
-    <FormGroup
-      {...rest}
-      {...calculatedDescribedByIds}
-      wrapperRef={wrapperRef}
-      label={label}
-      helpMessage={helpMessage}
-      exampleMessage={exampleMessage}
-      supplementaryMessage={supplementaryMessage}
-      classNames={classNames}
-      LabelComponent={LabelComponent}
-    />
-  )
+  return {
+    wrapperRef,
+    visibleErrorMessages: calculatedDescribedByIds.visibleErrorMessages,
+    formGroupProps: {
+      ...rest,
+      ...calculatedDescribedByIds,
+      wrapperRef,
+      label,
+      helpMessage,
+      exampleMessage,
+      supplementaryMessage,
+      classNames,
+      LabelComponent,
+    },
+  }
 }
 
 const LabelComponent = memo<LabelComponentProps>(

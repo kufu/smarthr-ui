@@ -1,17 +1,16 @@
-import { type ComponentType, type FC, type RefObject, useEffect, useMemo } from 'react'
+import { type ComponentType, type FC, type RefObject, useMemo } from 'react'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
-
-import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 import type { useDescribedByIds } from './useDescribedByIds'
 
 // HINT: errorMessagesを含む各idはuseDescribedByIdsで、classNamesは各コンポーネントで
 // 算出済みの値を受け取る
-type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
+// autoBindErrorInputによる分岐はFormControl・Fieldset側で行うため、ここでは受け取らない
+type Props = Omit<CommonProps, 'errorMessages' | 'className' | 'autoBindErrorInput'> &
   Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
     wrapperRef: RefObject<HTMLDivElement>
     /** グループのラベル名 */
@@ -26,41 +25,8 @@ type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
       childrenWrapper: string
     }
   }
-type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
-export const FormGroup: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
-  const Component = autoBindErrorInput ? AutoBindErrorFormGroup : ActualFormGroup
-
-  return <Component {...rest} />
-}
-
-const AutoBindErrorFormGroup: FC<LowerProps> = ({ visibleErrorMessages, wrapperRef, ...rest }) => {
-  useEffect(() => {
-    if (!wrapperRef.current) {
-      return
-    }
-
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (input) {
-      if (visibleErrorMessages) {
-        input.setAttribute('aria-invalid', 'true')
-      } else {
-        input.removeAttribute('aria-invalid')
-      }
-    }
-  }, [visibleErrorMessages, wrapperRef])
-
-  return (
-    <ActualFormGroup
-      {...rest}
-      wrapperRef={wrapperRef}
-      visibleErrorMessages={visibleErrorMessages}
-    />
-  )
-}
-
-const ActualFormGroup: FC<LowerProps> = ({
+export const FormGroup: FC<Props> = ({
   wrapperRef,
   label,
   subActionArea,
