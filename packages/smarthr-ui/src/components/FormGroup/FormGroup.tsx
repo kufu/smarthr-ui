@@ -56,6 +56,7 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
+  // TODO: autoBindErrorInputによってコンポーネントを実行し分けるように修正する
   useEffect(() => {
     if (!autoBindErrorInput || !wrapperRef.current) {
       return
