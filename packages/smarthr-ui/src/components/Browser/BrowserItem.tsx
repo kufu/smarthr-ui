@@ -9,38 +9,29 @@ import { getElementIdFromNode } from './utils'
 import type { ItemNode } from './models'
 
 const classNameGenerator = tv({
-  slots: {
-    label: [
-      'shr-block shr-rounded-m shr-px-1 shr-py-0.5',
-      'hover:shr-bg-white-darken',
-      'has-[:focus-visible]:shr-focus-indicator',
-    ],
-    input: 'shr-sr-only',
-  },
+  base: [
+    'shr-block shr-rounded-m shr-px-1 shr-py-0.5',
+    'hover:shr-bg-white-darken',
+    'has-[:focus-visible]:shr-focus-indicator',
+  ],
   variants: {
     selected: {
-      true: {
-        label: ['shr-bg-white-darken shr-font-bold', 'hover:shr-bg-column-darken'],
-      },
-      false: {},
+      true: ['shr-bg-white-darken shr-font-bold', 'hover:shr-bg-column-darken'],
     },
     hasChildren: {
-      true: {},
-      false: {},
+      false: '',
     },
   },
   compoundVariants: [
     {
       selected: true,
       hasChildren: false,
-      className: {
-        label: [
-          'shr-bg-main shr-text-white',
-          'hover:shr-bg-main-darken',
-          'forced-colors:shr-bg-[Highlight]',
-          'has-[:focus-visible]:shr-focus-indicator',
-        ],
-      },
+      className: [
+        'shr-bg-main shr-text-white',
+        'hover:shr-bg-main-darken',
+        'forced-colors:shr-bg-[Highlight]',
+        'has-[:focus-visible]:shr-focus-indicator',
+      ],
     },
   ],
 })
@@ -72,27 +63,23 @@ export const BrowserItem: FC<Props> = ({
   handleChangeInput,
 }) => {
   const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
-  const classNames = useMemo(() => {
-    const { label, input } = classNameGenerator()
-
-    return {
-      label: label({ selected, hasChildren: itemHasChildren }),
-      input: input(),
-    }
-  }, [selected, itemHasChildren])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ selected, hasChildren: itemHasChildren }),
+    [selected, itemHasChildren],
+  )
 
   return (
-    <label htmlFor={inputId} className={classNames.label}>
+    <label htmlFor={inputId} className={actualClassName}>
       <input
-        className={classNames.input}
-        type="radio"
         id={inputId}
+        type="radio"
         name={`column-${columnIndex}`}
         value={itemValue}
+        checked={selected}
         tabIndex={tabIndex}
+        className="shr-sr-only"
         onKeyDown={HANDLE_KEYDOWN}
         onChange={handleChangeInput}
-        checked={selected}
       />
       <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
     </label>
