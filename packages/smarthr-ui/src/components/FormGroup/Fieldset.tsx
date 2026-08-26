@@ -9,6 +9,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
+import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -20,7 +21,15 @@ export const Fieldset: FC<
     /** `true` のとき、文字色を `TEXT_DISABLED` にする */
     disabled?: boolean
   }
-> = ({ legend: orgLegend, innerMargin, ...rest }) => {
+> = ({
+  legend: orgLegend,
+  errorMessages: orgErrorMessages,
+  helpMessage,
+  exampleMessage,
+  supplementaryMessage,
+  innerMargin,
+  ...rest
+}) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
@@ -35,6 +44,15 @@ export const Fieldset: FC<
     htmlFor: `${baseId}-htmlFor`,
     id: baseLegend.id || `${baseId}-legend`,
   }
+
+  const calculatedDescribedByIds = useDescribedByIds({
+    wrapperRef,
+    htmlFor: legend.htmlFor,
+    errorMessages: orgErrorMessages,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+  })
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -97,9 +115,13 @@ export const Fieldset: FC<
   return (
     <FormGroup
       {...rest}
+      {...calculatedDescribedByIds}
       as="fieldset"
       wrapperRef={wrapperRef}
       label={legend}
+      helpMessage={helpMessage}
+      exampleMessage={exampleMessage}
+      supplementaryMessage={supplementaryMessage}
       LabelComponent={LabelComponent}
       innerMargin={innerMargin}
       fieldsetWithDefaultMargin={innerMargin === undefined}

@@ -6,21 +6,24 @@ import { Stack } from '../Layout'
 import { Text } from '../Text'
 
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
-import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
+import type { useDescribedByIds } from './useDescribedByIds'
 
-type Props = CommonProps & {
-  wrapperRef: RefObject<HTMLDivElement>
-  /** グループのラベル名 */
-  label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
-  as?: string | ComponentType<any>
-  /** `true` のとき、childrenWrapperの上部余白を広げる（FieldsetがinnerMargin未指定の場合に使用） */
-  fieldsetWithDefaultMargin?: boolean
-  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
-  disabled?: boolean
-  LabelComponent: FC<LabelComponentProps>
-}
+// HINT: errorMessagesを含む各idはuseDescribedByIdsで算出済みの値を受け取る
+type Props = Omit<CommonProps, 'errorMessages'> &
+  ReturnType<typeof useDescribedByIds> & {
+    wrapperRef: RefObject<HTMLDivElement>
+    /** グループのラベル名 */
+    label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
+      Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
+    as?: string | ComponentType<any>
+    /** `true` のとき、childrenWrapperの上部余白を広げる（FieldsetがinnerMargin未指定の場合に使用） */
+    fieldsetWithDefaultMargin?: boolean
+    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+    disabled?: boolean
+    LabelComponent: FC<LabelComponentProps>
+  }
 
 const classNameGenerator = tv({
   slots: {
@@ -57,7 +60,7 @@ export const FormGroup: FC<Props> = ({
   statusLabels,
   helpMessage,
   exampleMessage,
-  errorMessages: orgErrorMessages,
+  errorMessages,
   autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
@@ -65,6 +68,12 @@ export const FormGroup: FC<Props> = ({
   children,
   fieldsetWithDefaultMargin,
   LabelComponent,
+  visibleErrorMessages,
+  helpMessageId,
+  exampleMessageId,
+  supplementaryMessageId,
+  errorMessagesId,
+  describedbyIds,
   ...rest
 }) => {
   const isFieldset = as === 'fieldset'
@@ -84,23 +93,6 @@ export const FormGroup: FC<Props> = ({
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
     [statusLabels],
   )
-
-  const {
-    errorMessages,
-    visibleErrorMessages,
-    helpMessageId,
-    exampleMessageId,
-    supplementaryMessageId,
-    errorMessagesId,
-    describedbyIds,
-  } = useDescribedByIds({
-    wrapperRef,
-    htmlFor: label.htmlFor,
-    errorMessages: orgErrorMessages,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
-  })
 
   useEffect(() => {
     if (!autoBindErrorInput || !wrapperRef.current) {
