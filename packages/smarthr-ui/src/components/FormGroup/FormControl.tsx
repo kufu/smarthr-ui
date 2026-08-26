@@ -7,7 +7,9 @@ import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { CHILDREN_WRAPPER_INPUT_SELECTOR, FormGroup } from './FormGroup'
+import { FormGroup } from './FormGroup'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
+import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -17,7 +19,14 @@ export const FormControl: FC<
   CommonProps & {
     label: ReactNode | ObjectLabelType
   }
-> = ({ label: orgLabel, ...rest }) => {
+> = ({
+  label: orgLabel,
+  errorMessages: orgErrorMessages,
+  helpMessage,
+  exampleMessage,
+  supplementaryMessage,
+  ...rest
+}) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
   const [childInputId, setChildInputId] = useState<string>('')
@@ -31,6 +40,15 @@ export const FormControl: FC<
     htmlFor: baseLabel.htmlFor || childInputId || `${baseId}-htmlFor`,
     id: baseLabel.id || `${baseId}-label`,
   }
+
+  const calculatedDescribedByIds = useDescribedByIds({
+    wrapperRef,
+    htmlFor: label.htmlFor,
+    errorMessages: orgErrorMessages,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+  })
 
   useEffect(() => {
     if (
@@ -66,7 +84,16 @@ export const FormControl: FC<
   }, [label.htmlFor, label.id])
 
   return (
-    <FormGroup {...rest} wrapperRef={wrapperRef} label={label} LabelComponent={LabelComponent} />
+    <FormGroup
+      {...rest}
+      {...calculatedDescribedByIds}
+      wrapperRef={wrapperRef}
+      label={label}
+      helpMessage={helpMessage}
+      exampleMessage={exampleMessage}
+      supplementaryMessage={supplementaryMessage}
+      LabelComponent={LabelComponent}
+    />
   )
 }
 
