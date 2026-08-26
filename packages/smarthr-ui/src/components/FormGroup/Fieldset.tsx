@@ -11,6 +11,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { FormGroup } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
+import { useAutoBindErrorInput } from './useAutoBindErrorInput'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -32,13 +33,39 @@ const fieldsetClassNameGenerator = tv({
   },
 })
 
-export const Fieldset: FC<
-  CommonProps & {
-    legend: ReactNode | Omit<ObjectLabelType, 'htmlFor'>
-    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
-    disabled?: boolean
-  }
-> = ({
+type Props = CommonProps & {
+  legend: ReactNode | Omit<ObjectLabelType, 'htmlFor'>
+  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+  disabled?: boolean
+}
+type LowerProps = Omit<Props, 'autoBindErrorInput'>
+
+// HINT: useAutoBindErrorInputを呼ぶ/呼ばないでコンポーネントを分けている。
+// FormGroup側で分岐すると、切り替え時にFormGroup配下のみが再マウントされ、
+// ActualFieldsetのuseEffectがsetAttributeしたaria-label・aria-describedbyが
+// 復元されなくなる。分岐を最上位に置くことで、再マウント時にそれらのuseEffectも
+// 再実行されるようにしている。
+export const Fieldset: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
+  const Component = autoBindErrorInput ? AutoBindErrorFieldset : ActualFieldset
+
+  return <Component {...rest} />
+}
+
+const AutoBindErrorFieldset: FC<LowerProps> = (props) => {
+  const { wrapperRef, visibleErrorMessages, ...rest } = useFieldsetProps(props)
+
+  useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
+
+  return <FormGroup {...rest} wrapperRef={wrapperRef} visibleErrorMessages={visibleErrorMessages} />
+}
+
+const ActualFieldset: FC<LowerProps> = (props) => {
+  const actualProps = useFieldsetProps(props)
+
+  return <FormGroup {...actualProps} />
+}
+
+const useFieldsetProps = ({
   legend: orgLegend,
   errorMessages: orgErrorMessages,
   helpMessage,
@@ -47,7 +74,7 @@ export const Fieldset: FC<
   innerMargin,
   className,
   ...rest
-}) => {
+}: LowerProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
@@ -72,7 +99,7 @@ export const Fieldset: FC<
     id: baseLegend.id || `${baseId}-legend`,
   }
 
-  const { describedbyIds, ...describedByIdsRest } = useDescribedByIds({
+  const { describedbyIds, visibleErrorMessages, ...describedByIdsRest } = useDescribedByIds({
     wrapperRef,
     htmlFor: legend.htmlFor,
     errorMessages: orgErrorMessages,
@@ -139,22 +166,21 @@ export const Fieldset: FC<
     return () => observer.disconnect()
   }, [])
 
-  return (
-    <FormGroup
-      {...rest}
-      {...describedByIdsRest}
-      as="fieldset"
-      wrapperRef={wrapperRef}
-      label={legend}
-      helpMessage={helpMessage}
-      exampleMessage={exampleMessage}
-      supplementaryMessage={supplementaryMessage}
-      classNames={classNames}
-      LabelComponent={LabelComponent}
-      innerMargin={innerMargin}
-      aria-describedby={describedbyIds || undefined}
-    />
-  )
+  return {
+    ...rest,
+    ...describedByIdsRest,
+    visibleErrorMessages,
+    as: 'fieldset',
+    wrapperRef,
+    label: legend,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+    classNames,
+    LabelComponent,
+    innerMargin,
+    'aria-describedby': describedbyIds || undefined,
+  }
 }
 
 const LabelComponent = memo<LabelComponentProps>(

@@ -1,17 +1,16 @@
-import { type ComponentType, type FC, type RefObject, useEffect, useMemo } from 'react'
+import { type ComponentType, type FC, type RefObject, useMemo } from 'react'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
-
-import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 import type { useDescribedByIds } from './useDescribedByIds'
 
 // HINT: errorMessagesを含む各idはuseDescribedByIdsで、classNamesは各コンポーネントで
 // 算出済みの値を受け取る
-type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
+// autoBindErrorInputによる分岐はFormControl・Fieldset側で行うため、ここでは受け取らない
+type Props = Omit<CommonProps, 'errorMessages' | 'className' | 'autoBindErrorInput'> &
   Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
     wrapperRef: RefObject<HTMLDivElement>
     /** グループのラベル名 */
@@ -36,7 +35,6 @@ export const FormGroup: FC<Props> = ({
   helpMessage,
   exampleMessage,
   errorMessages,
-  autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
   children,
@@ -55,23 +53,6 @@ export const FormGroup: FC<Props> = ({
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
     [statusLabels],
   )
-
-  // TODO: autoBindErrorInputによってコンポーネントを実行し分けるように修正する
-  useEffect(() => {
-    if (!autoBindErrorInput || !wrapperRef.current) {
-      return
-    }
-
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (input) {
-      if (visibleErrorMessages) {
-        input.setAttribute('aria-invalid', 'true')
-      } else {
-        input.removeAttribute('aria-invalid')
-      }
-    }
-  }, [visibleErrorMessages, autoBindErrorInput, wrapperRef])
 
   return (
     <Stack
