@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ComponentProps, type FC, memo, useMemo } from 'react'
+import { type ComponentProps, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { BrowserItem } from './BrowserItem'
@@ -11,7 +11,6 @@ type BaseProps = {
   value?: string
   items: ItemNode[]
   index: number
-  handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 type Props = BaseProps & Omit<ComponentProps<'ul'>, keyof BaseProps>
 
@@ -23,7 +22,6 @@ export const BrowserColumn: FC<Props> = ({
   items,
   index: columnIndex,
   value,
-  handleChangeInput,
   className,
   ...rest
 }) => {
@@ -40,14 +38,13 @@ export const BrowserColumn: FC<Props> = ({
           value={value}
           columnIndex={columnIndex}
           rowIndex={rowIndex}
-          handleChangeInput={handleChangeInput}
         />
       ))}
     </ul>
   )
 }
 
-type ListItemProps = Pick<Props, 'value' | 'handleChangeInput'> & {
+type ListItemProps = Pick<Props, 'value'> & {
   itemValue: ItemNode['value']
   itemLabel: ItemNode['label']
   itemHasChildren: boolean
@@ -56,7 +53,7 @@ type ListItemProps = Pick<Props, 'value' | 'handleChangeInput'> & {
 }
 
 const ListItem = memo<ListItemProps>(
-  ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, handleChangeInput }) => {
+  ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex }) => {
     const selected = itemValue === value
     const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined
     const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
@@ -70,7 +67,6 @@ const ListItem = memo<ListItemProps>(
           itemHasChildren={itemHasChildren}
           columnIndex={columnIndex}
           tabIndex={tabIndex}
-          handleChangeInput={handleChangeInput}
         />
       </li>
     )

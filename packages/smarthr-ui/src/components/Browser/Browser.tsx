@@ -8,10 +8,13 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
+import { findDelegateTarget } from '../../libs/delegate'
 
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
+
+const INPUT_SELECTOR = 'input[type="radio"][data-smarthr-ui-browser-item-input="true"]'
 
 const classNameGenerator = tv({
   slots: {
@@ -114,9 +117,13 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
 
     return {
       handleDelegateKeyDown,
-      handleChangeInput: hasOnSelectItem
-        ? (e: ChangeEvent<HTMLInputElement>) => {
-            latest.onSelectItem?.(e.currentTarget.value)
+      handleDelegateChange: hasOnSelectItem
+        ? (e: ChangeEvent<HTMLDivElement>) => {
+            const el = findDelegateTarget<HTMLInputElement>(e, INPUT_SELECTOR)
+
+            if (el) {
+              latest.onSelectItem?.(el.value)
+            }
           }
         : undefined,
     }
@@ -128,6 +135,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
       {...rest}
       role="application"
       onKeyDown={functions.handleDelegateKeyDown}
+      onChange={functions.handleDelegateChange}
       className={classNames.wrapper}
     >
       {columns.map((colItems, index) => (
@@ -136,7 +144,6 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
           items={colItems}
           index={index}
           value={selectedPath[index]}
-          handleChangeInput={functions.handleChangeInput}
           className={classNames.column}
         />
       ))}

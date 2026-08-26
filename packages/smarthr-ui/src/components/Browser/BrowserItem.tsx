@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FC, type KeyboardEventHandler, memo, useMemo } from 'react'
+import { type FC, type KeyboardEventHandler, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
@@ -43,10 +43,13 @@ type Props = {
   itemHasChildren: boolean
   tabIndex: 0 | -1
   columnIndex: number
-  handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const KEYDOWN_REGEX = /^((Arrow(Right|Left|Up|Down))|Enter| )$/
+// HINT: changeの実処理はBrowserのwrapperへdelegateしている。
+// checkedを制御しているinputにonChangeが無いとReactが読み取り専用と誤認して警告するため、
+// 空のハンドラを渡して制御されていることを示す。
+const HANDLE_CHANGE = () => undefined
 const HANDLE_KEYDOWN: KeyboardEventHandler = (e) => {
   if (KEYDOWN_REGEX.test(e.key)) {
     e.preventDefault()
@@ -60,7 +63,6 @@ export const BrowserItem: FC<Props> = ({
   itemHasChildren,
   tabIndex,
   columnIndex,
-  handleChangeInput,
 }) => {
   const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
   const actualClassName = useMemo(
@@ -73,13 +75,14 @@ export const BrowserItem: FC<Props> = ({
       <input
         id={inputId}
         type="radio"
+        data-smarthr-ui-browser-item-input="true"
         name={`column-${columnIndex}`}
         value={itemValue}
         checked={selected}
         tabIndex={tabIndex}
         className="shr-sr-only"
         onKeyDown={HANDLE_KEYDOWN}
-        onChange={handleChangeInput}
+        onChange={HANDLE_CHANGE}
       />
       <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
     </label>
