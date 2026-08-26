@@ -23,8 +23,8 @@ const classNameGenerator = tv({
       1: {
         column: 'shr-max-w-[theme(width.1/3)]',
       },
-      2: {},
-      3: {},
+      2: '',
+      3: '',
     },
   },
   compoundVariants: [
@@ -52,9 +52,10 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
   const classNames = useMemo(() => {
-    const { wrapper, column } = classNameGenerator({ className })
+    const { wrapper, column } = classNameGenerator()
+
     return {
-      wrapper: wrapper(),
+      wrapper: wrapper({ className }),
       column: column({
         maxColumn: columns.length as 1 | 2 | 3,
       }),
