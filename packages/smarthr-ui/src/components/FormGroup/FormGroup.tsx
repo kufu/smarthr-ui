@@ -80,38 +80,46 @@ export const FormGroup: FC<Props> = ({
   const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
 
-  const describedbyIds = useMemo(() => {
-    const temp: string[] = []
-
-    if (helpMessage) {
-      temp.push(`${label.htmlFor}_helpMessage`)
-    }
-    if (exampleMessage) {
-      temp.push(`${label.htmlFor}_exampleMessage`)
-    }
-    if (supplementaryMessage) {
-      temp.push(`${label.htmlFor}_supplementaryMessage`)
-    }
-    if (errorMessages) {
-      temp.push(`${label.htmlFor}_errorMessages`)
-    }
-
-    return temp.join(' ')
-    // TODO: ReactNodeやarrayなど不安定な値をそのまま依存配列に含めているので調整する
-  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, label.htmlFor])
-
+  // HINT: statusLabelsは設定されない場合が大半、かつ設定されてもRequiredLabelでmemo化されているため
+  // memo化がかなりの確率で有用
   const actualStatusLabels = useMemo(
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
     [statusLabels],
   )
 
-  const actualErrorMessages = useMemo(() => {
-    if (!errorMessages) {
-      return []
+  // HINT: memo化している箇所がないため毎回計算している
+  const actualErrorMessages = errorMessages
+    ? Array.isArray(errorMessages)
+      ? errorMessages
+      : [errorMessages]
+    : []
+
+  const helpMessageId = helpMessage ? `${label.htmlFor}_helpMessage` : undefined
+  const exampleMessageId = exampleMessage ? `${label.htmlFor}_exampleMessage` : undefined
+  const supplementaryMessageId = supplementaryMessage
+    ? `${label.htmlFor}_supplementaryMessage`
+    : undefined
+  const visibleErrorMessages = actualErrorMessages.length > 0
+  const errorMessagesId = visibleErrorMessages ? `${label.htmlFor}_errorMessages` : undefined
+
+  const describedbyIds = useMemo(() => {
+    const temp: string[] = []
+
+    if (helpMessageId) {
+      temp.push(helpMessageId)
+    }
+    if (exampleMessageId) {
+      temp.push(exampleMessageId)
+    }
+    if (supplementaryMessageId) {
+      temp.push(supplementaryMessageId)
+    }
+    if (errorMessagesId) {
+      temp.push(errorMessagesId)
     }
 
-    return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
-  }, [errorMessages])
+    return temp.join(' ')
+  }, [helpMessageId, exampleMessageId, supplementaryMessageId, errorMessagesId])
 
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
@@ -164,13 +172,13 @@ export const FormGroup: FC<Props> = ({
     const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
     if (input) {
-      if (actualErrorMessages.length > 0) {
+      if (visibleErrorMessages) {
         input.setAttribute('aria-invalid', 'true')
       } else {
         input.removeAttribute('aria-invalid')
       }
     }
-  }, [actualErrorMessages.length, autoBindErrorInput, wrapperRef])
+  }, [visibleErrorMessages, autoBindErrorInput, wrapperRef])
 
   return (
     <Stack
@@ -194,7 +202,7 @@ export const FormGroup: FC<Props> = ({
         labelClassName={classNames.label}
       />
       {helpMessage && (
-        <p className="smarthr-ui-FormControl-helpMessage" id={`${label.htmlFor}_helpMessage`}>
+        <p className="smarthr-ui-FormControl-helpMessage" id={helpMessageId}>
           {helpMessage}
         </p>
       )}
@@ -203,14 +211,14 @@ export const FormGroup: FC<Props> = ({
           as="p"
           color="TEXT_GREY"
           italic
-          id={`${label.htmlFor}_exampleMessage`}
+          id={exampleMessageId}
           className="smarthr-ui-FormControl-exampleMessage"
         >
           {exampleMessage}
         </Text>
       )}
-      {actualErrorMessages.length > 0 && (
-        <div id={`${label.htmlFor}_errorMessages`} className="shr-list-none" role="alert">
+      {visibleErrorMessages && (
+        <div id={errorMessagesId} className="shr-list-none" role="alert">
           {actualErrorMessages.map((message, index) => (
             <p key={index}>
               <Text
@@ -231,7 +239,7 @@ export const FormGroup: FC<Props> = ({
           as="p"
           size="S"
           color="TEXT_GREY"
-          id={`${label.htmlFor}_supplementaryMessage`}
+          id={supplementaryMessageId}
           className="smarthr-ui-FormControl-supplementaryMessage"
         >
           {supplementaryMessage}
