@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useMemo, useRef } from 'react'
+import { type ReactNode, type RefObject, useEffect, useMemo, useRef } from 'react'
 
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 
@@ -13,6 +13,8 @@ type Props = Pick<
   htmlFor: string
 }
 
+const EMPTY_ERROR_MESSAGES: ReactNode[] = []
+
 export const useDescribedByIds = ({
   wrapperRef,
   htmlFor,
@@ -21,12 +23,15 @@ export const useDescribedByIds = ({
   exampleMessage,
   supplementaryMessage,
 }: Props) => {
-  // HINT: memo化している箇所がないため毎回計算している
+  // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
+  // undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する
   const actualErrorMessages = errorMessages
     ? Array.isArray(errorMessages)
-      ? errorMessages
+      ? errorMessages.length === 0
+        ? EMPTY_ERROR_MESSAGES
+        : errorMessages
       : [errorMessages]
-    : []
+    : EMPTY_ERROR_MESSAGES
 
   const helpMessageId = helpMessage ? `${htmlFor}_helpMessage` : undefined
   const exampleMessageId = exampleMessage ? `${htmlFor}_exampleMessage` : undefined
