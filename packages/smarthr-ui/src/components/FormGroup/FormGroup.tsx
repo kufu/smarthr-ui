@@ -26,8 +26,41 @@ type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
       childrenWrapper: string
     }
   }
+type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
-export const FormGroup: FC<Props> = ({
+export const FormGroup: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
+  const Component = autoBindErrorInput ? AutoBindErrorFormGroup : ActualFormGroup
+
+  return <Component {...rest} />
+}
+
+const AutoBindErrorFormGroup: FC<LowerProps> = ({ visibleErrorMessages, wrapperRef, ...rest }) => {
+  useEffect(() => {
+    if (!wrapperRef.current) {
+      return
+    }
+
+    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+
+    if (input) {
+      if (visibleErrorMessages) {
+        input.setAttribute('aria-invalid', 'true')
+      } else {
+        input.removeAttribute('aria-invalid')
+      }
+    }
+  }, [visibleErrorMessages, wrapperRef])
+
+  return (
+    <ActualFormGroup
+      {...rest}
+      wrapperRef={wrapperRef}
+      visibleErrorMessages={visibleErrorMessages}
+    />
+  )
+}
+
+const ActualFormGroup: FC<LowerProps> = ({
   wrapperRef,
   label,
   subActionArea,
@@ -36,7 +69,6 @@ export const FormGroup: FC<Props> = ({
   helpMessage,
   exampleMessage,
   errorMessages,
-  autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
   children,
@@ -55,23 +87,6 @@ export const FormGroup: FC<Props> = ({
     () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
     [statusLabels],
   )
-
-  // TODO: autoBindErrorInputによってコンポーネントを実行し分けるように修正する
-  useEffect(() => {
-    if (!autoBindErrorInput || !wrapperRef.current) {
-      return
-    }
-
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (input) {
-      if (visibleErrorMessages) {
-        input.setAttribute('aria-invalid', 'true')
-      } else {
-        input.removeAttribute('aria-invalid')
-      }
-    }
-  }, [visibleErrorMessages, autoBindErrorInput, wrapperRef])
 
   return (
     <Stack
