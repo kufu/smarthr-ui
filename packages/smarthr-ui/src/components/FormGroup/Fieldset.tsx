@@ -7,7 +7,7 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { FormGroup, LabelBody } from './FormGroup'
+import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
 import { useAutoBindErrorInput } from './useAutoBindErrorInput'
@@ -196,17 +196,17 @@ const LabelComponent = memo<LabelComponentProps>(
         {label}
       </LabelBody>
     )
+    // HINT: legendはfieldsetのchildrenの先頭に設置することがmarkupとして求められる
+    // そのためUIの調整を可能にするため、常にvisuallyHiddenでfieldsetのchildrenの先頭に埋め込む
     const legend = <VisuallyHiddenText as="legend">{body}</VisuallyHiddenText>
 
     if (unrecommendedHideLabel) {
       return legend
     }
 
-    const renderedLegend = (
-      <Cluster aria-hidden="true" align="center" className="smarthr-ui-FormControl-label">
-        {body}
-      </Cluster>
-    )
+    // HINT: 先述のfieldsetのmarkupの制約のため、UI上に表示されるlegendのdummyにはaria-hiddenを設定し
+    // UI・スクリーンリーダーともに１つだけ設定されているかのように見せかける
+    const renderedLegend = <LabelCluster aria-hidden="true">{body}</LabelCluster>
 
     if (subActionArea) {
       return (

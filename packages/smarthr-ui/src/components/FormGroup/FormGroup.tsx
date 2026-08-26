@@ -1,4 +1,11 @@
-import { type ComponentProps, type ComponentType, type FC, type RefObject, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type ComponentType,
+  type FC,
+  type PropsWithChildren,
+  type RefObject,
+  useMemo,
+} from 'react'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
@@ -134,4 +141,12 @@ export const LabelBody: FC<
       </Cluster>
     )}
   </>
+)
+
+export const LabelCluster: FC<
+  PropsWithChildren<{ as?: 'label'; htmlFor?: string; id?: string; 'aria-hidden'?: 'true' }>
+> = ({ children, ...rest }) => (
+  <Cluster {...rest} align="center" className="smarthr-ui-FormControl-label">
+    {children}
+  </Cluster>
 )

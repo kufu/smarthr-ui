@@ -6,7 +6,7 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { FormGroup, LabelBody } from './FormGroup'
+import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
 import { useAutoBindErrorInput } from './useAutoBindErrorInput'
@@ -160,11 +160,7 @@ const LabelComponent = memo<LabelComponentProps>(
       return <VisuallyHiddenText {...attrs}>{body}</VisuallyHiddenText>
     }
 
-    const renderedLabel = (
-      <Cluster {...attrs} align="center" className="smarthr-ui-FormControl-label">
-        {body}
-      </Cluster>
-    )
+    const renderedLabel = <LabelCluster {...attrs}>{body}</LabelCluster>
 
     if (subActionArea) {
       return (
