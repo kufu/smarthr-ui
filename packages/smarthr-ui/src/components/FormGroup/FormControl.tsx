@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useEffect, useId, useRef, useState } from 'react'
+import { type FC, type ReactNode, memo, useEffect, useId, useMemo, useRef, useState } from 'react'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
@@ -9,6 +9,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
+import { classNameGenerator } from './style'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -25,8 +26,18 @@ export const FormControl: FC<
   helpMessage,
   exampleMessage,
   supplementaryMessage,
+  className,
   ...rest
 }) => {
+  const classNames = useMemo(() => {
+    const generators = classNameGenerator()
+
+    return {
+      wrapper: generators.wrapper({ className }),
+      childrenWrapper: generators.childrenWrapper(),
+    }
+  }, [className])
+
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
   const [childInputId, setChildInputId] = useState<string>('')
@@ -92,6 +103,7 @@ export const FormControl: FC<
       helpMessage={helpMessage}
       exampleMessage={exampleMessage}
       supplementaryMessage={supplementaryMessage}
+      classNames={classNames}
       LabelComponent={LabelComponent}
     />
   )
