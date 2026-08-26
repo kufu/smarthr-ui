@@ -12,7 +12,7 @@ import type { useDescribedByIds } from './useDescribedByIds'
 
 // HINT: errorMessagesを含む各idはuseDescribedByIdsで算出済みの値を受け取る
 type Props = Omit<CommonProps, 'errorMessages'> &
-  ReturnType<typeof useDescribedByIds> & {
+  Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
     wrapperRef: RefObject<HTMLDivElement>
     /** グループのラベル名 */
     label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
@@ -73,11 +73,8 @@ export const FormGroup: FC<Props> = ({
   exampleMessageId,
   supplementaryMessageId,
   errorMessagesId,
-  describedbyIds,
   ...rest
 }) => {
-  const isFieldset = as === 'fieldset'
-
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -116,7 +113,6 @@ export const FormGroup: FC<Props> = ({
       ref={wrapperRef}
       as={as}
       gap={innerMargin ?? 0.5}
-      aria-describedby={isFieldset && describedbyIds ? describedbyIds : undefined}
       className={classNames.wrapper}
     >
       <LabelComponent

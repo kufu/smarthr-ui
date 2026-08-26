@@ -45,7 +45,7 @@ export const Fieldset: FC<
     id: baseLegend.id || `${baseId}-legend`,
   }
 
-  const calculatedDescribedByIds = useDescribedByIds({
+  const { describedbyIds, ...describedByIdsRest } = useDescribedByIds({
     wrapperRef,
     htmlFor: legend.htmlFor,
     errorMessages: orgErrorMessages,
@@ -115,7 +115,7 @@ export const Fieldset: FC<
   return (
     <FormGroup
       {...rest}
-      {...calculatedDescribedByIds}
+      {...describedByIdsRest}
       as="fieldset"
       wrapperRef={wrapperRef}
       label={legend}
@@ -125,6 +125,7 @@ export const Fieldset: FC<
       LabelComponent={LabelComponent}
       innerMargin={innerMargin}
       fieldsetWithDefaultMargin={innerMargin === undefined}
+      aria-describedby={describedbyIds || undefined}
     />
   )
 }
