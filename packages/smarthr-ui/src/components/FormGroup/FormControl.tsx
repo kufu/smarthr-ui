@@ -34,17 +34,17 @@ export const FormControl: FC<Props> = ({ autoBindErrorInput = true, ...rest }) =
 }
 
 const AutoBindErrorFormControl: FC<LowerProps> = (props) => {
-  const { wrapperRef, visibleErrorMessages, formGroupProps } = useFormControlProps(props)
+  const { wrapperRef, visibleErrorMessages, ...rest } = useFormControlProps(props)
 
   useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
 
-  return <FormGroup {...formGroupProps} />
+  return <FormGroup {...rest} wrapperRef={wrapperRef} visibleErrorMessages={visibleErrorMessages} />
 }
 
 const ActualFormControl: FC<LowerProps> = (props) => {
-  const { formGroupProps } = useFormControlProps(props)
+  const actualProps = useFormControlProps(props)
 
-  return <FormGroup {...formGroupProps} />
+  return <FormGroup {...actualProps} />
 }
 
 const useFormControlProps = ({
@@ -122,19 +122,15 @@ const useFormControlProps = ({
   }, [label.htmlFor, label.id])
 
   return {
+    ...rest,
+    ...calculatedDescribedByIds,
     wrapperRef,
-    visibleErrorMessages: calculatedDescribedByIds.visibleErrorMessages,
-    formGroupProps: {
-      ...rest,
-      ...calculatedDescribedByIds,
-      wrapperRef,
-      label,
-      helpMessage,
-      exampleMessage,
-      supplementaryMessage,
-      classNames,
-      LabelComponent,
-    },
+    label,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+    classNames,
+    LabelComponent,
   }
 }
 

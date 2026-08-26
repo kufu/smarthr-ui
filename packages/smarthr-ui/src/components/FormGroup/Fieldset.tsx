@@ -52,17 +52,17 @@ export const Fieldset: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
 }
 
 const AutoBindErrorFieldset: FC<LowerProps> = (props) => {
-  const { wrapperRef, visibleErrorMessages, formGroupProps } = useFieldsetProps(props)
+  const { wrapperRef, visibleErrorMessages, ...rest } = useFieldsetProps(props)
 
   useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
 
-  return <FormGroup {...formGroupProps} />
+  return <FormGroup {...rest} wrapperRef={wrapperRef} visibleErrorMessages={visibleErrorMessages} />
 }
 
 const ActualFieldset: FC<LowerProps> = (props) => {
-  const { formGroupProps } = useFieldsetProps(props)
+  const actualProps = useFieldsetProps(props)
 
-  return <FormGroup {...formGroupProps} />
+  return <FormGroup {...actualProps} />
 }
 
 const useFieldsetProps = ({
@@ -167,23 +167,19 @@ const useFieldsetProps = ({
   }, [])
 
   return {
-    wrapperRef,
+    ...rest,
+    ...describedByIdsRest,
     visibleErrorMessages,
-    formGroupProps: {
-      ...rest,
-      ...describedByIdsRest,
-      visibleErrorMessages,
-      as: 'fieldset',
-      wrapperRef,
-      label: legend,
-      helpMessage,
-      exampleMessage,
-      supplementaryMessage,
-      classNames,
-      LabelComponent,
-      innerMargin,
-      'aria-describedby': describedbyIds || undefined,
-    },
+    as: 'fieldset',
+    wrapperRef,
+    label: legend,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+    classNames,
+    LabelComponent,
+    innerMargin,
+    'aria-describedby': describedbyIds || undefined,
   }
 }
 
