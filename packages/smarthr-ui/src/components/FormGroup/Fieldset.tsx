@@ -5,10 +5,9 @@ import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
-import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { FormGroup } from './FormGroup'
+import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
 import { useAutoBindErrorInput } from './useAutoBindErrorInput'
@@ -193,28 +192,21 @@ const LabelComponent = memo<LabelComponentProps>(
     statusLabels,
   }) => {
     const body = (
-      <>
-        <Text styleType={labelType} icon={labelIcon}>
-          <span className="smarthr-ui-FormControl-labelText">{label}</span>
-        </Text>
-        {statusLabels.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabels}
-          </Cluster>
-        )}
-      </>
+      <LabelBody styleType={labelType} icon={labelIcon} statusLabels={statusLabels}>
+        {label}
+      </LabelBody>
     )
+    // HINT: legendはfieldsetのchildrenの先頭に設置することがmarkupとして求められる
+    // そのためUIの調整を可能にするため、常にvisuallyHiddenでfieldsetのchildrenの先頭に埋め込む
     const legend = <VisuallyHiddenText as="legend">{body}</VisuallyHiddenText>
 
     if (unrecommendedHideLabel) {
       return legend
     }
 
-    const renderedLegend = (
-      <Cluster aria-hidden="true" align="center" className="smarthr-ui-FormControl-label">
-        {body}
-      </Cluster>
-    )
+    // HINT: 先述のfieldsetのmarkupの制約のため、UI上に表示されるlegendのdummyにはaria-hiddenを設定し
+    // UI・スクリーンリーダーともに１つだけ設定されているかのように見せかける
+    const renderedLegend = <LabelCluster aria-hidden="true">{body}</LabelCluster>
 
     if (subActionArea) {
       return (
