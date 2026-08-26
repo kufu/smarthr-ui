@@ -1,7 +1,7 @@
-import { type ComponentType, type FC, type RefObject, useMemo } from 'react'
+import { type ComponentProps, type ComponentType, type FC, type RefObject, useMemo } from 'react'
 
 import { FaCircleExclamationIcon } from '../Icon'
-import { Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -119,3 +119,19 @@ export const FormGroup: FC<Props> = ({
     </Stack>
   )
 }
+
+export const LabelBody: FC<
+  Pick<ComponentProps<typeof Text>, 'styleType' | 'icon' | 'children'> &
+    Pick<LabelComponentProps, 'statusLabels'>
+> = ({ styleType, icon, children, statusLabels }) => (
+  <>
+    <Text styleType={styleType} icon={icon}>
+      <span className="smarthr-ui-FormControl-labelText">{children}</span>
+    </Text>
+    {statusLabels.length > 0 && (
+      <Cluster gap={0.25} as="span">
+        {statusLabels}
+      </Cluster>
+    )}
+  </>
+)
