@@ -7,7 +7,8 @@ import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { CHILDREN_WRAPPER_INPUT_SELECTOR, FormGroup } from './FormGroup'
+import { FormGroup } from './FormGroup'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 

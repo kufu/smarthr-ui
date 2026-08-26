@@ -1,9 +1,12 @@
-import { type ComponentType, type FC, type RefObject, useEffect, useMemo, useRef } from 'react'
+import { type ComponentType, type FC, type RefObject, useEffect, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
+
+import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
+import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -46,10 +49,6 @@ const classNameGenerator = tv({
   },
 })
 
-const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
-export const CHILDREN_WRAPPER_INPUT_SELECTOR = `.smarthr-ui-FormControl-childrenWrapper ${SMARTHR_UI_INPUT_SELECTOR}`
-export const LABEL_TEXT_SELECTOR = '.smarthr-ui-FormControl-labelText'
-
 export const FormGroup: FC<Props> = ({
   wrapperRef,
   label,
@@ -58,7 +57,7 @@ export const FormGroup: FC<Props> = ({
   statusLabels,
   helpMessage,
   exampleMessage,
-  errorMessages,
+  errorMessages: orgErrorMessages,
   autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
@@ -68,49 +67,7 @@ export const FormGroup: FC<Props> = ({
   LabelComponent,
   ...rest
 }) => {
-  const managedDescribedbyIdsRef = useRef<string[]>([])
   const isFieldset = as === 'fieldset'
-
-  // HINT: statusLabelsは設定されない場合が大半、かつ設定されてもRequiredLabelでmemo化されているため
-  // memo化がかなりの確率で有用
-  const actualStatusLabels = useMemo(
-    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
-    [statusLabels],
-  )
-
-  // HINT: memo化している箇所がないため毎回計算している
-  const actualErrorMessages = errorMessages
-    ? Array.isArray(errorMessages)
-      ? errorMessages
-      : [errorMessages]
-    : []
-
-  const helpMessageId = helpMessage ? `${label.htmlFor}_helpMessage` : undefined
-  const exampleMessageId = exampleMessage ? `${label.htmlFor}_exampleMessage` : undefined
-  const supplementaryMessageId = supplementaryMessage
-    ? `${label.htmlFor}_supplementaryMessage`
-    : undefined
-  const visibleErrorMessages = actualErrorMessages.length > 0
-  const errorMessagesId = visibleErrorMessages ? `${label.htmlFor}_errorMessages` : undefined
-
-  const describedbyIds = useMemo(() => {
-    const temp: string[] = []
-
-    if (helpMessageId) {
-      temp.push(helpMessageId)
-    }
-    if (exampleMessageId) {
-      temp.push(exampleMessageId)
-    }
-    if (supplementaryMessageId) {
-      temp.push(supplementaryMessageId)
-    }
-    if (errorMessagesId) {
-      temp.push(errorMessagesId)
-    }
-
-    return temp.join(' ')
-  }, [helpMessageId, exampleMessageId, supplementaryMessageId, errorMessagesId])
 
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
@@ -121,36 +78,29 @@ export const FormGroup: FC<Props> = ({
     }
   }, [fieldsetWithDefaultMargin, className])
 
-  useEffect(() => {
-    if (!wrapperRef.current) {
-      return
-    }
+  // HINT: statusLabelsは設定されない場合が大半、かつ設定されてもRequiredLabelでmemo化されているため
+  // memo化がかなりの確率で有用
+  const actualStatusLabels = useMemo(
+    () => (statusLabels ? (Array.isArray(statusLabels) ? statusLabels : [statusLabels]) : []),
+    [statusLabels],
+  )
 
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
-    const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
-    // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
-    const externalTokens = currentTokens.filter(
-      (token) => !managedDescribedbyIdsRef.current.includes(token),
-    )
-    const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
-    const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
-
-    if (nextValue !== ariaDescribedBy) {
-      if (nextValue) {
-        input.setAttribute('aria-describedby', nextValue)
-      } else {
-        input.removeAttribute('aria-describedby')
-      }
-    }
-
-    managedDescribedbyIdsRef.current = describedbyIdTokens
-  }, [describedbyIds, wrapperRef])
+  const {
+    errorMessages,
+    visibleErrorMessages,
+    helpMessageId,
+    exampleMessageId,
+    supplementaryMessageId,
+    errorMessagesId,
+    describedbyIds,
+  } = useDescribedByIds({
+    wrapperRef,
+    htmlFor: label.htmlFor,
+    errorMessages: orgErrorMessages,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+  })
 
   useEffect(() => {
     if (!autoBindErrorInput || !wrapperRef.current) {
@@ -205,7 +155,7 @@ export const FormGroup: FC<Props> = ({
       )}
       {visibleErrorMessages && (
         <div id={errorMessagesId} className="shr-list-none" role="alert">
-          {actualErrorMessages.map((message, index) => (
+          {errorMessages.map((message, index) => (
             <p key={index}>
               <Text
                 className="smarthr-ui-FormControl-errorMessage"
