@@ -46,3 +46,15 @@ type BaseCommonProps = PropsWithChildren<{
 }>
 export type CommonProps = BaseCommonProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof BaseCommonProps | 'aria-labelledby'>
+
+export type LabelComponentProps = {
+  label: ReactNode
+  labelType: TextProps['styleType']
+  labelIcon?: IconType
+  unrecommendedHideLabel?: boolean
+  managedHtmlFor: string
+  managedLabelId: string
+  labelClassName: string
+  statusLabels: StatusLabelType[]
+  subActionArea?: ReactNode
+}
