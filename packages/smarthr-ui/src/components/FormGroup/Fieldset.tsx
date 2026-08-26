@@ -1,6 +1,7 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useEffect, useId, useRef } from 'react'
+import { type FC, type ReactNode, memo, useEffect, useId, useMemo, useRef } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
@@ -9,11 +10,27 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
+import { classNameGenerator } from './style'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
+
+const fieldsetClassNameGenerator = tv({
+  extend: classNameGenerator,
+  variants: {
+    // TODO: innerMarginが未指定、初期値の場合、childrenの上部の余白を広げることで
+    // FormControlとの差をわかりやすくしている
+    // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
+    // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
+    withDefaultMargin: {
+      true: {
+        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
+      },
+    },
+  },
+})
 
 export const Fieldset: FC<
   CommonProps & {
@@ -28,10 +45,20 @@ export const Fieldset: FC<
   exampleMessage,
   supplementaryMessage,
   innerMargin,
+  className,
   ...rest
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
+
+  const classNames = useMemo(() => {
+    const generators = fieldsetClassNameGenerator()
+
+    return {
+      wrapper: generators.wrapper({ className }),
+      childrenWrapper: generators.childrenWrapper({ withDefaultMargin: innerMargin === undefined }),
+    }
+  }, [innerMargin, className])
 
   const baseLegend = useObjectAttributes<ReactNode | ObjectLabelType, ObjectLabelType>(
     orgLegend,
@@ -122,9 +149,9 @@ export const Fieldset: FC<
       helpMessage={helpMessage}
       exampleMessage={exampleMessage}
       supplementaryMessage={supplementaryMessage}
+      classNames={classNames}
       LabelComponent={LabelComponent}
       innerMargin={innerMargin}
-      fieldsetWithDefaultMargin={innerMargin === undefined}
       aria-describedby={describedbyIds || undefined}
     />
   )

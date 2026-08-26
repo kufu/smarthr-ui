@@ -1,5 +1,4 @@
 import { type ComponentType, type FC, type RefObject, useEffect, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Stack } from '../Layout'
@@ -10,47 +9,23 @@ import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 import type { useDescribedByIds } from './useDescribedByIds'
 
-// HINT: errorMessagesを含む各idはuseDescribedByIdsで算出済みの値を受け取る
-type Props = Omit<CommonProps, 'errorMessages'> &
+// HINT: errorMessagesを含む各idはuseDescribedByIdsで、classNamesは各コンポーネントで
+// 算出済みの値を受け取る
+type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
   Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
     wrapperRef: RefObject<HTMLDivElement>
     /** グループのラベル名 */
     label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
       Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
     as?: string | ComponentType<any>
-    /** `true` のとき、childrenWrapperの上部余白を広げる（FieldsetがinnerMargin未指定の場合に使用） */
-    fieldsetWithDefaultMargin?: boolean
     /** `true` のとき、文字色を `TEXT_DISABLED` にする */
     disabled?: boolean
     LabelComponent: FC<LabelComponentProps>
+    classNames: {
+      wrapper: string
+      childrenWrapper: string
+    }
   }
-
-const classNameGenerator = tv({
-  slots: {
-    wrapper: [
-      'smarthr-ui-FormControl',
-      'shr-mx-[unset] shr-border-none shr-p-[unset]',
-      'disabled:shr-text-disabled',
-      '[&:disabled_.smarthr-ui-FormControl-label_>_span]:shr-text-disabled',
-      '[&:disabled_.smarthr-ui-FormControl-exampleMessage]:shr-text-color-inherit',
-      '[&:disabled_.smarthr-ui-FormControl-errorMessage-Icon]:shr-text-color-inherit',
-      '[&:disabled_.smarthr-ui-FormControl-supplementaryMessage]:shr-text-color-inherit',
-      '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
-    ],
-    childrenWrapper: 'smarthr-ui-FormControl-childrenWrapper',
-  },
-  variants: {
-    // TODO: innerMarginが未指定、初期値の場合、かつFieldsetの場合、childrenの上部の余白を広げることで
-    // FormControltとの差をわかりやすくしている
-    // 微妙な方法ではあるので、必要に応じてinnerMarginではない属性を用意する
-    // https://kufuinc.slack.com/archives/CGC58MW01/p1737944965871159?thread_ts=1737541173.404369&cid=CGC58MW01
-    fieldsetWithDefaultMargin: {
-      true: {
-        childrenWrapper: '[:not([hidden])_~_&&&]:shr-mt-0.5',
-      },
-    },
-  },
-})
 
 export const FormGroup: FC<Props> = ({
   wrapperRef,
@@ -64,9 +39,8 @@ export const FormGroup: FC<Props> = ({
   autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
-  className,
   children,
-  fieldsetWithDefaultMargin,
+  classNames,
   LabelComponent,
   visibleErrorMessages,
   helpMessageId,
@@ -75,15 +49,6 @@ export const FormGroup: FC<Props> = ({
   errorMessagesId,
   ...rest
 }) => {
-  const classNames = useMemo(() => {
-    const generators = classNameGenerator()
-
-    return {
-      wrapper: generators.wrapper({ className }),
-      childrenWrapper: generators.childrenWrapper({ fieldsetWithDefaultMargin }),
-    }
-  }, [fieldsetWithDefaultMargin, className])
-
   // HINT: statusLabelsは設定されない場合が大半、かつ設定されてもRequiredLabelでmemo化されているため
   // memo化がかなりの確率で有用
   const actualStatusLabels = useMemo(
@@ -91,6 +56,7 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
+  // TODO: autoBindErrorInputによってコンポーネントを実行し分けるように修正する
   useEffect(() => {
     if (!autoBindErrorInput || !wrapperRef.current) {
       return
