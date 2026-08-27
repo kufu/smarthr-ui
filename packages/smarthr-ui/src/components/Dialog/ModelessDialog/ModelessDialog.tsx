@@ -162,6 +162,8 @@ export const ModelessDialog: FC<Props> = ({
 }) => {
   const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
+  // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
+  // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
   const { createPortal } = useDialogPortal(portalParent, id)
   const { localize } = useIntl()
@@ -421,6 +423,8 @@ export const ModelessDialog: FC<Props> = ({
           layer={3}
           overflow="auto"
           className={classNames.wrapper}
+          // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
+          // 依存する値も多く、memo化の効果が薄いため直接記述している
           style={{
             top: centering.top ?? defaultPosition.top,
             left: centering.left ?? defaultPosition.left,
