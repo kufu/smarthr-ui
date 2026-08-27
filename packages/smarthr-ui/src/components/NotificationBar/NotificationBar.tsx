@@ -169,7 +169,7 @@ const ICON_MAPPER = {
   },
 } as const
 
-const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
 export const NotificationBar: FC<Props> = ({
   type,
