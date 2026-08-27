@@ -5,7 +5,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
@@ -17,7 +17,7 @@ type BaseProps = PropsWithChildren<{
   /** 0値を表示するかどうか */
   showZero?: boolean
   /** 色の種類 */
-  type?: VariantProps<typeof classNameGenerator>['color']
+  type?: 'grey' | 'blue' | 'yellow' | 'red'
   /** ドット表示するかどうか */
   dot?: boolean
 }>
