@@ -98,21 +98,23 @@ const classNameGenerator = tv({
     wrapper:
       'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-max-h-[calc(100svh-theme(spacing[0.5]))] shr-max-w-[calc(100vw-theme(spacing[0.5]))] shr-flex-col',
     headerEl: [
-      'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
+      'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center',
+      'shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
       'hover:shr-bg-white-darken',
       /* DialogHandlerにフォーカスが当たっているときは、headerもフォーカス状態のスタイルにする。 */
-      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-focus-indicator has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-bg-white-darken has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-transition-colors has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-duration-100 has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-ease-in-out',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-focus-indicator',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-bg-white-darken',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-transition-colors',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-duration-100',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-ease-in-out',
     ],
     dialogHandler: [
-      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
+      'smarthr-ui-ModelessDialog-handle',
+      'shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px]',
+      'shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none',
+      'shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-focus-indicator--none shr-cursor-[inherit] shr-bg-[unset]',
     ],
-    headingEl: ['shr-my-1 shr-me-1'],
-    closeButtonLayout: [
-      'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
-      'shr-ml-auto shr-shrink-0',
-    ],
-    footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
   variants: {
     size: {
@@ -161,17 +163,13 @@ export const ModelessDialog: FC<Props> = ({
   const { localize } = useIntl()
 
   const classNames = useMemo(() => {
-    const { overlap, wrapper, headerEl, headingEl, dialogHandler, closeButtonLayout, footerEl } =
-      classNameGenerator()
+    const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
 
     return {
       overlap: overlap({ className }),
       wrapper: wrapper({ size, resizable }),
       header: headerEl(),
-      heading: headingEl(),
       dialogHandler: dialogHandler(),
-      closeButtonLayout: closeButtonLayout(),
-      footer: footerEl(),
     }
   }, [className, size, resizable])
 
@@ -396,13 +394,14 @@ export const ModelessDialog: FC<Props> = ({
               handleArrowKeyDown={functions.handleArrowKeyDown}
               className={classNames.dialogHandler}
             />
-            <div id={labelId} className={classNames.heading}>
+            <div id={labelId} className="shr-my-1 shr-me-1">
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
             <CloseButton
               handleClick={functions.handleClickClose}
-              className={classNames.closeButtonLayout}
+              // DialogHandlerの上に出すためにスタッキングコンテキストを生成
+              className="shr-relative shr-ml-auto shr-shrink-0"
             />
           </div>
           <DialogBody
@@ -412,7 +411,9 @@ export const ModelessDialog: FC<Props> = ({
           >
             {children}
           </DialogBody>
-          {footer && <div className={classNames.footer}>{footer}</div>}
+          {footer && (
+            <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
+          )}
           <LiveRegion regionText={debouncedLiveRegionText} />
         </Panel>
       </Draggable>
