@@ -19,22 +19,15 @@ const classNameGenerator = tv({
     column: ['shr-min-w-[13em] shr-list-none', '[&_+_&]:shr-border-l-shorthand'],
   },
   variants: {
-    maxColumn: {
-      1: {
+    isSingleColumn: {
+      true: {
         column: 'shr-max-w-[theme(width.1/3)]',
       },
-      2: {},
-      3: {},
-    },
-  },
-  compoundVariants: [
-    {
-      maxColumn: [2, 3],
-      className: {
+      false: {
         column: 'last:shr-grow',
       },
     },
-  ],
+  },
 })
 
 type BaseProps = {
@@ -51,15 +44,15 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
+  const isSingleColumn = columns.length === 1
   const classNames = useMemo(() => {
-    const { wrapper, column } = classNameGenerator({ className })
+    const { wrapper, column } = classNameGenerator()
+
     return {
-      wrapper: wrapper(),
-      column: column({
-        maxColumn: columns.length as 1 | 2 | 3,
-      }),
+      wrapper: wrapper({ className }),
+      column: column({ isSingleColumn }),
     }
-  }, [className, columns.length])
+  }, [isSingleColumn, className])
 
   const selectedPath = useMemo(() => {
     if (!value) return []

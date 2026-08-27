@@ -22,7 +22,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
-import type { useStepFormDialogButton } from './useStepFormDialogButton'
+import type { CommonButtonType } from './type'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
@@ -32,8 +32,6 @@ type StepFormHelpers = {
   /** 現在のステップ情報 */
   currentStep: StepItem
 }
-
-type CommonButtonType = ReturnType<typeof useStepFormDialogButton>
 
 export type BaseProps = PropsWithChildren<
   DialogBodyProps & {

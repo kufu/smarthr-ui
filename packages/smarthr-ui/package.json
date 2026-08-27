@@ -1,14 +1,14 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "99.3.2",
+  "version": "99.5.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
     "@smarthr/wareki": "^1.3.1",
     "dayjs": "^1.11.18",
     "decimal.js": "^10.6.0",
-    "intl-messageformat": "^11.2.13",
+    "intl-messageformat": "^11.2.14",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.3.1",

@@ -5,7 +5,6 @@ import {
   type MouseEvent,
   forwardRef,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -51,23 +50,10 @@ export const InputFileMultiplyAppendable = forwardRef<
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
-    const innerRef = useRef<HTMLInputElement>(null)
-
-    // TODO: useMergeRefsが実装されたら修正
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-      [],
-    )
-
     const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
-      const updateFiles = (newFiles: File[]) => {
-        if (!innerRef.current) {
-          return
-        }
-
+      const updateFiles = (input: HTMLInputElement, newFiles: File[]) => {
         latest.onChange?.(newFiles)
 
         const buff = new DataTransfer()
@@ -76,7 +62,7 @@ export const InputFileMultiplyAppendable = forwardRef<
         })
 
         isUpdatingFilesRef.current = true
-        innerRef.current.files = buff.files
+        input.files = buff.files
         isUpdatingFilesRef.current = false
 
         setFiles(newFiles)
@@ -91,10 +77,14 @@ export const InputFileMultiplyAppendable = forwardRef<
 
           const newFiles = Array.from(e.target.files ?? [])
 
-          updateFiles([...latest.files, ...newFiles])
+          updateFiles(e.target, [...latest.files, ...newFiles])
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          if (!innerRef.current) {
+          const input = e.currentTarget
+            .closest('.smarthr-ui-InputFile')
+            ?.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"][type="file"]')
+
+          if (!input) {
             return
           }
 
@@ -102,9 +92,9 @@ export const InputFileMultiplyAppendable = forwardRef<
           const newFiles = latest.files.filter((_, i) => index !== i)
 
           // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-          innerRef.current.value = ''
+          input.value = ''
 
-          updateFiles(newFiles)
+          updateFiles(input, newFiles)
         },
         handleClosePreview: () => {
           setPreviewFile(null)
@@ -143,7 +133,7 @@ export const InputFileMultiplyAppendable = forwardRef<
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            ref={innerRef}
+            ref={ref}
             type="file"
             disabled={disabled}
             multiple

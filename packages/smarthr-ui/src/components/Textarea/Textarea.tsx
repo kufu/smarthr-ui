@@ -11,7 +11,6 @@ import {
   startTransition,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -19,6 +18,8 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useOnce } from '../../hooks/useOnce'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
@@ -231,8 +232,6 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   ...rest
 }) => {
   const theme = useTheme()
-
-  const innerRef = useRef<HTMLTextAreaElement | null>(null)
   const [interimRows, setInterimRows] = useState(rows)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
@@ -248,10 +247,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const functions = useMemo(
     () => ({
-      callbackRef: (node: HTMLTextAreaElement | null) => {
-        // TODO: useMergeRefs, useOnceCallbackが実装されたら適用する
-        innerRef.current = node
-
+      baseCallbackRef: (node: HTMLTextAreaElement | null) => {
         if (node) {
           // autoFocus時に、フォーカスを当てる
           if (latest.autoFocus) {
@@ -284,16 +280,12 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     [latest],
   )
 
-  useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
-    externalRef,
-    () => innerRef.current,
-    [],
-  )
+  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
   return (
     <textarea
       {...rest}
-      ref={functions.callbackRef}
+      ref={mergedRef}
       aria-invalid={error || undefined}
       data-smarthr-ui-input="true"
       rows={interimRows}

@@ -28,6 +28,10 @@ type Props = {
   children?: React.ReactNode
   className?: string
   options?: Partial<ChartOptions<'doughnut'>>
+  /**
+   * ドーナツグラフの柄を無効化するか
+   */
+  disablePatterns?: boolean
 }
 
 export const DoughnutChart: React.FC<Props> = ({
@@ -37,11 +41,15 @@ export const DoughnutChart: React.FC<Props> = ({
   children,
   className,
   options: externalOptions,
+  disablePatterns,
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
-  const chartColors = useMemo(() => getChartColors<'doughnut'>(segmentCount), [segmentCount])
+  const chartColors = useMemo(
+    () => getChartColors<'doughnut'>(segmentCount, disablePatterns),
+    [segmentCount, disablePatterns],
+  )
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
   const ariaLabel = useMemo(() => {

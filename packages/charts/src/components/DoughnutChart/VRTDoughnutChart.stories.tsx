@@ -40,7 +40,12 @@ export default {
         <DoughnutChart data={doughnutWithZero} title="値0を含む" />
       </div>
 
-      {/* パターン7: 中央コンテンツあり（タイトルなし＝凡例分だけ上にずれる） */}
+      {/* パターン7: 柄なし（disablePatterns＝全セグメントが単色になること） */}
+      <div className="shr-h-[400px]">
+        <DoughnutChart data={doughnutSmall} title="柄なし" disablePatterns />
+      </div>
+
+      {/* パターン8: 中央コンテンツあり（タイトルなし＝凡例分だけ上にずれる） */}
       <div className="shr-h-[400px]">
         <DoughnutChart data={doughnutSmall}>
           <Text size="XXL" weight="bold">
@@ -52,7 +57,7 @@ export default {
         </DoughnutChart>
       </div>
 
-      {/* パターン8: 中央コンテンツあり＋タイトルあり（タイトル分もずれること） */}
+      {/* パターン9: 中央コンテンツあり＋タイトルあり（タイトル分もずれること） */}
       <div className="shr-h-[400px]">
         <DoughnutChart data={doughnutSmall} title="雇用形態の内訳">
           <Text size="XXL" weight="bold">
