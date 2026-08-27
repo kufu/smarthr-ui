@@ -264,8 +264,6 @@ export const ModelessDialog: FC<Props> = ({
     [latest],
   )
 
-  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
-
   useEffect(() => {
     if (!wrapperPosition) {
       setDebouncedLiveRegionText('')
@@ -364,6 +362,8 @@ export const ModelessDialog: FC<Props> = ({
 
     return () => document.removeEventListener('focus', focusHandler, true)
   }, [isOpen])
+
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
