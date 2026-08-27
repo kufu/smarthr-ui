@@ -24,6 +24,7 @@
   "smarthr-ui/AppHeader/Launcher/helpText": "よく使うアプリとは",
   "smarthr-ui/AppHeader/Launcher/searchResultText": "検索結果",
   "smarthr-ui/AppHeader/Launcher/emptyText": "該当するアプリが見つかりませんでした。",
+  "smarthr-ui/AppHeader/Launcher/loadError": "アプリ一覧の読み込みに失敗しました。\n時間をおいて、やり直してください。",
   "smarthr-ui/AppHeader/Launcher/sortDropdownLabel": "表示順",
   "smarthr-ui/AppHeader/Launcher/sortDropdownSelected": "選択中",
   "smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault": "デフォルト",

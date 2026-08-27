@@ -103,12 +103,13 @@ const OpenButton = memo<{ alt: ReactNode; onClick: () => void }>(({ onClick, alt
 ))
 
 const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => {
-  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+  const { isAppLauncherAvailable, handleOpenAppLauncher, setIsAppLauncherSelected } =
+    useContext(AppLauncherContext)
 
   return (
-    features &&
-    features.length > 0 && (
+    isAppLauncherAvailable && (
       <ActualFeatureButton
+        handleOpenAppLauncher={handleOpenAppLauncher}
         setIsAppLauncherSelected={setIsAppLauncherSelected}
         className={className}
       >
@@ -119,9 +120,16 @@ const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children
 })
 
 const ActualFeatureButton: FC<
-  PropsWithChildren<{ className: string; setIsAppLauncherSelected: (selected: boolean) => void }>
-> = ({ setIsAppLauncherSelected, children, className }) => {
-  const onClick = useCallback(() => setIsAppLauncherSelected(true), [setIsAppLauncherSelected])
+  PropsWithChildren<{
+    className: string
+    handleOpenAppLauncher: () => void
+    setIsAppLauncherSelected: (selected: boolean) => void
+  }>
+> = ({ handleOpenAppLauncher, setIsAppLauncherSelected, children, className }) => {
+  const onClick = useCallback(() => {
+    handleOpenAppLauncher()
+    setIsAppLauncherSelected(true)
+  }, [handleOpenAppLauncher, setIsAppLauncherSelected])
 
   return (
     <div className={className}>

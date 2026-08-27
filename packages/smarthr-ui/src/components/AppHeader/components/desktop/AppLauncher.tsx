@@ -23,6 +23,8 @@ import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
+  loading?: boolean
+  error?: boolean
 }
 
 const appLauncher = tv({
@@ -102,7 +104,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
+export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error }) => {
   const {
     features,
     page,
@@ -175,7 +177,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             </Cluster>
 
             <Scroller className={CLASS_NAMES.scrollArea}>
-              <AppLauncherFeatures features={features} page={page} />
+              <AppLauncherFeatures
+                features={features}
+                page={page}
+                loading={loading}
+                error={error}
+              />
             </Scroller>
           </Section>
         </div>

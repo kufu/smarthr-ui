@@ -18,7 +18,7 @@ import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
 
-import type { HeaderProps } from '../../types'
+import type { HeaderProps, InternalHeaderProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -32,7 +32,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DesktopHeader: FC<HeaderProps> = ({
+export const DesktopHeader: FC<InternalHeaderProps> = ({
   enableNew,
   className = '',
   appName,
@@ -47,6 +47,10 @@ export const DesktopHeader: FC<HeaderProps> = ({
   desktopNavigationAdditionalContent,
   releaseNote,
   features,
+  isAppLauncherAvailable,
+  featuresLoading,
+  featuresError,
+  handleOpenAppLauncher,
   locale: localeProps,
   ...rest
 }) => {
@@ -74,16 +78,24 @@ export const DesktopHeader: FC<HeaderProps> = ({
         <Cluster align="center" className="shr--me-0.25">
           {!enableNew && (
             <>
-              {features && features.length > 0 && (
+              {isAppLauncherAvailable && (
                 <Dropdown>
-                  <AppLauncherButton enableNew={enableNew} className={classNames.appsButton}>
+                  <AppLauncherButton
+                    enableNew={enableNew}
+                    className={classNames.appsButton}
+                    handleClick={handleOpenAppLauncher}
+                  >
                     <Localizer
                       id="smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel"
                       defaultText="アプリ"
                     />
                   </AppLauncherButton>
                   <DropdownContent controllable>
-                    <AppLauncher features={features} />
+                    <AppLauncher
+                      features={features}
+                      loading={featuresLoading}
+                      error={featuresError}
+                    />
                   </DropdownContent>
                 </Dropdown>
               )}
@@ -156,10 +168,10 @@ export const DesktopHeader: FC<HeaderProps> = ({
 }
 
 const AppLauncherButton = memo<
-  Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
->(({ enableNew, children, className }) => (
+  Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string; handleClick: () => void }>
+>(({ enableNew, children, className, handleClick }) => (
   <DropdownTrigger>
-    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
+    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className} onClick={handleClick}>
       <Translate>{children}</Translate>
     </Button>
   </DropdownTrigger>
