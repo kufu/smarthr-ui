@@ -159,6 +159,9 @@ export const ModelessDialog: FC<Props> = ({
 }) => {
   const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
+  // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
+  // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
+  const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
   const { createPortal } = useDialogPortal(portalParent, id)
   const { localize } = useIntl()
 
@@ -190,19 +193,7 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const positionStyle = useMemo(
-    () => ({
-      top: centering.top ?? top,
-      left: centering.left ?? left,
-      right,
-      bottom,
-      width: size ? undefined : width,
-      height,
-    }),
-    [centering, top, left, right, bottom, width, height, size],
-  )
-
-  const latest = useLatest({ isOpen, onClickClose, onPressEscape })
+  const latest = useLatest({ isOpen, onClickClose, onPressEscape, top, left, right, bottom })
 
   const functions = useMemo(
     () => ({
@@ -264,8 +255,6 @@ export const ModelessDialog: FC<Props> = ({
     [latest],
   )
 
-  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
-
   useEffect(() => {
     if (!wrapperPosition) {
       setDebouncedLiveRegionText('')
@@ -308,8 +297,8 @@ export const ModelessDialog: FC<Props> = ({
       return
     }
 
-    const isXCenter = left === undefined && right === undefined
-    const isYCenter = top === undefined && bottom === undefined
+    const isXCenter = defaultPosition.left === undefined && defaultPosition.right === undefined
+    const isYCenter = defaultPosition.top === undefined && defaultPosition.bottom === undefined
 
     if (isXCenter || isYCenter) {
       const rect = wrapperRef.current.getBoundingClientRect()
@@ -323,7 +312,7 @@ export const ModelessDialog: FC<Props> = ({
         return current.top === temp.top && current.left === temp.left ? current : temp
       })
     }
-  }, [bottom, isOpen, left, right, top])
+  }, [isOpen, defaultPosition])
 
   useEffect(() => {
     if (isOpen) {
@@ -349,6 +338,23 @@ export const ModelessDialog: FC<Props> = ({
 
   useEffect(() => {
     if (isOpen) {
+      setDefaultPosition((current) => {
+        if (
+          current.top === latest.top &&
+          current.left === latest.left &&
+          current.right === latest.right &&
+          current.bottom === latest.bottom
+        ) {
+          return current
+        }
+
+        return {
+          top: latest.top,
+          left: latest.left,
+          right: latest.right,
+          bottom: latest.bottom,
+        }
+      })
       setPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
@@ -363,7 +369,9 @@ export const ModelessDialog: FC<Props> = ({
     document.addEventListener('focus', focusHandler, true)
 
     return () => document.removeEventListener('focus', focusHandler, true)
-  }, [isOpen])
+  }, [isOpen, latest])
+
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
   return createPortal(
     <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
@@ -385,7 +393,16 @@ export const ModelessDialog: FC<Props> = ({
           layer={3}
           overflow="auto"
           className={classNames.wrapper}
-          style={positionStyle}
+          // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
+          // 依存する値も多く、memo化の効果が薄いため直接記述している
+          style={{
+            top: centering.top ?? defaultPosition.top,
+            left: centering.left ?? defaultPosition.left,
+            right: defaultPosition.right,
+            bottom: defaultPosition.bottom,
+            width: size ? undefined : width,
+            height,
+          }}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
