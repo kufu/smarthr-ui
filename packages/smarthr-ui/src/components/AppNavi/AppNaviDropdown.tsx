@@ -39,10 +39,10 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   displayCaret,
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, icon } = classNameGenerator({ active: current, displayCaret })
+    const { wrapper, icon } = classNameGenerator({ active: current })
 
     return {
-      wrapper: wrapper(),
+      wrapper: wrapper({ displayCaret }),
       icon: icon(),
     }
   }, [current, displayCaret])
