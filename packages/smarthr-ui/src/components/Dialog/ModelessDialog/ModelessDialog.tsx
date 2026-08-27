@@ -190,18 +190,6 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const positionStyle = useMemo(
-    () => ({
-      top: centering.top ?? top,
-      left: centering.left ?? left,
-      right,
-      bottom,
-      width: size ? undefined : width,
-      height,
-    }),
-    [centering, top, left, right, bottom, width, height, size],
-  )
-
   const latest = useLatest({ isOpen, onClickClose, onPressEscape })
 
   const functions = useMemo(
@@ -385,7 +373,16 @@ export const ModelessDialog: FC<Props> = ({
           layer={3}
           overflow="auto"
           className={classNames.wrapper}
-          style={positionStyle}
+          // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
+          // 依存する値も多く、memo化の効果が薄いため直接記述している
+          style={{
+            top: centering.top ?? top,
+            left: centering.left ?? left,
+            right,
+            bottom,
+            width: size ? undefined : width,
+            height,
+          }}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} ref={focusTargetRef} />
