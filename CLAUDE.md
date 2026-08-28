@@ -134,6 +134,67 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
+#### `'use client'` を付けるべきかの判定
+
+React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
+
+**Server Component で使える**
+
+```
+Children Fragment Profiler StrictMode Suspense cache cacheSignal
+captureOwnerStack cloneElement createElement createRef forwardRef
+isValidElement lazy memo use useCallback useDebugValue useId useMemo version
+```
+
+`useMemo` `useCallback` `useId` `forwardRef` `memo` は使えます。
+
+**使えない**
+
+`useState` `useRef` `useEffect` `useLayoutEffect` `useContext` `useReducer` `useSyncExternalStore` `useImperativeHandle` `createContext`
+
+export 一覧は実際のビルドから確認できます。
+
+```sh
+node -e "const m=require('./node_modules/.pnpm/react@'+require('react/package.json').version+'/node_modules/react/cjs/react.react-server.development.js'); console.log(Object.keys(m).sort().join(' '))"
+```
+
+**判定の手順**
+
+対象ファイルの import を1つずつ評価します。
+
+1. **`react` からの import** — 上記の使える一覧に含まれるか。型のみの import（`import type`、インラインの `type` 修飾子）は実行時に影響しないため対象外
+2. **ローカルの hook（`use*`）** — 実装を辿り、client 専用 API を使っていないか確認する。`import` だけでなく `export ... from` による再エクスポートも辿ること
+3. **ローカルのコンポーネント** — `'use client'` を持つ client component は、Server Component から**レンダリングする分には問題ない**。境界がそこで切れるため
+4. **外部パッケージ** — 後述
+
+**外部パッケージの判定**
+
+`createContext` などの文字列があるかだけで判断してはいけません。**実装がガードされているかまで読むこと。**
+
+`react-icons@5.7.0` が実例です。`createContext` を使いますが両方ともガードされており、Server Component で動作します。
+
+```js
+// lib/iconContext.mjs — undefinedになるだけでthrowしない
+export var IconContext = React.createContext && React.createContext(DefaultContext)
+
+// lib/iconBase.mjs — undefinedならDefaultContextで描画。useContextではなくConsumer
+return IconContext !== undefined
+  ? React.createElement(IconContext.Consumer, null, conf => elem(conf))
+  : elem(DefaultContext)
+```
+
+`package.json` の `exports` に `react-server` 条件があるか、dist に `'use client'` があるかも判断材料になりますが、無いからといって使えないとは限りません。
+
+**注意が必要なもの**
+
+- `styled-components@5.3.11` — `exports` フィールドを持たず RSC 非対応。これを import する経路があると Server Component にできない
+- ブラウザグローバル（`window` `document` `navigator`）— `typeof window !== 'undefined'` でガードされていれば SSR では落ちないが、Server Component では常に else 側に倒れる。挙動として許容できるか判断が必要
+- JSX のイベントハンドラ — Server Component は host 要素に関数を渡せない。ただし値が `undefined` なら成立するため、props 経由で条件付きに渡している形なら問題ない
+
+**検証**
+
+`'use client'` の削除は DOM に影響しないため、`innerHTML` を比較して同一であることを確認します。
+
 ### コンポーネントのブラックボックス原則
 
 他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。
