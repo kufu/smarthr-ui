@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -32,26 +32,21 @@ export const AppHeader: FC<HeaderProps> = ({
     error: boolean
     data: Array<Launcher['feature']> | null
   }>({ loading: false, error: false, data: null })
-  // HINT: Desktop・Mobileの両ヘッダーが常にマウントされているため、
-  // どちらから開いても fetchFeatures の呼び出しが1回だけになるようフラグで制御する
-  const requestedRef = useRef(false)
 
-  const latest = useLatest({ fetchFeatures })
+  const latest = useLatest({ fetchFeatures, lazyFeatures })
 
   const functions = useMemo(
     () => ({
       handleOpenAppLauncher: () => {
-        if (latest.fetchFeatures && !requestedRef.current) {
-          requestedRef.current = true
+        // HINT: Desktop・Mobileの両ヘッダーが常にマウントされているため、取得中・取得済みの場合はスキップし、
+        //  どちらから開いても fetchFeatures の呼び出しが1回だけになるようにする
+        if (latest.fetchFeatures && !latest.lazyFeatures.loading && !latest.lazyFeatures.data) {
           setLazyFeatures({ loading: true, error: false, data: null })
 
           latest.fetchFeatures().then(
             (data) => setLazyFeatures({ loading: false, error: false, data }),
-            () => {
-              // HINT: 失敗時は次回オープンで再試行できるようにする
-              requestedRef.current = false
-              setLazyFeatures({ loading: false, error: true, data: null })
-            },
+            // HINT: 失敗時は次回オープンで再試行できるようにする
+            () => setLazyFeatures({ loading: false, error: true, data: null }),
           )
         }
       },
