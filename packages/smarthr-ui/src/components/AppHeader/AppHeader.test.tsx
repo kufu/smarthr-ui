@@ -86,6 +86,14 @@ describe('AppHeader', () => {
     })
   })
 
+  // HINT: DesktopのDropdownはonOpenをrequestAnimationFrame経由で呼び出すため、
+  //  クリック後に1フレーム待たないとfetchFeaturesの呼び出しが観測できない
+  const clickAppLauncherButton = (expanded: boolean) =>
+    act(async () => {
+      screen.getByRole('button', { name: 'アプリ', expanded }).click()
+      await new Promise(requestAnimationFrame)
+    })
+
   describe('fetchFeatures による遅延ロード', () => {
     it('初期表示では「アプリ」ボタンが表示されるが、fetchFeaturesは呼ばれない', () => {
       const { fetchFeatures } = deferredFetchFeatures()
@@ -99,7 +107,7 @@ describe('AppHeader', () => {
       const { fetchFeatures, resolve } = deferredFetchFeatures()
       renderAppHeader({ fetchFeatures })
 
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
+      await clickAppLauncherButton(false)
 
       expect(fetchFeatures).toHaveBeenCalledTimes(1)
       expect(screen.getByText('処理中')).toBeInTheDocument()
@@ -114,33 +122,34 @@ describe('AppHeader', () => {
       const { fetchFeatures, resolve } = deferredFetchFeatures()
       renderAppHeader({ fetchFeatures })
 
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
+      await clickAppLauncherButton(false)
       await act(async () => resolve([]))
 
       expect(await screen.findByText('該当するアプリが見つかりませんでした。')).toBeInTheDocument()
     })
 
-    it('失敗した場合エラーメッセージを表示し、再度開くと再試行できる', async () => {
+    it('失敗した場合エラーメッセージを表示し、パネルを開き直したときに再試行する', async () => {
       const first = deferredFetchFeatures()
       const { fetchFeatures } = first
       renderAppHeader({ fetchFeatures })
 
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
+      await clickAppLauncherButton(false)
       await act(async () => first.reject())
 
       expect(await screen.findByText(/アプリ一覧の読み込みに失敗しました/)).toBeInTheDocument()
 
-      // HINT: Dropdownはトグルのため、この操作は見た目上パネルを閉じるクリックだが、
-      // エラー後は再試行フラグが戻っているため、このクリックで再度fetchFeaturesが呼ばれる
+      // パネルを閉じるだけのクリックでは再試行しない
       const second = deferredFetchFeatures()
       fetchFeatures.mockImplementationOnce(second.fetchFeatures)
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: true }).click())
+      await clickAppLauncherButton(true)
+
+      expect(fetchFeatures).toHaveBeenCalledTimes(1)
+
+      // 開き直したときに再試行される
+      await clickAppLauncherButton(false)
 
       expect(fetchFeatures).toHaveBeenCalledTimes(2)
-
-      // パネルを開き直して再試行の結果を確認する（開き直し自体は再フェッチを起こさない）
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
-      expect(fetchFeatures).toHaveBeenCalledTimes(2)
+      expect(screen.getByText('処理中')).toBeInTheDocument()
 
       await act(async () => second.resolve([buildFeature('1', 'アプリA')]))
       expect(await screen.findByRole('link', { name: /アプリA/ })).toBeInTheDocument()
@@ -150,13 +159,13 @@ describe('AppHeader', () => {
       const { fetchFeatures, resolve } = deferredFetchFeatures()
       renderAppHeader({ fetchFeatures })
 
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
+      await clickAppLauncherButton(false)
       await act(async () => resolve([buildFeature('1', 'アプリA')]))
       await screen.findByRole('link', { name: /アプリA/ })
 
       // 閉じて再度開く
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: true }).click())
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
+      await clickAppLauncherButton(true)
+      await clickAppLauncherButton(false)
 
       expect(fetchFeatures).toHaveBeenCalledTimes(1)
       expect(screen.getByRole('link', { name: /アプリA/ })).toBeInTheDocument()
@@ -168,7 +177,7 @@ describe('AppHeader', () => {
       renderAppHeader({ fetchFeatures })
 
       // Desktop側の「アプリ」を開く
-      act(() => screen.getByRole('button', { name: 'アプリ', expanded: false }).click())
+      await clickAppLauncherButton(false)
       expect(fetchFeatures).toHaveBeenCalledTimes(1)
 
       // Mobile側のハンバーガーメニューから「アプリ一覧」を開く

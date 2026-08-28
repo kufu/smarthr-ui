@@ -58,6 +58,10 @@ export const AppHeader: FC<HeaderProps> = ({
     ? (lazyFeatures.data ?? EMPTY_FEATURES)
     : (features ?? EMPTY_FEATURES)
   const isAppLauncherAvailable = !!fetchFeatures || resolvedFeatures.length > 0
+  // HINT: Desktopは Dropdown の onOpen（requestAnimationFrame経由）で取得を開始するため、
+  //  パネルが開いてから実際に取得が始まるまでに1フレームの猶予がある。
+  //  fetchFeatures 指定時に未取得かつ未エラーの状態はすべて取得中として扱い、その間に「該当なし」が表示されるのを防ぐ
+  const featuresLoading = !!fetchFeatures && lazyFeatures.data === null && !lazyFeatures.error
 
   // HINT: Desktop,Mobileの両ヘッダーは常にHTML上に存在し、cssでvisibleを切り替えることでSSR環境でのレイアウトシフトが発生しないようにしています
   // 表示切替は画面幅によって決まり、SSR環境では判定出来ないためです
@@ -69,7 +73,7 @@ export const AppHeader: FC<HeaderProps> = ({
         desktopNavigationAdditionalContent={desktopNavigationAdditionalContent}
         features={resolvedFeatures}
         isAppLauncherAvailable={isAppLauncherAvailable}
-        featuresLoading={lazyFeatures.loading}
+        featuresLoading={featuresLoading}
         featuresError={lazyFeatures.error}
         handleOpenAppLauncher={functions.handleOpenAppLauncher}
       >
@@ -80,7 +84,7 @@ export const AppHeader: FC<HeaderProps> = ({
         mobileAdditionalContent={mobileAdditionalContent}
         features={resolvedFeatures}
         isAppLauncherAvailable={isAppLauncherAvailable}
-        featuresLoading={lazyFeatures.loading}
+        featuresLoading={featuresLoading}
         featuresError={lazyFeatures.error}
         handleOpenAppLauncher={functions.handleOpenAppLauncher}
       >

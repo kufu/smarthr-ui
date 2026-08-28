@@ -79,12 +79,8 @@ export const DesktopHeader: FC<InternalHeaderProps> = ({
           {!enableNew && (
             <>
               {isAppLauncherAvailable && (
-                <Dropdown>
-                  <AppLauncherButton
-                    enableNew={enableNew}
-                    className={classNames.appsButton}
-                    handleClick={handleOpenAppLauncher}
-                  >
+                <Dropdown onOpen={handleOpenAppLauncher}>
+                  <AppLauncherButton enableNew={enableNew} className={classNames.appsButton}>
                     <Localizer
                       id="smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel"
                       defaultText="アプリ"
@@ -168,10 +164,10 @@ export const DesktopHeader: FC<InternalHeaderProps> = ({
 }
 
 const AppLauncherButton = memo<
-  Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string; handleClick: () => void }>
->(({ enableNew, children, className, handleClick }) => (
+  Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
+>(({ enableNew, children, className }) => (
   <DropdownTrigger>
-    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className} onClick={handleClick}>
+    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
       <Translate>{children}</Translate>
     </Button>
   </DropdownTrigger>
