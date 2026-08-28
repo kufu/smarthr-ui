@@ -43,11 +43,17 @@ export const AppHeader: FC<HeaderProps> = ({
         if (latest.fetchFeatures && !latest.lazyFeatures.loading && !latest.lazyFeatures.data) {
           setLazyFeatures({ loading: true, error: false, data: null })
 
-          latest.fetchFeatures().then(
-            (data) => setLazyFeatures({ loading: false, error: false, data }),
-            // HINT: 失敗時は次回オープンで再試行できるようにする
-            () => setLazyFeatures({ loading: false, error: true, data: null }),
-          )
+          // HINT: 失敗時は次回オープンで再試行できるようにする
+          const handleError = () => setLazyFeatures({ loading: false, error: true, data: null })
+
+          try {
+            latest
+              .fetchFeatures()
+              .then((data) => setLazyFeatures({ loading: false, error: false, data }), handleError)
+          } catch {
+            // HINT: fetchFeatures が Promise を返す前に同期的に throw した場合も、loading のままにしない
+            handleError()
+          }
         }
       },
     }),
