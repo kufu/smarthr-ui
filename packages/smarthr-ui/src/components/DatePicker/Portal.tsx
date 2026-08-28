@@ -1,3 +1,5 @@
+'use client'
+
 import { type PropsWithChildren, forwardRef, useImperativeHandle, useRef, useState } from 'react'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
