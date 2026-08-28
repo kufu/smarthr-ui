@@ -9,7 +9,7 @@ import {
   type RefObject,
   type SetStateAction,
   memo,
-  useEffect,
+  useCallback,
   useId,
   useMemo,
   useRef,
@@ -21,6 +21,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
@@ -179,7 +180,6 @@ export const ModelessDialog: FC<Props> = ({
   }, [className, size, resizable])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const focusTargetRef = useRef<HTMLDivElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
   const [debouncedLiveRegionText, setDebouncedLiveRegionText] = useState<string>('')
@@ -312,91 +312,97 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  useEffect(() => {
-    if (isOpen) {
-      const oldDefaultPosition = latest.defaultPosition
-      const nextDefaultPosition =
-        oldDefaultPosition.top === latest.top &&
-        oldDefaultPosition.left === latest.left &&
-        oldDefaultPosition.right === latest.right &&
-        oldDefaultPosition.bottom === latest.bottom
-          ? oldDefaultPosition
-          : {
-              top: latest.top,
-              left: latest.left,
-              right: latest.right,
-              bottom: latest.bottom,
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (isOpen) {
+        const oldDefaultPosition = latest.defaultPosition
+        const nextDefaultPosition =
+          oldDefaultPosition.top === latest.top &&
+          oldDefaultPosition.left === latest.left &&
+          oldDefaultPosition.right === latest.right &&
+          oldDefaultPosition.bottom === latest.bottom
+            ? oldDefaultPosition
+            : {
+                top: latest.top,
+                left: latest.left,
+                right: latest.right,
+                bottom: latest.bottom,
+              }
+
+        setDefaultPosition(nextDefaultPosition)
+
+        // 中央寄せの座標計算を行う
+        if (node) {
+          const isXCenter =
+            nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
+          const isYCenter =
+            nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+          let nextCentering = latest.centering
+
+          if (isXCenter || isYCenter) {
+            const rect = node.getBoundingClientRect()
+            const tempCentering = {
+              top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+              left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
             }
 
-      setDefaultPosition(nextDefaultPosition)
+            nextCentering =
+              latest.centering.top === tempCentering.top &&
+              latest.centering.left === tempCentering.left
+                ? latest.centering
+                : tempCentering
 
-      // 中央寄せの座標計算を行う
-      if (wrapperRef.current) {
-        const isXCenter =
-          nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
-        const isYCenter =
-          nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
-        let nextCentering = latest.centering
+            setCentering(nextCentering)
+          } else if (latest.centering.top !== undefined || latest.centering.left !== undefined) {
+            // HINT: 中央寄せが不要になった場合、以前の値が残るとdefaultPositionより優先されてしまう
+            nextCentering = {}
 
-        if (isXCenter || isYCenter) {
-          const rect = wrapperRef.current.getBoundingClientRect()
-          const tempCentering = {
-            top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-            left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+            setCentering(nextCentering)
           }
 
-          nextCentering =
-            latest.centering.top === tempCentering.top &&
-            latest.centering.left === tempCentering.left
-              ? latest.centering
-              : tempCentering
+          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+          setDraggableBounds((current: DraggableBounds | string | false) => {
+            // HINT: centering.topは0になりうるため、undefinedとの区別が必要
+            const nextTop =
+              nextCentering.top !== undefined
+                ? nextCentering.top * -1
+                : node.getBoundingClientRect().top * -1
 
-          setCentering(nextCentering)
-        } else if (latest.centering.top !== undefined || latest.centering.left !== undefined) {
-          // HINT: 中央寄せが不要になった場合、以前の値が残るとdefaultPositionより優先されてしまう
-          nextCentering = {}
+            return typeof current === 'object' && current.top === nextTop
+              ? current
+              : { top: nextTop }
+          })
 
-          setCentering(nextCentering)
+          node
+            .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')
+            ?.focus()
         }
 
-        // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
-        setDraggableBounds((current: DraggableBounds | string | false) => {
-          if (nextCentering.top) {
-            const nextTop = nextCentering.top * -1
-
-            if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-              return { top: nextTop }
-            }
-          } else if (wrapperRef.current) {
-            const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
-
-            if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-              return { top: nextTop }
-            }
-          }
-
-          return current
-        })
+        functions.setActualPosition({ x: 0, y: 0 })
       }
 
-      functions.setActualPosition({ x: 0, y: 0 })
-      focusTargetRef.current?.focus()
-    }
-
-    const focusHandler = (e: FocusEvent) => {
-      // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
-      if (e.target instanceof HTMLElement && !wrapperRef?.current?.contains(e.target)) {
-        lastFocusElementRef.current = e.target
+      const focusHandler = (e: FocusEvent) => {
+        // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
+        if (e.target instanceof HTMLElement && !node?.contains(e.target)) {
+          lastFocusElementRef.current = e.target
+        }
       }
-    }
 
-    document.addEventListener('focus', focusHandler, true)
+      document.addEventListener('focus', focusHandler, true)
 
-    return () => {
-      functions.cleanupLiveRegion()
-      document.removeEventListener('focus', focusHandler, true)
-    }
-  }, [isOpen, functions, latest])
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      return () => {
+        functions.cleanupLiveRegion()
+        document.removeEventListener('focus', focusHandler, true)
+      }
+    },
+    [isOpen, functions, latest],
+  )
+
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
   useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
@@ -413,7 +419,7 @@ export const ModelessDialog: FC<Props> = ({
       >
         <Panel
           {...rest}
-          ref={wrapperRef}
+          ref={mergedRef}
           role="dialog"
           aria-labelledby={labelId}
           radius="m"
@@ -432,7 +438,7 @@ export const ModelessDialog: FC<Props> = ({
           }}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div tabIndex={-1} ref={focusTargetRef} />
+          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
           <div className={classNames.header}>
             <Handler
               handleArrowKeyDown={functions.handleArrowKeyDown}
