@@ -1,3 +1,6 @@
+// HINT: styled-components@5はRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
+// このモジュールはcreateTheme経由でuseThemeから使われ、useThemeが'use client'を持つため
+// サーバ側では評価されない。
 import { type FlattenSimpleInterpolation, css } from 'styled-components'
 
 import { merge } from '../../libs/lodash'

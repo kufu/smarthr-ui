@@ -1,4 +1,7 @@
 import { type ComponentType, useMemo } from 'react'
+// HINT: styled-components@5はRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
+// react-server条件でimportするとTypeErrorになるため、このモジュールを使うコンポーネントは
+// 'use client'を外せない（Layout配下・Panelが該当）。
 import { isStyledComponent } from 'styled-components'
 
 import { SectioningFragment } from './SectioningContent'
