@@ -110,6 +110,8 @@ export const VRTLauncherLoading: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     canvas.getByRole('button', { name: 'アプリ' }).click()
+    // HINT: ランチャーは Dropdown のポータル（document.body 直下）に描画されるため body から参照する
+    await within(canvasElement.ownerDocument.body).findByText('処理中')
   },
 }
 
@@ -120,7 +122,7 @@ export const VRTLauncherError: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     canvas.getByRole('button', { name: 'アプリ' }).click()
-    await canvas.findByText(/アプリ一覧の読み込みに失敗しました/)
+    await within(canvasElement.ownerDocument.body).findByText(/アプリ一覧の読み込みに失敗しました/)
   },
 }
 
