@@ -357,21 +357,13 @@ export const ModelessDialog: FC<Props> = ({
 
           // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
           setDraggableBounds((current: DraggableBounds | string | false) => {
-            if (nextCentering.top) {
-              const nextTop = nextCentering.top * -1
+            const nextTop = nextCentering.top
+              ? nextCentering.top * -1
+              : node.getBoundingClientRect().top * -1
 
-              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-                return { top: nextTop }
-              }
-            } else {
-              const nextTop = node.getBoundingClientRect().top * -1
-
-              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-                return { top: nextTop }
-              }
-            }
-
-            return current
+            return typeof current === 'object' && current.top === nextTop
+              ? current
+              : { top: nextTop }
           })
 
           node
