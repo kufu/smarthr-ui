@@ -1,3 +1,3 @@
 export { Article, Aside, Nav, Section } from './SectioningContent'
-export { LevelContext } from './LevelContext'
-export { useSectionWrapper } from './useSectioningWrapper'
+export { LevelContext } from './client/components'
+export { useSectionWrapper } from './client/hooks/useSectioningWrapper'
