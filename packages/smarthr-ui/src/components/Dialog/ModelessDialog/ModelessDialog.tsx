@@ -193,7 +193,7 @@ export const ModelessDialog: FC<Props> = ({
   })
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const positionFrame = useAnimationFrame()
+  const liveRegionFrame = useAnimationFrame()
   const latest = useLatest({
     isOpen,
     onClickClose,
@@ -202,8 +202,10 @@ export const ModelessDialog: FC<Props> = ({
     left,
     right,
     bottom,
+    defaultPosition,
+    centering,
     localize,
-    positionFrame,
+    liveRegionFrame,
   })
 
   const functions = useMemo(() => {
@@ -211,7 +213,7 @@ export const ModelessDialog: FC<Props> = ({
     const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
       setPosition(pos)
 
-      latest.positionFrame.request(() => {
+      latest.liveRegionFrame.request(() => {
         const wrapperPosition = wrapperRef.current
           ? wrapperRef.current.getBoundingClientRect()
           : undefined
@@ -249,8 +251,8 @@ export const ModelessDialog: FC<Props> = ({
     }
 
     return {
-      cleanup: () => {
-        latest.positionFrame.cancel()
+      cleanupLiveRegion: () => {
+        latest.liveRegionFrame.cancel()
         debounceLiveRegionText.cancel()
       },
       setActualPosition,
@@ -310,72 +312,68 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  useEffect(() => functions.cleanup, [functions])
-
-  useEffect(() => {
-    // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen) {
-      return
-    }
-
-    const isXCenter = defaultPosition.left === undefined && defaultPosition.right === undefined
-    const isYCenter = defaultPosition.top === undefined && defaultPosition.bottom === undefined
-
-    if (isXCenter || isYCenter) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-
-      setCentering((current) => {
-        const temp = {
-          top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-          left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
-        }
-
-        return current.top === temp.top && current.left === temp.left ? current : temp
-      })
-    }
-  }, [isOpen, defaultPosition])
-
   useEffect(() => {
     if (isOpen) {
-      setDraggableBounds((current: DraggableBounds | string | false) => {
-        if (centering.top) {
-          const nextTop = centering.top * -1
+      const oldDefaultPosition = latest.defaultPosition
+      const nextDefaultPosition =
+        oldDefaultPosition.top === latest.top &&
+        oldDefaultPosition.left === latest.left &&
+        oldDefaultPosition.right === latest.right &&
+        oldDefaultPosition.bottom === latest.bottom
+          ? oldDefaultPosition
+          : {
+              top: latest.top,
+              left: latest.left,
+              right: latest.right,
+              bottom: latest.bottom,
+            }
 
-          if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-            return { top: nextTop }
-          }
-        } else if (wrapperRef.current) {
-          const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
+      setDefaultPosition(nextDefaultPosition)
 
-          if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-            return { top: nextTop }
+      // 中央寄せの座標計算を行う
+      if (wrapperRef.current) {
+        const isXCenter =
+          nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
+        const isYCenter =
+          nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+        let nextCentering = latest.centering
+
+        if (isXCenter || isYCenter) {
+          const rect = wrapperRef.current.getBoundingClientRect()
+          const tempCentering = {
+            top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+            left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
           }
+
+          nextCentering =
+            latest.centering.top === tempCentering.top &&
+            latest.centering.left === tempCentering.left
+              ? latest.centering
+              : tempCentering
+
+          setCentering(nextCentering)
         }
 
-        return current
-      })
-    }
-  }, [isOpen, centering.top])
+        // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+        setDraggableBounds((current: DraggableBounds | string | false) => {
+          if (nextCentering.top) {
+            const nextTop = nextCentering.top * -1
 
-  useEffect(() => {
-    if (isOpen) {
-      setDefaultPosition((current) => {
-        if (
-          current.top === latest.top &&
-          current.left === latest.left &&
-          current.right === latest.right &&
-          current.bottom === latest.bottom
-        ) {
+            if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+              return { top: nextTop }
+            }
+          } else if (wrapperRef.current) {
+            const nextTop = wrapperRef.current.getBoundingClientRect().top * -1
+
+            if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+              return { top: nextTop }
+            }
+          }
+
           return current
-        }
+        })
+      }
 
-        return {
-          top: latest.top,
-          left: latest.left,
-          right: latest.right,
-          bottom: latest.bottom,
-        }
-      })
       functions.setActualPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
@@ -389,7 +387,10 @@ export const ModelessDialog: FC<Props> = ({
 
     document.addEventListener('focus', focusHandler, true)
 
-    return () => document.removeEventListener('focus', focusHandler, true)
+    return () => {
+      functions.cleanupLiveRegion()
+      document.removeEventListener('focus', focusHandler, true)
+    }
   }, [isOpen, functions, latest])
 
   useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
