@@ -27,7 +27,7 @@ export const Type: StoryObj<typeof InformationPanel> = {
   render: (args) => (
     <Stack>
       {['success', 'info', 'warning', 'error', 'sync'].map((type) => (
-        <InformationPanel {...args} type={type as any} key={type} />
+        <InformationPanel {...args} type={type as any} key={type} role="alert" />
       ))}
     </Stack>
   ),
