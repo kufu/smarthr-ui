@@ -192,6 +192,29 @@ describe('AppHeader', () => {
       // Desktop・Mobile 両方のパネルに同じ結果が反映される
       expect(links.length).toBeGreaterThanOrEqual(1)
     })
+
+    it('Mobile側から先に開いた場合もfetchFeaturesが呼ばれ、取得結果が表示される', async () => {
+      const { fetchFeatures, resolve } = deferredFetchFeatures()
+      const user = userEvent.setup()
+      renderAppHeader({ fetchFeatures })
+
+      // Mobile側のハンバーガーメニューから「アプリ一覧」を開く
+      await user.click(screen.getByRole('button', { name: 'メニューを開く' }))
+      await user.click(screen.getByRole('button', { name: 'アプリ一覧' }))
+
+      expect(fetchFeatures).toHaveBeenCalledTimes(1)
+      expect(screen.getByText('処理中')).toBeInTheDocument()
+
+      await act(async () => resolve([buildFeature('1', 'アプリA')]))
+
+      // Desktop の Dropdown は閉じたままなので、Mobile のパネルにのみ表示される
+      expect(await screen.findByRole('link', { name: /アプリA/ })).toBeInTheDocument()
+
+      // その後Desktop側を開いても再取得しない
+      await clickAppLauncherButton(false)
+
+      expect(fetchFeatures).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('navigationsが無い場合', () => {
