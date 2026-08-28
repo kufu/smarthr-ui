@@ -185,6 +185,45 @@ return IconContext !== undefined
 
 `package.json` の `exports` に `react-server` 条件があるか、dist に `'use client'` があるかも判断材料になりますが、無いからといって使えないとは限りません。
 
+**モジュールスコープでの呼び出しに注意**
+
+判定軸は「hook かどうか」ではなく、**モジュール評価時に client 専用 API を呼ぶか**です。
+
+```ts
+// ❌ モジュールスコープで呼ぶ。importされた時点でreact-serverビルドでは例外
+export const ThemeContext = createContext<CreatedTheme>(createTheme())
+// TypeError - React.createContext is not a function
+
+// ✅ 関数内で呼ぶ。呼び出さなければ評価されない
+export const useLatest = <T>(value: T) => { const ref = useRef(value); ... }
+```
+
+前者は `'use client'` による境界が必須です。`'use client'` を持つモジュールは Server Component 側から実体を評価されず、参照だけが渡されるため、モジュールスコープの処理が保護されます。
+
+**境界をどこに置くか**
+
+hook 自身ではなく、それを使うコンポーネント側に置くのが原則です。client module が import するモジュールは client グラフに含まれ、サーバ側では評価されません。
+
+ただし**公開しているかどうか**で変わります。
+
+| | 境界の位置 |
+|---|---|
+| 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
+| 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
+
+**バレルには付けない**
+
+`src/index.ts` に付けるとライブラリ全体が client 扱いになります。再エクスポートのみで境界ではないため、付けてはいけません。
+
+**ビルド出力での確認**
+
+rollup は `preserveModules: true` を使っており、ディレクティブはモジュール単位で出力に保持されます。
+
+```sh
+cd packages/smarthr-ui && npx rollup --config rollup.esm.config.js
+head -1 lib/<対象>.js   # "use client"; が先頭に来る
+```
+
 **注意が必要なもの**
 
 - `styled-components@5.3.11` — `exports` フィールドを持たず RSC 非対応。これを import する経路があると Server Component にできない
