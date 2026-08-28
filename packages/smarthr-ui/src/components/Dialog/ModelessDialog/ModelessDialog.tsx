@@ -337,6 +337,7 @@ export const ModelessDialog: FC<Props> = ({
             nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
           const isYCenter =
             nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+          let nextCentering = latest.centering
 
           if (isXCenter || isYCenter) {
             const rect = node.getBoundingClientRect()
@@ -344,31 +345,34 @@ export const ModelessDialog: FC<Props> = ({
               top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
               left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
             }
-            const nextCentering =
+
+            nextCentering =
               latest.centering.top === tempCentering.top &&
               latest.centering.left === tempCentering.left
                 ? latest.centering
                 : tempCentering
 
             setCentering(nextCentering)
-            setDraggableBounds((current: DraggableBounds | string | false) => {
-              if (nextCentering.top) {
-                const nextTop = nextCentering.top * -1
-
-                if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-                  return { top: nextTop }
-                }
-              } else {
-                const nextTop = node.getBoundingClientRect().top * -1
-
-                if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
-                  return { top: nextTop }
-                }
-              }
-
-              return current
-            })
           }
+
+          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+          setDraggableBounds((current: DraggableBounds | string | false) => {
+            if (nextCentering.top) {
+              const nextTop = nextCentering.top * -1
+
+              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+                return { top: nextTop }
+              }
+            } else {
+              const nextTop = node.getBoundingClientRect().top * -1
+
+              if ((typeof current === 'object' ? current.top : undefined) !== nextTop) {
+                return { top: nextTop }
+              }
+            }
+
+            return current
+          })
 
           node
             .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')
