@@ -438,7 +438,7 @@ export const ModelessDialog: FC<Props> = ({
               handleArrowKeyDown={functions.handleArrowKeyDown}
               className={classNames.dialogHandler}
             />
-            <div id={labelId} className="shr-my-1 shr-me-1">
+            <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
