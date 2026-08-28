@@ -138,9 +138,20 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 
 判定は **Next.js の React Server Components を基準**とします。Next.js はサーバ側のモジュールを `react-server` 条件で解決するため、React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
 
+**RSC の境界と Next.js の初回 SSR は別の話**
+
+`'use client'` は「サーバの `react-server` グラフで評価されない」ことを保証しますが、**サーバで一切実行されないという意味ではありません**。Next.js App Router は初回ロード時に Client Component も含めて HTML を生成するため、`'use client'` があってもモジュールスコープの `window` / `document` はサーバで評価され `ReferenceError` になります。
+
+| | RSC グラフ（`react-server`） | 初回 SSR |
+|---|---|---|
+| `'use client'` なし | 評価される | 評価される |
+| `'use client'` あり | **評価されない** | **評価される** |
+
+つまり `'use client'` はブラウザ専用 API を守りません。そちらは `typeof window !== 'undefined'` のガードや `useEffect` 内での実行で対処します。
+
 **Server Component で使える**
 
-```
+```text
 Children Fragment Profiler StrictMode Suspense cache cacheSignal
 captureOwnerStack cloneElement createElement createRef forwardRef
 isValidElement lazy memo use useCallback useDebugValue useId useMemo version
@@ -219,7 +230,7 @@ hook 自身ではなく、それを使うコンポーネント側に置くのが
 
 個別ファイルに `'use client'` があるかだけを見てはいけません。**境界は直近の親である必要がなく、上位にあれば足ります。**
 
-```
+```text
 DatePicker/Portal.tsx  ← DatePicker.tsx（'use client' 有）
 Menu.tsx  ← MobileHeader.tsx  ← AppHeader.tsx（'use client' 有）
 ```
@@ -243,9 +254,11 @@ head -1 lib/<対象>.js   # "use client"; が先頭に来る
 
 **注意が必要なもの**
 
-- `styled-components@5.3.11` — モジュールスコープで `createContext` を呼びガードが無いため、`react-server` 条件で import した時点で `TypeError` になる。これを import する経路があると Server Component にできない（v6 は解消済み。ただし peer は `^5.0.1` のため更新は破壊的変更）
+- `styled-components@5.3.11` — モジュールスコープで `createContext` を呼びガードが無いため、`react-server` 条件で import した時点で `TypeError` になる。これを import する経路があると Server Component にできない
+
+  RSC に対応するのは **v6.3.0 以降**。v6.0〜v6.2 は未対応で、実測でも `v6.2.0` は `TypeError`、`v6.3.0` は成功する。`StyleSheetManager` の RSC 対応はさらに後の v6.4.0 から。なお peer は `^5.0.1` のため、更新は破壊的変更になる
 - ブラウザグローバル（`window` `document` `navigator`）— `typeof window !== 'undefined'` でガードされていれば SSR では落ちないが、Server Component では常に else 側に倒れる。挙動として許容できるか判断が必要
-- **関数を props で渡している箇所** — Server Component は関数をシリアライズできないため、host 要素にも Client Component にも関数を渡せない
+- **関数を props で渡している箇所** — Server Component は通常の関数をシリアライズできないため、host 要素にも Client Component にも渡せない
 
   ```tsx
   // ❌ どちらもServer Componentでは不可
@@ -253,7 +266,9 @@ head -1 lib/<対象>.js   # "use client"; が先頭に来る
   <ClientButton onClick={handleClick} />
   ```
 
-  ただし値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
+  例外として、`'use server'` で定義した **Server Function は Client Component の props として渡せます**。フレームワークが参照に変換し、呼び出し時にサーバへのリクエストになります。ただし host 要素のイベントハンドラには渡せません。
+
+  また値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
 
 **検証**
 
