@@ -136,7 +136,7 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 
 #### `'use client'` を付けるべきかの判定
 
-React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
+判定は **Next.js の React Server Components を基準**とします。Next.js はサーバ側のモジュールを `react-server` 条件で解決するため、React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
 
 **Server Component で使える**
 
@@ -243,9 +243,17 @@ head -1 lib/<対象>.js   # "use client"; が先頭に来る
 
 **注意が必要なもの**
 
-- `styled-components@5.3.11` — `exports` フィールドを持たず RSC 非対応。これを import する経路があると Server Component にできない
+- `styled-components@5.3.11` — モジュールスコープで `createContext` を呼びガードが無いため、`react-server` 条件で import した時点で `TypeError` になる。これを import する経路があると Server Component にできない（v6 は解消済み。ただし peer は `^5.0.1` のため更新は破壊的変更）
 - ブラウザグローバル（`window` `document` `navigator`）— `typeof window !== 'undefined'` でガードされていれば SSR では落ちないが、Server Component では常に else 側に倒れる。挙動として許容できるか判断が必要
-- JSX のイベントハンドラ — Server Component は host 要素に関数を渡せない。ただし値が `undefined` なら成立するため、props 経由で条件付きに渡している形なら問題ない
+- **関数を props で渡している箇所** — Server Component は関数をシリアライズできないため、host 要素にも Client Component にも関数を渡せない
+
+  ```tsx
+  // ❌ どちらもServer Componentでは不可
+  <button onClick={handleClick}>...</button>
+  <ClientButton onClick={handleClick} />
+  ```
+
+  ただし値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
 
 **検証**
 
