@@ -352,6 +352,11 @@ export const ModelessDialog: FC<Props> = ({
               : tempCentering
 
           setCentering(nextCentering)
+        } else if (latest.centering.top !== undefined || latest.centering.left !== undefined) {
+          // HINT: 中央寄せが不要になった場合、以前の値が残るとdefaultPositionより優先されてしまう
+          nextCentering = {}
+
+          setCentering(nextCentering)
         }
 
         // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
