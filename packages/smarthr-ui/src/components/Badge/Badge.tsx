@@ -9,6 +9,8 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
+type Color = 'grey' | 'blue' | 'yellow' | 'red'
+
 type BaseProps = PropsWithChildren<{
   /** 件数 */
   count?: number
@@ -17,7 +19,7 @@ type BaseProps = PropsWithChildren<{
   /** 0値を表示するかどうか */
   showZero?: boolean
   /** 色の種類 */
-  type?: 'grey' | 'blue' | 'yellow' | 'red'
+  type?: Color
   /** ドット表示するかどうか */
   dot?: boolean
 }>
@@ -37,7 +39,7 @@ const classNameGenerator = tv({
       blue: {},
       yellow: {},
       red: {},
-    },
+    } satisfies Record<Color, object>,
     withChildren: {
       true: {},
     },
