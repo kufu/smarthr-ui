@@ -134,6 +134,146 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
+#### `'use client'` を付けるべきかの判定
+
+判定は **Next.js の React Server Components を基準**とします。Next.js はサーバ側のモジュールを `react-server` 条件で解決するため、React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
+
+**RSC の境界と Next.js の初回 SSR は別の話**
+
+`'use client'` は「サーバの `react-server` グラフで評価されない」ことを保証しますが、**サーバで一切実行されないという意味ではありません**。Next.js App Router は初回ロード時に Client Component も含めて HTML を生成するため、`'use client'` があってもモジュールスコープの `window` / `document` はサーバで評価され `ReferenceError` になります。
+
+| | RSC グラフ（`react-server`） | 初回 SSR |
+|---|---|---|
+| `'use client'` なし | 評価される | 評価される |
+| `'use client'` あり | **評価されない** | **評価される** |
+
+つまり `'use client'` はブラウザ専用 API を守りません。そちらは `typeof window !== 'undefined'` のガードや `useEffect` 内での実行で対処します。
+
+**Server Component で使える**
+
+```text
+Children Fragment Profiler StrictMode Suspense cache cacheSignal
+captureOwnerStack cloneElement createElement createRef forwardRef
+isValidElement lazy memo use useCallback useDebugValue useId useMemo version
+```
+
+`useMemo` `useCallback` `useId` `forwardRef` `memo` は使えます。
+
+**使えない**
+
+`useState` `useRef` `useEffect` `useLayoutEffect` `useContext` `useReducer` `useSyncExternalStore` `useImperativeHandle` `createContext`
+
+export 一覧は実際のビルドから確認できます。
+
+```sh
+node -e "const m=require('./node_modules/.pnpm/react@'+require('react/package.json').version+'/node_modules/react/cjs/react.react-server.development.js'); console.log(Object.keys(m).sort().join(' '))"
+```
+
+**判定の手順**
+
+対象ファイルの import を1つずつ評価します。
+
+1. **`react` からの import** — 上記の使える一覧に含まれるか。型のみの import（`import type`、インラインの `type` 修飾子）は実行時に影響しないため対象外
+2. **ローカルの hook（`use*`）** — 実装を辿り、client 専用 API を使っていないか確認する。`import` だけでなく `export ... from` による再エクスポートも辿ること
+3. **ローカルのコンポーネント** — `'use client'` を持つ client component は、Server Component から**レンダリングする分には問題ない**。境界がそこで切れるため
+4. **外部パッケージ** — 後述
+
+**外部パッケージの判定**
+
+`createContext` などの文字列があるかだけで判断してはいけません。**実装がガードされているかまで読むこと。**
+
+`react-icons@5.7.0` が実例です。`createContext` を使いますが両方ともガードされており、Server Component で動作します。
+
+```js
+// lib/iconContext.mjs — undefinedになるだけでthrowしない
+export var IconContext = React.createContext && React.createContext(DefaultContext)
+
+// lib/iconBase.mjs — undefinedならDefaultContextで描画。useContextではなくConsumer
+return IconContext !== undefined
+  ? React.createElement(IconContext.Consumer, null, conf => elem(conf))
+  : elem(DefaultContext)
+```
+
+`package.json` の `exports` に `react-server` 条件があるか、dist に `'use client'` があるかも判断材料になりますが、無いからといって使えないとは限りません。
+
+**モジュールスコープでの呼び出しに注意**
+
+判定軸は「hook かどうか」ではなく、**モジュール評価時に client 専用 API を呼ぶか**です。
+
+```ts
+// ❌ モジュールスコープで呼ぶ。importされた時点でreact-serverビルドでは例外
+export const ThemeContext = createContext<CreatedTheme>(createTheme())
+// TypeError - React.createContext is not a function
+
+// ✅ 関数内で呼ぶ。呼び出さなければ評価されない
+export const useLatest = <T>(value: T) => { const ref = useRef(value); ... }
+```
+
+前者は `'use client'` による境界が必須です。`'use client'` を持つモジュールは Server Component 側から実体を評価されず、参照だけが渡されるため、モジュールスコープの処理が保護されます。
+
+**境界をどこに置くか**
+
+hook 自身ではなく、それを使うコンポーネント側に置くのが原則です。client module が import するモジュールは client グラフに含まれ、サーバ側では評価されません。
+
+ただし**公開しているかどうか**で変わります。
+
+| | 境界の位置 |
+|---|---|
+| 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
+| 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
+
+**バレルには付けない**
+
+`src/index.ts` に付けるとライブラリ全体が client 扱いになります。再エクスポートのみで境界ではないため、付けてはいけません。
+
+**境界はグラフとして評価する**
+
+個別ファイルに `'use client'` があるかだけを見てはいけません。**境界は直近の親である必要がなく、上位にあれば足ります。**
+
+```text
+DatePicker/Portal.tsx  ← DatePicker.tsx（'use client' 有）
+Menu.tsx  ← MobileHeader.tsx  ← AppHeader.tsx（'use client' 有）
+```
+
+いずれも client グラフ内にあるため、モジュールスコープの処理がサーバ側で評価されることはありません。
+
+判定するには、バレル（`src/index.ts`）から `'use client'` を跨がずに到達できるモジュールの集合（サーバグラフ）を求め、その中で client 専用 API を使うものを探します。
+
+- **モジュールスコープで呼ぶもの** — import された時点で例外。必ず修正が必要
+- **hook** — モジュールスコープでは何も実行しない。呼び出し元が client グラフ内なら問題ない
+- **コンポーネント** — 実際にレンダリングされる経路を確認する。バレルからの再エクスポートだけなら問題ない
+
+**ビルド出力での確認**
+
+rollup は `preserveModules: true` を使っており、ディレクティブはモジュール単位で出力に保持されます。
+
+```sh
+cd packages/smarthr-ui && npx rollup --config rollup.esm.config.js
+head -1 lib/<対象>.js   # "use client"; が先頭に来る
+```
+
+**注意が必要なもの**
+
+- `styled-components@5.3.11` — モジュールスコープで `createContext` を呼びガードが無いため、`react-server` 条件で import した時点で `TypeError` になる。これを import する経路があると Server Component にできない
+
+  RSC に対応するのは **v6.3.0 以降**。v6.0〜v6.2 は未対応で、実測でも `v6.2.0` は `TypeError`、`v6.3.0` は成功する。`StyleSheetManager` の RSC 対応はさらに後の v6.4.0 から。なお peer は `^5.0.1` のため、更新は破壊的変更になる
+- ブラウザグローバル（`window` `document` `navigator`）— `typeof window !== 'undefined'` でガードされていれば SSR では落ちないが、Server Component では常に else 側に倒れる。挙動として許容できるか判断が必要
+- **関数を props で渡している箇所** — Server Component は通常の関数をシリアライズできないため、host 要素にも Client Component にも渡せない
+
+  ```tsx
+  // ❌ どちらもServer Componentでは不可
+  <button onClick={handleClick}>...</button>
+  <ClientButton onClick={handleClick} />
+  ```
+
+  例外として、`'use server'` で定義した **Server Function は Client Component の props として渡せます**。フレームワークが参照に変換し、呼び出し時にサーバへのリクエストになります。ただし host 要素のイベントハンドラには渡せません。
+
+  また値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
+
+**検証**
+
+`'use client'` の削除は DOM に影響しないため、`innerHTML` を比較して同一であることを確認します。
+
 ### コンポーネントのブラックボックス原則
 
 他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。
