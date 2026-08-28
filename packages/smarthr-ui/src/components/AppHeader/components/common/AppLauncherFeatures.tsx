@@ -68,13 +68,11 @@ const LoadingList = memo(() => (
 const LoadErrorText = memo(() => (
   <div className={CLASS_NAMES.loadError}>
     <Text size="S">
-      <Translate>
-        <Localizer
-          id="smarthr-ui/AppHeader/Launcher/loadError"
-          defaultText={`アプリ一覧の読み込みに失敗しました。
+      <Localizer
+        id="smarthr-ui/AppHeader/Launcher/loadError"
+        defaultText={`アプリ一覧の読み込みに失敗しました。
 時間をおいて、やり直してください。`}
-        />
-      </Translate>
+      />
     </Text>
   </div>
 ))

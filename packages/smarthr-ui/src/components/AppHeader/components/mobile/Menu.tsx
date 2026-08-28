@@ -126,7 +126,7 @@ const ActualFeatureButton: FC<
     setIsAppLauncherSelected: (selected: boolean) => void
   }>
 > = ({ handleOpenAppLauncher, setIsAppLauncherSelected, children, className }) => {
-  const onClick = useCallback(() => {
+  const handleClick = useCallback(() => {
     handleOpenAppLauncher()
     setIsAppLauncherSelected(true)
   }, [handleOpenAppLauncher, setIsAppLauncherSelected])
@@ -138,7 +138,7 @@ const ActualFeatureButton: FC<
         wide
         prefix={<FaToolboxIcon />}
         suffix={<FaAngleRightIcon className="shr-ms-auto" />}
-        onClick={onClick}
+        onClick={handleClick}
       >
         <Translate>{children}</Translate>
       </Button>
