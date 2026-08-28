@@ -222,6 +222,48 @@ hook 自身ではなく、それを使うコンポーネント側に置くのが
 | 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
 | 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
 
+**client 境界が必要なモジュールは `client/` に閉じ込める**
+
+コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。
+
+```text
+SectioningContent/
+├── index.ts                      公開バレル
+├── SectioningContent.tsx         'use client' 無し = Server Component でも使える
+└── client/
+    ├── components/               各ファイルに 'use client' を付ける
+    │   ├── index.ts
+    │   ├── LevelContext.ts       モジュールスコープで createContext
+    │   └── SectioningFragment.tsx
+    └── hooks/                    'use client' は付けない
+        ├── index.ts
+        └── useSectioningWrapper.ts
+```
+
+- `client/components/` — 各ファイルに `'use client'` を付ける
+- `client/hooks/` — 付けない。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
+- **`client/index.ts` は作らない**（後述）
+
+`'use client'` を外せたコンポーネントは「Server Component になる」わけではありません。ディレクティブを持たないモジュールは server / client 双方のグラフで評価されるため、**Server Component からも Client Component からも使える**状態になります。制約が減るだけで、利用者側の使い方は変わりません。
+
+**`client/index.ts` を作ってはいけない**
+
+rollup は `preserveModules: true` でもバレルを平坦化し、import 元を実体へ直リンクします。このとき**バレルが依存する他モジュールの外部依存が、呼び出し側へ副作用 import として転記されます。**
+
+`client/index.ts` が `components` と `hooks` を両方 re-export すると、Server Component が `components` だけを参照していても `hooks` 側の依存が混入します。
+
+```js
+// client/index.ts がある場合の lib/components/SectioningContent/SectioningContent.js
+import { forwardRef } from 'react';
+import './client/components/LevelContext.js';
+import { SectioningFragment } from './client/components/SectioningFragment.js';
+import 'styled-components';    // ← hooks 側の依存が転記され、RSC で TypeError になる
+```
+
+`components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
+
+なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
 **バレルには付けない**
 
 `src/index.ts` に付けるとライブラリ全体が client 扱いになります。再エクスポートのみで境界ではないため、付けてはいけません。
@@ -251,6 +293,53 @@ rollup は `preserveModules: true` を使っており、ディレクティブは
 cd packages/smarthr-ui && npx rollup --config rollup.esm.config.js
 head -1 lib/<対象>.js   # "use client"; が先頭に来る
 ```
+
+ディレクティブの有無だけでなく、**出力の import 文も必ず確認してください。** ソース上は経由していないモジュールの依存が、バレルの平坦化によって転記されている場合があります。
+
+```sh
+grep -n '^"use client"\|^import' lib/components/<対象>.js
+```
+
+**RSC として評価できるかの実測**
+
+素の node は `'use client'` を無視して全モジュールを評価するため、そのままでは Next.js の挙動を再現できません。`'use client'` を持つモジュールを stub に差し替えるローダーを噛ませると再現できます。
+
+```js
+// loader.mjs
+import { readFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
+
+export async function load(url, ctx, next) {
+  if (url.startsWith('file:') && /\.(js|mjs)$/.test(url)) {
+    const src = await readFile(fileURLToPath(url), 'utf8')
+    if (/^\s*["']use client["']/.test(src)) {
+      const names = [...src.matchAll(/export\s*\{([^}]*)\}/g)].flatMap((m) =>
+        m[1].split(',').map((s) => s.trim().split(/\s+as\s+/).pop()).filter(Boolean),
+      )
+      const body = [...new Set(names)].map((n) => `export const ${n} = '__client_ref__';`).join('\n')
+      return { format: 'module', shortCircuit: true, source: body || 'export {};' }
+    }
+  }
+  return next(url, ctx)
+}
+```
+
+```sh
+node --conditions react-server --experimental-loader ./loader.mjs \
+  -e "import('<絶対パス>/lib/components/<対象>.js').then(()=>console.log('OK'),(e)=>console.log('THROW',e.message))"
+```
+
+**ツリーシェイクで落ちるかの実測**
+
+`export ... from` による re-export はバンドラが落とせるため、素の node で THROW してもそれだけでは実害の判定になりません。実際にバンドルして混入を確認します。
+
+```sh
+esbuild entry.mjs --bundle --format=esm --platform=node --conditions=react-server \
+  --external:react --external:react-dom --external:react/jsx-runtime --outfile=out.js
+grep -c 'styledComponentId' out.js   # 0 なら落ちている
+```
+
+副作用 import（`import 'styled-components'`）は `package.json` の `sideEffects` 宣言に依存して落ちるかが決まるため、**そもそも出力に出さない構成にするのが安全です。**
 
 **注意が必要なもの**
 
