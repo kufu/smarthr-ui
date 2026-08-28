@@ -9,7 +9,7 @@ import {
   useContext,
 } from 'react'
 
-import { LevelContext } from './levelContext'
+import { LevelContext } from './LevelContext'
 
 type BaseProps = PropsWithChildren<{
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
