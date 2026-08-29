@@ -19,8 +19,8 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
-import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
+import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -72,8 +72,6 @@ type BaseProps<T> = ComboboxProps<T> & {
   noResultText?: ReactNode
 }
 type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
-
-const NOOP = () => undefined
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
@@ -402,10 +400,10 @@ const ActualSingleCombobox = <T,>(
       ? theme.textColor.disabled
       : theme.textColor.grey
 
-  useClick(
-    [triggerRef, listBoxRef, clearButtonRef],
-    isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
+  useOuterClick(
+    isFocused ? [triggerRef, listBoxRef, clearButtonRef] : null,
     functions.unfocus,
+    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。

@@ -1,7 +1,5 @@
 import { type RefObject, useEffect } from 'react'
 
-import { isEventIncludedParent } from '../libs/delegate'
-
 import { useLatest } from './useLatest'
 
 /**
@@ -13,15 +11,23 @@ import { useLatest } from './useLatest'
 export function useOuterClick(
   targets: Array<RefObject<HTMLElement>> | null,
   callback: (e: MouseEvent) => void,
+  innerCallback?: (e: MouseEvent) => void,
 ) {
-  const latest = useLatest({ targets, callback })
+  const latest = useLatest({ targets, callback, innerCallback })
 
+  // TODO: useEffectではなくcallbackRef化したい
+  // Comboboxなどでメニューが表示されている場合、といったようにuseEffectで監視し続ける意味が薄いため
+  // 対象コンポーネントがマウントされている場合だけ監視するようにするようにする
   useEffect(() => {
     const handleOuterClick = (e: MouseEvent) => {
-      if (!latest.targets) {
-        return
-      } else if (!latest.targets.some((target) => isEventIncludedParent(e, target.current))) {
-        latest.callback(e)
+      if (latest.targets) {
+        const path = e.composedPath()
+
+        if (latest.targets.some((target) => target.current && path.includes(target.current))) {
+          latest.innerCallback?.(e)
+        } else {
+          latest.callback(e)
+        }
       }
     }
 
