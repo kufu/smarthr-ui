@@ -7,7 +7,10 @@ export function parseJpnDateString(dateString: string): Date {
   return isValid ? result : dayjs(formatted).toDate()
 }
 
-const PORTAL_POSITION_MARGIN = 4
+const PORTAL_POSITION_MARGIN_FOR_BOTTOM = 4
+// HINT: 上方向表示はcontentHeightを引いて位置を決めるため、
+// Portalとinputの重なりが下方向表示と同じになるよう小さい値にしている
+const PORTAL_POSITION_MARGIN_FOR_TOP = 2
 
 export function getPortalPosition(inputRect: DOMRect, contentHeight: number) {
   const { innerHeight, pageYOffset } = window
@@ -21,14 +24,14 @@ export function getPortalPosition(inputRect: DOMRect, contentHeight: number) {
   ) {
     // display on top side
     return {
-      top: pageYOffset + inputRect.top - contentHeight + PORTAL_POSITION_MARGIN,
+      top: pageYOffset + inputRect.top - contentHeight + PORTAL_POSITION_MARGIN_FOR_TOP,
       left,
     }
   }
 
   // display on bottom side
   return {
-    top: pageYOffset + inputRect.bottom - PORTAL_POSITION_MARGIN,
+    top: pageYOffset + inputRect.bottom - PORTAL_POSITION_MARGIN_FOR_BOTTOM,
     left,
   }
 }
