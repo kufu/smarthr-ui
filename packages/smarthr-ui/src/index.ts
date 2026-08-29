@@ -124,6 +124,7 @@ export { ResponseMessage } from './components/ResponseMessage'
 export { Badge } from './components/Badge'
 export { Switch } from './components/Switch'
 export { Stepper } from './components/Stepper'
+/** @public */
 export { TimePicker, MonthPicker, DatetimeLocalPicker } from './components/Picker'
 export { Browser } from './components/Browser'
 export { WarekiPicker } from './components/WarekiPicker'
@@ -139,6 +140,7 @@ export { useTheme } from './hooks/useTheme'
 export { useEnvironment, EnvironmentProvider } from './hooks/client/useEnvironment'
 
 // themes
+/** @public */
 export {
   createTheme,
   createMediaQuery,
@@ -168,6 +170,8 @@ export {
 } from './intl'
 
 // constants
+// HINT: packages/chartsから参照しているが、knipをworkspace単体で実行しているため検知できない
+/** @public */
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
 
 // utils
