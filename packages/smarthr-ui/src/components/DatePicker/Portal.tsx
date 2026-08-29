@@ -1,6 +1,5 @@
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { usePortal } from '../../hooks/usePortal'
 
 import { getPortalPosition } from './datePickerHelper'
@@ -12,20 +11,18 @@ type Props = PropsWithChildren<{
 export const Portal: FC<Props> = ({ inputRect, ...rest }) => {
   const { createPortal } = usePortal()
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLDivElement | null) => {
-        if (node) {
-          const position = getPortalPosition(inputRect, node.offsetHeight)
+  // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
+  // React v18の対応を切ったらこのコメントも削除する
+  const callbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        const position = getPortalPosition(inputRect, node.offsetHeight)
 
-          node.style.top = `${position.top}px`
-          node.style.left = `${position.left}px`
-        }
-
-        return undefined
-      },
-      [inputRect],
-    ),
+        node.style.top = `${position.top}px`
+        node.style.left = `${position.left}px`
+      }
+    },
+    [inputRect],
   )
 
   return createPortal(
