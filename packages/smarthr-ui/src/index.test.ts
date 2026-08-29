@@ -12,6 +12,8 @@ const IGNORE_INNER_DIRS = [
   'Input/InputWithTooltip',
   'Browser/models',
   'stories',
+  // client 境界が必要なモジュールを閉じ込めるディレクトリ。コンポーネントの公開単位ではない
+  'client',
   'AppHeader/components',
   'AppHeader/hooks',
   'AppHeader/multilingualization',
