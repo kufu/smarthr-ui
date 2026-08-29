@@ -11,7 +11,6 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -19,7 +18,9 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
@@ -168,8 +169,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
 
       const dateToAlternativeFormat = (d: Date | null) => {
-        if (!latest.showAlternative) return null
-        return d ? latest.showAlternative(d) : null
+        if (d && latest.showAlternative) return latest.showAlternative(d)
+        return null
       }
 
       const stringToDate = (str: string | null | undefined) =>
@@ -196,7 +197,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const formatValue = dateToString(nextDate)
 
         inputRef.current.value = formatValue
-        setAlternativeFormat(dateToAlternativeFormat(nextDate))
+
+        if (latest.showAlternative) {
+          setAlternativeFormat(dateToAlternativeFormat(nextDate))
+        }
+
         setSelectedDate(nextDate)
 
         if (latest.onChange) {
@@ -241,6 +246,60 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         dateToAlternativeFormat,
         closeCalendar,
         openCalendar,
+        inputCallbackRef: (node: HTMLInputElement | null) => {
+          if (!node) return
+
+          const handleKeyDown = (e: KeyboardEvent) => {
+            if (!calendarPortalRef.current || e.key !== 'Tab') {
+              return
+            }
+
+            const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
+
+            if (calendarButtons.length === 0) {
+              return
+            }
+
+            const firstCalendarButton = calendarButtons[0]
+
+            if (latest.isInputFocused) {
+              if (e.shiftKey) {
+                // move focus from Input to previous elements of DatePicker
+                closeCalendar()
+
+                return
+              }
+
+              // move focus from Input to Calendar
+              e.preventDefault()
+              firstCalendarButton.focus()
+
+              return
+            }
+
+            const calendarButtonAry = Array.from(calendarButtons)
+            const currentFocused = calendarButtonAry.find((button) => button === e.target)
+
+            if (e.shiftKey) {
+              if (currentFocused === firstCalendarButton) {
+                // move focus from Calendar to Input
+                node.focus()
+                e.preventDefault()
+              }
+            } else if (currentFocused === calendarButtonAry.at(-1)) {
+              // move focus from Calendar to next elements of DatePicker
+              node.focus()
+              closeCalendar()
+            }
+          }
+
+          window.addEventListener('keydown', handleKeyDown)
+
+          return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            latest.closeFrame.cancel()
+          }
+        },
         handleBlur: (e: React.FocusEvent<HTMLInputElement>) => {
           setIsInputFocused(false)
           updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
@@ -276,11 +335,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+    const mergedRef = useMergeRefs(
+      inputRef,
+      useCallbackRefCleanupForReact18(functions.inputCallbackRef),
       ref,
-      () => inputRef.current,
-      [],
     )
+
+    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
@@ -297,7 +358,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
         if (newDate && dayjs(newDate).isValid()) {
           inputRef.current.value = functions.dateToString(newDate)
-          setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
+
+          if (latest.showAlternative) {
+            setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
+          }
+
           setSelectedDate(newDate)
 
           return
@@ -307,62 +372,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       inputRef.current.value = value || ''
-    }, [value, isInputFocused, functions])
-
-    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
-
-    useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (!inputRef.current || !calendarPortalRef.current || e.key !== 'Tab') {
-          return
-        }
-
-        const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
-
-        if (calendarButtons.length === 0) {
-          return
-        }
-
-        const firstCalendarButton = calendarButtons[0]
-
-        if (latest.isInputFocused) {
-          if (e.shiftKey) {
-            // move focus from Input to previous elements of DatePicker
-            functions.closeCalendar()
-
-            return
-          }
-
-          // move focus from Input to Calendar
-          e.preventDefault()
-          firstCalendarButton.focus()
-
-          return
-        }
-
-        const calendarButtonAry = Array.from(calendarButtons)
-        const currentFocused = calendarButtonAry.find((button) => button === e.target)
-
-        if (e.shiftKey) {
-          if (currentFocused === firstCalendarButton) {
-            // move focus from Calendar to Input
-            inputRef.current.focus()
-            e.preventDefault()
-          }
-        } else if (currentFocused === calendarButtonAry.at(-1)) {
-          // move focus from Calendar to next elements of DatePicker
-          inputRef.current.focus()
-          functions.closeCalendar()
-        }
-      }
-
-      window.addEventListener('keydown', handleKeyDown)
-
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-        latest.closeFrame.cancel()
-      }
-    }, [functions, latest])
+    }, [value, isInputFocused, functions, latest])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
@@ -401,7 +411,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             }
             disabled={disabled}
             error={error}
-            ref={inputRef}
+            ref={mergedRef}
             className="smarthr-ui-DatePicker-inputContainer"
             aria-expanded={isCalendarShown}
             aria-controls={calenderId}

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.2...smarthr-ui-charts-v0.2.3) (2026-08-27)
+
+
+### Features
+
+* **DoughnutChart:** 柄を無効化するdisablePatternsを追加 ([#6869](https://github.com/kufu/smarthr-ui/issues/6869)) ([9b5da35](https://github.com/kufu/smarthr-ui/commit/9b5da354e4ee73ef213688979de28bcc52702c16))
+
+## [0.2.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.1...smarthr-ui-charts-v0.2.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* **charts:** smarthr-uiをdevDependenciesにも追加しビルド順序を保証 ([#6870](https://github.com/kufu/smarthr-ui/issues/6870)) ([b58edd0](https://github.com/kufu/smarthr-ui/commit/b58edd0850ea4b786235512c5933f722174f2264))
+
 ## [0.2.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.0...smarthr-ui-charts-v0.2.1) (2026-08-20)
 
 

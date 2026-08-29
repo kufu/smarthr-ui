@@ -1,5 +1,3 @@
-'use client'
-
 import { type ComponentProps, memo } from 'react'
 import { FaUpRightFromSquare } from 'react-icons/fa6'
 

@@ -5,7 +5,6 @@ import {
   type ReactNode,
   type RefObject,
   useContext,
-  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -13,6 +12,7 @@ import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
+import { useMergeRefs } from '../../../../hooks/useMergeRefs'
 import { Localizer, useLocalize } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
@@ -108,30 +108,35 @@ export const Content: FC<
     setSelectedNavigationGroup,
   })
 
-  const functions = useMemo(
-    () => ({
-      handleDialogClose: () => latest.setIsOpen(false),
-      clearAppLauncher: () => latest.setIsAppLauncherSelected(false),
-      clearReleaseNote: () => latest.setIsReleaseNoteSelected(false),
-      clearNavigationGroup: () => latest.setSelectedNavigationGroup(null),
-    }),
-    [latest],
-  )
+  const functions = useMemo(() => {
+    const clearAppLauncher = () => latest.setIsAppLauncherSelected(false)
+    const clearReleaseNote = () => latest.setIsReleaseNoteSelected(false)
+    const clearNavigationGroup = () => latest.setSelectedNavigationGroup(null)
 
-  // HINT: Contentをanimationで非表示にしたい
-  // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
-  // unmount時に操作内容のclearを行う
-  useEffect(
-    () => () => {
-      functions.clearReleaseNote()
-      functions.clearAppLauncher()
-      functions.clearNavigationGroup()
-    },
-    [functions],
-  )
+    return {
+      // HINT: Contentをanimationで非表示にしたい
+      // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
+      // unmount時に操作内容のclearを行う
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      callbackRef: () => () => {
+        clearReleaseNote()
+        clearAppLauncher()
+        clearNavigationGroup()
+      },
+      clearAppLauncher,
+      clearReleaseNote,
+      clearNavigationGroup,
+      handleDialogClose: () => latest.setIsOpen(false),
+    }
+  }, [latest])
+
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(functions.callbackRef, domRef)
 
   return (
-    <Section role="dialog" aria-modal="true" className={CLASS_NAMES.wrapper} ref={domRef}>
+    <Section ref={mergedRef} role="dialog" aria-modal="true" className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (

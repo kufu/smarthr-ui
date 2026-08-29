@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.5.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.4.0...smarthr-ui-v99.5.0) (2026-08-27)
+
+
+### Features
+
+* **Icon:** FaArrowsSplitUpAndLeftIconを追加 ([#6890](https://github.com/kufu/smarthr-ui/issues/6890)) ([a37391e](https://github.com/kufu/smarthr-ui/commit/a37391e1735dad7cf8e7a956f99cf95c8973fe56))
+* **Icon:** FaPasteIconを追加 ([#6871](https://github.com/kufu/smarthr-ui/issues/6871)) ([9009034](https://github.com/kufu/smarthr-ui/commit/9009034331fc5f43e6efe88348d216a3b97eef72))
+
+
+### Bug Fixes
+
+* **FormGroup:** autoBindErrorInput解除後もaria-invalidが残る問題を修正 ([#6892](https://github.com/kufu/smarthr-ui/issues/6892)) ([3c1a20d](https://github.com/kufu/smarthr-ui/commit/3c1a20db1dc7fc95e794367f78f3a041cc2b565c))
+* **FormGroup:** describedbyIdsの依存を安定させ、errorMessagesの判定漏れを修正する ([#6887](https://github.com/kufu/smarthr-ui/issues/6887)) ([1b3ace2](https://github.com/kufu/smarthr-ui/commit/1b3ace2b629f476be05057a111099f9ac7f5714d))
+* **InputFile:** FilePreviewDialogのFileViewer周りの余白を除去 ([#6875](https://github.com/kufu/smarthr-ui/issues/6875)) ([6e55833](https://github.com/kufu/smarthr-ui/commit/6e55833c90b8ed83e3b2d6d63e9deaeb96ffadc6))
+
+## [99.4.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.2...smarthr-ui-v99.4.0) (2026-08-24)
+
+
+### Features
+
+* **Input:** CurrencyInputの数値フォーマット関数をformatNumericStringとして公開 ([#6847](https://github.com/kufu/smarthr-ui/issues/6847)) ([ce3db91](https://github.com/kufu/smarthr-ui/commit/ce3db91c635adb8433dc85cf93c49f992ca0b20f))
+
+
+### Bug Fixes
+
+* **Fieldset:** legend変更時にaria-labelへ古いlegend文言が蓄積する不具合を修正 ([#6855](https://github.com/kufu/smarthr-ui/issues/6855)) ([7b17e93](https://github.com/kufu/smarthr-ui/commit/7b17e93cb523bd9093b4735885b679f03a14acfa))
+* **FormControl:** aria-describedbyのid重複バグを修正 ([#6831](https://github.com/kufu/smarthr-ui/issues/6831)) ([25519fc](https://github.com/kufu/smarthr-ui/commit/25519fcbb4eb1da762a5e419d29fda72abc50fd0))
+* **MobileHeader:** 特定条件でのHeaderへのcurrentTenantId・onTenantSelect転送漏れがあったため修正 ([#6873](https://github.com/kufu/smarthr-ui/issues/6873)) ([35186fc](https://github.com/kufu/smarthr-ui/commit/35186fcfa273850a6b9a134e5749e71781e3bff2))
+* **RemoteDialogTrigger:** onOpen等のコールバックが状態更新前に発火する不具合を修正 ([#6848](https://github.com/kufu/smarthr-ui/issues/6848)) ([4a16d48](https://github.com/kufu/smarthr-ui/commit/4a16d486a186ec21144399c772ccebf59305fa84))
+
 ## [99.3.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.3.1...smarthr-ui-v99.3.2) (2026-08-20)
 
 

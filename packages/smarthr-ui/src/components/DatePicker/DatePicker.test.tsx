@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { act } from 'react'
 
 import { IntlProvider } from '../../intl'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../FormGroup'
 
 import { DatePicker } from './DatePicker'
 
