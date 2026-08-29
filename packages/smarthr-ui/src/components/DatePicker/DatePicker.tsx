@@ -93,6 +93,7 @@ const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
+const INPUT_CONTAINER_CLASS_NAME = 'smarthr-ui-DatePicker-inputContainer'
 
 const parseStringDate = (
   str: string | null | undefined,
@@ -241,9 +242,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       const closeCalendar = () => setIsCalendarShown(false)
 
       const openCalendar = () => {
-        if (containerRef.current) {
+        // HINT: classNameはcontainerに設定されるため、containerの矩形は利用者の指定で変わりうる。
+        // カレンダーの表示位置はinput部分を基準にする必要があるため、Inputのwrapperを参照する
+        const inputContainer = containerRef.current?.querySelector(`.${INPUT_CONTAINER_CLASS_NAME}`)
+
+        if (inputContainer) {
           setIsCalendarShown(true)
-          setInputRect(containerRef.current.getBoundingClientRect())
+          setInputRect(inputContainer.getBoundingClientRect())
         }
       }
 
@@ -423,7 +428,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           disabled={disabled}
           error={error}
           ref={mergedRef}
-          className="smarthr-ui-DatePicker-inputContainer"
+          className={INPUT_CONTAINER_CLASS_NAME}
           aria-expanded={isCalendarShown}
           aria-controls={calenderId}
           aria-haspopup={true}
