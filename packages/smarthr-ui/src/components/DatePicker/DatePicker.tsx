@@ -92,6 +92,7 @@ const DEFAULT_DATE_TO_STRING_FORMAT = 'YYYY/MM/DD'
 const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
 
 const parseStringDate = (
   str: string | null | undefined,
@@ -165,8 +166,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const functions = useMemo(() => {
       // HINT: data-smarthr-ui-input はInput側が必ずinput要素に付与する
       const getInput = () =>
-        containerRef.current?.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]') ??
-        null
+        containerRef.current?.querySelector<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR) ?? null
 
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -180,14 +180,17 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         parseStringDate(str, latest.parseInput)
 
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
-        const input = getInput()
-
         if (
-          !input ||
           newDate === latest.selectedDate ||
           (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
+          return
+        }
+
+        const input = getInput()
+
+        if (!input) {
           return
         }
 
@@ -310,13 +313,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
           latest.onBlur?.(e)
         },
-        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
           if (ESCAPE_KEY_REGEX.test(e.key)) {
             e.stopPropagation()
             // delay hiding calendar because calendar will be displayed when input is focused
             latest.closeFrame.request(closeCalendar)
 
-            getInput()?.focus()
+            e.currentTarget.querySelector<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)?.focus()
           }
         },
         handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -347,9 +350,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     useOuterClick([containerRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
+      if (value === undefined) {
+        return
+      }
+
       const input = functions.getInput()
 
-      if (value === undefined || !input) {
+      if (!input) {
         return
       }
 
