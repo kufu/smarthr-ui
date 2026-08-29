@@ -264,6 +264,26 @@ import 'styled-components';    // ← hooks 側の依存が転記され、RSC �
 
 なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
 
+**共有 hook（`src/hooks/`）の場合**
+
+`src/hooks/` 配下は複数コンポーネントから使う共有 hook の置き場です。ここでも **client 環境でしか動作しない hook は `client/` にまとめます。**
+
+```text
+src/hooks/
+├── useObjectAttributes.ts    Server Component でも動く
+├── useResponseStatus.ts      Server Component でも動く
+└── client/
+    ├── useEnvironment/       'use client' 有（モジュールスコープで createContext）
+    ├── useLatest.ts          'use client' 無（useRef を使うため client 環境が必要）
+    └── ...
+```
+
+判断軸は `'use client'` の有無ではありません。`useLatest` のようにディレクティブを持たない hook も、`useRef` を使う以上 Server Component からは呼び出せないため `client/` の対象です。逆に `useObjectAttributes`（`isValidElement` のみ）や `useResponseStatus`（`useMemo` のみ）は Server Component でも動くため `client/` に置きません。
+
+コンポーネント配下と違い `components/` / `hooks/` の下位区分は設けません。`src/hooks/` 自体が hook の置き場であり、重ねる意味がないためです。
+
+**移行は段階的に進めています。** 現時点で移動済みなのは `useEnvironment` のみです。`src/hooks/` 直下に残っているものが、そのまま「Server Component で動く」ことを意味するわけではありません。実際に Server Component で動くのは `useObjectAttributes` と `useResponseStatus` の2件だけで、残りは順次 `client/` へ移していきます。
+
 **バレルには付けない**
 
 `src/index.ts` に付けるとライブラリ全体が client 扱いになります。再エクスポートのみで境界ではないため、付けてはいけません。
