@@ -137,7 +137,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     const [isInputFocused, setIsInputFocused] = useState(false)
-    const inputRef = useRef<HTMLInputElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
@@ -164,6 +163,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     })
 
     const functions = useMemo(() => {
+      // HINT: data-smarthr-ui-input はInput側が必ずinput要素に付与する
+      const getInput = () =>
+        containerRef.current?.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]') ??
+        null
+
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
 
@@ -176,8 +180,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         parseStringDate(str, latest.parseInput)
 
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
+        const input = getInput()
+
         if (
-          !inputRef.current ||
+          !input ||
           newDate === latest.selectedDate ||
           (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
@@ -195,7 +201,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const nextDate = isValid ? newDate : null
         const formatValue = dateToString(nextDate)
 
-        inputRef.current.value = formatValue
+        input.value = formatValue
 
         if (latest.showAlternative) {
           setAlternativeFormat(dateToAlternativeFormat(nextDate))
@@ -208,7 +214,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           e.stopPropagation()
 
           const event = new Event('change', { bubbles: true })
-          const input = inputRef.current
 
           input.dispatchEvent(event)
           latest.onChange(
@@ -240,6 +245,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       return {
+        getInput,
         stringToDate,
         dateToString,
         dateToAlternativeFormat,
@@ -310,7 +316,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             // delay hiding calendar because calendar will be displayed when input is focused
             latest.closeFrame.request(closeCalendar)
 
-            if (inputRef.current) inputRef.current.focus()
+            getInput()?.focus()
           }
         },
         handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -329,19 +335,21 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           // delay hiding calendar because calendar will be displayed when input is focused
           latest.closeFrame.request(closeCalendar)
 
-          if (inputRef.current) inputRef.current.focus()
+          getInput()?.focus()
         },
       }
     }, [latest])
 
     // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
     // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-    const mergedRef = useMergeRefs(inputRef, functions.inputCallbackRef, ref)
+    const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
     useOuterClick([containerRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
-      if (value === undefined || !inputRef.current) {
+      const input = functions.getInput()
+
+      if (value === undefined || !input) {
         return
       }
 
@@ -354,7 +362,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const newDate = functions.stringToDate(value)
 
         if (newDate && dayjs(newDate).isValid()) {
-          inputRef.current.value = functions.dateToString(newDate)
+          input.value = functions.dateToString(newDate)
 
           if (latest.showAlternative) {
             setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
@@ -368,7 +376,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         setSelectedDate(null)
       }
 
-      inputRef.current.value = value || ''
+      input.value = value || ''
     }, [value, isInputFocused, functions, latest])
 
     const caretIconColor =
@@ -392,7 +400,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       >
         <Input
           {...rest}
-          data-smarthr-ui-input="true"
           width="100%"
           name={name}
           onChange={isCalendarShown ? functions.closeCalendar : undefined}
