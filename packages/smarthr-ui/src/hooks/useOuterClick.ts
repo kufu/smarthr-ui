@@ -1,16 +1,26 @@
 import { type RefObject, useEffect } from 'react'
 
+import { isEventIncludedParent } from '../libs/delegate'
+
 import { useLatest } from './useLatest'
 
+/**
+ * targetsのいずれの内側でもない位置がクリックされたときにcallbackを実行するフック。
+ *
+ * targetsにnullを渡すと監視自体を行わない。
+ * 監視が不要なタイミングでは、要素が未マウントであることに頼らず明示的にnullを渡すこと。
+ */
 export function useOuterClick(
-  targets: Array<RefObject<HTMLElement>>,
+  targets: Array<RefObject<HTMLElement>> | null,
   callback: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ targets, callback })
 
   useEffect(() => {
     const handleOuterClick = (e: MouseEvent) => {
-      if (latest.targets.every((target) => isEventExcludedParent(e, target.current))) {
+      if (!latest.targets) {
+        return
+      } else if (!latest.targets.some((target) => isEventIncludedParent(e, target.current))) {
         latest.callback(e)
       }
     }
@@ -21,14 +31,4 @@ export function useOuterClick(
       window.removeEventListener('click', handleOuterClick)
     }
   }, [latest])
-}
-
-function isEventExcludedParent(e: MouseEvent, parent: Element | null): boolean {
-  if (!parent) return false
-
-  const path = e.composedPath()
-
-  if (path.length === 0) return false
-
-  return !path.includes(parent)
 }

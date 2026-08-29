@@ -341,7 +341,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       ref,
     )
 
-    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
+    // HINT: カレンダーを開いている間だけ監視する。calendarPortalRefは閉じている間undefinedのため
+    useOuterClick(
+      isCalendarShown ? [inputWrapperRef, calendarPortalRef] : null,
+      functions.closeCalendar,
+    )
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
