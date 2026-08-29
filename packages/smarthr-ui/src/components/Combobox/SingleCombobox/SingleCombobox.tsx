@@ -19,8 +19,8 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
-import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -400,7 +400,7 @@ const ActualSingleCombobox = <T,>(
       ? theme.textColor.disabled
       : theme.textColor.grey
 
-  useOuterClick(
+  useAreaOutsideClick(
     isFocused ? [triggerRef, listBoxRef, clearButtonRef] : null,
     functions.unfocus,
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,

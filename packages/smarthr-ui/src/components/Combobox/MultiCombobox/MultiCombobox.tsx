@@ -19,8 +19,8 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
-import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
@@ -439,7 +439,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  useOuterClick(isExpanded ? [triggerRef, listBoxRef] : null, functions.blur)
+  useAreaOutsideClick(isExpanded ? [triggerRef, listBoxRef] : null, functions.blur)
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
     ref,

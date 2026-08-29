@@ -18,10 +18,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
+import { useAreaOutsideClick } from '../../hooks/useAreaOutsideClick'
 import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
-import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'
@@ -342,7 +342,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     )
 
     // HINT: カレンダーを開いている間だけ監視する。calendarPortalRefは閉じている間undefinedのため
-    useOuterClick(
+    useAreaOutsideClick(
       isCalendarShown ? [inputWrapperRef, calendarPortalRef] : null,
       functions.closeCalendar,
     )
