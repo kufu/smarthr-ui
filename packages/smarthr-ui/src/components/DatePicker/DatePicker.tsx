@@ -18,7 +18,6 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
@@ -335,11 +334,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    const mergedRef = useMergeRefs(
-      inputRef,
-      useCallbackRefCleanupForReact18(functions.inputCallbackRef),
-      ref,
-    )
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(inputRef, functions.inputCallbackRef, ref)
 
     useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
 
