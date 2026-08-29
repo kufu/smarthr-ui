@@ -3,7 +3,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/useEnvironment'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../tailwind'
 
 import type { Gap } from '../../../types'

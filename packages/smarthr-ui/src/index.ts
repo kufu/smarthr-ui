@@ -136,7 +136,7 @@ export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/L
 
 // hooks
 export { useTheme } from './hooks/useTheme'
-export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
+export { useEnvironment, EnvironmentProvider } from './hooks/client/useEnvironment'
 
 // themes
 export {

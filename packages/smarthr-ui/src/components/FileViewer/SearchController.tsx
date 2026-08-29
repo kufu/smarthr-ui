@@ -3,7 +3,7 @@
 import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/useEnvironment'
+import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
