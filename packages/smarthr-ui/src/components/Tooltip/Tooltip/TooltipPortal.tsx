@@ -1,10 +1,9 @@
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
-import { debounce } from '../../libs/debounce'
-
-import { ControlledTooltip } from './ControlledTooltip'
+import { useTheme } from '../../../hooks/useTheme'
+import { debounce } from '../../../libs/debounce'
+import { ControlledTooltip } from '../ControlledTooltip'
 
 type Props = {
   messageId: string
