@@ -61,7 +61,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const { rootTriggerRef } = useContext(DropdownContext)
 
   const contentId = useId()
-  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal({
+  const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
     rootId: contentId,
   })
 
@@ -72,7 +72,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const latest = useLatest({
     active,
     isChildPortal,
-    portalRoot,
     onOpen,
     onClose,
     createPortal,
