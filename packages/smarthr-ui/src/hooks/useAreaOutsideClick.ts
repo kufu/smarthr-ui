@@ -1,5 +1,6 @@
-import { type RefObject, useEffect } from 'react'
+import { type RefObject, useCallback, useEffect } from 'react'
 
+import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact18'
 import { useLatest } from './useLatest'
 
 /**
@@ -45,4 +46,45 @@ export function useAreaOutsideClick(
       window.removeEventListener('click', handleClick)
     }
   }, [latest])
+}
+
+export function useAreaOutsideCallbackRef(
+  otherRefs: Array<RefObject<HTMLElement>>,
+  onOuter: (e: MouseEvent) => void,
+  onInner?: (e: MouseEvent) => void,
+) {
+  const latest = useLatest({ otherRefs, onOuter, onInner })
+
+  return useCallbackRefCleanupForReact18(
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (!node) {
+          return
+        }
+
+        const handleClick = (e: MouseEvent) => {
+          // // 監視対象がない（null）場合は、area不成立とみなしてskip
+          // if (!latest.otherRefs) return
+          const path = e.composedPath()
+
+          // 領域内のいずれかの要素に含まれているかチェック
+          if (
+            path.includes(node) ||
+            latest.otherRefs.some((target) => target.current && path.includes(target.current))
+          ) {
+            latest.onInner?.(e)
+          } else {
+            latest.onOuter(e)
+          }
+        }
+
+        window.addEventListener('click', handleClick)
+
+        return () => {
+          window.removeEventListener('click', handleClick)
+        }
+      },
+      [latest],
+    ),
+  )
 }
