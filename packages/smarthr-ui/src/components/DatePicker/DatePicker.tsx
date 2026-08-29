@@ -419,8 +419,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           />
         </div>
         {isCalendarShown && inputRect && (
-          <Portal inputRect={inputRect} ref={calendarPortalRef}>
+          <Portal inputRect={inputRect}>
             <Calendar
+              ref={calendarPortalRef}
               id={calenderId}
               value={selectedDate || undefined}
               from={from}
