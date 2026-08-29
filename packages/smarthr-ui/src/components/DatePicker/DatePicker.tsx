@@ -138,7 +138,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const [isInputFocused, setIsInputFocused] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
-    const inputWrapperRef = useRef<HTMLDivElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
@@ -233,9 +233,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       const closeCalendar = () => setIsCalendarShown(false)
 
       const openCalendar = () => {
-        if (inputWrapperRef.current) {
+        if (containerRef.current) {
           setIsCalendarShown(true)
-          setInputRect(inputWrapperRef.current.getBoundingClientRect())
+          setInputRect(containerRef.current.getBoundingClientRect())
         }
       }
 
@@ -338,7 +338,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
     const mergedRef = useMergeRefs(inputRef, functions.inputCallbackRef, ref)
 
-    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
+    useOuterClick([containerRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
       if (value === undefined || !inputRef.current) {
@@ -381,6 +381,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
+        ref={containerRef}
         onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
         onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
@@ -389,32 +390,30 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           width: typeof width === 'number' ? `${width}px` : width,
         }}
       >
-        <div ref={inputWrapperRef}>
-          <Input
-            {...rest}
-            data-smarthr-ui-input="true"
-            width="100%"
-            name={name}
-            onChange={isCalendarShown ? functions.closeCalendar : undefined}
-            onKeyPress={functions.handleKeyPressInput}
-            onFocus={functions.handleFocusInput}
-            onBlur={functions.handleBlur}
-            suffix={
-              <InputSuffixIcon
-                alternativeFormat={showAlternative ? alternativeFormat : null}
-                caretIconColor={caretIconColor}
-                classNames={classNames}
-              />
-            }
-            disabled={disabled}
-            error={error}
-            ref={mergedRef}
-            className="smarthr-ui-DatePicker-inputContainer"
-            aria-expanded={isCalendarShown}
-            aria-controls={calenderId}
-            aria-haspopup={true}
-          />
-        </div>
+        <Input
+          {...rest}
+          data-smarthr-ui-input="true"
+          width="100%"
+          name={name}
+          onChange={isCalendarShown ? functions.closeCalendar : undefined}
+          onKeyPress={functions.handleKeyPressInput}
+          onFocus={functions.handleFocusInput}
+          onBlur={functions.handleBlur}
+          suffix={
+            <InputSuffixIcon
+              alternativeFormat={showAlternative ? alternativeFormat : null}
+              caretIconColor={caretIconColor}
+              classNames={classNames}
+            />
+          }
+          disabled={disabled}
+          error={error}
+          ref={mergedRef}
+          className="smarthr-ui-DatePicker-inputContainer"
+          aria-expanded={isCalendarShown}
+          aria-controls={calenderId}
+          aria-haspopup={true}
+        />
         {isCalendarShown && inputRect && (
           <Portal inputRect={inputRect}>
             <Calendar
