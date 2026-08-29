@@ -1,5 +1,3 @@
-'use client'
-
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
