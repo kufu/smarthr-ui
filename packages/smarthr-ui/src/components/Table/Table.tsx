@@ -126,17 +126,45 @@ const classNameGenerator = tv({
   },
 })
 
-export const Table: FC<Props> = ({
+export const Table: FC<Props> = ({ reel = true, children, ...rest }) => {
+  const Component = reel ? ReeledTable : UnreeledTable
+
+  return <Component {...rest}>{children}</Component>
+}
+
+type LocalProps = Omit<Props, 'reel'>
+
+const ReeledTable: FC<LocalProps> = ({ fixedHead, children, ...rest }) => {
+  const tableWrapperRef = useRef<HTMLDivElement>(null)
+
+  return (
+    <TableScroller ref={tableWrapperRef} fixedHead={fixedHead}>
+      <TableReel tableWrapperRef={tableWrapperRef}>
+        <ActualTable {...rest} fixedHead={fixedHead}>
+          {children}
+        </ActualTable>
+      </TableReel>
+    </TableScroller>
+  )
+}
+const UnreeledTable: FC<LocalProps> = ({ fixedHead, children, ...rest }) => (
+  <TableScroller fixedHead={fixedHead}>
+    <ActualTable {...rest} fixedHead={fixedHead}>
+      {children}
+    </ActualTable>
+  </TableScroller>
+)
+
+const ActualTable: FC<LocalProps> = ({
   borderType,
   borderStyle,
   fixedHead,
   layout,
   rounded,
   className,
-  reel = true,
+  children,
   ...rest
 }) => {
-  const tableWrapperRef = useRef<HTMLDivElement>(null)
   const classNames = useMemo(() => {
     const { table } = classNameGenerator({
       borderType,
@@ -149,15 +177,9 @@ export const Table: FC<Props> = ({
     return { table: table({ className }) }
   }, [borderType, borderStyle, className, fixedHead, layout, rounded])
 
-  const renderedTable = <table {...rest} className={classNames.table} />
-
   return (
-    <TableScroller ref={tableWrapperRef} fixedHead={fixedHead}>
-      {reel ? (
-        <TableReel tableWrapperRef={tableWrapperRef}>{renderedTable}</TableReel>
-      ) : (
-        renderedTable
-      )}
-    </TableScroller>
+    <table {...rest} className={classNames.table}>
+      {children}
+    </table>
   )
 }
