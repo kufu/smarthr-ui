@@ -18,7 +18,7 @@ import {
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
-import { useEnhancedEffect } from '../../../../../hooks/useEnhancedEffect'
+import { useEnhancedEffect } from '../../../../../hooks/client/useEnhancedEffect'
 import { useLatest } from '../../../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'

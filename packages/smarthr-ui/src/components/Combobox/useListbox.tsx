@@ -14,10 +14,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useEnhancedEffect } from '../../hooks/client/useEnhancedEffect'
 import { usePortal } from '../../hooks/client/usePortal'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
-import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { findDelegateTarget } from '../../libs/delegate'
