@@ -111,7 +111,7 @@ export const AppLauncher: FC<Props> = ({
         <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (
-              <Stack gap={0.5} className={classNames.category} as="section">
+              <Stack as="section" gap={0.5} className={classNames.category}>
                 <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
                 <Cluster as="ul" gap={1} className={classNames.appList}>
                   {calculatedApps.base.items.map((item, index) => (
@@ -129,9 +129,9 @@ export const AppLauncher: FC<Props> = ({
             )}
             <Cluster gap={1.5}>
               {calculatedApps.others.map(({ heading, items }, i) => (
-                <Stack key={i} gap={0.5} className={classNames.category} as="section">
+                <Stack key={i} as="section" gap={0.5} className={classNames.category}>
                   <Heading type="subSubBlockTitle">{heading}</Heading>
-                  <Stack gap={0.5} as="ul" className={classNames.appList}>
+                  <Stack as="ul" gap={0.5} className={classNames.appList}>
                     {items.map((item, index) => (
                       <LinkListItem
                         key={index}
@@ -159,9 +159,9 @@ const MemoizedDropdownTrigger = memo<
 >(({ enableNew, triggerLabel, className }) => (
   <DropdownTrigger>
     <Button
+      className={className}
       prefix={enableNew ?? <FaToolboxIcon />}
       suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-      className={className}
     >
       {triggerLabel ?? <Localizer id="smarthr-ui/AppLauncher/triggerLabel" defaultText="アプリ" />}
     </Button>

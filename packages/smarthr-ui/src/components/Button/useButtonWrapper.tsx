@@ -97,7 +97,7 @@ export const useButtonWrapper = ({
 
   if ($loading) {
     actualPrefix = undefined
-    const loader = <Loader size="S" className={classNames.loader} role="presentation" />
+    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
 
     // HINT: squareは null | boolean のため、switchで判定する
     // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう

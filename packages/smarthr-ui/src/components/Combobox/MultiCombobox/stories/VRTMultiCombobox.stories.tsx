@@ -79,15 +79,15 @@ export default {
     return (
       <Stack align="flex-start" gap={2} className="shr-h-screen">
         {_cases.map((props, i) => (
-          <MultiCombobox {...args} {...props} items={items} key={i} />
+          <MultiCombobox {...args} {...props} key={i} items={items} />
         ))}
         <MultiCombobox
           {...args}
           name="default"
-          items={items}
-          dropdownHelpMessage="入力でフィルタリングできます。"
           selectedItems={selectedItems}
           onChangeSelected={(its) => setSelectedItems(its)}
+          items={items}
+          dropdownHelpMessage="入力でフィルタリングできます。"
         />
       </Stack>
     )
@@ -126,10 +126,10 @@ export const VRTOnRightEdge: StoryObj<typeof MultiCombobox> = {
       <MultiCombobox
         {...args}
         name="onRightEdge"
+        selectedItems={[]}
+        dropdownWidth="30rem"
         items={Object.values(defaultItems)}
         dropdownHelpMessage="入力でフィルタリングできます。"
-        dropdownWidth="30rem"
-        selectedItems={[]}
       />
     </div>
   ),

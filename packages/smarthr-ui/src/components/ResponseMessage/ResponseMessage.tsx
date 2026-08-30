@@ -42,7 +42,7 @@ export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ..
   const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text icon={<TextIcon {...rest} className={className} />} size={size}>
+    <Text size={size} icon={<TextIcon {...rest} className={className} />}>
       {children}
     </Text>
   )

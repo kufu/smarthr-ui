@@ -1,6 +1,6 @@
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react'
 
-import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 
 import type { Launcher } from '../types'
 

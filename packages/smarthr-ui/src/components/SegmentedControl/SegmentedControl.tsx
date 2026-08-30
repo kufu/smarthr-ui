@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 
@@ -182,9 +182,9 @@ export const SegmentedControl: FC<Props> = ({
       {...rest}
       ref={callbackRef}
       role="toolbar"
+      className={classNames.container}
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
-      className={classNames.container}
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
@@ -197,11 +197,11 @@ export const SegmentedControl: FC<Props> = ({
               key={option.value}
               checked={checked}
               tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              size={size}
+              className={classNames.button}
               aria-label={ariaLabel}
               aria-checked={checked && !!value}
-              size={size}
               handleClick={functions.handleClickOption}
-              className={classNames.button}
             />
           )
         })}

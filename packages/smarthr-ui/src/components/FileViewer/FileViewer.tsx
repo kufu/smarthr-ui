@@ -138,9 +138,9 @@ export const FileViewer: FC<Props> = ({
   return file.contentType === 'application/pdf' ? (
     <PDFFileViewer
       {...commonAttrs}
+      searchable={searchable}
       setRotation={setRotation}
       handlePassword={functions.handlePassword}
-      searchable={searchable}
     />
   ) : (
     <ImageFileViewer {...commonAttrs} />
@@ -174,22 +174,22 @@ const PDFFileViewer: FC<
     <ActualFileViewer
       scale={scale}
       loaded={loaded}
-      hasWidth={hasWidth}
-      setWidth={setWidth}
       scaleSteps={scaleSteps}
-      functions={functions}
       searchController={searchable ? <SearchController search={search} /> : undefined}
+      hasWidth={hasWidth}
+      functions={functions}
+      setWidth={setWidth}
     >
       <PDFViewer
         scale={scale}
         rotation={rotation}
         file={file}
+        search={searchable ? search : undefined}
         width={width}
         handleLoad={functions.handleLoaded}
         handlePDFLoaded={setRotation}
         handlePassword={handlePassword}
         handleLoadError={handleLoadError}
-        search={searchable ? search : undefined}
       />
     </ActualFileViewer>
   )
@@ -210,10 +210,10 @@ const ImageFileViewer: FC<CommonViewerProps> = ({
   <ActualFileViewer
     scale={scale}
     loaded={loaded}
-    hasWidth={hasWidth}
-    setWidth={setWidth}
     scaleSteps={scaleSteps}
+    hasWidth={hasWidth}
     functions={functions}
+    setWidth={setWidth}
   >
     {file.contentType.startsWith('image/') ? (
       <ImageViewer
@@ -259,16 +259,16 @@ const ActualFileViewer: FC<
 
   return (
     <Scroller
+      ref={ref}
       direction="both"
       className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
-      ref={ref}
     >
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
         <Controller
           scale={scale}
           scaleSteps={scaleSteps || defaultScaleSteps}
-          functions={functions}
           searchController={searchController}
+          functions={functions}
         />
       </div>
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
@@ -305,8 +305,8 @@ const Controller: FC<ControllerProps> = memo(
       {/* 操作ボタンを中央へ寄せるための空のスペーサー */}
       <div
         role="presentation"
-        aria-hidden="true"
         className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
+        aria-hidden="true"
       />
       <Cluster
         gap={0.5}
@@ -314,15 +314,16 @@ const Controller: FC<ControllerProps> = memo(
       >
         <Cluster gap={0}>
           <Button
-            onClick={functions.scaleDown}
             disabled={scale <= scaleSteps[0]}
             className="shr-rounded-r-none"
+            onClick={functions.scaleDown}
           >
             <FaMagnifyingGlassMinusIcon
               alt={<Localizer id="smarthr-ui/FileViewer/scaleDownAlt" defaultText="縮小" />}
             />
           </Button>
           <DropdownMenuButton
+            className="[&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-x-[0]"
             trigger={
               <>
                 <VisuallyHiddenText>
@@ -331,7 +332,6 @@ const Controller: FC<ControllerProps> = memo(
                 {`${(scale * 100).toFixed(0)}%`}
               </>
             }
-            className="[&_.smarthr-ui-Button]:shr-rounded-none [&_.smarthr-ui-Button]:shr-border-x-[0]"
           >
             {scaleSteps.map((step) => (
               <Button key={step.toString()} value={step} onClick={functions.handleClickScaleStep}>
@@ -339,13 +339,13 @@ const Controller: FC<ControllerProps> = memo(
               </Button>
             ))}
           </DropdownMenuButton>
-          <Button onClick={functions.scaleUp} className="shr-rounded-l-none">
+          <Button className="shr-rounded-l-none" onClick={functions.scaleUp}>
             <FaMagnifyingGlassPlusIcon
               alt={<Localizer id="smarthr-ui/FileViewer/scaleUpAlt" defaultText="拡大" />}
             />
           </Button>
         </Cluster>
-        <Button onClick={functions.rotate} className="shr-p-0.75">
+        <Button className="shr-p-0.75" onClick={functions.rotate}>
           <FaArrowRotateLeftIcon
             alt={<Localizer id="smarthr-ui/FileViewer/rotateAlt" defaultText="左回転" />}
           />
@@ -359,8 +359,8 @@ const Controller: FC<ControllerProps> = memo(
         // 操作ボタンを中央へ寄せるための空のスペーサー
         <div
           role="presentation"
-          aria-hidden="true"
           className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
+          aria-hidden="true"
         />
       )}
     </Cluster>

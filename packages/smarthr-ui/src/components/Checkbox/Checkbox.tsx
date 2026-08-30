@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = PropsWithChildren<
@@ -93,17 +93,17 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     }, [checked, mixed])
 
     return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
+      <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
           <input
             {...rest}
             ref={mergedRef}
             type="checkbox"
             id={checkBoxId}
-            checked={checked}
             disabled={disabled}
-            aria-invalid={error || undefined}
+            checked={checked}
             className={classNames.input}
+            aria-invalid={error || undefined}
             data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={classNames.box} />

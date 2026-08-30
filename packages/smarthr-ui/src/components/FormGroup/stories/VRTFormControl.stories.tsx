@@ -13,11 +13,11 @@ export default {
       {[false, true].map((unrecommendedHide) => (
         <FormControl
           {...args}
+          key={unrecommendedHide.toString()}
           label={{
             ...args.label,
             unrecommendedHide,
           }}
-          key={unrecommendedHide.toString()}
         />
       ))}
     </Stack>

@@ -42,7 +42,7 @@ export default {
 
       {/* パターン7: 柄なし（disablePatterns＝全セグメントが単色になること） */}
       <div className="shr-h-[400px]">
-        <DoughnutChart data={doughnutSmall} title="柄なし" disablePatterns />
+        <DoughnutChart data={doughnutSmall} disablePatterns title="柄なし" />
       </div>
 
       {/* パターン8: 中央コンテンツあり（タイトルなし＝凡例分だけ上にずれる） */}

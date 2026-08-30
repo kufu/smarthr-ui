@@ -43,7 +43,7 @@ export const Height: StoryObj<typeof SmartHRLogo> = {
 export const Fill: StoryObj<typeof SmartHRLogo> = {
   name: 'fill',
   render: (args) => (
-    <Stack className="shr-bg-background" inline>
+    <Stack inline className="shr-bg-background">
       {[undefined, 'white', 'brand', 'black'].map((fill) => (
         <SmartHRLogo {...args} key={fill || 'undefined'} fill={fill as any} />
       ))}

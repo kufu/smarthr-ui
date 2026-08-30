@@ -32,6 +32,11 @@ describe('SingleCombobox', () => {
           <MultiCombobox
             {...rest}
             name={name || 'default'}
+            selectedItems={
+              selectedItems !== undefined
+                ? selectedItems
+                : [{ label: 'option 1', value: 'value-1' }]
+            }
             items={
               items || [
                 { label: 'option 1', value: 'value-1' },
@@ -40,11 +45,6 @@ describe('SingleCombobox', () => {
                 { label: 'option 4', value: 'value-4' },
                 { label: 'option 5', value: 'value-5' },
               ]
-            }
-            selectedItems={
-              selectedItems !== undefined
-                ? selectedItems
-                : [{ label: 'option 1', value: 'value-1' }]
             }
           />
         </FormControl>

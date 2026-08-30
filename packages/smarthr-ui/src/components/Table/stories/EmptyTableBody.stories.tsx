@@ -41,7 +41,7 @@ export const Padding: StoryObj<typeof EmptyTableBody> = {
   render: (args) => (
     <Stack>
       {[undefined, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 8].map((padding) => (
-        <Template {...args} padding={padding as any} key={padding}>
+        <Template {...args} key={padding} padding={padding as any}>
           <p>padding: {padding}</p>
         </Template>
       ))}

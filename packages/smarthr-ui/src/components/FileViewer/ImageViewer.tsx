@@ -70,11 +70,11 @@ export const ImageViewer: FC<ViewerProps> = memo(
 
     return (
       <div
+        className="shr-relative shr-h-full shr-w-full"
         style={{
           width: viewConfig.wrapperWidth,
           height: viewConfig.wrapperHeight,
         }}
-        className="shr-relative shr-h-full shr-w-full"
       >
         {/* imgのload完了時にupdateViewConfigを呼び出さないと適切なサイズが取得できないため */}
         {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -82,13 +82,13 @@ export const ImageViewer: FC<ViewerProps> = memo(
           ref={callbackRef}
           src={file.url}
           alt={file.alt}
-          onLoad={functions.handleLoad}
-          onError={handleLoadError}
           className="shr-absolute shr-left-[50%] shr-top-[50%] shr-origin-top-left -shr-translate-x-1/2 -shr-translate-y-1/2"
           style={{
             rotate: `${viewConfig.rotation}deg`,
             scale: `${viewConfig.imgScale}`,
           }}
+          onLoad={functions.handleLoad}
+          onError={handleLoadError}
         />
       </div>
     )

@@ -33,5 +33,5 @@ export const Chip: FC<Props> = ({ size, color, disabled, className, ...rest }) =
     [size, color, className],
   )
 
-  return <span {...rest} data-disabled={disabled || undefined} className={actualClassName} />
+  return <span {...rest} className={actualClassName} data-disabled={disabled || undefined} />
 }

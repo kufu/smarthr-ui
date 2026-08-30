@@ -1,11 +1,9 @@
-// HINT: モジュールスコープでcreateContextを呼ぶため、react-server条件で評価されると
-// TypeErrorになる。利用側のコンポーネント（Button・Dropdown・useListbox・Menu・DatePicker/Portal）が'use client'を持つことで
-// clientグラフに入り、サーバ側では評価されない。
 import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useLatest } from '../useLatest'
+
 import { useEnhancedEffect } from './useEnhancedEffect'
-import { useLatest } from './useLatest'
 
 type ParentContextValue = {
   seqs: number[]

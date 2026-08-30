@@ -79,7 +79,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       unmountOnExit
       classNames="shr-dialog-transition"
     >
-      <Center ref={nodeRef} verticalCentering className={actualClassName} as={as}>
+      <Center as={as} ref={nodeRef} verticalCentering className={actualClassName}>
         {isOpen ? children : childrenBufferRef.current}
       </Center>
     </CSSTransition>

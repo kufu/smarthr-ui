@@ -59,10 +59,10 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
       <Th
         vAlign={vAlign}
         fixed={fixed}
-        className={classNames.wrapper}
-        aria-label={localized.checkColumnName}
         rowSpan={rowSpan}
         colSpan={colSpan}
+        className={classNames.wrapper}
+        aria-label={localized.checkColumnName}
       >
         <label className={classNames.inner}>
           <ControlledTooltip

@@ -9,6 +9,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "eslint": "^9.39.5",
     "eslint-config-smarthr": "14.8.2",
+    "eslint-plugin-perfectionist": "^5.10.1",
     "eslint-plugin-storybook": "^9.1.20",
     "husky": "^9.1.7",
     "knip": "^6.26.0",

@@ -184,9 +184,9 @@ const TenantSwitcher = memo<
       <div className={classNames.tenantInfo}>
         {tenants && tenants.length > 1 ? (
           <MultiTenantDropdownMenuButton
-            trigger={currentTenantName}
             tenants={tenants}
             handleTenantSelect={handleTenantSelect}
+            trigger={currentTenantName}
           />
         ) : (
           <Text color="TEXT_WHITE" className={classNames.tenantNameText}>
