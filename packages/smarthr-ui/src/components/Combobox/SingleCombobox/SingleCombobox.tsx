@@ -11,6 +11,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -186,11 +187,14 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
+  const generatedInputId = useId()
+  const inputId = id || generatedInputId
   const triggerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -240,6 +244,7 @@ const ActualSingleCombobox = <T,>(
       isLoading,
       triggerRef,
       noResultText,
+      inputId,
     },
   )
 
@@ -440,6 +445,7 @@ const ActualSingleCombobox = <T,>(
       <Input
         {...rest}
         ref={mergedRef}
+        id={inputId}
         type="text"
         role="combobox"
         name={name}
