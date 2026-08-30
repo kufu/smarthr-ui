@@ -10,9 +10,9 @@ import {
   useState,
 } from 'react'
 
+import { useOnce } from '../../../hooks/client/useOnce'
 import { useLatest } from '../../../hooks/useLatest'
 import { useMergeRefs } from '../../../hooks/useMergeRefs'
-import { useOnce } from '../../../hooks/useOnce'
 import { formatNumericString } from '../../../libs/formatNumericString'
 import { Input } from '../Input'
 
