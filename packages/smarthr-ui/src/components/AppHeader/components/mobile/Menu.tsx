@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useHandleEscape } from '../../../../hooks/useHandleEscape'
+import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
 import { usePortal } from '../../../../hooks/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
@@ -56,7 +56,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
     }
   }, [isOpen])
 
-  useHandleEscape(close)
+  const callbackRef = useEscapeCallbackRef(close)
 
   const className = useMemo(() => classNameGenerator(), [])
 
@@ -69,7 +69,12 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         onClick={open}
       />
       {createPortal(
-        <MenuDialog isOpen={isOpen} tenantSelector={tenantSelector} setIsOpen={setIsOpen}>
+        <MenuDialog
+          callbackRef={callbackRef}
+          isOpen={isOpen}
+          tenantSelector={tenantSelector}
+          setIsOpen={setIsOpen}
+        >
           <FeatureButton className={className}>
             <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
           </FeatureButton>
