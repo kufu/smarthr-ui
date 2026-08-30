@@ -11,8 +11,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { usePortal } from '../../../../hooks/client/usePortal'
 import { useHandleEscape } from '../../../../hooks/useHandleEscape'
-import { usePortal } from '../../../../hooks/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'

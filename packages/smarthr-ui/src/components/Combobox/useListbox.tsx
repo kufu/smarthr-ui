@@ -14,11 +14,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { usePortal } from '../../hooks/client/usePortal'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useLatest } from '../../hooks/useLatest'
-import { usePortal } from '../../hooks/usePortal'
 import { Localizer } from '../../intl'
 import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'

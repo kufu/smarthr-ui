@@ -1,6 +1,6 @@
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { usePortal } from '../../hooks/usePortal'
+import { usePortal } from '../../hooks/client/usePortal'
 
 import { getPortalPosition } from './datePickerHelper'
 
