@@ -4,9 +4,9 @@ import { type FC, type ReactNode, useContext } from 'react'
 
 import { defaultMediaQuery } from '../../../themes'
 import { useTheme } from '../../client/useTheme'
-import { useMediaQueries } from '../../useMediaQueries'
 
 import { type Environment, EnvironmentContext } from './useEnvironment'
+import { useMediaQueries } from './useMediaQueries'
 
 type Props = {
   children: ReactNode
