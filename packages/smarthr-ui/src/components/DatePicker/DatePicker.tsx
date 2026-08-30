@@ -18,7 +18,6 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
@@ -93,6 +92,8 @@ const DEFAULT_DATE_TO_STRING_FORMAT = 'YYYY/MM/DD'
 const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
+const INPUT_CONTAINER_CLASS_NAME = 'smarthr-ui-DatePicker-inputContainer'
 
 const parseStringDate = (
   str: string | null | undefined,
@@ -138,8 +139,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     const [isInputFocused, setIsInputFocused] = useState(false)
-    const inputRef = useRef<HTMLInputElement>(null)
-    const inputWrapperRef = useRef<HTMLDivElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
     const calendarPortalRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
@@ -165,6 +165,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     })
 
     const functions = useMemo(() => {
+      // HINT: data-smarthr-ui-input はInput側が必ずinput要素に付与する
+      const getInput = () =>
+        containerRef.current?.querySelector<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR) ?? null
+
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
 
@@ -178,11 +182,16 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
-          !inputRef.current ||
           newDate === latest.selectedDate ||
           (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
+          return
+        }
+
+        const input = getInput()
+
+        if (!input) {
           return
         }
 
@@ -196,7 +205,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const nextDate = isValid ? newDate : null
         const formatValue = dateToString(nextDate)
 
-        inputRef.current.value = formatValue
+        input.value = formatValue
 
         if (latest.showAlternative) {
           setAlternativeFormat(dateToAlternativeFormat(nextDate))
@@ -209,7 +218,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           e.stopPropagation()
 
           const event = new Event('change', { bubbles: true })
-          const input = inputRef.current
 
           input.dispatchEvent(event)
           latest.onChange(
@@ -234,13 +242,18 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       const closeCalendar = () => setIsCalendarShown(false)
 
       const openCalendar = () => {
-        if (inputWrapperRef.current) {
+        // HINT: classNameはcontainerに設定されるため、containerの矩形は利用者の指定で変わりうる。
+        // カレンダーの表示位置はinput部分を基準にする必要があるため、Inputのwrapperを参照する
+        const inputContainer = containerRef.current?.querySelector(`.${INPUT_CONTAINER_CLASS_NAME}`)
+
+        if (inputContainer) {
           setIsCalendarShown(true)
-          setInputRect(inputWrapperRef.current.getBoundingClientRect())
+          setInputRect(inputContainer.getBoundingClientRect())
         }
       }
 
       return {
+        getInput,
         stringToDate,
         dateToString,
         dateToAlternativeFormat,
@@ -305,13 +318,13 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           updateDate(e, e.target.value ? stringToDate(e.target.value) : null)
           latest.onBlur?.(e)
         },
-        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+        handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
           if (ESCAPE_KEY_REGEX.test(e.key)) {
             e.stopPropagation()
             // delay hiding calendar because calendar will be displayed when input is focused
             latest.closeFrame.request(closeCalendar)
 
-            if (inputRef.current) inputRef.current.focus()
+            e.currentTarget.querySelector<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR)?.focus()
           }
         },
         handleKeyPressInput: (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -330,21 +343,25 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           // delay hiding calendar because calendar will be displayed when input is focused
           latest.closeFrame.request(closeCalendar)
 
-          if (inputRef.current) inputRef.current.focus()
+          getInput()?.focus()
         },
       }
     }, [latest])
 
-    const mergedRef = useMergeRefs(
-      inputRef,
-      useCallbackRefCleanupForReact18(functions.inputCallbackRef),
-      ref,
-    )
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
-    useOuterClick([inputWrapperRef, calendarPortalRef], functions.closeCalendar)
+    useOuterClick([containerRef, calendarPortalRef], functions.closeCalendar)
 
     useEffect(() => {
-      if (value === undefined || !inputRef.current) {
+      if (value === undefined) {
+        return
+      }
+
+      const input = functions.getInput()
+
+      if (!input) {
         return
       }
 
@@ -357,7 +374,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const newDate = functions.stringToDate(value)
 
         if (newDate && dayjs(newDate).isValid()) {
-          inputRef.current.value = functions.dateToString(newDate)
+          input.value = functions.dateToString(newDate)
 
           if (latest.showAlternative) {
             setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
@@ -371,7 +388,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         setSelectedDate(null)
       }
 
-      inputRef.current.value = value || ''
+      input.value = value || ''
     }, [value, isInputFocused, functions, latest])
 
     const caretIconColor =
@@ -384,6 +401,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     return (
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
+        ref={containerRef}
         onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
         onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
@@ -392,35 +410,33 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           width: typeof width === 'number' ? `${width}px` : width,
         }}
       >
-        <div ref={inputWrapperRef}>
-          <Input
-            {...rest}
-            data-smarthr-ui-input="true"
-            width="100%"
-            name={name}
-            onChange={isCalendarShown ? functions.closeCalendar : undefined}
-            onKeyPress={functions.handleKeyPressInput}
-            onFocus={functions.handleFocusInput}
-            onBlur={functions.handleBlur}
-            suffix={
-              <InputSuffixIcon
-                alternativeFormat={showAlternative ? alternativeFormat : null}
-                caretIconColor={caretIconColor}
-                classNames={classNames}
-              />
-            }
-            disabled={disabled}
-            error={error}
-            ref={mergedRef}
-            className="smarthr-ui-DatePicker-inputContainer"
-            aria-expanded={isCalendarShown}
-            aria-controls={calenderId}
-            aria-haspopup={true}
-          />
-        </div>
+        <Input
+          {...rest}
+          width="100%"
+          name={name}
+          onChange={isCalendarShown ? functions.closeCalendar : undefined}
+          onKeyPress={functions.handleKeyPressInput}
+          onFocus={functions.handleFocusInput}
+          onBlur={functions.handleBlur}
+          suffix={
+            <InputSuffixIcon
+              alternativeFormat={showAlternative ? alternativeFormat : null}
+              caretIconColor={caretIconColor}
+              classNames={classNames}
+            />
+          }
+          disabled={disabled}
+          error={error}
+          ref={mergedRef}
+          className={INPUT_CONTAINER_CLASS_NAME}
+          aria-expanded={isCalendarShown}
+          aria-controls={calenderId}
+          aria-haspopup={true}
+        />
         {isCalendarShown && inputRect && (
-          <Portal inputRect={inputRect} ref={calendarPortalRef}>
+          <Portal inputRect={inputRect}>
             <Calendar
+              ref={calendarPortalRef}
               id={calenderId}
               value={selectedDate || undefined}
               from={from}
