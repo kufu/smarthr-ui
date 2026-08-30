@@ -217,6 +217,20 @@ export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
   },
 }
 
+export const DropdownWidthOnRightEdge: StoryObj<typeof SingleCombobox> = {
+  name: 'dropdownWidth（画面の右端に寄せた場合）',
+  decorators: [
+    (Story) => (
+      <div className="shr-flex shr-justify-end">
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    dropdownWidth: '30rem',
+  },
+}
+
 export const NoResultText: StoryObj<typeof SingleCombobox> = {
   name: 'noResultText',
   args: {

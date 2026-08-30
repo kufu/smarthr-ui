@@ -25,8 +25,9 @@ export type Props<T> = {
   disabled: boolean
   handleDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
-  buttonRef: RefObject<HTMLButtonElement>
 }
+
+export const DELETE_BUTTON_SELECTOR = 'smarthr-ui-MultiCombobox-deleteButton'
 
 const classNameGenerator = tv({
   slots: {
@@ -34,7 +35,7 @@ const classNameGenerator = tv({
       'smarthr-ui-MultiCombobox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
     itemLabel: 'smarthr-ui-MultiCombobox-selectedItemLabel',
     deleteButton: [
-      'smarthr-ui-MultiCombobox-deleteButton',
+      DELETE_BUTTON_SELECTOR,
       'shr-relative',
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
@@ -76,13 +77,7 @@ const CLASS_NAMES = (() => {
 
 const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
-export function MultiSelectedItem<T>({
-  item,
-  enableEllipsis,
-  disabled,
-  handleDelete,
-  ...rest
-}: Props<T>) {
+export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDelete }: Props<T>) {
   const itemDeletable = item.deletable ?? true
   const latest = useLatest({ handleDelete, item })
 
@@ -114,7 +109,6 @@ export function MultiSelectedItem<T>({
 
   return (
     <Component
-      {...rest}
       itemLabel={item.label}
       itemDeletable={itemDeletable}
       disabled={disabled}
@@ -168,7 +162,6 @@ const BaseEllipsisMultiSelectedItem = <T,>({
 const EllipsisMultiSelectedItem = typedMemo(BaseEllipsisMultiSelectedItem)
 
 const BaseActualMultiSelectedItem = <T,>({
-  buttonRef,
   labelRef,
   itemLabel,
   itemDeletable,
@@ -187,7 +180,6 @@ const BaseActualMultiSelectedItem = <T,>({
 
       {itemDeletable && (
         <DestroyButton
-          buttonRef={buttonRef}
           labelId={labelId}
           suffixTextId={`${idPrefix}-item-destroy-button-suffix`}
           functions={functions}
@@ -201,18 +193,16 @@ const BaseActualMultiSelectedItem = <T,>({
 const ActualMultiSelectedItem = typedMemo(BaseActualMultiSelectedItem)
 
 const DestroyButton = <T,>({
-  buttonRef,
   labelId,
   suffixTextId,
   disabled,
   functions,
   classNames,
-}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'buttonRef' | 'classNames'> & {
+}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'classNames'> & {
   labelId: string
   suffixTextId: string
 }) => (
   <UnstyledButton
-    ref={buttonRef}
     disabled={disabled}
     tabIndex={-1}
     aria-labelledby={`${labelId} ${suffixTextId}`}

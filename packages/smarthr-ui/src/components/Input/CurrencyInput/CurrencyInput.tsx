@@ -5,16 +5,16 @@ import {
   type FocusEvent,
   forwardRef,
   useEffect,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
+import { useOnce } from '../../../hooks/useOnce'
+import { formatNumericString } from '../../../libs/formatNumericString'
 import { Input } from '../Input'
-
-import { formatCurrency } from './currencyInputHelper'
 
 type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
   /** 通貨の値 */
@@ -26,7 +26,7 @@ type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className = '', ...rest }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, value, defaultValue, className, ...rest }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
@@ -34,6 +34,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       onFocus,
       onBlur,
       onFormatValue,
+      value,
+      defaultValue,
     })
 
     const functions = useMemo(() => {
@@ -43,18 +45,20 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
       }
+      const formatCurrencyValue = (raw = '') => {
+        formatValue(formatNumericString(raw))
+      }
 
       return {
-        formatCurrencyValue: (raw = '') => {
-          formatValue(formatCurrency(raw))
+        baseCallbackRef: (node: HTMLInputElement | null) => {
+          if (node && latest.value === undefined && latest.defaultValue !== undefined) {
+            formatCurrencyValue(latest.defaultValue)
+          }
         },
+        formatCurrencyValue,
         handleFocus: (e: FocusEvent<HTMLInputElement>) => {
           setIsFocused(true)
-
-          if (innerRef.current) {
-            const commaExcluded = innerRef.current.value.replace(/,/g, '')
-            formatValue(commaExcluded)
-          }
+          formatValue(e.currentTarget.value.replace(/,/g, ''))
 
           latest.onFocus?.(e)
         },
@@ -66,18 +70,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-    )
-
-    useEffect(() => {
-      if (value === undefined && defaultValue !== undefined) {
-        functions.formatCurrencyValue(defaultValue)
-      }
-      // when component did mount
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const callbackRef = useOnce(functions.baseCallbackRef)
+    const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
 
     useEffect(() => {
       if (!isFocused) {
@@ -94,12 +88,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...rest}
+        ref={mergedRef}
         type="text"
         value={value}
         defaultValue={defaultValue}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
-        ref={innerRef}
         className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )

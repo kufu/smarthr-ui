@@ -1,9 +1,9 @@
 'use client'
 
-import { type FC, memo, useMemo } from 'react'
+import { type FC, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/useEnvironment'
+import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
@@ -42,6 +42,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     goPrev,
   } = search
   const { mobile } = useEnvironment()
+  const searchInputId = useId()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
     return { wrapper: wrapper(), inputArea: inputArea() }
@@ -53,6 +54,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     <div className={classNames.wrapper}>
       <div className={classNames.inputArea}>
         <SearchInput
+          id={searchInputId}
           name="file_viewer_search"
           tooltipMessage={
             <Localizer
@@ -66,7 +68,13 @@ export const SearchController: FC<Props> = memo(({ search }) => {
           width="100%"
           suffix={
             query !== '' ? (
-              <Text size="S" aria-live="polite" className="shr-tabular-nums">
+              <Text
+                as="output"
+                role="status"
+                htmlFor={searchInputId}
+                size="S"
+                className="shr-tabular-nums"
+              >
                 {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
               </Text>
             ) : undefined

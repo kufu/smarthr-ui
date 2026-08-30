@@ -5,14 +5,13 @@ import {
   type ComponentType,
   type PropsWithChildren,
   forwardRef,
-  useEffect,
-  useImperativeHandle,
+  useCallback,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useSectionWrapper } from '../SectioningContent'
 
 type BaseProps = PropsWithChildren<
@@ -81,10 +80,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
-    const wrapperRef = useRef<HTMLDivElement>(null)
-
-    useImperativeHandle(ref, () => wrapperRef.current!)
-
     const [tabIndex, setTabIndex] = useState<0 | undefined>(undefined)
 
     const actualClassName = useMemo(
@@ -97,53 +92,56 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       [direction, styleType, className],
     )
 
-    useEffect(() => {
-      const refCurrent = wrapperRef.current
-      if (!refCurrent) return
+    const callbackRef = useCallback(
+      (node: HTMLDivElement | null) => {
+        if (!node) return
 
-      const autoTabIndex = () => {
-        let nextTabIndex: 0 | undefined = undefined
+        const autoTabIndex = () => {
+          let nextTabIndex: 0 | undefined = undefined
 
-        switch (direction) {
-          case 'vertical':
-            nextTabIndex = refCurrent.scrollHeight > refCurrent.clientHeight ? 0 : undefined
-            break
-          case 'horizontal':
-            nextTabIndex = refCurrent.scrollWidth > refCurrent.clientWidth ? 0 : undefined
-            break
-          case 'both':
-            nextTabIndex =
-              refCurrent.scrollHeight > refCurrent.clientHeight ||
-              refCurrent.scrollWidth > refCurrent.clientWidth
-                ? 0
-                : undefined
-            break
+          switch (direction) {
+            case 'vertical':
+              nextTabIndex = node.scrollHeight > node.clientHeight ? 0 : undefined
+              break
+            case 'horizontal':
+              nextTabIndex = node.scrollWidth > node.clientWidth ? 0 : undefined
+              break
+            case 'both':
+              nextTabIndex =
+                node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth
+                  ? 0
+                  : undefined
+              break
+          }
+
+          setTabIndex(nextTabIndex)
         }
 
-        setTabIndex(nextTabIndex)
-      }
+        autoTabIndex()
 
-      autoTabIndex()
+        const resizeObserver = new ResizeObserver(autoTabIndex)
+        resizeObserver.observe(node)
 
-      const resizeObserver = new ResizeObserver(autoTabIndex)
-      resizeObserver.observe(refCurrent)
+        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+        return () => {
+          resizeObserver.disconnect()
+        }
+      },
+      [direction],
+    )
 
-      return () => {
-        resizeObserver.unobserve(refCurrent)
-      }
-    }, [direction])
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(callbackRef, ref)
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component {...rest} ref={wrapperRef} className={actualClassName} tabIndex={tabIndex}>
+      <Component {...rest} ref={mergedRef} tabIndex={tabIndex} className={actualClassName}>
         {children}
       </Component>
     )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
-
-    return body
+    return Wrapper ? <Wrapper>{body}</Wrapper> : body
   },
 )

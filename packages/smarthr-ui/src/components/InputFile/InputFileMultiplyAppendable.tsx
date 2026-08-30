@@ -5,7 +5,6 @@ import {
   type MouseEvent,
   forwardRef,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -19,23 +18,16 @@ import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
-import type { Props } from './types'
+import type { LowerProps } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
+export const InputFileMultiplyAppendable = forwardRef<
+  HTMLInputElement,
+  Omit<LowerProps, 'multiple'>
+>(
   (
-    {
-      className,
-      size,
-      label,
-      hasFileList = true,
-      previewable = false,
-      onChange,
-      disabled,
-      error,
-      ...rest
-    },
+    { className, size, label, hasFileList = true, previewable, onChange, disabled, error, ...rest },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
@@ -58,20 +50,10 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
-    const inputRef = useRef<HTMLInputElement>(null)
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
-
     const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
-      const updateFiles = (newFiles: File[]) => {
-        if (!inputRef.current) {
-          return
-        }
-
+      const updateFiles = (input: HTMLInputElement, newFiles: File[]) => {
         latest.onChange?.(newFiles)
 
         const buff = new DataTransfer()
@@ -80,7 +62,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         })
 
         isUpdatingFilesRef.current = true
-        inputRef.current.files = buff.files
+        input.files = buff.files
         isUpdatingFilesRef.current = false
 
         setFiles(newFiles)
@@ -95,10 +77,14 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
 
           const newFiles = Array.from(e.target.files ?? [])
 
-          updateFiles([...latest.files, ...newFiles])
+          updateFiles(e.target, [...latest.files, ...newFiles])
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          if (!inputRef.current) {
+          const input = e.currentTarget
+            .closest('.smarthr-ui-InputFile')
+            ?.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"][type="file"]')
+
+          if (!input) {
             return
           }
 
@@ -106,9 +92,9 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
           const newFiles = latest.files.filter((_, i) => index !== i)
 
           // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-          inputRef.current.value = ''
+          input.value = ''
 
-          updateFiles(newFiles)
+          updateFiles(input, newFiles)
         },
         handleClosePreview: () => {
           setPreviewFile(null)
@@ -136,7 +122,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
                 key={index}
                 file={file}
                 index={index}
-                previewable={previewable}
+                previewable={!!previewable}
                 handleDeleteClick={functions.handleDelete}
                 handlePreviewClick={setPreviewFile}
                 className={classNames.fileItem}
@@ -147,14 +133,14 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            multiple
-            data-smarthr-ui-input="true"
+            ref={ref}
             type="file"
-            onChange={functions.handleChange}
             disabled={disabled}
-            ref={inputRef}
+            multiple
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
             className={classNames.input}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
@@ -165,6 +151,7 @@ export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Pro
             file={previewFile}
             handleClose={functions.handleClosePreview}
             handleDownload={functions.handleDownload}
+            searchable={previewable?.searchable}
           />
         )}
       </Stack>

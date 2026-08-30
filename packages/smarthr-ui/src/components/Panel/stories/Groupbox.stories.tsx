@@ -13,7 +13,7 @@ const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   .sort() as Gap[]
 
 export default {
-  title: 'Components/Panel/Groupbox',
+  title: 'Components/Base/BaseColumn',
   component: Groupbox,
   render: (args) => <Groupbox {...args} />,
   argTypes: {

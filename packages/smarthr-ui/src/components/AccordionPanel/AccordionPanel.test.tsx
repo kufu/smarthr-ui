@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { config } from 'react-transition-group'
 
-import { Fieldset } from '../Fieldset'
+import { Fieldset } from '../FormGroup'
 import { RadioButton } from '../RadioButton'
 
 import { AccordionPanel } from './AccordionPanel'

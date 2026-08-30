@@ -42,7 +42,7 @@ export const DisclosureContent: FC<DisclosureContentProps> = ({
 
   if (visuallyHidden) {
     return (
-      <VisuallyHiddenText {...rest} id={id} as="div">
+      <VisuallyHiddenText {...rest} as="div" id={id}>
         {children}
       </VisuallyHiddenText>
     )

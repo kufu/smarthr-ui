@@ -66,6 +66,7 @@ export const locale = {
   'smarthr-ui/InputFile/download': 'ダウンロード',
   'smarthr-ui/InputFile/previewLabel': '{fileName}のプレビューを開く',
   'smarthr-ui/InputFile/downloadLabel': '{fileName}をダウンロード',
+  'smarthr-ui/InputFile/closePreview': '閉じる',
   'smarthr-ui/LanguageSwitcher/checkIconAlt': '選択中',
   'smarthr-ui/Loader/alt': '処理中',
   'smarthr-ui/MessageDialog/closeButtonLabel': '閉じる',

@@ -5,13 +5,14 @@ import { type FC, useRef, useState } from 'react'
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
-import { Fieldset } from '../Fieldset'
-import { FormControl } from '../FormControl'
+import { Fieldset, FormControl } from '../FormGroup'
 import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
 import { Dialog } from './Dialog'
+
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
 
 describe('Dialog', () => {
   const renderWithIntl = (component: React.ReactElement) =>
@@ -73,6 +74,9 @@ describe('Dialog', () => {
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
 
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
+
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ }')
     await waitFor(
@@ -114,6 +118,9 @@ describe('Dialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     await userEvent.tab({ shift: true })
     expect(screen.getByRole('button', { name: 'close' })).toHaveFocus()
@@ -182,6 +189,9 @@ describe('Dialog', () => {
     expect(
       screen.getByRole('dialog', { name: '特定の要素をフォーカスするダイアログ' }),
     ).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     expect(
       screen.getByRole('textbox', { name: '特定の要素をフォーカスするダイアログのInput' }),

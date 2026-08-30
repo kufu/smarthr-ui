@@ -1,17 +1,17 @@
-import { type RefObject, useEffect, useRef } from 'react'
+import { type RefObject, useEffect } from 'react'
+
+import { useLatest } from './useLatest'
 
 export function useOuterClick(
   targets: Array<RefObject<HTMLElement>>,
   callback: (e: MouseEvent) => void,
 ) {
-  // callbackをrefに保存（毎レンダリング時に最新の値を設定）
-  const callbackRef = useRef(callback)
-  callbackRef.current = callback
+  const latest = useLatest({ targets, callback })
 
   useEffect(() => {
     const handleOuterClick = (e: MouseEvent) => {
-      if (targets.every((target) => isEventExcludedParent(e, target.current))) {
-        callbackRef.current(e)
+      if (latest.targets.every((target) => isEventExcludedParent(e, target.current))) {
+        latest.callback(e)
       }
     }
 
@@ -20,7 +20,7 @@ export function useOuterClick(
     return () => {
       window.removeEventListener('click', handleOuterClick)
     }
-  }, [targets])
+  }, [latest])
 }
 
 function isEventExcludedParent(e: MouseEvent, parent: Element | null): boolean {
