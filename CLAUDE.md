@@ -222,6 +222,68 @@ hook 自身ではなく、それを使うコンポーネント側に置くのが
 | 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
 | 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
 
+**client 境界が必要なモジュールは `client/` に閉じ込める**
+
+コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。
+
+```text
+SectioningContent/
+├── index.ts                      公開バレル
+├── SectioningContent.tsx         'use client' 無し = Server Component でも使える
+└── client/
+    ├── components/               各ファイルに 'use client' を付ける
+    │   ├── index.ts
+    │   ├── LevelContext.ts       モジュールスコープで createContext
+    │   └── SectioningFragment.tsx
+    └── hooks/                    'use client' は付けない
+        ├── index.ts
+        └── useSectioningWrapper.ts
+```
+
+- `client/components/` — 各ファイルに `'use client'` を付ける
+- `client/hooks/` — 付けない。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
+- **`client/index.ts` は作らない**（後述）
+
+`'use client'` を外せたコンポーネントは「Server Component になる」わけではありません。ディレクティブを持たないモジュールは server / client 双方のグラフで評価されるため、**Server Component からも Client Component からも使える**状態になります。制約が減るだけで、利用者側の使い方は変わりません。
+
+**`client/index.ts` を作ってはいけない**
+
+rollup は `preserveModules: true` でもバレルを平坦化し、import 元を実体へ直リンクします。このとき**バレルが依存する他モジュールの外部依存が、呼び出し側へ副作用 import として転記されます。**
+
+`client/index.ts` が `components` と `hooks` を両方 re-export すると、Server Component が `components` だけを参照していても `hooks` 側の依存が混入します。
+
+```js
+// client/index.ts がある場合の lib/components/SectioningContent/SectioningContent.js
+import { forwardRef } from 'react';
+import './client/components/LevelContext.js';
+import { SectioningFragment } from './client/components/SectioningFragment.js';
+import 'styled-components';    // ← hooks 側の依存が転記され、RSC で TypeError になる
+```
+
+`components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
+
+なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
+**共有 hook（`src/hooks/`）の場合**
+
+`src/hooks/` 配下は複数コンポーネントから使う共有 hook の置き場です。ここでも **client 環境でしか動作しない hook は `client/` にまとめます。**
+
+```text
+src/hooks/
+├── useObjectAttributes.ts    Server Component でも動く
+├── useResponseStatus.ts      Server Component でも動く
+└── client/
+    ├── useEnvironment/       'use client' 有（モジュールスコープで createContext）
+    ├── useLatest.ts          'use client' 無（useRef を使うため client 環境が必要）
+    └── ...
+```
+
+判断軸は `'use client'` の有無ではありません。`useLatest` のようにディレクティブを持たない hook も、`useRef` を使う以上 Server Component からは呼び出せないため `client/` の対象です。逆に `useObjectAttributes`（`isValidElement` のみ）や `useResponseStatus`（`useMemo` のみ）は Server Component でも動くため `client/` に置きません。
+
+コンポーネント配下と違い `components/` / `hooks/` の下位区分は設けません。`src/hooks/` 自体が hook の置き場であり、重ねる意味がないためです。
+
+**移行は段階的に進めています。** 現時点で移動済みなのは `useEnvironment` のみです。`src/hooks/` 直下に残っているものが、そのまま「Server Component で動く」ことを意味するわけではありません。実際に Server Component で動くのは `useObjectAttributes` と `useResponseStatus` の2件だけで、残りは順次 `client/` へ移していきます。
+
 **バレルには付けない**
 
 `src/index.ts` に付けるとライブラリ全体が client 扱いになります。再エクスポートのみで境界ではないため、付けてはいけません。
