@@ -4,7 +4,7 @@ import { type FC, type ReactNode, useContext, useMemo, useRef, useSyncExternalSt
 
 import { shallowEqual } from '../../../libs/shallowEqual'
 import { defaultMediaQuery } from '../../../themes'
-import { useTheme } from '../../client/useTheme'
+import { useTheme } from '../useTheme'
 
 import { type Environment, EnvironmentContext } from './useEnvironment'
 
@@ -20,24 +20,10 @@ type MediaQueryMatches<T> = {
 export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
   const theme = useTheme()
   const inheritedEnvironment = useContext(EnvironmentContext)
-  const matches = useMediaQueries(theme?.mediaQuery ?? defaultMediaQuery)
 
-  const baseEnvironment = {
-    ...inheritedEnvironment,
-    ...environment,
-  }
-
-  const state: Environment = {
-    ...baseEnvironment,
-    mobile: baseEnvironment.mobile ?? matches.SCREEN_SMALL,
-    matches: baseEnvironment.matches ?? matches,
-  }
-
-  return <EnvironmentContext.Provider value={state}>{children}</EnvironmentContext.Provider>
-}
-
-const useMediaQueries = <T extends { [key: string]: string }>(queries: T): MediaQueryMatches<T> => {
-  const lastSnapshotRef = useRef<MediaQueryMatches<T> | null>(null)
+  const queries = theme?.mediaQuery ?? defaultMediaQuery
+  type QueriesType = typeof queries
+  const snapshotQueriesRef = useRef<MediaQueryMatches<QueriesType> | null>(null)
 
   // useLatest を使わず queries を直接依存配列に指定することで、functions が再作成され、
   // useSyncExternalStore が subscribe を再実行して新しいメディアクエリを監視できる
@@ -50,11 +36,11 @@ const useMediaQueries = <T extends { [key: string]: string }>(queries: T): Media
         return acc
       },
       {} as Record<string, boolean>,
-    ) as MediaQueryMatches<T>
+    ) as MediaQueryMatches<QueriesType>
 
     return {
-      getServerSnapshot: (() => serverSnapshot) satisfies () => MediaQueryMatches<T>,
-      getSnapshot: (): MediaQueryMatches<T> => {
+      getServerSnapshot: (() => serverSnapshot) satisfies () => MediaQueryMatches<QueriesType>,
+      getSnapshot: (): MediaQueryMatches<QueriesType> => {
         if (typeof window === 'undefined' || !window.matchMedia) {
           return serverSnapshot
         }
@@ -65,13 +51,13 @@ const useMediaQueries = <T extends { [key: string]: string }>(queries: T): Media
             return acc
           },
           {} as Record<string, boolean>,
-        ) as MediaQueryMatches<T>
+        ) as MediaQueryMatches<QueriesType>
 
-        if (lastSnapshotRef.current && shallowEqual(lastSnapshotRef.current, ret)) {
-          return lastSnapshotRef.current
+        if (snapshotQueriesRef.current && shallowEqual(snapshotQueriesRef.current, ret)) {
+          return snapshotQueriesRef.current
         }
 
-        lastSnapshotRef.current = ret
+        snapshotQueriesRef.current = ret
 
         return ret
       },
@@ -93,9 +79,22 @@ const useMediaQueries = <T extends { [key: string]: string }>(queries: T): Media
     }
   }, [queries])
 
-  return useSyncExternalStore(
+  const matches = useSyncExternalStore(
     functions.subscribe,
     functions.getSnapshot,
     functions.getServerSnapshot,
   )
+
+  const baseEnvironment = {
+    ...inheritedEnvironment,
+    ...environment,
+  }
+
+  const state: Environment = {
+    ...baseEnvironment,
+    mobile: baseEnvironment.mobile ?? matches.SCREEN_SMALL,
+    matches: baseEnvironment.matches ?? matches,
+  }
+
+  return <EnvironmentContext.Provider value={state}>{children}</EnvironmentContext.Provider>
 }
