@@ -17,10 +17,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
-import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'

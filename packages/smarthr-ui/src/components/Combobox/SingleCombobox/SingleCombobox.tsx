@@ -19,11 +19,11 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
-import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'

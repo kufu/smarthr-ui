@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = PropsWithChildren<

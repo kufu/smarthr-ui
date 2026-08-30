@@ -14,9 +14,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
-import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
