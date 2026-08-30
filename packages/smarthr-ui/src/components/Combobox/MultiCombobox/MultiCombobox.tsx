@@ -19,7 +19,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
-import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
+import { useAreaOutsideCallbackRef } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
 import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
@@ -262,7 +262,7 @@ const ActualMultiCombobox = <T,>(
     [latestForListBox],
   )
 
-  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -439,7 +439,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  useAreaOutsideClick(isExpanded ? [triggerRef, listBoxRef] : null, functions.blur)
+  const listBoxCallbackRef = useAreaOutsideCallbackRef([triggerRef], functions.blur)
 
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
     ref,
@@ -561,7 +561,7 @@ const ActualMultiCombobox = <T,>(
 
       <MemoizedCaretDown disabled={disabled} isExpanded={isExpanded} classNames={classNames} />
 
-      <ListBox {...listBoxProps} />
+      <ListBox {...listBoxProps} callbackRef={listBoxCallbackRef} />
     </div>
   )
 }
