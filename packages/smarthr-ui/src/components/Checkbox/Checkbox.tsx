@@ -7,12 +7,12 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = PropsWithChildren<
@@ -81,10 +81,10 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
 
     const inputRef = useRef<HTMLInputElement>(null)
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
+    const defaultId = useId()
+    const checkBoxId = id || defaultId
+
+    const mergedRef = useMergeRefs(inputRef, ref)
 
     useEffect(() => {
       if (inputRef.current) {
@@ -92,15 +92,12 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       }
     }, [checked, mixed])
 
-    const defaultId = useId()
-    const checkBoxId = id || defaultId
-
     return (
       <span data-disabled={disabled} className={classNames.wrapper}>
         <span className={classNames.innerWrapper}>
           <input
             {...rest}
-            ref={inputRef}
+            ref={mergedRef}
             type="checkbox"
             id={checkBoxId}
             checked={checked}
@@ -110,16 +107,14 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={classNames.box} />
-          <CheckIconArea
-            mixed={mixed}
-            className={classNames.iconWrap}
-            iconClassName={classNames.icon}
-          />
+          <CheckIconArea mixed={mixed} classNames={classNames} />
         </span>
 
-        <LabeledChildren htmlFor={checkBoxId} className={classNames.label}>
-          {children}
-        </LabeledChildren>
+        {children && (
+          <label htmlFor={checkBoxId} className={classNames.label}>
+            {children}
+          </label>
+        )}
       </span>
     )
   },
@@ -129,23 +124,14 @@ const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClassName: string }>(
-  ({ mixed, className, iconClassName }) => (
-    <span className={className}>
-      {mixed ? (
-        <FaMinusIcon className={iconClassName} />
-      ) : (
-        <FaCheckIcon className={iconClassName} />
-      )}
-    </span>
-  ),
-)
+const CheckIconArea = memo<
+  Pick<Props, 'mixed'> & { classNames: { iconWrap: string; icon: string } }
+>(({ mixed, classNames }) => {
+  const Icon = mixed ? FaMinusIcon : FaCheckIcon
 
-const LabeledChildren = memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
-  ({ children, htmlFor, className }) =>
-    children && (
-      <label htmlFor={htmlFor} className={className}>
-        {children}
-      </label>
-    ),
-)
+  return (
+    <span className={classNames.iconWrap}>
+      <Icon className={classNames.icon} />
+    </span>
+  )
+})

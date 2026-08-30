@@ -1,5 +1,7 @@
 'use client'
 
+// HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
+// react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
 import { type ComponentProps, memo } from 'react'
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 

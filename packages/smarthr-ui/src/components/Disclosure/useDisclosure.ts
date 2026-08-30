@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
+import { useLatest } from '../../hooks/useLatest'
 
 const DISCLOSURE_CHANGE_EVENT = 'smarthr-ui:disclosure-change'
 type DisclosureChangeEventDetail = { id: string; expanded: boolean }
@@ -19,34 +22,43 @@ type UseDisclosureResult = [expanded: boolean, setExpanded: Setter]
  */
 export const useDisclosure = (id: string): UseDisclosureResult => {
   const [expanded, setExpanded] = useState(false)
+  const frame = useAnimationFrame()
+  const latest = useLatest({ id, expanded, frame })
+
+  const functions = useMemo(
+    () => ({
+      safeSetExpanded: (value: boolean | ((prev: boolean) => boolean)) => {
+        // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
+        latest.frame.request(() => {
+          const next = typeof value === 'function' ? value(latest.expanded) : value
+
+          if (next !== latest.expanded) {
+            setExpanded(next)
+            document.dispatchEvent(
+              new CustomEvent<DisclosureChangeEventDetail>(DISCLOSURE_CHANGE_EVENT, {
+                detail: { id: latest.id, expanded: next },
+              }),
+            )
+          }
+        })
+      },
+      handleDisclosureChange: (e: CustomEvent<DisclosureChangeEventDetail>) => {
+        if (latest.id === e.detail.id) {
+          setExpanded(e.detail.expanded)
+        }
+      },
+    }),
+    [latest],
+  )
 
   useEffect(() => {
-    document.dispatchEvent(
-      new CustomEvent<DisclosureChangeEventDetail>(DISCLOSURE_CHANGE_EVENT, {
-        detail: { id, expanded },
-      }),
-    )
-  }, [expanded, id])
+    document.addEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
 
-  useEffect(() => {
-    const handleDisclosureChange = (e: CustomEvent<DisclosureChangeEventDetail>) => {
-      if (id === e.detail.id) {
-        setExpanded(e.detail.expanded)
-      }
-    }
-
-    document.addEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
     return () => {
-      document.removeEventListener(DISCLOSURE_CHANGE_EVENT, handleDisclosureChange)
+      frame.cancel()
+      document.removeEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
     }
-  }, [id])
+  }, [frame, functions])
 
-  const safeSetExpanded: Setter = useCallback((value) => {
-    // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
-    requestAnimationFrame(() => {
-      setExpanded(value)
-    })
-  }, [])
-
-  return [expanded, safeSetExpanded]
+  return [expanded, functions.safeSetExpanded]
 }

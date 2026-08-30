@@ -1,16 +1,29 @@
 'use client'
 
-import { type PropsWithChildren, memo, useEffect, useId, useMemo } from 'react'
-import innerText from 'react-innertext'
+import {
+  type FC,
+  type ForwardedRef,
+  type PropsWithChildren,
+  type ReactNode,
+  type Ref,
+  forwardRef,
+  memo,
+  useCallback,
+  useId,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
 import type { ElementProps } from '../Heading'
 
-export type AbstractProps = PropsWithChildren<{
+export type BaseProps = PropsWithChildren<{
   /**
    * テキストのサイズ
    *
@@ -30,7 +43,7 @@ export type AbstractProps = PropsWithChildren<{
   /** title要素のsuffix */
   pageTitleSuffix?: string
 }>
-type Props = AbstractProps & Omit<ElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<ElementProps, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -44,71 +57,141 @@ const classNameGenerator = tv({
   },
 })
 
-export const PageHeading = memo<Props>(
-  ({
-    size,
-    className,
-    visuallyHidden,
-    autoPageTitle = true,
-    pageTitleSuffix = 'SmartHR（スマートHR）',
-    pageTitle,
-    children,
-    ...rest
-  }) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ visuallyHidden, className }),
-      [className, visuallyHidden],
-    )
-    const typography = STYLE_TYPE_MAP.screenTitle
+export const PageHeading = memo(
+  forwardRef<HTMLHeadingElement, Props>(
+    (
+      {
+        autoPageTitle = true,
+        pageTitleSuffix = 'SmartHR（スマートHR）',
+        pageTitle,
+        size = 'XL',
+        children,
+        ...rest
+      },
+      ref,
+    ) =>
+      !IS_NEXT_JS && autoPageTitle ? (
+        <AutoPageTitleHeading
+          {...rest}
+          size={size}
+          pageTitleSuffix={pageTitleSuffix}
+          pageTitle={pageTitle}
+          outerRef={ref}
+        >
+          {children}
+        </AutoPageTitleHeading>
+      ) : (
+        <ActualHeading {...rest} size={size} headingRef={ref}>
+          {children}
+        </ActualHeading>
+      ),
+  ),
+)
 
-    const pseudoTitleId = useId()
+const AutoPageTitleHeading: FC<
+  Omit<Props, 'size' | 'autoPageTitle' | 'pageTitleSuffix' | 'ref'> & {
+    size: TextProps['size']
+    pageTitleSuffix: string
+    outerRef?: ForwardedRef<HTMLHeadingElement>
+  }
+> = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
+  const pseudoTitleId = useId()
+  const titleFrame = useAnimationFrame()
+  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
 
-    const autoTitleText = useMemo(
-      () =>
-        autoPageTitle && !IS_NEXT_JS
-          ? `${pageTitle || innerText(children)}｜${pageTitleSuffix}`
-          : '',
-      [children, pageTitle, pageTitleSuffix, autoPageTitle],
-    )
+  const callbackRef = useCallback(
+    (node: HTMLHeadingElement | null) => {
+      if (!node) {
+        return
+      }
 
-    useEffect(() => {
-      if (autoTitleText) {
-        document.title = autoTitleText
+      const updateTitle = () => {
+        const title = latest.pageTitle || node.textContent || ''
+        document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
 
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-        const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
+        const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
           document.createElement('div')) as HTMLDivElement
 
-        pseudoTitle.setAttribute('id', pseudoTitleId)
+        pseudoTitle.setAttribute('id', latest.pseudoTitleId)
         pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
         pseudoTitle.setAttribute('aria-live', 'polite')
         document.body.prepend(pseudoTitle)
 
-        requestAnimationFrame(() => {
-          pseudoTitle.textContent = autoTitleText
+        latest.titleFrame.request(() => {
+          pseudoTitle.textContent = document.title
         })
+      }
 
-        return () => {
+      updateTitle()
+
+      const observer = new MutationObserver(updateTitle)
+      observer.observe(node, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+      })
+
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      return () => {
+        observer.disconnect()
+        latest.titleFrame.cancel()
+
+        const pseudoTitle = document.getElementById(latest.pseudoTitleId)
+
+        if (pseudoTitle) {
           pseudoTitle.remove()
         }
       }
+    },
+    [latest],
+  )
 
-      return undefined
-    }, [autoTitleText, pseudoTitleId])
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(callbackRef, outerRef)
 
-    const Component = visuallyHidden ? VisuallyHiddenText : Text
+  return (
+    <ActualHeading {...rest} headingRef={mergedRef}>
+      {children}
+    </ActualHeading>
+  )
+}
 
-    return (
-      <Component
-        {...rest}
-        {...typography}
-        size={size || typography.size}
-        as="h1"
-        className={actualClassName}
-      >
-        {children}
-      </Component>
-    )
-  },
-)
+type ActualHeadingProps = {
+  visuallyHidden?: boolean
+  size: TextProps['size']
+  className?: string
+  children: ReactNode
+  headingRef?: Ref<HTMLHeadingElement>
+} & Omit<ElementProps, 'size' | 'className' | 'visuallyHidden' | 'children' | 'ref'>
+
+const ActualHeading: FC<ActualHeadingProps> = ({
+  visuallyHidden,
+  size,
+  className,
+  children,
+  headingRef,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ visuallyHidden, className }),
+    [className, visuallyHidden],
+  )
+  const Component = visuallyHidden ? VisuallyHiddenText : Text
+
+  return (
+    <Component
+      {...rest}
+      {...STYLE_TYPE_MAP.screenTitle}
+      ref={headingRef}
+      size={size || STYLE_TYPE_MAP.screenTitle.size}
+      className={actualClassName}
+      as="h1"
+    >
+      {children}
+    </Component>
+  )
+}

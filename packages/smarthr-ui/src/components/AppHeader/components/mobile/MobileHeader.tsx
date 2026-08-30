@@ -10,11 +10,15 @@ import { ReleaseNoteContext } from './ReleaseNoteContext'
 import { TenantSelector } from './TenantSelector'
 import { UserInfo } from './UserInfo'
 
-import type { HeaderProps, NavigationGroup } from '../../types'
+import type { InternalHeaderProps, NavigationGroup } from '../../types'
 
-export const MobileHeader: FC<HeaderProps> = ({
+export const MobileHeader: FC<InternalHeaderProps> = ({
   navigations,
   features,
+  isAppLauncherAvailable,
+  featuresLoading,
+  featuresError,
+  handleOpenAppLauncher,
   releaseNote,
   className = '',
   tenants,
@@ -42,6 +46,10 @@ export const MobileHeader: FC<HeaderProps> = ({
     <AppLauncherContext.Provider
       value={{
         features,
+        isAppLauncherAvailable,
+        featuresLoading,
+        featuresError,
+        handleOpenAppLauncher,
         isAppLauncherSelected,
         setIsAppLauncherSelected,
       }}
@@ -64,6 +72,8 @@ export const MobileHeader: FC<HeaderProps> = ({
             {...rest}
             className={`${className} min-[752px]:!shr-hidden`}
             tenants={isMenuAvailable ? undefined : tenants}
+            currentTenantId={isMenuAvailable ? undefined : currentTenantId}
+            onTenantSelect={isMenuAvailable ? undefined : onTenantSelect}
           >
             {children}
 

@@ -4,6 +4,7 @@ import { SMARTHR_DEFAULT_COLORS } from '../helper'
 
 import {
   createBarChartOptions,
+  createDoughnutChartOptions,
   createLineChartOptions,
   createRadarChartOptions,
 } from './chartConfig'
@@ -311,5 +312,50 @@ describe('createRadarChartOptions', () => {
 
     expect(result.plugins?.datalabels?.display).toBe(true)
     expect(result.plugins?.datalabels?.backgroundColor).toBe('#fff')
+  })
+})
+
+describe('createDoughnutChartOptions', () => {
+  it('tooltipの装飾設定が外部から上書きできないこと（保護されている）', () => {
+    const result = createDoughnutChartOptions({
+      plugins: {
+        tooltip: {
+          backgroundColor: '#ff0000',
+        } as ChartOptions<'doughnut'>['plugins']['tooltip'],
+      },
+    })
+
+    expect(result.plugins?.tooltip?.backgroundColor).toBe(SMARTHR_DEFAULT_COLORS.BACKGROUND)
+  })
+
+  it('外部からcutoutを設定できること', () => {
+    const result = createDoughnutChartOptions({ cutout: '85%' })
+    expect(result.cutout).toBe('85%')
+  })
+
+  it('tooltipのenabledは保護対象外で、外部から無効化できること', () => {
+    const result = createDoughnutChartOptions({
+      plugins: {
+        tooltip: {
+          enabled: false,
+        } as ChartOptions<'doughnut'>['plugins']['tooltip'],
+      },
+    })
+
+    expect(result.plugins?.tooltip?.enabled).toBe(false)
+    // 装飾の内部設定は保護されたまま
+    expect(result.plugins?.tooltip?.backgroundColor).toBe(SMARTHR_DEFAULT_COLORS.BACKGROUND)
+  })
+
+  it('その他のplugin設定は外部から追加できること', () => {
+    const result = createDoughnutChartOptions({
+      plugins: {
+        datalabels: {
+          display: true,
+        },
+      },
+    })
+
+    expect(result.plugins?.datalabels?.display).toBe(true)
   })
 })

@@ -28,7 +28,21 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   desktopNavigationAdditionalContent?: ReactNode
   releaseNote?: ReleaseNoteProps | null
   features?: Array<Launcher['feature']>
+  /**
+   * 指定するとアプリランチャーを開いたタイミングでアプリ一覧を取得します（遅延ロード）。
+   * 指定した場合、features は無視されます。
+   */
+  fetchFeatures?: () => Promise<Array<Launcher['feature']>>
   mobileAdditionalContent?: ReactNode
+}
+
+/** AppHeader が内部の DesktopHeader・MobileHeader へ渡す props */
+export type InternalHeaderProps = Omit<HeaderProps, 'features' | 'fetchFeatures'> & {
+  features: Array<Launcher['feature']>
+  isAppLauncherAvailable: boolean
+  featuresLoading: boolean
+  featuresError: boolean
+  handleOpenAppLauncher: () => void
 }
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup

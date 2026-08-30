@@ -20,6 +20,8 @@ import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
+  loading?: boolean
+  error?: boolean
 }
 
 const classNameGenerator = tv({
@@ -48,7 +50,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
+export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error }) => {
   const {
     features,
     page,
@@ -59,6 +61,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   } = useAppLauncher(baseFeatures)
 
   const { searchInputTitle } = useLocalize({
@@ -69,7 +72,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
   })
 
   return (
-    <div className={CLASS_NAMES.wrapper}>
+    <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
@@ -88,7 +91,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
             <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
           </SearchResultText>
         ) : (
-          <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
+          <AppLauncherFilterDropdown page={page} handleSelectPage={changePage} />
         )}
 
         {(mode === 'search' || page === 'all') && (
@@ -97,7 +100,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
       </Cluster>
 
       <Scroller className={CLASS_NAMES.scrollArea} styleType="scroll">
-        <AppLauncherFeatures features={features} page={page} />
+        <AppLauncherFeatures features={features} page={page} loading={loading} error={error} />
       </Scroller>
 
       <BottomArea className={CLASS_NAMES.bottomArea}>

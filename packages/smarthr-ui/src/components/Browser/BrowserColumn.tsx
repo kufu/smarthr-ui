@@ -7,13 +7,13 @@ import type { ItemNode } from './models'
 
 const getColumnId = (column: number) => `column-${column}`
 
-type AbstractProps = {
+type BaseProps = {
   value?: string
   items: ItemNode[]
   index: number
   handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
-type Props = AbstractProps & Omit<ComponentProps<'ul'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'ul'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-px-0.25 shr-py-0.5',

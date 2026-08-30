@@ -1,0 +1,227 @@
+'use client'
+
+import {
+  type BaseSyntheticEvent,
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type FocusEvent as ReactFocusEvent,
+  type ReactNode,
+  type PointerEvent as ReactPointerEvent,
+  type TouchEvent as ReactTouchEvent,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
+import { createPortal } from 'react-dom'
+import { tv } from 'tailwind-variants'
+
+import { useEnhancedEffect } from '../../../../../hooks/useEnhancedEffect'
+import { useLatest } from '../../../../../hooks/useLatest'
+
+import { TooltipPortal } from './TooltipPortal'
+
+const subscribeFullscreenChange = (callback: () => void) => {
+  window.addEventListener('fullscreenchange', callback)
+
+  return () => {
+    window.removeEventListener('fullscreenchange', callback)
+  }
+}
+const getFullscreenElement = () => document.fullscreenElement
+const getFullscreenElementOnSSR = () => null
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+
+type BaseProps = PropsWithChildren<{
+  /** ツールチップ内に表示するメッセージ */
+  message: ReactNode
+  /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
+  type?: 'label' | 'description'
+  /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
+  triggerType?: 'icon' | 'text'
+  /** `true` のとき、ツールチップを表示する対象が省略されている場合のみツールチップ表示を有効にする */
+  ellipsisOnly?: boolean
+  /** ツールチップを表示する対象の tabIndex 値 */
+  tabIndex?: number
+  /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
+  ariaDescribedbyTarget?: 'wrapper' | 'inner'
+}>
+type Props = BaseProps &
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby'>
+
+const classNameGenerator = tv({
+  base: [
+    'smarthr-ui-Tooltip',
+    'shr-relative',
+    'shr-inline-block shr-max-w-full shr-align-bottom',
+    'focus-visible:shr-focus-indicator--outer',
+  ],
+  variants: {
+    isIcon: {
+      true: 'shr-leading-[0]',
+    },
+  },
+})
+
+export const Tooltip: FC<Props> = ({
+  message,
+  children,
+  type = 'description',
+  triggerType,
+  ellipsisOnly,
+  tabIndex,
+  ariaDescribedbyTarget = 'wrapper',
+  className,
+  onPointerEnter,
+  onPointerLeave,
+  onTouchStart,
+  onTouchEnd,
+  onFocus,
+  onBlur,
+  ...rest
+}) => {
+  const [portalRoot, setPortalRoot] = useState<Element | null>(null)
+  const [isVisible, setIsVisible] = useState(false)
+  const [rect, setRect] = useState<DOMRect | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
+  const childrenWrapperRef = useRef<HTMLSpanElement>(null)
+  const messageId = useId()
+  const fullscreenElement = useSyncExternalStore(
+    subscribeFullscreenChange,
+    getFullscreenElement,
+    getFullscreenElementOnSSR,
+  )
+
+  const [isFocusableChild, setIsFocusableChild] = useState(false)
+  const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
+
+  const isLabel = type === 'label'
+  const isIcon = triggerType === 'icon'
+
+  const actualClassName = useMemo(
+    () => classNameGenerator({ isIcon, className }),
+    [isIcon, className],
+  )
+
+  const latest = useLatest({
+    onPointerEnter,
+    onPointerLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
+    ellipsisOnly,
+  })
+
+  const functions = useMemo(() => {
+    const toShowAction = (e: BaseSyntheticEvent) => {
+      // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
+      if (!ref.current?.contains(e.target)) {
+        return
+      }
+
+      if (latest.ellipsisOnly) {
+        const outerWidth = parseInt(
+          window
+            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+            .width.match(/\d+/)![0],
+          10,
+        )
+
+        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
+          return
+        }
+      }
+
+      setRect(ref.current.getBoundingClientRect())
+      setIsVisible(true)
+    }
+    const toCloseAction = () => {
+      setRect(null)
+      setIsVisible(false)
+    }
+
+    return {
+      handlePointerEnter: (e: ReactPointerEvent<HTMLSpanElement>) => {
+        latest.onPointerEnter?.(e)
+        toShowAction(e)
+      },
+      handleTouchStart: (e: ReactTouchEvent<HTMLSpanElement>) => {
+        latest.onTouchStart?.(e)
+        toShowAction(e)
+      },
+      handleFocus: (e: ReactFocusEvent<HTMLSpanElement>) => {
+        latest.onFocus?.(e)
+        toShowAction(e)
+      },
+      handlePointerLeave: (e: ReactPointerEvent<HTMLSpanElement>) => {
+        latest.onPointerLeave?.(e)
+        toCloseAction()
+      },
+      handleTouchEnd: (e: ReactTouchEvent<HTMLSpanElement>) => {
+        latest.onTouchEnd?.(e)
+        toCloseAction()
+      },
+      handleBlur: (e: ReactFocusEvent<HTMLSpanElement>) => {
+        latest.onBlur?.(e)
+        toCloseAction()
+      },
+    }
+  }, [latest])
+
+  useEnhancedEffect(() => {
+    setPortalRoot(fullscreenElement ?? document.body)
+  }, [fullscreenElement])
+
+  useEnhancedEffect(() => {
+    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
+
+    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
+
+    setIsFocusableChild(focusable)
+    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
+
+    // focusableな要素に直接aria属性を設定
+    if (focusable) {
+      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+    }
+  }, [tabIndex, isLabel, messageId])
+
+  return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
+    <span
+      {...rest}
+      ref={ref}
+      tabIndex={actualTabIndex}
+      aria-describedby={
+        isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
+      }
+      onPointerEnter={functions.handlePointerEnter}
+      onTouchStart={functions.handleTouchStart}
+      onFocus={functions.handleFocus}
+      onPointerLeave={functions.handlePointerLeave}
+      onTouchEnd={functions.handleTouchEnd}
+      onBlur={functions.handleBlur}
+      className={actualClassName}
+    >
+      {portalRoot &&
+        createPortal(
+          <TooltipPortal
+            messageId={messageId}
+            message={message}
+            isVisible={isVisible}
+            parentRect={rect}
+            isIcon={isIcon}
+          />,
+          portalRoot,
+        )}
+      <span ref={childrenWrapperRef} className="shr-contents">
+        {children}
+      </span>
+    </span>
+  )
+}

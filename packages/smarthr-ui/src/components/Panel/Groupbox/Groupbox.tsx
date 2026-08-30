@@ -4,9 +4,9 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { backgroundColor } from '../../../tailwind'
 import { Panel } from '../Panel'
 
-type AbstractProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> &
+type BaseProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
@@ -21,6 +21,7 @@ const classNameGenerator = tv({
       left: 'shr-rounded-l-l',
     },
   },
+  // TODO: tailwindの場合のみdefault値が設定される挙動はバグの原因になりかねないので整理する
   defaultVariants: {
     bgColor: 'COLUMN',
     rounded: false,

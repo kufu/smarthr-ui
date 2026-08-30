@@ -6,13 +6,12 @@ import {
   type MouseEvent,
   type ReactNode,
   memo,
-  useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 
@@ -27,7 +26,7 @@ export type Option = {
   disabled?: boolean
 }
 
-type AbstractProps = {
+type BaseProps = {
   /** 選択肢の配列 */
   options: Option[]
   /** 選択中の値 */
@@ -37,7 +36,7 @@ type AbstractProps = {
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -84,7 +83,16 @@ export const SegmentedControl: FC<Props> = ({
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+
+  const classNames = useMemo(() => {
+    const { container, buttonGroup, button } = classNameGenerator()
+
+    return {
+      container: container({ className }),
+      buttonGroup: buttonGroup(),
+      button: button({ size }),
+    }
+  }, [size, className])
 
   const latest = useLatest({ onClickOption, isFocused })
 
@@ -92,6 +100,68 @@ export const SegmentedControl: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
+      callbackRef: (node: HTMLDivElement | null) => {
+        if (!node) {
+          return
+        }
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+          if (!latest.isFocused || !document.activeElement) {
+            return
+          }
+
+          let radios: NodeListOf<Element> | Element[] = node.querySelectorAll(
+            '[role="radio"]:not(:disabled)',
+          )
+
+          if (radios.length < 2) {
+            return
+          }
+
+          radios = Array.from(radios)
+
+          const focusedIndex = radios.indexOf(document.activeElement)
+
+          if (focusedIndex === -1) {
+            return
+          }
+
+          switch (e.key) {
+            case 'Down':
+            case 'ArrowDown':
+            case 'Right':
+            case 'ArrowRight': {
+              const nextIndex = focusedIndex + 1
+              const nextRadio = radios[nextIndex % radios.length]
+
+              if (nextRadio instanceof HTMLButtonElement) {
+                nextRadio.focus()
+              }
+
+              break
+            }
+            case 'Up':
+            case 'ArrowUp':
+            case 'Left':
+            case 'ArrowLeft': {
+              const nextIndex = focusedIndex - 1
+              const nextRadio = radios[(nextIndex + radios.length) % radios.length]
+
+              if (nextRadio instanceof HTMLButtonElement) {
+                nextRadio.focus()
+              }
+
+              break
+            }
+          }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => {
+          document.removeEventListener('keydown', handleKeyDown)
+        }
+      },
       handleClickOption: hasOnClickOption
         ? (e: MouseEvent<HTMLButtonElement>) => {
             latest.onClickOption?.(e.currentTarget.value)
@@ -103,83 +173,18 @@ export const SegmentedControl: FC<Props> = ({
     [hasOnClickOption, latest],
   )
 
-  const classNames = useMemo(() => {
-    const { container, buttonGroup, button } = classNameGenerator()
-
-    return {
-      container: container({ className }),
-      buttonGroup: buttonGroup(),
-      button: button({ size }),
-    }
-  }, [className, size])
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!latest.isFocused || !containerRef.current || !document.activeElement) {
-        return
-      }
-
-      const radios = Array.from(
-        containerRef.current.querySelectorAll('[role="radio"]:not(:disabled)'),
-      )
-
-      if (radios.length < 2) {
-        return
-      }
-
-      const focusedIndex = radios.indexOf(document.activeElement)
-
-      if (focusedIndex === -1) {
-        return
-      }
-
-      switch (e.key) {
-        case 'Down':
-        case 'ArrowDown':
-        case 'Right':
-        case 'ArrowRight': {
-          const nextIndex = focusedIndex + 1
-          const nextRadio = radios[nextIndex % radios.length]
-
-          if (nextRadio instanceof HTMLButtonElement) {
-            nextRadio.focus()
-          }
-
-          break
-        }
-        case 'Up':
-        case 'ArrowUp':
-        case 'Left':
-        case 'ArrowLeft': {
-          const nextIndex = focusedIndex - 1
-          const nextRadio = radios[(nextIndex + radios.length) % radios.length]
-
-          if (nextRadio instanceof HTMLButtonElement) {
-            nextRadio.focus()
-          }
-
-          break
-        }
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [latest])
+  const callbackRef = useCallbackRefCleanupForReact18(functions.callbackRef)
 
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      className={classNames.container}
+      ref={callbackRef}
+      role="toolbar"
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
-      ref={containerRef}
-      role="toolbar"
+      className={classNames.container}
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
@@ -190,12 +195,12 @@ export const SegmentedControl: FC<Props> = ({
             <SegmentedControlButton
               {...optionRest}
               key={option.value}
-              aria-label={ariaLabel}
-              handleClick={functions.handleClickOption}
-              size={size}
               checked={checked}
               tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+              aria-label={ariaLabel}
               aria-checked={checked && !!value}
+              size={size}
+              handleClick={functions.handleClickOption}
               className={classNames.button}
             />
           )

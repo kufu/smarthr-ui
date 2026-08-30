@@ -18,7 +18,9 @@ const _suffixOptions = {
 export default {
   title: 'Components/Input/CurrencyInput',
   component: CurrencyInput,
-  render: (args) => <CurrencyInput {...args} />,
+  render: (args) => (
+    <CurrencyInput {...args} onFormatValue={(v) => console.log('formatted: ', v)} />
+  ),
   argTypes: {
     prefix: {
       control: 'radio',

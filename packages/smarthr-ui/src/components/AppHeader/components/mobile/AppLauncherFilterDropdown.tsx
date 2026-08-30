@@ -14,7 +14,7 @@ import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']
-  onSelectPage: (page: Launcher['page']) => void
+  handleSelectPage: (page: Launcher['page']) => void
 }
 
 const classNameGenerator = tv({
@@ -42,13 +42,13 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => (
+export const AppLauncherFilterDropdown = memo<Props>(({ page, handleSelectPage }) => (
   <Dropdown>
     <MemoizedDropdownTrigger className={CLASS_NAMES.trigger} page={page} />
     <DropdownContent>
       <ContentBody
         page={page}
-        onSelectPage={onSelectPage}
+        handleSelectPage={handleSelectPage}
         className={CLASS_NAMES.contentBody}
         buttonClassName={CLASS_NAMES.contentButton}
       />
@@ -83,15 +83,15 @@ const ContentBody = memo<
     className: string
     buttonClassName: string
   }
->(({ page, onSelectPage, className, buttonClassName }) => {
+>(({ page, handleSelectPage, className, buttonClassName }) => {
   const theme = useTheme()
   const isFavorite = page === 'favorite'
 
-  const onClickButton = useCallback(
+  const handleClickButton = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectPage(e.currentTarget.value as Launcher['page'])
+      handleSelectPage(e.currentTarget.value as Launcher['page'])
     },
-    [onSelectPage],
+    [handleSelectPage],
   )
 
   const buttonPrefix = (
@@ -111,7 +111,7 @@ const ContentBody = memo<
         value="favorite"
         role="option"
         aria-selected={isFavorite}
-        onClick={onClickButton}
+        onClick={handleClickButton}
         className={buttonClassName}
         prefix={isFavorite && buttonPrefix}
       >
@@ -126,7 +126,7 @@ const ContentBody = memo<
         value="all"
         role="option"
         aria-selected={!isFavorite}
-        onClick={onClickButton}
+        onClick={handleClickButton}
         className={buttonClassName}
         prefix={!isFavorite && buttonPrefix}
       >

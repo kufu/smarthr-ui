@@ -6,7 +6,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useDisclosure } from './useDisclosure'
 
-type DisclosureContentAbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** DisclosureTriggerのtargetIdと紐づけるId */
   id: string
   /** 開閉状態。デフォルトは閉じている */
@@ -15,8 +15,7 @@ type DisclosureContentAbstractProps = PropsWithChildren<{
   visuallyHidden?: boolean
 }>
 
-type DisclosureContentProps = DisclosureContentAbstractProps &
-  Omit<ComponentProps<'div'>, keyof DisclosureContentAbstractProps>
+type DisclosureContentProps = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 export const DisclosureContent: FC<DisclosureContentProps> = ({
   id,
@@ -43,7 +42,7 @@ export const DisclosureContent: FC<DisclosureContentProps> = ({
 
   if (visuallyHidden) {
     return (
-      <VisuallyHiddenText {...rest} id={id} as="div">
+      <VisuallyHiddenText {...rest} as="div" id={id}>
         {children}
       </VisuallyHiddenText>
     )

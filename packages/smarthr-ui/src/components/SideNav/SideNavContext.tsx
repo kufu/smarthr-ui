@@ -1,3 +1,6 @@
+// HINT: モジュールスコープでcreateContextを呼ぶため、react-server条件で評価されると
+// TypeErrorになる。利用側のコンポーネント（SideNav・SideNavItemButton）が'use client'を持つことで
+// clientグラフに入り、サーバ側では評価されない。
 import { createContext, useContext } from 'react'
 
 import type { SideNavSizeType } from './SideNavItemButton'

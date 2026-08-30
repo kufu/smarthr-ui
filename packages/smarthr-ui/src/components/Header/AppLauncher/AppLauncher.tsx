@@ -21,13 +21,13 @@ type AppItem = {
   url: string
   target?: string
 }
-type AbstractProps = {
+type BaseProps = {
   apps: Category[]
   urlToShowAll?: string | null
   /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
   triggerLabel?: ReactNode
 } & VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -85,12 +85,12 @@ export const AppLauncher: FC<Props> = ({
   }, [apps])
 
   const classNames = useMemo(() => {
-    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator({
-      enableNew,
-    })
+    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator()
 
     return {
-      appsButton: appsButton(),
+      appsButton: appsButton({
+        enableNew,
+      }),
       contentWrapper: contentWrapper(),
       category: category(),
       appList: appList(),

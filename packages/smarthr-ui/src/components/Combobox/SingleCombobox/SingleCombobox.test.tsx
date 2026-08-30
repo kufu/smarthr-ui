@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../intl'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 
 import { SingleCombobox } from './SingleCombobox'
 
@@ -128,8 +128,8 @@ describe('SingleCombobox', () => {
     await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
-    // 選択解除ボタンが表示されていない(非表示用のクラスが付与されている)
-    expect(clearButton()).toHaveClass('shr-hidden')
+    // 選択解除ボタンが表示されていない(data-clear-button-hidden属性がtrueになっている)
+    expect(screen.getByRole('group')).toHaveAttribute('data-clear-button-hidden', 'true')
   })
 
   it('readOnly なコンボボックスではアイテムの選択・解除ができないこと', async () => {
@@ -140,8 +140,8 @@ describe('SingleCombobox', () => {
     await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
-    // 選択解除ボタンが表示されていない(非表示用のクラスが付与されている)
-    expect(clearButton()).toHaveClass('shr-hidden')
+    // 選択解除ボタンが表示されていない(data-clear-button-hidden属性がtrueになっている)
+    expect(screen.getByRole('group')).toHaveAttribute('data-clear-button-hidden', 'true')
   })
 
   it('キーボードで操作できること', async () => {

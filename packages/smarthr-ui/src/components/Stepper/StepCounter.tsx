@@ -3,7 +3,12 @@ import { tv } from 'tailwind-variants'
 
 import { StepStatusIcon } from './StepStatusIcon'
 
-import type { Step } from './types'
+type Props = {
+  statusType?: 'completed' | 'closed'
+  statusText?: string
+  stepNumber?: number
+  current: boolean
+}
 
 const classNameGenerator = tv({
   slots: {
@@ -30,15 +35,10 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = Pick<Step, 'status'> & {
-  stepNumber?: number
-  current: boolean
-}
-
-export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
+export const StepCounter: FC<Props> = ({ statusType, statusText, current, stepNumber }) => {
   const classNames = useMemo(() => {
     const { wrapper, counter, statusIcon } = classNameGenerator({
-      status: typeof status === 'object' ? status.type : status,
+      status: statusType,
       current,
     })
 
@@ -47,14 +47,18 @@ export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
       counter: counter(),
       statusIcon: statusIcon(),
     }
-  }, [status, current])
+  }, [statusType, current])
 
   return (
     <span className={classNames.wrapper}>
       <span className={classNames.counter} aria-hidden>
         {stepNumber}
       </span>
-      <StepStatusIcon status={status} className={classNames.statusIcon} />
+      <StepStatusIcon
+        statusType={statusType}
+        statusText={statusText}
+        className={classNames.statusIcon}
+      />
     </span>
   )
 }

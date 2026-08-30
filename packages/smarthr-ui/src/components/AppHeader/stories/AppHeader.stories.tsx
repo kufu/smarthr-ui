@@ -15,3 +15,12 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const LazyFeatures: Story = {
+  args: {
+    fetchFeatures: () =>
+      new Promise((resolve) => {
+        setTimeout(() => resolve(args.features ?? []), 1000)
+      }),
+  },
+}

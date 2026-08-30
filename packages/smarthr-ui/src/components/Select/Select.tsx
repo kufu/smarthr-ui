@@ -24,7 +24,7 @@ type Optgroup<T extends string> = {
   options: Array<Option<T>>
 } & OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type AbstractProps<T extends string> = {
+type BaseProps<T extends string> = {
   /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
   /** フォームの値が変わったときに発火するコールバック関数 */
@@ -41,8 +41,8 @@ type AbstractProps<T extends string> = {
   blankLabel?: string
 }
 
-type Props<T extends string> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof AbstractProps<string> | 'children'>
+type Props<T extends string> = BaseProps<T> &
+  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children'>
 
 const classNameGenerator = tv({
   slots: {
@@ -112,20 +112,27 @@ const ActualSelect = <T extends string>(
       iconWrap: iconWrap(sizeProps),
       blankOptGroup: blankOptgroup(),
     }
-  }, [className, size])
-  const wrapperStyle = useMemo(
-    () => ({
-      width: typeof width === 'number' ? `${width}px` : width,
-    }),
-    [width],
-  )
-
-  const actualBlankLabel = blankLabel ?? ''
+  }, [size, className])
 
   return (
-    <span className={classNames.wrapper} style={wrapperStyle}>
+    <span
+      className={classNames.wrapper}
+      style={{
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
+    >
       <select
         {...rest}
+        ref={ref}
+        disabled={disabled}
+        // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
+        //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
+        //    - エラーメッセージが表示されない
+        //    - 問題のある入力フィールドまでスクロールしない
+        // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
+        // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
+        required={isIOS ? undefined : required}
+        aria-invalid={error || undefined}
         data-smarthr-ui-input="true"
         onChange={(e: ChangeEvent<HTMLSelectElement>) => {
           onChange?.(e)
@@ -140,19 +147,9 @@ const ActualSelect = <T extends string>(
             }
           }
         }}
-        aria-invalid={error || undefined}
-        disabled={disabled}
-        // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
-        //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
-        //    - エラーメッセージが表示されない
-        //    - 問題のある入力フィールドまでスクロールしない
-        // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
-        // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
-        required={isIOS ? undefined : required}
-        ref={ref}
         className={classNames.select}
       >
-        <BlankOption hasBlank={hasBlank}>{actualBlankLabel}</BlankOption>
+        <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}

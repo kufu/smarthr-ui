@@ -107,3 +107,31 @@ export const VRTForcedColors: StoryObj<typeof MultiCombobox> = {
     chromatic: { forcedColors: 'active' },
   },
 }
+
+const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const combobox = await canvas.findByRole('combobox')
+
+  combobox.focus()
+
+  const body = canvasElement.ownerDocument.body
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+// 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
+export const VRTOnRightEdge: StoryObj<typeof MultiCombobox> = {
+  render: (args) => (
+    <div className="shr-flex shr-h-screen shr-justify-end">
+      <MultiCombobox
+        {...args}
+        name="onRightEdge"
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+        dropdownWidth="30rem"
+        selectedItems={[]}
+      />
+    </div>
+  ),
+  play: playOnRightEdge,
+}

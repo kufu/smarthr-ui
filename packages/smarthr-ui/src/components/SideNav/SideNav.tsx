@@ -1,3 +1,5 @@
+'use client'
+
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -5,14 +7,14 @@ import { SideNavProvider } from './SideNavContext'
 
 import type { SideNavSizeType } from './SideNavItemButton'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** コンポーネントに適用するクラス名 */
   className?: string
 }> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof BaseProps>
 
 const ROUNDED = {
   t_l: '[&>.smarthr-ui-SideNav-item:first-child]:shr-rounded-tl-l',

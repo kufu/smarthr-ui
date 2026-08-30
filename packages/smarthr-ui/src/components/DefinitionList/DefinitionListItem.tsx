@@ -19,12 +19,12 @@ type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   term: ReactNode | ObjectTermType
   fullWidth?: boolean
   maxColumns?: number
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const termObjectConverter = (term: ReactNode): ObjectTermType => ({ text: term })
 
@@ -69,19 +69,19 @@ export const DefinitionListItem: FC<Props> = ({
       description: cs.description(),
     }
   }, [className, fullWidth])
-  const style = useMemo(
-    () => ({
-      flexBasis:
-        // fullWidth の方が強い
-        !fullWidth && maxColumns
-          ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
-          : undefined,
-    }),
-    [fullWidth, maxColumns, theme],
-  )
 
   return (
-    <Stack gap={0.25} className={classNames.wrapper} style={style}>
+    <Stack
+      gap={0.25}
+      className={classNames.wrapper}
+      style={{
+        flexBasis:
+          // fullWidth の方が強い
+          !fullWidth && maxColumns
+            ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
+            : undefined,
+      }}
+    >
       <DefinitionTerm styleType={term.styleType} className={classNames.term}>
         {term.text}
       </DefinitionTerm>

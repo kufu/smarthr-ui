@@ -36,7 +36,7 @@ type ObjectHeadingType = {
   unrecommendedTag?: HeadingTagTypes
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** パネルのタイトル */
   heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
@@ -48,7 +48,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<PanelElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
@@ -123,20 +123,16 @@ export const InformationPanel: FC<Props> = ({
   heading,
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProp = true,
   bold,
   className,
   children,
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProps)
+  const [active, setActive] = useState(activeProp)
   const id = useId()
   const contentId = `${id}-content`
-
-  useEffect(() => {
-    setActive(activeProps)
-  }, [activeProps])
 
   const classNames = useMemo(() => {
     const {
@@ -159,13 +155,12 @@ export const InformationPanel: FC<Props> = ({
     }
   }, [type, bold, className])
 
+  useEffect(() => {
+    setActive(activeProp)
+  }, [activeProp])
+
   return (
-    <Panel
-      {...rest}
-      as="section"
-      data-active={(active || false).toString()}
-      className={classNames.wrapper}
-    >
+    <Panel {...rest} as="section" data-active={active} className={classNames.wrapper}>
       <Sidebar align="baseline" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading

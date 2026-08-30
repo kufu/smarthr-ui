@@ -103,12 +103,13 @@ const OpenButton = memo<{ alt: ReactNode; onClick: () => void }>(({ onClick, alt
 ))
 
 const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => {
-  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+  const { isAppLauncherAvailable, handleOpenAppLauncher, setIsAppLauncherSelected } =
+    useContext(AppLauncherContext)
 
   return (
-    features &&
-    features.length > 0 && (
+    isAppLauncherAvailable && (
       <ActualFeatureButton
+        handleOpenAppLauncher={handleOpenAppLauncher}
         setIsAppLauncherSelected={setIsAppLauncherSelected}
         className={className}
       >
@@ -119,9 +120,16 @@ const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children
 })
 
 const ActualFeatureButton: FC<
-  PropsWithChildren<{ className: string; setIsAppLauncherSelected: (selected: boolean) => void }>
-> = ({ setIsAppLauncherSelected, children, className }) => {
-  const onClick = useCallback(() => setIsAppLauncherSelected(true), [setIsAppLauncherSelected])
+  PropsWithChildren<{
+    className: string
+    handleOpenAppLauncher: () => void
+    setIsAppLauncherSelected: (selected: boolean) => void
+  }>
+> = ({ handleOpenAppLauncher, setIsAppLauncherSelected, children, className }) => {
+  const handleClick = useCallback(() => {
+    handleOpenAppLauncher()
+    setIsAppLauncherSelected(true)
+  }, [handleOpenAppLauncher, setIsAppLauncherSelected])
 
   return (
     <div className={className}>
@@ -130,7 +138,7 @@ const ActualFeatureButton: FC<
         wide
         prefix={<FaToolboxIcon />}
         suffix={<FaAngleRightIcon className="shr-ms-auto" />}
-        onClick={onClick}
+        onClick={handleClick}
       >
         <Translate>{children}</Translate>
       </Button>
@@ -143,7 +151,7 @@ const NavigationAccordion = memo<
 >(({ appName, menuClose, className }) => {
   const { navigations } = useContext(NavigationContext)
 
-  const children = <Navigation navigations={navigations} onClickNavigation={menuClose} />
+  const children = <Navigation navigations={navigations} handleClickNavigation={menuClose} />
 
   return navigations.length > 0 && appName ? (
     <ActualNavigationAccordion appName={appName} className={className}>
@@ -204,11 +212,11 @@ const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
 const ActualReleaseNoteButton = memo<
   PropsWithChildren<{ className: string; setIsReleaseNoteSelected: (selected: boolean) => void }>
 >(({ setIsReleaseNoteSelected, children, className }) => {
-  const onClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
+  const handleClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
 
   return (
     <div className={className}>
-      <MenuButton onClick={onClick}>{children}</MenuButton>
+      <MenuButton handleClick={handleClick}>{children}</MenuButton>
     </div>
   )
 })

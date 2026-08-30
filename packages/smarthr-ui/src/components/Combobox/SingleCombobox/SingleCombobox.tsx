@@ -11,7 +11,7 @@ import {
   memo,
   useCallback,
   useEffect,
-  useImperativeHandle,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -19,20 +19,22 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
-import { useListbox } from '../useListbox'
+import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { ComboboxItem, AbstractProps as ComboboxProps } from '../types'
+import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
-type AbstractProps<T> = ComboboxProps<T> & {
+type BaseProps<T> = ComboboxProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -71,8 +73,7 @@ type AbstractProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = AbstractProps<T> &
-  Omit<ComponentPropsWithoutRef<'input'>, keyof AbstractProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -86,7 +87,8 @@ const EMPTY_INPUT_CHANGE_EVENT = {
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-SingleCombobox shr-inline-block',
+    wrapper:
+      'smarthr-ui-SingleCombobox shr-inline-block [&:has(.smarthr-ui-Input-input:disabled)]:shr-cursor-not-allowed',
     input: 'smarthr-ui-SingleCombobox-input shr-w-full',
     caretDownLayout: [
       'shr-relative -shr-me-0.5 shr-p-0.5',
@@ -99,31 +101,20 @@ const classNameGenerator = tv({
       'shr-group/clearButton',
       'shr-me-0.5',
       'focus-visible:shr-shadow-none',
+      '[[data-clear-button-hidden=true]_&]:shr-hidden',
     ],
     clearButtonIcon: [
       'shr-block',
       'group-focus-visible/clearButton:shr-focus-indicator group-focus-visible/clearButton:shr-rounded-full',
     ],
   },
-  variants: {
-    disabled: {
-      true: {
-        wrapper: 'shr-cursor-not-allowed',
-      },
-    },
-    hidden: {
-      true: {
-        clearButton: 'shr-hidden',
-      },
-    },
-  },
 })
 
 type SuffixButtonsProps = {
-  onClickClear: (e: MouseEvent) => void
   clearButtonRef: RefObject<HTMLButtonElement>
-  onClickIcon: (e: MouseEvent) => void
   caretIconColor: string
+  handleClickClear: (e: MouseEvent) => void
+  handleClickIcon: (e: MouseEvent) => void
   classNames: {
     clearButton: string
     clearButtonIcon: string
@@ -134,15 +125,15 @@ type SuffixButtonsProps = {
 
 const SuffixButtons = memo<SuffixButtonsProps>(
   ({
-    onClickClear,
     clearButtonRef,
-    onClickIcon: onDelegateClickIcon,
     caretIconColor,
+    handleClickClear,
+    handleClickIcon: handleDelegateClickIcon,
     classNames,
   }) => (
     <>
       <UnstyledButton
-        onClick={onClickClear}
+        onClick={handleClickClear}
         ref={clearButtonRef}
         className={classNames.clearButton}
       >
@@ -156,7 +147,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
       </UnstyledButton>
       <span
         role="presentation"
-        onClick={onDelegateClickIcon}
+        onClick={handleDelegateClickIcon}
         className={classNames.caretDownLayout}
       >
         <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
@@ -196,12 +187,15 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
-  const outerRef = useRef<HTMLDivElement>(null)
+  const generatedInputId = useId()
+  const inputId = id || generatedInputId
+  const triggerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -209,27 +203,6 @@ const ActualSingleCombobox = <T,>(
   const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-
-  const latest = useLatest({
-    onChange,
-    onChangeInput,
-    onAdd,
-    onSelect,
-    onClear,
-    onClearClick,
-    onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    defaultItem,
-    selectedItem,
-    isFocused,
-    isExpanded,
-    isComposing,
-    isEditing,
-  })
-
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const { options } = useSingleOptions({
     items,
@@ -239,19 +212,22 @@ const ActualSingleCombobox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const { renderListBox, activeOption, onKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>({
-    options,
-    dropdownHelpMessage,
-    dropdownWidth,
-    onAdd,
-    onSelect: useCallback(
-      (selected: ComboboxItem<T>) => {
-        latest.onSelect?.(selected)
-        latest.onChangeSelected?.(selected)
+  const selectFrame = useAnimationFrame()
+
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
+    {
+      options,
+      dropdownHelpMessage,
+      dropdownWidth,
+      onAdd,
+      // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
+      onSelect: (selected: ComboboxItem<T>) => {
+        onSelect?.(selected)
+        onChangeSelected?.(selected)
 
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        selectFrame.request(() => {
           setIsExpanded(false)
           // HINT:
           // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
@@ -259,127 +235,102 @@ const ActualSingleCombobox = <T,>(
           //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
           //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
           //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
-          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         })
 
         setIsEditing(false)
       },
-      [latest],
-    ),
+      isExpanded,
+      isLoading,
+      triggerRef,
+      noResultText,
+      inputId,
+    },
+  )
+
+  const latest = useLatest({
+    onChange,
+    onChangeInput,
+    onSelect,
+    onClear,
+    onClearClick,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    handleKeyDownListBox,
+    defaultItem,
+    selectedItem,
+    isFocused,
     isExpanded,
-    isLoading,
-    triggerRef: outerRef,
-    noResultText,
+    isComposing,
+    isEditing,
+    disabled,
+    readOnly,
   })
 
-  const selectDefaultItem = useCallback(() => {
-    if (latest.onSelect && latest.defaultItem) {
-      latest.onSelect(latest.defaultItem)
-    }
-  }, [latest])
-
-  const focus = useCallback(() => {
-    latest.onFocus?.()
-    inputRef.current?.focus()
-    setIsFocused(true)
-
-    if (!latest.isFocused) {
-      setIsExpanded(true)
-    }
-  }, [latest])
-  const unfocus = useCallback(() => {
-    if (!latest.isFocused) return
-
-    latest.onBlur?.()
-
-    setIsFocused(false)
-    setIsExpanded(false)
-    setIsEditing(false)
-
-    if (latest.selectedItem) {
-      setInputValue(innerText(latest.selectedItem.label))
-    } else {
-      selectDefaultItem()
-    }
-  }, [selectDefaultItem, latest])
-  const onClickClear = useCallback(
-    (e: MouseEvent) => {
-      e.stopPropagation()
-
-      let isExecutedPreventDefault = false
-
-      latest.onClearClick?.({
-        ...e,
-        preventDefault: () => {
-          e.preventDefault()
-          isExecutedPreventDefault = true
-        },
-      })
-
-      if (!isExecutedPreventDefault) {
-        latest.onClear?.()
-        latest.onChangeSelected?.(null)
-
-        inputRef.current?.focus()
-
-        setIsFocused(true)
-        setIsExpanded(true)
+  const functions = useMemo(() => {
+    const selectDefaultItem = () => {
+      if (latest.onSelect && latest.defaultItem) {
+        latest.onSelect(latest.defaultItem)
       }
-    },
-    [latest],
-  )
-  const onClickInput = useCallback(
-    (e: MouseEvent) => {
-      if (disabled || readOnly) {
+    }
+    const unfocus = () => {
+      if (!latest.isFocused) return
+
+      latest.onBlur?.()
+
+      setIsFocused(false)
+      setIsExpanded(false)
+      setIsEditing(false)
+
+      if (latest.selectedItem) {
+        setInputValue(innerText(latest.selectedItem.label))
+      } else {
+        selectDefaultItem()
+      }
+    }
+
+    return {
+      selectDefaultItem,
+      unfocus,
+      handleFocus: () => {
+        latest.onFocus?.()
+        inputRef.current?.focus()
+        setIsFocused(true)
+
+        if (!latest.isFocused) {
+          setIsExpanded(true)
+        }
+      },
+      handleClickClear: (e: MouseEvent) => {
         e.stopPropagation()
 
-        return
-      }
+        let isExecutedPreventDefault = false
 
-      inputRef.current?.focus()
+        latest.onClearClick?.({
+          ...e,
+          preventDefault: () => {
+            e.preventDefault()
+            isExecutedPreventDefault = true
+          },
+        })
 
-      if (!latest.isExpanded) {
-        setIsExpanded(true)
-      }
-    },
-    [disabled, readOnly, latest],
-  )
-  const actualOnChangeInput = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      latest.onChange?.(e)
-      latest.onChangeInput?.(e)
+        if (!isExecutedPreventDefault) {
+          latest.onClear?.()
+          latest.onChangeSelected?.(null)
 
-      if (!latest.isEditing) setIsEditing(true)
+          inputRef.current?.focus()
 
-      const { value } = e.currentTarget
-
-      setInputValue(value)
-
-      if (value === '') {
-        latest.onClear?.()
-        latest.onChangeSelected?.(null)
-      }
-    },
-    [latest],
-  )
-  const onCompositionStart = useCallback(() => setIsComposing(true), [])
-  const onCompositionEnd = useCallback(() => setIsComposing(false), [])
-  const onKeyDownInput = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (latest.isComposing) {
-        return
-      }
-
-      if (ESCAPE_KEY_REGEX.test(e.key)) {
-        if (latest.isExpanded) {
-          e.stopPropagation()
-          setIsExpanded(false)
+          setIsFocused(true)
+          setIsExpanded(true)
         }
-      } else if (e.key === 'Tab') {
-        unfocus()
-      } else {
-        if (ARROW_UP_DOWN_REGEX.test(e.key)) {
-          e.preventDefault()
+      },
+      handleClickInput: (e: MouseEvent) => {
+        if (latest.disabled || latest.readOnly) {
+          e.stopPropagation()
+
+          return
         }
 
         inputRef.current?.focus()
@@ -387,23 +338,60 @@ const ActualSingleCombobox = <T,>(
         if (!latest.isExpanded) {
           setIsExpanded(true)
         }
-      }
-      onKeyDownListBox(e)
-    },
-    [unfocus, onKeyDownListBox, latest],
-  )
+      },
+      handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
+        latest.onChange?.(e)
+        latest.onChangeInput?.(e)
 
-  // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
-  // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
-  // submitイベントが発生し、formが送信される場合がある
-  const handleKeyPress = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') e.preventDefault()
+        if (!latest.isEditing) setIsEditing(true)
 
-      latest.onKeyPress?.(e)
-    },
-    [latest],
-  )
+        const { value } = e.currentTarget
+
+        setInputValue(value)
+
+        if (value === '') {
+          latest.onClear?.()
+          latest.onChangeSelected?.(null)
+        }
+      },
+      handleCompositionStart: () => setIsComposing(true),
+      handleCompositionEnd: () => setIsComposing(false),
+      // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+      // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+      // submitイベントが発生し、formが送信される場合がある
+      handleKeyPress: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') e.preventDefault()
+
+        latest.onKeyPress?.(e)
+      },
+      handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (latest.isComposing) {
+          return
+        }
+
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
+          if (latest.isExpanded) {
+            e.stopPropagation()
+            setIsExpanded(false)
+          }
+        } else if (e.key === 'Tab') {
+          unfocus()
+        } else {
+          if (ARROW_UP_DOWN_REGEX.test(e.key)) {
+            e.preventDefault()
+          }
+
+          inputRef.current?.focus()
+
+          if (!latest.isExpanded) {
+            setIsExpanded(true)
+          }
+        }
+
+        latest.handleKeyDownListBox(e)
+      },
+    }
+  }, [latest])
 
   const caretIconColor = isFocused
     ? theme.textColor.black
@@ -412,10 +400,16 @@ const ActualSingleCombobox = <T,>(
       : theme.textColor.grey
 
   useClick(
-    useMemo(() => [outerRef, listBoxRef, clearButtonRef], [listBoxRef]),
-    isFocused || selectedItem ? NOOP : selectDefaultItem,
-    unfocus,
+    [triggerRef, listBoxRef, clearButtonRef],
+    isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
+    functions.unfocus,
   )
+
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
+
+  const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
 
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
   const selectedItemLabelText = innerText(selectedItem?.label)
@@ -423,37 +417,35 @@ const ActualSingleCombobox = <T,>(
     setInputValue(selectedItemLabelText)
   }, [selectedItemLabelText])
 
-  const wrapperStyle = useMemo(
-    () => ({
-      ...style,
-      width: typeof width === 'number' ? `${width}px` : width,
-    }),
-    [style, width],
-  )
-
-  const hasSelectedItem = selectedItem !== null
-
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
       classNameGenerator()
 
     return {
-      wrapper: wrapper({ disabled, className }),
+      wrapper: wrapper({ className }),
       input: input(),
       caretDownLayout: caretDownLayout(),
       caretDownIcon: caretDownIcon(),
-      clearButton: clearButton({
-        hidden: !hasSelectedItem || disabled || readOnly,
-      }),
+      clearButton: clearButton(),
       clearButtonIcon: clearButtonIcon(),
     }
-  }, [hasSelectedItem, disabled, readOnly, className])
+  }, [className])
 
   return (
-    <div role="group" className={classNames.wrapper} style={wrapperStyle} ref={outerRef}>
+    <div
+      ref={triggerRef}
+      role="group"
+      className={classNames.wrapper}
+      style={{
+        ...style,
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
+      data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
+    >
       <Input
         {...rest}
-        ref={inputRef}
+        ref={mergedRef}
+        id={inputId}
         type="text"
         role="combobox"
         name={name}
@@ -469,33 +461,28 @@ const ActualSingleCombobox = <T,>(
         aria-autocomplete="list"
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
         placeholder={placeholder}
-        onClick={onClickInput}
-        onChange={actualOnChangeInput}
-        onFocus={isFocused ? undefined : focus}
-        onCompositionStart={onCompositionStart}
-        onCompositionEnd={onCompositionEnd}
-        onKeyDown={onKeyDownInput}
-        onKeyPress={handleKeyPress}
+        onClick={functions.handleClickInput}
+        onChange={functions.handleChangeInput}
+        onFocus={isFocused ? undefined : functions.handleFocus}
+        onCompositionStart={functions.handleCompositionStart}
+        onCompositionEnd={functions.handleCompositionEnd}
+        onKeyDown={functions.handleKeyDownInput}
+        onKeyPress={functions.handleKeyPress}
         error={error}
         prefix={prefix}
         suffix={
           <SuffixButtons
-            onClickClear={onClickClear}
             clearButtonRef={clearButtonRef}
-            onClickIcon={onClickInput}
             caretIconColor={caretIconColor}
-            classNames={{
-              clearButton: classNames.clearButton,
-              clearButtonIcon: classNames.clearButtonIcon,
-              caretDownLayout: classNames.caretDownLayout,
-              caretDownIcon: classNames.caretDownIcon,
-            }}
+            handleClickClear={functions.handleClickClear}
+            handleClickIcon={functions.handleClickInput}
+            classNames={classNames}
           />
         }
         className={classNames.input}
         data-smarthr-ui-input="true"
       />
-      {!readOnly && renderListBox()}
+      {!readOnly && <ListBox {...listBoxProps} />}
     </div>
   )
 }

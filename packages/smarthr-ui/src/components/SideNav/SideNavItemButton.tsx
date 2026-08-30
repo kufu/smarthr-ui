@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
@@ -15,7 +17,7 @@ import { useSideNavContext } from './SideNavContext'
 
 export type SideNavSizeType = 'M' | 'S'
 
-type AbstractProps = {
+type BaseProps = {
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
   /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
@@ -24,12 +26,12 @@ type AbstractProps = {
   current?: boolean
 }
 
-type AbstractButtonProps = AbstractProps & {
+type AbstractButtonProps = BaseProps & {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-type AbstractAnchorProps<T extends ElementType = 'a'> = AbstractProps & {
+type AbstractAnchorProps<T extends ElementType = 'a'> = BaseProps & {
   href: string
   /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
@@ -159,7 +161,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 }
 
 const BodyCluster = memo<
-  Pick<AbstractProps, 'prefix' | 'suffix'> & {
+  Pick<BaseProps, 'prefix' | 'suffix'> & {
     children: ReactNode
     classNames: { body: string; bodyText: string }
   }
