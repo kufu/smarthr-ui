@@ -79,7 +79,7 @@ export const BarChart: React.FC<Props> = ({
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
-      <VisuallyHiddenText id={chartId} aria-live="polite"></VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <Bar
         ref={chartRef}
         role="application"

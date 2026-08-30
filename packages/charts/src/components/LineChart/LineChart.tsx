@@ -70,7 +70,7 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
-      <VisuallyHiddenText id={chartId} aria-live="polite"></VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <Line
         ref={chartRef}
         role="application"
