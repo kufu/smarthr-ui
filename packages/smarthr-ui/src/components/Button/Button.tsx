@@ -3,7 +3,7 @@
 import { type ButtonHTMLAttributes, forwardRef, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { usePortal } from '../../hooks/usePortal'
+import { usePortal } from '../../hooks/client/usePortal'
 import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 

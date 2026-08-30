@@ -10,8 +10,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/client/useTheme'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 

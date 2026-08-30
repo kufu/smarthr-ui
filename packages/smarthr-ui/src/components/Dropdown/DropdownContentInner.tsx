@@ -13,8 +13,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
-import { useTheme } from '../../hooks/useTheme'
 import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
