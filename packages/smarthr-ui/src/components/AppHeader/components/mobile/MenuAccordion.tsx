@@ -36,7 +36,7 @@ const ActualMenuAccordion: FC<Props> = ({ isOpen, children, ...rest }) => {
 
   return (
     <Section>
-      <AccordionHeading {...rest} isOpen={isOpen} id={id} />
+      <AccordionHeading {...rest} id={id} isOpen={isOpen} />
       <div id={id}>{isOpen && <div className="shr-mt-0.5">{children}</div>}</div>
     </Section>
   )
@@ -54,9 +54,9 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
 
         <Button
           size="S"
+          className="[&&]:shr-min-h-0 [&&]:shr-p-0.25"
           aria-expanded={isOpen}
           aria-controls={id}
-          className="[&&]:shr-min-h-0 [&&]:shr-p-0.25"
           onClick={onClickButton}
         >
           {isOpen ? (

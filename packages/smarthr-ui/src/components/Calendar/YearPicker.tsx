@@ -86,9 +86,9 @@ const ActualYearPicker: FC<ActualProps> = ({
         {yearArray.map((year) => (
           <YearButton
             key={year}
+            selected={selectedYear === year}
             year={year}
             thisYear={thisYear}
-            selected={selectedYear === year}
             handleClick={handleSelectYear}
           />
         ))}
@@ -110,10 +110,8 @@ const YearButton = memo<{
     <UnstyledButton
       ref={isThisYear ? FOCUS_CALLBACK_REF : null}
       value={year}
-      aria-pressed={selected}
-      onClick={handleClick}
       className={CLASS_NAMES.yearButton}
-      data-this-year={isThisYear}
+      aria-pressed={selected}
       aria-label={
         isThisYear
           ? localize({
@@ -122,6 +120,8 @@ const YearButton = memo<{
             })
           : undefined
       }
+      data-this-year={isThisYear}
+      onClick={handleClick}
     >
       <span className={CLASS_NAMES.yearWrapper}>{year}</span>
     </UnstyledButton>

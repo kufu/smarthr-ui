@@ -31,7 +31,7 @@ export const Size: StoryObj<typeof Chip> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'S'].map((size) => (
-        <Chip {...args} size={size as any} key={String(size)} />
+        <Chip {...args} key={String(size)} size={size as any} />
       ))}
     </Stack>
   ),
@@ -42,7 +42,7 @@ export const Color: StoryObj<typeof Chip> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'grey', 'blue', 'green', 'orange', 'red'].map((color) => (
-        <Chip {...args} color={color as any} key={String(color)} />
+        <Chip {...args} key={String(color)} color={color as any} />
       ))}
     </Stack>
   ),

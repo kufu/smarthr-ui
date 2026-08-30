@@ -43,7 +43,7 @@ export const Padding: StoryObj<typeof Groupbox> = {
   render: (args) => (
     <Stack>
       {[undefined, ...basePadding].map((padding) => (
-        <Groupbox {...args} padding={padding} key={padding}>
+        <Groupbox {...args} key={padding} padding={padding}>
           padding: {padding}
         </Groupbox>
       ))}
@@ -60,7 +60,7 @@ export const BgColor: StoryObj<typeof Groupbox> = {
   render: (args) => (
     <Stack>
       {Object.keys(backgroundColor).map((bgColor) => (
-        <Groupbox {...args} bgColor={bgColor as any} key={bgColor}>
+        <Groupbox {...args} key={bgColor} bgColor={bgColor as any}>
           {bgColor}
         </Groupbox>
       ))}

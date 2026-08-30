@@ -242,11 +242,13 @@ const MemoizedTriggerButton = memo<
 
   return (
     <DropdownTrigger
-      className={classNames.triggerWrapper}
       tooltip={{ show: !!onlyIconTrigger, message: children }}
+      className={classNames.triggerWrapper}
     >
       <Button
         {...rest}
+        size={triggerSize}
+        className={classNames.triggerButton}
         suffix={
           !onlyIconTrigger && (
             <FaCaretDownIcon
@@ -266,8 +268,6 @@ const MemoizedTriggerButton = memo<
             />
           )
         }
-        size={triggerSize}
-        className={classNames.triggerButton}
       >
         <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
       </Button>

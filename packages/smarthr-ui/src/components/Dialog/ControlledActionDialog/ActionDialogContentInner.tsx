@@ -100,12 +100,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         <Cluster justify="space-between">
           {subActionArea}
           <ActionAreaCluster
+            loading={calcedResponseStatus.isProcessing}
+            className={CLASS_NAMES.buttonArea}
             handleClickClose={handleClickClose}
             handleClickAction={handleClickAction}
             closeButton={closeButton}
             actionButton={actionButton}
-            loading={calcedResponseStatus.isProcessing}
-            className={CLASS_NAMES.buttonArea}
           />
         </Cluster>
         <DialogContentResponseStatusMessage
@@ -135,14 +135,14 @@ const ActionAreaCluster = memo<
   return (
     <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
       <CloseButton
-        handleClick={handleClickClose}
         disabled={closeButton.disabled || loading}
         text={closeButton.text}
+        handleClick={handleClickClose}
       />
       <ActionButton
-        variant={actionButton.theme}
         disabled={actionButton.disabled}
         loading={loading}
+        variant={actionButton.theme}
         handleClick={handleClickActionWithHelpers}
       >
         {actionButton.text}
@@ -161,11 +161,11 @@ const ActionButton = memo<
 >(({ variant = 'primary', disabled, loading, handleClick, children }) => (
   <Button
     type="submit"
-    variant={variant}
     disabled={disabled}
     loading={loading}
-    onClick={handleClick}
+    variant={variant}
     className="smarthr-ui-Dialog-actionButton"
+    onClick={handleClick}
   >
     {children}
   </Button>
@@ -176,7 +176,7 @@ const CloseButton = memo<{
   disabled: boolean
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (
-  <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+  <Button disabled={disabled} className="smarthr-ui-Dialog-closeButton" onClick={handleClick}>
     {text ?? <Localizer id="smarthr-ui/ActionDialog/closeButtonLabel" defaultText="キャンセル" />}
   </Button>
 ))

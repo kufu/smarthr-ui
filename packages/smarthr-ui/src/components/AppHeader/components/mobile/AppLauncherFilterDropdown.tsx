@@ -44,13 +44,13 @@ const CLASS_NAMES = (() => {
 
 export const AppLauncherFilterDropdown = memo<Props>(({ page, handleSelectPage }) => (
   <Dropdown>
-    <MemoizedDropdownTrigger className={CLASS_NAMES.trigger} page={page} />
+    <MemoizedDropdownTrigger page={page} className={CLASS_NAMES.trigger} />
     <DropdownContent>
       <ContentBody
         page={page}
-        handleSelectPage={handleSelectPage}
         className={CLASS_NAMES.contentBody}
         buttonClassName={CLASS_NAMES.contentButton}
+        handleSelectPage={handleSelectPage}
       />
     </DropdownContent>
   </Dropdown>
@@ -59,7 +59,7 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, handleSelectPage }
 const MemoizedDropdownTrigger = memo<{ page: Launcher['page']; className: string }>(
   ({ page, className }) => (
     <DropdownTrigger>
-      <Button className={className} size="S" suffix={<FaCaretDownIcon />}>
+      <Button size="S" className={className} suffix={<FaCaretDownIcon />}>
         <Translate>
           {page === 'favorite' ? (
             <Localizer
@@ -96,23 +96,23 @@ const ContentBody = memo<
 
   const buttonPrefix = (
     <FaCheckIcon
-      color={theme.textColor.main}
       alt={
         <Translate>
           <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected" defaultText="選択中" />
         </Translate>
       }
+      color={theme.textColor.main}
     />
   )
 
   return (
     <div role="listbox" className={className}>
       <Button
-        value="favorite"
         role="option"
+        value="favorite"
+        className={buttonClassName}
         aria-selected={isFavorite}
         onClick={handleClickButton}
-        className={buttonClassName}
         prefix={isFavorite && buttonPrefix}
       >
         <Translate>
@@ -123,11 +123,11 @@ const ContentBody = memo<
         </Translate>
       </Button>
       <Button
-        value="all"
         role="option"
+        value="all"
+        className={buttonClassName}
         aria-selected={!isFavorite}
         onClick={handleClickButton}
-        className={buttonClassName}
         prefix={!isFavorite && buttonPrefix}
       >
         <Translate>

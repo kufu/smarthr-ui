@@ -17,8 +17,8 @@ describe('ControlledMessageDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ControlledMessageDialog</Button>
         <ControlledMessageDialog
           isOpen={isOpen}
-          heading="ControlledMessageDialog"
           onClickClose={() => setIsOpen(false)}
+          heading="ControlledMessageDialog"
         >
           <p>説明です</p>
         </ControlledMessageDialog>

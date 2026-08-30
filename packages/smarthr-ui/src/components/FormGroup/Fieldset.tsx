@@ -192,7 +192,7 @@ const LabelComponent = memo<LabelComponentProps>(
     statusLabels,
   }) => {
     const body = (
-      <LabelBody styleType={labelType} icon={labelIcon} statusLabels={statusLabels}>
+      <LabelBody statusLabels={statusLabels} styleType={labelType} icon={labelIcon}>
         {label}
       </LabelBody>
     )

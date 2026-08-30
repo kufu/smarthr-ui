@@ -20,9 +20,9 @@ describe('Dialog (Portal Parent)', () => {
         <Button onClick={() => setIsOpen(true)}>Dialog を開く</Button>
         <Dialog
           isOpen={isOpen}
-          onPressEscape={() => setIsOpen(false)}
-          ariaLabel="Dialog"
           portalParent={portalParentRef}
+          ariaLabel="Dialog"
+          onPressEscape={() => setIsOpen(false)}
         >
           <Section>
             <Heading>Dialog</Heading>

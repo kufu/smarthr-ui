@@ -15,12 +15,12 @@ export default {
         [false, true].map((disabled) => (
           <Fieldset
             {...args}
+            key={`${unrecommendedHide}${disabled}`}
+            disabled={disabled}
             legend={{
               ...args.legend,
               unrecommendedHide,
             }}
-            disabled={disabled}
-            key={`${unrecommendedHide}${disabled}`}
           >
             <Stack>
               <Fieldset

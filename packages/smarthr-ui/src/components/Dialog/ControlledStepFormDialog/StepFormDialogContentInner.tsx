@@ -170,9 +170,9 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             text={heading.sub ? heading.text : `${heading.text}${stepText}`}
           />
           <DialogBody
+            ref={scrollerRef}
             contentPadding={contentPadding}
             contentBgColor={contentBgColor}
-            ref={scrollerRef}
           >
             {children}
           </DialogBody>
@@ -180,27 +180,27 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
-                  handleClick={functions.handleBackAction}
-                  variant={backButton.theme}
                   disabled={backButton.disabled || calcedResponseStatus.isProcessing}
                   text={backButton.text}
+                  variant={backButton.theme}
+                  handleClick={functions.handleBackAction}
                 />
               )}
               <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
-                    handleClick={functions.handleCloseAction}
-                    variant={closeButton.theme}
                     disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
                     text={closeButton.text}
+                    variant={closeButton.theme}
+                    handleClick={functions.handleCloseAction}
                   />
                 )}
                 {!submitButton.hidden && (
                   <SubmitButton
-                    variant={submitButton.theme}
                     disabled={submitButton.disabled}
                     loading={calcedResponseStatus.isProcessing}
                     text={submitButton.text}
+                    variant={submitButton.theme}
                   />
                 )}
               </Cluster>
@@ -223,10 +223,10 @@ const BackButton = memo<{
   text: ReactNode
 }>(({ handleClick, variant, disabled, text }) => (
   <Button
-    onClick={handleClick}
-    variant={variant}
     disabled={disabled}
+    variant={variant}
     className="smarthr-ui-Dialog-backButton"
+    onClick={handleClick}
   >
     {text}
   </Button>
@@ -239,10 +239,10 @@ const CloseButton = memo<{
   text: ReactNode
 }>(({ handleClick, variant, disabled, text }) => (
   <Button
-    onClick={handleClick}
-    variant={variant}
     disabled={disabled}
+    variant={variant}
     className="smarthr-ui-Dialog-closeButton"
+    onClick={handleClick}
   >
     {text}
   </Button>
@@ -256,9 +256,9 @@ const SubmitButton = memo<{
 }>(({ variant, disabled, loading, text }) => (
   <Button
     type="submit"
-    variant={variant}
     disabled={disabled}
     loading={loading}
+    variant={variant}
     className="smarthr-ui-Dialog-actionButton"
   >
     {text}
