@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 // TODO: React v18を切れたらclientから移動できるか確認
-import { useCallbackRefCleanupForReact18 } from './client/useCallbackRefCleanupForReact18'
+import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact18'
 
 // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
 // Esc is a IE/Edge specific value
