@@ -10,9 +10,9 @@ import {
   useState,
 } from 'react'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useOnce } from '../../../hooks/client/useOnce'
 import { useLatest } from '../../../hooks/useLatest'
-import { useMergeRefs } from '../../../hooks/useMergeRefs'
-import { useOnce } from '../../../hooks/useOnce'
 import { formatNumericString } from '../../../libs/formatNumericString'
 import { Input } from '../Input'
 
@@ -92,9 +92,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         type="text"
         value={value}
         defaultValue={defaultValue}
+        className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
-        className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )
   },

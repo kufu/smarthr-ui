@@ -156,18 +156,18 @@ export const DialogContentInner: FC<Props> = ({
         style={actualWidth ? { width: actualWidth } : undefined}
       >
         <Overlay
-          handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
           className={classNames.background}
+          handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
         />
         <div
           {...rest}
           role="dialog"
+          className={classNames.inner}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
-          className={classNames.inner}
         >
-          <FocusTrap firstFocusTarget={firstFocusTarget} ref={focusTrapRef}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>
@@ -179,6 +179,6 @@ export const DialogContentInner: FC<Props> = ({
 const Overlay = memo<{ handleClickOverlay: (() => void) | undefined; className: string }>(
   ({ handleClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    <div onClick={handleClickOverlay} className={className} role="presentation" />
+    <div role="presentation" className={className} onClick={handleClickOverlay} />
   ),
 )

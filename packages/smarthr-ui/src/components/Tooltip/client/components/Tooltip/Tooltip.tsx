@@ -18,7 +18,7 @@ import {
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
-import { useEnhancedEffect } from '../../../../../hooks/useEnhancedEffect'
+import { useEnhancedEffect } from '../../../../../hooks/client/useEnhancedEffect'
 import { useLatest } from '../../../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
@@ -197,6 +197,7 @@ export const Tooltip: FC<Props> = ({
       {...rest}
       ref={ref}
       tabIndex={actualTabIndex}
+      className={actualClassName}
       aria-describedby={
         isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
       }
@@ -206,16 +207,15 @@ export const Tooltip: FC<Props> = ({
       onPointerLeave={functions.handlePointerLeave}
       onTouchEnd={functions.handleTouchEnd}
       onBlur={functions.handleBlur}
-      className={actualClassName}
     >
       {portalRoot &&
         createPortal(
           <TooltipPortal
             messageId={messageId}
-            message={message}
             isVisible={isVisible}
             parentRect={rect}
             isIcon={isIcon}
+            message={message}
           />,
           portalRoot,
         )}

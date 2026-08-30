@@ -161,13 +161,13 @@ const ActualPagination: FC<Props> = ({
     <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
       <Reel onClick={functions.handleDelegateClick}>
         <ItemButtons
+          linkAs={linkAs}
           total={total}
           current={current}
-          padding={padding}
           withoutNumbers={withoutNumbers}
           hrefTemplate={functions.actualHrefTemplate}
+          padding={padding}
           classNames={classNames}
-          linkAs={linkAs}
         />
       </Reel>
     </Nav>
@@ -217,10 +217,10 @@ const ItemButtons = memo<
       {pageNumbers.map((page) => (
         <NumberItemButton
           key={page}
-          page={page}
-          disabled={page === current}
-          hrefTemplate={hrefTemplate}
           linkAs={linkAs}
+          disabled={page === current}
+          page={page}
+          hrefTemplate={hrefTemplate}
         />
       ))}
       <li className={classNames.nextListItem}>

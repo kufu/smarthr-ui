@@ -64,39 +64,39 @@ export const FormGroup: FC<Props> = ({
   return (
     <Stack
       {...rest}
-      ref={wrapperRef}
       as={as}
+      ref={wrapperRef}
       gap={innerMargin ?? 0.5}
       className={classNames.wrapper}
     >
       <LabelComponent
-        managedHtmlFor={label.htmlFor}
         managedLabelId={label.id}
+        managedHtmlFor={label.htmlFor}
         unrecommendedHideLabel={label.unrecommendedHide}
         labelType={label.styleType}
-        label={label.text}
         labelIcon={label.icon}
         statusLabels={actualStatusLabels}
+        label={label.text}
         subActionArea={subActionArea}
       />
       {helpMessage && (
-        <p className="smarthr-ui-FormControl-helpMessage" id={helpMessageId}>
+        <p id={helpMessageId} className="smarthr-ui-FormControl-helpMessage">
           {helpMessage}
         </p>
       )}
       {exampleMessage && (
         <Text
           as="p"
-          color="TEXT_GREY"
-          italic
           id={exampleMessageId}
+          italic
+          color="TEXT_GREY"
           className="smarthr-ui-FormControl-exampleMessage"
         >
           {exampleMessage}
         </Text>
       )}
       {visibleErrorMessages && (
-        <div id={errorMessagesId} className="shr-list-none" role="alert">
+        <div role="alert" id={errorMessagesId} className="shr-list-none">
           {errorMessages.map((message, index) => (
             <p key={index}>
               <Text
@@ -115,9 +115,9 @@ export const FormGroup: FC<Props> = ({
       {supplementaryMessage && (
         <Text
           as="p"
+          id={supplementaryMessageId}
           size="S"
           color="TEXT_GREY"
-          id={supplementaryMessageId}
           className="smarthr-ui-FormControl-supplementaryMessage"
         >
           {supplementaryMessage}
@@ -136,7 +136,7 @@ export const LabelBody: FC<
       <span className="smarthr-ui-FormControl-labelText">{children}</span>
     </Text>
     {statusLabels.length > 0 && (
-      <Cluster gap={0.25} as="span">
+      <Cluster as="span" gap={0.25}>
         {statusLabels}
       </Cluster>
     )}

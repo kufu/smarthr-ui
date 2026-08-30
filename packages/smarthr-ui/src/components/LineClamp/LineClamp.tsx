@@ -107,8 +107,8 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
-      <span aria-hidden className={classNames.shadowElementWrapper}>
-        <span className={classNames.shadowElement} ref={shadowRef}>
+      <span className={classNames.shadowElementWrapper} aria-hidden>
+        <span ref={shadowRef} className={classNames.shadowElement}>
           {children}
         </span>
       </span>

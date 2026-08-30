@@ -11,9 +11,9 @@ export const DialogTrigger: FC<PropsWithChildren> = (props) => {
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events
     <div
       {...props}
-      onClick={handleDelegateClickTrigger}
-      aria-haspopup="dialog"
       className="shr-inline-block"
+      aria-haspopup="dialog"
+      onClick={handleDelegateClickTrigger}
     />
   )
 }

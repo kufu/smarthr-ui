@@ -89,7 +89,7 @@ export const VerticalStepItem: FC<Props> = ({
   }, [statusType, current])
 
   return (
-    <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
+    <li className={classNames.wrapper} aria-current={current ? 'step' : undefined}>
       <Section className={classNames.section}>
         <div className={classNames.stepCounter}>
           <StepCounter

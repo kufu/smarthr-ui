@@ -160,25 +160,25 @@ export const InformationPanel: FC<Props> = ({
   }, [activeProp])
 
   return (
-    <Panel {...rest} as="section" data-active={active} className={classNames.wrapper}>
+    <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
       <Sidebar align="baseline" right className={classNames.header}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading
-          heading={heading}
+          type={type}
           id={`${id}-heading`}
           className={classNames.heading}
-          type={type}
+          heading={heading}
         />
         {toggleable && (
           <ToggleableButton
-            active={active}
-            onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
             contentId={contentId}
+            active={active}
             className={classNames.toggleableButton}
+            onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
           />
         )}
       </Sidebar>
-      <div id={contentId} aria-hidden={!active} className={classNames.content}>
+      <div id={contentId} className={classNames.content} aria-hidden={!active}>
         {children}
       </div>
     </Panel>
@@ -215,13 +215,13 @@ const MemoizedHeading = memo<
   return (
     <Heading
       {...rest}
+      type="blockTitle"
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
         prefix: icon,
         gap: 0.5,
       }}
-      type="blockTitle"
     >
       {heading.text}
     </Heading>
@@ -235,12 +235,12 @@ const ToggleableButton: FC<{
   className: string
 }> = ({ active, onClick, contentId, className }) => (
   <Button
+    size="S"
+    className={className}
     aria-expanded={active}
     aria-controls={contentId}
     onClick={onClick}
     suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-    size="S"
-    className={className}
   >
     {active ? (
       <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />

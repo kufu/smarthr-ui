@@ -15,9 +15,9 @@ import {
   useState,
 } from 'react'
 
-import { useAnimationFrame } from '../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { usePortal } from '../../hooks/client/usePortal'
 import { useLatest } from '../../hooks/useLatest'
-import { usePortal } from '../../hooks/usePortal'
 
 import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 

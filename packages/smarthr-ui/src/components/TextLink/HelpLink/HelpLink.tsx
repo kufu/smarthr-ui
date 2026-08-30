@@ -9,8 +9,8 @@ export const HelpLink: FC<Props> = memo(({ target, ...rest }) => (
   <TextLink
     {...rest}
     rel="help"
-    referrerPolicy="no-referrer-when-downgrade"
     target={target}
+    referrerPolicy="no-referrer-when-downgrade"
     prefix={!target && <FaCircleQuestionIcon />}
   />
 ))

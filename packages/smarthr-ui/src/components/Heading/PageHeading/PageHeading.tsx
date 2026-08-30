@@ -14,9 +14,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
-import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
@@ -73,15 +73,15 @@ export const PageHeading = memo(
       !IS_NEXT_JS && autoPageTitle ? (
         <AutoPageTitleHeading
           {...rest}
-          size={size}
+          outerRef={ref}
           pageTitleSuffix={pageTitleSuffix}
           pageTitle={pageTitle}
-          outerRef={ref}
+          size={size}
         >
           {children}
         </AutoPageTitleHeading>
       ) : (
-        <ActualHeading {...rest} size={size} headingRef={ref}>
+        <ActualHeading {...rest} headingRef={ref} size={size}>
           {children}
         </ActualHeading>
       ),
@@ -186,10 +186,10 @@ const ActualHeading: FC<ActualHeadingProps> = ({
     <Component
       {...rest}
       {...STYLE_TYPE_MAP.screenTitle}
+      as="h1"
       ref={headingRef}
       size={size || STYLE_TYPE_MAP.screenTitle.size}
       className={actualClassName}
-      as="h1"
     >
       {children}
     </Component>

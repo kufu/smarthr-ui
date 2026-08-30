@@ -136,8 +136,8 @@ export { Scroller } from './components/Scroller'
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
-export { useTheme } from './hooks/useTheme'
-export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
+export { useTheme, ThemeProvider } from './hooks/client/useTheme'
+export { useEnvironment, EnvironmentProvider } from './hooks/client/useEnvironment'
 
 // themes
 /** @public */
@@ -154,7 +154,6 @@ export {
   defaultSpacing,
   defaultBreakpoint,
 } from './themes'
-export { ThemeProvider } from './hooks/useTheme'
 
 // localization
 export {

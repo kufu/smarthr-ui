@@ -63,7 +63,7 @@ const ItemGroup: FC<
 )
 
 const ItemGroupTitleText = memo<PropsWithChildren>(({ children }) => (
-  <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
+  <Text as="p" styleType="subSubBlockTitle" className="shr-py-0.5">
     {children}
   </Text>
 ))

@@ -17,11 +17,11 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../hooks/client/useTheme'
 import { useAreaOutsideCallbackRef } from '../../../hooks/useAreaOutsideCallbackRef'
 import { useLatest } from '../../../hooks/useLatest'
-import { useMergeRefs } from '../../../hooks/useMergeRefs'
-import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
@@ -164,6 +164,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -174,7 +175,9 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
 
-  const selectedListId = useId()
+  const baseId = useId()
+  const inputId = id || `${baseId}-input`
+  const selectedListId = `${baseId}-selected`
 
   const isInputControlled = controlledInputValue !== undefined
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
@@ -267,6 +270,7 @@ const ActualMultiCombobox = <T,>(
     isLoading,
     triggerRef,
     noResultText,
+    inputId,
   })
 
   const latest = useLatest({
@@ -489,28 +493,28 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={triggerRef}
       role="group"
-      onClick={functions.handleDelegateClick}
-      onKeyDown={functions.handleDelegateKeyDown}
-      onKeyPress={functions.handleDelegateKeyPress}
       className={classNames.wrapper}
       style={{
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      onClick={functions.handleDelegateClick}
+      onKeyDown={functions.handleDelegateKeyDown}
+      onKeyPress={functions.handleDelegateKeyPress}
     >
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
-          aria-label={localized.selectedListAriaLabel}
           className={classNames.selectedList}
+          aria-label={localized.selectedListAriaLabel}
         >
           {selectedItems.map((selectedItem) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
-                item={selectedItem}
                 disabled={disabled}
-                handleDelete={functions.handleDelete}
+                item={selectedItem}
                 enableEllipsis={selectedItemEllipsis}
+                handleDelete={functions.handleDelete}
               />
             </li>
           ))}
@@ -520,20 +524,16 @@ const ActualMultiCombobox = <T,>(
           <input
             {...rest}
             ref={mergedRef}
-            data-smarthr-ui-input="true"
+            role="combobox"
             type="text"
+            id={inputId}
             name={name}
-            value={inputValue}
-            disabled={disabled}
             required={required && selectedItems.length === 0}
-            onChange={functions.handleChangeInput}
-            onFocus={functions.handleFocusInput}
-            onCompositionStart={functions.handleCompositionStart}
-            onCompositionEnd={functions.handleCompositionEnd}
-            onKeyDown={functions.handleKeyDownInput}
+            disabled={disabled}
+            value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
-            role="combobox"
+            className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
@@ -541,7 +541,12 @@ const ActualMultiCombobox = <T,>(
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
-            className={classNames.input}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChangeInput}
+            onFocus={functions.handleFocusInput}
+            onCompositionStart={functions.handleCompositionStart}
+            onCompositionEnd={functions.handleCompositionEnd}
+            onKeyDown={functions.handleKeyDownInput}
           />
         </div>
 

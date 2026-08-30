@@ -65,16 +65,16 @@ const AnchorButton = forwardRef(
     const button = (
       <ButtonWrapper
         {...rest}
+        elementAs={elementAs}
+        anchorRef={ref}
         href={href}
-        size={size}
-        wide={wide}
-        variant={variant}
-        className={actualClassName}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
         isAnchor
-        anchorRef={ref}
-        elementAs={elementAs}
+        variant={variant}
+        size={size}
+        wide={wide}
+        className={actualClassName}
         prefix={prefix}
         suffix={actualSuffix}
       >
@@ -83,7 +83,7 @@ const AnchorButton = forwardRef(
     )
 
     if (!href && inactiveReason) {
-      return <DisabledReason button={button} disabledReason={inactiveReason} />
+      return <DisabledReason disabledReason={inactiveReason} button={button} />
     }
 
     return button

@@ -12,18 +12,18 @@ type Props = {
 
 export const ForbiddenErrorScreen: FC<Props> = ({ homeUrl }) => (
   <ErrorScreen
-    title={
-      <Localizer
-        id="smarthr-ui/ForbiddenErrorScreen/title"
-        defaultText="このページを表示する権限がありません"
-      />
-    }
     links={[
       {
         label: <Localizer id="smarthr-ui/ErrorScreen/homeLink" defaultText="ホームに戻る" />,
         url: homeUrl,
       },
     ]}
+    title={
+      <Localizer
+        id="smarthr-ui/ForbiddenErrorScreen/title"
+        defaultText="このページを表示する権限がありません"
+      />
+    }
   >
     <p>
       <Localizer

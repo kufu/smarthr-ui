@@ -65,7 +65,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     const radioButtonId = id || defaultId
 
     return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
+      <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
           <input
             {...rest}
