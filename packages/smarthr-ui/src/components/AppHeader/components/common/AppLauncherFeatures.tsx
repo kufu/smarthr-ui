@@ -4,7 +4,9 @@ import { tv } from 'tailwind-variants'
 import { Localizer } from '../../../../intl'
 import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
+import { Center } from '../../../Layout'
 import { LineClamp } from '../../../LineClamp'
+import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
 
@@ -15,6 +17,8 @@ import type { Launcher } from '../../types'
 const classNameGenerator = tv({
   slots: {
     empty: ['shr-p-1 shr-text-center'],
+    loadError: ['shr-whitespace-pre-wrap shr-p-1 shr-text-center'],
+    loading: ['shr-py-3'],
     list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
     listItem: [
       'smarthr-ui-AppLauncher-listItem',
@@ -25,10 +29,12 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  const { empty, list, listItem } = classNameGenerator()
+  const { empty, loadError, loading, list, listItem } = classNameGenerator()
 
   return {
     empty: empty(),
+    loadError: loadError(),
+    loading: loading(),
     list: list(),
     listItem: listItem(),
   }
@@ -37,10 +43,39 @@ const CLASS_NAMES = (() => {
 type Props = {
   features: Array<Launcher['feature']>
   page: Launcher['page']
+  loading?: boolean
+  error?: boolean
 }
 
-export const AppLauncherFeatures: FC<Props> = ({ features, page }) =>
-  features.length === 0 ? <EmptyList /> : <FeatureList features={features} page={page} />
+export const AppLauncherFeatures: FC<Props> = ({ features, page, loading, error }) => {
+  if (loading) {
+    return <LoadingList />
+  }
+
+  if (error) {
+    return <LoadErrorText />
+  }
+
+  return features.length === 0 ? <EmptyList /> : <FeatureList features={features} page={page} />
+}
+
+const LoadingList = memo(() => (
+  <Center className={CLASS_NAMES.loading}>
+    <Loader />
+  </Center>
+))
+
+const LoadErrorText = memo(() => (
+  <div className={CLASS_NAMES.loadError}>
+    <Text size="S">
+      <Localizer
+        id="smarthr-ui/AppHeader/Launcher/loadError"
+        defaultText={`アプリ一覧の読み込みに失敗しました。
+時間をおいて、やり直してください。`}
+      />
+    </Text>
+  </div>
+))
 
 const EmptyList = memo(() => (
   <div className={CLASS_NAMES.empty}>

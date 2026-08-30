@@ -87,8 +87,14 @@ export const Content: FC<
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
-  const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
-    useContext(AppLauncherContext)
+  const {
+    features,
+    isAppLauncherAvailable,
+    featuresLoading,
+    featuresError,
+    isAppLauncherSelected,
+    setIsAppLauncherSelected,
+  } = useContext(AppLauncherContext)
 
   const translated = useLocalize({
     launcherListText: {
@@ -173,8 +179,8 @@ export const Content: FC<
         </Cluster>
       </div>
 
-      {isAppLauncherSelected && features && features.length > 0 ? (
-        <AppLauncher features={features} />
+      {isAppLauncherSelected && isAppLauncherAvailable ? (
+        <AppLauncher features={features} loading={featuresLoading} error={featuresError} />
       ) : (
         <Scroller direction="vertical" className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
