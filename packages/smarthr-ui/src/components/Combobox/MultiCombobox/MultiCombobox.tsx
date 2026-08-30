@@ -10,7 +10,6 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -21,6 +20,7 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
@@ -230,6 +230,10 @@ const ActualMultiCombobox = <T,>(
     }
 
     return {
+      cleanupListBoxCallbackRef: () => () => {
+        latestForListBox.deleteFrame.cancel()
+        latestForListBox.selectFrame.cancel()
+      },
       handleDelete,
       handleSelect: (selected: ComboboxItem<T>) => {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -252,15 +256,6 @@ const ActualMultiCombobox = <T,>(
       },
     }
   }, [latestForListBox])
-
-  // TODO: callbackRefにまとめたい
-  useEffect(
-    () => () => {
-      latestForListBox.deleteFrame.cancel()
-      latestForListBox.selectFrame.cancel()
-    },
-    [latestForListBox],
-  )
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
@@ -441,11 +436,7 @@ const ActualMultiCombobox = <T,>(
 
   useAreaOutsideClick(isExpanded ? [triggerRef, listBoxRef] : null, functions.blur)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-    ref,
-    () => inputRef.current,
-    [],
-  )
+  const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 
   useEffect(() => {
     if (latest.highlighted) {
@@ -528,13 +519,13 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
+            ref={mergedRef}
             data-smarthr-ui-input="true"
             type="text"
             name={name}
             value={inputValue}
             disabled={disabled}
             required={required && selectedItems.length === 0}
-            ref={inputRef}
             onChange={functions.handleChangeInput}
             onFocus={functions.handleFocusInput}
             onCompositionStart={functions.handleCompositionStart}
