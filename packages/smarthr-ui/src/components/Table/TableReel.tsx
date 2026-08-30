@@ -40,10 +40,11 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       return
     }
 
-    let currentObserver: ResizeObserver | null = null
-
     const handleScroll = () => {
+      cellObserver.disconnect()
+
       if (!wrapper.querySelector(HAS_FIXED_SELECTOR)) {
+        setShowShadow(false)
         return
       }
 
@@ -53,38 +54,24 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
         direction: 'left' | 'right',
         visible: boolean,
       ) => {
-        currentObserver?.disconnect()
-        currentObserver = null
+        let position = 0
 
-        const action = () => {
-          let position = 0
+        cells.forEach((cell, index) => {
+          if (cell.classList.toggle('fixed', visible)) {
+            isVisible = true
+            cell.style[direction] = `${position}px`
+            cell.style.zIndex = (index + 1).toString()
 
-          cells.forEach((cell, index) => {
-            if (cell.classList.toggle('fixed', visible)) {
-              isVisible = true
-              cell.style[direction] = `${position}px`
-              cell.style.zIndex = (index + 1).toString()
+            position += cell.offsetWidth
+          }
 
-              position += cell.offsetWidth
-            }
-          })
-        }
-
-        action()
-        const observer = new ResizeObserver(action)
-
-        cells.forEach((cell) => {
-          observer.observe(cell)
+          cellObserver.observe(cell)
         })
-
-        currentObserver = observer
       }
 
       wrapper.querySelectorAll<HTMLElement>(TR_SELECTOR).forEach((tr) => {
         const leftCells = tr.querySelectorAll<HTMLElement>(FIXED_LEFT_SELECTOR)
-        const rightCells = Array.from(
-          tr.querySelectorAll<HTMLElement>(FIXED_RIGHT_SELECTOR),
-        ).reverse()
+        const rightCells = tr.querySelectorAll<HTMLElement>(FIXED_RIGHT_SELECTOR)
 
         if (leftCells.length > 0) {
           commonAction(leftCells, 'left' as const, wrapper.scrollLeft > 0)
@@ -92,7 +79,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
 
         if (rightCells.length > 0) {
           commonAction(
-            rightCells,
+            Array.from(rightCells).reverse(),
             'right' as const,
             wrapper.scrollLeft < wrapper.scrollWidth - wrapper.clientWidth - 1,
           )
@@ -102,8 +89,12 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       setShowShadow(isVisible)
     }
 
+    // HINT: cellObserverはhandleScroll先頭でdisconnect→再observeするため、
+    //       wrapperを監視するresizeObserverとは分けている
+    const cellObserver = new ResizeObserver(handleScroll)
+
     handleScroll()
-    wrapper.addEventListener('scroll', handleScroll)
+    wrapper.addEventListener('scroll', handleScroll, { passive: true })
 
     const resizeObserver = new ResizeObserver(handleScroll)
     resizeObserver.observe(wrapper)
@@ -119,7 +110,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       wrapper.removeEventListener('scroll', handleScroll)
       resizeObserver.unobserve(wrapper)
       mutationObserver.disconnect()
-      currentObserver?.disconnect()
+      cellObserver.disconnect()
     }
   }, [tableWrapperRef])
 
