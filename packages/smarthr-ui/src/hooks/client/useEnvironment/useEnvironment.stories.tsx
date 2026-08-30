@@ -4,8 +4,8 @@ import { Stack } from '../../../components/Layout'
 import { Groupbox } from '../../../components/Panel'
 import { createTheme, defaultMediaQuery } from '../../../themes'
 import { ThemeProvider } from '../../useTheme'
-import { EnvironmentProvider } from '../EnvironmentProvider'
 
+import { EnvironmentProvider } from './EnvironmentProvider'
 import { useEnvironment } from './useEnvironment'
 
 import type { Meta, StoryObj } from '@storybook/react/*'
