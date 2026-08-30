@@ -83,7 +83,7 @@ export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
 }
 
 export const Content: FC<
-  Omit<Props, 'isOpen'> & {
+  Omit<Props, 'callbackRef' | 'isOpen'> & {
     domRef: RefObject<HTMLSelectElement>
   }
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {

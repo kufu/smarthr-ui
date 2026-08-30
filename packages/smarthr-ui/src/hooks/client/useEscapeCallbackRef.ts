@@ -7,7 +7,7 @@ import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact
 // Esc is a IE/Edge specific value
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 
-export const useEscapeCallbackRef = (memoizedCallback?: () => void) =>
+export const useEscapeCallbackRef = (memoizedCallback: () => void) =>
   useCallbackRefCleanupForReact18(
     useCallback(() => {
       const handleKeyPress = (e: KeyboardEvent) => {
