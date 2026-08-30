@@ -7,12 +7,12 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = PropsWithChildren<
@@ -84,10 +84,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
     const defaultId = useId()
     const checkBoxId = id || defaultId
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
+    const mergedRef = useMergeRefs(inputRef, ref)
 
     useEffect(() => {
       if (inputRef.current) {
@@ -100,7 +97,7 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.innerWrapper}>
           <input
             {...rest}
-            ref={inputRef}
+            ref={mergedRef}
             type="checkbox"
             id={checkBoxId}
             checked={checked}

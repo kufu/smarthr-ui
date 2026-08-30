@@ -3,7 +3,7 @@ import { userEvent } from 'storybook/test'
 import { Button } from '../../Button'
 import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../client/components'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

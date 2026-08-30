@@ -1,6 +1,5 @@
-import { type PropsWithChildren, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 
 import { getPortalPosition } from './datePickerHelper'
@@ -9,36 +8,32 @@ type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
-const initialPosition = {
-  top: '0px',
-  left: '0px',
-}
+export const Portal: FC<Props> = ({ inputRect, children }) => {
+  const { createPortal } = usePortal()
 
-export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...rest }, ref) => {
-  const { portalRoot, createPortal } = usePortal()
-  const containerRef = useRef<HTMLDivElement>(null)
+  // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
+  // React v18の対応を切ったらこのコメントも削除する
+  const callbackRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        const position = getPortalPosition(inputRect, node.offsetHeight)
 
-  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
-
-  const [style, setStyle] = useState(initialPosition)
-
-  useEnhancedEffect(() => {
-    if (containerRef.current) {
-      const position = getPortalPosition(inputRect, containerRef.current.offsetHeight)
-
-      setStyle({
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-      })
-    }
-  }, [inputRect, portalRoot])
+        node.style.top = `${position.top}px`
+        node.style.left = `${position.left}px`
+      }
+    },
+    [inputRect],
+  )
 
   return createPortal(
     <div
-      {...rest}
-      ref={containerRef}
-      className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none"
-      style={style}
-    />,
+      ref={callbackRef}
+      // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
+      // 余白があるとPortal要素の下端がCalendarの外側になり、
+      // 外側クリック判定(useOuterClick)が意図せず発火する
+      className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-flex shr-leading-none"
+    >
+      {children}
+    </div>,
   )
-})
+}

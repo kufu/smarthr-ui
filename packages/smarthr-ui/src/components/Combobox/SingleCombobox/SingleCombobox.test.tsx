@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../intl'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 
 import { SingleCombobox } from './SingleCombobox'
 

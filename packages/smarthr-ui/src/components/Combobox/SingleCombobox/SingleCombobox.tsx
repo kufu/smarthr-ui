@@ -9,9 +9,9 @@ import {
   type Ref,
   type RefObject,
   memo,
+  useCallback,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -19,8 +19,10 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -202,8 +204,6 @@ const ActualSingleCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
-
   const { options } = useSingleOptions({
     items,
     selected: selectedItem,
@@ -211,6 +211,8 @@ const ActualSingleCombobox = <T,>(
     inputValue,
     isFilteringDisabled: !isEditing,
   })
+
+  const selectFrame = useAnimationFrame()
 
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
     {
@@ -224,8 +226,8 @@ const ActualSingleCombobox = <T,>(
         onChangeSelected?.(selected)
 
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        selectFrame.request(() => {
           setIsExpanded(false)
           // HINT:
           // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
@@ -398,10 +400,16 @@ const ActualSingleCombobox = <T,>(
       : theme.textColor.grey
 
   useClick(
-    useMemo(() => [triggerRef, listBoxRef, clearButtonRef], [listBoxRef]),
+    [triggerRef, listBoxRef, clearButtonRef],
     isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
     functions.unfocus,
   )
+
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
+
+  const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
 
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
   const selectedItemLabelText = innerText(selectedItem?.label)
@@ -436,8 +444,8 @@ const ActualSingleCombobox = <T,>(
     >
       <Input
         {...rest}
+        ref={mergedRef}
         id={inputId}
-        ref={inputRef}
         type="text"
         role="combobox"
         name={name}

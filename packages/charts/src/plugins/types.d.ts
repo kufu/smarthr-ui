@@ -8,6 +8,8 @@ declare module 'chart.js' {
   interface PluginOptionsByType<_TType extends ChartType> {
     doughnutSegmentDivider?: DoughnutSegmentDividerOptions
     keyboardNavigation?: KeyboardNavigationOptions
-    roundedProgress?: RoundedProgressOptions
+    // chart.js はプラグインオプションが false のときそのプラグインを実行しないため、
+    // 丸端をやめる指定として false を受け取れるようにする。
+    roundedProgress?: RoundedProgressOptions | false
   }
 }

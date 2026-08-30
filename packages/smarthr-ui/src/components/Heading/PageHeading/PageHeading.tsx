@@ -8,14 +8,15 @@ import {
   type Ref,
   forwardRef,
   memo,
-  useEffect,
+  useCallback,
   useId,
-  useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useLatest } from '../../../hooks/useLatest'
+import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
@@ -95,57 +96,65 @@ const AutoPageTitleHeading: FC<
   }
 > = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
-  // HINT: h1のテキストをMutationObserverで監視するために内部でrefを保持しつつ、利用者のrefにも要素を渡す
-  const innerRef = useRef<HTMLHeadingElement | null>(null)
+  const titleFrame = useAnimationFrame()
+  const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
 
-  useImperativeHandle<HTMLHeadingElement | null, HTMLHeadingElement | null>(
-    outerRef,
-    () => innerRef.current,
+  const callbackRef = useCallback(
+    (node: HTMLHeadingElement | null) => {
+      if (!node) {
+        return
+      }
+
+      const updateTitle = () => {
+        const title = latest.pageTitle || node.textContent || ''
+        document.title = latest.pageTitleSuffix ? `${title}｜${latest.pageTitleSuffix}` : title
+
+        // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
+        // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
+        const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
+          document.createElement('div')) as HTMLDivElement
+
+        pseudoTitle.setAttribute('id', latest.pseudoTitleId)
+        pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
+        pseudoTitle.setAttribute('aria-live', 'polite')
+        document.body.prepend(pseudoTitle)
+
+        latest.titleFrame.request(() => {
+          pseudoTitle.textContent = document.title
+        })
+      }
+
+      updateTitle()
+
+      const observer = new MutationObserver(updateTitle)
+      observer.observe(node, {
+        characterData: true,
+        childList: true,
+        subtree: true,
+      })
+
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      return () => {
+        observer.disconnect()
+        latest.titleFrame.cancel()
+
+        const pseudoTitle = document.getElementById(latest.pseudoTitleId)
+
+        if (pseudoTitle) {
+          pseudoTitle.remove()
+        }
+      }
+    },
+    [latest],
   )
 
-  useEffect(() => {
-    const h1 = innerRef.current
-    if (!h1) return
-
-    const updateTitle = () => {
-      const title = pageTitle || h1.textContent || ''
-      document.title = pageTitleSuffix ? `${title}｜${pageTitleSuffix}` : title
-
-      // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
-      // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-      const pseudoTitle: HTMLDivElement = (document.getElementById(pseudoTitleId) ||
-        document.createElement('div')) as HTMLDivElement
-
-      pseudoTitle.setAttribute('id', pseudoTitleId)
-      pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
-      pseudoTitle.setAttribute('aria-live', 'polite')
-      document.body.prepend(pseudoTitle)
-
-      requestAnimationFrame(() => {
-        pseudoTitle.textContent = document.title
-      })
-    }
-
-    updateTitle()
-
-    const observer = new MutationObserver(updateTitle)
-    observer.observe(h1, {
-      characterData: true,
-      childList: true,
-      subtree: true,
-    })
-
-    return () => {
-      observer.disconnect()
-      const pseudoTitle = document.getElementById(pseudoTitleId)
-      if (pseudoTitle) {
-        pseudoTitle.remove()
-      }
-    }
-  }, [pageTitle, pageTitleSuffix, pseudoTitleId])
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(callbackRef, outerRef)
 
   return (
-    <ActualHeading {...rest} headingRef={innerRef}>
+    <ActualHeading {...rest} headingRef={mergedRef}>
       {children}
     </ActualHeading>
   )
@@ -171,16 +180,16 @@ const ActualHeading: FC<ActualHeadingProps> = ({
     () => classNameGenerator({ visuallyHidden, className }),
     [className, visuallyHidden],
   )
-
   const Component = visuallyHidden ? VisuallyHiddenText : Text
+
   return (
     <Component
       {...rest}
       {...STYLE_TYPE_MAP.screenTitle}
-      size={size || STYLE_TYPE_MAP.screenTitle.size}
-      as="h1"
-      className={actualClassName}
       ref={headingRef}
+      size={size || STYLE_TYPE_MAP.screenTitle.size}
+      className={actualClassName}
+      as="h1"
     >
       {children}
     </Component>

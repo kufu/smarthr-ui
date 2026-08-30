@@ -2,10 +2,10 @@
 
 import {
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -14,11 +14,13 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useLatest } from '../../hooks/useLatest'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
+import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
@@ -60,7 +62,7 @@ const classNameGenerator = tv({
     wrapper: 'shr-absolute',
     dropdownList: [
       'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3 forced-colors:shr-outline forced-colors:shr-outline-1',
       /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
       = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
       'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
@@ -111,7 +113,11 @@ export const useListbox = <T,>({
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
 
-  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef })
+  const theme = useTheme()
+
+  const addFrame = useAnimationFrame()
+
+  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
   const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
@@ -176,9 +182,29 @@ export const useListbox = <T,>({
           height = bottomSpace
         }
 
+        // HINT: dropdownWidth は 'auto' や '%' などの CSS 値を取りうるため、算出済みの幅を実測して判定する
+        const listBoxWidth = listBoxRef.current.getBoundingClientRect().width
+        // ドロップダウンの幅は maxWidth でビューポート右端から余白分を残すよう制限しているため、位置の判定にも同じ余白を使う
+        const viewportMargin = parseInt(latest.theme.spacingByChar(0.5), 10)
+        // 入力欄の左端を起点に右方向へ表示する場合に使える幅
+        const rightSpace = window.innerWidth - rect.left - viewportMargin
+        // 入力欄の右端を起点に左方向へ表示する場合に使える幅
+        const leftSpace = rect.right
+
+        // ビューポートの左端を基準に計算
+        let left = window.pageXOffset
+
+        if (listBoxWidth <= rightSpace) {
+          // 右側に十分なスペースがある場合は入力欄の左端に揃えて通常表示
+          left += rect.left
+        } else if (listBoxWidth <= leftSpace) {
+          // 左側に収まる場合は入力欄の右端に揃えて表示
+          left += rect.right - listBoxWidth
+        }
+
         setListBoxRect({
           top,
-          left: rect.left + window.pageXOffset,
+          left,
           height,
         })
         setTriggerWidth(rect.width)
@@ -211,8 +237,8 @@ export const useListbox = <T,>({
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
+            // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            latest.addFrame.request(() => {
               latest.onAdd!(option.item.value)
             })
           }
@@ -227,6 +253,9 @@ export const useListbox = <T,>({
     }
   }, [hasOnAdd, latest])
 
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => addFrame.cancel, [addFrame.cancel])
+
   useEffect(() => {
     // props の変更によって activeOption の状態が変わりうるので、実態を反映する
     setActiveOption((current) => {
@@ -237,19 +266,6 @@ export const useListbox = <T,>({
       return options.find((option) => current.id === option.id) ?? null
     })
   }, [options])
-
-  useEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      setActiveOption(null)
-    }
-
-    const trigger = latest.triggerRef.current
-
-    if (trigger) {
-      setTriggerWidth(trigger.getBoundingClientRect().width)
-    }
-  }, [isExpanded, latest])
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
@@ -273,10 +289,22 @@ export const useListbox = <T,>({
   }, [activeOption, navigationType])
 
   useEnhancedEffect(() => {
-    if (isExpanded) {
-      // options の更新毎に座標を再計算する
-      functions.calculateRect()
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      return setActiveOption(null)
     }
+
+    functions.calculateRect()
+
+    const scrollOption = { capture: true, passive: true }
+    window.addEventListener('scroll', functions.calculateRect, scrollOption)
+    window.addEventListener('resize', functions.calculateRect, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
+      window.removeEventListener('resize', functions.calculateRect)
+    }
+    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
   }, [isExpanded, options, functions])
 
   return {
@@ -369,18 +397,46 @@ export const ListBox = memo(
         dropdownList: {
           width:
             typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-          maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
+          /* HINT: left に依存させると、算出した幅がさらに maxWidth を縮めて再計算の度に幅が縮んでいくため、
+          ビューポート幅のみから算出する */
+          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)})`,
           height: height ? `${height}px` : undefined,
         },
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-    const latest = useLatest({ minLength })
+    const latest = useLatest({ handleAdd, handleHoverOption, handleSelect, options, minLength })
 
-    const handleIntersect = useCallback(() => {
-      setCurrentItemLength((current) =>
-        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-      )
+    const functions = useMemo(() => {
+      const resolveOption = (e: MouseEvent) => {
+        const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+        if (!el || el.disabled) return null
+        return latest.options.find((o) => o.id === el.id) ?? null
+      }
+
+      return {
+        handleDelegateClick: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            if (option.isNew) {
+              latest.handleAdd?.(option)
+            } else {
+              latest.handleSelect(option)
+            }
+          }
+        },
+        handleDelegateMouseOver: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            latest.handleHoverOption(option)
+          }
+        },
+        handleIntersect: () => {
+          setCurrentItemLength((current) =>
+            Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+          )
+        },
+      }
     }, [latest])
 
     useEffect(() => {
@@ -401,6 +457,8 @@ export const ListBox = memo(
           aria-hidden={!isExpanded}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
+          onMouseOver={functions.handleDelegateMouseOver}
+          onClick={functions.handleDelegateClick}
         >
           {dropdownHelpMessage && (
             <Text
@@ -426,19 +484,21 @@ export const ListBox = memo(
                 )}
               </p>
             ) : (
-              items.map((option) => (
+              items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
-                  key={option.id}
-                  option={option}
-                  handleAdd={handleAdd}
-                  handleSelect={handleSelect}
-                  handleMouseOver={handleHoverOption}
-                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                  {...optionRest}
+                  label={label}
+                  disabled={disabled}
+                  key={id}
+                  id={id}
+                  activeRef={id === activeOptionId ? activeRef : undefined}
                 />
               ))
             )
           ) : null}
-          {currentItemLength < options.length && <Intersection handleIntersect={handleIntersect} />}
+          {currentItemLength < options.length && (
+            <Intersection handleIntersect={functions.handleIntersect} />
+          )}
         </Scroller>
       </div>,
     )

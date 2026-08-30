@@ -1,15 +1,11 @@
-import {
-  type FC,
-  type ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+// HINT: モジュールスコープでcreateContextを呼ぶため、react-server条件で評価されると
+// TypeErrorになる。利用側のコンポーネント（Button・Dropdown・useListbox・Menu・DatePicker/Portal）が'use client'を持つことで
+// clientグラフに入り、サーバ側では評価されない。
+import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useEnhancedEffect } from './useEnhancedEffect'
+import { useLatest } from './useLatest'
 
 type ParentContextValue = {
   seqs: number[]
@@ -23,7 +19,7 @@ let portalSeq = 0
 
 export function usePortal({ rootId }: { rootId?: string } = {}) {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
-  const currentSeq = useMemo(() => ++portalSeq, [])
+  const [currentSeq] = useState(() => ++portalSeq)
   const parent = useContext(ParentContext)
 
   const calculatedSeqs = useMemo(() => {
@@ -35,65 +31,54 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [currentSeq, parent.seqs])
 
-  useEnhancedEffect(() => {
-    // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
-    setPortalRoot((current) => {
-      const root = current || document.createElement('div')
+  const latest = useLatest({ currentSeq, portalRoot, calculatedSeqs })
 
-      if (rootId) {
-        root.setAttribute('id', rootId)
-      }
-
-      return root
-    })
-  }, [rootId])
-
-  useEnhancedEffect(() => {
-    if (!portalRoot) {
-      return
-    }
-
-    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
-    document.body.appendChild(portalRoot)
-
-    return () => {
-      portalRoot.remove()
-    }
-  }, [portalRoot, calculatedSeqs.portalChildOf])
-
-  const isChildPortal = useCallback(
-    (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
-    [currentSeq],
-  )
-
-  const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
-    ({ children }) => {
+  const functions = useMemo(() => {
+    const PortalParentProvider: FC<{ children: ReactNode }> = ({ children }) => {
       const value: ParentContextValue = {
-        seqs: calculatedSeqs.parentSeqs,
+        seqs: latest.calculatedSeqs.parentSeqs,
       }
 
       return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
-    },
-    [calculatedSeqs.parentSeqs],
-  )
+    }
 
-  const wrappedCreatePortal = useCallback(
-    (children: ReactNode) => {
-      if (portalRoot === null) {
-        return null
-      }
+    return {
+      PortalParentProvider,
+      isChildPortal: (element: HTMLElement | null) =>
+        _isChildPortal(element, new RegExp(`(^|,)${latest.currentSeq}(,|$)`)),
+      createPortal: (children: ReactNode) => {
+        if (latest.portalRoot === null) {
+          return null
+        }
 
-      return createPortal(children, portalRoot)
-    },
-    [portalRoot],
-  )
+        return createPortal(children, latest.portalRoot)
+      },
+    }
+  }, [latest])
 
-  return {
-    portalRoot,
-    isChildPortal,
-    PortalParentProvider,
-    createPortal: wrappedCreatePortal,
-  }
+  useEnhancedEffect(() => {
+    // Next.jsのhydration error回避のため、マウント後にdivを作成してdocument.bodyに追加する
+    const root = document.createElement('div')
+
+    document.body.appendChild(root)
+    setPortalRoot(root)
+
+    return () => {
+      root.remove()
+    }
+  }, [])
+
+  useEnhancedEffect(() => {
+    if (!portalRoot) return
+
+    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
+
+    if (rootId) {
+      portalRoot.setAttribute('id', rootId)
+    }
+  }, [calculatedSeqs.portalChildOf, portalRoot, rootId])
+
+  return functions
 }
 
 function _isChildPortal(element: HTMLElement | SVGElement | null, seqRegex: RegExp): boolean {

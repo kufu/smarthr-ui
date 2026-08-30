@@ -4,7 +4,7 @@
  *
  * @param {T} func - 実行する関数
  * @param {number} wait - デバウンスの待機時間（ミリ秒）
- * @returns {(...rest: Parameters<T>) => void} デバウンスされた関数
+ * @returns {((...rest: Parameters<T>) => void) & { cancel: () => void }} デバウンスされた関数
  *
  * @example
  * const debouncedFunction = debounce(() => console.log('Called!'), 200);
@@ -12,15 +12,25 @@
 export const debounce = <T extends (...rest: any[]) => void>(
   func: T,
   wait: number,
-): ((...rest: Parameters<T>) => void) => {
+): ((...rest: Parameters<T>) => void) & { cancel: () => void } => {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-  return function (...timeoutRest: Parameters<T>) {
+  const debouncedFunction = function (...timeoutRest: Parameters<T>) {
     if (timeoutId !== null) {
       clearTimeout(timeoutId)
     }
     timeoutId = setTimeout(() => {
+      timeoutId = null
       func(...timeoutRest)
     }, wait)
   }
+
+  debouncedFunction.cancel = () => {
+    if (timeoutId !== null) {
+      clearTimeout(timeoutId)
+      timeoutId = null
+    }
+  }
+
+  return debouncedFunction
 }

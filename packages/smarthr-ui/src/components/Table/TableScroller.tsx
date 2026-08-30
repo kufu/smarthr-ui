@@ -6,11 +6,9 @@ import {
   type PropsWithChildren,
   forwardRef,
   useCallback,
-  useLayoutEffect,
-  useRef,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { defaultHtmlFontSize } from '../../themes'
 import { Scroller } from '../Scroller'
 
@@ -19,37 +17,23 @@ type Props = PropsWithChildren &
     fixedHead?: boolean
   }
 
-const classNameGenerator = tv({
-  slots: {
-    // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
-    wrapper: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
-  },
-})
-
-const classNames = (() => {
-  const { wrapper } = classNameGenerator()
-  return {
-    wrapper: wrapper(),
-  }
-})()
+const SCROLLER_PROPS = {
+  direction: 'both' as const,
+  // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
+  className: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
+}
 
 export const TableScroller = forwardRef<HTMLDivElement, Props>(
-  ({ children, fixedHead, ...rest }, forwardedRef: ForwardedRef<HTMLDivElement>) => {
-    const commonProps = {
-      direction: 'both' as const,
-      className: classNames.wrapper,
-    }
-
-    return fixedHead ? (
-      <FixedHeadTableScroller {...rest} {...commonProps} forwardedRef={forwardedRef}>
+  ({ children, fixedHead, ...rest }, ref: ForwardedRef<HTMLDivElement>) =>
+    fixedHead ? (
+      <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS} forwardedRef={ref}>
         {children}
       </FixedHeadTableScroller>
     ) : (
-      <Scroller {...rest} {...commonProps} ref={forwardedRef}>
+      <Scroller {...rest} {...SCROLLER_PROPS} ref={ref}>
         {children}
       </Scroller>
-    )
-  },
+    ),
 )
 
 type FixedHeadTableScrollerProps = PropsWithChildren &
@@ -64,34 +48,23 @@ const FixedHeadTableScroller = ({
   direction,
   ...rest
 }: FixedHeadTableScrollerProps) => {
-  const innerRef = useRef<HTMLDivElement | null>(null)
+  const callbackRef = useCallback((node: HTMLDivElement | null) => {
+    // thead の高さ分だけ scroll-padding-top を設定
+    if (node) {
+      const thead = node.querySelector('thead')
 
-  const setRefs = useCallback(
-    (node: HTMLDivElement) => {
-      innerRef.current = node
-      if (forwardedRef) {
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(node)
-        } else {
-          forwardedRef.current = node
-        }
+      if (thead) {
+        const { height } = thead.getBoundingClientRect()
+
+        node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
       }
-    },
-    [forwardedRef],
-  )
-
-  // thead の高さ分だけ scroll-padding-top を設定
-  useLayoutEffect(() => {
-    if (!innerRef.current) return
-    const thead = innerRef.current.querySelector('thead')
-    if (thead) {
-      const { height } = thead.getBoundingClientRect()
-      innerRef.current.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
     }
   }, [])
 
+  const mergedRef = useMergeRefs(callbackRef, forwardedRef)
+
   return (
-    <Scroller {...rest} ref={setRefs} direction={direction}>
+    <Scroller {...rest} ref={mergedRef} direction={direction}>
       {children}
     </Scroller>
   )

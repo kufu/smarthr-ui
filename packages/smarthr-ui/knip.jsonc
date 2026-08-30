@@ -1,0 +1,70 @@
+// HINT: package.jsonのexportsに "./lib/*" のワイルドカードがあるため、
+// knipはsrc/**/* 全体をentryとみなす。entryのexportは既定で「利用済み」扱いになり、
+// 未使用のfile/exportが一切検知されなくなるため includeEntryExports を有効にしている。
+//
+// includeEntryExportsを有効にすると、内部から一度も参照されないexport（＝公開専用のAPI）も
+// 報告される。それらは src/index.ts 側に /** @public */ を付けて除外する。
+//
+// TODO: knipをworkspace単体ではなくルートから全workspace対象で実行するようにしたい。
+// packages/chartsからの参照を追えるようになり、constants.tsなどの@publicが不要になる。
+// ただしignoreDependenciesなどの設定をルートへ集約する必要があり、規模が大きいため別途対応する。
+{
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  "vitest": false,
+  "storybook": {
+    "entry": [
+      ".storybook/main.ts",
+      ".storybook/preview.tsx",
+      ".storybook/manager.ts",
+      ".storybook/tailwind.storybook.config.ts"
+    ]
+  },
+  "entry": [
+    "scripts/**/*.ts"
+  ],
+  "ignore": [
+    "**/*.stories.tsx",
+    "rollup.*.config.js",
+    "vitest.config.ts",
+    "vitest-setup.js"
+  ],
+  "includeEntryExports": true,
+  "tags": [
+    "-public"
+  ],
+  "ignoreDependencies": [
+    "@rollup/plugin-commonjs",
+    "@rollup/plugin-json",
+    "@rollup/plugin-node-resolve",
+    "@rollup/plugin-replace",
+    "@rollup/plugin-typescript",
+    "@storybook/addon-storysource",
+    "@storybook/cli",
+    "@swc/core",
+    "@testing-library/jest-dom",
+    "@vitejs/plugin-react",
+    "babel-plugin-polyfill-corejs2",
+    "babel-plugin-polyfill-regenerator",
+    "eslint-plugin-storybook",
+    "http-server",
+    "jsdom",
+    "playwright",
+    "postcss-styled-syntax",
+    "postcss-syntax",
+    "rollup-plugin-preserve-directives",
+    "rollup-plugin-rename-node-modules",
+    "tslib",
+    "typescript-eslint",
+    "vitest",
+    "wait-on"
+  ],
+  "ignoreBinaries": [
+    "tsc",
+    "eslint",
+    "prettier",
+    "stylelint",
+    "vitest",
+    "knip"
+  ],
+  "ignoreExportsUsedInFile": true
+}
