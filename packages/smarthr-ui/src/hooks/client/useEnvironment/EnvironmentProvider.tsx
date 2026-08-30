@@ -2,9 +2,9 @@
 
 import { type FC, type ReactNode, useContext } from 'react'
 
-import { defaultMediaQuery } from '../../themes'
-import { useMediaQueries } from '../useMediaQueries'
-import { useTheme } from '../useTheme'
+import { defaultMediaQuery } from '../../../themes'
+import { useMediaQueries } from '../../useMediaQueries'
+import { useTheme } from '../../useTheme'
 
 import { type Environment, EnvironmentContext } from './useEnvironment'
 

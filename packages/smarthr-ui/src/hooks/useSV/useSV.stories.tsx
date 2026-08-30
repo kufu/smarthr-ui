@@ -1,4 +1,4 @@
-import { EnvironmentProvider } from '../useEnvironment'
+import { EnvironmentProvider } from '../client/useEnvironment'
 
 import { type VariantProps, defineSV, useSV } from './useSV'
 
