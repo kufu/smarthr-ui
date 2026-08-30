@@ -122,8 +122,16 @@ export const DialogContentInner: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handlePressEscape: () => latest.onPressEscape?.(),
-      handleClickOverlay: () => latest.onClickOverlay?.(),
+      handlePressEscape: () => {
+        if (latest.isOpen) {
+          latest.onPressEscape?.()
+        }
+      },
+      handleClickOverlay: () => {
+        if (latest.isOpen) {
+          latest.onClickOverlay?.()
+        }
+      },
     }),
     [latest],
   )
