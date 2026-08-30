@@ -15,8 +15,8 @@ describe('ModelessDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
         <ModelessDialog
           isOpen={isOpen}
-          heading="座標指定表示"
           onClickClose={() => setIsOpen(false)}
+          heading="座標指定表示"
         >
           <p>ダイアログの中身</p>
         </ModelessDialog>

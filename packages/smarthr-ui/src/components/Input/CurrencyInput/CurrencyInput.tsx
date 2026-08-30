@@ -45,7 +45,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           latest.onFormatValue?.(formatted)
         }
 
-        return innerRef.current.value
+        return innerRef.current?.value || ''
       }
       const formatCurrencyValue = (raw = '') => formatValue(formatNumericString(raw))
 
@@ -96,9 +96,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         type="text"
         value={value}
         defaultValue={actualDefaultValue}
+        className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
         onFocus={functions.handleFocus}
         onBlur={functions.handleBlur}
-        className={`smarthr-ui-CurrencyInput${className ? ` ${className}` : ''}`}
       />
     )
   },

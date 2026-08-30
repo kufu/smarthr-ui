@@ -402,18 +402,25 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       // eslint-disable-next-line smarthr/best-practice-for-interactive-element
       <div
         ref={containerRef}
-        onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
-        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
         role="presentation"
         className={classNames.container}
         style={{
           width: typeof width === 'number' ? `${width}px` : width,
         }}
+        onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
+        onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
       >
         <Input
           {...rest}
-          width="100%"
+          ref={mergedRef}
           name={name}
+          disabled={disabled}
+          error={error}
+          width="100%"
+          className={INPUT_CONTAINER_CLASS_NAME}
+          aria-expanded={isCalendarShown}
+          aria-controls={calenderId}
+          aria-haspopup={true}
           onChange={isCalendarShown ? functions.closeCalendar : undefined}
           onKeyPress={functions.handleKeyPressInput}
           onFocus={functions.handleFocusInput}
@@ -425,13 +432,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               classNames={classNames}
             />
           }
-          disabled={disabled}
-          error={error}
-          ref={mergedRef}
-          className={INPUT_CONTAINER_CLASS_NAME}
-          aria-expanded={isCalendarShown}
-          aria-controls={calenderId}
-          aria-haspopup={true}
         />
         {isCalendarShown && inputRect && (
           <Portal inputRect={inputRect}>

@@ -75,8 +75,8 @@ export const CommonButton = memo<Props>(
           // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
           <a
             {...(rest as AnchorProps)}
-            onClick={handleClick as AnchorProps['handleClick']}
             className={actualClassName}
+            onClick={handleClick as AnchorProps['handleClick']}
           >
             {prefix}
             {children}
@@ -87,8 +87,8 @@ export const CommonButton = memo<Props>(
           // eslint-disable-next-line smarthr/best-practice-for-button-element
           <button
             {...(rest as ButtonProps)}
-            onClick={handleClick as ButtonProps['handleClick']}
             className={actualClassName}
+            onClick={handleClick as ButtonProps['handleClick']}
           >
             {prefix}
             {children}

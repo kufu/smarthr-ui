@@ -47,9 +47,9 @@ const InnerChart: React.FC<Props> = (props) => {
       return (
         <BarChart
           data={props.data}
+          disablePatterns={props.disablePatterns}
           title={props.title}
           options={props.options}
-          disablePatterns={props.disablePatterns}
         />
       )
     case 'line':

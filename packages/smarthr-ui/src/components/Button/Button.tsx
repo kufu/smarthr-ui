@@ -52,25 +52,25 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const button = (
       <ButtonWrapper
         {...rest}
-        id={buttonId}
         buttonRef={ref}
         type={type}
+        id={buttonId}
+        disabled={disabled}
+        $loading={loading}
+        variant={variant}
         size={size}
         wide={wide}
-        variant={variant}
         className={classNames.wrapper}
-        $loading={loading}
         prefix={prefix}
         suffix={suffix}
-        disabled={disabled}
       >
-        <LoadingStatus loading={loading} buttonId={buttonId} />
+        <LoadingStatus buttonId={buttonId} loading={loading} />
         {children}
       </ButtonWrapper>
     )
 
     if (disabled && disabledReason) {
-      return <DisabledReason button={button} disabledReason={disabledReason} />
+      return <DisabledReason disabledReason={disabledReason} button={button} />
     }
 
     return button

@@ -79,7 +79,7 @@ const SortableTh: FC<
 
   return (
     <ActualTh {...rest} align={align} aria-sort={sort === 'none' ? sort : `${sort}ending`}>
-      <ThSortButton align={align} handleSort={functions.handleSort} sort={sort}>
+      <ThSortButton align={align} sort={sort} handleSort={functions.handleSort}>
         {children}
       </ThSortButton>
     </ActualTh>
@@ -101,12 +101,12 @@ const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
     return (
       <th
         {...rest}
-        data-fixed={fixed}
         className={actualClassName}
         style={{
           ...style,
           width: typeof contentWidth === 'number' ? `${contentWidth}rem` : contentWidth,
         }}
+        data-fixed={fixed}
       >
         {children}
       </th>

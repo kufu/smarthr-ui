@@ -29,7 +29,7 @@ export const Count: StoryObj<typeof Badge> = {
   render: (args) => (
     <Cluster>
       {new Array(10).fill(0).map((_, i) => (
-        <Badge {...args} count={i + 1} key={i} />
+        <Badge {...args} key={i} count={i + 1} />
       ))}
     </Cluster>
   ),

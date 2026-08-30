@@ -172,18 +172,18 @@ export const SortDropdown: FC<Props> = ({
             >
               <Select
                 name="sortFields"
-                options={innerFields}
-                onChange={functions.handleChange}
                 className="shr-min-w-[16em]"
+                onChange={functions.handleChange}
+                options={innerFields}
               />
             </FormControl>
             <Fieldset
+              innerMargin={0.5}
               legend={
                 sortOrderLegend || (
                   <Localizer id="smarthr-ui/SortDropdown/sortOrderLegend" defaultText="並び順" />
                 )
               }
-              innerMargin={0.5}
             >
               <Cluster gap={1.25}>
                 <RadioButton
@@ -206,10 +206,10 @@ export const SortDropdown: FC<Props> = ({
             </Fieldset>
           </Stack>
           <Footer
-            handleApply={functions.handleApply}
-            handleCancel={functions.handleCancel}
             cancelText={cancelText}
             applyText={applyText}
+            handleApply={functions.handleApply}
+            handleCancel={functions.handleCancel}
           />
         </form>
       </DropdownContent>
@@ -224,10 +224,10 @@ const Footer = memo<{
   applyText?: ReactNode
 }>(({ handleApply, handleCancel, cancelText, applyText }) => (
   <Cluster
+    as="footer"
     gap={1}
     align="center"
     justify="flex-end"
-    as="footer"
     className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
   >
     <DropdownCloser>

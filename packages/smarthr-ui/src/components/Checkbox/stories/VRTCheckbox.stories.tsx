@@ -20,10 +20,10 @@ const Template = (
             <Checkbox
               key={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
               name={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
-              mixed={isMixed}
-              error={isError}
               disabled={isDisabled}
               checked={isChecked}
+              mixed={isMixed}
+              error={isError}
             />
           )),
         ),

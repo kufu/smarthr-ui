@@ -62,7 +62,7 @@ export const Width: StoryObj<typeof Select> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        <Select {...args} width={width} key={width} />
+        <Select {...args} key={width} width={width} />
       ))}
     </Stack>
   ),
@@ -73,7 +73,7 @@ export const Size: StoryObj<typeof Select> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'default', 's'].map((size) => (
-        <Select {...args} size={size as any} key={size} />
+        <Select {...args} key={size} size={size as any} />
       ))}
     </Stack>
   ),

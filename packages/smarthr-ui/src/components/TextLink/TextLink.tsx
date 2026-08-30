@@ -101,6 +101,7 @@ const ActualTextLink: TextLinkComponent = forwardRef(
         href={href ? href : onClick ? '' : undefined}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
+        className={classNames.anchor}
         // HINT: このコンポーネントは `use client` をつけなくても動作する状態にしたい
         //  - TextLinkにonClickが設定されるパターンは少ない
         //  - elementAsが設定されるパターンはさらに少ないため基本的にa要素になっている
@@ -117,7 +118,6 @@ const ActualTextLink: TextLinkComponent = forwardRef(
               }
             : undefined
         }
-        className={classNames.anchor}
       >
         {prefix && <span className={classNames.prefixWrapper}>{prefix}</span>}
         {children}
