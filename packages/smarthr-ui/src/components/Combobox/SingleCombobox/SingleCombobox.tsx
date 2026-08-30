@@ -192,10 +192,9 @@ const ActualSingleCombobox = <T,>(
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
+  const theme = useTheme()
   const generatedInputId = useId()
   const inputId = id || generatedInputId
-
-  const theme = useTheme()
   const triggerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
