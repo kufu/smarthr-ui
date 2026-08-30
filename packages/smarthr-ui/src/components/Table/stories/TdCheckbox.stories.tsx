@@ -38,7 +38,7 @@ export const AriaLabelledBy: StoryObj<typeof TdCheckbox> = {
       <Table>
         <tbody>
           <tr>
-            <TdCheckbox {...args} aria-labelledby={ariaLabelledBy} vAlign="baseline" />
+            <TdCheckbox {...args} vAlign="baseline" aria-labelledby={ariaLabelledBy} />
             <Td id={ariaLabelledBy}>ラベル名</Td>
           </tr>
         </tbody>

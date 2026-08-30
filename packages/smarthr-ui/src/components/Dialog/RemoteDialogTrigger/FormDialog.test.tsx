@@ -29,16 +29,16 @@ const TargetDialog: FC<{ selected?: Item }> = ({ selected }) => {
   return (
     <FormDialog
       id="repro-dialog"
-      heading="複製"
-      actionButton={{ text: '複製', theme: 'primary' }}
       onOpen={() => setValue(selected ? `（コピー）${selected.title}` : '')}
       onClose={() => setValue('')}
       onSubmit={async (_e, { close }) => close()}
+      heading="複製"
+      actionButton={{ text: '複製', theme: 'primary' }}
     >
       <Input
         name="title"
-        aria-label="テンプレート名"
         value={value}
+        aria-label="テンプレート名"
         onChange={(e) => setValue(e.target.value)}
       />
     </FormDialog>

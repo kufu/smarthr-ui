@@ -127,19 +127,19 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
+        className={classNames.wrapper}
+        data-files-dragged-over={filesDraggedOver || undefined}
         onDrop={functions.handleDrop}
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
-        className={classNames.wrapper}
-        data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
         <SelectButton
-          label={selectButtonLabel}
           disabled={disabled}
           error={error}
-          handleClick={functions.handleClickButton}
           className={classNames.button}
+          handleClick={functions.handleClickButton}
+          label={selectButtonLabel}
         />
         <VisuallyHiddenText>
           {/* TODO: この input にアクセシブルネームが設定されていない。VisuallyHiddenText で視覚的に隠されているが aria-hidden ではないためアクセシビリティツリーに残る。aria-label 等で適切なラベルを付与する必要がある */}
@@ -148,12 +148,12 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             {...rest}
             ref={ref}
             type="file"
-            multiple={multiple}
             disabled={disabled}
+            multiple={multiple}
             tabIndex={-1}
             aria-invalid={error || undefined}
-            onChange={functions.handleChange}
             data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
           />
         </VisuallyHiddenText>
       </div>
@@ -169,11 +169,11 @@ const SelectButton = memo<{
   className: string
 }>(({ label, disabled, error, handleClick, className }) => (
   <Button
-    prefix={<FaFolderOpenIcon />}
     disabled={disabled}
+    className={className}
     data-error={error || undefined}
     onClick={handleClick}
-    className={className}
+    prefix={<FaFolderOpenIcon />}
   >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
   </Button>

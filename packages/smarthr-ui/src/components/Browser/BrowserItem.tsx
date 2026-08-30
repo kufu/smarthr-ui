@@ -71,8 +71,8 @@ export const BrowserItem: FC<Props> = ({
   return (
     <label htmlFor={inputId} className={actualClassName}>
       <input
-        id={inputId}
         type="radio"
+        id={inputId}
         name={`column-${columnIndex}`}
         value={itemValue}
         checked={selected}
@@ -81,13 +81,13 @@ export const BrowserItem: FC<Props> = ({
         onKeyDown={HANDLE_KEYDOWN}
         onChange={handleChangeInput}
       />
-      <BodyCluster label={itemLabel} hasChildren={itemHasChildren} />
+      <BodyCluster hasChildren={itemHasChildren} label={itemLabel} />
     </label>
   )
 }
 
 const BodyCluster = memo<{ label: string; hasChildren: boolean }>(({ label, hasChildren }) => (
-  <Cluster align="center" justify="space-between" as="span">
+  <Cluster as="span" align="center" justify="space-between">
     <span>{label}</span>
     {hasChildren && <FaAngleRightIcon />}
   </Cluster>

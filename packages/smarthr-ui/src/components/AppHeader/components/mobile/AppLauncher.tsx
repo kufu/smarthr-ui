@@ -76,16 +76,16 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
-          title={searchInputTitle}
-          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
-          width="100%"
           value={searchQuery}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          title={searchInputTitle}
+          width="100%"
           onChange={onChangeSearchQuery}
+          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
 
-      <Cluster className={CLASS_NAMES.headArea} justify="space-between" align="center">
+      <Cluster justify="space-between" align="center" className={CLASS_NAMES.headArea}>
         {mode === 'search' ? (
           <SearchResultText>
             <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
@@ -99,7 +99,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
         )}
       </Cluster>
 
-      <Scroller className={CLASS_NAMES.scrollArea} styleType="scroll">
+      <Scroller styleType="scroll" className={CLASS_NAMES.scrollArea}>
         <AppLauncherFeatures features={features} page={page} loading={loading} error={error} />
       </Scroller>
 

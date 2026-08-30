@@ -70,9 +70,9 @@ export const MobileHeader: FC<InternalHeaderProps> = ({
         >
           <Header
             {...rest}
-            className={`${className} min-[752px]:!shr-hidden`}
-            tenants={isMenuAvailable ? undefined : tenants}
             currentTenantId={isMenuAvailable ? undefined : currentTenantId}
+            tenants={isMenuAvailable ? undefined : tenants}
+            className={`${className} min-[752px]:!shr-hidden`}
             onTenantSelect={isMenuAvailable ? undefined : onTenantSelect}
           >
             {children}
@@ -86,8 +86,8 @@ export const MobileHeader: FC<InternalHeaderProps> = ({
                 appName={appName}
                 tenantSelector={
                   <TenantSelector
-                    tenants={tenants}
                     currentTenantId={currentTenantId}
+                    tenants={tenants}
                     onTenantSelect={onTenantSelect}
                   />
                 }

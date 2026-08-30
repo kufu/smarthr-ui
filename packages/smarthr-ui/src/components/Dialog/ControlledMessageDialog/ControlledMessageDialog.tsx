@@ -66,15 +66,15 @@ export const ControlledMessageDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      ariaLabelledby={heading.id}
       className={className}
+      ariaLabelledby={heading.id}
       onPressEscape={onPressEscape}
     >
       <MessageDialogContentInner
-        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         handleClickClose={functions.handleClickClose}
+        heading={heading}
         closeButton={closeButton}
       >
         {children}

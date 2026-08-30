@@ -47,13 +47,13 @@ const CLASS_NAMES = {
 export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, activeRef }) => (
   <button
     ref={activeRef}
-    type="button"
     role="option"
+    type="button"
     id={id}
-    data-active={!!activeRef}
-    aria-selected={isNew ? false : selected}
     disabled={isNew ? undefined : disabled}
     className={isNew ? CLASS_NAMES.new : CLASS_NAMES.select}
+    aria-selected={isNew ? false : selected}
+    data-active={!!activeRef}
   >
     {isNew ? (
       <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>

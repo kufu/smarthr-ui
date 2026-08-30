@@ -8,14 +8,14 @@ export default {
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <Cluster gap={2} id={id} key={id}>
+        <Cluster key={id} id={id} gap={2}>
           {[false, true].map((checked) =>
             [false, true].map((disabled) => (
               <RadioButton
                 {...args}
-                checked={checked}
-                disabled={disabled}
                 key={`${id}-${checked}-${disabled}`}
+                disabled={disabled}
+                checked={checked}
               />
             )),
           )}

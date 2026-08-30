@@ -228,26 +228,26 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   return (
     <DialogContentInner
       {...rest}
-      isOpen={isOpen}
-      ariaLabelledby={heading.id}
-      className={className}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       focusTrapRef={focusTrapRef}
+      isOpen={isOpen}
+      className={className}
+      ariaLabelledby={heading.id}
+      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
     >
       <StepFormDialogContentInner
-        heading={heading}
         activeStep={activeStep}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         firstStep={firstStep}
         stepLength={stepLength}
-        submitButton={submitButton}
-        closeButton={closeButton}
-        backButton={backButton}
+        responseStatus={responseStatus}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}
-        responseStatus={responseStatus}
+        heading={heading}
+        submitButton={submitButton}
+        closeButton={closeButton}
+        backButton={backButton}
       >
         {children}
       </StepFormDialogContentInner>

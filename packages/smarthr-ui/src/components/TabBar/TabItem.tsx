@@ -94,9 +94,9 @@ export const TabItem: FC<Props> = ({
     return (
       <Tooltip
         {...tabAttrs}
-        message={disabledReason.message}
-        aria-disabled={disabled}
         className="focus-visible:shr-focus-indicator"
+        aria-disabled={disabled}
+        message={disabledReason.message}
       >
         <TabButton
           {...rest}
@@ -131,10 +131,10 @@ const TabButton = memo<
     <UnstyledButton
       {...rest}
       type="button"
-      value={id}
       id={id}
-      onClick={handleClick}
+      value={id}
       className={classNames.wrapper}
+      onClick={handleClick}
     >
       <span className={classNames.label}>{children}</span>
       {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}

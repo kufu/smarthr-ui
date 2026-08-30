@@ -103,7 +103,7 @@ export const RemoteDialogTrigger: FC<
   }, [targetId, latest])
 
   return (
-    <span className="smarthr-ui-RemoteDialogTrigger shr-contents" ref={ref}>
+    <span ref={ref} className="smarthr-ui-RemoteDialogTrigger shr-contents">
       {children}
     </span>
   )

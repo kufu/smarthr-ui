@@ -20,7 +20,7 @@ export const ButtonWrapper: FC<Props> = (props: Props) => {
     const Component = elementAs || 'a'
 
     return (
-      <Component {...rest} className={classNames.wrapper} ref={anchorRef}>
+      <Component {...rest} ref={anchorRef} className={classNames.wrapper}>
         {children}
       </Component>
     )
@@ -34,8 +34,8 @@ export const ButtonWrapper: FC<Props> = (props: Props) => {
     <button
       {...rest}
       ref={buttonRef}
-      aria-disabled={disabledOnLoading}
       className={classNames.wrapper}
+      aria-disabled={disabledOnLoading}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {children}
