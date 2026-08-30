@@ -475,17 +475,15 @@ export const ListBox = memo(
                 <Loader aria-hidden />
               </div>
             ) : options.length === 0 ? (
-              <>
-                {/* eslint-disable-next-line jsx-a11y/no-redundant-roles -- output要素のrole="status"は暗黙的だが、ブラウザ間の差異への対応としてフォールバック用に明示する */}
-                <output role="status" htmlFor={inputId} className={CLASS_NAMES.noItems}>
-                  {noResultText ?? (
-                    <Localizer
-                      id="smarthr-ui/Combobox/noResultsText"
-                      defaultText="一致する選択肢がありません。"
-                    />
-                  )}
-                </output>
-              </>
+              /* eslint-disable-next-line jsx-a11y/no-redundant-roles -- output要素のrole="status"は暗黙的だが、ブラウザ間の差異への対応としてフォールバック用に明示する */
+              <output role="status" htmlFor={inputId} className={CLASS_NAMES.noItems}>
+                {noResultText ?? (
+                  <Localizer
+                    id="smarthr-ui/Combobox/noResultsText"
+                    defaultText="一致する選択肢がありません。"
+                  />
+                )}
+              </output>
             ) : (
               items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
