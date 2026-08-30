@@ -1,0 +1,1 @@
+export { useTableHeadCellCount } from './useTableHeadCellCount'

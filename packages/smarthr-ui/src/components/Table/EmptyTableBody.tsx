@@ -4,7 +4,7 @@ import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } 
 import { tv } from 'tailwind-variants'
 
 import { Td } from './Td'
-import { useTableHeadCellCount } from './useTableHeadCellCount'
+import { useTableHeadCellCount } from './client/hooks/useTableHeadCellCount'
 
 import type { Gap } from '../../types'
 

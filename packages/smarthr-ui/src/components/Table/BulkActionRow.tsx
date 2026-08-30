@@ -3,7 +3,7 @@
 import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTableHeadCellCount } from './useTableHeadCellCount'
+import { useTableHeadCellCount } from './client/hooks/useTableHeadCellCount'
 
 const classNameGenerator = tv({
   slots: {
