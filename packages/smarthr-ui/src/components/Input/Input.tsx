@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/client/useTheme'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOnce } from '../../hooks/useOnce'
-import { useTheme } from '../../hooks/useTheme'
 
 type BaseProps = {
   /** input 要素の `type` 値 */

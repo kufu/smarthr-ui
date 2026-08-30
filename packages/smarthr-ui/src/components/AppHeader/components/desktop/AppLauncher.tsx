@@ -3,7 +3,7 @@
 import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../../../hooks/useTheme'
+import { useTheme } from '../../../../hooks/client/useTheme'
 import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'

@@ -17,11 +17,11 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../../hooks/client/useTheme'
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { useOuterClick } from '../../../hooks/useOuterClick'
-import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'

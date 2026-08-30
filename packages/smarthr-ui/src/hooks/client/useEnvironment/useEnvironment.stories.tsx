@@ -3,7 +3,7 @@ import { Heading } from '../../../components/Heading'
 import { Stack } from '../../../components/Layout'
 import { Groupbox } from '../../../components/Panel'
 import { createTheme, defaultMediaQuery } from '../../../themes'
-import { ThemeProvider } from '../../useTheme'
+import { ThemeProvider } from '../../client/useTheme'
 
 import { EnvironmentProvider } from './EnvironmentProvider'
 import { useEnvironment } from './useEnvironment'

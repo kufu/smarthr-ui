@@ -17,11 +17,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/client/useTheme'
 import { useAnimationFrame } from '../../hooks/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
 import { useMergeRefs } from '../../hooks/useMergeRefs'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useTheme } from '../../hooks/useTheme'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'
