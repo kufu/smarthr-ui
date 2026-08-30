@@ -19,7 +19,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
-import { useAreaOutsideCallbackRef } from '../../../hooks/useAreaOutsideClick'
+import { useAreaOutsideCallbackRef } from '../../../hooks/useAreaOutsideCallbackRef'
 import { useLatest } from '../../../hooks/useLatest'
 import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
