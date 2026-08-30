@@ -3,8 +3,8 @@
 import { type FC, type ReactNode, useContext } from 'react'
 
 import { defaultMediaQuery } from '../../../themes'
+import { useTheme } from '../../client/useTheme'
 import { useMediaQueries } from '../../useMediaQueries'
-import { useTheme } from '../../useTheme'
 
 import { type Environment, EnvironmentContext } from './useEnvironment'
 

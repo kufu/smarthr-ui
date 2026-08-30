@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 

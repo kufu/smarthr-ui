@@ -18,10 +18,10 @@ import {
 import Draggable, { type DraggableBounds } from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useLatest } from '../../../hooks/useLatest'
-import { useMergeRefs } from '../../../hooks/useMergeRefs'
 import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'

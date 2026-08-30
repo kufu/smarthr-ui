@@ -2,7 +2,7 @@
 
 import { type FC, type ReactElement, useCallback } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/useCallbackRefCleanupForReact18'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 
 import { useDisclosure } from './useDisclosure'

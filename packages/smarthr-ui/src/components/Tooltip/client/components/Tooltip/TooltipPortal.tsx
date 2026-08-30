@@ -1,7 +1,7 @@
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../../../../hooks/useTheme'
+import { useTheme } from '../../../../../hooks/client/useTheme'
 import { debounce } from '../../../../../libs/debounce'
 import { ControlledTooltip } from '../../../ControlledTooltip'
 

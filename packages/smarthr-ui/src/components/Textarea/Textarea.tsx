@@ -17,10 +17,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
+import { useOnce } from '../../hooks/client/useOnce'
+import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
-import { useMergeRefs } from '../../hooks/useMergeRefs'
-import { useOnce } from '../../hooks/useOnce'
-import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes'
