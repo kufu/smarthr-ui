@@ -18,9 +18,9 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useAreaOutsideCallbackRef } from '../../hooks/client/useAreaOutsideCallbackRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
-import { useAreaOutsideCallbackRef } from '../../hooks/useAreaOutsideCallbackRef'
 import { useLatest } from '../../hooks/useLatest'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'

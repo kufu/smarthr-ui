@@ -1,7 +1,8 @@
 import { type RefObject, useCallback } from 'react'
 
+import { useLatest } from '../useLatest'
+
 import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact18'
-import { useLatest } from './useLatest'
 
 /**
  * 指定された複数の要素を「ひとつの領域（Area）」とみなし
@@ -32,8 +33,8 @@ export function useAreaOutsideCallbackRef(
         }
 
         const handleClick = (e: MouseEvent) => {
-          // TODO: 現在はareaを成立させるotherRefsの要素は常に存在しているが、
-          // 対象要素が可変する場合は下記処理を復活させる
+          // TODO: 現在はareaを成立させるotherRefsの要素はcallbackRefがmountされている場合、
+          // 常にmountされている前提だが、対象要素が可変する場合は下記処理を復活させる
           // // 監視対象がない（null）場合は、area不成立とみなしてskip
           // if (!latest.otherRefs) return
           const path = e.composedPath()
