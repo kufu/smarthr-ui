@@ -88,20 +88,21 @@ export const ActualTable: FC<Props> = ({
   children,
   ...rest
 }) => {
-  const classNames = useMemo(() => {
-    const { table } = classNameGenerator({
-      borderType,
-      borderStyle,
-      fixedHead,
-      layout,
-      rounded,
-      className,
-    })
-    return { table: table({ className }) }
-  }, [borderType, borderStyle, className, fixedHead, layout, rounded])
+  const actualClassName = useMemo(
+    () =>
+      classNameGenerator({
+        borderType,
+        borderStyle,
+        fixedHead,
+        layout,
+        rounded,
+        className,
+      }),
+    [borderType, borderStyle, className, fixedHead, layout, rounded],
+  )
 
   return (
-    <table {...rest} className={classNames.table}>
+    <table {...rest} className={actualClassName}>
       {children}
     </table>
   )

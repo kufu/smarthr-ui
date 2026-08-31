@@ -8,9 +8,9 @@ import {
   useCallback,
 } from 'react'
 
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { defaultHtmlFontSize } from '../../../../themes'
 import { Scroller } from '../../../Scroller'
-import { useMergeRefs } from '../hooks/useTableHeadCellCount'
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
