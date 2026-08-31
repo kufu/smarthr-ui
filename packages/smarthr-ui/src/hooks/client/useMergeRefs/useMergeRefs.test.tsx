@@ -123,10 +123,15 @@ describe('useMergeRefs', () => {
       expect(internal.cleanup).not.toHaveBeenCalled()
     })
 
-    test('参照が変わったrefは旧refがcleanupされ、新refにnodeが設定される', () => {
+    test('参照が変わったrefは旧refのcleanupが先、新refへのnode設定が後', () => {
       const internal = createInternalRef()
-      const oldExternalRef = vi.fn()
-      const newExternalRef = vi.fn()
+      const order: string[] = []
+      const oldExternalRef = vi.fn((node: HTMLDivElement | null) => {
+        order.push(node ? 'old-set' : 'old-cleanup')
+      })
+      const newExternalRef = vi.fn((node: HTMLDivElement | null) => {
+        order.push(node ? 'new-set' : 'new-cleanup')
+      })
 
       const { rerender, getByTestId } = render(
         <Fixture internalRef={internal.setup} externalRef={oldExternalRef} />,
@@ -135,11 +140,45 @@ describe('useMergeRefs', () => {
       const node = getByTestId('target')
 
       expect(oldExternalRef).toHaveBeenCalledWith(node)
+      order.length = 0
 
       rerender(<Fixture internalRef={internal.setup} externalRef={newExternalRef} />)
 
       expect(oldExternalRef).toHaveBeenLastCalledWith(null)
       expect(newExternalRef).toHaveBeenCalledWith(node)
+      // 同一リソースへの新旧の登録が入れ替わる場合を考慮し、旧refのcleanupを先に済ませてから新refを設定する
+      expect(order).toEqual(['old-cleanup', 'new-set'])
+    })
+
+    test('先頭と末尾のrefが同時に差し替わっても、cleanupは元の並びの逆順・設定は先頭から順になる', () => {
+      const order: string[] = []
+      const makeRef = (name: string) => (node: HTMLDivElement | null) => {
+        order.push(node ? `${name}-set` : `${name}-cleanup`)
+      }
+
+      const second = makeRef('second')
+
+      const ThreeRefFixture = ({
+        first,
+        third,
+      }: {
+        first: Ref<HTMLDivElement>
+        third: Ref<HTMLDivElement>
+      }) => {
+        const mergedRef = useMergeRefs(first, second, third)
+
+        return <div ref={mergedRef} />
+      }
+
+      const { rerender } = render(
+        <ThreeRefFixture first={makeRef('first')} third={makeRef('third')} />,
+      )
+      order.length = 0
+
+      // 中央(second)は差し替えず、先頭(first)と末尾(third)だけ参照が変わる
+      rerender(<ThreeRefFixture first={makeRef('firstB')} third={makeRef('thirdB')} />)
+
+      expect(order).toEqual(['third-cleanup', 'first-cleanup', 'firstB-set', 'thirdB-set'])
     })
 
     test('RefObjectが差し替わった場合も旧refのcurrentがnullになり、新refにnodeが設定される', () => {
