@@ -169,16 +169,15 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   }, [latest])
 
   const classNames = useMemo(() => {
-    const { wrapper, actionArea, buttonArea, message } = dialogContentInner({
-      mobileType: actualMobileType,
-    })
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
     const footer = stepFormDialogFooter({ mobileType: actualMobileType })
+    const commonAttrs = { mobileType: actualMobileType }
 
     return {
-      wrapper: wrapper(),
-      actionArea: actionArea({ mobile }),
-      buttonArea: buttonArea(),
-      message: message(),
+      wrapper: wrapper(commonAttrs),
+      actionArea: actionArea({ mobile, mobileType: actualMobileType }),
+      buttonArea: buttonArea(commonAttrs),
+      message: message(commonAttrs),
       sheetButtonRow: footer.sheetButtonRow(),
       backButton: footer.backButton(),
       closeButton: footer.closeButton(),

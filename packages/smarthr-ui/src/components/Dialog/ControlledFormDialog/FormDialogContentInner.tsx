@@ -107,15 +107,16 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 
   const classNames = useMemo(() => {
     const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
-      formDialogContentInner({ mobileType: actualMobileType })
+      formDialogContentInner()
+    const commonAttrs = { mobileType: actualMobileType }
 
     return {
       form: form(),
-      wrapper: wrapper(),
-      actionArea: actionArea({ mobile }),
-      actionAreaInner: actionAreaInner(),
-      buttonArea: buttonArea(),
-      message: message(),
+      wrapper: wrapper(commonAttrs),
+      actionArea: actionArea({ mobile, mobileType: actualMobileType }),
+      actionAreaInner: actionAreaInner(commonAttrs),
+      buttonArea: buttonArea(commonAttrs),
+      message: message(commonAttrs),
     }
   }, [mobile, actualMobileType])
 
