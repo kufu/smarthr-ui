@@ -61,6 +61,7 @@ export const locale = {
   'smarthr-ui/FilterDropdown/status': '適用中',
   'smarthr-ui/FilterDropdown/triggerText': '絞り込み',
   'smarthr-ui/FormDialog/closeButtonLabel': 'キャンセル',
+  'smarthr-ui/IndexNav/ariaLabel': 'ページ内リンク',
   'smarthr-ui/InformationPanel/closeButtonLabel': '閉じる',
   'smarthr-ui/InformationPanel/openButtonLabel': '開く',
   'smarthr-ui/InputFile/destroy': '削除',
