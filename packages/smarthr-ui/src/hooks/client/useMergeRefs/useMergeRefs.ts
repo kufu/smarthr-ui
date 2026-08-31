@@ -72,16 +72,31 @@ export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) => {
     // 要素が未マウントの場合は反映するものがない。
     // マウント時に callback ref が最新の refs を設定するため、ここでは何もしなくてよい
     if (node) {
-      cleanupAppliedRefs(current.applied.filter(({ ref }) => !refs.includes(ref)))
+      // refsを1回舐めながら、旧appliedから該当を見つけ次第取り除いていく。
+      // ループ後にremainingへ残ったものが、新しいrefsに存在しなくなった要素
+      const remaining = current.applied.slice()
+      const newRefIndexes: number[] = []
 
-      // 参照が変わっていない ref は設定済みの cleanup ごと引き継ぎ、再実行しない
-      current.applied = refs.map(
-        (ref) =>
-          current.applied.find((applied) => applied.ref === ref) ?? {
-            ref,
-            cleanup: setRef(ref, node),
-          },
-      )
+      current.applied = refs.map((ref, i) => {
+        const index = remaining.findIndex((applied) => applied.ref === ref)
+
+        // 参照が変わっていない ref は設定済みの cleanup ごと引き継ぎ、再実行しない
+        if (index !== -1) {
+          return remaining.splice(index, 1)[0]
+        }
+
+        newRefIndexes.push(i)
+
+        return { ref, cleanup: undefined }
+      })
+
+      // 消えるrefを先にcleanupしてから、新しいrefにnodeを設定する。
+      // 同一リソースへの新旧の登録が入れ替わる場合でも、事故が起きないようにするため
+      cleanupAppliedRefs(remaining)
+
+      for (const i of newRefIndexes) {
+        current.applied[i].cleanup = setRef(current.applied[i].ref, node)
+      }
     }
   }, refs)
 
@@ -98,18 +113,16 @@ const setRef = <T>(ref: MergeableRefType<T>, value: T | null) => {
   }
 }
 
-const cleanupRef = <T>(ref: MergeableRefType<T>, cleanup: (() => void) | undefined) => {
-  if (cleanup) {
-    cleanup()
-  } else {
-    setRef(ref, null)
-  }
-}
-
 const cleanupAppliedRefs = <T>(applied: Array<AppliedRef<T>>) => {
   // 設定時とは逆順でcleanupする。後方のrefが前方のrefのcurrentに依存していても、
   // その依存先がcleanupで先に消されないようにするため
   for (let i = applied.length - 1; i >= 0; i--) {
-    cleanupRef(applied[i].ref, applied[i].cleanup)
+    const cleanup = applied[i].cleanup
+
+    if (cleanup) {
+      cleanup()
+    } else {
+      setRef(applied[i].ref, null)
+    }
   }
 }
