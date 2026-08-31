@@ -5,9 +5,8 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { Th } from '../Th'
-import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
-import { BulkActionRow, EmptyTableBody } from '../client/components'
+import { BulkActionRow, EmptyTableBody, ThCheckbox } from '../client/components'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
