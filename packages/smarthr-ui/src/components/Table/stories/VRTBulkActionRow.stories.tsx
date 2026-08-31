@@ -1,6 +1,6 @@
-import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Th } from '../Th'
+import { BulkActionRow } from '../client/components'
 
 import type { Meta } from '@storybook/react-webpack5'
 
