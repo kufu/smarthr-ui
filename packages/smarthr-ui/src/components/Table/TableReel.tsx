@@ -6,10 +6,12 @@ import {
   type PropsWithChildren,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { TableScroller } from './TableScroller'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 const TR_SELECTOR = 'table tr'
@@ -20,7 +22,7 @@ const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR}
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
-    tableWrapperRef: React.RefObject<HTMLDivElement>
+    fixedHead?: boolean
   }
 
 const classNameGenerator = tv({
@@ -30,11 +32,12 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...rest }) => {
+export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const [showShadow, setShowShadow] = useState(false)
 
   useEffect(() => {
-    const wrapper = tableWrapperRef.current
+    const wrapper = wrapperRef.current
 
     if (!wrapper) {
       return
@@ -112,7 +115,7 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
       mutationObserver.disconnect()
       cellObserver.disconnect()
     }
-  }, [tableWrapperRef])
+  }, [wrapperRef])
 
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator()
@@ -124,10 +127,12 @@ export const TableReel: FC<Props> = ({ className, children, tableWrapperRef, ...
   }, [showShadow, className])
 
   return (
-    <div className={classNames.wrapper}>
-      <div {...rest} className={classNames.inner}>
-        {children}
+    <TableScroller ref={wrapperRef} fixedHead={fixedHead}>
+      <div className={classNames.wrapper}>
+        <div {...rest} className={classNames.inner}>
+          {children}
+        </div>
       </div>
-    </div>
+    </TableScroller>
   )
 }
