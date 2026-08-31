@@ -10,11 +10,11 @@ import {
   useRef,
 } from 'react'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
+import { useControlledMobile } from '../useControlledMobile'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -142,12 +142,10 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   responseStatus,
   className,
   isOpen,
-  mobileType,
+  mobileType: orgMobileType,
   ...rest
 }) => {
-  const { mobile } = useEnvironment()
-  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
-  const actualMobileType = mobile ? mobileType : undefined
+  const { mobile, mobileType } = useControlledMobile(orgMobileType)
 
   const defaultTexts = useLocalize({
     closeButtonLabel: {
@@ -237,7 +235,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
-      mobileType={actualMobileType}
+      mobileType={mobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
@@ -250,7 +248,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         stepLength={stepLength}
         responseStatus={responseStatus}
         mobile={mobile}
-        mobileType={actualMobileType}
+        mobileType={mobileType}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}
