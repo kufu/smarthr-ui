@@ -10,7 +10,7 @@ import { useCallback, useRef } from 'react'
  * React 18/19 どちらでも同じ挙動になるようにする。
  *
  * cleanup 関数を返さなかった場合は、React 19 と同様に callback 自体を
- * node = null で呼び直す（useMergeRefs の cleanupRef と同じフォールバック）。
+ * node = null で呼び直す（useMergeRefs の cleanupAppliedRefs と同じフォールバック）。
  * そのため callback 側で node が null の場合の処理を書いても問題ない。
  *
  * callback は呼び出し側で useCallback によりメモ化して渡す。
