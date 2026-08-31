@@ -116,7 +116,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
       actionArea: actionArea({ mobile, mobileType: actualMobileType }),
       actionAreaInner: actionAreaInner(commonAttrs),
       buttonArea: buttonArea(commonAttrs),
-      message: message(commonAttrs),
+      message: message(),
     }
   }, [mobile, actualMobileType])
 

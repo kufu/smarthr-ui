@@ -177,7 +177,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       wrapper: wrapper(commonAttrs),
       actionArea: actionArea({ mobile, mobileType: actualMobileType }),
       buttonArea: buttonArea(commonAttrs),
-      message: message(commonAttrs),
+      message: message(),
       sheetButtonRow: footer.sheetButtonRow(),
       backButton: footer.backButton(),
       closeButton: footer.closeButton(commonAttrs),
