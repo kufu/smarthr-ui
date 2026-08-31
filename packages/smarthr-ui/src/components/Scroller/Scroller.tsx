@@ -7,7 +7,6 @@ import {
   forwardRef,
   useCallback,
   useMemo,
-  useState,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -80,8 +79,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
-    const [tabIndex, setTabIndex] = useState<0 | undefined>(undefined)
-
     const actualClassName = useMemo(
       () =>
         classNameGenerator({
@@ -97,24 +94,28 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
         if (!node) return
 
         const autoTabIndex = () => {
-          let nextTabIndex: 0 | undefined = undefined
+          let nextTabIndex: '0' | undefined = undefined
 
           switch (direction) {
             case 'vertical':
-              nextTabIndex = node.scrollHeight > node.clientHeight ? 0 : undefined
+              nextTabIndex = node.scrollHeight > node.clientHeight ? '0' : undefined
               break
             case 'horizontal':
-              nextTabIndex = node.scrollWidth > node.clientWidth ? 0 : undefined
+              nextTabIndex = node.scrollWidth > node.clientWidth ? '0' : undefined
               break
             case 'both':
               nextTabIndex =
                 node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth
-                  ? 0
+                  ? '0'
                   : undefined
               break
           }
 
-          setTabIndex(nextTabIndex)
+          if (nextTabIndex === undefined) {
+            node.removeAttribute('tabIndex')
+          } else {
+            node.setAttribute('tabIndex', nextTabIndex)
+          }
         }
 
         autoTabIndex()
@@ -125,6 +126,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
         // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
         // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
         return () => {
+          node.removeAttribute('tabIndex')
           resizeObserver.disconnect()
         }
       },
@@ -137,7 +139,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
 
     const Wrapper = useSectionWrapper(Component)
     const body = (
-      <Component {...rest} ref={mergedRef} tabIndex={tabIndex} className={actualClassName}>
+      <Component {...rest} ref={mergedRef} className={actualClassName}>
         {children}
       </Component>
     )
