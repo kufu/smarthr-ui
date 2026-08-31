@@ -38,7 +38,6 @@
     "@rollup/plugin-node-resolve",
     "@rollup/plugin-replace",
     "@rollup/plugin-typescript",
-    "@storybook/addon-storysource",
     "@storybook/cli",
     "@swc/core",
     "@testing-library/jest-dom",
