@@ -126,7 +126,10 @@ export const DialogContentInner: FC<Props> = ({
     const { layout, inner, background } = classNameGenerator()
 
     return {
-      layout: layout({ size, mobileType: actualMobileType }),
+      layout: layout({
+        size: actualMobileType === 'sheet' ? undefined : size,
+        mobileType: actualMobileType,
+      }),
       inner: inner({ mobileType: actualMobileType, className }),
       background: background(),
     }
