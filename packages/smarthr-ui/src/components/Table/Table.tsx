@@ -1,6 +1,6 @@
 import { ActualTable } from './ActualTable'
-import { TableReel } from './TableReel'
 import { TableScroller } from './TableScroller'
+import { TableReel } from './client/components'
 
 import type { ComponentProps, FC } from 'react'
 
