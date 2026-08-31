@@ -2,6 +2,7 @@
 
 import { type ComponentProps, type FC, type FormEvent, type ReactNode, useMemo } from 'react'
 
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
@@ -23,7 +24,7 @@ type ObjectCloseButtonType = FormDialogContentInnerProps['closeButton']
 
 type BaseProps = Omit<
   FormDialogContentInnerProps,
-  'heading' | 'actionButton' | 'closeButton' | 'handleClickClose' | 'handleSubmit'
+  'heading' | 'actionButton' | 'closeButton' | 'handleClickClose' | 'handleSubmit' | 'mobile'
 > &
   DialogProps & {
     heading: HeadingType
@@ -65,6 +66,12 @@ export const ControlledFormDialog: FC<Props> = ({
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
+
+  // TODO: カスタムhook化する
+  const { mobile } = useEnvironment()
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
+
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -105,7 +112,7 @@ export const ControlledFormDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      mobileType={mobileType}
+      mobileType={actualMobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
@@ -114,7 +121,8 @@ export const ControlledFormDialog: FC<Props> = ({
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         responseStatus={responseStatus}
-        mobileType={mobileType}
+        mobile={mobile}
+        mobileType={actualMobileType}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         heading={heading}

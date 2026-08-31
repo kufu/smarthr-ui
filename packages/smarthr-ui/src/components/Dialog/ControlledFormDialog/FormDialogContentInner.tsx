@@ -8,7 +8,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -66,6 +65,7 @@ export type BaseProps = PropsWithChildren<
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
     mobileType?: 'sheet'
+    mobile: boolean
   }
 >
 
@@ -95,35 +95,31 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   closeButton,
   subActionArea,
   mobileType,
+  mobile,
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
-  const { mobile } = useEnvironment()
-  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
-  const actualMobileType = mobile ? mobileType : undefined
   const actualSubActionArea =
-    typeof subActionArea === 'function'
-      ? subActionArea({ mobileType: actualMobileType })
-      : subActionArea
+    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
 
   const classNames = useMemo(() => {
     const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
       formDialogContentInner()
-    const commonAttrs = { mobileType: actualMobileType }
+    const commonAttrs = { mobileType }
 
     return {
       form: form(),
       wrapper: wrapper(commonAttrs),
-      actionArea: actionArea({ mobile, mobileType: actualMobileType }),
+      actionArea: actionArea({ mobile, mobileType }),
       actionAreaInner: actionAreaInner(commonAttrs),
       buttonArea: buttonArea(commonAttrs),
       message: message(),
     }
-  }, [mobile, actualMobileType])
+  }, [mobileType, mobile])
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={classNames.wrapper}>
-      <DialogHeader mobileType={actualMobileType}>
+      <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <form className={classNames.form} onSubmit={handleSubmit}>
