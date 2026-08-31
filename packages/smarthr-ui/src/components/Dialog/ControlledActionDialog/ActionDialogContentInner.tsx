@@ -10,7 +10,6 @@ import {
   useMemo,
 } from 'react'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -69,6 +68,7 @@ export type BaseProps = PropsWithChildren<
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
     mobileType?: 'sheet'
+    mobile: boolean
   }
 >
 
@@ -91,34 +91,28 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   closeButton,
   subActionArea,
   mobileType,
+  mobile,
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
-  const { mobile } = useEnvironment()
-  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
-  const actualMobileType = mobile ? mobileType : undefined
   const actualSubActionArea =
-    typeof subActionArea === 'function'
-      ? subActionArea({ mobileType: actualMobileType })
-      : subActionArea
+    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, actionAreaInner, buttonArea, message } = dialogContentInner()
-    const commonAttrs = {
-      mobileType: actualMobileType,
-    }
+    const commonAttrs = { mobileType }
 
     return {
       wrapper: wrapper(commonAttrs),
-      actionArea: actionArea({ mobile, mobileType: actualMobileType }),
+      actionArea: actionArea({ mobile, mobileType }),
       actionAreaInner: actionAreaInner(commonAttrs),
       buttonArea: buttonArea(commonAttrs),
       message: message(),
     }
-  }, [mobile, actualMobileType])
+  }, [mobileType, mobile])
 
   return (
     <Section className={classNames.wrapper}>
-      <DialogHeader mobileType={actualMobileType}>
+      <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
