@@ -3,7 +3,7 @@ import { ControlledMessageDialog } from '../ControlledMessageDialog'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/ControlledMessageDialog/VRT',
+  title: 'Components/Dialog/ControlledMessageDialog/VRT Mobile',
   component: ControlledMessageDialog,
   args: {
     width: '40em',
@@ -19,15 +19,17 @@ export default {
   },
   parameters: {
     chromatic: { disableSnapshot: false },
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
   },
   tags: ['!autodocs'],
 } satisfies Meta<typeof ControlledMessageDialog>
 
-export const VRT = {}
+export const Default = {}
 
-export const VRTForcedColors: StoryObj<typeof ControlledMessageDialog> = {
-  ...VRT,
-  parameters: {
-    chromatic: { forcedColors: 'active' },
+export const Sheet: StoryObj<typeof ControlledMessageDialog> = {
+  args: {
+    mobileType: 'sheet',
   },
 }

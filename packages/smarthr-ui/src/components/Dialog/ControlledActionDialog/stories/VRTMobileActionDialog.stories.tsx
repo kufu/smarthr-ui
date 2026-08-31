@@ -4,7 +4,7 @@ import { ControlledActionDialog } from '../ControlledActionDialog'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/ControlledActionDialog/VRT',
+  title: 'Components/Dialog/ControlledActionDialog/VRT Mobile',
   component: ControlledActionDialog,
   args: {
     width: '40em',
@@ -27,15 +27,17 @@ export default {
   },
   parameters: {
     chromatic: { disableSnapshot: false },
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
   },
   tags: ['!autodocs'],
 } satisfies Meta<typeof ControlledActionDialog>
 
-export const VRT = {}
+export const Default = {}
 
-export const VRTForcedColors: StoryObj<typeof ControlledActionDialog> = {
-  ...VRT,
-  parameters: {
-    chromatic: { forcedColors: 'active' },
+export const Sheet: StoryObj<typeof ControlledActionDialog> = {
+  args: {
+    mobileType: 'sheet',
   },
 }

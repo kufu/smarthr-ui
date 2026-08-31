@@ -3,7 +3,7 @@ import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/ControlledStepFormDialog/VRT',
+  title: 'Components/Dialog/ControlledStepFormDialog/VRT Mobile',
   component: ControlledStepFormDialog,
   args: {
     width: '30em',
@@ -28,15 +28,17 @@ export default {
   },
   parameters: {
     chromatic: { disableSnapshot: false },
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
   },
   tags: ['!autodocs'],
 } satisfies Meta<typeof ControlledStepFormDialog>
 
-export const VRT = {}
+export const Default = {}
 
-export const VRTForcedColors: StoryObj<typeof ControlledStepFormDialog> = {
-  ...VRT,
-  parameters: {
-    chromatic: { forcedColors: 'active' },
+export const Sheet: StoryObj<typeof ControlledStepFormDialog> = {
+  args: {
+    mobileType: 'sheet',
   },
 }

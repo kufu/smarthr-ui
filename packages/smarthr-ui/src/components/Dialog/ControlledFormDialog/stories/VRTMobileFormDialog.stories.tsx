@@ -6,7 +6,7 @@ import { ControlledFormDialog } from '../ControlledFormDialog'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Dialog/ControlledFormDialog/VRT',
+  title: 'Components/Dialog/ControlledFormDialog/VRT Mobile',
   component: ControlledFormDialog,
   args: {
     width: '40em',
@@ -35,15 +35,17 @@ export default {
   },
   parameters: {
     chromatic: { disableSnapshot: false },
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
   },
   tags: ['!autodocs'],
 } satisfies Meta<typeof ControlledFormDialog>
 
-export const VRT = {}
+export const Default = {}
 
-export const VRTForcedColors: StoryObj<typeof ControlledFormDialog> = {
-  ...VRT,
-  parameters: {
-    chromatic: { forcedColors: 'active' },
+export const Sheet: StoryObj<typeof ControlledFormDialog> = {
+  args: {
+    mobileType: 'sheet',
   },
 }
