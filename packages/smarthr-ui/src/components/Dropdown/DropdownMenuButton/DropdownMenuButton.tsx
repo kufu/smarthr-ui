@@ -17,7 +17,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/useCallbackRefCleanupForReact18'
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
@@ -242,11 +242,13 @@ const MemoizedTriggerButton = memo<
 
   return (
     <DropdownTrigger
-      className={classNames.triggerWrapper}
       tooltip={{ show: !!onlyIconTrigger, message: children }}
+      className={classNames.triggerWrapper}
     >
       <Button
         {...rest}
+        size={triggerSize}
+        className={classNames.triggerButton}
         suffix={
           !onlyIconTrigger && (
             <FaCaretDownIcon
@@ -266,8 +268,6 @@ const MemoizedTriggerButton = memo<
             />
           )
         }
-        size={triggerSize}
-        className={classNames.triggerButton}
       >
         <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
       </Button>

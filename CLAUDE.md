@@ -732,6 +732,20 @@ const functions = useMemo(() => {
 
 最終的なfunctionsオブジェクトには、JSX内で使用する関数や、useEffect等で外部から参照する関数のみを含めます。
 
+**functionsは再作成されないように作る:**
+
+`functions` の依存配列には `latest` と、安定していることが保証できる値のみを含めます。上記の boolean 化した値（`hasHrefTemplate` など）も安定しているため含めて構いません。
+
+```typescript
+// ✅ latest と boolean化した値のみ。再作成されない
+const functions = useMemo(() => ({ ... }), [hasHrefTemplate, latest])
+
+// ❌ ユーザー操作で変化する値を含めると再作成される
+const functions = useMemo(() => ({ ... }), [isExpanded, latest])
+```
+
+`functions` が再作成されると、それを依存配列に持つ他の hook まで連鎖して再実行されます。ユーザー操作で変化し得る値は依存配列に入れず、`latest` 経由で参照してください。
+
 **依存配列の順序ルール:**
 functionsを他のhookの依存配列に含める場合、基本的に最後尾に配置しますが、`latest`（useLatestの結果）よりは前に配置します：
 
@@ -1165,6 +1179,150 @@ const fullName = `${firstName} ${lastName}`
 ```
 
 **理由:** 単純な派生値のためだけに `state` と `useEffect` を使うと、レンダーが1回余分に発生し、値が一時的に古いまま表示される瞬間が生まれる。計算コストが高い場合のみ `useMemo` を使う。
+
+#### useEffectは可能な限り1つにまとめる
+
+`useEffect` を分けるほど、処理のきっかけと順序が追いにくくなります。同じきっかけで走るものは1つにまとめてください。
+
+**1. 同じ依存配列のeffectは統合する**
+
+```tsx
+// ❌ isOpenを見るeffectと、リスナー登録のeffectが分かれている
+useEffect(() => {
+  if (isOpen) {
+    setPosition({ x: 0, y: 0 })
+    focusTargetRef.current?.focus()
+  }
+}, [isOpen])
+
+useEffect(() => {
+  document.addEventListener('focus', focusHandler, true)
+  return () => document.removeEventListener('focus', focusHandler, true)
+}, [])
+
+// ✅ 1つにまとめる
+useEffect(() => {
+  if (isOpen) {
+    setPosition({ x: 0, y: 0 })
+    focusTargetRef.current?.focus()
+  }
+
+  document.addEventListener('focus', focusHandler, true)
+
+  return () => document.removeEventListener('focus', focusHandler, true)
+}, [isOpen])
+```
+
+**2. 依存配列の `latest` / `functions` は無視してよい**
+
+どちらも再作成されない前提で作るため、再実行のきっかけになりません。
+
+```tsx
+// この2つは実質どちらも isOpen でしか再実行されない → 統合できる
+useEffect(() => { ... }, [isOpen])
+useEffect(() => { ... }, [isOpen, functions, latest])
+```
+
+**3. stateを介した多段構成にしない**
+
+state の更新を待って次の effect が走る形は、レンダリングを余分に発生させ、処理の流れも追いにくくなります。次の値を先に算出し、同じ effect 内で使い切ってください。
+
+```tsx
+// ❌ stateの更新を待って次のeffectが走る3段構成
+useEffect(() => {
+  setDefaultPosition((current) => /* 算出 */)
+}, [isOpen])
+
+useEffect(() => {
+  /* defaultPositionを見て中央寄せを計算し setCentering */
+}, [isOpen, defaultPosition])
+
+useEffect(() => {
+  /* centeringを見て setDraggableBounds */
+}, [isOpen, centering.top])
+
+// ✅ 次の値を先に算出して同じeffect内で使い切る
+useEffect(() => {
+  const nextDefaultPosition = /* latestから算出 */
+  setDefaultPosition(nextDefaultPosition)
+
+  const nextCentering = /* nextDefaultPositionから算出 */
+  setCentering(nextCentering)
+  setDraggableBounds(/* nextCenteringから算出 */)
+}, [isOpen, functions, latest])
+```
+
+更新関数形式（`setX((current) => ...)`）をやめ、`latest` から現在値を読んで次の値を先に確定させるのが要点です。
+
+**4. cleanupを独立したeffectに持たせない**
+
+```tsx
+// ❌ cleanupのためだけのeffect
+useEffect(() => functions.cleanup, [functions])
+
+// ✅ 対応するeffectのcleanupにまとめる
+useEffect(() => {
+  // ...
+
+  return () => {
+    functions.cleanup()
+    document.removeEventListener('focus', focusHandler, true)
+  }
+}, [isOpen, functions, latest])
+```
+
+**5. 条件分岐の内側に副作用を入れない**
+
+統合する際、まとめた先の条件分岐の内側に入れてしまうと、その条件を満たさないケースで処理が走らなくなります。
+
+```tsx
+// ❌ 中央寄せの計算に紛れ込ませた結果、中央寄せしない場合にboundsが更新されない
+if (isXCenter || isYCenter) {
+  const nextCentering = /* 算出 */
+  setCentering(nextCentering)
+  setDraggableBounds(/* ... */)
+}
+
+// ✅ 条件に依存しない副作用はifの外に置く
+let nextCentering = latest.centering
+
+if (isXCenter || isYCenter) {
+  nextCentering = /* 算出 */
+  setCentering(nextCentering)
+}
+
+// HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+setDraggableBounds(/* nextCenteringから算出 */)
+```
+
+**6. early returnとcleanupの噛み合わせに注意**
+
+早期 return は cleanup を返しませんが、effect が再実行される際には前回の cleanup が先に走ります。この組み合わせで処理が失われることがあります。
+
+```tsx
+// ❌ 2回目の実行で、前回のcleanupがcancelしたあと早期returnしてしまう
+useEffect(() => {
+  // 1回目: debounceをスケジュールし、cleanupにcancelを返す
+  // 2回目: cleanupでcancelが実行される → 値が同じなので早期return
+  //        → スケジュールが取り消されたまま何も設定されない
+  if (前回と同じ) {
+    return
+  }
+
+  debounced(txt)
+
+  return debounced.cancel
+}, [deps])
+```
+
+値の変化を検知したいだけなら、`useEffect` ではなく値を更新する処理側から実行する形（`requestAnimationFrame` など）を検討してください。
+
+**統合時の検証**
+
+effect の統合は「最終状態は同じだが途中経過が変わる」変更になりやすく、DOM の最終状態を比較するだけでは不十分です。
+
+- 内部 state が DOM に出ない場合は、渡し先のコンポーネントをモックして prop を捕捉する
+- `debounce` や `requestAnimationFrame` を挟む場合はフェイクタイマーで経過させる
 
 ## スキル
 

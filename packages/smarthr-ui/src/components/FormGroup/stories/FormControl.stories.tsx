@@ -19,12 +19,12 @@ const _childrenOptions = {
   '<DatePicker />': <DatePicker name="formcontrol_datepicker" />,
   '<CurrencyInput />': <CurrencyInput name="formcontrol_currencyinput" />,
   '<Textarea />': <Textarea name="formcontrol_textarea" />,
-  '<Select />': <Select name="formcontrol_select" options={[]} hasBlank />,
+  '<Select />': <Select name="formcontrol_select" hasBlank options={[]} />,
   '<SingleCombobox />': (
-    <SingleCombobox name="formcontrol_singlecombobox" items={[]} selectedItem={null} />
+    <SingleCombobox name="formcontrol_singlecombobox" selectedItem={null} items={[]} />
   ),
   '<MultiCombobox />': (
-    <MultiCombobox name="formcontrol_multicombobox" items={[]} selectedItems={[]} />
+    <MultiCombobox name="formcontrol_multicombobox" selectedItems={[]} items={[]} />
   ),
   '<InputFile />': <InputFile name="formcontrol_inputfile" label="ファイルを選択" />,
   '<DropZone />': <DropZone name="formcontrol_dropzone" onSelectFiles={() => null} />,
@@ -88,6 +88,7 @@ export const LabelStyleType: StoryObj<typeof FormControl> = {
       {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((labelType) => (
         <FormControl
           {...args}
+          key={labelType}
           label={
             labelType
               ? {
@@ -96,7 +97,6 @@ export const LabelStyleType: StoryObj<typeof FormControl> = {
                 }
               : 'undefined'
           }
-          key={labelType}
         />
       ))}
     </Stack>

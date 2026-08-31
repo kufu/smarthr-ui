@@ -1,12 +1,9 @@
-'use client'
-
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
-import { debounce } from '../../libs/debounce'
-
-import { ControlledTooltip } from './ControlledTooltip'
+import { useTheme } from '../../../../../hooks/client/useTheme'
+import { debounce } from '../../../../../libs/debounce'
+import { ControlledTooltip } from '../../../ControlledTooltip'
 
 type Props = {
   messageId: string
@@ -84,9 +81,9 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
     <div
       ref={portalRef}
       role="tooltip"
-      aria-hidden={!isVisible}
       className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}
+      aria-hidden={!isVisible}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}

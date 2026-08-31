@@ -7,7 +7,7 @@ import {
   useRef,
 } from 'react'
 
-import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{

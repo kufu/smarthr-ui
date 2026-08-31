@@ -10,8 +10,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/client/useTheme'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
@@ -95,7 +95,7 @@ export const DefinitionListItem: FC<Props> = ({
 const DefinitionTerm = memo<
   PropsWithChildren<{ styleType: ObjectTermType['styleType']; className: string }>
 >(({ styleType = 'subBlockTitle', className, children }) => (
-  <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
+  <Text as="dt" styleType={styleType} leading="TIGHT" className={className}>
     {children}
   </Text>
 ))

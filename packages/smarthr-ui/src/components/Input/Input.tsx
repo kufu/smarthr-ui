@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/useMergeRefs'
-import { useOnce } from '../../hooks/useOnce'
-import { useTheme } from '../../hooks/useTheme'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
+import { useOnce } from '../../hooks/client/useOnce'
+import { useTheme } from '../../hooks/client/useTheme'
 
 type BaseProps = {
   /** input 要素の `type` 値 */
@@ -130,17 +130,17 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
-          delegateEvent.currentTarget
-            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
-            ?.focus()
-        }}
         className={classNames.wrapper}
         style={{
           borderColor: styleColor,
           backgroundColor: styleColor,
           maxWidth: styleMaxWidth,
           width: styleMaxWidth ? '100%' : undefined,
+        }}
+        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
         }}
       >
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
@@ -153,12 +153,12 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           max={
             max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
           }
+          className={classNames.input}
           aria-invalid={error || undefined}
           data-smarthr-ui-input="true"
           onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}
           onBlur={onBlur}
-          className={classNames.input}
         />
         {suffix && <span className={classNames.suffix}>{suffix}</span>}
       </span>

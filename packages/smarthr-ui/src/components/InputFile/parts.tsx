@@ -29,9 +29,9 @@ const PreviewButton: FC<{
 }> = ({ file, handlePreviewClick }) => (
   <Button
     variant="tertiary"
-    prefix={<FaFileLinesIcon className="shr-shrink-0" />}
-    onClick={() => handlePreviewClick(file)}
     className={PREVIEW_BUTTON_CLASSNAME}
+    onClick={() => handlePreviewClick(file)}
+    prefix={<FaFileLinesIcon className="shr-shrink-0" />}
   >
     <span aria-hidden="true">{file.name}</span>
     <VisuallyHiddenText>
@@ -60,9 +60,9 @@ const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
     <AnchorButton
       href={href}
       download={file.name}
-      prefix={<FaFileArrowDownIcon className="shr-shrink-0" />}
       variant="text"
       className={PREVIEW_BUTTON_CLASSNAME}
+      prefix={<FaFileArrowDownIcon className="shr-shrink-0" />}
     >
       <span aria-hidden="true">{file.name}</span>
       <VisuallyHiddenText>
@@ -98,11 +98,11 @@ export const FileListItem = memo<FileListItemProps>(
         <span className={FILE_NAME_BUTTON_CLASSNAME}>{file.name}</span>
       )}
       <Button
-        variant="text"
-        prefix={<FaTrashCanIcon />}
         value={index}
-        onClick={handleDeleteClick}
+        variant="text"
         className="smarthr-ui-InputFile-deleteButton shr-shrink-0"
+        onClick={handleDeleteClick}
+        prefix={<FaTrashCanIcon />}
       >
         <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
       </Button>

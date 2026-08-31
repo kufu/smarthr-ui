@@ -3,7 +3,7 @@ import { userEvent } from 'storybook/test'
 import { Button } from '../../Button'
 import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../client/components'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -31,24 +31,24 @@ export default {
           </span>
         </Tooltip>
       </div>
-      <Tooltip message="description" type="description">
+      <Tooltip type="description" message="description">
         <Button>ボタン</Button>
       </Tooltip>
-      <Tooltip message="label" type="label" triggerType="icon">
+      <Tooltip type="label" triggerType="icon" message="label">
         <Button>
           <FaPencilIcon />
         </Button>
       </Tooltip>
-      <Tooltip message="wrapper + focusable" ariaDescribedbyTarget="wrapper">
+      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
         <Button>ボタン</Button>
       </Tooltip>
-      <Tooltip message="wrapper + non-focusable" ariaDescribedbyTarget="wrapper">
+      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
         テキスト
       </Tooltip>
-      <Tooltip message="inner + focusable" ariaDescribedbyTarget="inner">
+      <Tooltip ariaDescribedbyTarget="inner" message="inner + focusable">
         <Button>ボタン</Button>
       </Tooltip>
-      <Tooltip message="inner + non-focusable" ariaDescribedbyTarget="inner" triggerType="icon">
+      <Tooltip triggerType="icon" ariaDescribedbyTarget="inner" message="inner + non-focusable">
         <FaCircleQuestionIcon alt="ツールチップ" />
       </Tooltip>
     </Stack>

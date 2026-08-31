@@ -98,7 +98,7 @@ export const HorizontalStepItem = memo<Props>(
     }, [statusType, current, isPrevStepCompleted])
 
     return (
-      <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
+      <li className={classNames.wrapper} aria-current={current ? 'step' : undefined}>
         <div className={classNames.labelWrapper}>
           <div className={classNames.stepCounterWrapper}>
             <span className={classNames.beforeLine} />

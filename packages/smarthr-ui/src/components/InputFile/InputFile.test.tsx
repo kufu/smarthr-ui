@@ -16,7 +16,7 @@ describe('InputFile', () => {
       <IntlProvider locale="ja">
         <form>
           <FormControl title="input file">
-            <InputFile name="test" label="input file" onChange={onChange} />
+            <InputFile name="test" onChange={onChange} label="input file" />
           </FormControl>
         </form>
       </IntlProvider>,
@@ -33,7 +33,7 @@ describe('InputFile', () => {
       <IntlProvider locale="ja">
         <form>
           <FormControl title="input file">
-            <InputFile name="test" label="input file" multiple onChange={onChange} />
+            <InputFile name="test" multiple onChange={onChange} label="input file" />
           </FormControl>
         </form>
       </IntlProvider>,
@@ -107,7 +107,7 @@ describe('InputFile', () => {
       <IntlProvider locale="ja">
         <form>
           <FormControl title="input file">
-            <InputFile name="test" label="input file" multiple />
+            <InputFile name="test" multiple label="input file" />
           </FormControl>
         </form>
       </IntlProvider>,

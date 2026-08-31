@@ -1,8 +1,9 @@
 'use client'
+// TODO: 将来的にuse clientを削除し、smarthr-uiを利用する側で 'use client' を設定するようにする
 
 import { createContext, useContext } from 'react'
 
-import type { CreatedMediaQueryTheme } from '../../themes'
+import type { CreatedMediaQueryTheme } from '../../../themes'
 
 export type Environment = {
   mobile: boolean

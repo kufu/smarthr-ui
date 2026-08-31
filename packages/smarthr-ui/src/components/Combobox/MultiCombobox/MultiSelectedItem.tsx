@@ -109,11 +109,11 @@ export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDel
 
   return (
     <Component
+      disabled={disabled}
       itemLabel={item.label}
       itemDeletable={itemDeletable}
-      disabled={disabled}
-      functions={functions}
       classNames={CLASS_NAMES[enableEllipsis ? 'enableEllipsis' : 'noEllipsis']}
+      functions={functions}
     />
   )
 }
@@ -182,9 +182,9 @@ const BaseActualMultiSelectedItem = <T,>({
         <DestroyButton
           labelId={labelId}
           suffixTextId={`${idPrefix}-item-destroy-button-suffix`}
-          functions={functions}
           disabled={disabled}
           classNames={classNames}
+          functions={functions}
         />
       )}
     </Chip>
@@ -205,10 +205,10 @@ const DestroyButton = <T,>({
   <UnstyledButton
     disabled={disabled}
     tabIndex={-1}
+    className={classNames.deleteButton}
     aria-labelledby={`${labelId} ${suffixTextId}`}
     onClick={functions.handleDestroyClick}
     onKeyDown={functions.handleDestroyKeyDown}
-    className={classNames.deleteButton}
   >
     <VisuallyHiddenText id={suffixTextId}>
       <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />

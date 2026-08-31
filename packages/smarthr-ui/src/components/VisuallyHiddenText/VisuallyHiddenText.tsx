@@ -34,17 +34,17 @@ const ActualVisuallyHiddenText: VisuallyHiddenTextComponent = forwardRef(
     ref: Ref<ElementRef<T>>,
   ) => {
     const actualClassName = useMemo(
-      () => visuallyHiddenTextClassNameGenerator({ className }),
+      // HINT: smarthr-ui-VisuallyHiddenTextは明示的にこのコンポーネントを利用している場合にのみ設定します
+      // visuallyHiddenTextClassName を利用している場合、他のclassに混ぜられたりする関係上、要素として検索する際
+      // ノイズになる可能性があるため
+      () =>
+        visuallyHiddenTextClassNameGenerator({
+          className: `smarthr-ui-VisuallyHiddenText ${className || ''}`,
+        }),
       [className],
     )
 
-    return (
-      <Component
-        {...rest}
-        ref={ref}
-        className={`smarthr-ui-VisuallyHiddenText ${actualClassName}`}
-      />
-    )
+    return <Component {...rest} ref={ref} className={actualClassName} />
   },
 )
 

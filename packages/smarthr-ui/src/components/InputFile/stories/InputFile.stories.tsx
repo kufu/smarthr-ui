@@ -35,7 +35,7 @@ export const Size: StoryObj<typeof InputFile> = {
   render: (args) => (
     <Stack>
       {[undefined, 'default', 's'].map((size) => (
-        <InputFile {...args} size={size as any} key={size} />
+        <InputFile {...args} key={size} size={size as any} />
       ))}
     </Stack>
   ),
@@ -68,9 +68,9 @@ export const HasFileList: StoryObj<typeof InputFile> = {
       {[true, false].map((hasFileList) => (
         <InputFile
           {...args}
+          key={String(hasFileList)}
           hasFileList={hasFileList as any}
           label={`hasFileList: ${hasFileList}`}
-          key={String(hasFileList)}
         />
       ))}
     </Stack>

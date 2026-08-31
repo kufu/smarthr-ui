@@ -82,7 +82,7 @@ export const FirstFocusTarget: StoryObj<typeof Dialog> = {
         <Dialog {...args} firstFocusTarget={inputRef} isOpen={open} onPressEscape={handleClose}>
           <label>
             入力要素
-            <Input name="dialog_input" ref={inputRef} />
+            <Input ref={inputRef} name="dialog_input" />
           </label>
         </Dialog>
       </>
@@ -151,7 +151,7 @@ export const PortalParent: StoryObj<typeof Dialog> = {
     const parentRef = useRef<HTMLDivElement>(null)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <Dialog {...args} isOpen={open} portalParent={parentRef}>
