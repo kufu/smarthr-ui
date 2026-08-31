@@ -40,6 +40,7 @@ const preview: Preview = {
       isToolshown: true,
       storySort: {
         method: 'alphabetical',
+        order: ['*', 'Charts'],
       },
     },
     viewport: {
