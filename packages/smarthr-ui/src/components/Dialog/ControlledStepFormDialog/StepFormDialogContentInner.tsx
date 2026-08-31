@@ -49,7 +49,6 @@ export type BaseProps = PropsWithChildren<
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
     mobileType?: 'sheet'
-    mobile: boolean
   }
 >
 
@@ -234,6 +233,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           </DialogHeader>
           <DialogBody
             ref={scrollerRef}
+            mobile={mobile}
             contentPadding={contentPadding}
             contentBgColor={contentBgColor}
           >

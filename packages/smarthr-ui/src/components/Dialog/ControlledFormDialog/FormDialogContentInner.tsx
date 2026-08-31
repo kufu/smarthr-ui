@@ -65,7 +65,6 @@ export type BaseProps = PropsWithChildren<
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
     mobileType?: 'sheet'
-    mobile: boolean
   }
 >
 
@@ -123,7 +122,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
         <DialogHeading {...heading} />
       </DialogHeader>
       <form className={classNames.form} onSubmit={handleSubmit}>
-        <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+        <DialogBody mobile={mobile} contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
         <div className={classNames.actionArea}>

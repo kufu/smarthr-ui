@@ -92,7 +92,7 @@ type BaseProps = PropsWithChildren<{
   portalParent?: HTMLElement | RefObject<HTMLElement>
 }>
 type Props = BaseProps &
-  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<DialogBodyProps, keyof BaseProps | 'mobile'> &
   Omit<PanelElementProps, keyof BaseProps> &
   Omit<VariantProps<typeof classNameGenerator>, keyof BaseProps>
 
@@ -180,12 +180,13 @@ export const ModelessDialog: FC<Props> = ({
 
   const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, headingEl, dialogHandler } = classNameGenerator()
+    const mobileAttrs = { mobile }
 
     return {
       overlap: overlap({ className }),
       wrapper: wrapper({ size, resizable }),
-      header: headerEl({ mobile }),
-      heading: headingEl({ mobile }),
+      header: headerEl(mobileAttrs),
+      heading: headingEl(mobileAttrs),
       dialogHandler: dialogHandler(),
     }
   }, [className, size, resizable, mobile])
@@ -466,6 +467,7 @@ export const ModelessDialog: FC<Props> = ({
             />
           </div>
           <DialogBody
+            mobile={mobile}
             contentBgColor={contentBgColor}
             contentPadding={contentPadding}
             className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"

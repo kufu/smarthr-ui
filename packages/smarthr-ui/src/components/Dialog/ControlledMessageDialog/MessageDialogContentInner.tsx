@@ -21,7 +21,6 @@ export type BaseProps = DialogBodyProps & {
    * モバイル時の表示形式（'sheet' でボトムシート表示になり閉じるボタンがアイコン化する）
    */
   mobileType?: 'sheet'
-  mobile: boolean
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
@@ -57,7 +56,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
           <CloseButton iconOnly handleClickClose={handleClickClose} closeButton={closeButton} />
         )}
       </DialogHeader>
-      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+      <DialogBody mobile={mobile} contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
       {!isSheet && (

@@ -1,7 +1,6 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { Scroller } from '../Scroller'
 
@@ -9,6 +8,7 @@ import type { Gap } from '../../types'
 
 export type Props = PropsWithChildren<
   Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
+    mobile: boolean
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
     className?: string | undefined
   } & Pick<ComponentProps<'div'>, 'ref'>
@@ -23,9 +23,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
-  const { mobile } = useEnvironment()
-
+export const DialogBody: FC<Props> = ({
+  mobile,
+  contentBgColor,
+  contentPadding,
+  className,
+  ...rest
+}) => {
   const initialized = contentPadding === undefined ? (mobile ? 1 : 1.5) : contentPadding
   const actualPaddings =
     initialized instanceof Object ? initialized : { block: initialized, inline: initialized }

@@ -68,7 +68,6 @@ export type BaseProps = PropsWithChildren<
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
     mobileType?: 'sheet'
-    mobile: boolean
   }
 >
 
@@ -115,7 +114,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
-      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+      <DialogBody mobile={mobile} contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
       <div className={classNames.actionArea}>
