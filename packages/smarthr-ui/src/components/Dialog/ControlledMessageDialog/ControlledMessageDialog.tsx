@@ -2,9 +2,9 @@
 
 import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
+import { useControlledMobile } from '../useControlledMobile'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -41,14 +41,12 @@ export const ControlledMessageDialog: FC<Props> = ({
   closeButton,
   id,
   isOpen,
-  mobileType,
+  mobileType: orgMobileType,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
 
-  const { mobile } = useEnvironment()
-  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
-  const actualMobileType = mobile ? mobileType : undefined
+  const { mobile, mobileType } = useControlledMobile(orgMobileType)
 
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
@@ -72,7 +70,7 @@ export const ControlledMessageDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      mobileType={actualMobileType}
+      mobileType={mobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={onPressEscape}
@@ -81,7 +79,7 @@ export const ControlledMessageDialog: FC<Props> = ({
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         mobile={mobile}
-        mobileType={actualMobileType}
+        mobileType={mobileType}
         handleClickClose={functions.handleClickClose}
         heading={heading}
         closeButton={closeButton}
