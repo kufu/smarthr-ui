@@ -26,11 +26,10 @@ const classNameGenerator = tv({
 export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
   const { mobile } = useEnvironment()
 
-  const actualPaddings = useMemo(() => {
-    const initialized = contentPadding === undefined ? (mobile ? 1 : 1.5) : contentPadding
+  const initialized = contentPadding === undefined ? (mobile ? 1 : 1.5) : contentPadding
+  const actualPaddings =
+    initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
 
-    return initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
-  }, [contentPadding, mobile])
   const actualClassName = useMemo(
     () =>
       classNameGenerator({
