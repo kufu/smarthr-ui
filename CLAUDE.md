@@ -257,12 +257,18 @@ rollup は `preserveModules: true` でもバレルを平坦化し、import 元�
 import { forwardRef } from 'react';
 import './client/components/LevelContext.js';
 import { SectioningFragment } from './client/components/SectioningFragment.js';
-import 'styled-components';    // ← hooks 側の依存が転記され、RSC で TypeError になる
+import 'styled-components';    // ← hooks 側の依存が転記される
 ```
 
 `components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
 
 なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
+**この転記は Next.js 実利用では顕在化しないが、それでも作らない**
+
+`sandbox/next`（`smarthr-ui: workspace:*`）で実測したところ、`client/index.ts` を作った状態でも `next build` / `next dev` は問題なく成功し、`Section` は Server Component として描画され、RSC 側の依存一覧（`page.js.nft.json`）に `styled-components` は含まれませんでした。`package.json` の `sideEffects` 宣言（`lib/*.js` を side-effect-free と宣言）により、Turbopack/webpack が副作用 import をツリーシェイクで除去するためです。
+
+一方、素の `node --conditions react-server` で当該ファイルを直接評価すると `TypeError: r.createContext is not a function` になります。バンドラを経由しない実行では顕在化するため、**バンドラの `sideEffects` 最適化に依存しない構成を保つ**という意味で、`client/index.ts` は作らない方針を維持します。
 
 **共有 hook（`src/hooks/`）の場合**
 
