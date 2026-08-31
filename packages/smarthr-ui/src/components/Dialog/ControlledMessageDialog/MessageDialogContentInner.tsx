@@ -42,7 +42,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   const actualMobileType = mobile ? mobileType : undefined
   const isSheet = actualMobileType === 'sheet'
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, actionArea } = dialogContentInner({ mobile, mobileType: actualMobileType })
 
     return {
@@ -52,7 +52,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   }, [mobile, actualMobileType])
 
   return (
-    <Section className={styles.wrapper}>
+    <Section className={classNames.wrapper}>
       <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
         {isSheet && (
@@ -63,7 +63,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
         {children}
       </DialogBody>
       {!isSheet && (
-        <Cluster as="footer" justify="flex-end" className={styles.actionArea}>
+        <Cluster as="footer" justify="flex-end" className={classNames.actionArea}>
           <CloseButton handleClickClose={handleClickClose} closeButton={closeButton} />
         </Cluster>
       )}

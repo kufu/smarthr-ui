@@ -105,7 +105,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
       ? subActionArea({ mobileType: actualMobileType })
       : subActionArea
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
       formDialogContentInner({ mobile, mobileType: actualMobileType })
 
@@ -121,24 +121,24 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={styles.wrapper}>
+    <Section className={classNames.wrapper}>
       <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={classNames.form} onSubmit={handleSubmit}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <div className={styles.actionArea}>
+        <div className={classNames.actionArea}>
           <Cluster
             gap={ACTION_AREA_CLUSTER_GAP}
             justify="space-between"
-            className={styles.actionAreaInner}
+            className={classNames.actionAreaInner}
           >
             {actualSubActionArea}
             <ActionAreaCluster
               loading={calculatedResponseStatus.isProcessing}
-              className={styles.buttonArea}
+              className={classNames.buttonArea}
               handleClickClose={handleClickClose}
               closeButton={closeButton}
               actionButton={actionButton}
@@ -146,7 +146,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           </Cluster>
           <DialogContentResponseStatusMessage
             responseStatus={calculatedResponseStatus}
-            className={styles.message}
+            className={classNames.message}
           />
         </div>
       </form>

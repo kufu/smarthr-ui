@@ -101,7 +101,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       ? subActionArea({ mobileType: actualMobileType })
       : subActionArea
 
-  const styles = useMemo(() => {
+  const classNames = useMemo(() => {
     const { wrapper, actionArea, actionAreaInner, buttonArea, message } = dialogContentInner({
       mobile,
       mobileType: actualMobileType,
@@ -117,23 +117,23 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   }, [mobile, actualMobileType])
 
   return (
-    <Section className={styles.wrapper}>
+    <Section className={classNames.wrapper}>
       <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <div className={styles.actionArea}>
+      <div className={classNames.actionArea}>
         <Cluster
           gap={ACTION_AREA_CLUSTER_GAP}
           justify="space-between"
-          className={styles.actionAreaInner}
+          className={classNames.actionAreaInner}
         >
           {actualSubActionArea}
           <ActionAreaCluster
             loading={calcedResponseStatus.isProcessing}
-            className={styles.buttonArea}
+            className={classNames.buttonArea}
             handleClickClose={handleClickClose}
             handleClickAction={handleClickAction}
             closeButton={closeButton}
@@ -142,7 +142,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         </Cluster>
         <DialogContentResponseStatusMessage
           responseStatus={calcedResponseStatus}
-          className={styles.message}
+          className={classNames.message}
         />
       </div>
     </Section>
