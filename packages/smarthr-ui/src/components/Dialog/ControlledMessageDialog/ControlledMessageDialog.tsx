@@ -2,6 +2,7 @@
 
 import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
@@ -17,7 +18,7 @@ import type { DialogProps } from '../types'
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
+type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose' | 'mobile'> &
   DialogProps & {
     heading: HeadingType
     onClickClose: MessageDialogContentInnerProps['handleClickClose']
@@ -45,6 +46,10 @@ export const ControlledMessageDialog: FC<Props> = ({
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
 
+  const { mobile } = useEnvironment()
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
+
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -67,7 +72,7 @@ export const ControlledMessageDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      mobileType={mobileType}
+      mobileType={actualMobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={onPressEscape}
@@ -75,7 +80,8 @@ export const ControlledMessageDialog: FC<Props> = ({
       <MessageDialogContentInner
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        mobileType={mobileType}
+        mobile={mobile}
+        mobileType={actualMobileType}
         handleClickClose={functions.handleClickClose}
         heading={heading}
         closeButton={closeButton}

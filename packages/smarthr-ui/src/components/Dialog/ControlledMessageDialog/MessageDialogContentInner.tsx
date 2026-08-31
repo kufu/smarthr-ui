@@ -1,6 +1,5 @@
 import { type FC, type ReactNode, memo, useMemo } from 'react'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { FaXmarkIcon } from '../../Icon'
@@ -22,6 +21,7 @@ export type BaseProps = DialogBodyProps & {
    * モバイル時の表示形式（'sheet' でボトムシート表示になり閉じるボタンがアイコン化する）
    */
   mobileType?: 'sheet'
+  mobile: boolean
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
@@ -36,24 +36,22 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   handleClickClose,
   closeButton,
   mobileType,
+  mobile,
 }) => {
-  const { mobile } = useEnvironment()
-  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
-  const actualMobileType = mobile ? mobileType : undefined
-  const isSheet = actualMobileType === 'sheet'
+  const isSheet = mobileType === 'sheet'
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea } = dialogContentInner()
 
     return {
-      wrapper: wrapper({ mobileType: actualMobileType }),
-      actionArea: actionArea({ mobile, mobileType: actualMobileType }),
+      wrapper: wrapper({ mobileType }),
+      actionArea: actionArea({ mobile, mobileType }),
     }
-  }, [mobile, actualMobileType])
+  }, [mobileType, mobile])
 
   return (
     <Section className={classNames.wrapper}>
-      <DialogHeader mobileType={actualMobileType}>
+      <DialogHeader mobileType={mobileType}>
         <DialogHeading {...heading} />
         {isSheet && (
           <CloseButton iconOnly handleClickClose={handleClickClose} closeButton={closeButton} />
