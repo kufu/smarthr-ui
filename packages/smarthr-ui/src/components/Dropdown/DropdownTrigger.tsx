@@ -43,8 +43,7 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
-  const { active, memoizedOnClickTrigger, contentId, triggerElementRef } =
-    useContext(DropdownContext)
+  const { active, handleClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
@@ -84,7 +83,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
       // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
       // そのためcaptureで開く処理を実行する
       const callback = (e: MouseEvent) => {
-        memoizedOnClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
+        handleClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
       }
 
       button.addEventListener('click', callback, CAPTURE_OPTION)
@@ -110,7 +109,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
       currentCleanup?.()
       observer.disconnect()
     }
-  }, [memoizedOnClickTrigger, triggerElementRef])
+  }, [handleClickTrigger, triggerElementRef])
 
   return (
     <div ref={triggerElementRef} className={actualClassName}>
@@ -120,7 +119,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
         wrapper={({ children: currentChildren }) =>
           tooltip?.message ? (
             // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-            <Tooltip message={tooltip?.message} triggerType="icon" tabIndex={-1}>
+            <Tooltip tabIndex={-1} triggerType="icon" message={tooltip?.message}>
               {currentChildren}
             </Tooltip>
           ) : (

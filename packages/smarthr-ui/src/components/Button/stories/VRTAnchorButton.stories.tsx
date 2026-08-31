@@ -1,6 +1,6 @@
-import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { AnchorButton } from '../AnchorButton'
 
 import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
@@ -90,15 +90,15 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
 const Template: StoryFn<typeof AnchorButton> = (args) => (
   <Stack>
     {[undefined, 'hover', 'focus-visible'].map((id) => (
-      <Stack id={id} key={id}>
+      <Stack key={id} id={id}>
         {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
-          <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+          <Groupbox key={variant} bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'}>
             <Cluster align="center">
               {_cases.map((props, index) => (
-                <AnchorButton {...args} {...props} variant={variant} key={index} />
+                <AnchorButton {...args} {...props} key={index} variant={variant} />
               ))}
             </Cluster>
-          </BaseColumn>
+          </Groupbox>
         ))}
       </Stack>
     ))}

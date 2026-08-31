@@ -49,7 +49,7 @@ export const Type: StoryObj<typeof Input> = {
         (type) => (
           <label key={type}>
             {`${type ?? '未指定'}： `}
-            <Input {...args} type={type} key={type} />
+            <Input {...args} key={type} type={type} />
           </label>
         ),
       )}
@@ -91,7 +91,7 @@ export const BgColor: StoryObj<typeof Input> = {
     <Stack>
       {([undefined, ...Object.keys(backgroundColor)] as Array<keyof typeof backgroundColor>).map(
         (bgColor) => (
-          <Input {...args} bgColor={bgColor} key={bgColor} />
+          <Input {...args} key={bgColor} bgColor={bgColor} />
         ),
       )}
     </Stack>
@@ -110,7 +110,7 @@ export const Width: StoryObj<typeof Input> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 500].map((width) => (
-        <Input {...args} width={width} key={width} />
+        <Input {...args} key={width} width={width} />
       ))}
     </Stack>
   ),

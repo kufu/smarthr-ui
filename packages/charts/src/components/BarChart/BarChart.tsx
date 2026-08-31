@@ -18,12 +18,24 @@ type Props = {
   data: ChartData<'bar'>
   title?: string
   options?: Partial<ChartOptions<'bar'>>
+  /**
+   * 棒グラフの柄を無効化するか
+   */
+  disablePatterns?: boolean
 }
 
-export const BarChart: React.FC<Props> = ({ data, title, options: externalOptions }) => {
+export const BarChart: React.FC<Props> = ({
+  data,
+  title,
+  options: externalOptions,
+  disablePatterns,
+}) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
-  const chartColors = useMemo(() => getChartColors(data.datasets.length), [data.datasets.length])
+  const chartColors = useMemo(
+    () => getChartColors(data.datasets.length, disablePatterns),
+    [data.datasets.length, disablePatterns],
+  )
 
   const ariaLabel = useMemo(() => {
     const datasetCount = data.datasets.length
@@ -67,14 +79,14 @@ export const BarChart: React.FC<Props> = ({ data, title, options: externalOption
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
-      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <Bar
-        tabIndex={0}
-        role="application"
         ref={chartRef}
+        role="application"
         data={enhancedData}
-        options={chartOptions}
+        tabIndex={0}
         aria-label={ariaLabel}
+        options={chartOptions}
       />
     </div>
   )

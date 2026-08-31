@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type PropsWithChildren, memo, useContext, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type PropsWithChildren,
+  forwardRef,
+  memo,
+  useContext,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
@@ -32,7 +39,7 @@ type StylingProps =
       size?: never
     }
 
-export type AbstractProps = PropsWithChildren<{
+export type BaseProps = PropsWithChildren<{
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
@@ -46,26 +53,9 @@ export type AbstractProps = PropsWithChildren<{
 
 export type ElementProps = Omit<
   ComponentProps<'h1'>,
-  keyof AbstractProps | keyof TextProps | 'role' | 'aria-level'
+  keyof BaseProps | keyof TextProps | 'role' | 'aria-level'
 >
-type Props = AbstractProps & ElementProps
-
-const generateTagProps = (level: number, unrecommendedTag?: HeadingTagTypes) => {
-  let role = undefined
-  let ariaLevel = undefined
-
-  // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
-  if (!unrecommendedTag && level > 6) {
-    role = 'heading'
-    ariaLevel = level
-  }
-
-  return {
-    as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
-    role,
-    'aria-level': ariaLevel,
-  }
-}
+type Props = BaseProps & ElementProps
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
@@ -79,38 +69,45 @@ const classNameGenerator = tv({
   },
 })
 
-export const Heading = memo<Props>(
-  ({ unrecommendedTag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest }) => {
-    const level = useContext(LevelContext)
-    const tagProps = useMemo(
-      () => generateTagProps(level, unrecommendedTag),
-      [level, unrecommendedTag],
-    )
-    const actualClassName = useMemo(
-      () => classNameGenerator({ visuallyHidden, className }),
-      [className, visuallyHidden],
-    )
-    const actualTypography = useMemo(() => {
-      const defaultTypography = STYLE_TYPE_MAP[type]
+export const Heading = memo(
+  forwardRef<HTMLHeadingElement, Props>(
+    (
+      { unrecommendedTag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest },
+      ref,
+    ) => {
+      const level = useContext(LevelContext)
 
-      if (type === 'sectionTitle' && size) {
-        return { ...defaultTypography, size }
+      let role = undefined
+      let ariaLevel = undefined
+
+      // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
+      if (!unrecommendedTag && level > 6) {
+        role = 'heading'
+        ariaLevel = level
       }
 
-      return defaultTypography
-    }, [type, size])
+      const actualClassName = useMemo(
+        () => classNameGenerator({ visuallyHidden, className }),
+        [className, visuallyHidden],
+      )
+      const typography = STYLE_TYPE_MAP[type]
 
-    const commonProps = {
-      ...rest,
-      ...actualTypography,
-      ...tagProps,
-      className: actualClassName,
-    }
+      // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
+      // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
+      const commonProps = {
+        as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
+        role,
+        'aria-level': ariaLevel,
+        className: actualClassName,
+        size: type === 'sectionTitle' && size ? size : typography.size,
+        ref,
+      }
 
-    if (visuallyHidden) {
-      return <VisuallyHiddenText {...commonProps} />
-    }
+      if (visuallyHidden) {
+        return <VisuallyHiddenText {...rest} {...typography} {...commonProps} />
+      }
 
-    return <Text {...commonProps} icon={icon} />
-  },
+      return <Text {...rest} {...typography} {...commonProps} icon={icon} />
+    },
+  ),
 )

@@ -7,6 +7,17 @@ import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep } from './types'
 
+type Props = Omit<HorizontalStep, 'status'> & {
+  statusType?: 'completed' | 'closed'
+  statusText?: string
+  /** ステップ数 */
+  stepNumber: number
+  /** 現在地かどうか */
+  current: boolean
+  /** 前のステップが完了しているかどうか */
+  isPrevStepCompleted: boolean
+}
+
 const classNameGenerator = tv({
   slots: {
     wrapper: [
@@ -60,17 +71,8 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = HorizontalStep & {
-  /** ステップ数 */
-  stepNumber: number
-  /** 現在地かどうか */
-  current: boolean
-  /** 前のステップが完了しているかどうか */
-  isPrevStepCompleted: boolean
-}
-
 export const HorizontalStepItem = memo<Props>(
-  ({ stepNumber, label, status, current, isPrevStepCompleted }) => {
+  ({ stepNumber, label, statusType, statusText, current, isPrevStepCompleted }) => {
     const classNames = useMemo(() => {
       const {
         wrapper,
@@ -80,7 +82,7 @@ export const HorizontalStepItem = memo<Props>(
         afterLine,
         label: labelText,
       } = classNameGenerator({
-        status: typeof status === 'object' ? status.type : status,
+        status: statusType,
         current,
         isPrevStepCompleted,
       })
@@ -93,14 +95,19 @@ export const HorizontalStepItem = memo<Props>(
         afterLine: afterLine(),
         label: labelText(),
       }
-    }, [current, isPrevStepCompleted, status])
+    }, [statusType, current, isPrevStepCompleted])
 
     return (
-      <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
+      <li className={classNames.wrapper} aria-current={current ? 'step' : undefined}>
         <div className={classNames.labelWrapper}>
           <div className={classNames.stepCounterWrapper}>
             <span className={classNames.beforeLine} />
-            <StepCounter status={status} current={current} stepNumber={stepNumber} />
+            <StepCounter
+              statusType={statusType}
+              statusText={statusText}
+              current={current}
+              stepNumber={stepNumber}
+            />
             <span className={classNames.afterLine} />
           </div>
           <Text styleType="sectionTitle" className={classNames.label}>

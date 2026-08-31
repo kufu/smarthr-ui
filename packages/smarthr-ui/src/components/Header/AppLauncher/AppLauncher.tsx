@@ -3,7 +3,7 @@
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -21,13 +21,13 @@ type AppItem = {
   url: string
   target?: string
 }
-type AbstractProps = {
+type BaseProps = {
   apps: Category[]
   urlToShowAll?: string | null
   /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
   triggerLabel?: ReactNode
 } & VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -85,12 +85,12 @@ export const AppLauncher: FC<Props> = ({
   }, [apps])
 
   const classNames = useMemo(() => {
-    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator({
-      enableNew,
-    })
+    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator()
 
     return {
-      appsButton: appsButton(),
+      appsButton: appsButton({
+        enableNew,
+      }),
       contentWrapper: contentWrapper(),
       category: category(),
       appList: appList(),
@@ -111,7 +111,7 @@ export const AppLauncher: FC<Props> = ({
         <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (
-              <Stack gap={0.5} className={classNames.category} as="section">
+              <Stack as="section" gap={0.5} className={classNames.category}>
                 <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
                 <Cluster as="ul" gap={1} className={classNames.appList}>
                   {calculatedApps.base.items.map((item, index) => (
@@ -129,9 +129,9 @@ export const AppLauncher: FC<Props> = ({
             )}
             <Cluster gap={1.5}>
               {calculatedApps.others.map(({ heading, items }, i) => (
-                <Stack key={i} gap={0.5} className={classNames.category} as="section">
+                <Stack key={i} as="section" gap={0.5} className={classNames.category}>
                   <Heading type="subSubBlockTitle">{heading}</Heading>
-                  <Stack gap={0.5} as="ul" className={classNames.appList}>
+                  <Stack as="ul" gap={0.5} className={classNames.appList}>
                     {items.map((item, index) => (
                       <LinkListItem
                         key={index}
@@ -156,45 +156,26 @@ export const AppLauncher: FC<Props> = ({
 
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'enableNew' | 'triggerLabel'> & { className: string }
->(({ enableNew, triggerLabel, className }) => {
-  const { localize } = useIntl()
-
-  const actualTriggerLabel = useMemo(
-    () =>
-      triggerLabel ??
-      localize({
-        id: 'smarthr-ui/AppLauncher/triggerLabel',
-        defaultText: 'アプリ',
-      }),
-    [triggerLabel, localize],
-  )
-
-  return (
-    <DropdownTrigger>
-      <Button
-        prefix={enableNew ?? <FaToolboxIcon />}
-        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-        className={className}
-      >
-        {actualTriggerLabel}
-      </Button>
-    </DropdownTrigger>
-  )
-})
+>(({ enableNew, triggerLabel, className }) => (
+  <DropdownTrigger>
+    <Button
+      className={className}
+      prefix={enableNew ?? <FaToolboxIcon />}
+      suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+    >
+      {triggerLabel ?? <Localizer id="smarthr-ui/AppLauncher/triggerLabel" defaultText="アプリ" />}
+    </Button>
+  </DropdownTrigger>
+))
 
 const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) => {
-    const { localize } = useIntl()
-
     if (!href) return null
 
     return (
       <div className={className}>
         <TextLink href={href} style={{ width: 'fit-content' }}>
-          {localize({
-            id: 'smarthr-ui/AppLauncher/showAllText',
-            defaultText: 'すべて見る',
-          })}
+          <Localizer id="smarthr-ui/AppLauncher/showAllText" defaultText="すべて見る" />
         </TextLink>
       </div>
     )

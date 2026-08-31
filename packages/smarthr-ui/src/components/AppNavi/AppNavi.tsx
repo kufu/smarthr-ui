@@ -20,7 +20,7 @@ import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** ラベルのテキスト */
   label?: ReactNode
   /** 表示するボタンの Props の配列
@@ -36,7 +36,7 @@ type AbstractProps = PropsWithChildren<{
   /** 追加の領域 */
   additionalArea?: ReactNode
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -75,7 +75,7 @@ export const AppNavi: FC<Props> = ({
   const wrapperClassName = useMemo(() => wrapper({ className }), [className])
 
   return (
-    <Nav {...rest} aria-labelledby={labelId} className={wrapperClassName}>
+    <Nav {...rest} className={wrapperClassName} aria-labelledby={labelId}>
       <MemoizedStatusLabel id={labelId}>{label}</MemoizedStatusLabel>
       <ul className={classNames.buttonsEl}>
         {buttons &&
@@ -103,7 +103,7 @@ export const AppNavi: FC<Props> = ({
 const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
   ({ id, children }) =>
     children && (
-      <StatusLabel aria-hidden={true} id={id} className={classNames.statusLabel}>
+      <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>
         {children}
       </StatusLabel>
     ),

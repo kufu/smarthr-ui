@@ -11,7 +11,7 @@ export default {
   subcomponents: { TabItem },
   render: (args) => (
     <TabBar {...args}>
-      <TabItem id="tab1" onClick={action('tab1')} selected>
+      <TabItem id="tab1" selected onClick={action('tab1')}>
         タブ1
       </TabItem>
       <TabItem id="tab2" onClick={action('tab2')}>

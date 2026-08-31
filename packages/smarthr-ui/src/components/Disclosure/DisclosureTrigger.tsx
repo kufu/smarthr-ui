@@ -1,6 +1,9 @@
 'use client'
 
-import { type FC, type ReactElement, useCallback, useEffect, useRef } from 'react'
+import { type FC, type ReactElement, useCallback } from 'react'
+
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
+import { useLatest } from '../../hooks/useLatest'
 
 import { useDisclosure } from './useDisclosure'
 
@@ -20,77 +23,80 @@ type DisclosureTriggerProps = {
 
 export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, children, onClick }) => {
   const [expanded, setExpanded] = useDisclosure(targetId)
-  const ref = useRef<HTMLSpanElement | null>(null)
 
-  const unstableRef = useRef({ onClick, setExpanded })
-  unstableRef.current = { onClick, setExpanded }
+  const latest = useLatest({ onClick, setExpanded })
 
-  const actualOnClick = useCallback((e: MouseEvent) => {
-    const toggleExpanded = () => {
-      unstableRef.current.setExpanded((current) => !current)
-    }
-
-    if (unstableRef.current.onClick) {
-      unstableRef.current.onClick(toggleExpanded, e)
-    } else {
-      toggleExpanded()
-    }
-  }, [])
-
-  useEffect(() => {
-    const wrapper = ref.current
-    if (!wrapper) {
-      return
-    }
-
-    let currentCleanup: (() => void) | undefined
-
-    const setupButton = () => {
-      currentCleanup?.()
-      currentCleanup = undefined
-
-      const button = wrapper.querySelector('button')
-
-      if (!button) {
-        throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
-      }
-
-      button.setAttribute('aria-expanded', expanded.toString())
-      button.setAttribute('aria-controls', targetId)
-
-      // Button は native disabled ではなく aria-disabled を使うため、
-      // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
-      if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
-        button.addEventListener('click', actualOnClick)
-
-        currentCleanup = () => {
-          button.removeEventListener('click', actualOnClick)
+  // HINT: callbackRefで実装しているが、外部からrefを受け取る様になったらuseEffect化が必要
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (!node) {
+          return
         }
-      }
-    }
 
-    setupButton()
+        let currentCleanup: (() => void) | undefined
 
-    const observer = new MutationObserver(setupButton)
-    observer.observe(wrapper, {
-      childList: true,
-      subtree: true,
-      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-      attributes: true,
-      attributeFilter: ['disabled', 'aria-disabled'],
-    })
+        const setupButton = () => {
+          currentCleanup?.()
+          currentCleanup = undefined
 
-    return () => {
-      currentCleanup?.()
-      observer.disconnect()
-    }
-  }, [expanded, targetId, actualOnClick])
+          const button = node.querySelector('button')
+
+          if (!button) {
+            throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
+          }
+
+          button.setAttribute('aria-expanded', expanded.toString())
+          button.setAttribute('aria-controls', targetId)
+
+          // Button は native disabled ではなく aria-disabled を使うため、
+          // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
+          if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+            const actualOnClick = (e: MouseEvent) => {
+              const toggleExpanded = () => {
+                latest.setExpanded((current) => !current)
+              }
+
+              if (latest.onClick) {
+                latest.onClick(toggleExpanded, e)
+              } else {
+                toggleExpanded()
+              }
+            }
+
+            button.addEventListener('click', actualOnClick)
+
+            currentCleanup = () => {
+              button.removeEventListener('click', actualOnClick)
+            }
+          }
+        }
+
+        setupButton()
+
+        const observer = new MutationObserver(setupButton)
+        observer.observe(node, {
+          childList: true,
+          subtree: true,
+          // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+          attributes: true,
+          attributeFilter: ['disabled', 'aria-disabled'],
+        })
+
+        return () => {
+          currentCleanup?.()
+          observer.disconnect()
+        }
+      },
+      [expanded, targetId, latest],
+    ),
+  )
 
   // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
   // TODO: 将来的にspan -> Fragmentに変更する
   return (
-    <span className="smarthr-ui-DisclosureTriggerWrapper shr-contents" ref={ref}>
+    <span ref={callbackRef} className="smarthr-ui-DisclosureTriggerWrapper shr-contents">
       {children instanceof Function ? children({ expanded }) : children}
     </span>
   )

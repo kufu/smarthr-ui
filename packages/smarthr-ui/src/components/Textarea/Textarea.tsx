@@ -2,27 +2,31 @@
 
 import {
   type ChangeEvent,
+  type ComponentProps,
   type ComponentPropsWithRef,
+  type FC,
   type ReactNode,
+  type Ref,
   forwardRef,
   startTransition,
-  useCallback,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
+import { useOnce } from '../../hooks/client/useOnce'
+import { useTheme } from '../../hooks/client/useTheme'
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type AbstractProps = {
+type BaseProps = {
   /** 入力値にエラーがあるかどうか */
   error?: boolean
   /** コンポーネントの幅 */
@@ -42,7 +46,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'textarea'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'textarea'>, keyof BaseProps>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -59,256 +63,235 @@ const getStringLength = (value: TextareaValue) => {
 }
 
 const classNameGenerator = tv({
-  slots: {
-    textareaEl: [
-      'smarthr-ui-Textarea-textarea',
-      'shr-border-shorthand shr-my-[unset] shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
-      'contrast-more:shr-border-high-contrast',
-      'placeholder:shr-text-grey',
-      'focus-visible:shr-focus-indicator',
-      'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
-      'aria-[invalid]:shr-border-danger',
-    ],
-    counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black',
-  },
-  variants: {
-    error: {
-      true: {
-        counter: 'shr-text-danger',
-      },
-    },
-  },
-  defaultVariants: {
-    error: false,
-  },
+  base: [
+    'smarthr-ui-Textarea-textarea',
+    'shr-border-shorthand shr-my-[unset] shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
+    'contrast-more:shr-border-high-contrast',
+    'placeholder:shr-text-grey',
+    'focus-visible:shr-focus-indicator',
+    'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
+    'aria-[invalid]:shr-border-danger',
+  ],
 })
 
 const calculateIdealRows = (
-  element: HTMLTextAreaElement | null | undefined,
+  node: HTMLTextAreaElement | null | undefined,
   maxRows: number,
   lineHeightNormal: number,
 ): number => {
-  if (!element) {
+  if (!node) {
     return 0
   }
 
   // 現在の入力値に応じた行数
   const currentInputValueRows = Math.floor(
-    element.scrollHeight / (defaultHtmlFontSize * lineHeightNormal),
+    node.scrollHeight / (defaultHtmlFontSize * lineHeightNormal),
   )
 
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>(
-  (
-    {
-      autoFocus,
-      maxLetters,
-      width,
-      className,
-      autoResize = false,
-      maxRows = Infinity,
-      rows = 2,
-      error,
-      onChange,
-      value,
-      defaultValue,
-      ...rest
-    },
-    ref,
-  ) => {
-    const theme = useTheme()
-    const maxLettersId = useId()
-    const maxLettersNoticeId = `${maxLettersId}-notice`
-    const actualMaxLettersId = maxLetters ? maxLettersId : undefined
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+  maxLetters ? (
+    <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
+  ) : (
+    <ActualTextarea {...rest} externalRef={ref} />
+  ),
+)
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+type LocalTextareaProps = ComponentProps<typeof Textarea> & {
+  externalRef?: Ref<HTMLTextAreaElement>
+}
+
+const MaxLettersTextarea: FC<
+  Omit<LocalTextareaProps, 'maxLetters'> & {
+    maxLetters: number
+  }
+> = ({ maxLetters, error, value, defaultValue, onChange, id, ...rest }) => {
+  const maxLettersId = useId()
+  const textareaId = id || `${maxLettersId}-textarea`
+  const maxLettersNoticeId = `${maxLettersId}-notice`
+
+  const counterSpanRef = useRef<HTMLSpanElement>(null)
+  const [count, setCount] = useState(() => {
     const currentValue = defaultValue || value
-    const [interimRows, setInterimRows] = useState(rows)
-    const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-    const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
+    return currentValue ? getStringLength(currentValue) : 0
+  })
+  const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
-    const onChangeRef = useRef(onChange)
-    onChangeRef.current = onChange
+  const countError = count > maxLetters
 
-    const buildAvailableLetters = useCallback(
-      (availableLetters: number): ReactNode => (
-        <Localizer
-          id="smarthr-ui/Textarea/availableLetters"
-          defaultText="あと{availableLetters}文字"
-          values={{ availableLetters }}
-        />
-      ),
-      [],
-    )
+  const latest = useLatest({
+    onChange,
+  })
 
-    const buildmaxLettersExceeded = useCallback(
-      (exceededLetters: number): ReactNode => (
-        <Localizer
-          id="smarthr-ui/Textarea/maxLettersExceeded"
-          defaultText="{exceededLetters}文字オーバー"
-          values={{ exceededLetters }}
-        />
-      ),
-      [],
-    )
+  const functions = useMemo(() => {
+    // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
+    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
+    const updateSrMessage = debounce(() => {
+      startTransition(() => {
+        if (counterSpanRef.current) {
+          setSrCounterMessage(counterSpanRef.current.textContent || '')
+        }
+      })
+    }, 1000)
+    const actualUpdateCount = debounce((newValue: TextareaValue) => {
+      startTransition(() => {
+        setCount(getStringLength(newValue))
+      })
+    }, 200)
 
-    const buildScreenReaderMaxLettersDescription = useCallback(
-      (internalMaxLetters: number): ReactNode => (
+    // 初回レンダリング時はスクリーンリーダー向けメッセージなどを更新したくないためskipする
+    // (実際のユーザー操作による変更でのみ更新すれば良い)
+    // useEffectでupdateCountが必ず呼びだされる
+    let firstCallUpdateCount = true
+    const updateCount = (newValue: TextareaValue) => {
+      if (firstCallUpdateCount) {
+        firstCallUpdateCount = false
+        return
+      }
+
+      actualUpdateCount(newValue)
+      updateSrMessage()
+    }
+
+    return {
+      updateCount,
+      cancelDebounce: () => {
+        updateSrMessage.cancel()
+        actualUpdateCount.cancel()
+      },
+      handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
+        updateCount(e.target.value)
+        latest.onChange?.(e)
+      },
+    }
+  }, [latest])
+
+  useEffect(() => {
+    functions.updateCount(value ?? '')
+    return functions.cancelDebounce
+  }, [value, functions])
+
+  return (
+    <span className="shr-relative">
+      <ActualTextarea
+        {...rest}
+        id={textareaId}
+        value={value}
+        defaultValue={defaultValue}
+        error={error || countError}
+        aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
+        onChange={functions.handleChange}
+      />
+      <VisuallyHiddenText id={maxLettersNoticeId}>
         <Localizer
           id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"
           defaultText="最大{maxLetters}文字入力できます"
-          values={{ maxLetters: internalMaxLetters }}
+          values={{ maxLetters }}
         />
-      ),
-      [],
-    )
+      </VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status" htmlFor={textareaId}>
+        {srCounterMessage}
+      </VisuallyHiddenText>
+      <span
+        ref={counterSpanRef}
+        id={maxLettersId}
+        className="smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black data-[error]:shr-text-danger"
+        aria-hidden={true}
+        data-error={countError || undefined}
+      >
+        {count > maxLetters ? (
+          <Localizer
+            id="smarthr-ui/Textarea/maxLettersExceeded"
+            defaultText="{exceededLetters}文字オーバー"
+            values={{ exceededLetters: count - maxLetters }}
+          />
+        ) : (
+          <Localizer
+            id="smarthr-ui/Textarea/availableLetters"
+            defaultText="あと{availableLetters}文字"
+            values={{ availableLetters: maxLetters - count }}
+          />
+        )}
+      </span>
+    </span>
+  )
+}
 
-    const getCounterMessage = useCallback(
-      (counterValue: number) => {
-        if (maxLetters === undefined) return
+const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
+  autoFocus,
+  width,
+  className,
+  autoResize = false,
+  maxRows = Infinity,
+  rows = 2,
+  error,
+  onChange,
+  externalRef,
+  ...rest
+}) => {
+  const theme = useTheme()
+  const [interimRows, setInterimRows] = useState(rows)
 
-        if (counterValue > maxLetters) {
-          // {count}文字オーバー
-          return <>{buildmaxLettersExceeded(counterValue - maxLetters)}</>
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
+  const latest = useLatest({
+    onChange,
+    autoFocus,
+    autoResize,
+    maxRows,
+    theme,
+    rows,
+  })
+
+  const functions = useMemo(
+    () => ({
+      baseCallbackRef: (node: HTMLTextAreaElement | null) => {
+        if (node) {
+          // autoFocus時に、フォーカスを当てる
+          if (latest.autoFocus) {
+            node.focus()
+          }
+          // autoResize時に、初期値での高さを指定
+          if (latest.autoResize) {
+            setInterimRows(calculateIdealRows(node, latest.maxRows, latest.theme.leading.NORMAL))
+          }
         }
-
-        // あと{count}文字
-        return <>{buildAvailableLetters(maxLetters - counterValue)}</>
       },
-      [maxLetters, buildAvailableLetters, buildmaxLettersExceeded],
-    )
-
-    const counterVisualMessage = useMemo(() => getCounterMessage(count), [count, getCounterMessage])
-
-    useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
-      ref,
-      () => textareaRef.current,
-    )
-
-    const debouncedUpdateCount = useMemo(
-      () =>
-        maxLetters
-          ? debounce((newValue: TextareaValue) => {
-              startTransition(() => {
-                setCount(getStringLength(newValue))
-              })
-            }, 200)
-          : undefined,
-      [maxLetters],
-    )
-
-    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-    const debouncedUpdateSrCounterMessage = useMemo(
-      () =>
-        maxLetters
-          ? debounce((newValue: TextareaValue) => {
-              startTransition(() => {
-                const counterText = getCounterMessage(getStringLength(newValue))
-
-                if (counterText) {
-                  setSrCounterMessage(counterText)
-                }
-              })
-            }, 1000)
-          : undefined,
-      [maxLetters, getCounterMessage],
-    )
-
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLTextAreaElement>) => {
-        const newValue = e.target.value
-        debouncedUpdateCount?.(newValue)
-        debouncedUpdateSrCounterMessage?.(newValue)
-
+      handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
         // rowsを初期化 TextareaのscrollHeightが文字列削除時に変更されないため
-        e.target.rows = rows
+        e.target.rows = latest.rows
 
-        if (autoResize) {
-          const currentRows = calculateIdealRows(e.target, maxRows, theme.leading.NORMAL)
+        if (latest.autoResize) {
+          const currentRows = calculateIdealRows(
+            e.target,
+            latest.maxRows,
+            latest.theme.leading.NORMAL,
+          )
           // rowsを直接反映 Textareaのrows propsが状態を変更しても反映されないため
           e.target.rows = currentRows
           setInterimRows(currentRows)
         }
 
-        onChangeRef.current?.(e)
+        latest.onChange?.(e)
       },
-      [
-        debouncedUpdateCount,
-        debouncedUpdateSrCounterMessage,
-        autoResize,
-        maxRows,
-        rows,
-        theme.leading.NORMAL,
-      ],
-    )
+    }),
+    [latest],
+  )
 
-    // autoFocus時に、フォーカスを当てる
-    useEffect(() => {
-      if (autoFocus && textareaRef && textareaRef.current) {
-        textareaRef.current.focus()
-      }
-    }, [autoFocus])
+  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
-    // autoResize時に、初期値での高さを指定
-    useEffect(() => {
-      if (autoResize && textareaRef.current) {
-        setInterimRows(calculateIdealRows(textareaRef.current, maxRows, theme.leading.NORMAL))
-      }
-    }, [setInterimRows, maxRows, autoResize, theme.leading.NORMAL])
-
-    // value 変更時にもカウントを更新する
-    useEffect(() => {
-      if (value && maxLetters) {
-        debouncedUpdateCount?.(value)
-        debouncedUpdateSrCounterMessage?.(value)
-      }
-    }, [maxLetters, debouncedUpdateCount, debouncedUpdateSrCounterMessage, value])
-
-    const textareaStyle = useMemo(
-      () => ({ width: typeof width === 'number' ? `${width}px` : width }),
-      [width],
-    )
-    const countError = maxLetters && count > maxLetters
-    const classNames = useMemo(() => {
-      const { textareaEl, counter } = classNameGenerator()
-
-      return {
-        textarea: textareaEl({ className }),
-        counter: counter({ error: !!countError }),
-      }
-    }, [countError, className])
-
-    const body = (
-      <textarea
-        {...rest}
-        {...(maxLetters && { 'aria-describedby': `${maxLettersNoticeId} ${actualMaxLettersId}` })}
-        data-smarthr-ui-input="true"
-        value={value}
-        defaultValue={defaultValue}
-        onChange={handleChange}
-        ref={textareaRef}
-        aria-invalid={error || countError || undefined}
-        rows={interimRows}
-        className={classNames.textarea}
-        style={textareaStyle}
-      />
-    )
-
-    return maxLetters ? (
-      <span className="shr-relative">
-        {body}
-        <VisuallyHiddenText id={maxLettersNoticeId}>
-          {buildScreenReaderMaxLettersDescription(maxLetters)}
-        </VisuallyHiddenText>
-        <VisuallyHiddenText aria-live="polite">{srCounterMessage}</VisuallyHiddenText>
-        <span id={actualMaxLettersId} aria-hidden={true} className={classNames.counter}>
-          {counterVisualMessage}
-        </span>
-      </span>
-    ) : (
-      body
-    )
-  },
-)
+  return (
+    <textarea
+      {...rest}
+      ref={mergedRef}
+      rows={interimRows}
+      className={actualClassName}
+      style={{ width: typeof width === 'number' ? `${width}px` : width }}
+      aria-invalid={error || undefined}
+      data-smarthr-ui-input="true"
+      onChange={functions.handleChange}
+    />
+  )
+}

@@ -2,14 +2,17 @@ import { tv } from 'tailwind-variants'
 
 export const classNameGenerator = tv({
   slots: {
-    wrapper: 'smarthr-ui-InputFile shr-block',
+    wrapper: 'smarthr-ui-InputFile',
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
     fileItem: 'shr-flex shr-items-center',
     inputWrapper: [
       'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
-      'has-[[aria-invalid]]:shr-border-danger',
+      '[&&&]:has-[[aria-invalid]]:shr-border-danger',
+      'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
+      'has-[:disabled]:shr-border-disabled has-[:disabled]:shr-bg-white-darken has-[:disabled]:shr-text-disabled',
+      'has-[:disabled]:hover:shr-border-disabled has-[:disabled]:hover:shr-text-disabled',
     ],
     input: [
       'smarthr-ui-InputFile-input',
@@ -26,14 +29,6 @@ export const classNameGenerator = tv({
       },
       S: {
         inputWrapper: 'shr-p-0.5 shr-text-sm',
-      },
-    },
-    disabled: {
-      true: {
-        inputWrapper: 'shr-border-disabled shr-bg-white-darken shr-text-disabled',
-      },
-      false: {
-        inputWrapper: 'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
       },
     },
   },

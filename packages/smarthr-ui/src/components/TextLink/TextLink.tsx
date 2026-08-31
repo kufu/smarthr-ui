@@ -8,9 +8,7 @@ import {
   type Ref,
   forwardRef,
   memo,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
@@ -63,10 +61,6 @@ const classNameGenerator = tv({
     },
   },
 })
-const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
-const prefixWrapperClassName = prefixWrapper()
-const suffixWrapperClassName = suffixWrapper()
-
 const ActualTextLink: TextLinkComponent = forwardRef(
   <T extends ElementType = 'a'>(
     {
@@ -88,40 +82,46 @@ const ActualTextLink: TextLinkComponent = forwardRef(
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
-    const actualHref = href ? href : onClick ? '' : undefined
-    const actualRel = rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel
-    const anchorClassName = useMemo(() => anchor({ size, className }), [size, className])
-
-    const onClickRef = useRef(onClick)
-    onClickRef.current = onClick
-
-    const actualOnClick = useCallback(
-      (e: MouseEvent) => {
-        if (!onClickRef.current) {
-          return
-        }
-
-        if (!href) {
-          e.preventDefault()
-        }
-        onClickRef.current(e)
-      },
-      [href],
-    )
+    const classNames = useMemo(() => {
+      const { anchor, prefixWrapper, suffixWrapper } = classNameGenerator()
+      return {
+        anchor: anchor({ size, className }),
+        prefixWrapper: prefixWrapper(),
+        suffixWrapper: suffixWrapper(),
+      }
+    }, [size, className])
 
     return (
       <Anchor
         {...rest}
         ref={ref}
-        href={actualHref}
+        // HINT: a要素でhrefが存在しない === button[disabled]のように無効化されていることを表す
+        // そのためhrefが存在せず、かつonClickが設定されている場合、hrefを擬似的に設定することで
+        // disabledではない状態にする (TODO: a11y的にはhrefをoptionalではなく必須属性としたい)
+        href={href ? href : onClick ? '' : undefined}
         target={target}
-        rel={actualRel}
-        onClick={onClick && actualOnClick}
-        className={anchorClassName}
+        rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
+        className={classNames.anchor}
+        // HINT: このコンポーネントは `use client` をつけなくても動作する状態にしたい
+        //  - TextLinkにonClickが設定されるパターンは少ない
+        //  - elementAsが設定されるパターンはさらに少ないため基本的にa要素になっている
+        //  - useLatestを利用すると内部でuseRefを利用しているためclient componentが強制される
+        // 以上からmemo化せずに直接設定しています。
+        // 今後の修正でclient componentになった場合はmemo化を検討する
+        onClick={
+          onClick
+            ? (e: MouseEvent) => {
+                if (!href) {
+                  e.preventDefault()
+                }
+                onClick(e)
+              }
+            : undefined
+        }
       >
-        {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
+        {prefix && <span className={classNames.prefixWrapper}>{prefix}</span>}
         {children}
-        {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
+        {actualSuffix && <span className={classNames.suffixWrapper}>{actualSuffix}</span>}
       </Anchor>
     )
   },

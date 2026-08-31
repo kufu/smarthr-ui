@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../intl'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 
 import { SingleCombobox } from './SingleCombobox'
 
@@ -32,6 +32,9 @@ describe('SingleCombobox', () => {
           <SingleCombobox
             {...rest}
             name={name || 'default'}
+            selectedItem={
+              selectedItem !== undefined ? selectedItem : { label: 'option 1', value: 'value-1' }
+            }
             items={
               items || [
                 { label: 'option 1', value: 'value-1' },
@@ -40,9 +43,6 @@ describe('SingleCombobox', () => {
                 { label: 'option 4', value: 'value-4' },
                 { label: 'option 5', value: 'value-5' },
               ]
-            }
-            selectedItem={
-              selectedItem !== undefined ? selectedItem : { label: 'option 1', value: 'value-1' }
             }
           />
         </FormControl>
@@ -128,8 +128,8 @@ describe('SingleCombobox', () => {
     await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
-    // 選択解除ボタンが表示されていない(非表示用のクラスが付与されている)
-    expect(clearButton()).toHaveClass('shr-hidden')
+    // 選択解除ボタンが表示されていない(data-clear-button-hidden属性がtrueになっている)
+    expect(screen.getByRole('group')).toHaveAttribute('data-clear-button-hidden', 'true')
   })
 
   it('readOnly なコンボボックスではアイテムの選択・解除ができないこと', async () => {
@@ -140,8 +140,8 @@ describe('SingleCombobox', () => {
     await userEvent.click(combobox())
     expect(listbox()).not.toBeInTheDocument()
 
-    // 選択解除ボタンが表示されていない(非表示用のクラスが付与されている)
-    expect(clearButton()).toHaveClass('shr-hidden')
+    // 選択解除ボタンが表示されていない(data-clear-button-hidden属性がtrueになっている)
+    expect(screen.getByRole('group')).toHaveAttribute('data-clear-button-hidden', 'true')
   })
 
   it('キーボードで操作できること', async () => {
@@ -171,11 +171,11 @@ describe('SingleCombobox', () => {
           <FormControl label="コンボボックス">
             <SingleCombobox
               name="default"
+              selectedItem={{ label: 'option 1', value: 'value-1' }}
               items={[
                 { label: 'option 1', value: 'value-1' },
                 { label: 'option 2', value: 'value-2' },
               ]}
-              selectedItem={{ label: 'option 1', value: 'value-1' }}
             />
           </FormControl>
         </form>
@@ -198,12 +198,12 @@ test('groupロールが付与されている', async () => {
         <FormControl label="コンボボックス">
           <SingleCombobox
             name="default"
+            selectedItem={{ label: 'option 1', value: 'value-1' }}
+            onClearClick={onClearClick}
             items={[
               { label: 'option 1', value: 'value-1' },
               { label: 'option 2', value: 'value-2' },
             ]}
-            selectedItem={{ label: 'option 1', value: 'value-1' }}
-            onClearClick={onClearClick}
           />
         </FormControl>
       </form>

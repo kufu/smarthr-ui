@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
@@ -15,7 +17,7 @@ import { useSideNavContext } from './SideNavContext'
 
 export type SideNavSizeType = 'M' | 'S'
 
-type AbstractProps = {
+type BaseProps = {
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
   /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
@@ -24,12 +26,12 @@ type AbstractProps = {
   current?: boolean
 }
 
-type AbstractButtonProps = AbstractProps & {
+type AbstractButtonProps = BaseProps & {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-type AbstractAnchorProps<T extends ElementType = 'a'> = AbstractProps & {
+type AbstractAnchorProps<T extends ElementType = 'a'> = BaseProps & {
   href: string
   /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
@@ -98,23 +100,22 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   ...rest
 }) => {
   const context = useSideNavContext()
-  const size = context?.size ?? 'M'
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size }),
+      button: button({ size: context.size }),
       body: body(),
       bodyText: bodyText(),
     }
-  }, [className, size])
+  }, [context.size, className])
 
   return (
-    <li {...rest} id={id} data-current={!!current} className={classNames.wrapper}>
-      <UnstyledButton className={classNames.button} onClick={onClick} value={id}>
-        <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
+    <li {...rest} id={id} className={classNames.wrapper} data-current={!!current}>
+      <UnstyledButton value={id} className={classNames.button} onClick={onClick}>
+        <BodyCluster classNames={classNames} prefix={prefix} suffix={suffix}>
           {children}
         </BodyCluster>
       </UnstyledButton>
@@ -134,25 +135,24 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   ...rest
 }: AnchorProps<T>) => {
   const context = useSideNavContext()
-  const size = context?.size ?? 'M'
 
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size }),
+      button: button({ size: context.size }),
       body: body(),
       bodyText: bodyText(),
     }
-  }, [className, size])
+  }, [context.size, className])
 
   const Anchor = elementAs || 'a'
 
   return (
-    <li {...rest} data-current={!!current} className={classNames.wrapper}>
-      <Anchor className={classNames.button} href={href} onClick={onClick}>
-        <BodyCluster prefix={prefix} suffix={suffix} classNames={classNames}>
+    <li {...rest} className={classNames.wrapper} data-current={!!current}>
+      <Anchor href={href} className={classNames.button} onClick={onClick}>
+        <BodyCluster classNames={classNames} prefix={prefix} suffix={suffix}>
           {children}
         </BodyCluster>
       </Anchor>
@@ -161,12 +161,12 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 }
 
 const BodyCluster = memo<
-  Pick<AbstractProps, 'prefix' | 'suffix'> & {
+  Pick<BaseProps, 'prefix' | 'suffix'> & {
     children: ReactNode
     classNames: { body: string; bodyText: string }
   }
 >(({ prefix, suffix, children, classNames }) => (
-  <Cluster inline align="center" className={classNames.body} as="span">
+  <Cluster as="span" inline align="center" className={classNames.body}>
     {prefix}
     <span className={classNames.bodyText}>{children}</span>
     {suffix}

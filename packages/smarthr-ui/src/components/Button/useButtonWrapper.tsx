@@ -21,7 +21,7 @@ import type { Variant } from './types'
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   size: 'M' | 'S'
   wide: boolean
   variant: Variant
@@ -32,32 +32,25 @@ type AbstractProps = PropsWithChildren<{
   suffix?: ReactNode
 }>
 
-type AbstractButtonProps = AbstractProps & {
+type BaseButtonProps = BaseProps & {
   isAnchor?: never
   buttonRef?: ForwardedRef<HTMLButtonElement>
 }
-type ButtonProps = AbstractButtonProps &
-  Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof AbstractButtonProps>
+type ButtonProps = BaseButtonProps &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>
 
-type AbstractAnchorProps = AbstractProps & {
+type BaseAnchorProps = BaseProps & {
   isAnchor: true
   anchorRef?: ForwardedRef<HTMLAnchorElement>
 }
-type AnchorProps = AbstractAnchorProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AbstractAnchorProps>
+type AnchorProps = BaseAnchorProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseAnchorProps>
 
 export type Props = ButtonProps | AnchorProps
 
 // HINT: useButtonWrapperの引数を調整する場合、以下も調整する
 type FilteredProps =
-  | 'size'
-  | 'wide'
-  | 'variant'
-  | 'className'
-  | 'prefix'
-  | 'suffix'
-  | 'children'
-  | 'isAnchor'
+  'size' | 'wide' | 'variant' | 'className' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
 export type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
 export type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
 
@@ -104,7 +97,7 @@ export const useButtonWrapper = ({
 
   if ($loading) {
     actualPrefix = undefined
-    const loader = <Loader size="S" className={classNames.loader} role="presentation" />
+    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
 
     // HINT: squareは null | boolean のため、switchで判定する
     // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう

@@ -1,9 +1,9 @@
 import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../intl'
+import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
-
-import { SearchInputIcon } from './SearchInputIcon'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
@@ -27,28 +27,32 @@ const classNameGenerator = tv({
 
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ width, className, ...rest }, ref) => {
-    const labelStyle = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
+    const labelStyle = {
+      width: typeof width === 'number' ? `${width}px` : width,
+    }
+    const existsWidth = !!labelStyle.width
+
     const classNames = useMemo(() => {
-      const { label, input } = classNameGenerator({ existsWidth: !!labelStyle.width })
+      const { label, input } = classNameGenerator({ existsWidth })
 
       return {
         label: label({ className }),
         input: input(),
       }
-    }, [labelStyle.width, className])
+    }, [existsWidth, className])
 
     return (
       <label className={classNames.label} style={labelStyle}>
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<SearchInputIcon />}
           className={classNames.input}
+          prefix={
+            <FaMagnifyingGlassIcon
+              alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
+              color="TEXT_GREY"
+            />
+          }
         />
       </label>
     )

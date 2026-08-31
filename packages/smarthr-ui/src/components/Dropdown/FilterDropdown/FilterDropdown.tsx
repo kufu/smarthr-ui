@@ -6,14 +6,14 @@ import {
   type FormEvent,
   type MouseEventHandler,
   type ReactNode,
-  isValidElement,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { useIntl } from '../../../intl'
-import { Button, type AbstractProps as ButtonProps } from '../../Button'
+import { Localizer, useIntl } from '../../../intl'
+import { Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -29,7 +29,7 @@ type ObjectTriggerType = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type AbstractProps = {
+type BaseProps = {
   /** 引き金となるボタン */
   trigger?: ReactNode | ObjectTriggerType
   applyText?: ReactNode
@@ -48,7 +48,9 @@ type AbstractProps = {
   onOpen?: () => void
   onClose?: () => void
 }
-type Props = AbstractProps & Omit<ComponentProps<'button'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
+
+const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
 const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 const ON_SUBMIT = (e: FormEvent) => {
@@ -57,7 +59,11 @@ const ON_SUBMIT = (e: FormEvent) => {
 
 const classNameGenerator = tv({
   slots: {
-    iconWrapper: ['smarthr-ui-Icon-extended', 'shr-relative shr-leading-none'],
+    iconWrapper: [
+      'smarthr-ui-Icon-extended',
+      'shr-relative shr-leading-none',
+      'data-[filtered=true]:shr-text-main',
+    ],
     filteredIcon: 'shr-absolute shr-bottom-[2px] shr-right-[-4px] shr-h-[0.5em] shr-w-[0.5em]',
     inner: 'shr-p-1.5',
     actionArea: 'shr-border-t-shorthand shr-sticky shr-bottom-0 shr-bg-white shr-px-1.5 shr-py-1',
@@ -66,11 +72,6 @@ const classNameGenerator = tv({
     message: 'shr-text-right',
   },
   variants: {
-    filtered: {
-      true: {
-        iconWrapper: 'shr-text-main',
-      },
-    },
     triggerSize: {
       M: {},
       S: {
@@ -95,56 +96,25 @@ export const FilterDropdown: FC<Props> = ({
   onClose,
   ...rest
 }) => {
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const trigger: ObjectTriggerType =
-    !orgTrigger || typeof orgTrigger !== 'object' || isValidElement(orgTrigger)
-      ? {
-          text: orgTrigger as ReactNode,
-        }
-      : (orgTrigger as ObjectTriggerType)
+  const trigger = useObjectAttributes<ReactNode | ObjectTriggerType, ObjectTriggerType>(
+    orgTrigger,
+    triggerObjectConverter,
+  )
   const { localize } = useIntl()
 
-  const decorated = useMemo(
-    () => ({
-      filteredIconAlt:
-        (typeof filtered === 'object' && filtered.iconAlt) ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/status',
-          defaultText: '適用中',
-        }),
-      trigger:
-        trigger.text ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/triggerText',
-          defaultText: '絞り込み',
-        }),
-      applyText:
-        applyText ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/applyText',
-          defaultText: '適用',
-        }),
-      cancelText:
-        cancelText ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/cancelText',
-          defaultText: 'キャンセル',
-        }),
-      resetText:
-        resetText ||
-        localize({
-          id: 'smarthr-ui/FilterDropdown/resetText',
-          defaultText: '絞り込み条件を解除',
-        }),
-    }),
-    [filtered, trigger.text, applyText, cancelText, resetText, localize],
+  const filteredIconAlt = useMemo(
+    () =>
+      (typeof filtered === 'object' && filtered.iconAlt) ||
+      localize({
+        id: 'smarthr-ui/FilterDropdown/status',
+        defaultText: '適用中',
+      }),
+    [filtered, localize],
   )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
-  const classNamesMapper = useMemo(() => {
+  const classNames = useMemo(() => {
     const {
       iconWrapper,
       filteredIcon,
@@ -155,7 +125,8 @@ export const FilterDropdown: FC<Props> = ({
       message,
     } = classNameGenerator()
 
-    const commonStyles = {
+    return {
+      iconWrapper: iconWrapper({ triggerSize: trigger.size }),
       filteredIcon: filteredIcon(),
       inner: inner(),
       actionArea: actionArea(),
@@ -163,54 +134,31 @@ export const FilterDropdown: FC<Props> = ({
       rightButtonArea: rightButtonArea(),
       message: message(),
     }
-
-    return {
-      filtered: {
-        ...commonStyles,
-        iconWrapper: iconWrapper({ filtered: true, triggerSize: trigger.size }),
-      },
-      unfiltered: {
-        ...commonStyles,
-        iconWrapper: iconWrapper({ filtered: false, triggerSize: trigger.size }),
-      },
-    }
   }, [trigger.size])
 
-  const classNames = classNamesMapper[filtered ? 'filtered' : 'unfiltered']
+  const triggerText = trigger.text || (
+    <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
+  )
 
-  const { buttonSuffix, buttonContent } = useMemo(() => {
-    const FilterIcon = (
-      <span className={classNames.iconWrapper}>
-        <FaFilterIcon alt={trigger.onlyIcon ? decorated.trigger : undefined} />
+  const FilterIcon = (
+    <span className={classNames.iconWrapper} data-filtered={!!filtered}>
+      <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
 
-        {filtered && (
-          // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-          <FaCircleCheckIcon
-            aria-label={decorated.filteredIconAlt}
-            className={classNames.filteredIcon}
-          />
-        )}
-      </span>
-    )
+      {filtered && (
+        // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
+        <FaCircleCheckIcon className={classNames.filteredIcon} aria-label={filteredIconAlt} />
+      )}
+    </span>
+  )
 
-    if (trigger.onlyIcon) {
-      return {
-        buttonSuffix: undefined,
-        buttonContent: FilterIcon,
-      }
-    }
-
-    return {
-      buttonSuffix: FilterIcon,
-      buttonContent: decorated.trigger,
-    }
-  }, [filtered, decorated.trigger, decorated.filteredIconAlt, trigger.onlyIcon, classNames])
+  const suffix = trigger.onlyIcon ? undefined : FilterIcon
+  const content = trigger.onlyIcon ? FilterIcon : triggerText
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
-      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: decorated.trigger }}>
-        <Button {...rest} suffix={buttonSuffix} size={trigger.size}>
-          {buttonContent}
+      <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: triggerText }}>
+        <Button {...rest} size={trigger.size} suffix={suffix}>
+          {content}
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
@@ -221,13 +169,18 @@ export const FilterDropdown: FC<Props> = ({
               {onReset && (
                 <div className={classNames.resetButtonArea}>
                   <Button
+                    disabled={calcedResponseStatus.isProcessing}
                     variant="text"
                     size="S"
-                    prefix={<FaRotateLeftIcon />}
                     onClick={onReset}
-                    disabled={calcedResponseStatus.isProcessing}
+                    prefix={<FaRotateLeftIcon />}
                   >
-                    {decorated.resetText}
+                    {resetText || (
+                      <Localizer
+                        id="smarthr-ui/FilterDropdown/resetText"
+                        defaultText="絞り込み条件を解除"
+                      />
+                    )}
                   </Button>
                 </div>
               )}
@@ -238,24 +191,31 @@ export const FilterDropdown: FC<Props> = ({
                 className={classNames.rightButtonArea}
               >
                 <DropdownCloser>
-                  <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
-                    {decorated.cancelText}
+                  <Button disabled={calcedResponseStatus.isProcessing} onClick={onCancel}>
+                    {cancelText || (
+                      <Localizer
+                        id="smarthr-ui/FilterDropdown/cancelText"
+                        defaultText="キャンセル"
+                      />
+                    )}
                   </Button>
                 </DropdownCloser>
                 <DropdownCloser>
                   <Button
+                    loading={calcedResponseStatus.isProcessing}
                     variant="primary"
                     onClick={onApply}
-                    loading={calcedResponseStatus.isProcessing}
                   >
-                    {decorated.applyText}
+                    {applyText || (
+                      <Localizer id="smarthr-ui/FilterDropdown/applyText" defaultText="適用" />
+                    )}
                   </Button>
                 </DropdownCloser>
               </Cluster>
             </Cluster>
             {calcedResponseStatus.message && (
               <div className={classNames.message}>
-                <ResponseMessage status={calcedResponseStatus.status} role="alert">
+                <ResponseMessage role="alert" status={calcedResponseStatus.status}>
                   {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>

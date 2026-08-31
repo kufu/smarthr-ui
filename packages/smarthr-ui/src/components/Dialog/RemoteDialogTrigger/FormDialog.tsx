@@ -1,7 +1,8 @@
 'use client'
 
 import { ControlledFormDialog } from '../ControlledFormDialog'
-import { useRemoteTrigger } from '../useRemoteTrigger'
+
+import { useRemoteTrigger } from './useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 
@@ -17,11 +18,7 @@ export const FormDialog: FC<Props> = ({
   onPressEscape,
   ...rest
 }) => {
-  const {
-    isOpen,
-    onClickClose: actualOnClickClose,
-    onPressEscape: actualOnPressEscape,
-  } = useRemoteTrigger({
+  const { isOpen, handleClickClose, handlePressEscape } = useRemoteTrigger({
     id,
     onClickClose,
     onPressEscape,
@@ -35,8 +32,8 @@ export const FormDialog: FC<Props> = ({
       {...rest}
       id={id}
       isOpen={isOpen}
-      onClickClose={actualOnClickClose}
-      onPressEscape={actualOnPressEscape}
+      onClickClose={handleClickClose}
+      onPressEscape={handlePressEscape}
     />
   )
 }

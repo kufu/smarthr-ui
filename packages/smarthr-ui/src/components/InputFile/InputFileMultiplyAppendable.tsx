@@ -3,193 +3,158 @@
 import {
   type ChangeEvent,
   type MouseEvent,
-  type PropsWithChildren,
-  type ReactNode,
   forwardRef,
-  memo,
-  useCallback,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
-import { useIntl } from '../../intl'
-import { BaseColumn } from '../Base'
-import { Button } from '../Button'
-import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
+import { useLatest } from '../../hooks/useLatest'
 import { Stack } from '../Layout'
+import { Groupbox } from '../Panel'
 
+import { FilePreviewDialog } from './FilePreviewDialog'
+import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
-import type { Props } from './types'
+import type { LowerProps } from './types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<HTMLInputElement, Omit<Props, 'multiple'>>(
+export const InputFileMultiplyAppendable = forwardRef<
+  HTMLInputElement,
+  Omit<LowerProps, 'multiple'>
+>(
   (
-    { className, size, label, hasFileList = true, onChange, disabled = false, error, ...rest },
+    { className, size, label, hasFileList = true, previewable, onChange, disabled, error, ...rest },
     ref,
   ) => {
     const [files, setFiles] = useState<File[]>([])
+    const [previewFile, setPreviewFile] = useState<File | null>(null)
     const labelId = useId()
-    const { localize } = useIntl()
-
-    const destroyLabel = useMemo(
-      () =>
-        localize({
-          id: 'smarthr-ui/InputFile/destroy',
-          defaultText: '削除',
-        }),
-      [localize],
-    )
 
     const classNames = useMemo(() => {
       const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),
-        inputWrapper: inputWrapper({ size, disabled }),
+        inputWrapper: inputWrapper({ size }),
         fileList: fileList(),
         fileItem: fileItem(),
         input: input(),
         prefix: prefix(),
       }
-    }, [disabled, size, className])
+    }, [size, className])
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
-    const isUpdatingFilesDirectly = useRef(false)
+    const isUpdatingFilesRef = useRef(false)
 
-    const inputRef = useRef<HTMLInputElement>(null)
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
+    const latest = useLatest({ onChange, files, previewFile })
 
-    const unstableRef = useRef({ onChange, files })
-    unstableRef.current = { onChange, files }
+    const functions = useMemo(() => {
+      const updateFiles = (input: HTMLInputElement, newFiles: File[]) => {
+        latest.onChange?.(newFiles)
 
-    const updateFiles = useCallback((newFiles: File[]) => {
-      if (!inputRef.current) {
-        return
+        const buff = new DataTransfer()
+        newFiles.forEach((file) => {
+          buff.items.add(file)
+        })
+
+        isUpdatingFilesRef.current = true
+        input.files = buff.files
+        isUpdatingFilesRef.current = false
+
+        setFiles(newFiles)
       }
 
-      unstableRef.current.onChange?.(newFiles)
+      return {
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
+          // Safari において、input.files への直接代入時はonChangeを発火させない
+          if (isUpdatingFilesRef.current) {
+            return
+          }
 
-      const buff = new DataTransfer()
-      newFiles.forEach((file) => {
-        buff.items.add(file)
-      })
+          const newFiles = Array.from(e.target.files ?? [])
 
-      isUpdatingFilesDirectly.current = true
-      inputRef.current.files = buff.files
-      isUpdatingFilesDirectly.current = false
+          updateFiles(e.target, [...latest.files, ...newFiles])
+        },
+        handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
+          const input = e.currentTarget
+            .closest('.smarthr-ui-InputFile')
+            ?.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"][type="file"]')
 
-      setFiles(newFiles)
-    }, [])
+          if (!input) {
+            return
+          }
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        // Safari において、input.files への直接代入時はonChangeを発火させない
-        if (isUpdatingFilesDirectly.current) {
-          return
-        }
+          const index = parseInt(e.currentTarget.value, 10)
+          const newFiles = latest.files.filter((_, i) => index !== i)
 
-        const newFiles = Array.from(e.target.files ?? [])
+          // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
+          input.value = ''
 
-        updateFiles([...unstableRef.current.files, ...newFiles])
-      },
-      [updateFiles],
-    )
+          updateFiles(input, newFiles)
+        },
+        handleClosePreview: () => {
+          setPreviewFile(null)
+        },
+        handleDownload: () => {
+          const file = latest.previewFile
+          if (!file) return
 
-    const handleDelete = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => {
-        if (!inputRef.current) {
-          return
-        }
-
-        const index = parseInt(e.currentTarget.value, 10)
-        const newFiles = unstableRef.current.files.filter((_, i) => index !== i)
-
-        // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-        inputRef.current.value = ''
-
-        updateFiles(newFiles)
-      },
-      [updateFiles],
-    )
+          const url = URL.createObjectURL(file)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = file.name
+          a.click()
+          URL.revokeObjectURL(url)
+        },
+      }
+    }, [latest])
 
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
-        {!disabled && hasFileList && files.length > 0 && (
-          <BaseColumn as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
+        {hasFileList && !disabled && files.length > 0 && (
+          <Groupbox as="ul" padding={BASE_COLUMN_PADDING} className={classNames.fileList}>
             {files.map((file, index) => (
               <FileListItem
                 key={index}
-                value={index}
-                onDeleteClick={handleDelete}
-                destroyLabel={destroyLabel}
+                file={file}
+                index={index}
+                previewable={!!previewable}
                 className={classNames.fileItem}
-              >
-                {file.name}
-              </FileListItem>
+                handleDeleteClick={functions.handleDelete}
+                handlePreviewClick={setPreviewFile}
+              />
             ))}
-          </BaseColumn>
+          </Groupbox>
         )}
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            multiple
-            data-smarthr-ui-input="true"
+            ref={ref}
             type="file"
-            onChange={handleChange}
             disabled={disabled}
-            ref={inputRef}
+            multiple
+            className={classNames.input}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
-            className={classNames.input}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
           />
           <StyledFaFolderOpenIcon className={classNames.prefix} />
           <LabelRender id={labelId} label={label} />
         </span>
+        {previewable && (
+          <FilePreviewDialog
+            file={previewFile}
+            searchable={previewable?.searchable}
+            handleClose={functions.handleClosePreview}
+            handleDownload={functions.handleDownload}
+          />
+        )}
       </Stack>
     )
   },
 )
-
-type FileListItemProps = PropsWithChildren<{
-  value: number
-  onDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
-  destroyLabel: string
-  className: string
-}>
-
-const FileListItem = memo<FileListItemProps>(
-  ({ value, onDeleteClick, destroyLabel, className, children }) => (
-    <li className={className}>
-      <span className="smarthr-ui-InputFile-fileName">{children}</span>
-      <Button
-        variant="text"
-        prefix={<FaTrashCanIcon />}
-        value={value}
-        onClick={onDeleteClick}
-        className="smarthr-ui-InputFile-deleteButton"
-      >
-        {destroyLabel}
-      </Button>
-    </li>
-  ),
-)
-
-const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (
-  <span className={className}>
-    <FaFolderOpenIcon />
-  </span>
-))
-
-const LabelRender = memo<{ id: string; label: ReactNode }>(({ id, label }) => (
-  <span id={id} aria-hidden="true">
-    {label}
-  </span>
-))

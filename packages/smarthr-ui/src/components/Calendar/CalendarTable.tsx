@@ -9,12 +9,13 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { useLatest } from '../../hooks/useLatest'
+import { useDateFormat } from '../../intl'
 import { UnstyledButton } from '../Button'
 
 import { isBetween } from './calendarHelper'
 
-type AbstractProps = {
+type BaseProps = {
   /** 現在の日付 */
   current: {
     day: DayJsType
@@ -29,7 +30,7 @@ type AbstractProps = {
   /** 選択された日付 */
   selectedDayText: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'table'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'table'>, keyof BaseProps>
 
 type DayJsType = ReturnType<typeof dayjs>
 
@@ -61,7 +62,7 @@ export const CalendarTable: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const { formatDate, getWeekStartDay } = useIntl()
+  const { formatDate, getWeekStartDay } = useDateFormat()
 
   const classNames = useMemo(() => {
     const { wrapper, table, th, td, cellButton, dateCell } = classNameGenerator()
@@ -96,6 +97,15 @@ export const CalendarTable: FC<Props> = ({
     return days
   }, [formatDate, getWeekStartDay])
 
+  const latest = useLatest({ onSelectDate })
+
+  const handleSelectDate: typeof onSelectDate = useCallback(
+    (...argsRest) => {
+      latest.onSelectDate(...argsRest)
+    },
+    [latest],
+  )
+
   // HINT: dayjsのisSameは文字列でも比較可能なため、cacheが効きやすいstringにする
   const nowDateText = dayjs().startOf('date').toString()
 
@@ -110,14 +120,14 @@ export const CalendarTable: FC<Props> = ({
                 date ? (
                   <SelectTdButton
                     key={dateIndex}
+                    selectedDayText={selectedDayText}
                     date={date}
                     currentDay={current.day}
-                    selectedDayText={selectedDayText}
                     from={from}
                     to={to}
                     nowDateText={nowDateText}
-                    onClick={onSelectDate}
                     classNames={classNames}
+                    handleClick={handleSelectDate}
                   />
                 ) : (
                   <NullTd key={dateIndex} className={classNames.td} />
@@ -152,13 +162,13 @@ const SelectTdButton = memo<{
   from: Date
   to: Date
   nowDateText: string
-  onClick: Props['onSelectDate']
+  handleClick: Props['onSelectDate']
   classNames: {
     td: string
     cellButton: string
     dateCell: string
   }
-}>(({ date, currentDay, selectedDayText, from, to, nowDateText, onClick, classNames }) => {
+}>(({ date, currentDay, selectedDayText, from, to, nowDateText, handleClick, classNames }) => {
   const target = useMemo(() => {
     const day = currentDay.date(date)
 
@@ -167,39 +177,21 @@ const SelectTdButton = memo<{
       date: day.toDate(),
     }
   }, [currentDay, date])
-  const disabled = useMemo(() => !isBetween(target.date, from, to), [target.date, from, to])
-  const ariaPressed = useMemo(
-    () => target.day.isSame(selectedDayText, 'date'),
-    [selectedDayText, target.day],
-  )
-  const dataIsToday = useMemo(
-    () => target.day.isSame(nowDateText, 'date'),
-    [nowDateText, target.day],
-  )
-
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      onClick(e, target.date)
-    },
-    [onClick, target.date],
-  )
 
   return (
     <td className={classNames.td}>
       <UnstyledButton
         type="button"
-        disabled={disabled}
-        aria-pressed={ariaPressed}
-        onClick={actualOnClick}
+        disabled={!isBetween(target.date, from, to)}
         className={classNames.cellButton}
-        data-is-today={dataIsToday}
+        aria-pressed={target.day.isSame(selectedDayText, 'date')}
+        data-is-today={target.day.isSame(nowDateText, 'date')}
+        onClick={(e) => {
+          handleClick(e, target.date)
+        }}
       >
-        <SelectButtonTdDateCell className={classNames.dateCell}>{date}</SelectButtonTdDateCell>
+        <span className={classNames.dateCell}>{date}</span>
       </UnstyledButton>
     </td>
   )
 })
-
-const SelectButtonTdDateCell = memo<{ children: number; className: string }>(
-  ({ children, className }) => <span className={className}>{children}</span>,
-)

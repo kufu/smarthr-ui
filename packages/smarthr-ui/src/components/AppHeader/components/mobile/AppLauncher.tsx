@@ -1,7 +1,7 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
@@ -20,6 +20,8 @@ import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
+  loading?: boolean
+  error?: boolean
 }
 
 const classNameGenerator = tv({
@@ -36,7 +38,19 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
+const CLASS_NAMES = (() => {
+  const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    searchArea: searchArea(),
+    headArea: headArea(),
+    scrollArea: scrollArea(),
+    bottomArea: bottomArea(),
+  }
+})()
+
+export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error }) => {
   const {
     features,
     page,
@@ -47,58 +61,37 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   } = useAppLauncher(baseFeatures)
 
-  const classNames = useMemo(() => {
-    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      searchArea: searchArea(),
-      headArea: headArea(),
-      scrollArea: scrollArea(),
-      bottomArea: bottomArea(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      searchInputTitle: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-      searchResultText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
-        defaultText: '検索結果',
-      }),
-      helpText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/helpText',
-        defaultText: 'よく使うアプリとは',
-      }),
-    }),
-    [localize],
-  )
+  const { searchInputTitle } = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+  })
 
   return (
-    <div className={classNames.wrapper}>
-      <div className={classNames.searchArea}>
+    <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
+      <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
-          width="100%"
           value={searchQuery}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          title={searchInputTitle}
+          width="100%"
           onChange={onChangeSearchQuery}
+          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
 
-      <Cluster className={classNames.headArea} justify="space-between" align="center">
+      <Cluster justify="space-between" align="center" className={CLASS_NAMES.headArea}>
         {mode === 'search' ? (
-          <SearchResultText>{translated.searchResultText}</SearchResultText>
+          <SearchResultText>
+            <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
+          </SearchResultText>
         ) : (
-          <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
+          <AppLauncherFilterDropdown page={page} handleSelectPage={changePage} />
         )}
 
         {(mode === 'search' || page === 'all') && (
@@ -106,11 +99,13 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
         )}
       </Cluster>
 
-      <Scroller className={classNames.scrollArea} styleType="scroll">
-        <AppLauncherFeatures features={features} page={page} />
+      <Scroller styleType="scroll" className={CLASS_NAMES.scrollArea}>
+        <AppLauncherFeatures features={features} page={page} loading={loading} error={error} />
       </Scroller>
 
-      <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
+      <BottomArea className={CLASS_NAMES.bottomArea}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+      </BottomArea>
     </div>
   )
 }

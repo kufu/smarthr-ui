@@ -12,6 +12,8 @@ const IGNORE_INNER_DIRS = [
   'Input/InputWithTooltip',
   'Browser/models',
   'stories',
+  // client 境界が必要なモジュールを閉じ込めるディレクトリ。コンポーネントの公開単位ではない
+  'client',
   'AppHeader/components',
   'AppHeader/hooks',
   'AppHeader/multilingualization',
@@ -116,7 +118,11 @@ const getExportedDirectoryComponents = async (
       node.forEachChild((child) => {
         if (ts.isNamedExports(child)) {
           child.elements.forEach((element) => {
-            exportComponents.push(`${element.name.escapedText}`)
+            // エイリアス前の元の名前を取得（export { A as B } の場合、Aを取得）
+            const componentName = element.propertyName
+              ? `${element.propertyName.escapedText}`
+              : `${element.name.escapedText}`
+            exportComponents.push(componentName)
           })
         }
       })

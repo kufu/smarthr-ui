@@ -1,10 +1,10 @@
 'use client'
 
+// HINT: useDateFormat経由でreact-intlに到達する。react-intlはRSC非対応のため、
+// 利用側へ境界を移せない。
 import dayjs from 'dayjs'
 
-import { useIntl } from './useIntl'
-
-import type { FormatDateProps } from './useIntl'
+import { type FormatDateProps, useDateFormat } from './useDateFormat'
 
 /**
  * 日付を現在のロケールに応じてフォーマットして表示するコンポーネント
@@ -56,6 +56,6 @@ export const DateFormatter = ({
   date: string | Date
 }) => {
   const date = dayjs(orgDate).toDate()
-  const { formatDate } = useIntl()
+  const { formatDate } = useDateFormat()
   return <time dateTime={date.toISOString()}>{formatDate({ ...rest, date })}</time>
 }

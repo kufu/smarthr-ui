@@ -3,22 +3,29 @@
 import {
   type ComponentProps,
   type FC,
+  type KeyboardEventHandler,
+  type MouseEvent,
   type PropsWithChildren,
   type RefObject,
   createContext,
-  useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { flatArrayToMap } from '../../libs/map'
+import { useLatest } from '../../hooks/useLatest'
+import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
 
-import { getNewExpandedItems } from './accordionPanelHelper'
+import {
+  focusFirstSibling,
+  focusLastSibling,
+  focusNextSibling,
+  focusPreviousSibling,
+  getNewExpandedItems,
+} from './accordionPanelHelper'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
   /** 複数のパネルを同時に開くことを許容するかどうか */
@@ -29,20 +36,25 @@ type AbstractProps = PropsWithChildren<{
   onClick?: (expandedItems: string[]) => void
 }> &
   VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+
+const DEFAULT_EXPANDED_ARRAY: string[] = []
+const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   expandableMultiply: boolean
   parentRef: RefObject<HTMLDivElement> | null
-  onClickTrigger?: (itemName: string, isExpanded: boolean) => void
-  onClickProps?: (expandedItems: string[]) => void
+  handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
+  handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }>({
   iconPosition: 'left',
-  expandedItems: new Map(),
+  expandedItems: DEFAULT_EXPANDED_MAP,
   expandableMultiply: true,
   parentRef: null,
+  handleClickTrigger: () => {},
+  handleKeyDown: () => {},
 })
 
 const ROUNDED = {
@@ -75,35 +87,80 @@ const classNameGenerator = tv({
 export const AccordionPanel: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
-  defaultExpanded = [],
+  defaultExpanded = DEFAULT_EXPANDED_ARRAY,
   className,
-  onClick: onClickProps,
+  onClick,
   rounded,
   ...rest
 }) => {
-  const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
+  const [expandedItems, setExpanded] = useState(() => flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
     [rounded, className],
   )
 
-  const onClickTrigger = useCallback(
-    (itemName: string, isExpanded: boolean) => {
-      setExpanded(getNewExpandedItems(expandedItems, itemName, isExpanded, expandableMultiply))
-    },
-    [expandableMultiply, expandedItems],
-  )
+  const latest = useLatest({ onClick, expandableMultiply })
 
-  useEffect(() => {
-    if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
-  }, [defaultExpanded])
+  const functions = useMemo(
+    () => ({
+      handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => {
+        const { currentTarget } = e
+
+        setExpanded((prevExpandedItems) => {
+          const newExpandedItems = getNewExpandedItems(
+            prevExpandedItems,
+            currentTarget.value,
+            currentTarget.getAttribute('aria-expanded') !== 'true',
+            latest.expandableMultiply,
+          )
+
+          latest.onClick?.(mapToKeyArray(newExpandedItems))
+
+          return newExpandedItems
+        })
+      },
+      handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
+        if (!parentRef.current) {
+          return
+        }
+
+        const item = e.target as HTMLElement
+
+        switch (e.key) {
+          case 'Home': {
+            e.preventDefault()
+            focusFirstSibling(parentRef.current)
+            break
+          }
+          case 'End': {
+            e.preventDefault()
+            focusLastSibling(parentRef.current)
+            break
+          }
+          case 'ArrowLeft':
+          case 'ArrowUp': {
+            e.preventDefault()
+            focusPreviousSibling(item, parentRef.current)
+            break
+          }
+          case 'ArrowRight':
+          case 'ArrowDown': {
+            e.preventDefault()
+            focusNextSibling(item, parentRef.current)
+            break
+          }
+        }
+      },
+    }),
+    [latest],
+  )
 
   return (
     <AccordionPanelContext.Provider
       value={{
-        onClickTrigger,
-        onClickProps,
+        handleClickTrigger: functions.handleClickTrigger,
+        handleKeyDown: functions.handleKeyDown,
         expandedItems,
         iconPosition,
         expandableMultiply,

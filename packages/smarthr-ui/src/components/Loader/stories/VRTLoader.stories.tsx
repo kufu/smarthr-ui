@@ -24,7 +24,7 @@ export default {
   render: (args) => (
     <Stack>
       {_cases.map((props, i) => (
-        <div className={props.type === 'light' ? 'shr-bg-scrim' : ''} key={i}>
+        <div key={i} className={props.type === 'light' ? 'shr-bg-scrim' : ''}>
           <Loader {...args} {...props} />
         </div>
       ))}

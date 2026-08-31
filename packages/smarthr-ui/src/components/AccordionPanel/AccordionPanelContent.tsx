@@ -16,8 +16,8 @@ import { getIsInclude } from '../../libs/map'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-type AbstractProps = PropsWithChildren
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [
@@ -38,15 +38,15 @@ export const AccordionPanelContent: FC<Props> = ({ className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Transition in={visible} timeout={150} nodeRef={wrapperRef}>
+    <Transition nodeRef={wrapperRef} in={visible} timeout={150}>
       {(status) => (
         <div
           {...rest}
           ref={wrapperRef}
           id={contentId}
+          className={`${actualClassName} ${status}`}
           aria-labelledby={triggerId}
           aria-hidden={visible ? undefined : true}
-          className={`${actualClassName} ${status}`}
         />
       )}
     </Transition>

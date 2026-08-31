@@ -1,6 +1,6 @@
-import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
+import { Panel } from '../../Panel'
 import { TextLink } from '../../TextLink'
 import { Timeline } from '../Timeline'
 import { TimelineItem } from '../TimelineItem'
@@ -14,13 +14,13 @@ export default {
     <Timeline {...args}>
       <TimelineItem datetime="2030-01-01T00:00:00.000Z" />
       <TimelineItem datetime={new Date()} dateLabel="現在" timeFormat="none" current>
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
       <TimelineItem
         datetime="2025-06-09T00:00:00.000Z"
         dateSuffixArea={
           <Cluster align="center">
-            <Button size="S" variant="text">
+            <Button variant="text" size="S">
               ボタン
             </Button>
             <TextLink href="https://smarthr.design/" size="S">
@@ -29,17 +29,17 @@ export default {
           </Cluster>
         }
       >
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
       <TimelineItem datetime="2024-06-10" sideActionArea={<Button size="S">ボタン</Button>}>
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
       <TimelineItem
         datetime="2023-06-11"
         timeFormat="HH:mm:ss"
         dateSuffixArea={
           <Cluster align="center">
-            <Button size="S" variant="text">
+            <Button variant="text" size="S">
               ボタン
             </Button>
             <TextLink href="https://smarthr.design/" size="S">
@@ -49,7 +49,7 @@ export default {
         }
         sideActionArea={<Button size="S">ボタン</Button>}
       >
-        <Base>タイムラインアイテム</Base>
+        <Panel>タイムラインアイテム</Panel>
       </TimelineItem>
     </Timeline>
   ),

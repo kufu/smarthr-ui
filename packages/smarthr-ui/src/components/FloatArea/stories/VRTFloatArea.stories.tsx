@@ -1,6 +1,6 @@
-import { Base } from '../../Base'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
+import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { Meta } from '@storybook/react-webpack5'
@@ -11,17 +11,17 @@ export default {
     <Stack gap={1.5}>
       <Stack>
         {[...Array(15)].map((_, index) => (
-          <Base padding={1.5} key={index}>
+          <Panel key={index} padding={1.5}>
             <div className="shr-h-2" />
-          </Base>
+          </Panel>
         ))}
       </Stack>
       <FloatArea
         {...args}
+        responseStatus={{ status: 'error', text: '入力に誤りがあります。' }}
         primaryButton={<Button variant="primary">保存</Button>}
         secondaryButton={<Button>キャンセル</Button>}
         tertiaryButton={<Button>プレビュー</Button>}
-        responseStatus={{ status: 'error', text: '入力に誤りがあります。' }}
       />
     </Stack>
   ),

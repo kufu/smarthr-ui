@@ -17,7 +17,9 @@ export default {
       onSelectDate={args.onSelectDate}
     />
   ),
-  args: {},
+  args: {
+    onSelectDate: () => undefined,
+  },
   argTypes: {
     value: {
       control: 'date',

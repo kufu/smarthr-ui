@@ -1,5 +1,5 @@
-import { Base } from '../../Base'
 import { Stack } from '../../Layout'
+import { Panel } from '../../Panel'
 import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { EmptyTableBody } from '../EmptyTableBody'
@@ -77,24 +77,24 @@ export const Rounded: StoryObj<typeof Table> = {
   name: 'rounded',
   render: (args) => (
     <Stack>
-      <Base>
+      <Panel>
         <Template {...args} rounded />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="all" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="top" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="right" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="bottom" />
-      </Base>
-      <Base>
+      </Panel>
+      <Panel>
         <Template {...args} rounded="left" />
-      </Base>
+      </Panel>
     </Stack>
   ),
 }
@@ -123,7 +123,7 @@ export const FixedHead: StoryObj<typeof Table> = {
     <Table {...args}>
       <thead>
         <tr>
-          <ThCheckbox name="check" key={0} />
+          <ThCheckbox key={0} name="check" />
           <Th>
             <Text whiteSpace="nowrap">オブジェクト名</Text>
           </Th>
@@ -141,7 +141,7 @@ export const FixedHead: StoryObj<typeof Table> = {
 
           return (
             <tr key={i}>
-              <TdCheckbox name={objectId} aria-labelledby={objectId} key={0} />
+              <TdCheckbox key={0} name={objectId} aria-labelledby={objectId} />
               <Td id={objectId}>
                 <Text whiteSpace="nowrap">オブジェクト{i + 1}</Text>
               </Td>
@@ -188,7 +188,7 @@ export const Reel: StoryObj<typeof Table> = {
       </thead>
       <tbody>
         <tr>
-          <Td fixed="left" key={0}>
+          <Td key={0} fixed="left">
             <Text whiteSpace="nowrap">表データ{0}</Text>
           </Td>
           {[...Array(9)].map((_, i) => (
@@ -196,7 +196,7 @@ export const Reel: StoryObj<typeof Table> = {
               <Text whiteSpace="nowrap">表データ{i + 1}</Text>
             </Td>
           ))}
-          <Td fixed="right" key={10}>
+          <Td key={10} fixed="right">
             <Text whiteSpace="nowrap">表データ{10}</Text>
           </Td>
         </tr>

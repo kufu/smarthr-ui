@@ -3,11 +3,11 @@ import {
   type ComponentProps,
   type FC,
   type KeyboardEventHandler,
-  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
+
+import { useLatest } from '../../hooks/useLatest'
 
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
@@ -19,25 +19,18 @@ const classNameGenerator = tv({
     column: ['shr-min-w-[13em] shr-list-none', '[&_+_&]:shr-border-l-shorthand'],
   },
   variants: {
-    maxColumn: {
-      1: {
+    isSingleColumn: {
+      true: {
         column: 'shr-max-w-[theme(width.1/3)]',
       },
-      2: {},
-      3: {},
-    },
-  },
-  compoundVariants: [
-    {
-      maxColumn: [2, 3],
-      className: {
+      false: {
         column: 'last:shr-grow',
       },
     },
-  ],
+  },
 })
 
-type AbstractProps = {
+type BaseProps = {
   /** 表示する item の配列 */
   items: ItemNodeLike[]
   /** 選択中の item の値 */
@@ -45,21 +38,21 @@ type AbstractProps = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
+  const isSingleColumn = columns.length === 1
   const classNames = useMemo(() => {
-    const { wrapper, column } = classNameGenerator({ className })
+    const { wrapper, column } = classNameGenerator()
+
     return {
-      wrapper: wrapper(),
-      column: column({
-        maxColumn: columns.length as 1 | 2 | 3,
-      }),
+      wrapper: wrapper({ className }),
+      column: column({ isSingleColumn }),
     }
-  }, [className, columns.length])
+  }, [isSingleColumn, className])
 
   const selectedPath = useMemo(() => {
     if (!value) return []
@@ -68,73 +61,83 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     return [...node.getAncestors().map((n) => n.value), node.value]
   }, [rootNode, value])
 
-  const unstableRef = useRef({ onSelectItem, value, rootNode })
-  unstableRef.current = { onSelectItem, value, rootNode }
+  const latest = useLatest({ onSelectItem, value, rootNode })
+  const hasOnSelectItem = !!onSelectItem
 
-  // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
-  // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
-  const onDelegateKeyDown: KeyboardEventHandler = useCallback((e) => {
-    const selectedNode = unstableRef.current.value
-      ? unstableRef.current.rootNode.findByValue(unstableRef.current.value)
-      : undefined
+  const functions = useMemo(() => {
+    // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)
+    // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
+    const handleDelegateKeyDown: KeyboardEventHandler = (e) => {
+      const selectedNode = latest.value ? latest.rootNode.findByValue(latest.value) : undefined
 
-    if (!selectedNode) {
-      return
-    }
-
-    let target: ItemNode | undefined = undefined
-
-    switch (e.key) {
-      case 'ArrowUp': {
-        target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
-
-        break
+      if (!selectedNode) {
+        return
       }
-      case 'ArrowDown': {
-        target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
 
-        break
-      }
-      case 'ArrowLeft': {
-        const node = selectedNode.parent
+      let target: ItemNode | undefined = undefined
 
-        if (node instanceof ItemNode) {
-          target = node
+      switch (e.key) {
+        case 'ArrowUp': {
+          target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
+
+          break
         }
+        case 'ArrowDown': {
+          target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
 
-        break
+          break
+        }
+        case 'ArrowLeft': {
+          const node = selectedNode.parent
+
+          if (node instanceof ItemNode) {
+            target = node
+          }
+
+          break
+        }
+        case 'ArrowRight':
+        case 'Enter':
+        case ' ': {
+          target = selectedNode.getFirstChild()
+
+          break
+        }
       }
-      case 'ArrowRight':
-      case 'Enter':
-      case ' ': {
-        target = selectedNode.getFirstChild()
 
-        break
+      if (target) {
+        e.preventDefault()
+        latest.onSelectItem?.(target.value)
+        document.getElementById(getElementIdFromNode(target.value))?.focus()
       }
     }
 
-    if (target) {
-      e.preventDefault()
-      unstableRef.current.onSelectItem?.(target.value)
-      document.getElementById(getElementIdFromNode(target.value))?.focus()
+    return {
+      handleDelegateKeyDown,
+      handleChangeInput: hasOnSelectItem
+        ? (e: ChangeEvent<HTMLInputElement>) => {
+            latest.onSelectItem?.(e.currentTarget.value)
+          }
+        : undefined,
     }
-  }, [])
-
-  const onChangeInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    unstableRef.current.onSelectItem?.(e.currentTarget.value)
-  }, [])
+  }, [hasOnSelectItem, latest])
 
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-    <div {...rest} role="application" onKeyDown={onDelegateKeyDown} className={classNames.wrapper}>
+    <div
+      {...rest}
+      role="application"
+      className={classNames.wrapper}
+      onKeyDown={functions.handleDelegateKeyDown}
+    >
       {columns.map((colItems, index) => (
         <BrowserColumn
           key={index}
-          items={colItems}
-          index={index}
           value={selectedPath[index]}
-          onChangeInput={onSelectItem ? onChangeInput : undefined}
+          index={index}
           className={classNames.column}
+          handleChangeInput={functions.handleChangeInput}
+          items={colItems}
         />
       ))}
     </div>

@@ -6,28 +6,29 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
-  useCallback,
+  useEffect,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
-import { useBodyScrollLock } from './useBodyScrollLock'
 
 import type { DialogSize } from './types'
 
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
    */
   onClickOverlay?: () => void
   /**
    * エスケープキーを押下した時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
    */
   onPressEscape?: () => void
   /**
@@ -114,46 +115,59 @@ export const DialogContentInner: FC<Props> = ({
       background: background(),
     }
   }, [size, className])
-  const style = useMemo(() => {
-    // width は deprecated なので、size が指定されている場合は width を無視する
-    const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
+  // width は deprecated なので、size が指定されている場合は width を無視する
+  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
-    return actualWidth ? { width: actualWidth } : undefined
-  }, [width, size])
+  const latest = useLatest({ onPressEscape, onClickOverlay })
 
-  const innerRef = useRef<HTMLDivElement>(null)
+  const functions = useMemo(
+    () => ({
+      handlePressEscape: () => latest.onPressEscape?.(),
+      handleClickOverlay: () => latest.onClickOverlay?.(),
+    }),
+    [latest],
+  )
 
-  // 外部propsのonPressEscapeをrefに保存
-  const onPressEscapeRef = useRef(onPressEscape)
-  onPressEscapeRef.current = onPressEscape
+  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
 
-  // stableなcallbackを作成
-  const memoizedOnPressEscape = useCallback(() => {
-    onPressEscapeRef.current?.()
-  }, [])
+  useEffect(() => {
+    if (!isOpen) return
 
-  useHandleEscape(isOpen ? memoizedOnPressEscape : undefined)
+    const body = document.body
+    const scrollBarWidth = window.innerWidth - body.clientWidth
+    const originalPaddingRight = getComputedStyle(body).getPropertyValue('padding-right')
 
-  useBodyScrollLock(isOpen)
+    const bodyStyle = body.style
+
+    bodyStyle.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
+    bodyStyle.overflow = 'hidden'
+
+    return () => {
+      bodyStyle.paddingInlineEnd = ''
+      bodyStyle.overflow = ''
+    }
+  }, [isOpen])
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div id={id} className={classNames.layout} style={style}>
+      <div
+        id={id}
+        className={classNames.layout}
+        style={actualWidth ? { width: actualWidth } : undefined}
+      >
         <Overlay
-          isOpen={isOpen}
-          onClickOverlay={onClickOverlay}
           className={classNames.background}
+          handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
         />
         <div
           {...rest}
-          ref={innerRef}
           role="dialog"
+          className={classNames.inner}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
-          className={classNames.inner}
         >
-          <FocusTrap firstFocusTarget={firstFocusTarget} ref={focusTrapRef}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>
@@ -162,14 +176,9 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
-  ({ onClickOverlay, isOpen, className }) => {
-    const onClick = useMemo(
-      () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
-      [isOpen, onClickOverlay],
-    )
-
+const Overlay = memo<{ handleClickOverlay: (() => void) | undefined; className: string }>(
+  ({ handleClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    return <div onClick={onClick} className={className} role="presentation" />
-  },
+    <div role="presentation" className={className} onClick={handleClickOverlay} />
+  ),
 )

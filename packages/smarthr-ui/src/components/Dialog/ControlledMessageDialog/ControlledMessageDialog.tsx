@@ -1,7 +1,8 @@
 'use client'
 
-import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
@@ -16,11 +17,12 @@ import type { DialogProps } from '../types'
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type AbstractProps = Omit<MessageDialogContentInnerProps, 'heading'> &
+type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
   DialogProps & {
     heading: HeadingType
+    onClickClose: MessageDialogContentInnerProps['handleClickClose']
   }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,
@@ -41,29 +43,38 @@ export const ControlledMessageDialog: FC<Props> = ({
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
-  const handleClickClose = useCallback(() => {
-    if (isOpen) {
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
+  )
+
+  const latest = useLatest({ onClickClose, isOpen })
+
+  const functions = useMemo(
+    () => ({
+      handleClickClose: () => {
+        if (latest.isOpen) {
+          latest.onClickClose()
+        }
+      },
+    }),
+    [latest],
   )
 
   return createPortal(
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      ariaLabelledby={heading.id}
       className={className}
+      ariaLabelledby={heading.id}
       onPressEscape={onPressEscape}
     >
       <MessageDialogContentInner
-        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        onClickClose={handleClickClose}
+        handleClickClose={functions.handleClickClose}
+        heading={heading}
         closeButton={closeButton}
       >
         {children}

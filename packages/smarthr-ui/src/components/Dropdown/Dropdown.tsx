@@ -7,7 +7,6 @@ import {
   type ReactNode,
   createContext,
   createRef,
-  useCallback,
   useContext,
   useEffect,
   useId,
@@ -16,7 +15,9 @@ import {
   useState,
 } from 'react'
 
-import { usePortal } from '../../hooks/usePortal'
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { usePortal } from '../../hooks/client/usePortal'
+import { useLatest } from '../../hooks/useLatest'
 
 import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
@@ -30,8 +31,8 @@ type DropdownContextType = {
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
-  memoizedOnClickTrigger: (rect: Rect) => void
-  onClickCloser: () => void
+  handleClickTrigger: (rect: Rect) => void
+  handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
 }
@@ -43,10 +44,10 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerRect: initialRect,
   triggerElementRef: createRef(),
   rootTriggerRef: null,
-  memoizedOnClickTrigger: () => {
+  handleClickTrigger: () => {
     /* noop */
   },
-  onClickCloser: () => {
+  handleDelegateClickCloser: () => {
     /* noop */
   },
   DropdownContentRoot: () => null,
@@ -58,81 +59,99 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { createPortal, portalRoot, isPortalRootMounted, isChildPortal, PortalParentProvider } =
-    usePortal()
+
+  const contentId = useId()
+  const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
+    rootId: contentId,
+  })
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
-  const contentId = useId()
+  const openFrame = useAnimationFrame()
+  const closeFrame = useAnimationFrame()
 
-  const unstableRef = useRef({
+  const latest = useLatest({
     active,
-    isPortalRootMounted,
+    isChildPortal,
     onOpen,
     onClose,
     createPortal,
+    openFrame,
+    closeFrame,
   })
-  unstableRef.current = {
-    active,
-    isPortalRootMounted,
-    onOpen,
-    onClose,
-    createPortal,
-  }
 
-  // This is the root container of a dropdown content located in outside the DOM tree
-  const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(() => {
-    const result: FC<{ children: ReactNode }> = (props) =>
-      unstableRef.current.active ? unstableRef.current.createPortal(props.children) : null
-
-    // set the displayName explicit for DevTools
-    result.displayName = 'DropdownContentRoot'
-
-    return result
-  }, [])
-
-  const memoizedOnClickTrigger = useCallback((rect: Rect) => {
-    setActive((current) => {
-      const newActive = !current
-
-      if (newActive) {
-        setTriggerRect(rect)
+  const functions = useMemo(() => {
+    // This is the root container of a dropdown content located in outside the DOM tree
+    const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
+      latest.active ? latest.createPortal(props.children) : null
+    DropdownContentRoot.displayName = 'DropdownContentRoot'
+    const actualClose = () => {
+      if (latest.onClose) {
+        latest.closeFrame.request(() => latest.onClose?.())
       }
+    }
 
-      return newActive
-    })
-  }, [])
+    return {
+      DropdownContentRoot,
+      handleClickTrigger: (rect: Rect) => {
+        if (latest.active) {
+          setActive(false)
+          actualClose()
+        } else {
+          setActive(true)
+          setTriggerRect(rect)
 
-  const onClickCloser = useCallback(() => {
-    setActive(false)
+          if (latest.onOpen) {
+            latest.openFrame.request(() => latest.onOpen?.())
+          }
+        }
+      },
+      handleDelegateClickCloser: () => {
+        setActive(false)
+        actualClose()
 
-    // return focus to the Trigger
-    getFirstTabbable(triggerElementRef)?.focus()
-  }, [])
+        // return focus to the Trigger
+        getFirstTabbable(triggerElementRef)?.focus()
+      },
+      handleClickBody: (e: any) => {
+        // ignore events from events within DropdownTrigger and DropdownContent
+        if (
+          latest.active &&
+          !isEventFromChild(e, triggerElementRef.current) &&
+          !latest.isChildPortal(e.target)
+        ) {
+          setActive(false)
+          actualClose()
+        }
+      },
+      updateTriggerRect: () => {
+        if (triggerElementRef.current) {
+          setTriggerRect(triggerElementRef.current.getBoundingClientRect())
+        }
+      },
+    }
+  }, [latest])
+
+  useEffect(
+    () => () => {
+      latest.openFrame.cancel()
+      latest.closeFrame.cancel()
+    },
+    [latest],
+  )
 
   useEffect(() => {
-    if (portalRoot) {
-      portalRoot.setAttribute('id', contentId)
-    }
+    if (!active) return
 
-    const onClickBody = (e: any) => {
-      // ignore events from events within DropdownTrigger and DropdownContent
-      if (!isEventFromChild(e, triggerElementRef.current) && !isChildPortal(e.target)) {
-        setActive(false)
-      }
-    }
-
-    document.body.addEventListener('click', onClickBody, false)
+    document.body.addEventListener('click', functions.handleClickBody, false)
+    window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
+    window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
 
     return () => {
-      document.body.removeEventListener('click', onClickBody, false)
+      document.body.removeEventListener('click', functions.handleClickBody, false)
+      window.removeEventListener('scroll', functions.updateTriggerRect)
+      window.removeEventListener('resize', functions.updateTriggerRect)
     }
-  }, [isChildPortal, portalRoot, contentId])
-
-  useEffect(() => {
-    if (unstableRef.current.isPortalRootMounted()) {
-      unstableRef.current[active ? 'onOpen' : 'onClose']?.()
-    }
-  }, [active])
+  }, [active, functions])
 
   return (
     <PortalParentProvider>
@@ -142,9 +161,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerRect,
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
-          memoizedOnClickTrigger,
-          onClickCloser,
-          DropdownContentRoot,
+          handleClickTrigger: functions.handleClickTrigger,
+          handleDelegateClickCloser: functions.handleDelegateClickCloser,
+          DropdownContentRoot: functions.DropdownContentRoot,
           contentId,
         }}
       >

@@ -1,18 +1,20 @@
 import {
-  type AriaAttributes,
   type ComponentPropsWithoutRef,
+  type FC,
   type PropsWithChildren,
   memo,
   useMemo,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
+
 import { ThSortButton } from './ThSortButton'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type AbstractProps = PropsWithChildren<
+export type BaseProps = PropsWithChildren<
   {
     /** 並び替え状態 */
     sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
@@ -23,7 +25,7 @@ export type AbstractProps = PropsWithChildren<
     contentWidth?: CellContentWidth
   } & VariantProps<typeof classNameGenerator>
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'th'>, keyof AbstractProps | 'onClick'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'th'>, keyof BaseProps | 'onClick'>
 
 const classNameGenerator = tv({
   base: [
@@ -53,17 +55,39 @@ const classNameGenerator = tv({
   },
 })
 
-const convertContentWidth = (contentWidth?: CellContentWidth) => {
-  if (typeof contentWidth === 'number') {
-    // Th は fontSize.S のため、rem で指定する
-    return `${contentWidth}rem`
-  }
+export const Th: FC<Props> = ({ sort, onSort, ...rest }) =>
+  sort ? <SortableTh {...rest} sort={sort} onSort={onSort} /> : <ActualTh {...rest} />
 
-  return contentWidth
+const SortableTh: FC<
+  Omit<Props, 'sort'> & {
+    sort: NonNullable<Props['sort']>
+  }
+> = ({ sort, onSort, align, children, ...rest }) => {
+  const latest = useLatest({ onSort })
+  const hasOnSort = !!onSort
+
+  const functions = useMemo(
+    () => ({
+      handleSort: hasOnSort
+        ? () => {
+            latest.onSort?.()
+          }
+        : undefined,
+    }),
+    [hasOnSort, latest],
+  )
+
+  return (
+    <ActualTh {...rest} align={align} aria-sort={sort === 'none' ? sort : `${sort}ending`}>
+      <ThSortButton align={align} sort={sort} handleSort={functions.handleSort}>
+        {children}
+      </ThSortButton>
+    </ActualTh>
+  )
 }
 
-export const Th = memo<Props>(
-  ({ children, sort, onSort, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
+const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
+  ({ children, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ className, align, vAlign })
 
@@ -71,38 +95,20 @@ export const Th = memo<Props>(
         return base
       }
 
-      const shadow = reelShadowClassNameGenerator({ showShadow: false, direction: fixed })
-
-      return `${base} ${shadow}`
-    }, [align, className, fixed, vAlign])
-    const actualStyle = useMemo(
-      () => ({
-        ...style,
-        width: convertContentWidth(contentWidth),
-      }),
-      [style, contentWidth],
-    )
-
-    const ariaSort = useMemo<AriaAttributes['aria-sort'] | undefined>(
-      () => (sort ? (sort === 'none' ? 'none' : `${sort}ending`) : undefined),
-      [sort],
-    )
+      return `${base} ${reelShadowClassNameGenerator({ showShadow: false, direction: fixed })}`
+    }, [align, fixed, vAlign, className])
 
     return (
       <th
         {...rest}
-        aria-sort={ariaSort}
-        data-fixed={fixed}
         className={actualClassName}
-        style={actualStyle}
+        style={{
+          ...style,
+          width: typeof contentWidth === 'number' ? `${contentWidth}rem` : contentWidth,
+        }}
+        data-fixed={fixed}
       >
-        {sort ? (
-          <ThSortButton align={align} onSort={onSort} sort={sort}>
-            {children}
-          </ThSortButton>
-        ) : (
-          children
-        )}
+        {children}
       </th>
     )
   },

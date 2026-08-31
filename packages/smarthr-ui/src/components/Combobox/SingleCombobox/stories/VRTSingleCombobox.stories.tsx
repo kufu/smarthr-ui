@@ -127,15 +127,15 @@ export default {
     <Stack align="flex-start" gap={2} className="shr-h-screen">
       <Cluster>
         {_cases.map((props, i) => (
-          <SingleCombobox {...args} {...props} items={Object.values(defaultItems)} key={i} />
+          <SingleCombobox {...args} {...props} key={i} items={Object.values(defaultItems)} />
         ))}
       </Cluster>
       <SingleCombobox
         {...args}
         name="default"
+        selectedItem={null}
         items={Object.values(defaultItems)}
         dropdownHelpMessage="入力でフィルタリングできます。"
-        selectedItem={null}
       />
     </Stack>
   ),
@@ -156,6 +156,39 @@ export const VRTForcedColors: StoryObj<typeof SingleCombobox> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
+    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
+  },
+}
+
+const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textbox = await canvas.findByRole('combobox')
+
+  textbox.click()
+
+  const body = canvasElement.ownerDocument.body
+  const option = await within(body).findByText('option 1')
+  await userEvent.hover(option)
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+// 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
+export const VRTOnRightEdge: StoryObj<typeof SingleCombobox> = {
+  render: (args) => (
+    <div className="shr-flex shr-h-screen shr-justify-end">
+      <SingleCombobox
+        {...args}
+        name="onRightEdge"
+        selectedItem={null}
+        dropdownWidth="30rem"
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+      />
+    </div>
+  ),
+  play: playOnRightEdge,
+  parameters: {
     backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }

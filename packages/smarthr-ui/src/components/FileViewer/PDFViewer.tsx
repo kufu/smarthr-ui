@@ -1,24 +1,12 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ComponentProps, type FC, memo, useCallback, useMemo, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Scroller } from '../Scroller'
 
-import {
-  SELECTED_MATCH_CLASS,
-  buildCustomTextRenderer,
-  matchSelector,
-} from './buildCustomTextRenderer'
+import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
@@ -57,9 +45,6 @@ const options = {
   cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-type CustomTextRenderer = NonNullable<ComponentProps<typeof Page>['customTextRenderer']>
-type TextContent = Parameters<NonNullable<ComponentProps<typeof Page>['onGetTextSuccess']>>[number]
-
 // pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer スコープで上書きし、検索ハイライト色を変更している。
 const HighlightOverrideStyle = () => (
   <style>{`
@@ -78,110 +63,108 @@ type Props = ViewerProps & {
 }
 
 export const PDFViewer: FC<Props> = memo(
-  ({ scale, rotation, file, width, onLoad, onPDFLoaded, onPassword, onLoadError, search }) => {
+  ({
+    scale,
+    rotation,
+    file,
+    width,
+    handleLoad,
+    handlePDFLoaded,
+    handlePassword,
+    handleLoadError,
+    search,
+  }) => {
     const matches = search?.matches
     const currentMatchIndex = search?.currentMatchIndex
-    const onPageTextLoaded = search?.registerPageText
     const [pdfNumPages, setPdfNumPages] = useState(1)
-    const rootRef = useRef<HTMLDivElement>(null)
 
-    const onDocumentLoadSuccess = useCallback<
-      NonNullable<ComponentProps<typeof Document>['onLoadSuccess']>
-    >(({ numPages }) => {
-      setPdfNumPages(numPages)
-    }, [])
+    const latest = useLatest({
+      rotation,
+      pdfNumPages,
+      handleLoad,
+      handlePDFLoaded,
+    })
 
-    const onPageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = useMemo(() => {
-      if (!onLoad && !onPDFLoaded) {
-        return undefined
+    const functions = useMemo(() => {
+      const handleDocumentLoadSuccess: NonNullable<
+        ComponentProps<typeof Document>['onLoadSuccess']
+      > = ({ numPages }) => {
+        setPdfNumPages(numPages)
       }
-
-      return (page) => {
-        if (onPDFLoaded && rotation === undefined) {
-          onPDFLoaded(page.rotate)
+      const handlePageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = (page) => {
+        if (latest.rotation === undefined) {
+          latest.handlePDFLoaded?.(page.rotate)
         }
         // DocumentのLoadだとページごとの読み込みが考慮されないため
-        if (onLoad && page.pageNumber === pdfNumPages) {
-          onLoad()
+        if (page.pageNumber === latest.pdfNumPages) {
+          latest.handleLoad()
         }
       }
-    }, [onLoad, onPDFLoaded, pdfNumPages, rotation])
 
-    const customTextRenderer = useMemo<CustomTextRenderer | undefined>(() => {
-      if (!matches || matches.length === 0) {
-        return undefined
+      return {
+        handleDocumentLoadSuccess,
+        handlePageLoad,
       }
-      return buildCustomTextRenderer(matches)
-    }, [matches])
+    }, [latest])
 
-    const handleGetTextSuccess = useCallback(
-      (pageIndex: number) => (textContent: TextContent) => {
-        if (!onPageTextLoaded) return
-        const texts = textContent.items.reduce<string[]>((acc, item) => {
-          if ('str' in item) {
-            acc.push(item.str)
+    const cancelApplyIdRef = useRef<number | null>(null)
+    const callbackRef = useCallback(
+      (node: HTMLElement | null) => {
+        if (node) {
+          node
+            .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
+            .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
+
+          if (currentMatchIndex === undefined || currentMatchIndex < 0) return
+
+          const start = performance.now()
+          const apply = () => {
+            const els = node.querySelectorAll(matchSelector(currentMatchIndex))
+
+            if (els.length > 0) {
+              els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
+              els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
+            } else if (performance.now() - start < 1000) {
+              cancelApplyIdRef.current = requestAnimationFrame(apply)
+            }
           }
-          return acc
-        }, [])
-        onPageTextLoaded(pageIndex, texts)
+          cancelApplyIdRef.current = requestAnimationFrame(apply)
+        } else if (cancelApplyIdRef.current !== null) {
+          cancelAnimationFrame(cancelApplyIdRef.current)
+        }
       },
-      [onPageTextLoaded],
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
+      [currentMatchIndex, matches],
     )
-
-    useEffect(() => {
-      const root = rootRef.current
-      if (!root) return
-      root
-        .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
-        .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
-
-      if (currentMatchIndex === undefined || currentMatchIndex < 0) return
-
-      const start = performance.now()
-      let id = 0
-      const apply = () => {
-        const els = root.querySelectorAll(matchSelector(currentMatchIndex))
-        if (els.length > 0) {
-          els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
-          els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
-          return
-        }
-        if (performance.now() - start < 1000) {
-          id = requestAnimationFrame(apply)
-        }
-      }
-      id = requestAnimationFrame(apply)
-      return () => cancelAnimationFrame(id)
-    }, [currentMatchIndex, matches])
 
     return (
       <>
         {/* TODO: 外部CSSをsmarthr-uiから読み込んでもらえるようにする機構ができたら消す */}
         <ReactPDFStyle />
         <HighlightOverrideStyle />
-        <Scroller ref={rootRef} direction="both" className="shr-h-full">
+        <Scroller ref={callbackRef} direction="both" className="shr-h-full">
           <Document
-            options={options}
             file={file.url}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onLoadError}
             rotate={rotation}
-            className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             externalLinkTarget="_blank"
             loading={null}
-            onPassword={onPassword}
+            className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
+            onLoadSuccess={functions.handleDocumentLoadSuccess}
+            onLoadError={handleLoadError}
+            onPassword={handlePassword}
+            options={options}
           >
             {Array.from({ length: pdfNumPages }).map((_, i) => (
               <Page
                 key={`page_${i}`}
                 pageNumber={i + 1}
-                width={width}
                 scale={scale}
-                className="shr-w-full"
-                onLoadSuccess={onPageLoad}
-                onGetTextSuccess={handleGetTextSuccess(i)}
-                customTextRenderer={customTextRenderer}
+                customTextRenderer={search?.customTextRenderer}
                 loading={null}
+                width={width}
+                className="shr-w-full"
+                onLoadSuccess={functions.handlePageLoad}
+                onGetTextSuccess={search?.generateHandlePDFPageGetTextSuccess(i)}
               />
             ))}
           </Document>

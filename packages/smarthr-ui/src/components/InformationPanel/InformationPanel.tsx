@@ -13,8 +13,7 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useIntl } from '../../intl'
-import { Base, type BaseElementProps } from '../Base'
+import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import {
@@ -27,6 +26,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Sidebar } from '../Layout'
+import { Panel, type PanelElementProps } from '../Panel'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -36,24 +36,29 @@ type ObjectHeadingType = {
   unrecommendedTag?: HeadingTagTypes
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** パネルのタイトル */
   heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
   toggleable?: boolean
+  /** `true` のとき、パネルを開く */
+  active?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
-    header: 'shr-rounded-t-l shr-p-1.5',
+    header: [
+      'shr-rounded-t-l shr-p-1.5',
+      '[[data-active="false"]>&]:shr-rounded-b-l [[data-active="false"]>&]:shr-py-1',
+    ],
     heading: 'smarthr-ui-InformationPanel-heading',
     toggleableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
     content: [
@@ -68,12 +73,6 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    },
-    active: {
-      true: {},
-      false: {
-        header: 'shr-rounded-b-l shr-py-1',
-      },
     },
     bold: {
       true: {
@@ -124,78 +123,65 @@ export const InformationPanel: FC<Props> = ({
   heading,
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProp = true,
   bold,
   className,
   children,
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProps)
+  const [active, setActive] = useState(activeProp)
   const id = useId()
   const contentId = `${id}-content`
 
-  useEffect(() => {
-    setActive(activeProps)
-  }, [activeProps])
-
-  const classNamesMapper = useMemo(() => {
-    const withActive = classNameGenerator({
+  const classNames = useMemo(() => {
+    const {
+      wrapper,
+      header,
+      heading: headingClassName,
+      toggleableButton,
+      content,
+    } = classNameGenerator({
       type,
-      active: true,
       bold,
     })
-    const withInactive = classNameGenerator({
-      type,
-      active: false,
-      bold,
-    })
-
-    const wrapperProps = { className }
 
     return {
-      active: {
-        wrapper: withActive.wrapper(wrapperProps),
-        header: withActive.header(),
-        heading: withActive.heading(),
-        toggleableButton: withActive.toggleableButton(),
-        content: withActive.content(),
-      },
-      inactive: {
-        wrapper: withInactive.wrapper(wrapperProps),
-        header: withInactive.header(),
-        heading: withInactive.heading(),
-        toggleableButton: withInactive.toggleableButton(),
-        content: withInactive.content(),
-      },
+      wrapper: wrapper({ className }),
+      header: header(),
+      heading: headingClassName(),
+      toggleableButton: toggleableButton(),
+      content: content(),
     }
-  }, [bold, type, className])
+  }, [type, bold, className])
 
-  const classNames = classNamesMapper[active ? 'active' : 'inactive']
+  useEffect(() => {
+    setActive(activeProp)
+  }, [activeProp])
 
   return (
-    <Base {...rest} as="section" className={classNames.wrapper}>
+    <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
       <Sidebar align="baseline" right className={classNames.header}>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading
-          heading={heading}
+          type={type}
           id={`${id}-heading`}
           className={classNames.heading}
-          type={type}
+          heading={heading}
         />
         {toggleable && (
           <ToggleableButton
-            active={active}
-            onClickTrigger={onClickTrigger}
-            setActive={setActive}
             contentId={contentId}
+            active={active}
             className={classNames.toggleableButton}
+            onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
           />
         )}
       </Sidebar>
-      <div id={contentId} aria-hidden={!active} className={classNames.content}>
+      <div id={contentId} className={classNames.content} aria-hidden={!active}>
         {children}
       </div>
-    </Base>
+    </Panel>
   )
 }
 
@@ -211,7 +197,7 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const icon = useMemo(() => {
+  const icon = (() => {
     switch (type) {
       case 'info':
         return <FaCircleInfoIcon color="TEXT_GREY" />
@@ -224,63 +210,42 @@ const MemoizedHeading = memo<
       case 'sync':
         return <FaRotateIcon color="MAIN" />
     }
-  }, [type])
+  })()
 
   return (
     <Heading
       {...rest}
+      type="blockTitle"
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
         prefix: icon,
         gap: 0.5,
       }}
-      type="blockTitle"
     >
       {heading.text}
     </Heading>
   )
 })
 
-const ToggleableButton: FC<
-  Pick<Props, 'onClickTrigger'> & {
-    active: boolean
-    setActive: (flg: boolean) => void
-    contentId: string
-    className: string
-  }
-> = ({ active, onClickTrigger, setActive, contentId, className }) => {
-  const { localize } = useIntl()
-
-  const buttonLabels = useMemo(
-    () => ({
-      open: localize({
-        id: 'smarthr-ui/InformationPanel/openButtonLabel',
-        defaultText: '開く',
-      }),
-      close: localize({
-        id: 'smarthr-ui/InformationPanel/closeButtonLabel',
-        defaultText: '閉じる',
-      }),
-    }),
-    [localize],
-  )
-
-  const onClick = useMemo(
-    () => (onClickTrigger ? () => onClickTrigger(active) : () => setActive(!active)),
-    [active, onClickTrigger, setActive],
-  )
-
-  return (
-    <Button
-      aria-expanded={active}
-      aria-controls={contentId}
-      onClick={onClick}
-      suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-      size="S"
-      className={className}
-    >
-      {active ? buttonLabels.close : buttonLabels.open}
-    </Button>
-  )
-}
+const ToggleableButton: FC<{
+  active: boolean
+  onClick: () => void
+  contentId: string
+  className: string
+}> = ({ active, onClick, contentId, className }) => (
+  <Button
+    size="S"
+    className={className}
+    aria-expanded={active}
+    aria-controls={contentId}
+    onClick={onClick}
+    suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+  >
+    {active ? (
+      <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />
+    ) : (
+      <Localizer id="smarthr-ui/InformationPanel/openButtonLabel" defaultText="開く" />
+    )}
+  </Button>
+)

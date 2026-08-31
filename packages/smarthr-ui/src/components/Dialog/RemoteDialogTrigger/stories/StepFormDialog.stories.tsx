@@ -19,9 +19,7 @@ export default {
       <StepFormDialog
         {...args}
         id="remote-dialog"
-        heading="ステップフォームダイアログ"
         stepLength={2}
-        submitButton="保存"
         firstStep={{ id: 'step-1', stepNumber: 1 }}
         onSubmit={(e, { currentStep, goto, close }) => {
           action('onSubmit')(e, currentStep)
@@ -32,6 +30,8 @@ export default {
             goto({ id: 'step-2', stepNumber: 2 })
           }
         }}
+        heading="ステップフォームダイアログ"
+        submitButton="保存"
       >
         <StepFormDialogItem id="step-1" stepNumber={1}>
           <p>ステップ1のコンテンツです。</p>

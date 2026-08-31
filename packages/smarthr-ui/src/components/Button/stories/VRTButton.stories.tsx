@@ -1,6 +1,6 @@
-import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
@@ -25,7 +25,7 @@ const Template: StoryFn = (args) => (
   <Stack {...args}>
     {(['secondary', 'primary', 'tertiary', 'danger', 'text', 'skeleton'] as Variant[]).map(
       (variant) => (
-        <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+        <Groupbox key={variant} bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'}>
           <Cluster align="center">
             <Button variant={variant} prefix={<FaCirclePlusIcon />}>
               ボタン
@@ -33,40 +33,40 @@ const Template: StoryFn = (args) => (
             <Button variant={variant}>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="S" suffix={<FaCaretDownIcon />} wide>
+            <Button variant={variant} size="S" wide suffix={<FaCaretDownIcon />}>
               ボタン
             </Button>
             <Button
-              variant={variant}
               disabled
               disabledReason={{ message: 'ボタンが無効な理由' }}
+              variant={variant}
               suffix={<FaCaretDownIcon />}
             >
               ボタン
             </Button>
-            <Button variant={variant} loading suffix={<FaCaretDownIcon />} wide>
+            <Button loading variant={variant} wide suffix={<FaCaretDownIcon />}>
               ボタン
             </Button>
-            <Button variant={variant} size="S" loading prefix={<FaCirclePlusIcon />} wide>
+            <Button loading variant={variant} size="S" wide prefix={<FaCirclePlusIcon />}>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="S" disabled prefix={<FaCirclePlusIcon />} wide>
+            <Button disabled variant={variant} size="S" wide prefix={<FaCirclePlusIcon />}>
               <FaCirclePlusIcon alt="ボタン" />
             </Button>
-            <Button variant={variant} size="S" loading prefix={<FaCirclePlusIcon />}>
+            <Button loading variant={variant} size="S" prefix={<FaCirclePlusIcon />}>
               ボタン
             </Button>
             <Button
-              variant={variant}
-              size="S"
               disabled
               disabledReason={{ message: 'ボタンが無効な理由' }}
+              variant={variant}
+              size="S"
               prefix={<FaCirclePlusIcon />}
             >
               ボタン
             </Button>
           </Cluster>
-        </BaseColumn>
+        </Groupbox>
       ),
     )}
   </Stack>

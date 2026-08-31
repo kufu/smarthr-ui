@@ -1,5 +1,4 @@
-import { type ReactNode, memo, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { type ReactNode, memo } from 'react'
 
 import { Heading } from '../Heading'
 import { Stack } from '../Layout'
@@ -13,33 +12,17 @@ export type Props = {
   id?: string
 }
 
-const classNameGenerator = tv({
-  base: [
-    'smarthr-ui-Dialog-titleArea',
-    'shr-border-b-shorthand shr-flex-[0_0_auto] shr-px-1.5 shr-py-1',
-  ],
-})
-
-export const DialogHeading = memo<Props>(({ text, sub, id }) => {
-  const className = useMemo(() => classNameGenerator(), [])
-
-  return (
-    <Heading className={className}>
-      <Stack gap={0.25} as="span">
-        {sub && (
-          <Text
-            size="S"
-            leading="TIGHT"
-            color="TEXT_GREY"
-            className="smarthr-ui-Dialog-heading-sub"
-          >
-            {sub}
-          </Text>
-        )}
-        <Text id={id} size="L" leading="TIGHT" className="smarthr-ui-Dialog-heading">
-          {text}
+export const DialogHeading = memo<Props>(({ text, sub, id }) => (
+  <Heading className="smarthr-ui-Dialog-titleArea shr-border-b-shorthand shr-flex-[0_0_auto] shr-px-1.5 shr-py-1">
+    <Stack as="span" gap={0.25}>
+      {sub && (
+        <Text size="S" leading="TIGHT" color="TEXT_GREY" className="smarthr-ui-Dialog-heading-sub">
+          {sub}
         </Text>
-      </Stack>
-    </Heading>
-  )
-})
+      )}
+      <Text id={id} size="L" leading="TIGHT" className="smarthr-ui-Dialog-heading">
+        {text}
+      </Text>
+    </Stack>
+  </Heading>
+))

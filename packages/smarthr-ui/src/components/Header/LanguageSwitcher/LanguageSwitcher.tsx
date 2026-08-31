@@ -11,7 +11,8 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer, useAvailableLocales } from '../../../intl'
 import { tabbable } from '../../../libs/tabbable'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
@@ -19,7 +20,7 @@ import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../I
 
 import type { Locale } from '../../../intl'
 
-export type AbstractProps = {
+export type BaseProps = {
   narrow?: boolean
   localeMap: Partial<Record<Locale, string>>
   locale?: string
@@ -28,7 +29,7 @@ export type AbstractProps = {
   onLanguageSelect?: (code: string) => void
 } & VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
@@ -43,7 +44,7 @@ const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayL
   return (currentIndex + 1) % arrayLength
 }
 
-const onDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }
@@ -103,22 +104,15 @@ export const LanguageSwitcher: FC<Props> = ({
   onLanguageSelect,
   ...rest
 }) => {
-  const { localize, availableLocales } = useIntl()
+  const availableLocales = useAvailableLocales()
   const { locales, defaultCurrentLang } = useMemo(
     () => ({
-      locales: Object.entries(localeMap).filter(([code]) => availableLocales.includes(code)),
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
       defaultCurrentLang: Object.keys(localeMap)[0],
     }),
     [localeMap, availableLocales],
-  )
-
-  const checkIconAlt = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/LanguageSwitcher/checkIconAlt',
-        defaultText: '選択中',
-      }),
-    [localize],
   )
 
   const currentLang = locale || defaultLocale || defaultCurrentLang
@@ -133,14 +127,18 @@ export const LanguageSwitcher: FC<Props> = ({
     }
   }, [enableNew, invert])
 
-  const onClickLanguageSelect = useMemo(
-    () =>
-      onLanguageSelect
+  const latest = useLatest({ onLanguageSelect })
+
+  const hasOnLanguageSelect = !!onLanguageSelect
+  const functions = useMemo(
+    () => ({
+      handleClickLanguageSelect: hasOnLanguageSelect
         ? (e: MouseEvent<HTMLButtonElement>) => {
-            onLanguageSelect(e.currentTarget.value)
+            latest.onLanguageSelect!(e.currentTarget.value)
           }
         : undefined,
-    [onLanguageSelect],
+    }),
+    [hasOnLanguageSelect, latest],
   )
 
   return (
@@ -151,17 +149,15 @@ export const LanguageSwitcher: FC<Props> = ({
         className={classNames.switchButton}
         label="Language"
       />
-      <DropdownContent onKeyDown={onDelegateKeyDownContent}>
+      <DropdownContent onKeyDown={handleDelegateKeyDownContent}>
         <ul className={classNames.languageItemsList}>
           {locales.map(([code, label]) => (
             <LanguageListItemButton
               key={code}
               code={code}
-              className={classNames.languageItem}
-              buttonStyle={classNames.languageButton}
               current={currentLang === code}
-              onClick={onClickLanguageSelect}
-              iconAlt={checkIconAlt}
+              classNames={classNames}
+              handleClick={functions.handleClickLanguageSelect}
             >
               {label}
             </LanguageListItemButton>
@@ -175,19 +171,27 @@ export const LanguageSwitcher: FC<Props> = ({
 const LanguageListItemButton = memo<{
   code: string
   children: string
-  className: string
-  buttonStyle: string
   current: boolean
-  iconAlt: ReactNode
-  onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ code, children, buttonStyle, className, current, iconAlt, onClick }) => (
-  <li key={code} className={className} aria-current={current} lang={code}>
+  handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
+  classNames: {
+    languageItem: string
+    languageButton: string
+  }
+}>(({ code, children, current, handleClick, classNames }) => (
+  <li lang={code} className={classNames.languageItem} aria-current={current}>
     <Button
       value={code}
-      onClick={onClick}
       wide
-      prefix={current ? <FaCheckIcon color="MAIN" alt={iconAlt} /> : null}
-      className={buttonStyle}
+      className={classNames.languageButton}
+      onClick={handleClick}
+      prefix={
+        current ? (
+          <FaCheckIcon
+            alt={<Localizer id="smarthr-ui/LanguageSwitcher/checkIconAlt" defaultText="選択中" />}
+            color="MAIN"
+          />
+        ) : null
+      }
     >
       {children}
     </Button>
@@ -196,20 +200,24 @@ const LanguageListItemButton = memo<{
 
 const MemoizedDropdownTrigger = memo<
   Pick<Props, 'narrow' | 'invert'> & { className: string; label: string }
->(({ narrow, invert, className, label }) => (
-  <DropdownTrigger>
-    {narrow ? (
-      <Button suffix={<FaCaretDownIcon />} className={className}>
-        {invert ? <LanguageIcon alt={label} /> : <FaGlobeIcon alt={label} />}
+>(({ narrow, invert, className, label }) => {
+  const Icon = invert ? LanguageIcon : FaGlobeIcon
+  let prefix: ReactNode = undefined
+  let body: ReactNode = label
+
+  if (narrow) {
+    // narrowの時はprefixなし、bodyにアイコン
+    body = <Icon alt={label} />
+  } else {
+    // narrowでない時はprefixにアイコン、bodyはlabel
+    prefix = <Icon />
+  }
+
+  return (
+    <DropdownTrigger>
+      <Button className={className} prefix={prefix} suffix={<FaCaretDownIcon />}>
+        {body}
       </Button>
-    ) : (
-      <Button
-        prefix={invert ? <LanguageIcon /> : <FaGlobeIcon />}
-        suffix={<FaCaretDownIcon />}
-        className={className}
-      >
-        {label}
-      </Button>
-    )}
-  </DropdownTrigger>
-))
+    </DropdownTrigger>
+  )
+})

@@ -1,5 +1,6 @@
-export { IntlProvider } from './IntlProvider'
-export { useIntl } from './useIntl'
+export { IntlProvider, useAvailableLocales } from './IntlProvider'
+export { useIntl, useLocalize } from './useIntl'
+export { useDateFormat } from './useDateFormat'
 export { Localizer } from './Localizer'
 export { DateFormatter } from './DateFormatter'
 export { TimeFormatter } from './TimeFormatter'
