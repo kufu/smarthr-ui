@@ -1,21 +1,19 @@
 import { render, screen } from '@testing-library/react'
 
-import { EnvironmentProvider } from '../../hooks/client/useEnvironment'
-
 import { DialogContentInner } from './DialogContentInner'
 
 describe('DialogContentInner', () => {
-  const renderDialog = (mobile: boolean) =>
+  // mobile環境かどうかの判定は呼び出し元（Controlled*Dialog）が行い、
+  // 確定済みのmobileTypeをpropsとして渡す契約になっている
+  const renderDialog = (mobileType: 'sheet' | undefined) =>
     render(
-      <EnvironmentProvider environment={{ mobile }}>
-        <DialogContentInner isOpen mobileType="sheet" size="M" ariaLabel="ダイアログ">
-          ダイアログコンテンツ
-        </DialogContentInner>
-      </EnvironmentProvider>,
+      <DialogContentInner isOpen mobileType={mobileType} size="M" ariaLabel="ダイアログ">
+        ダイアログコンテンツ
+      </DialogContentInner>,
     )
 
-  it('モバイルでsheet表示の場合はsizeを適用しないこと', () => {
-    renderDialog(true)
+  it('mobileTypeがsheetの場合はsizeを適用しないこと', () => {
+    renderDialog('sheet')
 
     const layout = screen.getByRole('dialog', { name: 'ダイアログ' }).parentElement
 
@@ -23,8 +21,8 @@ describe('DialogContentInner', () => {
     expect(layout).not.toHaveClass('shr-w-col5')
   })
 
-  it('非モバイルではsheet指定時もsizeを適用すること', () => {
-    renderDialog(false)
+  it('mobileTypeがundefinedの場合はsizeを適用すること', () => {
+    renderDialog(undefined)
 
     const layout = screen.getByRole('dialog', { name: 'ダイアログ' }).parentElement
 
