@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, memo, useMemo } from 'react'
 
-import { useEnvironment } from '../../../hooks/useEnvironment'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { FaXmarkIcon } from '../../Icon'
@@ -56,7 +56,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       <DialogHeader mobileType={actualMobileType}>
         <DialogHeading {...heading} />
         {isSheet && (
-          <CloseButton handleClickClose={handleClickClose} closeButton={closeButton} iconOnly />
+          <CloseButton iconOnly handleClickClose={handleClickClose} closeButton={closeButton} />
         )}
       </DialogHeader>
       <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>

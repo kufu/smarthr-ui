@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/useEnvironment'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'

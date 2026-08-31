@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/useEnvironment'
+import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'

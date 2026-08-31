@@ -1,16 +1,9 @@
 'use client'
 
-import {
-  type FC,
-  type FormEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  useContext,
-  useMemo,
-} from 'react'
+import { type FC, type FormEvent, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/useEnvironment'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
@@ -200,21 +193,21 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
 
   const backButtonElement = !backButton.hidden && activeStep > 1 && (
     <Button
-      onClick={functions.handleBackAction}
-      variant={backButton.theme}
       disabled={backButton.disabled || calcedResponseStatus.isProcessing}
+      variant={backButton.theme}
       className={classNames.backButton}
+      onClick={functions.handleBackAction}
     >
       {backButton.text}
     </Button>
   )
   const closeButtonElement = !closeButton.hidden && (
     <Button
-      onClick={functions.handleCloseAction}
+      disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
       // sheet かつ mobile 時はボトムシートの装飾に合わせ、明示 theme に関わらず tertiary にする
       variant={isSheet ? 'tertiary' : closeButton.theme}
-      disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
       className={classNames.closeButton}
+      onClick={functions.handleCloseAction}
     >
       {closeButton.text}
     </Button>
@@ -222,9 +215,9 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const submitButtonElement = !submitButton.hidden && (
     <Button
       type="submit"
-      variant={submitButton.theme}
       disabled={submitButton.disabled}
       loading={calcedResponseStatus.isProcessing}
+      variant={submitButton.theme}
       className={classNames.submitButton}
     >
       {submitButton.text}

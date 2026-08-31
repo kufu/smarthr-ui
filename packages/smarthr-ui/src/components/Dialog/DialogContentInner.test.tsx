@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 
-import { EnvironmentProvider } from '../../hooks/useEnvironment'
+import { EnvironmentProvider } from '../../hooks/client/useEnvironment'
 
 import { DialogContentInner } from './DialogContentInner'
 
@@ -8,7 +8,7 @@ describe('DialogContentInner', () => {
   const renderDialog = (mobile: boolean) =>
     render(
       <EnvironmentProvider environment={{ mobile }}>
-        <DialogContentInner isOpen ariaLabel="ダイアログ" mobileType="sheet" size="M">
+        <DialogContentInner isOpen mobileType="sheet" size="M" ariaLabel="ダイアログ">
           ダイアログコンテンツ
         </DialogContentInner>
       </EnvironmentProvider>,
