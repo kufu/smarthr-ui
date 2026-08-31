@@ -5,7 +5,7 @@ import { tv } from 'tailwind-variants'
 
 import { useTableHeadCellCount } from '../hooks/useTableHeadCellCount'
 
-import { Td } from './Td'
+import { Td } from '../../Td'
 
 import type { Gap } from '../../../../types'
 
