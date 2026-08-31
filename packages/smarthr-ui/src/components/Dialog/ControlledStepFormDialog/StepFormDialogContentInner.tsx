@@ -243,7 +243,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
           >
             {children}
           </DialogBody>
-          <Stack gap={0.5} className={classNames.actionArea}>
+          <div className={classNames.actionArea}>
             {isSheet ? (
               <Stack gap={0.5}>
                 <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.sheetButtonRow}>
@@ -265,7 +265,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
               responseStatus={calcedResponseStatus}
               className={classNames.message}
             />
-          </Stack>
+          </div>
         </div>
       </form>
     </Section>
