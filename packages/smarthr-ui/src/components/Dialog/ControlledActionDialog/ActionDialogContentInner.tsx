@@ -103,13 +103,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   const classNames = useMemo(() => {
     const { wrapper, actionArea, actionAreaInner, buttonArea, message } = dialogContentInner({
-      mobile,
       mobileType: actualMobileType,
     })
 
     return {
       wrapper: wrapper(),
-      actionArea: actionArea(),
+      actionArea: actionArea({ mobile }),
       actionAreaInner: actionAreaInner(),
       buttonArea: buttonArea(),
       message: message(),

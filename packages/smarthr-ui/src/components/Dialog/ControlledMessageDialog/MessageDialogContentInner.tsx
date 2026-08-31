@@ -43,11 +43,11 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   const isSheet = actualMobileType === 'sheet'
 
   const classNames = useMemo(() => {
-    const { wrapper, actionArea } = dialogContentInner({ mobile, mobileType: actualMobileType })
+    const { wrapper, actionArea } = dialogContentInner({ mobileType: actualMobileType })
 
     return {
       wrapper: wrapper(),
-      actionArea: actionArea(),
+      actionArea: actionArea({ mobile }),
     }
   }, [mobile, actualMobileType])
 
