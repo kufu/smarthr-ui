@@ -231,10 +231,10 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
+      mobileType={mobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
-      mobileType={mobileType}
     >
       <StepFormDialogContentInner
         activeStep={activeStep}
@@ -243,6 +243,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         firstStep={firstStep}
         stepLength={stepLength}
         responseStatus={responseStatus}
+        mobileType={mobileType}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}
@@ -250,7 +251,6 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         submitButton={submitButton}
         closeButton={closeButton}
         backButton={backButton}
-        mobileType={mobileType}
       >
         {children}
       </StepFormDialogContentInner>

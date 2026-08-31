@@ -57,7 +57,7 @@ export default [
             { groupName: 'linkAttribute', elementNamePattern: '^(href|target|rel)$' },
             { groupName: 'tabIndex', elementNamePattern: '^tabIndex$' },
             { groupName: 'title', elementNamePattern: '^title$' },
-            { groupName: 'styleType', elementNamePattern: '^(styleType|variant)$' },
+            { groupName: 'styleType', elementNamePattern: '^(styleType|mobileType|variant)$' },
             { groupName: 'size', elementNamePattern: '^size$' },
             { groupName: 'setCallback', elementNamePattern: '^set[A-Z]' },
             { groupName: 'width', elementNamePattern: '((^w|W)idth|(^h|H)eight)$' },
