@@ -10,6 +10,7 @@ import {
   useRef,
 } from 'react'
 
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
@@ -42,6 +43,7 @@ type BaseProps = Omit<
   | 'handleClickClose'
   | 'handleClickBack'
   | 'handleSubmit'
+  | 'mobile'
 > &
   DialogProps & {
     heading: HeadingType
@@ -143,6 +145,10 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   mobileType,
   ...rest
 }) => {
+  const { mobile } = useEnvironment()
+  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
+  const actualMobileType = mobile ? mobileType : undefined
+
   const defaultTexts = useLocalize({
     closeButtonLabel: {
       id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
@@ -231,7 +237,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
-      mobileType={mobileType}
+      mobileType={actualMobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
@@ -243,7 +249,8 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         firstStep={firstStep}
         stepLength={stepLength}
         responseStatus={responseStatus}
-        mobileType={mobileType}
+        mobile={mobile}
+        mobileType={actualMobileType}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}

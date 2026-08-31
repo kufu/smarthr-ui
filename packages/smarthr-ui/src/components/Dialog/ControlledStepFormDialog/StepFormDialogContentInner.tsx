@@ -3,7 +3,6 @@
 import { type FC, type FormEvent, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useLatest } from '../../../hooks/useLatest'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
@@ -50,6 +49,7 @@ export type BaseProps = PropsWithChildren<
      * モバイル時の表示形式（'sheet' でボトムシート表示になる）
      */
     mobileType?: 'sheet'
+    mobile: boolean
   }
 >
 
@@ -103,13 +103,11 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   responseStatus,
   handleClickBack,
   mobileType,
+  mobile,
 }) => {
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
-  const { mobile } = useEnvironment()
-  // mobile 環境でないときは mobileType='sheet' を無視してボトムシート化しない
-  const actualMobileType = mobile ? mobileType : undefined
-  const isSheet = actualMobileType === 'sheet'
+  const isSheet = mobileType === 'sheet'
 
   const latest = useLatest({
     handleClickClose,
@@ -171,11 +169,11 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   const classNames = useMemo(() => {
     const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
     const footer = stepFormDialogFooter()
-    const commonAttrs = { mobileType: actualMobileType }
+    const commonAttrs = { mobileType }
 
     return {
       wrapper: wrapper(commonAttrs),
-      actionArea: actionArea({ mobile, mobileType: actualMobileType }),
+      actionArea: actionArea({ mobile, mobileType }),
       buttonArea: buttonArea(commonAttrs),
       message: message(),
       sheetButtonRow: footer.sheetButtonRow(),
@@ -183,7 +181,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       closeButton: footer.closeButton(commonAttrs),
       submitButton: footer.submitButton(),
     }
-  }, [mobile, actualMobileType])
+  }, [mobileType, mobile])
 
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
@@ -227,7 +225,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     <Section>
       <form onSubmit={functions.handleSubmitAction}>
         <div className={classNames.wrapper}>
-          <DialogHeader mobileType={actualMobileType}>
+          <DialogHeader mobileType={mobileType}>
             <DialogHeading
               id={heading.id}
               sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
