@@ -1,9 +1,9 @@
 'use client'
 
-import { type ReactNode, type RefObject, useCallback, useLayoutEffect, useState } from 'react'
+import { type ReactNode, useCallback, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, id?: string) {
+export function useDialogPortal(parent?: HTMLElement, id?: string) {
   const [portalContainer] = useState<HTMLDivElement | null>(() =>
     typeof document === 'undefined' ? null : document.createElement('div'),
   )
@@ -17,9 +17,9 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
       portalContainer.id = id
     }
 
-    const parentElement = parent && 'current' in parent ? parent.current : parent
-    // SSR を考慮し、useLayoutEffect 内で初期値 document.body を指定
-    const actualParent = parentElement || document.body
+    // document への参照はレンダー中ではなくここで行う（SSR時は document が存在しないため）。
+    // parent が存在しない場合は document.body をデフォルトの配置先にする
+    const actualParent = parent || document.body
 
     actualParent.appendChild(portalContainer)
 
