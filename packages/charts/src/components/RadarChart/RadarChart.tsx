@@ -6,6 +6,7 @@ import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createRadarChartOptions, registerChartComponents } from '../../config'
 import { getRadarChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
@@ -20,17 +21,37 @@ type Props = {
 export const RadarChart: React.FC<Props> = ({ data, title, options: externalOptions }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'radar'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const chartColors = useMemo(
     () => getRadarChartColors(data.datasets.length),
     [data.datasets.length],
   )
 
   const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const axisCount = data.datasets[0]?.data.length ?? 0
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}レーダーチャート ${datasetCount}個のデータ ${axisCount}個の軸`
-  }, [title, data])
+    const counts = {
+      datasetCount: data.datasets.length,
+      axisCount: data.datasets[0]?.data.length ?? 0,
+    }
+
+    // titleの有無で別のメッセージを使う。ひとつの文章として翻訳できるようにするため、
+    // チャートの説明とtitleを後から連結していない
+    return title
+      ? localize(
+          {
+            id: 'smarthr-ui-charts/RadarChart/ariaLabelWithTitle',
+            defaultText: '{title} レーダーチャート {datasetCount}個のデータ {axisCount}個の軸',
+          },
+          { ...counts, title },
+        )
+      : localize(
+          {
+            id: 'smarthr-ui-charts/RadarChart/ariaLabel',
+            defaultText: 'レーダーチャート {datasetCount}個のデータ {axisCount}個の軸',
+          },
+          counts,
+        )
+  }, [title, data, localize])
 
   const enhancedData: ChartData<'radar'> = useMemo(
     () => ({
@@ -59,10 +80,11 @@ export const RadarChart: React.FC<Props> = ({ data, title, options: externalOpti
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, formatLiveRegionText],
   )
 
   return (

@@ -6,6 +6,7 @@ import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
@@ -32,17 +33,37 @@ export const BarChart: React.FC<Props> = ({
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const chartColors = useMemo(
     () => getChartColors(data.datasets.length, disablePatterns),
     [data.datasets.length, disablePatterns],
   )
 
   const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const barCount = data.datasets[0].data.length
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
-  }, [title, data])
+    const counts = {
+      datasetCount: data.datasets.length,
+      barCount: data.datasets[0].data.length,
+    }
+
+    // titleの有無で別のメッセージを使う。ひとつの文章として翻訳できるようにするため、
+    // チャートの説明とtitleを後から連結していない
+    return title
+      ? localize(
+          {
+            id: 'smarthr-ui-charts/BarChart/ariaLabelWithTitle',
+            defaultText: '{title} 棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+          },
+          { ...counts, title },
+        )
+      : localize(
+          {
+            id: 'smarthr-ui-charts/BarChart/ariaLabel',
+            defaultText: '棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+          },
+          counts,
+        )
+  }, [title, data, localize])
 
   const enhancedData: ChartData<'bar'> = useMemo(
     () => ({
@@ -71,10 +92,11 @@ export const BarChart: React.FC<Props> = ({
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, formatLiveRegionText],
   )
 
   return (

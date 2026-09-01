@@ -48,6 +48,12 @@ commands:
   run-npm-test:
     steps:
       - run: pnpm ui test
+  # chartsはCIでlintしていないため、ja.tsとja.jsonの同期ずれはlocales.test.tsで検知している
+  run-charts-test:
+    steps:
+      # chartsはsmarthr-uiのビルド成果物を参照するため、先にビルドする
+      - run: pnpm ui build
+      - run: pnpm charts test
   # SCとしてつかえるかどうかのテストを行っているが、費用対効果が薄いためoffにしています
   # 良いテスト方法を発見した場合置き換えます 2026/02/05
   # run-e2e-test:
@@ -101,6 +107,7 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
+      - run-charts-test
   node-active-lts:
     executor: node-active-lts
     resource_class: medium
@@ -108,6 +115,7 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
+      - run-charts-test
   # e2e-test:
   #   executor: node-active-lts-browsers
   #   working_directory: ~/repo

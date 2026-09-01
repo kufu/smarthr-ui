@@ -47,3 +47,27 @@ files:
         vi: vi_vn
         zh-CN: zh_hans_cn
         zh-TW: zh_hant_tw
+
+  # chartsパッケージは独自の辞書を持つため、別ファイルとして登録する
+  - source: packages/charts/src/intl/locales/ja.json
+
+    translation: packages/charts/src/intl/locales/%locale%.json
+
+    # smarthr-uiのja.jsonと同名になるため、Crowdin上ではcharts配下に分けて表示する
+    dest: charts/ja.json
+
+    skip_untranslated_strings: 1
+
+    export_only_approved: 1
+
+    # languages_mappingはfilesのエントリごとに指定する必要がある
+    languages_mapping:
+      locale:
+        en-US: en_us
+        id: id_id
+        ja-easy: ja_easy
+        ko: ko_kr
+        pt-BR: pt_br
+        vi: vi_vn
+        zh-CN: zh_hans_cn
+        zh-TW: zh_hant_tw
