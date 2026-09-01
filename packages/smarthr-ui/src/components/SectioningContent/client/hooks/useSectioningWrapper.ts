@@ -1,9 +1,4 @@
 import { type ComponentType, useMemo } from 'react'
-// HINT: styled-componentsがRSCに対応するのはv6.3.0以降。peerは^5.0.1のため、
-// モジュールスコープでcreateContextを呼びガードが無いバージョンが解決されうる。
-// react-server条件でimportするとTypeErrorになるため、このモジュールを使うコンポーネントは
-// 'use client'を外せない（Layout配下・Panelが該当）。
-import { isStyledComponent } from 'styled-components'
 
 import { SectioningFragment } from '../components'
 
@@ -12,7 +7,12 @@ type AsType = string | ComponentType<any>
 const SECTIONING_CONTENTS_REGEX = /^(article|aside|nav|section)$/
 
 const isSectioningContent = (as: AsType) => {
-  const type_ = isStyledComponent(as) ? as.target : as
+  // HINT: styled-componentsは対象の要素をtargetに保持している。
+  // isStyledComponentで判定するとstyled-componentsのimportが必要になり、
+  // v5がreact-server条件でTypeErrorになるためRSCで動作しなくなる。
+  // targetが文字列かどうかだけで判定すればimportが不要になる
+  const target = (as as { target?: unknown }).target
+  const type_ = typeof target === 'string' ? target : as
 
   return typeof type_ === 'string' && SECTIONING_CONTENTS_REGEX.test(type_)
 }
