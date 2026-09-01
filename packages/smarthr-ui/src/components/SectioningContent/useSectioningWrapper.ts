@@ -1,6 +1,6 @@
 import { type ComponentType, useMemo } from 'react'
 
-import { SectioningFragment } from '../components'
+import { SectioningFragment } from './client/components'
 
 type AsType = string | ComponentType<any>
 
