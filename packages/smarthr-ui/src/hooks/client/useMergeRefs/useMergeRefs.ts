@@ -82,6 +82,10 @@ export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) => {
       const generation = current.generation
 
       return () => {
+        // cleanup 時点では「差し替えによるデタッチ」か「アンマウント」かを区別する
+        // 情報が無い（node.isConnected は両ケースとも true になる。DOM からの実際の
+        // 削除は cleanup より後に行われるため）。差し替えなら直後の同期処理で新しい
+        // setup が実行されるので、1 マイクロタスクだけ待って判定する
         queueMicrotask(() => {
           // 自分より後に setup が実行されていれば、差し替えによるデタッチであり、
           // 引き継ぎ・cleanup は setup 側で完了している
