@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 import type { MutableRefObject, Ref } from 'react'
 
@@ -44,8 +44,8 @@ export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) => {
     generation: number
   }>({ applied: [], generation: 0 })
 
-  return useMemo(
-    () => (node: T | null) => {
+  return useCallback(
+    (node: T | null) => {
       // React 19 は cleanup 関数を返した callback ref を node = null で呼び直さないため、
       // このガードに到達するのは cleanup 関数を返す前（未マウント）のみ
       if (!node) {
