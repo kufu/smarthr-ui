@@ -5,9 +5,11 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
+
+type Color = 'grey' | 'blue' | 'yellow' | 'red'
 
 type BaseProps = PropsWithChildren<{
   /** 件数 */
@@ -16,8 +18,13 @@ type BaseProps = PropsWithChildren<{
   overflowCount?: number
   /** 0値を表示するかどうか */
   showZero?: boolean
-  /** 色の種類 */
-  type?: VariantProps<typeof classNameGenerator>['color']
+  /**
+   * 色の種類
+   *
+   * TODO: HTMLのtype属性と紛れやすく、tv側のvariant名もcolorであるため、
+   * 破壊的変更を伴うタイミングでcolorへリネームする
+   */
+  type?: Color
   /** ドット表示するかどうか */
   dot?: boolean
 }>

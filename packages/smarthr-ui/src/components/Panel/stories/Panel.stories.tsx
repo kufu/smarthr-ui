@@ -47,7 +47,7 @@ export const Padding: StoryObj<typeof Panel> = {
   render: (args) => (
     <Stack>
       {[undefined, ...basePadding].map((padding) => (
-        <Panel {...args} padding={padding} key={padding}>
+        <Panel {...args} key={padding} padding={padding}>
           padding: {padding}
         </Panel>
       ))}
@@ -76,7 +76,7 @@ export const Overflow: StoryObj<typeof Panel> = {
   render: (args) => (
     <Stack>
       {baseOverflow.map((overflow) => (
-        <Panel {...args} overflow={overflow} key={overflow}>
+        <Panel {...args} key={overflow} overflow={overflow}>
           <p className="shr-bg-white">{overflow || 'undefined'}</p>
         </Panel>
       ))}
@@ -89,7 +89,7 @@ export const Layer: StoryObj<typeof Panel> = {
   render: (args) => (
     <Stack>
       {baseLayer.map((layer) => (
-        <Panel {...args} layer={layer} key={layer}>
+        <Panel {...args} key={layer} layer={layer}>
           layer: {layer}
         </Panel>
       ))}

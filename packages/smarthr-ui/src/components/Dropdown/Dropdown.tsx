@@ -15,9 +15,9 @@ import {
   useState,
 } from 'react'
 
-import { useAnimationFrame } from '../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { usePortal } from '../../hooks/client/usePortal'
 import { useLatest } from '../../hooks/useLatest'
-import { usePortal } from '../../hooks/usePortal'
 
 import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
@@ -61,7 +61,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const { rootTriggerRef } = useContext(DropdownContext)
 
   const contentId = useId()
-  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal({
+  const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
     rootId: contentId,
   })
 
@@ -72,7 +72,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const latest = useLatest({
     active,
     isChildPortal,
-    portalRoot,
     onOpen,
     onClose,
     createPortal,

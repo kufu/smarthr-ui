@@ -14,11 +14,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../hooks/useAnimationFrame'
-import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useEnhancedEffect } from '../../hooks/client/useEnhancedEffect'
+import { usePortal } from '../../hooks/client/usePortal'
+import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
-import { usePortal } from '../../hooks/usePortal'
-import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
 import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
@@ -42,6 +42,8 @@ type Props<T> = {
   triggerRef: RefObject<HTMLElement>
   /** 検索結果が0件の時に表示するコンテンツ */
   noResultText?: ReactNode
+  /** output要素のhtmlFor属性に使用するinput要素のid */
+  inputId?: string
 }
 
 type Rect = {
@@ -95,6 +97,7 @@ export const useListbox = <T,>({
   isLoading,
   triggerRef,
   noResultText,
+  inputId,
 }: Props<T>) => {
   const listBoxId = useId()
 
@@ -312,6 +315,7 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       noResultText,
+      inputId,
       listBoxId,
       listBoxRef,
       handleAdd: functions.handleAdd,
@@ -336,6 +340,7 @@ type ListBoxProps<T> = {
   isLoading?: boolean
   noResultText?: ReactNode
   dropdownHelpMessage?: ReactNode
+  inputId?: string
   listBoxId: string
   listBoxRef: RefObject<HTMLDivElement>
   handleAdd: ((option: ComboboxOption<T>) => void) | undefined
@@ -364,6 +369,7 @@ export const ListBox = memo(
     listBoxRect,
     triggerWidth,
     dropdownWidth,
+    inputId,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
@@ -440,25 +446,25 @@ export const ListBox = memo(
     return createPortal(
       <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         {isExpanded && isLoading && (
-          <VisuallyHiddenText role="status">
+          <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
           </VisuallyHiddenText>
         )}
         <Scroller
-          id={listBoxId}
           ref={listBoxRef}
           role="listbox"
-          aria-hidden={!isExpanded}
+          id={listBoxId}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
+          aria-hidden={!isExpanded}
           onMouseOver={functions.handleDelegateMouseOver}
           onClick={functions.handleDelegateClick}
         >
           {dropdownHelpMessage && (
             <Text
+              as="p"
               className={CLASS_NAMES.helpMessage}
               icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-              as="p"
             >
               {dropdownHelpMessage}
             </Text>
@@ -469,23 +475,24 @@ export const ListBox = memo(
                 <Loader aria-hidden />
               </div>
             ) : options.length === 0 ? (
-              <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
+              /* eslint-disable-next-line jsx-a11y/no-redundant-roles -- output要素のrole="status"は暗黙的だが、ブラウザ間の差異への対応としてフォールバック用に明示する */
+              <output role="status" htmlFor={inputId} className={CLASS_NAMES.noItems}>
                 {noResultText ?? (
                   <Localizer
                     id="smarthr-ui/Combobox/noResultsText"
                     defaultText="一致する選択肢がありません。"
                   />
                 )}
-              </p>
+              </output>
             ) : (
               items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
                   {...optionRest}
-                  label={label}
-                  disabled={disabled}
                   key={id}
-                  id={id}
                   activeRef={id === activeOptionId ? activeRef : undefined}
+                  id={id}
+                  disabled={disabled}
+                  label={label}
                 />
               ))
             )

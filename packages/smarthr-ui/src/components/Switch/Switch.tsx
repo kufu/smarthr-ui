@@ -85,11 +85,11 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.wrapper}>
           <input
             {...rest}
-            type="checkbox"
+            ref={ref}
             role="switch"
+            type="checkbox"
             id={inputId}
             className={classNames.input}
-            ref={ref}
           />
           <MemoizedSuffixIcon className={classNames.iconWrapper} iconClassName={classNames.icon} />
         </span>
@@ -113,7 +113,7 @@ const MemoizedLabel = memo<
 const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
   ({ className, iconClassName }) => (
     <span className={className}>
-      <FaCheckIcon className={iconClassName} size="XXS" />
+      <FaCheckIcon size="XXS" className={iconClassName} />
     </span>
   ),
 )

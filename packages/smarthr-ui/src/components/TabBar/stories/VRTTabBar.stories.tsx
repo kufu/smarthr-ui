@@ -22,17 +22,17 @@ export default {
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((variant) => (
-        <Stack id={variant} key={variant}>
+        <Stack key={variant} id={variant}>
           <TabBar {...args} bordered={false}>
             <TabItem id="tab1" onClick={action('clicked')} suffix={<Badge count={100} />}>
               タブ1
             </TabItem>
             <TabItem
               id="tab2"
-              onClick={action('clicked')}
-              selected
               disabled
               disabledReason={{ message: 'タブが無効な理由' }}
+              selected
+              onClick={action('clicked')}
             >
               タブ2
             </TabItem>
@@ -40,27 +40,27 @@ export default {
           <TabBar>
             <TabItem
               id="tab3"
-              onClick={action('clicked')}
-              selected
               disabled
+              selected
+              onClick={action('clicked')}
               suffix={<Badge count={100} />}
             >
               タブ3
             </TabItem>
             <TabItem
               id="tab4"
-              onClick={action('clicked')}
               disabled
               disabledReason={{ message: 'タブが無効な理由' }}
+              onClick={action('clicked')}
             >
               タブ4
             </TabItem>
             <TabItem
               id="tab5"
-              onClick={action('clicked')}
-              selected
-              suffix={<FaCircleExclamationIcon color="DANGER" />}
               disabledReason={{ message: 'タブが無効な理由' }}
+              selected
+              onClick={action('clicked')}
+              suffix={<FaCircleExclamationIcon color="DANGER" />}
             >
               タブ5
             </TabItem>

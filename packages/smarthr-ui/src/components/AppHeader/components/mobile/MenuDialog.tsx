@@ -11,8 +11,8 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
-import { useMergeRefs } from '../../../../hooks/useMergeRefs'
 import { Localizer, useLocalize } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
@@ -65,11 +65,11 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
 
   return (
     <CSSTransition
-      classNames="shr-sp-menu"
+      nodeRef={domRef}
       in={isOpen}
       timeout={300}
       unmountOnExit
-      nodeRef={domRef}
+      classNames="shr-sp-menu"
     >
       <div className="shr-fixed shr-z-overlap-base">
         <FocusTrap>
@@ -87,8 +87,14 @@ export const Content: FC<
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
-  const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
-    useContext(AppLauncherContext)
+  const {
+    features,
+    isAppLauncherAvailable,
+    featuresLoading,
+    featuresError,
+    isAppLauncherSelected,
+    setIsAppLauncherSelected,
+  } = useContext(AppLauncherContext)
 
   const translated = useLocalize({
     launcherListText: {
@@ -136,7 +142,7 @@ export const Content: FC<
   const mergedRef = useMergeRefs(functions.callbackRef, domRef)
 
   return (
-    <Section ref={mergedRef} role="dialog" aria-modal="true" className={CLASS_NAMES.wrapper}>
+    <Section ref={mergedRef} role="dialog" className={CLASS_NAMES.wrapper} aria-modal="true">
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
@@ -173,8 +179,8 @@ export const Content: FC<
         </Cluster>
       </div>
 
-      {isAppLauncherSelected && features && features.length > 0 ? (
-        <AppLauncher features={features} />
+      {isAppLauncherSelected && isAppLauncherAvailable ? (
+        <AppLauncher features={features} loading={featuresLoading} error={featuresError} />
       ) : (
         <Scroller direction="vertical" className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (

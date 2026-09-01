@@ -10,7 +10,6 @@ import {
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -18,10 +17,11 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { useOuterClick } from '../../../hooks/useOuterClick'
-import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
@@ -164,6 +164,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -174,7 +175,9 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
 
-  const selectedListId = useId()
+  const baseId = useId()
+  const inputId = id || `${baseId}-input`
+  const selectedListId = `${baseId}-selected`
 
   const isInputControlled = controlledInputValue !== undefined
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
@@ -230,6 +233,10 @@ const ActualMultiCombobox = <T,>(
     }
 
     return {
+      cleanupListBoxCallbackRef: () => () => {
+        latestForListBox.deleteFrame.cancel()
+        latestForListBox.selectFrame.cancel()
+      },
       handleDelete,
       handleSelect: (selected: ComboboxItem<T>) => {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -253,15 +260,6 @@ const ActualMultiCombobox = <T,>(
     }
   }, [latestForListBox])
 
-  // TODO: callbackRefにまとめたい
-  useEffect(
-    () => () => {
-      latestForListBox.deleteFrame.cancel()
-      latestForListBox.selectFrame.cancel()
-    },
-    [latestForListBox],
-  )
-
   const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
     options,
     dropdownHelpMessage,
@@ -272,6 +270,7 @@ const ActualMultiCombobox = <T,>(
     isLoading,
     triggerRef,
     noResultText,
+    inputId,
   })
 
   const latest = useLatest({
@@ -441,11 +440,7 @@ const ActualMultiCombobox = <T,>(
 
   useOuterClick([triggerRef, listBoxRef], functions.blur)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-    ref,
-    () => inputRef.current,
-    [],
-  )
+  const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 
   useEffect(() => {
     if (latest.highlighted) {
@@ -498,28 +493,28 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={triggerRef}
       role="group"
-      onClick={functions.handleDelegateClick}
-      onKeyDown={functions.handleDelegateKeyDown}
-      onKeyPress={functions.handleDelegateKeyPress}
       className={classNames.wrapper}
       style={{
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      onClick={functions.handleDelegateClick}
+      onKeyDown={functions.handleDelegateKeyDown}
+      onKeyPress={functions.handleDelegateKeyPress}
     >
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
-          aria-label={localized.selectedListAriaLabel}
           className={classNames.selectedList}
+          aria-label={localized.selectedListAriaLabel}
         >
           {selectedItems.map((selectedItem) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
-                item={selectedItem}
                 disabled={disabled}
-                handleDelete={functions.handleDelete}
+                item={selectedItem}
                 enableEllipsis={selectedItemEllipsis}
+                handleDelete={functions.handleDelete}
               />
             </li>
           ))}
@@ -528,21 +523,17 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
-            data-smarthr-ui-input="true"
+            ref={mergedRef}
+            role="combobox"
             type="text"
+            id={inputId}
             name={name}
-            value={inputValue}
-            disabled={disabled}
             required={required && selectedItems.length === 0}
-            ref={inputRef}
-            onChange={functions.handleChangeInput}
-            onFocus={functions.handleFocusInput}
-            onCompositionStart={functions.handleCompositionStart}
-            onCompositionEnd={functions.handleCompositionEnd}
-            onKeyDown={functions.handleKeyDownInput}
+            disabled={disabled}
+            value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
-            role="combobox"
+            className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
@@ -550,7 +541,12 @@ const ActualMultiCombobox = <T,>(
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
-            className={classNames.input}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChangeInput}
+            onFocus={functions.handleFocusInput}
+            onCompositionStart={functions.handleCompositionStart}
+            onCompositionEnd={functions.handleCompositionEnd}
+            onKeyDown={functions.handleKeyDownInput}
           />
         </div>
 

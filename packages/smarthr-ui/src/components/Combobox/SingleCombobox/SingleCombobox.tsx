@@ -9,8 +9,9 @@ import {
   type Ref,
   type RefObject,
   memo,
+  useCallback,
   useEffect,
-  useImperativeHandle,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -18,10 +19,11 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/useAnimationFrame'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../hooks/client/useTheme'
 import { useClick } from '../../../hooks/useClick'
 import { useLatest } from '../../../hooks/useLatest'
-import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
@@ -131,22 +133,22 @@ const SuffixButtons = memo<SuffixButtonsProps>(
   }) => (
     <>
       <UnstyledButton
-        onClick={handleClickClear}
         ref={clearButtonRef}
         className={classNames.clearButton}
+        onClick={handleClickClear}
       >
         <FaCircleXmarkIcon
-          color="TEXT_BLACK"
           alt={
             <Localizer id="smarthr-ui/SingleCombobox/destroyButtonIconAlt" defaultText="クリア" />
           }
+          color="TEXT_BLACK"
           className={classNames.clearButtonIcon}
         />
       </UnstyledButton>
       <span
         role="presentation"
-        onClick={handleDelegateClickIcon}
         className={classNames.caretDownLayout}
+        onClick={handleDelegateClickIcon}
       >
         <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
       </span>
@@ -185,11 +187,14 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
+  const generatedInputId = useId()
+  const inputId = id || generatedInputId
   const triggerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -198,12 +203,6 @@ const ActualSingleCombobox = <T,>(
   const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-    ref,
-    () => inputRef.current,
-    [],
-  )
 
   const { options } = useSingleOptions({
     items,
@@ -245,11 +244,9 @@ const ActualSingleCombobox = <T,>(
       isLoading,
       triggerRef,
       noResultText,
+      inputId,
     },
   )
-
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => selectFrame.cancel, [selectFrame.cancel])
 
   const latest = useLatest({
     onChange,
@@ -408,6 +405,12 @@ const ActualSingleCombobox = <T,>(
     functions.unfocus,
   )
 
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
+
+  const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
+
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
   const selectedItemLabelText = innerText(selectedItem?.label)
   useEffect(() => {
@@ -441,22 +444,26 @@ const ActualSingleCombobox = <T,>(
     >
       <Input
         {...rest}
-        ref={inputRef}
-        type="text"
+        ref={mergedRef}
         role="combobox"
+        type="text"
+        id={inputId}
         name={name}
-        value={inputValue}
+        required={required}
         disabled={disabled}
         readOnly={readOnly}
-        required={required}
+        value={inputValue}
         autoComplete={autoComplete ?? 'off'}
+        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
+        placeholder={placeholder}
+        error={error}
+        className={classNames.input}
         aria-haspopup="listbox"
         aria-controls={listBoxId}
         aria-expanded={isFocused}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
-        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-        placeholder={placeholder}
+        data-smarthr-ui-input="true"
         onClick={functions.handleClickInput}
         onChange={functions.handleChangeInput}
         onFocus={isFocused ? undefined : functions.handleFocus}
@@ -464,19 +471,16 @@ const ActualSingleCombobox = <T,>(
         onCompositionEnd={functions.handleCompositionEnd}
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
-        error={error}
         prefix={prefix}
         suffix={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}
+            classNames={classNames}
             handleClickClear={functions.handleClickClear}
             handleClickIcon={functions.handleClickInput}
-            classNames={classNames}
           />
         }
-        className={classNames.input}
-        data-smarthr-ui-input="true"
       />
       {!readOnly && <ListBox {...listBoxProps} />}
     </div>

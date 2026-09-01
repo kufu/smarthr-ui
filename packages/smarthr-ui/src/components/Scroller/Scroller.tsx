@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/useMergeRefs'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../SectioningContent'
 
 type BaseProps = PropsWithChildren<

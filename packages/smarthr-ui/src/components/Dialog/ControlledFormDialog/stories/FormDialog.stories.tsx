@@ -36,9 +36,9 @@ export default {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ControlledFormDialog
           {...rest}
+          isOpen={open}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
-          isOpen={open}
         >
           <FormControl label="名前">
             <Input name="name" />
@@ -229,7 +229,7 @@ export const PortalParent: StoryObj<typeof ControlledFormDialog> = {
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledFormDialog

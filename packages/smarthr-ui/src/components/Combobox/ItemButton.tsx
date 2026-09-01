@@ -14,7 +14,7 @@ type Props = Omit<ComboboxOption<unknown>, 'item'> &
 
 const classNameGenerator = tv({
   base: [
-    'shr-relative shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
+    'shr-relative shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight shr-text-black',
     'aria-selected:shr-text-white',
     'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
     'data-[active=true]:shr-focus-indicator data-[active=true]:aria-selected:shr-bg-main',
@@ -47,13 +47,13 @@ const CLASS_NAMES = {
 export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, activeRef }) => (
   <button
     ref={activeRef}
-    type="button"
     role="option"
+    type="button"
     id={id}
-    data-active={!!activeRef}
-    aria-selected={isNew ? false : selected}
     disabled={isNew ? undefined : disabled}
     className={isNew ? CLASS_NAMES.new : CLASS_NAMES.select}
+    aria-selected={isNew ? false : selected}
+    data-active={!!activeRef}
   >
     {isNew ? (
       <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>

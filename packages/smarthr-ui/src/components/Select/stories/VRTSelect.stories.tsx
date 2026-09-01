@@ -28,7 +28,7 @@ export default {
   render: (args) => (
     <Stack align="flex-start" gap={2}>
       {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <Stack id={id} align="flex-start" key={id}>
+        <Stack key={id} id={id} align="flex-start">
           {_cases.map((props, i) => (
             <Select {...args} {...props} key={i} />
           ))}

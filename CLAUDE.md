@@ -134,6 +134,208 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
+#### `'use client'` を付けるべきかの判定
+
+判定は **Next.js の React Server Components を基準**とします。Next.js はサーバ側のモジュールを `react-server` 条件で解決するため、React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
+
+**RSC の境界と Next.js の初回 SSR は別の話**
+
+`'use client'` は「サーバの `react-server` グラフで評価されない」ことを保証しますが、**サーバで一切実行されないという意味ではありません**。Next.js App Router は初回ロード時に Client Component も含めて HTML を生成するため、`'use client'` があってもモジュールスコープの `window` / `document` はサーバで評価され `ReferenceError` になります。
+
+| | RSC グラフ（`react-server`） | 初回 SSR |
+|---|---|---|
+| `'use client'` なし | 評価される | 評価される |
+| `'use client'` あり | **評価されない** | **評価される** |
+
+つまり `'use client'` はブラウザ専用 API を守りません。そちらは `typeof window !== 'undefined'` のガードや `useEffect` 内での実行で対処します。
+
+**Server Component で使える**
+
+```text
+Children Fragment Profiler StrictMode Suspense cache cacheSignal
+captureOwnerStack cloneElement createElement createRef forwardRef
+isValidElement lazy memo use useCallback useDebugValue useId useMemo version
+```
+
+`useMemo` `useCallback` `useId` `forwardRef` `memo` は使えます。
+
+**使えない**
+
+`useState` `useRef` `useEffect` `useLayoutEffect` `useContext` `useReducer` `useSyncExternalStore` `useImperativeHandle` `createContext`
+
+export 一覧は実際のビルドから確認できます。
+
+```sh
+node -e "const m=require('./node_modules/.pnpm/react@'+require('react/package.json').version+'/node_modules/react/cjs/react.react-server.development.js'); console.log(Object.keys(m).sort().join(' '))"
+```
+
+**判定の手順**
+
+対象ファイルの import を1つずつ評価します。
+
+1. **`react` からの import** — 上記の使える一覧に含まれるか。型のみの import（`import type`、インラインの `type` 修飾子）は実行時に影響しないため対象外
+2. **ローカルの hook（`use*`）** — 実装を辿り、client 専用 API を使っていないか確認する。`import` だけでなく `export ... from` による再エクスポートも辿ること
+3. **ローカルのコンポーネント** — `'use client'` を持つ client component は、Server Component から**レンダリングする分には問題ない**。境界がそこで切れるため
+4. **外部パッケージ** — 後述
+
+**外部パッケージの判定**
+
+`createContext` などの文字列があるかだけで判断してはいけません。**実装がガードされているかまで読むこと。**
+
+`react-icons@5.7.0` が実例です。`createContext` を使いますが両方ともガードされており、Server Component で動作します。
+
+```js
+// lib/iconContext.mjs — undefinedになるだけでthrowしない
+export var IconContext = React.createContext && React.createContext(DefaultContext)
+
+// lib/iconBase.mjs — undefinedならDefaultContextで描画。useContextではなくConsumer
+return IconContext !== undefined
+  ? React.createElement(IconContext.Consumer, null, conf => elem(conf))
+  : elem(DefaultContext)
+```
+
+`package.json` の `exports` に `react-server` 条件があるか、dist に `'use client'` があるかも判断材料になりますが、無いからといって使えないとは限りません。
+
+**モジュールスコープでの呼び出しに注意**
+
+判定軸は「hook かどうか」ではなく、**モジュール評価時に client 専用 API を呼ぶか**です。
+
+```ts
+// ❌ モジュールスコープで呼ぶ。importされた時点でreact-serverビルドでは例外
+export const ThemeContext = createContext<CreatedTheme>(createTheme())
+// TypeError - React.createContext is not a function
+
+// ✅ 関数内で呼ぶ。呼び出さなければ評価されない
+export const useLatest = <T>(value: T) => { const ref = useRef(value); ... }
+```
+
+前者は `'use client'` による境界が必須です。`'use client'` を持つモジュールは Server Component 側から実体を評価されず、参照だけが渡されるため、モジュールスコープの処理が保護されます。
+
+**境界をどこに置くか**
+
+hook 自身ではなく、それを使うコンポーネント側に置くのが原則です。client module が import するモジュールは client グラフに含まれ、サーバ側では評価されません。
+
+ただし**公開しているかどうか**で変わります。
+
+| | 境界の位置 |
+|---|---|
+| 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
+| 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
+
+**client 境界が必要なモジュールは `client/` に閉じ込める**
+
+コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。
+
+```text
+SectioningContent/
+├── index.ts                      公開バレル
+├── SectioningContent.tsx         'use client' 無し = Server Component でも使える
+└── client/
+    ├── components/               各ファイルに 'use client' を付ける
+    │   ├── index.ts
+    │   ├── LevelContext.ts       モジュールスコープで createContext
+    │   └── SectioningFragment.tsx
+    └── hooks/                    'use client' は付けない
+        ├── index.ts
+        └── useSectioningWrapper.ts
+```
+
+- `client/components/` — 各ファイルに `'use client'` を付ける
+- `client/hooks/` — 付けない。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
+- **`client/index.ts` は作らない**（後述）
+
+`'use client'` を外せたコンポーネントは「Server Component になる」わけではありません。ディレクティブを持たないモジュールは server / client 双方のグラフで評価されるため、**Server Component からも Client Component からも使える**状態になります。制約が減るだけで、利用者側の使い方は変わりません。
+
+**`client/index.ts` を作ってはいけない**
+
+rollup は `preserveModules: true` でもバレルを平坦化し、import 元を実体へ直リンクします。このとき**バレルが依存する他モジュールの外部依存が、呼び出し側へ副作用 import として転記されます。**
+
+`client/index.ts` が `components` と `hooks` を両方 re-export すると、Server Component が `components` だけを参照していても `hooks` 側の依存が混入します。
+
+```js
+// client/index.ts がある場合の lib/components/SectioningContent/SectioningContent.js
+import { forwardRef } from 'react';
+import './client/components/LevelContext.js';
+import { SectioningFragment } from './client/components/SectioningFragment.js';
+import 'styled-components';    // ← hooks 側の依存が転記され、RSC で TypeError になる
+```
+
+`components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
+
+なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
+**共有 hook（`src/hooks/`）の場合**
+
+`src/hooks/` 配下は複数コンポーネントから使う共有 hook の置き場です。ここでも **client 環境でしか動作しない hook は `client/` にまとめます。**
+
+```text
+src/hooks/
+├── useObjectAttributes.ts    Server Component でも動く
+├── useResponseStatus.ts      Server Component でも動く
+└── client/
+    ├── useEnvironment/       'use client' 有（モジュールスコープで createContext）
+    ├── useLatest.ts          'use client' 無（useRef を使うため client 環境が必要）
+    └── ...
+```
+
+判断軸は `'use client'` の有無ではありません。`useLatest` のようにディレクティブを持たない hook も、`useRef` を使う以上 Server Component からは呼び出せないため `client/` の対象です。逆に `useObjectAttributes`（`isValidElement` のみ）や `useResponseStatus`（`useMemo` のみ）は Server Component でも動くため `client/` に置きません。
+
+コンポーネント配下と違い `components/` / `hooks/` の下位区分は設けません。`src/hooks/` 自体が hook の置き場であり、重ねる意味がないためです。
+
+**移行は段階的に進めています。** 現時点で移動済みなのは `useEnvironment` のみです。`src/hooks/` 直下に残っているものが、そのまま「Server Component で動く」ことを意味するわけではありません。実際に Server Component で動くのは `useObjectAttributes` と `useResponseStatus` の2件だけで、残りは順次 `client/` へ移していきます。
+
+**バレルには付けない**
+
+`src/index.ts` に付けるとライブラリ全体が client 扱いになります。再エクスポートのみで境界ではないため、付けてはいけません。
+
+**境界はグラフとして評価する**
+
+個別ファイルに `'use client'` があるかだけを見てはいけません。**境界は直近の親である必要がなく、上位にあれば足ります。**
+
+```text
+DatePicker/Portal.tsx  ← DatePicker.tsx（'use client' 有）
+Menu.tsx  ← MobileHeader.tsx  ← AppHeader.tsx（'use client' 有）
+```
+
+いずれも client グラフ内にあるため、モジュールスコープの処理がサーバ側で評価されることはありません。
+
+判定するには、バレル（`src/index.ts`）から `'use client'` を跨がずに到達できるモジュールの集合（サーバグラフ）を求め、その中で client 専用 API を使うものを探します。
+
+- **モジュールスコープで呼ぶもの** — import された時点で例外。必ず修正が必要
+- **hook** — モジュールスコープでは何も実行しない。呼び出し元が client グラフ内なら問題ない
+- **コンポーネント** — 実際にレンダリングされる経路を確認する。バレルからの再エクスポートだけなら問題ない
+
+**ビルド出力での確認**
+
+rollup は `preserveModules: true` を使っており、ディレクティブはモジュール単位で出力に保持されます。
+
+```sh
+cd packages/smarthr-ui && npx rollup --config rollup.esm.config.js
+head -1 lib/<対象>.js   # "use client"; が先頭に来る
+```
+
+**注意が必要なもの**
+
+- `styled-components@5.3.11` — モジュールスコープで `createContext` を呼びガードが無いため、`react-server` 条件で import した時点で `TypeError` になる。これを import する経路があると Server Component にできない
+
+  RSC に対応するのは **v6.3.0 以降**。v6.0〜v6.2 は未対応で、実測でも `v6.2.0` は `TypeError`、`v6.3.0` は成功する。`StyleSheetManager` の RSC 対応はさらに後の v6.4.0 から。なお peer は `^5.0.1` のため、更新は破壊的変更になる
+- ブラウザグローバル（`window` `document` `navigator`）— `typeof window !== 'undefined'` でガードされていれば SSR では落ちないが、Server Component では常に else 側に倒れる。挙動として許容できるか判断が必要
+- **関数を props で渡している箇所** — Server Component は通常の関数をシリアライズできないため、host 要素にも Client Component にも渡せない
+
+  ```tsx
+  // ❌ どちらもServer Componentでは不可
+  <button onClick={handleClick}>...</button>
+  <ClientButton onClick={handleClick} />
+  ```
+
+  例外として、`'use server'` で定義した **Server Function は Client Component の props として渡せます**。フレームワークが参照に変換し、呼び出し時にサーバへのリクエストになります。ただし host 要素のイベントハンドラには渡せません。
+
+  また値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
+
+**検証**
+
+`'use client'` の削除は DOM に影響しないため、`innerHTML` を比較して同一であることを確認します。
+
 ### コンポーネントのブラックボックス原則
 
 他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。
@@ -476,6 +678,20 @@ const functions = useMemo(() => {
 ```
 
 最終的なfunctionsオブジェクトには、JSX内で使用する関数や、useEffect等で外部から参照する関数のみを含めます。
+
+**functionsは再作成されないように作る:**
+
+`functions` の依存配列には `latest` と、安定していることが保証できる値のみを含めます。上記の boolean 化した値（`hasHrefTemplate` など）も安定しているため含めて構いません。
+
+```typescript
+// ✅ latest と boolean化した値のみ。再作成されない
+const functions = useMemo(() => ({ ... }), [hasHrefTemplate, latest])
+
+// ❌ ユーザー操作で変化する値を含めると再作成される
+const functions = useMemo(() => ({ ... }), [isExpanded, latest])
+```
+
+`functions` が再作成されると、それを依存配列に持つ他の hook まで連鎖して再実行されます。ユーザー操作で変化し得る値は依存配列に入れず、`latest` 経由で参照してください。
 
 **依存配列の順序ルール:**
 functionsを他のhookの依存配列に含める場合、基本的に最後尾に配置しますが、`latest`（useLatestの結果）よりは前に配置します：
@@ -910,6 +1126,150 @@ const fullName = `${firstName} ${lastName}`
 ```
 
 **理由:** 単純な派生値のためだけに `state` と `useEffect` を使うと、レンダーが1回余分に発生し、値が一時的に古いまま表示される瞬間が生まれる。計算コストが高い場合のみ `useMemo` を使う。
+
+#### useEffectは可能な限り1つにまとめる
+
+`useEffect` を分けるほど、処理のきっかけと順序が追いにくくなります。同じきっかけで走るものは1つにまとめてください。
+
+**1. 同じ依存配列のeffectは統合する**
+
+```tsx
+// ❌ isOpenを見るeffectと、リスナー登録のeffectが分かれている
+useEffect(() => {
+  if (isOpen) {
+    setPosition({ x: 0, y: 0 })
+    focusTargetRef.current?.focus()
+  }
+}, [isOpen])
+
+useEffect(() => {
+  document.addEventListener('focus', focusHandler, true)
+  return () => document.removeEventListener('focus', focusHandler, true)
+}, [])
+
+// ✅ 1つにまとめる
+useEffect(() => {
+  if (isOpen) {
+    setPosition({ x: 0, y: 0 })
+    focusTargetRef.current?.focus()
+  }
+
+  document.addEventListener('focus', focusHandler, true)
+
+  return () => document.removeEventListener('focus', focusHandler, true)
+}, [isOpen])
+```
+
+**2. 依存配列の `latest` / `functions` は無視してよい**
+
+どちらも再作成されない前提で作るため、再実行のきっかけになりません。
+
+```tsx
+// この2つは実質どちらも isOpen でしか再実行されない → 統合できる
+useEffect(() => { ... }, [isOpen])
+useEffect(() => { ... }, [isOpen, functions, latest])
+```
+
+**3. stateを介した多段構成にしない**
+
+state の更新を待って次の effect が走る形は、レンダリングを余分に発生させ、処理の流れも追いにくくなります。次の値を先に算出し、同じ effect 内で使い切ってください。
+
+```tsx
+// ❌ stateの更新を待って次のeffectが走る3段構成
+useEffect(() => {
+  setDefaultPosition((current) => /* 算出 */)
+}, [isOpen])
+
+useEffect(() => {
+  /* defaultPositionを見て中央寄せを計算し setCentering */
+}, [isOpen, defaultPosition])
+
+useEffect(() => {
+  /* centeringを見て setDraggableBounds */
+}, [isOpen, centering.top])
+
+// ✅ 次の値を先に算出して同じeffect内で使い切る
+useEffect(() => {
+  const nextDefaultPosition = /* latestから算出 */
+  setDefaultPosition(nextDefaultPosition)
+
+  const nextCentering = /* nextDefaultPositionから算出 */
+  setCentering(nextCentering)
+  setDraggableBounds(/* nextCenteringから算出 */)
+}, [isOpen, functions, latest])
+```
+
+更新関数形式（`setX((current) => ...)`）をやめ、`latest` から現在値を読んで次の値を先に確定させるのが要点です。
+
+**4. cleanupを独立したeffectに持たせない**
+
+```tsx
+// ❌ cleanupのためだけのeffect
+useEffect(() => functions.cleanup, [functions])
+
+// ✅ 対応するeffectのcleanupにまとめる
+useEffect(() => {
+  // ...
+
+  return () => {
+    functions.cleanup()
+    document.removeEventListener('focus', focusHandler, true)
+  }
+}, [isOpen, functions, latest])
+```
+
+**5. 条件分岐の内側に副作用を入れない**
+
+統合する際、まとめた先の条件分岐の内側に入れてしまうと、その条件を満たさないケースで処理が走らなくなります。
+
+```tsx
+// ❌ 中央寄せの計算に紛れ込ませた結果、中央寄せしない場合にboundsが更新されない
+if (isXCenter || isYCenter) {
+  const nextCentering = /* 算出 */
+  setCentering(nextCentering)
+  setDraggableBounds(/* ... */)
+}
+
+// ✅ 条件に依存しない副作用はifの外に置く
+let nextCentering = latest.centering
+
+if (isXCenter || isYCenter) {
+  nextCentering = /* 算出 */
+  setCentering(nextCentering)
+}
+
+// HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+setDraggableBounds(/* nextCenteringから算出 */)
+```
+
+**6. early returnとcleanupの噛み合わせに注意**
+
+早期 return は cleanup を返しませんが、effect が再実行される際には前回の cleanup が先に走ります。この組み合わせで処理が失われることがあります。
+
+```tsx
+// ❌ 2回目の実行で、前回のcleanupがcancelしたあと早期returnしてしまう
+useEffect(() => {
+  // 1回目: debounceをスケジュールし、cleanupにcancelを返す
+  // 2回目: cleanupでcancelが実行される → 値が同じなので早期return
+  //        → スケジュールが取り消されたまま何も設定されない
+  if (前回と同じ) {
+    return
+  }
+
+  debounced(txt)
+
+  return debounced.cancel
+}, [deps])
+```
+
+値の変化を検知したいだけなら、`useEffect` ではなく値を更新する処理側から実行する形（`requestAnimationFrame` など）を検討してください。
+
+**統合時の検証**
+
+effect の統合は「最終状態は同じだが途中経過が変わる」変更になりやすく、DOM の最終状態を比較するだけでは不十分です。
+
+- 内部 state が DOM に出ない場合は、渡し先のコンポーネントをモックして prop を捕捉する
+- `debounce` や `requestAnimationFrame` を挟む場合はフェイクタイマーで経過させる
 
 ## スキル
 

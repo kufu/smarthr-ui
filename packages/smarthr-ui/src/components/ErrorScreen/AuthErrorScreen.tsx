@@ -12,14 +12,14 @@ type Props = {
 
 export const AuthErrorScreen: FC<Props> = ({ smarthrUrl }) => (
   <ErrorScreen
-    title={
-      <Localizer id="smarthr-ui/AuthErrorScreen/title" defaultText="認証で問題が発生しました" />
-    }
     links={[
       {
         label: <Localizer id="smarthr-ui/ErrorScreen/smarthrLink" defaultText="SmartHR に戻る" />,
         url: smarthrUrl,
       },
     ]}
+    title={
+      <Localizer id="smarthr-ui/AuthErrorScreen/title" defaultText="認証で問題が発生しました" />
+    }
   />
 )

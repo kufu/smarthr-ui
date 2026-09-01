@@ -1,8 +1,9 @@
 import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useLatest } from '../useLatest'
+
 import { useEnhancedEffect } from './useEnhancedEffect'
-import { useLatest } from './useLatest'
 
 type ParentContextValue = {
   seqs: number[]
@@ -54,37 +55,28 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
   }, [latest])
 
   useEnhancedEffect(() => {
-    // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
-    setPortalRoot((current) => {
-      const root = current || document.createElement('div')
+    // Next.jsのhydration error回避のため、マウント後にdivを作成してdocument.bodyに追加する
+    const root = document.createElement('div')
 
-      if (rootId) {
-        root.setAttribute('id', rootId)
-      }
-
-      return root
-    })
-  }, [rootId])
-
-  useEnhancedEffect(() => {
-    if (!portalRoot) {
-      return
-    }
-
-    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
-    document.body.appendChild(portalRoot)
+    document.body.appendChild(root)
+    setPortalRoot(root)
 
     return () => {
-      portalRoot.remove()
+      root.remove()
     }
-  }, [portalRoot, calculatedSeqs.portalChildOf])
+  }, [])
 
-  return {
-    portalRoot,
-    isChildPortal: functions.isChildPortal,
-    createPortal: functions.createPortal,
-    PortalParentProvider: functions.PortalParentProvider,
-  }
+  useEnhancedEffect(() => {
+    if (!portalRoot) return
+
+    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
+
+    if (rootId) {
+      portalRoot.setAttribute('id', rootId)
+    }
+  }, [calculatedSeqs.portalChildOf, portalRoot, rootId])
+
+  return functions
 }
 
 function _isChildPortal(element: HTMLElement | SVGElement | null, seqRegex: RegExp): boolean {

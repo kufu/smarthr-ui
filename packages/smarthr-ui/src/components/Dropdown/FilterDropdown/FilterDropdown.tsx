@@ -146,7 +146,7 @@ export const FilterDropdown: FC<Props> = ({
 
       {filtered && (
         // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-        <FaCircleCheckIcon aria-label={filteredIconAlt} className={classNames.filteredIcon} />
+        <FaCircleCheckIcon className={classNames.filteredIcon} aria-label={filteredIconAlt} />
       )}
     </span>
   )
@@ -157,7 +157,7 @@ export const FilterDropdown: FC<Props> = ({
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <DropdownTrigger tooltip={{ show: trigger.onlyIcon, message: triggerText }}>
-        <Button {...rest} suffix={suffix} size={trigger.size}>
+        <Button {...rest} size={trigger.size} suffix={suffix}>
           {content}
         </Button>
       </DropdownTrigger>
@@ -169,11 +169,11 @@ export const FilterDropdown: FC<Props> = ({
               {onReset && (
                 <div className={classNames.resetButtonArea}>
                   <Button
+                    disabled={calcedResponseStatus.isProcessing}
                     variant="text"
                     size="S"
-                    prefix={<FaRotateLeftIcon />}
                     onClick={onReset}
-                    disabled={calcedResponseStatus.isProcessing}
+                    prefix={<FaRotateLeftIcon />}
                   >
                     {resetText || (
                       <Localizer
@@ -191,7 +191,7 @@ export const FilterDropdown: FC<Props> = ({
                 className={classNames.rightButtonArea}
               >
                 <DropdownCloser>
-                  <Button onClick={onCancel} disabled={calcedResponseStatus.isProcessing}>
+                  <Button disabled={calcedResponseStatus.isProcessing} onClick={onCancel}>
                     {cancelText || (
                       <Localizer
                         id="smarthr-ui/FilterDropdown/cancelText"
@@ -202,9 +202,9 @@ export const FilterDropdown: FC<Props> = ({
                 </DropdownCloser>
                 <DropdownCloser>
                   <Button
+                    loading={calcedResponseStatus.isProcessing}
                     variant="primary"
                     onClick={onApply}
-                    loading={calcedResponseStatus.isProcessing}
                   >
                     {applyText || (
                       <Localizer id="smarthr-ui/FilterDropdown/applyText" defaultText="適用" />
@@ -215,7 +215,7 @@ export const FilterDropdown: FC<Props> = ({
             </Cluster>
             {calcedResponseStatus.message && (
               <div className={classNames.message}>
-                <ResponseMessage status={calcedResponseStatus.status} role="alert">
+                <ResponseMessage role="alert" status={calcedResponseStatus.status}>
                   {calcedResponseStatus.message}
                 </ResponseMessage>
               </div>

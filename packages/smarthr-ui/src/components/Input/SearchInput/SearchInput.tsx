@@ -46,13 +46,13 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
+          className={classNames.input}
           prefix={
             <FaMagnifyingGlassIcon
               alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
               color="TEXT_GREY"
             />
           }
-          className={classNames.input}
         />
       </label>
     )

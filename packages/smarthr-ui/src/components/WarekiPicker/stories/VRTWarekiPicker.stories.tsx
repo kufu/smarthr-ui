@@ -28,26 +28,26 @@ export default {
             <WarekiPicker
               {...args}
               name="warekipicker_default"
-              error={m.error}
               disabled={m.disabled}
+              error={m.error}
             />
             <WarekiPicker
               name="warekipicker_value"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
             />
             <WarekiPicker
               name="warekipicker_width"
-              error={m.error}
               disabled={m.disabled}
+              error={m.error}
               width={width}
             />
             <WarekiPicker
               name="warekipicker_formatdate"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
               formatDate={formatDate}
             />
           </>
