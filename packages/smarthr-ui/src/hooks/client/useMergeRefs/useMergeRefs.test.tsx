@@ -315,4 +315,52 @@ describe('useMergeRefs', () => {
       expect(latestRef).toHaveBeenCalledWith(getByTestId('target'))
     })
   })
+
+  describe('実装が前提にしていること（regression guard）', () => {
+    // このテストはReactの実際の挙動を検証するものではなく、Reactの内部スケジューリングを
+    // 手動でバイパスして「差し替え時のcleanup->setupが同一マイクロタスク内で完結しなくなった場合」
+    // を人工的に再現する。実装コメント（useMergeRefs.ts）に記載の将来リスク（<ViewTransition>の
+    // stable化でmutation/layoutフェーズ間に非同期の中断が入りうる）が現実になった場合の
+    // 影響範囲を示すためのもの。このテストがpassし続けること自体は「今は前提が成立している」
+    // ことを意味しない点に注意。前提が崩れると何が起きるかを固定するためのテスト
+    test('cleanupとsetupの間にマイクロタスクが挟まると、参照が変わっていないrefまで誤って再実行される', async () => {
+      const internalCleanup = vi.fn()
+      const internal = vi.fn(() => internalCleanup)
+      const oldExternal = vi.fn()
+      const newExternal = vi.fn()
+
+      const { result, rerender } = renderHook(
+        ({ ext }: { ext: typeof oldExternal }) => useMergeRefs(internal, ext),
+        { initialProps: { ext: oldExternal } },
+      )
+
+      const node = {} as HTMLDivElement
+      // 現実のReactでの「setup A」に相当
+      const cleanupA = result.current(node)
+
+      expect(internal).toHaveBeenCalledTimes(1)
+
+      // refsが変わる（rerenderで新しいcallback関数を生成させる）。
+      // 現実のReactでは、この直後に同期的に「cleanupA -> setupB」が呼ばれる
+      rerender({ ext: newExternal })
+
+      const setupB = result.current
+
+      // 現実のReact: cleanupA() の直後、同期的にsetupB(node) が呼ばれる。
+      // ここでは「Reactの将来の実装変化」を想定し、間にマイクロタスクを1つ挟んでみる
+      cleanupA?.()
+
+      await Promise.resolve()
+
+      // この時点で、setupBはまだ呼ばれていないのに、internalが誤ってcleanupされていないか
+      const cleanupCalledBeforeNewSetup = internalCleanup.mock.calls.length > 0
+
+      setupB(node)
+
+      // 実装が前提にしている「同一マイクロタスク内」が崩れると、
+      // 参照が変わっていないinternalまで誤って再実行されてしまう
+      expect(cleanupCalledBeforeNewSetup).toBe(true)
+      expect(internal).toHaveBeenCalledTimes(2)
+    })
+  })
 })
