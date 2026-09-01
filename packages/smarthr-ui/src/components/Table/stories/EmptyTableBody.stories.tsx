@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Table } from '../Table'
 import { Th } from '../Th'
-import { EmptyTableBody } from '../client/components'
+import { EmptyTableBody } from '../client'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 

@@ -6,7 +6,7 @@ import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
 import { WakuWakuButton } from '../WakuWakuButton'
-import { BulkActionRow, ThCheckbox } from '../client/components'
+import { BulkActionRow, ThCheckbox } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

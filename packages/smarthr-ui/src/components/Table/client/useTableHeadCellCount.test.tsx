@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 
-import { Table } from '../../../Table'
-import { Th } from '../../../Th'
+import { Table } from '../Table'
+import { Th } from '../Th'
 
 import { useTableHeadCellCount } from './useTableHeadCellCount'
 

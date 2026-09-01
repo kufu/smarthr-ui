@@ -7,7 +7,7 @@ import {
 
 import { Scroller } from '../Scroller'
 
-import { FixedHeadTableScroller } from './client/components'
+import { FixedHeadTableScroller } from './client'
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {

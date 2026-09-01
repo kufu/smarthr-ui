@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
-import { TableScroller } from '../../TableScroller'
-import { reelShadowClassNameGenerator } from '../../reelShadowStyle'
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
+import { TableScroller } from '../TableScroller'
+import { reelShadowClassNameGenerator } from '../reelShadowStyle'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'

@@ -3,10 +3,11 @@
 import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Td } from '../../Td'
-import { useTableHeadCellCount } from '../hooks/useTableHeadCellCount'
+import { Td } from '../Td'
 
-import type { Gap } from '../../../../types'
+import { useTableHeadCellCount } from './useTableHeadCellCount'
+
+import type { Gap } from '../../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 
