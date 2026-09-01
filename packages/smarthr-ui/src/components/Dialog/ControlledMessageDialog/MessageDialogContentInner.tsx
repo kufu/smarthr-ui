@@ -1,4 +1,5 @@
 import { type FC, type ReactNode, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -27,6 +28,20 @@ export type MessageDialogContentInnerProps = BaseProps & {
   handleClickClose: () => void
 }
 
+const messageDialogContentInner = tv({
+  extend: dialogContentInner,
+  slots: {
+    header: '',
+  },
+  variants: {
+    mobileType: {
+      sheet: {
+        header: 'shr-py-0.5',
+      },
+    },
+  },
+})
+
 export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   heading,
   contentBgColor,
@@ -40,17 +55,18 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   const isSheet = mobileType === 'sheet'
 
   const classNames = useMemo(() => {
-    const { wrapper, actionArea } = dialogContentInner()
+    const { wrapper, actionArea, header } = messageDialogContentInner()
 
     return {
       wrapper: wrapper({ mobileType }),
       actionArea: actionArea({ mobile, mobileType }),
+      header: header({ mobileType }),
     }
   }, [mobileType, mobile])
 
   return (
     <Section className={classNames.wrapper}>
-      <DialogHeader mobile={mobile} mobileType={mobileType}>
+      <DialogHeader mobile={mobile} mobileType={mobileType} className={classNames.header}>
         <DialogHeading {...heading} />
         {isSheet && (
           <CloseButton iconOnly handleClickClose={handleClickClose} closeButton={closeButton} />
