@@ -1,7 +1,8 @@
 import { renderHook } from '@testing-library/react'
 import styled from 'styled-components'
 
-import { SectioningFragment } from './SectioningContent'
+import { SectioningFragment } from '../components'
+
 import { useSectionWrapper } from './useSectioningWrapper'
 
 describe('useSectionWrapper', () => {

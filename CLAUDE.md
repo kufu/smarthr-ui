@@ -257,12 +257,18 @@ rollup は `preserveModules: true` でもバレルを平坦化し、import 元�
 import { forwardRef } from 'react';
 import './client/components/LevelContext.js';
 import { SectioningFragment } from './client/components/SectioningFragment.js';
-import 'styled-components';    // ← hooks 側の依存が転記され、RSC で TypeError になる
+import 'styled-components';    // ← hooks 側の依存が転記される
 ```
 
 `components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
 
 なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
+**この転記は Next.js 実利用では顕在化しないが、それでも作らない**
+
+`sandbox/next`（`smarthr-ui: workspace:*`）で実測したところ、`client/index.ts` を作った状態でも `next build` / `next dev` は問題なく成功し、`Section` は Server Component として描画され、RSC 側の依存一覧（`page.js.nft.json`）に `styled-components` は含まれませんでした。`package.json` の `sideEffects` 宣言（`lib/*.js` を side-effect-free と宣言）により、Turbopack/webpack が副作用 import をツリーシェイクで除去するためです。
+
+一方、素の `node --conditions react-server` で当該ファイルを直接評価すると `TypeError: r.createContext is not a function` になります。バンドラを経由しない実行では顕在化するため、**バンドラの `sideEffects` 最適化に依存しない構成を保つ**という意味で、`client/index.ts` は作らない方針を維持します。
 
 **共有 hook（`src/hooks/`）の場合**
 
@@ -313,6 +319,53 @@ rollup は `preserveModules: true` を使っており、ディレクティブは
 cd packages/smarthr-ui && npx rollup --config rollup.esm.config.js
 head -1 lib/<対象>.js   # "use client"; が先頭に来る
 ```
+
+ディレクティブの有無だけでなく、**出力の import 文も必ず確認してください。** ソース上は経由していないモジュールの依存が、バレルの平坦化によって転記されている場合があります。
+
+```sh
+grep -n '^"use client"\|^import' lib/components/<対象>.js
+```
+
+**RSC として評価できるかの実測**
+
+素の node は `'use client'` を無視して全モジュールを評価するため、そのままでは Next.js の挙動を再現できません。`'use client'` を持つモジュールを stub に差し替えるローダーを噛ませると再現できます。
+
+```js
+// loader.mjs
+import { readFile } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
+
+export async function load(url, ctx, next) {
+  if (url.startsWith('file:') && /\.(js|mjs)$/.test(url)) {
+    const src = await readFile(fileURLToPath(url), 'utf8')
+    if (/^\s*["']use client["']/.test(src)) {
+      const names = [...src.matchAll(/export\s*\{([^}]*)\}/g)].flatMap((m) =>
+        m[1].split(',').map((s) => s.trim().split(/\s+as\s+/).pop()).filter(Boolean),
+      )
+      const body = [...new Set(names)].map((n) => `export const ${n} = '__client_ref__';`).join('\n')
+      return { format: 'module', shortCircuit: true, source: body || 'export {};' }
+    }
+  }
+  return next(url, ctx)
+}
+```
+
+```sh
+node --conditions react-server --experimental-loader ./loader.mjs \
+  -e "import('<絶対パス>/lib/components/<対象>.js').then(()=>console.log('OK'),(e)=>console.log('THROW',e.message))"
+```
+
+**ツリーシェイクで落ちるかの実測**
+
+`export ... from` による re-export はバンドラが落とせるため、素の node で THROW してもそれだけでは実害の判定になりません。実際にバンドルして混入を確認します。
+
+```sh
+esbuild entry.mjs --bundle --format=esm --platform=node --conditions=react-server \
+  --external:react --external:react-dom --external:react/jsx-runtime --outfile=out.js
+grep -c 'styledComponentId' out.js   # 0 なら落ちている
+```
+
+副作用 import（`import 'styled-components'`）は `package.json` の `sideEffects` 宣言に依存して落ちるかが決まるため、**そもそも出力に出さない構成にするのが安全です。**
 
 **注意が必要なもの**
 

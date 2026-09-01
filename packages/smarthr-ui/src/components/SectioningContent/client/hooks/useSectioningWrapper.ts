@@ -5,7 +5,7 @@ import { type ComponentType, useMemo } from 'react'
 // 'use client'を外せない（Layout配下・Panelが該当）。
 import { isStyledComponent } from 'styled-components'
 
-import { SectioningFragment } from './SectioningContent'
+import { SectioningFragment } from '../components'
 
 type AsType = string | ComponentType<any>
 
