@@ -34,8 +34,8 @@ export const Size: StoryObj<typeof InputFile> = {
   name: 'size',
   render: (args) => (
     <Stack>
-      {[undefined, 'default', 's'].map((size) => (
-        <InputFile {...args} key={size} size={size as any} />
+      {([undefined, 'M', 'S'] as const).map((size) => (
+        <InputFile {...args} key={String(size)} size={size} />
       ))}
     </Stack>
   ),
