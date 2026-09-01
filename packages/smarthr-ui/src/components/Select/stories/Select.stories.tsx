@@ -72,8 +72,8 @@ export const Size: StoryObj<typeof Select> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, 'default', 's'].map((size) => (
-        <Select {...args} key={size} size={size as any} />
+      {([undefined, 'M', 'S'] as const).map((size) => (
+        <Select {...args} key={String(size)} size={size} />
       ))}
     </Stack>
   ),

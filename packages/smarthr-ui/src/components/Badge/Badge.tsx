@@ -5,9 +5,11 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
+
+type Color = 'grey' | 'blue' | 'yellow' | 'red'
 
 type BaseProps = PropsWithChildren<{
   /** 件数 */
@@ -16,8 +18,13 @@ type BaseProps = PropsWithChildren<{
   overflowCount?: number
   /** 0値を表示するかどうか */
   showZero?: boolean
-  /** 色の種類 */
-  type?: VariantProps<typeof classNameGenerator>['color']
+  /**
+   * 色の種類
+   *
+   * TODO: HTMLのtype属性と紛れやすく、tv側のvariant名もcolorであるため、
+   * 破壊的変更を伴うタイミングでcolorへリネームする
+   */
+  type?: Color
   /** ドット表示するかどうか */
   dot?: boolean
 }>
@@ -28,74 +35,43 @@ const classNameGenerator = tv({
     wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
     pill: [
       'shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums forced-colors:shr-outline',
+      'shr-box-border shr-flex shr-items-center shr-justify-center shr-rounded-full',
     ],
-    dotElement: ['shr-h-[0.625em] shr-w-[0.625em] forced-colors:shr-outline'],
+    dotElement: [
+      'shr-h-[0.625em] shr-w-[0.625em] forced-colors:shr-outline',
+      'shr-box-border shr-flex shr-items-center shr-justify-center shr-rounded-full',
+    ],
   },
   variants: {
     color: {
-      grey: {},
-      blue: {},
-      yellow: {},
-      red: {},
+      grey: {
+        pill: 'shr-bg-[theme(colors.grey.65)] shr-text-white shr-shadow-[0_0_0_1px_theme(colors.white)]',
+        dotElement: 'shr-bg-[theme(colors.grey.65)] shr-shadow-[0_0_0_1px_theme(colors.white)]',
+      },
+      blue: {
+        pill: 'shr-bg-main shr-text-white shr-shadow-[0_0_0_1px_theme(colors.white)]',
+        dotElement: 'shr-bg-main shr-shadow-[0_0_0_1px_theme(colors.white)]',
+      },
+      yellow: {
+        pill: 'shr-bg-warning-yellow shr-text-black shr-shadow-[0_0_0_1px_theme(colors.black)]',
+        dotElement: 'shr-bg-warning-yellow shr-shadow-[0_0_0_1px_theme(colors.black)]',
+      },
+      red: {
+        pill: 'shr-bg-danger shr-text-white shr-shadow-[0_0_0_1px_theme(colors.white)]',
+        dotElement: 'shr-bg-danger shr-shadow-[0_0_0_1px_theme(colors.white)]',
+      },
     },
     withChildren: {
-      true: {},
+      // HINT: pill・dotElementで同一の指定になるためcompoundSlotsで扱う
+      true: '',
     },
   },
   compoundSlots: [
     {
       slots: ['pill', 'dotElement'],
-      className: [
-        'shr-box-border shr-flex shr-items-center shr-justify-center',
-        'shr-rounded-full',
-      ],
-    },
-    {
-      slots: ['pill', 'dotElement'],
       withChildren: true,
-      className: [
+      className:
         'shr-absolute -shr-translate-y-1/2 shr-translate-x-1/2 [inset-block-start:0] [inset-inline-end:0]',
-      ],
-    },
-    {
-      slots: ['pill', 'dotElement'],
-      color: 'blue',
-      className: 'shr-bg-main',
-    },
-    {
-      slots: ['pill', 'dotElement'],
-      color: 'yellow',
-      className: 'shr-bg-warning-yellow',
-    },
-    {
-      slots: ['pill', 'dotElement'],
-      color: 'red',
-      className: 'shr-bg-danger',
-    },
-    {
-      slots: ['pill', 'dotElement'],
-      color: 'grey',
-      className: 'shr-bg-[theme(colors.grey.65)]',
-    },
-    {
-      slots: ['pill', 'dotElement'],
-      color: ['grey', 'blue', 'red'],
-      className: 'shr-shadow-[0_0_0_1px_theme(colors.white)]',
-    },
-    {
-      slots: ['pill', 'dotElement'],
-      color: 'yellow',
-      className: 'shr-shadow-[0_0_0_1px_theme(colors.black)]',
-    },
-    {
-      slots: ['pill'],
-      color: ['grey', 'blue', 'red'],
-      className: 'shr-text-white',
-    },
-    {
-      slots: ['pill'],
-      color: ['yellow'],
-      className: 'shr-text-black',
     },
   ],
 })

@@ -19,8 +19,8 @@ import Draggable, { type DraggableBounds } from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { useHandleEscape } from '../../../hooks/useHandleEscape'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
 import { debounce } from '../../../libs/debounce'
@@ -404,7 +404,9 @@ export const ModelessDialog: FC<Props> = ({
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
-  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
+  // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際
+  // 常に表示される要素ならなんでもいいので分けている
+  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
   return createPortal(
     <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
@@ -437,8 +439,13 @@ export const ModelessDialog: FC<Props> = ({
           }}
           aria-labelledby={labelId}
         >
+          {/* HINT: Dialogが表示される場合、常に表示される要素にescapeCallbackRefを設定する。表示条件が入るなどした場合要調整 */}
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
+          <div
+            ref={escapeCallbackRef}
+            tabIndex={-1}
+            className="smarthr-ui-ModelessDialog-firstFocusTarget"
+          />
           <div className={classNames.header}>
             <Handler
               className={classNames.dialogHandler}

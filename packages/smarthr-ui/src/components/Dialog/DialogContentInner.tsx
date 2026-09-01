@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
@@ -118,17 +118,25 @@ export const DialogContentInner: FC<Props> = ({
   // width は deprecated なので、size が指定されている場合は width を無視する
   const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
-  const latest = useLatest({ onPressEscape, onClickOverlay })
+  const latest = useLatest({ isOpen, onPressEscape, onClickOverlay })
 
   const functions = useMemo(
     () => ({
-      handlePressEscape: () => latest.onPressEscape?.(),
-      handleClickOverlay: () => latest.onClickOverlay?.(),
+      handlePressEscape: () => {
+        if (latest.isOpen) {
+          latest.onPressEscape?.()
+        }
+      },
+      handleClickOverlay: () => {
+        if (latest.isOpen) {
+          latest.onClickOverlay?.()
+        }
+      },
     }),
     [latest],
   )
 
-  useHandleEscape(isOpen ? functions.handlePressEscape : undefined)
+  const callbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
   useEffect(() => {
     if (!isOpen) return
@@ -151,6 +159,7 @@ export const DialogContentInner: FC<Props> = ({
   return (
     <DialogOverlap isOpen={isOpen}>
       <div
+        ref={callbackRef}
         id={id}
         className={classNames.layout}
         style={actualWidth ? { width: actualWidth } : undefined}
