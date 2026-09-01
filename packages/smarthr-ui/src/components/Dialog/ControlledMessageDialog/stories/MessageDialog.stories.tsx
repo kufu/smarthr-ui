@@ -117,6 +117,18 @@ export const PortalParent: StoryObj<typeof ControlledMessageDialog> = {
   },
 }
 
+export const MobileType: StoryObj<typeof ControlledMessageDialog> = {
+  name: 'mobileType',
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+  },
+}
+
 export const Width: StoryObj<typeof ControlledMessageDialog> = {
   name: 'width（非推奨）',
   args: {

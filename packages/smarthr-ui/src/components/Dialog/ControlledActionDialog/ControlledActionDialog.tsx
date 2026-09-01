@@ -5,6 +5,7 @@ import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
+import { useControlledMobile } from '../useControlledMobile'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -23,7 +24,7 @@ type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
 
 type BaseProps = Omit<
   ActionDialogContentInnerProps,
-  'heading' | 'actionButton' | 'closeButton' | 'handleClickAction' | 'handleClickClose'
+  'heading' | 'actionButton' | 'closeButton' | 'handleClickAction' | 'handleClickClose' | 'mobile'
 > &
   DialogProps & {
     heading: HeadingType
@@ -61,9 +62,13 @@ export const ControlledActionDialog: FC<Props> = ({
   portalParent,
   id,
   isOpen,
+  mobileType: orgMobileType,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
+
+  const { mobile, mobileType } = useControlledMobile(orgMobileType)
+
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -99,6 +104,7 @@ export const ControlledActionDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
+      mobileType={mobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
@@ -107,6 +113,8 @@ export const ControlledActionDialog: FC<Props> = ({
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         responseStatus={responseStatus}
+        mobile={mobile}
+        mobileType={mobileType}
         handleClickClose={functions.handleClickClose}
         handleClickAction={functions.handleClickAction}
         heading={heading}

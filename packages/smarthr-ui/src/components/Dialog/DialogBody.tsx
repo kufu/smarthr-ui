@@ -8,6 +8,7 @@ import type { Gap } from '../../types'
 
 export type Props = PropsWithChildren<
   Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
+    mobile: boolean
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
     className?: string | undefined
   } & Pick<ComponentProps<'div'>, 'ref'>
@@ -22,8 +23,14 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
-  const initialized = contentPadding === undefined ? 1.5 : contentPadding
+export const DialogBody: FC<Props> = ({
+  mobile,
+  contentBgColor,
+  contentPadding,
+  className,
+  ...rest
+}) => {
+  const initialized = contentPadding === undefined ? (mobile ? 1 : 1.5) : contentPadding
   const actualPaddings =
     initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
 

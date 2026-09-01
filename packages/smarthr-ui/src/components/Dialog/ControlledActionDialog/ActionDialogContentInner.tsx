@@ -7,6 +7,7 @@ import {
   type ReactNode,
   memo,
   useCallback,
+  useMemo,
 } from 'react'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -16,11 +17,19 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 export type ActionDialogHelpers = {
   close: () => void
+}
+
+type SubActionAreaHelpers = {
+  /**
+   * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+   */
+  mobileType?: 'sheet'
 }
 
 type ObjectActionButtonType = {
@@ -54,7 +63,11 @@ export type BaseProps = PropsWithChildren<
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
-    subActionArea?: ReactNode
+    subActionArea?: ReactNode | ((helpers: SubActionAreaHelpers) => ReactNode)
+    /**
+     * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+     */
+    mobileType?: 'sheet'
   }
 >
 
@@ -64,17 +77,6 @@ export type ActionDialogContentInnerProps = BaseProps & {
 }
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
-
-const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-
-  return {
-    wrapper: wrapper(),
-    actionArea: actionArea(),
-    buttonArea: buttonArea(),
-    message: message(),
-  }
-})()
 
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
@@ -87,21 +89,44 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   responseStatus,
   closeButton,
   subActionArea,
+  mobileType,
+  mobile,
 }) => {
   const calcedResponseStatus = useResponseStatus(responseStatus)
+  const actualSubActionArea =
+    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
+
+  const classNames = useMemo(() => {
+    const { wrapper, actionArea, actionAreaInner, buttonArea, message } = dialogContentInner()
+    const commonAttrs = { mobileType }
+
+    return {
+      wrapper: wrapper(commonAttrs),
+      actionArea: actionArea({ mobile, mobileType }),
+      actionAreaInner: actionAreaInner(commonAttrs),
+      buttonArea: buttonArea(commonAttrs),
+      message: message(),
+    }
+  }, [mobileType, mobile])
 
   return (
-    <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
-      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+    <Section className={classNames.wrapper}>
+      <DialogHeader mobile={mobile} mobileType={mobileType}>
+        <DialogHeading {...heading} />
+      </DialogHeader>
+      <DialogBody mobile={mobile} contentPadding={contentPadding} contentBgColor={contentBgColor}>
         {children}
       </DialogBody>
-      <div className={CLASS_NAMES.actionArea}>
-        <Cluster justify="space-between">
-          {subActionArea}
+      <div className={classNames.actionArea}>
+        <Cluster
+          gap={ACTION_AREA_CLUSTER_GAP}
+          justify="space-between"
+          className={classNames.actionAreaInner}
+        >
+          {actualSubActionArea}
           <ActionAreaCluster
             loading={calcedResponseStatus.isProcessing}
-            className={CLASS_NAMES.buttonArea}
+            className={classNames.buttonArea}
             handleClickClose={handleClickClose}
             handleClickAction={handleClickAction}
             closeButton={closeButton}
@@ -110,7 +135,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         </Cluster>
         <DialogContentResponseStatusMessage
           responseStatus={calcedResponseStatus}
-          className={CLASS_NAMES.message}
+          className={classNames.message}
         />
       </div>
     </Section>

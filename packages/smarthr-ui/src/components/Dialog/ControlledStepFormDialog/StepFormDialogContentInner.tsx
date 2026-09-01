@@ -1,22 +1,16 @@
 'use client'
 
-import {
-  type FC,
-  type FormEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useContext,
-  useMemo,
-} from 'react'
+import { type FC, type FormEvent, type PropsWithChildren, useContext, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Button } from '../../Button'
-import { Cluster } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
@@ -51,6 +45,10 @@ export type BaseProps = PropsWithChildren<
     closeButton: CommonButtonType
     /** 戻るボタン */
     backButton: CommonButtonType
+    /**
+     * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+     */
+    mobileType?: 'sheet'
   }
 >
 
@@ -68,16 +66,25 @@ const BUTTON_COLUMN_GAP = {
   column: 1,
 } as const
 
-const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
-
-  return {
-    wrapper: wrapper(),
-    actionArea: actionArea(),
-    buttonArea: buttonArea(),
-    message: message(),
-  }
-})()
+// StepFormDialog はフッターのボタン構成（戻る / キャンセル / 送信）が他 Dialog と異なるため、
+// sheet 時のレイアウト用クラスを共有 dialogContentInner とは別にこのローカル tv で持つ。
+const stepFormDialogFooter = tv({
+  slots: {
+    // sheet 時、戻る+送信を横並び全幅（各 flex-1）にする上段
+    sheetButtonRow: 'shr-flex-nowrap [&>button]:shr-flex-1',
+    backButton: 'smarthr-ui-Dialog-backButton',
+    closeButton: 'smarthr-ui-Dialog-closeButton',
+    submitButton: 'smarthr-ui-Dialog-actionButton',
+  },
+  variants: {
+    mobileType: {
+      // sheet 時はキャンセルを全幅で下段に配置する
+      sheet: {
+        closeButton: 'shr-w-full',
+      },
+    },
+  },
+})
 
 export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
   children,
@@ -94,9 +101,12 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   handleClickClose,
   responseStatus,
   handleClickBack,
+  mobileType,
+  mobile,
 }) => {
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
     useContext(StepFormDialogContext)
+  const isSheet = mobileType === 'sheet'
 
   const latest = useLatest({
     handleClickClose,
@@ -155,59 +165,101 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     }
   }, [latest])
 
+  const classNames = useMemo(() => {
+    const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+    const footer = stepFormDialogFooter()
+    const commonAttrs = { mobileType }
+
+    return {
+      wrapper: wrapper(commonAttrs),
+      actionArea: actionArea({ mobile, mobileType }),
+      buttonArea: buttonArea(commonAttrs),
+      message: message(),
+      sheetButtonRow: footer.sheetButtonRow(),
+      backButton: footer.backButton(),
+      closeButton: footer.closeButton(commonAttrs),
+      submitButton: footer.submitButton(),
+    }
+  }, [mobileType, mobile])
+
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
+
+  const backButtonElement = !backButton.hidden && activeStep > 1 && (
+    <Button
+      disabled={backButton.disabled || calcedResponseStatus.isProcessing}
+      variant={backButton.theme}
+      className={classNames.backButton}
+      onClick={functions.handleBackAction}
+    >
+      {backButton.text}
+    </Button>
+  )
+  const closeButtonElement = !closeButton.hidden && (
+    <Button
+      disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
+      // sheet かつ mobile 時はボトムシートの装飾に合わせ、明示 theme に関わらず tertiary にする
+      variant={isSheet ? 'tertiary' : closeButton.theme}
+      className={classNames.closeButton}
+      onClick={functions.handleCloseAction}
+    >
+      {closeButton.text}
+    </Button>
+  )
+  const submitButtonElement = !submitButton.hidden && (
+    <Button
+      type="submit"
+      disabled={submitButton.disabled}
+      loading={calcedResponseStatus.isProcessing}
+      variant={submitButton.theme}
+      className={classNames.submitButton}
+    >
+      {submitButton.text}
+    </Button>
+  )
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
       <form onSubmit={functions.handleSubmitAction}>
-        <div className={CLASS_NAMES.wrapper}>
-          <DialogHeading
-            id={heading.id}
-            sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
-            text={heading.sub ? heading.text : `${heading.text}${stepText}`}
-          />
+        <div className={classNames.wrapper}>
+          <DialogHeader mobile={mobile} mobileType={mobileType}>
+            <DialogHeading
+              id={heading.id}
+              sub={heading.sub ? `${heading.sub}${stepText}` : undefined}
+              text={heading.sub ? heading.text : `${heading.text}${stepText}`}
+            />
+          </DialogHeader>
           <DialogBody
             ref={scrollerRef}
+            mobile={mobile}
             contentPadding={contentPadding}
             contentBgColor={contentBgColor}
           >
             {children}
           </DialogBody>
-          <div className={CLASS_NAMES.actionArea}>
-            <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
-              {!backButton.hidden && activeStep > 1 && (
-                <BackButton
-                  disabled={backButton.disabled || calcedResponseStatus.isProcessing}
-                  text={backButton.text}
-                  variant={backButton.theme}
-                  handleClick={functions.handleBackAction}
-                />
-              )}
-              <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
-                {!closeButton.hidden && (
-                  <CloseButton
-                    disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
-                    text={closeButton.text}
-                    variant={closeButton.theme}
-                    handleClick={functions.handleCloseAction}
-                  />
-                )}
-                {!submitButton.hidden && (
-                  <SubmitButton
-                    disabled={submitButton.disabled}
-                    loading={calcedResponseStatus.isProcessing}
-                    text={submitButton.text}
-                    variant={submitButton.theme}
-                  />
-                )}
+          <div className={classNames.actionArea}>
+            {isSheet ? (
+              <Stack gap={0.5}>
+                <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.sheetButtonRow}>
+                  {backButtonElement}
+                  {submitButtonElement}
+                </Cluster>
+                {closeButtonElement}
+              </Stack>
+            ) : (
+              <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
+                {backButtonElement}
+                <Cluster gap={BUTTON_COLUMN_GAP} className={classNames.buttonArea}>
+                  {closeButtonElement}
+                  {submitButtonElement}
+                </Cluster>
               </Cluster>
-            </Cluster>
+            )}
             <DialogContentResponseStatusMessage
               responseStatus={calcedResponseStatus}
-              className={CLASS_NAMES.message}
+              className={classNames.message}
             />
           </div>
         </div>
@@ -215,52 +267,3 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     </Section>
   )
 }
-
-const BackButton = memo<{
-  handleClick: () => void
-  variant: CommonButtonType['theme']
-  disabled: boolean
-  text: ReactNode
-}>(({ handleClick, variant, disabled, text }) => (
-  <Button
-    disabled={disabled}
-    variant={variant}
-    className="smarthr-ui-Dialog-backButton"
-    onClick={handleClick}
-  >
-    {text}
-  </Button>
-))
-
-const CloseButton = memo<{
-  handleClick: () => void
-  variant: CommonButtonType['theme']
-  disabled: boolean
-  text: ReactNode
-}>(({ handleClick, variant, disabled, text }) => (
-  <Button
-    disabled={disabled}
-    variant={variant}
-    className="smarthr-ui-Dialog-closeButton"
-    onClick={handleClick}
-  >
-    {text}
-  </Button>
-))
-
-const SubmitButton = memo<{
-  variant: CommonButtonType['theme']
-  disabled: boolean | undefined
-  loading: boolean
-  text: ReactNode
-}>(({ variant, disabled, loading, text }) => (
-  <Button
-    type="submit"
-    disabled={disabled}
-    loading={loading}
-    variant={variant}
-    className="smarthr-ui-Dialog-actionButton"
-  >
-    {text}
-  </Button>
-))

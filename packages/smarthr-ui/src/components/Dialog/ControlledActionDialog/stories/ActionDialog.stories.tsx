@@ -198,7 +198,14 @@ export const CloseButtonDisabled: StoryObj<typeof ControlledActionDialog> = {
 export const SubActionArea: StoryObj<typeof ControlledActionDialog> = {
   name: 'subActionArea',
   args: {
-    subActionArea: <Button onClick={action('subActionArea')}>サブアクション</Button>,
+    subActionArea: ({ mobileType }) => (
+      <Button
+        variant={mobileType === 'sheet' ? 'tertiary' : 'secondary'}
+        onClick={action('subActionArea')}
+      >
+        サブアクション
+      </Button>
+    ),
     width: '40em',
   },
 }
@@ -240,6 +247,18 @@ export const Size: StoryObj<typeof ControlledActionDialog> = {
   name: 'size',
   args: {
     size: 'M',
+  },
+}
+
+export const MobileType: StoryObj<typeof ControlledActionDialog> = {
+  name: 'mobileType',
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
   },
 }
 

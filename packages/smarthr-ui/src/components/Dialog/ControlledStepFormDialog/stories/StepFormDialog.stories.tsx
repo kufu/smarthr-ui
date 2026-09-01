@@ -340,6 +340,18 @@ export const Width: StoryObj<typeof ControlledStepFormDialog> = {
   },
 }
 
+export const MobileType: StoryObj<typeof ControlledStepFormDialog> = {
+  name: 'mobileType',
+  args: {
+    mobileType: 'sheet',
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+  },
+}
+
 export const FirstFocusTarget: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'firstFocusTarget',
   render: ({ onSubmit, onClickClose, ...rest }) => {

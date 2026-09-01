@@ -14,6 +14,7 @@ import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
+import { useControlledMobile } from '../useControlledMobile'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -42,6 +43,7 @@ type BaseProps = Omit<
   | 'handleClickClose'
   | 'handleClickBack'
   | 'handleSubmit'
+  | 'mobile'
 > &
   DialogProps & {
     heading: HeadingType
@@ -140,8 +142,11 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   responseStatus,
   className,
   isOpen,
+  mobileType: orgMobileType,
   ...rest
 }) => {
+  const { mobile, mobileType } = useControlledMobile(orgMobileType)
+
   const defaultTexts = useLocalize({
     closeButtonLabel: {
       id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
@@ -230,6 +235,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
+      mobileType={mobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
@@ -241,6 +247,8 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         firstStep={firstStep}
         stepLength={stepLength}
         responseStatus={responseStatus}
+        mobile={mobile}
+        mobileType={mobileType}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}

@@ -4,6 +4,7 @@ import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
+import { useControlledMobile } from '../useControlledMobile'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -17,7 +18,7 @@ import type { DialogProps } from '../types'
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
+type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose' | 'mobile'> &
   DialogProps & {
     heading: HeadingType
     onClickClose: MessageDialogContentInnerProps['handleClickClose']
@@ -40,9 +41,12 @@ export const ControlledMessageDialog: FC<Props> = ({
   closeButton,
   id,
   isOpen,
+  mobileType: orgMobileType,
   ...rest
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
+
+  const { mobile, mobileType } = useControlledMobile(orgMobileType)
 
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
@@ -66,6 +70,7 @@ export const ControlledMessageDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
+      mobileType={mobileType}
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={onPressEscape}
@@ -73,6 +78,8 @@ export const ControlledMessageDialog: FC<Props> = ({
       <MessageDialogContentInner
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
+        mobile={mobile}
+        mobileType={mobileType}
         handleClickClose={functions.handleClickClose}
         heading={heading}
         closeButton={closeButton}

@@ -65,6 +65,10 @@ export type DialogContentInnerProps = PropsWithChildren<{
    * ダイアログトップのフォーカストラップへの ref
    */
   focusTrapRef?: RefObject<FocusTrapRef>
+  /**
+   * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+   */
+  mobileType?: 'sheet'
 }>
 type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
@@ -88,6 +92,12 @@ const classNameGenerator = tv({
       XXL: { layout: dialogSize.XXL },
       FULL: { layout: dialogSize.FULL },
     },
+    mobileType: {
+      sheet: {
+        layout: 'shr-w-[100dvw] shr-max-w-none',
+        inner: 'shr-rounded-none',
+      },
+    },
   },
 })
 
@@ -104,19 +114,25 @@ export const DialogContentInner: FC<Props> = ({
   children,
   className,
   focusTrapRef,
+  mobileType,
   ...rest
 }) => {
   const classNames = useMemo(() => {
     const { layout, inner, background } = classNameGenerator()
 
     return {
-      layout: layout({ size }),
-      inner: inner({ className }),
+      layout: layout({
+        size: mobileType === 'sheet' ? undefined : size,
+        mobileType,
+      }),
+      inner: inner({ mobileType, className }),
       background: background(),
     }
-  }, [size, className])
+  }, [size, mobileType, className])
   // width は deprecated なので、size が指定されている場合は width を無視する
-  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
+  // mobileType の場合は幅いっぱいなので width を無視する
+  const actualWidth =
+    size || mobileType ? undefined : typeof width === 'number' ? `${width}px` : width
 
   const latest = useLatest({ onPressEscape, onClickOverlay })
 
@@ -149,7 +165,7 @@ export const DialogContentInner: FC<Props> = ({
   }, [isOpen])
 
   return (
-    <DialogOverlap isOpen={isOpen}>
+    <DialogOverlap isOpen={isOpen} mobileType={mobileType}>
       <div
         id={id}
         className={classNames.layout}

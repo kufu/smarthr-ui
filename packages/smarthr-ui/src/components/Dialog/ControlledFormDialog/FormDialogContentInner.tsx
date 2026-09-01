@@ -1,4 +1,11 @@
-import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo } from 'react'
+import {
+  type FC,
+  type FormEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -8,11 +15,19 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
+import { DialogHeader } from '../DialogHeader'
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 export type FormDialogHelpers = {
   close: () => void
+}
+
+type SubActionAreaHelpers = {
+  /**
+   * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+   */
+  mobileType?: 'sheet'
 }
 
 type ObjectActionButtonType = {
@@ -45,7 +60,11 @@ export type BaseProps = PropsWithChildren<
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
-    subActionArea?: ReactNode
+    subActionArea?: ReactNode | ((helpers: SubActionAreaHelpers) => ReactNode)
+    /**
+     * モバイル時の表示形式（'sheet' でボトムシート表示になる）
+     */
+    mobileType?: 'sheet'
   }
 >
 
@@ -63,18 +82,6 @@ const formDialogContentInner = tv({
   },
 })
 
-const CLASS_NAMES = (() => {
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
-
-  return {
-    form: form(),
-    wrapper: wrapper(),
-    actionArea: actionArea(),
-    buttonArea: buttonArea(),
-    message: message(),
-  }
-})()
-
 export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   children,
   heading,
@@ -86,23 +93,48 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   responseStatus,
   closeButton,
   subActionArea,
+  mobileType,
+  mobile,
 }) => {
   const calculatedResponseStatus = useResponseStatus(responseStatus)
+  const actualSubActionArea =
+    typeof subActionArea === 'function' ? subActionArea({ mobileType }) : subActionArea
+
+  const classNames = useMemo(() => {
+    const { form, wrapper, actionArea, actionAreaInner, buttonArea, message } =
+      formDialogContentInner()
+    const commonAttrs = { mobileType }
+
+    return {
+      form: form(),
+      wrapper: wrapper(commonAttrs),
+      actionArea: actionArea({ mobile, mobileType }),
+      actionAreaInner: actionAreaInner(commonAttrs),
+      buttonArea: buttonArea(commonAttrs),
+      message: message(),
+    }
+  }, [mobileType, mobile])
 
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
-      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
-        <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+    <Section className={classNames.wrapper}>
+      <DialogHeader mobile={mobile} mobileType={mobileType}>
+        <DialogHeading {...heading} />
+      </DialogHeader>
+      <form className={classNames.form} onSubmit={handleSubmit}>
+        <DialogBody mobile={mobile} contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
-        <div className={CLASS_NAMES.actionArea}>
-          <Cluster justify="space-between">
-            {subActionArea}
+        <div className={classNames.actionArea}>
+          <Cluster
+            gap={ACTION_AREA_CLUSTER_GAP}
+            justify="space-between"
+            className={classNames.actionAreaInner}
+          >
+            {actualSubActionArea}
             <ActionAreaCluster
               loading={calculatedResponseStatus.isProcessing}
-              className={CLASS_NAMES.buttonArea}
+              className={classNames.buttonArea}
               handleClickClose={handleClickClose}
               closeButton={closeButton}
               actionButton={actionButton}
@@ -110,7 +142,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           </Cluster>
           <DialogContentResponseStatusMessage
             responseStatus={calculatedResponseStatus}
-            className={CLASS_NAMES.message}
+            className={classNames.message}
           />
         </div>
       </form>

@@ -16,6 +16,10 @@ type Props = PropsWithChildren<
   {
     isOpen: boolean
     as?: ComponentProps<typeof Center>['as']
+    /**
+     * モバイル時の表示形式（'sheet' で画面下部に寄せる）
+     */
+    mobileType?: 'sheet'
   } & ComponentProps<'div'>
 >
 
@@ -35,13 +39,21 @@ const classNameGenerator = tv({
     // exit と exit-active は同時に付与されるので、exit-active を強める
     '[&&.shr-dialog-transition-exit-active]:shr-opacity-0',
   ],
+  variants: {
+    mobileType: {
+      sheet: 'shr-justify-end',
+    },
+  },
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
+export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as, mobileType }) => {
   const childrenBufferRef = useRef<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
 
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ mobileType, className }),
+    [mobileType, className],
+  )
 
   // childrenをrefに保存（毎レンダリング時に最新の値を設定）
   const childrenRef = useRef(children)
