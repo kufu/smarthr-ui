@@ -31,6 +31,21 @@ type AppliedRef<T> = {
  * DOM から要素が外れた後の処理であるため実害は無いが、アンマウント直後に
  * 同期的に ref の値を参照する場合は、まだ古い値が残っている点に注意。
  *
+ * 【この実装が前提にしていること・将来のリスク】
+ * 差し替え時に cleanup → setup が同一マイクロタスク内で完結することは、
+ * React の実装（react-dom@19.2.8 時点、commitMutationEffects で detach、
+ * commitLayoutEffects で attach）を実際に読んで確認した。両フェーズは
+ * 同一 commit 内で同期的に連続実行される、という Fiber の構造的な原則
+ * （commit は中断不可能）に基づいており、これ自体が崩れる可能性は低い。
+ *
+ * ただし React の実験的機能 `<ViewTransition>`（2026-09時点でCanaryの
+ * みでstable未リリース）は、mutation フェーズと layout フェーズの間に
+ * フォント/画像読み込み待ちで非同期の中断が入りうることが公式PRで言及
+ * されている（https://github.com/facebook/react/pull/34511）。この中断
+ * 中にマイクロタスクの判定が先に実行されると、差し替えをアンマウントと
+ * 誤判定し、内部 ref を誤って cleanup する可能性がある。
+ * `<ViewTransition>` が stable 化した際は要再検証。
+ *
  * @example
  * const mergedRef = useMergeRefs(externalRef, internalRef)
  * return <input ref={mergedRef} />
