@@ -3,7 +3,6 @@
 import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { Cluster } from '../Layout'
 
 const classNameGenerator = tv({
@@ -26,14 +25,13 @@ type Props = PropsWithChildren<{
    * モバイル時の表示形式（'sheet' で見出しと閉じるボタンを横並びにする）
    */
   mobileType?: 'sheet'
+  mobile: boolean
 }>
 
-export const DialogHeader: FC<Props> = ({ children, className, mobileType }) => {
-  const { mobile } = useEnvironment()
-
+export const DialogHeader: FC<Props> = ({ children, className, mobileType, mobile }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ mobile, mobileType, className }),
-    [mobile, mobileType, className],
+    [mobileType, mobile, className],
   )
 
   return (

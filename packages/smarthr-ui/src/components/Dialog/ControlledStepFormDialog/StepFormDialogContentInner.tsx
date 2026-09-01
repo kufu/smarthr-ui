@@ -224,7 +224,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
     <Section>
       <form onSubmit={functions.handleSubmitAction}>
         <div className={classNames.wrapper}>
-          <DialogHeader mobileType={mobileType}>
+          <DialogHeader mobile={mobile} mobileType={mobileType}>
             <DialogHeading
               id={heading.id}
               sub={heading.sub ? `${heading.sub}${stepText}` : undefined}

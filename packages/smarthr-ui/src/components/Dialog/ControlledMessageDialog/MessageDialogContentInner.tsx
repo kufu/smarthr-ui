@@ -50,7 +50,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
 
   return (
     <Section className={classNames.wrapper}>
-      <DialogHeader mobileType={mobileType}>
+      <DialogHeader mobile={mobile} mobileType={mobileType}>
         <DialogHeading {...heading} />
         {isSheet && (
           <CloseButton iconOnly handleClickClose={handleClickClose} closeButton={closeButton} />

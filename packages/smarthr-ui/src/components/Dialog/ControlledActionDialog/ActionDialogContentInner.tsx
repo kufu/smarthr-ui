@@ -111,7 +111,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   return (
     <Section className={classNames.wrapper}>
-      <DialogHeader mobileType={mobileType}>
+      <DialogHeader mobile={mobile} mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <DialogBody mobile={mobile} contentPadding={contentPadding} contentBgColor={contentBgColor}>

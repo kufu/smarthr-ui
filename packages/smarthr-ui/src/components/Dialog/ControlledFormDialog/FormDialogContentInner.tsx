@@ -118,7 +118,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={classNames.wrapper}>
-      <DialogHeader mobileType={mobileType}>
+      <DialogHeader mobile={mobile} mobileType={mobileType}>
         <DialogHeading {...heading} />
       </DialogHeader>
       <form className={classNames.form} onSubmit={handleSubmit}>
