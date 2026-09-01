@@ -1,8 +1,12 @@
 import { render, renderHook } from '@testing-library/react'
+import { StrictMode } from 'react'
 
 import { useMergeRefs } from './useMergeRefs'
 
 import type { MutableRefObject, Ref } from 'react'
+
+// アンマウント時のcleanupはマイクロタスクまで遅延されるため、待ってから検証する
+const flushMicrotasks = () => Promise.resolve().then(() => Promise.resolve())
 
 describe('useMergeRefs', () => {
   test('RefObjectとcallback refの両方にnodeを設定する', () => {
@@ -39,7 +43,7 @@ describe('useMergeRefs', () => {
     expect(callbackRef).toHaveBeenCalledWith('node')
   })
 
-  test('アンマウント時はマウント時と逆順でcleanupされる', () => {
+  test('アンマウント時はマウント時と逆順でcleanupされる', async () => {
     const order: string[] = []
     const first = vi.fn(() => {
       order.push('first-set')
@@ -50,36 +54,54 @@ describe('useMergeRefs', () => {
       return () => order.push('second-cleanup')
     })
 
-    const { result } = renderHook(() => useMergeRefs(first, second))
+    const Fixture = () => {
+      const mergedRef = useMergeRefs(first, second)
 
-    result.current('node')
-    result.current(null)
+      return <div ref={mergedRef} />
+    }
+
+    const { unmount } = render(<Fixture />)
+
+    unmount()
+    await flushMicrotasks()
 
     expect(order).toEqual(['first-set', 'second-set', 'second-cleanup', 'first-cleanup'])
   })
 
-  test('callback refがcleanup関数を返さない場合はアンマウント時にnullで呼び出される', () => {
+  test('callback refがcleanup関数を返さない場合はアンマウント時にnullで呼び出される', async () => {
     const callbackRef = vi.fn()
 
-    const { result } = renderHook(() => useMergeRefs(callbackRef))
+    const Fixture = () => {
+      const mergedRef = useMergeRefs(callbackRef)
 
-    result.current('node')
-    result.current(null)
+      return <div ref={mergedRef} />
+    }
 
-    expect(callbackRef).toHaveBeenNthCalledWith(1, 'node')
+    const { unmount } = render(<Fixture />)
+
+    expect(callbackRef).toHaveBeenNthCalledWith(1, expect.any(HTMLDivElement))
+
+    unmount()
+    await flushMicrotasks()
+
     expect(callbackRef).toHaveBeenNthCalledWith(2, null)
   })
 
-  test('RefObjectはアンマウント時にcurrentがnullにリセットされる', () => {
-    const objectRef: MutableRefObject<string | null> = { current: null }
+  test('RefObjectはアンマウント時にcurrentがnullにリセットされる', async () => {
+    const objectRef: MutableRefObject<HTMLDivElement | null> = { current: null }
 
-    const { result } = renderHook(() => useMergeRefs(objectRef))
+    const Fixture = () => {
+      const mergedRef = useMergeRefs(objectRef)
 
-    result.current('node')
+      return <div ref={mergedRef} />
+    }
 
-    expect(objectRef.current).toBe('node')
+    const { unmount } = render(<Fixture />)
 
-    result.current(null)
+    expect(objectRef.current).toBeInstanceOf(HTMLDivElement)
+
+    unmount()
+    await flushMicrotasks()
 
     expect(objectRef.current).toBeNull()
   })
@@ -107,7 +129,7 @@ describe('useMergeRefs', () => {
       return hasElement ? <div ref={mergedRef} data-testid="target" /> : <span />
     }
 
-    test('参照が変わっていないrefは再実行されない', () => {
+    test('参照が変わっていないrefは再実行されない', async () => {
       const internal = createInternalRef()
 
       const { rerender } = render(
@@ -118,6 +140,7 @@ describe('useMergeRefs', () => {
 
       // 外部refのみ参照が変わる（利用者がインラインのcallback refを渡した場合と同じ状況）
       rerender(<Fixture internalRef={internal.setup} externalRef={() => undefined} />)
+      await flushMicrotasks()
 
       expect(internal.setup).toHaveBeenCalledTimes(1)
       expect(internal.cleanup).not.toHaveBeenCalled()
@@ -146,7 +169,8 @@ describe('useMergeRefs', () => {
 
       expect(oldExternalRef).toHaveBeenLastCalledWith(null)
       expect(newExternalRef).toHaveBeenCalledWith(node)
-      // 同一リソースへの新旧の登録が入れ替わる場合を考慮し、旧refのcleanupを先に済ませてから新refを設定する
+      // 同一リソースへの新旧の登録が入れ替わる場合を考慮し、旧refのcleanupを先に済ませてから新refを設定する。
+      // React 19 のネイティブ cleanup により、これは host 要素の commit フェーズ内で同期的に完了する
       expect(order).toEqual(['old-cleanup', 'new-set'])
     })
 
@@ -200,19 +224,20 @@ describe('useMergeRefs', () => {
       expect(newObjectRef.current).toBe(node)
     })
 
-    test('アンマウント時はすべてのrefがcleanupされる', () => {
+    test('アンマウント時はすべてのrefがcleanupされる', async () => {
       const internal = createInternalRef()
       const externalRef: MutableRefObject<HTMLDivElement | null> = { current: null }
 
       const { unmount } = render(<Fixture internalRef={internal.setup} externalRef={externalRef} />)
 
       unmount()
+      await flushMicrotasks()
 
       expect(internal.cleanup).toHaveBeenCalledTimes(1)
       expect(externalRef.current).toBeNull()
     })
 
-    test('refsが差し替わりつつ要素だけが外れた場合もすべてのrefがcleanupされる', () => {
+    test('refsが差し替わりつつ要素だけが外れた場合もすべてのrefがcleanupされる', async () => {
       const internal = createInternalRef()
       const externalRef: MutableRefObject<HTMLDivElement | null> = { current: null }
 
@@ -224,9 +249,50 @@ describe('useMergeRefs', () => {
       rerender(
         <Fixture internalRef={internal.setup} externalRef={() => undefined} hasElement={false} />,
       )
+      await flushMicrotasks()
 
       expect(internal.cleanup).toHaveBeenCalledTimes(1)
       expect(externalRef.current).toBeNull()
+    })
+
+    test('要素が外れたあとに再マウントした場合、最新のrefsが設定される', async () => {
+      const internal = createInternalRef()
+      const externalRef = vi.fn()
+
+      const { rerender, getByTestId } = render(
+        <Fixture internalRef={internal.setup} externalRef={externalRef} />,
+      )
+
+      rerender(
+        <Fixture internalRef={internal.setup} externalRef={externalRef} hasElement={false} />,
+      )
+      await flushMicrotasks()
+
+      expect(internal.cleanup).toHaveBeenCalledTimes(1)
+
+      rerender(<Fixture internalRef={internal.setup} externalRef={externalRef} />)
+
+      // 再マウント時は引き継ぐものが無いため、すべてのrefが設定し直される
+      expect(internal.setup).toHaveBeenCalledTimes(2)
+      expect(externalRef).toHaveBeenLastCalledWith(getByTestId('target'))
+    })
+
+    test('StrictModeで同じcallback refが2回呼び出されても、設定が取り消されない', async () => {
+      const internal = createInternalRef()
+      const externalRef: MutableRefObject<HTMLDivElement | null> = { current: null }
+
+      render(
+        <StrictMode>
+          <Fixture internalRef={internal.setup} externalRef={externalRef} />
+        </StrictMode>,
+      )
+
+      await flushMicrotasks()
+
+      // StrictModeではrefのattach/detachが二重に実行されるが、
+      // 最終的にはnodeが設定された状態で残っていなければならない
+      expect(externalRef.current).toBeInstanceOf(HTMLDivElement)
+      expect(internal.setup.mock.calls.length).toBeGreaterThan(0)
     })
 
     test('要素が未マウントの間にrefsが差し替わっても、マウント時には最新のrefsが設定される', () => {

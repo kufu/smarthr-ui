@@ -1,6 +1,4 @@
-import { useCallback, useRef } from 'react'
-
-import { useEnhancedEffect } from '../useEnhancedEffect'
+import { useMemo, useRef } from 'react'
 
 import type { MutableRefObject, Ref } from 'react'
 
@@ -15,23 +13,23 @@ type AppliedRef<T> = {
  * ref を1つの callback ref にマージするフック。
  * useImperativeHandle を使わずに外部 ref と内部 ref を同時に設定できる。
  *
- * React 18 では callback ref の返り値（cleanup 関数）が無視され、
- * detach 時には callback 自体が node = null で呼び直されるだけになる。
- * そのため cleanup 関数を返り値として React に渡すのではなく、
- * 自前で保持しておき、node = null で呼ばれたときに手動で実行する。
- * これにより React 18/19 のどちらでも同じ挙動になる。
+ * refs のいずれかが差し替わると新しい callback ref を生成する。React 19 は
+ * callback ref が返した cleanup 関数をデタッチ時に呼ぶため、差し替え時は
+ * 「旧 callback の cleanup → 新 callback の setup」が host 要素の commit
+ * フェーズ内で同期的に実行される。この setup の中で差分を判定し、参照が
+ * 変わっていない ref（内部の callback ref など）は cleanup ごと引き継いで
+ * 再実行しない。そのため利用者がインラインの callback ref を渡していても、
+ * 内部の副作用は作り直されない。
  *
- * 返す callback ref の参照は常に安定している。refs のいずれかが差し替わっても
- * React による detach/attach は発生せず、差し替わった ref だけを設定し直す。
- * 参照が変わっていない ref（内部の callback ref など）は再実行されないため、
- * 利用者がインラインの callback ref を渡していても内部の副作用は作り直されない。
+ * 【cleanup がマイクロタスクまで遅延される理由】
+ * callback ref の cleanup は「差し替えによるデタッチ」でも「アンマウント」でも
+ * 同じように呼ばれ、その時点では両者を区別できない。差し替えなら直後に新しい
+ * setup が同期的に走るため、cleanup の判断をマイクロタスクまで遅らせ、
+ * setup が来たかどうかで判定している。
  *
- * refs が差し替わったときの反映は、host 要素の commit 時点ではなく
- * このフックを呼ぶコンポーネントの layout effect の順序内で行われる。
- * 同一コミット内・paint 前ではあるが、useMergeRefs より前に宣言された layout effect と、
- * mergedRef を props で受け取る子コンポーネントの layout effect は反映前に実行される。
- * 参照が変わらない ref のタイミングはマウント時から変化しないため、
- * 影響を受けるのは差し替わった ref のみ。マウント・アンマウントのタイミングは変わらない。
+ * この結果、アンマウント時の cleanup 実行は1マイクロタスク分遅延する。
+ * DOM から要素が外れた後の処理であるため実害は無いが、アンマウント直後に
+ * 同期的に ref の値を参照する場合は、まだ古い値が残っている点に注意。
  *
  * @example
  * const mergedRef = useMergeRefs(externalRef, internalRef)
@@ -40,40 +38,21 @@ type AppliedRef<T> = {
 // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
 export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) => {
   const state = useRef<{
-    node: T | null
     applied: Array<AppliedRef<T>>
-    refs: Array<MergeableRefType<T>>
-  }>({ node: null, applied: [], refs })
+    // setup が実行されるたびに加算する。cleanup 側は自分の世代と比較することで
+    // 「自分より後に setup が実行されたか」を判定する
+    generation: number
+  }>({ applied: [], generation: 0 })
 
-  // callback ref の参照を安定させるため、最新の refs は state 経由で参照する
-  state.current.refs = refs
+  return useMemo(
+    () => (node: T | null) => {
+      // React 19 は cleanup 関数を返した callback ref を node = null で呼び直さないため、
+      // このガードに到達するのは cleanup 関数を返す前（未マウント）のみ
+      if (!node) {
+        return undefined
+      }
 
-  const callbackRef = useCallback((node: T | null) => {
-    const current = state.current
-
-    current.node = node
-
-    if (node) {
-      current.applied = current.refs.map((ref) => ({ ref, cleanup: setRef(ref, node) }))
-
-      return
-    }
-
-    cleanupAppliedRefs(current.applied)
-    current.applied = []
-  }, [])
-
-  // HINT: callback ref の参照を安定させた結果、refs が差し替わっても React は callback ref を
-  // 呼び直さない。そのため差し替えの反映（= Reactの外にあるrefとの同期）はここで行う
-  useEnhancedEffect(() => {
-    const current = state.current
-    const { node } = current
-
-    // 要素が未マウントの場合は反映するものがない。
-    // マウント時に callback ref が最新の refs を設定するため、ここでは何もしなくてよい
-    if (node) {
-      // refsを1回舐めながら、旧appliedから該当を見つけ次第取り除いていく。
-      // ループ後にremainingへ残ったものが、新しいrefsに存在しなくなった要素
+      const current = state.current
       const remaining = current.applied.slice()
       const newRefIndexes: number[] = []
 
@@ -97,10 +76,25 @@ export const useMergeRefs = <T>(...refs: Array<MergeableRefType<T>>) => {
       for (const i of newRefIndexes) {
         current.applied[i].cleanup = setRef(current.applied[i].ref, node)
       }
-    }
-  }, refs)
 
-  return callbackRef
+      current.generation += 1
+
+      const generation = current.generation
+
+      return () => {
+        queueMicrotask(() => {
+          // 自分より後に setup が実行されていれば、差し替えによるデタッチであり、
+          // 引き継ぎ・cleanup は setup 側で完了している
+          if (current.generation === generation) {
+            cleanupAppliedRefs(current.applied)
+            current.applied = []
+          }
+        })
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    refs,
+  )
 }
 
 const setRef = <T>(ref: MergeableRefType<T>, value: T | null) => {
