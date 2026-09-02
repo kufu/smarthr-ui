@@ -6,12 +6,12 @@ import {
   type FormEvent,
   type MouseEventHandler,
   type ReactNode,
-  useEffect,
+  useCallback,
   useMemo,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer, useIntl } from '../../../intl'
@@ -116,13 +116,34 @@ export const FilterDropdown: FC<Props> = ({
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
-  const responseMessage = innerText(calcedResponseStatus.message)
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback((node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-  useEffect(() => {
-    if (responseMessage) {
-      document.ariaNotify(responseMessage)
-    }
-  }, [responseMessage])
+      const ariaNotifyAction = () => {
+        const message = node.innerText
+
+        if (message) {
+          document.ariaNotify(message)
+        }
+      }
+
+      ariaNotifyAction()
+
+      const observer = new MutationObserver(ariaNotifyAction)
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+
+      return () => {
+        observer.disconnect()
+      }
+    }, []),
+  )
 
   const classNames = useMemo(() => {
     const {
@@ -224,7 +245,7 @@ export const FilterDropdown: FC<Props> = ({
               </Cluster>
             </Cluster>
             {calcedResponseStatus.message && (
-              <div className={classNames.message}>
+              <div ref={callbackRef} className={classNames.message}>
                 <ResponseMessage role="alert" status={calcedResponseStatus.status}>
                   {calcedResponseStatus.message}
                 </ResponseMessage>
