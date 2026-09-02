@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 
-import { Button } from '../../../../Button'
-import { FaPencilIcon } from '../../../../Icon'
+import { Button } from '../../Button'
+import { FaPencilIcon } from '../../Icon'
 
 import { Tooltip } from './Tooltip'
 

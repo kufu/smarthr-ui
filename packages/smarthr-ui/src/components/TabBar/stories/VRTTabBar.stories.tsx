@@ -5,7 +5,7 @@ import { Badge } from '../../Badge'
 import { FaCircleExclamationIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { TabBar } from '../TabBar'
-import { TabItem } from '../TabItem'
+import { TabItem } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
