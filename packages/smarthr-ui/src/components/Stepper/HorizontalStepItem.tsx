@@ -81,19 +81,18 @@ export const HorizontalStepItem = memo<Props>(
         beforeLine,
         afterLine,
         label: labelText,
-      } = classNameGenerator({
-        statusType,
-        current,
-        isPrevStepCompleted,
-      })
+      } = classNameGenerator()
 
       return {
         wrapper: wrapper(),
         labelWrapper: labelWrapper(),
         stepCounterWrapper: stepCounterWrapper(),
-        beforeLine: beforeLine(),
-        afterLine: afterLine(),
-        label: labelText(),
+        beforeLine: beforeLine({ isPrevStepCompleted }),
+        afterLine: afterLine({ statusType }),
+        label: labelText({
+          statusType,
+          current,
+        }),
       }
     }, [statusType, current, isPrevStepCompleted])
 
