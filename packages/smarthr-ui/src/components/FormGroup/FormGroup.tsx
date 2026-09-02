@@ -4,8 +4,10 @@ import {
   type FC,
   type PropsWithChildren,
   type RefObject,
+  useEffect,
   useMemo,
 } from 'react'
+import innerText from 'react-innertext'
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
@@ -61,6 +63,15 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
+  const errorMessage = visibleErrorMessages
+    ? errorMessages.map((message) => innerText(message)).join('\n')
+    : ''
+  useEffect(() => {
+    if (errorMessage) {
+      document.ariaNotify(errorMessage)
+    }
+  }, [errorMessage])
+
   return (
     <Stack
       {...rest}
@@ -96,7 +107,7 @@ export const FormGroup: FC<Props> = ({
         </Text>
       )}
       {visibleErrorMessages && (
-        <div role="alert" id={errorMessagesId} className="shr-list-none">
+        <div id={errorMessagesId} className="shr-list-none">
           {errorMessages.map((message, index) => (
             <p key={index}>
               <Text

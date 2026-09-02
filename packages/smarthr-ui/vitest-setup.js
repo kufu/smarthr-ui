@@ -9,3 +9,7 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
   disconnect() {}
 }
+
+if (!('ariaNotify' in Document.prototype)) {
+  Document.prototype.ariaNotify = function ariaNotify() {}
+}

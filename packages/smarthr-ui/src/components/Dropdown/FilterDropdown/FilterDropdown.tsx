@@ -6,8 +6,10 @@ import {
   type FormEvent,
   type MouseEventHandler,
   type ReactNode,
+  useEffect,
   useMemo,
 } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
@@ -113,6 +115,14 @@ export const FilterDropdown: FC<Props> = ({
   )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
+
+  const responseMessage = innerText(calcedResponseStatus.message)
+
+  useEffect(() => {
+    if (responseMessage) {
+      document.ariaNotify(responseMessage)
+    }
+  }, [responseMessage])
 
   const classNames = useMemo(() => {
     const {

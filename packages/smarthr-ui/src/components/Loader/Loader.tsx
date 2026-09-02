@@ -1,5 +1,8 @@
-import { type ComponentProps, type ReactNode, memo } from 'react'
+import { type ComponentProps, type ReactNode, memo, useEffect } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
+
+import { useIntl } from '../../intl'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
@@ -34,6 +37,8 @@ const classNameGenerator = tv({
 
 export const Loader = memo<Props>(
   ({ size = 'M', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
+    const { localize } = useIntl()
+
     // HINT: Loaderは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
     const classNames = (() => {
       const { wrapper, textSlot } = classNameGenerator({
@@ -46,8 +51,19 @@ export const Loader = memo<Props>(
       }
     })()
 
+    const message = [
+      innerText(alt) || localize({ id: 'smarthr-ui/Loader/alt', defaultText: '処理中' }),
+      innerText(text),
+    ]
+      .filter(Boolean)
+      .join(' ')
+    useEffect(() => {
+      const priority = role === 'alert' ? 'high' : 'normal'
+      document.ariaNotify(message, { priority })
+    }, [message, role])
+
     return (
-      <span {...rest} role={role} className={classNames.wrapper}>
+      <span {...rest} className={classNames.wrapper}>
         <LoaderSpinner type={type} alt={alt} size={size} />
         {text && <span className={classNames.text}>{text}</span>}
       </span>

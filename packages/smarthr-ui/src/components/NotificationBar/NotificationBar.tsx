@@ -6,8 +6,10 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
+  useEffect,
   useMemo,
 } from 'react'
+import innerText from 'react-innertext'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -212,9 +214,16 @@ export const NotificationBar: FC<Props> = ({
     }
   }, [animate, base, bold, type, className])
 
+  const message = innerText(children)
+  useEffect(() => {
+    document.ariaNotify(message, {
+      priority: actualRole === 'alert' ? 'high' : 'normal',
+    })
+  }, [message, actualRole])
+
   return (
     <WrapBase {...baseProps}>
-      <div {...rest} role={actualRole} className={classNames.wrapper}>
+      <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
           <MessageArea type={type} bold={bold} classNames={classNames}>
             {children}
