@@ -148,13 +148,13 @@ export const PortalParent: StoryObj<typeof Dialog> = {
   name: 'portalParent',
   render: (args) => {
     const [open, setOpen] = useState(false)
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     return (
       <>
-        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
-        <Dialog {...args} isOpen={open} portalParent={parentRef}>
+        <Dialog {...args} isOpen={open} portalParent={parentEl ?? undefined}>
           ダイアログコンテンツ
           <Button onClick={() => setOpen(false)}>閉じる</Button>
         </Dialog>
