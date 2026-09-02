@@ -8,8 +8,9 @@ import { StepCounter } from './StepCounter'
 
 import type { VerticalStep } from './types'
 
+type StatusType = 'completed' | 'closed'
 type Props = Omit<VerticalStep, 'status'> & {
-  statusType?: 'completed' | 'closed'
+  statusType?: StatusType
   statusText?: string
   /** ステップ数 */
   stepNumber: number
@@ -38,12 +39,12 @@ const classNameGenerator = tv({
     ],
   },
   variants: {
-    status: {
+    statusType: {
       completed: {
         stepCounter: ['after:shr-bg-main', 'forced-colors:after:shr-bg-[Highlight]'],
       },
       closed: {},
-    },
+    } satisfies Record<StatusType, object>,
     current: {
       true: {
         heading: 'shr-font-bold',
@@ -53,7 +54,7 @@ const classNameGenerator = tv({
   },
   compoundVariants: [
     {
-      status: ['completed', 'closed'],
+      statusType: ['completed', 'closed'],
       current: false,
       className: {
         heading: 'shr-text-grey',
@@ -72,19 +73,19 @@ export const VerticalStepItem: FC<Props> = ({
 }) => {
   const classNames = useMemo(() => {
     const { wrapper, section, headingWrapper, heading, body, inner, stepCounter } =
-      classNameGenerator({
-        status: statusType,
-        current,
-      })
+      classNameGenerator()
 
     return {
       wrapper: wrapper(),
       section: section(),
       headingWrapper: headingWrapper(),
-      heading: heading(),
+      heading: heading({
+        statusType,
+        current,
+      }),
       body: body(),
       inner: inner(),
-      stepCounter: stepCounter(),
+      stepCounter: stepCounter({ statusType }),
     }
   }, [statusType, current])
 
