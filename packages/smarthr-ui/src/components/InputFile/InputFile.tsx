@@ -2,8 +2,7 @@ import { forwardRef } from 'react'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
-import { InputFileMultiplyAppendable } from './InputFileMultiplyAppendable'
-import { InputFileNative } from './InputFileNative'
+import { InputFileMultiplyAppendable, InputFileNative } from './client'
 
 import type { PreviewableObjectType, Props } from './types'
 

@@ -5,27 +5,29 @@ import {
   type MouseEvent,
   forwardRef,
   useId,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
-import { Stack } from '../Layout'
-import { Groupbox } from '../Panel'
+import { useLatest } from '../../../hooks/useLatest'
+import { Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
+import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from '../parts'
+import { classNameGenerator } from '../style'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
-import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
-import { classNameGenerator } from './style'
 
-import type { LowerProps } from './types'
+import type { LowerProps } from '../types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-export const InputFileMultiplyAppendable = forwardRef<
-  HTMLInputElement,
-  Omit<LowerProps, 'multiple'>
->(
+type Props = Omit<LowerProps, 'multiple'> & {
+  multiple?: boolean
+}
+
+export const InputFileNative = forwardRef<HTMLInputElement, Props>(
   (
     { className, size, label, hasFileList = true, previewable, onChange, disabled, error, ...rest },
     ref,
@@ -50,51 +52,48 @@ export const InputFileMultiplyAppendable = forwardRef<
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
+    const innerRef = useRef<HTMLInputElement>(null)
+
+    // TODO: useMergeRefsが実装されたら修正
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => innerRef.current,
+      [],
+    )
+
     const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
-      const updateFiles = (input: HTMLInputElement, newFiles: File[]) => {
+      const updateFiles = (newFiles: File[]) => {
         latest.onChange?.(newFiles)
-
-        const buff = new DataTransfer()
-        newFiles.forEach((file) => {
-          buff.items.add(file)
-        })
-
-        isUpdatingFilesRef.current = true
-        input.files = buff.files
-        isUpdatingFilesRef.current = false
-
         setFiles(newFiles)
       }
 
       return {
         handleChange: (e: ChangeEvent<HTMLInputElement>) => {
-          // Safari において、input.files への直接代入時はonChangeを発火させない
-          if (isUpdatingFilesRef.current) {
-            return
+          if (!isUpdatingFilesRef.current) {
+            updateFiles(Array.from(e.target.files ?? []))
           }
-
-          const newFiles = Array.from(e.target.files ?? [])
-
-          updateFiles(e.target, [...latest.files, ...newFiles])
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          const input = e.currentTarget
-            .closest('.smarthr-ui-InputFile')
-            ?.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"][type="file"]')
-
-          if (!input) {
+          if (!innerRef.current) {
             return
           }
 
           const index = parseInt(e.currentTarget.value, 10)
           const newFiles = latest.files.filter((_, i) => index !== i)
 
-          // 削除後、同一ファイルを再選択可能にするためinput.valueをリセット
-          input.value = ''
+          updateFiles(newFiles)
 
-          updateFiles(input, newFiles)
+          const buff = new DataTransfer()
+
+          newFiles.forEach((file) => {
+            buff.items.add(file)
+          })
+
+          isUpdatingFilesRef.current = true
+          innerRef.current.files = buff.files
+          isUpdatingFilesRef.current = false
         },
         handleClosePreview: () => {
           setPreviewFile(null)
@@ -133,10 +132,9 @@ export const InputFileMultiplyAppendable = forwardRef<
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            ref={ref}
+            ref={innerRef}
             type="file"
             disabled={disabled}
-            multiple
             className={classNames.input}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}

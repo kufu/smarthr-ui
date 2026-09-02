@@ -2,15 +2,15 @@
 
 import { type FC, memo, useEffect, useState } from 'react'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { Dialog, ModelessDialog } from '../Dialog'
-import { FileViewer } from '../FileViewer'
-import { Heading } from '../Heading'
-import { FaXmarkIcon } from '../Icon'
-import { Center, Cluster } from '../Layout'
-import { Loader } from '../Loader'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { Dialog, ModelessDialog } from '../../Dialog'
+import { FileViewer } from '../../FileViewer'
+import { Heading } from '../../Heading'
+import { FaXmarkIcon } from '../../Icon'
+import { Center, Cluster } from '../../Layout'
+import { Loader } from '../../Loader'
 
 type Props = {
   file: File | null
