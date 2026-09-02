@@ -1,5 +1,4 @@
 import { backgroundColor } from '../../../tailwind'
-import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { Groupbox } from '../Groupbox'
 import { panelClassNameGenerator } from '../Panel'
@@ -27,9 +26,6 @@ export default {
     children: 'ベースカラム',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
 } as Meta<typeof Groupbox>
