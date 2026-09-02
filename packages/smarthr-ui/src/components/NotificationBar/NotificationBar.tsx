@@ -7,14 +7,13 @@ import {
   Fragment,
   type PropsWithChildren,
   type ReactNode,
-  type RefObject,
   memo,
-  useEffect,
+  useCallback,
   useMemo,
-  useRef,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
@@ -218,49 +217,51 @@ export const NotificationBar: FC<Props> = ({
   }, [animate, base, bold, type, className])
 
   const latest = useLatest({ role, type })
-  const messageAreaRef = useRef<HTMLElement | null>(null)
 
-  useEffect(() => {
-    const node = messageAreaRef.current
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (!node) {
+          return
+        }
 
-    if (!node) {
-      return
-    }
+        const ariaNotifyAction = () => {
+          const message = node.innerText || ''
 
-    const ariaNotifyAction = () => {
-      const message = node.innerText || ''
+          if (!message) {
+            return
+          }
 
-      if (!message) {
-        return
-      }
+          const actualRole =
+            latest.role || (ROLE_STATUS_TYPE_REGEX.test(latest.type) ? 'status' : 'alert')
 
-      const actualRole =
-        latest.role || (ROLE_STATUS_TYPE_REGEX.test(latest.type) ? 'status' : 'alert')
+          document.ariaNotify(message, {
+            priority: actualRole === 'alert' ? 'high' : 'normal',
+          })
+        }
 
-      document.ariaNotify(message, {
-        priority: actualRole === 'alert' ? 'high' : 'normal',
-      })
-    }
+        ariaNotifyAction()
 
-    ariaNotifyAction()
+        const observer = new MutationObserver(ariaNotifyAction)
+        observer.observe(node, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        })
 
-    const observer = new MutationObserver(ariaNotifyAction)
-    observer.observe(node, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    })
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [latest])
+        return () => {
+          observer.disconnect()
+        }
+      },
+      [latest],
+    ),
+  )
 
   return (
     <WrapBase {...baseProps}>
       <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea innerRef={messageAreaRef} type={type} bold={bold} classNames={classNames}>
+          <MessageArea callbackRef={callbackRef} type={type} bold={bold} classNames={classNames}>
             {children}
           </MessageArea>
           {subActionArea && (
@@ -288,16 +289,16 @@ export const NotificationBar: FC<Props> = ({
 
 const MessageArea = memo<
   Pick<Props, 'children' | 'bold' | 'type'> & {
-    innerRef: RefObject<HTMLElement>
+    callbackRef: (node: HTMLElement | null) => void
     classNames: { messageArea: string; icon: string }
   }
->(({ innerRef, children, bold, type, classNames }) => {
+>(({ callbackRef, children, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
     <Text
       as="div"
-      ref={innerRef}
+      ref={callbackRef}
       className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
