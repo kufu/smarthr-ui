@@ -1,5 +1,3 @@
-import innerText from 'react-innertext'
-
 import type { ComboboxItem } from './types'
 
 const CHAR_MAP: Record<string, string> = {
@@ -38,5 +36,5 @@ export const convertMatchableString = (original: string) =>
   original.replace(NORMALIZE_PATTERN, normalizeChar).toLowerCase()
 
 export function areItemsEqual<T>(a: ComboboxItem<T>, b: ComboboxItem<T>) {
-  return a.value === b.value && innerText(a.label) === innerText(b.label)
+  return a.value === b.value && a.label === b.label
 }

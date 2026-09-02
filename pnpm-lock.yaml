@@ -229,9 +229,6 @@ importers:
       react-icons:
         specifier: ^5.7.0
         version: 5.7.0(react@19.2.8)
-      react-innertext:
-        specifier: ^1.1.5
-        version: 1.1.5(@types/react@18.3.31)(react@19.2.8)
       react-pdf:
         specifier: ^9.2.1
         version: 9.2.1(@types/react@18.3.31)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -5423,12 +5420,6 @@ packages:
     resolution: {integrity: sha512-LBLy340Rzqy6+/yVhZKT3B/QpP1BZaesGqasf09HPOBzRarcDIFH0WwXlXQfE7q7ipxK4MSiC5DIBWURCny6fw==}
     peerDependencies:
       react: '*'
-
-  react-innertext@1.1.5:
-    resolution: {integrity: sha512-PWAqdqhxhHIv80dT9znP2KvS+hfkbRovFp4zFYHFFlOoQLRiawIic81gKb3U1wEyJZgMwgs3JoLtwryASRWP3Q==}
-    peerDependencies:
-      '@types/react': '>=0.0.0 <=99'
-      react: '>=0.0.0 <=99'
 
   react-intl@10.1.18:
     resolution: {integrity: sha512-4JMOYakqVn/IajJt8Ad341Iwd6RDtiP1WQZiHRcFpHDBhVW4E9T0vkypSOk69Adg3dEbIYOE4HKTehH/1sSwnw==}
@@ -11831,11 +11822,6 @@ snapshots:
 
   react-icons@5.7.0(react@19.2.8):
     dependencies:
-      react: 19.2.8
-
-  react-innertext@1.1.5(@types/react@18.3.31)(react@19.2.8):
-    dependencies:
-      '@types/react': 18.3.31
       react: 19.2.8
 
   react-intl@10.1.18(@types/react@18.3.31)(react@19.2.8):
