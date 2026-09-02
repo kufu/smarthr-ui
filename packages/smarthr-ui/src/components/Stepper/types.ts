@@ -5,15 +5,16 @@ type BaseProps<P> = P & {
   activeIndex?: number
 } & Omit<ComponentPropsWithoutRef<'ol'>, keyof P>
 
+export type StatusType = 'completed' | 'closed'
+
 export type Step = {
   /** ステップラベル */
   label: ReactNode
   /** 状態 */
   status?:
-    | 'completed'
-    | 'closed'
+    | StatusType
     | {
-        type: 'completed' | 'closed'
+        type: StatusType
         text: string
       }
 }

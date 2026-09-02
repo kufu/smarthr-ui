@@ -8,12 +8,13 @@ import { VerticalStepItem } from './VerticalStepItem'
 
 import type {
   HorizontalStepper as HStepperProps,
+  StatusType,
   Step,
   VerticalStepper as VStepperProps,
 } from './types'
 
-type ObjectStepStatus = { type?: 'completed' | 'closed'; text?: string }
-const statusObjectConverter = (s: 'completed' | 'closed' | undefined): ObjectStepStatus => ({
+type ObjectStepStatus = { type?: StatusType; text?: string }
+const statusObjectConverter = (s: StatusType | undefined): ObjectStepStatus => ({
   type: s,
 })
 

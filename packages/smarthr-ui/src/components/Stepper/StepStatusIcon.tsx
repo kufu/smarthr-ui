@@ -4,24 +4,26 @@ import { tv } from 'tailwind-variants'
 import { Localizer } from '../../intl'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
+import type { StatusType } from './types'
+
 const classNameGenerator = tv({
   base: [
     'shr-rounded-full shr-bg-white shr-shadow-[0_0_0_theme(borderWidth.2)_theme(colors.white)]',
     'forced-colors:shr-bg-[CanvasText] forced-colors:shr-fill-[Canvas] forced-colors:shr-shadow-[0_0_0_theme(borderWidth.2)_Canvas]',
   ],
   variants: {
-    status: {
+    statusType: {
       completed: [
         'shr-text-main',
         'forced-colors:shr-bg-[Canvas] forced-colors:shr-fill-[Highlight]',
       ],
       closed: ['shr-text-grey', 'forced-colors:shr-bg-[Canvas] forced-colors:shr-fill-[GrayText]'],
-    },
+    } satisfies Record<StatusType, object>,
   },
 })
 
 type ActualProps = ComponentProps<typeof FaCircleCheckIcon> & {
-  statusType: 'completed' | 'closed'
+  statusType: StatusType
   statusText?: string
 }
 type Props = Partial<ActualProps>
@@ -45,7 +47,7 @@ const ActualStepStatusIcon: FC<ActualProps> = ({ statusType, statusText, classNa
   const actualAlt = statusText || alt
 
   const actualClassName = useMemo(
-    () => classNameGenerator({ status: statusType, className }),
+    () => classNameGenerator({ statusType, className }),
     [statusType, className],
   )
 
