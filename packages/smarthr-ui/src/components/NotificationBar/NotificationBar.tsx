@@ -186,7 +186,6 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
   let WrapBase = Fragment
   let baseProps = {}
 
@@ -216,10 +215,12 @@ export const NotificationBar: FC<Props> = ({
 
   const message = innerText(children)
   useEffect(() => {
+    const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
+
     document.ariaNotify(message, {
       priority: actualRole === 'alert' ? 'high' : 'normal',
     })
-  }, [message, actualRole])
+  }, [message, role, type])
 
   return (
     <WrapBase {...baseProps}>
