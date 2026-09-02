@@ -1,19 +1,16 @@
-'use client'
-
 import {
   type ComponentProps,
   type ComponentType,
   type FC,
   type PropsWithChildren,
   type RefObject,
-  useCallback,
   useMemo,
 } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
-import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
+
+import { ErrorMessages } from './client'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 import type { useDescribedByIds } from './useDescribedByIds'
@@ -65,35 +62,6 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const ariaNotifyAction = () => {
-        const message = node.innerText
-
-        if (message) {
-          document.ariaNotify(message)
-        }
-      }
-
-      ariaNotifyAction()
-
-      const observer = new MutationObserver(ariaNotifyAction)
-      observer.observe(node, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-      })
-
-      return () => {
-        observer.disconnect()
-      }
-    }, []),
-  )
-
   return (
     <Stack
       {...rest}
@@ -128,22 +96,7 @@ export const FormGroup: FC<Props> = ({
           {exampleMessage}
         </Text>
       )}
-      {visibleErrorMessages && (
-        <div ref={callbackRef} id={errorMessagesId} className="shr-list-none">
-          {errorMessages.map((message, index) => (
-            <p key={index}>
-              <Text
-                className="smarthr-ui-FormControl-errorMessage"
-                icon={
-                  <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
-                }
-              >
-                {message}
-              </Text>
-            </p>
-          ))}
-        </div>
-      )}
+      {visibleErrorMessages && <ErrorMessages id={errorMessagesId} errorMessages={errorMessages} />}
       <div className={classNames.childrenWrapper}>{children}</div>
       {supplementaryMessage && (
         <Text
