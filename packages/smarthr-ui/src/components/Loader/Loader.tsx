@@ -41,13 +41,13 @@ export const Loader = memo<Props>(
   ({ size = 'M', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
     // HINT: Loaderは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
     const classNames = (() => {
-      const { wrapper, textSlot } = classNameGenerator({
-        type,
-      })
+      const { wrapper, textSlot } = classNameGenerator()
 
       return {
         wrapper: wrapper({ className }),
-        text: textSlot(),
+        text: textSlot({
+          type,
+        }),
       }
     })()
 
