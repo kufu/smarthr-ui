@@ -1,14 +1,16 @@
+'use client'
+
 import {
   type ComponentProps,
   type ComponentType,
   type FC,
   type PropsWithChildren,
   type RefObject,
-  useEffect,
+  useCallback,
   useMemo,
 } from 'react'
-import innerText from 'react-innertext'
 
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
@@ -63,14 +65,34 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
-  const errorMessage = visibleErrorMessages
-    ? errorMessages.map((message) => innerText(message)).join('\n')
-    : ''
-  useEffect(() => {
-    if (errorMessage) {
-      document.ariaNotify(errorMessage)
-    }
-  }, [errorMessage])
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback((node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
+
+      const ariaNotifyAction = () => {
+        const message = node.innerText
+
+        if (message) {
+          document.ariaNotify(message)
+        }
+      }
+
+      ariaNotifyAction()
+
+      const observer = new MutationObserver(ariaNotifyAction)
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+
+      return () => {
+        observer.disconnect()
+      }
+    }, []),
+  )
 
   return (
     <Stack
@@ -107,7 +129,7 @@ export const FormGroup: FC<Props> = ({
         </Text>
       )}
       {visibleErrorMessages && (
-        <div id={errorMessagesId} className="shr-list-none">
+        <div ref={callbackRef} id={errorMessagesId} className="shr-list-none">
           {errorMessages.map((message, index) => (
             <p key={index}>
               <Text
