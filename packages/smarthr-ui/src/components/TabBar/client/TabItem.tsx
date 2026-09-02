@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentProps,
   type FC,
@@ -9,10 +11,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
-import { UnstyledButton } from '../Button'
-import { FaCircleInfoIcon } from '../Icon'
-import { Tooltip } from '../Tooltip'
+import { useLatest } from '../../../hooks/useLatest'
+import { UnstyledButton } from '../../Button'
+import { FaCircleInfoIcon } from '../../Icon'
+import { Tooltip } from '../../Tooltip'
 
 const classNameGenerator = tv({
   slots: {
