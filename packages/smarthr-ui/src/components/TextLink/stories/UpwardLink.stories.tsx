@@ -1,5 +1,5 @@
-import { Stack } from '../../../../../Layout'
-import { UpwardLink } from '../UpwardLink'
+import { Stack } from '../../Layout'
+import { UpwardLink } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 import type { ComponentPropsWithoutRef } from 'react'
