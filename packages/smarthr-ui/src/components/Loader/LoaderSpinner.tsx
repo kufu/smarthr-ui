@@ -1,6 +1,5 @@
 import { tv } from 'tailwind-variants'
 
-import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FC, ReactNode } from 'react'
@@ -9,7 +8,7 @@ type Props = {
   /** ローダーの大きさ */
   size?: 'S' | 'M'
   /** 代替テキスト */
-  alt?: ReactNode
+  alt: ReactNode
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
 }
@@ -152,9 +151,7 @@ export const LoaderSpinner: FC<Props> = ({ size = 'M', alt, type = 'primary' }) 
       <span className={classNames.line2}>{lineBody}</span>
       <span className={classNames.line3}>{lineBody}</span>
       <span className={classNames.line4}>{lineBody}</span>
-      <VisuallyHiddenText>
-        {alt ?? <Localizer id="smarthr-ui/Loader/alt" defaultText="処理中" />}
-      </VisuallyHiddenText>
+      <VisuallyHiddenText>{alt}</VisuallyHiddenText>
     </span>
   )
 }
