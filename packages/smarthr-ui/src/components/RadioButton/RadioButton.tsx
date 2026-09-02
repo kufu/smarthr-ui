@@ -1,5 +1,9 @@
 'use client'
 
+// HINT: libs/uaはtypeof window !== 'undefined'でガードされているためRSCで例外にはならないが、
+// isIOS・isMobileSafariは実機のUAをブラウザ側で検出する必要がある。Server Componentのままだと
+// navigatorが存在しないサーバ上で1回だけ評価され常にfalseに固定されるため、'use client'が必要
+
 import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
