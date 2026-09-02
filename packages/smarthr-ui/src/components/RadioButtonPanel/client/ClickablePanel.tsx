@@ -1,6 +1,6 @@
 'use client'
 
-import { Panel } from '../../../Panel'
+import { Panel } from '../../Panel'
 
 import type { ComponentType, FC, ReactNode } from 'react'
 
