@@ -5,10 +5,10 @@ import { Text } from '../Text'
 
 import { StepCounter } from './StepCounter'
 
-import type { HorizontalStep } from './types'
+import type { HorizontalStep, StatusType } from './types'
 
 type Props = Omit<HorizontalStep, 'status'> & {
-  statusType?: 'completed' | 'closed'
+  statusType?: StatusType
   statusText?: string
   /** ステップ数 */
   stepNumber: number
@@ -41,12 +41,12 @@ const classNameGenerator = tv({
     label: 'shr-px-0.25 shr-text-center shr-text-sm',
   },
   variants: {
-    status: {
+    statusType: {
       completed: {
         afterLine: ['shr-bg-main', 'forced-colors:shr-bg-[Highlight]'],
       },
       closed: {},
-    },
+    } satisfies Record<StatusType, object>,
     current: {
       true: {
         label: 'shr-font-bold',
@@ -62,7 +62,7 @@ const classNameGenerator = tv({
   },
   compoundVariants: [
     {
-      status: ['completed', 'closed'],
+      statusType: ['completed', 'closed'],
       current: false,
       className: {
         label: 'shr-text-grey',
@@ -82,7 +82,7 @@ export const HorizontalStepItem = memo<Props>(
         afterLine,
         label: labelText,
       } = classNameGenerator({
-        status: statusType,
+        statusType,
         current,
         isPrevStepCompleted,
       })

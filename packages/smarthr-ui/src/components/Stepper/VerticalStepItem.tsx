@@ -6,9 +6,8 @@ import { Section } from '../SectioningContent'
 
 import { StepCounter } from './StepCounter'
 
-import type { VerticalStep } from './types'
+import type { StatusType, VerticalStep } from './types'
 
-type StatusType = 'completed' | 'closed'
 type Props = Omit<VerticalStep, 'status'> & {
   statusType?: StatusType
   statusText?: string
