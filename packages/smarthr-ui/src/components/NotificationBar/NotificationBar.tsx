@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentProps,
   type ComponentPropsWithoutRef,
@@ -5,13 +7,15 @@ import {
   Fragment,
   type PropsWithChildren,
   type ReactNode,
+  type RefObject,
   memo,
   useEffect,
   useMemo,
+  useRef,
 } from 'react'
-import innerText from 'react-innertext'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import {
@@ -213,20 +217,50 @@ export const NotificationBar: FC<Props> = ({
     }
   }, [animate, base, bold, type, className])
 
-  const message = innerText(children)
-  useEffect(() => {
-    const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
+  const latest = useLatest({ role, type })
+  const messageAreaRef = useRef<HTMLElement | null>(null)
 
-    document.ariaNotify(message, {
-      priority: actualRole === 'alert' ? 'high' : 'normal',
+  useEffect(() => {
+    const node = messageAreaRef.current
+
+    if (!node) {
+      return
+    }
+
+    const ariaNotifyAction = () => {
+      const message = node.innerText || ''
+
+      if (!message) {
+        return
+      }
+
+      const actualRole =
+        latest.role || (ROLE_STATUS_TYPE_REGEX.test(latest.type) ? 'status' : 'alert')
+
+      document.ariaNotify(message, {
+        priority: actualRole === 'alert' ? 'high' : 'normal',
+      })
+    }
+
+    ariaNotifyAction()
+
+    const observer = new MutationObserver(ariaNotifyAction)
+    observer.observe(node, {
+      childList: true,
+      subtree: true,
+      characterData: true,
     })
-  }, [message, role, type])
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [latest])
 
   return (
     <WrapBase {...baseProps}>
       <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea type={type} bold={bold} classNames={classNames}>
+          <MessageArea innerRef={messageAreaRef} type={type} bold={bold} classNames={classNames}>
             {children}
           </MessageArea>
           {subActionArea && (
@@ -254,14 +288,16 @@ export const NotificationBar: FC<Props> = ({
 
 const MessageArea = memo<
   Pick<Props, 'children' | 'bold' | 'type'> & {
+    innerRef: RefObject<HTMLElement>
     classNames: { messageArea: string; icon: string }
   }
->(({ children, bold, type, classNames }) => {
+>(({ innerRef, children, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
     <Text
       as="div"
+      ref={innerRef}
       className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
