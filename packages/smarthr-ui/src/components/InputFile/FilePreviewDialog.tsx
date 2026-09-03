@@ -119,7 +119,7 @@ export const FilePreviewDialog: FC<Props> = memo(
         onClickClose={handleClose}
         heading={file?.name ?? ''}
         footer={
-          <Cluster justify="end" className="shr-px-1.5 shr-py-1">
+          <Cluster gap={1} justify="end" className="shr-px-1.5 shr-py-1">
             {actionAreaButtons}
           </Cluster>
         }
