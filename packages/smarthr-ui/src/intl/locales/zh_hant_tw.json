@@ -24,7 +24,7 @@
   "smarthr-ui/AppHeader/Launcher/helpText": "關於常用功能",
   "smarthr-ui/AppHeader/Launcher/searchResultText": "搜尋結果",
   "smarthr-ui/AppHeader/Launcher/emptyText": "找不到符合條件的功能。",
-  "smarthr-ui/AppHeader/Launcher/loadError": "無法載入功能列表。\\n請稍等片刻後再試。",
+  "smarthr-ui/AppHeader/Launcher/loadError": "無法載入功能列表。\n請稍等片刻後再試。",
   "smarthr-ui/AppHeader/Launcher/sortDropdownLabel": "顯示排序",
   "smarthr-ui/AppHeader/Launcher/sortDropdownSelected": "選擇中",
   "smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault": "預設",
