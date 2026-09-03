@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import innerText from 'react-innertext'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -86,7 +85,7 @@ function useOptions<T>(
     const convertedInputtedValue = convertMatchableString(inputValue)
 
     return allOptions.filter(({ item: { label } }) =>
-      convertMatchableString(innerText(label)).includes(convertedInputtedValue),
+      convertMatchableString(label).includes(convertedInputtedValue),
     )
     // TODO: itemsの安定化方法を検討中
   }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])

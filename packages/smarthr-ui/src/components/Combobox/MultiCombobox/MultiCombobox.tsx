@@ -14,7 +14,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
@@ -392,7 +391,7 @@ const ActualMultiCombobox = <T,>(
 
           handleDelete(lastItem)
           setHighlighted(true)
-          latest.setInputValueIfUncontrolled(innerText(lastItem.label))
+          latest.setInputValueIfUncontrolled(lastItem.label)
         } else {
           e.stopPropagation()
           inputRef.current?.focus()
@@ -509,7 +508,7 @@ const ActualMultiCombobox = <T,>(
           aria-label={localized.selectedListAriaLabel}
         >
           {selectedItems.map((selectedItem) => (
-            <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
+            <li key={`${selectedItem.label}-${selectedItem.value}`}>
               <MultiSelectedItem
                 disabled={disabled}
                 item={selectedItem}

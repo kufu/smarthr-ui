@@ -1,6 +1,5 @@
 import { useArgs } from 'storybook/preview-api'
 
-import { Stack } from '../../../Layout'
 import { MultiCombobox } from '../MultiCombobox'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
@@ -38,15 +37,6 @@ export const defaultItems = {
   'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）': {
     label: 'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     value: 'value-6',
-  },
-  アイテムのラベルがReactNodeの場合: {
-    label: (
-      <Stack as="span" gap={0.25}>
-        <span>アイテムのラベルがReactNodeの場合</span>
-        <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
-      </Stack>
-    ),
-    value: 'value-7',
   },
 }
 

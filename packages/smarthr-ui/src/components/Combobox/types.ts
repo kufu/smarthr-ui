@@ -2,7 +2,7 @@ import type { ChangeEvent, ReactNode } from 'react'
 
 export type ComboboxItem<T> = {
   value: string
-  label: ReactNode
+  label: string
   disabled?: boolean
   data?: T
 }

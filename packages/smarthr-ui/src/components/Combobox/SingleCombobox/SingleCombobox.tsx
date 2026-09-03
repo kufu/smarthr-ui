@@ -16,7 +16,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
@@ -285,7 +284,7 @@ const ActualSingleCombobox = <T,>(
       setIsEditing(false)
 
       if (latest.selectedItem) {
-        setInputValue(innerText(latest.selectedItem.label))
+        setInputValue(latest.selectedItem.label)
       } else {
         selectDefaultItem()
       }
@@ -412,7 +411,7 @@ const ActualSingleCombobox = <T,>(
   const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
 
   // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
-  const selectedItemLabelText = innerText(selectedItem?.label)
+  const selectedItemLabelText = selectedItem?.label || ''
   useEffect(() => {
     setInputValue(selectedItemLabelText)
   }, [selectedItemLabelText])
