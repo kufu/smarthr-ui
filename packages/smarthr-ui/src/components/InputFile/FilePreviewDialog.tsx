@@ -4,7 +4,7 @@ import { type FC, memo, useEffect, useState } from 'react'
 
 import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { Localizer } from '../../intl'
-import { Button } from '../Button'
+import { AnchorButton, Button } from '../Button'
 import { Dialog, ModelessDialog } from '../Dialog'
 import { FileViewer } from '../FileViewer'
 import { Heading } from '../Heading'
@@ -63,9 +63,14 @@ export const FilePreviewDialog: FC<Props> = memo(
         </Center>
       )
     const actionAreaButtons = (
-      <Button onClick={handleDownload}>
-        <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
-      </Button>
+      <>
+        <AnchorButton href={blobUrl} target="_blank">
+          <Localizer id="smarthr-ui/InputFile/targetBlank" defaultText="別タブで開く" />
+        </AnchorButton>
+        <Button onClick={handleDownload}>
+          <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
+        </Button>
+      </>
     )
 
     if (mobile) {
