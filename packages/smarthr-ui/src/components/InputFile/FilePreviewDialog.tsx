@@ -62,6 +62,11 @@ export const FilePreviewDialog: FC<Props> = memo(
           <Loader size="M" />
         </Center>
       )
+    const actionAreaButtons = (
+      <Button onClick={handleDownload}>
+        <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
+      </Button>
+    )
 
     if (mobile) {
       return (
@@ -92,9 +97,7 @@ export const FilePreviewDialog: FC<Props> = memo(
               justify="end"
               className="shr-border-t-shorthand shr-shrink-0 shr-px-1.5 shr-py-1"
             >
-              <Button onClick={handleDownload}>
-                <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
-              </Button>
+              {actionAreaButtons}
             </Cluster>
           </div>
         </Dialog>
@@ -112,9 +115,7 @@ export const FilePreviewDialog: FC<Props> = memo(
         heading={file?.name ?? ''}
         footer={
           <Cluster justify="end" className="shr-px-1.5 shr-py-1">
-            <Button onClick={handleDownload}>
-              <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
-            </Button>
+            {actionAreaButtons}
           </Cluster>
         }
       >
