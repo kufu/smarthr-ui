@@ -256,16 +256,14 @@ const MessageArea = memo<
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
-    <LiveRegion role={role}>
-      <Text
-        className={classNames.messageArea}
-        icon={{
-          prefix: <Icon className={classNames.icon} />,
-          gap: 0.5,
-        }}
-      >
-        {children}
-      </Text>
-    </LiveRegion>
+    <Text
+      className={classNames.messageArea}
+      icon={{
+        prefix: <Icon className={classNames.icon} />,
+        gap: 0.5,
+      }}
+    >
+      <LiveRegion role={role}>{children}</LiveRegion>
+    </Text>
   )
 })
