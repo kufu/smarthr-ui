@@ -24,6 +24,7 @@
   "smarthr-ui/AppHeader/Launcher/helpText": "자주 사용하는 앱이란",
   "smarthr-ui/AppHeader/Launcher/searchResultText": "검색결과",
   "smarthr-ui/AppHeader/Launcher/emptyText": "해당하는 앱을 발견할수 없습니다.",
+  "smarthr-ui/AppHeader/Launcher/loadError": "앱 리스트를 읽어들이기에 실패 했습니다.\\n시간을 두고 다시 시도해 주세요.",
   "smarthr-ui/AppHeader/Launcher/sortDropdownLabel": "표시순서",
   "smarthr-ui/AppHeader/Launcher/sortDropdownSelected": "선택중",
   "smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault": "디폴트",
