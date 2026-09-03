@@ -1,6 +1,4 @@
 // eslint-disable-next-line smarthr/require-barrel-import
-import '@github/arianotify-polyfill'
-// eslint-disable-next-line smarthr/require-barrel-import
 import './configureTwMerge'
 
 // components

@@ -1,5 +1,11 @@
 'use client'
 
+// HINT: document.ariaNotifyはブラウザでのみ必要なpolyfillで、'use client'を持たないbarrel（src/index.ts）
+// でimportするとRSCで評価されうる。EnvironmentProviderはアプリケーションのルートに設置される
+// 前提のコンポーネントであり、かつ'use client'を持つためサーバ側では評価されない。この2点から
+// ここでimportすることで、ブラウザ環境でのみ確実に読み込まれるようにしている
+import '@github/arianotify-polyfill'
+
 import { type FC, type ReactNode, useContext } from 'react'
 
 import { defaultMediaQuery } from '../../../themes'

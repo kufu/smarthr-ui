@@ -50,7 +50,7 @@ pnpm add react react-dom styled-components
 ```tsx
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { createTheme, ThemeProvider, Button } from 'smarthr-ui'
+import { createTheme, ThemeProvider, EnvironmentProvider, Button } from 'smarthr-ui'
 import 'smarthr-ui/smarthr-ui.css'
 
 const theme = createTheme()
@@ -58,7 +58,9 @@ const theme = createTheme()
 const App: React.FC = () => (
   <IntlProvider locale="ja">
     <ThemeProvider theme={theme}>
-      <Button variant="primary">Hello World</Button>
+      <EnvironmentProvider>
+        <Button variant="primary">Hello World</Button>
+      </EnvironmentProvider>
     </ThemeProvider>
   </IntlProvider>
 )
@@ -67,6 +69,8 @@ const container = document.getElementById('app')
 const root = createRoot(container)
 root.render(<App />)
 ```
+
+`EnvironmentProvider` はモバイル判定などの実行環境情報を各コンポーネントへ提供します。API 上は必須ではありませんが、アプリケーションのルートに設置することを前提としたコンポーネントがあるため、必ず設置してください。
 
 ## コントリビュート
 
