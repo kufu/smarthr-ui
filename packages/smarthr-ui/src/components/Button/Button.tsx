@@ -5,7 +5,7 @@ import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/client/usePortal'
 import { Localizer } from '../../intl'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { LiveRegion } from '../LiveRegion'
 
 import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
@@ -84,8 +84,8 @@ const LoadingStatus = memo<{ loading: boolean; buttonId: string }>(({ loading, b
 
   // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
   return createPortal(
-    <VisuallyHiddenText as="output" role="status" htmlFor={buttonId}>
+    <LiveRegion htmlFor={buttonId} visuallyHidden={true}>
       {loading && <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />}
-    </VisuallyHiddenText>,
+    </LiveRegion>,
   )
 })

@@ -37,6 +37,8 @@ const STATUS_ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
+// TODO: LiveRegionを内部で呼び出すように修正する
+// 利用している他コンポーネントで調整が必要なため、専用PRで対応
 export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
   const className = useMemo(() => classNameGenerator({ status }), [status])
   const TextIcon = STATUS_ICON_MAPPER[status]
