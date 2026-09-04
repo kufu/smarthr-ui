@@ -184,6 +184,7 @@ const MaxLettersTextarea: FC<
         aria-describedby={`${maxLettersNoticeId} ${maxLettersId}`}
         onChange={functions.handleChange}
       />
+      {/* TODO: 共通のLiveRegion実装に置き換える。その際、通知の遅延処理を実装する必要がありそう */}
       <VisuallyHiddenText id={maxLettersNoticeId}>
         <Localizer
           id="smarthr-ui/Textarea/screenReaderMaxLettersDescription"

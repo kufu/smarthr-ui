@@ -512,6 +512,8 @@ const Handler = memo<{
   )
 })
 
+// TODO: 共通のLiveRegion実装に置き換える
+// その際、通知の遅延処理を実装する必要がありそう
 const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
   <div
     role="status"

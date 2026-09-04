@@ -8,6 +8,7 @@ import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
 import { SearchInput } from '../Input'
+import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
 import type { UsePDFSearch } from './usePDFSearch'
@@ -69,14 +70,10 @@ export const SearchController: FC<Props> = memo(({ search }) => {
           }
           suffix={
             query !== '' ? (
-              <Text
-                as="output"
-                role="status"
-                htmlFor={searchInputId}
-                size="S"
-                className="shr-tabular-nums"
-              >
-                {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
+              <Text size="S" className="shr-tabular-nums">
+                <LiveRegion
+                  htmlFor={searchInputId}
+                >{`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}</LiveRegion>
               </Text>
             ) : undefined
           }
