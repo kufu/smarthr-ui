@@ -11,10 +11,12 @@ import {
 import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type BaseProps = PropsWithChildren
+type BaseProps = PropsWithChildren & {
+  as?: 'span' | 'div'
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
-export const LiveRegion: FC<Props> = ({ role, children, ...rest }) => {
+export const LiveRegion: FC<Props> = ({ as: Component = 'span', role, children, ...rest }) => {
   const [liveText, setLiveText] = useState('')
 
   const callbackRef = useCallbackRefCleanupForReact18(
@@ -23,7 +25,9 @@ export const LiveRegion: FC<Props> = ({ role, children, ...rest }) => {
         return
       }
 
-      const visibleTextElm = node.querySelector<HTMLElement>('.smarthr-ui-LiveRegion-visibleText')
+      const visibleTextElm = node.querySelector<HTMLElement>(
+        '.smarthr-ui-LiveRegion-visibleContent',
+      )
 
       if (!visibleTextElm) {
         return
@@ -69,10 +73,10 @@ export const LiveRegion: FC<Props> = ({ role, children, ...rest }) => {
   )
 
   return (
-    <span {...rest} ref={callbackRef}>
-      <span className="smarthr-ui-LiveRegion-visibleText" aria-hidden={true}>
+    <Component {...rest} ref={callbackRef}>
+      <Component className="smarthr-ui-LiveRegion-visibleContent" aria-hidden={true}>
         {children}
-      </span>
+      </Component>
       <VisuallyHiddenText
         as="output"
         role={role || 'status'}
@@ -80,6 +84,6 @@ export const LiveRegion: FC<Props> = ({ role, children, ...rest }) => {
       >
         {liveText}
       </VisuallyHiddenText>
-    </span>
+    </Component>
   )
 }
