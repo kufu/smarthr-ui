@@ -25,6 +25,7 @@ export const LiveRegion: FC<Props> = ({
   role,
   htmlFor,
   visuallyHidden,
+  id,
   children,
   ...rest
 }) => {
@@ -103,7 +104,7 @@ export const LiveRegion: FC<Props> = ({
 
   return (
     <Wrapper {...rest} as={wrapperAs} ref={callbackRef}>
-      <VisibleContent className="smarthr-ui-LiveRegion-visibleContent" aria-hidden={true}>
+      <VisibleContent id={id} className="smarthr-ui-LiveRegion-visibleContent" aria-hidden={true}>
         {children}
       </VisibleContent>
       <Output
