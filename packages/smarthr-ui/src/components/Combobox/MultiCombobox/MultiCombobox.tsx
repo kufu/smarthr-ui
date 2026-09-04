@@ -18,7 +18,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useAreaOutsideCallbackRef } from '../../../hooks/client/useAreaOutsideCallbackRef'
+import { useAreaClickCallbackRef } from '../../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
@@ -438,7 +438,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  const listBoxCallbackRef = useAreaOutsideCallbackRef([triggerRef], functions.blur)
+  const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur)
 
   const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 

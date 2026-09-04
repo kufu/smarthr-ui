@@ -20,7 +20,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useAreaOutsideCallbackRef } from '../../../hooks/client/useAreaOutsideCallbackRef'
+import { useAreaClickCallbackRef } from '../../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
@@ -395,7 +395,7 @@ const ActualSingleCombobox = <T,>(
       ? theme.textColor.disabled
       : theme.textColor.grey
 
-  const listBoxCallbackRef = useAreaOutsideCallbackRef(
+  const listBoxCallbackRef = useAreaClickCallbackRef(
     [triggerRef, clearButtonRef],
     functions.unfocus,
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,

@@ -17,7 +17,7 @@ import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact
  * @param onOuter   領域の【外側】がクリックされたときに実行されるメインのコールバック。
  * @param onInner   領域の【内側】がクリックされたときに実行されるオプションのコールバック。
  */
-export function useAreaOutsideCallbackRef(
+export function useAreaClickCallbackRef(
   otherRefs: Array<RefObject<HTMLElement>>,
   onOuter: (e: MouseEvent) => void,
   onInner?: (e: MouseEvent) => void,

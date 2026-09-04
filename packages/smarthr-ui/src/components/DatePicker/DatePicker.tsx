@@ -18,7 +18,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
-import { useAreaOutsideCallbackRef } from '../../hooks/client/useAreaOutsideCallbackRef'
+import { useAreaClickCallbackRef } from '../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
@@ -353,7 +353,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
     const mergedCalendarRef = useMergeRefs(
-      useAreaOutsideCallbackRef([containerRef], functions.closeCalendar),
+      useAreaClickCallbackRef([containerRef], functions.closeCalendar),
       calendarRef,
     )
 
