@@ -256,7 +256,7 @@ const MessageArea = memo<
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
-    <LiveRegion as="div" role={role} className={classNames.messageArea}>
+    <LiveRegion role={role} hasFlowContent={true} className={classNames.messageArea}>
       <Text
         as="div"
         icon={{

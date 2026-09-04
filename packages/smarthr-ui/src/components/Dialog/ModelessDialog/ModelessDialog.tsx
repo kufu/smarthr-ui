@@ -512,8 +512,8 @@ const Handler = memo<{
   )
 })
 
-// TODO: 共通のLiveRegion実装に置き換える
-// その際、通知の遅延処理を実装する必要がありそう
+// TODO: 共通のLiveRegion実装に置き換える。その際、通知の遅延処理を実装する必要がありそう
+// LiveRegionでの実装は一時的なものとし、最終的にdocument.ariaNotifyに修正したい
 const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
   <div
     role="status"
