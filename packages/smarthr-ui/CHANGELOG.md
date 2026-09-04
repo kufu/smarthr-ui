@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.6.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.5.0...smarthr-ui-v99.6.0) (2026-09-03)
+
+
+### Features
+
+* **AppHeader:** アプリ一覧の遅延読み込みを追加 ([#6899](https://github.com/kufu/smarthr-ui/issues/6899)) ([13139e5](https://github.com/kufu/smarthr-ui/commit/13139e509d6c805ebee30b5d5ff29be66c439355))
+* **InputFile:** ファイルプレビューに別タブで開くリンクを追加 ([#6958](https://github.com/kufu/smarthr-ui/issues/6958)) ([ba08e6f](https://github.com/kufu/smarthr-ui/commit/ba08e6ff46a3371c99a8b7b38cc161f33eae9748))
+
+
+### Bug Fixes
+
+* **Browser:** classNameが効かない・4カラム以上でレイアウトが崩れる不具合を修正 ([#6894](https://github.com/kufu/smarthr-ui/issues/6894)) ([61f7d30](https://github.com/kufu/smarthr-ui/commit/61f7d303e8e544235fb26def6e0d29909c2aa261))
+* **Combobox:** ItemButtonの色がiOSで意図しない色になっているのを修正 ([#6512](https://github.com/kufu/smarthr-ui/issues/6512)) ([7921b36](https://github.com/kufu/smarthr-ui/commit/7921b36233e7b1ce720f063199e34a63b1c5ff27))
+* **ModelessDialog:** top/left/right/bottomを開いたときの初期位置として扱う ([#6906](https://github.com/kufu/smarthr-ui/issues/6906)) ([d7d1bbe](https://github.com/kufu/smarthr-ui/commit/d7d1bbe63d3625d41724d47f627a196219d87b46))
+* **ModelessDialog:** ヘッダーの文字列が長いときの表示崩れを修正する ([#6908](https://github.com/kufu/smarthr-ui/issues/6908)) ([aa1b0e8](https://github.com/kufu/smarthr-ui/commit/aa1b0e8391ed55c77d092a8577ea43866da1988d))
+* **ModelessDialog:** 中央寄せが不要になった際にcenteringをリセットする ([#6910](https://github.com/kufu/smarthr-ui/issues/6910)) ([3ec4f55](https://github.com/kufu/smarthr-ui/commit/3ec4f55ec3ae8dabb04e90d0d2dab7955e8071de))
+* **NotificationBar:** Successの状態のroleをalertからstatusに変更する ([#6902](https://github.com/kufu/smarthr-ui/issues/6902)) ([ae675cf](https://github.com/kufu/smarthr-ui/commit/ae675cf7cb9c2f0e23e4e00202a17bd808678c33))
+* **RequiredLabel:** 'use client'を削除する ([#6935](https://github.com/kufu/smarthr-ui/issues/6935)) ([848f526](https://github.com/kufu/smarthr-ui/commit/848f52662cbf6c7b4c2a68defe16d18e4a75292a))
+* **SideNav:** client境界を張る ([#6914](https://github.com/kufu/smarthr-ui/issues/6914)) ([27442de](https://github.com/kufu/smarthr-ui/commit/27442de3898d4354d2648061db92f9539a352170))
+* **TabItem:** Server Componentから使うとエラーになる不具合を修正 ([#6948](https://github.com/kufu/smarthr-ui/issues/6948)) ([da19d4d](https://github.com/kufu/smarthr-ui/commit/da19d4d966cdc7b7be5335be9eee8092be824a50))
+* **TableReel:** 複数行・複数方向の固定列でセル幅変更時に位置が更新されないバグを修正 ([#6801](https://github.com/kufu/smarthr-ui/issues/6801)) ([7b6261b](https://github.com/kufu/smarthr-ui/commit/7b6261b6abe02d365d280e39101366d070976072))
+* **TextLink:** Server Componentとして描画できない問題を修正する ([#6904](https://github.com/kufu/smarthr-ui/issues/6904)) ([a901f8d](https://github.com/kufu/smarthr-ui/commit/a901f8dda2f4adc2096d2d50e010c990d2f95a23))
+* **WarekiPicker:** client境界を張る ([#6917](https://github.com/kufu/smarthr-ui/issues/6917)) ([38f80ca](https://github.com/kufu/smarthr-ui/commit/38f80ca4ebb84a4313a379c4b6e9dd05b58fa401))
+
 ## [99.5.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.4.0...smarthr-ui-v99.5.0) (2026-08-27)
 
 

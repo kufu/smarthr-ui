@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type Environment, useEnvironment } from '../client/useEnvironment'
+import { type Environment, useEnvironment } from '../useEnvironment'
 
 // tailwind-variantsのslotsから型を抽出する型ヘルパー
 type Slots<T> = T extends { slots: infer S }

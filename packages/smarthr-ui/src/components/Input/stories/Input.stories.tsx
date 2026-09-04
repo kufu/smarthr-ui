@@ -122,9 +122,6 @@ export const ReadOnly: StoryObj<typeof Input> = {
     readOnly: true,
     value: '読み取り専用',
   },
-  parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
-  },
 }
 
 export const Handlers: StoryObj<typeof Input> = {

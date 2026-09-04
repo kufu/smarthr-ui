@@ -3,6 +3,7 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  type RefCallback,
   type RefObject,
   useContext,
   useMemo,
@@ -55,12 +56,13 @@ const CLASS_NAMES = (() => {
 })()
 
 type Props = PropsWithChildren<{
+  callbackRef: RefCallback<HTMLDivElement>
   isOpen: boolean
   setIsOpen: Dispatch<boolean>
   tenantSelector: ReactNode
 }>
 
-export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
+export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
   const domRef = useRef<HTMLSelectElement>(null)
 
   return (
@@ -71,7 +73,7 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
       unmountOnExit
       classNames="shr-sp-menu"
     >
-      <div className="shr-fixed shr-z-overlap-base">
+      <div ref={callbackRef} className="shr-fixed shr-z-overlap-base">
         <FocusTrap>
           <Content {...rest} domRef={domRef} />
         </FocusTrap>
@@ -81,7 +83,7 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
 }
 
 export const Content: FC<
-  Omit<Props, 'isOpen'> & {
+  Omit<Props, 'callbackRef' | 'isOpen'> & {
     domRef: RefObject<HTMLSelectElement>
   }
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {
