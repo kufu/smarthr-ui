@@ -160,12 +160,14 @@ export const ModelessDialog: FC<Props> = ({
   onClickClose,
   ...rest
 }) => {
-  const labelId = useId()
+  const baseId = useId()
+  const actualId = id || baseId
+  const labelId = `${baseId}-label`
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
-  const { createPortal } = useDialogPortal(portalParent, id)
+  const { createPortal } = useDialogPortal(portalParent, actualId)
   const { localize } = useIntl()
 
   const classNames = useMemo(() => {
@@ -468,7 +470,7 @@ export const ModelessDialog: FC<Props> = ({
             <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
           )}
           {/* TODO: document.ariaNotifyに修正したい */}
-          <LiveRegion visuallyHidden={true} announceDelay={600}>
+          <LiveRegion htmlFor={actualId} visuallyHidden={true} announceDelay={600}>
             {liveRegionText}
           </LiveRegion>
         </Panel>
