@@ -20,8 +20,8 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
+import { useAreaOutsideClick } from '../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../hooks/useLatest'
-import { useOuterClick } from '../../hooks/useOuterClick'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'
@@ -352,7 +352,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
     const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
-    useOuterClick([containerRef, calendarPortalRef], functions.closeCalendar)
+    // HINT: カレンダーを開いている間だけ監視する。calendarPortalRefは閉じている間undefinedのため
+    useAreaOutsideClick(
+      isCalendarShown ? [containerRef, calendarPortalRef] : null,
+      functions.closeCalendar,
+    )
 
     useEffect(() => {
       if (value === undefined) {

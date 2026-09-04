@@ -226,10 +226,29 @@ hook 自身ではなく、それを使うコンポーネント側に置くのが
 
 コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。
 
+**デフォルトは `client/` 直下にフラットに配置する。`components/` `hooks/` という下位区分は作らない。**
+
+```text
+Table/
+├── index.ts                      公開バレル
+├── Table.tsx                     'use client' 無し = Server Component でも使える
+└── client/
+    ├── index.ts                  公開する分だけ re-export
+    ├── ThCheckbox.tsx             'use client' 有
+    ├── BulkActionRow.tsx          'use client' 有。同ディレクトリの useTableHeadCellCount を使う
+    └── useTableHeadCellCount.ts   'use client' 無。BulkActionRow 等の client component からしか呼ばれない
+```
+
+hook を含め `client/` 配下のモジュールは、すべて `client/` 内の component 経由でしか到達されないのが通常です。この場合、component 自身がすでに client グラフに属しているため、隣に hook を置いても「`client/index.ts` を作ってはいけない」（後述）の転記問題は起きません。したがって `components/` `hooks/` に分ける理由がなく、フラットに置きます。
+
+**例外: `components/` `hooks/` の下位区分が必要になるケース**
+
+hook が `client/` 内の component を経由せず、**Server Component からも直接 import されうる**場合（＝呼び出し元がその hook 専用の独立した参照経路を持つ場合）は分割が必要です。`SectioningContent` の `useSectioningWrapper` が実例で、`'use client'` を持たない `SectioningContent.tsx` 自身から直接呼ばれます。
+
 ```text
 SectioningContent/
 ├── index.ts                      公開バレル
-├── SectioningContent.tsx         'use client' 無し = Server Component でも使える
+├── SectioningContent.tsx         'use client' 無し。useSectioningWrapper を直接呼ぶ
 └── client/
     ├── components/               各ファイルに 'use client' を付ける
     │   ├── index.ts
@@ -240,9 +259,15 @@ SectioningContent/
         └── useSectioningWrapper.ts
 ```
 
-- `client/components/` — 各ファイルに `'use client'` を付ける
-- `client/hooks/` — 付けない。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
-- **`client/index.ts` は作らない**（後述）
+この場合 `client/index.ts` を一つにまとめると、`SectioningContent.tsx` が `hooks` 側だけを import しても `components` 側の依存（`createContext` など）が転記されてしまうため、`components/` と `hooks/` を別バレルに分けて経路を切り離す必要があります。
+
+**判断基準**
+
+- hook が `client/` 内の component からしか呼ばれない → フラットに置く（`Table` パターン）
+- hook が `client/` 内の component を経由しない独立した参照経路を持つ（Server Component から直接 import されうる）→ `components/` `hooks/` に分ける（`SectioningContent` パターン）
+
+- `client/` 配下で `'use client'` を持つファイル・持たないファイルが混在してよい。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
+- **`client/index.ts`（および `client/components/index.ts` 相当のバレルを分けた場合の集約バレル）は作らない**（後述）
 
 `'use client'` を外せたコンポーネントは「Server Component になる」わけではありません。ディレクティブを持たないモジュールは server / client 双方のグラフで評価されるため、**Server Component からも Client Component からも使える**状態になります。制約が減るだけで、利用者側の使い方は変わりません。
 
@@ -263,6 +288,10 @@ import 'styled-components';    // ← hooks 側の依存が転記される
 `components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
 
 なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
+**例外: `Table` パターンのようにフラット配置する場合**
+
+前述のとおり hook が `client/` 内の component からしか呼ばれない場合は `components/` `hooks/` に分けず `client/index.ts` を一つだけ置きます。これは「componentsとhooksの合流点を作らない」という目的に反しません。この `client/index.ts` が re-export するのは**公開する component のみ**で、`useTableHeadCellCount` のような非公開の内部 hook は re-export しないためです。結果として `client/index.ts` は実質「component 用バレル」としてのみ機能し、hook 側の依存が別経路から迷い込む合流点にはなりません。hook は同じ `client/` 内から相対 import で直接参照します。
 
 **この転記は Next.js 実利用では顕在化しないが、それでも作らない**
 
