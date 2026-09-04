@@ -9,7 +9,7 @@ import {
 } from 'react'
 
 import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
-import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../VisuallyHiddenText'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type BaseProps = PropsWithChildren & {
   as?: 'span' | 'div'
@@ -19,7 +19,7 @@ type BaseProps = PropsWithChildren & {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const LiveRegion: FC<Props> = ({
-  as: Component = 'span',
+  as = 'span',
   role,
   htmlFor,
   visuallyHidden,
@@ -81,12 +81,12 @@ export const LiveRegion: FC<Props> = ({
     }, []),
   )
 
+  const Component = visuallyHidden ? VisuallyHiddenText : as
+  const actualAs = Component !== as ? as : undefined
+
   return (
-    <Component {...rest} ref={callbackRef}>
-      <Component
-        className={`smarthr-ui-LiveRegion-visibleContent${visuallyHidden ? ` ${visuallyHiddenTextClassName}` : ''}`}
-        aria-hidden={true}
-      >
+    <Component {...rest} as={actualAs} ref={callbackRef}>
+      <Component as={actualAs} className="smarthr-ui-LiveRegion-visibleContent" aria-hidden={true}>
         {children}
       </Component>
       <VisuallyHiddenText
