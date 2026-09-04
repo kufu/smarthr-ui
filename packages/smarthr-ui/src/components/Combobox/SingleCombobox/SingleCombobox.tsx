@@ -22,7 +22,7 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
-import { useClick } from '../../../hooks/useClick'
+import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -74,8 +74,6 @@ type BaseProps<T> = ComboboxProps<T> & {
   noResultText?: ReactNode
 }
 type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
-
-const NOOP = () => undefined
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
@@ -399,10 +397,10 @@ const ActualSingleCombobox = <T,>(
       ? theme.textColor.disabled
       : theme.textColor.grey
 
-  useClick(
-    [triggerRef, listBoxRef, clearButtonRef],
-    isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
+  useAreaOutsideClick(
+    isFocused ? [triggerRef, listBoxRef, clearButtonRef] : null,
     functions.unfocus,
+    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
