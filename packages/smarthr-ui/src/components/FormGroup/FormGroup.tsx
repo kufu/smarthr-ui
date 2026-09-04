@@ -97,12 +97,7 @@ export const FormGroup: FC<Props> = ({
         </Text>
       )}
       {visibleErrorMessages && (
-        <LiveRegion
-          role="alert"
-          id={errorMessagesId}
-          hasFlowContent={true}
-          className="shr-list-none"
-        >
+        <LiveRegion role="alert" id={errorMessagesId} hasFlowContent={true}>
           {errorMessages.map((message, index) => (
             <p key={index}>
               <Text
