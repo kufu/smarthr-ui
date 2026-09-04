@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type PropsWithChildren,
   useCallback,
@@ -14,7 +14,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 type BaseProps = PropsWithChildren & {
   as?: 'span' | 'div'
 }
-type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const LiveRegion: FC<Props> = ({ as: Component = 'span', role, children, ...rest }) => {
   const [liveText, setLiveText] = useState('')
