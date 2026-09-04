@@ -257,13 +257,16 @@ const MessageArea = memo<
 
   return (
     <Text
+      as="div"
       className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
     >
-      <LiveRegion role={role}>{children}</LiveRegion>
+      <LiveRegion as="div" role={role}>
+        {children}
+      </LiveRegion>
     </Text>
   )
 })
