@@ -122,9 +122,11 @@ const MaxLettersTextarea: FC<
   })
 
   const functions = useMemo(() => {
-    // 初回レンダリング時はスクリーンリーダー向けメッセージなどを更新したくないためskipする
-    // (実際のユーザー操作による変更でのみ更新すれば良い)
-    // useEffectでupdateCountが必ず呼びだされる
+    // countの初期値はuseStateの遅延初期化でdefaultValue || valueから計算済みのため、
+    // マウント時にuseEffect経由で呼ばれるupdateCountは初回のみskipする。
+    // skipしないと、非制御コンポーネントとして扱う場合（valueを渡さずdefaultValueのみ渡す場合）
+    // valueがundefinedになりcountが誤った値に上書きされ、表示のちらつきや
+    // LiveRegionへの不要な通知が発生してしまう
     let firstCallUpdateCount = true
     const updateCount = (newValue: TextareaValue) => {
       if (firstCallUpdateCount) {
@@ -172,8 +174,8 @@ const MaxLettersTextarea: FC<
         id={maxLettersId}
         htmlFor={textareaId}
         announceDelay={1000}
-        className="smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black data-[error]:shr-text-danger"
-        data-error={countError || undefined}
+        skipInitialAnnounce={true}
+        className={`smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black ${countError ? 'shr-text-danger' : ''}`}
       >
         {count > maxLetters ? (
           <Localizer
