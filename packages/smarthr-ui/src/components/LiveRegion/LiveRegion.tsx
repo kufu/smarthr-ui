@@ -81,22 +81,34 @@ export const LiveRegion: FC<Props> = ({
     }, []),
   )
 
-  const Component = visuallyHidden ? VisuallyHiddenText : as
-  const actualAs = Component !== as ? as : undefined
+  const { Wrapper, wrapperAs, Output, outputAs } = visuallyHidden
+    ? {
+        Wrapper: VisuallyHiddenText,
+        wrapperAs: as,
+        Output: 'output',
+        outputAs: undefined,
+      }
+    : {
+        Wrapper: as,
+        wrapperAs: undefined,
+        Output: VisuallyHiddenText,
+        outputAs: 'output',
+      }
+  const VisibleContent = as
 
   return (
-    <Component {...rest} as={actualAs} ref={callbackRef}>
-      <Component as={actualAs} className="smarthr-ui-LiveRegion-visibleContent" aria-hidden={true}>
+    <Wrapper {...rest} as={wrapperAs} ref={callbackRef}>
+      <VisibleContent className="smarthr-ui-LiveRegion-visibleContent" aria-hidden={true}>
         {children}
-      </Component>
-      <VisuallyHiddenText
-        as="output"
+      </VisibleContent>
+      <Output
+        as={outputAs}
         role={role || 'status'}
         htmlFor={htmlFor}
         className="smarthr-ui-LiveRegion-visuallyHiddenText"
       >
         {liveText}
-      </VisuallyHiddenText>
-    </Component>
+      </Output>
+    </Wrapper>
   )
 }
