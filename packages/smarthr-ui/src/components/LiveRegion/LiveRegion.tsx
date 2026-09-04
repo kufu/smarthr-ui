@@ -40,13 +40,15 @@ export const LiveRegion: FC<Props> = ({ role, children, ...rest }) => {
       }
 
       let timeoutId: ReturnType<typeof setTimeout> | null = null
-      const timeoutAction = () => {
-        // HINT: 要素を空の状態でDOMに挿入してから遅延してテキストを設定することで、
-        // スクリーンリーダーの購読処理が間に合わずアナウンスが欠落するのを防ぐ。
+      const clearTimeoutAction = () => {
         if (timeoutId !== null) {
           clearTimeout(timeoutId)
         }
-
+      }
+      const timeoutAction = () => {
+        // HINT: 要素を空の状態でDOMに挿入してから遅延してテキストを設定することで、
+        // スクリーンリーダーの購読処理が間に合わずアナウンスが欠落するのを防ぐ。
+        clearTimeoutAction()
         timeoutId = setTimeout(action, 100)
       }
 
@@ -60,11 +62,8 @@ export const LiveRegion: FC<Props> = ({ role, children, ...rest }) => {
       })
 
       return () => {
+        clearTimeoutAction()
         observer.disconnect()
-
-        if (timeoutId !== null) {
-          clearTimeout(timeoutId)
-        }
       }
     }, []),
   )
