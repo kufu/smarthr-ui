@@ -1,3 +1,4 @@
+export type { SingleToneLevel } from './data'
 export {
   getChartColors,
   getLineChartColors,

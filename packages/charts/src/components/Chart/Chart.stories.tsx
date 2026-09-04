@@ -85,6 +85,16 @@ export const DisablePatterns: Story = {
   },
 }
 
+export const ToneRange: Story = {
+  name: 'singleTone（範囲を指定）',
+  args: {
+    type: 'bar',
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 2 },
+  },
+}
+
 export const WithChartJsOptions: Story = {
   name: 'with Chart.js options',
   args: {
