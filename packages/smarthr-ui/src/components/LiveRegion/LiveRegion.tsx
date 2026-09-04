@@ -13,6 +13,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type BaseProps = PropsWithChildren & {
   hasFlowContent?: boolean
+  announceDelay?: number
   htmlFor?: string
   visuallyHidden?: boolean
 }
@@ -20,6 +21,7 @@ type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const LiveRegion: FC<Props> = ({
   hasFlowContent,
+  announceDelay = 100,
   role,
   htmlFor,
   visuallyHidden,
@@ -29,56 +31,59 @@ export const LiveRegion: FC<Props> = ({
   const [liveText, setLiveText] = useState('')
 
   const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const visibleTextElm = node.querySelector<HTMLElement>(
-        '.smarthr-ui-LiveRegion-visibleContent',
-      )
-
-      if (!visibleTextElm) {
-        return
-      }
-
-      let beforeVisibleText = ''
-      const action = () => {
-        const visibleText = visibleTextElm.innerText
-
-        if (beforeVisibleText !== visibleText) {
-          beforeVisibleText = visibleText
-          setLiveText(visibleText)
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (!node) {
+          return
         }
-      }
 
-      let timeoutId: ReturnType<typeof setTimeout> | null = null
-      const clearTimeoutAction = () => {
-        if (timeoutId !== null) {
-          clearTimeout(timeoutId)
+        const visibleTextElm = node.querySelector<HTMLElement>(
+          '.smarthr-ui-LiveRegion-visibleContent',
+        )
+
+        if (!visibleTextElm) {
+          return
         }
-      }
-      const timeoutAction = () => {
-        // HINT: 要素を空の状態でDOMに挿入してから遅延してテキストを設定することで、
-        // スクリーンリーダーの購読処理が間に合わずアナウンスが欠落するのを防ぐ。
-        clearTimeoutAction()
-        timeoutId = setTimeout(action, 100)
-      }
 
-      timeoutAction()
+        let beforeVisibleText = ''
+        const action = () => {
+          const visibleText = visibleTextElm.innerText
 
-      const observer = new MutationObserver(timeoutAction)
-      observer.observe(visibleTextElm, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-      })
+          if (beforeVisibleText !== visibleText) {
+            beforeVisibleText = visibleText
+            setLiveText(visibleText)
+          }
+        }
 
-      return () => {
-        clearTimeoutAction()
-        observer.disconnect()
-      }
-    }, []),
+        let timeoutId: ReturnType<typeof setTimeout> | null = null
+        const clearTimeoutAction = () => {
+          if (timeoutId !== null) {
+            clearTimeout(timeoutId)
+          }
+        }
+        const timeoutAction = () => {
+          // HINT: 要素を空の状態でDOMに挿入してから遅延してテキストを設定することで、
+          // スクリーンリーダーの購読処理が間に合わずアナウンスが欠落するのを防ぐ。
+          clearTimeoutAction()
+          timeoutId = setTimeout(action, announceDelay)
+        }
+
+        timeoutAction()
+
+        const observer = new MutationObserver(timeoutAction)
+        observer.observe(visibleTextElm, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        })
+
+        return () => {
+          clearTimeoutAction()
+          observer.disconnect()
+        }
+      },
+      [announceDelay],
+    ),
   )
 
   const VisibleContent = hasFlowContent ? 'div' : 'span'

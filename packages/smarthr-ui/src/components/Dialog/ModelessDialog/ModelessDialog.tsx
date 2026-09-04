@@ -23,11 +23,11 @@ import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
-import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
+import { LiveRegion } from '../../LiveRegion'
 import { Panel, type PanelElementProps } from '../../Panel'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
@@ -182,7 +182,7 @@ export const ModelessDialog: FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
-  const [debouncedLiveRegionText, setDebouncedLiveRegionText] = useState<string>('')
+  const [liveRegionText, setLiveRegionText] = useState<string>('')
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -209,7 +209,6 @@ export const ModelessDialog: FC<Props> = ({
   })
 
   const functions = useMemo(() => {
-    const debounceLiveRegionText = debounce(setDebouncedLiveRegionText, 600)
     const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
       setPosition(pos)
 
@@ -219,7 +218,7 @@ export const ModelessDialog: FC<Props> = ({
           : undefined
 
         if (!wrapperPosition) {
-          setDebouncedLiveRegionText('')
+          setLiveRegionText('')
           return
         }
 
@@ -228,32 +227,29 @@ export const ModelessDialog: FC<Props> = ({
         wrapperPositionRef.current = wrapperPosition
 
         if (
-          oldPosition &&
-          wrapperPosition.top === oldPosition.top &&
-          wrapperPosition.left === oldPosition.left
+          !oldPosition ||
+          wrapperPosition.top !== oldPosition.top ||
+          wrapperPosition.left !== oldPosition.left
         ) {
-          return
+          setLiveRegionText(
+            latest.localize(
+              {
+                id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
+                defaultText: '上から{top}px、左から{left}px',
+              },
+              {
+                top: Math.trunc(wrapperPosition.top).toString(),
+                left: Math.trunc(wrapperPosition.left).toString(),
+              },
+            ),
+          )
         }
-
-        const txt = latest.localize(
-          {
-            id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
-            defaultText: '上から{top}px、左から{left}px',
-          },
-          {
-            top: Math.trunc(wrapperPosition.top).toString(),
-            left: Math.trunc(wrapperPosition.left).toString(),
-          },
-        )
-
-        debounceLiveRegionText(txt)
       })
     }
 
     return {
       cleanupLiveRegion: () => {
         latest.liveRegionFrame.cancel()
-        debounceLiveRegionText.cancel()
       },
       setActualPosition,
       handleArrowKeyDown: (e: KeyboardEvent) => {
@@ -471,7 +467,10 @@ export const ModelessDialog: FC<Props> = ({
           {footer && (
             <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
           )}
-          <LiveRegion regionText={debouncedLiveRegionText} />
+          {/* TODO: document.ariaNotifyに修正したい */}
+          <LiveRegion visuallyHidden={true} announceDelay={600}>
+            {liveRegionText}
+          </LiveRegion>
         </Panel>
       </Draggable>
     </DialogOverlap>,
@@ -511,17 +510,6 @@ const Handler = memo<{
     </>
   )
 })
-
-// TODO: 共通のLiveRegion実装に置き換える。その際、通知の遅延処理を実装する必要がありそう
-// LiveRegionでの実装は一時的なものとし、最終的にdocument.ariaNotifyに修正したい
-const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
-  <div
-    role="status"
-    className="shr-fixed -shr-m-px shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap"
-  >
-    {regionText}
-  </div>
-)
 
 const CloseButton = memo<{
   className: string
