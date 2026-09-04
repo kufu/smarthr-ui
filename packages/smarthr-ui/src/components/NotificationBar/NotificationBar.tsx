@@ -263,7 +263,9 @@ const MessageArea = memo<
         gap: 0.5,
       }}
     >
-      <LiveRegion role={role}>{children}</LiveRegion>
+      <LiveRegion role={role} className="shr-contents">
+        {children}
+      </LiveRegion>
     </Text>
   )
 })
