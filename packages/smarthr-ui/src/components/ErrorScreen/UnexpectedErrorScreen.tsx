@@ -1,5 +1,3 @@
-'use client'
-
 import { Localizer } from '../../intl'
 import { Stack } from '../Layout'
 import { HelpLink } from '../TextLink'

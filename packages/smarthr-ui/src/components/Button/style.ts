@@ -1,164 +1,6 @@
-import {
-  type AnchorHTMLAttributes,
-  type ButtonHTMLAttributes,
-  type ElementType,
-  type ForwardedRef,
-  type PropsWithChildren,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Loader } from '../Loader'
-
-import type { Variant } from './types'
-
-// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
-// このSELECTORはbody内の対象を列挙する
-// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
-const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
-
-type BaseProps = PropsWithChildren<{
-  size: 'M' | 'S'
-  wide: boolean
-  variant: Variant
-  $loading?: boolean
-  className: string
-  elementAs?: ElementType
-  prefix?: ReactNode
-  suffix?: ReactNode
-}>
-
-type BaseButtonProps = BaseProps & {
-  isAnchor?: never
-  buttonRef?: ForwardedRef<HTMLButtonElement>
-}
-type ButtonProps = BaseButtonProps &
-  Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>
-
-type BaseAnchorProps = BaseProps & {
-  isAnchor: true
-  anchorRef?: ForwardedRef<HTMLAnchorElement>
-}
-type AnchorProps = BaseAnchorProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseAnchorProps>
-
-export type Props = ButtonProps | AnchorProps
-
-// HINT: useButtonWrapperの引数を調整する場合、以下も調整する
-type FilteredProps =
-  'size' | 'wide' | 'variant' | 'className' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
-export type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
-export type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
-
-export const useButtonWrapper = ({
-  size,
-  wide = false,
-  variant,
-  $loading,
-  className,
-  prefix,
-  suffix,
-  children,
-  isAnchor,
-  ...rest
-}: Props) => {
-  const innerRef = useRef<HTMLElement>(null)
-  // HINT: squareは
-  //  null: Buttonのレンダリング前
-  //  boolean: レンダリング後
-  const [square, setSquare] = useState<null | boolean>(null)
-
-  const classNames = useMemo(() => {
-    const { button, anchor, loader } = wrapperClassNameGenerator({
-      variant,
-      size,
-      square: !!square,
-      loading: !!$loading,
-      wide,
-    })
-
-    const wrapper = isAnchor ? anchor : button
-
-    return {
-      wrapper: wrapper({ className }),
-      loader: loader(),
-    }
-  }, [$loading, size, square, variant, wide, className, isAnchor])
-
-  const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
-
-  let actualPrefix = prefix
-  let actualSuffix = suffix
-  let actualChildren = children
-
-  if ($loading) {
-    actualPrefix = undefined
-    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
-
-    // HINT: squareは null | boolean のため、switchで判定する
-    // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
-    switch (square) {
-      case true:
-        actualChildren = loader
-        break
-      case false:
-        actualSuffix = loader
-        break
-    }
-  }
-
-  // HINT: actualSuffixなどは$loadingの判定で置き換えられる可能性がある
-  // あくまで利用者が設定したprefix, suffixがないかで判定する
-  const onlyBody = !prefix && !suffix
-
-  useEffect(() => {
-    if (!onlyBody) {
-      setSquare(false)
-
-      return
-    }
-
-    const target = innerRef.current
-
-    if (!target) return
-
-    const checkSquare = () => {
-      setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
-    }
-
-    checkSquare()
-
-    const observer = new MutationObserver(checkSquare)
-
-    observer.observe(target, {
-      childList: true,
-    })
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [onlyBody])
-
-  return {
-    filteredProps: { ...rest, $loading } as FilteredAnchorProps | FilteredButtonProps,
-    classNames,
-    children: (
-      <>
-        {actualPrefix}
-        <span ref={innerRef} className={innerClassName}>
-          {actualChildren}
-        </span>
-        {actualSuffix}
-      </>
-    ),
-  }
-}
-
-const wrapperClassNameGenerator = tv({
+export const classNameGenerator = tv({
   slots: {
     button: [
       'aria-disabled:shr-cursor-not-allowed',
@@ -180,6 +22,11 @@ const wrapperClassNameGenerator = tv({
       'shr-align-bottom',
       '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
     ],
+    inner: [
+      'smarthr-ui-Button-body',
+      /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+      'shr-min-w-0',
+    ],
   },
   variants: {
     variant: {
@@ -192,13 +39,10 @@ const wrapperClassNameGenerator = tv({
     },
     size: {
       M: {},
-      S: {},
-    },
-    square: {
-      true: {},
-    },
-    loading: {
-      true: {},
+      S: {
+        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
+        inner: 'shr-leading-[0]',
+      },
     },
     wide: {
       true: {},
@@ -230,6 +74,7 @@ const wrapperClassNameGenerator = tv({
          * via https://github.com/tailwindlabs/tailwindcss/issues/10576#issuecomment-1440703413
          */
         '[&_svg]:shr-block',
+        'data-[loading]:shr-flex-row-reverse',
       ],
     },
     {
@@ -245,24 +90,13 @@ const wrapperClassNameGenerator = tv({
     {
       slots: ['button', 'anchor'],
       size: 'M',
-      className: ['shr-text-base'],
-    },
-    {
-      slots: ['button', 'anchor'],
-      size: 'M',
-      square: false,
-      className: 'shr-px-1 shr-py-0.75',
-    },
-    {
-      slots: ['button', 'anchor'],
-      size: 'M',
-      square: true,
-      className: 'shr-p-0.75',
-    },
-    {
-      slots: ['button', 'anchor'],
-      loading: true,
-      className: 'shr-flex-row-reverse',
+      className: [
+        'shr-text-base',
+        'shr-px-1',
+        'shr-py-0.75',
+        /* data-square指定時は上記px/pyより詳細度が高くshr-p-0.75相当に上書きされる */
+        'data-[square]:shr-p-0.75',
+      ],
     },
     {
       slots: ['button', 'anchor'],
@@ -459,21 +293,4 @@ const wrapperClassNameGenerator = tv({
       className: '[&_.smarthr-ui-Loader-line]:shr-border-link/50',
     },
   ],
-})
-
-const innerClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Button-body',
-    /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
-    'shr-min-w-0',
-  ],
-  variants: {
-    size: {
-      M: '',
-      S: [
-        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
-        'shr-leading-[0]',
-      ],
-    },
-  },
 })
