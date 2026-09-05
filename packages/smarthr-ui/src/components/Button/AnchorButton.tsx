@@ -12,7 +12,7 @@ import {
 import { OpenInNewTabIcon } from '../Icon'
 
 import { DisabledReason } from './DisabledReason'
-import { ActualButton } from './client'
+import { ActualAnchorButton } from './client'
 import { commonClassNameGenerator } from './style'
 
 import type { BaseProps as ButtonProps } from './types'
@@ -69,20 +69,19 @@ const AnchorButton = forwardRef(
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
 
     const button = (
-      <ActualButton
+      <ActualAnchorButton
         {...rest}
         elementAs={elementAs}
         anchorRef={ref}
         href={href}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
-        isAnchor
         classNames={classNames}
         prefix={prefix}
         suffix={actualSuffix}
       >
         {children}
-      </ActualButton>
+      </ActualAnchorButton>
     )
 
     if (!href && inactiveReason) {
