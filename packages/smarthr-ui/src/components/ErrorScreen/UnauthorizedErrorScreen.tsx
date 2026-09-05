@@ -1,8 +1,3 @@
-'use client'
-
-// HINT: onClickLogin は必須のイベントハンドラで、Buttonへそのまま渡している。
-// Server ComponentからClient Componentへ関数を渡すことはできないため、
-// 'use client'を削除できない
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { Center } from '../Layout'
