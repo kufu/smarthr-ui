@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
@@ -12,8 +10,6 @@ import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
-
-import { useSideNavContext } from './SideNavContext'
 
 export type SideNavSizeType = 'M' | 'S'
 
@@ -73,19 +69,11 @@ const classNameGenerator = tv({
       // 非選択かつ末尾以外のボタンにフォーカスが当たったときのみ表示する
       'after:shr-absolute after:-shr-bottom-[1px] after:shr-left-0 after:shr-hidden after:shr-h-px after:shr-w-full after:shr-bg-border after:shr-content-[""]',
       '[:last-child_&]:after:shr-hidden [[data-current=false]:not(:last-child)_&:focus-visible]:after:shr-block [[data-current=false]_&:focus-visible]:after:shr-absolute',
+      '[[data-size=M]_&]:shr-p-1 [[data-size=M]_&]:shr-text-base',
+      '[[data-size=S]_&]:shr-px-1 [[data-size=S]_&]:shr-py-0.5 [[data-size=S]_&]:shr-text-sm',
     ],
     body: 'shr-w-full',
     bodyText: 'smarthr-ui-SideNav-itemBodyText shr-grow',
-  },
-  variants: {
-    size: {
-      M: {
-        button: 'shr-p-1 shr-text-base',
-      },
-      S: {
-        button: 'shr-px-1 shr-py-0.5 shr-text-sm',
-      },
-    },
   },
 })
 
@@ -99,18 +87,16 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   onClick,
   ...rest
 }) => {
-  const context = useSideNavContext()
-
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: context.size }),
+      button: button(),
       body: body(),
       bodyText: bodyText(),
     }
-  }, [context.size, className])
+  }, [className])
 
   return (
     <li {...rest} id={id} className={classNames.wrapper} data-current={!!current}>
@@ -134,18 +120,16 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   onClick,
   ...rest
 }: AnchorProps<T>) => {
-  const context = useSideNavContext()
-
   const classNames = useMemo(() => {
     const { wrapper, button, body, bodyText } = classNameGenerator()
 
     return {
       wrapper: wrapper({ className }),
-      button: button({ size: context.size }),
+      button: button(),
       body: body(),
       bodyText: bodyText(),
     }
-  }, [context.size, className])
+  }, [className])
 
   const Anchor = elementAs || 'a'
 
