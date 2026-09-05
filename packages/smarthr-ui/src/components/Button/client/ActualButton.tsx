@@ -64,7 +64,7 @@ type FilteredProps =
 type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
 type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
 
-export const ButtonWrapper: FC<Props> = ({
+export const ActualButton: FC<Props> = ({
   size,
   wide = false,
   variant,

@@ -8,7 +8,7 @@ import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { DisabledReason } from './DisabledReason'
-import { ButtonWrapper } from './client'
+import { ActualButton } from './client'
 
 import type { BaseProps } from './types'
 
@@ -50,7 +50,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     }, [className])
 
     const button = (
-      <ButtonWrapper
+      <ActualButton
         {...rest}
         buttonRef={ref}
         type={type}
@@ -66,7 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       >
         <LoadingStatus buttonId={buttonId} loading={loading} />
         {children}
-      </ButtonWrapper>
+      </ActualButton>
     )
 
     if (disabled && disabledReason) {

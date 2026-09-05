@@ -1,1 +1,1 @@
-export { ButtonWrapper } from './ButtonWrapper'
+export { ActualButton } from './ActualButton'
