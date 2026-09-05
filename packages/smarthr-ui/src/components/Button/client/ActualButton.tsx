@@ -1,30 +1,15 @@
 'use client'
 
-import {
-  type AnchorHTMLAttributes,
-  type ButtonHTMLAttributes,
-  type ElementType,
-  type FC,
-  type ForwardedRef,
-  type MouseEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+import { useSquareDetection } from './useSquareDetection'
+
+import type {
+  ButtonHTMLAttributes,
+  FC,
+  ForwardedRef,
+  MouseEvent,
+  PropsWithChildren,
+  ReactNode,
 } from 'react'
-
-import { Loader } from '../../Loader'
-
-import { classNameGenerator } from './style'
-
-import type { Variant } from '../types'
-
-// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
-// このSELECTORはbody内の対象を列挙する
-// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
-const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
@@ -32,75 +17,38 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
 }
 
 type BaseProps = PropsWithChildren<{
-  size: 'M' | 'S'
-  wide: boolean
-  variant: Variant
-  $loading?: boolean
-  className: string
-  elementAs?: ElementType
+  classNames: {
+    wrapper: string
+    inner: string
+  }
+  // HINT: loading中かどうかはloaderの有無で判定する。要素の生成自体は呼び出し元(Button.tsx)が行う
+  loader?: ReactNode
+  buttonRef?: ForwardedRef<HTMLButtonElement>
   prefix?: ReactNode
   suffix?: ReactNode
 }>
 
-type BaseButtonProps = BaseProps & {
-  isAnchor?: never
-  buttonRef?: ForwardedRef<HTMLButtonElement>
-}
-type ButtonProps = BaseButtonProps &
-  Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>
-
-type BaseAnchorProps = BaseProps & {
-  isAnchor: true
-  anchorRef?: ForwardedRef<HTMLAnchorElement>
-}
-type AnchorProps = BaseAnchorProps &
-  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseAnchorProps>
-
-export type Props = ButtonProps | AnchorProps
-
-// HINT: 分割代入する引数を調整する場合、以下も調整する
-type FilteredProps =
-  'size' | 'wide' | 'variant' | 'className' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
-type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
-type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
+export type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
 export const ActualButton: FC<Props> = ({
-  size,
-  wide = false,
-  variant,
-  $loading,
-  className,
+  classNames,
+  loader,
+  buttonRef,
   prefix,
   suffix,
   children,
-  isAnchor,
+  disabled,
+  onClick,
   ...rest
 }) => {
-  const innerRef = useRef<HTMLElement>(null)
-  // HINT: squareは
-  //  null: Buttonのレンダリング前
-  //  boolean: レンダリング後
-  const [square, setSquare] = useState<null | boolean>(null)
+  const { square, callbackRef, dataOnlyBodyAttr } = useSquareDetection({ prefix, suffix })
 
-  const classNames = useMemo(() => {
-    const { button, anchor, loader, inner } = classNameGenerator()
-
-    const wrapper = isAnchor ? anchor : button
-
-    return {
-      wrapper: wrapper({ variant, size, wide, className }),
-      loader: loader({ variant }),
-      inner: inner({ size }),
-    }
-  }, [size, variant, wide, className, isAnchor])
-
+  let actualChildren = children
   let actualPrefix = prefix
   let actualSuffix = suffix
-  let actualChildren = children
 
-  if ($loading) {
+  if (loader) {
     actualPrefix = undefined
-    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
 
     // HINT: squareは null | boolean のため、switchで判定する
     // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
@@ -114,78 +62,25 @@ export const ActualButton: FC<Props> = ({
     }
   }
 
-  // HINT: actualSuffixなどは$loadingの判定で置き換えられる可能性がある
-  // あくまで利用者が設定したprefix, suffixがないかで判定する
-  const onlyBody = !prefix && !suffix
-
-  useEffect(() => {
-    if (!onlyBody) {
-      setSquare(false)
-
-      return
-    }
-
-    const target = innerRef.current
-
-    if (!target) return
-
-    const checkSquare = () => {
-      setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
-    }
-
-    checkSquare()
-
-    const observer = new MutationObserver(checkSquare)
-
-    observer.observe(target, {
-      childList: true,
-    })
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [onlyBody])
-
-  const inner = (
-    <span ref={innerRef} className={classNames.inner}>
-      {actualChildren}
-    </span>
-  )
-  const commonAttrs = {
-    className: classNames.wrapper,
-    'data-loading': $loading || undefined,
-    'data-square': square || undefined,
-  }
-
-  if (isAnchor) {
-    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
-    const { anchorRef, elementAs, ...anchorRest } = rest as FilteredAnchorProps
-    const Component = elementAs || 'a'
-
-    return (
-      <Component {...anchorRest} {...commonAttrs} ref={anchorRef}>
-        {actualPrefix}
-        {inner}
-        {actualSuffix}
-      </Component>
-    )
-  }
-
-  // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
-  const { buttonRef, disabled, onClick, ...buttonRest } = rest as FilteredButtonProps
-  const disabledOnLoading = $loading || disabled
-
   return (
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
-      {...buttonRest}
-      {...commonAttrs}
+      {...rest}
       ref={buttonRef}
-      aria-disabled={disabledOnLoading}
-      onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
+      className={classNames.wrapper}
+      aria-disabled={disabled}
+      data-loading={loader ? true : undefined}
+      onClick={disabled ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
-      {inner}
+      <span
+        ref={callbackRef}
+        className={classNames.inner}
+        data-only-body={dataOnlyBodyAttr}
+        data-square={square || undefined}
+      >
+        {actualChildren}
+      </span>
       {actualSuffix}
     </button>
   )
