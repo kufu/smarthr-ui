@@ -15,11 +15,11 @@ import {
   useState,
 } from 'react'
 
-import { Loader } from '../Loader'
+import { Loader } from '../../Loader'
 
 import { classNameGenerator } from './style'
 
-import type { Variant } from './types'
+import type { Variant } from '../types'
 
 // HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
 // このSELECTORはbody内の対象を列挙する

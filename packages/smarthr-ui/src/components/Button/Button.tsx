@@ -7,8 +7,8 @@ import { usePortal } from '../../hooks/client/usePortal'
 import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
+import { ButtonWrapper } from './client'
 
 import type { BaseProps } from './types'
 

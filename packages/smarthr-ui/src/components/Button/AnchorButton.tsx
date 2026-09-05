@@ -14,8 +14,8 @@ import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
-import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
+import { ButtonWrapper } from './client'
 
 import type { BaseProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
