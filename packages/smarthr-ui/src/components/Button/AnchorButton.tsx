@@ -68,20 +68,23 @@ const AnchorButton = forwardRef(
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
 
+    const Component = elementAs || 'a'
+
     const button = (
-      <ActualAnchorButton
+      <Component
         {...rest}
-        elementAs={elementAs}
-        anchorRef={ref}
+        ref={ref}
         href={href}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
-        classNames={classNames}
-        prefix={prefix}
-        suffix={actualSuffix}
+        className={classNames.wrapper}
       >
-        {children}
-      </ActualAnchorButton>
+        {prefix}
+        <ActualAnchorButton className={classNames.inner} prefix={prefix} suffix={actualSuffix}>
+          {children}
+        </ActualAnchorButton>
+        {actualSuffix}
+      </Component>
     )
 
     if (!href && inactiveReason) {
