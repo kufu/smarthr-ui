@@ -329,6 +329,7 @@ export const useListbox = <T,>({
     activeOption,
     handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
+    // TODO: テストで利用されているだけなのでテスト側を修正して対応、最終的に消したい
     listBoxRef,
   }
 }
@@ -350,6 +351,7 @@ type ListBoxProps<T> = {
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
   dropdownWidth?: string | number
+  callbackRef?: (node: HTMLElement | null) => void
 }
 
 export const ListBox = memo(
@@ -369,6 +371,7 @@ export const ListBox = memo(
     listBoxRect,
     triggerWidth,
     dropdownWidth,
+    callbackRef,
     inputId,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
@@ -444,7 +447,11 @@ export const ListBox = memo(
     }, [minLength])
 
     return createPortal(
-      <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+      <div
+        ref={isExpanded ? callbackRef : undefined}
+        className={CLASS_NAMES.wrapper}
+        style={styles.wrapper}
+      >
         {isExpanded && isLoading && (
           <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
