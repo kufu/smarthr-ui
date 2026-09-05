@@ -10,10 +10,13 @@ import {
   type PropsWithChildren,
   type ReactNode,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
+import { useLatest } from '../../../hooks/useLatest'
 import { Loader } from '../../Loader'
 
 // HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
@@ -68,7 +71,6 @@ export const ActualButton: FC<Props> = ({
   isAnchor,
   ...rest
 }) => {
-  const innerRef = useRef<HTMLElement>(null)
   // HINT: squareは
   //  null: Buttonのレンダリング前
   //  boolean: レンダリング後
@@ -78,33 +80,51 @@ export const ActualButton: FC<Props> = ({
   // あくまで利用者が設定したprefix, suffixがないかで判定する
   const onlyBody = !prefix && !suffix
 
-  useEffect(() => {
-    if (!onlyBody) {
-      setSquare(false)
+  const nodeRef = useRef<HTMLElement | null>(null)
+  const latest = useLatest({ onlyBody })
 
-      return
-    }
+  const functions = useMemo(() => {
+    const checkSquare = (target: HTMLElement) => {
+      if (!latest.onlyBody) {
+        setSquare(false)
 
-    const target = innerRef.current
+        return
+      }
 
-    if (!target) return
-
-    const checkSquare = () => {
       setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
     }
 
-    checkSquare()
+    return {
+      checkSquare,
+      innerCallbackRef: (node: HTMLElement | null) => {
+        nodeRef.current = node
 
-    const observer = new MutationObserver(checkSquare)
+        if (!node) return
 
-    observer.observe(target, {
-      childList: true,
-    })
+        checkSquare(node)
 
-    return () => {
-      observer.disconnect()
+        const observer = new MutationObserver(() => checkSquare(node))
+
+        observer.observe(node, {
+          childList: true,
+        })
+
+        return () => {
+          observer.disconnect()
+        }
+      },
     }
-  }, [onlyBody])
+  }, [latest])
+
+  const innerRef = useCallbackRefCleanupForReact18(functions.innerCallbackRef)
+
+  // HINT: onlyBodyはinner要素のmount/unmountを伴わずに変化しうるため、
+  // callback refのmount時チェックだけでは追従できない。変化時に再チェックする
+  useEffect(() => {
+    if (nodeRef.current) {
+      functions.checkSquare(nodeRef.current)
+    }
+  }, [onlyBody, functions])
 
   const commonAttrs = {
     className: classNames.wrapper,
