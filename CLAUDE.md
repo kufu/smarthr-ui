@@ -414,6 +414,8 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
   実測（Next.js 16.3.1 / React 19.2.8）: Server Component が直接レンダーした `<button onClick={someServerAction}>` をクリックしたところ、サーバ側のログに実行結果が出力されることを確認しました。Client Component を経由させる必要はありません。
 
+  この挙動は `onClick`/`button` に限らないことも実測済みです。`<form onSubmit={serverAction}>`・`<input onChange={serverAction}>`・`<div onKeyDown={serverAction}>` のいずれも同様にサーバへのリクエストとして実行されることを確認しています。Server Function は Flight プロトコルで関数参照そのものをシリアライズする仕組みのため、DOM 要素の種類やイベントの種類には依存しません。
+
   また値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
 
 **検証**
