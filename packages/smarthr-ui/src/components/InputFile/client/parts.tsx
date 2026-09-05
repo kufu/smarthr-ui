@@ -1,11 +1,11 @@
 import { type FC, type MouseEvent, type ReactNode, memo } from 'react'
 
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { FaFileLinesIcon, FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { FaFileLinesIcon, FaFolderOpenIcon, FaTrashCanIcon } from '../../Icon'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import { DownloadAnchorButton } from './client'
+import { DownloadAnchorButton } from './DownloadAnchorButton'
 import { FILE_NAME_BUTTON_CLASSNAME, PREVIEW_BUTTON_CLASSNAME } from './style'
 
 export const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (

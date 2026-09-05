@@ -13,10 +13,10 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { Stack } from '../../Layout'
 import { Groupbox } from '../../Panel'
-import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from '../parts'
-import { classNameGenerator } from '../style'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
+import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
+import { classNameGenerator } from './style'
 
 import type { LowerProps } from '../types'
 

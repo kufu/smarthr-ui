@@ -6,7 +6,8 @@ import { Localizer } from '../../../intl'
 import { AnchorButton } from '../../Button'
 import { FaFileArrowDownIcon } from '../../Icon'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
-import { PREVIEW_BUTTON_CLASSNAME } from '../style'
+
+import { PREVIEW_BUTTON_CLASSNAME } from './style'
 
 export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
   const [href, setHref] = useState('')
