@@ -1,3 +1,3 @@
 export { ActualButton } from './ActualButton'
-export { ActualAnchorButton } from './ActualAnchorButton'
+export { AnchorButtonInner } from './AnchorButtonInner'
 export { LoadingStatus } from './LoadingStatus'

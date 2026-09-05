@@ -12,7 +12,7 @@ import {
 import { OpenInNewTabIcon } from '../Icon'
 
 import { DisabledReason } from './DisabledReason'
-import { ActualAnchorButton } from './client'
+import { AnchorButtonInner } from './client'
 import { commonClassNameGenerator } from './style'
 
 import type { BaseProps as ButtonProps } from './types'
@@ -80,9 +80,9 @@ const AnchorButton = forwardRef(
         className={classNames.wrapper}
       >
         {prefix}
-        <ActualAnchorButton className={classNames.inner} prefix={prefix} suffix={actualSuffix}>
+        <AnchorButtonInner className={classNames.inner} prefix={prefix} suffix={actualSuffix}>
           {children}
-        </ActualAnchorButton>
+        </AnchorButtonInner>
         {actualSuffix}
       </Component>
     )

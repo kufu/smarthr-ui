@@ -7,7 +7,7 @@ import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallba
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
 
-// HINT: ActualButton/ActualAnchorButton(将来分割予定)の双方から利用するため切り出している
+// HINT: ActualButton/AnchorButtonInnerの双方から利用するため切り出している
 export const useSquareDetection = ({
   prefix,
   suffix,
