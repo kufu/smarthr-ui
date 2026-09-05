@@ -1,14 +1,10 @@
 'use client'
 
-import { type ButtonHTMLAttributes, forwardRef, memo, useId, useMemo } from 'react'
+import { type ButtonHTMLAttributes, forwardRef, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { usePortal } from '../../hooks/client/usePortal'
-import { Localizer } from '../../intl'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
 import { DisabledReason } from './DisabledReason'
-import { ActualButton } from './client'
+import { ActualButton, LoadingStatus } from './client'
 
 import type { BaseProps } from './types'
 
@@ -78,14 +74,3 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 )
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
-
-const LoadingStatus = memo<{ loading: boolean; buttonId: string }>(({ loading, buttonId }) => {
-  const { createPortal } = usePortal()
-
-  // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-  return createPortal(
-    <VisuallyHiddenText as="output" role="status" htmlFor={buttonId}>
-      {loading && <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />}
-    </VisuallyHiddenText>,
-  )
-})
