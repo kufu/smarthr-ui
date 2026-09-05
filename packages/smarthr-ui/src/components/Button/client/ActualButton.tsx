@@ -75,11 +75,15 @@ export const ActualButton: FC<Props> = ({
       className={classNames.wrapper}
       aria-disabled={disabledOnLoading}
       data-loading={$loading || undefined}
-      data-square={square || undefined}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
-      <span ref={callbackRef} className={classNames.inner} data-only-body={dataOnlyBodyAttr}>
+      <span
+        ref={callbackRef}
+        className={classNames.inner}
+        data-only-body={dataOnlyBodyAttr}
+        data-square={square || undefined}
+      >
         {actualChildren}
       </span>
       {actualSuffix}

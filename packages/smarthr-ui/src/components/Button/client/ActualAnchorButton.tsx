@@ -37,14 +37,14 @@ export const ActualAnchorButton: FC<Props> = ({
   const Component = elementAs || 'a'
 
   return (
-    <Component
-      {...rest}
-      ref={anchorRef}
-      className={classNames.wrapper}
-      data-square={square || undefined}
-    >
+    <Component {...rest} ref={anchorRef} className={classNames.wrapper}>
       {prefix}
-      <span ref={callbackRef} className={classNames.inner} data-only-body={dataOnlyBodyAttr}>
+      <span
+        ref={callbackRef}
+        className={classNames.inner}
+        data-only-body={dataOnlyBodyAttr}
+        data-square={square || undefined}
+      >
         {children}
       </span>
       {suffix}
