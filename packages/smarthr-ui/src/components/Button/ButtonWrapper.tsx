@@ -165,7 +165,7 @@ export const ButtonWrapper: FC<Props> = ({
     const Component = elementAs || 'a'
 
     return (
-      <Component {...anchorRest} ref={anchorRef} $loading={$loading} className={classNames.wrapper}>
+      <Component {...anchorRest} ref={anchorRef} className={classNames.wrapper}>
         {wrapperChildren}
       </Component>
     )
