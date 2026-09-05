@@ -147,15 +147,16 @@ export const ButtonWrapper: FC<Props> = ({
     }
   }, [onlyBody])
 
-  const wrapperChildren = (
-    <>
-      {actualPrefix}
-      <span ref={innerRef} className={classNames.inner}>
-        {actualChildren}
-      </span>
-      {actualSuffix}
-    </>
+  const inner = (
+    <span ref={innerRef} className={classNames.inner}>
+      {actualChildren}
+    </span>
   )
+  const commonAttrs = {
+    className: classNames.wrapper,
+    'data-loading': $loading || undefined,
+    'data-square': square || undefined,
+  }
 
   if (isAnchor) {
     // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
@@ -163,14 +164,10 @@ export const ButtonWrapper: FC<Props> = ({
     const Component = elementAs || 'a'
 
     return (
-      <Component
-        {...anchorRest}
-        ref={anchorRef}
-        className={classNames.wrapper}
-        data-loading={$loading || undefined}
-        data-square={square || undefined}
-      >
-        {wrapperChildren}
+      <Component {...anchorRest} {...commonAttrs} ref={anchorRef}>
+        {actualPrefix}
+        {inner}
+        {actualSuffix}
       </Component>
     )
   }
@@ -183,14 +180,14 @@ export const ButtonWrapper: FC<Props> = ({
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
       {...buttonRest}
+      {...commonAttrs}
       ref={buttonRef}
-      className={classNames.wrapper}
       aria-disabled={disabledOnLoading}
-      data-loading={$loading || undefined}
-      data-square={square || undefined}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
-      {wrapperChildren}
+      {actualPrefix}
+      {inner}
+      {actualSuffix}
     </button>
   )
 }
