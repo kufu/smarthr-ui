@@ -1,5 +1,7 @@
 import { type ButtonHTMLAttributes, forwardRef, useId, useMemo } from 'react'
 
+import { Loader } from '../Loader'
+
 import { DisabledReason } from './DisabledReason'
 import { ActualButton, LoadingStatus } from './client'
 import { commonClassNameGenerator } from './style'
@@ -45,8 +47,10 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         buttonRef={ref}
         type={type}
         id={buttonId}
-        disabled={disabled}
-        $loading={loading}
+        disabled={loading || disabled}
+        loader={
+          loading ? <Loader role="presentation" size="S" className={classNames.loader} /> : null
+        }
         classNames={classNames}
         prefix={prefix}
         suffix={suffix}

@@ -1,7 +1,5 @@
 'use client'
 
-import { Loader } from '../../Loader'
-
 import { useSquareDetection } from './useSquareDetection'
 
 import type {
@@ -21,10 +19,10 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
 type BaseProps = PropsWithChildren<{
   classNames: {
     wrapper: string
-    loader: string
     inner: string
   }
-  $loading?: boolean
+  // HINT: loading中かどうかはloaderの有無で判定する。要素の生成自体は呼び出し元(Button.tsx)が行う
+  loader?: ReactNode
   buttonRef?: ForwardedRef<HTMLButtonElement>
   prefix?: ReactNode
   suffix?: ReactNode
@@ -34,7 +32,7 @@ export type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, ke
 
 export const ActualButton: FC<Props> = ({
   classNames,
-  $loading,
+  loader,
   buttonRef,
   prefix,
   suffix,
@@ -49,9 +47,8 @@ export const ActualButton: FC<Props> = ({
   let actualPrefix = prefix
   let actualSuffix = suffix
 
-  if ($loading) {
+  if (loader) {
     actualPrefix = undefined
-    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
 
     // HINT: squareは null | boolean のため、switchで判定する
     // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
@@ -65,17 +62,15 @@ export const ActualButton: FC<Props> = ({
     }
   }
 
-  const disabledOnLoading = $loading || disabled
-
   return (
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
       {...rest}
       ref={buttonRef}
       className={classNames.wrapper}
-      aria-disabled={disabledOnLoading}
-      data-loading={$loading || undefined}
-      onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
+      aria-disabled={disabled}
+      data-loading={loader ? true : undefined}
+      onClick={disabled ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
       <span
