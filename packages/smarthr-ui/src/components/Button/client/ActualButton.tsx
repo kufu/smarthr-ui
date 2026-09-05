@@ -10,16 +10,11 @@ import {
   type PropsWithChildren,
   type ReactNode,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
 
 import { Loader } from '../../Loader'
-
-import { classNameGenerator } from './style'
-
-import type { Variant } from '../types'
 
 // HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
 // このSELECTORはbody内の対象を列挙する
@@ -32,11 +27,12 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
 }
 
 type BaseProps = PropsWithChildren<{
-  size: 'M' | 'S'
-  wide: boolean
-  variant: Variant
+  classNames: {
+    wrapper: string
+    loader?: string
+    inner: string
+  }
   $loading?: boolean
-  className: string
   elementAs?: ElementType
   prefix?: ReactNode
   suffix?: ReactNode
@@ -59,17 +55,13 @@ type AnchorProps = BaseAnchorProps &
 export type Props = ButtonProps | AnchorProps
 
 // HINT: 分割代入する引数を調整する場合、以下も調整する
-type FilteredProps =
-  'size' | 'wide' | 'variant' | 'className' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
+type FilteredProps = 'classNames' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
 type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
 type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
 
 export const ActualButton: FC<Props> = ({
-  size,
-  wide = false,
-  variant,
+  classNames,
   $loading,
-  className,
   prefix,
   suffix,
   children,
@@ -81,18 +73,6 @@ export const ActualButton: FC<Props> = ({
   //  null: Buttonのレンダリング前
   //  boolean: レンダリング後
   const [square, setSquare] = useState<null | boolean>(null)
-
-  const classNames = useMemo(() => {
-    const { button, anchor, loader, inner } = classNameGenerator()
-
-    const wrapper = isAnchor ? anchor : button
-
-    return {
-      wrapper: wrapper({ variant, size, wide, className }),
-      loader: loader({ variant }),
-      inner: inner({ size }),
-    }
-  }, [size, variant, wide, className, isAnchor])
 
   let actualPrefix = prefix
   let actualSuffix = suffix

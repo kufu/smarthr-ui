@@ -8,12 +8,12 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
 import { DisabledReason } from './DisabledReason'
 import { ActualButton } from './client'
+import { commonClassNameGenerator } from './style'
 
 import type { BaseProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
@@ -30,10 +30,6 @@ type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
   keyof BaseProps<T> & ElementRefProps<T>
 >
-
-const classNameGenerator = tv({
-  base: 'smarthr-ui-AnchorButton',
-})
 
 const AnchorButton = forwardRef(
   <T extends ElementType = 'a'>(
@@ -54,7 +50,19 @@ const AnchorButton = forwardRef(
     }: PropsWithoutRef<BaseProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+    const classNames = useMemo(() => {
+      const { anchor, inner } = commonClassNameGenerator()
+
+      return {
+        wrapper: anchor({
+          variant,
+          size,
+          wide,
+          className: `smarthr-ui-AnchorButton ${className || ''}`,
+        }),
+        inner: inner({ size }),
+      }
+    }, [variant, size, wide, className])
 
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
@@ -69,10 +77,7 @@ const AnchorButton = forwardRef(
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
         isAnchor
-        variant={variant}
-        size={size}
-        wide={wide}
-        className={actualClassName}
+        classNames={classNames}
         prefix={prefix}
         suffix={actualSuffix}
       >

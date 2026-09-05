@@ -1,18 +1,12 @@
 import { type ButtonHTMLAttributes, forwardRef, useId, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { DisabledReason } from './DisabledReason'
 import { ActualButton, LoadingStatus } from './client'
+import { commonClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
 
 type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
-
-const classNameGenerator = tv({
-  slots: {
-    wrapper: 'smarthr-ui-Button',
-  },
-})
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
   (
@@ -36,12 +30,14 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const generatedId = useId()
     const buttonId = id || generatedId
     const classNames = useMemo(() => {
-      const { wrapper } = classNameGenerator()
+      const { button, loader, inner } = commonClassNameGenerator()
 
       return {
-        wrapper: wrapper({ className }),
+        wrapper: button({ variant, size, wide, className: `smarthr-ui-Button ${className || ''}` }),
+        loader: loader({ variant }),
+        inner: inner({ size }),
       }
-    }, [className])
+    }, [variant, size, wide, className])
 
     const button = (
       <ActualButton
@@ -51,10 +47,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         id={buttonId}
         disabled={disabled}
         $loading={loading}
-        variant={variant}
-        size={size}
-        wide={wide}
-        className={classNames.wrapper}
+        classNames={classNames}
         prefix={prefix}
         suffix={suffix}
       >

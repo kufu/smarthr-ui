@@ -1,6 +1,6 @@
 import { tv } from 'tailwind-variants'
 
-export const classNameGenerator = tv({
+export const commonClassNameGenerator = tv({
   slots: {
     button: [
       'aria-disabled:shr-cursor-not-allowed',
