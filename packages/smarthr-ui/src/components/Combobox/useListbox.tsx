@@ -22,10 +22,10 @@ import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
+import { LiveRegion } from '../LiveRegion'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
 import { Text } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
 
@@ -453,9 +453,9 @@ export const ListBox = memo(
         style={styles.wrapper}
       >
         {isExpanded && isLoading && (
-          <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
+          <LiveRegion htmlFor={inputId}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
-          </VisuallyHiddenText>
+          </LiveRegion>
         )}
         <Scroller
           ref={listBoxRef}
@@ -482,15 +482,14 @@ export const ListBox = memo(
                 <Loader aria-hidden />
               </div>
             ) : options.length === 0 ? (
-              /* eslint-disable-next-line jsx-a11y/no-redundant-roles -- output要素のrole="status"は暗黙的だが、ブラウザ間の差異への対応としてフォールバック用に明示する */
-              <output role="status" htmlFor={inputId} className={CLASS_NAMES.noItems}>
+              <LiveRegion htmlFor={inputId} className={CLASS_NAMES.noItems}>
                 {noResultText ?? (
                   <Localizer
                     id="smarthr-ui/Combobox/noResultsText"
                     defaultText="一致する選択肢がありません。"
                   />
                 )}
-              </output>
+              </LiveRegion>
             ) : (
               items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton

@@ -9,6 +9,7 @@ import {
 
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
+import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -96,7 +97,7 @@ export const FormGroup: FC<Props> = ({
         </Text>
       )}
       {visibleErrorMessages && (
-        <div role="alert" id={errorMessagesId} className="shr-list-none">
+        <LiveRegion role="alert" id={errorMessagesId} hasFlowContent={true}>
           {errorMessages.map((message, index) => (
             <p key={index}>
               <Text
@@ -109,7 +110,7 @@ export const FormGroup: FC<Props> = ({
               </Text>
             </p>
           ))}
-        </div>
+        </LiveRegion>
       )}
       <div className={classNames.childrenWrapper}>{children}</div>
       {supplementaryMessage && (
