@@ -410,7 +410,9 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
   <ClientButton onClick={handleClick} />
   ```
 
-  例外として、`'use server'` で定義した **Server Function は Client Component の props として渡せます**。フレームワークが参照に変換し、呼び出し時にサーバへのリクエストになります。ただし host 要素のイベントハンドラには渡せません。
+  例外として、`'use server'` で定義した **Server Function はこの制約の対象外です**。フレームワークが参照に変換するため、Client Component の props としてはもちろん、host 要素のイベントハンドラにそのまま渡しても（Server Component 自身が書いた `<button onClick={serverAction}>` であっても）問題なく動作し、クリック時にサーバへのリクエストとして実行されます。
+
+  実測（Next.js 16.3.1 / React 19.2.8）: Server Component が直接レンダーした `<button onClick={someServerAction}>` をクリックしたところ、サーバ側のログに実行結果が出力されることを確認しました。Client Component を経由させる必要はありません。
 
   また値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
 
