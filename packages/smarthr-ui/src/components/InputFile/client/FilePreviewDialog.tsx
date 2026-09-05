@@ -27,15 +27,7 @@ export const FilePreviewDialog: FC<Props> = memo(
 
     useEffect(() => {
       if (!file) {
-        setBlobUrl((current) => {
-          if (current) {
-            URL.revokeObjectURL(current)
-            return undefined
-          }
-
-          return current
-        })
-
+        setBlobUrl(undefined)
         return
       }
 
