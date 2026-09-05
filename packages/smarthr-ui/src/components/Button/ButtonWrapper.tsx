@@ -161,17 +161,19 @@ export const ButtonWrapper: FC<Props> = ({
   )
 
   if (isAnchor) {
-    const { anchorRef, elementAs, ...anchorRest } = { ...rest, $loading } as FilteredAnchorProps
+    // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+    const { anchorRef, elementAs, ...anchorRest } = rest as FilteredAnchorProps
     const Component = elementAs || 'a'
 
     return (
-      <Component {...anchorRest} ref={anchorRef} className={classNames.wrapper}>
+      <Component {...anchorRest} ref={anchorRef} $loading={$loading} className={classNames.wrapper}>
         {wrapperChildren}
       </Component>
     )
   }
 
-  const { buttonRef, disabled, onClick, ...buttonRest } = { ...rest } as FilteredButtonProps
+  // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
+  const { buttonRef, disabled, onClick, ...buttonRest } = rest as FilteredButtonProps
   const disabledOnLoading = $loading || disabled
 
   return (
