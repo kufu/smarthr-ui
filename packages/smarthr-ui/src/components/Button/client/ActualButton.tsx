@@ -9,14 +9,11 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
+  useCallback,
   useState,
 } from 'react'
 
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { useLatest } from '../../../hooks/useLatest'
 import { Loader } from '../../Loader'
 
 // HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
@@ -80,51 +77,37 @@ export const ActualButton: FC<Props> = ({
   // あくまで利用者が設定したprefix, suffixがないかで判定する
   const onlyBody = !prefix && !suffix
 
-  const nodeRef = useRef<HTMLElement | null>(null)
-  const latest = useLatest({ onlyBody })
+  // HINT: onlyBodyはinner要素のmount/unmountを伴わずに変化しうるため、data-only-body属性として
+  // DOMに反映し、MutationObserver自身にその変化も監視させることで、callback refのmount時チェックだけで完結させる
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback((node: HTMLElement | null) => {
+      if (!node) return
 
-  const functions = useMemo(() => {
-    const checkSquare = (target: HTMLElement) => {
-      if (!latest.onlyBody) {
-        setSquare(false)
+      const checkSquare = () => {
+        if (node.getAttribute('data-only-body') !== 'true') {
+          setSquare(false)
 
-        return
+          return
+        }
+
+        setSquare(node.children.length === 1 && node.children[0].matches(ICON_SELECTOR))
       }
 
-      setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
-    }
+      checkSquare()
 
-    return {
-      checkSquare,
-      innerCallbackRef: (node: HTMLElement | null) => {
-        nodeRef.current = node
+      const observer = new MutationObserver(checkSquare)
 
-        if (!node) return
+      observer.observe(node, {
+        childList: true,
+        attributes: true,
+        attributeFilter: ['data-only-body'],
+      })
 
-        checkSquare(node)
-
-        const observer = new MutationObserver(() => checkSquare(node))
-
-        observer.observe(node, {
-          childList: true,
-        })
-
-        return () => {
-          observer.disconnect()
-        }
-      },
-    }
-  }, [latest])
-
-  const innerRef = useCallbackRefCleanupForReact18(functions.innerCallbackRef)
-
-  // HINT: onlyBodyはinner要素のmount/unmountを伴わずに変化しうるため、
-  // callback refのmount時チェックだけでは追従できない。変化時に再チェックする
-  useEffect(() => {
-    if (nodeRef.current) {
-      functions.checkSquare(nodeRef.current)
-    }
-  }, [onlyBody, functions])
+      return () => {
+        observer.disconnect()
+      }
+    }, []),
+  )
 
   const commonAttrs = {
     className: classNames.wrapper,
@@ -140,7 +123,7 @@ export const ActualButton: FC<Props> = ({
     return (
       <Component {...anchorRest} {...commonAttrs} ref={anchorRef}>
         {prefix}
-        <span ref={innerRef} className={classNames.inner}>
+        <span ref={callbackRef} className={classNames.inner} data-only-body={onlyBody || undefined}>
           {children}
         </span>
         {suffix}
@@ -182,7 +165,7 @@ export const ActualButton: FC<Props> = ({
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
-      <span ref={innerRef} className={classNames.inner}>
+      <span ref={callbackRef} className={classNames.inner} data-only-body={onlyBody || undefined}>
         {actualChildren}
       </span>
       {actualSuffix}
