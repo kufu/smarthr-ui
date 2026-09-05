@@ -2,10 +2,10 @@ import {
   type ComponentProps,
   type FC,
   type PropsWithChildren,
-  type ReactNode,
   useCallback,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
@@ -45,7 +45,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
   // childrenをrefに保存（毎レンダリング時に最新の値を設定）
   const childrenRef = useRef(children)
   childrenRef.current = children
-  const childrenBufferRef = useRef<ReactNode>(null)
+  const [childrenBuffer, setChildrenBuffer] = useState(children)
 
   const nodeRef = useRef<HTMLElement>(null)
 
@@ -56,8 +56,8 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       }
 
       const syncChildrenBuffer = () => {
-        if (node.getAttribute('data-dialog-open') === 'true') {
-          childrenBufferRef.current = childrenRef.current
+        if (node.getAttribute('data-dialog-open') !== 'true') {
+          setChildrenBuffer(childrenRef.current)
         }
       }
 
@@ -68,10 +68,8 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       const observer = new MutationObserver(syncChildrenBuffer)
 
       observer.observe(node, {
-        childList: true,
-        subtree: true,
-        characterData: true,
         attributes: true,
+        attributeFilter: ['data-dialog-open'],
       })
 
       return () => {
@@ -97,7 +95,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
         className={actualClassName}
         data-dialog-open={isOpen || undefined}
       >
-        {isOpen ? children : childrenBufferRef.current}
+        {isOpen ? children : childrenBuffer}
       </Center>
     </CSSTransition>
   )
