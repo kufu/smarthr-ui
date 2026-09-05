@@ -13,7 +13,7 @@ import { OpenInNewTabIcon } from '../Icon'
 
 import { DisabledReason } from './DisabledReason'
 import { AnchorButtonInner } from './client'
-import { commonClassNameGenerator } from './style'
+import { anchorClassNameGenerator } from './style'
 
 import type { BaseProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
@@ -51,10 +51,10 @@ const AnchorButton = forwardRef(
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const classNames = useMemo(() => {
-      const { anchor, inner } = commonClassNameGenerator()
+      const { wrapper, inner } = anchorClassNameGenerator()
 
       return {
-        wrapper: anchor({
+        wrapper: wrapper({
           variant,
           size,
           wide,
