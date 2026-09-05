@@ -84,7 +84,6 @@ export const ButtonWrapper: FC<Props> = ({
       variant,
       size,
       square: !!square,
-      loading: !!$loading,
       wide,
     })
 
@@ -95,7 +94,7 @@ export const ButtonWrapper: FC<Props> = ({
       loader: loader(),
       inner: inner(),
     }
-  }, [$loading, size, square, variant, wide, className, isAnchor])
+  }, [size, square, variant, wide, className, isAnchor])
 
   let actualPrefix = prefix
   let actualSuffix = suffix
@@ -165,7 +164,12 @@ export const ButtonWrapper: FC<Props> = ({
     const Component = elementAs || 'a'
 
     return (
-      <Component {...anchorRest} ref={anchorRef} className={classNames.wrapper}>
+      <Component
+        {...anchorRest}
+        ref={anchorRef}
+        className={classNames.wrapper}
+        data-loading={$loading || undefined}
+      >
         {wrapperChildren}
       </Component>
     )
@@ -182,6 +186,7 @@ export const ButtonWrapper: FC<Props> = ({
       ref={buttonRef}
       className={classNames.wrapper}
       aria-disabled={disabledOnLoading}
+      data-loading={$loading || undefined}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {wrapperChildren}
@@ -236,9 +241,6 @@ const classNameGenerator = tv({
     square: {
       true: {},
     },
-    loading: {
-      true: {},
-    },
     wide: {
       true: {},
     },
@@ -269,6 +271,7 @@ const classNameGenerator = tv({
          * via https://github.com/tailwindlabs/tailwindcss/issues/10576#issuecomment-1440703413
          */
         '[&_svg]:shr-block',
+        'data-[loading]:shr-flex-row-reverse',
       ],
     },
     {
@@ -297,11 +300,6 @@ const classNameGenerator = tv({
       size: 'M',
       square: true,
       className: 'shr-p-0.75',
-    },
-    {
-      slots: ['button', 'anchor'],
-      loading: true,
-      className: 'shr-flex-row-reverse',
     },
     {
       slots: ['button', 'anchor'],
