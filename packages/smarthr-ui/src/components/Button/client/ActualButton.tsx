@@ -74,27 +74,7 @@ export const ActualButton: FC<Props> = ({
   //  boolean: レンダリング後
   const [square, setSquare] = useState<null | boolean>(null)
 
-  let actualPrefix = prefix
-  let actualSuffix = suffix
-  let actualChildren = children
-
-  if ($loading) {
-    actualPrefix = undefined
-    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
-
-    // HINT: squareは null | boolean のため、switchで判定する
-    // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
-    switch (square) {
-      case true:
-        actualChildren = loader
-        break
-      case false:
-        actualSuffix = loader
-        break
-    }
-  }
-
-  // HINT: actualSuffixなどは$loadingの判定で置き換えられる可能性がある
+  // HINT: 後述のbutton向けのactualSuffixなどは$loadingの判定で置き換えられる可能性がある
   // あくまで利用者が設定したprefix, suffixがないかで判定する
   const onlyBody = !prefix && !suffix
 
@@ -126,11 +106,6 @@ export const ActualButton: FC<Props> = ({
     }
   }, [onlyBody])
 
-  const inner = (
-    <span ref={innerRef} className={classNames.inner}>
-      {actualChildren}
-    </span>
-  )
   const commonAttrs = {
     className: classNames.wrapper,
     'data-loading': $loading || undefined,
@@ -144,11 +119,33 @@ export const ActualButton: FC<Props> = ({
 
     return (
       <Component {...anchorRest} {...commonAttrs} ref={anchorRef}>
-        {actualPrefix}
-        {inner}
-        {actualSuffix}
+        {prefix}
+        <span ref={innerRef} className={classNames.inner}>
+          {children}
+        </span>
+        {suffix}
       </Component>
     )
+  }
+
+  let actualChildren = children
+  let actualPrefix = prefix
+  let actualSuffix = suffix
+
+  if ($loading) {
+    actualPrefix = undefined
+    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
+
+    // HINT: squareは null | boolean のため、switchで判定する
+    // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
+    switch (square) {
+      case true:
+        actualChildren = loader
+        break
+      case false:
+        actualSuffix = loader
+        break
+    }
   }
 
   // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
@@ -165,7 +162,9 @@ export const ActualButton: FC<Props> = ({
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
-      {inner}
+      <span ref={innerRef} className={classNames.inner}>
+        {actualChildren}
+      </span>
       {actualSuffix}
     </button>
   )
