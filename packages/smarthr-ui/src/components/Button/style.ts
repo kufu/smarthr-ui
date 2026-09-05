@@ -128,6 +128,7 @@ export const buttonClassNameGenerator = tv({
   extend: baseClassNameGenerator,
   slots: {
     wrapper: [
+      'smarthr-ui-Button',
       'aria-disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       'aria-disabled:shr-bg-clip-padding',
@@ -212,6 +213,7 @@ export const anchorClassNameGenerator = tv({
   extend: baseClassNameGenerator,
   slots: {
     wrapper: [
+      'smarthr-ui-AnchorButton',
       'shr-no-underline',
       '[&:not([href])]:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */

@@ -54,12 +54,7 @@ const AnchorButton = forwardRef(
       const { wrapper, inner } = anchorClassNameGenerator()
 
       return {
-        wrapper: wrapper({
-          variant,
-          size,
-          wide,
-          className: `smarthr-ui-AnchorButton ${className || ''}`,
-        }),
+        wrapper: wrapper({ variant, size, wide, className }),
         inner: inner({ size }),
       }
     }, [variant, size, wide, className])

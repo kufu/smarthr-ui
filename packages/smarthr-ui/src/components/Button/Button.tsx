@@ -35,12 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       const { wrapper, loader, inner } = buttonClassNameGenerator()
 
       return {
-        wrapper: wrapper({
-          variant,
-          size,
-          wide,
-          className: `smarthr-ui-Button ${className || ''}`,
-        }),
+        wrapper: wrapper({ variant, size, wide, className }),
         loader: loader({ variant }),
         inner: inner({ size }),
       }
