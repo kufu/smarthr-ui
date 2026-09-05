@@ -1,6 +1,6 @@
 import { tv } from 'tailwind-variants'
 
-export const classNameGenerator = tv({
+export const commonClassNameGenerator = tv({
   slots: {
     button: [
       'aria-disabled:shr-cursor-not-allowed',
@@ -94,8 +94,9 @@ export const classNameGenerator = tv({
         'shr-text-base',
         'shr-px-1',
         'shr-py-0.75',
-        /* data-square指定時は上記px/pyより詳細度が高くshr-p-0.75相当に上書きされる */
-        'data-[square]:shr-p-0.75',
+        /* data-squareは子要素(inner span)に設定されるため:has()で検知する。
+        上記px/pyより詳細度が高くshr-p-0.75相当に上書きされる */
+        '[&:has([data-square])]:shr-p-0.75',
       ],
     },
     {
