@@ -15,11 +15,11 @@ import {
   useState,
 } from 'react'
 
-import { Loader } from '../Loader'
+import { Loader } from '../../Loader'
 
 import { classNameGenerator } from './style'
 
-import type { Variant } from './types'
+import type { Variant } from '../types'
 
 // HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
 // このSELECTORはbody内の対象を列挙する
@@ -64,7 +64,7 @@ type FilteredProps =
 type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
 type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
 
-export const ButtonWrapper: FC<Props> = ({
+export const ActualButton: FC<Props> = ({
   size,
   wide = false,
   variant,
