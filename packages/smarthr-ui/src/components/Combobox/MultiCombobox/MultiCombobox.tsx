@@ -20,8 +20,8 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
+import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
-import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
@@ -438,7 +438,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  useOuterClick([triggerRef, listBoxRef], functions.blur)
+  useAreaOutsideClick(isExpanded ? [triggerRef, listBoxRef] : null, functions.blur)
 
   const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 

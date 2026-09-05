@@ -1,4 +1,3 @@
-import { backgroundColor } from '../../../tailwind'
 import { Stack } from '../../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 
@@ -9,10 +8,8 @@ export default {
   component: SmartHRLogo,
   render: (args) => <SmartHRLogo {...args} />,
   args: {},
+  globals: { backgrounds: { value: 'brand' } },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
-    },
     chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof SmartHRLogo>
@@ -49,9 +46,5 @@ export const Fill: StoryObj<typeof SmartHRLogo> = {
       ))}
     </Stack>
   ),
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.background }],
-    },
-  },
+  globals: { backgrounds: { value: 'background' } },
 }

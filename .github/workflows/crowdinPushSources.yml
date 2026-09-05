@@ -20,6 +20,10 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
 jobs:
   crowdin:
     name: "Upload Japanese dictionary to Crowdin"
@@ -27,6 +31,9 @@ jobs:
     env:
       TARGET_BRANCH: ${{ inputs.github_branch || github.ref_name }}
     steps:
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: Checkout branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

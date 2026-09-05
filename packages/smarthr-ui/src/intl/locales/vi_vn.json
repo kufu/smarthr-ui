@@ -24,6 +24,7 @@
   "smarthr-ui/AppHeader/Launcher/helpText": "Tính năng thường dùng là gì",
   "smarthr-ui/AppHeader/Launcher/searchResultText": "Kết quả tìm kiếm",
   "smarthr-ui/AppHeader/Launcher/emptyText": "Không tìm thấy tính năng tương thích.",
+  "smarthr-ui/AppHeader/Launcher/loadError": "Không thể tải danh sách ứng dụng. Hãy thử lại sau một lúc nữa.",
   "smarthr-ui/AppHeader/Launcher/sortDropdownLabel": "Thứ tự hiển thị",
   "smarthr-ui/AppHeader/Launcher/sortDropdownSelected": "Đang lựa chọn",
   "smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault": "Mặc định",

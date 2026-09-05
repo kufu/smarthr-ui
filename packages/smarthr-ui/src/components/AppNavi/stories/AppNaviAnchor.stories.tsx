@@ -1,4 +1,3 @@
-import { backgroundColor } from '../../../tailwind'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviAnchor } from '../AppNaviAnchor'
 
@@ -47,9 +46,6 @@ export default {
     children: 'アンカーボタン',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['Template'],

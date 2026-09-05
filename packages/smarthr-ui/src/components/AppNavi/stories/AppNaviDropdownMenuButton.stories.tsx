@@ -1,4 +1,3 @@
-import { backgroundColor } from '../../../tailwind'
 import { AnchorButton, Button } from '../../Button'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
@@ -17,9 +16,6 @@ export default {
     label: 'ボタン',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['Template'],

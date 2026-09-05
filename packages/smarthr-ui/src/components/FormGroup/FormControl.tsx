@@ -78,7 +78,7 @@ const useFormControlProps = ({
     id: baseLabel.id || `${baseId}-label`,
   }
 
-  const calculatedDescribedByIds = useDescribedByIds({
+  const { describedbyIds: _describedbyIds, ...describedByIdsRest } = useDescribedByIds({
     wrapperRef,
     htmlFor: label.htmlFor,
     errorMessages: orgErrorMessages,
@@ -122,7 +122,7 @@ const useFormControlProps = ({
 
   return {
     ...rest,
-    ...calculatedDescribedByIds,
+    ...describedByIdsRest,
     wrapperRef,
     label,
     helpMessage,
