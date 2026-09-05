@@ -71,6 +71,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
         childList: true,
         subtree: true,
         characterData: true,
+        attributes: true,
       })
 
       return () => {
