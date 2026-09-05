@@ -4,7 +4,7 @@ import { Loader } from '../Loader'
 
 import { DisabledReason } from './DisabledReason'
 import { ActualButton, LoadingStatus } from './client'
-import { commonClassNameGenerator } from './style'
+import { buttonClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
 
@@ -32,10 +32,10 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const generatedId = useId()
     const buttonId = id || generatedId
     const classNames = useMemo(() => {
-      const { button, loader, inner } = commonClassNameGenerator()
+      const { wrapper, loader, inner } = buttonClassNameGenerator()
 
       return {
-        wrapper: button({ variant, size, wide, className: `smarthr-ui-Button ${className || ''}` }),
+        wrapper: wrapper({ variant, size, wide, className }),
         loader: loader({ variant }),
         inner: inner({ size }),
       }
