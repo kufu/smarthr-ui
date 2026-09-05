@@ -18,7 +18,7 @@ overrides:
   esbuild@<=0.24.2: '>=0.28.2'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.2'
   tar@<=7.5.15: '>=7.5.22'
-  js-yaml@>=4.0.0 <=5.2.1: '>=5.2.3'
+  js-yaml@>=4.0.0 <=5.2.1: '>=5.3.0'
   '@babel/core@<=7.29.0': '>=8.0.1'
   # react-docgen が Babel 8 に未対応のため、Babel 7 を使用する（reactjs/react-docgen#1102）
   'react-docgen>@babel/core': '^7.28.0'
