@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useEffect, useState } from 'react'
+import { type FC, useLayoutEffect, useState } from 'react'
 
 import { Localizer } from '../../../intl'
 import { AnchorButton } from '../../Button'
@@ -12,7 +12,7 @@ import { PREVIEW_BUTTON_CLASSNAME } from './style'
 export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
   const [href, setHref] = useState('')
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const url = URL.createObjectURL(file)
     setHref(url)
 
