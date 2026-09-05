@@ -82,18 +82,14 @@ export const ButtonWrapper: FC<Props> = ({
   const [square, setSquare] = useState<null | boolean>(null)
 
   const classNames = useMemo(() => {
-    const { button, anchor, loader, inner } = classNameGenerator({
-      variant,
-      size,
-      wide,
-    })
+    const { button, anchor, loader, inner } = classNameGenerator()
 
     const wrapper = isAnchor ? anchor : button
 
     return {
-      wrapper: wrapper({ className }),
-      loader: loader(),
-      inner: inner(),
+      wrapper: wrapper({ variant, size, wide, className }),
+      loader: loader({ variant }),
+      inner: inner({ size }),
     }
   }, [size, variant, wide, className, isAnchor])
 
