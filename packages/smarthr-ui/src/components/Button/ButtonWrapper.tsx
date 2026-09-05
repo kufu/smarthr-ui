@@ -1,44 +1,509 @@
 import {
-  type FilteredAnchorProps,
-  type FilteredButtonProps,
-  type Props,
-  useButtonWrapper,
-} from './useButtonWrapper'
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ElementType,
+  type FC,
+  type ForwardedRef,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
-import type { FC, MouseEvent } from 'react'
+import { Loader } from '../Loader'
+
+import type { Variant } from './types'
+
+// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
+// このSELECTORはbody内の対象を列挙する
+// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
+const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }
 
-export const ButtonWrapper: FC<Props> = (props: Props) => {
-  const { classNames, children, filteredProps } = useButtonWrapper(props)
+type BaseProps = PropsWithChildren<{
+  size: 'M' | 'S'
+  wide: boolean
+  variant: Variant
+  $loading?: boolean
+  className: string
+  elementAs?: ElementType
+  prefix?: ReactNode
+  suffix?: ReactNode
+}>
 
-  if (props.isAnchor) {
-    const { anchorRef, elementAs, ...rest } = filteredProps as FilteredAnchorProps
+type BaseButtonProps = BaseProps & {
+  isAnchor?: never
+  buttonRef?: ForwardedRef<HTMLButtonElement>
+}
+type ButtonProps = BaseButtonProps &
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>
+
+type BaseAnchorProps = BaseProps & {
+  isAnchor: true
+  anchorRef?: ForwardedRef<HTMLAnchorElement>
+}
+type AnchorProps = BaseAnchorProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseAnchorProps>
+
+export type Props = ButtonProps | AnchorProps
+
+// HINT: 分割代入する引数を調整する場合、以下も調整する
+type FilteredProps =
+  'size' | 'wide' | 'variant' | 'className' | 'prefix' | 'suffix' | 'children' | 'isAnchor'
+type FilteredButtonProps = Omit<ButtonProps, FilteredProps>
+type FilteredAnchorProps = Omit<AnchorProps, FilteredProps>
+
+export const ButtonWrapper: FC<Props> = ({
+  size,
+  wide = false,
+  variant,
+  $loading,
+  className,
+  prefix,
+  suffix,
+  children,
+  isAnchor,
+  ...rest
+}) => {
+  const innerRef = useRef<HTMLElement>(null)
+  // HINT: squareは
+  //  null: Buttonのレンダリング前
+  //  boolean: レンダリング後
+  const [square, setSquare] = useState<null | boolean>(null)
+
+  const classNames = useMemo(() => {
+    const { button, anchor, loader } = wrapperClassNameGenerator({
+      variant,
+      size,
+      square: !!square,
+      loading: !!$loading,
+      wide,
+    })
+
+    const wrapper = isAnchor ? anchor : button
+
+    return {
+      wrapper: wrapper({ className }),
+      loader: loader(),
+    }
+  }, [$loading, size, square, variant, wide, className, isAnchor])
+
+  const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
+
+  let actualPrefix = prefix
+  let actualSuffix = suffix
+  let actualChildren = children
+
+  if ($loading) {
+    actualPrefix = undefined
+    const loader = <Loader role="presentation" size="S" className={classNames.loader} />
+
+    // HINT: squareは null | boolean のため、switchで判定する
+    // nullの場合にactualSuffixにloaderを突っ込んでしまうとsquareの計算が狂ってしまう
+    switch (square) {
+      case true:
+        actualChildren = loader
+        break
+      case false:
+        actualSuffix = loader
+        break
+    }
+  }
+
+  // HINT: actualSuffixなどは$loadingの判定で置き換えられる可能性がある
+  // あくまで利用者が設定したprefix, suffixがないかで判定する
+  const onlyBody = !prefix && !suffix
+
+  useEffect(() => {
+    if (!onlyBody) {
+      setSquare(false)
+
+      return
+    }
+
+    const target = innerRef.current
+
+    if (!target) return
+
+    const checkSquare = () => {
+      setSquare(target.children.length === 1 && target.children[0].matches(ICON_SELECTOR))
+    }
+
+    checkSquare()
+
+    const observer = new MutationObserver(checkSquare)
+
+    observer.observe(target, {
+      childList: true,
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [onlyBody])
+
+  const wrapperChildren = (
+    <>
+      {actualPrefix}
+      <span ref={innerRef} className={innerClassName}>
+        {actualChildren}
+      </span>
+      {actualSuffix}
+    </>
+  )
+
+  if (isAnchor) {
+    const { anchorRef, elementAs, ...anchorRest } = { ...rest, $loading } as FilteredAnchorProps
     const Component = elementAs || 'a'
 
     return (
-      <Component {...rest} ref={anchorRef} className={classNames.wrapper}>
-        {children}
+      <Component {...anchorRest} ref={anchorRef} className={classNames.wrapper}>
+        {wrapperChildren}
       </Component>
     )
   }
 
-  const { buttonRef, disabled, $loading, onClick, ...rest } = filteredProps as FilteredButtonProps
+  const { buttonRef, disabled, onClick, ...buttonRest } = { ...rest } as FilteredButtonProps
   const disabledOnLoading = $loading || disabled
 
   return (
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
-      {...rest}
+      {...buttonRest}
       ref={buttonRef}
       className={classNames.wrapper}
       aria-disabled={disabledOnLoading}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
-      {children}
+      {wrapperChildren}
     </button>
   )
 }
+
+const wrapperClassNameGenerator = tv({
+  slots: {
+    button: [
+      'aria-disabled:shr-cursor-not-allowed',
+      /* alpha color を使用しているので、背景色と干渉させない */
+      'aria-disabled:shr-bg-clip-padding',
+      /* disabled ではなく aria-disabled で文字色が変わらないため、強制カラーモード時の色を指定 */
+      'aria-disabled:forced-colors:shr-border-[GrayText] aria-disabled:forced-colors:shr-text-[GrayText]',
+      '[&_.smarthr-ui-Icon]:forced-colors:aria-disabled:shr-fill-[GrayText]',
+    ],
+    anchor: [
+      'shr-no-underline',
+      '[&:not([href])]:shr-cursor-not-allowed',
+      /* alpha color を使用しているので、背景色と干渉させない */
+      '[&:not([href])]:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
+      '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
+    ],
+    loader: [
+      'shr-align-bottom',
+      '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
+    ],
+  },
+  variants: {
+    variant: {
+      primary: {},
+      secondary: {},
+      danger: {},
+      skeleton: {},
+      text: {},
+      tertiary: {},
+    },
+    size: {
+      M: {},
+      S: {},
+    },
+    square: {
+      true: {},
+    },
+    loading: {
+      true: {},
+    },
+    wide: {
+      true: {},
+    },
+  },
+  compoundSlots: [
+    {
+      slots: ['button', 'anchor'],
+      className: [
+        'shr-box-border',
+        'shr-cursor-pointer',
+        'shr-inline-flex',
+        'shr-justify-center',
+        'shr-items-center',
+        'shr-gap-0.5',
+        'shr-text-center',
+        'shr-whitespace-nowrap',
+        'shr-rounded-m',
+        /* ボタンの高さを合わせるために指定 */
+        'shr-border-shorthand',
+        'shr-font-inherit',
+        'shr-font-bold',
+        'shr-leading-none',
+        'focus-visible:shr-focus-indicator',
+        'contrast-more:shr-border-high-contrast',
+        /* baseline より下の leading などの余白を埋める */
+        '[&_.smarthr-ui-Icon]:shr-block',
+        /** selector list は使えない
+         * via https://github.com/tailwindlabs/tailwindcss/issues/10576#issuecomment-1440703413
+         */
+        '[&_svg]:shr-block',
+      ],
+    },
+    {
+      slots: ['button', 'anchor'],
+      size: 'S',
+      className: [
+        'shr-p-0.5',
+        'shr-text-sm',
+        /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
+        'shr-min-h-[calc(theme(fontSize.sm)+theme(spacing.1)+theme(borderWidth.2))]',
+      ],
+    },
+    {
+      slots: ['button', 'anchor'],
+      size: 'M',
+      className: ['shr-text-base'],
+    },
+    {
+      slots: ['button', 'anchor'],
+      size: 'M',
+      square: false,
+      className: 'shr-px-1 shr-py-0.75',
+    },
+    {
+      slots: ['button', 'anchor'],
+      size: 'M',
+      square: true,
+      className: 'shr-p-0.75',
+    },
+    {
+      slots: ['button', 'anchor'],
+      loading: true,
+      className: 'shr-flex-row-reverse',
+    },
+    {
+      slots: ['button', 'anchor'],
+      wide: true,
+      className: 'shr-w-full',
+    },
+    {
+      slots: ['button', 'anchor'],
+      variant: 'primary',
+      className: [
+        'shr-border-main',
+        'shr-bg-main',
+        'shr-text-white',
+        'focus-visible:shr-border-main-darken',
+        'focus-visible:shr-bg-main-darken',
+        'hover:shr-border-main-darken',
+        'hover:shr-bg-main-darken',
+      ],
+    },
+    {
+      slots: ['button'],
+      variant: 'primary',
+      className: [
+        'aria-disabled:shr-border-main/50',
+        'aria-disabled:shr-bg-main/50',
+        'aria-disabled:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'primary',
+      className: [
+        '[&:not([href])]:shr-border-main/50',
+        '[&:not([href])]:shr-bg-main/50',
+        '[&:not([href])]:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['button', 'anchor'],
+      variant: 'secondary',
+      className: [
+        'shr-border-default',
+        'shr-bg-white',
+        'shr-text-black',
+        'focus-visible:shr-border-darken',
+        'focus-visible:shr-bg-white-darken',
+        'focus-visible:contrast-more:shr-border-high-contrast',
+        'hover:shr-border-darken',
+        'hover:shr-bg-white-darken',
+        'hover:contrast-more:shr-border-high-contrast',
+      ],
+    },
+    {
+      slots: ['button'],
+      variant: 'secondary',
+      className: [
+        'aria-disabled:shr-border-disabled',
+        'aria-disabled:shr-bg-white-darken',
+        'aria-disabled:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'secondary',
+      className: [
+        '[&:not([href])]:shr-border-disabled',
+        '[&:not([href])]:shr-bg-white-darken',
+        '[&:not([href])]:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['button'],
+      variant: 'tertiary',
+      className: [
+        'shr-border-transparent',
+        'shr-bg-transparent',
+        'shr-text-link',
+        'shr-font-normal',
+        'focus-visible:shr-bg-white-darken',
+        'hover:shr-bg-white-darken',
+        'aria-disabled:shr-bg-transparent',
+        'aria-disabled:shr-text-link/50',
+      ],
+    },
+    {
+      slots: ['button', 'anchor'],
+      variant: 'danger',
+      className: [
+        'shr-border-danger',
+        'shr-bg-danger',
+        'shr-text-white',
+        'focus-visible:shr-border-danger-darken',
+        'focus-visible:shr-bg-danger-darken',
+        'hover:shr-border-danger-darken',
+        'hover:shr-bg-danger-darken',
+      ],
+    },
+    {
+      slots: ['button'],
+      variant: 'danger',
+      className: [
+        'aria-disabled:shr-border-danger/50',
+        'aria-disabled:shr-bg-danger/50',
+        'aria-disabled:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'danger',
+      className: [
+        '[&:not([href])]:shr-border-danger/50',
+        '[&:not([href])]:shr-bg-danger/50',
+        '[&:not([href])]:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['button', 'anchor'],
+      variant: 'skeleton',
+      className: [
+        'shr-border-white',
+        'shr-bg-transparent',
+        'shr-text-white',
+        'focus-visible:shr-border-white-darken',
+        'focus-visible:shr-bg-overlay',
+        'focus-visible:shr-text-white-darken',
+        'hover:shr-border-white-darken',
+        'hover:shr-bg-overlay',
+        'hover:shr-text-white-darken',
+      ],
+    },
+    {
+      slots: ['button'],
+      variant: 'skeleton',
+      className: [
+        'aria-disabled:shr-border-white/50',
+        'aria-disabled:shr-bg-transparent',
+        'aria-disabled:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'skeleton',
+      className: [
+        '[&:not([href])]:shr-border-white/50',
+        '[&:not([href])]:shr-bg-transparent',
+        '[&:not([href])]:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['button', 'anchor'],
+      variant: 'text',
+      className: [
+        'shr-border-transparent',
+        'shr-bg-transparent',
+        'shr-text-black',
+        'focus-visible:shr-bg-white-darken',
+        'hover:shr-bg-white-darken',
+      ],
+    },
+    {
+      slots: ['button'],
+      variant: 'text',
+      className: [
+        'aria-disabled:shr-border-transparent',
+        'aria-disabled:shr-bg-transparent',
+        'aria-disabled:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'text',
+      className: [
+        '[&:not([href])]:shr-border-transparent',
+        '[&:not([href])]:shr-bg-transparent',
+        '[&:not([href])]:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['loader'],
+      variant: ['primary', 'danger', 'skeleton'],
+      className: [
+        '[&_.smarthr-ui-Loader-line]:shr-border-white/50',
+        '[&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+      ],
+    },
+    {
+      slots: ['loader'],
+      variant: ['secondary', 'text'],
+      className: '[&_.smarthr-ui-Loader-line]:shr-border-disabled',
+    },
+    {
+      slots: ['loader'],
+      variant: 'tertiary',
+      className: '[&_.smarthr-ui-Loader-line]:shr-border-link/50',
+    },
+  ],
+})
+
+const innerClassNameGenerator = tv({
+  base: [
+    'smarthr-ui-Button-body',
+    /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+    'shr-min-w-0',
+  ],
+  variants: {
+    size: {
+      M: '',
+      S: [
+        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
+        'shr-leading-[0]',
+      ],
+    },
+  },
+})
