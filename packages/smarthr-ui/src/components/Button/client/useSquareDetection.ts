@@ -1,5 +1,3 @@
-'use client'
-
 import { type ReactNode, useCallback, useState } from 'react'
 
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
@@ -17,16 +15,12 @@ export const useSquareDetection = ({
   prefix?: ReactNode
   suffix?: ReactNode
 }) => {
-  // HINT: 後述のbutton向けのactualSuffixなどは$loadingの判定で置き換えられる可能性がある
-  // あくまで利用者が設定したprefix, suffixがないかで判定する
-  const onlyBody = !prefix && !suffix
-
   // HINT: squareは
   //  null: Buttonのレンダリング前
   //  boolean: レンダリング後
   const [square, setSquare] = useState<null | boolean>(null)
 
-  // HINT: onlyBodyはinner要素のmount/unmountを伴わずに変化しうるため、data-only-body属性として
+  // HINT: prefix, suffixはinner要素のmount/unmountを伴わずに変化しうるため、data-only-body属性として
   // DOMに反映し、MutationObserver自身にその変化も監視させることで、callback refのmount時チェックだけで完結させる
   const callbackRef = useCallbackRefCleanupForReact18(
     useCallback((node: HTMLElement | null) => {
@@ -58,5 +52,9 @@ export const useSquareDetection = ({
     }, []),
   )
 
-  return { square, callbackRef, dataOnlyBodyAttr: onlyBody || undefined }
+  return {
+    square,
+    callbackRef,
+    dataOnlyBodyAttr: (!prefix && !suffix) || undefined,
+  }
 }
