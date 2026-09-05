@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.6.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.0...smarthr-ui-v99.6.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* **FormControl:** describedbyIdsがDOM要素に漏れる問題を修正 ([#6961](https://github.com/kufu/smarthr-ui/issues/6961)) ([36532d1](https://github.com/kufu/smarthr-ui/commit/36532d14be8ef348b63cd1f606be6cb9469591da))
+
 ## [99.6.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.5.0...smarthr-ui-v99.6.0) (2026-09-03)
 
 
