@@ -109,19 +109,18 @@ export const ActualButton: FC<Props> = ({
     }, []),
   )
 
-  const commonAttrs = {
-    className: classNames.wrapper,
-    'data-loading': $loading || undefined,
-    'data-square': square || undefined,
-  }
-
   if (isAnchor) {
     // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
     const { anchorRef, elementAs, ...anchorRest } = rest as FilteredAnchorProps
     const Component = elementAs || 'a'
 
     return (
-      <Component {...anchorRest} {...commonAttrs} ref={anchorRef}>
+      <Component
+        {...anchorRest}
+        ref={anchorRef}
+        className={classNames.wrapper}
+        data-square={square || undefined}
+      >
         {prefix}
         <span ref={callbackRef} className={classNames.inner} data-only-body={onlyBody || undefined}>
           {children}
@@ -159,9 +158,11 @@ export const ActualButton: FC<Props> = ({
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
       {...buttonRest}
-      {...commonAttrs}
       ref={buttonRef}
+      className={classNames.wrapper}
       aria-disabled={disabledOnLoading}
+      data-loading={$loading || undefined}
+      data-square={square || undefined}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
