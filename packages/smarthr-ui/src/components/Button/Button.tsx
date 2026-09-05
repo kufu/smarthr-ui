@@ -1,5 +1,3 @@
-'use client'
-
 import { type ButtonHTMLAttributes, forwardRef, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
