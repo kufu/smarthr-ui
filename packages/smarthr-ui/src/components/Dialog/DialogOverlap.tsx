@@ -3,13 +3,15 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
-  useEffect,
+  useCallback,
   useMemo,
   useRef,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { Center } from '../Layout'
 
 type Props = PropsWithChildren<
@@ -38,38 +40,46 @@ const classNameGenerator = tv({
 })
 
 export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
-  const childrenBufferRef = useRef<ReactNode>(null)
-  const nodeRef = useRef<HTMLDivElement>(null)
-
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   // childrenをrefに保存（毎レンダリング時に最新の値を設定）
   const childrenRef = useRef(children)
   childrenRef.current = children
+  const childrenBufferRef = useRef<ReactNode>(null)
 
-  useEffect(() => {
-    if (!isOpen || !nodeRef.current) {
-      return
-    }
+  const nodeRef = useRef<HTMLElement>(null)
 
-    // isOpen が true になった時に初期値を設定
-    childrenBufferRef.current = childrenRef.current
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback((node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-    // MutationObserver で DOM の変更を監視
-    const observer = new MutationObserver(() => {
-      childrenBufferRef.current = childrenRef.current
-    })
+      const syncChildrenBuffer = () => {
+        if (node.getAttribute('data-dialog-open') === 'true') {
+          childrenBufferRef.current = childrenRef.current
+        }
+      }
 
-    observer.observe(nodeRef.current, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    })
+      // マウント時点のdata-dialog-open状態を反映
+      syncChildrenBuffer()
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [isOpen])
+      // MutationObserver で DOM の変更を監視
+      const observer = new MutationObserver(syncChildrenBuffer)
+
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+
+      return () => {
+        observer.disconnect()
+      }
+    }, []),
+  )
+
+  const mergedRef = useMergeRefs(nodeRef, callbackRef)
 
   return (
     <CSSTransition
@@ -79,7 +89,13 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       unmountOnExit
       classNames="shr-dialog-transition"
     >
-      <Center as={as} ref={nodeRef} verticalCentering className={actualClassName}>
+      <Center
+        as={as}
+        ref={mergedRef}
+        verticalCentering
+        className={actualClassName}
+        data-dialog-open={isOpen || undefined}
+      >
         {isOpen ? children : childrenBufferRef.current}
       </Center>
     </CSSTransition>
