@@ -1,25 +1,19 @@
 'use client'
 
-import {
-  type AnchorHTMLAttributes,
-  type ButtonHTMLAttributes,
-  type ElementType,
-  type FC,
-  type ForwardedRef,
-  type MouseEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  useCallback,
-  useState,
-} from 'react'
-
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { Loader } from '../../Loader'
 
-// HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
-// このSELECTORはbody内の対象を列挙する
-// HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
-const ICON_SELECTOR = '.smarthr-ui-Icon, .smarthr-ui-Icon-extended, svg, img, .smarthr-ui-Loader'
+import { useSquareDetection } from './useSquareDetection'
+
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ElementType,
+  FC,
+  ForwardedRef,
+  MouseEvent,
+  PropsWithChildren,
+  ReactNode,
+} from 'react'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
@@ -68,46 +62,7 @@ export const ActualButton: FC<Props> = ({
   isAnchor,
   ...rest
 }) => {
-  // HINT: squareは
-  //  null: Buttonのレンダリング前
-  //  boolean: レンダリング後
-  const [square, setSquare] = useState<null | boolean>(null)
-
-  // HINT: 後述のbutton向けのactualSuffixなどは$loadingの判定で置き換えられる可能性がある
-  // あくまで利用者が設定したprefix, suffixがないかで判定する
-  const onlyBody = !prefix && !suffix
-
-  // HINT: onlyBodyはinner要素のmount/unmountを伴わずに変化しうるため、data-only-body属性として
-  // DOMに反映し、MutationObserver自身にその変化も監視させることで、callback refのmount時チェックだけで完結させる
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) return
-
-      const checkSquare = () => {
-        if (node.getAttribute('data-only-body') !== 'true') {
-          setSquare(false)
-
-          return
-        }
-
-        setSquare(node.children.length === 1 && node.children[0].matches(ICON_SELECTOR))
-      }
-
-      checkSquare()
-
-      const observer = new MutationObserver(checkSquare)
-
-      observer.observe(node, {
-        childList: true,
-        attributes: true,
-        attributeFilter: ['data-only-body'],
-      })
-
-      return () => {
-        observer.disconnect()
-      }
-    }, []),
-  )
+  const { square, callbackRef, dataOnlyBodyAttr } = useSquareDetection({ prefix, suffix })
 
   if (isAnchor) {
     // eslint-disable-next-line smarthr/best-practice-for-rest-parameters
@@ -122,7 +77,7 @@ export const ActualButton: FC<Props> = ({
         data-square={square || undefined}
       >
         {prefix}
-        <span ref={callbackRef} className={classNames.inner} data-only-body={onlyBody || undefined}>
+        <span ref={callbackRef} className={classNames.inner} data-only-body={dataOnlyBodyAttr}>
           {children}
         </span>
         {suffix}
@@ -166,7 +121,7 @@ export const ActualButton: FC<Props> = ({
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {actualPrefix}
-      <span ref={callbackRef} className={classNames.inner} data-only-body={onlyBody || undefined}>
+      <span ref={callbackRef} className={classNames.inner} data-only-body={dataOnlyBodyAttr}>
         {actualChildren}
       </span>
       {actualSuffix}
