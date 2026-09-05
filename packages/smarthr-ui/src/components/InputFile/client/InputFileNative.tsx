@@ -10,16 +10,16 @@ import {
   useState,
 } from 'react'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { useLatest } from '../../hooks/useLatest'
-import { Stack } from '../Layout'
-import { Groupbox } from '../Panel'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../hooks/useLatest'
+import { Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
-import type { LowerProps } from './types'
+import type { LowerProps } from '../types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 

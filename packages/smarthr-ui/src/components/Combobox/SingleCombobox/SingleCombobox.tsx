@@ -20,9 +20,9 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
-import { useAreaOutsideClick } from '../../../hooks/useAreaOutsideClick'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
@@ -212,39 +212,37 @@ const ActualSingleCombobox = <T,>(
 
   const selectFrame = useAnimationFrame()
 
-  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
-    {
-      options,
-      dropdownHelpMessage,
-      dropdownWidth,
-      onAdd,
-      // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
-      onSelect: (selected: ComboboxItem<T>) => {
-        onSelect?.(selected)
-        onChangeSelected?.(selected)
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId } = useListbox<T>({
+    options,
+    dropdownHelpMessage,
+    dropdownWidth,
+    onAdd,
+    // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
+    onSelect: (selected: ComboboxItem<T>) => {
+      onSelect?.(selected)
+      onChangeSelected?.(selected)
 
-        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        selectFrame.request(() => {
-          setIsExpanded(false)
-          // HINT:
-          // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
-          //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
-          //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
-          //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
-          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-        })
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      selectFrame.request(() => {
+        setIsExpanded(false)
+        // HINT:
+        // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+        // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+        //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+        //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+        //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+      })
 
-        setIsEditing(false)
-      },
-      isExpanded,
-      isLoading,
-      triggerRef,
-      noResultText,
-      inputId,
+      setIsEditing(false)
     },
-  )
+    isExpanded,
+    isLoading,
+    triggerRef,
+    noResultText,
+    inputId,
+  })
 
   const latest = useLatest({
     onChange,
@@ -397,8 +395,8 @@ const ActualSingleCombobox = <T,>(
       ? theme.textColor.disabled
       : theme.textColor.grey
 
-  useAreaOutsideClick(
-    isFocused ? [triggerRef, listBoxRef, clearButtonRef] : null,
+  const listBoxCallbackRef = useAreaClickCallbackRef(
+    [triggerRef, clearButtonRef],
     functions.unfocus,
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
@@ -480,7 +478,7 @@ const ActualSingleCombobox = <T,>(
           />
         }
       />
-      {!readOnly && <ListBox {...listBoxProps} />}
+      {!readOnly && <ListBox {...listBoxProps} callbackRef={listBoxCallbackRef} />}
     </div>
   )
 }
