@@ -80,7 +80,7 @@ export const ButtonWrapper: FC<Props> = ({
   const [square, setSquare] = useState<null | boolean>(null)
 
   const classNames = useMemo(() => {
-    const { button, anchor, loader } = wrapperClassNameGenerator({
+    const { button, anchor, loader, inner } = classNameGenerator({
       variant,
       size,
       square: !!square,
@@ -93,10 +93,9 @@ export const ButtonWrapper: FC<Props> = ({
     return {
       wrapper: wrapper({ className }),
       loader: loader(),
+      inner: inner(),
     }
   }, [$loading, size, square, variant, wide, className, isAnchor])
-
-  const innerClassName = useMemo(() => innerClassNameGenerator({ size }), [size])
 
   let actualPrefix = prefix
   let actualSuffix = suffix
@@ -153,7 +152,7 @@ export const ButtonWrapper: FC<Props> = ({
   const wrapperChildren = (
     <>
       {actualPrefix}
-      <span ref={innerRef} className={innerClassName}>
+      <span ref={innerRef} className={classNames.inner}>
         {actualChildren}
       </span>
       {actualSuffix}
@@ -190,7 +189,7 @@ export const ButtonWrapper: FC<Props> = ({
   )
 }
 
-const wrapperClassNameGenerator = tv({
+const classNameGenerator = tv({
   slots: {
     button: [
       'aria-disabled:shr-cursor-not-allowed',
@@ -212,6 +211,11 @@ const wrapperClassNameGenerator = tv({
       'shr-align-bottom',
       '[&_.smarthr-ui-Loader-spinner]:shr-h-em [&_.smarthr-ui-Loader-spinner]:shr-w-em',
     ],
+    inner: [
+      'smarthr-ui-Button-body',
+      /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+      'shr-min-w-0',
+    ],
   },
   variants: {
     variant: {
@@ -224,7 +228,10 @@ const wrapperClassNameGenerator = tv({
     },
     size: {
       M: {},
-      S: {},
+      S: {
+        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
+        inner: 'shr-leading-[0]',
+      },
     },
     square: {
       true: {},
@@ -491,21 +498,4 @@ const wrapperClassNameGenerator = tv({
       className: '[&_.smarthr-ui-Loader-line]:shr-border-link/50',
     },
   ],
-})
-
-const innerClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Button-body',
-    /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
-    'shr-min-w-0',
-  ],
-  variants: {
-    size: {
-      M: '',
-      S: [
-        /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
-        'shr-leading-[0]',
-      ],
-    },
-  },
 })
