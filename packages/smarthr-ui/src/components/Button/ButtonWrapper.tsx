@@ -83,7 +83,6 @@ export const ButtonWrapper: FC<Props> = ({
     const { button, anchor, loader, inner } = classNameGenerator({
       variant,
       size,
-      square: !!square,
       wide,
     })
 
@@ -94,7 +93,7 @@ export const ButtonWrapper: FC<Props> = ({
       loader: loader(),
       inner: inner(),
     }
-  }, [size, square, variant, wide, className, isAnchor])
+  }, [size, variant, wide, className, isAnchor])
 
   let actualPrefix = prefix
   let actualSuffix = suffix
@@ -169,6 +168,7 @@ export const ButtonWrapper: FC<Props> = ({
         ref={anchorRef}
         className={classNames.wrapper}
         data-loading={$loading || undefined}
+        data-square={square || undefined}
       >
         {wrapperChildren}
       </Component>
@@ -187,6 +187,7 @@ export const ButtonWrapper: FC<Props> = ({
       className={classNames.wrapper}
       aria-disabled={disabledOnLoading}
       data-loading={$loading || undefined}
+      data-square={square || undefined}
       onClick={disabledOnLoading ? EVENT_CANCELLER : onClick}
     >
       {wrapperChildren}
@@ -238,9 +239,6 @@ const classNameGenerator = tv({
         inner: 'shr-leading-[0]',
       },
     },
-    square: {
-      true: {},
-    },
     wide: {
       true: {},
     },
@@ -287,19 +285,13 @@ const classNameGenerator = tv({
     {
       slots: ['button', 'anchor'],
       size: 'M',
-      className: ['shr-text-base'],
-    },
-    {
-      slots: ['button', 'anchor'],
-      size: 'M',
-      square: false,
-      className: 'shr-px-1 shr-py-0.75',
-    },
-    {
-      slots: ['button', 'anchor'],
-      size: 'M',
-      square: true,
-      className: 'shr-p-0.75',
+      className: [
+        'shr-text-base',
+        'shr-px-1',
+        'shr-py-0.75',
+        /* data-square指定時は上記px/pyより詳細度が高くshr-p-0.75相当に上書きされる */
+        'data-[square]:shr-p-0.75',
+      ],
     },
     {
       slots: ['button', 'anchor'],
