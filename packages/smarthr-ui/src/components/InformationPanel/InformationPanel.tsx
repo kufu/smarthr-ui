@@ -5,9 +5,9 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
@@ -130,9 +130,15 @@ export const InformationPanel: FC<Props> = ({
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProp)
   const id = useId()
   const contentId = `${id}-content`
+  const [active, setActive] = useState(activeProp)
+  const prevActiveRef = useRef<boolean>(activeProp)
+
+  if (prevActiveRef.current !== activeProp) {
+    prevActiveRef.current = activeProp
+    setActive(activeProp)
+  }
 
   const classNames = useMemo(() => {
     const {
@@ -154,10 +160,6 @@ export const InformationPanel: FC<Props> = ({
       content: content(),
     }
   }, [type, bold, className])
-
-  useEffect(() => {
-    setActive(activeProp)
-  }, [activeProp])
 
   return (
     <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
