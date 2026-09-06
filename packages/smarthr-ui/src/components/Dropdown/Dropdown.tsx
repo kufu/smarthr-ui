@@ -30,7 +30,7 @@ type DropdownContextType = {
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
-  contentInnerCallbackRef: () => () => void
+  contentInnerCallbackRef: (node: HTMLElement | null) => (() => void) | undefined
   cleanupFrame: () => void
   handleClickTrigger: (rect: Rect) => void
   handleDelegateClickCloser: () => void
@@ -46,7 +46,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerRect: initialRect,
   triggerElementRef: createRef(),
   rootTriggerRef: null,
-  contentInnerCallbackRef: () => NOOP,
+  contentInnerCallbackRef: () => undefined,
   cleanupFrame: NOOP,
   handleClickTrigger: NOOP,
   handleDelegateClickCloser: NOOP,
@@ -114,7 +114,11 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         latest.openFrame.cancel()
         latest.closeFrame.cancel()
       },
-      contentInnerCallbackRef: () => {
+      contentInnerCallbackRef: (node: HTMLElement | null) => {
+        if (!node) {
+          return
+        }
+
         document.body.addEventListener('click', handleClickBody, false)
         window.addEventListener('scroll', updateTriggerRect, { passive: true })
         window.addEventListener('resize', updateTriggerRect, { passive: true })

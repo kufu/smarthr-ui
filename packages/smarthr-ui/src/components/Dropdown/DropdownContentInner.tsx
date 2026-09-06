@@ -101,7 +101,6 @@ export const DropdownContentInner: FC<Props> = ({
     triggerElementRef,
     rootTriggerRef,
     handleDelegateClickCloser,
-    contentInnerCallbackRef,
   })
 
   const callbackRef = useCallback(
@@ -110,7 +109,6 @@ export const DropdownContentInner: FC<Props> = ({
         return
       }
 
-      const callbackRefCleanup = latest.contentInnerCallbackRef()
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Tab') {
           if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
@@ -183,14 +181,13 @@ export const DropdownContentInner: FC<Props> = ({
       window.addEventListener('keydown', handleKeyDown)
 
       return () => {
-        callbackRefCleanup()
         window.removeEventListener('keydown', handleKeyDown)
       }
     },
     [latest],
   )
 
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
+  const mergedRef = useMergeRefs(contentInnerCallbackRef, wrapperRef, callbackRef)
 
   const focusFrame = useAnimationFrame()
 
