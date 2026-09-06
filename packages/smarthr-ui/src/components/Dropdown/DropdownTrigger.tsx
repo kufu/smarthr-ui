@@ -43,7 +43,8 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
-  const { active, handleClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
+  const { active, handleClickTrigger, contentId, triggerElementRef, cleanupFrame } =
+    useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
@@ -108,8 +109,9 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     return () => {
       currentCleanup?.()
       observer.disconnect()
+      cleanupFrame()
     }
-  }, [handleClickTrigger, triggerElementRef])
+  }, [handleClickTrigger, triggerElementRef, cleanupFrame])
 
   return (
     <div ref={triggerElementRef} className={actualClassName}>

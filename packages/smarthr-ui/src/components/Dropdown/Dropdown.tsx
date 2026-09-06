@@ -8,7 +8,6 @@ import {
   createContext,
   createRef,
   useContext,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -32,6 +31,7 @@ type DropdownContextType = {
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
   contentInnerCallbackRef: () => () => void
+  cleanupFrame: () => void
   handleClickTrigger: (rect: Rect) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
@@ -47,6 +47,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerElementRef: createRef(),
   rootTriggerRef: null,
   contentInnerCallbackRef: () => NOOP,
+  cleanupFrame: NOOP,
   handleClickTrigger: NOOP,
   handleDelegateClickCloser: NOOP,
   DropdownContentRoot: NOOP,
@@ -109,6 +110,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
+      cleanupFrame: () => {
+        latest.openFrame.cancel()
+        latest.closeFrame.cancel()
+      },
       contentInnerCallbackRef: () => {
         document.body.addEventListener('click', handleClickBody, false)
         window.addEventListener('scroll', updateTriggerRect, { passive: true })
@@ -143,16 +148,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
   }, [latest])
 
-  // openFrame/closeFrameのキャンセルは、DropdownContentInnerのmount/unmount(=Dropdownの開閉)
-  // とは発火条件が異なる(Dropdown自体のアンマウント時にのみキャンセルすればよい)ため分離する
-  useEffect(
-    () => () => {
-      latest.openFrame.cancel()
-      latest.closeFrame.cancel()
-    },
-    [latest],
-  )
-
   return (
     <PortalParentProvider>
       <DropdownContext.Provider
@@ -162,6 +157,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
           contentInnerCallbackRef: functions.contentInnerCallbackRef,
+          cleanupFrame: functions.cleanupFrame,
           handleClickTrigger: functions.handleClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
