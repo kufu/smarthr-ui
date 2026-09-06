@@ -5,10 +5,9 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useEffect,
+  useCallback,
   useId,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -79,18 +78,36 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
-    const inputRef = useRef<HTMLInputElement>(null)
-
     const defaultId = useId()
     const checkBoxId = id || defaultId
 
-    const mergedRef = useMergeRefs(inputRef, ref)
-
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.indeterminate = !!(checked && mixed)
+    const callbackRef = useCallback((node: HTMLInputElement | null) => {
+      if (!node) {
+        return
       }
-    }, [checked, mixed])
+
+      // checkedはcontrolled propとしてinput.checkedプロパティにのみ反映され、
+      // HTML属性としては反映されないため、data-checked属性で代替判定する
+      const action = () => {
+        node.indeterminate =
+          node.getAttribute('data-checked') === 'true' && node.getAttribute('data-mixed') === 'true'
+      }
+
+      action()
+
+      const observer = new MutationObserver(action)
+
+      observer.observe(node, {
+        attributes: true,
+        attributeFilter: ['data-checked', 'data-mixed'],
+      })
+
+      return () => {
+        observer.disconnect()
+      }
+    }, [])
+
+    const mergedRef = useMergeRefs(callbackRef, ref)
 
     return (
       <span className={classNames.wrapper} data-disabled={disabled}>
@@ -105,6 +122,9 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
             className={classNames.input}
             aria-invalid={error || undefined}
             data-smarthr-ui-input="true"
+            // checkedはDOM属性ではなくプロパティとしてのみ反映されるため、data-checkedをMutationObserverで監視
+            data-checked={checked || undefined}
+            data-mixed={mixed || undefined}
           />
           <AriaHiddenBox className={classNames.box} />
           <CheckIconArea mixed={mixed} classNames={classNames} />
