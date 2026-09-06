@@ -7,7 +7,6 @@ import {
   memo,
   useId,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
@@ -133,10 +132,10 @@ export const InformationPanel: FC<Props> = ({
   const id = useId()
   const contentId = `${id}-content`
   const [active, setActive] = useState(activeProp)
-  const prevActiveRef = useRef<boolean>(activeProp)
+  const [prevActiveProp, setPrevActiveProp] = useState(activeProp)
 
-  if (prevActiveRef.current !== activeProp) {
-    prevActiveRef.current = activeProp
+  if (prevActiveProp !== activeProp) {
+    setPrevActiveProp(activeProp)
     setActive(activeProp)
   }
 
