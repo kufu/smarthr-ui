@@ -8,12 +8,12 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useEffect,
+  useCallback,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
@@ -238,28 +238,32 @@ const ActualFileViewer: FC<
     }
   >
 > = ({ scale, loaded, hasWidth, setWidth, scaleSteps, functions, searchController, children }) => {
-  const ref = useRef<HTMLDivElement>(null)
   const loading = children && !loaded
 
-  useEffect(() => {
-    if (!ref.current || hasWidth) {
-      return
-    }
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (!node || hasWidth) {
+          return
+        }
 
-    const resizeObserver = new ResizeObserver(() => {
-      setWidth((ref.current?.clientWidth ?? 0) - 64)
-    })
+        const resizeObserver = new ResizeObserver(() => {
+          setWidth((node.clientWidth ?? 0) - 64)
+        })
 
-    resizeObserver.observe(ref.current)
+        resizeObserver.observe(node)
 
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [hasWidth, setWidth])
+        return () => {
+          resizeObserver.disconnect()
+        }
+      },
+      [hasWidth, setWidth],
+    ),
+  )
 
   return (
     <Scroller
-      ref={ref}
+      ref={callbackRef}
       direction="both"
       className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
     >
