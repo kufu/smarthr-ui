@@ -89,17 +89,35 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       }
     }
 
+    const handleClickBody = (e: any) => {
+      // ignore events from events within DropdownTrigger and DropdownContent
+      if (
+        latest.active &&
+        !isEventFromChild(e, triggerElementRef.current) &&
+        !latest.isChildPortal(e.target)
+      ) {
+        setActive(false)
+        actualClose()
+      }
+    }
+
+    const updateTriggerRect = () => {
+      if (triggerElementRef.current) {
+        setTriggerRect(triggerElementRef.current.getBoundingClientRect())
+      }
+    }
+
     return {
       DropdownContentRoot,
       contentInnerCallbackRef: () => {
-        document.body.addEventListener('click', functions.handleClickBody, false)
-        window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
-        window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
+        document.body.addEventListener('click', handleClickBody, false)
+        window.addEventListener('scroll', updateTriggerRect, { passive: true })
+        window.addEventListener('resize', updateTriggerRect, { passive: true })
 
         return () => {
-          document.body.removeEventListener('click', functions.handleClickBody, false)
-          window.removeEventListener('scroll', functions.updateTriggerRect)
-          window.removeEventListener('resize', functions.updateTriggerRect)
+          document.body.removeEventListener('click', handleClickBody, false)
+          window.removeEventListener('scroll', updateTriggerRect)
+          window.removeEventListener('resize', updateTriggerRect)
         }
       },
       handleClickTrigger: (rect: Rect) => {
@@ -121,22 +139,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
-      },
-      handleClickBody: (e: any) => {
-        // ignore events from events within DropdownTrigger and DropdownContent
-        if (
-          latest.active &&
-          !isEventFromChild(e, triggerElementRef.current) &&
-          !latest.isChildPortal(e.target)
-        ) {
-          setActive(false)
-          actualClose()
-        }
-      },
-      updateTriggerRect: () => {
-        if (triggerElementRef.current) {
-          setTriggerRect(triggerElementRef.current.getBoundingClientRect())
-        }
       },
     }
   }, [latest])
