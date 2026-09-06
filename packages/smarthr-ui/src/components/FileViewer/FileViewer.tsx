@@ -269,16 +269,11 @@ const ActualFileViewer: FC<
   )
 
   return hasWidth ? (
-    <Scroller direction="both" className={SCROLLER_CLASS_NAME}>
-      {content}
-    </Scroller>
+    <ActualScroller>{content}</ActualScroller>
   ) : (
     <ResizingScroller setWidth={setWidth}>{content}</ResizingScroller>
   )
 }
-
-const SCROLLER_CLASS_NAME =
-  'shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]'
 
 const ResizingScroller: FC<PropsWithChildren<{ setWidth: CommonViewerProps['setWidth'] }>> = ({
   setWidth,
@@ -305,12 +300,19 @@ const ResizingScroller: FC<PropsWithChildren<{ setWidth: CommonViewerProps['setW
     ),
   )
 
-  return (
-    <Scroller ref={callbackRef} direction="both" className={SCROLLER_CLASS_NAME}>
-      {children}
-    </Scroller>
-  )
+  return <ActualScroller callbackRef={callbackRef}>{children}</ActualScroller>
 }
+const ActualScroller: FC<
+  PropsWithChildren<{ callbackRef?: (node: HTMLElement | null) => void }>
+> = ({ callbackRef, children }) => (
+  <Scroller
+    ref={callbackRef}
+    direction="both"
+    className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
+  >
+    {children}
+  </Scroller>
+)
 
 type ControllerProps = Pick<CommonViewerProps, 'scale' | 'functions'> & {
   scaleSteps: NonNullable<CommonViewerProps['scaleSteps']>
