@@ -1,4 +1,11 @@
-import { type ChangeEvent, type ComponentProps, type KeyboardEvent, useMemo, useState } from 'react'
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  type KeyboardEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -60,12 +67,16 @@ export const usePDFSearch = (fileUrl: string) => {
   const [query, setQueryState] = useState('')
   const [matches, setMatches] = useState<PDFSearchMatch[]>([])
   const [currentMatchIndex, setCurrentMatchIndex] = useState(-1)
-  const [pageTexts, setPageTexts] = useState<Map<number, string[]>>(() => new Map())
+  // useState化も検討したが、ページ読み込み完了ごとにMapを丸ごとコピーして再レンダーを誘発するコストが
+  // ページ数に対してO(n^2)になり実測でも悪化したため、refのまま維持している。
+  // レンダー中に呼ぶのはclear()のみで、Suspense/startTransition等concurrent機能を使っていないため
+  // 「レンダー破棄によるref不整合」の実害はない。
+  const pageTextsRef = useRef<Map<number, string[]>>(new Map())
   const [prevFileUrl, setPrevFileUrl] = useState(fileUrl)
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const latest = useLatest({ matchCount, query, pageTexts })
+  const latest = useLatest({ matchCount, query })
 
   const functions = useMemo(() => {
     const resetMatchState = () => {
@@ -73,21 +84,17 @@ export const usePDFSearch = (fileUrl: string) => {
       setCurrentMatchIndex(-1)
     }
 
-    const recalculate = (
-      texts: Map<number, string[]>,
-      nextQuery: string,
-      options?: { resetSelection?: boolean },
-    ) => {
+    const recalculate = (nextQuery: string, options?: { resetSelection?: boolean }) => {
       if (nextQuery === '') {
         resetMatchState()
         return
       }
       const escapedQuery = escapeRegExp(normalize(nextQuery))
-      const pageIndices = Array.from(texts.keys()).sort((a, b) => a - b)
+      const pageIndices = Array.from(pageTextsRef.current.keys()).sort((a, b) => a - b)
       const collected: PDFSearchMatch[] = []
       let globalIndex = 0
       for (const pageIndex of pageIndices) {
-        const pageTextItems = texts.get(pageIndex)
+        const pageTextItems = pageTextsRef.current.get(pageIndex)
         if (!pageTextItems) continue
         const { matches: pageMatches, nextGlobalIndex } = computeMatchesForPage(
           pageIndex,
@@ -134,7 +141,7 @@ export const usePDFSearch = (fileUrl: string) => {
         const nextQuery = e.target.value
 
         setQueryState(nextQuery)
-        recalculate(latest.pageTexts, nextQuery, { resetSelection: true })
+        recalculate(nextQuery, { resetSelection: true })
       },
       handleKeyDownQuery: (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.nativeEvent.isComposing) {
@@ -167,12 +174,10 @@ export const usePDFSearch = (fileUrl: string) => {
           }
           return acc
         }, [])
-        const nextPageTexts = new Map(latest.pageTexts)
-        nextPageTexts.set(pageIndex, texts.map(normalize))
-        setPageTexts(nextPageTexts)
+        pageTextsRef.current.set(pageIndex, texts.map(normalize))
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
         if (latest.query !== '') {
-          recalculate(nextPageTexts, latest.query)
+          recalculate(latest.query)
         }
       },
     }
@@ -180,7 +185,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   if (prevFileUrl !== fileUrl) {
     setPrevFileUrl(fileUrl)
-    setPageTexts(new Map())
+    pageTextsRef.current.clear()
     setQueryState('')
     functions.resetMatchState()
   }
