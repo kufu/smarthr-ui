@@ -25,11 +25,14 @@ export const DisclosureContent: FC<DisclosureContentProps> = ({
   ...rest
 }) => {
   const [expanded, setExpanded, addDisclosureChangeListener] = useDisclosure(id)
-  const [prevIsOpen, setPrevIsOpen] = useState(expanded)
+  const [prevIsOpen, setPrevIsOpen] = useState<boolean | undefined>(undefined)
 
-  if (isOpen !== undefined && isOpen !== prevIsOpen) {
+  if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen)
-    setExpanded(isOpen)
+
+    if (isOpen !== undefined) {
+      setExpanded(isOpen)
+    }
   }
 
   useEffect(() => addDisclosureChangeListener(), [addDisclosureChangeListener])
