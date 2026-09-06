@@ -31,6 +31,7 @@ type DropdownContextType = {
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
+  contentInnerCallbackRef: () => () => void
   handleClickTrigger: (rect: Rect) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
@@ -39,18 +40,16 @@ type DropdownContextType = {
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 
+const NOOP = () => null
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: createRef(),
   rootTriggerRef: null,
-  handleClickTrigger: () => {
-    /* noop */
-  },
-  handleDelegateClickCloser: () => {
-    /* noop */
-  },
-  DropdownContentRoot: () => null,
+  contentInnerCallbackRef: () => NOOP,
+  handleClickTrigger: NOOP,
+  handleDelegateClickCloser: NOOP,
+  DropdownContentRoot: NOOP,
   contentId: '',
 })
 
@@ -92,6 +91,17 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
+      contentInnerCallbackRef: () => {
+        document.body.addEventListener('click', functions.handleClickBody, false)
+        window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
+        window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
+
+        return () => {
+          document.body.removeEventListener('click', functions.handleClickBody, false)
+          window.removeEventListener('scroll', functions.updateTriggerRect)
+          window.removeEventListener('resize', functions.updateTriggerRect)
+        }
+      },
       handleClickTrigger: (rect: Rect) => {
         if (latest.active) {
           setActive(false)
@@ -131,6 +141,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
   }, [latest])
 
+  // openFrame/closeFrameのキャンセルは、DropdownContentInnerのmount/unmount(=Dropdownの開閉)
+  // とは発火条件が異なる(Dropdown自体のアンマウント時にのみキャンセルすればよい)ため分離する
   useEffect(
     () => () => {
       latest.openFrame.cancel()
@@ -138,20 +150,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     },
     [latest],
   )
-
-  useEffect(() => {
-    if (!active) return
-
-    document.body.addEventListener('click', functions.handleClickBody, false)
-    window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
-    window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
-
-    return () => {
-      document.body.removeEventListener('click', functions.handleClickBody, false)
-      window.removeEventListener('scroll', functions.updateTriggerRect)
-      window.removeEventListener('resize', functions.updateTriggerRect)
-    }
-  }, [active, functions])
 
   return (
     <PortalParentProvider>
@@ -161,6 +159,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerRect,
           triggerElementRef,
           rootTriggerRef: rootTriggerRef || triggerElementRef || null,
+          contentInnerCallbackRef: functions.contentInnerCallbackRef,
           handleClickTrigger: functions.handleClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
           DropdownContentRoot: functions.DropdownContentRoot,

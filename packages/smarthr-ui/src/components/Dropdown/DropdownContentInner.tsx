@@ -130,16 +130,18 @@ export const DropdownContentInner: FC<Props> = ({
     }
   }, [isActive])
 
-  const { triggerElementRef, rootTriggerRef, handleDelegateClickCloser } =
+  const { triggerElementRef, rootTriggerRef, handleDelegateClickCloser, contentInnerCallbackRef } =
     useContext(DropdownContext)
 
   const latest = useLatest({
     triggerElementRef,
     rootTriggerRef,
     handleDelegateClickCloser,
+    contentInnerCallbackRef,
   })
 
   useEffect(() => {
+    const callbackRefCleanup = latest.contentInnerCallbackRef()
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Tab') {
         if (
@@ -218,6 +220,7 @@ export const DropdownContentInner: FC<Props> = ({
     window.addEventListener('keydown', handleKeyDown)
 
     return () => {
+      callbackRefCleanup()
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [latest])
