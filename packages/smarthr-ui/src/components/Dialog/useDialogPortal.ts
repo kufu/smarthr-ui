@@ -18,7 +18,7 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
     }
 
     const parentElement = parent && 'current' in parent ? parent.current : parent
-    // SSR を考慮し、useEffect 内で初期値 document.body を指定
+    // SSR を考慮し、useLayoutEffect 内で初期値 document.body を指定
     const actualParent = parentElement || document.body
 
     actualParent.appendChild(portalContainer)
