@@ -254,19 +254,24 @@ export const useListbox = <T,>({
     }
   }, [hasOnAdd, latest])
 
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => addFrame.cancel, [addFrame.cancel])
+  useEnhancedEffect(() => {
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      return setActiveOption(null)
+    }
 
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
+    functions.calculateRect()
 
-      return options.find((option) => current.id === option.id) ?? null
-    })
-  }, [options])
+    const scrollOption = { capture: true, passive: true }
+    window.addEventListener('scroll', functions.calculateRect, scrollOption)
+    window.addEventListener('resize', functions.calculateRect, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
+      window.removeEventListener('resize', functions.calculateRect)
+    }
+    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
+  }, [isExpanded, options, functions])
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
@@ -289,24 +294,19 @@ export const useListbox = <T,>({
     }
   }, [activeOption, navigationType])
 
-  useEnhancedEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      return setActiveOption(null)
-    }
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => addFrame.cancel, [addFrame.cancel])
 
-    functions.calculateRect()
+  useEffect(() => {
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
 
-    const scrollOption = { capture: true, passive: true }
-    window.addEventListener('scroll', functions.calculateRect, scrollOption)
-    window.addEventListener('resize', functions.calculateRect, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
-      window.removeEventListener('resize', functions.calculateRect)
-    }
-    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
-  }, [isExpanded, options, functions])
+      return options.find((option) => current.id === option.id) ?? null
+    })
+  }, [options])
 
   return {
     listBoxProps: {
