@@ -103,13 +103,27 @@ export const useListbox = <T,>({
   const listBoxId = useId()
 
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
   })
   // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
   const [triggerWidth, setTriggerWidth] = useState(0)
+
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+  const [prevOptions, setPrevOptions] = useState(options)
+
+  if (options !== prevOptions) {
+    setPrevOptions(options)
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return options.find((option) => current.id === option.id) ?? null
+    })
+  }
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
@@ -296,17 +310,6 @@ export const useListbox = <T,>({
 
   // TODO: callbackRefにまとめ直したい
   useEffect(() => addFrame.cancel, [addFrame.cancel])
-
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
-
-      return options.find((option) => current.id === option.id) ?? null
-    })
-  }, [options])
 
   return {
     listBoxProps: {
