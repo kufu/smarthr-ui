@@ -5,7 +5,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useCallback,
   useId,
   useMemo,
 } from 'react'
@@ -62,6 +61,32 @@ const classNameGenerator = tv({
   },
 })
 
+const callbackRef = (node: HTMLInputElement | null) => {
+  if (!node) {
+    return
+  }
+
+  // checkedはcontrolled propとしてinput.checkedプロパティにのみ反映され、
+  // HTML属性としては反映されないため、data-checked属性で代替判定する
+  const action = () => {
+    node.indeterminate =
+      node.getAttribute('data-checked') === 'true' && node.getAttribute('data-mixed') === 'true'
+  }
+
+  action()
+
+  const observer = new MutationObserver(action)
+
+  observer.observe(node, {
+    attributes: true,
+    attributeFilter: ['data-checked', 'data-mixed'],
+  })
+
+  return () => {
+    observer.disconnect()
+  }
+}
+
 export const Checkbox = forwardRef<HTMLInputElement, Props>(
   ({ checked, mixed, error, className, children, disabled, id, ...rest }, ref) => {
     const classNames = useMemo(() => {
@@ -80,32 +105,6 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
 
     const defaultId = useId()
     const checkBoxId = id || defaultId
-
-    const callbackRef = useCallback((node: HTMLInputElement | null) => {
-      if (!node) {
-        return
-      }
-
-      // checkedはcontrolled propとしてinput.checkedプロパティにのみ反映され、
-      // HTML属性としては反映されないため、data-checked属性で代替判定する
-      const action = () => {
-        node.indeterminate =
-          node.getAttribute('data-checked') === 'true' && node.getAttribute('data-mixed') === 'true'
-      }
-
-      action()
-
-      const observer = new MutationObserver(action)
-
-      observer.observe(node, {
-        attributes: true,
-        attributeFilter: ['data-checked', 'data-mixed'],
-      })
-
-      return () => {
-        observer.disconnect()
-      }
-    }, [])
 
     const mergedRef = useMergeRefs(callbackRef, ref)
 
