@@ -383,9 +383,16 @@ export const ListBox = memo(
         (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
       [activeOptionId, options],
     )
+    const [prevMinLength, setPrevMinLength] = useState(minLength)
     const [currentItemLength, setCurrentItemLength] = useState(() =>
       Math.max(OPTION_INCREMENT_AMOUNT, minLength),
     )
+
+    if (minLength !== prevMinLength) {
+      setPrevMinLength(minLength)
+      setCurrentItemLength((current) => Math.max(current, minLength))
+    }
+
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {
@@ -454,10 +461,6 @@ export const ListBox = memo(
         },
       }
     }, [latest])
-
-    useEffect(() => {
-      setCurrentItemLength((current) => Math.max(current, minLength))
-    }, [minLength])
 
     return createPortal(
       <div
