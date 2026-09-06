@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { useLatest } from '../../hooks/useLatest'
@@ -15,7 +15,11 @@ declare global {
 
 type Setter = (value: boolean | ((prev: boolean) => boolean)) => void
 
-type UseDisclosureResult = [expanded: boolean, setExpanded: Setter]
+type UseDisclosureResult = [
+  expanded: boolean,
+  setExpanded: Setter,
+  addDisclosureChangeListener: () => () => void,
+]
 
 /**
  * 同じ `id` で呼ぶとイベント経由で状態が同期される custom hook
@@ -27,6 +31,14 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
 
   const functions = useMemo(
     () => ({
+      addDisclosureChangeListener: () => {
+        document.addEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
+
+        return () => {
+          latest.frame.cancel()
+          document.removeEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
+        }
+      },
       safeSetExpanded: (value: boolean | ((prev: boolean) => boolean)) => {
         // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
         latest.frame.request(() => {
@@ -51,14 +63,5 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     [latest],
   )
 
-  useEffect(() => {
-    document.addEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
-
-    return () => {
-      frame.cancel()
-      document.removeEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
-    }
-  }, [frame, functions])
-
-  return [expanded, functions.safeSetExpanded]
+  return [expanded, functions.safeSetExpanded, functions.addDisclosureChangeListener]
 }
