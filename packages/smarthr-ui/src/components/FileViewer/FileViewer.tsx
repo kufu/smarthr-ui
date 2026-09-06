@@ -240,33 +240,8 @@ const ActualFileViewer: FC<
 > = ({ scale, loaded, hasWidth, setWidth, scaleSteps, functions, searchController, children }) => {
   const loading = children && !loaded
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLElement | null) => {
-        if (!node || hasWidth) {
-          return
-        }
-
-        const resizeObserver = new ResizeObserver(() => {
-          setWidth((node.clientWidth ?? 0) - 64)
-        })
-
-        resizeObserver.observe(node)
-
-        return () => {
-          resizeObserver.disconnect()
-        }
-      },
-      [hasWidth, setWidth],
-    ),
-  )
-
-  return (
-    <Scroller
-      ref={callbackRef}
-      direction="both"
-      className="shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]"
-    >
+  const content = (
+    <>
       <div className="shr-sticky shr-start-0 shr-top-0 shr-z-[1] shr-flex shr-w-full shr-flex-shrink-0 shr-gap-0.5">
         <Controller
           scale={scale}
@@ -290,6 +265,49 @@ const ActualFileViewer: FC<
           )}
         </div>
       </div>
+    </>
+  )
+
+  return hasWidth ? (
+    <Scroller direction="both" className={SCROLLER_CLASS_NAME}>
+      {content}
+    </Scroller>
+  ) : (
+    <ResizingScroller setWidth={setWidth}>{content}</ResizingScroller>
+  )
+}
+
+const SCROLLER_CLASS_NAME =
+  'shr-flex shr-h-full shr-w-full shr-flex-col shr-gap-2 shr-bg-scrim shr-bg-[radial-gradient(theme(textColor.black)_1px,_transparent_0)] shr-bg-[length:16px_16px]'
+
+const ResizingScroller: FC<PropsWithChildren<{ setWidth: CommonViewerProps['setWidth'] }>> = ({
+  setWidth,
+  children,
+}) => {
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (!node) {
+          return
+        }
+
+        const resizeObserver = new ResizeObserver(() => {
+          setWidth((node.clientWidth ?? 0) - 64)
+        })
+
+        resizeObserver.observe(node)
+
+        return () => {
+          resizeObserver.disconnect()
+        }
+      },
+      [setWidth],
+    ),
+  )
+
+  return (
+    <Scroller ref={callbackRef} direction="both" className={SCROLLER_CLASS_NAME}>
+      {children}
     </Scroller>
   )
 }
