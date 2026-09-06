@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, type PropsWithChildren, useEffect } from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useState } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -25,12 +25,12 @@ export const DisclosureContent: FC<DisclosureContentProps> = ({
   ...rest
 }) => {
   const [expanded, setExpanded] = useDisclosure(id)
+  const [prevIsOpen, setPrevIsOpen] = useState(expanded)
 
-  useEffect(() => {
-    if (isOpen !== undefined) {
-      setExpanded(isOpen)
-    }
-  }, [isOpen, setExpanded])
+  if (isOpen !== undefined && isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen)
+    setExpanded(isOpen)
+  }
 
   if (expanded) {
     return (
