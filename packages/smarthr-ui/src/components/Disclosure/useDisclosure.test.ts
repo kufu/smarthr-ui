@@ -10,6 +10,10 @@ describe('useDisclosure', () => {
     const c4 = renderHook(useDisclosure, { initialProps: 'disclosure-1' })
     const c5 = renderHook(useDisclosure, { initialProps: 'disclosure-1' })
 
+    act(() => {
+      ;[c1, c2, c3, c4, c5].forEach((c) => c.result.current[2]())
+    })
+
     expect(c1.result.current[0]).toBe(false)
     expect(c2.result.current[0]).toBe(false)
     expect(c3.result.current[0]).toBe(false)

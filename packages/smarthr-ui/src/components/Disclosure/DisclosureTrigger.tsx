@@ -22,9 +22,9 @@ type DisclosureTriggerProps = {
 }
 
 export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, children, onClick }) => {
-  const [expanded, setExpanded] = useDisclosure(targetId)
+  const [expanded, setExpanded, addDisclosureChangeListener] = useDisclosure(targetId)
 
-  const latest = useLatest({ onClick, setExpanded })
+  const latest = useLatest({ onClick, setExpanded, addDisclosureChangeListener })
 
   // HINT: callbackRefで実装しているが、外部からrefを受け取る様になったらuseEffect化が必要
   const callbackRef = useCallbackRefCleanupForReact18(
@@ -33,6 +33,8 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
         if (!node) {
           return
         }
+
+        const removeDisclosureChangeListener = latest.addDisclosureChangeListener()
 
         let currentCleanup: (() => void) | undefined
 
@@ -85,6 +87,7 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
 
         return () => {
           currentCleanup?.()
+          removeDisclosureChangeListener()
           observer.disconnect()
         }
       },
