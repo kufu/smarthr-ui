@@ -50,12 +50,13 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
 
   const latest = useLatest({ triggerElementRef, contentId, handleClickTrigger, cleanupFrame })
 
+  // aria-expandedはactiveの変化と同期して更新する必要があるため、
+  // 下記のMutationObserverベースのeffect(非同期に発火しうる)とは分離する
   useEffect(() => {
     if (!latest.triggerElementRef.current) {
       return
     }
 
-    // apply ARIA to all focusable elements in trigger
     const triggers = tabbable(latest.triggerElementRef.current, { shouldIgnoreVisibility: true })
 
     triggers.forEach((trigger) => {
