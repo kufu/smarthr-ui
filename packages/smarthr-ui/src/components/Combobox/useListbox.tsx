@@ -6,7 +6,6 @@ import {
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -420,6 +419,23 @@ export const ListBox = memo(
       }
 
       return {
+        intersectCallbackRef: (node: HTMLElement | null) => {
+          if (node === null) {
+            return
+          }
+
+          const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+              setCurrentItemLength((current) =>
+                Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+              )
+            }
+          })
+
+          observer.observe(node)
+
+          return () => observer.disconnect()
+        },
         handleDelegateClick: (e: MouseEvent) => {
           const option = resolveOption(e)
           if (option) {
@@ -435,11 +451,6 @@ export const ListBox = memo(
           if (option) {
             latest.handleHoverOption(option)
           }
-        },
-        handleIntersect: () => {
-          setCurrentItemLength((current) =>
-            Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-          )
         },
       }
     }, [latest])
@@ -507,7 +518,7 @@ export const ListBox = memo(
             )
           ) : null}
           {currentItemLength < options.length && (
-            <Intersection handleIntersect={functions.handleIntersect} />
+            <Intersection callbackRef={functions.intersectCallbackRef} />
           )}
         </Scroller>
       </div>,
@@ -515,27 +526,10 @@ export const ListBox = memo(
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
 
-const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLElement | null) => {
-        if (node === null) {
-          return
-        }
+const Intersection = memo<{
+  callbackRef: (node: HTMLElement | null) => (() => void) | undefined
+}>(({ callbackRef }) => {
+  const actualCallbackRef = useCallbackRefCleanupForReact18(callbackRef)
 
-        const observer = new IntersectionObserver(([entry]) => {
-          if (entry.isIntersecting) {
-            handleIntersect()
-          }
-        })
-
-        observer.observe(node)
-
-        return () => observer.disconnect()
-      },
-      [handleIntersect],
-    ),
-  )
-
-  return <div ref={callbackRef} />
+  return <div ref={actualCallbackRef} />
 })
