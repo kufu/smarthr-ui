@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
-  useEffect,
+  useLayoutEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -138,7 +138,7 @@ export const DialogContentInner: FC<Props> = ({
 
   const callbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen) return
 
     const body = document.body
