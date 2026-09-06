@@ -27,6 +27,7 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
 
   const functions = useMemo(
     () => ({
+      cleanupFrame: () => latest.frame.cancel(),
       safeSetExpanded: (value: boolean | ((prev: boolean) => boolean)) => {
         // DisclosureTrigger と DisclosureContent のレンダリング順序に影響しないように animation frame を待ってから state を更新する
         latest.frame.request(() => {
@@ -55,10 +56,10 @@ export const useDisclosure = (id: string): UseDisclosureResult => {
     document.addEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
 
     return () => {
-      frame.cancel()
+      functions.cleanupFrame()
       document.removeEventListener(DISCLOSURE_CHANGE_EVENT, functions.handleDisclosureChange)
     }
-  }, [frame, functions])
+  }, [functions])
 
   return [expanded, functions.safeSetExpanded]
 }
