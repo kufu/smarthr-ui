@@ -2,7 +2,6 @@ import {
   type ChangeEvent,
   type ComponentProps,
   type KeyboardEvent,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -70,6 +69,7 @@ export const usePDFSearch = (fileUrl: string) => {
   const [currentMatchIndex, setCurrentMatchIndex] = useState(-1)
   const pageTextsRef = useRef<Map<number, string[]>>(new Map())
   const queryRef = useRef('')
+  const [prevFileUrl, setPrevFileUrl] = useState(fileUrl)
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
@@ -182,12 +182,13 @@ export const usePDFSearch = (fileUrl: string) => {
     }
   }, [latest])
 
-  useEffect(() => {
+  if (prevFileUrl !== fileUrl) {
+    setPrevFileUrl(fileUrl)
     pageTextsRef.current.clear()
     queryRef.current = ''
     setQueryState('')
     functions.resetMatchState()
-  }, [fileUrl, functions])
+  }
 
   const customTextRenderer = useMemo(() => {
     if (matches.length === 0) {
