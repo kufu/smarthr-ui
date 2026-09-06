@@ -1,11 +1,4 @@
-import {
-  type ChangeEvent,
-  type ComponentProps,
-  type KeyboardEvent,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ChangeEvent, type ComponentProps, type KeyboardEvent, useMemo, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
@@ -67,13 +60,12 @@ export const usePDFSearch = (fileUrl: string) => {
   const [query, setQueryState] = useState('')
   const [matches, setMatches] = useState<PDFSearchMatch[]>([])
   const [currentMatchIndex, setCurrentMatchIndex] = useState(-1)
-  const pageTextsRef = useRef<Map<number, string[]>>(new Map())
-  const queryRef = useRef('')
+  const [pageTexts, setPageTexts] = useState<Map<number, string[]>>(() => new Map())
   const [prevFileUrl, setPrevFileUrl] = useState(fileUrl)
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const latest = useLatest({ matchCount })
+  const latest = useLatest({ matchCount, query, pageTexts })
 
   const functions = useMemo(() => {
     const resetMatchState = () => {
@@ -81,21 +73,25 @@ export const usePDFSearch = (fileUrl: string) => {
       setCurrentMatchIndex(-1)
     }
 
-    const recalculate = (nextQuery: string, options?: { resetSelection?: boolean }) => {
+    const recalculate = (
+      texts: Map<number, string[]>,
+      nextQuery: string,
+      options?: { resetSelection?: boolean },
+    ) => {
       if (nextQuery === '') {
         resetMatchState()
         return
       }
       const escapedQuery = escapeRegExp(normalize(nextQuery))
-      const pageIndices = Array.from(pageTextsRef.current.keys()).sort((a, b) => a - b)
+      const pageIndices = Array.from(texts.keys()).sort((a, b) => a - b)
       const collected: PDFSearchMatch[] = []
       let globalIndex = 0
       for (const pageIndex of pageIndices) {
-        const texts = pageTextsRef.current.get(pageIndex)
-        if (!texts) continue
+        const pageTextItems = texts.get(pageIndex)
+        if (!pageTextItems) continue
         const { matches: pageMatches, nextGlobalIndex } = computeMatchesForPage(
           pageIndex,
-          texts,
+          pageTextItems,
           escapedQuery,
           globalIndex,
         )
@@ -137,9 +133,8 @@ export const usePDFSearch = (fileUrl: string) => {
       handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
         const nextQuery = e.target.value
 
-        queryRef.current = nextQuery
         setQueryState(nextQuery)
-        recalculate(nextQuery, { resetSelection: true })
+        recalculate(latest.pageTexts, nextQuery, { resetSelection: true })
       },
       handleKeyDownQuery: (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.nativeEvent.isComposing) {
@@ -156,9 +151,8 @@ export const usePDFSearch = (fileUrl: string) => {
             break
           }
           case 'Escape': {
-            if (queryRef.current !== '') {
+            if (latest.query !== '') {
               e.preventDefault()
-              queryRef.current = ''
               setQueryState('')
               resetMatchState()
             }
@@ -173,10 +167,12 @@ export const usePDFSearch = (fileUrl: string) => {
           }
           return acc
         }, [])
-        pageTextsRef.current.set(pageIndex, texts.map(normalize))
+        const nextPageTexts = new Map(latest.pageTexts)
+        nextPageTexts.set(pageIndex, texts.map(normalize))
+        setPageTexts(nextPageTexts)
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
-        if (queryRef.current !== '') {
-          recalculate(queryRef.current)
+        if (latest.query !== '') {
+          recalculate(nextPageTexts, latest.query)
         }
       },
     }
@@ -184,8 +180,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   if (prevFileUrl !== fileUrl) {
     setPrevFileUrl(fileUrl)
-    pageTextsRef.current.clear()
-    queryRef.current = ''
+    setPageTexts(new Map())
     setQueryState('')
     functions.resetMatchState()
   }
