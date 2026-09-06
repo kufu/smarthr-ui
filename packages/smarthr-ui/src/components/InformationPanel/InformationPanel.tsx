@@ -5,7 +5,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useEffect,
   useId,
   useMemo,
   useState,
@@ -130,9 +129,15 @@ export const InformationPanel: FC<Props> = ({
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProp)
   const id = useId()
   const contentId = `${id}-content`
+  const [active, setActive] = useState(activeProp)
+  const [prevActiveProp, setPrevActiveProp] = useState(activeProp)
+
+  if (prevActiveProp !== activeProp) {
+    setPrevActiveProp(activeProp)
+    setActive(activeProp)
+  }
 
   const classNames = useMemo(() => {
     const {
@@ -154,10 +159,6 @@ export const InformationPanel: FC<Props> = ({
       content: content(),
     }
   }, [type, bold, className])
-
-  useEffect(() => {
-    setActive(activeProp)
-  }, [activeProp])
 
   return (
     <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
