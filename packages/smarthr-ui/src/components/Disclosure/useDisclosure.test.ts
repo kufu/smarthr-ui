@@ -10,38 +10,46 @@ describe('useDisclosure', () => {
     const c4 = renderHook(useDisclosure, { initialProps: 'disclosure-1' })
     const c5 = renderHook(useDisclosure, { initialProps: 'disclosure-1' })
 
-    act(() => {
-      ;[c1, c2, c3, c4, c5].forEach((c) => c.result.current[2]())
-    })
-
-    expect(c1.result.current[0]).toBe(false)
-    expect(c2.result.current[0]).toBe(false)
-    expect(c3.result.current[0]).toBe(false)
-    expect(c4.result.current[0]).toBe(false)
-    expect(c5.result.current[0]).toBe(false)
+    let cleanups: Array<() => void> = []
 
     act(() => {
-      c3.result.current[1](true)
+      cleanups = [c1, c2, c3, c4, c5].map((c) => c.result.current[2]())
     })
 
-    await waitFor(() => {
-      expect(c1.result.current[0]).toBe(true)
-      expect(c2.result.current[0]).toBe(true)
-      expect(c3.result.current[0]).toBe(true)
-      expect(c4.result.current[0]).toBe(true)
-      expect(c5.result.current[0]).toBe(true)
-    })
-
-    act(() => {
-      c3.result.current[1](false)
-    })
-
-    await waitFor(() => {
+    try {
       expect(c1.result.current[0]).toBe(false)
       expect(c2.result.current[0]).toBe(false)
       expect(c3.result.current[0]).toBe(false)
       expect(c4.result.current[0]).toBe(false)
       expect(c5.result.current[0]).toBe(false)
-    })
+
+      act(() => {
+        c3.result.current[1](true)
+      })
+
+      await waitFor(() => {
+        expect(c1.result.current[0]).toBe(true)
+        expect(c2.result.current[0]).toBe(true)
+        expect(c3.result.current[0]).toBe(true)
+        expect(c4.result.current[0]).toBe(true)
+        expect(c5.result.current[0]).toBe(true)
+      })
+
+      act(() => {
+        c3.result.current[1](false)
+      })
+
+      await waitFor(() => {
+        expect(c1.result.current[0]).toBe(false)
+        expect(c2.result.current[0]).toBe(false)
+        expect(c3.result.current[0]).toBe(false)
+        expect(c4.result.current[0]).toBe(false)
+        expect(c5.result.current[0]).toBe(false)
+      })
+    } finally {
+      act(() => {
+        cleanups.forEach((cleanup) => cleanup())
+      })
+    }
   })
 })
