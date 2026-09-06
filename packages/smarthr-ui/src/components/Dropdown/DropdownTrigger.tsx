@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { tabbable } from '../../libs/tabbable'
 import { Tooltip } from '../Tooltip'
 
@@ -43,26 +44,28 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
   const { active, handleClickTrigger, contentId, triggerElementRef, cleanupFrame } =
     useContext(DropdownContext)
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
+  const latest = useLatest({ triggerElementRef, contentId, handleClickTrigger, cleanupFrame })
 
   useEffect(() => {
-    if (!triggerElementRef.current) {
+    if (!latest.triggerElementRef.current) {
       return
     }
 
     // apply ARIA to all focusable elements in trigger
-    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+    const triggers = tabbable(latest.triggerElementRef.current, { shouldIgnoreVisibility: true })
 
     triggers.forEach((trigger) => {
       trigger.setAttribute('aria-expanded', active.toString())
-      trigger.setAttribute('aria-controls', contentId)
+      trigger.setAttribute('aria-controls', latest.contentId)
     })
-  }, [active, triggerElementRef, contentId])
+  }, [active, latest])
 
   useEffect(() => {
-    const triggerElement = triggerElementRef.current
+    const triggerElement = latest.triggerElementRef.current
     if (!triggerElement) {
       return
     }
@@ -84,7 +87,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
       // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
       // そのためcaptureで開く処理を実行する
       const callback = (e: MouseEvent) => {
-        handleClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
+        latest.handleClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
       }
 
       button.addEventListener('click', callback, CAPTURE_OPTION)
@@ -109,9 +112,9 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     return () => {
       currentCleanup?.()
       observer.disconnect()
-      cleanupFrame()
+      latest.cleanupFrame()
     }
-  }, [handleClickTrigger, triggerElementRef, cleanupFrame])
+  }, [latest])
 
   return (
     <div ref={triggerElementRef} className={actualClassName}>
