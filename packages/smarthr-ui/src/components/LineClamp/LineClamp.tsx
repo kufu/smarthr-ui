@@ -79,14 +79,23 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
 
     checkOverflow()
 
+    const observer = new MutationObserver(checkOverflow)
+
+    if (shadowRef.current) {
+      observer.observe(shadowRef.current, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      })
+    }
+
     window.addEventListener('resize', checkOverflow)
 
     return () => {
+      observer.disconnect()
       window.removeEventListener('resize', checkOverflow)
     }
-    // TODO: 将来的にMutationObserverに置き換えて、children の変更を監視する実装に変更する
-    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
-  }, [children, maxLines])
+  }, [maxLines])
 
   const classNames = useMemo(() => {
     const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
