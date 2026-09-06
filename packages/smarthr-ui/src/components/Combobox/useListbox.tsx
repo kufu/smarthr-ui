@@ -6,6 +6,7 @@ import {
   type ReactNode,
   type RefObject,
   memo,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -15,6 +16,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useEnhancedEffect } from '../../hooks/client/useEnhancedEffect'
 import { usePortal } from '../../hooks/client/usePortal'
 import { useTheme } from '../../hooks/client/useTheme'
@@ -514,25 +516,26 @@ export const ListBox = memo(
 ) as <T>(props: ListBoxProps<T>) => ReactNode
 
 const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const callbackRef = useCallbackRefCleanupForReact18(
+    useCallback(
+      (node: HTMLElement | null) => {
+        if (node === null) {
+          return
+        }
 
-  useEffect(() => {
-    const target = ref.current
+        const observer = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting) {
+            handleIntersect()
+          }
+        })
 
-    if (target === null) {
-      return
-    }
+        observer.observe(node)
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        handleIntersect()
-      }
-    })
+        return () => observer.disconnect()
+      },
+      [handleIntersect],
+    ),
+  )
 
-    observer.observe(target)
-
-    return () => observer.disconnect()
-  }, [handleIntersect])
-
-  return <div ref={ref} />
+  return <div ref={callbackRef} />
 })
