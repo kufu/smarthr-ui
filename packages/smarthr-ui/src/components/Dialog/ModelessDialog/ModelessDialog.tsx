@@ -6,7 +6,6 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
-  type RefObject,
   type SetStateAction,
   memo,
   useCallback,
@@ -86,9 +85,12 @@ type BaseProps = PropsWithChildren<{
    */
   bottom?: string | number
   /**
-   * ポータルの container となる DOM 要素を追加する親要素
+   * ポータルの container となる DOM 要素を追加する親要素。
+   * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
+   * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+   * 呼び出し側で要素が確定してから渡すこと。
    */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement
 }>
 type Props = BaseProps &
   Omit<DialogBodyProps, keyof BaseProps> &
