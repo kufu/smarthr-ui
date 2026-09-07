@@ -291,7 +291,24 @@ import 'styled-components';    // ← hooks 側の依存が転記される
 
 **例外: `Table` パターンのようにフラット配置する場合**
 
-前述のとおり hook が `client/` 内の component からしか呼ばれない場合は `components/` `hooks/` に分けず `client/index.ts` を一つだけ置きます。これは「componentsとhooksの合流点を作らない」という目的に反しません。この `client/index.ts` が re-export するのは**公開する component のみ**で、`useTableHeadCellCount` のような非公開の内部 hook は re-export しないためです。結果として `client/index.ts` は実質「component 用バレル」としてのみ機能し、hook 側の依存が別経路から迷い込む合流点にはなりません。hook は同じ `client/` 内から相対 import で直接参照します。
+前述のとおり hook が `client/` 内の component からしか呼ばれない場合は `components/` `hooks/` に分けず `client/index.ts` を一つだけ置きます。これは「componentsとhooksの合流点を作らない」という目的に反しません。`client/` 内で宣言した hook は client 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません。したがって `client/index.ts` から hook が re-export されることはなく（例外は次項の `useSectioningWrapper` のように hook が Server Component からも直接 import されうる場合のみ）、`client/index.ts` は実質「component 用バレル」としてのみ機能します。
+
+**例外: `client/index.ts` が component のみを re-export する場合**
+
+`client/index.ts` が re-export する対象は component のみです。`client/` 内で宣言した hook は client 専用の内部実装であり、同じ `client/` 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません（例外は `useSectioningWrapper` のように、hook が `client/` 内の component を経由せず Server Component からも直接 import されうる場合のみ）。`client/` 配下にある component は前述の原則（そのファイル自身が client 専用 API を使っているかで判断する）に従い `'use client'` を持つため、`'use client'` を持つモジュールは react-server グラフでは実体を評価されずクライアント参照に変換されます。したがって複数の component を一つの `client/index.ts` で re-export しても、ある component の依存が別の component 側へ転記されることはありません。対象が公開 component か非公開 component かは無関係です。
+
+`DefinitionListItem` の `client/ItemWrapper.tsx`（非公開 component、`useTheme` を使うため `'use client'` あり）が実例です。
+
+```text
+DefinitionList/
+├── index.ts                      公開バレル
+├── DefinitionListItem.tsx         'use client' 無し。client/ItemWrapper を使う
+└── client/
+    ├── index.ts                  componentのみre-export（ItemWrapper）
+    └── ItemWrapper.tsx            'use client' 有。非公開component
+```
+
+rollup ビルド出力で `DefinitionListItem.js` が `client/index.js` を経由せず `client/ItemWrapper.js` に直リンクされること、`node --conditions react-server` での評価が成功することを実測済みです。
 
 **この転記は Next.js 実利用では顕在化しないが、それでも作らない**
 
