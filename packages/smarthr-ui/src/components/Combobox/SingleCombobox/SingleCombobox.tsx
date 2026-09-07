@@ -10,7 +10,6 @@ import {
   type RefObject,
   memo,
   useCallback,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -198,9 +197,20 @@ const ActualSingleCombobox = <T,>(
   const clearButtonRef = useRef<HTMLButtonElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+
+  const [inputValue, setInputValue] = useState('')
+  // inputValueはユーザーの手入力値も兼ねるため、prevSelectedItemLabelTextの代わりにinputValueと比較すると、
+  // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
+  const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
+
+  const selectedItemLabelText = selectedItem ? innerText(selectedItem.label) : ''
+
+  if (selectedItemLabelText !== prevSelectedItemLabelText) {
+    setPrevSelectedItemLabelText(selectedItemLabelText)
+    setInputValue(selectedItemLabelText)
+  }
 
   const { options } = useSingleOptions({
     items,
@@ -406,12 +416,6 @@ const ActualSingleCombobox = <T,>(
   const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
 
   const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
-
-  // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
-  const selectedItemLabelText = innerText(selectedItem?.label)
-  useEffect(() => {
-    setInputValue(selectedItemLabelText)
-  }, [selectedItemLabelText])
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
