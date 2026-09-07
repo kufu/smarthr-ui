@@ -1,16 +1,16 @@
 'use client'
 
-import { type FC, memo, useEffect, useState } from 'react'
+import { type FC, memo, useLayoutEffect, useState } from 'react'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { Dialog, ModelessDialog } from '../Dialog'
-import { FileViewer } from '../FileViewer'
-import { Heading } from '../Heading'
-import { FaXmarkIcon } from '../Icon'
-import { Center, Cluster } from '../Layout'
-import { Loader } from '../Loader'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
+import { Localizer } from '../../../intl'
+import { AnchorButton, Button } from '../../Button'
+import { Dialog, ModelessDialog } from '../../Dialog'
+import { FileViewer } from '../../FileViewer'
+import { Heading } from '../../Heading'
+import { FaXmarkIcon } from '../../Icon'
+import { Center, Cluster } from '../../Layout'
+import { Loader } from '../../Loader'
 
 type Props = {
   file: File | null
@@ -25,17 +25,9 @@ export const FilePreviewDialog: FC<Props> = memo(
     const isOpen = !!file
     const { mobile } = useEnvironment()
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (!file) {
-        setBlobUrl((current) => {
-          if (current) {
-            URL.revokeObjectURL(current)
-            return undefined
-          }
-
-          return current
-        })
-
+        setBlobUrl(undefined)
         return
       }
 
@@ -62,6 +54,16 @@ export const FilePreviewDialog: FC<Props> = memo(
           <Loader size="M" />
         </Center>
       )
+    const actionAreaButtons = (
+      <>
+        <AnchorButton href={blobUrl} target="_blank">
+          <Localizer id="smarthr-ui/InputFile/targetBlank" defaultText="別タブで開く" />
+        </AnchorButton>
+        <Button onClick={handleDownload}>
+          <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
+        </Button>
+      </>
+    )
 
     if (mobile) {
       return (
@@ -92,9 +94,7 @@ export const FilePreviewDialog: FC<Props> = memo(
               justify="end"
               className="shr-border-t-shorthand shr-shrink-0 shr-px-1.5 shr-py-1"
             >
-              <Button onClick={handleDownload}>
-                <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
-              </Button>
+              {actionAreaButtons}
             </Cluster>
           </div>
         </Dialog>
@@ -111,10 +111,8 @@ export const FilePreviewDialog: FC<Props> = memo(
         onClickClose={handleClose}
         heading={file?.name ?? ''}
         footer={
-          <Cluster justify="end" className="shr-px-1.5 shr-py-1">
-            <Button onClick={handleDownload}>
-              <Localizer id="smarthr-ui/InputFile/download" defaultText="ダウンロード" />
-            </Button>
+          <Cluster gap={1} justify="end" className="shr-px-1.5 shr-py-1">
+            {actionAreaButtons}
           </Cluster>
         }
       >

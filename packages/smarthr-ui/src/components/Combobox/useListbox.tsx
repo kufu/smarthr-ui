@@ -15,6 +15,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useEnhancedEffect } from '../../hooks/client/useEnhancedEffect'
 import { usePortal } from '../../hooks/client/usePortal'
 import { useTheme } from '../../hooks/client/useTheme'
@@ -102,13 +103,27 @@ export const useListbox = <T,>({
   const listBoxId = useId()
 
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
   })
   // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
   const [triggerWidth, setTriggerWidth] = useState(0)
+
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+  const [prevOptions, setPrevOptions] = useState(options)
+
+  if (options !== prevOptions) {
+    setPrevOptions(options)
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return options.find((option) => current.id === option.id) ?? null
+    })
+  }
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
@@ -253,19 +268,24 @@ export const useListbox = <T,>({
     }
   }, [hasOnAdd, latest])
 
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => addFrame.cancel, [addFrame.cancel])
+  useEnhancedEffect(() => {
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      return setActiveOption(null)
+    }
 
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
+    functions.calculateRect()
 
-      return options.find((option) => current.id === option.id) ?? null
-    })
-  }, [options])
+    const scrollOption = { capture: true, passive: true }
+    window.addEventListener('scroll', functions.calculateRect, scrollOption)
+    window.addEventListener('resize', functions.calculateRect, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
+      window.removeEventListener('resize', functions.calculateRect)
+    }
+    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
+  }, [isExpanded, options, functions])
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
@@ -288,24 +308,8 @@ export const useListbox = <T,>({
     }
   }, [activeOption, navigationType])
 
-  useEnhancedEffect(() => {
-    // 閉じたときに activeOption を初期化
-    if (!isExpanded) {
-      return setActiveOption(null)
-    }
-
-    functions.calculateRect()
-
-    const scrollOption = { capture: true, passive: true }
-    window.addEventListener('scroll', functions.calculateRect, scrollOption)
-    window.addEventListener('resize', functions.calculateRect, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
-      window.removeEventListener('resize', functions.calculateRect)
-    }
-    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
-  }, [isExpanded, options, functions])
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => addFrame.cancel, [addFrame.cancel])
 
   return {
     listBoxProps: {
@@ -329,6 +333,7 @@ export const useListbox = <T,>({
     activeOption,
     handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
+    // TODO: テストで利用されているだけなのでテスト側を修正して対応、最終的に消したい
     listBoxRef,
   }
 }
@@ -350,6 +355,7 @@ type ListBoxProps<T> = {
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
   dropdownWidth?: string | number
+  callbackRef?: (node: HTMLElement | null) => void
 }
 
 export const ListBox = memo(
@@ -369,6 +375,7 @@ export const ListBox = memo(
     listBoxRect,
     triggerWidth,
     dropdownWidth,
+    callbackRef,
     inputId,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
@@ -379,9 +386,16 @@ export const ListBox = memo(
         (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
       [activeOptionId, options],
     )
+    const [prevMinLength, setPrevMinLength] = useState(minLength)
     const [currentItemLength, setCurrentItemLength] = useState(() =>
       Math.max(OPTION_INCREMENT_AMOUNT, minLength),
     )
+
+    if (minLength !== prevMinLength) {
+      setPrevMinLength(minLength)
+      setCurrentItemLength((current) => Math.max(current, minLength))
+    }
+
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {
@@ -415,6 +429,23 @@ export const ListBox = memo(
       }
 
       return {
+        intersectCallbackRef: (node: HTMLElement | null) => {
+          if (node === null) {
+            return
+          }
+
+          const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+              setCurrentItemLength((current) =>
+                Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+              )
+            }
+          })
+
+          observer.observe(node)
+
+          return () => observer.disconnect()
+        },
         handleDelegateClick: (e: MouseEvent) => {
           const option = resolveOption(e)
           if (option) {
@@ -431,20 +462,15 @@ export const ListBox = memo(
             latest.handleHoverOption(option)
           }
         },
-        handleIntersect: () => {
-          setCurrentItemLength((current) =>
-            Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-          )
-        },
       }
     }, [latest])
 
-    useEffect(() => {
-      setCurrentItemLength((current) => Math.max(current, minLength))
-    }, [minLength])
-
     return createPortal(
-      <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+      <div
+        ref={isExpanded ? callbackRef : undefined}
+        className={CLASS_NAMES.wrapper}
+        style={styles.wrapper}
+      >
         {isExpanded && isLoading && (
           <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
@@ -498,7 +524,7 @@ export const ListBox = memo(
             )
           ) : null}
           {currentItemLength < options.length && (
-            <Intersection handleIntersect={functions.handleIntersect} />
+            <Intersection callbackRef={functions.intersectCallbackRef} />
           )}
         </Scroller>
       </div>,
@@ -506,26 +532,10 @@ export const ListBox = memo(
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
 
-const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
-  const ref = useRef<HTMLDivElement>(null)
+const Intersection = memo<{
+  callbackRef: (node: HTMLElement | null) => (() => void) | undefined
+}>(({ callbackRef }) => {
+  const actualCallbackRef = useCallbackRefCleanupForReact18(callbackRef)
 
-  useEffect(() => {
-    const target = ref.current
-
-    if (target === null) {
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        handleIntersect()
-      }
-    })
-
-    observer.observe(target)
-
-    return () => observer.disconnect()
-  }, [handleIntersect])
-
-  return <div ref={ref} />
+  return <div ref={actualCallbackRef} />
 })

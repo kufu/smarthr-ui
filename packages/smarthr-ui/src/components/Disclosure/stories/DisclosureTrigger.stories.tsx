@@ -63,3 +63,15 @@ export const Disabled: StoryObj<typeof DisclosureTrigger> = {
     </>
   ),
 }
+
+export const Loading: StoryObj<typeof DisclosureTrigger> = {
+  name: 'loading',
+  render: () => (
+    <>
+      <DisclosureTrigger targetId="disclosure_loading">
+        <Button loading>ディスクロージャートリガー（loading）</Button>
+      </DisclosureTrigger>
+      <DisclosureContent id="disclosure_loading">ディスクロージャーコンテンツ</DisclosureContent>
+    </>
+  ),
+}

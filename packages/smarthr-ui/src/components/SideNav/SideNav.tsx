@@ -1,9 +1,5 @@
-'use client'
-
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
-
-import { SideNavProvider } from './SideNavContext'
 
 import type { SideNavSizeType } from './SideNavItemButton'
 
@@ -48,8 +44,8 @@ export const SideNav: FC<Props> = ({ size = 'M', className, rounded, children, .
   )
 
   return (
-    <ul {...rest} className={actualClassName}>
-      <SideNavProvider value={{ size }}>{children}</SideNavProvider>
+    <ul {...rest} className={actualClassName} data-size={size}>
+      {children}
     </ul>
   )
 }

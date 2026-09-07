@@ -17,7 +17,6 @@ export function useDialogPortal(parent?: HTMLElement, id?: string) {
       portalContainer.id = id
     }
 
-    // document への参照はレンダー中ではなくここで行う（SSR時は document が存在しないため）。
     // parent が存在しない場合は document.body をデフォルトの配置先にする
     const actualParent = parent || document.body
 
@@ -29,13 +28,8 @@ export function useDialogPortal(parent?: HTMLElement, id?: string) {
   }, [id, parent, portalContainer])
 
   const wrappedCreatePortal = useCallback(
-    (children: ReactNode) => {
-      if (portalContainer === null) {
-        return null
-      }
-
-      return createPortal(children, portalContainer)
-    },
+    (children: ReactNode) =>
+      portalContainer === null ? null : createPortal(children, portalContainer),
     [portalContainer],
   )
 

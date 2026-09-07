@@ -1,5 +1,9 @@
 import { tv } from 'tailwind-variants'
 
+export const FILE_NAME_BUTTON_CLASSNAME =
+  'smarthr-ui-InputFile-fileName shr-justify-start shr-min-w-0 shr-break-all shr-whitespace-normal shr-text-left'
+export const PREVIEW_BUTTON_CLASSNAME = `${FILE_NAME_BUTTON_CLASSNAME} shr-p-0 shr-font-normal shr-text-link`
+
 export const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InputFile',

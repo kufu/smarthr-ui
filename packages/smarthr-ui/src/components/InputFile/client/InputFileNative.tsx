@@ -5,21 +5,21 @@ import {
   type MouseEvent,
   forwardRef,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
-import { Stack } from '../Layout'
-import { Groupbox } from '../Panel'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../hooks/useLatest'
+import { Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 
 import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
 
-import type { LowerProps } from './types'
+import type { LowerProps } from '../types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
@@ -53,13 +53,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     const isUpdatingFilesRef = useRef(false)
 
     const innerRef = useRef<HTMLInputElement>(null)
-
-    // TODO: useMergeRefsが実装されたら修正
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-      [],
-    )
+    const mergedRef = useMergeRefs(innerRef, ref)
 
     const latest = useLatest({ onChange, files, previewFile })
 
@@ -132,7 +126,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.inputWrapper}>
           <input
             {...rest}
-            ref={innerRef}
+            ref={mergedRef}
             type="file"
             disabled={disabled}
             className={classNames.input}

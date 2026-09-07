@@ -1,6 +1,5 @@
 import { userEvent, within } from 'storybook/test'
 
-import { backgroundColor } from '../../../../tailwind'
 import { Cluster, Stack } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
@@ -146,17 +145,12 @@ export default {
   tags: ['!autodocs'],
 } as Meta<typeof SingleCombobox>
 
-export const VRT: StoryObj<typeof SingleCombobox> = {
-  parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
-  },
-}
+export const VRT: StoryObj<typeof SingleCombobox> = {}
 
 export const VRTForcedColors: StoryObj<typeof SingleCombobox> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
 
@@ -188,7 +182,4 @@ export const VRTOnRightEdge: StoryObj<typeof SingleCombobox> = {
     </div>
   ),
   play: playOnRightEdge,
-  parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
-  },
 }

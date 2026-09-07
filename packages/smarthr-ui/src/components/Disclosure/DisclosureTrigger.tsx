@@ -22,17 +22,18 @@ type DisclosureTriggerProps = {
 }
 
 export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, children, onClick }) => {
-  const [expanded, setExpanded] = useDisclosure(targetId)
+  const [expanded, setExpanded, addDisclosureChangeListener] = useDisclosure(targetId)
 
-  const latest = useLatest({ onClick, setExpanded })
+  const latest = useLatest({ onClick, setExpanded, addDisclosureChangeListener })
 
-  // HINT: callbackRefで実装しているが、外部からrefを受け取る様になったらuseEffect化が必要
   const callbackRef = useCallbackRefCleanupForReact18(
     useCallback(
       (node: HTMLElement | null) => {
         if (!node) {
           return
         }
+
+        const removeDisclosureChangeListener = latest.addDisclosureChangeListener()
 
         let currentCleanup: (() => void) | undefined
 
@@ -46,8 +47,11 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
             throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
           }
 
-          button.setAttribute('aria-expanded', expanded.toString())
-          button.setAttribute('aria-controls', targetId)
+          button.setAttribute(
+            'aria-expanded',
+            (node.getAttribute('data-disclosure-expanded') === 'true').toString(),
+          )
+          button.setAttribute('aria-controls', node.getAttribute('data-disclosure-target-id') ?? '')
 
           // Button は native disabled ではなく aria-disabled を使うため、
           // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
@@ -80,15 +84,21 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
           subtree: true,
           // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
           attributes: true,
-          attributeFilter: ['disabled', 'aria-disabled'],
+          attributeFilter: [
+            'data-disclosure-expanded',
+            'aria-disabled',
+            'disabled',
+            'data-disclosure-target-id',
+          ],
         })
 
         return () => {
           currentCleanup?.()
+          removeDisclosureChangeListener()
           observer.disconnect()
         }
       },
-      [expanded, targetId, latest],
+      [latest],
     ),
   )
 
@@ -96,7 +106,12 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
   // Fragmentにrefが渡せるようになったタイミングでclassNameも不要になる
   // TODO: 将来的にspan -> Fragmentに変更する
   return (
-    <span ref={callbackRef} className="smarthr-ui-DisclosureTriggerWrapper shr-contents">
+    <span
+      ref={callbackRef}
+      className="smarthr-ui-DisclosureTriggerWrapper shr-contents"
+      data-disclosure-target-id={targetId}
+      data-disclosure-expanded={expanded}
+    >
       {children instanceof Function ? children({ expanded }) : children}
     </span>
   )
