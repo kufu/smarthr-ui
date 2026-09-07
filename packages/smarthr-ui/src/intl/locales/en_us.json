@@ -24,6 +24,7 @@
   "smarthr-ui/AppHeader/Launcher/helpText": "About Favorite Apps",
   "smarthr-ui/AppHeader/Launcher/searchResultText": "Search results",
   "smarthr-ui/AppHeader/Launcher/emptyText": "App not found.",
+  "smarthr-ui/AppHeader/Launcher/loadError": "Failed to load the App list. Try again later.",
   "smarthr-ui/AppHeader/Launcher/sortDropdownLabel": "Sort by",
   "smarthr-ui/AppHeader/Launcher/sortDropdownSelected": "Selected",
   "smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault": "Default order",

@@ -48,6 +48,9 @@ export function useRemoteTrigger({
 
     return {
       updateIsOpen,
+      cleanupToggleFrame: () => {
+        latest.toggleFrame.cancel()
+      },
       handleClickClose: () => {
         if (latest.onClickClose) {
           return latest.onClickClose(() => {
@@ -80,10 +83,10 @@ export function useRemoteTrigger({
 
     return () => {
       // HINT: アンマウント後に予約済みのonToggle・onOpen・onCloseが呼ばれないようにする
-      toggleFrame.cancel()
+      functions.cleanupToggleFrame()
       document.removeEventListener(TRIGGER_EVENT, handler)
     }
-  }, [id, toggleFrame, functions])
+  }, [id, functions])
 
   return {
     isOpen,

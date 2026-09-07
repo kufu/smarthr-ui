@@ -17,10 +17,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
-import { useOuterClick } from '../../../hooks/useOuterClick'
 import { useLocalize } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
@@ -259,7 +259,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [latestForListBox])
 
-  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -437,7 +437,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  useOuterClick([triggerRef, listBoxRef], functions.blur)
+  const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur)
 
   const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 
@@ -556,7 +556,7 @@ const ActualMultiCombobox = <T,>(
 
       <MemoizedCaretDown disabled={disabled} isExpanded={isExpanded} classNames={classNames} />
 
-      <ListBox {...listBoxProps} />
+      <ListBox {...listBoxProps} callbackRef={listBoxCallbackRef} />
     </div>
   )
 }

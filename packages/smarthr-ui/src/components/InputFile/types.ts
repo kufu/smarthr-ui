@@ -1,4 +1,4 @@
-import type { classNameGenerator } from './style'
+import type { classNameGenerator } from './client'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
 import type { VariantProps } from 'tailwind-variants'
 

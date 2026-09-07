@@ -18,10 +18,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
-import { useOuterClick } from '../../hooks/useOuterClick'
 import { Calendar } from '../Calendar'
 import { FaCalendarDaysIcon } from '../Icon'
 import { Input } from '../Input'
@@ -140,7 +140,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const [isInputFocused, setIsInputFocused] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
-    const calendarPortalRef = useRef<HTMLDivElement>(null)
+    const calendarRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
@@ -263,11 +263,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           if (!node) return
 
           const handleKeyDown = (e: KeyboardEvent) => {
-            if (!calendarPortalRef.current || e.key !== 'Tab') {
+            if (!calendarRef.current || e.key !== 'Tab') {
               return
             }
 
-            const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
+            const calendarButtons = calendarRef.current.querySelectorAll('button')
 
             if (calendarButtons.length === 0) {
               return
@@ -352,7 +352,10 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
     const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
-    useOuterClick([containerRef, calendarPortalRef], functions.closeCalendar)
+    const mergedCalendarRef = useMergeRefs(
+      useAreaClickCallbackRef([containerRef], functions.closeCalendar),
+      calendarRef,
+    )
 
     useEffect(() => {
       if (value === undefined) {
@@ -436,7 +439,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         {isCalendarShown && inputRect && (
           <Portal inputRect={inputRect}>
             <Calendar
-              ref={calendarPortalRef}
+              ref={mergedCalendarRef}
               id={calenderId}
               value={selectedDate || undefined}
               from={from}

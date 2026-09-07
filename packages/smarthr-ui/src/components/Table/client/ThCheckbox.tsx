@@ -3,11 +3,10 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLocalize } from '../../intl'
-import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
-import { ControlledTooltip } from '../Tooltip'
-
-import { Th } from './Th'
+import { useLocalize } from '../../../intl'
+import { Checkbox, type Props as CheckboxProps } from '../../Checkbox'
+import { ControlledTooltip } from '../../Tooltip'
+import { Th } from '../Th'
 
 type BaseProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = BaseProps & Omit<CheckboxProps, keyof BaseProps>

@@ -64,6 +64,7 @@ export const locale = {
   'smarthr-ui/InformationPanel/closeButtonLabel': '閉じる',
   'smarthr-ui/InformationPanel/openButtonLabel': '開く',
   'smarthr-ui/InputFile/destroy': '削除',
+  'smarthr-ui/InputFile/targetBlank': '別タブで開く',
   'smarthr-ui/InputFile/download': 'ダウンロード',
   'smarthr-ui/InputFile/previewLabel': '{fileName}のプレビューを開く',
   'smarthr-ui/InputFile/downloadLabel': '{fileName}をダウンロード',
