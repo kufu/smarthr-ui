@@ -201,6 +201,8 @@ const ActualSingleCombobox = <T,>(
   const [isEditing, setIsEditing] = useState(false)
 
   const [inputValue, setInputValue] = useState('')
+  // inputValueはユーザーの手入力値も兼ねるため、prevSelectedItemLabelTextの代わりにinputValueと比較すると、
+  // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
   const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
 
   const selectedItemLabelText = selectedItem ? innerText(selectedItem.label) : ''
