@@ -27,6 +27,7 @@ import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../Icon'
 import { Input } from '../../Input'
+import { getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
@@ -204,7 +205,7 @@ const ActualSingleCombobox = <T,>(
   // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
   const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
 
-  const selectedItemLabelText = selectedItem?.label ?? ''
+  const selectedItemLabelText = selectedItem ? getSelectedLabelText(selectedItem) : ''
 
   if (selectedItemLabelText !== prevSelectedItemLabelText) {
     setPrevSelectedItemLabelText(selectedItemLabelText)
@@ -290,7 +291,7 @@ const ActualSingleCombobox = <T,>(
       setIsEditing(false)
 
       if (latest.selectedItem) {
-        setInputValue(latest.selectedItem.label)
+        setInputValue(getSelectedLabelText(latest.selectedItem))
       } else {
         selectDefaultItem()
       }

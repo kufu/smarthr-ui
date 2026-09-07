@@ -52,6 +52,20 @@ export const defaultItems = {
         'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     },
   },
+  アイテムのラベルがReactNodeの場合: {
+    label: (
+      <Stack as="span" gap={0.25}>
+        <span>アイテムのラベルがReactNodeの場合</span>
+        <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
+      </Stack>
+    ),
+    selectedLabelText:
+      'アイテムのラベルがReactNodeの場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
+    value: 'value-7',
+    data: {
+      option: 'アイテムのラベルがReactNodeの場合',
+    },
+  },
 }
 
 export const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }

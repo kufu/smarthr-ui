@@ -35,6 +35,9 @@ const normalizeChar = (match: string): string => {
 export const convertMatchableString = (original: string) =>
   original.replace(NORMALIZE_PATTERN, normalizeChar).toLowerCase()
 
+export const getSelectedLabelText = <T>(item: ComboboxItem<T>): string =>
+  item.selectedLabelText ?? (item.label as string)
+
 export function areItemsEqual<T>(a: ComboboxItem<T>, b: ComboboxItem<T>) {
-  return a.value === b.value && a.label === b.label
+  return a.value === b.value && getSelectedLabelText(a) === getSelectedLabelText(b)
 }

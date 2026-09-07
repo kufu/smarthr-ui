@@ -1,11 +1,22 @@
 import type { ChangeEvent, ReactNode } from 'react'
 
-export type ComboboxItem<T> = {
+type ComboboxItemBase<T> = {
   value: string
-  label: string
   disabled?: boolean
   data?: T
 }
+
+export type ComboboxItem<T> = ComboboxItemBase<T> &
+  (
+    | {
+        label: string
+        selectedLabelText?: string
+      }
+    | {
+        label: ReactNode
+        selectedLabelText: string
+      }
+  )
 
 export type ComboboxOption<T> = {
   id: string

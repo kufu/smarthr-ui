@@ -33,7 +33,7 @@ const _cases: Array<Omit<Parameters<typeof MultiCombobox>[0], 'items'>> = [
     disabled: false,
     error: false,
     width: undefined,
-    selectedItems: [defaultItems['option 5']],
+    selectedItems: [defaultItems['アイテムのラベルがReactNodeの場合']],
   },
   {
     disabled: true,
