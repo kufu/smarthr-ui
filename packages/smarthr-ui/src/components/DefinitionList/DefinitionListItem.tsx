@@ -10,8 +10,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useTheme } from '../../hooks/client/useTheme'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
@@ -69,19 +69,19 @@ export const DefinitionListItem: FC<Props> = ({
       description: cs.description(),
     }
   }, [className, fullWidth])
-  const style = useMemo(
-    () => ({
-      flexBasis:
-        // fullWidth の方が強い
-        !fullWidth && maxColumns
-          ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
-          : undefined,
-    }),
-    [fullWidth, maxColumns, theme],
-  )
 
   return (
-    <Stack gap={0.25} className={classNames.wrapper} style={style}>
+    <Stack
+      gap={0.25}
+      className={classNames.wrapper}
+      style={{
+        flexBasis:
+          // fullWidth の方が強い
+          !fullWidth && maxColumns
+            ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
+            : undefined,
+      }}
+    >
       <DefinitionTerm styleType={term.styleType} className={classNames.term}>
         {term.text}
       </DefinitionTerm>
@@ -95,7 +95,7 @@ export const DefinitionListItem: FC<Props> = ({
 const DefinitionTerm = memo<
   PropsWithChildren<{ styleType: ObjectTermType['styleType']; className: string }>
 >(({ styleType = 'subBlockTitle', className, children }) => (
-  <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
+  <Text as="dt" styleType={styleType} leading="TIGHT" className={className}>
     {children}
   </Text>
 ))

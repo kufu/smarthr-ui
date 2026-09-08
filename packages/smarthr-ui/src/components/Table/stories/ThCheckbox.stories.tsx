@@ -1,5 +1,5 @@
 import { Table } from '../Table'
-import { ThCheckbox } from '../ThCheckbox'
+import { ThCheckbox } from '../client'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 

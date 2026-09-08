@@ -120,14 +120,14 @@ export const CalendarTable: FC<Props> = ({
                 date ? (
                   <SelectTdButton
                     key={dateIndex}
+                    selectedDayText={selectedDayText}
                     date={date}
                     currentDay={current.day}
-                    selectedDayText={selectedDayText}
                     from={from}
                     to={to}
                     nowDateText={nowDateText}
-                    handleClick={handleSelectDate}
                     classNames={classNames}
+                    handleClick={handleSelectDate}
                   />
                 ) : (
                   <NullTd key={dateIndex} className={classNames.td} />
@@ -183,12 +183,12 @@ const SelectTdButton = memo<{
       <UnstyledButton
         type="button"
         disabled={!isBetween(target.date, from, to)}
+        className={classNames.cellButton}
         aria-pressed={target.day.isSame(selectedDayText, 'date')}
+        data-is-today={target.day.isSame(nowDateText, 'date')}
         onClick={(e) => {
           handleClick(e, target.date)
         }}
-        className={classNames.cellButton}
-        data-is-today={target.day.isSame(nowDateText, 'date')}
       >
         <span className={classNames.dateCell}>{date}</span>
       </UnstyledButton>

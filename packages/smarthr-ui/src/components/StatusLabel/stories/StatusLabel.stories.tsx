@@ -24,7 +24,7 @@ export const Type: StoryObj<typeof StatusLabel> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'grey', 'blue', 'green', 'red', 'warning', 'error'].map((type) => (
-        <StatusLabel {...args} type={type as any} key={type} />
+        <StatusLabel {...args} key={type} type={type as any} />
       ))}
     </Stack>
   ),
@@ -35,7 +35,7 @@ export const Bold: StoryObj<typeof StatusLabel> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'grey', 'blue', 'green', 'red', 'warning', 'error'].map((type) => (
-        <StatusLabel {...args} type={type as any} bold key={type} />
+        <StatusLabel {...args} key={type} type={type as any} bold />
       ))}
     </Stack>
   ),

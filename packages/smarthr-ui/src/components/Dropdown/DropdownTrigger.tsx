@@ -119,7 +119,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
         wrapper={({ children: currentChildren }) =>
           tooltip?.message ? (
             // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-            <Tooltip message={tooltip?.message} triggerType="icon" tabIndex={-1}>
+            <Tooltip tabIndex={-1} triggerType="icon" message={tooltip?.message}>
               {currentChildren}
             </Tooltip>
           ) : (

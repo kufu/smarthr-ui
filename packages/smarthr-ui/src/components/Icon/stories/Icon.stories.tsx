@@ -32,7 +32,7 @@ export default {
 
 export const All: StoryObj<typeof FaAddressBookIcon> = {
   render: (args) => (
-    <Stack gap={0.75} as="ul" className="shr-list-none">
+    <Stack as="ul" gap={0.75} className="shr-list-none">
       {[
         ...Object.entries(Icons),
         ['WarningIcon', WarningIcon],

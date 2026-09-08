@@ -12,7 +12,7 @@ export default {
         <Stack key={name}>
           <Icon />
           <Icon color="TEXT_GREY" />
-          <Icon color="TEXT_LINK" alt="アイコン" />
+          <Icon alt="アイコン" color="TEXT_LINK" />
           <Icon alt="アイコン" />
         </Stack>
       ))}

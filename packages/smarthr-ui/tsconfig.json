@@ -2,21 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "lib": ["es2022", "dom"],
     "target": "es2022",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
     "inlineSources": true,
-    "types": [
-      "node",
-      "react",
-      "vitest/globals",
-      "@testing-library/jest-dom"
-    ],
+    "types": ["node", "react", "vitest/globals", "@testing-library/jest-dom"],
     "jsx": "react-jsx",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -31,11 +23,6 @@
     "paths": {},
     "isolatedModules": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*",
-    ".storybook/**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*"]
 }

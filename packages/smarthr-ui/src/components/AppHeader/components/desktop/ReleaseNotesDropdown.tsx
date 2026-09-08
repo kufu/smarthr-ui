@@ -32,7 +32,7 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
     <div className="shr-border-l-shorthand shr-ms-0.5">
       <Dropdown>
         <ReleaseNoteDropdownTrigger />
-        <DropdownContent className="shr-mr-1.25" controllable>
+        <DropdownContent controllable className="shr-mr-1.25">
           <div className="shr-w-[400px]">
             {loading ? (
               <StyledLoader />
@@ -69,8 +69,8 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
 const ReleaseNoteDropdownTrigger = memo(() => (
   <DropdownTrigger>
     <Button
-      suffix={<FaCaretDownIcon />}
       className="shr-rounded-none shr-border-none shr-font-normal [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
+      suffix={<FaCaretDownIcon />}
     >
       <Translate>
         <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />

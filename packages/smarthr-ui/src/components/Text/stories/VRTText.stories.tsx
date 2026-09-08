@@ -95,10 +95,10 @@ export default {
           <Text
             {...props}
             {...args}
+            key={i}
             styleType={styleType}
             // 白文字だと見えないので背景色を変える
             className={props.color === 'TEXT_WHITE' ? 'shr-bg-black' : undefined}
-            key={i}
           />
         )),
       )}

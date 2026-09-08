@@ -40,6 +40,9 @@ module.exports = {
   create(context) {
     const sourceCode = context.sourceCode || context.getSourceCode()
 
+    // latest.xxxの使用や依存配列の位置チェックを許可するフック名
+    const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo)$/
+
     /**
      * 識別子が useLatest() 呼び出しに束縛されているかチェック
      */
@@ -75,7 +78,7 @@ module.exports = {
         if (
           parent.type === 'CallExpression' &&
           parent.callee.type === 'Identifier' &&
-          /^use((Layout)?Effect|Callback|Memo)$/.test(parent.callee.name)
+          ALLOWED_HOOK_PATTERN.test(parent.callee.name)
         ) {
           return true
         }
@@ -118,7 +121,7 @@ module.exports = {
             grandParent &&
             grandParent.type === 'CallExpression' &&
             grandParent.callee.type === 'Identifier' &&
-            /^use((Layout)?Effect|Callback|Memo)$/.test(grandParent.callee.name) &&
+            ALLOWED_HOOK_PATTERN.test(grandParent.callee.name) &&
             grandParent.arguments[1] === parent
           ) {
             return true
@@ -264,7 +267,7 @@ module.exports = {
         // 3-2. use*フックの依存配列のチェック
         if (
           node.callee.type === 'Identifier' &&
-          /^use((Layout)?Effect|Callback|Memo)$/.test(node.callee.name)
+          ALLOWED_HOOK_PATTERN.test(node.callee.name)
         ) {
           const hookName = node.callee.name
           const depsArg = node.arguments[1]

@@ -17,10 +17,10 @@ export const DialogContentResponseStatusMessage: FC<{
      * @see https://www.sarasoueidan.com/blog/accessible-notifications-with-aria-live-regions-part-2/#make-sure-the-live-region-container-is-in-the-dom-as-early-as-possible
      */
     <>
-      <div className={isError ? `${className} shr-mt-0.5` : className} role="alert">
+      <div role="alert" className={isError ? `${className} shr-mt-0.5` : className}>
         {isError && <ResponseMessage status="error">{responseStatus.message}</ResponseMessage>}
       </div>
-      <div className={isSuccess ? `${className} shr-mt-0.5` : className} role="status">
+      <div role="status" className={isSuccess ? `${className} shr-mt-0.5` : className}>
         {isSuccess && <ResponseMessage status="success">{responseStatus.message}</ResponseMessage>}
       </div>
     </>

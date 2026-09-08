@@ -13,13 +13,13 @@ export default {
           <DefinitionList {...args} key={`${termStyleType}-${maxColumns}`}>
             {[...Array(10)].map((_, i) => (
               <DefinitionListItem
+                key={i}
                 term={{
                   text: `定義リストアイテム${i + 1}`,
                   styleType: termStyleType as any,
                 }}
                 maxColumns={maxColumns}
                 fullWidth={i === 4}
-                key={i}
               >
                 定義リストアイテム説明{i + 1}
               </DefinitionListItem>

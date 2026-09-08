@@ -1,5 +1,3 @@
-'use client'
-
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { Center } from '../Layout'
@@ -29,7 +27,7 @@ export const UnauthorizedErrorScreen: FC<Props> = ({ onClickLogin, isLoading }) 
       />
     </p>
     <Center>
-      <Button className="shr-mt-1.5" onClick={onClickLogin} loading={isLoading}>
+      <Button loading={isLoading} className="shr-mt-1.5" onClick={onClickLogin}>
         <Localizer id="smarthr-ui/UnauthorizedErrorScreen/reLoginButton" defaultText="再ログイン" />
       </Button>
     </Center>

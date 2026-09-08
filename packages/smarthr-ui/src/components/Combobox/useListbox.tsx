@@ -2,10 +2,10 @@
 
 import {
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -14,11 +14,14 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
+import { useEnhancedEffect } from '../../hooks/client/useEnhancedEffect'
+import { usePortal } from '../../hooks/client/usePortal'
+import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
-import { usePortal } from '../../hooks/usePortal'
-import { useTheme } from '../../hooks/useTheme'
 import { Localizer } from '../../intl'
+import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
@@ -40,6 +43,8 @@ type Props<T> = {
   triggerRef: RefObject<HTMLElement>
   /** 検索結果が0件の時に表示するコンテンツ */
   noResultText?: ReactNode
+  /** output要素のhtmlFor属性に使用するinput要素のid */
+  inputId?: string
 }
 
 type Rect = {
@@ -58,7 +63,7 @@ const classNameGenerator = tv({
     wrapper: 'shr-absolute',
     dropdownList: [
       'smarthr-ui-Combobox-dropdownList',
-      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3 forced-colors:shr-outline forced-colors:shr-outline-1',
       /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
       = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
       'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
@@ -93,11 +98,11 @@ export const useListbox = <T,>({
   isLoading,
   triggerRef,
   noResultText,
+  inputId,
 }: Props<T>) => {
   const listBoxId = useId()
 
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
-  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
@@ -105,10 +110,29 @@ export const useListbox = <T,>({
   // HINT: calculateRectで同時に計算するとwidthの幅が変更されるタイミングの問題でlistBoxHeightが変化する場合がある
   const [triggerWidth, setTriggerWidth] = useState(0)
 
+  const [activeOption, setActiveOption] = useState<ComboboxOption<T> | null>(null)
+  const [prevOptions, setPrevOptions] = useState(options)
+
+  if (options !== prevOptions) {
+    setPrevOptions(options)
+    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
+    setActiveOption((current) => {
+      if (current === null) {
+        return null
+      }
+
+      return options.find((option) => current.id === option.id) ?? null
+    })
+  }
+
   const listBoxRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
 
-  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef })
+  const theme = useTheme()
+
+  const addFrame = useAnimationFrame()
+
+  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
   const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
@@ -173,9 +197,29 @@ export const useListbox = <T,>({
           height = bottomSpace
         }
 
+        // HINT: dropdownWidth は 'auto' や '%' などの CSS 値を取りうるため、算出済みの幅を実測して判定する
+        const listBoxWidth = listBoxRef.current.getBoundingClientRect().width
+        // ドロップダウンの幅は maxWidth でビューポート右端から余白分を残すよう制限しているため、位置の判定にも同じ余白を使う
+        const viewportMargin = parseInt(latest.theme.spacingByChar(0.5), 10)
+        // 入力欄の左端を起点に右方向へ表示する場合に使える幅
+        const rightSpace = window.innerWidth - rect.left - viewportMargin
+        // 入力欄の右端を起点に左方向へ表示する場合に使える幅
+        const leftSpace = rect.right
+
+        // ビューポートの左端を基準に計算
+        let left = window.pageXOffset
+
+        if (listBoxWidth <= rightSpace) {
+          // 右側に十分なスペースがある場合は入力欄の左端に揃えて通常表示
+          left += rect.left
+        } else if (listBoxWidth <= leftSpace) {
+          // 左側に収まる場合は入力欄の右端に揃えて表示
+          left += rect.right - listBoxWidth
+        }
+
         setListBoxRect({
           top,
-          left: rect.left + window.pageXOffset,
+          left,
           height,
         })
         setTriggerWidth(rect.width)
@@ -208,8 +252,8 @@ export const useListbox = <T,>({
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-            // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-            requestAnimationFrame(() => {
+            // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+            latest.addFrame.request(() => {
               latest.onAdd!(option.item.value)
             })
           }
@@ -224,29 +268,24 @@ export const useListbox = <T,>({
     }
   }, [hasOnAdd, latest])
 
-  useEffect(() => {
-    // props の変更によって activeOption の状態が変わりうるので、実態を反映する
-    setActiveOption((current) => {
-      if (current === null) {
-        return null
-      }
-
-      return options.find((option) => current.id === option.id) ?? null
-    })
-  }, [options])
-
-  useEffect(() => {
+  useEnhancedEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
-      setActiveOption(null)
+      return setActiveOption(null)
     }
 
-    const trigger = latest.triggerRef.current
+    functions.calculateRect()
 
-    if (trigger) {
-      setTriggerWidth(trigger.getBoundingClientRect().width)
+    const scrollOption = { capture: true, passive: true }
+    window.addEventListener('scroll', functions.calculateRect, scrollOption)
+    window.addEventListener('resize', functions.calculateRect, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', functions.calculateRect, scrollOption)
+      window.removeEventListener('resize', functions.calculateRect)
     }
-  }, [isExpanded, latest])
+    // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
+  }, [isExpanded, options, functions])
 
   useEffect(() => {
     // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
@@ -269,12 +308,8 @@ export const useListbox = <T,>({
     }
   }, [activeOption, navigationType])
 
-  useEnhancedEffect(() => {
-    if (isExpanded) {
-      // options の更新毎に座標を再計算する
-      functions.calculateRect()
-    }
-  }, [isExpanded, options, functions])
+  // TODO: callbackRefにまとめ直したい
+  useEffect(() => addFrame.cancel, [addFrame.cancel])
 
   return {
     listBoxProps: {
@@ -284,6 +319,7 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       noResultText,
+      inputId,
       listBoxId,
       listBoxRef,
       handleAdd: functions.handleAdd,
@@ -297,6 +333,7 @@ export const useListbox = <T,>({
     activeOption,
     handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
+    // TODO: テストで利用されているだけなのでテスト側を修正して対応、最終的に消したい
     listBoxRef,
   }
 }
@@ -308,6 +345,7 @@ type ListBoxProps<T> = {
   isLoading?: boolean
   noResultText?: ReactNode
   dropdownHelpMessage?: ReactNode
+  inputId?: string
   listBoxId: string
   listBoxRef: RefObject<HTMLDivElement>
   handleAdd: ((option: ComboboxOption<T>) => void) | undefined
@@ -317,6 +355,7 @@ type ListBoxProps<T> = {
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
   dropdownWidth?: string | number
+  callbackRef?: (node: HTMLElement | null) => void
 }
 
 export const ListBox = memo(
@@ -336,6 +375,8 @@ export const ListBox = memo(
     listBoxRect,
     triggerWidth,
     dropdownWidth,
+    callbackRef,
+    inputId,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
@@ -345,9 +386,16 @@ export const ListBox = memo(
         (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
       [activeOptionId, options],
     )
+    const [prevMinLength, setPrevMinLength] = useState(minLength)
     const [currentItemLength, setCurrentItemLength] = useState(() =>
       Math.max(OPTION_INCREMENT_AMOUNT, minLength),
     )
+
+    if (minLength !== prevMinLength) {
+      setPrevMinLength(minLength)
+      setCurrentItemLength((current) => Math.max(current, minLength))
+    }
+
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {
@@ -363,44 +411,86 @@ export const ListBox = memo(
         dropdownList: {
           width:
             typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
-          maxWidth: `calc(100vw - ${left}px - ${theme.spacingByChar(0.5)})`,
+          /* HINT: left に依存させると、算出した幅がさらに maxWidth を縮めて再計算の度に幅が縮んでいくため、
+          ビューポート幅のみから算出する */
+          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)})`,
           height: height ? `${height}px` : undefined,
         },
       }
     }, [listBoxRect, triggerWidth, dropdownWidth, theme])
 
-    const latest = useLatest({ minLength })
+    const latest = useLatest({ handleAdd, handleHoverOption, handleSelect, options, minLength })
 
-    const handleIntersect = useCallback(() => {
-      setCurrentItemLength((current) =>
-        Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
-      )
+    const functions = useMemo(() => {
+      const resolveOption = (e: MouseEvent) => {
+        const el = findDelegateTarget<HTMLButtonElement>(e, 'button[role="option"]')
+        if (!el || el.disabled) return null
+        return latest.options.find((o) => o.id === el.id) ?? null
+      }
+
+      return {
+        intersectCallbackRef: (node: HTMLElement | null) => {
+          if (node === null) {
+            return
+          }
+
+          const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+              setCurrentItemLength((current) =>
+                Math.max(current + OPTION_INCREMENT_AMOUNT, latest.minLength),
+              )
+            }
+          })
+
+          observer.observe(node)
+
+          return () => observer.disconnect()
+        },
+        handleDelegateClick: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            if (option.isNew) {
+              latest.handleAdd?.(option)
+            } else {
+              latest.handleSelect(option)
+            }
+          }
+        },
+        handleDelegateMouseOver: (e: MouseEvent) => {
+          const option = resolveOption(e)
+          if (option) {
+            latest.handleHoverOption(option)
+          }
+        },
+      }
     }, [latest])
 
-    useEffect(() => {
-      setCurrentItemLength((current) => Math.max(current, minLength))
-    }, [minLength])
-
     return createPortal(
-      <div className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+      <div
+        ref={isExpanded ? callbackRef : undefined}
+        className={CLASS_NAMES.wrapper}
+        style={styles.wrapper}
+      >
         {isExpanded && isLoading && (
-          <VisuallyHiddenText role="status">
+          <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
           </VisuallyHiddenText>
         )}
         <Scroller
-          id={listBoxId}
           ref={listBoxRef}
           role="listbox"
-          aria-hidden={!isExpanded}
+          id={listBoxId}
           className={CLASS_NAMES.dropdownList}
           style={styles.dropdownList}
+          aria-hidden={!isExpanded}
+          onMouseOver={functions.handleDelegateMouseOver}
+          onClick={functions.handleDelegateClick}
         >
           {dropdownHelpMessage && (
             <Text
+              as="p"
               className={CLASS_NAMES.helpMessage}
               icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-              as="p"
             >
               {dropdownHelpMessage}
             </Text>
@@ -411,54 +501,41 @@ export const ListBox = memo(
                 <Loader aria-hidden />
               </div>
             ) : options.length === 0 ? (
-              <p role="alert" aria-live="polite" className={CLASS_NAMES.noItems}>
+              /* eslint-disable-next-line jsx-a11y/no-redundant-roles -- output要素のrole="status"は暗黙的だが、ブラウザ間の差異への対応としてフォールバック用に明示する */
+              <output role="status" htmlFor={inputId} className={CLASS_NAMES.noItems}>
                 {noResultText ?? (
                   <Localizer
                     id="smarthr-ui/Combobox/noResultsText"
                     defaultText="一致する選択肢がありません。"
                   />
                 )}
-              </p>
+              </output>
             ) : (
-              items.map((option) => (
+              items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton
-                  key={option.id}
-                  option={option}
-                  handleAdd={handleAdd}
-                  handleSelect={handleSelect}
-                  handleMouseOver={handleHoverOption}
-                  activeRef={option.id === activeOptionId ? activeRef : undefined}
+                  {...optionRest}
+                  key={id}
+                  activeRef={id === activeOptionId ? activeRef : undefined}
+                  id={id}
+                  disabled={disabled}
+                  label={label}
                 />
               ))
             )
           ) : null}
-          {currentItemLength < options.length && <Intersection handleIntersect={handleIntersect} />}
+          {currentItemLength < options.length && (
+            <Intersection callbackRef={functions.intersectCallbackRef} />
+          )}
         </Scroller>
       </div>,
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
 
-const Intersection = memo<{ handleIntersect: () => void }>(({ handleIntersect }) => {
-  const ref = useRef<HTMLDivElement>(null)
+const Intersection = memo<{
+  callbackRef: (node: HTMLElement | null) => (() => void) | undefined
+}>(({ callbackRef }) => {
+  const actualCallbackRef = useCallbackRefCleanupForReact18(callbackRef)
 
-  useEffect(() => {
-    const target = ref.current
-
-    if (target === null) {
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        handleIntersect()
-      }
-    })
-
-    observer.observe(target)
-
-    return () => observer.disconnect()
-  }, [handleIntersect])
-
-  return <div ref={ref} />
+  return <div ref={actualCallbackRef} />
 })

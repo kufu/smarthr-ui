@@ -163,35 +163,35 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
             {calculatedCurrentMonth.yearMonthText}
           </YearMonthRender>
           <YearSelectButton
+            className={classNames.yearSelectButton}
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
             handleClick={functions.handleClickSelectYear}
-            className={classNames.yearSelectButton}
           />
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
             directionMonth={calculatedCurrentMonth}
             from={formattedFrom.day}
             to={formattedTo.day}
-            setCurrentMonth={setCurrentMonth}
             className={classNames.monthButtons}
+            setCurrentMonth={setCurrentMonth}
           />
         </header>
         <div className={classNames.tableLayout}>
           <YearPicker
+            id={yearPickerId}
+            selectedYear={value?.getFullYear()}
             fromYear={formattedFrom.year}
             toYear={formattedTo.year}
-            selectedYear={value?.getFullYear()}
-            handleSelectYear={functions.handleSelectYear}
             isDisplayed={isSelectingYear}
-            id={yearPickerId}
+            handleSelectYear={functions.handleSelectYear}
           />
           <CalendarTable
+            selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
             current={calculatedCurrentMonth}
             from={formattedFrom.date}
             to={formattedTo.date}
             onSelectDate={onSelectDate}
-            selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
           />
         </div>
       </div>
@@ -209,7 +209,7 @@ const YearSelectButton = memo<{
   handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
 }>(({ handleClick, ...rest }) => (
-  <Button {...rest} onClick={handleClick} size="S">
+  <Button {...rest} size="S" onClick={handleClick}>
     <FaCaretDownIcon
       alt={<Localizer id="smarthr-ui/Calendar/selectYear" defaultText="年を選択する" />}
     />
@@ -241,9 +241,9 @@ const MonthDirectionCluster = memo<{
     <Cluster gap={0.5} className={className}>
       <Button
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
-        onClick={functions.handleClickMonthPrev}
         size="S"
         className="smarthr-ui-Calendar-monthButtonPrev"
+        onClick={functions.handleClickMonthPrev}
       >
         <FaChevronLeftIcon
           alt={<Localizer id="smarthr-ui/Calendar/previousMonth" defaultText="前の月へ" />}
@@ -251,9 +251,9 @@ const MonthDirectionCluster = memo<{
       </Button>
       <Button
         disabled={isSelectingYear || next.isAfter(to, 'month')}
-        onClick={functions.handleClickMonthNext}
         size="S"
         className="smarthr-ui-Calendar-monthButtonNext"
+        onClick={functions.handleClickMonthNext}
       >
         <FaChevronRightIcon
           alt={<Localizer id="smarthr-ui/Calendar/nextMonth" defaultText="次の月へ" />}

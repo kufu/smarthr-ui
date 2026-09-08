@@ -35,7 +35,7 @@ export const Padding: StoryObj<typeof Center> = {
   render: (args) => (
     <Stack>
       {centerPadding.map((padding) => (
-        <Center {...args} padding={padding} className="shr-bg-background" key={padding}>
+        <Center {...args} key={padding} padding={padding} className="shr-bg-background">
           <ColorBox />
         </Center>
       ))}

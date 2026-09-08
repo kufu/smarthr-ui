@@ -12,10 +12,10 @@ export default {
       <Stack {...args}>
         {sizes.map((size) => (
           <>
-            <PageHeading size={size} visuallyHidden={true}>
+            <PageHeading visuallyHidden={true} size={size}>
               {size ? size : 'undefined'}
             </PageHeading>
-            <PageHeading size={size} visuallyHidden={false}>
+            <PageHeading visuallyHidden={false} size={size}>
               {size ? size : 'undefined'}
             </PageHeading>
           </>

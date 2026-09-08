@@ -12,11 +12,19 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
 jobs:
   crowdin:
     name: Download translations from Crowdin
     runs-on: ubuntu-latest
     steps:
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
       - name: Checkout branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -37,7 +45,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           
       - name: Download translations from Crowdin
-        uses: crowdin/github-action@c7af9bc98b01694653031fef2a0dc6c7888ce9bc # v2.17.0
+        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1
         with:
           config: crowdin.yml
           upload_sources: false

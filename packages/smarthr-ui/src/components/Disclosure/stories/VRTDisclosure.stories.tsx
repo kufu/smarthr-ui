@@ -18,6 +18,17 @@ export default {
           </DisclosureContent>
         </>
       ))}
+      {/* DisclosureContentがDisclosureTriggerより先にレンダリングされても、レンダリング順序に関わらずisOpenが反映されることを確認する */}
+      {[{ isOpen: true }].map((args, index) => (
+        <>
+          <DisclosureContent {...args} id={`disclosure_reverse_${index}`}>
+            ディスクロージャーコンテンツ
+          </DisclosureContent>
+          <DisclosureTrigger targetId={`disclosure_reverse_${index}`}>
+            {({ expanded }) => <Button>ディスクロージャーを{expanded ? '閉じる' : '開く'}</Button>}
+          </DisclosureTrigger>
+        </>
+      ))}
     </>
   ),
   parameters: {

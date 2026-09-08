@@ -21,6 +21,7 @@ const classNameGenerator = tv({
       left: 'shr-rounded-l-l',
     },
   },
+  // TODO: tailwindの場合のみdefault値が設定される挙動はバグの原因になりかねないので整理する
   defaultVariants: {
     bgColor: 'COLUMN',
     rounded: false,
@@ -33,5 +34,5 @@ export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, 
     [bgColor, rounded, className],
   )
 
-  return <Panel {...rest} padding={padding} layer={0} className={actualClassName} />
+  return <Panel {...rest} layer={0} padding={padding} className={actualClassName} />
 }

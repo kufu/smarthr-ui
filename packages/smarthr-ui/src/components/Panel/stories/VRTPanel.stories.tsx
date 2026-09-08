@@ -6,7 +6,7 @@ import type { Panel } from '../Panel'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Panel/VRT',
+  title: 'Components/Base/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

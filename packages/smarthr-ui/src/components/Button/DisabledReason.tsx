@@ -39,9 +39,9 @@ export const DisabledReason: FC<Props> = ({ button, disabledReason }) => (
   <div className={CLASS_NAMES.wrapper}>
     {button}
     <TooltipIcon
+      className={CLASS_NAMES.tooltip}
       icon={disabledReason.icon}
       message={disabledReason.message}
-      className={CLASS_NAMES.tooltip}
     />
   </div>
 )
@@ -54,7 +54,7 @@ const TooltipIcon = memo<{
   const DisabledReasonIcon = icon ?? FaCircleInfoIcon
 
   return (
-    <Tooltip message={message} triggerType="icon" className={className}>
+    <Tooltip triggerType="icon" className={className} message={message}>
       <DisabledReasonIcon />
     </Tooltip>
   )

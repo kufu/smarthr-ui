@@ -44,7 +44,7 @@ export default {
   render: (args) => (
     <Stack>
       {[undefined, 'focus-visible'].map((id) => (
-        <Stack align="flex-start" id={id} key={id}>
+        <Stack key={id} id={id} align="flex-start">
           {_cases.map((props, i) => (
             <Switch {...props} {...args} key={i} className="smarthr-ui-Switch" />
           ))}

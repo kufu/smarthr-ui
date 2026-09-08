@@ -1,4 +1,3 @@
-import { backgroundColor } from '../../../tailwind'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 
@@ -37,9 +36,6 @@ export default {
     children: 'カスタムタグ',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['Template'],

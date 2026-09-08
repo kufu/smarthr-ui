@@ -26,26 +26,26 @@ export default {
                 {/* @ts-expect-error */}
                 <Heading
                   type={type}
-                  size={size}
                   unrecommendedTag={unrecommendedTag}
                   visuallyHidden={true}
+                  size={size}
                 >
                   {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
                 <Heading
                   type={type}
-                  size={size}
                   unrecommendedTag={unrecommendedTag}
                   visuallyHidden={false}
+                  size={size}
                 >
                   {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
                 <Heading
                   type={type}
-                  size={size}
                   unrecommendedTag={unrecommendedTag}
+                  size={size}
                   icon={<FaAddressBookIcon />}
                 >
                   {type ? type : 'undefined'}

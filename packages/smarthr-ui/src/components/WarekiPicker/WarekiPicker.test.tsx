@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { act } from 'react'
 
 import { IntlProvider } from '../../intl'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../FormGroup'
 
 import { WarekiPicker } from './WarekiPicker'
 
@@ -21,7 +21,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
@@ -37,7 +37,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
       'en-us',
@@ -54,7 +54,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
       'ja',

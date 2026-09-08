@@ -1,1 +1,0 @@
-export { useMediaQueries } from './useMediaQueries'

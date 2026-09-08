@@ -4,10 +4,12 @@ import { type FC, useRef, useState } from 'react'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { Input } from '../../Input'
 
 import { ControlledFormDialog } from './ControlledFormDialog'
+
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
 
 describe('ControlledFormDialog', () => {
   const DialogTemplate: FC = () => {
@@ -17,7 +19,6 @@ describe('ControlledFormDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ControlledFormDialog</Button>
         <ControlledFormDialog
           isOpen={isOpen}
-          heading="ControlledFormDialog"
           actionText="保存"
           onSubmit={(_, { close }) => {
             close()
@@ -25,6 +26,7 @@ describe('ControlledFormDialog', () => {
           onClickClose={() => {
             setIsOpen(false)
           }}
+          heading="ControlledFormDialog"
         >
           ダイアログの中身です
         </ControlledFormDialog>
@@ -38,6 +40,9 @@ describe('ControlledFormDialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'ControlledFormDialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ }')
@@ -61,15 +66,15 @@ describe('ControlledFormDialog', () => {
         {isOpen && (
           <ControlledFormDialog
             isOpen
-            heading="開いた状態で投入されたダイアログ"
             actionText="実行"
+            firstFocusTarget={openedFocusRef}
             onSubmit={(_, { close }) => {
               close()
             }}
             onClickClose={() => {
               setIsOpen(false)
             }}
-            firstFocusTarget={openedFocusRef}
+            heading="開いた状態で投入されたダイアログ"
           >
             <FormControl
               label={
@@ -92,6 +97,9 @@ describe('ControlledFormDialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: '開いた状態で投入されたダイアログ' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     expect(
       screen.getByRole('textbox', { name: 'isOpen=true の状態で DOM に投入した場合のダイアログ' }),

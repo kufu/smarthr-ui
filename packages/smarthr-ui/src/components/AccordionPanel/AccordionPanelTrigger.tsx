@@ -84,16 +84,16 @@ export const AccordionPanelTrigger: FC<Props> = ({
   return (
     <MemoizedHeadingButton
       {...rest}
-      name={name}
       triggerId={triggerId}
-      isExpanded={isExpanded}
       contentId={contentId}
-      handleClickTrigger={handleClickTrigger}
-      handleKeyDown={handleKeyDown}
-      classNames={classNames}
+      name={name}
+      isExpanded={isExpanded}
       iconPosition={iconPosition}
       headingType={headingType}
       unrecommendedHeadingTag={unrecommendedHeadingTag}
+      classNames={classNames}
+      handleClickTrigger={handleClickTrigger}
+      handleKeyDown={handleKeyDown}
     >
       {children}
     </MemoizedHeadingButton>
@@ -137,21 +137,21 @@ const MemoizedHeadingButton = memo<
     ...rest
   }) => (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Heading unrecommendedTag={unrecommendedHeadingTag} type={headingType}>
+    <Heading type={headingType} unrecommendedTag={unrecommendedHeadingTag}>
       <button
         {...rest}
         type="button"
-        value={name}
         id={triggerId}
+        value={name}
+        className={classNames.button}
         aria-expanded={isExpanded}
         aria-controls={contentId}
+        data-component="AccordionHeaderButton"
         onClick={handleClickTrigger}
         onKeyDown={handleKeyDown}
-        className={classNames.button}
-        data-component="AccordionHeaderButton"
       >
         {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-        <Cluster className={classNames.titleWrapper} align="center" as="span">
+        <Cluster as="span" align="center" className={classNames.titleWrapper}>
           {iconPosition === 'left' && <FaCaretRightIcon className={classNames.leftIcon} />}
           <span className={classNames.title}>{children}</span>
           {iconPosition === 'right' && <FaCaretDownIcon className={classNames.rightIcon} />}

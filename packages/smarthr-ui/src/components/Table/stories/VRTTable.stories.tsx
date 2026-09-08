@@ -1,13 +1,12 @@
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
-import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
+import { BulkActionRow, ThCheckbox } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
@@ -24,12 +23,12 @@ export default {
                 <thead>
                   <tr>
                     {fixed === 'left' && <Th fixed={fixed}>操作</Th>}
-                    <ThCheckbox name="thead_checkbox" mixed checked />
+                    <ThCheckbox name="thead_checkbox" checked mixed />
                     {[...Array(10)].map((_, i) => (
                       <Th
+                        key={i}
                         align={i === 2 ? 'right' : undefined}
                         sort={i === 0 ? 'asc' : i === 1 ? 'desc' : i === 2 ? 'none' : undefined}
-                        key={i}
                       >
                         表頭{i + 1}
                       </Th>
@@ -52,16 +51,16 @@ export default {
                         </Td>
                       )}
                       <TdCheckbox
+                        name="tbody_checkbox"
                         checked={i % 2 === 0}
                         // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
-                        name="tbody_checkbox"
                       />
                       {[...Array(10)].map((__, j) => (
                         <Td
-                          align={j === 2 ? 'right' : undefined}
-                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
+                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
+                          align={j === 2 ? 'right' : undefined}
                         >
                           表データ{i + 1}-{j + 1}
                         </Td>
@@ -81,16 +80,16 @@ export default {
                         </Td>
                       )}
                       <TdRadioButton
+                        name={`tbody_radio--${fixed}--${borderType}`}
                         checked={i === 0}
                         // eslint-disable-next-line smarthr/a11y-aria-labelledby
                         aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
-                        name={`tbody_radio--${fixed}--${borderType}`}
                       />
                       {[...Array(10)].map((__, j) => (
                         <Td
-                          align={j === 2 ? 'right' : undefined}
-                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
+                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
+                          align={j === 2 ? 'right' : undefined}
                         >
                           表データ{i + 1}-{j + 1}
                         </Td>

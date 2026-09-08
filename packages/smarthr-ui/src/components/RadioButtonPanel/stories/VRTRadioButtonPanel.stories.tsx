@@ -9,23 +9,23 @@ export default {
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((id) =>
         [false, true].map((checked) => (
-          <Cluster gap={2} id={id} key={id}>
+          <Cluster key={id} id={id} gap={2}>
             {[false, true].map((disabled) => (
               <>
                 <div>
                   <RadioButtonPanel
                     {...args}
-                    checked={checked}
-                    disabled={disabled}
                     key={`${id}-${checked}-${disabled}`}
+                    disabled={disabled}
+                    checked={checked}
                   />
                 </div>
                 <div>
                   <RadioButtonPanel
                     {...args}
-                    checked={checked}
-                    disabled={disabled}
                     key={`${id}-${checked}-${disabled}`}
+                    disabled={disabled}
+                    checked={checked}
                   >
                     説明テキスト
                   </RadioButtonPanel>

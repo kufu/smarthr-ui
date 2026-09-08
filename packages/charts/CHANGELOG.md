@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.2...smarthr-ui-charts-v0.2.3) (2026-08-27)
+
+
+### Features
+
+* **DoughnutChart:** 柄を無効化するdisablePatternsを追加 ([#6869](https://github.com/kufu/smarthr-ui/issues/6869)) ([9b5da35](https://github.com/kufu/smarthr-ui/commit/9b5da354e4ee73ef213688979de28bcc52702c16))
+
+## [0.2.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.1...smarthr-ui-charts-v0.2.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* **charts:** smarthr-uiをdevDependenciesにも追加しビルド順序を保証 ([#6870](https://github.com/kufu/smarthr-ui/issues/6870)) ([b58edd0](https://github.com/kufu/smarthr-ui/commit/b58edd0850ea4b786235512c5933f722174f2264))
+
+## [0.2.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.0...smarthr-ui-charts-v0.2.1) (2026-08-20)
+
+
+### Features
+
+* **Chart:** disablePatterns propsを追加 ([#6828](https://github.com/kufu/smarthr-ui/issues/6828)) ([be4870d](https://github.com/kufu/smarthr-ui/commit/be4870d75e26a91e53757f7db7bc048866d55016))
+
+## [0.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.7...smarthr-ui-charts-v0.2.0) (2026-08-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **charts:** ProgressDoughnutChartの進捗帯の端の既定を角端にする ([#6782](https://github.com/kufu/smarthr-ui/issues/6782))
+
+### Features
+
+* **charts:** ProgressDoughnutChartの進捗帯の端の既定を角端にする ([#6782](https://github.com/kufu/smarthr-ui/issues/6782)) ([18af7bc](https://github.com/kufu/smarthr-ui/commit/18af7bcac6dd7b63b0fa7e03ad815502faff10ff))
+
+
+### Bug Fixes
+
+* **charts:** ProgressDoughnutChartで進捗と残りが両方0のとき何も描画されない ([#6812](https://github.com/kufu/smarthr-ui/issues/6812)) ([98c596e](https://github.com/kufu/smarthr-ui/commit/98c596e9a0e155a677dfd9ff6102a939f3c548d9))
+
 ## [0.1.7](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.6...smarthr-ui-charts-v0.1.7) (2026-08-06)
 
 

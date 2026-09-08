@@ -30,6 +30,7 @@ export default {
         <ControlledStepFormDialog
           {...rest}
           firstStep={{ id: 'step-1', stepNumber: 1 }}
+          isOpen={open}
           onSubmit={(e, { currentStep, goto, close }) => {
             action('onSubmit')(e)
 
@@ -40,7 +41,6 @@ export default {
             }
           }}
           onClickClose={handleClose}
-          isOpen={open}
         >
           <StepFormDialogItem id="step-1" stepNumber={1}>
             ダイアログコンテンツ1
@@ -299,10 +299,10 @@ export const ResponseStatus: StoryObj<typeof ControlledStepFormDialog> = {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ControlledStepFormDialog
           {...rest}
-          onClickClose={handleClose}
-          onSubmit={handleSubmit}
           isOpen={open}
           responseStatus={responseStatus}
+          onClickClose={handleClose}
+          onSubmit={handleSubmit}
         >
           <Cluster gap={1.25}>
             <RadioButton
@@ -363,14 +363,14 @@ export const FirstFocusTarget: StoryObj<typeof ControlledStepFormDialog> = {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ControlledStepFormDialog
           {...rest}
-          onClickClose={handleClose}
-          onSubmit={handleSubmit}
           isOpen={open}
           firstFocusTarget={inputRef}
+          onClickClose={handleClose}
+          onSubmit={handleSubmit}
         >
           <label>
             入力要素
-            <Input name="stepformdialog_input" ref={inputRef} />
+            <Input ref={inputRef} name="stepformdialog_input" />
           </label>
         </ControlledStepFormDialog>
       </>
@@ -412,15 +412,15 @@ export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
 
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledStepFormDialog
           {...rest}
-          onClickClose={handleClose}
-          onSubmit={handleSubmit}
           isOpen={open}
           portalParent={parentRef}
+          onClickClose={handleClose}
+          onSubmit={handleSubmit}
         >
           ダイアログコンテンツ
         </ControlledStepFormDialog>
@@ -484,11 +484,11 @@ export const AsyncSubmitSuccess: StoryObj<typeof ControlledStepFormDialog> = {
           {...rest}
           stepLength={3}
           firstStep={{ id: 'step-1', stepNumber: 1 }}
+          isOpen={open}
+          responseStatus={responseStatus}
           onClickClose={handleClose}
           onClickBack={handleBack}
           onSubmit={handleSubmit}
-          isOpen={open}
-          responseStatus={responseStatus}
         >
           <StepFormDialogItem id="step-1" stepNumber={1}>
             <p>「次へ」ボタンを押すと、0.5秒後にAPIコールが実行され、次のステップに進みます。</p>
@@ -545,11 +545,11 @@ export const AsyncSubmitError: StoryObj<typeof ControlledStepFormDialog> = {
         <Button onClick={() => setOpen(true)}>非同期処理ダイアログを開く（エラー）</Button>
         <ControlledStepFormDialog
           {...rest}
+          isOpen={open}
+          responseStatus={responseStatus}
           onClickClose={handleClose}
           onClickBack={handleBack}
           onSubmit={handleSubmit}
-          isOpen={open}
-          responseStatus={responseStatus}
         >
           <p>「次へ」ボタンを押すと、0.5秒後にエラーメッセージが表示されます。</p>
           <p>現在のページが維持されます。</p>

@@ -156,8 +156,8 @@ export const LanguageSwitcher: FC<Props> = ({
               key={code}
               code={code}
               current={currentLang === code}
-              handleClick={functions.handleClickLanguageSelect}
               classNames={classNames}
+              handleClick={functions.handleClickLanguageSelect}
             >
               {label}
             </LanguageListItemButton>
@@ -178,20 +178,20 @@ const LanguageListItemButton = memo<{
     languageButton: string
   }
 }>(({ code, children, current, handleClick, classNames }) => (
-  <li className={classNames.languageItem} aria-current={current} lang={code}>
+  <li lang={code} className={classNames.languageItem} aria-current={current}>
     <Button
       value={code}
-      onClick={handleClick}
       wide
+      className={classNames.languageButton}
+      onClick={handleClick}
       prefix={
         current ? (
           <FaCheckIcon
-            color="MAIN"
             alt={<Localizer id="smarthr-ui/LanguageSwitcher/checkIconAlt" defaultText="選択中" />}
+            color="MAIN"
           />
         ) : null
       }
-      className={classNames.languageButton}
     >
       {children}
     </Button>
@@ -215,7 +215,7 @@ const MemoizedDropdownTrigger = memo<
 
   return (
     <DropdownTrigger>
-      <Button prefix={prefix} suffix={<FaCaretDownIcon />} className={className}>
+      <Button className={className} prefix={prefix} suffix={<FaCaretDownIcon />}>
         {body}
       </Button>
     </DropdownTrigger>

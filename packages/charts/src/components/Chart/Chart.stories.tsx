@@ -42,6 +42,9 @@ export const Playground: Story = {
     options: {
       control: 'object',
     },
+    disablePatterns: {
+      control: 'boolean',
+    },
   },
 }
 
@@ -70,6 +73,25 @@ export const Title: Story = {
     title: {
       control: 'text',
     },
+  },
+}
+
+export const DisablePatterns: Story = {
+  name: 'disablePatterns',
+  args: {
+    type: 'bar',
+    data: multiSmall,
+    disablePatterns: true,
+  },
+}
+
+export const ToneRange: Story = {
+  name: 'singleTone（範囲を指定）',
+  args: {
+    type: 'bar',
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 2 },
   },
 }
 

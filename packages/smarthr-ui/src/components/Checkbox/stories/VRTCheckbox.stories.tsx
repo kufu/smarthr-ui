@@ -1,5 +1,4 @@
-import { Heading } from '@storybook/addon-docs/blocks'
-
+import { Heading } from '../../Heading'
 import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { Checkbox } from '../Checkbox'
@@ -20,10 +19,10 @@ const Template = (
             <Checkbox
               key={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
               name={`${isMixed}-${isError}-${isDisabled}-${isChecked}`}
-              mixed={isMixed}
-              error={isError}
               disabled={isDisabled}
               checked={isChecked}
+              mixed={isMixed}
+              error={isError}
             />
           )),
         ),

@@ -38,15 +38,15 @@ export const AccordionPanelContent: FC<Props> = ({ className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Transition in={visible} timeout={150} nodeRef={wrapperRef}>
+    <Transition nodeRef={wrapperRef} in={visible} timeout={150}>
       {(status) => (
         <div
           {...rest}
           ref={wrapperRef}
           id={contentId}
+          className={`${actualClassName} ${status}`}
           aria-labelledby={triggerId}
           aria-hidden={visible ? undefined : true}
-          className={`${actualClassName} ${status}`}
         />
       )}
     </Transition>

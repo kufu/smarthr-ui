@@ -32,7 +32,7 @@ export const VRT: StoryObj<typeof Pagination> = {
   render: (args, context) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <div id={id} key={id}>
+        <div key={id} id={id}>
           {meta.render?.(args, context)}
         </div>
       ))}

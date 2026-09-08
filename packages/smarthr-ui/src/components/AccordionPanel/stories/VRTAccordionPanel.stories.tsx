@@ -19,8 +19,8 @@ export default {
           {['screenTitle', 'sectionTitle', 'blockTitle', 'subBlockTitle', 'subSubBlockTitle'].map(
             (headingType) => (
               <AccordionPanelItem
-                name={`item-${iconPosition}-${headingType}`}
                 key={`${iconPosition}${headingType}`}
+                name={`item-${iconPosition}-${headingType}`}
               >
                 <AccordionPanelTrigger
                   headingType={headingType as any}

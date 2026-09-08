@@ -1,6 +1,5 @@
 import { action } from 'storybook/actions'
 
-import { backgroundColor } from '../../../tailwind'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviButton } from '../AppNaviButton'
 
@@ -26,9 +25,6 @@ export default {
     children: 'ボタン',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['Template'],

@@ -48,7 +48,7 @@ export const Loader = memo<Props>(
 
     return (
       <span {...rest} role={role} className={classNames.wrapper}>
-        <LoaderSpinner type={type} size={size} alt={alt} />
+        <LoaderSpinner type={type} alt={alt} size={size} />
         {text && <span className={classNames.text}>{text}</span>}
       </span>
     )

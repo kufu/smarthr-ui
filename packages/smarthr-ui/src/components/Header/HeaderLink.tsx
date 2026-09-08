@@ -1,13 +1,12 @@
 import { type ComponentProps, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../Button'
 
 type Props = Omit<
   ComponentProps<typeof AnchorButton>,
   'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason'
-> &
-  VariantProps<typeof classNameGenerator>
+> & { enableNew?: boolean }
 
 const classNameGenerator = tv({
   base: [
@@ -32,5 +31,5 @@ export const HeaderLink = memo<Props>(({ enableNew, className, ...rest }) => {
     [enableNew, className],
   )
 
-  return <AnchorButton {...rest} variant="text" target="_blank" className={actualClassName} />
+  return <AnchorButton {...rest} target="_blank" variant="text" className={actualClassName} />
 })

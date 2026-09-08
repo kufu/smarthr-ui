@@ -1,5 +1,9 @@
 'use client'
 
+// HINT: libs/uaはtypeof window !== 'undefined'でガードされているためRSCで例外にはならないが、
+// isIOS・isMobileSafariは実機のUAをブラウザ側で検出する必要がある。Server Componentのままだと
+// navigatorが存在しないサーバ上で1回だけ評価され常にfalseに固定されるため、'use client'が必要
+
 import {
   type ChangeEvent,
   type ComponentPropsWithoutRef,
@@ -112,20 +116,28 @@ const ActualSelect = <T extends string>(
       iconWrap: iconWrap(sizeProps),
       blankOptGroup: blankOptgroup(),
     }
-  }, [className, size])
-  const wrapperStyle = useMemo(
-    () => ({
-      width: typeof width === 'number' ? `${width}px` : width,
-    }),
-    [width],
-  )
-
-  const actualBlankLabel = blankLabel ?? ''
+  }, [size, className])
 
   return (
-    <span className={classNames.wrapper} style={wrapperStyle}>
+    <span
+      className={classNames.wrapper}
+      style={{
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
+    >
       <select
         {...rest}
+        ref={ref}
+        // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
+        //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
+        //    - エラーメッセージが表示されない
+        //    - 問題のある入力フィールドまでスクロールしない
+        // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
+        // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
+        required={isIOS ? undefined : required}
+        disabled={disabled}
+        className={classNames.select}
+        aria-invalid={error || undefined}
         data-smarthr-ui-input="true"
         onChange={(e: ChangeEvent<HTMLSelectElement>) => {
           onChange?.(e)
@@ -140,19 +152,8 @@ const ActualSelect = <T extends string>(
             }
           }
         }}
-        aria-invalid={error || undefined}
-        disabled={disabled}
-        // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
-        //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
-        //    - エラーメッセージが表示されない
-        //    - 問題のある入力フィールドまでスクロールしない
-        // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
-        // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
-        required={isIOS ? undefined : required}
-        ref={ref}
-        className={classNames.select}
       >
-        <BlankOption hasBlank={hasBlank}>{actualBlankLabel}</BlankOption>
+        <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}

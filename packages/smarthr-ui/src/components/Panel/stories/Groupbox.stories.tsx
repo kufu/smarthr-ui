@@ -1,5 +1,4 @@
 import { backgroundColor } from '../../../tailwind'
-import { defaultBackgroundColor as backgroundColorValue } from '../../../themes'
 import { Stack } from '../../Layout'
 import { Groupbox } from '../Groupbox'
 import { panelClassNameGenerator } from '../Panel'
@@ -13,7 +12,7 @@ const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   .sort() as Gap[]
 
 export default {
-  title: 'Components/Panel/Groupbox',
+  title: 'Components/Base/BaseColumn',
   component: Groupbox,
   render: (args) => <Groupbox {...args} />,
   argTypes: {
@@ -27,9 +26,6 @@ export default {
     children: 'ベースカラム',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColorValue.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
 } as Meta<typeof Groupbox>
@@ -43,7 +39,7 @@ export const Padding: StoryObj<typeof Groupbox> = {
   render: (args) => (
     <Stack>
       {[undefined, ...basePadding].map((padding) => (
-        <Groupbox {...args} padding={padding} key={padding}>
+        <Groupbox {...args} key={padding} padding={padding}>
           padding: {padding}
         </Groupbox>
       ))}
@@ -60,7 +56,7 @@ export const BgColor: StoryObj<typeof Groupbox> = {
   render: (args) => (
     <Stack>
       {Object.keys(backgroundColor).map((bgColor) => (
-        <Groupbox {...args} bgColor={bgColor as any} key={bgColor}>
+        <Groupbox {...args} key={bgColor} bgColor={bgColor as any}>
           {bgColor}
         </Groupbox>
       ))}
