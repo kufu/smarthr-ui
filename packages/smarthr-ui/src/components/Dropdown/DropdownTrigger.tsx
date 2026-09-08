@@ -47,20 +47,6 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   useEffect(() => {
-    if (!triggerElementRef.current) {
-      return
-    }
-
-    // apply ARIA to all focusable elements in trigger
-    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
-
-    triggers.forEach((trigger) => {
-      trigger.setAttribute('aria-expanded', active.toString())
-      trigger.setAttribute('aria-controls', contentId)
-    })
-  }, [active, triggerElementRef, contentId])
-
-  useEffect(() => {
     const triggerElement = triggerElementRef.current
     if (!triggerElement) {
       return
@@ -110,6 +96,20 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
       observer.disconnect()
     }
   }, [handleClickTrigger, triggerElementRef])
+
+  useEffect(() => {
+    if (!triggerElementRef.current) {
+      return
+    }
+
+    // apply ARIA to all focusable elements in trigger
+    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+
+    triggers.forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', active.toString())
+      trigger.setAttribute('aria-controls', contentId)
+    })
+  }, [active, triggerElementRef, contentId])
 
   return (
     <div ref={triggerElementRef} className={actualClassName}>
