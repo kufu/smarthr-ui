@@ -8,12 +8,12 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
 import { DisabledReason } from './DisabledReason'
-import { AnchorButtonInner } from './client'
-import { commonClassNameGenerator } from './style'
+import { ActualButton } from './client'
 
 import type { BaseProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
@@ -30,6 +30,10 @@ type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
   keyof BaseProps<T> & ElementRefProps<T>
 >
+
+const classNameGenerator = tv({
+  base: 'smarthr-ui-AnchorButton',
+})
 
 const AnchorButton = forwardRef(
   <T extends ElementType = 'a'>(
@@ -50,41 +54,30 @@ const AnchorButton = forwardRef(
     }: PropsWithoutRef<BaseProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const classNames = useMemo(() => {
-      const { anchor, inner } = commonClassNameGenerator()
-
-      return {
-        wrapper: anchor({
-          variant,
-          size,
-          wide,
-          className: `smarthr-ui-AnchorButton ${className || ''}`,
-        }),
-        inner: inner({ size }),
-      }
-    }, [variant, size, wide, className])
+    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
 
-    const Component = elementAs || 'a'
-
     const button = (
-      <Component
+      <ActualButton
         {...rest}
-        ref={ref}
+        elementAs={elementAs}
+        anchorRef={ref}
         href={href}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
-        className={classNames.wrapper}
+        isAnchor
+        variant={variant}
+        size={size}
+        wide={wide}
+        className={actualClassName}
+        prefix={prefix}
+        suffix={actualSuffix}
       >
-        {prefix}
-        <AnchorButtonInner className={classNames.inner} prefix={prefix} suffix={actualSuffix}>
-          {children}
-        </AnchorButtonInner>
-        {actualSuffix}
-      </Component>
+        {children}
+      </ActualButton>
     )
 
     if (!href && inactiveReason) {
