@@ -102,6 +102,30 @@ export const VRTLauncher: Story = {
   },
 }
 
+export const VRTLauncherLoading: Story = {
+  args: {
+    // HINT: 解決しない Promise を返して loading 状態を固定する
+    fetchFeatures: () => new Promise(() => {}),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button', { name: 'アプリ' }).click()
+    // HINT: ランチャーは Dropdown のポータル（document.body 直下）に描画されるため body から参照する
+    await within(canvasElement.ownerDocument.body).findByText('処理中')
+  },
+}
+
+export const VRTLauncherError: Story = {
+  args: {
+    fetchFeatures: () => Promise.reject(new Error('failed')),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button', { name: 'アプリ' }).click()
+    await within(canvasElement.ownerDocument.body).findByText(/アプリ一覧の読み込みに失敗しました/)
+  },
+}
+
 export const VRTReleaseNote: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

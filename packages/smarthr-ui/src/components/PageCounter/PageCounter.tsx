@@ -26,7 +26,7 @@ export const PageCounter = memo<Props>(({ start, end, total, className, ...rest 
 })
 
 const BoldNumber = memo<{ children: number }>(({ children }) => (
-  <Text weight="bold" as="b">
+  <Text as="b" weight="bold">
     {children.toLocaleString()}
   </Text>
 ))

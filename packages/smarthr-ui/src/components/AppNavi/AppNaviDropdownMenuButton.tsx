@@ -23,24 +23,21 @@ const classNameGenerator = tv({
   slots: {
     trigger: [
       'smarthr-ui-AppNavi-dropdownMenuButton',
-      [
-        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-none',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-grey',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-rounded-none',
-      ],
-      [
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:shr-relative',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:shr-text-black',
-      ],
-      [
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-content-[""]',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-absolute',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-bottom-0',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-inset-x-0',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-h-0.25',
-        '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-bg-main',
-      ],
+      // trigger
+      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-border-none',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.5',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-text-grey',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger]:shr-rounded-none',
+      // trigger has current
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:shr-relative',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:shr-text-black',
+      // trigger:after has current
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-content-[""]',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-absolute',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-bottom-0',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-inset-x-0',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-h-0.25',
+      '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-bg-main',
     ],
     actionItem: [
       // HINT: DropdownMenuButton内で設定されるclassNameより優先度を上げる必要がある
@@ -50,6 +47,7 @@ const classNameGenerator = tv({
   },
 })
 const { trigger, actionItem } = classNameGenerator()
+const TRIGGER_CLASSNAME = trigger()
 
 const renderItemList = (children: ReactNode) =>
   Children.map(children, (item): ReactNode => {
@@ -74,6 +72,9 @@ const renderItemList = (children: ReactNode) =>
 
 export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
+    className={TRIGGER_CLASSNAME}
+    onOpen={onOpen}
+    onClose={onClose}
     trigger={
       <>
         {label}
@@ -81,9 +82,6 @@ export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, c
         <span hidden>{children}</span>
       </>
     }
-    onOpen={onOpen}
-    onClose={onClose}
-    className={trigger()}
   >
     {renderItemList(children)}
   </DropdownMenuButton>

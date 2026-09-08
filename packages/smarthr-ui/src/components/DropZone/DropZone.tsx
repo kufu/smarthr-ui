@@ -4,12 +4,11 @@ import {
   type ChangeEvent,
   type ComponentPropsWithRef,
   type DragEvent,
+  type MouseEvent,
   type PropsWithChildren,
   forwardRef,
   memo,
-  useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -77,7 +76,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
     },
     ref,
   ) => {
-    const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
 
     const classNames = useMemo(() => {
@@ -90,15 +88,19 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 
     const latest = useLatest({ onSelectFiles })
 
-    const functions = useMemo(
-      () => ({
+    const functions = useMemo(() => {
+      const inputFileSelector = 'input[type="file"][data-smarthr-ui-input="true"]'
+
+      return {
         handleDrop: (e: DragEvent<HTMLElement>) => {
           overrideEventDefault(e)
           setFilesDraggedOver(false)
 
           if (e.dataTransfer.types.includes('Files')) {
-            if (fileRef.current) {
-              fileRef.current.files = e.dataTransfer.files
+            const input = e.currentTarget.querySelector<HTMLInputElement>(inputFileSelector)
+
+            if (input) {
+              input.files = e.dataTransfer.files
             }
             latest.onSelectFiles(e, e.dataTransfer.files)
           }
@@ -113,48 +115,45 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         handleChange: (e: ChangeEvent<HTMLInputElement>) => {
           latest.onSelectFiles(e, e.target.files)
         },
-        handleClickButton: () => {
-          fileRef.current!.click()
+        handleClickButton: (e: MouseEvent<HTMLButtonElement>) => {
+          e.currentTarget
+            .closest('.smarthr-ui-DropZone')
+            ?.querySelector<HTMLInputElement>(inputFileSelector)
+            ?.click()
         },
-      }),
-      [latest],
-    )
-
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => fileRef.current,
-    )
+      }
+    }, [latest])
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
+        className={classNames.wrapper}
+        data-files-dragged-over={filesDraggedOver || undefined}
         onDrop={functions.handleDrop}
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
-        className={classNames.wrapper}
-        data-files-dragged-over={filesDraggedOver || undefined}
       >
         {children}
         <SelectButton
-          label={selectButtonLabel}
           disabled={disabled}
           error={error}
-          handleClick={functions.handleClickButton}
           className={classNames.button}
+          handleClick={functions.handleClickButton}
+          label={selectButtonLabel}
         />
         <VisuallyHiddenText>
           {/* TODO: この input にアクセシブルネームが設定されていない。VisuallyHiddenText で視覚的に隠されているが aria-hidden ではないためアクセシビリティツリーに残る。aria-label 等で適切なラベルを付与する必要がある */}
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
-            ref={fileRef}
+            ref={ref}
             type="file"
-            multiple={multiple}
             disabled={disabled}
+            multiple={multiple}
             tabIndex={-1}
             aria-invalid={error || undefined}
-            onChange={functions.handleChange}
             data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
           />
         </VisuallyHiddenText>
       </div>
@@ -166,15 +165,15 @@ const SelectButton = memo<{
   label?: string
   disabled?: boolean
   error?: boolean
-  handleClick: () => void
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
 }>(({ label, disabled, error, handleClick, className }) => (
   <Button
-    prefix={<FaFolderOpenIcon />}
     disabled={disabled}
+    className={className}
     data-error={error || undefined}
     onClick={handleClick}
-    className={className}
+    prefix={<FaFolderOpenIcon />}
   >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
   </Button>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
@@ -14,34 +15,45 @@ type Props = {
 }
 
 export function useRemoteTrigger({
-  onClickClose: orgOnClickClose,
-  onPressEscape: orgOnPressEscape,
+  onClickClose,
+  onPressEscape,
   onToggle,
   onOpen,
   onClose,
   id,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
+  const toggleFrame = useAnimationFrame()
   const latest = useLatest({
     onToggle,
     onOpen,
     onClose,
-    orgOnClickClose,
-    orgOnPressEscape,
+    onClickClose,
+    onPressEscape,
+    toggleFrame,
   })
 
   const functions = useMemo(() => {
     const updateIsOpen = (newIsOpen: boolean) => {
       setIsOpen(newIsOpen)
-      latest.onToggle?.(newIsOpen)
-      latest[newIsOpen ? 'onOpen' : 'onClose']?.()
+
+      if (latest.onToggle || latest[newIsOpen ? 'onOpen' : 'onClose']) {
+        // HINT: 利用者側でstateの更新が行われている可能性があるため、遅延させる
+        latest.toggleFrame.request(() => {
+          latest.onToggle?.(newIsOpen)
+          latest[newIsOpen ? 'onOpen' : 'onClose']?.()
+        })
+      }
     }
 
     return {
       updateIsOpen,
+      cleanupToggleFrame: () => {
+        latest.toggleFrame.cancel()
+      },
       handleClickClose: () => {
-        if (latest.orgOnClickClose) {
-          return latest.orgOnClickClose(() => {
+        if (latest.onClickClose) {
+          return latest.onClickClose(() => {
             updateIsOpen(false)
           })
         }
@@ -49,8 +61,8 @@ export function useRemoteTrigger({
         updateIsOpen(false)
       },
       handlePressEscape: () => {
-        if (latest.orgOnPressEscape) {
-          return latest.orgOnPressEscape(() => {
+        if (latest.onPressEscape) {
+          return latest.onPressEscape(() => {
             updateIsOpen(false)
           })
         }
@@ -70,6 +82,8 @@ export function useRemoteTrigger({
     document.addEventListener(TRIGGER_EVENT, handler)
 
     return () => {
+      // HINT: アンマウント後に予約済みのonToggle・onOpen・onCloseが呼ばれないようにする
+      functions.cleanupToggleFrame()
       document.removeEventListener(TRIGGER_EVENT, handler)
     }
   }, [id, functions])

@@ -1,11 +1,13 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 
 import { IntlProvider } from '../../../intl'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 
 import { SingleCombobox } from './SingleCombobox'
 
+import type { ComboboxItem } from '../types'
 import type { ComponentProps } from 'react'
 
 describe('SingleCombobox', () => {
@@ -32,6 +34,9 @@ describe('SingleCombobox', () => {
           <SingleCombobox
             {...rest}
             name={name || 'default'}
+            selectedItem={
+              selectedItem !== undefined ? selectedItem : { label: 'option 1', value: 'value-1' }
+            }
             items={
               items || [
                 { label: 'option 1', value: 'value-1' },
@@ -40,9 +45,6 @@ describe('SingleCombobox', () => {
                 { label: 'option 4', value: 'value-4' },
                 { label: 'option 5', value: 'value-5' },
               ]
-            }
-            selectedItem={
-              selectedItem !== undefined ? selectedItem : { label: 'option 1', value: 'value-1' }
             }
           />
         </FormControl>
@@ -120,6 +122,69 @@ describe('SingleCombobox', () => {
     expect(onAdd).toHaveBeenCalledWith('新しいアイテム')
   })
 
+  it('creatableで新しく追加したアイテムをselectedItemに指定すると、値・表示が更新されること', async () => {
+    const initialItems: Array<ComboboxItem<string>> = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    // 実際の利用方法を模して、親コンポーネントがitems・selectedItemを状態として管理し、
+    // onAddで追加された値をitemsに加えた上でselectedItemに指定する
+    const CreatableComboboxWrapper = () => {
+      const [items, setItems] = useState(initialItems)
+      const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
+
+      return (
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={selectedItem}
+                creatable
+                onAdd={(value) => {
+                  const newItem = { label: value, value }
+                  setItems((current) => [...current, newItem])
+                  setSelectedItem(newItem)
+                }}
+                onChangeSelected={setSelectedItem}
+                items={items}
+              />
+            </FormControl>
+            {/* 手入力を経由せず外部からselectedItemを差し替えるための操作(実際のアプリでの「別のUIから選択を変更する」相当) */}
+            <button
+              type="button"
+              onClick={() => setSelectedItem(items.find((item) => item.value === 'value-1')!)}
+            >
+              option 1を外部から選択
+            </button>
+          </form>
+        </IntlProvider>
+      )
+    }
+
+    render(<CreatableComboboxWrapper />)
+
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), '新しいアイテム')
+    await userEvent.click(screen.getByRole('option', { name: '「新しいアイテム」を追加' }))
+
+    // 追加したアイテムがinputの表示値として反映される
+    expect(combobox()).toHaveValue('新しいアイテム')
+
+    // 再度リストボックスを開くと、追加したアイテムが選択肢として一覧に含まれ、選択中(aria-selected)であること
+    await userEvent.click(combobox())
+    expect(screen.getByRole('option', { name: '新しいアイテム' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+
+    // 手入力を経由せず外部からselectedItemが変わった場合も、inputの表示値が正しく更新されること
+    // (レンダー中の同期処理が効いているかの確認になる)
+    await userEvent.click(screen.getByRole('button', { name: 'option 1を外部から選択' }))
+    expect(combobox()).toHaveValue('option 1')
+  })
+
   it('disabled なコンボボックスではアイテムの選択・解除ができないこと', async () => {
     const onClear = vi.fn()
     render(template({ onClear, disabled: true }))
@@ -171,11 +236,11 @@ describe('SingleCombobox', () => {
           <FormControl label="コンボボックス">
             <SingleCombobox
               name="default"
+              selectedItem={{ label: 'option 1', value: 'value-1' }}
               items={[
                 { label: 'option 1', value: 'value-1' },
                 { label: 'option 2', value: 'value-2' },
               ]}
-              selectedItem={{ label: 'option 1', value: 'value-1' }}
             />
           </FormControl>
         </form>
@@ -198,12 +263,12 @@ test('groupロールが付与されている', async () => {
         <FormControl label="コンボボックス">
           <SingleCombobox
             name="default"
+            selectedItem={{ label: 'option 1', value: 'value-1' }}
+            onClearClick={onClearClick}
             items={[
               { label: 'option 1', value: 'value-1' },
               { label: 'option 2', value: 'value-2' },
             ]}
-            selectedItem={{ label: 'option 1', value: 'value-1' }}
-            onClearClick={onClearClick}
           />
         </FormControl>
       </form>

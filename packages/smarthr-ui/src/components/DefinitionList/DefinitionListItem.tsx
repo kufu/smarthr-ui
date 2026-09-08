@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentPropsWithoutRef,
   type FC,
@@ -11,9 +9,9 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { useTheme } from '../../hooks/useTheme'
-import { Stack } from '../Layout'
 import { Text } from '../Text'
+
+import { ItemWrapper } from './client'
 
 type ObjectTermType = {
   text: ReactNode
@@ -54,7 +52,6 @@ export const DefinitionListItem: FC<Props> = ({
   fullWidth,
   className,
 }) => {
-  const theme = useTheme()
   const term = useObjectAttributes<ReactNode | ObjectTermType, ObjectTermType>(
     orgTerm,
     termObjectConverter,
@@ -68,34 +65,24 @@ export const DefinitionListItem: FC<Props> = ({
       term: cs.term(),
       description: cs.description(),
     }
-  }, [className, fullWidth])
-  const style = useMemo(
-    () => ({
-      flexBasis:
-        // fullWidth の方が強い
-        !fullWidth && maxColumns
-          ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
-          : undefined,
-    }),
-    [fullWidth, maxColumns, theme],
-  )
+  }, [fullWidth, className])
 
   return (
-    <Stack gap={0.25} className={classNames.wrapper} style={style}>
+    <ItemWrapper maxColumns={maxColumns} fullWidth={fullWidth} className={classNames.wrapper}>
       <DefinitionTerm styleType={term.styleType} className={classNames.term}>
         {term.text}
       </DefinitionTerm>
       <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.description}>
         {children}
       </Text>
-    </Stack>
+    </ItemWrapper>
   )
 }
 
 const DefinitionTerm = memo<
   PropsWithChildren<{ styleType: ObjectTermType['styleType']; className: string }>
 >(({ styleType = 'subBlockTitle', className, children }) => (
-  <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
+  <Text as="dt" styleType={styleType} leading="TIGHT" className={className}>
     {children}
   </Text>
 ))

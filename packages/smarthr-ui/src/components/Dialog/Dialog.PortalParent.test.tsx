@@ -8,6 +8,8 @@ import { Section } from '../SectioningContent'
 
 import { Dialog } from './Dialog'
 
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
+
 describe('Dialog (Portal Parent)', () => {
   const DialogTemplate = () => {
     const portalParentRef = useRef<HTMLDivElement>(null)
@@ -18,9 +20,9 @@ describe('Dialog (Portal Parent)', () => {
         <Button onClick={() => setIsOpen(true)}>Dialog を開く</Button>
         <Dialog
           isOpen={isOpen}
-          onPressEscape={() => setIsOpen(false)}
-          ariaLabel="Dialog"
           portalParent={portalParentRef}
+          ariaLabel="Dialog"
+          onPressEscape={() => setIsOpen(false)}
         >
           <Section>
             <Heading>Dialog</Heading>
@@ -40,6 +42,9 @@ describe('Dialog (Portal Parent)', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ }')

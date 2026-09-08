@@ -15,13 +15,13 @@ export default {
   render: (args) => (
     <Stack className="shr-h-screen">
       {[undefined, 'focus-visible'].map((id) => (
-        <Stack id={id} key={id}>
+        <Stack key={id} id={id}>
           {[false, true].map((enableNew) => (
-            <Header {...args} enableNew={enableNew} key={String(enableNew)}>
+            <Header {...args} key={String(enableNew)} enableNew={enableNew}>
               <HeaderLink
                 href="https://smarthr.design/"
-                prefix={<FaRegCircleQuestionIcon />}
                 enableNew={enableNew}
+                prefix={<FaRegCircleQuestionIcon />}
               >
                 ヘルプ
               </HeaderLink>

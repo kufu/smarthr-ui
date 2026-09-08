@@ -118,8 +118,8 @@ export const BottomFixedArea: FC<Props> = ({
                     <Button
                       {...tertiaryRest}
                       variant="text"
-                      prefix={Icon && <Icon />}
                       className={classNames.tertiaryButton}
+                      prefix={Icon && <Icon />}
                     >
                       {text}
                     </Button>

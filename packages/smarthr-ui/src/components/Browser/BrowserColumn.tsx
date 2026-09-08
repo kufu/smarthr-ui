@@ -30,14 +30,14 @@ export const BrowserColumn: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <ul {...rest} className={actualClassName} id={getColumnId(columnIndex)}>
+    <ul {...rest} id={getColumnId(columnIndex)} className={actualClassName}>
       {items.map((item, rowIndex) => (
         <ListItem
           key={rowIndex}
+          value={value}
           itemValue={item.value}
           itemLabel={item.label}
           itemHasChildren={item.children.length > 0}
-          value={value}
           columnIndex={columnIndex}
           rowIndex={rowIndex}
           handleChangeInput={handleChangeInput}

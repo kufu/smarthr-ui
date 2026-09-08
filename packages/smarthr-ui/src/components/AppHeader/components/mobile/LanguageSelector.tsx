@@ -60,18 +60,18 @@ export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose
   return (
     <Section>
       <SelectorHeading
-        onClickClose={onClickClose}
         wrapperClassName={CLASS_NAMES.header}
         className={CLASS_NAMES.headerTitle}
+        onClickClose={onClickClose}
       />
       <div className={CLASS_NAMES.buttonWrapper}>
         {locales.map(([localeKey, label]) => (
           <LocaleButton
             key={localeKey}
             value={localeKey as Locale}
-            onClick={onClickLocale}
             selected={localeKey === locale}
             className={CLASS_NAMES.button}
+            onClick={onClickLocale}
           >
             {label}
           </LocaleButton>
@@ -105,9 +105,9 @@ const LocaleButton = memo<{
     elementAs="button"
     type="button"
     value={value}
+    className={className}
     handleClick={onClick}
     prefix={selected && <FaCheckIcon color="MAIN" />}
-    className={className}
   >
     {children}
   </CommonButton>

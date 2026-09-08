@@ -43,10 +43,10 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
 
   return tenantName ? (
     <ActualTenantSelector
-      tenants={tenants as ActualProps['tenants']}
       currentTenantId={currentTenantId}
-      onTenantSelect={onTenantSelect}
+      tenants={tenants as ActualProps['tenants']}
       tenantName={tenantName}
+      onTenantSelect={onTenantSelect}
     />
   ) : null
 }
@@ -66,10 +66,10 @@ const ActualTenantSelector: FC<ActualProps> = ({
 
   return (
     <TenantDropdown
-      tenants={tenants}
       currentTenantId={currentTenantId}
-      onTenantSelect={onTenantSelect}
+      tenants={tenants}
       tenantName={tenantName}
+      onTenantSelect={onTenantSelect}
     />
   )
 }
@@ -119,7 +119,7 @@ const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => 
   <DropdownTrigger>
     <button type="button" className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}>
       {children}
-      <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
+      <FaCaretDownIcon color="TEXT_BLACK" className="shr-ms-0.5" />
     </button>
   </DropdownTrigger>
 ))

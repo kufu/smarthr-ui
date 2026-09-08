@@ -28,6 +28,10 @@ type Props = {
   children?: React.ReactNode
   className?: string
   options?: Partial<ChartOptions<'doughnut'>>
+  /**
+   * ドーナツグラフの柄を無効化するか
+   */
+  disablePatterns?: boolean
 }
 
 export const DoughnutChart: React.FC<Props> = ({
@@ -37,11 +41,15 @@ export const DoughnutChart: React.FC<Props> = ({
   children,
   className,
   options: externalOptions,
+  disablePatterns,
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
-  const chartColors = useMemo(() => getChartColors<'doughnut'>(segmentCount), [segmentCount])
+  const chartColors = useMemo(
+    () => getChartColors<'doughnut'>(segmentCount, { disablePatterns }),
+    [segmentCount, disablePatterns],
+  )
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
   const ariaLabel = useMemo(() => {
@@ -100,16 +108,19 @@ export const DoughnutChart: React.FC<Props> = ({
 
   return (
     <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
-      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Doughnut
-        tabIndex={0}
-        role="application"
         ref={chartRef}
+        role="application"
         data={enhancedData}
-        options={chartOptions}
         plugins={plugins}
+        tabIndex={0}
+        // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
+        // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
+        className="shr-relative shr-z-1"
         aria-label={ariaLabel}
+        options={chartOptions}
       />
       <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
     </div>

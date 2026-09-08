@@ -6,7 +6,7 @@ import type { Groupbox } from '../Groupbox'
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 
 export default {
-  title: 'Components/Panel/Groupbox/VRT',
+  title: 'Components/Base/BaseColumn/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

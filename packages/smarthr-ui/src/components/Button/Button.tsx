@@ -1,24 +1,14 @@
-'use client'
+import { type ButtonHTMLAttributes, forwardRef, useId, useMemo } from 'react'
 
-import { type ButtonHTMLAttributes, forwardRef, memo, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { Loader } from '../Loader'
 
-import { usePortal } from '../../hooks/usePortal'
-import { Localizer } from '../../intl'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
+import { ActualButton, LoadingStatus } from './client'
+import { buttonClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
 
 type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
-
-const classNameGenerator = tv({
-  slots: {
-    wrapper: 'smarthr-ui-Button',
-  },
-})
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
   (
@@ -34,39 +24,44 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       className,
       children,
       loading = false,
+      id,
       ...rest
     },
     ref,
   ) => {
+    const generatedId = useId()
+    const buttonId = id || generatedId
     const classNames = useMemo(() => {
-      const { wrapper } = classNameGenerator()
+      const { wrapper, loader, inner } = buttonClassNameGenerator()
 
       return {
-        wrapper: wrapper({ className }),
+        wrapper: wrapper({ variant, size, wide, className }),
+        loader: loader({ variant }),
+        inner: inner({ size }),
       }
-    }, [className])
+    }, [variant, size, wide, className])
 
     const button = (
-      <ButtonWrapper
+      <ActualButton
         {...rest}
         buttonRef={ref}
         type={type}
-        size={size}
-        wide={wide}
-        variant={variant}
-        className={classNames.wrapper}
-        $loading={loading}
+        id={buttonId}
+        disabled={loading || disabled}
+        loader={
+          loading ? <Loader role="presentation" size="S" className={classNames.loader} /> : null
+        }
+        classNames={classNames}
         prefix={prefix}
         suffix={suffix}
-        disabled={disabled}
       >
-        <LoadingStatus loading={loading} />
+        <LoadingStatus buttonId={buttonId} loading={loading} />
         {children}
-      </ButtonWrapper>
+      </ActualButton>
     )
 
     if (disabled && disabledReason) {
-      return <DisabledReason button={button} disabledReason={disabledReason} />
+      return <DisabledReason disabledReason={disabledReason} button={button} />
     }
 
     return button
@@ -74,14 +69,3 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 )
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
-
-const LoadingStatus = memo<{ loading: boolean }>(({ loading }) => {
-  const { createPortal } = usePortal()
-
-  // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-  return createPortal(
-    <VisuallyHiddenText role="status">
-      {loading && <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />}
-    </VisuallyHiddenText>,
-  )
-})

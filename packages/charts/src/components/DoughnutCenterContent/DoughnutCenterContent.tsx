@@ -73,13 +73,13 @@ export const DoughnutCenterContent: React.FC<Props> = ({ chartArea, ariaHidden, 
   return (
     <div
       className={CENTER_CONTENT_CLASS_NAMES}
-      aria-hidden={ariaHidden}
       style={{
         top: chartArea.top,
         left: chartArea.left,
         width: chartArea.width,
         height: chartArea.height,
       }}
+      aria-hidden={ariaHidden}
     >
       {children}
     </div>

@@ -99,20 +99,20 @@ export const ControlledActionDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      ariaLabelledby={heading.id}
       className={className}
+      ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
     >
       <ActionDialogContentInner
-        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        actionButton={actionButton}
-        closeButton={closeButton}
+        responseStatus={responseStatus}
         handleClickClose={functions.handleClickClose}
         handleClickAction={functions.handleClickAction}
+        heading={heading}
+        actionButton={actionButton}
+        closeButton={closeButton}
         subActionArea={subActionArea}
-        responseStatus={responseStatus}
       >
         {children}
       </ActionDialogContentInner>

@@ -11,6 +11,8 @@ import { DialogContent } from './DialogContent'
 import { DialogTrigger } from './DialogTrigger'
 import { DialogWrapper } from './DialogWrapper'
 
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
+
 describe('DialogWrapper', () => {
   describe('DialogContent', () => {
     const DialogContentTemplate = () => (
@@ -38,6 +40,9 @@ describe('DialogWrapper', () => {
       await userEvent.tab()
       await userEvent.keyboard('{enter}')
       expect(screen.getByRole('dialog', { name: 'DialogContent' })).toBeVisible()
+
+      // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+      await waitForAnimationFrame()
 
       await userEvent.tab({ shift: true })
       await userEvent.keyboard('{ }')

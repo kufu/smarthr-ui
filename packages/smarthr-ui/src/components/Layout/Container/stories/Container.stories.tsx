@@ -8,7 +8,7 @@ import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
 
 const Template: StoryFn<typeof Container> = ({ size, ...rest }) => (
   <Container {...rest} size={size}>
-    <DisplayDimensionsBase padding={1.5} size={size}>
+    <DisplayDimensionsBase size={size} padding={1.5}>
       Story をわかりやすくするためのカスタム Base
     </DisplayDimensionsBase>
   </Container>

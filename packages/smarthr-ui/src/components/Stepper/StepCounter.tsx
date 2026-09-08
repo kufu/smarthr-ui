@@ -3,7 +3,14 @@ import { tv } from 'tailwind-variants'
 
 import { StepStatusIcon } from './StepStatusIcon'
 
-import type { Step } from './types'
+import type { StatusType } from './types'
+
+type Props = {
+  statusType?: StatusType
+  statusText?: string
+  stepNumber?: number
+  current: boolean
+}
 
 const classNameGenerator = tv({
   slots: {
@@ -14,10 +21,10 @@ const classNameGenerator = tv({
     statusIcon: 'shr-absolute -shr-left-[0.625em] -shr-top-[0.75em]',
   },
   variants: {
-    status: {
+    statusType: {
       completed: { counter: 'shr-border-main' },
       closed: { counter: 'shr-border-grey' },
-    },
+    } satisfies Record<StatusType, object>,
     current: {
       true: {
         counter: [
@@ -25,36 +32,34 @@ const classNameGenerator = tv({
           'forced-colors:shr-border-[Mark] forced-colors:shr-bg-[Mark]',
         ],
       },
-      false: {},
     },
   },
 })
 
-type Props = Pick<Step, 'status'> & {
-  stepNumber?: number
-  current: boolean
-}
-
-export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
+export const StepCounter: FC<Props> = ({ statusType, statusText, current, stepNumber }) => {
   const classNames = useMemo(() => {
-    const { wrapper, counter, statusIcon } = classNameGenerator({
-      status: typeof status === 'object' ? status.type : status,
-      current,
-    })
+    const { wrapper, counter, statusIcon } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
-      counter: counter(),
+      counter: counter({
+        statusType,
+        current,
+      }),
       statusIcon: statusIcon(),
     }
-  }, [status, current])
+  }, [statusType, current])
 
   return (
     <span className={classNames.wrapper}>
       <span className={classNames.counter} aria-hidden>
         {stepNumber}
       </span>
-      <StepStatusIcon status={status} className={classNames.statusIcon} />
+      <StepStatusIcon
+        statusType={statusType}
+        statusText={statusText}
+        className={classNames.statusIcon}
+      />
     </span>
   )
 }

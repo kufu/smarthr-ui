@@ -16,7 +16,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <ControlledMessageDialog {...rest} onClickClose={handleClose} isOpen={open} />
+        <ControlledMessageDialog {...rest} isOpen={open} onClickClose={handleClose} />
       </>
     )
   },
@@ -100,7 +100,7 @@ export const PortalParent: StoryObj<typeof ControlledMessageDialog> = {
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledMessageDialog

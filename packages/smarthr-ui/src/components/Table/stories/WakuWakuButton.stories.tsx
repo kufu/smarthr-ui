@@ -1,7 +1,7 @@
 import { Cluster } from '../../Layout'
-import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { WakuWakuButton } from '../WakuWakuButton'
+import { BulkActionRow } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
 

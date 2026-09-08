@@ -93,7 +93,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
-      <form onSubmit={handleSubmit} className={CLASS_NAMES.form}>
+      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
@@ -101,11 +101,11 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           <Cluster justify="space-between">
             {subActionArea}
             <ActionAreaCluster
+              loading={calculatedResponseStatus.isProcessing}
+              className={CLASS_NAMES.buttonArea}
               handleClickClose={handleClickClose}
               closeButton={closeButton}
               actionButton={actionButton}
-              loading={calculatedResponseStatus.isProcessing}
-              className={CLASS_NAMES.buttonArea}
             />
           </Cluster>
           <DialogContentResponseStatusMessage
@@ -128,11 +128,11 @@ const ActionAreaCluster = memo<
 >(({ handleClickClose, closeButton, actionButton, loading, className }) => (
   <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
     <CloseButton
-      handleClick={handleClickClose}
       disabled={closeButton.disabled || loading}
       text={closeButton.text}
+      handleClick={handleClickClose}
     />
-    <ActionButton variant={actionButton.theme} disabled={actionButton.disabled} loading={loading}>
+    <ActionButton disabled={actionButton.disabled} loading={loading} variant={actionButton.theme}>
       {actionButton.text}
     </ActionButton>
   </Cluster>
@@ -147,9 +147,9 @@ const ActionButton = memo<
 >(({ variant = 'primary', disabled, loading, children }) => (
   <Button
     type="submit"
-    variant={variant}
     disabled={disabled}
     loading={loading}
+    variant={variant}
     className="smarthr-ui-Dialog-actionButton"
   >
     {children}
@@ -161,7 +161,7 @@ const CloseButton = memo<{
   disabled: boolean
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (
-  <Button onClick={handleClick} disabled={disabled} className="smarthr-ui-Dialog-closeButton">
+  <Button disabled={disabled} className="smarthr-ui-Dialog-closeButton" onClick={handleClick}>
     {text ?? <Localizer id="smarthr-ui/FormDialog/closeButtonLabel" defaultText="キャンセル" />}
   </Button>
 ))

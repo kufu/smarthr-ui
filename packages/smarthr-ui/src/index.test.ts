@@ -12,6 +12,8 @@ const IGNORE_INNER_DIRS = [
   'Input/InputWithTooltip',
   'Browser/models',
   'stories',
+  // client 境界が必要なモジュールを閉じ込めるディレクトリ。コンポーネントの公開単位ではない
+  'client',
   'AppHeader/components',
   'AppHeader/hooks',
   'AppHeader/multilingualization',
@@ -29,11 +31,11 @@ describe('index', () => {
 
   it('各コンポーネントディレクトリ直下に存在する子ディレクトリ名と同名のコンポーネントが export されていること', async () => {
     const componentDirs = await getComponentDirs(componentsPath, IGNORE_COMPONENTS)
-    componentDirs.forEach(async (dirName) => {
+    for (const dirName of componentDirs) {
       const componentDirPath = path.join(componentsPath, dirName)
       const innerComponents = await getComponentDirs(componentDirPath, IGNORE_INNER_DIRS)
       if (innerComponents.length === 0) {
-        return
+        continue
       }
       const exportedComponentsFromInnerDir = await getExportedDirectoryComponents(
         indexPath,
@@ -42,7 +44,7 @@ describe('index', () => {
       expect(exportedComponentsFromInnerDir.sort()).toEqual(
         expect.arrayContaining(innerComponents.sort()),
       )
-    })
+    }
   })
 })
 

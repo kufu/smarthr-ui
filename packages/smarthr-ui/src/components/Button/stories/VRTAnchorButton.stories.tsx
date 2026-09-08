@@ -90,12 +90,12 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
 const Template: StoryFn<typeof AnchorButton> = (args) => (
   <Stack>
     {[undefined, 'hover', 'focus-visible'].map((id) => (
-      <Stack id={id} key={id}>
+      <Stack key={id} id={id}>
         {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
-          <Groupbox bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+          <Groupbox key={variant} bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'}>
             <Cluster align="center">
               {_cases.map((props, index) => (
-                <AnchorButton {...args} {...props} variant={variant} key={index} />
+                <AnchorButton {...args} {...props} key={index} variant={variant} />
               ))}
             </Cluster>
           </Groupbox>

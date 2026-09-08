@@ -38,7 +38,7 @@ export const AriaLabelledBy: StoryObj<typeof TdRadioButton> = {
       <Table>
         <tbody>
           <tr>
-            <TdRadioButton {...args} aria-labelledby={ariaLabelledby} vAlign="baseline" />
+            <TdRadioButton {...args} vAlign="baseline" aria-labelledby={ariaLabelledby} />
             <Td id={ariaLabelledby}>ラベル名</Td>
           </tr>
         </tbody>

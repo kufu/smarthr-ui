@@ -79,7 +79,7 @@ export const FirstFocusTarget: StoryObj<typeof DialogContent> = {
         <DialogContent {...args} firstFocusTarget={inputRef}>
           <label>
             入力要素
-            <Input name="dialogcontent_input" ref={inputRef} />
+            <Input ref={inputRef} name="dialogcontent_input" />
           </label>
           <DialogCloser>
             <Button>閉じる</Button>

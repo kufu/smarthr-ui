@@ -35,7 +35,7 @@ export const Template: StoryFn<typeof AppNavi> = (args) => (
         <AnchorButton href="#">その他</AnchorButton>
       </DropdownMenuGroup>
     </AppNaviDropdownMenuButton>
-    <AppNaviCustomTag tag={Link} href="/">
+    <AppNaviCustomTag href="/" tag={Link}>
       カスタムタグ
     </AppNaviCustomTag>
   </AppNavi>

@@ -16,9 +16,9 @@ export default {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ModelessDialog
           {...rest}
-          heading={heading || 'モードレスダイアログ'}
           isOpen={open}
           onClickClose={onClickClose ?? (() => setOpen(false))}
+          heading={heading || 'モードレスダイアログ'}
         >
           ダイアログコンテンツ
         </ModelessDialog>
@@ -122,10 +122,10 @@ export const PortalParent: StoryObj<typeof ModelessDialog> = {
         </div>
         <ModelessDialog
           {...args}
-          heading="ポータルに開いたダイアログ"
           portalParent={parentRef}
           isOpen={open}
           onClickClose={() => setOpen(false)}
+          heading="ポータルに開いたダイアログ"
         >
           ダイアログコンテンツ
         </ModelessDialog>

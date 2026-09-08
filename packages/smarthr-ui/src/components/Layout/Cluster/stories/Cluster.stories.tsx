@@ -44,7 +44,7 @@ export const Gap: StoryObj<typeof Cluster> = {
   render: (args) => (
     <Stack>
       {clusterGap.map((gap) => (
-        <Cluster {...args} gap={gap} key={gap}>
+        <Cluster {...args} key={gap} gap={gap}>
           {[...Array(3)].map((_, i) => (
             <ColorBox key={i} />
           ))}
@@ -72,9 +72,9 @@ export const Align: StoryObj<typeof Cluster> = {
       {Object.keys(clusterClassNameGenerator.variants.align).map((align) => (
         <Cluster
           {...args}
+          key={align}
           align={align as any}
           className="shr-h-[160px] shr-bg-background"
-          key={align}
         >
           {[...Array(3)].map((_, i) => (
             <ColorBox key={i} />
@@ -92,9 +92,9 @@ export const Justify: StoryObj<typeof Cluster> = {
       {Object.keys(clusterClassNameGenerator.variants.justify).map((justify) => (
         <Cluster
           {...args}
+          key={justify}
           justify={justify as any}
           className="shr-h-[160px] shr-bg-background"
-          key={justify}
         >
           {[...Array(3)].map((_, i) => (
             <ColorBox key={i} />

@@ -1,7 +1,16 @@
-import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type PropsWithChildren,
+  type SyntheticEvent,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
-import { EVENT_CANCELLER } from './ButtonWrapper'
+const EVENT_CANCELLER = (e: SyntheticEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
+}
 
 const classNameGenerator = tv({
   base: [
@@ -22,10 +31,10 @@ export const UnstyledButton = forwardRef<
       {...rest}
       ref={ref}
       type={type}
+      className={actualClassName}
       aria-disabled={disabled || undefined}
       onClick={disabled ? EVENT_CANCELLER : onClick}
       onKeyDown={disabled ? EVENT_CANCELLER : onKeyDown}
-      className={actualClassName}
     />
   )
 })

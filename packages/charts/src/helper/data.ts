@@ -105,10 +105,45 @@ export const getRadarChartColors = (dataLength: number): RadarChartColorConfig[]
   return colors
 }
 
-// TODO: SINGLE_CHART_COLORS を使うオプションを追加する
+/** 濃淡の段階。SINGLE_CHART_COLORS の index に対応し、0が最も淡く5が最も濃い */
+export type SingleToneLevel = 0 | 1 | 2 | 3 | 4 | 5
+
+/**
+ * 同系色の濃淡を toneFrom から toneTo の範囲に均等配分する。
+ * position は第一系列を0とした系列の位置。toneFrom > toneTo なら濃い側から始まる。
+ * 範囲の段数より系列が多いと色は重複するので、その場合は柄で見分ける
+ */
+const getSingleToneColor = (
+  position: number,
+  dataLength: number,
+  toneFrom: SingleToneLevel,
+  toneTo: SingleToneLevel,
+) => {
+  // 系列が1つだと第一系列と最終系列が同じになり式では決まらないため、濃い側を選ぶ。
+  // こうすると系列数が変わっても強調する系列の色が変わらない
+  if (dataLength === 1) {
+    return SINGLE_CHART_COLORS[Math.max(toneFrom, toneTo)]
+  }
+
+  // 第一系列を0、最終系列を1とした進み具合
+  const ratio = position / (dataLength - 1)
+  // 濃淡の幅。符号が向きを表す
+  const toneRange = toneTo - toneFrom
+  const toneIndex = Math.round(toneFrom + toneRange * ratio)
+
+  return SINGLE_CHART_COLORS[toneIndex]
+}
+
+type ChartColorOptions = {
+  disablePatterns?: boolean
+  singleTone?: boolean
+  toneFrom?: SingleToneLevel
+  toneTo?: SingleToneLevel
+}
+
 export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   dataLength: number,
-  disablePatterns = false,
+  { disablePatterns = false, singleTone = false, toneFrom = 0, toneTo = 5 }: ChartColorOptions = {},
 ): Array<
   Pick<ChartDataset<T>, 'backgroundColor' | 'borderColor' | 'hoverBorderColor' | 'hoverBorderWidth'>
 > => {
@@ -120,7 +155,7 @@ export const getChartColors = <T extends Exclude<ChartType, 'line'> = 'bar'>(
   > = []
 
   for (let i = 0; i < dataLength; i++) {
-    const color = getColor(i)
+    const color = singleTone ? getSingleToneColor(i, dataLength, toneFrom, toneTo) : getColor(i)
     colors.push({
       backgroundColor:
         !disablePatterns && i > 0

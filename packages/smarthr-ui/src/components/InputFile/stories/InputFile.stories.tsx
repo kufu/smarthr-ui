@@ -34,8 +34,8 @@ export const Size: StoryObj<typeof InputFile> = {
   name: 'size',
   render: (args) => (
     <Stack>
-      {[undefined, 'default', 's'].map((size) => (
-        <InputFile {...args} size={size as any} key={size} />
+      {([undefined, 'M', 'S'] as const).map((size) => (
+        <InputFile {...args} key={String(size)} size={size} />
       ))}
     </Stack>
   ),
@@ -68,9 +68,9 @@ export const HasFileList: StoryObj<typeof InputFile> = {
       {[true, false].map((hasFileList) => (
         <InputFile
           {...args}
+          key={String(hasFileList)}
           hasFileList={hasFileList as any}
           label={`hasFileList: ${hasFileList}`}
-          key={String(hasFileList)}
         />
       ))}
     </Stack>
@@ -80,6 +80,11 @@ export const HasFileList: StoryObj<typeof InputFile> = {
 export const Previewable: StoryObj<typeof InputFile> = {
   name: 'previewable',
   args: { previewable: true, multiple: { appendable: true } },
+}
+
+export const PreviewableSearchable: StoryObj<typeof InputFile> = {
+  name: 'previewable.searchable',
+  args: { previewable: { searchable: false }, multiple: { appendable: true } },
 }
 
 export const OnChange: StoryObj<typeof InputFile> = {

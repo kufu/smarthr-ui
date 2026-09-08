@@ -30,7 +30,7 @@ export const Data: StoryObj<typeof SpreadsheetTable> = {
         '001',
         <>
           草野 栄一郎
-          <Text size="S" emphasis>
+          <Text emphasis size="S">
             （ここを修正してください）
           </Text>
         </>,
@@ -81,7 +81,7 @@ export const Children: StoryObj<typeof SpreadsheetTable> = {
             <td>001</td>
             <td>
               草野 栄一郎
-              <Text size="S" emphasis>
+              <Text emphasis size="S">
                 （ここを修正してください）
               </Text>
             </td>

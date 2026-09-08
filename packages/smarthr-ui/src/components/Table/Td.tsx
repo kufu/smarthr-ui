@@ -41,7 +41,7 @@ export const Td = memo<Props>(
             width: convertContentWidth(contentWidth),
           }
 
-    return <td {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle} />
+    return <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed} />
   },
 )
 

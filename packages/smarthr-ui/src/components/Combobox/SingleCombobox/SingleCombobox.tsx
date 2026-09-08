@@ -9,8 +9,8 @@ import {
   type Ref,
   type RefObject,
   memo,
-  useEffect,
-  useImperativeHandle,
+  useCallback,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -18,9 +18,11 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useClick } from '../../../hooks/useClick'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../../hooks/client/useAreaClickCallbackRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
-import { useTheme } from '../../../hooks/useTheme'
 import { Localizer } from '../../../intl'
 import { genericsForwardRef } from '../../../libs/util'
 import { UnstyledButton } from '../../Button'
@@ -71,8 +73,6 @@ type BaseProps<T> = ComboboxProps<T> & {
   noResultText?: ReactNode
 }
 type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
-
-const NOOP = () => undefined
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
@@ -130,22 +130,22 @@ const SuffixButtons = memo<SuffixButtonsProps>(
   }) => (
     <>
       <UnstyledButton
-        onClick={handleClickClear}
         ref={clearButtonRef}
         className={classNames.clearButton}
+        onClick={handleClickClear}
       >
         <FaCircleXmarkIcon
-          color="TEXT_BLACK"
           alt={
             <Localizer id="smarthr-ui/SingleCombobox/destroyButtonIconAlt" defaultText="クリア" />
           }
+          color="TEXT_BLACK"
           className={classNames.clearButtonIcon}
         />
       </UnstyledButton>
       <span
         role="presentation"
-        onClick={handleDelegateClickIcon}
         className={classNames.caretDownLayout}
+        onClick={handleDelegateClickIcon}
       >
         <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
       </span>
@@ -184,21 +184,33 @@ const ActualSingleCombobox = <T,>(
     onKeyPress,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
 ) => {
   const theme = useTheme()
+  const generatedInputId = useId()
+  const inputId = id || generatedInputId
   const triggerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
+  const [inputValue, setInputValue] = useState('')
+  // inputValueはユーザーの手入力値も兼ねるため、prevSelectedItemLabelTextの代わりにinputValueと比較すると、
+  // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
+  const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
+
+  const selectedItemLabelText = selectedItem ? innerText(selectedItem.label) : ''
+
+  if (selectedItemLabelText !== prevSelectedItemLabelText) {
+    setPrevSelectedItemLabelText(selectedItemLabelText)
+    setInputValue(selectedItemLabelText)
+  }
 
   const { options } = useSingleOptions({
     items,
@@ -208,38 +220,39 @@ const ActualSingleCombobox = <T,>(
     isFilteringDisabled: !isEditing,
   })
 
-  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox<T>(
-    {
-      options,
-      dropdownHelpMessage,
-      dropdownWidth,
-      onAdd,
-      // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
-      onSelect: (selected: ComboboxItem<T>) => {
-        onSelect?.(selected)
-        onChangeSelected?.(selected)
+  const selectFrame = useAnimationFrame()
 
-        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
-          setIsExpanded(false)
-          // HINT:
-          // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
-          // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
-          //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
-          //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
-          //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
-          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-        })
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId } = useListbox<T>({
+    options,
+    dropdownHelpMessage,
+    dropdownWidth,
+    onAdd,
+    // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
+    onSelect: (selected: ComboboxItem<T>) => {
+      onSelect?.(selected)
+      onChangeSelected?.(selected)
 
-        setIsEditing(false)
-      },
-      isExpanded,
-      isLoading,
-      triggerRef,
-      noResultText,
+      // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      selectFrame.request(() => {
+        setIsExpanded(false)
+        // HINT:
+        // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+        // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+        //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+        //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+        //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+        onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+      })
+
+      setIsEditing(false)
     },
-  )
+    isExpanded,
+    isLoading,
+    triggerRef,
+    noResultText,
+    inputId,
+  })
 
   const latest = useLatest({
     onChange,
@@ -392,17 +405,17 @@ const ActualSingleCombobox = <T,>(
       ? theme.textColor.disabled
       : theme.textColor.grey
 
-  useClick(
-    useMemo(() => [triggerRef, listBoxRef, clearButtonRef], [listBoxRef]),
-    isFocused || selectedItem ? NOOP : functions.selectDefaultItem,
+  const listBoxCallbackRef = useAreaClickCallbackRef(
+    [triggerRef, clearButtonRef],
     functions.unfocus,
+    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 
-  // selectedItem.label はプリミティブ値でないデータ型の可能性があり、そのまま useEffect の依存配列に入れると意図せぬエフェクトの実行を引き起こしてしまう可能性があるので、プリミティブ値である string 型に変換したものを依存配列に入れています。
-  const selectedItemLabelText = innerText(selectedItem?.label)
-  useEffect(() => {
-    setInputValue(selectedItemLabelText)
-  }, [selectedItemLabelText])
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
+
+  const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
@@ -431,22 +444,26 @@ const ActualSingleCombobox = <T,>(
     >
       <Input
         {...rest}
-        ref={inputRef}
-        type="text"
+        ref={mergedRef}
         role="combobox"
+        type="text"
+        id={inputId}
         name={name}
-        value={inputValue}
+        required={required}
         disabled={disabled}
         readOnly={readOnly}
-        required={required}
+        value={inputValue}
         autoComplete={autoComplete ?? 'off'}
+        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
+        placeholder={placeholder}
+        error={error}
+        className={classNames.input}
         aria-haspopup="listbox"
         aria-controls={listBoxId}
         aria-expanded={isFocused}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
-        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-        placeholder={placeholder}
+        data-smarthr-ui-input="true"
         onClick={functions.handleClickInput}
         onChange={functions.handleChangeInput}
         onFocus={isFocused ? undefined : functions.handleFocus}
@@ -454,21 +471,18 @@ const ActualSingleCombobox = <T,>(
         onCompositionEnd={functions.handleCompositionEnd}
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
-        error={error}
         prefix={prefix}
         suffix={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}
+            classNames={classNames}
             handleClickClear={functions.handleClickClear}
             handleClickIcon={functions.handleClickInput}
-            classNames={classNames}
           />
         }
-        className={classNames.input}
-        data-smarthr-ui-input="true"
       />
-      {!readOnly && <ListBox {...listBoxProps} />}
+      {!readOnly && <ListBox {...listBoxProps} callbackRef={listBoxCallbackRef} />}
     </div>
   )
 }

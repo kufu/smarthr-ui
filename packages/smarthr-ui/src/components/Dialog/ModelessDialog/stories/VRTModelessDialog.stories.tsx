@@ -38,3 +38,10 @@ export const VRTForcedColors: StoryObj<typeof ModelessDialog> = {
     chromatic: { forcedColors: 'active' },
   },
 }
+
+export const VRTLongHeading: StoryObj<typeof ModelessDialog> = {
+  args: {
+    heading:
+      'ModelessDialog?%20%20%20%20%20%20%20%20%20%20&amp;%20%20%20%20%20%20=%20%20%20%20%20%20%20%20-%20%20%20%20%20%20%20%20--%20%20%20%20%20%20%20%20_%20%20%20%20%20%20%20%20__%20%20%20%20%20%20%20%20',
+  },
+}

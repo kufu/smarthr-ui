@@ -154,10 +154,35 @@ export const DropdownWidth: StoryObj<typeof MultiCombobox> = {
   },
 }
 
+export const DropdownWidthOnRightEdge: StoryObj<typeof MultiCombobox> = {
+  name: 'dropdownWidth（画面の右端に寄せた場合）',
+  decorators: [
+    (Story) => (
+      <div className="shr-flex shr-justify-end">
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    dropdownWidth: '30rem',
+  },
+}
+
 export const NoResultText: StoryObj<typeof MultiCombobox> = {
   name: 'noResultText',
   args: {
     items: [],
     noResultText: '該当するユーザーが見つかりません',
+  },
+}
+
+export const Deletable: StoryObj<typeof MultiCombobox> = {
+  name: 'deletable',
+  args: {
+    selectedItems: [
+      defaultItems['option 1'],
+      { ...defaultItems['option 2'], deletable: false },
+      { label: 'option 3', value: 'value-3' },
+    ],
   },
 }

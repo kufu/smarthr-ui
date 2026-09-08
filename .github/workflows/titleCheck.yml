@@ -6,11 +6,18 @@ on:
   pull_request_review:
     types: [submitted]
 
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
 jobs:
   conventional_commits:
     if: ${{ (((github.event_name != 'pull_request_review') && !(startsWith(github.event.pull_request.head.ref, 'merge-release-'))) || (github.event_name == 'pull_request_review') && (startsWith(github.event.pull_request.head.ref, 'merge-release-'))) }}
     runs-on: ubuntu-latest
     steps:
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - name: check title
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}

@@ -97,20 +97,20 @@ export const generateIcon = (SvgIcon: IconType) => {
       const svgIcon = (
         <SvgIcon
           {...rest}
+          role={role}
           stroke="currentColor"
           fill="currentColor"
-          strokeWidth="0"
+          focusable={focusable}
           // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
           size={iconSize}
+          strokeWidth="0"
           width={iconSize}
           height={iconSize}
           color={replacedColor}
           className={classNames.icon}
-          role={role}
           aria-hidden={actualAriaHidden}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
-          focusable={focusable}
         />
       )
 

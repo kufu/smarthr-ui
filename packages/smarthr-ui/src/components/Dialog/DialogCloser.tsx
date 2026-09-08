@@ -10,9 +10,9 @@ export const DialogCloser: FC<PropsWithChildren> = (props) => {
   return (
     <div
       {...props}
-      onClick={handleDelegateClickClose}
       role="presentation"
       className="shr-inline-block"
+      onClick={handleDelegateClickClose}
     />
   )
 }

@@ -7,11 +7,9 @@ import {
   type MouseEvent,
   type ReactNode,
   type Ref,
-  createRef,
   memo,
   useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -19,10 +17,13 @@ import {
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../../hooks/client/useAreaClickCallbackRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
-import { useOuterClick } from '../../../hooks/useOuterClick'
-import { useTheme } from '../../../hooks/useTheme'
 import { useLocalize } from '../../../intl'
+import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
@@ -30,7 +31,7 @@ import { areItemsEqual } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
-import { MultiSelectedItem } from './MultiSelectedItem'
+import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
 import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
 
@@ -92,6 +93,8 @@ const EMPTY_INPUT_CHANGE_EVENT = {
   currentTarget: { value: '' },
   target: { value: '' },
 } as ChangeEvent<HTMLInputElement>
+
+const DELETE_BUTTON_CLASSNAME = `.${DELETE_BUTTON_SELECTOR}`
 
 const classNameGenerator = tv({
   slots: {
@@ -161,6 +164,7 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     noResultText,
     style,
+    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -171,7 +175,9 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
 
-  const selectedListId = useId()
+  const baseId = useId()
+  const inputId = id || `${baseId}-input`
+  const selectedListId = `${baseId}-selected`
 
   const isInputControlled = controlledInputValue !== undefined
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
@@ -185,21 +191,9 @@ const ActualMultiCombobox = <T,>(
     inputValue,
     isItemSelected,
   })
-  const selectedItemLength = selectedItems.length
-
-  // TODO: 完全にcreateRefを作り直すのではなく、差分更新させたい
-  const deletionButtonRefs = useMemo(() => {
-    const refs: Array<ReturnType<typeof createRef<HTMLButtonElement>>> = []
-
-    for (let i = 0; i < selectedItemLength; i++) {
-      refs[i] = createRef<HTMLButtonElement>()
-    }
-
-    return refs
-  }, [selectedItemLength])
   const inputRef = useRef<HTMLInputElement>(null)
-
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
+  const deleteFrame = useAnimationFrame()
+  const selectFrame = useAnimationFrame()
 
   // eslint-disable-next-line local-rules/best-practice-for-use-latest
   const latestForListBox = useLatest({
@@ -208,6 +202,8 @@ const ActualMultiCombobox = <T,>(
     onSelect,
     onChangeInput,
     selectedItems,
+    deleteFrame,
+    selectFrame,
   })
 
   const listBoxFunctions = useMemo(() => {
@@ -229,19 +225,23 @@ const ActualMultiCombobox = <T,>(
 
       if (handlers.length > 0) {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        latestForListBox.deleteFrame.request(() => {
           handlers.forEach((h) => h(item))
         })
       }
     }
 
     return {
+      cleanupListBoxCallbackRef: () => () => {
+        latestForListBox.deleteFrame.cancel()
+        latestForListBox.selectFrame.cancel()
+      },
       handleDelete,
       handleSelect: (selected: ComboboxItem<T>) => {
         // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        latestForListBox.selectFrame.request(() => {
           const matchedSelectedItem = latestForListBox.selectedItems.find((item) =>
             areItemsEqual(item, selected),
           )
@@ -260,7 +260,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [latestForListBox])
 
-  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId, listBoxRef } = useListbox({
+  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId } = useListbox({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -270,6 +270,7 @@ const ActualMultiCombobox = <T,>(
     isLoading,
     triggerRef,
     noResultText,
+    inputId,
   })
 
   const latest = useLatest({
@@ -284,50 +285,59 @@ const ActualMultiCombobox = <T,>(
     isComposing,
     isInputEmpty,
     selectedItems,
-    deletionButtonRefs,
-    focusedIndex,
-    selectedItemLength,
     setInputValueIfUncontrolled,
     handleKeyDownListBox,
   })
 
   const functions = useMemo(() => {
-    const resetDeletionButtonFocus = () => {
-      setFocusedIndex(null)
-    }
-
     const handleDelete = listBoxFunctions.handleDelete
 
-    const focusPrevDeletionButton = () => {
-      if (latest.selectedItemLength === 0) {
-        return
+    const getDeletionButtons = () => {
+      if (triggerRef.current) {
+        const buttons =
+          triggerRef.current.querySelectorAll<HTMLButtonElement>(DELETE_BUTTON_CLASSNAME)
+
+        if (buttons.length > 0) {
+          const actualButtons = Array.from(buttons)
+
+          return {
+            buttons: actualButtons,
+            currentIndex: actualButtons.indexOf(document.activeElement as HTMLButtonElement),
+          }
+        }
       }
 
-      if (latest.focusedIndex !== null) {
-        const nextIndex = Math.max(latest.focusedIndex - 1, 0)
+      return null
+    }
 
-        latest.deletionButtonRefs[nextIndex].current?.focus()
-        setFocusedIndex(nextIndex)
+    const focusPrevDeletionButton = () => {
+      const result = getDeletionButtons()
+
+      if (!result) return
+
+      const { buttons, currentIndex } = result
+
+      if (currentIndex !== -1) {
+        buttons[Math.max(currentIndex - 1, 0)].focus()
       } else if (inputRef.current?.selectionStart === 0) {
-        const nextIndex = latest.deletionButtonRefs.length - 1
-
-        latest.deletionButtonRefs[nextIndex].current?.focus()
-        setFocusedIndex(nextIndex)
+        buttons[buttons.length - 1].focus()
       }
     }
 
     const focusNextDeletionButton = () => {
-      if (latest.deletionButtonRefs.length === 0 || latest.focusedIndex === null) {
-        return
-      }
+      const result = getDeletionButtons()
 
-      const nextIndex = latest.focusedIndex + 1
+      if (!result) return
 
-      if (nextIndex < latest.deletionButtonRefs.length) {
-        latest.deletionButtonRefs[nextIndex].current?.focus()
-        setFocusedIndex(nextIndex)
+      const { buttons, currentIndex } = result
+
+      if (currentIndex === -1) return
+
+      const nextIndex = currentIndex + 1
+
+      if (nextIndex < buttons.length) {
+        buttons[nextIndex].focus()
       } else {
-        setFocusedIndex(null)
         // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
         setTimeout(() => {
           inputRef.current?.focus()
@@ -344,7 +354,6 @@ const ActualMultiCombobox = <T,>(
       if (latest.isExpanded) {
         latest.onBlur?.()
         setIsExpanded(false)
-        resetDeletionButtonFocus()
       }
     }
 
@@ -387,7 +396,6 @@ const ActualMultiCombobox = <T,>(
         } else {
           e.stopPropagation()
           inputRef.current?.focus()
-          resetDeletionButtonFocus()
         }
 
         latest.handleKeyDownListBox(e)
@@ -396,7 +404,7 @@ const ActualMultiCombobox = <T,>(
         if (
           !latest.disabled &&
           !latest.isExpanded &&
-          !(e.target as HTMLElement).closest('.smarthr-ui-MultiCombobox-deleteButton')
+          !findDelegateTarget(e, DELETE_BUTTON_CLASSNAME)
         ) {
           focus()
         }
@@ -408,8 +416,6 @@ const ActualMultiCombobox = <T,>(
         latest.setInputValueIfUncontrolled(e.currentTarget.value)
       },
       handleFocusInput: () => {
-        resetDeletionButtonFocus()
-
         if (!latest.isExpanded) {
           focus()
         }
@@ -432,12 +438,9 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  useOuterClick(
-    useMemo(() => [triggerRef, listBoxRef], [listBoxRef]),
-    functions.blur,
-  )
+  const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur)
 
-  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
+  const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 
   useEffect(() => {
     if (latest.highlighted) {
@@ -490,29 +493,28 @@ const ActualMultiCombobox = <T,>(
     <div
       ref={triggerRef}
       role="group"
-      onClick={functions.handleDelegateClick}
-      onKeyDown={functions.handleDelegateKeyDown}
-      onKeyPress={functions.handleDelegateKeyPress}
       className={classNames.wrapper}
       style={{
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      onClick={functions.handleDelegateClick}
+      onKeyDown={functions.handleDelegateKeyDown}
+      onKeyPress={functions.handleDelegateKeyPress}
     >
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
-          aria-label={localized.selectedListAriaLabel}
           className={classNames.selectedList}
+          aria-label={localized.selectedListAriaLabel}
         >
-          {selectedItems.map((selectedItem, i) => (
+          {selectedItems.map((selectedItem) => (
             <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
               <MultiSelectedItem
-                item={selectedItem}
                 disabled={disabled}
-                handleDelete={functions.handleDelete}
+                item={selectedItem}
                 enableEllipsis={selectedItemEllipsis}
-                buttonRef={deletionButtonRefs[i]}
+                handleDelete={functions.handleDelete}
               />
             </li>
           ))}
@@ -521,21 +523,17 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
-            data-smarthr-ui-input="true"
+            ref={mergedRef}
+            role="combobox"
             type="text"
+            id={inputId}
             name={name}
-            value={inputValue}
-            disabled={disabled}
             required={required && selectedItems.length === 0}
-            ref={inputRef}
-            onChange={functions.handleChangeInput}
-            onFocus={functions.handleFocusInput}
-            onCompositionStart={functions.handleCompositionStart}
-            onCompositionEnd={functions.handleCompositionEnd}
-            onKeyDown={functions.handleKeyDownInput}
+            disabled={disabled}
+            value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
-            role="combobox"
+            className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
@@ -543,7 +541,12 @@ const ActualMultiCombobox = <T,>(
             aria-invalid={error || undefined}
             aria-disabled={disabled}
             aria-autocomplete="list"
-            className={classNames.input}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChangeInput}
+            onFocus={functions.handleFocusInput}
+            onCompositionStart={functions.handleCompositionStart}
+            onCompositionEnd={functions.handleCompositionEnd}
+            onKeyDown={functions.handleKeyDownInput}
           />
         </div>
 
@@ -554,7 +557,7 @@ const ActualMultiCombobox = <T,>(
 
       <MemoizedCaretDown disabled={disabled} isExpanded={isExpanded} classNames={classNames} />
 
-      <ListBox {...listBoxProps} />
+      <ListBox {...listBoxProps} callbackRef={listBoxCallbackRef} />
     </div>
   )
 }

@@ -7,6 +7,8 @@ import { Button } from '../../Button'
 
 import { ControlledActionDialog } from './ControlledActionDialog'
 
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
+
 describe('ControlledActionDialog', () => {
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -15,12 +17,12 @@ describe('ControlledActionDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ControlledActionDialog</Button>
         <ControlledActionDialog
           isOpen={isOpen}
-          heading="ControlledActionDialog"
-          actionButton="保存"
           onClickClose={() => setIsOpen(false)}
           onClickAction={(_, { close }) => {
             close()
           }}
+          heading="ControlledActionDialog"
+          actionButton="保存"
         >
           <p>ControlledActionDialog の本文です。</p>
         </ControlledActionDialog>
@@ -34,6 +36,9 @@ describe('ControlledActionDialog', () => {
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'ControlledActionDialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     await userEvent.tab({ shift: true })
     await userEvent.keyboard('{ }')

@@ -29,11 +29,11 @@ export const DropdownCloser: FC<Props> = ({ children, className }) => {
   return (
     <div
       role="presentation"
-      onClick={handleDelegateClickCloser}
       className={actualClassName}
       style={{
         maxHeight: controllable ? undefined : maxHeight,
       }}
+      onClick={handleDelegateClickCloser}
     >
       {children}
     </div>

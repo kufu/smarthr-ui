@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
-import { backgroundColor } from '../../../../tailwind'
 import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
@@ -169,9 +168,6 @@ export const ReadOnly: StoryObj<typeof SingleCombobox> = {
   args: {
     readOnly: true,
   },
-  parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
-  },
 }
 
 export const Error: StoryObj<typeof SingleCombobox> = {
@@ -212,6 +208,20 @@ export const DropdownHelpMessage: StoryObj<typeof SingleCombobox> = {
 
 export const DropdownWidth: StoryObj<typeof SingleCombobox> = {
   name: 'dropdownWidth',
+  args: {
+    dropdownWidth: '30rem',
+  },
+}
+
+export const DropdownWidthOnRightEdge: StoryObj<typeof SingleCombobox> = {
+  name: 'dropdownWidth（画面の右端に寄せた場合）',
+  decorators: [
+    (Story) => (
+      <div className="shr-flex shr-justify-end">
+        <Story />
+      </div>
+    ),
+  ],
   args: {
     dropdownWidth: '30rem',
   },

@@ -1,3 +1,5 @@
+'use client'
+
 import { type ComponentProps, type FC, useCallback } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'

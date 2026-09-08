@@ -104,20 +104,20 @@ export const ControlledFormDialog: FC<Props> = ({
     <DialogContentInner
       {...rest}
       isOpen={isOpen}
-      ariaLabelledby={heading.id}
       className={className}
+      ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
     >
       <FormDialogContentInner
-        heading={heading}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
+        responseStatus={responseStatus}
+        handleClickClose={functions.handleClickClose}
+        handleSubmit={functions.handleSubmit}
+        heading={heading}
         actionButton={actionButton}
         closeButton={closeButton}
         subActionArea={subActionArea}
-        handleClickClose={functions.handleClickClose}
-        handleSubmit={functions.handleSubmit}
-        responseStatus={responseStatus}
       >
         {children}
       </FormDialogContentInner>

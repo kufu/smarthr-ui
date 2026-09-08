@@ -79,15 +79,15 @@ export default {
     return (
       <Stack align="flex-start" gap={2} className="shr-h-screen">
         {_cases.map((props, i) => (
-          <MultiCombobox {...args} {...props} items={items} key={i} />
+          <MultiCombobox {...args} {...props} key={i} items={items} />
         ))}
         <MultiCombobox
           {...args}
           name="default"
-          items={items}
-          dropdownHelpMessage="入力でフィルタリングできます。"
           selectedItems={selectedItems}
           onChangeSelected={(its) => setSelectedItems(its)}
+          items={items}
+          dropdownHelpMessage="入力でフィルタリングできます。"
         />
       </Stack>
     )
@@ -106,4 +106,32 @@ export const VRTForcedColors: StoryObj<typeof MultiCombobox> = {
   parameters: {
     chromatic: { forcedColors: 'active' },
   },
+}
+
+const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const combobox = await canvas.findByRole('combobox')
+
+  combobox.focus()
+
+  const body = canvasElement.ownerDocument.body
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+// 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
+export const VRTOnRightEdge: StoryObj<typeof MultiCombobox> = {
+  render: (args) => (
+    <div className="shr-flex shr-h-screen shr-justify-end">
+      <MultiCombobox
+        {...args}
+        name="onRightEdge"
+        selectedItems={[]}
+        dropdownWidth="30rem"
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+      />
+    </div>
+  ),
+  play: playOnRightEdge,
 }
