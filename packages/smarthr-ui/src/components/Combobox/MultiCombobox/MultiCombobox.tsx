@@ -449,13 +449,13 @@ const ActualMultiCombobox = <T,>(
     } else {
       setInputValueIfUncontrolled('')
     }
-  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
+  }, [selectedItems, setInputValueIfUncontrolled, latest])
 
   useEffect(() => {
     if (isExpanded) {
       inputRef.current?.focus()
     }
-  }, [isExpanded, selectedItems, isInputControlled, inputRef])
+  }, [isExpanded, selectedItems, isInputControlled])
 
   const classNames = useMemo(() => {
     const {
