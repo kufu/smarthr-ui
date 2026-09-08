@@ -49,7 +49,7 @@ export const VRT: StoryObj<typeof Pagination> = {
 export const VRTNarrowView: StoryObj<typeof Pagination> = {
   render: meta.render,
   globals: {
-    viewport: { value: 'vrtMobile', isRotated: false },
+    viewport: { value: 'vrtMobile' },
   },
   parameters: {
     chromatic: {

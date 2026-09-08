@@ -90,7 +90,7 @@ export const VRT = {
 export const VRTNarrowView: StoryObj = {
   ...VRT,
   globals: {
-    viewport: { value: 'vrtMobile', isRotated: false },
+    viewport: { value: 'vrtMobile' },
   },
   parameters: {
     chromatic: {

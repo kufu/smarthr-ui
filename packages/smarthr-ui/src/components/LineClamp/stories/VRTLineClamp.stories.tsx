@@ -7,7 +7,7 @@ export default {
   title: 'Components/LineClamp/VRT',
   render: MaxLines.render,
   globals: {
-    viewport: { value: 'vrtMobile', isRotated: false },
+    viewport: { value: 'vrtMobile' },
   },
   parameters: {
     chromatic: {
