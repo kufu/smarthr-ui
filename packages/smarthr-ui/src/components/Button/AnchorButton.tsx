@@ -13,7 +13,7 @@ import { OpenInNewTabIcon } from '../Icon'
 
 import { DisabledReason } from './DisabledReason'
 import { AnchorButtonInner } from './client'
-import { anchorClassNameGenerator } from './style'
+import { commonClassNameGenerator } from './style'
 
 import type { BaseProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
@@ -51,10 +51,15 @@ const AnchorButton = forwardRef(
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const classNames = useMemo(() => {
-      const { wrapper, inner } = anchorClassNameGenerator()
+      const { anchor, inner } = commonClassNameGenerator()
 
       return {
-        wrapper: wrapper({ variant, size, wide, className }),
+        wrapper: anchor({
+          variant,
+          size,
+          wide,
+          className: `smarthr-ui-AnchorButton ${className || ''}`,
+        }),
         inner: inner({ size }),
       }
     }, [variant, size, wide, className])
