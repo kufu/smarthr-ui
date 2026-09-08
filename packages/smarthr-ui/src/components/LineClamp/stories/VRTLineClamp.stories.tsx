@@ -6,10 +6,10 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5'
 export default {
   title: 'Components/LineClamp/VRT',
   render: MaxLines.render,
+  globals: {
+    viewport: { value: 'vrtMobile', isRotated: false },
+  },
   parameters: {
-    viewport: {
-      defaultViewport: 'vrtMobile',
-    },
     chromatic: {
       modes: {
         vrtMobile: { viewport: 'vrtMobile' },
