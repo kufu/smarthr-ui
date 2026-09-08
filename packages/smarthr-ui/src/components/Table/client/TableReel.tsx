@@ -42,9 +42,9 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
         return
       }
 
-      const handleScroll = () => {
-        cellObserver.disconnect()
+      let rafId: number | null = null
 
+      const handleScroll = () => {
         if (!node.querySelector(HAS_FIXED_SELECTOR)) {
           setShowShadow(false)
           return
@@ -66,8 +66,6 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
 
               position += cell.offsetWidth
             }
-
-            cellObserver.observe(cell)
           })
         }
 
@@ -91,28 +89,57 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
         setShowShadow(isVisible)
       }
 
-      // HINT: cellObserverはhandleScroll先頭でdisconnect→再observeするため、
-      //       nodeを監視するresizeObserverとは分けている
-      const cellObserver = new ResizeObserver(handleScroll)
+      // HINT: handleScrollは監視対象セルのstyle/classを書き換える。これをResizeObserverの
+      //       コールバックから同期的に呼ぶと、同一配信サイクル内で通知が積み上がり
+      //       「ResizeObserver loop completed with undelivered notifications」を発生させる。
+      //       requestAnimationFrameで次フレームに逃がし、フレーム内の複数通知をコアレスする。
+      const scheduleHandleScroll = () => {
+        if (rafId === null) {
+          rafId = requestAnimationFrame(() => {
+            rafId = null
+            handleScroll()
+          })
+        }
+      }
 
+      // HINT: cellObserverでのobserveをhandleScroll内で毎回やり直すと、observe自体が次フレームに
+      //       初回通知を発火させ、handleScroll→observe→通知→handleScroll…と毎フレーム回り続ける。
+      //       observeの張り直しは監視対象セルが変わるDOM構造変更時(mutationObserver)とmount時だけに限定し、
+      //       handleScroll(計測・style適用)から分離する。
+      const cellObserver = new ResizeObserver(scheduleHandleScroll)
+      const observeCells = () => {
+        cellObserver.disconnect()
+        node
+          .querySelectorAll<HTMLElement>(HAS_FIXED_SELECTOR)
+          .forEach((cell) => cellObserver.observe(cell))
+      }
+
+      observeCells()
       handleScroll()
-      node.addEventListener('scroll', handleScroll, { passive: true })
+      node.addEventListener('scroll', scheduleHandleScroll, { passive: true })
 
-      const resizeObserver = new ResizeObserver(handleScroll)
+      const resizeObserver = new ResizeObserver(scheduleHandleScroll)
       resizeObserver.observe(node)
 
-      // HINT: Paginationと組み合わせた際などにテーブル構造の変更を検知して再生成
-      const mutationObserver = new MutationObserver(handleScroll)
+      // HINT: Paginationと組み合わせた際などにテーブル構造の変更を検知して監視対象を張り直す
+      const mutationObserver = new MutationObserver(() => {
+        observeCells()
+        scheduleHandleScroll()
+      })
       mutationObserver.observe(node, {
         childList: true,
         subtree: true,
       })
 
       return () => {
-        node.removeEventListener('scroll', handleScroll)
+        node.removeEventListener('scroll', scheduleHandleScroll)
         resizeObserver.unobserve(node)
         mutationObserver.disconnect()
         cellObserver.disconnect()
+
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId)
+        }
       }
     }, []),
   )
