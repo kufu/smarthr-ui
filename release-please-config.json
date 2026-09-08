@@ -12,7 +12,8 @@
       "initial-version": "87.0.0"
     },
     "packages/charts": {
-      "initial-version": "0.1.0"
+      "initial-version": "0.1.0",
+      "release-as": "0.2.4"
     }
   }
 }

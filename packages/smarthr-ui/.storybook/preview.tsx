@@ -44,7 +44,7 @@ const preview: Preview = {
       },
     },
     viewport: {
-      viewports: {
+      options: {
         ...INITIAL_VIEWPORTS,
         vrtMobile: {
           name: 'VRT Mobile',

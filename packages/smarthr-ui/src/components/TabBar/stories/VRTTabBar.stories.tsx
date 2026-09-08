@@ -89,10 +89,10 @@ export const VRT = {
 
 export const VRTNarrowView: StoryObj = {
   ...VRT,
+  globals: {
+    viewport: { value: 'vrtMobile' },
+  },
   parameters: {
-    viewport: {
-      defaultViewport: 'vrtMobile',
-    },
     chromatic: {
       modes: {
         vrtMobile: { viewport: 'vrtMobile' },
