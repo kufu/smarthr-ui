@@ -213,14 +213,22 @@ export const useLatest = <T>(value: T) => { const ref = useRef(value); ... }
 
 **境界をどこに置くか**
 
-hook 自身ではなく、それを使うコンポーネント側に置くのが原則です。client module が import するモジュールは client グラフに含まれ、サーバ側では評価されません。
+公開しているかどうかに関係なく、**そのファイル自身が client 専用 API を使っているか**で個別に判断します。モジュールスコープ、または関数内で client 専用 API を呼ぶファイルには、そのファイル自身に `'use client'` を付けます。
 
-ただし**公開しているかどうか**で変わります。
+呼び出し元がすでに `'use client'` を持っていて境界の内側にある場合、そのファイルへの追加は動作上は冗長になりますが、間違いではありません。「呼び出し元を辿って境界の要否を判定する」よりも、ファイル単体を見て機械的に判断できることを優先します。
 
-| | 境界の位置 |
-|---|---|
-| 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
-| 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
+```tsx
+// ✅ 呼び出し元(DialogContentInner.tsx など)がすでに 'use client' を持っていても、
+// useRef/useState を使うこのファイル自身にも 'use client' を付ける
+'use client'
+
+import { useRef, useState } from 'react'
+
+export const DialogOverlap: FC<Props> = (...) => {
+  const nodeRef = useRef<HTMLElement>(null)
+  ...
+}
+```
 
 **client 境界が必要なモジュールは `client/` に閉じ込める**
 
@@ -266,7 +274,7 @@ SectioningContent/
 - hook が `client/` 内の component からしか呼ばれない → フラットに置く（`Table` パターン）
 - hook が `client/` 内の component を経由しない独立した参照経路を持つ（Server Component から直接 import されうる）→ `components/` `hooks/` に分ける（`SectioningContent` パターン）
 
-- `client/` 配下で `'use client'` を持つファイル・持たないファイルが混在してよい。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
+- `client/` 配下で `'use client'` を持つファイル・持たないファイルが混在してよい。ファイル自身が client 専用 API を使っているかどうかで個別に判断する（前述の原則どおり）
 - **`client/index.ts`（および `client/components/index.ts` 相当のバレルを分けた場合の集約バレル）は作らない**（後述）
 
 `'use client'` を外せたコンポーネントは「Server Component になる」わけではありません。ディレクティブを持たないモジュールは server / client 双方のグラフで評価されるため、**Server Component からも Client Component からも使える**状態になります。制約が減るだけで、利用者側の使い方は変わりません。
