@@ -46,7 +46,7 @@ export const defaultItems = {
         <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
       </Stack>
     ),
-    selectedLabelText:
+    labelText:
       'アイテムのラベルがReactNodeの場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     value: 'value-7',
   },

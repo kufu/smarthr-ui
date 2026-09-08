@@ -10,11 +10,11 @@ export type ComboboxItem<T> = ComboboxItemBase<T> &
   (
     | {
         label: string
-        selectedLabelText?: string
+        labelText?: string
       }
     | {
         label: ReactNode
-        selectedLabelText: string
+        labelText: string
       }
   )
 
