@@ -76,8 +76,6 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
         window.addEventListener('keydown', handleKeyDown)
 
-        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
         return () => {
           cancelAnimationFrame(rAFId)
           window.removeEventListener('keydown', handleKeyDown)
@@ -91,8 +89,6 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     }
   }, [firstFocusTarget])
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(innerRef, functions.callbackRef)
 
   useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])

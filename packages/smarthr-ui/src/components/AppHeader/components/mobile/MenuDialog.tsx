@@ -125,8 +125,6 @@ export const Content: FC<
       // HINT: Contentをanimationで非表示にしたい
       // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
       // unmount時に操作内容のclearを行う
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       callbackRef: () => () => {
         clearReleaseNote()
         clearAppLauncher()
@@ -139,8 +137,6 @@ export const Content: FC<
     }
   }, [latest])
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(functions.callbackRef, domRef)
 
   return (

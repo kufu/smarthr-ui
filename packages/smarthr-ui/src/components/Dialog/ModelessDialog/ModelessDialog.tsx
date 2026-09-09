@@ -390,8 +390,6 @@ export const ModelessDialog: FC<Props> = ({
 
       document.addEventListener('focus', focusHandler, true)
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         functions.cleanupLiveRegion()
         document.removeEventListener('focus', focusHandler, true)
@@ -400,8 +398,6 @@ export const ModelessDialog: FC<Props> = ({
     [isOpen, functions, latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
   // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際

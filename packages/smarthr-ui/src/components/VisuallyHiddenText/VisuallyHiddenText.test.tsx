@@ -5,8 +5,8 @@ import { VisuallyHiddenText } from './VisuallyHiddenText'
 
 describe('VisuallyHiddenText', () => {
   // HINT: React 19 は ref を通常の props として扱うため forwardRef がなくても動いてしまい、
-  // 挙動のテストだけでは React 18 でのデグレを検知できない。そのため構造そのものを検証する
-  test('React 18 でも ref を転送できるよう memo(forwardRef()) でラップされている', () => {
+  // 挙動のテストだけでは forwardRef が外れたことによるデグレを検知できない。そのため構造そのものを検証する
+  test('ref を転送できるよう memo(forwardRef()) でラップされている', () => {
     const memoized = VisuallyHiddenText as unknown as {
       $$typeof: symbol
       type: { $$typeof: symbol }

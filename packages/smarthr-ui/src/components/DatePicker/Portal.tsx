@@ -11,8 +11,6 @@ type Props = PropsWithChildren<{
 export const Portal: FC<Props> = ({ inputRect, children }) => {
   const { createPortal } = usePortal()
 
-  // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
-  // React v18の対応を切ったらこのコメントも削除する
   const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (node) {
