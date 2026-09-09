@@ -45,10 +45,12 @@ const options = {
   cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
 } satisfies ComponentProps<typeof Document>['options']
 
-// pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer スコープで上書きし、検索ハイライト色を変更している。
+// pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer .highlight スコープで上書きし、検索ハイライト色を変更している。
+// HINT: react-pdf 10.5.0 (pdfjs-dist 5.4.296) から、これらの変数の定義元が :root から .textLayer .highlight に変わったため、
+// 同じセレクタで定義しないと詳細度で負けて上書きできない
 const HighlightOverrideStyle = () => (
   <style>{`
-.textLayer {
+.textLayer .highlight {
   --highlight-bg-color: rgba(255, 235, 0, 0.5);
   --highlight-selected-bg-color: rgba(255, 140, 0, 0.6);
 }
