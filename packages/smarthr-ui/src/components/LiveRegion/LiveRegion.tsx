@@ -23,7 +23,7 @@ type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const LiveRegion: FC<Props> = ({
   hasFlowContent,
-  announceDelay = 100,
+  announceDelay = 1000,
   skipInitialAnnounce,
   role,
   htmlFor,
