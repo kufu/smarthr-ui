@@ -6,7 +6,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   type Ref,
-  forwardRef,
   memo,
   useCallback,
   useId,
@@ -58,34 +57,30 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo(
-  forwardRef<HTMLHeadingElement, Props>(
-    (
-      {
-        autoPageTitle = true,
-        pageTitleSuffix = 'SmartHR（スマートHR）',
-        pageTitle,
-        size = 'XL',
-        children,
-        ...rest
-      },
-      ref,
-    ) =>
-      !IS_NEXT_JS && autoPageTitle ? (
-        <AutoPageTitleHeading
-          {...rest}
-          outerRef={ref}
-          pageTitleSuffix={pageTitleSuffix}
-          pageTitle={pageTitle}
-          size={size}
-        >
-          {children}
-        </AutoPageTitleHeading>
-      ) : (
-        <ActualHeading {...rest} headingRef={ref} size={size}>
-          {children}
-        </ActualHeading>
-      ),
-  ),
+  ({
+    autoPageTitle = true,
+    pageTitleSuffix = 'SmartHR（スマートHR）',
+    pageTitle,
+    size = 'XL',
+    children,
+    ref,
+    ...rest
+  }: Props) =>
+    !IS_NEXT_JS && autoPageTitle ? (
+      <AutoPageTitleHeading
+        {...rest}
+        outerRef={ref}
+        pageTitleSuffix={pageTitleSuffix}
+        pageTitle={pageTitle}
+        size={size}
+      >
+        {children}
+      </AutoPageTitleHeading>
+    ) : (
+      <ActualHeading {...rest} headingRef={ref} size={size}>
+        {children}
+      </ActualHeading>
+    ),
 )
 
 const AutoPageTitleHeading: FC<
