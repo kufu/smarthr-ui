@@ -2,7 +2,6 @@
 
 import { type FC, type ReactElement, useCallback } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 
 import { useDisclosure } from './useDisclosure'
@@ -26,80 +25,78 @@ export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, childr
 
   const latest = useLatest({ onClick, setExpanded, addDisclosureChangeListener })
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLElement | null) => {
-        if (!node) {
-          return
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
+
+      const removeDisclosureChangeListener = latest.addDisclosureChangeListener()
+
+      let currentCleanup: (() => void) | undefined
+
+      const setupButton = () => {
+        currentCleanup?.()
+        currentCleanup = undefined
+
+        const button = node.querySelector('button')
+
+        if (!button) {
+          throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
         }
 
-        const removeDisclosureChangeListener = latest.addDisclosureChangeListener()
+        button.setAttribute(
+          'aria-expanded',
+          (node.getAttribute('data-disclosure-expanded') === 'true').toString(),
+        )
+        button.setAttribute('aria-controls', node.getAttribute('data-disclosure-target-id') ?? '')
 
-        let currentCleanup: (() => void) | undefined
-
-        const setupButton = () => {
-          currentCleanup?.()
-          currentCleanup = undefined
-
-          const button = node.querySelector('button')
-
-          if (!button) {
-            throw new Error('DisclosureTriggerのchildrenにbutton要素を設置してください')
-          }
-
-          button.setAttribute(
-            'aria-expanded',
-            (node.getAttribute('data-disclosure-expanded') === 'true').toString(),
-          )
-          button.setAttribute('aria-controls', node.getAttribute('data-disclosure-target-id') ?? '')
-
-          // Button は native disabled ではなく aria-disabled を使うため、
-          // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
-          if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
-            const actualOnClick = (e: MouseEvent) => {
-              const toggleExpanded = () => {
-                latest.setExpanded((current) => !current)
-              }
-
-              if (latest.onClick) {
-                latest.onClick(toggleExpanded, e)
-              } else {
-                toggleExpanded()
-              }
+        // Button は native disabled ではなく aria-disabled を使うため、
+        // 無効時はリスナーを貼らず開閉しないようにする（DropdownTrigger と同じ）
+        if (!button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+          const actualOnClick = (e: MouseEvent) => {
+            const toggleExpanded = () => {
+              latest.setExpanded((current) => !current)
             }
 
-            button.addEventListener('click', actualOnClick)
-
-            currentCleanup = () => {
-              button.removeEventListener('click', actualOnClick)
+            if (latest.onClick) {
+              latest.onClick(toggleExpanded, e)
+            } else {
+              toggleExpanded()
             }
           }
+
+          button.addEventListener('click', actualOnClick)
+
+          currentCleanup = () => {
+            button.removeEventListener('click', actualOnClick)
+          }
         }
+      }
 
-        setupButton()
+      setupButton()
 
-        const observer = new MutationObserver(setupButton)
-        observer.observe(node, {
-          childList: true,
-          subtree: true,
-          // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-          attributes: true,
-          attributeFilter: [
-            'data-disclosure-expanded',
-            'aria-disabled',
-            'disabled',
-            'data-disclosure-target-id',
-          ],
-        })
+      const observer = new MutationObserver(setupButton)
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+        attributes: true,
+        attributeFilter: [
+          'data-disclosure-expanded',
+          'aria-disabled',
+          'disabled',
+          'data-disclosure-target-id',
+        ],
+      })
 
-        return () => {
-          currentCleanup?.()
-          removeDisclosureChangeListener()
-          observer.disconnect()
-        }
-      },
-      [latest],
-    ),
+      return () => {
+        currentCleanup?.()
+        removeDisclosureChangeListener()
+        observer.disconnect()
+      }
+    },
+    [latest],
   )
 
   // HINT: 念の為spanに対して外部からstyleを当てられるようにしておく。

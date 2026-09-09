@@ -12,7 +12,6 @@ import {
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { Center } from '../Layout'
 
@@ -51,34 +50,32 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
 
   const nodeRef = useRef<HTMLElement>(null)
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) {
+      return
+    }
+
+    const syncChildrenBuffer = () => {
+      if (node.getAttribute('data-dialog-open') !== 'true') {
+        setChildrenBuffer(childrenRef.current)
       }
+    }
 
-      const syncChildrenBuffer = () => {
-        if (node.getAttribute('data-dialog-open') !== 'true') {
-          setChildrenBuffer(childrenRef.current)
-        }
-      }
+    // マウント時点のdata-dialog-open状態を反映
+    syncChildrenBuffer()
 
-      // マウント時点のdata-dialog-open状態を反映
-      syncChildrenBuffer()
+    // MutationObserver で DOM の変更を監視
+    const observer = new MutationObserver(syncChildrenBuffer)
 
-      // MutationObserver で DOM の変更を監視
-      const observer = new MutationObserver(syncChildrenBuffer)
+    observer.observe(node, {
+      attributes: true,
+      attributeFilter: ['data-dialog-open'],
+    })
 
-      observer.observe(node, {
-        attributes: true,
-        attributeFilter: ['data-dialog-open'],
-      })
-
-      return () => {
-        observer.disconnect()
-      }
-    }, []),
-  )
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const mergedRef = useMergeRefs(nodeRef, callbackRef)
 
