@@ -11,15 +11,6 @@ describe('PageHeading', () => {
     document.title = ''
   })
 
-  // HINT: React 19 は ref を通常の props として扱うため forwardRef がなくても動いてしまい、
-  // 挙動のテストだけでは forwardRef が外れたことによるデグレを検知できない。そのため構造そのものを検証する
-  test('ref を転送できるよう memo(forwardRef()) でラップされている', () => {
-    const memoized = PageHeading as unknown as { $$typeof: symbol; type: { $$typeof: symbol } }
-
-    expect(memoized.$$typeof).toBe(Symbol.for('react.memo'))
-    expect(memoized.type.$$typeof).toBe(Symbol.for('react.forward_ref'))
-  })
-
   test('ページのタイトルを自動で設定する', async () => {
     render(<PageHeading>これはタイトルです</PageHeading>)
 

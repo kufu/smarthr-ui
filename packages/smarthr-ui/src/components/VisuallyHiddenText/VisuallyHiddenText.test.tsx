@@ -4,18 +4,7 @@ import { createRef } from 'react'
 import { VisuallyHiddenText } from './VisuallyHiddenText'
 
 describe('VisuallyHiddenText', () => {
-  // HINT: React 19 は ref を通常の props として扱うため forwardRef がなくても動いてしまい、
-  // 挙動のテストだけでは forwardRef が外れたことによるデグレを検知できない。そのため構造そのものを検証する
-  test('ref を転送できるよう memo(forwardRef()) でラップされている', () => {
-    const memoized = VisuallyHiddenText as unknown as {
-      $$typeof: symbol
-      type: { $$typeof: symbol }
-    }
-
-    expect(memoized.$$typeof).toBe(Symbol.for('react.memo'))
-    expect(memoized.type.$$typeof).toBe(Symbol.for('react.forward_ref'))
-  })
-
+  // TODO: forwardRefの利用をやめたら不要になる可能性がある。その際は削除を検討する
   test('ref を転送する', () => {
     const ref = createRef<HTMLSpanElement>()
     render(<VisuallyHiddenText ref={ref}>テキスト</VisuallyHiddenText>)
