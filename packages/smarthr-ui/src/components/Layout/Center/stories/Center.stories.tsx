@@ -3,7 +3,7 @@ import { Stack } from '../../Stack'
 import { Center, centerClassNameGenerator } from '../Center'
 
 import type { Gap as GapType } from '../../../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const centerPadding = Object.keys(centerClassNameGenerator.variants.padding)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない

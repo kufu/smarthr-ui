@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { InformationPanel } from '../InformationPanel'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/InformationPanel',

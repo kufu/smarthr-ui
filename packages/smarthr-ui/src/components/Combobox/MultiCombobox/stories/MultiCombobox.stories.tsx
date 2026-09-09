@@ -3,7 +3,7 @@ import { useArgs } from 'storybook/preview-api'
 import { Stack } from '../../../Layout'
 import { MultiCombobox } from '../MultiCombobox'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export const defaultItems = {
   'option 1': {

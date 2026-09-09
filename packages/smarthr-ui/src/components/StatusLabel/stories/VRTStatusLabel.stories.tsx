@@ -3,7 +3,7 @@ import { Stack } from '../../Layout'
 import { Bold, Type } from './StatusLabel.stories'
 
 import type { StatusLabel } from '../StatusLabel'
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/StatusLabel/VRT',

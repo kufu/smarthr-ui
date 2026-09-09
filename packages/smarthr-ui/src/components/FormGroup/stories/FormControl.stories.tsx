@@ -12,7 +12,7 @@ import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
 import { FormControl } from '../FormControl'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _childrenOptions = {
   '<Input />': <Input name="formcontrol_input" />,

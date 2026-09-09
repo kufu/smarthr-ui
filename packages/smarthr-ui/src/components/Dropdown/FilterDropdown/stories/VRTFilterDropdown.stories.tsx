@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test'
 import { Cluster } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 /**

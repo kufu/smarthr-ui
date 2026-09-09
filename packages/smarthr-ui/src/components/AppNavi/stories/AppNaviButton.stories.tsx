@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { FaGearIcon } from '../../Icon'
 import { AppNaviButton } from '../AppNaviButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _iconOptions = {
   なし: undefined,

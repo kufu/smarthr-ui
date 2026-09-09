@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test'
 import { Width } from './SearchInput.stories'
 
 import type { SearchInput } from '../SearchInput'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Input/SearchInput/VRT',

@@ -7,7 +7,7 @@ import { MultiCombobox } from '../MultiCombobox'
 import { defaultItems } from './MultiCombobox.stories'
 
 import type { ComboboxItem } from '../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /*
  * pict multiCombobox.pict

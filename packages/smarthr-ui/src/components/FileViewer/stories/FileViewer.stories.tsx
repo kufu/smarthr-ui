@@ -1,6 +1,6 @@
 import { FileViewer } from '../FileViewer'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/FileViewer',
