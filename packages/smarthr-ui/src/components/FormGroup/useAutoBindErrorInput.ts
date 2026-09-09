@@ -8,6 +8,7 @@ import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
  * HINT: このフックを呼ぶ/呼ばないでコンポーネントを分けているため、propsによる分岐は行わない。
  * 詳細な理由はFormControl・Fieldsetの分岐箇所のコメントを参照。
  */
+// TODO: FormGroup内のuseEffectを整理し、callbackRef化を進めている。このhook自体は削除できないか検討する
 export const useAutoBindErrorInput = ({
   wrapperRef,
   visibleErrorMessages,
