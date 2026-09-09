@@ -126,6 +126,7 @@ export const LiveRegion: FC<Props> = ({
         as={outputAs}
         role={role || 'status'}
         htmlFor={htmlFor}
+        tabindex={visuallyHidden ? -1 : null}
         className="smarthr-ui-LiveRegion-visuallyHiddenText"
       >
         {liveText}
