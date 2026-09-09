@@ -37,8 +37,6 @@ export const FixedHeadTableScroller: FC<Props> = ({
     }
   }, [])
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(callbackRef, forwardedRef)
 
   return (
