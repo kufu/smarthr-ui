@@ -6,15 +6,18 @@ import type { Meta } from '@storybook/react-webpack5'
 export default {
   title: 'Components/Layout/Container/VRT',
   render: Size.render,
+  globals: {
+    viewport: { value: 'vrtWide' },
+  },
   parameters: {
     chromatic: { disableSnapshot: false },
     viewport: {
-      defaultViewport: 'vrtWide',
-      viewports: {
+      options: {
         vrtWide: {
           name: 'VRT Wide',
           styles: {
             width: '2048px',
+            height: '900px',
           },
         },
       },
