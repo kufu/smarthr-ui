@@ -5,7 +5,7 @@ import { FaCirclePlusIcon } from '../../../Icon'
 import { Stack } from '../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export const defaultItems = {
   'option 1': {

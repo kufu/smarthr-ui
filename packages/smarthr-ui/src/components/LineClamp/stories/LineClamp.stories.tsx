@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 import { TextLink } from '../../TextLink'
 import { LineClamp } from '../LineClamp'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
   title: 'Components/LineClamp',

@@ -8,7 +8,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import { _appsOptions } from './Header.stories'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Header/VRT',

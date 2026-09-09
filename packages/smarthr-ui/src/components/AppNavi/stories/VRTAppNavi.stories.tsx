@@ -8,7 +8,7 @@ import { Text } from '../../Text'
 import { Template } from './AppNavi.stories'
 
 import type { AppNavi } from '../AppNavi'
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/AppNavi/VRT',

@@ -2,10 +2,11 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
+    "rootDir": "./src",
     "lib": ["es2022", "dom"],
     "target": "es2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "inlineSources": true,
     "types": ["node", "react", "vitest/globals", "@testing-library/jest-dom"],

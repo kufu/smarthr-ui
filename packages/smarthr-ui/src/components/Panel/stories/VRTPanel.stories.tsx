@@ -3,7 +3,7 @@ import { Stack } from '../../Layout'
 import { Layer, Overflow, Padding, Radius } from './Panel.stories'
 
 import type { Panel } from '../Panel'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Base/VRT',

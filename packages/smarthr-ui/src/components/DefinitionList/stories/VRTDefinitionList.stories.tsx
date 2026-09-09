@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 import { DefinitionList } from '../DefinitionList'
 import { DefinitionListItem } from '../DefinitionListItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/DefinitionList/VRT',

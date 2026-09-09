@@ -1,7 +1,7 @@
 import Story from './RequiredLabel.stories'
 
 import type { RequiredLabel } from '../RequiredLabel'
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/StatusLabel/RequiredLabel/VRT',

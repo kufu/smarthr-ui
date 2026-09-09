@@ -4,7 +4,7 @@ import { Button } from '../../Button'
 import { DisclosureContent } from '../DisclosureContent'
 import { DisclosureTrigger } from '../DisclosureTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Disclosure/DisclosureTrigger',

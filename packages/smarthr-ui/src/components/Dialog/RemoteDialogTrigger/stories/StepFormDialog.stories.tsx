@@ -5,7 +5,7 @@ import { StepFormDialogItem } from '../../ControlledStepFormDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 import { StepFormDialog } from '../StepFormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /** props は [StepFormDialog](./?path=/docs/dialog（ダイアログ）-dialog-stepformdialog--docs) を参照してください。 */
 export default {
