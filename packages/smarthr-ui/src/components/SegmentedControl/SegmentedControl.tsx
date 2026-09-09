@@ -11,7 +11,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 
@@ -173,14 +172,12 @@ export const SegmentedControl: FC<Props> = ({
     [hasOnClickOption, latest],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(functions.callbackRef)
-
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      ref={callbackRef}
+      ref={functions.callbackRef}
       role="toolbar"
       className={classNames.container}
       onFocus={functions.handleDelegateFocus}

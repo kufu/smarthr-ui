@@ -2,8 +2,6 @@ import { type RefObject, useCallback } from 'react'
 
 import { useLatest } from '../useLatest'
 
-import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact18'
-
 /**
  * 指定された複数の要素を「ひとつの領域（Area）」とみなし
  * その領域の【外側】がクリックされた際に処理を実行するcallbackRefを生成する。
@@ -24,52 +22,50 @@ export function useAreaClickCallbackRef(
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
 
-  return useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLElement | null) => {
-        if (!node) {
-          return
-        }
+  return useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-        const handleClick = (e: MouseEvent) => {
-          // TODO: 現在はareaを成立させるotherRefsの要素はcallbackRefがmountされている場合、
-          // 常にmountされている前提だが、対象要素が可変する場合を考慮して
-          // 監視対象が揃っていない場合は、area不成立とみなしてskip
-          // callbackRefなので設定されている要素はこのロジックに到達した場合必ず存在するので
-          // otherRefsの中身だけチェックする
-          const refs = latest.otherRefs
+      const handleClick = (e: MouseEvent) => {
+        // TODO: 現在はareaを成立させるotherRefsの要素はcallbackRefがmountされている場合、
+        // 常にmountされている前提だが、対象要素が可変する場合を考慮して
+        // 監視対象が揃っていない場合は、area不成立とみなしてskip
+        // callbackRefなので設定されている要素はこのロジックに到達した場合必ず存在するので
+        // otherRefsの中身だけチェックする
+        const refs = latest.otherRefs
 
-          if (refs.length === 0) return
+        if (refs.length === 0) return
 
-          const areaEls = refs.reduce<HTMLElement[]>((prev, target) => {
-            if (target.current) {
-              prev.push(target.current)
-            }
-
-            return prev
-          }, [])
-
-          if (areaEls.length !== refs.length) return
-
-          const path = e.composedPath()
-
-          // 領域内のいずれかの要素に含まれているかチェック
-          // HINT: nodeは頻繁に可変する要素の想定で、Comboboxのメニューなどが該当する
-          // そのためユーザーが操作する可能性が高いことが予想されるので先にチェックする
-          if (path.includes(node) || areaEls.some((el) => path.includes(el))) {
-            latest.onInner?.(e)
-          } else {
-            latest.onOuter(e)
+        const areaEls = refs.reduce<HTMLElement[]>((prev, target) => {
+          if (target.current) {
+            prev.push(target.current)
           }
-        }
 
-        window.addEventListener('click', handleClick)
+          return prev
+        }, [])
 
-        return () => {
-          window.removeEventListener('click', handleClick)
+        if (areaEls.length !== refs.length) return
+
+        const path = e.composedPath()
+
+        // 領域内のいずれかの要素に含まれているかチェック
+        // HINT: nodeは頻繁に可変する要素の想定で、Comboboxのメニューなどが該当する
+        // そのためユーザーが操作する可能性が高いことが予想されるので先にチェックする
+        if (path.includes(node) || areaEls.some((el) => path.includes(el))) {
+          latest.onInner?.(e)
+        } else {
+          latest.onOuter(e)
         }
-      },
-      [latest],
-    ),
+      }
+
+      window.addEventListener('click', handleClick)
+
+      return () => {
+        window.removeEventListener('click', handleClick)
+      }
+    },
+    [latest],
   )
 }

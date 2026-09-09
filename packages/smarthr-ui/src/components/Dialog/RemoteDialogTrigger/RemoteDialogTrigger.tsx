@@ -2,7 +2,6 @@
 
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../../hooks/useLatest'
 
 import { TRIGGER_EVENT } from './useRemoteTrigger'
@@ -27,85 +26,83 @@ export const RemoteDialogTrigger: FC<
 > = ({ targetId, children, onClick }) => {
   const latest = useLatest({ onClick })
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLElement | null) => {
-        if (!node) {
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
+
+      const handleClick = (e: Event) => {
+        // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+        // 先にariaControlsを取得しておく
+        const ariaControls = (e.currentTarget as HTMLElement).getAttribute(
+          'aria-controls',
+        ) as string
+
+        if (latest.onClick) {
+          return latest.onClick(() => {
+            dispatchRemoteDialogTrigger(ariaControls)
+          })
+        }
+
+        dispatchRemoteDialogTrigger(ariaControls)
+      }
+
+      const getClickableElement = () =>
+        node.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
+
+      // 現在の子要素に対して処理を実行
+      const setupElement = () => {
+        const element = getClickableElement()
+        if (!element) {
           return
         }
 
-        const handleClick = (e: Event) => {
-          // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
-          // 先にariaControlsを取得しておく
-          const ariaControls = (e.currentTarget as HTMLElement).getAttribute(
-            'aria-controls',
-          ) as string
+        element.setAttribute('aria-haspopup', 'dialog')
+        element.setAttribute('aria-controls', targetId)
 
-          if (latest.onClick) {
-            return latest.onClick(() => {
-              dispatchRemoteDialogTrigger(ariaControls)
-            })
-          }
-
-          dispatchRemoteDialogTrigger(ariaControls)
+        // Button は native disabled ではなく aria-disabled を使うため、
+        // 無効時はリスナーを貼らず Dialog が開かないようにする（DropdownTrigger と同じ）
+        if (
+          !('disabled' in element && element.disabled) &&
+          element.getAttribute('aria-disabled') !== 'true'
+        ) {
+          // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
+          element.addEventListener('click', handleClick, CAPTURE_OPTION)
         }
+      }
 
-        const getClickableElement = () =>
-          node.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
-
-        // 現在の子要素に対して処理を実行
-        const setupElement = () => {
-          const element = getClickableElement()
-          if (!element) {
-            return
-          }
-
-          element.setAttribute('aria-haspopup', 'dialog')
-          element.setAttribute('aria-controls', targetId)
-
-          // Button は native disabled ではなく aria-disabled を使うため、
-          // 無効時はリスナーを貼らず Dialog が開かないようにする（DropdownTrigger と同じ）
-          if (
-            !('disabled' in element && element.disabled) &&
-            element.getAttribute('aria-disabled') !== 'true'
-          ) {
-            // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
-            element.addEventListener('click', handleClick, CAPTURE_OPTION)
-          }
+      const clearEventListener = () => {
+        // 既存のイベントリスナーをクリーンアップ
+        const element = getClickableElement()
+        if (element) {
+          element.removeEventListener('click', handleClick, CAPTURE_OPTION)
         }
+      }
 
-        const clearEventListener = () => {
-          // 既存のイベントリスナーをクリーンアップ
-          const element = getClickableElement()
-          if (element) {
-            element.removeEventListener('click', handleClick, CAPTURE_OPTION)
-          }
-        }
+      // 初回セットアップ
+      setupElement()
 
-        // 初回セットアップ
+      // MutationObserverでDOM変更を監視
+      const observer = new MutationObserver(() => {
+        clearEventListener()
         setupElement()
+      })
 
-        // MutationObserverでDOM変更を監視
-        const observer = new MutationObserver(() => {
-          clearEventListener()
-          setupElement()
-        })
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+        attributes: true,
+        attributeFilter: ['disabled', 'aria-disabled'],
+      })
 
-        observer.observe(node, {
-          childList: true,
-          subtree: true,
-          // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-          attributes: true,
-          attributeFilter: ['disabled', 'aria-disabled'],
-        })
-
-        return () => {
-          observer.disconnect()
-          clearEventListener()
-        }
-      },
-      [targetId, latest],
-    ),
+      return () => {
+        observer.disconnect()
+        clearEventListener()
+      }
+    },
+    [targetId, latest],
   )
 
   return (
