@@ -8,7 +8,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
@@ -24,6 +24,31 @@ import {
 import { Cluster } from '../Layout'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
+
+// TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
+// base="base" も意味が分かりづらい
+type BaseType = 'base' | 'none'
+type TypeType = 'info' | 'success' | 'warning' | 'error' | 'sync'
+
+type BaseProps = PropsWithChildren<{
+  /** コンポーネント右の領域 */
+  subActionArea?: ReactNode
+  /** 閉じるボタン押下時に発火させる関数 */
+  onClose?: () => void
+  /** role 属性 */
+  role?: 'alert' | 'status'
+  /** 下地 */
+  base?: BaseType
+  /** メッセージの種類 */
+  type: TypeType
+  /** 強調するかどうか */
+  bold?: boolean
+  /** スライドインするかどうか */
+  animate?: boolean
+}> &
+  Pick<ComponentProps<typeof Panel>, 'layer'>
+
+type Props = Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps> & BaseProps
 
 const classNameGenerator = tv({
   slots: {
@@ -41,14 +66,12 @@ const classNameGenerator = tv({
       'smarthr-ui-NotificationBar-closeButton -shr-mb-0.5 -shr-mr-0.5 -shr-mt-0.5 shr-flex-shrink-0 shr-text-black',
   },
   variants: {
-    /** 下地 */
     base: {
       none: {},
       base: {
         wrapper: 'shr-py-1 shr-pe-1 shr-ps-1.5',
       },
-    },
-    /** メッセージの種類 */
+    } satisfies Record<BaseType, object>,
     type: {
       info: {
         icon: 'shr-text-grey',
@@ -61,13 +84,11 @@ const classNameGenerator = tv({
       sync: {
         icon: 'shr-text-main',
       },
-    },
-    /** 強調するかどうか */
+    } satisfies Record<TypeType, object>,
     bold: {
       true: '',
       false: '',
     },
-    /** スライドインするかどうか */
     animate: {
       true: {
         wrapper: 'shr-animate-[notification-bar-slide-in_0.2s_ease-out]',
@@ -134,23 +155,6 @@ const classNameGenerator = tv({
     },
   ],
 })
-
-type StyleVariants = VariantProps<typeof classNameGenerator>
-type BaseProps = PropsWithChildren<
-  Omit<StyleVariants, 'type'> &
-    Required<Pick<StyleVariants, 'type'>> & {
-      /** コンポーネント右の領域 */
-      subActionArea?: ReactNode
-      /** 閉じるボタン押下時に発火させる関数 */
-      onClose?: () => void
-      /** role 属性 */
-      role?: 'alert' | 'status'
-    }
->
-type PanelLayerProps = Pick<ComponentProps<typeof Panel>, 'layer'>
-type Props = PanelLayerProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof PanelLayerProps> &
-  Omit<BaseProps, keyof PanelLayerProps>
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
