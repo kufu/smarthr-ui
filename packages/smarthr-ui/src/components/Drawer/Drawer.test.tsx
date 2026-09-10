@@ -489,6 +489,44 @@ describe('Drawer（modeless）', () => {
     })
   })
 
+  // portalParent 内に収める modeless では、bottom の高さの基準はビューポートではなくコンテナ。
+  // dvh のままだとコンテナからはみ出して grabber とヘッダが上に切れる。
+  it('portalParent 指定の bottom はコンテナ基準の高さになること', async () => {
+    const PortalTemplate: FC = () => {
+      const containerRef = useRef<HTMLDivElement>(null)
+
+      return (
+        <div ref={containerRef}>
+          <Drawer
+            isOpen
+            position="bottom"
+            modality="modeless"
+            portalParent={containerRef}
+            ariaLabel="コンテナ内ドロワー"
+          >
+            <p>content</p>
+          </Drawer>
+        </div>
+      )
+    }
+    renderWithIntl(<PortalTemplate />)
+
+    const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
+    expect(dialog).toHaveClass('shr-h-[calc(100%-theme(spacing.1))]')
+    expect(dialog).not.toHaveClass('shr-h-[calc(100dvh-theme(spacing.1))]')
+  })
+
+  it('portalParent なしの bottom はビューポート基準の高さのままであること', async () => {
+    renderWithIntl(
+      <Drawer isOpen position="bottom" modality="modeless" ariaLabel="画面固定ドロワー">
+        <p>content</p>
+      </Drawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '画面固定ドロワー' })
+    expect(dialog).toHaveClass('shr-h-[calc(100dvh-theme(spacing.1))]')
+  })
+
   it('modeless でも onPressEscape を渡せば Escape で閉じること', async () => {
     const TemplateWithEscape: FC = () => {
       const [isOpen, setIsOpen] = useState(false)

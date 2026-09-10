@@ -74,8 +74,7 @@ const classNameGenerator = tv({
         inner: 'shr-inset-y-0 shr-left-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.1))]',
       },
       bottom: {
-        inner:
-          'shr-inset-x-0 shr-bottom-0 shr-h-[calc(100dvh-theme(spacing.1))] shr-w-full shr-rounded-t-l',
+        inner: 'shr-inset-x-0 shr-bottom-0 shr-w-full shr-rounded-t-l',
       },
     },
     size: {
@@ -93,6 +92,20 @@ const classNameGenerator = tv({
       absolute: { layout: 'shr-absolute' },
     },
   },
+  // bottom の高さは、画面端固定ならビューポート基準、portalParent 内に収めるならコンテナ基準。
+  // dvh のまま absolute にするとコンテナからはみ出し、grabber とヘッダが上に切れる。
+  compoundVariants: [
+    {
+      position: 'bottom',
+      layoutPosition: 'fixed',
+      class: { inner: 'shr-h-[calc(100dvh-theme(spacing.1))]' },
+    },
+    {
+      position: 'bottom',
+      layoutPosition: 'absolute',
+      class: { inner: 'shr-h-[calc(100%-theme(spacing.1))]' },
+    },
+  ],
 })
 
 // 閉じ位置（画面外）への transform 文字列
@@ -142,7 +155,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     return {
       layout: layout({ modality, layoutPosition }),
       overlay: overlay(),
-      inner: inner({ position, size: appliedSize, modality, className }),
+      inner: inner({ position, size: appliedSize, modality, layoutPosition, className }),
       handleArea: handleArea(),
       handleBar: handleBar(),
       focusTrap: focusTrap(),
