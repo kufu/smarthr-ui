@@ -83,6 +83,7 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
   const handleSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+      e.stopPropagation()
 
       const trimmed = url.trim()
 

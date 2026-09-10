@@ -90,6 +90,7 @@ export const TableInsertDropdown: FC<Props> = memo(
     const handleSubmit = useCallback(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        e.stopPropagation()
         if (!isValidSize(rows) || !isValidSize(cols)) {
           setError(errorMessage)
           return

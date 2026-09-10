@@ -136,6 +136,7 @@ export const ImageWidthPopover: FC<Props> = memo(
     const apply = useCallback(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        e.stopPropagation()
 
         const w = Number(width)
         const h = Number(height)

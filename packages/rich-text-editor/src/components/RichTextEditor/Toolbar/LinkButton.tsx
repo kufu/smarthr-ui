@@ -107,6 +107,7 @@ export const LinkButton: FC<Props> = memo(
     const handleSubmit = useCallback(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        e.stopPropagation()
         const trimmed = url.trim()
         if (!trimmed) {
           setError(requiredMessage)

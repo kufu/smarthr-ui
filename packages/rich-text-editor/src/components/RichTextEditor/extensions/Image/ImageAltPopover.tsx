@@ -77,6 +77,7 @@ export const ImageAltPopover: FC<Props> = memo(
     const handleSubmit = useCallback(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        e.stopPropagation()
 
         editor.chain().setNodeSelection(pos).updateAttributes('image', { alt }).run()
         setIsOpen(false)
