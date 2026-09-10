@@ -80,7 +80,7 @@ const useFieldsetProps = ({
     id: baseLegend.id || `${baseId}-legend`,
   }
 
-  const { describedbyIds, visibleErrorMessages, ...describedByIdsRest } = useDescribedByIds({
+  const { describedbyIds, ...describedByIdsRest } = useDescribedByIds({
     wrapperRef,
     htmlFor: legend.htmlFor,
     errorMessages: orgErrorMessages,
@@ -154,7 +154,6 @@ const useFieldsetProps = ({
   return {
     ...rest,
     ...describedByIdsRest,
-    visibleErrorMessages,
     as: 'fieldset',
     wrapperRef,
     wrapperCallbackRef,
