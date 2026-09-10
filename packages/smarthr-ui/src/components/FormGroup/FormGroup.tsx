@@ -17,7 +17,7 @@ import type { useDescribedByIds } from './useDescribedByIds'
 // HINT: errorMessagesを含む各idはuseDescribedByIdsで、classNamesは各コンポーネントで
 // 算出済みの値を受け取る
 // autoBindErrorInputによる分岐はFormControl・Fieldset側で行うため、ここでは受け取らない
-type Props = Omit<CommonProps, 'errorMessages' | 'className' | 'autoBindErrorInput'> &
+type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
   Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
     wrapperRef: Ref<HTMLDivElement>
     /** グループのラベル名 */
@@ -52,6 +52,7 @@ export const FormGroup: FC<Props> = ({
   exampleMessageId,
   supplementaryMessageId,
   errorMessagesId,
+  autoBindErrorInput = true,
   ...rest
 }) => {
   // HINT: statusLabelsは設定されない場合が大半、かつ設定されてもRequiredLabelでmemo化されているため
@@ -68,6 +69,7 @@ export const FormGroup: FC<Props> = ({
       ref={wrapperRef}
       gap={innerMargin ?? 0.5}
       className={classNames.wrapper}
+      data-auto-bind-error-input={autoBindErrorInput ? visibleErrorMessages.toString() : undefined}
     >
       <LabelComponent
         managedLabelId={label.id}
