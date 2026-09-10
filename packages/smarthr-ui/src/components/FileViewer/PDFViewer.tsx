@@ -1,7 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, memo, useCallback, useMemo, useRef, useState } from 'react'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 import { Scroller } from '../Scroller'
@@ -11,39 +10,53 @@ import { ReactPDFStyle } from './generatedReactPDFStyle'
 
 import type { ViewerProps } from './types'
 import type { UsePDFSearch } from './usePDFSearch'
+import type { Document, DocumentProps, Page, PageProps, pdfjs } from 'react-pdf'
 
-if (typeof window !== 'undefined') {
-  // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
-  // @ts-expect-error
-  if (typeof window.Promise.withResolvers === 'undefined') {
-    // @ts-expect-error
-    window.Promise.withResolvers = function () {
-      let resolve, reject
-      const promise = new Promise((res, rej) => {
-        resolve = res
-        reject = rej
-      })
-      return { promise, resolve, reject }
-    }
-    // web workerもpolyfillされたものを読み込む
-    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
-  } else {
-    // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-    // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    //   'pdfjs-dist/build/pdf.worker.min.mjs',
-    //   import.meta.url,
-    // ).toString()
-    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
-  }
+// HINT: react-pdf(pdfjs-dist)はモジュール評価時にDOMMatrix等のブラウザAPIを参照するため、
+// 静的importするとNext.jsのSSR(初回HTML生成)がReferenceErrorで失敗する。
+// マウント後にのみ動的importすることでSSR時の評価を避ける。
+type ReactPDFModule = {
+  Document: typeof Document
+  Page: typeof Page
+  pdfjs: typeof pdfjs
 }
 
-const options = {
-  // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-  // 非latin文字を読み込むためのオプション
-  // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
-  // cMapUrl: '/cmaps/',
-  cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
-} satisfies ComponentProps<typeof Document>['options']
+let reactPDFModulePromise: Promise<ReactPDFModule> | undefined
+
+const loadReactPDFModule = (): Promise<ReactPDFModule> => {
+  if (!reactPDFModulePromise) {
+    reactPDFModulePromise = import('react-pdf').then((mod) => {
+      const { pdfjs } = mod
+
+      // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
+      // @ts-expect-error
+      if (typeof window.Promise.withResolvers === 'undefined') {
+        // @ts-expect-error
+        window.Promise.withResolvers = function () {
+          let resolve, reject
+          const promise = new Promise((res, rej) => {
+            resolve = res
+            reject = rej
+          })
+          return { promise, resolve, reject }
+        }
+        // web workerもpolyfillされたものを読み込む
+        pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
+      } else {
+        // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+        // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        //   'pdfjs-dist/build/pdf.worker.min.mjs',
+        //   import.meta.url,
+        // ).toString()
+        pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+      }
+
+      return mod
+    })
+  }
+
+  return reactPDFModulePromise
+}
 
 // pdfjs が用意している CSS 変数 (--highlight-bg-color / --highlight-selected-bg-color)を .textLayer .highlight スコープで上書きし、検索ハイライト色を変更している。
 // HINT: react-pdf 10.5.0 (pdfjs-dist 5.4.296) から、これらの変数の定義元が :root から .textLayer .highlight に変わったため、
@@ -79,21 +92,44 @@ export const PDFViewer: FC<Props> = memo(
     const matches = search?.matches
     const currentMatchIndex = search?.currentMatchIndex
     const [pdfNumPages, setPdfNumPages] = useState(1)
+    const [reactPDFModule, setReactPDFModule] = useState<ReactPDFModule | null>(null)
 
     const latest = useLatest({
       rotation,
       pdfNumPages,
       handleLoad,
       handlePDFLoaded,
+      handleLoadError,
     })
 
+    useEffect(() => {
+      let cancelled = false
+
+      loadReactPDFModule().then(
+        (mod) => {
+          if (!cancelled) {
+            setReactPDFModule(mod)
+          }
+        },
+        (error) => {
+          if (!cancelled) {
+            latest.handleLoadError?.(error)
+          }
+        },
+      )
+
+      return () => {
+        cancelled = true
+      }
+    }, [latest])
+
     const functions = useMemo(() => {
-      const handleDocumentLoadSuccess: NonNullable<
-        ComponentProps<typeof Document>['onLoadSuccess']
-      > = ({ numPages }) => {
+      const handleDocumentLoadSuccess: NonNullable<DocumentProps['onLoadSuccess']> = ({
+        numPages,
+      }) => {
         setPdfNumPages(numPages)
       }
-      const handlePageLoad: ComponentProps<typeof Page>['onLoadSuccess'] = (page) => {
+      const handlePageLoad: PageProps['onLoadSuccess'] = (page) => {
         if (latest.rotation === undefined) {
           latest.handlePDFLoaded?.(page.rotate)
         }
@@ -138,6 +174,24 @@ export const PDFViewer: FC<Props> = memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
       [currentMatchIndex, matches],
     )
+
+    const options = useMemo(
+      () =>
+        ({
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // 非latin文字を読み込むためのオプション
+          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
+          // cMapUrl: '/cmaps/',
+          cMapUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/cmaps/`,
+        }) satisfies DocumentProps['options'],
+      [reactPDFModule],
+    )
+
+    if (!reactPDFModule) {
+      return null
+    }
+
+    const { Document, Page } = reactPDFModule
 
     return (
       <>
