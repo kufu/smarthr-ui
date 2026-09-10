@@ -19,6 +19,7 @@ import Draggable, { type DraggableBounds } from 'react-draggable'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
@@ -32,6 +33,8 @@ import { Panel, type PanelElementProps } from '../../Panel'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
+
+import { MobileModelessDialog } from './MobileModelessDialog'
 
 import type { DialogSize } from '../types'
 
@@ -138,7 +141,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const ModelessDialog: FC<Props> = ({
+export const ModelessDialog: FC<Props> = (props) => {
+  const { mobile } = useEnvironment()
+
+  return mobile ? <MobileModelessDialog {...props} /> : <DesktopModelessDialog {...props} />
+}
+
+const DesktopModelessDialog: FC<Props> = ({
   heading,
   children,
   contentBgColor,
