@@ -510,3 +510,23 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
     expect(getLayout()).not.toHaveClass('shr-absolute')
   })
 })
+
+describe('Drawer size', () => {
+  const SizedTemplate: FC<{ position: 'bottom' | 'right' }> = ({ position }) => (
+    <Drawer isOpen position={position} size="M" ariaLabel="サイズ確認">
+      <p>content</p>
+    </Drawer>
+  )
+
+  it('left/right では size のクラスが当たること', () => {
+    renderWithIntl(<SizedTemplate position="right" />)
+    expect(screen.getByRole('dialog', { name: 'サイズ確認' })).toHaveClass('shr-w-col5')
+  })
+
+  it('bottom では size を無視して幅フルにすること', () => {
+    renderWithIntl(<SizedTemplate position="bottom" />)
+    const dialog = screen.getByRole('dialog', { name: 'サイズ確認' })
+    expect(dialog).not.toHaveClass('shr-w-col5')
+    expect(dialog).toHaveClass('shr-w-full')
+  })
+})
