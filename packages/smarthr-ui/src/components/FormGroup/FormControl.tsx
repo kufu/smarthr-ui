@@ -1,7 +1,8 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useRef, useState } from 'react'
+import { type FC, type ReactNode, memo, useId, useMemo, useRef, useState } from 'react'
 
+import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -52,35 +53,33 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
   const managedInputIdRef = useRef(label.htmlFor)
   const managedLabelIdRef = useRef(label.id)
 
-  const callbackRef = useCallback((node: HTMLElement | null) => {
-    if (!node) {
-      return
-    }
+  const callbackRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-    const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+      const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
-    if (!input) {
-      return
-    }
+      if (!input) {
+        return
+      }
 
-    const action = () => {
-      const htmlForAttr = node.getAttribute('data-auto-bind-aria-labelledby-for-input-htmlfor')
-
-      if (htmlForAttr) {
+      if (label.htmlFor) {
         const currentInputId = input.getAttribute('id')
 
         if (currentInputId && currentInputId !== managedInputIdRef.current) {
           // HINT: 自分が過去に設定したid以外（=外部由来のid）の場合はそれを尊重する
           setChildInputId(currentInputId)
         } else {
-          const existingElement = document.getElementById(htmlForAttr)
+          const existingElement = document.getElementById(label.htmlFor)
 
           // HINT: 対象idを持つ別の要素が既に存在する場合、何もしない
           if (!existingElement || existingElement === input) {
-            if (currentInputId !== htmlForAttr) {
-              input.setAttribute('id', htmlForAttr)
+            if (currentInputId !== label.htmlFor) {
+              input.setAttribute('id', label.htmlFor)
             }
-            managedInputIdRef.current = htmlForAttr
+            managedInputIdRef.current = label.htmlFor
           }
         }
       }
@@ -89,38 +88,23 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
         const inputLabelledByIds = input.getAttribute('aria-labelledby')
 
         if (inputLabelledByIds) {
-          const labelId = node.getAttribute('data-auto-bind-aria-labelledby-for-input-id')
           const tokens = inputLabelledByIds.split(' ')
           // HINT: 自分が過去に追加したid以外（=外部由来のid）だけを残す
           const externalTokens = tokens.filter((token) => token !== managedLabelIdRef.current)
           // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-          const nextTokens = labelId ? [...externalTokens, labelId] : externalTokens
+          const nextTokens = label.id ? [...externalTokens, label.id] : externalTokens
           const nextValue = nextTokens.join(' ')
 
           if (nextValue !== inputLabelledByIds) {
             input.setAttribute('aria-labelledby', nextValue)
           }
 
-          managedLabelIdRef.current = labelId ?? ''
+          managedLabelIdRef.current = label.id ?? ''
         }
       }
-    }
-
-    action()
-
-    const observer = new MutationObserver(action)
-    observer.observe(node, {
-      attributes: true,
-      attributeFilter: [
-        'data-auto-bind-aria-labelledby-for-input-htmlfor',
-        'data-auto-bind-aria-labelledby-for-input-id',
-      ],
-    })
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
+    },
+    [label.htmlFor, label.id],
+  )
 
   return {
     ...rest,
@@ -128,8 +112,6 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
     label,
     classNames,
     LabelComponent,
-    'data-auto-bind-aria-labelledby-for-input-htmlfor': label.htmlFor,
-    'data-auto-bind-aria-labelledby-for-input-id': label.id,
   }
 }
 
