@@ -35,9 +35,9 @@ const classNameGenerator = tv({
 })
 
 export const DrawerHeader: FC<DrawerHeaderProps> = ({ title, subtitle, id, onClickClose }) => {
-  const { onClickClose: contextOnClickClose } = useContext(DrawerContentContext)
+  const { handleClickClose } = useContext(DrawerContentContext)
   const { headingId } = useContext(DrawerHeadingContext)
-  const actualOnClickClose = onClickClose ?? contextOnClickClose
+  const actualOnClickClose = onClickClose ?? handleClickClose
   const actualHeadingId = id ?? headingId
 
   const classNames = useMemo(() => {

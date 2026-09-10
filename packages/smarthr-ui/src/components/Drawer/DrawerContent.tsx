@@ -12,7 +12,7 @@ import type { DirectChildren, UncontrolledDrawerProps } from './types'
 type Props = UncontrolledDrawerProps & DirectChildren
 
 export const DrawerContent: FC<Props> = ({ portalParent, id, ...rest }) => {
-  const { onClickClose, active } = useContext(DrawerContext)
+  const { handleClickClose, active } = useContext(DrawerContext)
   const { createPortal } = useDialogPortal(portalParent, id)
 
   return createPortal(
@@ -20,9 +20,9 @@ export const DrawerContent: FC<Props> = ({ portalParent, id, ...rest }) => {
       {...rest}
       hasPortalParent={Boolean(portalParent)}
       isOpen={active}
-      onClickClose={onClickClose}
-      onClickOverlay={onClickClose}
-      onPressEscape={onClickClose}
+      onClickClose={handleClickClose}
+      onClickOverlay={handleClickClose}
+      onPressEscape={handleClickClose}
     />,
   )
 }

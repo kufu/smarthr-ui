@@ -221,7 +221,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
 
   useBodyScrollLock(isOpen && modality === 'modal')
 
-  const onClickCloseSafe = useMemo(() => onClickClose ?? (() => undefined), [onClickClose])
+  const handleClickCloseSafe = useMemo(() => onClickClose ?? (() => undefined), [onClickClose])
 
   if (!shouldMount) return null
 
@@ -238,7 +238,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     </div>
   )
   const drawerBody = (
-    <DrawerContentContext.Provider value={{ onClickClose: onClickCloseSafe }}>
+    <DrawerContentContext.Provider value={{ handleClickClose: handleClickCloseSafe }}>
       <DrawerHeadingContext.Provider value={{ headingId: autoHeadingId }}>
         {position === 'bottom' && handleElement}
         {children}

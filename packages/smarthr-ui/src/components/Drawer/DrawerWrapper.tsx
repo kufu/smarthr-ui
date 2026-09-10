@@ -3,22 +3,27 @@
 import { type FC, type PropsWithChildren, createContext, useCallback, useState } from 'react'
 
 type DrawerContextType = {
-  onClickTrigger: () => void
-  onClickClose: () => void
+  handleDelegateClickTrigger: () => void
+  handleClickClose: () => void
   active: boolean
 }
 
 const noop = () => undefined
 export const DrawerContext = createContext<DrawerContextType>({
-  onClickTrigger: noop,
-  onClickClose: noop,
+  handleDelegateClickTrigger: noop,
+  handleClickClose: noop,
   active: false,
 })
 
 export const DrawerWrapper: FC<PropsWithChildren> = (props) => {
   const [active, setActive] = useState(false)
-  const onClickTrigger = useCallback(() => setActive(true), [])
-  const onClickClose = useCallback(() => setActive(false), [])
+  const handleDelegateClickTrigger = useCallback(() => setActive(true), [])
+  const handleClickClose = useCallback(() => setActive(false), [])
 
-  return <DrawerContext.Provider {...props} value={{ onClickTrigger, onClickClose, active }} />
+  return (
+    <DrawerContext.Provider
+      {...props}
+      value={{ handleDelegateClickTrigger, handleClickClose, active }}
+    />
+  )
 }
