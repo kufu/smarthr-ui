@@ -9,6 +9,7 @@ import { Youtube } from '@tiptap/extension-youtube'
 import { StarterKit } from '@tiptap/starter-kit'
 
 import { CustomImage } from './Image/CustomImage'
+import { createImagePasteExtension } from './Image/imagePaste'
 import { imageUploadPlaceholderPlugin } from './Image/imageUploadPlaceholder'
 import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
 import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
@@ -112,6 +113,7 @@ export const configureExtensions = ({
       extensions.push(
         // allowedMimeTypes は渡さない。FileHandler の判定が完全一致で `image/*` を通せず、
         // ファイル選択ダイアログの accept 属性と挙動がずれるため、フィルタは自前で行う。
+        // onPaste は使わない（HTMLを含むクリップボードで二重挿入になる）。
         FileHandler.configure({
           onDrop: (editor, files, pos) => {
             const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
@@ -119,13 +121,8 @@ export const configureExtensions = ({
               uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
             }
           },
-          onPaste: (editor, files) => {
-            const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
-            if (file) {
-              uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
-            }
-          },
         }),
+        createImagePasteExtension({ mimeTypes, onImageUpload, onImageUploadError }),
       )
     }
   }

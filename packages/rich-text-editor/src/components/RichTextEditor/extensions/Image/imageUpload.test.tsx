@@ -269,3 +269,91 @@ describe('アップロード中の文書差し替え', () => {
     expect(onImageUploadError).not.toHaveBeenCalled()
   })
 })
+
+describe('画像ファイルの貼り付け', () => {
+  // Partial<RichTextEditorProps> は判別可能ユニオンに分配されて割り当て不可になるため、
+  // 必要なキーだけを明示する
+  type EditorProps = {
+    onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
+    onImageUploadError?: (error: unknown, file: File) => void
+    acceptedMimeTypes?: string[]
+  }
+
+  const renderEditor = async (props: EditorProps = {}) => {
+    render(<RichTextEditor {...props} features={['image']} />, { wrapper: Wrapper })
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+  }
+
+  it('File だけならアップロード結果を1枚挿入する', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
+    await renderEditor({ onImageUpload })
+
+    paste({ files: [pngFile()] })
+
+    await waitFor(() => expect(imageSrcs()).toEqual(['https://example.com/uploaded.png']))
+  })
+
+  it('File と HTML の img が同時にあってもアップロード結果だけを挿入する', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
+    await renderEditor({ onImageUpload })
+
+    paste({ files: [pngFile()], html: '<img src="https://example.com/original.png">' })
+
+    await waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+    await flush()
+    expect(imageSrcs()).toEqual(['https://example.com/uploaded.png'])
+  })
+
+  it('File と HTML のテキストが同時にあってもテキストを貼り付けない', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
+    await renderEditor({ onImageUpload })
+
+    paste({ files: [pngFile()], html: '<p>pasted text</p>', text: 'pasted text' })
+
+    await waitFor(() => expect(imageSrcs()).toEqual(['https://example.com/uploaded.png']))
+    expect(screen.getByRole('textbox')).not.toHaveTextContent('pasted text')
+  })
+
+  it('HTML だけなら通常の貼り付けになる', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
+    await renderEditor({ onImageUpload })
+
+    paste({ html: '<p>pasted text</p>', text: 'pasted text' })
+
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveTextContent('pasted text'))
+    expect(onImageUpload).not.toHaveBeenCalled()
+  })
+
+  it('onImageUpload が無ければ通常の貼り付けになる', async () => {
+    await renderEditor()
+
+    paste({ files: [pngFile()], html: '<p>pasted text</p>', text: 'pasted text' })
+
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveTextContent('pasted text'))
+  })
+
+  it('許可されないファイルが混ざっていてもテキストは貼り付ける', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
+    await renderEditor({ acceptedMimeTypes: ['image/png'], onImageUpload })
+
+    paste({
+      files: [new File(['x'], 'a.pdf', { type: 'application/pdf' })],
+      html: '<p>pasted text</p>',
+      text: 'pasted text',
+    })
+
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveTextContent('pasted text'))
+    expect(onImageUpload).not.toHaveBeenCalled()
+  })
+
+  it('アップロードに失敗しても HTML 側の画像を挿入しない', async () => {
+    const onImageUpload = vi.fn().mockRejectedValue(new Error('boom'))
+    const onImageUploadError = vi.fn()
+    await renderEditor({ onImageUpload, onImageUploadError })
+
+    paste({ files: [pngFile()], html: '<img src="https://example.com/original.png">' })
+
+    await waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
+    expect(imageSrcs()).toHaveLength(0)
+  })
+})
