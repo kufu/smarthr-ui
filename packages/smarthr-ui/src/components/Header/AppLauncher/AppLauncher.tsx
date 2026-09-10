@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -26,7 +26,8 @@ type BaseProps = {
   urlToShowAll?: string | null
   /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
   triggerLabel?: ReactNode
-} & VariantProps<typeof classNameGenerator>
+  enableNew?: boolean
+}
 type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const classNameGenerator = tv({
