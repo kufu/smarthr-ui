@@ -8,9 +8,9 @@ import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
+import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
-import { useAutoBindErrorInput } from './useAutoBindErrorInput'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -20,38 +20,11 @@ const labelObjectConverter = (label: ReactNode) => ({ text: label })
 type Props = CommonProps & {
   label: ReactNode | ObjectLabelType
 }
-type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
-// HINT: useAutoBindErrorInputを呼ぶ/呼ばないでコンポーネントを分けている。
-// FormGroup側で分岐すると、切り替え時にFormGroup配下のみが再マウントされ、
-// ActualFormControlのuseEffectがsetAttributeしたid・aria-describedbyが
-// 復元されなくなる。分岐を最上位に置くことで、再マウント時にそれらのuseEffectも
-// 再実行されるようにしている。
-export const FormControl: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
-  const Component = autoBindErrorInput ? AutoBindErrorFormControl : ActualFormControl
+export const FormControl: FC<Props> = (props) => {
+  const actualProps = useFormControlProps(props)
 
-  return <Component {...rest} />
-}
-
-const AutoBindErrorFormControl: FC<LowerProps> = (props) => {
-  const { wrapperRef, wrapperCallbackRef, visibleErrorMessages, ...rest } =
-    useFormControlProps(props)
-
-  useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
-
-  return (
-    <FormGroup
-      {...rest}
-      wrapperRef={wrapperCallbackRef}
-      visibleErrorMessages={visibleErrorMessages}
-    />
-  )
-}
-
-const ActualFormControl: FC<LowerProps> = (props) => {
-  const { wrapperCallbackRef, ...rest } = useFormControlProps(props)
-
-  return <FormGroup {...rest} wrapperRef={wrapperCallbackRef} />
+  return <FormGroup {...actualProps} />
 }
 
 const useFormControlProps = ({
@@ -61,8 +34,9 @@ const useFormControlProps = ({
   exampleMessage,
   supplementaryMessage,
   className,
+  autoBindErrorInput = true,
   ...rest
-}: LowerProps) => {
+}: Props) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -136,19 +110,23 @@ const useFormControlProps = ({
   // HINT: wrapperRefはこのcustom hookで定義しているRefObjectなので
   // 仮にcallbackRefが変化した場合の巻き込まれる形での再実行でも問題は発生しない。
   // このコンポーネントは外部からrefを受け付けないため、問題はないが必要性が発生したら検討する
-  const wrapperCallbackRef = useMergeRefs(callbackRef, wrapperRef)
+  const wrapperCallbackRef = useMergeRefs(
+    wrapperRef,
+    callbackRef,
+    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+  )
 
   return {
     ...rest,
     ...describedByIdsRest,
-    wrapperRef,
-    wrapperCallbackRef,
+    wrapperRef: wrapperCallbackRef,
     label,
     helpMessage,
     exampleMessage,
     supplementaryMessage,
     classNames,
     LabelComponent,
+    autoBindErrorInput,
   }
 }
 

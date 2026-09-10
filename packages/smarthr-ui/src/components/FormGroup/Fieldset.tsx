@@ -9,9 +9,9 @@ import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
+import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
-import { useAutoBindErrorInput } from './useAutoBindErrorInput'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -38,36 +38,11 @@ type Props = CommonProps & {
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
 }
-type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
-// HINT: useAutoBindErrorInputを呼ぶ/呼ばないでコンポーネントを分けている。
-// FormGroup側で分岐すると、切り替え時にFormGroup配下のみが再マウントされ、
-// ActualFieldsetのcallbackRefがsetAttributeしたaria属性が復元されなくなる。
-// 分岐を最上位に置くことで、再マウント時にそのcallbackRefも再実行されるようにしている。
-export const Fieldset: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
-  const Component = autoBindErrorInput ? AutoBindErrorFieldset : ActualFieldset
+export const Fieldset: FC<Props> = (props) => {
+  const actualProps = useFieldsetProps(props)
 
-  return <Component {...rest} />
-}
-
-const AutoBindErrorFieldset: FC<LowerProps> = (props) => {
-  const { wrapperRef, wrapperCallbackRef, visibleErrorMessages, ...rest } = useFieldsetProps(props)
-
-  useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
-
-  return (
-    <FormGroup
-      {...rest}
-      wrapperRef={wrapperCallbackRef}
-      visibleErrorMessages={visibleErrorMessages}
-    />
-  )
-}
-
-const ActualFieldset: FC<LowerProps> = (props) => {
-  const { wrapperCallbackRef, ...rest } = useFieldsetProps(props)
-
-  return <FormGroup {...rest} wrapperRef={wrapperCallbackRef} />
+  return <FormGroup {...actualProps} />
 }
 
 const useFieldsetProps = ({
@@ -78,8 +53,9 @@ const useFieldsetProps = ({
   supplementaryMessage,
   innerMargin,
   className,
+  autoBindErrorInput = true,
   ...rest
-}: LowerProps) => {
+}: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
@@ -104,7 +80,7 @@ const useFieldsetProps = ({
     id: baseLegend.id || `${baseId}-legend`,
   }
 
-  const { describedbyIds, visibleErrorMessages, ...describedByIdsRest } = useDescribedByIds({
+  const { describedbyIds, ...describedByIdsRest } = useDescribedByIds({
     wrapperRef,
     htmlFor: legend.htmlFor,
     errorMessages: orgErrorMessages,
@@ -169,21 +145,24 @@ const useFieldsetProps = ({
     return () => observer.disconnect()
   }, [])
 
-  const wrapperCallbackRef = useMergeRefs(callbackRef, wrapperRef)
+  const wrapperCallbackRef = useMergeRefs(
+    wrapperRef,
+    callbackRef,
+    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+  )
 
   return {
     ...rest,
     ...describedByIdsRest,
-    visibleErrorMessages,
     as: 'fieldset',
-    wrapperRef,
-    wrapperCallbackRef,
+    wrapperRef: wrapperCallbackRef,
     label: legend,
     helpMessage,
     exampleMessage,
     supplementaryMessage,
     classNames,
     LabelComponent,
+    autoBindErrorInput,
     innerMargin,
     'aria-describedby': describedbyIds || undefined,
   }
