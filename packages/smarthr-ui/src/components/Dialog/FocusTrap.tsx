@@ -16,6 +16,12 @@ type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
   /** ラッパー要素に付与する className。省略時は class 無しの div を描画する */
   className?: string
+  /**
+   * Tab をこの中で循環させるかどうか。既定は true。
+   * false にすると循環だけを止め、マウント時のフォーカス移動と
+   * アンマウント時のフォーカス復帰は行う（非モーダルなダイアログ向け）。
+   */
+  trapFocus?: boolean
 }>
 
 export type FocusTrapRef = {
@@ -26,7 +32,7 @@ const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
 const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(
-  ({ firstFocusTarget, className, children }, ref) => {
+  ({ firstFocusTarget, className, trapFocus = true, children }, ref) => {
     // TODO: innerRefを削除して、functionsのuseMemoの中にletで変数としてnodeの参照を持つことを検討
     const innerRef = useRef<HTMLDivElement | null>(null)
 
@@ -78,7 +84,9 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(
             }
           }
 
-          window.addEventListener('keydown', handleKeyDown)
+          if (trapFocus) {
+            window.addEventListener('keydown', handleKeyDown)
+          }
 
           // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
           // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
@@ -93,7 +101,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(
         },
         focus,
       }
-    }, [firstFocusTarget])
+    }, [firstFocusTarget, trapFocus])
 
     // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
     // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
