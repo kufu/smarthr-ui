@@ -22,9 +22,9 @@ type Props = CommonProps & {
 }
 
 export const FormControl: FC<Props> = (props) => {
-  const { wrapperCallbackRef, ...rest } = useFormControlProps(props)
+  const actualProps = useFormControlProps(props)
 
-  return <FormGroup {...rest} wrapperRef={wrapperCallbackRef} />
+  return <FormGroup {...actualProps} />
 }
 
 const useFormControlProps = ({
@@ -119,8 +119,7 @@ const useFormControlProps = ({
   return {
     ...rest,
     ...describedByIdsRest,
-    wrapperRef,
-    wrapperCallbackRef,
+    wrapperRef: wrapperCallbackRef,
     label,
     helpMessage,
     exampleMessage,

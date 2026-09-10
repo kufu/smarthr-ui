@@ -40,9 +40,9 @@ type Props = CommonProps & {
 }
 
 export const Fieldset: FC<Props> = (props) => {
-  const { wrapperCallbackRef, ...rest } = useFieldsetProps(props)
+  const actualProps = useFieldsetProps(props)
 
-  return <FormGroup {...rest} wrapperRef={wrapperCallbackRef} />
+  return <FormGroup {...actualProps} />
 }
 
 const useFieldsetProps = ({
@@ -155,8 +155,7 @@ const useFieldsetProps = ({
     ...rest,
     ...describedByIdsRest,
     as: 'fieldset',
-    wrapperRef,
-    wrapperCallbackRef,
+    wrapperRef: wrapperCallbackRef,
     label: legend,
     helpMessage,
     exampleMessage,
