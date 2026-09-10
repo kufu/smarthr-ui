@@ -2,7 +2,7 @@ import { Button } from '../../../Button'
 import { MessageDialog } from '../MessageDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /** props は [MessageDialog](./?path=/docs/dialog（ダイアログ）-dialog-messagedialog--docs) を参照してください。 */
 export default {

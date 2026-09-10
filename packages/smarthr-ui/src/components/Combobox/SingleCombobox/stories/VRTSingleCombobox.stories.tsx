@@ -5,7 +5,7 @@ import { SingleCombobox } from '../SingleCombobox'
 
 import { defaultItems, prefixes } from './SingleCombobox.stories'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /* pict singleCombobox.pict
  * disabled        error   width   prefix  selectedItem

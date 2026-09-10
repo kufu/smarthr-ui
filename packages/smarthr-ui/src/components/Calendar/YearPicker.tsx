@@ -1,3 +1,5 @@
+'use client'
+
 import { type ComponentProps, type FC, type MouseEvent, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 

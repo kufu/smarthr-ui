@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Switch } from '../Switch'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 /**

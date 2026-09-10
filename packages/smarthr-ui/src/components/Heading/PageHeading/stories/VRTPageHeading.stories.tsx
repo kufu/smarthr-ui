@@ -1,7 +1,7 @@
 import { Stack } from '../../../Layout'
 import { PageHeading } from '../PageHeading'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Heading/PageHeading/VRT',

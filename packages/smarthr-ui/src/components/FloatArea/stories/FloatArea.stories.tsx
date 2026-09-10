@@ -4,7 +4,7 @@ import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _primaryButtonOptions = {
   'あり（省略不可）': <Button variant="primary">プライマリーボタン</Button>,

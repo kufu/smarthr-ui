@@ -7,7 +7,7 @@ import { STYLE_TYPE_MAP } from '../../Text'
 import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export const _childrenOptions = {
   radio: (

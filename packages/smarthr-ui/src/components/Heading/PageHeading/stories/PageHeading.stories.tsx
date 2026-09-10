@@ -1,7 +1,7 @@
 import { Stack } from '../../../Layout'
 import { PageHeading } from '../PageHeading'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'
 
 export default {

@@ -3,7 +3,7 @@ import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/FloatArea/VRT',

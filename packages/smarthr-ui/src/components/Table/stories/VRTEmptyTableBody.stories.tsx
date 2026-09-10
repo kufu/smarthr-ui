@@ -2,7 +2,7 @@ import { Table } from '../Table'
 import { Th } from '../Th'
 import { EmptyTableBody } from '../client'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Table/EmptyTableBody/VRT',
