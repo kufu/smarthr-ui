@@ -142,10 +142,26 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     return ariaLabelledby ?? autoHeadingId
   }, [ariaLabel, ariaLabelledby, autoHeadingId])
 
+  const latest = useLatest({ isOpen, onPressEscape, onClickClose })
+
+  const functions = useMemo(
+    () => ({
+      handlePressEscape: () => {
+        if (latest.isOpen) {
+          latest.onPressEscape?.()
+        }
+      },
+      handleClickClose: () => {
+        latest.onClickClose?.()
+      },
+    }),
+    [latest],
+  )
+
   const drag = useDrawerDrag({
     targetRef: innerRef,
     isOpen,
-    onClose: onClickClose,
+    onClose: functions.handleClickClose,
   })
 
   const classNames = useMemo(() => {
@@ -217,24 +233,17 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     [entered],
   )
 
-  const latest = useLatest({ isOpen, onPressEscape })
-
-  const functions = useMemo(
-    () => ({
-      handlePressEscape: () => {
-        if (latest.isOpen) {
-          latest.onPressEscape?.()
-        }
-      },
-    }),
-    [latest],
-  )
-
   const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
   useBodyScrollLock(isOpen && modality === 'modal')
 
-  const handleClickCloseSafe = useMemo(() => onClickClose ?? (() => undefined), [onClickClose])
+  // ドラッグ中は毎フレーム再レンダーされるため、Context の値を作り直すと
+  // DrawerHeader（Button / Heading / Text / Icon）まで巻き込んで再描画される
+  const contentContextValue = useMemo(
+    () => ({ handleClickClose: functions.handleClickClose }),
+    [functions],
+  )
+  const headingContextValue = useMemo(() => ({ headingId: autoHeadingId }), [autoHeadingId])
 
   if (!shouldMount) return null
 
@@ -251,8 +260,8 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     </div>
   )
   const drawerBody = (
-    <DrawerContentContext.Provider value={{ handleClickClose: handleClickCloseSafe }}>
-      <DrawerHeadingContext.Provider value={{ headingId: autoHeadingId }}>
+    <DrawerContentContext.Provider value={contentContextValue}>
+      <DrawerHeadingContext.Provider value={headingContextValue}>
         {position === 'bottom' && handleElement}
         {children}
       </DrawerHeadingContext.Provider>

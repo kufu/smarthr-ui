@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { type FC, useRef, useState } from 'react'
+import { type FC, Profiler, useRef, useState } from 'react'
 
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
@@ -369,6 +369,39 @@ describe('Drawer ドラッグハンドル', () => {
     await waitFor(() => {
       expect(dialog.style.transform).toBe('translateY(0)')
     })
+  })
+
+  // Context の値を毎レンダー作り直すと、ドラッグ中（毎フレーム再レンダー）に
+  // DrawerHeader（Button / Heading / Text / Icon）まで再描画されてしまう
+  it('ドラッグ中に DrawerHeader が再レンダーされないこと', async () => {
+    let renderCount = 0
+    renderWithIntl(
+      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={() => undefined}>
+        <Profiler
+          id="header"
+          onRender={() => {
+            renderCount += 1
+          }}
+        >
+          <DrawerHeader title="タイトル" />
+        </Profiler>
+        <DrawerBody>
+          <p>body</p>
+        </DrawerBody>
+      </Drawer>,
+    )
+    const dialog = stubPanelHeight(400)
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+
+    renderCount = 0
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: 1000 })
+    for (let i = 1; i <= 5; i++) {
+      fireEvent.pointerMove(handle, { pointerId: 1, clientY: i * 10, timeStamp: 1000 + i * 16 })
+    }
+
+    // ドラッグ位置は反映されている（＝再レンダーは起きている）
+    expect(dialog.style.transform).toBe('translateY(50px)')
+    expect(renderCount).toBe(0)
   })
 
   it('横方向（right）では grabber を描画しないこと', async () => {
