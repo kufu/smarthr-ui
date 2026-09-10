@@ -6,10 +6,15 @@ import { DrawerHeader } from '../DrawerHeader'
 
 import { IsOpen } from './Drawer.stories'
 
+import type { DrawerSize } from '../drawerSize'
+import type { DrawerPosition } from '../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Drawer/VRT',
+  args: {
+    isOpen: true,
+  },
   parameters: {
     chromatic: { disableSnapshot: false },
   },
@@ -59,6 +64,48 @@ export const ModelessRight: StoryObj<typeof Drawer> = {
   render: () => (
     <Drawer isOpen modality="modeless" position="right">
       {drawerChildren(() => {})}
+    </Drawer>
+  ),
+}
+
+const SIZES: DrawerSize[] = ['S', 'M', 'L', 'FULL']
+
+const sizeStory = (
+  size: DrawerSize,
+  position: DrawerPosition = 'right',
+): StoryObj<typeof Drawer> => ({
+  name: `size: ${size}`,
+  render: () => (
+    <Drawer isOpen position={position} size={size}>
+      {drawerChildren(() => {})}
+    </Drawer>
+  ),
+})
+
+export const SizeS = sizeStory(SIZES[0])
+export const SizeM = sizeStory(SIZES[1])
+export const SizeL = sizeStory(SIZES[2])
+export const SizeFull = sizeStory(SIZES[3])
+
+/**
+ * modal では children が FocusTrap に包まれる。ここでボックスが挟まると
+ * DrawerBody がスクロールせず、DrawerFooter がパネル外へ押し出される。
+ * jsdom はレイアウトしないため、この崩れを捕まえられるのは VRT だけ。
+ */
+export const BottomLongContent: StoryObj<typeof Drawer> = {
+  name: 'bottom / 長いコンテンツ（既定の modality）',
+  render: () => (
+    <Drawer isOpen position="bottom">
+      <DrawerHeader subtitle="サブタイトル" title="ドロワータイトル" />
+      <DrawerBody>
+        {Array.from({ length: 40 }, (_, i) => (
+          <p key={i}>行 {i + 1}：ドロワーの長いコンテンツです。</p>
+        ))}
+      </DrawerBody>
+      <DrawerFooter>
+        <Button>キャンセル</Button>
+        <Button variant="primary">保存</Button>
+      </DrawerFooter>
     </Drawer>
   ),
 }
