@@ -14,6 +14,8 @@ import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
+  /** ラッパー要素に付与する className。省略時は class 無しの div を描画する */
+  className?: string
 }>
 
 export type FocusTrapRef = {
@@ -23,87 +25,90 @@ export type FocusTrapRef = {
 const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
 const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
-export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
-  // TODO: innerRefを削除して、functionsのuseMemoの中にletで変数としてnodeの参照を持つことを検討
-  const innerRef = useRef<HTMLDivElement | null>(null)
+export const FocusTrap = forwardRef<FocusTrapRef, Props>(
+  ({ firstFocusTarget, className, children }, ref) => {
+    // TODO: innerRefを削除して、functionsのuseMemoの中にletで変数としてnodeの参照を持つことを検討
+    const innerRef = useRef<HTMLDivElement | null>(null)
 
-  const functions = useMemo(() => {
-    const findDummyFocus = () => innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
+    const functions = useMemo(() => {
+      const findDummyFocus = () =>
+        innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
-    const focus = () => {
-      ;(firstFocusTarget?.current || findDummyFocus())?.focus()
-    }
+      const focus = () => {
+        ;(firstFocusTarget?.current || findDummyFocus())?.focus()
+      }
 
-    return {
-      callbackRef: (node: HTMLDivElement | null) => {
-        if (!node) {
-          return
-        }
-
-        // FocusTrap がマウントされた時点のフォーカス要素を保存
-        const triggerElement = document.activeElement
-
-        const rAFId = requestAnimationFrame(focus)
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-          // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
-          // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
-          // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
-          if (e.key !== 'Tab' || e.isComposing) {
+      return {
+        callbackRef: (node: HTMLDivElement | null) => {
+          if (!node) {
             return
           }
 
-          const tabbables = tabbable(node).filter((elm) => elm.tabIndex >= 0)
+          // FocusTrap がマウントされた時点のフォーカス要素を保存
+          const triggerElement = document.activeElement
 
-          if (tabbables.length === 0) {
-            return
-          }
+          const rAFId = requestAnimationFrame(focus)
 
-          const firstTabbable = tabbables[0]
-          const lastTabbable = tabbables[tabbables.length - 1]
-          const currentFocused = tabbables.find((elm) => elm === e.target)
-
-          if (e.shiftKey) {
-            if (currentFocused === firstTabbable || document.activeElement === findDummyFocus()) {
-              e.preventDefault()
-              lastTabbable.focus()
+          const handleKeyDown = (e: KeyboardEvent) => {
+            // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
+            // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
+            // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
+            if (e.key !== 'Tab' || e.isComposing) {
+              return
             }
-          } else if (currentFocused === lastTabbable) {
-            e.preventDefault()
-            firstTabbable.focus()
+
+            const tabbables = tabbable(node).filter((elm) => elm.tabIndex >= 0)
+
+            if (tabbables.length === 0) {
+              return
+            }
+
+            const firstTabbable = tabbables[0]
+            const lastTabbable = tabbables[tabbables.length - 1]
+            const currentFocused = tabbables.find((elm) => elm === e.target)
+
+            if (e.shiftKey) {
+              if (currentFocused === firstTabbable || document.activeElement === findDummyFocus()) {
+                e.preventDefault()
+                lastTabbable.focus()
+              }
+            } else if (currentFocused === lastTabbable) {
+              e.preventDefault()
+              firstTabbable.focus()
+            }
           }
-        }
 
-        window.addEventListener('keydown', handleKeyDown)
+          window.addEventListener('keydown', handleKeyDown)
 
-        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-        return () => {
-          cancelAnimationFrame(rAFId)
-          window.removeEventListener('keydown', handleKeyDown)
+          // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+          // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+          return () => {
+            cancelAnimationFrame(rAFId)
+            window.removeEventListener('keydown', handleKeyDown)
 
-          if (triggerElement instanceof HTMLElement) {
-            triggerElement.focus()
+            if (triggerElement instanceof HTMLElement) {
+              triggerElement.focus()
+            }
           }
-        }
-      },
-      focus,
-    }
-  }, [firstFocusTarget])
+        },
+        focus,
+      }
+    }, [firstFocusTarget])
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(innerRef, functions.callbackRef)
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(innerRef, functions.callbackRef)
 
-  useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
+    useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
 
-  return (
-    <div ref={mergedRef}>
-      {!firstFocusTarget && (
-        /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
-        <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
-      )}
-      {children}
-    </div>
-  )
-})
+    return (
+      <div ref={mergedRef} className={className}>
+        {!firstFocusTarget && (
+          /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
+          <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
+        )}
+        {children}
+      </div>
+    )
+  },
+)

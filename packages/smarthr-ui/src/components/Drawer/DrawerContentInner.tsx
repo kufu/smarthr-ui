@@ -61,6 +61,10 @@ const classNameGenerator = tv({
       'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-items-center shr-justify-center',
     ],
     handleBar: ['shr-h-0.25 shr-w-[2.5rem] shr-rounded-full shr-bg-border'],
+    // FocusTrap が挟む div をボックス化させないための display:contents。
+    // これが無いと modal のときだけ inner の flex コンテキストが途切れ、
+    // DrawerBody / DrawerFooter が flex アイテムでなくなる。
+    focusTrap: 'shr-contents',
   },
   variants: {
     position: {
@@ -144,7 +148,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   })
 
   const classNames = useMemo(() => {
-    const { layout, overlay, inner, handleArea, handleBar } = classNameGenerator()
+    const { layout, overlay, inner, handleArea, handleBar, focusTrap } = classNameGenerator()
     const appliedSize = position === 'bottom' ? undefined : size
     const layoutPosition = modality === 'modeless' && hasPortalParent ? 'absolute' : 'fixed'
     return {
@@ -153,6 +157,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
       inner: inner({ position, size: appliedSize, modality, className }),
       handleArea: handleArea(),
       handleBar: handleBar(),
+      focusTrap: focusTrap(),
     }
   }, [position, size, modality, hasPortalParent, className])
 
@@ -273,7 +278,11 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
         aria-labelledby={resolvedLabelledby}
       >
         {modality === 'modal' ? (
-          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+          <FocusTrap
+            ref={focusTrapRef}
+            firstFocusTarget={firstFocusTarget}
+            className={classNames.focusTrap}
+          >
             {drawerBody}
           </FocusTrap>
         ) : (

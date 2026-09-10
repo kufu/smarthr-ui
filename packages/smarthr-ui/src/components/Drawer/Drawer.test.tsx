@@ -103,6 +103,34 @@ describe('Drawer（Controlled）', () => {
     const dialog = screen.getByRole('dialog', { name: 'テストドロワー' })
     expect(dialog).toHaveAttribute('aria-modal', 'true')
   })
+
+  // FocusTrap が挟む div がボックスを作ると、dialog の flex コンテキストが途切れて
+  // DrawerBody のスクロールと DrawerFooter の固定が効かなくなる。
+  it('dialog と body/footer の間に挟まる要素がボックスを作らないこと', async () => {
+    renderWithIntl(
+      <Drawer isOpen ariaLabel="レイアウト検証">
+        <DrawerHeader title="タイトル" />
+        <DrawerBody>
+          <p>body</p>
+        </DrawerBody>
+        <DrawerFooter>
+          <Button>footer button</Button>
+        </DrawerFooter>
+      </Drawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'レイアウト検証' })
+    const body = dialog.querySelector('.smarthr-ui-Drawer-body') as HTMLElement
+    const footer = dialog.querySelector('.smarthr-ui-Drawer-footer') as HTMLElement
+    expect(body).toBeTruthy()
+    expect(footer).toBeTruthy()
+
+    for (const target of [body, footer]) {
+      for (let el = target.parentElement; el && el !== dialog; el = el.parentElement) {
+        expect(el).toHaveClass('shr-contents')
+      }
+    }
+  })
 })
 
 describe('Drawer（Uncontrolled）', () => {
