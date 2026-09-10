@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useRef, useState } from 'react'
 
@@ -37,6 +37,26 @@ if (typeof PointerEvent === 'undefined') {
 
 const renderWithIntl = (ui: React.ReactElement) =>
   render(<IntlProvider locale="ja">{ui}</IntlProvider>)
+
+// jsdom はレイアウトしないため getBoundingClientRect が常に 0 を返す。
+// swipe-to-dismiss はパネルの実測高を閾値の基準にするので、明示的に与える。
+const stubPanelHeight = (height: number) => {
+  const dialog = screen.getByRole('dialog')
+
+  vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue({
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    right: 390,
+    bottom: height,
+    width: 390,
+    height,
+    toJSON: () => ({}),
+  })
+
+  return dialog
+}
 
 const ControlledTemplate: FC<{ position?: DrawerPosition }> = ({ position }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -251,43 +271,104 @@ describe('Drawer ドラッグハンドル', () => {
     renderWithIntl(<VerticalTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
 
-    const handle = document.querySelector('.smarthr-ui-Drawer-handle')
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
     expect(handle).toHaveAttribute('aria-hidden', 'true')
-    expect(screen.queryByRole('button', { name: 'ドロワーの大きさ' })).toBeNull()
+    // aria-hidden 配下も含めて（hidden: true）、grabber は操作可能な要素を持たない
+    expect(within(handle).queryAllByRole('button', { hidden: true })).toHaveLength(0)
   })
 
-  it('grabber を下にドラッグすると onClickClose が呼ばれること', async () => {
-    const onClickClose = vi.fn()
+  const renderBottomDrawer = (onClickClose: () => void = vi.fn()) => {
     renderWithIntl(
       <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={onClickClose}>
         <p>bottom content</p>
       </Drawer>,
     )
 
-    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+    return {
+      onClickClose,
+      handle: document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement,
+    }
+  }
 
-    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: 0 })
-    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 500, timeStamp: 200 })
-    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 500, timeStamp: 200 })
+  // React の SyntheticEvent は timeStamp が falsy だと Date.now() で埋めるため、
+  // 0 は使わずに必ず正の値を渡す。
+  const DOWN_AT = 1000
+
+  const dragHandle = (
+    handle: HTMLElement,
+    { to, moveAt = DOWN_AT + 200, upAt = moveAt }: { to: number; moveAt?: number; upAt?: number },
+  ) => {
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: to, timeStamp: moveAt })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: to, timeStamp: upAt })
+  }
+
+  it('grabber を下にドラッグすると onClickClose が呼ばれること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    dragHandle(handle, { to: 300 })
 
     expect(onClickClose).toHaveBeenCalled()
   })
 
   it('grabber を少しだけドラッグしても閉じないこと', async () => {
-    const onClickClose = vi.fn()
-    renderWithIntl(
-      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={onClickClose}>
-        <p>bottom content</p>
-      </Drawer>,
-    )
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
 
-    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
-
-    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: 0 })
-    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 40, timeStamp: 200 })
-    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 40, timeStamp: 200 })
+    dragHandle(handle, { to: 40 })
 
     expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  // 閾値をビューポート高の初期値に固定していると、回転やリサイズ後のパネルでは
+  // ドラッグ量の割合が合わなくなる。掴んだ時点のパネル実測高を基準にする。
+  it('閉じ判定がパネルの実測高を基準にすること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    // window.innerHeight (jsdom は 768) より十分小さいパネル。
+    // 250px は実測高 300 の 83% だが、768 基準なら 33% にしかならない
+    stubPanelHeight(300)
+
+    // 1000ms かけてゆっくり動かし、フリック判定ではなく位置判定に載せる
+    dragHandle(handle, { to: 250, moveAt: DOWN_AT + 1000 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  it('勢いよく動かしても静止してから離せばフリック扱いしないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    // 10ms で 20px（= 2px/ms）動かしたあと 190ms 静止してから離す
+    dragHandle(handle, { to: 20, moveAt: DOWN_AT + 10, upAt: DOWN_AT + 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('勢いよく動かしてすぐ離せばフリックとして閉じること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    dragHandle(handle, { to: 20, moveAt: DOWN_AT + 10 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  // onClickClose を受けても isOpen を落とさない利用者（確認ダイアログを挟む等）がいるため、
+  // 閉じ位置へ送りっぱなしにすると画面外で操作不能になる
+  it('スワイプで閉じたあと isOpen が true のままなら開き位置へ戻ること', async () => {
+    const { handle } = renderBottomDrawer(() => undefined)
+    const dialog = stubPanelHeight(400)
+    await waitFor(() => {
+      expect(dialog.style.transform).toBe('translateY(0)')
+    })
+
+    dragHandle(handle, { to: 300 })
+    expect(dialog.style.transform).toBe('translateY(400px)')
+
+    await waitFor(() => {
+      expect(dialog.style.transform).toBe('translateY(0)')
+    })
   })
 
   it('横方向（right）では grabber を描画しないこと', async () => {

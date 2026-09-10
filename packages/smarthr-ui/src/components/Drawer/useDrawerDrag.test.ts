@@ -1,4 +1,4 @@
-import { resolveDragEnd } from './useDrawerDrag'
+import { decayVelocity, resolveDragEnd } from './useDrawerDrag'
 
 describe('resolveDragEnd', () => {
   const fullSize = 800
@@ -31,5 +31,20 @@ describe('resolveDragEnd', () => {
     expect(
       resolveDragEnd({ fullSize, currentSize: 380, velocity: 2.0, closeThreshold: 0.5 }),
     ).toEqual({ type: 'open' })
+  })
+})
+
+describe('decayVelocity', () => {
+  it('動かした直後に離せば観測した速度をそのまま使う', () => {
+    expect(decayVelocity({ velocity: -2, idleMs: 0, decayMs: 100 })).toBe(-2)
+  })
+
+  it('減衰時間の途中で離せば速度が比例して弱まる', () => {
+    expect(decayVelocity({ velocity: -2, idleMs: 50, decayMs: 100 })).toBe(-1)
+  })
+
+  it('減衰時間を過ぎて静止していれば速度は 0 になる', () => {
+    expect(decayVelocity({ velocity: -2, idleMs: 100, decayMs: 100 })).toBe(-0)
+    expect(decayVelocity({ velocity: -2, idleMs: 400, decayMs: 100 })).toBe(-0)
   })
 })

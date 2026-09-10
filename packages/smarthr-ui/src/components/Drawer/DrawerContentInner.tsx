@@ -19,6 +19,7 @@ import { FocusTrap, type FocusTrapRef, useBodyScrollLock } from '../Dialog'
 import { DrawerContentContext } from './DrawerContentContext'
 import { DrawerHeadingContext } from './DrawerHeadingContext'
 import { drawerSize } from './drawerSize'
+import { DRAWER_TRANSITION_DURATION } from './drawerTransition'
 import { useDrawerDrag } from './useDrawerDrag'
 
 import type {
@@ -38,13 +39,11 @@ export type DrawerContentInnerProps = DrawerCommonProps &
     hasPortalParent?: boolean
   }
 
-const TRANSITION_DURATION = 400
-
-// スライド／フェードは RTG の遷移状態（entering/entered/exiting）を見て inline style で当てる。
+// スライド／フェードは shouldMount / entered の状態を見て inline style で当てる。
 // （Tailwind の子孫セレクタ方式は確実に効かなかったため、transform/opacity は JS 側で制御する）
 const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
-const TRANSITION_TRANSFORM = `transform ${TRANSITION_DURATION}ms ${EASING}`
-const TRANSITION_OPACITY = `opacity ${TRANSITION_DURATION}ms ${EASING}`
+const TRANSITION_TRANSFORM = `transform ${DRAWER_TRANSITION_DURATION}ms ${EASING}`
+const TRANSITION_OPACITY = `opacity ${DRAWER_TRANSITION_DURATION}ms ${EASING}`
 
 const classNameGenerator = tv({
   slots: {
@@ -103,9 +102,6 @@ const closedTransform: Record<DrawerPosition, string> = {
   bottom: 'translateY(100%)',
 }
 
-// tv の bottom / left/right に入れている calc() の減算値（spacing.1 = 16px）と対にする
-const DRAWER_VIEWPORT_GAP = 16
-
 export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   position = 'right',
   size,
@@ -133,16 +129,8 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     return ariaLabelledby ?? autoHeadingId
   }, [ariaLabel, ariaLabelledby, autoHeadingId])
 
-  // bottom のパネル高は CSS 側で calc(100dvh - spacing.1) に固定している。
-  // swipe-to-dismiss の閉じ判定に使う全開サイズをそこから求める。
-  const fullSize = useMemo(
-    () => (typeof window === 'undefined' ? 0 : window.innerHeight - DRAWER_VIEWPORT_GAP),
-    [],
-  )
-
   const drag = useDrawerDrag({
-    position,
-    fullSize,
+    targetRef: innerRef,
     isOpen,
     onClose: onClickClose,
   })
@@ -167,7 +155,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     return `translateY(${drag.translateOffset}px)`
   }, [position, drag.translateOffset])
 
-  // 自前のマウント＋アニメーション制御（RTG の state 遷移が不安定だったため）。
+  // 自前のマウント＋アニメーション制御（react-transition-group は使っていない）。
   // shouldMount: DOM に存在させるか。entered: 開き位置へスライドさせるか（false=閉じ位置）。
   const [shouldMount, setShouldMount] = useState(isOpen)
   const [entered, setEntered] = useState(false)
@@ -194,7 +182,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
 
     // 閉じる: 開き位置→閉じ位置へ補間し、アニメ完了後にアンマウント
     setEntered(false)
-    closeTimerRef.current = setTimeout(() => setShouldMount(false), TRANSITION_DURATION)
+    closeTimerRef.current = setTimeout(() => setShouldMount(false), DRAWER_TRANSITION_DURATION)
     return () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
     }
