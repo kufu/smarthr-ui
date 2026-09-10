@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type ComponentProps,
   type ComponentType,
@@ -5,53 +7,48 @@ import {
   type PropsWithChildren,
   type Ref,
   useMemo,
+  useRef,
 } from 'react'
 
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
-import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
-import type { useDescribedByIds } from './useDescribedByIds'
+import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
+import { useDescribedByIds } from './useDescribedByIds'
 
-// HINT: errorMessagesを含む各idはuseDescribedByIdsで、classNamesは各コンポーネントで
-// 算出済みの値を受け取る
-// autoBindErrorInputはdata-auto-bind-error-input属性としてwrapper要素に反映するため受け取る
-type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
-  Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
-    wrapperRef: Ref<HTMLDivElement>
-    /** グループのラベル名 */
-    label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
-      Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
-    as?: string | ComponentType<any>
-    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
-    disabled?: boolean
-    LabelComponent: FC<LabelComponentProps>
-    classNames: {
-      wrapper: string
-      childrenWrapper: string
-    }
+import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
+
+// HINT: errorMessagesを含む各idはuseDescribedByIdsで算出する
+type Props = Omit<CommonProps, 'className'> & {
+  callbackRef: Ref<HTMLElement>
+  /** グループのラベル名 */
+  label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
+  as?: string | ComponentType<any>
+  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+  disabled?: boolean
+  LabelComponent: FC<LabelComponentProps>
+  classNames: {
+    wrapper: string
+    childrenWrapper: string
   }
+}
 
 export const FormGroup: FC<Props> = ({
-  wrapperRef,
+  callbackRef,
   label,
   subActionArea,
   innerMargin,
   statusLabels,
   helpMessage,
   exampleMessage,
-  errorMessages,
+  errorMessages: orgErrorMessages,
   supplementaryMessage,
   as = 'div',
   children,
   classNames,
   LabelComponent,
-  visibleErrorMessages,
-  helpMessageId,
-  exampleMessageId,
-  supplementaryMessageId,
-  errorMessagesId,
   autoBindErrorInput = true,
   ...rest
 }) => {
@@ -62,13 +59,39 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  const {
+    errorMessages,
+    visibleErrorMessages,
+    helpMessageId,
+    exampleMessageId,
+    supplementaryMessageId,
+    errorMessagesId,
+    describedbyIds,
+  } = useDescribedByIds({
+    wrapperRef,
+    htmlFor: label.htmlFor,
+    errorMessages: orgErrorMessages,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+  })
+
+  const wrapperCallbackRef = useMergeRefs(
+    wrapperRef,
+    callbackRef,
+    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+  )
+
   return (
     <Stack
       {...rest}
       as={as}
-      ref={wrapperRef}
+      ref={wrapperCallbackRef}
       gap={innerMargin ?? 0.5}
       className={classNames.wrapper}
+      aria-describedby={as === 'fieldset' ? describedbyIds || undefined : undefined}
       data-auto-bind-error-input={autoBindErrorInput ? visibleErrorMessages.toString() : undefined}
     >
       <LabelComponent

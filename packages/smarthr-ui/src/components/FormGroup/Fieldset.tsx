@@ -1,18 +1,13 @@
-'use client'
-
-import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useRef } from 'react'
+import { type FC, type ReactNode, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
-import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
-import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -45,18 +40,7 @@ export const Fieldset: FC<Props> = (props) => {
   return <FormGroup {...actualProps} />
 }
 
-const useFieldsetProps = ({
-  legend: orgLegend,
-  errorMessages: orgErrorMessages,
-  helpMessage,
-  exampleMessage,
-  supplementaryMessage,
-  innerMargin,
-  className,
-  autoBindErrorInput = true,
-  ...rest
-}: Props) => {
-  const wrapperRef = useRef<HTMLDivElement>(null)
+const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }: Props) => {
   const baseId = useId()
 
   const classNames = useMemo(() => {
@@ -79,15 +63,6 @@ const useFieldsetProps = ({
     htmlFor: `${baseId}-htmlFor`,
     id: baseLegend.id || `${baseId}-legend`,
   }
-
-  const { describedbyIds, ...describedByIdsRest } = useDescribedByIds({
-    wrapperRef,
-    htmlFor: legend.htmlFor,
-    errorMessages: orgErrorMessages,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
-  })
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
@@ -145,26 +120,14 @@ const useFieldsetProps = ({
     return () => observer.disconnect()
   }, [])
 
-  const wrapperCallbackRef = useMergeRefs(
-    wrapperRef,
-    callbackRef,
-    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
-  )
-
   return {
     ...rest,
-    ...describedByIdsRest,
     as: 'fieldset',
-    wrapperRef: wrapperCallbackRef,
+    callbackRef,
     label: legend,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
     classNames,
     LabelComponent,
-    autoBindErrorInput,
     innerMargin,
-    'aria-describedby': describedbyIds || undefined,
   }
 }
 
