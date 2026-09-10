@@ -530,3 +530,27 @@ describe('Drawer size', () => {
     expect(dialog).toHaveClass('shr-w-full')
   })
 })
+
+describe('Drawer あふれ防止', () => {
+  it('left/right にビューポート幅の max ガードが当たること', () => {
+    renderWithIntl(
+      <Drawer isOpen position="right" size="L" ariaLabel="右ドロワー">
+        <p>content</p>
+      </Drawer>,
+    )
+    expect(screen.getByRole('dialog', { name: '右ドロワー' })).toHaveClass(
+      'shr-max-w-[calc(100dvw-theme(spacing.1))]',
+    )
+  })
+
+  it('bottom の高さがコンテンツによらず固定されること', () => {
+    renderWithIntl(
+      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー">
+        <p>content</p>
+      </Drawer>,
+    )
+    expect(screen.getByRole('dialog', { name: 'ボトムドロワー' })).toHaveClass(
+      'shr-h-[calc(100dvh-theme(spacing.1))]',
+    )
+  })
+})

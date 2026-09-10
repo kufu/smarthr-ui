@@ -64,9 +64,16 @@ const classNameGenerator = tv({
   },
   variants: {
     position: {
-      right: { inner: 'shr-inset-y-0 shr-right-0 shr-h-full' },
-      left: { inner: 'shr-inset-y-0 shr-left-0 shr-h-full' },
-      bottom: { inner: 'shr-inset-x-0 shr-bottom-0 shr-max-h-full shr-w-full shr-rounded-t-l' },
+      right: {
+        inner: 'shr-inset-y-0 shr-right-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.1))]',
+      },
+      left: {
+        inner: 'shr-inset-y-0 shr-left-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.1))]',
+      },
+      bottom: {
+        inner:
+          'shr-inset-x-0 shr-bottom-0 shr-h-[calc(100dvh-theme(spacing.1))] shr-w-full shr-rounded-t-l',
+      },
     },
     size: {
       S: { inner: drawerSize.S },
