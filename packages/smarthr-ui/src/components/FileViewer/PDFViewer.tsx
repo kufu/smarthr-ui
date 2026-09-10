@@ -183,6 +183,11 @@ export const PDFViewer: FC<Props> = memo(
           // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
           // cMapUrl: '/cmaps/',
           cMapUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/cmaps/`,
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // JPEG 2000画像を含むPDFのデコードに必要
+          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-jpeg-2000
+          // wasmUrl: '/wasm/',
+          wasmUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/wasm/`,
         }) satisfies DocumentProps['options'],
       [reactPDFModule],
     )
