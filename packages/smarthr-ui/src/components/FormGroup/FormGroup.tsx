@@ -3,7 +3,7 @@ import {
   type ComponentType,
   type FC,
   type PropsWithChildren,
-  type RefObject,
+  type Ref,
   useMemo,
 } from 'react'
 
@@ -19,7 +19,7 @@ import type { useDescribedByIds } from './useDescribedByIds'
 // autoBindErrorInputによる分岐はFormControl・Fieldset側で行うため、ここでは受け取らない
 type Props = Omit<CommonProps, 'errorMessages' | 'className' | 'autoBindErrorInput'> &
   Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
-    wrapperRef: RefObject<HTMLDivElement>
+    wrapperRef: Ref<HTMLDivElement>
     /** グループのラベル名 */
     label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
       Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>

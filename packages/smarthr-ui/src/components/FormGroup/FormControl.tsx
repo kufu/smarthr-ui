@@ -1,7 +1,8 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useRef, useState } from 'react'
 
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -33,17 +34,24 @@ export const FormControl: FC<Props> = ({ autoBindErrorInput = true, ...rest }) =
 }
 
 const AutoBindErrorFormControl: FC<LowerProps> = (props) => {
-  const { wrapperRef, visibleErrorMessages, ...rest } = useFormControlProps(props)
+  const { wrapperRef, wrapperCallbackRef, visibleErrorMessages, ...rest } =
+    useFormControlProps(props)
 
   useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
 
-  return <FormGroup {...rest} wrapperRef={wrapperRef} visibleErrorMessages={visibleErrorMessages} />
+  return (
+    <FormGroup
+      {...rest}
+      wrapperRef={wrapperCallbackRef}
+      visibleErrorMessages={visibleErrorMessages}
+    />
+  )
 }
 
 const ActualFormControl: FC<LowerProps> = (props) => {
-  const actualProps = useFormControlProps(props)
+  const { wrapperCallbackRef, ...rest } = useFormControlProps(props)
 
-  return <FormGroup {...actualProps} />
+  return <FormGroup {...rest} wrapperRef={wrapperCallbackRef} />
 }
 
 const useFormControlProps = ({
@@ -87,43 +95,54 @@ const useFormControlProps = ({
     supplementaryMessage,
   })
 
-  useEffect(() => {
-    if (
-      !wrapperRef.current ||
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      document.getElementById(label.htmlFor)
-    ) {
-      return
-    }
-
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
-    const inputId = input.getAttribute('id')
-
-    if (inputId) {
-      setChildInputId(inputId)
-    } else {
-      input.setAttribute('id', label.htmlFor)
-    }
-
-    if (input instanceof HTMLInputElement && input.type === 'file') {
-      const inputLabelledByIds = input.getAttribute('aria-labelledby')
-
-      if (inputLabelledByIds) {
-        // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-        input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${label.id}`)
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (
+        !node ||
+        // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+        document.getElementById(label.htmlFor)
+      ) {
+        return
       }
-    }
-  }, [label.htmlFor, label.id])
+
+      const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+
+      if (!input) {
+        return
+      }
+
+      const inputId = input.getAttribute('id')
+
+      if (inputId) {
+        setChildInputId(inputId)
+      } else {
+        input.setAttribute('id', label.htmlFor)
+      }
+
+      if (input instanceof HTMLInputElement && input.type === 'file') {
+        const inputLabelledByIds = input.getAttribute('aria-labelledby')
+
+        if (inputLabelledByIds) {
+          // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
+          input.setAttribute('aria-labelledby', `${inputLabelledByIds} ${label.id}`)
+        }
+      }
+      // HINT: mount後、label.htmlFor, label.idは変化しない前提
+      // 変化させたい実装パターンが発生したら検討する
+    },
+    [label.htmlFor, label.id],
+  )
+
+  // HINT: wrapperRefはこのcustom hookで定義しているRefObjectなので
+  // 仮にcallbackRefが変化した場合の巻き込まれる形での再実行でも問題は発生しない。
+  // このコンポーネントは外部からrefを受け付けないため、問題はないが必要性が発生したら検討する
+  const wrapperCallbackRef = useMergeRefs(callbackRef, wrapperRef)
 
   return {
     ...rest,
     ...describedByIdsRest,
     wrapperRef,
+    wrapperCallbackRef,
     label,
     helpMessage,
     exampleMessage,

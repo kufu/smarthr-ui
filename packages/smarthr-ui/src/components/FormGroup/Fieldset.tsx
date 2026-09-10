@@ -1,8 +1,9 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useEffect, useId, useMemo, useRef } from 'react'
+import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -41,9 +42,8 @@ type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
 // HINT: useAutoBindErrorInputを呼ぶ/呼ばないでコンポーネントを分けている。
 // FormGroup側で分岐すると、切り替え時にFormGroup配下のみが再マウントされ、
-// ActualFieldsetのuseEffectがsetAttributeしたaria-label・aria-describedbyが
-// 復元されなくなる。分岐を最上位に置くことで、再マウント時にそれらのuseEffectも
-// 再実行されるようにしている。
+// ActualFieldsetのcallbackRefがsetAttributeしたaria属性が復元されなくなる。
+// 分岐を最上位に置くことで、再マウント時にそのcallbackRefも再実行されるようにしている。
 export const Fieldset: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
   const Component = autoBindErrorInput ? AutoBindErrorFieldset : ActualFieldset
 
@@ -51,17 +51,23 @@ export const Fieldset: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
 }
 
 const AutoBindErrorFieldset: FC<LowerProps> = (props) => {
-  const { wrapperRef, visibleErrorMessages, ...rest } = useFieldsetProps(props)
+  const { wrapperRef, wrapperCallbackRef, visibleErrorMessages, ...rest } = useFieldsetProps(props)
 
   useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
 
-  return <FormGroup {...rest} wrapperRef={wrapperRef} visibleErrorMessages={visibleErrorMessages} />
+  return (
+    <FormGroup
+      {...rest}
+      wrapperRef={wrapperCallbackRef}
+      visibleErrorMessages={visibleErrorMessages}
+    />
+  )
 }
 
 const ActualFieldset: FC<LowerProps> = (props) => {
-  const actualProps = useFieldsetProps(props)
+  const { wrapperCallbackRef, ...rest } = useFieldsetProps(props)
 
-  return <FormGroup {...actualProps} />
+  return <FormGroup {...rest} wrapperRef={wrapperCallbackRef} />
 }
 
 const useFieldsetProps = ({
@@ -109,10 +115,10 @@ const useFieldsetProps = ({
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
-  useEffect(() => {
-    if (!wrapperRef.current) return
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) return
 
-    const labelTextEl = wrapperRef.current.querySelector(LABEL_TEXT_SELECTOR)
+    const labelTextEl = node.querySelector(LABEL_TEXT_SELECTOR)
 
     if (!labelTextEl) return
 
@@ -124,9 +130,7 @@ const useFieldsetProps = ({
       const labelText = labelTextEl.textContent || ''
       if (!labelText) return
 
-      const inputs = wrapperRef.current?.querySelectorAll<HTMLInputElement>(
-        CHILDREN_WRAPPER_INPUT_SELECTOR,
-      )
+      const inputs = node.querySelectorAll<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
       if (!inputs?.length) return
 
       inputs.forEach((input: HTMLInputElement) => {
@@ -165,12 +169,15 @@ const useFieldsetProps = ({
     return () => observer.disconnect()
   }, [])
 
+  const wrapperCallbackRef = useMergeRefs(callbackRef, wrapperRef)
+
   return {
     ...rest,
     ...describedByIdsRest,
     visibleErrorMessages,
     as: 'fieldset',
     wrapperRef,
+    wrapperCallbackRef,
     label: legend,
     helpMessage,
     exampleMessage,
