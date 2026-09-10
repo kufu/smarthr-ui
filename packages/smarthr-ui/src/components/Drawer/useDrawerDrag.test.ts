@@ -1,55 +1,35 @@
-import { resolveSnap } from './useDrawerDrag'
+import { resolveDragEnd } from './useDrawerDrag'
 
-describe('resolveSnap', () => {
-  const snapPoints = [200, 480, 800] // px 昇順
+describe('resolveDragEnd', () => {
+  const fullSize = 800
 
-  it('速度ほぼ0なら投影位置に最も近いスナップに吸着する', () => {
-    expect(resolveSnap({ snapPoints, currentSize: 460, velocity: 0, closeThreshold: 0.5 })).toEqual(
-      {
-        type: 'snap',
-        index: 1,
-      },
-    )
-    expect(resolveSnap({ snapPoints, currentSize: 780, velocity: 0, closeThreshold: 0.5 })).toEqual(
-      {
-        type: 'snap',
-        index: 2,
-      },
-    )
-  })
-
-  it('最小スナップの半分を下回る位置なら閉じる', () => {
-    expect(resolveSnap({ snapPoints, currentSize: 80, velocity: 0, closeThreshold: 0.5 })).toEqual({
-      type: 'close',
-    })
-  })
-
-  it('最小スナップ以下で閉じ方向に強くフリックしたら閉じる', () => {
+  it('速度ほぼ0で半分以上残っていれば開いたままにする', () => {
     expect(
-      resolveSnap({ snapPoints, currentSize: 180, velocity: -1.2, closeThreshold: 0.5 }),
+      resolveDragEnd({ fullSize, currentSize: 600, velocity: 0, closeThreshold: 0.5 }),
+    ).toEqual({ type: 'open' })
+  })
+
+  it('速度ほぼ0で半分未満まで縮んでいれば閉じる', () => {
+    expect(
+      resolveDragEnd({ fullSize, currentSize: 300, velocity: 0, closeThreshold: 0.5 }),
     ).toEqual({ type: 'close' })
   })
 
-  it('開く方向の速度は投影位置を引き上げ、上のスナップへ吸着する', () => {
+  it('閉じ方向に強くフリックしたら位置によらず閉じる', () => {
     expect(
-      resolveSnap({ snapPoints, currentSize: 460, velocity: 2.0, closeThreshold: 0.5 }),
-    ).toEqual({ type: 'snap', index: 2 })
+      resolveDragEnd({ fullSize, currentSize: 780, velocity: -1.2, closeThreshold: 0.5 }),
+    ).toEqual({ type: 'close' })
   })
 
-  it('単一スナップ（横方向）: 半分以上残っていれば全開にスナップバック', () => {
+  it('閉じ方向でも閾値未満の速度なら位置で判定する', () => {
     expect(
-      resolveSnap({ snapPoints: [400], currentSize: 300, velocity: 0, closeThreshold: 0.5 }),
-    ).toEqual({
-      type: 'snap',
-      index: 0,
-    })
+      resolveDragEnd({ fullSize, currentSize: 780, velocity: -0.2, closeThreshold: 0.5 }),
+    ).toEqual({ type: 'open' })
   })
 
-  it('単一スナップ（横方向）: 半分未満なら閉じる', () => {
+  it('開く方向の速度は投影位置を引き上げ、閉じ判定を打ち消す', () => {
     expect(
-      resolveSnap({ snapPoints: [400], currentSize: 150, velocity: 0, closeThreshold: 0.5 }),
-    ).toEqual({
-      type: 'close',
-    })
+      resolveDragEnd({ fullSize, currentSize: 380, velocity: 2.0, closeThreshold: 0.5 }),
+    ).toEqual({ type: 'open' })
   })
 })

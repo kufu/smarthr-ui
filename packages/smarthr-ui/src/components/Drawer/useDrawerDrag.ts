@@ -9,15 +9,17 @@ import {
 
 import type { DrawerPosition } from './types'
 
-export type SnapResolution = { type: 'snap'; index: number } | { type: 'close' }
-
 // ドラッグ終了後の投影距離（速度 × この係数 だけ進むと仮定）
 const VELOCITY_PROJECTION_MS = 100
 
-type ResolveSnapArgs = {
-  /** px 昇順のスナップ位置（大きいほど開いている）。横方向は全開幅 1 要素で渡す */
-  snapPoints: number[]
-  /** 現在のドラッグ中の開きサイズ(px) */
+const CLOSE_VELOCITY_THRESHOLD = 0.5 // px/ms
+
+export type DragResolution = { type: 'open' } | { type: 'close' }
+
+type ResolveDragEndArgs = {
+  /** 全開時のサイズ(px) */
+  fullSize: number
+  /** ドラッグ終了時点の開きサイズ(px) */
   currentSize: number
   /** px/ms。正=開く方向、負=閉じる方向 */
   velocity: number
@@ -25,80 +27,47 @@ type ResolveSnapArgs = {
   closeThreshold: number
 }
 
-export const resolveSnap = ({
-  snapPoints,
+export const resolveDragEnd = ({
+  fullSize,
   currentSize,
   velocity,
   closeThreshold,
-}: ResolveSnapArgs): SnapResolution => {
-  const lowest = snapPoints[0]
+}: ResolveDragEndArgs): DragResolution => {
+  // 閉じ方向の強いフリックは位置によらず閉じる
+  if (velocity < -closeThreshold) return { type: 'close' }
 
-  // 最小スナップ以下かつ閉じ方向の強いフリック → 閉じる
-  if (velocity < -closeThreshold && currentSize <= lowest) {
-    return { type: 'close' }
-  }
+  // 速度を加味した投影位置が半分を下回るなら閉じる
+  if (currentSize + velocity * VELOCITY_PROJECTION_MS < fullSize / 2) return { type: 'close' }
 
-  // 速度を加味した投影位置
-  const projected = currentSize + velocity * VELOCITY_PROJECTION_MS
-
-  // 最小スナップの半分を下回る → 閉じる
-  if (projected < lowest / 2) {
-    return { type: 'close' }
-  }
-
-  // 投影位置に最も近いスナップを選ぶ
-  let nearestIndex = 0
-  let nearestDistance = Infinity
-  snapPoints.forEach((point, index) => {
-    const distance = Math.abs(point - projected)
-    if (distance < nearestDistance) {
-      nearestDistance = distance
-      nearestIndex = index
-    }
-  })
-
-  return { type: 'snap', index: nearestIndex }
+  return { type: 'open' }
 }
-
-const CLOSE_VELOCITY_THRESHOLD = 0.5 // px/ms
-const KEYBOARD_STEP_INDEX = 1
 
 type UseDrawerDragArgs = {
   position: DrawerPosition
-  /** 正規化済みの px 昇順スナップ配列（縦）。横方向は [extent] 1 要素 */
-  snapPoints: number[]
-  /** 初期スナップ index */
-  initialIndex: number
-  /** 開いているかどうか（閉→開で内部状態を初期スナップへリセットする） */
+  /** 全開時のサイズ(px) */
+  fullSize: number
+  /** 開いているかどうか（閉→開で内部状態をリセットする） */
   isOpen: boolean
   onClose?: () => void
 }
 
-const isVerticalPosition = (position: DrawerPosition) => position === 'bottom' || position === 'top'
+const isVerticalPosition = (position: DrawerPosition) => position === 'bottom'
 
-export const useDrawerDrag = ({
-  position,
-  snapPoints,
-  initialIndex,
-  isOpen,
-  onClose,
-}: UseDrawerDragArgs) => {
-  const [snapIndex, setSnapIndex] = useState(initialIndex)
+export const useDrawerDrag = ({ position, fullSize, isOpen, onClose }: UseDrawerDragArgs) => {
   // 閉じ方向への符号付きドラッグオフセット(px)。閉じ＝正 / 開き＝負
   const [dragOffset, setDragOffset] = useState(0)
-  // ドラッグ中フラグ。ドラッグ中はトランジションを切り、指に追従させるために state で持つ
+  // ドラッグ中はトランジションを切り、指に追従させるために state で持つ
   const [isDragging, setIsDragging] = useState(false)
 
-  // 閉→開のたびに初期スナップ位置・オフセットへリセット（前回ドラッグ位置の持ち越しを防ぐ）
+  // 閉→開のたびにオフセットをリセット（前回ドラッグ位置の持ち越しを防ぐ）
   const wasOpenRef = useRef(isOpen)
   useEffect(() => {
     if (isOpen && !wasOpenRef.current) {
-      setSnapIndex(initialIndex)
       setDragOffset(0)
       setIsDragging(false)
     }
     wasOpenRef.current = isOpen
-  }, [isOpen, initialIndex])
+  }, [isOpen])
 
   const draggingRef = useRef<{
     startCoord: number
@@ -118,21 +87,19 @@ export const useDrawerDrag = ({
     [position],
   )
 
-  // スナップ確定時のリセット（スナップ位置へ補間させるため dragOffset を 0 に戻す）
+  // ドラッグ終了時のリセット（開き位置へ補間させるため dragOffset を 0 に戻す）
   const endDragging = useCallback(() => {
     draggingRef.current = null
     setIsDragging(false)
     setDragOffset(0)
   }, [])
 
-  // 閉じ確定時のリセット。dragOffset を 0 に戻すと一瞬スナップ位置へ戻ってから消えて見えるため、
-  // 補間を有効にしたまま閉じ位置（最小サイズ=0）までスライドさせてからアンマウントさせる。
+  // 閉じ確定時は補間を有効にしたまま閉じ位置までスライドさせてからアンマウントさせる
   const endDraggingForClose = useCallback(() => {
     draggingRef.current = null
     setIsDragging(false)
-    // targetSize を 0 にする = 完全に閉じ位置へ。下方向へ滑り切ってから消える。
-    setDragOffset(snapPoints[snapIndex])
-  }, [snapPoints, snapIndex])
+    setDragOffset(fullSize)
+  }, [fullSize])
 
   const onPointerDown = useCallback(
     (e: ReactPointerEvent) => {
@@ -168,61 +135,39 @@ export const useDrawerDrag = ({
 
   const onPointerUp = useCallback(() => {
     const dragging = draggingRef.current
-    const fullSize = snapPoints[snapPoints.length - 1]
-    // dragOffset は符号付き（閉じ＝正 / 開き＝負）。開きで最大、閉じで 0 にクランプ。
-    const currentSize = Math.min(fullSize, Math.max(0, snapPoints[snapIndex] - dragOffset))
-    const result = resolveSnap({
-      snapPoints,
+    const currentSize = Math.min(fullSize, Math.max(0, fullSize - dragOffset))
+    const result = resolveDragEnd({
+      fullSize,
       currentSize,
       velocity: dragging?.velocity ?? 0,
       closeThreshold: CLOSE_VELOCITY_THRESHOLD,
     })
+
     if (result.type === 'close') {
       endDraggingForClose()
       onClose?.()
     } else {
       endDragging()
-      setSnapIndex(result.index)
     }
-  }, [snapPoints, snapIndex, dragOffset, onClose, endDragging, endDraggingForClose])
+  }, [fullSize, dragOffset, onClose, endDragging, endDraggingForClose])
 
   // OS 等でポインタ操作が中断されたとき（pointercancel）はドラッグ状態を解除して復帰
   const onPointerCancel = useCallback(() => {
     endDragging()
   }, [endDragging])
 
-  // 矢印キーでスナップ段階を移動（縦方向のみ利用）
-  const onHandleKeyDown = useCallback(
-    (e: { key: string; preventDefault: () => void }) => {
-      const max = snapPoints.length - 1
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-        setSnapIndex((prev) => Math.min(max, prev + KEYBOARD_STEP_INDEX))
-        e.preventDefault()
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-        setSnapIndex((prev) => Math.max(0, prev - KEYBOARD_STEP_INDEX))
-        e.preventDefault()
-      }
-    },
-    [snapPoints.length],
-  )
-
   // inner に適用する translate(px)。閉じ方向にずらす。
-  // dragOffset は符号付き（閉じ＝正 / 開き＝負）。targetSize を [0, fullSize] にクランプし、
-  // 最大スナップを超えて開く・閉じ位置を超えて飛び出す、のどちらも防ぐ。
   const translateOffset = useMemo(() => {
-    const fullSize = snapPoints[snapPoints.length - 1]
-    const targetSize = Math.min(fullSize, Math.max(0, snapPoints[snapIndex] - dragOffset))
-    return fullSize - targetSize // この分だけ閉じ方向に退避
-  }, [snapPoints, snapIndex, dragOffset])
+    const targetSize = Math.min(fullSize, Math.max(0, fullSize - dragOffset))
+    return fullSize - targetSize
+  }, [fullSize, dragOffset])
 
   return {
-    snapIndex,
     translateOffset,
     isDragging,
     onPointerDown,
     onPointerMove,
     onPointerUp,
     onPointerCancel,
-    onHandleKeyDown,
   }
 }

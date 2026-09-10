@@ -121,8 +121,5 @@
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "Ambiente operacional da SmartHR",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "P. Como faço para apagar os cookies e o cache do navegador?",
   "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "Informações que gostaríamos de receber em caso de erro",
-  "smarthr-ui/Drawer/closeButtonIconAlt": "",
-  "smarthr-ui/Drawer/handleAriaLabel": "",
-  "smarthr-ui/Drawer/handleAriaRoleDescription": "",
-  "smarthr-ui/Drawer/handleDescription": ""
+  "smarthr-ui/Drawer/closeButtonIconAlt": ""
 }

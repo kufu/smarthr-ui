@@ -49,15 +49,7 @@ export const Left: StoryObj<typeof Drawer> = {
 
 export const Bottom: StoryObj<typeof Drawer> = {
   render: () => (
-    <Drawer isOpen position="bottom" snapPoints={[0.3, 0.6, 1]}>
-      {drawerChildren(() => {})}
-    </Drawer>
-  ),
-}
-
-export const Top: StoryObj<typeof Drawer> = {
-  render: () => (
-    <Drawer isOpen position="top" snapPoints={[0.3, 0.6, 1]}>
+    <Drawer isOpen position="bottom">
       {drawerChildren(() => {})}
     </Drawer>
   ),

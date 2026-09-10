@@ -1,23 +1,15 @@
 import type { DrawerSize } from './drawerSize'
 import type { PropsWithChildren, ReactNode, RefObject } from 'react'
 
-export type DrawerPosition = 'right' | 'left' | 'bottom' | 'top'
+export type DrawerPosition = 'right' | 'left' | 'bottom'
 
 export type DrawerVariant = 'modal' | 'modeless'
 
 export type DrawerCommonProps = {
   /** スライドする方向。既定は 'right' */
   position?: DrawerPosition
-  /** right/left の幅。bottom/top では無視される */
+  /** right/left の幅。bottom では無視される */
   size?: DrawerSize
-  /**
-   * bottom/top の高さスナップ段階（縦方向のみ有効）。
-   * 0〜1 の比率（viewport 高さに対する割合）または `'200px'` `'60dvh'` などの CSS 長さ。
-   * 昇順で渡す（小さいほど閉じ寄り）。
-   */
-  snapPoints?: Array<number | string>
-  /** 初期スナップ位置（snapPoints の値のいずれか）。未指定なら最大スナップ */
-  defaultSnapPoint?: number | string
   /** aria-label（ariaLabelledby と排他で必須） */
   ariaLabel?: string
   /** aria-labelledby（ariaLabel と排他で必須） */

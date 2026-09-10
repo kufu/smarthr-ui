@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useRef, useState } from 'react'
 
@@ -14,12 +14,31 @@ import { DrawerHeader } from './DrawerHeader'
 import { DrawerTrigger } from './DrawerTrigger'
 import { DrawerWrapper } from './DrawerWrapper'
 
+import type { DrawerPosition } from './types'
+
+// jsdom は PointerEvent 未実装（clientX/clientY 等が抜け落ちる）のため、
+// fireEvent.pointerXxx でドラッグ座標を検証できるよう MouseEvent ベースで補う。
+// timeStamp も同一 tick 内の連続呼び出しでは常に同じ値になり、速度計算が距離に
+// 対して過大になってしまうため、明示的に上書きできるようにする。
+if (typeof PointerEvent === 'undefined') {
+  class PointerEventPolyfill extends MouseEvent {
+    pointerId?: number
+    constructor(type: string, params: PointerEventInit & { timeStamp?: number } = {}) {
+      super(type, params)
+      this.pointerId = params.pointerId
+      if (params.timeStamp !== undefined) {
+        Object.defineProperty(this, 'timeStamp', { value: params.timeStamp, configurable: true })
+      }
+    }
+  }
+  // @ts-expect-error -- jsdom に PointerEvent が無いため補う
+  global.PointerEvent = PointerEventPolyfill
+}
+
 const renderWithIntl = (ui: React.ReactElement) =>
   render(<IntlProvider locale="ja">{ui}</IntlProvider>)
 
-const ControlledTemplate: FC<{ position?: 'right' | 'left' | 'bottom' | 'top' }> = ({
-  position,
-}) => {
+const ControlledTemplate: FC<{ position?: DrawerPosition }> = ({ position }) => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
@@ -174,7 +193,7 @@ describe('Drawer サブコンポーネント', () => {
   })
 })
 
-describe('Drawer ドラッグハンドル（縦方向）', () => {
+describe('Drawer ドラッグハンドル', () => {
   const VerticalTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState(false)
     return (
@@ -183,7 +202,6 @@ describe('Drawer ドラッグハンドル（縦方向）', () => {
         <Drawer
           isOpen={isOpen}
           position="bottom"
-          snapPoints={[0.3, 0.6, 1]}
           ariaLabel="ボトムドロワー"
           onClickClose={() => setIsOpen(false)}
         >
@@ -193,16 +211,58 @@ describe('Drawer ドラッグハンドル（縦方向）', () => {
     )
   }
 
-  it('縦方向では grabber（ハンドル）が表示され、適切な aria を持つこと', async () => {
+  it('bottom では grabber を描画すること', async () => {
     renderWithIntl(<VerticalTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
 
-    const handle = screen.getByRole('button', { name: 'ドロワーの大きさ' })
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle')
     expect(handle).toBeVisible()
-    expect(handle).toHaveAttribute('aria-roledescription', 'ドラッグ可能')
   })
 
-  it('横方向（right）では grabber を表示しないこと', async () => {
+  it('grabber がアクセシビリティツリーに現れないこと', async () => {
+    renderWithIntl(<VerticalTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle')
+    expect(handle).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.queryByRole('button', { name: 'ドロワーの大きさ' })).toBeNull()
+  })
+
+  it('grabber を下にドラッグすると onClickClose が呼ばれること', async () => {
+    const onClickClose = vi.fn()
+    renderWithIntl(
+      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={onClickClose}>
+        <p>bottom content</p>
+      </Drawer>,
+    )
+
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: 0 })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 500, timeStamp: 200 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 500, timeStamp: 200 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  it('grabber を少しだけドラッグしても閉じないこと', async () => {
+    const onClickClose = vi.fn()
+    renderWithIntl(
+      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={onClickClose}>
+        <p>bottom content</p>
+      </Drawer>,
+    )
+
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: 0 })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 40, timeStamp: 200 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 40, timeStamp: 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('横方向（right）では grabber を描画しないこと', async () => {
     const HorizontalTemplate: FC = () => {
       const [isOpen, setIsOpen] = useState(false)
       return (
@@ -221,18 +281,7 @@ describe('Drawer ドラッグハンドル（縦方向）', () => {
     }
     renderWithIntl(<HorizontalTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
-    expect(screen.queryByRole('button', { name: 'ドロワーの大きさ' })).toBeNull()
-  })
-
-  it('grabber の矢印キーでスナップ段階を移動できること（クラッシュしない）', async () => {
-    renderWithIntl(<VerticalTemplate />)
-    await userEvent.click(screen.getByRole('button', { name: 'open' }))
-    const handle = screen.getByRole('button', { name: 'ドロワーの大きさ' })
-    handle.focus()
-    await userEvent.keyboard('{ArrowUp}')
-    await userEvent.keyboard('{ArrowDown}')
-    // 操作後も dialog が開いたまま（矢印キーで閉じない）
-    expect(screen.getByRole('dialog', { name: 'ボトムドロワー' })).toBeVisible()
+    expect(document.querySelector('.smarthr-ui-Drawer-handle')).toBeNull()
   })
 })
 

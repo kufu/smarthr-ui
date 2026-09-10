@@ -14,7 +14,6 @@ import { tv } from 'tailwind-variants'
 
 import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../hooks/useLatest'
-import { useIntl } from '../../intl'
 import { FocusTrap, type FocusTrapRef, useBodyScrollLock } from '../Dialog'
 
 import { DrawerContentContext } from './DrawerContentContext'
@@ -56,11 +55,10 @@ const classNameGenerator = tv({
       'shr-border-shorthand shr-pointer-events-auto shr-absolute shr-flex shr-flex-col shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
-    // 上辺中央の横バー（grabber）。vaul 風の pill 形状
+    // 上辺中央の横バー（grabber）。ポインタ操作専用の装飾
     handleArea: [
       'smarthr-ui-Drawer-handle',
-      'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-items-center shr-justify-center shr-border-none shr-bg-[unset] shr-p-0',
-      'focus-visible:shr-focus-indicator',
+      'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-items-center shr-justify-center',
     ],
     handleBar: ['shr-h-0.25 shr-w-[2.5rem] shr-rounded-full shr-bg-border'],
   },
@@ -69,7 +67,6 @@ const classNameGenerator = tv({
       right: { inner: 'shr-inset-y-0 shr-right-0 shr-h-full' },
       left: { inner: 'shr-inset-y-0 shr-left-0 shr-h-full' },
       bottom: { inner: 'shr-inset-x-0 shr-bottom-0 shr-max-h-full shr-w-full shr-rounded-t-l' },
-      top: { inner: 'shr-inset-x-0 shr-top-0 shr-max-h-full shr-w-full shr-rounded-b-l' },
     },
     size: {
       S: { inner: drawerSize.S },
@@ -88,37 +85,19 @@ const classNameGenerator = tv({
   },
 })
 
-const isVertical = (position: DrawerPosition) => position === 'bottom' || position === 'top'
-
 // 閉じ位置（画面外）への transform 文字列
 const closedTransform: Record<DrawerPosition, string> = {
   right: 'translateX(100%)',
   left: 'translateX(-100%)',
   bottom: 'translateY(100%)',
-  top: 'translateY(-100%)',
 }
 
-// snapPoints を px 昇順配列へ正規化（縦方向用）。
-// 対応単位: 比率(0〜1の数値) / px / vh / dvh / svh / lvh / %
-const normalizeSnapPoints = (snapPoints: Array<number | string> | undefined): number[] => {
-  const viewport = typeof window === 'undefined' ? 0 : window.innerHeight
-  const points = (snapPoints && snapPoints.length > 0 ? snapPoints : [1]).map((p) => {
-    if (typeof p === 'number') return p <= 1 ? p * viewport : p
-    const match = /^([\d.]+)(px|vh|dvh|svh|lvh|%)?$/.exec(p.trim())
-    if (!match) return viewport
-    const value = parseFloat(match[1])
-    if (match[2] === 'px') return value
-    // vh/dvh/svh/lvh/% は viewport 比率として扱う
-    return (value / 100) * viewport
-  })
-  return [...points].sort((a, b) => a - b)
-}
+// tv の bottom / left/right に入れている calc() の減算値（spacing.1 = 16px）と対にする
+const DRAWER_VIEWPORT_GAP = 16
 
 export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   position = 'right',
   size,
-  snapPoints,
-  defaultSnapPoint,
   isOpen,
   onClickClose,
   onClickOverlay,
@@ -134,9 +113,6 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   className,
   children,
 }) => {
-  const vertical = isVertical(position)
-  const { localize } = useIntl()
-  const handleDescriptionId = useId()
   const autoHeadingId = useId()
   const innerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number | null>(null)
@@ -146,28 +122,23 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     return ariaLabelledby ?? autoHeadingId
   }, [ariaLabel, ariaLabelledby, autoHeadingId])
 
-  const normalizedSnaps = useMemo(
-    () => (vertical ? normalizeSnapPoints(snapPoints) : [1]),
-    [vertical, snapPoints],
+  // bottom のパネル高は CSS 側で calc(100dvh - spacing.1) に固定している。
+  // swipe-to-dismiss の閉じ判定に使う全開サイズをそこから求める。
+  const fullSize = useMemo(
+    () => (typeof window === 'undefined' ? 0 : window.innerHeight - DRAWER_VIEWPORT_GAP),
+    [],
   )
-  const initialIndex = useMemo(() => {
-    if (!vertical || defaultSnapPoint === undefined) return normalizedSnaps.length - 1
-    const normalizedDefault = normalizeSnapPoints([defaultSnapPoint])[0]
-    const idx = normalizedSnaps.findIndex((p) => p >= normalizedDefault)
-    return idx === -1 ? normalizedSnaps.length - 1 : idx
-  }, [vertical, defaultSnapPoint, normalizedSnaps])
 
   const drag = useDrawerDrag({
     position,
-    snapPoints: normalizedSnaps,
-    initialIndex,
+    fullSize,
     isOpen,
     onClose: onClickClose,
   })
 
   const classNames = useMemo(() => {
     const { layout, overlay, inner, handleArea, handleBar } = classNameGenerator()
-    const appliedSize = vertical ? undefined : size
+    const appliedSize = position === 'bottom' ? undefined : size
     const layoutPosition = variant === 'modeless' && hasPortalParent ? 'absolute' : 'fixed'
     return {
       layout: layout({ variant, layoutPosition }),
@@ -176,21 +147,13 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
       handleArea: handleArea(),
       handleBar: handleBar(),
     }
-  }, [vertical, position, size, variant, hasPortalParent, className])
+  }, [position, size, variant, hasPortalParent, className])
 
-  // 縦方向で複数スナップのときはパネル高を最大スナップに固定する
-  const hasMultipleSnaps = vertical && normalizedSnaps.length > 1
-  const fixedHeight = useMemo(
-    () => (hasMultipleSnaps ? `${normalizedSnaps[normalizedSnaps.length - 1]}px` : undefined),
-    [hasMultipleSnaps, normalizedSnaps],
-  )
-
-  // 開いた状態での inner の transform。縦方向はスナップ offset を反映、横は 0。
+  // 開いた状態での inner の transform。bottom はドラッグ offset を反映、left/right は 0。
   const openedTransform = useMemo(() => {
-    if (!vertical || drag.translateOffset === 0) return 'translateY(0)'
-    const axis = position === 'bottom' ? 1 : -1
-    return `translateY(${axis * drag.translateOffset}px)`
-  }, [vertical, position, drag.translateOffset])
+    if (position !== 'bottom' || drag.translateOffset === 0) return 'translateY(0)'
+    return `translateY(${drag.translateOffset}px)`
+  }, [position, drag.translateOffset])
 
   // 自前のマウント＋アニメーション制御（RTG の state 遷移が不安定だったため）。
   // shouldMount: DOM に存在させるか。entered: 開き位置へスライドさせるか（false=閉じ位置）。
@@ -226,17 +189,15 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   }, [isOpen])
 
   const innerStyle = useMemo<CSSProperties>(() => {
-    const base: CSSProperties = { height: fixedHeight }
     // ドラッグ中は補間を切って指に追従
     if (drag.isDragging) {
-      return { ...base, transform: openedTransform, transition: 'none' }
+      return { transform: openedTransform, transition: 'none' }
     }
     return {
-      ...base,
       transform: entered ? openedTransform : closedTransform[position],
       transition: TRANSITION_TRANSFORM,
     }
-  }, [fixedHeight, drag.isDragging, openedTransform, entered, position])
+  }, [drag.isDragging, openedTransform, entered, position])
 
   const overlayStyle = useMemo<CSSProperties>(
     () => ({ opacity: entered ? 1 : 0, transition: TRANSITION_OPACITY }),
@@ -260,55 +221,27 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
 
   useBodyScrollLock(isOpen && variant === 'modal')
 
-  const handleTexts = useMemo(
-    () => ({
-      ariaLabel: localize({
-        id: 'smarthr-ui/Drawer/handleAriaLabel',
-        defaultText: 'ドロワーの大きさ',
-      }),
-      roleDescription: localize({
-        id: 'smarthr-ui/Drawer/handleAriaRoleDescription',
-        defaultText: 'ドラッグ可能',
-      }),
-      description: localize({
-        id: 'smarthr-ui/Drawer/handleDescription',
-        defaultText: '上下の矢印キーを押して大きさを変更できます',
-      }),
-    }),
-    [localize],
-  )
-
   const onClickCloseSafe = useMemo(() => onClickClose ?? (() => undefined), [onClickClose])
 
   if (!shouldMount) return null
 
   const handleElement = (
-    <>
-      <button
-        type="button"
-        className={classNames.handleArea}
-        aria-label={handleTexts.ariaLabel}
-        aria-roledescription={handleTexts.roleDescription}
-        aria-describedby={handleDescriptionId}
-        onPointerDown={drag.onPointerDown}
-        onPointerMove={drag.onPointerMove}
-        onPointerUp={drag.onPointerUp}
-        onPointerCancel={drag.onPointerCancel}
-        onKeyDown={drag.onHandleKeyDown}
-      >
-        <span className={classNames.handleBar} />
-      </button>
-      <div id={handleDescriptionId} className="shr-sr-only">
-        {handleTexts.description}
-      </div>
-    </>
+    <div
+      className={classNames.handleArea}
+      aria-hidden="true"
+      onPointerCancel={drag.onPointerCancel}
+      onPointerDown={drag.onPointerDown}
+      onPointerMove={drag.onPointerMove}
+      onPointerUp={drag.onPointerUp}
+    >
+      <span className={classNames.handleBar} />
+    </div>
   )
   const drawerBody = (
     <DrawerContentContext.Provider value={{ onClickClose: onClickCloseSafe }}>
       <DrawerHeadingContext.Provider value={{ headingId: autoHeadingId }}>
-        {vertical && position === 'bottom' && handleElement}
+        {position === 'bottom' && handleElement}
         {children}
-        {vertical && position === 'top' && handleElement}
       </DrawerHeadingContext.Provider>
     </DrawerContentContext.Provider>
   )

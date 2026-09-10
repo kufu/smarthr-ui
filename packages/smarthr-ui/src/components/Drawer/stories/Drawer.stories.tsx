@@ -55,7 +55,7 @@ export default {
     },
     position: {
       control: 'radio',
-      options: ['right', 'left', 'bottom', 'top'],
+      options: ['right', 'left', 'bottom'],
     },
     size: {
       control: 'radio',
@@ -124,45 +124,6 @@ export const Uncontrolled: StoryObj<typeof Drawer> = {
       </DrawerContent>
     </DrawerWrapper>
   ),
-}
-
-/**
- * 縦方向（bottom / top）のスナップポイント。`snapPoints` に高さの段階を渡すと、
- * グラバー（上辺中央の横バー）のドラッグや上下矢印キーで段階的に高さを変更できる。
- * 比率（0〜1）/ px / vh / dvh / svh / lvh / % が使える。
- */
-export const SnapPoints: StoryObj<typeof Drawer> = {
-  name: 'スナップポイント（bottom）',
-  render: () => {
-    const [open, setOpen] = useState(false)
-    const handleClose = () => setOpen(false)
-    return (
-      <>
-        <Button onClick={() => setOpen(true)}>ボトムドロワーを開く</Button>
-        <Drawer
-          isOpen={open}
-          position="bottom"
-          snapPoints={[0.3, 0.6, 1]}
-          defaultSnapPoint={0.6}
-          ariaLabel="スナップポイントのデモ"
-          onClickClose={handleClose}
-          onClickOverlay={handleClose}
-          onPressEscape={handleClose}
-        >
-          <DrawerHeader
-            subtitle="ドラッグまたは上下矢印キーで高さを変更"
-            title="スナップポイント"
-          />
-          <DrawerBody>
-            <p>
-              グラバー（上辺の横バー）をドラッグするか、フォーカスして上下矢印キーを押すと、 30% /
-              60% / 100% の高さに段階的にスナップします。下まで引き下げると閉じます。
-            </p>
-          </DrawerBody>
-        </Drawer>
-      </>
-    )
-  },
 }
 
 /**

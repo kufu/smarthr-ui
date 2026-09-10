@@ -131,8 +131,5 @@
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "SmartHR system requirements",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. How do I clear my browser’s cookies and cache?",
   "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "Information needed to investigate the error",
-  "smarthr-ui/Drawer/closeButtonIconAlt": "",
-  "smarthr-ui/Drawer/handleAriaLabel": "",
-  "smarthr-ui/Drawer/handleAriaRoleDescription": "",
-  "smarthr-ui/Drawer/handleDescription": ""
+  "smarthr-ui/Drawer/closeButtonIconAlt": ""
 }
