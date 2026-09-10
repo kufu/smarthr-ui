@@ -57,7 +57,7 @@ export const Bottom: StoryObj<typeof Drawer> = {
 
 export const ModelessRight: StoryObj<typeof Drawer> = {
   render: () => (
-    <Drawer isOpen position="right" variant="modeless">
+    <Drawer isOpen modality="modeless" position="right">
       {drawerChildren(() => {})}
     </Drawer>
   ),

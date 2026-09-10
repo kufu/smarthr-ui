@@ -74,7 +74,7 @@ const classNameGenerator = tv({
       L: { inner: drawerSize.L },
       FULL: { inner: drawerSize.FULL },
     },
-    variant: {
+    modality: {
       modal: {},
       modeless: { layout: 'shr-pointer-events-none' },
     },
@@ -104,7 +104,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   onPressEscape,
   ariaLabel,
   ariaLabelledby,
-  variant = 'modal',
+  modality = 'modal',
   // Drawer / DrawerContent からは常に渡される。内部コンポーネント専用のフォールバック既定。
   hasPortalParent = false,
   firstFocusTarget,
@@ -139,15 +139,15 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   const classNames = useMemo(() => {
     const { layout, overlay, inner, handleArea, handleBar } = classNameGenerator()
     const appliedSize = position === 'bottom' ? undefined : size
-    const layoutPosition = variant === 'modeless' && hasPortalParent ? 'absolute' : 'fixed'
+    const layoutPosition = modality === 'modeless' && hasPortalParent ? 'absolute' : 'fixed'
     return {
-      layout: layout({ variant, layoutPosition }),
+      layout: layout({ modality, layoutPosition }),
       overlay: overlay(),
-      inner: inner({ position, size: appliedSize, variant, className }),
+      inner: inner({ position, size: appliedSize, modality, className }),
       handleArea: handleArea(),
       handleBar: handleBar(),
     }
-  }, [position, size, variant, hasPortalParent, className])
+  }, [position, size, modality, hasPortalParent, className])
 
   // 開いた状態での inner の transform。bottom はドラッグ offset を反映、left/right は 0。
   const openedTransform = useMemo(() => {
@@ -219,7 +219,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
 
   const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
-  useBodyScrollLock(isOpen && variant === 'modal')
+  useBodyScrollLock(isOpen && modality === 'modal')
 
   const onClickCloseSafe = useMemo(() => onClickClose ?? (() => undefined), [onClickClose])
 
@@ -247,7 +247,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   )
   return (
     <div ref={escapeCallbackRef} id={id} className={classNames.layout}>
-      {variant === 'modal' && (
+      {modality === 'modal' && (
         /* eslint-disable-next-line smarthr/best-practice-for-interactive-element */
         <div
           role="presentation"
@@ -261,11 +261,11 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
         role="dialog"
         className={classNames.inner}
         style={innerStyle}
-        aria-modal={variant === 'modal' || undefined}
+        aria-modal={modality === 'modal' || undefined}
         aria-label={ariaLabel}
         aria-labelledby={resolvedLabelledby}
       >
-        {variant === 'modal' ? (
+        {modality === 'modal' ? (
           <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {drawerBody}
           </FocusTrap>

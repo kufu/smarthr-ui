@@ -322,7 +322,7 @@ describe('Drawer（modeless）', () => {
         <Drawer
           isOpen={isOpen}
           position="right"
-          variant="modeless"
+          modality="modeless"
           ariaLabel="モードレスドロワー"
           onClickClose={() => setIsOpen(false)}
           onPressEscape={onPressEscape}
@@ -388,7 +388,7 @@ describe('Drawer（modeless）', () => {
           <Button onClick={() => setIsOpen(true)}>open</Button>
           <Drawer
             isOpen={isOpen}
-            variant="modeless"
+            modality="modeless"
             ariaLabel="modeless escape"
             onClickClose={() => setIsOpen(false)}
             onPressEscape={() => setIsOpen(false)}
@@ -472,7 +472,7 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
           <Drawer
             isOpen={isOpen}
             portalParent={ref}
-            variant="modeless"
+            modality="modeless"
             ariaLabel="absolute drawer"
             onClickClose={() => setIsOpen(false)}
           >
@@ -495,7 +495,7 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
           <Button onClick={() => setIsOpen(true)}>open</Button>
           <Drawer
             isOpen={isOpen}
-            variant="modeless"
+            modality="modeless"
             ariaLabel="modeless fixed"
             onClickClose={() => setIsOpen(false)}
           >

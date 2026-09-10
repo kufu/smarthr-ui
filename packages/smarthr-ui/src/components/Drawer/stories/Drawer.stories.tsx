@@ -49,7 +49,7 @@ export default {
     )
   },
   argTypes: {
-    variant: {
+    modality: {
       control: 'radio',
       options: ['modal', 'modeless'],
     },
@@ -155,7 +155,7 @@ export const Modeless: StoryObj<typeof Drawer> = {
           isOpen={open}
           position="right"
           portalParent={containerRef}
-          variant="modeless"
+          modality="modeless"
           size="S"
           ariaLabel="モードレス詳細パネル"
           onClickClose={handleClose}

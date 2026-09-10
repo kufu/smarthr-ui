@@ -50,7 +50,7 @@ export {
   DrawerTrigger,
   DrawerWrapper,
 } from './components/Drawer'
-export type { DrawerProps, DrawerPosition, DrawerSize, DrawerVariant } from './components/Drawer'
+export type { DrawerProps, DrawerPosition, DrawerSize, DrawerModality } from './components/Drawer'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'

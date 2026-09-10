@@ -3,7 +3,7 @@ import type { PropsWithChildren, ReactNode, RefObject } from 'react'
 
 export type DrawerPosition = 'right' | 'left' | 'bottom'
 
-export type DrawerVariant = 'modal' | 'modeless'
+export type DrawerModality = 'modal' | 'modeless'
 
 export type DrawerCommonProps = {
   /** スライドする方向。既定は 'right' */
@@ -20,7 +20,7 @@ export type DrawerCommonProps = {
    * モーダル/非モーダルの切り替え。既定は 'modal'。
    * 'modeless' ではオーバーレイ無し・背後操作可（スクロールロック無し・フォーカストラップ無し・aria-modal 無し）。
    */
-  variant?: DrawerVariant
+  modality?: DrawerModality
 }
 
 export type DrawerControlledProps = {
