@@ -139,25 +139,26 @@ export const FormGroup: FC<Props> = ({
 
   const managedDescribedbyIdsRef = useRef<string[]>([])
 
-  const inputAriaDescribedByCallbackRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
+  const inputAriaDescribedByCallbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) {
+      return
+    }
 
-      const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+    const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
-      if (!input) {
-        return
-      }
+    if (!input) {
+      return
+    }
 
+    const action = () => {
+      const nextDescribedBy = node.getAttribute('data-auto-bind-aria-describedby-for-input')
       const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
       const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
       // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
       const externalTokens = currentTokens.filter(
         (token) => !managedDescribedbyIdsRef.current.includes(token),
       )
-      const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
+      const describedbyIdTokens = nextDescribedBy ? nextDescribedBy.split(' ') : []
       const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
 
       if (nextValue !== ariaDescribedBy) {
@@ -169,9 +170,20 @@ export const FormGroup: FC<Props> = ({
       }
 
       managedDescribedbyIdsRef.current = describedbyIdTokens
-    },
-    [describedbyIds],
-  )
+    }
+
+    action()
+
+    const observer = new MutationObserver(action)
+    observer.observe(node, {
+      attributes: true,
+      attributeFilter: ['data-auto-bind-aria-describedby-for-input'],
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const wrapperCallbackRef = useMergeRefs(
     inputAriaDescribedByCallbackRef,
@@ -188,6 +200,7 @@ export const FormGroup: FC<Props> = ({
       className={classNames.wrapper}
       aria-describedby={as === 'fieldset' ? describedbyIds || undefined : undefined}
       data-auto-bind-error-input={autoBindErrorInput ? visibleErrorMessages.toString() : undefined}
+      data-auto-bind-aria-describedby-for-input={describedbyIds}
     >
       <LabelComponent
         managedLabelId={label.id}
