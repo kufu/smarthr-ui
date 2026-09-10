@@ -1,16 +1,17 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useEffect, useId, useMemo, useRef } from 'react'
+import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useRef } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
+import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
-import { useAutoBindErrorInput } from './useAutoBindErrorInput'
 import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
@@ -37,28 +38,8 @@ type Props = CommonProps & {
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
 }
-type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
-// HINT: useAutoBindErrorInputを呼ぶ/呼ばないでコンポーネントを分けている。
-// FormGroup側で分岐すると、切り替え時にFormGroup配下のみが再マウントされ、
-// ActualFieldsetのuseEffectがsetAttributeしたaria-label・aria-describedbyが
-// 復元されなくなる。分岐を最上位に置くことで、再マウント時にそれらのuseEffectも
-// 再実行されるようにしている。
-export const Fieldset: FC<Props> = ({ autoBindErrorInput = true, ...rest }) => {
-  const Component = autoBindErrorInput ? AutoBindErrorFieldset : ActualFieldset
-
-  return <Component {...rest} />
-}
-
-const AutoBindErrorFieldset: FC<LowerProps> = (props) => {
-  const { wrapperRef, visibleErrorMessages, ...rest } = useFieldsetProps(props)
-
-  useAutoBindErrorInput({ wrapperRef, visibleErrorMessages })
-
-  return <FormGroup {...rest} wrapperRef={wrapperRef} visibleErrorMessages={visibleErrorMessages} />
-}
-
-const ActualFieldset: FC<LowerProps> = (props) => {
+export const Fieldset: FC<Props> = (props) => {
   const actualProps = useFieldsetProps(props)
 
   return <FormGroup {...actualProps} />
@@ -72,8 +53,9 @@ const useFieldsetProps = ({
   supplementaryMessage,
   innerMargin,
   className,
+  autoBindErrorInput = true,
   ...rest
-}: LowerProps) => {
+}: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
@@ -98,7 +80,7 @@ const useFieldsetProps = ({
     id: baseLegend.id || `${baseId}-legend`,
   }
 
-  const { describedbyIds, visibleErrorMessages, ...describedByIdsRest } = useDescribedByIds({
+  const { describedbyIds, ...describedByIdsRest } = useDescribedByIds({
     wrapperRef,
     htmlFor: legend.htmlFor,
     errorMessages: orgErrorMessages,
@@ -109,10 +91,10 @@ const useFieldsetProps = ({
 
   // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
   // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
-  useEffect(() => {
-    if (!wrapperRef.current) return
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) return
 
-    const labelTextEl = wrapperRef.current.querySelector(LABEL_TEXT_SELECTOR)
+    const labelTextEl = node.querySelector(LABEL_TEXT_SELECTOR)
 
     if (!labelTextEl) return
 
@@ -124,9 +106,7 @@ const useFieldsetProps = ({
       const labelText = labelTextEl.textContent || ''
       if (!labelText) return
 
-      const inputs = wrapperRef.current?.querySelectorAll<HTMLInputElement>(
-        CHILDREN_WRAPPER_INPUT_SELECTOR,
-      )
+      const inputs = node.querySelectorAll<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
       if (!inputs?.length) return
 
       inputs.forEach((input: HTMLInputElement) => {
@@ -165,18 +145,24 @@ const useFieldsetProps = ({
     return () => observer.disconnect()
   }, [])
 
+  const wrapperCallbackRef = useMergeRefs(
+    wrapperRef,
+    callbackRef,
+    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+  )
+
   return {
     ...rest,
     ...describedByIdsRest,
-    visibleErrorMessages,
     as: 'fieldset',
-    wrapperRef,
+    wrapperRef: wrapperCallbackRef,
     label: legend,
     helpMessage,
     exampleMessage,
     supplementaryMessage,
     classNames,
     LabelComponent,
+    autoBindErrorInput,
     innerMargin,
     'aria-describedby': describedbyIds || undefined,
   }
