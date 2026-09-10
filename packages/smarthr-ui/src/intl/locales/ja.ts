@@ -134,4 +134,8 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/environmentLink': 'SmartHRの動作環境',
   'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': 'Q. ブラウザのCookieとキャッシュを削除するには？',
   'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': 'エラー発生時に教えていただきたい内容',
+  'smarthr-ui/Drawer/closeButtonIconAlt': '閉じる',
+  'smarthr-ui/Drawer/handleAriaLabel': 'ドロワーの大きさ',
+  'smarthr-ui/Drawer/handleAriaRoleDescription': 'ドラッグ可能',
+  'smarthr-ui/Drawer/handleDescription': '上下の矢印キーを押して大きさを変更できます',
 } as const

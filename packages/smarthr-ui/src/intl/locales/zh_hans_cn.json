@@ -130,5 +130,9 @@
   "smarthr-ui/UnexpectedErrorScreen/maintenanceLink": "服务状态",
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "SmartHR 运行环境",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. 如何清除浏览器的 Cookie 和缓存？",
-  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "报错指引"
+  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "报错指引",
+  "smarthr-ui/Drawer/closeButtonIconAlt": "",
+  "smarthr-ui/Drawer/handleAriaLabel": "",
+  "smarthr-ui/Drawer/handleAriaRoleDescription": "",
+  "smarthr-ui/Drawer/handleDescription": ""
 }

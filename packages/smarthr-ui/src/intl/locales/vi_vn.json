@@ -130,5 +130,9 @@
   "smarthr-ui/UnexpectedErrorScreen/maintenanceLink": "Thông tin bảo trì & sửa lỗi",
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "Môi trường hoạt động của SmartHR",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. Làm sao để xoá cookie và cache của trình duyệt?",
-  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "Thông tin cần cung cấp khi xảy ra lỗi"
+  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "Thông tin cần cung cấp khi xảy ra lỗi",
+  "smarthr-ui/Drawer/closeButtonIconAlt": "",
+  "smarthr-ui/Drawer/handleAriaLabel": "",
+  "smarthr-ui/Drawer/handleAriaRoleDescription": "",
+  "smarthr-ui/Drawer/handleDescription": ""
 }
