@@ -17,11 +17,6 @@ const IGNORE_INNER_DIRS = [
   'AppHeader/components',
   'AppHeader/hooks',
   'AppHeader/multilingualization',
-  'RichTextEditor/Toolbar',
-  'RichTextEditor/extensions',
-  'RichTextEditor/serializers',
-  'RichTextEditor/hooks',
-  'RichTextEditor/context',
 ]
 
 describe('index', () => {

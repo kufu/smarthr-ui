@@ -1,0 +1,212 @@
+'use client'
+
+import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { FaCaretDownIcon, FaHighlighterIcon } from 'smarthr-ui'
+import { tv } from 'tailwind-variants'
+
+import { useIntl } from '../../../../intl'
+import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
+import { useToolbarState } from '../../hooks/useToolbarState'
+import { ToolbarTooltip } from '../ToolbarTooltip'
+import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
+
+import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
+import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
+import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
+import { useCurrentColorLabel } from './useCurrentColorLabel'
+
+const RECENT_LIMIT = 5
+
+const classNameGenerator = tv({
+  slots: {
+    trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-BackgroundColorPickerButton'],
+    colorIndicator: COLOR_INDICATOR_CLASS_NAME,
+  },
+})
+
+type Props = {
+  tabIndex?: number
+  disabled?: boolean
+  onKeyDown?: (e: KeyboardEvent) => void
+  onFocus?: () => void
+  ref?: (el: HTMLButtonElement | null) => void
+}
+
+export const BackgroundColorPickerButton: FC<Props> = memo(
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
+    const { editor } = useRichTextEditorContext()
+    const { localize } = useIntl()
+    const state = useToolbarState(editor)
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const paletteRef = useRef<HTMLDivElement>(null)
+    const [recentColors, setRecentColors] = useState<string[]>([])
+    const [customColor, setCustomColor] = useState<string>(DEFAULT_BACKGROUND_COLOR)
+
+    const currentColor = state.currentBackgroundColor
+
+    const classNames = classNameGenerator()
+
+    const pushRecent = useCallback((hex: string) => {
+      const normalized = normalizeHex(hex, DEFAULT_BACKGROUND_COLOR)
+      setRecentColors((prev) => {
+        const without = prev.filter((c) => normalizeHex(c, DEFAULT_BACKGROUND_COLOR) !== normalized)
+        return [normalized, ...without].slice(0, RECENT_LIMIT)
+      })
+    }, [])
+
+    const onApplyColor = useCallback(
+      (hex: string) => {
+        editor.chain().focus().setBackgroundColor(hex).run()
+      },
+      [editor],
+    )
+
+    const onUnsetColor = useCallback(() => {
+      editor.chain().focus().unsetBackgroundColor().run()
+    }, [editor])
+
+    const handleTriggerKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        switch (e.key) {
+          case 'Enter':
+          case ' ':
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            setIsOpen(true)
+            requestAnimationFrame(() => {
+              paletteRef.current
+                ?.querySelector<HTMLButtonElement>('[data-color-swatch="standard"]')
+                ?.focus()
+            })
+            break
+          default:
+            onKeyDownProp?.(e)
+        }
+      },
+      [onKeyDownProp, setIsOpen],
+    )
+
+    useEffect(() => {
+      if (isOpen && currentColor) {
+        setCustomColor(normalizeHex(currentColor, DEFAULT_BACKGROUND_COLOR))
+      }
+    }, [isOpen, currentColor])
+
+    const backgroundColorLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColor',
+      defaultText: '背景色',
+    })
+    const resetLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorReset',
+      defaultText: '背景色をリセット',
+    })
+    const standardSectionLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorStandardSection',
+      defaultText: '標準の色',
+    })
+    const customSectionLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorCustomSection',
+      defaultText: 'カスタム',
+    })
+    const recentSectionLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorRecentSection',
+      defaultText: '履歴',
+    })
+    const editButtonLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorEditButton',
+      defaultText: '背景色を編集',
+    })
+    const noneLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorNone',
+      defaultText: 'なし',
+    })
+    const customSwatchLabel = useCallback(
+      (color: string) =>
+        localize(
+          {
+            id: 'smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel',
+            defaultText: '背景色カスタム: {color}',
+          },
+          { color },
+        ),
+      [localize],
+    )
+    const recentSwatchLabel = useCallback(
+      (color: string) =>
+        localize(
+          {
+            id: 'smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel',
+            defaultText: '背景色履歴: {color}',
+          },
+          { color },
+        ),
+      [localize],
+    )
+
+    // 背景色パレットに白のスウォッチは無く、未設定はどの色も選ばれていない状態なので「なし」を読み上げる
+    const currentColorLabel = useCurrentColorLabel({
+      currentColor,
+      colors: EDITOR_BACKGROUND_COLORS,
+      defaultColor: DEFAULT_BACKGROUND_COLOR,
+      unsetLabel: noneLabel,
+    })
+
+    return (
+      <>
+        <ToolbarTooltip suppressed={isOpen || disabled} label={backgroundColorLabel}>
+          <button
+            ref={(el) => {
+              triggerRef.current = el
+              refProp?.(el)
+            }}
+            type="button"
+            disabled={disabled}
+            tabIndex={tabIndex}
+            className={classNames.trigger()}
+            aria-label={`${backgroundColorLabel}: ${currentColorLabel}`}
+            aria-expanded={isOpen}
+            aria-haspopup="dialog"
+            onKeyDown={handleTriggerKeyDown}
+            onClick={() => setIsOpen((prev) => !prev)}
+            onFocus={onFocusProp}
+          >
+            <span className="shr-flex shr-flex-col shr-items-center shr-gap-[2px]">
+              <FaHighlighterIcon className="shr-text-base" aria-hidden />
+              <span
+                className={classNames.colorIndicator()}
+                style={{ backgroundColor: currentColor ?? DEFAULT_BACKGROUND_COLOR }}
+              />
+            </span>
+            <FaCaretDownIcon className="shr-text-xs" />
+          </button>
+        </ToolbarTooltip>
+        {renderDropdown(
+          <ColorPickerPalette
+            paletteRef={paletteRef}
+            triggerRef={triggerRef}
+            colors={EDITOR_BACKGROUND_COLORS}
+            defaultColor={DEFAULT_BACKGROUND_COLOR}
+            currentColor={currentColor}
+            recentColors={recentColors}
+            pushRecent={pushRecent}
+            customColor={customColor}
+            dialogLabel={backgroundColorLabel}
+            standardSectionLabel={standardSectionLabel}
+            customSectionLabel={customSectionLabel}
+            recentSectionLabel={recentSectionLabel}
+            editButtonLabel={editButtonLabel}
+            resetButtonLabel={resetLabel}
+            customSwatchLabel={customSwatchLabel}
+            recentSwatchLabel={recentSwatchLabel}
+            setIsOpen={setIsOpen}
+            setCustomColor={setCustomColor}
+            onApplyColor={onApplyColor}
+            onUnsetColor={onUnsetColor}
+          />,
+        )}
+      </>
+    )
+  },
+)

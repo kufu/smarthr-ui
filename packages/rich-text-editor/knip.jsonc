@@ -1,0 +1,27 @@
+// HINT: Storybookは本体パッケージの.storybookから起動しているため、こちらではstorybookのentryを持たない。
+//
+// 本体はexportsに "./lib/*" のワイルドカードがあるためsrc全体がentry扱いになり、
+// それを打ち消すためにincludeEntryExportsを有効にしている。
+// このパッケージのexportsは "." だけでentryはsrc/index.tsに限られるため、その設定は不要。
+{
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  "vitest": false,
+  "entry": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "rollup.*.config.js",
+    "vitest.config.ts",
+    "vitest-setup.js"
+  ],
+  "ignore": [
+    // tailwindcss CLIの入力ファイル。importされないためknipからは到達できない
+    "src/styles/index.css"
+  ],
+  "ignoreBinaries": [
+    "eslint",
+    "prettier",
+    "stylelint",
+    "knip"
+  ],
+  "ignoreExportsUsedInFile": true
+}

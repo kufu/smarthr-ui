@@ -1,0 +1,144 @@
+{
+  "name": "@smarthr/smarthr-ui-rich-text-editor",
+  "description": "Rich text editor components for SmartHR UI built with React and Tiptap.",
+  "version": "0.1.0",
+  "author": "SmartHR-UI Team",
+  "type": "module",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "lib",
+    "styles.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    },
+    "./viewer": {
+      "types": "./lib/viewer.d.ts",
+      "import": "./lib/viewer.js",
+      "require": "./lib/viewer.cjs"
+    },
+    "./styles.css": "./styles.css",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "npm-run-all -p build:esm build:cjs build:types build:css",
+    "build:cjs": "rollup --silent --config rollup.cjs.config.js",
+    "build:esm": "rollup --silent --config rollup.esm.config.js",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:css": "tailwindcss -i ./src/styles/index.css -o ./styles.css",
+    "clean": "rimraf ./lib ./styles.css",
+    "format": "run-s -c format:*",
+    "format:eslint": "eslint --fix './src/**/*.ts{,x}'",
+    "format:prettier": "prettier --write './src/**/*.ts{,x}'",
+    "format:stylelint": "stylelint --fix './src/**/*.ts{,x}'",
+    "lint": "run-p lint:*",
+    "lint:eslint": "eslint './src/**/*.ts{,x}'",
+    "lint:knip": "knip --exclude duplicates",
+    "lint:prettier": "prettier --check './src/**/*.ts{,x}'",
+    "lint:style": "stylelint './src/**/*.ts{,x}'",
+    "lint:tsc": "tsc --noEmit -p tsconfig.build.json",
+    "prepublishOnly": "run-s clean build",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0",
+    "smarthr-ui": "workspace:^"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.23.6",
+    "@tiptap/extension-color": "^3.23.6",
+    "@tiptap/extension-file-handler": "^3.23.6",
+    "@tiptap/extension-image": "^3.23.6",
+    "@tiptap/extension-placeholder": "^3.23.6",
+    "@tiptap/extension-table": "^3.23.6",
+    "@tiptap/extension-text-align": "^3.23.6",
+    "@tiptap/extension-text-style": "^3.23.6",
+    "@tiptap/extension-youtube": "^3.23.6",
+    "@tiptap/html": "^3.23.6",
+    "@tiptap/pm": "^3.23.6",
+    "@tiptap/react": "^3.23.6",
+    "@tiptap/starter-kit": "^3.23.6",
+    "@tiptap/static-renderer": "^3.23.6",
+    "happy-dom": "^20.8.9",
+    "intl-messageformat": "^11.2.14",
+    "tailwind-variants": "^0.3.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@storybook/react-vite": "10.5.10",
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^20.19.43",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.27",
+    "glob": "13.0.6",
+    "jsdom": "^26.1.0",
+    "npm-run-all2": "^9.0.2",
+    "postcss": "^8.5.26",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-intl": "^10.1.18",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.62.3",
+    "rollup-plugin-preserve-directives": "^0.4.0",
+    "smarthr-ui": "workspace:^",
+    "storybook": "10.5.10",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "smarthr",
+    "rich-text-editor",
+    "tiptap",
+    "typescript"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kufu/smarthr-ui.git",
+    "directory": "packages/rich-text-editor"
+  },
+  "bugs": {
+    "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "imports": {
+    "#html": {
+      "types": "./lib/adapters/html.browser.d.ts",
+      "browser": {
+        "import": "./lib/adapters/html.browser.js",
+        "require": "./lib/adapters/html.browser.cjs"
+      },
+      "node": {
+        "import": "./lib/adapters/html.node.js",
+        "require": "./lib/adapters/html.node.cjs"
+      },
+      "default": {
+        "import": "./lib/adapters/html.browser.js",
+        "require": "./lib/adapters/html.browser.cjs"
+      }
+    }
+  }
+}
