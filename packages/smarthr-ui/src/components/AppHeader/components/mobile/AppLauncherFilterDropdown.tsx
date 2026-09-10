@@ -3,7 +3,7 @@
 import { type MouseEvent, memo, useCallback } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../../../hooks/useTheme'
+import { useTheme } from '../../../../hooks/client/useTheme'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
@@ -14,7 +14,7 @@ import type { Launcher } from '../../types'
 
 type Props = {
   page: Launcher['page']
-  onSelectPage: (page: Launcher['page']) => void
+  handleSelectPage: (page: Launcher['page']) => void
 }
 
 const classNameGenerator = tv({
@@ -42,15 +42,15 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) => (
+export const AppLauncherFilterDropdown = memo<Props>(({ page, handleSelectPage }) => (
   <Dropdown>
-    <MemoizedDropdownTrigger className={CLASS_NAMES.trigger} page={page} />
+    <MemoizedDropdownTrigger page={page} className={CLASS_NAMES.trigger} />
     <DropdownContent>
       <ContentBody
         page={page}
-        onSelectPage={onSelectPage}
         className={CLASS_NAMES.contentBody}
         buttonClassName={CLASS_NAMES.contentButton}
+        handleSelectPage={handleSelectPage}
       />
     </DropdownContent>
   </Dropdown>
@@ -59,7 +59,7 @@ export const AppLauncherFilterDropdown = memo<Props>(({ page, onSelectPage }) =>
 const MemoizedDropdownTrigger = memo<{ page: Launcher['page']; className: string }>(
   ({ page, className }) => (
     <DropdownTrigger>
-      <Button className={className} size="S" suffix={<FaCaretDownIcon />}>
+      <Button size="S" className={className} suffix={<FaCaretDownIcon />}>
         <Translate>
           {page === 'favorite' ? (
             <Localizer
@@ -83,36 +83,36 @@ const ContentBody = memo<
     className: string
     buttonClassName: string
   }
->(({ page, onSelectPage, className, buttonClassName }) => {
+>(({ page, handleSelectPage, className, buttonClassName }) => {
   const theme = useTheme()
   const isFavorite = page === 'favorite'
 
-  const onClickButton = useCallback(
+  const handleClickButton = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectPage(e.currentTarget.value as Launcher['page'])
+      handleSelectPage(e.currentTarget.value as Launcher['page'])
     },
-    [onSelectPage],
+    [handleSelectPage],
   )
 
   const buttonPrefix = (
     <FaCheckIcon
-      color={theme.textColor.main}
       alt={
         <Translate>
           <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected" defaultText="選択中" />
         </Translate>
       }
+      color={theme.textColor.main}
     />
   )
 
   return (
     <div role="listbox" className={className}>
       <Button
-        value="favorite"
         role="option"
-        aria-selected={isFavorite}
-        onClick={onClickButton}
+        value="favorite"
         className={buttonClassName}
+        aria-selected={isFavorite}
+        onClick={handleClickButton}
         prefix={isFavorite && buttonPrefix}
       >
         <Translate>
@@ -123,11 +123,11 @@ const ContentBody = memo<
         </Translate>
       </Button>
       <Button
-        value="all"
         role="option"
-        aria-selected={!isFavorite}
-        onClick={onClickButton}
+        value="all"
         className={buttonClassName}
+        aria-selected={!isFavorite}
+        onClick={handleClickButton}
         prefix={!isFavorite && buttonPrefix}
       >
         <Translate>

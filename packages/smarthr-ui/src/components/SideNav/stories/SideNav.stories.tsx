@@ -4,9 +4,9 @@ import { FaGearIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
 import { SideNav } from '../SideNav'
-import { SideNavItemAnchor, SideNavItemButton, type SideNavSizeType } from '../SideNavItemButton'
+import { SideNavItemAnchor, SideNavItemButton } from '../SideNavItemButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export const _sideNavItems = [
   {
@@ -70,8 +70,8 @@ export const Size: StoryObj<typeof SideNav> = {
   name: 'size',
   render: (args) => (
     <Stack>
-      {[undefined, 'default', 's'].map((size, i) => (
-        <SideNav {...args} key={i} size={size as SideNavSizeType}>
+      {([undefined, 'M', 'S'] as const).map((size, i) => (
+        <SideNav {...args} key={i} size={size}>
           {_sideNavItems.map((item) => (
             <SideNavItemButton
               key={item.id + i}

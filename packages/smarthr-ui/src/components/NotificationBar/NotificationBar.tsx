@@ -11,7 +11,6 @@ import {
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
 import { Button } from '../Button'
 import {
   FaCircleCheckIcon,
@@ -23,6 +22,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { Panel } from '../Panel'
 import { Text } from '../Text'
 
 const classNameGenerator = tv({
@@ -136,7 +136,7 @@ const classNameGenerator = tv({
 })
 
 type StyleVariants = VariantProps<typeof classNameGenerator>
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   Omit<StyleVariants, 'type'> &
     Required<Pick<StyleVariants, 'type'>> & {
       /** コンポーネント右の領域 */
@@ -147,10 +147,10 @@ type AbstractProps = PropsWithChildren<
       role?: 'alert' | 'status'
     }
 >
-type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
-type Props = AbstractProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
-  Omit<BaseProps, keyof AbstractProps>
+type PanelLayerProps = Pick<ComponentProps<typeof Panel>, 'layer'>
+type Props = PanelLayerProps &
+  Omit<ComponentPropsWithoutRef<'div'>, keyof PanelLayerProps> &
+  Omit<BaseProps, keyof PanelLayerProps>
 
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
@@ -169,7 +169,7 @@ const ICON_MAPPER = {
   },
 } as const
 
-const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
 export const NotificationBar: FC<Props> = ({
   type,
@@ -189,13 +189,12 @@ export const NotificationBar: FC<Props> = ({
   let baseProps = {}
 
   if (base === 'base') {
-    WrapBase = Base
+    WrapBase = Panel
     baseProps = {
       layer,
-      overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
+      overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
     }
   }
-
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
@@ -215,9 +214,9 @@ export const NotificationBar: FC<Props> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...rest} className={classNames.wrapper} role={actualRole}>
+      <div {...rest} role={actualRole} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea bold={bold} type={type} classNames={classNames}>
+          <MessageArea type={type} bold={bold} classNames={classNames}>
             {children}
           </MessageArea>
           {subActionArea && (
@@ -227,7 +226,7 @@ export const NotificationBar: FC<Props> = ({
           )}
         </Cluster>
         {onClose && (
-          <Button variant="text" size="S" onClick={onClose} className={classNames.closeButton}>
+          <Button variant="text" size="S" className={classNames.closeButton} onClick={onClose}>
             <FaXmarkIcon
               alt={
                 <Localizer
@@ -252,12 +251,12 @@ const MessageArea = memo<
 
   return (
     <Text
+      as="div"
+      className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
-      className={classNames.messageArea}
-      as="div"
     >
       {children}
     </Text>

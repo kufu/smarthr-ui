@@ -1,8 +1,7 @@
-import { backgroundColor } from '../../../tailwind'
 import { AnchorButton, Button } from '../../Button'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/AppNavi/AppNaviDropdownMenuButton',
@@ -17,9 +16,6 @@ export default {
     label: 'ボタン',
   },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['Template'],

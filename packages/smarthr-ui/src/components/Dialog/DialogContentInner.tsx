@@ -6,18 +6,17 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
+  useLayoutEffect,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
-import { useBodyScrollLock } from './useBodyScrollLock'
 
 import type { DialogSize } from './types'
 
@@ -116,48 +115,68 @@ export const DialogContentInner: FC<Props> = ({
       background: background(),
     }
   }, [size, className])
-  const style = useMemo(() => {
-    // width は deprecated なので、size が指定されている場合は width を無視する
-    const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
+  // width は deprecated なので、size が指定されている場合は width を無視する
+  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
-    return actualWidth ? { width: actualWidth } : undefined
-  }, [width, size])
+  const latest = useLatest({ isOpen, onPressEscape, onClickOverlay })
 
-  const innerRef = useRef<HTMLDivElement>(null)
+  const functions = useMemo(
+    () => ({
+      handlePressEscape: () => {
+        if (latest.isOpen) {
+          latest.onPressEscape?.()
+        }
+      },
+      handleClickOverlay: () => {
+        if (latest.isOpen) {
+          latest.onClickOverlay?.()
+        }
+      },
+    }),
+    [latest],
+  )
 
-  const latest = useLatest({ onPressEscape, onClickOverlay })
+  const callbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
-  const functions = useMemo(() => {
-    if (!isOpen) {
-      return {
-        onPressEscape: undefined,
-        onClickOverlay: undefined,
-      }
+  useLayoutEffect(() => {
+    if (!isOpen) return
+
+    const body = document.body
+    const scrollBarWidth = window.innerWidth - body.clientWidth
+    const originalPaddingRight = getComputedStyle(body).getPropertyValue('padding-right')
+
+    const bodyStyle = body.style
+
+    bodyStyle.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
+    bodyStyle.overflow = 'hidden'
+
+    return () => {
+      bodyStyle.paddingInlineEnd = ''
+      bodyStyle.overflow = ''
     }
-
-    return {
-      onPressEscape: () => latest.onPressEscape?.(),
-      onClickOverlay: () => latest.onClickOverlay?.(),
-    }
-  }, [isOpen, latest])
-
-  useHandleEscape(functions.onPressEscape)
-  useBodyScrollLock(isOpen)
+  }, [isOpen])
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div id={id} className={classNames.layout} style={style}>
-        <Overlay onClickOverlay={functions.onClickOverlay} className={classNames.background} />
+      <div
+        ref={callbackRef}
+        id={id}
+        className={classNames.layout}
+        style={actualWidth ? { width: actualWidth } : undefined}
+      >
+        <Overlay
+          className={classNames.background}
+          handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
+        />
         <div
           {...rest}
-          ref={innerRef}
           role="dialog"
+          className={classNames.inner}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
-          className={classNames.inner}
         >
-          <FocusTrap firstFocusTarget={firstFocusTarget} ref={focusTrapRef}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>
@@ -166,9 +185,9 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Overlay = memo<{ onClickOverlay: (() => void) | undefined; className: string }>(
-  ({ onClickOverlay, className }) => (
+const Overlay = memo<{ handleClickOverlay: (() => void) | undefined; className: string }>(
+  ({ handleClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    <div onClick={onClickOverlay} className={className} role="presentation" />
+    <div role="presentation" className={className} onClick={handleClickOverlay} />
   ),
 )

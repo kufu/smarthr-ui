@@ -4,7 +4,7 @@ import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'
 import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/AccordionPanel/VRT',
@@ -19,8 +19,8 @@ export default {
           {['screenTitle', 'sectionTitle', 'blockTitle', 'subBlockTitle', 'subSubBlockTitle'].map(
             (headingType) => (
               <AccordionPanelItem
-                name={`item-${iconPosition}-${headingType}`}
                 key={`${iconPosition}${headingType}`}
+                name={`item-${iconPosition}-${headingType}`}
               >
                 <AccordionPanelTrigger
                   headingType={headingType as any}

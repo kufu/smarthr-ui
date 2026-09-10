@@ -276,8 +276,8 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        prefix={<FaGearIcon />}
         className={className}
+        prefix={<FaGearIcon />}
       >
         <Translate>{children}</Translate>
       </AnchorButton>
@@ -287,7 +287,7 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
 const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
     <DropdownTrigger>
-      <Button variant="text" suffix={<FaCaretDownIcon />} className={className}>
+      <Button variant="text" className={className} suffix={<FaCaretDownIcon />}>
         <Translate>{children}</Translate>
       </Button>
     </DropdownTrigger>

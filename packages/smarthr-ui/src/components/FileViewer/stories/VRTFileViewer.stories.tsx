@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { FileViewer } from '../FileViewer'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/FileViewer/VRT',
@@ -87,6 +87,37 @@ export const VRT = {}
 
 export const VRTForcedColors: StoryObj = {
   ...VRT,
+  parameters: {
+    chromatic: { forcedColors: 'active' },
+  },
+}
+
+export const VRTSearchable: StoryObj = {
+  render: () => (
+    <Stack className="shr-h-[50vh]">
+      <div className="shr-h-[50%]">
+        <FileViewer
+          file={{
+            url: '/fixtures/sample-japanese-pdf.pdf',
+            contentType: 'application/pdf',
+          }}
+        />
+      </div>
+      <div className="shr-h-[50%]">
+        <FileViewer
+          file={{
+            url: '/fixtures/sample-japanese-pdf.pdf',
+            contentType: 'application/pdf',
+          }}
+          searchable={false}
+        />
+      </div>
+    </Stack>
+  ),
+}
+
+export const VRTSearchableForcedColors: StoryObj = {
+  ...VRTSearchable,
   parameters: {
     chromatic: { forcedColors: 'active' },
   },

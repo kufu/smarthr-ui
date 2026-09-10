@@ -6,7 +6,7 @@ import { FaGearIcon } from '../../../Icon'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _sampleTriggerIcons = {
   undefined,
@@ -26,7 +26,7 @@ export default {
       <RemoteDialogTrigger targetId="remoteDialog" onClick={action('open-remote-dialog')}>
         <Button>操作3</Button>
       </RemoteDialogTrigger>
-      <Button onClick={action('action4')} disabled={true} disabledReason={{ message: 'disabled.' }}>
+      <Button disabled={true} disabledReason={{ message: 'disabled.' }} onClick={action('action4')}>
         操作4
       </Button>
       <WrappedButton />

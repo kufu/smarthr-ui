@@ -1,2 +1,2 @@
 export { TabBar } from './TabBar'
-export { TabItem } from './TabItem'
+export { TabItem } from './client'

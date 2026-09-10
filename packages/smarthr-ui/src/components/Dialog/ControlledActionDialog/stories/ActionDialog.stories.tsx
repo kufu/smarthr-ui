@@ -6,7 +6,7 @@ import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
 import { ControlledActionDialog } from '../ControlledActionDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
   string: '30em',
@@ -28,9 +28,9 @@ export default {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ControlledActionDialog
           {...rest}
+          isOpen={open}
           onClickClose={handleClose}
           onClickAction={handleAction}
-          isOpen={open}
         >
           ダイアログコンテンツ
         </ControlledActionDialog>
@@ -210,7 +210,7 @@ export const PortalParent: StoryObj<typeof ControlledActionDialog> = {
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledActionDialog

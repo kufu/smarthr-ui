@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 import { DefinitionList } from '../DefinitionList'
 import { DefinitionListItem } from '../DefinitionListItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/DefinitionList/VRT',
@@ -13,13 +13,13 @@ export default {
           <DefinitionList {...args} key={`${termStyleType}-${maxColumns}`}>
             {[...Array(10)].map((_, i) => (
               <DefinitionListItem
+                key={i}
                 term={{
                   text: `定義リストアイテム${i + 1}`,
                   styleType: termStyleType as any,
                 }}
                 maxColumns={maxColumns}
                 fullWidth={i === 4}
-                key={i}
               >
                 定義リストアイテム説明{i + 1}
               </DefinitionListItem>

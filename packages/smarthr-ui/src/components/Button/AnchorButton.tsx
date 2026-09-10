@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
@@ -10,17 +8,17 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
-import { ButtonWrapper } from './ButtonWrapper'
 import { DisabledReason } from './DisabledReason'
+import { AnchorButtonInner } from './client'
+import { anchorClassNameGenerator } from './style'
 
-import type { AbstractProps as ButtonProps } from './types'
+import type { BaseProps as ButtonProps } from './types'
 import type { ElementRef, ElementRefProps } from '../../types'
 
-type AbstractProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledReason'> & {
+type BaseProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledReason'> & {
   /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
   // tertiaryはAnchorButtonでは使用不可
@@ -30,12 +28,8 @@ type AbstractProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disab
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,
-  keyof AbstractProps<T> & ElementRefProps<T>
+  keyof BaseProps<T> & ElementRefProps<T>
 >
-
-const classNameGenerator = tv({
-  base: 'smarthr-ui-AnchorButton',
-})
 
 const AnchorButton = forwardRef(
   <T extends ElementType = 'a'>(
@@ -53,37 +47,43 @@ const AnchorButton = forwardRef(
       children,
       href,
       ...rest
-    }: PropsWithoutRef<AbstractProps<T>> & ElementProps<T>,
+    }: PropsWithoutRef<BaseProps<T>> & ElementProps<T>,
     ref: Ref<ElementRef<T>>,
   ): ReactElement => {
-    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+    const classNames = useMemo(() => {
+      const { wrapper, inner } = anchorClassNameGenerator()
+
+      return {
+        wrapper: wrapper({ variant, size, wide, className }),
+        inner: inner({ size }),
+      }
+    }, [variant, size, wide, className])
 
     // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
     const actualSuffix =
       target === '_blank' && !prefix && suffix === undefined ? <OpenInNewTabIcon /> : suffix
 
+    const Component = elementAs || 'a'
+
     const button = (
-      <ButtonWrapper
+      <Component
         {...rest}
+        ref={ref}
         href={href}
-        size={size}
-        wide={wide}
-        variant={variant}
-        className={actualClassName}
         target={target}
         rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
-        isAnchor
-        anchorRef={ref}
-        elementAs={elementAs}
-        prefix={prefix}
-        suffix={actualSuffix}
+        className={classNames.wrapper}
       >
-        {children}
-      </ButtonWrapper>
+        {prefix}
+        <AnchorButtonInner className={classNames.inner} prefix={prefix} suffix={actualSuffix}>
+          {children}
+        </AnchorButtonInner>
+        {actualSuffix}
+      </Component>
     )
 
     if (!href && inactiveReason) {
-      return <DisabledReason button={button} disabledReason={inactiveReason} />
+      return <DisabledReason disabledReason={inactiveReason} button={button} />
     }
 
     return button
@@ -92,7 +92,7 @@ const AnchorButton = forwardRef(
 
 // 型キャストなしで ForwardRefExoticComponent に合わせた型をエクスポートするための処理
 type AnchorButtonType = <T extends ElementType = 'a'>(
-  props: AbstractProps<T> & ElementProps<T> & ElementRefProps<T>,
+  props: BaseProps<T> & ElementProps<T> & ElementRefProps<T>,
 ) => ReturnType<FC>
 
 const ForwardedAnchorButton = AnchorButton as unknown as AnchorButtonType & {

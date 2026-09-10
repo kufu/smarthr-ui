@@ -40,12 +40,12 @@ type IconProps = {
   size?: FontSizes
 }
 
-type AbstractProps = {
+type BaseProps = {
   /**アイコンの説明テキスト*/
   alt?: ReactNode
 }
-export type Props = AbstractProps &
-  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
+export type Props = BaseProps &
+  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof BaseProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
@@ -97,20 +97,20 @@ export const generateIcon = (SvgIcon: IconType) => {
       const svgIcon = (
         <SvgIcon
           {...rest}
+          role={role}
           stroke="currentColor"
           fill="currentColor"
-          strokeWidth="0"
+          focusable={focusable}
           // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
           size={iconSize}
+          strokeWidth="0"
           width={iconSize}
           height={iconSize}
           color={replacedColor}
           className={classNames.icon}
-          role={role}
           aria-hidden={actualAriaHidden}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
-          focusable={focusable}
         />
       )
 

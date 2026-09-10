@@ -1,7 +1,8 @@
 'use client'
 
 import { ControlledFormDialog } from '../ControlledFormDialog'
-import { useRemoteTrigger } from '../useRemoteTrigger'
+
+import { useRemoteTrigger } from './useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 

@@ -1,7 +1,7 @@
-import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
+import { BulkActionRow } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Table/BulkActionRow',

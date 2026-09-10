@@ -53,7 +53,6 @@ export const Navigation: FC<Props> = ({
 
   return (
     <AppNavi
-      label={enableNew ? undefined : appName}
       displayDropdownCaret
       additionalArea={
         <Cluster align="center" className="shr-flex-nowrap shr-ps-1">
@@ -61,8 +60,9 @@ export const Navigation: FC<Props> = ({
           {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
         </Cluster>
       }
-      data-with-releasenote={!!releaseNote}
       className={className}
+      data-with-releasenote={!!releaseNote}
+      label={enableNew ? undefined : appName}
     >
       {actualNavigations}
     </AppNavi>
@@ -121,7 +121,7 @@ const DropdownCustomTag = memo<NavigationCustomTag>(
       [current, className],
     )
 
-    return <Component {...rest} aria-current={current || undefined} className={actualClassName} />
+    return <Component {...rest} className={actualClassName} aria-current={current || undefined} />
   },
 )
 const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (

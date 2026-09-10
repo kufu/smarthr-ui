@@ -1,5 +1,3 @@
-'use client'
-
 import { Localizer } from '../../intl'
 import { Stack } from '../Layout'
 import { HelpLink } from '../TextLink'
@@ -26,18 +24,18 @@ export const UnexpectedErrorScreen: FC<Props> = ({ homeUrl }) => {
 
   return (
     <ErrorScreen
-      title={
-        <Localizer
-          id="smarthr-ui/UnexpectedErrorScreen/title"
-          defaultText="予期しないエラーが発生しました"
-        />
-      }
       links={[
         {
           label: <Localizer id="smarthr-ui/ErrorScreen/homeLink" defaultText="ホームに戻る" />,
           url: homeUrl,
         },
       ]}
+      title={
+        <Localizer
+          id="smarthr-ui/UnexpectedErrorScreen/title"
+          defaultText="予期しないエラーが発生しました"
+        />
+      }
     >
       <Stack className="shr-max-w-col6">
         <p>

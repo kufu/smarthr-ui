@@ -1,4 +1,6 @@
 export { BarChart } from './BarChart'
 export { Chart } from './Chart'
+export { DoughnutChart } from './DoughnutChart'
 export { LineChart } from './LineChart'
+export { ProgressDoughnutChart } from './ProgressDoughnutChart'
 export { RadarChart } from './RadarChart'

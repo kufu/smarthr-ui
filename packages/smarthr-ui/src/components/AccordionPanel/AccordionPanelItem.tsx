@@ -11,11 +11,11 @@ import { tv } from 'tailwind-variants'
 
 import { Section } from '../SectioningContent'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** アイテムを識別するための名前 */
   name: string
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'section'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'section'>, keyof BaseProps>
 
 export const AccordionPanelItemContext = createContext<{
   name: string

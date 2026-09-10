@@ -1,30 +1,30 @@
-'use client'
-
 import {
   type ComponentPropsWithoutRef,
   type FC,
   type PropsWithChildren,
   type ReactNode,
-  isValidElement,
   memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
-import { Stack } from '../Layout'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Text } from '../Text'
+
+import { ItemWrapper } from './client'
 
 type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   term: ReactNode | ObjectTermType
   fullWidth?: boolean
   maxColumns?: number
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+
+const termObjectConverter = (term: ReactNode): ObjectTermType => ({ text: term })
 
 const classNameGenerator = tv({
   slots: {
@@ -52,16 +52,10 @@ export const DefinitionListItem: FC<Props> = ({
   fullWidth,
   className,
 }) => {
-  const theme = useTheme()
-  // HINT: ReactNodeとObjectのどちらかを判定
-  // typeofはnullの場合もobject判定されてしまうため念の為falsyで判定
-  // ReactNodeの一部であるReactElementもobjectとして判定されてしまうためisValidElementで判定
-  const term: ObjectTermType =
-    !orgTerm || typeof orgTerm !== 'object' || isValidElement(orgTerm)
-      ? {
-          text: orgTerm as ReactNode,
-        }
-      : (orgTerm as ObjectTermType)
+  const term = useObjectAttributes<ReactNode | ObjectTermType, ObjectTermType>(
+    orgTerm,
+    termObjectConverter,
+  )
 
   const classNames = useMemo(() => {
     const cs = classNameGenerator()
@@ -71,34 +65,24 @@ export const DefinitionListItem: FC<Props> = ({
       term: cs.term(),
       description: cs.description(),
     }
-  }, [className, fullWidth])
-  const style = useMemo(
-    () => ({
-      flexBasis:
-        // fullWidth の方が強い
-        !fullWidth && maxColumns
-          ? `calc((100% - ${theme.spacingByChar(1.5)} * ${maxColumns - 1}) / ${maxColumns})`
-          : undefined,
-    }),
-    [fullWidth, maxColumns, theme],
-  )
+  }, [fullWidth, className])
 
   return (
-    <Stack gap={0.25} className={classNames.wrapper} style={style}>
+    <ItemWrapper maxColumns={maxColumns} fullWidth={fullWidth} className={classNames.wrapper}>
       <DefinitionTerm styleType={term.styleType} className={classNames.term}>
         {term.text}
       </DefinitionTerm>
       <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={classNames.description}>
         {children}
       </Text>
-    </Stack>
+    </ItemWrapper>
   )
 }
 
 const DefinitionTerm = memo<
   PropsWithChildren<{ styleType: ObjectTermType['styleType']; className: string }>
 >(({ styleType = 'subBlockTitle', className, children }) => (
-  <Text as="dt" leading="TIGHT" styleType={styleType} className={className}>
+  <Text as="dt" styleType={styleType} leading="TIGHT" className={className}>
     {children}
   </Text>
 ))

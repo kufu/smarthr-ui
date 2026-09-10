@@ -2,7 +2,7 @@ import { AppHeader } from '../AppHeader'
 
 import { args } from './args'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
   title: 'Components/AppHeader',
@@ -15,3 +15,12 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const LazyFeatures: Story = {
+  args: {
+    fetchFeatures: () =>
+      new Promise((resolve) => {
+        setTimeout(() => resolve(args.features ?? []), 1000)
+      }),
+  },
+}

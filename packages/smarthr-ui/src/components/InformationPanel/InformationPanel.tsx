@@ -5,7 +5,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useEffect,
   useId,
   useMemo,
   useState,
@@ -14,7 +13,6 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Localizer } from '../../intl'
-import { Base, type BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
 import {
@@ -27,6 +25,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Sidebar } from '../Layout'
+import { Panel, type PanelElementProps } from '../Panel'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -36,7 +35,7 @@ type ObjectHeadingType = {
   unrecommendedTag?: HeadingTagTypes
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** パネルのタイトル */
   heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
@@ -48,7 +47,7 @@ type AbstractProps = PropsWithChildren<{
 }> &
   VariantProps<typeof classNameGenerator>
 
-type Props = AbstractProps & Omit<BaseElementProps, keyof AbstractProps>
+type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
@@ -123,20 +122,22 @@ export const InformationPanel: FC<Props> = ({
   heading,
   type = 'info',
   toggleable,
-  active: activeProps = true,
+  active: activeProp = true,
   bold,
   className,
   children,
   onClickTrigger,
   ...rest
 }) => {
-  const [active, setActive] = useState(activeProps)
   const id = useId()
   const contentId = `${id}-content`
+  const [active, setActive] = useState(activeProp)
+  const [prevActiveProp, setPrevActiveProp] = useState(activeProp)
 
-  useEffect(() => {
-    setActive(activeProps)
-  }, [activeProps])
+  if (prevActiveProp !== activeProp) {
+    setPrevActiveProp(activeProp)
+    setActive(activeProp)
+  }
 
   const classNames = useMemo(() => {
     const {
@@ -160,32 +161,28 @@ export const InformationPanel: FC<Props> = ({
   }, [type, bold, className])
 
   return (
-    <Base
-      {...rest}
-      as="section"
-      data-active={(active || false).toString()}
-      className={classNames.wrapper}
-    >
+    <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
       <Sidebar align="baseline" right className={classNames.header}>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading
-          heading={heading}
+          type={type}
           id={`${id}-heading`}
           className={classNames.heading}
-          type={type}
+          heading={heading}
         />
         {toggleable && (
           <ToggleableButton
-            active={active}
-            onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
             contentId={contentId}
+            active={active}
             className={classNames.toggleableButton}
+            onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
           />
         )}
       </Sidebar>
-      <div id={contentId} aria-hidden={!active} className={classNames.content}>
+      <div id={contentId} className={classNames.content} aria-hidden={!active}>
         {children}
       </div>
-    </Base>
+    </Panel>
   )
 }
 
@@ -219,13 +216,13 @@ const MemoizedHeading = memo<
   return (
     <Heading
       {...rest}
+      type="blockTitle"
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
         prefix: icon,
         gap: 0.5,
       }}
-      type="blockTitle"
     >
       {heading.text}
     </Heading>
@@ -239,12 +236,12 @@ const ToggleableButton: FC<{
   className: string
 }> = ({ active, onClick, contentId, className }) => (
   <Button
+    size="S"
+    className={className}
     aria-expanded={active}
     aria-controls={contentId}
     onClick={onClick}
     suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-    size="S"
-    className={className}
   >
     {active ? (
       <Localizer id="smarthr-ui/InformationPanel/closeButtonLabel" defaultText="閉じる" />

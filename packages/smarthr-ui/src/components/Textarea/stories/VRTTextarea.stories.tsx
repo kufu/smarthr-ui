@@ -1,22 +1,22 @@
 import { Stack } from '../../Layout'
 import { Textarea } from '../Textarea'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Textarea/VRT',
   render: (args) => (
     <Stack>
       {[undefined, 'focus-visible'].map((id) => (
-        <Stack id={id} key={id} align="flex-start">
+        <Stack key={id} id={id} align="flex-start">
           <Textarea {...args} disabled />
           <Textarea {...args} error />
           <Textarea {...args} width="20em" />
           <Textarea {...args} rows={3} />
           <Textarea {...args} maxLetters={5} />
-          <Textarea {...args} maxLetters={5} value="テキスト" />
-          <Textarea {...args} maxLetters={5} value="テキストエ" />
-          <Textarea {...args} maxLetters={5} value="テキストエリア" />
+          <Textarea {...args} value="テキスト" maxLetters={5} />
+          <Textarea {...args} value="テキストエ" maxLetters={5} />
+          <Textarea {...args} value="テキストエリア" maxLetters={5} />
         </Stack>
       ))}
     </Stack>

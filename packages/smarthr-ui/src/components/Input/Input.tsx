@@ -2,20 +2,19 @@
 
 import {
   type ComponentPropsWithRef,
-  type MutableRefObject,
+  type MouseEvent,
   type ReactNode,
   type WheelEvent,
   forwardRef,
-  useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
-import { useTheme } from '../../hooks/useTheme'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
+import { useOnce } from '../../hooks/client/useOnce'
+import { useTheme } from '../../hooks/client/useTheme'
 
-type AbstractProps = {
+type BaseProps = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -35,7 +34,7 @@ type AbstractProps = {
    */
   placeholder?: string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps | 'onWheel'>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
 
 export const backgroundColor = {
   BACKGROUND: 'background',
@@ -47,25 +46,18 @@ export const backgroundColor = {
   ACTION_BACKGROUND: 'action-background',
 } as const
 
-const wrapperClassNameGenerator = tv({
-  base: [
-    'smarthr-ui-Input',
-    'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
-    'contrast-more:shr-border-high-contrast',
-    'focus-within:shr-focus-indicator',
-    'has-[[aria-invalid]]:shr-border-danger',
-  ],
-  variants: {
-    disabled: {
-      true: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
-    },
-    readOnly: {
-      true: '[&&&]:shr-border-[theme(backgroundColor.column)] [&&&]:shr-bg-column',
-    },
-  },
-})
-const innerClassNameGenerator = tv({
+const classNameGenerator = tv({
   slots: {
+    wrapper: [
+      'smarthr-ui-Input',
+      'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
+      'contrast-more:shr-border-high-contrast',
+      'focus-within:shr-focus-indicator',
+      'has-[[aria-invalid]]:shr-border-danger',
+      'has-[:disabled]:[&&&]:shr-border-default/50',
+      'has-[:disabled]:shr-pointer-events-none has-[:disabled]:shr-bg-white-darken',
+      'has-[[readonly]:not(:disabled)]:[&&&]:shr-border-[theme(backgroundColor.column)] has-[[readonly]:not(:disabled)]:[&&&]:shr-bg-column',
+    ],
     input: [
       'smarthr-ui-Input-input',
       'shr-inline-block shr-w-full shr-grow shr-border-none shr-bg-transparent shr-py-0.75 shr-text-base shr-leading-none shr-text-black shr-outline-none shr-outline-0',
@@ -76,14 +68,10 @@ const innerClassNameGenerator = tv({
       // マジックナンバーになるが、ほかに適切なプロパティがないため、min-widthで最低幅を指定することで防ぐ
       '[&[type="datetime-local"]]:shr-min-w-[11em] [&[type="month"]]:shr-min-w-[8em] [&[type="time"]]:shr-min-w-[5em]',
     ],
-    affix: 'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
-  },
-  variants: {
-    disabled: {
-      true: {
-        affix: 'shr-text-disabled shr-opacity-100',
-      },
-    },
+    affix: [
+      'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
+      '[.smarthr-ui-Input:has(:disabled)_&]:shr-text-disabled [.smarthr-ui-Input:has(:disabled)_&]:shr-opacity-100',
+    ],
   },
 })
 
@@ -116,39 +104,27 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     const theme = useTheme()
-    const innerRef: MutableRefObject<HTMLInputElement | null> = useRef(null)
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => innerRef.current,
-    )
+    const callbackRef = useOnce((node: HTMLInputElement | null) => {
+      if (node && autoFocus) {
+        node.focus()
+      }
+    })
 
-    const latest = useLatest({ autoFocus })
-
-    const functions = useMemo(
-      () => ({
-        handleInnerRef: (node: HTMLInputElement | null) => {
-          innerRef.current = node
-
-          if (latest.autoFocus && node) {
-            node.focus()
-          }
-        },
-        handleDelegateClick: () => innerRef.current?.focus(),
-      }),
-      [latest],
-    )
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(callbackRef, ref)
 
     const classNames = useMemo(() => {
-      const { input, affix } = innerClassNameGenerator({ disabled })
+      const { wrapper, input, affix } = classNameGenerator()
 
       return {
-        wrapper: wrapperClassNameGenerator({ disabled, readOnly, className }),
+        wrapper: wrapper({ className }),
         input: input(),
         prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
         suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
       }
-    }, [disabled, readOnly, className])
+    }, [className])
 
     const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
     const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
@@ -156,7 +132,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <span
         role="presentation"
-        onClick={functions.handleDelegateClick}
         className={classNames.wrapper}
         style={{
           borderColor: styleColor,
@@ -164,23 +139,28 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           maxWidth: styleMaxWidth,
           width: styleMaxWidth ? '100%' : undefined,
         }}
+        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }}
       >
         {prefix && <span className={classNames.prefix}>{prefix}</span>}
         <input
           {...rest}
+          ref={mergedRef}
           type={type}
-          data-smarthr-ui-input="true"
+          disabled={disabled}
+          readOnly={readOnly}
           max={
             max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
           }
+          className={classNames.input}
+          aria-invalid={error || undefined}
+          data-smarthr-ui-input="true"
           onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}
           onBlur={onBlur}
-          disabled={disabled}
-          readOnly={readOnly}
-          ref={functions.handleInnerRef}
-          aria-invalid={error || undefined}
-          className={classNames.input}
         />
         {suffix && <span className={classNames.suffix}>{suffix}</span>}
       </span>

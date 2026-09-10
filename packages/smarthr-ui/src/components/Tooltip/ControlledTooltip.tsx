@@ -126,13 +126,13 @@ const classNameGenerator = tv({
   ],
 })
 
-type AbstractProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   VariantProps<typeof classNameGenerator> & {
     /** レンダリングするタグ */
     as?: 'div' | 'span'
   }
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const ControlledTooltip = memo<Props>(
   ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...rest }) => {

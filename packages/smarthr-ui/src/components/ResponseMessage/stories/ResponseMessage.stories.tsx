@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/ResponseMessage',
@@ -33,7 +33,7 @@ export const Status: StoryObj<typeof ResponseMessage> = {
   render: (args) => (
     <Stack align="flex-start">
       {[undefined, 'info', 'success', 'warning', 'error', 'sync'].map((status) => (
-        <ResponseMessage {...args} status={status as any} key={status} />
+        <ResponseMessage {...args} key={status} status={status as any} />
       ))}
     </Stack>
   ),

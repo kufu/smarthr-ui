@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 
 /**
  * 常に最新の値を参照するためのフック。
@@ -19,16 +19,18 @@ import { useMemo, useRef } from 'react'
  * if (latest.selectedItem) { ... }
  */
 export function useLatest<T extends object>(values: T): Readonly<T> {
-  const ref = useRef<T>(values)
-  ref.current = values
+  const stableValues = useMemo(() => ({}), [])
 
-  const proxy = useMemo(
-    () =>
-      new Proxy({} as T, {
-        get: (_target, prop) => ref.current[prop as keyof T],
-      }) as Readonly<T>,
-    [],
-  )
+  // TODO: 必要に応じて下記ロジックを導入する。
+  // 通常の利用方法では削除する必要性はないためコメントアウトしている
+  // // 古いプロパティをすべて削除してから assign する（キーの増減に対応）
+  // for (const key in stableValues) {
+  //   if (!(key in values)) {
+  //     delete (stableValues as any)[key]
+  //   }
+  // }
 
-  return proxy
+  Object.assign(stableValues, values)
+
+  return stableValues as Readonly<T>
 }

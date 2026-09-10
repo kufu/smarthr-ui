@@ -1,5 +1,3 @@
-'use client'
-
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'

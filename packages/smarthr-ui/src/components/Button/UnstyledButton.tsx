@@ -14,5 +14,5 @@ export const UnstyledButton = forwardRef<
 >(({ className, type = 'button', ...rest }, ref) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  return <button {...rest} type={type} ref={ref} className={actualClassName} />
+  return <button {...rest} ref={ref} type={type} className={actualClassName} />
 })

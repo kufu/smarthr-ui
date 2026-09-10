@@ -1,21 +1,21 @@
 import { type ComponentPropsWithoutRef, memo } from 'react'
 
-type AbstractProps = {
+type BaseProps = {
   alt?: string
   width?: number | string
   height?: number | string
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof AbstractProps | 'fill'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps | 'fill'>
 
 export const SmartHRAILogo = memo<Props>(({ alt, width, height, ...rest }) => (
   <svg
     {...rest}
     role="img"
-    aria-label={alt || 'SmartHR（スマートHR） AI'}
     viewBox="0 0 53 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     style={width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }}
+    aria-label={alt || 'SmartHR（スマートHR） AI'}
   >
     <path
       fill="#00C4CC"

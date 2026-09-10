@@ -3,9 +3,9 @@ import { action } from 'storybook/actions'
 import { FaArrowRightIcon, FaCircleQuestionIcon, OpenInNewTabIcon } from '../../Icon'
 import { Table, Th } from '../../Table'
 import { TextLink } from '../TextLink'
-import { UpwardLink } from '../UpwardLink'
+import { UpwardLink } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'
 
 const _prefixOptions = {

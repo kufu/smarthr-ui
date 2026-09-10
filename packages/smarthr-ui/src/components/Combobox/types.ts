@@ -14,7 +14,7 @@ export type ComboboxOption<T> = {
   item: ComboboxItem<T>
 }
 
-export type AbstractProps<T> = {
+export type BaseProps<T> = {
   /**
    * 選択可能なアイテムのリスト
    */

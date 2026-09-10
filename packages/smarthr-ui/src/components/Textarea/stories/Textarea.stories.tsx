@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Textarea } from '../Textarea'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Textarea',
@@ -39,7 +39,7 @@ export const Width: StoryObj<typeof Textarea> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        <Textarea {...args} width={width} key={width} />
+        <Textarea {...args} key={width} width={width} />
       ))}
     </Stack>
   ),

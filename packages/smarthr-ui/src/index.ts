@@ -46,7 +46,9 @@ export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
 export { AnchorButton, Button, UnstyledButton } from './components/Button'
 export { StatusLabel, RequiredLabel } from './components/StatusLabel'
-export { Base, BaseColumn } from './components/Base'
+// TODO: 内部的にはPanel, Groupboxという名前だが、外部公開時はBase, BaseColumnとして提供
+// リネームの時期を調整中のため、互換性維持のため旧名称で公開
+export { Panel, Panel as Base, Groupbox, Groupbox as BaseColumn } from './components/Panel'
 // eslint-disable-next-line no-restricted-syntax -- Iconから200以上のアイコンをexport
 export * from './components/Icon'
 export { SmartHRAILogo } from './components/SmartHRAILogo'
@@ -101,8 +103,7 @@ export {
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl } from './components/SegmentedControl'
-export { FormControl } from './components/FormControl'
-export { Fieldset } from './components/Fieldset'
+export { FormControl, Fieldset } from './components/FormGroup'
 export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton, SideNavItemAnchor } from './components/SideNav'
 export { Text } from './components/Text'
@@ -124,6 +125,7 @@ export { ResponseMessage } from './components/ResponseMessage'
 export { Badge } from './components/Badge'
 export { Switch } from './components/Switch'
 export { Stepper } from './components/Stepper'
+/** @public */
 export { TimePicker, MonthPicker, DatetimeLocalPicker } from './components/Picker'
 export { Browser } from './components/Browser'
 export { WarekiPicker } from './components/WarekiPicker'
@@ -135,10 +137,11 @@ export { Scroller } from './components/Scroller'
 export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
-export { useTheme } from './hooks/useTheme'
-export { useEnvironment, EnvironmentProvider } from './hooks/useEnvironment'
+export { useTheme, ThemeProvider } from './hooks/client/useTheme'
+export { useEnvironment, EnvironmentProvider } from './hooks/client/useEnvironment'
 
 // themes
+/** @public */
 export {
   createTheme,
   createMediaQuery,
@@ -152,7 +155,6 @@ export {
   defaultSpacing,
   defaultBreakpoint,
 } from './themes'
-export { ThemeProvider } from './hooks/useTheme'
 
 // localization
 export {
@@ -168,4 +170,9 @@ export {
 } from './intl'
 
 // constants
+// HINT: packages/chartsから参照しているが、knipをworkspace単体で実行しているため検知できない
+/** @public */
 export { FONT_FAMILY, CHART_COLORS, SINGLE_CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+
+// utils
+export { formatNumericString } from './libs/formatNumericString'

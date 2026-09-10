@@ -15,18 +15,15 @@ const classNameGenerator = tv({
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
   ({ tooltipMessage, width, className, ...rest }, ref) => {
-    const style = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
+    const style = {
+      width: typeof width === 'number' ? `${width}px` : width,
+    }
 
     const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     return (
       // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-      <Tooltip message={tooltipMessage} tabIndex={-1} className={actualClassName} style={style}>
+      <Tooltip tabIndex={-1} className={actualClassName} style={style} message={tooltipMessage}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <Input {...rest} ref={ref} width={style.width} />
       </Tooltip>

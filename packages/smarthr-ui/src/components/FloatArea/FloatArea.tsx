@@ -1,96 +1,44 @@
 import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
 import { Cluster, Stack } from '../Layout'
+import { Panel } from '../Panel'
 import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { Gap } from '../../types'
 
 const classNameGenerator = tv({
-  slots: {
-    wrapper: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
-    mainButtonCluster: 'shr-ms-auto',
-    responseMessageWrapper: 'shr-ms-auto',
-  },
+  base: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
   variants: {
     bottom: {
-      0: {
-        wrapper: 'shr-bottom-0',
-      },
-      0.25: {
-        wrapper: 'shr-bottom-0.25',
-      },
-      0.5: {
-        wrapper: 'shr-bottom-0.5',
-      },
-      0.75: {
-        wrapper: 'shr-bottom-0.75',
-      },
-      1: {
-        wrapper: 'shr-bottom-1',
-      },
-      1.25: {
-        wrapper: 'shr-bottom-1.25',
-      },
-      1.5: {
-        wrapper: 'shr-bottom-1.5',
-      },
-      2: {
-        wrapper: 'shr-bottom-2',
-      },
-      2.5: {
-        wrapper: 'shr-bottom-2.5',
-      },
-      3: {
-        wrapper: 'shr-bottom-3',
-      },
-      3.5: {
-        wrapper: 'shr-bottom-3.5',
-      },
-      4: {
-        wrapper: 'shr-bottom-4',
-      },
-      8: {
-        wrapper: 'shr-bottom-8',
-      },
-      X3S: {
-        wrapper: 'shr-bottom-0.25',
-      },
-      XXS: {
-        wrapper: 'shr-bottom-0.5',
-      },
-      XS: {
-        wrapper: 'shr-bottom-1',
-      },
-      S: {
-        wrapper: 'shr-bottom-1.5',
-      },
-      M: {
-        wrapper: 'shr-bottom-2',
-      },
-      L: {
-        wrapper: 'shr-bottom-2.5',
-      },
-      XL: {
-        wrapper: 'shr-bottom-3',
-      },
-      XXL: {
-        wrapper: 'shr-bottom-3.5',
-      },
-      X3L: {
-        wrapper: 'shr-bottom-4',
-      },
-    } as { [key in Gap]: { wrapper: string } },
-  },
-  defaultVariants: {
-    bottom: 1.5,
+      0: 'shr-bottom-0',
+      0.25: 'shr-bottom-0.25',
+      0.5: 'shr-bottom-0.5',
+      0.75: 'shr-bottom-0.75',
+      1: 'shr-bottom-1',
+      1.25: 'shr-bottom-1.25',
+      1.5: 'shr-bottom-1.5',
+      2: 'shr-bottom-2',
+      2.5: 'shr-bottom-2.5',
+      3: 'shr-bottom-3',
+      3.5: 'shr-bottom-3.5',
+      4: 'shr-bottom-4',
+      8: 'shr-bottom-8',
+      X3S: 'shr-bottom-0.25',
+      XXS: 'shr-bottom-0.5',
+      XS: 'shr-bottom-1',
+      S: 'shr-bottom-1.5',
+      M: 'shr-bottom-2',
+      L: 'shr-bottom-2.5',
+      XL: 'shr-bottom-3',
+      XXL: 'shr-bottom-3.5',
+      X3L: 'shr-bottom-4',
+    } as { [key in CharRelativeSize | AbstractSize]: string },
   },
 })
 
-type AbstractProps = {
+type BaseProps = {
   /** 表示する `Button` または `AnchorButton` コンポーネント */
   primaryButton: ReactNode
   /** 表示する `Button` または `AnchorButton` コンポーネント */
@@ -104,7 +52,7 @@ type AbstractProps = {
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const FloatArea: FC<Props> = ({
   primaryButton,
@@ -117,33 +65,27 @@ export const FloatArea: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const classNames = useMemo(() => {
-    const { wrapper, mainButtonCluster, responseMessageWrapper } = classNameGenerator({ bottom })
-
-    return {
-      wrapper: wrapper({ className }),
-      mainButtonCluster: mainButtonCluster(),
-      responseMessageWrapper: responseMessageWrapper(),
-    }
-  }, [bottom, className])
-  const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ bottom: bottom ?? 1.5, className }),
+    [bottom, className],
+  )
 
   return (
-    <Base {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
+    <Panel {...rest} layer={3} padding={1} className={actualClassName} style={{ ...style, zIndex }}>
       <Stack gap={0.5}>
         <Cluster>
           {tertiaryButton}
-          <Cluster gap={1} className={classNames.mainButtonCluster}>
+          <Cluster gap={1} className="shr-ms-auto">
             {secondaryButton}
             {primaryButton}
           </Cluster>
         </Cluster>
         {responseStatus && (
-          <p className={classNames.responseMessageWrapper}>
+          <p className="shr-ms-auto">
             <ResponseMessage status={responseStatus.status}>{responseStatus.text}</ResponseMessage>
           </p>
         )}
       </Stack>
-    </Base>
+    </Panel>
   )
 }

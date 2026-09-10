@@ -3,7 +3,7 @@ import { AccordionPanelContent } from '../AccordionPanelContent'
 import { AccordionPanelItem } from '../AccordionPanelItem'
 import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 export default {
@@ -47,7 +47,7 @@ export const HeadingType: StoryObj<typeof AccordionPanelTrigger> = {
           'subSubBlockTitle',
         ] as Array<ComponentProps<typeof AccordionPanelTrigger>['headingType']>
       ).map((headingType) => (
-        <AccordionPanelItem name={`accorion-panel-item-${headingType}`} key={headingType}>
+        <AccordionPanelItem key={headingType} name={`accorion-panel-item-${headingType}`}>
           <AccordionPanelTrigger {...args} headingType={headingType}>
             {headingType ?? '未指定'}
           </AccordionPanelTrigger>
@@ -68,8 +68,8 @@ export const UnrecommendedHeadingTag: StoryObj<typeof AccordionPanelTrigger> = {
         >
       ).map((unrecommendedHeadingTag) => (
         <AccordionPanelItem
-          name={`accorion-panel-item-${unrecommendedHeadingTag}`}
           key={unrecommendedHeadingTag}
+          name={`accorion-panel-item-${unrecommendedHeadingTag}`}
         >
           <AccordionPanelTrigger {...args} unrecommendedHeadingTag={unrecommendedHeadingTag}>
             {unrecommendedHeadingTag ?? '未指定'}

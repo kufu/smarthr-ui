@@ -2,7 +2,7 @@ import { pictParser } from '../../../libs/pictParser'
 import { Stack } from '../../Layout'
 import { STYLE_TYPE_MAP, Text } from '../Text'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 // $ pict text.pict
@@ -95,10 +95,10 @@ export default {
           <Text
             {...props}
             {...args}
+            key={i}
             styleType={styleType}
             // 白文字だと見えないので背景色を変える
             className={props.color === 'TEXT_WHITE' ? 'shr-bg-black' : undefined}
-            key={i}
           />
         )),
       )}

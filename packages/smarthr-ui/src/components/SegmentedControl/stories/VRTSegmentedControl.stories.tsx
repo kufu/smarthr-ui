@@ -4,7 +4,7 @@ import { FaChartAreaIcon, FaChartBarIcon, FaChartLineIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { type Option, SegmentedControl } from '../SegmentedControl'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
 
 const chartBarIcon = <FaChartBarIcon />
 const chartAreaIcon = <FaChartAreaIcon />
@@ -35,13 +35,13 @@ export default {
   // icon            false                   1       s
   render: () => (
     <Stack>
-      <SegmentedControl options={iconOptions(true)} value={null} size="M" />
-      <SegmentedControl options={textOptions(false)} value={null} size="S" />
-      <SegmentedControl options={textOptions(true)} value="3" size="S" />
-      <SegmentedControl options={textOptions(false)} value="1" size="M" />
-      <SegmentedControl options={iconOptions(false)} value="3" size="M" />
-      <SegmentedControl options={iconOptions(true)} value="1" size="S" />
-      <SegmentedControl options={iconOptions(false)} value="1" size="S" />
+      <SegmentedControl value={null} size="M" options={iconOptions(true)} />
+      <SegmentedControl value={null} size="S" options={textOptions(false)} />
+      <SegmentedControl value="3" size="S" options={textOptions(true)} />
+      <SegmentedControl value="1" size="M" options={textOptions(false)} />
+      <SegmentedControl value="3" size="M" options={iconOptions(false)} />
+      <SegmentedControl value="1" size="S" options={iconOptions(true)} />
+      <SegmentedControl value="1" size="S" options={iconOptions(false)} />
     </Stack>
   ),
   parameters: {

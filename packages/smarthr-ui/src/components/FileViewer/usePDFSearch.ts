@@ -1,8 +1,23 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  type KeyboardEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
+import { buildCustomTextRenderer } from './buildCustomTextRenderer'
+
 import type { PDFSearchMatch } from './types'
+import type { Page } from 'react-pdf'
+
+type PDFTextContent = Parameters<
+  NonNullable<ComponentProps<typeof Page>['onGetTextSuccess']>
+>[number]
 
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -58,9 +73,7 @@ export const usePDFSearch = (fileUrl: string) => {
 
   const matchCount = matches.length === 0 ? 0 : matches[matches.length - 1].globalIndex + 1
 
-  const latest = useLatest({
-    matchCount,
-  })
+  const latest = useLatest({ matchCount })
 
   const functions = useMemo(() => {
     const resetMatchState = () => {
@@ -101,38 +114,70 @@ export const usePDFSearch = (fileUrl: string) => {
       })
     }
 
+    const goNext = () => {
+      setCurrentMatchIndex((prev) => {
+        if (latest.matchCount === 0) return -1
+        if (prev < 0) return 0
+        return (prev + 1) % latest.matchCount
+      })
+    }
+
+    const goPrev = () => {
+      setCurrentMatchIndex((prev) => {
+        if (latest.matchCount === 0) return -1
+        if (prev < 0) return latest.matchCount - 1
+        return (prev - 1 + latest.matchCount) % latest.matchCount
+      })
+    }
+
     return {
       resetMatchState,
-      setQuery: (nextQuery: string) => {
+      goNext,
+      goPrev,
+      handleChangeQuery: (e: ChangeEvent<HTMLInputElement>) => {
+        const nextQuery = e.target.value
+
         queryRef.current = nextQuery
         setQueryState(nextQuery)
         recalculate(nextQuery, { resetSelection: true })
       },
-      registerPageText: (pageIndex: number, texts: string[]) => {
+      handleKeyDownQuery: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.nativeEvent.isComposing) {
+          return
+        }
+        switch (e.key) {
+          case 'Enter': {
+            e.preventDefault()
+            if (e.shiftKey) {
+              goPrev()
+            } else {
+              goNext()
+            }
+            break
+          }
+          case 'Escape': {
+            if (queryRef.current !== '') {
+              e.preventDefault()
+              queryRef.current = ''
+              setQueryState('')
+              resetMatchState()
+            }
+            break
+          }
+        }
+      },
+      generateHandlePDFPageGetTextSuccess: (pageIndex: number) => (textContent: PDFTextContent) => {
+        const texts = textContent.items.reduce<string[]>((acc, item) => {
+          if ('str' in item) {
+            acc.push(item.str)
+          }
+          return acc
+        }, [])
         pageTextsRef.current.set(pageIndex, texts.map(normalize))
         // 全ページ読み込み前に検索が始まっても、後から読んだページがヒットするよう再計算する。
         if (queryRef.current !== '') {
           recalculate(queryRef.current)
         }
-      },
-      clear: () => {
-        queryRef.current = ''
-        setQueryState('')
-        functions.resetMatchState()
-      },
-      goNext: () => {
-        setCurrentMatchIndex((prev) => {
-          if (latest.matchCount === 0) return -1
-          if (prev < 0) return 0
-          return (prev + 1) % latest.matchCount
-        })
-      },
-      goPrev: () => {
-        setCurrentMatchIndex((prev) => {
-          if (latest.matchCount === 0) return -1
-          if (prev < 0) return latest.matchCount - 1
-          return (prev - 1 + latest.matchCount) % latest.matchCount
-        })
       },
     }
   }, [latest])
@@ -144,19 +189,27 @@ export const usePDFSearch = (fileUrl: string) => {
     functions.resetMatchState()
   }, [fileUrl, functions])
 
+  const customTextRenderer = useMemo(() => {
+    if (matches.length === 0) {
+      return undefined
+    }
+    return buildCustomTextRenderer(matches)
+  }, [matches])
+
   return useMemo(
     () => ({
       query,
       matches,
       matchCount,
       currentMatchIndex,
-      setQuery: functions.setQuery,
-      registerPageText: functions.registerPageText,
-      clear: functions.clear,
+      customTextRenderer,
       goNext: functions.goNext,
       goPrev: functions.goPrev,
+      handleChangeQuery: functions.handleChangeQuery,
+      handleKeyDownQuery: functions.handleKeyDownQuery,
+      generateHandlePDFPageGetTextSuccess: functions.generateHandlePDFPageGetTextSuccess,
     }),
-    [query, matches, matchCount, currentMatchIndex, functions],
+    [query, matches, matchCount, currentMatchIndex, customTextRenderer, functions],
   )
 }
 

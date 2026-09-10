@@ -1,5 +1,7 @@
 'use client'
 
+// HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
+// react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
 import { useMemo } from 'react'
 import {
   type PrimitiveType,
@@ -32,6 +34,8 @@ export type UseIntlReturn = {
   locale: keyof typeof locales
 }
 
+type LocalizeProps = Parameters<UseIntlReturn['localize']>[0]
+
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
 /**
@@ -56,7 +60,7 @@ const isValidLocale = (locale: string): locale is keyof typeof locales => locale
 export const useIntl = (): UseIntlReturn => {
   const intl = useReactIntl()
 
-  const result = useMemo(
+  return useMemo(
     () => ({
       localize: <T extends keyof Messages>(
         descriptor: MessageDescriptor<T>,
@@ -68,6 +72,23 @@ export const useIntl = (): UseIntlReturn => {
     }),
     [intl],
   )
+}
 
-  return result
+export const useLocalize = <T extends { [key: string]: LocalizeProps }>(
+  props: T,
+): { [K in keyof T]: string } => {
+  const { localize } = useIntl()
+
+  return useMemo(() => {
+    const result = {} as { [K in keyof T]: string }
+
+    for (const i in props) {
+      result[i] = localize(props[i])
+    }
+
+    return result
+    // HINT: 利用方法としてpropsはliteral objectになる
+    // 依存配列からは意図的に排除している
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localize])
 }

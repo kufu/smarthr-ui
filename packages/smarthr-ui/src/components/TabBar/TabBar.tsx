@@ -20,11 +20,11 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** `true` のとき、TabBar に下線を表示する */
   bordered?: boolean
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'role'>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'role'>
 
 export const TabBar: FC<Props> = ({ className, bordered, children, ...rest }) => {
   const classNames = useMemo(() => {

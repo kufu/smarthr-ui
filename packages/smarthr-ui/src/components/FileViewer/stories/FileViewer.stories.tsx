@@ -1,12 +1,13 @@
 import { FileViewer } from '../FileViewer'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/FileViewer',
   component: FileViewer,
   render: (args) => (
-    <div className="shr-h-[90vh]">
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div tabIndex={0} className="shr-h-[90vh] shr-w-full shr-resize shr-overflow-auto">
       <FileViewer {...args} />
     </div>
   ),
@@ -71,5 +72,12 @@ export const ScaleStep: Story = {
   name: 'scaleStep',
   args: {
     scaleStep: 1,
+  },
+}
+
+export const Searchable: Story = {
+  name: 'searchable',
+  args: {
+    searchable: false,
   },
 }

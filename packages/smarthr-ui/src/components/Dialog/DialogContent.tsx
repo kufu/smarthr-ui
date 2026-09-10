@@ -9,11 +9,11 @@ import { useDialogPortal } from './useDialogPortal'
 import type { DirectChildren, UncontrolledDialogProps } from './types'
 
 type DialogContentContextType = {
-  onClickClose: () => void
+  handleDelegateClickClose: () => void
 }
 
 export const DialogContentContext = createContext<DialogContentContextType>({
-  onClickClose: () => {
+  handleDelegateClickClose: () => {
     /* noop */
   },
 })
@@ -21,12 +21,12 @@ export const DialogContentContext = createContext<DialogContentContextType>({
 type Props = UncontrolledDialogProps & DirectChildren
 
 export const DialogContent: FC<Props> = ({ portalParent, ...rest }) => {
-  const { onClickClose, active } = useContext(DialogContext)
+  const { handleDelegateClickClose, active } = useContext(DialogContext)
   const { createPortal } = useDialogPortal(portalParent)
 
   return createPortal(
-    <DialogContentContext.Provider value={{ onClickClose }}>
-      <DialogContentInner {...rest} isOpen={active} onPressEscape={onClickClose} />
+    <DialogContentContext.Provider value={{ handleDelegateClickClose }}>
+      <DialogContentInner {...rest} isOpen={active} onPressEscape={handleDelegateClickClose} />
     </DialogContentContext.Provider>,
   )
 }

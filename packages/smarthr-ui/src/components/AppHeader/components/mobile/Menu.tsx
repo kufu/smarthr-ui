@@ -11,8 +11,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useHandleEscape } from '../../../../hooks/useHandleEscape'
-import { usePortal } from '../../../../hooks/usePortal'
+import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
+import { usePortal } from '../../../../hooks/client/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
@@ -56,20 +56,25 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
     }
   }, [isOpen])
 
-  useHandleEscape(close)
+  const callbackRef = useEscapeCallbackRef(close)
 
   const className = useMemo(() => classNameGenerator(), [])
 
   return (
     <>
       <OpenButton
-        onClick={open}
         alt={
           <Localizer id="smarthr-ui/AppHeader/MobileHeader/openMenu" defaultText="メニューを開く" />
         }
+        onClick={open}
       />
       {createPortal(
-        <MenuDialog isOpen={isOpen} setIsOpen={setIsOpen} tenantSelector={tenantSelector}>
+        <MenuDialog
+          callbackRef={callbackRef}
+          isOpen={isOpen}
+          tenantSelector={tenantSelector}
+          setIsOpen={setIsOpen}
+        >
           <FeatureButton className={className}>
             <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
           </FeatureButton>
@@ -97,20 +102,21 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
 }
 
 const OpenButton = memo<{ alt: ReactNode; onClick: () => void }>(({ onClick, alt }) => (
-  <Button size="S" onClick={onClick} aria-haspopup="true">
+  <Button size="S" aria-haspopup="true" onClick={onClick}>
     <FaBarsIcon alt={alt} />
   </Button>
 ))
 
 const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => {
-  const { features, setIsAppLauncherSelected } = useContext(AppLauncherContext)
+  const { isAppLauncherAvailable, handleOpenAppLauncher, setIsAppLauncherSelected } =
+    useContext(AppLauncherContext)
 
   return (
-    features &&
-    features.length > 0 && (
+    isAppLauncherAvailable && (
       <ActualFeatureButton
-        setIsAppLauncherSelected={setIsAppLauncherSelected}
         className={className}
+        setIsAppLauncherSelected={setIsAppLauncherSelected}
+        handleOpenAppLauncher={handleOpenAppLauncher}
       >
         {children}
       </ActualFeatureButton>
@@ -119,18 +125,25 @@ const FeatureButton = memo<PropsWithChildren<{ className: string }>>(({ children
 })
 
 const ActualFeatureButton: FC<
-  PropsWithChildren<{ className: string; setIsAppLauncherSelected: (selected: boolean) => void }>
-> = ({ setIsAppLauncherSelected, children, className }) => {
-  const onClick = useCallback(() => setIsAppLauncherSelected(true), [setIsAppLauncherSelected])
+  PropsWithChildren<{
+    className: string
+    handleOpenAppLauncher: () => void
+    setIsAppLauncherSelected: (selected: boolean) => void
+  }>
+> = ({ handleOpenAppLauncher, setIsAppLauncherSelected, children, className }) => {
+  const handleClick = useCallback(() => {
+    handleOpenAppLauncher()
+    setIsAppLauncherSelected(true)
+  }, [handleOpenAppLauncher, setIsAppLauncherSelected])
 
   return (
     <div className={className}>
       <Button
         variant="secondary"
         wide
+        onClick={handleClick}
         prefix={<FaToolboxIcon />}
         suffix={<FaAngleRightIcon className="shr-ms-auto" />}
-        onClick={onClick}
       >
         <Translate>{children}</Translate>
       </Button>
@@ -143,7 +156,7 @@ const NavigationAccordion = memo<
 >(({ appName, menuClose, className }) => {
   const { navigations } = useContext(NavigationContext)
 
-  const children = <Navigation navigations={navigations} onClickNavigation={menuClose} />
+  const children = <Navigation navigations={navigations} handleClickNavigation={menuClose} />
 
   return navigations.length > 0 && appName ? (
     <ActualNavigationAccordion appName={appName} className={className}>
@@ -161,7 +174,7 @@ const ActualNavigationAccordion: FC<
 
   return (
     <div className={className}>
-      <MenuAccordion isOpen={isOpen} setIsOpen={setIsOpen} title={appName}>
+      <MenuAccordion isOpen={isOpen} title={appName} setIsOpen={setIsOpen}>
         {children}
       </MenuAccordion>
     </div>
@@ -177,7 +190,7 @@ const AdditionalContent: FC<PropsWithChildren<{ title: ReactNode; className: str
 
   return (
     <div className={className}>
-      <MenuAccordion isOpen={isOpen} setIsOpen={setIsOpen} title={title}>
+      <MenuAccordion isOpen={isOpen} title={title} setIsOpen={setIsOpen}>
         {children}
       </MenuAccordion>
     </div>
@@ -191,8 +204,8 @@ const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
     return (
       releaseNote && (
         <ActualReleaseNoteButton
-          setIsReleaseNoteSelected={setIsReleaseNoteSelected}
           className={className}
+          setIsReleaseNoteSelected={setIsReleaseNoteSelected}
         >
           {children}
         </ActualReleaseNoteButton>
@@ -204,11 +217,11 @@ const ReleaseNoteButton = memo<PropsWithChildren<{ className: string }>>(
 const ActualReleaseNoteButton = memo<
   PropsWithChildren<{ className: string; setIsReleaseNoteSelected: (selected: boolean) => void }>
 >(({ setIsReleaseNoteSelected, children, className }) => {
-  const onClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
+  const handleClick = useCallback(() => setIsReleaseNoteSelected(true), [setIsReleaseNoteSelected])
 
   return (
     <div className={className}>
-      <MenuButton onClick={onClick}>{children}</MenuButton>
+      <MenuButton handleClick={handleClick}>{children}</MenuButton>
     </div>
   )
 })

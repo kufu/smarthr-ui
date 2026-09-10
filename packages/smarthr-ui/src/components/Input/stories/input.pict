@@ -1,4 +1,5 @@
 disabled: false, true
+readOnly: false, true
 error: false, true
 prefix: なし (10), あり
 suffix: なし (10), あり
@@ -8,3 +9,5 @@ width: なし (10), あり
 
 # prefix / suffix は両立させない
 IF [prefix] = "あり" THEN [suffix] = "なし";
+# disabled と readOnly は両立させない
+IF [disabled] = "true" THEN [readOnly] = "false";

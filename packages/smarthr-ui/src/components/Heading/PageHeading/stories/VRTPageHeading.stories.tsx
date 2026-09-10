@@ -1,7 +1,7 @@
 import { Stack } from '../../../Layout'
 import { PageHeading } from '../PageHeading'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Heading/PageHeading/VRT',
@@ -12,10 +12,10 @@ export default {
       <Stack {...args}>
         {sizes.map((size) => (
           <>
-            <PageHeading size={size} visuallyHidden={true}>
+            <PageHeading visuallyHidden={true} size={size}>
               {size ? size : 'undefined'}
             </PageHeading>
-            <PageHeading size={size} visuallyHidden={false}>
+            <PageHeading visuallyHidden={false} size={size}>
               {size ? size : 'undefined'}
             </PageHeading>
           </>

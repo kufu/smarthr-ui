@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<div>': 'div', '<span>': 'span' }
 

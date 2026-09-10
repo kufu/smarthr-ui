@@ -1,9 +1,9 @@
 import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../intl'
+import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
-
-import { SearchInputIcon } from './SearchInputIcon'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
@@ -46,8 +46,13 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
         <InputWithTooltip
           {...rest}
           ref={ref}
-          prefix={<SearchInputIcon />}
           className={classNames.input}
+          prefix={
+            <FaMagnifyingGlassIcon
+              alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
+              color="TEXT_GREY"
+            />
+          }
         />
       </label>
     )

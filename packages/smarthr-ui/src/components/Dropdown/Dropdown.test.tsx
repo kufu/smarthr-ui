@@ -88,6 +88,16 @@ describe('Dropdown', () => {
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
 
+  it('trigger の aria-controls が指す id を持つ要素が DOM 上に存在すること', () => {
+    render(template)
+
+    const trigger = screen.getByRole('button', { name: 'Trigger' })
+    expect(trigger).toHaveAttribute('aria-controls')
+
+    const controlsId = trigger.getAttribute('aria-controls')!
+    expect(document.getElementById(controlsId)).toBeInTheDocument()
+  })
+
   describe('トリガーボタンの disabled が動的に切り替わる場合', () => {
     const ToggleTemplate = ({ initialDisabled }: { initialDisabled: boolean }) => {
       const [disabled, setDisabled] = useState(initialDisabled)

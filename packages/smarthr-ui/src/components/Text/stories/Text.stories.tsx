@@ -2,7 +2,7 @@ import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Text } from '../Text'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 

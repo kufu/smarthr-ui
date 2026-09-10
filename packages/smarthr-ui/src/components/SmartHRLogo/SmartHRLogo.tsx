@@ -1,7 +1,7 @@
 import { type ComponentPropsWithoutRef, memo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-type AbstractProps = {
+type BaseProps = {
   /** コンポーネントのタイトル */
   alt?: string
   /** コンポーネントの幅 */
@@ -9,7 +9,7 @@ type AbstractProps = {
   /** コンポーネントの高さ */
   height?: number | string
 } & VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom'],
@@ -26,10 +26,10 @@ export const SmartHRLogo = memo<Props>(({ alt, width, height, fill, className, .
   <svg
     {...rest}
     role="img"
-    aria-label={alt || 'SmartHR（スマートHR）'}
     viewBox="0 0 150 28"
     className={classNameGenerator({ className, fill: fill ?? 'white' })}
     style={width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }}
+    aria-label={alt || 'SmartHR（スマートHR）'}
   >
     <path
       fillRule="evenodd"

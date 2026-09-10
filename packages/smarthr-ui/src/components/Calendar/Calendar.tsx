@@ -7,14 +7,13 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useCallback,
-  useEffect,
   useId,
   useMemo,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Localizer, useDateFormat } from '../../intl'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
@@ -24,7 +23,7 @@ import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
-type AbstractProps = {
+type BaseProps = {
   /** 選択可能な開始日 */
   from?: Date
   /** 選択可能な終了日 */
@@ -34,7 +33,7 @@ type AbstractProps = {
   /** 選択された日付 */
   value?: Date
 }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 type DayJsType = ReturnType<typeof dayjs>
 
@@ -69,6 +68,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       }
     }, [className])
 
+    const yearPickerId = useId()
+
     const formattedFrom = useMemo(() => {
       const date = getFromDate(from)
       const day = dayjs(date)
@@ -94,31 +95,31 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       () => value && isBetween(value, formattedFrom.date, formattedTo.date),
       [value, formattedFrom.date, formattedTo.date],
     )
+    const [prevIsValidValue, setPrevIsValidValue] = useState(isValidValue)
+    const [prevValue, setPrevValue] = useState(value)
 
-    const [currentMonth, setCurrentMonth] = useState(
-      (() => {
-        if (isValidValue) {
-          return dayjs(value)
-        }
+    const [currentMonth, setCurrentMonth] = useState(() => {
+      if (isValidValue) {
+        return dayjs(value)
+      }
 
-        const today = dayjs()
+      const today = dayjs()
 
-        return formattedTo.day.isBefore(today)
-          ? formattedTo.day
-          : formattedFrom.day.isAfter(today)
-            ? formattedFrom.day
-            : today
-      })(),
-    )
-    const [isSelectingYear, setIsSelectingYear] = useState(false)
+      return formattedTo.day.isBefore(today)
+        ? formattedTo.day
+        : formattedFrom.day.isAfter(today)
+          ? formattedFrom.day
+          : today
+    })
 
-    const yearPickerId = useId()
+    if (isValidValue !== prevIsValidValue || value !== prevValue) {
+      setPrevIsValidValue(isValidValue)
+      setPrevValue(value)
 
-    useEffect(() => {
       if (isValidValue) {
         setCurrentMonth(dayjs(value))
       }
-    }, [value, isValidValue])
+    }
 
     const calculatedCurrentMonth = useMemo(() => {
       const d = currentMonth.toDate()
@@ -140,19 +141,25 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       }
     }, [currentMonth, formatDate, getWeekStartDay])
 
-    const onSelectYear = useCallback(
-      (e: MouseEvent<HTMLButtonElement>) => {
-        e.stopPropagation()
-        setCurrentMonth(currentMonth.year(parseInt(e.currentTarget.value, 10)))
-        setIsSelectingYear(false)
-      },
-      [currentMonth],
-    )
+    const [isSelectingYear, setIsSelectingYear] = useState(false)
 
-    const onClickSelectYear = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      setIsSelectingYear((current) => !current)
-    }, [])
+    const functions = useMemo(
+      () => ({
+        handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation()
+
+          const year = parseInt(e.currentTarget.value, 10)
+
+          setCurrentMonth((prev) => prev.year(year))
+          setIsSelectingYear(false)
+        },
+        handleClickSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation()
+          setIsSelectingYear((current) => !current)
+        },
+      }),
+      [],
+    )
 
     return (
       <div {...rest} ref={ref} className={classNames.container}>
@@ -161,35 +168,35 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
             {calculatedCurrentMonth.yearMonthText}
           </YearMonthRender>
           <YearSelectButton
+            className={classNames.yearSelectButton}
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
-            onClick={onClickSelectYear}
-            className={classNames.yearSelectButton}
+            handleClick={functions.handleClickSelectYear}
           />
           <MonthDirectionCluster
             isSelectingYear={isSelectingYear}
             directionMonth={calculatedCurrentMonth}
             from={formattedFrom.day}
             to={formattedTo.day}
-            setCurrentMonth={setCurrentMonth}
             className={classNames.monthButtons}
+            setCurrentMonth={setCurrentMonth}
           />
         </header>
         <div className={classNames.tableLayout}>
           <YearPicker
+            id={yearPickerId}
+            selectedYear={value?.getFullYear()}
             fromYear={formattedFrom.year}
             toYear={formattedTo.year}
-            selectedYear={value?.getFullYear()}
-            onSelectYear={onSelectYear}
             isDisplayed={isSelectingYear}
-            id={yearPickerId}
+            handleSelectYear={functions.handleSelectYear}
           />
           <CalendarTable
+            selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
             current={calculatedCurrentMonth}
             from={formattedFrom.date}
             to={formattedTo.date}
             onSelectDate={onSelectDate}
-            selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
           />
         </div>
       </div>
@@ -204,10 +211,10 @@ const YearMonthRender = memo<PropsWithChildren<{ className: string }>>(
 const YearSelectButton = memo<{
   'aria-expanded': boolean
   'aria-controls': string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>((props) => (
-  <Button {...props} size="S">
+}>(({ handleClick, ...rest }) => (
+  <Button {...rest} size="S" onClick={handleClick}>
     <FaCaretDownIcon
       alt={<Localizer id="smarthr-ui/Calendar/selectYear" defaultText="年を選択する" />}
     />
@@ -225,16 +232,23 @@ const MonthDirectionCluster = memo<{
   setCurrentMonth: (day: DayJsType) => void
   className: string
 }>(({ isSelectingYear, directionMonth: { prev, next }, from, to, setCurrentMonth, className }) => {
-  const onClickMonthPrev = useCallback(() => setCurrentMonth(prev), [prev, setCurrentMonth])
-  const onClickMonthNext = useCallback(() => setCurrentMonth(next), [next, setCurrentMonth])
+  const latest = useLatest({ prev, next, setCurrentMonth })
+
+  const functions = useMemo(
+    () => ({
+      handleClickMonthPrev: () => latest.setCurrentMonth(latest.prev),
+      handleClickMonthNext: () => latest.setCurrentMonth(latest.next),
+    }),
+    [latest],
+  )
 
   return (
     <Cluster gap={0.5} className={className}>
       <Button
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
-        onClick={onClickMonthPrev}
         size="S"
         className="smarthr-ui-Calendar-monthButtonPrev"
+        onClick={functions.handleClickMonthPrev}
       >
         <FaChevronLeftIcon
           alt={<Localizer id="smarthr-ui/Calendar/previousMonth" defaultText="前の月へ" />}
@@ -242,9 +256,9 @@ const MonthDirectionCluster = memo<{
       </Button>
       <Button
         disabled={isSelectingYear || next.isAfter(to, 'month')}
-        onClick={onClickMonthNext}
         size="S"
         className="smarthr-ui-Calendar-monthButtonNext"
+        onClick={functions.handleClickMonthNext}
       >
         <FaChevronRightIcon
           alt={<Localizer id="smarthr-ui/Calendar/nextMonth" defaultText="次の月へ" />}

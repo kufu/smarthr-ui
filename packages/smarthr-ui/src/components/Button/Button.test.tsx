@@ -17,7 +17,7 @@ describe('Button', () => {
       const onClick = vi.fn()
       render(
         <IntlProvider locale="ja">
-          <Button onClick={onClick} disabled>
+          <Button disabled onClick={onClick}>
             button
           </Button>
         </IntlProvider>,
@@ -30,7 +30,7 @@ describe('Button', () => {
       const onClick = vi.fn()
       render(
         <IntlProvider locale="ja">
-          <Button onClick={onClick} loading>
+          <Button loading onClick={onClick}>
             button
           </Button>
         </IntlProvider>,

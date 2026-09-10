@@ -61,15 +61,15 @@ export const PaginationControllerItemButton: FC<Props> = ({
     variant: 'secondary',
     size: 'S',
     className: 'shr-rounded-s',
-    children: <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={alt} />,
+    children: <Icon alt={alt} color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} />,
   } as const
 
   if (hrefTemplate) {
     return (
       <AnchorButton
         {...commonAttrs}
-        href={disabled ? undefined : hrefTemplate(targetPage)}
         elementAs={disabled ? undefined : linkAs}
+        href={disabled ? undefined : hrefTemplate(targetPage)}
       />
     )
   }

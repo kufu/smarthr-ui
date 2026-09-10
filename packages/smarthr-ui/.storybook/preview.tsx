@@ -36,11 +36,13 @@ if (isProduction) {
 const preview: Preview = {
   parameters: {
     options: {
-      isFullscreen: false,
-      isToolshown: true,
+      storySort: {
+        method: 'alphabetical',
+        order: ['*', 'Charts'],
+      },
     },
     viewport: {
-      viewports: {
+      options: {
         ...INITIAL_VIEWPORTS,
         vrtMobile: {
           name: 'VRT Mobile',
@@ -79,9 +81,15 @@ const preview: Preview = {
       forcedColors: 'none',
     },
     backgrounds: {
-      default: 'light',
-      values: [{ name: 'light', value: backgroundColor.background }],
+      options: {
+        white: { name: 'white', value: backgroundColor.white },
+        background: { name: 'background', value: backgroundColor.background },
+        brand: { name: 'brand', value: backgroundColor.brand },
+      },
     },
+  },
+  initialGlobals: {
+    backgrounds: { value: 'white' },
   },
   globalTypes: {
     locale: {

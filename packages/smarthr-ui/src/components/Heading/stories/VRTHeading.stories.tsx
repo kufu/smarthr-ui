@@ -2,7 +2,7 @@ import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Heading } from '../Heading'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Heading/VRT',
@@ -26,26 +26,26 @@ export default {
                 {/* @ts-expect-error */}
                 <Heading
                   type={type}
-                  size={size}
                   unrecommendedTag={unrecommendedTag}
                   visuallyHidden={true}
+                  size={size}
                 >
                   {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
                 <Heading
                   type={type}
-                  size={size}
                   unrecommendedTag={unrecommendedTag}
                   visuallyHidden={false}
+                  size={size}
                 >
                   {type ? type : 'undefined'}
                 </Heading>
                 {/* @ts-expect-error */}
                 <Heading
                   type={type}
-                  size={size}
                   unrecommendedTag={unrecommendedTag}
+                  size={size}
                   icon={<FaAddressBookIcon />}
                 >
                   {type ? type : 'undefined'}

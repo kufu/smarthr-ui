@@ -1,7 +1,8 @@
 'use client'
 
 import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
-import { useRemoteTrigger } from '../useRemoteTrigger'
+
+import { useRemoteTrigger } from './useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 

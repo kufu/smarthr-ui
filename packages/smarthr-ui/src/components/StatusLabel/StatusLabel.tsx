@@ -62,8 +62,8 @@ const classNameGenerator = tv({
   ],
 })
 
-type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const StatusLabel = memo<Props>(
   ({ type = 'grey', bold = false, className, children, ...rest }) => {

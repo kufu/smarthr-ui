@@ -4,7 +4,7 @@ import { userEvent, within } from 'storybook/test'
 import { Cluster } from '../../Layout'
 import { DatePicker } from '../DatePicker'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/DatePicker（非推奨）/VRT',
@@ -26,31 +26,31 @@ export default {
       <Cluster>
         {matrices.map((m) => (
           <>
-            <DatePicker {...args} name="datepicker_default" error={m.error} disabled={m.disabled} />
+            <DatePicker {...args} name="datepicker_default" disabled={m.disabled} error={m.error} />
             <DatePicker
               name="datepicker_value"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
             />
             <DatePicker
               name="datepicker_width"
-              error={m.error}
               disabled={m.disabled}
+              error={m.error}
               width={width}
             />
             <DatePicker
               name="datepicker_showalternative"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
               showAlternative={showAlternative}
             />
             <DatePicker
               name="datepicker_formatdate"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
               formatDate={formatDate}
             />
           </>

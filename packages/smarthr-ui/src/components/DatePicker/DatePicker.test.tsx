@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { act } from 'react'
 
 import { IntlProvider } from '../../intl'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../FormGroup'
 
 import { DatePicker } from './DatePicker'
 
@@ -22,7 +22,7 @@ describe('DatePicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="DatePicker">
-          <DatePicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
+          <DatePicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
     )

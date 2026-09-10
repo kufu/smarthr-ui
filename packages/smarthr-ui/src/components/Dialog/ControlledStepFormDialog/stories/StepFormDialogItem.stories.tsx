@@ -5,7 +5,7 @@ import { Button } from '../../../Button'
 import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/ControlledStepFormDialog/StepFormDialogItem',
@@ -21,10 +21,9 @@ export default {
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ControlledStepFormDialog
-          heading="ステップダイアログ"
           stepLength={2}
-          submitButton="保存"
           firstStep={{ id: 'step-1', stepNumber: 1 }}
+          isOpen={open}
           onSubmit={(e, { goto, close, currentStep }) => {
             action('onSubmit')(e)
             if (currentStep.id === 'step-2') {
@@ -34,7 +33,8 @@ export default {
             }
           }}
           onClickClose={handleClose}
-          isOpen={open}
+          heading="ステップダイアログ"
+          submitButton="保存"
         >
           <StepFormDialogItem id="step-1" stepNumber={1}>
             ダイアログコンテンツ1

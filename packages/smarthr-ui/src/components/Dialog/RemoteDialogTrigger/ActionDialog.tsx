@@ -1,7 +1,8 @@
 'use client'
 
 import { ControlledActionDialog } from '../ControlledActionDialog'
-import { useRemoteTrigger } from '../useRemoteTrigger'
+
+import { useRemoteTrigger } from './useRemoteTrigger'
 
 import type { ComponentProps, FC } from 'react'
 

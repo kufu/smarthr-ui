@@ -3,14 +3,12 @@
 import {
   type ChangeEvent,
   type ComponentPropsWithRef,
-  type ComponentPropsWithoutRef,
   type DragEvent,
+  type MouseEvent,
   type PropsWithChildren,
   forwardRef,
   memo,
-  useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -27,32 +25,15 @@ const classNameGenerator = tv({
       'smarthr-ui-DropZone',
       'shr-relative',
       'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
+      'has-[.smarthr-ui-DropZone-Button[aria-disabled]]:shr-cursor-not-allowed',
+      '[&:not([data-files-dragged-over])]:shr-border-dashed',
+      'data-[files-dragged-over]:shr-border-main',
     ],
-    button: '',
-  },
-  variants: {
-    filesDraggedOver: {
-      true: {
-        wrapper: 'shr-border-main',
-      },
-      false: {
-        wrapper: 'shr-border-dashed',
-      },
-    },
-    disabled: {
-      true: {
-        wrapper: 'shr-cursor-not-allowed',
-      },
-    },
-    error: {
-      true: {
-        button: 'shr-border-danger',
-      },
-    },
+    button: ['smarthr-ui-DropZone-Button', 'data-[error]:shr-border-danger'],
   },
 })
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -74,7 +55,7 @@ type AbstractProps = PropsWithChildren<{
   /** ファイル選択ボタンのラベル */
   selectButtonLabel?: string
 }>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -83,83 +64,96 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 
 export const DropZone = forwardRef<HTMLInputElement, Props>(
   (
-    { children, onSelectFiles, multiple = true, disabled, error, selectButtonLabel, ...rest },
+    {
+      children,
+      onSelectFiles,
+      multiple = true,
+      disabled,
+      error,
+      selectButtonLabel,
+      className,
+      ...rest
+    },
     ref,
   ) => {
-    const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
+
     const classNames = useMemo(() => {
-      const { wrapper, button } = classNameGenerator({ filesDraggedOver, disabled, error })
+      const { wrapper, button } = classNameGenerator()
       return {
-        wrapper: wrapper(),
+        wrapper: wrapper({ className }),
         button: button(),
       }
-    }, [disabled, error, filesDraggedOver])
+    }, [className])
 
     const latest = useLatest({ onSelectFiles })
 
-    const functions = useMemo(
-      () => ({
-        onDrop: (e: DragEvent<HTMLElement>) => {
+    const functions = useMemo(() => {
+      const inputFileSelector = 'input[type="file"][data-smarthr-ui-input="true"]'
+
+      return {
+        handleDrop: (e: DragEvent<HTMLElement>) => {
           overrideEventDefault(e)
           setFilesDraggedOver(false)
 
           if (e.dataTransfer.types.includes('Files')) {
-            if (fileRef.current) {
-              fileRef.current.files = e.dataTransfer.files
+            const input = e.currentTarget.querySelector<HTMLInputElement>(inputFileSelector)
+
+            if (input) {
+              input.files = e.dataTransfer.files
             }
             latest.onSelectFiles(e, e.dataTransfer.files)
           }
         },
-        onDragOver: (e: DragEvent<HTMLElement>) => {
+        handleDragOver: (e: DragEvent<HTMLElement>) => {
           overrideEventDefault(e)
           setFilesDraggedOver(true)
         },
-        onDragLeave: () => {
+        handleDragLeave: () => {
           setFilesDraggedOver(false)
         },
-        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
           latest.onSelectFiles(e, e.target.files)
         },
-        onClickButton: () => {
-          fileRef.current!.click()
+        handleClickButton: (e: MouseEvent<HTMLButtonElement>) => {
+          e.currentTarget
+            .closest('.smarthr-ui-DropZone')
+            ?.querySelector<HTMLInputElement>(inputFileSelector)
+            ?.click()
         },
-      }),
-      [latest],
-    )
-
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => fileRef.current,
-    )
+      }
+    }, [latest])
 
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
-        onDrop={functions.onDrop}
-        onDragOver={functions.onDragOver}
-        onDragLeave={functions.onDragLeave}
         className={classNames.wrapper}
+        data-files-dragged-over={filesDraggedOver || undefined}
+        onDrop={functions.handleDrop}
+        onDragOver={functions.handleDragOver}
+        onDragLeave={functions.handleDragLeave}
       >
         {children}
         <SelectButton
-          onClick={functions.onClickButton}
           disabled={disabled}
+          error={error}
           className={classNames.button}
+          handleClick={functions.handleClickButton}
           label={selectButtonLabel}
         />
         <VisuallyHiddenText>
+          {/* TODO: この input にアクセシブルネームが設定されていない。VisuallyHiddenText で視覚的に隠されているが aria-hidden ではないためアクセシビリティツリーに残る。aria-label 等で適切なラベルを付与する必要がある */}
           {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
           <input
             {...rest}
-            data-smarthr-ui-input="true"
-            ref={fileRef}
+            ref={ref}
             type="file"
-            multiple={multiple}
             disabled={disabled}
+            multiple={multiple}
             tabIndex={-1}
             aria-invalid={error || undefined}
-            onChange={functions.onChange}
+            data-smarthr-ui-input="true"
+            onChange={functions.handleChange}
           />
         </VisuallyHiddenText>
       </div>
@@ -167,10 +161,20 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
   },
 )
 
-const SelectButton = memo<
-  ComponentPropsWithoutRef<typeof Button> & { onClick: () => void; label?: string }
->(({ onClick, label, ...rest }) => (
-  <Button {...rest} prefix={<FaFolderOpenIcon />} onClick={onClick}>
+const SelectButton = memo<{
+  label?: string
+  disabled?: boolean
+  error?: boolean
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+  className: string
+}>(({ label, disabled, error, handleClick, className }) => (
+  <Button
+    disabled={disabled}
+    className={className}
+    data-error={error || undefined}
+    onClick={handleClick}
+    prefix={<FaFolderOpenIcon />}
+  >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
   </Button>
 ))

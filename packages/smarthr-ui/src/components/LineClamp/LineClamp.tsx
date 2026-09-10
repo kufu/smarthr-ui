@@ -13,8 +13,8 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'span'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -107,8 +107,8 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
-      <span aria-hidden className={classNames.shadowElementWrapper}>
-        <span className={classNames.shadowElement} ref={shadowRef}>
+      <span className={classNames.shadowElementWrapper} aria-hidden>
+        <span ref={shadowRef} className={classNames.shadowElement}>
           {children}
         </span>
       </span>
