@@ -62,6 +62,7 @@
   "smarthr-ui/InformationPanel/closeButtonLabel": "닫기",
   "smarthr-ui/InformationPanel/openButtonLabel": "열기",
   "smarthr-ui/InputFile/destroy": "삭제",
+  "smarthr-ui/InputFile/targetBlank": "다른 창으로 열기",
   "smarthr-ui/InputFile/download": "다운로드",
   "smarthr-ui/InputFile/previewLabel": "{fileName}의 미리보기 열기",
   "smarthr-ui/InputFile/downloadLabel": "{fileName} 다운로드",
