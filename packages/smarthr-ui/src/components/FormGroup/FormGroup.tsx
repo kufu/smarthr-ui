@@ -5,7 +5,9 @@ import {
   type ComponentType,
   type FC,
   type PropsWithChildren,
+  type ReactNode,
   type Ref,
+  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -16,11 +18,10 @@ import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
 import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
-import { useDescribedByIds } from './useDescribedByIds'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
-// HINT: errorMessagesを含む各idはuseDescribedByIdsで算出する
 type Props = Omit<CommonProps, 'className'> & {
   callbackRef: Ref<HTMLElement>
   /** グループのラベル名 */
@@ -34,6 +35,10 @@ type Props = Omit<CommonProps, 'className'> & {
     childrenWrapper: string
   }
 }
+
+// HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
+// undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する
+const EMPTY_ERROR_MESSAGES: ReactNode[] = []
 
 export const FormGroup: FC<Props> = ({
   callbackRef,
@@ -61,22 +66,75 @@ export const FormGroup: FC<Props> = ({
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const {
-    errorMessages,
-    visibleErrorMessages,
-    helpMessageId,
-    exampleMessageId,
-    supplementaryMessageId,
-    errorMessagesId,
-    describedbyIds,
-  } = useDescribedByIds({
-    wrapperRef,
-    htmlFor: label.htmlFor,
-    errorMessages: orgErrorMessages,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
-  })
+  // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
+  // undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する
+  const errorMessages = orgErrorMessages
+    ? Array.isArray(orgErrorMessages)
+      ? orgErrorMessages.length === 0
+        ? EMPTY_ERROR_MESSAGES
+        : orgErrorMessages
+      : [orgErrorMessages]
+    : EMPTY_ERROR_MESSAGES
+
+  const helpMessageId = helpMessage ? `${label.htmlFor}_helpMessage` : undefined
+  const exampleMessageId = exampleMessage ? `${label.htmlFor}_exampleMessage` : undefined
+  const supplementaryMessageId = supplementaryMessage
+    ? `${label.htmlFor}_supplementaryMessage`
+    : undefined
+  const visibleErrorMessages = errorMessages.length > 0
+  const errorMessagesId = visibleErrorMessages ? `${label.htmlFor}_errorMessages` : undefined
+
+  const describedbyIds = useMemo(() => {
+    const temp: string[] = []
+
+    if (helpMessageId) {
+      temp.push(helpMessageId)
+    }
+    if (exampleMessageId) {
+      temp.push(exampleMessageId)
+    }
+    if (supplementaryMessageId) {
+      temp.push(supplementaryMessageId)
+    }
+    if (errorMessagesId) {
+      temp.push(errorMessagesId)
+    }
+
+    return temp.join(' ')
+  }, [helpMessageId, exampleMessageId, supplementaryMessageId, errorMessagesId])
+
+  const managedDescribedbyIdsRef = useRef<string[]>([])
+
+  useEffect(() => {
+    if (!wrapperRef.current) {
+      return
+    }
+
+    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+
+    if (!input) {
+      return
+    }
+
+    const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
+    const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
+    // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
+    const externalTokens = currentTokens.filter(
+      (token) => !managedDescribedbyIdsRef.current.includes(token),
+    )
+    const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
+    const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
+
+    if (nextValue !== ariaDescribedBy) {
+      if (nextValue) {
+        input.setAttribute('aria-describedby', nextValue)
+      } else {
+        input.removeAttribute('aria-describedby')
+      }
+    }
+
+    managedDescribedbyIdsRef.current = describedbyIdTokens
+  }, [describedbyIds, wrapperRef])
 
   const wrapperCallbackRef = useMergeRefs(
     wrapperRef,
