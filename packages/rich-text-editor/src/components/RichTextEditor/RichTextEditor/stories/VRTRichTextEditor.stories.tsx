@@ -411,3 +411,20 @@ export const VRTMobileToolbarExpanded: Story = {
     toggle.click()
   },
 }
+
+export const VRTNarrowToolbar: Story = {
+  name: 'ツールバーの折り返し（狭幅・デスクトップ）',
+  render: () => (
+    <Stack gap={2}>
+      <FormControl label="幅375px">
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
+      </FormControl>
+      <FormControl label="幅480px">
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={480} />
+      </FormControl>
+      <FormControl label="幅600px">
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={600} />
+      </FormControl>
+    </Stack>
+  ),
+}

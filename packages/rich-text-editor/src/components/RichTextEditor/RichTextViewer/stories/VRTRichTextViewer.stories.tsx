@@ -245,3 +245,78 @@ export const Gap: Story = {
     </Stack>
   ),
 }
+
+export const Table: Story = {
+  name: '表（結合セル・列幅・セル内寄せ）',
+  args: {
+    content: {
+      type: 'doc',
+      content: [
+        {
+          type: 'table',
+          content: [
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableHeader',
+                  attrs: { colspan: 2, colwidth: [120, 180] },
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '結合ヘッダ' }] }],
+                },
+                {
+                  type: 'tableHeader',
+                  attrs: { align: 'right', colwidth: [90] },
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '右寄せ' }] }],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: { rowspan: 2 },
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '2行結合' }] }],
+                },
+                {
+                  type: 'tableCell',
+                  attrs: { align: 'center' },
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '中央' }] }],
+                },
+                {
+                  type: 'tableCell',
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '通常' }] }],
+                },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: 'A' }] }],
+                },
+                {
+                  type: 'tableCell',
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: 'B' }] }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <Stack gap={2}>
+      <RichTextViewer content={content} />
+      <RichTextViewer
+        content={{
+          format: 'html',
+          content:
+            '<table><tbody><tr><th colspan="2">結合ヘッダ (HTML)</th><th>ヘッダ</th></tr><tr><td rowspan="2">2行結合</td><td>セル</td><td>セル</td></tr><tr><td>A</td><td>B</td></tr></tbody></table>',
+        }}
+      />
+    </Stack>
+  ),
+}

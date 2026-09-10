@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FormControl, Stack } from 'smarthr-ui'
+import { Button, Cluster, FormControl, Stack } from 'smarthr-ui'
 
 import { RichTextEditor } from '../RichTextEditor'
 
@@ -375,4 +375,32 @@ export const Resizable: Story = {
       </FormControl>
     </Stack>
   ),
+}
+
+export const InForm: Story = {
+  name: 'フォームの中で使う',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [submitCount, setSubmitCount] = useState(0)
+
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          setSubmitCount((count) => count + 1)
+        }}
+      >
+        <Stack>
+          <FormControl label="リッチテキストエディタ">
+            <RichTextEditor {...rest} />
+          </FormControl>
+          <Cluster align="center">
+            <Button type="submit" variant="primary">
+              保存
+            </Button>
+            <span>親フォームの送信回数: {submitCount}</span>
+          </Cluster>
+        </Stack>
+      </form>
+    )
+  },
 }
