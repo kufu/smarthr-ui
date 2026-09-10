@@ -60,9 +60,7 @@ const classNameGenerator = tv({
       'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-items-center shr-justify-center',
     ],
     handleBar: ['shr-h-0.25 shr-w-[2.5rem] shr-rounded-full shr-bg-border'],
-    // FocusTrap が挟む div をボックス化させないための display:contents。
-    // これが無いと modal のときだけ inner の flex コンテキストが途切れ、
-    // DrawerBody / DrawerFooter が flex アイテムでなくなる。
+    // FocusTrap の div がボックスを作ると inner の flex コンテキストが途切れる
     focusTrap: 'shr-contents',
   },
   variants: {
@@ -92,9 +90,7 @@ const classNameGenerator = tv({
       absolute: { layout: 'shr-absolute' },
     },
   },
-  // パネルの上限は、画面端固定（fixed）ならビューポート、portalParent 内（absolute）ならコンテナを基準にする。
-  // 基準を間違えると親からはみ出す。bottom は dvh のままだと grabber とヘッダが上に切れ、
-  // right/left は指定サイズより狭いコンテナで横にはみ出して閉じるボタンが切れる。
+  // パネルの上限は fixed ならビューポート、absolute ならコンテナが基準。間違えると親からはみ出す
   compoundVariants: [
     {
       position: ['right', 'left'],
@@ -148,8 +144,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   const innerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number | null>(null)
 
-  // DrawerHeader がマウントされたときだけ、そのヘッダの id を参照する。
-  // 常に autoHeadingId を指すと、ヘッダ無しの場合に参照先が存在しない属性になる。
+  // 常に autoHeadingId を指すと、ヘッダ無しのときに参照先が存在しない属性になる
   const [registeredHeadingId, setRegisteredHeadingId] = useState<string | undefined>(undefined)
 
   const resolvedLabelledby = useMemo(() => {
@@ -160,8 +155,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
 
   const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay })
 
-  // 閉じアニメーションの間もドロワーは DOM に残るため、isOpen を見ないと
-  // 閉じ途中のクリックや Escape で再度コールバックが走ってしまう。
+  // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
   const functions = useMemo(
     () => ({
       handlePressEscape: () => {
@@ -262,8 +256,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
 
   useBodyScrollLock(isOpen && modality === 'modal')
 
-  // ドラッグ中は毎フレーム再レンダーされるため、Context の値を作り直すと
-  // DrawerHeader（Button / Heading / Text / Icon）まで巻き込んで再描画される
+  // ドラッグ中は毎フレーム再レンダーされるため、作り直すと DrawerHeader まで巻き込む
   const contentContextValue = useMemo(
     () => ({ handleClickClose: functions.handleClickClose }),
     [functions],

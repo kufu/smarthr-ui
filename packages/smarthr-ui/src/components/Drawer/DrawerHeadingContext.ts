@@ -5,11 +5,7 @@ import { createContext } from 'react'
 type DrawerHeadingContextType = {
   /** DrawerHeader が id 未指定のときに使う自動生成 id */
   headingId: string
-  /**
-   * DrawerHeader が実際に適用した id を DrawerContentInner へ知らせる。
-   * ヘッダを置いていない場合に aria-labelledby が存在しない id を指すのを防ぐため、
-   * 「自動 id を使ったか」ではなく「どの id を使ったか」を登録させている。
-   */
+  /** DrawerHeader が実際に適用した id。有無ではなく id を登録させるのは、id 指定にも対応するため */
   registerHeadingId: (id: string | undefined) => void
 }
 
