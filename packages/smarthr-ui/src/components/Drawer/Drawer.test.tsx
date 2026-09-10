@@ -16,10 +16,8 @@ import { DrawerWrapper } from './DrawerWrapper'
 
 import type { DrawerPosition } from './types'
 
-// jsdom は PointerEvent 未実装（clientX/clientY 等が抜け落ちる）のため、
-// fireEvent.pointerXxx でドラッグ座標を検証できるよう MouseEvent ベースで補う。
-// timeStamp も同一 tick 内の連続呼び出しでは常に同じ値になり、速度計算が距離に
-// 対して過大になってしまうため、明示的に上書きできるようにする。
+// jsdom は PointerEvent 未実装で clientX/clientY と timeStamp が落ちるため補う。
+// timeStamp は同一 tick で同値になり、速度が距離に対して過大になる。
 if (typeof PointerEvent === 'undefined') {
   class PointerEventPolyfill extends MouseEvent {
     pointerId?: number
@@ -124,8 +122,7 @@ describe('Drawer（Controlled）', () => {
     expect(dialog).toHaveAttribute('aria-modal', 'true')
   })
 
-  // FocusTrap が挟む div がボックスを作ると、dialog の flex コンテキストが途切れて
-  // DrawerBody のスクロールと DrawerFooter の固定が効かなくなる。
+  // ボックスを作ると flex コンテキストが途切れ、body のスクロールと footer の固定が効かなくなる
   it('dialog と body/footer の間に挟まる要素がボックスを作らないこと', async () => {
     renderWithIntl(
       <Drawer isOpen ariaLabel="レイアウト検証">
@@ -321,8 +318,7 @@ describe('Drawer ドラッグハンドル', () => {
     expect(onClickClose).not.toHaveBeenCalled()
   })
 
-  // 閾値をビューポート高の初期値に固定していると、回転やリサイズ後のパネルでは
-  // ドラッグ量の割合が合わなくなる。掴んだ時点のパネル実測高を基準にする。
+  // ビューポート高に固定すると、回転やリサイズ後のパネルで割合が合わなくなる
   it('閉じ判定がパネルの実測高を基準にすること', async () => {
     const { onClickClose, handle } = renderBottomDrawer()
     // window.innerHeight (jsdom は 768) より十分小さいパネル。
@@ -354,8 +350,7 @@ describe('Drawer ドラッグハンドル', () => {
     expect(onClickClose).toHaveBeenCalled()
   })
 
-  // onClickClose を受けても isOpen を落とさない利用者（確認ダイアログを挟む等）がいるため、
-  // 閉じ位置へ送りっぱなしにすると画面外で操作不能になる
+  // 確認ダイアログを挟む等で isOpen を落とさない利用者がいるため、送りっぱなしにできない
   it('スワイプで閉じたあと isOpen が true のままなら開き位置へ戻ること', async () => {
     const { handle } = renderBottomDrawer(() => undefined)
     const dialog = stubPanelHeight(400)
@@ -371,8 +366,7 @@ describe('Drawer ドラッグハンドル', () => {
     })
   })
 
-  // Context の値を毎レンダー作り直すと、ドラッグ中（毎フレーム再レンダー）に
-  // DrawerHeader（Button / Heading / Text / Icon）まで再描画されてしまう
+  // Context の値を作り直すと、毎フレーム再レンダーされるドラッグ中に DrawerHeader まで巻き込む
   it('ドラッグ中に DrawerHeader が再レンダーされないこと', async () => {
     let renderCount = 0
     renderWithIntl(
@@ -501,8 +495,6 @@ describe('Drawer（modeless）', () => {
     expect(document.body.style.overflow).not.toBe('hidden')
   })
 
-  // modeless でも「開いたらパネル内へフォーカス」は必要（ModelessDialog と同じ）。
-  // 省略するのは Tab の循環だけ。
   it('開いたときにドロワー内へフォーカスが移ること', async () => {
     renderWithIntl(<ModelessTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
@@ -544,8 +536,7 @@ describe('Drawer（modeless）', () => {
     })
   })
 
-  // portalParent 内に収める modeless では、bottom の高さの基準はビューポートではなくコンテナ。
-  // dvh のままだとコンテナからはみ出して grabber とヘッダが上に切れる。
+  // dvh のままだとコンテナからはみ出し、grabber とヘッダが上に切れる
   it('portalParent 指定の bottom はコンテナ基準の高さになること', async () => {
     const PortalTemplate: FC = () => {
       const containerRef = useRef<HTMLDivElement>(null)
@@ -571,8 +562,7 @@ describe('Drawer（modeless）', () => {
     expect(dialog).not.toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
   })
 
-  // クラスが正しくても、ポータルが portalParent の外に出ていれば absolute の基準が
-  // コンテナにならず意味を成さない。DOM 上の配置そのものを検証する。
+  // クラスが正しくてもポータルが外に出ていれば absolute の基準がコンテナにならない
   it('portalParent の内側にポータルが生成されること', async () => {
     const PortalTemplate: FC = () => {
       const containerRef = useRef<HTMLDivElement>(null)
@@ -600,8 +590,6 @@ describe('Drawer（modeless）', () => {
     })
   })
 
-  // right/left も同様。指定サイズより狭いコンテナに置くと、dvw 基準のままでは
-  // パネルが親からはみ出し、overflow: hidden なコンテナでは閉じるボタンが切れる。
   it('portalParent 指定の right はコンテナ基準の最大幅になること', async () => {
     const PortalTemplate: FC = () => {
       const containerRef = useRef<HTMLDivElement>(null)
@@ -825,9 +813,8 @@ describe('Drawer あふれ防止', () => {
   })
 })
 
-// FocusTrap のラッパーに display: contents を当てているため、Dialog 相当の
-// フォーカス挙動が保たれているかをここで担保する。ラッパーがボックスを作ると
-// tabbable の探索やフォーカス順が崩れうる。
+// FocusTrap のラッパーに display: contents を当てているため、tabbable の探索や
+// フォーカス順が崩れていないかをここで担保する。
 describe('Drawer（modal のフォーカス）', () => {
   const FocusTemplate: FC<{ firstFocusTarget?: boolean }> = ({ firstFocusTarget }) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -883,7 +870,6 @@ describe('Drawer（modal のフォーカス）', () => {
       expect(screen.getByRole('textbox', { name: '最初の入力' })).toHaveFocus()
     })
 
-    // 末尾（閉じるボタン）から Tab すると先頭へ戻る
     screen.getByRole('button', { name: '閉じる' }).focus()
     await userEvent.tab()
 
@@ -909,9 +895,8 @@ describe('Drawer（modal のフォーカス）', () => {
   })
 })
 
-// 閉じアニメーションの間（TRANSITION_DURATION=400ms）ドロワーは DOM に残り、
-// オーバーレイも × ボタンもクリックできてしまう。ここで再発火すると、
-// 利用者が setOpen((v) => !v) のように書いている場合に閉じ途中で開き直る。
+// 閉じアニメーション中もドロワーは DOM に残るため、setOpen((v) => !v) と
+// 書いている利用者は閉じ途中のクリックで開き直ってしまう。
 describe('Drawer（閉じアニメーション中の再発火）', () => {
   const ClosingTemplate: FC<{
     onClickOverlay: () => void
@@ -966,9 +951,8 @@ describe('Drawer（閉じアニメーション中の再発火）', () => {
   })
 })
 
-// ariaLabel / ariaLabelledby を省略したときの自動ラベル付けは、DrawerHeader が
-// 実際に見出しを描画している場合にだけ成立する。ヘッダ無し・ラベル無しで
-// aria-labelledby を付けると参照先が存在せず、アクセシブル名が空になる。
+// ヘッダ無し・ラベル無しで aria-labelledby を付けると参照先が存在せず、
+// アクセシブル名が空になる。
 describe('Drawer（自動ラベル付け）', () => {
   it('DrawerHeader があれば見出しがアクセシブル名になること', () => {
     renderWithIntl(

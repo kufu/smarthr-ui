@@ -28,11 +28,7 @@ type DecayVelocityArgs = {
   decayMs: number
 }
 
-/**
- * 離した時点の速度を、最後に動いてからの経過時間で線形に減衰させる。
- * 観測値をそのまま使うと、勢いよく動かして静止してから離したときに
- * フリック扱いになってしまうため。
- */
+/** 観測値をそのまま使うと、勢いよく動かして静止してから離してもフリック扱いになるため減衰させる */
 export const decayVelocity = ({ velocity, idleMs, decayMs }: DecayVelocityArgs) =>
   velocity * Math.max(0, 1 - idleMs / decayMs)
 
@@ -53,10 +49,8 @@ export const resolveDragEnd = ({
   velocity,
   closeThreshold,
 }: ResolveDragEndArgs): DragResolution => {
-  // 閉じ方向の強いフリックは位置によらず閉じる
   if (velocity < -closeThreshold) return { type: 'close' }
 
-  // 速度を加味した投影位置が半分を下回るなら閉じる
   if (currentSize + velocity * VELOCITY_PROJECTION_MS < fullSize / 2) return { type: 'close' }
 
   return { type: 'open' }
@@ -71,7 +65,6 @@ type UseDrawerDragArgs = {
 }
 
 export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs) => {
-  // 閉じ方向への符号付きドラッグオフセット(px)。0=全開位置 / fullSize=閉じ位置
   const [dragOffset, setDragOffset] = useState(0)
   // ドラッグ中はトランジションを切り、指に追従させるために state で持つ
   const [isDragging, setIsDragging] = useState(false)
@@ -95,7 +88,6 @@ export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs)
     }
   }, [])
 
-  // 閉→開のたびにオフセットをリセット（前回ドラッグ位置の持ち越しを防ぐ）
   const wasOpenRef = useRef(isOpen)
   useEffect(() => {
     if (isOpen && !wasOpenRef.current) {
@@ -109,17 +101,14 @@ export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs)
     return clearRestoreTimer
   }, [isOpen, clearRestoreTimer])
 
-  // ドラッグ終了時のリセット（開き位置へ補間させるため dragOffset を 0 に戻す）
   const endDragging = useCallback(() => {
     draggingRef.current = null
     setIsDragging(false)
     setDragOffset(0)
   }, [])
 
-  // 閉じ確定時は補間を有効にしたまま閉じ位置までスライドさせてからアンマウントさせる。
-  // ただし onClose を受けて isOpen を false にするかは利用者次第（確認ダイアログを挟む、
-  // そもそも onClickClose を渡さない）なので、猶予を過ぎても開いたままなら開き位置へ戻す。
-  // 戻さないと、画面外・フォーカストラップ有効・スクロールロック中のまま操作不能になる。
+  // onClose を受けて isOpen を false にするかは利用者次第のため、猶予を過ぎても
+  // 開いたままなら開き位置へ戻す。戻さないと画面外に居座って操作不能になる。
   const endDraggingForClose = useCallback(() => {
     draggingRef.current = null
     setIsDragging(false)
@@ -190,13 +179,11 @@ export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs)
     [dragOffset, onClose, endDragging, endDraggingForClose],
   )
 
-  // OS 等でポインタ操作が中断されたとき（pointercancel）はドラッグ状態を解除して復帰
   const onPointerCancel = useCallback(() => {
     endDragging()
   }, [endDragging])
 
   return {
-    // inner に適用する translate(px)。閉じ方向にずらす。
     translateOffset: dragOffset,
     isDragging,
     onPointerDown,

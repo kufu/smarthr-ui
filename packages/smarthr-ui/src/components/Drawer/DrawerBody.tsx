@@ -13,9 +13,8 @@ export type DrawerBodyProps = PropsWithChildren<
   } & Pick<ComponentProps<'div'>, 'ref'>
 >
 
-// DialogBody とほぼ同一の実装だが、意図的に共通化していない。
-// Drawer は今後 bottom のドラッグ連動などで body の責務が変わる見込みがあり、
-// 共通化すると Dialog 側の変更が Drawer に波及してしまうため。
+// DialogBody とほぼ同一だが、Drawer 側は今後 bottom のドラッグ連動で責務が変わる
+// 見込みがあり、共通化すると Dialog 側の変更が波及するため複製に留めている。
 const classNameGenerator = tv({
   base: ['smarthr-ui-Drawer-body', 'shr-flex-auto shr-overscroll-contain'],
   variants: {

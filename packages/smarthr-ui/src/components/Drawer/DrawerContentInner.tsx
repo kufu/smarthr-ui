@@ -39,8 +39,7 @@ export type DrawerContentInnerProps = DrawerCommonProps &
     hasPortalParent?: boolean
   }
 
-// スライド／フェードは shouldMount / entered の状態を見て inline style で当てる。
-// （Tailwind の子孫セレクタ方式は確実に効かなかったため、transform/opacity は JS 側で制御する）
+// Tailwind の子孫セレクタ方式が効かなかったため、transform/opacity は JS 側で当てる
 const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
 const TRANSITION_TRANSFORM = `transform ${DRAWER_TRANSITION_DURATION}ms ${EASING}`
 const TRANSITION_OPACITY = `opacity ${DRAWER_TRANSITION_DURATION}ms ${EASING}`
@@ -54,7 +53,6 @@ const classNameGenerator = tv({
       'shr-border-shorthand shr-pointer-events-auto shr-absolute shr-flex shr-flex-col shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
-    // 上辺中央の横バー（grabber）。ポインタ操作専用の装飾
     handleArea: [
       'smarthr-ui-Drawer-handle',
       'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-items-center shr-justify-center',
@@ -115,7 +113,6 @@ const classNameGenerator = tv({
   ],
 })
 
-// 閉じ位置（画面外）への transform 文字列
 const closedTransform: Record<DrawerPosition, string> = {
   right: 'translateX(100%)',
   left: 'translateX(-100%)',
@@ -132,7 +129,6 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   ariaLabel,
   ariaLabelledby,
   modality = 'modal',
-  // Drawer / DrawerContent からは常に渡される。内部コンポーネント専用のフォールバック既定。
   hasPortalParent = false,
   firstFocusTarget,
   focusTrapRef,
@@ -197,21 +193,18 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     }
   }, [position, size, modality, hasPortalParent, className])
 
-  // 開いた状態での inner の transform。bottom はドラッグ offset を反映、left/right は 0。
   const openedTransform = useMemo(() => {
     if (position !== 'bottom' || drag.translateOffset === 0) return 'translateY(0)'
     return `translateY(${drag.translateOffset}px)`
   }, [position, drag.translateOffset])
 
-  // 自前のマウント＋アニメーション制御（react-transition-group は使っていない）。
-  // shouldMount: DOM に存在させるか。entered: 開き位置へスライドさせるか（false=閉じ位置）。
+  // react-transition-group は状態遷移が不安定だったため自前で制御する
   const [shouldMount, setShouldMount] = useState(isOpen)
   const [entered, setEntered] = useState(false)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (isOpen) {
-      // 開く: まず閉じ位置でマウントし、次フレームで開き位置へ補間
       if (closeTimerRef.current) {
         clearTimeout(closeTimerRef.current)
         closeTimerRef.current = null
@@ -228,7 +221,6 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
       }
     }
 
-    // 閉じる: 開き位置→閉じ位置へ補間し、アニメ完了後にアンマウント
     setEntered(false)
     closeTimerRef.current = setTimeout(() => setShouldMount(false), DRAWER_TRANSITION_DURATION)
     return () => {
@@ -237,7 +229,6 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   }, [isOpen])
 
   const innerStyle = useMemo<CSSProperties>(() => {
-    // ドラッグ中は補間を切って指に追従
     if (drag.isDragging) {
       return { transform: openedTransform, transition: 'none' }
     }
