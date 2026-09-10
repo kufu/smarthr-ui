@@ -11,9 +11,8 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { BOLD_STATUS_ICON_MAPPER, STATUS_ICON_MAPPER } from '../../libs/statusIcon'
 import { Button } from '../Button'
-import { FaXmarkIcon } from '../Icon'
+import { BOLD_STATUS_ICON_MAPPER, FaXmarkIcon, STATUS_ICON_MAPPER } from '../Icon'
 import { Cluster } from '../Layout'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
