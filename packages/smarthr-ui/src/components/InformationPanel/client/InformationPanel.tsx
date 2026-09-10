@@ -51,6 +51,15 @@ type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
+// HINT: warningのアイコンは自身で色を持っているため、色を指定しない
+const ICON_COLOR_MAPPER = {
+  info: 'TEXT_GREY',
+  success: 'MAIN',
+  warning: undefined,
+  error: 'DANGER',
+  sync: 'MAIN',
+} as const
+
 const classNameGenerator = tv({
   slots: {
     wrapper: 'smarthr-ui-InformationPanel shr-shadow-layer-3',
@@ -198,20 +207,7 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const icon = (() => {
-    switch (type) {
-      case 'info':
-        return <FaCircleInfoIcon color="TEXT_GREY" />
-      case 'success':
-        return <FaCircleCheckIcon color="MAIN" />
-      case 'warning':
-        return <WarningIcon />
-      case 'error':
-        return <FaCircleExclamationIcon color="DANGER" />
-      case 'sync':
-        return <FaRotateIcon color="MAIN" />
-    }
-  })()
+  const { Component: Icon, alt } = STATUS_ICON_MAPPER[type]
 
   return (
     <Heading
@@ -220,7 +216,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: icon,
+        prefix: <Icon alt={alt} color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >
