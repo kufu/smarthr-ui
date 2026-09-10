@@ -501,13 +501,35 @@ describe('Drawer（modeless）', () => {
     expect(document.body.style.overflow).not.toBe('hidden')
   })
 
-  it('開いても背後のトリガからフォーカスを奪わないこと（FocusTrap しない）', async () => {
+  // modeless でも「開いたらパネル内へフォーカス」は必要（ModelessDialog と同じ）。
+  // 省略するのは Tab の循環だけ。
+  it('開いたときにドロワー内へフォーカスが移ること', async () => {
     renderWithIntl(<ModelessTemplate />)
-    const trigger = screen.getByRole('button', { name: 'open' })
-    await userEvent.click(trigger)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
 
     const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
-    expect(document.activeElement).toBe(trigger)
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+  })
+
+  it('Tab はドロワー内に閉じ込めないこと（背後へ出られる）', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+
+    // 末尾まで Tab を送っても循環せず、いずれドロワーの外へ出る
+    for (let i = 0; i < 12; i++) {
+      await userEvent.tab()
+      if (!dialog.contains(document.activeElement)) break
+    }
+
     expect(dialog.contains(document.activeElement)).toBe(false)
   })
 
@@ -545,8 +567,76 @@ describe('Drawer（modeless）', () => {
     renderWithIntl(<PortalTemplate />)
 
     const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
-    expect(dialog).toHaveClass('shr-h-[calc(100%-theme(spacing.1))]')
-    expect(dialog).not.toHaveClass('shr-h-[calc(100dvh-theme(spacing.1))]')
+    expect(dialog).toHaveClass('shr-h-[calc(100%-theme(spacing.2))]')
+    expect(dialog).not.toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
+  })
+
+  // クラスが正しくても、ポータルが portalParent の外に出ていれば absolute の基準が
+  // コンテナにならず意味を成さない。DOM 上の配置そのものを検証する。
+  it('portalParent の内側にポータルが生成されること', async () => {
+    const PortalTemplate: FC = () => {
+      const containerRef = useRef<HTMLDivElement>(null)
+
+      return (
+        <div ref={containerRef} data-testid="portal-parent">
+          <Drawer
+            isOpen
+            position="right"
+            modality="modeless"
+            portalParent={containerRef}
+            ariaLabel="コンテナ内ドロワー"
+          >
+            <p>content</p>
+          </Drawer>
+        </div>
+      )
+    }
+    renderWithIntl(<PortalTemplate />)
+
+    const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
+
+    await waitFor(() => {
+      expect(screen.getByTestId('portal-parent')).toContainElement(dialog)
+    })
+  })
+
+  // right/left も同様。指定サイズより狭いコンテナに置くと、dvw 基準のままでは
+  // パネルが親からはみ出し、overflow: hidden なコンテナでは閉じるボタンが切れる。
+  it('portalParent 指定の right はコンテナ基準の最大幅になること', async () => {
+    const PortalTemplate: FC = () => {
+      const containerRef = useRef<HTMLDivElement>(null)
+
+      return (
+        <div ref={containerRef}>
+          <Drawer
+            isOpen
+            position="right"
+            modality="modeless"
+            portalParent={containerRef}
+            size="M"
+            ariaLabel="コンテナ内右ドロワー"
+          >
+            <p>content</p>
+          </Drawer>
+        </div>
+      )
+    }
+    renderWithIntl(<PortalTemplate />)
+
+    const dialog = screen.getByRole('dialog', { name: 'コンテナ内右ドロワー' })
+    expect(dialog).toHaveClass('shr-max-w-[calc(100%-theme(spacing.2))]')
+    expect(dialog).not.toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
+  })
+
+  it('portalParent なしの right はビューポート基準の最大幅のままであること', async () => {
+    renderWithIntl(
+      <Drawer isOpen position="right" modality="modeless" size="M" ariaLabel="画面固定右ドロワー">
+        <p>content</p>
+      </Drawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
+    expect(dialog).toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
   })
 
   it('portalParent なしの bottom はビューポート基準の高さのままであること', async () => {
@@ -557,7 +647,7 @@ describe('Drawer（modeless）', () => {
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定ドロワー' })
-    expect(dialog).toHaveClass('shr-h-[calc(100dvh-theme(spacing.1))]')
+    expect(dialog).toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
   })
 
   it('modeless でも onPressEscape を渡せば Escape で閉じること', async () => {
@@ -719,7 +809,7 @@ describe('Drawer あふれ防止', () => {
       </Drawer>,
     )
     expect(screen.getByRole('dialog', { name: '右ドロワー' })).toHaveClass(
-      'shr-max-w-[calc(100dvw-theme(spacing.1))]',
+      'shr-max-w-[calc(100dvw-theme(spacing.2))]',
     )
   })
 
@@ -730,7 +820,192 @@ describe('Drawer あふれ防止', () => {
       </Drawer>,
     )
     expect(screen.getByRole('dialog', { name: 'ボトムドロワー' })).toHaveClass(
-      'shr-h-[calc(100dvh-theme(spacing.1))]',
+      'shr-h-[calc(100dvh-theme(spacing.2))]',
     )
+  })
+})
+
+// FocusTrap のラッパーに display: contents を当てているため、Dialog 相当の
+// フォーカス挙動が保たれているかをここで担保する。ラッパーがボックスを作ると
+// tabbable の探索やフォーカス順が崩れうる。
+describe('Drawer（modal のフォーカス）', () => {
+  const FocusTemplate: FC<{ firstFocusTarget?: boolean }> = ({ firstFocusTarget }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <Drawer
+          isOpen={isOpen}
+          position="right"
+          firstFocusTarget={firstFocusTarget ? inputRef : undefined}
+          ariaLabel="フォーカス確認ドロワー"
+          onClickClose={() => setIsOpen(false)}
+        >
+          <DrawerBody>
+            <input ref={inputRef} name="first" aria-label="最初の入力" />
+            <input name="second" aria-label="次の入力" />
+          </DrawerBody>
+          <DrawerFooter>
+            <Button onClick={() => setIsOpen(false)}>閉じる</Button>
+          </DrawerFooter>
+        </Drawer>
+      </>
+    )
+  }
+
+  it('開いたときにドロワー内へフォーカスが移ること', async () => {
+    renderWithIntl(<FocusTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'フォーカス確認ドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+  })
+
+  it('firstFocusTarget を指定した要素にフォーカスできること', async () => {
+    renderWithIntl(<FocusTemplate firstFocusTarget />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: '最初の入力' })).toHaveFocus()
+    })
+  })
+
+  it('Tab がドロワー内で循環すること', async () => {
+    renderWithIntl(<FocusTemplate firstFocusTarget />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: '最初の入力' })).toHaveFocus()
+    })
+
+    // 末尾（閉じるボタン）から Tab すると先頭へ戻る
+    screen.getByRole('button', { name: '閉じる' }).focus()
+    await userEvent.tab()
+
+    const dialog = screen.getByRole('dialog', { name: 'フォーカス確認ドロワー' })
+    expect(dialog.contains(document.activeElement)).toBe(true)
+    expect(screen.getByRole('button', { name: 'open' })).not.toHaveFocus()
+  })
+
+  it('閉じたときにトリガへフォーカスが戻ること', async () => {
+    renderWithIntl(<FocusTemplate />)
+    const trigger = screen.getByRole('button', { name: 'open' })
+    await userEvent.click(trigger)
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'フォーカス確認ドロワー' })).toBeVisible()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    await waitFor(() => {
+      expect(trigger).toHaveFocus()
+    })
+  })
+})
+
+// 閉じアニメーションの間（TRANSITION_DURATION=400ms）ドロワーは DOM に残り、
+// オーバーレイも × ボタンもクリックできてしまう。ここで再発火すると、
+// 利用者が setOpen((v) => !v) のように書いている場合に閉じ途中で開き直る。
+describe('Drawer（閉じアニメーション中の再発火）', () => {
+  const ClosingTemplate: FC<{
+    onClickOverlay: () => void
+    onClickClose: () => void
+  }> = ({ onClickOverlay, onClickClose }) => {
+    const [isOpen, setIsOpen] = useState(true)
+
+    return (
+      <>
+        <Button onClick={() => setIsOpen(false)}>外から閉じる</Button>
+        <Drawer
+          isOpen={isOpen}
+          position="right"
+          ariaLabel="閉じ中ドロワー"
+          onClickClose={onClickClose}
+          onClickOverlay={onClickOverlay}
+        >
+          <DrawerHeader title="タイトル" />
+          <DrawerBody>
+            <p>content</p>
+          </DrawerBody>
+        </Drawer>
+      </>
+    )
+  }
+
+  const getOverlay = () => document.querySelector('.smarthr-ui-Drawer-overlay') as HTMLElement
+
+  it('閉じ始めたあとのオーバーレイクリックで onClickOverlay を呼ばないこと', async () => {
+    const onClickOverlay = vi.fn()
+    const onClickClose = vi.fn()
+    renderWithIntl(<ClosingTemplate onClickClose={onClickClose} onClickOverlay={onClickOverlay} />)
+
+    await userEvent.click(getOverlay())
+    expect(onClickOverlay).toHaveBeenCalledTimes(1)
+
+    await userEvent.click(screen.getByRole('button', { name: '外から閉じる' }))
+    await userEvent.click(getOverlay())
+
+    expect(onClickOverlay).toHaveBeenCalledTimes(1)
+  })
+
+  it('閉じ始めたあとの × クリックで onClickClose を呼ばないこと', async () => {
+    const onClickOverlay = vi.fn()
+    const onClickClose = vi.fn()
+    renderWithIntl(<ClosingTemplate onClickClose={onClickClose} onClickOverlay={onClickOverlay} />)
+
+    await userEvent.click(screen.getByRole('button', { name: '外から閉じる' }))
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+})
+
+// ariaLabel / ariaLabelledby を省略したときの自動ラベル付けは、DrawerHeader が
+// 実際に見出しを描画している場合にだけ成立する。ヘッダ無し・ラベル無しで
+// aria-labelledby を付けると参照先が存在せず、アクセシブル名が空になる。
+describe('Drawer（自動ラベル付け）', () => {
+  it('DrawerHeader があれば見出しがアクセシブル名になること', () => {
+    renderWithIntl(
+      <Drawer isOpen position="right">
+        <DrawerHeader title="ドロワータイトル" />
+        <DrawerBody>
+          <p>content</p>
+        </DrawerBody>
+      </Drawer>,
+    )
+
+    expect(screen.getByRole('dialog', { name: 'ドロワータイトル' })).toBeVisible()
+  })
+
+  it('DrawerHeader に id を渡してもその id が参照されること', () => {
+    renderWithIntl(
+      <Drawer isOpen position="right">
+        <DrawerHeader id="custom-heading" title="独自 id の見出し" />
+        <DrawerBody>
+          <p>content</p>
+        </DrawerBody>
+      </Drawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '独自 id の見出し' })
+    expect(dialog).toHaveAttribute('aria-labelledby', 'custom-heading')
+  })
+
+  it('DrawerHeader もラベルも無ければ aria-labelledby を付けないこと', () => {
+    renderWithIntl(
+      <Drawer isOpen position="right">
+        <DrawerBody>
+          <p>content</p>
+        </DrawerBody>
+      </Drawer>,
+    )
+
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-labelledby')
   })
 })

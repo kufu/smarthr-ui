@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useContext, useMemo } from 'react'
+import { type FC, type ReactNode, memo, useContext, useEffect, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../intl'
@@ -36,9 +36,15 @@ const classNameGenerator = tv({
 
 export const DrawerHeader: FC<DrawerHeaderProps> = ({ title, subtitle, id, onClickClose }) => {
   const { handleClickClose } = useContext(DrawerContentContext)
-  const { headingId } = useContext(DrawerHeadingContext)
+  const { headingId, registerHeadingId } = useContext(DrawerHeadingContext)
   const actualOnClickClose = onClickClose ?? handleClickClose
   const actualHeadingId = id ?? headingId
+
+  useEffect(() => {
+    registerHeadingId(actualHeadingId)
+
+    return () => registerHeadingId(undefined)
+  }, [actualHeadingId, registerHeadingId])
 
   const classNames = useMemo(() => {
     const { wrapper, closeButton } = classNameGenerator()

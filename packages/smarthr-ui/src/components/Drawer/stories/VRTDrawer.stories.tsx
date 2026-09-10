@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+
 import { Button } from '../../Button'
 import { Drawer } from '../Drawer'
 import { DrawerBody } from '../DrawerBody'
@@ -93,7 +95,6 @@ export const SizeFull = sizeStory(SIZES[3])
  * jsdom はレイアウトしないため、この崩れを捕まえられるのは VRT だけ。
  */
 export const BottomLongContent: StoryObj<typeof Drawer> = {
-  name: 'bottom / 長いコンテンツ（既定の modality）',
   render: () => (
     <Drawer isOpen position="bottom">
       <DrawerHeader subtitle="サブタイトル" title="ドロワータイトル" />
@@ -109,6 +110,40 @@ export const BottomLongContent: StoryObj<typeof Drawer> = {
     </Drawer>
   ),
 }
+
+/**
+ * portalParent 内では、幅・高さの上限はビューポートではなくコンテナが基準になる。
+ * dvw / dvh のままだとコンテナより広い size を指定したときに親からはみ出し、
+ * overflow: hidden なコンテナでは閉じるボタンやヘッダが切れる。
+ * jsdom はレイアウトしないため、実寸のはみ出しを捕まえられるのは VRT だけ。
+ */
+const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> => ({
+  render: () => {
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    return (
+      <div
+        ref={containerRef}
+        style={{
+          position: 'relative',
+          width: '24rem',
+          height: '24rem',
+          border: '1px solid #ccc',
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ padding: '1rem' }}>コンテナの内側だけを覆います。</div>
+        <Drawer isOpen modality="modeless" portalParent={containerRef} position={position} size="L">
+          {drawerChildren(() => {})}
+        </Drawer>
+      </div>
+    )
+  },
+})
+
+export const PortalParentRight = portalParentStory('right')
+export const PortalParentLeft = portalParentStory('left')
+export const PortalParentBottom = portalParentStory('bottom')
 
 export const VRT = IsOpen
 

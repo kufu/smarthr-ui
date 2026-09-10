@@ -68,10 +68,10 @@ const classNameGenerator = tv({
   variants: {
     position: {
       right: {
-        inner: 'shr-inset-y-0 shr-right-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.1))]',
+        inner: 'shr-inset-y-0 shr-right-0 shr-h-full',
       },
       left: {
-        inner: 'shr-inset-y-0 shr-left-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.1))]',
+        inner: 'shr-inset-y-0 shr-left-0 shr-h-full',
       },
       bottom: {
         inner: 'shr-inset-x-0 shr-bottom-0 shr-w-full shr-rounded-t-l',
@@ -92,18 +92,29 @@ const classNameGenerator = tv({
       absolute: { layout: 'shr-absolute' },
     },
   },
-  // bottom の高さは、画面端固定ならビューポート基準、portalParent 内に収めるならコンテナ基準。
-  // dvh のまま absolute にするとコンテナからはみ出し、grabber とヘッダが上に切れる。
+  // パネルの上限は、画面端固定（fixed）ならビューポート、portalParent 内（absolute）ならコンテナを基準にする。
+  // 基準を間違えると親からはみ出す。bottom は dvh のままだと grabber とヘッダが上に切れ、
+  // right/left は指定サイズより狭いコンテナで横にはみ出して閉じるボタンが切れる。
   compoundVariants: [
+    {
+      position: ['right', 'left'],
+      layoutPosition: 'fixed',
+      class: { inner: 'shr-max-w-[calc(100dvw-theme(spacing.2))]' },
+    },
+    {
+      position: ['right', 'left'],
+      layoutPosition: 'absolute',
+      class: { inner: 'shr-max-w-[calc(100%-theme(spacing.2))]' },
+    },
     {
       position: 'bottom',
       layoutPosition: 'fixed',
-      class: { inner: 'shr-h-[calc(100dvh-theme(spacing.1))]' },
+      class: { inner: 'shr-h-[calc(100dvh-theme(spacing.2))]' },
     },
     {
       position: 'bottom',
       layoutPosition: 'absolute',
-      class: { inner: 'shr-h-[calc(100%-theme(spacing.1))]' },
+      class: { inner: 'shr-h-[calc(100%-theme(spacing.2))]' },
     },
   ],
 })
@@ -137,13 +148,20 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   const innerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number | null>(null)
 
+  // DrawerHeader がマウントされたときだけ、そのヘッダの id を参照する。
+  // 常に autoHeadingId を指すと、ヘッダ無しの場合に参照先が存在しない属性になる。
+  const [registeredHeadingId, setRegisteredHeadingId] = useState<string | undefined>(undefined)
+
   const resolvedLabelledby = useMemo(() => {
     if (ariaLabel) return undefined
-    return ariaLabelledby ?? autoHeadingId
-  }, [ariaLabel, ariaLabelledby, autoHeadingId])
 
-  const latest = useLatest({ isOpen, onPressEscape, onClickClose })
+    return ariaLabelledby ?? registeredHeadingId
+  }, [ariaLabel, ariaLabelledby, registeredHeadingId])
 
+  const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay })
+
+  // 閉じアニメーションの間もドロワーは DOM に残るため、isOpen を見ないと
+  // 閉じ途中のクリックや Escape で再度コールバックが走ってしまう。
   const functions = useMemo(
     () => ({
       handlePressEscape: () => {
@@ -152,7 +170,14 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
         }
       },
       handleClickClose: () => {
-        latest.onClickClose?.()
+        if (latest.isOpen) {
+          latest.onClickClose?.()
+        }
+      },
+      handleClickOverlay: () => {
+        if (latest.isOpen) {
+          latest.onClickOverlay?.()
+        }
       },
     }),
     [latest],
@@ -243,7 +268,10 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     () => ({ handleClickClose: functions.handleClickClose }),
     [functions],
   )
-  const headingContextValue = useMemo(() => ({ headingId: autoHeadingId }), [autoHeadingId])
+  const headingContextValue = useMemo(
+    () => ({ headingId: autoHeadingId, registerHeadingId: setRegisteredHeadingId }),
+    [autoHeadingId],
+  )
 
   if (!shouldMount) return null
 
@@ -275,7 +303,7 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
           role="presentation"
           className={classNames.overlay}
           style={overlayStyle}
-          onClick={onClickOverlay}
+          onClick={isOpen ? functions.handleClickOverlay : undefined}
         />
       )}
       <div
@@ -287,17 +315,19 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
         aria-label={ariaLabel}
         aria-labelledby={resolvedLabelledby}
       >
-        {modality === 'modal' ? (
-          <FocusTrap
-            ref={focusTrapRef}
-            firstFocusTarget={firstFocusTarget}
-            className={classNames.focusTrap}
-          >
-            {drawerBody}
-          </FocusTrap>
-        ) : (
-          drawerBody
-        )}
+        {/*
+          modeless でも FocusTrap を通すのは、開いたときのフォーカス移動と閉じたときの
+          復帰が modal と同じく必要なため。循環（Tab のトラップ）だけを trapFocus で切る。
+          両モダリティで同じ DOM 構造になる副次効果もある。
+        */}
+        <FocusTrap
+          ref={focusTrapRef}
+          firstFocusTarget={firstFocusTarget}
+          trapFocus={modality === 'modal'}
+          className={classNames.focusTrap}
+        >
+          {drawerBody}
+        </FocusTrap>
       </div>
     </div>
   )

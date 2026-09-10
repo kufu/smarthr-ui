@@ -14,7 +14,7 @@ export type DrawerCommonProps = {
   ariaLabel?: string
   /** aria-labelledby（ariaLabel と排他で必須） */
   ariaLabelledby?: string
-  /** 開いたときに最初にフォーカスする要素（'modal' のみ有効） */
+  /** 開いたときに最初にフォーカスする要素。未指定ならドロワー先頭にフォーカスする */
   firstFocusTarget?: RefObject<HTMLElement>
   /**
    * モーダル/非モーダルの切り替え。既定は 'modal'。
