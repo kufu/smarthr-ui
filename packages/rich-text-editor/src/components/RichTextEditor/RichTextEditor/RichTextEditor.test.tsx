@@ -338,6 +338,24 @@ describe('RichTextEditor', () => {
       expect(screen.getByText('無関係な段落')).toBeInTheDocument()
     })
 
+    it('value の差し替えでは onChange を発火させない', async () => {
+      const onChange = vi.fn()
+      const doc = (text: string) => ({
+        type: 'doc',
+        content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+      })
+      const { rerender } = render(
+        <RichTextEditor value={doc('before')} features={['bold']} onChange={onChange} />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('before')).toBeInTheDocument())
+
+      rerender(<RichTextEditor value={doc('after')} features={['bold']} onChange={onChange} />)
+
+      await waitFor(() => expect(screen.getByText('after')).toBeInTheDocument())
+      expect(onChange).not.toHaveBeenCalled()
+    })
+
     it('content（HTML）の features 外の書式を保持する', async () => {
       render(
         <RichTextEditor

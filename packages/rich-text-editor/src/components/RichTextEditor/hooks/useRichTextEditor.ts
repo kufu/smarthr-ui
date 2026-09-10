@@ -3,6 +3,7 @@
 import { useEditor } from '@tiptap/react'
 import { type RefObject, useEffect, useMemo } from 'react'
 
+import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createPasteFilter } from '../extensions/pasteFilter'
 import { createChangeMeta } from '../serializers/createChangeMeta'
@@ -108,7 +109,16 @@ export const useRichTextEditor = ({
     const nextJSON = JSON.stringify(value)
 
     if (currentJSON !== nextJSON) {
-      editor.commands.setContent(value, { emitUpdate: false })
+      // 未完了の画像アップロードは差し替えと同じ transaction で無効化する
+      editor
+        .chain()
+        .setContent(value, { emitUpdate: false })
+        .command(({ tr }) => {
+          resetImagePlaceholders(tr)
+
+          return true
+        })
+        .run()
     }
   }, [editor, isControlled, value])
 

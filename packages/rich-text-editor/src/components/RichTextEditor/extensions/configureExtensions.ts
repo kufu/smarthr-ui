@@ -9,13 +9,9 @@ import { Youtube } from '@tiptap/extension-youtube'
 import { StarterKit } from '@tiptap/starter-kit'
 
 import { CustomImage } from './Image/CustomImage'
-import {
-  addImagePlaceholder,
-  findImagePlaceholderPos,
-  imageUploadPlaceholderPlugin,
-  removeImagePlaceholder,
-} from './Image/imageUploadPlaceholder'
+import { imageUploadPlaceholderPlugin } from './Image/imageUploadPlaceholder'
 import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
+import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
 import { LineHeight } from './LineHeight'
 import { LinkShortcut } from './LinkShortcut'
 import { CustomTable } from './Table/CustomTable'
@@ -23,7 +19,7 @@ import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
-import type { AnyExtension, Editor } from '@tiptap/react'
+import type { AnyExtension } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
   features?: readonly RichTextFeature[]
@@ -36,44 +32,6 @@ type ConfigureExtensionsOptions = {
 }
 
 const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
-
-/**
- * 画像ファイルを即アップロードし、完了後にエディタへ挿入する共通処理。
- * - 開始時にプレースホルダ Decoration を立てる（ドキュメントには載らない）
- * - 成功: プレースホルダ位置に image ノードを挿入
- * - 失敗: onImageUploadError を呼ぶ
- * - finally: プレースホルダを除去
- */
-export const uploadAndInsertImage = async (
-  editor: Editor,
-  file: File,
-  pos: number | null,
-  onImageUpload: (file: File, formData: FormData) => Promise<ImageUploadResult>,
-  onImageUploadError?: (error: unknown, file: File) => void,
-): Promise<void> => {
-  const view = editor.view
-  const insertPos = pos ?? view.state.selection.from
-  const placeholderId = addImagePlaceholder(view, insertPos)
-
-  try {
-    const formData = new FormData()
-    formData.append('file', file)
-    const result = await onImageUpload(file, formData)
-
-    const at = findImagePlaceholderPos(view, placeholderId) ?? insertPos
-    editor
-      .chain()
-      .insertContentAt(at, {
-        type: 'image',
-        attrs: { src: result.src, alt: result.alt ?? '' },
-      })
-      .run()
-  } catch (error) {
-    onImageUploadError?.(error, file)
-  } finally {
-    removeImagePlaceholder(view, placeholderId)
-  }
-}
 
 export const configureExtensions = ({
   features = [],

@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { DEFAULT_MIME_TYPES, matchesMimeType } from '../extensions/Image/mimeTypes'
-import { uploadAndInsertImage } from '../extensions/configureExtensions'
+import { uploadAndInsertImage } from '../extensions/Image/uploadAndInsertImage'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ImageUrlPopover } from './ImageUrlPopover'

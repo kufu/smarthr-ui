@@ -16,6 +16,7 @@ import { useIntl } from '../../../intl'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
+import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { useEditorResize } from '../hooks/useEditorResize'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
@@ -177,7 +178,17 @@ export const RichTextEditor = memo(
         ref,
         () => ({
           focus: () => editor?.chain().focus().run(),
-          clear: () => editor?.chain().focus().clearContent().run(),
+          clear: () =>
+            editor
+              ?.chain()
+              .focus()
+              .clearContent()
+              .command(({ tr }) => {
+                resetImagePlaceholders(tr)
+
+                return true
+              })
+              .run(),
           getJSON: () => (editor?.getJSON() ?? { type: 'doc', content: [] }) as RichTextJSON,
           // editor.getHTML() は拡張の renderHTML をそのまま使うためサニタイズされない。
           // onChange の meta.html と同じ結果を返すよう共通シリアライザーを通す。
