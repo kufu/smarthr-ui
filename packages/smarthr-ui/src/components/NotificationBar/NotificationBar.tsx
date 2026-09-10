@@ -11,16 +11,9 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
+import { BOLD_STATUS_ICON_MAPPER, STATUS_ICON_MAPPER } from '../../libs/statusIcon'
 import { Button } from '../Button'
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  FaTriangleExclamationIcon,
-  FaXmarkIcon,
-  WarningIcon,
-} from '../Icon'
+import { FaXmarkIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
@@ -156,23 +149,6 @@ const classNameGenerator = tv({
   ],
 })
 
-const ABSTRACT_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-}
-const ICON_MAPPER = {
-  normal: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: WarningIcon,
-  },
-  bold: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: FaTriangleExclamationIcon,
-  },
-} as const
-
 const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
 export const NotificationBar: FC<Props> = ({
@@ -251,14 +227,14 @@ const MessageArea = memo<
     classNames: { messageArea: string; icon: string }
   }
 >(({ children, bold, type, classNames }) => {
-  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
+  const { Component: Icon, alt } = (bold ? BOLD_STATUS_ICON_MAPPER : STATUS_ICON_MAPPER)[type]
 
   return (
     <Text
       as="div"
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon className={classNames.icon} />,
+        prefix: <Icon alt={alt} className={classNames.icon} />,
         gap: 0.5,
       }}
     >

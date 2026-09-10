@@ -1,19 +1,14 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  type ComponentProps as IconProps,
-  WarningIcon,
-} from '../Icon'
+import { STATUS_ICON_MAPPER, type StatusIconType } from '../../libs/statusIcon'
 import { Text } from '../Text'
+
+import type { ComponentProps as IconProps } from '../Icon'
 
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  status?: keyof typeof STATUS_ICON_MAPPER
+  status?: StatusIconType
 }
 
 export const classNameGenerator = tv({
@@ -29,20 +24,12 @@ export const classNameGenerator = tv({
   },
 })
 
-const STATUS_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  warning: WarningIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-} as const
-
 export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
   const className = useMemo(() => classNameGenerator({ status }), [status])
-  const TextIcon = STATUS_ICON_MAPPER[status]
+  const { Component: TextIcon, alt } = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text size={size} icon={<TextIcon {...rest} className={className} />}>
+    <Text size={size} icon={<TextIcon {...rest} alt={alt} className={className} />}>
       {children}
     </Text>
   )
