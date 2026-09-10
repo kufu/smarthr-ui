@@ -16,11 +16,7 @@ type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
   /** ラッパー要素に付与する className。省略時は class 無しの div を描画する */
   className?: string
-  /**
-   * Tab をこの中で循環させるかどうか。既定は true。
-   * false にすると循環だけを止め、マウント時のフォーカス移動と
-   * アンマウント時のフォーカス復帰は行う（非モーダルなダイアログ向け）。
-   */
+  /** Tab の循環だけを止める。フォーカス移動と復帰は行う。既定は true */
   trapFocus?: boolean
 }>
 
@@ -41,7 +37,9 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(
         innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
       const focus = () => {
-        ;(firstFocusTarget?.current || findDummyFocus())?.focus()
+        // アニメーション中にフォーカスすると祖先がスクロールしてしまう
+        // （overflow: hidden でも起きる）。表示位置は CSS で決まるため追う必要はない
+        ;(firstFocusTarget?.current || findDummyFocus())?.focus({ preventScroll: true })
       }
 
       return {
