@@ -9,11 +9,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **charts:** 棒グラフに同系色の濃淡で配色するオプションを追加 ([#6933](https://github.com/kufu/smarthr-ui/issues/6933)) ([4911f59](https://github.com/kufu/smarthr-ui/commit/4911f59da68260e54b3e00e4f726cf82bf81d456))
 
-
-### Miscellaneous Chores
-
-* リリースバージョンを99.6.1に固定する（再送） ([6efa754](https://github.com/kufu/smarthr-ui/commit/6efa754b5be397a74f5893c5f2a6ae222ac20349))
-
 ## [0.2.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.2...smarthr-ui-charts-v0.2.3) (2026-08-27)
 
 
