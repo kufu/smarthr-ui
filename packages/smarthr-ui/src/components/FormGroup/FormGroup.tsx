@@ -16,7 +16,7 @@ import type { useDescribedByIds } from './useDescribedByIds'
 
 // HINT: errorMessagesを含む各idはuseDescribedByIdsで、classNamesは各コンポーネントで
 // 算出済みの値を受け取る
-// autoBindErrorInputによる分岐はFormControl・Fieldset側で行うため、ここでは受け取らない
+// autoBindErrorInputはdata-auto-bind-error-input属性としてwrapper要素に反映するため受け取る
 type Props = Omit<CommonProps, 'errorMessages' | 'className'> &
   Omit<ReturnType<typeof useDescribedByIds>, 'describedbyIds'> & {
     wrapperRef: Ref<HTMLDivElement>

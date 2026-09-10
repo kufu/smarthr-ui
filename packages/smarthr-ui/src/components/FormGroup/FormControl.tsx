@@ -20,7 +20,6 @@ const labelObjectConverter = (label: ReactNode) => ({ text: label })
 type Props = CommonProps & {
   label: ReactNode | ObjectLabelType
 }
-type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
 export const FormControl: FC<Props> = (props) => {
   const { wrapperCallbackRef, ...rest } = useFormControlProps(props)
@@ -35,8 +34,9 @@ const useFormControlProps = ({
   exampleMessage,
   supplementaryMessage,
   className,
+  autoBindErrorInput = true,
   ...rest
-}: LowerProps) => {
+}: Props) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -110,7 +110,11 @@ const useFormControlProps = ({
   // HINT: wrapperRefはこのcustom hookで定義しているRefObjectなので
   // 仮にcallbackRefが変化した場合の巻き込まれる形での再実行でも問題は発生しない。
   // このコンポーネントは外部からrefを受け付けないため、問題はないが必要性が発生したら検討する
-  const wrapperCallbackRef = useMergeRefs(wrapperRef, callbackRef, autoBindErrorCallbackRef)
+  const wrapperCallbackRef = useMergeRefs(
+    wrapperRef,
+    callbackRef,
+    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+  )
 
   return {
     ...rest,
@@ -123,6 +127,7 @@ const useFormControlProps = ({
     supplementaryMessage,
     classNames,
     LabelComponent,
+    autoBindErrorInput,
   }
 }
 

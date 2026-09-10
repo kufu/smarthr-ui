@@ -38,7 +38,6 @@ type Props = CommonProps & {
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
 }
-type LowerProps = Omit<Props, 'autoBindErrorInput'>
 
 export const Fieldset: FC<Props> = (props) => {
   const { wrapperCallbackRef, ...rest } = useFieldsetProps(props)
@@ -54,8 +53,9 @@ const useFieldsetProps = ({
   supplementaryMessage,
   innerMargin,
   className,
+  autoBindErrorInput = true,
   ...rest
-}: LowerProps) => {
+}: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
 
@@ -145,7 +145,11 @@ const useFieldsetProps = ({
     return () => observer.disconnect()
   }, [])
 
-  const wrapperCallbackRef = useMergeRefs(wrapperRef, callbackRef, autoBindErrorCallbackRef)
+  const wrapperCallbackRef = useMergeRefs(
+    wrapperRef,
+    callbackRef,
+    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+  )
 
   return {
     ...rest,
@@ -160,6 +164,7 @@ const useFieldsetProps = ({
     supplementaryMessage,
     classNames,
     LabelComponent,
+    autoBindErrorInput,
     innerMargin,
     'aria-describedby': describedbyIds || undefined,
   }
