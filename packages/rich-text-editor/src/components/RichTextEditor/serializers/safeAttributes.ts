@@ -40,8 +40,10 @@ export const isSafeLinkTarget = (target: unknown): target is string =>
 export const isSafeTextAlign = (textAlign: unknown): textAlign is string =>
   typeof textAlign === 'string' && SAFE_TEXT_ALIGNS.has(textAlign)
 
+/** 寸法として style や属性へ出力されるため、NaN・Infinity・負値を除外する */
 export const isNumericAttr = (value: unknown): value is number | string =>
-  typeof value === 'number' || (typeof value === 'string' && NUMERIC_PATTERN.test(value))
+  (typeof value === 'number' && Number.isFinite(value) && value >= 0) ||
+  (typeof value === 'string' && NUMERIC_PATTERN.test(value))
 
 export const parseNumericAttr = (value: unknown): number | undefined =>
   isNumericAttr(value) ? Number(value) : undefined

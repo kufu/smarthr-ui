@@ -9,10 +9,12 @@ import {
   isSafeFontSize,
   isSafeImageSrc,
   isSafeLinkTarget,
+  isSafeTextAlign,
   isSafeUrl,
   isSafeYoutubeSrc,
   parseNumericAttr,
 } from './safeAttributes'
+import { sanitizeRichTextJSON } from './sanitizeRichTextJSON'
 
 import type { RichTextJSON } from '../types'
 import type { Mark, Node } from '@tiptap/pm/model'
@@ -31,12 +33,33 @@ const getOrCreateExtensions = () => {
   return cachedExtensions
 }
 
+/**
+ * @tiptap/static-renderer の既定マッピングは拡張の renderHTML が返すHTML属性名をそのまま
+ * React へ渡すため、colspan/rowspan が unknown property の警告になる。
+ */
+const createTableCellMapping =
+  (tag: 'td' | 'th'): ReactNodeMapping =>
+  ({ node, children }) => {
+    const { colspan, rowspan, colwidth, align } = node.attrs
+
+    return createElement(
+      tag,
+      {
+        colSpan: typeof colspan === 'number' ? colspan : undefined,
+        rowSpan: typeof rowspan === 'number' ? rowspan : undefined,
+        colwidth: Array.isArray(colwidth) ? colwidth.join(',') : undefined,
+        style: isSafeTextAlign(align) ? { textAlign: align } : undefined,
+      },
+      children,
+    )
+  }
+
 const nodeMapping: Record<string, ReactNodeMapping> = {
   heading: ({ node, children }) => {
     const level = Math.min(Math.max(Number(node.attrs.level) || 2, 1), 4) as 1 | 2 | 3 | 4
-    const textAlign = node.attrs.textAlign as string | undefined
+    const textAlign = node.attrs.textAlign
     const style: Record<string, string> = {}
-    if (textAlign && textAlign !== 'left') style.textAlign = textAlign
+    if (isSafeTextAlign(textAlign) && textAlign !== 'left') style.textAlign = textAlign
     if (isAllowedLineHeight(node.attrs.lineHeight)) style.lineHeight = node.attrs.lineHeight
     return createElement(
       `h${level}`,
@@ -75,6 +98,8 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
       }),
     )
   },
+  tableCell: createTableCellMapping('td'),
+  tableHeader: createTableCellMapping('th'),
 }
 
 const markMapping: Record<string, ReactMarkMapping> = {
@@ -105,7 +130,7 @@ const markMapping: Record<string, ReactMarkMapping> = {
 
 export const serializeToReactElement = (json: RichTextJSON): ReactNode =>
   tiptapRenderToReactElement({
-    content: json,
+    content: sanitizeRichTextJSON(json),
     extensions: getOrCreateExtensions(),
     options: { nodeMapping, markMapping },
   })

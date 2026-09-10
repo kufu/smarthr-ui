@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { normalizeToJSON } from './normalizeToJSON'
 import { serializeToHTML } from './serializeToHTML'
@@ -413,5 +413,216 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       assertSafe(html)
       expect(html).not.toContain('evil')
     })
+  })
+})
+
+describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
+  const INJECTED_CSS = 'left;position:fixed;inset:0;z-index:99999'
+
+  const bothOutputs = (json: Parameters<typeof serializeToHTML>[0]) => ({
+    html: serializeToHTML(json),
+    react: renderToStaticMarkup(serializeToReactElement(json) as React.ReactElement),
+  })
+
+  const assertNoInjectedCss = (outputs: { html: string; react: string }) => {
+    for (const output of Object.values(outputs)) {
+      expect(output).not.toContain('position')
+      expect(output).not.toContain('inset')
+      expect(output).not.toContain('z-index')
+      expect(output).not.toContain('99999')
+    }
+  }
+
+  const cellDoc = (cellType: 'tableCell' | 'tableHeader', attrs: Record<string, unknown>) => ({
+    type: 'doc',
+    content: [
+      {
+        type: 'table',
+        content: [
+          {
+            type: 'tableRow',
+            content: [
+              {
+                type: cellType,
+                attrs,
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: 'a' }] }],
+              },
+              {
+                type: cellType,
+                attrs: { colwidth: [180] },
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: 'b' }] }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  })
+
+  it('paragraph の textAlign に追記されたCSS宣言が両経路で出力されない', () => {
+    assertNoInjectedCss(
+      bothOutputs({
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            attrs: { textAlign: INJECTED_CSS },
+            content: [{ type: 'text', text: 'abc' }],
+          },
+        ],
+      }),
+    )
+  })
+
+  it('heading の textAlign に追記されたCSS宣言が両経路で出力されない', () => {
+    assertNoInjectedCss(
+      bothOutputs({
+        type: 'doc',
+        content: [
+          {
+            type: 'heading',
+            attrs: { level: 2, textAlign: INJECTED_CSS },
+            content: [{ type: 'text', text: 'abc' }],
+          },
+        ],
+      }),
+    )
+  })
+
+  it.each(['tableCell', 'tableHeader'] as const)(
+    '%s の colwidth に追記されたCSS宣言が両経路で出力されない',
+    (cellType) => {
+      assertNoInjectedCss(
+        bothOutputs(
+          cellDoc(cellType, { colwidth: ['100;position:fixed;inset:0;z-index:99999;--x:'] }),
+        ),
+      )
+    },
+  )
+
+  it('tableCell の align に追記されたCSS宣言が両経路で出力されない', () => {
+    assertNoInjectedCss(bothOutputs(cellDoc('tableCell', { align: INJECTED_CSS })))
+  })
+
+  it('引用の中の入れ子の表でも検証される', () => {
+    assertNoInjectedCss(
+      bothOutputs({
+        type: 'doc',
+        content: [
+          {
+            type: 'blockquote',
+            content: cellDoc('tableCell', {
+              colwidth: ['100;position:fixed;inset:0;z-index:99999;--x:'],
+            }).content,
+          },
+        ],
+      }),
+    )
+  })
+
+  it('正常な colwidth と結合セルが保持される', () => {
+    const { html, react } = bothOutputs(
+      cellDoc('tableCell', { colspan: 2, rowspan: 1, colwidth: [120, 180], align: 'center' }),
+    )
+    expect(html).toContain('colspan="2"')
+    expect(html).toContain('colwidth="120,180"')
+    expect(html).toContain('text-align: center')
+    expect(react).toContain('colSpan="2"')
+    expect(react).toContain('colwidth="120,180"')
+    expect(react).toContain('text-align:center')
+  })
+
+  it('幅未指定を表す 0 を含む colwidth が保持される', () => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colwidth: [0, 180] }))
+    expect(html).toContain('colwidth="0,180"')
+    expect(react).toContain('colwidth="0,180"')
+  })
+
+  it('colwidth に1つでも不正値があれば属性全体が落ちる', () => {
+    const outputs = bothOutputs(cellDoc('tableCell', { colwidth: [120, '180;position:fixed'] }))
+
+    for (const output of Object.values(outputs)) {
+      expect(output).not.toContain('120')
+      expect(output).not.toContain('position')
+    }
+  })
+
+  it('numeric string の colwidth は救済せず落とす', () => {
+    const outputs = bothOutputs(cellDoc('tableCell', { colwidth: ['120'] }))
+
+    for (const output of Object.values(outputs)) {
+      expect(output).not.toContain('120')
+    }
+  })
+
+  it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY, 1.5, '2'])(
+    '不正な colspan (%s) が既定値の1に戻る',
+    (colspan) => {
+      const { html, react } = bothOutputs(cellDoc('tableCell', { colspan }))
+      expect(html).toContain('colspan="1"')
+      expect(react).toContain('colSpan="1"')
+    },
+  )
+
+  it('React経路で結合セルを描画してもDOMプロパティ名の警告が出ない', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    renderToStaticMarkup(
+      serializeToReactElement(
+        cellDoc('tableHeader', { colspan: 2, rowspan: 1, colwidth: [120, 180] }),
+      ) as React.ReactElement,
+    )
+
+    expect(spy).not.toHaveBeenCalled()
+    spy.mockRestore()
+  })
+
+  it('色・行送り・画像寸法が保持される', () => {
+    const { html, react } = bothOutputs({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          attrs: { lineHeight: '1.75' },
+          content: [
+            {
+              type: 'text',
+              marks: [{ type: 'textStyle', attrs: { color: '#ff0000' } }],
+              text: 'x',
+            },
+          ],
+        },
+        { type: 'image', attrs: { src: 'https://example.com/a.png', width: 120.5, height: 80 } },
+      ],
+    })
+    expect(html).toContain('#ff0000')
+    expect(html).toContain('1.75')
+    expect(html).toContain('120.5')
+    expect(react).toContain('#ff0000')
+    expect(react).toContain('1.75')
+    expect(react).toContain('120.5')
+  })
+
+  it('画像の負の寸法が出力されない', () => {
+    const { html, react } = bothOutputs({
+      type: 'doc',
+      content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', width: -100 } }],
+    })
+    expect(html).not.toContain('-100')
+    expect(react).not.toContain('-100')
+  })
+
+  it('入力JSONを変更しない', () => {
+    const json = cellDoc('tableCell', { colspan: 0, colwidth: ['100;position:fixed'] })
+    const snapshot = structuredClone(json)
+
+    const deepFreeze = (value: unknown) => {
+      if (value && typeof value === 'object') Object.values(value).forEach(deepFreeze)
+      Object.freeze(value)
+    }
+    deepFreeze(json)
+
+    expect(() => bothOutputs(json)).not.toThrow()
+    expect(json).toEqual(snapshot)
   })
 })
