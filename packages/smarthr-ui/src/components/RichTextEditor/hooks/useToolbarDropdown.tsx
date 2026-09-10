@@ -11,8 +11,8 @@ import {
   useState,
 } from 'react'
 
-import { useEnhancedEffect } from '../../../hooks/useEnhancedEffect'
-import { usePortal } from '../../../hooks/usePortal'
+import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
+import { usePortal } from '../../../hooks/client/usePortal'
 
 const GAP = 2
 const VIEWPORT_PADDING = 10

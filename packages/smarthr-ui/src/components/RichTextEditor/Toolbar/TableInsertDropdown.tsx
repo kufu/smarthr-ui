@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { FaTableIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
@@ -158,8 +158,6 @@ export const TableInsertDropdown: FC<Props> = memo(
             triggerRef.current = el
             refProp?.(el)
           }}
-          icon={<FaTableIcon />}
-          label={tableLabel}
           disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={isOpen}
@@ -167,9 +165,11 @@ export const TableInsertDropdown: FC<Props> = memo(
           onClick={() => setIsOpen((prev) => !prev)}
           onKeyDown={handleTriggerKeyDown}
           onFocus={onFocusProp}
+          icon={<FaTableIcon />}
+          label={tableLabel}
         />
         {renderDropdown(
-          <div ref={popupRef} role="dialog" aria-label={tableLabel} className={classNames.popup()}>
+          <div ref={popupRef} role="dialog" className={classNames.popup()} aria-label={tableLabel}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
@@ -177,12 +177,12 @@ export const TableInsertDropdown: FC<Props> = memo(
                   <FormControl label={rowsLabel}>
                     <Input
                       ref={firstInputRef}
-                      name="tableRows"
                       type="number"
+                      name="tableRows"
                       value={rows}
-                      width="5em"
                       min={1}
                       error={!!error}
+                      width="5em"
                       onChange={(e) => {
                         setRows(e.target.value)
                         if (error) setError('')
@@ -191,12 +191,12 @@ export const TableInsertDropdown: FC<Props> = memo(
                   </FormControl>
                   <FormControl label={colsLabel}>
                     <Input
-                      name="tableCols"
                       type="number"
+                      name="tableCols"
                       value={cols}
-                      width="5em"
                       min={1}
                       error={!!error}
+                      width="5em"
                       onChange={(e) => {
                         setCols(e.target.value)
                         if (error) setError('')
@@ -210,10 +210,10 @@ export const TableInsertDropdown: FC<Props> = memo(
                   </span>
                 )}
                 <Cluster gap={0.5} justify="flex-end">
-                  <Button type="button" size="S" variant="secondary" onClick={closePopup}>
+                  <Button type="button" variant="secondary" size="S" onClick={closePopup}>
                     {cancelText}
                   </Button>
-                  <Button type="submit" size="S" variant="primary">
+                  <Button type="submit" variant="primary" size="S">
                     {insertText}
                   </Button>
                 </Cluster>

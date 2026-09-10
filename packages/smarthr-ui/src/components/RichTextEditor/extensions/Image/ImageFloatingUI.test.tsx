@@ -32,13 +32,13 @@ const imageDoc = {
 
 describe('ImageFloatingUI', () => {
   it('画像未選択ではツールバー(画像の操作)は出ない', async () => {
-    render(<RichTextEditor features={['image']} defaultValue={imageDoc} />, { wrapper: Wrapper })
+    render(<RichTextEditor defaultValue={imageDoc} features={['image']} />, { wrapper: Wrapper })
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
     expect(screen.queryByRole('toolbar', { name: '画像の操作' })).not.toBeInTheDocument()
   })
 
   it('readOnly では画像選択UIが出ない', async () => {
-    render(<RichTextEditor features={['image']} defaultValue={imageDoc} readOnly />, {
+    render(<RichTextEditor readOnly defaultValue={imageDoc} features={['image']} />, {
       wrapper: Wrapper,
     })
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())

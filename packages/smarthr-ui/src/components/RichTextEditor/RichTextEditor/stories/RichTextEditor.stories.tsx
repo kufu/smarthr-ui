@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { FormControl } from '../../../FormControl'
+import { FormControl } from '../../../FormGroup'
 import { Stack } from '../../../Layout'
 import { RichTextEditor } from '../RichTextEditor'
 
@@ -79,11 +79,11 @@ export const Playground: Story = {
         <FormControl label="リッチテキストエディタ">
           <RichTextEditor
             {...rest}
+            placeholder="ここに本文を入力してください"
+            showCharacterCount
             onChange={(json) => setValue(json)}
             onImageUpload={mockImageUpload}
             onImageUploadError={mockImageUploadError}
-            placeholder="ここに本文を入力してください"
-            showCharacterCount
           />
         </FormControl>
         <details>
@@ -165,7 +165,7 @@ export const Disabled: Story = {
 export const WithError: Story = {
   name: 'error',
   render: ({ outputFormat: _, onChange: __, ...rest }) => (
-    <FormControl label="エラー状態" errorMessages="入力内容にエラーがあります">
+    <FormControl errorMessages="入力内容にエラーがあります" label="エラー状態">
       <RichTextEditor {...rest} />
     </FormControl>
   ),
@@ -188,7 +188,6 @@ export const ImageEditing: Story = {
     <FormControl label="画像編集">
       <RichTextEditor
         {...rest}
-        features={['image', 'bold']}
         defaultValue={{
           type: 'doc',
           content: [
@@ -205,6 +204,7 @@ export const ImageEditing: Story = {
             { type: 'paragraph' },
           ],
         }}
+        features={['image', 'bold']}
         onImageUpload={mockImageUpload}
         onImageUploadError={mockImageUploadError}
       />
@@ -312,16 +312,16 @@ export const FixedSize: Story = {
       <FormControl label="高さ200px固定">
         <RichTextEditor
           {...rest}
-          height={200}
           placeholder="内容が溢れたらスクロールします"
           showCharacterCount
+          height={200}
         />
       </FormControl>
       <FormControl label="幅400px・高さ150px">
-        <RichTextEditor {...rest} width={400} height={150} placeholder="widthとheightを併用" />
+        <RichTextEditor {...rest} placeholder="widthとheightを併用" width={400} height={150} />
       </FormControl>
       <FormControl label="高さを相対値で指定（30vh）">
-        <RichTextEditor {...rest} height="30vh" placeholder="文字列はそのままCSSの値になります" />
+        <RichTextEditor {...rest} placeholder="文字列はそのままCSSの値になります" height="30vh" />
       </FormControl>
     </Stack>
   ),
@@ -335,25 +335,23 @@ export const Resizable: Story = {
         <RichTextEditor
           {...rest}
           resizable
-          height={200}
           placeholder="右下のハンドルで高さを変えられます"
           showCharacterCount
+          height={200}
         />
       </FormControl>
       <FormControl label="文字数カウントなし">
         <RichTextEditor
           {...rest}
           resizable
-          height={200}
           placeholder="文字数カウントが無くてもハンドルは右下に出ます"
+          height={200}
         />
       </FormControl>
       <FormControl label="readOnly（ハンドルなし）">
         <RichTextEditor
           {...rest}
-          resizable
           readOnly
-          height={150}
           defaultValue={{
             type: 'doc',
             content: [
@@ -363,15 +361,17 @@ export const Resizable: Story = {
               },
             ],
           }}
+          resizable
+          height={150}
         />
       </FormControl>
       <FormControl label="disabled（ハンドルなし）">
         <RichTextEditor
           {...rest}
-          resizable
           disabled
-          height={150}
+          resizable
           placeholder="disabledのときはハンドルを表示しません"
+          height={150}
         />
       </FormControl>
     </Stack>

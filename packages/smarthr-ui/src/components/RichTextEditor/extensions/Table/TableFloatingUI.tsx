@@ -79,8 +79,8 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
           tablePos={targetInfo.pos}
           top={targetInfo.rect.top}
           left={colLeft}
-          height={targetInfo.rect.height}
           thickness={barThickness}
+          height={targetInfo.rect.height}
           onFocus={() => setRightBarFocused(true)}
           onBlur={() => setRightBarFocused(false)}
         />
@@ -91,8 +91,8 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
           tablePos={targetInfo.pos}
           top={rowTop}
           left={targetInfo.rect.left}
-          width={targetInfo.rect.width}
           thickness={barThickness}
+          width={targetInfo.rect.width}
           onFocus={() => setBottomBarFocused(true)}
           onBlur={() => setBottomBarFocused(false)}
         />

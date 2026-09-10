@@ -3,7 +3,7 @@
 import { type FC, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/useEnvironment'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 
 import { formatShortcutTokens } from './shortcutKeys'
@@ -75,7 +75,7 @@ export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, ch
         ボタンには aria-label があるため支援技術への情報も失われないため採らない。
       */}
       {!suppressed && !mobile && (
-        <span aria-hidden="true" className={CLASS_NAMES.tooltip}>
+        <span className={CLASS_NAMES.tooltip} aria-hidden="true">
           <span className={CLASS_NAMES.label}>{label}</span>
           {tokens.length > 0 && (
             // ラベルを1行目、キーを2行目に箱付きで並べる。

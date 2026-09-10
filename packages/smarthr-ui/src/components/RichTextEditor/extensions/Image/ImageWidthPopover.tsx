@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
-import { FormControl } from '../../../FormControl'
+import { FormControl } from '../../../FormGroup'
 import { FaLockIcon, FaUpRightAndDownLeftFromCenterIcon } from '../../../Icon'
 import { Input } from '../../../Input'
 import { Cluster, Stack } from '../../../Layout'
@@ -182,10 +182,10 @@ export const ImageWidthPopover: FC<Props> = memo(
             refProp?.(el)
           }}
           type="button"
-          aria-haspopup="dialog"
-          aria-expanded={isOpen}
           tabIndex={tabIndex}
           className={classNames.trigger()}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => setIsOpen((prev) => !prev)}
           onKeyDown={(e) => {
@@ -203,7 +203,7 @@ export const ImageWidthPopover: FC<Props> = memo(
           {label}
         </button>
         {renderDropdown(
-          <div role="dialog" aria-label={label} className={classNames.menu()}>
+          <div role="dialog" className={classNames.menu()} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form noValidate onSubmit={apply} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
@@ -218,7 +218,7 @@ export const ImageWidthPopover: FC<Props> = memo(
                       onChange={(e) => handleWidthChange(e.target.value)}
                     />
                   </FormControl>
-                  <FaLockIcon className={classNames.lock()} alt={lockLabel} />
+                  <FaLockIcon alt={lockLabel} className={classNames.lock()} />
                   <FormControl label={heightLabel}>
                     <Input
                       type="number"
@@ -230,10 +230,10 @@ export const ImageWidthPopover: FC<Props> = memo(
                   </FormControl>
                 </div>
                 <Cluster gap={0.5} justify="space-between">
-                  <Button type="button" size="S" variant="secondary" onClick={reset}>
+                  <Button type="button" variant="secondary" size="S" onClick={reset}>
                     {resetLabel}
                   </Button>
-                  <Button type="submit" size="S" variant="primary">
+                  <Button type="submit" variant="primary" size="S">
                     {applyLabel}
                   </Button>
                 </Cluster>

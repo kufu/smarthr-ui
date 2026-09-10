@@ -14,7 +14,7 @@ import {
 
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { FaCirclePlayIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
@@ -142,8 +142,6 @@ export const YoutubeInsertButton: FC<Props> = memo(
             triggerRef.current = el
             refProp?.(el)
           }}
-          icon={<FaCirclePlayIcon />}
-          label={label}
           disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={isOpen}
@@ -151,24 +149,26 @@ export const YoutubeInsertButton: FC<Props> = memo(
           onClick={() => setIsOpen((prev) => !prev)}
           onKeyDown={handleTriggerKeyDown}
           onFocus={onFocusProp}
+          icon={<FaCirclePlayIcon />}
+          label={label}
         />
         {renderDropdown(
-          <div ref={popupRef} role="dialog" aria-label={label} className={POPUP_CLASS}>
+          <div ref={popupRef} role="dialog" className={POPUP_CLASS} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
                 <FormControl
+                  errorMessages={error || undefined}
                   label={urlLabelText}
                   helpMessage={urlHelpText}
-                  errorMessages={error || undefined}
                 >
                   <Input
                     ref={inputRef}
-                    name="youtubeUrl"
                     type="url"
+                    name="youtubeUrl"
                     value={url}
-                    width="100%"
                     error={!!error}
+                    width="100%"
                     onChange={(e) => {
                       setUrl(e.target.value)
                       if (error) setError('')
@@ -176,10 +176,10 @@ export const YoutubeInsertButton: FC<Props> = memo(
                   />
                 </FormControl>
                 <Cluster gap={0.5} justify="flex-end">
-                  <Button type="button" size="S" variant="secondary" onClick={closePopup}>
+                  <Button type="button" variant="secondary" size="S" onClick={closePopup}>
                     {cancelText}
                   </Button>
-                  <Button type="submit" size="S" variant="primary">
+                  <Button type="submit" variant="primary" size="S">
                     {embedText}
                   </Button>
                 </Cluster>

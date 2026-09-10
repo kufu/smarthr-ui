@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/useEnvironment'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { useIntl } from '../../../intl'
 import {
   FaArrowRotateLeftIcon,
@@ -466,36 +466,36 @@ export const RichTextEditorToolbar: FC = memo(() => {
     const rovingProps = getButtonProps(index, count)
 
     if (item.type === 'heading') {
-      return <HeadingDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <HeadingDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'fontSize') {
-      return <FontSizeDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <FontSizeDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'lineHeight') {
-      return <LineHeightDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <LineHeightDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'color') {
-      return <TextColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <TextColorPickerButton {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'backgroundColor') {
       return (
-        <BackgroundColorPickerButton {...rovingProps} disabled={item.disabled} key={item.key} />
+        <BackgroundColorPickerButton {...rovingProps} key={item.key} disabled={item.disabled} />
       )
     }
     if (item.type === 'image') {
-      return <ImageInsertButton {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <ImageInsertButton {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'youtube') {
-      return <YoutubeInsertButton {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <YoutubeInsertButton {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'link') {
-      return <LinkButton {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <LinkButton {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'textAlign') {
-      return <TextAlignDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <TextAlignDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'table') {
-      return <TableInsertDropdown {...rovingProps} disabled={item.disabled} key={item.key} />
+      return <TableInsertDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
     }
 
     const buttonItem = item as ButtonItem
@@ -504,12 +504,12 @@ export const RichTextEditorToolbar: FC = memo(() => {
       <ToolbarButton
         {...rovingProps}
         key={buttonItem.key}
-        icon={buttonItem.icon}
-        label={buttonItem.label}
-        active={buttonItem.active}
         disabled={buttonItem.disabled}
+        active={buttonItem.active}
         shortcut={buttonItem.shortcut}
         onClick={buttonItem.action}
+        icon={buttonItem.icon}
+        label={buttonItem.label}
       />
     )
   }
@@ -517,7 +517,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
   const renderGroups = (target: typeof indexedRows.primary) =>
     target.map((group, groupIndex) => (
       <Fragment key={group.id}>
-        {groupIndex > 0 && <div aria-hidden="true" className={classNames.separator} />}
+        {groupIndex > 0 && <div className={classNames.separator} aria-hidden="true" />}
         {group.items.map(({ item, index }) => renderItem(item, index))}
       </Fragment>
     ))
@@ -525,10 +525,10 @@ export const RichTextEditorToolbar: FC = memo(() => {
   return (
     <div
       role="toolbar"
+      className={classNames.toolbar}
       aria-label={toolbarLabel}
       // 2段になっても操作は左右キー1本の直線移動なので horizontal のままが実態に合う
       aria-orientation="horizontal"
-      className={classNames.toolbar}
     >
       {mobile ? (
         <>
@@ -538,9 +538,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
               <div className={classNames.toggleWrapper}>
                 <MoreFormatsToggle
                   {...getButtonProps(indexedRows.toggleIndex, count)}
+                  disabled={disabled}
                   expanded={isSecondaryOpen}
                   controls={secondaryId}
-                  disabled={disabled}
                   handleClick={handleToggleClick}
                 />
               </div>

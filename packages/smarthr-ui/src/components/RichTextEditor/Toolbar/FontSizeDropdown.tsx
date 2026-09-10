@@ -162,22 +162,22 @@ export const FontSizeDropdown: FC<Props> = memo(
 
     return (
       <>
-        <ToolbarTooltip label={dropdownLabel} suppressed={isOpen || isDisabled}>
+        <ToolbarTooltip suppressed={isOpen || isDisabled} label={dropdownLabel}>
           <button
             ref={(el) => {
               triggerRef.current = el
               refProp?.(el)
             }}
             type="button"
+            disabled={isDisabled}
+            tabIndex={tabIndex}
+            className={classNames.trigger()}
             aria-expanded={isOpen}
             aria-haspopup="listbox"
             aria-label={`${dropdownLabel}: ${currentLabel}`}
-            tabIndex={tabIndex}
-            disabled={isDisabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
-            className={classNames.trigger()}
           >
             <span className="shr-flex-1">{currentLabel}</span>
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
@@ -187,8 +187,8 @@ export const FontSizeDropdown: FC<Props> = memo(
           <div
             ref={listboxRef}
             role="listbox"
-            aria-label={dropdownLabel}
             className={classNames.listbox()}
+            aria-label={dropdownLabel}
           >
             {FONT_SIZES.map((option) => {
               const isSelected = option.value === currentValue
@@ -196,10 +196,10 @@ export const FontSizeDropdown: FC<Props> = memo(
               return (
                 <button
                   key={option.label}
-                  type="button"
                   role="option"
-                  aria-selected={isSelected}
+                  type="button"
                   className={classNames.option()}
+                  aria-selected={isSelected}
                   onClick={() => selectOption(option.value)}
                   onKeyDown={handleOptionKeyDown}
                 >

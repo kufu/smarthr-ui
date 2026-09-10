@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
-import { FormControl } from '../../../FormControl'
+import { FormControl } from '../../../FormGroup'
 import { FaPenToSquareIcon } from '../../../Icon'
 import { Input } from '../../../Input'
 import { Cluster, Stack } from '../../../Layout'
@@ -107,10 +107,10 @@ export const ImageAltPopover: FC<Props> = memo(
             refProp?.(el)
           }}
           type="button"
-          aria-haspopup="dialog"
-          aria-expanded={isOpen}
           tabIndex={tabIndex}
           className={classNames.trigger()}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => setIsOpen((prev) => !prev)}
           onKeyDown={(e) => {
@@ -128,7 +128,7 @@ export const ImageAltPopover: FC<Props> = memo(
           {label}
         </button>
         {renderDropdown(
-          <div role="dialog" aria-label={label} className={classNames.menu()}>
+          <div role="dialog" className={classNames.menu()} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
@@ -142,7 +142,7 @@ export const ImageAltPopover: FC<Props> = memo(
                   />
                 </FormControl>
                 <Cluster gap={0.5} justify="flex-end">
-                  <Button type="submit" size="S" variant="primary">
+                  <Button type="submit" variant="primary" size="S">
                     {applyLabel}
                   </Button>
                 </Cluster>

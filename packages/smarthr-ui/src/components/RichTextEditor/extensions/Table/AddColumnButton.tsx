@@ -85,10 +85,10 @@ export const AddColumnButton: FC<Props> = memo(
     return (
       <button
         type="button"
-        aria-label={label}
         title={label}
         className={classNames.button()}
         style={{ top, left, height, width: thickness }}
+        aria-label={label}
         onMouseDown={(e) => e.preventDefault()}
         onFocus={onFocus}
         onBlur={onBlur}

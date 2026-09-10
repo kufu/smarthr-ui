@@ -20,7 +20,7 @@ const Harness: FC<HarnessProps> = ({ scrollableRow = true, scrollableOutside = f
 
   const toolbar = (
     <div role="toolbar" aria-label="書式設定" aria-orientation="horizontal">
-      <div data-testid="row" style={scrollableRow ? { overflowX: 'auto' } : undefined}>
+      <div style={scrollableRow ? { overflowX: 'auto' } : undefined} data-testid="row">
         <button
           ref={triggerRef}
           type="button"
@@ -34,11 +34,11 @@ const Harness: FC<HarnessProps> = ({ scrollableRow = true, scrollableOutside = f
   )
 
   return (
-    <div data-testid="outside" style={scrollableOutside ? { overflowY: 'auto' } : undefined}>
+    <div style={scrollableOutside ? { overflowY: 'auto' } : undefined} data-testid="outside">
       {toolbar}
       {renderDropdown(
         <div role="listbox">
-          <button type="button" role="option" aria-selected="false">
+          <button role="option" type="button" aria-selected="false">
             項目
           </button>
         </div>,

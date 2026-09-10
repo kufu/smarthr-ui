@@ -275,13 +275,13 @@ export const ColorPickerPalette: FC<Props> = memo(
       <div
         ref={paletteRef}
         role="dialog"
-        aria-label={dialogLabel}
         className={classNames.palette()}
+        aria-label={dialogLabel}
         onKeyDown={onDelegateKeyDown}
         onBlur={onDelegateBlur}
       >
         {/* 標準パレットセクション */}
-        <div role="group" aria-label={standardSectionLabel} className={classNames.section()}>
+        <div role="group" className={classNames.section()} aria-label={standardSectionLabel}>
           <div className={classNames.swatchRow()}>
             {firstRow.map((color) => {
               const label = localize({ id: color.labelId, defaultText: color.defaultText })
@@ -294,11 +294,11 @@ export const ColorPickerPalette: FC<Props> = memo(
                 <button
                   key={color.value}
                   type="button"
-                  data-color-swatch="standard"
-                  aria-label={label}
-                  aria-pressed={isSelected}
                   className={classNames.swatch()}
                   style={{ backgroundColor: color.value }}
+                  aria-label={label}
+                  aria-pressed={isSelected}
+                  data-color-swatch="standard"
                   onClick={() => applyStandardColor(color.value)}
                   onKeyDown={handleSwatchKeyDown}
                 >
@@ -324,11 +324,11 @@ export const ColorPickerPalette: FC<Props> = memo(
                   <button
                     key={color.value}
                     type="button"
-                    data-color-swatch="standard"
-                    aria-label={label}
-                    aria-pressed={isSelected}
                     className={classNames.swatch()}
                     style={{ backgroundColor: color.value }}
+                    aria-label={label}
+                    aria-pressed={isSelected}
+                    data-color-swatch="standard"
                     onClick={() => applyStandardColor(color.value)}
                     onKeyDown={handleSwatchKeyDown}
                   >
@@ -346,16 +346,16 @@ export const ColorPickerPalette: FC<Props> = memo(
         </div>
 
         {/* カスタムセクション */}
-        <div role="group" aria-label={customSectionLabel} className={classNames.section()}>
+        <div role="group" className={classNames.section()} aria-label={customSectionLabel}>
           <span className={classNames.sectionTitle()}>{customSectionLabel}</span>
           <div className={classNames.customRow()}>
             <button
               type="button"
-              data-color-swatch="custom"
-              aria-label={customSwatchLabel(customColor)}
-              aria-pressed={customSelected}
               className={classNames.swatch()}
               style={{ backgroundColor: customColor }}
+              aria-label={customSwatchLabel(customColor)}
+              aria-pressed={customSelected}
+              data-color-swatch="custom"
               onClick={() => applyCustomColor(customColor)}
               onKeyDown={handleSwatchKeyDown}
             >
@@ -373,10 +373,10 @@ export const ColorPickerPalette: FC<Props> = memo(
                 ref={colorInputRef}
                 type="color"
                 name="customColor"
-                aria-label={editButtonLabel}
                 value={customColor}
-                onChange={handleColorInputChange}
                 className={classNames.colorInput()}
+                aria-label={editButtonLabel}
+                onChange={handleColorInputChange}
               />
             </span>
           </div>
@@ -384,7 +384,7 @@ export const ColorPickerPalette: FC<Props> = memo(
 
         {/* 履歴セクション（0件のとき非表示） */}
         {recentColors.length > 0 && (
-          <div role="group" aria-label={recentSectionLabel} className={classNames.section()}>
+          <div role="group" className={classNames.section()} aria-label={recentSectionLabel}>
             <span className={classNames.sectionTitle()}>{recentSectionLabel}</span>
             <div className={classNames.swatchRow()}>
               {recentColors.map((color, idx) => {
@@ -393,11 +393,11 @@ export const ColorPickerPalette: FC<Props> = memo(
                   <button
                     key={color}
                     type="button"
-                    data-color-swatch="recent"
-                    aria-label={recentSwatchLabel(color)}
-                    aria-pressed={isSelected}
                     className={classNames.swatch()}
                     style={{ backgroundColor: color }}
+                    aria-label={recentSwatchLabel(color)}
+                    aria-pressed={isSelected}
+                    data-color-swatch="recent"
                     onClick={() => applyRecentColor(color)}
                     onKeyDown={handleSwatchKeyDown}
                   >

@@ -165,22 +165,22 @@ export const LineHeightDropdown: FC<Props> = memo(
 
     return (
       <>
-        <ToolbarTooltip label={dropdownLabel} suppressed={isOpen || disabled}>
+        <ToolbarTooltip suppressed={isOpen || disabled} label={dropdownLabel}>
           <button
             ref={(el) => {
               triggerRef.current = el
               refProp?.(el)
             }}
             type="button"
+            disabled={disabled}
+            tabIndex={tabIndex}
+            className={classNames.trigger()}
             aria-expanded={isOpen}
             aria-haspopup="listbox"
             aria-label={`${dropdownLabel}: ${currentLabel}`}
-            tabIndex={tabIndex}
-            disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
-            className={classNames.trigger()}
           >
             <FaTextHeightIcon />
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
@@ -190,8 +190,8 @@ export const LineHeightDropdown: FC<Props> = memo(
           <div
             ref={listboxRef}
             role="listbox"
-            aria-label={dropdownLabel}
             className={classNames.listbox()}
+            aria-label={dropdownLabel}
           >
             {LINE_HEIGHT_OPTIONS.map((option) => {
               const isSelected = option.value === currentValue
@@ -201,10 +201,10 @@ export const LineHeightDropdown: FC<Props> = memo(
               return (
                 <button
                   key={option.label}
-                  type="button"
                   role="option"
-                  aria-selected={isSelected}
+                  type="button"
                   className={classNames.option()}
+                  aria-selected={isSelected}
                   onClick={() => selectOption(option.value)}
                   onKeyDown={handleOptionKeyDown}
                 >

@@ -4,7 +4,7 @@ import { createRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { IntlProvider } from '../../../intl'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 
 import { RichTextEditor } from './RichTextEditor'
 
@@ -94,7 +94,7 @@ describe('RichTextEditor', () => {
     render(
       <IntlProvider locale="ja">
         {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
-        <FormControl label="Description" errorMessages="Required field">
+        <FormControl errorMessages="Required field" label="Description">
           <RichTextEditor />
         </FormControl>
       </IntlProvider>,
@@ -232,11 +232,11 @@ describe('RichTextEditor', () => {
         <RichTextEditor
           ref={ref}
           disabled
-          features={['horizontalRule', 'bold']}
           defaultValue={{
             type: 'doc',
             content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
           }}
+          features={['horizontalRule', 'bold']}
           onChange={onChange}
         />,
         { wrapper: Wrapper },
@@ -324,7 +324,7 @@ describe('RichTextEditor', () => {
     }
 
     it('defaultValue の features 外の書式を保持する', async () => {
-      render(<RichTextEditor features={['bold']} defaultValue={RICH_VALUE} />, { wrapper: Wrapper })
+      render(<RichTextEditor defaultValue={RICH_VALUE} features={['bold']} />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByText('見出し')).toBeInTheDocument()
       })
@@ -333,7 +333,7 @@ describe('RichTextEditor', () => {
     })
 
     it('value（controlled）の features 外の書式を保持する', async () => {
-      render(<RichTextEditor features={['bold']} value={RICH_VALUE} />, { wrapper: Wrapper })
+      render(<RichTextEditor value={RICH_VALUE} features={['bold']} />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByText('見出し')).toBeInTheDocument()
       })
@@ -360,7 +360,7 @@ describe('RichTextEditor', () => {
 
     it('features 外の書式を保持したままHTMLを出力する', async () => {
       const ref = createRef<RichTextEditorController>()
-      render(<RichTextEditor ref={ref} features={['bold']} defaultValue={RICH_VALUE} />, {
+      render(<RichTextEditor ref={ref} defaultValue={RICH_VALUE} features={['bold']} />, {
         wrapper: Wrapper,
       })
       await waitFor(() => {
@@ -378,11 +378,11 @@ describe('RichTextEditor', () => {
     it('shows character count when showCharacterCount is true', async () => {
       render(
         <RichTextEditor
-          showCharacterCount
           defaultValue={{
             type: 'doc',
             content: [{ type: 'paragraph', content: [{ type: 'text', text: 'abc' }] }],
           }}
+          showCharacterCount
         />,
         { wrapper: Wrapper },
       )
@@ -400,7 +400,7 @@ describe('RichTextEditor', () => {
     })
 
     it('does not show character count when readOnly', async () => {
-      render(<RichTextEditor showCharacterCount readOnly />, { wrapper: Wrapper })
+      render(<RichTextEditor readOnly showCharacterCount />, { wrapper: Wrapper })
       await waitFor(() => {
         expect(screen.getByRole('textbox')).toBeInTheDocument()
       })
@@ -618,7 +618,7 @@ describe('RichTextEditor', () => {
     })
 
     it('readOnly のときリサイズハンドルは描画されない', async () => {
-      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable readOnly />, {
+      const { container } = render(<RichTextEditor readOnly features={ALL_FEATURES} resizable />, {
         wrapper: Wrapper,
       })
 
@@ -630,7 +630,7 @@ describe('RichTextEditor', () => {
     })
 
     it('disabled のときリサイズハンドルは描画されない', async () => {
-      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable disabled />, {
+      const { container } = render(<RichTextEditor disabled features={ALL_FEATURES} resizable />, {
         wrapper: Wrapper,
       })
 

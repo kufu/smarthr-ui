@@ -89,8 +89,8 @@ describe('画像アップロード', () => {
     render(
       <RichTextEditor
         features={['image']}
-        onImageUpload={onImageUpload}
         acceptedMimeTypes={['image/*']}
+        onImageUpload={onImageUpload}
       />,
       { wrapper: Wrapper },
     )
@@ -111,8 +111,8 @@ describe('画像アップロード', () => {
     render(
       <RichTextEditor
         features={['image']}
-        onImageUpload={onImageUpload}
         acceptedMimeTypes={['image/*']}
+        onImageUpload={onImageUpload}
       />,
       { wrapper: Wrapper },
     )
@@ -130,8 +130,8 @@ describe('画像アップロード', () => {
     render(
       <RichTextEditor
         features={['image']}
-        onImageUpload={onImageUpload}
         acceptedMimeTypes={['image/*']}
+        onImageUpload={onImageUpload}
       />,
       { wrapper: Wrapper },
     )

@@ -38,16 +38,16 @@ export const ToolbarButton: FC<Props> = memo(
     const isApple = useIsApplePlatform()
 
     return (
-      <ToolbarTooltip label={label} shortcut={shortcut} suppressed={disabled}>
+      <ToolbarTooltip shortcut={shortcut} suppressed={disabled} label={label}>
         <button
           {...rest}
           ref={ref}
           type="button"
           disabled={disabled}
+          className={classNameGenerator({ active, className })}
           aria-label={label}
           aria-pressed={active}
           aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut, isApple) : undefined}
-          className={classNameGenerator({ active, className })}
         >
           {icon}
         </button>

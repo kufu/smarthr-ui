@@ -43,7 +43,6 @@ describe('LineHeightDropdown', () => {
   it('現在値ありのとき aria-label に値が反映される', async () => {
     render(
       <RichTextEditor
-        features={['lineHeight']}
         defaultValue={{
           type: 'doc',
           content: [
@@ -54,6 +53,7 @@ describe('LineHeightDropdown', () => {
             },
           ],
         }}
+        features={['lineHeight']}
       />,
       { wrapper: Wrapper },
     )
@@ -65,7 +65,6 @@ describe('LineHeightDropdown', () => {
     const user = userEvent.setup()
     render(
       <RichTextEditor
-        features={['lineHeight']}
         defaultValue={{
           type: 'doc',
           content: [
@@ -76,6 +75,7 @@ describe('LineHeightDropdown', () => {
             },
           ],
         }}
+        features={['lineHeight']}
       />,
       { wrapper: Wrapper },
     )
@@ -102,11 +102,11 @@ describe('LineHeightDropdown', () => {
     const user = userEvent.setup()
     render(
       <RichTextEditor
-        features={['lineHeight']}
         defaultValue={{
           type: 'doc',
           content: [{ type: 'paragraph', content: [{ type: 'text', text: 'abc' }] }],
         }}
+        features={['lineHeight']}
       />,
       { wrapper: Wrapper },
     )
@@ -123,7 +123,6 @@ describe('LineHeightDropdown', () => {
     const user = userEvent.setup()
     render(
       <RichTextEditor
-        features={['lineHeight']}
         defaultValue={{
           type: 'doc',
           content: [
@@ -134,6 +133,7 @@ describe('LineHeightDropdown', () => {
             },
           ],
         }}
+        features={['lineHeight']}
       />,
       { wrapper: Wrapper },
     )

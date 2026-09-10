@@ -41,12 +41,12 @@ export const MoreFormatsToggle: FC<Props> = memo(
       <button
         ref={ref}
         type="button"
-        tabIndex={tabIndex}
         disabled={disabled}
+        tabIndex={tabIndex}
+        className={`${TOOLBAR_ITEM_CLASS_NAME} smarthr-ui-RichTextEditor-MoreFormatsToggle`}
         aria-label={label}
         aria-expanded={expanded}
         aria-controls={controls}
-        className={`${TOOLBAR_ITEM_CLASS_NAME} smarthr-ui-RichTextEditor-MoreFormatsToggle`}
         onClick={handleClick}
         onKeyDown={onKeyDown}
         onFocus={onFocus}

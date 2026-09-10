@@ -49,6 +49,3 @@ export const EDITOR_BACKGROUND_COLORS = [
     defaultText: 'マゼンタ',
   },
 ] as const
-
-export const isValidEditorBackgroundColor = (color: string): boolean =>
-  /^#[0-9a-f]{3,6}$/i.test(color)

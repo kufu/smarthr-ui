@@ -322,13 +322,13 @@ export const RichTextEditor = memo(
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
       const toolbar = editor && !readOnly && !hideToolbar && (
         <RichTextEditorProvider
+          disabled={disabled}
           editor={editor}
           features={features}
           headingLevels={headingLevels}
-          disabled={disabled}
+          acceptedMimeTypes={acceptedMimeTypes}
           onImageUpload={onImageUpload}
           onImageUploadError={onImageUploadError}
-          acceptedMimeTypes={acceptedMimeTypes}
         >
           <div ref={toolbarRef} className={classNames.toolbarWrapper()}>
             <RichTextEditorToolbar />
@@ -337,21 +337,21 @@ export const RichTextEditor = memo(
       )
 
       return (
-        <div ref={wrapperRef} style={wrapperStyle} className={classNames.wrapper({ className })}>
+        <div ref={wrapperRef} className={classNames.wrapper({ className })} style={wrapperStyle}>
           {toolbar}
           <div
             ref={contentRef}
-            data-smarthr-ui-input="true"
-            style={contentStyle}
             className={classNames.content({ className: editorClassName })}
+            style={contentStyle}
+            data-smarthr-ui-input="true"
           >
             {editor && <EditorContent editor={editor} />}
           </div>
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('table') && (
-            <TableFloatingUI editor={editor} containerRef={wrapperRef} />
+            <TableFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('image') && (
-            <ImageFloatingUI editor={editor} containerRef={wrapperRef} />
+            <ImageFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea()} />
@@ -381,13 +381,13 @@ export const RichTextEditor = memo(
  * wrapper 内に絶対配置しているテーブルの「+列」バーも clip されるため。
  */
 const ResizeHandleGrip = () => (
-  <svg width="1em" height="1em" viewBox="0 0 10 10" focusable="false" aria-hidden="true">
+  <svg viewBox="0 0 10 10" focusable="false" width="1em" height="1em" aria-hidden="true">
     {/*
       strokeWidth は 1em(13.7px) / viewBox 10 の比率で約1pxになる値。ネイティブの線幅に合わせる。
       斜線は viewBox いっぱいには引かない。掴む領域(1em)は保ったまま、
       描画サイズだけネイティブ(約7px四方)に寄せるため。
     */}
-    <path d="M9 3 3 9M9 6 6 9" stroke="currentColor" strokeWidth="0.75" fill="none" />
+    <path d="M9 3 3 9M9 6 6 9" stroke="currentColor" fill="none" strokeWidth="0.75" />
   </svg>
 )
 

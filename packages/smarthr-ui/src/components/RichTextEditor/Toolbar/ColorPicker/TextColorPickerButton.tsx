@@ -155,26 +155,26 @@ export const TextColorPickerButton: FC<Props> = memo(
 
     return (
       <>
-        <ToolbarTooltip label={colorLabel} suppressed={isOpen || disabled}>
+        <ToolbarTooltip suppressed={isOpen || disabled} label={colorLabel}>
           <button
             ref={(el) => {
               triggerRef.current = el
               refProp?.(el)
             }}
             type="button"
+            disabled={disabled}
+            tabIndex={tabIndex}
+            className={classNames.trigger()}
             aria-label={`${colorLabel}: ${currentColorLabel}`}
             aria-expanded={isOpen}
             aria-haspopup="dialog"
-            tabIndex={tabIndex}
-            disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
-            className={classNames.trigger()}
           >
             <span className="shr-flex shr-flex-col shr-items-center shr-gap-[2px]">
               {/* eslint-disable-next-line smarthr/require-i18n-text */}
-              <span aria-hidden className="shr-text-base shr-font-bold shr-leading-none">
+              <span className="shr-text-base shr-font-bold shr-leading-none" aria-hidden>
                 A
               </span>
               <span
@@ -189,16 +189,12 @@ export const TextColorPickerButton: FC<Props> = memo(
           <ColorPickerPalette
             paletteRef={paletteRef}
             triggerRef={triggerRef}
-            setIsOpen={setIsOpen}
             colors={EDITOR_COLORS}
             defaultColor={DEFAULT_COLOR}
             currentColor={currentColor}
             recentColors={recentColors}
             pushRecent={pushRecent}
             customColor={customColor}
-            setCustomColor={setCustomColor}
-            onApplyColor={onApplyColor}
-            onUnsetColor={onUnsetColor}
             dialogLabel={colorLabel}
             standardSectionLabel={standardSectionLabel}
             customSectionLabel={customSectionLabel}
@@ -207,6 +203,10 @@ export const TextColorPickerButton: FC<Props> = memo(
             resetButtonLabel={resetLabel}
             customSwatchLabel={customSwatchLabel}
             recentSwatchLabel={recentSwatchLabel}
+            setIsOpen={setIsOpen}
+            setCustomColor={setCustomColor}
+            onApplyColor={onApplyColor}
+            onUnsetColor={onUnsetColor}
           />,
         )}
       </>

@@ -59,7 +59,7 @@ describe('MoreFormatsToggle', () => {
 
   it('disabled のときネイティブの disabled になる', () => {
     render(
-      <MoreFormatsToggle expanded={false} controls="secondary-row" handleClick={NOOP} disabled />,
+      <MoreFormatsToggle disabled expanded={false} controls="secondary-row" handleClick={NOOP} />,
       { wrapper: Wrapper },
     )
 

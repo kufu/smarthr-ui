@@ -198,22 +198,22 @@ export const TextAlignDropdown: FC<Props> = memo(
 
     return (
       <>
-        <ToolbarTooltip label={dropdownLabel} suppressed={isOpen || disabled}>
+        <ToolbarTooltip suppressed={isOpen || disabled} label={dropdownLabel}>
           <button
             ref={(el) => {
               triggerRef.current = el
               refProp?.(el)
             }}
             type="button"
+            disabled={disabled}
+            tabIndex={tabIndex}
+            className={classNames.trigger()}
             aria-expanded={isOpen}
             aria-haspopup="listbox"
             aria-label={`${dropdownLabel}: ${currentLabel}`}
-            tabIndex={tabIndex}
-            disabled={disabled}
             onKeyDown={handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
-            className={classNames.trigger()}
           >
             {getAlignIcon(currentAlign)}
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
@@ -223,23 +223,23 @@ export const TextAlignDropdown: FC<Props> = memo(
           <div
             ref={listboxRef}
             role="listbox"
+            className={classNames.listbox()}
             aria-label={dropdownLabel}
             aria-orientation="horizontal"
-            className={classNames.listbox()}
           >
             {ALIGN_OPTIONS.map((option) => {
               const label = localize({ id: option.labelId, defaultText: option.defaultText })
               const isSelected = option.value === currentAlign
 
               return (
-                <ToolbarTooltip key={option.value} label={label} shortcut={option.shortcut}>
+                <ToolbarTooltip key={option.value} shortcut={option.shortcut} label={label}>
                   <button
-                    type="button"
                     role="option"
+                    type="button"
+                    className={`${classNames.option()} ${isSelected ? 'shr-bg-white-darken' : ''}`}
                     aria-selected={isSelected}
                     aria-label={label}
                     aria-keyshortcuts={toAriaKeyShortcuts(option.shortcut, isApple)}
-                    className={`${classNames.option()} ${isSelected ? 'shr-bg-white-darken' : ''}`}
                     onClick={() => selectOption(option.value)}
                     onKeyDown={handleOptionKeyDown}
                   >

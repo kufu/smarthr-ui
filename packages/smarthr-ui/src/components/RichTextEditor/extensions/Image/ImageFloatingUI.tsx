@@ -76,17 +76,17 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   return (
     <div
       role="toolbar"
-      aria-label={toolbarLabel}
       className={classNames.bar()}
       style={{ top, left }}
+      aria-label={toolbarLabel}
     >
       <ImageAltPopover {...getButtonProps(0, 3)} editor={editor} pos={info.pos} />
       <ImageWidthPopover {...getButtonProps(1, 3)} editor={editor} pos={info.pos} />
       <button
         {...getButtonProps(2, 3)}
         type="button"
-        aria-label={deleteLabel}
         className={classNames.deleteButton()}
+        aria-label={deleteLabel}
         onMouseDown={(e) => e.preventDefault()}
         onClick={handleDelete}
       >

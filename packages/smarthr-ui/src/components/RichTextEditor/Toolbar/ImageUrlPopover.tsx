@@ -12,10 +12,10 @@ import {
   useState,
 } from 'react'
 
-import { usePortal } from '../../../hooks/usePortal'
+import { usePortal } from '../../../hooks/client/usePortal'
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 
@@ -139,21 +139,21 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
   return createPortal(
     <div
       role="dialog"
-      aria-label={titleText}
       className={`shr-absolute shr-z-overlap-base ${POPUP_CLASS}`}
       style={{ top: `${position.top}px`, left: `${position.left}px` }}
+      aria-label={titleText}
     >
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <form noValidate onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
         <Stack gap={0.75}>
-          <FormControl label={urlLabelText} errorMessages={error || undefined}>
+          <FormControl errorMessages={error || undefined} label={urlLabelText}>
             <Input
               ref={inputRef}
-              name="imageUrl"
               type="url"
+              name="imageUrl"
               value={url}
-              width="100%"
               error={!!error}
+              width="100%"
               onChange={(e) => {
                 setUrl(e.target.value)
 
@@ -162,10 +162,10 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
             />
           </FormControl>
           <Cluster gap={0.5} justify="flex-end">
-            <Button type="button" size="S" variant="secondary" onClick={onClose}>
+            <Button type="button" variant="secondary" size="S" onClick={onClose}>
               {cancelText}
             </Button>
-            <Button type="submit" size="S" variant="primary">
+            <Button type="submit" variant="primary" size="S">
               {insertText}
             </Button>
           </Cluster>

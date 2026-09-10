@@ -13,7 +13,7 @@ import {
 
 import { useIntl } from '../../../intl'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { FaLinkIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
@@ -209,20 +209,20 @@ export const LinkButton: FC<Props> = memo(
             triggerRef.current = el
             refProp?.(el)
           }}
-          icon={<FaLinkIcon />}
-          label={label}
+          disabled={disabled}
           shortcut="Mod-K"
           active={state.isLink}
-          disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           onClick={() => setIsOpen((prev) => !prev)}
           onKeyDown={handleTriggerKeyDown}
           onFocus={onFocusProp}
+          icon={<FaLinkIcon />}
+          label={label}
         />
         {renderDropdown(
-          <div ref={popupRef} role="dialog" aria-label={label} className={POPUP_CLASS}>
+          <div ref={popupRef} role="dialog" className={POPUP_CLASS} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
@@ -235,17 +235,17 @@ export const LinkButton: FC<Props> = memo(
                   />
                 </FormControl>
                 <FormControl
+                  errorMessages={error || undefined}
                   label={urlLabelText}
                   helpMessage={urlHelpText}
-                  errorMessages={error || undefined}
                 >
                   <Input
                     ref={urlInputRef}
-                    name="linkUrl"
                     type="url"
+                    name="linkUrl"
                     value={url}
-                    width="100%"
                     error={!!error}
+                    width="100%"
                     onChange={(e) => {
                       setUrl(e.target.value)
                       if (error) setError('')
@@ -258,8 +258,8 @@ export const LinkButton: FC<Props> = memo(
                       type="button"
                       variant="text"
                       size="S"
-                      prefix={<FaLinkIcon />}
                       onClick={handleUnsetLink}
+                      prefix={<FaLinkIcon />}
                     >
                       {unsetText}
                     </Button>
@@ -267,10 +267,10 @@ export const LinkButton: FC<Props> = memo(
                     <span />
                   )}
                   <Cluster gap={0.5}>
-                    <Button type="button" size="S" variant="secondary" onClick={closePopup}>
+                    <Button type="button" variant="secondary" size="S" onClick={closePopup}>
                       {cancelText}
                     </Button>
-                    <Button type="submit" size="S" variant="primary">
+                    <Button type="submit" variant="primary" size="S">
                       {applyText}
                     </Button>
                   </Cluster>

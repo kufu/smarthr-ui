@@ -180,15 +180,15 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
   return (
     <>
       <span className="shr-absolute shr-z-0" style={{ top, left }}>
-        <ToolbarTooltip label={triggerLabel} shortcut="Alt-Enter" suppressed={isOpen}>
+        <ToolbarTooltip shortcut="Alt-Enter" suppressed={isOpen} label={triggerLabel}>
           <button
             ref={triggerRef}
             type="button"
+            className={classNames.trigger()}
             aria-label={triggerLabel}
             aria-haspopup="menu"
             aria-expanded={isOpen}
             aria-keyshortcuts="Alt+Enter Shift+F10"
-            className={classNames.trigger()}
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => (isOpen ? closeMenu() : openMenu(false))}
             onKeyDown={handleTriggerKeyDown}
@@ -198,7 +198,7 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
         </ToolbarTooltip>
       </span>
       {renderDropdown(
-        <div ref={menuRef} role="menu" aria-label={triggerLabel} className={classNames.menu()}>
+        <div ref={menuRef} role="menu" className={classNames.menu()} aria-label={triggerLabel}>
           {/* ヘッダー設定 */}
           <div className={classNames.section()}>
             {/*
@@ -207,10 +207,10 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
             */}
             {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
             <button
-              type="button"
               role="menuitemcheckbox"
-              aria-checked={state.hasHeaderRow}
+              type="button"
               className={classNames.checkboxItem()}
+              aria-checked={state.hasHeaderRow}
               onClick={() => runAndClose(actions.toggleHeaderRow)}
               onKeyDown={handleMenuKeyDown}
             >
@@ -226,10 +226,10 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
             </button>
             {/* eslint-disable-next-line smarthr/best-practice-for-interactive-element */}
             <button
-              type="button"
               role="menuitemcheckbox"
-              aria-checked={state.hasHeaderColumn}
+              type="button"
               className={classNames.checkboxItem()}
+              aria-checked={state.hasHeaderColumn}
               onClick={() => runAndClose(actions.toggleHeaderColumn)}
               onKeyDown={handleMenuKeyDown}
             >
@@ -244,8 +244,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
               })}
             </button>
             <button
-              type="button"
               role="menuitem"
+              type="button"
               disabled={!state.canToggleHeaderCell}
               className={classNames.menuItem()}
               onClick={() => runAndClose(actions.toggleHeaderCell)}
@@ -265,8 +265,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
           <div className={classNames.section()}>
             <div className={classNames.grid()}>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canAddColumnAfter}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.addColumnAfter)}
@@ -279,8 +279,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
                 })}
               </button>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canAddRowBefore}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.addRowBefore)}
@@ -293,8 +293,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
                 })}
               </button>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canAddColumnBefore}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.addColumnBefore)}
@@ -307,8 +307,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
                 })}
               </button>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canAddRowAfter}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.addRowAfter)}
@@ -321,8 +321,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
                 })}
               </button>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canDeleteColumn}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.deleteColumn)}
@@ -335,8 +335,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
                 })}
               </button>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canDeleteRow}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.deleteRow)}
@@ -357,8 +357,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
           <div className={classNames.section()}>
             <div className={classNames.grid()}>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canMergeCells}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.mergeCells)}
@@ -371,8 +371,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
                 })}
               </button>
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 disabled={!state.canSplitCell}
                 className={classNames.menuItem()}
                 onClick={() => runAndClose(actions.splitCell)}
@@ -392,8 +392,8 @@ export const TableActionsButton: FC<Props> = memo(({ editor, top, left }) => {
           {/* テーブル削除 */}
           <div className={classNames.section()}>
             <button
-              type="button"
               role="menuitem"
+              type="button"
               disabled={!state.canDeleteTable}
               className={classNames.menuItem()}
               onClick={() => runAndClose(actions.deleteTable)}

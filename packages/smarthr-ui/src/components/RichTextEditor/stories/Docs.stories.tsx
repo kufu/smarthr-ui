@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import {
   FaAlignLeftIcon,
   FaBoldIcon,
@@ -480,8 +480,8 @@ export const BasicUsage: Story = {
         <FormControl label="本文" helpMessage="ツールバーで書式を設定してください。">
           <RichTextEditor
             features={ALL_FEATURES}
-            onChange={(json) => setValue(json)}
             placeholder="ここに本文を入力してください"
+            onChange={(json) => setValue(json)}
           />
         </FormControl>
         {value && (
@@ -545,16 +545,16 @@ const handleSave = () => {
           ref の isEmpty() でエディタが空かどうかを判定できます。JSON
           では空でも構造データが返るため、isEmpty() を使ってください。
         </Text>
-        <FormControl label="本文" errorMessages={error || undefined}>
+        <FormControl errorMessages={error || undefined} label="本文">
           <RichTextEditor
             ref={ref}
             error={!!error}
             features={ALL_FEATURES}
+            placeholder="何か入力してから保存してください"
             onChange={(json) => {
               setValue(json)
               if (error) setError('')
             }}
-            placeholder="何か入力してから保存してください"
           />
         </FormControl>
         <div>
@@ -823,17 +823,17 @@ export const FixedHeight: Story = {
       <FormControl label="高さ200px固定">
         <RichTextEditor
           features={ALL_FEATURES}
-          height={200}
           placeholder="高さ200pxで固定。内容が溢れたらスクロールします"
           showCharacterCount
+          height={200}
         />
       </FormControl>
       <FormControl label="幅400px・高さ150px">
         <RichTextEditor
           features={ALL_FEATURES}
+          placeholder="width と height を併用"
           width={400}
           height={150}
-          placeholder="width と height を併用"
         />
       </FormControl>
     </Stack>
@@ -861,17 +861,17 @@ export const Resizable: Story = {
         <RichTextEditor
           features={ALL_FEATURES}
           resizable
-          height={200}
           placeholder="右下のハンドルで高さを変えられます"
           showCharacterCount
+          height={200}
         />
       </FormControl>
       <FormControl label="文字数カウントなし">
         <RichTextEditor
           features={ALL_FEATURES}
           resizable
-          height={200}
           placeholder="文字数カウントが無くてもハンドルは右下に出ます"
+          height={200}
         />
       </FormControl>
     </Stack>

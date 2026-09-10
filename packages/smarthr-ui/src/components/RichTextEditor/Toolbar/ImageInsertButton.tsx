@@ -144,8 +144,6 @@ export const ImageInsertButton: FC<Props> = memo(
             triggerRef.current = el
             refProp?.(el)
           }}
-          icon={<FaImageIcon />}
-          label={label}
           disabled={disabled}
           tabIndex={tabIndex}
           onKeyDown={(e) => {
@@ -162,13 +160,15 @@ export const ImageInsertButton: FC<Props> = memo(
           }}
           onFocus={onFocus}
           onClick={handleClick}
+          icon={<FaImageIcon />}
+          label={label}
         />
         {renderDropdown(
-          <div ref={menuRef} role="menu" aria-label={label} className={classNames.menu()}>
+          <div ref={menuRef} role="menu" className={classNames.menu()} aria-label={label}>
             {onImageUpload && (
               <button
-                type="button"
                 role="menuitem"
+                type="button"
                 className={classNames.menuItem()}
                 onClick={handleUploadClick}
                 onKeyDown={handleMenuKeyDown}
@@ -177,8 +177,8 @@ export const ImageInsertButton: FC<Props> = memo(
               </button>
             )}
             <button
-              type="button"
               role="menuitem"
+              type="button"
               className={classNames.menuItem()}
               onClick={handleUrlClick}
               onKeyDown={handleMenuKeyDown}
@@ -193,9 +193,9 @@ export const ImageInsertButton: FC<Props> = memo(
           type="file"
           name="imageFile"
           accept={mimeTypes.join(',')}
+          tabIndex={-1}
           className="shr-hidden"
           aria-hidden="true"
-          tabIndex={-1}
           onChange={handleFileChange}
         />
         <ImageUrlPopover

@@ -1,7 +1,7 @@
 import { within } from 'storybook/test'
 
-import { EnvironmentProvider } from '../../../../hooks/useEnvironment'
-import { FormControl } from '../../../FormControl'
+import { EnvironmentProvider } from '../../../../hooks/client/useEnvironment'
+import { FormControl } from '../../../FormGroup'
 import { Stack } from '../../../Layout'
 import { RichTextEditor } from '../RichTextEditor'
 
@@ -207,16 +207,16 @@ export const AllStates: Story = {
   render: () => (
     <Stack gap={2}>
       <FormControl label="通常">
-        <RichTextEditor features={ALL_FEATURES} defaultValue={richContent} />
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} />
       </FormControl>
       <FormControl label="読み取り専用">
-        <RichTextEditor features={ALL_FEATURES} readOnly defaultValue={richContent} />
+        <RichTextEditor readOnly defaultValue={richContent} features={ALL_FEATURES} />
       </FormControl>
       <FormControl label="無効">
-        <RichTextEditor features={ALL_FEATURES} disabled defaultValue={richContent} />
+        <RichTextEditor disabled defaultValue={richContent} features={ALL_FEATURES} />
       </FormControl>
-      <FormControl label="エラー" errorMessages="入力内容にエラーがあります">
-        <RichTextEditor features={ALL_FEATURES} error defaultValue={richContent} />
+      <FormControl errorMessages="入力内容にエラーがあります" label="エラー">
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} error />
       </FormControl>
     </Stack>
   ),
@@ -274,15 +274,15 @@ export const BackgroundColor: Story = {
     <Stack gap={2}>
       <FormControl label="背景色付きコンテンツ（通常）">
         <RichTextEditor
-          features={['color', 'backgroundColor']}
           defaultValue={backgroundColorContent}
+          features={['color', 'backgroundColor']}
         />
       </FormControl>
       <FormControl label="背景色付きコンテンツ（読み取り専用）">
         <RichTextEditor
-          features={['color', 'backgroundColor']}
           readOnly
           defaultValue={backgroundColorContent}
+          features={['color', 'backgroundColor']}
         />
       </FormControl>
     </Stack>
@@ -308,10 +308,10 @@ export const VRTImageWithWidth: Story = {
   render: () => (
     <Stack gap={2}>
       <FormControl label="幅指定画像（通常）">
-        <RichTextEditor features={['image']} defaultValue={imageWithWidthContent} />
+        <RichTextEditor defaultValue={imageWithWidthContent} features={['image']} />
       </FormControl>
       <FormControl label="幅指定画像（読み取り専用）">
-        <RichTextEditor features={['image']} readOnly defaultValue={imageWithWidthContent} />
+        <RichTextEditor readOnly defaultValue={imageWithWidthContent} features={['image']} />
       </FormControl>
     </Stack>
   ),
@@ -337,7 +337,7 @@ export const VRTBrokenImage: Story = {
   name: '読み込み失敗画像',
   render: () => (
     <FormControl label="読み込み失敗画像">
-      <RichTextEditor features={['image']} defaultValue={brokenImageContent} />
+      <RichTextEditor defaultValue={brokenImageContent} features={['image']} />
     </FormControl>
   ),
 }
@@ -350,28 +350,28 @@ export const VRTSizeAndResize: Story = {
         <RichTextEditor features={ALL_FEATURES} />
       </FormControl>
       <FormControl label="高さ200px固定">
-        <RichTextEditor features={ALL_FEATURES} height={200} defaultValue={richContent} />
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} height={200} />
       </FormControl>
       <FormControl label="幅400px・高さ150px">
         <RichTextEditor features={ALL_FEATURES} width={400} height={150} />
       </FormControl>
       <FormControl label="リサイズ可・文字数カウントあり">
-        <RichTextEditor features={ALL_FEATURES} resizable height={150} showCharacterCount />
+        <RichTextEditor features={ALL_FEATURES} resizable showCharacterCount height={150} />
       </FormControl>
       <FormControl label="リサイズ可・文字数カウントなし">
         <RichTextEditor features={ALL_FEATURES} resizable height={150} />
       </FormControl>
       <FormControl label="リサイズ可・読み取り専用（ハンドルなし）">
         <RichTextEditor
+          readOnly
+          defaultValue={richContent}
           features={ALL_FEATURES}
           resizable
-          readOnly
           height={150}
-          defaultValue={richContent}
         />
       </FormControl>
       <FormControl label="リサイズ可・無効（ハンドルなし）">
-        <RichTextEditor features={ALL_FEATURES} resizable disabled height={150} />
+        <RichTextEditor disabled features={ALL_FEATURES} resizable height={150} />
       </FormControl>
     </Stack>
   ),
@@ -383,13 +383,13 @@ export const VRTMobileToolbar: Story = {
     <EnvironmentProvider environment={{ mobile: true }}>
       <Stack gap={2}>
         <FormControl label="全機能・モバイル幅">
-          <RichTextEditor features={ALL_FEATURES} width={375} defaultValue={richContent} />
+          <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
         </FormControl>
         <FormControl label="無効・モバイル幅">
-          <RichTextEditor features={ALL_FEATURES} width={375} disabled defaultValue={richContent} />
+          <RichTextEditor disabled defaultValue={richContent} features={ALL_FEATURES} width={375} />
         </FormControl>
         <FormControl label="2段目に入る項目が無い（トグルなし）">
-          <RichTextEditor features={['bold', 'italic']} width={375} defaultValue={richContent} />
+          <RichTextEditor defaultValue={richContent} features={['bold', 'italic']} width={375} />
         </FormControl>
       </Stack>
     </EnvironmentProvider>
@@ -401,7 +401,7 @@ export const VRTMobileToolbarExpanded: Story = {
   render: () => (
     <EnvironmentProvider environment={{ mobile: true }}>
       <FormControl label="全機能・モバイル幅">
-        <RichTextEditor features={ALL_FEATURES} width={375} defaultValue={richContent} />
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
       </FormControl>
     </EnvironmentProvider>
   ),

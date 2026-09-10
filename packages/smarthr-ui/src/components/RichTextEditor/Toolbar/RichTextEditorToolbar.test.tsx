@@ -2,7 +2,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { EnvironmentProvider } from '../../../hooks/useEnvironment'
+import { EnvironmentProvider } from '../../../hooks/client/useEnvironment'
 import { IntlProvider } from '../../../intl'
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
@@ -177,7 +177,7 @@ describe('RichTextEditorToolbar', () => {
   })
 
   it('disabled のときトグルも disabled になる', async () => {
-    render(<RichTextEditor features={ALL_FEATURES} disabled />, { wrapper: MobileWrapper })
+    render(<RichTextEditor disabled features={ALL_FEATURES} />, { wrapper: MobileWrapper })
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 
     expect(screen.getByRole('button', { name: 'その他の書式' })).toBeDisabled()

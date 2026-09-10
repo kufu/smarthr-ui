@@ -14,5 +14,3 @@ export const EDITOR_COLORS = [
   { value: '#7239b3', labelId: 'smarthr-ui/RichTextEditor/colorPurple', defaultText: '紫' },
   { value: '#b3267a', labelId: 'smarthr-ui/RichTextEditor/colorMagenta', defaultText: 'マゼンタ' },
 ] as const
-
-export const isValidEditorColor = (color: string): boolean => /^#[0-9a-f]{3,6}$/i.test(color)
