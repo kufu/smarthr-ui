@@ -1,17 +1,14 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useRef, useState } from 'react'
+import { type FC, type ReactNode, memo, useCallback, useId, useMemo, useState } from 'react'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
-import { autoBindErrorCallbackRef } from './autoBindErrorCallbackRef'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
-import { useDescribedByIds } from './useDescribedByIds'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -27,16 +24,7 @@ export const FormControl: FC<Props> = (props) => {
   return <FormGroup {...actualProps} />
 }
 
-const useFormControlProps = ({
-  label: orgLabel,
-  errorMessages: orgErrorMessages,
-  helpMessage,
-  exampleMessage,
-  supplementaryMessage,
-  className,
-  autoBindErrorInput = true,
-  ...rest
-}: Props) => {
+const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -46,7 +34,6 @@ const useFormControlProps = ({
     }
   }, [className])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
   const baseId = useId()
   const [childInputId, setChildInputId] = useState<string>('')
 
@@ -59,15 +46,6 @@ const useFormControlProps = ({
     htmlFor: baseLabel.htmlFor || childInputId || `${baseId}-htmlFor`,
     id: baseLabel.id || `${baseId}-label`,
   }
-
-  const { describedbyIds: _describedbyIds, ...describedByIdsRest } = useDescribedByIds({
-    wrapperRef,
-    htmlFor: label.htmlFor,
-    errorMessages: orgErrorMessages,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
-  })
 
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
@@ -107,26 +85,12 @@ const useFormControlProps = ({
     [label.htmlFor, label.id],
   )
 
-  // HINT: wrapperRefはこのcustom hookで定義しているRefObjectなので
-  // 仮にcallbackRefが変化した場合の巻き込まれる形での再実行でも問題は発生しない。
-  // このコンポーネントは外部からrefを受け付けないため、問題はないが必要性が発生したら検討する
-  const wrapperCallbackRef = useMergeRefs(
-    wrapperRef,
-    callbackRef,
-    autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
-  )
-
   return {
     ...rest,
-    ...describedByIdsRest,
-    wrapperRef: wrapperCallbackRef,
+    callbackRef,
     label,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
     classNames,
     LabelComponent,
-    autoBindErrorInput,
   }
 }
 
