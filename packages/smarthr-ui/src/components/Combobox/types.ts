@@ -11,7 +11,7 @@ export type ComboboxItem<T> = ComboboxItemBase<T> &
     | {
         label: string
         /**
-         * 検索・アイテムの同一性判定・選択済みアイテムの表示に使う文字列。
+         * 検索・アイテムの同一性判定・選択済みアイテムの表示に使う文字列。候補とMultiComboboxの選択済みチップにはlabelを表示する。
          * 省略時は `label` がそのまま使われる。
          *
          * `label` に含まれていても `labelText` に含まれない文字列は検索対象にならない。
