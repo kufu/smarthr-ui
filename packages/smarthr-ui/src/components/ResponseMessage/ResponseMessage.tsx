@@ -1,10 +1,8 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { STATUS_ICON_MAPPER, type StatusIconType } from '../../libs/statusIcon'
+import { type ComponentProps as IconProps, STATUS_ICON_MAPPER, type StatusIconType } from '../Icon'
 import { Text } from '../Text'
-
-import type { ComponentProps as IconProps } from '../Icon'
 
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>

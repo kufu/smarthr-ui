@@ -6,3 +6,5 @@ export { WarningIcon } from './WarningIcon'
 export { SparklesIcon } from './SparklesIcon'
 export { LanguageIcon } from './LanguageIcon'
 export { OpenInNewTabIcon } from './OpenInNewTabIcon'
+
+export { BOLD_STATUS_ICON_MAPPER, STATUS_ICON_MAPPER, type StatusIconType } from './statusIcon'

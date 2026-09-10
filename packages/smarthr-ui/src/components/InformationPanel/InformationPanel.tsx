@@ -13,10 +13,9 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Localizer } from '../../intl'
-import { STATUS_ICON_MAPPER } from '../../libs/statusIcon'
 import { Button } from '../Button'
 import { Heading, type HeadingTagTypes } from '../Heading'
-import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, STATUS_ICON_MAPPER } from '../Icon'
 import { Sidebar } from '../Layout'
 import { Panel, type PanelElementProps } from '../Panel'
 
