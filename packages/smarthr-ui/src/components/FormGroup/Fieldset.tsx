@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, type ReactNode, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
