@@ -25,34 +25,40 @@ let reactPDFModulePromise: Promise<ReactPDFModule> | undefined
 
 const loadReactPDFModule = (): Promise<ReactPDFModule> => {
   if (!reactPDFModulePromise) {
-    reactPDFModulePromise = import('react-pdf').then((mod) => {
-      const { pdfjs } = mod
+    reactPDFModulePromise = import('react-pdf')
+      .then((mod) => {
+        const { pdfjs } = mod
 
-      // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
-      // @ts-expect-error
-      if (typeof window.Promise.withResolvers === 'undefined') {
+        // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
         // @ts-expect-error
-        window.Promise.withResolvers = function () {
-          let resolve, reject
-          const promise = new Promise((res, rej) => {
-            resolve = res
-            reject = rej
-          })
-          return { promise, resolve, reject }
+        if (typeof window.Promise.withResolvers === 'undefined') {
+          // @ts-expect-error
+          window.Promise.withResolvers = function () {
+            let resolve, reject
+            const promise = new Promise((res, rej) => {
+              resolve = res
+              reject = rej
+            })
+            return { promise, resolve, reject }
+          }
+          // web workerもpolyfillされたものを読み込む
+          pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
+        } else {
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          //   'pdfjs-dist/build/pdf.worker.min.mjs',
+          //   import.meta.url,
+          // ).toString()
+          pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
         }
-        // web workerもpolyfillされたものを読み込む
-        pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
-      } else {
-        // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-        // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-        //   'pdfjs-dist/build/pdf.worker.min.mjs',
-        //   import.meta.url,
-        // ).toString()
-        pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
-      }
 
-      return mod
-    })
+        return mod
+      })
+      .catch((error) => {
+        // HINT: 一時的なチャンク取得エラー等で拒否された場合、次回呼び出し時に再度importできるようキャッシュを解除する
+        reactPDFModulePromise = undefined
+        throw error
+      })
   }
 
   return reactPDFModulePromise
