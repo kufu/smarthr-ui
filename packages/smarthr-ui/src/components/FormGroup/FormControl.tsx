@@ -57,13 +57,13 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
       return
     }
 
-    const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
     const action = () => {
+      const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+
+      if (!input) {
+        return
+      }
+
       const htmlForAttr = node.getAttribute('data-auto-bind-aria-labelledby-for-input-htmlfor')
 
       if (htmlForAttr) {
