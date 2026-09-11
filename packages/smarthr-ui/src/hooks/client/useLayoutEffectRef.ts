@@ -1,4 +1,4 @@
-import { type DependencyList, useLayoutEffect, useRef } from 'react'
+import { type DependencyList, useLayoutEffect, useRef, useState } from 'react'
 
 /**
  * useRef + useLayoutEffectで、見た目上はcallback refのように振る舞うrefを作るフック。
@@ -17,15 +17,27 @@ export const useLayoutEffectRef = <T extends HTMLElement>(
   action: (node: T | null) => void | (() => void),
   dependencies: DependencyList,
 ) => {
-  const ref = useRef<T | null>(null)
-  const actionRef = useRef(action)
-  actionRef.current = action
+  const [node, setNode] = useState<T | null>(null)
+  const ref = useRef({
+    isMount,
+    action,
+    cleanup,
+  })
+  actionRef.current.action = action
 
   useLayoutEffect(
-    () => actionRef.current(ref.current),
+    () => {
+      if (node) {
+        ref.current.isMount = true
+        actionRef.current(node)
+      } else if (ref.current.isMount) {
+        actionRef.current(node)
+        ref.current.isMount = false
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    dependencies,
+    [...dependencies, node],
   )
 
-  return ref
+  return setNode
 }
