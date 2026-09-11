@@ -151,11 +151,9 @@ const classNameGenerator = tv({
 export const ModelessDialog: FC<Props> = ({ mobileMode = 'modal', ...rest }) => {
   const { mobile } = useEnvironment()
 
-  return mobile && mobileMode === 'modal' ? (
-    <MobileModelessDialog {...rest} />
-  ) : (
-    <DesktopModelessDialog {...rest} />
-  )
+  const Component = mobile && mobileMode === 'modal' ? MobileModelessDialog : DesktopModelessDialog
+
+  return <Component {...rest} />
 }
 
 const DesktopModelessDialog: FC<Props> = ({
