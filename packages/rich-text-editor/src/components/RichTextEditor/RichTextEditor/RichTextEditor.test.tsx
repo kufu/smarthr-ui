@@ -356,6 +356,30 @@ describe('RichTextEditor', () => {
       expect(onChange).not.toHaveBeenCalled()
     })
 
+    it('onChange の meta が ref の判定と一致する', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      const ref = createRef<RichTextEditorController>()
+      render(
+        <RichTextEditor
+          ref={ref}
+          defaultValue={{ type: 'doc', content: [{ type: 'paragraph' }, { type: 'paragraph' }] }}
+          features={ALL_FEATURES}
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      // 本文を変えて onChange を発火させる
+      await user.click(screen.getByRole('button', { name: '水平線' }))
+
+      await waitFor(() => expect(onChange).toHaveBeenCalled())
+      const meta = onChange.mock.calls.at(-1)![1]
+      expect(meta.isEmpty).toBe(ref.current!.isEmpty())
+      expect(meta.text).toBe(ref.current!.getText())
+    })
+
     it('content（HTML）の features 外の書式を保持する', async () => {
       render(
         <RichTextEditor

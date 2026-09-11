@@ -2,8 +2,8 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
-import { ALL_FEATURES, configureExtensions } from '../extensions/configureExtensions'
 
+import { getRichTextExtensions } from './richTextSchema'
 import {
   isSafeColor,
   isSafeFontSize,
@@ -18,20 +18,10 @@ import { sanitizeRichTextJSON } from './sanitizeRichTextJSON'
 
 import type { RichTextJSON } from '../types'
 import type { Mark, Node } from '@tiptap/pm/model'
-import type { AnyExtension } from '@tiptap/react'
 
 type ReactNodeMapping = (ctx: { node: Node; children?: ReactNode | ReactNode[] }) => ReactNode
 
 type ReactMarkMapping = (ctx: { mark: Mark; children?: ReactNode | ReactNode[] }) => ReactNode
-
-let cachedExtensions: AnyExtension[] | null = null
-
-const getOrCreateExtensions = () => {
-  if (!cachedExtensions) {
-    cachedExtensions = configureExtensions({ features: ALL_FEATURES })
-  }
-  return cachedExtensions
-}
 
 /**
  * @tiptap/static-renderer の既定マッピングは拡張の renderHTML が返すHTML属性名をそのまま
@@ -131,6 +121,6 @@ const markMapping: Record<string, ReactMarkMapping> = {
 export const serializeToReactElement = (json: RichTextJSON): ReactNode =>
   tiptapRenderToReactElement({
     content: sanitizeRichTextJSON(json),
-    extensions: getOrCreateExtensions(),
+    extensions: getRichTextExtensions(),
     options: { nodeMapping, markMapping },
   })

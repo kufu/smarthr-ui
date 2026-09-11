@@ -93,9 +93,13 @@ export const useRichTextEditor = ({
       },
     },
     onUpdate: ({ editor: e }) => {
+      // 空判定とテキストは editor と同じ結果にする必要があるため、この時点の値を読んで渡す
       const json = e.getJSON() as RichTextJSON
       const characterCount = e.getText({ blockSeparator: '' }).length
-      onChange?.(json, createChangeMeta(json, characterCount))
+      onChange?.(
+        json,
+        createChangeMeta(json, characterCount, { isEmpty: e.isEmpty, text: e.getText() }),
+      )
     },
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),
