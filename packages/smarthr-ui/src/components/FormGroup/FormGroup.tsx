@@ -144,13 +144,13 @@ export const FormGroup: FC<Props> = ({
       return
     }
 
-    const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
     const action = () => {
+      const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+
+      if (!input) {
+        return
+      }
+
       const nextDescribedBy = node.getAttribute('data-auto-bind-aria-describedby-for-input')
       const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
       const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
