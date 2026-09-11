@@ -1,10 +1,10 @@
-import { type DependencyList, useLayoutEffect, useRef, useState } from 'react'
+import { type DependencyList, useLayoutEffect, useRef } from 'react'
 
 type CleanupType = void | (() => void)
 
 /**
- * useState + useLayoutEffectで、見た目上はcallback refのように振る舞うrefを作るフック。
- * 戻り値(useStateのsetter)自体の参照は常に安定しているため、useMergeRefsに渡しても
+ * useRef + useLayoutEffectで、見た目上はcallback refのように振る舞うrefを作るフック。
+ * 戻り値(RefObject)自体の参照は常に安定しているため、useMergeRefsに渡しても
  * dependenciesの変化で他のrefまで巻き込まれて再アタッチされることがない。
  *
  * @example
@@ -16,32 +16,18 @@ type CleanupType = void | (() => void)
  * const mergedRef = useMergeRefs(layoutEffectRef, otherRef)
  */
 export const useLayoutEffectRef = <T extends HTMLElement>(
-  action: (node: T | null) => void | (() => void),
+  action: (node: T | null) => CleanupType,
   dependencies: DependencyList,
 ) => {
-  const [node, setNode] = useState<T | null>(null)
-  const ref = useRef<{
-    isMount: boolean
-    action: (node: T | null) => CleanupType
-  }>({
-    isMount: false,
-    action,
-  })
-  ref.current.action = action
+  const ref = useRef<T | null>(null)
+  const actionRef = useRef(action)
+  actionRef.current = action
 
   useLayoutEffect(
-    () => {
-      if (node) {
-        ref.current.isMount = true
-        return ref.current.action(node)
-      } else if (ref.current.isMount) {
-        ref.current.isMount = false
-        return ref.current.action(node)
-      }
-    },
+    () => actionRef.current(ref.current),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [...dependencies, node],
+    dependencies,
   )
 
-  return setNode
+  return ref
 }
