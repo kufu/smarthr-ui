@@ -21,6 +21,54 @@ const openUrlPopover = async (user: ReturnType<typeof userEvent.setup>) => {
 }
 
 describe('ImageUrlPopover', () => {
+  describe('閉じたあとのフォーカス', () => {
+    const trigger = () => screen.getByRole('button', { name: '画像を挿入' })
+
+    it('Escape でトリガーに戻る', async () => {
+      const user = userEvent.setup()
+      await openUrlPopover(user)
+
+      await user.type(screen.getByRole('textbox', { name: /^画像URL/ }), '{Escape}')
+
+      expect(trigger()).toHaveFocus()
+    })
+
+    it('キャンセルでトリガーに戻る', async () => {
+      const user = userEvent.setup()
+      await openUrlPopover(user)
+
+      await user.click(screen.getByRole('button', { name: 'キャンセル' }))
+
+      expect(trigger()).toHaveFocus()
+    })
+
+    it('挿入に成功したときはエディタへ移る', async () => {
+      const user = userEvent.setup()
+      await openUrlPopover(user)
+
+      await user.type(
+        screen.getByRole('textbox', { name: /^画像URL/ }),
+        'https://example.com/a.png',
+      )
+      await user.click(screen.getByRole('button', { name: '挿入' }))
+
+      // Tiptap の focus コマンドは requestAnimationFrame 越しに実行される
+      await waitFor(() => expect(document.querySelector('.ProseMirror')).toHaveFocus())
+    })
+
+    it('外側をクリックしたときはクリック先からフォーカスを奪わない', async () => {
+      const user = userEvent.setup()
+      await openUrlPopover(user)
+      const outside = document.createElement('input')
+      document.body.appendChild(outside)
+
+      await user.click(outside)
+
+      expect(outside).toHaveFocus()
+      outside.remove()
+    })
+  })
+
   it('スキームだけでホストがないURLは挿入できない', async () => {
     const user = userEvent.setup()
     await openUrlPopover(user)

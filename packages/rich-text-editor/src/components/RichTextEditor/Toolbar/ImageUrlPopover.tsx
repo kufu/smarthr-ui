@@ -105,15 +105,30 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
     [url, requiredMessage, invalidMessage, onInsert, onClose],
   )
 
+  /**
+   * 閉じる操作ではトリガーへフォーカスを戻す。
+   * 外側クリックでは呼ばない。クリック先からフォーカスを奪うことになる。
+   */
+  const closeAndRestoreFocus = useCallback(() => {
+    onClose()
+
+    const anchor = anchorRef.current
+
+    // 外れた/無効なトリガーへ戻すとフォーカスが body へ落ちる
+    if (anchor?.isConnected && !anchor.matches(':disabled')) {
+      anchor.focus()
+    }
+  }, [anchorRef, onClose])
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault()
         e.stopPropagation()
-        onClose()
+        closeAndRestoreFocus()
       }
     },
-    [onClose],
+    [closeAndRestoreFocus],
   )
 
   if (!isOpen) return null
@@ -160,7 +175,7 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
             />
           </FormControl>
           <Cluster gap={0.5} justify="flex-end">
-            <Button type="button" variant="secondary" size="S" onClick={onClose}>
+            <Button type="button" variant="secondary" size="S" onClick={closeAndRestoreFocus}>
               {cancelText}
             </Button>
             <Button type="submit" variant="primary" size="S">
