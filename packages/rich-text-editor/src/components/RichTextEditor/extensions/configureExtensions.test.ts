@@ -162,29 +162,24 @@ describe('configureExtensions', () => {
   describe('extension のオプション', () => {
     const createWithHeadingLevels = (
       features: readonly RichTextFeature[],
-      headingLevels: ReadonlyArray<1 | 2 | 3 | 4>,
+      allowedHeadingLevels: ReadonlyArray<1 | 2 | 3 | 4>,
     ) => {
       const element = document.createElement('div')
       document.body.appendChild(element)
 
       return new Editor({
         element,
-        extensions: configureExtensions({ features, headingLevels }) as AnyExtension[],
+        extensions: configureExtensions({ features, allowedHeadingLevels }) as AnyExtension[],
       })
     }
 
-    it('features に heading があるとき headingLevels が適用される', () => {
-      const editor = createWithHeadingLevels(['heading'], [1, 2])
-      const heading = editor.extensionManager.extensions.find((e) => e.name === 'heading')!
-
-      expect(heading.options.levels).toEqual([1, 2])
-      editor.destroy()
-    })
-
-    // headingLevels は「適用できるレベル」の指定なので、heading自体が使えないなら
-    // schemaは既存の見出しを読めるよう全レベルを受け入れる
-    it('features に heading が無いとき schema は全レベルを受け入れる', () => {
-      const editor = createWithHeadingLevels(['bold'], [1, 2])
+    // allowedHeadingLevels は「新しく適用できるレベル」の指定なので schema には出ない。
+    // schema を絞ると既存の見出しが読めなくなる（headingLevels.test.ts を参照）
+    it.each([
+      ['features に heading がある', ['heading'] as const],
+      ['features に heading が無い', ['bold'] as const],
+    ])('%s とき schema は全レベルを受け入れる', (_name, features) => {
+      const editor = createWithHeadingLevels(features, [1, 2])
       const heading = editor.extensionManager.extensions.find((e) => e.name === 'heading')!
 
       expect(heading.options.levels).toEqual([1, 2, 3, 4])

@@ -53,7 +53,7 @@ export const useRichTextEditor = ({
     () =>
       configureExtensions({
         features,
-        headingLevels,
+        allowedHeadingLevels: headingLevels,
         placeholder,
         onImageUpload,
         onImageUploadError,
@@ -66,9 +66,9 @@ export const useRichTextEditor = ({
   // schemaは全書式を載せているのでペーストはschemaで止まらない。
   // featuresの許可リストで絞るのはこのフィルタの責務。
   const transformPasted = useMemo(
-    () => createPasteFilter(features),
+    () => createPasteFilter(features, headingLevels),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [featuresKey],
+    [featuresKey, headingLevelsKey],
   )
 
   const editor = useEditor({

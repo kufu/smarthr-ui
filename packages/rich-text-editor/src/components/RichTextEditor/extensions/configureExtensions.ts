@@ -16,6 +16,11 @@ import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
 import { LineHeight } from './LineHeight'
 import { LinkShortcut } from './LinkShortcut'
 import { CustomTable } from './Table/CustomTable'
+import {
+  type HeadingLevel,
+  SUPPORTED_HEADING_LEVELS,
+  createHeadingOperationLimiter,
+} from './configureHeading'
 import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
 import { YOUTUBE_EMBED_OPTIONS } from './youtubeOptions'
@@ -25,7 +30,8 @@ import type { AnyExtension } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
   features?: readonly RichTextFeature[]
-  headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
+  /** 新しく適用できる見出しレベル。schema に載せるレベルとは別 */
+  allowedHeadingLevels?: readonly HeadingLevel[]
   placeholder?: string
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   onImageUploadError?: (error: unknown, file: File) => void
@@ -33,11 +39,9 @@ type ConfigureExtensionsOptions = {
   acceptedMimeTypes?: string[]
 }
 
-const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
-
 export const configureExtensions = ({
   features = [],
-  headingLevels = DEFAULT_HEADING_LEVELS,
+  allowedHeadingLevels = SUPPORTED_HEADING_LEVELS,
   placeholder,
   onImageUpload,
   onImageUploadError,
@@ -50,25 +54,19 @@ export const configureExtensions = ({
   // featuresでschemaを削ると既存データが消える。
   // featuresは「新しく適用できる操作」の制限として、操作だけを剥がして表現する。
   const restrictedNames = getRestrictedExtensionNames(features)
-
-  // headingLevelsが空指定のときは見出しを適用させない。
-  // schemaにはデフォルトのレベルを載せて既存の見出しを読めるようにする。
-  const headingEnabled = has('heading') && headingLevels.length > 0
-  if (!headingEnabled) {
-    restrictedNames.add('heading')
-  }
-
   const restrict = createOperationRestrictor(restrictedNames)
+  const limitHeading = createHeadingOperationLimiter(allowedHeadingLevels)
 
   const extensions: AnyExtension[] = [
     StarterKit.configure({
-      heading: { levels: [...(headingEnabled ? headingLevels : DEFAULT_HEADING_LEVELS)] },
+      // schema は常に全レベル。許可レベルの制限は操作側だけで行う
+      heading: { levels: [...SUPPORTED_HEADING_LEVELS] },
       link: { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto'] },
     }).extend({
       addExtensions() {
         // patch を restrict より先に通す。features にリストが無いとき restrict が
         // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
-        return (this.parent?.() ?? []).map(patchListItemShiftTab).map(restrict)
+        return (this.parent?.() ?? []).map(patchListItemShiftTab).map(limitHeading).map(restrict)
       },
     }),
     restrict(

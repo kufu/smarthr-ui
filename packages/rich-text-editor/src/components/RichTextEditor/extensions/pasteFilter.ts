@@ -1,5 +1,6 @@
 import { Fragment, Slice } from '@tiptap/pm/model'
 
+import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from './configureHeading'
 import { createTypeAllowChecker } from './restrictOperations'
 
 import type { RichTextFeature } from '../types'
@@ -43,10 +44,14 @@ const clampAttributes = (
  * - mark: 除去（テキストは残す）
  * - textStyle / paragraph の属性: 該当featureが無いものをnullにする
  * - inline contentを持つnode（heading等）: paragraphへ降格
+ * - 許可外のレベルの heading: paragraphへ降格（新規適用にあたるため）
  * - blockを持つnode（table / list / blockquote等）: 子を親へ引き上げて平坦化
  * - atom / leaf node（image / youtube / horizontalRule）: 削除
  */
-export const createPasteFilter = (features: readonly RichTextFeature[]) => {
+export const createPasteFilter = (
+  features: readonly RichTextFeature[],
+  allowedHeadingLevels: readonly HeadingLevel[] = SUPPORTED_HEADING_LEVELS,
+) => {
   const isAllowedType = createTypeAllowChecker(features)
   const isAllowedFeature = (feature: string) => features.includes(feature as RichTextFeature)
 
@@ -108,6 +113,16 @@ export const createPasteFilter = (features: readonly RichTextFeature[]) => {
 
         // blockを持つnodeは子を引き上げる。子が制限対象ならそこでも同じ判定が走る
         return filterFragment(node.content)
+      }
+
+      // 貼り付けは新規適用なので許可レベルで絞る。既存のvalue/contentには通さない
+      if (
+        node.type.name === 'heading' &&
+        !allowedHeadingLevels.includes(node.attrs.level as HeadingLevel)
+      ) {
+        structureChanged = true
+
+        return [toParagraph(node)]
       }
 
       const attributes = clampAttributes(node.attrs, FEATURE_BY_NODE_ATTRIBUTE, isAllowedFeature)

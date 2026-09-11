@@ -61,7 +61,8 @@ export const HeadingDropdown: FC<Props> = memo(
     )
 
     const currentLevel = state.currentHeadingLevel
-    const currentOption = options.find((o) => o.level === currentLevel) ?? options[0]
+    // 選択肢は許可レベルで絞るが、表示は許可外のレベルでも実際の見出しを出す
+    const currentOption = ALL_OPTIONS.find((o) => o.level === currentLevel) ?? ALL_OPTIONS[0]
     const currentLabel = localize({
       id: currentOption.labelId,
       defaultText: currentOption.defaultText,
