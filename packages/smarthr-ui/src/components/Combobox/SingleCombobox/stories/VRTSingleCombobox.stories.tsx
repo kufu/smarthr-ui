@@ -102,7 +102,7 @@ const _cases: Array<Omit<Parameters<typeof SingleCombobox>[0], 'items'>> = [
     error: false,
     width: undefined,
     prefix: prefixes['あり'],
-    selectedItem: defaultItems['アイテムのラベルがReactNodeの場合'],
+    selectedItem: defaultItems['option 1'],
   },
 ]
 

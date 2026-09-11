@@ -14,7 +14,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
@@ -27,7 +26,7 @@ import { findDelegateTarget } from '../../../libs/delegate'
 import { genericsForwardRef } from '../../../libs/util'
 import { FaCaretDownIcon } from '../../Icon'
 import { Scroller } from '../../Scroller'
-import { areItemsEqual } from '../helper'
+import { areItemsEqual, getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
@@ -392,7 +391,7 @@ const ActualMultiCombobox = <T,>(
 
           handleDelete(lastItem)
           setHighlighted(true)
-          latest.setInputValueIfUncontrolled(innerText(lastItem.label))
+          latest.setInputValueIfUncontrolled(getSelectedLabelText(lastItem))
         } else {
           e.stopPropagation()
           inputRef.current?.focus()
@@ -511,7 +510,7 @@ const ActualMultiCombobox = <T,>(
           aria-label={localized.selectedListAriaLabel}
         >
           {selectedItems.map((selectedItem) => (
-            <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
+            <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
               <MultiSelectedItem
                 disabled={disabled}
                 item={selectedItem}

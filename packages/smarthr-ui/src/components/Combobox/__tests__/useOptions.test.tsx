@@ -126,9 +126,9 @@ describe('useMultiOptions', () => {
           items: [
             { label: 'label1', value: 'value1' },
             { label: 'label2', value: 'value2' },
-            { label: element, value: 'value3' },
+            { label: element, value: 'value3', labelText: 'label3' },
           ],
-          selected: [{ label: element, value: 'value3' }],
+          selected: [{ label: element, value: 'value3', labelText: 'label3' }],
           creatable: false,
         }
         const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
@@ -143,7 +143,11 @@ describe('useMultiOptions', () => {
         expect(options[1].selected).toBeFalsy()
         expect(options[1].isNew).toBeFalsy()
 
-        expect(options[2].item).toEqual({ label: element, value: 'value3' })
+        expect(options[2].item).toEqual({
+          label: element,
+          value: 'value3',
+          labelText: 'label3',
+        })
         expect(options[2].selected).toBeTruthy()
         expect(options[2].isNew).toBeFalsy()
       })
@@ -158,9 +162,9 @@ describe('useMultiOptions', () => {
           items: [
             { label: 'label1', value: 'value1' },
             { label: 'label2', value: 'value2' },
-            { label: element, value: 'value3' },
+            { label: element, value: 'value3', labelText: 'label3' },
           ],
-          selected: [{ label: element, value: 'value3' }],
+          selected: [{ label: element, value: 'value3', labelText: 'label3' }],
           creatable: false,
           inputValue: 'label3',
         }
@@ -168,7 +172,11 @@ describe('useMultiOptions', () => {
         const options = result.current.options
 
         expect(options.length).toBe(1)
-        expect(options[0].item).toEqual({ label: element, value: 'value3' })
+        expect(options[0].item).toEqual({
+          label: element,
+          value: 'value3',
+          labelText: 'label3',
+        })
       })
     })
 
@@ -191,26 +199,38 @@ describe('useMultiOptions', () => {
       it('オプションが取得できること', () => {
         const initialProps = {
           items: [
-            { label: labelElement1, value: 'value1' },
-            { label: labelElement2, value: 'value2' },
-            { label: labelElement3, value: 'value3' },
+            { label: labelElement1, value: 'value1', labelText: 'label1' },
+            { label: labelElement2, value: 'value2', labelText: 'label2' },
+            { label: labelElement3, value: 'value3', labelText: 'label3' },
           ],
-          selected: [{ label: labelElement3, value: 'value3' }],
+          selected: [{ label: labelElement3, value: 'value3', labelText: 'label3' }],
           creatable: false,
         }
         const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(3)
-        expect(options[0].item).toEqual({ label: labelElement1, value: 'value1' })
+        expect(options[0].item).toEqual({
+          label: labelElement1,
+          value: 'value1',
+          labelText: 'label1',
+        })
         expect(options[0].selected).toBeFalsy()
         expect(options[0].isNew).toBeFalsy()
 
-        expect(options[1].item).toEqual({ label: labelElement2, value: 'value2' })
+        expect(options[1].item).toEqual({
+          label: labelElement2,
+          value: 'value2',
+          labelText: 'label2',
+        })
         expect(options[1].selected).toBeFalsy()
         expect(options[1].isNew).toBeFalsy()
 
-        expect(options[2].item).toEqual({ label: labelElement3, value: 'value3' })
+        expect(options[2].item).toEqual({
+          label: labelElement3,
+          value: 'value3',
+          labelText: 'label3',
+        })
         expect(options[2].selected).toBeTruthy()
         expect(options[2].isNew).toBeFalsy()
       })
@@ -218,11 +238,11 @@ describe('useMultiOptions', () => {
       it('入力によって options がフィルタリングされること', () => {
         const initialProps = {
           items: [
-            { label: labelElement1, value: 'value1' },
-            { label: labelElement2, value: 'value2' },
-            { label: labelElement3, value: 'value3' },
+            { label: labelElement1, value: 'value1', labelText: 'label1' },
+            { label: labelElement2, value: 'value2', labelText: 'label2' },
+            { label: labelElement3, value: 'value3', labelText: 'label3' },
           ],
-          selected: [{ label: labelElement3, value: 'value3' }],
+          selected: [{ label: labelElement3, value: 'value3', labelText: 'label3' }],
           creatable: false,
           inputValue: 'label3',
         }
@@ -230,7 +250,11 @@ describe('useMultiOptions', () => {
         const options = result.current.options
 
         expect(options.length).toBe(1)
-        expect(options[0].item).toEqual({ label: labelElement3, value: 'value3' })
+        expect(options[0].item).toEqual({
+          label: labelElement3,
+          value: 'value3',
+          labelText: 'label3',
+        })
       })
 
       it('isItemSelectedが渡されていなくてvalueが同じかつlabelのインスタンスが違うとき、selectedになること', () => {
@@ -240,15 +264,19 @@ describe('useMultiOptions', () => {
           </div>
         )
         const initialProps = {
-          items: [{ label: labelElement1, value: 'value1' }],
-          selected: [{ label: newLabelElement1, value: 'value1' }],
+          items: [{ label: labelElement1, value: 'value1', labelText: 'label1' }],
+          selected: [{ label: newLabelElement1, value: 'value1', labelText: 'label1' }],
           creatable: false,
         }
         const { result } = renderHook((props) => useMultiOptions(props), { initialProps })
         const options = result.current.options
 
         expect(options.length).toBe(1)
-        expect(options[0].item).toEqual({ label: labelElement1, value: 'value1' })
+        expect(options[0].item).toEqual({
+          label: labelElement1,
+          value: 'value1',
+          labelText: 'label1',
+        })
         expect(options[0].selected).toBeTruthy()
         expect(options[0].isNew).toBeFalsy()
       })

@@ -185,6 +185,81 @@ describe('SingleCombobox', () => {
     expect(combobox()).toHaveValue('option 1')
   })
 
+  it('ReactNodeのアイテムを選択すると、入力値がlabelTextになること', async () => {
+    const element = <span>アイコン付きラベル</span>
+    const items: Array<ComboboxItem<string>> = [
+      { label: 'option 1', value: 'value-1' },
+      { label: element, value: 'value-2', labelText: 'ラベル2' },
+    ]
+
+    // selectedItemはcontrolledなため、選択結果を反映するためのラッパーを用意する
+    const Wrapper = () => {
+      const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
+
+      return (
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={selectedItem}
+                onChangeSelected={setSelectedItem}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>
+      )
+    }
+
+    render(<Wrapper />)
+
+    await userEvent.click(combobox())
+    await userEvent.click(screen.getByRole('option', { name: 'アイコン付きラベル' }))
+
+    // ReactNodeの表示内容ではなく、labelTextがinputの値として反映される
+    expect(combobox()).toHaveValue('ラベル2')
+  })
+
+  it('JSX内の表示内容とは異なるlabelTextで検索されること', async () => {
+    const element = <span>アイコン付きラベル</span>
+    render(
+      template({
+        selectedItem: null,
+        items: [
+          { label: 'option 1', value: 'value-1' },
+          { label: element, value: 'value-2', labelText: '検索用テキスト' },
+        ],
+      }),
+    )
+
+    await userEvent.click(combobox())
+    // JSXの表示内容(「アイコン付きラベル」)には含まれない、labelTextの方の文字列で検索する
+    await userEvent.type(combobox(), '検索用')
+
+    // labelTextに一致するアイテムが検索結果に残り、一致しないアイテムは除外されること
+    expect(screen.getByRole('option', { name: 'アイコン付きラベル' })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: 'option 1' })).not.toBeInTheDocument()
+  })
+
+  it('creatableで入力値が既存アイテムのlabelTextと一致する場合、新規追加候補が出ないこと', async () => {
+    const onAdd = vi.fn()
+    render(
+      template({
+        onAdd,
+        creatable: true,
+        selectedItem: null,
+        items: [{ label: 'option 1', value: 'value-1' }],
+      }),
+    )
+
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option 1')
+
+    // 既存アイテムのlabelText(未指定のためlabel)と完全一致するため、新規追加候補は表示されない
+    expect(screen.queryByRole('option', { name: '「option 1」を追加' })).not.toBeInTheDocument()
+  })
+
   it('disabled なコンボボックスではアイテムの選択・解除ができないこと', async () => {
     const onClear = vi.fn()
     render(template({ onClear, disabled: true }))

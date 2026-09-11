@@ -1,9 +1,8 @@
 import { useCallback, useId, useMemo } from 'react'
-import innerText from 'react-innertext'
 
 import { useLatest } from '../../hooks/useLatest'
 
-import { areItemsEqual, convertMatchableString } from './helper'
+import { areItemsEqual, convertMatchableString, getSelectedLabelText } from './helper'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -67,7 +66,7 @@ function useOptions<T>(
     }))
 
     const allOptions =
-      creatable && inputValue && items.every((item) => item.label !== inputValue)
+      creatable && inputValue && items.every((item) => getSelectedLabelText(item) !== inputValue)
         ? [
             {
               id: newItemId,
@@ -85,8 +84,8 @@ function useOptions<T>(
 
     const convertedInputtedValue = convertMatchableString(inputValue)
 
-    return allOptions.filter(({ item: { label } }) =>
-      convertMatchableString(innerText(label)).includes(convertedInputtedValue),
+    return allOptions.filter(({ item }) =>
+      convertMatchableString(getSelectedLabelText(item)).includes(convertedInputtedValue),
     )
     // TODO: itemsの安定化方法を検討中
   }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
