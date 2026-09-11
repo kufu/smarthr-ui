@@ -107,13 +107,13 @@ export const FormGroup: FC<Props> = ({
       return
     }
 
-    const input = node.querySelector<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
-
-    if (!input) {
-      return
-    }
-
     const action = () => {
+      const input = node.querySelector<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
+
+      if (!input) {
+        return
+      }
+
       const errorAttr = node.getAttribute('data-auto-bind-error-input')
 
       // HINT: そもそも対象の属性の値が存在しない場合、入力要素にaria-invalid属性を自動的にon/offする処理をしない
@@ -150,6 +150,8 @@ export const FormGroup: FC<Props> = ({
 
     const observer = new MutationObserver(action)
     observer.observe(node, {
+      childList: true,
+      subtree: true,
       attributes: true,
       attributeFilter: ['data-auto-bind-error-input', 'data-auto-bind-aria-describedby-for-input'],
     })
