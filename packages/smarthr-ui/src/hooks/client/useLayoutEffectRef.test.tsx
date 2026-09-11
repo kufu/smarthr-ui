@@ -8,6 +8,7 @@ describe('useLayoutEffectRef', () => {
   test('mount時にnodeを引数にactionが1回だけ呼ばれる', () => {
     const action = vi.fn()
     const Component = () => {
+      // eslint-disable-next-line local-rules/best-practice-for-use-layout-effect-ref -- mount/unmount時の挙動を検証するテストのため意図的に空配列にする
       const ref = useLayoutEffectRef(action, [])
       return <div ref={ref} />
     }
@@ -40,6 +41,7 @@ describe('useLayoutEffectRef', () => {
   test('dependenciesが変わらなくても、node自体が差し替わるとactionが再実行される', () => {
     const action = vi.fn()
     const Component = ({ id }: { id: string }) => {
+      // eslint-disable-next-line local-rules/best-practice-for-use-layout-effect-ref -- node差し替え時の挙動を検証するテストのため意図的に空配列にする
       const ref = useLayoutEffectRef(action, [])
       return <div key={id} ref={ref} />
     }
@@ -87,6 +89,7 @@ describe('useLayoutEffectRef', () => {
   test('依存配列が変化しない場合、propsが変わってもactionは再実行されない', () => {
     const results: string[] = []
     const Component = ({ label }: { label: string }) => {
+      // eslint-disable-next-line local-rules/best-practice-for-use-layout-effect-ref -- クロージャの鮮度を検証するテストのため意図的に空配列にする
       const ref = useLayoutEffectRef(() => {
         results.push(label)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,6 +161,7 @@ describe('useLayoutEffectRef', () => {
         return cleanup
       })
       const Inner = () => {
+        // eslint-disable-next-line local-rules/best-practice-for-use-layout-effect-ref -- 埋め込み側のunmount/再mount挙動を検証するテストのため意図的に空配列にする
         const ref = useLayoutEffectRef(action, [])
         return <div ref={ref} />
       }
@@ -219,6 +223,7 @@ describe('useLayoutEffectRef', () => {
         return cleanup
       })
       const Inner = () => {
+        // eslint-disable-next-line local-rules/best-practice-for-use-layout-effect-ref -- 利用側込みのunmount/再mount挙動を検証するテストのため意図的に空配列にする
         const ref = useLayoutEffectRef(action, [])
         return <div ref={ref} />
       }

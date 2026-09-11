@@ -1,7 +1,9 @@
 import smarthr from 'eslint-config-smarthr'
 import perfectionist from 'eslint-plugin-perfectionist'
 import storybook from 'eslint-plugin-storybook'
+
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
+import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -14,12 +16,14 @@ export default [
       'local-rules': {
         rules: {
           'best-practice-for-use-latest': bestPracticeForUseLatest,
+          'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
         },
       },
       perfectionist,
     },
     rules: {
       'local-rules/best-practice-for-use-latest': 'error',
+      'local-rules/best-practice-for-use-layout-effect-ref': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {
