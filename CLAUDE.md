@@ -1049,11 +1049,13 @@ const callbackRef = useCallback((node: HTMLElement | null) => {
 const mergedRef = useMergeRefs(callbackRef, outerRef)
 ```
 
-この問題への対処は、値をDOM属性として表現できるかどうかで手段を使い分けます。
+この問題への対処は、値をDOM属性として取得または表現できるかどうかで手段を使い分けます。優先順位は **固定参照のcallback ref(+ MutationObserver) → `useLayoutEffectRef`** です。`useLayoutEffectRef` は内部で `useLayoutEffect` に加えて状態管理用の `useRef` を持つ分、素の `useCallback` よりコストが重くなることが予想されるため、まずMutationObserverパターンで対応できないか検討し、それでも対応できない場合にのみ `useLayoutEffectRef` を使います。
 
-**優先: 値をDOM属性(data属性)として表現できる場合 → 固定参照のcallback ref + MutationObserver**
+**優先: 値をDOM属性(`value` や `aria-*` などの既存属性、または `data-*` 属性)として取得できる場合 → 固定参照のcallback ref + MutationObserver**
 
-callback ref 自体は依存配列を持たない固定参照にし、値の変化はwrapper要素の `data-*` 属性として表現、`MutationObserver` でその属性変化を監視して処理を再実行します。callback ref が再生成されないため、`useMergeRefs` に渡しても他の ref を巻き込みません。実例は `FormGroup.tsx` の `innerCallbackRef`(`data-auto-bind-error-input` などの変化を監視)。
+callback ref 自体は基本的に依存配列を持たない固定参照にし、`MutationObserver` でDOM属性の変化を監視して処理を再実行します。値がすでに要素の属性として存在する場合（`value`、`disabled`、`aria-expanded` など）はそれをそのまま監視対象にでき、存在しない場合のみ `data-*` 属性として新たに表現します。callback ref が再生成されないため、`useMergeRefs` に渡しても他の ref を巻き込みません。実例は `FormGroup.tsx` の `innerCallbackRef`(`data-auto-bind-error-input` などの変化を監視)。
+
+**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。
 
 ```tsx
 // ✅ callbackRef自体は空配列で固定。値の変化はdata属性経由で伝える
@@ -1077,7 +1079,7 @@ const callbackRef = useCallback((node: HTMLElement | null) => {
 <div ref={callbackRef} data-expanded={isExpanded} />
 ```
 
-**それ以外: 値をDOM属性として表現しにくい場合 → `useLayoutEffectRef`**
+**それ以外: 値をDOM属性として取得できない、または表現しにくい場合 → `useLayoutEffectRef`**
 
 比較対象がReactの外(既存DOM要素のidなど)にある、あるいは値をわざわざdata属性化するのが不自然な場合は `useLayoutEffectRef`（`src/hooks/client/useLayoutEffectRef.ts`）を使います。通常の callback ref と同様にnodeのアタッチ/デタッチ時にactionを実行しつつ、それに加えて `dependencies` が変化した際にも(nodeを変えずに)actionを再実行します。戻り値(callback ref)自体の参照は常に安定しているため、`useMergeRefs` に渡しても依存値の変化で他のrefまで再アタッチされません。実例は `FormControl.tsx` の `layoutEffectRef`(`label.htmlFor`/`label.id` の変化を検知)。
 
