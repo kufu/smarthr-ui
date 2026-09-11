@@ -18,6 +18,7 @@ import { LinkShortcut } from './LinkShortcut'
 import { CustomTable } from './Table/CustomTable'
 import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
+import { YOUTUBE_EMBED_OPTIONS } from './youtubeOptions'
 
 import type { ImageUploadResult, RichTextFeature } from '../types'
 import type { AnyExtension } from '@tiptap/react'
@@ -128,12 +129,7 @@ export const configureExtensions = ({
   }
 
   extensions.push(
-    restrict(
-      Youtube.configure({
-        nocookie: true,
-        allowFullscreen: true,
-      }),
-    ),
+    restrict(Youtube.configure(YOUTUBE_EMBED_OPTIONS)),
     // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
     // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
     restrict(CustomTable.configure({ resizable: true, renderWrapper: true })),

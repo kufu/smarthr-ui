@@ -1,7 +1,9 @@
+import { getEmbedUrlFromYoutubeUrl } from '@tiptap/extension-youtube'
 import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/static-renderer'
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
+import { YOUTUBE_EMBED_OPTIONS } from '../extensions/youtubeOptions'
 
 import { getRichTextExtensions } from './richTextSchema'
 import {
@@ -44,6 +46,19 @@ const createTableCellMapping =
     )
   }
 
+/**
+ * watch や youtu.be のURLは iframe に置いても再生できないため、埋め込み用へ変換する。
+ * 変換に失敗したときに元のURLへ戻さないのは、検証を通っていない値を出さないため。
+ */
+const toEmbedUrl = (src: unknown, start: unknown): string | undefined => {
+  if (!isSafeYoutubeSrc(src)) return undefined
+
+  const startAt = typeof start === 'number' && Number.isFinite(start) && start >= 0 ? start : 0
+  const embedUrl = getEmbedUrlFromYoutubeUrl({ ...YOUTUBE_EMBED_OPTIONS, url: src, startAt })
+
+  return isSafeYoutubeSrc(embedUrl) ? embedUrl : undefined
+}
+
 const nodeMapping: Record<string, ReactNodeMapping> = {
   heading: ({ node, children }) => {
     const level = Math.min(Math.max(Number(node.attrs.level) || 2, 1), 4) as 1 | 2 | 3 | 4
@@ -70,14 +85,13 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
     })
   },
   youtube: ({ node }) => {
-    const src = node.attrs.src
     const width = typeof node.attrs.width === 'number' ? node.attrs.width : 640
     const height = typeof node.attrs.height === 'number' ? node.attrs.height : 480
     return createElement(
       'div',
-      null,
+      { 'data-youtube-video': '' },
       createElement('iframe', {
-        src: isSafeYoutubeSrc(src) ? src : undefined,
+        src: toEmbedUrl(node.attrs.src, node.attrs.start),
         width,
         height,
         allowFullScreen: true,
