@@ -92,4 +92,31 @@ describe('ModelessDialog', () => {
 
     expect(onClickClose).not.toHaveBeenCalled()
   })
+
+  it('mobileModeがmodelessの場合はモバイル環境でもModelessDialogとして表示されること', () => {
+    render(
+      <EnvironmentProvider environment={{ mobile: true }}>
+        <IntlProvider locale="ja">
+          <ModelessDialog
+            isOpen
+            mobileMode="modeless"
+            top={10}
+            left={10}
+            height="10em"
+            heading="モバイルダイアログ"
+            footer="モードレス用フッター"
+          >
+            <p>ダイアログの中身</p>
+          </ModelessDialog>
+        </IntlProvider>
+      </EnvironmentProvider>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'モバイルダイアログ' })
+
+    expect(dialog).not.toHaveAttribute('aria-modal', 'true')
+    expect(dialog).toHaveClass('smarthr-ui-ModelessDialog')
+    expect(dialog).toHaveStyle({ height: '10em', top: '10px', left: '10px' })
+    expect(screen.getByText('モードレス用フッター')).toBeVisible()
+  })
 })

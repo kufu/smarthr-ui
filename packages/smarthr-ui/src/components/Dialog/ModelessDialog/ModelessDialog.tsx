@@ -73,6 +73,13 @@ type BaseProps = PropsWithChildren<{
    */
   height?: string | number
   /**
+   * モバイル表示時のダイアログのモード
+   *
+   * `'modal'` の場合は MessageDialog、`'modeless'` の場合は ModelessDialog として表示されます。
+   * @default 'modal'
+   */
+  mobileMode?: 'modal' | 'modeless'
+  /**
    * ダイアログを開いたときの初期 top 位置
    */
   top?: string | number
@@ -141,10 +148,14 @@ const classNameGenerator = tv({
   },
 })
 
-export const ModelessDialog: FC<Props> = (props) => {
+export const ModelessDialog: FC<Props> = ({ mobileMode = 'modal', ...rest }) => {
   const { mobile } = useEnvironment()
 
-  return mobile ? <MobileModelessDialog {...props} /> : <DesktopModelessDialog {...props} />
+  return mobile && mobileMode === 'modal' ? (
+    <MobileModelessDialog {...rest} />
+  ) : (
+    <DesktopModelessDialog {...rest} />
+  )
 }
 
 const DesktopModelessDialog: FC<Props> = ({
