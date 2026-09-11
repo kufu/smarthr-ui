@@ -319,6 +319,109 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('ラベルのクリック', () => {
+    it('ラベルをクリックすると本文にフォーカスする', async () => {
+      const user = userEvent.setup()
+      render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label="ラベル">
+          <RichTextEditor />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      await user.click(screen.getByText('ラベル'))
+
+      // Tiptap の focus コマンドは requestAnimationFrame 越しに実行される
+      await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
+    })
+
+    it('2つ並んでいても取り違えない', async () => {
+      const user = userEvent.setup()
+      render(
+        <>
+          {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+          <FormControl label="ひとつめ">
+            <RichTextEditor />
+          </FormControl>
+          {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+          <FormControl label="ふたつめ">
+            <RichTextEditor />
+          </FormControl>
+        </>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getAllByRole('textbox')).toHaveLength(2))
+
+      await user.click(screen.getByText('ふたつめ'))
+
+      await waitFor(() => expect(screen.getAllByRole('textbox')[1]).toHaveFocus())
+      expect(screen.getAllByRole('textbox')[0]).not.toHaveFocus()
+    })
+
+    it('無効なときはフォーカスしない', async () => {
+      const user = userEvent.setup()
+      render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label="ラベル">
+          <RichTextEditor disabled />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      await user.click(screen.getByText('ラベル'))
+
+      expect(screen.getByRole('textbox')).not.toHaveFocus()
+    })
+
+    it('ラベル内のリンクはリンクの操作を優先する', async () => {
+      const user = userEvent.setup()
+      render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl
+          label={
+            <span>
+              ラベル
+              <a href="https://example.com/help">詳細</a>
+            </span>
+          }
+        >
+          <RichTextEditor />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      await user.click(screen.getByRole('link', { name: '詳細' }))
+
+      expect(screen.getByRole('textbox')).not.toHaveFocus()
+    })
+
+    it('無関係なラベルのクリックに反応しない', async () => {
+      const user = userEvent.setup()
+      render(
+        <>
+          {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+          <FormControl label="ラベル">
+            <RichTextEditor />
+          </FormControl>
+          <label htmlFor="other">別のフォーム</label>
+          <input id="other" name="other" />
+        </>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: 'ラベル' })).toBeInTheDocument(),
+      )
+
+      await user.click(screen.getByText('別のフォーム'))
+
+      expect(screen.getByRole('textbox', { name: 'ラベル' })).not.toHaveFocus()
+    })
+  })
+
   describe('エラー状態', () => {
     const renderInFormControl = (props: { error?: boolean }, errorMessages?: string) =>
       render(

@@ -266,6 +266,23 @@ export const RichTextEditor = memo(
           }
         }
 
+        // label の for が指すのは div なので、ブラウザはクリックでフォーカスを移してくれない。
+        // 委譲で拾い、for が本文の id と一致するものだけ処理する
+        const handleLabelClick = (e: MouseEvent) => {
+          const target = e.target as HTMLElement | null
+          const label = target?.closest('label')
+          const id = proseMirrorEl.getAttribute('id')
+
+          const isOwnLabel = !!label && !!id && label.htmlFor === id
+          // ラベルの中のリンクやボタンは、それ自体の操作が優先される
+          const hitsInteractive = !!target?.closest('a, button, input, select, textarea')
+
+          if (isOwnLabel && !hitsInteractive && editor.isEditable) {
+            e.preventDefault()
+            editor.commands.focus()
+          }
+        }
+
         syncAttributes()
 
         const observer = new MutationObserver(syncAttributes)
@@ -273,8 +290,12 @@ export const RichTextEditor = memo(
           attributes: true,
           attributeFilter: ['id', 'aria-describedby', 'aria-invalid'],
         })
+        document.addEventListener('click', handleLabelClick)
 
-        return () => observer.disconnect()
+        return () => {
+          observer.disconnect()
+          document.removeEventListener('click', handleLabelClick)
+        }
       }, [editor, error])
 
       // disabled/readOnlyはどちらも本文がcontenteditable="false"になるだけで区別が付かない。
