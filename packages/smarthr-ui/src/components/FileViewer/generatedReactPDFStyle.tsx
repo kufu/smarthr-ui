@@ -20,15 +20,6 @@ export const ReactPDFStyle = () => (
 
 :root {
   --react-pdf-text-layer: 1;
-  --highlight-bg-color: rgba(180, 0, 170, 1);
-  --highlight-selected-bg-color: rgba(0, 100, 0, 1);
-}
-
-@media screen and (forced-colors: active) {
-  :root {
-    --highlight-bg-color: Highlight;
-    --highlight-selected-bg-color: ButtonText;
-  }
 }
 
 [data-main-rotation='90'] {
@@ -42,15 +33,27 @@ export const ReactPDFStyle = () => (
 }
 
 .textLayer {
+  color-scheme: only light;
+
   position: absolute;
   text-align: initial;
   inset: 0;
-  overflow: hidden;
+  overflow: clip;
+  opacity: 1;
   line-height: 1;
   text-size-adjust: none;
   forced-color-adjust: none;
   transform-origin: 0 0;
-  z-index: 2;
+  caret-color: CanvasText;
+  z-index: 0;
+
+  /* We multiply the font size by --min-font-size, and then scale the text
+   * elements by 1/--min-font-size. This allows us to effectively ignore the
+   * minimum font size enforced by the browser, so that the text layer <span>s
+   * can always match the size of the text in the canvas. */
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
 }
 
 .textLayer :is(span, br) {
@@ -62,18 +65,45 @@ export const ReactPDFStyle = () => (
   transform-origin: 0 0;
 }
 
-/* Only necessary in Google Chrome, see issue 14205, and most unfortunately
- * the problem doesn't show up in "text" reference tests. */
-.textLayer span.markedContent {
-  top: 0;
-  height: 0;
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+  z-index: 1;
+
+  --font-height: 0; /* set by text_layer.js */
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+
+  --scale-x: 1;
+  --rotate: 0deg;
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.textLayer .markedContent {
+  display: contents;
+}
+
+.textLayer span[role='img'] {
+  user-select: none;
+  cursor: default;
 }
 
 .textLayer .highlight {
+  --highlight-bg-color: rgb(180 0 170 / 0.25);
+  --highlight-selected-bg-color: rgb(0 100 0 / 0.25);
+  --highlight-backdrop-filter: none;
+  --highlight-selected-backdrop-filter: none;
+
   margin: -1px;
   padding: 1px;
   background-color: var(--highlight-bg-color);
+  backdrop-filter: var(--highlight-backdrop-filter);
   border-radius: 4px;
+}
+
+@media screen and (forced-colors: active) {
+  .textLayer .highlight {
+    --highlight-bg-color: Highlight;
+    --highlight-selected-bg-color: ButtonText;
+  }
 }
 
 .textLayer .highlight.appended {
@@ -94,6 +124,17 @@ export const ReactPDFStyle = () => (
 
 .textLayer .highlight.selected {
   background-color: var(--highlight-selected-bg-color);
+  backdrop-filter: var(--highlight-selected-backdrop-filter);
+}
+
+.textLayer ::selection {
+  background: rgba(0 0 255 / 0.25);
+}
+
+@supports (background: color-mix(in srgb, AccentColor, transparent 75%)) {
+  .textLayer ::selection {
+    background: color-mix(in srgb, AccentColor, transparent 75%);
+  }
 }
 
 /* Avoids https://github.com/mozilla/pdf.js/issues/13840 in Chrome */
@@ -105,7 +146,7 @@ export const ReactPDFStyle = () => (
   display: block;
   position: absolute;
   inset: 100% 0 0;
-  z-index: -1;
+  z-index: 0;
   cursor: default;
   user-select: none;
 }
@@ -239,7 +280,7 @@ export const ReactPDFStyle = () => (
   background-image: var(--annotation-unfocused-field-background);
   border: 2px solid var(--input-unfocused-border-color);
   box-sizing: border-box;
-  font: calc(9px * var(--scale-factor)) sans-serif;
+  font: calc(9px * var(--total-scale-factor)) sans-serif;
   height: 100%;
   margin: 0;
   vertical-align: top;
@@ -370,21 +411,21 @@ export const ReactPDFStyle = () => (
 
 .annotationLayer .popupWrapper {
   position: absolute;
-  font-size: calc(9px * var(--scale-factor));
+  font-size: calc(9px * var(--total-scale-factor));
   width: 100%;
-  min-width: calc(180px * var(--scale-factor));
+  min-width: calc(180px * var(--total-scale-factor));
   pointer-events: none;
 }
 
 .annotationLayer .popup {
   position: absolute;
-  max-width: calc(180px * var(--scale-factor));
+  max-width: calc(180px * var(--total-scale-factor));
   background-color: rgba(255, 255, 153, 1);
-  box-shadow: 0 calc(2px * var(--scale-factor)) calc(5px * var(--scale-factor))
+  box-shadow: 0 calc(2px * var(--total-scale-factor)) calc(5px * var(--total-scale-factor))
     rgba(136, 136, 136, 1);
-  border-radius: calc(2px * var(--scale-factor));
-  padding: calc(6px * var(--scale-factor));
-  margin-left: calc(5px * var(--scale-factor));
+  border-radius: calc(2px * var(--total-scale-factor));
+  padding: calc(6px * var(--total-scale-factor));
+  margin-left: calc(5px * var(--total-scale-factor));
   cursor: pointer;
   font: message-box;
   white-space: normal;
@@ -393,7 +434,7 @@ export const ReactPDFStyle = () => (
 }
 
 .annotationLayer .popup > * {
-  font-size: calc(9px * var(--scale-factor));
+  font-size: calc(9px * var(--total-scale-factor));
 }
 
 .annotationLayer .popup h1 {
@@ -402,18 +443,18 @@ export const ReactPDFStyle = () => (
 
 .annotationLayer .popupDate {
   display: inline-block;
-  margin-left: calc(5px * var(--scale-factor));
+  margin-left: calc(5px * var(--total-scale-factor));
 }
 
 .annotationLayer .popupContent {
   border-top: 1px solid rgba(51, 51, 51, 1);
-  margin-top: calc(2px * var(--scale-factor));
-  padding-top: calc(2px * var(--scale-factor));
+  margin-top: calc(2px * var(--total-scale-factor));
+  padding-top: calc(2px * var(--total-scale-factor));
 }
 
 .annotationLayer .richText > * {
   white-space: pre-wrap;
-  font-size: calc(9px * var(--scale-factor));
+  font-size: calc(9px * var(--total-scale-factor));
 }
 
 .annotationLayer .highlightAnnotation,
