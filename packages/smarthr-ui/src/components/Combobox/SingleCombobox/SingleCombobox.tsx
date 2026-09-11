@@ -411,8 +411,6 @@ const ActualSingleCombobox = <T,>(
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const cleanupCallbackRef = useCallback(() => selectFrame.cancel, [selectFrame.cancel])
 
   const mergedRef = useMergeRefs(inputRef, cleanupCallbackRef, ref)

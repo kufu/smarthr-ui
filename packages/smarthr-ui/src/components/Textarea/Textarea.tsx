@@ -280,8 +280,6 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
   return (

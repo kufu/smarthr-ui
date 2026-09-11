@@ -186,8 +186,6 @@ export const DropdownContentInner: FC<Props> = ({
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
   useEffect(() => {
