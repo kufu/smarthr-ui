@@ -84,7 +84,7 @@ describe('useLayoutEffectRef', () => {
     expect(() => unmount()).not.toThrow()
   })
 
-  test('依存配列が同じままpropsだけ変わっても、mount時にキャプチャした古いactionが使われる', () => {
+  test('依存配列が変化しない場合、propsが変わってもactionは再実行されない', () => {
     const results: string[] = []
     const Component = ({ label }: { label: string }) => {
       const ref = useLayoutEffectRef(() => {
