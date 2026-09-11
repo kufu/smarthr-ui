@@ -319,6 +319,101 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('エラー状態', () => {
+    const renderInFormControl = (props: { error?: boolean }, errorMessages?: string) =>
+      render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl errorMessages={errorMessages} label="ラベル">
+          <RichTextEditor {...props} />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+
+    const wrapperEl = () => document.querySelector('.smarthr-ui-RichTextEditor')
+
+    it.each([
+      ['どちらも無い', {}, undefined, false],
+      ['error prop だけ', { error: true }, undefined, true],
+      ['FormControl だけ', {}, '必須です', true],
+      ['両方', { error: true }, '必須です', true],
+    ])('%s', async (_name, props, errorMessages, expected) => {
+      renderInFormControl(props, errorMessages)
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+
+      await waitFor(() => {
+        if (expected) {
+          expect(textbox).toHaveAttribute('aria-invalid', 'true')
+        } else {
+          expect(textbox).not.toHaveAttribute('aria-invalid', 'true')
+        }
+      })
+      expect(wrapperEl()?.className.includes('shr-border-danger')).toBe(expected)
+    })
+
+    it('FormControl のエラーを解除しても error prop が残っていればエラーのまま', async () => {
+      const { rerender } = renderInFormControl({ error: true }, '必須です')
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-invalid', 'true'))
+
+      rerender(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label="ラベル">
+          <RichTextEditor error />
+        </FormControl>,
+      )
+
+      expect(textbox).toHaveAttribute('aria-invalid', 'true')
+      expect(wrapperEl()?.className).toContain('shr-border-danger')
+    })
+
+    it('error prop を解除しても FormControl のエラーが残っていればエラーのまま', async () => {
+      const { rerender } = renderInFormControl({ error: true }, '必須です')
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-invalid', 'true'))
+
+      rerender(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl errorMessages="必須です" label="ラベル">
+          <RichTextEditor />
+        </FormControl>,
+      )
+
+      expect(textbox).toHaveAttribute('aria-invalid', 'true')
+      expect(wrapperEl()?.className).toContain('shr-border-danger')
+    })
+
+    it('error prop を後から立てると反映される', async () => {
+      const { rerender } = renderInFormControl({})
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+
+      rerender(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label="ラベル">
+          <RichTextEditor error />
+        </FormControl>,
+      )
+
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-invalid', 'true'))
+      expect(wrapperEl()?.className).toContain('shr-border-danger')
+    })
+
+    it('aria-describedby の変更で error prop のエラーが消えない', async () => {
+      const { rerender } = renderInFormControl({ error: true })
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-invalid', 'true'))
+
+      rerender(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label="ラベル" helpMessage="補足">
+          <RichTextEditor error />
+        </FormControl>,
+      )
+
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-describedby'))
+      expect(textbox).toHaveAttribute('aria-invalid', 'true')
+    })
+  })
+
   // features は「新しく適用できる操作」の制限であり、読み込める書式の制限ではない。
   describe('features 外の書式を含む入力', () => {
     const RICH_VALUE: RichTextJSON = {

@@ -9,6 +9,7 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -138,6 +139,9 @@ export const RichTextEditor = memo(
       const wrapperRef = useRef<HTMLDivElement>(null)
       const toolbarRef = useRef<HTMLDivElement>(null)
       const contentRef = useRef<HTMLDivElement>(null)
+      // FormControl は errorMessages を wrapper の aria-invalid で伝えてくる。
+      // 見た目もそれに追従させるため state に持つ
+      const [formControlInvalid, setFormControlInvalid] = useState(false)
 
       const normalizedDefaultValue = useMemo(() => {
         if (defaultValue) return defaultValue
@@ -225,7 +229,11 @@ export const RichTextEditor = memo(
         const syncAttributes = () => {
           const id = wrapperEl.getAttribute('id')
           const describedBy = wrapperEl.getAttribute('aria-describedby')
-          const ariaInvalid = wrapperEl.getAttribute('aria-invalid')
+          // FormControl が出すのは 'true' のみ。'false' を真と読むと常にエラー表示になる
+          const externalInvalid = wrapperEl.getAttribute('aria-invalid')
+          const invalidFromFormControl = externalInvalid === 'true'
+
+          setFormControlInvalid(invalidFromFormControl)
 
           if (id) {
             proseMirrorEl.setAttribute('id', id)
@@ -245,6 +253,12 @@ export const RichTextEditor = memo(
             proseMirrorEl.removeAttribute('aria-describedby')
           }
 
+          // grammar / spelling は「文法・綴りの誤り」を表す別の値なので、
+          // error が立っていないときは潰さずそのまま通す
+          const keptInvalid =
+            externalInvalid === 'grammar' || externalInvalid === 'spelling' ? externalInvalid : null
+          const ariaInvalid = error || invalidFromFormControl ? 'true' : keptInvalid
+
           if (ariaInvalid) {
             proseMirrorEl.setAttribute('aria-invalid', ariaInvalid)
           } else {
@@ -261,7 +275,7 @@ export const RichTextEditor = memo(
         })
 
         return () => observer.disconnect()
-      }, [editor])
+      }, [editor, error])
 
       // disabled/readOnlyはどちらも本文がcontenteditable="false"になるだけで区別が付かない。
       // role="textbox"を明示している以上、対応する状態も明示しないと支援技術に伝わらない。
@@ -283,18 +297,6 @@ export const RichTextEditor = memo(
         toggleAriaState('aria-disabled', disabled)
         toggleAriaState('aria-readonly', readOnly)
       }, [editor, disabled, readOnly])
-
-      useEffect(() => {
-        if (!editor || !contentRef.current) return
-        const proseMirrorEl = contentRef.current.querySelector<HTMLElement>('.ProseMirror')
-        if (!proseMirrorEl) return
-
-        if (error) {
-          proseMirrorEl.setAttribute('aria-invalid', 'true')
-        } else if (!contentRef.current.getAttribute('aria-invalid')) {
-          proseMirrorEl.removeAttribute('aria-invalid')
-        }
-      }, [editor, error])
 
       const wrapperStyle = useMemo(
         () => ({ width: typeof width === 'number' ? `${width}px` : width }),
@@ -323,7 +325,7 @@ export const RichTextEditor = memo(
       const classNames = classNameGenerator({
         disabled,
         readOnly,
-        error,
+        error: error || formControlInvalid,
         resizable: isResizable,
         hasEditorHeight: contentStyle !== undefined,
       })
