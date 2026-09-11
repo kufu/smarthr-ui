@@ -16,6 +16,16 @@ const H1_DOC = {
   content: [{ type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '見出し' }] }],
 }
 
+const renderAllLevels = async () => {
+  render(<RichTextEditor features={['heading']} />, { wrapper: Wrapper })
+  await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+}
+
+const selectOption = async (user: ReturnType<typeof userEvent.setup>, name: string) => {
+  await user.click(screen.getByRole('button', { name: /^書式:/ }))
+  await user.click(screen.getByRole('option', { name }))
+}
+
 const renderEditor = async () => {
   render(<RichTextEditor defaultValue={H1_DOC} features={['heading']} headingLevels={[2, 3]} />, {
     wrapper: Wrapper,
@@ -42,5 +52,40 @@ describe('HeadingDropdown', () => {
     expect(within(listbox).getByRole('option', { name: '見出し3' })).toBeInTheDocument()
     expect(within(listbox).queryByRole('option', { name: '見出し1' })).not.toBeInTheDocument()
     expect(within(listbox).queryByRole('option', { name: '見出し4' })).not.toBeInTheDocument()
+  })
+})
+
+describe('HeadingDropdown の適用', () => {
+  it('同じ見出しを2回選んでも解除されない', async () => {
+    const user = userEvent.setup()
+    await renderAllLevels()
+
+    await selectOption(user, '見出し1')
+    expect(document.querySelector('.ProseMirror h1')).not.toBeNull()
+
+    await selectOption(user, '見出し1')
+    expect(document.querySelector('.ProseMirror h1')).not.toBeNull()
+  })
+
+  it('別のレベルを選ぶと切り替わる', async () => {
+    const user = userEvent.setup()
+    await renderAllLevels()
+
+    await selectOption(user, '見出し1')
+    await selectOption(user, '見出し2')
+
+    expect(document.querySelector('.ProseMirror h1')).toBeNull()
+    expect(document.querySelector('.ProseMirror h2')).not.toBeNull()
+  })
+
+  it('標準テキストを選ぶと段落に戻る', async () => {
+    const user = userEvent.setup()
+    await renderAllLevels()
+
+    await selectOption(user, '見出し1')
+    await selectOption(user, '標準テキスト')
+
+    expect(document.querySelector('.ProseMirror h1')).toBeNull()
+    expect(document.querySelector('.ProseMirror p')).not.toBeNull()
   })
 })

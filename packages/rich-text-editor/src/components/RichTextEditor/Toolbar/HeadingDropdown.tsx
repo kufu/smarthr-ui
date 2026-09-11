@@ -75,7 +75,8 @@ export const HeadingDropdown: FC<Props> = memo(
         if (level === null) {
           editor.chain().focus().setParagraph().run()
         } else {
-          editor.chain().focus().toggleHeading({ level }).run()
+          // 選択は冪等にする。toggle だと同じレベルを選び直したときに段落へ戻ってしまう
+          editor.chain().focus().setHeading({ level }).run()
         }
         setIsOpen(false)
         triggerRef.current?.focus()

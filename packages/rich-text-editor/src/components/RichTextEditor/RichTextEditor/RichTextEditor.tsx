@@ -200,8 +200,7 @@ export const RichTextEditor = memo(
           toggleBulletList: () => editor?.chain().focus().toggleBulletList().run(),
           toggleOrderedList: () => editor?.chain().focus().toggleOrderedList().run(),
           toggleBlockquote: () => editor?.chain().focus().toggleBlockquote().run(),
-          setHeading: (level: 1 | 2 | 3 | 4) =>
-            editor?.chain().focus().toggleHeading({ level }).run(),
+          setHeading: (level: 1 | 2 | 3 | 4) => editor?.chain().focus().setHeading({ level }).run(),
           setLink: (href: string) =>
             editor?.chain().focus().extendMarkRange('link').setLink({ href }).run(),
           unsetLink: () => editor?.chain().focus().extendMarkRange('link').unsetLink().run(),

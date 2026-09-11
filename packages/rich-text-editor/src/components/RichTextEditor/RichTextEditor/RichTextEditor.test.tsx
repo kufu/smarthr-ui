@@ -505,6 +505,20 @@ describe('RichTextEditor', () => {
 
   // imperative API と onChange の meta.html はどちらも「HTML出力」を返すため、
   // どちらを使ってもサニタイズ結果が同じでなければならない。
+  describe('ref.setHeading()', () => {
+    it('同じレベルを2回設定しても解除されない', async () => {
+      const ref = createRef<RichTextEditorController>()
+      render(<RichTextEditor ref={ref} features={['heading']} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      ref.current!.setHeading(1)
+      expect(document.querySelector('.ProseMirror h1')).not.toBeNull()
+
+      ref.current!.setHeading(1)
+      expect(document.querySelector('.ProseMirror h1')).not.toBeNull()
+    })
+  })
+
   describe('ref.getHTML()', () => {
     const IMPERATIVE_FEATURES = ['image', 'color', 'backgroundColor', 'fontSize'] as const
 
