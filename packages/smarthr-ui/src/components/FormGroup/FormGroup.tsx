@@ -7,7 +7,7 @@ import {
   type PropsWithChildren,
   type ReactNode,
   type Ref,
-  useEffect,
+  useCallback,
   useMemo,
   useRef,
 } from 'react'
@@ -100,8 +100,6 @@ export const FormGroup: FC<Props> = ({
     [statusLabels],
   )
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
-
   // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
   // undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する
   const errorMessages = orgErrorMessages
@@ -141,41 +139,56 @@ export const FormGroup: FC<Props> = ({
 
   const managedDescribedbyIdsRef = useRef<string[]>([])
 
-  useEffect(() => {
-    if (!wrapperRef.current) {
+  const inputAriaDescribedByCallbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) {
       return
     }
 
-    const input = wrapperRef.current.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
+    const action = () => {
+      const input = node.querySelector(CHILDREN_WRAPPER_INPUT_SELECTOR)
 
-    if (!input) {
-      return
-    }
-
-    const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
-    const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
-    // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
-    const externalTokens = currentTokens.filter(
-      (token) => !managedDescribedbyIdsRef.current.includes(token),
-    )
-    const describedbyIdTokens = describedbyIds ? describedbyIds.split(' ') : []
-    const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
-
-    if (nextValue !== ariaDescribedBy) {
-      if (nextValue) {
-        input.setAttribute('aria-describedby', nextValue)
-      } else {
-        input.removeAttribute('aria-describedby')
+      if (!input) {
+        return
       }
+
+      const nextDescribedBy = node.getAttribute('data-auto-bind-aria-describedby-for-input')
+      const ariaDescribedBy = input.getAttribute('aria-describedby') || ''
+      const currentTokens = ariaDescribedBy ? ariaDescribedBy.split(' ') : []
+      // HINT: 自分が過去に付与したid以外（=外部由来のid）だけを残す
+      const externalTokens = currentTokens.filter(
+        (token) => !managedDescribedbyIdsRef.current.includes(token),
+      )
+      const describedbyIdTokens = nextDescribedBy ? nextDescribedBy.split(' ') : []
+      const nextValue = [...externalTokens, ...describedbyIdTokens].join(' ')
+
+      if (nextValue !== ariaDescribedBy) {
+        if (nextValue) {
+          input.setAttribute('aria-describedby', nextValue)
+        } else {
+          input.removeAttribute('aria-describedby')
+        }
+      }
+
+      managedDescribedbyIdsRef.current = describedbyIdTokens
     }
 
-    managedDescribedbyIdsRef.current = describedbyIdTokens
-  }, [describedbyIds, wrapperRef])
+    action()
+
+    const observer = new MutationObserver(action)
+    observer.observe(node, {
+      attributes: true,
+      attributeFilter: ['data-auto-bind-aria-describedby-for-input'],
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const wrapperCallbackRef = useMergeRefs(
-    wrapperRef,
-    callbackRef,
+    inputAriaDescribedByCallbackRef,
     autoBindErrorInput ? autoBindErrorCallbackRef : undefined,
+    callbackRef,
   )
 
   return (
@@ -187,6 +200,7 @@ export const FormGroup: FC<Props> = ({
       className={classNames.wrapper}
       aria-describedby={as === 'fieldset' ? describedbyIds || undefined : undefined}
       data-auto-bind-error-input={autoBindErrorInput ? visibleErrorMessages.toString() : undefined}
+      data-auto-bind-aria-describedby-for-input={describedbyIds}
     >
       <LabelComponent
         managedLabelId={label.id}
