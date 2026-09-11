@@ -13,7 +13,7 @@ import { type DependencyList, useLayoutEffect, useRef } from 'react'
  * }, [dep])
  * const mergedRef = useMergeRefs(myRef, otherRef)
  */
-export const useLayoutEffectRef = <T>(
+export const useLayoutEffectRef = <T extends HTMLElement>(
   action: (node: T | null) => void | (() => void),
   dependencies: DependencyList,
 ) => {
