@@ -125,7 +125,7 @@ const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }
   return {
     ...rest,
     as: 'fieldset',
-    callbackRef,
+    outerRef: callbackRef,
     label: legend,
     classNames,
     LabelComponent,

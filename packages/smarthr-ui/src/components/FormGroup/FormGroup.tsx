@@ -22,7 +22,7 @@ import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 type Props = Omit<CommonProps, 'className'> & {
-  callbackRef: Ref<HTMLElement>
+  outerRef: Ref<HTMLElement>
   /** グループのラベル名 */
   label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
   as?: string | ComponentType<any>
@@ -40,7 +40,7 @@ type Props = Omit<CommonProps, 'className'> & {
 const EMPTY_ERROR_MESSAGES: ReactNode[] = []
 
 export const FormGroup: FC<Props> = ({
-  callbackRef: outerCallbackRef,
+  outerRef,
   label,
   subActionArea,
   innerMargin,
@@ -159,7 +159,7 @@ export const FormGroup: FC<Props> = ({
     }
   }, [])
 
-  const wrapperCallbackRef = useMergeRefs(innerCallbackRef, outerCallbackRef)
+  const wrapperCallbackRef = useMergeRefs(innerCallbackRef, outerRef)
 
   return (
     <Stack

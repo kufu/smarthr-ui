@@ -108,7 +108,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
 
   return {
     ...rest,
-    callbackRef: layoutEffectRef,
+    outerRef: layoutEffectRef,
     label,
     classNames,
     LabelComponent,
