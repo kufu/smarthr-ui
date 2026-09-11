@@ -262,6 +262,8 @@ describe('RichTextEditor', () => {
   })
 
   describe('disabled / readOnly の状態通知', () => {
+    const onChangeSpy = vi.fn()
+
     const findTextbox = async () => {
       const textbox = await waitFor(() => screen.getByRole('textbox'))
       return textbox
@@ -286,6 +288,23 @@ describe('RichTextEditor', () => {
       const textbox = await findTextbox()
       await waitFor(() => expect(textbox).toHaveAttribute('aria-readonly', 'true'))
       expect(textbox).not.toHaveAttribute('aria-disabled')
+    })
+
+    it.each([
+      ['disabled', (on: boolean) => <RichTextEditor disabled={on} onChange={onChangeSpy} />],
+      ['readOnly', (on: boolean) => <RichTextEditor readOnly={on} onChange={onChangeSpy} />],
+    ])('%s の切り替えでは onChange を発火させない', async (_name, renderWith) => {
+      onChangeSpy.mockClear()
+      const { rerender } = render(renderWith(false), { wrapper: Wrapper })
+      const textbox = await findTextbox()
+
+      rerender(renderWith(true))
+      await waitFor(() => expect(textbox).toHaveAttribute('contenteditable', 'false'))
+
+      rerender(renderWith(false))
+      await waitFor(() => expect(textbox).toHaveAttribute('contenteditable', 'true'))
+
+      expect(onChangeSpy).not.toHaveBeenCalled()
     })
 
     it('disabled を解除すると aria-disabled が外れる', async () => {

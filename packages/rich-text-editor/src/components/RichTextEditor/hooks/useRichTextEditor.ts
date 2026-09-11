@@ -131,7 +131,8 @@ export const useRichTextEditor = ({
     if (!editor) return
     const editable = !(readOnly || disabled)
     if (editor.isEditable !== editable) {
-      editor.setEditable(editable)
+      // 本文は変わっていないので変更通知を出さない
+      editor.setEditable(editable, false)
     }
   }, [editor, readOnly, disabled])
 
