@@ -49,6 +49,11 @@ export const useLayoutEffectRef = <T extends HTMLElement>(
 
   useLayoutEffect(
     () => {
+      // HINT: nodeがまだcallback ref経由でアタッチされていない場合、実行しない
+      if (!state.current.node) {
+        return
+      }
+
       if (state.current.isFirstEffect) {
         state.current.isFirstEffect = false
         return
