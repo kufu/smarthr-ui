@@ -209,5 +209,43 @@ describe('useLayoutEffectRef', () => {
       rerender(<Outer show={true} dep={2} />)
       expect(action).toHaveBeenCalledTimes(4)
     })
+
+    test('埋め込み側だけでなく利用側(Outer)自体がunmount/再mountしても、正しくaction/cleanupが呼ばれる', () => {
+      const cleanups: Array<() => void> = []
+      const action = vi.fn((node: HTMLElement | null) => {
+        if (!node) return undefined
+        const cleanup = vi.fn()
+        cleanups.push(cleanup)
+        return cleanup
+      })
+      const Inner = () => {
+        const ref = useLayoutEffectRef(action, [])
+        return <div ref={ref} />
+      }
+      const Outer = () => <Inner />
+      const Root = ({ show }: { show: boolean }) => (show ? <Outer /> : null)
+
+      const { rerender } = render(<Root show={true} />)
+      expect(action).toHaveBeenCalledTimes(1)
+      expect(action.mock.calls[0][0]).toBeInstanceOf(HTMLDivElement)
+
+      // unmount: OuterごとInnerコンポーネントも破棄される
+      rerender(<Root show={false} />)
+      expect(action).toHaveBeenCalledTimes(2)
+      expect(action.mock.calls[1][0]).toBeNull()
+      expect(cleanups[0]).toHaveBeenCalledTimes(1)
+
+      // 再mount: OuterごとInnerコンポーネントも新しいインスタンスとして生成される
+      rerender(<Root show={true} />)
+      expect(action).toHaveBeenCalledTimes(3)
+      expect(action.mock.calls[2][0]).toBeInstanceOf(HTMLDivElement)
+      expect(action.mock.calls[2][0]).not.toBe(action.mock.calls[0][0])
+
+      // 再度unmount
+      rerender(<Root show={false} />)
+      expect(action).toHaveBeenCalledTimes(4)
+      expect(action.mock.calls[3][0]).toBeNull()
+      expect(cleanups[1]).toHaveBeenCalledTimes(1)
+    })
   })
 })
