@@ -114,7 +114,12 @@ export default [
       ],
       'jsx-a11y/no-static-element-interactions': 'error',
       'jsx-a11y/role-has-required-aria-props': 'error',
-      'react-hooks/exhaustive-deps': 'error',
+      'react-hooks/exhaustive-deps': [
+        'error',
+        {
+          additionalHooks: '(useLayoutEffectRef|useEnhancedEffect)',
+        },
+      ],
       'smarthr/a11y-anchor-has-href-attribute': [
         'error',
         {
