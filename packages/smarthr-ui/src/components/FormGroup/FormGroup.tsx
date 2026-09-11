@@ -150,6 +150,8 @@ export const FormGroup: FC<Props> = ({
 
     const observer = new MutationObserver(action)
     observer.observe(node, {
+      childList: true,
+      subtree: true,
       attributes: true,
       attributeFilter: ['data-auto-bind-error-input', 'data-auto-bind-aria-describedby-for-input'],
     })
