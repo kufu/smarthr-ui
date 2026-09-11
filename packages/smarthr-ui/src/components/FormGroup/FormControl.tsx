@@ -53,7 +53,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
   const managedInputIdRef = useRef(label.htmlFor)
   const managedLabelIdRef = useRef(label.id)
 
-  const callbackRef = useLayoutEffectRef(
+  const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (!node) {
         return
@@ -108,7 +108,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
 
   return {
     ...rest,
-    callbackRef,
+    callbackRef: layoutEffectRef,
     label,
     classNames,
     LabelComponent,
