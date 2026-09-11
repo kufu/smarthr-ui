@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, memo } from 'react'
+import { type FC, type MouseEvent, type ReactNode, memo } from 'react'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -18,7 +18,7 @@ export type BaseProps = DialogBodyProps & {
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
-  handleClickClose: () => void
+  handleClickClose: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const CLASS_NAMES = (() => {
