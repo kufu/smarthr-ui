@@ -1,4 +1,4 @@
-import { render, renderHook, waitFor } from '@testing-library/react'
+import { fireEvent, render, renderHook, waitFor } from '@testing-library/react'
 import { EditorContent } from '@tiptap/react'
 import { beforeAll, describe, expect, it } from 'vitest'
 
@@ -74,11 +74,98 @@ describe('CustomImage NodeView', () => {
       const img = document.querySelector<HTMLImageElement>('.ProseMirror img')!
       expect(img.getAttribute('alt')).toBe('NEWALT')
       expect(img.style.width).toBe('222px')
-      expect(img.style.height).toBe('111px')
+      // 高さは縦横比に従わせる（表示幅が縮んでも潰れないようにするため）
+      expect(img.style.height).toBe('auto')
+      expect(img.style.aspectRatio).toBe('2')
     })
 
     // モデルも一致していること（従来から正しい挙動）
     expect(editor.getHTML()).toContain('alt="NEWALT"')
+  })
+
+  describe('表示サイズ', () => {
+    const mountWithSize = async (attrs: Record<string, unknown>) => {
+      const { result } = renderHook(() =>
+        useRichTextEditor({
+          features: ['image'],
+          defaultValue: {
+            type: 'doc',
+            content: [{ type: 'image', attrs: { ...attrs, src: 'https://example.com/a.png' } }],
+          },
+        }),
+      )
+      await waitFor(() => expect(result.current.editor).not.toBeNull())
+      render(<EditorContent editor={result.current.editor!} />)
+      await waitFor(() => expect(document.querySelector('.ProseMirror img')).not.toBeNull())
+
+      return {
+        editor: result.current.editor!,
+        img: document.querySelector<HTMLImageElement>('.ProseMirror img')!,
+      }
+    }
+
+    // jsdom は画像を読み込まないので自然サイズを持たない
+    const stubNaturalSize = (img: HTMLImageElement, width: number, height: number) => {
+      Object.defineProperty(img, 'naturalWidth', { value: width, configurable: true })
+      Object.defineProperty(img, 'naturalHeight', { value: height, configurable: true })
+    }
+
+    it('width と height の両方があれば保存値の比率を使う', async () => {
+      const { img } = await mountWithSize({ width: 800, height: 400 })
+
+      expect(img.style.width).toBe('800px')
+      expect(img.style.height).toBe('auto')
+      expect(img.style.aspectRatio).toBe('2')
+    })
+
+    it('width だけなら自然比率に従わせる', async () => {
+      const { img } = await mountWithSize({ width: 600 })
+      stubNaturalSize(img, 800, 400)
+      fireEvent.load(img)
+
+      expect(img.style.width).toBe('600px')
+      expect(img.style.height).toBe('auto')
+      expect(img.style.aspectRatio).toBe('2')
+    })
+
+    it('height だけなら自然比率から相当する幅を出す', async () => {
+      const { img } = await mountWithSize({ height: 200 })
+      stubNaturalSize(img, 800, 400)
+      fireEvent.load(img)
+
+      expect(img.style.width).toBe('400px')
+      expect(img.style.height).toBe('auto')
+      expect(img.style.aspectRatio).toBe('2')
+    })
+
+    it('両方なしなら何も指定しない', async () => {
+      const { img } = await mountWithSize({})
+      stubNaturalSize(img, 800, 400)
+      fireEvent.load(img)
+
+      expect(img.style.width).toBe('')
+      expect(img.style.height).toBe('')
+      expect(img.style.aspectRatio).toBe('')
+    })
+
+    it('リセットすると以前の指定が消える', async () => {
+      const { editor, img } = await mountWithSize({ width: 800, height: 400 })
+      expect(img.style.width).toBe('800px')
+
+      editor
+        .chain()
+        .setNodeSelection(0)
+        .updateAttributes('image', { width: null, height: null })
+        .run()
+
+      await waitFor(() => {
+        const updated = document.querySelector<HTMLImageElement>('.ProseMirror img')!
+
+        expect(updated.style.width).toBe('')
+        expect(updated.style.height).toBe('')
+        expect(updated.style.aspectRatio).toBe('')
+      })
+    })
   })
 
   describe('読み込みに失敗した画像', () => {

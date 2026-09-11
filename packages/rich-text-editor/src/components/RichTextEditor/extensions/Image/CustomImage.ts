@@ -4,6 +4,9 @@ import { Image } from '@tiptap/extension-image'
 import type { NodeViewRendererProps, ResizableNodeViewDirection } from '@tiptap/core'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
+const toPositiveNumber = (value: unknown): number | null =>
+  typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : null
+
 /**
  * リサイズハンドルを生成する。標準の `createHandle` + `positionHandle` を再現しつつ、
  * `aria-hidden="true"` を付与してアクセシビリティツリーから除外する。
@@ -104,6 +107,32 @@ export const CustomImage = Image.extend({
       }
       syncImageSource(HTMLAttributes.src)
 
+      let sizeAttributes: { width: unknown; height: unknown } = {
+        width: node.attrs.width,
+        height: node.attrs.height,
+      }
+
+      /**
+       * 保存されたサイズを表示へ反映する。幅だけを px で固定し、高さは縦横比に従わせる。
+       *
+       * width と height の両方を px で固定すると、max-width で表示幅が縮んだときに
+       * 高さだけが残って画像が潰れる。ResizableNodeView のコンストラクタが
+       * applyInitialSize で px を書くため、生成後にもこれを通す必要がある。
+       */
+      const applyDisplaySize = () => {
+        const width = toPositiveNumber(sizeAttributes.width)
+        const height = toPositiveNumber(sizeAttributes.height)
+        const naturalRatio =
+          el.naturalWidth > 0 && el.naturalHeight > 0 ? el.naturalWidth / el.naturalHeight : null
+        // height だけ保存されている既存データは、同じ高さになる幅へ置き換える
+        const displayWidth = width ?? (height && naturalRatio ? height * naturalRatio : null)
+        const ratio = width && height ? width / height : naturalRatio
+
+        el.style.width = displayWidth ? `${displayWidth}px` : ''
+        el.style.height = displayWidth || height ? 'auto' : ''
+        el.style.aspectRatio = displayWidth && ratio ? `${ratio}` : ''
+      }
+
       let previousHTMLAttributes: Record<string, unknown> = { ...HTMLAttributes }
 
       const onUpdate = (updatedNode: ProseMirrorNode) => {
@@ -141,14 +170,10 @@ export const CustomImage = Image.extend({
 
         syncImageSource(newHTMLAttributes.src)
 
-        // 公式 PR でも未対応の width/height を style へ同期し、ポップオーバーでの
+        // 公式 PR でも未対応の width/height を同期し、ポップオーバーでの
         // サイズ変更（updateAttributes に width/height 数値）をライブ反映する。
-        // applyInitialSize と同じく、未指定(null)なら '' に戻して自然サイズへ戻す
-        // （Reset ボタンのケース）。
-        const w = updatedNode.attrs.width
-        const h = updatedNode.attrs.height
-        el.style.width = w ? `${w}px` : ''
-        el.style.height = h ? `${h}px` : ''
+        sizeAttributes = { width: updatedNode.attrs.width, height: updatedNode.attrs.height }
+        applyDisplaySize()
 
         previousHTMLAttributes = newHTMLAttributes
 
@@ -173,6 +198,10 @@ export const CustomImage = Image.extend({
               .updateAttributes(this.name, { width, height })
               .run()
           }
+
+          // ドラッグ中の px 指定から確定表示の規則へ戻す
+          sizeAttributes = { width, height }
+          applyDisplaySize()
         },
         onUpdate,
         options: {
@@ -187,6 +216,9 @@ export const CustomImage = Image.extend({
         },
       })
 
+      // コンストラクタの applyInitialSize が width/height を px で書くので上書きする
+      applyDisplaySize()
+
       const dom = nodeView.dom
       dom.style.visibility = 'hidden'
       dom.style.pointerEvents = 'none'
@@ -198,6 +230,8 @@ export const CustomImage = Image.extend({
 
       el.onload = () => {
         clearLoadFailure()
+        // 自然サイズはここで初めて分かる。height だけ保存されている場合に必要
+        applyDisplaySize()
         revealImage()
       }
 
