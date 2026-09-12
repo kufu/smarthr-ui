@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
@@ -39,7 +39,7 @@ const classNameGenerator = tv({
       ],
       right: '',
       left: '',
-    },
+    } satisfies Record<NonNullable<Props['horizontal']>, string | string[]>,
     vertical: {
       top: [
         'before:-shr-top-[5px]',
@@ -67,7 +67,7 @@ const classNameGenerator = tv({
         'after:shr-top-1/2',
         'after:-shr-translate-y-[5px]',
       ],
-    },
+    } satisfies Record<NonNullable<Props['vertical']>, string | string[]>,
     triggerIcon: {
       true: '',
     },
@@ -126,12 +126,13 @@ const classNameGenerator = tv({
   ],
 })
 
-type BaseProps = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & {
-    /** レンダリングするタグ */
-    as?: 'div' | 'span'
-  }
->
+type BaseProps = PropsWithChildren<{
+  /** レンダリングするタグ */
+  as?: 'div' | 'span'
+  horizontal?: 'center' | 'right' | 'left'
+  vertical?: 'top' | 'bottom' | 'middle'
+  triggerIcon?: boolean
+}>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const ControlledTooltip = memo<Props>(
