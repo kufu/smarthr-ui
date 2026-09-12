@@ -8,16 +8,16 @@ import {
   useCallback,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../SectioningContent'
 
-type BaseProps = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & {
-    as?: string | ComponentType<any>
-  }
->
+type BaseProps = PropsWithChildren<{
+  as?: string | ComponentType<any>
+  direction?: 'horizontal' | 'vertical' | 'both'
+  styleType?: 'auto' | 'scroll'
+}>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'tabIndex'>
 
 const classNameGenerator = tv({
@@ -27,11 +27,11 @@ const classNameGenerator = tv({
       horizontal: '',
       vertical: '',
       both: '',
-    },
+    } satisfies Record<NonNullable<Props['direction']>, string>,
     styleType: {
       auto: '',
       scroll: '',
-    },
+    } satisfies Record<NonNullable<Props['styleType']>, string>,
   },
   compoundVariants: [
     {
