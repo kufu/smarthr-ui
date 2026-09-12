@@ -303,7 +303,7 @@ const ActualSingleCombobox = <T,>(
       selectDefaultItem,
       unfocus,
       cleanupCallbackRef: () => () => {
-        latest.cleanupAddFrame?.()
+        latest.cleanupAddFrame()
         latest.selectFrame.cancel()
       },
       handleFocus: () => {

@@ -249,11 +249,7 @@ export const useListbox = <T,>({
           setActiveOption(null)
         }
       },
-      cleanupAddFrame: hasOnAdd
-        ? () => {
-            latest.addFrame.cancel()
-          }
-        : undefined,
+      cleanupAddFrame: () => latest.addFrame.cancel(),
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう

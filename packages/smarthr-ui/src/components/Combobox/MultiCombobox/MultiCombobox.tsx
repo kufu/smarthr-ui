@@ -362,9 +362,7 @@ const ActualMultiCombobox = <T,>(
     return {
       handleDelete,
       blur,
-      cleanupCallbackRef: () => () => {
-        latest.cleanupAddFrame?.()
-      },
+      cleanupCallbackRef: () => latest.cleanupAddFrame,
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
         if (latest.isComposing) return
 
