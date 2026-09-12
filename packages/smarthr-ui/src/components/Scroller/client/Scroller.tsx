@@ -10,8 +10,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { useSectionWrapper } from '../SectioningContent'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useSectionWrapper } from '../../SectioningContent'
 
 type BaseProps = PropsWithChildren<{
   as?: string | ComponentType<any>

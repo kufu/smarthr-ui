@@ -7,7 +7,7 @@ import {
   StyleTypeScroll,
 } from './Scroller.stories'
 
-import type { Scroller } from '../Scroller'
+import type { Scroller } from '../client'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
