@@ -15,7 +15,6 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 type BaseProps = PropsWithChildren & {
   announceDelay?: number
   skipInitialAnnounce?: boolean
-  htmlFor?: string
   visuallyHidden?: boolean
 }
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
@@ -24,7 +23,6 @@ export const LiveRegion: FC<Props> = ({
   announceDelay = 100,
   skipInitialAnnounce,
   role,
-  htmlFor,
   visuallyHidden,
   id,
   children,
@@ -97,18 +95,18 @@ export const LiveRegion: FC<Props> = ({
   )
 
   const VisibleContent = 'span'
-  const { Wrapper, wrapperAs, Output, outputAs } = visuallyHidden
+  const { Wrapper, wrapperAs, Invisible, invisibleAs } = visuallyHidden
     ? {
         Wrapper: VisuallyHiddenText,
         wrapperAs: VisibleContent,
-        Output: 'output',
-        outputAs: undefined,
+        Invisible: 'span',
+        invisibleAs: undefined,
       }
     : {
         Wrapper: VisibleContent,
         wrapperAs: undefined,
-        Output: VisuallyHiddenText,
-        outputAs: 'output',
+        Invisible: VisuallyHiddenText,
+        invisibleAs: 'span',
       }
 
   return (
@@ -120,14 +118,13 @@ export const LiveRegion: FC<Props> = ({
       >
         {children}
       </VisibleContent>
-      <Output
-        as={outputAs}
+      <Invisible
+        as={invisibleAs}
         role={role || 'status'}
-        htmlFor={htmlFor}
         className="smarthr-ui-LiveRegion-visuallyHiddenText"
       >
         {liveText}
-      </Output>
+      </Invisible>
     </Wrapper>
   )
 }
