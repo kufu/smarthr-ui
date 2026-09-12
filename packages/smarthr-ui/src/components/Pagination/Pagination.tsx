@@ -111,13 +111,9 @@ const ActualPagination: FC<Props> = ({
   }, [className, withoutNumbers])
 
   const latest = useLatest({ onClick, hrefTemplate })
-  const hasHrefTemplate = !!hrefTemplate
 
   const functions = useMemo(
     () => ({
-      actualHrefTemplate: hasHrefTemplate
-        ? (pageNumber: number) => latest.hrefTemplate!(pageNumber)
-        : undefined,
       handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
         if (!latest.onClick) {
           return
@@ -147,7 +143,7 @@ const ActualPagination: FC<Props> = ({
         }
       },
     }),
-    [hasHrefTemplate, latest],
+    [latest],
   )
 
   const { navigationLabel } = useLocalize({
@@ -158,18 +154,21 @@ const ActualPagination: FC<Props> = ({
   })
 
   return (
-    <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={functions.handleDelegateClick}>
-        <ItemButtons
-          linkAs={linkAs}
-          total={total}
-          current={current}
-          withoutNumbers={withoutNumbers}
-          hrefTemplate={functions.actualHrefTemplate}
-          padding={padding}
-          classNames={classNames}
-        />
-      </Reel>
+    <Nav
+      {...rest}
+      className={classNames.wrapper}
+      aria-label={navigationLabel}
+      onClick={functions.handleDelegateClick}
+    >
+      <ItemButtons
+        linkAs={linkAs}
+        total={total}
+        current={current}
+        withoutNumbers={withoutNumbers}
+        hrefTemplate={hrefTemplate}
+        padding={padding}
+        classNames={classNames}
+      />
     </Nav>
   )
 }
@@ -209,25 +208,31 @@ const ItemButtons = memo<
   }
 
   return (
-    <Cluster as="ul" className={classNames.list}>
-      <DoubleIconItemButton {...prevAttrs} targetPage={1} className={classNames.firstListItem} />
-      <li className={classNames.prevListItem}>
-        <PaginationControllerItemButton {...prevAttrs} targetPage={current - 1} />
-      </li>
-      {pageNumbers.map((page) => (
-        <NumberItemButton
-          key={page}
-          linkAs={linkAs}
-          disabled={page === current}
-          page={page}
-          hrefTemplate={hrefTemplate}
+    <Reel>
+      <Cluster as="ul" className={classNames.list}>
+        <DoubleIconItemButton {...prevAttrs} targetPage={1} className={classNames.firstListItem} />
+        <li className={classNames.prevListItem}>
+          <PaginationControllerItemButton {...prevAttrs} targetPage={current - 1} />
+        </li>
+        {pageNumbers.map((page) => (
+          <NumberItemButton
+            key={page}
+            linkAs={linkAs}
+            disabled={page === current}
+            page={page}
+            hrefTemplate={hrefTemplate}
+          />
+        ))}
+        <li className={classNames.nextListItem}>
+          <PaginationControllerItemButton {...nextAttrs} targetPage={current + 1} />
+        </li>
+        <DoubleIconItemButton
+          {...nextAttrs}
+          targetPage={total}
+          className={classNames.lastListItem}
         />
-      ))}
-      <li className={classNames.nextListItem}>
-        <PaginationControllerItemButton {...nextAttrs} targetPage={current + 1} />
-      </li>
-      <DoubleIconItemButton {...nextAttrs} targetPage={total} className={classNames.lastListItem} />
-    </Cluster>
+      </Cluster>
+    </Reel>
   )
 })
 
