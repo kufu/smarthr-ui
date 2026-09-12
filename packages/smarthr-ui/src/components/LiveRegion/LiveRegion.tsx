@@ -13,7 +13,6 @@ import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackR
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type BaseProps = PropsWithChildren & {
-  hasFlowContent?: boolean
   announceDelay?: number
   skipInitialAnnounce?: boolean
   htmlFor?: string
@@ -22,7 +21,6 @@ type BaseProps = PropsWithChildren & {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const LiveRegion: FC<Props> = ({
-  hasFlowContent,
   announceDelay = 100,
   skipInitialAnnounce,
   role,
@@ -98,7 +96,7 @@ export const LiveRegion: FC<Props> = ({
     ),
   )
 
-  const VisibleContent = hasFlowContent ? 'div' : 'span'
+  const VisibleContent = 'span'
   const { Wrapper, wrapperAs, Output, outputAs } = visuallyHidden
     ? {
         Wrapper: VisuallyHiddenText,

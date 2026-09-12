@@ -202,20 +202,20 @@ export const FormGroup: FC<Props> = ({
         </Text>
       )}
       {visibleErrorMessages && (
-        <LiveRegion role="alert" id={errorMessagesId} hasFlowContent={true}>
+        <div id={errorMessagesId}>
           {errorMessages.map((message, index) => (
-            <p key={index}>
-              <Text
-                className="smarthr-ui-FormControl-errorMessage"
-                icon={
-                  <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
-                }
-              >
-                {message}
-              </Text>
-            </p>
+            <Text
+              key={index}
+              as="p"
+              className="smarthr-ui-FormControl-errorMessage"
+              icon={
+                <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
+              }
+            >
+              <LiveRegion role="alert">{message}</LiveRegion>
+            </Text>
           ))}
-        </LiveRegion>
+        </div>
       )}
       <div className={classNames.childrenWrapper}>{children}</div>
       {supplementaryMessage && (

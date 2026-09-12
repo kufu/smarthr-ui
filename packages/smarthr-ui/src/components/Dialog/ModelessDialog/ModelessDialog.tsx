@@ -469,7 +469,6 @@ export const ModelessDialog: FC<Props> = ({
           {footer && (
             <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
           )}
-          {/* TODO: document.ariaNotifyに修正したい */}
           <LiveRegion htmlFor={actualId} visuallyHidden={true} announceDelay={600}>
             {liveRegionText}
           </LiveRegion>
