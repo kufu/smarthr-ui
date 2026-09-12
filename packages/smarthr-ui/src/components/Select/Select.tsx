@@ -68,20 +68,7 @@ const classNameGenerator = tv({
 })
 
 const BaseSelect = <T extends string>(
-  {
-    options,
-    onChange,
-    onChangeValue,
-    error,
-    width,
-    hasBlank,
-    blankLabel,
-    size,
-    className,
-    disabled,
-    required,
-    ...rest
-  }: Props<T>,
+  { options, width, hasBlank, blankLabel, size, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
   const classNames = useMemo(() => {
@@ -105,17 +92,7 @@ const BaseSelect = <T extends string>(
         width: typeof width === 'number' ? `${width}px` : width,
       }}
     >
-      <ActualSelect
-        {...rest}
-        outerRef={ref}
-        required={required}
-        disabled={disabled}
-        error={error}
-        className={classNames.select}
-        onChange={onChange}
-        onChangeValue={onChangeValue}
-        options={options}
-      >
+      <ActualSelect {...rest} outerRef={ref} className={classNames.select} options={options}>
         <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
