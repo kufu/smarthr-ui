@@ -5,11 +5,21 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { PositiveGap } from '../../../types'
+
+type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+
+type Props = PropsWithChildren<{
+  as?: string | ComponentType<any>
+  inline?: boolean
+  gap?: PositiveGap
+  align?: AlignType
+}> &
+  ComponentPropsWithRef<'div'>
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',
@@ -41,7 +51,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-y-3',
       XXL: 'shr-gap-y-3.5',
       X3L: 'shr-gap-y-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<PositiveGap, string>,
     align: {
       start: 'shr-items-start',
       'flex-start': 'shr-items-start',
@@ -50,15 +60,9 @@ const classNameGenerator = tv({
       center: 'shr-items-center',
       baseline: 'shr-items-baseline',
       stretch: 'shr-items-stretch',
-    },
+    } satisfies Record<AlignType, string>,
   },
 })
-
-type Props = VariantProps<typeof classNameGenerator> &
-  PropsWithChildren<{
-    as?: string | ComponentType<any>
-  }> &
-  ComponentPropsWithRef<'div'>
 
 export const Stack = forwardRef<HTMLDivElement, Props>(
   ({ as: Component = 'div', inline = false, gap = 1, align, className, ...rest }, ref) => {
