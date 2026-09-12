@@ -249,6 +249,7 @@ export const useListbox = <T,>({
           setActiveOption(null)
         }
       },
+      cleanupAddFrame: () => latest.addFrame.cancel(),
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -308,9 +309,6 @@ export const useListbox = <T,>({
     }
   }, [activeOption, navigationType])
 
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => addFrame.cancel, [addFrame.cancel])
-
   return {
     listBoxProps: {
       activeOptionId: activeOption?.id,
@@ -331,6 +329,7 @@ export const useListbox = <T,>({
       dropdownWidth,
     },
     activeOption,
+    cleanupAddFrame: functions.cleanupAddFrame,
     handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
     // TODO: テストで利用されているだけなのでテスト側を修正して対応、最終的に消したい
