@@ -9,7 +9,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
@@ -19,7 +19,9 @@ import type { ElementRef, Gap } from '../../types'
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
+export const STYLE_TYPE_MAP: {
+  [key in StyleType]: Pick<TextProps, 'size' | 'leading' | 'weight' | 'color'>
+} = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
@@ -65,11 +67,11 @@ const classNameGenerator = tv({
       L: 'shr-text-lg',
       XL: 'shr-text-xl',
       XXL: 'shr-text-2xl',
-    },
+    } satisfies Record<NonNullable<TextProps['size']>, string>,
     weight: {
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
-    },
+    } satisfies Record<NonNullable<TextProps['weight']>, string>,
     italic: {
       true: 'shr-italic',
     },
@@ -80,20 +82,20 @@ const classNameGenerator = tv({
       TEXT_DISABLED: 'shr-text-disabled',
       TEXT_LINK: 'shr-text-link',
       inherit: 'shr-text-color-inherit',
-    },
+    } satisfies Record<NonNullable<TextProps['color']>, string>,
     leading: {
       NONE: 'shr-leading-none',
       TIGHT: 'shr-leading-tight',
       NORMAL: 'shr-leading-normal',
       LOOSE: 'shr-leading-loose',
-    },
+    } satisfies Record<NonNullable<TextProps['leading']>, string>,
     whiteSpace: {
       normal: 'shr-whitespace-normal',
       nowrap: 'shr-whitespace-nowrap',
       pre: 'shr-whitespace-pre',
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
-    },
+    } satisfies Record<NonNullable<TextProps['whiteSpace']>, string>,
     maxLines: {
       1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       2: 'shr-line-clamp-[2]',
@@ -101,7 +103,7 @@ const classNameGenerator = tv({
       4: 'shr-line-clamp-[4]',
       5: 'shr-line-clamp-[5]',
       6: 'shr-line-clamp-[6]',
-    },
+    } satisfies Record<NonNullable<TextProps['maxLines']>, string>,
   },
 })
 
@@ -161,8 +163,7 @@ type ActualIconType =
     }
 type IconType = ActualIconType | ReactNode
 
-// VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
+export type TextProps<T extends ElementType = 'span'> = {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
   as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
@@ -171,6 +172,14 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   styleType?: StyleType
   /** 設置するアイコン */
   icon?: IconType
+
+  size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+  weight?: 'normal' | 'bold'
+  italic?: boolean
+  color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+  leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
 }
 
 // HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
