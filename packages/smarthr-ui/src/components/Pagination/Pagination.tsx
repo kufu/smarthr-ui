@@ -1,12 +1,4 @@
-import {
-  type ComponentProps,
-  type ElementType,
-  type FC,
-  type HTMLAttributes,
-  type MouseEvent,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentProps, type ElementType, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -41,7 +33,7 @@ const classNameGenerator = tv({
   },
 })
 
-type CommonProps = {
+type BaseProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
@@ -54,21 +46,7 @@ type CommonProps = {
   linkAs?: ElementType
 }
 
-type ButtonProps = CommonProps & {
-  /** ボタンを押下したときに発火するコールバック関数 */
-  onClick: (pageNumber: number, e: MouseEvent<HTMLElement>) => void
-  /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
-  hrefTemplate?: undefined
-}
-type AnchorProps = CommonProps & {
-  /** リンクを押下したときに発火するコールバック関数 */
-  onClick?: (href: string, e: MouseEvent<HTMLElement>) => void
-  /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
-  hrefTemplate: (pageNumber: number) => string
-}
-
-type BaseProps = ButtonProps | AnchorProps
-type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentProps<typeof Wrapper>, keyof BaseProps>
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
