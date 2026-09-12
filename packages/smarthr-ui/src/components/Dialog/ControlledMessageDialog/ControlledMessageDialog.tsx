@@ -20,7 +20,7 @@ type HeadingType = ReactNode | ObjectHeadingType
 type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
   DialogProps & {
     heading: HeadingType
-    onClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
