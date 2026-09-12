@@ -15,7 +15,6 @@ import { Text } from '../Text'
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
   status?: keyof typeof STATUS_ICON_MAPPER
-  htmlFor?: string
 }
 
 export const classNameGenerator = tv({
@@ -43,7 +42,6 @@ export const ResponseMessage: FC<Props> = ({
   status = 'info',
   size,
   role,
-  htmlFor,
   className,
   children,
   ...rest
@@ -53,7 +51,7 @@ export const ResponseMessage: FC<Props> = ({
 
   return (
     <Text size={size} className={className} icon={<TextIcon {...rest} className={iconClassName} />}>
-      <LiveRegion role={role} htmlFor={htmlFor} className="shr-contents">
+      <LiveRegion role={role} className="shr-contents">
         {children}
       </LiveRegion>
     </Text>
