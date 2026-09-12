@@ -3,7 +3,6 @@
 import {
   type FC,
   type FormEvent,
-  type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   memo,
@@ -57,7 +56,7 @@ export type BaseProps = PropsWithChildren<
 
 export type StepFormDialogContentInnerProps = BaseProps & {
   firstStep: StepItem
-  handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
   /** ステップの総数 */
   stepLength: number
@@ -111,8 +110,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   })
 
   const functions = useMemo(() => {
-    const handleCloseAction = (e?: MouseEvent<HTMLButtonElement>) => {
-      latest.handleClickClose(e)
+    const handleCloseAction = () => {
+      latest.handleClickClose()
       setTimeout(() => {
         // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
         latest.stepQueueRef.current = []
@@ -234,7 +233,7 @@ const BackButton = memo<{
 ))
 
 const CloseButton = memo<{
-  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+  handleClick: () => void
   variant: CommonButtonType['theme']
   disabled: boolean
   text: ReactNode

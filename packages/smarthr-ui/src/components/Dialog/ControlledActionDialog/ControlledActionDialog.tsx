@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, type MouseEvent, type ReactNode, useMemo } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
@@ -36,7 +36,7 @@ type BaseProps = Omit<
     /**
      * 閉じるボタンをクリックした時に発火するコールバック関数
      */
-    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    onClickClose: () => void
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
@@ -81,9 +81,9 @@ export const ControlledActionDialog: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
+      handleClickClose: () => {
         if (latest.isOpen) {
-          latest.onClickClose(e)
+          latest.onClickClose()
         }
       },
       handleClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {

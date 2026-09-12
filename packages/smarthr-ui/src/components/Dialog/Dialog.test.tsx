@@ -197,33 +197,4 @@ describe('Dialog', () => {
       screen.getByRole('textbox', { name: '特定の要素をフォーカスするダイアログのInput' }),
     ).toHaveFocus()
   })
-
-  it('Escapeキー押下時、onPressEscapeに実際のKeyboardEventが渡されること', async () => {
-    const handlePressEscape = vi.fn()
-    const DialogTemplateWithPressEscape: FC = () => {
-      const [isOpen, setIsOpen] = useState<boolean>(true)
-      return (
-        <Dialog
-          isOpen={isOpen}
-          ariaLabel="Escapeイベント検証ダイアログ"
-          onPressEscape={(e) => {
-            handlePressEscape(e)
-            setIsOpen(false)
-          }}
-        >
-          <p>本文</p>
-        </Dialog>
-      )
-    }
-    renderWithIntl(<DialogTemplateWithPressEscape />)
-
-    expect(screen.getByRole('dialog', { name: 'Escapeイベント検証ダイアログ' })).toBeVisible()
-
-    await userEvent.keyboard('{Escape}')
-
-    expect(handlePressEscape).toHaveBeenCalledTimes(1)
-    const receivedEvent = handlePressEscape.mock.calls[0][0]
-    expect(receivedEvent).toBeInstanceOf(KeyboardEvent)
-    expect(receivedEvent.key).toBe('Escape')
-  })
 })

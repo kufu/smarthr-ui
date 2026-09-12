@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, type FC, type MouseEvent, type ReactNode, useMemo } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
@@ -20,7 +20,7 @@ type HeadingType = ReactNode | ObjectHeadingType
 type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
   DialogProps & {
     heading: HeadingType
-    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    onClickClose: MessageDialogContentInnerProps['handleClickClose']
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
@@ -53,9 +53,9 @@ export const ControlledMessageDialog: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handleClickClose: (e: MouseEvent<HTMLButtonElement>) => {
+      handleClickClose: () => {
         if (latest.isOpen) {
-          latest.onClickClose(e)
+          latest.onClickClose()
         }
       },
     }),

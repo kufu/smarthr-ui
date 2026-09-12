@@ -30,7 +30,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
    * エスケープキーを押下した時に発火するコールバック関数
    * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
    */
-  onPressEscape?: (e: KeyboardEvent) => void
+  onPressEscape?: () => void
   /**
    * ダイアログを開いているかどうか
    */
@@ -122,9 +122,9 @@ export const DialogContentInner: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handlePressEscape: (e: KeyboardEvent) => {
+      handlePressEscape: () => {
         if (latest.isOpen) {
-          latest.onPressEscape?.(e)
+          latest.onPressEscape?.()
         }
       },
       handleClickOverlay: () => {

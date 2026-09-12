@@ -1,11 +1,4 @@
-import {
-  type FC,
-  type FormEvent,
-  type MouseEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-} from 'react'
+import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -57,7 +50,7 @@ export type BaseProps = PropsWithChildren<
 >
 
 export type FormDialogContentInnerProps = BaseProps & {
-  handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
 }
 

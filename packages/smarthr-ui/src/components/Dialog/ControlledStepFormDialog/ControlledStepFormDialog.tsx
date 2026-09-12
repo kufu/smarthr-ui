@@ -4,7 +4,6 @@ import {
   type ComponentProps,
   type FC,
   type FormEvent,
-  type MouseEvent,
   type ReactNode,
   useContext,
   useMemo,
@@ -50,7 +49,7 @@ type BaseProps = Omit<
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
     onSubmit: BaseStepFormDialogContentInnerProps['handleSubmit']
-    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    onClickClose: () => void
     onClickBack?: () => void
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
@@ -204,10 +203,10 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
 
   const functions = useMemo(
     () => ({
-      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
+      handleClickClose: () => {
         if (latest.isOpen) {
           focusTrapRef.current?.focus()
-          latest.onClickClose(e)
+          latest.onClickClose()
         }
       },
       handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {

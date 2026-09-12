@@ -59,7 +59,7 @@ export type BaseProps = PropsWithChildren<
 >
 
 export type ActionDialogContentInnerProps = BaseProps & {
-  handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+  handleClickClose: () => void
   responseStatus?: ResponseStatus
 }
 

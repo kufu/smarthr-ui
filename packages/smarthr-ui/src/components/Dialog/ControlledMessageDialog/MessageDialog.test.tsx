@@ -48,46 +48,4 @@ describe('ControlledMessageDialog', () => {
     // ダイアログを閉じた後、トリガがフォーカスされることを確認
     expect(screen.getByRole('button', { name: 'ControlledMessageDialog' })).toHaveFocus()
   })
-
-  it('閉じるボタンのクリックでonClickCloseに実際のMouseEventが渡されること', async () => {
-    const handleClickClose = vi.fn()
-    render(
-      <IntlProvider locale="ja">
-        <ControlledMessageDialog
-          isOpen
-          onClickClose={handleClickClose}
-          heading="ControlledMessageDialog"
-        >
-          <p>説明です</p>
-        </ControlledMessageDialog>
-      </IntlProvider>,
-    )
-
-    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
-
-    expect(handleClickClose).toHaveBeenCalledTimes(1)
-    expect(handleClickClose.mock.calls[0][0].nativeEvent).toBeInstanceOf(MouseEvent)
-  })
-
-  it('Escapeキー押下でonClickCloseに実際のKeyboardEventが渡されること', async () => {
-    const handleClickClose = vi.fn()
-    render(
-      <IntlProvider locale="ja">
-        <ControlledMessageDialog
-          isOpen
-          onClickClose={handleClickClose}
-          heading="ControlledMessageDialog"
-        >
-          <p>説明です</p>
-        </ControlledMessageDialog>
-      </IntlProvider>,
-    )
-
-    await userEvent.keyboard('{Escape}')
-
-    expect(handleClickClose).toHaveBeenCalledTimes(1)
-    const receivedEvent = handleClickClose.mock.calls[0][0]
-    expect(receivedEvent).toBeInstanceOf(KeyboardEvent)
-    expect(receivedEvent.key).toBe('Escape')
-  })
 })

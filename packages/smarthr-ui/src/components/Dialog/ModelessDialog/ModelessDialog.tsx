@@ -2,9 +2,9 @@
 
 import {
   type FC,
+  type KeyboardEvent,
   type MouseEvent,
   type PropsWithChildren,
-  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type RefObject,
   type SetStateAction,
@@ -51,11 +51,11 @@ type BaseProps = PropsWithChildren<{
   /**
    * 閉じるボタンを押下したときのハンドラ
    */
-  onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+  onClickClose?: (e: MouseEvent<HTMLButtonElement>) => void
   /**
    * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
    */
-  onPressEscape?: (e: KeyboardEvent) => void
+  onPressEscape?: () => void
   /**
    * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
@@ -256,7 +256,7 @@ export const ModelessDialog: FC<Props> = ({
         debounceLiveRegionText.cancel()
       },
       setActualPosition,
-      handleArrowKeyDown: (e: ReactKeyboardEvent) => {
+      handleArrowKeyDown: (e: KeyboardEvent) => {
         if (!latest.isOpen || document.activeElement !== e.currentTarget) {
           return
         }
@@ -298,9 +298,9 @@ export const ModelessDialog: FC<Props> = ({
         lastFocusElementRef.current?.focus()
         latest.onClickClose?.(e)
       },
-      handlePressEscape: (e: KeyboardEvent) => {
+      handlePressEscape: () => {
         lastFocusElementRef.current?.focus()
-        latest.onPressEscape?.(e)
+        latest.onPressEscape?.()
       },
       handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
@@ -480,7 +480,7 @@ export const ModelessDialog: FC<Props> = ({
 
 const Handler = memo<{
   className: string
-  handleArrowKeyDown: (e: ReactKeyboardEvent) => void
+  handleArrowKeyDown: (e: KeyboardEvent) => void
 }>(({ handleArrowKeyDown, ...rest }) => {
   const { localize } = useIntl()
 
