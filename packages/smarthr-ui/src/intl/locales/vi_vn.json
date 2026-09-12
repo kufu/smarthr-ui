@@ -62,6 +62,7 @@
   "smarthr-ui/InformationPanel/closeButtonLabel": "Đóng",
   "smarthr-ui/InformationPanel/openButtonLabel": "Mở",
   "smarthr-ui/InputFile/destroy": "Xóa",
+  "smarthr-ui/InputFile/targetBlank": "Mở trong tab mới",
   "smarthr-ui/InputFile/download": "Tải xuống",
   "smarthr-ui/InputFile/previewLabel": "Mở xem trước {fileName}",
   "smarthr-ui/InputFile/downloadLabel": "Tải xuống {fileName}",

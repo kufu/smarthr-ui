@@ -128,7 +128,7 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
 
         return () => {
           node.removeEventListener('scroll', scheduleHandleScroll)
-          resizeObserver.unobserve(node)
+          resizeObserver.disconnect()
           mutationObserver.disconnect()
           cellObserver.disconnect()
           frame.cancel()
