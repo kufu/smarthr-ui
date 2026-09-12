@@ -5,8 +5,7 @@ import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
-import { PaginationItemButton } from './PaginationItemButton'
-import { Wrapper } from './client'
+import { PaginationItemButton, Wrapper } from './client'
 
 import type { AnchorProps, ButtonProps } from './type'
 
