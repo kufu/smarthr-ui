@@ -160,17 +160,15 @@ const ActualPagination: FC<Props> = ({
       aria-label={navigationLabel}
       onClick={functions.handleDelegateClick}
     >
-      <Reel>
-        <ItemButtons
-          linkAs={linkAs}
-          total={total}
-          current={current}
-          withoutNumbers={withoutNumbers}
-          hrefTemplate={hrefTemplate}
-          padding={padding}
-          classNames={classNames}
-        />
-      </Reel>
+      <ItemButtons
+        linkAs={linkAs}
+        total={total}
+        current={current}
+        withoutNumbers={withoutNumbers}
+        hrefTemplate={hrefTemplate}
+        padding={padding}
+        classNames={classNames}
+      />
     </Nav>
   )
 }
@@ -210,25 +208,31 @@ const ItemButtons = memo<
   }
 
   return (
-    <Cluster as="ul" className={classNames.list}>
-      <DoubleIconItemButton {...prevAttrs} targetPage={1} className={classNames.firstListItem} />
-      <li className={classNames.prevListItem}>
-        <PaginationControllerItemButton {...prevAttrs} targetPage={current - 1} />
-      </li>
-      {pageNumbers.map((page) => (
-        <NumberItemButton
-          key={page}
-          linkAs={linkAs}
-          disabled={page === current}
-          page={page}
-          hrefTemplate={hrefTemplate}
+    <Reel>
+      <Cluster as="ul" className={classNames.list}>
+        <DoubleIconItemButton {...prevAttrs} targetPage={1} className={classNames.firstListItem} />
+        <li className={classNames.prevListItem}>
+          <PaginationControllerItemButton {...prevAttrs} targetPage={current - 1} />
+        </li>
+        {pageNumbers.map((page) => (
+          <NumberItemButton
+            key={page}
+            linkAs={linkAs}
+            disabled={page === current}
+            page={page}
+            hrefTemplate={hrefTemplate}
+          />
+        ))}
+        <li className={classNames.nextListItem}>
+          <PaginationControllerItemButton {...nextAttrs} targetPage={current + 1} />
+        </li>
+        <DoubleIconItemButton
+          {...nextAttrs}
+          targetPage={total}
+          className={classNames.lastListItem}
         />
-      ))}
-      <li className={classNames.nextListItem}>
-        <PaginationControllerItemButton {...nextAttrs} targetPage={current + 1} />
-      </li>
-      <DoubleIconItemButton {...nextAttrs} targetPage={total} className={classNames.lastListItem} />
-    </Cluster>
+      </Cluster>
+    </Reel>
   )
 })
 
