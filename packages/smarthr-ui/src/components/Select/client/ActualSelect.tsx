@@ -35,6 +35,8 @@ type BaseProps<T extends string> = PropsWithChildren<{
 }>
 
 export type Props<T extends string> = BaseProps<T> &
+  // HINT: HTML標準のsize属性（表示行数、number型）はSelectコンポーネント独自の
+  // size prop（'M' | 'S'）と名前が衝突するため、ここでOmitして呼び出し元に独自定義させる
   Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children' | 'size'>
 
 export const ActualSelect = <T extends string>({
