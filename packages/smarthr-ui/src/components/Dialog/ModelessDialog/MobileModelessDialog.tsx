@@ -1,11 +1,7 @@
-'use client'
-
-import { type ComponentProps, type FC, type MouseEvent, useMemo } from 'react'
-
-import { useLatest } from '../../../hooks/useLatest'
 import { ControlledMessageDialog } from '../ControlledMessageDialog'
 
 import type { ModelessDialog } from './ModelessDialog'
+import type { ComponentProps, FC } from 'react'
 
 const NOOP = () => undefined
 
@@ -26,26 +22,12 @@ export const MobileModelessDialog: FC<Props> = ({
   resizable: _resizable,
 
   ...rest
-}) => {
-  const latest = useLatest({ onClickClose })
-  const functions = useMemo(
-    () => ({
-      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
-        if (e) {
-          latest.onClickClose?.(e)
-        }
-      },
-    }),
-    [latest],
-  )
-
-  return (
-    <ControlledMessageDialog
-      {...rest}
-      onClickClose={functions.handleClickClose}
-      onPressEscape={onPressEscape ?? NOOP}
-    >
-      {children}
-    </ControlledMessageDialog>
-  )
-}
+}) => (
+  <ControlledMessageDialog
+    {...rest}
+    onClickClose={onClickClose ?? NOOP}
+    onPressEscape={onPressEscape ?? NOOP}
+  >
+    {children}
+  </ControlledMessageDialog>
+)
