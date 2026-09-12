@@ -1,4 +1,4 @@
-import type { Gap } from '../../types'
+import type { PositiveGap } from '../../types'
 import type { StatusLabel } from '../StatusLabel'
 import type { Text, TextProps } from '../Text'
 import type {
@@ -30,7 +30,7 @@ type BaseCommonProps = PropsWithChildren<{
   /** タイトル右の領域 */
   subActionArea?: ReactNode
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
-  innerMargin?: Gap
+  innerMargin?: PositiveGap
   /** タイトルの隣に表示する `StatusLabel` の配列 */
   statusLabels?: StatusLabelType | StatusLabelType[]
   /** タイトルの下に表示するヘルプメッセージ */
