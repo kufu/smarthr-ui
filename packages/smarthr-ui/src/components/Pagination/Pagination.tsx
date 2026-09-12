@@ -46,7 +46,8 @@ type BaseProps = {
   linkAs?: ElementType
 }
 
-type Props = BaseProps & Omit<ComponentProps<typeof Wrapper>, keyof BaseProps>
+type WrapperType = ComponentProps<typeof Wrapper>
+type Props = BaseProps & Omit<WrapperType, keyof BaseProps>
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
@@ -84,7 +85,7 @@ const ActualPagination: FC<Props> = ({
   const wrapperProps = {
     onClick,
     hrefTemplate,
-  } as ComponentProps<typeof Wrapper>
+  } as WrapperType
 
   return (
     <Wrapper {...rest} {...wrapperProps} className={classNames.wrapper}>
