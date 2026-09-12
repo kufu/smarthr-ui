@@ -1,6 +1,5 @@
-'use client'
-
 import {
+  type ComponentProps,
   type ElementType,
   type FC,
   type HTMLAttributes,
@@ -10,14 +9,12 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
-import { useLocalize } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
-import { Nav } from '../SectioningContent'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
 import { PaginationItemButton } from './PaginationItemButton'
+import { Wrapper } from './client'
 
 const classNameGenerator = tv({
   slots: {
@@ -53,6 +50,8 @@ type CommonProps = {
   padding?: number
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  linkAs?: ElementType
 }
 
 type ButtonProps = CommonProps & {
@@ -60,26 +59,16 @@ type ButtonProps = CommonProps & {
   onClick: (pageNumber: number, e: MouseEvent<HTMLElement>) => void
   /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
   hrefTemplate?: undefined
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  linkAs?: undefined
 }
 type AnchorProps = CommonProps & {
   /** リンクを押下したときに発火するコールバック関数 */
   onClick?: (href: string, e: MouseEvent<HTMLElement>) => void
   /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
   hrefTemplate: (pageNumber: number) => string
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  linkAs?: ElementType
 }
 
 type BaseProps = ButtonProps | AnchorProps
 type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
-
-const BUTTON_REGEX = /^button$/i
-const ANCHOR_REGEX = /^a/i
-
-const getTargetDelegateElement = (e: MouseEvent<HTMLElement>, regex: RegExp) =>
-  (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) => regex.test(elm.tagName))
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
@@ -87,11 +76,11 @@ export const Pagination: FC<Props> = (props) =>
 const ActualPagination: FC<Props> = ({
   total,
   current,
-  onClick,
   padding,
   className,
   withoutNumbers,
   hrefTemplate,
+  onClick,
   linkAs,
   ...rest
 }) => {
@@ -108,58 +97,21 @@ const ActualPagination: FC<Props> = ({
       nextListItem: nextListItem(itemArg),
       lastListItem: lastListItem(itemArg),
     }
-  }, [className, withoutNumbers])
+  }, [withoutNumbers, className])
 
-  const latest = useLatest({ onClick, hrefTemplate })
-
-  const functions = useMemo(
-    () => ({
-      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
-        if (!latest.onClick) {
-          return
-        }
-
-        if (latest.hrefTemplate) {
-          const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
-
-          if (!anchor) {
-            return
-          }
-
-          const href = (anchor as HTMLAnchorElement).href
-
-          if (href) {
-            ;(latest.onClick as (href: string, e: MouseEvent<HTMLElement>) => void)(href, e)
-          }
-        } else {
-          const button = getTargetDelegateElement(e, BUTTON_REGEX)
-
-          if (button) {
-            ;(latest.onClick as (pageNumber: number, e: MouseEvent<HTMLElement>) => void)(
-              parseInt((button as HTMLButtonElement).value, 10),
-              e,
-            )
-          }
-        }
-      },
-    }),
-    [latest],
-  )
-
-  const { navigationLabel } = useLocalize({
-    navigationLabel: {
-      id: 'smarthr-ui/Pagination/navigationLabel',
-      defaultText: 'ページネーション',
-    },
-  })
+  // HINT: onClick/hrefTemplateはButtonProps/AnchorPropsの判別可能ユニオンで、
+  // 分割代入した時点で個々のプロパティ型がユニオン展開され、TypeScript上は
+  // 組み合わせの整合性を検証できなくなる。実行時にはPropsとして渡された時点で
+  // 整合した組み合わせしか存在しないため、まとめて一度だけWrapperの型にキャストする
+  const wrapperProps = {
+    ...rest,
+    onClick,
+    hrefTemplate,
+    className: classNames.wrapper,
+  } as ComponentProps<typeof Wrapper>
 
   return (
-    <Nav
-      {...rest}
-      className={classNames.wrapper}
-      aria-label={navigationLabel}
-      onClick={functions.handleDelegateClick}
-    >
+    <Wrapper {...wrapperProps}>
       <ItemButtons
         linkAs={linkAs}
         total={total}
@@ -169,7 +121,7 @@ const ActualPagination: FC<Props> = ({
         padding={padding}
         classNames={classNames}
       />
-    </Nav>
+    </Wrapper>
   )
 }
 
