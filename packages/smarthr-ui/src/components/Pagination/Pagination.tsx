@@ -111,13 +111,9 @@ const ActualPagination: FC<Props> = ({
   }, [className, withoutNumbers])
 
   const latest = useLatest({ onClick, hrefTemplate })
-  const hasHrefTemplate = !!hrefTemplate
 
   const functions = useMemo(
     () => ({
-      actualHrefTemplate: hasHrefTemplate
-        ? (pageNumber: number) => latest.hrefTemplate!(pageNumber)
-        : undefined,
       handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
         if (!latest.onClick) {
           return
@@ -147,7 +143,7 @@ const ActualPagination: FC<Props> = ({
         }
       },
     }),
-    [hasHrefTemplate, latest],
+    [latest],
   )
 
   const { navigationLabel } = useLocalize({
@@ -165,7 +161,7 @@ const ActualPagination: FC<Props> = ({
           total={total}
           current={current}
           withoutNumbers={withoutNumbers}
-          hrefTemplate={functions.actualHrefTemplate}
+          hrefTemplate={hrefTemplate}
           padding={padding}
           classNames={classNames}
         />
