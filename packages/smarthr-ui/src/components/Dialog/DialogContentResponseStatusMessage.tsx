@@ -7,22 +7,26 @@ export const DialogContentResponseStatusMessage: FC<{
   responseStatus: ReturnType<typeof useResponseStatus>
   className?: string
 }> = ({ responseStatus, className }) => {
-  const isError = responseStatus.message && responseStatus.status === 'error'
-  const isSuccess = responseStatus.message && responseStatus.status === 'success'
+  if (responseStatus.message) {
+    let attrs: { role: 'status' | 'alert'; status: 'success' | 'error' } | null = null
 
-  return (
-    /**
-     * ライブリージョンを条件付きでDOMに追加すると、支援技術に通知が正しく行われないことがあるため、常にDOM上に存在するようにしています
-     *
-     * @see https://www.sarasoueidan.com/blog/accessible-notifications-with-aria-live-regions-part-2/#make-sure-the-live-region-container-is-in-the-dom-as-early-as-possible
-     */
-    <>
-      <div role="alert" className={isError ? `${className} shr-mt-0.5` : className}>
-        {isError && <ResponseMessage status="error">{responseStatus.message}</ResponseMessage>}
-      </div>
-      <div role="status" className={isSuccess ? `${className} shr-mt-0.5` : className}>
-        {isSuccess && <ResponseMessage status="success">{responseStatus.message}</ResponseMessage>}
-      </div>
-    </>
-  )
+    switch (responseStatus.status) {
+      case 'error':
+        attrs = { role: 'alert', status: 'error' }
+        break
+      case 'success':
+        attrs = { role: 'status', status: 'success' }
+        break
+    }
+
+    if (attrs) {
+      return (
+        <ResponseMessage {...attrs} className={`${className} shr-mt-0.5`}>
+          {responseStatus.message}
+        </ResponseMessage>
+      )
+    }
+  }
+
+  return null
 }

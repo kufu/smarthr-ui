@@ -15,6 +15,7 @@ import {
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
+import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
@@ -201,18 +202,18 @@ export const FormGroup: FC<Props> = ({
         </Text>
       )}
       {visibleErrorMessages && (
-        <div role="alert" id={errorMessagesId} className="shr-list-none">
+        <div id={errorMessagesId}>
           {errorMessages.map((message, index) => (
-            <p key={index}>
-              <Text
-                className="smarthr-ui-FormControl-errorMessage"
-                icon={
-                  <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
-                }
-              >
-                {message}
-              </Text>
-            </p>
+            <Text
+              key={index}
+              as="p"
+              className="smarthr-ui-FormControl-errorMessage"
+              icon={
+                <FaCircleExclamationIcon className="smarthr-ui-FormControl-errorMessage-Icon shr-text-danger" />
+              }
+            >
+              <LiveRegion role="alert">{message}</LiveRegion>
+            </Text>
           ))}
         </div>
       )}

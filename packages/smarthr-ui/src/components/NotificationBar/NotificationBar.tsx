@@ -22,6 +22,7 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
 
@@ -188,7 +189,6 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const actualRole = role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')
   let WrapBase = Fragment
   let baseProps = {}
 
@@ -218,9 +218,14 @@ export const NotificationBar: FC<Props> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...rest} role={actualRole} className={classNames.wrapper}>
+      <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea type={type} bold={bold} classNames={classNames}>
+          <MessageArea
+            role={role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')}
+            type={type}
+            bold={bold}
+            classNames={classNames}
+          >
             {children}
           </MessageArea>
           {subActionArea && (
@@ -248,21 +253,23 @@ export const NotificationBar: FC<Props> = ({
 
 const MessageArea = memo<
   Pick<Props, 'children' | 'bold' | 'type'> & {
+    role: 'status' | 'alert'
     classNames: { messageArea: string; icon: string }
   }
->(({ children, bold, type, classNames }) => {
+>(({ children, role, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
     <Text
-      as="div"
       className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
     >
-      {children}
+      <LiveRegion role={role} className="shr-contents">
+        {children}
+      </LiveRegion>
     </Text>
   )
 })
