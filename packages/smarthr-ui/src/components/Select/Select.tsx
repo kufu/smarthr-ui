@@ -1,40 +1,20 @@
-'use client'
-
-// HINT: libs/uaはtypeof window !== 'undefined'でガードされているためRSCで例外にはならないが、
-// isIOS・isMobileSafariは実機のUAをブラウザ側で検出する必要がある。Server Componentのままだと
-// navigatorが存在しないサーバ上で1回だけ評価され常にfalseに固定されるため、'use client'が必要
-
 import {
-  type ChangeEvent,
   type ComponentPropsWithoutRef,
   type ForwardedRef,
-  type OptgroupHTMLAttributes,
-  type OptionHTMLAttributes,
   type PropsWithChildren,
   memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
-type Option<T extends string> = {
-  value: T
-} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
-type Optgroup<T extends string> = {
-  label: string
-  options: Array<Option<T>>
-} & OptgroupHTMLAttributes<HTMLOptGroupElement>
+import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-type BaseProps<T extends string> = {
-  /** 選択肢のデータの配列 */
-  options: Array<Option<T> | Optgroup<T>>
-  /** フォームの値が変わったときに発火するコールバック関数 */
-  onChangeValue?: (value: T) => void
-  /** フォームの値にエラーがあるかどうか */
-  error?: boolean
+import type { ActualSelectProps } from './client'
+
+type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
   /** コンポーネントの幅 */
   width?: number | string
   /** コンポーネントの大きさ */
@@ -66,7 +46,6 @@ const classNameGenerator = tv({
       'shr-pointer-events-none shr-absolute shr-inset-y-0 shr-inline-flex shr-items-center shr-text-grey',
       'peer-focus-visible:shr-text-black peer-disabled:shr-text-disabled',
     ],
-    blankOptgroup: 'shr-hidden',
   },
   variants: {
     size: {
@@ -87,25 +66,12 @@ const classNameGenerator = tv({
   },
 })
 
-const ActualSelect = <T extends string>(
-  {
-    options,
-    onChange,
-    onChangeValue,
-    error,
-    width,
-    hasBlank,
-    blankLabel,
-    size,
-    className,
-    disabled,
-    required,
-    ...rest
-  }: Props<T>,
+const BaseSelect = <T extends string>(
+  { options, width, hasBlank, blankLabel, size, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
   const classNames = useMemo(() => {
-    const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
+    const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
       size: size || 'M',
     }
@@ -114,7 +80,6 @@ const ActualSelect = <T extends string>(
       wrapper: wrapper({ className }),
       select: select(sizeProps),
       iconWrap: iconWrap(sizeProps),
-      blankOptGroup: blankOptgroup(),
     }
   }, [size, className])
 
@@ -125,40 +90,13 @@ const ActualSelect = <T extends string>(
         width: typeof width === 'number' ? `${width}px` : width,
       }}
     >
-      <select
-        {...rest}
-        ref={ref}
-        // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
-        //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
-        //    - エラーメッセージが表示されない
-        //    - 問題のある入力フィールドまでスクロールしない
-        // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
-        // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
-        required={isIOS ? undefined : required}
-        disabled={disabled}
-        className={classNames.select}
-        aria-invalid={error || undefined}
-        data-smarthr-ui-input="true"
-        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-          onChange?.(e)
-
-          if (onChangeValue) {
-            const selectedOption = options
-              .flatMap((option) => ('value' in option ? [option] : option.options))
-              .find((option) => option.value === e.target.value)
-
-            if (selectedOption) {
-              onChangeValue(selectedOption.value)
-            }
-          }
-        }}
-      >
+      <ActualSelect {...rest} outerRef={ref} className={classNames.select} options={options}>
         <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}
-        <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
-      </select>
+        <NotOmittingLabelsInMobileSafari />
+      </ActualSelect>
       <span className={classNames.iconWrap}>
         <FaAngleDownIcon />
       </span>
@@ -190,9 +128,4 @@ const Option = memo<Props<string>['options'][number]>((option) => {
   )
 })
 
-// Support for not omitting labels in Mobile Safari
-const NotOmittingLabelsInMobileSafari = memo<{ className: string }>(
-  ({ className }) => isMobileSafari && <optgroup className={className} />,
-)
-
-export const Select = genericsForwardRef(ActualSelect)
+export const Select = genericsForwardRef(BaseSelect)
