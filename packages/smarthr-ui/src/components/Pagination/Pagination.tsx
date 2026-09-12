@@ -1,4 +1,4 @@
-import { type ComponentProps, type ElementType, type FC, memo, useMemo } from 'react'
+import { type ComponentProps, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -7,6 +7,8 @@ import { Cluster, Reel } from '../Layout'
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
 import { PaginationItemButton } from './PaginationItemButton'
 import { Wrapper } from './client'
+
+import type { AnchorProps, ButtonProps } from './type'
 
 const classNameGenerator = tv({
   slots: {
@@ -33,7 +35,7 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = {
+type CommonProps = {
   /** 全ページ数 */
   total: number
   /** 現在のページ */
@@ -42,9 +44,8 @@ type BaseProps = {
   padding?: number
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  linkAs?: ElementType
 }
+type BaseProps = (CommonProps & ButtonProps) | (CommonProps & AnchorProps)
 
 type WrapperType = ComponentProps<typeof Wrapper>
 type Props = BaseProps & Omit<WrapperType, keyof BaseProps>
@@ -78,17 +79,13 @@ const ActualPagination: FC<Props> = ({
     }
   }, [withoutNumbers, className])
 
-  // HINT: onClick/hrefTemplateはButtonProps/AnchorPropsの判別可能ユニオンで、
-  // 分割代入した時点で個々のプロパティ型がユニオン展開され、TypeScript上は
-  // 組み合わせの整合性を検証できなくなる。実行時にはPropsとして渡された時点で
-  // 整合した組み合わせしか存在しないため、まとめて一度だけWrapperの型にキャストする
-  const wrapperProps = {
-    onClick,
-    hrefTemplate,
-  } as WrapperType
-
   return (
-    <Wrapper {...rest} {...wrapperProps} className={classNames.wrapper}>
+    <Wrapper
+      {...rest}
+      hrefTemplate={hrefTemplate}
+      className={classNames.wrapper}
+      onDelegateClick={onClick}
+    >
       <ItemButtons
         linkAs={linkAs}
         total={total}
