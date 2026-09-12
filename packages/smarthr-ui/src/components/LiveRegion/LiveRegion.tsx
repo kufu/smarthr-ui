@@ -99,14 +99,14 @@ export const LiveRegion: FC<Props> = ({
     ? {
         Wrapper: VisuallyHiddenText,
         wrapperAs: VisibleContent,
-        Invisible: 'span',
+        Invisible: VisibleContent,
         invisibleAs: undefined,
       }
     : {
         Wrapper: VisibleContent,
         wrapperAs: undefined,
         Invisible: VisuallyHiddenText,
-        invisibleAs: 'span',
+        invisibleAs: VisibleContent,
       }
 
   return (
