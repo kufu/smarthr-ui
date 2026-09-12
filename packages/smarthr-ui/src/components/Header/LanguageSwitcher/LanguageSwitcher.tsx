@@ -9,7 +9,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useAvailableLocales } from '../../../intl'
@@ -27,7 +27,9 @@ export type BaseProps = {
   defaultLocale?: string
   /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
   onLanguageSelect?: (code: string) => void
-} & VariantProps<typeof classNameGenerator>
+  invert?: boolean
+  enableNew?: boolean
+}
 
 type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
