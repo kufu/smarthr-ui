@@ -105,9 +105,8 @@ const MaxLettersTextarea: FC<
   Omit<LocalTextareaProps, 'maxLetters'> & {
     maxLetters: number
   }
-> = ({ maxLetters, error, value, defaultValue, onChange, id, ...rest }) => {
+> = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
   const maxLettersId = useId()
-  const textareaId = id || `${maxLettersId}-textarea`
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
   const [count, setCount] = useState(() => {
@@ -156,7 +155,6 @@ const MaxLettersTextarea: FC<
     <span className="shr-relative">
       <ActualTextarea
         {...rest}
-        id={textareaId}
         value={value}
         defaultValue={defaultValue}
         error={error || countError}
@@ -172,7 +170,6 @@ const MaxLettersTextarea: FC<
       </VisuallyHiddenText>
       <LiveRegion
         id={maxLettersId}
-        htmlFor={textareaId}
         announceDelay={1000}
         skipInitialAnnounce={true}
         className={`smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black ${countError ? 'shr-text-danger' : ''}`}
