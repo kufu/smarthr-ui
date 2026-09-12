@@ -82,14 +82,12 @@ const ActualPagination: FC<Props> = ({
   // 組み合わせの整合性を検証できなくなる。実行時にはPropsとして渡された時点で
   // 整合した組み合わせしか存在しないため、まとめて一度だけWrapperの型にキャストする
   const wrapperProps = {
-    ...rest,
     onClick,
     hrefTemplate,
-    className: classNames.wrapper,
   } as ComponentProps<typeof Wrapper>
 
   return (
-    <Wrapper {...wrapperProps}>
+    <Wrapper {...rest} {...wrapperProps} className={classNames.wrapper}>
       <ItemButtons
         linkAs={linkAs}
         total={total}
