@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, memo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 type BaseProps = {
   /** コンポーネントのタイトル */
@@ -8,7 +8,8 @@ type BaseProps = {
   width?: number | string
   /** コンポーネントの高さ */
   height?: number | string
-} & VariantProps<typeof classNameGenerator>
+  fill?: 'white' | 'brand' | 'black'
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -18,7 +19,7 @@ const classNameGenerator = tv({
       white: 'shr-fill-white',
       brand: 'shr-fill-brand',
       black: 'shr-fill-black',
-    },
+    } satisfies Record<NonNullable<Props['fill']>, string>,
   },
 })
 
