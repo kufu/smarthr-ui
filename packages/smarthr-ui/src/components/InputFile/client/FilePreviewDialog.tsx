@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, memo, useEffect, useState } from 'react'
+import { type FC, memo, useLayoutEffect, useState } from 'react'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { Localizer } from '../../../intl'
@@ -25,17 +25,9 @@ export const FilePreviewDialog: FC<Props> = memo(
     const isOpen = !!file
     const { mobile } = useEnvironment()
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       if (!file) {
-        setBlobUrl((current) => {
-          if (current) {
-            URL.revokeObjectURL(current)
-            return undefined
-          }
-
-          return current
-        })
-
+        setBlobUrl(undefined)
         return
       }
 

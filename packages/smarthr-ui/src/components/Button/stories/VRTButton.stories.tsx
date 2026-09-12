@@ -3,7 +3,7 @@ import { Cluster, Stack } from '../../Layout'
 import { Groupbox } from '../../Panel'
 import { Button } from '../Button'
 
-import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { StoryFn, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 type Variant = ComponentProps<typeof Button>['variant']

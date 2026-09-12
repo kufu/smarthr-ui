@@ -47,6 +47,9 @@ export const Playground: Story = {
     disablePatterns: {
       control: 'boolean',
     },
+    singleTone: {
+      control: 'object',
+    },
   },
 }
 
@@ -67,6 +70,35 @@ export const WithoutPattern: Story = {
   args: {
     data: multiSmall,
     disablePatterns: true,
+  },
+}
+
+export const SingleTone: Story = {
+  name: 'singleTone',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+  },
+}
+
+// 範囲を狭めると濃淡差が小さくなり、系列が多くても色が重複しやすくなる
+export const ToneRange: Story = {
+  name: 'singleTone（範囲を狭める）',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 2 },
+  },
+}
+
+// from を to より大きくすると、第一系列がいちばん濃くなる
+export const DescendingTone: Story = {
+  name: 'singleTone（from > to）',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 5, to: 0 },
   },
 }
 

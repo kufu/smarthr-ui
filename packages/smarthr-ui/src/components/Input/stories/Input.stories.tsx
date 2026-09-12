@@ -6,7 +6,7 @@ import { CurrencyInput } from '../CurrencyInput'
 import { Input, backgroundColor } from '../Input'
 import { SearchInput } from '../SearchInput'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _affixOptions = {
   あり: <FaMagnifyingGlassIcon alt="検索" />,

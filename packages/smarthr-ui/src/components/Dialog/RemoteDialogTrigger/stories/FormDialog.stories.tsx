@@ -4,7 +4,7 @@ import { Button } from '../../../Button'
 import { FormDialog } from '../FormDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /** props は [FormDialog](./?path=/docs/dialog（ダイアログ）-dialog-formdialog--docs) を参照してください。 */
 export default {

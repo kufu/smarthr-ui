@@ -1,7 +1,7 @@
 import { FaGearIcon } from '../../Icon'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { FC, ReactNode } from 'react'
 
 const _iconOptions = {

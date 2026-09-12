@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Chip } from '../Chip'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Chip/VRT',

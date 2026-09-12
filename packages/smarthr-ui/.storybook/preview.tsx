@@ -36,15 +36,13 @@ if (isProduction) {
 const preview: Preview = {
   parameters: {
     options: {
-      isFullscreen: false,
-      isToolshown: true,
       storySort: {
         method: 'alphabetical',
         order: ['*', 'Charts'],
       },
     },
     viewport: {
-      viewports: {
+      options: {
         ...INITIAL_VIEWPORTS,
         vrtMobile: {
           name: 'VRT Mobile',

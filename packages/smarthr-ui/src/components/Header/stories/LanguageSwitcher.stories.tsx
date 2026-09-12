@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { localeMap } from '../../../intl'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Header/LanguageSwitcher',
