@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.7.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.1...smarthr-ui-v99.7.0) (2026-09-12)
+
+
+### Features
+
+* **useLayoutEffectRef:** useMergeRefs向けの安定したrefを作るhookを追加しFormControlへ適用する ([#7033](https://github.com/kufu/smarthr-ui/issues/7033)) ([1f6665f](https://github.com/kufu/smarthr-ui/commit/1f6665f3a39e93bae29c01897b8dd87db363d14d))
+
+
+### Bug Fixes
+
+* **FormGroup:** innerMarginの型をPositiveGapに絞る ([#7055](https://github.com/kufu/smarthr-ui/issues/7055)) ([c403220](https://github.com/kufu/smarthr-ui/commit/c403220b9433abd62a74d9e85b33fbf81d66c817))
+
 ## [99.6.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.0...smarthr-ui-v99.6.1) (2026-09-10)
 
 
