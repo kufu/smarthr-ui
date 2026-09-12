@@ -5,17 +5,18 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Scroller } from '../../Scroller'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { PositiveGap } from '../../../types'
 
-type Props = VariantProps<typeof classNameGenerator> &
-  PropsWithChildren<{
-    as?: string | ComponentType<any>
-  }> &
+type Props = PropsWithChildren<{
+  as?: string | ComponentType<any>
+  gap?: PositiveGap
+  padding?: PositiveGap
+}> &
   ComponentPropsWithRef<'div'>
 
 const classNameGenerator = tv({
@@ -52,7 +53,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-3',
       XXL: 'shr-gap-3.5',
       X3L: 'shr-gap-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<NonNullable<Props['gap']>, string>,
     padding: {
       0: 'shr-p-0',
       0.25: 'shr-p-0.25',
@@ -76,7 +77,7 @@ const classNameGenerator = tv({
       XL: 'shr-p-3',
       XXL: 'shr-p-3.5',
       X3L: 'shr-p-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<NonNullable<Props['padding']>, string>,
   },
 })
 
