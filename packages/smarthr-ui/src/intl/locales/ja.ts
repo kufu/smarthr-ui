@@ -134,4 +134,5 @@ export const locale = {
   'smarthr-ui/UnexpectedErrorScreen/environmentLink': 'SmartHRの動作環境',
   'smarthr-ui/UnexpectedErrorScreen/cookieCacheLink': 'Q. ブラウザのCookieとキャッシュを削除するには？',
   'smarthr-ui/UnexpectedErrorScreen/errorOccursInformation': 'エラー発生時に教えていただきたい内容',
+  'smarthr-ui/Drawer/closeButtonIconAlt': '閉じる',
 } as const

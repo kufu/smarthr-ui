@@ -130,5 +130,6 @@
   "smarthr-ui/UnexpectedErrorScreen/maintenanceLink": "メンテナンス・エラーの　じょうほう",
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "SmartHRが　上手く動ける　かんきょう",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. ブラウザの　Cookieと　キャッシュを　消す方法？",
-  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "エラーが出る時に　おしえてもらいたい内容"
+  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "エラーが出る時に　おしえてもらいたい内容",
+  "smarthr-ui/Drawer/closeButtonIconAlt": ""
 }

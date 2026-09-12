@@ -130,5 +130,6 @@
   "smarthr-ui/UnexpectedErrorScreen/maintenanceLink": "維護與故障資訊",
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "SmartHR的系統需求環境",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. 如何刪除瀏覽器的Cookie和快取？",
-  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "希望您能告訴我們發生錯誤時的內容"
+  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "希望您能告訴我們發生錯誤時的內容",
+  "smarthr-ui/Drawer/closeButtonIconAlt": ""
 }

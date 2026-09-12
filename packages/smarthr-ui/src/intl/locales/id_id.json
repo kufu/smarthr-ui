@@ -120,5 +120,6 @@
   "smarthr-ui/UnexpectedErrorScreen/maintenanceLink": "Informasi pemeliharaan dan gangguan",
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "Spesifikasi sistem SmartHR",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. Bagaimana cara menghapus cookie dan cache browser?",
-  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "Informasi yang ingin disampaikan saat terjadi kesalahan"
+  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "Informasi yang ingin disampaikan saat terjadi kesalahan",
+  "smarthr-ui/Drawer/closeButtonIconAlt": ""
 }

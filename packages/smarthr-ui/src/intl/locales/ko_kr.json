@@ -130,5 +130,6 @@
   "smarthr-ui/UnexpectedErrorScreen/maintenanceLink": "유지보수 및 장애 정보",
   "smarthr-ui/UnexpectedErrorScreen/environmentLink": "SmartHR의 동작 환경",
   "smarthr-ui/UnexpectedErrorScreen/cookieCacheLink": "Q. 브라우저의 쿠키와 캐시를 삭제하려면?",
-  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "오류 발생 시 알려주셨으면 하는 내용"
+  "smarthr-ui/UnexpectedErrorScreen/errorOccursInformation": "오류 발생 시 알려주셨으면 하는 내용",
+  "smarthr-ui/Drawer/closeButtonIconAlt": ""
 }
