@@ -46,7 +46,6 @@ const classNameGenerator = tv({
       'shr-pointer-events-none shr-absolute shr-inset-y-0 shr-inline-flex shr-items-center shr-text-grey',
       'peer-focus-visible:shr-text-black peer-disabled:shr-text-disabled',
     ],
-    blankOptgroup: 'shr-hidden',
   },
   variants: {
     size: {
@@ -72,7 +71,7 @@ const BaseSelect = <T extends string>(
   ref: ForwardedRef<HTMLSelectElement>,
 ) => {
   const classNames = useMemo(() => {
-    const { wrapper, select, iconWrap, blankOptgroup } = classNameGenerator()
+    const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
       size: size || 'M',
     }
@@ -81,7 +80,6 @@ const BaseSelect = <T extends string>(
       wrapper: wrapper({ className }),
       select: select(sizeProps),
       iconWrap: iconWrap(sizeProps),
-      blankOptGroup: blankOptgroup(),
     }
   }, [size, className])
 
@@ -97,7 +95,7 @@ const BaseSelect = <T extends string>(
         {options.map((option, index) => (
           <Option {...option} key={index} />
         ))}
-        <NotOmittingLabelsInMobileSafari className={classNames.blankOptGroup} />
+        <NotOmittingLabelsInMobileSafari />
       </ActualSelect>
       <span className={classNames.iconWrap}>
         <FaAngleDownIcon />
