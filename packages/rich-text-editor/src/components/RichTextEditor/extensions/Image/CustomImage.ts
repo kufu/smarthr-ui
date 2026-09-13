@@ -2,7 +2,19 @@ import { ResizableNodeView, getRenderedAttributes } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
 import type { NodeViewRendererProps, ResizableNodeViewDirection } from '@tiptap/core'
+import type { ImageOptions } from '@tiptap/extension-image'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
+
+type CustomImageOptions = ImageOptions & {
+  /**
+   * リサイズ操作を許可するか。NodeView を作る時点で評価する。
+   *
+   * 標準の resize.enabled は生成時に決め打ちになるため、features から image を
+   * 外しても NodeView を作り直すまでハンドルが残る。createNodeViews で作り直したときに
+   * 最新の値を読めるよう関数で受ける。
+   */
+  isResizable: () => boolean
+}
 
 const toPositiveNumber = (value: unknown): number | null =>
   typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : null
@@ -55,9 +67,21 @@ const createResizeHandle = (direction: ResizableNodeViewDirection): HTMLElement 
  * onResize / onCommit / options は標準実装と同一。読み込み完了まで隠す挙動も踏襲するが、
  * 標準に無い onerror を足して失敗時に操作できる状態へ戻す。
  */
-export const CustomImage = Image.extend({
+export const CustomImage = Image.extend<CustomImageOptions>({
+  addOptions() {
+    return {
+      ...(this.parent?.() as ImageOptions),
+      isResizable: () => true,
+    }
+  },
+
   addNodeView() {
-    if (!this.options.resize || !this.options.resize.enabled || typeof document === 'undefined') {
+    if (
+      !this.options.resize ||
+      !this.options.resize.enabled ||
+      !this.options.isResizable() ||
+      typeof document === 'undefined'
+    ) {
       return null
     }
 

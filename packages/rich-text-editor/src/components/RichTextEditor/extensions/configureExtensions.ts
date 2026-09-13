@@ -84,6 +84,8 @@ export const configureExtensions = ({
     restrict(
       CustomImage.configure({
         allowBase64: false,
+        // ドラッグリサイズは NodeView 側の機能なので、操作を剥がすだけでは止まらない
+        isResizable: () => getFeatures().includes('image'),
         resize: {
           enabled: true,
           alwaysPreserveAspectRatio: true,

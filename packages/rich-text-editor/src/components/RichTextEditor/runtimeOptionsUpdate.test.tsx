@@ -4,6 +4,7 @@ import { IntlProvider } from 'smarthr-ui'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
+import { reconfigureEditorOperations } from './extensions/reconfigureEditorOperations'
 
 import type { ImageUploadResult, RichTextEditorController, RichTextFeature } from './types'
 import type { ReactNode } from 'react'
@@ -18,6 +19,20 @@ beforeAll(() => {
     }
   }
 })
+
+// 再構成が走った回数を数える。実体はそのまま動かす
+vi.mock('./extensions/reconfigureEditorOperations', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>
+
+  return {
+    ...actual,
+    reconfigureEditorOperations: vi.fn(
+      actual.reconfigureEditorOperations as typeof reconfigureEditorOperations,
+    ),
+  }
+})
+
+const reconfigureSpy = vi.mocked(reconfigureEditorOperations)
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
@@ -240,5 +255,78 @@ describe('マウント後の props 更新', () => {
     await flush()
     pressBold()
     expect(hasBold()).toBe(true)
+  })
+
+  it('同じ内容の新しい配列では再構成しない', async () => {
+    const Host = () => {
+      const [, setTick] = useState(0)
+
+      return (
+        <>
+          <button type="button" onClick={() => setTick((n) => n + 1)}>
+            再描画
+          </button>
+          {/* 毎レンダー別の配列になるが内容は同じ */}
+          <RichTextEditor features={['bold', 'italic']} />
+        </>
+      )
+    }
+
+    render(<Host />, { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+
+    reconfigureSpy.mockClear()
+    fireEvent.click(screen.getByRole('button', { name: '再描画' }))
+    await flush()
+
+    expect(reconfigureSpy).not.toHaveBeenCalled()
+  })
+
+  it('callback の変更だけでは再構成しない', async () => {
+    const Host = () => {
+      const [n, setN] = useState(0)
+
+      return (
+        <>
+          <button type="button" onClick={() => setN((v) => v + 1)}>
+            差し替え
+          </button>
+          <RichTextEditor features={['image']} onImageUpload={async () => ({ src: `${n}.png` })} />
+        </>
+      )
+    }
+
+    render(<Host />, { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+
+    reconfigureSpy.mockClear()
+    fireEvent.click(screen.getByRole('button', { name: '差し替え' }))
+    await flush()
+
+    expect(reconfigureSpy).not.toHaveBeenCalled()
+  })
+
+  it('features が実際に変わったときは再構成する', async () => {
+    const Host = () => {
+      const [features, setFeatures] = useState<readonly RichTextFeature[]>(['bold'])
+
+      return (
+        <>
+          <button type="button" onClick={() => setFeatures(['bold', 'italic'])}>
+            追加
+          </button>
+          <RichTextEditor features={features} />
+        </>
+      )
+    }
+
+    render(<Host />, { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+
+    reconfigureSpy.mockClear()
+    fireEvent.click(screen.getByRole('button', { name: '追加' }))
+    await flush()
+
+    expect(reconfigureSpy).toHaveBeenCalledTimes(1)
   })
 })
