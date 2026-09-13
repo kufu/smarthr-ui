@@ -2,13 +2,13 @@
 
 import { type FC, type ForwardedRef, useCallback, useId } from 'react'
 
-import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
-import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
-import { useLatest } from '../../../../hooks/useLatest'
-import { visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
-import { ActualHeading } from '../ActualHeading'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../hooks/useLatest'
+import { visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
+import { ActualHeading } from '../PageHeading'
 
-import type { TextProps } from '../../../Text'
+import type { TextProps } from '../../Text'
 import type { Props } from '../PageHeading'
 
 export const AutoPageTitleHeading: FC<

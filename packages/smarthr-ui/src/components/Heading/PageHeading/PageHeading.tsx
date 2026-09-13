@@ -1,9 +1,9 @@
 import { type PropsWithChildren, forwardRef, memo } from 'react'
 
 import { IS_NEXT_JS } from '../../../libs/nextjs'
+import { AutoPageTitleHeading } from '../client'
 
 import { ActualHeading } from './ActualHeading'
-import { AutoPageTitleHeading } from './client'
 
 import type { TextProps } from '../../Text'
 import type { ElementProps } from '../client'
