@@ -20,6 +20,8 @@ const FEATURE_BY_NAME: Readonly<Record<string, RichTextFeature>> = {
   blockquote: 'blockquote',
   horizontalRule: 'horizontalRule',
   link: 'link',
+  // schema を持たない操作専用の extension。Mod-K のショートカットを features で絞る
+  linkShortcut: 'link',
   heading: 'heading',
   image: 'image',
   youtube: 'youtube',
@@ -32,22 +34,6 @@ const FEATURE_BY_NAME: Readonly<Record<string, RichTextFeature>> = {
   color: 'color',
   backgroundColor: 'backgroundColor',
   fontSize: 'fontSize',
-}
-
-/**
- * 「schemaには載せるが操作はさせない」ための上書き。
- *
- * addProseMirrorPlugins も外す必要がある。link の autolink は入力ルールではなく
- * appendTransaction を持つプラグインなので、これを残すと features に link が
- * 無いのに URL 入力でリンクが付いてしまう。table の columnResizing も同様に
- * mousemove ハンドラを張ってしまう。
- * 描画は addNodeView / renderHTML 側なので、プラグインを外しても表示は保たれる。
- */
-const STRIPPED_OPERATIONS = {
-  addKeyboardShortcuts: () => ({}),
-  addInputRules: () => [],
-  addPasteRules: () => [],
-  addProseMirrorPlugins: () => [],
 }
 
 /** 箇条書きと番号付きリストの共有部品。どちらのfeatureも無いときだけ制限する */
@@ -70,15 +56,37 @@ export const createTypeAllowChecker =
     return feature === undefined || features.includes(feature)
   }
 
-export const getRestrictedExtensionNames = (features: readonly RichTextFeature[]): Set<string> => {
-  const isAllowed = createTypeAllowChecker(features)
-
-  return new Set(
-    [...Object.keys(FEATURE_BY_NAME), ...SHARED_LIST_NAMES].filter((name) => !isAllowed(name)),
-  )
-}
-
+/**
+ * 「schemaには載せるが操作はさせない」ための上書き。
+ *
+ * 許可されているかの判定は呼ばれた時点で行う。生成時に決め打つと、マウント後に
+ * features が変わっても操作の可否が変わらない。
+ *
+ * addProseMirrorPlugins も外す必要がある。link の autolink は入力ルールではなく
+ * appendTransaction を持つプラグインなので、これを残すと features に link が
+ * 無いのに URL 入力でリンクが付いてしまう。table の columnResizing も同様に
+ * mousemove ハンドラを張ってしまう。
+ * 描画は addNodeView / renderHTML 側なので、プラグインを外しても表示は保たれる。
+ *
+ * this を失うため arrow 関数では書けない。this.parent は extension 本来の実装を指す。
+ */
 export const createOperationRestrictor =
-  (restrictedNames: ReadonlySet<string>) =>
-  (extension: AnyExtension): AnyExtension =>
-    restrictedNames.has(extension.name) ? extension.extend(STRIPPED_OPERATIONS) : extension
+  (getFeatures: () => readonly RichTextFeature[]) =>
+  (extension: AnyExtension): AnyExtension => {
+    const isAllowed = () => createTypeAllowChecker(getFeatures())(extension.name)
+
+    return extension.extend({
+      addKeyboardShortcuts() {
+        return isAllowed() ? (this.parent?.() ?? {}) : {}
+      },
+      addInputRules() {
+        return isAllowed() ? (this.parent?.() ?? []) : []
+      },
+      addPasteRules() {
+        return isAllowed() ? (this.parent?.() ?? []) : []
+      },
+      addProseMirrorPlugins() {
+        return isAllowed() ? (this.parent?.() ?? []) : []
+      },
+    })
+  }

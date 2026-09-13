@@ -1,4 +1,5 @@
-import type { ImageUploadResult } from '../types'
+import type { HeadingLevel } from './configureHeading'
+import type { ImageUploadResult, RichTextFeature } from '../types'
 
 /**
  * マウント後に変わりうる設定。
@@ -7,6 +8,10 @@ import type { ImageUploadResult } from '../types'
  * 変更が反映されない。extension 側は実行時に getter を呼んで最新値を読む。
  */
 export type RichTextRuntimeOptions = {
+  /** 新しく適用できる書式。schema に載せる書式とは別 */
+  features?: readonly RichTextFeature[]
+  /** 新しく適用できる見出しレベル。schema に載せるレベルとは別 */
+  allowedHeadingLevels?: readonly HeadingLevel[]
   placeholder?: string
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   onImageUploadError?: (error: unknown, file: File) => void

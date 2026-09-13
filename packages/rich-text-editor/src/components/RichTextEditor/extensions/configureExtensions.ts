@@ -23,7 +23,7 @@ import {
   createHeadingOperationLimiter,
 } from './configureHeading'
 import { patchListItemShiftTab } from './listItemShiftTab'
-import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
+import { createOperationRestrictor } from './restrictOperations'
 import { NO_RUNTIME_OPTIONS } from './runtimeOptions'
 import { YOUTUBE_EMBED_OPTIONS } from './youtubeOptions'
 
@@ -32,6 +32,7 @@ import type { RichTextFeature } from '../types'
 import type { AnyExtension } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
+  /** 変化しない前提の設定。動的に変える場合は getRuntimeOptions を使う */
   features?: readonly RichTextFeature[]
   /** 新しく適用できる見出しレベル。schema に載せるレベルとは別 */
   allowedHeadingLevels?: readonly HeadingLevel[]
@@ -43,19 +44,25 @@ type ConfigureExtensionsOptions = {
 }
 
 export const configureExtensions = ({
-  features = [],
-  allowedHeadingLevels = SUPPORTED_HEADING_LEVELS,
-  getRuntimeOptions = NO_RUNTIME_OPTIONS,
-}: ConfigureExtensionsOptions): AnyExtension[] => {
-  const has = (f: RichTextFeature) => features.includes(f)
+  features,
+  allowedHeadingLevels,
+  getRuntimeOptions,
+}: ConfigureExtensionsOptions = {}): AnyExtension[] => {
+  const getOptions: GetRichTextRuntimeOptions =
+    getRuntimeOptions ??
+    (features === undefined && allowedHeadingLevels === undefined
+      ? NO_RUNTIME_OPTIONS
+      : () => ({ features, allowedHeadingLevels }))
+  const getFeatures = () => getOptions().features ?? []
+  const getAllowedHeadingLevels = () =>
+    getOptions().allowedHeadingLevels ?? SUPPORTED_HEADING_LEVELS
 
   // schemaは常に全書式を載せる。featuresに無い書式が入力に含まれていても失わないため。
   // Tiptapは未知のmark/nodeを含むJSONを受け取るとドキュメント全体を空にするので、
   // featuresでschemaを削ると既存データが消える。
   // featuresは「新しく適用できる操作」の制限として、操作だけを剥がして表現する。
-  const restrictedNames = getRestrictedExtensionNames(features)
-  const restrict = createOperationRestrictor(restrictedNames)
-  const limitHeading = createHeadingOperationLimiter(allowedHeadingLevels)
+  const restrict = createOperationRestrictor(getFeatures)
+  const limitHeading = createHeadingOperationLimiter(getAllowedHeadingLevels)
 
   const extensions: AnyExtension[] = [
     StarterKit.configure({
@@ -77,56 +84,43 @@ export const configureExtensions = ({
     restrict(
       CustomImage.configure({
         allowBase64: false,
-        // featuresにimageが無いときはドラッグリサイズもさせない（NodeView側の機能なので
-        // STRIPPED_OPERATIONSでは外れない）
-        resize: has('image')
-          ? {
-              enabled: true,
-              alwaysPreserveAspectRatio: true,
-              minWidth: 100,
-              minHeight: 100,
-            }
-          : { enabled: false },
+        resize: {
+          enabled: true,
+          alwaysPreserveAspectRatio: true,
+          minWidth: 100,
+          minHeight: 100,
+        },
       }),
     ),
-  ]
-
-  if (has('link')) {
-    extensions.push(LinkShortcut)
-  }
-
-  if (has('image')) {
+    // features に無い間も登録しておく。後から足せないため、操作の可否は実行時に判定する。
+    restrict(LinkShortcut),
     // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）
-    extensions.push(
-      Extension.create({
-        name: 'imageUploadPlaceholder',
-        addProseMirrorPlugins() {
-          return [imageUploadPlaceholderPlugin()]
-        },
-      }),
-      // onImageUpload の有無で登録を分けない。未指定から指定へ変わったときに
-      // extension を足し直せないため、受け取るかどうかは実行時に判定する。
-      // allowedMimeTypes は渡さない。FileHandler の判定が完全一致で `image/*` を通せず、
-      // ファイル選択ダイアログの accept 属性と挙動がずれるため、フィルタは自前で行う。
-      // onPaste は使わない（HTMLを含むクリップボードで二重挿入になる）。
-      FileHandler.configure({
-        onDrop: (editor, files, pos) => {
-          // 1回のドロップで使う関数はここで確定させる
-          const { onImageUpload, onImageUploadError, acceptedMimeTypes } = getRuntimeOptions()
+    Extension.create({
+      name: 'imageUploadPlaceholder',
+      addProseMirrorPlugins() {
+        return [imageUploadPlaceholderPlugin()]
+      },
+    }),
+    // allowedMimeTypes は渡さない。FileHandler の判定が完全一致で `image/*` を通せず、
+    // ファイル選択ダイアログの accept 属性と挙動がずれるため、フィルタは自前で行う。
+    // onPaste は使わない（HTMLを含むクリップボードで二重挿入になる）。
+    FileHandler.configure({
+      onDrop: (editor, files, pos) => {
+        // 1回のドロップで使う関数はここで確定させる
+        const { onImageUpload, onImageUploadError, acceptedMimeTypes } = getOptions()
 
-          if (!onImageUpload) return
+        if (!onImageUpload || !getFeatures().includes('image')) return
 
-          const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
-          const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
+        const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
+        const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
 
-          if (file) {
-            uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
-          }
-        },
-      }),
-      createImagePasteExtension({ getRuntimeOptions }),
-    )
-  }
+        if (file) {
+          uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
+        }
+      },
+    }),
+    createImagePasteExtension({ getRuntimeOptions: getOptions }),
+  ]
 
   extensions.push(
     restrict(Youtube.configure(YOUTUBE_EMBED_OPTIONS)),
@@ -149,7 +143,7 @@ export const configureExtensions = ({
   extensions.push(
     // 文字列が空でも登録しておく。未指定から指定へ変わったときに extension を足し直せない。
     Placeholder.configure({
-      placeholder: () => getRuntimeOptions().placeholder ?? '',
+      placeholder: () => getOptions().placeholder ?? '',
     }),
   )
 

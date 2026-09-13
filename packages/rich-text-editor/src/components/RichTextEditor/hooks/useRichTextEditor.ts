@@ -1,12 +1,16 @@
 'use client'
 
 import { useEditor } from '@tiptap/react'
-import { type RefObject, useEffect, useMemo } from 'react'
+import { type RefObject, useEffect, useMemo, useRef } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createPasteFilter } from '../extensions/pasteFilter'
+import {
+  reconfigureEditorOperations,
+  rememberManagedPlugins,
+} from '../extensions/reconfigureEditorOperations'
 import { createChangeMeta } from '../serializers/createChangeMeta'
 
 import type { ImageUploadResult, RichTextFeature, RichTextJSON } from '../types'
@@ -49,13 +53,22 @@ export const useRichTextEditor = ({
   const featuresKey = features.join(',')
   const headingLevelsKey = headingLevels?.join(',')
 
-  const latest = useLatest({ placeholder, onImageUpload, onImageUploadError, acceptedMimeTypes })
+  const latest = useLatest({
+    features,
+    headingLevels,
+    placeholder,
+    onImageUpload,
+    onImageUploadError,
+    acceptedMimeTypes,
+  })
 
-  // callback や文字列の変更で extension を作り直さない。作り直しても useEditor は
-  // ExtensionManager を組み直さず、依存配列へ入れれば Editor ごと作り直して
-  // 本文と Undo 履歴を失う。extension 側には getter を渡して実行時に読ませる。
+  // props の変更で extension を作り直さない。作り直しても useEditor は ExtensionManager を
+  // 組み直さず、依存配列へ入れれば Editor ごと作り直して本文と Undo 履歴を失う。
+  // extension 側には getter を渡して実行時に読ませる。
   const getRuntimeOptions = useMemo(
     () => () => ({
+      features: latest.features,
+      allowedHeadingLevels: latest.headingLevels,
       placeholder: latest.placeholder,
       onImageUpload: latest.onImageUpload,
       onImageUploadError: latest.onImageUploadError,
@@ -64,16 +77,7 @@ export const useRichTextEditor = ({
     [latest],
   )
 
-  const extensions = useMemo(
-    () =>
-      configureExtensions({
-        features,
-        allowedHeadingLevels: headingLevels,
-        getRuntimeOptions,
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [featuresKey, headingLevelsKey, getRuntimeOptions],
-  )
+  const extensions = useMemo(() => configureExtensions({ getRuntimeOptions }), [getRuntimeOptions])
 
   // schemaは全書式を載せているのでペーストはschemaで止まらない。
   // featuresの許可リストで絞るのはこのフィルタの責務。
@@ -147,6 +151,35 @@ export const useRichTextEditor = ({
       editor.setEditable(editable, false)
     }
   }, [editor, readOnly, disabled])
+
+  // features / 見出しの許可レベルの同期
+  const reconfigured = useRef(false)
+  useEffect(() => {
+    if (!editor || editor.isDestroyed) return
+
+    if (!reconfigured.current) {
+      // 生成直後の一覧を管理対象として覚えるだけにする。組み直す必要はない
+      reconfigured.current = true
+      rememberManagedPlugins(editor)
+
+      return
+    }
+
+    if (!editor.view.composing) {
+      reconfigureEditorOperations(editor)
+
+      return
+    }
+
+    // 変換中に plugin を組み直すと入力中の文字が壊れる。確定まで待つ
+    const handleCompositionEnd = () => reconfigureEditorOperations(editor)
+
+    editor.view.dom.addEventListener('compositionend', handleCompositionEnd, { once: true })
+
+    return () => {
+      editor.view.dom.removeEventListener('compositionend', handleCompositionEnd)
+    }
+  }, [editor, featuresKey, headingLevelsKey])
 
   // placeholder の同期
   useEffect(() => {

@@ -25,6 +25,16 @@ const pressMod = (editor: Editor, key: string) => {
   )
 }
 
+/** 入力ルールは handleTextInput 経由でしか発火しないため、文字入力を直接流す */
+const typeText = (editor: Editor, text: string) => {
+  const { from, to } = editor.state.selection
+
+  editor.view.someProp('handleTextInput', (handler) =>
+    // 第5引数は「入力ルールが何も処理しなかった場合の既定の transaction」を作る関数
+    handler(editor.view, from, to, text, () => editor.state.tr.insertText(text, from, to)),
+  )
+}
+
 const RICH_CONTENT = {
   type: 'doc',
   content: [
@@ -122,13 +132,16 @@ describe('configureExtensions', () => {
       editor.destroy()
     })
 
-    it('features 外の入力ルールは登録されない', () => {
-      const editor = createEditor(['bold'])
-      const heading = editor.extensionManager.extensions.find((e) => e.name === 'heading')!
-      const bold = editor.extensionManager.extensions.find((e) => e.name === 'bold')!
+    it.each([
+      ['features に heading があるとき見出しになる', ['heading'] as const, true],
+      ['features に heading が無いとき見出しにならない', ['bold'] as const, false],
+    ])('%s', (_name, features, applied) => {
+      const editor = createEditor(features)
 
-      expect((heading.config.addInputRules as () => unknown[])()).toHaveLength(0)
-      expect((bold.config.addInputRules as () => unknown[])().length).toBeGreaterThan(0)
+      editor.commands.insertContent('#')
+      typeText(editor, ' ')
+
+      expect(JSON.stringify(editor.getJSON()).includes('"heading"')).toBe(applied)
       editor.destroy()
     })
 
@@ -197,10 +210,17 @@ describe('configureExtensions', () => {
   })
 
   describe('リンク挿入のショートカット', () => {
-    it('features に link が無いとき linkShortcut 拡張は登録されない', () => {
+    // 拡張自体は常に登録する。features から外れている間は操作だけを効かなくする
+    it('features に link が無いとき Mod-K でハンドラが呼ばれない', () => {
       const editor = createEditor(['bold'])
+      let called = 0
+      editor.storage.linkShortcut!.openLinkPopover = () => {
+        called++
+      }
 
-      expect(editor.storage.linkShortcut).toBeUndefined()
+      pressMod(editor, 'k')
+
+      expect(called).toBe(0)
       editor.destroy()
     })
 

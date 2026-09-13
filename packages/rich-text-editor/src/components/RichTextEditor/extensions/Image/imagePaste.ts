@@ -39,9 +39,10 @@ export const createImagePasteExtension = ({ getRuntimeOptions }: Options): Exten
             handlePaste: (_view, event) => {
               // 1回の貼り付けで使う関数はここで確定させる。アップロード中に差し替えられても
               // 同じジョブの成功と失敗で別の通知先へ分かれないようにする。
-              const { onImageUpload, onImageUploadError, acceptedMimeTypes } = getRuntimeOptions()
+              const { features, onImageUpload, onImageUploadError, acceptedMimeTypes } =
+                getRuntimeOptions()
 
-              if (!onImageUpload) return false
+              if (!onImageUpload || !features?.includes('image')) return false
 
               const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
               const files = Array.from(event.clipboardData?.files ?? [])

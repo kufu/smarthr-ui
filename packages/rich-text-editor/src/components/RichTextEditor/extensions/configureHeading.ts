@@ -20,11 +20,11 @@ type HeadingCommand = RawCommands['setHeading']
  * ショートカットと入力ルールを許可レベルから組み直す。
  */
 export const createHeadingOperationLimiter =
-  (allowedLevels: readonly HeadingLevel[]) =>
+  (getAllowedLevels: () => readonly HeadingLevel[]) =>
   (extension: AnyExtension): AnyExtension => {
     if (extension.name !== 'heading') return extension
 
-    const isAllowed = (level: unknown) => allowedLevels.includes(level as HeadingLevel)
+    const isAllowed = (level: unknown) => getAllowedLevels().includes(level as HeadingLevel)
 
     // AnyExtension のままだと this.type が null を含む型になるため Node として扱う
     return (extension as Node).extend({
@@ -49,7 +49,7 @@ export const createHeadingOperationLimiter =
       addKeyboardShortcuts() {
         const { editor } = this
 
-        return allowedLevels.reduce(
+        return getAllowedLevels().reduce(
           (shortcuts, level) => ({
             ...shortcuts,
             [`Mod-Alt-${level}`]: () => editor.commands.toggleHeading({ level }),
@@ -58,6 +58,8 @@ export const createHeadingOperationLimiter =
         )
       },
       addInputRules() {
+        const allowedLevels = getAllowedLevels()
+
         if (allowedLevels.length === 0) return []
 
         const minLevel = Math.min(...allowedLevels)

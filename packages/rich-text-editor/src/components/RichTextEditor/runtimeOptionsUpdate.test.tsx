@@ -1,11 +1,11 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 import { IntlProvider } from 'smarthr-ui'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
 
-import type { ImageUploadResult } from './types'
+import type { ImageUploadResult, RichTextEditorController, RichTextFeature } from './types'
 import type { ReactNode } from 'react'
 
 // jsdom には ResizeObserver が無く、挿入された画像の NodeView がマウント時に参照する。
@@ -187,5 +187,58 @@ describe('マウント後の props 更新', () => {
     // 同じ DOM ノードのままであれば Editor は作り直されていない
     expect(getEditorDom()).toBe(editorDom)
     expect(editorDom).toHaveTextContent('入力した本文')
+  })
+
+  it('features の変更がショートカットの可否へ反映される', async () => {
+    const ref = createRef<RichTextEditorController>()
+
+    const Host = () => {
+      const [features, setFeatures] = useState<readonly RichTextFeature[]>(['bold'])
+
+      return (
+        <>
+          <button type="button" onClick={() => setFeatures([])}>
+            外す
+          </button>
+          <button type="button" onClick={() => setFeatures(['bold'])}>
+            戻す
+          </button>
+          <RichTextEditor
+            ref={ref}
+            defaultValue={{
+              type: 'doc',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'あいう' }] }],
+            }}
+            features={features}
+          />
+        </>
+      )
+    }
+
+    render(<Host />, { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+
+    // jsdom では ctrlKey が Mod として解釈される
+    const pressBold = () => {
+      const dom = getEditorDom()
+      fireEvent.keyDown(dom, { key: 'a', ctrlKey: true })
+      fireEvent.keyDown(dom, { key: 'b', ctrlKey: true })
+    }
+    const hasBold = () => JSON.stringify(ref.current?.getJSON()).includes('"type":"bold"')
+
+    pressBold()
+    expect(hasBold()).toBe(true)
+    pressBold()
+    expect(hasBold()).toBe(false)
+
+    fireEvent.click(screen.getByRole('button', { name: '外す' }))
+    await flush()
+    pressBold()
+    expect(hasBold()).toBe(false)
+
+    fireEvent.click(screen.getByRole('button', { name: '戻す' }))
+    await flush()
+    pressBold()
+    expect(hasBold()).toBe(true)
   })
 })
