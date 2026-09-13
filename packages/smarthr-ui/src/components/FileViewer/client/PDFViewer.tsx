@@ -2,8 +2,8 @@
 
 import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
-import { Scroller } from '../Scroller'
+import { useLatest } from '../../../hooks/useLatest'
+import { Scroller } from '../../Scroller'
 
 import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
