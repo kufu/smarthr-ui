@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { IntlProvider } from '../../intl'
+import { IntlProvider } from '../../../intl'
 
 import { DropZone } from './DropZone'
 

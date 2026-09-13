@@ -13,11 +13,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { FaFolderOpenIcon } from '../Icon'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { FaFolderOpenIcon } from '../../Icon'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 const classNameGenerator = tv({
   slots: {
