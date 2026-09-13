@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "@smarthr/wareki": "^1.3.1",
-    "dayjs": "^1.11.18",
+    "dayjs": "^1.11.23",
     "decimal.js": "^10.6.0",
     "intl-messageformat": "^11.2.14",
     "lodash.merge": "^4.6.2",
