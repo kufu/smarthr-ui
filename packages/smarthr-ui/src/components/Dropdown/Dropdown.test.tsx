@@ -9,6 +9,14 @@ import { Dropdown } from './Dropdown'
 import { DropdownContent } from './DropdownContent'
 import { DropdownTrigger } from './DropdownTrigger'
 
+// DropdownContentInner は requestAnimationFrame 経由でフォーカスを当てる
+const waitForAnimationFrame = () =>
+  act(async () => {
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
+  })
+
 describe('Dropdown', () => {
   const template = (
     <Dropdown>
@@ -37,6 +45,7 @@ describe('Dropdown', () => {
     render(template)
 
     act(() => screen.getByRole('button', { name: 'Trigger' }).click())
+    await waitForAnimationFrame()
 
     expect(screen.getByRole('button', { name: 'Button1' })).not.toHaveFocus()
     await userEvent.tab()
@@ -62,6 +71,7 @@ describe('Dropdown', () => {
   it('ドロップダウン展開後にShift+Tabでトリガーにフォーカスが戻るとドロップダウンが閉じること', async () => {
     render(template)
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    await waitForAnimationFrame()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     await userEvent.tab()
@@ -76,6 +86,7 @@ describe('Dropdown', () => {
     render(template)
 
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    await waitForAnimationFrame()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     await userEvent.tab()

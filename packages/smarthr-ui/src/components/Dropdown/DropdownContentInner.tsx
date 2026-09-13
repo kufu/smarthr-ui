@@ -14,6 +14,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
@@ -96,10 +97,14 @@ export const DropdownContentInner: FC<Props> = ({
   const { triggerElementRef, rootTriggerRef, handleDelegateClickCloser } =
     useContext(DropdownContext)
 
+  const focusFrame = useAnimationFrame()
+
   const latest = useLatest({
     triggerElementRef,
     rootTriggerRef,
     handleDelegateClickCloser,
+    isActive,
+    focusFrame,
   })
 
   const callbackRef = useCallback(
@@ -209,25 +214,21 @@ export const DropdownContentInner: FC<Props> = ({
           },
         ),
       )
-      setIsActive(true)
-    }
-  }, [triggerRect])
 
-  // setIsActive(true) と同じ useEffect 内で直接 focus() を呼ぶことはできない。
-  // このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
-  // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
-  // shr-invisible (visibility: hidden) でレンダリングされる。
-  // ちらつき防止には実寸法を保持したまま視覚的に隠せる visibility: hidden が唯一の手段となる。
-  // visibility: hidden の要素はフォーカスを受け付けないため、setIsActive(true) の直後に
-  // focus() を呼んでも DOM がまだ更新されておらず無効になる。
-  //
-  // useEffect([isActive]) であれば、isActive=true になった後の render commit 後に
-  // 必ず実行されることが保証されるため、この実装が最も信頼性が高い。
-  useEffect(() => {
-    if (isActive) {
-      focusTargetRef.current?.focus()
+      if (!latest.isActive) {
+        setIsActive(true)
+
+        // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+        // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+        // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
+        // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
+        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
+        latest.focusFrame.request(() => focusTargetRef.current?.focus())
+      }
     }
-  }, [isActive])
+
+    return () => latest.focusFrame.cancel()
+  }, [triggerRect, latest])
 
   return (
     <div {...rest} ref={mergedRef} className={actualClassName} style={style}>
