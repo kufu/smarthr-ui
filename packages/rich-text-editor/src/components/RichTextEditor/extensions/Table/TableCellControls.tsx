@@ -10,6 +10,13 @@ import { type TableScope, getTableTarget } from './tableTarget'
 import type { RichTextFeature } from '../../types'
 import type { Editor } from '@tiptap/react'
 
+/**
+ * 表ハンドルは tableTop の上に置くため、tableTop のクランプはこの分だけ
+ * 編集領域の上端から余裕を取る。26 のままだと表を上へスクロールしたときに
+ * ハンドルの上端が編集領域の外へ出て、ツールバーの下に潜る。
+ */
+const TABLE_HANDLE_OFFSET = 28
+
 type Props = {
   features: readonly RichTextFeature[]
   editor: Editor
@@ -125,7 +132,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
         width: right - left,
         height: bottom - top,
         tableLeft: clip.left - originLeft,
-        tableTop: Math.max(tableRect.top, viewport.top + 26) - originTop,
+        tableTop: Math.max(tableRect.top, viewport.top + TABLE_HANDLE_OFFSET) - originTop,
       })
     }
     updateGeometry.current = update
@@ -207,7 +214,12 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
         editor={editor}
         cellPos={pos}
         scope="table"
-        style={{ top: tableTop - 28, left: Math.max(0, tableLeft - 28), width: 22, height: 22 }}
+        style={{
+          top: tableTop - TABLE_HANDLE_OFFSET,
+          left: Math.max(0, tableLeft - 28),
+          width: 22,
+          height: 22,
+        }}
         onTargetLock={onTargetLock}
       />
       <TableContextMenu
