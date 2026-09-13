@@ -2,16 +2,16 @@
 
 import { type FC, type ReactNode, memo, useId, useMemo, useRef, useState } from 'react'
 
-import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
-import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { Cluster } from '../Layout'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
+import { Cluster } from '../../Layout'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR } from '../constants'
+import { classNameGenerator } from '../style'
 
-import { FormGroup, LabelBody, LabelCluster } from './client'
-import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
-import { classNameGenerator } from './style'
+import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
 
-import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
+import type { CommonProps, LabelComponentProps, ObjectLabelType } from '../type'
 
 const labelObjectConverter = (label: ReactNode) => ({ text: label })
 
