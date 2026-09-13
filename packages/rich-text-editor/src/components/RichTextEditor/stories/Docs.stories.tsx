@@ -283,7 +283,13 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <code>color</code>
                 </td>
-                <td style={tdStyle}>文字色</td>
+                <td style={tdStyle}>
+                  文字色
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    表のセル内でカーソルだけを置いている場合と複数セルを選択している場合はセル全体に適用する
+                  </Text>
+                </td>
                 <td style={tdStyle}>カラーピッカーボタン</td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>なし</td>
@@ -292,7 +298,13 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <code>backgroundColor</code>
                 </td>
-                <td style={tdStyle}>背景色（ハイライト）</td>
+                <td style={tdStyle}>
+                  背景色（ハイライト）
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    表のセル内でカーソルだけを置いている場合と複数セルを選択している場合はセル全体に適用する
+                  </Text>
+                </td>
                 <td style={tdStyle}>背景色ピッカーボタン</td>
                 <td style={tdStyle}>なし</td>
                 <td style={tdStyle}>なし</td>
@@ -356,7 +368,7 @@ export const Overview: Story = {
                   テーブル
                   <br />
                   <Text size="S" color="TEXT_GREY">
-                    ツールバーは挿入のみ。テーブル付近に floating UI で操作系を表示
+                    ツールバーは挿入のみ。表・行・列・セルのハンドルを表の周囲に出し、挿入・削除・結合・ヘッダー切り替え・色の変更はそこから行う
                   </Text>
                 </td>
                 <td style={tdStyle}>
@@ -365,7 +377,9 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   Tab / Shift+Tab（セル移動）
                   <br />
-                  Alt+Enter / Shift+F10（表の操作メニュー）
+                  Alt+Shift+T / C / R（表・列・行の操作メニュー）
+                  <br />
+                  Alt+Enter / Shift+F10（セルの操作メニュー）
                 </td>
                 <td style={tdStyle}>なし</td>
               </tr>
