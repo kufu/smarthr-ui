@@ -91,6 +91,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
 
     const functions = useMemo(() => {
       const inputFileSelector = 'input[type="file"][data-smarthr-ui-input="true"]'
+      const selectButtonSelector = '.smarthr-ui-DropZone-Button'
 
       return {
         handleDrop: (e: DragEvent<HTMLElement>) => {
@@ -120,21 +121,23 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             latest.onSelectFiles(e, el.files)
           }
         },
-        handleClickButton: (e: MouseEvent<HTMLButtonElement>) => {
-          e.currentTarget
-            .closest('.smarthr-ui-DropZone')
-            ?.querySelector<HTMLInputElement>(inputFileSelector)
-            ?.click()
+        handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
+          const el = findDelegateTarget<HTMLButtonElement>(e, selectButtonSelector)
+
+          if (el) {
+            e.currentTarget.querySelector<HTMLInputElement>(inputFileSelector)?.click()
+          }
         },
       }
     }, [latest])
 
     return (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
       <div
         className={classNames.wrapper}
         data-files-dragged-over={filesDraggedOver || undefined}
         onChange={functions.handleDelegateChange}
+        onClick={functions.handleDelegateClick}
         onDrop={functions.handleDrop}
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
@@ -144,7 +147,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
           disabled={disabled}
           error={error}
           className={classNames.button}
-          handleClick={functions.handleClickButton}
           label={selectButtonLabel}
         />
         <VisuallyHiddenText>
@@ -170,14 +172,12 @@ const SelectButton = memo<{
   label?: string
   disabled?: boolean
   error?: boolean
-  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>(({ label, disabled, error, handleClick, className }) => (
+}>(({ label, disabled, error, className }) => (
   <Button
     disabled={disabled}
     className={className}
     data-error={error || undefined}
-    onClick={handleClick}
     prefix={<FaFolderOpenIcon />}
   >
     {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}

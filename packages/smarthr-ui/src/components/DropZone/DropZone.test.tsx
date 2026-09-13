@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../intl'
@@ -150,6 +150,50 @@ describe('DropZone', () => {
           }),
         )
       })
+    })
+  })
+
+  describe('ファイル選択ボタン', () => {
+    it('クリックすると非表示のinput要素がクリックされる', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <DropZone name="test_file" onSelectFiles={vi.fn()}>
+            ファイルをドロップ
+          </DropZone>
+        </IntlProvider>,
+      )
+
+      const input = document.querySelector('input[type="file"]') as HTMLInputElement
+      if (!input) throw new Error('Input not found')
+
+      const handleClick = vi.fn()
+      input.addEventListener('click', handleClick)
+
+      await user.click(screen.getByRole('button', { name: 'ファイルを選択' }))
+
+      expect(handleClick).toHaveBeenCalledTimes(1)
+    })
+
+    it('disabledのとき、クリックしても非表示のinput要素がクリックされない', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <DropZone name="test_file" disabled onSelectFiles={vi.fn()}>
+            ファイルをドロップ
+          </DropZone>
+        </IntlProvider>,
+      )
+
+      const input = document.querySelector('input[type="file"]') as HTMLInputElement
+      if (!input) throw new Error('Input not found')
+
+      const handleClick = vi.fn()
+      input.addEventListener('click', handleClick)
+
+      await user.click(screen.getByRole('button', { name: 'ファイルを選択' }))
+
+      expect(handleClick).not.toHaveBeenCalled()
     })
   })
 })
