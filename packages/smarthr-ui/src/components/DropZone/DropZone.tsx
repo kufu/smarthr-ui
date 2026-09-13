@@ -1,9 +1,9 @@
 'use client'
 
 import {
-  type ChangeEvent,
   type ComponentPropsWithRef,
   type DragEvent,
+  type FormEvent,
   type MouseEvent,
   type PropsWithChildren,
   forwardRef,
@@ -15,6 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
+import { findDelegateTarget } from '../../libs/delegate'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -38,7 +39,7 @@ type BaseProps = PropsWithChildren<{
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
   onSelectFiles: (
-    e: DragEvent<HTMLElement> | ChangeEvent<HTMLInputElement>,
+    e: DragEvent<HTMLElement> | FormEvent<HTMLElement>,
     files: FileList | null,
   ) => void
   /**
@@ -112,8 +113,12 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
         handleDragLeave: () => {
           setFilesDraggedOver(false)
         },
-        handleChange: (e: ChangeEvent<HTMLInputElement>) => {
-          latest.onSelectFiles(e, e.target.files)
+        handleDelegateChange: (e: FormEvent<HTMLDivElement>) => {
+          const el = findDelegateTarget<HTMLInputElement>(e, inputFileSelector)
+
+          if (el) {
+            latest.onSelectFiles(e, el.files)
+          }
         },
         handleClickButton: (e: MouseEvent<HTMLButtonElement>) => {
           e.currentTarget
@@ -129,6 +134,7 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
       <div
         className={classNames.wrapper}
         data-files-dragged-over={filesDraggedOver || undefined}
+        onChange={functions.handleDelegateChange}
         onDrop={functions.handleDrop}
         onDragOver={functions.handleDragOver}
         onDragLeave={functions.handleDragLeave}
@@ -153,7 +159,6 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             tabIndex={-1}
             aria-invalid={error || undefined}
             data-smarthr-ui-input="true"
-            onChange={functions.handleChange}
           />
         </VisuallyHiddenText>
       </div>
