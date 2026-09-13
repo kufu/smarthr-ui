@@ -7,7 +7,7 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { Cluster } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
+import { FormGroup, LabelBody, LabelCluster } from './client'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 import { classNameGenerator } from './style'
 
