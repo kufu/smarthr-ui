@@ -21,7 +21,7 @@ import { findDelegateTarget } from '../../libs/delegate'
 import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
-import { DropdownCloser } from './DropdownCloser'
+import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from './DropdownCloser'
 import {
   type ContentBoxStyle,
   type Rect,
@@ -185,7 +185,7 @@ export const DropdownContentInner: FC<Props> = ({
 
   const handleDelegateClick = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
-      if (findDelegateTarget(e, '.smarthr-ui-Dropdown-closer')) {
+      if (findDelegateTarget(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)) {
         latest.handleDelegateClickCloser()
       }
     },

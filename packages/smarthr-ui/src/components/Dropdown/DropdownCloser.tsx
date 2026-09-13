@@ -1,8 +1,10 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+export const DROPDOWN_CLOSER_CLASS_NAME = 'smarthr-ui-Dropdown-closer'
+
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Dropdown-closer',
+  base: DROPDOWN_CLOSER_CLASS_NAME,
 })
 
 type Props = PropsWithChildren<ComponentProps<'div'>>
