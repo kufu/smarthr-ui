@@ -16,9 +16,10 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { FaCircleExclamationIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { Text } from '../../Text'
-import { CHILDREN_WRAPPER_INPUT_SELECTOR } from '../constants'
 
-import type { CommonProps, LabelComponentProps, ObjectLabelType } from '../type'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
+
+import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 type Props = Omit<CommonProps, 'className'> & {
   outerRef: Ref<HTMLElement>

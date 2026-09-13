@@ -6,12 +6,12 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Cluster } from '../../Layout'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
-import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from '../constants'
-import { classNameGenerator } from '../style'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR, LABEL_TEXT_SELECTOR } from './constants'
+import { classNameGenerator } from './style'
 
-import type { CommonProps, LabelComponentProps, ObjectLabelType } from '../type'
+import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
 const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 
