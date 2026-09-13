@@ -24,29 +24,28 @@ import {
 } from './configureHeading'
 import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor, getRestrictedExtensionNames } from './restrictOperations'
+import { NO_RUNTIME_OPTIONS } from './runtimeOptions'
 import { YOUTUBE_EMBED_OPTIONS } from './youtubeOptions'
 
-import type { ImageUploadResult, RichTextFeature } from '../types'
+import type { GetRichTextRuntimeOptions } from './runtimeOptions'
+import type { RichTextFeature } from '../types'
 import type { AnyExtension } from '@tiptap/react'
 
 type ConfigureExtensionsOptions = {
   features?: readonly RichTextFeature[]
   /** 新しく適用できる見出しレベル。schema に載せるレベルとは別 */
   allowedHeadingLevels?: readonly HeadingLevel[]
-  placeholder?: string
-  onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
-  onImageUploadError?: (error: unknown, file: File) => void
-  onFileDrop?: (file: File, pos: number | null) => void
-  acceptedMimeTypes?: string[]
+  /**
+   * マウント後に変わりうる設定の getter。
+   * Editor を作り直さずに最新値を反映するため、値ではなく getter で受ける。
+   */
+  getRuntimeOptions?: GetRichTextRuntimeOptions
 }
 
 export const configureExtensions = ({
   features = [],
   allowedHeadingLevels = SUPPORTED_HEADING_LEVELS,
-  placeholder,
-  onImageUpload,
-  onImageUploadError,
-  acceptedMimeTypes,
+  getRuntimeOptions = NO_RUNTIME_OPTIONS,
 }: ConfigureExtensionsOptions): AnyExtension[] => {
   const has = (f: RichTextFeature) => features.includes(f)
 
@@ -105,26 +104,28 @@ export const configureExtensions = ({
           return [imageUploadPlaceholderPlugin()]
         },
       }),
+      // onImageUpload の有無で登録を分けない。未指定から指定へ変わったときに
+      // extension を足し直せないため、受け取るかどうかは実行時に判定する。
+      // allowedMimeTypes は渡さない。FileHandler の判定が完全一致で `image/*` を通せず、
+      // ファイル選択ダイアログの accept 属性と挙動がずれるため、フィルタは自前で行う。
+      // onPaste は使わない（HTMLを含むクリップボードで二重挿入になる）。
+      FileHandler.configure({
+        onDrop: (editor, files, pos) => {
+          // 1回のドロップで使う関数はここで確定させる
+          const { onImageUpload, onImageUploadError, acceptedMimeTypes } = getRuntimeOptions()
+
+          if (!onImageUpload) return
+
+          const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
+          const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
+
+          if (file) {
+            uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
+          }
+        },
+      }),
+      createImagePasteExtension({ getRuntimeOptions }),
     )
-
-    if (onImageUpload) {
-      const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
-
-      extensions.push(
-        // allowedMimeTypes は渡さない。FileHandler の判定が完全一致で `image/*` を通せず、
-        // ファイル選択ダイアログの accept 属性と挙動がずれるため、フィルタは自前で行う。
-        // onPaste は使わない（HTMLを含むクリップボードで二重挿入になる）。
-        FileHandler.configure({
-          onDrop: (editor, files, pos) => {
-            const file = files.find((f) => matchesMimeType(f.type, mimeTypes))
-            if (file) {
-              uploadAndInsertImage(editor, file, pos, onImageUpload, onImageUploadError)
-            }
-          },
-        }),
-        createImagePasteExtension({ mimeTypes, onImageUpload, onImageUploadError }),
-      )
-    }
   }
 
   extensions.push(
@@ -145,13 +146,12 @@ export const configureExtensions = ({
     restrict(LineHeight.configure({ types: ['paragraph', 'heading'] })),
   )
 
-  if (placeholder) {
-    extensions.push(
-      Placeholder.configure({
-        placeholder,
-      }),
-    )
-  }
+  extensions.push(
+    // 文字列が空でも登録しておく。未指定から指定へ変わったときに extension を足し直せない。
+    Placeholder.configure({
+      placeholder: () => getRuntimeOptions().placeholder ?? '',
+    }),
+  )
 
   return extensions
 }

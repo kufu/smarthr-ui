@@ -3,6 +3,7 @@
 import { useEditor } from '@tiptap/react'
 import { type RefObject, useEffect, useMemo } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { configureExtensions } from '../extensions/configureExtensions'
 import { createPasteFilter } from '../extensions/pasteFilter'
@@ -47,20 +48,31 @@ export const useRichTextEditor = ({
 
   const featuresKey = features.join(',')
   const headingLevelsKey = headingLevels?.join(',')
-  const mimeTypesKey = acceptedMimeTypes?.join(',')
+
+  const latest = useLatest({ placeholder, onImageUpload, onImageUploadError, acceptedMimeTypes })
+
+  // callback や文字列の変更で extension を作り直さない。作り直しても useEditor は
+  // ExtensionManager を組み直さず、依存配列へ入れれば Editor ごと作り直して
+  // 本文と Undo 履歴を失う。extension 側には getter を渡して実行時に読ませる。
+  const getRuntimeOptions = useMemo(
+    () => () => ({
+      placeholder: latest.placeholder,
+      onImageUpload: latest.onImageUpload,
+      onImageUploadError: latest.onImageUploadError,
+      acceptedMimeTypes: latest.acceptedMimeTypes,
+    }),
+    [latest],
+  )
 
   const extensions = useMemo(
     () =>
       configureExtensions({
         features,
         allowedHeadingLevels: headingLevels,
-        placeholder,
-        onImageUpload,
-        onImageUploadError,
-        acceptedMimeTypes,
+        getRuntimeOptions,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [featuresKey, headingLevelsKey, placeholder, onImageUpload, onImageUploadError, mimeTypesKey],
+    [featuresKey, headingLevelsKey, getRuntimeOptions],
   )
 
   // schemaは全書式を載せているのでペーストはschemaで止まらない。
@@ -135,6 +147,16 @@ export const useRichTextEditor = ({
       editor.setEditable(editable, false)
     }
   }, [editor, readOnly, disabled])
+
+  // placeholder の同期
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      // Placeholder は decoration なので、state が動かないと新しい文字列で作り直されない。
+      // 文書を変えない空の transaction で再計算させる。docChanged が無いため
+      // onUpdate は発火せず、履歴にも積まれない。
+      editor.view.dispatch(editor.state.tr)
+    }
+  }, [editor, placeholder])
 
   return { editor }
 }
