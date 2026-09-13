@@ -1,2 +1,2 @@
-export { Input, backgroundColor } from './Input'
+export { Input } from './Input'
 export { CurrencyInput } from './CurrencyInput'

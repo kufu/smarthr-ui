@@ -36,7 +36,7 @@ type BaseProps = {
 }
 type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
 
-export const backgroundColor = {
+const backgroundColor = {
   BACKGROUND: 'background',
   COLUMN: 'column',
   BASE_GREY: 'base-grey',
