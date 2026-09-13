@@ -1,2 +1,1 @@
-export { FormControl } from './client'
-export { Fieldset } from './client'
+export { FormControl, Fieldset } from './client'
