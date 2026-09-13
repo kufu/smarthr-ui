@@ -18,6 +18,17 @@ import type { RichTextFeature } from '../../types'
 import type { Editor } from '@tiptap/react'
 import type { CSSProperties, MutableRefObject } from 'react'
 
+/**
+ * 表・行のハンドルは編集領域の左端、セルのハンドルはセルの右端にあるため、
+ * 中央揃えのままだとツールチップが編集領域の外へはみ出す。内側へ向けて伸ばす。
+ */
+const TOOLTIP_ALIGN = {
+  table: 'start',
+  row: 'start',
+  column: 'center',
+  cell: 'end',
+} as const
+
 type Props = {
   features: readonly RichTextFeature[]
   openMenuRef?: MutableRefObject<((pos?: number) => void) | null>
@@ -70,7 +81,12 @@ export const TableContextMenu = ({
   return (
     <>
       <span className="shr-absolute shr-z-1 focus-within:shr-z-[3] hover:shr-z-[2]" style={style}>
-        <ToolbarTooltip shortcut={TABLE_SHORTCUTS[scope]} suppressed={isOpen} label={label}>
+        <ToolbarTooltip
+          align={TOOLTIP_ALIGN[scope]}
+          shortcut={TABLE_SHORTCUTS[scope]}
+          suppressed={isOpen}
+          label={label}
+        >
           <button
             ref={triggerRef}
             type="button"

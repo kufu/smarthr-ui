@@ -12,8 +12,8 @@ const classNameGenerator = tv({
   slots: {
     wrapper: 'shr-group shr-relative shr-inline-block',
     tooltip: [
-      'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr-flex shr--translate-x-1/2 shr-flex-col shr-items-center shr-gap-0.25',
+      'shr-pointer-events-none shr-absolute shr-top-full shr-z-overlap shr-mt-0.25',
+      'shr-flex shr-flex-col shr-items-center shr-gap-0.25',
       'shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.5 shr-text-sm shr-text-white',
       'shr-opacity-0 shr-transition-opacity',
       'group-focus-within:shr-opacity-100 group-hover:shr-opacity-100',
@@ -34,14 +34,29 @@ const classNameGenerator = tv({
     // flex で中央揃えし、最小幅と高さを揃えてキーごとの箱の大きさのばらつきも抑える。
     key: 'shr-inline-flex shr-h-[1.5em] shr-min-w-[1.5em] shr-items-center shr-justify-center shr-rounded-s shr-border shr-border-solid shr-border-white/50 shr-bg-white/20 shr-px-0.25 shr-text-xs shr-font-bold shr-leading-none shr-text-white',
   },
+  variants: {
+    // ツールチップはトリガーより横に広い。編集領域の端にあるトリガーで中央揃えにすると
+    // はみ出した側がウィンドウ外へ出て読めなくなるため、端では内側へ向けて伸ばす。
+    align: {
+      center: { tooltip: 'shr-left-1/2 shr--translate-x-1/2' },
+      start: { tooltip: 'shr-left-0' },
+      end: { tooltip: 'shr-right-0' },
+    },
+  },
 })
+
+type TooltipAlign = 'center' | 'start' | 'end'
 
 const CLASS_NAMES = (() => {
   const { wrapper, tooltip, label, shortcutRow, key } = classNameGenerator()
 
   return {
     wrapper: wrapper(),
-    tooltip: tooltip(),
+    tooltip: {
+      center: tooltip({ align: 'center' }),
+      start: tooltip({ align: 'start' }),
+      end: tooltip({ align: 'end' }),
+    },
     label: label(),
     shortcutRow: shortcutRow(),
     key: key(),
@@ -54,18 +69,21 @@ type Props = {
   shortcut?: string
   /** true の間はホバー・フォーカスしてもツールチップを出さない */
   suppressed?: boolean
+  /** トリガーに対する横位置。編集領域の端に置くトリガーでは内側へ寄せる */
+  align?: TooltipAlign
   children: ReactNode
 }
 
-export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, children }) => {
-  const isApple = useIsApplePlatform()
-  const { mobile } = useEnvironment()
-  const tokens = shortcut ? formatShortcutTokens(shortcut, isApple) : []
+export const ToolbarTooltip: FC<Props> = memo(
+  ({ label, shortcut, suppressed, align = 'center', children }) => {
+    const isApple = useIsApplePlatform()
+    const { mobile } = useEnvironment()
+    const tokens = shortcut ? formatShortcutTokens(shortcut, isApple) : []
 
-  return (
-    <span className={CLASS_NAMES.wrapper}>
-      {children}
-      {/*
+    return (
+      <span className={CLASS_NAMES.wrapper}>
+        {children}
+        {/*
         suppressed のときは opacity で隠すのではなく要素ごと描画しない。
         CSS の group-hover / group-focus-within より強い指定を重ねる必要がなくなる。
 
@@ -74,22 +92,23 @@ export const ToolbarTooltip: FC<Props> = memo(({ label, shortcut, suppressed, ch
         ポータル化する手もあるが、タッチ環境ではホバーが無く元々表示されず、
         ボタンには aria-label があるため支援技術への情報も失われないため採らない。
       */}
-      {!suppressed && !mobile && (
-        <span className={CLASS_NAMES.tooltip} aria-hidden="true">
-          <span className={CLASS_NAMES.label}>{label}</span>
-          {tokens.length > 0 && (
-            // ラベルを1行目、キーを2行目に箱付きで並べる。
-            // 箱で区切りが分かるため + は挟まない
-            <span className={CLASS_NAMES.shortcutRow}>
-              {tokens.map((token, index) => (
-                <kbd key={`${token}-${index}`} className={CLASS_NAMES.key}>
-                  {token}
-                </kbd>
-              ))}
-            </span>
-          )}
-        </span>
-      )}
-    </span>
-  )
-})
+        {!suppressed && !mobile && (
+          <span className={CLASS_NAMES.tooltip[align]} aria-hidden="true">
+            <span className={CLASS_NAMES.label}>{label}</span>
+            {tokens.length > 0 && (
+              // ラベルを1行目、キーを2行目に箱付きで並べる。
+              // 箱で区切りが分かるため + は挟まない
+              <span className={CLASS_NAMES.shortcutRow}>
+                {tokens.map((token, index) => (
+                  <kbd key={`${token}-${index}`} className={CLASS_NAMES.key}>
+                    {token}
+                  </kbd>
+                ))}
+              </span>
+            )}
+          </span>
+        )}
+      </span>
+    )
+  },
+)

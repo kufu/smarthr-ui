@@ -44,7 +44,10 @@ const classNameGenerator = tv({
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator--outer',
     ],
-    toolbarWrapper: 'shr-sticky shr-top-0 shr-z-1 shr-rounded-t-[inherit] shr-bg-white',
+    // z は表の操作ハンドル（TableContextMenu が 1〜3 を使う）より上に置く。
+    // sticky + z で積み重ねコンテキストを作るため、内側のツールチップの z-overlap は
+    // このコンテキストの中でしか効かず、同値だと後ろにあるハンドルに負ける。
+    toolbarWrapper: 'shr-sticky shr-top-0 shr-z-[4] shr-rounded-t-[inherit] shr-bg-white',
     content: [
       'smarthr-ui-RichTextEditor-content',
       // editor area
