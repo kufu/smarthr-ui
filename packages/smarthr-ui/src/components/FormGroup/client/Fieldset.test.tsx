@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
 
-import { Input } from '../Input'
+import { Input } from '../../Input'
 
 import { Fieldset } from './Fieldset'
-import { FormControl } from './client'
+import { FormControl } from './FormControl'
 
 describe('Fieldset', () => {
   it('子要素が可視ラベルを持つフォームコントロール要素の場合、アクセシブルネームは可視ラベルになる', async () => {
