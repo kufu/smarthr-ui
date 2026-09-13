@@ -21,7 +21,7 @@ import { IS_NEXT_JS } from '../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
 
-import type { ElementProps } from '../Heading'
+import type { ElementProps } from '../client'
 
 export type BaseProps = PropsWithChildren<{
   /**
