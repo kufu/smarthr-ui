@@ -55,7 +55,11 @@ const pasteFile = (file: File) => {
   })
 }
 
-const flush = () => act(() => new Promise((resolve) => setTimeout(resolve, 0)))
+/**
+ * ProseMirror は扱えない貼り付けを 50ms 後に拾い直す（capturePaste）。
+ * その前にエディタを破棄すると、破棄済み view への focus で例外になるため待ち切る。
+ */
+const flush = () => act(() => new Promise((resolve) => setTimeout(resolve, 60)))
 
 const pngFile = () => new File(['x'], 'a.png', { type: 'image/png' })
 const jpegFile = () => new File(['x'], 'a.jpg', { type: 'image/jpeg' })
