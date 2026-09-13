@@ -1,0 +1,1 @@
+export { AutoPageTitleHeading } from './AutoPageTitleHeading'
