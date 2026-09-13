@@ -3,8 +3,8 @@
 import {
   type ComponentProps,
   type FC,
+  type MouseEvent,
   type PropsWithChildren,
-  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -17,6 +17,7 @@ import { tv } from 'tailwind-variants'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
+import { findDelegateTarget } from '../../libs/delegate'
 import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
@@ -47,14 +48,6 @@ type BaseProps = PropsWithChildren<{
 
 export type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps>
 type Props = BaseProps & ElementProps
-
-type DropdownContentInnerContextType = {
-  maxHeight: string
-}
-
-export const DropdownContentInnerContext = createContext<DropdownContentInnerContextType>({
-  maxHeight: '',
-})
 
 export const DropdownContentInner: FC<Props> = ({
   triggerRect,
@@ -190,6 +183,15 @@ export const DropdownContentInner: FC<Props> = ({
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
+  const handleDelegateClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      if (findDelegateTarget(e, '.smarthr-ui-Dropdown-closer')) {
+        latest.handleDelegateClickCloser()
+      }
+    },
+    [latest],
+  )
+
   useEffect(() => {
     if (wrapperRef.current) {
       setContentBox(
@@ -230,7 +232,14 @@ export const DropdownContentInner: FC<Props> = ({
   }, [isActive])
 
   return (
-    <div {...rest} ref={mergedRef} className={actualClassName} style={style}>
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+    <div
+      {...rest}
+      ref={mergedRef}
+      className={actualClassName}
+      style={style}
+      onClick={handleDelegateClick}
+    >
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
@@ -242,9 +251,12 @@ export const DropdownContentInner: FC<Props> = ({
           {children}
         </div>
       ) : (
-        <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
-          <DropdownCloser>{children}</DropdownCloser>
-        </DropdownContentInnerContext.Provider>
+        <DropdownCloser
+          className="shr-flex shr-flex-col"
+          style={{ maxHeight: contentBox.maxHeight || undefined }}
+        >
+          {children}
+        </DropdownCloser>
       )}
     </div>
   )
