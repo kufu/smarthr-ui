@@ -97,4 +97,29 @@ describe('getIntl', () => {
     ).toBe('ドーナツグラフ 4個の項目')
     expect(spy).not.toHaveBeenCalled()
   })
+
+  describe('プロダクト側のmessagesとのマージ', () => {
+    it('プロダクト側のキーを引ける', () => {
+      const intl = getIntl('ja', { 'product/foo': 'プロダクトの文言' })
+
+      expect(intl.formatMessage({ id: 'product/foo' })).toBe('プロダクトの文言')
+    })
+
+    it('chartsのキーはプロダクト側に上書きされない', () => {
+      // smarthr-uiのIntlProviderと同様、自身の辞書を後に展開している
+      const intl = getIntl('ja', {
+        'smarthr-ui-charts/DoughnutChart/ariaLabel': '上書きされるべきではない文言',
+      })
+
+      expect(
+        intl.formatMessage(
+          {
+            id: 'smarthr-ui-charts/DoughnutChart/ariaLabel',
+            defaultMessage: 'ドーナツグラフ {segmentCount}個の項目',
+          },
+          { segmentCount: 4 },
+        ),
+      ).toBe('ドーナツグラフ 4個の項目')
+    })
+  })
 })

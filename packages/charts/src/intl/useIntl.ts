@@ -1,20 +1,17 @@
 /*
- * packages/smarthr-ui/src/intl/useIntl.ts をコピーしたファイル
- * chartsの辞書はsmarthr-uiのIntlProviderのmessagesに含まれないため、次の2点のみ異なる
- * - charts専用のIntlShapeを生成し、そのformatMessageを利用している
- * - intl-messageformatに依存していないため、localizeのvaluesとoptsの型を簡略化している
+ * packages/smarthr-ui/src/intl/ の useIntl.ts / IntlProvider.tsx を元にしたファイル
  */
 'use client'
 
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import {
+  IntlContext,
   type IntlShape,
   type PrimitiveType,
   ReactIntlErrorCode,
   type MessageDescriptor as ReactIntlMessageDescriptor,
   createIntl,
   createIntlCache,
-  useIntl as useReactIntl,
 } from 'react-intl'
 
 import { locales, type typedJa } from './locales'
@@ -41,21 +38,18 @@ export type UseIntlReturn = {
 
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
+// ICUのパース結果はcreateIntlの呼び出し間で共有したいため、モジュールスコープに持つ
 const cache = createIntlCache()
-const intlMap = new Map<keyof typeof locales, IntlShape>()
 
-export const getIntl = (locale: keyof typeof locales): IntlShape => {
-  const cached = intlMap.get(locale)
-
-  if (cached) {
-    return cached
-  }
-
-  const intl = createIntl(
+export const getIntl = (
+  locale: keyof typeof locales,
+  externalMessages?: IntlShape['messages'],
+): IntlShape =>
+  createIntl(
     {
       locale,
       defaultLocale: 'ja',
-      messages: locales[locale],
+      messages: { ...externalMessages, ...locales[locale] },
       onError: (error) => {
         if (error.code !== ReactIntlErrorCode.MISSING_TRANSLATION) {
           console.error(error)
@@ -64,11 +58,6 @@ export const getIntl = (locale: keyof typeof locales): IntlShape => {
     },
     cache,
   )
-
-  intlMap.set(locale, intl)
-
-  return intl
-}
 
 /**
  * メッセージローカライズ機能を提供するフック
@@ -82,11 +71,11 @@ export const getIntl = (locale: keyof typeof locales): IntlShape => {
  * }
  */
 export const useIntl = (): UseIntlReturn => {
-  const intl = useReactIntl()
+  const intl = useContext(IntlContext) as IntlShape | null
 
   const result = useMemo(() => {
-    const locale = isValidLocale(intl.locale) ? intl.locale : 'ja'
-    const chartsIntl = getIntl(locale)
+    const locale = intl && isValidLocale(intl.locale) ? intl.locale : 'ja'
+    const chartsIntl = getIntl(locale, intl?.messages)
 
     return {
       localize: <T extends keyof Messages>(

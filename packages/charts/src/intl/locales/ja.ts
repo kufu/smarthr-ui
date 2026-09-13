@@ -1,4 +1,7 @@
 // キーと値の間に改行が入ると翻訳システムと連携できなくなるため、prettier-ignoreしている
+//
+// aria-labelはtitleの有無でキーを分けている
+// チャートの説明を組み立ててからtitleを連結する形にすると、翻訳者が全体の語順を制御できなくなるため
 // prettier-ignore
 export const locale = {
   'smarthr-ui-charts/BarChart/ariaLabel': '棒グラフ {datasetCount}個のデータ {barCount}本の棒',

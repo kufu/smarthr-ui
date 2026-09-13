@@ -57,8 +57,6 @@ export const DoughnutChart: React.FC<Props> = ({
 
   const ariaLabel = useMemo(
     () =>
-      // titleの有無で別のメッセージを使う。ひとつの文章として翻訳できるようにするため、
-      // チャートの説明とtitleを後から連結していない
       title
         ? localize(
             {

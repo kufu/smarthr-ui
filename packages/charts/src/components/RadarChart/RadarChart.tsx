@@ -34,8 +34,6 @@ export const RadarChart: React.FC<Props> = ({ data, title, options: externalOpti
       axisCount: data.datasets[0]?.data.length ?? 0,
     }
 
-    // titleの有無で別のメッセージを使う。ひとつの文章として翻訳できるようにするため、
-    // チャートの説明とtitleを後から連結していない
     return title
       ? localize(
           {

@@ -17,7 +17,7 @@ import zhTw from './zh_hant_tw.json'
 // 型定義用にja.tsの型をexport
 export { locale as typedJa } from './ja'
 
-// ロケールのキーはsmarthr-uiのconvertLangの戻り値と一致させる必要がある
+// IntlProviderが渡すlocaleで辞書を引くため、キーはsmarthr-uiのlocalesと揃える必要がある
 export const locales = {
   ja,
   'en-us': enUs,
