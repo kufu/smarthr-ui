@@ -11,8 +11,9 @@ import { useToolbarState } from '../../hooks/useToolbarState'
 import { ToolbarTooltip } from '../ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
-import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
+import { ColorPickerPalette } from './ColorPickerPalette'
 import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
+import { normalizeHex } from './normalizeHex'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
 

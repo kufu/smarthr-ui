@@ -11,9 +11,10 @@ import { useToolbarState } from '../../hooks/useToolbarState'
 import { ToolbarTooltip } from '../ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
-import { ColorPickerPalette, normalizeHex } from './ColorPickerPalette'
+import { ColorPickerPalette } from './ColorPickerPalette'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
 import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
+import { normalizeHex } from './normalizeHex'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
 
 const RECENT_LIMIT = 5

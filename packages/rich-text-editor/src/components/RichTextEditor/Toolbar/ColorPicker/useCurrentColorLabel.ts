@@ -2,7 +2,9 @@
 
 import { useIntl } from '../../../../intl'
 
-import { type ColorPaletteEntry, normalizeHex } from './ColorPickerPalette'
+import { normalizeHex } from './normalizeHex'
+
+import type { ColorPaletteEntry } from './ColorPickerPalette'
 
 type Args = {
   currentColor: string | null
