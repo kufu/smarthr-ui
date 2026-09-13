@@ -2,9 +2,8 @@ import { action } from 'storybook/actions'
 
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { CurrencyInput } from '../CurrencyInput'
-import { Input, backgroundColor } from '../Input'
 import { SearchInput } from '../SearchInput'
+import { CurrencyInput, Input, backgroundColor } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
