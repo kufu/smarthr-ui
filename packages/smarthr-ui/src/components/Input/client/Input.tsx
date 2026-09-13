@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { useOnce } from '../../hooks/client/useOnce'
-import { useTheme } from '../../hooks/client/useTheme'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useOnce } from '../../../hooks/client/useOnce'
+import { useTheme } from '../../../hooks/client/useTheme'
 
 type BaseProps = {
   /** input 要素の `type` 値 */
@@ -36,7 +36,7 @@ type BaseProps = {
 }
 type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
 
-export const backgroundColor = {
+const backgroundColor = {
   BACKGROUND: 'background',
   COLUMN: 'column',
   BASE_GREY: 'base-grey',

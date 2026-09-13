@@ -1,6 +1,6 @@
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Input } from '../Input'
+import { Input } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'

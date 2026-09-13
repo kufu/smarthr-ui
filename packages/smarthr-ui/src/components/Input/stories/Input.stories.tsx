@@ -2,9 +2,8 @@ import { action } from 'storybook/actions'
 
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { CurrencyInput } from '../CurrencyInput'
-import { Input, backgroundColor } from '../Input'
 import { SearchInput } from '../SearchInput'
+import { CurrencyInput, Input } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -89,11 +88,18 @@ export const BgColor: StoryObj<typeof Input> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {([undefined, ...Object.keys(backgroundColor)] as Array<keyof typeof backgroundColor>).map(
-        (bgColor) => (
-          <Input {...args} key={bgColor} bgColor={bgColor} />
-        ),
-      )}
+      {[
+        undefined,
+        'background',
+        'column',
+        'base-grey',
+        'over-background',
+        'head',
+        'border',
+        'action-background',
+      ].map((bgColor) => (
+        <Input {...args} key={bgColor} bgColor={bgColor} />
+      ))}
     </Stack>
   ),
 }
