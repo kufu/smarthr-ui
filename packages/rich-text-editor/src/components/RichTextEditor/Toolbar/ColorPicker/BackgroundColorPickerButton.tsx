@@ -6,6 +6,7 @@ import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
+import { setEditorColor } from '../../extensions/Table/tableColor'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarState } from '../../hooks/useToolbarState'
 import { ToolbarTooltip } from '../ToolbarTooltip'
@@ -58,13 +59,13 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
 
     const onApplyColor = useCallback(
       (hex: string) => {
-        editor.chain().focus().setBackgroundColor(hex).run()
+        setEditorColor(editor, 'backgroundColor', hex)
       },
       [editor],
     )
 
     const onUnsetColor = useCallback(() => {
-      editor.chain().focus().unsetBackgroundColor().run()
+      setEditorColor(editor, 'backgroundColor', null)
     }, [editor])
 
     const handleTriggerKeyDown = useCallback(

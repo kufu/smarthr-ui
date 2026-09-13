@@ -15,8 +15,10 @@ const FEATURE_BY_TEXT_STYLE_ATTRIBUTE: Readonly<Record<string, RichTextFeature>>
   fontSize: 'fontSize',
 }
 
-/** paragraph / heading に付く属性 */
+/** paragraph / heading / table cell に付く属性 */
 const FEATURE_BY_NODE_ATTRIBUTE: Readonly<Record<string, RichTextFeature>> = {
+  color: 'color',
+  backgroundColor: 'backgroundColor',
   textAlign: 'textAlign',
   lineHeight: 'lineHeight',
 }

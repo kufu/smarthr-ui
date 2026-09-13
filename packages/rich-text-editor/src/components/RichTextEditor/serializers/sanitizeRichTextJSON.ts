@@ -40,6 +40,8 @@ const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
   rowspan: normalizeSpan,
   colwidth: nullIfUnsafe(isSafeColwidth),
   align: nullIfUnsafe(isSafeTextAlign),
+  color: nullIfUnsafe(isSafeColor),
+  backgroundColor: nullIfUnsafe(isSafeColor),
 }
 
 /**

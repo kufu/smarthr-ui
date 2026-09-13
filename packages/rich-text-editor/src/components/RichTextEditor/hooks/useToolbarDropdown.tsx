@@ -68,7 +68,7 @@ type UseToolbarDropdownReturn = {
   renderDropdown: (children: ReactNode) => ReactNode | null
 }
 
-export function useToolbarDropdown(): UseToolbarDropdownReturn {
+export function useToolbarDropdown(layoutKey?: unknown): UseToolbarDropdownReturn {
   const { createPortal, isChildPortal } = usePortal()
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -94,7 +94,7 @@ export function useToolbarDropdown(): UseToolbarDropdownReturn {
     if (!triggerEl || !contentEl) return
 
     const triggerRect = triggerEl.getBoundingClientRect()
-    const contentHeight = contentEl.offsetHeight
+    const contentHeight = Math.max(contentEl.offsetHeight, contentEl.scrollHeight)
     const spaceBelow = window.innerHeight - triggerRect.bottom - GAP
     const spaceAbove = triggerRect.top - GAP
     const fitsBelow = contentHeight <= spaceBelow
@@ -137,7 +137,7 @@ export function useToolbarDropdown(): UseToolbarDropdownReturn {
 
     setPosition(next)
     setIsVisible(true)
-  }, [isOpen])
+  }, [isOpen, layoutKey])
 
   // 座標は開いた時点で1度だけ算出するため、トリガーを内包する段が横スクロールすると
   // ドロップダウンだけが元の位置に取り残される。タッチスクロール中は mousedown が発生せず

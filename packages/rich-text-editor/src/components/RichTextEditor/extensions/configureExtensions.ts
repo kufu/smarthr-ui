@@ -15,6 +15,7 @@ import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
 import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
 import { LineHeight } from './LineHeight'
 import { LinkShortcut } from './LinkShortcut'
+import { CellAppearance } from './Table/CellAppearance'
 import { CustomTable } from './Table/CustomTable'
 import {
   type HeadingLevel,
@@ -132,6 +133,7 @@ export const configureExtensions = ({
     // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
     restrict(CustomTable.configure({ resizable: true, renderWrapper: true })),
     TableRow,
+    CellAppearance,
     TableHeader,
     TableCell,
     // textStyleはcolor/backgroundColor/fontSizeの入れ物。これがschemaに無いと

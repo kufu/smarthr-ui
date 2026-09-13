@@ -58,10 +58,10 @@ export const editorContentClasses = [
   // テーブルは内容幅にしてNotion風レイアウトを実現。column-resizingはtable-fixedで動作する。
   // tableWrapperの右と下に +列/+行 バー(24px)用の余白を確保。テーブル幅がそれを超えると
   // tableWrapper内で横スクロールが発生する。
-  '[&_.ProseMirror_.tableWrapper]:shr-mt-0.5 [&_.ProseMirror_.tableWrapper]:shr-mb-2 [&_.ProseMirror_.tableWrapper]:shr-w-fit [&_.ProseMirror_.tableWrapper]:shr-max-w-[calc(100%-1.75rem)] [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
+  '[&_.ProseMirror_.tableWrapper]:shr-outline-none [&_.ProseMirror_.tableWrapper]:shr-shadow-none [&_.ProseMirror_.tableWrapper]:shr-mt-2 [&_.ProseMirror_.tableWrapper]:shr-mb-2 [&_.ProseMirror_.tableWrapper]:shr-ml-1.5 [&_.ProseMirror_.tableWrapper]:shr-w-fit [&_.ProseMirror_.tableWrapper]:shr-max-w-[calc(100%-3.25rem)] [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
   '[&_.ProseMirror_table]:shr-w-auto [&_.ProseMirror_table]:shr-table-fixed [&_.ProseMirror_table]:shr-border-collapse [&_.ProseMirror_table]:shr-overflow-hidden',
-  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[6em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
-  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[6em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-text-left [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
+  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-pr-1.5 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[6em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
+  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-pr-1.5 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[6em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-text-left [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
   // selectedCell: 疑似要素オーバーレイ
   '[&_.ProseMirror_td.selectedCell::after]:shr-content-[""] [&_.ProseMirror_td.selectedCell::after]:shr-absolute [&_.ProseMirror_td.selectedCell::after]:shr-inset-0 [&_.ProseMirror_td.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_td.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_td.selectedCell::after]:shr-z-1',
   '[&_.ProseMirror_th.selectedCell::after]:shr-content-[""] [&_.ProseMirror_th.selectedCell::after]:shr-absolute [&_.ProseMirror_th.selectedCell::after]:shr-inset-0 [&_.ProseMirror_th.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_th.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_th.selectedCell::after]:shr-z-1',
@@ -112,11 +112,12 @@ export const staticContentClasses = [
   // table (renderWrapper: true で <div class="tableWrapper"> が出力されるので、その内側に table)
   // テーブル自身に inline style で width が付くため、wrapper 側で横スクロールを担保する
   '[&_.tableWrapper]:shr-max-w-full [&_.tableWrapper]:shr-overflow-x-auto',
-  '[&_table]:shr-border-collapse',
-  '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-align-top',
-  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-align-top [&_th]:shr-bg-head [&_th]:shr-text-left [&_th]:shr-font-bold',
-  '[&_td_p]:shr-my-0',
-  '[&_th_p]:shr-my-0',
+  '[&_table]:shr-table-fixed [&_table]:shr-border-collapse',
+  '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-pr-1.5 [&_td]:shr-align-top [&_td]:shr-min-w-[6em] [&_td]:shr-box-border',
+  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-pr-1.5 [&_th]:shr-align-top [&_th]:shr-min-w-[6em] [&_th]:shr-box-border [&_th]:shr-bg-head [&_th]:shr-text-left [&_th]:shr-font-bold',
+  // 編集時の trailingBreak が保存されない空段落にも、1行分の高さを確保する。
+  '[&_td_p]:shr-my-0 [&_td_p]:shr-min-h-[1.75em]',
+  '[&_th_p]:shr-my-0 [&_th_p]:shr-min-h-[1.75em]',
   // paragraph
   // エディタ側(editorContentClasses)と行送りを揃える: 本文は RELAXED(1.75)
   '[&_p]:shr-my-0 [&_p]:shr-leading-loose',

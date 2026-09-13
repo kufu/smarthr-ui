@@ -504,6 +504,23 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     assertNoInjectedCss(bothOutputs(cellDoc('tableCell', { align: INJECTED_CSS })))
   })
 
+  it.each(['color', 'backgroundColor'] as const)(
+    'tableCell の %s に追記されたCSS宣言が両経路で出力されない',
+    (attribute) => {
+      assertNoInjectedCss(bothOutputs(cellDoc('tableCell', { [attribute]: INJECTED_CSS })))
+    },
+  )
+
+  it('セルの文字色・背景色が両経路で保持される', () => {
+    const { html, react } = bothOutputs(
+      cellDoc('tableCell', { color: '#e01e5a', backgroundColor: '#fde2ea' }),
+    )
+    expect(html).toContain('color: #e01e5a')
+    expect(html).toContain('background-color: #fde2ea')
+    expect(react).toContain('color:#e01e5a')
+    expect(react).toContain('background-color:#fde2ea')
+  })
+
   it('引用の中の入れ子の表でも検証される', () => {
     assertNoInjectedCss(
       bothOutputs({

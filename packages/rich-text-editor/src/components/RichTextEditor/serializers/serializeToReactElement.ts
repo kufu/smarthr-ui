@@ -32,7 +32,12 @@ type ReactMarkMapping = (ctx: { mark: Mark; children?: ReactNode | ReactNode[] }
 const createTableCellMapping =
   (tag: 'td' | 'th'): ReactNodeMapping =>
   ({ node, children }) => {
-    const { colspan, rowspan, colwidth, align } = node.attrs
+    const { colspan, rowspan, colwidth, align, color, backgroundColor } = node.attrs
+    const style: Record<string, string> = {}
+
+    if (isSafeTextAlign(align)) style.textAlign = align
+    if (isSafeColor(color)) style.color = color
+    if (isSafeColor(backgroundColor)) style.backgroundColor = backgroundColor
 
     return createElement(
       tag,
@@ -40,7 +45,7 @@ const createTableCellMapping =
         colSpan: typeof colspan === 'number' ? colspan : undefined,
         rowSpan: typeof rowspan === 'number' ? rowspan : undefined,
         colwidth: Array.isArray(colwidth) ? colwidth.join(',') : undefined,
-        style: isSafeTextAlign(align) ? { textAlign: align } : undefined,
+        style: Object.keys(style).length > 0 ? style : undefined,
       },
       children,
     )

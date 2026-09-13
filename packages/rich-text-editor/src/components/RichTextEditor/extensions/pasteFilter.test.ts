@@ -280,3 +280,25 @@ describe('createPasteFilter', () => {
     })
   })
 })
+
+describe('table cell appearance on paste', () => {
+  it.each([
+    { features: ['table'] },
+    { features: ['table', 'color'] },
+    { features: ['table', 'backgroundColor'] },
+    { features: ['table', 'color', 'backgroundColor'] },
+  ] as const)('respects enabled cell color features: $features', ({ features }) => {
+    const cell = schema.nodes.tableCell.create(
+      { color: '#0077c7', backgroundColor: '#fde2ea' },
+      schema.nodes.paragraph.create(null, schema.text('cell')),
+    )
+    const table = schema.nodes.table.create(null, schema.nodes.tableRow.create(null, cell))
+    const result = createPasteFilter(features)(new Slice(table.content, 0, 0))
+    const attrs = result.content.firstChild!.firstChild!.attrs
+    expect(attrs.color).toBe(features.some((feature) => feature === 'color') ? '#0077c7' : null)
+    expect(attrs.backgroundColor).toBe(
+      features.some((feature) => feature === 'backgroundColor') ? '#fde2ea' : null,
+    )
+    expect(result.content.textBetween(0, result.content.size)).toBe('cell')
+  })
+})

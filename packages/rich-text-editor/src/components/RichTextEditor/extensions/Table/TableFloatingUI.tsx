@@ -2,52 +2,59 @@
 
 import { type FC, type RefObject, memo, useState } from 'react'
 
-import { AddColumnButton } from './AddColumnButton'
-import { AddRowButton } from './AddRowButton'
-import { TableActionsButton } from './TableActionsButton'
+import { AddTableAxisButton } from './AddTableAxisButton'
+import { TableCellControls } from './TableCellControls'
+import { TABLE_BAR_GAP, TABLE_BAR_THICKNESS } from './tableGeometry'
 import { useActiveTableRect } from './useActiveTableRect'
 import { useHoveredTable } from './useHoveredTable'
 
+import type { RichTextFeature } from '../../types'
 import type { Editor } from '@tiptap/react'
 
 type Props = {
+  features: readonly RichTextFeature[]
   editor: Editor
   containerRef: RefObject<HTMLElement | null>
 }
 
-export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
+export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features }) => {
   const activeInfo = useActiveTableRect(editor, containerRef)
   const { info: hoveredInfo, inRightBar, inBottomBar } = useHoveredTable(editor, containerRef)
   const [rightBarFocused, setRightBarFocused] = useState(false)
   const [bottomBarFocused, setBottomBarFocused] = useState(false)
 
-  // 表と +列/+行 バーの間の余白（窮屈に見えないよう少し離す）
-
-  // 表示対象テーブル: caret 側 > ホバー側 の優先順位（caret あるなら caret の rect/pos を使う）
-  const targetInfo = activeInfo ?? hoveredInfo
-  if (!targetInfo) return null
+  // ポインター操作中はホバー先の表、キーボード操作中は選択中の表を対象にする。
+  const targetInfo = hoveredInfo ?? activeInfo
+  if (!targetInfo)
+    return <TableCellControls containerRef={containerRef} features={features} editor={editor} />
 
   // ホバーは「hoveredInfo の pos === targetInfo.pos」のときだけ有効
   const hoverActive = hoveredInfo?.pos === targetInfo.pos
-  const caretAtRight =
-    !!activeInfo && activeInfo.pos === targetInfo.pos && activeInfo.isRightmostColumnSelected
-  const caretAtBottom =
-    !!activeInfo && activeInfo.pos === targetInfo.pos && activeInfo.isBottommostRowSelected
-
-  const showRightBar = rightBarFocused || (hoverActive && inRightBar) || caretAtRight
-  const showBottomBar = bottomBarFocused || (hoverActive && inBottomBar) || caretAtBottom
+  const activeMatches = activeInfo?.pos === targetInfo.pos
+  const showRightBar =
+    rightBarFocused ||
+    (hoverActive && inRightBar) ||
+    (activeMatches && activeInfo?.isRightmostColumnSelected)
+  const showBottomBar =
+    bottomBarFocused ||
+    (hoverActive && inBottomBar) ||
+    (activeMatches && activeInfo?.isBottommostRowSelected)
 
   const viewportRight = targetInfo.viewport.left + targetInfo.viewport.width
   const viewportBottom = targetInfo.viewport.top + targetInfo.viewport.height
 
   // 既存の viewport クランプロジック
-  const barGap = 4
+  const barGap = TABLE_BAR_GAP
   const colLeftIdeal = targetInfo.rect.left + targetInfo.rect.width + barGap
-  const barThickness = 24
+  const barThickness = TABLE_BAR_THICKNESS
   const colLeftMax = viewportRight - barThickness
   const colLeft = Math.min(colLeftIdeal, colLeftMax)
+  const colTop = Math.max(targetInfo.rect.top, targetInfo.viewport.top)
+  const colHeight = Math.min(targetInfo.rect.top + targetInfo.rect.height, viewportBottom) - colTop
   const colVisibleInViewport =
-    colLeftMax >= targetInfo.viewport.left && targetInfo.rect.top + barThickness <= viewportBottom
+    colHeight > 0 &&
+    colLeftMax >= targetInfo.viewport.left &&
+    targetInfo.rect.top + barThickness <= viewportBottom
 
   const rowTopIdeal = targetInfo.rect.top + targetInfo.rect.height + barGap
   const rowTopMax = viewportBottom - barThickness
@@ -55,44 +62,31 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   const rowVisibleInViewport =
     rowTopMax >= targetInfo.viewport.top && targetInfo.rect.left + barThickness <= viewportRight
 
-  const buttonSize = 32
-  const actionsGap = 4
   return (
     <>
-      {activeInfo &&
-        (() => {
-          const idealLeft = activeInfo.rect.left + activeInfo.rect.width - buttonSize
-          const maxLeft = viewportRight - buttonSize - actionsGap
-          const idealTop = activeInfo.rect.top - buttonSize - actionsGap
-          const minTop = activeInfo.viewport.top
-          return (
-            <TableActionsButton
-              editor={editor}
-              top={Math.max(idealTop, minTop)}
-              left={Math.min(idealLeft, Math.max(0, maxLeft))}
-            />
-          )
-        })()}
+      <TableCellControls containerRef={containerRef} features={features} editor={editor} />
       {showRightBar && colVisibleInViewport && (
-        <AddColumnButton
+        <AddTableAxisButton
+          axis="column"
           editor={editor}
           tablePos={targetInfo.pos}
-          top={targetInfo.rect.top}
+          top={colTop}
           left={colLeft}
           thickness={barThickness}
-          height={targetInfo.rect.height}
+          length={colHeight}
           onFocus={() => setRightBarFocused(true)}
           onBlur={() => setRightBarFocused(false)}
         />
       )}
       {showBottomBar && rowVisibleInViewport && (
-        <AddRowButton
+        <AddTableAxisButton
+          axis="row"
           editor={editor}
           tablePos={targetInfo.pos}
           top={rowTop}
           left={targetInfo.rect.left}
           thickness={barThickness}
-          width={targetInfo.rect.width}
+          length={targetInfo.rect.width}
           onFocus={() => setBottomBarFocused(true)}
           onBlur={() => setBottomBarFocused(false)}
         />

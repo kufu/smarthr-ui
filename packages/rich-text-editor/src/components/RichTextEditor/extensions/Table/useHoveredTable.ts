@@ -3,13 +3,19 @@
 import { type RefObject, useEffect, useRef, useState } from 'react'
 
 import { hitTestExtendedTableArea } from './helpers/extendedHitArea'
+import {
+  TABLE_BAR_GAP,
+  TABLE_BAR_THICKNESS,
+  getRelativeRect,
+  getTableControlOrigin,
+  resolveTableDisplayElement,
+} from './tableGeometry'
 
 import type { Editor } from '@tiptap/react'
 
 export type HoveredTableInfo = {
   pos: number
   rect: { top: number; left: number; width: number; height: number }
-  containerSize: { width: number; height: number }
   /** ProseMirror（実際の編集領域）のwrapper相対rect。ボタン表示判定の基準にする */
   viewport: { top: number; left: number; width: number; height: number }
 }
@@ -20,7 +26,7 @@ export type UseHoveredTableReturn = {
   inBottomBar: boolean
 }
 
-const BAR_THICKNESS = 24
+const BAR_THICKNESS = TABLE_BAR_GAP + TABLE_BAR_THICKNESS
 
 const resolveTablePos = (editor: Editor, tableEl: HTMLElement): number | null => {
   try {
@@ -37,12 +43,6 @@ const resolveTablePos = (editor: Editor, tableEl: HTMLElement): number | null =>
   return null
 }
 
-const resolveDisplayEl = (tableEl: HTMLElement): HTMLElement => {
-  const parent = tableEl.parentElement
-  if (parent && parent.classList.contains('tableWrapper')) return parent
-  return tableEl
-}
-
 const buildHoveredInfo = (
   editor: Editor,
   tableEl: HTMLElement,
@@ -50,24 +50,13 @@ const buildHoveredInfo = (
 ): HoveredTableInfo | null => {
   const pos = resolveTablePos(editor, tableEl)
   if (pos === null) return null
-  const displayRect = resolveDisplayEl(tableEl).getBoundingClientRect()
-  const containerRect = container.getBoundingClientRect()
+  const displayRect = resolveTableDisplayElement(tableEl).getBoundingClientRect()
+  const containerRect = getTableControlOrigin(container)
   const proseMirrorRect = editor.view.dom.getBoundingClientRect()
   return {
     pos,
-    rect: {
-      top: displayRect.top - containerRect.top,
-      left: displayRect.left - containerRect.left,
-      width: displayRect.width,
-      height: displayRect.height,
-    },
-    containerSize: { width: containerRect.width, height: containerRect.height },
-    viewport: {
-      top: proseMirrorRect.top - containerRect.top,
-      left: proseMirrorRect.left - containerRect.left,
-      width: proseMirrorRect.width,
-      height: proseMirrorRect.height,
-    },
+    rect: getRelativeRect(displayRect, containerRect),
+    viewport: getRelativeRect(proseMirrorRect, containerRect),
   }
 }
 
@@ -105,7 +94,7 @@ export const useHoveredTable = (
     }
 
     const evaluate = (mouseEvent: MouseEvent) => {
-      const containerRect = container.getBoundingClientRect()
+      const containerRect = getTableControlOrigin(container)
       const cx = mouseEvent.clientX - containerRect.left
       const cy = mouseEvent.clientY - containerRect.top
       const targetEl = mouseEvent.target as HTMLElement | null
@@ -122,23 +111,17 @@ export const useHoveredTable = (
         return
       }
 
-      // テーブルの外をホバー: 既存 info の拡張領域内なら維持、外なら null
-      setInfo((prev) => {
-        if (!prev) {
-          setInRightBar(false)
-          setInBottomBar(false)
-          return null
+      // 表の外から直接バー領域に入った場合も、フォーカスなしで操作できる。
+      for (const tableEl of Array.from(editor.view.dom.querySelectorAll<HTMLElement>('table'))) {
+        const next = buildHoveredInfo(editor, tableEl, container)
+        if (!next) continue
+        const hit = hitTestExtendedTableArea({ x: cx, y: cy }, next.rect, BAR_THICKNESS)
+        if (hit.inside) {
+          applyHit(next, hit)
+          return
         }
-        const hit = hitTestExtendedTableArea({ x: cx, y: cy }, prev.rect, BAR_THICKNESS)
-        if (!hit.inside) {
-          setInRightBar(false)
-          setInBottomBar(false)
-          return null
-        }
-        setInRightBar(hit.inRightBar)
-        setInBottomBar(hit.inBottomBar)
-        return prev
-      })
+      }
+      clearAll()
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -189,11 +172,28 @@ export const useHoveredTable = (
       const next = buildHoveredInfo(editor, tableEl, container)
       if (next && next.pos === info.pos) setInfo(next)
     }
+    let updateFrame: number | null = null
+    const onUpdate = () => {
+      if (updateFrame !== null) cancelAnimationFrame(updateFrame)
+      updateFrame = requestAnimationFrame(() => {
+        updateFrame = null
+        update()
+      })
+    }
     const resizeObserver = new ResizeObserver(update)
     resizeObserver.observe(container)
+    const node = editor.view.nodeDOM(info.pos)
+    if (node instanceof HTMLElement) {
+      resizeObserver.observe(node)
+      const table = node.matches('table') ? node : node.querySelector('table')
+      if (table) resizeObserver.observe(table)
+    }
+    editor.on('update', onUpdate)
     window.addEventListener('scroll', update, true)
     return () => {
       resizeObserver.disconnect()
+      editor.off('update', onUpdate)
+      if (updateFrame !== null) cancelAnimationFrame(updateFrame)
       window.removeEventListener('scroll', update, true)
     }
   }, [info?.pos, editor, containerRef]) // eslint-disable-line react-hooks/exhaustive-deps

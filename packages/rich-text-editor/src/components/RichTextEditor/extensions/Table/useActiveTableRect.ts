@@ -5,11 +5,11 @@ import { type Editor, useEditorState } from '@tiptap/react'
 import { type RefObject, useEffect, useRef, useState } from 'react'
 
 import { detectEdgeCells } from './helpers/edgeCellDetection'
+import { getRelativeRect, getTableControlOrigin, resolveTableDisplayElement } from './tableGeometry'
 
 export type ActiveTableInfo = {
   pos: number
   rect: { top: number; left: number; width: number; height: number }
-  containerSize: { width: number; height: number }
   /** ProseMirror（実際の編集領域）のwrapper相対rect。ボタン表示判定の基準にする */
   viewport: { top: number; left: number; width: number; height: number }
   /** caret/選択が最右列のいずれかのセルに触れている */
@@ -32,18 +32,6 @@ const resolveTableEl = (rootEl: HTMLElement | null): HTMLElement | null => {
   if (!rootEl) return null
   if (rootEl.tagName === 'TABLE') return rootEl
   return rootEl.querySelector('table')
-}
-
-/**
- * .tableWrapper が存在すればその rect（max-width制限・横スクロール考慮）、
- * なければ table 自体の rect を使う。
- * これで +行バーの幅などが画面外にはみ出さない。
- */
-const resolveDisplayEl = (tableEl: HTMLElement | null): HTMLElement | null => {
-  if (!tableEl) return null
-  const parent = tableEl.parentElement
-  if (parent && parent.classList.contains('tableWrapper')) return parent
-  return tableEl
 }
 
 const computeEdgeCells = (
@@ -100,7 +88,7 @@ export const useActiveTableRect = (
   const tablePos = activeSelection?.tablePos ?? null
   const isRightmostColumnSelected = activeSelection?.edge.isRightmostColumnSelected ?? false
   const isBottommostRowSelected = activeSelection?.edge.isBottommostRowSelected ?? false
-  // Use a ref so updateRect can always read the latest edge flags without them being deps
+  // updateRect の依存に入れずに最新の端フラグを読むため ref に持つ。依存に入れると選択のたびに購読し直しになる。
   const edgeFlagsRef = useRef({ isRightmostColumnSelected, isBottommostRowSelected })
   edgeFlagsRef.current = { isRightmostColumnSelected, isBottommostRowSelected }
 
@@ -114,30 +102,16 @@ export const useActiveTableRect = (
 
     const updateRect = () => {
       const tableEl = resolveTableEl(editor.view.nodeDOM(tablePos) as HTMLElement | null)
-      const displayEl = resolveDisplayEl(tableEl)
+      const displayEl = tableEl ? resolveTableDisplayElement(tableEl) : null
       const containerEl = containerRef.current
       if (!displayEl || !containerEl) return
       const displayRect = displayEl.getBoundingClientRect()
-      const containerRect = containerEl.getBoundingClientRect()
+      const containerRect = getTableControlOrigin(containerEl)
       const proseMirrorRect = editor.view.dom.getBoundingClientRect()
       setInfo({
         pos: tablePos,
-        rect: {
-          top: displayRect.top - containerRect.top,
-          left: displayRect.left - containerRect.left,
-          width: displayRect.width,
-          height: displayRect.height,
-        },
-        containerSize: {
-          width: containerRect.width,
-          height: containerRect.height,
-        },
-        viewport: {
-          top: proseMirrorRect.top - containerRect.top,
-          left: proseMirrorRect.left - containerRect.left,
-          width: proseMirrorRect.width,
-          height: proseMirrorRect.height,
-        },
+        rect: getRelativeRect(displayRect, containerRect),
+        viewport: getRelativeRect(proseMirrorRect, containerRect),
         isRightmostColumnSelected: edgeFlagsRef.current.isRightmostColumnSelected,
         isBottommostRowSelected: edgeFlagsRef.current.isBottommostRowSelected,
       })
@@ -146,7 +120,7 @@ export const useActiveTableRect = (
     updateRect()
 
     const tableEl = resolveTableEl(editor.view.nodeDOM(tablePos) as HTMLElement | null)
-    const displayEl = resolveDisplayEl(tableEl)
+    const displayEl = tableEl ? resolveTableDisplayElement(tableEl) : null
 
     const resizeObserver = new ResizeObserver(updateRect)
     if (displayEl) resizeObserver.observe(displayEl)

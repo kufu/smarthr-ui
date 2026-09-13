@@ -1,5 +1,8 @@
 import { Table, type TableOptions, TableView } from '@tiptap/extension-table'
 
+import { TABLE_SHORTCUTS } from './tableShortcuts'
+
+import type { TableScope } from './tableTarget'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 class CustomTableView extends TableView {
@@ -15,9 +18,21 @@ declare module '@tiptap/core' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Storage {
     table?: {
-      openActionsMenu: (() => void) | null
+      openActionsMenu: ((scope?: TableScope) => void) | null
     }
   }
+}
+
+/**
+ * macOS の Option+Shift+英字は 'Ç' のような別の文字を生むため、prosemirror-keymap は
+ * event.key では照合できず keyCode から小文字のキー名を組み立てて再照合する。
+ * 'Alt-Shift-C' の登録だけでは 'Shift-Alt-c' と一致せず macOS で発動しない。
+ * Windows/Linux は 'C' のまま届くので、大小どちらの登録も必要になる。
+ */
+const withKeyCaseVariants = (shortcut: string): readonly string[] => {
+  const key = shortcut.slice(shortcut.lastIndexOf('-') + 1)
+
+  return key.length === 1 ? [shortcut, shortcut.slice(0, -1) + key.toLowerCase()] : [shortcut]
 }
 
 export const CustomTable = Table.extend({
@@ -36,10 +51,22 @@ export const CustomTable = Table.extend({
 
   addKeyboardShortcuts() {
     // Tiptap Table 標準のショートカット（Backspace/Delete でのテーブル削除など）を継承し、
-    // Tab/Shift-Tab/Alt-Enter/Shift-F10 のみカスタマイズする。
+    // セル移動と表・行・列・セルの操作メニューをカスタマイズする。
     const parentShortcuts = this.parent?.() ?? {}
+    const openActionsMenu = (scope?: TableScope) => () => {
+      if (!this.editor.isActive('table')) return false
+      const handler = this.editor.storage.table?.openActionsMenu
+      if (!handler) return false
+      handler(scope)
+      return true
+    }
     return {
       ...parentShortcuts,
+      ...Object.fromEntries(
+        Object.entries(TABLE_SHORTCUTS).flatMap(([scope, shortcut]) =>
+          withKeyCaseVariants(shortcut).map((key) => [key, openActionsMenu(scope as TableScope)]),
+        ),
+      ),
       Tab: () => {
         if (!this.editor.isActive('table')) return false
         // セル移動できればtrue、できなければfalseでブラウザのTabデフォルト動作に任せる
@@ -50,21 +77,7 @@ export const CustomTable = Table.extend({
         if (!this.editor.isActive('table')) return false
         return this.editor.commands.goToPreviousCell()
       },
-      'Alt-Enter': () => {
-        if (!this.editor.isActive('table')) return false
-        const handler = this.editor.storage.table?.openActionsMenu
-        // handler未登録（hideToolbar 等で Floating UI が無い）時はショートカットを握りつぶさない
-        if (!handler) return false
-        handler()
-        return true
-      },
-      'Shift-F10': () => {
-        if (!this.editor.isActive('table')) return false
-        const handler = this.editor.storage.table?.openActionsMenu
-        if (!handler) return false
-        handler()
-        return true
-      },
+      'Shift-F10': openActionsMenu(),
     }
   },
 })

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Cluster, FormControl, Stack } from 'smarthr-ui'
 
+import { RichTextViewer } from '../../RichTextViewer/RichTextViewer'
 import { RichTextEditor } from '../RichTextEditor'
 
 import type { RichTextJSON } from '../../types'
@@ -401,6 +402,49 @@ export const InForm: Story = {
           </Cluster>
         </Stack>
       </form>
+    )
+  },
+}
+
+export const TableEditing: Story = {
+  name: 'テーブルの行・列・セル操作',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [value, setValue] = useState<RichTextJSON>({
+      type: 'doc',
+      content: [
+        {
+          type: 'table',
+          content: [
+            ['名前', '役割', '部署', '勤務地'],
+            ['山田 花子', 'シニアエンジニア', '開発部', '東京'],
+            ['佐藤 太郎', 'プロダクトマネージャー', 'プロダクト部', '大阪'],
+            ['鈴木 美咲', 'UXデザイナー', 'デザイン部', '福岡'],
+            ['田中 健太', 'データアナリスト', '分析部', 'リモート'],
+          ].map((cells, row) => ({
+            type: 'tableRow',
+            content: cells.map((text) => ({
+              type: row === 0 ? 'tableHeader' : 'tableCell',
+              attrs: { colwidth: [180] },
+              content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+            })),
+          })),
+        },
+        { type: 'paragraph', content: [{ type: 'text', text: '表の外にも移動できます。' }] },
+      ],
+    })
+    return (
+      <Stack>
+        <FormControl
+          label="テーブルの編集"
+          helpMessage="行・列・セルのボタンから操作できます。セル内でAlt+EnterまたはShift+F10を押してもメニューが開きます。"
+        >
+          <RichTextEditor {...rest} value={value} onChange={setValue} />
+        </FormControl>
+        <div>
+          <p>保存内容の表示</p>
+          <RichTextViewer content={value} />
+        </div>
+      </Stack>
     )
   },
 }

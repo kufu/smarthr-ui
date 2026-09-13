@@ -3,6 +3,8 @@
 import { NodeSelection } from '@tiptap/pm/state'
 import { type Editor, useEditorState } from '@tiptap/react'
 
+import { getEditorColor } from '../extensions/Table/tableColor'
+
 const findTableNode = (e: Editor) => {
   const { $from } = e.state.selection
   for (let depth = $from.depth; depth > 0; depth--) {
@@ -81,8 +83,8 @@ export const useToolbarState = (editor: Editor) =>
               ? 4
               : null) as 1 | 2 | 3 | 4 | null,
       isLink: e.isActive('link'),
-      currentColor: normalizeStyleValue(e.getAttributes('textStyle').color),
-      currentBackgroundColor: normalizeStyleValue(e.getAttributes('textStyle').backgroundColor),
+      currentColor: getEditorColor(e, 'color'),
+      currentBackgroundColor: getEditorColor(e, 'backgroundColor'),
       currentFontSize: normalizeStyleValue(e.getAttributes('textStyle').fontSize),
       currentLineHeight:
         normalizeStyleValue(e.getAttributes('paragraph').lineHeight) ??

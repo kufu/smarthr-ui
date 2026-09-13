@@ -135,3 +135,19 @@ describe('line-height のシリアライズ', () => {
     expect(serializeToHTML(json)).not.toContain('line-height')
   })
 })
+
+describe('表セルの文字色・背景色', () => {
+  it('HTMLの往復でセルの色とインラインの上書きが保持される', () => {
+    const html =
+      '<table><tr><th style="color: #0077c7; background-color: #fde2ea"><p>base <span style="color: #e01e5a">override</span></p></th></tr></table>'
+    const json = normalizeToJSON({ format: 'html', content: html })
+    const cell = json.content![0].content![0].content![0]
+    expect(cell.attrs).toMatchObject({
+      color: '#0077c7',
+      backgroundColor: '#fde2ea',
+    })
+    const restored = normalizeToJSON({ format: 'html', content: serializeToHTML(json) })
+    expect(restored).toEqual(json)
+    expect(cell.content![0].content![1].marks?.[0].attrs?.color).toBe('#e01e5a')
+  })
+})

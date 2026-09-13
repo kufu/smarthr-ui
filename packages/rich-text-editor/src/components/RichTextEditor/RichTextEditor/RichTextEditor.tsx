@@ -381,7 +381,7 @@ export const RichTextEditor = memo(
             {editor && <EditorContent editor={editor} />}
           </div>
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('table') && (
-            <TableFloatingUI containerRef={wrapperRef} editor={editor} />
+            <TableFloatingUI containerRef={wrapperRef} features={features} editor={editor} />
           )}
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('image') && (
             <ImageFloatingUI containerRef={wrapperRef} editor={editor} />
