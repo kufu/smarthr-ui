@@ -105,4 +105,40 @@ describe('Fieldset', () => {
       ).toBeInTheDocument(),
     )
   })
+
+  it('errorMessagesが指定されている場合、子のinput要素にaria-invalidが付与される', () => {
+    render(
+      <form>
+        <Fieldset errorMessages="error" legend="fieldset-legend">
+          <Input name="test" aria-label="input-accessible-name" />
+        </Fieldset>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('errorMessagesが指定されていない場合、子のinput要素にaria-invalidが付与されない', () => {
+    render(
+      <form>
+        <Fieldset legend="fieldset-legend">
+          <Input name="test" aria-label="input-accessible-name" />
+        </Fieldset>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid')
+  })
+
+  it('autoBindErrorInput:falseの場合、errorMessagesが指定されていても子のinput要素にaria-invalidが付与されない', () => {
+    render(
+      <form>
+        <Fieldset errorMessages="error" autoBindErrorInput={false} legend="fieldset-legend">
+          <Input name="test" aria-label="input-accessible-name" />
+        </Fieldset>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid')
+  })
 })

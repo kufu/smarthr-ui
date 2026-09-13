@@ -1,4 +1,4 @@
-import { FaMoneyCheckDollarIcon } from '../../../Icon'
+import { FaMoneyCheckDollarIcon } from '../../../../Icon'
 import { CurrencyInput } from '../CurrencyInput'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
