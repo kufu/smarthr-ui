@@ -1,6 +1,6 @@
-import type { PositiveGap } from '../../types'
-import type { StatusLabel } from '../StatusLabel'
-import type { Text, TextProps } from '../Text'
+import type { PositiveGap } from '../../../types'
+import type { StatusLabel } from '../../StatusLabel'
+import type { Text, TextProps } from '../../Text'
 import type {
   ComponentProps,
   ComponentPropsWithoutRef,
