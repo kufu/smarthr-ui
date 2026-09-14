@@ -2,7 +2,7 @@ import { Reel } from '../Reel'
 
 import { GapStory, Padding } from './Reel.stories'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Layout/Reel/VRT',

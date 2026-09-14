@@ -5,6 +5,7 @@ import {
   type FC,
   type PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -13,6 +14,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
 import { tabbable } from '../../libs/tabbable'
@@ -29,13 +32,12 @@ import {
 const KEY_ESCAPE = /^Esc(ape)?$/
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3 forced-colors:shr-outline forced-colors:shr-outline-1',
-  variants: {
-    isActive: {
-      true: 'shr-visible',
-      false: 'shr-invisible',
-    },
-  },
+  base: [
+    'smarthr-ui-Dropdown-content',
+    'shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
+    'forced-colors:shr-outline forced-colors:shr-outline-1',
+    'shr-invisible data-[dropdown-active]:shr-visible',
+  ],
 })
 
 type BaseProps = PropsWithChildren<{
@@ -70,10 +72,7 @@ export const DropdownContentInner: FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const actualClassName = useMemo(
-    () => classNameGenerator({ isActive, className }),
-    [isActive, className],
-  )
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const style = (() => {
     const defaultMargin = theme.spacingByChar(0.5)
@@ -90,6 +89,107 @@ export const DropdownContentInner: FC<Props> = ({
       maxWidth: maxWidthStyle,
     }
   })()
+
+  const { triggerElementRef, rootTriggerRef, handleDelegateClickCloser } =
+    useContext(DropdownContext)
+
+  const focusFrame = useAnimationFrame()
+
+  const latest = useLatest({
+    triggerElementRef,
+    rootTriggerRef,
+    handleDelegateClickCloser,
+    isActive,
+    focusFrame,
+  })
+
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
+            return
+          }
+
+          const tabbablesInContent = tabbable(node)
+
+          if (tabbablesInContent.length === 0) {
+            return
+          }
+
+          const trigger = tabbable(latest.triggerElementRef.current).at(-1)
+          const firstTabbable = tabbablesInContent[0]
+
+          if (e.target === trigger) {
+            if (e.shiftKey) {
+              // move focus previous of the Trigger
+              return
+            }
+
+            // focus a first tabbable element in the dropdown content
+            e.preventDefault()
+            firstTabbable.focus()
+
+            return
+          } else if (e.shiftKey) {
+            if (e.target === firstTabbable || e.target === focusTargetRef.current) {
+              // focus the Trigger
+              e.preventDefault()
+              trigger!.focus()
+              latest.handleDelegateClickCloser()
+            }
+          } else if (e.target === tabbablesInContent.at(-1)) {
+            // move focus next of the Trigger
+            const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
+
+            if (rootTrigger) {
+              rootTrigger.focus()
+              latest.handleDelegateClickCloser()
+            }
+          }
+        } else if (KEY_ESCAPE.test(e.key)) {
+          if (e.target && e.target === focusTargetRef.current) {
+            latest.handleDelegateClickCloser()
+
+            return
+          }
+
+          const trigger = getFirstTabbable(latest.triggerElementRef)
+
+          if (trigger && e.target === trigger) {
+            // close the dropdown when the Trigger is focused and Esc key is pressed
+            latest.handleDelegateClickCloser()
+
+            return
+          }
+
+          for (const inner of tabbable(node)) {
+            if (inner === e.target) {
+              // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
+              latest.handleDelegateClickCloser()
+
+              break
+            }
+          }
+        }
+      }
+
+      window.addEventListener('keydown', handleKeyDown)
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
+    },
+    [latest],
+  )
+
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -110,120 +210,30 @@ export const DropdownContentInner: FC<Props> = ({
           },
         ),
       )
-      setIsActive(true)
-    }
-  }, [triggerRect])
 
-  // setIsActive(true) と同じ useEffect 内で直接 focus() を呼ぶことはできない。
-  // このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
-  // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
-  // shr-invisible (visibility: hidden) でレンダリングされる。
-  // ちらつき防止には実寸法を保持したまま視覚的に隠せる visibility: hidden が唯一の手段となる。
-  // visibility: hidden の要素はフォーカスを受け付けないため、setIsActive(true) の直後に
-  // focus() を呼んでも DOM がまだ更新されておらず無効になる。
-  //
-  // useEffect([isActive]) であれば、isActive=true になった後の render commit 後に
-  // 必ず実行されることが保証されるため、この実装が最も信頼性が高い。
-  useEffect(() => {
-    if (isActive) {
-      focusTargetRef.current?.focus()
-    }
-  }, [isActive])
+      if (!latest.isActive) {
+        setIsActive(true)
 
-  const { triggerElementRef, rootTriggerRef, handleDelegateClickCloser } =
-    useContext(DropdownContext)
-
-  const latest = useLatest({
-    triggerElementRef,
-    rootTriggerRef,
-    handleDelegateClickCloser,
-  })
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        if (
-          !wrapperRef.current ||
-          !latest.triggerElementRef.current ||
-          !latest.rootTriggerRef?.current
-        ) {
-          return
-        }
-
-        const tabbablesInContent = tabbable(wrapperRef.current)
-
-        if (tabbablesInContent.length === 0) {
-          return
-        }
-
-        const trigger = tabbable(latest.triggerElementRef.current).at(-1)
-        const firstTabbable = tabbablesInContent[0]
-
-        if (e.target === trigger) {
-          if (e.shiftKey) {
-            // move focus previous of the Trigger
-            return
-          }
-
-          // focus a first tabbable element in the dropdown content
-          e.preventDefault()
-          firstTabbable.focus()
-
-          return
-        } else if (e.shiftKey) {
-          if (e.target === firstTabbable || e.target === focusTargetRef.current) {
-            // focus the Trigger
-            e.preventDefault()
-            trigger!.focus()
-            latest.handleDelegateClickCloser()
-          }
-        } else if (e.target === tabbablesInContent.at(-1)) {
-          // move focus next of the Trigger
-          const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
-
-          if (rootTrigger) {
-            rootTrigger.focus()
-            latest.handleDelegateClickCloser()
-          }
-        }
-      } else if (KEY_ESCAPE.test(e.key)) {
-        if (e.target && e.target === focusTargetRef.current) {
-          latest.handleDelegateClickCloser()
-
-          return
-        }
-
-        const trigger = getFirstTabbable(latest.triggerElementRef)
-
-        if (trigger && e.target === trigger) {
-          // close the dropdown when the Trigger is focused and Esc key is pressed
-          latest.handleDelegateClickCloser()
-
-          return
-        }
-
-        if (wrapperRef.current) {
-          for (const inner of tabbable(wrapperRef.current)) {
-            if (inner === e.target) {
-              // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-              latest.handleDelegateClickCloser()
-
-              break
-            }
-          }
-        }
+        // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+        // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+        // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
+        // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
+        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
+        latest.focusFrame.request(() => focusTargetRef.current?.focus())
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [latest])
+    return () => latest.focusFrame.cancel()
+  }, [triggerRect, latest])
 
   return (
-    <div {...rest} ref={wrapperRef} className={actualClassName} style={style}>
+    <div
+      {...rest}
+      ref={mergedRef}
+      className={actualClassName}
+      style={style}
+      data-dropdown-active={isActive || undefined}
+    >
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (

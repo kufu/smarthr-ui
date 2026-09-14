@@ -11,10 +11,10 @@ import {
 } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { Heading, type HeadingTagTypes } from '../Heading'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { Heading, type HeadingTagTypes } from '../../Heading'
 import {
   FaCaretDownIcon,
   FaCaretUpIcon,
@@ -23,9 +23,9 @@ import {
   FaCircleInfoIcon,
   FaRotateIcon,
   WarningIcon,
-} from '../Icon'
-import { Sidebar } from '../Layout'
-import { Panel, type PanelElementProps } from '../Panel'
+} from '../../Icon'
+import { Sidebar } from '../../Layout'
+import { Panel, type PanelElementProps } from '../../Panel'
 
 type ObjectHeadingType = {
   text: ReactNode

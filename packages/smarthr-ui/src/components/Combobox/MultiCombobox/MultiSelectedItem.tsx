@@ -1,11 +1,12 @@
+'use client'
+
 import {
   type KeyboardEvent,
-  type RefObject,
+  type RefCallback,
   memo,
-  useEffect,
+  useCallback,
   useId,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -119,7 +120,7 @@ export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDel
 }
 
 type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' | 'handleDelete'> & {
-  labelRef?: RefObject<HTMLSpanElement>
+  labelRef?: RefCallback<HTMLElement>
   itemLabel: ComboboxItem<T>['label']
   itemDeletable: boolean
   functions: {
@@ -141,17 +142,14 @@ const BaseEllipsisMultiSelectedItem = <T,>({
   ...rest
 }: LowerMultiSelectedItemProps<T>) => {
   const [needsTooltip, setNeedsTooltip] = useState(false)
-  const labelRef = useRef<HTMLSpanElement>(null)
 
-  useEffect(() => {
-    const elem = labelRef.current
-
-    if (elem) {
-      setNeedsTooltip(elem.offsetWidth < elem.scrollWidth)
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      setNeedsTooltip(node.offsetWidth < node.scrollWidth)
     }
   }, [])
 
-  const body = <ActualMultiSelectedItem {...rest} labelRef={labelRef} itemLabel={itemLabel} />
+  const body = <ActualMultiSelectedItem {...rest} labelRef={callbackRef} itemLabel={itemLabel} />
 
   if (needsTooltip) {
     return <Tooltip message={itemLabel}>{body}</Tooltip>

@@ -5,34 +5,22 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  useCallback,
   useContext,
-  useEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { tabbable } from '../../libs/tabbable'
 import { Tooltip } from '../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
-type ConditionalWrapperProps = {
-  shouldWrapContent?: boolean
-  wrapper: FC<PropsWithChildren>
-}
-
 const CAPTURE_OPTION = {
   capture: true,
 }
-
-/**
- * 条件付きでラッパをレンダリングする
- */
-const ConditionalWrapper: FC<PropsWithChildren<ConditionalWrapperProps>> = ({
-  shouldWrapContent,
-  wrapper,
-  children,
-}) => (shouldWrapContent ? wrapper({ children }) : children)
 
 type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show?: boolean }
@@ -46,89 +34,83 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   const { active, handleClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  useEffect(() => {
-    if (!triggerElementRef.current) {
-      return
-    }
-
-    // apply ARIA to all focusable elements in trigger
-    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
-
-    triggers.forEach((trigger) => {
-      trigger.setAttribute('aria-expanded', active.toString())
-      trigger.setAttribute('aria-controls', contentId)
-    })
-  }, [active, triggerElementRef, contentId])
-
-  useEffect(() => {
-    const triggerElement = triggerElementRef.current
-    if (!triggerElement) {
-      return
-    }
-
-    let currentCleanup: (() => void) | undefined
-
-    const setupButton = () => {
-      // 既存のクリーンアップを実行
-      currentCleanup?.()
-      currentCleanup = undefined
-
-      const button = triggerElement.querySelector<HTMLButtonElement>('button')
-
-      // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
-      if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+  const setupCallbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
         return
       }
 
-      // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
-      // そのためcaptureで開く処理を実行する
-      const callback = (e: MouseEvent) => {
-        handleClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
+      let currentCleanup: (() => void) | undefined
+
+      const setupButton = () => {
+        // 既存のクリーンアップを実行
+        currentCleanup?.()
+        currentCleanup = undefined
+
+        const button = node.querySelector<HTMLButtonElement>('button')
+
+        // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
+        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+          return
+        }
+
+        // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
+        // そのためcaptureで開く処理を実行する
+        const callback = (e: MouseEvent) => {
+          handleClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
+        }
+
+        button.addEventListener('click', callback, CAPTURE_OPTION)
+
+        currentCleanup = () => {
+          button.removeEventListener('click', callback, CAPTURE_OPTION)
+        }
       }
 
-      button.addEventListener('click', callback, CAPTURE_OPTION)
+      setupButton()
 
-      currentCleanup = () => {
-        button.removeEventListener('click', callback, CAPTURE_OPTION)
+      const observer = new MutationObserver(setupButton)
+
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+        attributes: true,
+        attributeFilter: ['disabled', 'aria-disabled'],
+      })
+
+      return () => {
+        currentCleanup?.()
+        observer.disconnect()
       }
-    }
+    },
+    [handleClickTrigger],
+  )
+  const layoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (node) {
+        // apply ARIA to all focusable elements in trigger
+        tabbable(node, { shouldIgnoreVisibility: true }).forEach((trigger) => {
+          trigger.setAttribute('aria-expanded', active.toString())
+          trigger.setAttribute('aria-controls', contentId)
+        })
+      }
+    },
+    [active, contentId],
+  )
 
-    setupButton()
-
-    const observer = new MutationObserver(setupButton)
-
-    observer.observe(triggerElement, {
-      childList: true,
-      subtree: true,
-      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-      attributes: true,
-      attributeFilter: ['disabled', 'aria-disabled'],
-    })
-
-    return () => {
-      currentCleanup?.()
-      observer.disconnect()
-    }
-  }, [handleClickTrigger, triggerElementRef])
+  const mergedRef = useMergeRefs(triggerElementRef, setupCallbackRef, layoutEffectRef)
 
   return (
-    <div ref={triggerElementRef} className={actualClassName}>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
-      <ConditionalWrapper
-        shouldWrapContent={tooltip?.show}
-        wrapper={({ children: currentChildren }) =>
-          tooltip?.message ? (
-            // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-            <Tooltip tabIndex={-1} triggerType="icon" message={tooltip?.message}>
-              {currentChildren}
-            </Tooltip>
-          ) : (
-            currentChildren
-          )
-        }
-      >
-        {children}
-      </ConditionalWrapper>
+    <div ref={mergedRef} className={actualClassName}>
+      {tooltip && tooltip.show && tooltip.message ? (
+        // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
+        <Tooltip tabIndex={-1} triggerType="icon" message={tooltip.message}>
+          {children}
+        </Tooltip>
+      ) : (
+        children
+      )}
     </div>
   )
 }

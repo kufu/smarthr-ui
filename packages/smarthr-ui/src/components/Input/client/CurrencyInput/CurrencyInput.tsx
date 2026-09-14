@@ -10,10 +10,10 @@ import {
   useState,
 } from 'react'
 
-import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { useOnce } from '../../../hooks/client/useOnce'
-import { useLatest } from '../../../hooks/useLatest'
-import { formatNumericString } from '../../../libs/formatNumericString'
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useOnce } from '../../../../hooks/client/useOnce'
+import { useLatest } from '../../../../hooks/useLatest'
+import { formatNumericString } from '../../../../libs/formatNumericString'
 import { Input } from '../Input'
 
 type Props = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
@@ -71,6 +71,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     }, [latest])
 
     const callbackRef = useOnce(functions.baseCallbackRef)
+
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
     const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
 
     useEffect(() => {

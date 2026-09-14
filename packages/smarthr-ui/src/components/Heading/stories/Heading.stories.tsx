@@ -2,7 +2,7 @@ import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Heading } from '../Heading'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'
 
 export default {

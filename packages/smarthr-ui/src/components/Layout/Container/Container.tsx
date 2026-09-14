@@ -1,18 +1,17 @@
 'use client'
 
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../tailwind'
 
 import type { Gap } from '../../../types'
 
-type BaseProps = PropsWithChildren<
-  Omit<VariantProps<typeof classNameGenerator>, 'paddingBlock' | 'paddingInline'> & {
-    padding?: Gap | SeparatePadding
-  }
->
+type BaseProps = PropsWithChildren<{
+  size?: 'NARROW' | 'DEFAULT' | 'WIDE' | 'FULL'
+  padding?: Gap | SeparatePadding
+}>
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 type SeparatePadding = {
@@ -32,7 +31,7 @@ const classNameGenerator = tv({
       DEFAULT: 'shr-max-w-col8',
       WIDE: 'shr-max-w-col9',
       FULL: '',
-    },
+    } satisfies Record<NonNullable<Props['size']>, string>,
     paddingBlock,
     paddingInline,
   },

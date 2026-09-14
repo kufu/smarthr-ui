@@ -3,7 +3,7 @@ import { Table } from '../Table'
 import { WakuWakuButton } from '../WakuWakuButton'
 import { BulkActionRow } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 // TODO: WakuWakuButtonは非推奨のため、完全に削除するまではストーリーを残す必要があるが、削除後はこのファイルも削除すること
 export default {

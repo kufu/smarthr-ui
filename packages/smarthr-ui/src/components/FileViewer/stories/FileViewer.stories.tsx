@@ -1,6 +1,6 @@
 import { FileViewer } from '../FileViewer'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/FileViewer',
@@ -14,10 +14,21 @@ export default {
   argTypes: {
     file: {
       control: 'select',
-      options: ['Japanese PDF', 'English PDF (long, multiple pages)', 'JPEG', 'PNG'],
+      options: [
+        'Japanese PDF',
+        'English PDF (long, multiple pages)',
+        'JPEG 2000 in PDF',
+        'JPEG',
+        'PNG',
+      ],
       mapping: {
         'Japanese PDF': {
           url: '/fixtures/sample-japanese-pdf.pdf',
+          contentType: 'application/pdf',
+        },
+        // HINT: PDFViewerのoptions.wasmUrl設定が正しく機能しているかの確認に使う
+        'JPEG 2000 in PDF': {
+          url: '/fixtures/sample-jpeg2000-pdf.pdf',
           contentType: 'application/pdf',
         },
         'English PDF (long, multiple pages)': {

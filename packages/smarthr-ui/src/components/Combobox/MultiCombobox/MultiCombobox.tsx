@@ -364,7 +364,10 @@ const ActualMultiCombobox = <T,>(
         if (latest.isComposing) return
 
         if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
+          if (latest.isExpanded) {
+            e.stopPropagation()
+          }
+
           blur()
         } else if (e.key === 'Tab') {
           if (latest.isExpanded) {
@@ -440,6 +443,8 @@ const ActualMultiCombobox = <T,>(
 
   const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur)
 
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
 
   useEffect(() => {

@@ -186,12 +186,14 @@ export const DropdownMenuButton: FC<Props> = ({
 
         // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
         if (e.key === 'Tab') {
-          // HINT: tbのデフォルトの挙動の場合のみ、preventDefaultが必要
           e.preventDefault()
           direction = e.shiftKey ? -1 : 1
         } else if (KEY_UP_REGEX.test(e.key)) {
+          // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
+          e.preventDefault()
           direction = -1
         } else if (KEY_DOWN_REGEX.test(e.key)) {
+          e.preventDefault()
           direction = 1
         }
 

@@ -7,7 +7,7 @@ import { SparklesIcon } from '../SparklesIcon'
 import { WarningIcon } from '../WarningIcon'
 import { colorSet } from '../generateIcon'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const FaAddressBookIcon = Icons.FaAddressBookIcon
 

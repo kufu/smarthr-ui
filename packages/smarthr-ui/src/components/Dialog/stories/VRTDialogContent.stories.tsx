@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test'
 import DialogContentStory from './DialogContent.stories'
 
 import type { Dialog } from '../Dialog'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   ...DialogContentStory,

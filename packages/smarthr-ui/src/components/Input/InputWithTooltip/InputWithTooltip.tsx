@@ -2,7 +2,7 @@ import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
-import { Input } from '../Input'
+import { Input } from '../client'
 
 type Props = ComponentProps<typeof Input> & {
   /** 入力欄に紐付けるツールチップに表示するメッセージ */
