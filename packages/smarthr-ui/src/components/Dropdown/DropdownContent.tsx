@@ -44,7 +44,9 @@ type BaseProps = PropsWithChildren<{
   controllable?: boolean
 }>
 
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+// HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
+// クリックハンドラが必要な場合はchildren側に要素をラップして設定する
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick'>
 
 export const DropdownContent: FC<Props> = ({
   children,
