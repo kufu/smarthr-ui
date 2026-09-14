@@ -69,6 +69,7 @@ export const BarChart: React.FC<Props> = ({
         toneFrom: singleTone?.from,
         toneTo: singleTone?.to,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data.datasets.length, disablePatterns, singleTone?.from, singleTone?.to],
   )
 
