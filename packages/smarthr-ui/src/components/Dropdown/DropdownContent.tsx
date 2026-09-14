@@ -180,7 +180,9 @@ export const DropdownContent: FC<Props> = ({
         }
       },
       handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
-        if (findDelegateTarget(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)) {
+        const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
+
+        if (closer?.closest('.smarthr-ui-Dropdown-content') === e.currentTarget) {
           latest.handleDelegateClickCloser()
         }
       },
