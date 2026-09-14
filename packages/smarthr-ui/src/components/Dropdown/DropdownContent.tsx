@@ -238,10 +238,10 @@ export const DropdownContent: FC<Props> = ({
 
   return (
     <DropdownContentRoot>
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
         {...rest}
         ref={mergedRef}
+        role="presentation"
         className={actualClassName}
         style={style}
         data-dropdown-active={isActive || undefined}
