@@ -42,6 +42,13 @@
     "test": "vitest",
     "watch:css": "tailwindcss -i ./src/styles/index.css -o ./lib/styles.css --watch"
   },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "stylelint --fix"
+    ]
+  },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
@@ -59,6 +66,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@rollup/plugin-typescript": "^12.1.4",

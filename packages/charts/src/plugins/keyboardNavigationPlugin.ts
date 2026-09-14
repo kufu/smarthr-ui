@@ -1,17 +1,43 @@
 import type { Chart } from 'chart.js'
 
+export type LiveRegionTextParts = {
+  /** 系列名。data.datasets[].label 由来（例: 正社員） */
+  datasetLabel: string
+  /** 項目名。data.labels[] 由来（例: 4月） */
+  label: string
+  /** 選択中の値。data.datasets[].data[] 由来（例: 12） */
+  value: string
+}
+
 export type KeyboardNavigationOptions = {
   liveRegionId?: string
+  /**
+   * ライブリージョンに書き込む文言のフォーマッタ
+   * 未指定の場合は、半角スペースで連結する
+   */
+  formatLiveRegionText?: (parts: LiveRegionTextParts) => string
 }
 
 type ChartWithKeyboardHandler = {
   _keyboardNavigationHandler?: (event: KeyboardEvent) => void
 } & Chart
 
+const toText = (value: unknown): string =>
+  value === null || value === undefined ? '' : String(value)
+
+export const resolveLiveRegionText = (
+  parts: LiveRegionTextParts,
+  format?: (parts: LiveRegionTextParts) => string,
+): string =>
+  format
+    ? format(parts)
+    : [parts.datasetLabel, parts.label, parts.value].filter((part) => part !== '').join(' ')
+
 export const keyboardNavigationPlugin = {
   id: 'keyboardNavigation',
   defaults: {
     liveRegionId: undefined,
+    formatLiveRegionText: undefined,
   },
   afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
@@ -87,17 +113,20 @@ export const keyboardNavigationPlugin = {
       chart.update()
 
       if (liveRegionElement) {
-        const datasetLabel = datasets[actualNextDatasetIndex].label
-        // labels は ChartData 上で任意（undefined 可）のため、無条件参照で落ちないよう防御する
-        const label = labels?.[actualNextDataIndex]
-        const value = datasets[actualNextDatasetIndex].data[actualNextDataIndex]
-        // datasetLabel（系列名）や label（項目名）が無いチャート（例: 系列名を持たない
-        // ProgressDoughnutChart）でも "undefined" を読み上げないよう、空要素を除いて連結する。
-        // value は 0 も有効な値のため除外しない。
-        const liveRegionText = [datasetLabel, label, value]
-          .filter((part) => part !== null && part !== undefined && part !== '')
-          .join(' ')
-        liveRegionElement.textContent = liveRegionText
+        // afterInitはチャート生成時の1度しか実行されず、optionsの変更ではchart.updateが走るだけなので、
+        // 引数のoptionsを参照すると初期値のまま古くなる。最新の値はchart.optionsから都度読み直す
+        const currentOptions: KeyboardNavigationOptions =
+          chart.options.plugins?.keyboardNavigation ?? options
+
+        liveRegionElement.textContent = resolveLiveRegionText(
+          {
+            datasetLabel: toText(datasets[actualNextDatasetIndex].label),
+            // labels は ChartData 上で任意（undefined 可）のため、無条件参照で落ちないよう防御する
+            label: toText(labels?.[actualNextDataIndex]),
+            value: toText(datasets[actualNextDatasetIndex].data[actualNextDataIndex]),
+          },
+          currentOptions.formatLiveRegionText,
+        )
       } else {
         console.warn('Live region element is null, cannot update text')
       }
