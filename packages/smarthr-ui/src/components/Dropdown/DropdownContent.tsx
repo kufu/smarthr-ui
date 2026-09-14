@@ -5,7 +5,6 @@ import {
   type FC,
   type MouseEvent,
   type PropsWithChildren,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -99,102 +98,100 @@ export const DropdownContent: FC<Props> = ({
     focusFrame,
   })
 
-  const callbackRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
+  const functions = useMemo(
+    () => ({
+      callbackRef: (node: HTMLElement | null) => {
+        if (!node) {
+          return
+        }
 
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Tab') {
-          if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
-            return
-          }
-
-          const tabbablesInContent = tabbable(node)
-
-          if (tabbablesInContent.length === 0) {
-            return
-          }
-
-          const trigger = tabbable(latest.triggerElementRef.current).at(-1)
-          const firstTabbable = tabbablesInContent[0]
-
-          if (e.target === trigger) {
-            if (e.shiftKey) {
-              // move focus previous of the Trigger
+        const handleKeyDown = (e: KeyboardEvent) => {
+          if (e.key === 'Tab') {
+            if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
               return
             }
 
-            // focus a first tabbable element in the dropdown content
-            e.preventDefault()
-            firstTabbable.focus()
+            const tabbablesInContent = tabbable(node)
 
-            return
-          } else if (e.shiftKey) {
-            if (e.target === firstTabbable || e.target === focusTargetRef.current) {
-              // focus the Trigger
+            if (tabbablesInContent.length === 0) {
+              return
+            }
+
+            const trigger = tabbable(latest.triggerElementRef.current).at(-1)
+            const firstTabbable = tabbablesInContent[0]
+
+            if (e.target === trigger) {
+              if (e.shiftKey) {
+                // move focus previous of the Trigger
+                return
+              }
+
+              // focus a first tabbable element in the dropdown content
               e.preventDefault()
-              trigger!.focus()
-              latest.handleDelegateClickCloser()
+              firstTabbable.focus()
+
+              return
+            } else if (e.shiftKey) {
+              if (e.target === firstTabbable || e.target === focusTargetRef.current) {
+                // focus the Trigger
+                e.preventDefault()
+                trigger!.focus()
+                latest.handleDelegateClickCloser()
+              }
+            } else if (e.target === tabbablesInContent.at(-1)) {
+              // move focus next of the Trigger
+              const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
+
+              if (rootTrigger) {
+                rootTrigger.focus()
+                latest.handleDelegateClickCloser()
+              }
             }
-          } else if (e.target === tabbablesInContent.at(-1)) {
-            // move focus next of the Trigger
-            const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
-
-            if (rootTrigger) {
-              rootTrigger.focus()
+          } else if (KEY_ESCAPE.test(e.key)) {
+            if (e.target && e.target === focusTargetRef.current) {
               latest.handleDelegateClickCloser()
+
+              return
             }
-          }
-        } else if (KEY_ESCAPE.test(e.key)) {
-          if (e.target && e.target === focusTargetRef.current) {
-            latest.handleDelegateClickCloser()
 
-            return
-          }
+            const trigger = getFirstTabbable(latest.triggerElementRef)
 
-          const trigger = getFirstTabbable(latest.triggerElementRef)
-
-          if (trigger && e.target === trigger) {
-            // close the dropdown when the Trigger is focused and Esc key is pressed
-            latest.handleDelegateClickCloser()
-
-            return
-          }
-
-          for (const inner of tabbable(node)) {
-            if (inner === e.target) {
-              // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
+            if (trigger && e.target === trigger) {
+              // close the dropdown when the Trigger is focused and Esc key is pressed
               latest.handleDelegateClickCloser()
 
-              break
+              return
+            }
+
+            for (const inner of tabbable(node)) {
+              if (inner === e.target) {
+                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
+                latest.handleDelegateClickCloser()
+
+                break
+              }
             }
           }
         }
-      }
 
-      window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keydown', handleKeyDown)
 
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-      }
-    },
+        return () => {
+          window.removeEventListener('keydown', handleKeyDown)
+        }
+      },
+      handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
+        if (findDelegateTarget(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)) {
+          latest.handleDelegateClickCloser()
+        }
+      },
+    }),
     [latest],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
-
-  const handleDelegateClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      if (findDelegateTarget(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)) {
-        latest.handleDelegateClickCloser()
-      }
-    },
-    [latest],
-  )
+  const mergedRef = useMergeRefs(wrapperRef, functions.callbackRef)
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -231,6 +228,10 @@ export const DropdownContent: FC<Props> = ({
     return () => latest.focusFrame.cancel()
   }, [triggerRect, latest])
 
+  const styleAttr = {
+    maxHeight: contentBox.maxHeight || undefined,
+  }
+
   return (
     <DropdownContentRoot>
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
@@ -240,23 +241,14 @@ export const DropdownContent: FC<Props> = ({
         className={actualClassName}
         style={style}
         data-dropdown-active={isActive || undefined}
-        onClick={handleDelegateClick}
+        onClick={functions.handleDelegateClick}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
         <div ref={focusTargetRef} tabIndex={-1} />
         {controllable ? (
-          <div
-            style={{
-              maxHeight: contentBox.maxHeight || undefined,
-            }}
-          >
-            {children}
-          </div>
+          <div style={styleAttr}>{children}</div>
         ) : (
-          <DropdownCloser
-            className="shr-flex shr-flex-col"
-            style={{ maxHeight: contentBox.maxHeight || undefined }}
-          >
+          <DropdownCloser className="shr-flex shr-flex-col" style={styleAttr}>
             {children}
           </DropdownCloser>
         )}
