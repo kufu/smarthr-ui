@@ -6,7 +6,6 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -14,6 +13,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
+import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
@@ -59,7 +59,6 @@ export const DropdownContent: FC<Props> = ({
     top: 'auto',
     maxHeight: '',
   })
-  const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
@@ -189,18 +188,18 @@ export const DropdownContent: FC<Props> = ({
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, functions.callbackRef)
+  const layoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-  useEffect(() => {
-    if (wrapperRef.current) {
       setContentBox(
         getContentBoxStyle(
           triggerRect,
           {
-            width: wrapperRef.current.offsetWidth,
-            height: wrapperRef.current.offsetHeight,
+            width: node.offsetWidth,
+            height: node.offsetHeight,
           },
           {
             width: document.body.clientWidth,
@@ -213,9 +212,9 @@ export const DropdownContent: FC<Props> = ({
         ),
       )
 
-      if (!latest.isActive) {
-        setIsActive(true)
+      setIsActive(true)
 
+      if (!latest.isActive) {
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
@@ -223,10 +222,15 @@ export const DropdownContent: FC<Props> = ({
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
         latest.focusFrame.request(() => focusTargetRef.current?.focus())
       }
-    }
 
-    return () => latest.focusFrame.cancel()
-  }, [triggerRect, latest])
+      return () => latest.focusFrame.cancel()
+    },
+    [triggerRect, latest],
+  )
+
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(functions.callbackRef, layoutEffectRef)
 
   const styleAttr = {
     maxHeight: contentBox.maxHeight || undefined,
@@ -234,10 +238,10 @@ export const DropdownContent: FC<Props> = ({
 
   return (
     <DropdownContentRoot>
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
         {...rest}
         ref={mergedRef}
+        role="presentation"
         className={actualClassName}
         style={style}
         data-dropdown-active={isActive || undefined}
