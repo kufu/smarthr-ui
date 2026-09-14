@@ -7,13 +7,14 @@ const classNameGenerator = tv({
   base: DROPDOWN_CLOSER_CLASS_NAME,
 })
 
-type Props = PropsWithChildren<ComponentProps<'div'>>
+// HINT: onClickは念のためomitしているが、必要に応じて利用可能にすることを検討する
+type Props = PropsWithChildren<Omit<ComponentProps<'div'>, 'role' | 'onClick'>>
 
-export const DropdownCloser: FC<Props> = ({ children, className, style }) => {
+export const DropdownCloser: FC<Props> = ({ className, style, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <div role="presentation" className={actualClassName} style={style}>
+    <div {...rest} role="presentation" className={actualClassName} style={style}>
       {children}
     </div>
   )
