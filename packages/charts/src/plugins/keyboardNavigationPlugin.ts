@@ -1,8 +1,11 @@
 import type { Chart } from 'chart.js'
 
 export type LiveRegionTextParts = {
+  /** 系列名。data.datasets[].label 由来（例: 正社員） */
   datasetLabel: string
+  /** 項目名。data.labels[] 由来（例: 4月） */
   label: string
+  /** 選択中の値。data.datasets[].data[] 由来（例: 12） */
   value: string
 }
 
@@ -22,13 +25,6 @@ type ChartWithKeyboardHandler = {
 const toText = (value: unknown): string =>
   value === null || value === undefined ? '' : String(value)
 
-/**
- * ライブリージョンに書き込む文言を解決する
- *
- * datasetLabel（系列名）やlabel（項目名）が無いチャート（例: 系列名を持たない
- * ProgressDoughnutChart）でも "undefined" を読み上げないよう、空の要素を除いて連結する。
- * value は 0 も有効な値のため除外しない。
- */
 export const resolveLiveRegionText = (
   parts: LiveRegionTextParts,
   format?: (parts: LiveRegionTextParts) => string,
