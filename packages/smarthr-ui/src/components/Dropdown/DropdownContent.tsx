@@ -80,19 +80,13 @@ export const DropdownContent: FC<Props> = ({
     }
   })()
 
-  const {
-    DropdownContentRoot,
-    triggerRect,
-    triggerElementRef,
-    rootTriggerRef,
-    handleDelegateClickCloser,
-  } = useContext(DropdownContext)
+  const { DropdownContentRoot, triggerRect, triggerElementRef, handleDelegateClickCloser } =
+    useContext(DropdownContext)
 
   const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
     triggerElementRef,
-    rootTriggerRef,
     handleDelegateClickCloser,
     isActive,
     focusFrame,
@@ -107,7 +101,7 @@ export const DropdownContent: FC<Props> = ({
 
         const handleKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Tab') {
-            if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
+            if (!latest.triggerElementRef.current) {
               return
             }
 
@@ -139,13 +133,10 @@ export const DropdownContent: FC<Props> = ({
                 latest.handleDelegateClickCloser()
               }
             } else if (e.target === tabbablesInContent.at(-1)) {
-              // move focus next of the Trigger
-              const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
-
-              if (rootTrigger) {
-                rootTrigger.focus()
-                latest.handleDelegateClickCloser()
-              }
+              // focus the Trigger
+              e.preventDefault()
+              trigger!.focus()
+              latest.handleDelegateClickCloser()
             }
           } else if (KEY_ESCAPE.test(e.key)) {
             if (e.target && e.target === focusTargetRef.current) {

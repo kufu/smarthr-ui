@@ -86,7 +86,7 @@ describe('Dropdown', () => {
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
 
-  it('ドロップダウンからフォーカスが外れるとドロップダウンが閉じること', async () => {
+  it('ドロップダウン展開後に最後の要素からTabするとトリガーにフォーカスが戻りドロップダウンが閉じること', async () => {
     render(template)
 
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
@@ -100,6 +100,7 @@ describe('Dropdown', () => {
     await userEvent.tab()
     expect(screen.getByRole('button', { name: 'Button3' })).toHaveFocus()
     await userEvent.tab()
+    expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
 
@@ -187,6 +188,28 @@ describe('Dropdown', () => {
 
       await userEvent.click(screen.getByRole('button', { name: 'InnerButton' }))
 
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('内側のDropdownContent内の最後の要素からTabすると内側のトリガーにフォーカスが戻り、外側は開いたままであること', async () => {
+      render(NestedTemplate)
+
+      await userEvent.click(screen.getByRole('button', { name: 'OuterTrigger' }))
+      await waitForAnimationFrame()
+      await userEvent.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+
+      screen.getByRole('button', { name: 'InnerButton' }).focus()
+      await userEvent.tab()
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveFocus()
       expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
         'aria-expanded',
         'false',
