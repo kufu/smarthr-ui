@@ -113,8 +113,8 @@ export const keyboardNavigationPlugin = {
       chart.update()
 
       if (liveRegionElement) {
-        // optionsをクロージャに捕捉したままだと、ロケール切り替え時にフォーマッタが古いままになるため、
-        // chart.optionsから都度読み直す
+        // afterInitはチャート生成時の1度しか実行されず、optionsの変更ではchart.updateが走るだけなので、
+        // 引数のoptionsを参照すると初期値のまま古くなる。最新の値はchart.optionsから都度読み直す
         const currentOptions: KeyboardNavigationOptions =
           chart.options.plugins?.keyboardNavigation ?? options
 
