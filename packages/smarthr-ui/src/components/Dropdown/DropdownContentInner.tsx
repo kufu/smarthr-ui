@@ -32,13 +32,12 @@ import {
 const KEY_ESCAPE = /^Esc(ape)?$/
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Dropdown-content shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3 forced-colors:shr-outline forced-colors:shr-outline-1',
-  variants: {
-    isActive: {
-      true: 'shr-visible',
-      false: 'shr-invisible',
-    },
-  },
+  base: [
+    'smarthr-ui-Dropdown-content',
+    'shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
+    'forced-colors:shr-outline forced-colors:shr-outline-1',
+    'shr-invisible data-[dropdown-active]:shr-visible',
+  ],
 })
 
 type BaseProps = PropsWithChildren<{
@@ -73,10 +72,7 @@ export const DropdownContentInner: FC<Props> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  const actualClassName = useMemo(
-    () => classNameGenerator({ isActive, className }),
-    [isActive, className],
-  )
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const style = (() => {
     const defaultMargin = theme.spacingByChar(0.5)
@@ -231,7 +227,13 @@ export const DropdownContentInner: FC<Props> = ({
   }, [triggerRect, latest])
 
   return (
-    <div {...rest} ref={mergedRef} className={actualClassName} style={style}>
+    <div
+      {...rest}
+      ref={mergedRef}
+      className={actualClassName}
+      style={style}
+      data-dropdown-active={isActive || undefined}
+    >
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
