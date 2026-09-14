@@ -212,9 +212,9 @@ export const DropdownContent: FC<Props> = ({
         ),
       )
 
-      if (!latest.isActive) {
-        setIsActive(true)
+      setIsActive(true)
 
+      if (!latest.isActive) {
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
