@@ -3,9 +3,8 @@
 import {
   type ComponentProps,
   type FC,
+  type MouseEvent,
   type PropsWithChildren,
-  createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -18,10 +17,11 @@ import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
+import { findDelegateTarget } from '../../libs/delegate'
 import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
-import { DropdownCloser } from './DropdownCloser'
+import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from './DropdownCloser'
 import {
   type ContentBoxStyle,
   type Rect,
@@ -45,16 +45,10 @@ type BaseProps = PropsWithChildren<{
   controllable: boolean
 }>
 
-export type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps>
+// HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
+// クリックハンドラが必要な場合はchildren側に要素をラップして設定する
+export type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick'>
 type Props = BaseProps & ElementProps
-
-type DropdownContentInnerContextType = {
-  maxHeight: string
-}
-
-export const DropdownContentInnerContext = createContext<DropdownContentInnerContextType>({
-  maxHeight: '',
-})
 
 export const DropdownContentInner: FC<Props> = ({
   triggerRect,
@@ -103,93 +97,100 @@ export const DropdownContentInner: FC<Props> = ({
     focusFrame,
   })
 
-  const callbackRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
+  const functions = useMemo(
+    () => ({
+      callbackRef: (node: HTMLElement | null) => {
+        if (!node) {
+          return
+        }
 
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Tab') {
-          if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
-            return
-          }
-
-          const tabbablesInContent = tabbable(node)
-
-          if (tabbablesInContent.length === 0) {
-            return
-          }
-
-          const trigger = tabbable(latest.triggerElementRef.current).at(-1)
-          const firstTabbable = tabbablesInContent[0]
-
-          if (e.target === trigger) {
-            if (e.shiftKey) {
-              // move focus previous of the Trigger
+        const handleKeyDown = (e: KeyboardEvent) => {
+          if (e.key === 'Tab') {
+            if (!latest.triggerElementRef.current || !latest.rootTriggerRef?.current) {
               return
             }
 
-            // focus a first tabbable element in the dropdown content
-            e.preventDefault()
-            firstTabbable.focus()
+            const tabbablesInContent = tabbable(node)
 
-            return
-          } else if (e.shiftKey) {
-            if (e.target === firstTabbable || e.target === focusTargetRef.current) {
-              // focus the Trigger
+            if (tabbablesInContent.length === 0) {
+              return
+            }
+
+            const trigger = tabbable(latest.triggerElementRef.current).at(-1)
+            const firstTabbable = tabbablesInContent[0]
+
+            if (e.target === trigger) {
+              if (e.shiftKey) {
+                // move focus previous of the Trigger
+                return
+              }
+
+              // focus a first tabbable element in the dropdown content
               e.preventDefault()
-              trigger!.focus()
-              latest.handleDelegateClickCloser()
+              firstTabbable.focus()
+
+              return
+            } else if (e.shiftKey) {
+              if (e.target === firstTabbable || e.target === focusTargetRef.current) {
+                // focus the Trigger
+                e.preventDefault()
+                trigger!.focus()
+                latest.handleDelegateClickCloser()
+              }
+            } else if (e.target === tabbablesInContent.at(-1)) {
+              // move focus next of the Trigger
+              const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
+
+              if (rootTrigger) {
+                rootTrigger.focus()
+                latest.handleDelegateClickCloser()
+              }
             }
-          } else if (e.target === tabbablesInContent.at(-1)) {
-            // move focus next of the Trigger
-            const rootTrigger = tabbable(latest.rootTriggerRef.current).at(-1)
-
-            if (rootTrigger) {
-              rootTrigger.focus()
+          } else if (KEY_ESCAPE.test(e.key)) {
+            if (e.target && e.target === focusTargetRef.current) {
               latest.handleDelegateClickCloser()
+
+              return
             }
-          }
-        } else if (KEY_ESCAPE.test(e.key)) {
-          if (e.target && e.target === focusTargetRef.current) {
-            latest.handleDelegateClickCloser()
 
-            return
-          }
+            const trigger = getFirstTabbable(latest.triggerElementRef)
 
-          const trigger = getFirstTabbable(latest.triggerElementRef)
-
-          if (trigger && e.target === trigger) {
-            // close the dropdown when the Trigger is focused and Esc key is pressed
-            latest.handleDelegateClickCloser()
-
-            return
-          }
-
-          for (const inner of tabbable(node)) {
-            if (inner === e.target) {
-              // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
+            if (trigger && e.target === trigger) {
+              // close the dropdown when the Trigger is focused and Esc key is pressed
               latest.handleDelegateClickCloser()
 
-              break
+              return
+            }
+
+            for (const inner of tabbable(node)) {
+              if (inner === e.target) {
+                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
+                latest.handleDelegateClickCloser()
+
+                break
+              }
             }
           }
         }
-      }
 
-      window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keydown', handleKeyDown)
 
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown)
-      }
-    },
+        return () => {
+          window.removeEventListener('keydown', handleKeyDown)
+        }
+      },
+      handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
+        if (findDelegateTarget(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)) {
+          latest.handleDelegateClickCloser()
+        }
+      },
+    }),
     [latest],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
+  const mergedRef = useMergeRefs(wrapperRef, functions.callbackRef)
 
   useEffect(() => {
     if (wrapperRef.current) {
@@ -226,28 +227,28 @@ export const DropdownContentInner: FC<Props> = ({
     return () => latest.focusFrame.cancel()
   }, [triggerRect, latest])
 
+  const styleAttr = {
+    maxHeight: contentBox.maxHeight || undefined,
+  }
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
     <div
       {...rest}
       ref={mergedRef}
       className={actualClassName}
       style={style}
       data-dropdown-active={isActive || undefined}
+      onClick={functions.handleDelegateClick}
     >
       {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
       <div ref={focusTargetRef} tabIndex={-1} />
       {controllable ? (
-        <div
-          style={{
-            maxHeight: contentBox.maxHeight || undefined,
-          }}
-        >
-          {children}
-        </div>
+        <div style={styleAttr}>{children}</div>
       ) : (
-        <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
-          <DropdownCloser>{children}</DropdownCloser>
-        </DropdownContentInnerContext.Provider>
+        <DropdownCloser className="shr-flex shr-flex-col" style={styleAttr}>
+          {children}
+        </DropdownCloser>
       )}
     </div>
   )
