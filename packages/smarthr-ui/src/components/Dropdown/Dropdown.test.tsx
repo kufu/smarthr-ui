@@ -44,7 +44,11 @@ describe('Dropdown', () => {
   it('トリガーボタンとドロップダウンの間でフォーカスの行き来ができること', async () => {
     render(template)
 
-    act(() => screen.getByRole('button', { name: 'Trigger' }).click())
+    await userEvent.click(screen.getByRole('button', { name: 'Trigger' }))
+
+    // requestAnimationFrameの前はTriggerにフォーカスが残ったままであること(早すぎるfocus実行を検知する)
+    expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
+
     await waitForAnimationFrame()
 
     expect(screen.getByRole('button', { name: 'Button1' })).not.toHaveFocus()
