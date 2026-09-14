@@ -25,10 +25,11 @@ import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from './DropdownCloser'
 import { type ContentBoxStyle, getContentBoxStyle, getFirstTabbable } from './dropdownHelper'
 
 const KEY_ESCAPE = /^Esc(ape)?$/
+const DROPDOWN_CONTENT_CLASS_NAME = 'smarthr-ui-Dropdown-content'
 
 const classNameGenerator = tv({
   base: [
-    'smarthr-ui-Dropdown-content',
+    DROPDOWN_CONTENT_CLASS_NAME,
     'shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
     'forced-colors:shr-outline forced-colors:shr-outline-1',
     'shr-invisible data-[dropdown-active]:shr-visible',
@@ -182,7 +183,8 @@ export const DropdownContent: FC<Props> = ({
       handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
         const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
 
-        if (closer?.closest('.smarthr-ui-Dropdown-content') === e.currentTarget) {
+        // HINT: Dropdownがネストしている場合、もっとも近いDropdownだけを閉じる
+        if (closer?.closest(`.${DROPDOWN_CONTENT_CLASS_NAME}`) === e.currentTarget) {
           latest.handleDelegateClickCloser()
         }
       },
