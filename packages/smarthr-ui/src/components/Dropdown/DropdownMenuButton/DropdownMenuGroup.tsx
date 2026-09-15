@@ -10,7 +10,7 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
 
-import { renderButtonList } from './DropdownMenuButton'
+import { renderButtonList } from './renderButtonList'
 
 type BaseProps = PropsWithChildren<{
   name?: ReactNode
