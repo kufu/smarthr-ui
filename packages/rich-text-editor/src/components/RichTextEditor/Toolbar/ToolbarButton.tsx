@@ -10,19 +10,18 @@ import { toAriaKeyShortcuts } from './shortcutKeys'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
 const classNameGenerator = tv({
-  base: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-ToolbarButton'],
-  variants: {
-    active: {
-      true: [
-        // shr-text-main（#0077c7）だと shr-bg-main/10 の上で 4.11:1、hover の
-        // shr-bg-main/20 では 3.70:1 となり 4.5:1 を下回る。1段暗くして
-        // 5.11:1 / 4.59:1 を確保する。
-        // textColor に main-darken が無いため theme() で colors から直接引く。
-        // プリセットにユーティリティを増やさず、この用途だけで閉じるため。
-        'shr-bg-main/10 shr-text-[theme(colors.main-darken)] hover:shr-bg-main/20',
-      ],
-    },
-  },
+  base: [
+    TOOLBAR_ITEM_CLASS_NAME,
+    'smarthr-ui-RichTextEditor-ToolbarButton',
+    // tv の variants で指定しないのは、shr- プレフィックスを tailwind-merge に
+    // 設定していないため base の shr-bg-transparent / shr-text-black と競合が
+    // 解決されず、CSS の出現順に負けるため。属性セレクタなら詳細度で上回る。
+    'aria-pressed:shr-bg-main aria-pressed:shr-text-white',
+    'aria-pressed:hover:shr-bg-main-darken',
+    // 押下中の disabled は Button の primary に合わせる
+    'aria-pressed:disabled:shr-bg-main/50 aria-pressed:disabled:shr-text-white/50',
+    'aria-pressed:disabled:hover:shr-bg-main/50',
+  ],
 })
 
 type Props = {
@@ -44,7 +43,7 @@ export const ToolbarButton: FC<Props> = memo(
           ref={ref}
           type="button"
           disabled={disabled}
-          className={classNameGenerator({ active, className })}
+          className={classNameGenerator({ className })}
           aria-label={label}
           aria-pressed={active}
           aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut, isApple) : undefined}
