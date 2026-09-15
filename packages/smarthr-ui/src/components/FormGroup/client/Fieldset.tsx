@@ -155,26 +155,17 @@ const LabelComponent = memo<LabelComponentProps>(
       return legend
     }
 
-    // HINT: 先述のfieldsetのmarkupの制約のため、UI上に表示されるlegendのdummyにはaria-hiddenを設定し
-    // UI・スクリーンリーダーともに１つだけ設定されているかのように見せかける
-    const renderedLegend = <LabelCluster aria-hidden="true">{body}</LabelCluster>
-
-    if (subActionArea) {
-      return (
-        <>
-          {legend}
-          <Cluster justify="space-between">
-            {renderedLegend}
-            <div className="shr-grow">{subActionArea}</div>
-          </Cluster>
-        </>
-      )
-    }
-
     return (
       <>
         {legend}
-        {renderedLegend}
+        {/* HINT: subActionAreaの有無でLabelClusterの親を変えると、Stack直下に来た場合に
+            align-items:stretchで全幅に広がってしまうため、無い場合も横方向のClusterで包む */}
+        <Cluster justify="space-between">
+          {/* HINT: 先述のfieldsetのmarkupの制約のため、UI上に表示されるlegendのdummyにはaria-hiddenを設定し
+              UI・スクリーンリーダーともに１つだけ設定されているかのように見せかける */}
+          <LabelCluster aria-hidden="true">{body}</LabelCluster>
+          {subActionArea && <div className="shr-grow">{subActionArea}</div>}
+        </Cluster>
       </>
     )
   },
