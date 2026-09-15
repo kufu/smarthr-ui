@@ -109,7 +109,9 @@ export const VRTNestedDropdown: StoryObj<typeof Dropdown> = {
     await userEvent.click(outerTrigger)
     await waitForAnimationFrame()
 
-    const innerTrigger = await canvas.findByRole('button', { name: '内側ドロップダウン' })
+    // HINT: DropdownContentはDropdownのポータル(document.body直下)に描画されるためbodyから参照する
+    const body = canvasElement.ownerDocument.body
+    const innerTrigger = await within(body).findByRole('button', { name: '内側ドロップダウン' })
     await userEvent.click(innerTrigger)
     await waitForAnimationFrame()
   },
