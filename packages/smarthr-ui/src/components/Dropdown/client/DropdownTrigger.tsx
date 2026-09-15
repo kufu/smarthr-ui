@@ -10,10 +10,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { tabbable } from '../../libs/tabbable'
-import { Tooltip } from '../Tooltip'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { tabbable } from '../../../libs/tabbable'
+import { Tooltip } from '../../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 

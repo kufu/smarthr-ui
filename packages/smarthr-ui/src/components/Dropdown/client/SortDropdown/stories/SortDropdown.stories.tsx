@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { Cluster } from '../../../Layout'
+import { Cluster } from '../../../../Layout'
 import { SortDropdown } from '../SortDropdown'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'

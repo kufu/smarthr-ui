@@ -17,10 +17,8 @@ import { Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
-import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
-import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
 
 type ObjectTriggerType = {
   text?: ReactNode

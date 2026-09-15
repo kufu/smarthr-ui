@@ -1,4 +1,4 @@
-import type { Rect } from '../Dropdown'
+import type { Rect } from '../../types'
 
 type Size = { width: number; height: number }
 export type ContentBoxStyle = {

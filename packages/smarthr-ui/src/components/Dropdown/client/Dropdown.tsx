@@ -15,22 +15,17 @@ import {
   useState,
 } from 'react'
 
-import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
-import { usePortal } from '../../hooks/client/usePortal'
-import { useLatest } from '../../hooks/useLatest'
-import { tabbable } from '../../libs/tabbable'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { usePortal } from '../../../hooks/client/usePortal'
+import { useLatest } from '../../../hooks/useLatest'
+import { tabbable } from '../../../libs/tabbable'
+
+import type { Rect } from '../types'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
   onClose?: () => void
 }>
-
-export type Rect = {
-  top: number
-  right: number
-  bottom: number
-  left: number
-}
 
 type DropdownContextType = {
   active: boolean

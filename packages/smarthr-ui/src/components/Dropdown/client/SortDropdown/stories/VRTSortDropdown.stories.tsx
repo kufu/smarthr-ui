@@ -1,6 +1,6 @@
 import { userEvent, within } from 'storybook/test'
 
-import { Cluster } from '../../../Layout'
+import { Cluster } from '../../../../Layout'
 import { SortDropdown } from '../SortDropdown'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
