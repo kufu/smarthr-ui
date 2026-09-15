@@ -146,11 +146,11 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         setTriggerRect(triggerElementRef.current.getBoundingClientRect())
       }
     }
-    const listnerOption = { passive: true }
+    const listenerOption = { passive: true }
 
     document.body.addEventListener('click', handleClickBody, false)
-    window.addEventListener('scroll', updateTriggerRect, listnerOption)
-    window.addEventListener('resize', updateTriggerRect, listnerOption)
+    window.addEventListener('scroll', updateTriggerRect, listenerOption)
+    window.addEventListener('resize', updateTriggerRect, listenerOption)
 
     return () => {
       document.body.removeEventListener('click', handleClickBody, false)
