@@ -7,7 +7,6 @@ import {
   type ReactNode,
   createContext,
   createRef,
-  useContext,
   useEffect,
   useId,
   useMemo,
@@ -30,7 +29,6 @@ type DropdownContextType = {
   active: boolean
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
-  rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
   handleClickTrigger: (rect: Rect) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
@@ -43,7 +41,6 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: createRef(),
-  rootTriggerRef: null,
   handleClickTrigger: () => {
     /* noop */
   },
@@ -57,8 +54,6 @@ export const DropdownContext = createContext<DropdownContextType>({
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
-
-  const { rootTriggerRef } = useContext(DropdownContext)
 
   const contentId = useId()
   const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
@@ -160,7 +155,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           active,
           triggerRect,
           triggerElementRef,
-          rootTriggerRef: rootTriggerRef || triggerElementRef || null,
           handleClickTrigger: functions.handleClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
