@@ -16,12 +16,16 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading, type HeadingTagTypes } from '../../Heading'
 import {
+  ERROR_ICON_ALT,
   FaCaretDownIcon,
   FaCaretUpIcon,
   FaCircleCheckIcon,
   FaCircleExclamationIcon,
   FaCircleInfoIcon,
   FaRotateIcon,
+  SUCCESS_ICON_ALT,
+  SYNC_ICON_ALT,
+  WARNING_ICON_ALT,
   WarningIcon,
 } from '../../Icon'
 import { Sidebar } from '../../Layout'
@@ -50,6 +54,31 @@ type BaseProps = PropsWithChildren<{
 type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
+
+const ICON_MAPPER = {
+  info: FaCircleInfoIcon,
+  success: FaCircleCheckIcon,
+  warning: WarningIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+}
+
+// HINT: infoは装飾として扱うため、代替テキストを設定しない
+const ICON_ALT_MAPPER: Partial<Record<keyof typeof ICON_MAPPER, ReactNode>> = {
+  success: SUCCESS_ICON_ALT,
+  warning: WARNING_ICON_ALT,
+  error: ERROR_ICON_ALT,
+  sync: SYNC_ICON_ALT,
+}
+
+// HINT: warningのアイコンは自身で色を持っているため、色を指定しない
+const ICON_COLOR_MAPPER = {
+  info: 'TEXT_GREY',
+  success: 'MAIN',
+  warning: undefined,
+  error: 'DANGER',
+  sync: 'MAIN',
+} as const
 
 const classNameGenerator = tv({
   slots: {
@@ -198,20 +227,7 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const icon = (() => {
-    switch (type) {
-      case 'info':
-        return <FaCircleInfoIcon color="TEXT_GREY" />
-      case 'success':
-        return <FaCircleCheckIcon color="MAIN" />
-      case 'warning':
-        return <WarningIcon />
-      case 'error':
-        return <FaCircleExclamationIcon color="DANGER" />
-      case 'sync':
-        return <FaRotateIcon color="MAIN" />
-    }
-  })()
+  const Icon = ICON_MAPPER[type]
 
   return (
     <Heading
@@ -220,7 +236,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: icon,
+        prefix: <Icon alt={ICON_ALT_MAPPER[type]} color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >

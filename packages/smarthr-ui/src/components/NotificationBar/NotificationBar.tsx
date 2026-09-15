@@ -13,12 +13,16 @@ import { tv } from 'tailwind-variants'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import {
+  ERROR_ICON_ALT,
   FaCircleCheckIcon,
   FaCircleExclamationIcon,
   FaCircleInfoIcon,
   FaRotateIcon,
   FaTriangleExclamationIcon,
   FaXmarkIcon,
+  SUCCESS_ICON_ALT,
+  SYNC_ICON_ALT,
+  WARNING_ICON_ALT,
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
@@ -28,7 +32,30 @@ import { Text } from '../Text'
 // TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
 // base="base" も意味が分かりづらい
 type BaseType = 'base' | 'none'
-type TypeType = 'info' | 'success' | 'warning' | 'error' | 'sync'
+
+const ICON_MAPPER = {
+  info: FaCircleInfoIcon,
+  success: FaCircleCheckIcon,
+  warning: WarningIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+}
+
+// HINT: WarningIconは自身で色を持っているため、背景に色が付くboldでは単色のアイコンを使う
+const BOLD_ICON_MAPPER = {
+  ...ICON_MAPPER,
+  warning: FaTriangleExclamationIcon,
+}
+
+type MessageType = keyof typeof ICON_MAPPER
+
+// HINT: infoは装飾として扱うため、代替テキストを設定しない
+const ICON_ALT_MAPPER: Partial<Record<MessageType, ReactNode>> = {
+  success: SUCCESS_ICON_ALT,
+  warning: WARNING_ICON_ALT,
+  error: ERROR_ICON_ALT,
+  sync: SYNC_ICON_ALT,
+}
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -40,7 +67,7 @@ type BaseProps = PropsWithChildren<{
   /** 下地 */
   base?: BaseType
   /** メッセージの種類 */
-  type: TypeType
+  type: MessageType
   /** 強調するかどうか */
   bold?: boolean
   /** スライドインするかどうか */
@@ -84,7 +111,7 @@ const classNameGenerator = tv({
       sync: {
         icon: 'shr-text-main',
       },
-    } satisfies Record<TypeType, object>,
+    } satisfies Record<MessageType, object>,
     bold: {
       true: '',
       false: '',
@@ -155,23 +182,6 @@ const classNameGenerator = tv({
     },
   ],
 })
-
-const ABSTRACT_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-}
-const ICON_MAPPER = {
-  normal: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: WarningIcon,
-  },
-  bold: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: FaTriangleExclamationIcon,
-  },
-} as const
 
 const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
@@ -251,14 +261,14 @@ const MessageArea = memo<
     classNames: { messageArea: string; icon: string }
   }
 >(({ children, bold, type, classNames }) => {
-  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
+  const Icon = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[type]
 
   return (
     <Text
       as="div"
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon className={classNames.icon} />,
+        prefix: <Icon alt={ICON_ALT_MAPPER[type]} className={classNames.icon} />,
         gap: 0.5,
       }}
     >
