@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
-import { FaCaretDownIcon, FaHighlighterIcon } from 'smarthr-ui'
+import { FaCaretDownIcon } from 'smarthr-ui'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
@@ -13,8 +13,8 @@ import { ToolbarTooltip } from '../ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette } from './ColorPickerPalette'
+import { ColorSwatchFace } from './ColorSwatch'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
-import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
 import { normalizeHex } from './normalizeHex'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
 
@@ -23,7 +23,6 @@ const RECENT_LIMIT = 5
 const classNameGenerator = tv({
   slots: {
     trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-BackgroundColorPickerButton'],
-    colorIndicator: COLOR_INDICATOR_CLASS_NAME,
   },
 })
 
@@ -124,12 +123,12 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/backgroundColorNone',
       defaultText: 'なし',
     })
-    const customSwatchLabel = useCallback(
+    const editButtonAccessibleLabel = useCallback(
       (color: string) =>
         localize(
           {
-            id: 'smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel',
-            defaultText: '背景色カスタム: {color}',
+            id: 'smarthr-ui/RichTextEditor/backgroundColorEditButtonWithCurrent',
+            defaultText: '背景色を編集（現在の色: {color}）',
           },
           { color },
         ),
@@ -174,13 +173,12 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
           >
-            <span className="shr-flex shr-flex-col shr-items-center shr-gap-[2px]">
-              <FaHighlighterIcon className="shr-text-base" aria-hidden />
-              <span
-                className={classNames.colorIndicator()}
-                style={{ backgroundColor: currentColor ?? DEFAULT_BACKGROUND_COLOR }}
-              />
-            </span>
+            <ColorSwatchFace
+              appearance="backgroundColor"
+              size="S"
+              color={currentColor ?? DEFAULT_BACKGROUND_COLOR}
+              aria-hidden="true"
+            />
             <FaCaretDownIcon className="shr-text-xs" />
           </button>
         </ToolbarTooltip>
@@ -188,6 +186,7 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
           <ColorPickerPalette
             paletteRef={paletteRef}
             triggerRef={triggerRef}
+            appearance="backgroundColor"
             colors={EDITOR_BACKGROUND_COLORS}
             defaultColor={DEFAULT_BACKGROUND_COLOR}
             currentColor={currentColor}
@@ -200,7 +199,7 @@ export const BackgroundColorPickerButton: FC<Props> = memo(
             recentSectionLabel={recentSectionLabel}
             editButtonLabel={editButtonLabel}
             resetButtonLabel={resetLabel}
-            customSwatchLabel={customSwatchLabel}
+            editButtonAccessibleLabel={editButtonAccessibleLabel}
             recentSwatchLabel={recentSwatchLabel}
             setIsOpen={setIsOpen}
             setCustomColor={setCustomColor}

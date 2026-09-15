@@ -68,48 +68,35 @@ describe('TextColorPickerButton', () => {
     expect(screen.getByRole('button', { name: '赤' })).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('カスタムスウォッチは現在のカスタム色をラベルに含むボタンとして操作できる', async () => {
+  it('カスタム色の表示は読み上げ対象にせず、現在の色は「色を編集」の名前で伝える', async () => {
     const user = userEvent.setup()
     await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    expect(screen.getByRole('button', { name: 'カスタム: #ff8800' })).toBeInTheDocument()
+
+    expect(screen.queryByRole('button', { name: /^カスタム/ })).not.toBeInTheDocument()
+    expect(screen.getByLabelText('色を編集（現在の色: #ff8800）')).toBeInTheDocument()
   })
 
-  it('カスタム色が現在の文字色と一致するときだけカスタムスウォッチが選択状態になる', async () => {
+  it('「色を編集」の名前は選択範囲の色に追従する', async () => {
     const user = userEvent.setup()
     await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    expect(screen.getByRole('button', { name: 'カスタム: #ff8800' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-
     await user.click(screen.getByRole('button', { name: '赤' }))
+
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    expect(screen.getByRole('button', { name: 'カスタム: #e01e5a' })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    )
+    expect(screen.getByLabelText('色を編集（現在の色: #e01e5a）')).toBeInTheDocument()
   })
 
-  it('カスタムスウォッチをクリックするとその色が履歴に追加される', async () => {
+  it('カラーピッカーで標準の色に無い色を確定すると履歴に追加される', async () => {
     const user = userEvent.setup()
     await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    await user.click(screen.getByRole('button', { name: 'カスタム: #ff8800' }))
+    fireEvent.change(document.querySelector('input[name="customColor"]')!, {
+      target: { value: '#123456' },
+    })
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    expect(screen.getByRole('button', { name: '履歴: #ff8800' })).toBeInTheDocument()
-  })
-
-  it('標準の色と同じカスタム色をクリックしても履歴には追加されない', async () => {
-    const user = userEvent.setup()
-    await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
-    await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    await user.click(screen.getByRole('button', { name: 'カスタム: #e01e5a' }))
-
-    await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    expect(screen.queryByRole('group', { name: '履歴' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '履歴: #123456' })).toBeInTheDocument()
   })
 
   it('カラーピッカーで標準の色と同じ色を確定しても履歴には追加されない', async () => {

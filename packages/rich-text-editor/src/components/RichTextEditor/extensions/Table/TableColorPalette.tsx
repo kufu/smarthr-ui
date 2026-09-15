@@ -1,7 +1,8 @@
 'use client'
-import { Button, FaCheckIcon, FaXmarkIcon } from 'smarthr-ui'
+import { Button, FaXmarkIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../../intl'
+import { ColorSwatch } from '../../Toolbar/ColorPicker/ColorSwatch'
 import { EDITOR_BACKGROUND_COLORS } from '../../Toolbar/ColorPicker/backgroundColors'
 import { normalizeHex } from '../../Toolbar/ColorPicker/normalizeHex'
 import { EDITOR_COLORS } from '../../Toolbar/ColorPicker/textColors'
@@ -33,37 +34,22 @@ export const TableColorPalette = ({
           const selected =
             normalizedCurrent !== null && normalizedCurrent === normalizeHex(color.value, '')
           return (
-            <button
+            <ColorSwatch
               key={color.value}
-              type="button"
-              title={label}
-              className="shr-border-shorthand shr-relative shr-flex shr-cursor-pointer shr-items-center shr-justify-center shr-rounded-m shr-p-0 group-data-[keyboard=true]/table-menu:focus:shr-focus-indicator hover:shr-shadow-outline group-data-[keyboard=false]/table-menu:focus:shr-outline-none"
-              style={{
-                width: 32,
-                height: 32,
-                backgroundColor: attribute === 'color' ? '#fff' : color.value,
-                color: attribute === 'color' ? color.value : undefined,
-              }}
-              aria-label={label}
-              aria-pressed={selected}
-              onClick={() => run(() => setTableCellColor(editor, attribute, color.value))}
-            >
-              {attribute === 'color' && (
-                <span className="shr-text-lg shr-font-bold" aria-hidden="true">
-                  {'A'}
-                </span>
-              )}
-              {selected && (
-                <FaCheckIcon className="shr-absolute shr-bottom-0 shr-right-0 shr-rounded-s shr-bg-white shr-text-xs shr-text-main" />
-              )}
-            </button>
+              selected={selected}
+              appearance={attribute}
+              color={color.value}
+              className="group-data-[keyboard=true]/table-menu:focus:shr-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-outline-none"
+              handleClick={() => run(() => setTableCellColor(editor, attribute, color.value))}
+              label={label}
+            />
           )
         })}
       </div>
       <Button
         variant="text"
         size="S"
-        className="shr-mt-0.5 shr-font-normal"
+        className="shr-mt-0.5"
         onClick={() => run(() => setTableCellColor(editor, attribute, null))}
         prefix={<FaXmarkIcon />}
       >

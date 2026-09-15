@@ -13,7 +13,7 @@ import { ToolbarTooltip } from '../ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
 import { ColorPickerPalette } from './ColorPickerPalette'
-import { COLOR_INDICATOR_CLASS_NAME } from './colorIndicatorStyle'
+import { ColorSwatchFace } from './ColorSwatch'
 import { normalizeHex } from './normalizeHex'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
@@ -23,7 +23,6 @@ const RECENT_LIMIT = 5
 const classNameGenerator = tv({
   slots: {
     trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-ColorPickerButton'],
-    colorIndicator: COLOR_INDICATOR_CLASS_NAME,
   },
 })
 
@@ -124,12 +123,12 @@ export const TextColorPickerButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/colorBlack',
       defaultText: '黒',
     })
-    const customSwatchLabel = useCallback(
+    const editButtonAccessibleLabel = useCallback(
       (color: string) =>
         localize(
           {
-            id: 'smarthr-ui/RichTextEditor/colorCustomSwatchLabel',
-            defaultText: 'カスタム: {color}',
+            id: 'smarthr-ui/RichTextEditor/colorEditButtonWithCurrent',
+            defaultText: '色を編集（現在の色: {color}）',
           },
           { color },
         ),
@@ -174,16 +173,12 @@ export const TextColorPickerButton: FC<Props> = memo(
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
           >
-            <span className="shr-flex shr-flex-col shr-items-center shr-gap-[2px]">
-              {/* eslint-disable-next-line smarthr/require-i18n-text */}
-              <span className="shr-text-base shr-font-bold shr-leading-none" aria-hidden>
-                A
-              </span>
-              <span
-                className={classNames.colorIndicator()}
-                style={{ backgroundColor: currentColor ?? DEFAULT_COLOR }}
-              />
-            </span>
+            <ColorSwatchFace
+              appearance="color"
+              size="S"
+              color={currentColor ?? DEFAULT_COLOR}
+              aria-hidden="true"
+            />
             <FaCaretDownIcon className="shr-text-xs" />
           </button>
         </ToolbarTooltip>
@@ -191,6 +186,7 @@ export const TextColorPickerButton: FC<Props> = memo(
           <ColorPickerPalette
             paletteRef={paletteRef}
             triggerRef={triggerRef}
+            appearance="color"
             colors={EDITOR_COLORS}
             defaultColor={DEFAULT_COLOR}
             currentColor={currentColor}
@@ -203,7 +199,7 @@ export const TextColorPickerButton: FC<Props> = memo(
             recentSectionLabel={recentSectionLabel}
             editButtonLabel={editButtonLabel}
             resetButtonLabel={resetLabel}
-            customSwatchLabel={customSwatchLabel}
+            editButtonAccessibleLabel={editButtonAccessibleLabel}
             recentSwatchLabel={recentSwatchLabel}
             setIsOpen={setIsOpen}
             setCustomColor={setCustomColor}
