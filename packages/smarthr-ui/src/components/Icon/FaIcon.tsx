@@ -1,4 +1,5 @@
 import {
+  FaA,
   FaAddressBook,
   FaAddressCard,
   FaAlignCenter,
@@ -221,6 +222,7 @@ import {
 
 import { generateIcon } from './generateIcon'
 
+export const FaAIcon = /*#__PURE__*/ generateIcon(FaA)
 export const FaAddressBookIcon = /*#__PURE__*/ generateIcon(FaAddressBook)
 export const FaAddressCardIcon = /*#__PURE__*/ generateIcon(FaAddressCard)
 export const FaAlignCenterIcon = /*#__PURE__*/ generateIcon(FaAlignCenter)
