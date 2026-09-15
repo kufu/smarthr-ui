@@ -64,11 +64,7 @@ const getAlignIcon = (value: string) => {
 
 const classNameGenerator = tv({
   slots: {
-    trigger: [
-      TOOLBAR_ITEM_CLASS_NAME,
-      'smarthr-ui-RichTextEditor-TextAlignDropdown',
-      'shr-text-sm',
-    ],
+    trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-TextAlignDropdown'],
     listbox: [
       'shr-border-shorthand shr-flex shr-items-center shr-gap-0.25 shr-rounded-m shr-bg-white shr-p-0.25 shr-shadow-layer-3',
     ],

@@ -23,11 +23,7 @@ const LINE_HEIGHT_OPTIONS = [
 
 const classNameGenerator = tv({
   slots: {
-    trigger: [
-      TOOLBAR_ITEM_CLASS_NAME,
-      'smarthr-ui-RichTextEditor-LineHeightDropdown',
-      'shr-text-sm',
-    ],
+    trigger: [TOOLBAR_ITEM_CLASS_NAME, 'smarthr-ui-RichTextEditor-LineHeightDropdown'],
     listbox: [
       'shr-border-shorthand shr-max-h-[20em] shr-min-w-[7em] shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
     ],
@@ -182,7 +178,10 @@ export const LineHeightDropdown: FC<Props> = memo(
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
           >
-            <FaTextHeightIcon />
+            {/* viewBox が 576x512 と横長で、react-icons は幅と高さの小さいほうに合わせて
+                縮小するため、16px では高さが 12.4px にしかならない。他のアイコンと同じ
+                14px にするには 18px が要る。text-lg は 19.2px で行き過ぎる */}
+            <FaTextHeightIcon className="shr-text-[18px]" />
             <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
           </button>
         </ToolbarTooltip>
