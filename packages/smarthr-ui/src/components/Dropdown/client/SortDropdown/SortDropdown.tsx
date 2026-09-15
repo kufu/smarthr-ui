@@ -23,8 +23,8 @@ import { Cluster, Stack } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
 import { Select } from '../../../Select'
 import { DropdownCloser } from '../../DropdownCloser'
-import { DropdownContent } from '../../DropdownContent'
 import { Dropdown } from '../Dropdown'
+import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 type SortFieldType = {

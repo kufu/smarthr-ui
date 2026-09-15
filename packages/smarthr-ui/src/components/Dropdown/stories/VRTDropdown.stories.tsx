@@ -2,8 +2,7 @@ import { userEvent, within } from 'storybook/test'
 
 import { Button } from '../../Button'
 import { SingleCombobox } from '../../Combobox'
-import { DropdownContent } from '../DropdownContent'
-import { Dropdown, DropdownTrigger } from '../client'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

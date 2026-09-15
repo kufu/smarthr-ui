@@ -23,8 +23,7 @@ import { Localizer } from '../../../intl'
 import { type AnchorButton, Button, type BaseProps as ButtonProps } from '../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { DropdownCloser } from '../DropdownCloser'
-import { DropdownContent } from '../DropdownContent'
-import { Dropdown, DropdownContext, DropdownTrigger } from '../client'
+import { Dropdown, DropdownContent, DropdownContext, DropdownTrigger } from '../client'
 
 import { DropdownMenuGroup } from './DropdownMenuGroup'
 

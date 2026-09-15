@@ -18,8 +18,7 @@ import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { DropdownCloser } from '../DropdownCloser'
-import { DropdownContent } from '../DropdownContent'
-import { Dropdown, DropdownTrigger } from '../client'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
 
 type ObjectTriggerType = {
   text?: ReactNode
