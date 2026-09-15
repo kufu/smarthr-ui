@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import type { SideNavSizeType } from './SideNavItemButton'
 
@@ -8,8 +8,8 @@ type BaseProps = PropsWithChildren<{
   size?: SideNavSizeType
   /** コンポーネントに適用するクラス名 */
   className?: string
-}> &
-  VariantProps<typeof classNameGenerator>
+  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+}>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof BaseProps>
 
 const ROUNDED = {
@@ -30,7 +30,7 @@ const classNameGenerator = tv({
       right: ['shr-rounded-r-l', ROUNDED.t_r, ROUNDED.b_r],
       bottom: ['shr-rounded-b-l', ROUNDED.b_l, ROUNDED.b_r],
       left: ['shr-rounded-l-l', ROUNDED.t_l, ROUNDED.b_l],
-    },
+    } satisfies Record<Exclude<NonNullable<Props['rounded']>, boolean> | 'true', string[]>,
   },
   defaultVariants: {
     rounded: false,

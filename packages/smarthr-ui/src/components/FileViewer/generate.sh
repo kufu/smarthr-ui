@@ -8,8 +8,8 @@ export const ReactPDFStyle = () => (
   <style>
     {\`
 EOF
-  cat $(readlink -f "../../../node_modules/react-pdf/dist/esm/Page/TextLayer.css")
-  cat $(readlink -f "../../../node_modules/react-pdf/dist/esm/Page/AnnotationLayer.css")
+  cat "$(readlink -f "../../../node_modules/react-pdf/dist/Page/TextLayer.css")"
+  cat "$(readlink -f "../../../node_modules/react-pdf/dist/Page/AnnotationLayer.css")"
   cat <<EOF
     \`}
   </style>

@@ -62,6 +62,7 @@
   "smarthr-ui/InformationPanel/closeButtonLabel": "收起",
   "smarthr-ui/InformationPanel/openButtonLabel": "展开",
   "smarthr-ui/InputFile/destroy": "删除",
+  "smarthr-ui/InputFile/targetBlank": "在新标签页中打开",
   "smarthr-ui/InputFile/download": "下载",
   "smarthr-ui/InputFile/previewLabel": "预览 {fileName}",
   "smarthr-ui/InputFile/downloadLabel": "下载 {fileName}",

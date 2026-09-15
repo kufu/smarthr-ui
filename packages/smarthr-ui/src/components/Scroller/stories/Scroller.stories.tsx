@@ -1,5 +1,5 @@
 import { Panel } from '../../Panel'
-import { Scroller } from '../Scroller'
+import { Scroller } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
