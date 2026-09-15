@@ -118,7 +118,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         actualClose()
 
         // return focus to the Trigger
-        tabbable(triggerElementRef.current!)[0]?.focus()
+        if (triggerElementRef.current) {
+          tabbable(triggerElementRef.current)[0]?.focus()
+        }
       },
     }
   }, [latest])

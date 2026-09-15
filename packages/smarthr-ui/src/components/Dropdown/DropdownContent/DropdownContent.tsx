@@ -145,7 +145,9 @@ export const DropdownContent: FC<Props> = ({
               return
             }
 
-            const trigger = tabbable(latest.triggerElementRef.current!)[0]
+            const trigger = latest.triggerElementRef.current
+              ? tabbable(latest.triggerElementRef.current)[0]
+              : undefined
 
             if (trigger && e.target === trigger) {
               // close the dropdown when the Trigger is focused and Esc key is pressed
