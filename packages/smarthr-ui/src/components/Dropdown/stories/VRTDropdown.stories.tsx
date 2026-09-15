@@ -23,7 +23,13 @@ export default {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const button = await canvas.findByRole('button')
-    userEvent.click(button)
+    await userEvent.click(button)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
   tags: ['!autodocs'],
 } as Meta<typeof Dropdown>

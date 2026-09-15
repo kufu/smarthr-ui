@@ -15,14 +15,14 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { useOnce } from '../../hooks/client/useOnce'
-import { useTheme } from '../../hooks/client/useTheme'
-import { useLatest } from '../../hooks/useLatest'
-import { Localizer } from '../../intl'
-import { defaultHtmlFontSize } from '../../themes'
-import { LiveRegion } from '../LiveRegion'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useOnce } from '../../../hooks/client/useOnce'
+import { useTheme } from '../../../hooks/client/useTheme'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer } from '../../../intl'
+import { defaultHtmlFontSize } from '../../../themes'
+import { LiveRegion } from '../../LiveRegion'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 type BaseProps = {
   /** 入力値にエラーがあるかどうか */

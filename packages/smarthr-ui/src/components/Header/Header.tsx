@@ -8,7 +8,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
@@ -69,8 +69,8 @@ type BaseProps = PropsWithChildren<{
   onTenantSelect?: (id: string) => void
   /** @deprecated internal-ui から利用するので使わないでください。 */
   enableNew?: boolean
-}> &
-  VariantProps<typeof classNameGenerator>
+}>
+
 type Props = BaseProps & Omit<ComponentProps<'header'>, keyof BaseProps>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const

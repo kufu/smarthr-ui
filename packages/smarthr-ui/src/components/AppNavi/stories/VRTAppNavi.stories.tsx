@@ -43,6 +43,12 @@ export default {
       name: 'ドロップダウンボタン 候補を開く',
     })
     await userEvent.click(dropdownButton)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
   tags: ['!autodocs'],
 } satisfies Meta<typeof AppNavi>

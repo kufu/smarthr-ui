@@ -7,34 +7,20 @@ import {
   type ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { tabbable } from '../../libs/tabbable'
 import { Tooltip } from '../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
-type ConditionalWrapperProps = {
-  shouldWrapContent?: boolean
-  wrapper: FC<PropsWithChildren>
-}
-
 const CAPTURE_OPTION = {
   capture: true,
 }
-
-/**
- * 条件付きでラッパをレンダリングする
- */
-const ConditionalWrapper: FC<PropsWithChildren<ConditionalWrapperProps>> = ({
-  shouldWrapContent,
-  wrapper,
-  children,
-}) => (shouldWrapContent ? wrapper({ children }) : children)
 
 type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show?: boolean }
@@ -48,7 +34,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   const { active, handleClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const callbackRef = useCallback(
+  const setupCallbackRef = useCallback(
     (node: HTMLElement | null) => {
       if (!node) {
         return
@@ -100,41 +86,31 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     },
     [handleClickTrigger],
   )
+  const layoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (node) {
+        // apply ARIA to all focusable elements in trigger
+        tabbable(node, { shouldIgnoreVisibility: true }).forEach((trigger) => {
+          trigger.setAttribute('aria-expanded', active.toString())
+          trigger.setAttribute('aria-controls', contentId)
+        })
+      }
+    },
+    [active, contentId],
+  )
 
-  const mergedRef = useMergeRefs(triggerElementRef, callbackRef)
-
-  useEffect(() => {
-    if (!triggerElementRef.current) {
-      return
-    }
-
-    // apply ARIA to all focusable elements in trigger
-    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
-
-    triggers.forEach((trigger) => {
-      trigger.setAttribute('aria-expanded', active.toString())
-      trigger.setAttribute('aria-controls', contentId)
-    })
-  }, [active, triggerElementRef, contentId])
+  const mergedRef = useMergeRefs(triggerElementRef, setupCallbackRef, layoutEffectRef)
 
   return (
     <div ref={mergedRef} className={actualClassName}>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
-      <ConditionalWrapper
-        shouldWrapContent={tooltip?.show}
-        wrapper={({ children: currentChildren }) =>
-          tooltip?.message ? (
-            // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
-            <Tooltip tabIndex={-1} triggerType="icon" message={tooltip?.message}>
-              {currentChildren}
-            </Tooltip>
-          ) : (
-            currentChildren
-          )
-        }
-      >
-        {children}
-      </ConditionalWrapper>
+      {tooltip && tooltip.show && tooltip.message ? (
+        // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
+        <Tooltip tabIndex={-1} triggerType="icon" message={tooltip.message}>
+          {children}
+        </Tooltip>
+      ) : (
+        children
+      )}
     </div>
   )
 }

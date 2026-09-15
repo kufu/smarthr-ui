@@ -2,10 +2,10 @@
 
 import { type FC, type ReactNode, memo, useId, useMemo, useRef, useState } from 'react'
 
-import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
-import { useObjectAttributes } from '../../hooks/useObjectAttributes'
-import { Cluster } from '../Layout'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
+import { Cluster } from '../../Layout'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { FormGroup, LabelBody, LabelCluster } from './FormGroup'
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'

@@ -12,11 +12,11 @@ import {
   useRef,
 } from 'react'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { FaCircleExclamationIcon } from '../Icon'
-import { Cluster, Stack } from '../Layout'
-import { LiveRegion } from '../LiveRegion'
-import { Text } from '../Text'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { FaCircleExclamationIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
+import { LiveRegion } from '../../LiveRegion'
+import { Text } from '../../Text'
 
 import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
 

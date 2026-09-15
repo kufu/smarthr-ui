@@ -9,6 +9,14 @@ import { Dropdown } from './Dropdown'
 import { DropdownContent } from './DropdownContent'
 import { DropdownTrigger } from './DropdownTrigger'
 
+// DropdownContent は requestAnimationFrame 経由でフォーカスを当てる
+const waitForAnimationFrame = () =>
+  act(async () => {
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
+  })
+
 describe('Dropdown', () => {
   const template = (
     <Dropdown>
@@ -36,7 +44,12 @@ describe('Dropdown', () => {
   it('トリガーボタンとドロップダウンの間でフォーカスの行き来ができること', async () => {
     render(template)
 
-    act(() => screen.getByRole('button', { name: 'Trigger' }).click())
+    await userEvent.click(screen.getByRole('button', { name: 'Trigger' }))
+
+    // requestAnimationFrameの前はTriggerにフォーカスが残ったままであること(早すぎるfocus実行を検知する)
+    expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
+
+    await waitForAnimationFrame()
 
     expect(screen.getByRole('button', { name: 'Button1' })).not.toHaveFocus()
     await userEvent.tab()
@@ -62,6 +75,7 @@ describe('Dropdown', () => {
   it('ドロップダウン展開後にShift+Tabでトリガーにフォーカスが戻るとドロップダウンが閉じること', async () => {
     render(template)
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    await waitForAnimationFrame()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     await userEvent.tab()
@@ -76,6 +90,7 @@ describe('Dropdown', () => {
     render(template)
 
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    await waitForAnimationFrame()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     await userEvent.tab()
@@ -138,6 +153,48 @@ describe('Dropdown', () => {
 
       await user.click(screen.getByRole('button', { name: 'Trigger' }))
       expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
+    })
+  })
+
+  describe('Dropdownがネストしている場合', () => {
+    const NestedTemplate = (
+      <Dropdown>
+        <DropdownTrigger>
+          <Button>OuterTrigger</Button>
+        </DropdownTrigger>
+        <DropdownContent controllable>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>InnerTrigger</Button>
+            </DropdownTrigger>
+            <DropdownContent>
+              <Button>InnerButton</Button>
+            </DropdownContent>
+          </Dropdown>
+        </DropdownContent>
+      </Dropdown>
+    )
+
+    it('内側のDropdownContent内(controllable未指定)のクリックで内側のみ閉じ、外側は開いたままであること', async () => {
+      render(NestedTemplate)
+
+      await userEvent.click(screen.getByRole('button', { name: 'OuterTrigger' }))
+      await userEvent.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await userEvent.click(screen.getByRole('button', { name: 'InnerButton' }))
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
     })
   })
 })

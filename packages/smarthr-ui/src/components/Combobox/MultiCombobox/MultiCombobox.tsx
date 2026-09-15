@@ -361,7 +361,10 @@ const ActualMultiCombobox = <T,>(
         if (latest.isComposing) return
 
         if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
+          if (latest.isExpanded) {
+            e.stopPropagation()
+          }
+
           blur()
         } else if (e.key === 'Tab') {
           if (latest.isExpanded) {

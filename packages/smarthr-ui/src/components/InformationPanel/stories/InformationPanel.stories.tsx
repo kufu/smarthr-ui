@@ -1,7 +1,7 @@
 import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
-import { InformationPanel } from '../InformationPanel'
+import { InformationPanel } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

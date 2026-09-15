@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 
-import { Input } from '../Input'
+import { Input } from '../../Input'
 
 import { Fieldset } from './Fieldset'
 import { FormControl } from './FormControl'

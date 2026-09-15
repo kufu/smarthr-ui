@@ -63,8 +63,14 @@ export default {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const { length, 0: first, [length - 1]: last } = await canvas.findAllByRole('button')
-    userEvent.hover(first)
-    userEvent.click(last)
+    await userEvent.hover(first)
+    await userEvent.click(last)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
   tags: ['!autodocs'],
 } as Meta<typeof DropdownMenuButton>
@@ -127,6 +133,12 @@ export const VRTComboboxScrollTracking: StoryObj<typeof DropdownMenuButton> = {
     // Dropdown を開く
     const trigger = await within(canvasElement).findByRole('button')
     await userEvent.click(trigger)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // 次の操作前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
 
     // SingleCombobox のメニューを開く
     const combobox = await within(body).findByRole('combobox')
