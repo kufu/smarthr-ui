@@ -130,18 +130,19 @@ describe('Dropdown', () => {
 
     const trigger = screen.getByRole('button', { name: 'Trigger', expanded: false })
 
-    // ドロップダウンの開閉トグル処理はDropdownTriggerのラッパー要素にonClickCapture(captureフェーズ)
-    // で登録されている。同じcaptureフェーズで発火するリスナーを追加し、トリガー要素自身に設定された
-    // onClick(bubbleフェーズ)より先に実行されることを確認する
-    trigger.parentElement!.addEventListener(
-      'click',
-      () => callOrder.push('wrapper click (capture)'),
-      { capture: true },
-    )
+    // ドロップダウンの開閉トグル処理(handleDelegateClickTrigger)はgetBoundingClientRectを呼ぶ。
+    // 独立したcaptureリスナーを別途追加する方法だと、onClickCaptureをonClickに書き換える
+    // 退行があってもネイティブのcaptureフェーズ自体は変わらず先に発火してしまいテストが検知できない。
+    // 実際のハンドラーが呼ぶgetBoundingClientRectを記録することで実行順序を検証する
+    const originalGetBoundingClientRect = trigger.getBoundingClientRect.bind(trigger)
+    trigger.getBoundingClientRect = () => {
+      callOrder.push('dropdown handler (capture)')
+      return originalGetBoundingClientRect()
+    }
 
     await userEvent.click(trigger)
 
-    expect(callOrder).toEqual(['wrapper click (capture)', 'button onClick (bubble)'])
+    expect(callOrder).toEqual(['dropdown handler (capture)', 'button onClick (bubble)'])
     expect(screen.getByRole('button', { name: 'Trigger', expanded: true })).toBeVisible()
   })
 
