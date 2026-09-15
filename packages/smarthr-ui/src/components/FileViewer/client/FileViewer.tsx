@@ -12,20 +12,20 @@ import {
   useState,
 } from 'react'
 
-import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
-import { useLatest } from '../../hooks/useLatest'
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { DropdownMenuButton } from '../Dropdown'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { DropdownMenuButton } from '../../Dropdown'
 import {
   FaArrowRotateLeftIcon,
   FaMagnifyingGlassMinusIcon,
   FaMagnifyingGlassPlusIcon,
-} from '../Icon'
-import { Cluster } from '../Layout'
-import { Loader } from '../Loader'
-import { Scroller } from '../Scroller'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+} from '../../Icon'
+import { Cluster } from '../../Layout'
+import { Loader } from '../../Loader'
+import { Scroller } from '../../Scroller'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { ImageViewer } from './ImageViewer'
 import { PDFViewer } from './PDFViewer'
