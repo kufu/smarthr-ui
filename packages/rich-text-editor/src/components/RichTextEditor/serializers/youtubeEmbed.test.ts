@@ -21,8 +21,10 @@ const viewerSrc = (json: RichTextJSON): string | null =>
 const insertYoutube = (src: string, start?: number): RichTextJSON => {
   const editor = new Editor({ extensions: configureExtensions({ features: ALL_FEATURES }) })
   editor.commands.setYoutubeVideo(start === undefined ? { src } : { src, start })
+  const json = editor.getJSON() as RichTextJSON
+  editor.destroy()
 
-  return editor.getJSON() as RichTextJSON
+  return json
 }
 
 const youtubeDoc = (attrs: Record<string, unknown>): RichTextJSON => ({

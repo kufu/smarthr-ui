@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it } from 'vitest'
 
 import { ALL_FEATURES, configureExtensions } from '../extensions/configureExtensions'
 
@@ -19,8 +19,20 @@ beforeAll(() => {
   }
 })
 
-const createEditor = (content: Content) =>
-  new Editor({ extensions: configureExtensions({ features: ALL_FEATURES }), content })
+const editors: Editor[] = []
+afterEach(() => {
+  while (editors.length > 0) editors.pop()?.destroy()
+})
+
+const createEditor = (content: Content) => {
+  const editor = new Editor({
+    extensions: configureExtensions({ features: ALL_FEATURES }),
+    content,
+  })
+  editors.push(editor)
+
+  return editor
+}
 
 const youtubeDoc: Content = {
   type: 'doc',

@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
 import { ImageAltPopover } from './extensions/Image/ImageAltPopover'
@@ -43,6 +43,11 @@ const renderInParentForm = (children: ReactNode) => {
 const waitForEditor = () =>
   waitFor(() => expect(screen.getByRole('textbox', { name: '' })).toBeInTheDocument())
 
+const editors: Editor[] = []
+afterEach(() => {
+  while (editors.length > 0) editors.pop()?.destroy()
+})
+
 const createImageEditor = () => {
   const editor = new Editor({
     extensions: configureExtensions({ features: ALL_FEATURES }),
@@ -52,6 +57,7 @@ const createImageEditor = () => {
     },
   })
   editor.commands.setNodeSelection(0)
+  editors.push(editor)
 
   return editor
 }

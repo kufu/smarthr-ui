@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import { serializeToHTML } from '../serializers/serializeToHTML'
 
@@ -12,14 +12,23 @@ import type { Slice } from '@tiptap/pm/model'
 
 const FEATURES = ['heading', 'bold'] as const
 
+const editors: Editor[] = []
+afterEach(() => {
+  while (editors.length > 0) editors.pop()?.destroy()
+})
+
 const createEditor = (
   content: Content,
   allowedHeadingLevels: ReadonlyArray<1 | 2 | 3 | 4> = [2, 3],
-) =>
-  new Editor({
+) => {
+  const editor = new Editor({
     extensions: configureExtensions({ features: FEATURES, allowedHeadingLevels }),
     content,
   })
+  editors.push(editor)
+
+  return editor
+}
 
 const H1_JSON: Content = {
   type: 'doc',
