@@ -18,13 +18,19 @@ import {
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { usePortal } from '../../hooks/client/usePortal'
 import { useLatest } from '../../hooks/useLatest'
-
-import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
+import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
   onClose?: () => void
 }>
+
+export type Rect = {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
 
 type DropdownContextType = {
   active: boolean
@@ -112,7 +118,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         actualClose()
 
         // return focus to the Trigger
-        getFirstTabbable(triggerElementRef)?.focus()
+        if (triggerElementRef.current) {
+          tabbable(triggerElementRef.current)[0]?.focus()
+        }
       },
     }
   }, [latest])
@@ -131,12 +139,14 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     if (!active) return
 
     const handleClickBody = (e: any) => {
+      if (!latest.active || !triggerElementRef.current) {
+        return
+      }
+
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (
-        latest.active &&
-        !isEventFromChild(e, triggerElementRef.current) &&
-        !latest.isChildPortal(e.target)
-      ) {
+      const isClickedInTrigger = e.composedPath().includes(triggerElementRef.current)
+
+      if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
         setActive(false)
         functions.actualClose()
       }

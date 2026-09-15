@@ -1,13 +1,4 @@
-import { tabbable } from '../../libs/tabbable'
-
-import type { RefObject } from 'react'
-
-export type Rect = {
-  top: number
-  right: number
-  bottom: number
-  left: number
-}
+import type { Rect } from '../Dropdown'
 
 type Size = { width: number; height: number }
 export type ContentBoxStyle = {
@@ -15,20 +6,6 @@ export type ContentBoxStyle = {
   left?: string
   right?: string
   maxHeight: string
-}
-
-export function isEventFromChild(e: Event, parent: Element | null): boolean {
-  if (!parent) {
-    return false
-  }
-
-  const path = e.composedPath()
-
-  if (path.length === 0) {
-    return false
-  }
-
-  return path.includes(parent)
 }
 
 export function getContentBoxStyle(
@@ -77,12 +54,4 @@ export function getContentBoxStyle(
   }
 
   return contentBox
-}
-
-export function getFirstTabbable(ref: RefObject<HTMLElement>) {
-  if (ref.current) {
-    return tabbable(ref.current)[0]
-  }
-
-  return null
 }
