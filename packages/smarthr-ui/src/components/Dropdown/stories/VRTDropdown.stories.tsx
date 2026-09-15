@@ -98,8 +98,11 @@ export const VRTNestedDropdown: StoryObj<typeof Dropdown> = {
           <DropdownTrigger>
             <Button>内側ドロップダウン</Button>
           </DropdownTrigger>
-          <DropdownContent controllable>内側パネル</DropdownContent>
+          <DropdownContent>
+            <Button>内側アイテム</Button>
+          </DropdownContent>
         </Dropdown>
+        <Button>後続アイテム</Button>
       </DropdownContent>
     </Dropdown>
   ),
@@ -113,6 +116,12 @@ export const VRTNestedDropdown: StoryObj<typeof Dropdown> = {
     const body = canvasElement.ownerDocument.body
     const innerTrigger = await within(body).findByRole('button', { name: '内側ドロップダウン' })
     await userEvent.click(innerTrigger)
+    await waitForAnimationFrame()
+
+    // 内側Dropdownのアイテムから続けてTabし、内側トリガーにフォーカスが戻った状態でスナップショットを撮る
+    const innerItem = await within(body).findByRole('button', { name: '内側アイテム' })
+    innerItem.focus()
+    await userEvent.tab()
     await waitForAnimationFrame()
   },
 }

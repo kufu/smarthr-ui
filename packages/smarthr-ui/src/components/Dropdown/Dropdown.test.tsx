@@ -172,6 +172,7 @@ describe('Dropdown', () => {
               <Button>InnerButton</Button>
             </DropdownContent>
           </Dropdown>
+          <Button>AfterInnerDropdown</Button>
         </DropdownContent>
       </Dropdown>
     )
@@ -214,6 +215,26 @@ describe('Dropdown', () => {
         'aria-expanded',
         'false',
       )
+      expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('内側のDropdownContent内のアイテムからTabで抜けた後、続けてTabすると内側のDropdownの直後の要素にフォーカスが移り、外側は開いたままであること', async () => {
+      render(NestedTemplate)
+
+      await userEvent.click(screen.getByRole('button', { name: 'OuterTrigger' }))
+      await waitForAnimationFrame()
+      await userEvent.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+
+      screen.getByRole('button', { name: 'InnerButton' }).focus()
+      await userEvent.tab()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveFocus()
+
+      await userEvent.tab()
+      expect(screen.getByRole('button', { name: 'AfterInnerDropdown' })).toHaveFocus()
       expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
         'aria-expanded',
         'true',
