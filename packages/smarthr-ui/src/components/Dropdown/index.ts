@@ -1,7 +1,5 @@
-export { Dropdown } from './Dropdown'
-export { DropdownTrigger } from './client'
+export { Dropdown, DropdownTrigger, SortDropdown } from './client'
 export { DropdownContent } from './DropdownContent'
 export { DropdownCloser } from './DropdownCloser'
 export { FilterDropdown } from './FilterDropdown'
 export { DropdownMenuButton, DropdownMenuGroup } from './DropdownMenuButton'
-export { SortDropdown } from './client'

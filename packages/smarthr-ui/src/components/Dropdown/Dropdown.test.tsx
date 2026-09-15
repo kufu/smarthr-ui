@@ -5,9 +5,8 @@ import { act, useState } from 'react'
 import { Button } from '../Button'
 import { Stack } from '../Layout'
 
-import { Dropdown } from './Dropdown'
 import { DropdownContent } from './DropdownContent'
-import { DropdownTrigger } from './client'
+import { Dropdown, DropdownTrigger } from './client'
 
 // DropdownContent は requestAnimationFrame 経由でフォーカスを当てる
 const waitForAnimationFrame = () =>

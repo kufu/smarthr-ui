@@ -22,9 +22,9 @@ import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
 import { Select } from '../../../Select'
-import { Dropdown } from '../../Dropdown'
 import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContent } from '../../DropdownContent'
+import { Dropdown } from '../Dropdown'
 import { DropdownTrigger } from '../DropdownTrigger'
 
 type SortFieldType = {

@@ -19,8 +19,8 @@ import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { tabbable } from '../../../libs/tabbable'
-import { DropdownContext } from '../Dropdown'
 import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from '../DropdownCloser'
+import { DropdownContext } from '../client'
 
 import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
 

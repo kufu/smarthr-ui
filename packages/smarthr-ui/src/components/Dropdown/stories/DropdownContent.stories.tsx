@@ -1,7 +1,6 @@
 import { Button } from '../../Button'
-import { Dropdown } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../client'
+import { Dropdown, DropdownTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
