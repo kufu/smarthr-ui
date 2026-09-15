@@ -3,10 +3,8 @@
 import {
   type ComponentProps,
   type FC,
-  type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
@@ -28,22 +26,10 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
-  const { active, handleClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
+  const { active, handleDelegateClickTrigger, contentId, triggerElementRef } =
+    useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const handleDelegateClickCapture = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      const button = (e.target as HTMLElement).closest('button')
-
-      // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
-      if (button && !button.disabled && button.getAttribute('aria-disabled') !== 'true') {
-        // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
-        // そのためcaptureで開く処理を実行する
-        handleClickTrigger(button.getBoundingClientRect())
-      }
-    },
-    [handleClickTrigger],
-  )
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (node) {
@@ -60,7 +46,9 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
   const mergedRef = useMergeRefs(triggerElementRef, layoutEffectRef)
 
   return (
-    <div ref={mergedRef} className={actualClassName} onClickCapture={handleDelegateClickCapture}>
+    // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
+    // そのためcaptureで開く処理を実行する
+    <div ref={mergedRef} className={actualClassName} onClickCapture={handleDelegateClickTrigger}>
       {tooltip && tooltip.show && tooltip.message ? (
         // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
         <Tooltip tabIndex={-1} triggerType="icon" message={tooltip.message}>

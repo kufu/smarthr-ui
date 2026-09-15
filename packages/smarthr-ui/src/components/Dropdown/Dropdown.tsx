@@ -2,6 +2,7 @@
 
 import {
   type FC,
+  type MouseEvent,
   type MutableRefObject,
   type PropsWithChildren,
   type ReactNode,
@@ -29,7 +30,7 @@ type DropdownContextType = {
   active: boolean
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
-  handleClickTrigger: (rect: Rect) => void
+  handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
@@ -41,7 +42,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: createRef(),
-  handleClickTrigger: () => {
+  handleDelegateClickTrigger: () => {
     /* noop */
   },
   handleDelegateClickCloser: () => {
@@ -88,13 +89,18 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     return {
       DropdownContentRoot,
       actualClose,
-      handleClickTrigger: (rect: Rect) => {
-        if (latest.active) {
+      handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => {
+        const button = (e.target as HTMLElement).closest('button')
+
+        // 引き金となる要素が disabled な場合、処理を差し込む必要がない
+        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+          return
+        } else if (latest.active) {
           setActive(false)
           actualClose()
         } else {
           setActive(true)
-          setTriggerRect(rect)
+          setTriggerRect(button.getBoundingClientRect())
 
           if (latest.onOpen) {
             latest.openFrame.request(() => latest.onOpen?.())
@@ -160,7 +166,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           active,
           triggerRect,
           triggerElementRef,
-          handleClickTrigger: functions.handleClickTrigger,
+          handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
           contentId,
