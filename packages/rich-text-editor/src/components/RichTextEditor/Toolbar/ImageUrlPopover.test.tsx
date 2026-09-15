@@ -33,15 +33,6 @@ describe('ImageUrlPopover', () => {
       expect(trigger()).toHaveFocus()
     })
 
-    it('キャンセルでトリガーに戻る', async () => {
-      const user = userEvent.setup()
-      await openUrlPopover(user)
-
-      await user.click(screen.getByRole('button', { name: 'キャンセル' }))
-
-      expect(trigger()).toHaveFocus()
-    })
-
     it('挿入に成功したときはエディタへ移る', async () => {
       const user = userEvent.setup()
       await openUrlPopover(user)

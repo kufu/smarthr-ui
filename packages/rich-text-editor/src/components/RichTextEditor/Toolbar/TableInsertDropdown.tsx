@@ -76,10 +76,6 @@ export const TableInsertDropdown: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/tableInsertButton',
       defaultText: '挿入',
     })
-    const cancelText = localize({
-      id: 'smarthr-ui/RichTextEditor/tableCancelButton',
-      defaultText: 'キャンセル',
-    })
 
     const closePopup = useCallback(() => {
       setIsOpen(false)
@@ -206,10 +202,7 @@ export const TableInsertDropdown: FC<Props> = memo(
                     {error}
                   </span>
                 )}
-                <Cluster gap={0.5} justify="flex-end">
-                  <Button type="button" variant="secondary" size="S" onClick={closePopup}>
-                    {cancelText}
-                  </Button>
+                <Cluster justify="flex-end">
                   <Button type="submit" variant="primary" size="S">
                     {insertText}
                   </Button>

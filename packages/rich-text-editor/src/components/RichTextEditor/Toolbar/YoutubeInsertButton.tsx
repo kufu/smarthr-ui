@@ -55,10 +55,6 @@ export const YoutubeInsertButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/youtubeEmbedButton',
       defaultText: '埋め込む',
     })
-    const cancelText = localize({
-      id: 'smarthr-ui/RichTextEditor/youtubeCancelButton',
-      defaultText: 'キャンセル',
-    })
     const requiredMessage = localize({
       id: 'smarthr-ui/RichTextEditor/youtubeUrlRequired',
       defaultText: 'URLを入力してください',
@@ -172,10 +168,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
                     }}
                   />
                 </FormControl>
-                <Cluster gap={0.5} justify="flex-end">
-                  <Button type="button" variant="secondary" size="S" onClick={closePopup}>
-                    {cancelText}
-                  </Button>
+                <Cluster justify="flex-end">
                   <Button type="submit" variant="primary" size="S">
                     {embedText}
                   </Button>

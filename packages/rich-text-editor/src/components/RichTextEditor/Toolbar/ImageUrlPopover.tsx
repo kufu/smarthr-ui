@@ -145,10 +145,6 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
     id: 'smarthr-ui/RichTextEditor/imageInsertButton',
     defaultText: '挿入',
   })
-  const cancelText = localize({
-    id: 'smarthr-ui/RichTextEditor/imageCancelButton',
-    defaultText: 'キャンセル',
-  })
   return createPortal(
     <div
       role="dialog"
@@ -174,10 +170,7 @@ export const ImageUrlPopover: FC<Props> = memo(({ anchorRef, isOpen, onInsert, o
               }}
             />
           </FormControl>
-          <Cluster gap={0.5} justify="flex-end">
-            <Button type="button" variant="secondary" size="S" onClick={closeAndRestoreFocus}>
-              {cancelText}
-            </Button>
+          <Cluster justify="flex-end">
             <Button type="submit" variant="primary" size="S">
               {insertText}
             </Button>

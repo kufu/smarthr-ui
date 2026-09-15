@@ -59,10 +59,6 @@ export const LinkButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/linkSetButton',
       defaultText: '適用',
     })
-    const cancelText = localize({
-      id: 'smarthr-ui/RichTextEditor/linkCancelButton',
-      defaultText: 'キャンセル',
-    })
     const unsetText = localize({
       id: 'smarthr-ui/RichTextEditor/linkUnsetButton',
       defaultText: 'リンクを解除',
@@ -263,14 +259,9 @@ export const LinkButton: FC<Props> = memo(
                   ) : (
                     <span />
                   )}
-                  <Cluster gap={0.5}>
-                    <Button type="button" variant="secondary" size="S" onClick={closePopup}>
-                      {cancelText}
-                    </Button>
-                    <Button type="submit" variant="primary" size="S">
-                      {applyText}
-                    </Button>
-                  </Cluster>
+                  <Button type="submit" variant="primary" size="S">
+                    {applyText}
+                  </Button>
                 </Cluster>
               </Stack>
             </form>
