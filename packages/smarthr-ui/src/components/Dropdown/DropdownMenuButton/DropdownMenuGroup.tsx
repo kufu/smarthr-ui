@@ -33,7 +33,11 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
+// HINT: renderButtonList側がDropdownMenuGroup本体をimportせずに判定できるようにするマーカー。
+// 循環依存を避けるため、コンポーネント参照ではなくこのプロパティの有無で判定する
+type DropdownMenuGroupComponent = FC<Props> & { __isSmarthrUIDropdownMenuGroup: true }
+
+export const DropdownMenuGroup = (({ name, children, className }) => {
   const subMenuId = useId()
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
@@ -65,4 +69,6 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
       )}
     </li>
   )
-}
+}) as DropdownMenuGroupComponent
+
+DropdownMenuGroup.__isSmarthrUIDropdownMenuGroup = true

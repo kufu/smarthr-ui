@@ -15,8 +15,6 @@ import { tv } from 'tailwind-variants'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { DropdownCloser } from '../DropdownCloser'
 
-import { DropdownMenuGroup } from './DropdownMenuGroup'
-
 import type { AnchorButton, Button } from '../../Button'
 import type { RemoteDialogTrigger } from '../../Dialog'
 
@@ -37,17 +35,24 @@ const actionListItemButton = tv({
   ],
 })
 
+// HINT: DropdownMenuGroup.tsx側がrenderButtonListに依存しているため、循環依存を避けるために
+// コンポーネント参照ではなくDropdownMenuGroupが持つマーカープロパティの有無で判定する
+const isDropdownMenuGroupType = (type: ReactElement['type']): boolean =>
+  typeof type === 'function' &&
+  (type as { __isSmarthrUIDropdownMenuGroup?: boolean }).__isSmarthrUIDropdownMenuGroup === true
+
 export const renderButtonList = (children: Actions) =>
   Children.map(children, (item): ReactNode => {
     if (!item || !isValidElement(item)) {
       return null
     }
 
-    switch (item.type) {
-      case Fragment:
-        return renderButtonList(item.props.children)
-      case DropdownMenuGroup:
-        return item
+    if (item.type === Fragment) {
+      return renderButtonList(item.props.children)
+    }
+
+    if (isDropdownMenuGroupType(item.type)) {
+      return item
     }
 
     return <ButtonListItem>{item}</ButtonListItem>
