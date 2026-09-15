@@ -142,17 +142,14 @@ const LabelComponent = memo<LabelComponentProps>(
       return <VisuallyHiddenText {...attrs}>{body}</VisuallyHiddenText>
     }
 
-    const renderedLabel = <LabelCluster {...attrs}>{body}</LabelCluster>
-
-    if (subActionArea) {
-      return (
-        <Cluster justify="space-between">
-          {renderedLabel}
-          <div className="shr-grow">{subActionArea}</div>
-        </Cluster>
-      )
-    }
-
-    return renderedLabel
+    // HINT: subActionAreaの有無でlabelの親を変えると、Stack直下に来た場合にalign-items:stretchで
+    // labelが全幅に広がり、テキストが無い部分をクリックしても入力要素にフォーカスが移ってしまう
+    // そのためsubActionAreaが無い場合も横方向のClusterで包み、labelの幅を内容分に保つ
+    return (
+      <Cluster justify="space-between">
+        <LabelCluster {...attrs}>{body}</LabelCluster>
+        {subActionArea && <div className="shr-grow">{subActionArea}</div>}
+      </Cluster>
+    )
   },
 )

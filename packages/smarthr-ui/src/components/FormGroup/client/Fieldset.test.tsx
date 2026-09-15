@@ -141,4 +141,31 @@ describe('Fieldset', () => {
 
     expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid')
   })
+
+  // HINT: FormControlのlabelと構造を揃え、subActionAreaの有無でLabelClusterの親が変わらないようにする
+  describe.each([
+    ['subActionAreaが指定されていない場合', undefined],
+    [
+      'subActionAreaが指定されている場合',
+      <button key="sub" type="button">
+        sub
+      </button>,
+    ],
+  ])('%s', (_, subActionArea) => {
+    it('可視legendがwrapper直下に配置されない', () => {
+      const { container } = render(
+        <form>
+          <Fieldset legend="fieldset-legend" subActionArea={subActionArea}>
+            <Input name="test" aria-label="input-accessible-name" />
+          </Fieldset>
+        </form>,
+      )
+
+      const wrapper = container.querySelector('.smarthr-ui-FormControl')
+      const legend = container.querySelector('.smarthr-ui-FormControl-label')
+
+      expect(legend).not.toBeNull()
+      expect(legend!.parentElement).not.toBe(wrapper)
+    })
+  })
 })
