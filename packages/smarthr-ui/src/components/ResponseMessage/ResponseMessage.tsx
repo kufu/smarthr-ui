@@ -1,23 +1,40 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import {
-  ErrorIcon,
+  ERROR_ICON_ALT,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
   FaCircleInfoIcon,
+  FaRotateIcon,
   type ComponentProps as IconProps,
-  SuccessIcon,
-  SyncIcon,
+  SUCCESS_ICON_ALT,
+  SYNC_ICON_ALT,
+  WARNING_ICON_ALT,
   WarningIcon,
 } from '../Icon'
 import { Text } from '../Text'
 
 const STATUS_ICON_MAPPER = {
-  // HINT: infoは装飾として扱うため、代替テキストを設定しない
   info: FaCircleInfoIcon,
-  success: SuccessIcon,
+  success: FaCircleCheckIcon,
   warning: WarningIcon,
-  error: ErrorIcon,
-  sync: SyncIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+}
+
+// HINT: infoは装飾として扱うため、代替テキストを設定しない
+const STATUS_ICON_ALT_MAPPER: Partial<Record<keyof typeof STATUS_ICON_MAPPER, ReactNode>> = {
+  success: SUCCESS_ICON_ALT,
+  warning: WARNING_ICON_ALT,
+  error: ERROR_ICON_ALT,
+  sync: SYNC_ICON_ALT,
 }
 
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
@@ -43,7 +60,10 @@ export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ..
   const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text size={size} icon={<TextIcon {...rest} className={className} />}>
+    <Text
+      size={size}
+      icon={<TextIcon {...rest} alt={STATUS_ICON_ALT_MAPPER[status]} className={className} />}
+    >
       {children}
     </Text>
   )
