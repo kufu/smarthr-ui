@@ -5,7 +5,6 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
@@ -18,10 +17,6 @@ import { Tooltip } from '../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
-const CAPTURE_OPTION = {
-  capture: true,
-}
-
 type Props = PropsWithChildren<ComponentProps<'div'>> & {
   tooltip?: { message: ReactNode; show?: boolean }
 }
@@ -31,61 +26,10 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
-  const { active, handleClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
+  const { active, handleDelegateClickTrigger, contentId, triggerElementRef } =
+    useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const setupCallbackRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      let currentCleanup: (() => void) | undefined
-
-      const setupButton = () => {
-        // 既存のクリーンアップを実行
-        currentCleanup?.()
-        currentCleanup = undefined
-
-        const button = node.querySelector<HTMLButtonElement>('button')
-
-        // 引き金となる要素が disabled な場合、処理を差し込む必要がないため、そのまま出力する
-        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
-          return
-        }
-
-        // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
-        // そのためcaptureで開く処理を実行する
-        const callback = (e: MouseEvent) => {
-          handleClickTrigger((e.currentTarget! as HTMLButtonElement).getBoundingClientRect())
-        }
-
-        button.addEventListener('click', callback, CAPTURE_OPTION)
-
-        currentCleanup = () => {
-          button.removeEventListener('click', callback, CAPTURE_OPTION)
-        }
-      }
-
-      setupButton()
-
-      const observer = new MutationObserver(setupButton)
-
-      observer.observe(node, {
-        childList: true,
-        subtree: true,
-        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-        attributes: true,
-        attributeFilter: ['disabled', 'aria-disabled'],
-      })
-
-      return () => {
-        currentCleanup?.()
-        observer.disconnect()
-      }
-    },
-    [handleClickTrigger],
-  )
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (node) {
@@ -99,10 +43,12 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     [active, contentId],
   )
 
-  const mergedRef = useMergeRefs(triggerElementRef, setupCallbackRef, layoutEffectRef)
+  const mergedRef = useMergeRefs(triggerElementRef, layoutEffectRef)
 
   return (
-    <div ref={mergedRef} className={actualClassName}>
+    // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
+    // そのためcaptureで開く処理を実行する
+    <div ref={mergedRef} className={actualClassName} onClickCapture={handleDelegateClickTrigger}>
       {tooltip && tooltip.show && tooltip.message ? (
         // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
         <Tooltip tabIndex={-1} triggerType="icon" message={tooltip.message}>
