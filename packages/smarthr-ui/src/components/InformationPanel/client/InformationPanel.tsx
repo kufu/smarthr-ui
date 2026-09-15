@@ -16,12 +16,16 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading, type HeadingTagTypes } from '../../Heading'
 import {
-  ErrorIcon,
+  ERROR_ICON_ALT,
   FaCaretDownIcon,
   FaCaretUpIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
   FaCircleInfoIcon,
-  SuccessIcon,
-  SyncIcon,
+  FaRotateIcon,
+  SUCCESS_ICON_ALT,
+  SYNC_ICON_ALT,
+  WARNING_ICON_ALT,
   WarningIcon,
 } from '../../Icon'
 import { Sidebar } from '../../Layout'
@@ -52,12 +56,19 @@ type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
 const ICON_MAPPER = {
-  // HINT: infoは装飾として扱うため、代替テキストを設定しない
   info: FaCircleInfoIcon,
-  success: SuccessIcon,
+  success: FaCircleCheckIcon,
   warning: WarningIcon,
-  error: ErrorIcon,
-  sync: SyncIcon,
+  error: FaCircleExclamationIcon,
+  sync: FaRotateIcon,
+}
+
+// HINT: infoは装飾として扱うため、代替テキストを設定しない
+const ICON_ALT_MAPPER: Partial<Record<keyof typeof ICON_MAPPER, ReactNode>> = {
+  success: SUCCESS_ICON_ALT,
+  warning: WARNING_ICON_ALT,
+  error: ERROR_ICON_ALT,
+  sync: SYNC_ICON_ALT,
 }
 
 // HINT: warningのアイコンは自身で色を持っているため、色を指定しない
@@ -225,7 +236,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: <Icon color={ICON_COLOR_MAPPER[type]} />,
+        prefix: <Icon alt={ICON_ALT_MAPPER[type]} color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >
