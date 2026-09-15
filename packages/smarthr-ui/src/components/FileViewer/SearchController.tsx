@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, memo, useId, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../hooks/client/useEnvironment'
@@ -8,6 +8,7 @@ import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
 import { SearchInput } from '../Input'
+import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
 import type { UsePDFSearch } from './usePDFSearch'
@@ -42,7 +43,6 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     goPrev,
   } = search
   const { mobile } = useEnvironment()
-  const searchInputId = useId()
   const classNames = useMemo(() => {
     const { wrapper, inputArea } = classNameGenerator({ mobile })
     return { wrapper: wrapper(), inputArea: inputArea() }
@@ -54,7 +54,6 @@ export const SearchController: FC<Props> = memo(({ search }) => {
     <div className={classNames.wrapper}>
       <div className={classNames.inputArea}>
         <SearchInput
-          id={searchInputId}
           name="file_viewer_search"
           value={query}
           width="100%"
@@ -69,14 +68,8 @@ export const SearchController: FC<Props> = memo(({ search }) => {
           }
           suffix={
             query !== '' ? (
-              <Text
-                as="output"
-                role="status"
-                htmlFor={searchInputId}
-                size="S"
-                className="shr-tabular-nums"
-              >
-                {`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}
+              <Text size="S" className="shr-tabular-nums">
+                <LiveRegion>{`${noMatches ? 0 : currentMatchIndex + 1}/${matchCount}`}</LiveRegion>
               </Text>
             ) : undefined
           }

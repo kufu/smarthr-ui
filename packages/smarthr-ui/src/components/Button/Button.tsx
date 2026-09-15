@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes, forwardRef, useId, useMemo } from 'react'
+import { type ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
 
 import { Loader } from '../Loader'
 
@@ -24,13 +24,10 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       className,
       children,
       loading = false,
-      id,
       ...rest
     },
     ref,
   ) => {
-    const generatedId = useId()
-    const buttonId = id || generatedId
     const classNames = useMemo(() => {
       const { wrapper, loader, inner } = buttonClassNameGenerator()
 
@@ -46,7 +43,6 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         {...rest}
         buttonRef={ref}
         type={type}
-        id={buttonId}
         disabled={loading || disabled}
         loader={
           loading ? <Loader role="presentation" size="S" className={classNames.loader} /> : null
@@ -55,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         prefix={prefix}
         suffix={suffix}
       >
-        <LoadingStatus buttonId={buttonId} loading={loading} />
+        <LoadingStatus loading={loading} />
         {children}
       </ActualButton>
     )

@@ -164,7 +164,6 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     noResultText,
     style,
-    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -176,7 +175,6 @@ const ActualMultiCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
 
   const baseId = useId()
-  const inputId = id || `${baseId}-input`
   const selectedListId = `${baseId}-selected`
 
   const isInputControlled = controlledInputValue !== undefined
@@ -271,7 +269,6 @@ const ActualMultiCombobox = <T,>(
       isLoading,
       triggerRef,
       noResultText,
-      inputId,
     })
 
   const latest = useLatest({
@@ -533,7 +530,6 @@ const ActualMultiCombobox = <T,>(
             ref={mergedInputRef}
             role="combobox"
             type="text"
-            id={inputId}
             name={name}
             required={required && selectedItems.length === 0}
             disabled={disabled}
