@@ -71,6 +71,7 @@ export const VRTComboboxInDropdown: StoryObj<typeof Dropdown> = {
           onClearClick={() => {}}
           items={_comboboxItems}
         />
+        <Button>後続アイテム</Button>
       </DropdownContent>
     </Dropdown>
   ),
@@ -84,6 +85,8 @@ export const VRTComboboxInDropdown: StoryObj<typeof Dropdown> = {
     const body = canvasElement.ownerDocument.body
     const combobox = await within(body).findByRole('combobox')
     await userEvent.click(combobox)
+    await userEvent.tab()
+    await waitForAnimationFrame()
   },
 }
 
