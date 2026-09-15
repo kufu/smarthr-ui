@@ -44,7 +44,7 @@ const BOLD_ICON_MAPPER = {
   warning: BoldWarningIcon,
 }
 
-type TypeType = keyof typeof ICON_MAPPER
+type MessageType = keyof typeof ICON_MAPPER
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -56,7 +56,7 @@ type BaseProps = PropsWithChildren<{
   /** 下地 */
   base?: BaseType
   /** メッセージの種類 */
-  type: TypeType
+  type: MessageType
   /** 強調するかどうか */
   bold?: boolean
   /** スライドインするかどうか */
@@ -100,7 +100,7 @@ const classNameGenerator = tv({
       sync: {
         icon: 'shr-text-main',
       },
-    } satisfies Record<TypeType, object>,
+    } satisfies Record<MessageType, object>,
     bold: {
       true: '',
       false: '',
