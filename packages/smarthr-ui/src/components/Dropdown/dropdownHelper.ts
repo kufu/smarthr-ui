@@ -1,7 +1,3 @@
-import { tabbable } from '../../libs/tabbable'
-
-import type { RefObject } from 'react'
-
 export type Rect = {
   top: number
   right: number
@@ -63,12 +59,4 @@ export function getContentBoxStyle(
   }
 
   return contentBox
-}
-
-export function getFirstTabbable(ref: RefObject<HTMLElement>) {
-  if (ref.current) {
-    return tabbable(ref.current)[0]
-  }
-
-  return null
 }

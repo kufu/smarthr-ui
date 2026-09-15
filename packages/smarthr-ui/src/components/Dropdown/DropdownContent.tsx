@@ -22,7 +22,7 @@ import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
 import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from './DropdownCloser'
-import { type ContentBoxStyle, getContentBoxStyle, getFirstTabbable } from './dropdownHelper'
+import { type ContentBoxStyle, getContentBoxStyle } from './dropdownHelper'
 
 const KEY_ESCAPE = /^Esc(ape)?$/
 const DROPDOWN_CONTENT_CLASS_NAME = 'smarthr-ui-Dropdown-content'
@@ -145,7 +145,7 @@ export const DropdownContent: FC<Props> = ({
               return
             }
 
-            const trigger = getFirstTabbable(latest.triggerElementRef)
+            const trigger = tabbable(latest.triggerElementRef.current!)[0]
 
             if (trigger && e.target === trigger) {
               // close the dropdown when the Trigger is focused and Esc key is pressed

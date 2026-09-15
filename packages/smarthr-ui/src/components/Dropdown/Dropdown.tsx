@@ -18,8 +18,9 @@ import {
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { usePortal } from '../../hooks/client/usePortal'
 import { useLatest } from '../../hooks/useLatest'
+import { tabbable } from '../../libs/tabbable'
 
-import { type Rect, getFirstTabbable } from './dropdownHelper'
+import type { Rect } from './dropdownHelper'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
@@ -112,7 +113,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         actualClose()
 
         // return focus to the Trigger
-        getFirstTabbable(triggerElementRef)?.focus()
+        tabbable(triggerElementRef.current!)[0]?.focus()
       },
     }
   }, [latest])
