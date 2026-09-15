@@ -19,7 +19,7 @@ import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { usePortal } from '../../hooks/client/usePortal'
 import { useLatest } from '../../hooks/useLatest'
 
-import { type Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
+import { type Rect, getFirstTabbable } from './dropdownHelper'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
@@ -131,12 +131,14 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     if (!active) return
 
     const handleClickBody = (e: any) => {
+      if (!latest.active || !triggerElementRef.current) {
+        return
+      }
+
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (
-        latest.active &&
-        !isEventFromChild(e, triggerElementRef.current) &&
-        !latest.isChildPortal(e.target)
-      ) {
+      const isClickedInTrigger = e.composedPath().includes(triggerElementRef.current)
+
+      if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
         setActive(false)
         functions.actualClose()
       }

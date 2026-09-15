@@ -17,20 +17,6 @@ export type ContentBoxStyle = {
   maxHeight: string
 }
 
-export function isEventFromChild(e: Event, parent: Element | null): boolean {
-  if (!parent) {
-    return false
-  }
-
-  const path = e.composedPath()
-
-  if (path.length === 0) {
-    return false
-  }
-
-  return path.includes(parent)
-}
-
 export function getContentBoxStyle(
   triggerRect: Rect,
   contentSize: Size,
