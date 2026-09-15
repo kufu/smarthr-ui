@@ -16,12 +16,12 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading, type HeadingTagTypes } from '../../Heading'
 import {
+  ErrorIcon,
   FaCaretDownIcon,
   FaCaretUpIcon,
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
   FaCircleInfoIcon,
-  FaRotateIcon,
+  SuccessIcon,
+  SyncIcon,
   WarningIcon,
 } from '../../Icon'
 import { Sidebar } from '../../Layout'
