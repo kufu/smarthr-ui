@@ -12,7 +12,15 @@ import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
-import { BOLD_STATUS_ICON_MAPPER, FaXmarkIcon, STATUS_ICON_MAPPER } from '../Icon'
+import {
+  BoldWarningIcon,
+  ErrorIcon,
+  FaCircleInfoIcon,
+  FaXmarkIcon,
+  SuccessIcon,
+  SyncIcon,
+  WarningIcon,
+} from '../Icon'
 import { Cluster } from '../Layout'
 import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
@@ -21,7 +29,22 @@ import { Text } from '../Text'
 // TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
 // base="base" も意味が分かりづらい
 type BaseType = 'base' | 'none'
-type TypeType = 'info' | 'success' | 'warning' | 'error' | 'sync'
+
+const ICON_MAPPER = {
+  // HINT: infoは装飾として扱うため、代替テキストを設定しない
+  info: FaCircleInfoIcon,
+  success: SuccessIcon,
+  warning: WarningIcon,
+  error: ErrorIcon,
+  sync: SyncIcon,
+}
+
+const BOLD_ICON_MAPPER = {
+  ...ICON_MAPPER,
+  warning: BoldWarningIcon,
+}
+
+type TypeType = keyof typeof ICON_MAPPER
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -232,13 +255,13 @@ const MessageArea = memo<
     classNames: { messageArea: string; icon: string }
   }
 >(({ children, bold, type, classNames }) => {
-  const { Component: Icon, alt } = (bold ? BOLD_STATUS_ICON_MAPPER : STATUS_ICON_MAPPER)[type]
+  const Icon = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[type]
 
   return (
     <Text
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon alt={alt} className={classNames.icon} />,
+        prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
     >
