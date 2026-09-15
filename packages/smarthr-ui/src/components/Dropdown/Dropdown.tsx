@@ -20,12 +20,17 @@ import { usePortal } from '../../hooks/client/usePortal'
 import { useLatest } from '../../hooks/useLatest'
 import { tabbable } from '../../libs/tabbable'
 
-import type { Rect } from './dropdownHelper'
-
 type Props = PropsWithChildren<{
   onOpen?: () => void
   onClose?: () => void
 }>
+
+export type Rect = {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
 
 type DropdownContextType = {
   active: boolean

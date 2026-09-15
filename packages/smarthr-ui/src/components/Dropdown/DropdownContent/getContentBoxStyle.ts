@@ -1,9 +1,4 @@
-export type Rect = {
-  top: number
-  right: number
-  bottom: number
-  left: number
-}
+import type { Rect } from '../Dropdown'
 
 type Size = { width: number; height: number }
 export type ContentBoxStyle = {
