@@ -12,11 +12,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { DropdownCloser } from '../DropdownCloser'
+import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
+import { DropdownCloser } from '../../DropdownCloser'
 
-import type { AnchorButton, Button } from '../../Button'
-import type { RemoteDialogTrigger } from '../../Dialog'
+import type { AnchorButton, Button } from '../../../Button'
+import type { RemoteDialogTrigger } from '../../../Dialog'
 
 export type Actions = ActionItem | ActionItem[]
 

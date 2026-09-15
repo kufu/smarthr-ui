@@ -13,12 +13,14 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { Localizer } from '../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../Button'
-import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
-import { Dropdown, DropdownContent, DropdownContext, DropdownTrigger } from '../client'
+import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
+import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
+import { Localizer } from '../../../../intl'
+import { Button, type BaseProps as ButtonProps } from '../../../Button'
+import { FaCaretDownIcon, FaEllipsisIcon } from '../../../Icon'
+import { Dropdown, DropdownContext } from '../Dropdown'
+import { DropdownContent } from '../DropdownContent'
+import { DropdownTrigger } from '../DropdownTrigger'
 
 import { type Actions, renderButtonList } from './renderButtonList'
 
