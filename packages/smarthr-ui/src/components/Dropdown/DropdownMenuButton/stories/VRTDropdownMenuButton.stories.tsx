@@ -7,7 +7,7 @@ import { FaGearIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Dropdown } from '../../Dropdown'
 import { DropdownContent } from '../../DropdownContent'
-import { DropdownTrigger } from '../../DropdownTrigger'
+import { DropdownTrigger } from '../../client'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 

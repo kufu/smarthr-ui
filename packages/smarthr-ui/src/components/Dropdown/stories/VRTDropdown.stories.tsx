@@ -4,7 +4,7 @@ import { Button } from '../../Button'
 import { SingleCombobox } from '../../Combobox'
 import { Dropdown } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import { DropdownTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

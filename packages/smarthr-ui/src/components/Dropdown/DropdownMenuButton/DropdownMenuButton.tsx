@@ -25,7 +25,7 @@ import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { Dropdown, DropdownContext } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import { DropdownTrigger } from '../client'
 
 import { DropdownMenuGroup } from './DropdownMenuGroup'
 

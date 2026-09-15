@@ -1,5 +1,5 @@
 export { Dropdown } from './Dropdown'
-export { DropdownTrigger } from './DropdownTrigger'
+export { DropdownTrigger } from './client'
 export { DropdownContent } from './DropdownContent'
 export { DropdownCloser } from './DropdownCloser'
 export { FilterDropdown } from './FilterDropdown'

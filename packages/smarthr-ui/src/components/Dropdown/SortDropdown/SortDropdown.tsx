@@ -25,7 +25,7 @@ import { Select } from '../../Select'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import { DropdownTrigger } from '../client'
 
 type SortFieldType = {
   value: string
