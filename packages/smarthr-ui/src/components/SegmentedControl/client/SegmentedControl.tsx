@@ -13,6 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../../hooks/useLatest'
+import { useLocalize } from '../../../intl'
 import { Button } from '../../Button'
 
 export type Option = {
@@ -35,13 +36,14 @@ type BaseProps = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
+  /** グループの `aria-label` */
+  ariaLabel?: string
 }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
-    container: 'smarthr-ui-SegmentedControl shr-inline-flex',
-    buttonGroup: 'shr-flex',
+    container: 'smarthr-ui-SegmentedControl shr-flex shr-inline-flex',
     button: [
       'smarthr-ui-SegmentedControl-button',
       'shr-m-0 shr--ml-px shr-rounded-none',
@@ -80,16 +82,22 @@ export const SegmentedControl: FC<Props> = ({
   onClickOption,
   size = 'M',
   className,
+  ariaLabel,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
+  const translated = useLocalize({
+    radioGroupAria: {
+      id: 'smarthr-ui/SegmentedControl/group/ariaLabel',
+      defaultText: 'ボタングループ',
+    },
+  })
 
   const classNames = useMemo(() => {
-    const { container, buttonGroup, button } = classNameGenerator()
+    const { container, button } = classNameGenerator()
 
     return {
       container: container({ className }),
-      buttonGroup: buttonGroup(),
       button: button({ size }),
     }
   }, [size, className])
@@ -181,31 +189,30 @@ export const SegmentedControl: FC<Props> = ({
     <div
       {...rest}
       ref={callbackRef}
-      role="toolbar"
+      role="radiogroup"
       className={classNames.container}
+      aria-label={ariaLabel || translated.radioGroupAria}
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
     >
-      <div role="radiogroup" className={classNames.buttonGroup}>
-        {options.map((option, index) => {
-          const checked = value === option.value
-          const { ariaLabel, ...optionRest } = option
+      {options.map((option, index) => {
+        const checked = value === option.value
+        const { ariaLabel: buttonAriaLabel, ...optionRest } = option
 
-          return (
-            <SegmentedControlButton
-              {...optionRest}
-              key={option.value}
-              checked={checked}
-              tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
-              size={size}
-              className={classNames.button}
-              aria-label={ariaLabel}
-              aria-checked={checked && !!value}
-              handleClick={functions.handleClickOption}
-            />
-          )
-        })}
-      </div>
+        return (
+          <SegmentedControlButton
+            {...optionRest}
+            key={option.value}
+            checked={checked}
+            tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+            size={size}
+            className={classNames.button}
+            aria-label={buttonAriaLabel}
+            aria-checked={checked && !!value}
+            handleClick={functions.handleClickOption}
+          />
+        )
+      })}
     </div>
   )
 }
