@@ -234,7 +234,7 @@ export const ImageWidthPopover: FC<Props> = memo(
                     />
                   </FormControl>
                 </div>
-                <Cluster gap={0.5} justify="space-between">
+                <Cluster gap={0.5} justify="flex-end">
                   <Button type="button" variant="secondary" size="S" onClick={reset}>
                     {resetLabel}
                   </Button>
