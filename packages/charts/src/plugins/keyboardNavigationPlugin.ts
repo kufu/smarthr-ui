@@ -2,6 +2,8 @@ import type { Chart } from 'chart.js'
 
 export type KeyboardNavigationOptions = {
   liveRegionId?: string
+  stacked?: boolean
+  horizontal?: boolean
 }
 
 type ChartWithKeyboardHandler = {
@@ -12,6 +14,8 @@ export const keyboardNavigationPlugin = {
   id: 'keyboardNavigation',
   defaults: {
     liveRegionId: undefined,
+    stacked: false,
+    horizontal: false,
   },
   afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
@@ -40,30 +44,41 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
-      switch (event.key) {
-        case 'ArrowRight':
-          nextDataIndex = (nextDataIndex + 1) % dataLength
-          break
-        case 'ArrowDown':
-          nextDatasetIndex = (nextDatasetIndex + 1) % datasets.length
-          break
-        case 'ArrowLeft':
-          nextDataIndex = (nextDataIndex - 1 + dataLength) % dataLength
-          break
-        case 'ArrowUp':
-          nextDatasetIndex = (nextDatasetIndex - 1 + datasets.length) % datasets.length
-          break
-        case 'Escape':
-        case 'Tab':
-          nextDatasetIndex = -1
-          nextDataIndex = -1
-          break
+      const moveData = (delta: number) =>
+        (nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength)
+      const moveDataset = (delta: number) =>
+        (nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length)
+      const reset = () => {
+        nextDatasetIndex = -1
+        nextDataIndex = -1
       }
+
+      // horizontal は stacked と組み合わさった場合のみデータ軸とデータセット軸を入れ替える
+      const bindings: Record<string, () => void> =
+        options.stacked && options.horizontal
+          ? {
+              ArrowDown: () => moveData(1),
+              ArrowUp: () => moveData(-1),
+              ArrowRight: () => moveDataset(1),
+              ArrowLeft: () => moveDataset(-1),
+              Escape: reset,
+              Tab: reset,
+            }
+          : {
+              ArrowRight: () => moveData(1),
+              ArrowLeft: () => moveData(-1),
+              ArrowDown: () => moveDataset(options.stacked ? -1 : 1),
+              ArrowUp: () => moveDataset(options.stacked ? 1 : -1),
+              Escape: reset,
+              Tab: reset,
+            }
+
+      bindings[event.key]?.()
 
       if (nextDatasetIndex === -1 && nextDataIndex === -1) {
         canvas.style.outline = ''
         chart.setActiveElements([])
-        chart.tooltip.setActiveElements([], { x: 0, y: 0 })
+        chart.tooltip?.setActiveElements([], { x: 0, y: 0 })
         chart.update()
         // ライブリージョンのクリア処理
         if (liveRegionElement) {
@@ -80,7 +95,7 @@ export const keyboardNavigationPlugin = {
       chart.setActiveElements([
         { datasetIndex: actualNextDatasetIndex, index: actualNextDataIndex },
       ])
-      chart.tooltip.setActiveElements(
+      chart.tooltip?.setActiveElements(
         [{ datasetIndex: actualNextDatasetIndex, index: actualNextDataIndex }],
         { x: 0, y: 0 },
       )
