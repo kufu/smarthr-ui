@@ -1,1 +1,1 @@
-export { SortDropdown } from './SortDropdown'
+export { SortDropdown } from './client'
