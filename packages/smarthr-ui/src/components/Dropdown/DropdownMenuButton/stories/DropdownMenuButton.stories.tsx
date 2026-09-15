@@ -3,8 +3,8 @@ import { action } from 'storybook/actions'
 import { AnchorButton, Button } from '../../../Button'
 import { RemoteDialogTrigger } from '../../../Dialog'
 import { FaGearIcon } from '../../../Icon'
+import { DropdownMenuGroup } from '../../DropdownMenuGroup'
 import { DropdownMenuButton } from '../DropdownMenuButton'
-import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
