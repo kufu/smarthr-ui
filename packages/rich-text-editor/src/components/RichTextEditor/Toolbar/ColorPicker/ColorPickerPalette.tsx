@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 
 import { type typedJa, useIntl } from '../../../../intl'
 
-import { ColorSwatch, ColorSwatchFace } from './ColorSwatch'
+import { ColorSwatch } from './ColorSwatch'
 import { normalizeHex } from './normalizeHex'
 
 const SWATCHES_PER_ROW = 6
@@ -80,9 +80,8 @@ type Props = {
   customSectionLabel: string
   recentSectionLabel: string
   editButtonLabel: string
-  /** 「色を編集」の読み上げ名。開始色が分かるよう現在の色を含める */
-  editButtonAccessibleLabel: (color: string) => string
   resetButtonLabel: string
+  customSwatchLabel: (color: string) => string
   recentSwatchLabel: (color: string) => string
 }
 
@@ -106,8 +105,8 @@ export const ColorPickerPalette: FC<Props> = memo(
     customSectionLabel,
     recentSectionLabel,
     editButtonLabel,
-    editButtonAccessibleLabel,
     resetButtonLabel,
+    customSwatchLabel,
     recentSwatchLabel,
   }) => {
     const { localize } = useIntl()
@@ -237,11 +236,16 @@ export const ColorPickerPalette: FC<Props> = memo(
     const recentSelectedIndex = currentNormalized
       ? recentColors.findIndex((c) => normalizeHex(c, defaultColor) === currentNormalized)
       : -1
+    const customNormalized = normalizeHex(customColor, defaultColor)
     const customSelected =
       recentSelectedIndex === -1 &&
       currentNormalized !== null &&
-      normalizeHex(customColor, defaultColor) === currentNormalized &&
+      customNormalized === currentNormalized &&
       !colors.some((c) => normalizeHex(c.value, defaultColor) === currentNormalized)
+    // 標準か履歴に同じ色があるなら、そちらから適用できる。同じ操作を二重に並べない
+    const showCustomSwatch =
+      !colors.some((c) => normalizeHex(c.value, defaultColor) === customNormalized) &&
+      !recentColors.some((c) => normalizeHex(c, defaultColor) === customNormalized)
 
     return (
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
@@ -308,8 +312,18 @@ export const ColorPickerPalette: FC<Props> = memo(
         <div role="group" className={classNames.section()} aria-label={customSectionLabel}>
           <span className={classNames.sectionTitle()}>{customSectionLabel}</span>
           <div className={classNames.customRow()}>
-            {/* 「色を編集」を開いたときの開始色。同じ色の再適用は履歴が担うため操作は持たせない */}
-            <ColorSwatchFace appearance={appearance} color={customColor} aria-hidden="true" />
+            {showCustomSwatch && (
+              <ColorSwatch
+                selected={customSelected}
+                appearance={appearance}
+                color={customColor}
+                className="focus-visible:shr-focus-indicator"
+                data-color-swatch="custom"
+                handleKeyDown={handleSwatchKeyDown}
+                handleClick={() => applyCustomColor(customColor)}
+                label={customSwatchLabel(customColor)}
+              />
+            )}
             <span className={classNames.editButton()}>
               {/* ラベルは input の aria-label で読み上げるため、見た目側は読み上げ対象から外す */}
               <span aria-hidden="true">{editButtonLabel}</span>
@@ -319,7 +333,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                 name="customColor"
                 value={customColor}
                 className={classNames.colorInput()}
-                aria-label={editButtonAccessibleLabel(customColor)}
+                aria-label={editButtonLabel}
                 onChange={handleColorInputChange}
               />
             </span>

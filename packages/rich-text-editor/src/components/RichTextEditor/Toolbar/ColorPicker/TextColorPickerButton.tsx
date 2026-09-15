@@ -123,12 +123,12 @@ export const TextColorPickerButton: FC<Props> = memo(
       id: 'smarthr-ui/RichTextEditor/colorBlack',
       defaultText: '黒',
     })
-    const editButtonAccessibleLabel = useCallback(
+    const customSwatchLabel = useCallback(
       (color: string) =>
         localize(
           {
-            id: 'smarthr-ui/RichTextEditor/colorEditButtonWithCurrent',
-            defaultText: '色を編集（現在の色: {color}）',
+            id: 'smarthr-ui/RichTextEditor/colorCustomSwatchLabel',
+            defaultText: 'カスタム: {color}',
           },
           { color },
         ),
@@ -199,7 +199,7 @@ export const TextColorPickerButton: FC<Props> = memo(
             recentSectionLabel={recentSectionLabel}
             editButtonLabel={editButtonLabel}
             resetButtonLabel={resetLabel}
-            editButtonAccessibleLabel={editButtonAccessibleLabel}
+            customSwatchLabel={customSwatchLabel}
             recentSwatchLabel={recentSwatchLabel}
             setIsOpen={setIsOpen}
             setCustomColor={setCustomColor}

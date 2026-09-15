@@ -68,23 +68,65 @@ describe('TextColorPickerButton', () => {
     expect(screen.getByRole('button', { name: '赤' })).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('カスタム色の表示は読み上げ対象にせず、現在の色は「色を編集」の名前で伝える', async () => {
+  it('カスタムスウォッチは開始色をラベルに含み、現在の色と一致するとき選択状態になる', async () => {
     const user = userEvent.setup()
     await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
+    await user.click(screen.getByRole('button', { name: /^文字色/ }))
+
+    expect(screen.getByRole('button', { name: 'カスタム: #ff8800' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+  })
+
+  it('標準パレットに同じ色があるときはカスタムスウォッチを出さない', async () => {
+    const user = userEvent.setup()
+    await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
 
     expect(screen.queryByRole('button', { name: /^カスタム/ })).not.toBeInTheDocument()
-    expect(screen.getByLabelText('色を編集（現在の色: #ff8800）')).toBeInTheDocument()
   })
 
-  it('「色を編集」の名前は選択範囲の色に追従する', async () => {
+  it('履歴に同じ色があるときはカスタムスウォッチを出さない', async () => {
     const user = userEvent.setup()
-    await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
+    await renderEditor('<p>plain</p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    await user.click(screen.getByRole('button', { name: '赤' }))
+    fireEvent.change(document.querySelector('input[name="customColor"]')!, {
+      target: { value: '#123456' },
+    })
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
-    expect(screen.getByLabelText('色を編集（現在の色: #e01e5a）')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '履歴: #123456' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^カスタム/ })).not.toBeInTheDocument()
+  })
+
+  it('確定せず持ち越した開始色を、カスタムスウォッチから適用できる', async () => {
+    const user = userEvent.setup()
+    await renderEditor('<p>plain</p>')
+    await user.click(screen.getByRole('button', { name: /^文字色/ }))
+
+    // input だけを起こす。native の change は発火しないため、この時点では適用されない
+    fireEvent.input(document.querySelector('input[name="customColor"]')!, {
+      target: { value: '#ff8800' },
+    })
+    expect(screen.getByRole('button', { name: '文字色: 黒' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'カスタム: #ff8800' }))
+
+    expect(screen.getByRole('button', { name: '文字色: #ff8800' })).toBeInTheDocument()
+  })
+
+  it('カスタムスウォッチをクリックするとその色が履歴に追加される', async () => {
+    const user = userEvent.setup()
+    await renderEditor('<p>plain</p>')
+    await user.click(screen.getByRole('button', { name: /^文字色/ }))
+    fireEvent.input(document.querySelector('input[name="customColor"]')!, {
+      target: { value: '#ff8800' },
+    })
+    await user.click(screen.getByRole('button', { name: 'カスタム: #ff8800' }))
+
+    await user.click(screen.getByRole('button', { name: /^文字色/ }))
+    expect(screen.getByRole('button', { name: '履歴: #ff8800' })).toBeInTheDocument()
   })
 
   it('カラーピッカーで標準の色に無い色を確定すると履歴に追加される', async () => {
