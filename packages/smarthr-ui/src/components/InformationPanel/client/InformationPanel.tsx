@@ -51,6 +51,15 @@ type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
+const ICON_MAPPER = {
+  // HINT: infoは装飾として扱うため、代替テキストを設定しない
+  info: FaCircleInfoIcon,
+  success: SuccessIcon,
+  warning: WarningIcon,
+  error: ErrorIcon,
+  sync: SyncIcon,
+}
+
 // HINT: warningのアイコンは自身で色を持っているため、色を指定しない
 const ICON_COLOR_MAPPER = {
   info: 'TEXT_GREY',
@@ -207,7 +216,7 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const { Component: Icon, alt } = STATUS_ICON_MAPPER[type]
+  const Icon = ICON_MAPPER[type]
 
   return (
     <Heading
@@ -216,7 +225,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: <Icon alt={alt} color={ICON_COLOR_MAPPER[type]} />,
+        prefix: <Icon color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >
