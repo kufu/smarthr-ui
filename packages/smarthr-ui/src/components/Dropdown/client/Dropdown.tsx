@@ -20,7 +20,7 @@ import { usePortal } from '../../../hooks/client/usePortal'
 import { useLatest } from '../../../hooks/useLatest'
 import { tabbable } from '../../../libs/tabbable'
 
-import type { Rect } from '../types'
+import type { Rect } from './types'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
