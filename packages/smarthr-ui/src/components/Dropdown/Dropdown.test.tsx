@@ -114,6 +114,37 @@ describe('Dropdown', () => {
     expect(document.getElementById(controlsId)).toBeInTheDocument()
   })
 
+  it('トリガー要素自身にonClickが設定されている場合、ドロップダウンの開閉トグル処理がそれより先に実行されること', async () => {
+    const callOrder: string[] = []
+
+    render(
+      <Dropdown>
+        <DropdownTrigger>
+          <Button onClick={() => callOrder.push('button onClick (bubble)')}>Trigger</Button>
+        </DropdownTrigger>
+        <DropdownContent controllable>
+          <Button>Button1</Button>
+        </DropdownContent>
+      </Dropdown>,
+    )
+
+    const trigger = screen.getByRole('button', { name: 'Trigger', expanded: false })
+
+    // ドロップダウンの開閉トグル処理はDropdownTriggerのラッパー要素にonClickCapture(captureフェーズ)
+    // で登録されている。同じcaptureフェーズで発火するリスナーを追加し、トリガー要素自身に設定された
+    // onClick(bubbleフェーズ)より先に実行されることを確認する
+    trigger.parentElement!.addEventListener(
+      'click',
+      () => callOrder.push('wrapper click (capture)'),
+      { capture: true },
+    )
+
+    await userEvent.click(trigger)
+
+    expect(callOrder).toEqual(['wrapper click (capture)', 'button onClick (bubble)'])
+    expect(screen.getByRole('button', { name: 'Trigger', expanded: true })).toBeVisible()
+  })
+
   describe('トリガーボタンの disabled が動的に切り替わる場合', () => {
     const ToggleTemplate = ({ initialDisabled }: { initialDisabled: boolean }) => {
       const [disabled, setDisabled] = useState(initialDisabled)

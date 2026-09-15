@@ -2,6 +2,7 @@
 
 import {
   type FC,
+  type MouseEvent,
   type MutableRefObject,
   type PropsWithChildren,
   type ReactNode,
@@ -29,7 +30,7 @@ type DropdownContextType = {
   active: boolean
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
-  handleClickTrigger: (rect: Rect) => void
+  handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
@@ -41,7 +42,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: createRef(),
-  handleClickTrigger: () => {
+  handleDelegateClickTrigger: () => {
     /* noop */
   },
   handleDelegateClickCloser: () => {
@@ -87,13 +88,19 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
-      handleClickTrigger: (rect: Rect) => {
-        if (latest.active) {
+      actualClose,
+      handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => {
+        const button = (e.target as HTMLElement).closest('button')
+
+        // 引き金となる要素が disabled な場合、処理を差し込む必要がない
+        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+          return
+        } else if (latest.active) {
           setActive(false)
           actualClose()
         } else {
           setActive(true)
-          setTriggerRect(rect)
+          setTriggerRect(button.getBoundingClientRect())
 
           if (latest.onOpen) {
             latest.openFrame.request(() => latest.onOpen?.())
@@ -107,25 +114,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         // return focus to the Trigger
         getFirstTabbable(triggerElementRef)?.focus()
       },
-      handleClickBody: (e: any) => {
-        // ignore events from events within DropdownTrigger and DropdownContent
-        if (
-          latest.active &&
-          !isEventFromChild(e, triggerElementRef.current) &&
-          !latest.isChildPortal(e.target)
-        ) {
-          setActive(false)
-          actualClose()
-        }
-      },
-      updateTriggerRect: () => {
-        if (triggerElementRef.current) {
-          setTriggerRect(triggerElementRef.current.getBoundingClientRect())
-        }
-      },
     }
   }, [latest])
 
+  // TODO: コンポーネントをFragmentでラップし、callbackRefとして設定するように修正
   useEffect(
     () => () => {
       latest.openFrame.cancel()
@@ -134,19 +126,38 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     [latest],
   )
 
+  // TODO: コンポーネントをFragmentでラップし、layoutEffectRefとして設定するように修正
   useEffect(() => {
     if (!active) return
 
-    document.body.addEventListener('click', functions.handleClickBody, false)
-    window.addEventListener('scroll', functions.updateTriggerRect, { passive: true })
-    window.addEventListener('resize', functions.updateTriggerRect, { passive: true })
+    const handleClickBody = (e: any) => {
+      // ignore events from events within DropdownTrigger and DropdownContent
+      if (
+        latest.active &&
+        !isEventFromChild(e, triggerElementRef.current) &&
+        !latest.isChildPortal(e.target)
+      ) {
+        setActive(false)
+        functions.actualClose()
+      }
+    }
+    const updateTriggerRect = () => {
+      if (triggerElementRef.current) {
+        setTriggerRect(triggerElementRef.current.getBoundingClientRect())
+      }
+    }
+    const listenerOption = { passive: true }
+
+    document.body.addEventListener('click', handleClickBody, false)
+    window.addEventListener('scroll', updateTriggerRect, listenerOption)
+    window.addEventListener('resize', updateTriggerRect, listenerOption)
 
     return () => {
-      document.body.removeEventListener('click', functions.handleClickBody, false)
-      window.removeEventListener('scroll', functions.updateTriggerRect)
-      window.removeEventListener('resize', functions.updateTriggerRect)
+      document.body.removeEventListener('click', handleClickBody, false)
+      window.removeEventListener('scroll', updateTriggerRect)
+      window.removeEventListener('resize', updateTriggerRect)
     }
-  }, [active, functions])
+  }, [active, functions, latest])
 
   return (
     <PortalParentProvider>
@@ -155,7 +166,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           active,
           triggerRect,
           triggerElementRef,
-          handleClickTrigger: functions.handleClickTrigger,
+          handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
           contentId,
