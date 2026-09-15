@@ -174,6 +174,27 @@ export const WithAnnotations: Story = {
   },
 }
 
+export const Horizontal: Story = {
+  name: 'horizontal',
+  args: {
+    data: multiSmall,
+    horizontal: true,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+  },
+}
+
+export const Stacked: Story = {
+  name: 'stacked',
+  args: {
+    data: multiSmall,
+    stacked: true,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+    horizontal: true,
+  },
+}
+
 const additionalData = {
   datasets: [
     {

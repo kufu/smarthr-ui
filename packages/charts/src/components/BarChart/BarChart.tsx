@@ -45,6 +45,8 @@ type Props = {
   data: ChartData<'bar'>
   title?: string
   options?: Partial<ChartOptions<'bar'>>
+  stacked?: boolean
+  horizontal?: boolean
 } & BarChartColorProps
 
 export const BarChart: React.FC<Props> = ({
@@ -53,6 +55,8 @@ export const BarChart: React.FC<Props> = ({
   options: externalOptions,
   disablePatterns,
   singleTone,
+  horizontal,
+  stacked,
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
@@ -82,6 +86,7 @@ export const BarChart: React.FC<Props> = ({
       datasets: data.datasets.map((dataset, index) => ({
         ...dataset,
         ...chartColors[index],
+        ...(stacked && index > 0 ? { borderSkipped: false } : {}),
       })),
     }),
     [data, chartColors],
@@ -103,8 +108,12 @@ export const BarChart: React.FC<Props> = ({
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            stacked,
+            horizontal,
           },
         },
+        ...(horizontal ? { indexAxis: 'y' } : {}),
+        ...(stacked ? { scales: { x: { stacked: true }, y: { stacked: true } } } : {}),
       }),
     [title, chartId, externalOptions],
   )
