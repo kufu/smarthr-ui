@@ -466,7 +466,7 @@ export const ListBox = memo(
         style={styles.wrapper}
       >
         {isExpanded && isLoading && (
-          <LiveRegion>
+          <LiveRegion visuallyHidden={true}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
           </LiveRegion>
         )}
