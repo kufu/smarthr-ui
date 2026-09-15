@@ -111,6 +111,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
   }, [latest])
 
+  // TODO: コンポーネントをFragmentでラップし、callbackRefとして設定するように修正
   useEffect(
     () => () => {
       latest.openFrame.cancel()
@@ -119,6 +120,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     [latest],
   )
 
+  // TODO: コンポーネントをFragmentでラップし、layoutEffectRefとして設定するように修正
   useEffect(() => {
     if (!active) return
 
