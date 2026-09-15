@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useLatest } from '../../../hooks/useLatest'
 
 import { buildCustomTextRenderer } from './buildCustomTextRenderer'
 

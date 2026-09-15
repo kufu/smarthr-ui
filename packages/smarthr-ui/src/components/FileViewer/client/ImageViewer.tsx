@@ -2,7 +2,7 @@
 
 import { type FC, type SyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useLatest } from '../../../hooks/useLatest'
 
 import type { ViewerProps } from './types'
 

@@ -3,12 +3,12 @@
 import { type FC, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
-import { Localizer } from '../../intl'
-import { Button } from '../Button'
-import { FaAngleDownIcon, FaAngleUpIcon } from '../Icon'
-import { SearchInput } from '../Input'
-import { Text } from '../Text'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { FaAngleDownIcon, FaAngleUpIcon } from '../../Icon'
+import { SearchInput } from '../../Input'
+import { Text } from '../../Text'
 
 import type { UsePDFSearch } from './usePDFSearch'
 
