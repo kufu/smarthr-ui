@@ -441,7 +441,7 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur)
+  const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur, isExpanded)
 
   const mergedInputRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
   const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)

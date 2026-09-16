@@ -1,8 +1,10 @@
-import { type RefObject, useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { useLatest } from '../useLatest'
 
 import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact18'
+
+import type { RefObject } from 'react'
 
 /**
  * 指定された複数の要素を「ひとつの領域（Area）」とみなし
@@ -15,11 +17,15 @@ import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact
  *
  * @param otherRefs 領域を構成する要素のRef配列。
  * @param onOuter   領域の【外側】がクリックされたときに実行されるメインのコールバック。
+ * @param enabled   監視を有効にするかどうか。falseの間はクリックを監視しない
+ *                  （例: Comboboxが非フォーカス状態の間など、監視が不要なタイミングで指定する）。
+ *                  値が変化するとcallback ref自体が作り直され、監視の開始/終了が切り替わる。
  * @param onInner   領域の【内側】がクリックされたときに実行されるオプションのコールバック。
  */
 export function useAreaClickCallbackRef(
   otherRefs: Array<RefObject<HTMLElement>>,
   onOuter: (e: MouseEvent) => void,
+  enabled: boolean,
   onInner?: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
@@ -27,7 +33,7 @@ export function useAreaClickCallbackRef(
   return useCallbackRefCleanupForReact18(
     useCallback(
       (node: HTMLElement | null) => {
-        if (!node) {
+        if (!node || !enabled) {
           return
         }
 
@@ -69,7 +75,11 @@ export function useAreaClickCallbackRef(
           window.removeEventListener('click', handleClick)
         }
       },
-      [latest],
+      // HINT: latestはuseLatestにより常に安定した参照のため依存配列から除外している。
+      // enabledが変化するとcallback ref自体が作り直され、呼び出し側のref属性の値が変わることで
+      // Reactが自動的に再デタッチ→再アタッチする（監視の開始/終了はこれで実現している）
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [enabled],
     ),
   )
 }

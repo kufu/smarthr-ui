@@ -409,6 +409,7 @@ const ActualSingleCombobox = <T,>(
   const listBoxCallbackRef = useAreaClickCallbackRef(
     [triggerRef, clearButtonRef],
     functions.unfocus,
+    isFocused,
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 

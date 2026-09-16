@@ -353,7 +353,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
     const mergedCalendarRef = useMergeRefs(
-      useAreaClickCallbackRef([containerRef], functions.closeCalendar),
+      useAreaClickCallbackRef([containerRef], functions.closeCalendar, isCalendarShown),
       calendarRef,
     )
 

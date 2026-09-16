@@ -459,11 +459,7 @@ export const ListBox = memo(
     }, [latest])
 
     return createPortal(
-      <div
-        ref={isExpanded ? callbackRef : undefined}
-        className={CLASS_NAMES.wrapper}
-        style={styles.wrapper}
-      >
+      <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         {isExpanded && isLoading && (
           <LiveRegion visuallyHidden={true}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
