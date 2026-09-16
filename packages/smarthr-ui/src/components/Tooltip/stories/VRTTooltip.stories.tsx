@@ -5,7 +5,7 @@ import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Tooltip } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Tooltip/VRT',

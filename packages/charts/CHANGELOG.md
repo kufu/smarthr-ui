@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.4](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.3...smarthr-ui-charts-v0.2.4) (2026-09-10)
+
+
+### Features
+
+* **charts:** 棒グラフに同系色の濃淡で配色するオプションを追加 ([#6933](https://github.com/kufu/smarthr-ui/issues/6933)) ([4911f59](https://github.com/kufu/smarthr-ui/commit/4911f59da68260e54b3e00e4f726cf82bf81d456))
+
 ## [0.2.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.2...smarthr-ui-charts-v0.2.3) (2026-08-27)
 
 

@@ -3,7 +3,7 @@ export {
   defaultMediaQuery,
   type CreatedMediaQueryTheme,
 } from './createMediaQuery'
-export type { AbstractSize, CharRelativeSize } from './createSpacing'
+export type { AbstractSize, CharRelativeSize, PositiveCharRelativeSize } from './createSpacing'
 export { createSpacingByChar, primitiveTokens } from './createSpacing'
 export type { FontSizes } from './createFontSize'
 export { defaultHtmlFontSize, defaultFontSize } from './createFontSize'

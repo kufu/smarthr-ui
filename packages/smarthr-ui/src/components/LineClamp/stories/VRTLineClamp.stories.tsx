@@ -1,7 +1,7 @@
 import { MaxLines } from './LineClamp.stories'
 
 import type { LineClamp } from '../LineClamp'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/LineClamp/VRT',

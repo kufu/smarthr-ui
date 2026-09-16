@@ -5,12 +5,34 @@ import {
   type PropsWithChildren,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap, SeparateGap } from '../../../types'
+import type { PositiveGap, SeparatePositiveGap } from '../../../types'
+
+type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+type JustifyType =
+  | 'normal'
+  | 'start'
+  | 'flex-start'
+  | 'end'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly'
+  | 'stretch'
+
+type Props<T extends ElementType> = PropsWithChildren<{
+  as?: T
+  gap?: PositiveGap | SeparatePositiveGap
+  inline?: boolean
+  align?: AlignType
+  justify?: JustifyType
+}> &
+  ComponentPropsWithoutRef<T>
 
 export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -43,7 +65,7 @@ export const clusterClassNameGenerator = tv({
       XL: 'shr-gap-y-3',
       XXL: 'shr-gap-y-3.5',
       X3L: 'shr-gap-y-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<PositiveGap, string>,
     columnGap: {
       0: 'shr-gap-x-0',
       0.25: 'shr-gap-x-0.25',
@@ -67,7 +89,7 @@ export const clusterClassNameGenerator = tv({
       XL: 'shr-gap-x-3',
       XXL: 'shr-gap-x-3.5',
       X3L: 'shr-gap-x-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<PositiveGap, string>,
     align: {
       start: 'shr-items-start',
       'flex-start': 'shr-items-start',
@@ -76,7 +98,7 @@ export const clusterClassNameGenerator = tv({
       center: 'shr-items-center',
       baseline: 'shr-items-baseline',
       stretch: 'shr-items-stretch',
-    },
+    } satisfies Record<AlignType, string>,
     justify: {
       normal: 'shr-justify-normal',
       start: 'shr-justify-start',
@@ -88,17 +110,9 @@ export const clusterClassNameGenerator = tv({
       'space-around': 'shr-justify-around',
       'space-evenly': 'shr-justify-evenly',
       stretch: 'shr-justify-stretch',
-    },
+    } satisfies Record<JustifyType, string>,
   },
 })
-
-type Props<T extends ElementType> = PropsWithChildren<
-  Omit<VariantProps<typeof clusterClassNameGenerator>, 'rowGap' | 'columnGap'> & {
-    as?: T
-    gap?: Gap | SeparateGap
-  }
-> &
-  ComponentPropsWithoutRef<T>
 
 const ActualCluster = <T extends ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
