@@ -9,8 +9,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
-
-import { renderButtonList } from './DropdownMenuButton'
+import { ButtonList } from '../client'
 
 type BaseProps = PropsWithChildren<{
   name?: ReactNode
@@ -33,18 +32,26 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
+// HINT: ButtonList側がDropdownMenuGroup本体をimportせずに判定できるようにするマーカー。
+// 循環依存を避けるため、コンポーネント参照ではなくこのプロパティの有無で判定する。
+// DropdownMenuButtonがServer Componentから利用され、その子としてDropdownMenuGroupが渡された
+// 場合、レンダー結果のli要素として届く（item.typeが関数ではなく'li'になる）ため、この関数
+// マーカーでは判定できない。この場合に備え、ルート要素にもdata-smarthr-ui-dropdown-menu-group
+// 属性を付与している（ButtonList.tsx側で判定に使用）
+type DropdownMenuGroupComponent = FC<Props> & { __isSmarthrUIDropdownMenuGroup: true }
+
+export const DropdownMenuGroup = (({ name, children, className }) => {
   const subMenuId = useId()
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const subMenu = (
     <menu role="group" className="shr-list-none" aria-labelledby={name ? subMenuId : undefined}>
-      {renderButtonList(children)}
+      <ButtonList>{children}</ButtonList>
     </menu>
   )
 
   return (
-    <li role="presentation" className={actualClassName}>
+    <li role="presentation" className={actualClassName} data-smarthr-ui-dropdown-menu-group>
       {name ? (
         <>
           <Text
@@ -65,4 +72,6 @@ export const DropdownMenuGroup: FC<Props> = ({ name, children, className }) => {
       )}
     </li>
   )
-}
+}) as DropdownMenuGroupComponent
+
+DropdownMenuGroup.__isSmarthrUIDropdownMenuGroup = true

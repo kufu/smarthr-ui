@@ -1,5 +1,5 @@
 import { Button } from '../../../Button'
-import { DropdownMenuButton } from '../DropdownMenuButton'
+import { DropdownMenuButton } from '../../client'
 import { DropdownMenuGroup } from '../DropdownMenuGroup'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
