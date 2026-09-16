@@ -129,6 +129,45 @@ describe('Disclosure', () => {
     })
   })
 
+  describe('isOpenの制御を再開する場合', () => {
+    test('isOpen={true}→undefined(外部操作でfalseに)→isOpen={true}で再度開く', async () => {
+      const Wrapper = ({ isOpen }: { isOpen: boolean | undefined }) => (
+        <div className="App">
+          <DisclosureTrigger targetId="dc">
+            <Button>押してね</Button>
+          </DisclosureTrigger>
+
+          <DisclosureContent id="dc" isOpen={isOpen}>
+            <p>これは詳細です</p>
+          </DisclosureContent>
+        </div>
+      )
+
+      const { rerender } = render(<Wrapper isOpen={true} />)
+
+      await waitFor(() => {
+        expect(screen.getByText('これは詳細です')).toBeInTheDocument()
+      })
+
+      // isOpenをundefinedにする(非制御化)
+      rerender(<Wrapper isOpen={undefined} />)
+
+      // 外部操作(トリガークリック)でexpandedをfalseにする
+      await userEvent.click(screen.getByRole('button', { name: '押してね', expanded: true }))
+
+      await waitFor(() => {
+        expect(screen.queryByText('これは詳細です')).toBeNull()
+      })
+
+      // 再度isOpen={true}に戻す
+      rerender(<Wrapper isOpen={true} />)
+
+      await waitFor(() => {
+        expect(screen.getByText('これは詳細です')).toBeInTheDocument()
+      })
+    })
+  })
+
   describe('SHRUI-1324: DisclosureContentよりもあとにDisclosureTriggerがある場合', () => {
     beforeEach(() => {
       render(

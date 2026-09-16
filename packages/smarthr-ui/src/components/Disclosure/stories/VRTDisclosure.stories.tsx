@@ -2,7 +2,7 @@ import { Button } from '../../Button'
 import { DisclosureContent } from '../DisclosureContent'
 import { DisclosureTrigger } from '../DisclosureTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Disclosure/VRT',
@@ -16,6 +16,17 @@ export default {
           <DisclosureContent {...args} id={`disclosure_${index}`}>
             ディスクロージャーコンテンツ
           </DisclosureContent>
+        </>
+      ))}
+      {/* DisclosureContentがDisclosureTriggerより先にレンダリングされても、レンダリング順序に関わらずisOpenが反映されることを確認する */}
+      {[{ isOpen: true }].map((args, index) => (
+        <>
+          <DisclosureContent {...args} id={`disclosure_reverse_${index}`}>
+            ディスクロージャーコンテンツ
+          </DisclosureContent>
+          <DisclosureTrigger targetId={`disclosure_reverse_${index}`}>
+            {({ expanded }) => <Button>ディスクロージャーを{expanded ? '閉じる' : '開く'}</Button>}
+          </DisclosureTrigger>
         </>
       ))}
     </>

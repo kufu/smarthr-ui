@@ -1,19 +1,16 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
   forwardRef,
   memo,
-  useEffect,
   useId,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
+
+import { ActualCheckbox } from './client'
 
 export type Props = PropsWithChildren<
   ComponentPropsWithRef<'input'> & {
@@ -64,7 +61,7 @@ const classNameGenerator = tv({
 })
 
 export const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed, error, className, children, disabled, id, ...rest }, ref) => {
+  ({ mixed, className, children, disabled, id, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
@@ -79,37 +76,23 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
-    const inputRef = useRef<HTMLInputElement>(null)
-
     const defaultId = useId()
     const checkBoxId = id || defaultId
-
-    const mergedRef = useMergeRefs(inputRef, ref)
-
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.indeterminate = !!(checked && mixed)
-      }
-    }, [checked, mixed])
 
     return (
       <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
-          <input
+          <ActualCheckbox
             {...rest}
-            ref={mergedRef}
-            type="checkbox"
+            checkboxRef={ref}
             id={checkBoxId}
             disabled={disabled}
-            checked={checked}
+            mixed={mixed}
             className={classNames.input}
-            aria-invalid={error || undefined}
-            data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={classNames.box} />
           <CheckIconArea mixed={mixed} classNames={classNames} />
         </span>
-
         {children && (
           <label htmlFor={checkBoxId} className={classNames.label}>
             {children}

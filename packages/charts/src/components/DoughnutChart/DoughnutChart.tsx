@@ -47,7 +47,7 @@ export const DoughnutChart: React.FC<Props> = ({
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
   const chartColors = useMemo(
-    () => getChartColors<'doughnut'>(segmentCount, disablePatterns),
+    () => getChartColors<'doughnut'>(segmentCount, { disablePatterns }),
     [segmentCount, disablePatterns],
   )
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()

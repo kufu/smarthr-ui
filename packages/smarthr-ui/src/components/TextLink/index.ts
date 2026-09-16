@@ -1,3 +1,3 @@
 export { TextLink } from './TextLink'
 export { HelpLink } from './HelpLink'
-export { UpwardLink } from './client/components'
+export { UpwardLink } from './client'

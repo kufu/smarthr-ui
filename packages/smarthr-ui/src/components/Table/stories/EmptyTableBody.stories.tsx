@@ -1,9 +1,9 @@
 import { Stack } from '../../Layout'
-import { EmptyTableBody } from '../EmptyTableBody'
 import { Table } from '../Table'
 import { Th } from '../Th'
+import { EmptyTableBody } from '../client'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof EmptyTableBody> = ({ children, ...rest }) => (
   <Table>

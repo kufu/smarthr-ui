@@ -1,4 +1,2 @@
-export { Heading } from './Heading'
-export type { BaseProps, HeadingTagTypes } from './Heading'
-
-export { PageHeading } from './PageHeading'
+export { Heading, PageHeading } from './client'
+export type { BaseProps, HeadingTagTypes } from './client'

@@ -6,12 +6,19 @@ on:
   pull_request_review:
     types: [submitted]
 
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
 jobs:
   previewRelease:
     if: ${{ (((github.event_name != 'pull_request_review') && !(startsWith(github.event.pull_request.head.ref, 'merge-release-'))) || (github.event_name == 'pull_request_review') && (startsWith(github.event.pull_request.head.ref, 'merge-release-'))) }}
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:

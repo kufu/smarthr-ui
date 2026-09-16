@@ -1,16 +1,14 @@
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
 import { Text } from '../../Text'
-import { BulkActionRow } from '../BulkActionRow'
-import { EmptyTableBody } from '../EmptyTableBody'
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { Th } from '../Th'
-import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
+import { BulkActionRow, EmptyTableBody, ThCheckbox } from '../client'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof Table> = (args) => (
   <Table {...args}>

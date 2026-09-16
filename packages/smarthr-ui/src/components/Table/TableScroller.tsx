@@ -1,16 +1,13 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
   type ForwardedRef,
   type PropsWithChildren,
   forwardRef,
-  useCallback,
 } from 'react'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
-import { defaultHtmlFontSize } from '../../themes'
 import { Scroller } from '../Scroller'
+
+import { FixedHeadTableScroller } from './client'
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
@@ -35,37 +32,3 @@ export const TableScroller = forwardRef<HTMLDivElement, Props>(
       </Scroller>
     ),
 )
-
-type FixedHeadTableScrollerProps = PropsWithChildren &
-  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
-    forwardedRef: ForwardedRef<HTMLDivElement>
-    direction: 'both'
-  }
-
-const FixedHeadTableScroller = ({
-  children,
-  forwardedRef,
-  direction,
-  ...rest
-}: FixedHeadTableScrollerProps) => {
-  const callbackRef = useCallback((node: HTMLDivElement | null) => {
-    // thead の高さ分だけ scroll-padding-top を設定
-    if (node) {
-      const thead = node.querySelector('thead')
-
-      if (thead) {
-        const { height } = thead.getBoundingClientRect()
-
-        node.style.scrollPaddingTop = `${height + defaultHtmlFontSize}px`
-      }
-    }
-  }, [])
-
-  const mergedRef = useMergeRefs(callbackRef, forwardedRef)
-
-  return (
-    <Scroller {...rest} ref={mergedRef} direction={direction}>
-      {children}
-    </Scroller>
-  )
-}

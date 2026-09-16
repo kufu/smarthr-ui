@@ -4,7 +4,7 @@ import { DialogContent } from '../DialogContent'
 import { DialogTrigger } from '../DialogTrigger'
 import { DialogWrapper } from '../DialogWrapper'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/DialogCloser',

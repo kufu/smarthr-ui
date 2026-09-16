@@ -1,1 +1,1 @@
-export { Scroller } from './Scroller'
+export { Scroller } from './client'

@@ -4,7 +4,7 @@ import { Button } from '../../Button'
 import { DisclosureContent } from '../DisclosureContent'
 import { DisclosureTrigger } from '../DisclosureTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Disclosure/DisclosureTrigger',
@@ -60,6 +60,18 @@ export const Disabled: StoryObj<typeof DisclosureTrigger> = {
         <Button disabled>ディスクロージャートリガー（disabled）</Button>
       </DisclosureTrigger>
       <DisclosureContent id="disclosure_disabled">ディスクロージャーコンテンツ</DisclosureContent>
+    </>
+  ),
+}
+
+export const Loading: StoryObj<typeof DisclosureTrigger> = {
+  name: 'loading',
+  render: () => (
+    <>
+      <DisclosureTrigger targetId="disclosure_loading">
+        <Button loading>ディスクロージャートリガー（loading）</Button>
+      </DisclosureTrigger>
+      <DisclosureContent id="disclosure_loading">ディスクロージャーコンテンツ</DisclosureContent>
     </>
   ),
 }

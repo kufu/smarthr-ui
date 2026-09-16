@@ -3,8 +3,10 @@ import { tv } from 'tailwind-variants'
 
 import { StepStatusIcon } from './StepStatusIcon'
 
+import type { StatusType } from './types'
+
 type Props = {
-  statusType?: 'completed' | 'closed'
+  statusType?: StatusType
   statusText?: string
   stepNumber?: number
   current: boolean
@@ -19,10 +21,10 @@ const classNameGenerator = tv({
     statusIcon: 'shr-absolute -shr-left-[0.625em] -shr-top-[0.75em]',
   },
   variants: {
-    status: {
+    statusType: {
       completed: { counter: 'shr-border-main' },
       closed: { counter: 'shr-border-grey' },
-    },
+    } satisfies Record<StatusType, object>,
     current: {
       true: {
         counter: [
@@ -30,21 +32,20 @@ const classNameGenerator = tv({
           'forced-colors:shr-border-[Mark] forced-colors:shr-bg-[Mark]',
         ],
       },
-      false: {},
     },
   },
 })
 
 export const StepCounter: FC<Props> = ({ statusType, statusText, current, stepNumber }) => {
   const classNames = useMemo(() => {
-    const { wrapper, counter, statusIcon } = classNameGenerator({
-      status: statusType,
-      current,
-    })
+    const { wrapper, counter, statusIcon } = classNameGenerator()
 
     return {
       wrapper: wrapper(),
-      counter: counter(),
+      counter: counter({
+        statusType,
+        current,
+      }),
       statusIcon: statusIcon(),
     }
   }, [statusType, current])

@@ -60,7 +60,7 @@ const classNameGenerator = tv({
         pill: 'shr-bg-danger shr-text-white shr-shadow-[0_0_0_1px_theme(colors.white)]',
         dotElement: 'shr-bg-danger shr-shadow-[0_0_0_1px_theme(colors.white)]',
       },
-    },
+    } satisfies Record<Color, object>,
     withChildren: {
       // HINT: pill・dotElementで同一の指定になるためcompoundSlotsで扱う
       true: '',

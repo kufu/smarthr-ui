@@ -8,6 +8,7 @@ import { BarChart } from '../BarChart'
 import { LineChart } from '../LineChart'
 import { RadarChart } from '../RadarChart'
 
+import type { BarChartColorProps } from '../BarChart'
 import type { ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()
@@ -21,11 +22,7 @@ type Props = {
     title?: string
     className?: string
     options?: Partial<ChartOptions<K>>
-    /**
-     * 棒グラフの柄を無効化するか（type="bar" のときのみ有効）
-     */
-    disablePatterns?: boolean
-  }
+  } & (K extends 'bar' ? BarChartColorProps : object)
 }[ChartType]
 
 const classNameGenerator = tv({
@@ -48,6 +45,7 @@ const InnerChart: React.FC<Props> = (props) => {
         <BarChart
           data={props.data}
           disablePatterns={props.disablePatterns}
+          singleTone={props.singleTone}
           title={props.title}
           options={props.options}
         />

@@ -7,7 +7,6 @@ import {
   type PropsWithChildren,
   forwardRef,
   memo,
-  useEffect,
   useId,
   useMemo,
   useState,
@@ -69,6 +68,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       }
     }, [className])
 
+    const yearPickerId = useId()
+
     const formattedFrom = useMemo(() => {
       const date = getFromDate(from)
       const day = dayjs(date)
@@ -94,6 +95,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
       () => value && isBetween(value, formattedFrom.date, formattedTo.date),
       [value, formattedFrom.date, formattedTo.date],
     )
+    const [prevIsValidValue, setPrevIsValidValue] = useState(isValidValue)
+    const [prevValue, setPrevValue] = useState(value)
 
     const [currentMonth, setCurrentMonth] = useState(() => {
       if (isValidValue) {
@@ -108,15 +111,15 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
           ? formattedFrom.day
           : today
     })
-    const [isSelectingYear, setIsSelectingYear] = useState(false)
 
-    const yearPickerId = useId()
+    if (isValidValue !== prevIsValidValue || value !== prevValue) {
+      setPrevIsValidValue(isValidValue)
+      setPrevValue(value)
 
-    useEffect(() => {
       if (isValidValue) {
         setCurrentMonth(dayjs(value))
       }
-    }, [value, isValidValue])
+    }
 
     const calculatedCurrentMonth = useMemo(() => {
       const d = currentMonth.toDate()
@@ -137,6 +140,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props>(
         selectedText: currentMonth.toString(),
       }
     }, [currentMonth, formatDate, getWeekStartDay])
+
+    const [isSelectingYear, setIsSelectingYear] = useState(false)
 
     const functions = useMemo(
       () => ({

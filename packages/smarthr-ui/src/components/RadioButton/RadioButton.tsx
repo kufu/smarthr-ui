@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
@@ -10,7 +8,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isIOS } from '../../libs/ua'
+import { ActualRadioButton } from './client'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
@@ -48,7 +46,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ children, className, required, id, disabled, ...rest }, ref) => {
+  ({ children, className, id, disabled, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
@@ -67,18 +65,10 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     return (
       <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
-          <input
+          <ActualRadioButton
             {...rest}
-            ref={ref}
-            type="radio"
+            outerRef={ref}
             id={radioButtonId}
-            // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
-            //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
-            //    - エラーメッセージが表示されない
-            //    - 問題のある入力フィールドまでスクロールしない
-            // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
-            // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
-            required={isIOS ? undefined : required}
             disabled={disabled}
             className={classNames.input}
             data-smarthr-ui-input="true"

@@ -213,23 +213,50 @@ export const useLatest = <T>(value: T) => { const ref = useRef(value); ... }
 
 **境界をどこに置くか**
 
-hook 自身ではなく、それを使うコンポーネント側に置くのが原則です。client module が import するモジュールは client グラフに含まれ、サーバ側では評価されません。
+公開しているかどうかに関係なく、**そのファイル自身が client 専用 API を使っているか**で個別に判断します。モジュールスコープ、または関数内で client 専用 API を呼ぶファイルには、そのファイル自身に `'use client'` を付けます。
 
-ただし**公開しているかどうか**で変わります。
+呼び出し元がすでに `'use client'` を持っていて境界の内側にある場合、そのファイルへの追加は動作上は冗長になりますが、間違いではありません。「呼び出し元を辿って境界の要否を判定する」よりも、ファイル単体を見て機械的に判断できることを優先します。
 
-| | 境界の位置 |
-|---|---|
-| 非公開の hook（例: `usePortal`） | 利用側のコンポーネントに置く |
-| 公開しているコンポーネント（例: `ThemeProvider` / `EnvironmentProvider`） | そのファイル自身に置く。利用者の Server Component から直接レンダリングされるため |
+```tsx
+// ✅ 呼び出し元(DialogContentInner.tsx など)がすでに 'use client' を持っていても、
+// useRef/useState を使うこのファイル自身にも 'use client' を付ける
+'use client'
+
+import { useRef, useState } from 'react'
+
+export const DialogOverlap: FC<Props> = (...) => {
+  const nodeRef = useRef<HTMLElement>(null)
+  ...
+}
+```
 
 **client 境界が必要なモジュールは `client/` に閉じ込める**
 
 コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。
 
+**デフォルトは `client/` 直下にフラットに配置する。`components/` `hooks/` という下位区分は作らない。**
+
+```text
+Table/
+├── index.ts                      公開バレル
+├── Table.tsx                     'use client' 無し = Server Component でも使える
+└── client/
+    ├── index.ts                  公開する分だけ re-export
+    ├── ThCheckbox.tsx             'use client' 有
+    ├── BulkActionRow.tsx          'use client' 有。同ディレクトリの useTableHeadCellCount を使う
+    └── useTableHeadCellCount.ts   'use client' 無。BulkActionRow 等の client component からしか呼ばれない
+```
+
+hook を含め `client/` 配下のモジュールは、すべて `client/` 内の component 経由でしか到達されないのが通常です。この場合、component 自身がすでに client グラフに属しているため、隣に hook を置いても「`client/index.ts` を作ってはいけない」（後述）の転記問題は起きません。したがって `components/` `hooks/` に分ける理由がなく、フラットに置きます。
+
+**例外: `components/` `hooks/` の下位区分が必要になるケース**
+
+hook が `client/` 内の component を経由せず、**Server Component からも直接 import されうる**場合（＝呼び出し元がその hook 専用の独立した参照経路を持つ場合）は分割が必要です。`SectioningContent` の `useSectioningWrapper` が実例で、`'use client'` を持たない `SectioningContent.tsx` 自身から直接呼ばれます。
+
 ```text
 SectioningContent/
 ├── index.ts                      公開バレル
-├── SectioningContent.tsx         'use client' 無し = Server Component でも使える
+├── SectioningContent.tsx         'use client' 無し。useSectioningWrapper を直接呼ぶ
 └── client/
     ├── components/               各ファイルに 'use client' を付ける
     │   ├── index.ts
@@ -240,9 +267,15 @@ SectioningContent/
         └── useSectioningWrapper.ts
 ```
 
-- `client/components/` — 各ファイルに `'use client'` を付ける
-- `client/hooks/` — 付けない。境界は利用側のコンポーネントが持つ（前述の原則どおり）。ただし smarthr-ui 外に公開する hook は安全のため付ける場合がある
-- **`client/index.ts` は作らない**（後述）
+この場合 `client/index.ts` を一つにまとめると、`SectioningContent.tsx` が `hooks` 側だけを import しても `components` 側の依存（`createContext` など）が転記されてしまうため、`components/` と `hooks/` を別バレルに分けて経路を切り離す必要があります。
+
+**判断基準**
+
+- hook が `client/` 内の component からしか呼ばれない → フラットに置く（`Table` パターン）
+- hook が `client/` 内の component を経由しない独立した参照経路を持つ（Server Component から直接 import されうる）→ `components/` `hooks/` に分ける（`SectioningContent` パターン）
+
+- `client/` 配下で `'use client'` を持つファイル・持たないファイルが混在してよい。ファイル自身が client 専用 API を使っているかどうかで個別に判断する（前述の原則どおり）
+- **`client/index.ts`（および `client/components/index.ts` 相当のバレルを分けた場合の集約バレル）は作らない**（後述）
 
 `'use client'` を外せたコンポーネントは「Server Component になる」わけではありません。ディレクティブを持たないモジュールは server / client 双方のグラフで評価されるため、**Server Component からも Client Component からも使える**状態になります。制約が減るだけで、利用者側の使い方は変わりません。
 
@@ -263,6 +296,27 @@ import 'styled-components';    // ← hooks 側の依存が転記される
 `components` と `hooks` を別バレルに保てば合流点が無くなり、これは発生しません。
 
 なお `smarthr/require-barrel-import` は「最寄りのバレル」経由を要求します。`client/index.ts` があるとそれが最寄りと判定されて経由が強制されるため、作った時点でこの問題を避けられなくなります。存在しなければ `client/components/index.ts` と `client/hooks/index.ts` がそれぞれ最寄りになります。
+
+**例外: `Table` パターンのようにフラット配置する場合**
+
+前述のとおり hook が `client/` 内の component からしか呼ばれない場合は `components/` `hooks/` に分けず `client/index.ts` を一つだけ置きます。これは「componentsとhooksの合流点を作らない」という目的に反しません。`client/` 内で宣言した hook は client 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません。したがって `client/index.ts` から hook が re-export されることはなく（例外は次項の `useSectioningWrapper` のように hook が Server Component からも直接 import されうる場合のみ）、`client/index.ts` は実質「component 用バレル」としてのみ機能します。
+
+**例外: `client/index.ts` が component のみを re-export する場合**
+
+`client/index.ts` が re-export する対象は component のみです。`client/` 内で宣言した hook は client 専用の内部実装であり、同じ `client/` 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません（例外は `useSectioningWrapper` のように、hook が `client/` 内の component を経由せず Server Component からも直接 import されうる場合のみ）。`client/` 配下にある component は前述の原則（そのファイル自身が client 専用 API を使っているかで判断する）に従い `'use client'` を持つため、`'use client'` を持つモジュールは react-server グラフでは実体を評価されずクライアント参照に変換されます。したがって複数の component を一つの `client/index.ts` で re-export しても、ある component の依存が別の component 側へ転記されることはありません。対象が公開 component か非公開 component かは無関係です。
+
+`DefinitionListItem` の `client/ItemWrapper.tsx`（非公開 component、`useTheme` を使うため `'use client'` あり）が実例です。
+
+```text
+DefinitionList/
+├── index.ts                      公開バレル
+├── DefinitionListItem.tsx         'use client' 無し。client/ItemWrapper を使う
+└── client/
+    ├── index.ts                  componentのみre-export（ItemWrapper）
+    └── ItemWrapper.tsx            'use client' 有。非公開component
+```
+
+rollup ビルド出力で `DefinitionListItem.js` が `client/index.js` を経由せず `client/ItemWrapper.js` に直リンクされること、`node --conditions react-server` での評価が成功することを実測済みです。
 
 **この転記は Next.js 実利用では顕在化しないが、それでも作らない**
 
@@ -381,7 +435,11 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
   <ClientButton onClick={handleClick} />
   ```
 
-  例外として、`'use server'` で定義した **Server Function は Client Component の props として渡せます**。フレームワークが参照に変換し、呼び出し時にサーバへのリクエストになります。ただし host 要素のイベントハンドラには渡せません。
+  例外として、`'use server'` で定義した **Server Function はこの制約の対象外です**。フレームワークが参照に変換するため、Client Component の props としてはもちろん、host 要素のイベントハンドラにそのまま渡しても（Server Component 自身が書いた `<button onClick={serverAction}>` であっても）問題なく動作し、クリック時にサーバへのリクエストとして実行されます。
+
+  実測（Next.js 16.3.1 / React 19.2.8）: Server Component が直接レンダーした `<button onClick={someServerAction}>` をクリックしたところ、サーバ側のログに実行結果が出力されることを確認しました。Client Component を経由させる必要はありません。
+
+  この挙動は `onClick`/`button` に限らないことも実測済みです。`<form onSubmit={serverAction}>`・`<input onChange={serverAction}>`・`<div onKeyDown={serverAction}>` のいずれも同様にサーバへのリクエストとして実行されることを確認しています。Server Function は Flight プロトコルで関数参照そのものをシリアライズする仕組みのため、DOM 要素の種類やイベントの種類には依存しません。
 
   また値が `undefined` なら成立します。props 経由で受け取った関数をそのまま渡している形（`onClick={onClick}` など）は、利用者が渡さなければ問題になりません。`TextLink` が `'use client'` なしで `onClick` を扱っているのがこの形です
 
@@ -974,6 +1032,83 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 
 // ❌ innerRefとcallbackRefの順序を逆にすると、callbackRef実行時点でinnerRef.currentがまだnullのまま
 const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
+```
+
+#### callback ref + useMergeRefs の弱点と useLayoutEffectRef
+
+`callback ref` を `useCallback` の依存配列に値を含めて作ると、その値が変化するたびに callback ref 自体が新しい参照になり、`useMergeRefs` に渡した**他の全ての ref も巻き込まれて再デタッチ→再アタッチ**されてしまいます。
+
+```tsx
+// ❌ isExpandedが変化するたびにcallbackRef自体が再生成され、
+// useMergeRefsに渡したouterRefやinnerRefも巻き込まれて再アタッチされる
+const callbackRef = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+  node.setAttribute('aria-expanded', String(isExpanded))
+}, [isExpanded])
+
+const mergedRef = useMergeRefs(callbackRef, outerRef)
+```
+
+この問題への対処は、値をDOM属性として取得または表現できるかどうかで手段を使い分けます。優先順位は **固定参照のcallback ref(+ MutationObserver) → `useLayoutEffectRef`** です。`useLayoutEffectRef` は内部で `useLayoutEffect` に加えて状態管理用の `useRef` を持つ分、素の `useCallback` よりコストが重くなることが予想されるため、まずMutationObserverパターンで対応できないか検討し、それでも対応できない場合にのみ `useLayoutEffectRef` を使います。
+
+**優先: 値をDOM属性(`value` や `aria-*` などの既存属性、または `data-*` 属性)として取得できる場合 → 固定参照のcallback ref + MutationObserver**
+
+callback ref 自体は基本的に依存配列を持たない固定参照にし、`MutationObserver` でDOM属性の変化を監視して処理を再実行します。値がすでに要素の属性として存在する場合（`value`、`disabled`、`aria-expanded` など）はそれをそのまま監視対象にでき、存在しない場合のみ `data-*` 属性として新たに表現します。callback ref が再生成されないため、`useMergeRefs` に渡しても他の ref を巻き込みません。実例は `FormGroup.tsx` の `innerCallbackRef`(`data-auto-bind-error-input` などの変化を監視)。
+
+**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。
+
+```tsx
+// ✅ callbackRef自体は空配列で固定。値の変化はdata属性経由で伝える
+const callbackRef = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+
+  const action = () => {
+    const expanded = node.getAttribute('data-expanded')
+    // ...
+  }
+
+  action()
+
+  const observer = new MutationObserver(action)
+  observer.observe(node, { attributes: true, attributeFilter: ['data-expanded'] })
+
+  return () => observer.disconnect()
+}, [])
+
+// 呼び出し側でdata属性として値を渡す
+<div ref={callbackRef} data-expanded={isExpanded} />
+```
+
+**それ以外: 値をDOM属性として取得できない、または表現しにくい場合 → `useLayoutEffectRef`**
+
+比較対象がReactの外(既存DOM要素のidなど)にある、あるいは値をわざわざdata属性化するのが不自然な場合は `useLayoutEffectRef`（`src/hooks/client/useLayoutEffectRef.ts`）を使います。通常の callback ref と同様にnodeのアタッチ/デタッチ時にactionを実行しつつ、それに加えて `dependencies` が変化した際にも(nodeを変えずに)actionを再実行します。戻り値(callback ref)自体の参照は常に安定しているため、`useMergeRefs` に渡しても依存値の変化で他のrefまで再アタッチされません。実例は `FormControl.tsx` の `layoutEffectRef`(`label.htmlFor`/`label.id` の変化を検知)。
+
+```tsx
+const layoutEffectRef = useLayoutEffectRef((node) => {
+  if (!node) return
+  // ...
+  return () => { ... } // cleanup(任意)
+}, [label.htmlFor, label.id])
+
+const mergedRef = useMergeRefs(layoutEffectRef, outerRef)
+```
+
+**注意: `dependencies` が常に空配列の場合は使わない**
+
+`useLayoutEffectRef` の価値は「`dependencies` 変化時にnodeを変えずにactionを再実行できる」点にあります。`dependencies` が常に `[]` なら、この再実行の恩恵がなく、mount/unmount時にactionを呼ぶだけの通常のcallback refと変わりません。この場合は素直に `useCallback(action, [])` を使ってください。
+
+```tsx
+// ❌ dependenciesが常に[]なら、useLayoutEffectRefを使う理由がない
+const ref = useLayoutEffectRef((node) => {
+  if (!node) return
+  node.focus()
+}, [])
+
+// ✅ 単純なuseCallbackのcallback refで十分
+const ref = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+  node.focus()
+}, [])
 ```
 
 #### callback ref の cleanup 関数と React 18/19 互換性

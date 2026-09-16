@@ -1,15 +1,15 @@
 import { MaxLines } from './LineClamp.stories'
 
 import type { LineClamp } from '../LineClamp'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/LineClamp/VRT',
   render: MaxLines.render,
+  globals: {
+    viewport: { value: 'vrtMobile' },
+  },
   parameters: {
-    viewport: {
-      defaultViewport: 'vrtMobile',
-    },
     chromatic: {
       modes: {
         vrtMobile: { viewport: 'vrtMobile' },
