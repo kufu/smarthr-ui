@@ -60,8 +60,11 @@ export const editorContentClasses = [
   // tableWrapper内で横スクロールが発生する。
   '[&_.ProseMirror_.tableWrapper]:shr-outline-none [&_.ProseMirror_.tableWrapper]:shr-shadow-none [&_.ProseMirror_.tableWrapper]:shr-mt-2 [&_.ProseMirror_.tableWrapper]:shr-mb-2 [&_.ProseMirror_.tableWrapper]:shr-ml-1.5 [&_.ProseMirror_.tableWrapper]:shr-w-fit [&_.ProseMirror_.tableWrapper]:shr-max-w-[calc(100%-3.25rem)] [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
   '[&_.ProseMirror_table]:shr-w-auto [&_.ProseMirror_table]:shr-table-fixed [&_.ProseMirror_table]:shr-border-collapse [&_.ProseMirror_table]:shr-overflow-hidden',
-  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-pr-1.5 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[6em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
-  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-pr-1.5 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[6em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-text-left [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
+  // 右の padding だけ広いのは、セル操作ボタン(24px幅)がセルの右端をまたいで配置され
+  // 内側へ13px食い込むため。左右対称にすると本文がボタンの下に潜る。
+  // Viewer 側(下部)も同値にしないと、編集時と表示時で文字の折り返し位置がずれる。
+  '[&_.ProseMirror_td]:shr-border-shorthand [&_.ProseMirror_td]:shr-p-0.5 [&_.ProseMirror_td]:shr-pr-1 [&_.ProseMirror_td]:shr-align-top [&_.ProseMirror_td]:shr-min-w-[6em] [&_.ProseMirror_td]:shr-relative [&_.ProseMirror_td]:shr-box-border',
+  '[&_.ProseMirror_th]:shr-border-shorthand [&_.ProseMirror_th]:shr-p-0.5 [&_.ProseMirror_th]:shr-pr-1 [&_.ProseMirror_th]:shr-align-top [&_.ProseMirror_th]:shr-min-w-[6em] [&_.ProseMirror_th]:shr-bg-head [&_.ProseMirror_th]:shr-text-left [&_.ProseMirror_th]:shr-font-bold [&_.ProseMirror_th]:shr-relative [&_.ProseMirror_th]:shr-box-border',
   // selectedCell: 疑似要素オーバーレイ
   '[&_.ProseMirror_td.selectedCell::after]:shr-content-[""] [&_.ProseMirror_td.selectedCell::after]:shr-absolute [&_.ProseMirror_td.selectedCell::after]:shr-inset-0 [&_.ProseMirror_td.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_td.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_td.selectedCell::after]:shr-z-1',
   '[&_.ProseMirror_th.selectedCell::after]:shr-content-[""] [&_.ProseMirror_th.selectedCell::after]:shr-absolute [&_.ProseMirror_th.selectedCell::after]:shr-inset-0 [&_.ProseMirror_th.selectedCell::after]:shr-bg-main/10 [&_.ProseMirror_th.selectedCell::after]:shr-pointer-events-none [&_.ProseMirror_th.selectedCell::after]:shr-z-1',
@@ -113,8 +116,8 @@ export const staticContentClasses = [
   // テーブル自身に inline style で width が付くため、wrapper 側で横スクロールを担保する
   '[&_.tableWrapper]:shr-max-w-full [&_.tableWrapper]:shr-overflow-x-auto',
   '[&_table]:shr-table-fixed [&_table]:shr-border-collapse',
-  '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-pr-1.5 [&_td]:shr-align-top [&_td]:shr-min-w-[6em] [&_td]:shr-box-border',
-  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-pr-1.5 [&_th]:shr-align-top [&_th]:shr-min-w-[6em] [&_th]:shr-box-border [&_th]:shr-bg-head [&_th]:shr-text-left [&_th]:shr-font-bold',
+  '[&_td]:shr-border-shorthand [&_td]:shr-p-0.5 [&_td]:shr-pr-1 [&_td]:shr-align-top [&_td]:shr-min-w-[6em] [&_td]:shr-box-border',
+  '[&_th]:shr-border-shorthand [&_th]:shr-p-0.5 [&_th]:shr-pr-1 [&_th]:shr-align-top [&_th]:shr-min-w-[6em] [&_th]:shr-box-border [&_th]:shr-bg-head [&_th]:shr-text-left [&_th]:shr-font-bold',
   // 編集時の trailingBreak が保存されない空段落にも、1行分の高さを確保する。
   '[&_td_p]:shr-my-0 [&_td_p]:shr-min-h-[1.75em]',
   '[&_th_p]:shr-my-0 [&_th_p]:shr-min-h-[1.75em]',
