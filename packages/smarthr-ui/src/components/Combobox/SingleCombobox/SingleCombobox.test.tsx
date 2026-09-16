@@ -65,6 +65,8 @@ describe('SingleCombobox', () => {
     await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    // 選択によってオプションボタンがDOMから消えても、フォーカスがコンボボックスに残っていること
+    expect(combobox()).toHaveFocus()
   })
 
   it('アイテムを選択解除できること', async () => {

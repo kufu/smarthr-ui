@@ -163,7 +163,6 @@ const ActualMultiCombobox = <T,>(
     isItemSelected,
     noResultText,
     style,
-    id,
     ...rest
   }: Props<T>,
   ref: Ref<HTMLInputElement>,
@@ -175,7 +174,6 @@ const ActualMultiCombobox = <T,>(
   const [isComposing, setIsComposing] = useState(false)
 
   const baseId = useId()
-  const inputId = id || `${baseId}-input`
   const selectedListId = `${baseId}-selected`
 
   const isInputControlled = controlledInputValue !== undefined
@@ -259,18 +257,18 @@ const ActualMultiCombobox = <T,>(
     }
   }, [latestForListBox])
 
-  const { listBoxProps, activeOption, handleKeyDownListBox, listBoxId } = useListbox({
-    options,
-    dropdownHelpMessage,
-    dropdownWidth,
-    onAdd,
-    onSelect: listBoxFunctions.handleSelect,
-    isExpanded,
-    isLoading,
-    triggerRef,
-    noResultText,
-    inputId,
-  })
+  const { listBoxProps, activeOption, cleanupAddFrame, handleKeyDownListBox, listBoxId } =
+    useListbox({
+      options,
+      dropdownHelpMessage,
+      dropdownWidth,
+      onAdd,
+      onSelect: listBoxFunctions.handleSelect,
+      isExpanded,
+      isLoading,
+      triggerRef,
+      noResultText,
+    })
 
   const latest = useLatest({
     onChange,
@@ -286,6 +284,7 @@ const ActualMultiCombobox = <T,>(
     selectedItems,
     setInputValueIfUncontrolled,
     handleKeyDownListBox,
+    cleanupAddFrame,
   })
 
   const functions = useMemo(() => {
@@ -359,11 +358,15 @@ const ActualMultiCombobox = <T,>(
     return {
       handleDelete,
       blur,
+      cleanupCallbackRef: () => latest.cleanupAddFrame,
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
         if (latest.isComposing) return
 
         if (ESCAPE_KEY_REGEX.test(e.key)) {
-          e.stopPropagation()
+          if (latest.isExpanded) {
+            e.stopPropagation()
+          }
+
           blur()
         } else if (e.key === 'Tab') {
           if (latest.isExpanded) {
@@ -437,9 +440,13 @@ const ActualMultiCombobox = <T,>(
     }
   }, [listBoxFunctions, latest])
 
-  const listBoxCallbackRef = useAreaClickCallbackRef([triggerRef], functions.blur)
+  const listBoxCallbackRef = useAreaClickCallbackRef(
+    isExpanded ? [triggerRef] : null,
+    functions.blur,
+  )
 
-  const mergedRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
+  const mergedInputRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
+  const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)
 
   useEffect(() => {
     if (latest.highlighted) {
@@ -448,13 +455,13 @@ const ActualMultiCombobox = <T,>(
     } else {
       setInputValueIfUncontrolled('')
     }
-  }, [selectedItems, setInputValueIfUncontrolled, inputRef, latest])
+  }, [selectedItems, setInputValueIfUncontrolled, latest])
 
   useEffect(() => {
     if (isExpanded) {
       inputRef.current?.focus()
     }
-  }, [isExpanded, selectedItems, isInputControlled, inputRef])
+  }, [isExpanded, selectedItems, isInputControlled])
 
   const classNames = useMemo(() => {
     const {
@@ -490,7 +497,7 @@ const ActualMultiCombobox = <T,>(
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
-      ref={triggerRef}
+      ref={mergedTriggerRef}
       role="group"
       className={classNames.wrapper}
       style={{
@@ -522,10 +529,9 @@ const ActualMultiCombobox = <T,>(
         <div className={classNames.inputWrapper}>
           <input
             {...rest}
-            ref={mergedRef}
+            ref={mergedInputRef}
             role="combobox"
             type="text"
-            id={inputId}
             name={name}
             required={required && selectedItems.length === 0}
             disabled={disabled}

@@ -8,7 +8,7 @@ import { Th } from '../Th'
 import { WakuWakuButton } from '../WakuWakuButton'
 import { BulkActionRow, EmptyTableBody, ThCheckbox } from '../client'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof Table> = (args) => (
   <Table {...args}>
