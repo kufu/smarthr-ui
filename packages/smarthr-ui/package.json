@@ -54,7 +54,7 @@
     "eslint-plugin-storybook": "10.5.10",
     "glob": "13.0.6",
     "http-server": "^14.1.1",
-    "jsdom": "^26.1.0",
+    "jsdom": "^30.0.1",
     "npm-run-all2": "^9.0.3",
     "playwright": "^1.63.0",
     "plop": "^4.0.5",
