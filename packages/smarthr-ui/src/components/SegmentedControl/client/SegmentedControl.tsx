@@ -36,8 +36,6 @@ type BaseProps = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
-  /** グループの `aria-label` */
-  ariaLabel?: string
 }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
@@ -82,7 +80,7 @@ export const SegmentedControl: FC<Props> = ({
   onClickOption,
   size = 'M',
   className,
-  ariaLabel,
+  'aria-label': ariaLabel,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
