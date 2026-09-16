@@ -27,11 +27,12 @@ export function useAreaClickCallbackRef(
   onInner?: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
+  const hasOtherRefs = !!otherRefs
 
   return useCallbackRefCleanupForReact18(
     useCallback(
       (node: HTMLElement | null) => {
-        if (!node || !otherRefs) {
+        if (!node || !hasOtherRefs) {
           return
         }
 
@@ -73,11 +74,9 @@ export function useAreaClickCallbackRef(
           window.removeEventListener('click', handleClick)
         }
       },
-      // HINT: latestはuseLatestにより常に安定した参照のため依存配列から除外している。
-      // otherRefsのnull/非nullが変化するとcallback ref自体が作り直され、呼び出し側のref属性の値が
-      // 変わることでReactが自動的に再デタッチ→再アタッチする（監視の開始/終了はこれで実現している）
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      [!!otherRefs],
+      // HINT: otherRefsのnull/非nullが変化するとcallback ref自体が作り直され、呼び出し側のref属性の
+      // 値が変わることでReactが自動的に再デタッチ→再アタッチする（監視の開始/終了はこれで実現している）
+      [hasOtherRefs, latest],
     ),
   )
 }
