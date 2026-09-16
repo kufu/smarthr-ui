@@ -63,6 +63,8 @@ export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
   })
 
 const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
+  // TODO: clickableな要素毎にcallbackRefを生成しているが、親のmenu要素で一つにまとめられないか検証する
+  // MutationObserverの範囲は広がるが複数生成されるよりメリットがありそう
   const callbackRef = useCallbackRefCleanupForReact18(
     useCallback((node: HTMLElement | null) => {
       if (!node) {
