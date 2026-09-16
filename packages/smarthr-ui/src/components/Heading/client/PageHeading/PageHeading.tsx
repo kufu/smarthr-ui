@@ -14,12 +14,12 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { useLatest } from '../../../hooks/useLatest'
-import { IS_NEXT_JS } from '../../../libs/nextjs'
-import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
-import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../VisuallyHiddenText'
+import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../../hooks/useLatest'
+import { IS_NEXT_JS } from '../../../../libs/nextjs'
+import { STYLE_TYPE_MAP, Text, type TextProps } from '../../../Text'
+import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
 import type { ElementProps } from '../Heading'
 
