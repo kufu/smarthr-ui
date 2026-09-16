@@ -407,9 +407,8 @@ const ActualSingleCombobox = <T,>(
       : theme.textColor.grey
 
   const listBoxCallbackRef = useAreaClickCallbackRef(
-    [triggerRef, clearButtonRef],
+    isFocused ? [triggerRef, clearButtonRef] : null,
     functions.unfocus,
-    isFocused,
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 

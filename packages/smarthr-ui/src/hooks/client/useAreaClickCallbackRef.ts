@@ -15,17 +15,15 @@ import type { RefObject } from 'react'
  * DOM構造上は離れているが、UIとしては同じ領域として扱いたい複数要素の外側クリックを判定するのに最適です。
  * callbackRefとして設定する要素はメニュー要素のようにdom上に存在する・しないが頻繁に変更される要素を指定する想定です。
  *
- * @param otherRefs 領域を構成する要素のRef配列。
- * @param onOuter   領域の【外側】がクリックされたときに実行されるメインのコールバック。
- * @param enabled   監視を有効にするかどうか。falseの間はクリックを監視しない
+ * @param otherRefs 領域を構成する要素のRef配列。`null`を渡すと監視を行わない
  *                  （例: Comboboxが非フォーカス状態の間など、監視が不要なタイミングで指定する）。
- *                  値が変化するとcallback ref自体が作り直され、監視の開始/終了が切り替わる。
+ *                  `null`かどうかが変化するとcallback ref自体が作り直され、監視の開始/終了が切り替わる。
+ * @param onOuter   領域の【外側】がクリックされたときに実行されるメインのコールバック。
  * @param onInner   領域の【内側】がクリックされたときに実行されるオプションのコールバック。
  */
 export function useAreaClickCallbackRef(
-  otherRefs: Array<RefObject<HTMLElement>>,
+  otherRefs: Array<RefObject<HTMLElement>> | null,
   onOuter: (e: MouseEvent) => void,
-  enabled: boolean,
   onInner?: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
@@ -33,7 +31,7 @@ export function useAreaClickCallbackRef(
   return useCallbackRefCleanupForReact18(
     useCallback(
       (node: HTMLElement | null) => {
-        if (!node || !enabled) {
+        if (!node || !otherRefs) {
           return
         }
 
@@ -45,7 +43,7 @@ export function useAreaClickCallbackRef(
           // otherRefsの中身だけチェックする
           const refs = latest.otherRefs
 
-          if (refs.length === 0) return
+          if (!refs || refs.length === 0) return
 
           const areaEls = refs.reduce<HTMLElement[]>((prev, target) => {
             if (target.current) {
@@ -76,10 +74,10 @@ export function useAreaClickCallbackRef(
         }
       },
       // HINT: latestはuseLatestにより常に安定した参照のため依存配列から除外している。
-      // enabledが変化するとcallback ref自体が作り直され、呼び出し側のref属性の値が変わることで
-      // Reactが自動的に再デタッチ→再アタッチする（監視の開始/終了はこれで実現している）
+      // otherRefsのnull/非nullが変化するとcallback ref自体が作り直され、呼び出し側のref属性の値が
+      // 変わることでReactが自動的に再デタッチ→再アタッチする（監視の開始/終了はこれで実現している）
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [enabled],
+      [!!otherRefs],
     ),
   )
 }
