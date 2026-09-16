@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.6.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.0...smarthr-ui-v99.6.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **DropdownMenuButton:** 矢印キーでのフォーカス移動時に背後のページがスクロールする不具合を修正 ([#7012](https://github.com/kufu/smarthr-ui/issues/7012)) ([55b8bb4](https://github.com/kufu/smarthr-ui/commit/55b8bb496c03b243c9aa40129b6a2f9031f23562))
+* **FormControl:** describedbyIdsがDOM要素に漏れる問題を修正 ([#6961](https://github.com/kufu/smarthr-ui/issues/6961)) ([36532d1](https://github.com/kufu/smarthr-ui/commit/36532d14be8ef348b63cd1f606be6cb9469591da))
+* **TableReel:** ResizeObserverのloop通知(コンソール警告)を解消 ([#6994](https://github.com/kufu/smarthr-ui/issues/6994)) ([a13d834](https://github.com/kufu/smarthr-ui/commit/a13d834eb4c4ad15ba0ccf82045b455d715f8785))
+* vrtMobileをStorybook 10のAPIに追従させる ([#6995](https://github.com/kufu/smarthr-ui/issues/6995)) ([fdffc95](https://github.com/kufu/smarthr-ui/commit/fdffc9519c1bd3f74edebd1ee64276921f5e2476))
+
 ## [99.6.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.5.0...smarthr-ui-v99.6.0) (2026-09-03)
 
 

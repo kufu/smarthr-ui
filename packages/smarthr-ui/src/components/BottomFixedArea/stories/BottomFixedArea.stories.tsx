@@ -4,7 +4,7 @@ import { Button } from '../../Button'
 import { FaThumbtackIcon } from '../../Icon'
 import { BottomFixedArea } from '../BottomFixedArea'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export const _primaryButtonOptions = {
   なし: undefined,

@@ -2,7 +2,7 @@ import { SideMenu } from '../SideMenu'
 import { SideMenuGroup } from '../SideMenuGroup'
 import { SideMenuItem } from '../SideMenuItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/SideMenu/SideMenuGroup',

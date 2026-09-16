@@ -42,15 +42,19 @@ export const keyboardNavigationPlugin = {
 
       switch (event.key) {
         case 'ArrowRight':
+          event.preventDefault()
           nextDataIndex = (nextDataIndex + 1) % dataLength
           break
         case 'ArrowDown':
+          event.preventDefault()
           nextDatasetIndex = (nextDatasetIndex + 1) % datasets.length
           break
         case 'ArrowLeft':
+          event.preventDefault()
           nextDataIndex = (nextDataIndex - 1 + dataLength) % dataLength
           break
         case 'ArrowUp':
+          event.preventDefault()
           nextDatasetIndex = (nextDatasetIndex - 1 + datasets.length) % datasets.length
           break
         case 'Escape':

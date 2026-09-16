@@ -5,7 +5,7 @@ import { Header } from '../Header'
 import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 import { HeaderLink } from '../HeaderLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _logoOptions = {
   default: undefined,

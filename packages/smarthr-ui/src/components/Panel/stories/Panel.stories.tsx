@@ -3,7 +3,7 @@ import { Groupbox } from '../Groupbox'
 import { Panel, panelClassNameGenerator } from '../Panel'
 
 import type { Gap } from '../../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)

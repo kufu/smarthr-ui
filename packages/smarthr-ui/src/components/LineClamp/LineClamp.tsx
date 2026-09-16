@@ -9,11 +9,13 @@ import {
   useRef,
   useState,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type BaseProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type BaseProps = PropsWithChildren<{
+  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+}>
 type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -45,7 +47,7 @@ const classNameGenerator = tv({
       6: {
         clampedLine: 'shr-line-clamp-[6]',
       },
-    },
+    } satisfies Record<NonNullable<BaseProps['maxLines']>, { clampedLine: string }>,
   },
   compoundVariants: [
     {
