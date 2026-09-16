@@ -37,8 +37,8 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
     ],
     menu: ['shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'],
-    row: 'shr-flex shr-items-end shr-gap-0.5',
-    lock: 'shr-shrink-0 shr-self-center shr-text-grey',
+    row: 'shr-flex shr-gap-0.5 [align-items:last_baseline]',
+    lock: 'shr-shrink-0 shr-text-grey',
   },
 })
 
