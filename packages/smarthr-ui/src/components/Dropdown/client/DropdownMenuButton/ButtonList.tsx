@@ -36,10 +36,26 @@ const actionListItemButton = tv({
 })
 
 // HINT: DropdownMenuGroup.tsx側がButtonListに依存しているため、循環依存を避けるために
-// コンポーネント参照ではなくDropdownMenuGroupが持つマーカープロパティの有無で判定する
-const isDropdownMenuGroupType = (type: ReactElement['type']): boolean =>
-  typeof type === 'function' &&
-  (type as { __isSmarthrUIDropdownMenuGroup?: boolean }).__isSmarthrUIDropdownMenuGroup === true
+// コンポーネント参照ではなくDropdownMenuGroupが持つマーカープロパティの有無で判定する。
+// DropdownMenuButtonがServer Componentから利用され、その子としてDropdownMenuGroupが渡された
+// 場合、DropdownMenuGroupはサーバー側で既にレンダーされたli要素として届く（item.typeは関数では
+// なく'li'になる）ため、関数のマーカーでは判定できない。この場合はルート要素に付与されたdata属性
+// で判定する
+const DROPDOWN_MENU_GROUP_MARKER_ATTR = 'data-smarthr-ui-dropdown-menu-group'
+
+const isDropdownMenuGroupType = (item: ReactElement): boolean => {
+  if (
+    typeof item.type === 'function' &&
+    (item.type as { __isSmarthrUIDropdownMenuGroup?: boolean }).__isSmarthrUIDropdownMenuGroup ===
+      true
+  ) {
+    return true
+  }
+
+  const props = item.props as Record<string, unknown> | null | undefined
+
+  return props?.[DROPDOWN_MENU_GROUP_MARKER_ATTR] === true
+}
 
 // HINT: 関数呼び出しの形(旧renderButtonList(children))は、Server ComponentからJSXレンダーされる
 // 場合(DropdownMenuGroup.tsx)に「Attempted to call renderButtonList() from the server but
@@ -55,7 +71,7 @@ export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
       return <ButtonList>{item.props.children}</ButtonList>
     }
 
-    if (isDropdownMenuGroupType(item.type)) {
+    if (isDropdownMenuGroupType(item)) {
       return item
     }
 
