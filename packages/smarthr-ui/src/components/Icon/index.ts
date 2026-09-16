@@ -2,10 +2,7 @@
 export * from './FaIcon'
 export { generateIcon, type Props as ComponentProps } from './generateIcon'
 
-export { BoldWarningIcon, WarningIcon } from './WarningIcon'
+export { WarningIcon } from './WarningIcon'
 export { SparklesIcon } from './SparklesIcon'
 export { LanguageIcon } from './LanguageIcon'
 export { OpenInNewTabIcon } from './OpenInNewTabIcon'
-export { SuccessIcon } from './SuccessIcon'
-export { ErrorIcon } from './ErrorIcon'
-export { SyncIcon } from './SyncIcon'

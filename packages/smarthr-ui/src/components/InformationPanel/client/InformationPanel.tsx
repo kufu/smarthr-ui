@@ -16,12 +16,12 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading, type HeadingTagTypes } from '../../Heading'
 import {
-  ErrorIcon,
   FaCaretDownIcon,
   FaCaretUpIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
   FaCircleInfoIcon,
-  SuccessIcon,
-  SyncIcon,
+  FaRotateIcon,
   WarningIcon,
 } from '../../Icon'
 import { Sidebar } from '../../Layout'
@@ -53,20 +53,28 @@ const headingObjectConverter = (text: ReactNode) => ({ text })
 
 const ICON_MAPPER = {
   // HINT: infoは装飾として扱うため、代替テキストを設定しない
-  info: FaCircleInfoIcon,
-  success: SuccessIcon,
-  warning: WarningIcon,
-  error: ErrorIcon,
-  sync: SyncIcon,
-}
-
-// HINT: warningのアイコンは自身で色を持っているため、色を指定しない
-const ICON_COLOR_MAPPER = {
-  info: 'TEXT_GREY',
-  success: 'MAIN',
-  warning: undefined,
-  error: 'DANGER',
-  sync: 'MAIN',
+  info: { Component: FaCircleInfoIcon, color: 'TEXT_GREY', alt: undefined },
+  success: {
+    Component: FaCircleCheckIcon,
+    color: 'MAIN',
+    alt: <Localizer id="smarthr-ui/statusIcon/successAlt" defaultText="成功" />,
+  },
+  // HINT: warningのアイコンは自身で色を持っているため、色を指定しない
+  warning: {
+    Component: WarningIcon,
+    color: undefined,
+    alt: <Localizer id="smarthr-ui/statusIcon/warningAlt" defaultText="注意" />,
+  },
+  error: {
+    Component: FaCircleExclamationIcon,
+    color: 'DANGER',
+    alt: <Localizer id="smarthr-ui/statusIcon/errorAlt" defaultText="エラー" />,
+  },
+  sync: {
+    Component: FaRotateIcon,
+    color: 'MAIN',
+    alt: <Localizer id="smarthr-ui/statusIcon/syncAlt" defaultText="実行中" />,
+  },
 } as const
 
 const classNameGenerator = tv({
@@ -216,7 +224,7 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const Icon = ICON_MAPPER[type]
+  const { Component: Icon, color, alt } = ICON_MAPPER[type]
 
   return (
     <Heading
@@ -225,7 +233,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: <Icon color={ICON_COLOR_MAPPER[type]} />,
+        prefix: <Icon alt={alt} color={color} />,
         gap: 0.5,
       }}
     >

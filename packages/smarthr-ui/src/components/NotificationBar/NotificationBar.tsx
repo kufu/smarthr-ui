@@ -13,12 +13,12 @@ import { tv } from 'tailwind-variants'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import {
-  BoldWarningIcon,
-  ErrorIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
   FaCircleInfoIcon,
+  FaRotateIcon,
+  FaTriangleExclamationIcon,
   FaXmarkIcon,
-  SuccessIcon,
-  SyncIcon,
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
@@ -30,18 +30,30 @@ import { Text } from '../Text'
 // base="base" も意味が分かりづらい
 type BaseType = 'base' | 'none'
 
+const WARNING_ALT = <Localizer id="smarthr-ui/statusIcon/warningAlt" defaultText="注意" />
+
 const ICON_MAPPER = {
   // HINT: infoは装飾として扱うため、代替テキストを設定しない
-  info: FaCircleInfoIcon,
-  success: SuccessIcon,
-  warning: WarningIcon,
-  error: ErrorIcon,
-  sync: SyncIcon,
+  info: { Component: FaCircleInfoIcon, alt: undefined },
+  success: {
+    Component: FaCircleCheckIcon,
+    alt: <Localizer id="smarthr-ui/statusIcon/successAlt" defaultText="成功" />,
+  },
+  warning: { Component: WarningIcon, alt: WARNING_ALT },
+  error: {
+    Component: FaCircleExclamationIcon,
+    alt: <Localizer id="smarthr-ui/statusIcon/errorAlt" defaultText="エラー" />,
+  },
+  sync: {
+    Component: FaRotateIcon,
+    alt: <Localizer id="smarthr-ui/statusIcon/syncAlt" defaultText="実行中" />,
+  },
 }
 
+// HINT: WarningIconは自身で色を持っているため、背景に色が付くboldでは単色のアイコンを使う
 const BOLD_ICON_MAPPER = {
   ...ICON_MAPPER,
-  warning: BoldWarningIcon,
+  warning: { Component: FaTriangleExclamationIcon, alt: WARNING_ALT },
 }
 
 type MessageType = keyof typeof ICON_MAPPER
@@ -255,13 +267,13 @@ const MessageArea = memo<
     classNames: { messageArea: string; icon: string }
   }
 >(({ children, bold, type, classNames }) => {
-  const Icon = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[type]
+  const { Component: Icon, alt } = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[type]
 
   return (
     <Text
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon className={classNames.icon} />,
+        prefix: <Icon alt={alt} className={classNames.icon} />,
         gap: 0.5,
       }}
     >
