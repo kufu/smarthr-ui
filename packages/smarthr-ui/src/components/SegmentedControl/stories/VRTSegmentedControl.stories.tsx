@@ -35,13 +35,18 @@ export default {
   // icon            false                   1       s
   render: () => (
     <Stack>
-      <SegmentedControl value={null} size="M" options={iconOptions(true)} />
-      <SegmentedControl value={null} size="S" options={textOptions(false)} />
-      <SegmentedControl value="3" size="S" options={textOptions(true)} />
-      <SegmentedControl value="1" size="M" options={textOptions(false)} />
-      <SegmentedControl value="3" size="M" options={iconOptions(false)} />
-      <SegmentedControl value="1" size="S" options={iconOptions(true)} />
-      <SegmentedControl value="1" size="S" options={iconOptions(false)} />
+      <SegmentedControl
+        value={null}
+        groupLabel="グラフ種別1"
+        size="M"
+        options={iconOptions(true)}
+      />
+      <SegmentedControl value={null} groupLabel="表示切替1" size="S" options={textOptions(false)} />
+      <SegmentedControl value="3" groupLabel="表示切替2" size="S" options={textOptions(true)} />
+      <SegmentedControl value="1" groupLabel="表示切替3" size="M" options={textOptions(false)} />
+      <SegmentedControl value="3" groupLabel="グラフ種別2" size="M" options={iconOptions(false)} />
+      <SegmentedControl value="1" groupLabel="グラフ種別3" size="S" options={iconOptions(true)} />
+      <SegmentedControl value="1" groupLabel="グラフ種別4" size="S" options={iconOptions(false)} />
     </Stack>
   ),
   parameters: {

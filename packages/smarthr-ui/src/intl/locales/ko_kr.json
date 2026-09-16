@@ -86,7 +86,6 @@
   "smarthr-ui/Pagination/navigationLabel": "페이지네이션",
   "smarthr-ui/RequiredLabel/text": "필수",
   "smarthr-ui/SearchInput/iconAlt": "검색",
-  "smarthr-ui/SegmentedControl/group/ariaLabel": "",
   "smarthr-ui/SideMenu/navigationLabel": "사이트 메뉴",
   "smarthr-ui/SingleCombobox/destroyButtonIconAlt": "지우기",
   "smarthr-ui/SortDropdown/applyText": "적용",

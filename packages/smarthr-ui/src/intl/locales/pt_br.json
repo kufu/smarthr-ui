@@ -77,7 +77,6 @@
   "smarthr-ui/Pagination/navigationLabel": "Paginação",
   "smarthr-ui/RequiredLabel/text": "Obrigatório",
   "smarthr-ui/SearchInput/iconAlt": "Pesquisar",
-  "smarthr-ui/SegmentedControl/group/ariaLabel": "",
   "smarthr-ui/SideMenu/navigationLabel": "Menu lateral",
   "smarthr-ui/SingleCombobox/destroyButtonIconAlt": "Limpar",
   "smarthr-ui/SortDropdown/applyText": "Aplicar",
