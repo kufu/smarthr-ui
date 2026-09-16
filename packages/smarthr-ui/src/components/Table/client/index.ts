@@ -1,5 +1,4 @@
 export { EmptyTableBody } from './EmptyTableBody'
-export { ScrollerSwitcher } from './ScrollerSwitcher'
 export { TableReel } from './TableReel'
 export { BulkActionRow } from './BulkActionRow'
 export { ThCheckbox } from './ThCheckbox'

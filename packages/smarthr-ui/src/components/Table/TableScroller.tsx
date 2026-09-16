@@ -5,7 +5,7 @@ import {
   forwardRef,
 } from 'react'
 
-import { ScrollerSwitcher } from './client'
+import { ScrollerSwitcher } from './ScrollerSwitcher'
 
 type Props = PropsWithChildren &
   Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {

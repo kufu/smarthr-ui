@@ -1,6 +1,9 @@
-import { Scroller } from '../../Scroller'
+import { Scroller } from '../Scroller'
 
-import { FixedHeadTableScroller } from './FixedHeadTableScroller'
+// HINT: client/index.ts経由だとTableReelの再export分も巻き込まれ、
+// TableReel.tsx(../ScrollerSwitcherを直接import)との間で循環依存になるため直接importする
+// eslint-disable-next-line smarthr/require-barrel-import
+import { FixedHeadTableScroller } from './client/FixedHeadTableScroller'
 
 import type { ComponentPropsWithRef, FC, ForwardedRef, PropsWithChildren } from 'react'
 

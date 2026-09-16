@@ -12,9 +12,8 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
+import { ScrollerSwitcher } from '../ScrollerSwitcher'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
-
-import { ScrollerSwitcher } from './ScrollerSwitcher'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
