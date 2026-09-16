@@ -135,3 +135,33 @@ export const VRTOnRightEdge: StoryObj<typeof MultiCombobox> = {
   ),
   play: playOnRightEdge,
 }
+
+const playNoResult = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textbox = await canvas.findByRole('combobox')
+
+  textbox.focus()
+  await userEvent.type(textbox, '絶対に一致しない検索文字列')
+
+  const body = canvasElement.ownerDocument.body
+  await within(body).findByText(
+    '一致する選択肢が見つかりませんでした。検索条件を変更してもう一度お試しください。',
+  )
+}
+
+// 候補が無い場合の長いメッセージが、幅の狭いドロップダウン内で折り返されて表示され、
+// 親要素の外にはみ出ないことを確認する
+export const VRTNoResult: StoryObj<typeof MultiCombobox> = {
+  render: (args) => (
+    <div className="shr-w-[10em]">
+      <MultiCombobox
+        {...args}
+        name="noResult"
+        selectedItems={[]}
+        noResultText="一致する選択肢が見つかりませんでした。検索条件を変更してもう一度お試しください。"
+        items={Object.values(defaultItems)}
+      />
+    </div>
+  ),
+  play: playNoResult,
+}
