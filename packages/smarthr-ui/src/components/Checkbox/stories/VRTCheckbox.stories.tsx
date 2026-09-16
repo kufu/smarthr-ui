@@ -3,7 +3,7 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { Checkbox } from '../Checkbox'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 // ペアワイズ法は使わずに総当りする
 const mixed = [true, false]

@@ -2,7 +2,7 @@ import { pictParser } from '../../../libs/pictParser'
 import { Stack } from '../../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 type ResponseMessageProps = ComponentProps<typeof ResponseMessage>

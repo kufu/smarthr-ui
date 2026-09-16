@@ -7,7 +7,7 @@ import {
   sampleSubActionAreas,
 } from './NotificationBar.stories'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
 
 /* ペアワイズ法による網羅
 base  bold   type     children   subActionArea  layer      onClose  */

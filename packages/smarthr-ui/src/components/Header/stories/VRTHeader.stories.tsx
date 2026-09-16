@@ -8,7 +8,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher'
 
 import { _appsOptions } from './Header.stories'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Header/VRT',
@@ -59,7 +59,13 @@ export const VRT = {
     const { length, [length - 1]: last } = await canvas.findAllByRole('button', {
       name: /基本機能/,
     })
-    userEvent.click(last)
+    await userEvent.click(last)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
 } satisfies Meta<typeof Header>
 

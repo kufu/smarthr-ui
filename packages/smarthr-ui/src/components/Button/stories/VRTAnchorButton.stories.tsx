@@ -3,7 +3,7 @@ import { Cluster, Stack } from '../../Layout'
 import { Groupbox } from '../../Panel'
 import { AnchorButton } from '../AnchorButton'
 
-import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { StoryFn, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 type Variant = ComponentProps<typeof AnchorButton>['variant']

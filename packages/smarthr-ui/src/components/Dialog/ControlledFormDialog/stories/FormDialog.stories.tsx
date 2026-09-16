@@ -8,7 +8,7 @@ import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
 import { ControlledFormDialog } from '../ControlledFormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
   string: '30em',
