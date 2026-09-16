@@ -130,9 +130,8 @@ export const FilterDropdown: FC<Props> = ({
       <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
 
       {filtered && (
-        // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
         <FilteredIcon
-          iconAlt={typeof filtered === 'object' ? filtered.iconAlt : undefined}
+          alt={typeof filtered === 'object' ? filtered.iconAlt : undefined}
           className={classNames.filteredIcon}
         />
       )}

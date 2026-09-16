@@ -9,18 +9,19 @@ import type { FC } from 'react'
 
 type Props = {
   className?: string
-  iconAlt?: string
+  alt?: string
 }
 
-export const FilteredIcon: FC<Props> = memo(({ className, iconAlt }) => {
+export const FilteredIcon: FC<Props> = memo(({ className, alt }) => {
   const { localize } = useIntl()
 
-  const alt =
-    iconAlt ||
+  // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
+  const actualAlt =
+    alt ||
     localize({
       id: 'smarthr-ui/FilterDropdown/status',
       defaultText: '適用中',
     })
 
-  return <FaCircleCheckIcon className={className} aria-label={alt} />
+  return <FaCircleCheckIcon className={className} aria-label={actualAlt} />
 })
