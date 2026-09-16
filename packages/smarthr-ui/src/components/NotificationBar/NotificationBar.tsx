@@ -13,16 +13,12 @@ import { tv } from 'tailwind-variants'
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
 import {
-  ERROR_ICON_ALT,
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
+  BoldWarningIcon,
+  ErrorIcon,
   FaCircleInfoIcon,
-  FaRotateIcon,
-  FaTriangleExclamationIcon,
   FaXmarkIcon,
-  SUCCESS_ICON_ALT,
-  SYNC_ICON_ALT,
-  WARNING_ICON_ALT,
+  SuccessIcon,
+  SyncIcon,
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
@@ -35,28 +31,20 @@ import { Text } from '../Text'
 type BaseType = 'base' | 'none'
 
 const ICON_MAPPER = {
+  // HINT: infoは装飾として扱うため、代替テキストを設定しない
   info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
+  success: SuccessIcon,
   warning: WarningIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
+  error: ErrorIcon,
+  sync: SyncIcon,
 }
 
-// HINT: WarningIconは自身で色を持っているため、背景に色が付くboldでは単色のアイコンを使う
 const BOLD_ICON_MAPPER = {
   ...ICON_MAPPER,
-  warning: FaTriangleExclamationIcon,
+  warning: BoldWarningIcon,
 }
 
 type MessageType = keyof typeof ICON_MAPPER
-
-// HINT: infoは装飾として扱うため、代替テキストを設定しない
-const ICON_ALT_MAPPER: Partial<Record<MessageType, ReactNode>> = {
-  success: SUCCESS_ICON_ALT,
-  warning: WARNING_ICON_ALT,
-  error: ERROR_ICON_ALT,
-  sync: SYNC_ICON_ALT,
-}
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -273,7 +261,7 @@ const MessageArea = memo<
     <Text
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon alt={ICON_ALT_MAPPER[type]} className={classNames.icon} />,
+        prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
     >
