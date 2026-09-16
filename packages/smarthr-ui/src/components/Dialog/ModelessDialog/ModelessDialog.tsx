@@ -16,7 +16,7 @@ import {
   useState,
 } from 'react'
 import Draggable, { type DraggableBounds } from 'react-draggable'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
@@ -89,11 +89,14 @@ type BaseProps = PropsWithChildren<{
    * ポータルの container となる DOM 要素を追加する親要素
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
+  /**
+   * リサイズ可能かどうか
+   */
+  resizable?: boolean
 }>
 type Props = BaseProps &
   Omit<DialogBodyProps, keyof BaseProps> &
-  Omit<PanelElementProps, keyof BaseProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof BaseProps>
+  Omit<PanelElementProps, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
