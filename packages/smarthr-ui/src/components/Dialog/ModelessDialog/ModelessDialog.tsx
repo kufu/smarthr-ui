@@ -131,7 +131,7 @@ const classNameGenerator = tv({
       XL: { wrapper: dialogSize.XL },
       XXL: { wrapper: dialogSize.XXL },
       FULL: { wrapper: dialogSize.FULL },
-    },
+    } satisfies Record<NonNullable<BaseProps['size']>, { wrapper: string }>,
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
