@@ -1,7 +1,9 @@
+'use client'
+
 import { type ElementType, type FC, useMemo } from 'react'
 
-import { useIntl } from '../../intl'
-import { AnchorButton, Button } from '../Button'
+import { useIntl } from '../../../intl'
+import { AnchorButton, Button } from '../../Button'
 
 const CLASS_NAME = [
   'shr-rounded-s',
