@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
@@ -112,17 +112,17 @@ export const Bottom: StoryObj<typeof ModelessDialog> = {
 export const PortalParent: StoryObj<typeof ModelessDialog> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
 
     return (
       <>
-        <div ref={parentRef}>
+        <div ref={setParentEl}>
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ModelessDialog
           {...args}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           isOpen={open}
           onClickClose={() => setOpen(false)}
           heading="ポータルに開いたダイアログ"

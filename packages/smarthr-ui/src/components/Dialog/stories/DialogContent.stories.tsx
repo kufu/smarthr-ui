@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import { Button } from '../../Button'
 import { Input } from '../../Input'
@@ -93,15 +93,15 @@ export const FirstFocusTarget: StoryObj<typeof DialogContent> = {
 export const PortalParent: StoryObj<typeof DialogContent> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     return (
       <>
-        <div ref={parentRef} />
+        <div ref={setParentEl} />
         <DialogWrapper>
           <DialogTrigger>
             <Button>ダイアログを開く</Button>
           </DialogTrigger>
-          <DialogContent {...args} portalParent={parentRef}>
+          <DialogContent {...args} portalParent={parentEl ?? undefined}>
             <DialogCloser>
               <Button>閉じる</Button>
             </DialogCloser>
