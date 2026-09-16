@@ -2,7 +2,7 @@
 
 import { type ComponentProps, type FC, type PropsWithChildren, useEffect, useState } from 'react'
 
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { useDisclosure } from './useDisclosure'
 
