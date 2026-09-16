@@ -2,6 +2,9 @@ import type { ElementType, MouseEvent } from 'react'
 
 type ButtonOnClickType = (pageNumber: number, e: MouseEvent<HTMLElement>) => void
 type AnchorOnClickType = (href: string, e: MouseEvent<HTMLElement>) => void
+// TODO: 関数のためServer Componentから直接渡すとシリアライズできず失敗する。
+// 将来的には '/page/{page}' のような文字列テンプレート（pageNumberをreplaceする形）に
+// 変更し、Server Componentからも安全に利用できるようにすることを検討する
 type HrefTemplateType = (pageNumber: number) => string
 
 export type ButtonProps = {
