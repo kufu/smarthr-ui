@@ -5,7 +5,7 @@ import { Stack } from '../../Layout'
 import { Current } from './Pagination.stories'
 
 import type { Pagination } from '../Pagination'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
   title: 'Components/Pagination/VRT',

@@ -9,6 +9,7 @@ import {
   type ComponentProps as IconProps,
   WarningIcon,
 } from '../Icon'
+import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
 type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
@@ -37,13 +38,22 @@ const STATUS_ICON_MAPPER = {
   sync: FaRotateIcon,
 } as const
 
-export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
-  const className = useMemo(() => classNameGenerator({ status }), [status])
+export const ResponseMessage: FC<Props> = ({
+  status = 'info',
+  size,
+  role,
+  className,
+  children,
+  ...rest
+}) => {
+  const iconClassName = useMemo(() => classNameGenerator({ status }), [status])
   const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text size={size} icon={<TextIcon {...rest} className={className} />}>
-      {children}
+    <Text size={size} className={className} icon={<TextIcon {...rest} className={iconClassName} />}>
+      <LiveRegion role={role} className="shr-contents">
+        {children}
+      </LiveRegion>
     </Text>
   )
 }

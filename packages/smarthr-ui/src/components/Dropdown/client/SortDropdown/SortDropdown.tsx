@@ -1,0 +1,246 @@
+'use client'
+
+import {
+  type ChangeEvent,
+  type ComponentPropsWithRef,
+  type FC,
+  type FormEvent,
+  type MouseEvent,
+  type MouseEventHandler,
+  type OptionHTMLAttributes,
+  type ReactNode,
+  memo,
+  useMemo,
+  useState,
+} from 'react'
+
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer } from '../../../../intl'
+import { Button } from '../../../Button'
+import { Fieldset, FormControl } from '../../../FormGroup'
+import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../../Icon'
+import { Cluster, Stack } from '../../../Layout'
+import { RadioButton } from '../../../RadioButton'
+import { Select } from '../../../Select'
+import { DropdownCloser } from '../../DropdownCloser'
+import { Dropdown } from '../Dropdown'
+import { DropdownContent } from '../DropdownContent'
+import { DropdownTrigger } from '../DropdownTrigger'
+
+type SortFieldType = {
+  value: string
+} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
+
+type ArgsOnApply = {
+  field: string
+  order: 'asc' | 'desc'
+  newfields: SortFieldType[]
+}
+
+type BaseProps = {
+  /** 並び替え項目 */
+  sortFields: SortFieldType[]
+  /** 並び順の初期値 */
+  defaultOrder: 'asc' | 'desc'
+  sortFieldLabel?: ReactNode
+  sortOrderLegend?: ReactNode
+  ascLabel?: ReactNode
+  descLabel?: ReactNode
+  applyText?: ReactNode
+  cancelText?: ReactNode
+  /** 適用時に発火するイベント */
+  onApply: (args: ArgsOnApply) => void
+  /** キャンセル時に発火するイベント */
+  onCancel?: MouseEventHandler<HTMLButtonElement>
+}
+type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
+
+const ON_SUBMIT = (e: FormEvent) => {
+  e.preventDefault()
+}
+
+export const SortDropdown: FC<Props> = ({
+  sortFields,
+  defaultOrder,
+  sortFieldLabel,
+  sortOrderLegend,
+  ascLabel,
+  descLabel,
+  applyText,
+  cancelText,
+  onApply,
+  onCancel,
+  ...rest
+}) => {
+  const [defaultFieldLabel] = useState(
+    () => (sortFields.find((field) => field.selected) || sortFields[0])?.label || '',
+  )
+
+  // 外向きの値
+  const [selectedLabel, setSelectedLabel] = useState<string>(defaultFieldLabel)
+  const [checkedOrder, setCheckedOrder] = useState<Props['defaultOrder']>(defaultOrder)
+
+  // 内部的な値
+  const [innerFields, setInnerFields] = useState<Props['sortFields']>(sortFields)
+  const [innerSelectedField, setInnerSelectedField] = useState<string>(defaultFieldLabel)
+  const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
+
+  const latest = useLatest({
+    innerCheckedOrder,
+    innerFields,
+    innerSelectedField,
+    onApply,
+    onCancel,
+  })
+  const hasOnCancel = !!onCancel
+
+  const functions = useMemo(
+    () => ({
+      handleChange: (e: ChangeEvent<HTMLSelectElement>) => {
+        const select = e.currentTarget
+        const newLabel = select.options[select.selectedIndex].label
+
+        setInnerFields((currentFields) =>
+          currentFields.map((field) => {
+            if (field.label === newLabel) {
+              if (!field.selected) {
+                return {
+                  ...field,
+                  selected: true,
+                }
+              }
+            } else if (field.selected) {
+              return {
+                ...field,
+                selected: false,
+              }
+            }
+
+            return field
+          }),
+        )
+        setInnerSelectedField(newLabel)
+      },
+      handleApply: () => {
+        setSelectedLabel(latest.innerSelectedField)
+        setCheckedOrder(latest.innerCheckedOrder)
+        latest.onApply({
+          field: latest.innerSelectedField || '',
+          order: latest.innerCheckedOrder,
+          newfields: latest.innerFields,
+        })
+      },
+      handleCancel: hasOnCancel
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onCancel!(e)
+          }
+        : undefined,
+      handleChangeSortOrderRadio: (e: ChangeEvent<HTMLInputElement>) => {
+        setCheckedInnerOrder(e.currentTarget.value as Props['defaultOrder'])
+      },
+    }),
+    [hasOnCancel, latest],
+  )
+
+  const SortIcon = checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon
+  const actualAscLabel = ascLabel || (
+    <Localizer id="smarthr-ui/SortDropdown/ascLabel" defaultText="昇順" />
+  )
+  const actualDescLabel = descLabel || (
+    <Localizer id="smarthr-ui/SortDropdown/descLabel" defaultText="降順" />
+  )
+
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button {...rest} suffix={<SortIcon />}>
+          {selectedLabel}（{checkedOrder === 'asc' ? actualAscLabel : actualDescLabel}）
+        </Button>
+      </DropdownTrigger>
+      <DropdownContent controllable>
+        <form onSubmit={ON_SUBMIT}>
+          <Stack className="shr-p-1.5">
+            <FormControl
+              label={
+                sortFieldLabel || (
+                  <Localizer
+                    id="smarthr-ui/SortDropdown/sortFieldLabel"
+                    defaultText="並べ替え項目"
+                  />
+                )
+              }
+            >
+              <Select
+                name="sortFields"
+                className="shr-min-w-[16em]"
+                onChange={functions.handleChange}
+                options={innerFields}
+              />
+            </FormControl>
+            <Fieldset
+              innerMargin={0.5}
+              legend={
+                sortOrderLegend || (
+                  <Localizer id="smarthr-ui/SortDropdown/sortOrderLegend" defaultText="並び順" />
+                )
+              }
+            >
+              <Cluster gap={1.25}>
+                <RadioButton
+                  name="sortOrder"
+                  value="asc"
+                  checked={innerCheckedOrder === 'asc'}
+                  onChange={functions.handleChangeSortOrderRadio}
+                >
+                  {actualAscLabel}
+                </RadioButton>
+                <RadioButton
+                  name="sortOrder"
+                  value="desc"
+                  checked={innerCheckedOrder === 'desc'}
+                  onChange={functions.handleChangeSortOrderRadio}
+                >
+                  {actualDescLabel}
+                </RadioButton>
+              </Cluster>
+            </Fieldset>
+          </Stack>
+          <Footer
+            cancelText={cancelText}
+            applyText={applyText}
+            handleApply={functions.handleApply}
+            handleCancel={functions.handleCancel}
+          />
+        </form>
+      </DropdownContent>
+    </Dropdown>
+  )
+}
+
+const Footer = memo<{
+  handleApply: MouseEventHandler<HTMLButtonElement>
+  handleCancel?: MouseEventHandler<HTMLButtonElement>
+  cancelText?: ReactNode
+  applyText?: ReactNode
+}>(({ handleApply, handleCancel, cancelText, applyText }) => (
+  <Cluster
+    as="footer"
+    gap={1}
+    align="center"
+    justify="flex-end"
+    className="shr-border-t-shorthand shr-px-1.5 shr-py-1"
+  >
+    <DropdownCloser>
+      <Button onClick={handleCancel}>
+        {cancelText || (
+          <Localizer id="smarthr-ui/SortDropdown/cancelText" defaultText="キャンセル" />
+        )}
+      </Button>
+    </DropdownCloser>
+    <DropdownCloser>
+      <Button variant="primary" onClick={handleApply}>
+        {applyText || <Localizer id="smarthr-ui/SortDropdown/applyText" defaultText="適用" />}
+      </Button>
+    </DropdownCloser>
+  </Cluster>
+))

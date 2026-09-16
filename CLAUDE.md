@@ -1034,6 +1034,83 @@ const mergedRef = useMergeRefs(innerRef, functions.callbackRef, ref)
 const mergedRef = useMergeRefs(functions.callbackRef, innerRef, ref)
 ```
 
+#### callback ref + useMergeRefs の弱点と useLayoutEffectRef
+
+`callback ref` を `useCallback` の依存配列に値を含めて作ると、その値が変化するたびに callback ref 自体が新しい参照になり、`useMergeRefs` に渡した**他の全ての ref も巻き込まれて再デタッチ→再アタッチ**されてしまいます。
+
+```tsx
+// ❌ isExpandedが変化するたびにcallbackRef自体が再生成され、
+// useMergeRefsに渡したouterRefやinnerRefも巻き込まれて再アタッチされる
+const callbackRef = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+  node.setAttribute('aria-expanded', String(isExpanded))
+}, [isExpanded])
+
+const mergedRef = useMergeRefs(callbackRef, outerRef)
+```
+
+この問題への対処は、値をDOM属性として取得または表現できるかどうかで手段を使い分けます。優先順位は **固定参照のcallback ref(+ MutationObserver) → `useLayoutEffectRef`** です。`useLayoutEffectRef` は内部で `useLayoutEffect` に加えて状態管理用の `useRef` を持つ分、素の `useCallback` よりコストが重くなることが予想されるため、まずMutationObserverパターンで対応できないか検討し、それでも対応できない場合にのみ `useLayoutEffectRef` を使います。
+
+**優先: 値をDOM属性(`value` や `aria-*` などの既存属性、または `data-*` 属性)として取得できる場合 → 固定参照のcallback ref + MutationObserver**
+
+callback ref 自体は基本的に依存配列を持たない固定参照にし、`MutationObserver` でDOM属性の変化を監視して処理を再実行します。値がすでに要素の属性として存在する場合（`value`、`disabled`、`aria-expanded` など）はそれをそのまま監視対象にでき、存在しない場合のみ `data-*` 属性として新たに表現します。callback ref が再生成されないため、`useMergeRefs` に渡しても他の ref を巻き込みません。実例は `FormGroup.tsx` の `innerCallbackRef`(`data-auto-bind-error-input` などの変化を監視)。
+
+**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。
+
+```tsx
+// ✅ callbackRef自体は空配列で固定。値の変化はdata属性経由で伝える
+const callbackRef = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+
+  const action = () => {
+    const expanded = node.getAttribute('data-expanded')
+    // ...
+  }
+
+  action()
+
+  const observer = new MutationObserver(action)
+  observer.observe(node, { attributes: true, attributeFilter: ['data-expanded'] })
+
+  return () => observer.disconnect()
+}, [])
+
+// 呼び出し側でdata属性として値を渡す
+<div ref={callbackRef} data-expanded={isExpanded} />
+```
+
+**それ以外: 値をDOM属性として取得できない、または表現しにくい場合 → `useLayoutEffectRef`**
+
+比較対象がReactの外(既存DOM要素のidなど)にある、あるいは値をわざわざdata属性化するのが不自然な場合は `useLayoutEffectRef`（`src/hooks/client/useLayoutEffectRef.ts`）を使います。通常の callback ref と同様にnodeのアタッチ/デタッチ時にactionを実行しつつ、それに加えて `dependencies` が変化した際にも(nodeを変えずに)actionを再実行します。戻り値(callback ref)自体の参照は常に安定しているため、`useMergeRefs` に渡しても依存値の変化で他のrefまで再アタッチされません。実例は `FormControl.tsx` の `layoutEffectRef`(`label.htmlFor`/`label.id` の変化を検知)。
+
+```tsx
+const layoutEffectRef = useLayoutEffectRef((node) => {
+  if (!node) return
+  // ...
+  return () => { ... } // cleanup(任意)
+}, [label.htmlFor, label.id])
+
+const mergedRef = useMergeRefs(layoutEffectRef, outerRef)
+```
+
+**注意: `dependencies` が常に空配列の場合は使わない**
+
+`useLayoutEffectRef` の価値は「`dependencies` 変化時にnodeを変えずにactionを再実行できる」点にあります。`dependencies` が常に `[]` なら、この再実行の恩恵がなく、mount/unmount時にactionを呼ぶだけの通常のcallback refと変わりません。この場合は素直に `useCallback(action, [])` を使ってください。
+
+```tsx
+// ❌ dependenciesが常に[]なら、useLayoutEffectRefを使う理由がない
+const ref = useLayoutEffectRef((node) => {
+  if (!node) return
+  node.focus()
+}, [])
+
+// ✅ 単純なuseCallbackのcallback refで十分
+const ref = useCallback((node: HTMLElement | null) => {
+  if (!node) return
+  node.focus()
+}, [])
+```
+
 #### callback ref の cleanup 関数と React 18/19 互換性
 
 React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。しかし React 18 にはこの仕組みがなく、返り値は無視されて `ref(null)` が呼ばれるだけです。smarthr-ui は `react: "^18.0.0 || ^19.0.0"` を peerDependency としてサポートしているため、callback ref から直接cleanup関数を返す実装は避けてください。
