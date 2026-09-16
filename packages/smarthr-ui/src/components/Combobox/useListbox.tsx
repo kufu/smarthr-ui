@@ -70,7 +70,8 @@ const classNameGenerator = tv({
     helpMessage:
       'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
     loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
-    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
+    noItems:
+      'smarthr-ui-Combobox-noItems shr-my-0 shr-block shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
   },
 })
 
