@@ -3,7 +3,7 @@ import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { Tooltip } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _messages = {
   'テキスト（sting）': 'メッセージ',

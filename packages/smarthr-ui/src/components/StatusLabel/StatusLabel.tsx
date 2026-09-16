@@ -5,9 +5,17 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
+
+type StatusLabelType = 'grey' | 'blue' | 'green' | 'red' | 'warning' | 'error'
+
+type BaseProps = PropsWithChildren<{
+  type?: StatusLabelType
+  bold?: boolean
+}>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [
@@ -26,7 +34,7 @@ const classNameGenerator = tv({
       red: 'shr-text-danger',
       warning: 'shr-border-warning-yellow shr-bg-warning-yellow shr-text-black',
       error: 'shr-border-danger shr-bg-danger shr-text-white',
-    },
+    } satisfies Record<NonNullable<Props['type']>, string | string[]>,
     bold: {
       true: 'shr-text-white',
     },
@@ -61,9 +69,6 @@ const classNameGenerator = tv({
     },
   ],
 })
-
-type BaseProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 export const StatusLabel = memo<Props>(
   ({ type = 'grey', bold = false, className, children, ...rest }) => {

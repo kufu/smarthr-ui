@@ -22,10 +22,10 @@ import { useLatest } from '../../hooks/useLatest'
 import { Localizer } from '../../intl'
 import { findDelegateTarget } from '../../libs/delegate'
 import { FaCircleInfoIcon } from '../Icon'
+import { LiveRegion } from '../LiveRegion'
 import { Loader } from '../Loader'
 import { Scroller } from '../Scroller'
 import { Text } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ItemButton } from './ItemButton'
 
@@ -42,8 +42,6 @@ type Props<T> = {
   triggerRef: RefObject<HTMLElement>
   /** 検索結果が0件の時に表示するコンテンツ */
   noResultText?: ReactNode
-  /** output要素のhtmlFor属性に使用するinput要素のid */
-  inputId?: string
 }
 
 type Rect = {
@@ -71,7 +69,8 @@ const classNameGenerator = tv({
     helpMessage:
       'shr-whitespace-[initial] shr-border-b-shorthand shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
     loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
-    noItems: 'smarthr-ui-Combobox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
+    noItems:
+      'smarthr-ui-Combobox-noItems shr-my-0 shr-block shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
   },
 })
 
@@ -97,7 +96,6 @@ export const useListbox = <T,>({
   isLoading,
   triggerRef,
   noResultText,
-  inputId,
 }: Props<T>) => {
   const listBoxId = useId()
 
@@ -248,6 +246,7 @@ export const useListbox = <T,>({
           setActiveOption(null)
         }
       },
+      cleanupAddFrame: () => latest.addFrame.cancel(),
       handleAdd: hasOnAdd
         ? (option: ComboboxOption<T>) => {
             // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -307,9 +306,6 @@ export const useListbox = <T,>({
     }
   }, [activeOption, navigationType])
 
-  // TODO: callbackRefにまとめ直したい
-  useEffect(() => addFrame.cancel, [addFrame.cancel])
-
   return {
     listBoxProps: {
       activeOptionId: activeOption?.id,
@@ -318,7 +314,6 @@ export const useListbox = <T,>({
       isLoading,
       dropdownHelpMessage,
       noResultText,
-      inputId,
       listBoxId,
       listBoxRef,
       handleAdd: functions.handleAdd,
@@ -330,6 +325,7 @@ export const useListbox = <T,>({
       dropdownWidth,
     },
     activeOption,
+    cleanupAddFrame: functions.cleanupAddFrame,
     handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
     // TODO: テストで利用されているだけなのでテスト側を修正して対応、最終的に消したい
@@ -344,7 +340,6 @@ type ListBoxProps<T> = {
   isLoading?: boolean
   noResultText?: ReactNode
   dropdownHelpMessage?: ReactNode
-  inputId?: string
   listBoxId: string
   listBoxRef: RefObject<HTMLDivElement>
   handleAdd: ((option: ComboboxOption<T>) => void) | undefined
@@ -375,7 +370,6 @@ export const ListBox = memo(
     triggerWidth,
     dropdownWidth,
     callbackRef,
-    inputId,
   }: ListBoxProps<T>) => {
     const { createPortal } = usePortal()
     const theme = useTheme()
@@ -465,15 +459,11 @@ export const ListBox = memo(
     }, [latest])
 
     return createPortal(
-      <div
-        ref={isExpanded ? callbackRef : undefined}
-        className={CLASS_NAMES.wrapper}
-        style={styles.wrapper}
-      >
+      <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         {isExpanded && isLoading && (
-          <VisuallyHiddenText as="output" role="status" htmlFor={inputId}>
+          <LiveRegion visuallyHidden={true}>
             <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
-          </VisuallyHiddenText>
+          </LiveRegion>
         )}
         <Scroller
           ref={listBoxRef}
@@ -500,15 +490,14 @@ export const ListBox = memo(
                 <Loader aria-hidden />
               </div>
             ) : options.length === 0 ? (
-              /* eslint-disable-next-line jsx-a11y/no-redundant-roles -- output要素のrole="status"は暗黙的だが、ブラウザ間の差異への対応としてフォールバック用に明示する */
-              <output role="status" htmlFor={inputId} className={CLASS_NAMES.noItems}>
+              <LiveRegion className={CLASS_NAMES.noItems}>
                 {noResultText ?? (
                   <Localizer
                     id="smarthr-ui/Combobox/noResultsText"
                     defaultText="一致する選択肢がありません。"
                   />
                 )}
-              </output>
+              </LiveRegion>
             ) : (
               items.map(({ item: { label, disabled }, id, ...optionRest }) => (
                 <ItemButton

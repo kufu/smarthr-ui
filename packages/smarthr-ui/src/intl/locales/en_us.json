@@ -62,6 +62,7 @@
   "smarthr-ui/InformationPanel/closeButtonLabel": "Close",
   "smarthr-ui/InformationPanel/openButtonLabel": "Open",
   "smarthr-ui/InputFile/destroy": "Delete",
+  "smarthr-ui/InputFile/targetBlank": "Open in another tab",
   "smarthr-ui/InputFile/download": "Download",
   "smarthr-ui/InputFile/previewLabel": "Open preview for {fileName}",
   "smarthr-ui/InputFile/downloadLabel": "Download {fileName}",

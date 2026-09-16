@@ -4,7 +4,7 @@ import { FaCircleQuestionIcon, OpenInNewTabIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { TextLink } from '../TextLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 /**

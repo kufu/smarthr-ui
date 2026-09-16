@@ -2,7 +2,7 @@ import { EnvironmentProvider } from '../useEnvironment'
 
 import { type VariantProps, defineSV, useSV } from './useSV'
 
-import type { Meta, StoryFn } from '@storybook/react-webpack5'
+import type { Meta, StoryFn } from '@storybook/react-vite'
 import type { FC } from 'react'
 
 const sv = defineSV(({ mobile }) => ({

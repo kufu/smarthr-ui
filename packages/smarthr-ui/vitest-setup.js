@@ -9,3 +9,6 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
   disconnect() {}
 }
+
+// react-pdf(pdfjs-dist)がモジュールロード時に参照するため必要なモック
+global.DOMMatrix = class DOMMatrix {}

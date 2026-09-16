@@ -8,7 +8,7 @@ import { Stack } from '../../Layout'
 import { Groupbox } from '../../Panel'
 import { InputFile } from '../InputFile'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/InputFile/Test',

@@ -18,8 +18,8 @@
     "@playwright/test": "1.55.1",
     "@types/node": "20.19.43",
     "@types/react": "18.3.31",
-    "@types/react-dom": "19.2.3",
-    "postcss": "8.5.26",
+    "@types/react-dom": "19.2.7",
+    "postcss": "8.5.28",
     "tailwindcss": "3.4.19",
     "typescript": "5.9.3"
   }
