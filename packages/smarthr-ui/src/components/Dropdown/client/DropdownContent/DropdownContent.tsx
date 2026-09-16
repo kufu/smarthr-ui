@@ -225,8 +225,6 @@ export const DropdownContent: FC<Props> = ({
     [triggerRect, latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(functions.callbackRef, layoutEffectRef)
 
   const styleAttr = {
