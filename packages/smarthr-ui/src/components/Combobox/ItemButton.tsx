@@ -1,3 +1,5 @@
+'use client'
+
 import { type MouseEvent, type RefObject, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
