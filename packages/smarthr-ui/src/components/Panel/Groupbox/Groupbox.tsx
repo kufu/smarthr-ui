@@ -15,7 +15,7 @@ type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
   variants: {
-    bgColor: backgroundColor satisfies Record<NonNullable<BaseProps['bgColor']>, string>,
+    bgColor: backgroundColor,
     rounded: {
       true: 'shr-rounded-l',
       all: 'shr-rounded-l',
