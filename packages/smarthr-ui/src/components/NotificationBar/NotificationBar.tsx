@@ -266,7 +266,7 @@ const MessageArea = memo<
     role: 'status' | 'alert'
     classNames: { messageArea: string; icon: string }
   }
->(({ children, bold, type, classNames }) => {
+>(({ children, bold, type, role, classNames }) => {
   const { Component: Icon, alt } = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[type]
 
   return (
