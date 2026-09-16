@@ -4,11 +4,18 @@ import { Table } from 'smarthr-ui'
 import { RSCChecker } from '../components/RSCChecker'
 
 const Row = () => (
-  <tbody>
-    <tr>
-      <td>cell</td>
-    </tr>
-  </tbody>
+  <>
+    <thead>
+      <tr>
+        <th>header</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>cell</td>
+      </tr>
+    </tbody>
+  </>
 )
 
 export default function TableScrollerPatternsPage() {
