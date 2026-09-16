@@ -1,11 +1,11 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { Fieldset } from '../Fieldset'
+import { Fieldset } from '../client'
 
 import { _childrenOptions } from './Fieldset.stories'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Fieldset/VRT',

@@ -1,1 +1,1 @@
-export { WarekiPicker } from './WarekiPicker'
+export { WarekiPicker } from './client'

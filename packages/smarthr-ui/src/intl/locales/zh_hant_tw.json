@@ -62,6 +62,7 @@
   "smarthr-ui/InformationPanel/closeButtonLabel": "收合",
   "smarthr-ui/InformationPanel/openButtonLabel": "展開",
   "smarthr-ui/InputFile/destroy": "刪除",
+  "smarthr-ui/InputFile/targetBlank": "另開分頁",
   "smarthr-ui/InputFile/download": "下載",
   "smarthr-ui/InputFile/previewLabel": "開啟{fileName}的預覽",
   "smarthr-ui/InputFile/downloadLabel": "下載{fileName}",

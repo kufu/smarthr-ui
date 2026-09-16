@@ -1,7 +1,7 @@
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { HeaderLink } from '../HeaderLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Header/HeaderLink',

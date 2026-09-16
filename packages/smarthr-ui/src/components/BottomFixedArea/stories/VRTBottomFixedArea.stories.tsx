@@ -6,7 +6,7 @@ import {
   _tertiaryLinksOptions,
 } from './BottomFixedArea.stories'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/BottomFixedArea（非推奨）/VRT',

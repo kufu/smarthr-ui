@@ -5,12 +5,33 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { paddingBlock, paddingInline } from '../../tailwind'
 import { useSectionWrapper } from '../SectioningContent'
 
 import type { Gap } from '../../types'
+
+type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
+
+type SeparatePadding = {
+  block?: Gap
+  inline?: Gap
+}
+
+type BaseProps = PropsWithChildren<{
+  /** 角丸の大きさ */
+  radius?: 's' | 'm'
+  /** 影のレイヤー */
+  layer?: 0 | 1 | 2 | 3 | 4
+  /** 境界とコンテンツの間の余白 */
+  padding?: Gap | SeparatePadding
+  /** コンテンツが要素内に収まらない場合の処理方法 */
+  overflow?: Overflow | { x: Overflow; y: Overflow }
+  as?: string | ComponentType<any>
+}>
+export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = BaseProps & ElementProps
 
 export const panelClassNameGenerator = tv({
   // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
@@ -21,52 +42,30 @@ export const panelClassNameGenerator = tv({
     radius: {
       s: 'shr-rounded-m',
       m: 'shr-rounded-l',
-    },
+    } satisfies Record<NonNullable<BaseProps['radius']>, string>,
     overflowBlock: {
       visible: 'shr-overflow-y-visible',
       hidden: 'shr-overflow-y-hidden',
       clip: 'shr-overflow-y-clip',
       scroll: 'shr-overflow-y-scroll',
       auto: 'shr-overflow-y-auto',
-    },
+    } satisfies Record<Overflow, string>,
     overflowInline: {
       visible: 'shr-overflow-x-visible',
       hidden: 'shr-overflow-x-hidden',
       clip: 'shr-overflow-x-clip',
       scroll: 'shr-overflow-x-scroll',
       auto: 'shr-overflow-x-auto',
-    },
+    } satisfies Record<Overflow, string>,
     layer: {
       0: 'shr-shadow-layer-0',
       1: 'shr-shadow-layer-1',
       2: 'shr-shadow-layer-2',
       3: 'shr-shadow-layer-3',
       4: 'shr-shadow-layer-4',
-    },
+    } satisfies Record<NonNullable<BaseProps['layer']>, string>,
   },
 })
-
-type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
-
-type BaseProps = PropsWithChildren<
-  Omit<
-    VariantProps<typeof panelClassNameGenerator>,
-    'paddingBlock' | 'paddingInline' | 'overflowBlock' | 'overflowInline'
-  > & {
-    /** 境界とコンテンツの間の余白 */
-    padding?: Gap | SeparatePadding
-    /** コンテンツが要素内に収まらない場合の処理方法 */
-    overflow?: Overflow | { x: Overflow; y: Overflow }
-    as?: string | ComponentType<any>
-  }
->
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
-type Props = BaseProps & ElementProps
-
-type SeparatePadding = {
-  block?: Gap
-  inline?: Gap
-}
 
 export const Panel = forwardRef<HTMLDivElement, Props>(
   ({ padding, radius, overflow, layer, as: Component = 'div', className, ...rest }, ref) => {
