@@ -20,18 +20,33 @@ const ALL_OPTIONS = [
   { level: 4, labelId: 'smarthr-ui/RichTextEditor/heading4', defaultText: '見出し4' },
 ] as const
 
+// 選択肢を実際の見出しの見た目で見せる。値は styles.ts のエディタ本文と揃える。
+// ボタン本体ではなくラベルにだけ付けるのは、ボタンの文字サイズを継承する
+// チェックアイコンまで大きくならないようにするため。
+const OPTION_LABEL_CLASS_NAMES = {
+  normal: 'shr-text-base shr-leading-tight',
+  1: 'shr-text-2xl shr-leading-tight',
+  2: 'shr-text-xl shr-leading-tight',
+  3: 'shr-text-lg shr-leading-tight',
+  4: 'shr-text-base shr-font-bold shr-leading-tight',
+} as const
+
 const classNameGenerator = tv({
   slots: {
     trigger: [
       TOOLBAR_ITEM_CLASS_NAME,
       'smarthr-ui-RichTextEditor-HeadingDropdown',
-      'shr-min-w-[9em] shr-text-sm',
+      'shr-min-w-[9em] shr-text-left shr-text-sm',
     ],
     listbox: [
       'shr-border-shorthand shr-min-w-[10em] shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
+      // 選択肢ごとに文字サイズが違うため行の高さが揃わない。grid-auto-rows:1fr で
+      // 全行を最も高い行に合わせる。固定値を書かずに済み、許可レベルが減って
+      // 見出し1が消えた場合もその時点の最大に追従する。
+      'shr-grid shr-grid-cols-1 [grid-auto-rows:1fr]',
     ],
     option: [
-      'shr-flex shr-w-full shr-cursor-pointer shr-items-center shr-gap-0.5 shr-border-none shr-bg-transparent shr-px-0.75 shr-py-0.5 shr-text-left shr-text-sm shr-text-black',
+      'shr-border-t-shorthand shr-flex shr-w-full shr-cursor-pointer shr-items-center shr-gap-0.5 shr-bg-transparent shr-px-0.75 shr-py-0.5 shr-text-left shr-text-sm shr-text-black first:shr-border-t-0',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
     ],
@@ -208,7 +223,9 @@ export const HeadingDropdown: FC<Props> = memo(
                   <span className={classNames.checkIcon()}>
                     {isSelected && <FaCheckIcon className="shr-text-main" />}
                   </span>
-                  <span>{label}</span>
+                  <span className={OPTION_LABEL_CLASS_NAMES[option.level ?? 'normal']}>
+                    {label}
+                  </span>
                 </button>
               )
             })}
