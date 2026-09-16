@@ -1,18 +1,22 @@
 import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 import type { CellContentWidth } from './type'
 
-export type BaseProps = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & {
-    /** 横スクロール時、カラムを左右いずれかに固定 */
-    fixed?: 'left' | 'right'
-    contentWidth?:
-      CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
-  }
->
+export type BaseProps = PropsWithChildren<{
+  /** テキストの水平方向の配置 */
+  align?: 'left' | 'right'
+  /** テキストの垂直方向の配置 */
+  vAlign?: 'middle' | 'baseline'
+  /** 値が空の場合にハイフンを表示するかどうか */
+  nullable?: boolean
+  /** 横スクロール時、カラムを左右いずれかに固定 */
+  fixed?: 'left' | 'right'
+  contentWidth?:
+    CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
+}>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'td'>, keyof BaseProps>
 
 export const Td = memo<Props>(
@@ -55,14 +59,14 @@ const classNameGenerator = tv({
     align: {
       left: '',
       right: 'shr-text-right',
-    },
+    } satisfies Record<NonNullable<BaseProps['align']>, string>,
     vAlign: {
       middle: '',
       baseline: 'shr-align-baseline',
-    },
+    } satisfies Record<NonNullable<BaseProps['vAlign']>, string>,
     nullable: {
       true: "empty:after:shr-content-['-----']",
-    },
+    } satisfies Record<'true', string>,
   },
   defaultVariants: {
     align: 'left',
