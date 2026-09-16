@@ -12,8 +12,9 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { TableScroller } from '../TableScroller'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
+
+import { ScrollerSwitcher } from './ScrollerSwitcher'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -148,12 +149,12 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
   }, [showShadow, className])
 
   return (
-    <TableScroller ref={callbackRef} fixedHead={fixedHead}>
+    <ScrollerSwitcher forwardedRef={callbackRef} fixedHead={fixedHead}>
       <div className={classNames.wrapper}>
         <div {...rest} className={classNames.inner}>
           {children}
         </div>
       </div>
-    </TableScroller>
+    </ScrollerSwitcher>
   )
 }
