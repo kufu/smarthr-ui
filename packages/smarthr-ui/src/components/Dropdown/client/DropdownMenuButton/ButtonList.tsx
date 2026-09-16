@@ -36,13 +36,12 @@ const actionListItemButton = tv({
 })
 
 // HINT: DropdownMenuGroup.tsx側がButtonListに依存しているため、循環依存を避けるために
-// コンポーネント参照ではなくDropdownMenuGroupが持つマーカープロパティの有無で判定する。
-// DropdownMenuButtonがServer Componentから利用され、その子としてDropdownMenuGroupが渡された
-// 場合、DropdownMenuGroupはサーバー側で既にレンダーされたli要素として届く（item.typeは関数では
-// なく'li'になる）ため、関数のマーカーでは判定できない。この場合はルート要素に付与されたdata属性
-// で判定する
-const DROPDOWN_MENU_GROUP_MARKER_ATTR = 'data-smarthr-ui-dropdown-menu-group'
-
+// コンポーネント参照ではなくDropdownMenuGroupが持つマーカーの有無で判定する。
+// 通常のクライアント側では要素はまだ未レンダーでitem.typeがDropdownMenuGroup関数のままのため
+// 関数マーカーで判定するが、DropdownMenuButtonがServer Componentから利用されその子として
+// DropdownMenuGroupが渡された場合、DropdownMenuGroupはサーバー側で既にレンダーされたli要素と
+// して届く（item.typeは関数ではなく'li'になる）ため、この場合はルート要素に付与された
+// data属性で判定する。どちらか一方だけでは判定を取りこぼすため両方必要
 const isDropdownMenuGroupType = (item: ReactElement): boolean => {
   if (
     typeof item.type === 'function' &&
@@ -52,9 +51,11 @@ const isDropdownMenuGroupType = (item: ReactElement): boolean => {
     return true
   }
 
-  const props = item.props as Record<string, unknown> | null | undefined
-
-  return props?.[DROPDOWN_MENU_GROUP_MARKER_ATTR] === true
+  return (
+    (item.props as Record<string, unknown> | null | undefined)?.[
+      'data-smarthr-ui-dropdown-menu-group'
+    ] === true
+  )
 }
 
 // HINT: 関数呼び出しの形(旧renderButtonList(children))は、Server ComponentからJSXレンダーされる

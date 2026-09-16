@@ -33,14 +33,12 @@ const classNameGenerator = tv({
 })
 
 // HINT: ButtonList側がDropdownMenuGroup本体をimportせずに判定できるようにするマーカー。
-// 循環依存を避けるため、コンポーネント参照ではなくこのプロパティの有無で判定する
+// 循環依存を避けるため、コンポーネント参照ではなくこのプロパティの有無で判定する。
+// DropdownMenuButtonがServer Componentから利用され、その子としてDropdownMenuGroupが渡された
+// 場合、レンダー結果のli要素として届く（item.typeが関数ではなく'li'になる）ため、この関数
+// マーカーでは判定できない。この場合に備え、ルート要素にもdata-smarthr-ui-dropdown-menu-group
+// 属性を付与している（ButtonList.tsx側で判定に使用）
 type DropdownMenuGroupComponent = FC<Props> & { __isSmarthrUIDropdownMenuGroup: true }
-
-// HINT: DropdownMenuButtonがServer Componentから利用され、その子としてDropdownMenuGroupが
-// 渡された場合、DropdownMenuGroupはサーバー側で既にレンダーされたli要素としてButtonListに届く
-// （item.typeは関数ではなく'li'になる）。この場合でも判定できるよう、ルート要素自体にも
-// マーカーを付与する
-const DROPDOWN_MENU_GROUP_MARKER_ATTR = 'data-smarthr-ui-dropdown-menu-group'
 
 export const DropdownMenuGroup = (({ name, children, className }) => {
   const subMenuId = useId()
@@ -53,11 +51,7 @@ export const DropdownMenuGroup = (({ name, children, className }) => {
   )
 
   return (
-    <li
-      {...{ [DROPDOWN_MENU_GROUP_MARKER_ATTR]: true }}
-      role="presentation"
-      className={actualClassName}
-    >
+    <li role="presentation" className={actualClassName} data-smarthr-ui-dropdown-menu-group>
       {name ? (
         <>
           <Text
