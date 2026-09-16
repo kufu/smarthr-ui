@@ -1,5 +1,3 @@
-'use client'
-
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
