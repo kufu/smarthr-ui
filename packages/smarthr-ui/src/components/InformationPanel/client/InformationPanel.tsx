@@ -46,7 +46,7 @@ type BaseProps = PropsWithChildren<{
   onClickTrigger?: (active: boolean) => void
   /** パネルの種類 */
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
-  /** 太字にするかどうか */
+  /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
   bold?: boolean
 }>
 
