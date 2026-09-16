@@ -66,7 +66,7 @@ const classNameGenerator = tv({
     } satisfies Record<NonNullable<BaseProps['vAlign']>, string>,
     nullable: {
       true: "empty:after:shr-content-['-----']",
-    } satisfies Record<'true', string>,
+    },
   },
   defaultVariants: {
     align: 'left',
