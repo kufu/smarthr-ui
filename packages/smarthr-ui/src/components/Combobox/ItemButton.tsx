@@ -1,4 +1,6 @@
-import { type RefObject, memo } from 'react'
+'use client'
+
+import { type MouseEvent, type RefObject, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -44,6 +46,14 @@ const CLASS_NAMES = {
   select: classNameGenerator({ new: false }),
 }
 
+// HINT: mousedownのデフォルト動作でbuttonにfocusが移ると、選択確定後にListBoxがDOMから除去された際、
+// フォーカス中の要素が消えることでフォーカスがdocument.bodyに落ちてしまう。
+// preventDefaultでbuttonへのfocus付与自体を止め、input側のfocusを維持する
+// （click自体は引き続き発火するため、選択処理には影響しない）
+const handleMouseDown = (e: MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault()
+}
+
 export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, activeRef }) => (
   <button
     ref={activeRef}
@@ -54,6 +64,7 @@ export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, a
     className={isNew ? CLASS_NAMES.new : CLASS_NAMES.select}
     aria-selected={isNew ? false : selected}
     data-active={!!activeRef}
+    onMouseDown={handleMouseDown}
   >
     {isNew ? (
       <Text color="TEXT_LINK" icon={<FaCirclePlusIcon color="TEXT_LINK" />}>

@@ -69,6 +69,8 @@ describe('SingleCombobox', () => {
 
     // リストボックスは開かれたままになっている
     expect(screen.queryByRole('listbox')).toBeInTheDocument()
+    // 選択によってオプションボタンが再レンダリングされても、フォーカスがコンボボックスに残っていること
+    expect(combobox()).toHaveFocus()
   })
 
   it('アイテムを選択解除できること', async () => {
@@ -108,6 +110,29 @@ describe('SingleCombobox', () => {
     // ESCで閉じる
     await userEvent.keyboard('{escape}')
     expect(listbox()).not.toBeInTheDocument()
+  })
+
+  it('リストボックスが展開されているときのESCキー入力はdocumentまで伝搬せず、閉じているときは伝搬すること', async () => {
+    const handleDocumentKeyDown = vi.fn()
+    document.addEventListener('keydown', handleDocumentKeyDown)
+
+    try {
+      render(template({}))
+
+      await userEvent.click(combobox())
+      expect(listbox()).toBeInTheDocument()
+
+      // 1回目のESC: リストボックスを閉じるだけで、documentへは伝搬しない
+      await userEvent.keyboard('{escape}')
+      expect(listbox()).not.toBeInTheDocument()
+      expect(handleDocumentKeyDown).not.toHaveBeenCalled()
+
+      // 2回目のESC: リストボックスは既に閉じているため、documentまで伝搬する
+      await userEvent.keyboard('{escape}')
+      expect(handleDocumentKeyDown).toHaveBeenCalledTimes(1)
+    } finally {
+      document.removeEventListener('keydown', handleDocumentKeyDown)
+    }
   })
 
   it('コンボボックスがフォーカスされていないときに選択解除ボタンを押下してもリストボックスが表示されないこと', async () => {
