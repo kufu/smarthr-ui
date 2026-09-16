@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { InformationPanel } from '../InformationPanel'
+import { InformationPanel } from '../client'
 
 import type { Meta } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'

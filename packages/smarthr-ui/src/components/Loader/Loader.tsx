@@ -1,5 +1,7 @@
-import { type ComponentProps, type ReactNode, memo } from 'react'
+import { type ComponentPropsWithoutRef, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
+
+import { LiveRegion } from '../LiveRegion'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
@@ -13,7 +15,7 @@ type BaseProps = {
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
 }
-type Props = BaseProps & Omit<ComponentProps<'span'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -33,7 +35,7 @@ const classNameGenerator = tv({
 })
 
 export const Loader = memo<Props>(
-  ({ size = 'M', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
+  ({ size = 'M', alt, text, type = 'primary', className, ...rest }) => {
     // HINT: Loaderは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
     const classNames = (() => {
       const { wrapper, textSlot } = classNameGenerator({
@@ -47,10 +49,10 @@ export const Loader = memo<Props>(
     })()
 
     return (
-      <span {...rest} role={role} className={classNames.wrapper}>
+      <LiveRegion {...rest} className={classNames.wrapper}>
         <LoaderSpinner type={type} alt={alt} size={size} />
         {text && <span className={classNames.text}>{text}</span>}
-      </span>
+      </LiveRegion>
     )
   },
 )

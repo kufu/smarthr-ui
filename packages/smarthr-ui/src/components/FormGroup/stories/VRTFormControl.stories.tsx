@@ -2,7 +2,7 @@ import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
