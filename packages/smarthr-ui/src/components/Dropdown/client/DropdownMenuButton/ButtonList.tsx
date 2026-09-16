@@ -35,20 +35,24 @@ const actionListItemButton = tv({
   ],
 })
 
-// HINT: DropdownMenuGroup.tsx側がrenderButtonListに依存しているため、循環依存を避けるために
+// HINT: DropdownMenuGroup.tsx側がButtonListに依存しているため、循環依存を避けるために
 // コンポーネント参照ではなくDropdownMenuGroupが持つマーカープロパティの有無で判定する
 const isDropdownMenuGroupType = (type: ReactElement['type']): boolean =>
   typeof type === 'function' &&
   (type as { __isSmarthrUIDropdownMenuGroup?: boolean }).__isSmarthrUIDropdownMenuGroup === true
 
-export const renderButtonList = (children: Actions) =>
+// HINT: 関数呼び出しの形(旧renderButtonList(children))は、Server ComponentからJSXレンダーされる
+// 場合(DropdownMenuGroup.tsx)に「Attempted to call renderButtonList() from the server but
+// renderButtonList is on the client」で失敗する。コンポーネントとしてJSXレンダーすれば、
+// client referenceとして正しく解決されるため、Server Componentからでも利用できる
+export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
   Children.map(children, (item): ReactNode => {
     if (!item || !isValidElement(item)) {
       return null
     }
 
     if (item.type === Fragment) {
-      return renderButtonList(item.props.children)
+      return <ButtonList>{item.props.children}</ButtonList>
     }
 
     if (isDropdownMenuGroupType(item.type)) {

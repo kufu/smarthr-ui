@@ -9,7 +9,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
-import { renderButtonList } from '../client'
+import { ButtonList } from '../client'
 
 type BaseProps = PropsWithChildren<{
   name?: ReactNode
@@ -42,7 +42,7 @@ export const DropdownMenuGroup = (({ name, children, className }) => {
 
   const subMenu = (
     <menu role="group" className="shr-list-none" aria-labelledby={name ? subMenuId : undefined}>
-      {renderButtonList(children)}
+      <ButtonList>{children}</ButtonList>
     </menu>
   )
 

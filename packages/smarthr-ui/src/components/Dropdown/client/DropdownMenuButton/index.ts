@@ -1,2 +1,2 @@
 export { DropdownMenuButton } from './DropdownMenuButton'
-export { renderButtonList } from './renderButtonList'
+export { ButtonList } from './ButtonList'

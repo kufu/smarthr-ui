@@ -22,7 +22,7 @@ import { Dropdown, DropdownContext } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import { type Actions, renderButtonList } from './renderButtonList'
+import { type Actions, ButtonList } from './ButtonList'
 
 type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
@@ -201,7 +201,7 @@ export const DropdownMenuButton: FC<Props> = ({
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
         <menu ref={callbackRef} role="menu" className={classNames.actionList}>
-          {renderButtonList(children)}
+          <ButtonList>{children}</ButtonList>
         </menu>
       </DropdownContent>
     </Dropdown>
