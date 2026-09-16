@@ -2,10 +2,10 @@
 
 import { type FC, type PropsWithChildren, useContext } from 'react'
 
-import { DialogContentContext } from './DialogContent'
+import { DialogContext } from './DialogWrapper'
 
 export const DialogCloser: FC<PropsWithChildren> = (props) => {
-  const { handleDelegateClickClose } = useContext(DialogContentContext)
+  const { handleDelegateClickClose } = useContext(DialogContext)
 
   return (
     <div
