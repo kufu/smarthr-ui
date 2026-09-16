@@ -13,7 +13,7 @@ const classNameGenerator = tv({
     wrapper: 'shr-group shr-relative shr-inline-block',
     tooltip: [
       'shr-pointer-events-none shr-absolute shr-top-full shr-z-overlap shr-mt-0.25',
-      'shr-flex shr-flex-col shr-items-center shr-gap-0.25',
+      'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
       'shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.5 shr-text-sm shr-text-white',
       'shr-opacity-0 shr-transition-opacity',
       'group-focus-within:shr-opacity-100 group-hover:shr-opacity-100',
