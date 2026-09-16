@@ -87,7 +87,7 @@ describe('PageHeading', () => {
 
   test('Next.js環境ではページのタイトルを設定しない', async () => {
     vi.resetModules()
-    vi.doMock('../../../libs/nextjs', () => ({ IS_NEXT_JS: true }))
+    vi.doMock('../../../../libs/nextjs', () => ({ IS_NEXT_JS: true }))
 
     const { PageHeading: MockedPageHeading } = await import('./PageHeading')
     render(<MockedPageHeading>これはタイトルです</MockedPageHeading>)

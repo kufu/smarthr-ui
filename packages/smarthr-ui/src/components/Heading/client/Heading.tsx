@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { LevelContext } from '../SectioningContent'
-import { STYLE_TYPE_MAP, Text, type TextProps } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { LevelContext } from '../../SectioningContent'
+import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 

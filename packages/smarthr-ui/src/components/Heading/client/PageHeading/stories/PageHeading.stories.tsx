@@ -1,4 +1,4 @@
-import { Stack } from '../../../Layout'
+import { Stack } from '../../../../Layout'
 import { PageHeading } from '../PageHeading'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
