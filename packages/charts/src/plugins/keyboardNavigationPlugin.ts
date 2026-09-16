@@ -44,31 +44,61 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
-      const moveData = (delta: number) =>
+      const moveData = (delta: number) => (
+        event.preventDefault(),
         (nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength)
-      const moveDataset = (delta: number) =>
+      )
+      const moveDataset = (delta: number) => (
+        event.preventDefault(),
         (nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length)
+      )
       const reset = () => {
         nextDatasetIndex = -1
         nextDataIndex = -1
       }
 
-      // horizontal は stacked と組み合わさった場合のみデータ軸とデータセット軸を入れ替える
-      const bindings: Record<string, () => void> =
-        options.stacked && options.horizontal
+      const compoundMoveData = (delta: number) => {
+        const atBoundary =
+          delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
+
+        if (atBoundary) {
+          moveData(delta)
+          nextDatasetIndex = delta > 0 ? 0 : datasets.length - 1
+        } else {
+          moveDataset(delta)
+        }
+      }
+
+      const defaultBindings: Record<string, () => void> = {
+        Escape: reset,
+        Tab: reset,
+      }
+
+      const bindings: Record<string, () => void> = options.horizontal
+        ? options.stacked
           ? {
               ArrowDown: () => moveData(1),
               ArrowUp: () => moveData(-1),
               ArrowRight: () => moveDataset(1),
               ArrowLeft: () => moveDataset(-1),
-              Escape: reset,
-              Tab: reset,
+              ...defaultBindings,
             }
           : {
+              ArrowDown: () => compoundMoveData(1),
+              ArrowUp: () => compoundMoveData(-1),
+              ...defaultBindings,
+            }
+        : options.stacked
+          ? {
               ArrowRight: () => moveData(1),
               ArrowLeft: () => moveData(-1),
-              ArrowDown: () => moveDataset(options.stacked ? -1 : 1),
-              ArrowUp: () => moveDataset(options.stacked ? 1 : -1),
+              ArrowDown: () => moveDataset(-1),
+              ArrowUp: () => moveDataset(1),
+              ...defaultBindings,
+            }
+          : {
+              ArrowRight: () => compoundMoveData(1),
+              ArrowLeft: () => compoundMoveData(-1),
               Escape: reset,
               Tab: reset,
             }
