@@ -9,7 +9,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
@@ -44,8 +44,11 @@ type BaseProps = PropsWithChildren<{
   active?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
-}> &
-  VariantProps<typeof classNameGenerator>
+  /** パネルの種類 */
+  type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
+  /** 太字にするかどうか */
+  bold?: boolean
+}>
 
 type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
@@ -72,7 +75,7 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    },
+    } satisfies Record<NonNullable<BaseProps['type']>, Record<string, never>>,
     bold: {
       true: {
         header: 'shr-py-1',
