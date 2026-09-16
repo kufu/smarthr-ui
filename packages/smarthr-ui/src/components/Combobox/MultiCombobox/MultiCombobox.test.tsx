@@ -69,6 +69,8 @@ describe('SingleCombobox', () => {
 
     // リストボックスは開かれたままになっている
     expect(screen.queryByRole('listbox')).toBeInTheDocument()
+    // 選択によってオプションボタンが再レンダリングされても、フォーカスがコンボボックスに残っていること
+    expect(combobox()).toHaveFocus()
   })
 
   it('アイテムを選択解除できること', async () => {
