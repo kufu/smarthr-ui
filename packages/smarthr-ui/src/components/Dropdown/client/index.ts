@@ -1,4 +1,5 @@
 export { Dropdown, DropdownContext } from './Dropdown'
 export { DropdownContent } from './DropdownContent'
 export { DropdownTrigger } from './DropdownTrigger'
+export { FilteredIcon } from './FilteredIcon'
 export { SortDropdown } from './SortDropdown'

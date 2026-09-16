@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentProps,
   type FC,
@@ -12,13 +10,13 @@ import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { Localizer, useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button, type BaseProps as ButtonProps } from '../../Button'
-import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
+import { FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { DropdownCloser } from '../DropdownCloser'
-import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
+import { Dropdown, DropdownContent, DropdownTrigger, FilteredIcon } from '../client'
 
 type ObjectTriggerType = {
   text?: ReactNode
@@ -98,17 +96,6 @@ export const FilterDropdown: FC<Props> = ({
     orgTrigger,
     triggerObjectConverter,
   )
-  const { localize } = useIntl()
-
-  const filteredIconAlt = useMemo(
-    () =>
-      (typeof filtered === 'object' && filtered.iconAlt) ||
-      localize({
-        id: 'smarthr-ui/FilterDropdown/status',
-        defaultText: '適用中',
-      }),
-    [filtered, localize],
-  )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
@@ -144,7 +131,10 @@ export const FilterDropdown: FC<Props> = ({
 
       {filtered && (
         // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-        <FaCircleCheckIcon className={classNames.filteredIcon} aria-label={filteredIconAlt} />
+        <FilteredIcon
+          iconAlt={typeof filtered === 'object' ? filtered.iconAlt : undefined}
+          className={classNames.filteredIcon}
+        />
       )}
     </span>
   )
