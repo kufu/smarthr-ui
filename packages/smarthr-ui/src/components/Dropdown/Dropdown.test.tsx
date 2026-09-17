@@ -40,6 +40,15 @@ describe('Dropdown', () => {
   })
 
   it('トリガーボタンとドロップダウンの間でフォーカスの行き来ができること', async () => {
+    // HINT: userEvent.clickの内部処理とjsdomのrequestAnimationFrameの実行タイミングが競合し、
+    // 環境によって「クリック直後はまだrAFが発火していないこと」の検証が不安定になるため、
+    // requestAnimationFrameをspyして発火タイミングを手動で制御する
+    const rafCallbacks: FrameRequestCallback[] = []
+    const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      rafCallbacks.push(callback)
+      return rafCallbacks.length
+    })
+
     render(template)
 
     await userEvent.click(screen.getByRole('button', { name: 'Trigger' }))
@@ -47,7 +56,10 @@ describe('Dropdown', () => {
     // requestAnimationFrameの前はTriggerにフォーカスが残ったままであること(早すぎるfocus実行を検知する)
     expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
 
-    await waitForAnimationFrame()
+    act(() => {
+      rafCallbacks.forEach((callback) => callback(0))
+    })
+    rafSpy.mockRestore()
 
     expect(screen.getByRole('button', { name: 'Button1' })).not.toHaveFocus()
     await userEvent.tab()
