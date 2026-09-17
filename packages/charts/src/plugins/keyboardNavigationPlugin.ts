@@ -57,7 +57,8 @@ export const keyboardNavigationPlugin = {
         nextDataIndex = -1
       }
 
-      const compoundMoveData = (delta: number) => {
+      const compoundMoveDataAndDataset = (delta: number) => {
+        // データとデータセットの境界に到達したかどうかを判定
         const atBoundary =
           delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
 
@@ -84,8 +85,8 @@ export const keyboardNavigationPlugin = {
               ...defaultBindings,
             }
           : {
-              ArrowDown: () => compoundMoveData(1),
-              ArrowUp: () => compoundMoveData(-1),
+              ArrowDown: () => compoundMoveDataAndDataset(1),
+              ArrowUp: () => compoundMoveDataAndDataset(-1),
               ...defaultBindings,
             }
         : options.stacked
@@ -97,10 +98,9 @@ export const keyboardNavigationPlugin = {
               ...defaultBindings,
             }
           : {
-              ArrowRight: () => compoundMoveData(1),
-              ArrowLeft: () => compoundMoveData(-1),
-              Escape: reset,
-              Tab: reset,
+              ArrowRight: () => compoundMoveDataAndDataset(1),
+              ArrowLeft: () => compoundMoveDataAndDataset(-1),
+              ..defaultBindings
             }
 
       bindings[event.key]?.()
