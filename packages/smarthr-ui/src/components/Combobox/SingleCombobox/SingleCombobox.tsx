@@ -205,6 +205,8 @@ const ActualSingleCombobox = <T,>(
   if (selectedItemLabelText !== prevSelectedItemLabelText) {
     setPrevSelectedItemLabelText(selectedItemLabelText)
     setInputValue(selectedItemLabelText)
+    // inputValueを選択中アイテムのラベルで上書きした場合、それは手入力値ではないため絞り込みには使わない
+    setIsEditing(false)
   }
 
   const { options } = useSingleOptions({
@@ -285,11 +287,14 @@ const ActualSingleCombobox = <T,>(
 
       setIsFocused(false)
       setIsExpanded(false)
-      setIsEditing(false)
 
       if (latest.selectedItem) {
+        // inputValueを選択中アイテムのラベルへ戻すため、手入力による絞り込みも解除する
+        setIsEditing(false)
         setInputValue(innerText(latest.selectedItem.label))
       } else {
+        // HINT: 未選択の場合はinputValueに手入力値が残るため、isEditingは解除しない
+        // 解除してしまうと「入力値が表示されているのに絞り込みが効いていない」状態になる
         selectDefaultItem()
       }
     }
