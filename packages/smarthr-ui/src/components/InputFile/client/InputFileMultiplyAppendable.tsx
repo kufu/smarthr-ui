@@ -113,6 +113,8 @@ export const InputFileMultiplyAppendable = forwardRef<
       }
     }, [latest])
 
+    const errorAttr = error || undefined
+
     return (
       <Stack align="flex-start" className={classNames.wrapper}>
         {hasFileList && !disabled && files.length > 0 && (
@@ -138,8 +140,9 @@ export const InputFileMultiplyAppendable = forwardRef<
             disabled={disabled}
             multiple
             className={classNames.input}
-            aria-invalid={error || undefined}
+            aria-invalid={errorAttr}
             aria-labelledby={labelId}
+            data-smarthr-ui-input-error={errorAttr}
             data-smarthr-ui-input="true"
             onChange={functions.handleChange}
           />

@@ -18,7 +18,7 @@ import { Cluster, Stack } from '../../Layout'
 import { LiveRegion } from '../../LiveRegion'
 import { Text } from '../../Text'
 
-import { CHILDREN_WRAPPER_INPUT_SELECTOR } from './constants'
+import { CHILDREN_WRAPPER_INPUT_SELECTOR, WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
@@ -121,7 +121,13 @@ export const FormGroup: FC<Props> = ({
       if (errorAttr) {
         if (errorAttr === 'true') {
           input.setAttribute('aria-invalid', 'true')
-        } else {
+        } else if (
+          // HINT: 入力要素自体にerror属性が設定されている場合、そちらを優先する
+          input.getAttribute('data-smarthr-ui-input-error') !== 'true' &&
+          // HINT: Fieldset > FormControlのようにネストしている場合を考慮して
+          // autoBindErrorしているForｍGroupが親方向に存在する場合、子の入力要素からaria-invalidを外さないようにする
+          !input.closest(`${WRAPPER_SELECTOR}[data-auto-bind-error-input='true']`)
+        ) {
           input.removeAttribute('aria-invalid')
         }
       }

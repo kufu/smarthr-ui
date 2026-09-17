@@ -142,6 +142,50 @@ describe('Fieldset', () => {
     expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid')
   })
 
+  it('Fieldset > FormControlのように入れ子の場合、内側のFormControlが付与したaria-invalidを外側のFieldsetが消さない', () => {
+    render(
+      <form>
+        <Fieldset legend="fieldset-legend">
+          <FormControl errorMessages="error" label="label">
+            <Input name="test" aria-label="input-accessible-name" />
+          </FormControl>
+        </Fieldset>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('外側のFieldsetがerrorMessagesを持つ場合、errorMessagesを持たない内側のFormControlの入力要素にもaria-invalidが付与される', () => {
+    render(
+      <form>
+        <Fieldset errorMessages="error" legend="fieldset-legend">
+          <FormControl label="label">
+            <Input name="test" aria-label="input-accessible-name" />
+          </FormControl>
+        </Fieldset>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
+  it('3階層のネストで中間のFormControlが付与したaria-invalidを最も外側のFieldsetが消さない', () => {
+    render(
+      <form>
+        <Fieldset legend="outer-legend">
+          <Fieldset errorMessages="error" legend="middle-legend">
+            <FormControl label="label">
+              <Input name="test" aria-label="input-accessible-name" />
+            </FormControl>
+          </Fieldset>
+        </Fieldset>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
   // HINT: FormControlのlabelと構造を揃え、subActionAreaの有無でLabelClusterの親が変わらないようにする
   describe.each([
     ['subActionAreaが指定されていない場合', undefined],
