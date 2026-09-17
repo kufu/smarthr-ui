@@ -1,8 +1,8 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
-import { IntlProvider } from '../../intl'
-import { Button } from '../Button'
+import { IntlProvider } from '../../../intl'
+import { Button } from '../../Button'
 
 import { DisclosureContent } from './DisclosureContent'
 import { DisclosureTrigger } from './DisclosureTrigger'

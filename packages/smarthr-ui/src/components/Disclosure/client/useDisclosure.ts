@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 
-import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
-import { useLatest } from '../../hooks/useLatest'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useLatest } from '../../../hooks/useLatest'
 
 const DISCLOSURE_CHANGE_EVENT = 'smarthr-ui:disclosure-change'
 type DisclosureChangeEventDetail = { id: string; expanded: boolean }
