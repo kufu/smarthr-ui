@@ -495,6 +495,8 @@ const ActualMultiCombobox = <T,>(
     },
   })
 
+  const errorAttr = error || undefined
+
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
@@ -544,9 +546,10 @@ const ActualMultiCombobox = <T,>(
             aria-controls={`${listBoxId} ${selectedListId}`}
             aria-haspopup="listbox"
             aria-expanded={isExpanded}
-            aria-invalid={error || undefined}
+            aria-invalid={errorAttr}
             aria-disabled={disabled}
             aria-autocomplete="list"
+            data-smarthr-ui-input-error={errorAttr}
             data-smarthr-ui-input="true"
             onChange={functions.handleChangeInput}
             onFocus={functions.handleFocusInput}

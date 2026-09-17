@@ -253,6 +253,8 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     [latest],
   )
 
+  const errorAttr = error || undefined
+
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
@@ -264,7 +266,8 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
       rows={interimRows}
       className={actualClassName}
       style={{ width: typeof width === 'number' ? `${width}px` : width }}
-      aria-invalid={error || undefined}
+      aria-invalid={errorAttr}
+      data-smarthr-ui-input-error={errorAttr}
       data-smarthr-ui-input="true"
       onChange={functions.handleChange}
     />

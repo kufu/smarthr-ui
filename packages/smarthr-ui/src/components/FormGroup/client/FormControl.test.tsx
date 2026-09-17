@@ -41,6 +41,18 @@ describe('FormControl', () => {
     expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid')
   })
 
+  it('errorMessagesを指定していなくても、子のinput要素が自身のerror propでaria-invalidを付与している場合は消されない', () => {
+    render(
+      <form>
+        <FormControl label="label">
+          <Input name="test" error />
+        </FormControl>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+  })
+
   // HINT: labelが縦方向のwrapper直下に来るとalign-items:stretchで全幅に広がり、
   // テキストが無い部分をクリックしても入力要素にフォーカスが移ってしまう
   describe.each([
