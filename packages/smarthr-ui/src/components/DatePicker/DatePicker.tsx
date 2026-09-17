@@ -140,7 +140,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const [isInputFocused, setIsInputFocused] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
-    const calendarRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
@@ -165,9 +164,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     })
 
     const functions = useMemo(() => {
+      let inputNode: HTMLInputElement | null = null
+      let calendarNode: HTMLElement | null = null
+
       // HINT: data-smarthr-ui-input はInput側が必ずinput要素に付与する
-      const getInput = () =>
-        containerRef.current?.querySelector<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR) ?? null
+      const getInput = () => inputNode
 
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -182,16 +183,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
+          !inputNode ||
           newDate === latest.selectedDate ||
           (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
-          return
-        }
-
-        const input = getInput()
-
-        if (!input) {
           return
         }
 
@@ -205,7 +201,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const nextDate = isValid ? newDate : null
         const formatValue = dateToString(nextDate)
 
-        input.value = formatValue
+        inputNode.value = formatValue
 
         if (latest.showAlternative) {
           setAlternativeFormat(dateToAlternativeFormat(nextDate))
@@ -219,7 +215,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
           const event = new Event('change', { bubbles: true })
 
-          input.dispatchEvent(event)
+          inputNode.dispatchEvent(event)
           latest.onChange(
             // HINT: 型問題のため別途オブジェクトをイベントに見立てる
             {
@@ -229,8 +225,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               preventDefault: () => {
                 event.preventDefault()
               },
-              target: input,
-              currentTarget: input,
+              target: inputNode,
+              currentTarget: inputNode,
             } as ChangeEvent<HTMLInputElement>,
             { date: nextDate, formatValue, errors },
           )
@@ -244,7 +240,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       const openCalendar = () => {
         // HINT: classNameはcontainerに設定されるため、containerの矩形は利用者の指定で変わりうる。
         // カレンダーの表示位置はinput部分を基準にする必要があるため、Inputのwrapperを参照する
-        const inputContainer = containerRef.current?.querySelector(`.${INPUT_CONTAINER_CLASS_NAME}`)
+        const inputContainer = inputNode?.closest(`.${INPUT_CONTAINER_CLASS_NAME}`)
 
         if (inputContainer) {
           setIsCalendarShown(true)
@@ -259,15 +255,20 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         dateToAlternativeFormat,
         closeCalendar,
         openCalendar,
+        calendarCallbackRef: (node: HTMLElement | null) => {
+          calendarNode = node
+        },
         inputCallbackRef: (node: HTMLInputElement | null) => {
+          inputNode = node
+
           if (!node) return
 
           const handleKeyDown = (e: KeyboardEvent) => {
-            if (!calendarRef.current || e.key !== 'Tab') {
+            if (!calendarNode || e.key !== 'Tab') {
               return
             }
 
-            const calendarButtons = calendarRef.current.querySelectorAll('button')
+            const calendarButtons = calendarNode.querySelectorAll('button')
 
             if (calendarButtons.length === 0) {
               return
@@ -343,7 +344,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           // delay hiding calendar because calendar will be displayed when input is focused
           latest.closeFrame.request(closeCalendar)
 
-          getInput()?.focus()
+          inputNode?.focus()
         },
       }
     }, [latest])
@@ -354,7 +355,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const mergedCalendarRef = useMergeRefs(
       useAreaClickCallbackRef(isCalendarShown ? [containerRef] : null, functions.closeCalendar),
-      calendarRef,
+      functions.calendarCallbackRef,
     )
 
     useEffect(() => {
