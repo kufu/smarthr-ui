@@ -141,13 +141,14 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const [isInputFocused, setIsInputFocused] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-    const [isCalendarShown, setIsCalendarShown] = useState(false)
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
       parseStringDate(value, parseInput),
     )
+
+    const isCalendarShown = !!inputRect
 
     const closeFrame = useAnimationFrame()
 
@@ -232,7 +233,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
-      const closeCalendar = () => setIsCalendarShown(false)
+      const closeCalendar = () => setInputRect(null)
 
       const openCalendar = () => {
         // HINT: classNameはcontainerに設定されるため、containerの矩形は利用者の指定で変わりうる。
@@ -240,7 +241,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const inputContainer = inputNode?.closest(`.${INPUT_CONTAINER_CLASS_NAME}`)
 
         if (inputContainer) {
-          setIsCalendarShown(true)
           setInputRect(inputContainer.getBoundingClientRect())
         }
       }
@@ -430,7 +430,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             />
           }
         />
-        {isCalendarShown && inputRect && (
+        {inputRect && (
           <Portal inputRect={inputRect}>
             <Calendar
               ref={mergedCalendarRef}
