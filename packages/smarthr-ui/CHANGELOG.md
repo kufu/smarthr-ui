@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.7.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.0...smarthr-ui-v99.7.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **FormGroup:** 自身にerrorMessagesが無い場合でも入力要素側のaria-invalidを消さないようにする ([#7126](https://github.com/kufu/smarthr-ui/issues/7126)) ([4e0dcee](https://github.com/kufu/smarthr-ui/commit/4e0dceef3c23349cda0f5541d0509aa95445a976))
+
 ## [99.7.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.1...smarthr-ui-v99.7.0) (2026-09-17)
 
 
