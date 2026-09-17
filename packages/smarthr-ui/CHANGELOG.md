@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.7.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.1...smarthr-ui-v99.7.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **SingleCombobox:** 未選択のままblurすると絞り込みだけが解除される不具合を修正 ([#7128](https://github.com/kufu/smarthr-ui/issues/7128)) ([42fa5fe](https://github.com/kufu/smarthr-ui/commit/42fa5fefa858530723e480cf4ede409e0576ad0e))
+
 ## [99.7.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.0...smarthr-ui-v99.7.1) (2026-09-17)
 
 
