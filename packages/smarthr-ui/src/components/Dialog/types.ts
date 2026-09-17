@@ -16,7 +16,6 @@ type PortalProps = {
 }
 
 export type DialogProps = CommonProps & ControlledProps & PortalProps
-export type UncontrolledDialogProps = CommonProps & PortalProps
 
 export type DirectChildren = Pick<DialogContentInnerProps, 'children'>
 

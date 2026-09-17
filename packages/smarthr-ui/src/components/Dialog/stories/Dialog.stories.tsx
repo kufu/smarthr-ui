@@ -4,10 +4,6 @@ import { Button } from '../../Button'
 import { Checkbox } from '../../Checkbox'
 import { Input } from '../../Input'
 import { Dialog } from '../Dialog'
-import { DialogCloser } from '../DialogCloser'
-import { DialogContent } from '../DialogContent'
-import { DialogTrigger } from '../DialogTrigger'
-import { DialogWrapper } from '../DialogWrapper'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -19,7 +15,6 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog',
   component: Dialog,
-  subcomponents: { DialogWrapper, DialogTrigger, DialogContent, DialogCloser },
   render: (args) => {
     const [open, setOpen] = useState(false)
     return (
