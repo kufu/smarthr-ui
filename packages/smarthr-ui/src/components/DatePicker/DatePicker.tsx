@@ -9,7 +9,6 @@ import {
   type ReactNode,
   forwardRef,
   memo,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -19,6 +18,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
@@ -140,15 +140,15 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
     const [isInputFocused, setIsInputFocused] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
-    const calendarRef = useRef<HTMLDivElement>(null)
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-    const [isCalendarShown, setIsCalendarShown] = useState(false)
     const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
       parseStringDate(value, parseInput),
     )
+
+    const isCalendarShown = !!inputRect
 
     const closeFrame = useAnimationFrame()
 
@@ -165,9 +165,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     })
 
     const functions = useMemo(() => {
-      // HINT: data-smarthr-ui-input はInput側が必ずinput要素に付与する
-      const getInput = () =>
-        containerRef.current?.querySelector<HTMLInputElement>(SMARTHR_UI_INPUT_SELECTOR) ?? null
+      let inputNode: HTMLInputElement | null = null
+      let calendarNode: HTMLElement | null = null
 
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
@@ -182,16 +181,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
       const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
         if (
+          !inputNode ||
           newDate === latest.selectedDate ||
           (newDate && latest.selectedDate && newDate.getTime() === latest.selectedDate.getTime())
         ) {
           // Do not update date if the new date is same with the old one.
-          return
-        }
-
-        const input = getInput()
-
-        if (!input) {
           return
         }
 
@@ -205,7 +199,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         const nextDate = isValid ? newDate : null
         const formatValue = dateToString(nextDate)
 
-        input.value = formatValue
+        inputNode.value = formatValue
 
         if (latest.showAlternative) {
           setAlternativeFormat(dateToAlternativeFormat(nextDate))
@@ -219,7 +213,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
 
           const event = new Event('change', { bubbles: true })
 
-          input.dispatchEvent(event)
+          inputNode.dispatchEvent(event)
           latest.onChange(
             // HINT: 型問題のため別途オブジェクトをイベントに見立てる
             {
@@ -229,8 +223,8 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
               preventDefault: () => {
                 event.preventDefault()
               },
-              target: input,
-              currentTarget: input,
+              target: inputNode,
+              currentTarget: inputNode,
             } as ChangeEvent<HTMLInputElement>,
             { date: nextDate, formatValue, errors },
           )
@@ -239,35 +233,38 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
         }
       }
 
-      const closeCalendar = () => setIsCalendarShown(false)
+      const closeCalendar = () => setInputRect(null)
 
       const openCalendar = () => {
         // HINT: classNameはcontainerに設定されるため、containerの矩形は利用者の指定で変わりうる。
         // カレンダーの表示位置はinput部分を基準にする必要があるため、Inputのwrapperを参照する
-        const inputContainer = containerRef.current?.querySelector(`.${INPUT_CONTAINER_CLASS_NAME}`)
+        const inputContainer = inputNode?.closest(`.${INPUT_CONTAINER_CLASS_NAME}`)
 
         if (inputContainer) {
-          setIsCalendarShown(true)
           setInputRect(inputContainer.getBoundingClientRect())
         }
       }
 
       return {
-        getInput,
         stringToDate,
         dateToString,
         dateToAlternativeFormat,
         closeCalendar,
         openCalendar,
+        calendarCallbackRef: (node: HTMLElement | null) => {
+          calendarNode = node
+        },
         inputCallbackRef: (node: HTMLInputElement | null) => {
+          inputNode = node
+
           if (!node) return
 
           const handleKeyDown = (e: KeyboardEvent) => {
-            if (!calendarRef.current || e.key !== 'Tab') {
+            if (!calendarNode || e.key !== 'Tab') {
               return
             }
 
-            const calendarButtons = calendarRef.current.querySelectorAll('button')
+            const calendarButtons = calendarNode.querySelectorAll('button')
 
             if (calendarButtons.length === 0) {
               return
@@ -343,56 +340,53 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
           // delay hiding calendar because calendar will be displayed when input is focused
           latest.closeFrame.request(closeCalendar)
 
-          getInput()?.focus()
+          inputNode?.focus()
         },
       }
     }, [latest])
 
-    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-    const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
-
-    const mergedCalendarRef = useMergeRefs(
-      useAreaClickCallbackRef(isCalendarShown ? [containerRef] : null, functions.closeCalendar),
-      calendarRef,
-    )
-
-    useEffect(() => {
-      if (value === undefined) {
-        return
-      }
-
-      const input = functions.getInput()
-
-      if (!input) {
-        return
-      }
-
-      /**
-       * Do not format the given value in the following cases
-       * - while input element is focused.
-       * - if the given value is not date formattable.
-       */
-      if (!isInputFocused) {
-        const newDate = functions.stringToDate(value)
-
-        if (newDate && dayjs(newDate).isValid()) {
-          input.value = functions.dateToString(newDate)
-
-          if (latest.showAlternative) {
-            setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
-          }
-
-          setSelectedDate(newDate)
-
+    const inputLayoutEffectRef = useLayoutEffectRef(
+      (node: HTMLInputElement | null) => {
+        if (!node || value === undefined) {
           return
         }
 
-        setSelectedDate(null)
-      }
+        /**
+         * Do not format the given value in the following cases
+         * - while input element is focused.
+         * - if the given value is not date formattable.
+         */
+        if (!isInputFocused) {
+          const newDate = functions.stringToDate(value)
 
-      input.value = value || ''
-    }, [value, isInputFocused, functions, latest])
+          if (newDate && dayjs(newDate).isValid()) {
+            node.value = functions.dateToString(newDate)
+
+            if (latest.showAlternative) {
+              setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
+            }
+
+            setSelectedDate(newDate)
+
+            return
+          }
+
+          setSelectedDate(null)
+        }
+
+        node.value = value || ''
+      },
+      [value, isInputFocused, functions, latest],
+    )
+
+    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+    const mergedRef = useMergeRefs(functions.inputCallbackRef, inputLayoutEffectRef, ref)
+
+    const mergedCalendarRef = useMergeRefs(
+      useAreaClickCallbackRef(isCalendarShown ? [containerRef] : null, functions.closeCalendar),
+      functions.calendarCallbackRef,
+    )
 
     const caretIconColor =
       isInputFocused || isCalendarShown
@@ -436,7 +430,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
             />
           }
         />
-        {isCalendarShown && inputRect && (
+        {inputRect && (
           <Portal inputRect={inputRect}>
             <Calendar
               ref={mergedCalendarRef}
