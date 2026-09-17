@@ -1,42 +1,15 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer } from '../../intl'
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  type ComponentProps as IconProps,
-  WarningIcon,
-} from '../Icon'
+import { type ComponentProps as IconProps, StatusIcon } from '../Icon'
 import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
-const STATUS_ICON_MAPPER = {
-  // HINT: infoは装飾として扱うため、代替テキストを設定しない
-  info: { Component: FaCircleInfoIcon, alt: undefined },
-  success: {
-    Component: FaCircleCheckIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/successAlt" defaultText="成功" />,
-  },
-  warning: {
-    Component: WarningIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/warningAlt" defaultText="注意" />,
-  },
-  error: {
-    Component: FaCircleExclamationIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/errorAlt" defaultText="エラー" />,
-  },
-  sync: {
-    Component: FaRotateIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/syncAlt" defaultText="実行中" />,
-  },
-}
-
-type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
+type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt' | 'role'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  status?: keyof typeof STATUS_ICON_MAPPER
+  status?: ComponentPropsWithoutRef<typeof StatusIcon>['status']
+  /** role 属性 */
+  role?: 'alert' | 'status'
 }
 
 export const classNameGenerator = tv({
@@ -52,6 +25,8 @@ export const classNameGenerator = tv({
   },
 })
 
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
+
 export const ResponseMessage: FC<Props> = ({
   status = 'info',
   size,
@@ -61,15 +36,17 @@ export const ResponseMessage: FC<Props> = ({
   ...rest
 }) => {
   const iconClassName = useMemo(() => classNameGenerator({ status }), [status])
-  const { Component: TextIcon, alt } = STATUS_ICON_MAPPER[status]
 
   return (
     <Text
       size={size}
       className={className}
-      icon={<TextIcon {...rest} alt={alt} className={iconClassName} />}
+      icon={<StatusIcon {...rest} status={status} className={iconClassName} />}
     >
-      <LiveRegion role={role} className="shr-contents">
+      <LiveRegion
+        role={role || (ROLE_STATUS_TYPE_REGEX.test(status) ? 'status' : 'alert')}
+        className="shr-contents"
+      >
         {children}
       </LiveRegion>
     </Text>

@@ -12,15 +12,7 @@ import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  FaTriangleExclamationIcon,
-  FaXmarkIcon,
-  WarningIcon,
-} from '../Icon'
+import { FaXmarkIcon, StatusIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
@@ -30,33 +22,7 @@ import { Text } from '../Text'
 // base="base" も意味が分かりづらい
 type BaseType = 'base' | 'none'
 
-const WARNING_ALT = <Localizer id="smarthr-ui/statusIcon/warningAlt" defaultText="注意" />
-
-const ICON_MAPPER = {
-  // HINT: infoは装飾として扱うため、代替テキストを設定しない
-  info: { Component: FaCircleInfoIcon, alt: undefined },
-  success: {
-    Component: FaCircleCheckIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/successAlt" defaultText="成功" />,
-  },
-  warning: { Component: WarningIcon, alt: WARNING_ALT },
-  error: {
-    Component: FaCircleExclamationIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/errorAlt" defaultText="エラー" />,
-  },
-  sync: {
-    Component: FaRotateIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/syncAlt" defaultText="実行中" />,
-  },
-}
-
-// HINT: WarningIconは自身で色を持っているため、背景に色が付くboldでは単色のアイコンを使う
-const BOLD_ICON_MAPPER = {
-  ...ICON_MAPPER,
-  warning: { Component: FaTriangleExclamationIcon, alt: WARNING_ALT },
-}
-
-type MessageType = keyof typeof ICON_MAPPER
+type MessageType = ComponentProps<typeof StatusIcon>['status']
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -266,20 +232,16 @@ const MessageArea = memo<
     role: 'status' | 'alert'
     classNames: { messageArea: string; icon: string }
   }
->(({ children, bold, type, role, classNames }) => {
-  const { Component: Icon, alt } = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[type]
-
-  return (
-    <Text
-      className={classNames.messageArea}
-      icon={{
-        prefix: <Icon alt={alt} className={classNames.icon} />,
-        gap: 0.5,
-      }}
-    >
-      <LiveRegion role={role} className="shr-contents">
-        {children}
-      </LiveRegion>
-    </Text>
-  )
-})
+>(({ children, bold, type, role, classNames }) => (
+  <Text
+    className={classNames.messageArea}
+    icon={{
+      prefix: <StatusIcon status={type} bold={bold} className={classNames.icon} />,
+      gap: 0.5,
+    }}
+  >
+    <LiveRegion role={role} className="shr-contents">
+      {children}
+    </LiveRegion>
+  </Text>
+))

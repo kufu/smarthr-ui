@@ -15,15 +15,7 @@ import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading, type HeadingTagTypes } from '../../Heading'
-import {
-  FaCaretDownIcon,
-  FaCaretUpIcon,
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  WarningIcon,
-} from '../../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel, type PanelElementProps } from '../../Panel'
 
@@ -51,30 +43,13 @@ type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-const ICON_MAPPER = {
-  // HINT: infoは装飾として扱うため、代替テキストを設定しない
-  info: { Component: FaCircleInfoIcon, color: 'TEXT_GREY', alt: undefined },
-  success: {
-    Component: FaCircleCheckIcon,
-    color: 'MAIN',
-    alt: <Localizer id="smarthr-ui/statusIcon/successAlt" defaultText="成功" />,
-  },
-  // HINT: warningのアイコンは自身で色を持っているため、色を指定しない
-  warning: {
-    Component: WarningIcon,
-    color: undefined,
-    alt: <Localizer id="smarthr-ui/statusIcon/warningAlt" defaultText="注意" />,
-  },
-  error: {
-    Component: FaCircleExclamationIcon,
-    color: 'DANGER',
-    alt: <Localizer id="smarthr-ui/statusIcon/errorAlt" defaultText="エラー" />,
-  },
-  sync: {
-    Component: FaRotateIcon,
-    color: 'MAIN',
-    alt: <Localizer id="smarthr-ui/statusIcon/syncAlt" defaultText="実行中" />,
-  },
+// HINT: warningのアイコンは自身で色を持っているため、色を指定しない
+const ICON_COLOR_MAPPER = {
+  info: 'TEXT_GREY',
+  success: 'MAIN',
+  warning: undefined,
+  error: 'DANGER',
+  sync: 'MAIN',
 } as const
 
 const classNameGenerator = tv({
@@ -224,8 +199,6 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const { Component: Icon, color, alt } = ICON_MAPPER[type]
-
   return (
     <Heading
       {...rest}
@@ -233,7 +206,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: <Icon alt={alt} color={color} />,
+        prefix: <StatusIcon status={type} color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >
