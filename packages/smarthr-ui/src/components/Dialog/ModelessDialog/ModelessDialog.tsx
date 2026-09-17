@@ -9,7 +9,6 @@ import {
   type RefObject,
   type SetStateAction,
   memo,
-  useCallback,
   useId,
   useMemo,
   useRef,
@@ -20,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
@@ -311,7 +311,7 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  const callbackRef = useCallback(
+  const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
         const oldDefaultPosition = latest.defaultPosition
@@ -389,8 +389,6 @@ export const ModelessDialog: FC<Props> = ({
 
       document.addEventListener('focus', focusHandler, true)
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         functions.cleanupLiveRegion()
         document.removeEventListener('focus', focusHandler, true)
@@ -399,9 +397,7 @@ export const ModelessDialog: FC<Props> = ({
     [isOpen, functions, latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
+  const mergedRef = useMergeRefs(wrapperRef, layoutEffectRef)
 
   // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際
   // 常に表示される要素ならなんでもいいので分けている
