@@ -9,7 +9,6 @@ import {
   type RefObject,
   type SetStateAction,
   memo,
-  useCallback,
   useId,
   useMemo,
   useRef,
@@ -20,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
@@ -311,7 +311,9 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  const callbackRef = useCallback(
+  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+
+  const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
         const oldDefaultPosition = latest.defaultPosition
@@ -389,8 +391,6 @@ export const ModelessDialog: FC<Props> = ({
 
       document.addEventListener('focus', focusHandler, true)
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         functions.cleanupLiveRegion()
         document.removeEventListener('focus', focusHandler, true)
@@ -399,13 +399,10 @@ export const ModelessDialog: FC<Props> = ({
     [isOpen, functions, latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
-
-  // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際
-  // 常に表示される要素ならなんでもいいので分けている
-  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+  // HINT: escapeCallbackRefはnodeを参照せずEscapeキーの監視を行うだけなので、
+  // どの要素にアタッチしても良い。Dialogが表示されている間常にマウントされている
+  // wrapperRefに混ぜ込んでいる
+  const mergedRef = useMergeRefs(wrapperRef, escapeCallbackRef, layoutEffectRef)
 
   return createPortal(
     <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
@@ -438,13 +435,8 @@ export const ModelessDialog: FC<Props> = ({
           }}
           aria-labelledby={labelId}
         >
-          {/* HINT: Dialogが表示される場合、常に表示される要素にescapeCallbackRefを設定する。表示条件が入るなどした場合要調整 */}
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div
-            ref={escapeCallbackRef}
-            tabIndex={-1}
-            className="smarthr-ui-ModelessDialog-firstFocusTarget"
-          />
+          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
           <div className={classNames.header}>
             <Handler
               className={classNames.dialogHandler}
