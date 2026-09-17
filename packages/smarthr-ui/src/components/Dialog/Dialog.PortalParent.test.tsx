@@ -16,7 +16,7 @@ describe('Dialog (Portal Parent)', () => {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-      <div ref={portalParentRef}>
+      <div ref={portalParentRef} data-testid="portal-parent">
         <Button onClick={() => setIsOpen(true)}>Dialog を開く</Button>
         <Dialog
           isOpen={isOpen}
@@ -35,6 +35,23 @@ describe('Dialog (Portal Parent)', () => {
       </div>
     )
   }
+  // React は子から順にコミットするため、portalParent に渡した ref が Dialog の
+  // 祖先要素を指す場合、Dialog 側の useLayoutEffect の時点ではまだ ref が付いていない。
+  // ここで body へフォールバックしたままだと、absolute 配置の基準が指定要素にならない。
+  it('portalParent に指定した要素の内側に生成されること', async () => {
+    render(<DialogTemplate />)
+
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
+
+    const dialog = screen.getByRole('dialog', { name: 'Dialog' })
+    const portalParent = screen.getByTestId('portal-parent')
+
+    await waitFor(() => {
+      expect(portalParent).toContainElement(dialog)
+    })
+  })
+
   it('body 以外を親にしたダイアログが開閉できること', async () => {
     render(<DialogTemplate />)
 
