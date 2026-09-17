@@ -311,6 +311,8 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
+  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
@@ -397,11 +399,10 @@ export const ModelessDialog: FC<Props> = ({
     [isOpen, functions, latest],
   )
 
-  const mergedRef = useMergeRefs(wrapperRef, layoutEffectRef)
-
-  // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際
-  // 常に表示される要素ならなんでもいいので分けている
-  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+  // HINT: escapeCallbackRefはnodeを参照せずEscapeキーの監視を行うだけなので、
+  // どの要素にアタッチしても良い。Dialogが表示されている間常にマウントされている
+  // wrapperRefに混ぜ込んでいる
+  const mergedRef = useMergeRefs(wrapperRef, escapeCallbackRef, layoutEffectRef)
 
   return createPortal(
     <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
@@ -434,13 +435,8 @@ export const ModelessDialog: FC<Props> = ({
           }}
           aria-labelledby={labelId}
         >
-          {/* HINT: Dialogが表示される場合、常に表示される要素にescapeCallbackRefを設定する。表示条件が入るなどした場合要調整 */}
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div
-            ref={escapeCallbackRef}
-            tabIndex={-1}
-            className="smarthr-ui-ModelessDialog-firstFocusTarget"
-          />
+          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
           <div className={classNames.header}>
             <Handler
               className={classNames.dialogHandler}
