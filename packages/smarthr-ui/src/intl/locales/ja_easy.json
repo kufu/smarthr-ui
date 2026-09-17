@@ -86,7 +86,7 @@
   "smarthr-ui/Pagination/navigationLabel": "ページの　移動",
   "smarthr-ui/RequiredLabel/text": "ひつよう",
   "smarthr-ui/SearchInput/iconAlt": "さがす",
-  "smarthr-ui/SegmentedControl/group/ariaLabel": "ボタングループ",
+  "smarthr-ui/SegmentedControl/group/ariaLabel": "表示きりかえ",
   "smarthr-ui/SideMenu/navigationLabel": "サイドメニュー",
   "smarthr-ui/SingleCombobox/destroyButtonIconAlt": "消す",
   "smarthr-ui/SortDropdown/applyText": "決める",

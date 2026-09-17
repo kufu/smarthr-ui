@@ -87,7 +87,7 @@ export const SegmentedControl: FC<Props> = ({
   const translated = useLocalize({
     radioGroupAria: {
       id: 'smarthr-ui/SegmentedControl/group/ariaLabel',
-      defaultText: 'ボタングループ',
+      defaultText: '表示切り替え',
     },
   })
 

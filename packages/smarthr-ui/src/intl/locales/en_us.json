@@ -86,7 +86,7 @@
   "smarthr-ui/Pagination/navigationLabel": "Pagination",
   "smarthr-ui/RequiredLabel/text": "Required",
   "smarthr-ui/SearchInput/iconAlt": "Search",
-  "smarthr-ui/SegmentedControl/group/ariaLabel": "Button group",
+  "smarthr-ui/SegmentedControl/group/ariaLabel": "Change view",
   "smarthr-ui/SideMenu/navigationLabel": "Sidebar",
   "smarthr-ui/SingleCombobox/destroyButtonIconAlt": "Clear",
   "smarthr-ui/SortDropdown/applyText": "Apply",
