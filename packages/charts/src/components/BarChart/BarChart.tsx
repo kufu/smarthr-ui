@@ -96,6 +96,16 @@ export const BarChart: React.FC<Props> = ({
     () =>
       createBarChartOptions({
         ...externalOptions,
+        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        scales: {
+          ...externalOptions?.scales,
+          ...(stacked
+            ? {
+                x: { ...externalOptions?.scales?.x, stacked: true },
+                y: { ...externalOptions?.scales?.y, stacked: true },
+              }
+            : {}),
+        },
         plugins: {
           ...externalOptions?.plugins,
           title: title
@@ -112,8 +122,6 @@ export const BarChart: React.FC<Props> = ({
             horizontal: orientation === 'horizontal',
           },
         },
-        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
-        ...(stacked ? { scales: { x: { stacked: true }, y: { stacked: true } } } : {}),
       }),
     [title, chartId, externalOptions],
   )

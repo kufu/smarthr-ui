@@ -44,14 +44,14 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
-      const moveData = (delta: number) => (
-        event.preventDefault(),
-        (nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength)
-      )
-      const moveDataset = (delta: number) => (
-        event.preventDefault(),
-        (nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length)
-      )
+      const moveData = (delta: number) => {
+        event.preventDefault()
+        nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength
+      }
+      const moveDataset = (delta: number) => {
+        event.preventDefault()
+        nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length
+      }
       const reset = () => {
         nextDatasetIndex = -1
         nextDataIndex = -1
@@ -78,29 +78,29 @@ export const keyboardNavigationPlugin = {
       const bindings: Record<string, () => void> = options.horizontal
         ? options.stacked
           ? {
+              ...defaultBindings,
               ArrowDown: () => moveData(1),
               ArrowUp: () => moveData(-1),
               ArrowRight: () => moveDataset(1),
               ArrowLeft: () => moveDataset(-1),
-              ...defaultBindings,
             }
           : {
+              ...defaultBindings,
               ArrowDown: () => compoundMoveDataAndDataset(1),
               ArrowUp: () => compoundMoveDataAndDataset(-1),
-              ...defaultBindings,
             }
         : options.stacked
           ? {
+              ...defaultBindings,
               ArrowRight: () => moveData(1),
               ArrowLeft: () => moveData(-1),
               ArrowDown: () => moveDataset(-1),
               ArrowUp: () => moveDataset(1),
-              ...defaultBindings,
             }
           : {
+              ...defaultBindings,
               ArrowRight: () => compoundMoveDataAndDataset(1),
               ArrowLeft: () => compoundMoveDataAndDataset(-1),
-              ...defaultBindings,
             }
 
       bindings[event.key]?.()
