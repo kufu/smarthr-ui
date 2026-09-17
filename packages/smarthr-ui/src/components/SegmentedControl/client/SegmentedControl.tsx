@@ -13,6 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../../hooks/useLatest'
+import { useLocalize } from '../../../intl'
 import { Button } from '../../Button'
 
 export type Option = {
@@ -35,10 +36,8 @@ type BaseProps = {
   onClickOption?: (value: string) => void
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
-  /** SegmentedControlのグループのaccessible-nameとなるラベル*/
-  groupLabel: string
 }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps | 'aria-label'>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -81,10 +80,16 @@ export const SegmentedControl: FC<Props> = ({
   onClickOption,
   size = 'M',
   className,
-  groupLabel,
+  'aria-label': ariaLabel,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
+  const translated = useLocalize({
+    radioGroupAria: {
+      id: 'smarthr-ui/SegmentedControl/group/ariaLabel',
+      defaultText: 'ボタングループ',
+    },
+  })
 
   const classNames = useMemo(() => {
     const { container, button } = classNameGenerator()
@@ -184,7 +189,7 @@ export const SegmentedControl: FC<Props> = ({
       ref={callbackRef}
       role="radiogroup"
       className={classNames.container}
-      aria-label={groupLabel}
+      aria-label={ariaLabel || translated.radioGroupAria}
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
     >

@@ -32,7 +32,6 @@ export default {
     onClickOption: (value) => action('onClickOption')(value),
     size: 'M',
     className: '',
-    groupLabel: '表示切り替え',
   },
   parameters: {
     chromatic: { disableSnapshot: true },
