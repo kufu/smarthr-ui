@@ -9,7 +9,6 @@ import {
   type ReactNode,
   forwardRef,
   memo,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -19,6 +18,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { useTheme } from '../../hooks/client/useTheme'
 import { useLatest } from '../../hooks/useLatest'
@@ -167,9 +167,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       let inputNode: HTMLInputElement | null = null
       let calendarNode: HTMLElement | null = null
 
-      // HINT: data-smarthr-ui-input はInput側が必ずinput要素に付与する
-      const getInput = () => inputNode
-
       const dateToString = (date: Date | null) =>
         latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
 
@@ -249,7 +246,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
 
       return {
-        getInput,
         stringToDate,
         dateToString,
         dateToAlternativeFormat,
@@ -349,51 +345,48 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
+    const inputLayoutEffectRef = useLayoutEffectRef(
+      (node: HTMLInputElement | null) => {
+        if (!node || value === undefined) {
+          return
+        }
+
+        /**
+         * Do not format the given value in the following cases
+         * - while input element is focused.
+         * - if the given value is not date formattable.
+         */
+        if (!isInputFocused) {
+          const newDate = functions.stringToDate(value)
+
+          if (newDate && dayjs(newDate).isValid()) {
+            node.value = functions.dateToString(newDate)
+
+            if (latest.showAlternative) {
+              setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
+            }
+
+            setSelectedDate(newDate)
+
+            return
+          }
+
+          setSelectedDate(null)
+        }
+
+        node.value = value || ''
+      },
+      [value, isInputFocused, functions, latest],
+    )
+
     // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
     // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-    const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
+    const mergedRef = useMergeRefs(functions.inputCallbackRef, inputLayoutEffectRef, ref)
 
     const mergedCalendarRef = useMergeRefs(
       useAreaClickCallbackRef(isCalendarShown ? [containerRef] : null, functions.closeCalendar),
       functions.calendarCallbackRef,
     )
-
-    useEffect(() => {
-      if (value === undefined) {
-        return
-      }
-
-      const input = functions.getInput()
-
-      if (!input) {
-        return
-      }
-
-      /**
-       * Do not format the given value in the following cases
-       * - while input element is focused.
-       * - if the given value is not date formattable.
-       */
-      if (!isInputFocused) {
-        const newDate = functions.stringToDate(value)
-
-        if (newDate && dayjs(newDate).isValid()) {
-          input.value = functions.dateToString(newDate)
-
-          if (latest.showAlternative) {
-            setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
-          }
-
-          setSelectedDate(newDate)
-
-          return
-        }
-
-        setSelectedDate(null)
-      }
-
-      input.value = value || ''
-    }, [value, isInputFocused, functions, latest])
 
     const caretIconColor =
       isInputFocused || isCalendarShown
