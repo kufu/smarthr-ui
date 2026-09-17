@@ -89,7 +89,7 @@ export const BarChart: React.FC<Props> = ({
         ...(stacked && index > 0 ? { borderSkipped: false } : {}),
       })),
     }),
-    [data, chartColors],
+    [data, chartColors, stacked],
   )
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
@@ -123,7 +123,7 @@ export const BarChart: React.FC<Props> = ({
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, orientation],
   )
 
   return (
