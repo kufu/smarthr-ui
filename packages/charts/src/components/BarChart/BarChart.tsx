@@ -46,7 +46,7 @@ type Props = {
   title?: string
   options?: Partial<ChartOptions<'bar'>>
   stacked?: boolean
-  horizontal?: boolean
+  orientation?: 'horizontal' | 'vertical'
 } & BarChartColorProps
 
 export const BarChart: React.FC<Props> = ({
@@ -55,7 +55,7 @@ export const BarChart: React.FC<Props> = ({
   options: externalOptions,
   disablePatterns,
   singleTone,
-  horizontal,
+  orientation = 'vertical',
   stacked,
 }) => {
   const chartId = useId()
@@ -109,10 +109,10 @@ export const BarChart: React.FC<Props> = ({
           keyboardNavigation: {
             liveRegionId: chartId,
             stacked,
-            horizontal,
+            horizontal: orientation === 'horizontal',
           },
         },
-        ...(horizontal ? { indexAxis: 'y' } : {}),
+        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
         ...(stacked ? { scales: { x: { stacked: true }, y: { stacked: true } } } : {}),
       }),
     [title, chartId, externalOptions],

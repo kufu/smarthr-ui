@@ -100,7 +100,7 @@ export const keyboardNavigationPlugin = {
           : {
               ArrowRight: () => compoundMoveDataAndDataset(1),
               ArrowLeft: () => compoundMoveDataAndDataset(-1),
-              ..defaultBindings
+              ...defaultBindings,
             }
 
       bindings[event.key]?.()

@@ -50,6 +50,13 @@ export const Playground: Story = {
     singleTone: {
       control: 'object',
     },
+    stacked: {
+      control: 'boolean',
+    },
+    orientation: {
+      control: 'select',
+      options: ['horizontal', 'vertical'],
+    },
   },
 }
 
@@ -178,7 +185,7 @@ export const Horizontal: Story = {
   name: 'horizontal',
   args: {
     data: multiSmall,
-    horizontal: true,
+    orientation: 'horizontal',
     disablePatterns: true,
     singleTone: { from: 0, to: 5 },
   },
@@ -191,7 +198,7 @@ export const Stacked: Story = {
     stacked: true,
     disablePatterns: true,
     singleTone: { from: 0, to: 5 },
-    horizontal: true,
+    orientation: 'horizontal',
   },
 }
 
