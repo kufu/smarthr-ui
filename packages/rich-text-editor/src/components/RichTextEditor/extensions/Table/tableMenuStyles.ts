@@ -1,0 +1,2 @@
+export const tableMenuItemClass =
+  'shr-border-none shr-bg-transparent shr-text-black shr-text-left [&&]:shr-px-1 [&&]:shr-py-0.75 [&&]:shr-text-base [&&]:shr-rounded-none [&&]:shr-justify-start [&&]:shr-font-normal [&&]:shr-w-full shr-cursor-pointer hover:shr-bg-white-darken group-data-[keyboard=false]/table-menu:focus:shr-outline-none group-data-[keyboard=true]/table-menu:focus:shr-focus-indicator disabled:shr-text-disabled disabled:shr-cursor-not-allowed'

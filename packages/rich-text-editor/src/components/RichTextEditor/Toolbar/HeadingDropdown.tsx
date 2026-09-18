@@ -1,0 +1,237 @@
+'use client'
+
+import { type FC, type KeyboardEvent, memo, useCallback, useMemo, useRef } from 'react'
+import { FaCaretDownIcon, FaCheckIcon } from 'smarthr-ui'
+import { tv } from 'tailwind-variants'
+
+import { useIntl } from '../../../intl'
+import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
+import { useToolbarState } from '../hooks/useToolbarState'
+
+import { ToolbarTooltip } from './ToolbarTooltip'
+import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
+
+const ALL_OPTIONS = [
+  { level: null, labelId: 'smarthr-ui/RichTextEditor/headingNormal', defaultText: '標準テキスト' },
+  { level: 1, labelId: 'smarthr-ui/RichTextEditor/heading1', defaultText: '見出し1' },
+  { level: 2, labelId: 'smarthr-ui/RichTextEditor/heading2', defaultText: '見出し2' },
+  { level: 3, labelId: 'smarthr-ui/RichTextEditor/heading3', defaultText: '見出し3' },
+  { level: 4, labelId: 'smarthr-ui/RichTextEditor/heading4', defaultText: '見出し4' },
+] as const
+
+// 選択肢を実際の見出しの見た目で見せる。値は styles.ts のエディタ本文と揃える。
+// ボタン本体ではなくラベルにだけ付けるのは、ボタンの文字サイズを継承する
+// チェックアイコンまで大きくならないようにするため。
+const OPTION_LABEL_CLASS_NAMES = {
+  normal: 'shr-text-base shr-leading-tight',
+  1: 'shr-text-2xl shr-leading-tight',
+  2: 'shr-text-xl shr-leading-tight',
+  3: 'shr-text-lg shr-leading-tight',
+  4: 'shr-text-base shr-font-bold shr-leading-tight',
+} as const
+
+const classNameGenerator = tv({
+  slots: {
+    trigger: [
+      TOOLBAR_ITEM_CLASS_NAME,
+      'smarthr-ui-RichTextEditor-HeadingDropdown',
+      'shr-min-w-[9em] shr-text-left shr-text-sm',
+    ],
+    listbox: [
+      'shr-border-shorthand shr-min-w-[10em] shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
+      // 選択肢ごとに文字サイズが違うため行の高さが揃わない。grid-auto-rows:1fr で
+      // 全行を最も高い行に合わせる。固定値を書かずに済み、許可レベルが減って
+      // 見出し1が消えた場合もその時点の最大に追従する。
+      'shr-grid shr-grid-cols-1 [grid-auto-rows:1fr]',
+    ],
+    option: [
+      'shr-border-t-shorthand shr-flex shr-w-full shr-cursor-pointer shr-items-center shr-gap-0.5 shr-bg-transparent shr-px-0.75 shr-py-0.5 shr-text-left shr-text-sm shr-text-black first:shr-border-t-0',
+      'hover:shr-bg-white-darken',
+      'focus-visible:shr-focus-indicator',
+    ],
+    checkIcon: 'shr-w-[1em] shr-shrink-0',
+  },
+})
+
+type Props = {
+  tabIndex?: number
+  disabled?: boolean
+  onKeyDown?: (e: KeyboardEvent) => void
+  onFocus?: () => void
+  ref?: (el: HTMLButtonElement | null) => void
+}
+
+export const HeadingDropdown: FC<Props> = memo(
+  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
+    const { editor, headingLevels } = useRichTextEditorContext()
+    const { localize } = useIntl()
+    const state = useToolbarState(editor)
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const listboxRef = useRef<HTMLDivElement>(null)
+
+    const options = useMemo(
+      () => ALL_OPTIONS.filter((o) => o.level === null || headingLevels.includes(o.level)),
+      [headingLevels],
+    )
+
+    const currentLevel = state.currentHeadingLevel
+    // 選択肢は許可レベルで絞るが、表示は許可外のレベルでも実際の見出しを出す
+    const currentOption = ALL_OPTIONS.find((o) => o.level === currentLevel) ?? ALL_OPTIONS[0]
+    const currentLabel = localize({
+      id: currentOption.labelId,
+      defaultText: currentOption.defaultText,
+    })
+
+    const classNames = classNameGenerator()
+
+    const selectOption = useCallback(
+      (level: 1 | 2 | 3 | 4 | null) => {
+        if (level === null) {
+          editor.chain().focus().setParagraph().run()
+        } else {
+          // 選択は冪等にする。toggle だと同じレベルを選び直したときに段落へ戻ってしまう
+          editor.chain().focus().setHeading({ level }).run()
+        }
+        setIsOpen(false)
+        triggerRef.current?.focus()
+      },
+      [editor, setIsOpen, triggerRef],
+    )
+
+    const handleTriggerKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        switch (e.key) {
+          case 'Enter':
+          case ' ':
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            setIsOpen(true)
+            requestAnimationFrame(() => {
+              const currentIndex = options.findIndex((o) => o.level === currentLevel)
+              const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+              target?.[currentIndex >= 0 ? currentIndex : 0]?.focus()
+            })
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            e.stopPropagation()
+            setIsOpen(true)
+            requestAnimationFrame(() => {
+              const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+              buttons?.[buttons.length - 1]?.focus()
+            })
+            break
+          default:
+            onKeyDownProp?.(e)
+        }
+      },
+      [currentLevel, onKeyDownProp, options, setIsOpen],
+    )
+
+    const handleOptionKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+        if (!buttons) return
+        const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
+
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(currentIndex + 1) % buttons.length]?.focus()
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
+            break
+          case 'Home':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[0]?.focus()
+            break
+          case 'End':
+            e.preventDefault()
+            e.stopPropagation()
+            buttons[buttons.length - 1]?.focus()
+            break
+          case 'Escape':
+            e.preventDefault()
+            e.stopPropagation()
+            setIsOpen(false)
+            triggerRef.current?.focus()
+            break
+          case 'Tab':
+            setIsOpen(false)
+            break
+        }
+      },
+      [setIsOpen, triggerRef],
+    )
+
+    const dropdownLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/headingDropdownLabel',
+      defaultText: '書式',
+    })
+
+    return (
+      <>
+        <ToolbarTooltip suppressed={isOpen || disabled} label={dropdownLabel}>
+          <button
+            ref={(el) => {
+              triggerRef.current = el
+              refProp?.(el)
+            }}
+            type="button"
+            disabled={disabled}
+            tabIndex={tabIndex}
+            className={classNames.trigger()}
+            aria-expanded={isOpen}
+            aria-haspopup="listbox"
+            aria-label={`${dropdownLabel}: ${currentLabel}`}
+            onKeyDown={handleTriggerKeyDown}
+            onClick={() => setIsOpen((prev) => !prev)}
+            onFocus={onFocusProp}
+          >
+            <span className="shr-flex-1">{currentLabel}</span>
+            <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
+          </button>
+        </ToolbarTooltip>
+        {renderDropdown(
+          <div
+            ref={listboxRef}
+            role="listbox"
+            className={classNames.listbox()}
+            aria-label={dropdownLabel}
+          >
+            {options.map((option) => {
+              const label = localize({ id: option.labelId, defaultText: option.defaultText })
+              const isSelected = option.level === currentLevel
+
+              return (
+                <button
+                  key={option.level ?? 'normal'}
+                  role="option"
+                  type="button"
+                  className={classNames.option()}
+                  aria-selected={isSelected}
+                  onClick={() => selectOption(option.level)}
+                  onKeyDown={handleOptionKeyDown}
+                >
+                  <span className={classNames.checkIcon()}>
+                    {isSelected && <FaCheckIcon className="shr-text-main" />}
+                  </span>
+                  <span className={OPTION_LABEL_CLASS_NAMES[option.level ?? 'normal']}>
+                    {label}
+                  </span>
+                </button>
+              )
+            })}
+          </div>,
+        )}
+      </>
+    )
+  },
+)

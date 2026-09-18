@@ -29,6 +29,7 @@
   "scripts": {
     "ui": "pnpm -F smarthr-ui",
     "charts": "pnpm -F @smarthr/smarthr-ui-charts",
+    "rte": "pnpm -F @smarthr/smarthr-ui-rich-text-editor",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
