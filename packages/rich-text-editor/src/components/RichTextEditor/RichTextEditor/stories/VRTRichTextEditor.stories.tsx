@@ -1,4 +1,4 @@
-import { EnvironmentProvider, FormControl, Stack } from 'smarthr-ui'
+import { FormControl, Stack } from 'smarthr-ui'
 import { within } from 'storybook/test'
 
 import { RichTextEditor } from '../RichTextEditor'
@@ -375,45 +375,8 @@ export const VRTSizeAndResize: Story = {
   ),
 }
 
-export const VRTMobileToolbar: Story = {
-  name: 'モバイルツールバー（2段目を閉じた状態）',
-  render: () => (
-    <EnvironmentProvider environment={{ mobile: true }}>
-      <Stack gap={2}>
-        <FormControl label="全機能・モバイル幅">
-          <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
-        </FormControl>
-        <FormControl label="無効・モバイル幅">
-          <RichTextEditor disabled defaultValue={richContent} features={ALL_FEATURES} width={375} />
-        </FormControl>
-        <FormControl label="2段目に入る項目が無い（トグルなし）">
-          <RichTextEditor defaultValue={richContent} features={['bold', 'italic']} width={375} />
-        </FormControl>
-      </Stack>
-    </EnvironmentProvider>
-  ),
-}
-
-export const VRTMobileToolbarExpanded: Story = {
-  name: 'モバイルツールバー（2段目を開いた状態）',
-  render: () => (
-    <EnvironmentProvider environment={{ mobile: true }}>
-      <FormControl label="全機能・モバイル幅">
-        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
-      </FormControl>
-    </EnvironmentProvider>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const toggle = await canvas.findByRole('button', { name: 'その他の書式' })
-    // userEvent.click ではなく click() を使うのは、ポインタ操作に伴う hover 状態が
-    // スナップショットに残ると背景色が変わって差分の原因になるため
-    toggle.click()
-  },
-}
-
-export const VRTNarrowToolbar: Story = {
-  name: 'ツールバーの折り返し（狭幅・デスクトップ）',
+export const VRTScrollableToolbar: Story = {
+  name: 'ツールバーの横スクロール（既定の表示）',
   render: () => (
     <Stack gap={2}>
       <FormControl label="幅375px">
@@ -425,6 +388,28 @@ export const VRTNarrowToolbar: Story = {
       <FormControl label="幅600px">
         <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={600} />
       </FormControl>
+      <FormControl label="無効・幅375px">
+        <RichTextEditor disabled defaultValue={richContent} features={ALL_FEATURES} width={375} />
+      </FormControl>
+      <FormControl label="溢れないため折り返しトグルが出ない">
+        <RichTextEditor defaultValue={richContent} features={['bold', 'italic']} width={375} />
+      </FormControl>
     </Stack>
   ),
+}
+
+export const VRTWrappedToolbar: Story = {
+  name: 'ツールバーの折り返し表示（トグルを押した状態）',
+  render: () => (
+    <FormControl label="全機能・幅375px">
+      <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
+    </FormControl>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const toggle = await canvas.findByRole('button', { name: '折り返して表示' })
+    // userEvent.click ではなく click() を使うのは、ポインタ操作に伴う hover 状態が
+    // スナップショットに残ると背景色が変わって差分の原因になるため
+    toggle.click()
+  },
 }

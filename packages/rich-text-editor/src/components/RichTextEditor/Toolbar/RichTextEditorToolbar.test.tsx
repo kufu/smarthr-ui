@@ -8,14 +8,30 @@ import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 import type { RichTextFeature } from '../types'
 import type { ReactNode } from 'react'
 
+// 段以外を監視しているコールバック（画像や表の位置追従）を巻き込まないよう絞り込む
+type FakeObserver = { callback: () => void; targets: Element[] }
+
+const observers: FakeObserver[] = []
+
 beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    } as unknown as typeof ResizeObserver
-  }
+  globalThis.ResizeObserver = class {
+    private observed: FakeObserver
+
+    constructor(callback: () => void) {
+      this.observed = { callback, targets: [] }
+      observers.push(this.observed)
+    }
+
+    observe(target: Element) {
+      this.observed.targets.push(target)
+    }
+
+    unobserve() {}
+
+    disconnect() {
+      this.observed.targets.length = 0
+    }
+  } as unknown as typeof ResizeObserver
 })
 
 const ALL_FEATURES: RichTextFeature[] = [
@@ -61,15 +77,23 @@ const renderMobileEditor = async () => {
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 }
 
-// mobile を切り替えて再レンダリングすることで、ツールバーの状態を保ったままブレークポイントの
-// 行き来を再現する。jsdom はレイアウトしないため matchMedia を差し替えても段組みは変わらない
-const SwitchableEditor = ({ mobile }: { mobile: boolean }) => (
-  <IntlProvider locale="ja">
-    <EnvironmentProvider environment={{ mobile }}>
-      <RichTextEditor features={ALL_FEATURES} />
-    </EnvironmentProvider>
-  </IntlProvider>
-)
+// jsdom はレイアウトしないため、判定に使う2つの値を差し替えて測り直させる
+const setRowOverflowing = (overflowing: boolean) => {
+  const toolbar = document.querySelector('.smarthr-ui-RichTextEditor-Toolbar')!
+  const row = document.querySelector('.smarthr-ui-RichTextEditor-ToolbarRow')!
+
+  Object.defineProperty(toolbar, 'clientWidth', { value: 100, configurable: true })
+  Object.defineProperty(row, 'scrollWidth', {
+    value: overflowing ? 500 : 100,
+    configurable: true,
+  })
+
+  act(() => {
+    observers.filter(({ targets }) => targets.includes(row)).forEach(({ callback }) => callback())
+  })
+}
+
+const WRAP_TOGGLE_LABEL = '折り返して表示'
 
 const tabStopsOf = (toolbar: HTMLElement) =>
   within(toolbar)
@@ -111,108 +135,112 @@ describe('RichTextEditorToolbar', () => {
     expect(screen.getByRole('button', { name: '太字' })).toBeInTheDocument()
   })
 
-  it('デスクトップでは開閉トグルを表示しない', async () => {
+  it('段が溢れていなければ折り返しトグルを表示しない', async () => {
     await renderEditor()
 
-    expect(screen.queryByRole('button', { name: 'その他の書式' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: WRAP_TOGGLE_LABEL })).not.toBeInTheDocument()
   })
 
-  it('モバイルでは開閉トグルを表示し、初期状態は閉じている', async () => {
-    await renderMobileEditor()
+  it('段が溢れているとき折り返しトグルを表示し、初期状態は横スクロールになる', async () => {
+    await renderEditor()
 
-    expect(screen.getByRole('button', { name: 'その他の書式' })).toHaveAttribute(
-      'aria-expanded',
+    setRowOverflowing(true)
+
+    expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toHaveAttribute(
+      'aria-pressed',
       'false',
     )
-    // 2段目の項目（挿入系）は閉じている間は描画しない
-    expect(screen.queryByRole('button', { name: '水平線' })).not.toBeInTheDocument()
   })
 
-  it('モバイルでトグルを押すと2段目が現れ、もう一度押すと消える', async () => {
-    await renderMobileEditor()
+  it('折り返しトグルを押すと折り返し表示になり、もう一度押すと横スクロールに戻る', async () => {
+    await renderEditor()
+    setRowOverflowing(true)
 
-    const toggle = screen.getByRole('button', { name: 'その他の書式' })
+    const toggle = screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })
 
     await userEvent.click(toggle)
 
-    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    expect(toggle).toHaveAttribute('aria-pressed', 'true')
+
+    await userEvent.click(toggle)
+
+    expect(toggle).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('横スクロール中も折り返し中も、すべての項目を描画する', async () => {
+    await renderEditor()
+    setRowOverflowing(true)
+
     expect(screen.getByRole('button', { name: '水平線' })).toBeInTheDocument()
 
-    await userEvent.click(toggle)
+    await userEvent.click(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL }))
 
-    expect(toggle).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('button', { name: '水平線' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '水平線' })).toBeInTheDocument()
   })
 
-  it('モバイルで2段目を閉じたときトグルにフォーカスが残る', async () => {
-    await renderMobileEditor()
+  it('折り返しを切り替えてもトグルにフォーカスが残る', async () => {
+    await renderEditor()
+    setRowOverflowing(true)
 
-    const toggle = screen.getByRole('button', { name: 'その他の書式' })
+    const toggle = screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })
 
-    await userEvent.click(toggle)
     await userEvent.click(toggle)
 
     expect(toggle).toHaveFocus()
   })
 
-  it('モバイルでトグルの aria-controls が2段目の要素を指す', async () => {
-    await renderMobileEditor()
+  it('折り返し中は溢れを測り直さないため、トグルが消えない', async () => {
+    await renderEditor()
+    setRowOverflowing(true)
 
-    const toggle = screen.getByRole('button', { name: 'その他の書式' })
-    await userEvent.click(toggle)
+    await userEvent.click(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL }))
 
-    const secondaryId = toggle.getAttribute('aria-controls')
-    expect(secondaryId).toBeTruthy()
+    setRowOverflowing(false)
 
-    const secondaryRow = document.getElementById(secondaryId!)
-    expect(secondaryRow).toBeInTheDocument()
-    // 2段目の中に挿入系の項目が入っている
-    expect(within(secondaryRow!).getByRole('button', { name: '水平線' })).toBeInTheDocument()
+    // 測定は毎コミット走るため、折り返し中の早期returnが無いとここでトグルが消える
+    await userEvent.click(screen.getByRole('button', { name: '太字' }))
+
+    expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toBeInTheDocument()
   })
 
-  it('2段目に入る項目が無い features ではトグルを表示しない', async () => {
-    // bold は decoration グループなので1段目のみになる
-    render(<RichTextEditor features={['bold']} />, { wrapper: MobileWrapper })
-    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+  it('トグルが占有する幅は溢れの判定に含めない', async () => {
+    await renderEditor()
 
-    expect(screen.queryByRole('button', { name: 'その他の書式' })).not.toBeInTheDocument()
+    const toolbar = screen.getByRole('toolbar')
+    const row = toolbar.querySelector('.smarthr-ui-RichTextEditor-ToolbarRow')!
+
+    Object.defineProperty(toolbar, 'clientWidth', { value: 100, configurable: true })
+    Object.defineProperty(row, 'scrollWidth', { value: 500, configurable: true })
+
+    act(() => {
+      observers.filter(({ targets }) => targets.includes(row)).forEach(({ callback }) => callback())
+    })
+
+    expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toBeInTheDocument()
+
+    Object.defineProperty(row, 'clientWidth', { value: 60, configurable: true })
+    Object.defineProperty(row, 'scrollWidth', { value: 80, configurable: true })
+
+    act(() => {
+      observers.filter(({ targets }) => targets.includes(row)).forEach(({ callback }) => callback())
+    })
+
+    // 段の幅(60)には収まらないが、ツールバーの内寸(100)には収まるためトグルは不要
+    expect(screen.queryByRole('button', { name: WRAP_TOGGLE_LABEL })).not.toBeInTheDocument()
   })
 
   it('disabled のときトグルも disabled になる', async () => {
-    render(<RichTextEditor disabled features={ALL_FEATURES} />, { wrapper: MobileWrapper })
+    render(<RichTextEditor disabled features={ALL_FEATURES} />, { wrapper: Wrapper })
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 
-    expect(screen.getByRole('button', { name: 'その他の書式' })).toBeDisabled()
+    setRowOverflowing(true)
+
+    expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toBeDisabled()
   })
 
-  it('右キーで1段目末尾からトグル、さらに2段目先頭へ移動する', async () => {
-    await renderMobileEditor()
-
-    const toggle = screen.getByRole('button', { name: 'その他の書式' })
-    // 2段目を開く。DOM順は1段目→トグル→2段目なので、ツールバー全体のボタン列から
-    // トグルの直前にある要素を「1段目末尾」として取得する（ラベルをハードコードしない）
-    await userEvent.click(toggle)
-
-    const toolbarButtons = within(screen.getByRole('toolbar')).getAllByRole('button')
-    const lastPrimaryItem = toolbarButtons[toolbarButtons.indexOf(toggle) - 1]
-
-    lastPrimaryItem.focus()
-    await userEvent.keyboard('{ArrowRight}')
-
-    // 1段目末尾 → トグル
-    expect(toggle).toHaveFocus()
-
-    await userEvent.keyboard('{ArrowRight}')
-
-    // トグル → 2段目先頭。semantics グループの先頭は link（features の指定順ではなくグループ定義順で決まる）
-    expect(screen.getByRole('button', { name: 'リンク' })).toHaveFocus()
-  })
-
-  it('2段目末尾から右キーを押すと1段目先頭（元に戻す）へラップし、2段目先頭から左キーを押すとトグルへ戻る', async () => {
-    await renderMobileEditor()
-
-    const toggle = screen.getByRole('button', { name: 'その他の書式' })
-    await userEvent.click(toggle)
+  it('右キーで末尾の項目からトグルへ移動し、トグルからは先頭（元に戻す）へラップする', async () => {
+    await renderEditor()
+    setRowOverflowing(true)
 
     // 初期状態は undo が disabled のため、まず「水平線」を挿入して履歴を1件積み、undo を有効にする。
     // undo（index 0）が有効な状態でラップアラウンドを検証しないと、トグルの分だけ count が
@@ -220,56 +248,32 @@ describe('RichTextEditorToolbar', () => {
     // ある disabled な項目群にたまたま行き当たって同じ結果になり、バグを見逃してしまう
     await userEvent.click(screen.getByRole('button', { name: '水平線' }))
 
-    const secondaryId = toggle.getAttribute('aria-controls')
-    const secondaryRow = document.getElementById(secondaryId!)!
-    const secondaryButtons = within(secondaryRow).getAllByRole('button')
+    const toggle = screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })
+    // DOM順は段の項目→トグルなので、トグルの直前にある要素を「末尾の項目」として取得する
+    const toolbarButtons = within(screen.getByRole('toolbar')).getAllByRole('button')
+    const lastItem = toolbarButtons[toolbarButtons.indexOf(toggle) - 1]
 
-    // トグルが disabledFlags の1要素を占有していないと count が1つ小さくなり、
-    // ラップアラウンドの探索順がずれて undo より先に別の項目（見出しドロップダウン）へ着地する
-    secondaryButtons[secondaryButtons.length - 1].focus()
+    lastItem.focus()
+    await userEvent.keyboard('{ArrowRight}')
+
+    expect(toggle).toHaveFocus()
+
     await userEvent.keyboard('{ArrowRight}')
 
     expect(screen.getByRole('button', { name: '元に戻す' })).toHaveFocus()
-
-    secondaryButtons[0].focus()
-    await userEvent.keyboard('{ArrowLeft}')
-
-    expect(toggle).toHaveFocus()
   })
 
-  it('デスクトップからモバイルへ切り替えて項目数が減っても、Tabで到達できる項目が1つ残る', async () => {
-    const { rerender } = render(<SwitchableEditor mobile={false} />)
-    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+  it('溢れが解消してトグルが消えても、Tabで到達できる項目が1つ残る', async () => {
+    await renderEditor()
+    setRowOverflowing(true)
 
-    // モバイルでは2段目へ回る（かつ閉じている間は描画されない）項目にフォーカスを置く。
-    // 切り替え後の項目数を超える index が active に残る状況を作るため
-    act(() => within(screen.getByRole('toolbar')).getByRole('button', { name: '水平線' }).focus())
+    act(() => screen.getByRole('button', { name: WRAP_TOGGLE_LABEL }).focus())
 
     expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
 
-    rerender(<SwitchableEditor mobile />)
+    setRowOverflowing(false)
 
-    expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
-  })
-
-  it('モバイルで2段目を開いた状態からデスクトップへ切り替えても、Tabで到達できる項目が1つ残る', async () => {
-    const { rerender } = render(<SwitchableEditor mobile />)
-    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
-
-    const toggle = screen.getByRole('button', { name: 'その他の書式' })
-    await userEvent.click(toggle)
-
-    // 2段目を開いた状態の項目数はデスクトップより1つ多い（トグルの分）。その末尾を active にすると
-    // デスクトップへ戻したときに index が範囲外になる
-    const secondaryRow = document.getElementById(toggle.getAttribute('aria-controls')!)!
-    const secondaryButtons = within(secondaryRow).getAllByRole('button')
-
-    act(() => secondaryButtons[secondaryButtons.length - 1].focus())
-
-    expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
-
-    rerender(<SwitchableEditor mobile={false} />)
-
+    expect(screen.queryByRole('button', { name: WRAP_TOGGLE_LABEL })).not.toBeInTheDocument()
     expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
   })
 })

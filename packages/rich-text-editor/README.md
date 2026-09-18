@@ -46,7 +46,7 @@ const App = () => (
 )
 ```
 
-`EnvironmentProvider` が無い環境ではモバイル向けのツールバー切り替えが働きません。
+`EnvironmentProvider` が無い環境ではモバイル判定が常に `false` になり、タッチ環境でもツールチップを描画します。ツールバーの構成は Provider の有無では変わりません。
 
 ## 開発
 

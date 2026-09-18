@@ -1,6 +1,6 @@
 {
   "smarthr-ui/RichTextEditor/toolbarLabel": "書式設定",
-  "smarthr-ui/RichTextEditor/moreFormats": "その他の書式",
+  "smarthr-ui/RichTextEditor/wrapToolbar": "折り返して表示",
   "smarthr-ui/RichTextEditor/undo": "元に戻す",
   "smarthr-ui/RichTextEditor/redo": "やり直す",
   "smarthr-ui/RichTextEditor/bold": "太字",

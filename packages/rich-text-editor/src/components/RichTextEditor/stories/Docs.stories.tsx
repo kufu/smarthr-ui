@@ -892,37 +892,21 @@ export const Resizable: Story = {
   ),
 }
 
-export const MobileToolbar: Story = {
-  name: 'モバイル表示',
-  parameters: {
-    docs: {
-      source: {
-        language: 'tsx',
-        code: `import { EnvironmentProvider } from 'smarthr-ui'
-import { RichTextEditor } from '@smarthr/smarthr-ui-rich-text-editor'
-
-const App = () => (
-  <EnvironmentProvider>
-    <RichTextEditor features={['bold', 'italic', 'link', 'table', 'image']} />
-  </EnvironmentProvider>
-)`,
-      },
-    },
-  },
+export const ToolbarDisplay: Story = {
+  name: 'ツールバーの表示',
   render: () => (
     <Stack gap={1.5}>
       <Text color="TEXT_GREY">
-        画面幅が 751px
-        以下のとき、ツールバーは2段構成になります。1段目に履歴操作とテキスト装飾、2段目にリンク・リスト・引用・インラインコード・コードブロックと挿入系（水平線・表・画像・動画）が入り、2段目は1段目右端のトグルで開閉します。各段は折り返さずに横スクロールするため、初期状態の高さは常に1段分です。2段目を開いている間は2段分になります。
+        ツールバーは折り返さずに横スクロールします。高さは常に1段分で、ウィンドウ幅やエディタの置かれた場所によって構成が変わることはありません。
         <br />
-        この判定には <code>useEnvironment</code> を使っています。アプリ全体を{' '}
-        <code>EnvironmentProvider</code> で囲んでいない場合はモバイル判定が常に <code>false</code>{' '}
-        になり、この2段構成は有効になりません。
+        項目が幅に収まらないときだけ、右端に折り返しトグルが現れます。押すと折り返して全項目を並べ、もう一度押すと横スクロールに戻ります。収まっているときは押しても変わるものが無いためトグルを出しません。
         <br />
-        また、モバイル表示ではツールチップを表示しません。各ボタンには <code>aria-label</code>{' '}
-        が付いているため、支援技術には引き続きラベルが伝わります。
+        モバイル表示（
+        <code>EnvironmentProvider</code> を置いたうえで画面幅が 751px
+        以下）ではツールチップを表示しません。ホバーが無い環境のためで、各ボタンには{' '}
+        <code>aria-label</code> が付いているため支援技術には引き続きラベルが伝わります。
       </Text>
-      <FormControl label="ウィンドウ幅を751px以下に狭めるとツールバーが2段構成になります">
+      <FormControl label="ブラウザの幅を狭めると折り返しトグルが現れます">
         <RichTextEditor
           features={ALL_FEATURES}
           placeholder="ブラウザの幅を狭めてツールバーの変化を確認できます"

@@ -6,8 +6,8 @@ import {
   type ReactNode,
   memo,
   useCallback,
-  useId,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import {
@@ -23,10 +23,11 @@ import {
   FaQuoteLeftIcon,
   FaStrikethroughIcon,
   FaUnderlineIcon,
-  useEnvironment,
 } from 'smarthr-ui'
 import { tv } from 'tailwind-variants'
 
+import { useEnhancedEffect } from '../../../hooks/useEnhancedEffect'
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useRovingToolbar } from '../hooks/useRovingToolbar'
@@ -39,10 +40,10 @@ import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
 import { LineHeightDropdown } from './LineHeightDropdown'
 import { LinkButton } from './LinkButton'
-import { MoreFormatsToggle } from './MoreFormatsToggle'
 import { TableInsertDropdown } from './TableInsertDropdown'
 import { TextAlignDropdown } from './TextAlignDropdown'
 import { ToolbarButton } from './ToolbarButton'
+import { ToolbarWrapToggle } from './ToolbarWrapToggle'
 import { YoutubeInsertButton } from './YoutubeInsertButton'
 
 import type { RichTextFeature } from '../types'
@@ -86,56 +87,51 @@ type ToolbarGroup = {
   items: ToolbarItem[]
 }
 
-// 1段目に置くグループ。残り（semantics / insertion）はモバイル時に2段目へ回す
-const PRIMARY_GROUP_IDS: ReadonlyArray<ToolbarGroup['id']> = ['history', 'decoration']
-
 const classNameGenerator = tv({
   slots: {
+    // items-start は、折り返して段が複数行になってもトグルを右上に留めるため
     toolbar: [
       'smarthr-ui-RichTextEditor-Toolbar',
-      'shr-border-b-shorthand shr-flex shr-items-center shr-gap-0.25 shr-p-0.5',
+      'shr-border-b-shorthand shr-flex shr-items-start shr-gap-0.25 shr-p-0.5',
     ],
-    row: '',
-    toggleWrapper: '',
+    // min-w-0 が無いと段が内容の幅より縮まず、横スクロールが発生しない。
+    // overflow-y は auto に計算されるのに任せず hidden を明示する（Scroller と同じ）
+    row: [
+      'smarthr-ui-RichTextEditor-ToolbarRow',
+      'shr-flex shr-min-w-0 shr-flex-1 shr-items-center shr-gap-0.25',
+      'shr-flex-nowrap shr-overflow-x-auto shr-overflow-y-hidden',
+      'data-[wrapped]:shr-flex-wrap data-[wrapped]:shr-overflow-visible',
+    ],
+    // separator を流用すると「もう1つのコントロールのグループ」に見えるため、
+    // 全高の罫線で別の領域として切る
+    toggleWrapper:
+      'shr-border-l-shorthand shr-flex shr-shrink-0 shr-items-start shr-self-stretch shr-pl-0.5',
     // グループの切れ目を示すだけの装飾要素。h-1.5（24px）は各項目の高さ32px（toolbarItemStyle）
     // に対して上下に余白が残る値。mx-0.5（8px）はツールバーのgap-0.25（4px）と
-    // 合わせて左右12px空ける。デスクトップの折り返しでも、モバイルの横スクロールでも
-    // 潰れずに一定幅を保つようshrink-0を付ける。
+    // 合わせて左右12px空ける。折り返しでも横スクロールでも潰れずに一定幅を保つよう
+    // shrink-0 を付ける。
     separator:
       'smarthr-ui-RichTextEditor-ToolbarSeparator shr-mx-0.5 shr-h-1.5 shr-w-px shr-shrink-0 shr-bg-border',
   },
-  variants: {
-    mobile: {
-      true: {
-        // 段を縦に積む。items-stretch は各段を横幅いっぱいに広げてスクロール領域を確保するため
-        toolbar: 'shr-flex-col shr-items-stretch',
-        // 折り返しをやめて横スクロールにする。これが高さを1段分に固定する要。
-        // overflow-y は auto に計算されるのに任せず hidden を明示する（Scroller と同じ組み合わせ）。
-        // 段の下に出るツールチップは ToolbarTooltip 側で抑制している。
-        row: 'shr-flex shr-flex-nowrap shr-items-center shr-gap-0.25 shr-overflow-x-auto shr-overflow-y-hidden',
-        // 横スクロールしても常に見えるよう右端に固定する。背景はツールバーと同色にして
-        // 下を流れる項目を隠す。pl-0.25 は隣の項目との間に隙間を作るため
-        toggleWrapper:
-          'shr-sticky shr-right-0 shr-flex shr-shrink-0 shr-items-center shr-bg-white shr-pl-0.25',
-      },
-      false: {
-        toolbar: 'shr-flex-wrap',
-      },
-    },
-    disabled: {
-      true: {
-        // RichTextEditor 側の toolbarWrapper が disabled で bg-white-darken になるため合わせる
-        toggleWrapper: 'shr-bg-white-darken',
-      },
-    },
-  },
 })
+
+const CLASS_NAMES = (() => {
+  const { toolbar, row, toggleWrapper, separator } = classNameGenerator()
+
+  return {
+    toolbar: toolbar(),
+    row: row(),
+    toggleWrapper: toggleWrapper(),
+    separator: separator(),
+  }
+})()
 
 export const RichTextEditorToolbar: FC = memo(() => {
   const { editor, features, disabled } = useRichTextEditorContext()
-  const { mobile } = useEnvironment()
-  const [isSecondaryOpen, setIsSecondaryOpen] = useState(false)
-  const secondaryId = useId()
+  const [isWrapped, setIsWrapped] = useState(false)
+  const [isOverflowing, setIsOverflowing] = useState(false)
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const rowRef = useRef<HTMLDivElement>(null)
   const { localize } = useIntl()
   const state = useToolbarState(editor)
 
@@ -383,59 +379,82 @@ export const RichTextEditorToolbar: FC = memo(() => {
     return filled
   }, [features, state, editor, localize, disabled])
 
-  // デスクトップでは分割しない（1段に全項目を並べる現状の見た目を維持する）
-  const rows = useMemo(() => {
-    if (!mobile) return { primary: groups, secondary: [] as typeof groups }
+  // トグルの表示を溢れで決めているのは、押しても何も起きないボタンを見せないため
+  const latest = useLatest({ isWrapped })
 
-    return {
-      primary: groups.filter((group) => PRIMARY_GROUP_IDS.includes(group.id)),
-      secondary: groups.filter((group) => !PRIMARY_GROUP_IDS.includes(group.id)),
-    }
-  }, [groups, mobile])
+  const functions = useMemo(
+    () => ({
+      measureOverflow: () => {
+        // 折り返し中は段が複数行に折れて scrollWidth が内容の幅を表さなくなる。
+        // 測り直すとトグルが消えて横スクロール表示へ戻せなくなる
+        if (latest.isWrapped) return
 
-  const hasToggle = rows.secondary.length > 0
+        const toolbar = toolbarRef.current
+        const row = rowRef.current
+
+        if (!toolbar || !row) return
+
+        // 段ではなくツールバーの内寸と比べるのは、段はトグルが出るとその分だけ狭くなり、
+        // トグル自身の有無が判定に混ざって同じ幅でも操作の履歴で結果が変わるため
+        const { paddingLeft, paddingRight } = getComputedStyle(toolbar)
+        const innerWidth =
+          toolbar.clientWidth - (parseFloat(paddingLeft) || 0) - (parseFloat(paddingRight) || 0)
+
+        setIsOverflowing(row.scrollWidth > innerWidth)
+      },
+    }),
+    [latest],
+  )
+
+  // 内容の幅は見出しやフォントサイズのラベルが変わることでも動くため依存配列で絞れない。
+  // 下の購読と分けているのは、同居させると状態が変わるたびに張り替えることになるため
+  useEnhancedEffect(() => {
+    functions.measureOverflow()
+  })
+
+  useEnhancedEffect(() => {
+    if (isWrapped) return
+
+    const el = rowRef.current
+
+    if (!el) return
+
+    const observer = new ResizeObserver(functions.measureOverflow)
+
+    observer.observe(el)
+
+    return () => observer.disconnect()
+  }, [isWrapped, functions])
 
   const handleEscape = useCallback(() => {
     editor.commands.focus()
   }, [editor])
 
-  // 閉じたあとにトグルへ focus() を呼び直してはいない。閉じる操作はこのトグルの
-  // クリック・キー操作でしか起きず、その時点でフォーカスは既にトグル上にあるため。
-  // 2段目の項目にフォーカスがある状態で unmount されることは無い。
   const handleToggleClick = useCallback(() => {
-    setIsSecondaryOpen((prev) => !prev)
+    setIsWrapped((prev) => !prev)
   }, [])
 
   // 区切り線をフォーカス対象に含めないため、ボタンの通し番号は描画前に確定させる。
   // JSX の中でカウンタを進めると描画が副作用を持つため useMemo の中で振る。
-  // 順番は DOM 順（1段目 → トグル → 2段目）に合わせる。これで左右キーの移動が見た目と一致する。
-  const indexedRows = useMemo(() => {
+  // 順番は DOM 順（段の項目 → トグル）に合わせる。これで左右キーの移動が見た目と一致する。
+  const indexedGroups = useMemo(() => {
     let index = 0
 
-    const assign = (target: typeof groups) =>
-      target.map((group) => ({
-        id: group.id,
-        items: group.items.map((item) => ({ item, index: index++ })),
-      }))
+    return groups.map((group) => ({
+      id: group.id,
+      items: group.items.map((item) => ({ item, index: index++ })),
+    }))
+  }, [groups])
 
-    const primary = assign(rows.primary)
-    const toggleIndex = hasToggle ? index++ : -1
-    const secondary = isSecondaryOpen ? assign(rows.secondary) : []
-
-    return { primary, toggleIndex, secondary }
-  }, [rows, hasToggle, isSecondaryOpen])
-
-  // roving tabindex の各indexが無効かどうかを、indexedRows と同じ順番で並べた配列。
+  // roving tabindex の各indexが無効かどうかを、indexedGroups と同じ順番で並べた配列。
   // トグルは項目の型（ToolbarItem）に含めず、ここでフラグだけ差し込む。
   const disabledFlags = useMemo(() => {
-    const toDisabled = (target: typeof groups) =>
-      target.flatMap((group) => group.items).map((item) => item.disabled)
+    const items = groups.flatMap((group) => group.items).map((item) => item.disabled)
 
-    const primary = toDisabled(rows.primary)
-    const secondary = isSecondaryOpen ? toDisabled(rows.secondary) : []
+    return isWrapped || isOverflowing ? [...items, !!disabled] : items
+  }, [groups, isWrapped, isOverflowing, disabled])
 
-    return hasToggle ? [...primary, !!disabled, ...secondary] : [...primary, ...secondary]
-  }, [rows, hasToggle, isSecondaryOpen, disabled])
+  const toggleIndex = isWrapped || isOverflowing ? disabledFlags.length - 1 : -1
 
   const disabledKeys = useMemo(
     () =>
@@ -450,17 +469,6 @@ export const RichTextEditorToolbar: FC = memo(() => {
     id: 'smarthr-ui/RichTextEditor/toolbarLabel',
     defaultText: '書式設定',
   })
-
-  const classNames = useMemo(() => {
-    const { toolbar, row, toggleWrapper, separator } = classNameGenerator({ mobile, disabled })
-
-    return {
-      toolbar: toolbar(),
-      row: row(),
-      toggleWrapper: toggleWrapper(),
-      separator: separator(),
-    }
-  }, [mobile, disabled])
 
   const renderItem = (item: ToolbarItem, index: number) => {
     const rovingProps = getButtonProps(index, count)
@@ -514,46 +522,32 @@ export const RichTextEditorToolbar: FC = memo(() => {
     )
   }
 
-  const renderGroups = (target: typeof indexedRows.primary) =>
-    target.map((group, groupIndex) => (
-      <Fragment key={group.id}>
-        {groupIndex > 0 && <div className={classNames.separator} aria-hidden="true" />}
-        {group.items.map(({ item, index }) => renderItem(item, index))}
-      </Fragment>
-    ))
-
   return (
     <div
+      ref={toolbarRef}
       role="toolbar"
-      className={classNames.toolbar}
+      className={CLASS_NAMES.toolbar}
       aria-label={toolbarLabel}
-      // 2段になっても操作は左右キー1本の直線移動なので horizontal のままが実態に合う
+      // 折り返して複数行になっても操作は左右キー1本の直線移動なので horizontal が実態に合う
       aria-orientation="horizontal"
     >
-      {mobile ? (
-        <>
-          <div className={classNames.row}>
-            {renderGroups(indexedRows.primary)}
-            {indexedRows.toggleIndex >= 0 && (
-              <div className={classNames.toggleWrapper}>
-                <MoreFormatsToggle
-                  {...getButtonProps(indexedRows.toggleIndex, count)}
-                  disabled={disabled}
-                  expanded={isSecondaryOpen}
-                  controls={secondaryId}
-                  handleClick={handleToggleClick}
-                />
-              </div>
-            )}
-          </div>
-          {isSecondaryOpen && hasToggle && (
-            <div id={secondaryId} className={classNames.row}>
-              {renderGroups(indexedRows.secondary)}
-            </div>
-          )}
-        </>
-      ) : (
-        renderGroups(indexedRows.primary)
+      <div ref={rowRef} className={CLASS_NAMES.row} data-wrapped={isWrapped || undefined}>
+        {indexedGroups.map((group, groupIndex) => (
+          <Fragment key={group.id}>
+            {groupIndex > 0 && <div className={CLASS_NAMES.separator} aria-hidden="true" />}
+            {group.items.map(({ item, index }) => renderItem(item, index))}
+          </Fragment>
+        ))}
+      </div>
+      {toggleIndex >= 0 && (
+        <div className={CLASS_NAMES.toggleWrapper}>
+          <ToolbarWrapToggle
+            {...getButtonProps(toggleIndex, count)}
+            disabled={disabled}
+            wrapped={isWrapped}
+            handleClick={handleToggleClick}
+          />
+        </div>
       )}
     </div>
   )
