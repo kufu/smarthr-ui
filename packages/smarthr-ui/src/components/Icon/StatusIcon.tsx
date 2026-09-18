@@ -18,19 +18,19 @@ const ICON_MAPPER = {
   info: { Component: FaCircleInfoIcon, alt: undefined },
   success: {
     Component: FaCircleCheckIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/successAlt" defaultText="成功" />,
+    alt: <Localizer id="smarthr-ui/StatusIcon/successAlt" defaultText="成功" />,
   },
   warning: {
     Component: WarningIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/warningAlt" defaultText="注意" />,
+    alt: <Localizer id="smarthr-ui/StatusIcon/warningAlt" defaultText="注意" />,
   },
   error: {
     Component: FaCircleExclamationIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/errorAlt" defaultText="エラー" />,
+    alt: <Localizer id="smarthr-ui/StatusIcon/errorAlt" defaultText="エラー" />,
   },
   sync: {
     Component: FaRotateIcon,
-    alt: <Localizer id="smarthr-ui/statusIcon/syncAlt" defaultText="実行中" />,
+    alt: <Localizer id="smarthr-ui/StatusIcon/syncAlt" defaultText="実行中" />,
   },
 }
 
