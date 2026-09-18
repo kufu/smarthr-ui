@@ -233,15 +233,15 @@ const MessageArea = memo<
     classNames: { messageArea: string; icon: string }
   }
 >(({ children, bold, type, role, classNames }) => (
-  <Text
-    className={classNames.messageArea}
-    icon={{
-      prefix: <StatusIcon status={type} bold={bold} className={classNames.icon} />,
-      gap: 0.5,
-    }}
-  >
-    <LiveRegion role={role} className="shr-contents">
+  <LiveRegion role={role} className="shr-contents">
+    <Text
+      className={classNames.messageArea}
+      icon={{
+        prefix: <StatusIcon status={type} bold={bold} className={classNames.icon} />,
+        gap: 0.5,
+      }}
+    >
       {children}
-    </LiveRegion>
-  </Text>
+    </Text>
+  </LiveRegion>
 ))

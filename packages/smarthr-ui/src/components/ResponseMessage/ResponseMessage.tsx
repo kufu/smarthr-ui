@@ -38,17 +38,17 @@ export const ResponseMessage: FC<Props> = ({
   const iconClassName = useMemo(() => classNameGenerator({ status }), [status])
 
   return (
-    <Text
-      size={size}
-      className={className}
-      icon={<StatusIcon {...rest} status={status} className={iconClassName} />}
+    <LiveRegion
+      role={role || (ROLE_STATUS_TYPE_REGEX.test(status) ? 'status' : 'alert')}
+      className="shr-contents"
     >
-      <LiveRegion
-        role={role || (ROLE_STATUS_TYPE_REGEX.test(status) ? 'status' : 'alert')}
-        className="shr-contents"
+      <Text
+        size={size}
+        className={className}
+        icon={<StatusIcon {...rest} status={status} className={iconClassName} />}
       >
         {children}
-      </LiveRegion>
-    </Text>
+      </Text>
+    </LiveRegion>
   )
 }
