@@ -92,8 +92,10 @@ describe('RichTextEditorToolbar', () => {
     expect(new Set(heightClassNames.map(([className]) => className)).size).toBe(1)
   })
 
-  it('デスクトップではツールチップを描画する', async () => {
+  it('デスクトップではホバーするとツールチップを描画する', async () => {
     await renderEditor()
+
+    await userEvent.hover(screen.getByRole('button', { name: '太字' }))
 
     // ボタンの aria-label はテキストノードではないため、getByText はツールチップ本体だけに一致する
     expect(screen.getByText('太字')).toBeInTheDocument()
@@ -102,7 +104,8 @@ describe('RichTextEditorToolbar', () => {
   it('モバイルではツールチップを描画しない', async () => {
     await renderMobileEditor()
 
-    // 段が overflow-y-hidden なので段の下に出るツールチップは見えなくなるため描画しない
+    await userEvent.hover(screen.getByRole('button', { name: '太字' }))
+
     expect(screen.queryByText('太字')).not.toBeInTheDocument()
     // ボタン自体は aria-label で見つかる（支援技術への情報は失われていない）
     expect(screen.getByRole('button', { name: '太字' })).toBeInTheDocument()

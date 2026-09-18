@@ -47,3 +47,17 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
   disconnect() {}
 }
+
+// jsdom はレイアウトしないため交差は判定できずコールバックも発火しない。
+// 交差の出入りを検証するテストは ToolbarTooltip.test.tsx で差し替えている
+global.IntersectionObserver = class IntersectionObserver {
+  constructor(callback) {
+    this.callback = callback
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+}

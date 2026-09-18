@@ -1,22 +1,25 @@
 'use client'
 
-import { type FC, type ReactNode, memo } from 'react'
+import { type FC, type ReactNode, memo, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useEnvironment } from 'smarthr-ui'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 
 import { formatShortcutTokens } from './shortcutKeys'
 
+const GAP = 4
+
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'shr-group shr-relative shr-inline-block',
+    wrapper: 'shr-inline-block',
+    // absolute だと body に position が付いたページで基準がずれる
     tooltip: [
-      'shr-pointer-events-none shr-absolute shr-top-full shr-z-overlap shr-mt-0.25',
+      'shr-pointer-events-none shr-fixed shr-z-overlap',
       'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
       'shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.5 shr-text-sm shr-text-white',
-      'shr-opacity-0 shr-transition-opacity',
-      'group-focus-within:shr-opacity-100 group-hover:shr-opacity-100',
     ],
     // 既定の line-height だと行ボックスに内包された余白の半分がラベル文字の上に乗り、
     // キーの箱（leading-none で文字に密着）との対比で上の余白だけ広く見える。
@@ -38,14 +41,20 @@ const classNameGenerator = tv({
     // ツールチップはトリガーより横に広い。編集領域の端にあるトリガーで中央揃えにすると
     // はみ出した側がウィンドウ外へ出て読めなくなるため、端では内側へ向けて伸ばす。
     align: {
-      center: { tooltip: 'shr-left-1/2 shr--translate-x-1/2' },
-      start: { tooltip: 'shr-left-0' },
-      end: { tooltip: 'shr-right-0' },
+      center: { tooltip: 'shr--translate-x-1/2' },
+      start: {},
+      end: { tooltip: 'shr--translate-x-full' },
     },
   },
 })
 
 type TooltipAlign = 'center' | 'start' | 'end'
+
+const ALIGN_TO_LEFT: Record<TooltipAlign, (rect: DOMRect) => number> = {
+  center: (rect) => rect.left + rect.width / 2,
+  start: (rect) => rect.left,
+  end: (rect) => rect.right,
+}
 
 const CLASS_NAMES = (() => {
   const { wrapper, tooltip, label, shortcutRow, key } = classNameGenerator()
@@ -78,36 +87,137 @@ export const ToolbarTooltip: FC<Props> = memo(
   ({ label, shortcut, suppressed, align = 'center', children }) => {
     const isApple = useIsApplePlatform()
     const { mobile } = useEnvironment()
+    // position と分けているのは、クリップされて見えないあいだも監視を続けるため。
+    // position で監視を止めると、スクロールを戻しても復帰できない
+    const [isActive, setIsActive] = useState(false)
+    const [position, setPosition] = useState<{ top: number; left: number } | null>(null)
+    const wrapperRef = useRef<HTMLSpanElement>(null)
+    const isHovered = useRef(false)
+    const isClipped = useRef(false)
     const tokens = shortcut ? formatShortcutTokens(shortcut, isApple) : []
 
+    const latest = useLatest({ align, mobile })
+
+    const functions = useMemo(() => {
+      const syncPosition = () => {
+        const el = wrapperRef.current
+
+        if (!el) return
+
+        // イベントだけだと pointerleave が届かないときに出たまま残り、:hover だけだと
+        // jsdom が常に true を返すため検証できない
+        const active =
+          !latest.mobile &&
+          ((isHovered.current && el.matches(':hover')) || el.contains(document.activeElement))
+
+        setIsActive(active)
+
+        if (!active || isClipped.current) {
+          setPosition(null)
+
+          return
+        }
+
+        const rect = el.getBoundingClientRect()
+        const next = {
+          top: rect.bottom + GAP,
+          left: ALIGN_TO_LEFT[latest.align](rect),
+        }
+
+        setPosition((current) =>
+          current && current.top === next.top && current.left === next.left ? current : next,
+        )
+      }
+
+      return {
+        syncPosition,
+        handleDelegatePointerEnter: () => {
+          isHovered.current = true
+          syncPosition()
+        },
+        handleDelegatePointerLeave: () => {
+          isHovered.current = false
+          syncPosition()
+        },
+        handleDelegateFocusChange: syncPosition,
+      }
+    }, [latest])
+
+    // scroll と resize の購読では足りない。プログラムからのスクロールで
+    // pointerout が届かず、ツールチップが取り残されることがある。
+    // 交差を監視しているのは、ポータルへ出すと段の overflow が効かなくなるため。
+    // root 未指定で足りる（交差の計算は祖先のクリップ矩形も含む）
+    useEffect(() => {
+      const el = wrapperRef.current
+
+      if (!isActive || !el) return
+
+      if (suppressed) {
+        setPosition(null)
+
+        return
+      }
+
+      let frame = requestAnimationFrame(function step() {
+        functions.syncPosition()
+        frame = requestAnimationFrame(step)
+      })
+
+      const observer = new IntersectionObserver(([entry]) => {
+        isClipped.current = !entry.isIntersecting
+      })
+
+      observer.observe(el)
+
+      return () => {
+        cancelAnimationFrame(frame)
+        observer.disconnect()
+        isClipped.current = false
+      }
+    }, [isActive, suppressed, functions])
+
     return (
-      <span className={CLASS_NAMES.wrapper}>
+      // フォーカス由来の表示を諦めるとキーボード操作でツールチップが読めなくなる
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+      <span
+        ref={wrapperRef}
+        className={CLASS_NAMES.wrapper}
+        onPointerEnter={functions.handleDelegatePointerEnter}
+        onPointerLeave={functions.handleDelegatePointerLeave}
+        onFocus={functions.handleDelegateFocusChange}
+        onBlur={functions.handleDelegateFocusChange}
+      >
         {children}
         {/*
-        suppressed のときは opacity で隠すのではなく要素ごと描画しない。
-        CSS の group-hover / group-focus-within より強い指定を重ねる必要がなくなる。
-
-        mobile で描画しないのは、ツールバーの段が overflow-y-hidden を持つため。
-        top-full で段の下に出るこのツールチップはクリップされて見えなくなる。
-        ポータル化する手もあるが、タッチ環境ではホバーが無く元々表示されず、
-        ボタンには aria-label があるため支援技術への情報も失われないため採らない。
+        ポータルへ出しているのは、ツールバーの段が横スクロールのために overflow を持つため。
+        段の中に置くと、スクロールしていない状態でもクリップされて見えない。
+        mobile で描画を止めても、ボタンの aria-label と aria-keyshortcuts があるため
+        支援技術への情報は失われない。
       */}
-        {!suppressed && !mobile && (
-          <span className={CLASS_NAMES.tooltip[align]} aria-hidden="true">
-            <span className={CLASS_NAMES.label}>{label}</span>
-            {tokens.length > 0 && (
-              // ラベルを1行目、キーを2行目に箱付きで並べる。
-              // 箱で区切りが分かるため + は挟まない
-              <span className={CLASS_NAMES.shortcutRow}>
-                {tokens.map((token, index) => (
-                  <kbd key={`${token}-${index}`} className={CLASS_NAMES.key}>
-                    {token}
-                  </kbd>
-                ))}
-              </span>
-            )}
-          </span>
-        )}
+        {!suppressed &&
+          !mobile &&
+          position &&
+          createPortal(
+            <span
+              className={CLASS_NAMES.tooltip[align]}
+              style={{ top: position.top, left: position.left }}
+              aria-hidden="true"
+            >
+              <span className={CLASS_NAMES.label}>{label}</span>
+              {tokens.length > 0 && (
+                // ラベルを1行目、キーを2行目に箱付きで並べる。
+                // 箱で区切りが分かるため + は挟まない
+                <span className={CLASS_NAMES.shortcutRow}>
+                  {tokens.map((token, index) => (
+                    <kbd key={`${token}-${index}`} className={CLASS_NAMES.key}>
+                      {token}
+                    </kbd>
+                  ))}
+                </span>
+              )}
+            </span>,
+            document.body,
+          )}
       </span>
     )
   },
