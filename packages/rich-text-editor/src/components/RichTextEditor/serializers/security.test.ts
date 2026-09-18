@@ -351,6 +351,16 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).toContain('12px')
     })
 
+    it('textStyle の rem 指定の fontSize は保持される', () => {
+      const html = serializeToHTML(textStyleDoc({ fontSize: '1.5rem' }))
+      expect(html).toContain('1.5rem')
+    })
+
+    it('textStyle の許可していない単位の fontSize は出力されない', () => {
+      const html = serializeToHTML(textStyleDoc({ fontSize: '12pt' }))
+      expect(html).not.toContain('12pt')
+    })
+
     it('textAlign に追記されたCSS宣言が出力されない', () => {
       const html = serializeToHTML({
         type: 'doc',

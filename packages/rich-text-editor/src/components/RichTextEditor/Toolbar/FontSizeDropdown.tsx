@@ -12,19 +12,40 @@ import { useToolbarState } from '../hooks/useToolbarState'
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
+const DEFAULT_ROOT_FONT_SIZE = 16
+const LENGTH_PATTERN = /^(\d+(?:\.\d+)?)(px|rem|em)$/
+
+// value が px ではなく rem なのは、px だとブラウザのフォントサイズ設定に追従せず、
+// 未指定(16)だけが追従して不整合になるため。em ではないのは、pre/code のように
+// font-size を縮めた文脈でラベルと実寸がずれるのを避けるため。
+// px を併記するのは、他エディタから引き継いだ px 値を選択肢へ対応づけるのに
+// 文字列一致では足りず、ラベルと選択判定で同じ基準が必要なため。
 const FONT_SIZES = [
-  { value: '12px', label: '12' },
-  { value: '14px', label: '14' },
-  { value: null, label: '16' },
-  { value: '18px', label: '18' },
-  { value: '20px', label: '20' },
-  { value: '24px', label: '24' },
-  { value: '30px', label: '30' },
-  { value: '36px', label: '36' },
-  { value: '48px', label: '48' },
-  { value: '60px', label: '60' },
-  { value: '72px', label: '72' },
+  { px: 12, value: '0.75rem' },
+  { px: 14, value: '0.875rem' },
+  { px: 16, value: null },
+  { px: 18, value: '1.125rem' },
+  { px: 20, value: '1.25rem' },
+  { px: 24, value: '1.5rem' },
+  { px: 30, value: '1.875rem' },
+  { px: 36, value: '2.25rem' },
+  { px: 48, value: '3rem' },
+  { px: 60, value: '3.75rem' },
+  { px: 72, value: '4.5rem' },
 ] as const
+
+/** 既定のルートフォントサイズ換算の表示サイズ。解釈できない単位は null */
+const toPxSize = (value: string | null) => {
+  if (value === null) return DEFAULT_ROOT_FONT_SIZE
+
+  const matched = LENGTH_PATTERN.exec(value)
+
+  if (!matched) return null
+
+  const [, num, unit] = matched
+
+  return Math.round(unit === 'px' ? Number(num) : Number(num) * DEFAULT_ROOT_FONT_SIZE)
+}
 
 const classNameGenerator = tv({
   slots: {
@@ -62,9 +83,9 @@ export const FontSizeDropdown: FC<Props> = memo(
     const listboxRef = useRef<HTMLDivElement>(null)
 
     const currentValue = state.currentFontSize
-    const currentLabel =
-      FONT_SIZES.find((s) => s.value === currentValue)?.label ??
-      (currentValue === null ? '16' : currentValue.replace('px', ''))
+    const currentSize = toPxSize(currentValue)
+    // 解釈できない単位はそのまま見せる
+    const currentLabel = currentSize ?? currentValue ?? DEFAULT_ROOT_FONT_SIZE
     const isDisabled = disabled || state.isInHeading
 
     const classNames = classNameGenerator()
@@ -97,7 +118,7 @@ export const FontSizeDropdown: FC<Props> = memo(
             e.stopPropagation()
             setIsOpen(true)
             requestAnimationFrame(() => {
-              const currentIndex = FONT_SIZES.findIndex((s) => s.value === currentValue)
+              const currentIndex = FONT_SIZES.findIndex((s) => s.px === currentSize)
               const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
               const defaultIndex = FONT_SIZES.findIndex((s) => s.value === null)
               target?.[currentIndex >= 0 ? currentIndex : defaultIndex]?.focus()
@@ -116,7 +137,7 @@ export const FontSizeDropdown: FC<Props> = memo(
             onKeyDownProp?.(e)
         }
       },
-      [currentValue, onKeyDownProp, setIsOpen],
+      [currentSize, onKeyDownProp, setIsOpen],
     )
 
     const handleOptionKeyDown = useCallback(
@@ -191,11 +212,11 @@ export const FontSizeDropdown: FC<Props> = memo(
             aria-label={dropdownLabel}
           >
             {FONT_SIZES.map((option) => {
-              const isSelected = option.value === currentValue
+              const isSelected = option.px === currentSize
 
               return (
                 <button
-                  key={option.label}
+                  key={option.px}
                   role="option"
                   type="button"
                   className={classNames.option()}
@@ -206,7 +227,7 @@ export const FontSizeDropdown: FC<Props> = memo(
                   <span className={classNames.checkIcon()}>
                     {isSelected && <FaCheckIcon className="shr-text-main" />}
                   </span>
-                  <span>{option.label}</span>
+                  <span>{option.px}</span>
                 </button>
               )
             })}
