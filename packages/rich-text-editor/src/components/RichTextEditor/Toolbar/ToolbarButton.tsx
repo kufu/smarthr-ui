@@ -27,13 +27,14 @@ const classNameGenerator = tv({
 type Props = {
   icon: ReactNode
   label: string
+  /** 未指定なら aria-pressed を出力しない。値を持つとトグルボタンとして読み上げられるため */
   active?: boolean
   /** Tiptap 表記のショートカット（例: `Mod-B`） */
   shortcut?: string
 } & Omit<ComponentPropsWithRef<'button'>, 'children'>
 
 export const ToolbarButton: FC<Props> = memo(
-  ({ icon, label, active = false, shortcut, className, ref, disabled, ...rest }) => {
+  ({ icon, label, active, shortcut, className, ref, disabled, ...rest }) => {
     const isApple = useIsApplePlatform()
 
     return (

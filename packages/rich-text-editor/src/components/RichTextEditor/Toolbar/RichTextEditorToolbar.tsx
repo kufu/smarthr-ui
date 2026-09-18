@@ -53,7 +53,7 @@ type ButtonItem = {
   key: string
   icon: ReactNode
   label: string
-  active: boolean
+  active?: boolean
   disabled: boolean
   action: () => void
   /**
@@ -145,7 +145,6 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'undo',
         icon: <FaArrowRotateLeftIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/undo', defaultText: '元に戻す' }),
-        active: false,
         disabled: !state.canUndo,
         action: () => editor.chain().focus().undo().run(),
         shortcut: 'Mod-Z',
@@ -155,7 +154,6 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'redo',
         icon: <FaArrowRotateRightIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/redo', defaultText: 'やり直す' }),
-        active: false,
         disabled: !state.canRedo,
         action: () => editor.chain().focus().redo().run(),
         shortcut: 'Shift-Mod-Z',
@@ -340,7 +338,6 @@ export const RichTextEditorToolbar: FC = memo(() => {
           id: 'smarthr-ui/RichTextEditor/horizontalRule',
           defaultText: '水平線',
         }),
-        active: false,
         disabled: state.isNodeSelected,
         action: () => editor.chain().focus().setHorizontalRule().run(),
       })

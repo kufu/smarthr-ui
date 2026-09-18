@@ -113,6 +113,21 @@ describe('RichTextEditor', () => {
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
   })
 
+  it('切り替えないボタンには aria-pressed を付けない', async () => {
+    render(<RichTextEditor features={['horizontalRule', 'table', 'image', 'youtube']} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => {
+      expect(screen.getByRole('toolbar')).toBeInTheDocument()
+    })
+    expect(screen.getByLabelText('元に戻す')).not.toHaveAttribute('aria-pressed')
+    expect(screen.getByLabelText('やり直す')).not.toHaveAttribute('aria-pressed')
+    expect(screen.getByLabelText('水平線')).not.toHaveAttribute('aria-pressed')
+    expect(screen.getByLabelText('テーブルを挿入')).not.toHaveAttribute('aria-pressed')
+    expect(screen.getByLabelText('画像を挿入')).not.toHaveAttribute('aria-pressed')
+    expect(screen.getByLabelText('YouTube動画を埋め込む')).not.toHaveAttribute('aria-pressed')
+  })
+
   describe('ツールバーのグルーピング', () => {
     const SEPARATOR_SELECTOR = '.smarthr-ui-RichTextEditor-ToolbarSeparator'
 
