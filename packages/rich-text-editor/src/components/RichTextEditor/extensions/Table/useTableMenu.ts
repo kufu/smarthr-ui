@@ -23,7 +23,10 @@ type Props = {
 export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, onTargetLock }: Props) => {
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const [showColors, setShowColors] = useState(false)
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(showColors)
+  // 列のハンドルは矩形が列幅そのものなので、既定の左端揃えでは選択中の列が隠れる
+  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(showColors, {
+    avoidTrigger: scope === 'column',
+  })
   const colorTriggerRef = useRef<HTMLButtonElement>(null)
   const returnToTrigger = useRef(false)
   const focusFrame = useRef<number | null>(null)

@@ -61,6 +61,25 @@ type Position = {
   maxHeight?: number
 }
 
+type Options = {
+  /**
+   * トリガーに重ねず、その右隣（入らなければ左隣）へ置く。列のハンドルはトリガーの
+   * 矩形が列幅そのものなので、既定の左端揃えでは選択中の列を完全に覆ってしまう
+   */
+  avoidTrigger?: boolean
+}
+
+/** 右隣を優先し、入らなければ左隣。どちらも入らなければ null */
+const resolveBesideLeft = (triggerRect: DOMRect, contentWidth: number) => {
+  const right = triggerRect.right + GAP
+
+  if (right + contentWidth <= window.innerWidth - VIEWPORT_PADDING) return right
+
+  const left = triggerRect.left - GAP - contentWidth
+
+  return left >= VIEWPORT_PADDING ? left : null
+}
+
 type UseToolbarDropdownReturn = {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
@@ -68,7 +87,10 @@ type UseToolbarDropdownReturn = {
   renderDropdown: (children: ReactNode) => ReactNode | null
 }
 
-export function useToolbarDropdown(layoutKey?: unknown): UseToolbarDropdownReturn {
+export function useToolbarDropdown(
+  layoutKey?: unknown,
+  { avoidTrigger }: Options = {},
+): UseToolbarDropdownReturn {
   const { createPortal, isChildPortal } = usePortal()
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -101,15 +123,16 @@ export function useToolbarDropdown(layoutKey?: unknown): UseToolbarDropdownRetur
     const fitsAbove = contentHeight <= spaceAbove
 
     const contentWidth = contentEl.offsetWidth
+    const besideLeft = avoidTrigger ? resolveBesideLeft(triggerRect, contentWidth) : null
     const rightEdge = triggerRect.left + contentWidth
 
     const next: Position = {
       top: 0,
       left:
-        rightEdge > window.innerWidth - VIEWPORT_PADDING
-          ? Math.max(VIEWPORT_PADDING, window.innerWidth - contentWidth - VIEWPORT_PADDING) +
-            window.pageXOffset
-          : triggerRect.left + window.pageXOffset,
+        (besideLeft ??
+          (rightEdge > window.innerWidth - VIEWPORT_PADDING
+            ? Math.max(VIEWPORT_PADDING, window.innerWidth - contentWidth - VIEWPORT_PADDING)
+            : triggerRect.left)) + window.pageXOffset,
     }
 
     if (fitsBelow) {
@@ -137,7 +160,7 @@ export function useToolbarDropdown(layoutKey?: unknown): UseToolbarDropdownRetur
 
     setPosition(next)
     setIsVisible(true)
-  }, [isOpen, layoutKey])
+  }, [isOpen, layoutKey, avoidTrigger])
 
   // 座標は開いた時点で1度だけ算出するため、トリガーを内包する段が横スクロールすると
   // ドロップダウンだけが元の位置に取り残される。タッチスクロール中は mousedown が発生せず

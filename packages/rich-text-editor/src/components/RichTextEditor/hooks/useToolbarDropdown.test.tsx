@@ -11,12 +11,19 @@ type HarnessProps = {
   scrollableRow?: boolean
   /** ツールバーの外側にスクロールコンテナを置くか（Dialog の本文などを模したもの） */
   scrollableOutside?: boolean
+  avoidTrigger?: boolean
 }
 
 // スクロールコンテナの判定は getComputedStyle を見るため、jsdom でも効くインラインスタイルで作る
 // （Tailwind のクラスは jsdom に CSS が読み込まれず overflow が visible のままになる）
-const Harness: FC<HarnessProps> = ({ scrollableRow = true, scrollableOutside = false }) => {
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+const Harness: FC<HarnessProps> = ({
+  scrollableRow = true,
+  scrollableOutside = false,
+  avoidTrigger = false,
+}) => {
+  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(undefined, {
+    avoidTrigger,
+  })
 
   const toolbar = (
     <div role="toolbar" aria-label="書式設定" aria-orientation="horizontal">
@@ -53,6 +60,44 @@ const openDropdown = async (props: HarnessProps = {}) => {
   expect(screen.getByRole('listbox')).toBeInTheDocument()
 }
 
+// jsdom はレイアウトしないため、座標の算出に使う値を差し替えてから開く
+const openWithLayout = async ({
+  trigger,
+  contentWidth,
+  viewportWidth,
+  avoidTrigger,
+}: {
+  trigger: { left: number; right: number }
+  contentWidth: number
+  viewportWidth: number
+  avoidTrigger?: boolean
+}) => {
+  Object.defineProperty(window, 'innerWidth', { value: viewportWidth, configurable: true })
+
+  render(<Harness avoidTrigger={avoidTrigger} />)
+
+  const triggerEl = screen.getByRole('button', { name: '開く' })
+
+  triggerEl.getBoundingClientRect = () =>
+    ({
+      left: trigger.left,
+      right: trigger.right,
+      top: 0,
+      bottom: 20,
+      width: trigger.right - trigger.left,
+      height: 20,
+    }) as DOMRect
+
+  Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+    value: contentWidth,
+    configurable: true,
+  })
+
+  await userEvent.click(triggerEl)
+
+  return screen.getByRole('listbox').parentElement!
+}
+
 // jsdom はレイアウトしないため scrollLeft への代入が反映されない。スクロール位置を差し替えた
 // うえで scroll を発火し、実際にスクロールが起きた状態と同じ入力をハンドラへ与える
 const scrollBy = (el: HTMLElement, offset: { left?: number; top?: number }) => {
@@ -66,6 +111,53 @@ const scrollBy = (el: HTMLElement, offset: { left?: number; top?: number }) => {
 }
 
 describe('useToolbarDropdown', () => {
+  describe('avoidTrigger', () => {
+    it('既定ではトリガーの左端に揃える', async () => {
+      const content = await openWithLayout({
+        trigger: { left: 100, right: 300 },
+        contentWidth: 270,
+        viewportWidth: 1000,
+      })
+
+      expect(content.style.left).toBe('100px')
+    })
+
+    it('トリガーの右隣へ置く', async () => {
+      const content = await openWithLayout({
+        trigger: { left: 100, right: 300 },
+        contentWidth: 270,
+        viewportWidth: 1000,
+        avoidTrigger: true,
+      })
+
+      // 右端(300) + GAP(2)
+      expect(content.style.left).toBe('302px')
+    })
+
+    it('右に入らなければ左隣へ置く', async () => {
+      const content = await openWithLayout({
+        trigger: { left: 500, right: 700 },
+        contentWidth: 270,
+        viewportWidth: 800,
+        avoidTrigger: true,
+      })
+
+      // 左端(500) - GAP(2) - 幅(270)
+      expect(content.style.left).toBe('228px')
+    })
+
+    it('左右どちらにも入らなければ既定の左端揃えへ戻す', async () => {
+      const content = await openWithLayout({
+        trigger: { left: 100, right: 300 },
+        contentWidth: 270,
+        viewportWidth: 420,
+        avoidTrigger: true,
+      })
+
+      expect(content.style.left).toBe('100px')
+    })
+  })
+
   it('トリガーを内包する段がスクロールしたらドロップダウンを閉じる', async () => {
     await openDropdown()
 
