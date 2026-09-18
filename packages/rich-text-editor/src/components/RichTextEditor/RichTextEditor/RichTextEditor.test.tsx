@@ -111,6 +111,7 @@ describe('RichTextEditor', () => {
     })
     const boldButton = screen.getByLabelText('太字')
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
+    expect(boldButton).not.toHaveAttribute('data-active')
   })
 
   it('切り替えないボタンには aria-pressed を付けない', async () => {
@@ -126,6 +127,22 @@ describe('RichTextEditor', () => {
     expect(screen.getByLabelText('テーブルを挿入')).not.toHaveAttribute('aria-pressed')
     expect(screen.getByLabelText('画像を挿入')).not.toHaveAttribute('aria-pressed')
     expect(screen.getByLabelText('YouTube動画を埋め込む')).not.toHaveAttribute('aria-pressed')
+  })
+
+  it('選択中の書式が適用されている切り替えボタンは押下状態になる', async () => {
+    render(
+      <RichTextEditor
+        features={['bold']}
+        content={{ format: 'html', content: '<p><strong>bold</strong></p>' }}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => {
+      expect(screen.getByRole('toolbar')).toBeInTheDocument()
+    })
+    const boldButton = screen.getByLabelText('太字')
+    expect(boldButton).toHaveAttribute('aria-pressed', 'true')
+    expect(boldButton).toHaveAttribute('data-active')
   })
 
   describe('ツールバーのグルーピング', () => {

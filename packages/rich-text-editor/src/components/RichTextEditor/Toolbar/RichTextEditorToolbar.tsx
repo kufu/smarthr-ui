@@ -510,6 +510,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         {...rovingProps}
         key={buttonItem.key}
         disabled={buttonItem.disabled}
+        toggle={buttonItem.active !== undefined}
         active={buttonItem.active}
         shortcut={buttonItem.shortcut}
         onClick={buttonItem.action}

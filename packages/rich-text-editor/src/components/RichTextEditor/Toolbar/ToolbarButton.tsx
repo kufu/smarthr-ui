@@ -16,25 +16,30 @@ const classNameGenerator = tv({
     // tv の variants で指定しないのは、shr- プレフィックスを tailwind-merge に
     // 設定していないため base の shr-bg-transparent / shr-text-black と競合が
     // 解決されず、CSS の出現順に負けるため。属性セレクタなら詳細度で上回る。
-    'aria-pressed:shr-bg-main aria-pressed:shr-text-white',
-    'aria-pressed:hover:shr-bg-main-darken',
+    'data-[active]:shr-bg-main data-[active]:shr-text-white',
+    'data-[active]:hover:shr-bg-main-darken',
     // 押下中の disabled は Button の primary に合わせる
-    'aria-pressed:disabled:shr-bg-main/50 aria-pressed:disabled:shr-text-white/50',
-    'aria-pressed:disabled:hover:shr-bg-main/50',
+    'data-[active]:disabled:shr-bg-main/50 data-[active]:disabled:shr-text-white/50',
+    'data-[active]:disabled:hover:shr-bg-main/50',
   ],
 })
 
 type Props = {
   icon: ReactNode
   label: string
-  /** 未指定なら aria-pressed を出力しない。値を持つとトグルボタンとして読み上げられるため */
+  /** 選択状態。見た目にのみ反映する */
   active?: boolean
+  /**
+   * 押下で active を切り替えるボタンかどうか。aria-pressed は切り替えボタンとして
+   * 読み上げられるため、ダイアログを開くだけのボタンや状態を持たないボタンでは出さない。
+   */
+  toggle?: boolean
   /** Tiptap 表記のショートカット（例: `Mod-B`） */
   shortcut?: string
 } & Omit<ComponentPropsWithRef<'button'>, 'children'>
 
 export const ToolbarButton: FC<Props> = memo(
-  ({ icon, label, active, shortcut, className, ref, disabled, ...rest }) => {
+  ({ icon, label, active, toggle, shortcut, className, ref, disabled, ...rest }) => {
     const isApple = useIsApplePlatform()
 
     return (
@@ -46,8 +51,9 @@ export const ToolbarButton: FC<Props> = memo(
           disabled={disabled}
           className={classNameGenerator({ className })}
           aria-label={label}
-          aria-pressed={active}
+          aria-pressed={toggle ? active : undefined}
           aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut, isApple) : undefined}
+          data-active={active || undefined}
         >
           {icon}
         </button>

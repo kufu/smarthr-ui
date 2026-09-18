@@ -53,4 +53,13 @@ describe('LinkButton', () => {
       'https://example.com/page',
     )
   })
+
+  it('リンク適用中でも切り替えボタンとして読み上げさせない', async () => {
+    const user = userEvent.setup()
+    await applyLink(user, 'https://example.com/page')
+
+    const button = screen.getByRole('button', { name: 'リンク' })
+    expect(button).not.toHaveAttribute('aria-pressed')
+    expect(button).toHaveAttribute('data-active')
+  })
 })
