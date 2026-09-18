@@ -1,6 +1,8 @@
-import { memo } from 'react'
+'use client'
 
-import { Localizer } from '../../intl'
+import { memo, useMemo } from 'react'
+
+import { useIntl } from '../../intl'
 
 import {
   FaCircleCheckIcon,
@@ -18,27 +20,27 @@ const ICON_MAPPER = {
   info: { Component: FaCircleInfoIcon, alt: undefined },
   success: {
     Component: FaCircleCheckIcon,
-    alt: <Localizer id="smarthr-ui/StatusIcon/successAlt" defaultText="成功" />,
+    alt: { id: 'smarthr-ui/StatusIcon/successAlt', defaultText: '成功' },
   },
   warning: {
     Component: WarningIcon,
-    alt: <Localizer id="smarthr-ui/StatusIcon/warningAlt" defaultText="注意" />,
+    alt: { id: 'smarthr-ui/StatusIcon/warningAlt', defaultText: '注意' },
   },
   error: {
     Component: FaCircleExclamationIcon,
-    alt: <Localizer id="smarthr-ui/StatusIcon/errorAlt" defaultText="エラー" />,
+    alt: { id: 'smarthr-ui/StatusIcon/errorAlt', defaultText: 'エラー' },
   },
   sync: {
     Component: FaRotateIcon,
-    alt: <Localizer id="smarthr-ui/StatusIcon/syncAlt" defaultText="実行中" />,
+    alt: { id: 'smarthr-ui/StatusIcon/syncAlt', defaultText: '実行中' },
   },
-}
+} as const
 
 // HINT: WarningIconは自身で色を持っているため、色を変えられないためFA Iconを利用している
 const BOLD_ICON_MAPPER = {
   ...ICON_MAPPER,
   warning: { Component: FaTriangleExclamationIcon, alt: ICON_MAPPER.warning.alt },
-}
+} as const
 
 type BaseProps = {
   /** アイコンが表す状態 */
@@ -49,7 +51,10 @@ type BaseProps = {
 type Props = BaseProps & Omit<IconProps, keyof BaseProps | 'alt'>
 
 export const StatusIcon = memo<Props>(({ status, bold, ...rest }) => {
-  const { Component, alt } = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[status]
+  const { localize } = useIntl()
 
-  return <Component {...rest} alt={alt} />
+  const { Component, alt } = (bold ? BOLD_ICON_MAPPER : ICON_MAPPER)[status]
+  const actualAlt = useMemo(() => (alt ? localize(alt) : undefined), [alt, localize])
+
+  return <Component {...rest} alt={actualAlt} />
 })
