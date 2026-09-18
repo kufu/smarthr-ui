@@ -41,7 +41,6 @@
     "@storybook/cli",
     "@swc/core",
     "@testing-library/jest-dom",
-    "@vitejs/plugin-react",
     "babel-plugin-polyfill-corejs2",
     "babel-plugin-polyfill-regenerator",
     "eslint-plugin-storybook",

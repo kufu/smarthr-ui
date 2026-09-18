@@ -12,7 +12,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
@@ -34,8 +34,9 @@ type BaseProps = PropsWithChildren<{
   defaultExpanded?: string[]
   /** トリガのクリックイベントを処理するハンドラ */
   onClick?: (expandedItems: string[]) => void
-}> &
-  VariantProps<typeof classNameGenerator>
+  /** 角丸を適用する範囲 */
+  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+}>
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const DEFAULT_EXPANDED_ARRAY: string[] = []
@@ -77,7 +78,10 @@ const classNameGenerator = tv({
       right: [ROUNDED.t_r, ROUNDED.b_r],
       bottom: [ROUNDED.b_l, ROUNDED.b_r],
       left: [ROUNDED.t_l, ROUNDED.b_l],
-    },
+    } satisfies Record<
+      Exclude<NonNullable<BaseProps['rounded']>, boolean> | 'true' | 'false',
+      string | string[]
+    >,
   },
   defaultVariants: {
     rounded: false,

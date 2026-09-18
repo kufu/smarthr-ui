@@ -1,40 +1,20 @@
-'use client'
-
-import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { DropdownContentContext } from './DropdownContent'
-import { DropdownContentInnerContext } from './DropdownContentInner'
+export const DROPDOWN_CLOSER_CLASS_NAME = 'smarthr-ui-Dropdown-closer'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-Dropdown-closer',
-  variants: {
-    controllable: {
-      false: 'shr-flex shr-flex-col',
-    },
-  },
+  base: DROPDOWN_CLOSER_CLASS_NAME,
 })
 
-type Props = PropsWithChildren<ComponentProps<'div'>>
+// HINT: onClickは念のためomitしているが、必要に応じて利用可能にすることを検討する
+type Props = PropsWithChildren<Omit<ComponentProps<'div'>, 'onClick'>>
 
-export const DropdownCloser: FC<Props> = ({ children, className }) => {
-  const { handleDelegateClickCloser, controllable } = useContext(DropdownContentContext)
-  const { maxHeight } = useContext(DropdownContentInnerContext)
-
-  const actualClassName = useMemo(
-    () => classNameGenerator({ controllable, className }),
-    [controllable, className],
-  )
+export const DropdownCloser: FC<Props> = ({ className, style, children, ...rest }) => {
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <div
-      role="presentation"
-      className={actualClassName}
-      style={{
-        maxHeight: controllable ? undefined : maxHeight,
-      }}
-      onClick={handleDelegateClickCloser}
-    >
+    <div {...rest} className={actualClassName} style={style}>
       {children}
     </div>
   )

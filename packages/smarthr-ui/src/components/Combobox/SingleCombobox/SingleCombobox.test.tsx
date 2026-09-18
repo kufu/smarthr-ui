@@ -65,6 +65,8 @@ describe('SingleCombobox', () => {
     await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
     expect(onSelect).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    // 選択によってオプションボタンがDOMから消えても、フォーカスがコンボボックスに残っていること
+    expect(combobox()).toHaveFocus()
   })
 
   it('アイテムを選択解除できること', async () => {
@@ -94,6 +96,65 @@ describe('SingleCombobox', () => {
     // ESCで閉じる
     await userEvent.keyboard('{escape}')
     expect(listbox()).not.toBeInTheDocument()
+  })
+
+  it('未選択のままblurしても、入力値が残っている限り絞り込みが維持されること', async () => {
+    render(template({ selectedItem: null }))
+
+    // 入力すると絞り込まれる
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option 2')
+    expect(screen.getAllByRole('option')).toHaveLength(1)
+
+    // 外側クリックでblurする
+    await userEvent.click(document.body)
+    expect(listbox()).not.toBeInTheDocument()
+
+    // 再度フォーカスしたとき、入力値が残っているなら絞り込みも維持されていること
+    await userEvent.click(combobox())
+    expect(combobox()).toHaveValue('option 2')
+    expect(screen.getAllByRole('option')).toHaveLength(1)
+  })
+
+  it('未選択のままblurしてdefaultItemが選択された場合は、絞り込みが解除されること', async () => {
+    // 実際の利用方法を模して、親コンポーネントがselectedItemを状態として管理する
+    const DefaultItemComboboxWrapper = () => {
+      const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
+
+      return (
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={selectedItem}
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                onSelect={setSelectedItem}
+                items={[
+                  { label: 'option 1', value: 'value-1' },
+                  { label: 'option 2', value: 'value-2' },
+                  { label: 'option 3', value: 'value-3' },
+                ]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>
+      )
+    }
+
+    render(<DefaultItemComboboxWrapper />)
+
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option 2')
+    expect(screen.getAllByRole('option')).toHaveLength(1)
+
+    // 未選択のままblurするとdefaultItemが選択され、inputの表示値もそのラベルになる
+    await userEvent.click(document.body)
+    expect(combobox()).toHaveValue('option 1')
+
+    // 選択中アイテムのラベルは手入力値ではないため、絞り込みには使われないこと
+    await userEvent.click(combobox())
+    expect(screen.getAllByRole('option')).toHaveLength(3)
   })
 
   it('コンボボックスがフォーカスされていないときに選択解除ボタンを押下してもリストボックスが表示されること', async () => {

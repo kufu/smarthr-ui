@@ -1,6 +1,6 @@
 import { action } from 'storybook/actions'
 
-import { DropZone } from '../DropZone'
+import { DropZone } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

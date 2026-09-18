@@ -4,8 +4,7 @@ import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
-import { Fieldset } from '../Fieldset'
-import { FormControl } from '../FormControl'
+import { Fieldset, FormControl } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
