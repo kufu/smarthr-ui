@@ -3,7 +3,7 @@
 import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTableHeadCellCount } from './useTableHeadCellCount'
+import { AutoColSpanTd } from './AutoColSpanTd'
 
 const classNameGenerator = tv({
   slots: {
@@ -21,8 +21,6 @@ export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> =
   className,
   ...rest
 }) => {
-  const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
-
   const classNames = useMemo(() => {
     const { wrapper, cell } = classNameGenerator()
 
@@ -33,10 +31,8 @@ export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> =
   }, [className])
 
   return (
-    <tr {...rest} ref={countHeadCellRef} className={classNames.wrapper}>
-      <td colSpan={count} className={classNames.cell}>
-        {children}
-      </td>
+    <tr {...rest} className={classNames.wrapper}>
+      <AutoColSpanTd className={classNames.cell}>{children}</AutoColSpanTd>
     </tr>
   )
 }
