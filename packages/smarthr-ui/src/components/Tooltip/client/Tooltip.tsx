@@ -146,27 +146,27 @@ export const Tooltip: FC<Props> = ({
       callbackRef: (n: HTMLElement | null) => {
         node = n
       },
-      handlePointerEnter: (e: ReactPointerEvent<HTMLElement>) => {
+      handleDelegatePointerEnter: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerEnter?.(e)
         toShowAction(e)
       },
-      handleTouchStart: (e: ReactTouchEvent<HTMLElement>) => {
+      handleDelegateTouchStart: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchStart?.(e)
         toShowAction(e)
       },
-      handleFocus: (e: ReactFocusEvent<HTMLElement>) => {
+      handleDelegateFocus: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onFocus?.(e)
         toShowAction(e)
       },
-      handlePointerLeave: (e: ReactPointerEvent<HTMLElement>) => {
+      handleDelegatePointerLeave: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerLeave?.(e)
         toCloseAction()
       },
-      handleTouchEnd: (e: ReactTouchEvent<HTMLElement>) => {
+      handleDelegateTouchEnd: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchEnd?.(e)
         toCloseAction()
       },
-      handleBlur: (e: ReactFocusEvent<HTMLElement>) => {
+      handleDelegateBlur: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onBlur?.(e)
         toCloseAction()
       },
@@ -197,7 +197,7 @@ export const Tooltip: FC<Props> = ({
   const mergedRef = useMergeRefs(layoutEffectRef, functions.callbackRef)
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       {...rest}
       ref={mergedRef}
@@ -206,12 +206,12 @@ export const Tooltip: FC<Props> = ({
       aria-describedby={
         isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
       }
-      onPointerEnter={functions.handlePointerEnter}
-      onTouchStart={functions.handleTouchStart}
-      onFocus={functions.handleFocus}
-      onPointerLeave={functions.handlePointerLeave}
-      onTouchEnd={functions.handleTouchEnd}
-      onBlur={functions.handleBlur}
+      onPointerEnter={functions.handleDelegatePointerEnter}
+      onTouchStart={functions.handleDelegateTouchStart}
+      onFocus={functions.handleDelegateFocus}
+      onPointerLeave={functions.handleDelegatePointerLeave}
+      onTouchEnd={functions.handleDelegateTouchEnd}
+      onBlur={functions.handleDelegateBlur}
     >
       {portalRoot &&
         createPortal(
