@@ -13,7 +13,7 @@ type Props = PropsWithChildren &
   }
 
 // thead の高さ分だけ scroll-padding-top を設定
-const setScrollPaddingTop = (node: HTMLDivElement | null) => {
+const callbackRef = (node: HTMLDivElement | null) => {
   if (!node) {
     return
   }
@@ -35,7 +35,7 @@ export const FixedHeadTableScroller: FC<Props> = ({
 }) => {
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(setScrollPaddingTop, forwardedRef)
+  const mergedRef = useMergeRefs(callbackRef, forwardedRef)
 
   return (
     <Scroller {...rest} ref={mergedRef} direction={direction}>
