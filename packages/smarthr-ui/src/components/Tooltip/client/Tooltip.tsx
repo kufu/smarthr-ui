@@ -30,8 +30,8 @@ const subscribeFullscreenChange = (callback: () => void) => {
     window.removeEventListener('fullscreenchange', callback)
   }
 }
-const getFullscreenElement = () => document.fullscreenElement
-const getFullscreenElementOnSSR = () => null
+const getPortalRoot = () => document.fullscreenElement ?? document.body
+const getPortalRootOnSSR = () => null
 
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -84,15 +84,14 @@ export const Tooltip: FC<Props> = ({
   onBlur,
   ...rest
 }) => {
-  const [portalRoot, setPortalRoot] = useState<Element | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const messageId = useId()
-  const fullscreenElement = useSyncExternalStore(
+  const portalRoot = useSyncExternalStore(
     subscribeFullscreenChange,
-    getFullscreenElement,
-    getFullscreenElementOnSSR,
+    getPortalRoot,
+    getPortalRootOnSSR,
   )
 
   const [isFocusableChild, setIsFocusableChild] = useState(false)
@@ -171,10 +170,6 @@ export const Tooltip: FC<Props> = ({
       },
     }
   }, [latest])
-
-  useEnhancedEffect(() => {
-    setPortalRoot(fullscreenElement ?? document.body)
-  }, [fullscreenElement])
 
   useEnhancedEffect(() => {
     const childElement = ref.current?.querySelector('.smarthr-ui-Tooltip-content')
