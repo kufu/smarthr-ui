@@ -18,7 +18,6 @@ import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
-import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
@@ -179,8 +178,7 @@ export const Tooltip: FC<Props> = ({
         return
       }
 
-      const childElement = node.querySelector('.smarthr-ui-Tooltip-content')?.firstElementChild as
-        HTMLElement | undefined
+      const childElement = node.firstElementChild as HTMLElement | undefined
       const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
 
       setIsFocusableChild(focusable)
@@ -194,7 +192,6 @@ export const Tooltip: FC<Props> = ({
     [tabIndex, isLabel, messageId],
   )
 
-  const mergedRef = useMergeRefs(layoutEffectRef, functions.callbackRef)
   const ariaDescribedby =
     isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
 
@@ -202,7 +199,7 @@ export const Tooltip: FC<Props> = ({
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       {...rest}
-      ref={mergedRef}
+      ref={functions.callbackRef}
       // HINT: presentation roleとaria-describedbyはARIA仕様上の衝突関係にあり、UAが
       // presentation roleを無視する規定になっている。この無視に依存せず、aria-describedbyを
       // 設定しない場合にのみpresentation roleを設定することで衝突自体を避ける
@@ -228,7 +225,9 @@ export const Tooltip: FC<Props> = ({
           />,
           portalRoot,
         )}
-      <span className="smarthr-ui-Tooltip-content shr-contents">{children}</span>
+      <span ref={layoutEffectRef} className="smarthr-ui-Tooltip-content shr-contents">
+        {children}
+      </span>
     </span>
   )
 }
