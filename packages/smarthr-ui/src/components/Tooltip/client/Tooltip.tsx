@@ -51,7 +51,7 @@ type BaseProps = PropsWithChildren<{
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
 type Props = BaseProps &
-  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby'>
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby' | 'role'>
 
 const classNameGenerator = tv({
   base: [
@@ -195,17 +195,21 @@ export const Tooltip: FC<Props> = ({
   )
 
   const mergedRef = useMergeRefs(layoutEffectRef, functions.callbackRef)
+  const ariaDescribedby =
+    isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       {...rest}
       ref={mergedRef}
+      // HINT: presentation roleとaria-describedbyはARIA仕様上の衝突関係にあり、UAが
+      // presentation roleを無視する規定になっている。この無視に依存せず、aria-describedbyを
+      // 設定しない場合にのみpresentation roleを設定することで衝突自体を避ける
+      role={ariaDescribedby ? undefined : 'presentation'}
       tabIndex={actualTabIndex}
       className={actualClassName}
-      aria-describedby={
-        isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
-      }
+      aria-describedby={ariaDescribedby}
       onPointerEnter={functions.handleDelegatePointerEnter}
       onTouchStart={functions.handleDelegateTouchStart}
       onFocus={functions.handleDelegateFocus}
