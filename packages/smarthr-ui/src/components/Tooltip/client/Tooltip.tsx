@@ -18,7 +18,8 @@ import {
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
@@ -171,25 +172,34 @@ export const Tooltip: FC<Props> = ({
     }
   }, [latest])
 
-  useEnhancedEffect(() => {
-    const childElement = ref.current?.querySelector('.smarthr-ui-Tooltip-content')
-      ?.firstElementChild as HTMLElement | undefined
-    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
+  const layoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-    setIsFocusableChild(focusable)
-    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
+      const childElement = node.querySelector('.smarthr-ui-Tooltip-content')?.firstElementChild as
+        HTMLElement | undefined
+      const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
 
-    // focusableな要素に直接aria属性を設定
-    if (focusable) {
-      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
-    }
-  }, [tabIndex, isLabel, messageId])
+      setIsFocusableChild(focusable)
+      setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
+
+      // focusableな要素に直接aria属性を設定
+      if (focusable) {
+        childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+      }
+    },
+    [tabIndex, isLabel, messageId],
+  )
+
+  const mergedRef = useMergeRefs(layoutEffectRef, ref)
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
     <span
       {...rest}
-      ref={ref}
+      ref={mergedRef}
       tabIndex={actualTabIndex}
       className={actualClassName}
       aria-describedby={
