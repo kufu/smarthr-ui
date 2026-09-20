@@ -11,7 +11,6 @@ import {
   type TouchEvent as ReactTouchEvent,
   useId,
   useMemo,
-  useRef,
   useState,
   useSyncExternalStore,
 } from 'react'
@@ -87,7 +86,6 @@ export const Tooltip: FC<Props> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
-  const ref = useRef<HTMLDivElement>(null)
   const messageId = useId()
   const portalRoot = useSyncExternalStore(
     subscribeFullscreenChange,
@@ -117,26 +115,26 @@ export const Tooltip: FC<Props> = ({
   })
 
   const functions = useMemo(() => {
+    let node: HTMLElement | null = null
+
     const toShowAction = (e: BaseSyntheticEvent) => {
       // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
-      if (!ref.current?.contains(e.target)) {
+      if (!node?.contains(e.target)) {
         return
       }
 
       if (latest.ellipsisOnly) {
         const outerWidth = parseInt(
-          window
-            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-            .width.match(/\d+/)![0],
+          window.getComputedStyle(node.parentNode! as HTMLElement, null).width.match(/\d+/)![0],
           10,
         )
 
-        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
+        if (outerWidth < 0 || outerWidth > node.clientWidth) {
           return
         }
       }
 
-      setRect(ref.current.getBoundingClientRect())
+      setRect(node.getBoundingClientRect())
       setIsVisible(true)
     }
     const toCloseAction = () => {
@@ -145,27 +143,30 @@ export const Tooltip: FC<Props> = ({
     }
 
     return {
-      handlePointerEnter: (e: ReactPointerEvent<HTMLSpanElement>) => {
+      callbackRef: (n: HTMLElement | null) => {
+        node = n
+      },
+      handlePointerEnter: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerEnter?.(e)
         toShowAction(e)
       },
-      handleTouchStart: (e: ReactTouchEvent<HTMLSpanElement>) => {
+      handleTouchStart: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchStart?.(e)
         toShowAction(e)
       },
-      handleFocus: (e: ReactFocusEvent<HTMLSpanElement>) => {
+      handleFocus: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onFocus?.(e)
         toShowAction(e)
       },
-      handlePointerLeave: (e: ReactPointerEvent<HTMLSpanElement>) => {
+      handlePointerLeave: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerLeave?.(e)
         toCloseAction()
       },
-      handleTouchEnd: (e: ReactTouchEvent<HTMLSpanElement>) => {
+      handleTouchEnd: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchEnd?.(e)
         toCloseAction()
       },
-      handleBlur: (e: ReactFocusEvent<HTMLSpanElement>) => {
+      handleBlur: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onBlur?.(e)
         toCloseAction()
       },
@@ -193,7 +194,7 @@ export const Tooltip: FC<Props> = ({
     [tabIndex, isLabel, messageId],
   )
 
-  const mergedRef = useMergeRefs(layoutEffectRef, ref)
+  const mergedRef = useMergeRefs(layoutEffectRef, functions.callbackRef)
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
