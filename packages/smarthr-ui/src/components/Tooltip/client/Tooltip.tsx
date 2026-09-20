@@ -88,7 +88,6 @@ export const Tooltip: FC<Props> = ({
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
-  const childrenWrapperRef = useRef<HTMLSpanElement>(null)
   const messageId = useId()
   const fullscreenElement = useSyncExternalStore(
     subscribeFullscreenChange,
@@ -178,8 +177,8 @@ export const Tooltip: FC<Props> = ({
   }, [fullscreenElement])
 
   useEnhancedEffect(() => {
-    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
-
+    const childElement = ref.current?.querySelector('.smarthr-ui-Tooltip-content')
+      ?.firstElementChild as HTMLElement | undefined
     const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
 
     setIsFocusableChild(focusable)
@@ -219,9 +218,7 @@ export const Tooltip: FC<Props> = ({
           />,
           portalRoot,
         )}
-      <span ref={childrenWrapperRef} className="shr-contents">
-        {children}
-      </span>
+      <span className="smarthr-ui-Tooltip-content shr-contents">{children}</span>
     </span>
   )
 }
