@@ -188,7 +188,6 @@ const ActualSingleCombobox = <T,>(
 ) => {
   const theme = useTheme()
   const triggerRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -275,6 +274,8 @@ const ActualSingleCombobox = <T,>(
   })
 
   const functions = useMemo(() => {
+    let inputNode: HTMLInputElement | null = null
+
     const selectDefaultItem = () => {
       if (latest.onSelect && latest.defaultItem) {
         latest.onSelect(latest.defaultItem)
@@ -302,13 +303,18 @@ const ActualSingleCombobox = <T,>(
     return {
       selectDefaultItem,
       unfocus,
-      cleanupCallbackRef: () => () => {
-        latest.cleanupAddFrame()
-        latest.selectFrame.cancel()
+      inputCallbackRef: (node: HTMLInputElement | null) => {
+        inputNode = node
+
+        return () => {
+          inputNode = null
+          latest.cleanupAddFrame()
+          latest.selectFrame.cancel()
+        }
       },
       handleFocus: () => {
         latest.onFocus?.()
-        inputRef.current?.focus()
+        inputNode?.focus()
         setIsFocused(true)
 
         if (!latest.isFocused) {
@@ -332,7 +338,7 @@ const ActualSingleCombobox = <T,>(
           latest.onClear?.()
           latest.onChangeSelected?.(null)
 
-          inputRef.current?.focus()
+          inputNode?.focus()
 
           setIsFocused(true)
           setIsExpanded(true)
@@ -345,7 +351,7 @@ const ActualSingleCombobox = <T,>(
           return
         }
 
-        inputRef.current?.focus()
+        inputNode?.focus()
 
         if (!latest.isExpanded) {
           setIsExpanded(true)
@@ -393,7 +399,7 @@ const ActualSingleCombobox = <T,>(
             e.preventDefault()
           }
 
-          inputRef.current?.focus()
+          inputNode?.focus()
 
           if (!latest.isExpanded) {
             setIsExpanded(true)
@@ -419,7 +425,7 @@ const ActualSingleCombobox = <T,>(
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(inputRef, functions.cleanupCallbackRef, ref)
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
