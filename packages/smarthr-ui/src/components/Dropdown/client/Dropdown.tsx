@@ -12,6 +12,7 @@ import {
 } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
@@ -102,7 +103,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     DropdownContentRoot.displayName = 'DropdownContentRoot'
 
     const updateContentStyles = () => {
-      if (triggerButton && content) {
+      if (content && triggerButton) {
         const contentBox = getContentBoxStyle(
           triggerButton.getBoundingClientRect(),
           {
@@ -124,18 +125,17 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         const rightMargin =
           contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
         const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
+        const wrapper = {
+          insetBlockStart: contentBox.top,
+          insetInlineStart: contentBox.left || undefined,
+          insetInlineEnd: contentBox.right || undefined,
+          maxWidth: maxWidthStyle,
+        }
+        const body = {
+          maxHeight: contentBox.maxHeight || undefined,
+        }
 
         setContentStyles((current) => {
-          const wrapper = {
-            insetBlockStart: contentBox.top,
-            insetInlineStart: contentBox.left || undefined,
-            insetInlineEnd: contentBox.right || undefined,
-            maxWidth: maxWidthStyle,
-          }
-          const body = {
-            maxHeight: contentBox.maxHeight || undefined,
-          }
-
           if (
             current.wrapper.insetBlockStart === wrapper.insetBlockStart &&
             current.wrapper.insetInlineStart === wrapper.insetInlineStart &&
@@ -190,9 +190,19 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           return
         }
 
-        updateContentStyles()
-
         dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
+
+        updateContentStyles()
+        node.setAttribute('data-dropdown-mounted', 'true')
+
+        // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+        // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+        // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
+        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
+        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
+        latest.focusFrame.request(() => {
+          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
+        })
 
         const handleKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Tab') {
@@ -263,9 +273,11 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         window.addEventListener('keydown', handleKeyDown)
 
         return () => {
+          latest.focusFrame.cancel()
+          window.removeEventListener('keydown', handleKeyDown)
+
           content = null
           dummyFocusContent = null
-          window.removeEventListener('keydown', handleKeyDown)
         }
       },
       actualClose,
@@ -346,31 +358,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     baseTriggerLayoutEffectRef,
   )
 
-  const contentLayoutEffectRef = useLayoutEffectRef(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      node.setAttribute(dropdownMountedAttr, 'true')
-
-      // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
-      // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
-      // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-      // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
-      // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-      latest.focusFrame.request(() => {
-        node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
-      })
-
-      return () => latest.focusFrame.cancel()
-    },
-    [latest],
-  )
-
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const contentCallbackRef = useMergeRefs(functions.baseContentCallbackRef, contentLayoutEffectRef)
+  const contentCallbackRef = useCallbackRefCleanupForReact18(functions.baseContentCallbackRef)
 
   return (
     <PortalParentProvider>
