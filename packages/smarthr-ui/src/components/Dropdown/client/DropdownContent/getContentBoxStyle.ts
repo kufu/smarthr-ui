@@ -1,7 +1,7 @@
 import type { Rect } from '../types'
 
 type Size = { width: number; height: number }
-export type ContentBoxStyle = {
+type ContentBoxStyle = {
   top: string
   left?: string
   right?: string

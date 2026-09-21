@@ -3,7 +3,6 @@
 import {
   type ComponentProps,
   type FC,
-  type MouseEvent,
   type PropsWithChildren,
   useContext,
   useMemo,
@@ -16,16 +15,11 @@ import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { findDelegateTarget } from '../../../../libs/delegate'
-import { tabbable } from '../../../../libs/tabbable'
-import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from '../../DropdownCloser'
+import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
+import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
 
-import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
-
-const KEY_ESCAPE = /^Esc(ape)?$/
-const DROPDOWN_CONTENT_CLASS_NAME = 'smarthr-ui-Dropdown-content'
-const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dropdown-dummyFocus'
+import { getContentBoxStyle } from './getContentBoxStyle'
 
 const classNameGenerator = tv({
   base: [
@@ -56,136 +50,31 @@ export const DropdownContent: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
-  const [contentBox, setContentBox] = useState<ContentBoxStyle>({
-    top: 'auto',
-    maxHeight: '',
-  })
+  // TODO: triggerRectの変化によってのみstyles.contentは変化する
+  // triggerRectはstyles.content生成のためだけにしか利用されていない
+  // 後続のlayoutEffectと併せて整理する
+  const [styles, setStyles] = useState<{
+    content: {
+      insetBlockStart: string
+      insetInlineStart?: string
+      insetInlineEnd?: string
+      maxWidth: string
+    }
+    body: {
+      maxHeight?: string
+    }
+  }>({ content: { insetBlockStart: 'auto', maxWidth: '' }, body: {} })
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const style = (() => {
-    const defaultMargin = theme.spacingByChar(0.5)
-    const leftMargin =
-      contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
-    const rightMargin =
-      contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
-    const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
-
-    return {
-      insetBlockStart: contentBox.top,
-      insetInlineStart: contentBox.left || undefined,
-      insetInlineEnd: contentBox.right || undefined,
-      maxWidth: maxWidthStyle,
-    }
-  })()
-
-  const { DropdownContentRoot, triggerRect, triggerElementRef, handleDelegateClickCloser } =
+  const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
     useContext(DropdownContext)
 
   const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
-    triggerElementRef,
-    handleDelegateClickCloser,
     isActive,
     focusFrame,
   })
-
-  const functions = useMemo(() => {
-    let dummyFocusTarget: HTMLElement | null = null
-
-    return {
-      callbackRef: (node: HTMLElement | null) => {
-        dummyFocusTarget = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`) ?? null
-
-        if (!node) {
-          return
-        }
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-          if (e.key === 'Tab') {
-            if (!latest.triggerElementRef.current) {
-              return
-            }
-
-            const tabbablesInContent = tabbable(node)
-
-            if (tabbablesInContent.length === 0) {
-              return
-            }
-
-            const trigger = tabbable(latest.triggerElementRef.current).at(-1)
-            const firstTabbable = tabbablesInContent[0]
-
-            if (e.target === trigger) {
-              if (e.shiftKey) {
-                // move focus previous of the Trigger
-                return
-              }
-
-              // focus a first tabbable element in the dropdown content
-              e.preventDefault()
-              firstTabbable.focus()
-
-              return
-            } else if (e.shiftKey) {
-              if (e.target === firstTabbable || e.target === dummyFocusTarget) {
-                // focus the Trigger
-                e.preventDefault()
-                trigger!.focus()
-                latest.handleDelegateClickCloser()
-              }
-            } else if (e.target === tabbablesInContent.at(-1)) {
-              // focus the Trigger
-              e.preventDefault()
-              trigger!.focus()
-              latest.handleDelegateClickCloser()
-            }
-          } else if (KEY_ESCAPE.test(e.key)) {
-            if (e.target && e.target === dummyFocusTarget) {
-              latest.handleDelegateClickCloser()
-
-              return
-            }
-
-            const trigger = latest.triggerElementRef.current
-              ? tabbable(latest.triggerElementRef.current)[0]
-              : undefined
-
-            if (trigger && e.target === trigger) {
-              // close the dropdown when the Trigger is focused and Esc key is pressed
-              latest.handleDelegateClickCloser()
-
-              return
-            }
-
-            for (const inner of tabbable(node)) {
-              if (inner === e.target) {
-                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-                latest.handleDelegateClickCloser()
-
-                break
-              }
-            }
-          }
-        }
-
-        window.addEventListener('keydown', handleKeyDown)
-
-        return () => {
-          window.removeEventListener('keydown', handleKeyDown)
-        }
-      },
-      handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
-        const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
-
-        // HINT: Dropdownがネストしている場合、もっとも近いDropdownだけを閉じる
-        if (closer?.closest(`.${DROPDOWN_CONTENT_CLASS_NAME}`) === e.currentTarget) {
-          latest.handleDelegateClickCloser()
-        }
-      },
-      focusDummyTarget: () => dummyFocusTarget?.focus(),
-    }
-  }, [latest])
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -193,23 +82,54 @@ export const DropdownContent: FC<Props> = ({
         return
       }
 
-      setContentBox(
-        getContentBoxStyle(
-          triggerRect,
-          {
-            width: node.offsetWidth,
-            height: node.offsetHeight,
-          },
-          {
-            width: document.body.clientWidth,
-            height: innerHeight,
-          },
-          {
-            top: scrollY,
-            left: scrollX,
-          },
-        ),
+      const contentBox = getContentBoxStyle(
+        triggerRect,
+        {
+          width: node.offsetWidth,
+          height: node.offsetHeight,
+        },
+        {
+          width: document.body.clientWidth,
+          height: innerHeight,
+        },
+        {
+          top: scrollY,
+          left: scrollX,
+        },
       )
+      const defaultMargin = theme.spacingByChar(0.5)
+      const leftMargin =
+        contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
+      const rightMargin =
+        contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
+      const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
+
+      setStyles((current) => {
+        const content = {
+          insetBlockStart: contentBox.top,
+          insetInlineStart: contentBox.left || undefined,
+          insetInlineEnd: contentBox.right || undefined,
+          maxWidth: maxWidthStyle,
+        }
+        const body = {
+          maxHeight: contentBox.maxHeight || undefined,
+        }
+
+        if (
+          current.content.insetBlockStart === content.insetBlockStart &&
+          current.content.insetInlineStart === content.insetInlineStart &&
+          current.content.insetInlineEnd === content.insetInlineEnd &&
+          current.content.maxWidth === content.maxWidth &&
+          current.body.maxHeight === body.maxHeight
+        ) {
+          return current
+        }
+
+        return {
+          content,
+          body,
+        }
+      })
 
       setIsActive(true)
 
@@ -219,21 +139,19 @@ export const DropdownContent: FC<Props> = ({
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
         // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        latest.focusFrame.request(functions.focusDummyTarget)
+        latest.focusFrame.request(() => {
+          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
+        })
       }
 
       return () => latest.focusFrame.cancel()
     },
-    [triggerRect, functions, latest],
+    [triggerRect, theme, latest],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(functions.callbackRef, layoutEffectRef)
-
-  const styleAttr = {
-    maxHeight: contentBox.maxHeight || undefined,
-  }
+  const mergedRef = useMergeRefs(contentCallbackRef, layoutEffectRef)
 
   return (
     <DropdownContentRoot>
@@ -242,16 +160,16 @@ export const DropdownContent: FC<Props> = ({
         ref={mergedRef}
         role="presentation"
         className={actualClassName}
-        style={style}
+        style={styles.content}
         data-dropdown-active={isActive || undefined}
-        onClick={functions.handleDelegateClick}
+        onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-        <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
+        <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
         {controllable ? (
-          <div style={styleAttr}>{children}</div>
+          <div style={styles.body}>{children}</div>
         ) : (
-          <DropdownCloser className="shr-flex shr-flex-col" style={styleAttr}>
+          <DropdownCloser className="shr-flex shr-flex-col" style={styles.body}>
             {children}
           </DropdownCloser>
         )}
