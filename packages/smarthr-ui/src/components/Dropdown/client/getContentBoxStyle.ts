@@ -1,5 +1,9 @@
-import type { Rect } from '../types'
-
+type Rect = {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
 type Size = { width: number; height: number }
 export type ContentBoxStyle = {
   top: string

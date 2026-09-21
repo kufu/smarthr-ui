@@ -21,8 +21,7 @@ import { tabbable } from '../../../libs/tabbable'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
-
-import type { Rect } from './types'
+import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
@@ -31,7 +30,8 @@ type Props = PropsWithChildren<{
 
 type DropdownContextType = {
   active: boolean
-  triggerRect: Rect
+  isMountedContent: boolean
+  contentBox: ContentBoxStyle
   triggerLayoutEffectRef: (node: HTMLElement | null) => void
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
@@ -39,13 +39,17 @@ type DropdownContextType = {
   DropdownContentRoot: FC<{ children: ReactNode }>
 }
 
-const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 const KEY_ESCAPE = /^Esc(ape)?$/
 const NOOP = () => null
+const INITIAL_CONTENT_BOX = {
+  top: 'auto',
+  maxHeight: '',
+}
 
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
-  triggerRect: initialRect,
+  isMountedContent: false,
+  contentBox: INITIAL_CONTENT_BOX,
   triggerLayoutEffectRef: NOOP,
   contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
@@ -55,7 +59,8 @@ export const DropdownContext = createContext<DropdownContextType>({
 
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [active, setActive] = useState(false)
-  const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
+  const [isMountedContent, setIsMountedContent] = useState(false)
+  const [contentBox, setContentBox] = useState<ContentBoxStyle>(INITIAL_CONTENT_BOX)
 
   const contentId = useId()
   const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
@@ -64,6 +69,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
+  const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
     active,
@@ -73,11 +79,14 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     createPortal,
     openFrame,
     closeFrame,
+    focusFrame,
     contentId,
+    isMountedContent,
   })
 
   const functions = useMemo(() => {
     let trigger: HTMLElement | null = null
+    let content: HTMLElement | null = null
     let dummyFocusContent: HTMLElement | null | undefined = null
 
     // This is the root container of a dropdown content located in outside the DOM tree
@@ -100,8 +109,31 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       }
     }
 
+    const calculateContentBox = () => {
+      if (trigger && content) {
+        setContentBox(
+          getContentBoxStyle(
+            trigger.getBoundingClientRect(),
+            {
+              width: content.offsetWidth,
+              height: content.offsetHeight,
+            },
+            {
+              width: document.body.clientWidth,
+              height: innerHeight,
+            },
+            {
+              top: scrollY,
+              left: scrollX,
+            },
+          ),
+        )
+      }
+    }
+
     return {
       DropdownContentRoot,
+      calculateContentBox,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
 
@@ -111,10 +143,22 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         }
       },
       contentCallbackRef: (node: HTMLElement | null) => {
+        content = node
         dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
 
         if (!node) {
           return
+        }
+
+        setIsMountedContent(true)
+
+        if (!latest.isMountedContent) {
+          // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+          // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+          // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
+          // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
+          // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
+          latest.focusFrame.request(() => dummyFocusContent?.focus())
         }
 
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -187,6 +231,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
         return () => {
           window.removeEventListener('keydown', handleKeyDown)
+          latest.focusFrame.cancel()
         }
       },
       actualClose,
@@ -201,7 +246,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           actualClose()
         } else {
           setActive(true)
-          setTriggerRect(button.getBoundingClientRect())
+          calculateContentBox()
 
           if (latest.onOpen) {
             latest.openFrame.request(() => latest.onOpen?.())
@@ -245,21 +290,16 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           functions.actualClose()
         }
       }
-      const updateTriggerRect = () => {
-        if (node) {
-          setTriggerRect(node.getBoundingClientRect())
-        }
-      }
       const listenerOption = { passive: true }
 
       document.body.addEventListener('click', handleClickBody, false)
-      window.addEventListener('scroll', updateTriggerRect, listenerOption)
-      window.addEventListener('resize', updateTriggerRect, listenerOption)
+      window.addEventListener('scroll', functions.calculateContentBox, listenerOption)
+      window.addEventListener('resize', functions.calculateContentBox, listenerOption)
 
       return () => {
         document.body.removeEventListener('click', handleClickBody, false)
-        window.removeEventListener('scroll', updateTriggerRect)
-        window.removeEventListener('resize', updateTriggerRect)
+        window.removeEventListener('scroll', functions.calculateContentBox)
+        window.removeEventListener('resize', functions.calculateContentBox)
       }
     },
     [active, functions, latest],
@@ -275,7 +315,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       <DropdownContext.Provider
         value={{
           active,
-          triggerRect,
+          isMountedContent,
+          contentBox,
           triggerLayoutEffectRef,
           contentCallbackRef: functions.contentCallbackRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
