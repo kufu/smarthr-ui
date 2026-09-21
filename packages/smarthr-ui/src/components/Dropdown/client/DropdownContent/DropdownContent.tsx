@@ -3,7 +3,6 @@
 import {
   type ComponentProps,
   type FC,
-  type MouseEvent,
   type PropsWithChildren,
   useContext,
   useMemo,
@@ -16,15 +15,14 @@ import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { findDelegateTarget } from '../../../../libs/delegate'
 import { tabbable } from '../../../../libs/tabbable'
-import { DROPDOWN_CLOSER_CLASS_NAME, DropdownCloser } from '../../DropdownCloser'
+import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
+import { DROPDOWN_CONTENT_CLASS_NAME } from '../constants'
 
 import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
 
 const KEY_ESCAPE = /^Esc(ape)?$/
-const DROPDOWN_CONTENT_CLASS_NAME = 'smarthr-ui-Dropdown-content'
 const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dropdown-dummyFocus'
 
 const classNameGenerator = tv({
@@ -78,8 +76,13 @@ export const DropdownContent: FC<Props> = ({
     }
   })()
 
-  const { DropdownContentRoot, triggerRect, triggerElementRef, handleDelegateClickCloser } =
-    useContext(DropdownContext)
+  const {
+    DropdownContentRoot,
+    triggerRect,
+    triggerElementRef,
+    handleDelegateClickCloser,
+    handleDelegateClickContentCloser,
+  } = useContext(DropdownContext)
 
   const focusFrame = useAnimationFrame()
 
@@ -175,14 +178,6 @@ export const DropdownContent: FC<Props> = ({
           window.removeEventListener('keydown', handleKeyDown)
         }
       },
-      handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
-        const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
-
-        // HINT: Dropdownがネストしている場合、もっとも近いDropdownだけを閉じる
-        if (closer?.closest(`.${DROPDOWN_CONTENT_CLASS_NAME}`) === e.currentTarget) {
-          latest.handleDelegateClickCloser()
-        }
-      },
       focusDummyTarget: () => dummyFocusTarget?.focus(),
     }
   }, [latest])
@@ -244,7 +239,7 @@ export const DropdownContent: FC<Props> = ({
         className={actualClassName}
         style={style}
         data-dropdown-active={isActive || undefined}
-        onClick={functions.handleDelegateClick}
+        onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
         <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />

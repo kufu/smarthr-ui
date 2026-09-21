@@ -20,7 +20,11 @@ import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
 import { useLatest } from '../../../hooks/useLatest'
+import { findDelegateTarget } from '../../../libs/delegate'
 import { tabbable } from '../../../libs/tabbable'
+import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
+
+import { DROPDOWN_CONTENT_CLASS_NAME } from './constants'
 
 import type { Rect } from './types'
 
@@ -36,24 +40,23 @@ type DropdownContextType = {
   triggerLayoutEffectRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickCloser: () => void
+  handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
 }
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
+const NOOP = () => null
 
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: createRef(),
-  triggerLayoutEffectRef: () => undefined,
-  handleDelegateClickTrigger: () => {
-    /* noop */
-  },
-  handleDelegateClickCloser: () => {
-    /* noop */
-  },
-  DropdownContentRoot: () => null,
+  triggerLayoutEffectRef: NOOP,
+  handleDelegateClickTrigger: NOOP,
+  handleDelegateClickCloser: NOOP,
+  handleDelegateClickContentCloser: NOOP,
+  DropdownContentRoot: NOOP,
   contentId: '',
 })
 
@@ -90,6 +93,15 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         latest.closeFrame.request(() => latest.onClose?.())
       }
     }
+    const handleDelegateClickCloser = () => {
+      setActive(false)
+      actualClose()
+
+      // return focus to the Trigger
+      if (triggerElementRef.current) {
+        tabbable(triggerElementRef.current)[0]?.focus()
+      }
+    }
 
     return {
       DropdownContentRoot,
@@ -112,13 +124,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           }
         }
       },
-      handleDelegateClickCloser: () => {
-        setActive(false)
-        actualClose()
+      handleDelegateClickCloser,
+      handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => {
+        const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
 
-        // return focus to the Trigger
-        if (triggerElementRef.current) {
-          tabbable(triggerElementRef.current)[0]?.focus()
+        // HINT: Dropdownがネストしている場合、もっとも近いDropdownだけを閉じる
+        if (closer?.closest(`.${DROPDOWN_CONTENT_CLASS_NAME}`) === e.currentTarget) {
+          handleDelegateClickCloser()
         }
       },
     }
@@ -182,6 +194,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerLayoutEffectRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
+          handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
           contentId,
         }}
