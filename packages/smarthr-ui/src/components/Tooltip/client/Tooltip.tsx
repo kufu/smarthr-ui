@@ -172,6 +172,9 @@ export const Tooltip: FC<Props> = ({
     }
   }, [latest])
 
+  // TODO: childrenが変わった場合にfocusable判定が再実行されない。また、focusableから
+  // 非focusableに変わった場合、以前設定したaria-labelledby/aria-describedbyが残り続ける。
+  // どちらも今回のリファクタリング以前から存在する既存の課題であり、別途対応する
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (!node) {
@@ -192,6 +195,10 @@ export const Tooltip: FC<Props> = ({
     [tabIndex, isLabel, messageId],
   )
 
+  // TODO: ariaDescribedbyTarget==='inner'かつchildrenが非focusableの場合、
+  // inner span(children直下のラッパー)側にaria-describedbyを設定するロジックが無く、
+  // メッセージとの関連付けが失われる。今回のリファクタリング以前から存在する既存の課題であり、
+  // 別途対応する
   const ariaDescribedby =
     isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
 
