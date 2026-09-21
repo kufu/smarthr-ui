@@ -103,7 +103,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
-      triggerCallbckRef: (node: HTMLElement | null) => {
+      triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
 
         return () => {
@@ -258,7 +258,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   )
 
   const triggerLayoutEffectRef = useMergeRefs(
-    functions.triggerCallbckRef,
+    functions.triggerCallbackRef,
     baseTriggerLayoutEffectRef,
   )
 
