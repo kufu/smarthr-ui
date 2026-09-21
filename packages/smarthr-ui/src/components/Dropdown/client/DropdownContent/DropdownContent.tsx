@@ -19,7 +19,7 @@ import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
 
-import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
+import { getContentBoxStyle } from './getContentBoxStyle'
 
 const classNameGenerator = tv({
   base: [
@@ -50,27 +50,21 @@ export const DropdownContent: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
-  const [contentBox, setContentBox] = useState<ContentBoxStyle>({
-    top: 'auto',
-    maxHeight: '',
-  })
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
-
-  const style = (() => {
-    const defaultMargin = theme.spacingByChar(0.5)
-    const leftMargin =
-      contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
-    const rightMargin =
-      contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
-    const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
-
-    return {
-      insetBlockStart: contentBox.top,
-      insetInlineStart: contentBox.left || undefined,
-      insetInlineEnd: contentBox.right || undefined,
-      maxWidth: maxWidthStyle,
+  // TODO: triggerRectの変化によってのみstyles.contentは変化する
+  // triggerRectはstyles.content生成のためだけにしか利用されていない
+  // 後続のlayoutEffectと併せて整理する
+  const [styles, setStyles] = useState<{
+    content: {
+      insetBlockStart: string
+      insetInlineStart?: string
+      insetInlineEnd?: string
+      maxWidth: string
     }
-  })()
+    body: {
+      maxHeight?: string
+    }
+  }>({ content: { insetBlockStart: 'auto', maxWidth: '' }, body: {} })
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
     useContext(DropdownContext)
@@ -88,23 +82,54 @@ export const DropdownContent: FC<Props> = ({
         return
       }
 
-      setContentBox(
-        getContentBoxStyle(
-          triggerRect,
-          {
-            width: node.offsetWidth,
-            height: node.offsetHeight,
-          },
-          {
-            width: document.body.clientWidth,
-            height: innerHeight,
-          },
-          {
-            top: scrollY,
-            left: scrollX,
-          },
-        ),
+      const contentBox = getContentBoxStyle(
+        triggerRect,
+        {
+          width: node.offsetWidth,
+          height: node.offsetHeight,
+        },
+        {
+          width: document.body.clientWidth,
+          height: innerHeight,
+        },
+        {
+          top: scrollY,
+          left: scrollX,
+        },
       )
+      const defaultMargin = theme.spacingByChar(0.5)
+      const leftMargin =
+        contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
+      const rightMargin =
+        contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
+      const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
+
+      setStyles((current) => {
+        const content = {
+          insetBlockStart: contentBox.top,
+          insetInlineStart: contentBox.left || undefined,
+          insetInlineEnd: contentBox.right || undefined,
+          maxWidth: maxWidthStyle,
+        }
+        const body = {
+          maxHeight: contentBox.maxHeight || undefined,
+        }
+
+        if (
+          current.content.insetBlockStart === content.insetBlockStart &&
+          current.content.insetInlineStart === content.insetInlineStart &&
+          current.content.insetInlineEnd === content.insetInlineEnd &&
+          current.content.maxWidth === content.maxWidth &&
+          current.body.maxHeight === body.maxHeight
+        ) {
+          return current
+        }
+
+        return {
+          content,
+          body,
+        }
+      })
 
       setIsActive(true)
 
@@ -121,16 +146,12 @@ export const DropdownContent: FC<Props> = ({
 
       return () => latest.focusFrame.cancel()
     },
-    [triggerRect, latest],
+    [triggerRect, theme, latest],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(contentCallbackRef, layoutEffectRef)
-
-  const styleAttr = {
-    maxHeight: contentBox.maxHeight || undefined,
-  }
 
   return (
     <DropdownContentRoot>
@@ -139,16 +160,16 @@ export const DropdownContent: FC<Props> = ({
         ref={mergedRef}
         role="presentation"
         className={actualClassName}
-        style={style}
+        style={styles.content}
         data-dropdown-active={isActive || undefined}
         onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
         <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
         {controllable ? (
-          <div style={styleAttr}>{children}</div>
+          <div style={styles.body}>{children}</div>
         ) : (
-          <DropdownCloser className="shr-flex shr-flex-col" style={styleAttr}>
+          <DropdownCloser className="shr-flex shr-flex-col" style={styles.body}>
             {children}
           </DropdownCloser>
         )}
