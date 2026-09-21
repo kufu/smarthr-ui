@@ -26,7 +26,7 @@ const classNameGenerator = tv({
     DROPDOWN_CONTENT_CLASS_NAME,
     'shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
     'forced-colors:shr-outline forced-colors:shr-outline-1',
-    'shr-invisible data-[dropdown-active]:shr-visible',
+    'shr-invisible data-[dropdown-mounted]:shr-visible',
   ],
 })
 
@@ -49,7 +49,7 @@ export const DropdownContent: FC<Props> = ({
   ...rest
 }) => {
   const theme = useTheme()
-  const [isActive, setIsActive] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   // TODO: triggerRectの変化によってのみstylesは変化する
   // triggerRectはstyles生成のためだけにしか利用されていない
   // 後続のlayoutEffectと併せて整理する
@@ -72,7 +72,7 @@ export const DropdownContent: FC<Props> = ({
   const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
-    isActive,
+    isMounted,
     focusFrame,
   })
 
@@ -131,13 +131,13 @@ export const DropdownContent: FC<Props> = ({
         }
       })
 
-      setIsActive(true)
+      setIsMounted(true)
 
-      if (!latest.isActive) {
+      if (!latest.isMounted) {
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-        // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
+        // フォーカスを受け付けない。setIsMounted(true) の直後に focus() を呼んでも DOM がまだ
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
         latest.focusFrame.request(() => {
           node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
@@ -161,7 +161,7 @@ export const DropdownContent: FC<Props> = ({
         role="presentation"
         className={actualClassName}
         style={styles.wrapper}
-        data-dropdown-active={isActive || undefined}
+        data-dropdown-mounted={isMounted || undefined}
         onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
