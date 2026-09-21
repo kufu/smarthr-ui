@@ -107,6 +107,12 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       latest.active ? latest.createPortal(props.children) : null
     DropdownContentRoot.displayName = 'DropdownContentRoot'
 
+    const updateTriggerRect = () => {
+      if (triggerButton) {
+        setTriggerRect(triggerButton.getBoundingClientRect())
+      }
+    }
+
     const actualClose = () => {
       if (latest.onClose) {
         latest.closeFrame.request(() => latest.onClose?.())
@@ -124,9 +130,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
+      updateTriggerRect,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
-        triggerButton = node?.querySelector('button')
+        triggerButton = node?.querySelector<HTMLButtonElement>('button')
 
         return () => {
           trigger = null
@@ -229,7 +236,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           actualClose()
         } else {
           setActive(true)
-          setTriggerRect(triggerButton.getBoundingClientRect())
+          updateTriggerRect()
 
           if (latest.onOpen) {
             latest.openFrame.request(() => latest.onOpen?.())
@@ -274,23 +281,16 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         }
       }
 
-      const updateTriggerRect = () => {
-        const button = node.querySelector<HTMLButtonElement>('button')
-
-        if (button) {
-          setTriggerRect(button.getBoundingClientRect())
-        }
-      }
       const listenerOption = { passive: true }
 
       document.body.addEventListener('click', handleClickBody, false)
-      window.addEventListener('scroll', updateTriggerRect, listenerOption)
-      window.addEventListener('resize', updateTriggerRect, listenerOption)
+      window.addEventListener('scroll', functions.updateTriggerRect, listenerOption)
+      window.addEventListener('resize', functions.updateTriggerRect, listenerOption)
 
       return () => {
         document.body.removeEventListener('click', handleClickBody, false)
-        window.removeEventListener('scroll', updateTriggerRect)
-        window.removeEventListener('resize', updateTriggerRect)
+        window.removeEventListener('scroll', functions.updateTriggerRect)
+        window.removeEventListener('resize', functions.updateTriggerRect)
       }
     },
     [active, functions, latest],
