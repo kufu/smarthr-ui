@@ -106,16 +106,17 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         trigger = node
 
         return () => {
+          trigger = null
           latest.openFrame.cancel()
           latest.closeFrame.cancel()
         }
       },
       contentCallbackRef: (node: HTMLElement | null) => {
-        dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
-
         if (!node) {
           return
         }
+
+        dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
 
         const handleKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Tab') {
@@ -186,6 +187,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         window.addEventListener('keydown', handleKeyDown)
 
         return () => {
+          dummyFocusContent = null
           window.removeEventListener('keydown', handleKeyDown)
         }
       },
