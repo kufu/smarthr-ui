@@ -1,24 +1,11 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
-import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
-import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
-import { useTheme } from '../../../../hooks/client/useTheme'
 import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
-
-import { getContentBoxStyle } from './getContentBoxStyle'
 
 const classNameGenerator = tv({
   base: [
@@ -28,18 +15,6 @@ const classNameGenerator = tv({
     'shr-invisible data-[dropdown-mounted]:shr-visible',
   ],
 })
-
-const INITIAL_STYLES: {
-  wrapper: {
-    insetBlockStart: string
-    insetInlineStart?: string
-    insetInlineEnd?: string
-    maxWidth: string
-  }
-  body: {
-    maxHeight?: string
-  }
-} = { wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} }
 
 type BaseProps = PropsWithChildren<{
   /**
@@ -60,102 +35,20 @@ export const DropdownContent: FC<Props> = ({
   controllable = false,
   ...rest
 }) => {
-  const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
-    useContext(DropdownContext)
+  const {
+    DropdownContentRoot,
+    contentStyles,
+    contentCallbackRef,
+    handleDelegateClickContentCloser,
+  } = useContext(DropdownContext)
 
-  // TODO: triggerRectの変化によってのみcontentStylesは変化する
-  // triggerRectはcontentStyles生成のためだけにしか利用されていない
-  // 後続のlayoutEffectと併せて整理する
-  const [contentStyles, setContentStyles] = useState(INITIAL_STYLES)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
-
-  const theme = useTheme()
-
-  const focusFrame = useAnimationFrame()
-
-  const layoutEffectRef = useLayoutEffectRef(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const contentBox = getContentBoxStyle(
-        triggerRect,
-        {
-          width: node.offsetWidth,
-          height: node.offsetHeight,
-        },
-        {
-          width: document.body.clientWidth,
-          height: innerHeight,
-        },
-        {
-          top: scrollY,
-          left: scrollX,
-        },
-      )
-      const defaultMargin = theme.spacingByChar(0.5)
-      const leftMargin =
-        contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
-      const rightMargin =
-        contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
-      const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
-
-      setContentStyles((current) => {
-        const wrapper = {
-          insetBlockStart: contentBox.top,
-          insetInlineStart: contentBox.left || undefined,
-          insetInlineEnd: contentBox.right || undefined,
-          maxWidth: maxWidthStyle,
-        }
-        const body = {
-          maxHeight: contentBox.maxHeight || undefined,
-        }
-
-        if (
-          current.wrapper.insetBlockStart === wrapper.insetBlockStart &&
-          current.wrapper.insetInlineStart === wrapper.insetInlineStart &&
-          current.wrapper.insetInlineEnd === wrapper.insetInlineEnd &&
-          current.wrapper.maxWidth === wrapper.maxWidth &&
-          current.body.maxHeight === body.maxHeight
-        ) {
-          return current
-        }
-
-        return {
-          wrapper,
-          body,
-        }
-      })
-
-      const dropdownMountedAttr = 'data-dropdown-mounted'
-
-      if (node.getAttribute(dropdownMountedAttr) !== 'true') {
-        node.setAttribute(dropdownMountedAttr, 'true')
-        // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
-        // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
-        // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
-        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        focusFrame.request(() => {
-          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
-        })
-      }
-
-      return focusFrame.cancel
-    },
-    [triggerRect, theme, focusFrame],
-  )
-
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(contentCallbackRef, layoutEffectRef)
 
   return (
     <DropdownContentRoot>
       <div
         {...rest}
-        ref={mergedRef}
+        ref={contentCallbackRef}
         role="presentation"
         className={actualClassName}
         style={contentStyles.wrapper}
