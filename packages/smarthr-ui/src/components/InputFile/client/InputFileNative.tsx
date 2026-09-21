@@ -52,25 +52,27 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesRef = useRef(false)
 
-    const innerRef = useRef<HTMLInputElement>(null)
-    const mergedRef = useMergeRefs(innerRef, ref)
-
     const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
+      let input: HTMLInputElement | null = null
+
       const updateFiles = (newFiles: File[]) => {
         latest.onChange?.(newFiles)
         setFiles(newFiles)
       }
 
       return {
+        callbackRef: (node: HTMLInputElement | null) => {
+          input = node
+        },
         handleChange: (e: ChangeEvent<HTMLInputElement>) => {
           if (!isUpdatingFilesRef.current) {
             updateFiles(Array.from(e.target.files ?? []))
           }
         },
         handleDelete: (e: MouseEvent<HTMLButtonElement>) => {
-          if (!innerRef.current) {
+          if (!input) {
             return
           }
 
@@ -86,7 +88,7 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
           })
 
           isUpdatingFilesRef.current = true
-          innerRef.current.files = buff.files
+          input.files = buff.files
           isUpdatingFilesRef.current = false
         },
         handleClosePreview: () => {
@@ -105,6 +107,8 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
         },
       }
     }, [latest])
+
+    const mergedRef = useMergeRefs(functions.callbackRef, ref)
 
     const errorAttr = error || undefined
 
