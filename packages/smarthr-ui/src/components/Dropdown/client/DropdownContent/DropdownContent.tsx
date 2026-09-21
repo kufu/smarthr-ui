@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
@@ -59,15 +60,18 @@ export const DropdownContent: FC<Props> = ({
   controllable = false,
   ...rest
 }) => {
-  const theme = useTheme()
+  const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
+    useContext(DropdownContext)
+
   // TODO: triggerRectの変化によってのみcontentStylesは変化する
   // triggerRectはcontentStyles生成のためだけにしか利用されていない
   // 後続のlayoutEffectと併せて整理する
   const [contentStyles, setContentStyles] = useState(INITIAL_STYLES)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
-    useContext(DropdownContext)
+  const theme = useTheme()
+
+  const focusFrame = useAnimationFrame()
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -126,16 +130,21 @@ export const DropdownContent: FC<Props> = ({
 
       const dropdownMountedAttr = 'data-dropdown-mounted'
 
-      if (!node.getAttribute(dropdownMountedAttr) !== 'true') {
+      if (node.getAttribute(dropdownMountedAttr) !== 'true') {
         node.setAttribute(dropdownMountedAttr, 'true')
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼ぶようにする
-        node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
+        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
+        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
+        focusFrame.request(() => {
+          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
+        })
       }
+
+      return focusFrame.cancel
     },
-    [triggerRect, theme],
+    [triggerRect, theme, focusFrame],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
