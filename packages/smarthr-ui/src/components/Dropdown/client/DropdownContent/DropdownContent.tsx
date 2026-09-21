@@ -50,11 +50,11 @@ export const DropdownContent: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
-  // TODO: triggerRectの変化によってのみstyles.contentは変化する
-  // triggerRectはstyles.content生成のためだけにしか利用されていない
+  // TODO: triggerRectの変化によってのみstylesは変化する
+  // triggerRectはstyles生成のためだけにしか利用されていない
   // 後続のlayoutEffectと併せて整理する
   const [styles, setStyles] = useState<{
-    content: {
+    wrapper: {
       insetBlockStart: string
       insetInlineStart?: string
       insetInlineEnd?: string
@@ -63,7 +63,7 @@ export const DropdownContent: FC<Props> = ({
     body: {
       maxHeight?: string
     }
-  }>({ content: { insetBlockStart: 'auto', maxWidth: '' }, body: {} })
+  }>({ wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} })
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
@@ -105,7 +105,7 @@ export const DropdownContent: FC<Props> = ({
       const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
       setStyles((current) => {
-        const content = {
+        const wrapper = {
           insetBlockStart: contentBox.top,
           insetInlineStart: contentBox.left || undefined,
           insetInlineEnd: contentBox.right || undefined,
@@ -116,17 +116,17 @@ export const DropdownContent: FC<Props> = ({
         }
 
         if (
-          current.content.insetBlockStart === content.insetBlockStart &&
-          current.content.insetInlineStart === content.insetInlineStart &&
-          current.content.insetInlineEnd === content.insetInlineEnd &&
-          current.content.maxWidth === content.maxWidth &&
+          current.wrapper.insetBlockStart === wrapper.insetBlockStart &&
+          current.wrapper.insetInlineStart === wrapper.insetInlineStart &&
+          current.wrapper.insetInlineEnd === wrapper.insetInlineEnd &&
+          current.wrapper.maxWidth === wrapper.maxWidth &&
           current.body.maxHeight === body.maxHeight
         ) {
           return current
         }
 
         return {
-          content,
+          wrapper,
           body,
         }
       })
@@ -160,7 +160,7 @@ export const DropdownContent: FC<Props> = ({
         ref={mergedRef}
         role="presentation"
         className={actualClassName}
-        style={styles.content}
+        style={styles.wrapper}
         data-dropdown-active={isActive || undefined}
         onClick={handleDelegateClickContentCloser}
       >
