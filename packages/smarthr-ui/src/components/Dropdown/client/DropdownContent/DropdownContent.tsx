@@ -60,10 +60,10 @@ export const DropdownContent: FC<Props> = ({
   ...rest
 }) => {
   const theme = useTheme()
-  // TODO: triggerRectの変化によってのみstylesは変化する
-  // triggerRectはstyles生成のためだけにしか利用されていない
+  // TODO: triggerRectの変化によってのみcontentStylesは変化する
+  // triggerRectはcontentStyles生成のためだけにしか利用されていない
   // 後続のlayoutEffectと併せて整理する
-  const [styles, setStyles] = useState(INITIAL_STYLES)
+  const [contentStyles, setContentStyles] = useState(INITIAL_STYLES)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
@@ -97,7 +97,7 @@ export const DropdownContent: FC<Props> = ({
         contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
       const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
-      setStyles((current) => {
+      setContentStyles((current) => {
         const wrapper = {
           insetBlockStart: contentBox.top,
           insetInlineStart: contentBox.left || undefined,
@@ -149,15 +149,15 @@ export const DropdownContent: FC<Props> = ({
         ref={mergedRef}
         role="presentation"
         className={actualClassName}
-        style={styles.wrapper}
+        style={contentStyles.wrapper}
         onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
         <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
         {controllable ? (
-          <div style={styles.body}>{children}</div>
+          <div style={contentStyles.body}>{children}</div>
         ) : (
-          <DropdownCloser className="shr-flex shr-flex-col" style={styles.body}>
+          <DropdownCloser className="shr-flex shr-flex-col" style={contentStyles.body}>
             {children}
           </DropdownCloser>
         )}
