@@ -10,11 +10,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
-import { useLatest } from '../../../../hooks/useLatest'
 import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
@@ -30,6 +28,18 @@ const classNameGenerator = tv({
   ],
 })
 
+const INITIAL_STYLES: {
+  wrapper: {
+    insetBlockStart: string
+    insetInlineStart?: string
+    insetInlineEnd?: string
+    maxWidth: string
+  }
+  body: {
+    maxHeight?: string
+  }
+} = { wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} }
+
 type BaseProps = PropsWithChildren<{
   /**
    * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
@@ -40,7 +50,8 @@ type BaseProps = PropsWithChildren<{
 
 // HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
 // クリックハンドラが必要な場合はchildren側に要素をラップして設定する
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick'>
+type Props = BaseProps &
+  Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick' | 'data-dropdown-mounted'>
 
 export const DropdownContent: FC<Props> = ({
   children,
@@ -49,32 +60,14 @@ export const DropdownContent: FC<Props> = ({
   ...rest
 }) => {
   const theme = useTheme()
-  const [isMounted, setIsMounted] = useState(false)
   // TODO: triggerRectの変化によってのみstylesは変化する
   // triggerRectはstyles生成のためだけにしか利用されていない
   // 後続のlayoutEffectと併せて整理する
-  const [styles, setStyles] = useState<{
-    wrapper: {
-      insetBlockStart: string
-      insetInlineStart?: string
-      insetInlineEnd?: string
-      maxWidth: string
-    }
-    body: {
-      maxHeight?: string
-    }
-  }>({ wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} })
+  const [styles, setStyles] = useState(INITIAL_STYLES)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
     useContext(DropdownContext)
-
-  const focusFrame = useAnimationFrame()
-
-  const latest = useLatest({
-    isMounted,
-    focusFrame,
-  })
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -131,22 +124,18 @@ export const DropdownContent: FC<Props> = ({
         }
       })
 
-      setIsMounted(true)
+      const dropdownMountedAttr = 'data-dropdown-mounted'
 
-      if (!latest.isMounted) {
+      if (!node.getAttribute(dropdownMountedAttr) !== 'true') {
+        node.setAttribute(dropdownMountedAttr, 'true')
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-        // フォーカスを受け付けない。setIsMounted(true) の直後に focus() を呼んでも DOM がまだ
-        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        latest.focusFrame.request(() => {
-          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
-        })
+        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼ぶようにする
+        node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
       }
-
-      return () => latest.focusFrame.cancel()
     },
-    [triggerRect, theme, latest],
+    [triggerRect, theme],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
@@ -161,7 +150,6 @@ export const DropdownContent: FC<Props> = ({
         role="presentation"
         className={actualClassName}
         style={styles.wrapper}
-        data-dropdown-mounted={isMounted || undefined}
         onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
