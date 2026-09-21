@@ -99,6 +99,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const functions = useMemo(() => {
     let trigger: HTMLElement | null = null
+    let triggerButton: HTMLButtonElement | null | undefined = null
     let dummyFocusContent: HTMLElement | null | undefined = null
 
     // This is the root container of a dropdown content located in outside the DOM tree
@@ -125,9 +126,11 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       DropdownContentRoot,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
+        triggerButton = node?.querySelector('button')
 
         return () => {
           trigger = null
+          triggerButton = null
           latest.openFrame.cancel()
           latest.closeFrame.cancel()
         }
@@ -213,18 +216,20 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         }
       },
       actualClose,
-      handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => {
-        const button = (e.target as HTMLElement).closest('button')
-
+      handleDelegateClickTrigger: () => {
         // 引き金となる要素が disabled な場合、処理を差し込む必要がない
-        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+        if (
+          !triggerButton ||
+          triggerButton.disabled ||
+          triggerButton.getAttribute('aria-disabled') === 'true'
+        ) {
           return
         } else if (latest.active) {
           setActive(false)
           actualClose()
         } else {
           setActive(true)
-          setTriggerRect(button.getBoundingClientRect())
+          setTriggerRect(triggerButton.getBoundingClientRect())
 
           if (latest.onOpen) {
             latest.openFrame.request(() => latest.onOpen?.())
@@ -269,9 +274,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         }
       }
       const updateTriggerRect = () => {
-        if (node) {
-          setTriggerRect(node.getBoundingClientRect())
-        }
+        // TODO: triggerではなくtriggerButtonで範囲を算出する
+        setTriggerRect(node.getBoundingClientRect())
       }
       const listenerOption = { passive: true }
 
