@@ -26,7 +26,7 @@ const classNameGenerator = tv({
 })
 
 export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => {
-  const { active, handleDelegateClickTrigger, contentId, triggerElementRef } =
+  const { active, handleDelegateClickTrigger, contentId, triggerLayoutEffectRef } =
     useContext(DropdownContext)
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
@@ -43,7 +43,7 @@ export const DropdownTrigger: FC<Props> = ({ children, className, tooltip }) => 
     [active, contentId],
   )
 
-  const mergedRef = useMergeRefs(triggerElementRef, layoutEffectRef)
+  const mergedRef = useMergeRefs(triggerLayoutEffectRef, layoutEffectRef)
 
   return (
     // HINT: Trigger要素自体にonClickが設定されている場合、先にDropdownを開いた状態で処理を行いたい
