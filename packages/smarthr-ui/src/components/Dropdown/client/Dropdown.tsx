@@ -24,7 +24,7 @@ import { findDelegateTarget } from '../../../libs/delegate'
 import { tabbable } from '../../../libs/tabbable'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
-import { DROPDOWN_CONTENT_CLASS_NAME } from './constants'
+import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
 
 import type { Rect } from './types'
 
@@ -38,14 +38,15 @@ type DropdownContextType = {
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
   triggerLayoutEffectRef: (node: HTMLElement | null) => void
+  contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
-  handleDelegateClickCloser: () => void
   handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
   DropdownContentRoot: FC<{ children: ReactNode }>
   contentId: string
 }
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
+const KEY_ESCAPE = /^Esc(ape)?$/
 const NOOP = () => null
 
 export const DropdownContext = createContext<DropdownContextType>({
@@ -53,8 +54,8 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerRect: initialRect,
   triggerElementRef: createRef(),
   triggerLayoutEffectRef: NOOP,
+  contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
-  handleDelegateClickCloser: NOOP,
   handleDelegateClickContentCloser: NOOP,
   DropdownContentRoot: NOOP,
   contentId: '',
@@ -84,10 +85,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   })
 
   const functions = useMemo(() => {
+    let dummyFocusContent: HTMLElement | null | undefined = null
+
     // This is the root container of a dropdown content located in outside the DOM tree
     const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
       latest.active ? latest.createPortal(props.children) : null
     DropdownContentRoot.displayName = 'DropdownContentRoot'
+
     const actualClose = () => {
       if (latest.onClose) {
         latest.closeFrame.request(() => latest.onClose?.())
@@ -105,6 +109,87 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
+      contentCallbackRef: (node: HTMLElement | null) => {
+        dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
+
+        if (!node) {
+          return
+        }
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+          if (e.key === 'Tab') {
+            if (!triggerElementRef.current) {
+              return
+            }
+
+            const tabbablesInContent = tabbable(node)
+
+            if (tabbablesInContent.length === 0) {
+              return
+            }
+
+            const trigger = tabbable(triggerElementRef.current).at(-1)
+            const firstTabbable = tabbablesInContent[0]
+
+            if (e.target === trigger) {
+              if (e.shiftKey) {
+                // move focus previous of the Trigger
+                return
+              }
+
+              // focus a first tabbable element in the dropdown content
+              e.preventDefault()
+              firstTabbable.focus()
+
+              return
+            } else if (e.shiftKey) {
+              if (e.target === firstTabbable || e.target === dummyFocusContent) {
+                // focus the Trigger
+                e.preventDefault()
+                trigger!.focus()
+                handleDelegateClickCloser()
+              }
+            } else if (e.target === tabbablesInContent.at(-1)) {
+              // focus the Trigger
+              e.preventDefault()
+              trigger!.focus()
+              handleDelegateClickCloser()
+            }
+          } else if (KEY_ESCAPE.test(e.key)) {
+            if (e.target && e.target === dummyFocusContent) {
+              handleDelegateClickCloser()
+
+              return
+            }
+
+            const trigger = triggerElementRef.current
+              ? tabbable(triggerElementRef.current)[0]
+              : undefined
+
+            if (trigger && e.target === trigger) {
+              // close the dropdown when the Trigger is focused and Esc key is pressed
+              handleDelegateClickCloser()
+
+              return
+            }
+
+            for (const inner of tabbable(node)) {
+              if (inner === e.target) {
+                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
+                handleDelegateClickCloser()
+
+                break
+              }
+            }
+          }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+
+        return () => {
+          window.removeEventListener('keydown', handleKeyDown)
+        }
+      },
       actualClose,
       handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => {
         const button = (e.target as HTMLElement).closest('button')
@@ -124,7 +209,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           }
         }
       },
-      handleDelegateClickCloser,
       handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => {
         const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
 
@@ -192,8 +276,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           triggerRect,
           triggerElementRef,
           triggerLayoutEffectRef,
+          contentCallbackRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
-          handleDelegateClickCloser: functions.handleDelegateClickCloser,
           handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
           contentId,

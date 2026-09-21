@@ -15,15 +15,11 @@ import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { tabbable } from '../../../../libs/tabbable'
 import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
-import { DROPDOWN_CONTENT_CLASS_NAME } from '../constants'
+import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
 
 import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
-
-const KEY_ESCAPE = /^Esc(ape)?$/
-const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dropdown-dummyFocus'
 
 const classNameGenerator = tv({
   base: [
@@ -76,110 +72,15 @@ export const DropdownContent: FC<Props> = ({
     }
   })()
 
-  const {
-    DropdownContentRoot,
-    triggerRect,
-    triggerElementRef,
-    handleDelegateClickCloser,
-    handleDelegateClickContentCloser,
-  } = useContext(DropdownContext)
+  const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
+    useContext(DropdownContext)
 
   const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
-    triggerElementRef,
-    handleDelegateClickCloser,
     isActive,
     focusFrame,
   })
-
-  const functions = useMemo(() => {
-    let dummyFocusContent: HTMLElement | null = null
-
-    return {
-      contentCallbackRef: (node: HTMLElement | null) => {
-        dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`) ?? null
-
-        if (!node) {
-          return
-        }
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-          if (e.key === 'Tab') {
-            if (!latest.triggerElementRef.current) {
-              return
-            }
-
-            const tabbablesInContent = tabbable(node)
-
-            if (tabbablesInContent.length === 0) {
-              return
-            }
-
-            const trigger = tabbable(latest.triggerElementRef.current).at(-1)
-            const firstTabbable = tabbablesInContent[0]
-
-            if (e.target === trigger) {
-              if (e.shiftKey) {
-                // move focus previous of the Trigger
-                return
-              }
-
-              // focus a first tabbable element in the dropdown content
-              e.preventDefault()
-              firstTabbable.focus()
-
-              return
-            } else if (e.shiftKey) {
-              if (e.target === firstTabbable || e.target === dummyFocusContent) {
-                // focus the Trigger
-                e.preventDefault()
-                trigger!.focus()
-                latest.handleDelegateClickCloser()
-              }
-            } else if (e.target === tabbablesInContent.at(-1)) {
-              // focus the Trigger
-              e.preventDefault()
-              trigger!.focus()
-              latest.handleDelegateClickCloser()
-            }
-          } else if (KEY_ESCAPE.test(e.key)) {
-            if (e.target && e.target === dummyFocusContent) {
-              latest.handleDelegateClickCloser()
-
-              return
-            }
-
-            const trigger = latest.triggerElementRef.current
-              ? tabbable(latest.triggerElementRef.current)[0]
-              : undefined
-
-            if (trigger && e.target === trigger) {
-              // close the dropdown when the Trigger is focused and Esc key is pressed
-              latest.handleDelegateClickCloser()
-
-              return
-            }
-
-            for (const inner of tabbable(node)) {
-              if (inner === e.target) {
-                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-                latest.handleDelegateClickCloser()
-
-                break
-              }
-            }
-          }
-        }
-
-        window.addEventListener('keydown', handleKeyDown)
-
-        return () => {
-          window.removeEventListener('keydown', handleKeyDown)
-        }
-      },
-    }
-  }, [latest])
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -214,7 +115,7 @@ export const DropdownContent: FC<Props> = ({
         // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
         latest.focusFrame.request(() => {
-          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`)?.focus()
+          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
         })
       }
 
@@ -225,7 +126,7 @@ export const DropdownContent: FC<Props> = ({
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(functions.contentCallbackRef, layoutEffectRef)
+  const mergedRef = useMergeRefs(contentCallbackRef, layoutEffectRef)
 
   const styleAttr = {
     maxHeight: contentBox.maxHeight || undefined,
@@ -243,7 +144,7 @@ export const DropdownContent: FC<Props> = ({
         onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-        <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
+        <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
         {controllable ? (
           <div style={styleAttr}>{children}</div>
         ) : (
