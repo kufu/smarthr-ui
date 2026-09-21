@@ -273,9 +273,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           functions.actualClose()
         }
       }
+
       const updateTriggerRect = () => {
-        // TODO: triggerではなくtriggerButtonで範囲を算出する
-        setTriggerRect(node.getBoundingClientRect())
+        const button = node.querySelector<HTMLButtonElement>('button')
+
+        if (button) {
+          setTriggerRect(button.getBoundingClientRect())
+        }
       }
       const listenerOption = { passive: true }
 
