@@ -14,7 +14,6 @@ import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
-import { useLatest } from '../../../../hooks/useLatest'
 import { DropdownCloser } from '../../DropdownCloser'
 import { DropdownContext } from '../Dropdown'
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
@@ -26,9 +25,21 @@ const classNameGenerator = tv({
     DROPDOWN_CONTENT_CLASS_NAME,
     'shr-absolute shr-z-overlap-base shr-overflow-y-auto shr-break-words shr-rounded-m shr-bg-white shr-shadow-layer-3',
     'forced-colors:shr-outline forced-colors:shr-outline-1',
-    'shr-invisible data-[dropdown-active]:shr-visible',
+    'shr-invisible data-[dropdown-mounted]:shr-visible',
   ],
 })
+
+const INITIAL_STYLES: {
+  wrapper: {
+    insetBlockStart: string
+    insetInlineStart?: string
+    insetInlineEnd?: string
+    maxWidth: string
+  }
+  body: {
+    maxHeight?: string
+  }
+} = { wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} }
 
 type BaseProps = PropsWithChildren<{
   /**
@@ -40,7 +51,8 @@ type BaseProps = PropsWithChildren<{
 
 // HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
 // クリックハンドラが必要な場合はchildren側に要素をラップして設定する
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick'>
+type Props = BaseProps &
+  Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick' | 'data-dropdown-mounted'>
 
 export const DropdownContent: FC<Props> = ({
   children,
@@ -48,33 +60,18 @@ export const DropdownContent: FC<Props> = ({
   controllable = false,
   ...rest
 }) => {
-  const theme = useTheme()
-  const [isActive, setIsActive] = useState(false)
-  // TODO: triggerRectの変化によってのみstyles.contentは変化する
-  // triggerRectはstyles.content生成のためだけにしか利用されていない
-  // 後続のlayoutEffectと併せて整理する
-  const [styles, setStyles] = useState<{
-    content: {
-      insetBlockStart: string
-      insetInlineStart?: string
-      insetInlineEnd?: string
-      maxWidth: string
-    }
-    body: {
-      maxHeight?: string
-    }
-  }>({ content: { insetBlockStart: 'auto', maxWidth: '' }, body: {} })
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
-
   const { DropdownContentRoot, triggerRect, contentCallbackRef, handleDelegateClickContentCloser } =
     useContext(DropdownContext)
 
-  const focusFrame = useAnimationFrame()
+  // TODO: triggerRectの変化によってのみcontentStylesは変化する
+  // triggerRectはcontentStyles生成のためだけにしか利用されていない
+  // 後続のlayoutEffectと併せて整理する
+  const [contentStyles, setContentStyles] = useState(INITIAL_STYLES)
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  const latest = useLatest({
-    isActive,
-    focusFrame,
-  })
+  const theme = useTheme()
+
+  const focusFrame = useAnimationFrame()
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -104,8 +101,8 @@ export const DropdownContent: FC<Props> = ({
         contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
       const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
-      setStyles((current) => {
-        const content = {
+      setContentStyles((current) => {
+        const wrapper = {
           insetBlockStart: contentBox.top,
           insetInlineStart: contentBox.left || undefined,
           insetInlineEnd: contentBox.right || undefined,
@@ -116,37 +113,38 @@ export const DropdownContent: FC<Props> = ({
         }
 
         if (
-          current.content.insetBlockStart === content.insetBlockStart &&
-          current.content.insetInlineStart === content.insetInlineStart &&
-          current.content.insetInlineEnd === content.insetInlineEnd &&
-          current.content.maxWidth === content.maxWidth &&
+          current.wrapper.insetBlockStart === wrapper.insetBlockStart &&
+          current.wrapper.insetInlineStart === wrapper.insetInlineStart &&
+          current.wrapper.insetInlineEnd === wrapper.insetInlineEnd &&
+          current.wrapper.maxWidth === wrapper.maxWidth &&
           current.body.maxHeight === body.maxHeight
         ) {
           return current
         }
 
         return {
-          content,
+          wrapper,
           body,
         }
       })
 
-      setIsActive(true)
+      const dropdownMountedAttr = 'data-dropdown-mounted'
 
-      if (!latest.isActive) {
+      if (node.getAttribute(dropdownMountedAttr) !== 'true') {
+        node.setAttribute(dropdownMountedAttr, 'true')
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-        // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
+        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        latest.focusFrame.request(() => {
+        focusFrame.request(() => {
           node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
         })
       }
 
-      return () => latest.focusFrame.cancel()
+      return focusFrame.cancel
     },
-    [triggerRect, theme, latest],
+    [triggerRect, theme, focusFrame],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
@@ -160,16 +158,15 @@ export const DropdownContent: FC<Props> = ({
         ref={mergedRef}
         role="presentation"
         className={actualClassName}
-        style={styles.content}
-        data-dropdown-active={isActive || undefined}
+        style={contentStyles.wrapper}
         onClick={handleDelegateClickContentCloser}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
         <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
         {controllable ? (
-          <div style={styles.body}>{children}</div>
+          <div style={contentStyles.body}>{children}</div>
         ) : (
-          <DropdownCloser className="shr-flex shr-flex-col" style={styles.body}>
+          <DropdownCloser className="shr-flex shr-flex-col" style={contentStyles.body}>
             {children}
           </DropdownCloser>
         )}
