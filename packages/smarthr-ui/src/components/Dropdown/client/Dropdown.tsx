@@ -86,6 +86,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const functions = useMemo(() => {
     let trigger: HTMLElement | null = null
+    let triggerButton: HTMLButtonElement | null | undefined = null
     let content: HTMLElement | null = null
     let dummyFocusContent: HTMLElement | null | undefined = null
 
@@ -110,10 +111,12 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
 
     const calculateContentBox = () => {
-      if (trigger && content) {
+      const button = trigger?.querySelector<HTMLButtonElement>('button')
+
+      if (button && content) {
         setContentBox(
           getContentBoxStyle(
-            trigger.getBoundingClientRect(),
+            button.getBoundingClientRect(),
             {
               width: content.offsetWidth,
               height: content.offsetHeight,
@@ -136,6 +139,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       calculateContentBox,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
+        triggerButton = node?.querySelector<HTMLButtonElement>('button')
 
         return () => {
           latest.openFrame.cancel()
@@ -235,11 +239,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         }
       },
       actualClose,
-      handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => {
-        const button = (e.target as HTMLElement).closest('button')
-
+      handleDelegateClickTrigger: () => {
         // 引き金となる要素が disabled な場合、処理を差し込む必要がない
-        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+        if (
+          !triggerButton ||
+          triggerButton.disabled ||
+          triggerButton.getAttribute('aria-disabled') === 'true'
+        ) {
           return
         } else if (latest.active) {
           setActive(false)
