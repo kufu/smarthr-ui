@@ -178,7 +178,6 @@ export const DropdownContent: FC<Props> = ({
           window.removeEventListener('keydown', handleKeyDown)
         }
       },
-      focusDummyTarget: () => dummyFocusTarget?.focus(),
     }
   }, [latest])
 
@@ -214,12 +213,14 @@ export const DropdownContent: FC<Props> = ({
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
         // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        latest.focusFrame.request(functions.focusDummyTarget)
+        latest.focusFrame.request(() => {
+          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`)?.focus()
+        })
       }
 
       return () => latest.focusFrame.cancel()
     },
-    [triggerRect, functions, latest],
+    [triggerRect, latest],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
