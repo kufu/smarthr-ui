@@ -1,13 +1,9 @@
-'use client'
-
 import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Td } from '../Td'
+import { AutoColSpanTd } from './client'
 
-import { useTableHeadCellCount } from './useTableHeadCellCount'
-
-import type { Gap } from '../../../types'
+import type { Gap } from '../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 
@@ -17,7 +13,7 @@ type BaseProps = PropsWithChildren<{
 }>
 type Props = BaseProps & Omit<ComponentPropsWithRef<'tbody'>, keyof BaseProps>
 
-const tdClassNameGenerator = tv({
+const classNameGenerator = tv({
   base: 'shr-text-center',
   variants: {
     vertical: {
@@ -76,21 +72,17 @@ const tdClassNameGenerator = tv({
 })
 
 export const EmptyTableBody: FC<Props> = ({ children, padding, ...rest }) => {
-  const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
-
-  const tdClassName = useMemo(() => {
+  const className = useMemo(() => {
     const actualPadding =
       padding instanceof Object ? padding : { vertical: padding, horizontal: padding }
 
-    return tdClassNameGenerator(actualPadding)
+    return classNameGenerator(actualPadding)
   }, [padding])
 
   return (
-    <tbody {...rest} ref={countHeadCellRef}>
+    <tbody {...rest}>
       <tr>
-        <Td colSpan={count} className={tdClassName}>
-          {children}
-        </Td>
+        <AutoColSpanTd className={className}>{children}</AutoColSpanTd>
       </tr>
     </tbody>
   )
