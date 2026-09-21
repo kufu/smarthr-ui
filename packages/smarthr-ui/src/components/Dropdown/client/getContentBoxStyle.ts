@@ -1,15 +1,12 @@
-import type { Rect } from './types'
-
 type Size = { width: number; height: number }
-type ContentBoxStyle = {
-  top: string
-  left?: string
-  right?: string
-  maxHeight: string
-}
 
 export function getContentBoxStyle(
-  triggerRect: Rect,
+  triggerRect: {
+    top: number
+    right: number
+    bottom: number
+    left: number
+  },
   contentSize: Size,
   windowSize: Size,
   scroll: {
@@ -17,7 +14,12 @@ export function getContentBoxStyle(
     left: number
   },
 ) {
-  const contentBox: ContentBoxStyle = {
+  const contentBox: {
+    top: string
+    left?: string
+    right?: string
+    maxHeight: string
+  } = {
     top: 'auto',
     maxHeight: '',
   }
