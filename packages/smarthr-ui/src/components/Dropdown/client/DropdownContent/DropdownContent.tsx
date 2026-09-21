@@ -94,11 +94,11 @@ export const DropdownContent: FC<Props> = ({
   })
 
   const functions = useMemo(() => {
-    let dummyFocusTarget: HTMLElement | null = null
+    let dummyFocusContent: HTMLElement | null = null
 
     return {
-      callbackRef: (node: HTMLElement | null) => {
-        dummyFocusTarget = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`) ?? null
+      contentCallbackRef: (node: HTMLElement | null) => {
+        dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`) ?? null
 
         if (!node) {
           return
@@ -131,7 +131,7 @@ export const DropdownContent: FC<Props> = ({
 
               return
             } else if (e.shiftKey) {
-              if (e.target === firstTabbable || e.target === dummyFocusTarget) {
+              if (e.target === firstTabbable || e.target === dummyFocusContent) {
                 // focus the Trigger
                 e.preventDefault()
                 trigger!.focus()
@@ -144,7 +144,7 @@ export const DropdownContent: FC<Props> = ({
               latest.handleDelegateClickCloser()
             }
           } else if (KEY_ESCAPE.test(e.key)) {
-            if (e.target && e.target === dummyFocusTarget) {
+            if (e.target && e.target === dummyFocusContent) {
               latest.handleDelegateClickCloser()
 
               return
@@ -225,7 +225,7 @@ export const DropdownContent: FC<Props> = ({
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
   // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(functions.callbackRef, layoutEffectRef)
+  const mergedRef = useMergeRefs(functions.contentCallbackRef, layoutEffectRef)
 
   const styleAttr = {
     maxHeight: contentBox.maxHeight || undefined,
