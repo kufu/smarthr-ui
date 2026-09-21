@@ -37,7 +37,6 @@ type DropdownContextType = {
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
   DropdownContentRoot: FC<{ children: ReactNode }>
-  contentId: string
 }
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
@@ -52,7 +51,6 @@ export const DropdownContext = createContext<DropdownContextType>({
   handleDelegateClickTrigger: NOOP,
   handleDelegateClickContentCloser: NOOP,
   DropdownContentRoot: NOOP,
-  contentId: '',
 })
 
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
@@ -75,6 +73,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     createPortal,
     openFrame,
     closeFrame,
+    contentId,
   })
 
   const functions = useMemo(() => {
@@ -222,7 +221,16 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const baseTriggerLayoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
-      if (!node || !active) return
+      if (!node) return
+
+      // apply ARIA to all focusable elements in trigger
+      const activeStr = active.toString()
+      tabbable(node, { shouldIgnoreVisibility: true }).forEach((trigger) => {
+        trigger.setAttribute('aria-expanded', activeStr)
+        trigger.setAttribute('aria-controls', latest.contentId)
+      })
+
+      if (!active) return
 
       const handleClickBody = (e: any) => {
         if (!latest.active || !node) {
@@ -273,7 +281,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
-          contentId,
         }}
       >
         {children}
