@@ -3,15 +3,12 @@
 import {
   type FC,
   type MouseEvent,
-  type MutableRefObject,
   type PropsWithChildren,
   type ReactNode,
   createContext,
-  createRef,
   useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 
@@ -36,7 +33,6 @@ type Props = PropsWithChildren<{
 type DropdownContextType = {
   active: boolean
   triggerRect: Rect
-  triggerElementRef: MutableRefObject<HTMLDivElement | null>
   triggerLayoutEffectRef: (node: HTMLElement | null) => void
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
@@ -52,7 +48,6 @@ const NOOP = () => null
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
-  triggerElementRef: createRef(),
   triggerLayoutEffectRef: NOOP,
   contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
@@ -70,7 +65,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     rootId: contentId,
   })
 
-  const triggerElementRef = useRef<HTMLDivElement>(null)
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
 
@@ -85,6 +79,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   })
 
   const functions = useMemo(() => {
+    let trigger: HTMLElement | null = null
     let dummyFocusContent: HTMLElement | null | undefined = null
 
     // This is the root container of a dropdown content located in outside the DOM tree
@@ -102,13 +97,16 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       actualClose()
 
       // return focus to the Trigger
-      if (triggerElementRef.current) {
-        tabbable(triggerElementRef.current)[0]?.focus()
+      if (trigger) {
+        tabbable(trigger)[0]?.focus()
       }
     }
 
     return {
       DropdownContentRoot,
+      triggerCallbckRef: (node: HTMLElement | null) => {
+        trigger = node
+      },
       contentCallbackRef: (node: HTMLElement | null) => {
         dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
 
@@ -118,7 +116,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
         const handleKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Tab') {
-            if (!triggerElementRef.current) {
+            if (!trigger) {
               return
             }
 
@@ -128,10 +126,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
               return
             }
 
-            const trigger = tabbable(triggerElementRef.current).at(-1)
+            const target = tabbable(trigger).at(-1)
             const firstTabbable = tabbablesInContent[0]
 
-            if (e.target === trigger) {
+            if (e.target === target) {
               if (e.shiftKey) {
                 // move focus previous of the Trigger
                 return
@@ -146,13 +144,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
               if (e.target === firstTabbable || e.target === dummyFocusContent) {
                 // focus the Trigger
                 e.preventDefault()
-                trigger!.focus()
+                target!.focus()
                 handleDelegateClickCloser()
               }
             } else if (e.target === tabbablesInContent.at(-1)) {
               // focus the Trigger
               e.preventDefault()
-              trigger!.focus()
+              target!.focus()
               handleDelegateClickCloser()
             }
           } else if (KEY_ESCAPE.test(e.key)) {
@@ -162,11 +160,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
               return
             }
 
-            const trigger = triggerElementRef.current
-              ? tabbable(triggerElementRef.current)[0]
-              : undefined
+            const target = trigger ? tabbable(trigger)[0] : undefined
 
-            if (trigger && e.target === trigger) {
+            if (target && e.target === target) {
               // close the dropdown when the Trigger is focused and Esc key is pressed
               handleDelegateClickCloser()
 
@@ -266,7 +262,10 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     [active, functions, latest],
   )
 
-  const triggerLayoutEffectRef = useMergeRefs(baseTriggerLayoutEffectRef, triggerElementRef)
+  const triggerLayoutEffectRef = useMergeRefs(
+    functions.triggerCallbckRef,
+    baseTriggerLayoutEffectRef,
+  )
 
   return (
     <PortalParentProvider>
@@ -274,7 +273,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         value={{
           active,
           triggerRect,
-          triggerElementRef,
           triggerLayoutEffectRef,
           contentCallbackRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
