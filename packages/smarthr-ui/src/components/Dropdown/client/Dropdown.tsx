@@ -6,7 +6,6 @@ import {
   type PropsWithChildren,
   type ReactNode,
   createContext,
-  useEffect,
   useId,
   useMemo,
   useState,
@@ -106,6 +105,11 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       DropdownContentRoot,
       triggerCallbckRef: (node: HTMLElement | null) => {
         trigger = node
+
+        return () => {
+          latest.openFrame.cancel()
+          latest.closeFrame.cancel()
+        }
       },
       contentCallbackRef: (node: HTMLElement | null) => {
         dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
@@ -216,15 +220,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
   }, [latest])
 
-  // TODO: コンポーネントをFragmentでラップし、callbackRefとして設定するように修正
-  useEffect(
-    () => () => {
-      latest.openFrame.cancel()
-      latest.closeFrame.cancel()
-    },
-    [latest],
-  )
-
   const baseTriggerLayoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (!node || !active) return
@@ -274,7 +269,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           active,
           triggerRect,
           triggerLayoutEffectRef,
-          contentCallbackRef,
+          contentCallbackRef: functions.contentCallbackRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
