@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  type ChangeEvent,
-  type MouseEvent,
-  forwardRef,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ChangeEvent, type MouseEvent, forwardRef, useId, useMemo, useState } from 'react'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
@@ -49,13 +41,12 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       }
     }, [size, className])
 
-    // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
-    const isUpdatingFilesRef = useRef(false)
-
     const latest = useLatest({ onChange, files, previewFile })
 
     const functions = useMemo(() => {
       let input: HTMLInputElement | null = null
+      // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
+      let isUpdatingFiles = false
 
       const updateFiles = (newFiles: File[]) => {
         latest.onChange?.(newFiles)
@@ -65,9 +56,14 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
       return {
         callbackRef: (node: HTMLInputElement | null) => {
           input = node
+          isUpdatingFiles = false
+
+          return () => {
+            isUpdatingFiles = false
+          }
         },
         handleChange: (e: ChangeEvent<HTMLInputElement>) => {
-          if (!isUpdatingFilesRef.current) {
+          if (!isUpdatingFiles) {
             updateFiles(Array.from(e.target.files ?? []))
           }
         },
@@ -87,9 +83,9 @@ export const InputFileNative = forwardRef<HTMLInputElement, Props>(
             buff.items.add(file)
           })
 
-          isUpdatingFilesRef.current = true
+          isUpdatingFiles = true
           input.files = buff.files
-          isUpdatingFilesRef.current = false
+          isUpdatingFiles = false
         },
         handleClosePreview: () => {
           setPreviewFile(null)
