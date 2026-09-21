@@ -16,6 +16,8 @@ import {
 } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
 import { useLatest } from '../../../hooks/useLatest'
 import { tabbable } from '../../../libs/tabbable'
@@ -31,6 +33,7 @@ type DropdownContextType = {
   active: boolean
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
+  triggerLayoutEffectRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
@@ -43,6 +46,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: createRef(),
+  triggerLayoutEffectRef: () => undefined,
   handleDelegateClickTrigger: () => {
     /* noop */
   },
@@ -129,40 +133,44 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     [latest],
   )
 
-  // TODO: コンポーネントをFragmentでラップし、layoutEffectRefとして設定するように修正
-  useEffect(() => {
-    if (!active) return
+  const baseTriggerLayoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (!node || !active) return
 
-    const handleClickBody = (e: any) => {
-      if (!latest.active || !triggerElementRef.current) {
-        return
+      const handleClickBody = (e: any) => {
+        if (!latest.active || !node) {
+          return
+        }
+
+        // ignore events from events within DropdownTrigger and DropdownContent
+        const isClickedInTrigger = e.composedPath().includes(node)
+
+        if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
+          setActive(false)
+          functions.actualClose()
+        }
       }
-
-      // ignore events from events within DropdownTrigger and DropdownContent
-      const isClickedInTrigger = e.composedPath().includes(triggerElementRef.current)
-
-      if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
-        setActive(false)
-        functions.actualClose()
+      const updateTriggerRect = () => {
+        if (node) {
+          setTriggerRect(node.getBoundingClientRect())
+        }
       }
-    }
-    const updateTriggerRect = () => {
-      if (triggerElementRef.current) {
-        setTriggerRect(triggerElementRef.current.getBoundingClientRect())
+      const listenerOption = { passive: true }
+
+      document.body.addEventListener('click', handleClickBody, false)
+      window.addEventListener('scroll', updateTriggerRect, listenerOption)
+      window.addEventListener('resize', updateTriggerRect, listenerOption)
+
+      return () => {
+        document.body.removeEventListener('click', handleClickBody, false)
+        window.removeEventListener('scroll', updateTriggerRect)
+        window.removeEventListener('resize', updateTriggerRect)
       }
-    }
-    const listenerOption = { passive: true }
+    },
+    [active, functions, latest],
+  )
 
-    document.body.addEventListener('click', handleClickBody, false)
-    window.addEventListener('scroll', updateTriggerRect, listenerOption)
-    window.addEventListener('resize', updateTriggerRect, listenerOption)
-
-    return () => {
-      document.body.removeEventListener('click', handleClickBody, false)
-      window.removeEventListener('scroll', updateTriggerRect)
-      window.removeEventListener('resize', updateTriggerRect)
-    }
-  }, [active, functions, latest])
+  const triggerLayoutEffectRef = useMergeRefs(baseTriggerLayoutEffectRef, triggerElementRef)
 
   return (
     <PortalParentProvider>
@@ -171,6 +179,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           active,
           triggerRect,
           triggerElementRef,
+          triggerLayoutEffectRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickCloser: functions.handleDelegateClickCloser,
           DropdownContentRoot: functions.DropdownContentRoot,

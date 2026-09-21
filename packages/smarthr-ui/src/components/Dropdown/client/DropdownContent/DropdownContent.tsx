@@ -7,7 +7,6 @@ import {
   type PropsWithChildren,
   useContext,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -26,6 +25,7 @@ import { type ContentBoxStyle, getContentBoxStyle } from './getContentBoxStyle'
 
 const KEY_ESCAPE = /^Esc(ape)?$/
 const DROPDOWN_CONTENT_CLASS_NAME = 'smarthr-ui-Dropdown-content'
+const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dropdown-dummyFocus'
 
 const classNameGenerator = tv({
   base: [
@@ -60,8 +60,6 @@ export const DropdownContent: FC<Props> = ({
     top: 'auto',
     maxHeight: '',
   })
-  const focusTargetRef = useRef<HTMLDivElement>(null)
-
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   const style = (() => {
@@ -92,9 +90,13 @@ export const DropdownContent: FC<Props> = ({
     focusFrame,
   })
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    let dummyFocusTarget: HTMLElement | null = null
+
+    return {
       callbackRef: (node: HTMLElement | null) => {
+        dummyFocusTarget = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CLASSNAME}`) ?? null
+
         if (!node) {
           return
         }
@@ -126,7 +128,7 @@ export const DropdownContent: FC<Props> = ({
 
               return
             } else if (e.shiftKey) {
-              if (e.target === firstTabbable || e.target === focusTargetRef.current) {
+              if (e.target === firstTabbable || e.target === dummyFocusTarget) {
                 // focus the Trigger
                 e.preventDefault()
                 trigger!.focus()
@@ -139,7 +141,7 @@ export const DropdownContent: FC<Props> = ({
               latest.handleDelegateClickCloser()
             }
           } else if (KEY_ESCAPE.test(e.key)) {
-            if (e.target && e.target === focusTargetRef.current) {
+            if (e.target && e.target === dummyFocusTarget) {
               latest.handleDelegateClickCloser()
 
               return
@@ -181,9 +183,9 @@ export const DropdownContent: FC<Props> = ({
           latest.handleDelegateClickCloser()
         }
       },
-    }),
-    [latest],
-  )
+      focusDummyTarget: () => dummyFocusTarget?.focus(),
+    }
+  }, [latest])
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -217,12 +219,12 @@ export const DropdownContent: FC<Props> = ({
         // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
         // フォーカスを受け付けない。setIsActive(true) の直後に focus() を呼んでも DOM がまだ
         // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        latest.focusFrame.request(() => focusTargetRef.current?.focus())
+        latest.focusFrame.request(functions.focusDummyTarget)
       }
 
       return () => latest.focusFrame.cancel()
     },
-    [triggerRect, latest],
+    [triggerRect, functions, latest],
   )
 
   // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
@@ -245,7 +247,7 @@ export const DropdownContent: FC<Props> = ({
         onClick={functions.handleDelegateClick}
       >
         {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-        <div ref={focusTargetRef} tabIndex={-1} />
+        <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
         {controllable ? (
           <div style={styleAttr}>{children}</div>
         ) : (
