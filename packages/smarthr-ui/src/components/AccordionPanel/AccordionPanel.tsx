@@ -20,7 +20,6 @@ import {
   focusLastSibling,
   focusNextSibling,
   focusPreviousSibling,
-  getNewExpandedItems,
 } from './accordionPanelHelper'
 
 type BaseProps = PropsWithChildren<{
@@ -111,12 +110,21 @@ export const AccordionPanel: FC<Props> = ({
         const { currentTarget } = e
 
         setExpanded((prevExpandedItems) => {
-          const newExpandedItems = getNewExpandedItems(
-            prevExpandedItems,
-            currentTarget.value,
-            currentTarget.getAttribute('aria-expanded') !== 'true',
-            latest.expandableMultiply,
-          )
+          let newExpandedItems: Map<string, string>
+          const itemName = currentTarget.value
+          const isExpanded = currentTarget.getAttribute('aria-expanded') !== 'true'
+
+          if (latest.expandableMultiply) {
+            newExpandedItems = new Map(prevExpandedItems)
+
+            if (isExpanded) {
+              newExpandedItems.set(itemName, itemName)
+            } else {
+              newExpandedItems.delete(itemName)
+            }
+          } else {
+            newExpandedItems = isExpanded ? new Map([[itemName, itemName]]) : new Map()
+          }
 
           latest.onClick?.(mapToKeyArray(newExpandedItems))
 
