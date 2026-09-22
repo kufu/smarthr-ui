@@ -1,26 +1,3 @@
-export const getNewExpandedItems = (
-  prevExpandedItems: Map<string, string>,
-  itemName: string,
-  isExpanded: boolean,
-  expandableMultiply: boolean,
-) => {
-  let newState: Map<string, string>
-
-  if (expandableMultiply) {
-    newState = new Map(prevExpandedItems)
-
-    if (isExpanded) {
-      newState.set(itemName, itemName)
-    } else {
-      newState.delete(itemName)
-    }
-  } else {
-    newState = isExpanded ? new Map([[itemName, itemName]]) : new Map()
-  }
-
-  return newState
-}
-
 const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] =>
   Array.from(parent.querySelectorAll('[data-component="AccordionHeaderButton"]'))
 

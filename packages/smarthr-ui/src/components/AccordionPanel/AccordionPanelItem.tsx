@@ -31,7 +31,7 @@ const classNameGenerator = tv({
   base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
-export const AccordionPanelItem: FC<Props> = ({ name, className, ...rest }) => {
+export const AccordionPanelItem: FC<Props> = ({ name, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
@@ -42,7 +42,10 @@ export const AccordionPanelItem: FC<Props> = ({ name, className, ...rest }) => {
         contentId: `${name}-content`,
       }}
     >
-      <Section {...rest} className={actualClassName} />
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- 組み合わせて利用するAccordionPanelTriggerが内部でHeadingを持つ */}
+      <Section {...rest} className={actualClassName}>
+        {children}
+      </Section>
     </AccordionPanelItemContext.Provider>
   )
 }
