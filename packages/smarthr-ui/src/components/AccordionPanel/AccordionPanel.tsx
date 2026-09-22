@@ -8,7 +8,6 @@ import {
   type PropsWithChildren,
   createContext,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -90,10 +89,10 @@ export const AccordionPanel: FC<Props> = ({
   className,
   onClick,
   rounded,
+  children,
   ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(() => flatArrayToMap(defaultExpanded))
-  const parentRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
     [rounded, className],
@@ -101,8 +100,13 @@ export const AccordionPanel: FC<Props> = ({
 
   const latest = useLatest({ onClick, expandableMultiply })
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    let wrapper: HTMLElement | null = null
+
+    return {
+      callbackRef: (node: HTMLElement | null) => {
+        wrapper = node
+      },
       handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => {
         const { currentTarget } = e
 
@@ -120,7 +124,7 @@ export const AccordionPanel: FC<Props> = ({
         })
       },
       handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
-        if (!parentRef.current) {
+        if (!wrapper) {
           return
         }
 
@@ -129,31 +133,30 @@ export const AccordionPanel: FC<Props> = ({
         switch (e.key) {
           case 'Home': {
             e.preventDefault()
-            focusFirstSibling(parentRef.current)
+            focusFirstSibling(wrapper)
             break
           }
           case 'End': {
             e.preventDefault()
-            focusLastSibling(parentRef.current)
+            focusLastSibling(wrapper)
             break
           }
           case 'ArrowLeft':
           case 'ArrowUp': {
             e.preventDefault()
-            focusPreviousSibling(item, parentRef.current)
+            focusPreviousSibling(item, wrapper)
             break
           }
           case 'ArrowRight':
           case 'ArrowDown': {
             e.preventDefault()
-            focusNextSibling(item, parentRef.current)
+            focusNextSibling(item, wrapper)
             break
           }
         }
       },
-    }),
-    [latest],
-  )
+    }
+  }, [latest])
 
   return (
     <AccordionPanelContext.Provider
@@ -164,7 +167,9 @@ export const AccordionPanel: FC<Props> = ({
         iconPosition,
       }}
     >
-      <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
+      <div {...rest} ref={functions.callbackRef} role="presentation" className={actualClassName}>
+        {children}
+      </div>
     </AccordionPanelContext.Provider>
   )
 }
