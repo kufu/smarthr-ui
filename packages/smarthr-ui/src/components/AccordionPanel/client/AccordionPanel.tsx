@@ -12,8 +12,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
-import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
+import { useLatest } from '../../../hooks/useLatest'
+import { flatArrayToMap, mapToKeyArray } from '../../../libs/map'
 
 type BaseProps = PropsWithChildren<{
   /** アイコンの左右位置 */
