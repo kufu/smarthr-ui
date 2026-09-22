@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
-import { FaCirclePlusIcon } from '../../../Icon'
-import { Stack } from '../../../Layout'
+import { FaCirclePlusIcon } from '../../../../Icon'
+import { Stack } from '../../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'

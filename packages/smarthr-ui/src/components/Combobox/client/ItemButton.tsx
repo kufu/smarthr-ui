@@ -3,9 +3,9 @@
 import { type MouseEvent, type RefObject, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer } from '../../intl'
-import { FaCirclePlusIcon } from '../Icon'
-import { Text } from '../Text'
+import { Localizer } from '../../../intl'
+import { FaCirclePlusIcon } from '../../Icon'
+import { Text } from '../../Text'
 
 import type { ComboboxOption } from './types'
 

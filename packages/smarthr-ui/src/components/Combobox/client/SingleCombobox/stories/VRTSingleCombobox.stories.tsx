@@ -1,6 +1,6 @@
 import { userEvent, within } from 'storybook/test'
 
-import { Cluster, Stack } from '../../../Layout'
+import { Cluster, Stack } from '../../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
 
 import { defaultItems, prefixes } from './SingleCombobox.stories'

@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useLatest } from '../../../hooks/useLatest'
 
 import { areItemsEqual, convertMatchableString } from './helper'
 

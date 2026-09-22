@@ -1,6 +1,6 @@
 import { useArgs } from 'storybook/preview-api'
 
-import { Stack } from '../../../Layout'
+import { Stack } from '../../../../Layout'
 import { MultiCombobox } from '../MultiCombobox'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
