@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import { act } from 'react'
 
-import { IntlProvider } from '../../intl'
+import { IntlProvider } from '../../../intl'
 
 import { Calendar } from './Calendar'
 
-import type { locales } from '../../intl'
+import type { locales } from '../../../intl'
 
 describe('Calendar', () => {
   const renderWithIntl = (component: React.ReactElement, locale: keyof typeof locales = 'ja') =>
