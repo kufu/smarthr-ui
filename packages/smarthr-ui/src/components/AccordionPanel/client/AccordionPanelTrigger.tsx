@@ -12,15 +12,15 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { getIsInclude } from '../../libs/map'
-import { Heading, type HeadingTagTypes } from '../Heading'
-import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
-import { Cluster } from '../Layout'
+import { getIsInclude } from '../../../libs/map'
+import { Heading, type HeadingTagTypes } from '../../Heading'
+import { FaCaretDownIcon, FaCaretRightIcon } from '../../Icon'
+import { Cluster } from '../../Layout'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-import type { TextProps } from '../Text'
+import type { TextProps } from '../../Text'
 
 type BaseProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */

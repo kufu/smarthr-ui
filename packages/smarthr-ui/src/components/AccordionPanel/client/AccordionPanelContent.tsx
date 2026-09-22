@@ -11,7 +11,7 @@ import {
 import { Transition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { getIsInclude } from '../../libs/map'
+import { getIsInclude } from '../../../libs/map'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'

@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Section } from '../SectioningContent'
+import { Section } from '../../SectioningContent'
 
 type BaseProps = PropsWithChildren<{
   /** アイテムを識別するための名前 */
