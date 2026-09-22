@@ -325,7 +325,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       if (!active) return
 
       const handleClickBody = (e: any) => {
-        if (!latest.active || !node) {
+        if (!active || !node) {
           return
         }
 
