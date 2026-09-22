@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { userEvent, within } from 'storybook/test'
 
-import { Stack } from '../../../Layout'
+import { Stack } from '../../../../Layout'
 import { MultiCombobox } from '../MultiCombobox'
 
 import { defaultItems } from './MultiCombobox.stories'

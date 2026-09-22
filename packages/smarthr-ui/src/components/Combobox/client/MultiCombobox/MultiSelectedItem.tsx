@@ -11,13 +11,13 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../../hooks/useLatest'
-import { Localizer } from '../../../intl'
-import { UnstyledButton } from '../../Button'
-import { Chip } from '../../Chip'
-import { FaCircleXmarkIcon } from '../../Icon'
-import { Tooltip } from '../../Tooltip'
-import { VisuallyHiddenText } from '../../VisuallyHiddenText'
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer } from '../../../../intl'
+import { UnstyledButton } from '../../../Button'
+import { Chip } from '../../../Chip'
+import { FaCircleXmarkIcon } from '../../../Icon'
+import { Tooltip } from '../../../Tooltip'
+import { VisuallyHiddenText } from '../../../VisuallyHiddenText'
 
 import type { ComboboxItem } from '../types'
 
