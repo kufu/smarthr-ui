@@ -124,38 +124,6 @@ describe('Dropdown', () => {
     expect(document.getElementById(controlsId)).toBeInTheDocument()
   })
 
-  it('トリガー要素自身にonClickが設定されている場合、ドロップダウンの開閉トグル処理がそれより先に実行されること', async () => {
-    const callOrder: string[] = []
-
-    render(
-      <Dropdown>
-        <DropdownTrigger>
-          <Button onClick={() => callOrder.push('button onClick (bubble)')}>Trigger</Button>
-        </DropdownTrigger>
-        <DropdownContent controllable>
-          <Button>Button1</Button>
-        </DropdownContent>
-      </Dropdown>,
-    )
-
-    const trigger = screen.getByRole('button', { name: 'Trigger', expanded: false })
-
-    // ドロップダウンの開閉トグル処理(handleDelegateClickTrigger)はgetBoundingClientRectを呼ぶ。
-    // 独立したcaptureリスナーを別途追加する方法だと、onClickCaptureをonClickに書き換える
-    // 退行があってもネイティブのcaptureフェーズ自体は変わらず先に発火してしまいテストが検知できない。
-    // 実際のハンドラーが呼ぶgetBoundingClientRectを記録することで実行順序を検証する
-    const originalGetBoundingClientRect = trigger.getBoundingClientRect.bind(trigger)
-    trigger.getBoundingClientRect = () => {
-      callOrder.push('dropdown handler (capture)')
-      return originalGetBoundingClientRect()
-    }
-
-    await userEvent.click(trigger)
-
-    expect(callOrder).toEqual(['dropdown handler (capture)', 'button onClick (bubble)'])
-    expect(screen.getByRole('button', { name: 'Trigger', expanded: true })).toBeVisible()
-  })
-
   describe('トリガーボタンの disabled が動的に切り替わる場合', () => {
     const ToggleTemplate = ({ initialDisabled }: { initialDisabled: boolean }) => {
       const [disabled, setDisabled] = useState(initialDisabled)

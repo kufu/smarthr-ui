@@ -3,9 +3,10 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { DropdownCloser } from '../../DropdownCloser'
-import { DropdownContext } from '../Dropdown'
-import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from '../constants'
+import { DropdownCloser } from '../DropdownCloser'
+
+import { DropdownContext } from './Dropdown'
+import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
 
 const classNameGenerator = tv({
   base: [

@@ -12,6 +12,7 @@ import {
 } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
@@ -22,9 +23,7 @@ import { tabbable } from '../../../libs/tabbable'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
-import { getContentBoxStyle } from './getContentBoxStyle'
-
-import type { Rect } from './types'
+import { INITIAL_CONTENT_STYLES, generateContentStyle } from './getContentBoxStyle'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
@@ -41,20 +40,8 @@ type DropdownContextType = {
   DropdownContentRoot: FC<{ children: ReactNode }>
 }
 
-const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 const KEY_ESCAPE = /^Esc(ape)?$/
 const NOOP = () => null
-const INITIAL_CONTENT_STYLES: {
-  wrapper: {
-    insetBlockStart: string
-    insetInlineStart?: string
-    insetInlineEnd?: string
-    maxWidth: string
-  }
-  body: {
-    maxHeight?: string
-  }
-} = { wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} }
 
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
@@ -69,10 +56,6 @@ export const DropdownContext = createContext<DropdownContextType>({
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const theme = useTheme()
   const [active, setActive] = useState(false)
-  const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
-  // TODO: triggerRectの変化によってのみcontentStylesは変化する
-  // triggerRectはcontentStyles生成のためだけにしか利用されていない
-  // 後続のlayoutEffectと併せて整理する
   const [contentStyles, setContentStyles] = useState(INITIAL_CONTENT_STYLES)
 
   const contentId = useId()
@@ -95,16 +78,32 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     contentId,
     theme,
     focusFrame,
+    contentStyles,
   })
 
   const functions = useMemo(() => {
     let trigger: HTMLElement | null = null
+    let triggerButton: HTMLButtonElement | null | undefined = null
+    let content: HTMLElement | null = null
     let dummyFocusContent: HTMLElement | null | undefined = null
 
     // This is the root container of a dropdown content located in outside the DOM tree
     const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
       latest.active ? latest.createPortal(props.children) : null
     DropdownContentRoot.displayName = 'DropdownContentRoot'
+
+    const updateContentStyles = () => {
+      if (content && triggerButton) {
+        setContentStyles(
+          generateContentStyle(
+            latest.contentStyles,
+            triggerButton,
+            content,
+            latest.theme.spacingByChar(0.5),
+          ),
+        )
+      }
+    }
 
     const actualClose = () => {
       if (latest.onClose) {
@@ -123,21 +122,38 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       DropdownContentRoot,
+      updateContentStyles,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
+        triggerButton = node?.querySelector<HTMLButtonElement>('button')
 
         return () => {
           trigger = null
+          triggerButton = null
           latest.openFrame.cancel()
           latest.closeFrame.cancel()
         }
       },
       baseContentCallbackRef: (node: HTMLElement | null) => {
+        content = node
+
         if (!node) {
           return
         }
 
         dummyFocusContent = node?.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)
+
+        updateContentStyles()
+        node.setAttribute('data-dropdown-mounted', 'true')
+
+        // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
+        // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
+        // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
+        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
+        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
+        latest.focusFrame.request(() => {
+          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
+        })
 
         const handleKeyDown = (e: KeyboardEvent) => {
           if (e.key === 'Tab') {
@@ -208,23 +224,27 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         window.addEventListener('keydown', handleKeyDown)
 
         return () => {
-          dummyFocusContent = null
+          latest.focusFrame.cancel()
           window.removeEventListener('keydown', handleKeyDown)
+
+          content = null
+          dummyFocusContent = null
         }
       },
       actualClose,
-      handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => {
-        const button = (e.target as HTMLElement).closest('button')
-
+      handleDelegateClickTrigger: () => {
         // 引き金となる要素が disabled な場合、処理を差し込む必要がない
-        if (!button || button.disabled || button.getAttribute('aria-disabled') === 'true') {
+        if (
+          !triggerButton ||
+          triggerButton.disabled ||
+          triggerButton.getAttribute('aria-disabled') === 'true'
+        ) {
           return
         } else if (latest.active) {
           setActive(false)
           actualClose()
         } else {
           setActive(true)
-          setTriggerRect(button.getBoundingClientRect())
 
           if (latest.onOpen) {
             latest.openFrame.request(() => latest.onOpen?.())
@@ -256,7 +276,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       if (!active) return
 
       const handleClickBody = (e: any) => {
-        if (!latest.active || !node) {
+        if (!active || !node) {
           return
         }
 
@@ -268,21 +288,17 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           functions.actualClose()
         }
       }
-      const updateTriggerRect = () => {
-        if (node) {
-          setTriggerRect(node.getBoundingClientRect())
-        }
-      }
+
       const listenerOption = { passive: true }
 
       document.body.addEventListener('click', handleClickBody, false)
-      window.addEventListener('scroll', updateTriggerRect, listenerOption)
-      window.addEventListener('resize', updateTriggerRect, listenerOption)
+      window.addEventListener('scroll', functions.updateContentStyles, listenerOption)
+      window.addEventListener('resize', functions.updateContentStyles, listenerOption)
 
       return () => {
         document.body.removeEventListener('click', handleClickBody, false)
-        window.removeEventListener('scroll', updateTriggerRect)
-        window.removeEventListener('resize', updateTriggerRect)
+        window.removeEventListener('scroll', functions.updateContentStyles)
+        window.removeEventListener('resize', functions.updateContentStyles)
       }
     },
     [active, functions, latest],
@@ -293,83 +309,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     baseTriggerLayoutEffectRef,
   )
 
-  const contentLayoutEffectRef = useLayoutEffectRef(
-    (node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const contentBox = getContentBoxStyle(
-        triggerRect,
-        {
-          width: node.offsetWidth,
-          height: node.offsetHeight,
-        },
-        {
-          width: document.body.clientWidth,
-          height: innerHeight,
-        },
-        {
-          top: scrollY,
-          left: scrollX,
-        },
-      )
-      const defaultMargin = latest.theme.spacingByChar(0.5)
-      const leftMargin =
-        contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
-      const rightMargin =
-        contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
-      const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
-
-      setContentStyles((current) => {
-        const wrapper = {
-          insetBlockStart: contentBox.top,
-          insetInlineStart: contentBox.left || undefined,
-          insetInlineEnd: contentBox.right || undefined,
-          maxWidth: maxWidthStyle,
-        }
-        const body = {
-          maxHeight: contentBox.maxHeight || undefined,
-        }
-
-        if (
-          current.wrapper.insetBlockStart === wrapper.insetBlockStart &&
-          current.wrapper.insetInlineStart === wrapper.insetInlineStart &&
-          current.wrapper.insetInlineEnd === wrapper.insetInlineEnd &&
-          current.wrapper.maxWidth === wrapper.maxWidth &&
-          current.body.maxHeight === body.maxHeight
-        ) {
-          return current
-        }
-
-        return {
-          wrapper,
-          body,
-        }
-      })
-
-      const dropdownMountedAttr = 'data-dropdown-mounted'
-
-      if (node.getAttribute(dropdownMountedAttr) !== 'true') {
-        node.setAttribute(dropdownMountedAttr, 'true')
-        // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
-        // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
-        // shr-invisible (visibility: hidden) でレンダリングされ、visibility: hidden の要素は
-        // フォーカスを受け付けない。data-dropdown-mounted の設定直後直後に focus() を呼んでも DOM がまだ
-        // 更新されておらず無効になるため、requestAnimationFrame で次の描画フレームまで遅延させる
-        latest.focusFrame.request(() => {
-          node.querySelector<HTMLElement>(`.${DUMMY_FOCUS_CONTENT_CLASSNAME}`)?.focus()
-        })
-      }
-
-      return () => latest.focusFrame.cancel()
-    },
-    [triggerRect, latest],
-  )
-
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const contentCallbackRef = useMergeRefs(functions.baseContentCallbackRef, contentLayoutEffectRef)
+  const contentCallbackRef = useCallbackRefCleanupForReact18(functions.baseContentCallbackRef)
 
   return (
     <PortalParentProvider>
