@@ -15,13 +15,6 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
 
-import {
-  focusFirstSibling,
-  focusLastSibling,
-  focusNextSibling,
-  focusPreviousSibling,
-} from './accordionPanelHelper'
-
 type BaseProps = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
@@ -141,24 +134,38 @@ export const AccordionPanel: FC<Props> = ({
         switch (e.key) {
           case 'Home': {
             e.preventDefault()
-            focusFirstSibling(wrapper)
+            focusSibling({
+              mode: 'first',
+              wrapper,
+            })
             break
           }
           case 'End': {
             e.preventDefault()
-            focusLastSibling(wrapper)
+            focusSibling({
+              mode: 'last',
+              wrapper,
+            })
             break
           }
           case 'ArrowLeft':
           case 'ArrowUp': {
             e.preventDefault()
-            focusPreviousSibling(item, wrapper)
+            focusSibling({
+              mode: 'prev',
+              wrapper,
+              current: item,
+            })
             break
           }
           case 'ArrowRight':
           case 'ArrowDown': {
             e.preventDefault()
-            focusNextSibling(item, wrapper)
+            focusSibling({
+              mode: 'next',
+              wrapper,
+              current: item,
+            })
             break
           }
         }
@@ -180,4 +187,56 @@ export const AccordionPanel: FC<Props> = ({
       </div>
     </AccordionPanelContext.Provider>
   )
+}
+
+const focusSibling = (
+  props:
+    | {
+        mode: 'first' | 'last'
+        wrapper: HTMLElement
+        current?: undefined
+      }
+    | {
+        mode: 'next' | 'prev'
+        wrapper: HTMLElement
+        current: HTMLElement
+      },
+) => {
+  const siblings = props.wrapper.querySelectorAll<HTMLElement>(
+    '[data-component="AccordionHeaderButton"]',
+  )
+  let target: HTMLElement | undefined = undefined
+
+  switch (props.mode) {
+    case 'first':
+      target = siblings[0]
+      break
+    case 'last':
+      target = siblings[siblings.length - 1]
+      break
+    case 'next': {
+      const index = Array.prototype.indexOf.call(siblings, props.current)
+
+      if (index === siblings.length - 1) {
+        target = siblings[0]
+      } else if (index !== -1) {
+        target = siblings[index + 1]
+      }
+
+      break
+    }
+    case 'prev': {
+      const index = Array.prototype.indexOf.call(siblings, props.current)
+
+      if (index === 0) {
+        target = siblings[siblings.length - 1]
+      } else if (index !== -1) {
+        target = siblings[index - 1]
+      }
+
+      break
+    }
+  }
+
+  target?.focus()
 }
