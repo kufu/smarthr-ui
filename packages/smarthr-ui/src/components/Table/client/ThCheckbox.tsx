@@ -3,12 +3,13 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer, useLocalize } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Checkbox, type Props as CheckboxProps } from '../../Checkbox'
 import { ControlledTooltip } from '../../Tooltip'
-import { Th } from '../Th'
 
-type BaseProps = Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
+import { CheckboxTh } from './CheckboxTh'
+
+type BaseProps = Pick<ComponentProps<typeof CheckboxTh>>
 type Props = BaseProps & Omit<CheckboxProps, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -33,13 +34,6 @@ const classNameGenerator = tv({
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
-    const localized = useLocalize({
-      checkColumnName: {
-        id: 'smarthr-ui/ThCheckbox/checkColumnName',
-        defaultText: '選択',
-      },
-    })
-
     const classNames = useMemo(() => {
       const { wrapper, inner, balloon, checkbox } = classNameGenerator()
 
@@ -52,14 +46,12 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     return (
-      // Th に必要な属性やイベントは不要
-      <Th
+      <CheckboxTh
         vAlign={vAlign}
         fixed={fixed}
         rowSpan={rowSpan}
         colSpan={colSpan}
         className={classNames.wrapper}
-        aria-label={localized.checkColumnName}
       >
         <label className={classNames.inner}>
           <ControlledTooltip
@@ -78,7 +70,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>
-      </Th>
+      </CheckboxTh>
     )
   },
 )
