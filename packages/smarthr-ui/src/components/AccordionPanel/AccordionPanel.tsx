@@ -6,24 +6,14 @@ import {
   type KeyboardEventHandler,
   type MouseEvent,
   type PropsWithChildren,
-  type RefObject,
   createContext,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../libs/map'
-
-import {
-  focusFirstSibling,
-  focusLastSibling,
-  focusNextSibling,
-  focusPreviousSibling,
-  getNewExpandedItems,
-} from './accordionPanelHelper'
 
 type BaseProps = PropsWithChildren<{
   /** アイコンの左右位置 */
@@ -45,15 +35,11 @@ const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
-  expandableMultiply: boolean
-  parentRef: RefObject<HTMLDivElement> | null
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
   handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
-  expandableMultiply: true,
-  parentRef: null,
   handleClickTrigger: () => {},
   handleKeyDown: () => {},
 })
@@ -95,10 +81,10 @@ export const AccordionPanel: FC<Props> = ({
   className,
   onClick,
   rounded,
+  children,
   ...rest
 }) => {
   const [expandedItems, setExpanded] = useState(() => flatArrayToMap(defaultExpanded))
-  const parentRef = useRef<HTMLDivElement>(null)
   const actualClassName = useMemo(
     () => classNameGenerator({ className, rounded }),
     [rounded, className],
@@ -106,18 +92,32 @@ export const AccordionPanel: FC<Props> = ({
 
   const latest = useLatest({ onClick, expandableMultiply })
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    let wrapper: HTMLElement | null = null
+
+    return {
+      callbackRef: (node: HTMLElement | null) => {
+        wrapper = node
+      },
       handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => {
         const { currentTarget } = e
 
         setExpanded((prevExpandedItems) => {
-          const newExpandedItems = getNewExpandedItems(
-            prevExpandedItems,
-            currentTarget.value,
-            currentTarget.getAttribute('aria-expanded') !== 'true',
-            latest.expandableMultiply,
-          )
+          let newExpandedItems: Map<string, string>
+          const itemName = currentTarget.value
+          const isExpanded = currentTarget.getAttribute('aria-expanded') !== 'true'
+
+          if (latest.expandableMultiply) {
+            newExpandedItems = new Map(prevExpandedItems)
+
+            if (isExpanded) {
+              newExpandedItems.set(itemName, itemName)
+            } else {
+              newExpandedItems.delete(itemName)
+            }
+          } else {
+            newExpandedItems = isExpanded ? new Map([[itemName, itemName]]) : new Map()
+          }
 
           latest.onClick?.(mapToKeyArray(newExpandedItems))
 
@@ -125,7 +125,7 @@ export const AccordionPanel: FC<Props> = ({
         })
       },
       handleKeyDown: (e: Parameters<KeyboardEventHandler<HTMLButtonElement>>[0]): void => {
-        if (!parentRef.current) {
+        if (!wrapper) {
           return
         }
 
@@ -134,31 +134,44 @@ export const AccordionPanel: FC<Props> = ({
         switch (e.key) {
           case 'Home': {
             e.preventDefault()
-            focusFirstSibling(parentRef.current)
+            focusSibling({
+              mode: 'first',
+              wrapper,
+            })
             break
           }
           case 'End': {
             e.preventDefault()
-            focusLastSibling(parentRef.current)
+            focusSibling({
+              mode: 'last',
+              wrapper,
+            })
             break
           }
           case 'ArrowLeft':
           case 'ArrowUp': {
             e.preventDefault()
-            focusPreviousSibling(item, parentRef.current)
+            focusSibling({
+              mode: 'prev',
+              wrapper,
+              current: item,
+            })
             break
           }
           case 'ArrowRight':
           case 'ArrowDown': {
             e.preventDefault()
-            focusNextSibling(item, parentRef.current)
+            focusSibling({
+              mode: 'next',
+              wrapper,
+              current: item,
+            })
             break
           }
         }
       },
-    }),
-    [latest],
-  )
+    }
+  }, [latest])
 
   return (
     <AccordionPanelContext.Provider
@@ -167,11 +180,63 @@ export const AccordionPanel: FC<Props> = ({
         handleKeyDown: functions.handleKeyDown,
         expandedItems,
         iconPosition,
-        expandableMultiply,
-        parentRef,
       }}
     >
-      <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
+      <div {...rest} ref={functions.callbackRef} role="presentation" className={actualClassName}>
+        {children}
+      </div>
     </AccordionPanelContext.Provider>
   )
+}
+
+const focusSibling = (
+  props:
+    | {
+        mode: 'first' | 'last'
+        wrapper: HTMLElement
+        current?: undefined
+      }
+    | {
+        mode: 'next' | 'prev'
+        wrapper: HTMLElement
+        current: HTMLElement
+      },
+) => {
+  const siblings = props.wrapper.querySelectorAll<HTMLElement>(
+    '[data-component="AccordionHeaderButton"]',
+  )
+  let target: HTMLElement | undefined = undefined
+
+  switch (props.mode) {
+    case 'first':
+      target = siblings[0]
+      break
+    case 'last':
+      target = siblings[siblings.length - 1]
+      break
+    case 'next': {
+      const index = Array.prototype.indexOf.call(siblings, props.current)
+
+      if (index === siblings.length - 1) {
+        target = siblings[0]
+      } else if (index !== -1) {
+        target = siblings[index + 1]
+      }
+
+      break
+    }
+    case 'prev': {
+      const index = Array.prototype.indexOf.call(siblings, props.current)
+
+      if (index === 0) {
+        target = siblings[siblings.length - 1]
+      } else if (index !== -1) {
+        target = siblings[index - 1]
+      }
+
+      break
+    }
+  }
+
+  target?.focus()
 }
