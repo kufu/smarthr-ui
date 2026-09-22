@@ -1,15 +1,13 @@
-'use client'
-
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer } from '../../../intl'
-import { Checkbox, type Props as CheckboxProps } from '../../Checkbox'
-import { ControlledTooltip } from '../../Tooltip'
+import { Localizer } from '../../intl'
+import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { ControlledTooltip } from '../Tooltip'
 
-import { CheckboxTh } from './CheckboxTh'
+import { CheckboxTh } from './client'
 
-type BaseProps = Pick<ComponentProps<typeof CheckboxTh>>
+type BaseProps = Pick<ComponentProps<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = BaseProps & Omit<CheckboxProps, keyof BaseProps>
 
 const classNameGenerator = tv({

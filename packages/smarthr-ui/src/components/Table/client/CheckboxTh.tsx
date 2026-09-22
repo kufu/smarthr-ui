@@ -3,7 +3,7 @@
 import { useLocalize } from '../../../intl'
 import { Th } from '../Th'
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps, FC } from 'react'
 
 type Props = Omit<ComponentProps<typeof Th>, 'aria-label'>
 
@@ -16,7 +16,6 @@ export const CheckboxTh: FC<Props> = ({ children, ...rest }) => {
   })
 
   return (
-    // Th に必要な属性やイベントは不要
     <Th {...rest} aria-label={localized.checkColumnName}>
       {children}
     </Th>

@@ -38,7 +38,6 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     return (
-      // Td に必要な属性やイベントは不要
       <Td
         vAlign={vAlign}
         fixed={fixed}
