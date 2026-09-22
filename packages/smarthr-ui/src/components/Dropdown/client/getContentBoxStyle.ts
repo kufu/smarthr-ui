@@ -1,5 +1,70 @@
 type Size = { width: number; height: number }
 
+export const INITIAL_CONTENT_STYLES: {
+  wrapper: {
+    insetBlockStart: string
+    insetInlineStart?: string
+    insetInlineEnd?: string
+    maxWidth: string
+  }
+  body: {
+    maxHeight?: string
+  }
+} = { wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} }
+
+type ContentStyleType = typeof INITIAL_CONTENT_STYLES
+
+export const generateContentStyle = (
+  current: ContentStyleType,
+  triggerButton: HTMLButtonElement,
+  content: HTMLElement,
+  defaultMargin: string,
+): ContentStyleType => {
+  const contentBox = getContentBoxStyle(
+    triggerButton.getBoundingClientRect(),
+    {
+      width: content.offsetWidth,
+      height: content.offsetHeight,
+    },
+    {
+      width: document.body.clientWidth,
+      height: window.innerHeight,
+    },
+    {
+      top: window.scrollY,
+      left: window.scrollX,
+    },
+  )
+
+  const leftMargin = contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
+  const rightMargin =
+    contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
+
+  const nextStyle = {
+    wrapper: {
+      insetBlockStart: contentBox.top,
+      insetInlineStart: contentBox.left || undefined,
+      insetInlineEnd: contentBox.right || undefined,
+      maxWidth: `calc(100% - ${leftMargin} - ${rightMargin})`,
+    },
+    body: {
+      maxHeight: contentBox.maxHeight || undefined,
+    },
+  }
+
+  if (
+    current.wrapper.insetBlockStart === nextStyle.wrapper.insetBlockStart &&
+    current.wrapper.insetInlineStart === nextStyle.wrapper.insetInlineStart &&
+    current.wrapper.insetInlineEnd === nextStyle.wrapper.insetInlineEnd &&
+    current.wrapper.maxWidth === nextStyle.wrapper.maxWidth &&
+    current.body.maxHeight === nextStyle.body.maxHeight
+  ) {
+    return current
+  }
+
+  return nextStyle
+}
+
 export function getContentBoxStyle(
   triggerRect: {
     top: number

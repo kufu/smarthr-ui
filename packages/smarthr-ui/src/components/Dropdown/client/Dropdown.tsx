@@ -23,7 +23,7 @@ import { tabbable } from '../../../libs/tabbable'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
-import { getContentBoxStyle } from './getContentBoxStyle'
+import { INITIAL_CONTENT_STYLES, generateContentStyle } from './getContentBoxStyle'
 
 type Props = PropsWithChildren<{
   onOpen?: () => void
@@ -42,17 +42,6 @@ type DropdownContextType = {
 
 const KEY_ESCAPE = /^Esc(ape)?$/
 const NOOP = () => null
-const INITIAL_CONTENT_STYLES: {
-  wrapper: {
-    insetBlockStart: string
-    insetInlineStart?: string
-    insetInlineEnd?: string
-    maxWidth: string
-  }
-  body: {
-    maxHeight?: string
-  }
-} = { wrapper: { insetBlockStart: 'auto', maxWidth: '' }, body: {} }
 
 export const DropdownContext = createContext<DropdownContextType>({
   active: false,
@@ -89,6 +78,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     contentId,
     theme,
     focusFrame,
+    contentStyles,
   })
 
   const functions = useMemo(() => {
@@ -104,53 +94,14 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     const updateContentStyles = () => {
       if (content && triggerButton) {
-        const contentBox = getContentBoxStyle(
-          triggerButton.getBoundingClientRect(),
-          {
-            width: content.offsetWidth,
-            height: content.offsetHeight,
-          },
-          {
-            width: document.body.clientWidth,
-            height: innerHeight,
-          },
-          {
-            top: scrollY,
-            left: scrollX,
-          },
+        setContentStyles(
+          generateContentStyle(
+            latest.contentStyles,
+            triggerButton,
+            content,
+            latest.theme.spacingByChar(0.5),
+          ),
         )
-        const defaultMargin = latest.theme.spacingByChar(0.5)
-        const leftMargin =
-          contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
-        const rightMargin =
-          contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
-        const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
-        const wrapper = {
-          insetBlockStart: contentBox.top,
-          insetInlineStart: contentBox.left || undefined,
-          insetInlineEnd: contentBox.right || undefined,
-          maxWidth: maxWidthStyle,
-        }
-        const body = {
-          maxHeight: contentBox.maxHeight || undefined,
-        }
-
-        setContentStyles((current) => {
-          if (
-            current.wrapper.insetBlockStart === wrapper.insetBlockStart &&
-            current.wrapper.insetInlineStart === wrapper.insetInlineStart &&
-            current.wrapper.insetInlineEnd === wrapper.insetInlineEnd &&
-            current.wrapper.maxWidth === wrapper.maxWidth &&
-            current.body.maxHeight === body.maxHeight
-          ) {
-            return current
-          }
-
-          return {
-            wrapper,
-            body,
-          }
-        })
       }
     }
 
