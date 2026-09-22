@@ -3,7 +3,7 @@
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLocalize } from '../../../intl'
+import { Localizer, useLocalize } from '../../../intl'
 import { Checkbox, type Props as CheckboxProps } from '../../Checkbox'
 import { ControlledTooltip } from '../../Tooltip'
 import { Th } from '../Th'
@@ -22,7 +22,9 @@ const classNameGenerator = tv({
     checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
     balloon: [
       // 位置はセルの真ん中(50%)+checkboxの幅の半分(8px)+outlineの幅(4px)+Balloonの矢印の幅(5px), sr-onlyで隠す
-      'shr-sr-only shr-absolute shr-left-[calc(50%+(theme(fontSize.base)/2)+4px+5px)]',
+      'shr-sr-only shr-absolute shr-left-[calc(50%+(theme(fontSize.base)/2)+9px)]',
+      // 縦方向の位置も揃える
+      'shr-top-[calc(50%-(theme(fontSize.base)/2)-8px)]',
       // labelの中の要素に hover or focus-visible がある時のスタイル。shr-absoluteはshr-not-sr-onlyのpositionをabsoluteに上書きしている
       'group-has-[:hover,:focus-visible]/label:shr-not-sr-only group-has-[:hover,:focus-visible]/label:shr-absolute group-has-[:hover,:focus-visible]/label:shr-whitespace-nowrap',
     ],
@@ -32,10 +34,6 @@ const classNameGenerator = tv({
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
     const localized = useLocalize({
-      checkAllInvisibleLabel: {
-        id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
-        defaultText: 'すべての項目を選択/解除',
-      },
       checkColumnName: {
         id: 'smarthr-ui/ThCheckbox/checkColumnName',
         defaultText: '選択',
@@ -70,7 +68,12 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
             vertical="middle"
             className={classNames.balloon}
           >
-            <span className="shr-block shr-p-0.5">{localized.checkAllInvisibleLabel}</span>
+            <span className="shr-inline-block shr-p-0.5">
+              <Localizer
+                id="smarthr-ui/ThCheckbox/checkAllInvisibleLabel"
+                defaultText="すべての項目を選択/解除"
+              />
+            </span>
           </ControlledTooltip>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
