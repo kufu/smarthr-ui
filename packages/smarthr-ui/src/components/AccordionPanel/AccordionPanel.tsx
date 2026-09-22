@@ -44,13 +44,11 @@ const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
-  expandableMultiply: boolean
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
   handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
-  expandableMultiply: true,
   handleClickTrigger: () => {},
   handleKeyDown: () => {},
 })
@@ -164,7 +162,6 @@ export const AccordionPanel: FC<Props> = ({
         handleKeyDown: functions.handleKeyDown,
         expandedItems,
         iconPosition,
-        expandableMultiply,
       }}
     >
       <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
