@@ -6,7 +6,6 @@ import {
   type KeyboardEventHandler,
   type MouseEvent,
   type PropsWithChildren,
-  type RefObject,
   createContext,
   useMemo,
   useRef,
@@ -46,14 +45,12 @@ export const AccordionPanelContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   expandableMultiply: boolean
-  parentRef: RefObject<HTMLDivElement> | null
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
   handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }>({
   iconPosition: 'left',
   expandedItems: DEFAULT_EXPANDED_MAP,
   expandableMultiply: true,
-  parentRef: null,
   handleClickTrigger: () => {},
   handleKeyDown: () => {},
 })
@@ -168,7 +165,6 @@ export const AccordionPanel: FC<Props> = ({
         expandedItems,
         iconPosition,
         expandableMultiply,
-        parentRef,
       }}
     >
       <div {...rest} ref={parentRef} role="presentation" className={actualClassName} />
