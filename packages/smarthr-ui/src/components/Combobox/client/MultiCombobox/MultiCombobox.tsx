@@ -174,8 +174,7 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
 
-  const baseId = useId()
-  const selectedListId = `${baseId}-selected`
+  const selectedListId = useId()
 
   const isInputControlled = controlledInputValue !== undefined
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
@@ -270,6 +269,8 @@ const ActualMultiCombobox = <T,>(
       noResultText,
     })
 
+  const focusFrame = useAnimationFrame()
+
   const latest = useLatest({
     onChange,
     onChangeInput,
@@ -285,6 +286,7 @@ const ActualMultiCombobox = <T,>(
     setInputValueIfUncontrolled,
     handleKeyDownListBox,
     cleanupAddFrame,
+    focusFrame,
   })
 
   const functions = useMemo(() => {
@@ -339,7 +341,7 @@ const ActualMultiCombobox = <T,>(
         buttons[nextIndex].focus()
       } else {
         // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
-        setTimeout(() => {
+        latest.focusFrame.request(() => {
           input?.focus()
         })
       }
@@ -365,6 +367,7 @@ const ActualMultiCombobox = <T,>(
         if (!node) {
           listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
+          latest.focusFrame.cancel()
         }
       },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
