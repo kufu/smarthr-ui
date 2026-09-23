@@ -1,12 +1,13 @@
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
+import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
 import { WakuWakuButton } from '../WakuWakuButton'
-import { BulkActionRow, ThCheckbox } from '../client'
+import { ThCheckbox } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
