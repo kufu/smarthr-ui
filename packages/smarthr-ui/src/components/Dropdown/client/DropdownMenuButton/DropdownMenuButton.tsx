@@ -7,7 +7,6 @@ import {
   type FC,
   type ReactNode,
   memo,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
@@ -124,6 +123,43 @@ const classNameGenerator = tv({
 
 const { triggerWrapper, triggerButton, actionList } = classNameGenerator()
 
+const menuCallbackRef = (node: HTMLElement | null) => {
+  if (!node) {
+    return
+  }
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!document.activeElement) {
+      return
+    }
+
+    let direction: -1 | 0 | 1 = 0
+
+    // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      direction = e.shiftKey ? -1 : 1
+    } else if (KEY_UP_REGEX.test(e.key)) {
+      // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
+      e.preventDefault()
+      direction = -1
+    } else if (KEY_DOWN_REGEX.test(e.key)) {
+      e.preventDefault()
+      direction = 1
+    }
+
+    if (direction !== 0) {
+      moveFocus(node, direction)
+    }
+  }
+
+  document.addEventListener('keydown', handleKeyDown)
+
+  return () => {
+    document.removeEventListener('keydown', handleKeyDown)
+  }
+}
+
 export const DropdownMenuButton: FC<Props> = ({
   trigger,
   children,
@@ -150,44 +186,7 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (!document.activeElement) {
-          return
-        }
-
-        let direction: -1 | 0 | 1 = 0
-
-        // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
-        if (e.key === 'Tab') {
-          e.preventDefault()
-          direction = e.shiftKey ? -1 : 1
-        } else if (KEY_UP_REGEX.test(e.key)) {
-          // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
-          e.preventDefault()
-          direction = -1
-        } else if (KEY_DOWN_REGEX.test(e.key)) {
-          e.preventDefault()
-          direction = 1
-        }
-
-        if (direction !== 0) {
-          moveFocus(node, direction)
-        }
-      }
-
-      document.addEventListener('keydown', handleKeyDown)
-
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown)
-      }
-    }, []),
-  )
+  const callbackRef = useCallbackRefCleanupForReact18(menuCallbackRef)
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
