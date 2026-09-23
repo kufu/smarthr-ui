@@ -1,0 +1,215 @@
+import { userEvent, within } from 'storybook/test'
+
+import { Cluster, Stack } from '../../../../Layout'
+import { SingleCombobox } from '../SingleCombobox'
+
+import { defaultItems, prefixes } from './SingleCombobox.stories'
+
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+/* pict singleCombobox.pict
+ * disabled        error   width   prefix  selectedItem
+ * false   false   なし    なし    あり
+ * false   true    あり    あり    なし
+ * true    true    あり    なし    あり
+ * true    false   あり    あり    なし
+ * true    true    なし    なし    なし
+ * true    false   なし    あり    あり
+ */
+
+const _cases: Array<Omit<Parameters<typeof SingleCombobox>[0], 'items'>> = [
+  {
+    disabled: false,
+    readOnly: false,
+    error: false,
+    width: undefined,
+    prefix: undefined,
+    selectedItem: defaultItems['option 1'],
+  },
+  {
+    disabled: false,
+    readOnly: false,
+    error: true,
+    width: '15em',
+    prefix: prefixes['あり'],
+    selectedItem: null,
+  },
+  {
+    disabled: true,
+    readOnly: false,
+    error: true,
+    width: '15em',
+    prefix: undefined,
+    selectedItem:
+      defaultItems[
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）'
+      ],
+  },
+  {
+    disabled: true,
+    readOnly: false,
+    error: false,
+    width: '15em',
+    prefix: prefixes['あり'],
+    selectedItem: null,
+  },
+  {
+    disabled: true,
+    readOnly: false,
+    error: true,
+    width: undefined,
+    prefix: undefined,
+    selectedItem: null,
+  },
+  {
+    disabled: true,
+    readOnly: false,
+    error: false,
+    width: undefined,
+    prefix: prefixes['あり'],
+    selectedItem: defaultItems['アイテムのラベルがReactNodeの場合'],
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: true,
+    width: '15em',
+    prefix: undefined,
+    selectedItem:
+      defaultItems[
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）'
+      ],
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: false,
+    width: '15em',
+    prefix: prefixes['あり'],
+    selectedItem: null,
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: true,
+    width: undefined,
+    prefix: undefined,
+    selectedItem: null,
+  },
+  {
+    disabled: false,
+    readOnly: true,
+    error: false,
+    width: undefined,
+    prefix: prefixes['あり'],
+    selectedItem: defaultItems['option 1'],
+  },
+]
+
+const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textboxes = await canvas.findAllByRole('combobox')
+
+  await textboxes[textboxes.length - 1].click()
+
+  const body = canvasElement.ownerDocument.body
+  const option = await within(body).findByText('option 1')
+  await userEvent.hover(option)
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+export default {
+  title: 'Components/Combobox/SingleCombobox/VRT',
+  component: SingleCombobox,
+  render: (args) => (
+    <Stack align="flex-start" gap={2} className="shr-h-screen">
+      <Cluster>
+        {_cases.map((props, i) => (
+          <SingleCombobox {...args} {...props} key={i} items={Object.values(defaultItems)} />
+        ))}
+      </Cluster>
+      <SingleCombobox
+        {...args}
+        name="default"
+        selectedItem={null}
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+      />
+    </Stack>
+  ),
+  play: playSingle,
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
+  tags: ['!autodocs'],
+} as Meta<typeof SingleCombobox>
+
+export const VRT: StoryObj<typeof SingleCombobox> = {}
+
+export const VRTForcedColors: StoryObj<typeof SingleCombobox> = {
+  ...VRT,
+  parameters: {
+    chromatic: { forcedColors: 'active' },
+  },
+}
+
+const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textbox = await canvas.findByRole('combobox')
+
+  textbox.click()
+
+  const body = canvasElement.ownerDocument.body
+  const option = await within(body).findByText('option 1')
+  await userEvent.hover(option)
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+// 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
+export const VRTOnRightEdge: StoryObj<typeof SingleCombobox> = {
+  render: (args) => (
+    <div className="shr-flex shr-h-screen shr-justify-end">
+      <SingleCombobox
+        {...args}
+        name="onRightEdge"
+        selectedItem={null}
+        dropdownWidth="30rem"
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+      />
+    </div>
+  ),
+  play: playOnRightEdge,
+}
+
+const playNoResult = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textbox = await canvas.findByRole('combobox')
+
+  await userEvent.click(textbox)
+  await userEvent.type(textbox, '絶対に一致しない検索文字列')
+
+  const body = canvasElement.ownerDocument.body
+  await within(body).findByText(
+    '一致する選択肢が見つかりませんでした。検索条件を変更してもう一度お試しください。',
+  )
+}
+
+// 候補が無い場合の長いメッセージが、幅の狭いドロップダウン内で折り返されて表示され、
+// 親要素の外にはみ出ないことを確認する
+export const VRTNoResult: StoryObj<typeof SingleCombobox> = {
+  render: (args) => (
+    <div className="shr-w-[10em]">
+      <SingleCombobox
+        {...args}
+        name="noResult"
+        selectedItem={null}
+        noResultText="一致する選択肢が見つかりませんでした。検索条件を変更してもう一度お試しください。"
+        items={Object.values(defaultItems)}
+      />
+    </div>
+  ),
+  play: playNoResult,
+}

@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { userEvent, within } from 'storybook/test'
 
 import { Cluster } from '../../Layout'
-import { Calendar } from '../Calendar'
+import { Calendar } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
