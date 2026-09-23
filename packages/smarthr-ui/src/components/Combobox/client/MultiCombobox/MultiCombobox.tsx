@@ -19,6 +19,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
@@ -446,7 +447,21 @@ const ActualMultiCombobox = <T,>(
     functions.blur,
   )
 
-  const mergedInputRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
+  const inputLayoutEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      if (node && isExpanded) {
+        node.focus()
+      }
+    },
+    [isExpanded, selectedItems, isInputControlled],
+  )
+
+  const mergedInputRef = useMergeRefs(
+    inputRef,
+    inputLayoutEffectRef,
+    listBoxFunctions.cleanupListBoxCallbackRef,
+    ref,
+  )
   const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)
 
   useEffect(() => {
@@ -457,12 +472,6 @@ const ActualMultiCombobox = <T,>(
       setInputValueIfUncontrolled('')
     }
   }, [selectedItems, setInputValueIfUncontrolled, latest])
-
-  useEffect(() => {
-    if (isExpanded) {
-      inputRef.current?.focus()
-    }
-  }, [isExpanded, selectedItems, isInputControlled])
 
   const classNames = useMemo(() => {
     const {
