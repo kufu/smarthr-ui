@@ -189,7 +189,6 @@ const ActualMultiCombobox = <T,>(
     inputValue,
     isItemSelected,
   })
-  const inputRef = useRef<HTMLInputElement>(null)
   const deleteFrame = useAnimationFrame()
   const selectFrame = useAnimationFrame()
 
@@ -289,6 +288,8 @@ const ActualMultiCombobox = <T,>(
   })
 
   const functions = useMemo(() => {
+    let input: HTMLInputElement | null = null
+
     const handleDelete = listBoxFunctions.handleDelete
 
     const getDeletionButtons = () => {
@@ -318,7 +319,7 @@ const ActualMultiCombobox = <T,>(
 
       if (currentIndex !== -1) {
         buttons[Math.max(currentIndex - 1, 0)].focus()
-      } else if (inputRef.current?.selectionStart === 0) {
+      } else if (input?.selectionStart === 0) {
         buttons[buttons.length - 1].focus()
       }
     }
@@ -339,7 +340,7 @@ const ActualMultiCombobox = <T,>(
       } else {
         // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
         setTimeout(() => {
-          inputRef.current?.focus()
+          input?.focus()
         })
       }
     }
@@ -359,7 +360,8 @@ const ActualMultiCombobox = <T,>(
     return {
       handleDelete,
       blur,
-      cleanupCallbackRef: (node: HTMLElement | null) => {
+      inputCallbackRef: (node: HTMLInputElement | null) => {
+        input = node
         if (!node) {
           listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
@@ -377,7 +379,7 @@ const ActualMultiCombobox = <T,>(
         } else if (e.key === 'Tab') {
           if (latest.isExpanded) {
             // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-            inputRef.current?.focus()
+            input?.focus()
           }
 
           blur()
@@ -403,7 +405,7 @@ const ActualMultiCombobox = <T,>(
           latest.setInputValueIfUncontrolled(innerText(lastItem.label))
         } else {
           e.stopPropagation()
-          inputRef.current?.focus()
+          input?.focus()
         }
 
         latest.handleKeyDownListBox(e)
@@ -476,8 +478,12 @@ const ActualMultiCombobox = <T,>(
     [selectedItems, setInputValueIfUncontrolled, latest],
   )
 
-  const mergedInputRef = useMergeRefs(inputRef, inputFocusEffectRef, inputSelectEffectRef, ref)
-  const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)
+  const mergedInputRef = useMergeRefs(
+    functions.inputCallbackRef,
+    inputFocusEffectRef,
+    inputSelectEffectRef,
+    ref,
+  )
 
   const classNames = useMemo(() => {
     const {
@@ -515,7 +521,7 @@ const ActualMultiCombobox = <T,>(
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
-      ref={mergedTriggerRef}
+      ref={triggerRef}
       role="group"
       className={classNames.wrapper}
       style={{
