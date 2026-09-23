@@ -253,6 +253,8 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     [latest],
   )
 
+  const errorAttr = error || undefined
+
   const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
   return (
@@ -262,7 +264,8 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
       rows={interimRows}
       className={actualClassName}
       style={{ width: typeof width === 'number' ? `${width}px` : width }}
-      aria-invalid={error || undefined}
+      aria-invalid={errorAttr}
+      data-smarthr-ui-input-error={errorAttr}
       data-smarthr-ui-input="true"
       onChange={functions.handleChange}
     />

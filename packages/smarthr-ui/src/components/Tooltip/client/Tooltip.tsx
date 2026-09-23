@@ -11,14 +11,13 @@ import {
   type TouchEvent as ReactTouchEvent,
   useId,
   useMemo,
-  useRef,
   useState,
   useSyncExternalStore,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
@@ -30,8 +29,8 @@ const subscribeFullscreenChange = (callback: () => void) => {
     window.removeEventListener('fullscreenchange', callback)
   }
 }
-const getFullscreenElement = () => document.fullscreenElement
-const getFullscreenElementOnSSR = () => null
+const getPortalRoot = () => document.fullscreenElement ?? document.body
+const getPortalRootOnSSR = () => null
 
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -51,7 +50,7 @@ type BaseProps = PropsWithChildren<{
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
 type Props = BaseProps &
-  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby'>
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby' | 'role'>
 
 const classNameGenerator = tv({
   base: [
@@ -84,16 +83,13 @@ export const Tooltip: FC<Props> = ({
   onBlur,
   ...rest
 }) => {
-  const [portalRoot, setPortalRoot] = useState<Element | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
-  const ref = useRef<HTMLDivElement>(null)
-  const childrenWrapperRef = useRef<HTMLSpanElement>(null)
   const messageId = useId()
-  const fullscreenElement = useSyncExternalStore(
+  const portalRoot = useSyncExternalStore(
     subscribeFullscreenChange,
-    getFullscreenElement,
-    getFullscreenElementOnSSR,
+    getPortalRoot,
+    getPortalRootOnSSR,
   )
 
   const [isFocusableChild, setIsFocusableChild] = useState(false)
@@ -118,26 +114,26 @@ export const Tooltip: FC<Props> = ({
   })
 
   const functions = useMemo(() => {
+    let node: HTMLElement | null = null
+
     const toShowAction = (e: BaseSyntheticEvent) => {
       // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
-      if (!ref.current?.contains(e.target)) {
+      if (!node?.contains(e.target)) {
         return
       }
 
       if (latest.ellipsisOnly) {
         const outerWidth = parseInt(
-          window
-            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-            .width.match(/\d+/)![0],
+          window.getComputedStyle(node.parentNode! as HTMLElement, null).width.match(/\d+/)![0],
           10,
         )
 
-        if (outerWidth < 0 || outerWidth > ref.current.clientWidth) {
+        if (outerWidth < 0 || outerWidth > node.clientWidth) {
           return
         }
       }
 
-      setRect(ref.current.getBoundingClientRect())
+      setRect(node.getBoundingClientRect())
       setIsVisible(true)
     }
     const toCloseAction = () => {
@@ -146,67 +142,84 @@ export const Tooltip: FC<Props> = ({
     }
 
     return {
-      handlePointerEnter: (e: ReactPointerEvent<HTMLSpanElement>) => {
+      callbackRef: (n: HTMLElement | null) => {
+        node = n
+      },
+      handleDelegatePointerEnter: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerEnter?.(e)
         toShowAction(e)
       },
-      handleTouchStart: (e: ReactTouchEvent<HTMLSpanElement>) => {
+      handleDelegateTouchStart: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchStart?.(e)
         toShowAction(e)
       },
-      handleFocus: (e: ReactFocusEvent<HTMLSpanElement>) => {
+      handleDelegateFocus: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onFocus?.(e)
         toShowAction(e)
       },
-      handlePointerLeave: (e: ReactPointerEvent<HTMLSpanElement>) => {
+      handleDelegatePointerLeave: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerLeave?.(e)
         toCloseAction()
       },
-      handleTouchEnd: (e: ReactTouchEvent<HTMLSpanElement>) => {
+      handleDelegateTouchEnd: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchEnd?.(e)
         toCloseAction()
       },
-      handleBlur: (e: ReactFocusEvent<HTMLSpanElement>) => {
+      handleDelegateBlur: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onBlur?.(e)
         toCloseAction()
       },
     }
   }, [latest])
 
-  useEnhancedEffect(() => {
-    setPortalRoot(fullscreenElement ?? document.body)
-  }, [fullscreenElement])
+  // TODO: childrenが変わった場合にfocusable判定が再実行されない。また、focusableから
+  // 非focusableに変わった場合、以前設定したaria-labelledby/aria-describedbyが残り続ける。
+  // どちらも今回のリファクタリング以前から存在する既存の課題であり、別途対応する
+  const layoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
 
-  useEnhancedEffect(() => {
-    const childElement = childrenWrapperRef.current?.firstElementChild as HTMLElement | undefined
+      const childElement = node.firstElementChild as HTMLElement | undefined
+      const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
 
-    const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
+      setIsFocusableChild(focusable)
+      setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
 
-    setIsFocusableChild(focusable)
-    setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
+      // focusableな要素に直接aria属性を設定
+      if (focusable) {
+        childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+      }
+    },
+    [tabIndex, isLabel, messageId],
+  )
 
-    // focusableな要素に直接aria属性を設定
-    if (focusable) {
-      childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
-    }
-  }, [tabIndex, isLabel, messageId])
+  // TODO: ariaDescribedbyTarget==='inner'かつchildrenが非focusableの場合、
+  // inner span(children直下のラッパー)側にaria-describedbyを設定するロジックが無く、
+  // メッセージとの関連付けが失われる。今回のリファクタリング以前から存在する既存の課題であり、
+  // 別途対応する
+  const ariaDescribedby =
+    isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/best-practice-for-interactive-element
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <span
       {...rest}
-      ref={ref}
+      ref={functions.callbackRef}
+      // HINT: presentation roleとaria-describedbyはARIA仕様上の衝突関係にあり、UAが
+      // presentation roleを無視する規定になっている。この無視に依存せず、aria-describedbyを
+      // 設定しない場合にのみpresentation roleを設定することで衝突自体を避ける
+      role={ariaDescribedby ? undefined : 'presentation'}
       tabIndex={actualTabIndex}
       className={actualClassName}
-      aria-describedby={
-        isLabel || isFocusableChild || ariaDescribedbyTarget === 'inner' ? undefined : messageId
-      }
-      onPointerEnter={functions.handlePointerEnter}
-      onTouchStart={functions.handleTouchStart}
-      onFocus={functions.handleFocus}
-      onPointerLeave={functions.handlePointerLeave}
-      onTouchEnd={functions.handleTouchEnd}
-      onBlur={functions.handleBlur}
+      aria-describedby={ariaDescribedby}
+      onPointerEnter={functions.handleDelegatePointerEnter}
+      onTouchStart={functions.handleDelegateTouchStart}
+      onFocus={functions.handleDelegateFocus}
+      onPointerLeave={functions.handleDelegatePointerLeave}
+      onTouchEnd={functions.handleDelegateTouchEnd}
+      onBlur={functions.handleDelegateBlur}
     >
       {portalRoot &&
         createPortal(
@@ -219,7 +232,7 @@ export const Tooltip: FC<Props> = ({
           />,
           portalRoot,
         )}
-      <span ref={childrenWrapperRef} className="shr-contents">
+      <span ref={layoutEffectRef} className="smarthr-ui-Tooltip-content shr-contents">
         {children}
       </span>
     </span>

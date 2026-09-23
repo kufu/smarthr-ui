@@ -879,6 +879,23 @@ const functions = useMemo(() => ({
 - `id` は `useId()` ベースで一意性が保証される
 - `value` は重複の可能性があるため不適切
 
+**`findDelegateTarget` を使わない場合にも `handleDelegateXxx` を使うケース:**
+
+`div` や `span` のような本来インタラクティブでない要素に `onXxx` 系のハンドラーを設定する場合も、`handleDelegateXxx` 形式を使います。この場合の「delegate」は、複数の同種子要素を判別する意味ではなく、**その要素自身がインタラクティブでないため、内部の実際のインタラクティブな要素（またはその要素が表す操作対象全体）に代わってイベントを受け取っている**という意味です。
+
+```tsx
+// ✅ spanはインタラクティブでない。children側の操作をこのspanが代理で受け取っている
+// eslint-disable-next-line jsx-a11y/no-static-element-interactions
+<span
+  onPointerEnter={functions.handleDelegatePointerEnter}
+  onFocus={functions.handleDelegateFocus}
+>
+  {children}
+</span>
+```
+
+**判断基準:** ハンドラーを設定する対象のホスト要素（`div`/`span`など）が、それ自体としてはユーザー操作の対象ではなく、`children` や内部要素の操作を代わりに受け取っているだけの場合は `handleDelegateXxx` にする。`button`/`input` など要素自体がインタラクティブで、その要素固有の操作を処理する場合は通常の `handleXxx` のままでよい。
+
 #### useImperativeHandle の依存配列
 
 `useImperativeHandle` には**必ず依存配列を指定**します。

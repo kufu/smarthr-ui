@@ -21,6 +21,8 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
       }
     }, [className])
 
+    const errorAttr = error || undefined
+
     return (
       <span className={classNames.wrapper}>
         <input
@@ -28,7 +30,8 @@ export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
           ref={ref}
           type="time"
           className={classNames.inner}
-          aria-invalid={error || undefined}
+          aria-invalid={errorAttr}
+          data-smarthr-ui-input-error={errorAttr}
           data-smarthr-ui-input="true"
         />
       </span>
