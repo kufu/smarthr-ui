@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useCallback, useId, useMemo } from 'react'
+import { type FC, type ReactNode, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
@@ -29,6 +29,62 @@ const fieldsetClassNameGenerator = tv({
     },
   },
 })
+
+// HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
+// https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
+const callbackRef = (node: HTMLElement | null) => {
+  if (!node) return
+
+  const labelTextEl = node.querySelector(LABEL_TEXT_SELECTOR)
+
+  if (!labelTextEl) return
+
+  // HINT: legend変更のたびにaria-labelへ古いlegend文言が蓄積しないよう、
+  // 初回に確定したアクセシブルネームをinput要素ごとに保持しておく
+  const baseAccessibleNames = new WeakMap<HTMLInputElement, string>()
+
+  const updateAriaLabels = () => {
+    const labelText = labelTextEl.textContent || ''
+    if (!labelText) return
+
+    const inputs = node.querySelectorAll<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
+    if (!inputs?.length) return
+
+    inputs.forEach((input: HTMLInputElement) => {
+      let accessibleName = baseAccessibleNames.get(input)
+
+      if (accessibleName === undefined) {
+        accessibleName =
+          input.getAttribute('aria-label') ||
+          (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
+            ? input.labels[0].textContent || ''
+            : '')
+        baseAccessibleNames.set(input, accessibleName)
+      }
+
+      if (
+        accessibleName &&
+        !accessibleName.includes(labelText) &&
+        !labelText.includes(accessibleName)
+      ) {
+        input.setAttribute('aria-label', `${accessibleName} ${labelText}`)
+      }
+    })
+  }
+
+  // 初回実行
+  updateAriaLabels()
+
+  // label要素の変更を監視
+  const observer = new MutationObserver(updateAriaLabels)
+  observer.observe(labelTextEl, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  })
+
+  return () => observer.disconnect()
+}
 
 type Props = CommonProps & {
   legend: ReactNode | Omit<ObjectLabelType, 'htmlFor'>
@@ -65,62 +121,6 @@ const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }
     htmlFor: `${baseId}-htmlFor`,
     id: baseLegend.id || `${baseId}-legend`,
   }
-
-  // HINT: Fieldset内の可視ラベルが無いinputに、legend文言をアクセシブルネームに追加する
-  // https://waic.jp/translations/WCAG21/Understanding/label-in-name.html
-  const callbackRef = useCallback((node: HTMLElement | null) => {
-    if (!node) return
-
-    const labelTextEl = node.querySelector(LABEL_TEXT_SELECTOR)
-
-    if (!labelTextEl) return
-
-    // HINT: legend変更のたびにaria-labelへ古いlegend文言が蓄積しないよう、
-    // 初回に確定したアクセシブルネームをinput要素ごとに保持しておく
-    const baseAccessibleNames = new WeakMap<HTMLInputElement, string>()
-
-    const updateAriaLabels = () => {
-      const labelText = labelTextEl.textContent || ''
-      if (!labelText) return
-
-      const inputs = node.querySelectorAll<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
-      if (!inputs?.length) return
-
-      inputs.forEach((input: HTMLInputElement) => {
-        let accessibleName = baseAccessibleNames.get(input)
-
-        if (accessibleName === undefined) {
-          accessibleName =
-            input.getAttribute('aria-label') ||
-            (input.labels?.[0]?.classList.contains('smarthr-ui-VisuallyHiddenText')
-              ? input.labels[0].textContent || ''
-              : '')
-          baseAccessibleNames.set(input, accessibleName)
-        }
-
-        if (
-          accessibleName &&
-          !accessibleName.includes(labelText) &&
-          !labelText.includes(accessibleName)
-        ) {
-          input.setAttribute('aria-label', `${accessibleName} ${labelText}`)
-        }
-      })
-    }
-
-    // 初回実行
-    updateAriaLabels()
-
-    // label要素の変更を監視
-    const observer = new MutationObserver(updateAriaLabels)
-    observer.observe(labelTextEl, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    })
-
-    return () => observer.disconnect()
-  }, [])
 
   return {
     ...rest,
