@@ -231,7 +231,7 @@ const ActualMultiCombobox = <T,>(
     }
 
     return {
-      cleanupListBoxCallbackRef: () => () => {
+      cleanupFrame: () => {
         latestForListBox.deleteFrame.cancel()
         latestForListBox.selectFrame.cancel()
       },
@@ -359,7 +359,12 @@ const ActualMultiCombobox = <T,>(
     return {
       handleDelete,
       blur,
-      cleanupCallbackRef: () => latest.cleanupAddFrame,
+      cleanupCallbackRef: (node: HTMLElement | null) => {
+        if (!node) {
+          listBoxFunctions.cleanupFrame()
+          latest.cleanupAddFrame()
+        }
+      },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
         if (latest.isComposing) return
 
@@ -471,13 +476,7 @@ const ActualMultiCombobox = <T,>(
     [selectedItems, setInputValueIfUncontrolled, latest],
   )
 
-  const mergedInputRef = useMergeRefs(
-    inputRef,
-    inputFocusEffectRef,
-    inputSelectEffectRef,
-    listBoxFunctions.cleanupListBoxCallbackRef,
-    ref,
-  )
+  const mergedInputRef = useMergeRefs(inputRef, inputFocusEffectRef, inputSelectEffectRef, ref)
   const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)
 
   const classNames = useMemo(() => {
