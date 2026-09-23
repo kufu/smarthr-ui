@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type BaseProps = PropsWithChildren & {
@@ -32,66 +31,64 @@ export const LiveRegion: FC<Props> = ({
   // それ以外の場合は空の状態でマウントしてから遅延してテキストを設定する必要があるため('' のままにする)
   const [liveText, setLiveText] = useState<ReactNode>(() => (skipInitialAnnounce ? children : ''))
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (node: HTMLElement | null) => {
-        if (!node) {
-          return
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
+      }
+
+      const visibleTextElm = node.querySelector<HTMLElement>(
+        '.smarthr-ui-LiveRegion-visibleContent',
+      )
+
+      if (!visibleTextElm) {
+        return
+      }
+
+      let beforeVisibleText = ''
+      const action = () => {
+        const visibleText = visibleTextElm.innerText
+
+        if (beforeVisibleText !== visibleText) {
+          beforeVisibleText = visibleText
+          setLiveText(visibleText)
         }
+      }
 
-        const visibleTextElm = node.querySelector<HTMLElement>(
-          '.smarthr-ui-LiveRegion-visibleContent',
-        )
-
-        if (!visibleTextElm) {
-          return
+      let timeoutId: ReturnType<typeof setTimeout> | null = null
+      const clearTimeoutAction = () => {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId)
         }
+      }
+      const timeoutAction = () => {
+        // HINT: 要素を空の状態でDOMに挿入してから遅延してテキストを設定することで、
+        // スクリーンリーダーの購読処理が間に合わずアナウンスが欠落するのを防ぐ。
+        clearTimeoutAction()
+        timeoutId = setTimeout(action, announceDelay)
+      }
 
-        let beforeVisibleText = ''
-        const action = () => {
-          const visibleText = visibleTextElm.innerText
+      if (!skipInitialAnnounce) {
+        timeoutAction()
+      }
 
-          if (beforeVisibleText !== visibleText) {
-            beforeVisibleText = visibleText
-            setLiveText(visibleText)
-          }
-        }
+      const observer = new MutationObserver(timeoutAction)
+      observer.observe(visibleTextElm, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
 
-        let timeoutId: ReturnType<typeof setTimeout> | null = null
-        const clearTimeoutAction = () => {
-          if (timeoutId !== null) {
-            clearTimeout(timeoutId)
-          }
-        }
-        const timeoutAction = () => {
-          // HINT: 要素を空の状態でDOMに挿入してから遅延してテキストを設定することで、
-          // スクリーンリーダーの購読処理が間に合わずアナウンスが欠落するのを防ぐ。
-          clearTimeoutAction()
-          timeoutId = setTimeout(action, announceDelay)
-        }
+      return () => {
+        clearTimeoutAction()
+        observer.disconnect()
+      }
 
-        if (!skipInitialAnnounce) {
-          timeoutAction()
-        }
-
-        const observer = new MutationObserver(timeoutAction)
-        observer.observe(visibleTextElm, {
-          childList: true,
-          subtree: true,
-          characterData: true,
-        })
-
-        return () => {
-          clearTimeoutAction()
-          observer.disconnect()
-        }
-
-        // HINT: 変化した場合callbackRefが再生成されてしまうので本来はuseRefを利用して
-        // 依存配列を空にすべきだが、LiveRegionの実用上これらの値の参照が変化する可能性は現状無い
-        // 必要が生じたらannounceDelayは可変、skipInitialAnnounceは不変の状態でuseRefを使うこと
-      },
-      [announceDelay, skipInitialAnnounce],
-    ),
+      // HINT: 変化した場合callbackRefが再生成されてしまうので本来はuseRefを利用して
+      // 依存配列を空にすべきだが、LiveRegionの実用上これらの値の参照が変化する可能性は現状無い
+      // 必要が生じたらannounceDelayは可変、skipInitialAnnounceは不変の状態でuseRefを使うこと
+    },
+    [announceDelay, skipInitialAnnounce],
   )
 
   const VisibleContent = 'span'

@@ -1,7 +1,6 @@
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { debounce } from '../../../libs/debounce'
 import { ControlledTooltip } from '../ControlledTooltip'
@@ -45,40 +44,38 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
   // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (element: HTMLDivElement | null) => {
-        if (!element || !parentRect) {
-          return
-        }
+  const callbackRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (!element || !parentRect) {
+        return
+      }
 
-        const action = () => {
-          const vertical = calculateVertical(element.offsetHeight, parentRect)
-          const horizontal = calculateHorizontal(element.offsetWidth, parentRect, theme)
+      const action = () => {
+        const vertical = calculateVertical(element.offsetHeight, parentRect)
+        const horizontal = calculateHorizontal(element.offsetWidth, parentRect, theme)
 
-          setStyle({
-            insetBlockStart: vertical.insetBlockStart,
-            insetInlineStart: horizontal.insetInlineStart,
-            insetInlineEnd: horizontal.insetInlineEnd,
-            maxWidth: horizontal.maxWidth,
-            maxHeight: vertical.maxHeight,
-          })
-          setActualVertical(vertical.alignment)
-          setActualHorizontal(horizontal.alignment)
-        }
-        const debouncedAction = debounce(action, 100)
+        setStyle({
+          insetBlockStart: vertical.insetBlockStart,
+          insetInlineStart: horizontal.insetInlineStart,
+          insetInlineEnd: horizontal.insetInlineEnd,
+          maxWidth: horizontal.maxWidth,
+          maxHeight: vertical.maxHeight,
+        })
+        setActualVertical(vertical.alignment)
+        setActualHorizontal(horizontal.alignment)
+      }
+      const debouncedAction = debounce(action, 100)
 
-        action()
+      action()
 
-        window.addEventListener('resize', debouncedAction)
+      window.addEventListener('resize', debouncedAction)
 
-        return () => {
-          window.removeEventListener('resize', debouncedAction)
-          debouncedAction.cancel()
-        }
-      },
-      [parentRect, theme],
-    ),
+      return () => {
+        window.removeEventListener('resize', debouncedAction)
+        debouncedAction.cancel()
+      }
+    },
+    [parentRect, theme],
   )
 
   return (

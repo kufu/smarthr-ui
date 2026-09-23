@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
 import { DropdownCloser } from '../../DropdownCloser'
 
 import type { AnchorButton, Button } from '../../../Button'
@@ -82,40 +81,38 @@ export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
 const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
   // TODO: clickableな要素毎にcallbackRefを生成しているが、親のmenu要素で一つにまとめられないか検証する
   // MutationObserverの範囲は広がるが複数生成されるよりメリットがありそう
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) {
+      return
+    }
+
+    const setupButton = () => {
+      const button = node.querySelector('button,a')
+
+      if (button) {
+        button.setAttribute('role', 'menuitem')
+        button.setAttribute(
+          'class',
+          actionListItemButton({ className: button.getAttribute('class') }),
+        )
       }
+    }
 
-      const setupButton = () => {
-        const button = node.querySelector('button,a')
+    setupButton()
 
-        if (button) {
-          button.setAttribute('role', 'menuitem')
-          button.setAttribute(
-            'class',
-            actionListItemButton({ className: button.getAttribute('class') }),
-          )
-        }
-      }
+    const observer = new MutationObserver(setupButton)
+    observer.observe(node, {
+      childList: true,
+      subtree: true,
+      // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+      attributes: true,
+      attributeFilter: ['disabled', 'aria-disabled'],
+    })
 
-      setupButton()
-
-      const observer = new MutationObserver(setupButton)
-      observer.observe(node, {
-        childList: true,
-        subtree: true,
-        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-        attributes: true,
-        attributeFilter: ['disabled', 'aria-disabled'],
-      })
-
-      return () => {
-        observer.disconnect()
-      }
-    }, []),
-  )
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return (
     <li ref={callbackRef} role="presentation">

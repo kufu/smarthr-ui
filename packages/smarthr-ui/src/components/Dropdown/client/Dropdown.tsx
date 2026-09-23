@@ -12,7 +12,6 @@ import {
 } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
@@ -134,7 +133,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           latest.closeFrame.cancel()
         }
       },
-      baseContentCallbackRef: (node: HTMLElement | null) => {
+      contentCallbackRef: (node: HTMLElement | null) => {
         content = node
 
         if (!node) {
@@ -309,8 +308,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     baseTriggerLayoutEffectRef,
   )
 
-  const contentCallbackRef = useCallbackRefCleanupForReact18(functions.baseContentCallbackRef)
-
   return (
     <PortalParentProvider>
       <DropdownContext.Provider
@@ -318,7 +315,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           active,
           contentStyles,
           triggerLayoutEffectRef,
-          contentCallbackRef,
+          contentCallbackRef: functions.contentCallbackRef,
           handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
           handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
           DropdownContentRoot: functions.DropdownContentRoot,
