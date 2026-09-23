@@ -1,5 +1,5 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { Scroller } from '../Scroller'
@@ -7,7 +7,9 @@ import { Scroller } from '../Scroller'
 import type { Gap } from '../../types'
 
 export type Props = PropsWithChildren<
-  Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
+  {
+    /** コンテンツ部分の背景色 */
+    contentBgColor?: keyof typeof backgroundColor
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
     className?: string | undefined
   } & Pick<ComponentProps<'div'>, 'ref'>

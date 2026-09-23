@@ -43,7 +43,8 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
-  const portalRef = useCallback(
+  // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
+  const callbackRef = useCallback(
     (element: HTMLDivElement | null) => {
       if (!element || !parentRect) {
         return
@@ -79,7 +80,7 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
 
   return (
     <div
-      ref={portalRef}
+      ref={callbackRef}
       role="tooltip"
       className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}

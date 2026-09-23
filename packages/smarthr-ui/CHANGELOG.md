@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.7.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.1...smarthr-ui-v99.7.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* **SingleCombobox:** 未選択のままblurすると絞り込みだけが解除される不具合を修正 ([#7128](https://github.com/kufu/smarthr-ui/issues/7128)) ([42fa5fe](https://github.com/kufu/smarthr-ui/commit/42fa5fefa858530723e480cf4ede409e0576ad0e))
+
+## [99.7.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.0...smarthr-ui-v99.7.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* **FormGroup:** 自身にerrorMessagesが無い場合でも入力要素側のaria-invalidを消さないようにする ([#7126](https://github.com/kufu/smarthr-ui/issues/7126)) ([4e0dcee](https://github.com/kufu/smarthr-ui/commit/4e0dceef3c23349cda0f5541d0509aa95445a976))
+
+## [99.7.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.1...smarthr-ui-v99.7.0) (2026-09-17)
+
+
+### Features
+
+* **LiveRegion:** テキスト変更を確実に読み上げるLiveRegionを内部コンポーネントとして追加 ([#6960](https://github.com/kufu/smarthr-ui/issues/6960)) ([2acc213](https://github.com/kufu/smarthr-ui/commit/2acc2132c9be30fa94a841a2bceef5021ca7cf79))
+* **useLayoutEffectRef:** useMergeRefs向けの安定したrefを作るhookを追加しFormControlへ適用する ([#7033](https://github.com/kufu/smarthr-ui/issues/7033)) ([1f6665f](https://github.com/kufu/smarthr-ui/commit/1f6665f3a39e93bae29c01897b8dd87db363d14d))
+
+
+### Bug Fixes
+
+* **Combobox:** 候補なしメッセージがインライン要素のため折り返されずはみ出る問題を修正 ([#7109](https://github.com/kufu/smarthr-ui/issues/7109)) ([ff2b8d6](https://github.com/kufu/smarthr-ui/commit/ff2b8d6efa35b4935148cea70c34a4bad3cf1799))
+* **Combobox:** 候補選択後、外側クリックでフォーカスが外れなくなる問題を修正 ([#7110](https://github.com/kufu/smarthr-ui/issues/7110)) ([5744a2a](https://github.com/kufu/smarthr-ui/commit/5744a2a21a4f00906080dc09c88f49dbed3b3964))
+* **DropdownCloser:** role/onClick以外のdiv属性を渡せるようにする ([#7080](https://github.com/kufu/smarthr-ui/issues/7080)) ([293b620](https://github.com/kufu/smarthr-ui/commit/293b620f92245d8d511eea9fad2c54b2ca209745))
+* **Dropdown:** DropdownMenuGroupがclient専用関数を呼び出せない問題を解消 ([#7099](https://github.com/kufu/smarthr-ui/issues/7099)) ([0bed1b4](https://github.com/kufu/smarthr-ui/commit/0bed1b4e7d37b9ae605c31f41136a8656e51ce91))
+* **Dropdown:** ネストしたDropdown内で最後の要素からTabした際にトリガーへフォーカスが戻らない不具合を修正 ([#7093](https://github.com/kufu/smarthr-ui/issues/7093)) ([6dba3d1](https://github.com/kufu/smarthr-ui/commit/6dba3d1a0f3b94e91e9094849d0b76328b593047))
+* **FormControl,Fieldset:** ラベルのクリック領域が横に伸びてしまうのを修正 ([#7094](https://github.com/kufu/smarthr-ui/issues/7094)) ([0082453](https://github.com/kufu/smarthr-ui/commit/0082453fb6e3422cbe18896cdb8d4ac9497e172e))
+* **FormGroup:** innerMarginの型をPositiveGapに絞る ([#7055](https://github.com/kufu/smarthr-ui/issues/7055)) ([c403220](https://github.com/kufu/smarthr-ui/commit/c403220b9433abd62a74d9e85b33fbf81d66c817))
+* **MultiCombobox:** ダイアログ内でフォーカス時にESCキーが伝搬しない不具合を修正する ([#7083](https://github.com/kufu/smarthr-ui/issues/7083)) ([568ee71](https://github.com/kufu/smarthr-ui/commit/568ee7156710e28cf539e154a4ce9a2ef5c00f55))
+
 ## [99.6.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.6.0...smarthr-ui-v99.6.1) (2026-09-10)
 
 
