@@ -49,27 +49,6 @@ const classNameGenerator = tv({
 const { trigger, actionItem } = classNameGenerator()
 const TRIGGER_CLASSNAME = trigger()
 
-const renderItemList = (children: ReactNode) =>
-  Children.map(children, (item): ReactNode => {
-    if (!isValidElement(item)) {
-      return null
-    }
-
-    if (item.type === Fragment) {
-      return renderItemList(item.props.children)
-    }
-
-    if (item.type === DropdownMenuGroup) {
-      return (
-        <DropdownMenuGroup {...item.props}>{renderItemList(item.props.children)}</DropdownMenuGroup>
-      )
-    }
-
-    return cloneElement(item as ReactElement, {
-      className: actionItem({ className: item.props.className }),
-    })
-  })
-
 export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
     className={TRIGGER_CLASSNAME}
@@ -83,6 +62,29 @@ export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, c
       </>
     }
   >
-    {renderItemList(children)}
+    <ItemList>{children}</ItemList>
   </DropdownMenuButton>
 )
+
+const ItemList: FC<PropsWithChildren> = ({ children }) =>
+  Children.map(children, (item): ReactNode => {
+    if (!isValidElement(item)) {
+      return null
+    }
+
+    if (item.type === Fragment) {
+      return <ItemList>{item.props.children}</ItemList>
+    }
+
+    if (item.type === DropdownMenuGroup) {
+      return (
+        <DropdownMenuGroup {...item.props}>
+          <ItemList>{item.props.children}</ItemList>
+        </DropdownMenuGroup>
+      )
+    }
+
+    return cloneElement(item as ReactElement, {
+      className: actionItem({ className: item.props.className }),
+    })
+  })
