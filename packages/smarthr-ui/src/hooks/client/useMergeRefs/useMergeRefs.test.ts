@@ -52,8 +52,8 @@ describe('useMergeRefs', () => {
 
     const { result } = renderHook(() => useMergeRefs(first, second))
 
-    result.current('node')
-    result.current(null)
+    const cleanup = result.current('node')
+    cleanup?.()
 
     expect(order).toEqual(['first-set', 'second-set', 'second-cleanup', 'first-cleanup'])
   })
@@ -63,8 +63,8 @@ describe('useMergeRefs', () => {
 
     const { result } = renderHook(() => useMergeRefs(callbackRef))
 
-    result.current('node')
-    result.current(null)
+    const cleanup = result.current('node')
+    cleanup?.()
 
     expect(callbackRef).toHaveBeenNthCalledWith(1, 'node')
     expect(callbackRef).toHaveBeenNthCalledWith(2, null)
@@ -75,11 +75,11 @@ describe('useMergeRefs', () => {
 
     const { result } = renderHook(() => useMergeRefs(objectRef))
 
-    result.current('node')
+    const cleanup = result.current('node')
 
     expect(objectRef.current).toBe('node')
 
-    result.current(null)
+    cleanup?.()
 
     expect(objectRef.current).toBeNull()
   })
