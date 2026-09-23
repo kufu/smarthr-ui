@@ -55,7 +55,7 @@ const classNameGenerator = tv({
 })
 
 const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
-const classNames = {
+const CLASS_NAMES = {
   statusLabel: statusLabel(),
   buttonsEl: buttonsEl(),
   listItem: listItem(),
@@ -77,10 +77,10 @@ export const AppNavi: FC<Props> = ({
   return (
     <Nav {...rest} className={wrapperClassName} aria-labelledby={labelId}>
       <MemoizedStatusLabel id={labelId}>{label}</MemoizedStatusLabel>
-      <ul className={classNames.buttonsEl}>
+      <ul className={CLASS_NAMES.buttonsEl}>
         {buttons &&
           buttons.map((button, i) => (
-            <li key={i} className={classNames.listItem}>
+            <li key={i} className={CLASS_NAMES.listItem}>
               {'tag' in button ? (
                 <AppNaviCustomTag {...button} />
               ) : 'href' in button ? (
@@ -92,10 +92,10 @@ export const AppNavi: FC<Props> = ({
               )}
             </li>
           ))}
-        {renderButtons(children)}
+        <ButtonListItem>{children}</ButtonListItem>
       </ul>
 
-      {additionalArea && <div className={classNames.additionalAreaEl}>{additionalArea}</div>}
+      {additionalArea && <div className={CLASS_NAMES.additionalAreaEl}>{additionalArea}</div>}
     </Nav>
   )
 }
@@ -103,21 +103,21 @@ export const AppNavi: FC<Props> = ({
 const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
   ({ id, children }) =>
     children && (
-      <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>
+      <StatusLabel id={id} className={CLASS_NAMES.statusLabel} aria-hidden={true}>
         {children}
       </StatusLabel>
     ),
 )
 
-const renderButtons = (children: ReactNode) =>
+const ButtonListItem: FC<PropsWithChildren> = ({ children }) =>
   Children.map(children, (child): ReactNode => {
     if (!child || !isValidElement(child)) {
       return null
     }
 
     if (child.type === Fragment) {
-      return renderButtons(child.props.children)
+      return <ButtonListItem>{child.props.children}</ButtonListItem>
     }
 
-    return <li className={classNames.listItem}>{child}</li>
+    return <li className={CLASS_NAMES.listItem}>{child}</li>
   })
