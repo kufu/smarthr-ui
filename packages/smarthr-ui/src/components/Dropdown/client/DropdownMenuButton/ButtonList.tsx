@@ -66,8 +66,8 @@ export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
     }
 
     return (
-      <li role="presentation">
-        <DropdownCloser>{item}</DropdownCloser>
-      </li>
+      <DropdownCloser as="li" role="presentation">
+        {item}
+      </DropdownCloser>
     )
   })
