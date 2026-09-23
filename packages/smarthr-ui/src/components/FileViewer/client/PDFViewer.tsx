@@ -1,7 +1,8 @@
 'use client'
 
-import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { Scroller } from '../../Scroller'
 
@@ -100,6 +101,23 @@ export const PDFViewer: FC<Props> = memo(
     const [pdfNumPages, setPdfNumPages] = useState(1)
     const [reactPDFModule, setReactPDFModule] = useState<ReactPDFModule | null>(null)
 
+    const options = useMemo(
+      () =>
+        ({
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // 非latin文字を読み込むためのオプション
+          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
+          // cMapUrl: '/cmaps/',
+          cMapUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/cmaps/`,
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // JPEG 2000画像を含むPDFのデコードに必要
+          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-jpeg-2000
+          // wasmUrl: '/wasm/',
+          wasmUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/wasm/`,
+        }) satisfies DocumentProps['options'],
+      [reactPDFModule],
+    )
+
     const latest = useLatest({
       rotation,
       pdfNumPages,
@@ -107,27 +125,6 @@ export const PDFViewer: FC<Props> = memo(
       handlePDFLoaded,
       handleLoadError,
     })
-
-    useEffect(() => {
-      let cancelled = false
-
-      loadReactPDFModule().then(
-        (mod) => {
-          if (!cancelled) {
-            setReactPDFModule(mod)
-          }
-        },
-        (error) => {
-          if (!cancelled) {
-            latest.handleLoadError?.(error)
-          }
-        },
-      )
-
-      return () => {
-        cancelled = true
-      }
-    }, [latest])
 
     const functions = useMemo(() => {
       const handleDocumentLoadSuccess: NonNullable<DocumentProps['onLoadSuccess']> = ({
@@ -151,7 +148,8 @@ export const PDFViewer: FC<Props> = memo(
       }
     }, [latest])
 
-    const cancelApplyIdRef = useRef<number | null>(null)
+    const applyFrame = useAnimationFrame()
+
     const callbackRef = useCallback(
       (node: HTMLElement | null) => {
         if (node) {
@@ -169,34 +167,38 @@ export const PDFViewer: FC<Props> = memo(
               els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
               els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
             } else if (performance.now() - start < 1000) {
-              cancelApplyIdRef.current = requestAnimationFrame(apply)
+              applyFrame.request(apply)
             }
           }
-          cancelApplyIdRef.current = requestAnimationFrame(apply)
-        } else if (cancelApplyIdRef.current !== null) {
-          cancelAnimationFrame(cancelApplyIdRef.current)
+          applyFrame.request(apply)
+        } else {
+          applyFrame.cancel()
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
-      [currentMatchIndex, matches],
+      [currentMatchIndex, matches, applyFrame],
     )
 
-    const options = useMemo(
-      () =>
-        ({
-          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-          // 非latin文字を読み込むためのオプション
-          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
-          // cMapUrl: '/cmaps/',
-          cMapUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/cmaps/`,
-          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-          // JPEG 2000画像を含むPDFのデコードに必要
-          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-jpeg-2000
-          // wasmUrl: '/wasm/',
-          wasmUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/wasm/`,
-        }) satisfies DocumentProps['options'],
-      [reactPDFModule],
-    )
+    useEffect(() => {
+      let cancelled = false
+
+      loadReactPDFModule().then(
+        (mod) => {
+          if (!cancelled) {
+            setReactPDFModule(mod)
+          }
+        },
+        (error) => {
+          if (!cancelled) {
+            latest.handleLoadError?.(error)
+          }
+        },
+      )
+
+      return () => {
+        cancelled = true
+      }
+    }, [latest])
 
     if (!reactPDFModule) {
       return null

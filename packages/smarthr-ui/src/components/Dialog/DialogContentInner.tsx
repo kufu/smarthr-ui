@@ -68,11 +68,13 @@ export type DialogContentInnerProps = PropsWithChildren<{
 }>
 type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
+export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
+
 const classNameGenerator = tv({
   slots: {
     layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
     inner: [
-      'smarthr-ui-Dialog',
+      DIALOG_CONTENT_CLASS_NAME,
       'shr-border-shorthand shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
