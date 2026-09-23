@@ -9,9 +9,7 @@ import {
   type ReactNode,
   isValidElement,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
 import { DropdownCloser } from '../../DropdownCloser'
 
 import type { AnchorButton, Button } from '../../../Button'
@@ -25,14 +23,6 @@ type ActionItem =
   | ReactElement<ComponentProps<typeof AnchorButton>>
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
   | ReactNode
-
-const actionListItemButton = tv({
-  base: [
-    // HINT: 実際にレンダリングされた要素のclassに対して追加されるため、優先度を上げる必要がある
-    '[&&]:shr-w-full [&&]:shr-justify-start [&&]:shr-rounded-none [&&]:shr-border-none [&&]:shr-py-0.5 [&&]:shr-font-normal',
-    '[&&]:focus-visible:shr-focus-indicator',
-  ],
-})
 
 // HINT: DropdownMenuGroup.tsx側がButtonListに依存しているため、循環依存を避けるために
 // コンポーネント参照ではなくDropdownMenuGroupが持つマーカーの有無で判定する。
@@ -75,50 +65,9 @@ export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
       return item
     }
 
-    return <ButtonListItem>{item}</ButtonListItem>
+    return (
+      <li role="presentation">
+        <DropdownCloser>{item}</DropdownCloser>
+      </li>
+    )
   })
-
-const itemCallbackRef = (node: HTMLElement | null) => {
-  if (!node) {
-    return
-  }
-
-  const setupButton = () => {
-    const button = node.querySelector('button,a')
-
-    if (button) {
-      button.setAttribute('role', 'menuitem')
-      button.setAttribute(
-        'class',
-        actionListItemButton({ className: button.getAttribute('class') }),
-      )
-    }
-  }
-
-  setupButton()
-
-  const observer = new MutationObserver(setupButton)
-  observer.observe(node, {
-    childList: true,
-    subtree: true,
-    // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-    attributes: true,
-    attributeFilter: ['disabled', 'aria-disabled'],
-  })
-
-  return () => {
-    observer.disconnect()
-  }
-}
-
-const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
-  // TODO: clickableな要素毎にcallbackRefを生成しているが、親のmenu要素で一つにまとめられないか検証する
-  // MutationObserverの範囲は広がるが複数生成されるよりメリットがありそう
-  const callbackRef = useCallbackRefCleanupForReact18(itemCallbackRef)
-
-  return (
-    <li ref={callbackRef} role="presentation">
-      <DropdownCloser>{children}</DropdownCloser>
-    </li>
-  )
-}

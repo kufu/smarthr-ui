@@ -118,16 +118,30 @@ const classNameGenerator = tv({
         '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-bg-transparent [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset]',
       ],
     ],
+    actionListItemButton: [
+      // HINT: 実際にレンダリングされた要素のclassに対して追加されるため、優先度を上げる必要がある
+      '[&&]:shr-w-full [&&]:shr-justify-start [&&]:shr-rounded-none [&&]:shr-border-none [&&]:shr-py-0.5 [&&]:shr-font-normal',
+      '[&&]:focus-visible:shr-focus-indicator',
+    ],
   },
 })
 
-const { triggerWrapper, triggerButton, actionList } = classNameGenerator()
+const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
 
 const menuCallbackRef = (node: HTMLElement | null) => {
   if (!node) {
     return
   }
 
+  const setupButtons = () => {
+    node.querySelectorAll<HTMLElement>('button,a').forEach((button) => {
+      button.setAttribute('role', 'menuitem')
+      button.setAttribute(
+        'class',
+        actionListItemButton({ className: button.getAttribute('class') }),
+      )
+    })
+  }
   const handleKeyDown = (e: KeyboardEvent) => {
     if (!document.activeElement) {
       return
@@ -153,9 +167,21 @@ const menuCallbackRef = (node: HTMLElement | null) => {
     }
   }
 
+  setupButtons()
+
+  const observer = new MutationObserver(setupButtons)
+  observer.observe(node, {
+    childList: true,
+    subtree: true,
+    // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+    attributes: true,
+    attributeFilter: ['disabled', 'aria-disabled'],
+  })
+
   document.addEventListener('keydown', handleKeyDown)
 
   return () => {
+    observer.disconnect()
     document.removeEventListener('keydown', handleKeyDown)
   }
 }
