@@ -8,7 +8,6 @@ import {
   type ReactNode,
   type Ref,
   memo,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -447,7 +446,8 @@ const ActualMultiCombobox = <T,>(
     functions.blur,
   )
 
-  const inputLayoutEffectRef = useLayoutEffectRef(
+  // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
+  const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
       if (node && isExpanded) {
         node.focus()
@@ -455,23 +455,30 @@ const ActualMultiCombobox = <T,>(
     },
     [isExpanded, selectedItems, isInputControlled],
   )
+  const inputSelectEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      if (!node) {
+        return
+      }
+
+      if (latest.highlighted) {
+        setHighlighted(false)
+        node.select()
+      } else {
+        setInputValueIfUncontrolled('')
+      }
+    },
+    [selectedItems, setInputValueIfUncontrolled, latest],
+  )
 
   const mergedInputRef = useMergeRefs(
     inputRef,
-    inputLayoutEffectRef,
+    inputFocusEffectRef,
+    inputSelectEffectRef,
     listBoxFunctions.cleanupListBoxCallbackRef,
     ref,
   )
   const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)
-
-  useEffect(() => {
-    if (latest.highlighted) {
-      setHighlighted(false)
-      inputRef.current?.select()
-    } else {
-      setInputValueIfUncontrolled('')
-    }
-  }, [selectedItems, setInputValueIfUncontrolled, latest])
 
   const classNames = useMemo(() => {
     const {
