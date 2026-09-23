@@ -5,7 +5,7 @@ import { act } from 'react'
 import { IntlProvider } from '../../intl'
 import { FormControl } from '../FormGroup'
 
-import { DatePicker } from './DatePicker'
+import { DatePicker } from './client'
 
 describe('DatePicker', () => {
   const renderWithIntl = (component: React.ReactElement) =>

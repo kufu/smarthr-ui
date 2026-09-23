@@ -6,13 +6,12 @@ import {
   type PropsWithChildren,
   useCallback,
   useMemo,
-  useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { TableScroller } from '../TableScroller'
+import { ScrollerSwitcher } from '../ScrollerSwitcher'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
 
 const TR_SELECTOR = 'table tr'
@@ -34,9 +33,6 @@ const classNameGenerator = tv({
 })
 
 export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }) => {
-  // TODO: stateではなくdata属性などを直接変更することで再レンダリングを引き起こさない形にしたい
-  const [showShadow, setShowShadow] = useState(false)
-
   const frame = useAnimationFrame()
 
   const callbackRef = useCallbackRefCleanupForReact18(
@@ -44,6 +40,11 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
       (node: HTMLElement | null) => {
         if (!node) {
           return
+        }
+
+        const wrapperNode = node.querySelector<HTMLElement>('.smarthr-ui-TableReel')
+        const setShowShadow = (visible: boolean) => {
+          wrapperNode?.setAttribute('data-smarthr-ui-shadow', visible.toString())
         }
 
         const handleScroll = () => {
@@ -142,18 +143,18 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
     const { wrapper, inner } = classNameGenerator()
 
     return {
-      wrapper: reelShadowClassNameGenerator({ showShadow, className: wrapper({ className }) }),
+      wrapper: reelShadowClassNameGenerator({ className: wrapper({ className }) }),
       inner: inner(),
     }
-  }, [showShadow, className])
+  }, [className])
 
   return (
-    <TableScroller ref={callbackRef} fixedHead={fixedHead}>
+    <ScrollerSwitcher forwardedRef={callbackRef} fixedHead={fixedHead}>
       <div className={classNames.wrapper}>
         <div {...rest} className={classNames.inner}>
           {children}
         </div>
       </div>
-    </TableScroller>
+    </ScrollerSwitcher>
   )
 }
