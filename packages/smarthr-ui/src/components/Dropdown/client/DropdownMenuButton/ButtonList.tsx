@@ -8,7 +8,6 @@ import {
   type ReactElement,
   type ReactNode,
   isValidElement,
-  useCallback,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -79,43 +78,43 @@ export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
     return <ButtonListItem>{item}</ButtonListItem>
   })
 
+const itemCallbackRef = (node: HTMLElement | null) => {
+  if (!node) {
+    return
+  }
+
+  const setupButton = () => {
+    const button = node.querySelector('button,a')
+
+    if (button) {
+      button.setAttribute('role', 'menuitem')
+      button.setAttribute(
+        'class',
+        actionListItemButton({ className: button.getAttribute('class') }),
+      )
+    }
+  }
+
+  setupButton()
+
+  const observer = new MutationObserver(setupButton)
+  observer.observe(node, {
+    childList: true,
+    subtree: true,
+    // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+    attributes: true,
+    attributeFilter: ['disabled', 'aria-disabled'],
+  })
+
+  return () => {
+    observer.disconnect()
+  }
+}
+
 const ButtonListItem: FC<{ children: ReactElement }> = ({ children }) => {
   // TODO: clickableな要素毎にcallbackRefを生成しているが、親のmenu要素で一つにまとめられないか検証する
   // MutationObserverの範囲は広がるが複数生成されるよりメリットがありそう
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const setupButton = () => {
-        const button = node.querySelector('button,a')
-
-        if (button) {
-          button.setAttribute('role', 'menuitem')
-          button.setAttribute(
-            'class',
-            actionListItemButton({ className: button.getAttribute('class') }),
-          )
-        }
-      }
-
-      setupButton()
-
-      const observer = new MutationObserver(setupButton)
-      observer.observe(node, {
-        childList: true,
-        subtree: true,
-        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
-        attributes: true,
-        attributeFilter: ['disabled', 'aria-disabled'],
-      })
-
-      return () => {
-        observer.disconnect()
-      }
-    }, []),
-  )
+  const callbackRef = useCallbackRefCleanupForReact18(itemCallbackRef)
 
   return (
     <li ref={callbackRef} role="presentation">
