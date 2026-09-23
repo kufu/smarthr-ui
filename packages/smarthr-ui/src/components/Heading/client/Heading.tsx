@@ -2,8 +2,8 @@
 
 import {
   type ComponentProps,
+  type ComponentPropsWithRef,
   type PropsWithChildren,
-  forwardRef,
   memo,
   useContext,
   useMemo,
@@ -52,7 +52,7 @@ export type BaseProps = PropsWithChildren<{
   StylingProps
 
 export type ElementProps = Omit<
-  ComponentProps<'h1'>,
+  ComponentPropsWithRef<'h1'>,
   keyof BaseProps | keyof TextProps | 'role' | 'aria-level'
 >
 type Props = BaseProps & ElementProps
@@ -70,44 +70,48 @@ const classNameGenerator = tv({
 })
 
 export const Heading = memo(
-  forwardRef<HTMLHeadingElement, Props>(
-    (
-      { unrecommendedTag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest },
+  ({
+    unrecommendedTag,
+    type = 'sectionTitle',
+    size,
+    className,
+    visuallyHidden,
+    icon,
+    ref,
+    ...rest
+  }: Props) => {
+    const level = useContext(LevelContext)
+
+    let role = undefined
+    let ariaLevel = undefined
+
+    // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
+    if (!unrecommendedTag && level > 6) {
+      role = 'heading'
+      ariaLevel = level
+    }
+
+    const actualClassName = useMemo(
+      () => classNameGenerator({ visuallyHidden, className }),
+      [className, visuallyHidden],
+    )
+    const typography = STYLE_TYPE_MAP[type]
+
+    // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
+    // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
+    const commonProps = {
+      as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
+      role,
+      'aria-level': ariaLevel,
+      className: actualClassName,
+      size: type === 'sectionTitle' && size ? size : typography.size,
       ref,
-    ) => {
-      const level = useContext(LevelContext)
+    }
 
-      let role = undefined
-      let ariaLevel = undefined
+    if (visuallyHidden) {
+      return <VisuallyHiddenText {...rest} {...typography} {...commonProps} />
+    }
 
-      // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
-      if (!unrecommendedTag && level > 6) {
-        role = 'heading'
-        ariaLevel = level
-      }
-
-      const actualClassName = useMemo(
-        () => classNameGenerator({ visuallyHidden, className }),
-        [className, visuallyHidden],
-      )
-      const typography = STYLE_TYPE_MAP[type]
-
-      // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
-      // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
-      const commonProps = {
-        as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
-        role,
-        'aria-level': ariaLevel,
-        className: actualClassName,
-        size: type === 'sectionTitle' && size ? size : typography.size,
-        ref,
-      }
-
-      if (visuallyHidden) {
-        return <VisuallyHiddenText {...rest} {...typography} {...commonProps} />
-      }
-
-      return <Text {...rest} {...typography} {...commonProps} icon={icon} />
-    },
-  ),
+    return <Text {...rest} {...typography} {...commonProps} icon={icon} />
+  },
 )
