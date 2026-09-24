@@ -54,11 +54,12 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 type Item = {
-  key: string
+  // HINT: Tuck 内部でアイテムを識別するための値。計測した幅やまとめる対象の管理に使う
+  id: string
   node: ReactElement<any>
 }
 
-const ITEM_KEY_ATTR = 'data-tuck-item'
+const ITEM_ID_ATTR = 'data-tuck-item'
 const TRIGGER_ATTR = 'data-tuck-trigger'
 const MEASURED_ATTR = 'data-measured'
 
@@ -89,24 +90,39 @@ const classNameGenerator = tv({
   },
 })
 
-const flattenItems = (children: ReactNode, keyPrefix = ''): Item[] =>
+// HINT: Children.toArray は key をエスケープ（`=` → `=0`、`:` → `=2`）して '.$' を付け、
+// 配列の入れ子は ':' でつなぐ（'.3:$key'）。エスケープ後の key に ':' は現れないため、最後の ':' 以降が要素自身の key になる
+const toOriginalKey = (arrayKey: string, index: number) => {
+  const ownKey = arrayKey.slice(arrayKey.lastIndexOf(':') + 1).replace(/^\./, '')
+
+  return ownKey.startsWith('$')
+    ? ownKey.slice(1).replace(/[=]([02])/g, (_, code) => (code === '0' ? '=' : ':'))
+    : `${index}`
+}
+
+const flattenItems = (children: ReactNode, parent?: { id: string; key: string }): Item[] =>
   Children.toArray(children).flatMap((child, index) => {
     if (!isValidElement(child)) {
       return []
     }
 
-    // HINT: Children.toArray は key に接頭辞（'.$' など）を付けるため、渡された key に戻す。
-    // renderTucked 側で key から元データを引けるようにするのと、Fragment 展開時に key が重複しないようにするため
-    const key = `${keyPrefix}${child.key === null ? index : child.key.replace(/^\.\$?/, '')}`
+    const arrayKey = String(child.key)
+    // HINT: 内部の識別子には toArray が付けた key をそのまま使い、Fragment の中は ':' でつなぐ。
+    // toArray の key で ':' の直後が '.' になることはないため、単独の key（'a/b' など）とも衝突しない
+    const id = parent ? `${parent.id}:${arrayKey}` : arrayKey
+    // HINT: renderTucked 側で key から元データを引けるよう、要素には渡された key を戻す。
+    // Fragment の中は、展開後に key が重複しないよう Fragment の key を前に付ける
+    const originalKey = toOriginalKey(arrayKey, index)
+    const key = parent ? `${parent.key}/${originalKey}` : originalKey
 
     if (child.type === Fragment) {
-      return flattenItems(
-        (child as ReactElement<{ children?: ReactNode }>).props.children,
-        `${key}/`,
-      )
+      return flattenItems((child as ReactElement<{ children?: ReactNode }>).props.children, {
+        id,
+        key,
+      })
     }
 
-    return [{ key, node: cloneElement(child, { key }) }]
+    return [{ id, node: cloneElement(child, { key }) }]
   })
 
 const countLines = (widths: number[], gap: number, available: number) => {
@@ -161,7 +177,7 @@ type Measurement = {
 export const Tuck = forwardRef<HTMLDivElement, Props>(
   ({ children, renderTucked, maxLines = 1, collapse = 'partial', className, ...rest }, ref) => {
     const actualMaxLines = Math.max(1, Math.floor(maxLines))
-    const [tuckedKeys, setTuckedKeys] = useState<string[]>([])
+    const [tuckedIds, setTuckedIds] = useState<string[]>([])
     const groupRef = useRef<HTMLElement>(null)
     const sizerRef = useRef<HTMLDivElement>(null)
     const measuredRef = useRef({
@@ -169,7 +185,7 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
       // 表示中のトリガーの幅で判定すると、広いトリガーでは収まらないので件数を増やす → 狭くなったので戻す…と
       // 状態が行き来し、更新が止まらなくなる。これまでに測った最大の幅を使えば判定が一方向にしか変わらず収束する
       triggerWidth: 0,
-      // HINT: まとめたアイテムはアンマウントするため、表示中に測った幅を key ごとに覚えておき判定に使う。
+      // HINT: まとめたアイテムはアンマウントするため、表示中に測った幅をアイテムごとに覚えておき判定に使う。
       // まとめている間に中身の幅が変わっても分からない。広がった場合は並びに戻した時点で測り直され、
       // 描画前に再判定されるため見た目には出ないが、狭まった場合は本来収まるのにまとめたままになることがある
       itemWidths: new Map<string, number>(),
@@ -177,12 +193,12 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
     const resizeFrame = useAnimationFrame()
 
     const items = flattenItems(children)
-    const tuckedKeySet = new Set(tuckedKeys)
-    const tuckedItems = items.filter((item) => tuckedKeySet.has(item.key)).map((item) => item.node)
+    const tuckedIdSet = new Set(tuckedIds)
+    const tuckedItems = items.filter((item) => tuckedIdSet.has(item.id)).map((item) => item.node)
 
     const latest = useLatest({
       items,
-      tuckedKeys,
+      tuckedIds,
       maxLines: actualMaxLines,
       collapse,
       resizeFrame,
@@ -199,11 +215,11 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
         const measured = measuredRef.current
         const widthCache = measured.itemWidths
         for (const child of Array.from(group.children)) {
-          const key = child.getAttribute(ITEM_KEY_ATTR)
+          const id = child.getAttribute(ITEM_ID_ATTR)
           const width = child.getBoundingClientRect().width
 
-          if (key !== null) {
-            widthCache.set(key, width)
+          if (id !== null) {
+            widthCache.set(id, width)
             continue
           }
 
@@ -214,26 +230,26 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
           measured.triggerWidth = Math.max(measured.triggerWidth, width)
         }
 
-        const currentKeys = new Set(latest.items.map((item) => item.key))
+        const currentIds = new Set(latest.items.map((item) => item.id))
 
         // HINT: 取り除かれたアイテムの幅は使わないため捨てる
-        for (const key of widthCache.keys()) {
-          if (!currentKeys.has(key)) {
-            widthCache.delete(key)
+        for (const id of widthCache.keys()) {
+          if (!currentIds.has(id)) {
+            widthCache.delete(id)
           }
         }
 
         // HINT: 幅が分からないアイテムがある場合（取り除かれた後に同じ key で戻ってきた場合など）は、
         // いったんすべて並びに戻して測り直す。描画途中で DOM が追いついていない場合は、コミット後の再実行に任せる
-        if (latest.items.some((item) => !widthCache.has(item.key))) {
-          if (latest.tuckedKeys.length > 0) {
-            setTuckedKeys([])
+        if (latest.items.some((item) => !widthCache.has(item.id))) {
+          if (latest.tuckedIds.length > 0) {
+            setTuckedIds([])
           }
 
           return
         }
 
-        const widths = latest.items.map((item) => widthCache.get(item.key) as number)
+        const widths = latest.items.map((item) => widthCache.get(item.id) as number)
         const gap = parseFloat(getComputedStyle(group).columnGap) || 0
 
         // HINT: 各要素の幅の合計が、親レイアウトに伝える自然な幅になる
@@ -251,14 +267,14 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
           collapse: latest.collapse,
           triggerWidth: measured.triggerWidth,
         })
-        const nextTuckedKeys = latest.items.slice(visibleCount).map((item) => item.key)
+        const nextTuckedIds = latest.items.slice(visibleCount).map((item) => item.id)
 
         if (!group.hasAttribute(MEASURED_ATTR)) {
           group.setAttribute(MEASURED_ATTR, '')
         }
 
-        if (JSON.stringify(nextTuckedKeys) !== JSON.stringify(latest.tuckedKeys)) {
-          setTuckedKeys(nextTuckedKeys)
+        if (JSON.stringify(nextTuckedIds) !== JSON.stringify(latest.tuckedIds)) {
+          setTuckedIds(nextTuckedIds)
         }
       }
 
@@ -318,14 +334,14 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
       <div {...rest} ref={ref} className={classNames.wrapper}>
         <div ref={sizerRef} className={classNames.sizer} aria-hidden>
           {items.map((item) => (
-            <div key={item.key} />
+            <div key={item.id} />
           ))}
         </div>
         <div ref={mergedGroupRef} className={classNames.group}>
           {items.map((item) =>
             // HINT: まとめたアイテムは renderTucked 側で描画されうるため、並びからは取り除いて二重に存在しないようにする
-            tuckedKeySet.has(item.key) ? null : (
-              <div key={item.key} className={classNames.item} data-tuck-item={item.key}>
+            tuckedIdSet.has(item.id) ? null : (
+              <div key={item.id} className={classNames.item} data-tuck-item={item.id}>
                 {item.node}
               </div>
             ),

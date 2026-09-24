@@ -1,8 +1,7 @@
 import { act, render, screen } from '@testing-library/react'
+import { type ComponentProps, Fragment } from 'react'
 
 import { Tuck } from './client'
-
-import type { ComponentProps } from 'react'
 
 // HINT: jsdom はレイアウトを計算しないため、data-width を幅として返すようにする。
 // group 要素は groupWidth を、それ以外は内側の data-width を持つ要素の幅を返す
@@ -247,6 +246,49 @@ describe('Tuck', () => {
       expect.objectContaining({ key: 'c' }),
       expect.objectContaining({ key: 'd' }),
     ])
+  })
+
+  it('key に `:` や `=` を含む場合や、配列と並べた場合も、渡した key のまま renderTucked に渡る', () => {
+    // A + トリガーまでしか収まらない
+    groupWidth = 200
+
+    const renderTucked = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
+
+    render(
+      <Tuck renderTucked={renderTucked}>
+        <Item width={100} label="A" />
+        {[
+          <Item key="user:1" width={100} label="B" />,
+          <Item key="a=b" width={100} label="C" />,
+          <Item key="c" width={100} label="D" />,
+        ]}
+      </Tuck>,
+    )
+
+    expect(renderTucked).toHaveBeenLastCalledWith([
+      expect.objectContaining({ key: 'user:1' }),
+      expect.objectContaining({ key: 'a=b' }),
+      expect.objectContaining({ key: 'c' }),
+    ])
+  })
+
+  it('Fragment の key と中の key をつないだものが単独の key と同じでも、別のアイテムとして扱う', () => {
+    groupWidth = 200
+
+    render(
+      <Tuck renderTucked={(items) => <Item width={30} label={`+${items.length}`} />}>
+        <Fragment key="a">
+          <Item key="b" width={100} label="A" />
+        </Fragment>
+        <Item key="a/b" width={100} label="B" />
+        <Item width={100} label="C" />
+        <Item width={100} label="D" />
+      </Tuck>,
+    )
+
+    expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([false, true, true, true])
+    // 表示中の A まで renderTucked に渡ると「+4」になる
+    expect(screen.getByText('+3')).toBeInTheDocument()
   })
 
   it('まとめている間に幅が広がったアイテムは、並びに戻したときに測り直して判定する', () => {
