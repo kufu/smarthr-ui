@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it } from 'vitest'
@@ -24,6 +24,9 @@ const renderAllLevels = async () => {
 const selectOption = async (user: ReturnType<typeof userEvent.setup>, name: string) => {
   await user.click(screen.getByRole('button', { name: /^書式:/ }))
   await user.click(screen.getByRole('option', { name }))
+  // 選択後の本文へのフォーカスは Tiptap が次のフレームで行う。続けて開き直すと、
+  // 遅れて本文へ移ったフォーカスでドロップダウンが閉じる
+  await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
 }
 
 const renderEditor = async () => {

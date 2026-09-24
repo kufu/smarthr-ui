@@ -197,17 +197,43 @@ export function useToolbarDropdown(
   useEffect(() => {
     if (!isOpen) return
 
-    const handler = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
+    const isInside = (target: HTMLElement) =>
+      !!triggerRef.current?.contains(target) || isChildPortal(target)
 
-      if (!triggerRef.current?.contains(target) && !isChildPortal(target)) {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (!isInside(e.target as HTMLElement)) {
         setIsOpen(false)
       }
     }
 
-    document.addEventListener('mousedown', handler)
+    // トリガーの onKeyDown で拾うと、ツールバーの roving が Escape を本文へのフォーカス移動に
+    // 使うため先に処理される。キャプチャで受けてトリガーへ届く前に閉じる
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // ドロップダウン内の Escape は各コンポーネントがトリガーへフォーカスを戻して閉じる
+      if (e.key === 'Escape' && !isChildPortal(e.target as HTMLElement)) {
+        e.preventDefault()
+        e.stopPropagation()
+        setIsOpen(false)
+      }
+    }
 
-    return () => document.removeEventListener('mousedown', handler)
+    // focusout の relatedTarget は中身の余白をクリックしたときも null になり区別できないため、
+    // フォーカスが実際に移った先を focusin で見る
+    const handleFocusIn = (e: FocusEvent) => {
+      if (!isInside(e.target as HTMLElement)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('keydown', handleKeyDown, true)
+    document.addEventListener('focusin', handleFocusIn)
+
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('keydown', handleKeyDown, true)
+      document.removeEventListener('focusin', handleFocusIn)
+    }
   }, [isOpen, isChildPortal])
 
   const renderDropdown = useCallback(

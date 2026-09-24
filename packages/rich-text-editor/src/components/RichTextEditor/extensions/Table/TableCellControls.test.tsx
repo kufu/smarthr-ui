@@ -87,6 +87,10 @@ const showControls = () =>
     </IntlProvider>,
   )
 
+// メニューの操作後は本文へのフォーカスを Tiptap が次のフレームで行う。待たずに開き直すと、
+// 遅れて本文へ移ったフォーカスでメニューが閉じる
+const waitForEditorFocus = () => act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
 describe('table controls', () => {
   it('keeps handles at the clicked cell while a column menu is open and colors only that column', async () => {
     const user = userEvent.setup()
@@ -200,6 +204,7 @@ describe('table controls', () => {
     expect(editor.state.doc.nodeAt(pos)?.type.name).toBe('tableHeader')
     expect(editor.state.doc.nodeAt(pos)?.textContent).toBe('Heading')
     expect(getTableTarget(editor)!.table.firstChild!.firstChild!.type.name).toBe('tableCell')
+    await waitForEditorFocus()
     await user.click(screen.getByRole('button', { name: 'セルの操作' }))
     await user.click(screen.getByRole('button', { name: '通常のセルに戻す' }))
     expect(editor.state.doc.nodeAt(pos)?.type.name).toBe('tableCell')
@@ -218,6 +223,7 @@ describe('table controls', () => {
       expect(table.child(scope === '行' ? 1 : 0).child(scope === '行' ? 0 : 1).type.name).toBe(
         'tableHeader',
       )
+      await waitForEditorFocus()
       await user.click(screen.getByRole('button', { name: `${scope}の操作` }))
       expect(screen.getByRole('button', { name: `${scope}をヘッダーにする` })).toHaveAttribute(
         'aria-pressed',

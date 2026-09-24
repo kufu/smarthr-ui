@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it } from 'vitest'
@@ -18,6 +18,10 @@ const renderEditor = async (html: string) => {
   )
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 }
+
+// 色の適用は本文へのフォーカスを Tiptap が次のフレームで行う。待たずに開き直すと、
+// 遅れて本文へ移ったフォーカスでパレットが閉じる
+const waitForEditorFocus = () => act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
 
 describe('TextColorPickerButton', () => {
   describe('トリガーのアクセシブル名', () => {
@@ -94,6 +98,7 @@ describe('TextColorPickerButton', () => {
     fireEvent.change(document.querySelector('input[name="customColor"]')!, {
       target: { value: '#123456' },
     })
+    await waitForEditorFocus()
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     expect(screen.getByRole('button', { name: '履歴: #123456' })).toBeInTheDocument()
@@ -124,6 +129,7 @@ describe('TextColorPickerButton', () => {
       target: { value: '#ff8800' },
     })
     await user.click(screen.getByRole('button', { name: 'カスタム: #ff8800' }))
+    await waitForEditorFocus()
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     expect(screen.getByRole('button', { name: '履歴: #ff8800' })).toBeInTheDocument()
@@ -136,6 +142,7 @@ describe('TextColorPickerButton', () => {
     fireEvent.change(document.querySelector('input[name="customColor"]')!, {
       target: { value: '#123456' },
     })
+    await waitForEditorFocus()
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     expect(screen.getByRole('button', { name: '履歴: #123456' })).toBeInTheDocument()
@@ -148,6 +155,7 @@ describe('TextColorPickerButton', () => {
     fireEvent.change(document.querySelector('input[name="customColor"]')!, {
       target: { value: '#e01e5a' },
     })
+    await waitForEditorFocus()
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     expect(screen.queryByRole('group', { name: '履歴' })).not.toBeInTheDocument()
