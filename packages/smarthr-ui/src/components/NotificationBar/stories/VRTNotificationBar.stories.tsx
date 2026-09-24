@@ -10,48 +10,48 @@ import {
 import type { StoryObj } from '@storybook/react-vite'
 
 /* ペアワイズ法による網羅
-base  bold   type     children   subActionArea  layer      onClose  */
+paneled  bold   type     children   subActionArea  layer      onClose  */
 const pairwisePatterns = `
-base  false  error    String     ReactNode      1          no
-base  true   error    ReactNode  undefined      2          yes
-base  false  info     ReactNode  undefined      0          no
-base  true   info     String     ReactNode      4          yes
-base  true   success  String     ReactNode      0          yes
-base  true   error    ReactNode  undefined      4          no
-base  false  error    String     undefined      3          yes
-base  true   info     ReactNode  ReactNode      3          no
-none  true   warning  ReactNode  undefined      undefined  no
-base  false  warning  String     ReactNode      4          yes
-none  false  success  String     ReactNode      undefined  yes
-base  true   sync     ReactNode  undefined      3          no
-none  false  sync     String     ReactNode      undefined  yes
-base  true   sync     String     undefined      4          no
-base  false  info     String     undefined      undefined  no
-base  true   info     ReactNode  undefined      1          yes
-base  true   success  ReactNode  undefined      3          no
-base  false  success  String     ReactNode      2          no
-base  true   warning  String     undefined      0          yes
-base  true   sync     String     undefined      2          no
-none  true   error    String     undefined      undefined  no
-base  true   error    String     undefined      0          yes
-base  false  success  String     undefined      1          no
-base  true   success  String     undefined      4          no
-base  false  info     String     ReactNode      2          yes
-base  true   sync     String     undefined      1          yes
-base  false  warning  String     undefined      2          no
-base  true   warning  String     undefined      1          yes
-base  false  warning  ReactNode  undefined      3          yes
-base  true   sync     String     undefined      0          no
-none  true   info     String     undefined      undefined  yes
+true     false  error    String     ReactNode      1          no
+true     true   error    ReactNode  undefined      2          yes
+true     false  info     ReactNode  undefined      0          no
+true     true   info     String     ReactNode      4          yes
+true     true   success  String     ReactNode      0          yes
+true     true   error    ReactNode  undefined      4          no
+true     false  error    String     undefined      3          yes
+true     true   info     ReactNode  ReactNode      3          no
+false    true   warning  ReactNode  undefined      undefined  no
+true     false  warning  String     ReactNode      4          yes
+false    false  success  String     ReactNode      undefined  yes
+true     true   sync     ReactNode  undefined      3          no
+false    false  sync     String     ReactNode      undefined  yes
+true     true   sync     String     undefined      4          no
+true     false  info     String     undefined      undefined  no
+true     true   info     ReactNode  undefined      1          yes
+true     true   success  ReactNode  undefined      3          no
+true     false  success  String     ReactNode      2          no
+true     true   warning  String     undefined      0          yes
+true     true   sync     String     undefined      2          no
+false    true   error    String     undefined      undefined  no
+true     true   error    String     undefined      0          yes
+true     false  success  String     undefined      1          no
+true     true   success  String     undefined      4          no
+true     false  info     String     ReactNode      2          yes
+true     true   sync     String     undefined      1          yes
+true     false  warning  String     undefined      2          no
+true     true   warning  String     undefined      1          yes
+true     false  warning  ReactNode  undefined      3          yes
+true     true   sync     String     undefined      0          no
+false    true   info     String     undefined      undefined  yes
 `
   .replace(/ +/g, ' ')
   .replace(/(^\n|\n$)/g, '')
   .split('\n')
   .map((l) => {
-    const [base, bold, type, children, subActionArea, layer, onClose] = l.split(' ')
+    const [paneled, bold, type, children, subActionArea, layer, onClose] = l.split(' ')
 
     return {
-      base,
+      paneled: paneled === 'true',
       bold,
       type,
       children: children === 'String' ? sampleChildrens.String : sampleChildrens.ReactNode,
