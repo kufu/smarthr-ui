@@ -144,5 +144,11 @@ export const serializeToReactElement = (json: RichTextJSON): ReactNode =>
   tiptapRenderToReactElement({
     content: sanitizeRichTextJSON(json),
     extensions: getRichTextExtensions(),
-    options: { nodeMapping, markMapping },
+    options: {
+      nodeMapping,
+      markMapping,
+      // 別バージョンの schema で保存された型は、装飾を諦めて中身の文字だけを残す
+      unhandledNode: ({ children }) => children ?? null,
+      unhandledMark: ({ children }) => children,
+    },
   })

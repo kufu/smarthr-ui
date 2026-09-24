@@ -1,7 +1,22 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
+import { serializeToReactElement } from '../serializers/serializeToReactElement'
 
 import { RichTextViewer } from './RichTextViewer'
+
+import type { RichTextViewerProps } from '../types'
+
+vi.mock('../serializers/serializeToReactElement', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>
+
+  return {
+    ...actual,
+    serializeToReactElement: vi.fn(
+      actual.serializeToReactElement as typeof serializeToReactElement,
+    ),
+  }
+})
 
 describe('RichTextViewer', () => {
   it('JSON content を静的に描画する', () => {
@@ -124,5 +139,103 @@ describe('RichTextViewer', () => {
   it('直下要素の縦マージンをリセットするクラスが付く', () => {
     const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
     expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('[&>*]:shr-my-0')
+  })
+
+  describe('壊れた JSON でも例外を投げず、正常な部分を描画する', () => {
+    const paragraph = (text: string) => ({
+      type: 'paragraph',
+      content: [{ type: 'text', text }],
+    })
+
+    const renderBroken = (content: unknown) =>
+      render(<RichTextViewer content={content as RichTextViewerProps['content']} />)
+
+    const textOf = (container: HTMLElement) =>
+      container.querySelector('.smarthr-ui-RichTextViewer')?.textContent
+
+    it('未知の node は中身だけを描画する', () => {
+      const { container } = renderBroken({
+        type: 'doc',
+        content: [
+          paragraph('前'),
+          { type: 'mermaid', content: [{ type: 'text', text: '中' }] },
+          paragraph('後'),
+        ],
+      })
+      expect(textOf(container)).toBe('前中後')
+    })
+
+    it('未知の mark は装飾を外して文字を描画する', () => {
+      const { container } = renderBroken({
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', text: '印', marks: [{ type: 'highlight' }] }],
+          },
+        ],
+      })
+      expect(textOf(container)).toBe('印')
+    })
+
+    it('配列でない marks は無視する', () => {
+      const { container } = renderBroken({
+        type: 'doc',
+        content: [
+          { type: 'paragraph', content: [{ type: 'text', text: 'x', marks: { type: 'bold' } }] },
+        ],
+      })
+      expect(textOf(container)).toBe('x')
+    })
+
+    it('配列でない content は無視する', () => {
+      const { container } = renderBroken({ type: 'doc', content: 'abc' })
+      expect(textOf(container)).toBe('')
+    })
+
+    it('null の要素は取り除く', () => {
+      const { container } = renderBroken({
+        type: 'doc',
+        content: [paragraph('前'), null, paragraph('後')],
+      })
+      expect(textOf(container)).toBe('前後')
+    })
+
+    it('文字列を持たない text ノードは取り除く', () => {
+      const { container } = renderBroken({
+        type: 'doc',
+        content: [paragraph('前'), { type: 'paragraph', content: [{ type: 'text' }] }],
+      })
+      expect(textOf(container)).toBe('前')
+    })
+
+    it.each([
+      ['content が null', null],
+      ['format が無いオブジェクト', {}],
+      ['format: json の中身が null', { format: 'json', content: null }],
+    ])('%s なら空で描画する', (_, content) => {
+      const { container } = renderBroken(content)
+      expect(textOf(container)).toBe('')
+    })
+  })
+
+  it('描画に失敗しても例外を投げず、その Viewer だけを空にしてエラーを出力する', () => {
+    const error = new Error('broken')
+    vi.mocked(serializeToReactElement).mockImplementationOnce(() => {
+      throw error
+    })
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    render(
+      <>
+        <p>ページの他の部分</p>
+        <RichTextViewer content={{ format: 'html', content: '<p>本文</p>' }} />
+      </>,
+    )
+
+    expect(screen.getByText('ページの他の部分')).toBeInTheDocument()
+    expect(screen.queryByText('本文')).not.toBeInTheDocument()
+    expect(spy).toHaveBeenCalledWith(error)
+    spy.mockRestore()
   })
 })

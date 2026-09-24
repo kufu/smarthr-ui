@@ -40,15 +40,20 @@ const classNameGenerator = tv({
 })
 
 const isRichTextJSON = (content: RichTextViewerProps['content']): content is RichTextJSON =>
-  'type' in content && content.type === 'doc'
+  // 型を通らない JS の利用者は null を渡しうる
+  content !== null && 'type' in content && content.type === 'doc'
 
 export const RichTextViewer: FC<RichTextViewerProps> = memo(({ content, className, gap = 1 }) => {
-  const normalized = useMemo(
-    () => (isRichTextJSON(content) ? content : normalizeToJSON(content)),
-    [content],
-  )
+  const element = useMemo(() => {
+    try {
+      return serializeToReactElement(isRichTextJSON(content) ? content : normalizeToJSON(content))
+    } catch (error) {
+      // 1件の破損データで表示ページ全体を落とさないよう、この Viewer だけを空にする
+      console.error(error)
 
-  const element = useMemo(() => serializeToReactElement(normalized), [normalized])
+      return null
+    }
+  }, [content])
 
   return <div className={classNameGenerator({ gap, className })}>{element}</div>
 })

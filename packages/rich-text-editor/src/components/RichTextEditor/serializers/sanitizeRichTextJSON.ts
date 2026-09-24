@@ -15,6 +15,8 @@ import {
 
 import type { JSONContent } from '@tiptap/core'
 
+type JSONMark = NonNullable<JSONContent['marks']>[number]
+
 type AttrNormalizer = (value: unknown) => unknown
 
 /** null は拡張のデフォルトへ戻す指示になる（キー削除ではTiptapのattrs解決に乗らない） */
@@ -124,15 +126,42 @@ const sanitizeAttrs = (
   }, attrs)
 }
 
-export const sanitizeRichTextJSON = (node: JSONContent): JSONContent => ({
-  ...node,
-  ...(node.attrs ? { attrs: sanitizeAttrs(node.type, node.attrs) } : {}),
-  ...(node.marks
-    ? {
-        marks: node.marks.map((mark) =>
-          mark.attrs ? { ...mark, attrs: sanitizeAttrs(mark.type, mark.attrs) } : mark,
-        ),
-      }
-    : {}),
-  ...(node.content ? { content: node.content.map(sanitizeRichTextJSON) } : {}),
-})
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const isPresent = <T>(value: T | null): value is T => value !== null
+
+const sanitizeMark = (mark: unknown): JSONMark | null => {
+  if (!isRecord(mark) || typeof mark.type !== 'string') return null
+
+  const { attrs, ...rest } = mark
+
+  return {
+    ...rest,
+    ...(isRecord(attrs) ? { attrs: sanitizeAttrs(mark.type, attrs) } : {}),
+    type: mark.type,
+  }
+}
+
+/**
+ * 保存済みの JSON は別バージョンの schema で書かれたものや壊れたものもありうる。
+ * 形の崩れた部分だけを取り除き、ProseMirror の Node.fromJSON が例外を投げないようにする。
+ */
+const sanitizeNode = (node: unknown): JSONContent | null => {
+  if (!isRecord(node) || typeof node.type !== 'string') return null
+  // ProseMirror は文字列を持たない text ノードも空文字の text ノードも受け付けない
+  if (node.type === 'text' && (typeof node.text !== 'string' || node.text === '')) return null
+
+  const { attrs, marks, content, ...rest } = node
+
+  return {
+    ...rest,
+    ...(isRecord(attrs) ? { attrs: sanitizeAttrs(node.type, attrs) } : {}),
+    ...(Array.isArray(marks) ? { marks: marks.map(sanitizeMark).filter(isPresent) } : {}),
+    ...(Array.isArray(content) ? { content: content.map(sanitizeNode).filter(isPresent) } : {}),
+    type: node.type,
+  }
+}
+
+export const sanitizeRichTextJSON = (json: unknown): JSONContent =>
+  sanitizeNode(json) ?? { type: 'doc', content: [{ type: 'paragraph' }] }
