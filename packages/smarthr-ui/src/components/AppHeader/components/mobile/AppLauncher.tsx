@@ -34,7 +34,10 @@ const classNameGenerator = tv({
     ],
     headArea: 'shr-px-1 shr-py-0.75',
     scrollArea: 'shr-flex-1 shr-basis-0',
-    bottomArea: 'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+    bottomArea: [
+      'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+      'shr-pb-[calc(theme(spacing[0.75])+env(safe-area-inset-bottom))]',
+    ],
   },
 })
 

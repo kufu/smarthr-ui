@@ -28,7 +28,11 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-ErrorScreen shr-box-border shr-bg-background shr-p-1.5',
+  base: [
+    'smarthr-ui-ErrorScreen shr-box-border shr-bg-background',
+    'shr-pb-[calc(theme(spacing[1.5])+env(safe-area-inset-bottom))] shr-pt-[calc(theme(spacing[1.5])+env(safe-area-inset-top))]',
+    'shr-pl-[calc(theme(spacing[1.5])+env(safe-area-inset-left))] shr-pr-[calc(theme(spacing[1.5])+env(safe-area-inset-right))]',
+  ],
 })
 
 export const ErrorScreen: FC<Props> = ({ logo, title, links, children, className, ...rest }) => {
