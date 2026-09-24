@@ -192,7 +192,7 @@ export const NotificationBar: FC<Props> = ({
     Wrapper = Panel
     wrapperProps = {
       layer,
-      overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
+      overflow: 'clip' as ComponentProps<typeof Panel>['overflow'],
     }
   }
   const classNames = useMemo(() => {
