@@ -43,6 +43,12 @@ export const isSafeFontSize = (fontSize: unknown): fontSize is string =>
 export const isSafeCodeLanguage = (language: unknown): language is string =>
   typeof language === 'string' && /^[a-z0-9_+.#-]+$/i.test(language)
 
+/**
+ * Link 拡張の既定値と同じ。JSON で上書きされると noopener が外れるため、
+ * 入力に関わらずこの値で出力する。
+ */
+export const LINK_REL = 'noopener noreferrer nofollow'
+
 export const isSafeLinkTarget = (target: unknown): target is string =>
   typeof target === 'string' && SAFE_LINK_TARGETS.has(target)
 

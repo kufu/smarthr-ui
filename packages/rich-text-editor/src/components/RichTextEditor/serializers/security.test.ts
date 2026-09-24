@@ -671,6 +671,45 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(react).toContain('class="language-c++"')
   })
 
+  const linkDoc = (attrs: Record<string, unknown>) => ({
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: [{ type: 'text', marks: [{ type: 'link', attrs }], text: 'click' }],
+      },
+    ],
+  })
+
+  it('link の rel が上書きされず両経路で同じ値になる', () => {
+    const { html, react } = bothOutputs(
+      linkDoc({ href: 'https://example.com', target: '_blank', rel: 'opener' }),
+    )
+    expect(html).not.toContain('opener"')
+    expect(html).toContain('rel="noopener noreferrer nofollow"')
+    expect(react).toContain('rel="noopener noreferrer nofollow"')
+  })
+
+  it('link の class が両経路で出力されない', () => {
+    const { html, react } = bothOutputs(
+      linkDoc({ href: 'https://example.com', class: 'shr-fixed shr-inset-0' }),
+    )
+    expect(html).not.toContain('shr-fixed')
+    expect(react).not.toContain('shr-fixed')
+  })
+
+  it('HTML入力の link の rel/class も出力されない', () => {
+    const json = normalizeToJSON({
+      format: 'html',
+      content: '<p><a href="https://example.com" rel="opener" class="shr-fixed">click</a></p>',
+    })
+    const { html, react } = bothOutputs(json)
+    for (const output of [html, react]) {
+      expect(output).not.toContain('shr-fixed')
+      expect(output).toContain('rel="noopener noreferrer nofollow"')
+    }
+  })
+
   it('入力JSONを変更しない', () => {
     const json = cellDoc('tableCell', { colspan: 0, colwidth: ['100;position:fixed'] })
     const snapshot = structuredClone(json)

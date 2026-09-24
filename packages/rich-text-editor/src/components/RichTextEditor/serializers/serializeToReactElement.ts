@@ -7,6 +7,7 @@ import { YOUTUBE_EMBED_OPTIONS } from '../extensions/youtubeOptions'
 
 import { getRichTextExtensions } from './richTextSchema'
 import {
+  LINK_REL,
   isSafeColor,
   isSafeFontSize,
   isSafeImageSrc,
@@ -119,7 +120,7 @@ const markMapping: Record<string, ReactMarkMapping> = {
       {
         href: isSafeUrl(href) ? href : undefined,
         target: isSafeLinkTarget(mark.attrs.target) ? mark.attrs.target : undefined,
-        rel: 'noopener noreferrer',
+        rel: LINK_REL,
       },
       children,
     )

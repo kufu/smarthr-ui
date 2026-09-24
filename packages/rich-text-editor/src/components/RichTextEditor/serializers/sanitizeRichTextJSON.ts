@@ -1,4 +1,5 @@
 import {
+  LINK_REL,
   isNumericAttr,
   isSafeCodeLanguage,
   isSafeColor,
@@ -70,7 +71,14 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
   tableCell: TABLE_CELL_GUARDS,
   tableHeader: TABLE_CELL_GUARDS,
   // マーク
-  link: { href: nullIfUnsafe(isSafeUrl), target: nullIfUnsafe(isSafeLinkTarget) },
+  link: {
+    href: nullIfUnsafe(isSafeUrl),
+    target: nullIfUnsafe(isSafeLinkTarget),
+    // null だと属性ごと落ちて既定値に戻らない
+    rel: () => LINK_REL,
+    class: () => null,
+    title: nullIfUnsafe((value) => typeof value === 'string'),
+  },
   textStyle: {
     color: nullIfUnsafe(isSafeColor),
     backgroundColor: nullIfUnsafe(isSafeColor),
