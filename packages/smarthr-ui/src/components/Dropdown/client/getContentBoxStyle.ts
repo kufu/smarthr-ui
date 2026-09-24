@@ -1,3 +1,5 @@
+import { type SafeAreaInsets, getSafeAreaInsets } from '../../../libs/safeAreaInsets'
+
 type Size = { width: number; height: number }
 
 export const INITIAL_CONTENT_STYLES: {
@@ -20,6 +22,7 @@ export const generateContentStyle = (
   content: HTMLElement,
   defaultMargin: string,
 ): ContentStyleType => {
+  const safeAreaInsets = getSafeAreaInsets()
   const contentBox = getContentBoxStyle(
     triggerButton.getBoundingClientRect(),
     {
@@ -34,11 +37,18 @@ export const generateContentStyle = (
       top: window.scrollY,
       left: window.scrollX,
     },
+    safeAreaInsets,
   )
 
-  const leftMargin = contentBox.left === undefined ? defaultMargin : `max(${contentBox.left}, 0px)`
+  // HINT: トリガに揃えていない側は、safe areaの外側に余白を取る
+  const leftMargin =
+    contentBox.left === undefined
+      ? `(${defaultMargin} + ${safeAreaInsets.left}px)`
+      : `max(${contentBox.left}, 0px)`
   const rightMargin =
-    contentBox.right === undefined ? defaultMargin : `max(${contentBox.right}, 0px)`
+    contentBox.right === undefined
+      ? `(${defaultMargin} + ${safeAreaInsets.right}px)`
+      : `max(${contentBox.right}, 0px)`
 
   const nextStyle = {
     wrapper: {
@@ -78,6 +88,7 @@ export function getContentBoxStyle(
     top: number
     left: number
   },
+  safeAreaInsets: SafeAreaInsets,
 ) {
   const contentBox: {
     top: string
@@ -89,30 +100,36 @@ export function getContentBoxStyle(
     maxHeight: '',
   }
 
-  if (triggerRect.bottom + contentSize.height <= windowSize.height) {
+  // HINT: safe areaに重ならない領域を、コンテンツを表示できる範囲とする
+  const safeTop = safeAreaInsets.top
+  const safeBottom = windowSize.height - safeAreaInsets.bottom
+  const safeLeft = safeAreaInsets.left
+  const safeRight = windowSize.width - safeAreaInsets.right
+
+  if (triggerRect.bottom + contentSize.height <= safeBottom) {
     // ドロップダウンのサイズがトリガの下側の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
-  } else if (triggerRect.top - contentSize.height >= 0) {
+  } else if (triggerRect.top - contentSize.height >= safeTop) {
     // ドロップダウンのサイズがトリガの上川の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.top - contentSize.height + 5}px`
   } else {
     const padding = 10
     const triggerHeight = triggerRect.bottom - triggerRect.top
 
-    if (triggerRect.top + triggerHeight / 2 < windowSize.height / 2) {
+    if (triggerRect.top + triggerHeight / 2 < (safeTop + safeBottom) / 2) {
       // 下側の領域のほうが広い場合
       contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
-      contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
+      contentBox.maxHeight = `${safeBottom - triggerRect.bottom - padding}px`
     } else {
       // 上側の領域のほうが広い場合
-      contentBox.top = `${scroll.top + padding + 5}px`
-      contentBox.maxHeight = `${triggerRect.top - padding}px`
+      contentBox.top = `${scroll.top + safeTop + padding + 5}px`
+      contentBox.maxHeight = `${triggerRect.top - safeTop - padding}px`
     }
   }
 
   const triggerAlignCenter = triggerRect.left + (triggerRect.right - triggerRect.left) / 2
 
-  if (triggerAlignCenter <= windowSize.width / 2) {
+  if (triggerAlignCenter <= (safeLeft + safeRight) / 2) {
     // トリガが画面左寄りの場合
     contentBox.left = `${scroll.left + triggerRect.left - 5}px`
   } else {

@@ -72,7 +72,16 @@ export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 
 const classNameGenerator = tv({
   slots: {
-    layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
+    // HINT: safe areaを除いた領域の中央にダイアログを配置する。
+    // 背景(background)はDialogOverlapを基準にinset-0で配置しているため、paddingに関わらず画面全体を覆う
+    overlap: [
+      'shr-pr-[env(safe-area-inset-right)] shr-pt-[env(safe-area-inset-top)]',
+      'shr-pb-[env(safe-area-inset-bottom)] shr-pl-[env(safe-area-inset-left)]',
+    ],
+    layout: [
+      'smarthr-ui-Dialog-wrapper',
+      'shr-max-w-[calc(100dvw-theme(spacing.1)-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+    ],
     inner: [
       DIALOG_CONTENT_CLASS_NAME,
       'shr-border-shorthand shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
@@ -109,9 +118,10 @@ export const DialogContentInner: FC<Props> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { layout, inner, background } = classNameGenerator()
+    const { overlap, layout, inner, background } = classNameGenerator()
 
     return {
+      overlap: overlap(),
       layout: layout({ size }),
       inner: inner({ className }),
       background: background(),
@@ -159,7 +169,7 @@ export const DialogContentInner: FC<Props> = ({
   }, [isOpen])
 
   return (
-    <DialogOverlap isOpen={isOpen}>
+    <DialogOverlap isOpen={isOpen} className={classNames.overlap}>
       <div
         ref={callbackRef}
         id={id}

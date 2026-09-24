@@ -2,7 +2,12 @@ import { act, renderHook } from '@testing-library/react'
 import { createRef } from 'react'
 import { vi } from 'vitest'
 
+import { getSafeAreaInsets } from '../../../../libs/safeAreaInsets'
 import { useListbox } from '../useListbox'
+
+vi.mock('../../../../libs/safeAreaInsets', () => ({
+  getSafeAreaInsets: vi.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+}))
 
 describe('useListbox', () => {
   const options = [
@@ -205,6 +210,60 @@ describe('useListbox', () => {
           listBoxWidth: VIEWPORT_WIDTH - VIEWPORT_MARGIN,
         }),
       ).toBe(0)
+    })
+
+    describe('safe area がある場合', () => {
+      beforeEach(() => {
+        // iPhoneの横向き(viewport-fit=cover)を想定した値
+        vi.mocked(getSafeAreaInsets).mockReturnValue({ top: 0, right: 59, bottom: 21, left: 59 })
+      })
+
+      afterEach(() => vi.mocked(getSafeAreaInsets).mockReset())
+
+      it('右側の safe area に重なる場合、入力欄の右端に揃うこと', () => {
+        // 右側に使える幅 = 1000 - 59 - 500 - 8 = 433
+        expect(getCalculatedLeft({ triggerLeft: 500, triggerRight: 700, listBoxWidth: 434 })).toBe(
+          700 - 434,
+        )
+      })
+
+      it('左右いずれにも収まらない場合、safe area の左端に揃うこと', () => {
+        // 右側に使える幅 = 1000 - 59 - 300 - 8 = 633、左側に使える幅 = 500 - 59 = 441
+        expect(getCalculatedLeft({ triggerLeft: 300, triggerRight: 500, listBoxWidth: 700 })).toBe(
+          59,
+        )
+      })
+    })
+  })
+
+  describe('calculateRect による縦方向の位置の算出', () => {
+    afterEach(() => vi.mocked(getSafeAreaInsets).mockReset())
+
+    it('下側の safe area に重なる場合、入力欄の上側に表示されること', () => {
+      vi.mocked(getSafeAreaInsets).mockReturnValue({ top: 59, right: 0, bottom: 34, left: 0 })
+
+      const trigger = document.createElement('div')
+      // 下側に使える幅 = 768 - 34 - 568 = 166 のため、高さ 200 のリストボックスは収まらない
+      trigger.getBoundingClientRect = () =>
+        ({ top: 538, bottom: 568, left: 0, right: 200, width: 200, height: 30 }) as DOMRect
+
+      const listBox = document.createElement('div')
+      listBox.style.maxHeight = '300px'
+      Object.defineProperty(listBox, 'scrollHeight', { value: 200 })
+      listBox.getBoundingClientRect = () => ({ width: 200 }) as DOMRect
+
+      const props = { ...initialProps, triggerRef: { current: trigger } }
+      const renderHookResult = renderHook((p) => useListbox(p), { initialProps: props })
+
+      renderHookResult.result.current.listBoxRef.current = listBox
+      renderHookResult.rerender({ ...props, options: [...options] })
+
+      // 入力欄の上端 538 - リストボックスの高さ 200 + offset 2
+      expect(renderHookResult.result.current.listBoxProps.listBoxRect).toEqual({
+        top: 340,
+        left: 0,
+        height: undefined,
+      })
     })
   })
 })

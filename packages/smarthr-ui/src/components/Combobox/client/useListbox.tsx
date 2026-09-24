@@ -22,6 +22,7 @@ import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
+import { getSafeAreaInsets } from '../../../libs/safeAreaInsets'
 import { FaCircleInfoIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Loader } from '../../Loader'
@@ -168,8 +169,10 @@ export const useListbox = <T,>({
           return
         }
         const rect = latest.triggerRef.current.getBoundingClientRect()
-        const bottomSpace = window.innerHeight - rect.bottom
-        const topSpace = rect.top
+        // HINT: safe areaに重ならない領域を、リストボックスを表示できる範囲とする
+        const safeAreaInsets = getSafeAreaInsets()
+        const bottomSpace = window.innerHeight - safeAreaInsets.bottom - rect.bottom
+        const topSpace = rect.top - safeAreaInsets.top
         const listBoxHeight = Math.min(
           listBoxRef.current.scrollHeight,
           parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
@@ -200,9 +203,9 @@ export const useListbox = <T,>({
         // ドロップダウンの幅は maxWidth でビューポート右端から余白分を残すよう制限しているため、位置の判定にも同じ余白を使う
         const viewportMargin = parseInt(latest.theme.spacingByChar(0.5), 10)
         // 入力欄の左端を起点に右方向へ表示する場合に使える幅
-        const rightSpace = window.innerWidth - rect.left - viewportMargin
+        const rightSpace = window.innerWidth - safeAreaInsets.right - rect.left - viewportMargin
         // 入力欄の右端を起点に左方向へ表示する場合に使える幅
-        const leftSpace = rect.right
+        const leftSpace = rect.right - safeAreaInsets.left
 
         // ビューポートの左端を基準に計算
         let left = window.pageXOffset
@@ -213,6 +216,9 @@ export const useListbox = <T,>({
         } else if (listBoxWidth <= leftSpace) {
           // 左側に収まる場合は入力欄の右端に揃えて表示
           left += rect.right - listBoxWidth
+        } else {
+          // どちらにも収まらない場合はsafe areaの左端に揃えて表示
+          left += safeAreaInsets.left
         }
 
         setListBoxRect({
@@ -405,7 +411,7 @@ export const ListBox = memo(
             typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
           /* HINT: left に依存させると、算出した幅がさらに maxWidth を縮めて再計算の度に幅が縮んでいくため、
           ビューポート幅のみから算出する */
-          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)})`,
+          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)} - env(safe-area-inset-left) - env(safe-area-inset-right))`,
           height: height ? `${height}px` : undefined,
         },
       }
