@@ -1,7 +1,7 @@
 'use client'
 
 import { useEditor } from '@tiptap/react'
-import { type RefObject, useEffect, useMemo, useRef } from 'react'
+import { type RefObject, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
@@ -12,6 +12,7 @@ import {
   rememberManagedPlugins,
 } from '../extensions/reconfigureEditorOperations'
 import { createChangeMeta } from '../serializers/createChangeMeta'
+import { toEditorContent } from '../serializers/toEditorContent'
 
 import type { ImageUploadResult, RichTextFeature, RichTextJSON } from '../types'
 
@@ -87,9 +88,16 @@ export const useRichTextEditor = ({
     [featuresKey, headingLevelsKey],
   )
 
+  // useEditor が content を読むのは生成時だけなので、schema の検査も初回だけにする
+  const [initialContent] = useState(() => {
+    const initial = isControlled ? value : defaultValue
+
+    return initial === undefined ? undefined : toEditorContent(initial)
+  })
+
   const editor = useEditor({
     extensions,
-    content: isControlled ? value : defaultValue,
+    content: initialContent,
     editable: !(readOnly || disabled),
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
@@ -132,7 +140,7 @@ export const useRichTextEditor = ({
       // 未完了の画像アップロードは差し替えと同じ transaction で無効化する
       editor
         .chain()
-        .setContent(value, { emitUpdate: false })
+        .setContent(toEditorContent(value), { emitUpdate: false })
         .command(({ tr }) => {
           resetImagePlaceholders(tr)
 

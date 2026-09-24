@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event'
 import { createRef } from 'react'
 import { FormControl, IntlProvider } from 'smarthr-ui'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
 
@@ -660,6 +660,126 @@ describe('RichTextEditor', () => {
       expect(html).toContain('<h2>')
       expect(html).toContain('<em>')
       expect(html).toContain('#ff0000')
+    })
+  })
+
+  describe('壊れた JSON を読み込んだとき', () => {
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    const paragraph = (text: string) => ({
+      type: 'paragraph',
+      content: [{ type: 'text', text }],
+    })
+
+    const BROKEN: Array<[string, unknown, string]> = [
+      [
+        '未知の node は中身の文字を段落として残す',
+        {
+          type: 'doc',
+          content: [
+            paragraph('前'),
+            { type: 'mermaid', content: [{ type: 'text', text: '中' }] },
+            paragraph('後'),
+          ],
+        },
+        '前中後',
+      ],
+      [
+        '未知の mark は装飾だけ外して文字を残す',
+        {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [{ type: 'text', text: '印', marks: [{ type: 'highlight' }] }],
+            },
+          ],
+        },
+        '印',
+      ],
+      [
+        'schema に合わない構造は段落に包み直す',
+        { type: 'doc', content: [{ type: 'text', text: '裸' }, paragraph('後')] },
+        '裸後',
+      ],
+    ]
+
+    const SHAPE_BROKEN: Array<[string, unknown, string]> = [
+      [
+        'null の要素は取り除く',
+        { type: 'doc', content: [paragraph('前'), null, paragraph('後')] },
+        '前後',
+      ],
+      [
+        '文字列を持たない text ノードは取り除く',
+        {
+          type: 'doc',
+          content: [paragraph('前'), { type: 'paragraph', content: [{ type: 'text' }] }],
+        },
+        '前',
+      ],
+      ['配列でない content は無視する', { type: 'doc', content: 'abc' }, ''],
+    ]
+
+    const editorText = () => document.querySelector('.ProseMirror')?.textContent
+
+    const renderBroken = async (props: { defaultValue?: unknown; value?: unknown }) => {
+      const onChange = vi.fn()
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const result = render(
+        <RichTextEditor {...(props as { defaultValue?: RichTextJSON })} onChange={onChange} />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(document.querySelector('.ProseMirror')).toBeInTheDocument())
+
+      return { ...result, onChange, warn }
+    }
+
+    it.each([...BROKEN, ...SHAPE_BROKEN])(
+      'defaultValue: %s（文書全体を空にしない）',
+      async (_, json, expected) => {
+        const { onChange } = await renderBroken({ defaultValue: json })
+
+        expect(editorText()).toBe(expected)
+        expect(onChange).not.toHaveBeenCalled()
+      },
+    )
+
+    it.each(BROKEN)('value: %s（文書全体を空にしない）', async (_, json, expected) => {
+      await renderBroken({ value: json })
+
+      expect(editorText()).toBe(expected)
+    })
+
+    it('value を壊れた JSON に差し替えても文書全体を空にしない', async () => {
+      const { rerender } = await renderBroken({
+        value: { type: 'doc', content: [paragraph('差し替え前')] },
+      })
+      expect(editorText()).toBe('差し替え前')
+
+      rerender(<RichTextEditor value={BROKEN[0][1] as RichTextJSON} />)
+
+      await waitFor(() => expect(editorText()).toBe('前中後'))
+    })
+
+    it.each(BROKEN)('装飾や要素を取り除いたときは警告を出す: %s', async (_, json) => {
+      const { warn } = await renderBroken({ defaultValue: json })
+
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('RichTextEditor'),
+        expect.anything(),
+      )
+    })
+
+    it('正しい JSON では警告を出さない', async () => {
+      const { warn } = await renderBroken({
+        defaultValue: { type: 'doc', content: [paragraph('正常')] },
+      })
+
+      expect(editorText()).toBe('正常')
+      expect(warn).not.toHaveBeenCalled()
     })
   })
 
