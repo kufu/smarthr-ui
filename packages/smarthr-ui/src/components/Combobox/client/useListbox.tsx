@@ -124,7 +124,6 @@ export const useListbox = <T,>({
   }
 
   const listBoxRef = useRef<HTMLDivElement>(null)
-  const activeRef = useRef<HTMLButtonElement>(null)
 
   const theme = useTheme()
 
@@ -323,7 +322,6 @@ export const useListbox = <T,>({
       handleAdd: functions.handleAdd,
       handleHoverOption: functions.handleHoverOption,
       handleSelect: functions.handleSelect,
-      activeRef,
       listBoxRect,
       triggerWidth,
       dropdownWidth,
@@ -347,7 +345,6 @@ type ListBoxProps<T> = {
   handleAdd: ((option: ComboboxOption<T>) => void) | undefined
   handleHoverOption: (option: ComboboxOption<T>) => void
   handleSelect: (option: ComboboxOption<T>) => void
-  activeRef: RefObject<HTMLButtonElement>
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
   dropdownWidth?: string | number
@@ -367,7 +364,6 @@ export const ListBox = memo(
     handleAdd,
     handleHoverOption,
     handleSelect,
-    activeRef,
     listBoxRect,
     triggerWidth,
     dropdownWidth,
@@ -505,9 +501,9 @@ export const ListBox = memo(
                 <ItemButton
                   {...optionRest}
                   key={id}
-                  activeRef={id === activeOptionId ? activeRef : undefined}
                   id={id}
                   disabled={disabled}
+                  active={id === activeOptionId}
                   label={label}
                 />
               ))
