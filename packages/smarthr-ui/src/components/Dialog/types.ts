@@ -1,5 +1,4 @@
 import type { DialogContentInnerProps } from './DialogContentInner'
-import type { RefObject } from 'react'
 
 type CommonProps = Pick<
   DialogContentInnerProps,
@@ -10,9 +9,12 @@ type ControlledProps = Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay'
 
 type PortalProps = {
   /**
-   * DOM 上でダイアログの要素を追加する親要素
+   * DOM 上でダイアログの要素を追加する親要素。
+   * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
+   * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+   * 呼び出し側で要素が確定してから渡すこと。
    */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement
 }
 
 export type DialogProps = CommonProps & ControlledProps & PortalProps

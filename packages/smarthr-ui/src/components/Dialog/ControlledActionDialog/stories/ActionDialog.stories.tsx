@@ -206,16 +206,16 @@ export const SubActionArea: StoryObj<typeof ControlledActionDialog> = {
 export const PortalParent: StoryObj<typeof ControlledActionDialog> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledActionDialog
           {...args}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           isOpen={open}
           onClickClose={() => setOpen(false)}
         >
