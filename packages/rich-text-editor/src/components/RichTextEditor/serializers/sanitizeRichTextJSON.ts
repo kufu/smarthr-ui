@@ -1,5 +1,6 @@
 import {
   isNumericAttr,
+  isSafeCodeLanguage,
   isSafeColor,
   isSafeFontSize,
   isSafeImageSrc,
@@ -63,6 +64,7 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
     height: nullIfUnsafe(isNumericAttr),
   },
   youtube: { src: nullIfUnsafe(isSafeYoutubeSrc) },
+  codeBlock: { language: nullIfUnsafe(isSafeCodeLanguage) },
   paragraph: { textAlign: nullIfUnsafe(isSafeTextAlign) },
   heading: { textAlign: nullIfUnsafe(isSafeTextAlign) },
   tableCell: TABLE_CELL_GUARDS,

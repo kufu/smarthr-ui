@@ -36,6 +36,13 @@ export const isSafeColor = (color: unknown): color is string =>
 export const isSafeFontSize = (fontSize: unknown): fontSize is string =>
   typeof fontSize === 'string' && /^\d+(\.\d+)?(px|rem)$/.test(fontSize)
 
+/**
+ * CodeBlock 拡張は `language-` 接頭辞を付けて class へ展開するため、
+ * 空白を許すと任意のクラスを追加できてしまう。
+ */
+export const isSafeCodeLanguage = (language: unknown): language is string =>
+  typeof language === 'string' && /^[a-z0-9_+.#-]+$/i.test(language)
+
 export const isSafeLinkTarget = (target: unknown): target is string =>
   typeof target === 'string' && SAFE_LINK_TARGETS.has(target)
 

@@ -639,6 +639,38 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(react).not.toContain('-100')
   })
 
+  it('codeBlock の language に追加したクラスが両経路で出力されない', () => {
+    const { html, react } = bothOutputs({
+      type: 'doc',
+      content: [
+        {
+          type: 'codeBlock',
+          attrs: { language: 'x shr-fixed shr-inset-0' },
+          content: [{ type: 'text', text: 'code' }],
+        },
+      ],
+    })
+    expect(html).not.toContain('shr-fixed')
+    expect(react).not.toContain('shr-fixed')
+    expect(html).toContain('code')
+    expect(react).toContain('code')
+  })
+
+  it('codeBlock の安全な language は両経路で保持される', () => {
+    const { html, react } = bothOutputs({
+      type: 'doc',
+      content: [
+        {
+          type: 'codeBlock',
+          attrs: { language: 'c++' },
+          content: [{ type: 'text', text: 'code' }],
+        },
+      ],
+    })
+    expect(html).toContain('class="language-c++"')
+    expect(react).toContain('class="language-c++"')
+  })
+
   it('入力JSONを変更しない', () => {
     const json = cellDoc('tableCell', { colspan: 0, colwidth: ['100;position:fixed'] })
     const snapshot = structuredClone(json)
