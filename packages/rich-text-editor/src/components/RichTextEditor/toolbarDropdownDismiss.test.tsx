@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
@@ -75,5 +75,40 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
 
     expect(getTrigger(name)).not.toHaveFocus()
     expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it.each([/^書式:/, /^フォントサイズ:/, /^行送り:/, /^テキスト配置:/])(
+    '%s: 選択肢で Tab を押すと閉じてトリガーへ戻る',
+    async (name) => {
+      const user = userEvent.setup()
+      await renderEditor()
+
+      getTrigger(name).focus()
+      await user.keyboard('{Enter}')
+      const option = await screen.findByRole('option', { selected: true })
+      await waitFor(() => expect(option).toHaveFocus())
+
+      const notPrevented = fireEvent.keyDown(option, { key: 'Tab' })
+
+      expect(notPrevented).toBe(false)
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    },
+  )
+
+  it('画像の挿入メニューで Tab を押すと閉じてトリガーへ戻る', async () => {
+    const user = userEvent.setup()
+    await renderEditor()
+
+    getTrigger(/^画像を挿入/).focus()
+    await user.keyboard('{Enter}')
+    const item = await screen.findByRole('menuitem', { name: 'ファイルをアップロード' })
+    await waitFor(() => expect(item).toHaveFocus())
+
+    const notPrevented = fireEvent.keyDown(item, { key: 'Tab' })
+
+    expect(notPrevented).toBe(false)
+    expect(getTrigger(/^画像を挿入/)).toHaveAttribute('aria-expanded', 'false')
+    expect(getTrigger(/^画像を挿入/)).toHaveFocus()
   })
 })

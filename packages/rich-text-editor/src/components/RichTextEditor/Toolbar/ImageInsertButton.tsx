@@ -118,14 +118,13 @@ export const ImageInsertButton: FC<Props> = memo(
             e.stopPropagation()
             buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
             break
+          // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
           case 'Escape':
+          case 'Tab':
             e.preventDefault()
             e.stopPropagation()
             setIsMenuOpen(false)
             triggerRef.current?.focus()
-            break
-          case 'Tab':
-            setIsMenuOpen(false)
             break
         }
       },

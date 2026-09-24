@@ -178,14 +178,13 @@ export const TextAlignDropdown: FC<Props> = memo(
             e.stopPropagation()
             buttons[buttons.length - 1]?.focus()
             break
+          // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
           case 'Escape':
+          case 'Tab':
             e.preventDefault()
             e.stopPropagation()
             setIsOpen(false)
             triggerRef.current?.focus()
-            break
-          case 'Tab':
-            setIsOpen(false)
             break
         }
       },
