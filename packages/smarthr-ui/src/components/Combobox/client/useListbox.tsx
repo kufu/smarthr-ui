@@ -329,8 +329,6 @@ export const useListbox = <T,>({
     cleanupAddFrame: functions.cleanupAddFrame,
     handleKeyDownListBox: functions.handleKeyDownListBox,
     listBoxId,
-    // TODO: テストで利用されているだけなのでテスト側を修正して対応、最終的に消したい
-    listBoxRef,
   }
 }
 
