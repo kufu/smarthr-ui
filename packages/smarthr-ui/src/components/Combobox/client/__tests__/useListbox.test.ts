@@ -165,7 +165,7 @@ describe('useListbox', () => {
       const renderHookResult = renderHook((p) => useListbox(p), { initialProps: props })
 
       // ListBox がレンダリングされた状態を再現し、実測値が得られる状態で再計算させる
-      renderHookResult.result.current.listBoxProps.listBoxRef.current = listBox
+      renderHookResult.result.current.listBoxProps.listBoxRef(listBox)
       renderHookResult.rerender({ ...props, options: [...options] })
 
       return renderHookResult.result.current.listBoxProps.listBoxRect.left
