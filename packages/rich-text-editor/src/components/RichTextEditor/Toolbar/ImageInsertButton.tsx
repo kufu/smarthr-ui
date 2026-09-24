@@ -47,7 +47,12 @@ export const ImageInsertButton: FC<Props> = memo(
     const { editor, onImageUpload, onImageUploadError, acceptedMimeTypes } =
       useRichTextEditorContext()
     const { localize } = useIntl()
-    const { setIsOpen: setIsMenuOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const {
+      isOpen: isMenuOpen,
+      setIsOpen: setIsMenuOpen,
+      triggerRef,
+      renderDropdown,
+    } = useToolbarDropdown()
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
     const [showUrlDialog, setShowUrlDialog] = useState(false)
@@ -146,6 +151,8 @@ export const ImageInsertButton: FC<Props> = memo(
           }}
           disabled={disabled}
           tabIndex={tabIndex}
+          aria-expanded={isMenuOpen}
+          aria-haspopup="menu"
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()

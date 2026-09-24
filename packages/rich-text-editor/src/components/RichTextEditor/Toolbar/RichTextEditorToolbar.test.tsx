@@ -116,6 +116,20 @@ describe('RichTextEditorToolbar', () => {
     expect(new Set(heightClassNames.map(([className]) => className)).size).toBe(1)
   })
 
+  it('画像の挿入トリガーはメニューを持つことと開閉状態を伝える', async () => {
+    await renderEditor()
+
+    const trigger = screen.getByRole('button', { name: /^画像を挿入/ })
+
+    expect(trigger).toHaveAttribute('aria-haspopup', 'menu')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+
+    await userEvent.click(trigger)
+
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  })
+
   it('デスクトップではホバーするとツールチップを描画する', async () => {
     await renderEditor()
 
