@@ -162,17 +162,19 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
   ({ children, renderTucked, maxLines = 1, collapse = 'partial', className, ...rest }, ref) => {
     const actualMaxLines = Math.max(1, Math.floor(maxLines))
     const [tuckedKeys, setTuckedKeys] = useState<string[]>([])
-    const groupRef = useRef<HTMLDivElement>(null)
+    const groupRef = useRef<HTMLElement>(null)
     const sizerRef = useRef<HTMLDivElement>(null)
-    // HINT: トリガーの幅は「+7」が「+6」より狭いなど、件数に対して単調に増えるとは限らない。
-    // 表示中のトリガーの幅で判定すると、広いトリガーでは収まらないので件数を増やす → 狭くなったので戻す…と
-    // 状態が行き来し、更新が止まらなくなる。これまでに測った最大の幅を使えば判定が一方向にしか変わらず収束する
-    const triggerWidthRef = useRef(0)
-    // HINT: まとめたアイテムはアンマウントするため、表示中に測った幅を key ごとに覚えておき判定に使う。
-    // まとめている間に中身の幅が変わっても分からない。広がった場合は並びに戻した時点で測り直され、
-    // 描画前に再判定されるため見た目には出ないが、狭まった場合は本来収まるのにまとめたままになることがある
-    const widthCacheRef = useRef(new Map<string, number>())
-    const frame = useAnimationFrame()
+    const measuredRef = useRef({
+      // HINT: トリガーの幅は「+7」が「+6」より狭いなど、件数に対して単調に増えるとは限らない。
+      // 表示中のトリガーの幅で判定すると、広いトリガーでは収まらないので件数を増やす → 狭くなったので戻す…と
+      // 状態が行き来し、更新が止まらなくなる。これまでに測った最大の幅を使えば判定が一方向にしか変わらず収束する
+      triggerWidth: 0,
+      // HINT: まとめたアイテムはアンマウントするため、表示中に測った幅を key ごとに覚えておき判定に使う。
+      // まとめている間に中身の幅が変わっても分からない。広がった場合は並びに戻した時点で測り直され、
+      // 描画前に再判定されるため見た目には出ないが、狭まった場合は本来収まるのにまとめたままになることがある
+      itemWidths: new Map<string, number>(),
+    })
+    const resizeFrame = useAnimationFrame()
 
     const items = flattenItems(children)
     const tuckedKeySet = new Set(tuckedKeys)
@@ -183,6 +185,7 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
       tuckedKeys,
       maxLines: actualMaxLines,
       collapse,
+      resizeFrame,
     })
 
     const functions = useMemo(() => {
@@ -193,7 +196,8 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
           return
         }
 
-        const widthCache = widthCacheRef.current
+        const measured = measuredRef.current
+        const widthCache = measured.itemWidths
         for (const child of Array.from(group.children)) {
           const key = child.getAttribute(ITEM_KEY_ATTR)
           const width = child.getBoundingClientRect().width
@@ -207,7 +211,7 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
             continue
           }
 
-          triggerWidthRef.current = Math.max(triggerWidthRef.current, width)
+          measured.triggerWidth = Math.max(measured.triggerWidth, width)
         }
 
         const currentKeys = new Set(latest.items.map((item) => item.key))
@@ -245,7 +249,7 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
           available: group.getBoundingClientRect().width,
           maxLines: latest.maxLines,
           collapse: latest.collapse,
-          triggerWidth: triggerWidthRef.current,
+          triggerWidth: measured.triggerWidth,
         })
         const nextTuckedKeys = latest.items.slice(visibleCount).map((item) => item.key)
 
@@ -260,14 +264,14 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
 
       return {
         update,
-        observerRef: (node: HTMLDivElement | null) => {
+        observerRef: (node: HTMLElement | null) => {
           if (!node) {
             return
           }
 
           // HINT: update は計測対象の大きさを変えうるため、ResizeObserver のコールバックから同期的に呼ぶと
           // 「ResizeObserver loop completed with undelivered notifications」を発生させる。次フレームに逃がす
-          const resizeObserver = new ResizeObserver(() => frame.request(update))
+          const resizeObserver = new ResizeObserver(() => latest.resizeFrame.request(update))
           const observeChildren = () => {
             resizeObserver.disconnect()
             resizeObserver.observe(node)
@@ -281,13 +285,13 @@ export const Tuck = forwardRef<HTMLDivElement, Props>(
           mutationObserver.observe(node, { childList: true })
 
           return () => {
-            frame.cancel()
+            latest.resizeFrame.cancel()
             mutationObserver.disconnect()
             resizeObserver.disconnect()
           }
         },
       }
-    }, [frame, latest])
+    }, [latest])
 
     const mergedGroupRef = useMergeRefs(groupRef, functions.observerRef)
 
