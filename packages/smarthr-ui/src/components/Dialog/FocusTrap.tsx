@@ -24,7 +24,7 @@ const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
 export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
   const functions = useMemo(() => {
-    let inner: HTMLDivElement | null = null
+    let inner: HTMLElement | null = null
     const findDummyFocus = () => inner?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
     const focus = () => {
@@ -32,7 +32,7 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     }
 
     return {
-      baseCallbackRef: (node: HTMLDivElement | null) => {
+      baseCallbackRef: (node: HTMLElement | null) => {
         inner = node
 
         if (!node) {

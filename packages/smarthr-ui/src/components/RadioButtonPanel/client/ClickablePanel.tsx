@@ -47,7 +47,7 @@ const isRadioButtonElementClicked = (path: EventTarget[], currentTarget: EventTa
 }
 
 // 外側の装飾を押しても内側のラジオボタンが押せるようにする
-const handleDelegateClick = (e: React.MouseEvent<HTMLDivElement>) => {
+const handleDelegateClick = (e: React.MouseEvent<HTMLElement>) => {
   // RadioButtonの要素（labelまたはinput）以外がクリックされた場合（description や Base の余白）
   if (!isRadioButtonElementClicked(e.nativeEvent.composedPath(), e.currentTarget)) {
     // Base要素のclickイベントは止める（実装の詳細を隠蔽し、input要素のclickのみを親に伝える）
