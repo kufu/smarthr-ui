@@ -12,3 +12,9 @@ export const YOUTUBE_EMBED_OPTIONS = {
   controls: true,
   rel: 1,
 } as const
+
+/**
+ * 不正な寸法を落とすと iframe の width/height 属性ごと消えるため、
+ * サニタイズで戻す先として拡張の設定と共有する。
+ */
+export const YOUTUBE_DEFAULT_SIZE = { width: 640, height: 480 } as const

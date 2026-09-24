@@ -671,6 +671,43 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(react).toContain('class="language-c++"')
   })
 
+  const youtubeDoc = (attrs: Record<string, unknown>) => ({
+    type: 'doc',
+    content: [{ type: 'youtube', attrs: { ...attrs, src: 'https://www.youtube.com/watch?v=abc' } }],
+  })
+
+  it('youtube の start に追記したクエリが両経路で埋め込みURLに出ない', () => {
+    const { html, react } = bothOutputs(
+      youtubeDoc({ start: '0&autoplay=1&origin=https://evil.example' }),
+    )
+    for (const output of [html, react]) {
+      expect(output).not.toContain('evil.example')
+      expect(output).not.toContain('autoplay=1')
+    }
+  })
+
+  it('youtube の安全な start は両経路で保持される', () => {
+    const { html, react } = bothOutputs(youtubeDoc({ start: 30 }))
+    expect(html).toContain('start=30')
+    expect(react).toContain('start=30')
+  })
+
+  it('youtube の不正な width/height は両経路で既定値になる', () => {
+    const { html, react } = bothOutputs(youtubeDoc({ width: '100%;x', height: -1 }))
+    for (const output of [html, react]) {
+      expect(output).toContain('width="640"')
+      expect(output).toContain('height="480"')
+    }
+  })
+
+  it('youtube の安全な width/height は両経路で保持される', () => {
+    const { html, react } = bothOutputs(youtubeDoc({ width: 320, height: 180 }))
+    for (const output of [html, react]) {
+      expect(output).toContain('width="320"')
+      expect(output).toContain('height="180"')
+    }
+  })
+
   const linkDoc = (attrs: Record<string, unknown>) => ({
     type: 'doc',
     content: [

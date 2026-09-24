@@ -3,7 +3,7 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
-import { YOUTUBE_EMBED_OPTIONS } from '../extensions/youtubeOptions'
+import { YOUTUBE_DEFAULT_SIZE, YOUTUBE_EMBED_OPTIONS } from '../extensions/youtubeOptions'
 
 import { getRichTextExtensions } from './richTextSchema'
 import {
@@ -91,8 +91,10 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
     })
   },
   youtube: ({ node }) => {
-    const width = typeof node.attrs.width === 'number' ? node.attrs.width : 640
-    const height = typeof node.attrs.height === 'number' ? node.attrs.height : 480
+    const width =
+      typeof node.attrs.width === 'number' ? node.attrs.width : YOUTUBE_DEFAULT_SIZE.width
+    const height =
+      typeof node.attrs.height === 'number' ? node.attrs.height : YOUTUBE_DEFAULT_SIZE.height
     return createElement(
       'div',
       { 'data-youtube-video': '' },

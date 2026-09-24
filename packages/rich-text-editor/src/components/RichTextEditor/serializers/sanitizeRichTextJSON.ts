@@ -1,3 +1,5 @@
+import { YOUTUBE_DEFAULT_SIZE } from '../extensions/youtubeOptions'
+
 import {
   LINK_REL,
   isNumericAttr,
@@ -37,6 +39,19 @@ const isSafeColwidth = (value: unknown): boolean =>
 const normalizeSpan: AttrNormalizer = (value) =>
   typeof value === 'number' && Number.isInteger(value) && value >= 1 ? value : 1
 
+/**
+ * Youtube 拡張は start を埋め込みURLのクエリへ文字列連結するため、
+ * 数値以外を通すとクエリの追記になる。null でも 0 と同じ扱いになるが schema の既定値に揃える。
+ */
+const normalizeStart: AttrNormalizer = (value) =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0
+
+// React 経路は数値以外を既定値にするため、数値文字列も許可せず両経路の出力を揃える
+const normalizeYoutubeDimension =
+  (fallback: number): AttrNormalizer =>
+  (value) =>
+    typeof value === 'number' && isNumericAttr(value) ? value : fallback
+
 const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
   colspan: normalizeSpan,
   rowspan: normalizeSpan,
@@ -64,7 +79,12 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
     width: nullIfUnsafe(isNumericAttr),
     height: nullIfUnsafe(isNumericAttr),
   },
-  youtube: { src: nullIfUnsafe(isSafeYoutubeSrc) },
+  youtube: {
+    src: nullIfUnsafe(isSafeYoutubeSrc),
+    start: normalizeStart,
+    width: normalizeYoutubeDimension(YOUTUBE_DEFAULT_SIZE.width),
+    height: normalizeYoutubeDimension(YOUTUBE_DEFAULT_SIZE.height),
+  },
   codeBlock: { language: nullIfUnsafe(isSafeCodeLanguage) },
   paragraph: { textAlign: nullIfUnsafe(isSafeTextAlign) },
   heading: { textAlign: nullIfUnsafe(isSafeTextAlign) },
