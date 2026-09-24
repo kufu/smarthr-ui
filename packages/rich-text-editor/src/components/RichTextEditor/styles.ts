@@ -79,13 +79,16 @@ export const editorContentClasses = [
   // li / blockquote / table セルの中身も p なのでまとめて 1.75 になる（見出し・コードは別指定）。
   '[&_.ProseMirror_p]:shr-my-0 [&_.ProseMirror_p]:shr-leading-loose',
   // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ
-  '[&_.ProseMirror_p]::after:shr-content-[\\200B]',
-  '[&_.ProseMirror_h1]::after:shr-content-[\\200B]',
-  '[&_.ProseMirror_h2]::after:shr-content-[\\200B]',
-  '[&_.ProseMirror_h3]::after:shr-content-[\\200B]',
-  '[&_.ProseMirror_h4]::after:shr-content-[\\200B]',
-  '[&_.ProseMirror_li]::after:shr-content-[\\200B]',
-  '[&_.ProseMirror_blockquote]::after:shr-content-[\\200B]',
+  // https://tiptap.dev/docs/guides/accessibility
+  // 空のブロックは trailingBreak の後ろに2行目ができて高さが倍になるため除外する。
+  // li・blockquote は中身の p に付くので対象にしない（付けると1行分伸びる）。
+  // Tailwind はソースを文字列のまま読むため、'\\200B' と書くとバックスラッシュ2つの
+  // クラスとして生成され、実行時のクラス名と一致しない。String.raw で両者を揃える。
+  String.raw`[&_.ProseMirror_p:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h1:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h2:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h3:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h4:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-content-['\200B']`,
 ] as const
 
 /** RichTextViewer 用: 直下の要素向けスタイル */
@@ -124,12 +127,10 @@ export const staticContentClasses = [
   // paragraph
   // エディタ側(editorContentClasses)と行送りを揃える: 本文は RELAXED(1.75)
   '[&_p]:shr-my-0 [&_p]:shr-leading-loose',
-  // VoiceOver対策: ブロック要素末尾にゼロ幅スペースを追加し、読み上げ時の単語結合を防ぐ
-  '[&_p]::after:shr-content-[\\200B]',
-  '[&_h1]::after:shr-content-[\\200B]',
-  '[&_h2]::after:shr-content-[\\200B]',
-  '[&_h3]::after:shr-content-[\\200B]',
-  '[&_h4]::after:shr-content-[\\200B]',
-  '[&_li]::after:shr-content-[\\200B]',
-  '[&_blockquote]::after:shr-content-[\\200B]',
+  // VoiceOver対策: エディタ側と同じ。空のブロックは高さ0から1行分に伸びるため除外する
+  String.raw`[&_p:not(:empty)::after]:shr-content-['\200B']`,
+  String.raw`[&_h1:not(:empty)::after]:shr-content-['\200B']`,
+  String.raw`[&_h2:not(:empty)::after]:shr-content-['\200B']`,
+  String.raw`[&_h3:not(:empty)::after]:shr-content-['\200B']`,
+  String.raw`[&_h4:not(:empty)::after]:shr-content-['\200B']`,
 ] as const
