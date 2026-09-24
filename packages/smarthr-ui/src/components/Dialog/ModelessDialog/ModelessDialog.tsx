@@ -162,8 +162,7 @@ export const ModelessDialog: FC<Props> = ({
   onClickClose,
   ...rest
 }) => {
-  const baseId = useId()
-  const labelId = `${baseId}-label`
+  const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
