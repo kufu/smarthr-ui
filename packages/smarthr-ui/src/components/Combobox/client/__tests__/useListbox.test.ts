@@ -104,6 +104,91 @@ describe('useListbox', () => {
     })
   })
 
+  describe('キーボード操作時、activeOption の要素までスクロールすること', () => {
+    const EMPTY_RECT = {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      width: 0,
+      height: 0,
+      x: 0,
+      y: 0,
+      toJSON: () => '',
+    }
+
+    const createRect = (rect: Partial<DOMRect>) => ({ ...EMPTY_RECT, ...rect }) as DOMRect
+
+    // listBox(スクロールコンテナ)と、その中で data-active="true" を持つボタンの位置関係を再現する
+    const setupListBox = ({
+      containerRect,
+      activeRect,
+    }: {
+      containerRect: Partial<DOMRect>
+      activeRect: Partial<DOMRect>
+    }) => {
+      const listBox = document.createElement('div')
+      listBox.getBoundingClientRect = () => createRect(containerRect)
+
+      const activeButton = document.createElement('button')
+      activeButton.setAttribute('data-active', 'true')
+      activeButton.getBoundingClientRect = () => createRect(activeRect)
+      listBox.appendChild(activeButton)
+
+      result.current.listBoxProps.listBoxRef(listBox)
+
+      return listBox
+    }
+
+    it('activeOption の要素がコンテナ上端より上にある場合、上端に収まる位置までスクロールすること', () => {
+      const listBox = setupListBox({
+        containerRect: { top: 100, bottom: 200 },
+        activeRect: { top: 80, bottom: 100 },
+      })
+      listBox.scrollTop = 50
+
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
+
+      expect(listBox.scrollTop).toBe(30)
+    })
+
+    it('activeOption の要素がコンテナ下端より下にある場合、下端に収まる位置までスクロールすること', () => {
+      const listBox = setupListBox({
+        containerRect: { top: 0, bottom: 100 },
+        activeRect: { top: 90, bottom: 120 },
+      })
+      listBox.scrollTop = 0
+
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
+
+      expect(listBox.scrollTop).toBe(20)
+    })
+
+    it('activeOption の要素がコンテナ内に収まっている場合、スクロールしないこと', () => {
+      const listBox = setupListBox({
+        containerRect: { top: 0, bottom: 100 },
+        activeRect: { top: 10, bottom: 50 },
+      })
+      listBox.scrollTop = 5
+
+      act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
+
+      expect(listBox.scrollTop).toBe(5)
+    })
+
+    it('マウス操作(pointer)による選択の場合、スクロールしないこと', () => {
+      const listBox = setupListBox({
+        containerRect: { top: 100, bottom: 200 },
+        activeRect: { top: 80, bottom: 100 },
+      })
+      listBox.scrollTop = 50
+
+      act(() => result.current.listBoxProps.handleHoverOption(options[0]))
+
+      expect(listBox.scrollTop).toBe(50)
+    })
+  })
+
   describe('calculateRect による横方向の位置の算出', () => {
     const VIEWPORT_WIDTH = 1000
     // theme.spacingByChar(0.5) 相当の、ビューポート右端に残す余白
@@ -165,7 +250,7 @@ describe('useListbox', () => {
       const renderHookResult = renderHook((p) => useListbox(p), { initialProps: props })
 
       // ListBox がレンダリングされた状態を再現し、実測値が得られる状態で再計算させる
-      renderHookResult.result.current.listBoxProps.listBoxRef.current = listBox
+      renderHookResult.result.current.listBoxProps.listBoxRef(listBox)
       renderHookResult.rerender({ ...props, options: [...options] })
 
       return renderHookResult.result.current.listBoxProps.listBoxRect.left

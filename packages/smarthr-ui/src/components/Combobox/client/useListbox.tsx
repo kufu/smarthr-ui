@@ -4,12 +4,11 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
+  type RefCallback,
   type RefObject,
   memo,
-  useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -17,6 +16,8 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
@@ -123,9 +124,6 @@ export const useListbox = <T,>({
     })
   }
 
-  const listBoxRef = useRef<HTMLDivElement>(null)
-  const activeRef = useRef<HTMLButtonElement>(null)
-
   const theme = useTheme()
 
   const addFrame = useAnimationFrame()
@@ -134,6 +132,8 @@ export const useListbox = <T,>({
   const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
+    let listBox: HTMLElement | null = null
+
     const moveActiveOptionIndex = (currentActive: ComboboxOption<T> | null, delta: -1 | 1) => {
       if (latest.options.every((option) => option.item.disabled)) {
         return
@@ -163,16 +163,20 @@ export const useListbox = <T,>({
     }
 
     return {
+      baseCallbackRef: (node: HTMLElement | null) => {
+        listBox = node
+      },
       calculateRect: () => {
-        if (!listBoxRef.current || !latest.triggerRef.current) {
+        if (!listBox || !latest.triggerRef.current) {
           return
         }
+
         const rect = latest.triggerRef.current.getBoundingClientRect()
         const bottomSpace = window.innerHeight - rect.bottom
         const topSpace = rect.top
         const listBoxHeight = Math.min(
-          listBoxRef.current.scrollHeight,
-          parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
+          listBox.scrollHeight,
+          parseInt(getComputedStyle(listBox).maxHeight, 10),
         )
         const offset = 2
 
@@ -196,7 +200,7 @@ export const useListbox = <T,>({
         }
 
         // HINT: dropdownWidth は 'auto' や '%' などの CSS 値を取りうるため、算出済みの幅を実測して判定する
-        const listBoxWidth = listBoxRef.current.getBoundingClientRect().width
+        const listBoxWidth = listBox.getBoundingClientRect().width
         // ドロップダウンの幅は maxWidth でビューポート右端から余白分を残すよう制限しているため、位置の判定にも同じ余白を使う
         const viewportMargin = parseInt(latest.theme.spacingByChar(0.5), 10)
         // 入力欄の左端を起点に右方向へ表示する場合に使える幅
@@ -267,6 +271,32 @@ export const useListbox = <T,>({
     }
   }, [hasOnAdd, latest])
 
+  const listBoxLayoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
+      if (!node || activeOption === null || navigationType !== 'key') {
+        return
+      }
+
+      const activeElement = node.querySelector<HTMLElement>('button[data-active="true"]')
+
+      if (!activeElement) {
+        return
+      }
+
+      const activeRect = activeElement.getBoundingClientRect()
+      const containerRect = node.getBoundingClientRect()
+
+      if (activeRect.top < containerRect.top) {
+        node.scrollTop -= containerRect.top - activeRect.top
+      } else if (activeRect.bottom > containerRect.bottom) {
+        node.scrollTop += activeRect.bottom - containerRect.bottom
+      }
+    },
+    [activeOption, navigationType],
+  )
+  const mergedListBoxRef = useMergeRefs(listBoxLayoutEffectRef, functions.baseCallbackRef)
+
   useEnhancedEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
@@ -286,27 +316,6 @@ export const useListbox = <T,>({
     // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
   }, [isExpanded, options, functions])
 
-  useEffect(() => {
-    // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
-    if (
-      !activeRef.current ||
-      !listBoxRef.current ||
-      activeOption === null ||
-      navigationType !== 'key'
-    ) {
-      return
-    }
-
-    const activeRect = activeRef.current.getBoundingClientRect()
-    const containerRect = listBoxRef.current.getBoundingClientRect()
-
-    if (activeRect.top < containerRect.top) {
-      listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
-    } else if (activeRect.bottom > containerRect.bottom) {
-      listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
-    }
-  }, [activeOption, navigationType])
-
   return {
     listBoxProps: {
       activeOptionId: activeOption?.id,
@@ -316,11 +325,10 @@ export const useListbox = <T,>({
       dropdownHelpMessage,
       noResultText,
       listBoxId,
-      listBoxRef,
+      listBoxRef: mergedListBoxRef,
       handleAdd: functions.handleAdd,
       handleHoverOption: functions.handleHoverOption,
       handleSelect: functions.handleSelect,
-      activeRef,
       listBoxRect,
       triggerWidth,
       dropdownWidth,
@@ -340,11 +348,10 @@ type ListBoxProps<T> = {
   noResultText?: ReactNode
   dropdownHelpMessage?: ReactNode
   listBoxId: string
-  listBoxRef: RefObject<HTMLDivElement>
+  listBoxRef: RefCallback<HTMLDivElement>
   handleAdd: ((option: ComboboxOption<T>) => void) | undefined
   handleHoverOption: (option: ComboboxOption<T>) => void
   handleSelect: (option: ComboboxOption<T>) => void
-  activeRef: RefObject<HTMLButtonElement>
   listBoxRect: { top: number; left: number; height?: number }
   triggerWidth: number
   dropdownWidth?: string | number
@@ -364,7 +371,6 @@ export const ListBox = memo(
     handleAdd,
     handleHoverOption,
     handleSelect,
-    activeRef,
     listBoxRect,
     triggerWidth,
     dropdownWidth,
@@ -497,9 +503,9 @@ export const ListBox = memo(
                 <ItemButton
                   {...optionRest}
                   key={id}
-                  activeRef={id === activeOptionId ? activeRef : undefined}
                   id={id}
                   disabled={disabled}
+                  active={id === activeOptionId}
                   label={label}
                 />
               ))
