@@ -1,20 +1,15 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  type ComponentProps as IconProps,
-  WarningIcon,
-} from '../Icon'
+import { type ComponentProps as IconProps, StatusIcon } from '../Icon'
 import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
-type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
+type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt' | 'role'>> & {
   size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  status?: keyof typeof STATUS_ICON_MAPPER
+  status?: ComponentPropsWithoutRef<typeof StatusIcon>['status']
+  /** role 属性 */
+  role?: 'alert' | 'status'
 }
 
 export const classNameGenerator = tv({
@@ -30,13 +25,7 @@ export const classNameGenerator = tv({
   },
 })
 
-const STATUS_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  warning: WarningIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-} as const
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
 export const ResponseMessage: FC<Props> = ({
   status = 'info',
@@ -47,13 +36,19 @@ export const ResponseMessage: FC<Props> = ({
   ...rest
 }) => {
   const iconClassName = useMemo(() => classNameGenerator({ status }), [status])
-  const TextIcon = STATUS_ICON_MAPPER[status]
 
   return (
-    <Text size={size} className={className} icon={<TextIcon {...rest} className={iconClassName} />}>
-      <LiveRegion role={role} className="shr-contents">
+    <LiveRegion
+      role={role || (ROLE_STATUS_TYPE_REGEX.test(status) ? 'status' : 'alert')}
+      className="shr-contents"
+    >
+      <Text
+        size={size}
+        className={className}
+        icon={<StatusIcon {...rest} status={status} className={iconClassName} />}
+      >
         {children}
-      </LiveRegion>
-    </Text>
+      </Text>
+    </LiveRegion>
   )
 }
