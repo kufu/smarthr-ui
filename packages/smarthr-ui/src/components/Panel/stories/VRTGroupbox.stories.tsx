@@ -3,10 +3,10 @@ import { Stack } from '../../Layout'
 import { BgColor, Padding, Rounded } from './Groupbox.stories'
 
 import type { Groupbox } from '../Groupbox'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
-  title: 'Components/Panel/Groupbox/VRT',
+  title: 'Components/Base/BaseColumn/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}

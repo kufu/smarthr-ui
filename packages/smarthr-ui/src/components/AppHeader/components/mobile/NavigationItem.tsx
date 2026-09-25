@@ -32,8 +32,8 @@ export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation })
     return (
       <NavigationCustomTag
         {...navigation}
-        handleClickNavigation={handleClickNavigation}
         className={`${className} ${navigation.className}`}
+        handleClickNavigation={handleClickNavigation}
       />
     )
   }
@@ -46,8 +46,8 @@ export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation })
     return (
       <NavigationButton
         navigation={navigation}
-        handleClickNavigation={handleClickNavigation}
         className={className}
+        handleClickNavigation={handleClickNavigation}
       />
     )
   }
@@ -77,7 +77,7 @@ const NavigationCustomTag = memo<
     )
 
     return (
-      <Tag {...rest} onClick={handleDelegateClick} className={actualClassName}>
+      <Tag {...rest} className={actualClassName} onClick={handleDelegateClick}>
         <Translate>{children}</Translate>
       </Tag>
     )
@@ -111,10 +111,10 @@ const NavigationButton: FC<
     <CommonButton
       elementAs="button"
       type="button"
-      handleClick={functions.handleClick}
       current={navigation.current}
       boldWhenCurrent
       className={className}
+      handleClick={functions.handleClick}
     >
       <Translate>{navigation.children}</Translate>
     </CommonButton>
@@ -148,7 +148,7 @@ const NavigationGroupMenuButton: FC<{ navigation: NavigationGroup }> = ({ naviga
   )
 
   return (
-    <MenuButton handleClick={functions.handleClick} isCurrent={isCurrent}>
+    <MenuButton isCurrent={isCurrent} handleClick={functions.handleClick}>
       {navigation.children}
     </MenuButton>
   )

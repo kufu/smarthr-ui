@@ -35,7 +35,7 @@ export const ErrorScreen: FC<Props> = ({ logo, title, links, children, className
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Center {...rest} minHeight="100vh" verticalCentering className={actualClassName}>
+    <Center {...rest} verticalCentering minHeight="100vh" className={actualClassName}>
       <Stack gap={1.5} align="center" className="[&&&]:shr-my-auto">
         <div className="smarthr-ui-ErrorScreen-logo">
           {logo || <SmartHRLogo fill="brand" className="shr-p-0.75" />}

@@ -9,11 +9,13 @@ import {
   useRef,
   useState,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type BaseProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
+type BaseProps = PropsWithChildren<{
+  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+}>
 type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -45,7 +47,7 @@ const classNameGenerator = tv({
       6: {
         clampedLine: 'shr-line-clamp-[6]',
       },
-    },
+    } satisfies Record<NonNullable<BaseProps['maxLines']>, { clampedLine: string }>,
   },
   compoundVariants: [
     {
@@ -107,8 +109,8 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
-      <span aria-hidden className={classNames.shadowElementWrapper}>
-        <span className={classNames.shadowElement} ref={shadowRef}>
+      <span className={classNames.shadowElementWrapper} aria-hidden>
+        <span ref={shadowRef} className={classNames.shadowElement}>
           {children}
         </span>
       </span>

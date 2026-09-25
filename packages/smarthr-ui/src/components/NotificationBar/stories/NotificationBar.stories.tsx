@@ -6,7 +6,7 @@ import { Text } from '../../Text'
 import { TextLink } from '../../TextLink'
 import { NotificationBar } from '../NotificationBar'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export const sampleChildrens = {
   String: 'NotificationBar が表示されました',

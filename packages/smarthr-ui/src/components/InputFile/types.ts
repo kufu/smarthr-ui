@@ -1,8 +1,13 @@
-import type { classNameGenerator } from './style'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
-import type { VariantProps } from 'tailwind-variants'
 
-type BaseProps = VariantProps<typeof classNameGenerator> & {
+export type PreviewableObjectType = {
+  /** プレビューダイアログ内のFileViewerで検索機能を有効にするかどうか */
+  searchable?: boolean
+}
+
+type BaseProps = {
+  /** コンポーネントのサイズ */
+  size?: 'M' | 'S'
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
@@ -10,7 +15,7 @@ type BaseProps = VariantProps<typeof classNameGenerator> & {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** ファイルのプレビュー機能を有効にするかどうか */
-  previewable?: boolean
+  previewable?: boolean | PreviewableObjectType
   error?: boolean
   multiple?:
     | boolean
@@ -20,3 +25,6 @@ type BaseProps = VariantProps<typeof classNameGenerator> & {
       }
 }
 export type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
+export type LowerProps = Omit<Props, 'previewable'> & {
+  previewable: PreviewableObjectType | undefined
+}

@@ -51,7 +51,7 @@ const FooterCluster = memo<
   Pick<MessageDialogContentInnerProps, 'handleClickClose' | 'closeButton'>
 >(({ handleClickClose, closeButton }) => (
   <Cluster as="footer" justify="flex-end" className={CLASS_NAMES.actionArea}>
-    <Button onClick={handleClickClose} className="smarthr-ui-Dialog-closeButton">
+    <Button className="smarthr-ui-Dialog-closeButton" onClick={handleClickClose}>
       {closeButton ?? (
         <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
       )}

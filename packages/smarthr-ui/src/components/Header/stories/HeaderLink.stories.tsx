@@ -1,8 +1,7 @@
-import { backgroundColor } from '../../../tailwind'
 import { FaRegCircleQuestionIcon } from '../../Icon'
 import { HeaderLink } from '../HeaderLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Header/HeaderLink',
@@ -11,10 +10,8 @@ export default {
   args: {
     href: '#',
   },
+  globals: { backgrounds: { value: 'brand' } },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
-    },
     chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof HeaderLink>
@@ -37,9 +34,5 @@ export const EnableNew: StoryObj<typeof HeaderLink> = {
     prefix: <FaRegCircleQuestionIcon />,
     enableNew: true,
   },
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
-  },
+  globals: { backgrounds: { value: 'white' } },
 }

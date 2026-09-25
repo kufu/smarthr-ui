@@ -1,15 +1,12 @@
-'use client'
-
 import {
   type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
   forwardRef,
-  useContext,
 } from 'react'
 
-import { LevelContext } from './levelContext'
+import { SectioningFragment } from './client/components'
 
 type BaseProps = PropsWithChildren<{
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
@@ -30,20 +27,11 @@ const SectioningContent = forwardRef<HTMLElement, PropsWithAs>(
 
 export const Section: FC<Props> = SectioningContent
 export const Article: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
-  <SectioningContent {...props} ref={ref} as="article" />
+  <SectioningContent {...props} as="article" ref={ref} />
 ))
 export const Aside: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
-  <SectioningContent {...props} ref={ref} as="aside" />
+  <SectioningContent {...props} as="aside" ref={ref} />
 ))
 export const Nav: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
-  <SectioningContent {...props} ref={ref} as="nav" />
+  <SectioningContent {...props} as="nav" ref={ref} />
 ))
-
-export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
-  children,
-  baseLevel,
-}) => {
-  const level = useContext(LevelContext)
-
-  return <LevelContext.Provider value={baseLevel || level + 1}>{children}</LevelContext.Provider>
-}

@@ -2,7 +2,7 @@ import { action } from 'storybook/actions'
 
 import { HelpLink } from '../HelpLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'
 
 const _elementAsOptions = {

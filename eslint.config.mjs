@@ -1,6 +1,9 @@
 import smarthr from 'eslint-config-smarthr'
+import perfectionist from 'eslint-plugin-perfectionist'
 import storybook from 'eslint-plugin-storybook'
+
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
+import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -13,11 +16,73 @@ export default [
       'local-rules': {
         rules: {
           'best-practice-for-use-latest': bestPracticeForUseLatest,
+          'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
         },
       },
+      perfectionist,
     },
     rules: {
       'local-rules/best-practice-for-use-latest': 'error',
+      'local-rules/best-practice-for-use-layout-effect-ref': 'error',
+      'perfectionist/sort-jsx-props': [
+        'error',
+        {
+          type: 'unsorted',
+          groups: [
+            'key', 'as', 'namedAs', 'ref', 'namedRef',
+            'role', 'type', 'id', 'htmlFor', 'form',
+            'name', 'required', 'disabled', 'readOnly', 'value', 'checked',
+            'linkAttribute',
+            'unknown',
+            'tabIndex',
+            'title',
+            'styleType', 'size', 'width', 'decoration', 'className', 'style',
+            'ariaAttribute', 'dataAttribute',
+            'functions', 'setCallback', 'onCallback', 'handleCallback',
+            'prefix', 'headerLike', 'trigger', 'children', 'items', 'button', 'suffix',
+          ],
+          customGroups: [
+            { groupName: 'key', elementNamePattern: '^key$' },
+            { groupName: 'as', elementNamePattern: '^as$' },
+            { groupName: 'namedAs', elementNamePattern: '^.+As$' },
+            { groupName: 'ref', elementNamePattern: '^ref$' },
+            { groupName: 'namedRef', elementNamePattern: '^.+Ref$' },
+            { groupName: 'role', elementNamePattern: '^role$' },
+            { groupName: 'type', elementNamePattern: '^type$' },
+            { groupName: 'id', elementNamePattern: '(^id|Id)$' },
+            { groupName: 'htmlFor', elementNamePattern: '^htmlFor$' },
+            { groupName: 'form', elementNamePattern: '^form$' },
+            { groupName: 'name', elementNamePattern: '^name$' },
+            { groupName: 'required', elementNamePattern: '^required$' },
+            { groupName: 'disabled', elementNamePattern: '^disabled(Reason)?$' },
+            { groupName: 'readOnly', elementNamePattern: '^readOnly$' },
+            { groupName: 'value', elementNamePattern: '^(value|defaultValue)$' },
+            { groupName: 'checked', elementNamePattern: '^(checked|selected(.+)?)$' },
+            { groupName: 'linkAttribute', elementNamePattern: '^(href|target|rel)$' },
+            { groupName: 'tabIndex', elementNamePattern: '^tabIndex$' },
+            { groupName: 'title', elementNamePattern: '^title$' },
+            { groupName: 'styleType', elementNamePattern: '^(styleType|variant)$' },
+            { groupName: 'size', elementNamePattern: '^size$' },
+            { groupName: 'setCallback', elementNamePattern: '^set[A-Z]' },
+            { groupName: 'width', elementNamePattern: '((^w|W)idth|(^h|H)eight)$' },
+            { groupName: 'decoration', elementNamePattern: '^(color|wide|weight|leading|triggerType|innerMargin|padding)$' },
+            { groupName: 'className', elementNamePattern: '(^c|C)lassName(s)?$' },
+            { groupName: 'style', elementNamePattern: '^style$' },
+            { groupName: 'ariaAttribute', elementNamePattern: '^aria' },
+            { groupName: 'dataAttribute', elementNamePattern: '^data-' },
+            { groupName: 'functions', elementNamePattern: '^functions$' },
+            { groupName: 'onCallback', elementNamePattern: '^on[A-Z]' },
+            { groupName: 'handleCallback', elementNamePattern: '^handle[A-Z]' },
+            { groupName: 'prefix', elementNamePattern: '^(prefix|icon)$' },
+            { groupName: 'headerLike', elementNamePattern: '^(header|heading|label|legend)$' },
+            { groupName: 'trigger', elementNamePattern: '^trigger$' },
+            { groupName: 'children', elementNamePattern: '^(children|message)$' },
+            { groupName: 'items', elementNamePattern: '((^i|I)tems|(^o|O)ptions)$' },
+            { groupName: 'button', elementNamePattern: 'Button$' },
+            { groupName: 'suffix', elementNamePattern: '(^suffix|^footer|^subActionArea|Message)$' },
+          ],
+        },
+      ],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/consistent-type-imports': [
         'error',
@@ -53,7 +118,12 @@ export default [
       ],
       'jsx-a11y/no-static-element-interactions': 'error',
       'jsx-a11y/role-has-required-aria-props': 'error',
-      'react-hooks/exhaustive-deps': 'error',
+      'react-hooks/exhaustive-deps': [
+        'error',
+        {
+          additionalHooks: '(useLayoutEffectRef|useEnhancedEffect)',
+        },
+      ],
       'smarthr/a11y-anchor-has-href-attribute': [
         'error',
         {
@@ -93,6 +163,19 @@ export default [
         {
           selector: 'ImportNamespaceSpecifier',
           message: 'import * as は使用できません。個別にimportしてください。',
+        },
+      ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'tailwind-variants',
+              importNames: ['VariantProps'],
+              message:
+                'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
+            },
+          ],
         },
       ],
     },

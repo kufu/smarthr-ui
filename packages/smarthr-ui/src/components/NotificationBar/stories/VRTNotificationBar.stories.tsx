@@ -7,7 +7,10 @@ import {
   sampleSubActionAreas,
 } from './NotificationBar.stories'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
+import type { ComponentProps } from 'react'
+
+type Props = ComponentProps<typeof NotificationBar>
 
 /* ペアワイズ法による網羅
 base  bold   type     children   subActionArea  layer      onClose  */
@@ -51,13 +54,13 @@ none  true   info     String     undefined      undefined  yes
     const [base, bold, type, children, subActionArea, layer, onClose] = l.split(' ')
 
     return {
-      base,
-      bold,
-      type,
+      base: base as Props['base'],
+      bold: bold === 'true',
+      type: type as Props['type'],
       children: children === 'String' ? sampleChildrens.String : sampleChildrens.ReactNode,
       subActionArea:
         subActionArea === 'ReactNode' ? sampleSubActionAreas.ReactNode : sampleSubActionAreas.なし,
-      layer: layer === 'undefined' ? undefined : parseInt(layer, 10),
+      layer: layer === 'undefined' ? undefined : (parseInt(layer, 10) as Props['layer']),
       onClose: onClose === 'yes' ? sampleOnCloseHandlers.あり : sampleOnCloseHandlers.なし,
     }
   })

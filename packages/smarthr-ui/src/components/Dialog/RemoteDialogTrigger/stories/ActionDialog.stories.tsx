@@ -4,7 +4,7 @@ import { Button } from '../../../Button'
 import { ActionDialog } from '../ActionDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 /** props は [ActionDialog](./?path=/docs/dialog（ダイアログ）-dialog-actiondialog--docs) を参照してください。 */
 export default {
@@ -18,12 +18,12 @@ export default {
       <ActionDialog
         {...args}
         id="remote-dialog"
-        heading="リモートトリガーアクションダイアログ"
-        actionButton="アクション"
         onClickAction={(e, { close }) => {
           action('onClickAction')(e)
           close()
         }}
+        heading="リモートトリガーアクションダイアログ"
+        actionButton="アクション"
       >
         <p>リモートトリガーアクションダイアログです。</p>
       </ActionDialog>

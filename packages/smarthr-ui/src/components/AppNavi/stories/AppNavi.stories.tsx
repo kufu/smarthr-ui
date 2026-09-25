@@ -9,7 +9,7 @@ import { AppNaviButton } from '../AppNaviButton'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 import type { FC, ReactNode } from 'react'
 
 const Link: FC<{
@@ -35,7 +35,7 @@ export const Template: StoryFn<typeof AppNavi> = (args) => (
         <AnchorButton href="#">その他</AnchorButton>
       </DropdownMenuGroup>
     </AppNaviDropdownMenuButton>
-    <AppNaviCustomTag tag={Link} href="/">
+    <AppNaviCustomTag href="/" tag={Link}>
       カスタムタグ
     </AppNaviCustomTag>
   </AppNavi>

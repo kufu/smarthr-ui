@@ -31,6 +31,7 @@ export const Playground: Story = {
     },
     thickness: 'S',
     tone: 1,
+    rounded: false,
     children: (
       <>
         <Text size="XXL" weight="bold">
@@ -46,6 +47,7 @@ export const Playground: Story = {
     data: { control: 'object' },
     thickness: { control: 'radio', options: ['S', 'M', 'L'] },
     tone: { control: { type: 'range', min: 1, max: 5, step: 1 } },
+    rounded: { control: 'boolean' },
   },
 }
 
@@ -75,5 +77,62 @@ export const WithCenterContent: Story = {
         </Text>
       </>
     ),
+  },
+}
+
+export const Rounded: Story = {
+  name: 'rounded',
+  args: {
+    data: {
+      labels: ['インストール済', '未インストール'],
+      datasets: [{ data: [780, 420] }],
+    },
+    rounded: true,
+  },
+}
+
+export const TinyValue: Story = {
+  name: 'with tiny value',
+  args: {
+    data: {
+      labels: ['インストール済', '未インストール'],
+      datasets: [{ data: [30, 9970] }],
+    },
+    children: (
+      <Text size="XXL" weight="bold">
+        0%
+      </Text>
+    ),
+  },
+}
+
+export const RoundedTinyValue: Story = {
+  name: 'rounded with tiny value',
+  args: {
+    ...TinyValue.args,
+    rounded: true,
+  },
+}
+
+export const Empty: Story = {
+  name: 'with empty data',
+  args: {
+    data: {
+      labels: ['インストール済', '未インストール'],
+      datasets: [{ data: [0, 0] }],
+    },
+    children: (
+      <Text size="XXL" weight="bold">
+        0%
+      </Text>
+    ),
+  },
+}
+
+export const RoundedEmpty: Story = {
+  name: 'rounded with empty data',
+  args: {
+    ...Empty.args,
+    rounded: true,
   },
 }

@@ -75,7 +75,7 @@ export const AppNavi: FC<Props> = ({
   const wrapperClassName = useMemo(() => wrapper({ className }), [className])
 
   return (
-    <Nav {...rest} aria-labelledby={labelId} className={wrapperClassName}>
+    <Nav {...rest} className={wrapperClassName} aria-labelledby={labelId}>
       <MemoizedStatusLabel id={labelId}>{label}</MemoizedStatusLabel>
       <ul className={classNames.buttonsEl}>
         {buttons &&
@@ -103,7 +103,7 @@ export const AppNavi: FC<Props> = ({
 const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
   ({ id, children }) =>
     children && (
-      <StatusLabel aria-hidden={true} id={id} className={classNames.statusLabel}>
+      <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>
         {children}
       </StatusLabel>
     ),

@@ -2,7 +2,15 @@ import { darken, rgba, transparentize } from 'polished'
 
 import { merge } from '../libs/lodash'
 
+// TODO: リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
+// 可能性があるため残している。利用状況を確認し、使われていなければ削除する:
+// import type { TextColors } from 'smarthr-ui/lib/themes/createColor'
+/** @public */
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
+// TODO: リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
+// 可能性があるため残している。利用状況を確認し、使われていなければ削除する:
+// import type { GreyScaleColors } from 'smarthr-ui/lib/themes/createColor'
+/** @public */
 export type GreyScaleColors =
   | keyof typeof greyScale
   | 'BACKGROUND'

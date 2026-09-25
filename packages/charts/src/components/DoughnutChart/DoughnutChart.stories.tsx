@@ -36,6 +36,7 @@ export const Playground: Story = {
     title: { control: 'text' },
     thickness: { control: 'radio', options: ['S', 'M', 'L'] },
     options: { control: 'object' },
+    disablePatterns: { control: 'boolean' },
   },
 }
 
@@ -50,6 +51,14 @@ export const Title: Story = {
   args: {
     data: doughnutSmall,
     title: '雇用形態の内訳',
+  },
+}
+
+export const WithoutPattern: Story = {
+  name: 'disablePatterns',
+  args: {
+    data: doughnutSmall,
+    disablePatterns: true,
   },
 }
 

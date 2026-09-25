@@ -40,9 +40,9 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
 
   return (
     <UnstyledButton
+      className={classNames.wrapper}
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
-      className={classNames.wrapper}
     >
       {Icon && <Icon className={classNames.icon} />}
       {children}

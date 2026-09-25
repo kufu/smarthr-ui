@@ -3,7 +3,7 @@ import { Stack } from '../../Stack'
 import { Sidebar } from '../Sidebar'
 
 import type { Gap } from '../../../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
   title: 'Components/Layout/Sidebar',

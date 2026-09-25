@@ -1,7 +1,6 @@
-import { backgroundColor } from '../../../tailwind'
 import { AppLauncher } from '../AppLauncher'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const apps = [
   {
@@ -61,10 +60,8 @@ export default {
   args: {
     apps,
   },
+  globals: { backgrounds: { value: 'brand' } },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
-    },
     chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof AppLauncher>
@@ -83,9 +80,5 @@ export const EnableNew: StoryObj<typeof AppLauncher> = {
   args: {
     enableNew: true,
   },
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.white }],
-    },
-  },
+  globals: { backgrounds: { value: 'white' } },
 }

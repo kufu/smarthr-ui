@@ -4,7 +4,7 @@ import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _primaryButtonOptions = {
   'あり（省略不可）': <Button variant="primary">プライマリーボタン</Button>,
@@ -99,7 +99,7 @@ export const Bottom: StoryObj<typeof FloatArea> = {
   render: (args) => (
     <Stack gap={1.5}>
       {[...Array(15)].map((_, index) => (
-        <Panel padding={1.5} key={index}>
+        <Panel key={index} padding={1.5}>
           <p>bottom を確認するための Panel</p>
         </Panel>
       ))}

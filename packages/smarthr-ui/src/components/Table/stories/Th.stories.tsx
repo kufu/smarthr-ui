@@ -5,7 +5,7 @@ import { Stack } from '../../Layout'
 import { Table } from '../Table'
 import { Th } from '../Th'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof Th> = (args) => (
   <Table>

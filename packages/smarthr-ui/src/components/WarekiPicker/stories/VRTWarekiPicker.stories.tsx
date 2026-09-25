@@ -2,9 +2,9 @@ import dayjs from 'dayjs'
 import { userEvent, within } from 'storybook/test'
 
 import { Cluster } from '../../Layout'
-import { WarekiPicker } from '../WarekiPicker'
+import { WarekiPicker } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/WarekiPicker/VRT',
@@ -28,26 +28,26 @@ export default {
             <WarekiPicker
               {...args}
               name="warekipicker_default"
-              error={m.error}
               disabled={m.disabled}
+              error={m.error}
             />
             <WarekiPicker
               name="warekipicker_value"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
             />
             <WarekiPicker
               name="warekipicker_width"
-              error={m.error}
               disabled={m.disabled}
+              error={m.error}
               width={width}
             />
             <WarekiPicker
               name="warekipicker_formatdate"
-              error={m.error}
               disabled={m.disabled}
               value={value}
+              error={m.error}
               formatDate={formatDate}
             />
           </>

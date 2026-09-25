@@ -5,7 +5,7 @@ import { TextLink } from '../../TextLink'
 import { Timeline } from '../Timeline'
 import { TimelineItem } from '../TimelineItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Timeline/VRT',
@@ -20,7 +20,7 @@ export default {
         datetime="2025-06-09T00:00:00.000Z"
         dateSuffixArea={
           <Cluster align="center">
-            <Button size="S" variant="text">
+            <Button variant="text" size="S">
               ボタン
             </Button>
             <TextLink href="https://smarthr.design/" size="S">
@@ -39,7 +39,7 @@ export default {
         timeFormat="HH:mm:ss"
         dateSuffixArea={
           <Cluster align="center">
-            <Button size="S" variant="text">
+            <Button variant="text" size="S">
               ボタン
             </Button>
             <TextLink href="https://smarthr.design/" size="S">

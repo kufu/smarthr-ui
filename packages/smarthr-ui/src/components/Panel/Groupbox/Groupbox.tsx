@@ -1,11 +1,15 @@
 import { type ComponentProps, type FC, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../../tailwind'
 import { Panel } from '../Panel'
 
-type BaseProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> &
-  VariantProps<typeof classNameGenerator>
+type BaseProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> & {
+  /** 背景色 */
+  bgColor?: keyof typeof backgroundColor
+  /** 角丸を適用する範囲 */
+  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+}
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -19,8 +23,9 @@ const classNameGenerator = tv({
       right: 'shr-rounded-r-l',
       bottom: 'shr-rounded-b-l',
       left: 'shr-rounded-l-l',
-    },
+    } satisfies Record<Exclude<NonNullable<BaseProps['rounded']>, boolean> | 'true', string>,
   },
+  // TODO: tailwindの場合のみdefault値が設定される挙動はバグの原因になりかねないので整理する
   defaultVariants: {
     bgColor: 'COLUMN',
     rounded: false,
@@ -33,5 +38,5 @@ export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, 
     [bgColor, rounded, className],
   )
 
-  return <Panel {...rest} padding={padding} layer={0} className={actualClassName} />
+  return <Panel {...rest} layer={0} padding={padding} className={actualClassName} />
 }

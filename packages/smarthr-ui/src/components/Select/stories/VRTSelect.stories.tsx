@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Select } from '../Select'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 /**
@@ -28,7 +28,7 @@ export default {
   render: (args) => (
     <Stack align="flex-start" gap={2}>
       {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <Stack id={id} align="flex-start" key={id}>
+        <Stack key={id} id={id} align="flex-start">
           {_cases.map((props, i) => (
             <Select {...args} {...props} key={i} />
           ))}

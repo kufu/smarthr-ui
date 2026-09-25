@@ -2,11 +2,10 @@ import { action } from 'storybook/actions'
 
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { CurrencyInput } from '../CurrencyInput'
-import { Input, backgroundColor } from '../Input'
 import { SearchInput } from '../SearchInput'
+import { CurrencyInput, Input } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _affixOptions = {
   あり: <FaMagnifyingGlassIcon alt="検索" />,
@@ -49,7 +48,7 @@ export const Type: StoryObj<typeof Input> = {
         (type) => (
           <label key={type}>
             {`${type ?? '未指定'}： `}
-            <Input {...args} type={type} key={type} />
+            <Input {...args} key={type} type={type} />
           </label>
         ),
       )}
@@ -89,11 +88,18 @@ export const BgColor: StoryObj<typeof Input> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {([undefined, ...Object.keys(backgroundColor)] as Array<keyof typeof backgroundColor>).map(
-        (bgColor) => (
-          <Input {...args} bgColor={bgColor} key={bgColor} />
-        ),
-      )}
+      {[
+        undefined,
+        'background',
+        'column',
+        'base-grey',
+        'over-background',
+        'head',
+        'border',
+        'action-background',
+      ].map((bgColor) => (
+        <Input {...args} key={bgColor} bgColor={bgColor} />
+      ))}
     </Stack>
   ),
 }
@@ -110,7 +116,7 @@ export const Width: StoryObj<typeof Input> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 500].map((width) => (
-        <Input {...args} width={width} key={width} />
+        <Input {...args} key={width} width={width} />
       ))}
     </Stack>
   ),
@@ -121,9 +127,6 @@ export const ReadOnly: StoryObj<typeof Input> = {
   args: {
     readOnly: true,
     value: '読み取り専用',
-  },
-  parameters: {
-    backgrounds: { values: [{ name: 'light', value: backgroundColor.white }] },
   },
 }
 
