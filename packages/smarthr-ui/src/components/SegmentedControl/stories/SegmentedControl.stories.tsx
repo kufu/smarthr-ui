@@ -24,13 +24,14 @@ export default {
   render: (args) => <SegmentedControl {...args} />,
   args: {
     options: [
-      { value: 'departments', content: '部署' },
-      { value: 'crew', content: '従業員' },
-      { value: 'both', content: '部署と従業員' },
+      { value: 'departments', content: '部署', ariaLabel: '部署' },
+      { value: 'crew', content: '従業員', ariaLabel: '従業員' },
+      { value: 'both', content: '部署と従業員', ariaLabel: '部署と従業員' },
     ],
     value: 'departments',
     onClickOption: (value) => action('onClickOption')(value),
     size: 'M',
+    ariaLabel: '',
     className: '',
   },
   parameters: {
