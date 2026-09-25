@@ -459,11 +459,6 @@ export const ListBox = memo(
 
     return createPortal(
       <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
-        {isExpanded && isLoading && (
-          <LiveRegion visuallyHidden={true}>
-            <Localizer id="smarthr-ui/Combobox/loadingText" defaultText="処理中" />
-          </LiveRegion>
-        )}
         <Scroller
           ref={listBoxRef}
           role="listbox"
@@ -486,7 +481,7 @@ export const ListBox = memo(
           {isExpanded ? (
             isLoading ? (
               <div className={CLASS_NAMES.loaderWrapper}>
-                <Loader aria-hidden />
+                <Loader />
               </div>
             ) : options.length === 0 ? (
               <LiveRegion className={CLASS_NAMES.noItems}>
