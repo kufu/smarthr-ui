@@ -8,7 +8,7 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
   // HINT: containerがDOMに接続される前に子を描画すると、子孫のref attach時点で
   // getBoundingClientRectやfocusが効かない(ModelessDialogの中央寄せずれの原因)。
   // 接続後にのみ描画するためのフラグ
-  const [isAttached, setIsAttached] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
   useLayoutEffect(() => {
     if (!portalContainer) {
@@ -23,7 +23,10 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
     const actualParent = parentElement || document.body
 
     actualParent.appendChild(portalContainer)
-    setIsAttached(true)
+    // HINT: appendChildが成功してもactualParent自体がdocumentに未接続だと
+    // portalContainerも未接続のままになる(portalParentに未接続要素を渡された場合)。
+    // isConnectedで実際の接続有無を確認する
+    setIsMounted(portalContainer.isConnected)
 
     return () => {
       actualParent.removeChild(portalContainer)
@@ -33,8 +36,8 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
   return {
     createPortal: useCallback(
       (children: ReactNode) =>
-        portalContainer && isAttached ? createPortal(children, portalContainer) : null,
-      [portalContainer, isAttached],
+        portalContainer && isMounted ? createPortal(children, portalContainer) : null,
+      [portalContainer, isMounted],
     ),
   }
 }
