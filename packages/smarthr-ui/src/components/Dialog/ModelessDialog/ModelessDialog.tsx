@@ -211,6 +211,7 @@ export const ModelessDialog: FC<Props> = ({
     bottom,
     defaultPosition,
     centering,
+    position,
     localize,
     liveRegionFrame,
   })
@@ -373,19 +374,20 @@ export const ModelessDialog: FC<Props> = ({
             setCentering(nextCentering)
           }
 
-          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
-          setDraggableBounds((current: DraggableBounds | string | false) => {
-            // HINT: centering.topは0になりうるため、undefinedとの区別が必要
-            const initialTop =
-              nextCentering.top !== undefined ? nextCentering.top : node.getBoundingClientRect().top
-            // HINT: ドラッグでsafe areaに重ならないよう、上端をsafe areaの下端までに制限する。
-            // 初期位置がすでにsafe areaに重なっている場合は、ドラッグ開始時に位置が飛ばないよう初期位置を上限にする
-            const nextTop = Math.min(0, safeAreaInsets.top - initialTop)
+          // HINT: centering.topは0になりうるため、undefinedとの区別が必要。
+          // 再表示時は前回のドラッグによる移動量がまだ残っているため、その分を除いた位置を初期位置とする
+          const initialTop =
+            nextCentering.top !== undefined
+              ? nextCentering.top
+              : node.getBoundingClientRect().top - latest.position.y
+          // HINT: ドラッグでsafe areaに重ならないよう、上端をsafe areaの下端までに制限する。
+          // 初期位置がすでにsafe areaに重なっている場合は、ドラッグ開始時に位置が飛ばないよう初期位置を上限にする
+          const nextTop = Math.min(0, safeAreaInsets.top - initialTop)
 
-            return typeof current === 'object' && current.top === nextTop
-              ? current
-              : { top: nextTop }
-          })
+          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+          setDraggableBounds((current: DraggableBounds | string | false) =>
+            typeof current === 'object' && current.top === nextTop ? current : { top: nextTop },
+          )
 
           node
             .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')

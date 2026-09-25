@@ -119,7 +119,8 @@ const calculateVertical = (
   const safeTop = safeAreaInsets.top
 
   // トリガの上側の領域に収まる場合
-  if (parentRect.top - portalHeight >= safeTop) {
+  // HINT: トリガとの間にSPACING分の隙間を空けて配置するため、判定にも含める
+  if (parentRect.top - portalHeight - SPACING >= safeTop) {
     return {
       insetBlockStart: `${scrollY + parentRect.top - portalHeight - SPACING}px`,
       maxHeight: undefined,
@@ -130,7 +131,7 @@ const calculateVertical = (
   const safeBottom = innerHeight - safeAreaInsets.bottom
 
   // トリガの下側の領域に収まる場合
-  if (parentRect.bottom + portalHeight <= safeBottom) {
+  if (parentRect.bottom + portalHeight + SPACING <= safeBottom) {
     return {
       insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
       maxHeight: undefined,
