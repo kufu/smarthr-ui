@@ -13,7 +13,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
@@ -26,6 +25,7 @@ import { genericsForwardRef } from '../../../../libs/util'
 import { UnstyledButton } from '../../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
 import { Input } from '../../../Input'
+import { getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
@@ -199,7 +199,7 @@ const ActualSingleCombobox = <T,>(
   // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
   const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
 
-  const selectedItemLabelText = selectedItem ? innerText(selectedItem.label) : ''
+  const selectedItemLabelText = selectedItem ? getSelectedLabelText(selectedItem) : ''
 
   if (selectedItemLabelText !== prevSelectedItemLabelText) {
     setPrevSelectedItemLabelText(selectedItemLabelText)
@@ -292,7 +292,7 @@ const ActualSingleCombobox = <T,>(
       if (latest.selectedItem) {
         // inputValueを選択中アイテムのラベルへ戻すため、手入力による絞り込みも解除する
         setIsEditing(false)
-        setInputValue(innerText(latest.selectedItem.label))
+        setInputValue(getSelectedLabelText(latest.selectedItem))
       } else {
         // HINT: 未選択の場合はinputValueに手入力値が残るため、isEditingは解除しない
         // 解除してしまうと「入力値が表示されているのに絞り込みが効いていない」状態になる
