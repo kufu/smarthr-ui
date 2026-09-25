@@ -229,3 +229,22 @@ export const MaxLines: StoryObj<typeof Text> = {
     </Stack>
   ),
 }
+
+export const MaxLinesTooltip: StoryObj<typeof Text> = {
+  name: 'maxLines(tooltip)',
+  render: ({ children, ...rest }) => (
+    <Stack>
+      {[1, 2, 3].map((max) => (
+        <div key={max} style={{ width: '20em' }}>
+          <b>max: {max}</b>
+          <br />
+          <Text {...rest} maxLines={{ max: max as 1 | 2 | 3, tooltip: true }}>
+            {children}
+            {children}
+            {children}
+          </Text>
+        </div>
+      ))}
+    </Stack>
+  ),
+}

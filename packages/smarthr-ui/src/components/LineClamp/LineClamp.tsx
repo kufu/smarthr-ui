@@ -60,6 +60,10 @@ const classNameGenerator = tv({
   ],
 })
 
+/**
+ * @deprecated LineClamp は非推奨です。Text の maxLines(オブジェクト形式)を使ってください。
+ * `<LineClamp maxLines={2}>` は `<Text maxLines={{ max: 2, tooltip: true }}>` に置き換えられます。
+ */
 export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...rest }) => {
   if (maxLines < 1 || maxLines > 6) {
     throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')

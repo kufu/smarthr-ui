@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/best-practice-for-text-component */
-import { render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { createRef } from 'react'
 
 import { Text } from './Text'
@@ -19,5 +19,88 @@ describe('Text', () => {
     render(<Text ref={ref}>テキスト</Text>)
 
     expect(ref.current?.tagName).toBe('SPAN')
+  })
+
+  describe('maxLines', () => {
+    test('number を指定した場合、Tooltip 関連の要素は追加されない', () => {
+      const { container } = render(<Text maxLines={3}>テキスト</Text>)
+
+      expect(container.querySelector('.smarthr-ui-Text-overflowTooltipWrapper')).toBeNull()
+    })
+
+    test('object 指定で tooltip が未指定の場合、Tooltip 関連の要素は追加されない', () => {
+      const { container } = render(<Text maxLines={{ max: 3 }}>テキスト</Text>)
+
+      expect(container.querySelector('.smarthr-ui-Text-overflowTooltipWrapper')).toBeNull()
+    })
+
+    test('"maxLines.max" が範囲外の場合エラーになる', () => {
+      expect(() =>
+        render(<Text maxLines={{ max: 7 as 1 | 2 | 3 | 4 | 5 | 6 }}>テキスト</Text>),
+      ).toThrow('"maxLines" は 1 ~ 6 の範囲で指定してください')
+    })
+
+    describe('object指定でtooltipがtrueの場合', () => {
+      // HINT: -webkit-line-clamp の高さ比較用 shadow 要素との clientHeight 比較で
+      // オーバーフローを判定している。isOverflowingがtrueに切り替わるとTooltipで
+      // ラップされる形にJSXのルート要素が変わり、Reactがサブツリーごと再マウントするため、
+      // 個別のDOM要素にモックを仕込んでも再マウントで失われる。className基準の
+      // prototypeレベルのgetterにすることで再マウント後も一貫した値を返すようにする
+      const originalClientHeight = Object.getOwnPropertyDescriptor(
+        Element.prototype,
+        'clientHeight',
+      )!
+
+      afterEach(() => {
+        Object.defineProperty(Element.prototype, 'clientHeight', originalClientHeight)
+      })
+
+      const mockClientHeight = (visible: number, shadow: number) => {
+        Object.defineProperty(Element.prototype, 'clientHeight', {
+          configurable: true,
+          get(this: Element) {
+            return this.classList.contains('smarthr-ui-Text-overflowTooltipShadow')
+              ? shadow
+              : visible
+          },
+        })
+      }
+
+      test('テキストが省略されている場合、Tooltip で全文を表示する', () => {
+        mockClientHeight(24, 72)
+
+        const { container } = render(<Text maxLines={{ max: 3, tooltip: true }}>テキスト</Text>)
+
+        act(() => {
+          window.dispatchEvent(new Event('resize'))
+        })
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+      })
+
+      test('テキストが省略されていない場合、Tooltip を表示しない', () => {
+        mockClientHeight(72, 72)
+
+        const { container } = render(<Text maxLines={{ max: 3, tooltip: true }}>テキスト</Text>)
+
+        act(() => {
+          window.dispatchEvent(new Event('resize'))
+        })
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+      })
+
+      test('ref は実際にレンダリングされた要素を指す', () => {
+        const ref = createRef<HTMLSpanElement>()
+        render(
+          <Text ref={ref} maxLines={{ max: 3, tooltip: true }}>
+            テキスト
+          </Text>,
+        )
+
+        expect(ref.current?.tagName).toBe('SPAN')
+        expect(ref.current?.textContent).toBe('テキスト')
+      })
+    })
   })
 })
