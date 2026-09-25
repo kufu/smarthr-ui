@@ -19,6 +19,7 @@ export default {
   },
   args: {
     children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
+    italic: false,
     emphasis: false,
     as: 'なし',
   },
@@ -68,6 +69,13 @@ export const Color: StoryObj<typeof Text> = {
       <Text {...args} color="inherit" />
     </Stack>
   ),
+}
+
+export const Italic: StoryObj<typeof Text> = {
+  name: 'italic',
+  args: {
+    italic: true,
+  },
 }
 
 export const Leading: StoryObj<typeof Text> = {

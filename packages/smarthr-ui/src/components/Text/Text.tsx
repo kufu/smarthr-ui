@@ -72,10 +72,8 @@ const classNameGenerator = tv({
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
     } satisfies Record<NonNullable<TextProps['weight']>, string>,
-    // HINT: i要素はブラウザのデフォルトスタイルで斜体になるが、日本語では強調・区別に斜体を用いないため打ち消す
-    // 斜体にしたい場合は className で指定する
-    idiomaticText: {
-      true: 'shr-not-italic',
+    italic: {
+      true: 'shr-italic',
     },
     color: {
       TEXT_BLACK: 'shr-text-black',
@@ -177,6 +175,7 @@ export type TextProps<T extends ElementType = 'span'> = {
 
   size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
   weight?: 'normal' | 'bold'
+  italic?: boolean
   color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
   leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
   whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
@@ -199,6 +198,7 @@ const ActualText: TextComponent = forwardRef(
       weight = emphasis ? 'bold' : undefined,
       as: Component = emphasis ? 'em' : 'span',
       size,
+      italic,
       color,
       leading,
       whiteSpace,
@@ -224,12 +224,12 @@ const ActualText: TextComponent = forwardRef(
         weight: weight || styleTypeValues.weight,
         color: color || styleTypeValues.color,
         leading: leading || styleTypeValues.leading,
-        idiomaticText: Component === 'i',
+        italic,
         whiteSpace,
         maxLines,
         className,
       })
-    }, [size, weight, color, leading, Component, whiteSpace, maxLines, className, styleType])
+    }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
     const hasIcon = !!icon
     const iconGap = icon?.gap
 
