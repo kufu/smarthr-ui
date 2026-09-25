@@ -121,6 +121,11 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     </span>
   )
 
+  // HINT: isTooltipVisibleがfalse→trueに切り替わるとJSXのルート要素の型が
+  // span→Tooltipに変わるため、Reactはこのサブツリーをアンマウント/リマウントする。
+  // 初回判定(false→true)はuseEffect実行後の再レンダーで発生するため実ブラウザでは
+  // 目立ちにくいが、resizeなどでtrue→falseへ戻る場合は一瞬のちらつきが理論上発生しうる。
+  // 発生頻度が低く実害が小さいため許容している
   return isTooltipVisible ? (
     <Tooltip message={children}>{actualLineClamp}</Tooltip>
   ) : (

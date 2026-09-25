@@ -83,5 +83,10 @@ export const TextOverflowTooltip: FC<Props> = ({
     </span>
   )
 
+  // HINT: isOverflowingがfalse→trueに切り替わるとJSXのルート要素の型が
+  // span→Tooltipに変わるため、Reactはこのサブツリーをアンマウント/リマウントする。
+  // 初回判定(false→true)はuseLayoutEffectRefによりペイント前に完結するため
+  // ユーザーには見えないが、resizeなどペイント後にtrue→falseへ戻る場合は
+  // 一瞬のちらつきが理論上発生しうる。発生頻度が低く実害が小さいため許容している
   return isOverflowing ? <Tooltip message={children}>{content}</Tooltip> : content
 }
