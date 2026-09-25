@@ -203,7 +203,7 @@ export const FormGroup: FC<Props> = ({
           color="TEXT_GREY"
           className="smarthr-ui-FormControl-exampleMessage"
         >
-          <i>{exampleMessage}</i>
+          <i className="shr-not-italic">{exampleMessage}</i>
         </Text>
       )}
       {visibleErrorMessages && (

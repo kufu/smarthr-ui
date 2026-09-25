@@ -58,7 +58,6 @@ const UNDEFINED_STYLE_VALUES = {
 }
 
 const classNameGenerator = tv({
-  base: 'shr-not-italic',
   variants: {
     size: {
       XXS: 'shr-text-2xs',
@@ -73,6 +72,11 @@ const classNameGenerator = tv({
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
     } satisfies Record<NonNullable<TextProps['weight']>, string>,
+    // HINT: i要素はブラウザのデフォルトスタイルで斜体になるが、日本語では強調・区別に斜体を用いないため打ち消す
+    // 斜体にしたい場合は className で指定する
+    idiomaticText: {
+      true: 'shr-not-italic',
+    },
     color: {
       TEXT_BLACK: 'shr-text-black',
       TEXT_WHITE: 'shr-text-white',
@@ -220,11 +224,12 @@ const ActualText: TextComponent = forwardRef(
         weight: weight || styleTypeValues.weight,
         color: color || styleTypeValues.color,
         leading: leading || styleTypeValues.leading,
+        idiomaticText: Component === 'i',
         whiteSpace,
         maxLines,
         className,
       })
-    }, [size, weight, color, leading, whiteSpace, maxLines, className, styleType])
+    }, [size, weight, color, leading, Component, whiteSpace, maxLines, className, styleType])
     const hasIcon = !!icon
     const iconGap = icon?.gap
 
