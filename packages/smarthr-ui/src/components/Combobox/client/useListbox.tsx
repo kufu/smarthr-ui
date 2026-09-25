@@ -481,9 +481,7 @@ export const ListBox = memo(
           {isExpanded ? (
             isLoading ? (
               <div className={CLASS_NAMES.loaderWrapper}>
-                <LiveRegion>
-                  <Loader />
-                </LiveRegion>
+                <Loader />
               </div>
             ) : options.length === 0 ? (
               <LiveRegion className={CLASS_NAMES.noItems}>
