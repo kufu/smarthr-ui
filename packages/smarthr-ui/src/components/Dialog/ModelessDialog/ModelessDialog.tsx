@@ -180,7 +180,7 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [className, size, resizable])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
   const [liveRegionText, setLiveRegionText] = useState<ReactNode>('')

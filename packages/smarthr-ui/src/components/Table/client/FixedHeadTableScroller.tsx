@@ -13,7 +13,7 @@ type Props = PropsWithChildren &
   }
 
 // thead の高さ分だけ scroll-padding-top を設定
-const callbackRef = (node: HTMLDivElement | null) => {
+const callbackRef = (node: HTMLElement | null) => {
   if (!node) {
     return
   }

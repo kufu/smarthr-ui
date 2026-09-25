@@ -100,7 +100,7 @@ export const SegmentedControl: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      callbackRef: (node: HTMLDivElement | null) => {
+      callbackRef: (node: HTMLElement | null) => {
         if (!node) {
           return
         }

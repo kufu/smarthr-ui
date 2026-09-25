@@ -360,7 +360,7 @@ const ActualMultiCombobox = <T,>(
       handleDelete,
       blur,
       cleanupCallbackRef: () => latest.cleanupAddFrame,
-      handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+      handleDelegateKeyDown: (e: KeyboardEvent<HTMLElement>) => {
         if (latest.isComposing) return
 
         if (ESCAPE_KEY_REGEX.test(e.key)) {
