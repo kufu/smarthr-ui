@@ -1,3 +1,3 @@
-export * from './TextLink'
-export * from './HelpLink'
-export { UpwardLink } from './UpwardLink'
+export { TextLink } from './TextLink'
+export { HelpLink } from './HelpLink'
+export { UpwardLink } from './client'

@@ -22,7 +22,7 @@ const classNameGenerator = tv({
       // 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。
       'shr-p-px',
       // :focus-visible-within の代替, なぜかhasが機能しないので以下の書き方で代用している
-      'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
+      'has-[:focus-visible]:shr-focus-indicator--outer [&:has(:focus-visible)]:shr-focus-indicator--outer',
       'has-[:checked]:shr-border-[theme(colors.main)] has-[:checked]:shr-bg-main',
       'has-[:disabled]:shr-border-[theme(borderColor.default)] has-[:disabled]:shr-bg-border',
       'forced-colors:has-[:disabled]:shr-border-[GrayText]',
@@ -85,11 +85,11 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
         <span className={classNames.wrapper}>
           <input
             {...rest}
-            type="checkbox"
+            ref={ref}
             role="switch"
+            type="checkbox"
             id={inputId}
             className={classNames.input}
-            ref={ref}
           />
           <MemoizedSuffixIcon className={classNames.iconWrapper} iconClassName={classNames.icon} />
         </span>
@@ -113,7 +113,7 @@ const MemoizedLabel = memo<
 const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
   ({ className, iconClassName }) => (
     <span className={className}>
-      <FaCheckIcon className={iconClassName} size="XXS" />
+      <FaCheckIcon size="XXS" className={iconClassName} />
     </span>
   ),
 )

@@ -2,6 +2,108 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.5](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.4...smarthr-ui-charts-v0.2.5) (2026-09-17)
+
+
+### Bug Fixes
+
+* Chart をキーボードで操作したときにページがスクロールされる問題を修正 ([#7103](https://github.com/kufu/smarthr-ui/issues/7103)) ([5956417](https://github.com/kufu/smarthr-ui/commit/5956417011bcf7577dec29bfd05b68b7eb75ad76))
+
+## [0.2.4](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.3...smarthr-ui-charts-v0.2.4) (2026-09-10)
+
+
+### Features
+
+* **charts:** 棒グラフに同系色の濃淡で配色するオプションを追加 ([#6933](https://github.com/kufu/smarthr-ui/issues/6933)) ([4911f59](https://github.com/kufu/smarthr-ui/commit/4911f59da68260e54b3e00e4f726cf82bf81d456))
+
+## [0.2.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.2...smarthr-ui-charts-v0.2.3) (2026-08-27)
+
+
+### Features
+
+* **DoughnutChart:** 柄を無効化するdisablePatternsを追加 ([#6869](https://github.com/kufu/smarthr-ui/issues/6869)) ([9b5da35](https://github.com/kufu/smarthr-ui/commit/9b5da354e4ee73ef213688979de28bcc52702c16))
+
+## [0.2.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.1...smarthr-ui-charts-v0.2.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* **charts:** smarthr-uiをdevDependenciesにも追加しビルド順序を保証 ([#6870](https://github.com/kufu/smarthr-ui/issues/6870)) ([b58edd0](https://github.com/kufu/smarthr-ui/commit/b58edd0850ea4b786235512c5933f722174f2264))
+
+## [0.2.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.0...smarthr-ui-charts-v0.2.1) (2026-08-20)
+
+
+### Features
+
+* **Chart:** disablePatterns propsを追加 ([#6828](https://github.com/kufu/smarthr-ui/issues/6828)) ([be4870d](https://github.com/kufu/smarthr-ui/commit/be4870d75e26a91e53757f7db7bc048866d55016))
+
+## [0.2.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.7...smarthr-ui-charts-v0.2.0) (2026-08-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **charts:** ProgressDoughnutChartの進捗帯の端の既定を角端にする ([#6782](https://github.com/kufu/smarthr-ui/issues/6782))
+
+### Features
+
+* **charts:** ProgressDoughnutChartの進捗帯の端の既定を角端にする ([#6782](https://github.com/kufu/smarthr-ui/issues/6782)) ([18af7bc](https://github.com/kufu/smarthr-ui/commit/18af7bcac6dd7b63b0fa7e03ad815502faff10ff))
+
+
+### Bug Fixes
+
+* **charts:** ProgressDoughnutChartで進捗と残りが両方0のとき何も描画されない ([#6812](https://github.com/kufu/smarthr-ui/issues/6812)) ([98c596e](https://github.com/kufu/smarthr-ui/commit/98c596e9a0e155a677dfd9ff6102a939f3c548d9))
+
+## [0.1.7](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.6...smarthr-ui-charts-v0.1.7) (2026-08-06)
+
+
+### Features
+
+* **BarChart:** 棒グラフの柄を非表示にできる disablePatterns を追加 ([#6627](https://github.com/kufu/smarthr-ui/issues/6627)) ([cb1f00a](https://github.com/kufu/smarthr-ui/commit/cb1f00ad54d4f0515cdc93438e051d98247394e8))
+* **charts:** DoughnutChartとProgressDoughnutChartを追加 ([#6480](https://github.com/kufu/smarthr-ui/issues/6480)) ([0b0a7a8](https://github.com/kufu/smarthr-ui/commit/0b0a7a86798561d5ba629554372fa01d7dbf5ee0))
+* **charts:** peerDependencies に React 18 を追加 ([#6656](https://github.com/kufu/smarthr-ui/issues/6656)) ([31571e1](https://github.com/kufu/smarthr-ui/commit/31571e15dacfb0035c1bef6ee62250f41df1e765))
+
+## [0.1.6](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.5...smarthr-ui-charts-v0.1.6) (2026-07-16)
+
+
+### Bug Fixes
+
+* **BarChart:** 棒グラフの柄をSmartHRのトンマナに合わせ調整&視認性の低い柄を除去 ([#6489](https://github.com/kufu/smarthr-ui/issues/6489)) ([505fe2f](https://github.com/kufu/smarthr-ui/commit/505fe2fbd45dee4a5cf5861fb405c2579067c4aa))
+
+## [0.1.5](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.4...smarthr-ui-charts-v0.1.5) (2026-07-02)
+
+
+### Bug Fixes
+
+* **charts:** chartConfig.testの型エラーを修正 ([#6462](https://github.com/kufu/smarthr-ui/issues/6462)) ([d4bd9f7](https://github.com/kufu/smarthr-ui/commit/d4bd9f720e930d8b129229dd1b9a36f2b5affa5c))
+
+## [0.1.4](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.3...smarthr-ui-charts-v0.1.4) (2026-05-21)
+
+
+### Features
+
+* **Chart:** chartsパッケージにRadarChartを追加 ([#6277](https://github.com/kufu/smarthr-ui/issues/6277)) ([9fcd272](https://github.com/kufu/smarthr-ui/commit/9fcd27259b5938d427ce8e66788fa023faff9b49))
+
+## [0.1.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.2...smarthr-ui-charts-v0.1.3) (2026-05-13)
+
+
+### Bug Fixes
+
+* **charts:** chartjs-plugin-datalabels の型拡張を利用者側に伝播させる ([#6316](https://github.com/kufu/smarthr-ui/issues/6316)) ([daaa3d3](https://github.com/kufu/smarthr-ui/commit/daaa3d3e7854eb41e7067c0d6cb2dc67ee20abf6))
+
+## [0.1.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.1...smarthr-ui-charts-v0.1.2) (2026-04-16)
+
+
+### Features
+
+* **Chart:** chartjs-plugin-annotation を追加 ([#6263](https://github.com/kufu/smarthr-ui/issues/6263)) ([c65ddbd](https://github.com/kufu/smarthr-ui/commit/c65ddbd37b39521206ee5f82d5a6a49270e71d79))
+
+## [0.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.1.0...smarthr-ui-charts-v0.1.1) (2026-03-12)
+
+
+### Features
+
+* **charts:** lint/formatスクリプトを追加 ([#6178](https://github.com/kufu/smarthr-ui/issues/6178)) ([a9c767c](https://github.com/kufu/smarthr-ui/commit/a9c767ccc680c4db2a58c0c280a37e9cd6fb27c5))
+
 ## 0.1.0 (2025-11-20)
 
 

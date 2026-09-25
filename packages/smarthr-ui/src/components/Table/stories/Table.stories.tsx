@@ -1,4 +1,5 @@
 import { Stack } from '../../Layout'
+import { Panel } from '../../Panel'
 import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { EmptyTableBody } from '../EmptyTableBody'
@@ -9,7 +10,7 @@ import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof Table> = (args) => (
   <Table {...args}>
@@ -74,7 +75,28 @@ export const BorderStyle: StoryObj<typeof Table> = {
 
 export const Rounded: StoryObj<typeof Table> = {
   name: 'rounded',
-  render: (args) => <Template {...args} rounded />,
+  render: (args) => (
+    <Stack>
+      <Panel>
+        <Template {...args} rounded />
+      </Panel>
+      <Panel>
+        <Template {...args} rounded="all" />
+      </Panel>
+      <Panel>
+        <Template {...args} rounded="top" />
+      </Panel>
+      <Panel>
+        <Template {...args} rounded="right" />
+      </Panel>
+      <Panel>
+        <Template {...args} rounded="bottom" />
+      </Panel>
+      <Panel>
+        <Template {...args} rounded="left" />
+      </Panel>
+    </Stack>
+  ),
 }
 
 export const Layout: StoryObj<typeof Table> = {
@@ -101,7 +123,7 @@ export const FixedHead: StoryObj<typeof Table> = {
     <Table {...args}>
       <thead>
         <tr>
-          <ThCheckbox name="check" key={0} />
+          <ThCheckbox key={0} name="check" />
           <Th>
             <Text whiteSpace="nowrap">オブジェクト名</Text>
           </Th>
@@ -114,20 +136,24 @@ export const FixedHead: StoryObj<typeof Table> = {
         </tr>
       </thead>
       <tbody>
-        {[...Array(20)].map((_, i) => (
-          <tr key={i}>
-            <TdCheckbox name={`test-check${i + 1}`} aria-labelledby="check" key={0} />
-            <Td>
-              <Text whiteSpace="nowrap">オブジェクト{i + 1}</Text>
-            </Td>
-            <Td>
-              <Text whiteSpace="nowrap">情報{i + 1}</Text>
-            </Td>
-            <Td>
-              <Text whiteSpace="nowrap">2024-11-26</Text>
-            </Td>
-          </tr>
-        ))}
+        {[...Array(20)].map((_, i) => {
+          const objectId = `test-check${i + 1}`
+
+          return (
+            <tr key={i}>
+              <TdCheckbox key={0} name={objectId} aria-labelledby={objectId} />
+              <Td id={objectId}>
+                <Text whiteSpace="nowrap">オブジェクト{i + 1}</Text>
+              </Td>
+              <Td>
+                <Text whiteSpace="nowrap">情報{i + 1}</Text>
+              </Td>
+              <Td>
+                <Text whiteSpace="nowrap">2024-11-26</Text>
+              </Td>
+            </tr>
+          )
+        })}
       </tbody>
     </Table>
   ),
@@ -162,7 +188,7 @@ export const Reel: StoryObj<typeof Table> = {
       </thead>
       <tbody>
         <tr>
-          <Td fixed="left" key={0}>
+          <Td key={0} fixed="left">
             <Text whiteSpace="nowrap">表データ{0}</Text>
           </Td>
           {[...Array(9)].map((_, i) => (
@@ -170,7 +196,7 @@ export const Reel: StoryObj<typeof Table> = {
               <Text whiteSpace="nowrap">表データ{i + 1}</Text>
             </Td>
           ))}
-          <Td fixed="right" key={10}>
+          <Td key={10} fixed="right">
             <Text whiteSpace="nowrap">表データ{10}</Text>
           </Td>
         </tr>

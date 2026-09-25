@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test'
 import { Cluster } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 /**
@@ -22,8 +22,8 @@ const _cases: Array<
   >
 > = [
   { trigger: { onlyIcon: true } },
-  { trigger: { size: 's' }, filtered: true, disabled: true },
-  { trigger: { size: 's' } },
+  { trigger: { size: 'S' }, filtered: true, disabled: true },
+  { trigger: { size: 'S' } },
   { filtered: false, disabled: true },
   { filtered: true },
 ]
@@ -49,8 +49,14 @@ export default {
 
     const { length, 0: first, [length - 1]: last } = await canvas.findAllByRole('button')
 
-    userEvent.hover(first)
-    userEvent.click(last)
+    await userEvent.hover(first)
+    await userEvent.click(last)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
   tags: ['!autodocs'],
 } as Meta<typeof FilterDropdown>

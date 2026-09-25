@@ -1,15 +1,14 @@
 import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
-import { DeviceProvider } from '../../../..'
-import { Base } from '../../../Base'
+import { Panel } from '../../../Panel'
 import { Stack } from '../../Stack'
-import { Container, classNameGenerator } from '../Container'
+import { Container } from '../Container'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
-const Template: StoryFn<typeof Container> = ({ size, children, ...rest }) => (
+const Template: StoryFn<typeof Container> = ({ size, ...rest }) => (
   <Container {...rest} size={size}>
-    <DisplayDimensionsBase padding={1.5} size={size}>
+    <DisplayDimensionsBase size={size} padding={1.5}>
       Story をわかりやすくするためのカスタム Base
     </DisplayDimensionsBase>
   </Container>
@@ -19,13 +18,6 @@ export default {
   title: 'Components/Layout/Container',
   component: Container,
   render: Template,
-  decorators: [
-    (Story) => (
-      <DeviceProvider>
-        <Story />
-      </DeviceProvider>
-    ),
-  ],
   parameters: {
     chromatic: { disableSnapshot: true },
   },
@@ -37,7 +29,7 @@ export const Size: StoryObj<typeof Container> = {
   name: 'size',
   render: (args, context) => (
     <Stack>
-      {[undefined, ...Object.keys(classNameGenerator.variants.size)].map((size) =>
+      {[undefined, 'NARROW', 'DEFAULT', 'WIDE', 'FULL'].map((size) =>
         Template({ ...args, size: size as any }, context),
       )}
     </Stack>
@@ -57,8 +49,8 @@ export const Padding: StoryObj<typeof Container> = {
 }
 
 const DisplayDimensionsBase: React.FC<
-  ComponentProps<typeof Base> & Pick<ComponentProps<typeof Container>, 'size'>
-> = ({ children, size, ...rest }) => {
+  ComponentProps<typeof Panel> & Pick<ComponentProps<typeof Container>, 'size'>
+> = ({ size, ...rest }) => {
   const target = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0 })
 
@@ -89,8 +81,8 @@ const DisplayDimensionsBase: React.FC<
   })
 
   return (
-    <Base {...rest} ref={target}>
+    <Panel {...rest} ref={target}>
       コンテナ{size}: {dimensions.width}px
-    </Base>
+    </Panel>
   )
 }

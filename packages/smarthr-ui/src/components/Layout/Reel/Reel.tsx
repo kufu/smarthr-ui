@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
   type ComponentType,
@@ -7,21 +5,23 @@ import {
   forwardRef,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
-import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+import { Scroller } from '../../Scroller'
+import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { PositiveGap } from '../../../types'
 
-type Props = VariantProps<typeof classNameGenerator> &
-  PropsWithChildren<{
-    as?: string | ComponentType<any>
-  }> &
+type Props = PropsWithChildren<{
+  as?: string | ComponentType<any>
+  gap?: PositiveGap
+  padding?: PositiveGap
+}> &
   ComponentPropsWithRef<'div'>
 
 const classNameGenerator = tv({
   base: [
-    'shr-flex shr-overflow-x-auto shr-overflow-y-hidden',
+    'shr-flex',
     '[&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto',
     /*
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
@@ -53,7 +53,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-3',
       XXL: 'shr-gap-3.5',
       X3L: 'shr-gap-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<NonNullable<Props['gap']>, string>,
     padding: {
       0: 'shr-p-0',
       0.25: 'shr-p-0.25',
@@ -77,19 +77,29 @@ const classNameGenerator = tv({
       XL: 'shr-p-3',
       XXL: 'shr-p-3.5',
       X3L: 'shr-p-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<NonNullable<Props['padding']>, string>,
   },
 })
 
 export const Reel = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...rest }, ref) => {
+  ({ as: Component = 'div', gap = 0.5, padding = 0, className, children, ...rest }, ref) => {
     const actualClassName = useMemo(
       () => classNameGenerator({ gap, padding, className }),
       [className, gap, padding],
     )
 
     const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} />
+    const body = (
+      <Scroller
+        {...rest}
+        as={Component}
+        ref={ref}
+        direction="horizontal"
+        className={actualClassName}
+      >
+        {children}
+      </Scroller>
+    )
 
     if (Wrapper) {
       return <Wrapper>{body}</Wrapper>

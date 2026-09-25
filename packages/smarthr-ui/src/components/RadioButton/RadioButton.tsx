@@ -1,5 +1,3 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
@@ -10,7 +8,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isIOS } from '../../libs/ua'
+import { ActualRadioButton } from './client'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
@@ -34,7 +32,7 @@ const classNameGenerator = tv({
       'peer-checked:before:shr-pointer-events-none peer-checked:before:shr-absolute peer-checked:before:shr-left-1/2 peer-checked:before:shr-top-1/2 peer-checked:before:shr-h-[0.375em] peer-checked:before:shr-w-[0.375em] peer-checked:before:-shr-translate-x-1/2 peer-checked:before:-shr-translate-y-1/2 peer-checked:before:shr-rounded-full peer-checked:before:shr-bg-white peer-checked:before:shr-content-[""]',
       'peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
-      'peer-focus-visible:shr-focus-indicator',
+      'peer-focus-visible:shr-focus-indicator--outer',
       'peer-[:not(:disabled)]:peer-hover:shr-shadow-input-hover',
     ],
     input: [
@@ -48,7 +46,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, required, id, disabled, ...rest }, ref) => {
+  ({ children, className, id, disabled, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
@@ -65,22 +63,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     const radioButtonId = id || defaultId
 
     return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
+      <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
-          <input
+          <ActualRadioButton
             {...rest}
-            ref={ref}
-            type="radio"
+            outerRef={ref}
             id={radioButtonId}
-            // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
-            //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
-            //    - エラーメッセージが表示されない
-            //    - 問題のある入力フィールドまでスクロールしない
-            // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
-            // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
-            required={isIOS ? undefined : required}
             disabled={disabled}
-            onChange={onChange}
             className={classNames.input}
             data-smarthr-ui-input="true"
           />

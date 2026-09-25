@@ -2,7 +2,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { SmartHRLogo } from '../../SmartHRLogo'
 import { ErrorScreen } from '../ErrorScreen'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const logoOptions = {
   デフォルト: undefined,
@@ -12,7 +12,7 @@ const logoOptions = {
 const titleOptions = {
   なし: undefined,
   文字列: 'エラーが発生しました',
-  ReactNode: <ResponseMessage type="error">エラーが発生しました</ResponseMessage>,
+  ReactNode: <ResponseMessage status="error">エラーが発生しました</ResponseMessage>,
 }
 
 const linksOptions = {

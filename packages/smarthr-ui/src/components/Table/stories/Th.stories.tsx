@@ -2,11 +2,10 @@ import { action } from 'storybook/actions'
 
 import { Chip } from '../../Chip'
 import { Stack } from '../../Layout'
-import { Text } from '../../Text'
 import { Table } from '../Table'
 import { Th } from '../Th'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof Th> = (args) => (
   <Table>

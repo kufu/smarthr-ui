@@ -1,15 +1,12 @@
-'use client'
-
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Center } from '../../../Layout'
 import { Loader } from '../../../Loader'
-import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 import { Translate } from '../common/Translate'
 
@@ -29,35 +26,22 @@ const BOX_SHADOW_STYLE = { boxShadow: 'none' }
 export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => {
   const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      releaseNote: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotes',
-        defaultText: 'リリースノート',
-      }),
-      loadError: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotesLoadError',
-        defaultText: 'リリースノートの読み込みに失敗しました。\n時間をおいて、やり直してください。',
-      }),
-      seeAll: localize({
-        id: 'smarthr-ui/AppHeader/seeAllReleaseNotes',
-        defaultText: 'すべてのリリースノートを見る',
-      }),
-    }),
-    [localize],
-  )
-
   return (
     <div className="shr-border-l-shorthand shr-ms-0.5">
       <Dropdown>
-        <ReleaseNoteDropdownTrigger>{translated.releaseNote}</ReleaseNoteDropdownTrigger>
-        <DropdownContent className="shr-mr-1.25" controllable>
+        <ReleaseNoteDropdownTrigger />
+        <DropdownContent controllable className="shr-mr-1.25">
           <div className="shr-w-[400px]">
             {loading ? (
               <StyledLoader />
             ) : error || !links ? (
-              <LoadErrorText>{translated.loadError}</LoadErrorText>
+              <LoadErrorText>
+                <Localizer
+                  id="smarthr-ui/AppHeader/releaseNotesLoadError"
+                  defaultText={`リリースノートの読み込みに失敗しました。
+時間をおいて、やり直してください。`}
+                />
+              </LoadErrorText>
             ) : (
               <div className={wrapperClassName}>
                 {links.slice(0, 5).map(({ title, url }, index) => (
@@ -65,7 +49,12 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
                     {title}
                   </ArticleLink>
                 ))}
-                <SeeAllTextLink href={indexUrl}>{translated.seeAll}</SeeAllTextLink>
+                <SeeAllTextLink href={indexUrl}>
+                  <Localizer
+                    id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+                    defaultText="すべてのリリースノートを見る"
+                  />
+                </SeeAllTextLink>
               </div>
             )}
           </div>
@@ -75,13 +64,15 @@ export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, lo
   )
 }
 
-const ReleaseNoteDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
+const ReleaseNoteDropdownTrigger = memo(() => (
   <DropdownTrigger>
     <Button
-      suffix={<FaCaretDownIcon />}
       className="shr-rounded-none shr-border-none shr-font-normal [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
+      suffix={<FaCaretDownIcon />}
     >
-      <Translate>{children}</Translate>
+      <Translate>
+        <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
+      </Translate>
     </Button>
   </DropdownTrigger>
 ))
@@ -94,18 +85,22 @@ const StyledLoader = memo(() => (
 
 const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
   <div className="shr-whitespace-pre-wrap shr-p-0.75">
-    <Text>
-      <Translate>{children}</Translate>
-    </Text>
+    <Translate>{children}</Translate>
   </div>
 ))
 
+// HelpLinkではなくTextLinkを使用する理由:
+// - リリースノートは典型的なヘルプコンテンツではない
+// - rel="help"はW3C定義で「親要素とその子要素のための追加のヘルプ情報」を指すが、
+//   AppHeaderからのリリースノートは現在のページと直接関連するとは限らない
+// 参考: https://www.w3.org/TR/2010/WD-html5-20100624/links.html#link-type-help
 const ArticleLink = memo<PropsWithChildren<{ href: string }>>(({ href, children }) => (
   <div className="shr-border-b-shorthand shr-border-dashed shr-p-0.75">
     <TextLink
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
+      referrerPolicy="no-referrer-when-downgrade"
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >
@@ -119,7 +114,8 @@ const SeeAllTextLink = memo<PropsWithChildren<{ href: string }>>(({ href, childr
     <TextLink
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
+      referrerPolicy="no-referrer-when-downgrade"
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >

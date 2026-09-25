@@ -1,12 +1,14 @@
 import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
-import { AccordionPanel } from '../AccordionPanel'
-import { AccordionPanelContent } from '../AccordionPanelContent'
-import { AccordionPanelItem } from '../AccordionPanelItem'
-import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
+import {
+  AccordionPanel,
+  AccordionPanelContent,
+  AccordionPanelItem,
+  AccordionPanelTrigger,
+} from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 const _defaultExpandedOptions = {
@@ -114,5 +116,33 @@ export const OnClick: StoryObj<typeof AccordionPanel> = {
   name: 'onClick',
   args: {
     onClick: action('click'),
+  },
+}
+
+export const Rounded: StoryObj<typeof AccordionPanel> = {
+  name: 'rounded',
+  render: (args) => {
+    const template = (rounded?: ComponentProps<typeof AccordionPanel>['rounded']) => (
+      <AccordionPanel {...args} rounded={rounded}>
+        {[...Array(2)].map((_, i) => (
+          <AccordionPanelItem key={i + 1} name={`accordion-panel-${i + 1}`}>
+            <AccordionPanelTrigger>アコーディオンパネル{i + 1}</AccordionPanelTrigger>
+            <AccordionPanelContent>アコーディオンパネルコンテンツ{i + 1}</AccordionPanelContent>
+          </AccordionPanelItem>
+        ))}
+      </AccordionPanel>
+    )
+
+    return (
+      <Stack>
+        {template()}
+        {template(true)}
+        {template('all')}
+        {template('top')}
+        {template('right')}
+        {template('bottom')}
+        {template('left')}
+      </Stack>
+    )
   },
 }

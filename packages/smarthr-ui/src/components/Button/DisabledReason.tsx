@@ -1,4 +1,4 @@
-import { type FC, type FunctionComponent, type JSX, type ReactNode, memo, useMemo } from 'react'
+import { type FC, type FunctionComponent, type JSX, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleInfoIcon } from '../Icon'
@@ -19,7 +19,6 @@ const classNameGenerator = tv({
       'shr-overflow-y-visible',
       /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
       '[&_.smarthr-ui-Icon]:-shr-m-0.25',
-      /* global style��どでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */
       '[&_.smarthr-ui-Icon]:shr-box-content',
       '[&_.smarthr-ui-Icon]:shr-p-0.25',
       '[&_.smarthr-ui-Icon]:shr-text-grey',
@@ -27,27 +26,25 @@ const classNameGenerator = tv({
   },
 })
 
-export const DisabledReason: FC<Props> = ({ button, disabledReason }) => {
-  const classNames = useMemo(() => {
-    const { wrapper, tooltip } = classNameGenerator()
+const CLASS_NAMES = (() => {
+  const { wrapper, tooltip } = classNameGenerator()
 
-    return {
-      wrapper: wrapper(),
-      tooltip: tooltip(),
-    }
-  }, [])
+  return {
+    wrapper: wrapper(),
+    tooltip: tooltip(),
+  }
+})()
 
-  return (
-    <div className={classNames.wrapper}>
-      {button}
-      <TooltipIcon
-        icon={disabledReason.icon}
-        message={disabledReason.message}
-        className={classNames.tooltip}
-      />
-    </div>
-  )
-}
+export const DisabledReason: FC<Props> = ({ button, disabledReason }) => (
+  <div className={CLASS_NAMES.wrapper}>
+    {button}
+    <TooltipIcon
+      className={CLASS_NAMES.tooltip}
+      icon={disabledReason.icon}
+      message={disabledReason.message}
+    />
+  </div>
+)
 
 const TooltipIcon = memo<{
   icon?: FunctionComponent
@@ -57,7 +54,7 @@ const TooltipIcon = memo<{
   const DisabledReasonIcon = icon ?? FaCircleInfoIcon
 
   return (
-    <Tooltip message={message} triggerType="icon" className={className}>
+    <Tooltip triggerType="icon" className={className} message={message}>
       <DisabledReasonIcon />
     </Tooltip>
   )

@@ -1,19 +1,16 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
   type PropsWithChildren,
   forwardRef,
   memo,
-  useEffect,
   useId,
-  useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
+
+import { ActualCheckbox } from './client'
 
 export type Props = PropsWithChildren<
   ComponentPropsWithRef<'input'> & {
@@ -37,7 +34,7 @@ const classNameGenerator = tv({
       'peer-disabled:shr-border-disabled peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border',
       'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',
-      'peer-focus-visible:shr-focus-indicator',
+      'peer-focus-visible:shr-focus-indicator--outer',
       'peer-hover:shr-shadow-input-hover',
       'shr-border-default',
       'peer-[[aria-invalid]]:shr-border-danger',
@@ -64,7 +61,7 @@ const classNameGenerator = tv({
 })
 
 export const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed, error, className, children, disabled, id, ...rest }, ref) => {
+  ({ mixed, className, children, disabled, id, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
@@ -79,47 +76,28 @@ export const Checkbox = forwardRef<HTMLInputElement, Props>(
       }
     }, [className])
 
-    const inputRef = useRef<HTMLInputElement>(null)
-
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
-
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.indeterminate = !!(checked && mixed)
-      }
-    }, [checked, mixed])
-
     const defaultId = useId()
     const checkBoxId = id || defaultId
 
     return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
+      <span className={classNames.wrapper} data-disabled={disabled}>
         <span className={classNames.innerWrapper}>
-          <input
+          <ActualCheckbox
             {...rest}
-            ref={inputRef}
-            type="checkbox"
+            checkboxRef={ref}
             id={checkBoxId}
-            checked={checked}
             disabled={disabled}
-            aria-invalid={error || undefined}
+            mixed={mixed}
             className={classNames.input}
-            data-smarthr-ui-input="true"
           />
           <AriaHiddenBox className={classNames.box} />
-          <CheckIconArea
-            mixed={mixed}
-            className={classNames.iconWrap}
-            iconClassName={classNames.icon}
-          />
+          <CheckIconArea mixed={mixed} classNames={classNames} />
         </span>
-
-        <LabeledChildren htmlFor={checkBoxId} className={classNames.label}>
-          {children}
-        </LabeledChildren>
+        {children && (
+          <label htmlFor={checkBoxId} className={classNames.label}>
+            {children}
+          </label>
+        )}
       </span>
     )
   },
@@ -129,23 +107,14 @@ const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClassName: string }>(
-  ({ mixed, className, iconClassName }) => (
-    <span className={className}>
-      {mixed ? (
-        <FaMinusIcon className={iconClassName} />
-      ) : (
-        <FaCheckIcon className={iconClassName} />
-      )}
-    </span>
-  ),
-)
+const CheckIconArea = memo<
+  Pick<Props, 'mixed'> & { classNames: { iconWrap: string; icon: string } }
+>(({ mixed, classNames }) => {
+  const Icon = mixed ? FaMinusIcon : FaCheckIcon
 
-const LabeledChildren = memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
-  ({ children, htmlFor, className }) =>
-    children && (
-      <label htmlFor={htmlFor} className={className}>
-        {children}
-      </label>
-    ),
-)
+  return (
+    <span className={classNames.iconWrap}>
+      <Icon className={classNames.icon} />
+    </span>
+  )
+})

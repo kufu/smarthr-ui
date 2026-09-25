@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { act } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../intl'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../FormGroup'
 
-import { DatePicker } from './DatePicker'
+import { DatePicker } from './client'
 
 describe('DatePicker', () => {
   const renderWithIntl = (component: React.ReactElement) =>
@@ -22,7 +22,7 @@ describe('DatePicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="DatePicker">
-          <DatePicker value="2024-09-25" name="date" onChangeDate={vi.fn()} />
+          <DatePicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
     )
@@ -53,7 +53,7 @@ describe('DatePicker', () => {
       </form>,
     )
     const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
-    await act(() => userEvent.type(textbox, '平成4年5月29日{tab}'))
+    await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
   })
 })

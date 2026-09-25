@@ -1,4 +1,4 @@
-import type { Locale } from '../../intl/localeMap'
+import type { Locale } from '../../intl'
 import type { Header } from '../Header'
 import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
 
@@ -7,8 +7,6 @@ export type LocaleProps = {
 }
 
 export type UserInfoProps = {
-  /** @deprecated 書式の統一のために、可能な限り使用しないでください */
-  arbitraryDisplayName?: string | null
   email?: string | null
   empCode?: string | null
   firstName?: string | null
@@ -30,7 +28,21 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   desktopNavigationAdditionalContent?: ReactNode
   releaseNote?: ReleaseNoteProps | null
   features?: Array<Launcher['feature']>
+  /**
+   * 指定するとアプリランチャーを開いたタイミングでアプリ一覧を取得します（遅延ロード）。
+   * 指定した場合、features は無視されます。
+   */
+  fetchFeatures?: () => Promise<Array<Launcher['feature']>>
   mobileAdditionalContent?: ReactNode
+}
+
+/** AppHeader が内部の DesktopHeader・MobileHeader へ渡す props */
+export type InternalHeaderProps = Omit<HeaderProps, 'features' | 'fetchFeatures'> & {
+  features: Array<Launcher['feature']>
+  isAppLauncherAvailable: boolean
+  featuresLoading: boolean
+  featuresError: boolean
+  handleOpenAppLauncher: () => void
 }
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup
@@ -76,21 +88,15 @@ export type ReleaseNoteProps = {
   error?: boolean | null
 }
 
-const launcher = {
-  pages: ['favorite', 'all'],
-  modes: ['default', 'search'],
-  sortTypes: ['default', 'name/asc', 'name/desc'],
-} as const
-
 export type Launcher = {
   feature: {
     id: string
     name: string
     url: string
     favorite: boolean
-    position: number | null
+    position?: number | null
   }
-  page: (typeof launcher)['pages'][number]
-  mode: (typeof launcher)['modes'][number]
-  sortType: (typeof launcher)['sortTypes'][number]
+  page: 'favorite' | 'all'
+  mode: 'default' | 'search'
+  sortType: 'default' | 'name/asc' | 'name/desc'
 }

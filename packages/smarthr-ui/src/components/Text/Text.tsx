@@ -1,26 +1,27 @@
 import {
   type ComponentProps,
   type ElementType,
+  type FC,
   type PropsWithChildren,
   type ReactNode,
+  type Ref,
+  forwardRef,
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
-import type { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
-import type { Gap } from '../../types'
+import type { AbstractSize, CharRelativeSize } from '../../themes'
+import type { ElementRef, Gap } from '../../types'
 
 type StyleType =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
+  'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
+export const STYLE_TYPE_MAP: {
+  [key in StyleType]: Pick<TextProps, 'size' | 'leading' | 'weight' | 'color'>
+} = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
@@ -67,11 +68,11 @@ const classNameGenerator = tv({
       L: 'shr-text-lg',
       XL: 'shr-text-xl',
       XXL: 'shr-text-2xl',
-    },
+    } satisfies Record<NonNullable<TextProps['size']>, string>,
     weight: {
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
-    },
+    } satisfies Record<NonNullable<TextProps['weight']>, string>,
     color: {
       TEXT_BLACK: 'shr-text-black',
       TEXT_WHITE: 'shr-text-white',
@@ -79,20 +80,20 @@ const classNameGenerator = tv({
       TEXT_DISABLED: 'shr-text-disabled',
       TEXT_LINK: 'shr-text-link',
       inherit: 'shr-text-color-inherit',
-    },
+    } satisfies Record<NonNullable<TextProps['color']>, string>,
     leading: {
       NONE: 'shr-leading-none',
       TIGHT: 'shr-leading-tight',
       NORMAL: 'shr-leading-normal',
       LOOSE: 'shr-leading-loose',
-    },
+    } satisfies Record<NonNullable<TextProps['leading']>, string>,
     whiteSpace: {
       normal: 'shr-whitespace-normal',
       nowrap: 'shr-whitespace-nowrap',
       pre: 'shr-whitespace-pre',
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
-    },
+    } satisfies Record<NonNullable<TextProps['whiteSpace']>, string>,
     maxLines: {
       1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       2: 'shr-line-clamp-[2]',
@@ -100,7 +101,7 @@ const classNameGenerator = tv({
       4: 'shr-line-clamp-[4]',
       5: 'shr-line-clamp-[5]',
       6: 'shr-line-clamp-[6]',
-    },
+    } satisfies Record<NonNullable<TextProps['maxLines']>, string>,
   },
 })
 
@@ -160,8 +161,7 @@ type ActualIconType =
     }
 type IconType = ActualIconType | ReactNode
 
-// VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
+export type TextProps<T extends ElementType = 'span'> = {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
   as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
@@ -170,63 +170,83 @@ export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof clas
   styleType?: StyleType
   /** 設置するアイコン */
   icon?: IconType
+
+  size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+  weight?: 'normal' | 'bold'
+  color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+  leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
 }
+
+// HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
+type ActualTextProps<T extends ElementType> = PropsWithChildren<TextProps<T> & ComponentProps<T>>
+
+type TextComponent = <T extends ElementType = 'span'>(props: ActualTextProps<T>) => ReturnType<FC>
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 
-const ActualText = <T extends ElementType = 'span'>({
-  emphasis,
-  styleType,
-  icon: orgIcon,
-  weight = emphasis ? 'bold' : undefined,
-  as: Component = emphasis ? 'em' : 'span',
-  size,
-  color,
-  leading,
-  whiteSpace,
-  maxLines,
-  className,
-  children,
-  ...rest
-}: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
-    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
-  }
-
-  const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
-  const actualClassName = useMemo(() => {
-    const styleTypeValues = styleType
-      ? STYLE_TYPE_MAP[styleType as StyleType]
-      : UNDEFINED_STYLE_VALUES
-
-    return classNameGenerator({
-      size: size || styleTypeValues.size,
-      weight: weight || styleTypeValues.weight,
-      color: color || styleTypeValues.color,
-      leading: leading || styleTypeValues.leading,
+const ActualText: TextComponent = forwardRef(
+  <T extends ElementType = 'span'>(
+    {
+      emphasis,
+      styleType,
+      icon: orgIcon,
+      weight = emphasis ? 'bold' : undefined,
+      as: Component = emphasis ? 'em' : 'span',
+      size,
+      color,
+      leading,
       whiteSpace,
       maxLines,
       className,
-    })
-  }, [size, weight, color, leading, whiteSpace, maxLines, className, styleType])
-  const wrapperClassName = useMemo(
-    () => (icon ? wrapperClassNameGenerator({ gap: icon.gap || 0.25 }) : ''),
-    [icon],
-  )
+      children,
+      ...rest
+    }: ActualTextProps<T>,
+    ref: Ref<ElementRef<T>>,
+  ) => {
+    if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
+      throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+    }
 
-  return (
-    <Component {...rest} className={actualClassName}>
-      {icon ? (
-        <span className={wrapperClassName}>
-          {icon.prefix}
-          {children}
-          {icon.suffix}
-        </span>
-      ) : (
-        children
-      )}
-    </Component>
-  )
-}
+    const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
+    const actualClassName = useMemo(() => {
+      const styleTypeValues = styleType
+        ? STYLE_TYPE_MAP[styleType as StyleType]
+        : UNDEFINED_STYLE_VALUES
+
+      return classNameGenerator({
+        size: size || styleTypeValues.size,
+        weight: weight || styleTypeValues.weight,
+        color: color || styleTypeValues.color,
+        leading: leading || styleTypeValues.leading,
+        whiteSpace,
+        maxLines,
+        className,
+      })
+    }, [size, weight, color, leading, whiteSpace, maxLines, className, styleType])
+    const hasIcon = !!icon
+    const iconGap = icon?.gap
+
+    const wrapperClassName = useMemo(
+      () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
+      [hasIcon, iconGap],
+    )
+
+    return (
+      <Component {...rest} ref={ref} className={actualClassName}>
+        {icon ? (
+          <span className={wrapperClassName}>
+            {icon.prefix}
+            {children}
+            {icon.suffix}
+          </span>
+        ) : (
+          children
+        )}
+      </Component>
+    )
+  },
+)
 
 export const Text = memo(ActualText) as typeof ActualText

@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Select } from '../Select'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
 
 /**
@@ -15,11 +15,11 @@ import type { ComponentProps } from 'react'
  * false    false なし   default true
  */
 const _cases: Array<Omit<ComponentProps<typeof Select>, 'options'>> = [
-  { disabled: false, error: false, width: undefined, size: 's', hasBlank: true },
+  { disabled: false, error: false, width: undefined, size: 'S', hasBlank: true },
   { disabled: false, error: true, width: '15em', size: undefined, hasBlank: false },
-  { disabled: true, error: true, width: '15em', size: 's', hasBlank: true },
+  { disabled: true, error: true, width: '15em', size: 'S', hasBlank: true },
   { disabled: true, error: false, width: '15em', size: undefined, hasBlank: false },
-  { disabled: true, error: true, width: undefined, size: 's', hasBlank: false },
+  { disabled: true, error: true, width: undefined, size: 'S', hasBlank: false },
   { disabled: false, error: false, width: undefined, size: undefined, hasBlank: true },
 ]
 
@@ -28,7 +28,7 @@ export default {
   render: (args) => (
     <Stack align="flex-start" gap={2}>
       {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <Stack id={id} align="flex-start" key={id}>
+        <Stack key={id} id={id} align="flex-start">
           {_cases.map((props, i) => (
             <Select {...args} {...props} key={i} />
           ))}

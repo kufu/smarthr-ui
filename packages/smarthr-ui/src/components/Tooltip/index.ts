@@ -1,1 +1,2 @@
-export * from './Tooltip'
+export { ControlledTooltip } from './ControlledTooltip'
+export { Tooltip } from './client'

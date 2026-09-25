@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
-import { StatusLabel, classNameGenerator } from '../StatusLabel'
+import { StatusLabel } from '../StatusLabel'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/StatusLabel',
@@ -23,8 +23,8 @@ export const Type: StoryObj<typeof StatusLabel> = {
   name: 'type',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
-        <StatusLabel {...args} type={type as any} key={type} />
+      {[undefined, 'grey', 'blue', 'green', 'red', 'warning', 'error'].map((type) => (
+        <StatusLabel {...args} key={type} type={type as any} />
       ))}
     </Stack>
   ),
@@ -34,8 +34,8 @@ export const Bold: StoryObj<typeof StatusLabel> = {
   name: 'bold',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.type)].map((type) => (
-        <StatusLabel {...args} type={type as any} bold key={type} />
+      {[undefined, 'grey', 'blue', 'green', 'red', 'warning', 'error'].map((type) => (
+        <StatusLabel {...args} key={type} type={type as any} bold />
       ))}
     </Stack>
   ),

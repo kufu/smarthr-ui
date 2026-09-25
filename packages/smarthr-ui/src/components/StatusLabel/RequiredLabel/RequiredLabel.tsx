@@ -1,8 +1,6 @@
-'use client'
-
 import { type FC, memo } from 'react'
 
-import { Localizer } from '../../../intl/Localizer'
+import { Localizer } from '../../../intl'
 import { StatusLabel } from '../StatusLabel'
 
 export const RequiredLabel: FC = memo(() => (

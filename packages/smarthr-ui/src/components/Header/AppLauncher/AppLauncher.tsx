@@ -1,10 +1,7 @@
-'use client'
-
 import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../../hooks/useDecorators'
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -22,15 +19,14 @@ type AppItem = {
   url: string
   target?: string
 }
-type AbstractProps = {
+type BaseProps = {
   apps: Category[]
   urlToShowAll?: string | null
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
-} & VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
-
-type DecoratorKeyTypes = 'triggerLabel'
+  /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
+  triggerLabel?: ReactNode
+  enableNew?: boolean
+}
+type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -63,7 +59,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableNew, ...rest }) => {
+export const AppLauncher: FC<Props> = ({
+  apps,
+  urlToShowAll,
+  triggerLabel,
+  enableNew,
+  ...rest
+}) => {
   const calculatedApps = useMemo(() => {
     const result: {
       base: Props['apps'][number] | undefined
@@ -82,12 +84,12 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
   }, [apps])
 
   const classNames = useMemo(() => {
-    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator({
-      enableNew,
-    })
+    const { appsButton, contentWrapper, category, appList, link, footer } = classNameGenerator()
 
     return {
-      appsButton: appsButton(),
+      appsButton: appsButton({
+        enableNew,
+      }),
       contentWrapper: contentWrapper(),
       category: category(),
       appList: appList(),
@@ -100,7 +102,7 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
     <Dropdown {...rest}>
       <MemoizedDropdownTrigger
         enableNew={enableNew}
-        decorators={decorators}
+        triggerLabel={triggerLabel}
         className={classNames.appsButton}
       />
       <DropdownContent controllable>
@@ -108,7 +110,7 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
         <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (
-              <Stack gap={0.5} className={classNames.category} as="section">
+              <Stack as="section" gap={0.5} className={classNames.category}>
                 <Heading type="subSubBlockTitle">{calculatedApps.base.heading}</Heading>
                 <Cluster as="ul" gap={1} className={classNames.appList}>
                   {calculatedApps.base.items.map((item, index) => (
@@ -126,9 +128,9 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
             )}
             <Cluster gap={1.5}>
               {calculatedApps.others.map(({ heading, items }, i) => (
-                <Stack key={i} gap={0.5} className={classNames.category} as="section">
+                <Stack key={i} as="section" gap={0.5} className={classNames.category}>
                   <Heading type="subSubBlockTitle">{heading}</Heading>
-                  <Stack gap={0.5} as="ul" className={classNames.appList}>
+                  <Stack as="ul" gap={0.5} className={classNames.appList}>
                     {items.map((item, index) => (
                       <LinkListItem
                         key={index}
@@ -152,48 +154,27 @@ export const AppLauncher: FC<Props> = ({ apps, urlToShowAll, decorators, enableN
 }
 
 const MemoizedDropdownTrigger = memo<
-  Pick<Props, 'enableNew' | 'decorators'> & { className: string }
->(({ enableNew, className, decorators }) => {
-  const { localize } = useIntl()
-
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      triggerLabel: localize({
-        id: 'smarthr-ui/AppLauncher/triggerLabel',
-        defaultText: 'アプリ',
-      }),
-    }),
-    [localize],
-  )
-
-  const decorated = useDecorators<DecoratorKeyTypes>(decoratorDefaultTexts, decorators)
-
-  return (
-    <DropdownTrigger>
-      <Button
-        prefix={enableNew ?? <FaToolboxIcon />}
-        suffix={enableNew ? <FaCaretDownIcon /> : undefined}
-        className={className}
-      >
-        {decorated.triggerLabel}
-      </Button>
-    </DropdownTrigger>
-  )
-})
+  Pick<Props, 'enableNew' | 'triggerLabel'> & { className: string }
+>(({ enableNew, triggerLabel, className }) => (
+  <DropdownTrigger>
+    <Button
+      className={className}
+      prefix={enableNew ?? <FaToolboxIcon />}
+      suffix={enableNew ? <FaCaretDownIcon /> : undefined}
+    >
+      {triggerLabel ?? <Localizer id="smarthr-ui/AppLauncher/triggerLabel" defaultText="アプリ" />}
+    </Button>
+  </DropdownTrigger>
+))
 
 const TextLinkToShowAll = memo<{ href: Props['urlToShowAll']; className: string }>(
   ({ href, className }) => {
-    const { localize } = useIntl()
-
     if (!href) return null
 
     return (
       <div className={className}>
         <TextLink href={href} style={{ width: 'fit-content' }}>
-          {localize({
-            id: 'smarthr-ui/AppLauncher/showAllText',
-            defaultText: 'すべて見る',
-          })}
+          <Localizer id="smarthr-ui/AppLauncher/showAllText" defaultText="すべて見る" />
         </TextLink>
       </div>
     )

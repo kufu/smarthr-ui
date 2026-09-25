@@ -1,72 +1,18 @@
 import { darken } from 'polished'
-import { validators } from 'tailwind-merge'
-import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
-import { defaultColor } from './themes/createColor'
-import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
-import { defaultShadow } from './themes/createShadow/defaultShadow'
-import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
-import { defaultWidth } from './themes/createWidth'
-import { defaultZIndex } from './themes/createZIndex'
+import {
+  createSpacingByChar,
+  defaultColor,
+  defaultFontSize,
+  defaultHtmlFontSize,
+  defaultShadow,
+  defaultWidth,
+  defaultZIndex,
+  primitiveTokens as spacingSizes,
+} from './themes'
 
 import type { Config } from 'tailwindcss'
-
-const DEFAULT_WIDTH_KEYS = Object.keys(defaultWidth) as Array<keyof typeof defaultWidth>
-
-defaultConfig.twMergeConfig = {
-  prefix: 'shr-',
-  classGroups: {
-    w: [{ w: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
-    basis: [{ basis: [...DEFAULT_WIDTH_KEYS, validators.isArbitraryValue] }],
-    boxShadow: [
-      {
-        shadow: [
-          'layer-0',
-          'layer-1',
-          'layer-2',
-          'layer-3',
-          'layer-4',
-          'outline',
-          'underline',
-          'input-hover',
-          'none',
-        ],
-      },
-    ],
-    'border-shorthand': [
-      'border-shorthand',
-      'border-t-shorthand',
-      'border-r-shorthand',
-      'border-b-shorthand',
-      'border-l-shorthand',
-    ],
-    fontSize: [
-      {
-        text: ['2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', 'inherit'],
-      },
-    ],
-    lineHeight: [
-      {
-        leading: ['none', 'tight', 'normal', 'loose', '[0]'],
-      },
-    ],
-    zIndex: [
-      {
-        z: [
-          'auto',
-          '0',
-          '1',
-          'fixed-menu',
-          'overlap-base',
-          'overlap',
-          (classPart: string) => /^\[\d+\]$/.test(classPart),
-        ],
-      },
-    ],
-    focus: ['focus-indicator', 'focus-indicator--inner', 'focus-indicator-none'],
-  },
-}
 
 const spacingByChar = createSpacingByChar(defaultHtmlFontSize / 2)
 type Spacing = {
@@ -412,15 +358,23 @@ export default {
          */
         ':where(.focus-indicator)': {
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
-          outline: `2px solid ${theme('colors.outline')}`,
-          outlineOffset: '2px',
-        },
-        ':where(.focus-indicator--inner)': {
-          isolation: 'isolate',
           boxShadow: `inset 0 0 0 4px ${theme('colors.white')}`,
           outline: `2px solid ${theme('colors.outline')}`,
           outlineOffset: '-2px',
+
+          /**
+           * outline と box-shadow がそれぞれ border の内側と外側から生えるため、borderがある場合 box-shadow の幅が小さくなってしまうため幅を増やしている
+          /* FIXME: :not() が効かなくて border-shorthand が適用されていて border-none されているコンポーネントで box-shadow が少し細くなっている 
+          */
+          '&.border-shorthand:not(.border-none)': {
+            boxShadow: `inset 0 0 0 calc(4px - ${theme('borderWidth.DEFAULT')}) ${theme('colors.white')}`,
+          },
+        },
+        ':where(.focus-indicator--outer)': {
+          isolation: 'isolate',
+          boxShadow: `0 0 0 2px ${theme('colors.white')}`,
+          outline: `2px solid ${theme('colors.outline')}`,
+          outlineOffset: '2px',
         },
         '.focus-indicator-none': {
           boxShadow: 'none',

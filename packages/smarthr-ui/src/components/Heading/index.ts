@@ -1,4 +1,2 @@
-export { Heading } from './Heading'
-export type { AbstractProps, HeadingTagTypes } from './Heading'
-
-export * from './PageHeading'
+export { Heading, PageHeading } from './client'
+export type { BaseProps, HeadingTagTypes } from './client'

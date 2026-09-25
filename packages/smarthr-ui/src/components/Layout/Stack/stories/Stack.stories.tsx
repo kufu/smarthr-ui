@@ -1,9 +1,9 @@
-import { Stack } from '..'
 import { Cluster } from '../../Cluster'
 import { ColorBox } from '../../ComponentsForStories'
+import { Stack } from '../Stack'
 
 import type { Gap } from '../../../../types'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Layout/Stack',
@@ -51,14 +51,7 @@ export const AlignStory: StoryObj<typeof Stack> = {
   },
   render: (args) => {
     type Align =
-      | 'center'
-      | 'start'
-      | 'flex-start'
-      | 'end'
-      | 'flex-end'
-      | 'baseline'
-      | 'stretch'
-      | undefined
+      'center' | 'start' | 'flex-start' | 'end' | 'flex-end' | 'baseline' | 'stretch' | undefined
     return (
       <Stack>
         {(['stretch', 'flex-start', 'center', 'flex-end'] as Align[]).map((align) => (

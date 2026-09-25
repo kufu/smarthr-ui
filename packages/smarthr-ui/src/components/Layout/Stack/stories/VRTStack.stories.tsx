@@ -1,8 +1,8 @@
-import { Stack } from '../../../..'
+import { Stack } from '../Stack'
 
 import { GapStory } from './Stack.stories'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Layout/Stack/VRT',

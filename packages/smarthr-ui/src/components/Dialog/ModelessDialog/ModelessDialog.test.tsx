@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
@@ -15,8 +15,8 @@ describe('ModelessDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ModelessDialog</Button>
         <ModelessDialog
           isOpen={isOpen}
-          heading="座標指定表示"
           onClickClose={() => setIsOpen(false)}
+          heading="座標指定表示"
         >
           <p>ダイアログの中身</p>
         </ModelessDialog>
@@ -28,12 +28,12 @@ describe('ModelessDialog', () => {
 
     // トリガ押下でダイアログが開くこと
     expect(screen.queryByRole('dialog', { name: 'ModelessDialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: '座標指定表示' })).toBeVisible()
 
     // 裏側をクリックしてもダイアログが閉じないこと
-    await act(() => userEvent.click(document.body))
+    await userEvent.click(document.body)
     await waitFor(
       () => {
         expect(screen.getByRole('dialog', { name: '座標指定表示' })).toBeVisible()
@@ -49,5 +49,29 @@ describe('ModelessDialog', () => {
       },
       { timeout: 1000 },
     )
+  })
+
+  it('初回マウント時にisOpenがtrueの場合も、正しく中央寄せされること', () => {
+    // HINT: jsdomにはレイアウトが無いため、DOMに接続済みの要素にのみサイズを持たせてrectを返す。
+    // portal containerがdocument.bodyへappendされる前に計測すると0が返り、中央寄せがずれる不具合の再現に使う
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      const size = this.isConnected ? { width: 200, height: 100 } : { width: 0, height: 0 }
+      return { ...size, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => {} }
+    })
+
+    render(
+      <IntlProvider locale="ja">
+        <ModelessDialog isOpen onClickClose={() => {}} heading="初回マウント表示">
+          <p>ダイアログの中身</p>
+        </ModelessDialog>
+      </IntlProvider>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '初回マウント表示' })
+
+    expect(dialog.style.top).toBe(`${window.innerHeight / 2 - 50}px`)
+    expect(dialog.style.left).toBe(`${window.innerWidth / 2 - 100}px`)
   })
 })

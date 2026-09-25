@@ -8,10 +8,9 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Base } from '../Base'
 import { Button } from '../Button'
 import {
   FaCircleCheckIcon,
@@ -23,7 +22,34 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
+import { LiveRegion } from '../LiveRegion'
+import { Panel } from '../Panel'
 import { Text } from '../Text'
+
+// TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
+// base="base" も意味が分かりづらい
+type BaseType = 'base' | 'none'
+type TypeType = 'info' | 'success' | 'warning' | 'error' | 'sync'
+
+type BaseProps = PropsWithChildren<{
+  /** コンポーネント右の領域 */
+  subActionArea?: ReactNode
+  /** 閉じるボタン押下時に発火させる関数 */
+  onClose?: () => void
+  /** role 属性 */
+  role?: 'alert' | 'status'
+  /** 下地 */
+  base?: BaseType
+  /** メッセージの種類 */
+  type: TypeType
+  /** 強調するかどうか */
+  bold?: boolean
+  /** スライドインするかどうか */
+  animate?: boolean
+}> &
+  Pick<ComponentProps<typeof Panel>, 'layer'>
+
+type Props = Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps> & BaseProps
 
 const classNameGenerator = tv({
   slots: {
@@ -41,14 +67,12 @@ const classNameGenerator = tv({
       'smarthr-ui-NotificationBar-closeButton -shr-mb-0.5 -shr-mr-0.5 -shr-mt-0.5 shr-flex-shrink-0 shr-text-black',
   },
   variants: {
-    /** 下地 */
     base: {
       none: {},
       base: {
         wrapper: 'shr-py-1 shr-pe-1 shr-ps-1.5',
       },
-    },
-    /** メッセージの種類 */
+    } satisfies Record<BaseType, object>,
     type: {
       info: {
         icon: 'shr-text-grey',
@@ -61,13 +85,11 @@ const classNameGenerator = tv({
       sync: {
         icon: 'shr-text-main',
       },
-    },
-    /** 強調するかどうか */
+    } satisfies Record<TypeType, object>,
     bold: {
       true: '',
       false: '',
     },
-    /** スライドインするかどうか */
     animate: {
       true: {
         wrapper: 'shr-animate-[notification-bar-slide-in_0.2s_ease-out]',
@@ -110,7 +132,7 @@ const classNameGenerator = tv({
         wrapper: 'shr-bg-main shr-text-white',
         icon: 'shr-text-white',
         closeButton:
-          'shr-text-white hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
+          'shr-text-white focus-visible:[&]:shr-focus-indicator hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
       },
     },
     {
@@ -135,23 +157,6 @@ const classNameGenerator = tv({
   ],
 })
 
-type StyleVariants = VariantProps<typeof classNameGenerator>
-type AbstractProps = PropsWithChildren<
-  Omit<StyleVariants, 'type'> &
-    Required<Pick<StyleVariants, 'type'>> & {
-      /** コンポーネント右の領域 */
-      subActionArea?: ReactNode
-      /** 閉じるボタン押下時に発火させる関数 */
-      onClose?: () => void
-      /** role 属性 */
-      role?: 'alert' | 'status'
-    }
->
-type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
-type Props = AbstractProps &
-  Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps> &
-  Omit<BaseProps, keyof AbstractProps>
-
 const ABSTRACT_ICON_MAPPER = {
   info: FaCircleInfoIcon,
   success: FaCircleCheckIcon,
@@ -169,7 +174,7 @@ const ICON_MAPPER = {
   },
 } as const
 
-const ROLE_STATUS_TYPE_REGEX = /^(info|sync)$/
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
 export const NotificationBar: FC<Props> = ({
   type,
@@ -184,29 +189,16 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  const actualRole = useMemo(() => {
-    if (role) {
-      return role
-    }
+  let WrapBase = Fragment
+  let baseProps = {}
 
-    return ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert'
-  }, [role, type])
-  const { WrapBase, baseProps } = useMemo(
-    () =>
-      base === 'base'
-        ? {
-            WrapBase: Base,
-            baseProps: {
-              layer,
-              overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
-            },
-          }
-        : {
-            WrapBase: Fragment,
-            baseProps: {},
-          },
-    [base, layer],
-  )
+  if (base === 'base') {
+    WrapBase = Panel
+    baseProps = {
+      layer,
+      overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
+    }
+  }
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
@@ -226,9 +218,14 @@ export const NotificationBar: FC<Props> = ({
 
   return (
     <WrapBase {...baseProps}>
-      <div {...rest} className={classNames.wrapper} role={actualRole}>
+      <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
-          <MessageArea bold={bold} type={type} classNames={classNames}>
+          <MessageArea
+            role={role || (ROLE_STATUS_TYPE_REGEX.test(type) ? 'status' : 'alert')}
+            type={type}
+            bold={bold}
+            classNames={classNames}
+          >
             {children}
           </MessageArea>
           {subActionArea && (
@@ -237,7 +234,18 @@ export const NotificationBar: FC<Props> = ({
             </Cluster>
           )}
         </Cluster>
-        <CloseButton onClose={onClose} className={classNames.closeButton} />
+        {onClose && (
+          <Button variant="text" size="S" className={classNames.closeButton} onClick={onClose}>
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/NotificationBar/closeButtonIconAlt"
+                  defaultText="閉じる"
+                />
+              }
+            />
+          </Button>
+        )}
       </div>
     </WrapBase>
   )
@@ -245,34 +253,23 @@ export const NotificationBar: FC<Props> = ({
 
 const MessageArea = memo<
   Pick<Props, 'children' | 'bold' | 'type'> & {
+    role: 'status' | 'alert'
     classNames: { messageArea: string; icon: string }
   }
->(({ children, bold, type, classNames }) => {
+>(({ children, role, bold, type, classNames }) => {
   const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
 
   return (
     <Text
+      className={classNames.messageArea}
       icon={{
         prefix: <Icon className={classNames.icon} />,
         gap: 0.5,
       }}
-      className={classNames.messageArea}
-      as="div"
     >
-      {children}
+      <LiveRegion role={role} className="shr-contents">
+        {children}
+      </LiveRegion>
     </Text>
   )
 })
-
-const CloseButton = memo<Pick<Props, 'onClose'> & { className: string }>(
-  ({ onClose, className }) =>
-    onClose && (
-      <Button variant="text" size="s" onClick={onClose} className={className}>
-        <FaXmarkIcon
-          alt={
-            <Localizer id="smarthr-ui/NotificationBar/closeButtonIconAlt" defaultText="閉じる" />
-          }
-        />
-      </Button>
-    ),
-)

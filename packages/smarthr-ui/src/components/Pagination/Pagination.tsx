@@ -1,22 +1,13 @@
-'use client'
-
-import {
-  type ElementType,
-  type FC,
-  type HTMLAttributes,
-  type MouseEvent,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentProps, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
 import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
-import { Nav } from '../SectioningContent'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
-import { PaginationItemButton } from './PaginationItemButton'
+import { PaginationItemButton, Wrapper } from './client'
+
+import type { AnchorProps, ButtonProps } from './type'
 
 const classNameGenerator = tv({
   slots: {
@@ -53,32 +44,10 @@ type CommonProps = {
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
+type BaseProps = (CommonProps & ButtonProps) | (CommonProps & AnchorProps)
 
-type ButtonProps = CommonProps & {
-  /** ボタンを押下したときに発火するコールバック関数 */
-  onClick: (pageNumber: number, e: MouseEvent<HTMLElement>) => void
-  /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
-  hrefTemplate?: undefined
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  linkAs?: undefined
-}
-type AnchorProps = CommonProps & {
-  /** リンクを押下したときに発火するコールバック関数 */
-  onClick?: (href: string, e: MouseEvent<HTMLElement>) => void
-  /** href属性生成用関数。設定した場合、番号やarrowがbuttonからa要素に置き換わります */
-  hrefTemplate: (pageNumber: number) => string
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  linkAs?: ElementType
-}
-
-type AbstractProps = ButtonProps | AnchorProps
-type Props = AbstractProps & Omit<HTMLAttributes<HTMLElement>, keyof AbstractProps>
-
-const BUTTON_REGEX = /^button$/i
-const ANCHOR_REGEX = /^a/i
-
-const getTargetDelegateElement = (e: MouseEvent<HTMLElement>, regex: RegExp) =>
-  (e.nativeEvent.composedPath() as HTMLElement[]).find((elm) => regex.test(elm.tagName))
+type WrapperType = ComponentProps<typeof Wrapper>
+type Props = BaseProps & Omit<WrapperType, keyof BaseProps>
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
@@ -86,15 +55,14 @@ export const Pagination: FC<Props> = (props) =>
 const ActualPagination: FC<Props> = ({
   total,
   current,
-  onClick,
   padding,
   className,
   withoutNumbers,
   hrefTemplate,
+  onClick,
   linkAs,
   ...rest
 }) => {
-  const { localize } = useIntl()
   const classNames = useMemo(() => {
     const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } =
       classNameGenerator()
@@ -108,61 +76,25 @@ const ActualPagination: FC<Props> = ({
       nextListItem: nextListItem(itemArg),
       lastListItem: lastListItem(itemArg),
     }
-  }, [className, withoutNumbers])
-
-  const onDelegateClick = useMemo(() => {
-    if (!onClick) {
-      return undefined
-    }
-
-    if (hrefTemplate) {
-      return (e: MouseEvent<HTMLElement>) => {
-        const anchor = getTargetDelegateElement(e, ANCHOR_REGEX)
-
-        if (!anchor) {
-          return
-        }
-
-        const href = (anchor as HTMLAnchorElement).href
-
-        if (href) {
-          onClick(href, e)
-        }
-      }
-    }
-
-    return (e: MouseEvent<HTMLElement>) => {
-      const button = getTargetDelegateElement(e, BUTTON_REGEX)
-
-      if (button) {
-        onClick(parseInt((button as HTMLButtonElement).value, 10), e)
-      }
-    }
-  }, [onClick, hrefTemplate])
-
-  const navigationLabel = useMemo(
-    () =>
-      localize({
-        id: 'smarthr-ui/Pagination/navigationLabel',
-        defaultText: 'ページネーション',
-      }),
-    [localize],
-  )
+  }, [withoutNumbers, className])
 
   return (
-    <Nav {...rest} className={classNames.wrapper} aria-label={navigationLabel}>
-      <Reel onClick={onDelegateClick}>
-        <ItemButtons
-          total={total}
-          current={current}
-          padding={padding}
-          withoutNumbers={withoutNumbers}
-          hrefTemplate={hrefTemplate}
-          classNames={classNames}
-          linkAs={linkAs}
-        />
-      </Reel>
-    </Nav>
+    <Wrapper
+      {...rest}
+      hrefTemplate={hrefTemplate}
+      className={classNames.wrapper}
+      onDelegateClick={onClick}
+    >
+      <ItemButtons
+        linkAs={linkAs}
+        total={total}
+        current={current}
+        withoutNumbers={withoutNumbers}
+        hrefTemplate={hrefTemplate}
+        padding={padding}
+        classNames={classNames}
+      />
+    </Wrapper>
   )
 }
 
@@ -187,52 +119,45 @@ const ItemButtons = memo<
     return range(Math.max(current - actualPadding, 1), Math.min(current + actualPadding, total) + 1)
   }, [current, total, padding, withoutNumbers])
 
-  const controllerAttrs = useMemo(
-    () => ({
-      prev: {
-        disabled: current === 1,
-        direction: 'prev' as const,
-        hrefTemplate,
-        linkAs,
-      },
-      next: {
-        disabled: current === total,
-        direction: 'next' as const,
-        hrefTemplate,
-        linkAs,
-      },
-    }),
-    [current, total, hrefTemplate, linkAs],
-  )
+  const prevAttrs = {
+    disabled: current === 1,
+    direction: 'prev' as const,
+    hrefTemplate,
+    linkAs,
+  }
+  const nextAttrs = {
+    disabled: current === total,
+    direction: 'next' as const,
+    hrefTemplate,
+    linkAs,
+  }
 
   return (
-    <Cluster as="ul" className={classNames.list}>
-      <DoubleIconItemButton
-        {...controllerAttrs.prev}
-        targetPage={1}
-        className={classNames.firstListItem}
-      />
-      <li className={classNames.prevListItem}>
-        <PaginationControllerItemButton {...controllerAttrs.prev} targetPage={current - 1} />
-      </li>
-      {pageNumbers.map((page) => (
-        <NumberItemButton
-          key={page}
-          page={page}
-          disabled={page === current}
-          hrefTemplate={hrefTemplate}
-          linkAs={linkAs}
+    <Reel>
+      <Cluster as="ul" className={classNames.list}>
+        <DoubleIconItemButton {...prevAttrs} targetPage={1} className={classNames.firstListItem} />
+        <li className={classNames.prevListItem}>
+          <PaginationControllerItemButton {...prevAttrs} targetPage={current - 1} />
+        </li>
+        {pageNumbers.map((page) => (
+          <NumberItemButton
+            key={page}
+            linkAs={linkAs}
+            disabled={page === current}
+            page={page}
+            hrefTemplate={hrefTemplate}
+          />
+        ))}
+        <li className={classNames.nextListItem}>
+          <PaginationControllerItemButton {...nextAttrs} targetPage={current + 1} />
+        </li>
+        <DoubleIconItemButton
+          {...nextAttrs}
+          targetPage={total}
+          className={classNames.lastListItem}
         />
-      ))}
-      <li className={classNames.nextListItem}>
-        <PaginationControllerItemButton {...controllerAttrs.next} targetPage={current + 1} />
-      </li>
-      <DoubleIconItemButton
-        {...controllerAttrs.next}
-        targetPage={total}
-        className={classNames.lastListItem}
-      />
-    </Cluster>
+      </Cluster>
+    </Reel>
   )
 })
 

@@ -1,12 +1,18 @@
-'use client'
+import { type PropsWithChildren, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
-
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+type sortTypes = 'asc' | 'desc' | 'none'
+
+type Props = PropsWithChildren<{
+  align?: 'left' | 'right'
+  handleSort?: () => void
+  sort?: sortTypes
+}>
 
 const sortButtonClassNameGenerator = tv({
   base: 'shr-relative -shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-items-center shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
@@ -14,58 +20,28 @@ const sortButtonClassNameGenerator = tv({
     align: {
       left: '',
       right: 'shr-justify-end',
-    },
+    } satisfies Record<NonNullable<Props['align']>, string>,
   },
 })
 
-type sortTypes = 'asc' | 'desc' | 'none'
-
-type Props = PropsWithChildren<{
-  align?: VariantProps<typeof sortButtonClassNameGenerator>['align']
-  onSort?: () => void
-  sort?: sortTypes
-  decorators?: {
-    sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
-  }
-}>
-
-export const ThSortButton = memo<Props>(({ align, sort, decorators, onSort, children }) => {
-  const { localize } = useIntl()
-
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      asc: localize({
-        id: 'smarthr-ui/Th/sortDirectionAsc',
-        defaultText: '昇順',
-      }),
-      desc: localize({
-        id: 'smarthr-ui/Th/sortDirectionDesc',
-        defaultText: '降順',
-      }),
-      none: localize({
-        id: 'smarthr-ui/Th/sortDirectionNone',
-        defaultText: '並び替えなし',
-      }),
-    }),
-    [localize],
-  )
-
-  const sortLabel = useMemo(() => {
-    if (!sort) return undefined
-
-    return (
-      decorators?.sortDirectionIconAlt?.(decoratorDefaultTexts[sort], { sort }) ??
-      decoratorDefaultTexts[sort]
-    )
-  }, [decorators, sort, decoratorDefaultTexts])
-
+export const ThSortButton = memo<Props>(({ align, sort, handleSort, children }) => {
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
 
   return (
-    <UnstyledButton onClick={onSort} className={className}>
+    <UnstyledButton className={className} onClick={handleSort}>
       {children}
       <SortIcon />
-      <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
+      {sort && (
+        <VisuallyHiddenText>
+          {sort === 'asc' ? (
+            <Localizer id="smarthr-ui/Th/sortDirectionAsc" defaultText="昇順" />
+          ) : sort === 'desc' ? (
+            <Localizer id="smarthr-ui/Th/sortDirectionDesc" defaultText="降順" />
+          ) : (
+            <Localizer id="smarthr-ui/Th/sortDirectionNone" defaultText="並び替えなし" />
+          )}
+        </VisuallyHiddenText>
+      )}
     </UnstyledButton>
   )
 })
@@ -90,21 +66,19 @@ const sortIconClassNameGenerator = tv({
   },
 })
 
-const SortIcon = memo(() => {
-  const classNames = useMemo(() => {
-    const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
+const SORT_ICON_CLASS_NAMES = (() => {
+  const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
 
-    return {
-      wrapper: wrapper(),
-      upIcon: upIcon(),
-      downIcon: downIcon(),
-    }
-  }, [])
+  return {
+    wrapper: wrapper(),
+    upIcon: upIcon(),
+    downIcon: downIcon(),
+  }
+})()
 
-  return (
-    <span className={classNames.wrapper}>
-      <FaSortUpIcon className={classNames.upIcon} />
-      <FaSortDownIcon className={classNames.downIcon} />
-    </span>
-  )
-})
+const SortIcon = memo(() => (
+  <span className={SORT_ICON_CLASS_NAMES.wrapper}>
+    <FaSortUpIcon className={SORT_ICON_CLASS_NAMES.upIcon} />
+    <FaSortDownIcon className={SORT_ICON_CLASS_NAMES.downIcon} />
+  </span>
+))

@@ -16,5 +16,8 @@
       "enabled": false,
       "matchPackageNames": ["/cimg/node/"]
     }
-  ]
+  ],
+  "toolSettings": {
+    "nodeMaxMemory": 1024
+  }
 }

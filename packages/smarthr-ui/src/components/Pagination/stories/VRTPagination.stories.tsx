@@ -5,7 +5,7 @@ import { Stack } from '../../Layout'
 import { Current } from './Pagination.stories'
 
 import type { Pagination } from '../Pagination'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
   title: 'Components/Pagination/VRT',
@@ -32,7 +32,7 @@ export const VRT: StoryObj<typeof Pagination> = {
   render: (args, context) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((id) => (
-        <div id={id} key={id}>
+        <div key={id} id={id}>
           {meta.render?.(args, context)}
         </div>
       ))}
@@ -48,10 +48,10 @@ export const VRT: StoryObj<typeof Pagination> = {
 
 export const VRTNarrowView: StoryObj<typeof Pagination> = {
   render: meta.render,
+  globals: {
+    viewport: { value: 'vrtMobile' },
+  },
   parameters: {
-    viewport: {
-      defaultViewport: 'vrtMobile',
-    },
     chromatic: {
       modes: {
         vrtMobile: { viewport: 'vrtMobile' },

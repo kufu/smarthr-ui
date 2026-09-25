@@ -5,7 +5,7 @@ export const itemClassNameGenerator = tv({
     wrapper: [
       'shr-box-border shr-inline-flex shr-cursor-pointer shr-items-center shr-gap-0.5 shr-whitespace-nowrap shr-px-0.5 shr-py-0.75 shr-text-base shr-font-bold shr-leading-none shr-text-grey shr-no-underline',
       'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator--inner',
+      'focus-visible:shr-focus-indicator',
     ],
     icon: 'shr-fill-grey',
   },

@@ -1,17 +1,18 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { type FC, useRef, useState } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
-import { Fieldset } from '../Fieldset'
-import { FormControl } from '../FormControl'
+import { Fieldset, FormControl } from '../FormGroup'
 import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
 import { Dialog } from './Dialog'
+
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
 
 describe('Dialog', () => {
   const renderWithIntl = (component: React.ReactElement) =>
@@ -36,7 +37,7 @@ describe('Dialog', () => {
               <FormControl label="dialog_datepicker">
                 <DatePicker
                   name="dialog_datepicker"
-                  value={'2021-01-01'}
+                  value="2021-01-01"
                   formatDate={(_date) => (_date ? _date.toDateString() : '')}
                 />
               </FormControl>
@@ -69,12 +70,15 @@ describe('Dialog', () => {
     renderWithIntl(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
 
-    await act(() => userEvent.tab({ shift: true }))
-    await act(() => userEvent.keyboard('{ }'))
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
+
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard('{ }')
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
@@ -111,14 +115,43 @@ describe('Dialog', () => {
     renderWithIntl(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
 
-    await act(() => userEvent.tab({ shift: true }))
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
+
+    await userEvent.tab({ shift: true })
     expect(screen.getByRole('button', { name: 'close' })).toHaveFocus()
-    await act(() => userEvent.tab())
+    await userEvent.tab()
     expect(screen.getByRole('textbox', { name: 'dialog_datepicker' })).toHaveFocus()
+  })
+
+  it('IME 変換中の Tab はフォーカストラップの対象外になること', async () => {
+    renderWithIntl(<DialogTemplate />)
+
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
+    expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
+
+    // ダイアログ内の最後の tabbable 要素 (close ボタン) にフォーカスを移し、
+    // 通常であれば Tab で最初の要素に戻る（preventDefault される）状態を再現する。
+    const closeButton = screen.getByRole('button', { name: 'close' })
+    closeButton.focus()
+    expect(closeButton).toHaveFocus()
+
+    // IME 変換中 (isComposing: true) の Tab では preventDefault されないことを確認する。
+    // このとき、フォーカスは Tab の本来の挙動 (IME の変換候補選択) に委ねられ、
+    // FocusTrap は介入しない。
+    const event = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      isComposing: true,
+      bubbles: true,
+      cancelable: true,
+    })
+    fireEvent(closeButton, event)
+    expect(event.defaultPrevented).toBe(false)
   })
 
   const DialogTemplateWithFocusTrap: FC = () => {
@@ -129,9 +162,9 @@ describe('Dialog', () => {
         <Button onClick={() => setIsOpen(true)}>特定の要素をフォーカス</Button>
         <Dialog
           isOpen={isOpen}
-          onPressEscape={() => setIsOpen(false)}
           firstFocusTarget={inputRef}
           ariaLabel="特定の要素をフォーカスするダイアログ"
+          onPressEscape={() => setIsOpen(false)}
         >
           <form>
             <FormControl label="特定の要素をフォーカスするダイアログのInput">
@@ -151,11 +184,14 @@ describe('Dialog', () => {
     expect(
       screen.queryByRole('dialog', { name: '特定の要素をフォーカスするダイアログ' }),
     ).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(
       screen.getByRole('dialog', { name: '特定の要素をフォーカスするダイアログ' }),
     ).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
 
     expect(
       screen.getByRole('textbox', { name: '特定の要素をフォーカスするダイアログのInput' }),

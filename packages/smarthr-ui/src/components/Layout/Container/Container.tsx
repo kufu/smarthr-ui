@@ -1,20 +1,18 @@
 'use client'
 
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
-import { useDevice } from '../../../hooks/useDevice'
-import { useEnvironment } from '../../../hooks/useEnvironment'
-import { paddingBlock, paddingInline } from '../../../themes/tailwind'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
+import { paddingBlock, paddingInline } from '../../../tailwind'
 
 import type { Gap } from '../../../types'
 
-type AbstractProps = PropsWithChildren<
-  Omit<VariantProps<typeof classNameGenerator>, 'paddingBlock' | 'paddingInline'> & {
-    padding?: Gap | SeparatePadding
-  }
->
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren<{
+  size?: 'NARROW' | 'DEFAULT' | 'WIDE' | 'FULL'
+  padding?: Gap | SeparatePadding
+}>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 type SeparatePadding = {
   block?: Gap
@@ -25,7 +23,7 @@ type SeparatePadding = {
   narrowModeInline?: Gap
 }
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: 'shr-mx-auto shr-w-full',
   variants: {
     size: {
@@ -33,7 +31,7 @@ export const classNameGenerator = tv({
       DEFAULT: 'shr-max-w-col8',
       WIDE: 'shr-max-w-col9',
       FULL: '',
-    },
+    } satisfies Record<NonNullable<Props['size']>, string>,
     paddingBlock,
     paddingInline,
   },
@@ -89,15 +87,20 @@ export const classNameGenerator = tv({
   ],
 })
 
+const DEFAULT_PADDING = {
+  block: 2,
+  inline: 2,
+  narrowModeBlock: 1.5,
+  narrowModeInline: 1,
+} as const
+
 export const Container: FC<Props> = ({
   size = 'DEFAULT',
-  padding = { block: 2, inline: 2, narrowModeBlock: 1.5, narrowModeInline: 1 },
+  padding = DEFAULT_PADDING,
   className,
   ...rest
 }) => {
-  const { isNarrowView } = useDevice()
-  const environment = useEnvironment()
-  const mobile = isNarrowView || environment.mobile
+  const { mobile } = useEnvironment()
   const actualClassName = useMemo(() => {
     const actualPadding =
       padding instanceof Object
@@ -110,5 +113,6 @@ export const Container: FC<Props> = ({
       className,
     })
   }, [size, className, padding, mobile])
+
   return <div {...rest} className={actualClassName} />
 }

@@ -7,7 +7,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 import { Td } from './Td'
 
 type Props = PropsWithChildren<{
-  /** 値を特定するための行 id */
+  /** RadioButtonのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
   ComponentProps<typeof RadioButton> &

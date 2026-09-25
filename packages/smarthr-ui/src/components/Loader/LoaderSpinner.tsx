@@ -1,14 +1,13 @@
-'use client'
-
-import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
+import { Localizer } from '../../intl'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { FC, ReactNode } from 'react'
 
 type Props = {
   /** ローダーの大きさ */
-  size?: 's' | 'm'
+  size?: 'S' | 'M'
   /** 代替テキスト */
   alt?: ReactNode
   /** コンポーネントの色調 */
@@ -56,11 +55,11 @@ const classNameGenerator = tv({
   },
   variants: {
     size: {
-      s: {
+      S: {
         spinner: ['shr-w-1.5', 'shr-h-1.5'],
         cogInner: ['shr-border-2'],
       },
-      m: {
+      M: {
         spinner: ['shr-w-3', 'shr-h-3'],
         cogInner: ['shr-border-4'],
       },
@@ -116,10 +115,9 @@ const classNameGenerator = tv({
   },
 })
 
-export const LoaderSpinner = memo<Props>(({ size = 'm', alt, type = 'primary' }) => {
-  const { localize } = useIntl()
-
-  const classNames = useMemo(() => {
+export const LoaderSpinner: FC<Props> = ({ size = 'M', alt, type = 'primary' }) => {
+  // HINT: LoaderSpinnerは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
+  const classNames = (() => {
     const { spinner, line, cog, cogInner } = classNameGenerator({
       type,
       size,
@@ -135,12 +133,7 @@ export const LoaderSpinner = memo<Props>(({ size = 'm', alt, type = 'primary' })
       line3: line({ lineNum: 3 }),
       line4: line({ lineNum: 4 }),
     }
-  }, [type, size])
-
-  const actualAlt = useMemo(
-    () => alt ?? localize({ id: 'smarthr-ui/Loader/alt', defaultText: '処理中' }),
-    [alt, localize],
-  )
+  })()
 
   const lineBody = (
     <>
@@ -159,7 +152,9 @@ export const LoaderSpinner = memo<Props>(({ size = 'm', alt, type = 'primary' })
       <span className={classNames.line2}>{lineBody}</span>
       <span className={classNames.line3}>{lineBody}</span>
       <span className={classNames.line4}>{lineBody}</span>
-      <VisuallyHiddenText>{actualAlt}</VisuallyHiddenText>
+      <VisuallyHiddenText>
+        {alt ?? <Localizer id="smarthr-ui/Loader/alt" defaultText="処理中" />}
+      </VisuallyHiddenText>
     </span>
   )
-})
+}

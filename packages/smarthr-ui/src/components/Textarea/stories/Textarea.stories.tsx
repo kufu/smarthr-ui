@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
-import { Textarea } from '../Textarea'
+import { Textarea } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Textarea',
@@ -39,7 +39,7 @@ export const Width: StoryObj<typeof Textarea> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        <Textarea {...args} width={width} key={width} />
+        <Textarea {...args} key={width} width={width} />
       ))}
     </Stack>
   ),
@@ -79,29 +79,6 @@ export const MaxLetters: StoryObj<typeof Textarea> = {
   args: {
     maxLetters: 100,
   },
-}
-
-export const Decorators: StoryObj<typeof Textarea> = {
-  name: 'decorators',
-  args: {
-    decorators: {
-      beforeMaxLettersCount: (org) => <>beforeMaxLettersCount({org})</>,
-      afterMaxLettersCount: (org) => <>afterMaxLettersCount({org})</>,
-      afterMaxLettersCountExceeded: (org) => <>afterMaxLettersCountExceeded({org})</>,
-      beforeScreenReaderMaxLettersDescription: (org) => (
-        <>beforeScreenReaderMaxLettersDescription({org})</>
-      ),
-      afterScreenReaderMaxLettersDescription: (org) => (
-        <>afterScreenReaderMaxLettersDescription({org})</>
-      ),
-    },
-  },
-  render: (args) => (
-    <>
-      <Textarea {...args} maxLetters={5} value="テキストエ" />
-      <Textarea {...args} maxLetters={5} value="テキストエリア" />
-    </>
-  ),
 }
 
 export const Placeholder: StoryObj<typeof Textarea> = {

@@ -1,12 +1,21 @@
-'use client'
+import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { type FC, type PropsWithChildren, useContext } from 'react'
+export const DIALOG_CLOSER_CLASS_NAME = 'smarthr-ui-Dialog-closer'
 
-import { DialogContentContext } from './DialogContent'
+const classNameGenerator = tv({
+  base: [DIALOG_CLOSER_CLASS_NAME, 'shr-inline-block'],
+})
 
-export const DialogCloser: FC<PropsWithChildren> = (props) => {
-  const { onClickClose } = useContext(DialogContentContext)
+// HINT: onClickは念のためomitしているが、必要に応じて利用可能にすることを検討する
+type Props = PropsWithChildren<Omit<ComponentProps<'div'>, 'onClick'>>
 
-  // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-  return <div {...props} onClick={onClickClose} role="presentation" className="shr-inline-block" />
+export const DialogCloser: FC<Props> = ({ className, children, ...rest }) => {
+  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
+  return (
+    <div {...rest} className={actualClassName}>
+      {children}
+    </div>
+  )
 }

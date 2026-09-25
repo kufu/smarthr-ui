@@ -1,13 +1,20 @@
 name: Typo Checker
 on: [pull_request]
 
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
 jobs:
   run:
     name: Typo Checker
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - name: Set NPM_CONFIG_BEFORE
+      run: |
+        echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Use custom config file
-      uses: crate-ci/typos@master
+      uses: crate-ci/typos@512fc24f32f44ab01972217aaaf3dc86ec234d53 # v1.50.2
       with:
         config: ./.typos.toml

@@ -1,19 +1,16 @@
-'use client'
-
 import {
   type ComponentProps,
   type ComponentType,
   type FC,
   type ReactNode,
-  useCallback,
   useId,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
 import { RadioButton } from '../RadioButton'
+
+import { ClickablePanel } from './client'
 
 type Props = ComponentProps<typeof RadioButton> & {
   as?: string | ComponentType<any>
@@ -31,7 +28,7 @@ const classNameGenerator = tv({
       '[&:has(:disabled)]:shr-text-disabled has-[:disabled]:[&_.smarthr-ui-RadioButtonPanel-description]:shr-text-disabled',
     ],
     radio: [
-      '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
+      '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-focus-indicator-none',
       '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
     ],
     // RadioButtonPanel で指定している shr-ms-0.75 + RadioButton のボタンの shr-w-em を足して shr-ms-[1.75em] にしている
@@ -47,16 +44,9 @@ const classNameGenerator = tv({
   },
 })
 
-export const RadioButtonPanel: FC<Props> = ({
-  onClick,
-  as,
-  className,
-  children,
-  label,
-  'aria-describedby': ariaDescribedby,
-  ...rest
-}) => {
+export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) => {
   const hasDescription = !!children
+
   const classNames = useMemo(() => {
     const { base, description, radio } = classNameGenerator({
       className,
@@ -64,31 +54,51 @@ export const RadioButtonPanel: FC<Props> = ({
     })
 
     return { base: base(), description: description(), radio: radio() }
-  }, [className, hasDescription])
+  }, [hasDescription, className])
 
-  // 外側の装飾を押しても内側のラジオボタンが押せるようにする
-  const innerRef = useRef<HTMLInputElement>(null)
-  const onDelegateClick = useCallback(() => {
-    innerRef.current?.click()
-  }, [])
+  return hasDescription ? (
+    <DescriptionRadioButtonPanel {...rest} classNames={classNames}>
+      {children}
+    </DescriptionRadioButtonPanel>
+  ) : (
+    <ActualRadioButtonPanel {...rest} classNames={classNames} />
+  )
+}
 
+type LowerProps = Omit<Props, 'className'> & {
+  classNames: {
+    base: string
+    description: string
+    radio: string
+  }
+}
+
+const DescriptionRadioButtonPanel: FC<LowerProps> = ({
+  'aria-describedby': ariaDescribedby,
+  classNames,
+  children,
+  ...rest
+}) => {
   const descriptionId = useId()
 
   return (
-    <Base padding={1} onClick={onDelegateClick} as={as} className={classNames.base}>
-      <RadioButton
-        {...rest}
-        ref={innerRef}
-        aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
-        className={classNames.radio}
-      >
-        {label}
-      </RadioButton>
-      {children && (
-        <div id={descriptionId} className={classNames.description}>
-          {children}
-        </div>
-      )}
-    </Base>
+    <ActualRadioButtonPanel
+      {...rest}
+      classNames={classNames}
+      aria-describedby={`${descriptionId}${ariaDescribedby ? ` ${ariaDescribedby}` : ''}`}
+    >
+      <div id={descriptionId} className={classNames.description}>
+        {children}
+      </div>
+    </ActualRadioButtonPanel>
   )
 }
+
+const ActualRadioButtonPanel: FC<LowerProps> = ({ as, classNames, children, label, ...rest }) => (
+  <ClickablePanel as={as} className={classNames.base}>
+    <RadioButton {...rest} className={classNames.radio}>
+      {label}
+    </RadioButton>
+    {children}
+  </ClickablePanel>
+)

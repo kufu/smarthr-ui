@@ -1,0 +1,53 @@
+# 日本語辞書を翻訳ツール(Crowdin)にアップロード
+name: "i18n: Upload Japanese dictionary to Crowdin"
+
+on:
+  schedule:
+    - cron: "0 8 * * MON"
+      timezone: Asia/Tokyo
+  workflow_dispatch:
+    inputs:
+      github_branch:
+        description: アップするブランチ名（Crowdinブランチ名としても使用される）
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.github_branch || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
+jobs:
+  crowdin:
+    name: "Upload Japanese dictionary to Crowdin"
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ inputs.github_branch || github.ref_name }}
+    steps:
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          persist-credentials: false
+      - name: Push ja-JP source to Crowdin
+        uses: crowdin/github-action@0d5670f539973aea2f01abce61a8989934df0025 # v3.0.2
+        with:
+          config: crowdin.yml
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          crowdin_branch_name: ${{ env.TARGET_BRANCH }}
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PUSH_PULL_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_BASE_URL: ${{ secrets.CROWDIN_BASE_URL }}

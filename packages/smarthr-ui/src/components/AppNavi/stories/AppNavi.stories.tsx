@@ -9,7 +9,7 @@ import { AppNaviButton } from '../AppNaviButton'
 import { AppNaviCustomTag } from '../AppNaviCustomTag'
 import { AppNaviDropdownMenuButton } from '../AppNaviDropdownMenuButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 import type { FC, ReactNode } from 'react'
 
 const Link: FC<{
@@ -35,7 +35,7 @@ export const Template: StoryFn<typeof AppNavi> = (args) => (
         <AnchorButton href="#">その他</AnchorButton>
       </DropdownMenuGroup>
     </AppNaviDropdownMenuButton>
-    <AppNaviCustomTag tag={Link} href="/">
+    <AppNaviCustomTag href="/" tag={Link}>
       カスタムタグ
     </AppNaviCustomTag>
   </AppNavi>
@@ -72,7 +72,7 @@ export const AdditionalArea: StoryObj<typeof AppNavi> = {
     additionalArea: (
       <Cluster align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
-        <Button size="s" prefix={<FaArrowsRotateIcon />}>
+        <Button size="S" prefix={<FaArrowsRotateIcon />}>
           データを同期
         </Button>
       </Cluster>

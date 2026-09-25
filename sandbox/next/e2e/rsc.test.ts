@@ -64,7 +64,7 @@ const CLIENT_COMPONENTS: string[] = [
   'AppHeader',      // ドロップダウンやダイアログを表示するためのuseStateなど
   'Article',        // 見出しレベルの自動生成のため
   'Aside',          // 見出しレベルの自動生成のため
-  'Base',           // 見出しレベルの自動生成のため
+  'Panel',           // 見出しレベルの自動生成のため
   'BottomFixedArea', // children のバリデーションのための useEffect
   'BulkActionRow',  // 件数計算のためのuseStateなど
   'Button',         // アイコンのみの場合のstyle調整のためのquerySelector & live region を使うためのcreatePortal
@@ -124,7 +124,6 @@ const DISABLED_COMPONENTS = [
   'FilterDropdown',             // 必須のイベントハンドラをもつため
   'FormDialog',                 // 必須のイベントハンドラをもつため
   'MessageDialog',              // 必須のイベントハンドラをもつため
-  'MessageDialogContent',       // 必須のイベントハンドラを持つため
   'RemoteTriggerActionDialog',  // 必須のイベントハンドラをもつため
   'RemoteTriggerFormDialog',    // 必須のイベントハンドラをもつため
   'SortDropdown',               // 必須のイベントハンドラをもつため

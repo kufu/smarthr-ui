@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+env:
+  NPM_CONFIG_BEFORE: ''
+  PNPM_CONFIG_MINIMUM_RELEASE_AGE: '1440' # 1 day
+
 jobs:
   release_please:
     runs-on: ubuntu-latest
@@ -15,7 +19,10 @@ jobs:
     outputs:
       releases_created: ${{ steps.release_please.outputs.releases_created }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
         id: release_please
         with:
           config-file: release-please-config.json
@@ -29,21 +36,20 @@ jobs:
     needs: release_please
     if: ${{ needs.release_please.outputs.releases_created }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v4
+      - name: Set NPM_CONFIG_BEFORE
+        run: |
+          echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
           package_json_file: 'package.json'
           run_install: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: '.node-version'
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm -r publish --no-git-checks --access public
+      - run: pnpm -r publish --no-git-checks --access public --provenance
         env:
-          NODE_AUTH_TOKEN: ${{secrets.KUFU_NPM_RELEASE_TOKEN}}
-      # Trusted Package Publishingに移行したら以下に変更する
-      # - run: pnpm -r publish --no-git-checks --access public --provenance
-      #   env:
-      #     NPM_CONFIG_PROVENANCE: true
+          NPM_CONFIG_PROVENANCE: true

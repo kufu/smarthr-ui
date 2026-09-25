@@ -1,0 +1,6 @@
+export { backgroundColor } from './backgroundColor'
+export { paddingBlock, paddingInline } from './padding'
+export { dialogSize } from './dialogSize'
+export { textColor } from './textColor'
+export { fontSize } from './fontSize'
+export { color } from './color'

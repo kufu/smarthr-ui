@@ -1,19 +1,21 @@
-import type { classNameGenerator } from './style'
-import type { DecoratorsType } from '../../hooks/useDecorators'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
-import type { VariantProps } from 'tailwind-variants'
 
-export type DecoratorKeyTypes = 'destroy'
+export type PreviewableObjectType = {
+  /** プレビューダイアログ内のFileViewerで検索機能を有効にするかどうか */
+  searchable?: boolean
+}
 
-type AbstractProps = VariantProps<typeof classNameGenerator> & {
+type BaseProps = {
+  /** コンポーネントのサイズ */
+  size?: 'M' | 'S'
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
   onChange?: (files: File[]) => void
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
-  /** コンポーネント内のテキストを変更する関数 */
-  decorators?: DecoratorsType<DecoratorKeyTypes>
+  /** ファイルのプレビュー機能を有効にするかどうか */
+  previewable?: boolean | PreviewableObjectType
   error?: boolean
   multiple?:
     | boolean
@@ -22,4 +24,7 @@ type AbstractProps = VariantProps<typeof classNameGenerator> & {
         appendable?: boolean
       }
 }
-export type Props = AbstractProps & Omit<ComponentPropsWithRef<'input'>, keyof AbstractProps>
+export type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
+export type LowerProps = Omit<Props, 'previewable'> & {
+  previewable: PreviewableObjectType | undefined
+}

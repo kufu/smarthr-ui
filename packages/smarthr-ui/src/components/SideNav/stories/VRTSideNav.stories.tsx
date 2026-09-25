@@ -6,9 +6,9 @@ import { SideNavItemAnchor, SideNavItemButton } from '../SideNavItemButton'
 
 import { _sideNavItems } from './SideNav.stories'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
-const _casse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'default', 's']
+const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'M', 'S']
 
 export default {
   title: 'Components/SideNav/VRT',
@@ -22,8 +22,8 @@ export default {
     <Stack gap={2} className="shr-p-1">
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
         <Fragment key={index}>
-          {_casse.map((size, i) => (
-            <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
+          {sizeCasse.map((size, i) => (
+            <SideNav {...args} key={`${index}-${i}`} id={id} size={size}>
               {_sideNavItems.map((item) =>
                 i % 2 === 0 ? (
                   <SideNavItemButton {...item} key={item.id} />
@@ -35,6 +35,11 @@ export default {
           ))}
         </Fragment>
       ))}
+      <SideNav {...args} rounded="all">
+        {_sideNavItems.map((item) => (
+          <SideNavItemButton {...item} key={item.id} />
+        ))}
+      </SideNav>
     </Stack>
   ),
   parameters: {

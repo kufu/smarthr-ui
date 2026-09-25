@@ -1,8 +1,8 @@
 import { action } from 'storybook/actions'
 
-import { DropZone } from '../DropZone'
+import { DropZone } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/DropZone',
@@ -50,12 +50,10 @@ export const Error: StoryObj<typeof DropZone> = {
   },
 }
 
-export const Decorators: StoryObj<typeof DropZone> = {
-  name: 'decorators',
+export const SelectButtonLabel: StoryObj<typeof DropZone> = {
+  name: 'selectButtonLabel',
   args: {
-    decorators: {
-      selectButtonLabel: (txt) => `select file.(${txt})`,
-    },
-    children: 'ボタンのテキストを変更',
+    selectButtonLabel: 'Choose File',
+    children: 'カスタムラベルのボタン',
   },
 }

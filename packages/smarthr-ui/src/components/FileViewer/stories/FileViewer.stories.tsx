@@ -1,22 +1,34 @@
-import { FileViewer } from '..'
+import { FileViewer } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/FileViewer',
   component: FileViewer,
   render: (args) => (
-    <div className="shr-h-[90vh]">
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div tabIndex={0} className="shr-h-[90vh] shr-w-full shr-resize shr-overflow-auto">
       <FileViewer {...args} />
     </div>
   ),
   argTypes: {
     file: {
       control: 'select',
-      options: ['Japanese PDF', 'English PDF (long, multiple pages)', 'JPEG', 'PNG'],
+      options: [
+        'Japanese PDF',
+        'English PDF (long, multiple pages)',
+        'JPEG 2000 in PDF',
+        'JPEG',
+        'PNG',
+      ],
       mapping: {
         'Japanese PDF': {
           url: '/fixtures/sample-japanese-pdf.pdf',
+          contentType: 'application/pdf',
+        },
+        // HINT: PDFViewerのoptions.wasmUrl設定が正しく機能しているかの確認に使う
+        'JPEG 2000 in PDF': {
+          url: '/fixtures/sample-jpeg2000-pdf.pdf',
           contentType: 'application/pdf',
         },
         'English PDF (long, multiple pages)': {
@@ -71,5 +83,12 @@ export const ScaleStep: Story = {
   name: 'scaleStep',
   args: {
     scaleStep: 1,
+  },
+}
+
+export const Searchable: Story = {
+  name: 'searchable',
+  args: {
+    searchable: false,
   },
 }

@@ -1,6 +1,5 @@
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
-import { Text } from '../../Text'
 import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Td } from '../Td'
@@ -10,7 +9,7 @@ import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Table/VRT',
@@ -25,12 +24,12 @@ export default {
                 <thead>
                   <tr>
                     {fixed === 'left' && <Th fixed={fixed}>操作</Th>}
-                    <ThCheckbox name="thead_checkbox" mixed checked />
+                    <ThCheckbox name="thead_checkbox" checked mixed />
                     {[...Array(10)].map((_, i) => (
                       <Th
+                        key={i}
                         align={i === 2 ? 'right' : undefined}
                         sort={i === 0 ? 'asc' : i === 1 ? 'desc' : i === 2 ? 'none' : undefined}
-                        key={i}
                       >
                         表頭{i + 1}
                       </Th>
@@ -49,26 +48,27 @@ export default {
                     <tr key={i}>
                       {fixed === 'left' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                       <TdCheckbox
-                        checked={i % 2 === 0}
-                        aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name="tbody_checkbox"
+                        checked={i % 2 === 0}
+                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
+                        aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                       />
                       {[...Array(10)].map((__, j) => (
                         <Td
-                          align={j === 2 ? 'right' : undefined}
-                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
+                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
+                          align={j === 2 ? 'right' : undefined}
                         >
                           表データ{i + 1}-{j + 1}
                         </Td>
                       ))}
                       {fixed === 'right' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                     </tr>
@@ -77,26 +77,27 @@ export default {
                     <tr key={i}>
                       {fixed === 'left' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                       <TdRadioButton
-                        checked={i === 0}
-                        aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                         name={`tbody_radio--${fixed}--${borderType}`}
+                        checked={i === 0}
+                        // eslint-disable-next-line smarthr/a11y-aria-labelledby
+                        aria-labelledby={`td_${fixed}_${borderType}_${i + 1}_1`}
                       />
                       {[...Array(10)].map((__, j) => (
                         <Td
-                          align={j === 2 ? 'right' : undefined}
-                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
                           key={j}
+                          id={`td_${fixed}_${borderType}_${i + 1}_${j + 1}`}
+                          align={j === 2 ? 'right' : undefined}
                         >
                           表データ{i + 1}-{j + 1}
                         </Td>
                       ))}
                       {fixed === 'right' && (
                         <Td fixed={fixed}>
-                          <Button size="s">操作</Button>
+                          <Button size="S">操作</Button>
                         </Td>
                       )}
                     </tr>

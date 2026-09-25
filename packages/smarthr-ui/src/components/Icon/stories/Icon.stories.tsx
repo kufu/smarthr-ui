@@ -1,4 +1,5 @@
 import { Cluster, Stack } from '../../Layout'
+// eslint-disable-next-line no-restricted-syntax -- 200個以上のアイコンを一覧表示するため
 import * as Icons from '../FaIcon'
 import { LanguageIcon } from '../LanguageIcon'
 import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
@@ -6,7 +7,7 @@ import { SparklesIcon } from '../SparklesIcon'
 import { WarningIcon } from '../WarningIcon'
 import { colorSet } from '../generateIcon'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const FaAddressBookIcon = Icons.FaAddressBookIcon
 
@@ -31,7 +32,7 @@ export default {
 
 export const All: StoryObj<typeof FaAddressBookIcon> = {
   render: (args) => (
-    <Stack gap={0.75} as="ul" className="shr-list-none">
+    <Stack as="ul" gap={0.75} className="shr-list-none">
       {[
         ...Object.entries(Icons),
         ['WarningIcon', WarningIcon],

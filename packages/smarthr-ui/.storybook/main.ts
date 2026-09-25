@@ -6,22 +6,8 @@ import tailwindcss from 'tailwindcss'
 import type { StorybookConfig } from '@storybook/react-vite'
 
 export default {
-  stories: ['../src/**/*.stories.tsx'],
-  addons: [
-    '@storybook/addon-docs',
-    'storybook-addon-pseudo-states',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        loaderOptions: {
-          prettierConfig: {
-            printWidth: 80,
-            singleQuote: false,
-          },
-        },
-      },
-    },
-  ],
+  stories: ['../src/**/*.stories.tsx', '../../charts/src/**/*.stories.tsx'],
+  addons: ['@storybook/addon-a11y', '@storybook/addon-docs', 'storybook-addon-pseudo-states'],
   refs: {
     'smarthr-patterns': {
       title: 'SmartHR Patterns',
@@ -42,7 +28,8 @@ export default {
       ...config.resolve,
       alias: {
         ...config.resolve?.alias,
-        '@': join(__dirname, '../src'),
+        '@': join(import.meta.dirname, '../src'),
+        'smarthr-ui': join(import.meta.dirname, '../src/index.ts'),
       },
     },
     define: {
@@ -52,7 +39,10 @@ export default {
     },
     css: {
       postcss: {
-        plugins: [tailwindcss, autoprefixer],
+        plugins: [
+          tailwindcss({ config: join(import.meta.dirname, 'tailwind.storybook.config.ts') }),
+          autoprefixer,
+        ],
       },
     },
   }),

@@ -1,12 +1,14 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { useRef, useState } from 'react'
-import { userEvent } from 'storybook/test'
 
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
 import { Dialog } from './Dialog'
+
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
 
 describe('Dialog (Portal Parent)', () => {
   const DialogTemplate = () => {
@@ -18,9 +20,9 @@ describe('Dialog (Portal Parent)', () => {
         <Button onClick={() => setIsOpen(true)}>Dialog を開く</Button>
         <Dialog
           isOpen={isOpen}
-          onPressEscape={() => setIsOpen(false)}
-          ariaLabel="Dialog"
           portalParent={portalParentRef}
+          ariaLabel="Dialog"
+          onPressEscape={() => setIsOpen(false)}
         >
           <Section>
             <Heading>Dialog</Heading>
@@ -37,12 +39,15 @@ describe('Dialog (Portal Parent)', () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
-    await act(() => userEvent.tab())
-    await act(() => userEvent.keyboard('{enter}'))
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
     expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
 
-    await act(() => userEvent.tab({ shift: true }))
-    await act(() => userEvent.keyboard('{ }'))
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
+
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard('{ }')
     await waitFor(
       () => {
         expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()

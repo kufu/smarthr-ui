@@ -6,27 +6,29 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
+  useLayoutEffect,
   useMemo,
-  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { dialogSize } from '../../themes/tailwind'
+import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
+import { useLatest } from '../../hooks/useLatest'
+import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap, type FocusTrapRef } from './FocusTrap'
-import { useBodyScrollLock } from './useBodyScrollLock'
 
 import type { DialogSize } from './types'
 
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
    */
   onClickOverlay?: () => void
   /**
    * エスケープキーを押下した時に発火するコールバック関数
+   * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
    */
   onPressEscape?: () => void
   /**
@@ -66,11 +68,13 @@ export type DialogContentInnerProps = PropsWithChildren<{
 }>
 type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
+export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
+
 const classNameGenerator = tv({
   slots: {
     layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
     inner: [
-      'smarthr-ui-Dialog',
+      DIALOG_CONTENT_CLASS_NAME,
       'shr-border-shorthand shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
@@ -113,39 +117,68 @@ export const DialogContentInner: FC<Props> = ({
       background: background(),
     }
   }, [size, className])
-  const style = useMemo(() => {
-    // width は deprecated なので、size が指定されている場合は width を無視する
-    const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
+  // width は deprecated なので、size が指定されている場合は width を無視する
+  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
-    return actualWidth ? { width: actualWidth } : undefined
-  }, [width, size])
+  const latest = useLatest({ isOpen, onPressEscape, onClickOverlay })
 
-  const innerRef = useRef<HTMLDivElement>(null)
-
-  useHandleEscape(
-    useMemo(() => (onPressEscape && isOpen ? onPressEscape : undefined), [isOpen, onPressEscape]),
+  const functions = useMemo(
+    () => ({
+      handlePressEscape: () => {
+        if (latest.isOpen) {
+          latest.onPressEscape?.()
+        }
+      },
+      handleClickOverlay: () => {
+        if (latest.isOpen) {
+          latest.onClickOverlay?.()
+        }
+      },
+    }),
+    [latest],
   )
 
-  useBodyScrollLock(isOpen)
+  const callbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+
+  useLayoutEffect(() => {
+    if (!isOpen) return
+
+    const body = document.body
+    const scrollBarWidth = window.innerWidth - body.clientWidth
+    const originalPaddingRight = getComputedStyle(body).getPropertyValue('padding-right')
+
+    const bodyStyle = body.style
+
+    bodyStyle.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
+    bodyStyle.overflow = 'hidden'
+
+    return () => {
+      bodyStyle.paddingInlineEnd = ''
+      bodyStyle.overflow = ''
+    }
+  }, [isOpen])
 
   return (
     <DialogOverlap isOpen={isOpen}>
-      <div id={id} className={classNames.layout} style={style}>
+      <div
+        ref={callbackRef}
+        id={id}
+        className={classNames.layout}
+        style={actualWidth ? { width: actualWidth } : undefined}
+      >
         <Overlay
-          isOpen={isOpen}
-          onClickOverlay={onClickOverlay}
           className={classNames.background}
+          handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
         />
         <div
           {...rest}
-          ref={innerRef}
           role="dialog"
+          className={classNames.inner}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
-          className={classNames.inner}
         >
-          <FocusTrap firstFocusTarget={firstFocusTarget} ref={focusTrapRef}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>
@@ -154,14 +187,9 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Overlay = memo<Pick<Props, 'onClickOverlay' | 'isOpen'> & { className: string }>(
-  ({ onClickOverlay, isOpen, className }) => {
-    const onClick = useMemo(
-      () => (onClickOverlay && isOpen ? onClickOverlay : undefined),
-      [isOpen, onClickOverlay],
-    )
-
+const Overlay = memo<{ handleClickOverlay: (() => void) | undefined; className: string }>(
+  ({ handleClickOverlay, className }) => (
     // eslint-disable-next-line smarthr/best-practice-for-interactive-element
-    return <div onClick={onClick} className={className} role="presentation" />
-  },
+    <div role="presentation" className={className} onClick={handleClickOverlay} />
+  ),
 )

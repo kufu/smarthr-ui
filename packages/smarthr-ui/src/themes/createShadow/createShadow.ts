@@ -1,3 +1,7 @@
+// HINT: styled-componentsがRSCに対応するのはv6.3.0以降。peerは^5.0.1のため、
+// モジュールスコープでcreateContextを呼びガードが無いバージョンが解決されうる。
+// ただしこのモジュールはcreateTheme経由でuseThemeから使われ、useThemeが'use client'を
+// 持つためサーバ側では評価されない。
 import { type FlattenSimpleInterpolation, css } from 'styled-components'
 
 import { merge } from '../../libs/lodash'

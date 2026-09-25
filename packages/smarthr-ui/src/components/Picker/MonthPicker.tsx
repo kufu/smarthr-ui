@@ -11,7 +11,7 @@ type Props = {
 
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
 export const MonthPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
-  ({ disabled, error, readOnly, className, ...rest }, ref) => {
+  ({ error, className, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner } = classNameGenerator('Month')
 
@@ -21,18 +21,19 @@ export const MonthPicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
       }
     }, [className])
 
+    const errorAttr = error || undefined
+
     return (
       <span className={classNames.wrapper}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
-          data-smarthr-ui-input="true"
           ref={ref}
           type="month"
-          disabled={disabled}
-          readOnly={readOnly}
-          aria-invalid={error || undefined}
           className={classNames.inner}
+          aria-invalid={errorAttr}
+          data-smarthr-ui-input-error={errorAttr}
+          data-smarthr-ui-input="true"
         />
       </span>
     )

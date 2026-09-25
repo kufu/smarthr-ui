@@ -1,7 +1,9 @@
-import { FaCircleQuestionIcon } from '../../Icon'
-import { Tooltip } from '../Tooltip'
+import { Button } from '../../Button'
+import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
+import { Tooltip } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _messages = {
   'テキスト（sting）': 'メッセージ',
@@ -113,11 +115,56 @@ export const TabIndex: StoryObj<typeof Tooltip> = {
   },
 }
 
+export const Type: StoryObj<typeof Tooltip> = {
+  name: 'type',
+  render: () => (
+    <Stack>
+      <div>
+        description(default):
+        <Tooltip message="description">
+          <Button>ボタン</Button>
+        </Tooltip>
+      </div>
+      <div>
+        label:
+        <Tooltip type="label" triggerType="icon" message="label">
+          <Button>
+            <FaPencilIcon />
+          </Button>
+        </Tooltip>
+      </div>
+    </Stack>
+  ),
+}
+
 export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
   name: 'ariaDescribedbyTarget',
-  args: {
-    ariaDescribedbyTarget: 'inner',
-    triggerType: 'icon',
-    children: <FaCircleQuestionIcon alt="ツールチップ" />,
-  },
+  render: () => (
+    <Stack>
+      <Cluster>
+        wrapper + focusable:
+        <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
+          <Button>ボタン</Button>
+        </Tooltip>
+      </Cluster>
+      <Cluster>
+        wrapper + non-focusable:
+        <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
+          テキスト
+        </Tooltip>
+      </Cluster>
+      <Cluster>
+        inner + focusable:
+        <Tooltip ariaDescribedbyTarget="inner" message="inner + focusable">
+          <Button>ボタン</Button>
+        </Tooltip>
+      </Cluster>
+      <Cluster>
+        inner + non-focusable:
+        <Tooltip triggerType="icon" ariaDescribedbyTarget="inner" message="inner + non-focusable">
+          <FaCircleQuestionIcon alt="ツールチップ" />
+        </Tooltip>
+      </Cluster>
+    </Stack>
+  ),
 }

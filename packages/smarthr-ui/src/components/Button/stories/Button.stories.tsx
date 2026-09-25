@@ -4,7 +4,7 @@ import { AnchorButton } from '../AnchorButton'
 import { Button } from '../Button'
 import { UnstyledButton } from '../UnstyledButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Button',
@@ -12,7 +12,7 @@ export default {
   subcomponents: { AnchorButton, UnstyledButton },
   render: (args) => <Button {...args} />,
   args: {
-    size: 'default',
+    size: 'M',
     children: 'ボタン',
     variant: 'secondary',
     disabled: false,
@@ -87,7 +87,7 @@ export const Variant: StoryObj<typeof Button> = {
 export const Size: StoryObj<typeof Button> = {
   name: 'size',
   args: {
-    size: 's',
+    size: 'S',
   },
 }
 
@@ -118,6 +118,14 @@ export const Loading: StoryObj<typeof Button> = {
   args: {
     loading: true,
   },
+}
+export const OnlyIconLoading: StoryObj<typeof Button> = {
+  name: 'loading(only Icon)',
+  render: () => (
+    <Button loading={true}>
+      <FaCirclePlusIcon />
+    </Button>
+  ),
 }
 
 export const Prefix: StoryObj<typeof Button> = {

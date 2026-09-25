@@ -1,10 +1,17 @@
-import { within } from 'storybook/test'
+import { userEvent, within } from 'storybook/test'
 
 import { AppHeader } from '../AppHeader'
 
 import { args } from './args'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+// DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+// スナップショット撮影前にその発火を待つ
+const waitForAnimationFrame = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => resolve())
+  })
 
 const meta = {
   title: 'Components/AppHeader/VRT',
@@ -91,21 +98,50 @@ export const VRTNoNavigations: Story = {
 export const VRTTenant: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: '株式会社テストテナント壱 候補を開く' }).click()
+    await userEvent.click(
+      canvas.getByRole('button', { name: '株式会社テストテナント壱 候補を開く' }),
+    )
+    await waitForAnimationFrame()
   },
 }
 
 export const VRTLauncher: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    await userEvent.click(canvas.getByRole('button', { name: 'アプリ' }))
+    await waitForAnimationFrame()
+  },
+}
+
+export const VRTLauncherLoading: Story = {
+  args: {
+    // HINT: 解決しない Promise を返して loading 状態を固定する
+    fetchFeatures: () => new Promise(() => {}),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
     canvas.getByRole('button', { name: 'アプリ' }).click()
+    // HINT: ランチャーは Dropdown のポータル（document.body 直下）に描画されるため body から参照する
+    await within(canvasElement.ownerDocument.body).findByText('処理中')
+  },
+}
+
+export const VRTLauncherError: Story = {
+  args: {
+    fetchFeatures: () => Promise.reject(new Error('failed')),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    canvas.getByRole('button', { name: 'アプリ' }).click()
+    await within(canvasElement.ownerDocument.body).findByText(/アプリ一覧の読み込みに失敗しました/)
   },
 }
 
 export const VRTReleaseNote: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'リリースノート' }).click()
+    await userEvent.click(canvas.getByRole('button', { name: 'リリースノート' }))
+    await waitForAnimationFrame()
   },
 }
 
@@ -119,7 +155,8 @@ export const VRTReleaseNoteLoading: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'リリースノート' }).click()
+    await userEvent.click(canvas.getByRole('button', { name: 'リリースノート' }))
+    await waitForAnimationFrame()
   },
 }
 
@@ -133,28 +170,32 @@ export const VRTReleaseNoteError: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'リリースノート' }).click()
+    await userEvent.click(canvas.getByRole('button', { name: 'リリースノート' }))
+    await waitForAnimationFrame()
   },
 }
 
 export const VRTSetting: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: '栄子 須磨（001）' }).click()
+    await userEvent.click(canvas.getByRole('button', { name: '栄子 須磨（001）' }))
+    await waitForAnimationFrame()
   },
 }
 
 export const VRTNavigationDropdown: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'ドロップダウン 候補を開く' }).click()
+    await userEvent.click(canvas.getByRole('button', { name: 'ドロップダウン 候補を開く' }))
+    await waitForAnimationFrame()
   },
 }
 
 export const VRTNavigationDropdownGroup: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    canvas.getByRole('button', { name: 'グループ 候補を開く' }).click()
+    await userEvent.click(canvas.getByRole('button', { name: 'グループ 候補を開く' }))
+    await waitForAnimationFrame()
   },
 }
 

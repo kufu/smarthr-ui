@@ -1,0 +1,120 @@
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { type FC, useRef, useState } from 'react'
+
+import { IntlProvider } from '../../../intl'
+import { Button } from '../../Button'
+import { FormControl } from '../../FormGroup'
+import { Input } from '../../Input'
+
+import { ControlledFormDialog } from './ControlledFormDialog'
+
+const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
+
+describe('ControlledFormDialog', () => {
+  const DialogTemplate: FC = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    return (
+      <IntlProvider locale="ja">
+        <Button onClick={() => setIsOpen(true)}>ControlledFormDialog</Button>
+        <ControlledFormDialog
+          isOpen={isOpen}
+          actionText="保存"
+          onSubmit={(_, { close }) => {
+            close()
+          }}
+          onClickClose={() => {
+            setIsOpen(false)
+          }}
+          heading="ControlledFormDialog"
+        >
+          ダイアログの中身です
+        </ControlledFormDialog>
+      </IntlProvider>
+    )
+  }
+  it('ダイアログが開閉できること', async () => {
+    render(<DialogTemplate />)
+
+    expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
+    expect(screen.getByRole('dialog', { name: 'ControlledFormDialog' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
+
+    await userEvent.tab({ shift: true })
+    await userEvent.keyboard('{ }')
+    await waitFor(
+      () => {
+        expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
+      },
+      { timeout: 1000 },
+    )
+
+    // ダイアログを閉じた後、トリガがフォーカスされることを確認
+    expect(screen.getByRole('button', { name: 'ControlledFormDialog' })).toHaveFocus()
+  })
+
+  const DialogTemplateWithFocusTrap: FC = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const openedFocusRef = useRef<HTMLInputElement>(null)
+    return (
+      <IntlProvider locale="ja">
+        <Button onClick={() => setIsOpen(true)}>開いた状態で DOM に投入</Button>
+        {isOpen && (
+          <ControlledFormDialog
+            isOpen
+            actionText="実行"
+            firstFocusTarget={openedFocusRef}
+            onSubmit={(_, { close }) => {
+              close()
+            }}
+            onClickClose={() => {
+              setIsOpen(false)
+            }}
+            heading="開いた状態で投入されたダイアログ"
+          >
+            <FormControl
+              label={
+                <>
+                  <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+                </>
+              }
+            >
+              <Input ref={openedFocusRef} name="opened_dialog_focus_target" />
+            </FormControl>
+          </ControlledFormDialog>
+        )}
+      </IntlProvider>
+    )
+  }
+  it('開いた状態で DOM に投入されたダイアログにフォーカスが移動すること', async () => {
+    render(<DialogTemplateWithFocusTrap />)
+
+    expect(screen.queryByRole('dialog', { name: '開いた状態で投入されたダイアログ' })).toBeNull()
+    await userEvent.tab()
+    await userEvent.keyboard('{enter}')
+    expect(screen.getByRole('dialog', { name: '開いた状態で投入されたダイアログ' })).toBeVisible()
+
+    // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
+    await waitForAnimationFrame()
+
+    expect(
+      screen.getByRole('textbox', { name: 'isOpen=true の状態で DOM に投入した場合のダイアログ' }),
+    ).toHaveFocus()
+
+    await userEvent.tab()
+    await userEvent.keyboard('{ }')
+    await waitFor(
+      () => {
+        expect(screen.queryByRole('dialog', { name: 'ControlledFormDialog' })).toBeNull()
+      },
+      { timeout: 1000 },
+    )
+
+    // ダイアログを閉じた後、トリガがフォーカスされることを確認
+    expect(screen.getByRole('button', { name: '開いた状態で DOM に投入' })).toHaveFocus()
+  })
+})

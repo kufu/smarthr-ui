@@ -3,21 +3,23 @@ import {
   type FC,
   type PropsWithChildren,
   type ReactNode,
+  type RefCallback,
   type RefObject,
-  useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer, useLocalize } from '../../../../intl'
 import { Button } from '../../../Button'
-import { FocusTrap } from '../../../Dialog/FocusTrap'
+import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
+import { Scroller } from '../../../Scroller'
 import { Section } from '../../../SectioningContent'
 
 import { AppLauncher } from './AppLauncher'
@@ -39,28 +41,39 @@ const classNameGenerator = tv({
       '[&&.shr-sp-menu-exit-done]:shr-opacity-0',
     ],
     header: 'shr-border-b-shorthand shr-sticky shr-top-0 shr-px-0.75 shr-py-0.5',
-    content: 'shr-overflow-auto shr-p-1',
+    content: 'shr-p-1',
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { wrapper, header, content } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    header: header(),
+    content: content(),
+  }
+})()
+
 type Props = PropsWithChildren<{
+  callbackRef: RefCallback<HTMLElement>
   isOpen: boolean
   setIsOpen: Dispatch<boolean>
   tenantSelector: ReactNode
 }>
 
-export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
+export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
   const domRef = useRef<HTMLSelectElement>(null)
 
   return (
     <CSSTransition
-      classNames="shr-sp-menu"
+      nodeRef={domRef}
       in={isOpen}
       timeout={300}
       unmountOnExit
-      nodeRef={domRef}
+      classNames="shr-sp-menu"
     >
-      <div className="shr-fixed shr-z-overlap-base">
+      <div ref={callbackRef} className="shr-fixed shr-z-overlap-base">
         <FocusTrap>
           <Content {...rest} domRef={domRef} />
         </FocusTrap>
@@ -70,110 +83,119 @@ export const MenuDialog: FC<Props> = ({ isOpen, ...rest }) => {
 }
 
 export const Content: FC<
-  Omit<Props, 'isOpen'> & {
+  Omit<Props, 'callbackRef' | 'isOpen'> & {
     domRef: RefObject<HTMLSelectElement>
   }
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
   const { isReleaseNoteSelected, setIsReleaseNoteSelected } = useContext(ReleaseNoteContext)
-  const { features, isAppLauncherSelected, setIsAppLauncherSelected } =
-    useContext(AppLauncherContext)
+  const {
+    features,
+    isAppLauncherAvailable,
+    featuresLoading,
+    featuresError,
+    isAppLauncherSelected,
+    setIsAppLauncherSelected,
+  } = useContext(AppLauncherContext)
 
-  const classNames = useMemo(() => {
-    const { wrapper, header, content } = classNameGenerator()
+  const translated = useLocalize({
+    launcherListText: {
+      id: 'smarthr-ui/AppHeader/Launcher/listText',
+      defaultText: 'アプリ一覧',
+    },
+    latestReleaseNotes: {
+      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
+      defaultText: '最新のリリースノート',
+    },
+  })
+
+  const latest = useLatest({
+    setIsOpen,
+    setIsAppLauncherSelected,
+    setIsReleaseNoteSelected,
+    setSelectedNavigationGroup,
+  })
+
+  const functions = useMemo(() => {
+    const clearAppLauncher = () => latest.setIsAppLauncherSelected(false)
+    const clearReleaseNote = () => latest.setIsReleaseNoteSelected(false)
+    const clearNavigationGroup = () => latest.setSelectedNavigationGroup(null)
 
     return {
-      wrapper: wrapper(),
-      header: header(),
-      content: content(),
+      // HINT: Contentをanimationで非表示にしたい
+      // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
+      // unmount時に操作内容のclearを行う
+      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+      callbackRef: () => () => {
+        clearReleaseNote()
+        clearAppLauncher()
+        clearNavigationGroup()
+      },
+      clearAppLauncher,
+      clearReleaseNote,
+      clearNavigationGroup,
+      handleDialogClose: () => latest.setIsOpen(false),
     }
-  }, [])
+  }, [latest])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      launcherListText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/listText',
-        defaultText: 'アプリ一覧',
-      }),
-      latestReleaseNotes: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-        defaultText: '最新のリリースノート',
-      }),
-      closeMenu: localize({
-        id: 'smarthr-ui/AppHeader/MobileHeader/closeMenu',
-        defaultText: 'メニューを閉じる',
-      }),
-    }),
-    [localize],
-  )
-
-  const dialogClose = useCallback(() => setIsOpen(false), [setIsOpen])
-  const clearAppLauncher = useCallback(
-    () => setIsAppLauncherSelected(false),
-    [setIsAppLauncherSelected],
-  )
-  const clearReleaseNote = useCallback(
-    () => setIsReleaseNoteSelected(false),
-    [setIsReleaseNoteSelected],
-  )
-  const clearNavigationGroup = useCallback(
-    () => setSelectedNavigationGroup(null),
-    [setSelectedNavigationGroup],
-  )
-
-  // HINT: Contentをanimationで非表示にしたい
-  // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
-  // unmount時に操作内容のclearを行う
-  useEffect(
-    () => () => {
-      clearReleaseNote()
-      clearAppLauncher()
-      clearNavigationGroup()
-    },
-    [clearAppLauncher, clearReleaseNote, clearNavigationGroup],
-  )
+  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
+  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const mergedRef = useMergeRefs(functions.callbackRef, domRef)
 
   return (
-    <Section role="dialog" aria-modal="true" className={classNames.wrapper} ref={domRef}>
-      <div className={classNames.header}>
+    <Section ref={mergedRef} role="dialog" className={CLASS_NAMES.wrapper} aria-modal="true">
+      <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
           {isAppLauncherSelected ? (
-            <MenuSubHeading title={translated.launcherListText} onClickBack={clearAppLauncher} />
+            <MenuSubHeading
+              title={translated.launcherListText}
+              handleClickBack={functions.clearAppLauncher}
+            />
           ) : isReleaseNoteSelected ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading title={translated.latestReleaseNotes} onClickBack={clearReleaseNote} />
+            <MenuSubHeading
+              title={translated.latestReleaseNotes}
+              handleClickBack={functions.clearReleaseNote}
+            />
           ) : selectedNavigationGroup ? (
             // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
             <MenuSubHeading
               title={selectedNavigationGroup.children}
-              onClickBack={clearNavigationGroup}
+              handleClickBack={functions.clearNavigationGroup}
             />
           ) : (
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="s" onClick={dialogClose}>
-            <FaXmarkIcon alt={translated.closeMenu} />
+          <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
+            <FaXmarkIcon
+              alt={
+                <Localizer
+                  id="smarthr-ui/AppHeader/MobileHeader/closeMenu"
+                  defaultText="メニューを閉じる"
+                />
+              }
+            />
           </Button>
         </Cluster>
       </div>
 
-      {isAppLauncherSelected && features && features.length > 0 ? (
-        <AppLauncher features={features} />
+      {isAppLauncherSelected && isAppLauncherAvailable ? (
+        <AppLauncher features={features} loading={featuresLoading} error={featuresError} />
       ) : (
-        <div className={classNames.content}>
+        <Scroller direction="vertical" className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
             <Navigation
               navigations={selectedNavigationGroup.childNavigations}
-              onClickNavigation={dialogClose}
+              handleClickNavigation={functions.handleDialogClose}
             />
           ) : (
             children
           )}
-        </div>
+        </Scroller>
       )}
     </Section>
   )

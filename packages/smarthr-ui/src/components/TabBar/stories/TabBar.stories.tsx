@@ -1,9 +1,9 @@
 import { action } from 'storybook/actions'
 
 import { TabBar } from '../TabBar'
-import { TabItem } from '../TabItem'
+import { TabItem } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/TabBar',
@@ -11,7 +11,7 @@ export default {
   subcomponents: { TabItem },
   render: (args) => (
     <TabBar {...args}>
-      <TabItem id="tab1" onClick={action('tab1')} selected>
+      <TabItem id="tab1" selected onClick={action('tab1')}>
         タブ1
       </TabItem>
       <TabItem id="tab2" onClick={action('tab2')}>

@@ -1,5 +1,7 @@
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+
 import type { Launcher } from '../types'
 
 export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
@@ -50,12 +52,24 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     (e: ChangeEvent<HTMLInputElement>) => changeSearchQuery(e.currentTarget.value),
     [changeSearchQuery],
   )
+
+  const clearSearchQueryFrame = useAnimationFrame()
+
   const onClickClearSearchQuery = useCallback(() => {
     // HINT: 別のスレッドにしないとドロップダウンが閉じてしまう
-    requestAnimationFrame(() => {
+    clearSearchQueryFrame.request(() => {
       changeSearchQuery('')
     })
-  }, [changeSearchQuery])
+  }, [changeSearchQuery, clearSearchQueryFrame])
+
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        clearSearchQueryFrame.cancel()
+      }
+    },
+    [clearSearchQueryFrame],
+  )
 
   return {
     features,
@@ -67,6 +81,7 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   }
 }
 
@@ -87,15 +102,15 @@ const sortFeatures = (
   if (mode !== 'search' && page === 'favorite') {
     const filtered = features.filter((item) => item.favorite)
 
-    // feature の position の数値の順に並び替える。position が null の場合は最後に並べる
+    // feature の position の数値の順に並び替える。position が null または undefined の場合は最後に並べる
     return filtered.sort((a, b) => {
-      if (a.position === null) {
-        if (b.position === null) {
+      if (a.position === null || a.position === undefined) {
+        if (b.position === null || b.position === undefined) {
           return 0
         }
 
         return 1
-      } else if (b.position === null) {
+      } else if (b.position === null || b.position === undefined) {
         return -1
       }
 

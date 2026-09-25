@@ -5,10 +5,10 @@ import type { TimelineItem } from './TimelineItem'
 
 type TimelineItem = ReactElement<ComponentProps<typeof TimelineItem>>
 
-type AbstractProps = {
+type BaseProps = {
   children: TimelineItem | TimelineItem[]
 }
-type Props = AbstractProps & Omit<ComponentProps<'ol'>, keyof AbstractProps>
+type Props = BaseProps & Omit<ComponentProps<'ol'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-list-none',
@@ -16,6 +16,7 @@ const classNameGenerator = tv({
 
 export const Timeline: React.FC<Props> = ({ className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
   return (
     <ol {...rest} className={actualClassName}>
       {children}

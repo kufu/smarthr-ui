@@ -1,10 +1,11 @@
 import { userEvent } from 'storybook/test'
 
-import { FaCircleQuestionIcon } from '../../Icon'
+import { Button } from '../../Button'
+import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Tooltip/VRT',
@@ -30,6 +31,26 @@ export default {
           </span>
         </Tooltip>
       </div>
+      <Tooltip type="description" message="description">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip type="label" triggerType="icon" message="label">
+        <Button>
+          <FaPencilIcon />
+        </Button>
+      </Tooltip>
+      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
+        テキスト
+      </Tooltip>
+      <Tooltip ariaDescribedbyTarget="inner" message="inner + focusable">
+        <Button>ボタン</Button>
+      </Tooltip>
+      <Tooltip triggerType="icon" ariaDescribedbyTarget="inner" message="inner + non-focusable">
+        <FaCircleQuestionIcon alt="ツールチップ" />
+      </Tooltip>
     </Stack>
   ),
   args: {

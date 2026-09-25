@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dropdown/FilterDropdown',
@@ -30,7 +30,7 @@ export const TriggerSize: StoryObj<typeof FilterDropdown> = {
   name: 'trigger.size',
   args: {
     trigger: {
-      size: 's',
+      size: 'S',
     },
   },
 }

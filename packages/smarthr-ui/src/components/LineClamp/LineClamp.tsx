@@ -9,17 +9,19 @@ import {
   useRef,
   useState,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'span'>, keyof AbstractProps>
+type BaseProps = PropsWithChildren<{
+  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
     base: 'smarthr-ui-LineClamp shr-relative',
-    clampedLine: 'shr-w-full',
+    clampedLine: 'shr-max-w-full',
     shadowElementWrapper:
       'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0',
     shadowElement: 'shr-absolute shr-left-0 shr-top-0 shr-w-full',
@@ -28,7 +30,7 @@ const classNameGenerator = tv({
     maxLines: {
       1: {
         clampedLine:
-          'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+          'shr-inline-block shr-max-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       },
       2: {
         clampedLine: 'shr-line-clamp-[2]',
@@ -45,7 +47,7 @@ const classNameGenerator = tv({
       6: {
         clampedLine: 'shr-line-clamp-[6]',
       },
-    },
+    } satisfies Record<NonNullable<BaseProps['maxLines']>, { clampedLine: string }>,
   },
   compoundVariants: [
     {
@@ -68,19 +70,25 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
   const shadowRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
-    const el = ref.current
-    const shadowEl = shadowRef.current
-
     // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
     // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
     // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-    const isMultiLineOverflow =
-      el && shadowEl
-        ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
-        : false
+    const checkOverflow = () => {
+      if (ref.current && shadowRef.current) {
+        setTooltipVisible(shadowRef.current.clientHeight > ref.current.clientHeight)
+      }
+    }
 
-    setTooltipVisible(isMultiLineOverflow)
-  }, [maxLines, children])
+    checkOverflow()
+
+    window.addEventListener('resize', checkOverflow)
+
+    return () => {
+      window.removeEventListener('resize', checkOverflow)
+    }
+    // TODO: 将来的にMutationObserverに置き換えて、children の変更を監視する実装に変更する
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
+  }, [children, maxLines])
 
   const classNames = useMemo(() => {
     const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
@@ -101,8 +109,8 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
         {children}
       </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
-      <span aria-hidden className={classNames.shadowElementWrapper}>
-        <span className={classNames.shadowElement} ref={shadowRef}>
+      <span className={classNames.shadowElementWrapper} aria-hidden>
+        <span ref={shadowRef} className={classNames.shadowElement}>
           {children}
         </span>
       </span>

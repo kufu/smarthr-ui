@@ -1,3 +1,5 @@
+'use client'
+
 import {
   type FC,
   type MouseEvent,
@@ -10,8 +12,8 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
+import { useTheme } from '../../../../hooks/client/useTheme'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
@@ -34,6 +36,16 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { trigger, contentBody, contentButton } = classNameGenerator()
+
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+})()
+
 type Props = {
   sortType: Launcher['sortType']
   onSelectSortType: (sortType: Launcher['sortType']) => void
@@ -42,50 +54,34 @@ type Props = {
 export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
 
-  const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = classNameGenerator()
-
-    return {
-      trigger: trigger(),
-      contentBody: contentBody(),
-      contentButton: contentButton(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      label: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownLabel',
-        defaultText: '表示順',
-      }),
-      selected: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownSelected',
-        defaultText: '選択中',
-      }),
-      default: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault',
-        defaultText: 'デフォルト',
-      }),
-      asc: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameAsc',
-        defaultText: 'アプリ名の昇順',
-      }),
-      desc: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameDesc',
-        defaultText: 'アプリ名の降順',
-      }),
-    }),
-    [localize],
-  )
-
-  const options = useMemo(
+  const options = useMemo<Array<[Launcher['sortType'], JSX.Element]>>(
     () => [
-      ['default', translated.default],
-      ['name/asc', translated.asc],
-      ['name/desc', translated.desc],
+      [
+        'default',
+        <Localizer
+          key="default"
+          id="smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault"
+          defaultText="デフォルト"
+        />,
+      ],
+      [
+        'name/asc',
+        <Localizer
+          key="name/asc"
+          id="smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameAsc"
+          defaultText="アプリ名の昇順"
+        />,
+      ],
+      [
+        'name/desc',
+        <Localizer
+          key="name/desc"
+          id="smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameDesc"
+          defaultText="アプリ名の降順"
+        />,
+      ],
     ],
-    [translated],
+    [],
   )
 
   const onClickOption = useCallback(
@@ -106,19 +102,18 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
   return (
     <Dropdown>
-      <TriggerButton triggerRef={triggerRef} className={classNames.trigger}>
-        {translated.label}
+      <TriggerButton triggerRef={triggerRef} className={CLASS_NAMES.trigger}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownLabel" defaultText="表示順" />
       </TriggerButton>
       <DropdownContent controllable>
-        <div role="listbox" className={classNames.contentBody}>
+        <div role="listbox" className={CLASS_NAMES.contentBody}>
           {options.map(([value, children], i) => (
             <OptionButton
               key={i}
               value={value}
               selected={value === sortType}
-              selectedAlt={translated.selected}
+              className={CLASS_NAMES.contentButton}
               onClick={onClickOption}
-              className={classNames.contentButton}
             >
               {children}
             </OptionButton>
@@ -135,10 +130,10 @@ const TriggerButton = memo<
   <DropdownTrigger>
     <Button
       ref={triggerRef}
-      size="s"
       variant="text"
-      suffix={<FaCaretDownIcon />}
+      size="S"
       className={className}
+      suffix={<FaCaretDownIcon />}
     >
       <Translate>{children}</Translate>
     </Button>
@@ -149,21 +144,35 @@ const OptionButton = memo<
   PropsWithChildren<{
     value: string
     selected: boolean
-    selectedAlt: string
     onClick: (e: MouseEvent<HTMLButtonElement>) => void
     className: string
   }>
->(({ value, selected, selectedAlt, onClick, children, className }) => (
-  <Button
-    value={value}
-    role="option"
-    aria-selected={selected}
-    className={className}
-    prefix={
-      selected && <FaCheckIcon color={textColor.main} alt={<Translate>{selectedAlt}</Translate>} />
-    }
-    onClick={onClick}
-  >
-    <Translate>{children}</Translate>
-  </Button>
-))
+>(({ value, selected, onClick, children, className }) => {
+  const theme = useTheme()
+  return (
+    <Button
+      role="option"
+      value={value}
+      className={className}
+      aria-selected={selected}
+      onClick={onClick}
+      prefix={
+        selected && (
+          <FaCheckIcon
+            alt={
+              <Translate>
+                <Localizer
+                  id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected"
+                  defaultText="選択中"
+                />
+              </Translate>
+            }
+            color={theme.textColor.main}
+          />
+        )
+      }
+    >
+      <Translate>{children}</Translate>
+    </Button>
+  )
+})

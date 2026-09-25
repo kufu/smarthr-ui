@@ -7,11 +7,13 @@ import ts from 'typescript'
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
-const IGNORE_COMPONENTS = ['Experimental', 'OpenInNewTabIcon']
+const IGNORE_COMPONENTS = ['Experimental', 'OpenInNewTabIcon', 'LiveRegion']
 const IGNORE_INNER_DIRS = [
   'Input/InputWithTooltip',
   'Browser/models',
   'stories',
+  // client 境界が必要なモジュールを閉じ込めるディレクトリ。コンポーネントの公開単位ではない
+  'client',
   'AppHeader/components',
   'AppHeader/hooks',
   'AppHeader/multilingualization',
@@ -29,11 +31,11 @@ describe('index', () => {
 
   it('各コンポーネントディレクトリ直下に存在する子ディレクトリ名と同名のコンポーネントが export されていること', async () => {
     const componentDirs = await getComponentDirs(componentsPath, IGNORE_COMPONENTS)
-    componentDirs.forEach(async (dirName) => {
+    for (const dirName of componentDirs) {
       const componentDirPath = path.join(componentsPath, dirName)
       const innerComponents = await getComponentDirs(componentDirPath, IGNORE_INNER_DIRS)
       if (innerComponents.length === 0) {
-        return
+        continue
       }
       const exportedComponentsFromInnerDir = await getExportedDirectoryComponents(
         indexPath,
@@ -42,7 +44,7 @@ describe('index', () => {
       expect(exportedComponentsFromInnerDir.sort()).toEqual(
         expect.arrayContaining(innerComponents.sort()),
       )
-    })
+    }
   })
 })
 
@@ -87,7 +89,9 @@ const parseFile = async (filePath: string): Promise<string[]> => {
 
 const getExportedComponents = async (file: string): Promise<string[]> => {
   const files = await parseFile(file)
-  return files.filter(isNonComponentsExports).map(getComponentName)
+  const components = files.filter(isNonComponentsExports).map(getComponentName)
+  // 同じディレクトリから複数のコンポーネントをexportする場合があるため重複を除去
+  return [...new Set(components)]
 }
 
 const getComponentDirs = async (dirPath: string, ignoreDirs: string[] = []) => {
@@ -114,7 +118,11 @@ const getExportedDirectoryComponents = async (
       node.forEachChild((child) => {
         if (ts.isNamedExports(child)) {
           child.elements.forEach((element) => {
-            exportComponents.push(`${element.name.escapedText}`)
+            // エイリアス前の元の名前を取得（export { A as B } の場合、Aを取得）
+            const componentName = element.propertyName
+              ? `${element.propertyName.escapedText}`
+              : `${element.name.escapedText}`
+            exportComponents.push(componentName)
           })
         }
       })

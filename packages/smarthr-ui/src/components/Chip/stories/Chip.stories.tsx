@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
-import { Chip, classNameGenerator } from '../Chip'
+import { Chip } from '../Chip'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Chip',
@@ -13,7 +13,7 @@ export default {
     },
     color: {
       control: 'select',
-      options: Object.keys(classNameGenerator.variants.color),
+      options: ['grey', 'blue', 'green', 'orange', 'red'],
     },
   },
   args: {
@@ -30,8 +30,8 @@ export const Size: StoryObj<typeof Chip> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.size)].map((size) => (
-        <Chip {...args} size={size as any} key={String(size)} />
+      {[undefined, 'S'].map((size) => (
+        <Chip {...args} key={String(size)} size={size as any} />
       ))}
     </Stack>
   ),
@@ -41,8 +41,8 @@ export const Color: StoryObj<typeof Chip> = {
   name: 'color',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, ...Object.keys(classNameGenerator.variants.color)].map((color) => (
-        <Chip {...args} color={color as any} key={String(color)} />
+      {[undefined, 'grey', 'blue', 'green', 'orange', 'red'].map((color) => (
+        <Chip {...args} key={String(color)} color={color as any} />
       ))}
     </Stack>
   ),

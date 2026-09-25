@@ -2,6 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
@@ -48,15 +49,23 @@ export default {
     // peerDependenciesにreactが入っているが、jsx-runtimeは明示的に指定しないとbundleされてしまうのでベタ書きしている
     'react/jsx-runtime',
     ...peerDependencies,
+    // react-pdfはSSR時のクラッシュを避けるため動的importしているが、rollupは動的importの
+    // import()引数をvendor/へのリネーム後のパスに書き換えられないため、externalにして
+    // バンドルせず利用側の解決に委ねる(react-pdfはdependenciesとして持っているため
+    // インストール自体は自動で行われる)
+    'react-pdf',
   ],
   // pnpm起因での問題がおきないようにしている
   preserveSymlinks: false,
   plugins: [
+    json(),
     typescript({
       tsconfig: './tsconfig.build.json',
       noEmit: true,
     }),
-    preserveDirectives(),
+    preserveDirectives({
+      exclude: '**/*.json',
+    }),
     commonjs(),
     nodeResolve(),
     // node_modulesのままだとimportできないケースがあったので、vendorにrenameしている

@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
-import { Calendar } from '../Calendar'
+import { Calendar } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Calendar',
@@ -17,7 +17,9 @@ export default {
       onSelectDate={args.onSelectDate}
     />
   ),
-  args: {},
+  args: {
+    onSelectDate: () => undefined,
+  },
   argTypes: {
     value: {
       control: 'date',

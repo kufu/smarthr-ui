@@ -1,11 +1,11 @@
-import { type FC, memo, useContext, useMemo } from 'react'
+import { type FC, memo, useContext } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
-import { Text } from '../../../Text'
+import { TextLink } from '../../../TextLink'
 import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
@@ -14,15 +14,29 @@ import type { HeaderProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
-    anchor: ['shr-text-base shr-text-link [&&]:shr-underline', '[&&]:hover:shr-no-underline'],
+    anchor: [
+      'shr-text-base shr-text-link shr-shadow-none [&&]:shr-underline',
+      '[&&]:hover:shr-no-underline',
+    ],
     icon: ['shr-ms-0.5'],
     indexLinkWrapper: ['shr-mt-2 shr-text-end'],
     indexLinkAnchor: [
-      'shr-text-base shr-text-link [&&]:shr-no-underline',
+      'shr-text-base shr-text-link shr-shadow-none [&&]:shr-no-underline',
       '[&&]:hover:shr-underline',
     ],
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
+
+  return {
+    anchor: anchor(),
+    icon: icon(),
+    indexLinkWrapper: indexLinkWrapper(),
+    indexLinkAnchor: indexLinkAnchor(),
+  }
+})()
 
 export const ReleaseNote = memo(() => {
   const { releaseNote } = useContext(ReleaseNoteContext)
@@ -32,72 +46,55 @@ export const ReleaseNote = memo(() => {
 
 const ActualReleaseNote: FC<{
   data: Exclude<Required<HeaderProps>['releaseNote'], null>
-}> = ({ data }) => {
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      error: localize({
-        id: 'smarthr-ui/AppHeader/releaseNotesLoadError',
-        defaultText: 'リリースノートの読み込みに失敗しました。\n時間をおいて、やり直してください。',
-      }),
-      seeAll: localize({
-        id: 'smarthr-ui/AppHeader/seeAllReleaseNotes',
-        defaultText: 'すべてのリリースノートを見る',
-      }),
-    }),
-    [localize],
-  )
+}> = ({ data }) => (
+  <div>
+    {data.loading ? (
+      <Center>
+        <Loader />
+      </Center>
+    ) : data.error ? (
+      <Translate>
+        <Localizer
+          id="smarthr-ui/AppHeader/releaseNotesLoadError"
+          defaultText={`リリースノートの読み込みに失敗しました。
+時間をおいて、やり直してください。`}
+        />
+      </Translate>
+    ) : (
+      <Stack>
+        {data.links.slice(0, 5).map((link) => (
+          <div key={link.url}>
+            <TextLink
+              href={link.url}
+              target="_blank"
+              rel="noopener"
+              referrerPolicy="no-referrer-when-downgrade"
+              className={CLASS_NAMES.anchor}
+              suffix={<OpenInNewTabIcon className={CLASS_NAMES.icon} />}
+            >
+              {link.title}
+            </TextLink>
+          </div>
+        ))}
+      </Stack>
+    )}
 
-  const classNames = useMemo(() => {
-    const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
-
-    return {
-      anchor: anchor(),
-      icon: icon(),
-      indexLinkWrapper: indexLinkWrapper(),
-      indexLinkAnchor: indexLinkAnchor(),
-    }
-  }, [])
-
-  return (
-    <div>
-      {data.loading ? (
-        <Center>
-          <Loader />
-        </Center>
-      ) : data.error ? (
-        <Text>
-          <Translate>{translated.error}</Translate>
-        </Text>
-      ) : (
-        <Stack>
-          {data.links.slice(0, 5).map((link) => (
-            <div key={link.url}>
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={classNames.anchor}
-              >
-                {link.title}
-                <OpenInNewTabIcon className={classNames.icon} />
-              </a>
-            </div>
-          ))}
-        </Stack>
-      )}
-
-      <div className={classNames.indexLinkWrapper}>
-        <a
-          href={data.indexUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={classNames.indexLinkAnchor}
-        >
-          <Translate>{translated.seeAll}</Translate>
-          <OpenInNewTabIcon className={classNames.icon} />
-        </a>
-      </div>
+    <div className={CLASS_NAMES.indexLinkWrapper}>
+      <TextLink
+        href={data.indexUrl}
+        target="_blank"
+        rel="noopener"
+        referrerPolicy="no-referrer-when-downgrade"
+        className={CLASS_NAMES.indexLinkAnchor}
+        suffix={<OpenInNewTabIcon className={CLASS_NAMES.icon} />}
+      >
+        <Translate>
+          <Localizer
+            id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+            defaultText="すべてのリリースノートを見る"
+          />
+        </Translate>
+      </TextLink>
     </div>
-  )
-}
+  </div>
+)

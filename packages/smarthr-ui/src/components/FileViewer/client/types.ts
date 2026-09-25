@@ -1,0 +1,30 @@
+import type { ComponentProps } from 'react'
+import type { Document } from 'react-pdf'
+
+export type FileForViewer = {
+  url: string
+  contentType: string
+  alt?: string
+}
+
+export type PDFSearchMatch = {
+  pageIndex: number
+  itemIndex: number
+  matchStart: number
+  matchLength: number
+  globalIndex: number
+}
+
+export type ViewerProps = {
+  file: FileForViewer
+  scale: number
+  rotation: number | undefined
+  width: number
+  handleLoad: () => void
+  handlePDFLoaded?: (defaultRotation: number) => void
+  /**
+   * PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PdfViewerでのみ使用されます。
+   */
+  handlePassword?: ComponentProps<typeof Document>['onPassword']
+  handleLoadError?: (error: unknown) => void
+}

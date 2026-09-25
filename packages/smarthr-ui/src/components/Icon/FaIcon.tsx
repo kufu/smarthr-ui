@@ -18,6 +18,7 @@ import {
   FaArrowUp19,
   FaArrowUpWideShort,
   FaArrowsRotate,
+  FaArrowsSplitUpAndLeft,
   FaAsterisk,
   FaAt,
   FaBabyCarriage,
@@ -58,6 +59,7 @@ import {
   FaCircleExclamation,
   FaCircleInfo,
   FaCircleMinus,
+  FaCirclePlay,
   FaCirclePlus,
   FaCircleQuestion,
   FaCircleUser,
@@ -145,6 +147,7 @@ import {
   FaPaintbrush,
   FaPaperPlane,
   FaPaperclip,
+  FaPaste,
   FaPen,
   FaPenToSquare,
   FaPencil,
@@ -224,6 +227,7 @@ export const FaArrowUp19Icon = /*#__PURE__*/ generateIcon(FaArrowUp19)
 export const FaArrowUpIcon = /*#__PURE__*/ generateIcon(FaArrowUp)
 export const FaArrowUpWideShortIcon = /*#__PURE__*/ generateIcon(FaArrowUpWideShort)
 export const FaArrowsRotateIcon = /*#__PURE__*/ generateIcon(FaArrowsRotate)
+export const FaArrowsSplitUpAndLeftIcon = /*#__PURE__*/ generateIcon(FaArrowsSplitUpAndLeft)
 export const FaAsteriskIcon = /*#__PURE__*/ generateIcon(FaAsterisk)
 export const FaAtIcon = /*#__PURE__*/ generateIcon(FaAt)
 export const FaBabyCarriageIcon = /*#__PURE__*/ generateIcon(FaBabyCarriage)
@@ -264,6 +268,7 @@ export const FaCircleExclamationIcon = /*#__PURE__*/ generateIcon(FaCircleExclam
 export const FaCircleIcon = /*#__PURE__*/ generateIcon(FaCircle)
 export const FaCircleInfoIcon = /*#__PURE__*/ generateIcon(FaCircleInfo)
 export const FaCircleMinusIcon = /*#__PURE__*/ generateIcon(FaCircleMinus)
+export const FaCirclePlayIcon = /*#__PURE__*/ generateIcon(FaCirclePlay)
 export const FaCirclePlusIcon = /*#__PURE__*/ generateIcon(FaCirclePlus)
 export const FaCircleQuestionIcon = /*#__PURE__*/ generateIcon(FaCircleQuestion)
 export const FaCircleUserIcon = /*#__PURE__*/ generateIcon(FaCircleUser)
@@ -353,6 +358,7 @@ export const FaMugHotIcon = /*#__PURE__*/ generateIcon(FaMugHot)
 export const FaPaintbrushIcon = /*#__PURE__*/ generateIcon(FaPaintbrush)
 export const FaPaperPlaneIcon = /*#__PURE__*/ generateIcon(FaPaperPlane)
 export const FaPaperclipIcon = /*#__PURE__*/ generateIcon(FaPaperclip)
+export const FaPasteIcon = /*#__PURE__*/ generateIcon(FaPaste)
 export const FaPenIcon = /*#__PURE__*/ generateIcon(FaPen)
 export const FaPenToSquareIcon = /*#__PURE__*/ generateIcon(FaPenToSquare)
 export const FaPencilIcon = /*#__PURE__*/ generateIcon(FaPencil)

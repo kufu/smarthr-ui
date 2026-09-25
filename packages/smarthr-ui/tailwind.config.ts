@@ -1,3 +1,4 @@
+// eslint-disable-next-line smarthr/require-barrel-import
 import preset from './src/smarthr-ui-preset'
 
 import type { Config } from 'tailwindcss'

@@ -1,9 +1,9 @@
 import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
-import { InformationPanel, classNameGenerator } from '../InformationPanel'
+import { InformationPanel } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/InformationPanel',
@@ -26,8 +26,8 @@ export const Type: StoryObj<typeof InformationPanel> = {
   name: 'type',
   render: (args) => (
     <Stack>
-      {Object.keys(classNameGenerator.variants.type).map((type) => (
-        <InformationPanel {...args} type={type as any} key={type} />
+      {['success', 'info', 'warning', 'error', 'sync'].map((type) => (
+        <InformationPanel {...args} key={type} type={type as any} />
       ))}
     </Stack>
   ),
@@ -68,9 +68,9 @@ export const Toggleable: StoryObj<typeof InformationPanel> = {
       {[undefined, false, true].map((toggleable) => (
         <InformationPanel
           {...args}
-          heading={`toggleable: ${toggleable}`}
-          toggleable={toggleable}
           key={String(toggleable)}
+          toggleable={toggleable}
+          heading={`toggleable: ${toggleable}`}
         />
       ))}
     </Stack>
@@ -84,9 +84,9 @@ export const Active: StoryObj<typeof InformationPanel> = {
       {[undefined, false, true].map((active) => (
         <InformationPanel
           {...args}
-          heading={`active: ${active}`}
-          active={active}
           key={String(active)}
+          active={active}
+          heading={`active: ${active}`}
         />
       ))}
     </Stack>

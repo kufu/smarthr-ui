@@ -1,39 +1,41 @@
 'use client'
 
 import {
-  type ComponentProps,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   type RefObject,
+  type SetStateAction,
   memo,
-  useCallback,
-  useEffect,
   useId,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import Draggable from 'react-draggable'
-import { type VariantProps, tv } from 'tailwind-variants'
+import Draggable, { type DraggableBounds } from 'react-draggable'
+import { tv } from 'tailwind-variants'
 
-import { useHandleEscape } from '../../../hooks/useHandleEscape'
-import { useIntl } from '../../../intl'
-import { dialogSize } from '../../../themes/tailwind'
-import { Base, type BaseElementProps } from '../../Base'
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../hooks/useLatest'
+import { Localizer, useIntl } from '../../../intl'
+import { dialogSize } from '../../../tailwind'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
+import { LiveRegion } from '../../LiveRegion'
+import { Panel, type PanelElementProps } from '../../Panel'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
-import type { DecoratorsType } from '../../../hooks/useDecorators'
 import type { DialogSize } from '../types'
 
-type AbstractProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
    */
@@ -87,37 +89,38 @@ type AbstractProps = PropsWithChildren<{
    * ポータルの container となる DOM 要素を追加する親要素
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'closeButtonIconAlt'> & {
-    dialogHandlerAriaLabel?: (txt: string) => string
-    dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
-  }
+  /**
+   * リサイズ可能かどうか
+   */
+  resizable?: boolean
 }>
-type Props = AbstractProps &
-  Omit<DialogBodyProps, keyof AbstractProps> &
-  Omit<BaseElementProps, keyof AbstractProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof AbstractProps>
+type Props = BaseProps &
+  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<PanelElementProps, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
-    wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
-    headerEl:
-      'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
+    wrapper:
+      'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-max-h-[calc(100svh-theme(spacing[0.5]))] shr-max-w-[calc(100vw-theme(spacing[0.5]))] shr-flex-col',
+    headerEl: [
+      'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center',
+      'shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
+      'hover:shr-bg-white-darken',
+      /* DialogHandlerにフォーカスが当たっているときは、headerもフォーカス状態のスタイルにする。 */
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-focus-indicator',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-bg-white-darken',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-transition-colors',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-duration-100',
+      'has-[.smarthr-ui-ModelessDialog-handle:focus-visible]:shr-ease-in-out',
+    ],
     dialogHandler: [
-      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
-      'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
+      'smarthr-ui-ModelessDialog-handle',
+      'shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px]',
+      'shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-border-none',
+      'shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
+      'focus-visible:shr-focus-indicator--none shr-cursor-[inherit] shr-bg-[unset]',
     ],
-    headingEl: [
-      'shr-my-1 shr-me-1',
-      /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
-      '[.smarthr-ui-ModelessDialog-handle:focus-visible_+_&]:shr-relative',
-    ],
-    closeButtonLayout: [
-      'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
-      'shr-ml-auto shr-shrink-0',
-    ],
-    footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
   variants: {
     size: {
@@ -128,7 +131,7 @@ const classNameGenerator = tv({
       XL: { wrapper: dialogSize.XL },
       XXL: { wrapper: dialogSize.XXL },
       FULL: { wrapper: dialogSize.FULL },
-    },
+    } satisfies Record<NonNullable<BaseProps['size']>, { wrapper: string }>,
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
@@ -156,35 +159,31 @@ export const ModelessDialog: FC<Props> = ({
   bottom,
   portalParent,
   className,
-  decorators,
-  id,
   onClickClose,
   ...rest
 }) => {
   const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
-  const { createPortal } = useDialogPortal(portalParent, id)
-  const { localize } = useIntl()
+  // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
+  // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
+  const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
+  const { createPortal } = useDialogPortal(portalParent)
 
   const classNames = useMemo(() => {
-    const { overlap, wrapper, headerEl, headingEl, dialogHandler, closeButtonLayout, footerEl } =
-      classNameGenerator()
+    const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
 
     return {
       overlap: overlap({ className }),
       wrapper: wrapper({ size, resizable }),
       header: headerEl(),
-      heading: headingEl(),
       dialogHandler: dialogHandler(),
-      closeButtonLayout: closeButtonLayout(),
-      footer: footerEl(),
     }
   }, [className, size, resizable])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const focusTargetRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLElement>(null)
 
-  const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
+  const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
+  const [liveRegionText, setLiveRegionText] = useState<ReactNode>('')
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -193,245 +192,259 @@ export const ModelessDialog: FC<Props> = ({
     x: 0,
     y: 0,
   })
-  const [draggableBounds, setDraggableBounds] =
-    useState<ComponentProps<typeof Draggable>['bounds']>()
+  const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
-  const decoratorDefaultTexts = useMemo(
-    () => ({
-      closeButtonIconAlt: localize({
-        id: 'smarthr-ui/ModelessDialog/closeButtonIconAlt',
-        defaultText: '閉じる',
-      }),
-      dialogHandlerAriaLabel: localize({
-        id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel',
-        defaultText: 'ダイアログの位置',
-      }),
-      dialogHandlerAriaValuetext: wrapperPosition
-        ? localize(
-            {
-              id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaValuetext',
-              defaultText: '上から{top}px、左から{left}px',
-            },
-            {
-              top: Math.trunc(wrapperPosition.top).toString(),
-              left: Math.trunc(wrapperPosition.left).toString(),
-            },
+  const liveRegionFrame = useAnimationFrame()
+  const latest = useLatest({
+    isOpen,
+    onClickClose,
+    onPressEscape,
+    top,
+    left,
+    right,
+    bottom,
+    defaultPosition,
+    centering,
+    liveRegionFrame,
+  })
+
+  const functions = useMemo(() => {
+    const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
+      setPosition(pos)
+
+      latest.liveRegionFrame.request(() => {
+        const wrapperPosition = wrapperRef.current
+          ? wrapperRef.current.getBoundingClientRect()
+          : undefined
+
+        if (!wrapperPosition) {
+          setLiveRegionText('')
+          return
+        }
+
+        const oldPosition = wrapperPositionRef.current
+
+        wrapperPositionRef.current = wrapperPosition
+
+        if (
+          !oldPosition ||
+          wrapperPosition.top !== oldPosition.top ||
+          wrapperPosition.left !== oldPosition.left
+        ) {
+          setLiveRegionText(
+            <Localizer
+              id="smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText"
+              defaultText="上から{top}px、左から{left}px"
+              values={{
+                top: Math.trunc(wrapperPosition.top).toString(),
+                left: Math.trunc(wrapperPosition.left).toString(),
+              }}
+            />,
           )
-        : '',
-    }),
-    [localize, wrapperPosition],
-  )
-
-  const decorated = useMemo(() => {
-    if (!decorators) {
-      return {
-        dialogHandlerAriaLabel: decoratorDefaultTexts.dialogHandlerAriaLabel,
-        closeButtonIconAlt: decoratorDefaultTexts.closeButtonIconAlt,
-        dialogHandlerAriaValuetext: decoratorDefaultTexts.dialogHandlerAriaValuetext,
-      }
+        }
+      })
     }
 
     return {
-      dialogHandlerAriaLabel:
-        decorators.dialogHandlerAriaLabel?.(decoratorDefaultTexts.dialogHandlerAriaLabel) ||
-        decoratorDefaultTexts.dialogHandlerAriaLabel,
-      closeButtonIconAlt:
-        decorators.closeButtonIconAlt?.(decoratorDefaultTexts.closeButtonIconAlt) ||
-        decoratorDefaultTexts.closeButtonIconAlt,
-      dialogHandlerAriaValuetext: decorators.dialogHandlerAriaValuetext?.(
-        decoratorDefaultTexts.dialogHandlerAriaValuetext,
-        wrapperPosition,
-      ),
+      cleanupLiveRegion: () => {
+        latest.liveRegionFrame.cancel()
+      },
+      setActualPosition,
+      handleArrowKeyDown: (e: KeyboardEvent) => {
+        if (!latest.isOpen || document.activeElement !== e.currentTarget) {
+          return
+        }
+
+        const movingDistance = 20
+
+        switch (e.key) {
+          case 'ArrowUp':
+            setActualPosition((prev) => ({
+              x: prev.x,
+              y: prev.y - movingDistance,
+            }))
+            e.preventDefault()
+            break
+          case 'ArrowDown':
+            setActualPosition((prev) => ({
+              x: prev.x,
+              y: prev.y + movingDistance,
+            }))
+            e.preventDefault()
+            break
+          case 'ArrowLeft':
+            setActualPosition((prev) => ({
+              x: prev.x - movingDistance,
+              y: prev.y,
+            }))
+            e.preventDefault()
+            break
+          case 'ArrowRight':
+            setActualPosition((prev) => ({
+              x: prev.x + movingDistance,
+              y: prev.y,
+            }))
+            e.preventDefault()
+            break
+        }
+      },
+      handleClickClose: (e: MouseEvent<HTMLButtonElement>) => {
+        lastFocusElementRef.current?.focus()
+        latest.onClickClose?.(e)
+      },
+      handlePressEscape: () => {
+        lastFocusElementRef.current?.focus()
+        latest.onPressEscape?.()
+      },
+      handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
+      handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
+        setActualPosition((prev) => ({
+          x: prev.x + data.deltaX,
+          y: prev.y + data.deltaY,
+        }))
+      },
     }
-  }, [decorators, decoratorDefaultTexts, wrapperPosition])
+  }, [latest])
 
-  const positionStyle = useMemo(
-    () => ({
-      top: centering.top ?? top,
-      left: centering.left ?? left,
-      right,
-      bottom,
-      width: size ? undefined : width,
-      height,
-    }),
-    [centering, top, left, right, bottom, width, height, size],
-  )
+  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
-  const handleArrowKey = useCallback(
-    (e: KeyboardEvent) => {
-      if (!isOpen || document.activeElement !== e.currentTarget) {
-        return
-      }
+  const layoutEffectRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
+      if (isOpen) {
+        const oldDefaultPosition = latest.defaultPosition
+        const nextDefaultPosition =
+          oldDefaultPosition.top === latest.top &&
+          oldDefaultPosition.left === latest.left &&
+          oldDefaultPosition.right === latest.right &&
+          oldDefaultPosition.bottom === latest.bottom
+            ? oldDefaultPosition
+            : {
+                top: latest.top,
+                left: latest.left,
+                right: latest.right,
+                bottom: latest.bottom,
+              }
 
-      const movingDistance = 20
+        setDefaultPosition(nextDefaultPosition)
 
-      switch (e.key) {
-        case 'ArrowUp':
-          setPosition((prev) => ({
-            x: prev.x,
-            y: prev.y - movingDistance,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowDown':
-          setPosition((prev) => ({
-            x: prev.x,
-            y: prev.y + movingDistance,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowLeft':
-          setPosition((prev) => ({
-            x: prev.x - movingDistance,
-            y: prev.y,
-          }))
-          e.preventDefault()
-          break
-        case 'ArrowRight':
-          setPosition((prev) => ({
-            x: prev.x + movingDistance,
-            y: prev.y,
-          }))
-          e.preventDefault()
-          break
-      }
-    },
-    [isOpen],
-  )
+        // 中央寄せの座標計算を行う
+        if (node) {
+          const isXCenter =
+            nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
+          const isYCenter =
+            nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
+          let nextCentering = latest.centering
 
-  useEffect(() => {
-    if (wrapperRef.current instanceof Element) {
-      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
-    }
-  }, [position])
+          if (isXCenter || isYCenter) {
+            const rect = node.getBoundingClientRect()
+            const tempCentering = {
+              top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
+              left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+            }
 
-  useEffect(() => {
-    // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen) {
-      return
-    }
+            nextCentering =
+              latest.centering.top === tempCentering.top &&
+              latest.centering.left === tempCentering.left
+                ? latest.centering
+                : tempCentering
 
-    const isXCenter = left === undefined && right === undefined
-    const isYCenter = top === undefined && bottom === undefined
+            setCentering(nextCentering)
+          } else if (latest.centering.top !== undefined || latest.centering.left !== undefined) {
+            // HINT: 中央寄せが不要になった場合、以前の値が残るとdefaultPositionより優先されてしまう
+            nextCentering = {}
 
-    if (isXCenter || isYCenter) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-
-      setCentering({
-        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
-        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
-      })
-    }
-  }, [bottom, isOpen, left, right, top])
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    if (centering.top) {
-      setDraggableBounds({ top: centering.top * -1 })
-
-      return
-    }
-
-    if (wrapperRef.current) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-
-      setDraggableBounds({ top: rect.top * -1 })
-    }
-  }, [isOpen, centering.top])
-
-  useEffect(() => {
-    if (isOpen) {
-      setPosition({ x: 0, y: 0 })
-      focusTargetRef.current?.focus()
-    }
-  }, [isOpen])
-
-  const actualOnClickClose = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      lastFocusElementRef.current?.focus()
-      onClickClose?.(e)
-    },
-    [onClickClose],
-  )
-
-  const actualOnPressEscape = useMemo(
-    () =>
-      onPressEscape
-        ? () => {
-            lastFocusElementRef.current?.focus()
-            onPressEscape()
+            setCentering(nextCentering)
           }
-        : undefined,
-    [onPressEscape],
-  )
 
-  useHandleEscape(
-    useMemo(
-      () => (actualOnPressEscape && isOpen ? actualOnPressEscape : undefined),
-      [isOpen, actualOnPressEscape],
-    ),
-  )
+          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
+          setDraggableBounds((current: DraggableBounds | string | false) => {
+            // HINT: centering.topは0になりうるため、undefinedとの区別が必要
+            const nextTop =
+              nextCentering.top !== undefined
+                ? nextCentering.top * -1
+                : node.getBoundingClientRect().top * -1
 
-  useEffect(() => {
-    const focusHandler = (e: FocusEvent) => {
-      // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
-      if (e.target instanceof HTMLElement && !wrapperRef?.current?.contains(e.target)) {
-        lastFocusElementRef.current = e.target
+            return typeof current === 'object' && current.top === nextTop
+              ? current
+              : { top: nextTop }
+          })
+
+          node
+            .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')
+            ?.focus()
+        }
+
+        functions.setActualPosition({ x: 0, y: 0 })
       }
-    }
 
-    document.addEventListener('focus', focusHandler, true)
+      const focusHandler = (e: FocusEvent) => {
+        // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
+        if (e.target instanceof HTMLElement && !node?.contains(e.target)) {
+          lastFocusElementRef.current = e.target
+        }
+      }
 
-    return () => document.removeEventListener('focus', focusHandler, true)
-  }, [])
+      document.addEventListener('focus', focusHandler, true)
 
-  const onDragStart = useCallback((_: any, data: { x: number; y: number }) => setPosition(data), [])
-  const onDrag = useCallback((_: any, data: { deltaX: number; deltaY: number }) => {
-    setPosition((prev) => ({
-      x: prev.x + data.deltaX,
-      y: prev.y + data.deltaY,
-    }))
-  }, [])
+      return () => {
+        functions.cleanupLiveRegion()
+        document.removeEventListener('focus', focusHandler, true)
+      }
+    },
+    [isOpen, functions, latest],
+  )
+
+  // HINT: escapeCallbackRefはnodeを参照せずEscapeキーの監視を行うだけなので、
+  // どの要素にアタッチしても良い。Dialogが表示されている間常にマウントされている
+  // wrapperRefに混ぜ込んでいる
+  const mergedRef = useMergeRefs(wrapperRef, escapeCallbackRef, layoutEffectRef)
 
   return createPortal(
-    <DialogOverlap isOpen={isOpen} className={classNames.overlap} as="section">
+    <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
       <Draggable
-        handle=".smarthr-ui-ModelessDialog-handle"
-        onStart={onDragStart}
-        onDrag={onDrag}
-        position={position}
-        bounds={draggableBounds}
+        {...Draggable.defaultProps}
         nodeRef={wrapperRef}
+        handle=".smarthr-ui-ModelessDialog-handle"
+        position={position}
+        bounds={draggableBounds ?? false}
+        onStart={functions.handleDragStart}
+        onDrag={functions.handleDrag}
       >
-        <Base
+        <Panel
           {...rest}
-          ref={wrapperRef}
+          ref={mergedRef}
           role="dialog"
-          aria-labelledby={labelId}
           radius="m"
           layer={3}
           overflow="auto"
           className={classNames.wrapper}
-          style={positionStyle}
+          // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
+          // 依存する値も多く、memo化の効果が薄いため直接記述している
+          style={{
+            top: centering.top ?? defaultPosition.top,
+            left: centering.left ?? defaultPosition.left,
+            right: defaultPosition.right,
+            bottom: defaultPosition.bottom,
+            width: size ? undefined : width,
+            height,
+          }}
+          aria-labelledby={labelId}
         >
-          {/* dummy element for focus management. */}
-          <div tabIndex={-1} ref={focusTargetRef} />
+          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
+          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
           <div className={classNames.header}>
             <Handler
-              aria-label={decorated.dialogHandlerAriaLabel}
-              aria-valuetext={decorated.dialogHandlerAriaValuetext}
-              onArrowKeyDown={handleArrowKey}
               className={classNames.dialogHandler}
+              handleArrowKeyDown={functions.handleArrowKeyDown}
             />
-            <div id={labelId} className={classNames.heading}>
+            <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
               {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading>{heading}</Heading>
             </div>
             <CloseButton
-              onClick={actualOnClickClose}
-              className={classNames.closeButtonLayout}
-              iconAlt={decorated.closeButtonIconAlt}
+              // DialogHandlerの上に出すためにスタッキングコンテキストを生成
+              className="shr-relative shr-ml-auto shr-shrink-0"
+              handleClick={functions.handleClickClose}
             />
           </div>
           <DialogBody
@@ -441,38 +454,66 @@ export const ModelessDialog: FC<Props> = ({
           >
             {children}
           </DialogBody>
-          {footer && <div className={classNames.footer}>{footer}</div>}
-        </Base>
+          {footer && (
+            <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
+          )}
+          <LiveRegion visuallyHidden={true} announceDelay={600}>
+            {liveRegionText}
+          </LiveRegion>
+        </Panel>
       </Draggable>
     </DialogOverlap>,
   )
 }
 
 const Handler = memo<{
-  'aria-label': string
-  'aria-valuetext': string | undefined
   className: string
-  onArrowKeyDown: (e: KeyboardEvent) => void
-}>(({ onArrowKeyDown: onDelegateKeyDown, ...rest }) => (
-  // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
-  <div {...rest} tabIndex={0} role="slider" onKeyDown={onDelegateKeyDown}>
-    <FaGripIcon />
-  </div>
-))
+  handleArrowKeyDown: (e: KeyboardEvent) => void
+}>(({ handleArrowKeyDown, ...rest }) => {
+  const { localize } = useIntl()
+
+  return (
+    <>
+      <button
+        {...rest}
+        type="button"
+        aria-label={localize({
+          id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaLabel',
+          defaultText: 'ダイアログの位置',
+        })}
+        aria-roledescription={localize({
+          id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaRoleDescription',
+          defaultText: 'ドラッグ可能',
+        })}
+        aria-describedby="handler-description"
+        onKeyDown={handleArrowKeyDown}
+      >
+        <FaGripIcon />
+      </button>
+      <div id="handler-description" className="shr-hidden">
+        <Localizer
+          id="smarthr-ui/ModelessDialog/dialogHandlerDescription"
+          defaultText="矢印キーを押して上下左右に移動できます"
+        />
+      </div>
+    </>
+  )
+})
 
 const CloseButton = memo<{
   className: string
-  iconAlt: ReactNode
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>(({ onClick, iconAlt, className }) => (
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ handleClick, className }) => (
   <div className={className}>
     <Button
       type="button"
-      size="s"
-      onClick={onClick}
+      size="S"
       className="smarthr-ui-ModelessDialog-closeButton"
+      onClick={handleClick}
     >
-      <FaXmarkIcon alt={iconAlt} />
+      <FaXmarkIcon
+        alt={<Localizer id="smarthr-ui/ModelessDialog/closeButtonIconAlt" defaultText="閉じる" />}
+      />
     </Button>
   </div>
 ))

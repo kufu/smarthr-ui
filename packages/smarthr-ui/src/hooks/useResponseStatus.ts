@@ -11,8 +11,8 @@ export type ResponseStatus =
       status: 'processing'
     }
 
-export const useResponseStatus = (responseStatus: ResponseStatus | undefined) => {
-  const calculated = useMemo(() => {
+export const useResponseStatus = (responseStatus: ResponseStatus | undefined) =>
+  useMemo(() => {
     if (!responseStatus) {
       return {
         isProcessing: false,
@@ -37,6 +37,3 @@ export const useResponseStatus = (responseStatus: ResponseStatus | undefined) =>
       message: responseStatus.text,
     }
   }, [responseStatus])
-
-  return calculated
-}

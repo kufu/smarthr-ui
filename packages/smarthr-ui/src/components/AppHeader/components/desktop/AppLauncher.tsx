@@ -1,15 +1,18 @@
-import { type FC, type PropsWithChildren, type ReactNode, memo, useCallback, useMemo } from 'react'
+'use client'
+
+import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
-import { textColor } from '../../../../themes'
+import { useTheme } from '../../../../hooks/client/useTheme'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
+import { Scroller } from '../../../Scroller'
 import { Section } from '../../../SectioningContent'
-import { SideNav } from '../../../SideNav'
+import { SideNav, SideNavItemButton } from '../../../SideNav'
 import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
@@ -20,6 +23,8 @@ import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
+  loading?: boolean
+  error?: boolean
 }
 
 const appLauncher = tv({
@@ -52,7 +57,7 @@ const appLauncher = tv({
       'shr-min-h-[2rem] shr-px-1 shr-py-0.75',
       '[&_.smarthr-ui-Heading]:shr-text-black',
     ],
-    scrollArea: ['shr-h-[509px] shr-overflow-y-scroll'],
+    scrollArea: ['shr-h-[509px]'],
   },
   variants: {
     noIcon: {
@@ -68,7 +73,38 @@ const appLauncher = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
+const CLASS_NAMES = (() => {
+  const {
+    wrapper,
+    searchArea,
+    inner,
+    side,
+    sideNav,
+    sideNavHeading,
+    help,
+    main,
+    mainInner,
+    contentHead,
+    scrollArea,
+  } = appLauncher()
+
+  return {
+    wrapper: wrapper(),
+    searchArea: searchArea(),
+    inner: inner(),
+    side: side(),
+    unselectedSideNav: sideNav({ selected: false }),
+    selectedSideNav: sideNav({ noIcon: true, selected: true }),
+    sideNavHeading: sideNavHeading(),
+    help: help(),
+    main: main(),
+    mainInner: mainInner(),
+    contentHead: contentHead(),
+    scrollArea: scrollArea(),
+  }
+})()
+
+export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error }) => {
   const {
     features,
     page,
@@ -79,119 +115,60 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   } = useAppLauncher(baseFeatures)
 
-  const classNames = useMemo(() => {
-    const {
-      wrapper,
-      searchArea,
-      inner,
-      side,
-      sideNav,
-      sideNavHeading,
-      help,
-      main,
-      mainInner,
-      contentHead,
-      scrollArea,
-    } = appLauncher()
-
-    return {
-      wrapper: wrapper(),
-      searchArea: searchArea(),
-      inner: inner(),
-      side: side(),
-      unselectedSideNav: sideNav({ selected: false }),
-      selectedSideNav: sideNav({ noIcon: true, selected: true }),
-      sideNavHeading: sideNavHeading(),
-      help: help(),
-      main: main(),
-      mainInner: mainInner(),
-      contentHead: contentHead(),
-      scrollArea: scrollArea(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo<
-    Record<
-      Launcher['page'] | 'listText' | 'searchInputTitle' | 'helpText' | 'searchResultText',
-      ReactNode
-    >
-  >(
-    () => ({
-      favorite: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
-            defaultText: 'よく使うアプリ',
-          })}
-        </Translate>
-      ),
-      all: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/allModeText',
-            defaultText: 'すべてのアプリ',
-          })}
-        </Translate>
-      ),
-      listText: (
-        <Translate>
-          {localize({ id: 'smarthr-ui/AppHeader/Launcher/listText', defaultText: 'アプリ一覧' })}
-        </Translate>
-      ),
-      searchInputTitle: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-      helpText: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/helpText',
-            defaultText: 'よく使うアプリとは',
-          })}
-        </Translate>
-      ),
-      searchResultText: (
-        <Translate>
-          {localize({
-            id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
-            defaultText: '検索結果',
-          })}
-        </Translate>
-      ),
-    }),
-    [localize],
-  )
+  const translated = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+    favoriteModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+      defaultText: 'よく使うアプリ',
+    },
+    allModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+      defaultText: 'すべてのアプリ',
+    },
+  })
 
   return (
-    <div className={classNames.wrapper}>
-      <div className={classNames.searchArea}>
+    <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
+      <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle as string}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
-          width="100%"
           value={searchQuery}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          title={translated.searchInputTitle}
+          width="100%"
           onChange={onChangeSearchQuery}
+          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
 
-      <div className={classNames.inner}>
+      <div className={CLASS_NAMES.inner}>
         <SideNavs
           mode={mode}
           page={page}
           changePage={changePage}
-          translated={translated}
-          classNames={classNames}
+          favoriteModeText={translated.favoriteModeText}
+          allModeText={translated.allModeText}
         />
-        <main className={classNames.main}>
-          <Section className={classNames.mainInner}>
-            <Cluster className={classNames.contentHead} align="center" justify="space-between">
+        <div className={CLASS_NAMES.main}>
+          <Section className={CLASS_NAMES.mainInner}>
+            <Cluster align="center" justify="space-between" className={CLASS_NAMES.contentHead}>
               <MemoizedSubSubBlockHeading>
-                {mode === 'search' ? translated.searchResultText : translated[page]}
+                {mode === 'search' ? (
+                  <Localizer
+                    id="smarthr-ui/AppHeader/Launcher/searchResultText"
+                    defaultText="検索結果"
+                  />
+                ) : page === 'favorite' ? (
+                  translated.favoriteModeText
+                ) : (
+                  translated.allModeText
+                )}
               </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
@@ -199,11 +176,16 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
               )}
             </Cluster>
 
-            <div className={classNames.scrollArea}>
-              <AppLauncherFeatures features={features} page={page} />
-            </div>
+            <Scroller className={CLASS_NAMES.scrollArea}>
+              <AppLauncherFeatures
+                features={features}
+                page={page}
+                loading={loading}
+                error={error}
+              />
+            </Scroller>
           </Section>
-        </main>
+        </div>
       </div>
     </div>
   )
@@ -217,16 +199,12 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SideNavs = memo<
   Pick<ReturnType<typeof useAppLauncher>, 'mode' | 'page' | 'changePage'> & {
-    translated: { favorite: ReactNode; listText: ReactNode; all: ReactNode; helpText: ReactNode }
-    classNames: {
-      side: string
-      unselectedSideNav: string
-      sideNavHeading: string
-      selectedSideNav: string
-      help: string
-    }
+    favoriteModeText: string
+    allModeText: string
   }
->(({ mode, page, changePage, translated, classNames }) => {
+>(({ mode, page, changePage, favoriteModeText, allModeText }) => {
+  const theme = useTheme()
+  const listHeadingId = useId()
   const isNotSearch = mode !== 'search'
   const isFavorite = isNotSearch && page === 'favorite'
   const isAll = isNotSearch && page === 'all'
@@ -235,55 +213,65 @@ const SideNavs = memo<
     () => [
       {
         id: 'favorite',
-        title: translated.favorite,
-        prefix: <FaStarIcon color={isFavorite ? textColor.white : undefined} />,
+        title: <Translate>{favoriteModeText}</Translate>,
+        prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
         current: isFavorite,
       },
     ],
-    [isFavorite, translated],
+    [isFavorite, favoriteModeText, theme.textColor.white],
   )
   const selectedItems = useMemo(
     () => [
       {
         id: 'all',
-        title: translated.all,
+        title: <Translate>{allModeText}</Translate>,
         current: isAll,
       },
     ],
-    [isAll, translated],
+    [isAll, allModeText],
   )
 
   const onClick = useCallback(
-    (_: any, id: string) => {
-      changePage(id as Launcher['page'])
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      changePage(e.currentTarget.value as Launcher['page'])
     },
     [changePage],
   )
 
   return (
-    <div className={classNames.side}>
-      <SideNav
-        className={classNames.unselectedSideNav}
-        size="s"
-        items={unselectedItems}
-        onClick={onClick}
-      />
+    <div className={CLASS_NAMES.side}>
+      <SideNav size="S" className={CLASS_NAMES.unselectedSideNav} aria-label={favoriteModeText}>
+        {unselectedItems.map((item) => (
+          <SideNavItemButton
+            key={item.id}
+            id={item.id}
+            current={item.current}
+            onClick={onClick}
+            prefix={item.prefix}
+          >
+            {item.title}
+          </SideNavItemButton>
+        ))}
+      </SideNav>
 
       <hr />
 
       <Section>
-        <MemoizedSubSubBlockHeading className={classNames.sideNavHeading}>
-          {translated.listText}
-        </MemoizedSubSubBlockHeading>
-        <SideNav
-          className={classNames.selectedSideNav}
-          size="s"
-          items={selectedItems}
-          onClick={onClick}
-        />
+        <MemoizedAppListHeading id={listHeadingId} className={CLASS_NAMES.sideNavHeading} />
+        <SideNav size="S" className={CLASS_NAMES.selectedSideNav} aria-labelledby={listHeadingId}>
+          {selectedItems.map((item) => (
+            <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
+              {item.title}
+            </SideNavItemButton>
+          ))}
+        </SideNav>
       </Section>
 
-      <HelpLinkArea className={classNames.help}>{translated.helpText}</HelpLinkArea>
+      <HelpLinkArea className={CLASS_NAMES.help}>
+        <Translate>
+          <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+        </Translate>
+      </HelpLinkArea>
     </div>
   )
 })
@@ -302,7 +290,15 @@ const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children,
 const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
   ({ children, className }) => (
     <Heading type="subSubBlockTitle" className={className}>
-      {children}
+      <Translate>{children}</Translate>
     </Heading>
   ),
 )
+
+const MemoizedAppListHeading = memo<{ id: string; className?: string }>(({ id, className }) => (
+  <Heading type="subSubBlockTitle" id={id} className={className}>
+    <Translate>
+      <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
+    </Translate>
+  </Heading>
+))

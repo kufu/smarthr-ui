@@ -2,7 +2,7 @@ import { Stack } from '../../../Layout'
 import InputStory from '../../stories/Input.stories'
 import { SearchInput } from '../SearchInput'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Input/SearchInput',
@@ -52,7 +52,7 @@ export const Width: StoryObj<typeof SearchInput> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        <SearchInput {...args} width={width} key={width} />
+        <SearchInput {...args} key={width} width={width} />
       ))}
     </Stack>
   ),

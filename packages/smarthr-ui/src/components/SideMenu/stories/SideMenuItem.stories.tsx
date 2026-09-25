@@ -1,7 +1,8 @@
-import { SideMenu, SideMenuItem } from '..'
 import { FaMessageIcon } from '../../Icon'
+import { SideMenu } from '../SideMenu'
+import { SideMenuItem } from '../SideMenuItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/SideMenu/SideMenuItem',

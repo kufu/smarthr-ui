@@ -2,7 +2,7 @@ import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Button/AnchorButton',
@@ -10,7 +10,7 @@ export default {
   render: (args) => <AnchorButton {...args} />,
   args: {
     href: '#',
-    size: 'default',
+    size: 'M',
     children: 'ボタン',
     variant: 'secondary',
     wide: false,
@@ -87,7 +87,7 @@ export const Variant: StoryObj<typeof AnchorButton> = {
 export const Size: StoryObj<typeof AnchorButton> = {
   name: 'size',
   args: {
-    size: 's',
+    size: 'S',
   },
 }
 

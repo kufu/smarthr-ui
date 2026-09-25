@@ -1,22 +1,14 @@
-'use client'
-
 import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type DecoratorsType, useDecorators } from '../../hooks/useDecorators'
-import { useIntl } from '../../intl'
-import { Balloon } from '../Balloon'
+import { Localizer } from '../../intl'
 import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { ControlledTooltip } from '../Tooltip'
 
-import { Th } from './Th'
+import { CheckboxTh } from './client'
 
-type AbstractProps = {
-  // HINT: checkColumnName は aria-label属性に設定されるため、型をstringのみに絞ります
-  decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
-    checkColumnName?: (text: string) => string
-  }
-} & Pick<ComponentProps<typeof Th>, 'vAlign' | 'fixed'>
-type Props = AbstractProps & Omit<CheckboxProps, keyof AbstractProps>
+type BaseProps = Pick<ComponentProps<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
+type Props = BaseProps & Omit<CheckboxProps, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -29,7 +21,9 @@ const classNameGenerator = tv({
     checkbox: ['shr-leading-[0]', '[&>span]:shr-translate-y-[unset]'],
     balloon: [
       // 位置はセルの真ん中(50%)+checkboxの幅の半分(8px)+outlineの幅(4px)+Balloonの矢印の幅(5px), sr-onlyで隠す
-      'shr-sr-only shr-absolute shr-left-[calc(50%+(theme(fontSize.base)/2)+4px+5px)]',
+      'shr-sr-only shr-absolute shr-left-[calc(50%+(theme(fontSize.base)/2)+9px)]',
+      // 縦方向の位置も揃える
+      'shr-top-[calc(50%-(theme(fontSize.base)/2)-8px)]',
       // labelの中の要素に hover or focus-visible がある時のスタイル。shr-absoluteはshr-not-sr-onlyのpositionをabsoluteに上書きしている
       'group-has-[:hover,:focus-visible]/label:shr-not-sr-only group-has-[:hover,:focus-visible]/label:shr-absolute group-has-[:hover,:focus-visible]/label:shr-whitespace-nowrap',
     ],
@@ -37,28 +31,7 @@ const classNameGenerator = tv({
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, decorators, className, ...rest }, ref) => {
-    const { localize } = useIntl()
-
-    const decoratorDefaultTexts = useMemo(
-      () => ({
-        checkAllInvisibleLabel: localize({
-          id: 'smarthr-ui/ThCheckbox/checkAllInvisibleLabel',
-          defaultText: 'すべての項目を選択/解除',
-        }),
-        checkColumnName: localize({
-          id: 'smarthr-ui/ThCheckbox/checkColumnName',
-          defaultText: '選択',
-        }),
-      }),
-      [localize],
-    )
-
-    const decorated = useDecorators<'checkAllInvisibleLabel' | 'checkColumnName'>(
-      decoratorDefaultTexts,
-      decorators,
-    )
-
+  ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
     const classNames = useMemo(() => {
       const { wrapper, inner, balloon, checkbox } = classNameGenerator()
 
@@ -71,21 +44,31 @@ export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
     }, [className])
 
     return (
-      // Th に必要な属性やイベントは不要
-      <Th
+      <CheckboxTh
         vAlign={vAlign}
         fixed={fixed}
+        rowSpan={rowSpan}
+        colSpan={colSpan}
         className={classNames.wrapper}
-        aria-label={decorated.checkColumnName as string}
       >
         <label className={classNames.inner}>
-          <Balloon as="span" horizontal="left" vertical="middle" className={classNames.balloon}>
-            <span className="shr-block shr-p-0.5">{decorated.checkAllInvisibleLabel}</span>
-          </Balloon>
+          <ControlledTooltip
+            as="span"
+            horizontal="left"
+            vertical="middle"
+            className={classNames.balloon}
+          >
+            <span className="shr-inline-block shr-p-0.5">
+              <Localizer
+                id="smarthr-ui/ThCheckbox/checkAllInvisibleLabel"
+                defaultText="すべての項目を選択/解除"
+              />
+            </span>
+          </ControlledTooltip>
           {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
           <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
         </label>
-      </Th>
+      </CheckboxTh>
     )
   },
 )

@@ -1,1 +1,1 @@
-export * from './InputFile'
+export { InputFile } from './InputFile'

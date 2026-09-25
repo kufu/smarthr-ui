@@ -6,12 +6,14 @@ import { tv } from 'tailwind-variants'
 import { registerChartComponents } from '../../config'
 import { BarChart } from '../BarChart'
 import { LineChart } from '../LineChart'
+import { RadarChart } from '../RadarChart'
 
+import type { BarChartColorProps } from '../BarChart'
 import type { ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()
 
-type ChartType = 'bar' | 'line'
+type ChartType = 'bar' | 'line' | 'radar'
 
 type Props = {
   [K in ChartType]: {
@@ -20,28 +22,38 @@ type Props = {
     title?: string
     className?: string
     options?: Partial<ChartOptions<K>>
-  }
+  } & (K extends 'bar' ? BarChartColorProps : object)
 }[ChartType]
 
 const classNameGenerator = tv({
   base: 'shr-h-[500px]',
 })
 
-export const Chart: React.FC<Props> = ({ className, ...props }) => {
+export const Chart: React.FC<Props> = ({ className, ...rest }) => {
   const classNames = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <div className={classNames}>
-      <InnerChart {...props} />
+      <InnerChart {...rest} />
     </div>
   )
 }
 const InnerChart: React.FC<Props> = (props) => {
   switch (props.type) {
     case 'bar':
-      return <BarChart data={props.data} title={props.title} options={props.options} />
+      return (
+        <BarChart
+          data={props.data}
+          disablePatterns={props.disablePatterns}
+          singleTone={props.singleTone}
+          title={props.title}
+          options={props.options}
+        />
+      )
     case 'line':
       return <LineChart data={props.data} title={props.title} options={props.options} />
+    case 'radar':
+      return <RadarChart data={props.data} title={props.title} options={props.options} />
     default:
       return null
   }

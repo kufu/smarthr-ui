@@ -10,14 +10,21 @@ import {
   LineElement,
   LinearScale,
   PointElement,
+  RadialLinearScale,
   Title,
   Tooltip,
 } from 'chart.js'
+import annotationPlugin from 'chartjs-plugin-annotation'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
-
 import deepmerge from 'deepmerge'
 
-import { BORDER_DASHES, CHART_COLORS, FONT_FAMILY, SMARTHR_DEFAULT_COLORS } from '../helper'
+import {
+  BORDER_DASHES,
+  CHART_COLORS,
+  FONT_FAMILY,
+  RADAR_CHART_COLORS,
+  SMARTHR_DEFAULT_COLORS,
+} from '../helper'
 import { keyboardNavigationPlugin } from '../plugins'
 
 import type { ChartOptions, ChartType, LegendOptions } from 'chart.js'
@@ -29,6 +36,7 @@ export const registerChartComponents = () => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
+    RadialLinearScale,
     PointElement,
     LineElement,
     BarElement,
@@ -38,6 +46,7 @@ export const registerChartComponents = () => {
     Legend,
     Filler,
     ChartDataLabels,
+    annotationPlugin,
     keyboardNavigationPlugin,
   )
 }
@@ -47,7 +56,8 @@ export const registerChartComponents = () => {
 const generateLegendOptions = <TType extends ChartType>(
   chartType: TType,
 ): Partial<LegendOptions<TType>['labels']> => {
-  if (chartType === 'line') {
+  if (chartType === 'line' || chartType === 'radar') {
+    const colors = chartType === 'radar' ? RADAR_CHART_COLORS : CHART_COLORS
     return {
       font: { family: FONT_FAMILY },
       usePointStyle: true,
@@ -55,10 +65,13 @@ const generateLegendOptions = <TType extends ChartType>(
       generateLabels: (chart) =>
         chart.data.datasets.map((dataset, index) => ({
           text: dataset.label,
-          strokeStyle: CHART_COLORS[index % CHART_COLORS.length],
+          fontColor: SMARTHR_DEFAULT_COLORS.TEXT_BLACK,
+          strokeStyle: colors[index % colors.length],
           lineDash: BORDER_DASHES[index % BORDER_DASHES.length],
           lineWidth: 4,
           pointStyle: 'line',
+          datasetIndex: index,
+          hidden: !chart.isDatasetVisible(index),
         })),
     }
   }
@@ -71,7 +84,9 @@ const generateLegendOptions = <TType extends ChartType>(
 
 type CreateBaseChartOptionsReturn<T extends ChartType> = T extends 'line'
   ? Partial<ChartOptions<'line'>>
-  : Partial<ChartOptions<'bar'>>
+  : T extends 'radar'
+    ? Partial<ChartOptions<'radar'>>
+    : Partial<ChartOptions<'bar'>>
 
 // FIXME:borderWidth, cornerRadiusはnumberなため、定義された値を使うことができない
 const createBaseChartOptions = <T extends ChartType>({
@@ -93,13 +108,16 @@ const createBaseChartOptions = <T extends ChartType>({
 
   const internalLegendLabels = generateLegendOptions(chartType)
 
-  // 外部pluginsからtooltipを除外（内部設定を保護するため）
-  const { tooltip: _tooltip, ...safeExternalPlugins } = options.plugins || {}
-
-  // 外部オプションからplugins.tooltipを除外したオプションを作成
+  // 外部オプションからinternalTooltipConfigの指定を保護したオプションを作成
   const safeExternalOptions = {
     ...options,
-    plugins: safeExternalPlugins,
+    plugins: {
+      ...options.plugins,
+      tooltip: {
+        ...(options.plugins?.tooltip ?? {}),
+        ...internalTooltipConfig,
+      },
+    },
   }
 
   const baseDefaults = {
@@ -108,17 +126,20 @@ const createBaseChartOptions = <T extends ChartType>({
     maintainAspectRatio: false,
     events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
     plugins: {
+      ...options.plugins,
       legend: {
         position: 'bottom' as const,
         labels: internalLegendLabels,
       },
       tooltip: internalTooltipConfig,
-      ...safeExternalPlugins,
+      datalabels: {
+        display: false,
+      },
     },
   }
 
   // 外部オプションとベースデフォルトをマージ
-  return deepmerge(baseDefaults, safeExternalOptions) as CreateBaseChartOptionsReturn<T>
+  return deepmerge(baseDefaults, safeExternalOptions) as unknown as CreateBaseChartOptionsReturn<T>
 }
 
 export const createBarChartOptions = (
@@ -174,4 +195,44 @@ export const createLineChartOptions = (
 
   // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
   return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'line'>>
+}
+
+export const createRadarChartOptions = (
+  options: Partial<ChartOptions<'radar'>> = {},
+): Partial<ChartOptions<'radar'>> => {
+  const baseOptions = createBaseChartOptions({
+    chartType: 'radar',
+    options,
+  })
+
+  const scalesDefaults = {
+    scales: {
+      r: {
+        beginAtZero: true,
+        grid: {
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
+        angleLines: {
+          color: SMARTHR_DEFAULT_COLORS.BORDER,
+        },
+        pointLabels: {
+          font: { family: FONT_FAMILY },
+        },
+      },
+    },
+  }
+
+  // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
+  return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'radar'>>
+}
+
+export const createDoughnutChartOptions = (
+  options: Partial<ChartOptions<'doughnut'>> = {},
+): Partial<ChartOptions<'doughnut'>> => {
+  const baseOptions = createBaseChartOptions({
+    chartType: 'doughnut',
+    options,
+  })
+
+  return baseOptions as unknown as Partial<ChartOptions<'doughnut'>>
 }
