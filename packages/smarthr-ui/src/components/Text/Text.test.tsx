@@ -90,6 +90,24 @@ describe('Text', () => {
         expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
       })
 
+      test('children が変化した場合、MutationObserver により再判定される', async () => {
+        mockClientHeight(24, 72)
+
+        const { container, rerender } = render(
+          <Text maxLines={{ max: 3, tooltip: true }}>テキスト</Text>,
+        )
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+
+        mockClientHeight(72, 72)
+
+        await act(async () => {
+          rerender(<Text maxLines={{ max: 3, tooltip: true }}>別のテキスト</Text>)
+        })
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+      })
+
       test('ref は実際にレンダリングされた要素を指す', () => {
         const ref = createRef<HTMLSpanElement>()
         render(

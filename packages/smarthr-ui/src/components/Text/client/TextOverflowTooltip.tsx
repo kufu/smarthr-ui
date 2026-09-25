@@ -1,9 +1,15 @@
 'use client'
 
-import { type ComponentPropsWithRef, type ElementType, type FC, type Ref, useState } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ElementType,
+  type FC,
+  type Ref,
+  useCallback,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { Tooltip } from '../../Tooltip'
 
@@ -45,31 +51,38 @@ export const TextOverflowTooltip: FC<Props> = ({
   // HINT: -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
   // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadow要素と比較している
   // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-  const layoutEffectRef = useLayoutEffectRef<HTMLElement>(
-    (node) => {
-      if (!node) {
-        return
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) {
+      return
+    }
+
+    const checkOverflow = () => {
+      const shadow = node.parentElement?.querySelector<HTMLElement>(`.${SHADOW_CLASS_NAME}`)
+
+      if (shadow) {
+        setIsOverflowing(shadow.clientHeight > node.clientHeight)
       }
+    }
 
-      const checkOverflow = () => {
-        const shadow = node.parentElement?.querySelector<HTMLElement>(`.${SHADOW_CLASS_NAME}`)
+    checkOverflow()
 
-        if (shadow) {
-          setIsOverflowing(shadow.clientHeight > node.clientHeight)
-        }
-      }
+    window.addEventListener('resize', checkOverflow)
 
-      checkOverflow()
+    // HINT: childrenの変更を検知するため、nodeの子要素・テキストの変化を監視する
+    const mutationObserver = new MutationObserver(checkOverflow)
+    mutationObserver.observe(node, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    })
 
-      window.addEventListener('resize', checkOverflow)
+    return () => {
+      window.removeEventListener('resize', checkOverflow)
+      mutationObserver.disconnect()
+    }
+  }, [])
 
-      return () => window.removeEventListener('resize', checkOverflow)
-    },
-    // TODO: 将来的にMutationObserverに置き換えて、children の変更を監視する実装に変更する
-    [children, className],
-  )
-
-  const mergedRef = useMergeRefs(layoutEffectRef, outerRef)
+  const mergedRef = useMergeRefs(callbackRef, outerRef)
 
   const content = (
     <span className={CLASS_NAMES.wrapper}>
