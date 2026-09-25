@@ -17,7 +17,12 @@ jobs:
       issues: write
       pull-requests: write
     outputs:
+      # HINT: release-please は未リリース時に文字列 'false' を返す。
+      # GitHub Actions の if は空文字以外を真として扱うため、必ず == 'true' で比較する。
       releases_created: ${{ steps.release_please.outputs.releases_created }}
+      smarthr_ui_released: ${{ steps.release_please.outputs['packages/smarthr-ui--release_created'] }}
+      charts_released: ${{ steps.release_please.outputs['packages/charts--release_created'] }}
+      rich_text_editor_released: ${{ steps.release_please.outputs['packages/rich-text-editor--release_created'] }}
     steps:
       - name: Set NPM_CONFIG_BEFORE
         run: |
@@ -34,7 +39,7 @@ jobs:
       contents: write
       id-token: write
     needs: release_please
-    if: ${{ needs.release_please.outputs.releases_created }}
+    if: ${{ needs.release_please.outputs.releases_created == 'true' }}
     steps:
       - name: Set NPM_CONFIG_BEFORE
         run: |
@@ -50,6 +55,28 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm -r publish --no-git-checks --access public --provenance
+
+      # charts と rich-text-editor のビルドは smarthr-ui の lib を参照するため、
+      # 本体が公開対象かどうかに関わらず先にビルドする
+      - name: Build smarthr-ui
+        run: pnpm --filter smarthr-ui run build
+
+      # smarthr-ui を先に公開する。rich-text-editor の peer が指す本体版が
+      # 実在しない状態で editor を公開しないため
+      - name: Publish smarthr-ui
+        if: ${{ needs.release_please.outputs.smarthr_ui_released == 'true' }}
+        run: pnpm --filter smarthr-ui publish --no-git-checks --access public --provenance
+        env:
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Publish charts
+        if: ${{ needs.release_please.outputs.charts_released == 'true' }}
+        run: pnpm --filter @smarthr/smarthr-ui-charts publish --no-git-checks --access public --provenance
+        env:
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Publish rich-text-editor
+        if: ${{ needs.release_please.outputs.rich_text_editor_released == 'true' }}
+        run: pnpm --filter @smarthr/smarthr-ui-rich-text-editor publish --no-git-checks --access public --provenance
         env:
           NPM_CONFIG_PROVENANCE: true

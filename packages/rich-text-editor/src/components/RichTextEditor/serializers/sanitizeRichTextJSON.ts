@@ -1,0 +1,167 @@
+import { YOUTUBE_DEFAULT_SIZE } from '../extensions/youtubeOptions'
+
+import {
+  LINK_REL,
+  isNumericAttr,
+  isSafeCodeLanguage,
+  isSafeColor,
+  isSafeFontSize,
+  isSafeImageSrc,
+  isSafeLinkTarget,
+  isSafeTextAlign,
+  isSafeUrl,
+  isSafeYoutubeSrc,
+} from './safeAttributes'
+
+import type { JSONContent } from '@tiptap/core'
+
+type JSONMark = NonNullable<JSONContent['marks']>[number]
+
+type AttrNormalizer = (value: unknown) => unknown
+
+/** null は拡張のデフォルトへ戻す指示になる（キー削除ではTiptapのattrs解決に乗らない） */
+const nullIfUnsafe =
+  (isSafe: (value: unknown) => boolean): AttrNormalizer =>
+  (value) =>
+    isSafe(value) ? value : null
+
+/**
+ * colwidth の各要素は table の width 宣言へ合算されるため、
+ * 数値以外が混ざるとCSS宣言の追記になる。0 は Tiptap が幅未指定として扱うので許可する。
+ */
+const isSafeColwidth = (value: unknown): boolean =>
+  Array.isArray(value) &&
+  value.every((width) => typeof width === 'number' && Number.isFinite(width) && width >= 0)
+
+/**
+ * colspan/rowspan は colgroup を組み立てるループの回数になるため、
+ * 0・NaN・Infinity を渡すと列が消えたり無限ループになる。
+ * null では既定値へ解決されないので schema と同じ 1 に戻す。
+ */
+const normalizeSpan: AttrNormalizer = (value) =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 1 ? value : 1
+
+/**
+ * Youtube 拡張は start を埋め込みURLのクエリへ文字列連結するため、
+ * 数値以外を通すとクエリの追記になる。null でも 0 と同じ扱いになるが schema の既定値に揃える。
+ */
+const normalizeStart: AttrNormalizer = (value) =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0
+
+// React 経路は数値以外を既定値にするため、数値文字列も許可せず両経路の出力を揃える
+const normalizeYoutubeDimension =
+  (fallback: number): AttrNormalizer =>
+  (value) =>
+    typeof value === 'number' && isNumericAttr(value) ? value : fallback
+
+const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
+  colspan: normalizeSpan,
+  rowspan: normalizeSpan,
+  colwidth: nullIfUnsafe(isSafeColwidth),
+  align: nullIfUnsafe(isSafeTextAlign),
+  color: nullIfUnsafe(isSafeColor),
+  backgroundColor: nullIfUnsafe(isSafeColor),
+}
+
+/**
+ * ノード/マークの型ごとに、信頼できない属性値の正規化を対応づける。
+ *
+ * Tiptap拡張の renderHTML は属性を style や属性値へそのまま展開するため、
+ * 直接JSONを渡された場合に `color: 'red;position:fixed'` のようなCSS宣言の追記が
+ * そのまま出力される。HTML経路とReact経路の双方が描画直前にこの表を通すことで、
+ * APIによってサニタイズ結果が変わる状態を防ぐ。
+ *
+ * href・youtube の src・lineHeight は拡張側の renderHTML でも落ちるが、
+ * 拡張の実装変更に依存しないよう明示的に検証する。
+ */
+const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
+  // ノード
+  image: {
+    src: nullIfUnsafe(isSafeImageSrc),
+    width: nullIfUnsafe(isNumericAttr),
+    height: nullIfUnsafe(isNumericAttr),
+  },
+  youtube: {
+    src: nullIfUnsafe(isSafeYoutubeSrc),
+    start: normalizeStart,
+    width: normalizeYoutubeDimension(YOUTUBE_DEFAULT_SIZE.width),
+    height: normalizeYoutubeDimension(YOUTUBE_DEFAULT_SIZE.height),
+  },
+  codeBlock: { language: nullIfUnsafe(isSafeCodeLanguage) },
+  paragraph: { textAlign: nullIfUnsafe(isSafeTextAlign) },
+  heading: { textAlign: nullIfUnsafe(isSafeTextAlign) },
+  tableCell: TABLE_CELL_GUARDS,
+  tableHeader: TABLE_CELL_GUARDS,
+  // マーク
+  link: {
+    href: nullIfUnsafe(isSafeUrl),
+    target: nullIfUnsafe(isSafeLinkTarget),
+    // null だと属性ごと落ちて既定値に戻らない
+    rel: () => LINK_REL,
+    class: () => null,
+    title: nullIfUnsafe((value) => typeof value === 'string'),
+  },
+  textStyle: {
+    color: nullIfUnsafe(isSafeColor),
+    backgroundColor: nullIfUnsafe(isSafeColor),
+    fontSize: nullIfUnsafe(isSafeFontSize),
+  },
+}
+
+const sanitizeAttrs = (
+  type: string | undefined,
+  attrs: Record<string, unknown>,
+): Record<string, unknown> => {
+  const guards = type ? ATTR_GUARDS[type] : undefined
+
+  if (!guards) return attrs
+
+  return Object.entries(guards).reduce((acc, [key, normalize]) => {
+    // 属性が無い場合は schema の既定値に任せる
+    if (!(key in acc)) return acc
+
+    const sanitized = normalize(acc[key])
+
+    return sanitized === acc[key] ? acc : { ...acc, [key]: sanitized }
+  }, attrs)
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+const isPresent = <T>(value: T | null): value is T => value !== null
+
+const sanitizeMark = (mark: unknown): JSONMark | null => {
+  if (!isRecord(mark) || typeof mark.type !== 'string') return null
+
+  const { attrs, ...rest } = mark
+
+  return {
+    ...rest,
+    ...(isRecord(attrs) ? { attrs: sanitizeAttrs(mark.type, attrs) } : {}),
+    type: mark.type,
+  }
+}
+
+/**
+ * 保存済みの JSON は別バージョンの schema で書かれたものや壊れたものもありうる。
+ * 形の崩れた部分だけを取り除き、ProseMirror の Node.fromJSON が例外を投げないようにする。
+ */
+const sanitizeNode = (node: unknown): JSONContent | null => {
+  if (!isRecord(node) || typeof node.type !== 'string') return null
+  // ProseMirror は文字列を持たない text ノードも空文字の text ノードも受け付けない
+  if (node.type === 'text' && (typeof node.text !== 'string' || node.text === '')) return null
+
+  const { attrs, marks, content, ...rest } = node
+
+  return {
+    ...rest,
+    ...(isRecord(attrs) ? { attrs: sanitizeAttrs(node.type, attrs) } : {}),
+    ...(Array.isArray(marks) ? { marks: marks.map(sanitizeMark).filter(isPresent) } : {}),
+    ...(Array.isArray(content) ? { content: content.map(sanitizeNode).filter(isPresent) } : {}),
+    type: node.type,
+  }
+}
+
+export const sanitizeRichTextJSON = (json: unknown): JSONContent =>
+  sanitizeNode(json) ?? { type: 'doc', content: [{ type: 'paragraph' }] }
