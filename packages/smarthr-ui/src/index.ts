@@ -45,9 +45,15 @@ export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
 export { AnchorButton, Button, UnstyledButton } from './components/Button'
 export { StatusLabel, RequiredLabel } from './components/StatusLabel'
-// TODO: 内部的にはPanel, Groupboxという名前だが、外部公開時はBase, BaseColumnとして提供
-// リネームの時期を調整中のため、互換性維持のため旧名称で公開
-export { Panel, Panel as Base, Groupbox, Groupbox as BaseColumn } from './components/Panel'
+export { Panel, Groupbox } from './components/Panel'
+/**
+ * @deprecated Base は非推奨です。Panel を使ってください。
+ */
+export { Panel as Base } from './components/Panel'
+/**
+ * @deprecated BaseColumn は非推奨です。Groupbox を使ってください。
+ */
+export { Groupbox as BaseColumn } from './components/Panel'
 // eslint-disable-next-line no-restricted-syntax -- Iconから200以上のアイコンをexport
 export * from './components/Icon'
 export { SmartHRAILogo } from './components/SmartHRAILogo'
