@@ -178,7 +178,7 @@ export const DialogContentInner: FC<Props> = ({
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
         >
-          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+          <FocusTrap outerRef={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>
