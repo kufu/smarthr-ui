@@ -19,7 +19,7 @@ export const DialogContent: FC<Props> = ({ portalParent, children, ...rest }) =>
 
   const functions = useMemo(
     () => ({
-      handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
+      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
         const closer = findDelegateTarget<HTMLElement>(e, `.${DIALOG_CLOSER_CLASS_NAME}`)
 
         // HINT: Dialogがネストしている場合、もっとも近いDialogだけを閉じる

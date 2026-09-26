@@ -162,14 +162,12 @@ export const ModelessDialog: FC<Props> = ({
   onClickClose,
   ...rest
 }) => {
-  const baseId = useId()
-  const labelId = `${baseId}-label`
+  const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
   const { createPortal } = useDialogPortal(portalParent)
-  const { localize } = useIntl()
 
   const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
@@ -182,10 +180,10 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [className, size, resizable])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
-  const [liveRegionText, setLiveRegionText] = useState<string>('')
+  const [liveRegionText, setLiveRegionText] = useState<ReactNode>('')
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -207,7 +205,6 @@ export const ModelessDialog: FC<Props> = ({
     bottom,
     defaultPosition,
     centering,
-    localize,
     liveRegionFrame,
   })
 
@@ -235,16 +232,14 @@ export const ModelessDialog: FC<Props> = ({
           wrapperPosition.left !== oldPosition.left
         ) {
           setLiveRegionText(
-            latest.localize(
-              {
-                id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
-                defaultText: '上から{top}px、左から{left}px',
-              },
-              {
+            <Localizer
+              id="smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText"
+              defaultText="上から{top}px、左から{left}px"
+              values={{
                 top: Math.trunc(wrapperPosition.top).toString(),
                 left: Math.trunc(wrapperPosition.left).toString(),
-              },
-            ),
+              }}
+            />,
           )
         }
       })
@@ -496,10 +491,10 @@ const Handler = memo<{
         <FaGripIcon />
       </button>
       <div id="handler-description" className="shr-hidden">
-        {localize({
-          id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
-          defaultText: '矢印キーを押して上下左右に移動できます',
-        })}
+        <Localizer
+          id="smarthr-ui/ModelessDialog/dialogHandlerDescription"
+          defaultText="矢印キーを押して上下左右に移動できます"
+        />
       </div>
     </>
   )
