@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.7.3](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.2...smarthr-ui-v99.7.3) (2026-09-26)
+
+
+### Bug Fixes
+
+* **FormControl, Fieldset:** exampleMessageをi要素かつ立体で表示 ([#5902](https://github.com/kufu/smarthr-ui/issues/5902)) ([94ac679](https://github.com/kufu/smarthr-ui/commit/94ac6791da1e10fac62ef957fb20b659b4a1e6b9))
+* **ListBox:** ローダー表示中のスクリーンリーダー向けアナウンスを修正 ([#7166](https://github.com/kufu/smarthr-ui/issues/7166)) ([a3bcb69](https://github.com/kufu/smarthr-ui/commit/a3bcb692ed09630a2b6ff2b0fecc78fea38a6d4f))
+* **ModelessDialog:** 初回マウント時にisOpen=trueの場合中央寄せがずれる問題を修正 ([#7167](https://github.com/kufu/smarthr-ui/issues/7167)) ([1568844](https://github.com/kufu/smarthr-ui/commit/1568844407e7a225dc65da3f1ce2b4646a682c16))
+* **ThCheckbox:** tooltip位置を調整 ([#7152](https://github.com/kufu/smarthr-ui/issues/7152)) ([6319d8c](https://github.com/kufu/smarthr-ui/commit/6319d8c9869be4b5160bed8d29c8a57ec92c497e))
+
 ## [99.7.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.1...smarthr-ui-v99.7.2) (2026-09-17)
 
 
