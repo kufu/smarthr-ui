@@ -9,6 +9,7 @@ import {
   memo,
   useId,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -101,7 +102,7 @@ export const useListbox = <T,>({
 }: Props<T>) => {
   const listBoxId = useId()
 
-  const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
+  const navigationTypeRef = useRef<'pointer' | 'key'>('pointer')
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
@@ -227,7 +228,7 @@ export const useListbox = <T,>({
         setTriggerWidth(rect.width)
       },
       handleKeyDownListBox: (e: KeyboardEvent<HTMLElement>) => {
-        setNavigationType('key')
+        navigationTypeRef.current = 'key'
 
         if (KEY_DOWN_REGEX.test(e.key)) {
           e.stopPropagation()
@@ -265,7 +266,7 @@ export const useListbox = <T,>({
         latest.onSelect(option.item)
       },
       handleHoverOption: (option: ComboboxOption<T>) => {
-        setNavigationType('pointer')
+        navigationTypeRef.current = 'pointer'
         setActiveOption(option)
       },
     }
@@ -274,7 +275,7 @@ export const useListbox = <T,>({
   const listBoxLayoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
-      if (!node || activeOption === null || navigationType !== 'key') {
+      if (!node || activeOption === null || navigationTypeRef.current !== 'key') {
         return
       }
 
@@ -293,7 +294,7 @@ export const useListbox = <T,>({
         node.scrollTop += activeRect.bottom - containerRect.bottom
       }
     },
-    [activeOption, navigationType],
+    [activeOption],
   )
   const mergedListBoxRef = useMergeRefs(listBoxLayoutEffectRef, functions.baseCallbackRef)
 
