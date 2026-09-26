@@ -5,7 +5,6 @@ import { Localizer } from '../../../../intl'
 import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
 import { Center } from '../../../Layout'
-import { LineClamp } from '../../../LineClamp'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
@@ -134,5 +133,11 @@ const FeatureListItem = memo<{
 const FeatureName: FC<PropsWithChildren> = ({ children }) => {
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
-  return isDesktop ? <LineClamp maxLines={2}>{children}</LineClamp> : children
+  return isDesktop ? (
+    <Text as="span" maxLines={{ max: 2, tooltip: true }}>
+      {children}
+    </Text>
+  ) : (
+    children
+  )
 }

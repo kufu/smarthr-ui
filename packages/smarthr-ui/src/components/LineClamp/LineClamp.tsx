@@ -60,6 +60,10 @@ const classNameGenerator = tv({
   ],
 })
 
+/**
+ * @deprecated LineClamp は非推奨です。Text の maxLines(オブジェクト形式)を使ってください。
+ * `<LineClamp maxLines={2}>` は `<Text maxLines={{ max: 2, tooltip: true }}>` に置き換えられます。
+ */
 export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...rest }) => {
   if (maxLines < 1 || maxLines > 6) {
     throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
@@ -117,6 +121,11 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     </span>
   )
 
+  // HINT: isTooltipVisibleがfalse→trueに切り替わるとJSXのルート要素の型が
+  // span→Tooltipに変わるため、Reactはこのサブツリーをアンマウント/リマウントする。
+  // 初回判定(false→true)はuseEffect実行後の再レンダーで発生するため実ブラウザでは
+  // 目立ちにくいが、resizeなどでtrue→falseへ戻る場合は一瞬のちらつきが理論上発生しうる。
+  // 発生頻度が低く実害が小さいため許容している
   return isTooltipVisible ? (
     <Tooltip message={children}>{actualLineClamp}</Tooltip>
   ) : (
