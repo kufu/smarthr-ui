@@ -66,7 +66,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         }
         onClick={open}
       />
-      {/* TODO: PortalのdivとMenuDialog内のdivが二重になっている。Portalのas propで統合する(別PRで対応) */}
       <Portal>
         <MenuDialog
           callbackRef={callbackRef}
