@@ -30,9 +30,16 @@ const classNameGenerator = tv({
   },
 })
 
-const isValidSize = (value: string) => {
-  const num = parseInt(value, 10)
-  return !Number.isNaN(num) && num >= 1
+// 桁を打ち間違えると数万行の transaction でタブが固まるため、上限を設ける。
+// 動作は1万セルでも問題ないが、空のセルも属性を持つため 100×100 で JSON が約2MBになる。
+// 列は約11列で横スクロールになるので、行より小さくして1回の挿入のデータ量を抑える
+const MAX_ROWS = 100
+const MAX_COLS = 20
+
+// parseInt は '1.5' を 1 と読むため、小数が黙って切り捨てられる
+const isValidSize = (value: string, max: number) => {
+  const num = Number(value)
+  return Number.isInteger(num) && num >= 1 && num <= max
 }
 
 type Props = {
@@ -55,10 +62,13 @@ export const TableInsertDropdown: FC<Props> = memo(
     const firstInputRef = useRef<HTMLInputElement>(null)
     const classNames = classNameGenerator()
 
-    const errorMessage = localize({
-      id: 'smarthr-ui/RichTextEditor/tableInvalidSize',
-      defaultText: '1以上の数値を入力してください',
-    })
+    const errorMessage = localize(
+      {
+        id: 'smarthr-ui/RichTextEditor/tableInvalidSize',
+        defaultText: '行数は1〜{maxRows}、列数は1〜{maxCols}の整数を入力してください',
+      },
+      { maxRows: MAX_ROWS, maxCols: MAX_COLS },
+    )
 
     const tableLabel = localize({
       id: 'smarthr-ui/RichTextEditor/tableInsert',
@@ -87,7 +97,7 @@ export const TableInsertDropdown: FC<Props> = memo(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         e.stopPropagation()
-        if (!isValidSize(rows) || !isValidSize(cols)) {
+        if (!isValidSize(rows, MAX_ROWS) || !isValidSize(cols, MAX_COLS)) {
           setError(errorMessage)
           return
         }
@@ -95,8 +105,8 @@ export const TableInsertDropdown: FC<Props> = memo(
           .chain()
           .focus()
           .insertTable({
-            rows: parseInt(rows, 10),
-            cols: parseInt(cols, 10),
+            rows: Number(rows),
+            cols: Number(cols),
             withHeaderRow: true,
           })
           .run()
@@ -164,7 +174,7 @@ export const TableInsertDropdown: FC<Props> = memo(
         {renderDropdown(
           <div ref={popupRef} role="dialog" className={classNames.popup()} aria-label={tableLabel}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
               <Stack gap={0.75}>
                 <Cluster gap={0.75}>
                   <FormControl label={rowsLabel}>
@@ -174,6 +184,7 @@ export const TableInsertDropdown: FC<Props> = memo(
                       name="tableRows"
                       value={rows}
                       min={1}
+                      max={MAX_ROWS}
                       error={!!error}
                       width="5em"
                       onChange={(e) => {
@@ -188,6 +199,7 @@ export const TableInsertDropdown: FC<Props> = memo(
                       name="tableCols"
                       value={cols}
                       min={1}
+                      max={MAX_COLS}
                       error={!!error}
                       width="5em"
                       onChange={(e) => {

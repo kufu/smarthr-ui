@@ -118,7 +118,7 @@
   "smarthr-ui/RichTextEditor/tableRowsLabel": "行数",
   "smarthr-ui/RichTextEditor/tableColsLabel": "列数",
   "smarthr-ui/RichTextEditor/tableInsertButton": "挿入",
-  "smarthr-ui/RichTextEditor/tableInvalidSize": "1以上の数値を入力してください",
+  "smarthr-ui/RichTextEditor/tableInvalidSize": "行数は1〜{maxRows}、列数は1〜{maxCols}の整数を入力してください",
   "smarthr-ui/RichTextEditor/characterCount": "文字数：{count}",
   "smarthr-ui/RichTextEditor/rowActions": "行の操作",
   "smarthr-ui/RichTextEditor/columnActions": "列の操作",
