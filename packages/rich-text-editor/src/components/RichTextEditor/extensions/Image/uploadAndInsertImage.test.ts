@@ -61,13 +61,13 @@ describe('uploadAndInsertImage', () => {
     const deferred = createDeferred<ImageUploadResult>()
     const done = uploadAndInsertImage(editor, file(), 3, () => deferred.promise)
 
-    editor.commands.insertContentAt(1, 'XY')
+    editor.commands.insertContentAt(1, '12')
     deferred.resolve({ src: 'https://example.com/a.png' })
     await done
 
     expect(imagePositions(editor)).toHaveLength(1)
     // プレースホルダは 3 から 5 へ移動する。ブロック要素の挿入で段落が分割される
-    expect(editor.getHTML()).toMatch(/<p>XYhe<\/p>.*<img[^>]*>.*<p>llo<\/p>/)
+    expect(editor.getHTML()).toMatch(/<p>12he<\/p>.*<img[^>]*>.*<p>llo<\/p>/)
   })
 
   it('挿入箇所を含む範囲が削除されたら挿入しない', async () => {
