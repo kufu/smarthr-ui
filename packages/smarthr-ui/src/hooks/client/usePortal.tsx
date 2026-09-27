@@ -3,7 +3,6 @@ import {
   type ElementType,
   type FC,
   createContext,
-  useCallback,
   useContext,
   useMemo,
   useState,
@@ -22,30 +21,15 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-export function usePortal() {
-  const [currentSeq] = useState(() => ++portalSeq)
-
-  const portalProps = useMemo(() => ({ currentSeq }), [currentSeq])
-
-  const isChildPortal = useCallback(
-    (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
-    [currentSeq],
-  )
-
-  return { portalProps, isChildPortal }
-}
-
-type PortalProps = Omit<ComponentPropsWithoutRef<'div'>, 'data-portal-child-of'> & {
+type PortalProps = Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'data-portal-child-of' | 'data-portal-current-seq'
+> & {
   as?: ElementType
-  currentSeq: number
 }
 
-export const Portal: FC<PortalProps> = ({
-  as: Component = 'div',
-  currentSeq,
-  children,
-  ...rest
-}) => {
+export const Portal: FC<PortalProps> = ({ as: Component = 'div', children, ...rest }) => {
+  const [currentSeq] = useState(() => ++portalSeq)
   const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
 
@@ -69,7 +53,11 @@ export const Portal: FC<PortalProps> = ({
 
   return createPortal(
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
-      <Component {...rest} data-portal-child-of={calculatedSeqs.portalChildOf}>
+      <Component
+        {...rest}
+        data-portal-current-seq={currentSeq}
+        data-portal-child-of={calculatedSeqs.portalChildOf}
+      >
         {children}
       </Component>
     </ParentContext.Provider>,
@@ -77,15 +65,26 @@ export const Portal: FC<PortalProps> = ({
   )
 }
 
-function _isChildPortal(element: HTMLElement | SVGElement | null, seqRegex: RegExp): boolean {
-  if (!element) return false
+/**
+ * targetが、nodeの属するポータル系列(node自身が生成したポータル、またはその祖先ポータル)の
+ * 子孫かどうかを判定する。nodeにはPortalの中身に含まれる任意の要素を渡せば良い。
+ */
+export function isChildPortal(target: HTMLElement | SVGElement | null, node: HTMLElement): boolean {
+  const seq = node.closest<HTMLElement>('[data-portal-current-seq]')?.dataset.portalCurrentSeq
 
-  let includesSeq = false
-  const childOf = element.dataset?.portalChildOf
-
-  if (childOf) {
-    includesSeq = seqRegex.test(childOf)
+  if (seq === undefined) {
+    return false
   }
 
-  return includesSeq || _isChildPortal(element.parentElement, seqRegex)
+  return _isDescendantOfSeq(target, Number(seq))
+}
+
+function _isDescendantOfSeq(element: HTMLElement | SVGElement | null, seq: number): boolean {
+  if (!element) return false
+
+  const childOf = element.dataset?.portalChildOf
+  const seqRegex = new RegExp(`(^|,)${seq}(,|$)`)
+  const includesSeq = childOf !== undefined && seqRegex.test(childOf)
+
+  return includesSeq || _isDescendantOfSeq(element.parentElement, seq)
 }

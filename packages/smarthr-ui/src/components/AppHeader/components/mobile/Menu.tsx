@@ -12,7 +12,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
-import { Portal, usePortal } from '../../../../hooks/client/usePortal'
+import { Portal } from '../../../../hooks/client/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
@@ -44,8 +44,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  const { portalProps } = usePortal()
-
   useEffect(() => {
     if (isOpen) {
       scrollPosition = window.scrollY
@@ -69,7 +67,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         onClick={open}
       />
       {/* TODO: PortalのdivとMenuDialog内のdivが二重になっている。Portalのas propで統合する(別PRで対応) */}
-      <Portal {...portalProps}>
+      <Portal>
         <MenuDialog
           callbackRef={callbackRef}
           isOpen={isOpen}

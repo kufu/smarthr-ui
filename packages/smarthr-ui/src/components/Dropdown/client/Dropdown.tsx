@@ -14,7 +14,7 @@ import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { usePortal } from '../../../hooks/client/usePortal'
+import { isChildPortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { findDelegateTarget } from '../../../libs/delegate'
@@ -36,7 +36,6 @@ type DropdownContextType = {
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
-  portalProps: { currentSeq: number }
   contentId: string
 }
 
@@ -50,7 +49,6 @@ export const DropdownContext = createContext<DropdownContextType>({
   contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
   handleDelegateClickContentCloser: NOOP,
-  portalProps: { currentSeq: 0 },
   contentId: '',
 })
 
@@ -60,7 +58,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [contentStyles, setContentStyles] = useState(INITIAL_CONTENT_STYLES)
 
   const contentId = useId()
-  const { portalProps, isChildPortal } = usePortal()
 
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
@@ -68,7 +65,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const latest = useLatest({
     active,
-    isChildPortal,
     onOpen,
     onClose,
     openFrame,
@@ -115,6 +111,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
     return {
       updateContentStyles,
+      getContent: () => content,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
         triggerButton = node?.querySelector<HTMLButtonElement>('button')
@@ -274,8 +271,9 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
         // ignore events from events within DropdownTrigger and DropdownContent
         const isClickedInTrigger = e.composedPath().includes(node)
+        const content = functions.getContent()
 
-        if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
+        if (!isClickedInTrigger && !(content && isChildPortal(e.target, content))) {
           setActive(false)
           functions.actualClose()
         }
@@ -312,7 +310,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         contentCallbackRef,
         handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
         handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
-        portalProps,
         contentId,
       }}
     >

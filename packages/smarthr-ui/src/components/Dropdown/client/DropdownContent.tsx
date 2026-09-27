@@ -37,20 +37,14 @@ export const DropdownContent: FC<Props> = ({
   controllable = false,
   ...rest
 }) => {
-  const {
-    active,
-    portalProps,
-    contentId,
-    contentStyles,
-    contentCallbackRef,
-    handleDelegateClickContentCloser,
-  } = useContext(DropdownContext)
+  const { active, contentId, contentStyles, contentCallbackRef, handleDelegateClickContentCloser } =
+    useContext(DropdownContext)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
-    <Portal {...portalProps} id={contentId}>
+    <Portal id={contentId}>
       {active && (
         <div
           {...rest}

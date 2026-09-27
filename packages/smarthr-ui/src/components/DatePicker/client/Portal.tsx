@@ -2,15 +2,13 @@
 
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { Portal as OriginalPortal, usePortal } from '../../../hooks/client/usePortal'
+import { Portal as OriginalPortal } from '../../../hooks/client/usePortal'
 
 type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
 export const Portal: FC<Props> = ({ inputRect, children }) => {
-  const { portalProps } = usePortal()
-
   // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
   // React v18の対応を切ったらこのコメントも削除する
   const callbackRef = useCallback(
@@ -27,7 +25,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
 
   return (
     // TODO: OriginalPortalのdivとこのdivが二重になっている。OriginalPortalのas propで統合する(別PRで対応)
-    <OriginalPortal {...portalProps}>
+    <OriginalPortal>
       <div
         ref={callbackRef}
         // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。

@@ -18,7 +18,7 @@ import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallba
 import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { Portal, usePortal } from '../../../hooks/client/usePortal'
+import { Portal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
@@ -376,7 +376,6 @@ export const ListBox = memo(
     dropdownWidth,
     callbackRef,
   }: ListBoxProps<T>) => {
-    const { portalProps } = usePortal()
     const theme = useTheme()
 
     const minLength = useMemo(
@@ -465,7 +464,7 @@ export const ListBox = memo(
 
     return (
       // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
-      <Portal {...portalProps}>
+      <Portal>
         <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
           <Scroller
             ref={listBoxRef}
