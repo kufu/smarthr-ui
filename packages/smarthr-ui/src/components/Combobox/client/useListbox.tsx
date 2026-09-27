@@ -25,7 +25,7 @@ import { findDelegateTarget } from '../../../libs/delegate'
 import { FaCircleInfoIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Loader } from '../../Loader'
-import { Portal } from '../../Portal'
+import { NestablePortal } from '../../Portal'
 import { Scroller } from '../../Scroller'
 import { Text } from '../../Text'
 
@@ -463,8 +463,8 @@ export const ListBox = memo(
     }, [latest])
 
     return (
-      // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
-      <Portal>
+      // TODO: NestablePortalのdivとこのdivが二重になっている。NestablePortalのas propで統合する(別PRで対応)
+      <NestablePortal>
         <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
           <Scroller
             ref={listBoxRef}
@@ -517,7 +517,7 @@ export const ListBox = memo(
             )}
           </Scroller>
         </div>
-      </Portal>
+      </NestablePortal>
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
