@@ -111,3 +111,45 @@ export const As: StoryObj<typeof Cluster> = {
     as: 'section',
   },
 }
+
+export const LayoutMainSub: StoryObj<typeof Cluster> = {
+  name: 'layout="main sub"',
+  render: (args) => (
+    <Cluster {...args} layout="main sub" gap={1}>
+      <div style={{ minWidth: '300px' }}>
+        <ColorBox>メインコンテンツ（min-width: 300px）</ColorBox>
+      </div>
+      <div style={{ maxWidth: '400px' }}>
+        <ColorBox>サブコンテンツ（max-width: 400px）</ColorBox>
+      </div>
+    </Cluster>
+  ),
+}
+
+export const LayoutSubMain: StoryObj<typeof Cluster> = {
+  name: 'layout="sub main"',
+  render: (args) => (
+    <Cluster {...args} layout="sub main" gap={1}>
+      <div style={{ maxWidth: '400px' }}>
+        <ColorBox>サブコンテンツ（max-width: 400px）</ColorBox>
+      </div>
+      <div style={{ minWidth: '300px' }}>
+        <ColorBox>メインコンテンツ（min-width: 300px）</ColorBox>
+      </div>
+    </Cluster>
+  ),
+}
+
+export const LayoutWithSectioningContent: StoryObj<typeof Cluster> = {
+  name: 'layout（sectioning content使用）',
+  render: (args) => (
+    <Cluster {...args} layout="main sub" gap={1}>
+      <article style={{ minWidth: '300px' }}>
+        <ColorBox>記事コンテンツ（article要素）</ColorBox>
+      </article>
+      <aside style={{ maxWidth: '400px' }}>
+        <ColorBox>サイドバー（aside要素）</ColorBox>
+      </aside>
+    </Cluster>
+  ),
+}

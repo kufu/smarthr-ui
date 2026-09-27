@@ -31,11 +31,20 @@ type Props<T extends ElementType> = PropsWithChildren<{
   inline?: boolean
   align?: AlignType
   justify?: JustifyType
+  layout?: 'main sub' | 'sub main'
 }> &
   ComponentPropsWithoutRef<T>
 
 export const clusterClassNameGenerator = tv({
-  base: 'shr-flex-wrap [&:empty]:shr-gap-0',
+  base: [
+    'shr-flex-wrap [&:empty]:shr-gap-0',
+    // layout="main sub" の場合
+    '[&[data-layout="main sub"]_>_:nth-child(1)]:shr-grow-[999] [&[data-layout="main sub"]_>_:nth-child(1)]:shr-basis-0',
+    '[&[data-layout="main sub"]_>_:nth-child(2)]:shr-grow',
+    // layout="sub main" の場合
+    '[&[data-layout="sub main"]_>_:nth-child(1)]:shr-grow',
+    '[&[data-layout="sub main"]_>_:nth-child(2)]:shr-grow-[999] [&[data-layout="sub main"]_>_:nth-child(2)]:shr-basis-0',
+  ],
   variants: {
     inline: {
       true: 'shr-inline-flex',
@@ -115,7 +124,7 @@ export const clusterClassNameGenerator = tv({
 })
 
 const ActualCluster = <T extends ElementType = 'div'>(
-  { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
+  { as, gap = 0.5, inline = false, align, justify, layout, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLElement>,
 ) => {
   const actualClassName = useMemo(() => {
@@ -142,7 +151,9 @@ const ActualCluster = <T extends ElementType = 'div'>(
   // ポリモーフィックコンポーネント: asプロパティで要素型を動的に変更可能なため、
   // refの型を静的に決定できません。HTMLElementを基底型として使用し、
   // 実際の要素型との整合性はas anyで型アサーションします。
-  const body = <Component {...rest} ref={ref as any} className={actualClassName} />
+  const body = (
+    <Component {...rest} ref={ref as any} className={actualClassName} data-layout={layout} />
+  )
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>
