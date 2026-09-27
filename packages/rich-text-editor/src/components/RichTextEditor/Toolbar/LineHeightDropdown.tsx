@@ -7,7 +7,7 @@ import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
-import { useToolbarState } from '../hooks/useToolbarState'
+import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
@@ -48,13 +48,13 @@ export const LineHeightDropdown: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const state = useToolbarState(editor)
+    const currentLineHeight = useToolbarValue(editor, readers.currentLineHeight)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const listboxRef = useRef<HTMLDivElement>(null)
 
     // '1.75' は CSS デフォルト(RELAXED)と同値のため、デフォルト(null=未指定)として扱う。
     // これにより HTML/JSON 由来で attrs.lineHeight='1.75' が入っても「1.75（標準）」が選択表示になる。
-    const currentValue = state.currentLineHeight === '1.75' ? null : state.currentLineHeight
+    const currentValue = currentLineHeight === '1.75' ? null : currentLineHeight
 
     const classNames = classNameGenerator()
 

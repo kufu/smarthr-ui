@@ -15,7 +15,7 @@ import { Button, Cluster, FaLinkIcon, FormControl, Input, Stack } from 'smarthr-
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
-import { useToolbarState } from '../hooks/useToolbarState'
+import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarButton } from './ToolbarButton'
 import { isHttpUrl, isMailtoUrl } from './urlValidation'
@@ -34,7 +34,7 @@ export const LinkButton: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const state = useToolbarState(editor)
+    const isLink = useToolbarValue(editor, readers.isLink)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const [text, setText] = useState('')
     const [url, setUrl] = useState('')
@@ -204,7 +204,7 @@ export const LinkButton: FC<Props> = memo(
           }}
           disabled={disabled}
           shortcut="Mod-K"
-          active={state.isLink}
+          active={isLink}
           tabIndex={tabIndex}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
@@ -246,7 +246,7 @@ export const LinkButton: FC<Props> = memo(
                   />
                 </FormControl>
                 <Cluster gap={0.5} justify="space-between">
-                  {state.isLink ? (
+                  {isLink ? (
                     <Button
                       type="button"
                       variant="text"

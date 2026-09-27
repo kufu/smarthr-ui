@@ -403,12 +403,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
     [latest],
   )
 
-  // 内容の幅は見出しやフォントサイズのラベルが変わることでも動くため依存配列で絞れない。
-  // 下の購読と分けているのは、同居させると状態が変わるたびに張り替えることになるため
-  useEnhancedEffect(() => {
-    functions.measureOverflow()
-  })
-
+  // 段の幅はツールバーの幅で決まり、中身が増えても段自身の大きさは変わらない。
+  // ラベルの変化は各ドロップダウンの中で起き、この部品は描画し直されないため、
+  // 項目それぞれの大きさの変化を監視して測り直す。項目の増減には MutationObserver で追従する
   useEnhancedEffect(() => {
     if (isWrapped) return
 
@@ -416,11 +413,26 @@ export const RichTextEditorToolbar: FC = memo(() => {
 
     if (!el) return
 
-    const observer = new ResizeObserver(functions.measureOverflow)
+    const resizeObserver = new ResizeObserver(functions.measureOverflow)
+    const observeItems = () => {
+      resizeObserver.disconnect()
+      resizeObserver.observe(el)
 
-    observer.observe(el)
+      for (const item of Array.from(el.children)) {
+        resizeObserver.observe(item)
+      }
+    }
 
-    return () => observer.disconnect()
+    observeItems()
+
+    const mutationObserver = new MutationObserver(observeItems)
+
+    mutationObserver.observe(el, { childList: true })
+
+    return () => {
+      mutationObserver.disconnect()
+      resizeObserver.disconnect()
+    }
   }, [isWrapped, functions])
 
   const handleEscape = useCallback(() => {

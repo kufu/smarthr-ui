@@ -7,7 +7,7 @@ import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
-import { useToolbarState } from '../hooks/useToolbarState'
+import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
@@ -66,7 +66,7 @@ export const HeadingDropdown: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor, headingLevels } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const state = useToolbarState(editor)
+    const currentLevel = useToolbarValue(editor, readers.currentHeadingLevel)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const listboxRef = useRef<HTMLDivElement>(null)
 
@@ -75,7 +75,6 @@ export const HeadingDropdown: FC<Props> = memo(
       [headingLevels],
     )
 
-    const currentLevel = state.currentHeadingLevel
     // 選択肢は許可レベルで絞るが、表示は許可外のレベルでも実際の見出しを出す
     const currentOption = ALL_OPTIONS.find((o) => o.level === currentLevel) ?? ALL_OPTIONS[0]
     const currentLabel = localize({

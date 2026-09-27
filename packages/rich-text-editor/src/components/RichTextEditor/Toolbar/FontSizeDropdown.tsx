@@ -7,7 +7,7 @@ import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
-import { useToolbarState } from '../hooks/useToolbarState'
+import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
@@ -78,15 +78,15 @@ export const FontSizeDropdown: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const state = useToolbarState(editor)
+    const currentValue = useToolbarValue(editor, readers.currentFontSize)
+    const isInHeading = useToolbarValue(editor, readers.isInHeading)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const listboxRef = useRef<HTMLDivElement>(null)
 
-    const currentValue = state.currentFontSize
     const currentSize = toPxSize(currentValue)
     // 解釈できない単位はそのまま見せる
     const currentLabel = currentSize ?? currentValue ?? DEFAULT_ROOT_FONT_SIZE
-    const isDisabled = disabled || state.isInHeading
+    const isDisabled = disabled || isInHeading
 
     const classNames = classNameGenerator()
 

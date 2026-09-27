@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
 import type { RichTextFeature } from '../types'
+import type { Editor } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 // 段以外を監視しているコールバック（画像や表の位置追従）を巻き込まないよう絞り込む
@@ -217,6 +218,75 @@ describe('RichTextEditorToolbar', () => {
     expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toBeInTheDocument()
   })
 
+  describe('項目の幅が変わったときの測り直し', () => {
+    const fireResizeOf = (target: Element) => {
+      act(() => {
+        observers
+          .filter(({ targets }) => targets.includes(target))
+          .forEach(({ callback }) => callback())
+      })
+    }
+
+    // 段の直下はボタンを包むツールチップの要素で、監視はその単位で行う
+    const itemOf = (button: HTMLElement) =>
+      button.closest('.smarthr-ui-RichTextEditor-ToolbarRow > *')!
+
+    const setWidths = (scrollWidth: number) => {
+      const toolbar = screen.getByRole('toolbar')
+      const row = toolbar.querySelector('.smarthr-ui-RichTextEditor-ToolbarRow')!
+
+      Object.defineProperty(toolbar, 'clientWidth', { value: 100, configurable: true })
+      Object.defineProperty(row, 'scrollWidth', { value: scrollWidth, configurable: true })
+    }
+
+    // ツールバー本体が描画し直されない変化でも、項目自身の大きさの変化で測り直す
+    it('カーソルの移動でラベルだけが変わって幅が増えても、溢れていればトグルを出す', async () => {
+      render(
+        <RichTextEditor
+          features={['bold', 'fontSize']}
+          content={{
+            format: 'html',
+            content: '<p>標準</p><p><span style="font-size: 2rem">大きい</span></p>',
+          }}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+      setWidths(100)
+      fireResizeOf(
+        screen.getByRole('toolbar').querySelector('.smarthr-ui-RichTextEditor-ToolbarRow')!,
+      )
+      expect(screen.queryByRole('button', { name: WRAP_TOGGLE_LABEL })).not.toBeInTheDocument()
+
+      const editor = (document.querySelector('.ProseMirror') as HTMLElement & { editor: Editor })
+        .editor
+      act(() => {
+        editor.commands.setTextSelection(editor.state.doc.content.size - 2)
+      })
+      const trigger = await screen.findByRole('button', { name: /^フォントサイズ: 32/ })
+      setWidths(500)
+      fireResizeOf(itemOf(trigger))
+
+      expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toBeInTheDocument()
+    })
+
+    it('後から足した項目の幅の変化も測り直す', async () => {
+      const { rerender } = render(<RichTextEditor features={['bold']} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+
+      rerender(<RichTextEditor features={['bold', 'italic']} />)
+      const italic = await screen.findByRole('button', { name: '斜体' })
+      // 子要素の増減は MutationObserver が非同期に拾う
+      await waitFor(() =>
+        expect(observers.some(({ targets }) => targets.includes(itemOf(italic)))).toBe(true),
+      )
+      setWidths(500)
+      fireResizeOf(itemOf(italic))
+
+      expect(screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })).toBeInTheDocument()
+    })
+  })
+
   it('トグルが占有する幅は溢れの判定に含めない', async () => {
     await renderEditor()
 
@@ -261,6 +331,9 @@ describe('RichTextEditorToolbar', () => {
     // 1つ小さいバグ（disabledFlagsからトグルの要素が抜けている）があっても、探索順の先頭付近に
     // ある disabled な項目群にたまたま行き当たって同じ結果になり、バグを見逃してしまう
     await userEvent.click(screen.getByRole('button', { name: '水平線' }))
+    // コマンドの focus は requestAnimationFrame で遅れて届くため、先に着地させておく。
+    // 待たないと、下で項目へ移したフォーカスをキー操作の途中で奪われる
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
 
     const toggle = screen.getByRole('button', { name: WRAP_TOGGLE_LABEL })
     // DOM順は段の項目→トグルなので、トグルの直前にある要素を「末尾の項目」として取得する

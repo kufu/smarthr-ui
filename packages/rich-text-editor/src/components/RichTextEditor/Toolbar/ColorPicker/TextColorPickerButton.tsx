@@ -6,9 +6,9 @@ import { FaCaretDownIcon } from 'smarthr-ui'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
-import { setEditorColor } from '../../extensions/Table/tableColor'
+import { getEditorColor, setEditorColor } from '../../extensions/Table/tableColor'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
-import { useToolbarState } from '../../hooks/useToolbarState'
+import { useToolbarValue } from '../../hooks/useToolbarState'
 import { ToolbarTooltip } from '../ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 
@@ -17,6 +17,8 @@ import { ColorSwatchFace } from './ColorSwatch'
 import { normalizeHex } from './normalizeHex'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
+
+import type { Editor } from '@tiptap/react'
 
 const RECENT_LIMIT = 5
 
@@ -34,17 +36,17 @@ type Props = {
   ref?: (el: HTMLButtonElement | null) => void
 }
 
+const readCurrentColor = (e: Editor) => getEditorColor(e, 'color')
+
 export const TextColorPickerButton: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const state = useToolbarState(editor)
+    const currentColor = useToolbarValue(editor, readCurrentColor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const paletteRef = useRef<HTMLDivElement>(null)
     const [recentColors, setRecentColors] = useState<string[]>([])
     const [customColor, setCustomColor] = useState<string>(DEFAULT_COLOR)
-
-    const currentColor = state.currentColor
 
     const classNames = classNameGenerator()
 

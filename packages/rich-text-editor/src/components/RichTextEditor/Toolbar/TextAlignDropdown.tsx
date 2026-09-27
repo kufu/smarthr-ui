@@ -14,7 +14,7 @@ import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
-import { useToolbarState } from '../hooks/useToolbarState'
+import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { toAriaKeyShortcuts } from './shortcutKeys'
@@ -89,11 +89,11 @@ export const TextAlignDropdown: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const isApple = useIsApplePlatform()
-    const state = useToolbarState(editor)
+    const currentTextAlign = useToolbarValue(editor, readers.currentTextAlign)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
     const listboxRef = useRef<HTMLDivElement>(null)
 
-    const currentAlign = state.currentTextAlign ?? 'left'
+    const currentAlign = currentTextAlign ?? 'left'
     const currentOption = ALIGN_OPTIONS.find((o) => o.value === currentAlign) ?? ALIGN_OPTIONS[0]
     const currentLabel = localize({
       id: currentOption.labelId,

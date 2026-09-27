@@ -3,34 +3,6 @@
 import { NodeSelection } from '@tiptap/pm/state'
 import { type Editor, useEditorState } from '@tiptap/react'
 
-import { getEditorColor } from '../extensions/Table/tableColor'
-
-const findTableNode = (e: Editor) => {
-  const { $from } = e.state.selection
-  for (let depth = $from.depth; depth > 0; depth--) {
-    const node = $from.node(depth)
-    if (node.type.name === 'table') return node
-  }
-  return null
-}
-
-const detectHeaderRow = (e: Editor): boolean => {
-  const table = findTableNode(e)
-  if (!table || table.childCount === 0) return false
-  const firstRow = table.child(0)
-  if (firstRow.childCount === 0) return false
-  const lastCell = firstRow.child(firstRow.childCount - 1)
-  return lastCell.type.name === 'tableHeader'
-}
-
-const detectHeaderColumn = (e: Editor): boolean => {
-  const table = findTableNode(e)
-  if (!table || table.childCount < 2) return false
-  const secondRow = table.child(1)
-  if (secondRow.childCount === 0) return false
-  return secondRow.child(0).type.name === 'tableHeader'
-}
-
 const canRun = (editor: Editor, command: string): boolean => {
   try {
     return (
@@ -56,6 +28,33 @@ const canRun = (editor: Editor, command: string): boolean => {
 const normalizeStyleValue = (value: unknown): string | null =>
   typeof value === 'string' && value.length > 0 ? value : null
 
+const readHeadingLevel = (e: Editor): 1 | 2 | 3 | 4 | null =>
+  ([1, 2, 3, 4] as const).find((level) => e.isActive('heading', { level })) ?? null
+
+const readBlockAttribute = (e: Editor, name: 'lineHeight' | 'textAlign') =>
+  normalizeStyleValue(e.getAttributes('paragraph')[name]) ??
+  normalizeStyleValue(e.getAttributes('heading')[name])
+
+export const readers = {
+  currentHeadingLevel: readHeadingLevel,
+  currentFontSize: (e: Editor) => normalizeStyleValue(e.getAttributes('textStyle').fontSize),
+  currentLineHeight: (e: Editor) => readBlockAttribute(e, 'lineHeight'),
+  currentTextAlign: (e: Editor) => readBlockAttribute(e, 'textAlign'),
+  isInHeading: (e: Editor) => e.isActive('heading'),
+  isLink: (e: Editor) => e.isActive('link'),
+}
+
+/**
+ * ドロップダウンなどが自分の使う値だけを購読する。
+ *
+ * useEditorState のセレクタは購読者ごとに毎トランザクション実行される。
+ * ツールバー全体の状態を各部品で購読すると、使わない canRun のドライランまで
+ * 部品の数だけ繰り返すため、必要な値だけを読む。
+ */
+export const useToolbarValue = <T>(editor: Editor, read: (e: Editor) => T): T =>
+  useEditorState({ editor, selector: ({ editor: e }) => read(e) })
+
+/** ツールバー本体のボタンの押下状態と、押せるかどうか */
 export const useToolbarState = (editor: Editor) =>
   useEditorState({
     editor,
@@ -69,30 +68,7 @@ export const useToolbarState = (editor: Editor) =>
       isBulletList: e.isActive('bulletList'),
       isOrderedList: e.isActive('orderedList'),
       isBlockquote: e.isActive('blockquote'),
-      isHeading1: e.isActive('heading', { level: 1 }),
-      isHeading2: e.isActive('heading', { level: 2 }),
-      isHeading3: e.isActive('heading', { level: 3 }),
-      isHeading4: e.isActive('heading', { level: 4 }),
-      currentHeadingLevel: (e.isActive('heading', { level: 1 })
-        ? 1
-        : e.isActive('heading', { level: 2 })
-          ? 2
-          : e.isActive('heading', { level: 3 })
-            ? 3
-            : e.isActive('heading', { level: 4 })
-              ? 4
-              : null) as 1 | 2 | 3 | 4 | null,
-      isLink: e.isActive('link'),
-      currentColor: getEditorColor(e, 'color'),
-      currentBackgroundColor: getEditorColor(e, 'backgroundColor'),
-      currentFontSize: normalizeStyleValue(e.getAttributes('textStyle').fontSize),
-      currentLineHeight:
-        normalizeStyleValue(e.getAttributes('paragraph').lineHeight) ??
-        normalizeStyleValue(e.getAttributes('heading').lineHeight),
-      currentTextAlign:
-        normalizeStyleValue(e.getAttributes('paragraph').textAlign) ??
-        normalizeStyleValue(e.getAttributes('heading').textAlign),
-      isInHeading: e.isActive('heading'),
+      isInHeading: readers.isInHeading(e),
 
       canBold: canRun(e, 'toggleBold'),
       canItalic: canRun(e, 'toggleItalic'),
@@ -107,19 +83,5 @@ export const useToolbarState = (editor: Editor) =>
       canRedo: e.can().redo(),
 
       isNodeSelected: e.state.selection instanceof NodeSelection,
-
-      isInTable: e.isActive('table'),
-      hasHeaderRow: detectHeaderRow(e),
-      hasHeaderColumn: detectHeaderColumn(e),
-      canAddColumnBefore: canRun(e, 'addColumnBefore'),
-      canAddColumnAfter: canRun(e, 'addColumnAfter'),
-      canDeleteColumn: canRun(e, 'deleteColumn'),
-      canAddRowBefore: canRun(e, 'addRowBefore'),
-      canAddRowAfter: canRun(e, 'addRowAfter'),
-      canDeleteRow: canRun(e, 'deleteRow'),
-      canDeleteTable: canRun(e, 'deleteTable'),
-      canMergeCells: canRun(e, 'mergeCells'),
-      canSplitCell: canRun(e, 'splitCell'),
-      canToggleHeaderCell: canRun(e, 'toggleHeaderCell'),
     }),
   })
