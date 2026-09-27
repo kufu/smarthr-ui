@@ -471,8 +471,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
     [disabledFlags],
   )
 
-  const { getButtonProps } = useRovingToolbar({ disabledKeys, onEscape: handleEscape })
   const count = disabledFlags.length
+  const { getButtonProps } = useRovingToolbar({ count, disabledKeys, onEscape: handleEscape })
 
   const toolbarLabel = localize({
     id: 'smarthr-ui/RichTextEditor/toolbarLabel',
@@ -480,7 +480,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
   })
 
   const renderItem = (item: ToolbarItem, index: number) => {
-    const rovingProps = getButtonProps(index, count)
+    const rovingProps = getButtonProps(index)
 
     if (item.type === 'heading') {
       return <HeadingDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
@@ -552,7 +552,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
       {toggleIndex >= 0 && (
         <div className={CLASS_NAMES.toggleWrapper}>
           <ToolbarWrapToggle
-            {...getButtonProps(toggleIndex, count)}
+            {...getButtonProps(toggleIndex)}
             disabled={disabled}
             wrapped={isWrapped}
             handleClick={handleToggleClick}

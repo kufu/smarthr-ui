@@ -52,7 +52,7 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
     editor.commands.focus()
   }, [editor])
 
-  const { getButtonProps } = useRovingToolbar({ onEscape: handleEscape })
+  const { getButtonProps } = useRovingToolbar({ count: 3, onEscape: handleEscape })
 
   if (!info) return null
 
@@ -80,10 +80,10 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
       style={{ top, left }}
       aria-label={toolbarLabel}
     >
-      <ImageAltPopover {...getButtonProps(0, 3)} editor={editor} pos={info.pos} />
-      <ImageWidthPopover {...getButtonProps(1, 3)} editor={editor} pos={info.pos} />
+      <ImageAltPopover {...getButtonProps(0)} editor={editor} pos={info.pos} />
+      <ImageWidthPopover {...getButtonProps(1)} editor={editor} pos={info.pos} />
       <button
-        {...getButtonProps(2, 3)}
+        {...getButtonProps(2)}
         type="button"
         className={classNames.deleteButton()}
         aria-label={deleteLabel}
