@@ -2,7 +2,7 @@
 
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { Portal as OriginalPortal } from '../../../hooks/client/usePortal'
+import { Portal as OriginalPortal } from '../../Portal'
 
 type Props = PropsWithChildren<{
   inputRect: DOMRect

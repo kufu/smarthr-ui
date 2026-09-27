@@ -12,10 +12,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
-import { Portal } from '../../../../hooks/client/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
+import { Portal } from '../../../Portal'
 import { Translate } from '../common/Translate'
 
 import { AppLauncherContext } from './AppLauncherContext'

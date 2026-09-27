@@ -3,7 +3,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Portal } from '../../../hooks/client/usePortal'
+import { Portal } from '../../Portal'
 import { DropdownCloser } from '../DropdownCloser'
 
 import { DropdownContext } from './Dropdown'

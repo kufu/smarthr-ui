@@ -14,11 +14,11 @@ import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { isChildPortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { tabbable } from '../../../libs/tabbable'
+import { isChildPortal } from '../../Portal'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
@@ -265,15 +265,18 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       if (!active) return
 
       const handleClickBody = (e: any) => {
-        if (!active || !node) {
+        if (
+          !active ||
+          !node ||
+          // ignore events from events within DropdownTrigger and DropdownContent
+          e.composedPath().includes(node)
+        ) {
           return
         }
 
-        // ignore events from events within DropdownTrigger and DropdownContent
-        const isClickedInTrigger = e.composedPath().includes(node)
         const content = functions.getContent()
 
-        if (!isClickedInTrigger && !(content && isChildPortal(e.target, content))) {
+        if (!content || !isChildPortal(e.target, content)) {
           setActive(false)
           functions.actualClose()
         }
