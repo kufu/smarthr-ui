@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import {
   type IntlShape,
   type PrimitiveType,
+  ReactIntlErrorCode,
   type MessageDescriptor as ReactIntlMessageDescriptor,
   createIntl,
   createIntlCache,
@@ -39,6 +40,14 @@ export type UseIntlReturn = {
 const cache = createIntlCache()
 const formatters = new Map<Locale, IntlShape>()
 
+// 日本語以外は未翻訳のまま日本語へフォールバックする仕様のため、未翻訳は報告しない。
+// 本体はアプリの IntlProvider の onError を引き継ぐが、専用の formatter はそれを受け取れない
+const handleError: NonNullable<Parameters<typeof createIntl>[0]['onError']> = (error) => {
+  if (error.code !== ReactIntlErrorCode.MISSING_TRANSLATION) {
+    console.error(error)
+  }
+}
+
 const getFormatter = (locale: Locale): IntlShape => {
   const cached = formatters.get(locale)
 
@@ -46,7 +55,7 @@ const getFormatter = (locale: Locale): IntlShape => {
     return cached
   }
 
-  const formatter = createIntl({ locale, messages: locales[locale] }, cache)
+  const formatter = createIntl({ locale, messages: locales[locale], onError: handleError }, cache)
 
   formatters.set(locale, formatter)
 

@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 import { IntlProvider } from 'smarthr-ui'
+import { afterEach, vi } from 'vitest'
 
 import { locales } from './locales'
 import { useIntl } from './useIntl'
@@ -24,6 +25,32 @@ describe('intl', () => {
         .current
 
       expect(localize({ id: 'smarthr-ui/RichTextEditor/bold', defaultText: '太字' })).toBe('太字')
+    })
+
+    describe('console への出力', () => {
+      afterEach(() => {
+        vi.restoreAllMocks()
+      })
+
+      it('未翻訳のロケールで日本語にフォールバックしてもエラーを出さない', () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+        const { localize } = renderHook(() => useIntl(), { wrapper: wrapperOf('en-us') }).result
+          .current
+
+        localize({ id: 'smarthr-ui/RichTextEditor/bold', defaultText: '太字' })
+
+        expect(consoleError).not.toHaveBeenCalled()
+      })
+
+      it('埋め込む値が足りないなど、文言の組み立てに失敗したらエラーを出す', () => {
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+        const { localize } = renderHook(() => useIntl(), { wrapper: wrapperOf('ja') }).result
+          .current
+
+        localize({ id: 'smarthr-ui/RichTextEditor/characterCount', defaultText: '文字数：{count}' })
+
+        expect(consoleError).toHaveBeenCalled()
+      })
     })
 
     it('値を埋め込める', () => {
