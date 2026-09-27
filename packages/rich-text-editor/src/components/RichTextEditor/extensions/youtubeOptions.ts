@@ -14,6 +14,16 @@ export const YOUTUBE_EMBED_OPTIONS = {
 } as const
 
 /**
+ * Editor・HTML 出力・Viewer の iframe に共通で付ける属性。
+ *
+ * 埋め込み先は正規化・検証した YouTube の URL に限定する。
+ * YouTube プレイヤーとリンク先の動作互換性を優先し、sandbox は付けない。
+ */
+export const YOUTUBE_IFRAME_ATTRIBUTES = {
+  allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+} as const
+
+/**
  * 不正な寸法を落とすと iframe の width/height 属性ごと消えるため、
  * サニタイズで戻す先として拡張の設定と共有する。
  */

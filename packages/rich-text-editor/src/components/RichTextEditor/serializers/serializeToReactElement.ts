@@ -3,7 +3,11 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
-import { YOUTUBE_DEFAULT_SIZE, YOUTUBE_EMBED_OPTIONS } from '../extensions/youtubeOptions'
+import {
+  YOUTUBE_DEFAULT_SIZE,
+  YOUTUBE_EMBED_OPTIONS,
+  YOUTUBE_IFRAME_ATTRIBUTES,
+} from '../extensions/youtubeOptions'
 
 import { getRichTextExtensions } from './richTextSchema'
 import {
@@ -99,13 +103,11 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
       'div',
       { 'data-youtube-video': '' },
       createElement('iframe', {
+        ...YOUTUBE_IFRAME_ATTRIBUTES,
         src: toEmbedUrl(node.attrs.src, node.attrs.start),
         width,
         height,
         allowFullScreen: true,
-        allow:
-          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-        sandbox: 'allow-scripts allow-same-origin allow-popups',
         style: { border: 0, maxWidth: '100%', aspectRatio: `${width} / ${height}` },
       }),
     )

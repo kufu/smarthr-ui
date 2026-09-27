@@ -95,3 +95,46 @@ describe('Viewer の YouTube 埋め込み', () => {
     expect(src).not.toContain('NaN')
   })
 })
+
+describe('YouTube の iframe の属性', () => {
+  const iframeAttrs = (root: ParentNode) => {
+    const iframe = root.querySelector('iframe')!
+
+    return { allow: iframe.getAttribute('allow'), sandbox: iframe.getAttribute('sandbox') }
+  }
+
+  const parse = (html: string) => new DOMParser().parseFromString(html, 'text/html')
+
+  it('エディタ・HTML 出力・Viewer で同じ属性になる', () => {
+    const json = insertYoutube(WATCH_URL)
+
+    const element = document.createElement('div')
+    const editor = new Editor({
+      element,
+      extensions: configureExtensions({ features: ALL_FEATURES }),
+      content: json,
+    })
+    const inEditor = iframeAttrs(editor.view.dom)
+    editor.destroy()
+
+    const inHTML = iframeAttrs(parse(serializeToHTML(json)))
+    const inViewer = iframeAttrs(
+      parse(renderToStaticMarkup(serializeToReactElement(json) as ReactElement)),
+    )
+
+    expect(inHTML).toEqual(inEditor)
+    expect(inViewer).toEqual(inEditor)
+  })
+
+  it('再生に必要な権限を許可する', () => {
+    const { allow } = iframeAttrs(parse(serializeToHTML(insertYoutube(WATCH_URL))))
+
+    expect(allow).toContain('autoplay')
+    expect(allow).toContain('encrypted-media')
+    expect(allow).toContain('picture-in-picture')
+  })
+
+  it('sandbox を付けない', () => {
+    expect(iframeAttrs(parse(serializeToHTML(insertYoutube(WATCH_URL)))).sandbox).toBeNull()
+  })
+})
