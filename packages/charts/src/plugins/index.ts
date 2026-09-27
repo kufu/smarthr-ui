@@ -1,3 +1,7 @@
 export { doughnutSegmentDividerPlugin } from './doughnutSegmentDividerPlugin'
-export { keyboardNavigationPlugin } from './keyboardNavigationPlugin'
+export {
+  keyboardNavigationPlugin,
+  resolveLiveRegionText,
+  type LiveRegionTextParts,
+} from './keyboardNavigationPlugin'
 export { roundedProgressPlugin } from './roundedProgressPlugin'

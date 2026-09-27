@@ -6,6 +6,7 @@ import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 
 import type { SingleToneLevel } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
@@ -56,6 +57,8 @@ export const BarChart: React.FC<Props> = ({
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
   const chartColors = useMemo(
@@ -66,15 +69,32 @@ export const BarChart: React.FC<Props> = ({
         toneFrom: singleTone?.from,
         toneTo: singleTone?.to,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data.datasets.length, disablePatterns, singleTone?.from, singleTone?.to],
   )
 
   const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const barCount = data.datasets[0].data.length
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
-  }, [title, data])
+    const counts = {
+      datasetCount: data.datasets.length,
+      barCount: data.datasets[0].data.length,
+    }
+
+    return title
+      ? localize(
+          {
+            id: 'smarthr-ui-charts/BarChart/ariaLabelWithTitle',
+            defaultText: '{title} 棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+          },
+          { ...counts, title },
+        )
+      : localize(
+          {
+            id: 'smarthr-ui-charts/BarChart/ariaLabel',
+            defaultText: '棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+          },
+          counts,
+        )
+  }, [title, data, localize])
 
   const enhancedData: ChartData<'bar'> = useMemo(
     () => ({
@@ -103,10 +123,11 @@ export const BarChart: React.FC<Props> = ({
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, formatLiveRegionText],
   )
 
   return (
