@@ -1,4 +1,5 @@
 import { Table, type TableOptions, TableView } from '@tiptap/extension-table'
+import { columnResizingPluginKey } from '@tiptap/pm/tables'
 
 import { TABLE_SHORTCUTS } from './tableShortcuts'
 
@@ -35,12 +36,29 @@ const withKeyCaseVariants = (shortcut: string): readonly string[] => {
   return key.length === 1 ? [shortcut, shortcut.slice(0, -1) + key.toLowerCase()] : [shortcut]
 }
 
-export const CustomTable = Table.extend({
-  addOptions(): TableOptions {
+type CustomTableOptions = TableOptions & {
+  /** 列幅の変更を許可するか。plugin を組み立てる時点で評価する */
+  isColumnResizable: () => boolean
+}
+
+export const CustomTable = Table.extend<CustomTableOptions>({
+  addOptions(): CustomTableOptions {
     return {
       ...this.parent?.(),
       View: CustomTableView,
-    } as TableOptions
+      isColumnResizable: () => true,
+    } as CustomTableOptions
+  },
+
+  // 標準は columnResizing と tableEditing を1つの配列で返す。操作の制限で丸ごと外すと
+  // CellSelection の扱いや、セル数の崩れを直す fixTables まで消え、features に table が
+  // 無くても読み込んだ表は編集できるのに構造が壊れたまま保存されうる。
+  addProseMirrorPlugins() {
+    const plugins = this.parent?.() ?? []
+
+    return this.options.isColumnResizable()
+      ? plugins
+      : plugins.filter((plugin) => plugin.spec.key !== columnResizingPluginKey)
   },
 
   addStorage() {

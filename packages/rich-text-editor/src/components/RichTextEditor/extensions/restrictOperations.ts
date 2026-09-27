@@ -64,15 +64,20 @@ export const createTypeAllowChecker =
  *
  * addProseMirrorPlugins も外す必要がある。link の autolink は入力ルールではなく
  * appendTransaction を持つプラグインなので、これを残すと features に link が
- * 無いのに URL 入力でリンクが付いてしまう。table の columnResizing も同様に
- * mousemove ハンドラを張ってしまう。
+ * 無いのに URL 入力でリンクが付いてしまう。
  * 描画は addNodeView / renderHTML 側なので、プラグインを外しても表示は保たれる。
+ *
+ * table は tableEditing のように文書の整合を保つ plugin も同じ配列で返すため、
+ * keepPlugins で丸ごと外すのをやめ、列幅の変更だけを CustomTable 側で出し分ける。
  *
  * this を失うため arrow 関数では書けない。this.parent は extension 本来の実装を指す。
  */
 export const createOperationRestrictor =
   (getFeatures: () => readonly RichTextFeature[]) =>
-  (extension: AnyExtension): AnyExtension => {
+  (
+    extension: AnyExtension,
+    { keepPlugins = false }: { keepPlugins?: boolean } = {},
+  ): AnyExtension => {
     const isAllowed = () => createTypeAllowChecker(getFeatures())(extension.name)
 
     return extension.extend({
@@ -86,7 +91,7 @@ export const createOperationRestrictor =
         return isAllowed() ? (this.parent?.() ?? []) : []
       },
       addProseMirrorPlugins() {
-        return isAllowed() ? (this.parent?.() ?? []) : []
+        return keepPlugins || isAllowed() ? (this.parent?.() ?? []) : []
       },
     })
   }

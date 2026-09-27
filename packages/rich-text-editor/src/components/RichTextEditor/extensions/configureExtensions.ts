@@ -73,7 +73,10 @@ export const configureExtensions = ({
       addExtensions() {
         // patch を restrict より先に通す。features にリストが無いとき restrict が
         // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
-        return (this.parent?.() ?? []).map(patchListItemShiftTab).map(limitHeading).map(restrict)
+        return (this.parent?.() ?? [])
+          .map(patchListItemShiftTab)
+          .map(limitHeading)
+          .map((extension) => restrict(extension))
       },
     }),
     restrict(
@@ -128,7 +131,14 @@ export const configureExtensions = ({
     restrict(CustomYoutube.configure({ ...YOUTUBE_EMBED_OPTIONS, ...YOUTUBE_DEFAULT_SIZE })),
     // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
     // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
-    restrict(CustomTable.configure({ resizable: true, renderWrapper: true })),
+    restrict(
+      CustomTable.configure({
+        resizable: true,
+        renderWrapper: true,
+        isColumnResizable: () => getFeatures().includes('table'),
+      }),
+      { keepPlugins: true },
+    ),
     TableRow,
     CellAppearance,
     TableHeader,
