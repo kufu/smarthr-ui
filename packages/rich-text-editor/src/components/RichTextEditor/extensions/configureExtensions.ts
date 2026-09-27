@@ -5,9 +5,9 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
-import { Youtube } from '@tiptap/extension-youtube'
 import { StarterKit } from '@tiptap/starter-kit'
 
+import { CustomYoutube } from './CustomYoutube'
 import { CustomImage } from './Image/CustomImage'
 import { createImagePasteExtension } from './Image/imagePaste'
 import { imageUploadPlaceholderPlugin } from './Image/imageUploadPlaceholder'
@@ -125,7 +125,7 @@ export const configureExtensions = ({
   ]
 
   extensions.push(
-    restrict(Youtube.configure({ ...YOUTUBE_EMBED_OPTIONS, ...YOUTUBE_DEFAULT_SIZE })),
+    restrict(CustomYoutube.configure({ ...YOUTUBE_EMBED_OPTIONS, ...YOUTUBE_DEFAULT_SIZE })),
     // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
     // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
     restrict(CustomTable.configure({ resizable: true, renderWrapper: true })),

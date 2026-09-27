@@ -1,6 +1,5 @@
 'use client'
 
-import { isValidYoutubeUrl } from '@tiptap/extension-youtube'
 import {
   type FC,
   type FormEvent,
@@ -15,6 +14,7 @@ import { Button, Cluster, FaCirclePlayIcon, FormControl, Input, Stack } from 'sm
 
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
@@ -78,11 +78,12 @@ export const YoutubeInsertButton: FC<Props> = memo(
           setError(requiredMessage)
           return
         }
-        if (!isValidYoutubeUrl(trimmed)) {
+        const normalized = normalizeYoutubeUrl(trimmed)
+        if (!normalized) {
           setError(invalidMessage)
           return
         }
-        editor.chain().focus().setYoutubeVideo({ src: trimmed }).run()
+        editor.chain().focus().setYoutubeVideo(normalized).run()
         setIsOpen(false)
       },
       [editor, url, requiredMessage, invalidMessage, setIsOpen],

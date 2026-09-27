@@ -1,4 +1,5 @@
 import { YOUTUBE_DEFAULT_SIZE } from '../extensions/youtubeOptions'
+import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 
 import {
   LINK_REL,
@@ -108,10 +109,28 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
   },
 }
 
+type AttrsNormalizer = (attrs: Record<string, unknown>) => Record<string, unknown>
+
+/**
+ * 複数の属性をまたいで直すもの。ATTR_GUARDS より先に適用する。
+ *
+ * youtube の src は出力で落ちる表記でも同じ動画を指すため、落とさず揃える。
+ * embed の URL の start は揃えると src から消えるので、start 属性へ移す。
+ */
+const ATTRS_NORMALIZERS: Record<string, AttrsNormalizer> = {
+  youtube: (attrs) => {
+    if (!('src' in attrs)) return attrs
+
+    return { ...attrs, ...(normalizeYoutubeUrl(attrs.src) ?? { src: null }) }
+  },
+}
+
 const sanitizeAttrs = (
   type: string | undefined,
-  attrs: Record<string, unknown>,
+  rawAttrs: Record<string, unknown>,
 ): Record<string, unknown> => {
+  const normalizeAttrs = type ? ATTRS_NORMALIZERS[type] : undefined
+  const attrs = normalizeAttrs ? normalizeAttrs(rawAttrs) : rawAttrs
   const guards = type ? ATTR_GUARDS[type] : undefined
 
   if (!guards) return attrs
