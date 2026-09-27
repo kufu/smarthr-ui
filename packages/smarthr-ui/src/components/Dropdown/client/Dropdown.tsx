@@ -266,17 +266,12 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
       const handleClickBody = (e: any) => {
         if (
-          !active ||
-          !node ||
+          active &&
+          node &&
           // ignore events from events within DropdownTrigger and DropdownContent
-          e.composedPath().includes(node)
+          !e.composedPath().includes(node) &&
+          !isChildPortal(e.target, functions.getContent())
         ) {
-          return
-        }
-
-        const content = functions.getContent()
-
-        if (!content || !isChildPortal(e.target, content)) {
           setActive(false)
           functions.actualClose()
         }
