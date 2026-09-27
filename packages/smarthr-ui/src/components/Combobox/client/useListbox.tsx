@@ -464,6 +464,7 @@ export const ListBox = memo(
     }, [latest])
 
     return (
+      // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
       <Portal {...portalProps}>
         <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
           <Scroller

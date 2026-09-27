@@ -26,6 +26,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
   )
 
   return (
+    // TODO: OriginalPortalのdivとこのdivが二重になっている。OriginalPortalのas propで統合する(別PRで対応)
     <OriginalPortal {...portalProps}>
       <div
         ref={callbackRef}

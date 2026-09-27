@@ -49,6 +49,7 @@ export const DropdownContent: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
+    // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
     <Portal {...portalProps} id={contentId}>
       {active && (
         <div
