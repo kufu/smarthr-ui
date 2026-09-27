@@ -30,9 +30,11 @@ const ALL_FEATURES = [
   'table',
 ] as const
 
+// blob: の URL は保存しても次の表示で読めず受け付けられないため、選んだファイルに関わらず
+// Storybook が配信する画像を返す
 const mockImageUpload = async (file: File) => {
   await new Promise((resolve) => setTimeout(resolve, 5000))
-  return { src: URL.createObjectURL(file), alt: file.name }
+  return { src: '/fixtures/sample-png.png', alt: file.name }
 }
 
 const mockImageUploadError = (error: unknown, file: File) => {

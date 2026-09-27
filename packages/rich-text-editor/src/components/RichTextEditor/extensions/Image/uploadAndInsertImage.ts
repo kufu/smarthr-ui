@@ -1,3 +1,5 @@
+import { isSafeImageSrc } from '../../serializers/safeAttributes'
+
 import {
   addImagePlaceholder,
   findImagePlaceholderPos,
@@ -12,7 +14,7 @@ import type { Editor } from '@tiptap/react'
  * 画像ファイルを即アップロードし、完了後にエディタへ挿入する共通処理。
  * - 開始時にプレースホルダ Decoration を立てる（ドキュメントには載らない）
  * - 成功: プレースホルダ位置に image ノードを挿入
- * - 失敗: onImageUploadError を呼ぶ
+ * - 失敗: onImageUploadError を呼ぶ。src が isSafeImageSrc を満たさない場合も失敗とする
  * - finally: プレースホルダを除去
  *
  * 挿入先が失われていた場合は何もせず正常終了する。アップロードは成功しているので
@@ -40,6 +42,11 @@ export const uploadAndInsertImage = async (
     // 位置0は有効なので null かどうかで判定する。
     // 挿入箇所が削除された場合と、文書ごと差し替えられた場合の両方をここで止める。
     if (at === null || getImagePlaceholderGeneration(view) !== generation) return
+
+    // 挿入すると表示はされるが、保存した内容を表示するときに落ちる
+    if (!isSafeImageSrc(result.src)) {
+      throw new Error(`RichTextEditor: 画像の src に使えない URL です: ${String(result.src)}`)
+    }
 
     editor
       .chain()

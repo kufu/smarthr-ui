@@ -14,8 +14,14 @@ const SAFE_TEXT_ALIGNS = new Set(['left', 'center', 'right', 'justify'])
 export const isSafeUrl = (url: unknown): url is string =>
   typeof url === 'string' && /^https?:\/\/|^mailto:/i.test(url.trim())
 
+/**
+ * アップロード API が返すことの多いルート相対パスも許可する。
+ * `//host` と `/\host` はブラウザが別ホストとして解釈し、URL の解析時にタブと改行は
+ * 取り除かれる（`/\t/host` は `//host` になる）ため除く。
+ */
 export const isSafeImageSrc = (src: unknown): src is string =>
-  typeof src === 'string' && /^https?:\/\//i.test(src)
+  typeof src === 'string' &&
+  (/^https?:\/\//i.test(src) || (/^\/(?![/\\])/.test(src) && !/[\t\n\r]/.test(src)))
 
 export const isSafeYoutubeSrc = (src: unknown): src is string =>
   typeof src === 'string' &&

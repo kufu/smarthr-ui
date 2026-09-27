@@ -1,6 +1,8 @@
 import { ResizableNodeView, getRenderedAttributes } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
+import { isSafeImageSrc } from '../../serializers/safeAttributes'
+
 import type { NodeViewRendererProps, ResizableNodeViewDirection } from '@tiptap/core'
 import type { ImageOptions } from '@tiptap/extension-image'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
@@ -73,6 +75,15 @@ export const CustomImage = Image.extend<CustomImageOptions>({
       ...(this.parent?.() as ImageOptions),
       isResizable: () => true,
     }
+  },
+
+  // 標準は data: を除くだけで、blob: や相対パスの画像は取り込まれて保存後の表示で落ちる
+  parseHTML() {
+    return (this.parent?.() ?? []).map((rule) => ({
+      ...rule,
+      getAttrs: (element: HTMLElement) =>
+        isSafeImageSrc(element.getAttribute('src')) ? null : false,
+    }))
   },
 
   addNodeView() {

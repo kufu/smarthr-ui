@@ -444,6 +444,10 @@ export const Overview: Story = {
             画像のアップロード先は <code>onImageUpload</code> で利用者が実装します。失敗した場合は{' '}
             <code>onImageUploadError</code> が呼ばれます。
             <br />
+            <code>onImageUpload</code> が返す <code>src</code> は http(s) の URL か <code>/</code>{' '}
+            から始まるパスにしてください。保存後に表示できない <code>blob:</code> や{' '}
+            <code>data:</code>、相対パスは失敗として扱います。
+            <br />
             SmartHR UI は保存先を持たないため、不要になった画像の削除もエディタは行いません。
             <br />
             編集中の削除をもとにファイルを消すと、undo

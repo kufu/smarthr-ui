@@ -38,6 +38,10 @@ export type RichTextChangeMeta = {
 }
 
 export type ImageUploadResult = {
+  /**
+   * http(s) の絶対 URL、または `/` から始まるルート相対パス。
+   * blob: や data:、相対パスを返すと onImageUploadError が呼ばれ、画像は挿入されない。
+   */
   src: string
   alt?: string
 }
