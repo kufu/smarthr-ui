@@ -1,5 +1,6 @@
 import {
   type ComponentPropsWithoutRef,
+  type ElementType,
   type FC,
   createContext,
   useCallback,
@@ -35,10 +36,16 @@ export function usePortal() {
 }
 
 type PortalProps = Omit<ComponentPropsWithoutRef<'div'>, 'data-portal-child-of'> & {
+  as?: ElementType
   currentSeq: number
 }
 
-export const Portal: FC<PortalProps> = ({ currentSeq, children, ...rest }) => {
+export const Portal: FC<PortalProps> = ({
+  as: Component = 'div',
+  currentSeq,
+  children,
+  ...rest
+}) => {
   const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
 
@@ -62,9 +69,9 @@ export const Portal: FC<PortalProps> = ({ currentSeq, children, ...rest }) => {
 
   return createPortal(
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
-      <div {...rest} data-portal-child-of={calculatedSeqs.portalChildOf}>
+      <Component {...rest} data-portal-child-of={calculatedSeqs.portalChildOf}>
         {children}
-      </div>
+      </Component>
     </ParentContext.Provider>,
     document.body,
   )
