@@ -40,7 +40,7 @@ type PortalProps = PropsWithChildren<{
 }>
 
 export const Portal: FC<PortalProps> = ({ currentSeq, rootId, children }) => {
-  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null)
+  const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
 
   const calculatedSeqs = useMemo(() => {
@@ -53,36 +53,21 @@ export const Portal: FC<PortalProps> = ({ currentSeq, rootId, children }) => {
   }, [currentSeq, parent.seqs])
 
   useEnhancedEffect(() => {
-    // Next.jsのhydration error回避のため、マウント後にdivを作成してdocument.bodyに追加する
-    const root = document.createElement('div')
-
-    document.body.appendChild(root)
-    setPortalRoot(root)
-
-    return () => {
-      root.remove()
-    }
+    // Next.jsのhydration error回避のため、マウント後にのみportalを描画する
+    setMounted(true)
   }, [])
 
-  useEnhancedEffect(() => {
-    if (!portalRoot) return
-
-    portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf
-
-    if (rootId) {
-      portalRoot.setAttribute('id', rootId)
-    }
-  }, [calculatedSeqs.portalChildOf, portalRoot, rootId])
-
-  if (portalRoot === null) {
+  if (!mounted) {
     return null
   }
 
   return createPortal(
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
-      {children}
+      <div id={rootId} data-portal-child-of={calculatedSeqs.portalChildOf}>
+        {children}
+      </div>
     </ParentContext.Provider>,
-    portalRoot,
+    document.body,
   )
 }
 
