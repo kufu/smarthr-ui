@@ -817,7 +817,7 @@ describe('RichTextEditor', () => {
     })
   })
 
-  describe('content prop (旧 FlexibleRichTextEditor)', () => {
+  describe('content prop', () => {
     it('HTML content を受け取ってエディタを描画する', async () => {
       render(<RichTextEditor content={{ format: 'html', content: '<p>HTMLコンテンツ</p>' }} />, {
         wrapper: Wrapper,

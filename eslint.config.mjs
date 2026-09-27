@@ -139,10 +139,7 @@ export default [
       'smarthr/best-practice-for-interactive-element': [
         'error',
         {
-          additionalInteractiveComponentRegex: [
-            'RichTextEditor',
-            'FlexibleRichTextEditor',
-          ],
+          additionalInteractiveComponentRegex: ['RichTextEditor'],
         },
       ],
       'smarthr/best-practice-for-consecutive-definition-list': 'off',

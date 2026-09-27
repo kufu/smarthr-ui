@@ -122,8 +122,6 @@ import {
   FaGripLines,
   FaGripLinesVertical,
   FaGripVertical,
-  FaHeading,
-  FaHighlighter,
   FaHourglassHalf,
   FaHouse,
   FaIdBadge,
@@ -177,7 +175,6 @@ import {
   FaRocket,
   FaRotate,
   FaRotateLeft,
-  FaRulerHorizontal,
   FaShareNodes,
   FaShieldHalved,
   FaSliders,
@@ -347,8 +344,6 @@ export const FaGripIcon = /*#__PURE__*/ generateIcon(FaGrip)
 export const FaGripLinesIcon = /*#__PURE__*/ generateIcon(FaGripLines)
 export const FaGripLinesVerticalIcon = /*#__PURE__*/ generateIcon(FaGripLinesVertical)
 export const FaGripVerticalIcon = /*#__PURE__*/ generateIcon(FaGripVertical)
-export const FaHeadingIcon = /*#__PURE__*/ generateIcon(FaHeading)
-export const FaHighlighterIcon = /*#__PURE__*/ generateIcon(FaHighlighter)
 export const FaHourglassHalfIcon = /*#__PURE__*/ generateIcon(FaHourglassHalf)
 export const FaHouseIcon = /*#__PURE__*/ generateIcon(FaHouse)
 export const FaIdBadgeIcon = /*#__PURE__*/ generateIcon(FaIdBadge)
@@ -404,7 +399,6 @@ export const FaRobotIcon = /*#__PURE__*/ generateIcon(FaRobot)
 export const FaRocketIcon = /*#__PURE__*/ generateIcon(FaRocket)
 export const FaRotateIcon = /*#__PURE__*/ generateIcon(FaRotate)
 export const FaRotateLeftIcon = /*#__PURE__*/ generateIcon(FaRotateLeft)
-export const FaRulerHorizontalIcon = /*#__PURE__*/ generateIcon(FaRulerHorizontal)
 export const FaShareNodesIcon = /*#__PURE__*/ generateIcon(FaShareNodes)
 export const FaStrikethroughIcon = /*#__PURE__*/ generateIcon(FaStrikethrough)
 export const FaShieldHalvedIcon = /*#__PURE__*/ generateIcon(FaShieldHalved)
