@@ -96,11 +96,12 @@ describe('intl', () => {
   })
 
   describe('locales', () => {
-    it('全ロケールがjaと同じキーを持つ', () => {
-      const jaKeys = Object.keys(locales.ja).sort()
+    // Crowdin は未翻訳のキーを省いて書き出す（skip_untranslated_strings）ため、キーが揃うとは限らない
+    it('全ロケールのキーがjaのキーに含まれる', () => {
+      const jaKeys = new Set(Object.keys(locales.ja))
 
       for (const [name, messages] of Object.entries(locales)) {
-        expect([name, Object.keys(messages).sort()]).toEqual([name, jaKeys])
+        expect([name, Object.keys(messages).filter((key) => !jaKeys.has(key))]).toEqual([name, []])
       }
     })
 
