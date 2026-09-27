@@ -11,9 +11,9 @@ import {
   useState,
 } from 'react'
 import { Button, Cluster, FaPenToSquareIcon, FormControl, Input, Stack } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
+import { tv } from '../../../../libs/tv'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
 import type { Editor } from '@tiptap/react'

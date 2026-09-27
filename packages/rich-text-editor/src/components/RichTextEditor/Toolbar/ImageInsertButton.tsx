@@ -10,9 +10,9 @@ import {
   useState,
 } from 'react'
 import { FaImageIcon } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
+import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { DEFAULT_MIME_TYPES, matchesMimeType } from '../extensions/Image/mimeTypes'
 import { uploadAndInsertImage } from '../extensions/Image/uploadAndInsertImage'

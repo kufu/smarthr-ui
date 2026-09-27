@@ -12,9 +12,9 @@ import {
   useRef,
 } from 'react'
 import { Button, FaXmarkIcon } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { type typedJa, useIntl } from '../../../../intl'
+import { tv } from '../../../../libs/tv'
 
 import { ColorSwatch } from './ColorSwatch'
 import { normalizeHex } from './normalizeHex'

@@ -3,9 +3,9 @@
 import { type FC, type ReactNode, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useEnvironment } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { tv } from '../../../libs/tv'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 
 import { formatShortcutTokens } from './shortcutKeys'

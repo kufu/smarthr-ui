@@ -8,9 +8,9 @@ import {
   FaAlignRightIcon,
   FaCaretDownIcon,
 } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
+import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'

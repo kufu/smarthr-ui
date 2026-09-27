@@ -1,8 +1,8 @@
 'use client'
 
 import { type FC, memo, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
+import { tv } from '../../../libs/tv'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { serializeToReactElement } from '../serializers/serializeToReactElement'
 import { staticContentClasses } from '../styles'

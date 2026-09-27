@@ -1,6 +1,7 @@
 import { type ComponentPropsWithRef, type FC, type KeyboardEvent, memo, useMemo } from 'react'
 import { FaAIcon, FaCheckIcon } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
+
+import { tv } from '../../../../libs/tv'
 
 const faceClassNameGenerator = tv({
   slots: {

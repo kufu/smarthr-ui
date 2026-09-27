@@ -11,9 +11,9 @@ import {
   useRef,
   useState,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
+import { tv } from '../../../libs/tv'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'

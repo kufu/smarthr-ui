@@ -19,9 +19,9 @@ import {
   Input,
   Stack,
 } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
+import { tv } from '../../../../libs/tv'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
 import { calcHeightFromWidth, calcWidthFromHeight } from './aspectRatio'

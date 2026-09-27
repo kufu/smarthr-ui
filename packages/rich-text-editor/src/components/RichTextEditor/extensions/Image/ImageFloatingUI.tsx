@@ -2,9 +2,9 @@
 
 import { type FC, type RefObject, memo, useCallback } from 'react'
 import { FaTrashCanIcon } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
+import { tv } from '../../../../libs/tv'
 import { useRovingToolbar } from '../../hooks/useRovingToolbar'
 
 import { ImageAltPopover } from './ImageAltPopover'

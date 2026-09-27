@@ -1,8 +1,8 @@
 'use client'
 
 import { type ComponentPropsWithRef, type FC, type ReactNode, memo } from 'react'
-import { tv } from 'tailwind-variants'
 
+import { tv } from '../../../libs/tv'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
 
 import { ToolbarTooltip } from './ToolbarTooltip'

@@ -24,11 +24,11 @@ import {
   FaStrikethroughIcon,
   FaUnderlineIcon,
 } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../../hooks/useEnhancedEffect'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
+import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useRovingToolbar } from '../hooks/useRovingToolbar'
 import { useToolbarState } from '../hooks/useToolbarState'

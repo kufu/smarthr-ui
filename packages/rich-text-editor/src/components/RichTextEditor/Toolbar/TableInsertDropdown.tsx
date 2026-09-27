@@ -11,9 +11,9 @@ import {
   useState,
 } from 'react'
 import { Button, Cluster, FaTableIcon, FormControl, Input, Stack } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
+import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 

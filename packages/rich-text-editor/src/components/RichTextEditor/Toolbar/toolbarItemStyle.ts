@@ -1,4 +1,4 @@
-import { tv } from 'tailwind-variants'
+import { tv } from '../../../libs/tv'
 
 const classNameGenerator = tv({
   base: [

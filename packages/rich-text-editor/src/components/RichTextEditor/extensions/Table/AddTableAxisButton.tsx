@@ -2,9 +2,9 @@
 
 import { type FC, type MouseEvent, memo, useCallback } from 'react'
 import { FaPlusIcon } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../../intl'
+import { tv } from '../../../../libs/tv'
 
 import { insertTableAxis } from './tableTarget'
 

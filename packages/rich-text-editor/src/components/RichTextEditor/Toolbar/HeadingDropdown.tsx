@@ -2,9 +2,9 @@
 
 import { type FC, type KeyboardEvent, memo, useCallback, useMemo, useRef } from 'react'
 import { FaCaretDownIcon, FaCheckIcon } from 'smarthr-ui'
-import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
+import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { useToolbarState } from '../hooks/useToolbarState'
