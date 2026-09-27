@@ -16,8 +16,7 @@ function _isDescendantOfSeq(element: HTMLElement | SVGElement | null, seq: numbe
   if (!element) return false
 
   const childOf = element.dataset?.portalChildOf
-  const seqRegex = new RegExp(`(^|,)${seq}(,|$)`)
-  const includesSeq = childOf !== undefined && seqRegex.test(childOf)
+  const includesSeq = childOf !== undefined && new RegExp(`(^|,)${seq}(,|$)`).test(childOf)
 
   return includesSeq || _isDescendantOfSeq(element.parentElement, seq)
 }
