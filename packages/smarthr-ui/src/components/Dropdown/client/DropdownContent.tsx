@@ -3,6 +3,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Portal } from '../../../hooks/client/usePortal'
 import { DropdownCloser } from '../DropdownCloser'
 
 import { DropdownContext } from './Dropdown'
@@ -37,7 +38,8 @@ export const DropdownContent: FC<Props> = ({
   ...rest
 }) => {
   const {
-    DropdownContentRoot,
+    active,
+    portalProps,
     contentStyles,
     contentCallbackRef,
     handleDelegateClickContentCloser,
@@ -46,25 +48,27 @@ export const DropdownContent: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <DropdownContentRoot>
-      <div
-        {...rest}
-        ref={contentCallbackRef}
-        role="presentation"
-        className={actualClassName}
-        style={contentStyles.wrapper}
-        onClick={handleDelegateClickContentCloser}
-      >
-        {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-        <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
-        {controllable ? (
-          <div style={contentStyles.body}>{children}</div>
-        ) : (
-          <DropdownCloser className="shr-flex shr-flex-col" style={contentStyles.body}>
-            {children}
-          </DropdownCloser>
-        )}
-      </div>
-    </DropdownContentRoot>
+    <Portal {...portalProps}>
+      {active && (
+        <div
+          {...rest}
+          ref={contentCallbackRef}
+          role="presentation"
+          className={actualClassName}
+          style={contentStyles.wrapper}
+          onClick={handleDelegateClickContentCloser}
+        >
+          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
+          <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
+          {controllable ? (
+            <div style={contentStyles.body}>{children}</div>
+          ) : (
+            <DropdownCloser className="shr-flex shr-flex-col" style={contentStyles.body}>
+              {children}
+            </DropdownCloser>
+          )}
+        </div>
+      )}
+    </Portal>
   )
 }

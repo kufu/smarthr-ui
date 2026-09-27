@@ -18,7 +18,7 @@ import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallba
 import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { usePortal } from '../../../hooks/client/usePortal'
+import { Portal, usePortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
@@ -376,7 +376,7 @@ export const ListBox = memo(
     dropdownWidth,
     callbackRef,
   }: ListBoxProps<T>) => {
-    const { createPortal } = usePortal()
+    const { portalProps } = usePortal()
     const theme = useTheme()
 
     const minLength = useMemo(
@@ -463,59 +463,61 @@ export const ListBox = memo(
       }
     }, [latest])
 
-    return createPortal(
-      <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
-        <Scroller
-          ref={listBoxRef}
-          role="listbox"
-          id={listBoxId}
-          className={CLASS_NAMES.dropdownList}
-          style={styles.dropdownList}
-          aria-hidden={!isExpanded}
-          onMouseOver={functions.handleDelegateMouseOver}
-          onClick={functions.handleDelegateClick}
-        >
-          {dropdownHelpMessage && (
-            <Text
-              as="p"
-              className={CLASS_NAMES.helpMessage}
-              icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-            >
-              {dropdownHelpMessage}
-            </Text>
-          )}
-          {isExpanded ? (
-            isLoading ? (
-              <div className={CLASS_NAMES.loaderWrapper}>
-                <Loader />
-              </div>
-            ) : options.length === 0 ? (
-              <LiveRegion className={CLASS_NAMES.noItems}>
-                {noResultText ?? (
-                  <Localizer
-                    id="smarthr-ui/Combobox/noResultsText"
-                    defaultText="一致する選択肢がありません。"
+    return (
+      <Portal {...portalProps}>
+        <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+          <Scroller
+            ref={listBoxRef}
+            role="listbox"
+            id={listBoxId}
+            className={CLASS_NAMES.dropdownList}
+            style={styles.dropdownList}
+            aria-hidden={!isExpanded}
+            onMouseOver={functions.handleDelegateMouseOver}
+            onClick={functions.handleDelegateClick}
+          >
+            {dropdownHelpMessage && (
+              <Text
+                as="p"
+                className={CLASS_NAMES.helpMessage}
+                icon={<FaCircleInfoIcon color="TEXT_GREY" />}
+              >
+                {dropdownHelpMessage}
+              </Text>
+            )}
+            {isExpanded ? (
+              isLoading ? (
+                <div className={CLASS_NAMES.loaderWrapper}>
+                  <Loader />
+                </div>
+              ) : options.length === 0 ? (
+                <LiveRegion className={CLASS_NAMES.noItems}>
+                  {noResultText ?? (
+                    <Localizer
+                      id="smarthr-ui/Combobox/noResultsText"
+                      defaultText="一致する選択肢がありません。"
+                    />
+                  )}
+                </LiveRegion>
+              ) : (
+                items.map(({ item: { label, disabled }, id, ...optionRest }) => (
+                  <ItemButton
+                    {...optionRest}
+                    key={id}
+                    id={id}
+                    disabled={disabled}
+                    active={id === activeOptionId}
+                    label={label}
                   />
-                )}
-              </LiveRegion>
-            ) : (
-              items.map(({ item: { label, disabled }, id, ...optionRest }) => (
-                <ItemButton
-                  {...optionRest}
-                  key={id}
-                  id={id}
-                  disabled={disabled}
-                  active={id === activeOptionId}
-                  label={label}
-                />
-              ))
-            )
-          ) : null}
-          {currentItemLength < options.length && (
-            <Intersection callbackRef={functions.intersectCallbackRef} />
-          )}
-        </Scroller>
-      </div>,
+                ))
+              )
+            ) : null}
+            {currentItemLength < options.length && (
+              <Intersection callbackRef={functions.intersectCallbackRef} />
+            )}
+          </Scroller>
+        </div>
+      </Portal>
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
