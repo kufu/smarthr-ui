@@ -303,7 +303,7 @@ import 'styled-components';    // ← hooks 側の依存が転記される
 
 **例外: `client/index.ts` が component のみを re-export する場合**
 
-`client/index.ts` が re-export する対象は component のみです。`client/` 内で宣言した hook は client 専用の内部実装であり、同じ `client/` 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません（例外は `useSectioningWrapper` のように、hook が `client/` 内の component を経由せず Server Component からも直接 import されうる場合のみ）。`client/` 配下にある component は前述の原則（そのファイル自身が client 専用 API を使っているかで判断する）に従い `'use client'` を持つため、`'use client'` を持つモジュールは react-server グラフでは実体を評価されずクライアント参照に変換されます。したがって複数の component を一つの `client/index.ts` で re-export しても、ある component の依存が別の component 側へ転記されることはありません。対象が公開 component か非公開 component かは無関係です。
+`client/index.ts` が re-export する対象は component のみです。`client/` 内で宣言した hook は client 専用の内部実装であり、同じ `client/` 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません（例外は `useSectioningWrapper` のように、hook が `client/` 内の component を経由せず Server Component からも直接 import されうる場合のみ）。対象が公開 component か非公開 component かは無関係です。
 
 `DefinitionListItem` の `client/ItemWrapper.tsx`（非公開 component、`useTheme` を使うため `'use client'` あり）が実例です。
 
@@ -318,11 +318,15 @@ DefinitionList/
 
 rollup ビルド出力で `DefinitionListItem.js` が `client/index.js` を経由せず `client/ItemWrapper.js` に直リンクされること、`node --conditions react-server` での評価が成功することを実測済みです。
 
-**この転記は Next.js 実利用では顕在化しないが、それでも作らない**
+**`client/index.ts` が component を複数 re-export する場合は転記が起きるが、許容する**
 
-`sandbox/next`（`smarthr-ui: workspace:*`）で実測したところ、`client/index.ts` を作った状態でも `next build` / `next dev` は問題なく成功し、`Section` は Server Component として描画され、RSC 側の依存一覧（`page.js.nft.json`）に `styled-components` は含まれませんでした。`package.json` の `sideEffects` 宣言（`lib/*.js` を side-effect-free と宣言）により、Turbopack/webpack が副作用 import をツリーシェイクで除去するためです。
+`client/index.ts` が component を1つだけ re-export する場合（`DefinitionListItem` の実例）は転記が起きませんが、component を複数 re-export すると、ある component の依存が別の component 側へ転記されることがあります。`Portal`（`client/Portal.tsx`）と `NestablePortal`（`client/NestablePortal.tsx`、`createContext` をモジュールスコープで呼ぶ）を同じ `client/index.ts` から re-export した実例で、`Portal` だけを使う `LoadingStatus.tsx` の rollup ビルド出力に `import '../Portal/client/NestablePortal.js';` という副作用 import が転記されることを実測しています。
 
-一方、素の `node --conditions react-server` で当該ファイルを直接評価すると `TypeError: r.createContext is not a function` になります。バンドラを経由しない実行では顕在化するため、**バンドラの `sideEffects` 最適化に依存しない構成を保つ**という意味で、`client/index.ts` は作らない方針を維持します。
+この転記は許容します。理由は次の実測に基づきます。
+
+`sandbox/next`（`smarthr-ui: workspace:*`）で実測したところ、`client/index.ts` を作った状態でも `next build` / `next dev` は問題なく成功し、`Section` は Server Component として描画され、RSC 側の依存一覧（`page.js.nft.json`）に `styled-components` は含まれませんでした。`package.json` の `sideEffects` 宣言（`lib/*.js` を side-effect-free と宣言）により、Turbopack/webpack が副作用 import をツリーシェイクで除去するためです。これは component を複数 re-export した場合の転記（`Portal`/`NestablePortal` の実例）でも同様に働きます。
+
+一方、素の `node --conditions react-server` で当該ファイルを直接評価すると `TypeError: r.createContext is not a function` になります。これはバンドラを経由しない直接評価でのみ顕在化するものであり、Next.js 等の実利用環境では `sideEffects` 宣言によるツリーシェイクで解消されるため、実害はありません。したがって `client/index.ts` が component を複数 re-export することも許容します。
 
 **共有 hook（`src/hooks/`）の場合**
 
