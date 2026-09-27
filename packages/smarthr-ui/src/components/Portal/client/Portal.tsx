@@ -44,13 +44,8 @@ export const Portal: FC<PortalProps> = ({ as: Component = 'div', children, ...re
     }
   }, [currentSeq, parent.seqs])
 
-  useEnhancedEffect(() => {
-    // Next.jsのhydration error回避のため、マウント後にのみportalを描画する
-    setMounted(true)
-  }, [])
-
   if (!mounted) {
-    return null
+    return <MountChecker setMounted={setMounted} />
   }
 
   return createPortal(
@@ -65,4 +60,13 @@ export const Portal: FC<PortalProps> = ({ as: Component = 'div', children, ...re
     </ParentContext.Provider>,
     document.body,
   )
+}
+
+const MountChecker: FC<{ setMounted: (mounted: boolean) => void }> = ({ setMounted }) => {
+  useEnhancedEffect(() => {
+    // Next.jsのhydration error回避のため、マウント後にのみportalを描画する
+    setMounted(true)
+  }, [setMounted])
+
+  return null
 }
