@@ -44,7 +44,7 @@ type Props = {
 
 export const ImageInsertButton: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown, onFocus, ref: refProp }) => {
-    const { editor, onImageUpload, onImageUploadError, acceptedMimeTypes } =
+    const { editor, hasImageUpload, getImageUploadHandlers, acceptedMimeTypes } =
       useRichTextEditorContext()
     const { localize } = useIntl()
     const {
@@ -77,6 +77,7 @@ export const ImageInsertButton: FC<Props> = memo(
     const handleFileChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
+        const { onImageUpload, onImageUploadError } = getImageUploadHandlers()
         // accept 属性はダイアログの絞り込みヒントでしかなく利用者が回避できるため、
         // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する
         if (file && onImageUpload && matchesMimeType(file.type, mimeTypes)) {
@@ -86,7 +87,7 @@ export const ImageInsertButton: FC<Props> = memo(
           e.target.value = ''
         }
       },
-      [editor, mimeTypes, onImageUpload, onImageUploadError],
+      [editor, mimeTypes, getImageUploadHandlers],
     )
 
     const handleUrlInsert = useCallback(
@@ -171,7 +172,7 @@ export const ImageInsertButton: FC<Props> = memo(
         />
         {renderDropdown(
           <div ref={menuRef} role="menu" className={classNames.menu()} aria-label={label}>
-            {onImageUpload && (
+            {hasImageUpload && (
               <button
                 role="menuitem"
                 type="button"
