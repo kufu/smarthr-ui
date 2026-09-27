@@ -2,7 +2,11 @@ import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { act, useState } from 'react'
 
+import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
+import { SingleCombobox } from '../Combobox'
+import { DatePicker } from '../DatePicker'
+import { FormControl } from '../FormGroup'
 import { Stack } from '../Layout'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from './client'
@@ -246,6 +250,87 @@ describe('Dropdown', () => {
       await userEvent.tab()
       expect(screen.getByRole('button', { name: 'AfterInnerDropdown' })).toHaveFocus()
       expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+  })
+
+  describe('DropdownContent内にポータルを使う別コンポーネントがネストしている場合', () => {
+    it('Comboboxのオプションをクリックしても外側のDropdownが閉じないこと', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>Trigger</Button>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <form>
+                <FormControl label="コンボボックス">
+                  <SingleCombobox
+                    name="test"
+                    selectedItem={null}
+                    items={[
+                      { label: 'option 1', value: 'value-1' },
+                      { label: 'option 2', value: 'value-2' },
+                    ]}
+                  />
+                </FormControl>
+              </form>
+            </DropdownContent>
+          </Dropdown>
+        </IntlProvider>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await user.click(screen.getByRole('combobox'))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('DatePickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>Trigger</Button>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <form>
+                <FormControl label="日付">
+                  <DatePicker name="test" value={undefined} onChangeDate={() => {}} />
+                </FormControl>
+              </form>
+            </DropdownContent>
+          </Dropdown>
+        </IntlProvider>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await user.click(screen.getByRole('textbox'))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('button', { name: '4' }))
+
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
         'aria-expanded',
         'true',
       )
