@@ -2,7 +2,7 @@
 
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { NestablePortal as DatePickerNestablePortal } from '../../Portal'
+import { Portal as OriginalPortal } from '../../Portal'
 
 type Props = PropsWithChildren<{
   inputRect: DOMRect
@@ -24,8 +24,8 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
   )
 
   return (
-    // TODO: DatePickerNestablePortalのdivとこのdivが二重になっている。DatePickerNestablePortalのas propで統合する(別PRで対応)
-    <DatePickerNestablePortal>
+    // TODO: OriginalPortalのdivとこのdivが二重になっている。OriginalPortalのas propで統合する(別PRで対応)
+    <OriginalPortal>
       <div
         ref={callbackRef}
         // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
@@ -35,7 +35,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
       >
         {children}
       </div>
-    </DatePickerNestablePortal>
+    </OriginalPortal>
   )
 }
 

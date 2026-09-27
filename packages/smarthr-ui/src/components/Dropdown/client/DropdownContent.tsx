@@ -3,7 +3,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { NestablePortal } from '../../Portal'
+import { Portal } from '../../Portal'
 import { DropdownCloser } from '../DropdownCloser'
 
 import { DropdownContext } from './Dropdown'
@@ -43,8 +43,8 @@ export const DropdownContent: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    // TODO: NestablePortalのdivとこのdivが二重になっている。NestablePortalのas propで統合する(別PRで対応)
-    <NestablePortal id={contentId}>
+    // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
+    <Portal id={contentId}>
       {active && (
         <div
           {...rest}
@@ -65,6 +65,6 @@ export const DropdownContent: FC<Props> = ({
           )}
         </div>
       )}
-    </NestablePortal>
+    </Portal>
   )
 }

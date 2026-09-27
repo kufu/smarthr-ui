@@ -1,2 +1,2 @@
-export { NestablePortal, Portal } from './client'
+export { Portal } from './client'
 export { isChildPortal } from './isChildPortal'
