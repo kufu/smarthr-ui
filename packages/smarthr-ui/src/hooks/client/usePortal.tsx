@@ -1,6 +1,6 @@
 import {
+  type ComponentPropsWithoutRef,
   type FC,
-  type PropsWithChildren,
   createContext,
   useCallback,
   useContext,
@@ -24,7 +24,7 @@ let portalSeq = 0
 export function usePortal({ rootId }: { rootId?: string } = {}) {
   const [currentSeq] = useState(() => ++portalSeq)
 
-  const portalProps = useMemo(() => ({ currentSeq, rootId }), [currentSeq, rootId])
+  const portalProps = useMemo(() => ({ currentSeq, id: rootId }), [currentSeq, rootId])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),
@@ -34,12 +34,11 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
   return { portalProps, isChildPortal }
 }
 
-type PortalProps = PropsWithChildren<{
+type PortalProps = Omit<ComponentPropsWithoutRef<'div'>, 'data-portal-child-of'> & {
   currentSeq: number
-  rootId?: string
-}>
+}
 
-export const Portal: FC<PortalProps> = ({ currentSeq, rootId, children }) => {
+export const Portal: FC<PortalProps> = ({ currentSeq, children, ...rest }) => {
   const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
 
@@ -63,7 +62,7 @@ export const Portal: FC<PortalProps> = ({ currentSeq, rootId, children }) => {
 
   return createPortal(
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
-      <div id={rootId} data-portal-child-of={calculatedSeqs.portalChildOf}>
+      <div {...rest} data-portal-child-of={calculatedSeqs.portalChildOf}>
         {children}
       </div>
     </ParentContext.Provider>,
