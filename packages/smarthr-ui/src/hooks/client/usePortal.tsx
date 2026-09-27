@@ -6,10 +6,9 @@ import {
   useContext,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import { createPortal } from 'react-dom'
-
-import { useEnhancedEffect } from './useEnhancedEffect'
 
 type ParentContextValue = {
   seqs: number[]
@@ -39,8 +38,17 @@ type PortalProps = PropsWithChildren<{
   rootId?: string
 }>
 
+const NOOP_SUBSCRIBE = () => () => {}
+const GET_SNAPSHOT_MOUNTED = () => true
+const GET_SERVER_SNAPSHOT_MOUNTED = () => false
+
 export const Portal: FC<PortalProps> = ({ currentSeq, rootId, children }) => {
-  const [mounted, setMounted] = useState(false)
+  // Next.jsのhydration error回避のため、マウント後にのみportalを描画する
+  const mounted = useSyncExternalStore(
+    NOOP_SUBSCRIBE,
+    GET_SNAPSHOT_MOUNTED,
+    GET_SERVER_SNAPSHOT_MOUNTED,
+  )
   const parent = useContext(ParentContext)
 
   const calculatedSeqs = useMemo(() => {
@@ -51,11 +59,6 @@ export const Portal: FC<PortalProps> = ({ currentSeq, rootId, children }) => {
       portalChildOf: parentSeqs.join(','),
     }
   }, [currentSeq, parent.seqs])
-
-  useEnhancedEffect(() => {
-    // Next.jsのhydration error回避のため、マウント後にのみportalを描画する
-    setMounted(true)
-  }, [])
 
   if (!mounted) {
     return null
