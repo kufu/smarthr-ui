@@ -36,7 +36,8 @@ type DropdownContextType = {
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
-  portalProps: { currentSeq: number; rootId?: string }
+  portalProps: { currentSeq: number }
+  contentId: string
 }
 
 const KEY_ESCAPE = /^Esc(ape)?$/
@@ -50,6 +51,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   handleDelegateClickTrigger: NOOP,
   handleDelegateClickContentCloser: NOOP,
   portalProps: { currentSeq: 0 },
+  contentId: '',
 })
 
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
@@ -58,9 +60,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [contentStyles, setContentStyles] = useState(INITIAL_CONTENT_STYLES)
 
   const contentId = useId()
-  const { portalProps, isChildPortal } = usePortal({
-    rootId: contentId,
-  })
+  const { portalProps, isChildPortal } = usePortal()
 
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
@@ -313,6 +313,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
         handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
         portalProps,
+        contentId,
       }}
     >
       {children}

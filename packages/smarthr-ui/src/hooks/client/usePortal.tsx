@@ -21,10 +21,10 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-export function usePortal({ rootId }: { rootId?: string } = {}) {
+export function usePortal() {
   const [currentSeq] = useState(() => ++portalSeq)
 
-  const portalProps = useMemo(() => ({ currentSeq, id: rootId }), [currentSeq, rootId])
+  const portalProps = useMemo(() => ({ currentSeq }), [currentSeq])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => _isChildPortal(element, new RegExp(`(^|,)${currentSeq}(,|$)`)),

@@ -40,6 +40,7 @@ export const DropdownContent: FC<Props> = ({
   const {
     active,
     portalProps,
+    contentId,
     contentStyles,
     contentCallbackRef,
     handleDelegateClickContentCloser,
@@ -48,7 +49,7 @@ export const DropdownContent: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Portal {...portalProps}>
+    <Portal {...portalProps} id={contentId}>
       {active && (
         <div
           {...rest}
