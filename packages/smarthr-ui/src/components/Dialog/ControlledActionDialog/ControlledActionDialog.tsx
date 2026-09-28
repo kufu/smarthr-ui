@@ -1,5 +1,3 @@
-'use client'
-
 import { type ComponentProps, type FC, type MouseEvent, type ReactNode, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
