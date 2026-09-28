@@ -3,7 +3,8 @@ import { type ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
 import { Loader } from '../Loader'
 
 import { DisabledReason } from './DisabledReason'
-import { ActualButton, LoadingStatus } from './client'
+import { LoadingStatus } from './LoadingStatus'
+import { ActualButton } from './client'
 import { buttonClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
