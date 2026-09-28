@@ -6,8 +6,8 @@ import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
+import { ThCheckbox } from '../ThCheckbox'
 import { WakuWakuButton } from '../WakuWakuButton'
-import { ThCheckbox } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

@@ -111,8 +111,8 @@ const AutoPageTitleHeading: FC<
 
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-        const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
-          document.createElement('div')) as HTMLDivElement
+        const pseudoTitle: HTMLElement =
+          document.getElementById(latest.pseudoTitleId) || document.createElement('div')
 
         pseudoTitle.setAttribute('id', latest.pseudoTitleId)
         pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
