@@ -1,0 +1,219 @@
+'use client'
+
+import {
+  type KeyboardEvent,
+  type RefCallback,
+  memo,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
+import { tv } from 'tailwind-variants'
+
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer } from '../../../../intl'
+import { UnstyledButton } from '../../../Button'
+import { Chip } from '../../../Chip'
+import { FaCircleXmarkIcon } from '../../../Icon'
+import { Tooltip } from '../../../Tooltip'
+import { VisuallyHiddenText } from '../../../VisuallyHiddenText'
+
+import type { ComboboxItem } from '../types'
+
+export type Props<T> = {
+  item: ComboboxItem<T> & { deletable?: boolean }
+  disabled: boolean
+  handleDelete: (item: ComboboxItem<T>) => void
+  enableEllipsis?: boolean
+}
+
+export const DELETE_BUTTON_SELECTOR = 'smarthr-ui-MultiCombobox-deleteButton'
+
+const classNameGenerator = tv({
+  slots: {
+    wrapper:
+      'smarthr-ui-MultiCombobox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
+    itemLabel: 'smarthr-ui-MultiCombobox-selectedItemLabel',
+    deleteButton: [
+      DELETE_BUTTON_SELECTOR,
+      'shr-relative',
+      'shr-group/deleteButton',
+      'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
+      'focus-visible:shr-outline-none',
+      'disabled:shr-cursor-not-allowed',
+    ],
+    deleteButtonIcon:
+      'group-focus-visible/deleteButton:shr-focus-indicator--outer group-focus-visible/deleteButton:shr-rounded-full',
+  },
+  variants: {
+    enableEllipsis: {
+      true: {
+        itemLabel: 'shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap',
+      },
+    },
+  },
+})
+
+const CLASS_NAMES = (() => {
+  const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = classNameGenerator()
+
+  const common = {
+    wrapper: wrapper(),
+    deleteButton: deleteButton(),
+    deleteButtonIcon: deleteButtonIcon(),
+  }
+
+  return {
+    enableEllipsis: {
+      ...common,
+      itemLabel: itemLabel({ enableEllipsis: true }),
+    },
+    noEllipsis: {
+      ...common,
+      itemLabel: itemLabel({ enableEllipsis: false }),
+    },
+  }
+})()
+
+const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
+
+export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDelete }: Props<T>) {
+  const itemDeletable = item.deletable ?? true
+  const latest = useLatest({ handleDelete, item })
+
+  const functions = useMemo(
+    () =>
+      itemDeletable
+        ? {
+            handleDestroyClick: () => {
+              latest.handleDelete(latest.item)
+            },
+            handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
+              if (EXEC_DESTROY_KEY.test(e.key)) {
+                e.stopPropagation()
+
+                // HINT: イベントの伝播が止まる関係でonClickに設定したhandleDeleteは実行されない
+                // このタイミングで明示的に削除処理を実行する
+                latest.handleDelete(latest.item)
+              }
+            },
+          }
+        : {
+            handleDestroyClick: undefined,
+            handleDestroyKeyDown: undefined,
+          },
+    [itemDeletable, latest],
+  )
+
+  const Component = enableEllipsis ? EllipsisMultiSelectedItem : ActualMultiSelectedItem
+
+  return (
+    <Component
+      disabled={disabled}
+      itemLabel={item.label}
+      itemDeletable={itemDeletable}
+      classNames={CLASS_NAMES[enableEllipsis ? 'enableEllipsis' : 'noEllipsis']}
+      functions={functions}
+    />
+  )
+}
+
+type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' | 'handleDelete'> & {
+  labelRef?: RefCallback<HTMLElement>
+  itemLabel: ComboboxItem<T>['label']
+  itemDeletable: boolean
+  functions: {
+    handleDestroyClick?: () => void
+    handleDestroyKeyDown?: (e: KeyboardEvent<HTMLButtonElement>) => void
+  }
+  classNames: {
+    wrapper: string
+    itemLabel: string
+    deleteButton: string
+    deleteButtonIcon: string
+  }
+}
+
+const typedMemo: <T>(c: T) => T = memo
+
+const BaseEllipsisMultiSelectedItem = <T,>({
+  itemLabel,
+  ...rest
+}: LowerMultiSelectedItemProps<T>) => {
+  const [needsTooltip, setNeedsTooltip] = useState(false)
+
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      setNeedsTooltip(node.offsetWidth < node.scrollWidth)
+    }
+  }, [])
+
+  const body = <ActualMultiSelectedItem {...rest} labelRef={callbackRef} itemLabel={itemLabel} />
+
+  if (needsTooltip) {
+    return <Tooltip message={itemLabel}>{body}</Tooltip>
+  }
+
+  return body
+}
+const EllipsisMultiSelectedItem = typedMemo(BaseEllipsisMultiSelectedItem)
+
+const BaseActualMultiSelectedItem = <T,>({
+  labelRef,
+  itemLabel,
+  itemDeletable,
+  disabled,
+  functions,
+  classNames,
+}: LowerMultiSelectedItemProps<T>) => {
+  const idPrefix = useId()
+  const labelId = `${idPrefix}-item-label`
+
+  return (
+    <Chip disabled={disabled} className={classNames.wrapper}>
+      <span ref={labelRef} id={labelId} className={classNames.itemLabel}>
+        {itemLabel}
+      </span>
+
+      {itemDeletable && (
+        <DestroyButton
+          labelId={labelId}
+          suffixTextId={`${idPrefix}-item-destroy-button-suffix`}
+          disabled={disabled}
+          classNames={classNames}
+          functions={functions}
+        />
+      )}
+    </Chip>
+  )
+}
+const ActualMultiSelectedItem = typedMemo(BaseActualMultiSelectedItem)
+
+const DestroyButton = <T,>({
+  labelId,
+  suffixTextId,
+  disabled,
+  functions,
+  classNames,
+}: Pick<LowerMultiSelectedItemProps<T>, 'disabled' | 'functions' | 'classNames'> & {
+  labelId: string
+  suffixTextId: string
+}) => (
+  <UnstyledButton
+    disabled={disabled}
+    tabIndex={-1}
+    className={classNames.deleteButton}
+    aria-labelledby={`${labelId} ${suffixTextId}`}
+    onClick={functions.handleDestroyClick}
+    onKeyDown={functions.handleDestroyKeyDown}
+  >
+    <VisuallyHiddenText id={suffixTextId}>
+      <Localizer id="smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix" defaultText="を削除" />
+    </VisuallyHiddenText>
+    <FaCircleXmarkIcon
+      color={disabled ? 'TEXT_DISABLED' : 'inherit'}
+      className={classNames.deleteButtonIcon}
+    />
+  </UnstyledButton>
+)

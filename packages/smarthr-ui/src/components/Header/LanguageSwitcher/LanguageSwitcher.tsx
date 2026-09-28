@@ -46,7 +46,7 @@ const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayL
   return (currentIndex + 1) % arrayLength
 }
 
-const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }

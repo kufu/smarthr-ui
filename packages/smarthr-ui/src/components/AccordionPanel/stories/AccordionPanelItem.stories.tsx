@@ -1,7 +1,9 @@
-import { AccordionPanel } from '../AccordionPanel'
-import { AccordionPanelContent } from '../AccordionPanelContent'
-import { AccordionPanelItem } from '../AccordionPanelItem'
-import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
+import {
+  AccordionPanel,
+  AccordionPanelContent,
+  AccordionPanelItem,
+  AccordionPanelTrigger,
+} from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

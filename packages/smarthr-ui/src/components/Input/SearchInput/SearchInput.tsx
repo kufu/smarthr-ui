@@ -45,7 +45,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
       <label className={classNames.label} style={labelStyle}>
         <InputWithTooltip
           {...rest}
-          ref={ref}
+          outerRef={ref}
           className={classNames.input}
           prefix={
             <FaMagnifyingGlassIcon

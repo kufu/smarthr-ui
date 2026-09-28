@@ -28,7 +28,7 @@ import { useCallback, useRef } from 'react'
  *
  * @example
  * const callbackRef = useCallbackRefCleanupForReact18(
- *   useCallback((node: HTMLDivElement | null) => {
+ *   useCallback((node: HTMLElement | null) => {
  *     if (!node) return
  *
  *     const observer = new MutationObserver(...)

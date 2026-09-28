@@ -165,6 +165,19 @@ export default [
           message: 'import * as は使用できません。個別にimportしてください。',
         },
       ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'tailwind-variants',
+              importNames: ['VariantProps'],
+              message:
+                'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
+            },
+          ],
+        },
+      ],
     },
   },
   {

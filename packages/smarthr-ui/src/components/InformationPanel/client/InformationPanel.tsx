@@ -9,21 +9,13 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading, type HeadingTagTypes } from '../../Heading'
-import {
-  FaCaretDownIcon,
-  FaCaretUpIcon,
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  WarningIcon,
-} from '../../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel, type PanelElementProps } from '../../Panel'
 
@@ -44,12 +36,24 @@ type BaseProps = PropsWithChildren<{
   active?: boolean
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
-}> &
-  VariantProps<typeof classNameGenerator>
+  /** パネルの種類 */
+  type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
+  /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
+  bold?: boolean
+}>
 
 type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
+
+// HINT: warningのアイコンは自身で色を持っているため、色を指定しない
+const ICON_COLOR_MAPPER = {
+  info: 'TEXT_GREY',
+  success: 'MAIN',
+  warning: undefined,
+  error: 'DANGER',
+  sync: 'MAIN',
+} as const
 
 const classNameGenerator = tv({
   slots: {
@@ -72,7 +76,7 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    },
+    } satisfies Record<NonNullable<BaseProps['type']>, Record<string, never>>,
     bold: {
       true: {
         header: 'shr-py-1',
@@ -198,21 +202,6 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const icon = (() => {
-    switch (type) {
-      case 'info':
-        return <FaCircleInfoIcon color="TEXT_GREY" />
-      case 'success':
-        return <FaCircleCheckIcon color="MAIN" />
-      case 'warning':
-        return <WarningIcon />
-      case 'error':
-        return <FaCircleExclamationIcon color="DANGER" />
-      case 'sync':
-        return <FaRotateIcon color="MAIN" />
-    }
-  })()
-
   return (
     <Heading
       {...rest}
@@ -220,7 +209,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: icon,
+        prefix: <StatusIcon status={type} color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >

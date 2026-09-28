@@ -128,6 +128,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 
     const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
     const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
+    const errorAttr = error || undefined
 
     return (
       <span
@@ -156,7 +157,8 @@ export const Input = forwardRef<HTMLInputElement, Props>(
             max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
           }
           className={classNames.input}
-          aria-invalid={error || undefined}
+          aria-invalid={errorAttr}
+          data-smarthr-ui-input-error={errorAttr}
           data-smarthr-ui-input="true"
           onWheel={type === 'number' ? disableWheel : undefined}
           onFocus={onFocus}

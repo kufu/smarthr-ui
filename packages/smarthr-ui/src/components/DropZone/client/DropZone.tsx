@@ -124,6 +124,8 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
       }
     }, [latest])
 
+    const errorAttr = error || undefined
+
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
@@ -151,7 +153,8 @@ export const DropZone = forwardRef<HTMLInputElement, Props>(
             disabled={disabled}
             multiple={multiple}
             tabIndex={-1}
-            aria-invalid={error || undefined}
+            aria-invalid={errorAttr}
+            data-smarthr-ui-input-error={errorAttr}
             data-smarthr-ui-input="true"
             onChange={functions.handleChange}
           />

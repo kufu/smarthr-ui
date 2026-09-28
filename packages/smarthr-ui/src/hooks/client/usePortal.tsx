@@ -16,7 +16,7 @@ const ParentContext = createContext<ParentContextValue>({
 let portalSeq = 0
 
 export function usePortal({ rootId }: { rootId?: string } = {}) {
-  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null)
   const [currentSeq] = useState(() => ++portalSeq)
   const parent = useContext(ParentContext)
 

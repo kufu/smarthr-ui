@@ -16,13 +16,13 @@ export const InputFile = forwardRef<HTMLInputElement, Props>(
     >(orgPreviewable, previewableObjectConverter)
 
     if (typeof multiple === 'object' && multiple.appendable) {
-      return <InputFileMultiplyAppendable {...rest} ref={ref} previewable={previewable} />
+      return <InputFileMultiplyAppendable {...rest} outerRef={ref} previewable={previewable} />
     }
 
     return (
       <InputFileNative
         {...rest}
-        ref={ref}
+        outerRef={ref}
         previewable={previewable}
         multiple={multiple as boolean | undefined}
       />

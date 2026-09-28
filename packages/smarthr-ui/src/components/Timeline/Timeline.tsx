@@ -16,6 +16,7 @@ const classNameGenerator = tv({
 
 export const Timeline: React.FC<Props> = ({ className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
   return (
     <ol {...rest} className={actualClassName}>
       {children}
