@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 import { useLatest } from '../useLatest'
 
-import { useEnhancedEffect } from './useEnhancedEffect'
+import { useLayoutEffect } from './useLayoutEffect'
 
 type ParentContextValue = {
   seqs: number[]
@@ -54,7 +54,7 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [latest])
 
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     // Next.jsのhydration error回避のため、マウント後にdivを作成してdocument.bodyに追加する
     const root = document.createElement('div')
 
@@ -66,7 +66,7 @@ export function usePortal({ rootId }: { rootId?: string } = {}) {
     }
   }, [])
 
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     if (!portalRoot) return
 
     portalRoot.dataset.portalChildOf = calculatedSeqs.portalChildOf

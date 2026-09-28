@@ -1,5 +1,7 @@
-import { type ReactNode, type RefObject, useCallback, useLayoutEffect, useState } from 'react'
+import { type ReactNode, type RefObject, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
+
+import { useLayoutEffect } from '../../hooks/client/useLayoutEffect'
 
 export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, id?: string) {
   const [portalContainer] = useState<HTMLElement | null>(() =>

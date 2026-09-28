@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
+import { useLayoutEffect } from '../../../hooks/client/useLayoutEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'
@@ -297,7 +297,7 @@ export const useListbox = <T,>({
   )
   const mergedListBoxRef = useMergeRefs(listBoxLayoutEffectRef, functions.baseCallbackRef)
 
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       return setActiveOption(null)

@@ -6,12 +6,12 @@ import {
   type PropsWithChildren,
   type RefObject,
   memo,
-  useLayoutEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffect } from '../../hooks/client/useLayoutEffect'
 import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
