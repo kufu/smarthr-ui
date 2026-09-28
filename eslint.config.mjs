@@ -142,6 +142,14 @@ export default [
       'smarthr/design-system-guideline-bulk-action-row-button': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'smarthr/best-practice-for-unstable-dependencies': [
+        'error',
+        {
+          'additionalUnstableNames': [
+            "/^on[A-Z]/",
+          ],
+        },
+      ],
       'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
       'smarthr/best-practice-for-no-unnecessary-variable': [
         'error',
