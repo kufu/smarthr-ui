@@ -123,9 +123,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       latest.setCurrentStep(step)
 
       // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
-      if (latest.scrollerRef.current) {
-        latest.scrollerRef.current.scroll(0, 0)
-      }
+      latest.scrollerRef.current?.scroll(0, 0)
     }
 
     return {
