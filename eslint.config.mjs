@@ -195,21 +195,9 @@ export default [
               message:
                 'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
             },
-            {
-              name: 'react',
-              importNames: ['useLayoutEffect'],
-              message:
-                'reactのuseLayoutEffectは直接利用せず、SSR安全なsrc/hooks/client/useLayoutEffectを利用してください。',
-            },
           ],
         },
       ],
-    },
-  },
-  {
-    files: ['packages/smarthr-ui/src/hooks/client/useLayoutEffect.ts'],
-    rules: {
-      'no-restricted-imports': 'off',
     },
   },
   {

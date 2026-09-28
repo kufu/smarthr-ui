@@ -1,9 +1,15 @@
-import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
+import {
+  type FC,
+  type ReactNode,
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { useLatest } from '../useLatest'
-
-import { useLayoutEffect } from './useLayoutEffect'
 
 type ParentContextValue = {
   seqs: number[]

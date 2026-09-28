@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react'
-import { useCallback, useState } from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 
-import { useLayoutEffect } from './useLayoutEffect'
 import { useLayoutEffectRef } from './useLayoutEffectRef'
 import { useMergeRefs } from './useMergeRefs'
 

@@ -1,6 +1,4 @@
-import { type DependencyList, useCallback, useRef } from 'react'
-
-import { useLayoutEffect } from './useLayoutEffect'
+import { type DependencyList, useCallback, useLayoutEffect, useRef } from 'react'
 
 type CleanupType = void | (() => void)
 

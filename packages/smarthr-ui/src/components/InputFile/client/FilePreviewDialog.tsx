@@ -1,9 +1,8 @@
 'use client'
 
-import { type FC, memo, useState } from 'react'
+import { type FC, memo, useLayoutEffect, useState } from 'react'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
-import { useLayoutEffect } from '../../../hooks/client/useLayoutEffect'
 import { Localizer } from '../../../intl'
 import { AnchorButton, Button } from '../../Button'
 import { Dialog, ModelessDialog } from '../../Dialog'

@@ -8,6 +8,7 @@ import {
   type RefObject,
   memo,
   useId,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
@@ -15,7 +16,6 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { useLayoutEffect } from '../../../hooks/client/useLayoutEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { usePortal } from '../../../hooks/client/usePortal'

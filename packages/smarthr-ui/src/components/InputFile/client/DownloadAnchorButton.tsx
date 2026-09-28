@@ -1,8 +1,7 @@
 'use client'
 
-import { type FC, useState } from 'react'
+import { type FC, useLayoutEffect, useState } from 'react'
 
-import { useLayoutEffect } from '../../../hooks/client/useLayoutEffect'
 import { Localizer } from '../../../intl'
 import { AnchorButton } from '../../Button'
 import { FaFileArrowDownIcon } from '../../Icon'
