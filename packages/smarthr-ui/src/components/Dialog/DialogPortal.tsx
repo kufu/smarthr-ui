@@ -13,26 +13,18 @@ export const DialogPortal: FC<Props> = ({ parent, children, ...rest }) => {
   const [isMounted, setIsMounted] = useState(false)
   const actualParent = parent || document.body
 
-  return (
-    <>
-      <MountChecker actualParent={actualParent} setIsMounted={setIsMounted} />
-      {isMounted && createPortal(<div {...rest}>{children}</div>, actualParent)}
-    </>
-  )
-}
-
-const MountChecker: FC<{
-  actualParent: HTMLElement
-  setIsMounted: (mounted: boolean) => void
-}> = ({ actualParent, setIsMounted }) => {
   // HINT: parentが指定されている場合、その要素がまだDOMに未接続だと子孫のref attach時点で
   // getBoundingClientRectやfocusが効かない(ModelessDialogの中央寄せずれの原因)。
   // parentは開いている最中に変わりうるため、共有Portalのマウント判定(mounted後は
-  // アンマウントする)とは異なり、このコンポーネント自体は常時レンダーし続け、
-  // 変化のたびに接続状態を再評価する
+  // 不要になるため専用コンポーネントに切り出す)とは異なり、常時有効なeffectとして
+  // 変化のたびに接続状態を再評価する必要があり、切り出す理由がない
   useEnhancedEffect(() => {
     setIsMounted(actualParent.isConnected)
-  }, [actualParent, setIsMounted])
+  }, [actualParent])
 
-  return null
+  if (!isMounted) {
+    return null
+  }
+
+  return createPortal(<div {...rest}>{children}</div>, actualParent)
 }
