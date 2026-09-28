@@ -1,5 +1,3 @@
-'use client'
-
 import { DialogContentInner } from './DialogContentInner'
 import { DialogPortal } from './DialogPortal'
 
