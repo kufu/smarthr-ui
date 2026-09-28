@@ -123,7 +123,7 @@ export const BarChart: React.FC<Props> = ({
           },
         },
       }),
-    [title, chartId, externalOptions, orientation],
+    [title, chartId, externalOptions, orientation, stacked],
   )
 
   return (
