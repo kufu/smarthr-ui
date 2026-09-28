@@ -41,6 +41,7 @@ type BaseProps = {
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
+  // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 

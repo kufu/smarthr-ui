@@ -77,9 +77,7 @@ export const RemoteDialogTrigger: FC<
         const clearEventListener = () => {
           // 既存のイベントリスナーをクリーンアップ
           const element = getClickableElement()
-          if (element) {
-            element.removeEventListener('click', handleClick, CAPTURE_OPTION)
-          }
+          element?.removeEventListener('click', handleClick, CAPTURE_OPTION)
         }
 
         // 初回セットアップ
