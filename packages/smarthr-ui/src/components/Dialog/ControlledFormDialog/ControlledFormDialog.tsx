@@ -12,7 +12,7 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { FormDialogContentInner } from './FormDialogContentInner'
@@ -67,7 +67,6 @@ export const ControlledFormDialog: FC<Props> = ({
   isOpen,
   ...rest
 }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -104,27 +103,29 @@ export const ControlledFormDialog: FC<Props> = ({
     }
   }, [latest])
 
-  return createPortal(
-    <DialogContentInner
-      {...rest}
-      isOpen={isOpen}
-      className={className}
-      ariaLabelledby={heading.id}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
-    >
-      <FormDialogContentInner
-        contentBgColor={contentBgColor}
-        contentPadding={contentPadding}
-        responseStatus={responseStatus}
-        handleClickClose={functions.handleClickClose}
-        handleSubmit={functions.handleSubmit}
-        heading={heading}
-        actionButton={actionButton}
-        closeButton={closeButton}
-        subActionArea={subActionArea}
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DialogContentInner
+        {...rest}
+        isOpen={isOpen}
+        className={className}
+        ariaLabelledby={heading.id}
+        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       >
-        {children}
-      </FormDialogContentInner>
-    </DialogContentInner>,
+        <FormDialogContentInner
+          contentBgColor={contentBgColor}
+          contentPadding={contentPadding}
+          responseStatus={responseStatus}
+          handleClickClose={functions.handleClickClose}
+          handleSubmit={functions.handleSubmit}
+          heading={heading}
+          actionButton={actionButton}
+          closeButton={closeButton}
+          subActionArea={subActionArea}
+        >
+          {children}
+        </FormDialogContentInner>
+      </DialogContentInner>
+    </DialogPortal>
   )
 }

@@ -16,7 +16,7 @@ import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
 import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { StepFormDialogContentInner } from './StepFormDialogContentInner'
@@ -161,15 +161,13 @@ const useStepFormDialogButton = ({
   return actualButton
 }
 
-export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstStep, ...rest }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
-
-  return createPortal(
+export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstStep, ...rest }) => (
+  <DialogPortal id={id} parent={portalParent}>
     <StepFormDialogProvider firstStep={firstStep}>
       <ActualControlledStepFormDialog {...rest} firstStep={firstStep} />
-    </StepFormDialogProvider>,
-  )
-}
+    </StepFormDialogProvider>
+  </DialogPortal>
+)
 
 const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   children,

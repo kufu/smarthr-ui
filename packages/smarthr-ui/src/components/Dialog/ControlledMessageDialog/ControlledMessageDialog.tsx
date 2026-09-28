@@ -4,7 +4,7 @@ import { type ComponentProps, type FC, type MouseEvent, type ReactNode, useMemo 
 
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { MessageDialogContentInner } from './MessageDialogContentInner'
@@ -40,8 +40,6 @@ export const ControlledMessageDialog: FC<Props> = ({
   isOpen,
   ...rest
 }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
-
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -60,23 +58,25 @@ export const ControlledMessageDialog: FC<Props> = ({
     [latest],
   )
 
-  return createPortal(
-    <DialogContentInner
-      {...rest}
-      isOpen={isOpen}
-      className={className}
-      ariaLabelledby={heading.id}
-      onPressEscape={onPressEscape}
-    >
-      <MessageDialogContentInner
-        contentBgColor={contentBgColor}
-        contentPadding={contentPadding}
-        handleClickClose={functions.handleClickClose}
-        heading={heading}
-        closeButton={closeButton}
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DialogContentInner
+        {...rest}
+        isOpen={isOpen}
+        className={className}
+        ariaLabelledby={heading.id}
+        onPressEscape={onPressEscape}
       >
-        {children}
-      </MessageDialogContentInner>
-    </DialogContentInner>,
+        <MessageDialogContentInner
+          contentBgColor={contentBgColor}
+          contentPadding={contentPadding}
+          handleClickClose={functions.handleClickClose}
+          heading={heading}
+          closeButton={closeButton}
+        >
+          {children}
+        </MessageDialogContentInner>
+      </DialogContentInner>
+    </DialogPortal>
   )
 }
