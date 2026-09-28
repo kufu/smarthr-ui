@@ -314,6 +314,7 @@ export const useListbox = <T,>({
       window.removeEventListener('resize', functions.calculateRect)
     }
     // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [isExpanded, options, functions])
 
   return {
@@ -382,6 +383,7 @@ export const ListBox = memo(
     const minLength = useMemo(
       () =>
         (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
+      // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
       [activeOptionId, options],
     )
     const [prevMinLength, setPrevMinLength] = useState(minLength)
@@ -394,6 +396,7 @@ export const ListBox = memo(
       setCurrentItemLength((current) => Math.max(current, minLength))
     }
 
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {

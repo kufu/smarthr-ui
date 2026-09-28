@@ -145,8 +145,21 @@ export default [
       'smarthr/best-practice-for-unstable-dependencies': [
         'error',
         {
+          'additionalTargetHooks': [
+            'useEnhancedEffect',
+            'useLayoutEffectRef',
+          ],
           'additionalUnstableNames': [
-            "/^on[A-Z]/",
+            "icon",
+            "prefix",
+            "suffix",
+            "footer",
+            "subActionArea",
+            "options",
+            "items",
+            'ref',
+            '/Ref$/',
+            '/^on[A-Z]/',
           ],
         },
       ],
