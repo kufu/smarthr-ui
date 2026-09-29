@@ -30,6 +30,10 @@ const classNameGenerator = tv({
       '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-inset-x-0',
       '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-h-0.25',
       '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-bg-main',
+    ],
+    // HINT: DropdownContent(Portal経由)内に実際にレンダリングされるmenu要素へ渡すためのslot。
+    // triggerを起点にした子孫セレクタはPortal先には届かないため、actionListClassName経由で直接適用する
+    actionList: [
       // HINT: DropdownMenuButton内で設定されるclassNameより優先度を上げる必要がある
       [
         '[&&_button[aria-current="page"]]:shr-bg-grey-9',
@@ -41,12 +45,14 @@ const classNameGenerator = tv({
     ],
   },
 })
-const { trigger } = classNameGenerator()
+const { trigger, actionList } = classNameGenerator()
 const TRIGGER_CLASSNAME = trigger()
+const ACTION_LIST_CLASSNAME = actionList()
 
 export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
     className={TRIGGER_CLASSNAME}
+    actionListClassName={ACTION_LIST_CLASSNAME}
     onOpen={onOpen}
     onClose={onClose}
     trigger={
