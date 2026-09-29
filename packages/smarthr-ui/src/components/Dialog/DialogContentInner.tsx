@@ -20,7 +20,7 @@ import { FocusTrap, type FocusTrapRef } from './FocusTrap'
 
 import type { DialogSize } from './types'
 
-export type DialogContentInnerProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
    * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
@@ -61,7 +61,7 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   focusTrapRef?: RefObject<FocusTrapRef>
 }>
-type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 

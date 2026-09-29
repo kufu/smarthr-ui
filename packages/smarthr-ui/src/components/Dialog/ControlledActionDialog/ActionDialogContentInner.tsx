@@ -19,10 +19,6 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type ActionDialogHelpers = {
-  close: () => void
-}
-
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
   text: ReactNode
@@ -39,7 +35,7 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-export type BaseProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
@@ -50,7 +46,7 @@ export type BaseProps = PropsWithChildren<
      * @param e マウスイベント
      * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    handleClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    handleClickAction: (e: MouseEvent<Element>, helpers: { close: () => void }) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -58,7 +54,7 @@ export type BaseProps = PropsWithChildren<
   }
 >
 
-export type ActionDialogContentInnerProps = BaseProps & {
+type Props = BaseProps & {
   handleClickClose: () => void
   responseStatus?: ResponseStatus
 }
@@ -76,7 +72,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
+export const ActionDialogContentInner: FC<Props> = ({
   children,
   heading,
   contentBgColor,
@@ -118,7 +114,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<ActionDialogContentInnerProps, 'handleClickClose' | 'handleClickAction'> & {
+  Pick<Props, 'handleClickClose' | 'handleClickAction'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
@@ -172,7 +168,7 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<{
-  handleClick: ActionDialogContentInnerProps['handleClickClose']
+  handleClick: Props['handleClickClose']
   disabled: boolean
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (
