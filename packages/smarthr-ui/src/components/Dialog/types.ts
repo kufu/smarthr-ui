@@ -3,8 +3,10 @@ import type { RefObject } from 'react'
 
 type CommonProps = Pick<
   DialogContentInnerProps,
-  'width' | 'size' | 'id' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
->
+  'width' | 'size' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
+> & {
+  id?: string
+}
 
 type ControlledProps = Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
 

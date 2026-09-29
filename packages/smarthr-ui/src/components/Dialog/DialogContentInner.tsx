@@ -45,11 +45,6 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   size?: DialogSize
   /**
-   * ダイアログの `id`
-   * TODO 使われてなさそうなので確認
-   */
-  id?: string
-  /**
    * ダイアログを開いた時にフォーカスする対象
    */
   firstFocusTarget?: RefObject<HTMLElement>
@@ -97,7 +92,6 @@ export const DialogContentInner: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,
-  id,
   width,
   size,
   firstFocusTarget,
@@ -162,7 +156,6 @@ export const DialogContentInner: FC<Props> = ({
     <DialogOverlap isOpen={isOpen}>
       <div
         ref={callbackRef}
-        id={id}
         className={classNames.layout}
         style={actualWidth ? { width: actualWidth } : undefined}
       >
