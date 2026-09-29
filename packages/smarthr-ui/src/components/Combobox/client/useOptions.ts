@@ -89,6 +89,7 @@ function useOptions<T>(
       convertMatchableString(innerText(label)).includes(convertedInputtedValue),
     )
     // TODO: itemsの安定化方法を検討中
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
 
   return {

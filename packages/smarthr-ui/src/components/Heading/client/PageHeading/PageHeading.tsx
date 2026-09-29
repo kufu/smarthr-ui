@@ -141,9 +141,7 @@ const AutoPageTitleHeading: FC<
 
         const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 
-        if (pseudoTitle) {
-          pseudoTitle.remove()
-        }
+        pseudoTitle?.remove()
       }
     },
     [latest],

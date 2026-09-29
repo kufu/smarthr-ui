@@ -246,7 +246,12 @@ const ActualFileViewer: FC<
       }
 
       const resizeObserver = new ResizeObserver(() => {
-        setWidth((node.clientWidth ?? 0) - 64)
+        // HINT: clientWidthではなくoffsetWidthを使う。offsetWidthは境界ボックスのサイズで
+        // 縦スクロールバーの出現/消失(clientWidthのみに影響する)の影響を受けないため、
+        // 画像の高さがコンテナ境界付近にある場合のsetWidthの無限往復(ちらつき)を防げる。
+        // 64px差し引くことでスクロールバー分(15px程度)の余白が確保されるため、
+        // 画像とスクロールバーが重なることはない
+        setWidth((node.offsetWidth ?? 0) - 64)
       })
 
       resizeObserver.observe(node)
