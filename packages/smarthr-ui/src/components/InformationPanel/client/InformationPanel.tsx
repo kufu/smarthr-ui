@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -14,17 +15,19 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
-import { Heading, type HeadingTagTypes } from '../../Heading'
+import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel, type PanelElementProps } from '../../Panel'
+
+type HeadingProps = ComponentProps<typeof HeadingProps>
 
 type ObjectHeadingType = {
   text: ReactNode
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  unrecommendedTag?: HeadingTagTypes
+  unrecommendedTag?: HeadingProps['unrecommendedTag']
 }
 type HeadingType = ReactNode | ObjectHeadingType
 type BaseProps = PropsWithChildren<{

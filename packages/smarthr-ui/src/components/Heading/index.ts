@@ -1,1 +1,1 @@
-export { Heading, type HeadingTagTypes, PageHeading } from './client'
+export { Heading, PageHeading } from './client'

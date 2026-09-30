@@ -1,2 +1,2 @@
-export { Heading, type HeadingTagTypes } from './Heading'
+export { Heading } from './Heading'
 export { PageHeading } from './PageHeading'
