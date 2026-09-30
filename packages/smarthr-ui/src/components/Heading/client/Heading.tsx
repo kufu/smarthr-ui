@@ -52,7 +52,7 @@ export type BaseProps = PropsWithChildren<{
   StylingProps
 
 type Props = BaseProps &
-  Omit<ComponentProps<'h2'>, keyof BaseProps | keyof TextProps | 'role' | 'aria-level'>
+  Omit<ComponentProps<'h2'>, keyof BaseProps | 'color' | 'role' | 'aria-level'>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',

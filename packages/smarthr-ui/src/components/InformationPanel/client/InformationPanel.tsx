@@ -20,7 +20,7 @@ import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel, type PanelElementProps } from '../../Panel'
 
-type HeadingProps = ComponentProps<typeof HeadingProps>
+type HeadingProps = ComponentProps<typeof Heading>
 
 type ObjectHeadingType = {
   text: ReactNode

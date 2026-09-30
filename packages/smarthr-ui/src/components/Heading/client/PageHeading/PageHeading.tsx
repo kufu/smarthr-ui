@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type FC,
   type ForwardedRef,
   type PropsWithChildren,
@@ -41,7 +42,7 @@ type BaseProps = PropsWithChildren<{
   pageTitleSuffix?: string
 }>
 type Props = BaseProps &
-  Omit<ComponentProps<'h1'>, keyof BaseProps | keyof TextProps | 'role' | 'aria-level'>
+  Omit<ComponentProps<'h1'>, keyof BaseProps | 'color' | 'role' | 'aria-level'>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -57,17 +58,7 @@ const classNameGenerator = tv({
 
 export const PageHeading = memo(
   forwardRef<HTMLHeadingElement, Props>(
-    (
-      {
-        autoPageTitle = true,
-        pageTitleSuffix = 'SmartHR（スマートHR）',
-        pageTitle,
-        size = 'XL',
-        children,
-        ...rest
-      },
-      ref,
-    ) =>
+    ({ autoPageTitle = true, pageTitleSuffix, pageTitle, size = 'XL', children, ...rest }, ref) =>
       !IS_NEXT_JS && autoPageTitle ? (
         <AutoPageTitleHeading
           {...rest}
@@ -87,12 +78,11 @@ export const PageHeading = memo(
 )
 
 const AutoPageTitleHeading: FC<
-  Omit<Props, 'size' | 'autoPageTitle' | 'pageTitleSuffix' | 'ref'> & {
+  Omit<Props, 'size' | 'autoPageTitle' | 'ref'> & {
     size: TextProps['size']
-    pageTitleSuffix: string
     outerRef?: ForwardedRef<HTMLHeadingElement>
   }
-> = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
+> = ({ pageTitleSuffix = 'SmartHR（スマートHR）', pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
   const titleFrame = useAnimationFrame()
   const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
