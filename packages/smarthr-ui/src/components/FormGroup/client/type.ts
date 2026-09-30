@@ -1,6 +1,6 @@
 import type { PositiveGap } from '../../../types'
 import type { StatusLabel } from '../../StatusLabel'
-import type { Text, TextProps } from '../../Text'
+import type { Text } from '../../Text'
 import type {
   ComponentProps,
   ComponentPropsWithoutRef,
@@ -9,7 +9,8 @@ import type {
   ReactNode,
 } from 'react'
 
-type IconType = ComponentProps<typeof Text>['icon']
+type TextProps = ComponentProps<typeof Text>
+type IconType = TextProps['icon']
 type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
 export type ObjectLabelType = {

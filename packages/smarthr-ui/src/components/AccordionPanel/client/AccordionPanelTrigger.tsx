@@ -21,8 +21,9 @@ import { Cluster } from '../../Layout'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-import type { TextProps } from '../../Text'
+import type { Text } from '../../Text'
 
+type TextProps = ComponentProps<typeof Text>
 type HeadingProps = ComponentProps<typeof Heading>
 
 type BaseProps = PropsWithChildren<{
