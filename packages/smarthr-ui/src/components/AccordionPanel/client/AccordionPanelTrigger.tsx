@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type ComponentPropsWithoutRef,
   type FC,
   type KeyboardEventHandler,
@@ -13,7 +14,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude } from '../../../libs/map'
-import { Heading, type HeadingTagTypes } from '../../Heading'
+import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../../Icon'
 import { Cluster } from '../../Layout'
 
@@ -22,13 +23,15 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 
 import type { TextProps } from '../../Text'
 
+type HeadingProps = ComponentProps<typeof Heading>
+
 type BaseProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
-  unrecommendedHeadingTag?: HeadingTagTypes
+  unrecommendedHeadingTag?: HeadingProps['unrecommendedTag']
 }>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
@@ -118,7 +121,7 @@ const MemoizedHeadingButton = memo<
       }
       iconPosition: 'left' | 'right'
       headingType: Exclude<TextProps['styleType'], 'screenTitle'>
-      unrecommendedHeadingTag?: HeadingTagTypes
+      unrecommendedHeadingTag?: HeadingProps['unrecommendedTag']
     }
   >
 >(
