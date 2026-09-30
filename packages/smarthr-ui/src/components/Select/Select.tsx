@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type ComponentPropsWithoutRef,
   type ForwardedRef,
   type PropsWithChildren,
@@ -10,9 +11,12 @@ import { tv } from 'tailwind-variants'
 import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
-import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
+import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
+type BaseProps<T extends string> = Omit<
+  ComponentProps<ReturnType<typeof ActualSelect<T>>>,
+  'outerRef' | 'children'
+> & {
   /** コンポーネントの幅 */
   width?: number | string
   /** コンポーネントの大きさ */
