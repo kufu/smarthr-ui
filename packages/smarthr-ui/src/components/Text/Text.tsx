@@ -20,7 +20,7 @@ type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: {
-  [key in StyleType]: Pick<TextProps, 'size' | 'leading' | 'weight' | 'color'>
+  [key in StyleType]: Pick<Props, 'size' | 'leading' | 'weight' | 'color'>
 } = {
   screenTitle: {
     size: 'XL',
@@ -67,11 +67,11 @@ const classNameGenerator = tv({
       L: 'shr-text-lg',
       XL: 'shr-text-xl',
       XXL: 'shr-text-2xl',
-    } satisfies Record<NonNullable<TextProps['size']>, string>,
+    } satisfies Record<NonNullable<Props['size']>, string>,
     weight: {
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
-    } satisfies Record<NonNullable<TextProps['weight']>, string>,
+    } satisfies Record<NonNullable<Props['weight']>, string>,
     italic: {
       true: 'shr-italic',
     },
@@ -82,20 +82,20 @@ const classNameGenerator = tv({
       TEXT_DISABLED: 'shr-text-disabled',
       TEXT_LINK: 'shr-text-link',
       inherit: 'shr-text-color-inherit',
-    } satisfies Record<NonNullable<TextProps['color']>, string>,
+    } satisfies Record<NonNullable<Props['color']>, string>,
     leading: {
       NONE: 'shr-leading-none',
       TIGHT: 'shr-leading-tight',
       NORMAL: 'shr-leading-normal',
       LOOSE: 'shr-leading-loose',
-    } satisfies Record<NonNullable<TextProps['leading']>, string>,
+    } satisfies Record<NonNullable<Props['leading']>, string>,
     whiteSpace: {
       normal: 'shr-whitespace-normal',
       nowrap: 'shr-whitespace-nowrap',
       pre: 'shr-whitespace-pre',
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
-    } satisfies Record<NonNullable<TextProps['whiteSpace']>, string>,
+    } satisfies Record<NonNullable<Props['whiteSpace']>, string>,
     maxLines: {
       1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       2: 'shr-line-clamp-[2]',
@@ -103,7 +103,7 @@ const classNameGenerator = tv({
       4: 'shr-line-clamp-[4]',
       5: 'shr-line-clamp-[5]',
       6: 'shr-line-clamp-[6]',
-    } satisfies Record<NonNullable<TextProps['maxLines']>, string>,
+    } satisfies Record<NonNullable<Props['maxLines']>, string>,
   },
 })
 
@@ -163,33 +163,31 @@ type ActualIconType =
     }
 type IconType = ActualIconType | ReactNode
 
-export type TextProps<T extends ElementType = 'span'> = {
-  /** テキストコンポーネントの HTML タグ名。初期値は span */
-  as?: T
-  /** 強調するかどうかの真偽値。指定すると em 要素になる */
-  emphasis?: boolean
-  /** 見た目の種類 */
-  styleType?: StyleType
-  /** 設置するアイコン */
-  icon?: IconType
-
-  size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
-  weight?: 'normal' | 'bold'
-  italic?: boolean
-  color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
-  leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
-  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
-  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
-}
-
 // HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
-type ActualTextProps<T extends ElementType> = PropsWithChildren<TextProps<T> & ComponentProps<T>>
+type Props<T extends ElementType = 'span'> = PropsWithChildren<
+  ComponentProps<T> & {
+    /** テキストコンポーネントの HTML タグ名。初期値は span */
+    as?: T
+    /** 強調するかどうかの真偽値。指定すると em 要素になる */
+    emphasis?: boolean
+    /** 見た目の種類 */
+    styleType?: StyleType
+    /** 設置するアイコン */
+    icon?: IconType
 
-type TextComponent = <T extends ElementType = 'span'>(props: ActualTextProps<T>) => ReturnType<FC>
+    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+    weight?: 'normal' | 'bold'
+    italic?: boolean
+    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+    maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+  }
+>
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 
-const ActualText: TextComponent = forwardRef(
+const ActualText: <T extends ElementType = 'span'>(props: Props<T>) => ReturnType<FC> = forwardRef(
   <T extends ElementType = 'span'>(
     {
       emphasis,
@@ -206,7 +204,7 @@ const ActualText: TextComponent = forwardRef(
       className,
       children,
       ...rest
-    }: ActualTextProps<T>,
+    }: Props<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
     if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
