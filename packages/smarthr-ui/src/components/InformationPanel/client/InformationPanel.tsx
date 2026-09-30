@@ -2,6 +2,7 @@
 
 import {
   type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -18,7 +19,7 @@ import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
-import { Panel, type PanelElementProps } from '../../Panel'
+import { Panel } from '../../Panel'
 
 type HeadingProps = ComponentProps<typeof Heading>
 
@@ -45,7 +46,7 @@ type BaseProps = PropsWithChildren<{
   bold?: boolean
 }>
 
-type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
