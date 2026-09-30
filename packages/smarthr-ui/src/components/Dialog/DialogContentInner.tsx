@@ -16,9 +16,11 @@ import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap, type FocusTrapRef } from './FocusTrap'
+import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
+
+type FocusTrapProps = ComponentProps<typeof FocusTrap>
 
 type BaseProps = PropsWithChildren<{
   /**
@@ -59,7 +61,7 @@ type BaseProps = PropsWithChildren<{
   /**
    * ダイアログトップのフォーカストラップへの ref
    */
-  focusTrapRef?: RefObject<FocusTrapRef>
+  focusTrapRef?: FocusTrapProps['outerRef']
 }>
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
