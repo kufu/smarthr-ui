@@ -11,15 +11,31 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../../SectioningContent'
-import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
+import { STYLE_TYPE_MAP, Text } from '../../Text'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
-type StylingProps =
-  | {
+type TextProps = ComponentProps<typeof Text>
+export type ElementProps = Omit<ComponentProps<'h1'>, 'type' | 'size' | 'role' | 'aria-level'>
+
+type AbstractProps = PropsWithChildren<
+  ElementProps & {
+    /**
+     * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
+     */
+    unrecommendedTag?: HeadingTagTypes
+    /** 視覚的に非表示にするフラグ */
+    visuallyHidden?: boolean
+    /** テキスト左に設置するアイコン */
+    icon?: TextProps['icon']
+  }
+>
+
+export type BaseProps =
+  | (AbstractProps & {
       /** テキストのスタイル */
-      type?: Extract<TextProps['styleType'], 'sectionTitle'>
+      type?: 'sectionTitle'
 
       /**
        * テキストのサイズ
@@ -29,33 +45,16 @@ type StylingProps =
        * @default 'L'
        */
       size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
-    }
-  | {
+    })
+  | (AbstractProps & {
       /** テキストのスタイル
        *
        * screenTitleを使用する場合、PageHeadingコンポーネントを使用してください
        * */
       type: Exclude<TextProps['styleType'], 'screenTitle' | 'sectionTitle'>
       size?: never
-    }
-
-export type BaseProps = PropsWithChildren<{
-  /**
-   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
-   */
-  unrecommendedTag?: HeadingTagTypes
-  /** 視覚的に非表示にするフラグ */
-  visuallyHidden?: boolean
-  /** テキスト左に設置するアイコン */
-  icon?: ComponentProps<typeof Text>['icon']
-}> &
-  StylingProps
-
-export type ElementProps = Omit<
-  ComponentProps<'h1'>,
-  keyof BaseProps | keyof TextProps | 'role' | 'aria-level'
->
-type Props = BaseProps & ElementProps
+    })
+type Props = BaseProps
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
@@ -90,7 +89,7 @@ export const Heading = memo(
         () => classNameGenerator({ visuallyHidden, className }),
         [className, visuallyHidden],
       )
-      const typography = STYLE_TYPE_MAP[type]
+      const typography = STYLE_TYPE_MAP[type as TextProps['styleType']]
 
       // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
       // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）

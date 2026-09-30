@@ -163,27 +163,27 @@ type ActualIconType =
     }
 type IconType = ActualIconType | ReactNode
 
-export type TextProps<T extends ElementType = 'span'> = {
-  /** テキストコンポーネントの HTML タグ名。初期値は span */
-  as?: T
-  /** 強調するかどうかの真偽値。指定すると em 要素になる */
-  emphasis?: boolean
-  /** 見た目の種類 */
-  styleType?: StyleType
-  /** 設置するアイコン */
-  icon?: IconType
-
-  size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
-  weight?: 'normal' | 'bold'
-  italic?: boolean
-  color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
-  leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
-  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
-  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
-}
-
 // HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
-type Props<T extends ElementType = 'span'> = PropsWithChildren<TextProps<T> & ComponentProps<T>>
+type Props<T extends ElementType = 'span'> = PropsWithChildren<
+  {
+    /** テキストコンポーネントの HTML タグ名。初期値は span */
+    as?: T
+    /** 強調するかどうかの真偽値。指定すると em 要素になる */
+    emphasis?: boolean
+    /** 見た目の種類 */
+    styleType?: StyleType
+    /** 設置するアイコン */
+    icon?: IconType
+
+    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+    weight?: 'normal' | 'bold'
+    italic?: boolean
+    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+    maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+  } & ComponentProps<T>
+>
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 
