@@ -7,13 +7,11 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  MessageDialogContentInner,
-  type MessageDialogContentInnerProps,
-} from './MessageDialogContentInner'
+import { MessageDialogContentInner } from './MessageDialogContentInner'
 
 import type { DialogProps } from '../types'
 
+type MessageDialogContentInnerProps = ComponentProps<typeof MessageDialogContentInner>
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 

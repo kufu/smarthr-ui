@@ -8,19 +8,13 @@ import { DialogBody } from '../DialogBody'
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-type DialogBodyProps = ComponentProps<typeof DialogBody>
-type DialogHeadingProps = ComponentProps<typeof DialogHeading>
-
-export type BaseProps = DialogBodyProps & {
+type Props = ComponentProps<typeof DialogBody> & {
   /** ダイアログタイトル */
-  heading: DialogHeadingProps
+  heading: ComponentProps<typeof DialogHeading>
   /** ダイアログの説明 */
   children: ReactNode
   /** 閉じるボタン */
   closeButton?: ReactNode
-}
-
-export type MessageDialogContentInnerProps = BaseProps & {
   handleClickClose: () => void
 }
 
@@ -33,7 +27,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
+export const MessageDialogContentInner: FC<Props> = ({
   heading,
   contentBgColor,
   contentPadding,
@@ -50,14 +44,14 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   </Section>
 )
 
-const FooterCluster = memo<
-  Pick<MessageDialogContentInnerProps, 'handleClickClose' | 'closeButton'>
->(({ handleClickClose, closeButton }) => (
-  <Cluster as="footer" justify="flex-end" className={CLASS_NAMES.actionArea}>
-    <Button className="smarthr-ui-Dialog-closeButton" onClick={handleClickClose}>
-      {closeButton ?? (
-        <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
-      )}
-    </Button>
-  </Cluster>
-))
+const FooterCluster = memo<Pick<Props, 'handleClickClose' | 'closeButton'>>(
+  ({ handleClickClose, closeButton }) => (
+    <Cluster as="footer" justify="flex-end" className={CLASS_NAMES.actionArea}>
+      <Button className="smarthr-ui-Dialog-closeButton" onClick={handleClickClose}>
+        {closeButton ?? (
+          <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
+        )}
+      </Button>
+    </Cluster>
+  ),
+)
