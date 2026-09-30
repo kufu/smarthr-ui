@@ -13,15 +13,13 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
+type DialogBodyProps = ComponentProps<typeof DialogBody>
 type DialogHeadingProps = ComponentProps<typeof DialogHeading>
-export type FormDialogHelpers = {
-  close: () => void
-}
 
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
@@ -39,7 +37,7 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-export type BaseProps = PropsWithChildren<
+type BaseProps = PropsWithChildren<
   DialogBodyProps & {
     /** ダイアログタイトル */
     heading: DialogHeadingProps
@@ -57,7 +55,7 @@ export type BaseProps = PropsWithChildren<
   }
 >
 
-export type FormDialogContentInnerProps = BaseProps & {
+type Props = BaseProps & {
   handleClickClose: () => void
   responseStatus?: ResponseStatus
 }
@@ -83,7 +81,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
+export const FormDialogContentInner: FC<Props> = ({
   children,
   heading,
   contentBgColor,
@@ -127,7 +125,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<FormDialogContentInnerProps, 'handleClickClose'> & {
+  Pick<Props, 'handleClickClose'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
@@ -165,7 +163,7 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<{
-  handleClick: FormDialogContentInnerProps['handleClickClose']
+  handleClick: Props['handleClickClose']
   disabled: boolean
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (

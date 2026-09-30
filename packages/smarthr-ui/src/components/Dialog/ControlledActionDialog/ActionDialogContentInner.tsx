@@ -15,11 +15,12 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
+type DialogBodyProps = ComponentProps<typeof DialogBody>
 type DialogHeadingProps = ComponentProps<typeof DialogHeading>
 
 type ObjectActionButtonType = {
