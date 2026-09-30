@@ -18,9 +18,6 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-type DialogBodyProps = ComponentProps<typeof DialogBody>
-type DialogHeadingProps = ComponentProps<typeof DialogHeading>
-
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
   text: ReactNode
@@ -38,9 +35,9 @@ type ObjectCloseButtonType = {
 }
 
 type BaseProps = PropsWithChildren<
-  DialogBodyProps & {
+  ComponentProps<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: DialogHeadingProps
+    heading: ComponentProps<typeof DialogHeading>
     /** アクションボタン */
     actionButton: ObjectActionButtonType
     /**

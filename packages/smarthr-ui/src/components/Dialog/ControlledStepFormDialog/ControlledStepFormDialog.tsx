@@ -17,16 +17,14 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  type BaseProps as BaseStepFormDialogContentInnerProps,
-  StepFormDialogContentInner,
-  type StepFormDialogContentInnerProps,
-} from './StepFormDialogContentInner'
+import { StepFormDialogContentInner } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import type { StepItem } from './StepFormDialogProvider'
 import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
+
+type StepFormDialogContentInnerProps = ComponentProps<typeof StepFormDialogContentInner>
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -47,7 +45,7 @@ type BaseProps = Omit<
     submitButton: ButtonArgType | ObjectButtonType
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
-    onSubmit: BaseStepFormDialogContentInnerProps['handleSubmit']
+    onSubmit: StepFormDialogContentInnerProps['handleSubmit']
     onClickClose: () => void
     onClickBack?: () => void
   }

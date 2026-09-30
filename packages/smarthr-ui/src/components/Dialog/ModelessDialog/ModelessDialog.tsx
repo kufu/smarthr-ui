@@ -36,7 +36,6 @@ import { useDialogPortal } from '../useDialogPortal'
 
 import type { DialogSize } from '../types'
 
-type DialogBodyProps = ComponentProps<typeof DialogBody>
 type BaseProps = PropsWithChildren<{
   /**
    * ダイアログのタイトルの内容
@@ -97,7 +96,7 @@ type BaseProps = PropsWithChildren<{
   resizable?: boolean
 }>
 type Props = BaseProps &
-  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
   Omit<PanelElementProps, keyof BaseProps>
 
 const classNameGenerator = tv({

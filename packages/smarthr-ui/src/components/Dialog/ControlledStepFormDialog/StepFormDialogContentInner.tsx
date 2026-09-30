@@ -25,9 +25,6 @@ import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
 import type { CommonButtonType } from './type'
 
-type DialogBodyProps = ComponentProps<typeof DialogBody>
-type DialogHeadingProps = ComponentProps<typeof DialogHeading>
-
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
   goto: (nextStep: StepItem) => void
@@ -37,10 +34,10 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-export type BaseProps = PropsWithChildren<
-  DialogBodyProps & {
+type Props = PropsWithChildren<
+  ComponentProps<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: DialogHeadingProps
+    heading: ComponentProps<typeof DialogHeading>
     /** 現在のStepNo */
     activeStep: number
     /** submitボタン */
@@ -55,17 +52,14 @@ export type BaseProps = PropsWithChildren<
     closeButton: CommonButtonType
     /** 戻るボタン */
     backButton: CommonButtonType
+    firstStep: StepItem
+    handleClickClose: () => void
+    responseStatus?: ResponseStatus
+    /** ステップの総数 */
+    stepLength: number
+    handleClickBack?: () => void
   }
 >
-
-export type StepFormDialogContentInnerProps = BaseProps & {
-  firstStep: StepItem
-  handleClickClose: () => void
-  responseStatus?: ResponseStatus
-  /** ステップの総数 */
-  stepLength: number
-  handleClickBack?: () => void
-}
 
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
@@ -83,7 +77,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
+export const StepFormDialogContentInner: FC<Props> = ({
   children,
   heading,
   activeStep,
