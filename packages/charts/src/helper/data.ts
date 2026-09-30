@@ -186,3 +186,6 @@ export const getProgressDoughnutColors = (
     track: OTHER_CHART_COLOR,
   }
 }
+
+// チャートの表示形式を指定する型。'chart' はグラフ表示、'table' は表形式表示。
+export type ChartViewType = 'chart' | 'table'

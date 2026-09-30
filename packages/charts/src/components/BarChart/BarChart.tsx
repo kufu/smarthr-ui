@@ -1,14 +1,24 @@
 'use client'
 
-import { useId, useMemo, useRef } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
-import { VisuallyHiddenText } from 'smarthr-ui'
+
+import type { ReactNode } from 'react'
+import {
+  VisuallyHiddenText,
+  Text,
+  SegmentedControl,
+  FaTableIcon,
+  FaChartColumnIcon,
+} from 'smarthr-ui'
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
 
 import type { SingleToneLevel } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
+import { ChartViewType } from '../../helper/data'
+import { TableView } from '../internal/TableView/TableView'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -45,7 +55,14 @@ type Props = {
   data: ChartData<'bar'>
   title?: string
   options?: Partial<ChartOptions<'bar'>>
+  onChangeView?: (value: ChartViewType) => void
+  defaultView?: ChartViewType
 } & BarChartColorProps
+
+type TableData = {
+  headers: ReactNode[]
+  dataRows: ReactNode[][]
+}
 
 export const BarChart: React.FC<Props> = ({
   data,
@@ -53,7 +70,10 @@ export const BarChart: React.FC<Props> = ({
   options: externalOptions,
   disablePatterns,
   singleTone,
+  onChangeView,
+  defaultView = 'chart',
 }) => {
+  const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
@@ -93,33 +113,60 @@ export const BarChart: React.FC<Props> = ({
         ...externalOptions,
         plugins: {
           ...externalOptions?.plugins,
-          title: title
-            ? {
-                display: true,
-                text: title,
-              }
-            : {
-                display: false,
-              },
+          title: { display: false },
           keyboardNavigation: {
             liveRegionId: chartId,
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [chartId, externalOptions],
   )
+
+  const handleViewChange = (value: ChartViewType) => {
+    setView(value)
+    if (onChangeView) {
+      onChangeView(value)
+    }
+  }
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      <Bar
-        ref={chartRef}
-        role="application"
-        data={enhancedData}
-        tabIndex={0}
-        aria-label={ariaLabel}
-        options={chartOptions}
-      />
+      <div className="shr-grid shr-grid-cols-[1fr_auto_1fr]">
+        <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+          {title}
+        </Text>
+        <SegmentedControl
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
+          size="s"
+          onClickOption={(value) => handleViewChange(value as ChartViewType)}
+          value={view}
+          options={[
+            {
+              value: 'chart',
+              content: <FaChartColumnIcon />,
+              ariaLabel: 'グラフ',
+            },
+            {
+              value: 'table',
+              content: <FaTableIcon />,
+              ariaLabel: 'テーブル',
+            },
+          ]}
+        />
+      </div>
+      {view === 'chart' ? (
+        <Bar
+          ref={chartRef}
+          role="application"
+          data={enhancedData}
+          tabIndex={0}
+          aria-label={ariaLabel}
+          options={chartOptions}
+        />
+      ) : (
+        <TableView data={enhancedData} options={chartOptions} />
+      )}
     </div>
   )
 }
