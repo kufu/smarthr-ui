@@ -41,8 +41,14 @@ type BaseProps = PropsWithChildren<{
   /** title要素のsuffix */
   pageTitleSuffix?: string
 }>
+
+type StyleTypeMapProps = typeof STYLE_TYPE_MAP
+
 type Props = BaseProps &
-  Omit<ComponentProps<'h1'>, keyof BaseProps | 'color' | 'role' | 'aria-level'>
+  Omit<
+    ComponentProps<'h1'>,
+    keyof BaseProps | keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level'
+  >
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
