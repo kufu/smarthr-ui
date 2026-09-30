@@ -17,17 +17,26 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  type BaseProps as BaseStepFormDialogContentInnerProps,
-  StepFormDialogContentInner,
-  type StepFormDialogContentInnerProps,
-} from './StepFormDialogContentInner'
+import { StepFormDialogContentInner } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
-import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
-import type { StepItem } from './StepFormDialogProvider'
-import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
+import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
+
+type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
+
+type VariableFunctionType<T> = (currentStep: StepItem) => T
+type ObjectButtonType = {
+  text?: ButtonArgType
+  /** ボタンを非表示にするかどうか */
+  hidden?: boolean | VariableFunctionType<boolean>
+  /** ボタンを無効にするかどうか */
+  disabled?: boolean | VariableFunctionType<boolean>
+  /** ボタンのスタイル */
+  theme?: ButtonThemeType | VariableFunctionType<ButtonThemeType>
+}
+
+type StepFormDialogContentInnerProps = ComponentProps<typeof StepFormDialogContentInner>
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -48,7 +57,7 @@ type BaseProps = Omit<
     submitButton: ButtonArgType | ObjectButtonType
     closeButton?: ButtonArgType | ObjectButtonType
     backButton?: ButtonArgType | ObjectButtonType
-    onSubmit: BaseStepFormDialogContentInnerProps['handleSubmit']
+    onSubmit: StepFormDialogContentInnerProps['handleSubmit']
     onClickClose: () => void
     onClickBack?: () => void
   }
@@ -197,7 +206,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     },
   })
 
-  const focusTrapRef = useRef<FocusTrapRef>(null)
+  const focusTrapRef = useRef<{ focus: () => void } | null>(null)
 
   const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 

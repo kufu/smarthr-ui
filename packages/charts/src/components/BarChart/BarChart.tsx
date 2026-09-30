@@ -78,15 +78,18 @@ export const BarChart: React.FC<Props> = ({
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
+  const hasSingleTone = !!singleTone
+  const singleToneFrom = singleTone?.from
+  const singleToneTo = singleTone?.to
   const chartColors = useMemo(
     () =>
       getChartColors(data.datasets.length, {
         disablePatterns,
-        singleTone: Boolean(singleTone),
-        toneFrom: singleTone?.from,
-        toneTo: singleTone?.to,
+        singleTone: hasSingleTone,
+        toneFrom: singleToneFrom,
+        toneTo: singleToneTo,
       }),
-    [data.datasets.length, disablePatterns, singleTone?.from, singleTone?.to],
+    [data.datasets.length, disablePatterns, hasSingleTone, singleToneFrom, singleToneTo],
   )
 
   const ariaLabel = useMemo(() => {
@@ -155,6 +158,7 @@ export const BarChart: React.FC<Props> = ({
           ]}
         />
       </div>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       {view === 'chart' ? (
         <Bar
           ref={chartRef}

@@ -10,9 +10,7 @@ import { tv } from 'tailwind-variants'
 import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
-import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
-
-import type { ActualSelectProps } from './client'
+import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
 
 type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
   /** コンポーネントの幅 */

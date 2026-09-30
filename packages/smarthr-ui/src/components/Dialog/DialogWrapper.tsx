@@ -15,7 +15,7 @@ export const DialogContext = createContext<DialogContextType>({
   active: false,
 })
 
-export const DialogWrapper: FC<PropsWithChildren> = (props) => {
+export const DialogWrapper: FC<PropsWithChildren> = ({ children }) => {
   const [active, setActive] = useState(false)
 
   const functions = useMemo(
@@ -28,11 +28,12 @@ export const DialogWrapper: FC<PropsWithChildren> = (props) => {
 
   return (
     <DialogContext.Provider
-      {...props}
       value={{
         ...functions,
         active,
       }}
-    />
+    >
+      {children}
+    </DialogContext.Provider>
   )
 }

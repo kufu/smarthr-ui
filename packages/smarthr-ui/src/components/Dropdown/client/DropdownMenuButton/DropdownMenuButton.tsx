@@ -7,7 +7,6 @@ import {
   type FC,
   type ReactNode,
   memo,
-  useCallback,
   useContext,
   useMemo,
 } from 'react'
@@ -119,10 +118,73 @@ const classNameGenerator = tv({
         '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-bg-transparent [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset]',
       ],
     ],
+    actionListItemButton: [
+      // HINT: 実際にレンダリングされた要素のclassに対して追加されるため、優先度を上げる必要がある
+      '[&&]:shr-w-full [&&]:shr-justify-start [&&]:shr-rounded-none [&&]:shr-border-none [&&]:shr-py-0.5 [&&]:shr-font-normal',
+      '[&&]:focus-visible:shr-focus-indicator',
+    ],
   },
 })
 
-const { triggerWrapper, triggerButton, actionList } = classNameGenerator()
+const { triggerWrapper, triggerButton, actionList, actionListItemButton } = classNameGenerator()
+
+const menuCallbackRef = (node: HTMLElement | null) => {
+  if (!node) {
+    return
+  }
+
+  const setupButtons = () => {
+    node.querySelectorAll<HTMLElement>('button,a').forEach((button) => {
+      button.setAttribute('role', 'menuitem')
+      button.setAttribute(
+        'class',
+        actionListItemButton({ className: button.getAttribute('class') }),
+      )
+    })
+  }
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!document.activeElement) {
+      return
+    }
+
+    let direction: -1 | 0 | 1 = 0
+
+    // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      direction = e.shiftKey ? -1 : 1
+    } else if (KEY_UP_REGEX.test(e.key)) {
+      // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
+      e.preventDefault()
+      direction = -1
+    } else if (KEY_DOWN_REGEX.test(e.key)) {
+      e.preventDefault()
+      direction = 1
+    }
+
+    if (direction !== 0) {
+      moveFocus(node, direction)
+    }
+  }
+
+  setupButtons()
+
+  const observer = new MutationObserver(setupButtons)
+  observer.observe(node, {
+    childList: true,
+    subtree: true,
+    // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+    attributes: true,
+    attributeFilter: ['disabled', 'aria-disabled'],
+  })
+
+  document.addEventListener('keydown', handleKeyDown)
+
+  return () => {
+    observer.disconnect()
+    document.removeEventListener('keydown', handleKeyDown)
+  }
+}
 
 export const DropdownMenuButton: FC<Props> = ({
   trigger,
@@ -150,44 +212,7 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
-      }
-
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (!document.activeElement) {
-          return
-        }
-
-        let direction: -1 | 0 | 1 = 0
-
-        // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
-        if (e.key === 'Tab') {
-          e.preventDefault()
-          direction = e.shiftKey ? -1 : 1
-        } else if (KEY_UP_REGEX.test(e.key)) {
-          // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
-          e.preventDefault()
-          direction = -1
-        } else if (KEY_DOWN_REGEX.test(e.key)) {
-          e.preventDefault()
-          direction = 1
-        }
-
-        if (direction !== 0) {
-          moveFocus(node, direction)
-        }
-      }
-
-      document.addEventListener('keydown', handleKeyDown)
-
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown)
-      }
-    }, []),
-  )
+  const callbackRef = useCallbackRefCleanupForReact18(menuCallbackRef)
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>

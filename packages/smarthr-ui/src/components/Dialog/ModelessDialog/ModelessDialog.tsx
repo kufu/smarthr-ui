@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -9,7 +10,6 @@ import {
   type RefObject,
   type SetStateAction,
   memo,
-  useCallback,
   useId,
   useMemo,
   useRef,
@@ -20,6 +20,7 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
@@ -29,7 +30,7 @@ import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Panel, type PanelElementProps } from '../../Panel'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
@@ -95,7 +96,7 @@ type BaseProps = PropsWithChildren<{
   resizable?: boolean
 }>
 type Props = BaseProps &
-  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
   Omit<PanelElementProps, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -162,14 +163,12 @@ export const ModelessDialog: FC<Props> = ({
   onClickClose,
   ...rest
 }) => {
-  const baseId = useId()
-  const labelId = `${baseId}-label`
+  const labelId = useId()
   const lastFocusElementRef = useRef<HTMLElement | null>(null)
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
   const { createPortal } = useDialogPortal(portalParent)
-  const { localize } = useIntl()
 
   const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
@@ -182,10 +181,10 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [className, size, resizable])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
-  const [liveRegionText, setLiveRegionText] = useState<string>('')
+  const [liveRegionText, setLiveRegionText] = useState<ReactNode>('')
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -207,7 +206,6 @@ export const ModelessDialog: FC<Props> = ({
     bottom,
     defaultPosition,
     centering,
-    localize,
     liveRegionFrame,
   })
 
@@ -235,16 +233,14 @@ export const ModelessDialog: FC<Props> = ({
           wrapperPosition.left !== oldPosition.left
         ) {
           setLiveRegionText(
-            latest.localize(
-              {
-                id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
-                defaultText: '上から{top}px、左から{left}px',
-              },
-              {
+            <Localizer
+              id="smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText"
+              defaultText="上から{top}px、左から{left}px"
+              values={{
                 top: Math.trunc(wrapperPosition.top).toString(),
                 left: Math.trunc(wrapperPosition.left).toString(),
-              },
-            ),
+              }}
+            />,
           )
         }
       })
@@ -311,7 +307,9 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  const callbackRef = useCallback(
+  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+
+  const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
         const oldDefaultPosition = latest.defaultPosition
@@ -389,8 +387,6 @@ export const ModelessDialog: FC<Props> = ({
 
       document.addEventListener('focus', focusHandler, true)
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         functions.cleanupLiveRegion()
         document.removeEventListener('focus', focusHandler, true)
@@ -399,13 +395,10 @@ export const ModelessDialog: FC<Props> = ({
     [isOpen, functions, latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
-
-  // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際
-  // 常に表示される要素ならなんでもいいので分けている
-  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+  // HINT: escapeCallbackRefはnodeを参照せずEscapeキーの監視を行うだけなので、
+  // どの要素にアタッチしても良い。Dialogが表示されている間常にマウントされている
+  // wrapperRefに混ぜ込んでいる
+  const mergedRef = useMergeRefs(wrapperRef, escapeCallbackRef, layoutEffectRef)
 
   return createPortal(
     <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
@@ -438,13 +431,8 @@ export const ModelessDialog: FC<Props> = ({
           }}
           aria-labelledby={labelId}
         >
-          {/* HINT: Dialogが表示される場合、常に表示される要素にescapeCallbackRefを設定する。表示条件が入るなどした場合要調整 */}
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div
-            ref={escapeCallbackRef}
-            tabIndex={-1}
-            className="smarthr-ui-ModelessDialog-firstFocusTarget"
-          />
+          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
           <div className={classNames.header}>
             <Handler
               className={classNames.dialogHandler}
@@ -504,10 +492,10 @@ const Handler = memo<{
         <FaGripIcon />
       </button>
       <div id="handler-description" className="shr-hidden">
-        {localize({
-          id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
-          defaultText: '矢印キーを押して上下左右に移動できます',
-        })}
+        <Localizer
+          id="smarthr-ui/ModelessDialog/dialogHandlerDescription"
+          defaultText="矢印キーを押して上下左右に移動できます"
+        />
       </div>
     </>
   )

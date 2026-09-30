@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, type Ref, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
@@ -6,14 +6,13 @@ import { Scroller } from '../Scroller'
 
 import type { Gap } from '../../types'
 
-export type Props = PropsWithChildren<
-  {
-    /** コンテンツ部分の背景色 */
-    contentBgColor?: keyof typeof backgroundColor
-    contentPadding?: Gap | { block?: Gap; inline?: Gap }
-    className?: string | undefined
-  } & Pick<ComponentProps<'div'>, 'ref'>
->
+type Props = PropsWithChildren<{
+  ref?: Ref<HTMLDivElement>
+  /** コンテンツ部分の背景色 */
+  contentBgColor?: keyof typeof backgroundColor
+  contentPadding?: Gap | { block?: Gap; inline?: Gap }
+  className?: string | undefined
+}>
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-Dialog-body', 'shr-flex-auto'],

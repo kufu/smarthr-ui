@@ -6,7 +6,6 @@ import {
   type PropsWithChildren,
   useCallback,
   useMemo,
-  useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -34,9 +33,6 @@ const classNameGenerator = tv({
 })
 
 export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }) => {
-  // TODO: stateではなくdata属性などを直接変更することで再レンダリングを引き起こさない形にしたい
-  const [showShadow, setShowShadow] = useState(false)
-
   const frame = useAnimationFrame()
 
   const callbackRef = useCallbackRefCleanupForReact18(
@@ -44,6 +40,11 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
       (node: HTMLElement | null) => {
         if (!node) {
           return
+        }
+
+        const wrapperNode = node.querySelector<HTMLElement>('.smarthr-ui-TableReel')
+        const setShowShadow = (visible: boolean) => {
+          wrapperNode?.setAttribute('data-smarthr-ui-shadow', visible.toString())
         }
 
         const handleScroll = () => {
@@ -142,10 +143,10 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
     const { wrapper, inner } = classNameGenerator()
 
     return {
-      wrapper: reelShadowClassNameGenerator({ showShadow, className: wrapper({ className }) }),
+      wrapper: reelShadowClassNameGenerator({ className: wrapper({ className }) }),
       inner: inner(),
     }
-  }, [showShadow, className])
+  }, [className])
 
   return (
     <ScrollerSwitcher forwardedRef={callbackRef} fixedHead={fixedHead}>

@@ -97,7 +97,7 @@ const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
         return base
       }
 
-      return `${base} ${reelShadowClassNameGenerator({ showShadow: false, direction: fixed })}`
+      return `${base} ${reelShadowClassNameGenerator({ direction: fixed })}`
     }, [align, fixed, vAlign, className])
 
     return (

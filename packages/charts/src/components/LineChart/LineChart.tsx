@@ -116,6 +116,7 @@ export const LineChart: React.FC<Props> = ({
           ]}
         />
       </div>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       {view === 'chart' ? (
         <Line
           ref={chartRef}
