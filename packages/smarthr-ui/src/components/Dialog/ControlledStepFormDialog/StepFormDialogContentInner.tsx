@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type FC,
   type FormEvent,
   type PropsWithChildren,
@@ -17,12 +18,14 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
+import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
 import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
 
 import type { CommonButtonType } from './type'
+
+type DialogHeadingProps = ComponentProps<typeof DialogHeading>
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */

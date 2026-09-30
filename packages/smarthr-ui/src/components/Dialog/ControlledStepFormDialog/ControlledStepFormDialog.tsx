@@ -24,12 +24,10 @@ import {
 } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
-import type { FocusTrap } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import type { StepItem } from './StepFormDialogProvider'
 import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
 
-type FocusTrapProps = ComponentProps<typeof FocusTrap>
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
@@ -198,7 +196,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     },
   })
 
-  const focusTrapRef = useRef<FocusTrapProps['outerRef']['current']>(null)
+  const focusTrapRef = useRef<{ focus: () => void } | null>(null)
 
   const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 

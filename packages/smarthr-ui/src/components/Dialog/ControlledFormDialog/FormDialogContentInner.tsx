@@ -1,4 +1,11 @@
-import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type FormEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -8,9 +15,10 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
+import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
+type DialogHeadingProps = ComponentProps<typeof DialogHeading>
 export type FormDialogHelpers = {
   close: () => void
 }

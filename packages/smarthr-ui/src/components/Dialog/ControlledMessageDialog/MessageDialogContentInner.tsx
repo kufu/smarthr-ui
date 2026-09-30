@@ -1,12 +1,14 @@
-import { type FC, type ReactNode, memo } from 'react'
+import { type ComponentProps, type FC, type ReactNode, memo } from 'react'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
-import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
+import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
+
+type DialogHeadingProps = ComponentProps<typeof DialogHeading>
 
 export type BaseProps = DialogBodyProps & {
   /** ダイアログタイトル */
