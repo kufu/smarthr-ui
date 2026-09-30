@@ -30,8 +30,7 @@ type BaseProps = PropsWithChildren<{
   overflow?: Overflow | { x: Overflow; y: Overflow }
   as?: string | ComponentType<any>
 }>
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
-type Props = BaseProps & ElementProps
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const panelClassNameGenerator = tv({
   // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
