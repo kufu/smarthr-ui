@@ -21,8 +21,13 @@ import { StepFormDialogContentInner } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
-import type { StepItem } from './StepFormDialogProvider'
-import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
+import type {
+  ButtonArgType,
+  ButtonThemeType,
+  CommonButtonType,
+  ObjectButtonType,
+  StepItem,
+} from './type'
 
 type StepFormDialogContentInnerProps = ComponentProps<typeof StepFormDialogContentInner>
 

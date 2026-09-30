@@ -1,5 +1,11 @@
-import type { StepItem } from './StepFormDialogProvider'
 import type { ReactNode } from 'react'
+
+export type StepItem = {
+  /** StepのID */
+  id: string
+  /** 何ステップ目か */
+  stepNumber: number
+}
 
 export type ButtonThemeType = 'primary' | 'secondary' | 'danger'
 type VariableFunctionType<T> = (currentStep: StepItem) => T

@@ -21,9 +21,9 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
+import { StepFormDialogContext } from './StepFormDialogProvider'
 
-import type { CommonButtonType } from './type'
+import type { CommonButtonType, StepItem } from './type'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
