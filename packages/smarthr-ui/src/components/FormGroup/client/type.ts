@@ -9,8 +9,8 @@ import type {
   ReactNode,
 } from 'react'
 
-export type IconType = ComponentProps<typeof Text>['icon']
-export type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
+type IconType = ComponentProps<typeof Text>['icon']
+type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
 export type ObjectLabelType = {
   text: ReactNode

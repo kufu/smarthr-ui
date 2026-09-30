@@ -40,7 +40,7 @@ type StylingProps =
       size?: never
     }
 
-export type BaseProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
