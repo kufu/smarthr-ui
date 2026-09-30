@@ -11,9 +11,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../../SectioningContent'
-import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
+import { STYLE_TYPE_MAP, Text } from '../../Text'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
+type TextProps = ComponentProps<typeof Text>
 type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 type StylingProps =
@@ -92,7 +93,7 @@ export const Heading = memo(
         () => classNameGenerator({ visuallyHidden, className }),
         [className, visuallyHidden],
       )
-      const typography = STYLE_TYPE_MAP[type]
+      const typography = STYLE_TYPE_MAP[type as keyof StyleTypeMapProps]
 
       // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
       // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
