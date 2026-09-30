@@ -36,7 +36,7 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-type BaseProps = PropsWithChildren<
+type Props = PropsWithChildren<
   ComponentProps<typeof DialogBody> & {
     /** ダイアログタイトル */
     heading: ComponentProps<typeof DialogHeading>
@@ -52,13 +52,10 @@ type BaseProps = PropsWithChildren<
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
+    handleClickClose: () => void
+    responseStatus?: ResponseStatus
   }
 >
-
-type Props = BaseProps & {
-  handleClickClose: () => void
-  responseStatus?: ResponseStatus
-}
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
