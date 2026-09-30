@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -29,7 +30,7 @@ import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Panel, type PanelElementProps } from '../../Panel'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
@@ -95,7 +96,7 @@ type BaseProps = PropsWithChildren<{
   resizable?: boolean
 }>
 type Props = BaseProps &
-  Omit<DialogBodyProps, keyof BaseProps> &
+  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
   Omit<PanelElementProps, keyof BaseProps>
 
 const classNameGenerator = tv({
