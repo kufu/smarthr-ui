@@ -21,13 +21,20 @@ import { StepFormDialogContentInner } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
-import type {
-  ButtonArgType,
-  ButtonThemeType,
-  CommonButtonType,
-  ObjectButtonType,
-  StepItem,
-} from './type'
+import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
+
+type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
+
+type VariableFunctionType<T> = (currentStep: StepItem) => T
+type ObjectButtonType = {
+  text?: ButtonArgType
+  /** ボタンを非表示にするかどうか */
+  hidden?: boolean | VariableFunctionType<boolean>
+  /** ボタンを無効にするかどうか */
+  disabled?: boolean | VariableFunctionType<boolean>
+  /** ボタンのスタイル */
+  theme?: ButtonThemeType | VariableFunctionType<ButtonThemeType>
+}
 
 type StepFormDialogContentInnerProps = ComponentProps<typeof StepFormDialogContentInner>
 
