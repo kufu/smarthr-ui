@@ -4,7 +4,6 @@ import {
   type FC,
   type ForwardedRef,
   type PropsWithChildren,
-  type ReactNode,
   type Ref,
   forwardRef,
   memo,
@@ -21,9 +20,7 @@ import { IS_NEXT_JS } from '../../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text, type TextProps } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
-import type { ElementProps } from '../Heading'
-
-export type BaseProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /**
    * テキストのサイズ
    *
@@ -43,7 +40,8 @@ export type BaseProps = PropsWithChildren<{
   /** title要素のsuffix */
   pageTitleSuffix?: string
 }>
-type Props = BaseProps & Omit<ElementProps, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentProps<'h1'>, keyof BaseProps | keyof TextProps | 'role' | 'aria-level'>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -158,13 +156,13 @@ const AutoPageTitleHeading: FC<
   )
 }
 
-type ActualHeadingProps = {
-  visuallyHidden?: boolean
-  size: TextProps['size']
-  className?: string
-  children: ReactNode
-  headingRef?: Ref<HTMLHeadingElement>
-} & Omit<ElementProps, 'size' | 'className' | 'visuallyHidden' | 'children' | 'ref'>
+type ActualHeadingProps = PropsWithChildren<
+  ComponentProps<'h1'> & {
+    visuallyHidden?: boolean
+    size: TextProps['size']
+    headingRef?: Ref<HTMLHeadingElement>
+  }
+>
 
 const ActualHeading: FC<ActualHeadingProps> = ({
   visuallyHidden,
