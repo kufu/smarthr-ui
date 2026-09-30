@@ -21,7 +21,7 @@ import { VisuallyHiddenText } from '../../../VisuallyHiddenText'
 
 import type { ComboboxItem } from '../types'
 
-export type Props<T> = {
+type Props<T> = {
   item: ComboboxItem<T> & { deletable?: boolean }
   disabled: boolean
   handleDelete: (item: ComboboxItem<T>) => void
