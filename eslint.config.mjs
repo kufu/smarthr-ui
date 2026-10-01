@@ -121,7 +121,7 @@ export default [
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: '(useLayoutEffectRef|useEnhancedEffect)',
+          additionalHooks: 'useLayoutEffectRef',
         },
       ],
       'smarthr/a11y-anchor-has-href-attribute': [
@@ -146,7 +146,6 @@ export default [
         'error',
         {
           'additionalTargetHooks': [
-            'useEnhancedEffect',
             'useLayoutEffectRef',
           ],
           'additionalUnstableNames': [

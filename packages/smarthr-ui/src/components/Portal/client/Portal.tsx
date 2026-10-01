@@ -7,12 +7,11 @@ import {
   type Ref,
   createContext,
   useContext,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
-
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 
 type ParentContextValue = {
   seqs: number[]
@@ -66,7 +65,7 @@ export const Portal: FC<PortalProps> = ({ as: Component = 'div', outerRef, child
 }
 
 const MountChecker: FC<{ setMounted: (mounted: boolean) => void }> = ({ setMounted }) => {
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     // Next.jsのhydration error回避のため、マウント後にのみportalを描画する
     setMounted(true)
   }, [setMounted])

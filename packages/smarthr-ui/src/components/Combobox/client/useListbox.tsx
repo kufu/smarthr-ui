@@ -8,13 +8,13 @@ import {
   type RefObject,
   memo,
   useId,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
@@ -296,7 +296,7 @@ export const useListbox = <T,>({
   )
   const mergedListBoxRef = useMergeRefs(listBoxLayoutEffectRef, functions.baseCallbackRef)
 
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       return setActiveOption(null)
