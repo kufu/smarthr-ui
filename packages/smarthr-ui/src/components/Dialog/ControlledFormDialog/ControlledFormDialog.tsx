@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type FC, type FormEvent, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type FormEvent,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
@@ -33,7 +40,7 @@ type BaseProps = Omit<
     /**
      * 閉じるボタンをクリックした時に発火するコールバック関数
      */
-    onClickClose: () => void
+    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
@@ -77,9 +84,9 @@ export const ControlledFormDialog: FC<Props> = ({
   const latest = useLatest({ onClickClose, onSubmit, isOpen })
 
   const functions = useMemo(() => {
-    const handleClickClose = () => {
+    const handleClickClose = (e?: MouseEvent<HTMLButtonElement>) => {
       if (latest.isOpen) {
-        latest.onClickClose()
+        latest.onClickClose(e)
       }
     }
 

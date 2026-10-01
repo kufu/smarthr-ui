@@ -211,8 +211,6 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  const callbackRef = menuCallbackRef
-
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
@@ -224,7 +222,7 @@ export const DropdownMenuButton: FC<Props> = ({
         {triggerChildren}
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
-        <menu ref={callbackRef} role="menu" className={classNames.actionList}>
+        <menu ref={menuCallbackRef} role="menu" className={classNames.actionList}>
           <ButtonList>{children}</ButtonList>
         </menu>
       </DropdownContent>
