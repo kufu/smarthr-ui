@@ -1,16 +1,14 @@
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
-  type ForwardedRef,
   type PropsWithChildren,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SeparatePositiveGap } from '../../../types'
+import type { ElementRefProps, PositiveGap, SeparatePositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type JustifyType =
@@ -32,7 +30,8 @@ type Props<T extends ElementType> = PropsWithChildren<{
   align?: AlignType
   justify?: JustifyType
 }> &
-  ComponentPropsWithoutRef<T>
+  ComponentPropsWithoutRef<T> &
+  ElementRefProps<T>
 
 export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -114,10 +113,16 @@ export const clusterClassNameGenerator = tv({
   },
 })
 
-const ActualCluster = <T extends ElementType = 'div'>(
-  { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLElement>,
-) => {
+export const Cluster = <T extends ElementType = 'div'>({
+  as,
+  gap = 0.5,
+  inline = false,
+  align,
+  justify,
+  className,
+  ref,
+  ...rest
+}: Props<T>) => {
   const actualClassName = useMemo(() => {
     const gaps =
       gap instanceof Object
@@ -139,10 +144,7 @@ const ActualCluster = <T extends ElementType = 'div'>(
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
-  // ポリモーフィックコンポーネント: asプロパティで要素型を動的に変更可能なため、
-  // refの型を静的に決定できません。HTMLElementを基底型として使用し、
-  // 実際の要素型との整合性はas anyで型アサーションします。
-  const body = <Component {...rest} ref={ref as any} className={actualClassName} />
+  const body = <Component {...rest} ref={ref} className={actualClassName} />
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>
@@ -150,5 +152,3 @@ const ActualCluster = <T extends ElementType = 'div'>(
 
   return body
 }
-
-export const Cluster = genericsForwardRef(ActualCluster)
