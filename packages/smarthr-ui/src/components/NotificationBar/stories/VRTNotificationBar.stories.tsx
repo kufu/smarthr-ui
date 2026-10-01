@@ -8,6 +8,9 @@ import {
 } from './NotificationBar.stories'
 
 import type { StoryObj } from '@storybook/react-vite'
+import type { ComponentProps } from 'react'
+
+type Props = ComponentProps<typeof NotificationBar>
 
 /* ペアワイズ法による網羅
 paneled  bold   type     children   subActionArea  layer      onClose  */
@@ -52,12 +55,12 @@ false    true   info     String     undefined      undefined  yes
 
     return {
       paneled: paneled === 'true',
-      bold,
-      type,
+      bold: bold === 'true',
+      type: type as Props['type'],
       children: children === 'String' ? sampleChildrens.String : sampleChildrens.ReactNode,
       subActionArea:
         subActionArea === 'ReactNode' ? sampleSubActionAreas.ReactNode : sampleSubActionAreas.なし,
-      layer: layer === 'undefined' ? undefined : parseInt(layer, 10),
+      layer: layer === 'undefined' ? undefined : (parseInt(layer, 10) as Props['layer']),
       onClose: onClose === 'yes' ? sampleOnCloseHandlers.あり : sampleOnCloseHandlers.なし,
     }
   })

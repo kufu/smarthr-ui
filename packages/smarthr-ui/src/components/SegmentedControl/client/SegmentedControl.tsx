@@ -11,11 +11,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../../hooks/useLatest'
 import { Button } from '../../Button'
 
-export type Option = {
+type Option = {
   /** 選択時に返される値 */
   value: string
   /** ボタンに表示する内容 */
@@ -100,7 +99,7 @@ export const SegmentedControl: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      callbackRef: (node: HTMLDivElement | null) => {
+      callbackRef: (node: HTMLElement | null) => {
         if (!node) {
           return
         }
@@ -173,14 +172,12 @@ export const SegmentedControl: FC<Props> = ({
     [hasOnClickOption, latest],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(functions.callbackRef)
-
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      ref={callbackRef}
+      ref={functions.callbackRef}
       role="toolbar"
       className={classNames.container}
       onFocus={functions.handleDelegateFocus}

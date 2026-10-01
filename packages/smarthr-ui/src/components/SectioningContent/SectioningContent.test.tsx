@@ -119,7 +119,7 @@ describe('SectioningContent', () => {
   })
 
   it('SectioningContent には ref を渡すことができる', async () => {
-    const ref = createRef<HTMLDivElement>()
+    const ref = createRef<HTMLSectionElement>()
     render(
       <Section ref={ref}>
         <Heading>heading</Heading>

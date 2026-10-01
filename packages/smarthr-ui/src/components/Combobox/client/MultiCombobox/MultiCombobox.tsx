@@ -8,17 +8,16 @@ import {
   type ReactNode,
   type Ref,
   memo,
-  useEffect,
   useId,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
@@ -27,7 +26,7 @@ import { findDelegateTarget } from '../../../../libs/delegate'
 import { genericsForwardRef } from '../../../../libs/util'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Scroller } from '../../../Scroller'
-import { areItemsEqual } from '../helper'
+import { areItemsEqual, getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useMultiOptions } from '../useOptions'
 
@@ -174,8 +173,7 @@ const ActualMultiCombobox = <T,>(
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
 
-  const baseId = useId()
-  const selectedListId = `${baseId}-selected`
+  const selectedListId = useId()
 
   const isInputControlled = controlledInputValue !== undefined
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
@@ -189,7 +187,6 @@ const ActualMultiCombobox = <T,>(
     inputValue,
     isItemSelected,
   })
-  const inputRef = useRef<HTMLInputElement>(null)
   const deleteFrame = useAnimationFrame()
   const selectFrame = useAnimationFrame()
 
@@ -231,7 +228,7 @@ const ActualMultiCombobox = <T,>(
     }
 
     return {
-      cleanupListBoxCallbackRef: () => () => {
+      cleanupFrame: () => {
         latestForListBox.deleteFrame.cancel()
         latestForListBox.selectFrame.cancel()
       },
@@ -271,6 +268,8 @@ const ActualMultiCombobox = <T,>(
       noResultText,
     })
 
+  const focusFrame = useAnimationFrame()
+
   const latest = useLatest({
     onChange,
     onChangeInput,
@@ -286,9 +285,12 @@ const ActualMultiCombobox = <T,>(
     setInputValueIfUncontrolled,
     handleKeyDownListBox,
     cleanupAddFrame,
+    focusFrame,
   })
 
   const functions = useMemo(() => {
+    let input: HTMLInputElement | null = null
+
     const handleDelete = listBoxFunctions.handleDelete
 
     const getDeletionButtons = () => {
@@ -318,7 +320,7 @@ const ActualMultiCombobox = <T,>(
 
       if (currentIndex !== -1) {
         buttons[Math.max(currentIndex - 1, 0)].focus()
-      } else if (inputRef.current?.selectionStart === 0) {
+      } else if (input?.selectionStart === 0) {
         buttons[buttons.length - 1].focus()
       }
     }
@@ -338,8 +340,8 @@ const ActualMultiCombobox = <T,>(
         buttons[nextIndex].focus()
       } else {
         // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
-        setTimeout(() => {
-          inputRef.current?.focus()
+        latest.focusFrame.request(() => {
+          input?.focus()
         })
       }
     }
@@ -359,8 +361,15 @@ const ActualMultiCombobox = <T,>(
     return {
       handleDelete,
       blur,
-      cleanupCallbackRef: () => latest.cleanupAddFrame,
-      handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+      inputCallbackRef: (node: HTMLInputElement | null) => {
+        input = node
+        if (!node) {
+          listBoxFunctions.cleanupFrame()
+          latest.cleanupAddFrame()
+          latest.focusFrame.cancel()
+        }
+      },
+      handleDelegateKeyDown: (e: KeyboardEvent<HTMLElement>) => {
         if (latest.isComposing) return
 
         if (ESCAPE_KEY_REGEX.test(e.key)) {
@@ -372,7 +381,7 @@ const ActualMultiCombobox = <T,>(
         } else if (e.key === 'Tab') {
           if (latest.isExpanded) {
             // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-            inputRef.current?.focus()
+            input?.focus()
           }
 
           blur()
@@ -395,10 +404,10 @@ const ActualMultiCombobox = <T,>(
 
           handleDelete(lastItem)
           setHighlighted(true)
-          latest.setInputValueIfUncontrolled(innerText(lastItem.label))
+          latest.setInputValueIfUncontrolled(getSelectedLabelText(lastItem))
         } else {
           e.stopPropagation()
-          inputRef.current?.focus()
+          input?.focus()
         }
 
         latest.handleKeyDownListBox(e)
@@ -446,23 +455,37 @@ const ActualMultiCombobox = <T,>(
     functions.blur,
   )
 
-  const mergedInputRef = useMergeRefs(inputRef, listBoxFunctions.cleanupListBoxCallbackRef, ref)
-  const mergedTriggerRef = useMergeRefs(triggerRef, functions.cleanupCallbackRef)
+  // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
+  const inputFocusEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      if (node && isExpanded) {
+        node.focus()
+      }
+    },
+    [isExpanded, selectedItems, isInputControlled],
+  )
+  const inputSelectEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      if (!node) {
+        return
+      }
 
-  useEffect(() => {
-    if (latest.highlighted) {
-      setHighlighted(false)
-      inputRef.current?.select()
-    } else {
-      setInputValueIfUncontrolled('')
-    }
-  }, [selectedItems, setInputValueIfUncontrolled, latest])
+      if (latest.highlighted) {
+        setHighlighted(false)
+        node.select()
+      } else {
+        setInputValueIfUncontrolled('')
+      }
+    },
+    [selectedItems, setInputValueIfUncontrolled, latest],
+  )
 
-  useEffect(() => {
-    if (isExpanded) {
-      inputRef.current?.focus()
-    }
-  }, [isExpanded, selectedItems, isInputControlled])
+  const mergedInputRef = useMergeRefs(
+    functions.inputCallbackRef,
+    inputFocusEffectRef,
+    inputSelectEffectRef,
+    ref,
+  )
 
   const classNames = useMemo(() => {
     const {
@@ -500,7 +523,7 @@ const ActualMultiCombobox = <T,>(
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
-      ref={mergedTriggerRef}
+      ref={triggerRef}
       role="group"
       className={classNames.wrapper}
       style={{
@@ -518,7 +541,7 @@ const ActualMultiCombobox = <T,>(
           aria-label={localized.selectedListAriaLabel}
         >
           {selectedItems.map((selectedItem) => (
-            <li key={`${selectedItem.label}-${innerText(selectedItem.value)}`}>
+            <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
               <MultiSelectedItem
                 disabled={disabled}
                 item={selectedItem}

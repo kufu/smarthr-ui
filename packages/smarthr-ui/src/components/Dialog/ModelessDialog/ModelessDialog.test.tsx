@@ -50,4 +50,67 @@ describe('ModelessDialog', () => {
       { timeout: 1000 },
     )
   })
+
+  it('閉じるボタンのクリックでonClickCloseに実際のMouseEventが渡されること', async () => {
+    const handleClickClose = vi.fn()
+    render(
+      <IntlProvider locale="ja">
+        <ModelessDialog isOpen onClickClose={handleClickClose} heading="座標指定表示">
+          <p>ダイアログの中身</p>
+        </ModelessDialog>
+      </IntlProvider>,
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    expect(handleClickClose).toHaveBeenCalledTimes(1)
+    expect(handleClickClose.mock.calls[0][0].nativeEvent).toBeInstanceOf(MouseEvent)
+  })
+
+  it('Escapeキー押下でonPressEscapeに実際のKeyboardEventが渡されること', async () => {
+    const handlePressEscape = vi.fn()
+    render(
+      <IntlProvider locale="ja">
+        <ModelessDialog
+          isOpen
+          onClickClose={() => {}}
+          onPressEscape={handlePressEscape}
+          heading="座標指定表示"
+        >
+          <p>ダイアログの中身</p>
+        </ModelessDialog>
+      </IntlProvider>,
+    )
+
+    await userEvent.keyboard('{Escape}')
+
+    expect(handlePressEscape).toHaveBeenCalledTimes(1)
+    const receivedEvent = handlePressEscape.mock.calls[0][0]
+    expect(receivedEvent).toBeInstanceOf(KeyboardEvent)
+    expect(receivedEvent.key).toBe('Escape')
+  })
+
+  it('初回マウント時にisOpenがtrueの場合も、正しく中央寄せされること', () => {
+    // HINT: jsdomにはレイアウトが無いため、DOMに接続済みの要素にのみサイズを持たせてrectを返す。
+    // portal containerがdocument.bodyへappendされる前に計測すると0が返り、中央寄せがずれる不具合の再現に使う
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      const size = this.isConnected ? { width: 200, height: 100 } : { width: 0, height: 0 }
+      return { ...size, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => {} }
+    })
+
+    render(
+      <IntlProvider locale="ja">
+        <ModelessDialog isOpen onClickClose={() => {}} heading="初回マウント表示">
+          <p>ダイアログの中身</p>
+        </ModelessDialog>
+      </IntlProvider>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '初回マウント表示' })
+
+    expect(dialog.style.top).toBe(`${window.innerHeight / 2 - 50}px`)
+    expect(dialog.style.left).toBe(`${window.innerWidth / 2 - 100}px`)
+  })
 })

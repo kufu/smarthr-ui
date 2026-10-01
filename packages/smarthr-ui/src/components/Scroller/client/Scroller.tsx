@@ -90,7 +90,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
     )
 
     const callbackRef = useCallback(
-      (node: HTMLDivElement | null) => {
+      (node: HTMLElement | null) => {
         if (!node) return
 
         const autoTabIndex = () => {
@@ -123,8 +123,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
         const resizeObserver = new ResizeObserver(autoTabIndex)
         resizeObserver.observe(node)
 
-        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
         return () => {
           node.removeAttribute('tabIndex')
           resizeObserver.disconnect()
@@ -133,8 +131,6 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
       [direction],
     )
 
-    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
     const mergedRef = useMergeRefs(callbackRef, ref)
 
     const Wrapper = useSectionWrapper(Component)

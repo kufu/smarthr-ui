@@ -1,21 +1,23 @@
-'use client'
-
-import { type ComponentProps, type FC, type FormEvent, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type FC,
+  type FormEvent,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  FormDialogContentInner,
-  type FormDialogContentInnerProps,
-  type FormDialogHelpers,
-} from './FormDialogContentInner'
+import { FormDialogContentInner } from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
+type FormDialogContentInnerProps = ComponentProps<typeof FormDialogContentInner>
 type ObjectHeadingType = Omit<FormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
@@ -32,11 +34,11 @@ type BaseProps = Omit<
     /**
      * フォーム送信時に発火するコールバック関数
      */
-    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
+    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: { close: () => void }) => void
     /**
      * 閉じるボタンをクリックした時に発火するコールバック関数
      */
-    onClickClose: () => void
+    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
@@ -63,7 +65,6 @@ export const ControlledFormDialog: FC<Props> = ({
   isOpen,
   ...rest
 }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -80,9 +81,9 @@ export const ControlledFormDialog: FC<Props> = ({
   const latest = useLatest({ onClickClose, onSubmit, isOpen })
 
   const functions = useMemo(() => {
-    const handleClickClose = () => {
+    const handleClickClose = (e?: MouseEvent<HTMLButtonElement>) => {
       if (latest.isOpen) {
-        latest.onClickClose()
+        latest.onClickClose(e)
       }
     }
 
@@ -100,27 +101,29 @@ export const ControlledFormDialog: FC<Props> = ({
     }
   }, [latest])
 
-  return createPortal(
-    <DialogContentInner
-      {...rest}
-      isOpen={isOpen}
-      className={className}
-      ariaLabelledby={heading.id}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
-    >
-      <FormDialogContentInner
-        contentBgColor={contentBgColor}
-        contentPadding={contentPadding}
-        responseStatus={responseStatus}
-        handleClickClose={functions.handleClickClose}
-        handleSubmit={functions.handleSubmit}
-        heading={heading}
-        actionButton={actionButton}
-        closeButton={closeButton}
-        subActionArea={subActionArea}
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DialogContentInner
+        {...rest}
+        isOpen={isOpen}
+        className={className}
+        ariaLabelledby={heading.id}
+        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       >
-        {children}
-      </FormDialogContentInner>
-    </DialogContentInner>,
+        <FormDialogContentInner
+          contentBgColor={contentBgColor}
+          contentPadding={contentPadding}
+          responseStatus={responseStatus}
+          handleClickClose={functions.handleClickClose}
+          handleSubmit={functions.handleSubmit}
+          heading={heading}
+          actionButton={actionButton}
+          closeButton={closeButton}
+          subActionArea={subActionArea}
+        >
+          {children}
+        </FormDialogContentInner>
+      </DialogContentInner>
+    </DialogPortal>
   )
 }
