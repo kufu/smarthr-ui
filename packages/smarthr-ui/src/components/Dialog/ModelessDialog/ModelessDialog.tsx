@@ -32,7 +32,7 @@ import { LiveRegion } from '../../LiveRegion'
 import { Panel } from '../../Panel'
 import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 
 import type { DialogSize } from '../types'
 
@@ -171,7 +171,6 @@ export const ModelessDialog: FC<Props> = ({
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
-  const { createPortal } = useDialogPortal(portalParent)
 
   const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
@@ -403,70 +402,74 @@ export const ModelessDialog: FC<Props> = ({
   // wrapperRefに混ぜ込んでいる
   const mergedRef = useMergeRefs(wrapperRef, escapeCallbackRef, layoutEffectRef)
 
-  return createPortal(
-    <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
-      <Draggable
-        {...Draggable.defaultProps}
-        nodeRef={wrapperRef}
-        handle=".smarthr-ui-ModelessDialog-handle"
-        position={position}
-        bounds={draggableBounds ?? false}
-        onStart={functions.handleDragStart}
-        onDrag={functions.handleDrag}
-      >
-        <Panel
-          {...rest}
-          ref={mergedRef}
-          role="dialog"
-          radius="m"
-          layer={3}
-          overflow="auto"
-          className={classNames.wrapper}
-          // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
-          // 依存する値も多く、memo化の効果が薄いため直接記述している
-          style={{
-            top: centering.top ?? defaultPosition.top,
-            left: centering.left ?? defaultPosition.left,
-            right: defaultPosition.right,
-            bottom: defaultPosition.bottom,
-            width: size ? undefined : width,
-            height,
-          }}
-          aria-labelledby={labelId}
+  return (
+    <DialogPortal parent={portalParent}>
+      <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
+        <Draggable
+          {...Draggable.defaultProps}
+          nodeRef={wrapperRef}
+          handle=".smarthr-ui-ModelessDialog-handle"
+          position={position}
+          bounds={draggableBounds ?? false}
+          onStart={functions.handleDragStart}
+          onDrag={functions.handleDrag}
         >
-          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
-          <div className={classNames.header}>
-            <Handler
-              className={classNames.dialogHandler}
-              handleArrowKeyDown={functions.handleArrowKeyDown}
-            />
-            <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
-              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-              <Heading>{heading}</Heading>
-            </div>
-            <CloseButton
-              // DialogHandlerの上に出すためにスタッキングコンテキストを生成
-              className="shr-relative shr-ml-auto shr-shrink-0"
-              handleClick={functions.handleClickClose}
-            />
-          </div>
-          <DialogBody
-            contentBgColor={contentBgColor}
-            contentPadding={contentPadding}
-            className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+          <Panel
+            {...rest}
+            ref={mergedRef}
+            role="dialog"
+            radius="m"
+            layer={3}
+            overflow="auto"
+            className={classNames.wrapper}
+            // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
+            // 依存する値も多く、memo化の効果が薄いため直接記述している
+            style={{
+              top: centering.top ?? defaultPosition.top,
+              left: centering.left ?? defaultPosition.left,
+              right: defaultPosition.right,
+              bottom: defaultPosition.bottom,
+              width: size ? undefined : width,
+              height,
+            }}
+            aria-labelledby={labelId}
           >
-            {children}
-          </DialogBody>
-          {footer && (
-            <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
-          )}
-          <LiveRegion visuallyHidden={true} announceDelay={600}>
-            {liveRegionText}
-          </LiveRegion>
-        </Panel>
-      </Draggable>
-    </DialogOverlap>,
+            {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
+            <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
+            <div className={classNames.header}>
+              <Handler
+                className={classNames.dialogHandler}
+                handleArrowKeyDown={functions.handleArrowKeyDown}
+              />
+              <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
+                {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+                <Heading>{heading}</Heading>
+              </div>
+              <CloseButton
+                // DialogHandlerの上に出すためにスタッキングコンテキストを生成
+                className="shr-relative shr-ml-auto shr-shrink-0"
+                handleClick={functions.handleClickClose}
+              />
+            </div>
+            <DialogBody
+              contentBgColor={contentBgColor}
+              contentPadding={contentPadding}
+              className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+            >
+              {children}
+            </DialogBody>
+            {footer && (
+              <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">
+                {footer}
+              </div>
+            )}
+            <LiveRegion visuallyHidden={true} announceDelay={600}>
+              {liveRegionText}
+            </LiveRegion>
+          </Panel>
+        </Draggable>
+      </DialogOverlap>
+    </DialogPortal>
   )
 }
 
