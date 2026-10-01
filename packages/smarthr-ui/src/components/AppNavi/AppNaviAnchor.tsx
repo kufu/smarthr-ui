@@ -46,7 +46,6 @@ export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a
   icon: Icon,
   current,
   elementAs,
-  ref,
   ...rest
 }: AppNaviAnchorProps<T> & ElementProps<T> & ElementRefProps<T>): ReactElement => {
   const classNames = useMemo(() => {
@@ -63,7 +62,6 @@ export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a
   return (
     <Component
       {...rest}
-      ref={ref}
       href={href}
       className={classNames.wrapper}
       aria-current={current ? 'page' : undefined}
