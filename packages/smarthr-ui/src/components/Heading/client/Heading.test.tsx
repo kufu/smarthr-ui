@@ -5,7 +5,6 @@ import { createRef } from 'react'
 import { Heading } from './Heading'
 
 describe('Heading', () => {
-  // TODO: forwardRefの利用をやめたら不要になる可能性がある。その際は削除を検討する
   test('ref を転送する', () => {
     const ref = createRef<HTMLHeadingElement>()
     render(<Heading ref={ref}>見出し</Heading>)
