@@ -90,7 +90,7 @@ export const Scroller = forwardRef<HTMLDivElement, Props>(
     )
 
     const callbackRef = useCallback(
-      (node: HTMLDivElement | null) => {
+      (node: HTMLElement | null) => {
         if (!node) return
 
         const autoTabIndex = () => {

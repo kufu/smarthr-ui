@@ -76,7 +76,7 @@ type Props = BaseProps &
     | 'aria-haspopup'
   >
 
-export const DEFAULT_FROM = new Date(1900, 0, 1)
+const DEFAULT_FROM = new Date(1900, 0, 1)
 
 const classNameGenerator = tv({
   slots: {

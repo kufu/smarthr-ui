@@ -136,7 +136,7 @@ describe('DropZone', () => {
           </IntlProvider>,
         )
 
-        const input = document.querySelector('input[type="file"]') as HTMLInputElement
+        const input = document.querySelector<HTMLInputElement>('input[type="file"]')
         if (!input) throw new Error('Input not found')
 
         const file = new File(['content'], 'test.txt', { type: 'text/plain' })

@@ -1,21 +1,21 @@
-import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import type { ComponentProps, ElementType, FC, PropsWithChildren } from 'react'
 
 export const DROPDOWN_CLOSER_CLASS_NAME = 'smarthr-ui-Dropdown-closer'
 
-const classNameGenerator = tv({
-  base: DROPDOWN_CLOSER_CLASS_NAME,
-})
-
 // HINT: onClickは念のためomitしているが、必要に応じて利用可能にすることを検討する
-type Props = PropsWithChildren<Omit<ComponentProps<'div'>, 'onClick'>>
+type Props = PropsWithChildren<
+  Omit<ComponentProps<'div'>, 'onClick'> & {
+    as?: ElementType
+  }
+>
 
-export const DropdownCloser: FC<Props> = ({ className, style, children, ...rest }) => {
-  const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
-
-  return (
-    <div {...rest} className={actualClassName} style={style}>
-      {children}
-    </div>
-  )
-}
+export const DropdownCloser: FC<Props> = ({
+  as: Component = 'div',
+  className,
+  children,
+  ...rest
+}) => (
+  <Component {...rest} className={`${DROPDOWN_CLOSER_CLASS_NAME} ${className || ''}`}>
+    {children}
+  </Component>
+)

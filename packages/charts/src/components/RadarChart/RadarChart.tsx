@@ -68,6 +68,7 @@ export const RadarChart: React.FC<Props> = ({ data, title, options: externalOpti
   return (
     <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Radar
         ref={chartRef}
         role="application"

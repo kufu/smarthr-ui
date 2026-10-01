@@ -56,7 +56,7 @@ const CLASS_NAMES = (() => {
 })()
 
 type Props = PropsWithChildren<{
-  callbackRef: RefCallback<HTMLDivElement>
+  callbackRef: RefCallback<HTMLElement>
   isOpen: boolean
   setIsOpen: Dispatch<boolean>
   tenantSelector: ReactNode
@@ -82,7 +82,7 @@ export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
   )
 }
 
-export const Content: FC<
+const Content: FC<
   Omit<Props, 'callbackRef' | 'isOpen'> & {
     domRef: RefObject<HTMLSelectElement>
   }

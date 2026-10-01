@@ -20,7 +20,7 @@ import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../I
 
 import type { Locale } from '../../../intl'
 
-export type BaseProps = {
+type BaseProps = {
   narrow?: boolean
   localeMap: Partial<Record<Locale, string>>
   locale?: string
@@ -46,7 +46,7 @@ const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayL
   return (currentIndex + 1) % arrayLength
 }
 
-const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLDivElement>) => {
+const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLElement>) => {
   if (!ARROW_KEY_REGEX.test(e.key)) {
     return
   }

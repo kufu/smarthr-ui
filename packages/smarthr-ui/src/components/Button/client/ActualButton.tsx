@@ -28,7 +28,7 @@ type BaseProps = PropsWithChildren<{
   suffix?: ReactNode
 }>
 
-export type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
 export const ActualButton: FC<Props> = ({
   classNames,

@@ -4,7 +4,6 @@ import {
   type FC,
   type MouseEvent,
   type PropsWithChildren,
-  type ReactNode,
   createContext,
   useId,
   useMemo,
@@ -14,11 +13,11 @@ import {
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { usePortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { tabbable } from '../../../libs/tabbable'
+import { isChildPortal } from '../../Portal'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
@@ -36,7 +35,7 @@ type DropdownContextType = {
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
   handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
-  DropdownContentRoot: FC<{ children: ReactNode }>
+  contentId: string
 }
 
 const KEY_ESCAPE = /^Esc(ape)?$/
@@ -49,7 +48,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
   handleDelegateClickContentCloser: NOOP,
-  DropdownContentRoot: NOOP,
+  contentId: '',
 })
 
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
@@ -58,9 +57,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [contentStyles, setContentStyles] = useState(INITIAL_CONTENT_STYLES)
 
   const contentId = useId()
-  const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
-    rootId: contentId,
-  })
 
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
@@ -68,10 +64,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const latest = useLatest({
     active,
-    isChildPortal,
     onOpen,
     onClose,
-    createPortal,
     openFrame,
     closeFrame,
     contentId,
@@ -85,11 +79,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     let triggerButton: HTMLButtonElement | null | undefined = null
     let content: HTMLElement | null = null
     let dummyFocusContent: HTMLElement | null | undefined = null
-
-    // This is the root container of a dropdown content located in outside the DOM tree
-    const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
-      latest.active ? latest.createPortal(props.children) : null
-    DropdownContentRoot.displayName = 'DropdownContentRoot'
 
     const updateContentStyles = () => {
       if (content && triggerButton) {
@@ -120,8 +109,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
 
     return {
-      DropdownContentRoot,
       updateContentStyles,
+      getContent: () => content,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
         triggerButton = node?.querySelector<HTMLButtonElement>('button')
@@ -275,14 +264,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       if (!active) return
 
       const handleClickBody = (e: any) => {
-        if (!active || !node) {
-          return
-        }
-
-        // ignore events from events within DropdownTrigger and DropdownContent
-        const isClickedInTrigger = e.composedPath().includes(node)
-
-        if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
+        if (
+          active &&
+          node &&
+          // ignore events from events within DropdownTrigger and DropdownContent
+          !e.composedPath().includes(node) &&
+          !isChildPortal(e.target, functions.getContent())
+        ) {
           setActive(false)
           functions.actualClose()
         }
@@ -309,20 +297,18 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   )
 
   return (
-    <PortalParentProvider>
-      <DropdownContext.Provider
-        value={{
-          active,
-          contentStyles,
-          triggerLayoutEffectRef,
-          contentCallbackRef: functions.contentCallbackRef,
-          handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
-          handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
-          DropdownContentRoot: functions.DropdownContentRoot,
-        }}
-      >
-        {children}
-      </DropdownContext.Provider>
-    </PortalParentProvider>
+    <DropdownContext.Provider
+      value={{
+        active,
+        contentStyles,
+        triggerLayoutEffectRef,
+        contentCallbackRef: functions.contentCallbackRef,
+        handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
+        handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
+        contentId,
+      }}
+    >
+      {children}
+    </DropdownContext.Provider>
   )
 }

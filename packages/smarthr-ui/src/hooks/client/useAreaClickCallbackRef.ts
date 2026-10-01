@@ -34,11 +34,8 @@ export function useAreaClickCallbackRef(
       }
 
       const handleClick = (e: MouseEvent) => {
-        // TODO: 現在はareaを成立させるotherRefsの要素はcallbackRefがmountされている場合、
-        // 常にmountされている前提だが、対象要素が可変する場合を考慮して
         // 監視対象が揃っていない場合は、area不成立とみなしてskip
-        // callbackRefなので設定されている要素はこのロジックに到達した場合必ず存在するので
-        // otherRefsの中身だけチェックする
+        // callbackRefが設定されている要素はこのロジックに到達した場合必ず存在するのでotherRefsだけチェックする
         const refs = latest.otherRefs
 
         if (!refs || refs.length === 0) return

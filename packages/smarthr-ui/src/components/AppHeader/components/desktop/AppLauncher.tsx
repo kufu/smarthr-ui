@@ -172,7 +172,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
               </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
-                <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
+                <AppLauncherSortDropdown sortType={sortType} handleSelectSortType={setSortType} />
               )}
             </Cluster>
 

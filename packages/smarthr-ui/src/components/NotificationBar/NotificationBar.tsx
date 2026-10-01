@@ -12,15 +12,7 @@ import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  FaTriangleExclamationIcon,
-  FaXmarkIcon,
-  WarningIcon,
-} from '../Icon'
+import { FaXmarkIcon, StatusIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
@@ -29,7 +21,8 @@ import { Text } from '../Text'
 // TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
 // base="base" も意味が分かりづらい
 type BaseType = 'base' | 'none'
-type TypeType = 'info' | 'success' | 'warning' | 'error' | 'sync'
+
+type MessageType = ComponentProps<typeof StatusIcon>['status']
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -41,7 +34,7 @@ type BaseProps = PropsWithChildren<{
   /** 下地 */
   base?: BaseType
   /** メッセージの種類 */
-  type: TypeType
+  type: MessageType
   /** 強調するかどうか */
   bold?: boolean
   /** スライドインするかどうか */
@@ -85,7 +78,7 @@ const classNameGenerator = tv({
       sync: {
         icon: 'shr-text-main',
       },
-    } satisfies Record<TypeType, object>,
+    } satisfies Record<MessageType, object>,
     bold: {
       true: '',
       false: '',
@@ -156,23 +149,6 @@ const classNameGenerator = tv({
     },
   ],
 })
-
-const ABSTRACT_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-}
-const ICON_MAPPER = {
-  normal: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: WarningIcon,
-  },
-  bold: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: FaTriangleExclamationIcon,
-  },
-} as const
 
 const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
@@ -256,20 +232,16 @@ const MessageArea = memo<
     role: 'status' | 'alert'
     classNames: { messageArea: string; icon: string }
   }
->(({ children, role, bold, type, classNames }) => {
-  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
-
-  return (
+>(({ children, bold, type, role, classNames }) => (
+  <LiveRegion role={role} className="shr-contents">
     <Text
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon className={classNames.icon} />,
+        prefix: <StatusIcon status={type} bold={bold} className={classNames.icon} />,
         gap: 0.5,
       }}
     >
-      <LiveRegion role={role} className="shr-contents">
-        {children}
-      </LiveRegion>
+      {children}
     </Text>
-  )
-})
+  </LiveRegion>
+))
