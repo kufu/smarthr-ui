@@ -20,7 +20,7 @@ type BaseProps = PropsWithChildren<{
 type Props = BaseProps & Omit<ComponentPropsWithRef<'td'>, keyof BaseProps>
 
 export const Td: FC<Props> = memo(
-  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, children, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
@@ -45,7 +45,11 @@ export const Td: FC<Props> = memo(
             width: convertContentWidth(contentWidth),
           }
 
-    return <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed} />
+    return (
+      <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed}>
+        {children}
+      </td>
+    )
   },
 )
 
