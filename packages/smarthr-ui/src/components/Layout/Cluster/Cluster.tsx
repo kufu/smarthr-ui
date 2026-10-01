@@ -1,5 +1,5 @@
 import {
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ElementType,
   type PropsWithChildren,
   useMemo,
@@ -8,7 +8,7 @@ import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { ElementRefProps, PositiveGap, SeparatePositiveGap } from '../../../types'
+import type { PositiveGap, SeparatePositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type JustifyType =
@@ -23,15 +23,16 @@ type JustifyType =
   | 'space-evenly'
   | 'stretch'
 
-type Props<T extends ElementType> = PropsWithChildren<{
+type BaseProps<T extends ElementType> = PropsWithChildren<{
   as?: T
   gap?: PositiveGap | SeparatePositiveGap
   inline?: boolean
   align?: AlignType
   justify?: JustifyType
-}> &
-  ComponentPropsWithoutRef<T> &
-  ElementRefProps<T>
+}>
+
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
 
 export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -120,7 +121,7 @@ export const Cluster = <T extends ElementType = 'div'>({
   align,
   justify,
   className,
-  ref,
+  children,
   ...rest
 }: Props<T>) => {
   const actualClassName = useMemo(() => {
@@ -144,7 +145,11 @@ export const Cluster = <T extends ElementType = 'div'>({
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
-  const body = <Component {...rest} ref={ref} className={actualClassName} />
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>
