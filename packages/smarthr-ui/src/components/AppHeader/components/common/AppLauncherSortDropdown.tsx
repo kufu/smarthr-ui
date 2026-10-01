@@ -48,10 +48,10 @@ const CLASS_NAMES = (() => {
 
 type Props = {
   sortType: Launcher['sortType']
-  onSelectSortType: (sortType: Launcher['sortType']) => void
+  handleSelectSortType: (sortType: Launcher['sortType']) => void
 }
 
-export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
+export const AppLauncherSortDropdown: FC<Props> = ({ sortType, handleSelectSortType }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const options = useMemo<Array<[Launcher['sortType'], JSX.Element]>>(
@@ -86,7 +86,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
   const onClickOption = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectSortType(e.currentTarget.value as Launcher['sortType'])
+      handleSelectSortType(e.currentTarget.value as Launcher['sortType'])
 
       // Dropdown がネストしており、この Dropdown のみ閉じて親の Dropdown は開いたままというのができない
       // そのため、無理矢理クリックイベントを発生させて実現している
@@ -97,7 +97,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
         }
       }, 0)
     },
-    [onSelectSortType],
+    [handleSelectSortType],
   )
 
   return (

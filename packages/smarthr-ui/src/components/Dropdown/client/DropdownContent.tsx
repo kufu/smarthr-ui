@@ -3,6 +3,7 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Portal } from '../../Portal'
 import { DropdownCloser } from '../DropdownCloser'
 
 import { DropdownContext } from './Dropdown'
@@ -36,35 +37,35 @@ export const DropdownContent: FC<Props> = ({
   controllable = false,
   ...rest
 }) => {
-  const {
-    DropdownContentRoot,
-    contentStyles,
-    contentCallbackRef,
-    handleDelegateClickContentCloser,
-  } = useContext(DropdownContext)
+  const { active, contentId, contentStyles, contentCallbackRef, handleDelegateClickContentCloser } =
+    useContext(DropdownContext)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <DropdownContentRoot>
-      <div
-        {...rest}
-        ref={contentCallbackRef}
-        role="presentation"
-        className={actualClassName}
-        style={contentStyles.wrapper}
-        onClick={handleDelegateClickContentCloser}
-      >
-        {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-        <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
-        {controllable ? (
-          <div style={contentStyles.body}>{children}</div>
-        ) : (
-          <DropdownCloser className="shr-flex shr-flex-col" style={contentStyles.body}>
-            {children}
-          </DropdownCloser>
-        )}
-      </div>
-    </DropdownContentRoot>
+    // HINT: DropdownのTriggerにはaria-controlsが設定されている
+    // aria-controlsに紐づく要素は常に存在する必要があるためactive trueの場合のdivと分離している
+    <Portal id={contentId}>
+      {active && (
+        <div
+          {...rest}
+          ref={contentCallbackRef}
+          role="presentation"
+          className={actualClassName}
+          style={contentStyles.wrapper}
+          onClick={handleDelegateClickContentCloser}
+        >
+          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
+          <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />
+          {controllable ? (
+            <div style={contentStyles.body}>{children}</div>
+          ) : (
+            <DropdownCloser className="shr-flex shr-flex-col" style={contentStyles.body}>
+              {children}
+            </DropdownCloser>
+          )}
+        </div>
+      )}
+    </Portal>
   )
 }

@@ -14,12 +14,8 @@ import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
-  outerRef?: Ref<FocusTrapRef>
+  outerRef?: Ref<{ focus: () => void }>
 }>
-
-export type FocusTrapRef = {
-  focus: () => void
-}
 
 const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
 const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
