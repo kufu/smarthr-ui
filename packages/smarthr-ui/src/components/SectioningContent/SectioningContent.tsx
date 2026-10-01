@@ -14,10 +14,9 @@ const SectioningContent: FC<PropsWithAs> = ({
   children,
   baseLevel,
   as: Wrapper = 'section',
-  ref,
   ...rest
 }) => (
-  <Wrapper {...rest} ref={ref}>
+  <Wrapper {...rest}>
     {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
     <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
   </Wrapper>
