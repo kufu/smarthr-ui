@@ -3,9 +3,16 @@ import type { ComponentProps } from 'react'
 
 type DialogContentInnerProps = ComponentProps<typeof DialogContentInner>
 
-export type UncontrolledDialogProps = Pick<
+export type DialogProps = Pick<
   DialogContentInnerProps,
-  'width' | 'size' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
+  | 'width'
+  | 'size'
+  | 'firstFocusTarget'
+  | 'ariaLabel'
+  | 'ariaLabelledby'
+  | 'isOpen'
+  | 'onClickOverlay'
+  | 'onPressEscape'
 > & {
   id?: string
   /**
@@ -16,7 +23,5 @@ export type UncontrolledDialogProps = Pick<
    */
   portalParent?: HTMLElement
 }
-export type DialogProps = UncontrolledDialogProps &
-  Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
 
 export type DialogSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'
