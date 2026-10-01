@@ -1,7 +1,7 @@
 import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { Checkbox } from '../Checkbox'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
@@ -11,7 +11,7 @@ type BaseProps = PropsWithChildren<{
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = Omit<CheckboxProps, keyof BaseProps> & BaseProps
+type Props = Omit<ComponentProps<typeof Checkbox>, keyof BaseProps> & BaseProps
 
 const classNameGenerator = tv({
   slots: {

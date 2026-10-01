@@ -29,11 +29,9 @@ export type BaseProps = PropsWithChildren<{
   /**
    * ボタンのスタイルの種類
    */
-  variant?: Variant
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'
   /**
    * 処理が走ってるかどうか
    */
   loading?: boolean
 }>
-
-export type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'
