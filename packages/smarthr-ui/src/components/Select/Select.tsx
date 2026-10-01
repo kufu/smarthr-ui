@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithoutRef,
-  type PropsWithChildren,
-  type Ref,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleDownIcon } from '../Icon'
@@ -23,7 +17,7 @@ type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'chil
 }
 
 type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children'>
+  Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'children'>
 
 const classNameGenerator = tv({
   slots: {
@@ -72,7 +66,7 @@ export const Select = <T extends string>({
   className,
   ref,
   ...rest
-}: Props<T> & { ref?: Ref<HTMLSelectElement> }) => {
+}: Props<T>) => {
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
