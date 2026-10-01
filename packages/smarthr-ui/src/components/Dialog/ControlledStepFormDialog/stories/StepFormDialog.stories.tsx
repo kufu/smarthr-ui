@@ -109,6 +109,22 @@ export const SubmitButtonWithFunction: StoryObj<typeof ControlledStepFormDialog>
   },
 }
 
+export const SubmitButtonWithResolverFunction: StoryObj<typeof ControlledStepFormDialog> = {
+  name: 'submitButton(StepItem毎にtext/themeをまとめて切り替える方法)',
+  args: {
+    submitButton: (currentStep: StepItem, defaultText) => {
+      switch (currentStep.id) {
+        case 'step-1':
+          return { text: defaultText, theme: 'secondary' }
+        case 'step-2':
+          return { text: 'タスクを作成する', theme: 'primary' }
+      }
+
+      return { text: '閉じる', theme: 'secondary' }
+    },
+  },
+}
+
 export const SubmitButtonTheme: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'submitButton.theme',
   args: {
