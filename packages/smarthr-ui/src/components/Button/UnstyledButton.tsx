@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type PropsWithChildren,
-  type SyntheticEvent,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, type SyntheticEvent, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 const EVENT_CANCELLER = (e: SyntheticEvent) => {
@@ -22,21 +16,27 @@ const classNameGenerator = tv({
   ],
 })
 
-export const UnstyledButton = forwardRef<
-  HTMLButtonElement,
-  PropsWithChildren<ComponentProps<'button'>>
->(({ type = 'button', disabled, onClick, onKeyDown, className, ...rest }, ref) => {
+export const UnstyledButton: FC<ComponentPropsWithRef<'button'>> = ({
+  type = 'button',
+  disabled,
+  onClick,
+  onKeyDown,
+  className,
+  children,
+  ...rest
+}) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
     <button
       {...rest}
-      ref={ref}
       type={type}
       className={actualClassName}
       aria-disabled={disabled || undefined}
       onClick={disabled ? EVENT_CANCELLER : onClick}
       onKeyDown={disabled ? EVENT_CANCELLER : onKeyDown}
-    />
+    >
+      {children}
+    </button>
   )
-})
+}
