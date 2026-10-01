@@ -10,7 +10,7 @@ type Props = {
 }
 
 /** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
-export const TimePicker: FC<PickerProps<Props>> = ({ error, className, ref, ...rest }) => {
+export const TimePicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('Time')
 
@@ -26,7 +26,6 @@ export const TimePicker: FC<PickerProps<Props>> = ({ error, className, ref, ...r
     <span className={classNames.wrapper}>
       <input
         {...rest}
-        ref={ref}
         type="time"
         className={classNames.inner}
         aria-invalid={errorAttr}

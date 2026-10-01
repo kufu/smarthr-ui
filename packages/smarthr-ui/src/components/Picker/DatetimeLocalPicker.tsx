@@ -10,7 +10,7 @@ type Props = {
 }
 
 /** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
-export const DatetimeLocalPicker: FC<PickerProps<Props>> = ({ error, className, ref, ...rest }) => {
+export const DatetimeLocalPicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('DatetimeLocal')
 
@@ -27,7 +27,6 @@ export const DatetimeLocalPicker: FC<PickerProps<Props>> = ({ error, className, 
       {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
       <input
         {...rest}
-        ref={ref}
         type="datetime-local"
         className={classNames.inner}
         aria-invalid={errorAttr}

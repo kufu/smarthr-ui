@@ -10,7 +10,7 @@ type Props = {
 }
 
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
-export const MonthPicker: FC<PickerProps<Props>> = ({ error, className, ref, ...rest }) => {
+export const MonthPicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('Month')
 
@@ -27,7 +27,6 @@ export const MonthPicker: FC<PickerProps<Props>> = ({ error, className, ref, ...
       {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
       <input
         {...rest}
-        ref={ref}
         type="month"
         className={classNames.inner}
         aria-invalid={errorAttr}
