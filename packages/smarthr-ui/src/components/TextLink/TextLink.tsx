@@ -1,7 +1,6 @@
 import {
   type ComponentPropsWithoutRef,
   type ElementType,
-  type FC,
   type MouseEvent,
   type ReactNode,
   memo,
@@ -13,12 +12,7 @@ import { OpenInNewTabIcon } from '../Icon'
 
 import type { ElementRefProps } from '../../types'
 
-type ElementProps<T extends ElementType> = Omit<
-  ComponentPropsWithoutRef<T>,
-  (keyof Props<T> & ElementRefProps<T>) | 'color'
->
-
-type Props<T extends ElementType> = {
+type BaseProps<T extends ElementType> = ElementRefProps<T> & {
   /** テキストのサイズ */
   size?: 'XS' | 'S' | 'M'
   /** リンクをクリックした時に発火するコールバック関数 */
@@ -30,10 +24,8 @@ type Props<T extends ElementType> = {
   /** TextLinkを利用しつつnext/linkなどと併用する場合に指定する */
   elementAs?: T
 }
-
-type TextLinkComponent = <T extends ElementType = 'a'>(
-  props: Props<T> & ElementProps<T> & ElementRefProps<T>,
-) => ReturnType<FC>
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T> | 'color'>
 
 const classNameGenerator = tv({
   slots: {
@@ -60,7 +52,7 @@ const classNameGenerator = tv({
     } satisfies Record<NonNullable<Props<ElementType>['size']>, { anchor: string }>,
   },
 })
-const ActualTextLink: TextLinkComponent = <T extends ElementType = 'a'>({
+const ActualTextLink = <T extends ElementType = 'a'>({
   elementAs,
   href,
   target,
@@ -71,9 +63,8 @@ const ActualTextLink: TextLinkComponent = <T extends ElementType = 'a'>({
   suffix,
   className,
   size,
-  ref,
   ...rest
-}: Props<T> & ElementProps<T> & ElementRefProps<T>) => {
+}: Props<T>) => {
   const Anchor = elementAs || 'a'
   // target="_blank" だが OpenInNewTabIcon を表示したくない場合 suffix に null を指定すれば表示しないようにしている
   const actualSuffix =
@@ -90,7 +81,6 @@ const ActualTextLink: TextLinkComponent = <T extends ElementType = 'a'>({
   return (
     <Anchor
       {...rest}
-      ref={ref}
       // HINT: a要素でhrefが存在しない === button[disabled]のように無効化されていることを表す
       // そのためhrefが存在せず、かつonClickが設定されている場合、hrefを擬似的に設定することで
       // disabledではない状態にする (TODO: a11y的にはhrefをoptionalではなく必須属性としたい)
