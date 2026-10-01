@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithoutRef,
-  type PropsWithChildren,
-  forwardRef,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
@@ -23,46 +17,36 @@ type BaseProps = PropsWithChildren<{
   contentWidth?:
     CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
 }>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'td'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'td'>, keyof BaseProps>
 
-export const Td = memo(
-  forwardRef<HTMLTableCellElement, Props>(
-    ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }, ref) => {
-      const actualClassName = useMemo(() => {
-        const base = classNameGenerator({ align, vAlign, nullable, className })
+export const Td: FC<Props> = memo(
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
+    const actualClassName = useMemo(() => {
+      const base = classNameGenerator({ align, vAlign, nullable, className })
 
-        if (!fixed) {
-          return base
-        }
+      if (!fixed) {
+        return base
+      }
 
-        const shadow = reelShadowClassNameGenerator({ direction: fixed })
+      const shadow = reelShadowClassNameGenerator({ direction: fixed })
 
-        return `${base} ${shadow}`
-      }, [align, className, fixed, nullable, vAlign])
-      const actualStyle =
-        typeof contentWidth === 'object'
-          ? {
-              ...style,
-              width: convertContentWidth(contentWidth.base),
-              minWidth: convertContentWidth(contentWidth.min),
-              maxWidth: convertContentWidth(contentWidth.max),
-            }
-          : {
-              ...style,
-              width: convertContentWidth(contentWidth),
-            }
+      return `${base} ${shadow}`
+    }, [align, className, fixed, nullable, vAlign])
+    const actualStyle =
+      typeof contentWidth === 'object'
+        ? {
+            ...style,
+            width: convertContentWidth(contentWidth.base),
+            minWidth: convertContentWidth(contentWidth.min),
+            maxWidth: convertContentWidth(contentWidth.max),
+          }
+        : {
+            ...style,
+            width: convertContentWidth(contentWidth),
+          }
 
-      return (
-        <td
-          {...rest}
-          ref={ref}
-          className={actualClassName}
-          style={actualStyle}
-          data-fixed={fixed}
-        />
-      )
-    },
-  ),
+    return <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed} />
+  },
 )
 
 const classNameGenerator = tv({
