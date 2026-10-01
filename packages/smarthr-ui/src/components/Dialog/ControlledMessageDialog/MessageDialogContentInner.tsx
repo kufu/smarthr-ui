@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, type ReactNode, memo } from 'react'
+import { type ComponentProps, type FC, type MouseEvent, type ReactNode, memo } from 'react'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -15,7 +15,7 @@ type Props = ComponentProps<typeof DialogBody> & {
   children: ReactNode
   /** 閉じるボタン */
   closeButton?: ReactNode
-  handleClickClose: () => void
+  handleClickClose: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 const CLASS_NAMES = (() => {
