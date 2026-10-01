@@ -1,8 +1,8 @@
 import {
   type ComponentPropsWithRef,
   type ComponentType,
+  type FC,
   type PropsWithChildren,
-  forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -64,20 +64,30 @@ const classNameGenerator = tv({
   },
 })
 
-export const Stack = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...rest }, ref) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ inline, align, gap, className }),
-      [align, className, gap, inline],
-    )
+export const Stack: FC<Props> = ({
+  as: Component = 'div',
+  inline = false,
+  gap = 1,
+  align,
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ inline, align, gap, className }),
+    [align, className, gap, inline],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} />
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

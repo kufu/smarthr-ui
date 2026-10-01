@@ -3,10 +3,10 @@ import {
   Children,
   type ComponentPropsWithRef,
   type ComponentType,
+  type FC,
   type PropsWithChildren,
   type ReactElement,
   cloneElement,
-  forwardRef,
   isValidElement,
   useMemo,
 } from 'react'
@@ -110,94 +110,89 @@ const itemClassNameGenerator = tv({
   },
 })
 
-export const Sidebar = forwardRef<HTMLDivElement, Props>(
-  (
-    {
-      as: Component = 'div',
-      align = 'stretch',
-      contentsMinWidth = '50%',
-      gap = 1,
-      right = false,
-      className,
-      children,
-      ...rest
-    },
-    ref,
-  ) => {
-    const gaps = useMemo(() => {
-      if (gap instanceof Object) {
-        return gap
-      }
-
-      return {
-        row: gap,
-        column: gap,
-      }
-    }, [gap])
-
-    const actualClassName = useMemo(
-      () => classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
-      [align, gaps.row, gaps.column, className],
-    )
-    const classNames = useMemo(() => {
-      const { firstItem, lastItem } = itemClassNameGenerator({ right })
-
-      return {
-        firstItem: firstItem(),
-        lastItem: lastItem(),
-      }
-    }, [right])
-    const styles = useMemo(() => {
-      const styleProps = {
-        minWidth: contentsMinWidth,
-      }
-
-      if (right) {
-        return {
-          firstItem: styleProps,
-          lastItem: undefined,
-        }
-      }
-
-      return {
-        firstItem: undefined,
-        lastItem: styleProps,
-      }
-    }, [contentsMinWidth, right])
-
-    // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
-    const maxChildrenIndex = Children.count(children) - 1
-    const styledChildren = Children.map(children, (child, i) => {
-      if (isValidElement(child)) {
-        const childClassName = child.props.className ?? ''
-
-        if (i === 0) {
-          return cloneElement(child as ReactElement, {
-            className: `${classNames.firstItem} ${childClassName}`,
-            style: { ...styles.firstItem, ...child.props.style },
-          })
-        } else if (i === maxChildrenIndex) {
-          return cloneElement(child as ReactElement, {
-            className: `${classNames.lastItem} ${childClassName}`,
-            style: { ...styles.lastItem, ...child.props.style },
-          })
-        }
-      }
-
-      return child
-    })
-
-    const Wrapper = useSectionWrapper(Component)
-    const body = (
-      <Component {...rest} ref={ref} className={actualClassName}>
-        {styledChildren}
-      </Component>
-    )
-
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
+export const Sidebar: FC<Props> = ({
+  as: Component = 'div',
+  align = 'stretch',
+  contentsMinWidth = '50%',
+  gap = 1,
+  right = false,
+  className,
+  children,
+  ...rest
+}) => {
+  const gaps = useMemo(() => {
+    if (gap instanceof Object) {
+      return gap
     }
 
-    return body
-  },
-)
+    return {
+      row: gap,
+      column: gap,
+    }
+  }, [gap])
+
+  const actualClassName = useMemo(
+    () => classNameGenerator({ align, rowGap: gaps.row, columnGap: gaps.column, className }),
+    [align, gaps.row, gaps.column, className],
+  )
+  const classNames = useMemo(() => {
+    const { firstItem, lastItem } = itemClassNameGenerator({ right })
+
+    return {
+      firstItem: firstItem(),
+      lastItem: lastItem(),
+    }
+  }, [right])
+  const styles = useMemo(() => {
+    const styleProps = {
+      minWidth: contentsMinWidth,
+    }
+
+    if (right) {
+      return {
+        firstItem: styleProps,
+        lastItem: undefined,
+      }
+    }
+
+    return {
+      firstItem: undefined,
+      lastItem: styleProps,
+    }
+  }, [contentsMinWidth, right])
+
+  // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
+  const maxChildrenIndex = Children.count(children) - 1
+  const styledChildren = Children.map(children, (child, i) => {
+    if (isValidElement(child)) {
+      const childClassName = child.props.className ?? ''
+
+      if (i === 0) {
+        return cloneElement(child as ReactElement, {
+          className: `${classNames.firstItem} ${childClassName}`,
+          style: { ...styles.firstItem, ...child.props.style },
+        })
+      } else if (i === maxChildrenIndex) {
+        return cloneElement(child as ReactElement, {
+          className: `${classNames.lastItem} ${childClassName}`,
+          style: { ...styles.lastItem, ...child.props.style },
+        })
+      }
+    }
+
+    return child
+  })
+
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {styledChildren}
+    </Component>
+  )
+
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
+
+  return body
+}
