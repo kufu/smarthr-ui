@@ -13,6 +13,8 @@ import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
+import { TextOverflowTooltip } from './client'
+
 import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { ElementRef, Gap } from '../../types'
 
@@ -103,7 +105,7 @@ const classNameGenerator = tv({
       4: 'shr-line-clamp-[4]',
       5: 'shr-line-clamp-[5]',
       6: 'shr-line-clamp-[6]',
-    } satisfies Record<NonNullable<Props['maxLines']>, string>,
+    } satisfies Record<NonNullable<MaxLinesObject['max']>, string>,
   },
 })
 
@@ -163,6 +165,13 @@ type ActualIconType =
     }
 type IconType = ActualIconType | ReactNode
 
+type MaxLinesObject = {
+  max: 1 | 2 | 3 | 4 | 5 | 6 | undefined
+  /** true のとき、テキストが省略されている場合のみ Tooltip で全文を表示する */
+  tooltip?: boolean
+}
+type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
+
 // HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
 type Props<T extends ElementType = 'span'> = PropsWithChildren<
   ComponentProps<T> & {
@@ -181,11 +190,15 @@ type Props<T extends ElementType = 'span'> = PropsWithChildren<
     color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
     leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
     whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
-    maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+    /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
+    maxLines?: MaxLinesType
   }
 >
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
+const maxLinesObjectConverter = (maxLines: 1 | 2 | 3 | 4 | 5 | 6 | undefined): MaxLinesObject => ({
+  max: maxLines,
+})
 
 const ActualText: <T extends ElementType = 'span'>(props: Props<T>) => ReturnType<FC> = forwardRef(
   <T extends ElementType = 'span'>(
@@ -200,14 +213,19 @@ const ActualText: <T extends ElementType = 'span'>(props: Props<T>) => ReturnTyp
       color,
       leading,
       whiteSpace,
-      maxLines,
+      maxLines: orgMaxLines,
       className,
       children,
       ...rest
     }: Props<T>,
     ref: Ref<ElementRef<T>>,
   ) => {
-    if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
+    const maxLines = useObjectAttributes<MaxLinesType, MaxLinesObject>(
+      orgMaxLines,
+      maxLinesObjectConverter,
+    )
+
+    if (maxLines.max !== undefined && (maxLines.max < 1 || maxLines.max > 6)) {
       throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
     }
 
@@ -224,10 +242,10 @@ const ActualText: <T extends ElementType = 'span'>(props: Props<T>) => ReturnTyp
         leading: leading || styleTypeValues.leading,
         italic,
         whiteSpace,
-        maxLines,
+        maxLines: maxLines.max,
         className,
       })
-    }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
+    }, [size, weight, italic, color, leading, whiteSpace, maxLines.max, className, styleType])
     const hasIcon = !!icon
     const iconGap = icon?.gap
 
@@ -236,17 +254,23 @@ const ActualText: <T extends ElementType = 'span'>(props: Props<T>) => ReturnTyp
       [hasIcon, iconGap],
     )
 
-    return (
+    const content = icon ? (
+      <span className={wrapperClassName}>
+        {icon.prefix}
+        {children}
+        {icon.suffix}
+      </span>
+    ) : (
+      children
+    )
+
+    return maxLines.tooltip ? (
+      <TextOverflowTooltip {...rest} as={Component} outerRef={ref} className={actualClassName}>
+        {content}
+      </TextOverflowTooltip>
+    ) : (
       <Component {...rest} ref={ref} className={actualClassName}>
-        {icon ? (
-          <span className={wrapperClassName}>
-            {icon.prefix}
-            {children}
-            {icon.suffix}
-          </span>
-        ) : (
-          children
-        )}
+        {content}
       </Component>
     )
   },
