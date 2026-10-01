@@ -1,8 +1,10 @@
-import { type RefObject, useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { useLatest } from '../useLatest'
 
 import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact18'
+
+import type { RefObject } from 'react'
 
 /**
  * 指定された複数の要素を「ひとつの領域（Area）」とみなし
@@ -13,33 +15,33 @@ import { useCallbackRefCleanupForReact18 } from './useCallbackRefCleanupForReact
  * DOM構造上は離れているが、UIとしては同じ領域として扱いたい複数要素の外側クリックを判定するのに最適です。
  * callbackRefとして設定する要素はメニュー要素のようにdom上に存在する・しないが頻繁に変更される要素を指定する想定です。
  *
- * @param otherRefs 領域を構成する要素のRef配列。
+ * @param otherRefs 領域を構成する要素のRef配列。`null`を渡すと監視を行わない
+ *                  （例: Comboboxが非フォーカス状態の間など、監視が不要なタイミングで指定する）。
+ *                  `null`かどうかが変化するとcallback ref自体が作り直され、監視の開始/終了が切り替わる。
  * @param onOuter   領域の【外側】がクリックされたときに実行されるメインのコールバック。
  * @param onInner   領域の【内側】がクリックされたときに実行されるオプションのコールバック。
  */
 export function useAreaClickCallbackRef(
-  otherRefs: Array<RefObject<HTMLElement>>,
+  otherRefs: Array<RefObject<HTMLElement>> | null,
   onOuter: (e: MouseEvent) => void,
   onInner?: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
+  const hasOtherRefs = !!otherRefs
 
   return useCallbackRefCleanupForReact18(
     useCallback(
       (node: HTMLElement | null) => {
-        if (!node) {
+        if (!node || !hasOtherRefs) {
           return
         }
 
         const handleClick = (e: MouseEvent) => {
-          // TODO: 現在はareaを成立させるotherRefsの要素はcallbackRefがmountされている場合、
-          // 常にmountされている前提だが、対象要素が可変する場合を考慮して
           // 監視対象が揃っていない場合は、area不成立とみなしてskip
-          // callbackRefなので設定されている要素はこのロジックに到達した場合必ず存在するので
-          // otherRefsの中身だけチェックする
+          // callbackRefが設定されている要素はこのロジックに到達した場合必ず存在するのでotherRefsだけチェックする
           const refs = latest.otherRefs
 
-          if (refs.length === 0) return
+          if (!refs || refs.length === 0) return
 
           const areaEls = refs.reduce<HTMLElement[]>((prev, target) => {
             if (target.current) {
@@ -69,7 +71,9 @@ export function useAreaClickCallbackRef(
           window.removeEventListener('click', handleClick)
         }
       },
-      [latest],
+      // HINT: otherRefsのnull/非nullが変化するとcallback ref自体が作り直され、呼び出し側のref属性の
+      // 値が変わることでReactが自動的に再デタッチ→再アタッチする（監視の開始/終了はこれで実現している）
+      [hasOtherRefs, latest],
     ),
   )
 }

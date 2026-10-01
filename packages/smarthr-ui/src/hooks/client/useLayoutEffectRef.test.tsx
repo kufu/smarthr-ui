@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { useCallback } from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 
 import { useLayoutEffectRef } from './useLayoutEffectRef'
 import { useMergeRefs } from './useMergeRefs'
@@ -149,6 +149,45 @@ describe('useLayoutEffectRef', () => {
     rerender(<Component show={true} dep={3} />)
 
     expect(action).toHaveBeenCalledTimes(1)
+  })
+
+  test('要素が後から追加されるマウントで、同じコミット内で兄弟がsetStateしても、次のdependencies変化でactionが再実行される', () => {
+    // HINT: 条件付きレンダーで後から要素が追加されるマウントの場合、useLayoutEffectがref attachより先に
+    // 実行されることがある(通常の初回マウントとは順序が逆転する)。この状態で兄弟のuseLayoutEffectがsetStateし、
+    // 同じコミット内で追加の再レンダーが発生すると、旧実装(isFirstEffectフラグ方式)では
+    // 「ref attachより先に実行されたuseLayoutEffect」を初回起動と誤認識し、
+    // 以降のdependencies変化に対するaction再実行がスキップされ続けるバグがあった
+    const action = vi.fn()
+
+    const Sibling = ({ onMount }: { onMount: () => void }) => {
+      useLayoutEffect(() => {
+        onMount()
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- mount時のみ実行する挙動を検証するテストのため意図的に空配列にする
+      }, [])
+      return null
+    }
+
+    const Child = ({ show, dep }: { show: boolean; dep: number }) => {
+      const ref = useLayoutEffectRef(action, [dep])
+      return show ? <div ref={ref} /> : null
+    }
+
+    const Parent = ({ show, dep }: { show: boolean; dep: number }) => {
+      const [, forceRerender] = useState(0)
+      return (
+        <>
+          <Child show={show} dep={dep} />
+          {show && <Sibling onMount={() => forceRerender((c) => c + 1)} />}
+        </>
+      )
+    }
+
+    const { rerender } = render(<Parent show={false} dep={1} />)
+    rerender(<Parent show={true} dep={1} />)
+    expect(action).toHaveBeenCalledTimes(1)
+
+    rerender(<Parent show={true} dep={2} />)
+    expect(action).toHaveBeenCalledTimes(2)
   })
 
   describe('useLayoutEffectRefを利用するコンポーネントと、それを埋め込む側のコンポーネントが異なる場合', () => {

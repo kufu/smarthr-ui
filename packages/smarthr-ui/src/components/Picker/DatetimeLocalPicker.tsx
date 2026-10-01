@@ -21,6 +21,8 @@ export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Prop
       }
     }, [className])
 
+    const errorAttr = error || undefined
+
     return (
       <span className={classNames.wrapper}>
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
@@ -29,7 +31,8 @@ export const DatetimeLocalPicker = forwardRef<HTMLInputElement, PickerProps<Prop
           ref={ref}
           type="datetime-local"
           className={classNames.inner}
-          aria-invalid={error || undefined}
+          aria-invalid={errorAttr}
+          data-smarthr-ui-input-error={errorAttr}
           data-smarthr-ui-input="true"
         />
       </span>

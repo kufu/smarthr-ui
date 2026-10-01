@@ -1,10 +1,18 @@
 import { type PropsWithChildren, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+type sortTypes = 'asc' | 'desc' | 'none'
+
+type Props = PropsWithChildren<{
+  align?: 'left' | 'right'
+  handleSort?: () => void
+  sort?: sortTypes
+}>
 
 const sortButtonClassNameGenerator = tv({
   base: 'shr-relative -shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-items-center shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
@@ -12,17 +20,9 @@ const sortButtonClassNameGenerator = tv({
     align: {
       left: '',
       right: 'shr-justify-end',
-    },
+    } satisfies Record<NonNullable<Props['align']>, string>,
   },
 })
-
-type sortTypes = 'asc' | 'desc' | 'none'
-
-type Props = PropsWithChildren<{
-  align?: VariantProps<typeof sortButtonClassNameGenerator>['align']
-  handleSort?: () => void
-  sort?: sortTypes
-}>
 
 export const ThSortButton = memo<Props>(({ align, sort, handleSort, children }) => {
   const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])

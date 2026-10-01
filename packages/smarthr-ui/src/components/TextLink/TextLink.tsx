@@ -10,7 +10,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
@@ -21,7 +21,9 @@ type ElementProps<T extends ElementType> = Omit<
   (keyof Props<T> & ElementRefProps<T>) | 'color'
 >
 
-type Props<T extends ElementType> = VariantProps<typeof classNameGenerator> & {
+type Props<T extends ElementType> = {
+  /** テキストのサイズ */
+  size?: 'XS' | 'S' | 'M'
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: MouseEvent) => void
   /** テキストの前に表示するアイコン */
@@ -58,7 +60,7 @@ const classNameGenerator = tv({
       M: {
         anchor: 'shr-text-base',
       },
-    },
+    } satisfies Record<NonNullable<Props<ElementType>['size']>, { anchor: string }>,
   },
 })
 const ActualTextLink: TextLinkComponent = forwardRef(

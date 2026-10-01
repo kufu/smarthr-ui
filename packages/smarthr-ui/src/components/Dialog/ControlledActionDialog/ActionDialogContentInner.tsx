@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  type ComponentProps,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -14,14 +15,10 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
+import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
-
-export type ActionDialogHelpers = {
-  close: () => void
-}
 
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
@@ -39,10 +36,10 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-export type BaseProps = PropsWithChildren<
-  DialogBodyProps & {
+type Props = PropsWithChildren<
+  ComponentProps<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: DialogHeadingProps
+    heading: ComponentProps<typeof DialogHeading>
     /** アクションボタン */
     actionButton: ObjectActionButtonType
     /**
@@ -50,18 +47,15 @@ export type BaseProps = PropsWithChildren<
      * @param e マウスイベント
      * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    handleClickAction: (e: MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    handleClickAction: (e: MouseEvent<Element>, helpers: { close: () => void }) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
+    handleClickClose: () => void
+    responseStatus?: ResponseStatus
   }
 >
-
-export type ActionDialogContentInnerProps = BaseProps & {
-  handleClickClose: () => void
-  responseStatus?: ResponseStatus
-}
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
@@ -76,7 +70,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
+export const ActionDialogContentInner: FC<Props> = ({
   children,
   heading,
   contentBgColor,
@@ -118,7 +112,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<ActionDialogContentInnerProps, 'handleClickClose' | 'handleClickAction'> & {
+  Pick<Props, 'handleClickClose' | 'handleClickAction'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
@@ -172,7 +166,7 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<{
-  handleClick: ActionDialogContentInnerProps['handleClickClose']
+  handleClick: Props['handleClickClose']
   disabled: boolean
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (

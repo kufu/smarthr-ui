@@ -1,13 +1,13 @@
-import type { classNameGenerator } from './client'
 import type { ComponentPropsWithRef, ReactNode } from 'react'
-import type { VariantProps } from 'tailwind-variants'
 
 export type PreviewableObjectType = {
   /** プレビューダイアログ内のFileViewerで検索機能を有効にするかどうか */
   searchable?: boolean
 }
 
-type BaseProps = VariantProps<typeof classNameGenerator> & {
+type BaseProps = {
+  /** コンポーネントのサイズ */
+  size?: 'M' | 'S'
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */

@@ -16,11 +16,13 @@ import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap, type FocusTrapRef } from './FocusTrap'
+import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
 
-export type DialogContentInnerProps = PropsWithChildren<{
+type FocusTrapProps = ComponentProps<typeof FocusTrap>
+
+type BaseProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
    * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
@@ -45,11 +47,6 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   size?: DialogSize
   /**
-   * ダイアログの `id`
-   * TODO 使われてなさそうなので確認
-   */
-  id?: string
-  /**
    * ダイアログを開いた時にフォーカスする対象
    */
   firstFocusTarget?: RefObject<HTMLElement>
@@ -64,15 +61,17 @@ export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * ダイアログトップのフォーカストラップへの ref
    */
-  focusTrapRef?: RefObject<FocusTrapRef>
+  focusTrapRef?: FocusTrapProps['outerRef']
 }>
-type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+
+export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 
 const classNameGenerator = tv({
   slots: {
     layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
     inner: [
-      'smarthr-ui-Dialog',
+      DIALOG_CONTENT_CLASS_NAME,
       'shr-border-shorthand shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
@@ -95,7 +94,6 @@ export const DialogContentInner: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,
-  id,
   width,
   size,
   firstFocusTarget,
@@ -160,7 +158,6 @@ export const DialogContentInner: FC<Props> = ({
     <DialogOverlap isOpen={isOpen}>
       <div
         ref={callbackRef}
-        id={id}
         className={classNames.layout}
         style={actualWidth ? { width: actualWidth } : undefined}
       >
@@ -176,7 +173,7 @@ export const DialogContentInner: FC<Props> = ({
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
         >
-          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+          <FocusTrap outerRef={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>

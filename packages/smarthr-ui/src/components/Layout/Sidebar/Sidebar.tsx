@@ -10,11 +10,24 @@ import {
   isValidElement,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap, SeparateGap } from '../../../types'
+import type { PositiveGap, SeparatePositiveGap } from '../../../types'
+
+type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+
+type Props = PropsWithChildren<{
+  as?: string | ComponentType<any>
+  /** コンポーネントの `min-width` 値 */
+  contentsMinWidth?: CSSProperties['minWidth']
+  /** 各領域の間隔の指定（gap） */
+  gap?: PositiveGap | SeparatePositiveGap
+  align?: AlignType
+  right?: boolean
+}> &
+  ComponentPropsWithRef<'div'>
 
 const classNameGenerator = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],
@@ -27,7 +40,7 @@ const classNameGenerator = tv({
       center: 'shr-items-center',
       baseline: 'shr-items-baseline',
       stretch: 'shr-items-stretch',
-    },
+    } satisfies Record<AlignType, string>,
     rowGap: {
       0: 'shr-gap-y-0',
       0.25: 'shr-gap-y-0.25',
@@ -51,7 +64,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-y-3',
       XXL: 'shr-gap-y-3.5',
       X3L: 'shr-gap-y-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<PositiveGap, string>,
     columnGap: {
       0: 'shr-gap-x-0',
       0.25: 'shr-gap-x-0.25',
@@ -75,7 +88,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-x-3',
       XXL: 'shr-gap-x-3.5',
       X3L: 'shr-gap-x-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<PositiveGap, string>,
   },
 })
 const itemClassNameGenerator = tv({
@@ -96,17 +109,6 @@ const itemClassNameGenerator = tv({
     },
   },
 })
-
-type Props = Omit<VariantProps<typeof classNameGenerator>, 'rowGap' | 'columnGap'> &
-  VariantProps<typeof itemClassNameGenerator> &
-  PropsWithChildren<{
-    as?: string | ComponentType<any>
-    /** コンポーネントの `min-width` 値 */
-    contentsMinWidth?: CSSProperties['minWidth']
-    /** 各領域の間隔の指定（gap） */
-    gap?: Gap | SeparateGap
-  }> &
-  ComponentPropsWithRef<'div'>
 
 export const Sidebar = forwardRef<HTMLDivElement, Props>(
   (

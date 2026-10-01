@@ -1,5 +1,5 @@
 'use client'
-// TODO: 将来的にuse clientを削除し、smarthr-uiを利用する側で 'use client' を設定するようにする
+// HINT: このhookは外部公開されているため、安全のため use clientを残す
 
 import { createContext, useContext } from 'react'
 
