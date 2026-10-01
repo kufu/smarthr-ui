@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.6](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.5...smarthr-ui-charts-v0.2.6) (2026-10-01)
+
+
+### Features
+
+* **BarChart:** StackとHorizontalの機能を追加 ([#7096](https://github.com/kufu/smarthr-ui/issues/7096)) ([b3dbd25](https://github.com/kufu/smarthr-ui/commit/b3dbd254953301e51c897b23bc5d0abe13f2eb26))
+
 ## [0.2.5](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.4...smarthr-ui-charts-v0.2.5) (2026-09-17)
 
 

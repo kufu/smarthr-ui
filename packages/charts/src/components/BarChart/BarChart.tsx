@@ -45,6 +45,8 @@ type Props = {
   data: ChartData<'bar'>
   title?: string
   options?: Partial<ChartOptions<'bar'>>
+  stacked?: boolean
+  orientation?: 'horizontal' | 'vertical'
 } & BarChartColorProps
 
 export const BarChart: React.FC<Props> = ({
@@ -53,6 +55,8 @@ export const BarChart: React.FC<Props> = ({
   options: externalOptions,
   disablePatterns,
   singleTone,
+  orientation = 'vertical',
+  stacked,
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
@@ -85,15 +89,26 @@ export const BarChart: React.FC<Props> = ({
       datasets: data.datasets.map((dataset, index) => ({
         ...dataset,
         ...chartColors[index],
+        ...(stacked && index > 0 ? { borderSkipped: false } : {}),
       })),
     }),
-    [data, chartColors],
+    [data, chartColors, stacked],
   )
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
         ...externalOptions,
+        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        scales: {
+          ...externalOptions?.scales,
+          ...(stacked
+            ? {
+                x: { ...externalOptions?.scales?.x, stacked: true },
+                y: { ...externalOptions?.scales?.y, stacked: true },
+              }
+            : {}),
+        },
         plugins: {
           ...externalOptions?.plugins,
           title: title
@@ -106,10 +121,12 @@ export const BarChart: React.FC<Props> = ({
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            stacked,
+            horizontal: orientation === 'horizontal',
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, orientation, stacked],
   )
 
   return (

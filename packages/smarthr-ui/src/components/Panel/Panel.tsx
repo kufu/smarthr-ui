@@ -96,4 +96,5 @@ export const Panel = forwardRef<HTMLDivElement, Props>(
 )
 
 /** @deprecated Base は非推奨です。Panel を使ってください。 */
+/** @alias */
 export const Base = Panel

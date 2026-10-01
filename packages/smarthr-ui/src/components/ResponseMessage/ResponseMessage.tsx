@@ -12,7 +12,7 @@ type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt' | 'role'>> & {
   role?: 'alert' | 'status'
 }
 
-export const classNameGenerator = tv({
+const classNameGenerator = tv({
   base: '',
   variants: {
     status: {

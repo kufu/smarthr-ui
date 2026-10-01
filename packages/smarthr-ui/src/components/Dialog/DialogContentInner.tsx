@@ -65,7 +65,7 @@ type BaseProps = PropsWithChildren<{
 }>
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
-export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
+const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 
 const classNameGenerator = tv({
   slots: {

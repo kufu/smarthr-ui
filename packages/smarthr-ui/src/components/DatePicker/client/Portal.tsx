@@ -9,8 +9,6 @@ type Props = PropsWithChildren<{
 }>
 
 export const Portal: FC<Props> = ({ inputRect, children }) => {
-  // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
-  // React v18の対応を切ったらこのコメントも削除する
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
       if (node) {

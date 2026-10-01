@@ -128,8 +128,6 @@ const AutoPageTitleHeading: FC<
         subtree: true,
       })
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         observer.disconnect()
         latest.titleFrame.cancel()
@@ -142,8 +140,6 @@ const AutoPageTitleHeading: FC<
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(callbackRef, outerRef)
 
   return (

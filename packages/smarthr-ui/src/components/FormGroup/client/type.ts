@@ -10,8 +10,8 @@ import type {
 } from 'react'
 
 type TextProps = ComponentProps<typeof Text>
-export type IconType = TextProps['icon']
-export type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
+type IconType = TextProps['icon']
+type StatusLabelType = FunctionComponentElement<ComponentProps<typeof StatusLabel>>
 
 export type ObjectLabelType = {
   text: ReactNode
