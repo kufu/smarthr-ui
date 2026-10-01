@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.9.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.8.0...smarthr-ui-v99.9.0) (2026-10-01)
+
+
+### Features
+
+* **StepFormDialog:** submitButton等でtext/theme/disabled/hiddenをまとめて返す関数形式をサポート ([#7214](https://github.com/kufu/smarthr-ui/issues/7214)) ([9bb0ac8](https://github.com/kufu/smarthr-ui/commit/9bb0ac8e7fb9133077c4491ef0ff58babf247a77))
+* **Text:** maxLinesをオブジェクト指定にしオーバーフロー時のTooltip表示に対応、LineClampを非推奨化 ([#7172](https://github.com/kufu/smarthr-ui/issues/7172)) ([80286c9](https://github.com/kufu/smarthr-ui/commit/80286c9d1b873a8bfdd1a6231eed8ab28a43c7ba))
+
+
+### Bug Fixes
+
+* Base・BaseColumn を非推奨にし、Panel・Groupbox への移行を促す ([#7171](https://github.com/kufu/smarthr-ui/issues/7171)) ([14a802e](https://github.com/kufu/smarthr-ui/commit/14a802ef9abc30263f95c45b7de4a4ebc4b2bf4c))
+
 ## [99.8.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.2...smarthr-ui-v99.8.0) (2026-09-28)
 
 

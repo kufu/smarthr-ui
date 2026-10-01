@@ -303,7 +303,7 @@ import 'styled-components';    // ← hooks 側の依存が転記される
 
 **例外: `client/index.ts` が component のみを re-export する場合**
 
-`client/index.ts` が re-export する対象は component のみです。`client/` 内で宣言した hook は client 専用の内部実装であり、同じ `client/` 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません（例外は `useSectioningWrapper` のように、hook が `client/` 内の component を経由せず Server Component からも直接 import されうる場合のみ）。`client/` 配下にある component は前述の原則（そのファイル自身が client 専用 API を使っているかで判断する）に従い `'use client'` を持つため、`'use client'` を持つモジュールは react-server グラフでは実体を評価されずクライアント参照に変換されます。したがって複数の component を一つの `client/index.ts` で re-export しても、ある component の依存が別の component 側へ転記されることはありません。対象が公開 component か非公開 component かは無関係です。
+`client/index.ts` が re-export する対象は component のみです。`client/` 内で宣言した hook は client 専用の内部実装であり、同じ `client/` 内の component から相対 import で直接参照されるだけで、`client/` の外から参照されることは原則ありません（例外は `useSectioningWrapper` のように、hook が `client/` 内の component を経由せず Server Component からも直接 import されうる場合のみ）。対象が公開 component か非公開 component かは無関係で、component をいくつ re-export しても構いません。
 
 `DefinitionListItem` の `client/ItemWrapper.tsx`（非公開 component、`useTheme` を使うため `'use client'` あり）が実例です。
 
@@ -318,11 +318,13 @@ DefinitionList/
 
 rollup ビルド出力で `DefinitionListItem.js` が `client/index.js` を経由せず `client/ItemWrapper.js` に直リンクされること、`node --conditions react-server` での評価が成功することを実測済みです。
 
-**この転記は Next.js 実利用では顕在化しないが、それでも作らない**
+**component を複数 re-export すると副作用 import が転記されることがあるが、実害はない**
 
-`sandbox/next`（`smarthr-ui: workspace:*`）で実測したところ、`client/index.ts` を作った状態でも `next build` / `next dev` は問題なく成功し、`Section` は Server Component として描画され、RSC 側の依存一覧（`page.js.nft.json`）に `styled-components` は含まれませんでした。`package.json` の `sideEffects` 宣言（`lib/*.js` を side-effect-free と宣言）により、Turbopack/webpack が副作用 import をツリーシェイクで除去するためです。
+`client/index.ts` が component を複数 re-export している場合、ある component のモジュールスコープの副作用（`createContext` 呼び出しなど）が、それを使っていない呼び出し側にまで副作用 import として転記されることがあります。`Portal`（`client/Portal.tsx`）と `NestablePortal`（`client/NestablePortal.tsx`、`createContext` をモジュールスコープで呼ぶ）を同じ `client/index.ts` から re-export していた際、`Portal` だけを使う `LoadingStatus.tsx` の rollup ビルド出力に `import '../Portal/client/NestablePortal.js';` という副作用 import が転記されることを実測しました。
 
-一方、素の `node --conditions react-server` で当該ファイルを直接評価すると `TypeError: r.createContext is not a function` になります。バンドラを経由しない実行では顕在化するため、**バンドラの `sideEffects` 最適化に依存しない構成を保つ**という意味で、`client/index.ts` は作らない方針を維持します。
+この転記に実害はありません。`package.json` の `sideEffects` 宣言（`lib/*.js` を side-effect-free と宣言）により、Next.js 等のバンドラ（Turbopack/webpack）が副作用 import をツリーシェイクで除去するためです。`sandbox/next`（`smarthr-ui: workspace:*`）で実測したところ、`client/index.ts` を作った状態でも `next build` / `next dev` は問題なく成功し、対象コンポーネントは Server Component として描画され、RSC 側の依存一覧（`page.js.nft.json`）に余分な依存は含まれませんでした。
+
+素の `node --conditions react-server` で当該ファイルを直接評価すると転記された依存でエラーになることがありますが、これはバンドラを経由しない直接評価でのみ顕在化するものであり、Next.js 等の実利用環境では問題になりません。したがって `client/index.ts` は component をいくつ re-export しても構わず、転記の有無を気にしてバレルを分割する必要はありません。
 
 **共有 hook（`src/hooks/`）の場合**
 
@@ -1128,12 +1130,12 @@ const ref = useCallback((node: HTMLElement | null) => {
 }, [])
 ```
 
-#### callback ref の cleanup 関数と React 18/19 互換性
+#### callback ref の cleanup 関数
 
-React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。しかし React 18 にはこの仕組みがなく、返り値は無視されて `ref(null)` が呼ばれるだけです。smarthr-ui は `react: "^18.0.0 || ^19.0.0"` を peerDependency としてサポートしているため、callback ref から直接cleanup関数を返す実装は避けてください。
+React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。
 
 ```tsx
-// ❌ React 19でしか正しく動作しない（React 18ではcleanup関数が無視される）
+// ✅ callback refがcleanup関数を返す
 const callbackRef = useCallback((node: HTMLElement | null) => {
   if (!node) return
 
@@ -1144,25 +1146,7 @@ const callbackRef = useCallback((node: HTMLElement | null) => {
 }, [])
 ```
 
-**対応方法:**
-- 単一の ref を扱う場合は `useCallbackRefCleanupForReact18`（`src/hooks/useCallbackRefCleanupForReact18.ts`）でラップする
-- 複数の ref を1つに統合する場合は `useMergeRefs` を使う（内部で同じ仕組みを実装済み）
-
-どちらも「callback が返した cleanup 関数を自前で保持しておき、`node = null` で呼ばれたときに手動で実行する」という同じ仕組みで React 18/19 の挙動を統一しています。そのため、これらのフックを経由すれば callback ref の cleanup 関数はどちらのバージョンでも正しく動作します。
-
-```tsx
-// ✅ useCallbackRefCleanupForReact18でラップする
-const callbackRef = useCallbackRefCleanupForReact18(
-  useCallback((node: HTMLElement | null) => {
-    if (!node) return
-
-    const observer = new MutationObserver(callback)
-    observer.observe(node, { childList: true })
-
-    return () => observer.disconnect()
-  }, []),
-)
-```
+複数の ref を1つに統合する場合は `useMergeRefs` を使います。
 
 #### useOnce
 
@@ -1250,17 +1234,15 @@ useEffect(() => {
 }, [])
 
 // ✅ callback refに直接書く（要素がアタッチされた瞬間に実行されることが一目でわかる）
-const callbackRef = useCallbackRefCleanupForReact18(
-  useCallback((node: HTMLUListElement | null) => {
-    if (!node) return
-    const observer = new MutationObserver(callback)
-    observer.observe(node, { childList: true })
-    return () => observer.disconnect()
-  }, []),
-)
+const callbackRef = useCallback((node: HTMLUListElement | null) => {
+  if (!node) return
+  const observer = new MutationObserver(callback)
+  observer.observe(node, { childList: true })
+  return () => observer.disconnect()
+}, [])
 ```
 
-**理由:** `ref.current` 経由の間接参照ではなく、要素のアタッチ/デタッチそのものにロジックを紐付けられる。cleanup関数を返す場合はReact 18互換のため `useCallbackRefCleanupForReact18`（または `useMergeRefs`）でラップする。
+**理由:** `ref.current` 経由の間接参照ではなく、要素のアタッチ/デタッチそのものにロジックを紐付けられる。
 
 **2. マウント時に一度だけ計算する初期値 → useStateの遅延初期化**
 

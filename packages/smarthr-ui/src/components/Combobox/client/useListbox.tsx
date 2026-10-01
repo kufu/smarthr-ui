@@ -18,7 +18,6 @@ import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallba
 import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { usePortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
@@ -26,6 +25,7 @@ import { findDelegateTarget } from '../../../libs/delegate'
 import { FaCircleInfoIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Loader } from '../../Loader'
+import { Portal } from '../../Portal'
 import { Scroller } from '../../Scroller'
 import { Text } from '../../Text'
 
@@ -314,6 +314,7 @@ export const useListbox = <T,>({
       window.removeEventListener('resize', functions.calculateRect)
     }
     // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [isExpanded, options, functions])
 
   return {
@@ -376,12 +377,12 @@ export const ListBox = memo(
     dropdownWidth,
     callbackRef,
   }: ListBoxProps<T>) => {
-    const { createPortal } = usePortal()
     const theme = useTheme()
 
     const minLength = useMemo(
       () =>
         (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
+      // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
       [activeOptionId, options],
     )
     const [prevMinLength, setPrevMinLength] = useState(minLength)
@@ -394,6 +395,7 @@ export const ListBox = memo(
       setCurrentItemLength((current) => Math.max(current, minLength))
     }
 
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {
@@ -463,8 +465,8 @@ export const ListBox = memo(
       }
     }, [latest])
 
-    return createPortal(
-      <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+    return (
+      <Portal outerRef={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         <Scroller
           ref={listBoxRef}
           role="listbox"
@@ -515,7 +517,7 @@ export const ListBox = memo(
             <Intersection callbackRef={functions.intersectCallbackRef} />
           )}
         </Scroller>
-      </div>,
+      </Portal>
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode

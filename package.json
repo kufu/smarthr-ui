@@ -8,7 +8,7 @@
     "@commitlint/config-conventional": "^21.2.3",
     "@rollup/plugin-json": "^6.1.0",
     "eslint": "^9.39.5",
-    "eslint-config-smarthr": "14.8.2",
+    "eslint-config-smarthr": "^14.11.0",
     "eslint-plugin-perfectionist": "^5.10.1",
     "eslint-plugin-storybook": "^10.5.10",
     "husky": "^9.1.7",

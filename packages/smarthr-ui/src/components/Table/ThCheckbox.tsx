@@ -2,13 +2,13 @@ import { type ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
-import { Checkbox, type Props as CheckboxProps } from '../Checkbox'
+import { Checkbox } from '../Checkbox'
 import { ControlledTooltip } from '../Tooltip'
 
 import { CheckboxTh } from './client'
 
 type BaseProps = Pick<ComponentProps<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = BaseProps & Omit<CheckboxProps, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentProps<typeof Checkbox>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

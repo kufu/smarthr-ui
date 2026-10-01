@@ -76,7 +76,7 @@ type Props = BaseProps &
     | 'aria-haspopup'
   >
 
-export const DEFAULT_FROM = new Date(1900, 0, 1)
+const DEFAULT_FROM = new Date(1900, 0, 1)
 
 const classNameGenerator = tv({
   slots: {
@@ -379,8 +379,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
       [value, isInputFocused, functions, latest],
     )
 
-    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
     const mergedRef = useMergeRefs(functions.inputCallbackRef, inputLayoutEffectRef, ref)
 
     const mergedCalendarRef = useMergeRefs(

@@ -1,7 +1,8 @@
-import { type ReactNode, type RefObject, useCallback, useLayoutEffect, useState } from 'react'
+import { type ReactNode, useCallback, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, id?: string) {
+export function useDialogPortal(parent?: HTMLElement, id?: string) {
+  // TODO: Portalの実装を参考に修正する
   const [portalContainer] = useState<HTMLElement | null>(() =>
     typeof document === 'undefined' ? null : document.createElement('div'),
   )
@@ -19,8 +20,8 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
       portalContainer.id = id
     }
 
-    const parentElement = parent && 'current' in parent ? parent.current : parent
-    const actualParent = parentElement || document.body
+    // parent が存在しない場合は document.body をデフォルトの配置先にする
+    const actualParent = parent || document.body
 
     actualParent.appendChild(portalContainer)
     // HINT: appendChildが成功してもactualParent自体がdocumentに未接続だと
@@ -33,11 +34,13 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, i
     }
   }, [id, parent, portalContainer])
 
+  const wrappedCreatePortal = useCallback(
+    (children: ReactNode) =>
+      portalContainer && isMounted ? createPortal(children, portalContainer) : null,
+    [portalContainer, isMounted],
+  )
+
   return {
-    createPortal: useCallback(
-      (children: ReactNode) =>
-        portalContainer && isMounted ? createPortal(children, portalContainer) : null,
-      [portalContainer, isMounted],
-    ),
+    createPortal: wrappedCreatePortal,
   }
 }

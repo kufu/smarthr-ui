@@ -15,14 +15,11 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  FormDialogContentInner,
-  type FormDialogContentInnerProps,
-  type FormDialogHelpers,
-} from './FormDialogContentInner'
+import { FormDialogContentInner } from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
+type FormDialogContentInnerProps = ComponentProps<typeof FormDialogContentInner>
 type ObjectHeadingType = Omit<FormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
@@ -39,7 +36,7 @@ type BaseProps = Omit<
     /**
      * フォーム送信時に発火するコールバック関数
      */
-    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: FormDialogHelpers) => void
+    onSubmit: (e: FormEvent<HTMLFormElement>, helpers: { close: () => void }) => void
     /**
      * 閉じるボタンをクリックした時に発火するコールバック関数
      */
