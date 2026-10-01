@@ -105,7 +105,7 @@ const classNameGenerator = tv({
       4: 'shr-line-clamp-[4]',
       5: 'shr-line-clamp-[5]',
       6: 'shr-line-clamp-[6]',
-    } satisfies Record<NonNullable<Props['maxLines']>, string>,
+    } satisfies Record<NonNullable<MaxLinesObject['max']>, string>,
   },
 })
 
