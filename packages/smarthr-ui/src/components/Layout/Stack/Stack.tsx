@@ -13,13 +13,13 @@ import type { PositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type Props = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   as?: string | ComponentType<any>
   inline?: boolean
   gap?: PositiveGap
   align?: AlignType
-}> &
-  ComponentPropsWithRef<'div'>
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',

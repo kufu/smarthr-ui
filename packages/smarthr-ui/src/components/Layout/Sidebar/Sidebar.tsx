@@ -18,7 +18,7 @@ import type { PositiveGap, SeparatePositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type Props = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   as?: string | ComponentType<any>
   /** コンポーネントの `min-width` 値 */
   contentsMinWidth?: CSSProperties['minWidth']
@@ -26,8 +26,8 @@ type Props = PropsWithChildren<{
   gap?: PositiveGap | SeparatePositiveGap
   align?: AlignType
   right?: boolean
-}> &
-  ComponentPropsWithRef<'div'>
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],

@@ -12,12 +12,12 @@ import { useSectionWrapper } from '../../SectioningContent'
 
 import type { PositiveGap } from '../../../types'
 
-type Props = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   as?: string | ComponentType<any>
   gap?: PositiveGap
   padding?: PositiveGap
-}> &
-  ComponentPropsWithRef<'div'>
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [
