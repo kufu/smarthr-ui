@@ -1,13 +1,12 @@
 import {
   type ComponentPropsWithoutRef,
-  type ForwardedRef,
   type PropsWithChildren,
+  type Ref,
   memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
 import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
@@ -64,10 +63,16 @@ const classNameGenerator = tv({
   },
 })
 
-const BaseSelect = <T extends string>(
-  { options, width, hasBlank, blankLabel, size, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLSelectElement>,
-) => {
+export const Select = <T extends string>({
+  options,
+  width,
+  hasBlank,
+  blankLabel,
+  size,
+  className,
+  ref,
+  ...rest
+}: Props<T> & { ref?: Ref<HTMLSelectElement> }) => {
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
@@ -125,5 +130,3 @@ const Option = memo<Props<string>['options'][number]>((option) => {
     </optgroup>
   )
 })
-
-export const Select = genericsForwardRef(BaseSelect)
