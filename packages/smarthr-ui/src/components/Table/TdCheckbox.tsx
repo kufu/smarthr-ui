@@ -1,4 +1,10 @@
-import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
+import {
+  type ComponentProps,
+  type ComponentPropsWithRef,
+  type FC,
+  type PropsWithChildren,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Checkbox } from '../Checkbox'
@@ -11,7 +17,7 @@ type BaseProps = PropsWithChildren<{
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = Omit<ComponentProps<typeof Checkbox>, keyof BaseProps> & BaseProps
+type Props = Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps> & BaseProps
 
 const classNameGenerator = tv({
   slots: {
@@ -25,32 +31,38 @@ const classNameGenerator = tv({
   },
 })
 
-export const TdCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, children, className, rowSpan, colSpan, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, inner, checkbox } = classNameGenerator()
+export const TdCheckbox: FC<Props> = ({
+  vAlign,
+  fixed,
+  children,
+  className,
+  rowSpan,
+  colSpan,
+  ...rest
+}) => {
+  const classNames = useMemo(() => {
+    const { wrapper, inner, checkbox } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        inner: inner(),
-        checkbox: checkbox(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      inner: inner(),
+      checkbox: checkbox(),
+    }
+  }, [className])
 
-    return (
-      <Td
-        vAlign={vAlign}
-        fixed={fixed}
-        rowSpan={rowSpan}
-        colSpan={colSpan}
-        className={classNames.wrapper}
-      >
-        <label className={classNames.inner}>
-          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
-          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
-          {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
-        </label>
-      </Td>
-    )
-  },
-)
+  return (
+    <Td
+      vAlign={vAlign}
+      fixed={fixed}
+      rowSpan={rowSpan}
+      colSpan={colSpan}
+      className={classNames.wrapper}
+    >
+      <label className={classNames.inner}>
+        {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
+        <Checkbox {...rest} className={classNames.checkbox} />
+        {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
+      </label>
+    </Td>
+  )
+}

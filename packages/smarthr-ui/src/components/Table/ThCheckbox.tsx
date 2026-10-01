@@ -1,4 +1,4 @@
-import { type ComponentProps, forwardRef, useMemo } from 'react'
+import { type ComponentProps, type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -8,7 +8,7 @@ import { ControlledTooltip } from '../Tooltip'
 import { CheckboxTh } from './client'
 
 type BaseProps = Pick<ComponentProps<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = BaseProps & Omit<ComponentProps<typeof Checkbox>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -30,45 +30,43 @@ const classNameGenerator = tv({
   },
 })
 
-export const ThCheckbox = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, inner, balloon, checkbox } = classNameGenerator()
+export const ThCheckbox: FC<Props> = ({ vAlign, fixed, className, rowSpan, colSpan, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, inner, balloon, checkbox } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        inner: inner(),
-        balloon: balloon(),
-        checkbox: checkbox(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      inner: inner(),
+      balloon: balloon(),
+      checkbox: checkbox(),
+    }
+  }, [className])
 
-    return (
-      <CheckboxTh
-        vAlign={vAlign}
-        fixed={fixed}
-        rowSpan={rowSpan}
-        colSpan={colSpan}
-        className={classNames.wrapper}
-      >
-        <label className={classNames.inner}>
-          <ControlledTooltip
-            as="span"
-            horizontal="left"
-            vertical="middle"
-            className={classNames.balloon}
-          >
-            <span className="shr-inline-block shr-p-0.5">
-              <Localizer
-                id="smarthr-ui/ThCheckbox/checkAllInvisibleLabel"
-                defaultText="すべての項目を選択/解除"
-              />
-            </span>
-          </ControlledTooltip>
-          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
-          <Checkbox {...rest} ref={ref} className={classNames.checkbox} />
-        </label>
-      </CheckboxTh>
-    )
-  },
-)
+  return (
+    <CheckboxTh
+      vAlign={vAlign}
+      fixed={fixed}
+      rowSpan={rowSpan}
+      colSpan={colSpan}
+      className={classNames.wrapper}
+    >
+      <label className={classNames.inner}>
+        <ControlledTooltip
+          as="span"
+          horizontal="left"
+          vertical="middle"
+          className={classNames.balloon}
+        >
+          <span className="shr-inline-block shr-p-0.5">
+            <Localizer
+              id="smarthr-ui/ThCheckbox/checkAllInvisibleLabel"
+              defaultText="すべての項目を選択/解除"
+            />
+          </span>
+        </ControlledTooltip>
+        {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
+        <Checkbox {...rest} className={classNames.checkbox} />
+      </label>
+    </CheckboxTh>
+  )
+}
