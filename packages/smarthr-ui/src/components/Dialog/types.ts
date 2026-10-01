@@ -1,13 +1,13 @@
-import type { DialogContentInnerProps } from './DialogContentInner'
+import type { DialogContentInner } from './DialogContentInner'
+import type { ComponentProps } from 'react'
 
-type CommonProps = Pick<
+type DialogContentInnerProps = ComponentProps<typeof DialogContentInner>
+
+export type UncontrolledDialogProps = Pick<
   DialogContentInnerProps,
-  'width' | 'size' | 'id' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
->
-
-type ControlledProps = Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
-
-type PortalProps = {
+  'width' | 'size' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
+> & {
+  id?: string
   /**
    * DOM 上でダイアログの要素を追加する親要素。
    * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
@@ -16,10 +16,7 @@ type PortalProps = {
    */
   portalParent?: HTMLElement
 }
-
-export type DialogProps = CommonProps & ControlledProps & PortalProps
-export type UncontrolledDialogProps = CommonProps & PortalProps
-
-export type DirectChildren = Pick<DialogContentInnerProps, 'children'>
+export type DialogProps = UncontrolledDialogProps &
+  Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
 
 export type DialogSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'

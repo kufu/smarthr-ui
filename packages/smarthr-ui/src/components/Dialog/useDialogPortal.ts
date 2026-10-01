@@ -2,7 +2,8 @@ import { type ReactNode, useCallback, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 export function useDialogPortal(parent?: HTMLElement, id?: string) {
-  const [portalContainer] = useState<HTMLDivElement | null>(() =>
+  // TODO: Portalの実装を参考に修正する
+  const [portalContainer] = useState<HTMLElement | null>(() =>
     typeof document === 'undefined' ? null : document.createElement('div'),
   )
   // HINT: containerがDOMに接続される前に子を描画すると、子孫のref attach時点で

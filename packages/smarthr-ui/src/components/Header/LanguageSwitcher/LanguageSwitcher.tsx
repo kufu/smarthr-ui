@@ -20,7 +20,7 @@ import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../I
 
 import type { Locale } from '../../../intl'
 
-export type BaseProps = {
+type BaseProps = {
   narrow?: boolean
   localeMap: Partial<Record<Locale, string>>
   locale?: string

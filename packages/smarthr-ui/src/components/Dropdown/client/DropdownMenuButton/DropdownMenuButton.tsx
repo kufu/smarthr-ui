@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../../Button'
+import { Button } from '../../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../../Icon'
 import { Dropdown, DropdownContext } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
@@ -27,7 +27,7 @@ type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
   children: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ButtonProps['size']
+  size?: ComponentProps<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?:
     | boolean

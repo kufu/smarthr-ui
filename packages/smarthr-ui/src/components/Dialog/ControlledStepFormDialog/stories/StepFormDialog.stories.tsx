@@ -8,7 +8,7 @@ import { RadioButton } from '../../../RadioButton'
 import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
 
-import type { StepItem } from '../StepFormDialogProvider'
+import type { StepItem } from '../type'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
