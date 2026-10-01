@@ -73,6 +73,7 @@ export const Panel: FC<Props> = ({
   layer,
   as: Component = 'div',
   className,
+  children,
   ...rest
 }) => {
   const actualClassName = useMemo(() => {
@@ -91,7 +92,11 @@ export const Panel: FC<Props> = ({
   }, [layer, overflow, padding, radius, className])
 
   const Wrapper = useSectionWrapper(Component)
-  const body = <Component {...rest} className={actualClassName} />
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>
