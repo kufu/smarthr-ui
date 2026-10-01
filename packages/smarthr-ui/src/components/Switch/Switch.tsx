@@ -1,12 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useId,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, type ReactNode, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon } from '../Icon'
@@ -55,11 +47,12 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = ComponentPropsWithRef<'input'> & {
+type BaseProps = {
   children: ReactNode
   /** ラベルを視覚的に隠すかどうか */
   unrecommendedLabelHidden?: boolean
 }
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
 
 export const Switch: FC<Props> = ({
   children,
@@ -89,14 +82,14 @@ export const Switch: FC<Props> = ({
       </MemoizedLabel>
       <span className={classNames.wrapper}>
         <input {...rest} role="switch" type="checkbox" id={inputId} className={classNames.input} />
-        <MemoizedSuffixIcon className={classNames.iconWrapper} iconClassName={classNames.icon} />
+        <MemoizedSuffixIcon classNames={classNames} />
       </span>
     </Cluster>
   )
 }
 
 const MemoizedLabel = memo<
-  Pick<Props, 'unrecommendedLabelHidden'> & PropsWithChildren<{ htmlFor: string }>
+  Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
 >(({ unrecommendedLabelHidden, htmlFor, children }) => {
   const Component = unrecommendedLabelHidden ? VisuallyHiddenText : Text
 
@@ -107,10 +100,10 @@ const MemoizedLabel = memo<
   )
 })
 
-const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
-  ({ className, iconClassName }) => (
-    <span className={className}>
-      <FaCheckIcon size="XXS" className={iconClassName} />
+const MemoizedSuffixIcon = memo<{ classNames: { iconWrapper: string; icon: string } }>(
+  ({ classNames }) => (
+    <span className={classNames.iconWrapper}>
+      <FaCheckIcon size="XXS" className={classNames.icon} />
     </span>
   ),
 )
