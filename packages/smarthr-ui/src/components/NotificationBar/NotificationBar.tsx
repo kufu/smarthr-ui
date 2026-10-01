@@ -165,7 +165,7 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  let WrapBase = Fragment
+  let WrapBase: typeof Fragment | typeof Panel = Fragment
   let baseProps = {}
 
   if (base === 'base') {
