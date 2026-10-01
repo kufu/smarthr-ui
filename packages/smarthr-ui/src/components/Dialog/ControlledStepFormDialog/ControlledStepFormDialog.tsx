@@ -4,7 +4,9 @@ import {
   type ComponentProps,
   type FC,
   type FormEvent,
+  type MouseEvent,
   type ReactNode,
+  isValidElement,
   useContext,
   useMemo,
   useRef,
@@ -17,17 +19,43 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  type BaseProps as BaseStepFormDialogContentInnerProps,
-  StepFormDialogContentInner,
-  type StepFormDialogContentInnerProps,
-} from './StepFormDialogContentInner'
+import { StepFormDialogContentInner } from './StepFormDialogContentInner'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
-import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
-import type { StepItem } from './StepFormDialogProvider'
-import type { ButtonArgType, ButtonThemeType, CommonButtonType, ObjectButtonType } from './type'
+import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
+
+type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
+
+type VariableFunctionType<T> = (currentStep: StepItem) => T
+type ObjectButtonType = {
+  text?: ButtonArgType
+  /** ボタンを非表示にするかどうか */
+  hidden?: boolean | VariableFunctionType<boolean>
+  /** ボタンを無効にするかどうか */
+  disabled?: boolean | VariableFunctionType<boolean>
+  /** ボタンのスタイル */
+  theme?: ButtonThemeType | VariableFunctionType<ButtonThemeType>
+}
+
+/** text/theme/disabled/hiddenをまとめて1つの関数で解決する場合の戻り値。関数のネストは許容しない */
+type ButtonResolverResult = {
+  text?: ReactNode
+  theme?: ButtonThemeType
+  disabled?: boolean
+  hidden?: boolean
+}
+/** currentStepに応じてtext/theme/disabled/hiddenをまとめて返す関数形式 */
+type ButtonResolverType = (currentStep: StepItem, defaultText: ReactNode) => ButtonResolverResult
+
+type ButtonType = ButtonArgType | ObjectButtonType | ButtonResolverType
+
+// HINT: ButtonArgTypeの関数部分とButtonResolverTypeはどちらも`(currentStep, defaultText) => ...`という
+// 同じ引数形だが、戻り値がReactNodeかButtonResolverResultかで実行時に判別する
+const isButtonResolverResult = (value: unknown): value is ButtonResolverResult =>
+  !!value && typeof value === 'object' && !Array.isArray(value) && !isValidElement(value)
+
+type StepFormDialogContentInnerProps = ComponentProps<typeof StepFormDialogContentInner>
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -45,23 +73,30 @@ type BaseProps = Omit<
 > &
   DialogProps & {
     heading: HeadingType
-    submitButton: ButtonArgType | ObjectButtonType
-    closeButton?: ButtonArgType | ObjectButtonType
-    backButton?: ButtonArgType | ObjectButtonType
-    onSubmit: BaseStepFormDialogContentInnerProps['handleSubmit']
-    onClickClose: () => void
+    submitButton: ButtonType
+    closeButton?: ButtonType
+    backButton?: ButtonType
+    onSubmit: StepFormDialogContentInnerProps['handleSubmit']
+    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
     onClickBack?: () => void
   }
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-const buttonObjectConverter = (text: ButtonArgType): ObjectButtonType => ({
+// HINT: ButtonResolverType(関数)もtextとして保持し、呼び出し後にisButtonResolverResultで判別する
+type InternalObjectButtonType = Omit<ObjectButtonType, 'text'> & {
+  text?: ButtonArgType | ButtonResolverType
+}
+
+const buttonObjectConverter = (
+  text: ButtonArgType | ButtonResolverType,
+): InternalObjectButtonType => ({
   text,
 })
 
 type UseStepFormDialogButtonProps = {
-  button: ButtonArgType | ObjectButtonType
+  button: ButtonType
   currentStep: StepItem
   defaultValues: {
     text: ReactNode
@@ -79,25 +114,38 @@ const useStepFormDialogButton = ({
     theme: tempTheme,
     disabled: tempDisabled,
     hidden: tempHidden,
-  } = useObjectAttributes<ButtonArgType | ObjectButtonType, ObjectButtonType>(
-    button,
-    buttonObjectConverter,
-  )
+  } = useObjectAttributes<ButtonType, InternalObjectButtonType>(button, buttonObjectConverter)
 
   const actualButton = useMemo((): CommonButtonType => {
     let text = tempText ?? defaultText
     let textFunc = false
+    let actualTempTheme = tempTheme
+    let actualTempDisabled = tempDisabled
+    let actualTempHidden = tempHidden
 
     if (typeof text === 'function') {
       textFunc = true
-      text = text(currentStep, defaultText)
+
+      const result = text(currentStep, defaultText)
+
+      if (isButtonResolverResult(result)) {
+        text = result.text ?? defaultText
+        actualTempTheme = result.theme ?? actualTempTheme
+        actualTempDisabled = result.disabled ?? actualTempDisabled
+        actualTempHidden = result.hidden ?? actualTempHidden
+      } else {
+        text = result
+      }
     }
 
-    const actualTempTheme = tempTheme || defaultTheme
-    const theme =
-      typeof actualTempTheme === 'function' ? actualTempTheme(currentStep) : actualTempTheme
-    const disabled = typeof tempDisabled === 'function' ? tempDisabled(currentStep) : tempDisabled
-    const hidden = typeof tempHidden === 'function' ? tempHidden(currentStep) : tempHidden
+    const actualTheme = actualTempTheme || defaultTheme
+    const theme = typeof actualTheme === 'function' ? actualTheme(currentStep) : actualTheme
+    const disabled =
+      typeof actualTempDisabled === 'function'
+        ? actualTempDisabled(currentStep)
+        : actualTempDisabled
+    const hidden =
+      typeof actualTempHidden === 'function' ? actualTempHidden(currentStep) : actualTempHidden
 
     return {
       text,
@@ -197,16 +245,16 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     },
   })
 
-  const focusTrapRef = useRef<FocusTrapRef>(null)
+  const focusTrapRef = useRef<{ focus: () => void } | null>(null)
 
   const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
   const functions = useMemo(
     () => ({
-      handleClickClose: () => {
+      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
         if (latest.isOpen) {
           focusTrapRef.current?.focus()
-          latest.onClickClose()
+          latest.onClickClose(e)
         }
       },
       handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {

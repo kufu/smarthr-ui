@@ -1,12 +1,13 @@
 'use client'
 
 import {
+  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type KeyboardEvent,
   type MouseEvent,
   type PropsWithChildren,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
-  type RefObject,
   type SetStateAction,
   memo,
   useId,
@@ -28,8 +29,8 @@ import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
-import { Panel, type PanelElementProps } from '../../Panel'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { Panel } from '../../Panel'
+import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
 
@@ -51,11 +52,11 @@ type BaseProps = PropsWithChildren<{
   /**
    * 閉じるボタンを押下したときのハンドラ
    */
-  onClickClose?: (e: MouseEvent<HTMLButtonElement>) => void
+  onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   /**
    * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
    */
-  onPressEscape?: () => void
+  onPressEscape?: (e: KeyboardEvent) => void
   /**
    * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
@@ -86,17 +87,20 @@ type BaseProps = PropsWithChildren<{
    */
   bottom?: string | number
   /**
-   * ポータルの container となる DOM 要素を追加する親要素
+   * ポータルの container となる DOM 要素を追加する親要素。
+   * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
+   * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+   * 呼び出し側で要素が確定してから渡すこと。
    */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement
   /**
    * リサイズ可能かどうか
    */
   resizable?: boolean
 }>
 type Props = BaseProps &
-  Omit<DialogBodyProps, keyof BaseProps> &
-  Omit<PanelElementProps, keyof BaseProps>
+  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
+  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -250,7 +254,7 @@ export const ModelessDialog: FC<Props> = ({
         latest.liveRegionFrame.cancel()
       },
       setActualPosition,
-      handleArrowKeyDown: (e: KeyboardEvent) => {
+      handleArrowKeyDown: (e: ReactKeyboardEvent) => {
         if (!latest.isOpen || document.activeElement !== e.currentTarget) {
           return
         }
@@ -292,9 +296,9 @@ export const ModelessDialog: FC<Props> = ({
         lastFocusElementRef.current?.focus()
         latest.onClickClose?.(e)
       },
-      handlePressEscape: () => {
+      handlePressEscape: (e: KeyboardEvent) => {
         lastFocusElementRef.current?.focus()
-        latest.onPressEscape?.()
+        latest.onPressEscape?.(e)
       },
       handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
@@ -468,7 +472,7 @@ export const ModelessDialog: FC<Props> = ({
 
 const Handler = memo<{
   className: string
-  handleArrowKeyDown: (e: KeyboardEvent) => void
+  handleArrowKeyDown: (e: ReactKeyboardEvent) => void
 }>(({ handleArrowKeyDown, ...rest }) => {
   const { localize } = useIntl()
 

@@ -9,8 +9,6 @@ type Props = PropsWithChildren<{
 }>
 
 export const Portal: FC<Props> = ({ inputRect, children }) => {
-  // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
-  // React v18の対応を切ったらこのコメントも削除する
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
       if (node) {
@@ -24,17 +22,14 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
   )
 
   return (
-    // TODO: OriginalPortalのdivとこのdivが二重になっている。OriginalPortalのas propで統合する(別PRで対応)
-    <OriginalPortal>
-      <div
-        ref={callbackRef}
-        // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
-        // 余白があるとPortal要素の下端がCalendarの外側になり、
-        // 外側クリック判定(useOuterClick)が意図せず発火する
-        className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-flex shr-leading-none"
-      >
-        {children}
-      </div>
+    <OriginalPortal
+      outerRef={callbackRef}
+      // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
+      // 余白があるとPortal要素の下端がCalendarの外側になり、
+      // 外側クリック判定(useOuterClick)が意図せず発火する
+      className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-flex shr-leading-none"
+    >
+      {children}
     </OriginalPortal>
   )
 }

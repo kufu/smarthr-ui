@@ -43,7 +43,8 @@ export const DropdownContent: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
+    // HINT: DropdownのTriggerにはaria-controlsが設定されている
+    // aria-controlsに紐づく要素は常に存在する必要があるためactive trueの場合のdivと分離している
     <Portal id={contentId}>
       {active && (
         <div

@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "99.8.0",
+  "version": "99.9.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -14,7 +14,6 @@
     "polished": "^4.3.1",
     "react-draggable": "^4.7.2",
     "react-icons": "^5.7.0",
-    "react-innertext": "^1.1.5",
     "react-pdf": "^10.5.0",
     "react-transition-group": "^4.4.5",
     "tailwind-variants": "^0.3.1",
@@ -80,8 +79,8 @@
     "vitest": "^4.1.11"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0",
     "styled-components": "^5.0.1"
   },

@@ -42,4 +42,5 @@ export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, 
 }
 
 /** @deprecated BaseColumn は非推奨です。Groupbox を使ってください。 */
+/** @alias */
 export const BaseColumn = Groupbox
