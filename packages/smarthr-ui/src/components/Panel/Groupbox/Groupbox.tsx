@@ -40,3 +40,6 @@ export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, 
 
   return <Panel {...rest} layer={0} padding={padding} className={actualClassName} />
 }
+
+/** @deprecated BaseColumn は非推奨です。Groupbox を使ってください。 */
+export const BaseColumn = Groupbox

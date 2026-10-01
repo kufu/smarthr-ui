@@ -1,23 +1,19 @@
-import type { DialogContentInnerProps } from './DialogContentInner'
-import type { RefObject } from 'react'
+import type { DialogContentInner } from './DialogContentInner'
+import type { ComponentProps, RefObject } from 'react'
 
-type CommonProps = Pick<
+type DialogContentInnerProps = ComponentProps<typeof DialogContentInner>
+
+export type UncontrolledDialogProps = Pick<
   DialogContentInnerProps,
-  'width' | 'size' | 'id' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
->
-
-type ControlledProps = Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
-
-type PortalProps = {
+  'width' | 'size' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
+> & {
+  id?: string
   /**
    * DOM 上でダイアログの要素を追加する親要素
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
 }
-
-export type DialogProps = CommonProps & ControlledProps & PortalProps
-export type UncontrolledDialogProps = CommonProps & PortalProps
-
-export type DirectChildren = Pick<DialogContentInnerProps, 'children'>
+export type DialogProps = UncontrolledDialogProps &
+  Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
 
 export type DialogSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'FULL'

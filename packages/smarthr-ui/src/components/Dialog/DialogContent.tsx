@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type MouseEvent, useContext, useMemo } from 'react'
+import { type FC, type MouseEvent, type PropsWithChildren, useContext, useMemo } from 'react'
 
 import { findDelegateTarget } from '../../libs/delegate'
 
@@ -9,9 +9,9 @@ import { DIALOG_CONTENT_CLASS_NAME, DialogContentInner } from './DialogContentIn
 import { DialogContext } from './DialogWrapper'
 import { useDialogPortal } from './useDialogPortal'
 
-import type { DirectChildren, UncontrolledDialogProps } from './types'
+import type { UncontrolledDialogProps } from './types'
 
-type Props = UncontrolledDialogProps & DirectChildren
+type Props = PropsWithChildren<UncontrolledDialogProps>
 
 export const DialogContent: FC<Props> = ({ portalParent, children, ...rest }) => {
   const { handleDelegateClickClose, active } = useContext(DialogContext)
@@ -19,7 +19,7 @@ export const DialogContent: FC<Props> = ({ portalParent, children, ...rest }) =>
 
   const functions = useMemo(
     () => ({
-      handleDelegateClick: (e: MouseEvent<HTMLDivElement>) => {
+      handleDelegateClick: (e: MouseEvent<HTMLElement>) => {
         const closer = findDelegateTarget<HTMLElement>(e, `.${DIALOG_CLOSER_CLASS_NAME}`)
 
         // HINT: Dialogがネストしている場合、もっとも近いDialogだけを閉じる

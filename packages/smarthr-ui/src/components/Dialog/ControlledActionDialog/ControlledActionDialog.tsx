@@ -8,13 +8,11 @@ import { DialogContentInner } from '../DialogContentInner'
 import { useDialogPortal } from '../useDialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  ActionDialogContentInner,
-  type ActionDialogContentInnerProps,
-  type ActionDialogHelpers,
-} from './ActionDialogContentInner'
+import { ActionDialogContentInner } from './ActionDialogContentInner'
 
 import type { DialogProps } from '../types'
+
+type ActionDialogContentInnerProps = ComponentProps<typeof ActionDialogContentInner>
 
 type ObjectHeadingType = Omit<ActionDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -32,7 +30,7 @@ type BaseProps = Omit<
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      */
-    onClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => void
+    onClickAction: ActionDialogContentInnerProps['handleClickAction']
     /**
      * 閉じるボタンをクリックした時に発火するコールバック関数
      */
@@ -79,21 +77,22 @@ export const ControlledActionDialog: FC<Props> = ({
 
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    const handleClickAction: ActionDialogContentInnerProps['handleClickAction'] = (e, helpers) => {
+      if (latest.isOpen) {
+        latest.onClickAction(e, helpers)
+      }
+    }
+
+    return {
       handleClickClose: () => {
         if (latest.isOpen) {
           latest.onClickClose()
         }
       },
-      handleClickAction: (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
-        if (latest.isOpen) {
-          latest.onClickAction(e, helpers)
-        }
-      },
-    }),
-    [latest],
-  )
+      handleClickAction,
+    }
+  }, [latest])
 
   return createPortal(
     <DialogContentInner

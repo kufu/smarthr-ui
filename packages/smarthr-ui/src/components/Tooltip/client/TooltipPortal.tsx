@@ -47,7 +47,7 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
   // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
   const callbackRef = useCallbackRefCleanupForReact18(
     useCallback(
-      (element: HTMLDivElement | null) => {
+      (element: HTMLElement | null) => {
         if (!element || !parentRect) {
           return
         }
