@@ -52,7 +52,7 @@ type Props = PropsWithChildren<
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
-    handleClickClose: () => void
+    handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
     responseStatus?: ResponseStatus
   }
 >
