@@ -1,8 +1,9 @@
-import { forwardRef, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
 import type { PickerProps } from './types'
+import type { FC } from 'react'
 
 type Props = {
   /** フォームにエラーがあるかどうか */
@@ -10,31 +11,29 @@ type Props = {
 }
 
 /** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
-export const TimePicker = forwardRef<HTMLInputElement, PickerProps<Props>>(
-  ({ error, className, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, inner } = classNameGenerator('Time')
+export const TimePicker: FC<PickerProps<Props>> = ({ error, className, ref, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, inner } = classNameGenerator('Time')
 
-      return {
-        wrapper: wrapper({ className }),
-        inner: inner(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      inner: inner(),
+    }
+  }, [className])
 
-    const errorAttr = error || undefined
+  const errorAttr = error || undefined
 
-    return (
-      <span className={classNames.wrapper}>
-        <input
-          {...rest}
-          ref={ref}
-          type="time"
-          className={classNames.inner}
-          aria-invalid={errorAttr}
-          data-smarthr-ui-input-error={errorAttr}
-          data-smarthr-ui-input="true"
-        />
-      </span>
-    )
-  },
-)
+  return (
+    <span className={classNames.wrapper}>
+      <input
+        {...rest}
+        ref={ref}
+        type="time"
+        className={classNames.inner}
+        aria-invalid={errorAttr}
+        data-smarthr-ui-input-error={errorAttr}
+        data-smarthr-ui-input="true"
+      />
+    </span>
+  )
+}
