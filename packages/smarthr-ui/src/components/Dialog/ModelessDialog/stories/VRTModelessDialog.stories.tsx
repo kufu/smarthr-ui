@@ -32,6 +32,19 @@ export default {
 
 export const VRT: StoryObj<typeof ModelessDialog> = {}
 
+export const VRTMobile: StoryObj<typeof ModelessDialog> = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'vrtMobile',
+    },
+    chromatic: {
+      modes: {
+        vrtMobile: { viewport: 'vrtMobile' },
+      },
+    },
+  },
+}
+
 export const VRTForcedColors: StoryObj<typeof ModelessDialog> = {
   ...VRT,
   parameters: {

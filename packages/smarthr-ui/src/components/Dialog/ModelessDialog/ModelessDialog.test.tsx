@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
+import { EnvironmentProvider } from '../../../hooks/client/useEnvironment'
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
 
@@ -49,6 +50,74 @@ describe('ModelessDialog', () => {
       },
       { timeout: 1000 },
     )
+  })
+
+  it('モバイル環境ではMessageDialogとして表示されること', async () => {
+    const onClickClose = vi.fn()
+
+    render(
+      <EnvironmentProvider environment={{ mobile: true }}>
+        <IntlProvider locale="ja">
+          <ModelessDialog
+            isOpen
+            top={10}
+            left={10}
+            right={10}
+            bottom={10}
+            resizable
+            height="10em"
+            onClickClose={onClickClose}
+            heading="モバイルダイアログ"
+            footer="モードレス用フッター"
+          >
+            <p>ダイアログの中身</p>
+          </ModelessDialog>
+        </IntlProvider>
+      </EnvironmentProvider>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'モバイルダイアログ' })
+
+    expect(dialog).toHaveAttribute('aria-modal', 'true')
+    expect(dialog).not.toHaveClass('smarthr-ui-ModelessDialog')
+    expect(dialog).not.toHaveStyle({ height: '10em', top: '10px', left: '10px' })
+    expect(screen.queryByText('モードレス用フッター')).toBeNull()
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    expect(onClickClose).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }))
+
+    onClickClose.mockClear()
+    await userEvent.keyboard('{Escape}')
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('mobileModeがmodelessの場合はモバイル環境でもModelessDialogとして表示されること', () => {
+    render(
+      <EnvironmentProvider environment={{ mobile: true }}>
+        <IntlProvider locale="ja">
+          <ModelessDialog
+            isOpen
+            mobileMode="modeless"
+            top={10}
+            left={10}
+            height="10em"
+            heading="モバイルダイアログ"
+            footer="モードレス用フッター"
+          >
+            <p>ダイアログの中身</p>
+          </ModelessDialog>
+        </IntlProvider>
+      </EnvironmentProvider>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'モバイルダイアログ' })
+
+    expect(dialog).not.toHaveAttribute('aria-modal', 'true')
+    expect(dialog).toHaveClass('smarthr-ui-ModelessDialog')
+    expect(dialog).toHaveStyle({ height: '10em', top: '10px', left: '10px' })
+    expect(screen.getByText('モードレス用フッター')).toBeVisible()
   })
 
   it('閉じるボタンのクリックでonClickCloseに実際のMouseEventが渡されること', async () => {
