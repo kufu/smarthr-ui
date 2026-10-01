@@ -411,7 +411,7 @@ export const OnClickOverlay: StoryObj<typeof ControlledStepFormDialog> = {
 export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'portalParent',
   render: ({ onSubmit, onClickClose, ...rest }) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
@@ -428,13 +428,13 @@ export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
 
     return (
       <>
-        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledStepFormDialog
           {...rest}
           isOpen={open}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
         >
