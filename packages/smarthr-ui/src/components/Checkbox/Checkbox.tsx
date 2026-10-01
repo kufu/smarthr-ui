@@ -12,7 +12,7 @@ import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 import { ActualCheckbox } from './client'
 
-export type Props = PropsWithChildren<
+type Props = PropsWithChildren<
   ComponentPropsWithRef<'input'> & {
     /** `true` のとき、チェック状態を `mixed` にする */
     mixed?: boolean

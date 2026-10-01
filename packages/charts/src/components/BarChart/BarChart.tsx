@@ -57,6 +57,8 @@ type Props = {
   options?: Partial<ChartOptions<'bar'>>
   onChangeView?: (value: ChartViewType) => void
   defaultView?: ChartViewType
+  stacked?: boolean
+  orientation?: 'horizontal' | 'vertical'
 } & BarChartColorProps
 
 type TableData = {
@@ -72,6 +74,8 @@ export const BarChart: React.FC<Props> = ({
   singleTone,
   onChangeView,
   defaultView = 'chart',
+  orientation = 'vertical',
+  stacked,
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
@@ -105,24 +109,37 @@ export const BarChart: React.FC<Props> = ({
       datasets: data.datasets.map((dataset, index) => ({
         ...dataset,
         ...chartColors[index],
+        ...(stacked && index > 0 ? { borderSkipped: false } : {}),
       })),
     }),
-    [data, chartColors],
+    [data, chartColors, stacked],
   )
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
         ...externalOptions,
+        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        scales: {
+          ...externalOptions?.scales,
+          ...(stacked
+            ? {
+                x: { ...externalOptions?.scales?.x, stacked: true },
+                y: { ...externalOptions?.scales?.y, stacked: true },
+              }
+            : {}),
+        },
         plugins: {
           ...externalOptions?.plugins,
           title: { display: false },
           keyboardNavigation: {
             liveRegionId: chartId,
+            stacked,
+            horizontal: orientation === 'horizontal',
           },
         },
       }),
-    [chartId, externalOptions],
+    [chartId, externalOptions, orientation, stacked],
   )
 
   const handleViewChange = (value: ChartViewType) => {

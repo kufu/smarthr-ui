@@ -2,6 +2,7 @@
 
 import {
   type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type KeyboardEvent,
   type MouseEvent,
@@ -29,7 +30,7 @@ import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
-import { Panel, type PanelElementProps } from '../../Panel'
+import { Panel } from '../../Panel'
 import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { useDialogPortal } from '../useDialogPortal'
@@ -97,7 +98,7 @@ type BaseProps = PropsWithChildren<{
 }>
 type Props = BaseProps &
   Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
-  Omit<PanelElementProps, keyof BaseProps>
+  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

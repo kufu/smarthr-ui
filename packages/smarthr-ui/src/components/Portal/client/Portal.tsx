@@ -4,6 +4,7 @@ import {
   type ComponentPropsWithoutRef,
   type ElementType,
   type FC,
+  type Ref,
   createContext,
   useContext,
   useMemo,
@@ -28,9 +29,10 @@ type PortalProps = Omit<
   'data-portal-child-of' | 'data-portal-current-seq'
 > & {
   as?: ElementType
+  outerRef?: Ref<HTMLElement>
 }
 
-export const Portal: FC<PortalProps> = ({ as: Component = 'div', children, ...rest }) => {
+export const Portal: FC<PortalProps> = ({ as: Component = 'div', outerRef, children, ...rest }) => {
   const [currentSeq] = useState(() => ++portalSeq)
   const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
@@ -52,6 +54,7 @@ export const Portal: FC<PortalProps> = ({ as: Component = 'div', children, ...re
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
       <Component
         {...rest}
+        ref={outerRef}
         data-portal-current-seq={currentSeq}
         data-portal-child-of={calculatedSeqs.portalChildOf}
       >

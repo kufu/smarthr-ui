@@ -4,7 +4,7 @@ import type { Page } from 'react-pdf'
 
 type CustomTextRenderer = NonNullable<ComponentProps<typeof Page>['customTextRenderer']>
 
-export const MATCH_INDEX_ATTR = 'data-shr-match-index'
+const MATCH_INDEX_ATTR = 'data-shr-match-index'
 
 export const SELECTED_MATCH_CLASS = 'selected'
 

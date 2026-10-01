@@ -466,60 +466,57 @@ export const ListBox = memo(
     }, [latest])
 
     return (
-      // TODO: Portalのdivとこのdivが二重になっている。Portalのas propで統合する(別PRで対応)
-      <Portal>
-        <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
-          <Scroller
-            ref={listBoxRef}
-            role="listbox"
-            id={listBoxId}
-            className={CLASS_NAMES.dropdownList}
-            style={styles.dropdownList}
-            aria-hidden={!isExpanded}
-            onMouseOver={functions.handleDelegateMouseOver}
-            onClick={functions.handleDelegateClick}
-          >
-            {dropdownHelpMessage && (
-              <Text
-                as="p"
-                className={CLASS_NAMES.helpMessage}
-                icon={<FaCircleInfoIcon color="TEXT_GREY" />}
-              >
-                {dropdownHelpMessage}
-              </Text>
-            )}
-            {isExpanded ? (
-              isLoading ? (
-                <div className={CLASS_NAMES.loaderWrapper}>
-                  <Loader />
-                </div>
-              ) : options.length === 0 ? (
-                <LiveRegion className={CLASS_NAMES.noItems}>
-                  {noResultText ?? (
-                    <Localizer
-                      id="smarthr-ui/Combobox/noResultsText"
-                      defaultText="一致する選択肢がありません。"
-                    />
-                  )}
-                </LiveRegion>
-              ) : (
-                items.map(({ item: { label, disabled }, id, ...optionRest }) => (
-                  <ItemButton
-                    {...optionRest}
-                    key={id}
-                    id={id}
-                    disabled={disabled}
-                    active={id === activeOptionId}
-                    label={label}
+      <Portal outerRef={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+        <Scroller
+          ref={listBoxRef}
+          role="listbox"
+          id={listBoxId}
+          className={CLASS_NAMES.dropdownList}
+          style={styles.dropdownList}
+          aria-hidden={!isExpanded}
+          onMouseOver={functions.handleDelegateMouseOver}
+          onClick={functions.handleDelegateClick}
+        >
+          {dropdownHelpMessage && (
+            <Text
+              as="p"
+              className={CLASS_NAMES.helpMessage}
+              icon={<FaCircleInfoIcon color="TEXT_GREY" />}
+            >
+              {dropdownHelpMessage}
+            </Text>
+          )}
+          {isExpanded ? (
+            isLoading ? (
+              <div className={CLASS_NAMES.loaderWrapper}>
+                <Loader />
+              </div>
+            ) : options.length === 0 ? (
+              <LiveRegion className={CLASS_NAMES.noItems}>
+                {noResultText ?? (
+                  <Localizer
+                    id="smarthr-ui/Combobox/noResultsText"
+                    defaultText="一致する選択肢がありません。"
                   />
-                ))
-              )
-            ) : null}
-            {currentItemLength < options.length && (
-              <Intersection callbackRef={functions.intersectCallbackRef} />
-            )}
-          </Scroller>
-        </div>
+                )}
+              </LiveRegion>
+            ) : (
+              items.map(({ item: { label, disabled }, id, ...optionRest }) => (
+                <ItemButton
+                  {...optionRest}
+                  key={id}
+                  id={id}
+                  disabled={disabled}
+                  active={id === activeOptionId}
+                  label={label}
+                />
+              ))
+            )
+          ) : null}
+          {currentItemLength < options.length && (
+            <Intersection callbackRef={functions.intersectCallbackRef} />
+          )}
+        </Scroller>
       </Portal>
     )
   },
