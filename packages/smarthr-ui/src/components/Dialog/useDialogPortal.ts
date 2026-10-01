@@ -1,6 +1,7 @@
 import { type ReactNode, type RefObject, useCallback, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+// TODO: Portalの実装を参考に修正する
 export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>, id?: string) {
   const [portalContainer] = useState<HTMLElement | null>(() =>
     typeof document === 'undefined' ? null : document.createElement('div'),

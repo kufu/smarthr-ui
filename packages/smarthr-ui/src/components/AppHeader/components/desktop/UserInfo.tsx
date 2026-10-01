@@ -102,7 +102,7 @@ export const UserInfo: FC<Props> = ({
   )
 }
 
-export const ActualUserInfo: FC<Props & { displayName: string }> = ({
+const ActualUserInfo: FC<Props & { displayName: string }> = ({
   email,
   empCode,
   firstName,

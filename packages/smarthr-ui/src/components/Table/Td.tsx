@@ -9,9 +9,9 @@ import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-import type { CellContentWidth } from './type'
+type CellContentWidth = number | string
 
-export type BaseProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** テキストの水平方向の配置 */
   align?: 'left' | 'right'
   /** テキストの垂直方向の配置 */

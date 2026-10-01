@@ -15,7 +15,7 @@ import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallba
 import { useLatest } from '../../../hooks/useLatest'
 import { Button } from '../../Button'
 
-export type Option = {
+type Option = {
   /** 選択時に返される値 */
   value: string
   /** ボタンに表示する内容 */

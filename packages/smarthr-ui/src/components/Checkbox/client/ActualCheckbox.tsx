@@ -4,7 +4,7 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 
 import type { ComponentPropsWithoutRef, FC, Ref } from 'react'
 
-export type Props = ComponentPropsWithoutRef<'input'> & {
+type Props = ComponentPropsWithoutRef<'input'> & {
   checkboxRef?: Ref<HTMLInputElement>
   /** `true` のとき、チェック状態を `mixed` にする */
   mixed?: boolean

@@ -12,10 +12,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
-import { usePortal } from '../../../../hooks/client/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
+import { Portal } from '../../../Portal'
 import { Translate } from '../common/Translate'
 
 import { AppLauncherContext } from './AppLauncherContext'
@@ -44,8 +44,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  const { createPortal } = usePortal()
-
   useEffect(() => {
     if (isOpen) {
       scrollPosition = window.scrollY
@@ -68,7 +66,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         }
         onClick={open}
       />
-      {createPortal(
+      <Portal>
         <MenuDialog
           callbackRef={callbackRef}
           isOpen={isOpen}
@@ -95,8 +93,8 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           <ReleaseNoteButton className={className}>
             <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
           </ReleaseNoteButton>
-        </MenuDialog>,
-      )}
+        </MenuDialog>
+      </Portal>
     </>
   )
 }

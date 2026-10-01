@@ -90,7 +90,6 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
     return () => {
       window.removeEventListener('resize', checkOverflow)
     }
-    // TODO: 将来的にMutationObserverに置き換えて、children の変更を監視する実装に変更する
     // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [children, maxLines])
 
