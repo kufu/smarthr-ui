@@ -14,7 +14,6 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
@@ -524,8 +523,4 @@ export const ListBox = memo(
 
 const Intersection = memo<{
   callbackRef: (node: HTMLElement | null) => (() => void) | undefined
-}>(({ callbackRef }) => {
-  const actualCallbackRef = useCallbackRefCleanupForReact18(callbackRef)
-
-  return <div ref={actualCallbackRef} />
-})
+}>(({ callbackRef }) => <div ref={callbackRef} />)

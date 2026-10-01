@@ -10,7 +10,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { Tooltip } from '../../Tooltip'
 
 type Props = {
@@ -49,39 +48,37 @@ export const TextOverflowTooltip: FC<Props> = ({
   // HINT: -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
   // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadow要素と比較している
   // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-  const shadowCallbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) {
-        return
+  const shadowCallbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) {
+      return
+    }
+
+    const checkOverflow = () => {
+      // node(shadow) -> shadowWrapper(parentElement) -> Component(previousElementSibling)
+      const target = node.parentElement?.previousElementSibling as HTMLElement | null
+
+      if (target) {
+        setIsOverflowing(node.clientHeight > target.clientHeight)
       }
+    }
 
-      const checkOverflow = () => {
-        // node(shadow) -> shadowWrapper(parentElement) -> Component(previousElementSibling)
-        const target = node.parentElement?.previousElementSibling as HTMLElement | null
+    checkOverflow()
 
-        if (target) {
-          setIsOverflowing(node.clientHeight > target.clientHeight)
-        }
-      }
+    window.addEventListener('resize', checkOverflow)
 
-      checkOverflow()
+    // HINT: childrenの変更を検知するため、nodeの子要素・テキストの変化を監視する
+    const mutationObserver = new MutationObserver(checkOverflow)
+    mutationObserver.observe(node, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    })
 
-      window.addEventListener('resize', checkOverflow)
-
-      // HINT: childrenの変更を検知するため、nodeの子要素・テキストの変化を監視する
-      const mutationObserver = new MutationObserver(checkOverflow)
-      mutationObserver.observe(node, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-      })
-
-      return () => {
-        window.removeEventListener('resize', checkOverflow)
-        mutationObserver.disconnect()
-      }
-    }, []),
-  )
+    return () => {
+      window.removeEventListener('resize', checkOverflow)
+      mutationObserver.disconnect()
+    }
+  }, [])
 
   const content = (
     <span className={CLASS_NAMES.wrapper}>

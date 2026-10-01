@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
@@ -212,8 +211,6 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(menuCallbackRef)
-
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
@@ -225,7 +222,7 @@ export const DropdownMenuButton: FC<Props> = ({
         {triggerChildren}
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
-        <menu ref={callbackRef} role="menu" className={classNames.actionList}>
+        <menu ref={menuCallbackRef} role="menu" className={classNames.actionList}>
           <ButtonList>{children}</ButtonList>
         </menu>
       </DropdownContent>
