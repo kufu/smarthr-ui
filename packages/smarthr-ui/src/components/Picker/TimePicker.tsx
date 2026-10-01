@@ -1,9 +1,8 @@
-import { useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
 import type { PickerProps } from './types'
-import type { FC } from 'react'
 
 type Props = {
   /** フォームにエラーがあるかどうか */
