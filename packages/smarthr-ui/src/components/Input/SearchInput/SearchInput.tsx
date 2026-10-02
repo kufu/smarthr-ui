@@ -1,14 +1,11 @@
-import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
+import { type ComponentProps, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
-type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
-  /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
-  tooltipMessage: ReactNode
-}
+type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'prefix'>
 
 const classNameGenerator = tv({
   slots: {
