@@ -91,7 +91,7 @@ export const LiveRegion: FC<Props> = ({
     [announceDelay, skipInitialAnnounce],
   )
 
-  const VisibleContent = 'span'
+  const VisibleContent = 'span' as const
   const { Wrapper, wrapperAs, Invisible, invisibleAs } = visuallyHidden
     ? {
         Wrapper: VisuallyHiddenText,
