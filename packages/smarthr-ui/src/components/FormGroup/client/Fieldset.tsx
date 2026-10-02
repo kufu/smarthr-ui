@@ -92,14 +92,7 @@ type Props = CommonProps & {
   disabled?: boolean
 }
 
-export const Fieldset: FC<Props> = (props) => {
-  const actualProps = useFieldsetProps(props)
-
-  return <FormGroup {...actualProps} />
-}
-
-// TODO: フックで切り出す意味がないので修正する
-const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }: Props) => {
+export const Fieldset: FC<Props> = ({ legend: orgLegend, innerMargin, className, ...rest }) => {
   const baseId = useId()
 
   const classNames = useMemo(() => {
@@ -115,23 +108,24 @@ const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }
     orgLegend,
     legendObjectConverter,
   )
-  const legend = {
-    ...baseLegend,
-    // HINT: Fieldsetなので本質的にhtmlForは不要なのだがhtmlForを使って
-    // 最初のinputと各種ヒントをaria-describedbyでつなげているため必要
-    htmlFor: `${baseId}-htmlFor`,
-    id: baseLegend.id || `${baseId}-legend`,
-  }
 
-  return {
-    ...rest,
-    as: 'fieldset',
-    ref: callbackRef,
-    label: legend,
-    classNames,
-    LabelComponent,
-    innerMargin,
-  }
+  return (
+    <FormGroup
+      {...rest}
+      as="fieldset"
+      ref={callbackRef}
+      LabelComponent={LabelComponent}
+      innerMargin={innerMargin}
+      classNames={classNames}
+      label={{
+        ...baseLegend,
+        // HINT: Fieldsetなので本質的にhtmlForは不要なのだがhtmlForを使って
+        // 最初のinputと各種ヒントをaria-describedbyでつなげているため必要
+        htmlFor: `${baseId}-htmlFor`,
+        id: baseLegend.id || `${baseId}-legend`,
+      }}
+    />
+  )
 }
 
 const LabelComponent = memo<LabelComponentProps>(

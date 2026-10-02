@@ -19,14 +19,7 @@ type Props = CommonProps & {
   label: ReactNode | ObjectLabelType
 }
 
-export const FormControl: FC<Props> = (props) => {
-  const actualProps = useFormControlProps(props)
-
-  return <FormGroup {...actualProps} />
-}
-
-// TODO: フックで切り出す意味がないので修正する
-const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => {
+export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -51,8 +44,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
 
   // HINT: 自分がsetAttributeで設定したid/aria-labelledbyトークンを記憶しておく。
   // 利用者がInputに直接指定したid・aria-labelledbyと、自分由来のものを区別するために使う
-  const managedInputIdRef = useRef(label.htmlFor)
-  const managedLabelIdRef = useRef(label.id)
+  const managedRef = useRef({ inputId: label.htmlFor, labelId: label.id })
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -69,7 +61,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
       if (label.htmlFor) {
         const currentInputId = input.getAttribute('id')
 
-        if (currentInputId && currentInputId !== managedInputIdRef.current) {
+        if (currentInputId && currentInputId !== managedRef.current.inputId) {
           // HINT: 自分が過去に設定したid以外（=外部由来のid）の場合はそれを尊重する
           setChildInputId(currentInputId)
         } else {
@@ -80,7 +72,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
             if (currentInputId !== label.htmlFor) {
               input.setAttribute('id', label.htmlFor)
             }
-            managedInputIdRef.current = label.htmlFor
+            managedRef.current.inputId = label.htmlFor
           }
         }
       }
@@ -91,7 +83,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
         if (inputLabelledByIds) {
           const tokens = inputLabelledByIds.split(' ')
           // HINT: 自分が過去に追加したid以外（=外部由来のid）だけを残す
-          const externalTokens = tokens.filter((token) => token !== managedLabelIdRef.current)
+          const externalTokens = tokens.filter((token) => token !== managedRef.current.labelId)
           // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
           const nextTokens = label.id ? [...externalTokens, label.id] : externalTokens
           const nextValue = nextTokens.join(' ')
@@ -100,20 +92,22 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
             input.setAttribute('aria-labelledby', nextValue)
           }
 
-          managedLabelIdRef.current = label.id ?? ''
+          managedRef.current.labelId = label.id ?? ''
         }
       }
     },
     [label.htmlFor, label.id],
   )
 
-  return {
-    ...rest,
-    ref: layoutEffectRef,
-    label,
-    classNames,
-    LabelComponent,
-  }
+  return (
+    <FormGroup
+      {...rest}
+      ref={layoutEffectRef}
+      LabelComponent={LabelComponent}
+      classNames={classNames}
+      label={label}
+    />
+  )
 }
 
 const LabelComponent = memo<LabelComponentProps>(
