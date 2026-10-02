@@ -1,6 +1,12 @@
 'use client'
 
-import { type ComponentProps, type FC, type PropsWithChildren, useEffect, useState } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react'
 
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
@@ -15,7 +21,7 @@ type BaseProps = PropsWithChildren<{
   visuallyHidden?: boolean
 }>
 
-type DisclosureContentProps = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type DisclosureContentProps = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const DisclosureContent: FC<DisclosureContentProps> = ({
   id,
