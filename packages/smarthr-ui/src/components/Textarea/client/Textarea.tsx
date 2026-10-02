@@ -2,10 +2,8 @@
 
 import {
   type ChangeEvent,
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
-  type Ref,
   startTransition,
   useEffect,
   useId,
@@ -88,19 +86,15 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea: FC<Props> = ({ maxLetters, ref, ...rest }) =>
+export const Textarea: FC<Props> = ({ maxLetters, ...rest }) =>
   maxLetters ? (
-    <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
+    <MaxLettersTextarea {...rest} maxLetters={maxLetters} />
   ) : (
-    <ActualTextarea {...rest} externalRef={ref} />
+    <ActualTextarea {...rest} />
   )
 
-type LocalTextareaProps = ComponentProps<typeof Textarea> & {
-  externalRef?: Ref<HTMLTextAreaElement>
-}
-
 const MaxLettersTextarea: FC<
-  Omit<LocalTextareaProps, 'maxLetters'> & {
+  Omit<Props, 'maxLetters'> & {
     maxLetters: number
   }
 > = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
@@ -190,7 +184,7 @@ const MaxLettersTextarea: FC<
   )
 }
 
-const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
+const ActualTextarea: FC<Omit<Props, 'maxLetters'>> = ({
   autoFocus,
   width,
   className,
@@ -199,7 +193,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   rows = 2,
   error,
   onChange,
-  externalRef,
+  ref,
   ...rest
 }) => {
   const theme = useTheme()
@@ -253,7 +247,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const errorAttr = error || undefined
 
-  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
+  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), ref)
 
   return (
     <textarea
