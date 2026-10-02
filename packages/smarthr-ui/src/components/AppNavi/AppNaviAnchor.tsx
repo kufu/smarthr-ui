@@ -1,5 +1,5 @@
 import {
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ComponentType,
   type ElementType,
   type FC,
@@ -10,12 +10,11 @@ import { tv } from 'tailwind-variants'
 
 import { itemClassNameGenerator } from './itemClassNameGenerator'
 
-import type { ElementRefProps } from '../../types'
 import type { ComponentProps as IconProps } from '../Icon'
 
 type ElementProps<T extends ElementType> = Omit<
-  ComponentPropsWithoutRef<T>,
-  keyof AppNaviAnchorProps<T> & ElementRefProps<T>
+  ComponentPropsWithRef<T>,
+  keyof AppNaviAnchorProps<T>
 >
 
 export type AppNaviAnchorProps<T extends ElementType = 'a'> = {
@@ -30,7 +29,7 @@ export type AppNaviAnchorProps<T extends ElementType = 'a'> = {
 }
 
 type AppNaviAnchorComponent = <T extends ElementType = 'a'>(
-  props: AppNaviAnchorProps<T> & ElementProps<T> & ElementRefProps<T>,
+  props: AppNaviAnchorProps<T> & ElementProps<T>,
 ) => ReturnType<FC>
 
 const classNameGenerator = tv({
@@ -47,7 +46,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a
   current,
   elementAs,
   ...rest
-}: AppNaviAnchorProps<T> & ElementProps<T> & ElementRefProps<T>): ReactElement => {
+}: AppNaviAnchorProps<T> & ElementProps<T>): ReactElement => {
   const classNames = useMemo(() => {
     const { wrapper, icon } = classNameGenerator({ active: current })
 

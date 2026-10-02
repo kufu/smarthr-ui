@@ -18,7 +18,7 @@ const visuallyHiddenTextClassNameGenerator = tv({
 
 export const visuallyHiddenTextClassName = visuallyHiddenTextClassNameGenerator()
 
-// HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
+// HINT: ComponentProps<T> が ref を含むため、別途 ref の型を合成する必要はない
 type Props<T extends ElementType> = PropsWithChildren<{
   as?: T
 }> &
