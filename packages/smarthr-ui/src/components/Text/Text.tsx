@@ -169,7 +169,6 @@ type MaxLinesObject = {
 }
 type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
 
-// HINT: ComponentPropsWithRef<T> が ref を含むため、別途 ref の型を合成する必要はない
 type Props<T extends ElementType = 'span'> = PropsWithChildren<
   ComponentPropsWithRef<T> & {
     /** テキストコンポーネントの HTML タグ名。初期値は span */

@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type ElementType, type ReactElement, useMemo } from 'react'
+import { type ComponentPropsWithRef, type ElementType, type ReactElement, useMemo } from 'react'
 
 import { OpenInNewTabIcon } from '../Icon'
 
@@ -7,7 +7,6 @@ import { AnchorButtonInner } from './client'
 import { anchorClassNameGenerator } from './style'
 
 import type { BaseProps as ButtonProps } from './types'
-import type { ElementRefProps } from '../../types'
 
 type BaseProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledReason'> & {
   /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
@@ -17,8 +16,7 @@ type BaseProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledR
   inactiveReason?: ButtonProps['disabledReason']
 }
 type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T>> &
-  ElementRefProps<T>
+  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
 
 export const AnchorButton = <T extends ElementType = 'a'>({
   size = 'M',
