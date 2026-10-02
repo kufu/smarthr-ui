@@ -44,8 +44,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
 
   // HINT: 自分がsetAttributeで設定したid/aria-labelledbyトークンを記憶しておく。
   // 利用者がInputに直接指定したid・aria-labelledbyと、自分由来のものを区別するために使う
-  const managedInputIdRef = useRef(label.htmlFor)
-  const managedLabelIdRef = useRef(label.id)
+  const managedRef = useRef({ inputId: label.htmlFor, labelId: label.id })
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -62,7 +61,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
       if (label.htmlFor) {
         const currentInputId = input.getAttribute('id')
 
-        if (currentInputId && currentInputId !== managedInputIdRef.current) {
+        if (currentInputId && currentInputId !== managedRef.current.inputId) {
           // HINT: 自分が過去に設定したid以外（=外部由来のid）の場合はそれを尊重する
           setChildInputId(currentInputId)
         } else {
@@ -73,7 +72,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
             if (currentInputId !== label.htmlFor) {
               input.setAttribute('id', label.htmlFor)
             }
-            managedInputIdRef.current = label.htmlFor
+            managedRef.current.inputId = label.htmlFor
           }
         }
       }
@@ -84,7 +83,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
         if (inputLabelledByIds) {
           const tokens = inputLabelledByIds.split(' ')
           // HINT: 自分が過去に追加したid以外（=外部由来のid）だけを残す
-          const externalTokens = tokens.filter((token) => token !== managedLabelIdRef.current)
+          const externalTokens = tokens.filter((token) => token !== managedRef.current.labelId)
           // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
           const nextTokens = label.id ? [...externalTokens, label.id] : externalTokens
           const nextValue = nextTokens.join(' ')
@@ -93,7 +92,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
             input.setAttribute('aria-labelledby', nextValue)
           }
 
-          managedLabelIdRef.current = label.id ?? ''
+          managedRef.current.labelId = label.id ?? ''
         }
       }
     },
