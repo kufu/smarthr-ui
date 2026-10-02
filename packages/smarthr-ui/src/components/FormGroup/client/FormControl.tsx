@@ -19,14 +19,7 @@ type Props = CommonProps & {
   label: ReactNode | ObjectLabelType
 }
 
-export const FormControl: FC<Props> = (props) => {
-  const actualProps = useFormControlProps(props)
-
-  return <FormGroup {...actualProps} />
-}
-
-// TODO: フックで切り出す意味がないので修正する
-const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => {
+export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
 
@@ -107,13 +100,15 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
     [label.htmlFor, label.id],
   )
 
-  return {
-    ...rest,
-    ref: layoutEffectRef,
-    label,
-    classNames,
-    LabelComponent,
-  }
+  return (
+    <FormGroup
+      {...rest}
+      ref={layoutEffectRef}
+      LabelComponent={LabelComponent}
+      classNames={classNames}
+      label={label}
+    />
+  )
 }
 
 const LabelComponent = memo<LabelComponentProps>(
