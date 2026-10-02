@@ -23,7 +23,6 @@ export const Button: FC<Props> = ({
   className,
   children,
   loading = false,
-  ref,
   ...rest
 }) => {
   const classNames = useMemo(() => {
@@ -39,7 +38,6 @@ export const Button: FC<Props> = ({
   const button = (
     <ActualButton
       {...rest}
-      buttonRef={ref}
       type={type}
       disabled={loading || disabled}
       loader={
