@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, type ReactNode, type Ref, useMemo } from 'react'
+import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
@@ -8,8 +8,6 @@ import { InputWithTooltip } from '../InputWithTooltip'
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
   tooltipMessage: ReactNode
-  /** input要素へのref */
-  ref?: Ref<HTMLInputElement>
 }
 
 const classNameGenerator = tv({
@@ -27,7 +25,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SearchInput: FC<Props> = ({ width, className, ref, ...rest }) => {
+export const SearchInput: FC<Props> = ({ width, className, ...rest }) => {
   const labelStyle = {
     width: typeof width === 'number' ? `${width}px` : width,
   }
@@ -46,7 +44,6 @@ export const SearchInput: FC<Props> = ({ width, className, ref, ...rest }) => {
     <label className={classNames.label} style={labelStyle}>
       <InputWithTooltip
         {...rest}
-        outerRef={ref}
         className={classNames.input}
         prefix={
           <FaMagnifyingGlassIcon
