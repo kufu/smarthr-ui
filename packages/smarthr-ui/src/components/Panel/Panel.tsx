@@ -1,8 +1,8 @@
 import {
   type ComponentPropsWithRef,
   type ComponentType,
+  type FC,
   type PropsWithChildren,
-  forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -30,8 +30,7 @@ type BaseProps = PropsWithChildren<{
   overflow?: Overflow | { x: Overflow; y: Overflow }
   as?: string | ComponentType<any>
 }>
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
-type Props = BaseProps & ElementProps
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const panelClassNameGenerator = tv({
   // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
@@ -67,31 +66,45 @@ export const panelClassNameGenerator = tv({
   },
 })
 
-export const Panel = forwardRef<HTMLDivElement, Props>(
-  ({ padding, radius, overflow, layer, as: Component = 'div', className, ...rest }, ref) => {
-    const actualClassName = useMemo(() => {
-      const actualPadding =
-        padding instanceof Object ? padding : { block: padding, inline: padding }
-      const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
+export const Panel: FC<Props> = ({
+  padding,
+  radius,
+  overflow,
+  layer,
+  as: Component = 'div',
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(() => {
+    const actualPadding = padding instanceof Object ? padding : { block: padding, inline: padding }
+    const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
-      return panelClassNameGenerator({
-        paddingBlock: actualPadding.block,
-        paddingInline: actualPadding.inline,
-        radius: radius ?? 'm',
-        overflowBlock: actualOverflow.y,
-        overflowInline: actualOverflow.x,
-        layer: layer ?? 1,
-        className,
-      })
-    }, [layer, overflow, padding, radius, className])
+    return panelClassNameGenerator({
+      paddingBlock: actualPadding.block,
+      paddingInline: actualPadding.inline,
+      radius: radius ?? 'm',
+      overflowBlock: actualOverflow.y,
+      overflowInline: actualOverflow.x,
+      layer: layer ?? 1,
+      className,
+    })
+  }, [layer, overflow, padding, radius, className])
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} />
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}
+
+/** @deprecated Base は非推奨です。Panel を使ってください。 */
+/** @alias */
+export const Base = Panel

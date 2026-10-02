@@ -12,16 +12,14 @@ import { useLatest } from '../../hooks/useLatest'
 import { ThSortButton } from './ThSortButton'
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-import type { CellContentWidth } from './type'
-
-export type BaseProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** 並び替え状態 */
   sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
   /** 並び替えをクリックした時に発火するコールバック関数 */
   onSort?: () => void
   /** 横スクロール時、カラムを左右いずれかに固定 */
   fixed?: 'left' | 'right'
-  contentWidth?: CellContentWidth
+  contentWidth?: number | string
   /** テキストの水平方向の配置 */
   align?: 'left' | 'right'
   /** テキストの垂直方向の配置 */
@@ -97,7 +95,7 @@ const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
         return base
       }
 
-      return `${base} ${reelShadowClassNameGenerator({ showShadow: false, direction: fixed })}`
+      return `${base} ${reelShadowClassNameGenerator({ direction: fixed })}`
     }, [align, fixed, vAlign, className])
 
     return (

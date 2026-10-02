@@ -1,12 +1,12 @@
 'use client'
 
 import {
+  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type ForwardedRef,
   type PropsWithChildren,
-  type ReactNode,
   type Ref,
-  forwardRef,
   memo,
   useCallback,
   useId,
@@ -18,12 +18,11 @@ import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { IS_NEXT_JS } from '../../../../libs/nextjs'
-import { STYLE_TYPE_MAP, Text, type TextProps } from '../../../Text'
+import { STYLE_TYPE_MAP, Text } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
-import type { ElementProps } from '../Heading'
-
-export type BaseProps = PropsWithChildren<{
+type TextProps = ComponentProps<typeof Text>
+type BaseProps = PropsWithChildren<{
   /**
    * テキストのサイズ
    *
@@ -43,7 +42,14 @@ export type BaseProps = PropsWithChildren<{
   /** title要素のsuffix */
   pageTitleSuffix?: string
 }>
-type Props = BaseProps & Omit<ElementProps, keyof BaseProps>
+
+type StyleTypeMapProps = typeof STYLE_TYPE_MAP
+
+type Props = BaseProps &
+  Omit<
+    ComponentPropsWithRef<'h1'>,
+    keyof BaseProps | keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level'
+  >
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
@@ -58,43 +64,38 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo(
-  forwardRef<HTMLHeadingElement, Props>(
-    (
-      {
-        autoPageTitle = true,
-        pageTitleSuffix = 'SmartHR（スマートHR）',
-        pageTitle,
-        size = 'XL',
-        children,
-        ...rest
-      },
-      ref,
-    ) =>
-      !IS_NEXT_JS && autoPageTitle ? (
-        <AutoPageTitleHeading
-          {...rest}
-          outerRef={ref}
-          pageTitleSuffix={pageTitleSuffix}
-          pageTitle={pageTitle}
-          size={size}
-        >
-          {children}
-        </AutoPageTitleHeading>
-      ) : (
-        <ActualHeading {...rest} headingRef={ref} size={size}>
-          {children}
-        </ActualHeading>
-      ),
-  ),
+  ({
+    autoPageTitle = true,
+    pageTitleSuffix,
+    pageTitle,
+    size = 'XL',
+    children,
+    ref,
+    ...rest
+  }: Props) =>
+    !IS_NEXT_JS && autoPageTitle ? (
+      <AutoPageTitleHeading
+        {...rest}
+        outerRef={ref}
+        pageTitleSuffix={pageTitleSuffix}
+        pageTitle={pageTitle}
+        size={size}
+      >
+        {children}
+      </AutoPageTitleHeading>
+    ) : (
+      <ActualHeading {...rest} headingRef={ref} size={size}>
+        {children}
+      </ActualHeading>
+    ),
 )
 
 const AutoPageTitleHeading: FC<
-  Omit<Props, 'size' | 'autoPageTitle' | 'pageTitleSuffix' | 'ref'> & {
+  Omit<Props, 'size' | 'autoPageTitle' | 'ref'> & {
     size: TextProps['size']
-    pageTitleSuffix: string
     outerRef?: ForwardedRef<HTMLHeadingElement>
   }
-> = ({ pageTitleSuffix, pageTitle, outerRef, children, ...rest }) => {
+> = ({ pageTitleSuffix = 'SmartHR（スマートHR）', pageTitle, outerRef, children, ...rest }) => {
   const pseudoTitleId = useId()
   const titleFrame = useAnimationFrame()
   const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
@@ -111,8 +112,8 @@ const AutoPageTitleHeading: FC<
 
         // HINT: SPAで遷移する場合などの対策としてbody直下にaria-liveを仕込む
         // head内はスクリーンリーダーの変更検知のチェック対象外のため、title要素にaria-liveは設定しない
-        const pseudoTitle: HTMLDivElement = (document.getElementById(latest.pseudoTitleId) ||
-          document.createElement('div')) as HTMLDivElement
+        const pseudoTitle: HTMLElement =
+          document.getElementById(latest.pseudoTitleId) || document.createElement('div')
 
         pseudoTitle.setAttribute('id', latest.pseudoTitleId)
         pseudoTitle.setAttribute('class', visuallyHiddenTextClassName)
@@ -133,24 +134,18 @@ const AutoPageTitleHeading: FC<
         subtree: true,
       })
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         observer.disconnect()
         latest.titleFrame.cancel()
 
         const pseudoTitle = document.getElementById(latest.pseudoTitleId)
 
-        if (pseudoTitle) {
-          pseudoTitle.remove()
-        }
+        pseudoTitle?.remove()
       }
     },
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(callbackRef, outerRef)
 
   return (
@@ -160,13 +155,13 @@ const AutoPageTitleHeading: FC<
   )
 }
 
-type ActualHeadingProps = {
-  visuallyHidden?: boolean
-  size: TextProps['size']
-  className?: string
-  children: ReactNode
-  headingRef?: Ref<HTMLHeadingElement>
-} & Omit<ElementProps, 'size' | 'className' | 'visuallyHidden' | 'children' | 'ref'>
+type ActualHeadingProps = PropsWithChildren<
+  ComponentProps<'h1'> & {
+    visuallyHidden?: boolean
+    size: TextProps['size']
+    headingRef?: Ref<HTMLHeadingElement>
+  }
+>
 
 const ActualHeading: FC<ActualHeadingProps> = ({
   visuallyHidden,

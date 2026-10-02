@@ -1,8 +1,8 @@
 import {
   type ComponentPropsWithRef,
   type ComponentType,
+  type FC,
   type PropsWithChildren,
-  forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -57,33 +57,38 @@ export const centerClassNameGenerator = tv({
   },
 })
 
-export const Center = forwardRef<HTMLDivElement, Props>(
-  (
-    { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...rest },
-    ref,
-  ) => {
-    const actualClassName = useMemo(
-      () => centerClassNameGenerator({ padding, verticalCentering, className }),
-      [padding, verticalCentering, className],
-    )
+export const Center: FC<Props> = ({
+  minHeight,
+  maxWidth,
+  padding,
+  verticalCentering,
+  as: Component = 'div',
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => centerClassNameGenerator({ padding, verticalCentering, className }),
+    [padding, verticalCentering, className],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = (
-      <Component
-        {...rest}
-        ref={ref}
-        className={actualClassName}
-        style={{
-          minHeight: minHeight ?? undefined,
-          maxWidth: maxWidth ?? undefined,
-        }}
-      />
-    )
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component
+      {...rest}
+      className={actualClassName}
+      style={{
+        minHeight: minHeight ?? undefined,
+        maxWidth: maxWidth ?? undefined,
+      }}
+    >
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

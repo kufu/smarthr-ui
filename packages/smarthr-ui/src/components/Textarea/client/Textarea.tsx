@@ -6,7 +6,6 @@ import {
   type ComponentPropsWithRef,
   type FC,
   type Ref,
-  forwardRef,
   startTransition,
   useEffect,
   useId,
@@ -89,13 +88,12 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+export const Textarea: FC<Props> = ({ maxLetters, ref, ...rest }) =>
   maxLetters ? (
     <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
   ) : (
     <ActualTextarea {...rest} externalRef={ref} />
-  ),
-)
+  )
 
 type LocalTextareaProps = ComponentProps<typeof Textarea> & {
   externalRef?: Ref<HTMLTextAreaElement>
@@ -255,8 +253,6 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const errorAttr = error || undefined
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
   return (

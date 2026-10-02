@@ -4,7 +4,7 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 
 import type { ComponentPropsWithoutRef, FC, Ref } from 'react'
 
-export type Props = ComponentPropsWithoutRef<'input'> & {
+type Props = ComponentPropsWithoutRef<'input'> & {
   checkboxRef?: Ref<HTMLInputElement>
   /** `true` のとき、チェック状態を `mixed` にする */
   mixed?: boolean
@@ -39,8 +39,6 @@ const callbackRef = (node: HTMLInputElement | null) => {
 }
 
 export const ActualCheckbox: FC<Props> = ({ checkboxRef, checked, mixed, error, ...rest }) => {
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(callbackRef, checkboxRef)
   const errorAttr = error || undefined
 

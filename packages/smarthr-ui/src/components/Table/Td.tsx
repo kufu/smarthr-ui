@@ -1,11 +1,11 @@
-import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-import type { CellContentWidth } from './type'
+type CellContentWidth = number | string
 
-export type BaseProps = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** テキストの水平方向の配置 */
   align?: 'left' | 'right'
   /** テキストの垂直方向の配置 */
@@ -17,10 +17,10 @@ export type BaseProps = PropsWithChildren<{
   contentWidth?:
     CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
 }>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'td'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'td'>, keyof BaseProps>
 
-export const Td = memo<Props>(
-  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
+export const Td: FC<Props> = memo(
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, children, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
@@ -45,7 +45,11 @@ export const Td = memo<Props>(
             width: convertContentWidth(contentWidth),
           }
 
-    return <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed} />
+    return (
+      <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed}>
+        {children}
+      </td>
+    )
   },
 )
 

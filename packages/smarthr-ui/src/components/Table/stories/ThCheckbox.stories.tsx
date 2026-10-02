@@ -1,5 +1,5 @@
 import { Table } from '../Table'
-import { ThCheckbox } from '../client'
+import { ThCheckbox } from '../ThCheckbox'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 

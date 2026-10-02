@@ -1,7 +1,7 @@
 import { ItemNode, type ItemNodeLike } from './ItemNode'
 import { NodeContext } from './NodeContext'
 
-export type RootNodeLike = {
+type RootNodeLike = {
   children: ItemNodeLike[]
 }
 

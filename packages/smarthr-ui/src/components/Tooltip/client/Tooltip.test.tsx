@@ -84,7 +84,7 @@ describe('Tooltip', () => {
   describe('非表示時の位置計算スタイルのクリア', () => {
     const showTooltip = (wrapper: Element) => fireEvent.pointerEnter(wrapper)
     const hideTooltip = (wrapper: Element) => fireEvent.pointerLeave(wrapper)
-    const getPopup = () => document.querySelector('.smarthr-ui-Tooltip-popup') as HTMLElement
+    const getPopup = () => document.querySelector<HTMLElement>('.smarthr-ui-Tooltip-popup')
 
     it('ツールチップを閉じると、表示中に算出した位置計算の inline style が残らない', () => {
       render(

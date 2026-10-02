@@ -8,7 +8,7 @@ import { RadioButton } from '../../../RadioButton'
 import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
 
-import type { StepItem } from '../StepFormDialogProvider'
+import type { StepItem } from '../type'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
@@ -105,6 +105,22 @@ export const SubmitButtonWithFunction: StoryObj<typeof ControlledStepFormDialog>
       }
 
       return '完了'
+    },
+  },
+}
+
+export const SubmitButtonWithResolverFunction: StoryObj<typeof ControlledStepFormDialog> = {
+  name: 'submitButton(StepItem毎にtext/themeをまとめて切り替える方法)',
+  args: {
+    submitButton: (currentStep: StepItem, defaultText) => {
+      switch (currentStep.id) {
+        case 'step-1':
+          return { text: defaultText, theme: 'secondary' }
+        case 'step-2':
+          return { text: 'タスクを作成する', theme: 'primary' }
+      }
+
+      return { text: '閉じる', theme: 'secondary' }
     },
   },
 }
@@ -395,7 +411,7 @@ export const OnClickOverlay: StoryObj<typeof ControlledStepFormDialog> = {
 export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
   name: 'portalParent',
   render: ({ onSubmit, onClickClose, ...rest }) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
     const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
@@ -412,13 +428,13 @@ export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
 
     return (
       <>
-        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledStepFormDialog
           {...rest}
           isOpen={open}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
         >

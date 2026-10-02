@@ -1,4 +1,3 @@
-import type { ComponentPropsWithoutRef } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 
-export type PickerProps<Props> = Props &
-  Omit<ComponentPropsWithoutRef<'input'>, keyof Props | 'type'>
+export type PickerProps<Props> = Props & Omit<ComponentPropsWithRef<'input'>, keyof Props | 'type'>
