@@ -19,7 +19,7 @@ type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: {
-  [key in StyleType]: Pick<Props<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
+  [key in StyleType]: Pick<BaseProps<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
 } = {
   screenTitle: {
     size: 'XL',

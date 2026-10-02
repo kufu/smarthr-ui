@@ -144,7 +144,7 @@ const AutoPageTitleHeading: FC<
 }
 
 type ActualHeadingProps = PropsWithChildren<
-  ComponentPropsWithRef<'h1'> & {
+  Omit<ComponentPropsWithRef<'h1'>, keyof StyleTypeMapProps[keyof StyleTypeMapProps]> & {
     visuallyHidden?: boolean
     size: TextProps['size']
   }
