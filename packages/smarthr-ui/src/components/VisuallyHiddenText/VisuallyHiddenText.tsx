@@ -1,7 +1,6 @@
 import {
   type ComponentPropsWithRef,
   type ElementType,
-  type FC,
   type PropsWithChildren,
   memo,
   useMemo,
@@ -14,21 +13,18 @@ const visuallyHiddenTextClassNameGenerator = tv({
 
 export const visuallyHiddenTextClassName = visuallyHiddenTextClassNameGenerator()
 
-// HINT: ComponentPropsWithRef<T> が ref を含むため、別途 ref の型を合成する必要はない
-type Props<T extends ElementType> = PropsWithChildren<{
+type BaseProps<T extends ElementType> = PropsWithChildren<{
   as?: T
-}> &
-  ComponentPropsWithRef<T>
+}>
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
 
-type VisuallyHiddenTextComponent = <T extends ElementType = 'span'>(
-  props: Props<T>,
-) => ReturnType<FC>
-
-const ActualVisuallyHiddenText: VisuallyHiddenTextComponent = <T extends ElementType = 'span'>({
-  as: Component = 'span',
+const ActualVisuallyHiddenText = <T extends ElementType = 'span'>({
+  as,
   className,
   ...rest
 }: Props<T>) => {
+  const Component = as || 'span'
   const actualClassName = useMemo(
     // HINT: smarthr-ui-VisuallyHiddenTextは明示的にこのコンポーネントを利用している場合にのみ設定します
     // visuallyHiddenTextClassName を利用している場合、他のclassに混ぜられたりする関係上、要素として検索する際
