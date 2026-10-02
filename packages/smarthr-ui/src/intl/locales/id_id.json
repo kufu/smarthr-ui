@@ -77,6 +77,7 @@
   "smarthr-ui/Pagination/navigationLabel": "Navigasi halaman",
   "smarthr-ui/RequiredLabel/text": "Wajib",
   "smarthr-ui/SearchInput/iconAlt": "Cari",
+  "smarthr-ui/SegmentedControl/group/ariaLabel": "",
   "smarthr-ui/SideMenu/navigationLabel": "Menu samping",
   "smarthr-ui/SingleCombobox/destroyButtonIconAlt": "Bersihkan",
   "smarthr-ui/SortDropdown/applyText": "Terapkan",
