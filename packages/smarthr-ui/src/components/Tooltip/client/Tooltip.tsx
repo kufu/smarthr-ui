@@ -12,25 +12,13 @@ import {
   useId,
   useMemo,
   useState,
-  useSyncExternalStore,
 } from 'react'
-import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
-
-const subscribeFullscreenChange = (callback: () => void) => {
-  window.addEventListener('fullscreenchange', callback)
-
-  return () => {
-    window.removeEventListener('fullscreenchange', callback)
-  }
-}
-const getPortalRoot = () => document.fullscreenElement ?? document.body
-const getPortalRootOnSSR = () => null
 
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -86,11 +74,6 @@ export const Tooltip: FC<Props> = ({
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const messageId = useId()
-  const portalRoot = useSyncExternalStore(
-    subscribeFullscreenChange,
-    getPortalRoot,
-    getPortalRootOnSSR,
-  )
 
   const [isFocusableChild, setIsFocusableChild] = useState(false)
   const [actualTabIndex, setActualTabIndex] = useState<number | undefined>(tabIndex ?? 0)
@@ -221,17 +204,13 @@ export const Tooltip: FC<Props> = ({
       onTouchEnd={functions.handleDelegateTouchEnd}
       onBlur={functions.handleDelegateBlur}
     >
-      {portalRoot &&
-        createPortal(
-          <TooltipPortal
-            messageId={messageId}
-            isVisible={isVisible}
-            parentRect={rect}
-            isIcon={isIcon}
-            message={message}
-          />,
-          portalRoot,
-        )}
+      <TooltipPortal
+        messageId={messageId}
+        isVisible={isVisible}
+        parentRect={rect}
+        isIcon={isIcon}
+        message={message}
+      />
       <span ref={layoutEffectRef} className="smarthr-ui-Tooltip-content shr-contents">
         {children}
       </span>
