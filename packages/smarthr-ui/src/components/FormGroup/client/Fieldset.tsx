@@ -98,6 +98,7 @@ export const Fieldset: FC<Props> = (props) => {
   return <FormGroup {...actualProps} />
 }
 
+// TODO: フックで切り出す意味がないので修正する
 const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }: Props) => {
   const baseId = useId()
 
@@ -125,7 +126,7 @@ const useFieldsetProps = ({ legend: orgLegend, innerMargin, className, ...rest }
   return {
     ...rest,
     as: 'fieldset',
-    outerRef: callbackRef,
+    ref: callbackRef,
     label: legend,
     classNames,
     LabelComponent,

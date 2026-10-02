@@ -25,6 +25,7 @@ export const FormControl: FC<Props> = (props) => {
   return <FormGroup {...actualProps} />
 }
 
+// TODO: フックで切り出す意味がないので修正する
 const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => {
   const classNames = useMemo(() => {
     const generators = classNameGenerator()
@@ -108,7 +109,7 @@ const useFormControlProps = ({ label: orgLabel, className, ...rest }: Props) => 
 
   return {
     ...rest,
-    outerRef: layoutEffectRef,
+    ref: layoutEffectRef,
     label,
     classNames,
     LabelComponent,
