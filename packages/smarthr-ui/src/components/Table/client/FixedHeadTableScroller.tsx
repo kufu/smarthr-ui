@@ -6,11 +6,11 @@ import { Scroller } from '../../Scroller'
 
 import type { ComponentPropsWithRef, FC, ForwardedRef, PropsWithChildren } from 'react'
 
-type Props = PropsWithChildren &
-  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
-    forwardedRef: ForwardedRef<HTMLDivElement>
-    direction: 'both'
-  }
+type BaseProps = PropsWithChildren<{
+  forwardedRef: ForwardedRef<HTMLDivElement>
+  direction: 'both'
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 // thead の高さ分だけ scroll-padding-top を設定
 const callbackRef = (node: HTMLElement | null) => {

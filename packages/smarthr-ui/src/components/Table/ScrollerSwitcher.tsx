@@ -7,11 +7,11 @@ import { FixedHeadTableScroller } from './client/FixedHeadTableScroller'
 
 import type { ComponentPropsWithRef, FC, ForwardedRef, PropsWithChildren } from 'react'
 
-type Props = PropsWithChildren &
-  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
-    fixedHead?: boolean
-    forwardedRef: ForwardedRef<HTMLDivElement>
-  }
+type BaseProps = PropsWithChildren<{
+  fixedHead?: boolean
+  forwardedRef: ForwardedRef<HTMLDivElement>
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const SCROLLER_PROPS = {
   direction: 'both' as const,
