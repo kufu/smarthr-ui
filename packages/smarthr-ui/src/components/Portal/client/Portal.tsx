@@ -1,10 +1,9 @@
 'use client'
 
 import {
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ElementType,
   type FC,
-  type Ref,
   createContext,
   useContext,
   useLayoutEffect,
@@ -23,15 +22,16 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-type PortalProps = Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'data-portal-child-of' | 'data-portal-current-seq'
-> & {
+type BaseProps = {
   as?: ElementType
-  outerRef?: Ref<HTMLElement>
 }
+type Props = BaseProps &
+  Omit<
+    ComponentPropsWithRef<'div'>,
+    keyof BaseProps | 'data-portal-child-of' | 'data-portal-current-seq'
+  >
 
-export const Portal: FC<PortalProps> = ({ as: Component = 'div', outerRef, children, ...rest }) => {
+export const Portal: FC<Props> = ({ as: Component = 'div', children, ...rest }) => {
   const [currentSeq] = useState(() => ++portalSeq)
   const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
@@ -53,7 +53,6 @@ export const Portal: FC<PortalProps> = ({ as: Component = 'div', outerRef, child
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
       <Component
         {...rest}
-        ref={outerRef}
         data-portal-current-seq={currentSeq}
         data-portal-child-of={calculatedSeqs.portalChildOf}
       >
