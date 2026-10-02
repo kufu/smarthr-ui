@@ -46,7 +46,6 @@ export default {
     type: 'success',
     children: 'String',
     role: 'alert',
-    layer: 0,
     onClose: undefined,
     subActionArea: undefined,
   },
