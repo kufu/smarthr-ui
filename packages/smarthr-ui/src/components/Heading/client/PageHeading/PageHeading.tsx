@@ -4,9 +4,7 @@ import {
   type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
-  type ForwardedRef,
   type PropsWithChildren,
-  type Ref,
   memo,
   useCallback,
   useId,
@@ -64,19 +62,10 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo(
-  ({
-    autoPageTitle = true,
-    pageTitleSuffix,
-    pageTitle,
-    size = 'XL',
-    children,
-    ref,
-    ...rest
-  }: Props) =>
+  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, size = 'XL', children, ...rest }: Props) =>
     !IS_NEXT_JS && autoPageTitle ? (
       <AutoPageTitleHeading
         {...rest}
-        outerRef={ref}
         pageTitleSuffix={pageTitleSuffix}
         pageTitle={pageTitle}
         size={size}
@@ -84,18 +73,17 @@ export const PageHeading = memo(
         {children}
       </AutoPageTitleHeading>
     ) : (
-      <ActualHeading {...rest} headingRef={ref} size={size}>
+      <ActualHeading {...rest} size={size}>
         {children}
       </ActualHeading>
     ),
 )
 
 const AutoPageTitleHeading: FC<
-  Omit<Props, 'size' | 'autoPageTitle' | 'ref'> & {
+  Omit<Props, 'size' | 'autoPageTitle'> & {
     size: TextProps['size']
-    outerRef?: ForwardedRef<HTMLHeadingElement>
   }
-> = ({ pageTitleSuffix = 'SmartHR（スマートHR）', pageTitle, outerRef, children, ...rest }) => {
+> = ({ pageTitleSuffix = 'SmartHR（スマートHR）', pageTitle, ref, children, ...rest }) => {
   const pseudoTitleId = useId()
   const titleFrame = useAnimationFrame()
   const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
@@ -146,20 +134,19 @@ const AutoPageTitleHeading: FC<
     [latest],
   )
 
-  const mergedRef = useMergeRefs(callbackRef, outerRef)
+  const mergedRef = useMergeRefs(callbackRef, ref)
 
   return (
-    <ActualHeading {...rest} headingRef={mergedRef}>
+    <ActualHeading {...rest} ref={mergedRef}>
       {children}
     </ActualHeading>
   )
 }
 
 type ActualHeadingProps = PropsWithChildren<
-  ComponentProps<'h1'> & {
+  ComponentPropsWithRef<'h1'> & {
     visuallyHidden?: boolean
     size: TextProps['size']
-    headingRef?: Ref<HTMLHeadingElement>
   }
 >
 
@@ -168,7 +155,6 @@ const ActualHeading: FC<ActualHeadingProps> = ({
   size,
   className,
   children,
-  headingRef,
   ...rest
 }) => {
   const actualClassName = useMemo(
@@ -182,7 +168,6 @@ const ActualHeading: FC<ActualHeadingProps> = ({
       {...rest}
       {...STYLE_TYPE_MAP.screenTitle}
       as="h1"
-      ref={headingRef}
       size={size || STYLE_TYPE_MAP.screenTitle.size}
       className={actualClassName}
     >
