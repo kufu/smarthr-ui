@@ -3,6 +3,7 @@ import {
   multi20Datasets,
   multiSmall,
   singleSmall,
+  stackedGroupsExpanded,
 } from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
@@ -199,6 +200,27 @@ export const Stacked: Story = {
     disablePatterns: true,
     singleTone: { from: 0, to: 5 },
     orientation: 'horizontal',
+  },
+}
+
+// グループごとの値の集まり（データ1 = [12, 19, 3, 5, 2] など）を、グループ名1つのxカテゴリの中に積み上げて表示する
+export const GroupedStacks: Story = {
+  name: 'grouped stacks',
+  args: {
+    data: stackedGroupsExpanded,
+    stacked: true,
+    disablePatterns: true,
+    orientation: 'horizontal',
+    options: {
+      skipNull: true,
+      plugins: {
+        tooltip: {
+          filter: function (tooltipItem: TooltipItem<'bar'>) {
+            return tooltipItem.parsed.x !== null
+          },
+        },
+      },
+    },
   },
 }
 
