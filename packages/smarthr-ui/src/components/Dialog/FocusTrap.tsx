@@ -1,41 +1,37 @@
 'use client'
 
 import {
+  type FC,
   type PropsWithChildren,
+  type Ref,
   type RefObject,
-  forwardRef,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react'
 
-import { useMergeRefs } from '../../hooks/client/useMergeRefs'
 import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
+  outerRef?: Ref<{ focus: () => void }>
 }>
-
-export type FocusTrapRef = {
-  focus: () => void
-}
 
 const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
 const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
-export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
-  // TODO: innerRefを削除して、functionsのuseMemoの中にletで変数としてnodeの参照を持つことを検討
-  const innerRef = useRef<HTMLDivElement | null>(null)
-
+export const FocusTrap: FC<Props> = ({ firstFocusTarget, outerRef, children }) => {
   const functions = useMemo(() => {
-    const findDummyFocus = () => innerRef.current?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
+    let inner: HTMLElement | null = null
+    const findDummyFocus = () => inner?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
     const focus = () => {
       ;(firstFocusTarget?.current || findDummyFocus())?.focus()
     }
 
     return {
-      callbackRef: (node: HTMLDivElement | null) => {
+      callbackRef: (node: HTMLElement | null) => {
+        inner = node
+
         if (!node) {
           return
         }
@@ -76,9 +72,8 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
 
         window.addEventListener('keydown', handleKeyDown)
 
-        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
         return () => {
+          inner = null
           cancelAnimationFrame(rAFId)
           window.removeEventListener('keydown', handleKeyDown)
 
@@ -91,14 +86,10 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
     }
   }, [firstFocusTarget])
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(innerRef, functions.callbackRef)
-
-  useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
+  useImperativeHandle(outerRef, () => functions as { focus: () => void }, [functions])
 
   return (
-    <div ref={mergedRef}>
+    <div ref={functions.callbackRef}>
       {!firstFocusTarget && (
         /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
         <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
@@ -106,4 +97,4 @@ export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, ch
       {children}
     </div>
   )
-})
+}

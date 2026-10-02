@@ -1,9 +1,7 @@
-'use client'
-
 import {
   type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type FormEvent,
   type MouseEventHandler,
   type ReactNode,
   useMemo,
@@ -12,20 +10,24 @@ import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { Localizer, useIntl } from '../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../Button'
-import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
-import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
-import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownTrigger,
+  FilterDropdownForm,
+  FilteredIcon,
+} from '../client'
 
 type ObjectTriggerType = {
   text?: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ButtonProps['size']
+  size?: ComponentProps<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
@@ -48,14 +50,11 @@ type BaseProps = {
   onOpen?: () => void
   onClose?: () => void
 }
-type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
 const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
-const ON_SUBMIT = (e: FormEvent) => {
-  e.preventDefault()
-}
 
 const classNameGenerator = tv({
   slots: {
@@ -100,17 +99,6 @@ export const FilterDropdown: FC<Props> = ({
     orgTrigger,
     triggerObjectConverter,
   )
-  const { localize } = useIntl()
-
-  const filteredIconAlt = useMemo(
-    () =>
-      (typeof filtered === 'object' && filtered.iconAlt) ||
-      localize({
-        id: 'smarthr-ui/FilterDropdown/status',
-        defaultText: '適用中',
-      }),
-    [filtered, localize],
-  )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
@@ -145,8 +133,10 @@ export const FilterDropdown: FC<Props> = ({
       <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
 
       {filtered && (
-        // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-        <FaCircleCheckIcon className={classNames.filteredIcon} aria-label={filteredIconAlt} />
+        <FilteredIcon
+          alt={typeof filtered === 'object' ? filtered.iconAlt : undefined}
+          className={classNames.filteredIcon}
+        />
       )}
     </span>
   )
@@ -162,7 +152,7 @@ export const FilterDropdown: FC<Props> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <form onSubmit={ON_SUBMIT}>
+        <FilterDropdownForm>
           <div className={classNames.inner}>{children}</div>
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster gap={1} align="center" justify="space-between">
@@ -221,7 +211,7 @@ export const FilterDropdown: FC<Props> = ({
               </div>
             )}
           </Stack>
-        </form>
+        </FilterDropdownForm>
       </DropdownContent>
     </Dropdown>
   )

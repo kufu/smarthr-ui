@@ -1,5 +1,6 @@
 import {
   type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -71,7 +72,7 @@ type BaseProps = PropsWithChildren<{
   enableNew?: boolean
 }>
 
-type Props = BaseProps & Omit<ComponentProps<'header'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'header'>, keyof BaseProps>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
 const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const

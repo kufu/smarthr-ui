@@ -1,37 +1,38 @@
 'use client'
 
 import {
+  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type KeyboardEvent,
   type MouseEvent,
   type PropsWithChildren,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
-  type RefObject,
   type SetStateAction,
   memo,
-  useCallback,
   useId,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import Draggable, { type DraggableBounds } from 'react-draggable'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../intl'
-import { debounce } from '../../../libs/debounce'
 import { dialogSize } from '../../../tailwind'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../Icon'
-import { Panel, type PanelElementProps } from '../../Panel'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { LiveRegion } from '../../LiveRegion'
+import { Panel } from '../../Panel'
+import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 
 import type { DialogSize } from '../types'
 
@@ -51,11 +52,11 @@ type BaseProps = PropsWithChildren<{
   /**
    * 閉じるボタンを押下したときのハンドラ
    */
-  onClickClose?: (e: MouseEvent<HTMLButtonElement>) => void
+  onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   /**
    * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
    */
-  onPressEscape?: () => void
+  onPressEscape?: (e: KeyboardEvent) => void
   /**
    * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
    * ダイアログの幅
@@ -86,14 +87,20 @@ type BaseProps = PropsWithChildren<{
    */
   bottom?: string | number
   /**
-   * ポータルの container となる DOM 要素を追加する親要素
+   * ポータルの container となる DOM 要素を追加する親要素。
+   * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
+   * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+   * 呼び出し側で要素が確定してから渡すこと。
    */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement
+  /**
+   * リサイズ可能かどうか
+   */
+  resizable?: boolean
 }>
 type Props = BaseProps &
-  Omit<DialogBodyProps, keyof BaseProps> &
-  Omit<PanelElementProps, keyof BaseProps> &
-  Omit<VariantProps<typeof classNameGenerator>, keyof BaseProps>
+  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
+  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -128,7 +135,7 @@ const classNameGenerator = tv({
       XL: { wrapper: dialogSize.XL },
       XXL: { wrapper: dialogSize.XXL },
       FULL: { wrapper: dialogSize.FULL },
-    },
+    } satisfies Record<NonNullable<BaseProps['size']>, { wrapper: string }>,
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
@@ -156,7 +163,6 @@ export const ModelessDialog: FC<Props> = ({
   bottom,
   portalParent,
   className,
-  id,
   onClickClose,
   ...rest
 }) => {
@@ -165,8 +171,6 @@ export const ModelessDialog: FC<Props> = ({
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
-  const { createPortal } = useDialogPortal(portalParent, id)
-  const { localize } = useIntl()
 
   const classNames = useMemo(() => {
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
@@ -179,10 +183,10 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [className, size, resizable])
 
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLElement>(null)
 
   const wrapperPositionRef = useRef<{ top: number; left: number } | undefined>(undefined)
-  const [debouncedLiveRegionText, setDebouncedLiveRegionText] = useState<string>('')
+  const [liveRegionText, setLiveRegionText] = useState<ReactNode>('')
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -204,12 +208,10 @@ export const ModelessDialog: FC<Props> = ({
     bottom,
     defaultPosition,
     centering,
-    localize,
     liveRegionFrame,
   })
 
   const functions = useMemo(() => {
-    const debounceLiveRegionText = debounce(setDebouncedLiveRegionText, 600)
     const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
       setPosition(pos)
 
@@ -219,7 +221,7 @@ export const ModelessDialog: FC<Props> = ({
           : undefined
 
         if (!wrapperPosition) {
-          setDebouncedLiveRegionText('')
+          setLiveRegionText('')
           return
         }
 
@@ -228,35 +230,30 @@ export const ModelessDialog: FC<Props> = ({
         wrapperPositionRef.current = wrapperPosition
 
         if (
-          oldPosition &&
-          wrapperPosition.top === oldPosition.top &&
-          wrapperPosition.left === oldPosition.left
+          !oldPosition ||
+          wrapperPosition.top !== oldPosition.top ||
+          wrapperPosition.left !== oldPosition.left
         ) {
-          return
+          setLiveRegionText(
+            <Localizer
+              id="smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText"
+              defaultText="上から{top}px、左から{left}px"
+              values={{
+                top: Math.trunc(wrapperPosition.top).toString(),
+                left: Math.trunc(wrapperPosition.left).toString(),
+              }}
+            />,
+          )
         }
-
-        const txt = latest.localize(
-          {
-            id: 'smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText',
-            defaultText: '上から{top}px、左から{left}px',
-          },
-          {
-            top: Math.trunc(wrapperPosition.top).toString(),
-            left: Math.trunc(wrapperPosition.left).toString(),
-          },
-        )
-
-        debounceLiveRegionText(txt)
       })
     }
 
     return {
       cleanupLiveRegion: () => {
         latest.liveRegionFrame.cancel()
-        debounceLiveRegionText.cancel()
       },
       setActualPosition,
-      handleArrowKeyDown: (e: KeyboardEvent) => {
+      handleArrowKeyDown: (e: ReactKeyboardEvent) => {
         if (!latest.isOpen || document.activeElement !== e.currentTarget) {
           return
         }
@@ -298,9 +295,9 @@ export const ModelessDialog: FC<Props> = ({
         lastFocusElementRef.current?.focus()
         latest.onClickClose?.(e)
       },
-      handlePressEscape: () => {
+      handlePressEscape: (e: KeyboardEvent) => {
         lastFocusElementRef.current?.focus()
-        latest.onPressEscape?.()
+        latest.onPressEscape?.(e)
       },
       handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
@@ -312,7 +309,9 @@ export const ModelessDialog: FC<Props> = ({
     }
   }, [latest])
 
-  const callbackRef = useCallback(
+  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+
+  const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
         const oldDefaultPosition = latest.defaultPosition
@@ -390,8 +389,6 @@ export const ModelessDialog: FC<Props> = ({
 
       document.addEventListener('focus', focusHandler, true)
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         functions.cleanupLiveRegion()
         document.removeEventListener('focus', focusHandler, true)
@@ -400,87 +397,85 @@ export const ModelessDialog: FC<Props> = ({
     [isOpen, functions, latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(wrapperRef, callbackRef)
+  // HINT: escapeCallbackRefはnodeを参照せずEscapeキーの監視を行うだけなので、
+  // どの要素にアタッチしても良い。Dialogが表示されている間常にマウントされている
+  // wrapperRefに混ぜ込んでいる
+  const mergedRef = useMergeRefs(wrapperRef, escapeCallbackRef, layoutEffectRef)
 
-  // HINT: mergedRefに混ぜ込んでも実害はなさそうだが、Dialogが表示されている際
-  // 常に表示される要素ならなんでもいいので分けている
-  const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
-
-  return createPortal(
-    <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
-      <Draggable
-        {...Draggable.defaultProps}
-        nodeRef={wrapperRef}
-        handle=".smarthr-ui-ModelessDialog-handle"
-        position={position}
-        bounds={draggableBounds ?? false}
-        onStart={functions.handleDragStart}
-        onDrag={functions.handleDrag}
-      >
-        <Panel
-          {...rest}
-          ref={mergedRef}
-          role="dialog"
-          radius="m"
-          layer={3}
-          overflow="auto"
-          className={classNames.wrapper}
-          // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
-          // 依存する値も多く、memo化の効果が薄いため直接記述している
-          style={{
-            top: centering.top ?? defaultPosition.top,
-            left: centering.left ?? defaultPosition.left,
-            right: defaultPosition.right,
-            bottom: defaultPosition.bottom,
-            width: size ? undefined : width,
-            height,
-          }}
-          aria-labelledby={labelId}
+  return (
+    <DialogPortal parent={portalParent}>
+      <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
+        <Draggable
+          {...Draggable.defaultProps}
+          nodeRef={wrapperRef}
+          handle=".smarthr-ui-ModelessDialog-handle"
+          position={position}
+          bounds={draggableBounds ?? false}
+          onStart={functions.handleDragStart}
+          onDrag={functions.handleDrag}
         >
-          {/* HINT: Dialogが表示される場合、常に表示される要素にescapeCallbackRefを設定する。表示条件が入るなどした場合要調整 */}
-          {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-          <div
-            ref={escapeCallbackRef}
-            tabIndex={-1}
-            className="smarthr-ui-ModelessDialog-firstFocusTarget"
-          />
-          <div className={classNames.header}>
-            <Handler
-              className={classNames.dialogHandler}
-              handleArrowKeyDown={functions.handleArrowKeyDown}
-            />
-            <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
-              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-              <Heading>{heading}</Heading>
-            </div>
-            <CloseButton
-              // DialogHandlerの上に出すためにスタッキングコンテキストを生成
-              className="shr-relative shr-ml-auto shr-shrink-0"
-              handleClick={functions.handleClickClose}
-            />
-          </div>
-          <DialogBody
-            contentBgColor={contentBgColor}
-            contentPadding={contentPadding}
-            className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+          <Panel
+            {...rest}
+            ref={mergedRef}
+            role="dialog"
+            radius="m"
+            layer={3}
+            overflow="auto"
+            className={classNames.wrapper}
+            // HINT: Panelはmemo化されていないため、styleを安定化しても再レンダリングは減らない。
+            // 依存する値も多く、memo化の効果が薄いため直接記述している
+            style={{
+              top: centering.top ?? defaultPosition.top,
+              left: centering.left ?? defaultPosition.left,
+              right: defaultPosition.right,
+              bottom: defaultPosition.bottom,
+              width: size ? undefined : width,
+              height,
+            }}
+            aria-labelledby={labelId}
           >
-            {children}
-          </DialogBody>
-          {footer && (
-            <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">{footer}</div>
-          )}
-          <LiveRegion regionText={debouncedLiveRegionText} />
-        </Panel>
-      </Draggable>
-    </DialogOverlap>,
+            {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
+            <div tabIndex={-1} className="smarthr-ui-ModelessDialog-firstFocusTarget" />
+            <div className={classNames.header}>
+              <Handler
+                className={classNames.dialogHandler}
+                handleArrowKeyDown={functions.handleArrowKeyDown}
+              />
+              <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
+                {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+                <Heading>{heading}</Heading>
+              </div>
+              <CloseButton
+                // DialogHandlerの上に出すためにスタッキングコンテキストを生成
+                className="shr-relative shr-ml-auto shr-shrink-0"
+                handleClick={functions.handleClickClose}
+              />
+            </div>
+            <DialogBody
+              contentBgColor={contentBgColor}
+              contentPadding={contentPadding}
+              className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+            >
+              {children}
+            </DialogBody>
+            {footer && (
+              <div className="smarthr-ui-ModelessDialog-footer shr-border-t-shorthand">
+                {footer}
+              </div>
+            )}
+            <LiveRegion visuallyHidden={true} announceDelay={600}>
+              {liveRegionText}
+            </LiveRegion>
+          </Panel>
+        </Draggable>
+      </DialogOverlap>
+    </DialogPortal>
   )
 }
 
 const Handler = memo<{
   className: string
-  handleArrowKeyDown: (e: KeyboardEvent) => void
+  handleArrowKeyDown: (e: ReactKeyboardEvent) => void
 }>(({ handleArrowKeyDown, ...rest }) => {
   const { localize } = useIntl()
 
@@ -503,23 +498,14 @@ const Handler = memo<{
         <FaGripIcon />
       </button>
       <div id="handler-description" className="shr-hidden">
-        {localize({
-          id: 'smarthr-ui/ModelessDialog/dialogHandlerDescription',
-          defaultText: '矢印キーを押して上下左右に移動できます',
-        })}
+        <Localizer
+          id="smarthr-ui/ModelessDialog/dialogHandlerDescription"
+          defaultText="矢印キーを押して上下左右に移動できます"
+        />
       </div>
     </>
   )
 })
-
-const LiveRegion = ({ regionText }: { regionText: string | undefined }) => (
-  <div
-    role="status"
-    className="shr-fixed -shr-m-px shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap"
-  >
-    {regionText}
-  </div>
-)
 
 const CloseButton = memo<{
   className: string

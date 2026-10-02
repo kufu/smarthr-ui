@@ -5,14 +5,11 @@ import {
   type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
-  type ReactNode,
   type Ref,
-  forwardRef,
   startTransition,
   useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -22,8 +19,8 @@ import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
-import { debounce } from '../../../libs/debounce'
 import { defaultHtmlFontSize } from '../../../themes'
+import { LiveRegion } from '../../LiveRegion'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 type BaseProps = {
@@ -91,13 +88,12 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+export const Textarea: FC<Props> = ({ maxLetters, ref, ...rest }) =>
   maxLetters ? (
     <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
   ) : (
     <ActualTextarea {...rest} externalRef={ref} />
-  ),
-)
+  )
 
 type LocalTextareaProps = ComponentProps<typeof Textarea> & {
   externalRef?: Ref<HTMLTextAreaElement>
@@ -107,17 +103,14 @@ const MaxLettersTextarea: FC<
   Omit<LocalTextareaProps, 'maxLetters'> & {
     maxLetters: number
   }
-> = ({ maxLetters, error, value, defaultValue, onChange, id, ...rest }) => {
+> = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
   const maxLettersId = useId()
-  const textareaId = id || `${maxLettersId}-textarea`
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
-  const counterSpanRef = useRef<HTMLSpanElement>(null)
   const [count, setCount] = useState(() => {
     const currentValue = defaultValue || value
     return currentValue ? getStringLength(currentValue) : 0
   })
-  const [srCounterMessage, setSrCounterMessage] = useState<ReactNode>('')
 
   const countError = count > maxLetters
 
@@ -126,24 +119,11 @@ const MaxLettersTextarea: FC<
   })
 
   const functions = useMemo(() => {
-    // counter spanのテキスト変更を監視してスクリーンリーダーメッセージを更新
-    // countが連続で更新されると、スクリーンリーダーが古い値を読み上げてしまうため、メッセージの更新を遅延しています
-    const updateSrMessage = debounce(() => {
-      startTransition(() => {
-        if (counterSpanRef.current) {
-          setSrCounterMessage(counterSpanRef.current.textContent || '')
-        }
-      })
-    }, 1000)
-    const actualUpdateCount = debounce((newValue: TextareaValue) => {
-      startTransition(() => {
-        setCount(getStringLength(newValue))
-      })
-    }, 200)
-
-    // 初回レンダリング時はスクリーンリーダー向けメッセージなどを更新したくないためskipする
-    // (実際のユーザー操作による変更でのみ更新すれば良い)
-    // useEffectでupdateCountが必ず呼びだされる
+    // countの初期値はuseStateの遅延初期化でdefaultValue || valueから計算済みのため、
+    // マウント時にuseEffect経由で呼ばれるupdateCountは初回のみskipする。
+    // skipしないと、非制御コンポーネントとして扱う場合（valueを渡さずdefaultValueのみ渡す場合）
+    // valueがundefinedになりcountが誤った値に上書きされ、表示のちらつきや
+    // LiveRegionへの不要な通知が発生してしまう
     let firstCallUpdateCount = true
     const updateCount = (newValue: TextareaValue) => {
       if (firstCallUpdateCount) {
@@ -151,16 +131,13 @@ const MaxLettersTextarea: FC<
         return
       }
 
-      actualUpdateCount(newValue)
-      updateSrMessage()
+      startTransition(() => {
+        setCount(getStringLength(newValue))
+      })
     }
 
     return {
       updateCount,
-      cancelDebounce: () => {
-        updateSrMessage.cancel()
-        actualUpdateCount.cancel()
-      },
       handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
         updateCount(e.target.value)
         latest.onChange?.(e)
@@ -170,14 +147,12 @@ const MaxLettersTextarea: FC<
 
   useEffect(() => {
     functions.updateCount(value ?? '')
-    return functions.cancelDebounce
   }, [value, functions])
 
   return (
     <span className="shr-relative">
       <ActualTextarea
         {...rest}
-        id={textareaId}
         value={value}
         defaultValue={defaultValue}
         error={error || countError}
@@ -191,15 +166,11 @@ const MaxLettersTextarea: FC<
           values={{ maxLetters }}
         />
       </VisuallyHiddenText>
-      <VisuallyHiddenText as="output" role="status" htmlFor={textareaId}>
-        {srCounterMessage}
-      </VisuallyHiddenText>
-      <span
-        ref={counterSpanRef}
+      <LiveRegion
         id={maxLettersId}
-        className="smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black data-[error]:shr-text-danger"
-        aria-hidden={true}
-        data-error={countError || undefined}
+        announceDelay={1000}
+        skipInitialAnnounce={true}
+        className={`smarthr-ui-Textarea-counter shr-block shr-text-sm shr-text-black ${countError ? 'shr-text-danger' : ''}`}
       >
         {count > maxLetters ? (
           <Localizer
@@ -214,7 +185,7 @@ const MaxLettersTextarea: FC<
             values={{ availableLetters: maxLetters - count }}
           />
         )}
-      </span>
+      </LiveRegion>
     </span>
   )
 }
@@ -280,8 +251,8 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
+  const errorAttr = error || undefined
+
   const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
 
   return (
@@ -291,7 +262,8 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
       rows={interimRows}
       className={actualClassName}
       style={{ width: typeof width === 'number' ? `${width}px` : width }}
-      aria-invalid={error || undefined}
+      aria-invalid={errorAttr}
+      data-smarthr-ui-input-error={errorAttr}
       data-smarthr-ui-input="true"
       onChange={functions.handleChange}
     />

@@ -1,18 +1,9 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ForwardedRef,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
-import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
-
-import type { ActualSelectProps } from './client'
+import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
 
 type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
   /** コンポーネントの幅 */
@@ -26,7 +17,7 @@ type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'chil
 }
 
 type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children'>
+  Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'children'>
 
 const classNameGenerator = tv({
   slots: {
@@ -66,10 +57,16 @@ const classNameGenerator = tv({
   },
 })
 
-const BaseSelect = <T extends string>(
-  { options, width, hasBlank, blankLabel, size, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLSelectElement>,
-) => {
+export const Select = <T extends string>({
+  options,
+  width,
+  hasBlank,
+  blankLabel,
+  size,
+  className,
+  ref,
+  ...rest
+}: Props<T>) => {
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
@@ -127,5 +124,3 @@ const Option = memo<Props<string>['options'][number]>((option) => {
     </optgroup>
   )
 })
-
-export const Select = genericsForwardRef(BaseSelect)

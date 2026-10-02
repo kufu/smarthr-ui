@@ -1,7 +1,7 @@
 {
   "name": "@smarthr/smarthr-ui-charts",
   "description": "Chart components for SmartHR UI built with React.",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "author": "SmartHR-UI Team",
   "type": "module",
   "main": "lib/index.js",
@@ -43,8 +43,8 @@
     "watch:css": "tailwindcss -i ./src/styles/index.css -o ./lib/styles.css --watch"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0",
     "smarthr-ui": "workspace:^",
     "styled-components": "^5.0.1"
@@ -76,18 +76,18 @@
     "jsdom": "^26.1.0",
     "npm-run-all2": "^9.0.3",
     "postcss": "^8.5.28",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "react-intl": "^10.1.26",
     "rimraf": "^6.0.1",
-    "rollup": "^4.63.1",
+    "rollup": "^4.63.4",
     "smarthr-ui": "workspace:^",
     "storybook": "10.5.10",
     "styled-components": "^5.3.11",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "vite": "7.3.6",
+    "vite": "8.2.2",
     "vitest": "^4.1.11"
   },
   "keywords": [

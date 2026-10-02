@@ -1,8 +1,8 @@
 import {
   type ComponentPropsWithRef,
   type ComponentType,
+  type FC,
   type PropsWithChildren,
-  forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -12,12 +12,12 @@ import { useSectionWrapper } from '../../SectioningContent'
 
 import type { PositiveGap } from '../../../types'
 
-type Props = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   as?: string | ComponentType<any>
   gap?: PositiveGap
   padding?: PositiveGap
-}> &
-  ComponentPropsWithRef<'div'>
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [
@@ -81,30 +81,29 @@ const classNameGenerator = tv({
   },
 })
 
-export const Reel = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', gap = 0.5, padding = 0, className, children, ...rest }, ref) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ gap, padding, className }),
-      [className, gap, padding],
-    )
+export const Reel: FC<Props> = ({
+  as: Component = 'div',
+  gap = 0.5,
+  padding = 0,
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ gap, padding, className }),
+    [className, gap, padding],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = (
-      <Scroller
-        {...rest}
-        as={Component}
-        ref={ref}
-        direction="horizontal"
-        className={actualClassName}
-      >
-        {children}
-      </Scroller>
-    )
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Scroller {...rest} as={Component} direction="horizontal" className={actualClassName}>
+      {children}
+    </Scroller>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

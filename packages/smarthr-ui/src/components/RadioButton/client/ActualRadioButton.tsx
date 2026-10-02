@@ -10,7 +10,7 @@ import type { ComponentPropsWithRef, FC, PropsWithChildren, Ref } from 'react'
 
 type Props = PropsWithChildren<
   {
-    outerRef: Ref<HTMLInputElement>
+    outerRef?: Ref<HTMLInputElement>
   } & ComponentPropsWithRef<'input'>
 >
 
