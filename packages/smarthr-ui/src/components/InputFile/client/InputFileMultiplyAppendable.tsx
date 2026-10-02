@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  type ChangeEvent,
-  type FC,
-  type MouseEvent,
-  type Ref,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ChangeEvent, type FC, type MouseEvent, useId, useMemo, useRef, useState } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { Stack } from '../../Layout'
@@ -23,9 +14,7 @@ import type { LowerProps } from '../types'
 
 const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
-type Props = Omit<LowerProps, 'multiple'> & {
-  outerRef?: Ref<HTMLInputElement>
-}
+type Props = Omit<LowerProps, 'multiple'>
 
 export const InputFileMultiplyAppendable: FC<Props> = ({
   className,
@@ -36,7 +25,6 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
   onChange,
   disabled,
   error,
-  outerRef,
   ...rest
 }) => {
   const [files, setFiles] = useState<File[]>([])
@@ -144,7 +132,6 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
       <span className={classNames.inputWrapper}>
         <input
           {...rest}
-          ref={outerRef}
           type="file"
           disabled={disabled}
           multiple
