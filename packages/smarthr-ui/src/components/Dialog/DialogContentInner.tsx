@@ -61,7 +61,7 @@ type BaseProps = PropsWithChildren<{
   /**
    * ダイアログトップのフォーカストラップへの ref
    */
-  focusTrapRef?: FocusTrapProps['outerRef']
+  focusTrapRef?: FocusTrapProps['ref']
 }>
 type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
 
@@ -173,7 +173,7 @@ export const DialogContentInner: FC<Props> = ({
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
         >
-          <FocusTrap outerRef={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>
