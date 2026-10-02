@@ -2,11 +2,10 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
-  type Ref,
   type RefObject,
   memo,
   useMemo,
@@ -21,7 +20,6 @@ import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
 import { Localizer } from '../../../../intl'
-import { genericsForwardRef } from '../../../../libs/util'
 import { UnstyledButton } from '../../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
 import { Input } from '../../../Input'
@@ -70,7 +68,7 @@ type BaseProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps<unknown>>
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
@@ -151,41 +149,39 @@ const SuffixButtons = memo<SuffixButtonsProps>(
   ),
 )
 
-const ActualSingleCombobox = <T,>(
-  {
-    items,
-    selectedItem,
-    defaultItem,
-    name,
-    disabled,
-    readOnly,
-    required,
-    prefix,
-    error,
-    creatable,
-    placeholder,
-    autoComplete,
-    dropdownHelpMessage,
-    isLoading,
-    width,
-    dropdownWidth = 'auto',
-    className,
-    onChange,
-    onChangeInput,
-    onAdd,
-    onSelect,
-    onClear,
-    onClearClick,
-    onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    noResultText,
-    style,
-    ...rest
-  }: Props<T>,
-  ref: Ref<HTMLInputElement>,
-) => {
+export const SingleCombobox = <T,>({
+  items,
+  selectedItem,
+  defaultItem,
+  name,
+  disabled,
+  readOnly,
+  required,
+  prefix,
+  error,
+  creatable,
+  placeholder,
+  autoComplete,
+  dropdownHelpMessage,
+  isLoading,
+  width,
+  dropdownWidth = 'auto',
+  className,
+  onChange,
+  onChangeInput,
+  onAdd,
+  onSelect,
+  onClear,
+  onClearClick,
+  onChangeSelected,
+  onFocus,
+  onBlur,
+  onKeyPress,
+  noResultText,
+  style,
+  ref,
+  ...rest
+}: Props<T>) => {
   const theme = useTheme()
   const triggerRef = useRef<HTMLDivElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -493,5 +489,3 @@ const ActualSingleCombobox = <T,>(
     </div>
   )
 }
-
-export const SingleCombobox = genericsForwardRef(ActualSingleCombobox)

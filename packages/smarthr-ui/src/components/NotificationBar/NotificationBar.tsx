@@ -160,7 +160,7 @@ export const NotificationBar: FC<Props> = ({
   className,
   ...rest
 }) => {
-  let Wrapper = Fragment
+  let Wrapper: typeof Fragment | typeof Panel = Fragment
   let wrapperProps = {}
 
   if (paneled) {

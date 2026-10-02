@@ -1,11 +1,8 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type ElementType,
-  type FC,
   type PropsWithChildren,
   type ReactNode,
-  type Ref,
-  forwardRef,
   memo,
   useMemo,
 } from 'react'
@@ -16,7 +13,7 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { TextOverflowTooltip } from './client'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { ElementRef, Gap } from '../../types'
+import type { Gap } from '../../types'
 
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
@@ -172,9 +169,8 @@ type MaxLinesObject = {
 }
 type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
 
-// HINT: ComponentProps<T> が ref を含むため、TextLink などのように ElementRefProps<T> は付与しない
 type Props<T extends ElementType = 'span'> = PropsWithChildren<
-  ComponentProps<T> & {
+  ComponentPropsWithRef<T> & {
     /** テキストコンポーネントの HTML タグ名。初期値は span */
     as?: T
     /** 強調するかどうかの真偽値。指定すると em 要素になる */
@@ -200,80 +196,76 @@ const maxLinesObjectConverter = (maxLines: 1 | 2 | 3 | 4 | 5 | 6 | undefined): M
   max: maxLines,
 })
 
-const ActualText: <T extends ElementType = 'span'>(props: Props<T>) => ReturnType<FC> = forwardRef(
-  <T extends ElementType = 'span'>(
-    {
-      emphasis,
-      styleType,
-      icon: orgIcon,
-      weight = emphasis ? 'bold' : undefined,
-      as: Component = emphasis ? 'em' : 'span',
-      size,
+const ActualText = <T extends ElementType = 'span'>({
+  emphasis,
+  styleType,
+  icon: orgIcon,
+  weight = emphasis ? 'bold' : undefined,
+  as: Component = emphasis ? 'em' : 'span',
+  size,
+  italic,
+  color,
+  leading,
+  whiteSpace,
+  maxLines: orgMaxLines,
+  className,
+  children,
+  ref,
+  ...rest
+}: Props<T>) => {
+  const maxLines = useObjectAttributes<MaxLinesType, MaxLinesObject>(
+    orgMaxLines,
+    maxLinesObjectConverter,
+  )
+
+  if (maxLines.max !== undefined && (maxLines.max < 1 || maxLines.max > 6)) {
+    throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
+  }
+
+  const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
+  const actualClassName = useMemo(() => {
+    const styleTypeValues = styleType
+      ? STYLE_TYPE_MAP[styleType as StyleType]
+      : UNDEFINED_STYLE_VALUES
+
+    return classNameGenerator({
+      size: size || styleTypeValues.size,
+      weight: weight || styleTypeValues.weight,
+      color: color || styleTypeValues.color,
+      leading: leading || styleTypeValues.leading,
       italic,
-      color,
-      leading,
       whiteSpace,
-      maxLines: orgMaxLines,
+      maxLines: maxLines.max,
       className,
-      children,
-      ...rest
-    }: Props<T>,
-    ref: Ref<ElementRef<T>>,
-  ) => {
-    const maxLines = useObjectAttributes<MaxLinesType, MaxLinesObject>(
-      orgMaxLines,
-      maxLinesObjectConverter,
-    )
+    })
+  }, [size, weight, italic, color, leading, whiteSpace, maxLines.max, className, styleType])
+  const hasIcon = !!icon
+  const iconGap = icon?.gap
 
-    if (maxLines.max !== undefined && (maxLines.max < 1 || maxLines.max > 6)) {
-      throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
-    }
+  const wrapperClassName = useMemo(
+    () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
+    [hasIcon, iconGap],
+  )
 
-    const icon = useObjectAttributes<IconType, ActualIconType>(orgIcon, iconObjectConverter)
-    const actualClassName = useMemo(() => {
-      const styleTypeValues = styleType
-        ? STYLE_TYPE_MAP[styleType as StyleType]
-        : UNDEFINED_STYLE_VALUES
+  const content = icon ? (
+    <span className={wrapperClassName}>
+      {icon.prefix}
+      {children}
+      {icon.suffix}
+    </span>
+  ) : (
+    children
+  )
 
-      return classNameGenerator({
-        size: size || styleTypeValues.size,
-        weight: weight || styleTypeValues.weight,
-        color: color || styleTypeValues.color,
-        leading: leading || styleTypeValues.leading,
-        italic,
-        whiteSpace,
-        maxLines: maxLines.max,
-        className,
-      })
-    }, [size, weight, italic, color, leading, whiteSpace, maxLines.max, className, styleType])
-    const hasIcon = !!icon
-    const iconGap = icon?.gap
-
-    const wrapperClassName = useMemo(
-      () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
-      [hasIcon, iconGap],
-    )
-
-    const content = icon ? (
-      <span className={wrapperClassName}>
-        {icon.prefix}
-        {children}
-        {icon.suffix}
-      </span>
-    ) : (
-      children
-    )
-
-    return maxLines.tooltip ? (
-      <TextOverflowTooltip {...rest} as={Component} outerRef={ref} className={actualClassName}>
-        {content}
-      </TextOverflowTooltip>
-    ) : (
-      <Component {...rest} ref={ref} className={actualClassName}>
-        {content}
-      </Component>
-    )
-  },
-)
+  return maxLines.tooltip ? (
+    <TextOverflowTooltip {...rest} as={Component} outerRef={ref} className={actualClassName}>
+      {content}
+    </TextOverflowTooltip>
+  ) : (
+    <Component {...rest} ref={ref} className={actualClassName}>
+      {content}
+    </Component>
+  )
+}
 
 export const Text = memo(ActualText) as typeof ActualText

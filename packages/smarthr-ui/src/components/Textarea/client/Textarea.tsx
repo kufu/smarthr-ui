@@ -6,7 +6,6 @@ import {
   type ComponentPropsWithRef,
   type FC,
   type Ref,
-  forwardRef,
   startTransition,
   useEffect,
   useId,
@@ -89,13 +88,12 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+export const Textarea: FC<Props> = ({ maxLetters, ref, ...rest }) =>
   maxLetters ? (
     <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
   ) : (
     <ActualTextarea {...rest} externalRef={ref} />
-  ),
-)
+  )
 
 type LocalTextareaProps = ComponentProps<typeof Textarea> & {
   externalRef?: Ref<HTMLTextAreaElement>

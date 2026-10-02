@@ -1,7 +1,7 @@
 import {
   type ComponentPropsWithRef,
+  type FC,
   type PropsWithChildren,
-  forwardRef,
   memo,
   useId,
   useMemo,
@@ -45,43 +45,41 @@ const classNameGenerator = tv({
   },
 })
 
-export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ children, className, id, disabled, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
+export const RadioButton: FC<Props> = ({ children, className, id, disabled, ref, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        innerWrapper: innerWrapper(),
-        box: box(),
-        input: input(),
-        label: label(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      innerWrapper: innerWrapper(),
+      box: box(),
+      input: input(),
+      label: label(),
+    }
+  }, [className])
 
-    const defaultId = useId()
-    const radioButtonId = id || defaultId
+  const defaultId = useId()
+  const radioButtonId = id || defaultId
 
-    return (
-      <span className={classNames.wrapper} data-disabled={disabled}>
-        <span className={classNames.innerWrapper}>
-          <ActualRadioButton
-            {...rest}
-            outerRef={ref}
-            id={radioButtonId}
-            disabled={disabled}
-            className={classNames.input}
-            data-smarthr-ui-input="true"
-          />
-          <AriaHiddenBox className={classNames.box} />
-        </span>
-        <LabeledChildren htmlFor={radioButtonId} className={classNames.label}>
-          {children}
-        </LabeledChildren>
+  return (
+    <span className={classNames.wrapper} data-disabled={disabled}>
+      <span className={classNames.innerWrapper}>
+        <ActualRadioButton
+          {...rest}
+          outerRef={ref}
+          id={radioButtonId}
+          disabled={disabled}
+          className={classNames.input}
+          data-smarthr-ui-input="true"
+        />
+        <AriaHiddenBox className={classNames.box} />
       </span>
-    )
-  },
-)
+      <LabeledChildren htmlFor={radioButtonId} className={classNames.label}>
+        {children}
+      </LabeledChildren>
+    </span>
+  )
+}
 
 const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />

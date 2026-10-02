@@ -2,11 +2,10 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
-  type Ref,
   memo,
   useId,
   useMemo,
@@ -23,7 +22,6 @@ import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useLocalize } from '../../../../intl'
 import { findDelegateTarget } from '../../../../libs/delegate'
-import { genericsForwardRef } from '../../../../libs/util'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Scroller } from '../../../Scroller'
 import { areItemsEqual, getSelectedLabelText } from '../helper'
@@ -73,7 +71,7 @@ type BaseProps<T> = ComboboxProps<T> & {
    */
   noResultText?: ReactNode
 }
-type Props<T> = BaseProps<T> & Omit<ComponentPropsWithoutRef<'input'>, keyof BaseProps<unknown>>
+type Props<T> = BaseProps<T> & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps<unknown>>
 
 const NOOP = () => undefined
 
@@ -133,40 +131,38 @@ const classNameGenerator = tv({
   },
 })
 
-const ActualMultiCombobox = <T,>(
-  {
-    items,
-    selectedItems,
-    name,
-    disabled = false,
-    required = false,
-    error = false,
-    creatable = false,
-    placeholder = '',
-    autoComplete,
-    dropdownHelpMessage,
-    isLoading,
-    selectedItemEllipsis,
-    width,
-    dropdownWidth = 'auto',
-    inputValue: controlledInputValue,
-    className,
-    onChange,
-    onChangeInput,
-    onAdd,
-    onDelete,
-    onSelect,
-    onChangeSelected,
-    onFocus,
-    onBlur,
-    onKeyPress,
-    isItemSelected,
-    noResultText,
-    style,
-    ...rest
-  }: Props<T>,
-  ref: Ref<HTMLInputElement>,
-) => {
+export const MultiCombobox = <T,>({
+  items,
+  selectedItems,
+  name,
+  disabled = false,
+  required = false,
+  error = false,
+  creatable = false,
+  placeholder = '',
+  autoComplete,
+  dropdownHelpMessage,
+  isLoading,
+  selectedItemEllipsis,
+  width,
+  dropdownWidth = 'auto',
+  inputValue: controlledInputValue,
+  className,
+  onChange,
+  onChangeInput,
+  onAdd,
+  onDelete,
+  onSelect,
+  onChangeSelected,
+  onFocus,
+  onBlur,
+  onKeyPress,
+  isItemSelected,
+  noResultText,
+  style,
+  ref,
+  ...rest
+}: Props<T>) => {
   const triggerRef = useRef<HTMLDivElement>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
@@ -593,8 +589,6 @@ const ActualMultiCombobox = <T,>(
     </div>
   )
 }
-
-export const MultiCombobox = genericsForwardRef(ActualMultiCombobox)
 
 const MemoizedCaretDown = memo<{
   disabled: boolean

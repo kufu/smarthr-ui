@@ -1,5 +1,6 @@
 import {
   type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEventHandler,
   type ReactNode,
@@ -49,7 +50,7 @@ type BaseProps = {
   onOpen?: () => void
   onClose?: () => void
 }
-type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
