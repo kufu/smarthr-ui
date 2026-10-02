@@ -6,11 +6,9 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type OptgroupHTMLAttributes,
   type OptionHTMLAttributes,
-  type PropsWithChildren,
-  type Ref,
   memo,
 } from 'react'
 
@@ -24,21 +22,19 @@ type Optgroup<T extends string> = {
   options: Array<Option<T>>
 } & OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type BaseProps<T extends string> = PropsWithChildren<{
-  outerRef?: Ref<HTMLSelectElement>
+type BaseProps<T extends string> = {
   /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
   /** フォームの値が変わったときに発火するコールバック関数 */
   onChangeValue?: (value: T) => void
   /** フォームの値にエラーがあるかどうか */
   error?: boolean
-}>
+}
 
 export type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children' | 'size'>
+  Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'size'>
 
 export const ActualSelect = <T extends string>({
-  outerRef,
   options,
   onChange,
   onChangeValue,
@@ -51,7 +47,6 @@ export const ActualSelect = <T extends string>({
   return (
     <select
       {...rest}
-      ref={outerRef}
       // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
       //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
       //    - エラーメッセージが表示されない
