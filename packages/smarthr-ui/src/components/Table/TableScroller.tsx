@@ -8,7 +8,7 @@ type BaseProps = PropsWithChildren<{
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const TableScroller: FC<Props> = ({ children, fixedHead, ...rest }) => (
-  <ScrollerSwitcher {...rest} forwardedRef={null} fixedHead={fixedHead}>
+  <ScrollerSwitcher {...rest} fixedHead={fixedHead}>
     {children}
   </ScrollerSwitcher>
 )

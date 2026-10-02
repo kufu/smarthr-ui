@@ -146,7 +146,7 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
   }, [className])
 
   return (
-    <ScrollerSwitcher forwardedRef={callbackRef} fixedHead={fixedHead}>
+    <ScrollerSwitcher ref={callbackRef} fixedHead={fixedHead}>
       <div className={classNames.wrapper}>
         <div {...rest} className={classNames.inner}>
           {children}

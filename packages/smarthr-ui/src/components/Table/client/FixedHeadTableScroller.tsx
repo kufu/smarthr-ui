@@ -4,10 +4,9 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { defaultHtmlFontSize } from '../../../themes'
 import { Scroller } from '../../Scroller'
 
-import type { ComponentPropsWithRef, FC, ForwardedRef, PropsWithChildren } from 'react'
+import type { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
 
 type BaseProps = PropsWithChildren<{
-  forwardedRef: ForwardedRef<HTMLDivElement>
   direction: 'both'
 }>
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
@@ -27,13 +26,8 @@ const callbackRef = (node: HTMLElement | null) => {
   }
 }
 
-export const FixedHeadTableScroller: FC<Props> = ({
-  children,
-  forwardedRef,
-  direction,
-  ...rest
-}) => {
-  const mergedRef = useMergeRefs(callbackRef, forwardedRef)
+export const FixedHeadTableScroller: FC<Props> = ({ children, ref, direction, ...rest }) => {
+  const mergedRef = useMergeRefs(callbackRef, ref)
 
   return (
     <Scroller {...rest} ref={mergedRef} direction={direction}>

@@ -5,11 +5,10 @@ import { Scroller } from '../Scroller'
 // eslint-disable-next-line smarthr/require-barrel-import
 import { FixedHeadTableScroller } from './client/FixedHeadTableScroller'
 
-import type { ComponentPropsWithRef, FC, ForwardedRef, PropsWithChildren } from 'react'
+import type { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
 
 type BaseProps = PropsWithChildren<{
   fixedHead?: boolean
-  forwardedRef: ForwardedRef<HTMLDivElement>
 }>
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
@@ -19,13 +18,13 @@ const SCROLLER_PROPS = {
   className: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
 }
 
-export const ScrollerSwitcher: FC<Props> = ({ children, fixedHead, forwardedRef, ...rest }) =>
+export const ScrollerSwitcher: FC<Props> = ({ children, fixedHead, ...rest }) =>
   fixedHead ? (
-    <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS} forwardedRef={forwardedRef}>
+    <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS}>
       {children}
     </FixedHeadTableScroller>
   ) : (
-    <Scroller {...rest} {...SCROLLER_PROPS} ref={forwardedRef}>
+    <Scroller {...rest} {...SCROLLER_PROPS}>
       {children}
     </Scroller>
   )
