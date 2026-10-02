@@ -10,6 +10,7 @@ import {
   SegmentedControl,
   FaTableIcon,
   FaChartColumnIcon,
+  FaChartBarIcon,
 } from 'smarthr-ui'
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
@@ -164,7 +165,7 @@ export const BarChart: React.FC<Props> = ({
           options={[
             {
               value: 'chart',
-              content: <FaChartColumnIcon />,
+              content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
               ariaLabel: 'グラフ',
             },
             {
