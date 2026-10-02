@@ -1,5 +1,5 @@
 import {
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ElementType,
   type MouseEvent,
   type ReactNode,
@@ -10,9 +10,7 @@ import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
-import type { ElementRefProps } from '../../types'
-
-type BaseProps<T extends ElementType> = ElementRefProps<T> & {
+type BaseProps<T extends ElementType> = {
   /** テキストのサイズ */
   size?: 'XS' | 'S' | 'M'
   /** リンクをクリックした時に発火するコールバック関数 */
@@ -25,7 +23,7 @@ type BaseProps<T extends ElementType> = ElementRefProps<T> & {
   elementAs?: T
 }
 type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T> | 'color'>
+  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T> | 'color'>
 
 const classNameGenerator = tv({
   slots: {
