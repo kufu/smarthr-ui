@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  type ChangeEvent,
-  type FC,
-  type MouseEvent,
-  type Ref,
-  useId,
-  useMemo,
-  useState,
-} from 'react'
+import { type ChangeEvent, type FC, type MouseEvent, useId, useMemo, useState } from 'react'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
@@ -25,7 +17,6 @@ const BASE_COLUMN_PADDING = { block: 0.5, inline: 1 } as const
 
 type Props = Omit<LowerProps, 'multiple'> & {
   multiple?: boolean
-  outerRef?: Ref<HTMLInputElement>
 }
 
 export const InputFileNative: FC<Props> = ({
@@ -37,7 +28,7 @@ export const InputFileNative: FC<Props> = ({
   onChange,
   disabled,
   error,
-  outerRef,
+  ref,
   ...rest
 }) => {
   const [files, setFiles] = useState<File[]>([])
@@ -120,7 +111,7 @@ export const InputFileNative: FC<Props> = ({
     }
   }, [latest])
 
-  const mergedRef = useMergeRefs(functions.callbackRef, outerRef)
+  const mergedRef = useMergeRefs(functions.callbackRef, ref)
 
   const errorAttr = error || undefined
 

@@ -19,7 +19,7 @@ type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: {
-  [key in StyleType]: Pick<Props, 'size' | 'leading' | 'weight' | 'color'>
+  [key in StyleType]: Pick<BaseProps<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
 } = {
   screenTitle: {
     size: 'XL',
@@ -66,11 +66,11 @@ const classNameGenerator = tv({
       L: 'shr-text-lg',
       XL: 'shr-text-xl',
       XXL: 'shr-text-2xl',
-    } satisfies Record<NonNullable<Props['size']>, string>,
+    } satisfies Record<NonNullable<Props<ElementType>['size']>, string>,
     weight: {
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
-    } satisfies Record<NonNullable<Props['weight']>, string>,
+    } satisfies Record<NonNullable<Props<ElementType>['weight']>, string>,
     italic: {
       true: 'shr-italic',
     },
@@ -81,20 +81,20 @@ const classNameGenerator = tv({
       TEXT_DISABLED: 'shr-text-disabled',
       TEXT_LINK: 'shr-text-link',
       inherit: 'shr-text-color-inherit',
-    } satisfies Record<NonNullable<Props['color']>, string>,
+    } satisfies Record<NonNullable<Props<ElementType>['color']>, string>,
     leading: {
       NONE: 'shr-leading-none',
       TIGHT: 'shr-leading-tight',
       NORMAL: 'shr-leading-normal',
       LOOSE: 'shr-leading-loose',
-    } satisfies Record<NonNullable<Props['leading']>, string>,
+    } satisfies Record<NonNullable<Props<ElementType>['leading']>, string>,
     whiteSpace: {
       normal: 'shr-whitespace-normal',
       nowrap: 'shr-whitespace-nowrap',
       pre: 'shr-whitespace-pre',
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
-    } satisfies Record<NonNullable<Props['whiteSpace']>, string>,
+    } satisfies Record<NonNullable<Props<ElementType>['whiteSpace']>, string>,
     maxLines: {
       1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       2: 'shr-line-clamp-[2]',
@@ -169,27 +169,27 @@ type MaxLinesObject = {
 }
 type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
 
-type Props<T extends ElementType = 'span'> = PropsWithChildren<
-  ComponentPropsWithRef<T> & {
-    /** テキストコンポーネントの HTML タグ名。初期値は span */
-    as?: T
-    /** 強調するかどうかの真偽値。指定すると em 要素になる */
-    emphasis?: boolean
-    /** 見た目の種類 */
-    styleType?: StyleType
-    /** 設置するアイコン */
-    icon?: IconType
+type BaseProps<T extends ElementType> = PropsWithChildren<{
+  /** テキストコンポーネントの HTML タグ名。初期値は span */
+  as?: T
+  /** 強調するかどうかの真偽値。指定すると em 要素になる */
+  emphasis?: boolean
+  /** 見た目の種類 */
+  styleType?: StyleType
+  /** 設置するアイコン */
+  icon?: IconType
 
-    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
-    weight?: 'normal' | 'bold'
-    italic?: boolean
-    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
-    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
-    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
-    /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
-    maxLines?: MaxLinesType
-  }
->
+  size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+  weight?: 'normal' | 'bold'
+  italic?: boolean
+  color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+  leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+  /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
+  maxLines?: MaxLinesType
+}>
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 const maxLinesObjectConverter = (maxLines: 1 | 2 | 3 | 4 | 5 | 6 | undefined): MaxLinesObject => ({
@@ -201,7 +201,7 @@ const ActualText = <T extends ElementType = 'span'>({
   styleType,
   icon: orgIcon,
   weight = emphasis ? 'bold' : undefined,
-  as: Component = emphasis ? 'em' : 'span',
+  as,
   size,
   italic,
   color,
@@ -210,7 +210,6 @@ const ActualText = <T extends ElementType = 'span'>({
   maxLines: orgMaxLines,
   className,
   children,
-  ref,
   ...rest
 }: Props<T>) => {
   const maxLines = useObjectAttributes<MaxLinesType, MaxLinesObject>(
@@ -257,12 +256,14 @@ const ActualText = <T extends ElementType = 'span'>({
     children
   )
 
+  const Component = as || (emphasis ? 'em' : 'span')
+
   return maxLines.tooltip ? (
-    <TextOverflowTooltip {...rest} as={Component} outerRef={ref} className={actualClassName}>
+    <TextOverflowTooltip {...rest} as={Component} className={actualClassName}>
       {content}
     </TextOverflowTooltip>
   ) : (
-    <Component {...rest} ref={ref} className={actualClassName}>
+    <Component {...rest} className={actualClassName}>
       {content}
     </Component>
   )

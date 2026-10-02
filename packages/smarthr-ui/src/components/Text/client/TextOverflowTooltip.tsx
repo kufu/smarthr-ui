@@ -1,21 +1,14 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type FC,
-  type Ref,
-  useCallback,
-  useState,
-} from 'react'
+import { type ComponentPropsWithRef, type ElementType, type FC, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
 
-type Props = {
+type BaseProps = {
   as: ElementType
-  outerRef?: Ref<HTMLElement>
-} & Omit<ComponentPropsWithRef<'span'>, 'as' | 'ref'>
+}
+type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -36,13 +29,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const TextOverflowTooltip: FC<Props> = ({
-  as: Component,
-  outerRef,
-  className,
-  children,
-  ...rest
-}) => {
+export const TextOverflowTooltip: FC<Props> = ({ as: Component, className, children, ...rest }) => {
   const [isOverflowing, setIsOverflowing] = useState(false)
 
   // HINT: -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
@@ -82,7 +69,7 @@ export const TextOverflowTooltip: FC<Props> = ({
 
   const content = (
     <span className={CLASS_NAMES.wrapper}>
-      <Component {...rest} ref={outerRef} className={className}>
+      <Component {...rest} className={className}>
         {children}
       </Component>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
