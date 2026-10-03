@@ -13,7 +13,7 @@ import { Cluster } from '../Layout'
 
 export type SideNavSizeType = 'M' | 'S'
 
-type BaseProps = {
+type BaseItemProps = {
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
   /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
@@ -21,28 +21,23 @@ type BaseProps = {
   /** 選択されているアイテムかどうか */
   current?: boolean
 }
+type ItemElementProps = ComponentPropsWithoutRef<'li'>
 
-type AbstractButtonProps = BaseProps & {
+type BaseButtonProps = BaseItemProps & {
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
+type ButtonProps = BaseButtonProps & Omit<ItemElementProps, keyof BaseButtonProps>
 
-type AbstractAnchorProps<T extends ElementType = 'a'> = BaseProps & {
+type BaseAnchorProps<T extends ElementType = 'a'> = BaseItemProps & {
   href: string
   /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
   elementAs?: T
   /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
-
-type ButtonProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractButtonProps> &
-  AbstractButtonProps
-
-type AnchorProps<T extends ElementType = 'a'> = Omit<
-  ComponentPropsWithoutRef<'li'>,
-  keyof AbstractAnchorProps<T>
-> &
-  AbstractAnchorProps<T>
+type AnchorProps<T extends ElementType = 'a'> = BaseAnchorProps<T> &
+  Omit<ItemElementProps, keyof BaseAnchorProps<T>>
 
 const classNameGenerator = tv({
   slots: {
@@ -145,7 +140,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 }
 
 const BodyCluster = memo<
-  Pick<BaseProps, 'prefix' | 'suffix'> & {
+  Pick<BaseItemProps, 'prefix' | 'suffix'> & {
     children: ReactNode
     classNames: { body: string; bodyText: string }
   }
