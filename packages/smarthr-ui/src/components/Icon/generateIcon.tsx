@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
+import { type ComponentPropsWithRef, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
@@ -27,7 +27,9 @@ export const colorSet = {
 
 const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
 
-type IconProps = {
+type BaseProps = {
+  /**アイコンの説明テキスト*/
+  alt?: ReactNode
   /**
    * アイコンの色
    * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
@@ -39,13 +41,7 @@ type IconProps = {
    */
   size?: FontSizes
 }
-
-type BaseProps = {
-  /**アイコンの説明テキスト*/
-  alt?: ReactNode
-}
-export type Props = BaseProps &
-  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof BaseProps>
+export type Props = BaseProps & Omit<ComponentPropsWithRef<'svg'>, keyof BaseProps>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
