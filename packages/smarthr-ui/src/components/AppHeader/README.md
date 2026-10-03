@@ -8,7 +8,7 @@ props を埋めていくだけで良い感じに共通のヘッダー/ナビゲ�
 `xxxAdditionalContent` 以外の props は積極的に埋めてください。
 
 ```ts
-type HeaderProps = ComponentProps<typeof Header> & {
+type HeaderProps = ComponentPropsWithRef<typeof Header> & {
   locale?: LocaleProps | null
   enableNew?: boolean
   appName?: ReactNode
