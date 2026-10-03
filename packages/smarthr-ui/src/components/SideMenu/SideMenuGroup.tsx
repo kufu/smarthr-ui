@@ -13,7 +13,7 @@ import { Section } from '../SectioningContent'
 type BaseProps = PropsWithChildren<{
   heading: ReactNode
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'li'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -23,12 +23,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideMenuGroup = ({
-  heading,
-  children,
-  className,
-  ...rest
-}: BaseProps & ElementProps) => {
+export const SideMenuGroup = ({ heading, children, className, ...rest }: Props) => {
   const classNames = useMemo(() => {
     const { wrapper, list, groupHeading } = classNameGenerator()
 
