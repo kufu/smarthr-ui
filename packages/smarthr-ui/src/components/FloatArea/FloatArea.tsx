@@ -52,7 +52,11 @@ type BaseProps = {
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<
+    ComponentPropsWithoutRef<typeof Panel>,
+    keyof BaseProps | 'radius' | 'layer' | 'padding' | 'overflow' | 'as'
+  >
 
 export const FloatArea: FC<Props> = ({
   primaryButton,
