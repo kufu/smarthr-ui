@@ -63,7 +63,10 @@ type BaseProps = PropsWithChildren<{
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>
 type Props = BaseProps &
-  Omit<ComponentPropsWithRef<typeof UnstyledButton>, keyof BaseProps | 'aria-selected' | 'type'>
+  Omit<
+    ComponentPropsWithRef<typeof UnstyledButton>,
+    keyof BaseProps | 'aria-selected' | 'type' | 'role' | 'value'
+  >
 
 export const TabItem: FC<Props> = ({
   selected = false,

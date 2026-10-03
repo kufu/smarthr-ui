@@ -22,7 +22,7 @@ const classNameGenerator = tv({
   },
 })
 
-type ActualProps = ComponentPropsWithRef<typeof FaCircleCheckIcon> & {
+type ActualProps = Omit<ComponentPropsWithRef<typeof FaCircleCheckIcon>, 'alt'> & {
   statusType: StatusType
   statusText?: string
 }
