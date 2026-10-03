@@ -8,7 +8,7 @@ import { StepCounter } from './StepCounter'
 
 import type { StatusType, VerticalStep } from './types'
 
-type Props = Omit<VerticalStep, 'status'> & {
+type BaseProps = {
   statusType?: StatusType
   statusText?: string
   /** ステップ数 */
@@ -16,6 +16,7 @@ type Props = Omit<VerticalStep, 'status'> & {
   /** 現在地かどうか */
   current: boolean
 }
+type Props = BaseProps & Omit<VerticalStep, keyof BaseProps | 'status'>
 
 const classNameGenerator = tv({
   slots: {
