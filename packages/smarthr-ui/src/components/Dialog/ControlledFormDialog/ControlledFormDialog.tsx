@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -17,7 +17,7 @@ import { FormDialogContentInner } from './FormDialogContentInner'
 
 import type { DialogProps } from '../types'
 
-type FormDialogContentInnerProps = ComponentProps<typeof FormDialogContentInner>
+type FormDialogContentInnerProps = ComponentPropsWithRef<typeof FormDialogContentInner>
 type ObjectHeadingType = Omit<FormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
@@ -40,7 +40,8 @@ type BaseProps = Omit<
      */
     onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,

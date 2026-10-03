@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -37,9 +37,9 @@ type ObjectCloseButtonType = {
 }
 
 type Props = PropsWithChildren<
-  ComponentProps<typeof DialogBody> & {
+  ComponentPropsWithRef<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: ComponentProps<typeof DialogHeading>
+    heading: ComponentPropsWithRef<typeof DialogHeading>
     /** アクションボタン */
     actionButton: ObjectActionButtonType
     /**

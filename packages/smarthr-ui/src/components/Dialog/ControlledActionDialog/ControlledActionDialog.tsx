@@ -1,4 +1,10 @@
-import { type ComponentProps, type FC, type MouseEvent, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
@@ -10,7 +16,7 @@ import { ActionDialogContentInner } from './ActionDialogContentInner'
 
 import type { DialogProps } from '../types'
 
-type ActionDialogContentInnerProps = ComponentProps<typeof ActionDialogContentInner>
+type ActionDialogContentInnerProps = ComponentPropsWithRef<typeof ActionDialogContentInner>
 
 type ObjectHeadingType = Omit<ActionDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -34,7 +40,8 @@ type BaseProps = Omit<
      */
     onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,
