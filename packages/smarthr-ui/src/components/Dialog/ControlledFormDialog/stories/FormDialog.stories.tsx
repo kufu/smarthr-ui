@@ -1,4 +1,4 @@
-import { type ComponentProps, useRef, useState } from 'react'
+import { type ComponentPropsWithRef, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
@@ -139,7 +139,7 @@ export const ResponseStatus: StoryObj<typeof ControlledFormDialog> = {
   render: (args) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof ControlledFormDialog>['responseStatus']>()
+      useState<ComponentPropsWithRef<typeof ControlledFormDialog>['responseStatus']>()
 
     return (
       <>
