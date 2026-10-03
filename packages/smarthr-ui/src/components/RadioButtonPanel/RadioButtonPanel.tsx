@@ -12,10 +12,11 @@ import { RadioButton } from '../RadioButton'
 
 import { ClickablePanel } from './client'
 
-type Props = ComponentProps<typeof RadioButton> & {
+type BaseProps = {
   as?: string | ComponentType<any>
   label: ReactNode
 }
+type Props = BaseProps & Omit<ComponentProps<typeof RadioButton>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
