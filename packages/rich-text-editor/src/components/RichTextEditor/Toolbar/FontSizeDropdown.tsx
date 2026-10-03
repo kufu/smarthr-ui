@@ -1,17 +1,12 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo, useRef } from 'react'
-import { FaCaretDownIcon, FaCheckIcon } from 'smarthr-ui'
+import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
 
-import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
-import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
-import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
-import { ToolbarTooltip } from './ToolbarTooltip'
-import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
+import { ToolbarListboxDropdown, type ToolbarListboxOption } from './ToolbarListboxDropdown'
 
 const DEFAULT_ROOT_FONT_SIZE = 16
 const LENGTH_PATTERN = /^(\d+(?:\.\d+)?)(px|rem|em)$/
@@ -48,24 +43,13 @@ const toPxSize = (value: string | null) => {
   return unit === 'px' ? Number(num) : Number(num) * DEFAULT_ROOT_FONT_SIZE
 }
 
-const classNameGenerator = tv({
-  slots: {
-    trigger: [
-      TOOLBAR_ITEM_CLASS_NAME,
-      'smarthr-ui-RichTextEditor-FontSizeDropdown',
-      'shr-min-w-[4em] shr-text-sm',
-    ],
-    listbox: [
-      'shr-border-shorthand shr-max-h-[20em] shr-min-w-[5em] shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
-    ],
-    option: [
-      'shr-flex shr-w-full shr-cursor-pointer shr-items-center shr-gap-0.5 shr-border-none shr-bg-transparent shr-px-0.75 shr-py-0.5 shr-text-left shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-    ],
-    checkIcon: 'shr-w-[1em] shr-shrink-0',
-  },
-})
+const OPTIONS: readonly ToolbarListboxOption[] = FONT_SIZES.map(({ px }) => ({
+  key: String(px),
+  label: String(px),
+  content: <span>{px}</span>,
+}))
+
+const DEFAULT_INDEX = FONT_SIZES.findIndex((s) => s.value === null)
 
 type Props = {
   tabIndex?: number
@@ -75,162 +59,49 @@ type Props = {
   ref?: (el: HTMLButtonElement | null) => void
 }
 
-export const FontSizeDropdown: FC<Props> = memo(
-  ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
-    const { editor } = useRichTextEditorContext()
-    const { localize } = useIntl()
-    const currentValue = useToolbarValue(editor, readers.currentFontSize)
-    const isInHeading = useToolbarValue(editor, readers.isInHeading)
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const listboxRef = useRef<HTMLDivElement>(null)
+export const FontSizeDropdown: FC<Props> = memo(({ disabled, ...rest }) => {
+  const { editor } = useRichTextEditorContext()
+  const { localize } = useIntl()
+  const currentValue = useToolbarValue(editor, readers.currentFontSize)
+  const isInHeading = useToolbarValue(editor, readers.isInHeading)
 
-    const currentSize = toPxSize(currentValue)
-    // 端数は Froala と同じく切り捨てて見せる。選択状態は端数を含めた値で判定するため、
-    // 11pt(14.67px) を選択肢の 14 と取り違えない。解釈できない単位はそのまま見せる
-    const currentLabel = currentSize === null ? currentValue : Math.floor(currentSize)
-    const isDisabled = disabled || isInHeading
+  const currentSize = toPxSize(currentValue)
+  // 端数は Froala と同じく切り捨てて見せる。選択状態は端数を含めた値で判定するため、
+  // 11pt(14.67px) を選択肢の 14 と取り違えない。解釈できない単位はそのまま見せる
+  const currentLabel = currentSize === null ? currentValue : Math.floor(currentSize)
 
-    const classNames = classNameGenerator()
+  const functions = useMemo(
+    () => ({
+      handleSelect: (index: number) => {
+        const { value } = FONT_SIZES[index]
 
-    const dropdownLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/fontSizeDropdownLabel',
-      defaultText: 'フォントサイズ',
-    })
+        if (value === null) {
+          editor.chain().focus().unsetFontSize().run()
+        } else {
+          editor.chain().focus().setFontSize(value).run()
+        }
+      },
+    }),
+    [editor],
+  )
 
-    const latest = useLatest({ currentSize, triggerRef, onKeyDown: onKeyDownProp })
-
-    const functions = useMemo(
-      () => ({
-        selectOption: (value: string | null) => {
-          if (value === null) {
-            editor.chain().focus().unsetFontSize().run()
-          } else {
-            editor.chain().focus().setFontSize(value).run()
-          }
-          setIsOpen(false)
-          latest.triggerRef.current?.focus()
-        },
-        handleTriggerKeyDown: (e: KeyboardEvent) => {
-          switch (e.key) {
-            case 'Enter':
-            case ' ':
-            case 'ArrowDown':
-              e.preventDefault()
-              e.stopPropagation()
-              setIsOpen(true)
-              requestAnimationFrame(() => {
-                const currentIndex = FONT_SIZES.findIndex((s) => s.px === latest.currentSize)
-                const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-                const defaultIndex = FONT_SIZES.findIndex((s) => s.value === null)
-                target?.[currentIndex >= 0 ? currentIndex : defaultIndex]?.focus()
-              })
-              break
-            case 'ArrowUp':
-              e.preventDefault()
-              e.stopPropagation()
-              setIsOpen(true)
-              requestAnimationFrame(() => {
-                const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-                buttons?.[buttons.length - 1]?.focus()
-              })
-              break
-            default:
-              latest.onKeyDown?.(e)
-          }
-        },
-        handleOptionKeyDown: (e: KeyboardEvent) => {
-          const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-          if (!buttons) return
-          const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
-
-          switch (e.key) {
-            case 'ArrowDown':
-              e.preventDefault()
-              e.stopPropagation()
-              buttons[(currentIndex + 1) % buttons.length]?.focus()
-              break
-            case 'ArrowUp':
-              e.preventDefault()
-              e.stopPropagation()
-              buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
-              break
-            case 'Home':
-              e.preventDefault()
-              e.stopPropagation()
-              buttons[0]?.focus()
-              break
-            case 'End':
-              e.preventDefault()
-              e.stopPropagation()
-              buttons[buttons.length - 1]?.focus()
-              break
-            // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
-            case 'Escape':
-            case 'Tab':
-              e.preventDefault()
-              e.stopPropagation()
-              setIsOpen(false)
-              latest.triggerRef.current?.focus()
-              break
-          }
-        },
-      }),
-      [editor, setIsOpen, latest],
-    )
-
-    return (
-      <>
-        <ToolbarTooltip suppressed={isOpen || isDisabled} label={dropdownLabel}>
-          <button
-            ref={(el) => {
-              triggerRef.current = el
-              refProp?.(el)
-            }}
-            type="button"
-            disabled={isDisabled}
-            tabIndex={tabIndex}
-            className={classNames.trigger()}
-            aria-expanded={isOpen}
-            aria-haspopup="listbox"
-            aria-label={`${dropdownLabel}: ${currentLabel}`}
-            onKeyDown={functions.handleTriggerKeyDown}
-            onClick={() => setIsOpen((prev) => !prev)}
-            onFocus={onFocusProp}
-          >
-            <span className="shr-flex-1">{currentLabel}</span>
-            <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
-          </button>
-        </ToolbarTooltip>
-        {renderDropdown(
-          <div
-            ref={listboxRef}
-            role="listbox"
-            className={classNames.listbox()}
-            aria-label={dropdownLabel}
-          >
-            {FONT_SIZES.map((option) => {
-              const isSelected = option.px === currentSize
-
-              return (
-                <button
-                  key={option.px}
-                  role="option"
-                  type="button"
-                  className={classNames.option()}
-                  aria-selected={isSelected}
-                  onClick={() => functions.selectOption(option.value)}
-                  onKeyDown={functions.handleOptionKeyDown}
-                >
-                  <span className={classNames.checkIcon()}>
-                    {isSelected && <FaCheckIcon className="shr-text-main" />}
-                  </span>
-                  <span>{option.px}</span>
-                </button>
-              )
-            })}
-          </div>,
-        )}
-      </>
-    )
-  },
-)
+  return (
+    <ToolbarListboxDropdown
+      {...rest}
+      disabled={disabled || isInHeading}
+      selectedIndex={FONT_SIZES.findIndex((s) => s.px === currentSize)}
+      valueLabel={currentLabel}
+      triggerContent={<span className="shr-flex-1">{currentLabel}</span>}
+      fallbackIndex={DEFAULT_INDEX}
+      appearance="list"
+      triggerClassName="smarthr-ui-RichTextEditor-FontSizeDropdown shr-min-w-[4em] shr-text-sm"
+      listboxClassName="shr-min-w-[5em]"
+      handleSelect={functions.handleSelect}
+      label={localize({
+        id: 'smarthr-ui/RichTextEditor/fontSizeDropdownLabel',
+        defaultText: 'フォントサイズ',
+      })}
+      options={OPTIONS}
+    />
+  )
+})
