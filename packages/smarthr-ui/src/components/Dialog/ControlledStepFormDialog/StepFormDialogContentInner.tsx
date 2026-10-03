@@ -2,6 +2,7 @@
 
 import {
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -38,7 +39,7 @@ type StepFormHelpers = {
 type Props = PropsWithChildren<
   ComponentPropsWithRef<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: ComponentPropsWithRef<typeof DialogHeading>
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** 現在のStepNo */
     activeStep: number
     /** submitボタン */

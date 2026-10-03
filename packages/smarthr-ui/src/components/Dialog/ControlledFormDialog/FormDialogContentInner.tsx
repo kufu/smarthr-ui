@@ -1,5 +1,6 @@
 import {
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -38,7 +39,7 @@ type ObjectCloseButtonType = {
 type Props = PropsWithChildren<
   ComponentPropsWithRef<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: ComponentPropsWithRef<typeof DialogHeading>
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** アクションボタン */
     actionButton: ObjectActionButtonType
     /**

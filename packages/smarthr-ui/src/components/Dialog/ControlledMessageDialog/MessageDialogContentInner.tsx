@@ -1,4 +1,11 @@
-import { type ComponentPropsWithRef, type FC, type MouseEvent, type ReactNode, memo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+} from 'react'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -10,7 +17,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 
 type Props = ComponentPropsWithRef<typeof DialogBody> & {
   /** ダイアログタイトル */
-  heading: ComponentPropsWithRef<typeof DialogHeading>
+  heading: ComponentPropsWithoutRef<typeof DialogHeading>
   /** ダイアログの説明 */
   children: ReactNode
   /** 閉じるボタン */
