@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
@@ -21,14 +20,12 @@ import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel } from '../../Panel'
 
-type HeadingProps = ComponentProps<typeof Heading>
-
 type ObjectHeadingType = {
   text: ReactNode
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  unrecommendedTag?: HeadingProps['unrecommendedTag']
+  unrecommendedTag?: ComponentPropsWithRef<typeof Heading>['unrecommendedTag']
 }
 type HeadingType = ReactNode | ObjectHeadingType
 type BaseProps = PropsWithChildren<{
@@ -46,7 +43,11 @@ type BaseProps = PropsWithChildren<{
   bold?: boolean
 }>
 
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<
+    ComponentPropsWithRef<typeof Panel>,
+    keyof BaseProps | 'radius' | 'layer' | 'padding' | 'overflow' | 'as'
+  >
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
