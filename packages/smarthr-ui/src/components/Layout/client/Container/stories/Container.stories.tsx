@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentPropsWithoutRef,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
 
 import { Panel } from '../../../../Panel'
 import { Stack } from '../../../Stack'
@@ -55,7 +49,7 @@ export const Padding: StoryObj<typeof Container> = {
 }
 
 const DisplayDimensionsBase: React.FC<
-  ComponentPropsWithRef<typeof Panel> & Pick<ComponentPropsWithoutRef<typeof Container>, 'size'>
+  ComponentProps<typeof Panel> & Pick<ComponentProps<typeof Container>, 'size'>
 > = ({ size, ...rest }) => {
   const target = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0 })
