@@ -39,11 +39,26 @@ type Props = {
 } & Omit<ComponentPropsWithRef<'button'>, 'children'>
 
 export const ToolbarButton: FC<Props> = memo(
-  ({ icon, label, active, toggle, shortcut, className, ref, disabled, ...rest }) => {
+  ({
+    icon,
+    label,
+    active,
+    toggle,
+    shortcut,
+    className,
+    ref,
+    disabled,
+    'aria-expanded': ariaExpanded,
+    ...rest
+  }) => {
     const isApple = useIsApplePlatform()
 
     return (
-      <ToolbarTooltip shortcut={shortcut} suppressed={disabled} label={label}>
+      <ToolbarTooltip
+        shortcut={shortcut}
+        suppressed={disabled || ariaExpanded === true || ariaExpanded === 'true'}
+        label={label}
+      >
         <button
           {...rest}
           ref={ref}
@@ -51,6 +66,7 @@ export const ToolbarButton: FC<Props> = memo(
           disabled={disabled}
           className={classNameGenerator({ className })}
           aria-label={label}
+          aria-expanded={ariaExpanded}
           aria-pressed={toggle ? active : undefined}
           aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut, isApple) : undefined}
           data-active={active || undefined}
