@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import {
-  type ComponentPropsWithRef,
+  type ComponentProps,
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -28,7 +28,7 @@ type BaseProps = PropsWithChildren<{
 }>
 type Props = BaseProps &
   Omit<
-    ComponentPropsWithRef<typeof Stack>,
+    ComponentProps<typeof Stack>,
     keyof BaseProps | 'inline' | 'gap' | 'align' | 'as' | 'aria-current'
   >
 

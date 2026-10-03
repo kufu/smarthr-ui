@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, memo } from 'react'
+import { type ComponentProps, memo } from 'react'
 import { FaUpRightFromSquare } from 'react-icons/fa6'
 
 import { Localizer } from '../../intl'
@@ -7,7 +7,7 @@ import { generateIcon } from './generateIcon'
 
 const FaUpRightFromSquareIcon = /*#__PURE__*/ generateIcon(FaUpRightFromSquare)
 
-type Props = Omit<ComponentPropsWithRef<typeof FaUpRightFromSquareIcon>, 'alt'>
+type Props = Omit<ComponentProps<typeof FaUpRightFromSquareIcon>, 'alt'>
 
 const OpenInNewTabIcon = memo<Props>((props) => (
   <FaUpRightFromSquareIcon

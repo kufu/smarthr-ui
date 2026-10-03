@@ -1,5 +1,5 @@
 import {
-  type ComponentPropsWithRef,
+  type ComponentProps,
   type ComponentType,
   type FC,
   type ReactNode,
@@ -16,7 +16,7 @@ type BaseProps = {
   as?: string | ComponentType<any>
   label: ReactNode
 }
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof RadioButton>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentProps<typeof RadioButton>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

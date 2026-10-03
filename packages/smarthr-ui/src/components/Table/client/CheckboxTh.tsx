@@ -3,9 +3,9 @@
 import { useLocalize } from '../../../intl'
 import { Th } from '../Th'
 
-import type { ComponentPropsWithRef, FC } from 'react'
+import type { ComponentProps, FC } from 'react'
 
-type Props = Omit<ComponentPropsWithRef<typeof Th>, 'aria-label'>
+type Props = Omit<ComponentProps<typeof Th>, 'aria-label'>
 
 export const CheckboxTh: FC<Props> = ({ children, ...rest }) => {
   const localized = useLocalize({

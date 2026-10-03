@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentPropsWithRef,
+  type ComponentProps,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -63,7 +63,7 @@ type BaseProps = PropsWithChildren<{
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>
 type Props = BaseProps &
-  Omit<ComponentPropsWithRef<typeof UnstyledButton>, keyof BaseProps | 'aria-selected' | 'type'>
+  Omit<ComponentProps<typeof UnstyledButton>, keyof BaseProps | 'aria-selected' | 'type'>
 
 export const TabItem: FC<Props> = ({
   selected = false,
