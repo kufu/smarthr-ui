@@ -3,6 +3,7 @@
 import dayjs from 'dayjs'
 import {
   type ChangeEvent,
+  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
@@ -442,7 +443,7 @@ export const DatePicker: FC<Props> = ({
 const InputSuffixIcon = memo<{
   classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
-  caretIconColor: ComponentPropsWithRef<typeof FaCalendarDaysIcon>['color']
+  caretIconColor: ComponentProps<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <span className={classNames.inputSuffixLayout}>
     <span className={classNames.inputSuffixWrapper}>

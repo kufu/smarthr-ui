@@ -2,8 +2,9 @@
 
 import {
   type BaseSyntheticEvent,
-  type ComponentPropsWithoutRef,
+  type ComponentProps,
   type FC,
+  type PropsWithChildren,
   type FocusEvent as ReactFocusEvent,
   type ReactNode,
   type PointerEvent as ReactPointerEvent,
@@ -22,7 +23,7 @@ import { TooltipPortal } from './TooltipPortal'
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type BaseProps = {
+type BaseProps = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
   /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
@@ -35,12 +36,9 @@ type BaseProps = {
   tabIndex?: number
   /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
-}
+}>
 type Props = BaseProps &
-  Omit<
-    ComponentPropsWithoutRef<'span'>,
-    keyof BaseProps | 'aria-describedby' | 'aria-labelledby' | 'role'
-  >
+  Omit<ComponentProps<'span'>, keyof BaseProps | 'aria-describedby' | 'aria-labelledby' | 'role'>
 
 const classNameGenerator = tv({
   base: [

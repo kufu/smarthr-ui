@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
@@ -60,7 +61,7 @@ type BaseProps = PropsWithChildren<{
   /** 機能名（enableNew と合わせて使います） */
   featureName?: ReactNode
   /** 機能群（enableNew と合わせて使います） */
-  apps?: ComponentPropsWithRef<typeof AppLauncher>['apps']
+  apps?: ComponentProps<typeof AppLauncher>['apps']
   /** テナント一覧 */
   tenants?: Tenant[]
   /** 現在のテナント ID */

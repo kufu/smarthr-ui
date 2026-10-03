@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type ComponentPropsWithoutRef,
   type FC,
   Fragment,
@@ -17,8 +18,7 @@ import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
 
-type PanelProps = ComponentPropsWithoutRef<typeof Panel>
-type MessageType = ComponentPropsWithoutRef<typeof StatusIcon>['status']
+type MessageType = ComponentProps<typeof StatusIcon>['status']
 
 type BaseProps = PropsWithChildren<{
   /** コンポーネント右の領域 */
@@ -36,7 +36,7 @@ type BaseProps = PropsWithChildren<{
   /** スライドインするかどうか */
   animate?: boolean
 }> &
-  Pick<PanelProps, 'layer'>
+  Pick<ComponentProps<typeof Panel>, 'layer'>
 
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
@@ -167,7 +167,7 @@ export const NotificationBar: FC<Props> = ({
     Wrapper = Panel
     wrapperProps = {
       layer,
-      overflow: 'clip' as PanelProps['overflow'],
+      overflow: 'clip' as ComponentProps<typeof Panel>['overflow'],
     }
   }
   const classNames = useMemo(() => {
