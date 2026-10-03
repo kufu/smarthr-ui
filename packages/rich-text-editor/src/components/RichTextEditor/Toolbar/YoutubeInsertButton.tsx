@@ -20,8 +20,7 @@ import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
-
-const POPUP_CLASS = 'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'
+import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 
 type Props = {
   tabIndex?: number
@@ -148,7 +147,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
           label={label}
         />
         {renderDropdown(
-          <div ref={popupRef} role="dialog" className={POPUP_CLASS} aria-label={label}>
+          <div ref={popupRef} role="dialog" className={TOOLBAR_POPUP_CLASS_NAME} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form
               noValidate

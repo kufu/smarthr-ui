@@ -15,3 +15,7 @@ const classNameGenerator = tv({
 
 /** ツールバーのボタン・ドロップダウンのトリガーで共有するスタイル */
 export const TOOLBAR_ITEM_CLASS_NAME = classNameGenerator()
+
+/** ツールバーから開くポップアップの外枠で共有するスタイル */
+export const TOOLBAR_POPUP_CLASS_NAME =
+  'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'

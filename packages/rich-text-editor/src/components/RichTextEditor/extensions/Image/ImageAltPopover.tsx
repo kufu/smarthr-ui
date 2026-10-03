@@ -16,6 +16,7 @@ import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
+import { TOOLBAR_POPUP_CLASS_NAME } from '../../Toolbar/toolbarItemStyle'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
 import type { Editor } from '@tiptap/react'
@@ -28,7 +29,7 @@ const classNameGenerator = tv({
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
     ],
-    menu: ['shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'],
+    menu: TOOLBAR_POPUP_CLASS_NAME,
   },
 })
 

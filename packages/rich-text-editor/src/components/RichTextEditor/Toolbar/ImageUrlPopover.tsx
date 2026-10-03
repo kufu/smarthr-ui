@@ -17,9 +17,8 @@ import { usePortal } from '../../../hooks/client/usePortal'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 
+import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 import { isHttpUrl } from './urlValidation'
-
-const POPUP_CLASS = 'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'
 
 type Props = {
   anchorRef: RefObject<HTMLElement | null>
@@ -156,7 +155,7 @@ export const ImageUrlPopover: FC<Props> = memo(
     return createPortal(
       <div
         role="dialog"
-        className={`shr-absolute shr-z-overlap-base ${POPUP_CLASS}`}
+        className={`shr-absolute shr-z-overlap-base ${TOOLBAR_POPUP_CLASS_NAME}`}
         style={{ top: `${position.top}px`, left: `${position.left}px` }}
         aria-label={titleText}
       >
