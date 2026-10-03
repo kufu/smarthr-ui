@@ -6,7 +6,11 @@ import tailwindcss from 'tailwindcss'
 import type { StorybookConfig } from '@storybook/react-vite'
 
 export default {
-  stories: ['../src/**/*.stories.tsx', '../../charts/src/**/*.stories.tsx'],
+  stories: [
+    '../src/**/*.stories.tsx',
+    '../../charts/src/**/*.stories.tsx',
+    '../../rich-text-editor/src/**/*.stories.tsx',
+  ],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs', 'storybook-addon-pseudo-states'],
   refs: {
     'smarthr-patterns': {
@@ -30,6 +34,8 @@ export default {
         ...config.resolve?.alias,
         '@': join(import.meta.dirname, '../src'),
         'smarthr-ui': join(import.meta.dirname, '../src/index.ts'),
+        // rich-text-editorのpackage.jsonのimportsはlibの成果物を指すため、srcを直接読むStorybookでは解決できない
+        '#html': join(import.meta.dirname, '../../rich-text-editor/src/adapters/html.browser.ts'),
       },
     },
     define: {

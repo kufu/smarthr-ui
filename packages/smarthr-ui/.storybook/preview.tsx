@@ -42,7 +42,7 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        order: ['*', 'Charts'],
+        order: ['Components', 'Editor', '*', 'Charts'],
       },
     },
     viewport: {
