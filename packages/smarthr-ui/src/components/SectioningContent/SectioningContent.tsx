@@ -1,4 +1,4 @@
-import { SectioningFragment } from './client/components'
+import { SectioningFragment } from './client'
 
 import type { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
 
