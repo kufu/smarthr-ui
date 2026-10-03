@@ -1,8 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
   type ReactNode,
@@ -26,13 +26,13 @@ type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
   children: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ComponentProps<typeof Button>['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?:
     | boolean
     | {
         /** 引き金となるアイコンを差し替えたい場合（onlyIcon=true の場合のみ有効） */
-        component?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
+        component?: ComponentType<ComponentPropsWithoutRef<typeof FaCaretDownIcon>>
       }
 }
 type BaseProps = {
