@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { useToolbarDropdown } from './useToolbarDropdown'
 
@@ -111,6 +111,51 @@ const scrollBy = (el: HTMLElement, offset: { left?: number; top?: number }) => {
 }
 
 describe('useToolbarDropdown', () => {
+  it('上へ反転して開いたあとに中身が伸びたら、トリガーに重ならないよう測り直す', async () => {
+    const resizeCallbacks: Array<() => void> = []
+    const OriginalResizeObserver = globalThis.ResizeObserver
+    const originalInnerHeight = window.innerHeight
+    globalThis.ResizeObserver = class {
+      constructor(callback: () => void) {
+        resizeCallbacks.push(callback)
+      }
+
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {}
+    } as unknown as typeof ResizeObserver
+    Object.defineProperty(window, 'innerHeight', { value: 500, configurable: true })
+
+    try {
+      render(<Harness />)
+      const triggerEl = screen.getByRole('button', { name: '開く' })
+      triggerEl.getBoundingClientRect = () =>
+        ({ left: 0, right: 100, top: 400, bottom: 420, width: 100, height: 20 }) as DOMRect
+      let contentHeight = 150
+      vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(() => contentHeight)
+
+      await userEvent.click(triggerEl)
+      const content = screen.getByRole('listbox').parentElement!
+
+      // トリガー上端(400) - GAP(2) - 高さ(150)
+      expect(content.style.top).toBe('248px')
+
+      contentHeight = 230
+      act(() => resizeCallbacks.forEach((callback) => callback()))
+
+      expect(content.style.top).toBe('168px')
+    } finally {
+      vi.restoreAllMocks()
+      globalThis.ResizeObserver = OriginalResizeObserver
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight,
+        configurable: true,
+      })
+    }
+  })
+
   describe('avoidTrigger', () => {
     it('既定ではトリガーの左端に揃える', async () => {
       const content = await openWithLayout({

@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { flushSync } from 'react-dom'
 
 import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { usePortal } from '../../../hooks/client/usePortal'
@@ -115,37 +116,47 @@ export function useToolbarDropdown(
 
     if (!triggerEl || !contentEl) return
 
-    const triggerRect = triggerEl.getBoundingClientRect()
-    const contentHeight = Math.max(contentEl.offsetHeight, contentEl.scrollHeight)
-    const spaceBelow = window.innerHeight - triggerRect.bottom - GAP
-    const spaceAbove = triggerRect.top - GAP
-    const fitsBelow = contentHeight <= spaceBelow
-    const fitsAbove = contentHeight <= spaceAbove
+    const place = () => {
+      const triggerRect = triggerEl.getBoundingClientRect()
+      const contentHeight = Math.max(contentEl.offsetHeight, contentEl.scrollHeight)
+      const spaceBelow = window.innerHeight - triggerRect.bottom - GAP
+      const spaceAbove = triggerRect.top - GAP
+      const fitsBelow = contentHeight <= spaceBelow
+      const fitsAbove = contentHeight <= spaceAbove
 
-    const contentWidth = contentEl.offsetWidth
-    const besideLeft = avoidTrigger ? resolveBesideLeft(triggerRect, contentWidth) : null
-    const rightEdge = triggerRect.left + contentWidth
+      const contentWidth = contentEl.offsetWidth
+      const besideLeft = avoidTrigger ? resolveBesideLeft(triggerRect, contentWidth) : null
+      const rightEdge = triggerRect.left + contentWidth
 
-    const next: Position = {
-      top: 0,
-      left:
-        (besideLeft ??
-          (rightEdge > window.innerWidth - VIEWPORT_PADDING
-            ? Math.max(VIEWPORT_PADDING, window.innerWidth - contentWidth - VIEWPORT_PADDING)
-            : triggerRect.left)) + window.pageXOffset,
+      const next: Position = {
+        top: 0,
+        left:
+          (besideLeft ??
+            (rightEdge > window.innerWidth - VIEWPORT_PADDING
+              ? Math.max(VIEWPORT_PADDING, window.innerWidth - contentWidth - VIEWPORT_PADDING)
+              : triggerRect.left)) + window.pageXOffset,
+      }
+
+      if (fitsBelow) {
+        next.top = triggerRect.bottom + GAP + window.pageYOffset
+      } else if (fitsAbove) {
+        next.top = triggerRect.top - contentHeight - GAP + window.pageYOffset
+      } else if (spaceBelow >= spaceAbove) {
+        next.top = triggerRect.bottom + GAP + window.pageYOffset
+        next.maxHeight = spaceBelow - VIEWPORT_PADDING
+      } else {
+        next.top = VIEWPORT_PADDING + window.pageYOffset
+        next.maxHeight = spaceAbove - VIEWPORT_PADDING
+      }
+
+      setPosition((prev) =>
+        prev.top === next.top && prev.left === next.left && prev.maxHeight === next.maxHeight
+          ? prev
+          : next,
+      )
     }
 
-    if (fitsBelow) {
-      next.top = triggerRect.bottom + GAP + window.pageYOffset
-    } else if (fitsAbove) {
-      next.top = triggerRect.top - contentHeight - GAP + window.pageYOffset
-    } else if (spaceBelow >= spaceAbove) {
-      next.top = triggerRect.bottom + GAP + window.pageYOffset
-      next.maxHeight = spaceBelow - VIEWPORT_PADDING
-    } else {
-      next.top = VIEWPORT_PADDING + window.pageYOffset
-      next.maxHeight = spaceAbove - VIEWPORT_PADDING
-    }
+    place()
 
     // スクロール位置は座標を測ったこの時点で記録する。トリガーへの focus() が
     // scroll-into-view を起こしていた場合、その scroll イベントは購読開始より後に届きうるので、
@@ -158,11 +169,19 @@ export function useToolbarDropdown(
       top: scrollContainer?.scrollTop ?? 0,
     }
 
-    setPosition(next)
     setIsVisible(true)
+
+    // 通知から React が描画するまでの間に、伸びた中身が前の位置のまま1フレーム描かれてしまう
+    const resizeObserver = new ResizeObserver(() => flushSync(place))
+
+    resizeObserver.observe(contentEl)
+    // maxHeight で頭打ちになると外枠の大きさは変わらないので、中身も見る
+    if (contentEl.firstElementChild) resizeObserver.observe(contentEl.firstElementChild)
+
+    return () => resizeObserver.disconnect()
   }, [isOpen, layoutKey, avoidTrigger])
 
-  // 座標は開いた時点で1度だけ算出するため、トリガーを内包する段が横スクロールすると
+  // 座標はトリガーの移動に追従しないため、トリガーを内包する段が横スクロールすると
   // ドロップダウンだけが元の位置に取り残される。タッチスクロール中は mousedown が発生せず
   // 外側クリックの購読でも閉じられないので、スクロール自体を閉じる契機にする
   useEffect(() => {
@@ -245,6 +264,9 @@ export function useToolbarDropdown(
           ref={contentRef}
           className={`shr-absolute shr-z-overlap-base ${isVisible ? 'shr-visible' : 'shr-invisible'}`}
           style={{
+            // 既定の縮む幅だと、画面の右端に近いときに縮んだ値で測られ、端からの余白を確保できない
+            width: 'max-content',
+            maxWidth: `calc(100vw - ${VIEWPORT_PADDING * 2}px)`,
             top: `${position.top}px`,
             left: `${position.left}px`,
             maxHeight: position.maxHeight ? `${position.maxHeight}px` : undefined,

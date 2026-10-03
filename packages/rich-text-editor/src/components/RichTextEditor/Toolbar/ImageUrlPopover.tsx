@@ -9,6 +9,8 @@ import { useIntl } from '../../../intl'
 import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 import { isHttpUrl } from './urlValidation'
 
+const DIALOG_CLASS_NAME = `${TOOLBAR_POPUP_CLASS_NAME} shr-box-border shr-w-[20em] shr-max-w-full`
+
 type Props = {
   handleInsert: (src: string) => void
   handleCancel: () => void
@@ -85,7 +87,7 @@ export const ImageUrlPopover: FC<Props> = memo(({ handleInsert, handleCancel }) 
   })
 
   return (
-    <div role="dialog" className={TOOLBAR_POPUP_CLASS_NAME} aria-label={titleText}>
+    <div role="dialog" className={DIALOG_CLASS_NAME} aria-label={titleText}>
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <form noValidate onSubmit={functions.handleSubmit} onKeyDown={functions.handleKeyDown}>
         <Stack gap={0.75}>
