@@ -1,9 +1,11 @@
-import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
 
-type Props = PropsWithChildren<ComponentProps<'dl'>>
+type Props = PropsWithChildren<{
+  className?: string
+}>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-DefinitionList shr-my-[initial]',
