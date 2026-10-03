@@ -31,7 +31,7 @@ type BaseProps<T extends string> = {
   error?: boolean
 }
 
-export type Props<T extends string> = BaseProps<T> &
+type Props<T extends string> = BaseProps<T> &
   Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'size'>
 
 export const ActualSelect = <T extends string>({

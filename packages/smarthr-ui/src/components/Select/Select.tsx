@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { FaAngleDownIcon } from '../Icon'
 
-import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
+import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'children'> & {
+type BaseProps = {
   /** コンポーネントの幅 */
   width?: number | string
   /** コンポーネントの大きさ */
@@ -16,8 +16,8 @@ type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'children'> & {
   blankLabel?: string
 }
 
-type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'children'>
+type Props<T extends string> = BaseProps &
+  Omit<ComponentPropsWithRef<typeof ActualSelect<T>>, keyof BaseProps | 'children'>
 
 const classNameGenerator = tv({
   slots: {
