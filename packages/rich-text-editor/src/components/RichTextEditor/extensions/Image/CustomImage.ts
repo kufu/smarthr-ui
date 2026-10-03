@@ -68,6 +68,16 @@ const createResizeHandle = (
 }
 
 /**
+ * 標準はハンドルを文書の更新時にだけ編集可否に合わせて外し・付け直す。更新を伴わない
+ * setEditable では付け直されず、読み取り専用の間に更新が入るとハンドルが消えたままになる。
+ * 読み取り専用の間は CSS で隠して mousedown も止めるので、外さずに保つ
+ */
+// @ts-expect-error 標準の private な更新処理を空にする。コンストラクタがこの名前で購読する
+class PersistentHandlesNodeView extends ResizableNodeView {
+  handleEditorUpdate() {}
+}
+
+/**
  * `@tiptap/extension-image` の標準 NodeView は、`updateAttributes` で alt や
  * width/height を変更しても ProseMirror モデルは更新されるものの、画面上の
  * `<img>` 要素へ反映しない（onUpdate が DOM を同期せず true を返すだけ）。
@@ -226,16 +236,24 @@ export const CustomImage = Image.extend<CustomImageOptions>({
         return true
       }
 
-      const nodeView = new ResizableNodeView({
+      const nodeView = new PersistentHandlesNodeView({
         element: el,
         editor,
         node,
         getPos,
         onResize: (width, height) => {
-          el.style.width = `${width}px`
-          el.style.height = `${height}px`
+          if (editor.isEditable) {
+            el.style.width = `${width}px`
+            el.style.height = `${height}px`
+          }
         },
         onCommit: (width, height) => {
+          // ドラッグ中に読み取り専用へ切り替わっても、離した時点で書き込まない
+          if (!editor.isEditable) {
+            applyDisplaySize()
+            return
+          }
+
           const pos = getPos()
           if (pos !== undefined) {
             this.editor

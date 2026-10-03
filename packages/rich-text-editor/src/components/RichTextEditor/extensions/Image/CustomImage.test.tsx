@@ -303,6 +303,33 @@ describe('読み取り専用でのリサイズ', () => {
     expect(imageWidth(editor)).toBe(300)
   })
 
+  // 標準の NodeView は文書の更新時に編集可否を見てハンドルを外し、更新を伴わない
+  // setEditable では付け直さない。アップロード完了など読み取り専用中の更新で起きる
+  it('readOnly の間に文書が更新されても、編集可能へ戻すとドラッグで幅が書き換わる', async () => {
+    const { editor, rerender } = await mount({})
+    rerender({ readOnly: true })
+    await waitFor(() => expect(editor.isEditable).toBe(false))
+    editor.commands.insertContentAt(editor.state.doc.content.size, {
+      type: 'paragraph',
+      content: [{ type: 'text', text: '追記' }],
+    })
+    rerender({ readOnly: false })
+    await waitFor(() => expect(editor.isEditable).toBe(true))
+    drag()
+    expect(imageWidth(editor)).not.toBe(300)
+  })
+
+  it('ドラッグ中に readOnly へ切り替えると、離しても幅が変わらない', async () => {
+    const { editor, rerender } = await mount({})
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle]')!
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    rerender({ readOnly: true })
+    await waitFor(() => expect(editor.isEditable).toBe(false))
+    fireEvent.mouseMove(document, { clientX: -100, clientY: -100 })
+    fireEvent.mouseUp(document)
+    expect(imageWidth(editor)).toBe(300)
+  })
+
   it('readOnly から編集可能へ戻すとドラッグで幅が書き換わる', async () => {
     const { editor, rerender } = await mount({ readOnly: true })
     rerender({ readOnly: false })
