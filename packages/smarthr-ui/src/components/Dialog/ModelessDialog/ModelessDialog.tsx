@@ -100,7 +100,11 @@ type BaseProps = Pick<
    */
   resizable?: boolean
 }
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Panel>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<
+    ComponentPropsWithRef<typeof Panel>,
+    keyof BaseProps | 'role' | 'radius' | 'layer' | 'overflow' | 'style' | 'aria-labelledby'
+  >
 
 const classNameGenerator = tv({
   slots: {
@@ -176,8 +180,8 @@ export const ModelessDialog: FC<Props> = ({
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
 
     return {
-      overlap: overlap({ className }),
-      wrapper: wrapper({ size, resizable }),
+      overlap: overlap(),
+      wrapper: wrapper({ className, size, resizable }),
       header: headerEl(),
       dialogHandler: dialogHandler(),
     }
