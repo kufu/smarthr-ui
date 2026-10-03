@@ -270,4 +270,42 @@ describe('configureExtensions', () => {
       editor.destroy()
     })
   })
+
+  describe('配置のショートカット', () => {
+    // Shift を押すと event.key は大文字になる。ProseMirror は keyCode から小文字へ戻して照合する
+    const pressModShift = (editor: Editor, key: string) => {
+      editor.commands.selectAll()
+      editor.view.dom.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          keyCode: key.charCodeAt(0),
+          ctrlKey: true,
+          shiftKey: true,
+          bubbles: true,
+          cancelable: true,
+        }),
+      )
+    }
+
+    const paragraphAlign = (editor: Editor) => editor.getJSON().content?.[0]?.attrs?.textAlign
+
+    it('Mod-Shift-E で中央揃えになる', () => {
+      const editor = createEditor(['textAlign'], '<p>本文</p>')
+
+      pressModShift(editor, 'E')
+
+      expect(paragraphAlign(editor)).toBe('center')
+      editor.destroy()
+    })
+
+    // ツールバーの左揃えと同じく指定を外す。left を明示すると同じ見た目で保存データが2通りになる
+    it('Mod-Shift-L で配置の指定を外す', () => {
+      const editor = createEditor(['textAlign'], '<p style="text-align: center">本文</p>')
+
+      pressModShift(editor, 'L')
+
+      expect(paragraphAlign(editor)).toBeNull()
+      editor.destroy()
+    })
+  })
 })

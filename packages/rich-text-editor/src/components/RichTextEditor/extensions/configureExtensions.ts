@@ -84,7 +84,16 @@ export const configureExtensions = ({
       },
     }),
     restrict(
-      TextAlign.configure({
+      TextAlign.extend({
+        addKeyboardShortcuts() {
+          return {
+            ...this.parent?.(),
+            // ツールバーの左揃えと同じく指定を外す。標準は left を明示するため、
+            // 同じ見た目のまま保存データが2通りになる
+            'Mod-Shift-l': () => this.editor.commands.unsetTextAlign(),
+          }
+        },
+      }).configure({
         types: ['heading', 'paragraph'],
       }),
     ),
