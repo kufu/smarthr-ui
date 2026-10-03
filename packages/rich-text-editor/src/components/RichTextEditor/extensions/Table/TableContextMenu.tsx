@@ -5,11 +5,13 @@ import {
   type KeyboardEvent,
   type MutableRefObject,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { Button, FaArrowLeftIcon, FaEllipsisIcon } from 'smarthr-ui'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { ToolbarTooltip } from '../../Toolbar/ToolbarTooltip'
 import { toAriaKeyShortcuts } from '../../Toolbar/shortcutKeys'
@@ -83,46 +85,120 @@ export const TableContextMenu = ({
   const returnPos = useRef<number | undefined>(cellPos)
   const target = getTableTarget(editor, isOpen ? menuCellPos : cellPos)
 
-  const scheduleFocus = (focus: () => void) => {
-    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
-    focusFrame.current = requestAnimationFrame(() => {
-      focusFrame.current = null
-      focus()
-    })
-  }
-  useEffect(
-    () => () => {
+  const latest = useLatest({
+    cellPos,
+    scope,
+    showColors,
+    openMenuRef,
+    handleTargetLock,
+    triggerRef,
+  })
+
+  const functions = useMemo(() => {
+    const cancelFocus = () => {
       if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
-    },
-    [],
-  )
-  const open = (pos = cellPos, last = false, fromTrigger = false, keyboard = true) => {
-    setKeyboardNavigation(keyboard)
-    returnToTrigger.current = fromTrigger
-    returnPos.current = pos
-    setMenuCellPos(pos)
-    handleTargetLock(scope, pos)
-    if (selectTableTarget(editor, pos, scope)) {
-      setShowColors(false)
-      setIsOpen(true)
-      scheduleFocus(() => {
-        const buttons =
-          menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
-        buttons?.[last ? buttons.length - 1 : 0]?.focus()
+    }
+    const scheduleFocus = (focus: () => void) => {
+      cancelFocus()
+      focusFrame.current = requestAnimationFrame(() => {
+        focusFrame.current = null
+        focus()
       })
     }
-  }
-  useEffect(() => {
-    if (!openMenuRef) return
-    openMenuRef.current = open
-    return () => {
-      openMenuRef.current = null
+    const close = (restoreTrigger = false) => {
+      cancelFocus()
+      setIsOpen(false)
+      if (restoreTrigger) latest.triggerRef.current?.focus({ preventScroll: true })
+      else focusTableCell(editor, returnPos.current)
     }
-  })
+    const changeColors = (show: boolean) => {
+      setShowColors(show)
+      scheduleFocus(() => {
+        if (show)
+          menuRef.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus()
+        else colorTriggerRef.current?.focus()
+      })
+    }
+
+    return {
+      cancelFocus,
+      open: (pos = latest.cellPos, last = false, fromTrigger = false, keyboard = true) => {
+        setKeyboardNavigation(keyboard)
+        returnToTrigger.current = fromTrigger
+        returnPos.current = pos
+        setMenuCellPos(pos)
+        latest.handleTargetLock(latest.scope, pos)
+        if (selectTableTarget(editor, pos, latest.scope)) {
+          setShowColors(false)
+          setIsOpen(true)
+          scheduleFocus(() => {
+            const buttons =
+              menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
+            buttons?.[last ? buttons.length - 1 : 0]?.focus()
+          })
+        }
+      },
+      close,
+      handleRun: (action: () => unknown) => {
+        runTableAction(editor, action)
+        close()
+      },
+      handleChangeColors: changeColors,
+      handleDelegateMenuKeyDown: (delegateEvent: KeyboardEvent<HTMLDivElement>) => {
+        if (delegateEvent.key === 'Tab') {
+          const buttons = Array.from(
+            menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [],
+          )
+          const index = buttons.indexOf(document.activeElement as HTMLButtonElement)
+          if (
+            (!delegateEvent.shiftKey && index === buttons.length - 1) ||
+            (delegateEvent.shiftKey && index === 0)
+          ) {
+            delegateEvent.preventDefault()
+            close()
+          }
+        }
+        if (latest.showColors && ['Escape', 'ArrowLeft'].includes(delegateEvent.key)) {
+          delegateEvent.preventDefault()
+          delegateEvent.stopPropagation()
+          changeColors(false)
+          return
+        }
+        if (delegateEvent.key === 'Escape') {
+          delegateEvent.preventDefault()
+          delegateEvent.stopPropagation()
+          close(returnToTrigger.current)
+        }
+        if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(delegateEvent.key)) {
+          delegateEvent.preventDefault()
+          const buttons = Array.from(
+            menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [],
+          )
+          const index = buttons.indexOf(document.activeElement as HTMLButtonElement)
+          buttons[
+            delegateEvent.key === 'Home'
+              ? 0
+              : delegateEvent.key === 'End'
+                ? buttons.length - 1
+                : (index + (delegateEvent.key === 'ArrowDown' ? 1 : -1) + buttons.length) %
+                  buttons.length
+          ]?.focus()
+        }
+      },
+    }
+  }, [editor, setIsOpen, latest])
+
   useEffect(() => {
-    if (!isOpen) return
-    return () => handleTargetLock(scope, null)
-  }, [isOpen, scope, handleTargetLock])
+    const { openMenuRef: menuOpener } = latest
+
+    if (menuOpener) menuOpener.current = functions.open
+
+    return () => {
+      functions.cancelFocus()
+      if (menuOpener) menuOpener.current = null
+    }
+  }, [functions, latest])
+
   useEffect(() => {
     if (!isOpen) return
     const handleScroll = (event: Event) => {
@@ -151,68 +227,12 @@ export const TableContextMenu = ({
       window.removeEventListener('scroll', handleScroll, true)
       window.removeEventListener('resize', handleScroll)
       editor.off('transaction', mapTarget)
+      latest.handleTargetLock(latest.scope, null)
     }
-  }, [editor, isOpen, setIsOpen])
+  }, [editor, isOpen, setIsOpen, latest])
+
   if (!target) return null
   const label = localize(LABEL_MESSAGES[scope])
-  const close = (restoreTrigger = false) => {
-    if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
-    setIsOpen(false)
-    if (restoreTrigger) triggerRef.current?.focus({ preventScroll: true })
-    else focusTableCell(editor, returnPos.current)
-  }
-  const handleRun = (action: () => unknown) => {
-    runTableAction(editor, action)
-    close()
-  }
-  const handleChangeColors = (show: boolean) => {
-    setShowColors(show)
-    scheduleFocus(() => {
-      if (show) menuRef.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus()
-      else colorTriggerRef.current?.focus()
-    })
-  }
-  const handleDelegateMenuKeyDown = (delegateEvent: KeyboardEvent<HTMLDivElement>) => {
-    if (delegateEvent.key === 'Tab') {
-      const buttons = Array.from(
-        menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [],
-      )
-      const index = buttons.indexOf(document.activeElement as HTMLButtonElement)
-      if (
-        (!delegateEvent.shiftKey && index === buttons.length - 1) ||
-        (delegateEvent.shiftKey && index === 0)
-      ) {
-        delegateEvent.preventDefault()
-        close()
-      }
-    }
-    if (showColors && ['Escape', 'ArrowLeft'].includes(delegateEvent.key)) {
-      delegateEvent.preventDefault()
-      delegateEvent.stopPropagation()
-      handleChangeColors(false)
-      return
-    }
-    if (delegateEvent.key === 'Escape') {
-      delegateEvent.preventDefault()
-      delegateEvent.stopPropagation()
-      close(returnToTrigger.current)
-    }
-    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(delegateEvent.key)) {
-      delegateEvent.preventDefault()
-      const buttons = Array.from(
-        menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [],
-      )
-      const index = buttons.indexOf(document.activeElement as HTMLButtonElement)
-      buttons[
-        delegateEvent.key === 'Home'
-          ? 0
-          : delegateEvent.key === 'End'
-            ? buttons.length - 1
-            : (index + (delegateEvent.key === 'ArrowDown' ? 1 : -1) + buttons.length) %
-              buttons.length
-      ]?.focus()
-    }
-  }
   return (
     <>
       <span className="shr-absolute shr-z-1 focus-within:shr-z-[3] hover:shr-z-[2]" style={style}>
@@ -236,11 +256,13 @@ export const TableContextMenu = ({
               if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(event.key)) {
                 event.preventDefault()
                 event.stopPropagation()
-                if (!isOpen) open(cellPos, event.key === 'ArrowUp', true)
+                if (!isOpen) functions.open(cellPos, event.key === 'ArrowUp', true)
               }
             }}
             onClick={(event) =>
-              isOpen ? close(true) : open(cellPos, false, true, event.detail === 0)
+              isOpen
+                ? functions.close(true)
+                : functions.open(cellPos, false, true, event.detail === 0)
             }
           >
             {scope === 'cell' ? (
@@ -274,7 +296,7 @@ export const TableContextMenu = ({
           data-keyboard={keyboardNavigation}
           onPointerDownCapture={() => setKeyboardNavigation(false)}
           onKeyDownCapture={() => setKeyboardNavigation(true)}
-          onKeyDown={handleDelegateMenuKeyDown}
+          onKeyDown={functions.handleDelegateMenuKeyDown}
         >
           <strong className="shr-px-1 shr-py-0.5 shr-text-sm shr-leading-none shr-text-grey">
             {showColors
@@ -286,7 +308,7 @@ export const TableContextMenu = ({
               type="button"
               variant="text"
               className={itemClass}
-              onClick={() => handleChangeColors(false)}
+              onClick={() => functions.handleChangeColors(false)}
               prefix={<FaArrowLeftIcon />}
             >
               {localize({
@@ -301,8 +323,8 @@ export const TableContextMenu = ({
               editor={editor}
               scope={scope}
               features={features}
-              handleRun={handleRun}
-              handleChangeColors={handleChangeColors}
+              handleRun={functions.handleRun}
+              handleChangeColors={functions.handleChangeColors}
             />
           )}
           {showColors && scope !== 'table' && features.includes('color') && (
@@ -313,7 +335,7 @@ export const TableContextMenu = ({
                 id: 'smarthr-ui/RichTextEditor/cellTextColor',
                 defaultText: '文字色',
               })}
-              handleRun={handleRun}
+              handleRun={functions.handleRun}
             />
           )}
           {showColors && scope !== 'table' && features.includes('backgroundColor') && (
@@ -324,7 +346,7 @@ export const TableContextMenu = ({
                 id: 'smarthr-ui/RichTextEditor/cellBackgroundColor',
                 defaultText: '背景色',
               })}
-              handleRun={handleRun}
+              handleRun={functions.handleRun}
             />
           )}
         </div>,

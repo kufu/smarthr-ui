@@ -2,7 +2,7 @@
 
 import { CellSelection, TableMap } from '@tiptap/pm/tables'
 import { useEditorState } from '@tiptap/react'
-import { type FC, type RefObject, memo, useEffect, useState } from 'react'
+import { type FC, type RefObject, memo, useEffect, useMemo, useState } from 'react'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useNodeRect } from '../../hooks/useNodeRect'
@@ -199,6 +199,15 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
 
   const [rightBarFocused, setRightBarFocused] = useState(false)
   const [bottomBarFocused, setBottomBarFocused] = useState(false)
+  const functions = useMemo(
+    () => ({
+      handleRightBarFocus: () => setRightBarFocused(true),
+      handleRightBarBlur: () => setRightBarFocused(false),
+      handleBottomBarFocus: () => setBottomBarFocused(true),
+      handleBottomBarBlur: () => setBottomBarFocused(false),
+    }),
+    [],
+  )
 
   // ポインター操作中はホバー先の表、キーボード操作中は選択中の表を対象にする。
   const targetInfo = hoveredInfo ?? activeInfo
@@ -249,8 +258,8 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
           left={colLeft}
           thickness={barThickness}
           length={colHeight}
-          onFocus={() => setRightBarFocused(true)}
-          onBlur={() => setRightBarFocused(false)}
+          onFocus={functions.handleRightBarFocus}
+          onBlur={functions.handleRightBarBlur}
         />
       )}
       {showBottomBar && rowVisibleInViewport && (
@@ -262,8 +271,8 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
           left={targetInfo.rect.left}
           thickness={barThickness}
           length={targetInfo.rect.width}
-          onFocus={() => setBottomBarFocused(true)}
-          onBlur={() => setBottomBarFocused(false)}
+          onFocus={functions.handleBottomBarFocus}
+          onBlur={functions.handleBottomBarBlur}
         />
       )}
     </>
