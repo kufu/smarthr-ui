@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { createRef } from 'react'
 import { IntlProvider } from 'smarthr-ui'
@@ -90,5 +91,35 @@ describe('ImageFloatingUI', () => {
       // 画像の上端 200 から、バーの高さ36と間隔6を引いた位置
       expect(bar).toHaveStyle({ left: '27px', top: '106px' })
     })
+  })
+
+  it('ポップオーバーを開いている間に画像の位置が動いても、閉じずに入力中の値を保つ', async () => {
+    const user = userEvent.setup()
+    const editor = new Editor({
+      extensions: configureExtensions({ features: ALL_FEATURES }),
+      content: imageDoc,
+    })
+    const container = document.createElement('div')
+    document.body.append(container)
+    editor.commands.setNodeSelection(2)
+
+    const containerRef = createRef<HTMLElement>()
+    containerRef.current = container
+    render(<ImageFloatingUI containerRef={containerRef} editor={editor as never} />, {
+      wrapper: Wrapper,
+    })
+    await user.click(await screen.findByRole('button', { name: '代替テキスト（alt）' }))
+    const input = screen.getByRole('textbox', { name: /^代替テキスト/ })
+    await user.type(input, '説明')
+
+    act(() => {
+      editor.commands.insertContentAt(1, '前', { updateSelection: false })
+    })
+
+    expect(screen.getByRole('dialog', { name: '代替テキスト（alt）' })).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /^代替テキスト/ })).toHaveValue('説明')
+
+    editor.destroy()
+    container.remove()
   })
 })

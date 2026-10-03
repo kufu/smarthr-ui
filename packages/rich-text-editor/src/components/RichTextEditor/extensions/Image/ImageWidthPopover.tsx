@@ -1,32 +1,13 @@
 'use client'
 
-import {
-  type FC,
-  type FormEvent,
-  type KeyboardEvent,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {
-  Button,
-  Cluster,
-  FaLockIcon,
-  FaUpRightAndDownLeftFromCenterIcon,
-  FormControl,
-  Input,
-  Stack,
-} from 'smarthr-ui'
+import { type FC, type KeyboardEvent, memo, useMemo, useRef, useState } from 'react'
+import { FaLockIcon, FaUpRightAndDownLeftFromCenterIcon, FormControl, Input } from 'smarthr-ui'
 
-import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
-import { TOOLBAR_POPUP_CLASS_NAME } from '../../Toolbar/toolbarItemStyle'
-import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
+import { ImagePopoverForm } from './ImagePopoverForm'
 import { calcHeightFromWidth, calcWidthFromHeight } from './aspectRatio'
 import { resolveImageElement } from './resolveImageElement'
 
@@ -34,28 +15,21 @@ import type { Editor } from '@tiptap/react'
 
 const classNameGenerator = tv({
   slots: {
-    trigger: [
-      'shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25',
-      'shr-cursor-pointer shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-    ],
-    menu: TOOLBAR_POPUP_CLASS_NAME,
     row: 'shr-flex shr-gap-0.5 [align-items:last_baseline]',
     lock: 'shr-shrink-0 shr-text-grey',
   },
 })
 
 const CLASS_NAMES = (() => {
-  const { lock, menu, row, trigger } = classNameGenerator()
+  const { lock, row } = classNameGenerator()
 
   return {
     lock: lock(),
-    menu: menu(),
     row: row(),
-    trigger: trigger(),
   }
 })()
+
+const ICON = <FaUpRightAndDownLeftFromCenterIcon alt="" />
 
 type Props = {
   editor: Editor
@@ -79,176 +53,125 @@ const getRenderedSize = (editor: Editor, pos: number): { w: number; h: number } 
   return { w: img?.offsetWidth ?? 0, h: img?.offsetHeight ?? 0 }
 }
 
-export const ImageWidthPopover: FC<Props> = memo(
-  ({ editor, pos, tabIndex = -1, onKeyDown, onFocus, ref: refProp }) => {
-    const { localize } = useIntl()
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
-    const [width, setWidth] = useState('')
-    const [height, setHeight] = useState('')
-    const naturalRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 })
-    const widthInputRef = useRef<HTMLInputElement>(null)
+export const ImageWidthPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
+  const { localize } = useIntl()
+  const [width, setWidth] = useState('')
+  const [height, setHeight] = useState('')
+  const naturalRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 })
+  const widthInputRef = useRef<HTMLInputElement>(null)
 
-    const label = localize({ id: 'smarthr-ui/RichTextEditor/imageWidth', defaultText: 'サイズ' })
-    const widthLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageWidthLabel',
-      defaultText: '幅 (px)',
-    })
-    const heightLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageHeightLabel',
-      defaultText: '高さ (px)',
-    })
-    const resetLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageSizeReset',
-      defaultText: 'リセット',
-    })
-    const applyLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageApplyButton',
-      defaultText: '適用',
-    })
-    const lockLabel = localize({
-      id: 'smarthr-ui/RichTextEditor/imageAspectLocked',
-      defaultText: '縦横比を固定',
-    })
+  const label = localize({ id: 'smarthr-ui/RichTextEditor/imageWidth', defaultText: 'サイズ' })
+  const widthLabel = localize({
+    id: 'smarthr-ui/RichTextEditor/imageWidthLabel',
+    defaultText: '幅 (px)',
+  })
+  const heightLabel = localize({
+    id: 'smarthr-ui/RichTextEditor/imageHeightLabel',
+    defaultText: '高さ (px)',
+  })
+  const resetLabel = localize({
+    id: 'smarthr-ui/RichTextEditor/imageSizeReset',
+    defaultText: 'リセット',
+  })
+  const lockLabel = localize({
+    id: 'smarthr-ui/RichTextEditor/imageAspectLocked',
+    defaultText: '縦横比を固定',
+  })
 
-    useEffect(() => {
-      if (!isOpen) return
+  const latest = useLatest({ width, height })
 
-      const node = editor.state.doc.nodeAt(pos)
+  const functions = useMemo(
+    () => ({
+      handleOpen: (targetPos: number) => {
+        const node = editor.state.doc.nodeAt(targetPos)
 
-      naturalRef.current = getNaturalSize(editor, pos)
-      // width/height 属性が未設定なら、現在の表示サイズを初期値として入れる
-      const rendered = getRenderedSize(editor, pos)
-      setWidth(node?.attrs.width ? String(node.attrs.width) : rendered.w ? String(rendered.w) : '')
-      setHeight(
-        node?.attrs.height ? String(node.attrs.height) : rendered.h ? String(rendered.h) : '',
-      )
-      requestAnimationFrame(() => widthInputRef.current?.focus())
-    }, [isOpen, editor, pos])
+        naturalRef.current = getNaturalSize(editor, targetPos)
+        // width/height 属性が未設定なら、現在の表示サイズを初期値として入れる
+        const rendered = getRenderedSize(editor, targetPos)
+        setWidth(
+          node?.attrs.width ? String(node.attrs.width) : rendered.w ? String(rendered.w) : '',
+        )
+        setHeight(
+          node?.attrs.height ? String(node.attrs.height) : rendered.h ? String(rendered.h) : '',
+        )
+      },
+      handleWidthChange: (value: string) => {
+        setWidth(value)
 
-    const latest = useLatest({ pos, width, height, triggerRef })
+        const h = calcHeightFromWidth(Number(value), naturalRef.current.w, naturalRef.current.h)
 
-    const functions = useMemo(() => {
-      const closePopup = () => {
-        setIsOpen(false)
-        latest.triggerRef.current?.focus()
-      }
+        if (h !== undefined) setHeight(String(h))
+      },
+      handleHeightChange: (value: string) => {
+        setHeight(value)
 
-      return {
-        handleWidthChange: (value: string) => {
-          setWidth(value)
+        const w = calcWidthFromHeight(Number(value), naturalRef.current.w, naturalRef.current.h)
 
-          const h = calcHeightFromWidth(Number(value), naturalRef.current.w, naturalRef.current.h)
+        if (w !== undefined) setWidth(String(w))
+      },
+      handleSubmit: (targetPos: number) => {
+        const w = Number(latest.width)
+        const h = Number(latest.height)
 
-          if (h !== undefined) setHeight(String(h))
-        },
-        handleHeightChange: (value: string) => {
-          setHeight(value)
+        editor
+          .chain()
+          .setNodeSelection(targetPos)
+          .updateAttributes('image', {
+            width: Number.isFinite(w) && w > 0 ? w : null,
+            height: Number.isFinite(h) && h > 0 ? h : null,
+          })
+          .run()
+      },
+      handleReset: (targetPos: number) => {
+        editor
+          .chain()
+          .setNodeSelection(targetPos)
+          .updateAttributes('image', { width: null, height: null })
+          .run()
+      },
+    }),
+    [editor, latest],
+  )
 
-          const w = calcWidthFromHeight(Number(value), naturalRef.current.w, naturalRef.current.h)
+  const secondaryAction = useMemo(
+    () => ({ label: resetLabel, handleClick: functions.handleReset }),
+    [resetLabel, functions],
+  )
 
-          if (w !== undefined) setWidth(String(w))
-        },
-        apply: (e: FormEvent<HTMLFormElement>) => {
-          e.preventDefault()
-          e.stopPropagation()
-
-          const w = Number(latest.width)
-          const h = Number(latest.height)
-
-          editor
-            .chain()
-            .setNodeSelection(latest.pos)
-            .updateAttributes('image', {
-              width: Number.isFinite(w) && w > 0 ? w : null,
-              height: Number.isFinite(h) && h > 0 ? h : null,
-            })
-            .run()
-          setIsOpen(false)
-        },
-        reset: () => {
-          editor
-            .chain()
-            .setNodeSelection(latest.pos)
-            .updateAttributes('image', { width: null, height: null })
-            .run()
-          setIsOpen(false)
-        },
-        handlePopupKeyDown: (e: KeyboardEvent) => {
-          if (e.key === 'Escape') {
-            e.preventDefault()
-            e.stopPropagation()
-            closePopup()
-          }
-        },
-      }
-    }, [editor, setIsOpen, latest])
-
-    return (
-      <>
-        <button
-          ref={mergedTriggerRef}
-          type="button"
-          tabIndex={tabIndex}
-          className={CLASS_NAMES.trigger}
-          aria-haspopup="dialog"
-          aria-expanded={isOpen}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => setIsOpen((prev) => !prev)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              e.stopPropagation()
-              setIsOpen(true)
-              return
-            }
-            onKeyDown?.(e)
-          }}
-          onFocus={onFocus}
-        >
-          <FaUpRightAndDownLeftFromCenterIcon alt="" />
-          {label}
-        </button>
-        {renderDropdown(
-          <div role="dialog" className={CLASS_NAMES.menu} aria-label={label}>
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form noValidate onSubmit={functions.apply} onKeyDown={functions.handlePopupKeyDown}>
-              <Stack gap={0.75}>
-                <div className={CLASS_NAMES.row}>
-                  <FormControl label={widthLabel}>
-                    <Input
-                      ref={widthInputRef}
-                      type="number"
-                      name="imageWidth"
-                      value={width}
-                      width="6em"
-                      onChange={(e) => functions.handleWidthChange(e.target.value)}
-                    />
-                  </FormControl>
-                  <FaLockIcon alt={lockLabel} className={CLASS_NAMES.lock} />
-                  <FormControl label={heightLabel}>
-                    <Input
-                      type="number"
-                      name="imageHeight"
-                      value={height}
-                      width="6em"
-                      onChange={(e) => functions.handleHeightChange(e.target.value)}
-                    />
-                  </FormControl>
-                </div>
-                <Cluster gap={0.5} justify="flex-end">
-                  <Button type="button" variant="secondary" size="S" onClick={functions.reset}>
-                    {resetLabel}
-                  </Button>
-                  <Button type="submit" variant="primary" size="S">
-                    {applyLabel}
-                  </Button>
-                </Cluster>
-              </Stack>
-            </form>
-          </div>,
-        )}
-      </>
-    )
-  },
-)
+  return (
+    <ImagePopoverForm
+      {...rest}
+      initialFocusRef={widthInputRef}
+      editor={editor}
+      pos={pos}
+      secondaryAction={secondaryAction}
+      handleOpen={functions.handleOpen}
+      handleSubmit={functions.handleSubmit}
+      icon={ICON}
+      label={label}
+    >
+      <div className={CLASS_NAMES.row}>
+        <FormControl label={widthLabel}>
+          <Input
+            ref={widthInputRef}
+            type="number"
+            name="imageWidth"
+            value={width}
+            width="6em"
+            onChange={(e) => functions.handleWidthChange(e.target.value)}
+          />
+        </FormControl>
+        <FaLockIcon alt={lockLabel} className={CLASS_NAMES.lock} />
+        <FormControl label={heightLabel}>
+          <Input
+            type="number"
+            name="imageHeight"
+            value={height}
+            width="6em"
+            onChange={(e) => functions.handleHeightChange(e.target.value)}
+          />
+        </FormControl>
+      </div>
+    </ImagePopoverForm>
+  )
+})

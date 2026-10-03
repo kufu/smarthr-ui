@@ -18,7 +18,10 @@ export type NodeRect = {
   viewport: RelativeRect
 }
 
-// useEffect で測ると、対象が切り替わるたびに操作UIが1フレーム消える
+const isSameRect = (a: RelativeRect, b: RelativeRect) =>
+  a.top === b.top && a.left === b.left && a.width === b.width && a.height === b.height
+
+// useEffect で測ると、対象が切り替わった直後の1フレームだけ操作UIが前の位置に出る
 export const useNodeRect = (
   editor: Editor,
   containerRef: RefObject<HTMLElement | null>,
@@ -47,11 +50,19 @@ export const useNodeRect = (
 
       const origin = getControlOrigin(container)
 
-      setNodeRect({
+      const next = {
         pos,
         rect: getRelativeRect(el.getBoundingClientRect(), origin),
         viewport: getRelativeRect(editor.view.dom.getBoundingClientRect(), origin),
-      })
+      }
+
+      setNodeRect((prev) =>
+        prev?.pos === next.pos &&
+        isSameRect(prev.rect, next.rect) &&
+        isSameRect(prev.viewport, next.viewport)
+          ? prev
+          : next,
+      )
     }
 
     measure()
@@ -89,5 +100,7 @@ export const useNodeRect = (
     }
   }, [editor, pos, latest])
 
-  return nodeRect?.pos === pos ? nodeRect : null
+  // pos が変わった描画で null を返すと、利用側が操作UIごとアンマウントして開いているポップオーバーの入力を失う。
+  // 測り直しは描画前に終わるので、前の矩形が画面に出ることはない
+  return pos === null ? null : nodeRect
 }

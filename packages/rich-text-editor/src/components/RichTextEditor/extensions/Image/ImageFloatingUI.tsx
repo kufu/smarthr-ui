@@ -11,6 +11,7 @@ import { useRovingToolbar } from '../../hooks/useRovingToolbar'
 
 import { ImageAltPopover } from './ImageAltPopover'
 import { ImageWidthPopover } from './ImageWidthPopover'
+import { IMAGE_TOOLBAR_BUTTON_CLASS_NAME } from './imageToolbarStyle'
 import { resolveImageElement } from './resolveImageElement'
 
 import type { Editor } from '@tiptap/react'
@@ -31,21 +32,14 @@ const classNameGenerator = tv({
       'shr-inline-flex shr-items-center shr-gap-0.25',
       'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-0.25 shr-shadow-layer-2',
     ],
-    deleteButton: [
-      'shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25',
-      'shr-cursor-pointer shr-border-none shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
-    ],
   },
 })
 
 const CLASS_NAMES = (() => {
-  const { bar, deleteButton } = classNameGenerator()
+  const { bar } = classNameGenerator()
 
   return {
     bar: bar(),
-    deleteButton: deleteButton(),
   }
 })()
 
@@ -78,7 +72,7 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
 
   const { getButtonProps } = useRovingToolbar({ count: 3, onEscape: handleEscape })
 
-  if (!info) return null
+  if (pos === null || !info) return null
 
   const idealTop = info.rect.top - BAR_HEIGHT - BAR_GAP
   const top = Math.max(idealTop, info.viewport.top)
@@ -98,12 +92,12 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   })
   return (
     <div role="toolbar" className={CLASS_NAMES.bar} style={{ top, left }} aria-label={toolbarLabel}>
-      <ImageAltPopover {...getButtonProps(0)} editor={editor} pos={info.pos} />
-      <ImageWidthPopover {...getButtonProps(1)} editor={editor} pos={info.pos} />
+      <ImageAltPopover {...getButtonProps(0)} editor={editor} pos={pos} />
+      <ImageWidthPopover {...getButtonProps(1)} editor={editor} pos={pos} />
       <button
         {...getButtonProps(2)}
         type="button"
-        className={CLASS_NAMES.deleteButton}
+        className={IMAGE_TOOLBAR_BUTTON_CLASS_NAME}
         aria-label={deleteLabel}
         onMouseDown={(e) => e.preventDefault()}
         onClick={handleDelete}
