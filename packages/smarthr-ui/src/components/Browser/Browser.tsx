@@ -1,6 +1,6 @@
 import {
   type ChangeEvent,
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type KeyboardEventHandler,
   useMemo,
@@ -38,7 +38,7 @@ type BaseProps = {
   /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
   onSelectItem?: (value: string) => void
 }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
   // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
