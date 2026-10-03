@@ -1,25 +1,17 @@
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useId,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 import { ActualCheckbox } from './client'
 
-type Props = PropsWithChildren<
-  ComponentPropsWithRef<'input'> & {
-    /** `true` のとき、チェック状態を `mixed` にする */
-    mixed?: boolean
-    /** チェックボックスにエラーがあるかどうか */
-    error?: boolean
-  }
->
+type BaseProps = {
+  /** `true` のとき、チェック状態を `mixed` にする */
+  mixed?: boolean
+  /** チェックボックスにエラーがあるかどうか */
+  error?: boolean
+}
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -60,7 +52,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const Checkbox: FC<Props> = ({ mixed, className, children, disabled, id, ref, ...rest }) => {
+export const Checkbox: FC<Props> = ({ mixed, className, children, disabled, id, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
@@ -83,7 +75,6 @@ export const Checkbox: FC<Props> = ({ mixed, className, children, disabled, id, 
       <span className={classNames.innerWrapper}>
         <ActualCheckbox
           {...rest}
-          checkboxRef={ref}
           id={checkBoxId}
           disabled={disabled}
           mixed={mixed}
