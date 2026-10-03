@@ -9,15 +9,14 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
-  elementAs?: AsElement
+type BaseProps<T extends ElementType> = PropsWithChildren<{
+  elementAs?: T
   current?: boolean
   prefix?: ReactNode
   suffix?: ReactNode
 }>
-
-type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
-  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
+type Props<T extends ElementType> = BaseProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T>>
 
 const classNameGenerator = tv({
   slots: {
@@ -47,7 +46,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideMenuItem = <AsElement extends ElementType = 'a'>({
+export const SideMenuItem = <T extends ElementType = 'a'>({
   elementAs,
   current,
   prefix,
@@ -56,7 +55,7 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   children,
   className,
   ...rest
-}: Props<AsElement>) => {
+}: Props<T>) => {
   const Component = elementAs ?? 'a'
 
   const classNames = useMemo(() => {
