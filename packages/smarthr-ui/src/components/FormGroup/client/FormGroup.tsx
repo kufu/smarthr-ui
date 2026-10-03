@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type ComponentType,
   type FC,
   type PropsWithChildren,
@@ -22,7 +22,7 @@ import { CHILDREN_WRAPPER_INPUT_SELECTOR, WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
-type Props = Omit<CommonProps, 'className'> & {
+type BaseProps = {
   ref: Ref<HTMLElement>
   /** グループのラベル名 */
   label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
@@ -35,6 +35,7 @@ type Props = Omit<CommonProps, 'className'> & {
     childrenWrapper: string
   }
 }
+type Props = BaseProps & Omit<CommonProps, keyof BaseProps | 'className'>
 
 // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
 // undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する
@@ -239,7 +240,7 @@ export const FormGroup: FC<Props> = ({
 }
 
 export const LabelBody: FC<
-  Pick<ComponentProps<typeof Text>, 'styleType' | 'icon' | 'children'> &
+  Pick<ComponentPropsWithRef<typeof Text>, 'styleType' | 'icon' | 'children'> &
     Pick<LabelComponentProps, 'statusLabels'>
 > = ({ styleType, icon, children, statusLabels }) => (
   <>
