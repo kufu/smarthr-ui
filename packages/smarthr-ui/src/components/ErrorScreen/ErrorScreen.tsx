@@ -20,12 +20,12 @@ type BaseProps = {
     /** アンカー要素の target。`_blank` を設定すると外部リンクアイコンが表示されます。*/
     target?: string
   }>
-  /** 表示するコンテンツ */
-  children?: ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<
+    ComponentPropsWithoutRef<typeof Center>,
+    keyof BaseProps | 'minHeight' | 'maxWidth' | 'padding' | 'verticalCentering' | 'as'
+  >
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-ErrorScreen shr-box-border shr-bg-background shr-p-1.5',
