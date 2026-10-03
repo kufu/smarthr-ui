@@ -1,6 +1,6 @@
 import { act, render, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
 
@@ -18,11 +18,15 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
 /**
  * 本文の実測値と CSS 上の下限を固定する。jsdom はレイアウトを持たず、Tailwind も読み込まないため。
  */
 const renderResizable = async (initialHeight: number, minHeight = '0px') => {
-  const { container } = render(<RichTextEditor features={['bold']} resizable />, {
+  const { container, rerender } = render(<RichTextEditor features={['bold']} resizable />, {
     wrapper: Wrapper,
   })
   await waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
@@ -34,9 +38,11 @@ const renderResizable = async (initialHeight: number, minHeight = '0px') => {
   const handle = container.querySelector<HTMLElement>('.smarthr-ui-RichTextEditor-resizeHandle')!
 
   // jsdom は PointerEvent を持たない。React は種別だけを見るので MouseEvent で足りる
-  const pointer = (target: EventTarget, type: string, clientY = 0) =>
+  const pointer = (target: EventTarget, type: string, clientY = 0, button = 0) =>
     act(() => {
-      target.dispatchEvent(new MouseEvent(type, { clientY, bubbles: true, cancelable: true }))
+      target.dispatchEvent(
+        new MouseEvent(type, { clientY, button, bubbles: true, cancelable: true }),
+      )
     })
 
   const editorHeight = () => {
@@ -48,7 +54,8 @@ const renderResizable = async (initialHeight: number, minHeight = '0px') => {
 
   return {
     editorHeight,
-    down: (clientY: number) => pointer(handle, 'pointerdown', clientY),
+    down: (clientY: number, button = 0) => pointer(handle, 'pointerdown', clientY, button),
+    setReadOnly: () => rerender(<RichTextEditor readOnly features={['bold']} resizable />),
     move: (clientY: number) => pointer(window, 'pointermove', clientY),
     up: () => pointer(window, 'pointerup'),
   }
@@ -124,5 +131,34 @@ describe('高さのドラッグ', () => {
     move(30)
 
     expect(editorHeight()).toBe('280px')
+  })
+
+  // 右クリックはコンテキストメニューが開き、pointerup が届かないままドラッグが残ることがある
+  it('左ボタン以外ではドラッグを始めない', async () => {
+    const { editorHeight, down, move } = await renderResizable(200)
+
+    down(100, 2)
+    move(150)
+
+    expect(editorHeight()).toBeNull()
+  })
+
+  it('ドラッグ中に readOnly へ切り替えると、それ以降の移動で高さが変わらない', async () => {
+    const { editorHeight, down, move, setReadOnly } = await renderResizable(200)
+
+    down(100)
+    move(150)
+    setReadOnly()
+    move(300)
+
+    expect(editorHeight()).toBe('250px')
+  })
+
+  it('リサイズできないエディタはポインタの移動を購読しない', async () => {
+    const addEventListener = vi.spyOn(window, 'addEventListener')
+    const { container } = render(<RichTextEditor features={['bold']} />, { wrapper: Wrapper })
+    await waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+
+    expect(addEventListener.mock.calls.map(([type]) => type)).not.toContain('pointermove')
   })
 })

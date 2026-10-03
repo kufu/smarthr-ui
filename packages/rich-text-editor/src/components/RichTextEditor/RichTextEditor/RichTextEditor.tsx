@@ -149,7 +149,7 @@ export const RichTextEditor = memo(
         return undefined
       }, [defaultValue, content])
 
-      const latest = useLatest({ onChange, outputFormat, isResizable, draggedHeight })
+      const latest = useLatest({ onChange, outputFormat, draggedHeight })
 
       const functions = useMemo(
         () => ({
@@ -168,7 +168,8 @@ export const RichTextEditor = memo(
             )
           },
           handleResizePointerDown: (e: ReactPointerEvent) => {
-            if (!latest.isResizable) return
+            // 右クリックはコンテキストメニューが開き、pointerup が届かないままドラッグが残る
+            if (e.button !== 0) return
 
             const proseMirror = contentRef.current?.querySelector<HTMLElement>('.ProseMirror')
 
@@ -191,6 +192,8 @@ export const RichTextEditor = memo(
       // setPointerCapture ではなく window で受ける。ハンドルの外にポインタが出ても
       // 追従させる必要があり、かつ jsdom が setPointerCapture を実装していないため。
       useEffect(() => {
+        if (!isResizable) return
+
         const handleMove = (e: PointerEvent) => {
           const origin = dragOriginRef.current
 
@@ -215,8 +218,10 @@ export const RichTextEditor = memo(
           window.removeEventListener('pointermove', handleMove)
           window.removeEventListener('pointerup', handleUp)
           window.removeEventListener('pointercancel', handleUp)
+          // ドラッグ中に readOnly/disabled へ切り替わったら、そのドラッグは打ち切る
+          dragOriginRef.current = null
         }
-      }, [])
+      }, [isResizable])
 
       const { editor } = useRichTextEditor({
         value,
