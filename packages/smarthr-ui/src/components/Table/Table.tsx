@@ -4,10 +4,10 @@ import { TableReel } from './client'
 
 import type { ComponentProps, FC } from 'react'
 
-type BaseProps = ComponentProps<typeof ActualTable> & {
+type BaseProps = {
   reel?: boolean
 }
-type Props = BaseProps & Omit<ComponentProps<'table'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentProps<typeof ActualTable>, keyof BaseProps>
 
 export const Table: FC<Props> = ({ reel = true, fixedHead, children, ...rest }) => {
   const Component = reel ? TableReel : TableScroller

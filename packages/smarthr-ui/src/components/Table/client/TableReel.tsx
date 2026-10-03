@@ -19,10 +19,10 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-type Props = PropsWithChildren &
-  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
-    fixedHead?: boolean
-  }
+type BaseProps = PropsWithChildren<{
+  fixedHead?: boolean
+}>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -146,7 +146,7 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
   }, [className])
 
   return (
-    <ScrollerSwitcher forwardedRef={callbackRef} fixedHead={fixedHead}>
+    <ScrollerSwitcher ref={callbackRef} fixedHead={fixedHead}>
       <div className={classNames.wrapper}>
         <div {...rest} className={classNames.inner}>
           {children}

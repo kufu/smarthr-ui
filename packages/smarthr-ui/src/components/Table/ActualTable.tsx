@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 type BaseProps = PropsWithChildren<{
@@ -13,7 +13,7 @@ type BaseProps = PropsWithChildren<{
   /** ヘッダーを固定するかどうか */
   fixedHead?: boolean
 }>
-type Props = BaseProps & Omit<ComponentProps<'table'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'table'>, keyof BaseProps>
 
 const ROUNDED = {
   t_l: '[&>thead:first-child>tr:first-child>th:first-child]:shr-rounded-tl-l [&>thead:first-child>tr:first-child>td:first-child]:shr-rounded-tl-l',

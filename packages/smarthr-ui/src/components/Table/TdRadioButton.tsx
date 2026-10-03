@@ -12,12 +12,12 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
 
-type Props = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** RadioButtonのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
-  ComponentPropsWithRef<typeof RadioButton> &
   Pick<ComponentProps<typeof Td>, 'vAlign'>
+type Props = BaseProps & Omit<ComponentPropsWithRef<typeof RadioButton>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {

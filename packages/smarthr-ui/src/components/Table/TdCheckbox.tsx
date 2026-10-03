@@ -17,7 +17,7 @@ type BaseProps = PropsWithChildren<{
   'aria-labelledby': string
 }> &
   Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps> & BaseProps
+type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
