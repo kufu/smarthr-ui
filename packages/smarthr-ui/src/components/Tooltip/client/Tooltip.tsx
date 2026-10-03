@@ -2,7 +2,7 @@
 
 import {
   type BaseSyntheticEvent,
-  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type FocusEvent as ReactFocusEvent,
   type ReactNode,
@@ -38,7 +38,7 @@ type BaseProps = {
 }
 type Props = BaseProps &
   Omit<
-    ComponentPropsWithRef<'span'>,
+    ComponentPropsWithoutRef<'span'>,
     keyof BaseProps | 'aria-describedby' | 'aria-labelledby' | 'role'
   >
 

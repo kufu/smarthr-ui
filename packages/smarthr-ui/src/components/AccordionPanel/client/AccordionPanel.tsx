@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type KeyboardEventHandler,
   type MouseEvent,
@@ -26,7 +26,7 @@ type BaseProps = {
   /** 角丸を適用する範囲 */
   rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
 }
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const DEFAULT_EXPANDED_ARRAY: string[] = []
 const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
