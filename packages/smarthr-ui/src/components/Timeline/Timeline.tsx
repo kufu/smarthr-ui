@@ -8,7 +8,7 @@ type TimelineItem = ReactElement<ComponentPropsWithRef<typeof TimelineItem>>
 type BaseProps = {
   children: TimelineItem | TimelineItem[]
 }
-type Props = BaseProps & Omit<ComponentProps<'ol'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'ol'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-list-none',
