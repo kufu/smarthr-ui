@@ -1,6 +1,6 @@
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type PropsWithChildren,
   useMemo,
@@ -16,7 +16,7 @@ type BaseProps = PropsWithChildren<{
   /** Checkboxのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
-  Pick<ComponentProps<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
+  Pick<ComponentPropsWithoutRef<typeof Td>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps>
 
 const classNameGenerator = tv({
