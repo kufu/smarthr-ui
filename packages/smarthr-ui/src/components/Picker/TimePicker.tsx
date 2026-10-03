@@ -1,16 +1,15 @@
-import { type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
-import type { PickerProps } from './types'
-
-type Props = {
+type BaseProps = {
   /** フォームにエラーがあるかどうか */
   error?: boolean
 }
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'type'>
 
 /** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
-export const TimePicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
+export const TimePicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('Time')
 
