@@ -18,7 +18,9 @@ import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 import { Panel } from '../Panel'
 
-import type { ComponentProps as IconProps } from '../Icon'
+import type { generateIcon } from '../Icon'
+
+type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 
 type ButtonType =
   | FunctionComponentElement<ComponentProps<typeof Button>>
