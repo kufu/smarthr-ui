@@ -23,7 +23,7 @@ const renderEditor = async (html: string) => {
 // 遅れて本文へ移ったフォーカスでパレットが閉じる
 const waitForEditorFocus = () => act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
 
-describe('TextColorPickerButton', () => {
+describe('ColorPickerButton（文字色）', () => {
   describe('トリガーのアクセシブル名', () => {
     it('文字色未指定のときは既定色の色名を含む', async () => {
       await renderEditor('<p>plain</p>')

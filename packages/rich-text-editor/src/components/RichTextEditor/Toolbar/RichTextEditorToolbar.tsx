@@ -33,8 +33,7 @@ import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useRovingToolbar } from '../hooks/useRovingToolbar'
 import { useToolbarState } from '../hooks/useToolbarState'
 
-import { BackgroundColorPickerButton } from './ColorPicker/BackgroundColorPickerButton'
-import { TextColorPickerButton } from './ColorPicker/TextColorPickerButton'
+import { ColorPickerButton } from './ColorPicker/ColorPickerButton'
 import { FontSizeDropdown } from './FontSizeDropdown'
 import { HeadingDropdown } from './HeadingDropdown'
 import { ImageInsertButton } from './ImageInsertButton'
@@ -491,12 +490,14 @@ export const RichTextEditorToolbar: FC = memo(() => {
     if (item.type === 'lineHeight') {
       return <LineHeightDropdown {...rovingProps} key={item.key} disabled={item.disabled} />
     }
-    if (item.type === 'color') {
-      return <TextColorPickerButton {...rovingProps} key={item.key} disabled={item.disabled} />
-    }
-    if (item.type === 'backgroundColor') {
+    if (item.type === 'color' || item.type === 'backgroundColor') {
       return (
-        <BackgroundColorPickerButton {...rovingProps} key={item.key} disabled={item.disabled} />
+        <ColorPickerButton
+          {...rovingProps}
+          key={item.key}
+          disabled={item.disabled}
+          attribute={item.type}
+        />
       )
     }
     if (item.type === 'image') {

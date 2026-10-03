@@ -19,7 +19,7 @@ const renderEditor = async (html: string) => {
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 }
 
-describe('BackgroundColorPickerButton', () => {
+describe('ColorPickerButton（背景色）', () => {
   describe('トリガーのアクセシブル名', () => {
     it('背景色未指定のときは「なし」を含む', async () => {
       await renderEditor('<p>plain</p>')

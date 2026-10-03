@@ -49,8 +49,8 @@ vi.mock('../Toolbar/HeadingDropdown', (importOriginal) =>
 vi.mock('../Toolbar/FontSizeDropdown', (importOriginal) =>
   trackDropdown('fontSize', 'FontSizeDropdown')(importOriginal),
 )
-vi.mock('../Toolbar/ColorPicker/TextColorPickerButton', (importOriginal) =>
-  trackDropdown('color', 'TextColorPickerButton')(importOriginal),
+vi.mock('../Toolbar/ColorPicker/ColorPickerButton', (importOriginal) =>
+  trackDropdown('color', 'ColorPickerButton')(importOriginal),
 )
 
 beforeAll(() => {
