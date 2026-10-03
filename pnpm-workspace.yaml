@@ -30,3 +30,8 @@ overrides:
   postcss-selector-parser@>=6.1.0 <6.1.3: '>=7.1.6'
   brace-expansion@>=2.0.0 <2.1.7: '>=2.1.7 <3.0.0'
   brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
+audit:
+  ignore:
+    # braces<=3.0.3 のstack-exhaustion DoS。2026-10-03時点でパッチ済みバージョンが
+    # 存在しないため一時的に無視する。パッチがリリースされ次第overridesに切り替えて削除する
+    - GHSA-vfj7-8cjw-p6xm
