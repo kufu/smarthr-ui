@@ -3,10 +3,10 @@
 import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../../hooks/client/useEnvironment'
-import { paddingBlock, paddingInline } from '../../../tailwind'
+import { useEnvironment } from '../../../../hooks/client/useEnvironment'
+import { paddingBlock, paddingInline } from '../../../../tailwind'
 
-import type { Gap } from '../../../types'
+import type { Gap } from '../../../../types'
 
 type BaseProps = PropsWithChildren<{
   size?: 'NARROW' | 'DEFAULT' | 'WIDE' | 'FULL'
