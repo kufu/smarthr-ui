@@ -1,7 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -36,9 +37,9 @@ type StepFormHelpers = {
 }
 
 type Props = PropsWithChildren<
-  ComponentProps<typeof DialogBody> & {
+  ComponentPropsWithRef<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: ComponentProps<typeof DialogHeading>
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** 現在のStepNo */
     activeStep: number
     /** submitボタン */

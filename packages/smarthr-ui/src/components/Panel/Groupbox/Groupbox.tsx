@@ -1,16 +1,17 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../../tailwind'
 import { Panel } from '../Panel'
 
-type BaseProps = Omit<ComponentProps<typeof Panel>, 'radius' | 'layer'> & {
+type BaseProps = {
   /** 背景色 */
   bgColor?: keyof typeof backgroundColor
   /** 角丸を適用する範囲 */
   rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
 }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentPropsWithRef<typeof Panel>, keyof BaseProps | 'radius' | 'layer'>
 
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',

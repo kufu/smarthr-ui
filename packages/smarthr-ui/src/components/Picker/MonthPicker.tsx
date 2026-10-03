@@ -1,16 +1,15 @@
-import { type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
-import type { PickerProps } from './types'
-
-type Props = {
+type BaseProps = {
   /** フォームにエラーがあるかどうか */
   error?: boolean
 }
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'type'>
 
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
-export const MonthPicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
+export const MonthPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('Month')
 

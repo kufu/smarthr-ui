@@ -2,14 +2,7 @@
 
 import { useSquareDetection } from './useSquareDetection'
 
-import type {
-  ButtonHTMLAttributes,
-  FC,
-  ForwardedRef,
-  MouseEvent,
-  PropsWithChildren,
-  ReactNode,
-} from 'react'
+import type { ComponentPropsWithRef, FC, MouseEvent, PropsWithChildren, ReactNode } from 'react'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
@@ -23,17 +16,14 @@ type BaseProps = PropsWithChildren<{
   }
   // HINT: loading中かどうかはloaderの有無で判定する。要素の生成自体は呼び出し元(Button.tsx)が行う
   loader?: ReactNode
-  buttonRef?: ForwardedRef<HTMLButtonElement>
   prefix?: ReactNode
   suffix?: ReactNode
 }>
-
-type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 
 export const ActualButton: FC<Props> = ({
   classNames,
   loader,
-  buttonRef,
   prefix,
   suffix,
   children,
@@ -66,7 +56,6 @@ export const ActualButton: FC<Props> = ({
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
       {...rest}
-      ref={buttonRef}
       className={classNames.wrapper}
       aria-disabled={disabled}
       data-loading={loader ? true : undefined}

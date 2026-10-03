@@ -10,17 +10,17 @@ type DisclosureTriggerNodeChildren = Omit<
   ReactElement,
   'onClick' | 'aria-expanded' | 'aria-controls'
 >
-type DisclosureTriggerFuncChildren = (args: { expanded: boolean }) => DisclosureTriggerNodeChildren
 
-type DisclosureTriggerProps = {
+type Props = {
   /** DisclosureContentのidと紐づける文字列 */
   targetId: string
   /** 開閉時のハンドラー */
   onClick?: (open: () => void, e: MouseEvent) => void
-  children: DisclosureTriggerNodeChildren | DisclosureTriggerFuncChildren
+  children:
+    DisclosureTriggerNodeChildren | ((args: { expanded: boolean }) => DisclosureTriggerNodeChildren)
 }
 
-export const DisclosureTrigger: FC<DisclosureTriggerProps> = ({ targetId, children, onClick }) => {
+export const DisclosureTrigger: FC<Props> = ({ targetId, children, onClick }) => {
   const [expanded, setExpanded, addDisclosureChangeListener] = useDisclosure(targetId)
 
   const latest = useLatest({ onClick, setExpanded, addDisclosureChangeListener })

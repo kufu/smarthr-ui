@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
@@ -19,7 +18,7 @@ import { IS_NEXT_JS } from '../../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
-type TextProps = ComponentProps<typeof Text>
+type TextProps = ComponentPropsWithRef<typeof Text>
 type BaseProps = PropsWithChildren<{
   /**
    * テキストのサイズ
