@@ -12,8 +12,10 @@ import {
 } from 'react'
 import { FaCaretDownIcon } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
+import { normalizeHex } from '../../../../libs/normalizeHex'
 import { tv } from '../../../../libs/tv'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
 import { getEditorColor, setEditorColor } from '../../extensions/Table/tableColor'
@@ -25,7 +27,6 @@ import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 import { ColorPickerPalette } from './ColorPickerPalette'
 import { ColorSwatchFace } from './ColorSwatch'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
-import { normalizeHex } from './normalizeHex'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 import { useCurrentColorLabel } from './useCurrentColorLabel'
 
@@ -111,6 +112,15 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { trigger } = classNameGenerator()
+
+  return {
+    color: trigger({ className: CONFIGS.color.className }),
+    backgroundColor: trigger({ className: CONFIGS.backgroundColor.className }),
+  }
+})()
+
 type Props = {
   attribute: keyof typeof CONFIGS
   tabIndex?: number
@@ -129,20 +139,15 @@ export const ColorPickerButton: FC<Props> = memo(
     onFocus: onFocusProp,
     ref: refProp,
   }) => {
-    const { colors, defaultColor, className, readCurrentColor, messages } = CONFIGS[attribute]
+    const { colors, defaultColor, readCurrentColor, messages } = CONFIGS[attribute]
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const currentColor = useToolbarValue(editor, readCurrentColor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const paletteRef = useRef<HTMLDivElement>(null)
     const [recentColors, setRecentColors] = useState<string[]>([])
     const [customColor, setCustomColor] = useState<string>(defaultColor)
-
-    const classNames = useMemo(() => {
-      const { trigger } = classNameGenerator()
-
-      return { trigger: trigger({ className }) }
-    }, [className])
 
     const latest = useLatest({ attribute, defaultColor, onKeyDown: onKeyDownProp })
 
@@ -216,14 +221,11 @@ export const ColorPickerButton: FC<Props> = memo(
       <>
         <ToolbarTooltip suppressed={isOpen || disabled} label={label}>
           <button
-            ref={(el) => {
-              triggerRef.current = el
-              refProp?.(el)
-            }}
+            ref={mergedTriggerRef}
             type="button"
             disabled={disabled}
             tabIndex={tabIndex}
-            className={classNames.trigger}
+            className={CLASS_NAMES[attribute]}
             aria-label={`${label}: ${currentColorLabel}`}
             aria-expanded={isOpen}
             aria-haspopup="dialog"

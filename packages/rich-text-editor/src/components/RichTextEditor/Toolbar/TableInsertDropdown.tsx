@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { Button, Cluster, FaTableIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
@@ -30,6 +31,15 @@ const classNameGenerator = tv({
     error: 'shr-text-sm shr-text-danger',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { error, popup } = classNameGenerator()
+
+  return {
+    error: error(),
+    popup: popup(),
+  }
+})()
 
 // 桁を打ち間違えると数万行の transaction でタブが固まるため、上限を設ける。
 // 動作は1万セルでも問題ないが、空のセルも属性を持つため 100×100 で JSON が約2MBになる。
@@ -56,12 +66,12 @@ export const TableInsertDropdown: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [rows, setRows] = useState('3')
     const [cols, setCols] = useState('3')
     const [error, setError] = useState('')
     const popupRef = useRef<HTMLDivElement>(null)
     const firstInputRef = useRef<HTMLInputElement>(null)
-    const classNames = classNameGenerator()
 
     const errorMessage = localize(
       {
@@ -153,10 +163,7 @@ export const TableInsertDropdown: FC<Props> = memo(
     return (
       <>
         <ToolbarButton
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
+          ref={mergedTriggerRef}
           disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={isOpen}
@@ -168,7 +175,7 @@ export const TableInsertDropdown: FC<Props> = memo(
           label={tableLabel}
         />
         {renderDropdown(
-          <div ref={popupRef} role="dialog" className={classNames.popup()} aria-label={tableLabel}>
+          <div ref={popupRef} role="dialog" className={CLASS_NAMES.popup} aria-label={tableLabel}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form
               noValidate
@@ -210,7 +217,7 @@ export const TableInsertDropdown: FC<Props> = memo(
                   </FormControl>
                 </Cluster>
                 {error && (
-                  <span role="alert" className={classNames.error()}>
+                  <span role="alert" className={CLASS_NAMES.error}>
                     {error}
                   </span>
                 )}

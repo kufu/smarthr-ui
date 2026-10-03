@@ -1,8 +1,7 @@
 'use client'
 
 import { useIntl } from '../../../../intl'
-
-import { normalizeHex } from './normalizeHex'
+import { normalizeHex } from '../../../../libs/normalizeHex'
 
 import type { ColorPaletteEntry } from './ColorPickerPalette'
 

@@ -34,10 +34,18 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { button } = classNameGenerator()
+
+  return {
+    row: button({ className: 'smarthr-ui-RichTextEditor-AddRowButton' }),
+    column: button({ className: 'smarthr-ui-RichTextEditor-AddColumnButton' }),
+  }
+})()
+
 export const AddTableAxisButton: FC<Props> = memo(
   ({ editor, tablePos, top, left, axis, length, thickness, onFocus, onBlur }) => {
     const { localize } = useIntl()
-    const classNames = classNameGenerator()
 
     const label = localize(
       axis === 'row'
@@ -61,12 +69,7 @@ export const AddTableAxisButton: FC<Props> = memo(
       <button
         type="button"
         title={label}
-        className={classNames.button({
-          className:
-            axis === 'row'
-              ? 'smarthr-ui-RichTextEditor-AddRowButton'
-              : 'smarthr-ui-RichTextEditor-AddColumnButton',
-        })}
+        className={CLASS_NAMES[axis]}
         style={{
           top,
           left,

@@ -25,7 +25,7 @@ import {
   FaUnderlineIcon,
 } from 'smarthr-ui'
 
-import { useEnhancedEffect } from '../../../hooks/useEnhancedEffect'
+import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'

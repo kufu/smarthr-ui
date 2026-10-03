@@ -1,8 +1,11 @@
+'use client'
+
 import { type FC, type ReactNode, createContext, useContext, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useLatest } from '../useLatest'
+
 import { useEnhancedEffect } from './useEnhancedEffect'
-import { useLatest } from './useLatest'
 
 type ParentContextValue = {
   seqs: string[]

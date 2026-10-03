@@ -2,9 +2,9 @@
 import { Button, FaXmarkIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../../intl'
+import { normalizeHex } from '../../../../libs/normalizeHex'
 import { ColorSwatch } from '../../Toolbar/ColorPicker/ColorSwatch'
 import { EDITOR_BACKGROUND_COLORS } from '../../Toolbar/ColorPicker/backgroundColors'
-import { normalizeHex } from '../../Toolbar/ColorPicker/normalizeHex'
 import { EDITOR_COLORS } from '../../Toolbar/ColorPicker/textColors'
 
 import { setTableCellColor } from './tableColor'
@@ -15,12 +15,12 @@ export const TableColorPalette = ({
   editor,
   attribute,
   title,
-  run,
+  handleRun,
 }: {
   editor: Editor
   attribute: 'color' | 'backgroundColor'
   title: string
-  run: (action: () => unknown) => void
+  handleRun: (action: () => unknown) => void
 }) => {
   const { localize } = useIntl()
   const current = getSelectedCellColor(editor, attribute)
@@ -40,7 +40,7 @@ export const TableColorPalette = ({
               appearance={attribute}
               color={color.value}
               className="group-data-[keyboard=true]/table-menu:focus:shr-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-outline-none"
-              handleClick={() => run(() => setTableCellColor(editor, attribute, color.value))}
+              handleClick={() => handleRun(() => setTableCellColor(editor, attribute, color.value))}
               label={label}
             />
           )
@@ -50,7 +50,7 @@ export const TableColorPalette = ({
         variant="text"
         size="S"
         className="shr-mt-0.5"
-        onClick={() => run(() => setTableCellColor(editor, attribute, null))}
+        onClick={() => handleRun(() => setTableCellColor(editor, attribute, null))}
         prefix={<FaXmarkIcon />}
       >
         {localize({ id: 'smarthr-ui/RichTextEditor/resetCellColor', defaultText: '色をリセット' })}

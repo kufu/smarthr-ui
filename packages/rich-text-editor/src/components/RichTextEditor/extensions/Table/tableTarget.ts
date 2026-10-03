@@ -2,7 +2,7 @@ import { closeHistory } from '@tiptap/pm/history'
 import { TextSelection } from '@tiptap/pm/state'
 import { CellSelection, TableMap, addColumn, addRow, selectedRect } from '@tiptap/pm/tables'
 
-import { normalizeHex } from '../../Toolbar/ColorPicker/normalizeHex'
+import { normalizeHex } from '../../../../libs/normalizeHex'
 
 import type { Editor } from '@tiptap/react'
 

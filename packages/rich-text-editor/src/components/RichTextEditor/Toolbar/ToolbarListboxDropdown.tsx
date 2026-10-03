@@ -3,6 +3,7 @@
 import { type KeyboardEvent, type ReactNode, useMemo, useRef } from 'react'
 import { FaCaretDownIcon, FaCheckIcon } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { tv } from '../../../libs/tv'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
@@ -60,7 +61,7 @@ export type ToolbarListboxOption = {
 type Props = {
   label: string
   /** 現在の値。トリガーの名前に「ラベル: 値」として含める */
-  valueLabel: ReactNode
+  valueLabel: string | number
   triggerContent: ReactNode
   options: readonly ToolbarListboxOption[]
   /** 選択中の選択肢の位置。どれも選ばれていなければ -1 */
@@ -98,6 +99,7 @@ export const ToolbarListboxDropdown = ({
 }: Props) => {
   const isApple = useIsApplePlatform()
   const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+  const mergedTriggerRef = useMergeRefs(triggerRef, ref)
   const listboxRef = useRef<HTMLDivElement>(null)
   const isHorizontal = appearance === 'icons'
 
@@ -205,10 +207,7 @@ export const ToolbarListboxDropdown = ({
     <>
       <ToolbarTooltip suppressed={isOpen || disabled} label={label}>
         <button
-          ref={(el) => {
-            triggerRef.current = el
-            ref?.(el)
-          }}
+          ref={mergedTriggerRef}
           type="button"
           disabled={disabled}
           tabIndex={tabIndex}

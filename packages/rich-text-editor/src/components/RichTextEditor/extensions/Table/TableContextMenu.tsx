@@ -72,9 +72,9 @@ export const TableContextMenu = ({
     target,
     open,
     close,
-    run,
-    changeColors,
-    onMenuKeyDown: delegateMenuKeyDown,
+    handleRun,
+    handleChangeColors,
+    handleDelegateMenuKeyDown,
   } = useTableMenu({ editor, cellPos, scope, openMenuRef, handleTargetLock })
   if (!target) return null
   const label = localize(LABEL_MESSAGES[scope])
@@ -139,7 +139,7 @@ export const TableContextMenu = ({
           data-keyboard={keyboardNavigation}
           onPointerDownCapture={() => setKeyboardNavigation(false)}
           onKeyDownCapture={() => setKeyboardNavigation(true)}
-          onKeyDown={delegateMenuKeyDown}
+          onKeyDown={handleDelegateMenuKeyDown}
         >
           <strong className="shr-px-1 shr-py-0.5 shr-text-sm shr-leading-none shr-text-grey">
             {showColors
@@ -151,7 +151,7 @@ export const TableContextMenu = ({
               type="button"
               variant="text"
               className={itemClass}
-              onClick={() => changeColors(false)}
+              onClick={() => handleChangeColors(false)}
               prefix={<FaArrowLeftIcon />}
             >
               {localize({
@@ -166,30 +166,30 @@ export const TableContextMenu = ({
               editor={editor}
               scope={scope}
               features={features}
-              run={run}
-              changeColors={changeColors}
+              handleRun={handleRun}
+              handleChangeColors={handleChangeColors}
             />
           )}
           {showColors && scope !== 'table' && features.includes('color') && (
             <TableColorPalette
               editor={editor}
-              run={run}
               attribute="color"
               title={localize({
                 id: 'smarthr-ui/RichTextEditor/cellTextColor',
                 defaultText: '文字色',
               })}
+              handleRun={handleRun}
             />
           )}
           {showColors && scope !== 'table' && features.includes('backgroundColor') && (
             <TableColorPalette
               editor={editor}
-              run={run}
               attribute="backgroundColor"
               title={localize({
                 id: 'smarthr-ui/RichTextEditor/cellBackgroundColor',
                 defaultText: '背景色',
               })}
+              handleRun={handleRun}
             />
           )}
         </div>,

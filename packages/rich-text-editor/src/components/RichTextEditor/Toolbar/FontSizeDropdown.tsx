@@ -68,7 +68,7 @@ export const FontSizeDropdown: FC<Props> = memo(({ disabled, ...rest }) => {
   const currentSize = toPxSize(currentValue)
   // 端数は Froala と同じく切り捨てて見せる。選択状態は端数を含めた値で判定するため、
   // 11pt(14.67px) を選択肢の 14 と取り違えない。解釈できない単位はそのまま見せる
-  const currentLabel = currentSize === null ? currentValue : Math.floor(currentSize)
+  const currentLabel = currentSize === null ? (currentValue ?? '') : Math.floor(currentSize)
 
   const functions = useMemo(
     () => ({

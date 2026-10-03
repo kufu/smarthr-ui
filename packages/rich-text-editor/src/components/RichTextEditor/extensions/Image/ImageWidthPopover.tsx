@@ -20,6 +20,7 @@ import {
   Stack,
 } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
@@ -42,6 +43,17 @@ const classNameGenerator = tv({
     lock: 'shr-shrink-0 shr-text-grey',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { lock, menu, row, trigger } = classNameGenerator()
+
+  return {
+    lock: lock(),
+    menu: menu(),
+    row: row(),
+    trigger: trigger(),
+  }
+})()
 
 type Props = {
   editor: Editor
@@ -75,7 +87,7 @@ export const ImageWidthPopover: FC<Props> = memo(
   ({ editor, pos, tabIndex = -1, onKeyDown, onFocus, ref: refProp }) => {
     const { localize } = useIntl()
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const classNames = classNameGenerator()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [width, setWidth] = useState('')
     const [height, setHeight] = useState('')
     const naturalRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 })
@@ -179,13 +191,10 @@ export const ImageWidthPopover: FC<Props> = memo(
     return (
       <>
         <button
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
+          ref={mergedTriggerRef}
           type="button"
           tabIndex={tabIndex}
-          className={classNames.trigger()}
+          className={CLASS_NAMES.trigger}
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           onMouseDown={(e) => e.preventDefault()}
@@ -205,11 +214,11 @@ export const ImageWidthPopover: FC<Props> = memo(
           {label}
         </button>
         {renderDropdown(
-          <div role="dialog" className={classNames.menu()} aria-label={label}>
+          <div role="dialog" className={CLASS_NAMES.menu} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form noValidate onSubmit={functions.apply} onKeyDown={functions.handlePopupKeyDown}>
               <Stack gap={0.75}>
-                <div className={classNames.row()}>
+                <div className={CLASS_NAMES.row}>
                   <FormControl label={widthLabel}>
                     <Input
                       ref={widthInputRef}
@@ -220,7 +229,7 @@ export const ImageWidthPopover: FC<Props> = memo(
                       onChange={(e) => functions.handleWidthChange(e.target.value)}
                     />
                   </FormControl>
-                  <FaLockIcon alt={lockLabel} className={classNames.lock()} />
+                  <FaLockIcon alt={lockLabel} className={CLASS_NAMES.lock} />
                   <FormControl label={heightLabel}>
                     <Input
                       type="number"

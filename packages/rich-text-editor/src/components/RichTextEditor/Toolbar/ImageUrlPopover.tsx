@@ -13,8 +13,8 @@ import {
 } from 'react'
 import { Button, Cluster, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { usePortal } from '../../../hooks/client/usePortal'
 import { useLatest } from '../../../hooks/useLatest'
-import { usePortal } from '../../../hooks/usePortal'
 import { useIntl } from '../../../intl'
 
 import { isHttpUrl } from './urlValidation'

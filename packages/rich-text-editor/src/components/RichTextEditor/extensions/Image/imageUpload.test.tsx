@@ -8,7 +8,7 @@ import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 import type { ImageUploadResult, RichTextEditorController, RichTextJSON } from '../../types'
 import type { ReactNode } from 'react'
 
-// jsdom には ResizeObserver が無く、挿入された画像の NodeView(useActiveImageRect) が
+// jsdom には ResizeObserver が無く、挿入された画像の NodeView と ImageFloatingUI が
 // マウント時に参照するため、最小限のスタブを用意する。
 beforeAll(() => {
   if (typeof globalThis.ResizeObserver === 'undefined') {

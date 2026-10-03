@@ -35,8 +35,8 @@ type Props = {
   scope: TableScope
   target: NonNullable<ReturnType<typeof getTableTarget>>
   features: readonly RichTextFeature[]
-  run: (action: () => unknown) => void
-  changeColors: (show: boolean) => void
+  handleRun: (action: () => unknown) => void
+  handleChangeColors: (show: boolean) => void
   colorTriggerRef: RefObject<HTMLButtonElement>
 }
 export const TableMenuActions = ({
@@ -44,8 +44,8 @@ export const TableMenuActions = ({
   scope,
   target,
   features,
-  run,
-  changeColors,
+  handleRun,
+  handleChangeColors,
   colorTriggerRef,
 }: Props) => {
   const { localize } = useIntl()
@@ -62,7 +62,7 @@ export const TableMenuActions = ({
       variant="text"
       className={`${itemClass} shr-flex shr-items-center shr-gap-0.5`}
       aria-pressed={pressed}
-      onClick={() => run(action)}
+      onClick={() => handleRun(action)}
       prefix={
         pressed === undefined ? (
           icon
@@ -254,10 +254,10 @@ export const TableMenuActions = ({
                 if (event.key === 'ArrowRight') {
                   event.preventDefault()
                   event.stopPropagation()
-                  changeColors(true)
+                  handleChangeColors(true)
                 }
               }}
-              onClick={() => changeColors(true)}
+              onClick={() => handleChangeColors(true)}
               prefix={<FaPaintbrushIcon />}
               suffix={<FaChevronRightIcon />}
             >

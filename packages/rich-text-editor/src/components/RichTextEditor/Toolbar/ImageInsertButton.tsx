@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { FaImageIcon } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
@@ -35,6 +36,15 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { menu, menuItem } = classNameGenerator()
+
+  return {
+    menu: menu(),
+    menuItem: menuItem(),
+  }
+})()
+
 type Props = {
   tabIndex?: number
   disabled?: boolean
@@ -54,12 +64,12 @@ export const ImageInsertButton: FC<Props> = memo(
       triggerRef,
       renderDropdown,
     } = useToolbarDropdown()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
     const [showUrlDialog, setShowUrlDialog] = useState(false)
 
     const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
-    const classNames = classNameGenerator()
 
     const latest = useLatest({ mimeTypes, triggerRef })
 
@@ -142,10 +152,7 @@ export const ImageInsertButton: FC<Props> = memo(
     return (
       <>
         <ToolbarButton
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
+          ref={mergedTriggerRef}
           disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={isMenuOpen}
@@ -168,12 +175,12 @@ export const ImageInsertButton: FC<Props> = memo(
           label={label}
         />
         {renderDropdown(
-          <div ref={menuRef} role="menu" className={classNames.menu()} aria-label={label}>
+          <div ref={menuRef} role="menu" className={CLASS_NAMES.menu} aria-label={label}>
             {hasImageUpload && (
               <button
                 role="menuitem"
                 type="button"
-                className={classNames.menuItem()}
+                className={CLASS_NAMES.menuItem}
                 onClick={functions.handleUploadClick}
                 onKeyDown={functions.handleMenuKeyDown}
               >
@@ -183,7 +190,7 @@ export const ImageInsertButton: FC<Props> = memo(
             <button
               role="menuitem"
               type="button"
-              className={classNames.menuItem()}
+              className={CLASS_NAMES.menuItem}
               onClick={functions.handleUrlClick}
               onKeyDown={functions.handleMenuKeyDown}
             >

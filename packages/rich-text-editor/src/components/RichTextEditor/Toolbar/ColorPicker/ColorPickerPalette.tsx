@@ -15,10 +15,10 @@ import { Button, FaXmarkIcon } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { type typedJa, useIntl } from '../../../../intl'
+import { normalizeHex } from '../../../../libs/normalizeHex'
 import { tv } from '../../../../libs/tv'
 
 import { ColorSwatch } from './ColorSwatch'
-import { normalizeHex } from './normalizeHex'
 
 const SWATCHES_PER_ROW = 6
 const PALETTE_BUTTON_BASE_CLASSES = [
@@ -51,6 +51,21 @@ const classNameGenerator = tv({
       'shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0',
   },
 })
+
+const CLASS_NAMES = (() => {
+  const { colorInput, customRow, editButton, palette, section, sectionTitle, swatchRow } =
+    classNameGenerator()
+
+  return {
+    colorInput: colorInput(),
+    customRow: customRow(),
+    editButton: editButton(),
+    palette: palette(),
+    section: section(),
+    sectionTitle: sectionTitle(),
+    swatchRow: swatchRow(),
+  }
+})()
 
 type LocaleKey = keyof typeof typedJa
 type LocaleDefaultText<K extends LocaleKey> = (typeof typedJa)[K]
@@ -112,8 +127,6 @@ export const ColorPickerPalette: FC<Props> = memo(
   }) => {
     const { localize } = useIntl()
     const colorInputRef = useRef<HTMLInputElement>(null)
-
-    const classNames = classNameGenerator()
 
     const latest = useLatest({
       paletteRef,
@@ -243,14 +256,14 @@ export const ColorPickerPalette: FC<Props> = memo(
       <div
         ref={paletteRef}
         role="dialog"
-        className={classNames.palette()}
+        className={CLASS_NAMES.palette}
         aria-label={dialogLabel}
         onKeyDown={functions.handleDelegateKeyDown}
         onBlur={functions.handleDelegateBlur}
       >
         {/* 標準パレットセクション */}
-        <div role="group" className={classNames.section()} aria-label={standardSectionLabel}>
-          <div className={classNames.swatchRow()}>
+        <div role="group" className={CLASS_NAMES.section} aria-label={standardSectionLabel}>
+          <div className={CLASS_NAMES.swatchRow}>
             {firstRow.map((color) => {
               const label = localize({ id: color.labelId, defaultText: color.defaultText })
               const isSelected =
@@ -274,7 +287,7 @@ export const ColorPickerPalette: FC<Props> = memo(
             })}
           </div>
           {secondRow.length > 0 && (
-            <div className={classNames.swatchRow()}>
+            <div className={CLASS_NAMES.swatchRow}>
               {secondRow.map((color) => {
                 const label = localize({ id: color.labelId, defaultText: color.defaultText })
                 const isSelected =
@@ -300,9 +313,9 @@ export const ColorPickerPalette: FC<Props> = memo(
         </div>
 
         {/* カスタムセクション */}
-        <div role="group" className={classNames.section()} aria-label={customSectionLabel}>
-          <span className={classNames.sectionTitle()}>{customSectionLabel}</span>
-          <div className={classNames.customRow()}>
+        <div role="group" className={CLASS_NAMES.section} aria-label={customSectionLabel}>
+          <span className={CLASS_NAMES.sectionTitle}>{customSectionLabel}</span>
+          <div className={CLASS_NAMES.customRow}>
             {showCustomSwatch && (
               <ColorSwatch
                 selected={customSelected}
@@ -315,7 +328,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                 label={customSwatchLabel(customColor)}
               />
             )}
-            <span className={classNames.editButton()}>
+            <span className={CLASS_NAMES.editButton}>
               {/* ラベルは input の aria-label で読み上げるため、見た目側は読み上げ対象から外す */}
               <span aria-hidden="true">{editButtonLabel}</span>
               <input
@@ -323,7 +336,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                 type="color"
                 name="customColor"
                 value={customColor}
-                className={classNames.colorInput()}
+                className={CLASS_NAMES.colorInput}
                 aria-label={editButtonLabel}
                 onChange={functions.handleColorInputChange}
               />
@@ -333,9 +346,9 @@ export const ColorPickerPalette: FC<Props> = memo(
 
         {/* 履歴セクション（0件のとき非表示） */}
         {recentColors.length > 0 && (
-          <div role="group" className={classNames.section()} aria-label={recentSectionLabel}>
-            <span className={classNames.sectionTitle()}>{recentSectionLabel}</span>
-            <div className={classNames.swatchRow()}>
+          <div role="group" className={CLASS_NAMES.section} aria-label={recentSectionLabel}>
+            <span className={CLASS_NAMES.sectionTitle}>{recentSectionLabel}</span>
+            <div className={CLASS_NAMES.swatchRow}>
               {recentColors.map((color, idx) => {
                 const isSelected = idx === recentSelectedIndex
                 return (

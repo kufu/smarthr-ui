@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { Button, Cluster, FaLinkIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -37,6 +38,7 @@ export const LinkButton: FC<Props> = memo(
     const { localize } = useIntl()
     const isLink = useToolbarValue(editor, readers.isLink)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [text, setText] = useState('')
     const [url, setUrl] = useState('')
     const [error, setError] = useState('')
@@ -200,10 +202,7 @@ export const LinkButton: FC<Props> = memo(
     return (
       <>
         <ToolbarButton
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
+          ref={mergedTriggerRef}
           disabled={disabled}
           shortcut="Mod-K"
           active={isLink}

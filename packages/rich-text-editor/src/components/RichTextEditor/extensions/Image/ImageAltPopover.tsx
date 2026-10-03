@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { Button, Cluster, FaPenToSquareIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
@@ -31,6 +32,15 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  const { menu, trigger } = classNameGenerator()
+
+  return {
+    menu: menu(),
+    trigger: trigger(),
+  }
+})()
+
 type Props = {
   editor: Editor
   pos: number
@@ -44,7 +54,7 @@ export const ImageAltPopover: FC<Props> = memo(
   ({ editor, pos, tabIndex = -1, onKeyDown, onFocus, ref: refProp }) => {
     const { localize } = useIntl()
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
-    const classNames = classNameGenerator()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [alt, setAlt] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -103,13 +113,10 @@ export const ImageAltPopover: FC<Props> = memo(
     return (
       <>
         <button
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
+          ref={mergedTriggerRef}
           type="button"
           tabIndex={tabIndex}
-          className={classNames.trigger()}
+          className={CLASS_NAMES.trigger}
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           onMouseDown={(e) => e.preventDefault()}
@@ -129,7 +136,7 @@ export const ImageAltPopover: FC<Props> = memo(
           {label}
         </button>
         {renderDropdown(
-          <div role="dialog" className={classNames.menu()} aria-label={label}>
+          <div role="dialog" className={CLASS_NAMES.menu} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form
               noValidate

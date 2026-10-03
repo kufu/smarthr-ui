@@ -12,6 +12,7 @@ import {
 } from 'react'
 import { Button, Cluster, FaCirclePlayIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -35,6 +36,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [url, setUrl] = useState('')
     const [error, setError] = useState('')
     const popupRef = useRef<HTMLDivElement>(null)
@@ -134,10 +136,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
     return (
       <>
         <ToolbarButton
-          ref={(el) => {
-            triggerRef.current = el
-            refProp?.(el)
-          }}
+          ref={mergedTriggerRef}
           disabled={disabled}
           tabIndex={tabIndex}
           aria-expanded={isOpen}

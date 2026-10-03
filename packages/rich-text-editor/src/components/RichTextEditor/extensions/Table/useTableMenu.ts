@@ -111,18 +111,18 @@ export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, handleTarget
     if (restoreTrigger) triggerRef.current?.focus({ preventScroll: true })
     else focusTableCell(editor, returnPos.current)
   }
-  const run = (action: () => unknown) => {
+  const handleRun = (action: () => unknown) => {
     runTableAction(editor, action)
     close()
   }
-  const changeColors = (show: boolean) => {
+  const handleChangeColors = (show: boolean) => {
     setShowColors(show)
     scheduleFocus(() => {
       if (show) menuRef.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus()
       else colorTriggerRef.current?.focus()
     })
   }
-  const onMenuKeyDown = (delegateEvent: KeyboardEvent<HTMLDivElement>) => {
+  const handleDelegateMenuKeyDown = (delegateEvent: KeyboardEvent<HTMLDivElement>) => {
     if (delegateEvent.key === 'Tab') {
       const buttons = Array.from(
         menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [],
@@ -139,7 +139,7 @@ export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, handleTarget
     if (showColors && ['Escape', 'ArrowLeft'].includes(delegateEvent.key)) {
       delegateEvent.preventDefault()
       delegateEvent.stopPropagation()
-      changeColors(false)
+      handleChangeColors(false)
       return
     }
     if (delegateEvent.key === 'Escape') {
@@ -175,8 +175,8 @@ export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, handleTarget
     target,
     open,
     close,
-    run,
-    changeColors,
-    onMenuKeyDown,
+    handleRun,
+    handleChangeColors,
+    handleDelegateMenuKeyDown,
   }
 }
