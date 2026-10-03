@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [100.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.9.0...smarthr-ui-v100.0.0) (2026-10-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **NotificaionBar:** `base` propを `paneled` propに変更 ([#7159](https://github.com/kufu/smarthr-ui/issues/7159))
+* **Dialog:** onClickClose/onPressEscapeのイベント型を統一する ([#7040](https://github.com/kufu/smarthr-ui/issues/7040))
+* **Dialog:** DialogWrapperによる非制御パターンを廃止しDialogに一本化する ([#7130](https://github.com/kufu/smarthr-ui/issues/7130))
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008))
+* **Combobox:** ComboboxItem.labelを調整し、stringが必要な箇所に利用できるlabelText属性を追加 ([#6956](https://github.com/kufu/smarthr-ui/issues/6956))
+* **createShadow:** styled-componentsに依存しないようにする ([#6946](https://github.com/kufu/smarthr-ui/issues/6946))
+* **Dialog:** portalParentがRefObjectの場合に意図した位置に配置されない不具合を修正 ([#6942](https://github.com/kufu/smarthr-ui/issues/6942))
+* **UnstyledButton:** disabled属性をaria-disabledに変更しイベントをキャンセル ([#6749](https://github.com/kufu/smarthr-ui/issues/6749))
+
+### Features
+
+* **UnstyledButton:** disabled属性をaria-disabledに変更しイベントをキャンセル ([#6749](https://github.com/kufu/smarthr-ui/issues/6749)) ([6e69bb5](https://github.com/kufu/smarthr-ui/commit/6e69bb542f439e941bc694b9897ba12630a17daf))
+
+
+### Bug Fixes
+
+* **Dialog:** portalParentがRefObjectの場合に意図した位置に配置されない不具合を修正 ([#6942](https://github.com/kufu/smarthr-ui/issues/6942)) ([488b9c3](https://github.com/kufu/smarthr-ui/commit/488b9c34e22947b8554bf79dcb34b8696de437dd))
+* **Dialog:** 閉じた直後にダイアログの中身が開く前の状態で描画されるのを修正する ([#7221](https://github.com/kufu/smarthr-ui/issues/7221)) ([db20215](https://github.com/kufu/smarthr-ui/commit/db20215b4c072f6a9ec0cccc47b266a661fd53b7))
+* **NotificaionBar:** `base` propを `paneled` propに変更 ([#7159](https://github.com/kufu/smarthr-ui/issues/7159)) ([d8f524b](https://github.com/kufu/smarthr-ui/commit/d8f524bd91aa0aa22fd18dde7cbbc28bf7dde8a4))
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008)) ([0346ec8](https://github.com/kufu/smarthr-ui/commit/0346ec8cfe992c17a138bef8fc5aed4e63c66761))
+
+
+### Code Refactoring
+
+* **Combobox:** ComboboxItem.labelを調整し、stringが必要な箇所に利用できるlabelText属性を追加 ([#6956](https://github.com/kufu/smarthr-ui/issues/6956)) ([39cd5ae](https://github.com/kufu/smarthr-ui/commit/39cd5ae19cf3b2b5a219479af0a90adb8ee0015d))
+* **createShadow:** styled-componentsに依存しないようにする ([#6946](https://github.com/kufu/smarthr-ui/issues/6946)) ([61fa071](https://github.com/kufu/smarthr-ui/commit/61fa071d7a67b60299ae3db8a245133b224b5087))
+* **Dialog:** DialogWrapperによる非制御パターンを廃止しDialogに一本化する ([#7130](https://github.com/kufu/smarthr-ui/issues/7130)) ([febd6ce](https://github.com/kufu/smarthr-ui/commit/febd6cee717927bd7b1523271e09ee21f8dc3330))
+* **Dialog:** onClickClose/onPressEscapeのイベント型を統一する ([#7040](https://github.com/kufu/smarthr-ui/issues/7040)) ([fc704c0](https://github.com/kufu/smarthr-ui/commit/fc704c03099d42c61d427bbc387136a408cbd361))
+
 ## [99.9.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.8.0...smarthr-ui-v99.9.0) (2026-10-01)
 
 
