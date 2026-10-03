@@ -58,33 +58,58 @@ export const ImageInsertButton: FC<Props> = memo(
     const { editor, hasImageUpload, getImageUploadHandlers, acceptedMimeTypes } =
       useRichTextEditorContext()
     const { localize } = useIntl()
-    const {
-      isOpen: isMenuOpen,
-      setIsOpen: setIsMenuOpen,
-      triggerRef,
-      renderDropdown,
-    } = useToolbarDropdown()
+    const [view, setView] = useState<'menu' | 'url'>('menu')
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(view)
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
-    const [showUrlDialog, setShowUrlDialog] = useState(false)
 
     const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
 
-    const latest = useLatest({ mimeTypes, triggerRef })
+    const latest = useLatest({ mimeTypes, isOpen, view, triggerRef, onKeyDown })
 
-    const functions = useMemo(
-      () => ({
+    const functions = useMemo(() => {
+      const focusTrigger = () => {
+        const trigger = latest.triggerRef.current
+
+        // 外れた/無効なトリガーへ戻すとフォーカスが body へ落ちる
+        if (trigger?.isConnected && !trigger.matches(':disabled')) trigger.focus()
+      }
+      const openMenu = (focusFirstItem: boolean) => {
+        setView('menu')
+        setIsOpen(true)
+
+        if (focusFirstItem) {
+          requestAnimationFrame(() => {
+            menuRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
+          })
+        }
+      }
+
+      return {
         handleClick: () => {
-          setIsMenuOpen((prev) => !prev)
+          if (latest.isOpen) setIsOpen(false)
+          else openMenu(false)
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            e.stopPropagation()
+
+            if (latest.isOpen && latest.view === 'url') setIsOpen(false)
+            else openMenu(true)
+
+            return
+          }
+
+          latest.onKeyDown?.(e)
         },
         handleUploadClick: () => {
-          setIsMenuOpen(false)
+          setIsOpen(false)
           fileInputRef.current?.click()
         },
         handleUrlClick: () => {
-          setIsMenuOpen(false)
-          setShowUrlDialog(true)
+          setView('url')
         },
         handleFileChange: (e: ChangeEvent<HTMLInputElement>) => {
           const file = e.target.files?.[0]
@@ -104,10 +129,11 @@ export const ImageInsertButton: FC<Props> = memo(
             .focus()
             .insertContent({ type: 'image', attrs: { src, alt: '' } })
             .run()
-          setShowUrlDialog(false)
+          setIsOpen(false)
         },
-        handleUrlDialogClose: () => {
-          setShowUrlDialog(false)
+        handleUrlCancel: () => {
+          setIsOpen(false)
+          focusTrigger()
         },
         handleMenuKeyDown: (e: KeyboardEvent) => {
           const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>('button')
@@ -130,14 +156,13 @@ export const ImageInsertButton: FC<Props> = memo(
             case 'Tab':
               e.preventDefault()
               e.stopPropagation()
-              setIsMenuOpen(false)
-              latest.triggerRef.current?.focus()
+              setIsOpen(false)
+              focusTrigger()
               break
           }
         },
-      }),
-      [editor, getImageUploadHandlers, setIsMenuOpen, latest],
-    )
+      }
+    }, [editor, getImageUploadHandlers, setIsOpen, latest])
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })
     const uploadLabel = localize({
@@ -155,48 +180,44 @@ export const ImageInsertButton: FC<Props> = memo(
           ref={mergedTriggerRef}
           disabled={disabled}
           tabIndex={tabIndex}
-          aria-expanded={isMenuOpen}
-          aria-haspopup="menu"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              e.stopPropagation()
-              setIsMenuOpen(true)
-              requestAnimationFrame(() => {
-                menuRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
-              })
-              return
-            }
-            onKeyDown?.(e)
-          }}
+          aria-expanded={isOpen}
+          aria-haspopup={isOpen && view === 'url' ? 'dialog' : 'menu'}
+          onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocus}
           onClick={functions.handleClick}
           icon={<FaImageIcon />}
           label={label}
         />
         {renderDropdown(
-          <div ref={menuRef} role="menu" className={CLASS_NAMES.menu} aria-label={label}>
-            {hasImageUpload && (
+          view === 'url' ? (
+            <ImageUrlPopover
+              handleInsert={functions.handleUrlInsert}
+              handleCancel={functions.handleUrlCancel}
+            />
+          ) : (
+            <div ref={menuRef} role="menu" className={CLASS_NAMES.menu} aria-label={label}>
+              {hasImageUpload && (
+                <button
+                  role="menuitem"
+                  type="button"
+                  className={CLASS_NAMES.menuItem}
+                  onClick={functions.handleUploadClick}
+                  onKeyDown={functions.handleMenuKeyDown}
+                >
+                  {uploadLabel}
+                </button>
+              )}
               <button
                 role="menuitem"
                 type="button"
                 className={CLASS_NAMES.menuItem}
-                onClick={functions.handleUploadClick}
+                onClick={functions.handleUrlClick}
                 onKeyDown={functions.handleMenuKeyDown}
               >
-                {uploadLabel}
+                {urlLabel}
               </button>
-            )}
-            <button
-              role="menuitem"
-              type="button"
-              className={CLASS_NAMES.menuItem}
-              onClick={functions.handleUrlClick}
-              onKeyDown={functions.handleMenuKeyDown}
-            >
-              {urlLabel}
-            </button>
-          </div>,
+            </div>
+          ),
         )}
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
@@ -208,12 +229,6 @@ export const ImageInsertButton: FC<Props> = memo(
           className="shr-hidden"
           aria-hidden="true"
           onChange={functions.handleFileChange}
-        />
-        <ImageUrlPopover
-          anchorRef={triggerRef}
-          isOpen={showUrlDialog}
-          handleInsert={functions.handleUrlInsert}
-          handleClose={functions.handleUrlDialogClose}
         />
       </>
     )

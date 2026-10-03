@@ -70,4 +70,33 @@ describe('ImageUrlPopover', () => {
     expect(screen.getByText(INVALID_MESSAGE)).toBeInTheDocument()
     expect(document.querySelector('.ProseMirror img')).toBeNull()
   })
+
+  it('開いているあいだはトリガーがダイアログを開いた状態を伝え、押すとメニューを開かずに閉じる', async () => {
+    const user = userEvent.setup()
+    await openUrlPopover(user)
+    const trigger = screen.getByRole('button', { name: '画像を挿入' })
+
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    expect(trigger).toHaveAttribute('aria-haspopup', 'dialog')
+
+    await user.click(trigger)
+
+    expect(screen.queryByRole('dialog', { name: 'URLから挿入' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(trigger).toHaveFocus()
+  })
+
+  it('開いているあいだにトリガーで Enter を押すと、メニューを開かずに閉じる', async () => {
+    const user = userEvent.setup()
+    await openUrlPopover(user)
+    const trigger = screen.getByRole('button', { name: '画像を挿入' })
+
+    trigger.focus()
+    await user.keyboard('{Enter}')
+
+    expect(screen.queryByRole('dialog', { name: 'URLから挿入' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    expect(trigger).toHaveFocus()
+  })
 })
