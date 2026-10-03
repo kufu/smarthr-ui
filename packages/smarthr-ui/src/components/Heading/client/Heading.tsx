@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type PropsWithChildren,
   memo,
@@ -14,7 +13,7 @@ import { LevelContext } from '../../SectioningContent'
 import { STYLE_TYPE_MAP, Text } from '../../Text'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-type TextProps = ComponentProps<typeof Text>
+type TextProps = ComponentPropsWithRef<typeof Text>
 type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 type StylingProps =
@@ -48,7 +47,7 @@ type BaseProps = PropsWithChildren<{
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
   /** テキスト左に設置するアイコン */
-  icon?: ComponentProps<typeof Text>['icon']
+  icon?: TextProps['icon']
 }> &
   StylingProps
 
