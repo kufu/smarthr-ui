@@ -1,8 +1,18 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  type FC,
+  type KeyboardEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { FaCaretDownIcon } from 'smarthr-ui'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
@@ -50,45 +60,43 @@ export const TextColorPickerButton: FC<Props> = memo(
 
     const classNames = classNameGenerator()
 
-    const pushRecent = useCallback((hex: string) => {
-      const normalized = normalizeHex(hex, DEFAULT_COLOR)
-      setRecentColors((prev) => {
-        const without = prev.filter((c) => normalizeHex(c, DEFAULT_COLOR) !== normalized)
-        return [normalized, ...without].slice(0, RECENT_LIMIT)
-      })
-    }, [])
+    const latest = useLatest({ onKeyDown: onKeyDownProp })
 
-    const onApplyColor = useCallback(
-      (hex: string) => {
-        setEditorColor(editor, 'color', hex)
-      },
-      [editor],
-    )
-
-    const onUnsetColor = useCallback(() => {
-      setEditorColor(editor, 'color', null)
-    }, [editor])
-
-    const handleTriggerKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(true)
-            requestAnimationFrame(() => {
-              paletteRef.current
-                ?.querySelector<HTMLButtonElement>('[data-color-swatch="standard"]')
-                ?.focus()
-            })
-            break
-          default:
-            onKeyDownProp?.(e)
-        }
-      },
-      [onKeyDownProp, setIsOpen],
+    const functions = useMemo(
+      () => ({
+        pushRecent: (hex: string) => {
+          const normalized = normalizeHex(hex, DEFAULT_COLOR)
+          setRecentColors((prev) => {
+            const without = prev.filter((c) => normalizeHex(c, DEFAULT_COLOR) !== normalized)
+            return [normalized, ...without].slice(0, RECENT_LIMIT)
+          })
+        },
+        handleApplyColor: (hex: string) => {
+          setEditorColor(editor, 'color', hex)
+        },
+        handleUnsetColor: () => {
+          setEditorColor(editor, 'color', null)
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'Enter':
+            case ' ':
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              requestAnimationFrame(() => {
+                paletteRef.current
+                  ?.querySelector<HTMLButtonElement>('[data-color-swatch="standard"]')
+                  ?.focus()
+              })
+              break
+            default:
+              latest.onKeyDown?.(e)
+          }
+        },
+      }),
+      [editor, setIsOpen, latest],
     )
 
     useEffect(() => {
@@ -171,7 +179,7 @@ export const TextColorPickerButton: FC<Props> = memo(
             aria-label={`${colorLabel}: ${currentColorLabel}`}
             aria-expanded={isOpen}
             aria-haspopup="dialog"
-            onKeyDown={handleTriggerKeyDown}
+            onKeyDown={functions.handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
           >
@@ -193,7 +201,7 @@ export const TextColorPickerButton: FC<Props> = memo(
             defaultColor={DEFAULT_COLOR}
             currentColor={currentColor}
             recentColors={recentColors}
-            pushRecent={pushRecent}
+            pushRecent={functions.pushRecent}
             customColor={customColor}
             dialogLabel={colorLabel}
             standardSectionLabel={standardSectionLabel}
@@ -205,8 +213,8 @@ export const TextColorPickerButton: FC<Props> = memo(
             recentSwatchLabel={recentSwatchLabel}
             setIsOpen={setIsOpen}
             setCustomColor={setCustomColor}
-            onApplyColor={onApplyColor}
-            onUnsetColor={onUnsetColor}
+            handleApplyColor={functions.handleApplyColor}
+            handleUnsetColor={functions.handleUnsetColor}
           />,
         )}
       </>

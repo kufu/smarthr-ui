@@ -5,13 +5,14 @@ import {
   type FormEvent,
   type KeyboardEvent,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { Button, Cluster, FaLinkIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
@@ -72,10 +73,81 @@ export const LinkButton: FC<Props> = memo(
       defaultText: '有効なURLを入力してください',
     })
 
-    const closePopup = useCallback(() => {
-      setIsOpen(false)
-      triggerRef.current?.focus()
-    }, [setIsOpen, triggerRef])
+    const latest = useLatest({
+      text,
+      url,
+      requiredMessage,
+      invalidMessage,
+      triggerRef,
+      onKeyDown: onKeyDownProp,
+    })
+
+    const functions = useMemo(() => {
+      const closePopup = () => {
+        setIsOpen(false)
+        latest.triggerRef.current?.focus()
+      }
+
+      return {
+        handleSubmit: (e: FormEvent<HTMLFormElement>) => {
+          e.preventDefault()
+          e.stopPropagation()
+          const trimmed = latest.url.trim()
+          if (!trimmed) {
+            setError(latest.requiredMessage)
+            return
+          }
+          if (!isHttpUrl(trimmed) && !isMailtoUrl(trimmed)) {
+            setError(latest.invalidMessage)
+            return
+          }
+
+          const { from, to } = editor.state.selection
+          const selectedText = editor.state.doc.textBetween(from, to, '')
+
+          if (selectedText && latest.text === selectedText) {
+            editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run()
+          } else {
+            const finalText = latest.text || selectedText || trimmed
+            editor
+              .chain()
+              .focus()
+              .extendMarkRange('link')
+              .insertContent({
+                type: 'text',
+                text: finalText,
+                marks: [{ type: 'link', attrs: { href: trimmed } }],
+              })
+              .run()
+          }
+          setIsOpen(false)
+        },
+        handleUnsetLink: () => {
+          editor.chain().focus().extendMarkRange('link').unsetLink().run()
+          setIsOpen(false)
+        },
+        handlePopupKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            e.stopPropagation()
+            closePopup()
+          }
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'Enter':
+            case ' ':
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              break
+            default:
+              latest.onKeyDown?.(e)
+          }
+        },
+      }
+    }, [editor, setIsOpen, latest])
 
     // ショートカット（Mod-K）からポップオーバーを開けるよう storage にハンドラを登録。
     //
@@ -87,7 +159,7 @@ export const LinkButton: FC<Props> = memo(
       if (disabled || !editor.storage.linkShortcut) return
 
       const handler = () => {
-        triggerRef.current?.focus()
+        latest.triggerRef.current?.focus()
         setIsOpen(true)
       }
 
@@ -98,77 +170,7 @@ export const LinkButton: FC<Props> = memo(
           editor.storage.linkShortcut.openLinkPopover = null
         }
       }
-    }, [disabled, editor, setIsOpen, triggerRef])
-
-    const handleSubmit = useCallback(
-      (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
-        const trimmed = url.trim()
-        if (!trimmed) {
-          setError(requiredMessage)
-          return
-        }
-        if (!isHttpUrl(trimmed) && !isMailtoUrl(trimmed)) {
-          setError(invalidMessage)
-          return
-        }
-
-        const { from, to } = editor.state.selection
-        const selectedText = editor.state.doc.textBetween(from, to, '')
-
-        if (selectedText && text === selectedText) {
-          editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run()
-        } else {
-          const finalText = text || selectedText || trimmed
-          editor
-            .chain()
-            .focus()
-            .extendMarkRange('link')
-            .insertContent({
-              type: 'text',
-              text: finalText,
-              marks: [{ type: 'link', attrs: { href: trimmed } }],
-            })
-            .run()
-        }
-        setIsOpen(false)
-      },
-      [editor, url, text, requiredMessage, invalidMessage, setIsOpen],
-    )
-
-    const handleUnsetLink = useCallback(() => {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run()
-      setIsOpen(false)
-    }, [editor, setIsOpen])
-
-    const handlePopupKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.preventDefault()
-          e.stopPropagation()
-          closePopup()
-        }
-      },
-      [closePopup],
-    )
-
-    const handleTriggerKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(true)
-            break
-          default:
-            onKeyDownProp?.(e)
-        }
-      },
-      [setIsOpen, onKeyDownProp],
-    )
+    }, [disabled, editor, setIsOpen, latest])
 
     // ポップアップ表示時: 選択範囲・既存リンクから値を投入し URL Input にフォーカス
     // 閉じた時: 入力値とエラーをリセット
@@ -209,7 +211,7 @@ export const LinkButton: FC<Props> = memo(
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           onClick={() => setIsOpen((prev) => !prev)}
-          onKeyDown={handleTriggerKeyDown}
+          onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
           icon={<FaLinkIcon />}
           label={label}
@@ -217,7 +219,11 @@ export const LinkButton: FC<Props> = memo(
         {renderDropdown(
           <div ref={popupRef} role="dialog" className={POPUP_CLASS} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+            <form
+              noValidate
+              onSubmit={functions.handleSubmit}
+              onKeyDown={functions.handlePopupKeyDown}
+            >
               <Stack gap={0.75}>
                 <FormControl label={textLabel}>
                   <Input
@@ -251,7 +257,7 @@ export const LinkButton: FC<Props> = memo(
                       type="button"
                       variant="text"
                       size="S"
-                      onClick={handleUnsetLink}
+                      onClick={functions.handleUnsetLink}
                       prefix={<FaLinkIcon />}
                     >
                       {unsetText}

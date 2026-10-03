@@ -5,13 +5,14 @@ import {
   type FormEvent,
   type KeyboardEvent,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { Button, Cluster, FaTableIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -87,62 +88,57 @@ export const TableInsertDropdown: FC<Props> = memo(
       defaultText: '挿入',
     })
 
-    const closePopup = useCallback(() => {
-      setIsOpen(false)
-      setError('')
-      triggerRef.current?.focus()
-    }, [setIsOpen, triggerRef])
+    const latest = useLatest({ rows, cols, errorMessage, triggerRef, onKeyDown: onKeyDownProp })
 
-    const handleSubmit = useCallback(
-      (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
-        if (!isValidSize(rows, MAX_ROWS) || !isValidSize(cols, MAX_COLS)) {
-          setError(errorMessage)
-          return
-        }
-        editor
-          .chain()
-          .focus()
-          .insertTable({
-            rows: Number(rows),
-            cols: Number(cols),
-            withHeaderRow: true,
-          })
-          .run()
+    const functions = useMemo(() => {
+      const closePopup = () => {
         setIsOpen(false)
         setError('')
-      },
-      [editor, rows, cols, errorMessage, setIsOpen],
-    )
+        latest.triggerRef.current?.focus()
+      }
 
-    const handlePopupKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
+      return {
+        handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
-          closePopup()
-        }
-      },
-      [closePopup],
-    )
-
-    const handleTriggerKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'ArrowDown':
+          if (!isValidSize(latest.rows, MAX_ROWS) || !isValidSize(latest.cols, MAX_COLS)) {
+            setError(latest.errorMessage)
+            return
+          }
+          editor
+            .chain()
+            .focus()
+            .insertTable({
+              rows: Number(latest.rows),
+              cols: Number(latest.cols),
+              withHeaderRow: true,
+            })
+            .run()
+          setIsOpen(false)
+          setError('')
+        },
+        handlePopupKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
             e.preventDefault()
             e.stopPropagation()
-            setIsOpen(true)
-            break
-          default:
-            onKeyDownProp?.(e)
-        }
-      },
-      [setIsOpen, onKeyDownProp],
-    )
+            closePopup()
+          }
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'Enter':
+            case ' ':
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              break
+            default:
+              latest.onKeyDown?.(e)
+          }
+        },
+      }
+    }, [editor, setIsOpen, latest])
 
     // ポップアップ表示時に行数Inputへフォーカス
     useEffect(() => {
@@ -166,7 +162,7 @@ export const TableInsertDropdown: FC<Props> = memo(
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           onClick={() => setIsOpen((prev) => !prev)}
-          onKeyDown={handleTriggerKeyDown}
+          onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
           icon={<FaTableIcon />}
           label={tableLabel}
@@ -174,7 +170,11 @@ export const TableInsertDropdown: FC<Props> = memo(
         {renderDropdown(
           <div ref={popupRef} role="dialog" className={classNames.popup()} aria-label={tableLabel}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+            <form
+              noValidate
+              onSubmit={functions.handleSubmit}
+              onKeyDown={functions.handlePopupKeyDown}
+            >
               <Stack gap={0.75}>
                 <Cluster gap={0.75}>
                   <FormControl label={rowsLabel}>

@@ -3,6 +3,8 @@
 import { CellSelection } from '@tiptap/pm/tables'
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
+import { useLatest } from '../../../../hooks/useLatest'
+
 import { TableContextMenu } from './TableContextMenu'
 import { getTableControlOrigin } from './tableGeometry'
 import { type TableScope, getTableTarget } from './tableTarget'
@@ -41,14 +43,15 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
   const openRowMenu = useRef<((pos?: number) => void) | null>(null)
   const openCellMenu = useRef<((pos?: number) => void) | null>(null)
   const updateGeometry = useRef<(() => void) | null>(null)
-  const onTargetLock = useCallback((scope: TableScope, pos: number | null) => {
+  const handleTargetLock = useCallback((scope: TableScope, pos: number | null) => {
     if (pos !== null) lockedTarget.current = { scope, pos }
     else if (lockedTarget.current?.scope === scope) lockedTarget.current = null
     updateGeometry.current?.()
   }, [])
   const [geometry, setGeometry] = useState<Geometry | null>(null)
+  const latest = useLatest({ containerRef })
   useEffect(() => {
-    const container = containerRef.current
+    const container = latest.containerRef.current
     if (!container) return
     let hovered: number | undefined
     const update = () => {
@@ -194,7 +197,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       window.removeEventListener('scroll', update, true)
       observer.disconnect()
     }
-  }, [editor, containerRef])
+  }, [editor, latest])
   if (!geometry) return null
   const { pos, cellPos, left, top, width, height, tableLeft, tableTop, highlight } = geometry
   return (
@@ -220,7 +223,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
           width: 22,
           height: 22,
         }}
-        onTargetLock={onTargetLock}
+        handleTargetLock={handleTargetLock}
       />
       <TableContextMenu
         openMenuRef={openColumnMenu}
@@ -229,7 +232,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
         cellPos={pos}
         scope="column"
         style={{ top: tableTop - 26, left, width, height: 18 }}
-        onTargetLock={onTargetLock}
+        handleTargetLock={handleTargetLock}
       />
       <TableContextMenu
         openMenuRef={openRowMenu}
@@ -238,7 +241,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
         cellPos={pos}
         scope="row"
         style={{ top, left: Math.max(0, tableLeft - 26), width: 18, height }}
-        onTargetLock={onTargetLock}
+        handleTargetLock={handleTargetLock}
       />
       <TableContextMenu
         openMenuRef={openCellMenu}
@@ -253,7 +256,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
           width: 24,
           height: 28,
         }}
-        onTargetLock={onTargetLock}
+        handleTargetLock={handleTargetLock}
       />
     </>
   )

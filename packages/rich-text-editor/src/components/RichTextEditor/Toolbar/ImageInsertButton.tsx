@@ -5,12 +5,13 @@ import {
   type FC,
   type KeyboardEvent,
   memo,
-  useCallback,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { FaImageIcon } from 'smarthr-ui'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -60,76 +61,72 @@ export const ImageInsertButton: FC<Props> = memo(
     const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
     const classNames = classNameGenerator()
 
-    const handleClick = useCallback(() => {
-      setIsMenuOpen((prev) => !prev)
-    }, [setIsMenuOpen])
+    const latest = useLatest({ mimeTypes, triggerRef })
 
-    const handleUploadClick = useCallback(() => {
-      setIsMenuOpen(false)
-      fileInputRef.current?.click()
-    }, [setIsMenuOpen])
+    const functions = useMemo(
+      () => ({
+        handleClick: () => {
+          setIsMenuOpen((prev) => !prev)
+        },
+        handleUploadClick: () => {
+          setIsMenuOpen(false)
+          fileInputRef.current?.click()
+        },
+        handleUrlClick: () => {
+          setIsMenuOpen(false)
+          setShowUrlDialog(true)
+        },
+        handleFileChange: (e: ChangeEvent<HTMLInputElement>) => {
+          const file = e.target.files?.[0]
+          const { onImageUpload, onImageUploadError } = getImageUploadHandlers()
+          // accept 属性はダイアログの絞り込みヒントでしかなく利用者が回避できるため、
+          // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する
+          if (file && onImageUpload && matchesMimeType(file.type, latest.mimeTypes)) {
+            uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
+          }
+          if (e.target) {
+            e.target.value = ''
+          }
+        },
+        handleUrlInsert: (src: string) => {
+          editor
+            .chain()
+            .focus()
+            .insertContent({ type: 'image', attrs: { src, alt: '' } })
+            .run()
+          setShowUrlDialog(false)
+        },
+        handleUrlDialogClose: () => {
+          setShowUrlDialog(false)
+        },
+        handleMenuKeyDown: (e: KeyboardEvent) => {
+          const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>('button')
+          if (!buttons) return
+          const idx = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
 
-    const handleUrlClick = useCallback(() => {
-      setIsMenuOpen(false)
-      setShowUrlDialog(true)
-    }, [setIsMenuOpen])
-
-    const handleFileChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        const { onImageUpload, onImageUploadError } = getImageUploadHandlers()
-        // accept 属性はダイアログの絞り込みヒントでしかなく利用者が回避できるため、
-        // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する
-        if (file && onImageUpload && matchesMimeType(file.type, mimeTypes)) {
-          uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
-        }
-        if (e.target) {
-          e.target.value = ''
-        }
-      },
-      [editor, mimeTypes, getImageUploadHandlers],
-    )
-
-    const handleUrlInsert = useCallback(
-      (src: string) => {
-        editor
-          .chain()
-          .focus()
-          .insertContent({ type: 'image', attrs: { src, alt: '' } })
-          .run()
-        setShowUrlDialog(false)
-      },
-      [editor],
-    )
-
-    const handleMenuKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>('button')
-        if (!buttons) return
-        const idx = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[(idx + 1) % buttons.length]?.focus()
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
-            break
-          // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
-          case 'Escape':
-          case 'Tab':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsMenuOpen(false)
-            triggerRef.current?.focus()
-            break
-        }
-      },
-      [setIsMenuOpen, triggerRef],
+          switch (e.key) {
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[(idx + 1) % buttons.length]?.focus()
+              break
+            case 'ArrowUp':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[(idx - 1 + buttons.length) % buttons.length]?.focus()
+              break
+            // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
+            case 'Escape':
+            case 'Tab':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsMenuOpen(false)
+              latest.triggerRef.current?.focus()
+              break
+          }
+        },
+      }),
+      [editor, getImageUploadHandlers, setIsMenuOpen, latest],
     )
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })
@@ -166,7 +163,7 @@ export const ImageInsertButton: FC<Props> = memo(
             onKeyDown?.(e)
           }}
           onFocus={onFocus}
-          onClick={handleClick}
+          onClick={functions.handleClick}
           icon={<FaImageIcon />}
           label={label}
         />
@@ -177,8 +174,8 @@ export const ImageInsertButton: FC<Props> = memo(
                 role="menuitem"
                 type="button"
                 className={classNames.menuItem()}
-                onClick={handleUploadClick}
-                onKeyDown={handleMenuKeyDown}
+                onClick={functions.handleUploadClick}
+                onKeyDown={functions.handleMenuKeyDown}
               >
                 {uploadLabel}
               </button>
@@ -187,8 +184,8 @@ export const ImageInsertButton: FC<Props> = memo(
               role="menuitem"
               type="button"
               className={classNames.menuItem()}
-              onClick={handleUrlClick}
-              onKeyDown={handleMenuKeyDown}
+              onClick={functions.handleUrlClick}
+              onKeyDown={functions.handleMenuKeyDown}
             >
               {urlLabel}
             </button>
@@ -203,13 +200,13 @@ export const ImageInsertButton: FC<Props> = memo(
           tabIndex={-1}
           className="shr-hidden"
           aria-hidden="true"
-          onChange={handleFileChange}
+          onChange={functions.handleFileChange}
         />
         <ImageUrlPopover
           anchorRef={triggerRef}
           isOpen={showUrlDialog}
-          onInsert={handleUrlInsert}
-          onClose={() => setShowUrlDialog(false)}
+          handleInsert={functions.handleUrlInsert}
+          handleClose={functions.handleUrlDialogClose}
         />
       </>
     )

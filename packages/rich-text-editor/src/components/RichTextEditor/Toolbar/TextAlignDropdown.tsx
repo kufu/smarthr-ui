@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useRef } from 'react'
+import { type FC, type KeyboardEvent, memo, useMemo, useRef } from 'react'
 import {
   FaAlignCenterIcon,
   FaAlignJustifyIcon,
@@ -9,6 +9,7 @@ import {
   FaCaretDownIcon,
 } from 'smarthr-ui'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -107,88 +108,84 @@ export const TextAlignDropdown: FC<Props> = memo(
       defaultText: 'テキスト配置',
     })
 
-    const selectOption = useCallback(
-      (value: string) => {
-        if (value === 'left') {
-          editor.chain().focus().unsetTextAlign().run()
-        } else {
-          editor.chain().focus().setTextAlign(value).run()
-        }
-        setIsOpen(false)
-        triggerRef.current?.focus()
-      },
-      [editor, setIsOpen, triggerRef],
-    )
+    const latest = useLatest({ currentAlign, triggerRef, onKeyDown: onKeyDownProp })
 
-    const handleTriggerKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(true)
-            requestAnimationFrame(() => {
-              const currentIndex = ALIGN_OPTIONS.findIndex((o) => o.value === currentAlign)
-              const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-              target?.[currentIndex >= 0 ? currentIndex : 0]?.focus()
-            })
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(true)
-            requestAnimationFrame(() => {
-              const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-              buttons?.[buttons.length - 1]?.focus()
-            })
-            break
-          default:
-            onKeyDownProp?.(e)
-        }
-      },
-      [currentAlign, onKeyDownProp, setIsOpen],
-    )
+    const functions = useMemo(
+      () => ({
+        selectOption: (value: string) => {
+          if (value === 'left') {
+            editor.chain().focus().unsetTextAlign().run()
+          } else {
+            editor.chain().focus().setTextAlign(value).run()
+          }
+          setIsOpen(false)
+          latest.triggerRef.current?.focus()
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'Enter':
+            case ' ':
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              requestAnimationFrame(() => {
+                const currentIndex = ALIGN_OPTIONS.findIndex((o) => o.value === latest.currentAlign)
+                const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+                target?.[currentIndex >= 0 ? currentIndex : 0]?.focus()
+              })
+              break
+            case 'ArrowUp':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              requestAnimationFrame(() => {
+                const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+                buttons?.[buttons.length - 1]?.focus()
+              })
+              break
+            default:
+              latest.onKeyDown?.(e)
+          }
+        },
+        handleOptionKeyDown: (e: KeyboardEvent) => {
+          const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+          if (!buttons) return
+          const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
 
-    const handleOptionKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-        if (!buttons) return
-        const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
-
-        switch (e.key) {
-          case 'ArrowRight':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[(currentIndex + 1) % buttons.length]?.focus()
-            break
-          case 'ArrowLeft':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
-            break
-          case 'Home':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[0]?.focus()
-            break
-          case 'End':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[buttons.length - 1]?.focus()
-            break
-          // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
-          case 'Escape':
-          case 'Tab':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(false)
-            triggerRef.current?.focus()
-            break
-        }
-      },
-      [setIsOpen, triggerRef],
+          switch (e.key) {
+            case 'ArrowRight':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[(currentIndex + 1) % buttons.length]?.focus()
+              break
+            case 'ArrowLeft':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
+              break
+            case 'Home':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[0]?.focus()
+              break
+            case 'End':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[buttons.length - 1]?.focus()
+              break
+            // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
+            case 'Escape':
+            case 'Tab':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(false)
+              latest.triggerRef.current?.focus()
+              break
+          }
+        },
+      }),
+      [editor, setIsOpen, latest],
     )
 
     return (
@@ -206,7 +203,7 @@ export const TextAlignDropdown: FC<Props> = memo(
             aria-expanded={isOpen}
             aria-haspopup="listbox"
             aria-label={`${dropdownLabel}: ${currentLabel}`}
-            onKeyDown={handleTriggerKeyDown}
+            onKeyDown={functions.handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
           >
@@ -235,8 +232,8 @@ export const TextAlignDropdown: FC<Props> = memo(
                     aria-selected={isSelected}
                     aria-label={label}
                     aria-keyshortcuts={toAriaKeyShortcuts(option.shortcut, isApple)}
-                    onClick={() => selectOption(option.value)}
-                    onKeyDown={handleOptionKeyDown}
+                    onClick={() => functions.selectOption(option.value)}
+                    onKeyDown={functions.handleOptionKeyDown}
                   >
                     {getAlignIcon(option.value)}
                   </button>

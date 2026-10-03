@@ -3,6 +3,8 @@
 import { type Editor, useEditorState } from '@tiptap/react'
 import { type RefObject, useEffect, useState } from 'react'
 
+import { useLatest } from '../../../../hooks/useLatest'
+
 export type ActiveImageInfo = {
   pos: number
   /** container 相対の画像矩形 */
@@ -35,6 +37,7 @@ export const useActiveImageRect = (
   })
 
   const [info, setInfo] = useState<ActiveImageInfo | null>(null)
+  const latest = useLatest({ containerRef })
 
   useEffect(() => {
     if (pos === null) {
@@ -44,7 +47,7 @@ export const useActiveImageRect = (
 
     const updateRect = () => {
       const imgEl = resolveImageEl(editor.view.nodeDOM(pos) as HTMLElement | null)
-      const containerEl = containerRef.current
+      const containerEl = latest.containerRef.current
       if (!imgEl || !containerEl) return
       const imgRect = imgEl.getBoundingClientRect()
       const containerRect = containerEl.getBoundingClientRect()
@@ -71,7 +74,7 @@ export const useActiveImageRect = (
     const observed = resolveImageEl(editor.view.nodeDOM(pos) as HTMLElement | null)
     const resizeObserver = new ResizeObserver(updateRect)
     if (observed) resizeObserver.observe(observed)
-    if (containerRef.current) resizeObserver.observe(containerRef.current)
+    if (latest.containerRef.current) resizeObserver.observe(latest.containerRef.current)
     // スクロールは位置の変化なので ResizeObserver で検知できない。capture phase で祖先全部のスクロールを拾う。
     window.addEventListener('scroll', updateRect, true)
 
@@ -79,7 +82,7 @@ export const useActiveImageRect = (
       resizeObserver.disconnect()
       window.removeEventListener('scroll', updateRect, true)
     }
-  }, [editor, pos, containerRef])
+  }, [editor, pos, latest])
 
   return info
 }

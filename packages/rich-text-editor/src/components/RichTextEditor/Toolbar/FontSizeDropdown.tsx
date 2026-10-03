@@ -1,8 +1,9 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useCallback, useRef } from 'react'
+import { type FC, type KeyboardEvent, memo, useMemo, useRef } from 'react'
 import { FaCaretDownIcon, FaCheckIcon } from 'smarthr-ui'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -95,89 +96,85 @@ export const FontSizeDropdown: FC<Props> = memo(
       defaultText: 'フォントサイズ',
     })
 
-    const selectOption = useCallback(
-      (value: string | null) => {
-        if (value === null) {
-          editor.chain().focus().unsetFontSize().run()
-        } else {
-          editor.chain().focus().setFontSize(value).run()
-        }
-        setIsOpen(false)
-        triggerRef.current?.focus()
-      },
-      [editor, setIsOpen, triggerRef],
-    )
+    const latest = useLatest({ currentSize, triggerRef, onKeyDown: onKeyDownProp })
 
-    const handleTriggerKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(true)
-            requestAnimationFrame(() => {
-              const currentIndex = FONT_SIZES.findIndex((s) => s.px === currentSize)
-              const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-              const defaultIndex = FONT_SIZES.findIndex((s) => s.value === null)
-              target?.[currentIndex >= 0 ? currentIndex : defaultIndex]?.focus()
-            })
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(true)
-            requestAnimationFrame(() => {
-              const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-              buttons?.[buttons.length - 1]?.focus()
-            })
-            break
-          default:
-            onKeyDownProp?.(e)
-        }
-      },
-      [currentSize, onKeyDownProp, setIsOpen],
-    )
+    const functions = useMemo(
+      () => ({
+        selectOption: (value: string | null) => {
+          if (value === null) {
+            editor.chain().focus().unsetFontSize().run()
+          } else {
+            editor.chain().focus().setFontSize(value).run()
+          }
+          setIsOpen(false)
+          latest.triggerRef.current?.focus()
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'Enter':
+            case ' ':
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              requestAnimationFrame(() => {
+                const currentIndex = FONT_SIZES.findIndex((s) => s.px === latest.currentSize)
+                const target = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+                const defaultIndex = FONT_SIZES.findIndex((s) => s.value === null)
+                target?.[currentIndex >= 0 ? currentIndex : defaultIndex]?.focus()
+              })
+              break
+            case 'ArrowUp':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              requestAnimationFrame(() => {
+                const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+                buttons?.[buttons.length - 1]?.focus()
+              })
+              break
+            default:
+              latest.onKeyDown?.(e)
+          }
+        },
+        handleOptionKeyDown: (e: KeyboardEvent) => {
+          const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
+          if (!buttons) return
+          const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
 
-    const handleOptionKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        const buttons = listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
-        if (!buttons) return
-        const currentIndex = Array.from(buttons).indexOf(e.currentTarget as HTMLButtonElement)
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[(currentIndex + 1) % buttons.length]?.focus()
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
-            break
-          case 'Home':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[0]?.focus()
-            break
-          case 'End':
-            e.preventDefault()
-            e.stopPropagation()
-            buttons[buttons.length - 1]?.focus()
-            break
-          // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
-          case 'Escape':
-          case 'Tab':
-            e.preventDefault()
-            e.stopPropagation()
-            setIsOpen(false)
-            triggerRef.current?.focus()
-            break
-        }
-      },
-      [setIsOpen, triggerRef],
+          switch (e.key) {
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[(currentIndex + 1) % buttons.length]?.focus()
+              break
+            case 'ArrowUp':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[(currentIndex - 1 + buttons.length) % buttons.length]?.focus()
+              break
+            case 'Home':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[0]?.focus()
+              break
+            case 'End':
+              e.preventDefault()
+              e.stopPropagation()
+              buttons[buttons.length - 1]?.focus()
+              break
+            // ポータルは body 末尾にあり Tab の既定の移動先が無いため、Escape と同じくトリガーへ戻す
+            case 'Escape':
+            case 'Tab':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(false)
+              latest.triggerRef.current?.focus()
+              break
+          }
+        },
+      }),
+      [editor, setIsOpen, latest],
     )
 
     return (
@@ -195,7 +192,7 @@ export const FontSizeDropdown: FC<Props> = memo(
             aria-expanded={isOpen}
             aria-haspopup="listbox"
             aria-label={`${dropdownLabel}: ${currentLabel}`}
-            onKeyDown={handleTriggerKeyDown}
+            onKeyDown={functions.handleTriggerKeyDown}
             onClick={() => setIsOpen((prev) => !prev)}
             onFocus={onFocusProp}
           >
@@ -220,8 +217,8 @@ export const FontSizeDropdown: FC<Props> = memo(
                   type="button"
                   className={classNames.option()}
                   aria-selected={isSelected}
-                  onClick={() => selectOption(option.value)}
-                  onKeyDown={handleOptionKeyDown}
+                  onClick={() => functions.selectOption(option.value)}
+                  onKeyDown={functions.handleOptionKeyDown}
                 >
                   <span className={classNames.checkIcon()}>
                     {isSelected && <FaCheckIcon className="shr-text-main" />}

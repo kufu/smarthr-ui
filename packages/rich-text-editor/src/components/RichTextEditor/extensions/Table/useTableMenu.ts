@@ -18,9 +18,9 @@ type Props = {
   cellPos: number
   scope: TableScope
   openMenuRef?: MutableRefObject<((pos?: number) => void) | null>
-  onTargetLock: (scope: TableScope, pos: number | null) => void
+  handleTargetLock: (scope: TableScope, pos: number | null) => void
 }
-export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, onTargetLock }: Props) => {
+export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, handleTargetLock }: Props) => {
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const [showColors, setShowColors] = useState(false)
   // 列のハンドルは矩形が列幅そのものなので、既定の左端揃えでは選択中の列が隠れる
@@ -53,7 +53,7 @@ export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, onTargetLock
     returnToTrigger.current = fromTrigger
     returnPos.current = pos
     setMenuCellPos(pos)
-    onTargetLock(scope, pos)
+    handleTargetLock(scope, pos)
     if (selectTableTarget(editor, pos, scope)) {
       setShowColors(false)
       setIsOpen(true)
@@ -73,8 +73,8 @@ export const useTableMenu = ({ editor, cellPos, scope, openMenuRef, onTargetLock
   })
   useEffect(() => {
     if (!isOpen) return
-    return () => onTargetLock(scope, null)
-  }, [isOpen, scope, onTargetLock])
+    return () => handleTargetLock(scope, null)
+  }, [isOpen, scope, handleTargetLock])
   useEffect(() => {
     if (!isOpen) return
     const handleScroll = (event: Event) => {

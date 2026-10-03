@@ -1,6 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { useLatest } from '../../../hooks/useLatest'
 
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react'
 
@@ -14,25 +16,29 @@ export const useEditorResize = ({ contentRef, enabled }: UseEditorResizeArgs) =>
   // ドラッグ中の起点。state にすると pointermove ごとに購読し直す必要があるため ref に置く
   const dragOriginRef = useRef<{ clientY: number; height: number; minHeight: number } | null>(null)
 
-  const handlePointerDown = useCallback(
-    (e: ReactPointerEvent) => {
-      if (!enabled) return
+  const latest = useLatest({ enabled, draggedHeight, contentRef })
 
-      const proseMirror = contentRef.current?.querySelector<HTMLElement>('.ProseMirror')
+  const functions = useMemo(
+    () => ({
+      handlePointerDown: (e: ReactPointerEvent) => {
+        if (!latest.enabled) return
 
-      if (!proseMirror) return
+        const proseMirror = latest.contentRef.current?.querySelector<HTMLElement>('.ProseMirror')
 
-      // ドラッグ中に本文のテキストが選択されるのを防ぐ
-      e.preventDefault()
+        if (!proseMirror) return
 
-      dragOriginRef.current = {
-        clientY: e.clientY,
-        height: draggedHeight ?? proseMirror.getBoundingClientRect().height,
-        // 下限は CSS の min-height を正とする。px を直書きするとトークンと二重管理になるため
-        minHeight: parseFloat(getComputedStyle(proseMirror).minHeight) || 0,
-      }
-    },
-    [enabled, draggedHeight, contentRef],
+        // ドラッグ中に本文のテキストが選択されるのを防ぐ
+        e.preventDefault()
+
+        dragOriginRef.current = {
+          clientY: e.clientY,
+          height: latest.draggedHeight ?? proseMirror.getBoundingClientRect().height,
+          // 下限は CSS の min-height を正とする。px を直書きするとトークンと二重管理になるため
+          minHeight: parseFloat(getComputedStyle(proseMirror).minHeight) || 0,
+        }
+      },
+    }),
+    [latest],
   )
 
   // setPointerCapture ではなく window で受ける。ハンドルの外にポインタが出ても
@@ -63,5 +69,5 @@ export const useEditorResize = ({ contentRef, enabled }: UseEditorResizeArgs) =>
     }
   }, [])
 
-  return { draggedHeight, handlePointerDown }
+  return { draggedHeight, handlePointerDown: functions.handlePointerDown }
 }

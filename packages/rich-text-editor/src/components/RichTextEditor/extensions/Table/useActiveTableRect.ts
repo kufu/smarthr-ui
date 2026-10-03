@@ -4,6 +4,8 @@ import { CellSelection, TableMap } from '@tiptap/pm/tables'
 import { type Editor, useEditorState } from '@tiptap/react'
 import { type RefObject, useEffect, useRef, useState } from 'react'
 
+import { useLatest } from '../../../../hooks/useLatest'
+
 import { detectEdgeCells } from './helpers/edgeCellDetection'
 import { getRelativeRect, getTableControlOrigin, resolveTableDisplayElement } from './tableGeometry'
 
@@ -93,6 +95,7 @@ export const useActiveTableRect = (
   edgeFlagsRef.current = { isRightmostColumnSelected, isBottommostRowSelected }
 
   const [info, setInfo] = useState<ActiveTableInfo | null>(null)
+  const latest = useLatest({ containerRef })
 
   useEffect(() => {
     if (tablePos === null) {
@@ -103,7 +106,7 @@ export const useActiveTableRect = (
     const updateRect = () => {
       const tableEl = resolveTableEl(editor.view.nodeDOM(tablePos) as HTMLElement | null)
       const displayEl = tableEl ? resolveTableDisplayElement(tableEl) : null
-      const containerEl = containerRef.current
+      const containerEl = latest.containerRef.current
       if (!displayEl || !containerEl) return
       const displayRect = displayEl.getBoundingClientRect()
       const containerRect = getTableControlOrigin(containerEl)
@@ -124,7 +127,7 @@ export const useActiveTableRect = (
 
     const resizeObserver = new ResizeObserver(updateRect)
     if (displayEl) resizeObserver.observe(displayEl)
-    if (containerRef.current) resizeObserver.observe(containerRef.current)
+    if (latest.containerRef.current) resizeObserver.observe(latest.containerRef.current)
     // スクロールは位置の変化なので ResizeObserver で検知できない。capture phase で祖先全部のスクロールを拾う。
     window.addEventListener('scroll', updateRect, true)
 
@@ -132,7 +135,7 @@ export const useActiveTableRect = (
       resizeObserver.disconnect()
       window.removeEventListener('scroll', updateRect, true)
     }
-  }, [editor, tablePos, containerRef])
+  }, [editor, tablePos, latest])
 
   useEffect(() => {
     setInfo((prev) =>

@@ -7,12 +7,13 @@ import {
   type KeyboardEvent,
   type RefObject,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
 } from 'react'
 import { Button, FaXmarkIcon } from 'smarthr-ui'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { type typedJa, useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
 
@@ -73,8 +74,8 @@ type Props = {
   pushRecent: (hex: string) => void
   customColor: string
   setCustomColor: (hex: string) => void
-  onApplyColor: (hex: string) => void
-  onUnsetColor: () => void
+  handleApplyColor: (hex: string) => void
+  handleUnsetColor: () => void
   dialogLabel: string
   standardSectionLabel: string
   customSectionLabel: string
@@ -98,8 +99,8 @@ export const ColorPickerPalette: FC<Props> = memo(
     pushRecent,
     customColor,
     setCustomColor,
-    onApplyColor,
-    onUnsetColor,
+    handleApplyColor,
+    handleUnsetColor,
     dialogLabel,
     standardSectionLabel,
     customSectionLabel,
@@ -114,45 +115,99 @@ export const ColorPickerPalette: FC<Props> = memo(
 
     const classNames = classNameGenerator()
 
-    const applyStandardColor = useCallback(
-      (color: string) => {
-        onApplyColor(color)
-        setIsOpen(false)
-        triggerRef.current?.focus()
-      },
-      [onApplyColor, setIsOpen, triggerRef],
-    )
+    const latest = useLatest({
+      paletteRef,
+      triggerRef,
+      setIsOpen,
+      colors,
+      defaultColor,
+      pushRecent,
+      setCustomColor,
+      handleApplyColor,
+      handleUnsetColor,
+    })
 
-    const applyRecentColor = useCallback(
-      (color: string) => {
-        onApplyColor(color)
-        pushRecent(color)
-        setIsOpen(false)
-        triggerRef.current?.focus()
-      },
-      [onApplyColor, pushRecent, setIsOpen, triggerRef],
-    )
+    const functions = useMemo(() => {
+      const closeAndFocusTrigger = () => {
+        latest.setIsOpen(false)
+        latest.triggerRef.current?.focus()
+      }
 
-    const applyCustomColor = useCallback(
-      (hex: string) => {
-        onApplyColor(hex)
+      const applyCustomColor = (hex: string) => {
+        latest.handleApplyColor(hex)
         // 標準パレットから選べる色は、標準スウォッチと同じく履歴に積まない
-        const normalized = normalizeHex(hex, defaultColor)
-        if (!colors.some((c) => normalizeHex(c.value, defaultColor) === normalized)) {
-          pushRecent(hex)
+        const normalized = normalizeHex(hex, latest.defaultColor)
+        if (!latest.colors.some((c) => normalizeHex(c.value, latest.defaultColor) === normalized)) {
+          latest.pushRecent(hex)
         }
-        setIsOpen(false)
-        triggerRef.current?.focus()
-      },
-      [colors, defaultColor, onApplyColor, pushRecent, setIsOpen, triggerRef],
-    )
+        closeAndFocusTrigger()
+      }
 
-    const handleColorInputChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        setCustomColor(e.target.value)
-      },
-      [setCustomColor],
-    )
+      return {
+        applyCustomColor,
+        applyStandardColor: (color: string) => {
+          latest.handleApplyColor(color)
+          closeAndFocusTrigger()
+        },
+        applyRecentColor: (color: string) => {
+          latest.handleApplyColor(color)
+          latest.pushRecent(color)
+          closeAndFocusTrigger()
+        },
+        removeColor: () => {
+          latest.handleUnsetColor()
+          closeAndFocusTrigger()
+        },
+        handleColorInputChange: (e: ChangeEvent<HTMLInputElement>) => {
+          latest.setCustomColor(e.target.value)
+        },
+        handleSwatchKeyDown: (e: KeyboardEvent) => {
+          const swatches =
+            latest.paletteRef.current?.querySelectorAll<HTMLButtonElement>('[data-color-swatch]')
+          if (!swatches) return
+          const arr = Array.from(swatches)
+          const idx = arr.indexOf(e.currentTarget as HTMLButtonElement)
+          if (idx === -1) return
+
+          switch (e.key) {
+            case 'ArrowRight':
+              e.preventDefault()
+              e.stopPropagation()
+              arr[Math.min(idx + 1, arr.length - 1)]?.focus()
+              break
+            case 'ArrowLeft':
+              e.preventDefault()
+              e.stopPropagation()
+              arr[Math.max(idx - 1, 0)]?.focus()
+              break
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              arr[Math.min(idx + SWATCHES_PER_ROW, arr.length - 1)]?.focus()
+              break
+            case 'ArrowUp':
+              e.preventDefault()
+              e.stopPropagation()
+              arr[Math.max(idx - SWATCHES_PER_ROW, 0)]?.focus()
+              break
+            case 'Tab':
+              break
+          }
+        },
+        handleDelegateKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            e.stopPropagation()
+            closeAndFocusTrigger()
+          }
+        },
+        handleDelegateBlur: (e: FocusEvent<HTMLDivElement>) => {
+          if (!latest.paletteRef.current?.contains(e.relatedTarget as Node | null)) {
+            latest.setIsOpen(false)
+          }
+        },
+      }
+    }, [latest])
 
     // popup マウント時に native の change イベントを listen し、ピッカー確定時のみ適用
     // （native color input には確定とキャンセルを区別する手段がないため、
@@ -160,74 +215,10 @@ export const ColorPickerPalette: FC<Props> = memo(
     useEffect(() => {
       const el = colorInputRef.current
       if (!el) return
-      const handler = () => applyCustomColor(el.value)
+      const handler = () => functions.applyCustomColor(el.value)
       el.addEventListener('change', handler)
       return () => el.removeEventListener('change', handler)
-    }, [applyCustomColor])
-
-    const removeColor = useCallback(() => {
-      onUnsetColor()
-      setIsOpen(false)
-      triggerRef.current?.focus()
-    }, [onUnsetColor, setIsOpen, triggerRef])
-
-    const handleSwatchKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        const swatches =
-          paletteRef.current?.querySelectorAll<HTMLButtonElement>('[data-color-swatch]')
-        if (!swatches) return
-        const arr = Array.from(swatches)
-        const idx = arr.indexOf(e.currentTarget as HTMLButtonElement)
-        if (idx === -1) return
-
-        switch (e.key) {
-          case 'ArrowRight':
-            e.preventDefault()
-            e.stopPropagation()
-            arr[Math.min(idx + 1, arr.length - 1)]?.focus()
-            break
-          case 'ArrowLeft':
-            e.preventDefault()
-            e.stopPropagation()
-            arr[Math.max(idx - 1, 0)]?.focus()
-            break
-          case 'ArrowDown':
-            e.preventDefault()
-            e.stopPropagation()
-            arr[Math.min(idx + SWATCHES_PER_ROW, arr.length - 1)]?.focus()
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            e.stopPropagation()
-            arr[Math.max(idx - SWATCHES_PER_ROW, 0)]?.focus()
-            break
-          case 'Tab':
-            break
-        }
-      },
-      [paletteRef],
-    )
-
-    const onDelegateKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.preventDefault()
-          e.stopPropagation()
-          setIsOpen(false)
-          triggerRef.current?.focus()
-        }
-      },
-      [setIsOpen, triggerRef],
-    )
-
-    const onDelegateBlur = useCallback(
-      (e: FocusEvent<HTMLDivElement>) => {
-        if (!paletteRef.current?.contains(e.relatedTarget as Node | null)) {
-          setIsOpen(false)
-        }
-      },
-      [paletteRef, setIsOpen],
-    )
+    }, [functions])
 
     const firstRow = colors.slice(0, SWATCHES_PER_ROW)
     const secondRow = colors.slice(SWATCHES_PER_ROW)
@@ -254,8 +245,8 @@ export const ColorPickerPalette: FC<Props> = memo(
         role="dialog"
         className={classNames.palette()}
         aria-label={dialogLabel}
-        onKeyDown={onDelegateKeyDown}
-        onBlur={onDelegateBlur}
+        onKeyDown={functions.handleDelegateKeyDown}
+        onBlur={functions.handleDelegateBlur}
       >
         {/* 標準パレットセクション */}
         <div role="group" className={classNames.section()} aria-label={standardSectionLabel}>
@@ -275,8 +266,8 @@ export const ColorPickerPalette: FC<Props> = memo(
                   color={color.value}
                   className="focus-visible:shr-focus-indicator"
                   data-color-swatch="standard"
-                  handleKeyDown={handleSwatchKeyDown}
-                  handleClick={() => applyStandardColor(color.value)}
+                  handleKeyDown={functions.handleSwatchKeyDown}
+                  handleClick={() => functions.applyStandardColor(color.value)}
                   label={label}
                 />
               )
@@ -298,8 +289,8 @@ export const ColorPickerPalette: FC<Props> = memo(
                     color={color.value}
                     className="focus-visible:shr-focus-indicator"
                     data-color-swatch="standard"
-                    handleKeyDown={handleSwatchKeyDown}
-                    handleClick={() => applyStandardColor(color.value)}
+                    handleKeyDown={functions.handleSwatchKeyDown}
+                    handleClick={() => functions.applyStandardColor(color.value)}
                     label={label}
                   />
                 )
@@ -319,8 +310,8 @@ export const ColorPickerPalette: FC<Props> = memo(
                 color={customColor}
                 className="focus-visible:shr-focus-indicator"
                 data-color-swatch="custom"
-                handleKeyDown={handleSwatchKeyDown}
-                handleClick={() => applyCustomColor(customColor)}
+                handleKeyDown={functions.handleSwatchKeyDown}
+                handleClick={() => functions.applyCustomColor(customColor)}
                 label={customSwatchLabel(customColor)}
               />
             )}
@@ -334,7 +325,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                 value={customColor}
                 className={classNames.colorInput()}
                 aria-label={editButtonLabel}
-                onChange={handleColorInputChange}
+                onChange={functions.handleColorInputChange}
               />
             </span>
           </div>
@@ -355,8 +346,8 @@ export const ColorPickerPalette: FC<Props> = memo(
                     color={color}
                     className="focus-visible:shr-focus-indicator"
                     data-color-swatch="recent"
-                    handleKeyDown={handleSwatchKeyDown}
-                    handleClick={() => applyRecentColor(color)}
+                    handleKeyDown={functions.handleSwatchKeyDown}
+                    handleClick={() => functions.applyRecentColor(color)}
                     label={recentSwatchLabel(color)}
                   />
                 )
@@ -369,7 +360,7 @@ export const ColorPickerPalette: FC<Props> = memo(
           variant="text"
           size="S"
           className="shr-self-start"
-          onClick={removeColor}
+          onClick={functions.removeColor}
           prefix={<FaXmarkIcon />}
         >
           {resetButtonLabel}

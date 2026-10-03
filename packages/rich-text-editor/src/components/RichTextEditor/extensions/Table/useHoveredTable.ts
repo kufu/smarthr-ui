@@ -2,6 +2,8 @@
 
 import { type RefObject, useEffect, useRef, useState } from 'react'
 
+import { useLatest } from '../../../../hooks/useLatest'
+
 import { hitTestExtendedTableArea } from './helpers/extendedHitArea'
 import {
   TABLE_BAR_GAP,
@@ -69,9 +71,10 @@ export const useHoveredTable = (
   const [inBottomBar, setInBottomBar] = useState(false)
   const rafRef = useRef<number | null>(null)
   const lastEventRef = useRef<MouseEvent | null>(null)
+  const latest = useLatest({ containerRef })
 
   useEffect(() => {
-    const container = containerRef.current
+    const container = latest.containerRef.current
     if (!container) return
 
     const clearAll = () => {
@@ -150,12 +153,12 @@ export const useHoveredTable = (
       container.removeEventListener('mouseleave', handleMouseLeave)
       if (rafRef.current !== null) window.cancelAnimationFrame(rafRef.current)
     }
-  }, [editor, containerRef])
+  }, [editor, latest])
 
   // テーブルの位置変動（スクロール、リサイズ）に追従して info.rect を更新
   useEffect(() => {
     if (!info) return
-    const container = containerRef.current
+    const container = latest.containerRef.current
     if (!container) return
     const update = () => {
       const tableNode = editor.view.nodeDOM(info.pos)
@@ -196,7 +199,7 @@ export const useHoveredTable = (
       if (updateFrame !== null) cancelAnimationFrame(updateFrame)
       window.removeEventListener('scroll', update, true)
     }
-  }, [info?.pos, editor, containerRef]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [info?.pos, editor, latest]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return { info, inRightBar, inBottomBar }
 }

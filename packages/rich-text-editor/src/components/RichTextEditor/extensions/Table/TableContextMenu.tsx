@@ -29,10 +29,17 @@ const TOOLTIP_ALIGN = {
   cell: 'end',
 } as const
 
+const LABEL_MESSAGES = {
+  table: { id: 'smarthr-ui/RichTextEditor/tableActions', defaultText: '表の操作' },
+  row: { id: 'smarthr-ui/RichTextEditor/rowActions', defaultText: '行の操作' },
+  column: { id: 'smarthr-ui/RichTextEditor/columnActions', defaultText: '列の操作' },
+  cell: { id: 'smarthr-ui/RichTextEditor/cellActions', defaultText: 'セルの操作' },
+} as const
+
 type Props = {
   features: readonly RichTextFeature[]
   openMenuRef?: MutableRefObject<((pos?: number) => void) | null>
-  onTargetLock: (scope: TableScope, pos: number | null) => void
+  handleTargetLock: (scope: TableScope, pos: number | null) => void
   editor: Editor
   cellPos: number
   scope: TableScope
@@ -49,7 +56,7 @@ export const TableContextMenu = ({
   style,
   features,
   openMenuRef,
-  onTargetLock,
+  handleTargetLock,
 }: Props) => {
   const { localize } = useIntl()
   const isApple = useIsApplePlatform()
@@ -68,16 +75,9 @@ export const TableContextMenu = ({
     run,
     changeColors,
     onMenuKeyDown: delegateMenuKeyDown,
-  } = useTableMenu({ editor, cellPos, scope, openMenuRef, onTargetLock })
+  } = useTableMenu({ editor, cellPos, scope, openMenuRef, handleTargetLock })
   if (!target) return null
-  const label =
-    scope === 'table'
-      ? localize({ id: 'smarthr-ui/RichTextEditor/tableActions', defaultText: '表の操作' })
-      : scope === 'row'
-        ? localize({ id: 'smarthr-ui/RichTextEditor/rowActions', defaultText: '行の操作' })
-        : scope === 'column'
-          ? localize({ id: 'smarthr-ui/RichTextEditor/columnActions', defaultText: '列の操作' })
-          : localize({ id: 'smarthr-ui/RichTextEditor/cellActions', defaultText: 'セルの操作' })
+  const label = localize(LABEL_MESSAGES[scope])
   return (
     <>
       <span className="shr-absolute shr-z-1 focus-within:shr-z-[3] hover:shr-z-[2]" style={style}>

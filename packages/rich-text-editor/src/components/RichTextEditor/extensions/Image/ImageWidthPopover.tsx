@@ -5,8 +5,8 @@ import {
   type FormEvent,
   type KeyboardEvent,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -20,6 +20,7 @@ import {
   Stack,
 } from 'smarthr-ui'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
@@ -117,67 +118,63 @@ export const ImageWidthPopover: FC<Props> = memo(
       requestAnimationFrame(() => widthInputRef.current?.focus())
     }, [isOpen, editor, pos])
 
-    const handleWidthChange = useCallback((value: string) => {
-      setWidth(value)
+    const latest = useLatest({ pos, width, height, triggerRef })
 
-      const h = calcHeightFromWidth(Number(value), naturalRef.current.w, naturalRef.current.h)
-
-      if (h !== undefined) setHeight(String(h))
-    }, [])
-
-    const handleHeightChange = useCallback((value: string) => {
-      setHeight(value)
-
-      const w = calcWidthFromHeight(Number(value), naturalRef.current.w, naturalRef.current.h)
-
-      if (w !== undefined) setWidth(String(w))
-    }, [])
-
-    const apply = useCallback(
-      (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
-
-        const w = Number(width)
-        const h = Number(height)
-
-        editor
-          .chain()
-          .setNodeSelection(pos)
-          .updateAttributes('image', {
-            width: Number.isFinite(w) && w > 0 ? w : null,
-            height: Number.isFinite(h) && h > 0 ? h : null,
-          })
-          .run()
+    const functions = useMemo(() => {
+      const closePopup = () => {
         setIsOpen(false)
-      },
-      [editor, pos, width, height, setIsOpen],
-    )
+        latest.triggerRef.current?.focus()
+      }
 
-    const reset = useCallback(() => {
-      editor
-        .chain()
-        .setNodeSelection(pos)
-        .updateAttributes('image', { width: null, height: null })
-        .run()
-      setIsOpen(false)
-    }, [editor, pos, setIsOpen])
+      return {
+        handleWidthChange: (value: string) => {
+          setWidth(value)
 
-    const closePopup = useCallback(() => {
-      setIsOpen(false)
-      triggerRef.current?.focus()
-    }, [setIsOpen, triggerRef])
+          const h = calcHeightFromWidth(Number(value), naturalRef.current.w, naturalRef.current.h)
 
-    const handlePopupKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
+          if (h !== undefined) setHeight(String(h))
+        },
+        handleHeightChange: (value: string) => {
+          setHeight(value)
+
+          const w = calcWidthFromHeight(Number(value), naturalRef.current.w, naturalRef.current.h)
+
+          if (w !== undefined) setWidth(String(w))
+        },
+        apply: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
-          closePopup()
-        }
-      },
-      [closePopup],
-    )
+
+          const w = Number(latest.width)
+          const h = Number(latest.height)
+
+          editor
+            .chain()
+            .setNodeSelection(latest.pos)
+            .updateAttributes('image', {
+              width: Number.isFinite(w) && w > 0 ? w : null,
+              height: Number.isFinite(h) && h > 0 ? h : null,
+            })
+            .run()
+          setIsOpen(false)
+        },
+        reset: () => {
+          editor
+            .chain()
+            .setNodeSelection(latest.pos)
+            .updateAttributes('image', { width: null, height: null })
+            .run()
+          setIsOpen(false)
+        },
+        handlePopupKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            e.stopPropagation()
+            closePopup()
+          }
+        },
+      }
+    }, [editor, setIsOpen, latest])
 
     return (
       <>
@@ -210,7 +207,7 @@ export const ImageWidthPopover: FC<Props> = memo(
         {renderDropdown(
           <div role="dialog" className={classNames.menu()} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form noValidate onSubmit={apply} onKeyDown={handlePopupKeyDown}>
+            <form noValidate onSubmit={functions.apply} onKeyDown={functions.handlePopupKeyDown}>
               <Stack gap={0.75}>
                 <div className={classNames.row()}>
                   <FormControl label={widthLabel}>
@@ -220,7 +217,7 @@ export const ImageWidthPopover: FC<Props> = memo(
                       name="imageWidth"
                       value={width}
                       width="6em"
-                      onChange={(e) => handleWidthChange(e.target.value)}
+                      onChange={(e) => functions.handleWidthChange(e.target.value)}
                     />
                   </FormControl>
                   <FaLockIcon alt={lockLabel} className={classNames.lock()} />
@@ -230,12 +227,12 @@ export const ImageWidthPopover: FC<Props> = memo(
                       name="imageHeight"
                       value={height}
                       width="6em"
-                      onChange={(e) => handleHeightChange(e.target.value)}
+                      onChange={(e) => functions.handleHeightChange(e.target.value)}
                     />
                   </FormControl>
                 </div>
                 <Cluster gap={0.5} justify="flex-end">
-                  <Button type="button" variant="secondary" size="S" onClick={reset}>
+                  <Button type="button" variant="secondary" size="S" onClick={functions.reset}>
                     {resetLabel}
                   </Button>
                   <Button type="submit" variant="primary" size="S">

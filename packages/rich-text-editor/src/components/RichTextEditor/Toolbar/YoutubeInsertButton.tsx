@@ -5,13 +5,14 @@ import {
   type FormEvent,
   type KeyboardEvent,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { Button, Cluster, FaCirclePlayIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
@@ -64,58 +65,59 @@ export const YoutubeInsertButton: FC<Props> = memo(
       defaultText: '有効なYouTube URLを入力してください',
     })
 
-    const closePopup = useCallback(() => {
-      setIsOpen(false)
-      triggerRef.current?.focus()
-    }, [setIsOpen, triggerRef])
+    const latest = useLatest({
+      url,
+      requiredMessage,
+      invalidMessage,
+      triggerRef,
+      onKeyDown: onKeyDownProp,
+    })
 
-    const handleSubmit = useCallback(
-      (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
-        const trimmed = url.trim()
-        if (!trimmed) {
-          setError(requiredMessage)
-          return
-        }
-        const normalized = normalizeYoutubeUrl(trimmed)
-        if (!normalized) {
-          setError(invalidMessage)
-          return
-        }
-        editor.chain().focus().setYoutubeVideo(normalized).run()
+    const functions = useMemo(() => {
+      const closePopup = () => {
         setIsOpen(false)
-      },
-      [editor, url, requiredMessage, invalidMessage, setIsOpen],
-    )
+        latest.triggerRef.current?.focus()
+      }
 
-    const handlePopupKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
+      return {
+        handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
-          closePopup()
-        }
-      },
-      [closePopup],
-    )
-
-    const handleTriggerKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'Enter':
-          case ' ':
-          case 'ArrowDown':
+          const trimmed = latest.url.trim()
+          if (!trimmed) {
+            setError(latest.requiredMessage)
+            return
+          }
+          const normalized = normalizeYoutubeUrl(trimmed)
+          if (!normalized) {
+            setError(latest.invalidMessage)
+            return
+          }
+          editor.chain().focus().setYoutubeVideo(normalized).run()
+          setIsOpen(false)
+        },
+        handlePopupKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
             e.preventDefault()
             e.stopPropagation()
-            setIsOpen(true)
-            break
-          default:
-            onKeyDownProp?.(e)
-        }
-      },
-      [setIsOpen, onKeyDownProp],
-    )
+            closePopup()
+          }
+        },
+        handleTriggerKeyDown: (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'Enter':
+            case ' ':
+            case 'ArrowDown':
+              e.preventDefault()
+              e.stopPropagation()
+              setIsOpen(true)
+              break
+            default:
+              latest.onKeyDown?.(e)
+          }
+        },
+      }
+    }, [editor, setIsOpen, latest])
 
     // ポップアップ表示時にURL Inputへフォーカス、閉じたら入力をリセット
     useEffect(() => {
@@ -141,7 +143,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
           aria-expanded={isOpen}
           aria-haspopup="dialog"
           onClick={() => setIsOpen((prev) => !prev)}
-          onKeyDown={handleTriggerKeyDown}
+          onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
           icon={<FaCirclePlayIcon />}
           label={label}
@@ -149,7 +151,11 @@ export const YoutubeInsertButton: FC<Props> = memo(
         {renderDropdown(
           <div ref={popupRef} role="dialog" className={POPUP_CLASS} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+            <form
+              noValidate
+              onSubmit={functions.handleSubmit}
+              onKeyDown={functions.handlePopupKeyDown}
+            >
               <Stack gap={0.75}>
                 <FormControl
                   errorMessages={error || undefined}

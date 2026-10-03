@@ -5,13 +5,14 @@ import {
   type FormEvent,
   type KeyboardEvent,
   memo,
-  useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { Button, Cluster, FaPenToSquareIcon, FormControl, Input, Stack } from 'smarthr-ui'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
 import { tv } from '../../../../libs/tv'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
@@ -69,32 +70,35 @@ export const ImageAltPopover: FC<Props> = memo(
       requestAnimationFrame(() => inputRef.current?.focus())
     }, [isOpen, editor, pos])
 
-    const closePopup = useCallback(() => {
-      setIsOpen(false)
-      triggerRef.current?.focus()
-    }, [setIsOpen, triggerRef])
+    const latest = useLatest({ pos, alt, triggerRef })
 
-    const handleSubmit = useCallback(
-      (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        e.stopPropagation()
-
-        editor.chain().setNodeSelection(pos).updateAttributes('image', { alt }).run()
+    const functions = useMemo(() => {
+      const closePopup = () => {
         setIsOpen(false)
-      },
-      [editor, pos, alt, setIsOpen],
-    )
+        latest.triggerRef.current?.focus()
+      }
 
-    const handlePopupKeyDown = useCallback(
-      (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
+      return {
+        handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
-          closePopup()
-        }
-      },
-      [closePopup],
-    )
+
+          editor
+            .chain()
+            .setNodeSelection(latest.pos)
+            .updateAttributes('image', { alt: latest.alt })
+            .run()
+          setIsOpen(false)
+        },
+        handlePopupKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            e.stopPropagation()
+            closePopup()
+          }
+        },
+      }
+    }, [editor, setIsOpen, latest])
 
     return (
       <>
@@ -127,7 +131,11 @@ export const ImageAltPopover: FC<Props> = memo(
         {renderDropdown(
           <div role="dialog" className={classNames.menu()} aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-            <form noValidate onSubmit={handleSubmit} onKeyDown={handlePopupKeyDown}>
+            <form
+              noValidate
+              onSubmit={functions.handleSubmit}
+              onKeyDown={functions.handlePopupKeyDown}
+            >
               <Stack gap={0.75}>
                 <FormControl label={label} helpMessage={helpText}>
                   <Input

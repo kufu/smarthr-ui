@@ -162,15 +162,17 @@ export const TableMenuActions = ({
       {scope === 'cell' && (
         <>
           {item(
-            hasHeaderCell
-              ? localize({
-                  id: 'smarthr-ui/RichTextEditor/makeNormalCell',
-                  defaultText: '通常のセルに戻す',
-                })
-              : localize({
-                  id: 'smarthr-ui/RichTextEditor/makeHeaderCell',
-                  defaultText: 'ヘッダーセルにする',
-                }),
+            localize(
+              hasHeaderCell
+                ? {
+                    id: 'smarthr-ui/RichTextEditor/makeNormalCell',
+                    defaultText: '通常のセルに戻す',
+                  }
+                : {
+                    id: 'smarthr-ui/RichTextEditor/makeHeaderCell',
+                    defaultText: 'ヘッダーセルにする',
+                  },
+            ),
             () => editor.commands.toggleHeaderCell(),
           )}
           {editor.can().mergeCells() &&

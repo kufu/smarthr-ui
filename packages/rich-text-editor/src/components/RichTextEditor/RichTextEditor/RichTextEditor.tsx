@@ -1,17 +1,9 @@
 'use client'
 
 import { EditorContent, useEditorState } from '@tiptap/react'
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
@@ -152,22 +144,32 @@ export const RichTextEditor = memo(
         return undefined
       }, [defaultValue, content])
 
-      const handleChange = useCallback(
-        (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
-          if (!onChange) return
-          if (outputFormat === 'html') {
-            ;(onChange as (value: string, meta: RichTextChangeMeta) => void)(meta.html, meta)
-            return
-          }
-          ;(onChange as (value: RichTextJSON, meta: RichTextChangeMeta) => void)(nextJson, meta)
-        },
-        [onChange, outputFormat],
+      const latest = useLatest({ onChange, outputFormat })
+
+      const functions = useMemo(
+        () => ({
+          handleChange: (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
+            if (!latest.onChange) return
+            if (latest.outputFormat === 'html') {
+              ;(latest.onChange as (value: string, meta: RichTextChangeMeta) => void)(
+                meta.html,
+                meta,
+              )
+              return
+            }
+            ;(latest.onChange as (value: RichTextJSON, meta: RichTextChangeMeta) => void)(
+              nextJson,
+              meta,
+            )
+          },
+        }),
+        [latest],
       )
 
       const { editor } = useRichTextEditor({
         value,
         defaultValue: normalizedDefaultValue,
-        onChange: handleChange,
+        onChange: functions.handleChange,
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
