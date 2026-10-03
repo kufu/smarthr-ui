@@ -32,12 +32,23 @@ const toPositiveNumber = (value: unknown): number | null =>
  * NOTE: `createCustomHandle` を指定すると ResizableNodeView 側の `positionHandle` は
  * スキップされるため、位置指定（top/bottom/left/right）もここで行う必要がある。
  */
-const createResizeHandle = (direction: ResizableNodeViewDirection): HTMLElement => {
+const createResizeHandle = (
+  direction: ResizableNodeViewDirection,
+  isEditable: () => boolean,
+): HTMLElement => {
   const handle = document.createElement('div')
 
   handle.dataset.resizeHandle = direction
   handle.setAttribute('aria-hidden', 'true')
   handle.style.position = 'absolute'
+
+  // ResizableNodeView がハンドルを外すのは文書の更新時だけで、更新を伴わない setEditable では
+  // 残る。NodeView を作り直すと読み込み完了まで画像が消えるため、標準の購読より先に止める
+  const stopWhenReadOnly = (e: Event) => {
+    if (!isEditable()) e.stopImmediatePropagation()
+  }
+  handle.addEventListener('mousedown', stopWhenReadOnly)
+  handle.addEventListener('touchstart', stopWhenReadOnly)
 
   if (direction.includes('top')) handle.style.top = '0'
   if (direction.includes('bottom')) handle.style.bottom = '0'
@@ -247,7 +258,7 @@ export const CustomImage = Image.extend<CustomImageOptions>({
           },
           preserveAspectRatio: alwaysPreserveAspectRatio === true,
           // ハンドルを aria-hidden 化して VoiceOver の重複読み上げを防ぐ
-          createCustomHandle: createResizeHandle,
+          createCustomHandle: (direction) => createResizeHandle(direction, () => editor.isEditable),
         },
       })
 

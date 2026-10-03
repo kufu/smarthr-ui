@@ -249,3 +249,65 @@ describe('CustomImage NodeView', () => {
     })
   })
 })
+
+describe('読み取り専用でのリサイズ', () => {
+  const mount = async (initial: { readOnly?: boolean; disabled?: boolean }) => {
+    const { result, rerender } = renderHook(
+      (props: { readOnly?: boolean; disabled?: boolean }) =>
+        useRichTextEditor({ ...props, features: ['image'], defaultValue }),
+      { initialProps: initial },
+    )
+    await waitFor(() => expect(result.current.editor).not.toBeNull())
+    render(<EditorContent editor={result.current.editor!} />)
+    await waitFor(() => expect(document.querySelector('[data-resize-handle]')).not.toBeNull())
+
+    return { editor: result.current.editor!, rerender }
+  }
+
+  // jsdom は寸法を持たないため、ドラッグを確定すると幅・高さが 0 で書き込まれる
+  const drag = () => {
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle]')!
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    fireEvent.mouseMove(document, { clientX: -100, clientY: -100 })
+    fireEvent.mouseUp(document)
+  }
+
+  const imageWidth = (editor: Editor) => {
+    let width: unknown
+    editor.state.doc.descendants((node) => {
+      if (node.type.name === 'image') width = node.attrs.width
+    })
+    return width
+  }
+
+  it('編集できるときはドラッグで幅が書き換わる', async () => {
+    const { editor } = await mount({})
+    drag()
+    expect(imageWidth(editor)).not.toBe(300)
+  })
+
+  it.each([
+    ['readOnly', { readOnly: true }],
+    ['disabled', { disabled: true }],
+  ])('%s のときはドラッグしても幅が変わらない', async (_, props) => {
+    const { editor } = await mount(props)
+    drag()
+    expect(imageWidth(editor)).toBe(300)
+  })
+
+  it('表示後に readOnly へ切り替えてもドラッグで幅が変わらない', async () => {
+    const { editor, rerender } = await mount({})
+    rerender({ readOnly: true })
+    await waitFor(() => expect(editor.isEditable).toBe(false))
+    drag()
+    expect(imageWidth(editor)).toBe(300)
+  })
+
+  it('readOnly から編集可能へ戻すとドラッグで幅が書き換わる', async () => {
+    const { editor, rerender } = await mount({ readOnly: true })
+    rerender({ readOnly: false })
+    await waitFor(() => expect(editor.isEditable).toBe(true))
+    drag()
+    expect(imageWidth(editor)).not.toBe(300)
+  })
+})
