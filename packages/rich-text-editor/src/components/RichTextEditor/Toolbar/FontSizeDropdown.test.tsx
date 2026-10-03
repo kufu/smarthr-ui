@@ -1,7 +1,7 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
@@ -90,6 +90,74 @@ describe('FontSizeDropdown', () => {
     expect(
       screen.getAllByRole('option').filter((o) => o.getAttribute('aria-selected') === 'true'),
     ).toHaveLength(0)
+  })
+
+  // Google ドキュメントから貼り付けた文書は 11pt（14.67px）で入っている。Froala と同じく整数部を表示する
+  it('一覧に無い端数のサイズは整数部を表示し、近い選択肢も選択状態にしない', async () => {
+    const user = userEvent.setup()
+    await renderEditor('<p><span style="font-size: 11pt">本文</span></p>')
+    expect(screen.getByRole('button', { name: 'フォントサイズ: 14' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /フォントサイズ/ }))
+    expect(screen.getByRole('option', { name: '14' })).toHaveAttribute('aria-selected', 'false')
+  })
+
+  it('Google ドキュメントから貼り付けた pt 指定の文字サイズは rem で保存される', async () => {
+    const onChange = vi.fn()
+    render(<RichTextEditor features={['fontSize', 'color']} onChange={onChange} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    // Google ドキュメントがクリップボードに載せる形
+    const html =
+      '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-1"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#353744;background-color:transparent;font-weight:400;vertical-align:baseline;">本文</span></b>'
+    fireEvent.paste(screen.getByRole('textbox'), {
+      clipboardData: {
+        files: [],
+        types: ['text/html', 'text/plain'],
+        getData: (type: string) => (type === 'text/html' ? html : '本文'),
+      },
+    })
+
+    await waitFor(() => expect(onChange).toHaveBeenCalled())
+    const saved = JSON.stringify(onChange.mock.lastCall?.[0])
+    expect(saved).toContain('0.9167rem')
+    expect(saved).not.toContain('11pt')
+  })
+
+  // em は親要素に依存する。rem と同じ倍率で換算すると見出しが本文の大きさに縮む
+  it('見出しの中の em 指定を貼り付けても、見出し・文字・他の装飾は残り文字サイズだけ落ちる', async () => {
+    const onChange = vi.fn()
+    render(
+      <RichTextEditor features={['heading', 'bold', 'fontSize', 'color']} onChange={onChange} />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    const html = '<h2><span style="font-size:1em;color:#ff0000"><strong>見出し</strong></span></h2>'
+    fireEvent.paste(screen.getByRole('textbox'), {
+      clipboardData: {
+        files: [],
+        types: ['text/html', 'text/plain'],
+        getData: (type: string) => (type === 'text/html' ? html : '見出し'),
+      },
+    })
+
+    await waitFor(() => expect(onChange).toHaveBeenCalled())
+    const heading = onChange.mock.lastCall?.[0].content.find(
+      (node: { type: string }) => node.type === 'heading',
+    )
+    expect(heading?.attrs.level).toBe(2)
+    expect(heading?.content).toEqual([
+      {
+        type: 'text',
+        text: '見出し',
+        marks: expect.arrayContaining([
+          { type: 'bold' },
+          { type: 'textStyle', attrs: { color: '#ff0000', backgroundColor: null, fontSize: null } },
+        ]),
+      },
+    ])
   })
 
   // NOTE: jsdomではcontenteditable divへの入力が動作せずspanを生成できないため、

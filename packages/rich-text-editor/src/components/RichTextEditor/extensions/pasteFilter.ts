@@ -1,6 +1,7 @@
 import { Fragment, Slice } from '@tiptap/pm/model'
 
 import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from './configureHeading'
+import { normalizeFontSize } from './normalizeFontSize'
 import { createTypeAllowChecker } from './restrictOperations'
 
 import type { RichTextFeature } from '../types'
@@ -77,6 +78,8 @@ export const createPasteFilter = (
           FEATURE_BY_TEXT_STYLE_ATTRIBUTE,
           isAllowedFeature,
         )
+
+        if ('fontSize' in attributes) attributes.fontSize = normalizeFontSize(attributes.fontSize)
 
         // 属性が全て空になったtextStyleは残す意味がない
         if (Object.values(attributes).every((value) => value === null)) return acc

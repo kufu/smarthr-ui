@@ -100,7 +100,27 @@ describe('createPasteFilter', () => {
       const json = JSON.stringify(result.content)
 
       expect(json).not.toContain('#ff0000')
-      expect(json).toContain('20px')
+      expect(json).toContain('1.25rem')
+    })
+
+    // Google ドキュメントから貼り付けると pt のまま入ってくる
+    it('文字サイズは rem にそろえる', () => {
+      const result = filterSlice(['fontSize'], {
+        content: [paragraph([text('本文', [{ type: 'textStyle', attrs: { fontSize: '11pt' } }])])],
+      })
+      const json = JSON.stringify(result.content)
+
+      expect(json).toContain('0.9167rem')
+      expect(json).not.toContain('11pt')
+    })
+
+    it('換算できない文字サイズは落とす', () => {
+      const result = filterSlice(['fontSize'], {
+        content: [paragraph([text('本文', [{ type: 'textStyle', attrs: { fontSize: '150%' } }])])],
+      })
+
+      expect(JSON.stringify(result.content)).not.toContain('textStyle')
+      expect(JSON.stringify(result.content)).toContain('本文')
     })
 
     it('すべての属性が features 外なら textStyle 自体を落とす', () => {

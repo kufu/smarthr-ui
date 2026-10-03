@@ -35,7 +35,7 @@ const FONT_SIZES = [
   { px: 72, value: '4.5rem' },
 ] as const
 
-/** 既定のルートフォントサイズ換算の表示サイズ。解釈できない単位は null */
+/** 既定のルートフォントサイズ換算の px。解釈できない単位は null */
 const toPxSize = (value: string | null) => {
   if (value === null) return DEFAULT_ROOT_FONT_SIZE
 
@@ -45,7 +45,7 @@ const toPxSize = (value: string | null) => {
 
   const [, num, unit] = matched
 
-  return Math.round(unit === 'px' ? Number(num) : Number(num) * DEFAULT_ROOT_FONT_SIZE)
+  return unit === 'px' ? Number(num) : Number(num) * DEFAULT_ROOT_FONT_SIZE
 }
 
 const classNameGenerator = tv({
@@ -85,8 +85,9 @@ export const FontSizeDropdown: FC<Props> = memo(
     const listboxRef = useRef<HTMLDivElement>(null)
 
     const currentSize = toPxSize(currentValue)
-    // 解釈できない単位はそのまま見せる
-    const currentLabel = currentSize ?? currentValue ?? DEFAULT_ROOT_FONT_SIZE
+    // 端数は Froala と同じく切り捨てて見せる。選択状態は端数を含めた値で判定するため、
+    // 11pt(14.67px) を選択肢の 14 と取り違えない。解釈できない単位はそのまま見せる
+    const currentLabel = currentSize === null ? currentValue : Math.floor(currentSize)
     const isDisabled = disabled || isInHeading
 
     const classNames = classNameGenerator()

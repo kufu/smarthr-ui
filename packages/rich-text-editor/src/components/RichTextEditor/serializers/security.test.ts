@@ -348,7 +348,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       )
       expect(html).toContain('#ff0000')
       expect(html).toContain('rgb(0, 0, 255)')
-      expect(html).toContain('12px')
+      expect(html).toContain('0.75rem')
     })
 
     it('textStyle の rem 指定の fontSize は保持される', () => {
@@ -356,9 +356,15 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).toContain('1.5rem')
     })
 
-    it('textStyle の許可していない単位の fontSize は出力されない', () => {
+    it('textStyle の pt 指定の fontSize は rem にそろえて出力される', () => {
       const html = serializeToHTML(textStyleDoc({ fontSize: '12pt' }))
       expect(html).not.toContain('12pt')
+      expect(html).toContain('1rem')
+    })
+
+    it('textStyle の換算できない単位の fontSize は出力されない', () => {
+      const html = serializeToHTML(textStyleDoc({ fontSize: '150%' }))
+      expect(html).not.toContain('150%')
     })
 
     it('textAlign に追記されたCSS宣言が出力されない', () => {

@@ -955,8 +955,21 @@ describe('RichTextEditor', () => {
       const html = ref.current?.getHTML() ?? ''
       // 共通シリアライザー経由になり、DOM往復による rgb() 正規化を受けず原値のまま出る
       expect(html).toContain('#ff0000')
-      expect(html).toContain('20px')
+      expect(html).toContain('1.25rem')
       expect(html).toContain('styled')
+    })
+
+    // 保存データに pt が残ると、ブラウザのフォントサイズ設定に追従しないまま公開される
+    it('HTML入力の pt 指定の文字サイズを rem にそろえて保持する', async () => {
+      const ref = await renderWithRef({
+        content: {
+          format: 'html',
+          content: '<p><span style="font-size:11pt;color:#353744">本文</span></p>',
+        },
+      })
+      const json = JSON.stringify(ref.current?.getJSON())
+      expect(json).toContain('0.9167rem')
+      expect(json).not.toContain('11pt')
     })
   })
 

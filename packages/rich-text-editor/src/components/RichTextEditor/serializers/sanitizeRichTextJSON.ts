@@ -1,3 +1,4 @@
+import { normalizeFontSize } from '../extensions/normalizeFontSize'
 import { YOUTUBE_DEFAULT_SIZE } from '../extensions/youtubeOptions'
 import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 
@@ -6,7 +7,6 @@ import {
   isNumericAttr,
   isSafeCodeLanguage,
   isSafeColor,
-  isSafeFontSize,
   isSafeImageSrc,
   isSafeLinkTarget,
   isSafeTextAlign,
@@ -105,7 +105,7 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
   textStyle: {
     color: nullIfUnsafe(isSafeColor),
     backgroundColor: nullIfUnsafe(isSafeColor),
-    fontSize: nullIfUnsafe(isSafeFontSize),
+    fontSize: normalizeFontSize,
   },
 }
 

@@ -37,10 +37,9 @@ export const isSafeColor = (color: unknown): color is string =>
     /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/i.test(color) ||
     /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|1|0?\.\d+)\s*\)$/i.test(color))
 
-// エディタが生成するのは rem のみだが、px も許可するのは外部からペーストされる HTML の
-// font-size が px 主流で、落とすとペースト時に装飾が消えるため。
+// 入力の単位は sanitizeRichTextJSON と貼り付けで rem にそろえるため、rem だけを通す
 export const isSafeFontSize = (fontSize: unknown): fontSize is string =>
-  typeof fontSize === 'string' && /^\d+(\.\d+)?(px|rem)$/.test(fontSize)
+  typeof fontSize === 'string' && /^\d+(\.\d+)?rem$/.test(fontSize)
 
 /**
  * CodeBlock 拡張は `language-` 接頭辞を付けて class へ展開するため、
