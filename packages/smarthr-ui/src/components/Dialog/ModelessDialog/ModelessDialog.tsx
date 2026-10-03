@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
@@ -99,8 +98,8 @@ type BaseProps = PropsWithChildren<{
   resizable?: boolean
 }>
 type Props = BaseProps &
-  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
-  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+  Pick<ComponentPropsWithRef<typeof DialogBody>, 'contentBgColor' | 'contentPadding'> &
+  Omit<ComponentPropsWithRef<typeof Panel>, keyof BaseProps | 'contentBgColor' | 'contentPadding'>
 
 const classNameGenerator = tv({
   slots: {

@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type ReactNode,
@@ -35,7 +35,7 @@ type BaseProps = {
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
 }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
