@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ComponentProps, type FC, memo, useMemo } from 'react'
+import { type ChangeEvent, type ComponentPropsWithRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { BrowserItem } from './BrowserItem'
@@ -13,7 +13,7 @@ type BaseProps = {
   index: number
   handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
 }
-type Props = BaseProps & Omit<ComponentProps<'ul'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'ul'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: 'shr-px-0.25 shr-py-0.5',
