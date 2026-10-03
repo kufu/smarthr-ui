@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, memo, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -45,9 +45,7 @@ type CommonProps = {
   withoutNumbers?: boolean
 }
 type BaseProps = (CommonProps & ButtonProps) | (CommonProps & AnchorProps)
-
-type WrapperType = ComponentProps<typeof Wrapper>
-type Props = BaseProps & Omit<WrapperType, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Wrapper>, keyof BaseProps>
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
