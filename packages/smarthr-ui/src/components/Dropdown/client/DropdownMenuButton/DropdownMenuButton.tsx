@@ -44,6 +44,8 @@ type BaseProps = {
   onOpen?: () => void
   /** ドロップダウンメニューが閉じられた際のイベント */
   onClose?: () => void
+  /** 操作群を囲む menu 要素に付与する className */
+  actionListClassName?: string
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 type Props = BaseProps & ElementProps
@@ -191,6 +193,7 @@ export const DropdownMenuButton: FC<Props> = ({
   onOpen,
   onClose,
   className,
+  actionListClassName,
   ...rest
 }) => {
   const {
@@ -206,9 +209,9 @@ export const DropdownMenuButton: FC<Props> = ({
     () => ({
       triggerWrapper: triggerWrapper({ className }),
       triggerButton: triggerButton(),
-      actionList: actionList(),
+      actionList: actionList({ className: actionListClassName }),
     }),
-    [className],
+    [className, actionListClassName],
   )
 
   return (

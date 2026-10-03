@@ -1,16 +1,8 @@
-import {
-  Children,
-  type FC,
-  Fragment,
-  type PropsWithChildren,
-  type ReactElement,
-  type ReactNode,
-  cloneElement,
-  isValidElement,
-} from 'react'
 import { tv } from 'tailwind-variants'
 
-import { DropdownMenuButton, DropdownMenuGroup } from '../Dropdown'
+import { DropdownMenuButton } from '../Dropdown'
+
+import type { FC, PropsWithChildren, ReactNode } from 'react'
 
 type Props = PropsWithChildren<{
   /** 引き金となるボタンラベル */
@@ -39,40 +31,28 @@ const classNameGenerator = tv({
       '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-h-0.25',
       '[&_.smarthr-ui-DropdownMenuButton-trigger:has([aria-current])]:after:shr-bg-main',
     ],
-    actionItem: [
+    // HINT: DropdownContent(Portal経由)内に実際にレンダリングされるmenu要素へ渡すためのslot。
+    // triggerを起点にした子孫セレクタはPortal先には届かないため、actionListClassName経由で直接適用する
+    actionList: [
       // HINT: DropdownMenuButton内で設定されるclassNameより優先度を上げる必要がある
-      '[&&]:aria-current-page:shr-bg-grey-9 [&&]:aria-current-page:shr-font-bold',
-      '[&&]:hover:shr-bg-head-darken',
+      [
+        '[&&_button[aria-current="page"]]:shr-bg-grey-9',
+        '[&&_button[aria-current="page"]]:shr-font-bold',
+        '[&&_a[aria-current="page"]]:shr-bg-grey-9',
+        '[&&_a[aria-current="page"]]:shr-font-bold',
+      ],
+      ['[&&_button:hover]:shr-bg-head-darken', '[&&_a:hover]:shr-bg-head-darken'],
     ],
   },
 })
-const { trigger, actionItem } = classNameGenerator()
+const { trigger, actionList } = classNameGenerator()
 const TRIGGER_CLASSNAME = trigger()
-
-const renderItemList = (children: ReactNode) =>
-  Children.map(children, (item): ReactNode => {
-    if (!isValidElement(item)) {
-      return null
-    }
-
-    if (item.type === Fragment) {
-      return renderItemList(item.props.children)
-    }
-
-    if (item.type === DropdownMenuGroup) {
-      return (
-        <DropdownMenuGroup {...item.props}>{renderItemList(item.props.children)}</DropdownMenuGroup>
-      )
-    }
-
-    return cloneElement(item as ReactElement, {
-      className: actionItem({ className: item.props.className }),
-    })
-  })
+const ACTION_LIST_CLASSNAME = actionList()
 
 export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, children }) => (
   <DropdownMenuButton
     className={TRIGGER_CLASSNAME}
+    actionListClassName={ACTION_LIST_CLASSNAME}
     onOpen={onOpen}
     onClose={onClose}
     trigger={
@@ -83,6 +63,6 @@ export const AppNaviDropdownMenuButton: FC<Props> = ({ label, onOpen, onClose, c
       </>
     }
   >
-    {renderItemList(children)}
+    {children}
   </DropdownMenuButton>
 )
