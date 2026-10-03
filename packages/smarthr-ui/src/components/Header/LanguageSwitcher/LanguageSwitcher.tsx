@@ -1,8 +1,8 @@
 'use client'
 
 import {
+  type ComponentPropsWithoutRef,
   type FC,
-  type HTMLAttributes,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -31,7 +31,7 @@ type BaseProps = {
   enableNew?: boolean
 }
 
-type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Dropdown>, keyof BaseProps>
 
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/

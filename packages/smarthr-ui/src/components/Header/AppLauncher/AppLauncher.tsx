@@ -1,4 +1,4 @@
-import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
@@ -26,7 +26,7 @@ type BaseProps = {
   triggerLabel?: ReactNode
   enableNew?: boolean
 }
-type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Dropdown>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
