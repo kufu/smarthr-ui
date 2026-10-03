@@ -38,7 +38,7 @@ type BaseProps = PropsWithChildren<{
 }> &
   Pick<ComponentProps<typeof Panel>, 'layer'>
 
-type Props = Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps> & BaseProps
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
