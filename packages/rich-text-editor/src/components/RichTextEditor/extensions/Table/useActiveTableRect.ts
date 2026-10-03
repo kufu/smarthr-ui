@@ -2,18 +2,14 @@
 
 import { CellSelection, TableMap } from '@tiptap/pm/tables'
 import { type Editor, useEditorState } from '@tiptap/react'
-import { type RefObject, useEffect, useRef, useState } from 'react'
+import { type RefObject, useMemo } from 'react'
 
-import { useLatest } from '../../../../hooks/useLatest'
+import { type NodeRect, useNodeRect } from '../../hooks/useNodeRect'
 
 import { detectEdgeCells } from './helpers/edgeCellDetection'
-import { getRelativeRect, getTableControlOrigin, resolveTableDisplayElement } from './tableGeometry'
+import { resolveTableDisplayElementFromDOM } from './tableGeometry'
 
-export type ActiveTableInfo = {
-  pos: number
-  rect: { top: number; left: number; width: number; height: number }
-  /** ProseMirror（実際の編集領域）のwrapper相対rect。ボタン表示判定の基準にする */
-  viewport: { top: number; left: number; width: number; height: number }
+export type ActiveTableInfo = NodeRect & {
   /** caret/選択が最右列のいずれかのセルに触れている */
   isRightmostColumnSelected: boolean
   /** caret/選択が最下行のいずれかのセルに触れている */
@@ -28,12 +24,6 @@ const findTablePos = (editor: Editor): number | null => {
     }
   }
   return null
-}
-
-const resolveTableEl = (rootEl: HTMLElement | null): HTMLElement | null => {
-  if (!rootEl) return null
-  if (rootEl.tagName === 'TABLE') return rootEl
-  return rootEl.querySelector('table')
 }
 
 const computeEdgeCells = (
@@ -90,64 +80,10 @@ export const useActiveTableRect = (
   const tablePos = activeSelection?.tablePos ?? null
   const isRightmostColumnSelected = activeSelection?.edge.isRightmostColumnSelected ?? false
   const isBottommostRowSelected = activeSelection?.edge.isBottommostRowSelected ?? false
-  // updateRect の依存に入れずに最新の端フラグを読むため ref に持つ。依存に入れると選択のたびに購読し直しになる。
-  const edgeFlagsRef = useRef({ isRightmostColumnSelected, isBottommostRowSelected })
-  edgeFlagsRef.current = { isRightmostColumnSelected, isBottommostRowSelected }
+  const nodeRect = useNodeRect(editor, containerRef, tablePos, resolveTableDisplayElementFromDOM)
 
-  const [info, setInfo] = useState<ActiveTableInfo | null>(null)
-  const latest = useLatest({ containerRef })
-
-  useEffect(() => {
-    if (tablePos === null) {
-      setInfo(null)
-      return
-    }
-
-    const updateRect = () => {
-      const tableEl = resolveTableEl(editor.view.nodeDOM(tablePos) as HTMLElement | null)
-      const displayEl = tableEl ? resolveTableDisplayElement(tableEl) : null
-      const containerEl = latest.containerRef.current
-      if (!displayEl || !containerEl) return
-      const displayRect = displayEl.getBoundingClientRect()
-      const containerRect = getTableControlOrigin(containerEl)
-      const proseMirrorRect = editor.view.dom.getBoundingClientRect()
-      setInfo({
-        pos: tablePos,
-        rect: getRelativeRect(displayRect, containerRect),
-        viewport: getRelativeRect(proseMirrorRect, containerRect),
-        isRightmostColumnSelected: edgeFlagsRef.current.isRightmostColumnSelected,
-        isBottommostRowSelected: edgeFlagsRef.current.isBottommostRowSelected,
-      })
-    }
-
-    updateRect()
-
-    const tableEl = resolveTableEl(editor.view.nodeDOM(tablePos) as HTMLElement | null)
-    const displayEl = tableEl ? resolveTableDisplayElement(tableEl) : null
-
-    const resizeObserver = new ResizeObserver(updateRect)
-    if (displayEl) resizeObserver.observe(displayEl)
-    if (latest.containerRef.current) resizeObserver.observe(latest.containerRef.current)
-    // スクロールは位置の変化なので ResizeObserver で検知できない。capture phase で祖先全部のスクロールを拾う。
-    window.addEventListener('scroll', updateRect, true)
-
-    return () => {
-      resizeObserver.disconnect()
-      window.removeEventListener('scroll', updateRect, true)
-    }
-  }, [editor, tablePos, latest])
-
-  useEffect(() => {
-    setInfo((prev) =>
-      prev
-        ? {
-            ...prev,
-            isRightmostColumnSelected,
-            isBottommostRowSelected,
-          }
-        : prev,
-    )
-  }, [isRightmostColumnSelected, isBottommostRowSelected])
-
-  return info
+  return useMemo(
+    () => (nodeRect ? { ...nodeRect, isRightmostColumnSelected, isBottommostRowSelected } : null),
+    [nodeRect, isRightmostColumnSelected, isBottommostRowSelected],
+  )
 }

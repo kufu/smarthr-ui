@@ -4,9 +4,9 @@ import { CellSelection } from '@tiptap/pm/tables'
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useLatest } from '../../../../hooks/useLatest'
+import { getControlOrigin } from '../floatingGeometry'
 
 import { TableContextMenu } from './TableContextMenu'
-import { getTableControlOrigin } from './tableGeometry'
 import { type TableScope, getTableTarget } from './tableTarget'
 
 import type { RichTextFeature } from '../../types'
@@ -119,7 +119,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       }
       const highlightLeft = Math.max(highlightRect.left, clip.left)
       const highlightTop = Math.max(highlightRect.top, viewport.top)
-      const { left: originLeft, top: originTop } = getTableControlOrigin(container)
+      const { left: originLeft, top: originTop } = getControlOrigin(container)
       const tableRect = table.getBoundingClientRect()
       setGeometry({
         cellPos: cellTarget.pos,

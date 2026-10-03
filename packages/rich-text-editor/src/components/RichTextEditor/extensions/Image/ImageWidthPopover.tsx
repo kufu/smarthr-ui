@@ -28,6 +28,7 @@ import { TOOLBAR_POPUP_CLASS_NAME } from '../../Toolbar/toolbarItemStyle'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
 import { calcHeightFromWidth, calcWidthFromHeight } from './aspectRatio'
+import { resolveImageElement } from './resolveImageElement'
 
 import type { Editor } from '@tiptap/react'
 
@@ -65,21 +66,15 @@ type Props = {
   ref?: (el: HTMLButtonElement | null) => void
 }
 
-const resolveImageEl = (editor: Editor, pos: number): HTMLImageElement | null => {
-  const dom = editor.view.nodeDOM(pos) as HTMLElement | null
-
-  return (dom?.tagName === 'IMG' ? dom : dom?.querySelector('img')) as HTMLImageElement | null
-}
-
 const getNaturalSize = (editor: Editor, pos: number): { w: number; h: number } => {
-  const img = resolveImageEl(editor, pos)
+  const img = resolveImageElement(editor.view.nodeDOM(pos))
 
   return { w: img?.naturalWidth ?? 0, h: img?.naturalHeight ?? 0 }
 }
 
 // 画面に表示されている実寸（max-width:100% による縮小後のサイズ）
 const getRenderedSize = (editor: Editor, pos: number): { w: number; h: number } => {
-  const img = resolveImageEl(editor, pos)
+  const img = resolveImageElement(editor.view.nodeDOM(pos))
 
   return { w: img?.offsetWidth ?? 0, h: img?.offsetHeight ?? 0 }
 }
