@@ -320,3 +320,62 @@ export const Table: Story = {
     </Stack>
   ),
 }
+
+const LONG_TEXT =
+  '両端揃えは行の端まで文字間を広げるため、折り返しが起きる長さの文章でないと左揃えと見分けがつきません。'
+
+export const TextAlign: Story = {
+  name: '文字揃え',
+  args: {
+    content: {
+      type: 'doc',
+      content: [
+        ...['left', 'center', 'right', 'justify'].map((textAlign) => ({
+          type: 'paragraph',
+          attrs: { textAlign },
+          content: [{ type: 'text', text: `${textAlign}: ${LONG_TEXT}` }],
+        })),
+        {
+          type: 'heading',
+          attrs: { level: 2, textAlign: 'center' },
+          content: [{ type: 'text', text: '中央揃えの見出し' }],
+        },
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <div style={{ width: 360 }}>
+      <RichTextViewer content={content} />
+    </div>
+  ),
+}
+
+export const Media: Story = {
+  name: 'コードブロック・画像・YouTube',
+  args: {
+    content: {
+      type: 'doc',
+      content: [
+        {
+          type: 'codeBlock',
+          attrs: { language: 'typescript' },
+          content: [
+            { type: 'text', text: 'const greeting: string = "hello"\nconsole.log(greeting)' },
+          ],
+        },
+        {
+          type: 'image',
+          attrs: { src: '/fixtures/sample-png.png', alt: '幅200pxの画像', width: 200 },
+        },
+        {
+          type: 'youtube',
+          attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 320, height: 180 },
+        },
+      ],
+    },
+  },
+  parameters: {
+    // 埋め込み先の描画は YouTube 側の都合で変わるため、中身は比較せず枠の大きさだけを見る
+    chromatic: { ignoreSelectors: ['iframe'] },
+  },
+}

@@ -4,6 +4,9 @@ import { within } from 'storybook/test'
 import { RichTextEditor } from '../RichTextEditor'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Editor } from '@tiptap/core'
+
+type TiptapEditorHTMLElement = HTMLElement & { editor?: Editor }
 
 const ALL_FEATURES = [
   'bold',
@@ -98,7 +101,7 @@ const richContent = {
     },
     {
       type: 'codeBlock',
-      content: [{ type: 'text', text: 'const x = 1' }],
+      content: [{ type: 'text', text: 'const x = 1\nconsole.log(x)' }],
     },
     { type: 'horizontalRule' },
     {
@@ -398,6 +401,17 @@ export const VRTScrollableToolbar: Story = {
   ),
 }
 
+/**
+ * userEvent.click ではなく click() を使うのは、ポインタ操作に伴う hover 状態やツールチップが
+ * スナップショットに残ると差分の原因になるため。開いた中身は rAF でフォーカスを移すので、その発火まで待つ
+ */
+const clickButton = async (canvasElement: HTMLElement, name: string | RegExp) => {
+  const button = await within(canvasElement).findByRole('button', { name })
+
+  button.click()
+  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+}
+
 export const VRTWrappedToolbar: Story = {
   name: 'ツールバーの折り返し表示（トグルを押した状態）',
   render: () => (
@@ -405,11 +419,120 @@ export const VRTWrappedToolbar: Story = {
       <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} width={375} />
     </FormControl>
   ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const toggle = await canvas.findByRole('button', { name: '折り返して表示' })
-    // userEvent.click ではなく click() を使うのは、ポインタ操作に伴う hover 状態が
-    // スナップショットに残ると背景色が変わって差分の原因になるため
-    toggle.click()
+  play: ({ canvasElement }) => clickButton(canvasElement, '折り返して表示'),
+}
+
+export const VRTPlaceholderAndHiddenToolbar: Story = {
+  name: 'プレースホルダーとツールバー非表示',
+  render: () => (
+    <Stack gap={2}>
+      <FormControl label="空でプレースホルダーあり">
+        <RichTextEditor features={ALL_FEATURES} placeholder="本文を入力してください" />
+      </FormControl>
+      <FormControl label="ツールバー非表示">
+        <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} hideToolbar />
+      </FormControl>
+    </Stack>
+  ),
+}
+
+const openToolbarPopup =
+  (name: RegExp): Story['play'] =>
+  ({ canvasElement }) =>
+    clickButton(canvasElement, name)
+
+export const VRTHeadingDropdownOpen: Story = {
+  name: '書式のドロップダウン（見出しレベルを制限）',
+  render: () => (
+    <FormControl label="見出し2・3のみ許可">
+      <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} headingLevels={[2, 3]} />
+    </FormControl>
+  ),
+  play: openToolbarPopup(/^書式/),
+}
+
+export const VRTLinkPopoverOpen: Story = {
+  name: 'リンクのポップオーバー',
+  render: () => (
+    <FormControl label="リンク">
+      <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} />
+    </FormControl>
+  ),
+  play: openToolbarPopup(/^リンク/),
+}
+
+export const VRTColorPickerOpen: Story = {
+  name: '文字色のパレット',
+  render: () => (
+    <FormControl label="文字色">
+      <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} />
+    </FormControl>
+  ),
+  play: openToolbarPopup(/^文字色/),
+}
+
+const createTable = (rows: string[][]) => ({
+  type: 'table',
+  content: rows.map((cells, row) => ({
+    type: 'tableRow',
+    content: cells.map((text) => ({
+      type: row === 0 ? 'tableHeader' : 'tableCell',
+      attrs: { colwidth: [160] },
+      content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+    })),
+  })),
+})
+
+// 表を2つ続けて置き、上の表の行追加バーと下の表の操作ハンドルが重ならない間隔も写す
+const tableContent = {
+  type: 'doc' as const,
+  content: [
+    createTable([
+      ['名前', '部署'],
+      ['山田 花子', '開発部'],
+      ['佐藤 太郎', 'プロダクト部'],
+    ]),
+    createTable([
+      ['拠点', '人数'],
+      ['東京', '120'],
+    ]),
+  ],
+}
+
+// DOM の選択範囲を動かすと ProseMirror が取り込むのは次のタスクになり、撮影と競合する。
+// focus コマンドはフォーカスを次のフレームへ遅らせ、後から開いたメニューを閉じてしまう
+const placeCaretInCell: Story['play'] = async ({ canvasElement }) => {
+  const editorElement: TiptapEditorHTMLElement = await within(canvasElement).findByRole('textbox')
+  const cell = await within(editorElement).findByText('山田 花子')
+  const editor = editorElement.editor
+
+  if (editor) {
+    editor.commands.setTextSelection(editor.view.posAtDOM(cell, 0))
+    editor.view.focus()
+  }
+
+  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+}
+
+export const VRTTableControls: Story = {
+  name: '表の操作ハンドル',
+  render: () => (
+    <FormControl label="セルにキャレットがある状態">
+      <RichTextEditor defaultValue={tableContent} features={ALL_FEATURES} />
+    </FormControl>
+  ),
+  play: placeCaretInCell,
+}
+
+export const VRTTableContextMenu: Story = {
+  name: '表の操作メニュー',
+  render: () => (
+    <FormControl label="セルの操作メニューを開いた状態">
+      <RichTextEditor defaultValue={tableContent} features={ALL_FEATURES} />
+    </FormControl>
+  ),
+  play: async (context) => {
+    await placeCaretInCell(context)
+    await clickButton(context.canvasElement, 'セルの操作')
   },
 }

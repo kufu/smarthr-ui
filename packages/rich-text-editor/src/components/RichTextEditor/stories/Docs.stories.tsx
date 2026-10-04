@@ -54,6 +54,7 @@ const meta = {
   title: 'Editor/Docs',
   tags: ['!dev'],
   parameters: {
+    chromatic: { disableSnapshot: true },
     layout: 'padded',
   },
 } satisfies Meta

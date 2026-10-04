@@ -6,6 +6,7 @@ const meta = {
   title: 'Editor/RichTextViewer',
   component: RichTextViewer,
   parameters: {
+    chromatic: { disableSnapshot: true },
     layout: 'padded',
   },
   args: {
