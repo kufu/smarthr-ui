@@ -60,6 +60,11 @@ export const editorContentClasses = [
   // tableWrapperの右と下に +列/+行 バー(24px)用の余白を確保。テーブル幅がそれを超えると
   // tableWrapper内で横スクロールが発生する。
   '[&_.ProseMirror_.tableWrapper]:shr-outline-none [&_.ProseMirror_.tableWrapper]:shr-shadow-none [&_.ProseMirror_.tableWrapper]:shr-mt-2 [&_.ProseMirror_.tableWrapper]:shr-mb-2 [&_.ProseMirror_.tableWrapper]:shr-ml-1.5 [&_.ProseMirror_.tableWrapper]:shr-w-fit [&_.ProseMirror_.tableWrapper]:shr-max-w-[calc(100%-3.25rem)] [&_.ProseMirror_.tableWrapper]:shr-overflow-x-auto',
+  // 余白は上下それぞれ片側の操作UI（下の行追加バー・上の列ハンドル）分しか見込んでおらず、
+  // 表が続くと margin の相殺で両者が同じ帯に重なる。全ての表を広げず、隣り合うときだけ広げる
+  '[&_.ProseMirror_.tableWrapper+.tableWrapper]:shr-mt-4',
+  // 表の間にギャップカーソルが置かれると、要素が挟まって上のセレクタが外れる
+  '[&_.ProseMirror_.tableWrapper+.ProseMirror-gapcursor+.tableWrapper]:shr-mt-4',
   '[&_.ProseMirror_table]:shr-w-auto [&_.ProseMirror_table]:shr-table-fixed [&_.ProseMirror_table]:shr-border-collapse [&_.ProseMirror_table]:shr-overflow-hidden',
   // 右の padding だけ広いのは、セル操作ボタン(24px幅)がセルの右端をまたいで配置され
   // 内側へ13px食い込むため。左右対称にすると本文がボタンの下に潜る。
