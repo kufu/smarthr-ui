@@ -18,6 +18,8 @@ const openUrlPopover = async (user: ReturnType<typeof userEvent.setup>) => {
   await waitFor(() => expect(screen.getByRole('textbox', { name: '' })).toBeInTheDocument())
   await user.click(screen.getByRole('button', { name: '画像を挿入' }))
   await user.click(screen.getByRole('menuitem', { name: 'URLから挿入' }))
+  // 入力欄は次のフレームでフォーカスを取る。待たずに操作すると、後から届いたフォーカスに奪われる
+  await waitFor(() => expect(screen.getByRole('textbox', { name: /^画像URL/ })).toHaveFocus())
 }
 
 describe('ImageUrlPopover', () => {
