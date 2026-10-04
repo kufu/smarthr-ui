@@ -26,10 +26,12 @@ import { patchListItemShiftTab } from './listItemShiftTab'
 import { createOperationRestrictor } from './restrictOperations'
 import { NO_RUNTIME_OPTIONS } from './runtimeOptions'
 import {
-  YOUTUBE_DEFAULT_SIZE,
-  YOUTUBE_EMBED_OPTIONS,
-  YOUTUBE_IFRAME_ATTRIBUTES,
-} from './youtubeOptions'
+  BLOCK_STYLE_TYPES,
+  IMAGE_OPTIONS,
+  STARTER_KIT_OPTIONS,
+  TABLE_OPTIONS,
+  YOUTUBE_OPTIONS,
+} from './schemaExtensions'
 
 import type { GetRichTextRuntimeOptions } from './runtimeOptions'
 import type { RichTextFeature } from '../types'
@@ -69,11 +71,7 @@ export const configureExtensions = ({
   const limitHeading = createHeadingOperationLimiter(getAllowedHeadingLevels)
 
   const extensions: AnyExtension[] = [
-    StarterKit.configure({
-      // schema は常に全レベル。許可レベルの制限は操作側だけで行う
-      heading: { levels: [...SUPPORTED_HEADING_LEVELS] },
-      link: { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto'] },
-    }).extend({
+    StarterKit.configure(STARTER_KIT_OPTIONS).extend({
       addExtensions() {
         // patch を restrict より先に通す。features にリストが無いとき restrict が
         // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
@@ -93,13 +91,11 @@ export const configureExtensions = ({
             'Mod-Shift-l': () => this.editor.commands.unsetTextAlign(),
           }
         },
-      }).configure({
-        types: ['heading', 'paragraph'],
-      }),
+      }).configure({ types: BLOCK_STYLE_TYPES }),
     ),
     restrict(
       CustomImage.configure({
-        allowBase64: false,
+        ...IMAGE_OPTIONS,
         // ドラッグリサイズは NodeView 側の機能なので、操作を剥がすだけでは止まらない
         isResizable: () => getFeatures().includes('image'),
         resize: {
@@ -141,19 +137,11 @@ export const configureExtensions = ({
   ]
 
   extensions.push(
-    restrict(
-      CustomYoutube.configure({
-        ...YOUTUBE_EMBED_OPTIONS,
-        ...YOUTUBE_DEFAULT_SIZE,
-        HTMLAttributes: YOUTUBE_IFRAME_ATTRIBUTES,
-      }),
-    ),
-    // renderWrapper: true で HTML 出力にも <div class="tableWrapper"> を含める。
-    // これで RichTextViewer 側でも横スクロール用 wrapper が機能する。
+    restrict(CustomYoutube.configure(YOUTUBE_OPTIONS)),
     restrict(
       CustomTable.configure({
+        ...TABLE_OPTIONS,
         resizable: true,
-        renderWrapper: true,
         isColumnResizable: () => getFeatures().includes('table'),
       }),
       { keepPlugins: true },
@@ -168,7 +156,7 @@ export const configureExtensions = ({
     restrict(Color.configure()),
     restrict(BackgroundColor.configure()),
     restrict(FontSize.configure()),
-    restrict(LineHeight.configure({ types: ['paragraph', 'heading'] })),
+    restrict(LineHeight.configure({ types: BLOCK_STYLE_TYPES })),
   )
 
   extensions.push(
@@ -181,7 +169,7 @@ export const configureExtensions = ({
   return extensions
 }
 
-/** 全feature有効のextensions（serializer用） */
+/** すべての feature */
 export const ALL_FEATURES: readonly RichTextFeature[] = [
   'bold',
   'italic',

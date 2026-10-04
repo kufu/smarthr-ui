@@ -1,7 +1,6 @@
 import { ResizableNodeView, getRenderedAttributes } from '@tiptap/core'
-import { Image } from '@tiptap/extension-image'
 
-import { isSafeImageSrc } from '../../serializers/safeAttributes'
+import { SafeImage } from './SafeImage'
 
 import type { NodeViewRendererProps, ResizableNodeViewDirection } from '@tiptap/core'
 import type { ImageOptions } from '@tiptap/extension-image'
@@ -90,21 +89,12 @@ class PersistentHandlesNodeView extends ResizableNodeView {
  * onResize / onCommit / options は標準実装と同一。読み込み完了まで隠す挙動も踏襲するが、
  * 標準に無い onerror を足して失敗時に操作できる状態へ戻す。
  */
-export const CustomImage = Image.extend<CustomImageOptions>({
+export const CustomImage = SafeImage.extend<CustomImageOptions>({
   addOptions() {
     return {
       ...(this.parent?.() as ImageOptions),
       isResizable: () => true,
     }
-  },
-
-  // 標準は data: を除くだけで、blob: や相対パスの画像は取り込まれて保存後の表示で落ちる
-  parseHTML() {
-    return (this.parent?.() ?? []).map((rule) => ({
-      ...rule,
-      getAttrs: (element: HTMLElement) =>
-        isSafeImageSrc(element.getAttribute('src')) ? null : false,
-    }))
   },
 
   addNodeView() {

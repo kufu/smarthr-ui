@@ -651,7 +651,8 @@ export const StaticDisplay: Story = {
     <Stack gap={1.5}>
       <Text color="TEXT_GREY">
         保存済みの内容を表示するだけなら RichTextViewer を使います。editor instance
-        を起動しないため軽量です。JSON でも HTML でも渡せます。
+        を起動せず、ツールバーや画像アップロードの処理も読み込みません。JSON でも HTML
+        でも渡せます。
       </Text>
       <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16 }}>
         <RichTextViewer
