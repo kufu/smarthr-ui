@@ -8,9 +8,9 @@ import {
 } from './NotificationBar.stories'
 
 import type { StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
-type Props = ComponentProps<typeof NotificationBar>
+type Props = ComponentPropsWithoutRef<typeof NotificationBar>
 
 /* ペアワイズ法による網羅
 paneled  bold   type     children   subActionArea  layer      onClose  */

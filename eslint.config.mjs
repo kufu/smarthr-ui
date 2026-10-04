@@ -195,6 +195,12 @@ export default [
               message:
                 'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
             },
+            {
+              name: 'react',
+              importNames: ['ComponentProps'],
+              message:
+                'ComponentPropsの利用は禁止されています。refの有無を明示するため、ComponentPropsWithRefまたはComponentPropsWithoutRefを使用してください。',
+            },
           ],
         },
       ],
