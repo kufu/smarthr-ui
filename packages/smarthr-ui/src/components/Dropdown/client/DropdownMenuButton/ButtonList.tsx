@@ -2,8 +2,7 @@
 
 import {
   Children,
-  type ComponentPropsWithRef,
-  type ComponentPropsWithoutRef,
+  type ComponentProps,
   type FC,
   Fragment,
   type ReactElement,
@@ -20,9 +19,9 @@ export type Actions = ActionItem | ActionItem[]
 
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
 type ActionItem =
-  | ReactElement<ComponentPropsWithRef<typeof Button>>
-  | ReactElement<ComponentPropsWithRef<typeof AnchorButton>>
-  | ReactElement<ComponentPropsWithoutRef<typeof RemoteDialogTrigger>>
+  | ReactElement<ComponentProps<typeof Button>>
+  | ReactElement<ComponentProps<typeof AnchorButton>>
+  | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
   | ReactNode
 
 // HINT: DropdownMenuGroup.tsx側がButtonListに依存しているため、循環依存を避けるために
