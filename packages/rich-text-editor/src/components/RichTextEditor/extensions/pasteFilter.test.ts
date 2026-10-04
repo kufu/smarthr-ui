@@ -231,6 +231,104 @@ describe('createPasteFilter', () => {
       expect(json).toContain('本文')
     })
 
+    it('features 外の見出しを段落へ降格しても、中の mark は features で絞る', () => {
+      const result = filterSlice(['bold'], {
+        content: [
+          {
+            type: 'heading',
+            attrs: { level: 2 },
+            content: [text('太字', [{ type: 'bold' }]), text('斜体', [{ type: 'italic' }])],
+          },
+        ],
+      })
+
+      expect(result.content).toEqual([
+        {
+          type: 'paragraph',
+          attrs: expect.anything(),
+          content: [{ type: 'text', marks: [{ type: 'bold' }], text: '太字' }, text('斜体')],
+        },
+      ])
+    })
+
+    const tableWithList = {
+      content: [
+        {
+          type: 'table',
+          content: [
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  content: [
+                    {
+                      type: 'bulletList',
+                      content: [{ type: 'listItem', content: [paragraph([text('項目')])] }],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+
+    it('features 外のテーブルの中の features 外のリストは、段落まで平坦化する', () => {
+      const result = filterSlice(['bold'], tableWithList)
+
+      expect(result.content).toEqual([
+        { type: 'paragraph', attrs: expect.anything(), content: [text('項目')] },
+      ])
+    })
+
+    it('features 外のテーブルの中の features 内のリストは、リストのまま残す', () => {
+      const result = filterSlice(['bulletList'], tableWithList)
+
+      expect(result.content).toEqual([
+        {
+          type: 'bulletList',
+          content: [
+            {
+              type: 'listItem',
+              content: [{ type: 'paragraph', attrs: expect.anything(), content: [text('項目')] }],
+            },
+          ],
+        },
+      ])
+    })
+
+    it('features 外の YouTube は削除する', () => {
+      const result = filterSlice(['bold'], {
+        content: [
+          { type: 'youtube', attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' } },
+          paragraph([text('本文')]),
+        ],
+      })
+
+      expect(JSON.stringify(result.content)).not.toContain('youtube')
+      expect(JSON.stringify(result.content)).toContain('本文')
+    })
+
+    it('改行は features に関係なく残す', () => {
+      const result = filterSlice(['bold'], {
+        content: [paragraph([text('1行目'), { type: 'hardBreak' }, text('2行目')])],
+      })
+
+      expect(JSON.stringify(result.content)).toContain('hardBreak')
+    })
+
+    it('features に heading が無ければ、許可レベルを渡しても段落へ降格する', () => {
+      const slice = Slice.fromJSON(schema, {
+        content: [{ type: 'heading', attrs: { level: 2 }, content: [text('見出し')] }],
+      })
+
+      const result = createPasteFilter(['bold'], [2])(slice)
+
+      expect(result.content.firstChild?.type.name).toBe('paragraph')
+    })
+
     it('features 内のテーブルはそのまま残す', () => {
       const result = filterSlice(['table'], {
         content: [
