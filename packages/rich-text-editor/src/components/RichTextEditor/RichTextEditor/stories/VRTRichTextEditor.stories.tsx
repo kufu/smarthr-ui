@@ -4,9 +4,7 @@ import { within } from 'storybook/test'
 import { RichTextEditor } from '../RichTextEditor'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { Editor } from '@tiptap/core'
-
-type TiptapEditorHTMLElement = HTMLElement & { editor?: Editor }
+import type { TiptapEditorHTMLElement } from '@tiptap/core'
 
 const ALL_FEATURES = [
   'bold',
@@ -506,10 +504,11 @@ const placeCaretInCell: Story['play'] = async ({ canvasElement }) => {
   const cell = await within(editorElement).findByText('山田 花子')
   const editor = editorElement.editor
 
-  if (editor) {
-    editor.commands.setTextSelection(editor.view.posAtDOM(cell, 0))
-    editor.view.focus()
-  }
+  // 撮りたい状態を作れないまま撮影を通すと、退行を見逃す
+  if (!editor) throw new Error('RichTextEditor の editor を取得できません')
+
+  editor.commands.setTextSelection(editor.view.posAtDOM(cell, 0))
+  editor.view.focus()
 
   await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
 }

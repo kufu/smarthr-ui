@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
-import type { Editor } from '@tiptap/core'
+import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { FC, ReactNode } from 'react'
 
 const rendered = vi.hoisted(() => ({ labels: [] as string[], dropdowns: [] as string[] }))
@@ -84,7 +84,7 @@ const renderEditor = async () => {
   )
   await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
 
-  return (document.querySelector('.ProseMirror') as HTMLElement & { editor: Editor }).editor
+  return document.querySelector<TiptapEditorHTMLElement>('.ProseMirror')!.editor!
 }
 
 describe('ツールバーの roving tabindex', () => {

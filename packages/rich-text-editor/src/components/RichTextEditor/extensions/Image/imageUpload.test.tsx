@@ -219,6 +219,38 @@ describe('アップロード中の文書差し替え', () => {
     expect(imageSrcs()).toHaveLength(0)
   })
 
+  it('clear() は本文を空にし、アップロード中の表示を消して onChange を呼ぶ', async () => {
+    const onImageUpload = vi.fn(() => createDeferred().promise)
+    const onChange = vi.fn()
+    const ref = createRef<RichTextEditorController>()
+    render(
+      <RichTextEditor
+        ref={ref}
+        defaultValue={{
+          type: 'doc',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: '本文' }] }],
+        }}
+        features={['image']}
+        onImageUpload={onImageUpload}
+        onChange={onChange}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+    fireEvent.change(getFileInput(), { target: { files: [pngFile()] } })
+    await waitFor(() => expect(screen.getByRole('status')).toBeInTheDocument())
+
+    act(() => ref.current?.clear())
+
+    expect(screen.queryByText('本文')).not.toBeInTheDocument()
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(ref.current?.isEmpty()).toBe(true)
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ type: 'doc' }),
+      expect.objectContaining({ isEmpty: true }),
+    )
+  })
+
   it('value が差し替わったら完了後も画像を挿入しない', async () => {
     const deferred = createDeferred()
     const onImageUpload = vi.fn(() => deferred.promise)

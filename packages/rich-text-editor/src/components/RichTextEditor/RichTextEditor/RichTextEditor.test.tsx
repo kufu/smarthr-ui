@@ -1476,4 +1476,70 @@ describe('RichTextEditor', () => {
       await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
     })
   })
+
+  describe('ref', () => {
+    it('focus() で本文にフォーカスする', async () => {
+      const ref = createRef<RichTextEditorController>()
+      render(<RichTextEditor ref={ref} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      act(() => ref.current?.focus())
+
+      await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
+    })
+
+    it('エディタの準備が整う前は空の値を返し、操作しても例外を投げない', async () => {
+      let beforeReady: Record<string, unknown> | undefined
+      const captureFirst = (controller: RichTextEditorController | null) => {
+        if (controller && !beforeReady) {
+          controller.focus()
+          controller.clear()
+          controller.toggleBold()
+          beforeReady = {
+            json: controller.getJSON(),
+            html: controller.getHTML(),
+            text: controller.getText(),
+            isEmpty: controller.isEmpty(),
+          }
+        }
+      }
+      render(<RichTextEditor ref={captureFirst} defaultValue={paragraphDoc('本文')} />, {
+        wrapper: Wrapper,
+      })
+
+      await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+      expect(beforeReady).toEqual({
+        json: { type: 'doc', content: [] },
+        html: '',
+        text: '',
+        isEmpty: true,
+      })
+    })
+  })
+
+  describe('編集後の表示の更新', () => {
+    it('文字数の表示が編集に追従する', async () => {
+      render(<RichTextEditor defaultValue={paragraphDoc('abc')} showCharacterCount />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(screen.getByText('文字数：3')).toBeInTheDocument())
+
+      act(() => {
+        getEditor().chain().setTextSelection(4).insertContent('de').run()
+      })
+
+      await waitFor(() => expect(screen.getByText('文字数：5')).toBeInTheDocument())
+    })
+
+    it('readOnly の切り替えでツールバーが出入りする', async () => {
+      const { rerender } = render(<RichTextEditor />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+
+      rerender(<RichTextEditor readOnly />)
+      await waitFor(() => expect(screen.queryByRole('toolbar')).not.toBeInTheDocument())
+
+      rerender(<RichTextEditor />)
+      await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+    })
+  })
 })

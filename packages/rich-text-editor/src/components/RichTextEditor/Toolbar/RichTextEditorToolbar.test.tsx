@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
 import type { RichTextFeature } from '../types'
-import type { Editor } from '@tiptap/core'
+import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 // 段以外を監視しているコールバック（画像や表の位置追従）を巻き込まないよう絞り込む
@@ -258,8 +258,7 @@ describe('RichTextEditorToolbar', () => {
       )
       expect(screen.queryByRole('button', { name: WRAP_TOGGLE_LABEL })).not.toBeInTheDocument()
 
-      const editor = (document.querySelector('.ProseMirror') as HTMLElement & { editor: Editor })
-        .editor
+      const editor = document.querySelector<TiptapEditorHTMLElement>('.ProseMirror')!.editor!
       act(() => {
         editor.commands.setTextSelection(editor.state.doc.content.size - 2)
       })
