@@ -1,5 +1,3 @@
-'use client'
-
 import { type FC, memo, useMemo } from 'react'
 
 import { tv } from '../../../libs/tv'
