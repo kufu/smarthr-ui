@@ -234,10 +234,10 @@ export const useRichTextEditor = ({
 
   // placeholder の同期
   useEffect(() => {
-    // 空の transaction で描き直さないのは、appendTransaction を持つ plugin（TrailingNode など）が
-    // 文書を変え、操作していないのに onChange と履歴が発生するため。
-    // 変換中に描き直さないのは入力中の文字を壊さないため。変換中は本文が空でなく表示もされない
-    if (editor && !editor.isDestroyed && !editor.view.composing) {
+    // useEditor も再描画ごとに setOptions で描き直すが、それは editorProps が毎回新しいためで、
+    // メモ化すると止まる。空の transaction で描き直さないのは、appendTransaction を持つ plugin
+    // （TrailingNode など）が文書を変え、操作していないのに onChange と履歴が発生するため
+    if (editor && !editor.isDestroyed) {
       editor.view.setProps({})
     }
   }, [editor, placeholder])
