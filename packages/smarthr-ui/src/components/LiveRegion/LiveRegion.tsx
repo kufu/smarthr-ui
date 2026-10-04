@@ -3,7 +3,6 @@
 import {
   type ComponentPropsWithoutRef,
   type FC,
-  type PropsWithChildren,
   type ReactNode,
   useCallback,
   useState,
@@ -11,7 +10,7 @@ import {
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type BaseProps = PropsWithChildren & {
+type BaseProps = {
   announceDelay?: number
   skipInitialAnnounce?: boolean
   visuallyHidden?: boolean

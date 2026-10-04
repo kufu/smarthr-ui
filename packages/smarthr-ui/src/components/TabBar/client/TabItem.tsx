@@ -43,7 +43,7 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** タブの ID */
   id: string
   /** ボタン内の末尾に表示する内容 */
@@ -61,7 +61,7 @@ type BaseProps = PropsWithChildren<{
   }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>
+}
 type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<typeof UnstyledButton>,

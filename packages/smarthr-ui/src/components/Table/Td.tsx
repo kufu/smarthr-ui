@@ -1,11 +1,11 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
 type CellContentWidth = number | string
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** テキストの水平方向の配置 */
   align?: 'left' | 'right'
   /** テキストの垂直方向の配置 */
@@ -16,7 +16,7 @@ type BaseProps = PropsWithChildren<{
   fixed?: 'left' | 'right'
   contentWidth?:
     CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'td'>, keyof BaseProps>
 
 export const Td: FC<Props> = memo(

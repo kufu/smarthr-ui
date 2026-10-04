@@ -1,10 +1,10 @@
 import { ScrollerSwitcher } from './ScrollerSwitcher'
 
-import type { ComponentPropsWithoutRef, FC, PropsWithChildren } from 'react'
+import type { ComponentPropsWithoutRef, FC } from 'react'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   fixedHead?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const TableScroller: FC<Props> = ({ children, fixedHead, ...rest }) => (

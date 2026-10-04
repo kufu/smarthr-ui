@@ -1,17 +1,11 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
 import type { Gap } from '../../../types'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** コンテンツの最小高さ */
   minHeight?: number | string
   /** コンテンツの最大幅 */
@@ -21,7 +15,7 @@ type BaseProps = PropsWithChildren<{
   /** 天地中央揃えも有効化するかどうか */
   verticalCentering?: boolean
   as?: string | ComponentType<any>
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const centerClassNameGenerator = tv({

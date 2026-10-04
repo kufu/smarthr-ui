@@ -3,7 +3,6 @@
 import {
   type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useId,
@@ -28,7 +27,7 @@ type ObjectHeadingType = {
   unrecommendedTag?: ComponentPropsWithRef<typeof Heading>['unrecommendedTag']
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** パネルのタイトル */
   heading: HeadingType
   /** `true` のとき、開閉ボタンを表示する */
@@ -41,8 +40,7 @@ type BaseProps = PropsWithChildren<{
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
   /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
   bold?: boolean
-}>
-
+}
 type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<typeof Panel>,

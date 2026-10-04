@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type MouseEvent,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, type MouseEvent, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useLocalize } from '../../../intl'
@@ -14,7 +8,7 @@ import { Nav } from '../../SectioningContent'
 
 import type { ClickableProps } from '../type'
 
-type BaseProps = PropsWithChildren<ClickableProps>
+type BaseProps = ClickableProps
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Nav>, keyof BaseProps | 'baseLevel'>
 
 const BUTTON_REGEX = /^button$/i

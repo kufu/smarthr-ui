@@ -1,20 +1,14 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
 type StatusLabelType = 'grey' | 'blue' | 'green' | 'red' | 'warning' | 'error'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   type?: StatusLabelType
   bold?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({

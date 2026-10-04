@@ -1,17 +1,12 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useLayoutEffect,
-  useState,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-type Props = PropsWithChildren<ComponentPropsWithoutRef<'div'>> & {
+type BaseProps = {
   parent?: HTMLElement
 }
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const DialogPortal: FC<Props> = ({ parent, children, ...rest }) => {
   const [isMounted, setIsMounted] = useState(false)

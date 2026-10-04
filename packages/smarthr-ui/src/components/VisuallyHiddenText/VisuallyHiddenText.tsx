@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type ElementType, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 const visuallyHiddenTextClassNameGenerator = tv({
@@ -13,9 +7,9 @@ const visuallyHiddenTextClassNameGenerator = tv({
 
 export const visuallyHiddenTextClassName = visuallyHiddenTextClassNameGenerator()
 
-type BaseProps<T extends ElementType> = PropsWithChildren<{
+type BaseProps<T extends ElementType> = {
   as?: T
-}>
+}
 type Props<T extends ElementType> = BaseProps<T> &
   Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
 

@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
@@ -6,11 +6,11 @@ import { Scroller } from '../Scroller'
 
 import type { Gap } from '../../types'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** コンテンツ部分の背景色 */
   contentBgColor?: keyof typeof backgroundColor
   contentPadding?: Gap | { block?: Gap; inline?: Gap }
-}>
+}
 type Props = BaseProps &
   Omit<ComponentPropsWithRef<typeof Scroller>, keyof BaseProps | 'as' | 'direction' | 'styleType'>
 

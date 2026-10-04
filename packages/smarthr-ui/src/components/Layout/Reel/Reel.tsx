@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Scroller } from '../../Scroller'
@@ -12,11 +6,11 @@ import { useSectionWrapper } from '../../SectioningContent'
 
 import type { PositiveGap } from '../../../types'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   as?: string | ComponentType<any>
   gap?: PositiveGap
   padding?: PositiveGap
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({

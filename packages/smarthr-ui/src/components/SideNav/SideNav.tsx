@@ -1,13 +1,13 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import type { SideNavSizeType } from './SideNavItemButton'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof BaseProps>
 
 const ROUNDED = {

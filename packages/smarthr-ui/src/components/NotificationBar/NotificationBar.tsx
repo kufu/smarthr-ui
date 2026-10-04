@@ -2,7 +2,6 @@ import {
   type ComponentPropsWithoutRef,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -20,7 +19,7 @@ import { Text } from '../Text'
 type PanelProps = ComponentPropsWithoutRef<typeof Panel>
 type MessageType = ComponentPropsWithoutRef<typeof StatusIcon>['status']
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = Pick<PanelProps, 'layer'> & {
   /** コンポーネント右の領域 */
   subActionArea?: ReactNode
   /** 閉じるボタン押下時に発火させる関数 */
@@ -35,9 +34,7 @@ type BaseProps = PropsWithChildren<{
   bold?: boolean
   /** スライドインするかどうか */
   animate?: boolean
-}> &
-  Pick<PanelProps, 'layer'>
-
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({

@@ -1,19 +1,12 @@
 import dayjs from 'dayjs'
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  useId,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster, Sidebar, Stack } from '../Layout'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   datetime: Date | string
   /** 日付の代わりに表示するテキスト */
   dateLabel?: string
@@ -25,7 +18,7 @@ type BaseProps = PropsWithChildren<{
   sideActionArea?: ReactNode
   /** 現在のアイテムかどうか */
   current?: boolean
-}>
+}
 type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<typeof Stack>,

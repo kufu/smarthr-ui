@@ -25,14 +25,14 @@ import type { Text } from '../../Text'
 type TextProps = ComponentPropsWithoutRef<typeof Text>
 type HeadingProps = ComponentPropsWithoutRef<typeof Heading>
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** ヘッダ部分のテキストのスタイル */
   headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
   unrecommendedHeadingTag?: HeadingProps['unrecommendedTag']
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
 
 const classNameGenerator = tv({

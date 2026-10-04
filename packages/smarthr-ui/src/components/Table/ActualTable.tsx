@@ -1,7 +1,7 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** 罫線の種類 */
   borderType?: 'vertical' | 'horizontal' | 'both' | 'outer' | 'all'
   /** 罫線のスタイル */
@@ -12,7 +12,7 @@ type BaseProps = PropsWithChildren<{
   layout?: 'auto' | 'fixed'
   /** ヘッダーを固定するかどうか */
   fixedHead?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'table'>, keyof BaseProps>
 
 const ROUNDED = {

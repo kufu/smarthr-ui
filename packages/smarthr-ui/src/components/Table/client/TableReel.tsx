@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
@@ -19,9 +13,9 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   fixedHead?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const classNameGenerator = tv({

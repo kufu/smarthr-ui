@@ -1,9 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type ElementType, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
@@ -23,14 +18,13 @@ type JustifyType =
   | 'space-evenly'
   | 'stretch'
 
-type BaseProps<T extends ElementType> = PropsWithChildren<{
+type BaseProps<T extends ElementType> = {
   as?: T
   gap?: PositiveGap | SeparatePositiveGap
   inline?: boolean
   align?: AlignType
   justify?: JustifyType
-}>
-
+}
 type Props<T extends ElementType> = BaseProps<T> &
   Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
 
