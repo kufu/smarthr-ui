@@ -1140,6 +1140,36 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('outputFormat', () => {
+    it("'html' のとき onChange の第1引数は meta.html と同じ文字列になる", async () => {
+      const onChange = vi.fn()
+      render(<RichTextEditor outputFormat="html" onChange={onChange} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      act(() => {
+        getEditor().commands.insertContent('本文')
+      })
+
+      await waitFor(() => expect(onChange).toHaveBeenCalled())
+      const [value, meta] = onChange.mock.calls.at(-1)!
+      expect(value).toBe('<p>本文</p>')
+      expect(value).toBe(meta.html)
+    })
+
+    it('既定では onChange の第1引数は JSON になる', async () => {
+      const onChange = vi.fn()
+      render(<RichTextEditor onChange={onChange} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      act(() => {
+        getEditor().commands.insertContent('本文')
+      })
+
+      await waitFor(() => expect(onChange).toHaveBeenCalled())
+      expect(onChange.mock.calls.at(-1)![0]).toMatchObject(paragraphDoc('本文'))
+    })
+  })
+
   describe('controlled の value', () => {
     // 保存や受け渡しの途中で null の属性が落ちた値を、親がそのまま戻してくる状況を作る
     const dropNullAttrs = (node: RichTextJSON): RichTextJSON =>
@@ -1263,6 +1293,31 @@ describe('RichTextEditor', () => {
 
       await waitFor(() => expect(screen.getByText('defaultValue')).toBeInTheDocument())
       expect(screen.queryByText('content')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('onFocus / onBlur', () => {
+    it('本文へのフォーカスの出入りで呼ばれる', async () => {
+      const user = userEvent.setup()
+      const onFocus = vi.fn()
+      const onBlur = vi.fn()
+      render(
+        <>
+          <RichTextEditor hideToolbar onFocus={onFocus} onBlur={onBlur} />
+          <button type="button">外</button>
+        </>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      await user.tab()
+      expect(screen.getByRole('textbox')).toHaveFocus()
+      await waitFor(() => expect(onFocus).toHaveBeenCalledTimes(1))
+      expect(onBlur).not.toHaveBeenCalled()
+
+      await user.tab()
+      expect(screen.getByRole('button', { name: '外' })).toHaveFocus()
+      await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
     })
   })
 })
