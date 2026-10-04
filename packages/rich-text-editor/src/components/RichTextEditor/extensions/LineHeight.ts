@@ -71,12 +71,17 @@ export const LineHeight = Extension.create<LineHeightOptions>({
             return false
           }
 
-          return this.options.types.every((type) => commands.updateAttributes(type, { lineHeight }))
+          // every だと最初の型が選択範囲に無い時点で止まり、後ろの型へ適用されない
+          return this.options.types
+            .map((type) => commands.updateAttributes(type, { lineHeight }))
+            .some(Boolean)
         },
       unsetLineHeight:
         () =>
         ({ commands }) =>
-          this.options.types.every((type) => commands.resetAttributes(type, 'lineHeight')),
+          this.options.types
+            .map((type) => commands.resetAttributes(type, 'lineHeight'))
+            .some(Boolean),
     }
   },
 })

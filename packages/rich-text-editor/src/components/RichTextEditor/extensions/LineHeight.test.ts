@@ -23,6 +23,24 @@ describe('LineHeight 拡張', () => {
     editor.destroy()
   })
 
+  it.each([
+    ['見出しだけ', 2, 'heading'],
+    ['段落だけ', 7, 'paragraph'],
+  ])('%sを選んでいても、その型に適用・解除できる', (_, pos, type) => {
+    const editor = new Editor({
+      extensions: [StarterKit, LineHeight.configure({ types: ['paragraph', 'heading'] })],
+      content: '<h2>見出し</h2><p>本文</p>',
+    })
+    editor.commands.setTextSelection(pos)
+
+    expect(editor.commands.setLineHeight('2')).toBe(true)
+    expect(editor.getAttributes(type).lineHeight).toBe('2')
+
+    expect(editor.commands.unsetLineHeight()).toBe(true)
+    expect(editor.getAttributes(type).lineHeight ?? null).toBeNull()
+    editor.destroy()
+  })
+
   it('renderHTML で line-height の style が出力される', () => {
     const editor = createEditor()
     editor.commands.selectAll()
