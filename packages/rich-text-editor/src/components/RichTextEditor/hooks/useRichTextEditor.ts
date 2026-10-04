@@ -233,14 +233,12 @@ export const useRichTextEditor = ({
   }, [editor, featuresKey, headingLevelsKey])
 
   // placeholder の同期
-  const syncedPlaceholder = useRef(placeholder)
   useEffect(() => {
-    // 生成時の値は作った時点で反映済み。マウント時にも流すと、末尾が段落でない文書に
-    // TrailingNode が段落を足し、操作していないのに onChange と履歴が発生する
-    if (editor && !editor.isDestroyed && syncedPlaceholder.current !== placeholder) {
-      syncedPlaceholder.current = placeholder
-      // Placeholder は decoration なので、state が動かないと新しい文字列で作り直されない
-      editor.view.dispatch(editor.state.tr)
+    // 空の transaction で描き直さないのは、appendTransaction を持つ plugin（TrailingNode など）が
+    // 文書を変え、操作していないのに onChange と履歴が発生するため。
+    // 変換中に描き直さないのは入力中の文字を壊さないため。変換中は本文が空でなく表示もされない
+    if (editor && !editor.isDestroyed && !editor.view.composing) {
+      editor.view.setProps({})
     }
   }, [editor, placeholder])
 

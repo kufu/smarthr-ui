@@ -1421,31 +1421,42 @@ describe('RichTextEditor', () => {
     })
   })
 
-  describe('マウント時', () => {
+  describe('マウント時と placeholder の変更', () => {
+    const listDoc: RichTextJSON = {
+      type: 'doc',
+      content: [
+        {
+          type: 'bulletList',
+          content: [
+            {
+              type: 'listItem',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
+            },
+          ],
+        },
+      ],
+    }
+
     it('末尾が段落でない内容を読み込んだだけでは onChange を呼ばず履歴も積まない', async () => {
       const onChange = vi.fn()
-      render(
-        <RichTextEditor
-          defaultValue={{
-            type: 'doc',
-            content: [
-              {
-                type: 'bulletList',
-                content: [
-                  {
-                    type: 'listItem',
-                    content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
-                  },
-                ],
-              },
-            ],
-          }}
-          placeholder="本文"
-          onChange={onChange}
-        />,
+      render(<RichTextEditor defaultValue={listDoc} placeholder="本文" onChange={onChange} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(screen.getByText('項目')).toBeInTheDocument())
+
+      expect(onChange).not.toHaveBeenCalled()
+      expect(getEditor().can().undo()).toBe(false)
+    })
+
+    it('placeholder を変えたことでは onChange を呼ばず履歴も積まない', async () => {
+      const onChange = vi.fn()
+      const { rerender } = render(
+        <RichTextEditor defaultValue={listDoc} placeholder="本文" onChange={onChange} />,
         { wrapper: Wrapper },
       )
       await waitFor(() => expect(screen.getByText('項目')).toBeInTheDocument())
+
+      rerender(<RichTextEditor defaultValue={listDoc} placeholder="別の文言" onChange={onChange} />)
 
       expect(onChange).not.toHaveBeenCalled()
       expect(getEditor().can().undo()).toBe(false)
