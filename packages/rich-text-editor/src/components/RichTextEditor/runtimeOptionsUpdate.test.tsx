@@ -333,4 +333,53 @@ describe('マウント後の props 更新', () => {
 
     expect(reconfigureSpy).toHaveBeenCalledTimes(1)
   })
+
+  describe('IME で変換している間', () => {
+    const Host = () => {
+      const [features, setFeatures] = useState<readonly RichTextFeature[]>(['bold'])
+
+      return (
+        <>
+          <button type="button" onClick={() => setFeatures((prev) => [...prev, 'italic'])}>
+            追加
+          </button>
+          <button type="button" onClick={() => setFeatures((prev) => [...prev, 'strike'])}>
+            もう1つ追加
+          </button>
+          <RichTextEditor features={features} />
+        </>
+      )
+    }
+
+    it('features を変えても再構成せず、変換が終わってから反映する', async () => {
+      render(<Host />, { wrapper: Wrapper })
+      await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+      reconfigureSpy.mockClear()
+
+      fireEvent.compositionStart(getEditorDom())
+      fireEvent.click(screen.getByRole('button', { name: '追加' }))
+      await flush()
+
+      expect(reconfigureSpy).not.toHaveBeenCalled()
+
+      fireEvent.compositionEnd(getEditorDom())
+
+      expect(reconfigureSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('変換中に何度変えても、変換が終わったときに1回だけ反映する', async () => {
+      render(<Host />, { wrapper: Wrapper })
+      await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+      reconfigureSpy.mockClear()
+
+      fireEvent.compositionStart(getEditorDom())
+      fireEvent.click(screen.getByRole('button', { name: '追加' }))
+      await flush()
+      fireEvent.click(screen.getByRole('button', { name: 'もう1つ追加' }))
+      await flush()
+      fireEvent.compositionEnd(getEditorDom())
+
+      expect(reconfigureSpy).toHaveBeenCalledTimes(1)
+    })
+  })
 })
