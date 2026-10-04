@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { RichTextEditor } from './RichTextEditor'
 
 import type { ExternalRichTextValue, RichTextEditorController, RichTextJSON } from '../types'
-import type { Editor } from '@tiptap/core'
+import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
@@ -20,7 +20,7 @@ const paragraphDoc = (text: string): RichTextJSON => ({
 })
 
 // jsdom の contenteditable では文字入力を再現できないため、Tiptap が DOM に載せる editor から操作する
-const getEditor = () => (screen.getByRole('textbox') as HTMLElement & { editor: Editor }).editor
+const getEditor = () => (screen.getByRole('textbox') as TiptapEditorHTMLElement).editor!
 
 const ALL_FEATURES = [
   'bold',
@@ -1186,16 +1186,22 @@ describe('RichTextEditor', () => {
       await waitFor(() => expect(screen.getByText('ac')).toBeInTheDocument())
       const editor = getEditor()
 
-      // 「a」と「c」の間に入力する。value を戻すたびに本文を作り直すと、キャレットが末尾へ飛ぶ
-      act(() => {
-        editor.commands.setTextSelection(2)
-        editor.commands.insertContent('b')
-      })
-      await waitFor(() => expect(screen.getByText('abc')).toBeInTheDocument())
-      act(() => {
-        editor.commands.insertContent('!')
-      })
-      await waitFor(() => expect(screen.getByText('ab!c')).toBeInTheDocument())
+      // 「a」と「c」の間に入力する。value を戻すたびに本文を作り直すと、キャレットが末尾へ飛ぶ。
+      // 履歴は時刻の間隔（既定の newGroupDelay は 500ms）で区切られるため、実時間に左右されないよう止めておく
+      const now = vi.spyOn(Date, 'now').mockReturnValue(Date.now())
+      try {
+        act(() => {
+          editor.commands.setTextSelection(2)
+          editor.commands.insertContent('b')
+        })
+        expect(screen.getByText('abc')).toBeInTheDocument()
+        act(() => {
+          editor.commands.insertContent('!')
+        })
+        expect(screen.getByText('ab!c')).toBeInTheDocument()
+      } finally {
+        now.mockRestore()
+      }
 
       act(() => {
         editor.commands.undo()
@@ -1227,6 +1233,125 @@ describe('RichTextEditor', () => {
       })
 
       await waitFor(() => expect(screen.getByText('ABC')).toBeInTheDocument())
+    })
+
+    it.each<[string, () => RichTextJSON]>([
+      [
+        '末尾が箇条書き（エディタが末尾に段落を足す）',
+        () => ({
+          type: 'doc',
+          content: [
+            {
+              type: 'bulletList',
+              content: [
+                {
+                  type: 'listItem',
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
+                },
+              ],
+            },
+          ],
+        }),
+      ],
+      [
+        '読み込み時に正規化される文字サイズ',
+        () => ({
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: '大きい',
+                  marks: [{ type: 'textStyle', attrs: { fontSize: '24px' } }],
+                },
+              ],
+            },
+          ],
+        }),
+      ],
+    ])('%sでも、同じ内容の別オブジェクトなら本文を作り直さない', async (_, createValue) => {
+      const { rerender } = render(<RichTextEditor value={createValue()} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+      const editor = getEditor()
+      act(() => {
+        editor.commands.setTextSelection(2)
+      })
+      const { doc } = editor.state
+
+      rerender(<RichTextEditor value={createValue()} />)
+
+      expect(editor.state.doc).toBe(doc)
+    })
+
+    it('onChange で受け取った値の属性を親が書き換えて戻すと、書き換えた内容を表示する', async () => {
+      const Centered = () => {
+        const [value, setValue] = useState(paragraphDoc('a'))
+
+        return (
+          <RichTextEditor
+            value={value}
+            onChange={(next) => {
+              next.content![0].attrs!.textAlign = 'center'
+              setValue(next)
+            }}
+          />
+        )
+      }
+      render(<Centered />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByText('a')).toBeInTheDocument())
+
+      act(() => {
+        getEditor().chain().setTextSelection(2).insertContent('b').run()
+      })
+
+      await waitFor(() => expect(screen.getByText('ab')).toHaveStyle({ textAlign: 'center' }))
+    })
+
+    it('出力時に整える属性（class・rel）を持つリンクが本文にあっても、本文を作り直さない', async () => {
+      const Echo = () => {
+        const [value, setValue] = useState(paragraphDoc('ac'))
+
+        return <RichTextEditor value={value} onChange={setValue} />
+      }
+      render(<Echo />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByText('ac')).toBeInTheDocument())
+      const editor = getEditor()
+
+      act(() => {
+        editor
+          .chain()
+          .setTextSelection(2)
+          .insertContent('<a href="https://example.com" class="external" rel="nofollow">b</a>')
+          .run()
+      })
+
+      expect(editor.state.selection.from).toBe(3)
+    })
+
+    it('末尾の空段落を消した value に戻すと、空段落が消える', async () => {
+      const { rerender } = render(
+        <RichTextEditor
+          value={{ type: 'doc', content: [...paragraphDoc('a').content!, { type: 'paragraph' }] }}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('a')).toBeInTheDocument())
+
+      rerender(<RichTextEditor value={paragraphDoc('a')} />)
+
+      expect(getEditor().state.doc.childCount).toBe(1)
+    })
+
+    it('ref.getJSON() の戻り値を書き換えても本文は変わらない', async () => {
+      const ref = createRef<RichTextEditorController>()
+      render(<RichTextEditor ref={ref} defaultValue={paragraphDoc('a')} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByText('a')).toBeInTheDocument())
+
+      ref.current!.getJSON().content![0].attrs!.textAlign = 'center'
+
+      expect(getEditor().state.doc.firstChild?.attrs.textAlign).toBeNull()
     })
 
     it('同じ内容の別オブジェクトを渡しても本文を作り直さない', async () => {
@@ -1293,6 +1418,37 @@ describe('RichTextEditor', () => {
 
       await waitFor(() => expect(screen.getByText('defaultValue')).toBeInTheDocument())
       expect(screen.queryByText('content')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('マウント時', () => {
+    it('末尾が段落でない内容を読み込んだだけでは onChange を呼ばず履歴も積まない', async () => {
+      const onChange = vi.fn()
+      render(
+        <RichTextEditor
+          defaultValue={{
+            type: 'doc',
+            content: [
+              {
+                type: 'bulletList',
+                content: [
+                  {
+                    type: 'listItem',
+                    content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
+                  },
+                ],
+              },
+            ],
+          }}
+          placeholder="本文"
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('項目')).toBeInTheDocument())
+
+      expect(onChange).not.toHaveBeenCalled()
+      expect(getEditor().can().undo()).toBe(false)
     })
   })
 

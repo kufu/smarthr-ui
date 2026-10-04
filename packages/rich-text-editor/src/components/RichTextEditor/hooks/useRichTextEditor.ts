@@ -12,9 +12,39 @@ import {
   rememberManagedPlugins,
 } from '../extensions/reconfigureEditorOperations'
 import { createChangeMeta } from '../serializers/createChangeMeta'
+import { getDetachedJSON } from '../serializers/getDetachedJSON'
 import { toEditorContent } from '../serializers/toEditorContent'
 
 import type { ImageUploadResult, RichTextFeature, RichTextJSON } from '../types'
+import type { JSONContent } from '@tiptap/core'
+import type { Node as ProseMirrorNode, Schema } from '@tiptap/pm/model'
+
+/**
+ * 末尾の段落まで比べないのは、末尾が段落でない value にはエディタが空の段落を足すため
+ * （StarterKit の TrailingNode）。足されたぶんまで比べると、同じ内容でも毎回別物になる
+ */
+const isSameDocument = (doc: ProseMirrorNode, content: JSONContent, schema: Schema) => {
+  let next: ProseMirrorNode
+
+  try {
+    next = schema.nodeFromJSON(content)
+  } catch {
+    return false
+  }
+
+  if (doc.eq(next)) return true
+
+  const last = doc.lastChild
+
+  return (
+    !!last &&
+    last.type.name === 'paragraph' &&
+    last.childCount === 0 &&
+    last.sameMarkup(last.type.create()) &&
+    next.lastChild?.type.name !== 'paragraph' &&
+    doc.copy(doc.content.cut(0, doc.content.size - last.nodeSize)).eq(next)
+  )
+}
 
 type UseRichTextEditorOptions = {
   value?: RichTextJSON
@@ -117,10 +147,12 @@ export const useRichTextEditor = ({
       },
     },
     onUpdate: ({ editor: e }) => {
+      if (!onChange) return
+
       // 空判定とテキストは editor と同じ結果にする必要があるため、この時点の値を読んで渡す
-      const json = e.getJSON() as RichTextJSON
+      const json = getDetachedJSON(e)
       const characterCount = e.getText({ blockSeparator: '' }).length
-      onChange?.(
+      onChange(
         json,
         createChangeMeta(json, characterCount, { isEmpty: e.isEmpty, text: e.getText() }),
       )
@@ -131,25 +163,27 @@ export const useRichTextEditor = ({
 
   // controlled mode: 外からのvalue変更を同期
   useEffect(() => {
-    if (!editor || !isControlled || !value) return
-
     // JSON の文字列では、既定値の属性（textAlign: null など）を省いた value が別物と判定され、
     // 本文の作り直しでキャレットと編集履歴が失われる。参照の一致で省くと、onChange で渡した
-    // オブジェクトを親が書き換えて戻したときに反映されない。schema で解釈した結果で比べる
-    const isSameContent = () => {
-      try {
-        return editor.state.doc.eq(editor.schema.nodeFromJSON(value))
-      } catch {
-        // schema に合わない値は、下の toEditorContent で読める形に直してから差し替える
-        return false
-      }
+    // オブジェクトを親が書き換えて戻したときに反映されない。
+    // 正規化した値だけで比べないのは、貼り付けたリンクの class のように正規化で変わる属性を
+    // 本文が持っていると、onChange の値をそのまま戻しても別物になるため
+    if (
+      !editor ||
+      !isControlled ||
+      !value ||
+      isSameDocument(editor.state.doc, value, editor.schema)
+    ) {
+      return
     }
 
-    if (!isSameContent()) {
+    const nextContent = toEditorContent(value)
+
+    if (!isSameDocument(editor.state.doc, nextContent, editor.schema)) {
       // 未完了の画像アップロードは差し替えと同じ transaction で無効化する
       editor
         .chain()
-        .setContent(toEditorContent(value), { emitUpdate: false })
+        .setContent(nextContent, { emitUpdate: false })
         .command(({ tr }) => {
           resetImagePlaceholders(tr)
 
@@ -199,11 +233,13 @@ export const useRichTextEditor = ({
   }, [editor, featuresKey, headingLevelsKey])
 
   // placeholder の同期
+  const syncedPlaceholder = useRef(placeholder)
   useEffect(() => {
-    if (editor && !editor.isDestroyed) {
-      // Placeholder は decoration なので、state が動かないと新しい文字列で作り直されない。
-      // 文書を変えない空の transaction で再計算させる。docChanged が無いため
-      // onUpdate は発火せず、履歴にも積まれない。
+    // 生成時の値は作った時点で反映済み。マウント時にも流すと、末尾が段落でない文書に
+    // TrailingNode が段落を足し、操作していないのに onChange と履歴が発生する
+    if (editor && !editor.isDestroyed && syncedPlaceholder.current !== placeholder) {
+      syncedPlaceholder.current = placeholder
+      // Placeholder は decoration なので、state が動かないと新しい文字列で作り直されない
       editor.view.dispatch(editor.state.tr)
     }
   }, [editor, placeholder])

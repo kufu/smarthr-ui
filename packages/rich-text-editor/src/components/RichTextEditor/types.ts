@@ -48,6 +48,12 @@ export type ImageUploadResult = {
 
 type RichTextEditorBaseProps = {
   content?: ExternalRichTextValue
+  /**
+   * 表示する内容（controlled）。内容が変わったときだけ本文を差し替え、編集の履歴は残す。
+   *
+   * 別のレコードの本文へ切り替えるときは `key` も変えてエディタを作り直すこと。
+   * 同じエディタのまま差し替えると、元に戻す操作で切り替え前の本文が戻ってしまう。
+   */
   value?: RichTextJSON
   defaultValue?: RichTextJSON
   onFocus?: () => void

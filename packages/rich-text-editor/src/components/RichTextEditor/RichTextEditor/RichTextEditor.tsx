@@ -12,6 +12,7 @@ import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
+import { getDetachedJSON } from '../serializers/getDetachedJSON'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
 import { serializeToHTML } from '../serializers/serializeToHTML'
 import { editorContentClasses } from '../styles'
@@ -154,7 +155,6 @@ export const RichTextEditor = memo(
       const functions = useMemo(
         () => ({
           handleChange: (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
-            if (!latest.onChange) return
             if (latest.outputFormat === 'html') {
               ;(latest.onChange as (value: string, meta: RichTextChangeMeta) => void)(
                 meta.html,
@@ -226,7 +226,7 @@ export const RichTextEditor = memo(
       const { editor } = useRichTextEditor({
         value,
         defaultValue: normalizedDefaultValue,
-        onChange: functions.handleChange,
+        onChange: onChange ? functions.handleChange : undefined,
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
@@ -255,7 +255,7 @@ export const RichTextEditor = memo(
                 return true
               })
               .run(),
-          getJSON: () => (editor?.getJSON() ?? { type: 'doc', content: [] }) as RichTextJSON,
+          getJSON: () => (editor ? getDetachedJSON(editor) : { type: 'doc', content: [] }),
           // editor.getHTML() は拡張の renderHTML をそのまま使うためサニタイズされない。
           // onChange の meta.html と同じ結果を返すよう共通シリアライザーを通す。
           getHTML: () => (editor ? serializeToHTML(editor.getJSON()) : ''),
