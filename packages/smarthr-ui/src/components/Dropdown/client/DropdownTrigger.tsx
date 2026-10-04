@@ -7,6 +7,7 @@ import { Tooltip } from '../../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
+// TODO: ComponentPropsWithoutRef<'div'> などでdivがもつ属性を設定できるようにする
 type Props = PropsWithChildren<{
   tooltip?: { message: ReactNode; show?: boolean }
   className?: string
