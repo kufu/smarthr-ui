@@ -7,7 +7,7 @@ type BaseProps = { enableNew?: boolean }
 type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<typeof AnchorButton>,
-    keyof BaseProps | 'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason'
+    keyof BaseProps | 'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason' | 'target'
   >
 
 const classNameGenerator = tv({
