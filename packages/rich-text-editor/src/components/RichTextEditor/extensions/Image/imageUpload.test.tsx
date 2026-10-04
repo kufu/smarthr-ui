@@ -5,7 +5,13 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 
-import type { ImageUploadResult, RichTextEditorController, RichTextJSON } from '../../types'
+import type {
+  ImageUploadResult,
+  RichTextEditorController,
+  RichTextFeature,
+  RichTextJSON,
+} from '../../types'
+import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 // jsdom には ResizeObserver が無く、挿入された画像の NodeView と ImageFloatingUI が
@@ -364,6 +370,19 @@ describe('画像ファイルの貼り付け', () => {
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveTextContent('pasted text'))
   })
 
+  it('features に image が無ければ通常の貼り付けになる', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
+    render(<RichTextEditor features={['bold']} onImageUpload={onImageUpload} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    paste({ files: [pngFile()], html: '<p>pasted text</p>', text: 'pasted text' })
+
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveTextContent('pasted text'))
+    expect(onImageUpload).not.toHaveBeenCalled()
+  })
+
   it('許可されないファイルが混ざっていてもテキストは貼り付ける', async () => {
     const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/uploaded.png' })
     await renderEditor({ acceptedMimeTypes: ['image/png'], onImageUpload })
@@ -386,6 +405,80 @@ describe('画像ファイルの貼り付け', () => {
     paste({ files: [pngFile()], html: '<img src="https://example.com/original.png">' })
 
     await waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
+    expect(imageSrcs()).toHaveLength(0)
+  })
+})
+
+describe('画像ファイルのドロップ', () => {
+  const twoParagraphs: RichTextJSON = {
+    type: 'doc',
+    content: [
+      { type: 'paragraph', content: [{ type: 'text', text: '前' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: '後' }] },
+    ],
+  }
+  const BETWEEN_PARAGRAPHS = 3
+
+  const renderEditor = async (
+    onImageUpload: (file: File, formData: FormData) => Promise<ImageUploadResult>,
+    features: readonly RichTextFeature[] = ['image'],
+  ) => {
+    render(
+      <RichTextEditor
+        defaultValue={twoParagraphs}
+        features={features}
+        acceptedMimeTypes={['image/png']}
+        onImageUpload={onImageUpload}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByText('後')).toBeInTheDocument())
+  }
+
+  // jsdom はレイアウトを持たず座標から位置を求められないため、ドロップ先の位置を直接与える
+  const drop = (file: File, pos: number) => {
+    const { view } = (screen.getByRole('textbox') as TiptapEditorHTMLElement).editor!
+    vi.spyOn(view, 'posAtCoords').mockReturnValue({ pos, inside: -1 })
+
+    fireEvent.drop(screen.getByRole('textbox'), {
+      dataTransfer: { files: [file], types: ['Files'], getData: () => '' },
+    })
+  }
+
+  it('ドロップした位置へアップロード結果を挿入する', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/dropped.png' })
+    await renderEditor(onImageUpload)
+
+    drop(pngFile(), BETWEEN_PARAGRAPHS)
+
+    await waitFor(() => expect(imageSrcs()).toEqual(['https://example.com/dropped.png']))
+    const blocks = Array.from(document.querySelector('.ProseMirror')!.children)
+    const imageIndex = blocks.findIndex(
+      (block) => block.querySelector('img') ?? block.matches('img'),
+    )
+    expect(blocks[imageIndex - 1]).toHaveTextContent('前')
+    expect(blocks[imageIndex + 1]).toHaveTextContent('後')
+  })
+
+  it('acceptedMimeTypes に一致しないファイルは受け付けない', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/dropped.png' })
+    await renderEditor(onImageUpload)
+
+    drop(new File(['x'], 'a.jpg', { type: 'image/jpeg' }), BETWEEN_PARAGRAPHS)
+    await flush()
+
+    expect(onImageUpload).not.toHaveBeenCalled()
+    expect(imageSrcs()).toHaveLength(0)
+  })
+
+  it('features に image が無ければアップロードしない', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/dropped.png' })
+    await renderEditor(onImageUpload, ['bold'])
+
+    drop(pngFile(), BETWEEN_PARAGRAPHS)
+    await flush()
+
+    expect(onImageUpload).not.toHaveBeenCalled()
     expect(imageSrcs()).toHaveLength(0)
   })
 })

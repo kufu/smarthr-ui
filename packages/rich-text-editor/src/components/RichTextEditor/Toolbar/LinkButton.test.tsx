@@ -83,6 +83,9 @@ describe('LinkButton', () => {
       await waitFor(() => expect(urlInput()).toHaveFocus())
     }
 
+    const WORLD_RANGE = { from: 7, to: 12 }
+    const INSIDE_HELLO = 3
+
     const plainDoc: RichTextJSON = {
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello world' }] }],
@@ -108,9 +111,8 @@ describe('LinkButton', () => {
     it('選択中の文字列をテキストに入れ、適用するとその文字列をリンクにする', async () => {
       const user = userEvent.setup()
       await renderWith(plainDoc)
-      // 「world」を選ぶ
       act(() => {
-        getEditor().commands.setTextSelection({ from: 7, to: 12 })
+        getEditor().commands.setTextSelection(WORLD_RANGE)
       })
 
       await openPopup(user)
@@ -130,7 +132,7 @@ describe('LinkButton', () => {
       const user = userEvent.setup()
       await renderWith(plainDoc)
       act(() => {
-        getEditor().commands.setTextSelection({ from: 7, to: 12 })
+        getEditor().commands.setTextSelection(WORLD_RANGE)
       })
 
       await openPopup(user)
@@ -146,9 +148,8 @@ describe('LinkButton', () => {
     it('リンクの中にキャレットがあると、リンク全体の文字列と URL を入れ、URL の変更はリンク全体に効く', async () => {
       const user = userEvent.setup()
       await renderWith(linkedDoc)
-      // 「hello」の途中にキャレットを置く
       act(() => {
-        getEditor().commands.setTextSelection(3)
+        getEditor().commands.setTextSelection(INSIDE_HELLO)
       })
 
       await openPopup(user)
@@ -169,7 +170,7 @@ describe('LinkButton', () => {
       const user = userEvent.setup()
       await renderWith(linkedDoc)
       act(() => {
-        getEditor().commands.setTextSelection(3)
+        getEditor().commands.setTextSelection(INSIDE_HELLO)
       })
 
       await openPopup(user)
