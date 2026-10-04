@@ -1,6 +1,13 @@
 'use client'
 
-import { type ComponentProps, type FC, type MouseEvent, memo, useMemo, useState } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEvent,
+  memo,
+  useMemo,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
@@ -21,7 +28,7 @@ type BaseProps = {
   /** HTMLのid属性 */
   id: string
 }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({

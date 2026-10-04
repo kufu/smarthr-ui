@@ -1,11 +1,11 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
-type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'prefix'>
+type Props = Omit<ComponentPropsWithRef<typeof InputWithTooltip>, 'prefix'>
 
 const classNameGenerator = tv({
   slots: {

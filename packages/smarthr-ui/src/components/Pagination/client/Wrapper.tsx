@@ -1,8 +1,8 @@
 'use client'
 
 import {
+  type ComponentPropsWithoutRef,
   type FC,
-  type HTMLAttributes,
   type MouseEvent,
   type PropsWithChildren,
   useMemo,
@@ -15,7 +15,7 @@ import { Nav } from '../../SectioningContent'
 import type { ClickableProps } from '../type'
 
 type BaseProps = PropsWithChildren<ClickableProps>
-type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Nav>, keyof BaseProps | 'baseLevel'>
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i

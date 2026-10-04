@@ -1,11 +1,10 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type SetStateAction,
@@ -36,7 +35,10 @@ import { DialogPortal } from '../DialogPortal'
 
 import type { DialogSize } from '../types'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = Pick<
+  ComponentPropsWithoutRef<typeof DialogBody>,
+  'contentBgColor' | 'contentPadding'
+> & {
   /**
    * ダイアログのタイトルの内容
    */
@@ -97,10 +99,12 @@ type BaseProps = PropsWithChildren<{
    * リサイズ可能かどうか
    */
   resizable?: boolean
-}>
+}
 type Props = BaseProps &
-  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
-  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+  Omit<
+    ComponentPropsWithRef<typeof Panel>,
+    keyof BaseProps | 'role' | 'radius' | 'layer' | 'overflow' | 'style' | 'aria-labelledby'
+  >
 
 const classNameGenerator = tv({
   slots: {

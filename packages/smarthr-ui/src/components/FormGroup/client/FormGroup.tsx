@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type ComponentType,
   type FC,
   type PropsWithChildren,
@@ -12,18 +12,17 @@ import {
   useRef,
 } from 'react'
 
-import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { FaCircleExclamationIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { LiveRegion } from '../../LiveRegion'
 import { Text } from '../../Text'
 
-import { CHILDREN_WRAPPER_INPUT_SELECTOR, WRAPPER_SELECTOR } from './constants'
+import { CHILDREN_WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
 
-type Props = Omit<CommonProps, 'className'> & {
-  ref: Ref<HTMLElement>
+type BaseProps = {
+  ref: Ref<HTMLDivElement>
   /** グループのラベル名 */
   label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
   as?: string | ComponentType<any>
@@ -35,6 +34,7 @@ type Props = Omit<CommonProps, 'className'> & {
     childrenWrapper: string
   }
 }
+type Props = BaseProps & Omit<CommonProps, keyof BaseProps | 'className'>
 
 // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
 // undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する
@@ -109,7 +109,7 @@ export const FormGroup: FC<Props> = ({
     }
 
     const action = () => {
-      const input = node.querySelector<HTMLInputElement>(CHILDREN_WRAPPER_INPUT_SELECTOR)
+      const input = node.querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
 
       if (!input) {
         return
@@ -126,7 +126,7 @@ export const FormGroup: FC<Props> = ({
           input.getAttribute('data-smarthr-ui-input-error') !== 'true' &&
           // HINT: Fieldset > FormControlのようにネストしている場合を考慮して
           // autoBindErrorしているForｍGroupが親方向に存在する場合、子の入力要素からaria-invalidを外さないようにする
-          !input.closest(`${WRAPPER_SELECTOR}[data-auto-bind-error-input='true']`)
+          !input.closest(`${CHILDREN_WRAPPER_SELECTOR}[data-auto-bind-error-input='true']`)
         ) {
           input.removeAttribute('aria-invalid')
         }
@@ -168,18 +168,14 @@ export const FormGroup: FC<Props> = ({
     }
   }, [])
 
-  const wrapperCallbackRef = useMergeRefs(innerCallbackRef, ref)
-
   return (
     <Stack
       {...rest}
       as={as}
-      ref={wrapperCallbackRef}
+      ref={ref}
       gap={innerMargin ?? 0.5}
       className={classNames.wrapper}
       aria-describedby={as === 'fieldset' ? describedbyIds || undefined : undefined}
-      data-auto-bind-error-input={autoBindErrorInput ? visibleErrorMessages.toString() : undefined}
-      data-auto-bind-aria-describedby-for-input={describedbyIds}
     >
       <LabelComponent
         managedLabelId={label.id}
@@ -222,7 +218,16 @@ export const FormGroup: FC<Props> = ({
           ))}
         </div>
       )}
-      <div className={classNames.childrenWrapper}>{children}</div>
+      <div
+        ref={innerCallbackRef}
+        className={classNames.childrenWrapper}
+        data-auto-bind-error-input={
+          autoBindErrorInput ? visibleErrorMessages.toString() : undefined
+        }
+        data-auto-bind-aria-describedby-for-input={describedbyIds}
+      >
+        {children}
+      </div>
       {supplementaryMessage && (
         <Text
           as="p"
@@ -239,7 +244,7 @@ export const FormGroup: FC<Props> = ({
 }
 
 export const LabelBody: FC<
-  Pick<ComponentProps<typeof Text>, 'styleType' | 'icon' | 'children'> &
+  Pick<ComponentPropsWithRef<typeof Text>, 'styleType' | 'icon' | 'children'> &
     Pick<LabelComponentProps, 'statusLabels'>
 > = ({ styleType, icon, children, statusLabels }) => (
   <>

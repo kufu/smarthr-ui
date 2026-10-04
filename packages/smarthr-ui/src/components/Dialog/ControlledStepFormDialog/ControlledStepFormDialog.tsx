@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -55,7 +55,7 @@ type ButtonType = ButtonArgType | ObjectButtonType | ButtonResolverType
 const isButtonResolverResult = (value: unknown): value is ButtonResolverResult =>
   !!value && typeof value === 'object' && !Array.isArray(value) && !isValidElement(value)
 
-type StepFormDialogContentInnerProps = ComponentProps<typeof StepFormDialogContentInner>
+type StepFormDialogContentInnerProps = ComponentPropsWithRef<typeof StepFormDialogContentInner>
 
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -80,7 +80,8 @@ type BaseProps = Omit<
     onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
     onClickBack?: () => void
   }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
