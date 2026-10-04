@@ -1,14 +1,12 @@
-import { type ComponentPropsWithRef, memo, useMemo } from 'react'
+import { type ComponentProps, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../Button'
 
-type BaseProps = { enableNew?: boolean }
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<typeof AnchorButton>,
-    keyof BaseProps | 'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason'
-  >
+type Props = Omit<
+  ComponentProps<typeof AnchorButton>,
+  'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason'
+> & { enableNew?: boolean }
 
 const classNameGenerator = tv({
   base: [
