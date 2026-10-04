@@ -155,6 +155,7 @@ export const RichTextEditor = memo(
       const functions = useMemo(
         () => ({
           handleChange: (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
+            if (!latest.onChange) return
             if (latest.outputFormat === 'html') {
               ;(latest.onChange as (value: string, meta: RichTextChangeMeta) => void)(
                 meta.html,
