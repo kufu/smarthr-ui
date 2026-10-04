@@ -3,6 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
 
+// TODO: ComponentPropsWithRef<'dl'>に修正し、dlが受け取れる属性をすべて設定可能にする
 type Props = PropsWithChildren<{
   className?: string
 }>
