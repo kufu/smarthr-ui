@@ -23,7 +23,7 @@ export const editorContentClasses = [
   // h4: M(16px) / bold / black
   '[&_.ProseMirror_h4]:shr-my-0.5 [&_.ProseMirror_h4]:shr-text-base [&_.ProseMirror_h4]:shr-font-bold [&_.ProseMirror_h4]:shr-leading-tight [&_.ProseMirror_h4]:shr-text-black',
   // code
-  '[&_.ProseMirror_code]:shr-rounded-m [&_.ProseMirror_code]:shr-bg-white-darken [&_.ProseMirror_code]:shr-px-0.25 [&_.ProseMirror_code]:shr-py-[0.125rem] [&_.ProseMirror_code]:shr-text-sm',
+  '[&_.ProseMirror_:not(pre)>code]:shr-rounded-m [&_.ProseMirror_:not(pre)>code]:shr-bg-white-darken [&_.ProseMirror_:not(pre)>code]:shr-px-0.25 [&_.ProseMirror_:not(pre)>code]:shr-py-[0.125rem] [&_.ProseMirror_:not(pre)>code]:shr-text-sm',
   '[&_.ProseMirror_pre]:shr-my-0.5 [&_.ProseMirror_pre]:shr-overflow-x-auto [&_.ProseMirror_pre]:shr-rounded-m [&_.ProseMirror_pre]:shr-bg-white-darken [&_.ProseMirror_pre]:shr-p-0.75 [&_.ProseMirror_pre]:shr-text-sm',
   // horizontal rule
   '[&_.ProseMirror_hr]:shr-my-1 [&_.ProseMirror_hr]:shr-border-t-shorthand',
@@ -111,7 +111,7 @@ export const staticContentClasses = [
   '[&_h3]:shr-text-lg [&_h3]:shr-font-normal [&_h3]:shr-leading-tight',
   '[&_h4]:shr-text-base [&_h4]:shr-font-bold [&_h4]:shr-leading-tight [&_h4]:shr-text-black',
   // code
-  '[&_code]:shr-rounded-m [&_code]:shr-bg-white-darken [&_code]:shr-px-0.25 [&_code]:shr-py-[0.125rem] [&_code]:shr-text-sm',
+  '[&_:not(pre)>code]:shr-rounded-m [&_:not(pre)>code]:shr-bg-white-darken [&_:not(pre)>code]:shr-px-0.25 [&_:not(pre)>code]:shr-py-[0.125rem] [&_:not(pre)>code]:shr-text-sm',
   '[&_pre]:shr-overflow-x-auto [&_pre]:shr-rounded-m [&_pre]:shr-bg-white-darken [&_pre]:shr-p-0.75 [&_pre]:shr-text-sm',
   // horizontal rule
   '[&_hr]:shr-border-t-shorthand',
