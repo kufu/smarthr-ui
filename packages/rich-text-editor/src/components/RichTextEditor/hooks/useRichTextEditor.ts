@@ -133,10 +133,19 @@ export const useRichTextEditor = ({
   useEffect(() => {
     if (!editor || !isControlled || !value) return
 
-    const currentJSON = JSON.stringify(editor.getJSON())
-    const nextJSON = JSON.stringify(value)
+    // JSON の文字列では、既定値の属性（textAlign: null など）を省いた value が別物と判定され、
+    // 本文の作り直しでキャレットと編集履歴が失われる。参照の一致で省くと、onChange で渡した
+    // オブジェクトを親が書き換えて戻したときに反映されない。schema で解釈した結果で比べる
+    const isSameContent = () => {
+      try {
+        return editor.state.doc.eq(editor.schema.nodeFromJSON(value))
+      } catch {
+        // schema に合わない値は、下の toEditorContent で読める形に直してから差し替える
+        return false
+      }
+    }
 
-    if (currentJSON !== nextJSON) {
+    if (!isSameContent()) {
       // 未完了の画像アップロードは差し替えと同じ transaction で無効化する
       editor
         .chain()

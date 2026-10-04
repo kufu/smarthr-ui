@@ -1,17 +1,26 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { createRef } from 'react'
+import { createRef, useState } from 'react'
 import { FormControl, IntlProvider } from 'smarthr-ui'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
 
 import type { ExternalRichTextValue, RichTextEditorController, RichTextJSON } from '../types'
+import type { Editor } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
+
+const paragraphDoc = (text: string): RichTextJSON => ({
+  type: 'doc',
+  content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+})
+
+// jsdom の contenteditable では文字入力を再現できないため、Tiptap が DOM に載せる editor から操作する
+const getEditor = () => (screen.getByRole('textbox') as HTMLElement & { editor: Editor }).editor
 
 const ALL_FEATURES = [
   'bold',
@@ -589,17 +598,15 @@ describe('RichTextEditor', () => {
 
     it('value の差し替えでは onChange を発火させない', async () => {
       const onChange = vi.fn()
-      const doc = (text: string) => ({
-        type: 'doc',
-        content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
-      })
       const { rerender } = render(
-        <RichTextEditor value={doc('before')} features={['bold']} onChange={onChange} />,
+        <RichTextEditor value={paragraphDoc('before')} features={['bold']} onChange={onChange} />,
         { wrapper: Wrapper },
       )
       await waitFor(() => expect(screen.getByText('before')).toBeInTheDocument())
 
-      rerender(<RichTextEditor value={doc('after')} features={['bold']} onChange={onChange} />)
+      rerender(
+        <RichTextEditor value={paragraphDoc('after')} features={['bold']} onChange={onChange} />,
+      )
 
       await waitFor(() => expect(screen.getByText('after')).toBeInTheDocument())
       expect(onChange).not.toHaveBeenCalled()
@@ -1130,6 +1137,132 @@ describe('RichTextEditor', () => {
       fireEvent(window, new MouseEvent('pointerup', {}))
 
       expect(content.style.getPropertyValue('--shr-rte-editor-height')).toBe('260px')
+    })
+  })
+
+  describe('controlled の value', () => {
+    // 保存や受け渡しの途中で null の属性が落ちた値を、親がそのまま戻してくる状況を作る
+    const dropNullAttrs = (node: RichTextJSON): RichTextJSON =>
+      JSON.parse(JSON.stringify(node, (_, v) => (v === null ? undefined : v)))
+
+    const Controlled = ({ initial }: { initial: RichTextJSON }) => {
+      const [value, setValue] = useState(initial)
+
+      return <RichTextEditor value={value} onChange={(next) => setValue(dropNullAttrs(next))} />
+    }
+
+    it('既定値の属性が落ちた値を戻されても、キャレットの位置と編集履歴を保つ', async () => {
+      render(<Controlled initial={paragraphDoc('ac')} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByText('ac')).toBeInTheDocument())
+      const editor = getEditor()
+
+      // 「a」と「c」の間に入力する。value を戻すたびに本文を作り直すと、キャレットが末尾へ飛ぶ
+      act(() => {
+        editor.commands.setTextSelection(2)
+        editor.commands.insertContent('b')
+      })
+      await waitFor(() => expect(screen.getByText('abc')).toBeInTheDocument())
+      act(() => {
+        editor.commands.insertContent('!')
+      })
+      await waitFor(() => expect(screen.getByText('ab!c')).toBeInTheDocument())
+
+      act(() => {
+        editor.commands.undo()
+      })
+      await waitFor(() => expect(screen.getByText('ac')).toBeInTheDocument())
+    })
+
+    it('onChange で受け取った値を親がその場で書き換えて戻すと、書き換えた内容を表示する', async () => {
+      const Uppercase = () => {
+        const [value, setValue] = useState(paragraphDoc('a'))
+
+        return (
+          <RichTextEditor
+            value={value}
+            onChange={(next) => {
+              next.content?.[0].content?.forEach((node) => {
+                if (node.text) node.text = node.text.toUpperCase()
+              })
+              setValue(next)
+            }}
+          />
+        )
+      }
+      render(<Uppercase />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByText('a')).toBeInTheDocument())
+
+      act(() => {
+        getEditor().chain().setTextSelection(2).insertContent('bc').run()
+      })
+
+      await waitFor(() => expect(screen.getByText('ABC')).toBeInTheDocument())
+    })
+
+    it('同じ内容の別オブジェクトを渡しても本文を作り直さない', async () => {
+      const { rerender } = render(<RichTextEditor value={paragraphDoc('abc')} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(screen.getByText('abc')).toBeInTheDocument())
+      const editor = getEditor()
+      act(() => {
+        editor.commands.setTextSelection(2)
+      })
+      const { doc } = editor.state
+
+      rerender(<RichTextEditor value={paragraphDoc('abc')} />)
+
+      expect(editor.state.doc).toBe(doc)
+      expect(editor.state.selection.from).toBe(2)
+    })
+
+    it('onChange で受け取った値へ戻すと、その間に差し替えた内容から戻る', async () => {
+      const onChange = vi.fn()
+      const { rerender } = render(
+        <RichTextEditor value={paragraphDoc('a')} onChange={onChange} />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('a')).toBeInTheDocument())
+      act(() => {
+        getEditor().chain().setTextSelection(2).insertContent('b').run()
+      })
+      await waitFor(() => expect(onChange).toHaveBeenCalled())
+      const emitted = onChange.mock.calls.at(-1)![0]
+      rerender(<RichTextEditor value={emitted} onChange={onChange} />)
+
+      rerender(<RichTextEditor value={paragraphDoc('外から差し替え')} onChange={onChange} />)
+      await waitFor(() => expect(screen.getByText('外から差し替え')).toBeInTheDocument())
+
+      rerender(<RichTextEditor value={emitted} onChange={onChange} />)
+      await waitFor(() => expect(screen.getByText('ab')).toBeInTheDocument())
+    })
+
+    it('value・defaultValue・content を同時に渡すと value を表示する', async () => {
+      render(
+        <RichTextEditor
+          value={paragraphDoc('value')}
+          defaultValue={paragraphDoc('defaultValue')}
+          content={{ format: 'html', content: '<p>content</p>' }}
+        />,
+        { wrapper: Wrapper },
+      )
+
+      await waitFor(() => expect(screen.getByText('value')).toBeInTheDocument())
+      expect(screen.queryByText('defaultValue')).not.toBeInTheDocument()
+      expect(screen.queryByText('content')).not.toBeInTheDocument()
+    })
+
+    it('value が無ければ defaultValue を content より優先する', async () => {
+      render(
+        <RichTextEditor
+          defaultValue={paragraphDoc('defaultValue')}
+          content={{ format: 'html', content: '<p>content</p>' }}
+        />,
+        { wrapper: Wrapper },
+      )
+
+      await waitFor(() => expect(screen.getByText('defaultValue')).toBeInTheDocument())
+      expect(screen.queryByText('content')).not.toBeInTheDocument()
     })
   })
 })
