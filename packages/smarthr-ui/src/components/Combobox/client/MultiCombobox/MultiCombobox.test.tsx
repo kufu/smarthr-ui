@@ -6,7 +6,7 @@ import { FormControl } from '../../../FormGroup'
 
 import { MultiCombobox } from './MultiCombobox'
 
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 
 describe('SingleCombobox', () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('SingleCombobox', () => {
     items,
     selectedItems,
     ...rest
-  }: Partial<ComponentProps<typeof MultiCombobox>>) => (
+  }: Partial<ComponentPropsWithRef<typeof MultiCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
         <FormControl label="コンボボックス">

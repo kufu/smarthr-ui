@@ -1,22 +1,17 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  useContext,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
-type Props = PropsWithChildren<ComponentProps<'div'>> & {
+// TODO: ComponentPropsWithoutRef<'div'> などでdivがもつ属性を設定できるようにする
+type Props = PropsWithChildren<{
   tooltip?: { message: ReactNode; show?: boolean }
-}
+  className?: string
+}>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Dropdown shr-inline-block',
