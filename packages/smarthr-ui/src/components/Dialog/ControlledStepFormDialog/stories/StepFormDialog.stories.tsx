@@ -1,4 +1,4 @@
-import { type ComponentProps, useRef, useState } from 'react'
+import { type ComponentPropsWithoutRef, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
@@ -296,8 +296,8 @@ export const ResponseStatus: StoryObj<typeof ControlledStepFormDialog> = {
   render: ({ onSubmit, onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
-    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
+      useState<ComponentPropsWithoutRef<typeof ControlledStepFormDialog>['responseStatus']>()
+    const handleSubmit: ComponentPropsWithoutRef<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -361,7 +361,7 @@ export const FirstFocusTarget: StoryObj<typeof ControlledStepFormDialog> = {
   render: ({ onSubmit, onClickClose, ...rest }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
+    const handleSubmit: ComponentPropsWithoutRef<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -413,7 +413,7 @@ export const PortalParent: StoryObj<typeof ControlledStepFormDialog> = {
   render: ({ onSubmit, onClickClose, ...rest }) => {
     const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
-    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = (
+    const handleSubmit: ComponentPropsWithoutRef<typeof ControlledStepFormDialog>['onSubmit'] = (
       e,
       helpers,
     ) => {
@@ -453,12 +453,11 @@ export const AsyncSubmitSuccess: StoryObj<typeof ControlledStepFormDialog> = {
   render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
+      useState<ComponentPropsWithoutRef<typeof ControlledStepFormDialog>['responseStatus']>()
 
-    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = async (
-      _e,
-      { goto, close, currentStep },
-    ) => {
+    const handleSubmit: ComponentPropsWithoutRef<
+      typeof ControlledStepFormDialog
+    >['onSubmit'] = async (_e, { goto, close, currentStep }) => {
       setResponseStatus({ status: 'processing' })
       // APIコールをシミュレート（成功パターン）
       await new Promise<void>((resolve) => {
@@ -528,12 +527,11 @@ export const AsyncSubmitError: StoryObj<typeof ControlledStepFormDialog> = {
   render: ({ onClickClose, ...rest }) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof ControlledStepFormDialog>['responseStatus']>()
+      useState<ComponentPropsWithoutRef<typeof ControlledStepFormDialog>['responseStatus']>()
 
-    const handleSubmit: ComponentProps<typeof ControlledStepFormDialog>['onSubmit'] = async (
-      _e,
-      _helpers,
-    ) => {
+    const handleSubmit: ComponentPropsWithoutRef<
+      typeof ControlledStepFormDialog
+    >['onSubmit'] = async (_e, _helpers) => {
       setResponseStatus({ status: 'processing' })
       // APIコールをシミュレート（エラーパターン）
       await new Promise<void>((_resolve, reject) => {

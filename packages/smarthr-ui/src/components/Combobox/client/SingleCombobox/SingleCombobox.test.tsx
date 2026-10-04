@@ -8,7 +8,7 @@ import { FormControl } from '../../../FormGroup'
 import { SingleCombobox } from './SingleCombobox'
 
 import type { ComboboxItem } from '../types'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 
 describe('SingleCombobox', () => {
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('SingleCombobox', () => {
     items,
     selectedItem,
     ...rest
-  }: Partial<ComponentProps<typeof SingleCombobox>>) => (
+  }: Partial<ComponentPropsWithRef<typeof SingleCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
         <FormControl label="コンボボックス">

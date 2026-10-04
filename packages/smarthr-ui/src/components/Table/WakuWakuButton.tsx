@@ -1,9 +1,9 @@
 import { Button } from '../Button'
 
-import type { ComponentProps, FC } from 'react'
+import type { ComponentPropsWithRef, FC } from 'react'
 
 type Props = Omit<
-  ComponentProps<typeof Button>,
+  ComponentPropsWithRef<typeof Button>,
   'variant' | 'size' | 'prefix' | 'suffix' | 'disabledReason' | 'wide' | 'loading'
 >
 

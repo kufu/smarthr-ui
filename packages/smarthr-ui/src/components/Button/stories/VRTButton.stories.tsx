@@ -4,9 +4,9 @@ import { Groupbox } from '../../Panel'
 import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
-type Variant = ComponentProps<typeof Button>['variant']
+type Variant = ComponentPropsWithoutRef<typeof Button>['variant']
 
 /**
  * $ pict button.pict.txt /e:button-seeds.pict.txt
