@@ -1,6 +1,12 @@
 'use client'
 
-import { type ComponentProps, type FC, type PropsWithChildren, useContext, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type PropsWithChildren,
+  useContext,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Portal } from '../../Portal'
@@ -29,7 +35,7 @@ type BaseProps = PropsWithChildren<{
 // HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
 // クリックハンドラが必要な場合はchildren側に要素をラップして設定する
 type Props = BaseProps &
-  Omit<ComponentProps<'div'>, keyof BaseProps | 'onClick' | 'data-dropdown-mounted'>
+  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps | 'onClick' | 'data-dropdown-mounted'>
 
 export const DropdownContent: FC<Props> = ({
   children,

@@ -1,4 +1,4 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -22,7 +22,7 @@ const classNameGenerator = tv({
   },
 })
 
-type ActualProps = ComponentProps<typeof FaCircleCheckIcon> & {
+type ActualProps = Omit<ComponentPropsWithRef<typeof FaCircleCheckIcon>, 'alt'> & {
   statusType: StatusType
   statusText?: string
 }

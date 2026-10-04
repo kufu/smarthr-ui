@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type ComponentType,
   type FC,
@@ -21,8 +20,8 @@ import { Panel } from '../Panel'
 import type { ComponentProps as IconProps } from '../Icon'
 
 type ButtonType =
-  | FunctionComponentElement<ComponentProps<typeof Button>>
-  | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
+  | FunctionComponentElement<ComponentPropsWithRef<typeof Button>>
+  | FunctionComponentElement<ComponentPropsWithRef<typeof AnchorButton>>
 
 type BaseProps = {
   /** この領域の説明 */

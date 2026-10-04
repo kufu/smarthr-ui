@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentProps, memo, useMemo } from 'react'
+import { type ComponentPropsWithRef, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
@@ -17,12 +17,14 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> & {
+type TextLinkProps = ComponentPropsWithRef<typeof TextLink>
+type BaseProps = {
   /** インデントするかどうか */
   indent?: boolean
   /** `TextLink`に渡す `elementAs` をオプションで指定 */
-  elementAs?: ComponentProps<typeof TextLink>['elementAs']
+  elementAs?: TextLinkProps['elementAs']
 }
+type Props = BaseProps & Omit<TextLinkProps, keyof BaseProps | 'prefix' | 'suffix'>
 
 export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
   const { mobile } = useEnvironment()

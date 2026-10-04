@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
   type RefObject,
@@ -20,7 +20,7 @@ import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
 
-type FocusTrapProps = ComponentProps<typeof FocusTrap>
+type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 
 type BaseProps = PropsWithChildren<{
   /**
@@ -63,7 +63,7 @@ type BaseProps = PropsWithChildren<{
    */
   focusTrapRef?: FocusTrapProps['ref']
 }>
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 

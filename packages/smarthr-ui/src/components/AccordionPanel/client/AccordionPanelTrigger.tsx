@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithoutRef,
   type FC,
   type KeyboardEventHandler,
@@ -23,8 +22,8 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 
 import type { Text } from '../../Text'
 
-type TextProps = ComponentProps<typeof Text>
-type HeadingProps = ComponentProps<typeof Heading>
+type TextProps = ComponentPropsWithoutRef<typeof Text>
+type HeadingProps = ComponentPropsWithoutRef<typeof Heading>
 
 type BaseProps = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
