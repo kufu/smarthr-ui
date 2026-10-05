@@ -7,11 +7,12 @@ import { ControlledTooltip } from '../Tooltip'
 
 import { CheckboxTh } from './client'
 
-type BaseProps = Pick<
-  ComponentPropsWithRef<typeof CheckboxTh>,
-  'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof Checkbox,
+  Pick<ComponentPropsWithRef<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 >
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
