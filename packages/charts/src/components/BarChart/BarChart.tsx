@@ -62,11 +62,6 @@ type Props = {
   orientation?: 'horizontal' | 'vertical'
 } & BarChartColorProps
 
-type TableData = {
-  headers: ReactNode[]
-  dataRows: ReactNode[][]
-}
-
 export const BarChart: React.FC<Props> = ({
   data,
   title,

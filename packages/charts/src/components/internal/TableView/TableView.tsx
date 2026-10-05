@@ -1,8 +1,11 @@
 import { Table, Td, Th } from 'smarthr-ui'
-import { ChartData, ChartOptions } from 'chart.js'
+import { ChartData, ChartOptions, ChartType } from 'chart.js'
 import { ReactNode } from 'react'
 
-type Props<T extends 'doughnut' | 'bar' | 'radar' | 'pie' | 'line'> = {
+
+type ChartName = Exclude<ChartType, 'bubble' | 'scatter' | 'polarArea'>
+
+type Props<T extends ChartName> = {
   data: ChartData<T>
   options: Partial<ChartOptions<T>>
 }
@@ -12,7 +15,13 @@ type TableData = {
   dataRows: ReactNode[][]
 }
 
-export const TableView = <T extends 'doughnut' | 'bar' | 'radar' | 'pie' | 'line'>({
+// 1列目（見出し列）のみ幅を抑える
+const FIRST_COLUMN_CLASS_NAME = [
+  '[&>tbody>tr:first-child>th:first-child]:shr-min-w-[10rem] [&>tbody>tr:first-child>th:first-child]:shr-w-[1%] [&>tbody>tr:first-child>th:first-child]:shr-max-w-[24rem] [&>tbody>tr:first-child>th:first-child]:shr-whitespace-normal',
+  '[&>tbody>tr>td:first-child]:shr-min-w-[10rem] [&>tbody>tr>td:first-child]:shr-w-[1%] [&>tbody>tr>td:first-child]:shr-max-w-[24rem]',
+].join(' ')
+
+export const TableView = <T extends ChartName>({
   data,
   options,
 }: Props<T>) => {
@@ -33,7 +42,7 @@ export const TableView = <T extends 'doughnut' | 'bar' | 'radar' | 'pie' | 'line
 
   return (
     <div className="shr-py-0.5">
-      <Table>
+      <Table className={FIRST_COLUMN_CLASS_NAME}>
         <tbody>
           <tr>
             {tableData.headers.map((header, index) => (

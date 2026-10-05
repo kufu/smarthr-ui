@@ -2,7 +2,7 @@
 
 import { ReactNode, useId, useMemo, useRef, useState } from 'react'
 import { Radar } from 'react-chartjs-2'
-import { FaChartBarIcon, FaTableIcon, SegmentedControl, VisuallyHiddenText, Text } from 'smarthr-ui'
+import { FaCircleNodesIcon, FaTableIcon, SegmentedControl, VisuallyHiddenText, Text } from 'smarthr-ui'
 
 import { createRadarChartOptions, registerChartComponents } from '../../config'
 import { getRadarChartColors } from '../../helper'
@@ -98,7 +98,7 @@ export const RadarChart: React.FC<Props> = ({
           options={[
             {
               value: 'chart',
-              content: <FaChartBarIcon />,
+              content: <FaCircleNodesIcon />,
               ariaLabel: 'グラフ',
             },
             {
