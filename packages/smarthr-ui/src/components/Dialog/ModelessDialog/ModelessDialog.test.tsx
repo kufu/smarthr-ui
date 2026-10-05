@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
@@ -8,6 +8,10 @@ import { Button } from '../../Button'
 import { ModelessDialog } from './ModelessDialog'
 
 describe('ModelessDialog', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   const DialogTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     return (
@@ -112,5 +116,91 @@ describe('ModelessDialog', () => {
 
     expect(dialog.style.top).toBe(`${window.innerHeight / 2 - 50}px`)
     expect(dialog.style.left).toBe(`${window.innerWidth / 2 - 100}px`)
+  })
+
+  it('画面の上端より上へはドラッグできないこと', async () => {
+    // HINT: jsdomにはレイアウトが無いため、style.topとドラッグ量から画面上の位置を算出して返す。
+    // ドラッグ量はreact-draggableがtransformのtranslateとして書き込む
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      const translateY = Number(
+        this.style.transform.match(/translate\([^,]+,\s*(-?[\d.]+)px\)/)?.[1] ?? 0,
+      )
+      const top = (parseFloat(this.style.top) || 0) + translateY
+
+      return {
+        width: 0,
+        height: 0,
+        top,
+        left: 0,
+        right: 0,
+        bottom: top,
+        x: 0,
+        y: 0,
+        toJSON: () => {},
+      }
+    })
+
+    const dragVertically = (deltaY: number) => {
+      fireEvent.mouseDown(screen.getByRole('button', { name: 'ダイアログの位置' }), {
+        clientX: 0,
+        clientY: 500,
+      })
+      fireEvent.mouseMove(document, { clientX: 0, clientY: 500 + deltaY })
+      fireEvent.mouseUp(document, { clientX: 0, clientY: 500 + deltaY })
+    }
+
+    // HINT: 初回描画時と開くときで異なるtopを渡す(位置を開くたびに算出する利用側を想定)
+    const Template: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      const [top, setTop] = useState(32)
+
+      return (
+        <IntlProvider locale="ja">
+          <Button
+            onClick={() => {
+              setTop(100)
+              setIsOpen(true)
+            }}
+          >
+            開く
+          </Button>
+          <ModelessDialog
+            isOpen={isOpen}
+            top={top}
+            left={100}
+            onClickClose={() => setIsOpen(false)}
+            heading="位置指定"
+          >
+            <p>ダイアログの中身</p>
+          </ModelessDialog>
+        </IntlProvider>
+      )
+    }
+
+    render(<Template />)
+
+    await userEvent.click(screen.getByRole('button', { name: '開く' }))
+    const dialog = screen.getByRole('dialog', { name: '位置指定' })
+    expect(dialog.style.top).toBe('100px')
+
+    // 下へ動かしたあとに上へ動かしても、画面の上端で止まること
+    dragVertically(200)
+    dragVertically(-500)
+    expect(dialog.getBoundingClientRect().top).toBe(0)
+
+    await act(() => screen.getByRole('button', { name: '閉じる' }).click())
+    await waitFor(
+      () => {
+        expect(screen.queryByRole('dialog', { name: '位置指定' })).toBeNull()
+      },
+      { timeout: 1000 },
+    )
+
+    // 開き直したあとも、画面の上端で止まること
+    await userEvent.click(screen.getByRole('button', { name: '開く' }))
+    dragVertically(-500)
+    expect(screen.getByRole('dialog', { name: '位置指定' }).getBoundingClientRect().top).toBe(0)
   })
 })
