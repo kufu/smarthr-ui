@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useCallback,
-  useId,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
@@ -19,7 +11,7 @@ import { STYLE_TYPE_MAP, Text } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
 type TextProps = ComponentPropsWithRef<typeof Text>
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /**
    * テキストのサイズ
    *
@@ -38,10 +30,8 @@ type BaseProps = PropsWithChildren<{
   pageTitle?: string
   /** title要素のsuffix */
   pageTitleSuffix?: string
-}>
-
+}
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
-
 type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<'h1'>,

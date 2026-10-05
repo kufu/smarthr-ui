@@ -1,21 +1,13 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   maxLines?: 1 | 2 | 3 | 4 | 5 | 6
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({
@@ -47,7 +39,7 @@ const classNameGenerator = tv({
       6: {
         clampedLine: 'shr-line-clamp-[6]',
       },
-    } satisfies Record<NonNullable<BaseProps['maxLines']>, { clampedLine: string }>,
+    } satisfies Record<NonNullable<Props['maxLines']>, { clampedLine: string }>,
   },
   compoundVariants: [
     {

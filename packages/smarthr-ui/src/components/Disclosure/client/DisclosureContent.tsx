@@ -1,26 +1,19 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useEffect,
-  useState,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, useEffect, useState } from 'react'
 
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { useDisclosure } from './useDisclosure'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** DisclosureTriggerのtargetIdと紐づけるId */
   id: string
   /** 開閉状態。デフォルトは閉じている */
   isOpen?: boolean
   /** 閉じた状態でContentを要素として存在させるか。デフォルトでは要素は存在しない */
   visuallyHidden?: boolean
-}>
-
+}
 type DisclosureContentProps = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const DisclosureContent: FC<DisclosureContentProps> = ({

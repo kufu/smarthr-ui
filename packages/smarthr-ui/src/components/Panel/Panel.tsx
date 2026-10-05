@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { paddingBlock, paddingInline } from '../../tailwind'
@@ -19,7 +13,7 @@ type SeparatePadding = {
   inline?: Gap
 }
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** 角丸の大きさ */
   radius?: 's' | 'm'
   /** 影のレイヤー */
@@ -29,7 +23,7 @@ type BaseProps = PropsWithChildren<{
   /** コンテンツが要素内に収まらない場合の処理方法 */
   overflow?: Overflow | { x: Overflow; y: Overflow }
   as?: string | ComponentType<any>
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 export const panelClassNameGenerator = tv({
@@ -41,7 +35,7 @@ export const panelClassNameGenerator = tv({
     radius: {
       s: 'shr-rounded-m',
       m: 'shr-rounded-l',
-    } satisfies Record<NonNullable<BaseProps['radius']>, string>,
+    } satisfies Record<NonNullable<Props['radius']>, string>,
     overflowBlock: {
       visible: 'shr-overflow-y-visible',
       hidden: 'shr-overflow-y-hidden',
@@ -62,7 +56,7 @@ export const panelClassNameGenerator = tv({
       2: 'shr-shadow-layer-2',
       3: 'shr-shadow-layer-3',
       4: 'shr-shadow-layer-4',
-    } satisfies Record<NonNullable<BaseProps['layer']>, string>,
+    } satisfies Record<NonNullable<Props['layer']>, string>,
   },
 })
 

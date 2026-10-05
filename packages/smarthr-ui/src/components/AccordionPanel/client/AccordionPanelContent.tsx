@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useContext,
-  useMemo,
-  useRef,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, useContext, useMemo, useRef } from 'react'
 import { Transition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
@@ -16,8 +9,7 @@ import { getIsInclude } from '../../../libs/map'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-type BaseProps = PropsWithChildren
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+type Props = ComponentPropsWithoutRef<'div'>
 
 const classNameGenerator = tv({
   base: [
