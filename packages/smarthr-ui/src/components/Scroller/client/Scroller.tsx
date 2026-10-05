@@ -4,7 +4,6 @@ import {
   type ComponentPropsWithRef,
   type ComponentType,
   type FC,
-  type PropsWithChildren,
   useCallback,
   useMemo,
 } from 'react'
@@ -13,11 +12,11 @@ import { tv } from 'tailwind-variants'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../../SectioningContent'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   as?: string | ComponentType<any>
   direction?: 'horizontal' | 'vertical' | 'both'
   styleType?: 'auto' | 'scroll'
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps | 'tabIndex'>
 
 const classNameGenerator = tv({

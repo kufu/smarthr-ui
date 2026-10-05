@@ -2,14 +2,14 @@
 
 import { useSquareDetection } from './useSquareDetection'
 
-import type { ComponentPropsWithRef, FC, MouseEvent, PropsWithChildren, ReactNode } from 'react'
+import type { ComponentPropsWithRef, FC, MouseEvent, ReactNode } from 'react'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   classNames: {
     wrapper: string
     inner: string
@@ -18,7 +18,7 @@ type BaseProps = PropsWithChildren<{
   loader?: ReactNode
   prefix?: ReactNode
   suffix?: ReactNode
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 
 export const ActualButton: FC<Props> = ({

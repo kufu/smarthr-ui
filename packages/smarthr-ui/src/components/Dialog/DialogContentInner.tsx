@@ -3,7 +3,6 @@
 import {
   type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type RefObject,
   memo,
   useLayoutEffect,
@@ -22,7 +21,7 @@ import type { DialogSize } from './types'
 
 type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
    * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
@@ -62,7 +61,7 @@ type BaseProps = PropsWithChildren<{
    * ダイアログトップのフォーカストラップへの ref
    */
   focusTrapRef?: FocusTrapProps['ref']
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'

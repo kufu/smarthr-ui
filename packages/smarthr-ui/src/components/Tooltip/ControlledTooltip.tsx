@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
@@ -126,13 +126,13 @@ const classNameGenerator = tv({
   ],
 })
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** レンダリングするタグ */
   as?: 'div' | 'span'
   horizontal?: 'center' | 'right' | 'left'
   vertical?: 'top' | 'bottom' | 'middle'
   triggerIcon?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 export const ControlledTooltip = memo<Props>(

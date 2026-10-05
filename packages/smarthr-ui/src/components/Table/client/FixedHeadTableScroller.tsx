@@ -4,11 +4,11 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { defaultHtmlFontSize } from '../../../themes'
 import { Scroller } from '../../Scroller'
 
-import type { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
+import type { ComponentPropsWithRef, FC } from 'react'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   direction: 'both'
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
 // thead の高さ分だけ scroll-padding-top を設定
