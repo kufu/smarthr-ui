@@ -19,28 +19,28 @@ import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
 
+import type { SHRComponentProps } from '../../../types'
+
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type BaseProps = {
-  /** ツールチップ内に表示するメッセージ */
-  message: ReactNode
-  /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
-  type?: 'label' | 'description'
-  /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
-  triggerType?: 'icon' | 'text'
-  /** `true` のとき、ツールチップを表示する対象が省略されている場合のみツールチップ表示を有効にする */
-  ellipsisOnly?: boolean
-  /** ツールチップを表示する対象の tabIndex 値 */
-  tabIndex?: number
-  /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
-  ariaDescribedbyTarget?: 'wrapper' | 'inner'
-}
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithoutRef<'span'>,
-    keyof BaseProps | 'aria-describedby' | 'aria-labelledby' | 'role'
-  >
+type Props = SHRComponentProps<
+  Omit<ComponentPropsWithoutRef<'span'>, 'aria-describedby' | 'aria-labelledby' | 'role'>,
+  {
+    /** ツールチップ内に表示するメッセージ */
+    message: ReactNode
+    /** ツールチップの種類。`label` の場合は children の要素に `aria-labelledby` を付与しアクセシブルネームとして機能する。`description`（デフォルト）の場合は `aria-describedby` を付与し補足説明として機能する */
+    type?: 'label' | 'description'
+    /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
+    triggerType?: 'icon' | 'text'
+    /** `true` のとき、ツールチップを表示する対象が省略されている場合のみツールチップ表示を有効にする */
+    ellipsisOnly?: boolean
+    /** ツールチップを表示する対象の tabIndex 値 */
+    tabIndex?: number
+    /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
+    ariaDescribedbyTarget?: 'wrapper' | 'inner'
+  }
+>
 
 const classNameGenerator = tv({
   base: [
