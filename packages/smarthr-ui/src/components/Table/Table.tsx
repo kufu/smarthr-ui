@@ -2,12 +2,15 @@ import { ActualTable } from './ActualTable'
 import { TableScroller } from './TableScroller'
 import { TableReel } from './client'
 
-import type { ComponentPropsWithRef, FC } from 'react'
+import type { SHRComponentPropsWithRef } from '../../types'
+import type { FC } from 'react'
 
-type BaseProps = {
-  reel?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof ActualTable>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  typeof ActualTable,
+  {
+    reel?: boolean
+  }
+>
 
 export const Table: FC<Props> = ({ reel = true, fixedHead, children, ...rest }) => {
   const Component = reel ? TableReel : TableScroller
