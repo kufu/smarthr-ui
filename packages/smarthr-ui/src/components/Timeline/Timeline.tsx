@@ -2,13 +2,16 @@ import { type ComponentPropsWithRef, type ReactElement, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import type { TimelineItem } from './TimelineItem'
+import type { SHRComponentPropsWithRef } from '../../types'
 
 type TimelineItem = ReactElement<ComponentPropsWithRef<typeof TimelineItem>>
 
-type BaseProps = {
-  children: TimelineItem | TimelineItem[]
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'ol'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'ol',
+  {
+    children: TimelineItem | TimelineItem[]
+  }
+>
 
 const classNameGenerator = tv({
   base: 'shr-list-none',
