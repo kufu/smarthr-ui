@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
   type RefObject,
@@ -20,7 +20,7 @@ import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
 
-type FocusTrapProps = ComponentProps<typeof FocusTrap>
+type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 
 type BaseProps = PropsWithChildren<{
   /**
@@ -32,7 +32,7 @@ type BaseProps = PropsWithChildren<{
    * エスケープキーを押下した時に発火するコールバック関数
    * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
    */
-  onPressEscape?: () => void
+  onPressEscape?: (e: KeyboardEvent) => void
   /**
    * ダイアログを開いているかどうか
    */
@@ -61,11 +61,11 @@ type BaseProps = PropsWithChildren<{
   /**
    * ダイアログトップのフォーカストラップへの ref
    */
-  focusTrapRef?: FocusTrapProps['outerRef']
+  focusTrapRef?: FocusTrapProps['ref']
 }>
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
 
-export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
+const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 
 const classNameGenerator = tv({
   slots: {
@@ -120,9 +120,9 @@ export const DialogContentInner: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handlePressEscape: () => {
+      handlePressEscape: (e: KeyboardEvent) => {
         if (latest.isOpen) {
-          latest.onPressEscape?.()
+          latest.onPressEscape?.(e)
         }
       },
       handleClickOverlay: () => {
@@ -173,7 +173,7 @@ export const DialogContentInner: FC<Props> = ({
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
         >
-          <FocusTrap outerRef={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>

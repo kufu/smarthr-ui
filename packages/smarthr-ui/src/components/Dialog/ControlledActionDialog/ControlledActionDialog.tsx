@@ -1,18 +1,22 @@
-'use client'
-
-import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { ActionDialogContentInner } from './ActionDialogContentInner'
 
 import type { DialogProps } from '../types'
 
-type ActionDialogContentInnerProps = ComponentProps<typeof ActionDialogContentInner>
+type ActionDialogContentInnerProps = ComponentPropsWithRef<typeof ActionDialogContentInner>
 
 type ObjectHeadingType = Omit<ActionDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
@@ -34,9 +38,10 @@ type BaseProps = Omit<
     /**
      * 閉じるボタンをクリックした時に発火するコールバック関数
      */
-    onClickClose: () => void
+    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
   }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,
@@ -61,7 +66,6 @@ export const ControlledActionDialog: FC<Props> = ({
   isOpen,
   ...rest
 }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -85,36 +89,38 @@ export const ControlledActionDialog: FC<Props> = ({
     }
 
     return {
-      handleClickClose: () => {
+      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
         if (latest.isOpen) {
-          latest.onClickClose()
+          latest.onClickClose(e)
         }
       },
       handleClickAction,
     }
   }, [latest])
 
-  return createPortal(
-    <DialogContentInner
-      {...rest}
-      isOpen={isOpen}
-      className={className}
-      ariaLabelledby={heading.id}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
-    >
-      <ActionDialogContentInner
-        contentBgColor={contentBgColor}
-        contentPadding={contentPadding}
-        responseStatus={responseStatus}
-        handleClickClose={functions.handleClickClose}
-        handleClickAction={functions.handleClickAction}
-        heading={heading}
-        actionButton={actionButton}
-        closeButton={closeButton}
-        subActionArea={subActionArea}
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DialogContentInner
+        {...rest}
+        isOpen={isOpen}
+        className={className}
+        ariaLabelledby={heading.id}
+        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       >
-        {children}
-      </ActionDialogContentInner>
-    </DialogContentInner>,
+        <ActionDialogContentInner
+          contentBgColor={contentBgColor}
+          contentPadding={contentPadding}
+          responseStatus={responseStatus}
+          handleClickClose={functions.handleClickClose}
+          handleClickAction={functions.handleClickAction}
+          heading={heading}
+          actionButton={actionButton}
+          closeButton={closeButton}
+          subActionArea={subActionArea}
+        >
+          {children}
+        </ActionDialogContentInner>
+      </DialogContentInner>
+    </DialogPortal>
   )
 }

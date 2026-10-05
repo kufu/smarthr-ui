@@ -4,7 +4,7 @@ import { Cluster } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict filter-dropdown.pict
@@ -17,7 +17,7 @@ import type { ComponentProps } from 'react'
  */
 const _cases: Array<
   Pick<
-    ComponentProps<typeof FilterDropdown>,
+    ComponentPropsWithoutRef<typeof FilterDropdown>,
     'isFiltered' | 'triggerSize' | 'disabled' | 'onlyIconTrigger'
   >
 > = [

@@ -2,15 +2,15 @@
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 
-import type { ComponentPropsWithoutRef, FC, Ref } from 'react'
+import type { ComponentPropsWithRef, FC } from 'react'
 
-type Props = ComponentPropsWithoutRef<'input'> & {
-  checkboxRef?: Ref<HTMLInputElement>
+type BaseProps = {
   /** `true` のとき、チェック状態を `mixed` にする */
   mixed?: boolean
   /** チェックボックスにエラーがあるかどうか */
   error?: boolean
 }
+type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
 
 const callbackRef = (node: HTMLInputElement | null) => {
   if (!node) {
@@ -38,10 +38,8 @@ const callbackRef = (node: HTMLInputElement | null) => {
   }
 }
 
-export const ActualCheckbox: FC<Props> = ({ checkboxRef, checked, mixed, error, ...rest }) => {
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(callbackRef, checkboxRef)
+export const ActualCheckbox: FC<Props> = ({ ref, checked, mixed, error, ...rest }) => {
+  const mergedRef = useMergeRefs(callbackRef, ref)
   const errorAttr = error || undefined
 
   return (

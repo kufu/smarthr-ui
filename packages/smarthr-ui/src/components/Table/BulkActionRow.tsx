@@ -14,11 +14,9 @@ const classNameGenerator = tv({
   },
 })
 
-export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> = ({
-  children,
-  className,
-  ...rest
-}) => {
+type Props = PropsWithChildren<ComponentPropsWithRef<'tr'>>
+
+export const BulkActionRow: FC<Props> = ({ children, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, cell } = classNameGenerator()
 

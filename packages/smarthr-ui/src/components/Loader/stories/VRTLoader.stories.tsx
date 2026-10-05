@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 import { Loader } from '../Loader'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict loader.pict
@@ -12,7 +12,7 @@ import type { ComponentProps } from 'react'
  * s    あり  light
  * s    なし  primary
  */
-const _cases: Array<ComponentProps<typeof Loader>> = [
+const _cases: Array<ComponentPropsWithoutRef<typeof Loader>> = [
   { size: 'M', text: undefined, type: 'light' },
   { size: 'M', text: '読込中', type: 'primary' },
   { size: 'S', text: '読込中', type: 'light' },

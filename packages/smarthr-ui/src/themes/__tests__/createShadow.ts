@@ -1,8 +1,6 @@
-import { type FlattenSimpleInterpolation, css } from 'styled-components'
-
 import { createShadow } from '../createShadow'
 
-const replaceSpaces = (str: FlattenSimpleInterpolation) => String(str).replace(/\s/g, '')
+const replaceSpaces = (str: string) => str.replace(/\s/g, '')
 
 describe('createShadow', () => {
   it('ユーザー指定の OUTLINE がフォーカススタイルに反映されること', () => {
@@ -13,7 +11,7 @@ describe('createShadow', () => {
     expect(actual.OUTLINE).toBe(expectedOutline)
 
     const actualFocusIndicator = replaceSpaces(actual.focusIndicatorStyles)
-    const expectedFocusIndicator = replaceSpaces(css`
+    const expectedFocusIndicator = replaceSpaces(`
       /* stylelint-disable no-invalid-position-declaration */
       isolation: isolate;
       box-shadow: 0 0 0 2px white;

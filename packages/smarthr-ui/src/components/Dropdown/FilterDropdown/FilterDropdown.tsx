@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEventHandler,
   type ReactNode,
@@ -26,7 +26,7 @@ import {
 type ObjectTriggerType = {
   text?: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ComponentProps<typeof Button>['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
@@ -49,11 +49,11 @@ type BaseProps = {
   onOpen?: () => void
   onClose?: () => void
 }
-type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
-const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
+const CONTROL_CLUSTER_GAP: ComponentPropsWithRef<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
 const classNameGenerator = tv({
   slots: {

@@ -1,16 +1,15 @@
-'use client'
-
 import { DialogContentInner } from './DialogContentInner'
-import { useDialogPortal } from './useDialogPortal'
+import { DialogPortal } from './DialogPortal'
 
 import type { DialogProps } from './types'
-import type { ComponentProps, FC, PropsWithChildren } from 'react'
+import type { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
 
 type BaseProps = PropsWithChildren<DialogProps>
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps &
+  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
 
-export const Dialog: FC<Props> = ({ className, portalParent, id, ...rest }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
-
-  return createPortal(<DialogContentInner {...rest} className={className} />)
-}
+export const Dialog: FC<Props> = ({ className, portalParent, id, ...rest }) => (
+  <DialogPortal id={id} parent={portalParent}>
+    <DialogContentInner {...rest} className={className} />
+  </DialogPortal>
+)

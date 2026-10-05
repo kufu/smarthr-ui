@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -14,7 +14,7 @@ import { ButtonList } from '../client'
 type BaseProps = PropsWithChildren<{
   name?: ReactNode
 }>
-type Props = BaseProps & Omit<ComponentProps<'li'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentPropsWithRef<'li'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [

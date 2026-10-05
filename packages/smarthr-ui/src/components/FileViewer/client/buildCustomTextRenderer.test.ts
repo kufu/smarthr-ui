@@ -1,10 +1,12 @@
 import { buildCustomTextRenderer } from './buildCustomTextRenderer'
 
 import type { PDFSearchMatch } from './types'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 import type { Page } from 'react-pdf'
 
-type RendererArgs = Parameters<NonNullable<ComponentProps<typeof Page>['customTextRenderer']>>[0]
+type RendererArgs = Parameters<
+  NonNullable<ComponentPropsWithoutRef<typeof Page>['customTextRenderer']>
+>[0]
 
 const callRenderer = (
   matches: PDFSearchMatch[],

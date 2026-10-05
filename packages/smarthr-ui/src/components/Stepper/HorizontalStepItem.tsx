@@ -7,7 +7,7 @@ import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep, StatusType } from './types'
 
-type Props = Omit<HorizontalStep, 'status'> & {
+type BaseProps = {
   statusType?: StatusType
   statusText?: string
   /** ステップ数 */
@@ -17,6 +17,7 @@ type Props = Omit<HorizontalStep, 'status'> & {
   /** 前のステップが完了しているかどうか */
   isPrevStepCompleted: boolean
 }
+type Props = BaseProps & Omit<HorizontalStep, keyof BaseProps | 'status'>
 
 const classNameGenerator = tv({
   slots: {

@@ -2,11 +2,8 @@
 
 import {
   type ChangeEvent,
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
-  type Ref,
-  forwardRef,
   startTransition,
   useEffect,
   useId,
@@ -89,20 +86,15 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ maxLetters, ...rest }, ref) =>
+export const Textarea: FC<Props> = ({ maxLetters, ...rest }) =>
   maxLetters ? (
-    <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
+    <MaxLettersTextarea {...rest} maxLetters={maxLetters} />
   ) : (
-    <ActualTextarea {...rest} externalRef={ref} />
-  ),
-)
-
-type LocalTextareaProps = ComponentProps<typeof Textarea> & {
-  externalRef?: Ref<HTMLTextAreaElement>
-}
+    <ActualTextarea {...rest} />
+  )
 
 const MaxLettersTextarea: FC<
-  Omit<LocalTextareaProps, 'maxLetters'> & {
+  Omit<Props, 'maxLetters'> & {
     maxLetters: number
   }
 > = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
@@ -192,7 +184,7 @@ const MaxLettersTextarea: FC<
   )
 }
 
-const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
+const ActualTextarea: FC<Omit<Props, 'maxLetters'>> = ({
   autoFocus,
   width,
   className,
@@ -201,7 +193,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   rows = 2,
   error,
   onChange,
-  externalRef,
+  ref,
   ...rest
 }) => {
   const theme = useTheme()
@@ -255,9 +247,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const errorAttr = error || undefined
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
+  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), ref)
 
   return (
     <textarea

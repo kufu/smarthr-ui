@@ -6,8 +6,6 @@ import type { SideNavSizeType } from './SideNavItemButton'
 type BaseProps = PropsWithChildren<{
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
 }>
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof BaseProps>

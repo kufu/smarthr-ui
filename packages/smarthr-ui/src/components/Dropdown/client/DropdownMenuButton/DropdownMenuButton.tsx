@@ -1,8 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
   type ReactNode,
@@ -12,7 +12,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
@@ -27,13 +26,13 @@ type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
   children: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ComponentProps<typeof Button>['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?:
     | boolean
     | {
         /** 引き金となるアイコンを差し替えたい場合（onlyIcon=true の場合のみ有効） */
-        component?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
+        component?: ComponentType<ComponentPropsWithoutRef<typeof FaCaretDownIcon>>
       }
 }
 type BaseProps = {
@@ -212,8 +211,6 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(menuCallbackRef)
-
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
@@ -225,7 +222,7 @@ export const DropdownMenuButton: FC<Props> = ({
         {triggerChildren}
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
-        <menu ref={callbackRef} role="menu" className={classNames.actionList}>
+        <menu ref={menuCallbackRef} role="menu" className={classNames.actionList}>
           <ButtonList>{children}</ButtonList>
         </menu>
       </DropdownContent>

@@ -1,12 +1,9 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type ForwardedRef,
   type PropsWithChildren,
-  type Ref,
-  forwardRef,
   memo,
   useCallback,
   useId,
@@ -21,7 +18,7 @@ import { IS_NEXT_JS } from '../../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
-type TextProps = ComponentProps<typeof Text>
+type TextProps = ComponentPropsWithRef<typeof Text>
 type BaseProps = PropsWithChildren<{
   /**
    * テキストのサイズ
@@ -47,7 +44,7 @@ type StyleTypeMapProps = typeof STYLE_TYPE_MAP
 
 type Props = BaseProps &
   Omit<
-    ComponentProps<'h1'>,
+    ComponentPropsWithRef<'h1'>,
     keyof BaseProps | keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level'
   >
 
@@ -64,32 +61,28 @@ const classNameGenerator = tv({
 })
 
 export const PageHeading = memo(
-  forwardRef<HTMLHeadingElement, Props>(
-    ({ autoPageTitle = true, pageTitleSuffix, pageTitle, size = 'XL', children, ...rest }, ref) =>
-      !IS_NEXT_JS && autoPageTitle ? (
-        <AutoPageTitleHeading
-          {...rest}
-          outerRef={ref}
-          pageTitleSuffix={pageTitleSuffix}
-          pageTitle={pageTitle}
-          size={size}
-        >
-          {children}
-        </AutoPageTitleHeading>
-      ) : (
-        <ActualHeading {...rest} headingRef={ref} size={size}>
-          {children}
-        </ActualHeading>
-      ),
-  ),
+  ({ autoPageTitle = true, pageTitleSuffix, pageTitle, size = 'XL', children, ...rest }: Props) =>
+    !IS_NEXT_JS && autoPageTitle ? (
+      <AutoPageTitleHeading
+        {...rest}
+        pageTitleSuffix={pageTitleSuffix}
+        pageTitle={pageTitle}
+        size={size}
+      >
+        {children}
+      </AutoPageTitleHeading>
+    ) : (
+      <ActualHeading {...rest} size={size}>
+        {children}
+      </ActualHeading>
+    ),
 )
 
 const AutoPageTitleHeading: FC<
-  Omit<Props, 'size' | 'autoPageTitle' | 'ref'> & {
+  Omit<Props, 'size' | 'autoPageTitle'> & {
     size: TextProps['size']
-    outerRef?: ForwardedRef<HTMLHeadingElement>
   }
-> = ({ pageTitleSuffix = 'SmartHR（スマートHR）', pageTitle, outerRef, children, ...rest }) => {
+> = ({ pageTitleSuffix = 'SmartHR（スマートHR）', pageTitle, ref, children, ...rest }) => {
   const pseudoTitleId = useId()
   const titleFrame = useAnimationFrame()
   const latest = useLatest({ pageTitle, pageTitleSuffix, pseudoTitleId, titleFrame })
@@ -128,8 +121,6 @@ const AutoPageTitleHeading: FC<
         subtree: true,
       })
 
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       return () => {
         observer.disconnect()
         latest.titleFrame.cancel()
@@ -142,31 +133,27 @@ const AutoPageTitleHeading: FC<
     [latest],
   )
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-  const mergedRef = useMergeRefs(callbackRef, outerRef)
+  const mergedRef = useMergeRefs(callbackRef, ref)
 
   return (
-    <ActualHeading {...rest} headingRef={mergedRef}>
+    <ActualHeading {...rest} ref={mergedRef}>
       {children}
     </ActualHeading>
   )
 }
 
-type ActualHeadingProps = PropsWithChildren<
-  ComponentProps<'h1'> & {
-    visuallyHidden?: boolean
-    size: TextProps['size']
-    headingRef?: Ref<HTMLHeadingElement>
-  }
->
+type ActualHeadingProps = Omit<
+  Props,
+  'autoPageTitle' | 'pageTitle' | 'pageTitleSuffix' | 'size'
+> & {
+  size: TextProps['size']
+}
 
 const ActualHeading: FC<ActualHeadingProps> = ({
   visuallyHidden,
   size,
   className,
   children,
-  headingRef,
   ...rest
 }) => {
   const actualClassName = useMemo(
@@ -180,7 +167,6 @@ const ActualHeading: FC<ActualHeadingProps> = ({
       {...rest}
       {...STYLE_TYPE_MAP.screenTitle}
       as="h1"
-      ref={headingRef}
       size={size || STYLE_TYPE_MAP.screenTitle.size}
       className={actualClassName}
     >

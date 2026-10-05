@@ -121,7 +121,7 @@ export default [
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: '(useLayoutEffectRef|useEnhancedEffect)',
+          additionalHooks: 'useLayoutEffectRef',
         },
       ],
       'smarthr/a11y-anchor-has-href-attribute': [
@@ -146,7 +146,6 @@ export default [
         'error',
         {
           'additionalTargetHooks': [
-            'useEnhancedEffect',
             'useLayoutEffectRef',
           ],
           'additionalUnstableNames': [
@@ -195,6 +194,12 @@ export default [
               importNames: ['VariantProps'],
               message:
                 'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
+            },
+            {
+              name: 'react',
+              importNames: ['ComponentProps'],
+              message:
+                'ComponentPropsの利用は禁止されています。refの有無を明示するため、ComponentPropsWithRefまたはComponentPropsWithoutRefを使用してください。',
             },
           ],
         },

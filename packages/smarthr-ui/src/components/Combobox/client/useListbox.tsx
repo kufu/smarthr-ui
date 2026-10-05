@@ -8,14 +8,13 @@ import {
   type RefObject,
   memo,
   useId,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../hooks/client/useTheme'
@@ -297,7 +296,7 @@ export const useListbox = <T,>({
   )
   const mergedListBoxRef = useMergeRefs(listBoxLayoutEffectRef, functions.baseCallbackRef)
 
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       return setActiveOption(null)
@@ -466,7 +465,7 @@ export const ListBox = memo(
     }, [latest])
 
     return (
-      <Portal outerRef={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+      <Portal ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         <Scroller
           ref={listBoxRef}
           role="listbox"
@@ -524,8 +523,4 @@ export const ListBox = memo(
 
 const Intersection = memo<{
   callbackRef: (node: HTMLElement | null) => (() => void) | undefined
-}>(({ callbackRef }) => {
-  const actualCallbackRef = useCallbackRefCleanupForReact18(callbackRef)
-
-  return <div ref={actualCallbackRef} />
-})
+}>(({ callbackRef }) => <div ref={callbackRef} />)

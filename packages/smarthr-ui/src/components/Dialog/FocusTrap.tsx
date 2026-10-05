@@ -9,18 +9,17 @@ import {
   useMemo,
 } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../hooks/client/useCallbackRefCleanupForReact18'
 import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
-  outerRef?: Ref<{ focus: () => void }>
+  ref?: Ref<{ focus: () => void }>
 }>
 
 const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
 const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
-export const FocusTrap: FC<Props> = ({ firstFocusTarget, outerRef, children }) => {
+export const FocusTrap: FC<Props> = ({ firstFocusTarget, ref, children }) => {
   const functions = useMemo(() => {
     let inner: HTMLElement | null = null
     const findDummyFocus = () => inner?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
@@ -30,7 +29,7 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, outerRef, children }) =
     }
 
     return {
-      baseCallbackRef: (node: HTMLElement | null) => {
+      callbackRef: (node: HTMLElement | null) => {
         inner = node
 
         if (!node) {
@@ -87,12 +86,10 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, outerRef, children }) =
     }
   }, [firstFocusTarget])
 
-  const callbackRef = useCallbackRefCleanupForReact18(functions.baseCallbackRef)
-
-  useImperativeHandle(outerRef, () => functions as { focus: () => void }, [functions])
+  useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
 
   return (
-    <div ref={callbackRef}>
+    <div ref={functions.callbackRef}>
       {!firstFocusTarget && (
         /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
         <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />

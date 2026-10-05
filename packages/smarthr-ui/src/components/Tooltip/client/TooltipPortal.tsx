@@ -1,10 +1,22 @@
-import { type FC, type ReactNode, useCallback, useState } from 'react'
+'use client'
+
+import { type FC, type ReactNode, useCallback, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { debounce } from '../../../libs/debounce'
 import { ControlledTooltip } from '../ControlledTooltip'
+
+const subscribeFullscreenChange = (callback: () => void) => {
+  window.addEventListener('fullscreenchange', callback)
+
+  return () => {
+    window.removeEventListener('fullscreenchange', callback)
+  }
+}
+const getPortalRoot = () => document.fullscreenElement ?? document.body
+const getPortalRootOnSSR = () => null
 
 type Props = {
   messageId: string
@@ -40,48 +52,55 @@ type VerticalType = 'top' | 'middle' | 'bottom'
 
 export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parentRect, isIcon }) => {
   const theme = useTheme()
+  const portalRoot = useSyncExternalStore(
+    subscribeFullscreenChange,
+    getPortalRoot,
+    getPortalRootOnSSR,
+  )
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
   // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback(
-      (element: HTMLElement | null) => {
-        if (!element || !parentRect) {
-          return
-        }
+  const callbackRef = useCallback(
+    (element: HTMLElement | null) => {
+      if (!element || !parentRect) {
+        return
+      }
 
-        const action = () => {
-          const vertical = calculateVertical(element.offsetHeight, parentRect)
-          const horizontal = calculateHorizontal(element.offsetWidth, parentRect, theme)
+      const action = () => {
+        const vertical = calculateVertical(element.offsetHeight, parentRect)
+        const horizontal = calculateHorizontal(element.offsetWidth, parentRect, theme)
 
-          setStyle({
-            insetBlockStart: vertical.insetBlockStart,
-            insetInlineStart: horizontal.insetInlineStart,
-            insetInlineEnd: horizontal.insetInlineEnd,
-            maxWidth: horizontal.maxWidth,
-            maxHeight: vertical.maxHeight,
-          })
-          setActualVertical(vertical.alignment)
-          setActualHorizontal(horizontal.alignment)
-        }
-        const debouncedAction = debounce(action, 100)
+        setStyle({
+          insetBlockStart: vertical.insetBlockStart,
+          insetInlineStart: horizontal.insetInlineStart,
+          insetInlineEnd: horizontal.insetInlineEnd,
+          maxWidth: horizontal.maxWidth,
+          maxHeight: vertical.maxHeight,
+        })
+        setActualVertical(vertical.alignment)
+        setActualHorizontal(horizontal.alignment)
+      }
+      const debouncedAction = debounce(action, 100)
 
-        action()
+      action()
 
-        window.addEventListener('resize', debouncedAction)
+      window.addEventListener('resize', debouncedAction)
 
-        return () => {
-          window.removeEventListener('resize', debouncedAction)
-          debouncedAction.cancel()
-        }
-      },
-      [parentRect, theme],
-    ),
+      return () => {
+        window.removeEventListener('resize', debouncedAction)
+        debouncedAction.cancel()
+      }
+    },
+    [parentRect, theme],
   )
 
-  return (
+  if (!portalRoot) {
+    return null
+  }
+
+  return createPortal(
     <div
       ref={callbackRef}
       role="tooltip"
@@ -99,7 +118,8 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
           {message}
         </div>
       </ControlledTooltip>
-    </div>
+    </div>,
+    portalRoot,
   )
 }
 

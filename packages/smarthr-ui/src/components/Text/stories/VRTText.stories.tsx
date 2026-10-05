@@ -3,10 +3,10 @@ import { Stack } from '../../Layout'
 import { STYLE_TYPE_MAP, Text } from '../Text'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 // $ pict text.pict
-const pict = pictParser<ComponentProps<typeof Stack>>(
+const pict = pictParser<ComponentPropsWithoutRef<typeof Stack>>(
   `size	weight	color	leading	emphasis	prefixIcon	suffixIcon	maxLines
    undefined	normal	TEXT_LINK	undefined	false	undefined	undefined	1
    XL	bold	undefined	TIGHT	true	undefined	<Icon />	undefined

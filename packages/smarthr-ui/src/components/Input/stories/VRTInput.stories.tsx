@@ -3,7 +3,7 @@ import { Stack } from '../../Layout'
 import { Input } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 
 /**
  * $ pict input.pict
@@ -23,7 +23,7 @@ import type { ComponentProps } from 'react'
  * true     false なし    あり    なし    なし         なし
  * true     false なし    なし    あり    なし         なし
  */
-const _cases: Array<ComponentProps<typeof Input>> = [
+const _cases: Array<ComponentPropsWithRef<typeof Input>> = [
   {
     disabled: undefined,
     error: true,

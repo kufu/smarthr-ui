@@ -1,9 +1,11 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
+  type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   memo,
@@ -35,9 +37,9 @@ type StepFormHelpers = {
 }
 
 type Props = PropsWithChildren<
-  ComponentProps<typeof DialogBody> & {
+  ComponentPropsWithRef<typeof DialogBody> & {
     /** ダイアログタイトル */
-    heading: ComponentProps<typeof DialogHeading>
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** 現在のStepNo */
     activeStep: number
     /** submitボタン */
@@ -53,7 +55,7 @@ type Props = PropsWithChildren<
     /** 戻るボタン */
     backButton: CommonButtonType
     firstStep: StepItem
-    handleClickClose: () => void
+    handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
     responseStatus?: ResponseStatus
     /** ステップの総数 */
     stepLength: number
@@ -108,8 +110,8 @@ export const StepFormDialogContentInner: FC<Props> = ({
   })
 
   const functions = useMemo(() => {
-    const handleCloseAction = () => {
-      latest.handleClickClose()
+    const handleCloseAction = (e?: MouseEvent<HTMLButtonElement>) => {
+      latest.handleClickClose(e)
       setTimeout(() => {
         // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
         latest.stepQueueRef.current = []
@@ -229,7 +231,7 @@ const BackButton = memo<{
 ))
 
 const CloseButton = memo<{
-  handleClick: () => void
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   variant: CommonButtonType['theme']
   disabled: boolean
   text: ReactNode

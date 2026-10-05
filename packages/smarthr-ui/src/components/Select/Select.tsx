@@ -1,18 +1,11 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ForwardedRef,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
-import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
+import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
+type BaseProps = {
   /** コンポーネントの幅 */
   width?: number | string
   /** コンポーネントの大きさ */
@@ -23,8 +16,8 @@ type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'chil
   blankLabel?: string
 }
 
-type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children'>
+type Props<T extends string> = BaseProps &
+  Omit<ComponentPropsWithRef<typeof ActualSelect<T>>, keyof BaseProps | 'children'>
 
 const classNameGenerator = tv({
   slots: {
@@ -64,10 +57,15 @@ const classNameGenerator = tv({
   },
 })
 
-const BaseSelect = <T extends string>(
-  { options, width, hasBlank, blankLabel, size, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLSelectElement>,
-) => {
+export const Select = <T extends string>({
+  options,
+  width,
+  hasBlank,
+  blankLabel,
+  size,
+  className,
+  ...rest
+}: Props<T>) => {
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
@@ -88,7 +86,7 @@ const BaseSelect = <T extends string>(
         width: typeof width === 'number' ? `${width}px` : width,
       }}
     >
-      <ActualSelect {...rest} outerRef={ref} className={classNames.select} options={options}>
+      <ActualSelect {...rest} className={classNames.select} options={options}>
         <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
@@ -125,5 +123,3 @@ const Option = memo<Props<string>['options'][number]>((option) => {
     </optgroup>
   )
 })
-
-export const Select = genericsForwardRef(BaseSelect)

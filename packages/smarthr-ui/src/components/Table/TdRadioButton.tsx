@@ -1,4 +1,4 @@
-import { type ComponentProps, type PropsWithChildren, forwardRef, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RadioButton } from '../RadioButton'
@@ -6,12 +6,12 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
 
-type Props = PropsWithChildren<{
+type BaseProps = PropsWithChildren<{
   /** RadioButtonのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
   'aria-labelledby': string
 }> &
-  ComponentProps<typeof RadioButton> &
-  Pick<ComponentProps<typeof Td>, 'vAlign'>
+  Pick<ComponentPropsWithRef<typeof Td>, 'vAlign'>
+type Props = BaseProps & Omit<ComponentPropsWithRef<typeof RadioButton>, keyof BaseProps>
 
 const classNameGenerator = tv({
   slots: {
@@ -25,27 +25,25 @@ const classNameGenerator = tv({
   },
 })
 
-export const TdRadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ vAlign, children, className, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, inner, radio } = classNameGenerator()
+export const TdRadioButton: FC<Props> = ({ vAlign, children, className, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, inner, radio } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        inner: inner(),
-        radio: radio(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      inner: inner(),
+      radio: radio(),
+    }
+  }, [className])
 
-    return (
-      // Td に必要な属性やイベントは不要
-      <Td vAlign={vAlign} className={classNames.wrapper}>
-        <label className={classNames.inner}>
-          {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
-          <RadioButton {...rest} ref={ref} className={classNames.radio} />
-          {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
-        </label>
-      </Td>
-    )
-  },
-)
+  return (
+    // Td に必要な属性やイベントは不要
+    <Td vAlign={vAlign} className={classNames.wrapper}>
+      <label className={classNames.inner}>
+        {/* eslint-disable-next-line smarthr/a11y-prohibit-checkbox-or-radio-in-table-cell */}
+        <RadioButton {...rest} className={classNames.radio} />
+        {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
+      </label>
+    </Td>
+  )
+}

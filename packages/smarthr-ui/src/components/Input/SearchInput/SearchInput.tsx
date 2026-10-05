@@ -1,14 +1,11 @@
-import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
 import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
-type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
-  /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
-  tooltipMessage: ReactNode
-}
+type Props = Omit<ComponentPropsWithRef<typeof InputWithTooltip>, 'prefix'>
 
 const classNameGenerator = tv({
   slots: {
@@ -25,36 +22,33 @@ const classNameGenerator = tv({
   },
 })
 
-export const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ width, className, ...rest }, ref) => {
-    const labelStyle = {
-      width: typeof width === 'number' ? `${width}px` : width,
+export const SearchInput: FC<Props> = ({ width, className, ...rest }) => {
+  const labelStyle = {
+    width: typeof width === 'number' ? `${width}px` : width,
+  }
+  const existsWidth = !!labelStyle.width
+
+  const classNames = useMemo(() => {
+    const { label, input } = classNameGenerator({ existsWidth })
+
+    return {
+      label: label({ className }),
+      input: input(),
     }
-    const existsWidth = !!labelStyle.width
+  }, [existsWidth, className])
 
-    const classNames = useMemo(() => {
-      const { label, input } = classNameGenerator({ existsWidth })
-
-      return {
-        label: label({ className }),
-        input: input(),
-      }
-    }, [existsWidth, className])
-
-    return (
-      <label className={classNames.label} style={labelStyle}>
-        <InputWithTooltip
-          {...rest}
-          outerRef={ref}
-          className={classNames.input}
-          prefix={
-            <FaMagnifyingGlassIcon
-              alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
-              color="TEXT_GREY"
-            />
-          }
-        />
-      </label>
-    )
-  },
-)
+  return (
+    <label className={classNames.label} style={labelStyle}>
+      <InputWithTooltip
+        {...rest}
+        className={classNames.input}
+        prefix={
+          <FaMagnifyingGlassIcon
+            alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
+            color="TEXT_GREY"
+          />
+        }
+      />
+    </label>
+  )
+}

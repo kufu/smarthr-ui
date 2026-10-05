@@ -3,6 +3,10 @@ export * from './FaIcon'
 export {
   /** @public */
   generateIcon,
+  // TODO: smarthr-uiは型を公開APIとして提供しない方針のため、本来この型はexport
+  // すべきではない。また`ComponentProps`という名前も汎用的すぎる。現状AppNavi系・
+  // BottomFixedAreaの複数箇所がicon propsの型として利用しており、exportの廃止・
+  // 名前の変更いずれも破壊的変更になるため、別途対応する
   type Props as ComponentProps,
 } from './generateIcon'
 
