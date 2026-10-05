@@ -1,23 +1,27 @@
-import { type ComponentPropsWithRef, type FC, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
+import type { SHRComponentPropsWithRef } from '../../types'
+
 type CellContentWidth = number | string
 
-type BaseProps = {
-  /** テキストの水平方向の配置 */
-  align?: 'left' | 'right'
-  /** テキストの垂直方向の配置 */
-  vAlign?: 'middle' | 'baseline'
-  /** 値が空の場合にハイフンを表示するかどうか */
-  nullable?: boolean
-  /** 横スクロール時、カラムを左右いずれかに固定 */
-  fixed?: 'left' | 'right'
-  contentWidth?:
-    CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'td'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'td',
+  {
+    /** テキストの水平方向の配置 */
+    align?: 'left' | 'right'
+    /** テキストの垂直方向の配置 */
+    vAlign?: 'middle' | 'baseline'
+    /** 値が空の場合にハイフンを表示するかどうか */
+    nullable?: boolean
+    /** 横スクロール時、カラムを左右いずれかに固定 */
+    fixed?: 'left' | 'right'
+    contentWidth?:
+      CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
+  }
+>
 
 export const Td: FC<Props> = memo(
   ({ align, vAlign, nullable, fixed, contentWidth, className, style, children, ...rest }) => {
