@@ -59,6 +59,7 @@ import {
   FaCircleExclamation,
   FaCircleInfo,
   FaCircleMinus,
+  FaCircleNodes,
   FaCirclePlay,
   FaCirclePlus,
   FaCircleQuestion,
@@ -267,6 +268,7 @@ export const FaCircleDotIcon = /*#__PURE__*/ generateIcon(FaCircleDot)
 export const FaCircleExclamationIcon = /*#__PURE__*/ generateIcon(FaCircleExclamation)
 export const FaCircleIcon = /*#__PURE__*/ generateIcon(FaCircle)
 export const FaCircleInfoIcon = /*#__PURE__*/ generateIcon(FaCircleInfo)
+export const FaCircleNodesIcon = /*#__PURE__*/ generateIcon(FaCircleNodes)
 export const FaCircleMinusIcon = /*#__PURE__*/ generateIcon(FaCircleMinus)
 export const FaCirclePlayIcon = /*#__PURE__*/ generateIcon(FaCirclePlay)
 export const FaCirclePlusIcon = /*#__PURE__*/ generateIcon(FaCirclePlus)
