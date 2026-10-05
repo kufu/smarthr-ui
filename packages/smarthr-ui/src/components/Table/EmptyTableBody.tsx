@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AutoColSpanTd } from './client'
@@ -7,10 +7,10 @@ import type { Gap } from '../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** 境界とコンテンツの間の余白 */
   padding?: Padding
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'tbody'>, keyof BaseProps>
 
 const classNameGenerator = tv({

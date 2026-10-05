@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
@@ -20,10 +20,10 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** `true` のとき、TabBar に下線を表示する */
   bordered?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'role'>
 
 export const TabBar: FC<Props> = ({ className, bordered, children, ...rest }) => {

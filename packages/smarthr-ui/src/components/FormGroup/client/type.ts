@@ -1,12 +1,7 @@
 import type { PositiveGap } from '../../../types'
 import type { StatusLabel } from '../../StatusLabel'
 import type { Text } from '../../Text'
-import type {
-  ComponentPropsWithoutRef,
-  FunctionComponentElement,
-  PropsWithChildren,
-  ReactNode,
-} from 'react'
+import type { ComponentPropsWithoutRef, FunctionComponentElement, ReactNode } from 'react'
 
 type TextProps = ComponentPropsWithoutRef<typeof Text>
 type IconType = TextProps['icon']
@@ -26,7 +21,7 @@ export type ObjectLabelType = {
   id?: string
 }
 
-type BaseCommonProps = PropsWithChildren<{
+type BaseCommonProps = {
   /** タイトル右の領域 */
   subActionArea?: ReactNode
   /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
@@ -43,7 +38,7 @@ type BaseCommonProps = PropsWithChildren<{
   autoBindErrorInput?: boolean
   /** フォームコントロールの下に表示する補足メッセージ */
   supplementaryMessage?: ReactNode
-}>
+}
 export type CommonProps = BaseCommonProps &
   Omit<ComponentPropsWithoutRef<'div'>, keyof BaseCommonProps | 'aria-labelledby'>
 

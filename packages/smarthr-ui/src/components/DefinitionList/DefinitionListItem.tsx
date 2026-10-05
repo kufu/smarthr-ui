@@ -17,11 +17,11 @@ type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   term: ReactNode | ObjectTermType
   fullWidth?: boolean
   maxColumns?: number
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const termObjectConverter = (term: ReactNode): ObjectTermType => ({ text: term })

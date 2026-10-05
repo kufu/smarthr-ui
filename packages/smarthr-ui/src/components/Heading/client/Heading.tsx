@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type PropsWithChildren,
-  memo,
-  useContext,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../../SectioningContent'
@@ -39,7 +33,7 @@ type StylingProps =
       size?: never
     }
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = StylingProps & {
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
    */
@@ -48,11 +42,8 @@ type BaseProps = PropsWithChildren<{
   visuallyHidden?: boolean
   /** テキスト左に設置するアイコン */
   icon?: TextProps['icon']
-}> &
-  StylingProps
-
+}
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
-
 type Props = BaseProps &
   Omit<
     ComponentPropsWithRef<'h2'>,

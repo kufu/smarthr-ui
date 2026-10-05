@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useContext,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Portal } from '../../Portal'
@@ -24,14 +18,13 @@ const classNameGenerator = tv({
   ],
 })
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /**
    * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
    *  この場合は、 `DropdownCloser` を用いてドロップダウンを閉じることができる。
    */
   controllable?: boolean
-}>
-
+}
 // HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
 // クリックハンドラが必要な場合はchildren側に要素をラップして設定する
 type Props = BaseProps &

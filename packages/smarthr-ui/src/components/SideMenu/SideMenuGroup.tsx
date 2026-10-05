@@ -10,9 +10,9 @@ import { tv } from 'tailwind-variants'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   heading: ReactNode
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'li'>, keyof BaseProps>
 
 const classNameGenerator = tv({

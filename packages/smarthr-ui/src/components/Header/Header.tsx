@@ -52,7 +52,7 @@ type Tenant = PropsWithChildren<{
   name: ReactNode
 }>
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** ロゴ */
   logo?: ReactElement
   /** ロゴリンク */
@@ -69,8 +69,7 @@ type BaseProps = PropsWithChildren<{
   onTenantSelect?: (id: string) => void
   /** @deprecated internal-ui から利用するので使わないでください。 */
   enableNew?: boolean
-}>
-
+}
 type Props = BaseProps & Omit<ComponentPropsWithRef<'header'>, keyof BaseProps>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
