@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ElementType } from 'react'
 
-type SHRComponentProps<Base, Additional> = Additional & Omit<Base, keyof Additional>
+export type SHRComponentProps<Base, Additional> = Additional & Omit<Base, keyof Additional>
 
 type OmitKey<Options> = Options extends { omit: infer K extends PropertyKey } ? K : never
 
