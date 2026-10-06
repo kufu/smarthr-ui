@@ -3,7 +3,6 @@
 import {
   type ChangeEvent,
   type FC,
-  type FocusEvent,
   type KeyboardEvent,
   type RefObject,
   memo,
@@ -212,11 +211,24 @@ export const ColorPickerPalette: FC<Props> = memo(
             e.preventDefault()
             e.stopPropagation()
             closeAndFocusTrigger()
+            return
           }
-        },
-        handleDelegateBlur: (e: FocusEvent<HTMLDivElement>) => {
-          if (!latest.paletteRef.current?.contains(e.relatedTarget as Node | null)) {
-            latest.setIsOpen(false)
+
+          // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
+          // ページ末尾の要素へ飛ぶため、他のドロップダウンと同じくトリガーへ戻す
+          if (e.key === 'Tab') {
+            const focusables = Array.from(
+              latest.paletteRef.current?.querySelectorAll<HTMLElement>(
+                'button:not(:disabled), input:not(:disabled)',
+              ) ?? [],
+            )
+            const index = focusables.indexOf(document.activeElement as HTMLElement)
+
+            if ((!e.shiftKey && index === focusables.length - 1) || (e.shiftKey && index === 0)) {
+              e.preventDefault()
+              e.stopPropagation()
+              closeAndFocusTrigger()
+            }
           }
         },
       }
@@ -259,7 +271,6 @@ export const ColorPickerPalette: FC<Props> = memo(
         className={CLASS_NAMES.palette}
         aria-label={dialogLabel}
         onKeyDown={functions.handleDelegateKeyDown}
-        onBlur={functions.handleDelegateBlur}
       >
         {/* 標準パレットセクション */}
         <div role="group" className={CLASS_NAMES.section} aria-label={standardSectionLabel}>

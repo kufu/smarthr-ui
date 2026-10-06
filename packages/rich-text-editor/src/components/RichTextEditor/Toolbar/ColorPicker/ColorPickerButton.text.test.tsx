@@ -48,6 +48,15 @@ describe('ColorPickerButton（文字色）', () => {
 
       expect(screen.getByRole('button', { name: '文字色: 紫' })).toBeInTheDocument()
     })
+
+    it('色をリセットすると既定色に戻る', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
+      await user.click(screen.getByRole('button', { name: /^文字色/ }))
+      await user.click(screen.getByRole('button', { name: '色をリセット' }))
+
+      expect(screen.getByRole('button', { name: '文字色: 黒' })).toBeInTheDocument()
+    })
   })
 
   it('文字色未指定のときはパレットの既定色（黒）が選択状態になる', async () => {
@@ -159,5 +168,111 @@ describe('ColorPickerButton（文字色）', () => {
 
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     expect(screen.queryByRole('group', { name: '履歴' })).not.toBeInTheDocument()
+  })
+
+  describe('パレットのキーボード操作', () => {
+    const openByKey = async (user: ReturnType<typeof userEvent.setup>) => {
+      act(() => screen.getByRole('button', { name: /^文字色/ }).focus())
+      await user.keyboard('{Enter}')
+      // 開いた直後のフォーカスは次のフレームで先頭のスウォッチへ移る
+      await waitFor(() => expect(screen.getByRole('button', { name: '黒' })).toHaveFocus())
+    }
+
+    it('矢印キーで1行6色の格子を移る', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+
+      await user.keyboard('{ArrowRight}')
+      expect(screen.getByRole('button', { name: 'グレー' })).toHaveFocus()
+
+      await user.keyboard('{ArrowDown}')
+      expect(screen.getByRole('button', { name: '緑' })).toHaveFocus()
+
+      await user.keyboard('{ArrowUp}')
+      expect(screen.getByRole('button', { name: 'グレー' })).toHaveFocus()
+
+      await user.keyboard('{ArrowLeft}')
+      expect(screen.getByRole('button', { name: '黒' })).toHaveFocus()
+    })
+
+    it('端では折り返さずに止まる', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+
+      await user.keyboard('{ArrowLeft}')
+      expect(screen.getByRole('button', { name: '黒' })).toHaveFocus()
+
+      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowRight}')
+      expect(screen.getByRole('button', { name: 'マゼンタ' })).toHaveFocus()
+    })
+
+    it('Escape で閉じてトリガーへ戻る', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+
+      await user.keyboard('{ArrowRight}{Escape}')
+
+      const trigger = screen.getByRole('button', { name: /^文字色/ })
+      expect(trigger).toHaveAttribute('aria-expanded', 'false')
+      expect(trigger).toHaveFocus()
+    })
+
+    it('パレットの中でフォーカスが移っても閉じず、外へ移ると閉じる', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+      const trigger = screen.getByRole('button', { name: /^文字色/ })
+
+      act(() => screen.getByRole('button', { name: '色をリセット' }).focus())
+      expect(trigger).toHaveAttribute('aria-expanded', 'true')
+
+      act(() => screen.getByRole('textbox').focus())
+      expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    })
+
+    it('両端で外へ向けて Tab を押すと閉じてトリガーへ戻る。中へ向けた Tab では閉じない', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+      const trigger = screen.getByRole('button', { name: /^文字色/ })
+      const first = screen.getByRole('button', { name: '黒' })
+      const last = screen.getByRole('button', { name: '色をリセット' })
+
+      expect(fireEvent.keyDown(first, { key: 'Tab' })).toBe(true)
+      act(() => last.focus())
+      expect(fireEvent.keyDown(last, { key: 'Tab', shiftKey: true })).toBe(true)
+      expect(trigger).toHaveAttribute('aria-expanded', 'true')
+
+      expect(fireEvent.keyDown(last, { key: 'Tab' })).toBe(false)
+      expect(trigger).toHaveAttribute('aria-expanded', 'false')
+      expect(trigger).toHaveFocus()
+
+      await openByKey(user)
+      expect(
+        fireEvent.keyDown(screen.getByRole('button', { name: '黒' }), {
+          key: 'Tab',
+          shiftKey: true,
+        }),
+      ).toBe(false)
+      expect(trigger).toHaveAttribute('aria-expanded', 'false')
+      expect(trigger).toHaveFocus()
+    })
+
+    it('パレットの余白をクリックしても閉じない', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+
+      // フォーカスできない所を押すとフォーカスは body へ移り、パレットの外へ出たように見える
+      await user.click(screen.getByText('カスタム', { selector: 'span' }))
+
+      expect(screen.getByRole('button', { name: /^文字色/ })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
   })
 })
