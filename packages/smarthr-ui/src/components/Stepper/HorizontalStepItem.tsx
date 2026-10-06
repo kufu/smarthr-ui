@@ -6,18 +6,22 @@ import { Text } from '../Text'
 import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep, StatusType } from './types'
+import type { SHRComponentProps } from '../../types'
 
-type BaseProps = {
-  statusType?: StatusType
-  statusText?: string
-  /** ステップ数 */
-  stepNumber: number
-  /** 現在地かどうか */
-  current: boolean
-  /** 前のステップが完了しているかどうか */
-  isPrevStepCompleted: boolean
-}
-type Props = BaseProps & Omit<HorizontalStep, keyof BaseProps | 'status'>
+type Props = SHRComponentProps<
+  HorizontalStep,
+  {
+    statusType?: StatusType
+    statusText?: string
+    /** ステップ数 */
+    stepNumber: number
+    /** 現在地かどうか */
+    current: boolean
+    /** 前のステップが完了しているかどうか */
+    isPrevStepCompleted: boolean
+  },
+  { omit: 'status' }
+>
 
 const classNameGenerator = tv({
   slots: {
