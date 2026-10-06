@@ -1,16 +1,21 @@
-import { type ComponentPropsWithoutRef, memo } from 'react'
+import { memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type BaseProps = {
-  /** コンポーネントのタイトル */
-  alt?: string
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** コンポーネントの高さ */
-  height?: number | string
-  fill?: 'white' | 'brand' | 'black'
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'svg',
+  {
+    /** コンポーネントのタイトル */
+    alt?: string
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** コンポーネントの高さ */
+    height?: number | string
+    fill?: 'white' | 'brand' | 'black'
+  },
+  { omit: 'role' | 'viewBox' | 'style' | 'aria-label' }
+>
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom'],

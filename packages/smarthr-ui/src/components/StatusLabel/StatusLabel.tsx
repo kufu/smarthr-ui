@@ -1,15 +1,17 @@
-import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
-type StatusLabelType = 'grey' | 'blue' | 'green' | 'red' | 'warning' | 'error'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
-type BaseProps = {
-  type?: StatusLabelType
-  bold?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  'span',
+  {
+    type?: 'grey' | 'blue' | 'green' | 'red' | 'warning' | 'error'
+    bold?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   base: [
