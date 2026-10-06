@@ -1,21 +1,19 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type ReactNode,
-  useCallback,
-  useState,
-} from 'react'
+import { type FC, type ReactNode, useCallback, useState } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-type BaseProps = {
-  announceDelay?: number
-  skipInitialAnnounce?: boolean
-  visuallyHidden?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'span',
+  {
+    announceDelay?: number
+    skipInitialAnnounce?: boolean
+    visuallyHidden?: boolean
+  }
+>
 
 export const LiveRegion: FC<Props> = ({
   announceDelay = 100,
