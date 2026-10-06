@@ -1,21 +1,19 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type MouseEvent,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useLocalize } from '../../../intl'
 import { Nav } from '../../SectioningContent'
 
+import type { SHRComponentPropsWithoutRef } from '../../../types'
 import type { ClickableProps } from '../type'
 
-type BaseProps = PropsWithChildren<ClickableProps>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Nav>, keyof BaseProps | 'baseLevel'>
+type Props = SHRComponentPropsWithoutRef<
+  typeof Nav,
+  ClickableProps,
+  { omit: 'baseLevel' | 'aria-label' | 'onClick' }
+>
 
 const BUTTON_REGEX = /^button$/i
 const ANCHOR_REGEX = /^a/i
