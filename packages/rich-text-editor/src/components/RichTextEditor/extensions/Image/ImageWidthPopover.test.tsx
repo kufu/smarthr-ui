@@ -92,4 +92,29 @@ describe('ImageWidthPopover', () => {
     expect(trigger).toHaveFocus()
     expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: null, height: null })
   })
+
+  it('幅を変えると画像本来の縦横比で高さが、高さを変えると幅が追従する', async () => {
+    const user = userEvent.setup()
+    const editor = createEditor()
+    const img = editor.view.dom.querySelector('img')!
+    Object.defineProperty(img, 'naturalWidth', { value: 400, configurable: true })
+    Object.defineProperty(img, 'naturalHeight', { value: 100, configurable: true })
+
+    render(<ImageWidthPopover editor={editor as never} pos={2} />, { wrapper: Wrapper })
+    await user.click(screen.getByRole('button', { name: 'サイズ' }))
+    const widthInput = screen.getByRole('spinbutton', { name: '幅 (px)' })
+    const heightInput = screen.getByRole('spinbutton', { name: '高さ (px)' })
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '300')
+    expect(heightInput).toHaveValue(75)
+
+    await user.clear(heightInput)
+    await user.type(heightInput, '50')
+    expect(widthInput).toHaveValue(200)
+
+    await user.click(screen.getByRole('button', { name: '適用' }))
+
+    expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: 200, height: 50 })
+  })
 })

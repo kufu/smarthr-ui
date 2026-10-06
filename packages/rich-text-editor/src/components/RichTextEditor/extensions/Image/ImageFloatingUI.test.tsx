@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { createRef } from 'react'
 import { IntlProvider } from 'smarthr-ui'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, onTestFinished, vi } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 import { ALL_FEATURES, configureExtensions } from '../configureExtensions'
@@ -121,5 +121,34 @@ describe('ImageFloatingUI', () => {
 
     editor.destroy()
     container.remove()
+  })
+
+  it('削除ボタンを押すと選択中の画像を消す。画像の位置が動いていても動いた先を消す', async () => {
+    const user = userEvent.setup()
+    const editor = new Editor({
+      extensions: configureExtensions({ features: ALL_FEATURES }),
+      content: imageDoc,
+    })
+    const container = document.createElement('div')
+    document.body.append(container)
+    onTestFinished(() => {
+      editor.destroy()
+      container.remove()
+    })
+    editor.commands.setNodeSelection(2)
+
+    render(<ImageFloatingUI containerRef={{ current: container }} editor={editor as never} />, {
+      wrapper: Wrapper,
+    })
+    const deleteButton = await screen.findByRole('button', { name: '画像を削除' })
+
+    act(() => {
+      editor.commands.insertContentAt(1, '前', { updateSelection: false })
+    })
+    await user.click(deleteButton)
+
+    expect(editor.$node('image')).toBeNull()
+    expect(editor.getText().trim()).toBe('前')
+    expect(screen.queryByRole('toolbar', { name: '画像の操作' })).not.toBeInTheDocument()
   })
 })
