@@ -10,33 +10,34 @@ import { IS_NEXT_JS } from '../../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
+import type { SHRComponentPropsWithRef } from '../../../../types'
+
 type TextProps = ComponentPropsWithRef<typeof Text>
-type BaseProps = {
-  /**
-   * テキストのサイズ
-   *
-   * @default 'XL'
-   */
-  size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
-  /** 視覚的に非表示にするフラグ */
-  visuallyHidden?: boolean
-  /**
-   * title要素の自動生成フラグ
-   *
-   * Next.js 環境ではこの値にかかわらずtitleは自動生成されません。metadataなどの方法を利用してください。
-   */
-  autoPageTitle?: boolean
-  /** title要素のprefix */
-  pageTitle?: string
-  /** title要素のsuffix */
-  pageTitleSuffix?: string
-}
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<'h1'>,
-    keyof BaseProps | keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level'
-  >
+type Props = SHRComponentPropsWithRef<
+  'h1',
+  {
+    /**
+     * テキストのサイズ
+     *
+     * @default 'XL'
+     */
+    size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
+    /** 視覚的に非表示にするフラグ */
+    visuallyHidden?: boolean
+    /**
+     * title要素の自動生成フラグ
+     *
+     * Next.js 環境ではこの値にかかわらずtitleは自動生成されません。metadataなどの方法を利用してください。
+     */
+    autoPageTitle?: boolean
+    /** title要素のprefix */
+    pageTitle?: string
+    /** title要素のsuffix */
+    pageTitleSuffix?: string
+  },
+  { omit: keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level' }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading smarthr-ui-PageHeading',
