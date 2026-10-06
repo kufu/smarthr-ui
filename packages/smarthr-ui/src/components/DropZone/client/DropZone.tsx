@@ -6,7 +6,6 @@ import {
   type DragEvent,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   type Ref,
   memo,
   useMemo,
@@ -34,7 +33,7 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -57,7 +56,7 @@ type BaseProps = PropsWithChildren<{
   selectButtonLabel?: string
   /** input[type="file"]要素へのref */
   ref?: Ref<HTMLInputElement>
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {

@@ -1,17 +1,11 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
 type Color = 'grey' | 'blue' | 'yellow' | 'red'
 
-type BaseProps = PropsWithChildren<{
+type BaseProps = {
   /** 件数 */
   count?: number
   /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
@@ -27,7 +21,7 @@ type BaseProps = PropsWithChildren<{
   type?: Color
   /** ドット表示するかどうか */
   dot?: boolean
-}>
+}
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
 
 const classNameGenerator = tv({

@@ -1,17 +1,17 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AutoColSpanTd } from './client'
 
-import type { Gap } from '../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../types'
 
-type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
-
-type BaseProps = PropsWithChildren<{
-  /** 境界とコンテンツの間の余白 */
-  padding?: Padding
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'tbody'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'tbody',
+  {
+    /** 境界とコンテンツの間の余白 */
+    padding?: Gap | { vertical?: Gap; horizontal?: Gap }
+  }
+>
 
 const classNameGenerator = tv({
   base: 'shr-text-center',

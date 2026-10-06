@@ -1,40 +1,38 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type MouseEvent,
-  type ReactNode,
-  type WheelEvent,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, type ReactNode, type WheelEvent, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
 
-type BaseProps = {
-  /** input 要素の `type` 値 */
-  type?: HTMLInputElement['type']
-  /** フォームにエラーがあるかどうか */
-  error?: boolean
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** オートフォーカスを行うかどうか */
-  autoFocus?: boolean
-  /** コンポーネント内の先頭に表示する内容 */
-  prefix?: ReactNode
-  /** コンポーネント内の末尾に表示する内容 */
-  suffix?: ReactNode
-  /** 背景色。readOnly を下地の上に載せる場合に使う */
-  bgColor?: keyof typeof backgroundColor
-  /**
-   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
-   */
-  placeholder?: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** input 要素の `type` 値 */
+    type?: HTMLInputElement['type']
+    /** フォームにエラーがあるかどうか */
+    error?: boolean
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** オートフォーカスを行うかどうか */
+    autoFocus?: boolean
+    /** コンポーネント内の先頭に表示する内容 */
+    prefix?: ReactNode
+    /** コンポーネント内の末尾に表示する内容 */
+    suffix?: ReactNode
+    /** 背景色。readOnly を下地の上に載せる場合に使う */
+    bgColor?: keyof typeof backgroundColor
+    /**
+     * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
+     */
+    placeholder?: string
+  },
+  { omit: 'onWheel' | 'children' | 'aria-invalid' }
+>
 
 const backgroundColor = {
   BACKGROUND: 'background',
@@ -84,16 +82,12 @@ const DEFAULT_MAX_ATTR = {
 }
 
 export const Input: FC<Props> = ({
-  onFocus,
-  onBlur,
   autoFocus,
   prefix,
   suffix,
   className,
   width,
-  disabled,
   error,
-  readOnly,
   bgColor,
   type,
   max,
@@ -146,16 +140,12 @@ export const Input: FC<Props> = ({
         {...rest}
         ref={mergedRef}
         type={type}
-        disabled={disabled}
-        readOnly={readOnly}
         max={max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined}
         className={classNames.input}
         aria-invalid={errorAttr}
         data-smarthr-ui-input-error={errorAttr}
         data-smarthr-ui-input="true"
         onWheel={type === 'number' ? disableWheel : undefined}
-        onFocus={onFocus}
-        onBlur={onBlur}
       />
       {suffix && <span className={classNames.suffix}>{suffix}</span>}
     </span>

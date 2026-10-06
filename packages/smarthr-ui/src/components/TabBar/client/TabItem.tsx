@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -15,6 +14,8 @@ import { useLatest } from '../../../hooks/useLatest'
 import { UnstyledButton } from '../../Button'
 import { FaCircleInfoIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -43,30 +44,29 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = PropsWithChildren<{
-  /** タブの ID */
-  id: string
-  /** ボタン内の末尾に表示する内容 */
-  suffix?: ReactNode
-  /** `true` のとき、タブが選択状態のスタイルになる */
-  selected?: boolean
-  /** `true` のとき、タブを無効状態にしてクリック不能にする */
-  disabled?: boolean
-  /**
-   * 無効な理由
-   */
-  disabledReason?: {
-    icon?: ReactNode
-    message: ReactNode
-  }
-  /** タブをクリックした時に発火するコールバック関数 */
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
-}>
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<typeof UnstyledButton>,
-    keyof BaseProps | 'aria-selected' | 'type' | 'role' | 'value'
-  >
+type Props = SHRComponentPropsWithRef<
+  typeof UnstyledButton,
+  {
+    /** タブの ID */
+    id: string
+    /** ボタン内の末尾に表示する内容 */
+    suffix?: ReactNode
+    /** `true` のとき、タブが選択状態のスタイルになる */
+    selected?: boolean
+    /** `true` のとき、タブを無効状態にしてクリック不能にする */
+    disabled?: boolean
+    /**
+     * 無効な理由
+     */
+    disabledReason?: {
+      icon?: ReactNode
+      message: ReactNode
+    }
+    /** タブをクリックした時に発火するコールバック関数 */
+    onClick: (e: MouseEvent<HTMLButtonElement>) => void
+  },
+  { omit: 'aria-selected' | 'type' | 'role' | 'value' }
+>
 
 export const TabItem: FC<Props> = ({
   selected = false,

@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -8,6 +8,7 @@ import { PaginationControllerItemButton } from './PaginationControllerItemButton
 import { PaginationItemButton, Wrapper } from './client'
 
 import type { AnchorProps, ButtonProps } from './type'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -44,8 +45,9 @@ type CommonProps = {
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
-type BaseProps = (CommonProps & ButtonProps) | (CommonProps & AnchorProps)
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Wrapper>, keyof BaseProps>
+type ActualButtonProps = SHRComponentPropsWithoutRef<typeof Wrapper, CommonProps & ButtonProps>
+type ActualAnchorProps = SHRComponentPropsWithoutRef<typeof Wrapper, CommonProps & AnchorProps>
+type Props = ActualButtonProps | ActualAnchorProps
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null

@@ -1,14 +1,9 @@
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ElementType, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SeparatePositiveGap } from '../../../types'
+import type { PositiveGap, SHRComponentPropsWithRef, SeparatePositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type JustifyType =
@@ -23,16 +18,16 @@ type JustifyType =
   | 'space-evenly'
   | 'stretch'
 
-type BaseProps<T extends ElementType> = PropsWithChildren<{
-  as?: T
-  gap?: PositiveGap | SeparatePositiveGap
-  inline?: boolean
-  align?: AlignType
-  justify?: JustifyType
-}>
-
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
+type Props<T extends ElementType> = SHRComponentPropsWithRef<
+  T,
+  {
+    as?: T
+    gap?: PositiveGap | SeparatePositiveGap
+    inline?: boolean
+    align?: AlignType
+    justify?: JustifyType
+  }
+>
 
 export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',

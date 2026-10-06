@@ -5,12 +5,15 @@ import { Scroller } from '../Scroller'
 // eslint-disable-next-line smarthr/require-barrel-import
 import { FixedHeadTableScroller } from './client/FixedHeadTableScroller'
 
-import type { ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
+import type { SHRComponentPropsWithRef } from '../../types'
+import type { FC } from 'react'
 
-type BaseProps = PropsWithChildren<{
-  fixedHead?: boolean
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    fixedHead?: boolean
+  }
+>
 
 const SCROLLER_PROPS = {
   direction: 'both' as const,

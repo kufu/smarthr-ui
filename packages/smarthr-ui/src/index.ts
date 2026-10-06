@@ -80,7 +80,6 @@ export {
   TdRadioButton,
   BulkActionRow,
   EmptyTableBody,
-  WakuWakuButton,
 } from './components/Table'
 /** @public */
 export {

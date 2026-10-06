@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentPropsWithRef,
   type ElementType,
   type FC,
   createContext,
@@ -11,6 +10,8 @@ import {
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type ParentContextValue = {
   seqs: number[]
@@ -22,14 +23,13 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-type BaseProps = {
-  as?: ElementType
-}
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<'div'>,
-    keyof BaseProps | 'data-portal-child-of' | 'data-portal-current-seq'
-  >
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    as?: ElementType
+  },
+  { omit: 'data-portal-child-of' | 'data-portal-current-seq' }
+>
 
 export const Portal: FC<Props> = ({ as: Component = 'div', children, ...rest }) => {
   const [currentSeq] = useState(() => ++portalSeq)

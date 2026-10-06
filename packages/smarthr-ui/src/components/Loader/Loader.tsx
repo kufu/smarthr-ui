@@ -1,21 +1,25 @@
-import { type ComponentPropsWithoutRef, type ReactNode, memo } from 'react'
+import { type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LiveRegion } from '../LiveRegion'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
-type BaseProps = {
-  /** ローダーの大きさ */
-  size?: 'S' | 'M'
-  /** 代替テキスト */
-  alt?: ReactNode
-  /** 表示するメッセージ */
-  text?: ReactNode
-  /** コンポーネントの色調 */
-  type?: 'primary' | 'light'
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'span',
+  {
+    /** ローダーの大きさ */
+    size?: 'S' | 'M'
+    /** 代替テキスト */
+    alt?: ReactNode
+    /** 表示するメッセージ */
+    text?: ReactNode
+    /** コンポーネントの色調 */
+    type?: 'primary' | 'light'
+  }
+>
 
 const classNameGenerator = tv({
   slots: {

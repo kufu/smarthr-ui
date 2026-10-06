@@ -1,11 +1,7 @@
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ElementType, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
+
+import type { SHRComponentPropsWithRef } from '../../types'
 
 const visuallyHiddenTextClassNameGenerator = tv({
   base: 'shr-absolute shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap shr-border-0 shr-p-0 [clip-path:inset(100%)] [clip:rect(0_0_0_0)]',
@@ -13,11 +9,7 @@ const visuallyHiddenTextClassNameGenerator = tv({
 
 export const visuallyHiddenTextClassName = visuallyHiddenTextClassNameGenerator()
 
-type BaseProps<T extends ElementType> = PropsWithChildren<{
-  as?: T
-}>
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
+type Props<T extends ElementType> = SHRComponentPropsWithRef<T, { as?: T }>
 
 const ActualVisuallyHiddenText = <T extends ElementType = 'span'>({
   as,

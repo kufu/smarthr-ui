@@ -1,14 +1,18 @@
-import { type ComponentPropsWithRef, type FC, type ReactNode, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
 import { Input } from '../client'
 
-type BaseProps = {
-  /** 入力欄に紐付けるツールチップに表示するメッセージ */
-  tooltipMessage: ReactNode
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Input>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof Input,
+  {
+    /** 入力欄に紐付けるツールチップに表示するメッセージ */
+    tooltipMessage: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-InputWithTooltip [&]:shr-overflow-y-visible',

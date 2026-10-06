@@ -1,24 +1,22 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../../SectioningContent'
 
-type BaseProps = PropsWithChildren<{
-  as?: string | ComponentType<any>
-  direction?: 'horizontal' | 'vertical' | 'both'
-  styleType?: 'auto' | 'scroll'
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps | 'tabIndex'>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    as?: string | ComponentType<any>
+    direction?: 'horizontal' | 'vertical' | 'both'
+    styleType?: 'auto' | 'scroll'
+  },
+  { omit: 'tabIndex' }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Scroller',

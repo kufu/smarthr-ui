@@ -1,19 +1,23 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type BaseProps = PropsWithChildren<{
-  /** 罫線の種類 */
-  borderType?: 'vertical' | 'horizontal' | 'both' | 'outer' | 'all'
-  /** 罫線のスタイル */
-  borderStyle?: 'solid' | 'dotted' | 'dashed'
-  /** 角丸を適用する範囲 */
-  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
-  /** テーブルのレイアウト */
-  layout?: 'auto' | 'fixed'
-  /** ヘッダーを固定するかどうか */
-  fixedHead?: boolean
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'table'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'table',
+  {
+    /** 罫線の種類 */
+    borderType?: 'vertical' | 'horizontal' | 'both' | 'outer' | 'all'
+    /** 罫線のスタイル */
+    borderStyle?: 'solid' | 'dotted' | 'dashed'
+    /** 角丸を適用する範囲 */
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+    /** テーブルのレイアウト */
+    layout?: 'auto' | 'fixed'
+    /** ヘッダーを固定するかどうか */
+    fixedHead?: boolean
+  }
+>
 
 const ROUNDED = {
   t_l: '[&>thead:first-child>tr:first-child>th:first-child]:shr-rounded-tl-l [&>thead:first-child>tr:first-child>td:first-child]:shr-rounded-tl-l',
@@ -39,12 +43,12 @@ const classNameGenerator = tv({
       both: {},
       outer: 'shr-border-shorthand',
       all: 'shr-border-shorthand',
-    } satisfies Record<NonNullable<BaseProps['borderType']>, string | Record<string, never>>,
+    } satisfies Record<NonNullable<Props['borderType']>, string | Record<string, never>>,
     borderStyle: {
       solid: '[&_:is(.smarthr-ui-Th,.smarthr-ui-Td)]:shr-border-solid',
       dotted: '[&_:is(.smarthr-ui-Th,.smarthr-ui-Td)]:shr-border-dotted',
       dashed: '[&_:is(.smarthr-ui-Th,.smarthr-ui-Td)]:shr-border-dashed',
-    } satisfies Record<NonNullable<BaseProps['borderStyle']>, string>,
+    } satisfies Record<NonNullable<Props['borderStyle']>, string>,
     rounded: {
       true: ROUNDED_ALL,
       all: ROUNDED_ALL,
@@ -52,11 +56,11 @@ const classNameGenerator = tv({
       right: [ROUNDED.t_r, ROUNDED.b_r],
       bottom: [ROUNDED.b_l, ROUNDED.b_r],
       left: [ROUNDED.t_l, ROUNDED.b_l],
-    } satisfies Record<Exclude<NonNullable<BaseProps['rounded']>, boolean> | 'true', string[]>,
+    } satisfies Record<Exclude<NonNullable<Props['rounded']>, boolean> | 'true', string[]>,
     layout: {
       auto: '',
       fixed: 'shr-table-fixed',
-    } satisfies Record<NonNullable<BaseProps['layout']>, string>,
+    } satisfies Record<NonNullable<Props['layout']>, string>,
     fixedHead: {
       true: '[&_tbody]:shr-relative [&_tbody]:shr-z-1 [&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0 [&_thead]:shr-z-[2]',
     } satisfies Record<'true', string>,

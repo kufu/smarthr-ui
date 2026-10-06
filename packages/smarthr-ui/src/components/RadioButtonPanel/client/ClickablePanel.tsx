@@ -2,16 +2,20 @@
 
 import { Panel } from '../../Panel'
 
-import type { ComponentType, FC, ReactNode } from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC, ReactNode } from 'react'
 
-type Props = {
-  as?: string | ComponentType<any>
-  children: ReactNode
-  className: string
-}
+type Props = SHRComponentPropsWithRef<
+  typeof Panel,
+  {
+    children: ReactNode
+    className: string
+  },
+  { omit: 'padding' | 'onClick' }
+>
 
-export const ClickablePanel: FC<Props> = ({ as, className, children }) => (
-  <Panel as={as} padding={1} className={className} onClick={handleDelegateClick}>
+export const ClickablePanel: FC<Props> = ({ children, ...rest }) => (
+  <Panel {...rest} padding={1} onClick={handleDelegateClick}>
     {children}
   </Panel>
 )

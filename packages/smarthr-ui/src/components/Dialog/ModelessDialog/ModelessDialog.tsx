@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import Draggable, { type DraggableBounds } from 'react-draggable'
+import Draggable from 'react-draggable'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
@@ -303,7 +303,15 @@ export const ModelessDialog: FC<Props> = ({
         lastFocusElementRef.current?.focus()
         latest.onPressEscape?.(e)
       },
-      handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
+      handleDragStart: (_: any, data: { x: number; y: number }) => {
+        if (wrapperRef.current) {
+          setDraggableBounds({
+            top: (wrapperRef.current.getBoundingClientRect().top - data.y) * -1,
+          })
+        }
+
+        setActualPosition(data)
+      },
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
         setActualPosition((prev) => ({
           x: prev.x + data.deltaX,
@@ -340,41 +348,24 @@ export const ModelessDialog: FC<Props> = ({
             nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
           const isYCenter =
             nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
-          let nextCentering = latest.centering
 
           if (isXCenter || isYCenter) {
             const rect = node.getBoundingClientRect()
-            const tempCentering = {
+            const nextCentering = {
               top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
               left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
             }
 
-            nextCentering =
-              latest.centering.top === tempCentering.top &&
-              latest.centering.left === tempCentering.left
+            setCentering(
+              latest.centering.top === nextCentering.top &&
+                latest.centering.left === nextCentering.left
                 ? latest.centering
-                : tempCentering
-
-            setCentering(nextCentering)
+                : nextCentering,
+            )
           } else if (latest.centering.top !== undefined || latest.centering.left !== undefined) {
             // HINT: 中央寄せが不要になった場合、以前の値が残るとdefaultPositionより優先されてしまう
-            nextCentering = {}
-
-            setCentering(nextCentering)
+            setCentering({})
           }
-
-          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
-          setDraggableBounds((current: DraggableBounds | string | false) => {
-            // HINT: centering.topは0になりうるため、undefinedとの区別が必要
-            const nextTop =
-              nextCentering.top !== undefined
-                ? nextCentering.top * -1
-                : node.getBoundingClientRect().top * -1
-
-            return typeof current === 'object' && current.top === nextTop
-              ? current
-              : { top: nextTop }
-          })
 
           node
             .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')

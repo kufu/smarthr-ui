@@ -1,28 +1,24 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../../types'
 
-type BaseProps = PropsWithChildren<{
-  /** コンテンツの最小高さ */
-  minHeight?: number | string
-  /** コンテンツの最大幅 */
-  maxWidth?: number | string
-  /** 境界とコンテンツの間の余白 */
-  padding?: Gap
-  /** 天地中央揃えも有効化するかどうか */
-  verticalCentering?: boolean
-  as?: string | ComponentType<any>
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** コンテンツの最小高さ */
+    minHeight?: number | string
+    /** コンテンツの最大幅 */
+    maxWidth?: number | string
+    /** 境界とコンテンツの間の余白 */
+    padding?: Gap
+    /** 天地中央揃えも有効化するかどうか */
+    verticalCentering?: boolean
+    as?: string | ComponentType<any>
+  }
+>
 
 export const centerClassNameGenerator = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',

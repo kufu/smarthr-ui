@@ -1,14 +1,16 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import type { SideNavSizeType } from './SideNavItemButton'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
-type BaseProps = PropsWithChildren<{
-  /** 各アイテムの大きさ */
-  size?: SideNavSizeType
-  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  'ul',
+  {
+    /** 各アイテムの大きさ */
+    size?: 'M' | 'S'
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+  }
+>
 
 const ROUNDED = {
   t_l: '[&>.smarthr-ui-SideNav-item:first-child]:shr-rounded-tl-l',

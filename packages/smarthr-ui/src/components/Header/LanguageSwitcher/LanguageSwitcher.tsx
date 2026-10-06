@@ -30,7 +30,6 @@ type BaseProps = {
   invert?: boolean
   enableNew?: boolean
 }
-
 type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Dropdown>, keyof BaseProps>
 
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/

@@ -1,17 +1,10 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type FC,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type ElementType, type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
-export type SideNavSizeType = 'M' | 'S'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
 type BaseItemProps = {
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
@@ -21,23 +14,23 @@ type BaseItemProps = {
   /** 選択されているアイテムかどうか */
   current?: boolean
 }
-type ItemElementProps = ComponentPropsWithoutRef<'li'>
-
-type BaseButtonProps = BaseItemProps & {
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
-type ButtonProps = BaseButtonProps & Omit<ItemElementProps, keyof BaseButtonProps>
-
-type BaseAnchorProps<T extends ElementType = 'a'> = BaseItemProps & {
-  href: string
-  /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  elementAs?: T
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
-}
-type AnchorProps<T extends ElementType = 'a'> = BaseAnchorProps<T> &
-  Omit<ItemElementProps, keyof BaseAnchorProps<T>>
+type ButtonProps = SHRComponentPropsWithoutRef<
+  'li',
+  BaseItemProps & {
+    /** アイテムを押下したときに発火するコールバック関数 */
+    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  }
+>
+type AnchorProps<T extends ElementType> = SHRComponentPropsWithoutRef<
+  'li',
+  BaseItemProps & {
+    href: string
+    /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+    elementAs?: T
+    /** アイテムを押下したときに発火するコールバック関数 */
+    onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  }
+>
 
 const classNameGenerator = tv({
   slots: {

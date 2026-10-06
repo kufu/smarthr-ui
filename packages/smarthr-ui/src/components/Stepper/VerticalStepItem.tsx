@@ -7,16 +7,20 @@ import { Section } from '../SectioningContent'
 import { StepCounter } from './StepCounter'
 
 import type { StatusType, VerticalStep } from './types'
+import type { SHRComponentProps } from '../../types'
 
-type BaseProps = {
-  statusType?: StatusType
-  statusText?: string
-  /** ステップ数 */
-  stepNumber: number
-  /** 現在地かどうか */
-  current: boolean
-}
-type Props = BaseProps & Omit<VerticalStep, keyof BaseProps | 'status'>
+type Props = SHRComponentProps<
+  VerticalStep,
+  {
+    statusType?: StatusType
+    statusText?: string
+    /** ステップ数 */
+    stepNumber: number
+    /** 現在地かどうか */
+    current: boolean
+  },
+  { omit: 'status' }
+>
 
 const classNameGenerator = tv({
   slots: {
