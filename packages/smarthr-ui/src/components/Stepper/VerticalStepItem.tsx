@@ -10,7 +10,7 @@ import type { StatusType, VerticalStep } from './types'
 import type { SHRComponentProps } from '../../types'
 
 type Props = SHRComponentProps<
-  Omit<VerticalStep, 'status'>,
+  VerticalStep,
   {
     statusType?: StatusType
     statusText?: string
@@ -18,7 +18,8 @@ type Props = SHRComponentProps<
     stepNumber: number
     /** 現在地かどうか */
     current: boolean
-  }
+  },
+  { omit: 'status' }
 >
 
 const classNameGenerator = tv({
