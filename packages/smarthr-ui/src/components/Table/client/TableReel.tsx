@@ -1,11 +1,13 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { ScrollerSwitcher } from '../ScrollerSwitcher'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -13,10 +15,12 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-type BaseProps = {
-  fixedHead?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    fixedHead?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
