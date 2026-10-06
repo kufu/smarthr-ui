@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { StatusIcon } from '../Icon'
@@ -9,12 +9,12 @@ import type { SHRComponentPropsWithRef } from '../../types'
 
 type Props = SHRComponentPropsWithRef<
   typeof StatusIcon,
-  {
+  PropsWithChildren<{
     size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
     status?: ComponentPropsWithoutRef<typeof StatusIcon>['status']
     /** role 属性 */
     role?: 'alert' | 'status'
-  },
+  }>,
   { omit: 'bold' }
 >
 
