@@ -322,16 +322,72 @@ describe('操作メニューのキーボードショートカット', () => {
     { platform: 'macOS', key: 'ˆ', keyCode: 84, shiftKey: true, name: '表の操作' },
     { platform: 'Windows', key: 'T', keyCode: 84, shiftKey: true, name: '表の操作' },
     { platform: '共通', key: 'Enter', keyCode: 13, shiftKey: false, name: 'セルの操作' },
+    {
+      platform: '共通',
+      key: 'F10',
+      keyCode: 121,
+      shiftKey: true,
+      altKey: false,
+      name: 'セルの操作',
+    },
   ]
 
   it.each(cases)(
     '$platform の $key で「$name」が開く',
-    async ({ key, keyCode, shiftKey, name }) => {
+    async ({ key, keyCode, shiftKey, altKey = true, name }) => {
       showControls()
       act(() => {
-        fireEvent.keyDown(editor.view.dom, { altKey: true, key, keyCode, shiftKey, which: keyCode })
+        fireEvent.keyDown(editor.view.dom, { altKey, key, keyCode, shiftKey, which: keyCode })
       })
       expect(await screen.findByRole('dialog', { name })).toBeInTheDocument()
     },
   )
+})
+
+describe('セル移動のキーボード操作', () => {
+  const cellPos = (index: number) => {
+    const target = getTableTarget(editor)!
+
+    return target.tablePos + 1 + target.map.map[index]
+  }
+  const caretIn = (index: number) => editor.commands.setTextSelection(cellPos(index) + 2)
+  const pressKeyNotPrevented = (key: string, shiftKey = false) =>
+    fireEvent.keyDown(editor.view.dom, { key, shiftKey })
+
+  it('Tab で次のセル、Shift+Tab で前のセルへ移り、行の端では隣の行へ移る', () => {
+    expect(pressKeyNotPrevented('Tab')).toBe(false)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 2 })
+
+    expect(pressKeyNotPrevented('Tab')).toBe(false)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 2, left: 0 })
+
+    expect(pressKeyNotPrevented('Tab', true)).toBe(false)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 2 })
+
+    caretIn(3)
+    expect(pressKeyNotPrevented('Tab', true)).toBe(false)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 0, left: 2 })
+  })
+
+  it('最後のセルの Tab では行を増やさず、ブラウザの既定動作で表の外へ抜けられる', () => {
+    caretIn(8)
+
+    expect(pressKeyNotPrevented('Tab')).toBe(true)
+    expect(getTableTarget(editor)!.map.height).toBe(3)
+  })
+
+  it('最初のセルの Shift+Tab はブラウザの既定動作に任せる', () => {
+    caretIn(0)
+
+    expect(pressKeyNotPrevented('Tab', true)).toBe(true)
+  })
+
+  it('表の外では Tab も Shift+F10 も扱わない', () => {
+    showControls()
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+
+    expect(editor.isActive('table')).toBe(false)
+    expect(pressKeyNotPrevented('Tab')).toBe(true)
+    expect(pressKeyNotPrevented('F10', true)).toBe(true)
+  })
 })

@@ -150,4 +150,66 @@ describe('table context actions', () => {
     editor.commands.setCellAttribute('color', 'red;position:fixed')
     expect(editor.getHTML()).not.toContain('position:fixed')
   })
+
+  describe('行・列の追加', () => {
+    const cellPos = (row: number, col: number) => {
+      const { tablePos, map } = getTableTarget(editor)!
+
+      return tablePos + 1 + map.map[row * map.width + col]
+    }
+    // 追加後の位置を追えるよう、基準のセルだけに印を付ける
+    const markCell = (row: number, col: number) => {
+      editor.commands.setTextSelection(cellPos(row, col) + 2)
+      editor.commands.setCellAttribute('color', '#0077c7')
+    }
+    const markedColumns = () => {
+      const { map, table } = getTableTarget(editor)!
+
+      return Array.from({ length: map.width }, (_, col) => col).filter(
+        (col) => table.nodeAt(map.map[map.width + col])?.attrs.color === '#0077c7',
+      )
+    }
+
+    it('列はキャレットのある列の前と後ろに足す', () => {
+      createEditor()
+      markCell(1, 1)
+
+      insertTableAxis(editor, 'column', 'before')
+      expect(getTableTarget(editor)!.map.width).toBe(4)
+      expect(markedColumns()).toEqual([2])
+
+      editor.commands.setTextSelection(cellPos(1, 2) + 2)
+      insertTableAxis(editor, 'column', 'after')
+      expect(getTableTarget(editor)!.map.width).toBe(5)
+      expect(markedColumns()).toEqual([2, 3])
+    })
+
+    it('横に結合したセルを跨いで列を足すと、結合セルが広がる', () => {
+      createEditor()
+      editor.commands.setCellSelection({ anchorCell: cellPos(0, 0), headCell: cellPos(0, 1) })
+      editor.commands.mergeCells()
+      editor.commands.setTextSelection(cellPos(1, 0) + 2)
+
+      insertTableAxis(editor, 'column', 'after')
+
+      const { map, table } = getTableTarget(editor)!
+      expect(map.width).toBe(4)
+      expect(map.problems).toBeNull()
+      expect(table.firstChild!.firstChild!.attrs.colspan).toBe(3)
+    })
+
+    it('縦に結合したセルを跨いで行を足すと、結合セルが伸びる', () => {
+      createEditor()
+      editor.commands.setCellSelection({ anchorCell: cellPos(0, 0), headCell: cellPos(1, 0) })
+      editor.commands.mergeCells()
+      editor.commands.setTextSelection(cellPos(0, 1) + 2)
+
+      insertTableAxis(editor, 'row', 'after')
+
+      const { map, table } = getTableTarget(editor)!
+      expect(map.height).toBe(4)
+      expect(map.problems).toBeNull()
+      expect(table.firstChild!.firstChild!.attrs.rowspan).toBe(3)
+    })
+  })
 })
