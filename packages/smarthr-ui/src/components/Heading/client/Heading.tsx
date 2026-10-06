@@ -7,6 +7,8 @@ import { LevelContext } from '../../SectioningContent'
 import { STYLE_TYPE_MAP, Text } from '../../Text'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
+
 type TextProps = ComponentPropsWithRef<typeof Text>
 type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
@@ -33,22 +35,21 @@ type StylingProps =
       size?: never
     }
 
-type BaseProps = StylingProps & {
-  /**
-   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
-   */
-  unrecommendedTag?: HeadingTagTypes
-  /** 視覚的に非表示にするフラグ */
-  visuallyHidden?: boolean
-  /** テキスト左に設置するアイコン */
-  icon?: TextProps['icon']
-}
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<'h2'>,
-    keyof BaseProps | keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level'
-  >
+type Props = SHRComponentPropsWithRef<
+  'h2',
+  StylingProps & {
+    /**
+     * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
+     */
+    unrecommendedTag?: HeadingTagTypes
+    /** 視覚的に非表示にするフラグ */
+    visuallyHidden?: boolean
+    /** テキスト左に設置するアイコン */
+    icon?: TextProps['icon']
+  },
+  { omit: keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level' }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
