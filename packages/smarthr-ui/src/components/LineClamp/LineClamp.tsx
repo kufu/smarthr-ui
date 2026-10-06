@@ -1,14 +1,18 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type BaseProps = {
-  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'span',
+  {
+    maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
