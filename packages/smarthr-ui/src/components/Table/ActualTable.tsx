@@ -1,19 +1,23 @@
-import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type BaseProps = {
-  /** 罫線の種類 */
-  borderType?: 'vertical' | 'horizontal' | 'both' | 'outer' | 'all'
-  /** 罫線のスタイル */
-  borderStyle?: 'solid' | 'dotted' | 'dashed'
-  /** 角丸を適用する範囲 */
-  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
-  /** テーブルのレイアウト */
-  layout?: 'auto' | 'fixed'
-  /** ヘッダーを固定するかどうか */
-  fixedHead?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'table'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'table',
+  {
+    /** 罫線の種類 */
+    borderType?: 'vertical' | 'horizontal' | 'both' | 'outer' | 'all'
+    /** 罫線のスタイル */
+    borderStyle?: 'solid' | 'dotted' | 'dashed'
+    /** 角丸を適用する範囲 */
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+    /** テーブルのレイアウト */
+    layout?: 'auto' | 'fixed'
+    /** ヘッダーを固定するかどうか */
+    fixedHead?: boolean
+  }
+>
 
 const ROUNDED = {
   t_l: '[&>thead:first-child>tr:first-child>th:first-child]:shr-rounded-tl-l [&>thead:first-child>tr:first-child>td:first-child]:shr-rounded-tl-l',
