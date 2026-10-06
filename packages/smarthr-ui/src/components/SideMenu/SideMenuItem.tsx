@@ -1,22 +1,19 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type PropsWithChildren,
-  type ReactNode,
-  useMemo,
-} from 'react'
+import { type ElementType, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type BaseProps<T extends ElementType> = PropsWithChildren<{
-  elementAs?: T
-  current?: boolean
-  prefix?: ReactNode
-  suffix?: ReactNode
-}>
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<T>, keyof BaseProps<T>>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props<T extends ElementType> = SHRComponentPropsWithoutRef<
+  T,
+  PropsWithChildren<{
+    elementAs?: T
+    current?: boolean
+    prefix?: ReactNode
+    suffix?: ReactNode
+  }>
+>
 
 const classNameGenerator = tv({
   slots: {
