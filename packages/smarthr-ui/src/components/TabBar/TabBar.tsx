@@ -1,7 +1,9 @@
-import { type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
+
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -20,11 +22,14 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = {
-  /** `true` のとき、TabBar に下線を表示する */
-  bordered?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'role'>
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    /** `true` のとき、TabBar に下線を表示する */
+    bordered?: boolean
+  },
+  { omit: 'role' }
+>
 
 export const TabBar: FC<Props> = ({ className, bordered, children, ...rest }) => {
   const classNames = useMemo(() => {
