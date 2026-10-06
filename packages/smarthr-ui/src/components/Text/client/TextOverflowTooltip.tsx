@@ -1,14 +1,18 @@
 'use client'
 
-import { type ComponentPropsWithRef, type ElementType, type FC, useCallback, useState } from 'react'
+import { type ElementType, type FC, useCallback, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
 
-type BaseProps = {
-  as: ElementType
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'span',
+  {
+    as: ElementType
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
