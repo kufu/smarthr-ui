@@ -1,18 +1,20 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../../../hooks/client/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../../tailwind'
 
-import type { Gap } from '../../../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../../../types'
 
-type BaseProps = {
-  size?: 'NARROW' | 'DEFAULT' | 'WIDE' | 'FULL'
-  padding?: Gap | SeparatePadding
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    size?: 'NARROW' | 'DEFAULT' | 'WIDE' | 'FULL'
+    padding?: Gap | SeparatePadding
+  }
+>
 
 type SeparatePadding = {
   block?: Gap
