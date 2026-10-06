@@ -1,22 +1,19 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type ReactNode,
-  useId,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RadioButton } from '../RadioButton'
 
 import { ClickablePanel } from './client'
 
-type BaseProps = {
-  as?: string | ComponentType<any>
-  label: ReactNode
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof RadioButton>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof RadioButton,
+  {
+    as?: string | ComponentType<any>
+    label: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
