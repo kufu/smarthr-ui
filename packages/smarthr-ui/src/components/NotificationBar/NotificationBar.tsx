@@ -16,26 +16,30 @@ import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
 
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
 type PanelProps = ComponentPropsWithoutRef<typeof Panel>
 type MessageType = ComponentPropsWithoutRef<typeof StatusIcon>['status']
 
-type BaseProps = Pick<PanelProps, 'layer'> & {
-  /** コンポーネント右の領域 */
-  subActionArea?: ReactNode
-  /** 閉じるボタン押下時に発火させる関数 */
-  onClose?: () => void
-  /** role 属性 */
-  role?: 'alert' | 'status'
-  /** Panel で囲むかどうか */
-  paneled?: boolean
-  /** メッセージの種類 */
-  type: MessageType
-  /** 強調するかどうか */
-  bold?: boolean
-  /** スライドインするかどうか */
-  animate?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  Pick<PanelProps, 'layer'> & {
+    /** コンポーネント右の領域 */
+    subActionArea?: ReactNode
+    /** 閉じるボタン押下時に発火させる関数 */
+    onClose?: () => void
+    /** role 属性 */
+    role?: 'alert' | 'status'
+    /** Panel で囲むかどうか */
+    paneled?: boolean
+    /** メッセージの種類 */
+    type: MessageType
+    /** 強調するかどうか */
+    bold?: boolean
+    /** スライドインするかどうか */
+    animate?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {

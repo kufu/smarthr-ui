@@ -1,15 +1,19 @@
-import { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-type BaseProps = {
-  start: number
-  end: number
-  total?: number
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    start: number
+    end: number
+    total?: number
+  }
+>
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 

@@ -1,17 +1,21 @@
-import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { backgroundColor } from '../../../tailwind'
 import { Panel } from '../Panel'
 
-type BaseProps = {
-  /** 背景色 */
-  bgColor?: keyof typeof backgroundColor
-  /** 角丸を適用する範囲 */
-  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
-}
-type Props = BaseProps &
-  Omit<ComponentPropsWithRef<typeof Panel>, keyof BaseProps | 'radius' | 'layer'>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof Panel,
+  {
+    /** 背景色 */
+    bgColor?: keyof typeof backgroundColor
+    /** 角丸を適用する範囲 */
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+  },
+  { omit: 'radius' | 'layer' }
+>
 
 const classNameGenerator = tv({
   base: 'shr-rounded-[unset]',
@@ -24,18 +28,14 @@ const classNameGenerator = tv({
       right: 'shr-rounded-r-l',
       bottom: 'shr-rounded-b-l',
       left: 'shr-rounded-l-l',
-    } satisfies Record<Exclude<NonNullable<BaseProps['rounded']>, boolean> | 'true', string>,
-  },
-  // TODO: tailwindの場合のみdefault値が設定される挙動はバグの原因になりかねないので整理する
-  defaultVariants: {
-    bgColor: 'COLUMN',
-    rounded: false,
+    } satisfies Record<Exclude<NonNullable<Props['rounded']>, boolean> | 'true', string>,
   },
 })
 
 export const Groupbox: FC<Props> = ({ bgColor, rounded, padding = 1, className, ...rest }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ bgColor, rounded, className }),
+    () =>
+      classNameGenerator({ bgColor: bgColor ?? 'COLUMN', rounded: rounded ?? false, className }),
     [bgColor, rounded, className],
   )
 
