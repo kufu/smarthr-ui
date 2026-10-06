@@ -1,11 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type ElementType, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -13,13 +6,13 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { TextOverflowTooltip } from './client'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { Gap } from '../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../types'
 
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
 export const STYLE_TYPE_MAP: {
-  [key in StyleType]: Pick<BaseProps<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
+  [key in StyleType]: Pick<Props<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
 } = {
   screenTitle: {
     size: 'XL',
@@ -169,27 +162,28 @@ type MaxLinesObject = {
 }
 type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
 
-type BaseProps<T extends ElementType> = PropsWithChildren<{
-  /** テキストコンポーネントの HTML タグ名。初期値は span */
-  as?: T
-  /** 強調するかどうかの真偽値。指定すると em 要素になる */
-  emphasis?: boolean
-  /** 見た目の種類 */
-  styleType?: StyleType
-  /** 設置するアイコン */
-  icon?: IconType
+type Props<T extends ElementType> = SHRComponentPropsWithRef<
+  T,
+  {
+    /** テキストコンポーネントの HTML タグ名。初期値は span */
+    as?: T
+    /** 強調するかどうかの真偽値。指定すると em 要素になる */
+    emphasis?: boolean
+    /** 見た目の種類 */
+    styleType?: StyleType
+    /** 設置するアイコン */
+    icon?: IconType
 
-  size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
-  weight?: 'normal' | 'bold'
-  italic?: boolean
-  color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
-  leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
-  whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
-  /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
-  maxLines?: MaxLinesType
-}>
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
+    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+    weight?: 'normal' | 'bold'
+    italic?: boolean
+    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+    /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
+    maxLines?: MaxLinesType
+  }
+>
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 const maxLinesObjectConverter = (maxLines: 1 | 2 | 3 | 4 | 5 | 6 | undefined): MaxLinesObject => ({

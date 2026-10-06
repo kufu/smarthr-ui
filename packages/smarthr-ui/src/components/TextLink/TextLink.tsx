@@ -1,29 +1,26 @@
-import {
-  type ComponentPropsWithRef,
-  type ElementType,
-  type MouseEvent,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type ElementType, type MouseEvent, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
-type BaseProps<T extends ElementType> = {
-  /** テキストのサイズ */
-  size?: 'XS' | 'S' | 'M'
-  /** リンクをクリックした時に発火するコールバック関数 */
-  onClick?: (e: MouseEvent) => void
-  /** テキストの前に表示するアイコン */
-  prefix?: ReactNode
-  /** テキストの後ろに表示するアイコン */
-  suffix?: ReactNode
-  /** TextLinkを利用しつつnext/linkなどと併用する場合に指定する */
-  elementAs?: T
-}
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T> | 'color'>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props<T extends ElementType> = SHRComponentPropsWithRef<
+  T,
+  {
+    /** テキストのサイズ */
+    size?: 'XS' | 'S' | 'M'
+    /** リンクをクリックした時に発火するコールバック関数 */
+    onClick?: (e: MouseEvent) => void
+    /** テキストの前に表示するアイコン */
+    prefix?: ReactNode
+    /** テキストの後ろに表示するアイコン */
+    suffix?: ReactNode
+    /** TextLinkを利用しつつnext/linkなどと併用する場合に指定する */
+    elementAs?: T
+  },
+  { omit: 'color' }
+>
 
 const classNameGenerator = tv({
   slots: {

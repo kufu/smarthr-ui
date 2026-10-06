@@ -2,7 +2,6 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithRef,
   type FC,
   startTransition,
   useEffect,
@@ -21,27 +20,31 @@ import { defaultHtmlFontSize } from '../../../themes'
 import { LiveRegion } from '../../LiveRegion'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-type BaseProps = {
-  /** 入力値にエラーがあるかどうか */
-  error?: boolean
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** 自動でフォーカスされるかどうか */
-  autoFocus?: boolean
-  /** 自動で広がるかどうか */
-  autoResize?: boolean
-  /** 最大行数。超えるとスクロールする。初期値は無限 */
-  maxRows?: number
-  /** 行数の初期値。省略した場合は2 */
-  rows?: number
-  /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
-  maxLetters?: number
-  /**
-   * placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
-   */
-  placeholder?: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'textarea'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'textarea',
+  {
+    /** 入力値にエラーがあるかどうか */
+    error?: boolean
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** 自動でフォーカスされるかどうか */
+    autoFocus?: boolean
+    /** 自動で広がるかどうか */
+    autoResize?: boolean
+    /** 最大行数。超えるとスクロールする。初期値は無限 */
+    maxRows?: number
+    /** 行数の初期値。省略した場合は2 */
+    rows?: number
+    /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
+    maxLetters?: number
+    /**
+     * placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
+     */
+    placeholder?: string
+  }
+>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {

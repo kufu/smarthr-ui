@@ -2,7 +2,6 @@
 
 import {
   type BaseSyntheticEvent,
-  type ComponentPropsWithoutRef,
   type FC,
   type FocusEvent as ReactFocusEvent,
   type ReactNode,
@@ -19,13 +18,13 @@ import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
 
-import type { SHRComponentProps } from '../../../types'
+import type { SHRComponentPropsWithoutRef } from '../../../types'
 
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type Props = SHRComponentProps<
-  Omit<ComponentPropsWithoutRef<'span'>, 'aria-describedby' | 'aria-labelledby' | 'role'>,
+type Props = SHRComponentPropsWithoutRef<
+  'span',
   {
     /** ツールチップ内に表示するメッセージ */
     message: ReactNode
@@ -39,7 +38,8 @@ type Props = SHRComponentProps<
     tabIndex?: number
     /** `type` が `description` の場合に `aria-describedby` を付与する対象。children が focusable な場合は常に children に付与されるため無視される */
     ariaDescribedbyTarget?: 'wrapper' | 'inner'
-  }
+  },
+  { omit: 'aria-describedby' | 'aria-labelledby' | 'role' }
 >
 
 const classNameGenerator = tv({
