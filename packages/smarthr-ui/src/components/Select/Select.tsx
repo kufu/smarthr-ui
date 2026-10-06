@@ -1,23 +1,26 @@
-import { type ComponentPropsWithRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleDownIcon } from '../Icon'
 
 import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-type BaseProps = {
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** コンポーネントの大きさ */
-  size?: 'M' | 'S'
-  /** 空の選択肢を表示するかどうか */
-  hasBlank?: boolean
-  /** 空の選択肢のラベル */
-  blankLabel?: string
-}
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type Props<T extends string> = BaseProps &
-  Omit<ComponentPropsWithRef<typeof ActualSelect<T>>, keyof BaseProps | 'children'>
+type Props<T extends string> = SHRComponentPropsWithRef<
+  typeof ActualSelect<T>,
+  {
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** コンポーネントの大きさ */
+    size?: 'M' | 'S'
+    /** 空の選択肢を表示するかどうか */
+    hasBlank?: boolean
+    /** 空の選択肢のラベル */
+    blankLabel?: string
+  },
+  { omit: 'children' }
+>
 
 const classNameGenerator = tv({
   slots: {
