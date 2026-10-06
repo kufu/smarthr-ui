@@ -1,11 +1,20 @@
-import { type ComponentType, type FC, type PropsWithChildren, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
-import { FaCaretDownIcon, type ComponentProps as IconProps } from '../Icon'
+import { FaCaretDownIcon, type generateIcon } from '../Icon'
 
 import { itemClassNameGenerator } from './itemClassNameGenerator'
+
+type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 
 export type AppNaviDropdownProps = PropsWithChildren<{
   /** ドロップダウンのコンテンツ */

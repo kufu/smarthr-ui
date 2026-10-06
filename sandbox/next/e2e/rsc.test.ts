@@ -48,7 +48,6 @@ const SERVER_COMPONENTS = [
   'TimePicker',
   'UnstyledButton',
   'VisuallyHiddenText',
-  'WakuWakuButton',
 ]
 
 /**
