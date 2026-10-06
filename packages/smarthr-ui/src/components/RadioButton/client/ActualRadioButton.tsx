@@ -8,7 +8,7 @@ import { isIOS } from '../../../libs/ua'
 
 import type { ComponentPropsWithRef, FC } from 'react'
 
-type Props = ComponentPropsWithRef<'input'>
+type Props = Omit<ComponentPropsWithRef<'input'>, 'children'>
 
 export const ActualRadioButton: FC<Props> = ({ required, ...rest }) => (
   <input

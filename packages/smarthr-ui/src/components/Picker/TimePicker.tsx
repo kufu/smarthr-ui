@@ -1,12 +1,17 @@
-import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
-type BaseProps = {
-  /** フォームにエラーがあるかどうか */
-  error?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'type'>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** フォームにエラーがあるかどうか */
+    error?: boolean
+  },
+  { omit: 'type' | 'children' }
+>
 
 /** @deprecated TimePicker は非推奨です。Input[type="time"] を使ってください。 */
 export const TimePicker: FC<Props> = ({ error, className, ...rest }) => {
