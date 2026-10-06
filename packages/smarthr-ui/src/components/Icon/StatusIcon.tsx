@@ -14,6 +14,7 @@ import {
 import { WarningIcon } from './WarningIcon'
 
 import type { Props as IconProps } from './generateIcon'
+import type { SHRComponentProps } from '../../types'
 
 const ICON_MAPPER = {
   // HINT: infoは装飾として扱うため、代替テキストを設定しない
@@ -42,13 +43,16 @@ const BOLD_ICON_MAPPER = {
   warning: { Component: FaTriangleExclamationIcon, alt: ICON_MAPPER.warning.alt },
 } as const
 
-type BaseProps = {
-  /** アイコンが表す状態 */
-  status: keyof typeof ICON_MAPPER
-  /** `true` のとき、背景に色が付く場面向けに単色のアイコンを使う（warningのみ変化する） */
-  bold?: boolean
-}
-type Props = BaseProps & Omit<IconProps, keyof BaseProps | 'alt'>
+type Props = SHRComponentProps<
+  IconProps,
+  {
+    /** アイコンが表す状態 */
+    status: keyof typeof ICON_MAPPER
+    /** `true` のとき、背景に色が付く場面向けに単色のアイコンを使う（warningのみ変化する） */
+    bold?: boolean
+  },
+  { omit: 'alt' }
+>
 
 export const StatusIcon = memo<Props>(({ status, bold, ...rest }) => {
   const { localize } = useIntl()
