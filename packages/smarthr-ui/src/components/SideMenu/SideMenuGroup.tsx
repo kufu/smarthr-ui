@@ -1,19 +1,17 @@
-import {
-  type ComponentPropsWithoutRef,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-type BaseProps = {
-  heading: ReactNode
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'li'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'li',
+  {
+    heading: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
