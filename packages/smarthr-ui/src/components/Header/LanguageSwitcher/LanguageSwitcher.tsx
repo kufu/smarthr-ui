@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type KeyboardEvent,
-  type MouseEvent,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type FC, type KeyboardEvent, type MouseEvent, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -19,18 +11,21 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
 
 import type { Locale } from '../../../intl'
+import type { SHRComponentPropsWithoutRef } from '../../../types'
 
-type BaseProps = {
-  narrow?: boolean
-  localeMap: Partial<Record<Locale, string>>
-  locale?: string
-  defaultLocale?: string
-  /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
-  onLanguageSelect?: (code: string) => void
-  invert?: boolean
-  enableNew?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Dropdown>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  typeof Dropdown,
+  {
+    narrow?: boolean
+    localeMap: Partial<Record<Locale, string>>
+    locale?: string
+    defaultLocale?: string
+    /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
+    onLanguageSelect?: (code: string) => void
+    invert?: boolean
+    enableNew?: boolean
+  }
+>
 
 const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
 const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
