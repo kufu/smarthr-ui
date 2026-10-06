@@ -362,4 +362,67 @@ describe('RichTextEditorToolbar', () => {
     expect(screen.queryByRole('button', { name: WRAP_TOGGLE_LABEL })).not.toBeInTheDocument()
     expect(tabStopsOf(screen.getByRole('toolbar'))).toHaveLength(1)
   })
+
+  describe('キーボード操作', () => {
+    const renderSmallEditor = async () => {
+      render(
+        <RichTextEditor
+          features={['heading', 'bold', 'italic']}
+          content={{ format: 'html', content: '<p>本文</p>' }}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+
+      return document.querySelector<TiptapEditorHTMLElement>('.ProseMirror')!.editor!
+    }
+
+    it('Home は無効な項目を飛ばした先頭へ、End は末尾へ移る', async () => {
+      const user = userEvent.setup()
+      await renderSmallEditor()
+      act(() => screen.getByRole('button', { name: '太字' }).focus())
+
+      await user.keyboard('{End}')
+      expect(screen.getByRole('button', { name: '斜体' })).toHaveFocus()
+
+      await user.keyboard('{Home}')
+      expect(screen.getByRole('button', { name: /^書式:/ })).toHaveFocus()
+    })
+
+    it('左右キーは無効な項目を飛ばす', async () => {
+      const user = userEvent.setup()
+      const editor = await renderSmallEditor()
+      act(() => screen.getByRole('button', { name: /^書式:/ }).focus())
+
+      // 先頭の「元に戻す」「やり直す」は無効なので、左で末尾へ折り返す
+      await user.keyboard('{ArrowLeft}')
+      expect(screen.getByRole('button', { name: '斜体' })).toHaveFocus()
+
+      act(() => {
+        editor.commands.insertContent('追記')
+      })
+      act(() => screen.getByRole('button', { name: '元に戻す' }).focus())
+
+      // 無効な「やり直す」を飛ばす
+      await user.keyboard('{ArrowRight}')
+      expect(screen.getByRole('button', { name: /^書式:/ })).toHaveFocus()
+    })
+
+    it('本文で Alt+F10 を押すと、最後にフォーカスしていたツールバーの項目へ移る', async () => {
+      const user = userEvent.setup()
+      await renderSmallEditor()
+      const textbox = screen.getByRole('textbox')
+
+      act(() => textbox.focus())
+      await user.keyboard('{Alt>}{F10}{/Alt}')
+      expect(screen.getByRole('button', { name: /^書式:/ })).toHaveFocus()
+
+      await user.keyboard('{ArrowRight}')
+      await user.keyboard('{Escape}')
+      await waitFor(() => expect(textbox).toHaveFocus())
+
+      await user.keyboard('{Alt>}{F10}{/Alt}')
+      expect(screen.getByRole('button', { name: '太字' })).toHaveFocus()
+    })
+  })
 })
