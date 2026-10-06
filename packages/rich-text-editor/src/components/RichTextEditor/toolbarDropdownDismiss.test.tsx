@@ -55,6 +55,16 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     expect(getTrigger(name)).toHaveFocus()
   })
 
+  it.each(TRIGGERS)('%s: トリガーをもう一度クリックすると閉じる', async (name) => {
+    const user = userEvent.setup()
+    await renderEditor()
+
+    await openByClick(user, name)
+    await user.click(getTrigger(name))
+
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+  })
+
   it('閉じたあとの Escape はツールバーから本文へ戻す', async () => {
     const user = userEvent.setup()
     await renderEditor()
