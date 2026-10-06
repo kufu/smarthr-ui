@@ -4,35 +4,38 @@
 // isIOS・isMobileSafariは実機のUAをブラウザ側で検出する必要がある。Server Componentのままだと
 // navigatorが存在しないサーバ上で1回だけ評価され常にfalseに固定されるため、'use client'が必要
 
-import {
-  type ChangeEvent,
-  type ComponentPropsWithRef,
-  type OptgroupHTMLAttributes,
-  type OptionHTMLAttributes,
-  memo,
-} from 'react'
+import { type ChangeEvent, memo } from 'react'
 
 import { isIOS, isMobileSafari } from '../../../libs/ua'
 
-type Option<T extends string> = {
-  value: T
-} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
-type Optgroup<T extends string> = {
-  label: string
-  options: Array<Option<T>>
-} & OptgroupHTMLAttributes<HTMLOptGroupElement>
+import type { SHRComponentPropsWithRef, SHRComponentPropsWithoutRef } from '../../../types'
 
-type BaseProps<T extends string> = {
-  /** 選択肢のデータの配列 */
-  options: Array<Option<T> | Optgroup<T>>
-  /** フォームの値が変わったときに発火するコールバック関数 */
-  onChangeValue?: (value: T) => void
-  /** フォームの値にエラーがあるかどうか */
-  error?: boolean
-}
+type Option<T extends string> = SHRComponentPropsWithoutRef<
+  'option',
+  {
+    value: T
+  }
+>
+type Optgroup<T extends string> = SHRComponentPropsWithoutRef<
+  'optgroup',
+  {
+    label: string
+    options: Array<Option<T>>
+  }
+>
 
-type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'size'>
+type Props<T extends string> = SHRComponentPropsWithRef<
+  'select',
+  {
+    /** 選択肢のデータの配列 */
+    options: Array<Option<T> | Optgroup<T>>
+    /** フォームの値が変わったときに発火するコールバック関数 */
+    onChangeValue?: (value: T) => void
+    /** フォームの値にエラーがあるかどうか */
+    error?: boolean
+  },
+  { omit: 'size' }
+>
 
 export const ActualSelect = <T extends string>({
   options,
