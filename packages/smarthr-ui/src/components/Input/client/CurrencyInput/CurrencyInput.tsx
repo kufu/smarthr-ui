@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type FocusEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, type FocusEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../../hooks/client/useOnce'
@@ -16,14 +8,20 @@ import { useLatest } from '../../../../hooks/useLatest'
 import { formatNumericString } from '../../../../libs/formatNumericString'
 import { Input } from '../Input'
 
-type Props = Omit<ComponentPropsWithRef<typeof Input>, 'type' | 'value' | 'defaultValue'> & {
-  /** 通貨の値 */
-  value?: string
-  /** デフォルトで表示する通貨の値 */
-  defaultValue?: string
-  /** 入力値がフォーマットされたときに発火するコールバック関数 */
-  onFormatValue?: (value: string) => void
-}
+import type { SHRComponentPropsWithRef } from '../../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof Input,
+  {
+    /** 通貨の値 */
+    value?: string
+    /** デフォルトで表示する通貨の値 */
+    defaultValue?: string
+    /** 入力値がフォーマットされたときに発火するコールバック関数 */
+    onFormatValue?: (value: string) => void
+  },
+  { omit: 'type' }
+>
 
 export const CurrencyInput: FC<Props> = ({
   onFormatValue,
