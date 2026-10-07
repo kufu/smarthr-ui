@@ -2,15 +2,19 @@
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 
-import type { ComponentPropsWithRef, FC } from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC } from 'react'
 
-type BaseProps = {
-  /** `true` のとき、チェック状態を `mixed` にする */
-  mixed?: boolean
-  /** チェックボックスにエラーがあるかどうか */
-  error?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** `true` のとき、チェック状態を `mixed` にする */
+    mixed?: boolean
+    /** チェックボックスにエラーがあるかどうか */
+    error?: boolean
+  },
+  { omit: 'children' }
+>
 
 const callbackRef = (node: HTMLInputElement | null) => {
   if (!node) {
