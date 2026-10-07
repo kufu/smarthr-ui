@@ -48,7 +48,9 @@ type Props = SHRComponentPropsWithRef<
     /** テキスト左に設置するアイコン */
     icon?: TextProps['icon']
   },
-  { omit: keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level' }
+  {
+    omit: Exclude<keyof StyleTypeMapProps[keyof StyleTypeMapProps], 'size'> | 'role' | 'aria-level'
+  }
 >
 
 const classNameGenerator = tv({
