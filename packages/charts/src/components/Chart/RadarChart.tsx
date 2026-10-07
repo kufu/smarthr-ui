@@ -2,7 +2,13 @@
 
 import { ReactNode, useId, useMemo, useRef, useState } from 'react'
 import { Radar } from 'react-chartjs-2'
-import { FaCircleNodesIcon, FaTableIcon, SegmentedControl, VisuallyHiddenText, Text } from 'smarthr-ui'
+import {
+  FaCircleNodesIcon,
+  FaTableIcon,
+  SegmentedControl,
+  VisuallyHiddenText,
+  Text,
+} from 'smarthr-ui'
 
 import { createRadarChartOptions, registerChartComponents } from '../../config'
 import { getRadarChartColors } from '../../helper'
@@ -84,9 +90,9 @@ export const RadarChart: React.FC<Props> = ({
   }
 
   return (
-    <div className="shr-relative shr-h-full shr-w-full">
+    <div className="shr-flex shr-h-full shr-w-full shr-flex-col">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      <div className="shr-grid shr-grid-cols-[1fr_auto_1fr]">
+      <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
         <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
           {title}
         </Text>
@@ -109,18 +115,21 @@ export const RadarChart: React.FC<Props> = ({
           ]}
         />
       </div>
-      {view === 'chart' ? (
-        <Radar
-          ref={chartRef}
-          role="application"
-          data={enhancedData}
-          tabIndex={0}
-          aria-label={ariaLabel}
-          options={chartOptions}
-        />
-      ) : (
-        <TableView data={enhancedData} options={chartOptions} />
-      )}
+      <div className="shr-relative shr-min-h-0 shr-flex-1">
+        {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
+        {view === 'chart' ? (
+          <Radar
+            ref={chartRef}
+            role="application"
+            data={enhancedData}
+            tabIndex={0}
+            aria-label={ariaLabel}
+            options={chartOptions}
+          />
+        ) : (
+          <TableView data={enhancedData} options={chartOptions} />
+        )}
+      </div>
     </div>
   )
 }
