@@ -1,4 +1,4 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
@@ -16,8 +16,8 @@ type Props = SHRComponentPropsWithRef<
     padding?: Gap
     /** 天地中央揃えも有効化するかどうか */
     verticalCentering?: boolean
-    as?: string | ComponentType<any>
-  }
+  },
+  { as: true }
 >
 
 export const centerClassNameGenerator = tv({

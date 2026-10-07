@@ -1,4 +1,4 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
@@ -10,11 +10,11 @@ type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'basel
 type Props = SHRComponentPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     inline?: boolean
     gap?: PositiveGap
     align?: AlignType
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({
