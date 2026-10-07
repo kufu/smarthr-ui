@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
+import { type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -82,9 +82,11 @@ export const DefinitionListItem: FC<Props> = ({
   )
 }
 
-const DefinitionTerm = memo<
-  PropsWithChildren<{ styleType: ObjectTermType['styleType']; className: string }>
->(({ styleType = 'subBlockTitle', className, children }) => (
+const DefinitionTerm = memo<{
+  children: ObjectTermType['text']
+  styleType: ObjectTermType['styleType']
+  className: string
+}>(({ styleType = 'subBlockTitle', className, children }) => (
   <Text as="dt" styleType={styleType} leading="TIGHT" className={className}>
     {children}
   </Text>
