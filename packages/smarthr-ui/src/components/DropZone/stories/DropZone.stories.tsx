@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
-import { DropZone } from '../client'
+import { Button } from '../../Button'
+import { DropZone } from '../DropZone'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -9,7 +11,7 @@ export default {
   component: DropZone,
   render: (args) => <DropZone {...args} name="file" />,
   args: {
-    onSelectFiles: (files) => action('onSelected')(files),
+    onSelectFiles: action('onSelected'),
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -33,6 +35,37 @@ export const Multiple: StoryObj<typeof DropZone> = {
   args: {
     multiple: true,
     children: '複数ファイルアップロード可能',
+  },
+}
+
+export const MultipleAppendable: StoryObj<typeof DropZone> = {
+  name: 'multiple (appendable)',
+  render: (args) => {
+    const [files, setFiles] = useState<File[]>([])
+
+    return (
+      <DropZone
+        {...args}
+        name="file"
+        multiple={{ appendable: true }}
+        files={files}
+        onSelectFiles={(e, newFiles) => {
+          action('onSelected')(e, newFiles)
+          setFiles(newFiles)
+        }}
+      >
+        <ul>
+          {files.map((file, index) => (
+            <li key={index}>
+              {file.name}
+              <Button size="S" onClick={() => setFiles(files.filter((_, i) => i !== index))}>
+                削除
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </DropZone>
+    )
   },
 }
 

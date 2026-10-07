@@ -67,7 +67,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: FC<Props> = ({
+export const DropZoneNative: FC<Props> = ({
   children,
   onSelectFiles,
   multiple = true,
