@@ -1,12 +1,12 @@
 import { Editor } from '@tiptap/core'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { configureExtensions } from '../configureExtensions'
 
 import { imageUploadPlaceholderKey } from './imageUploadPlaceholder'
 import { uploadAndInsertImage } from './uploadAndInsertImage'
 
-import type { ImageUploadResult } from '../../types'
+import type { ImageUploadResult, RichTextFeature } from '../../types'
 
 // jsdom には ResizeObserver が無く、挿入された画像の NodeView がマウント時に参照する
 beforeAll(() => {
@@ -19,8 +19,18 @@ beforeAll(() => {
   }
 })
 
-const createEditor = (content: string) =>
-  new Editor({ extensions: configureExtensions({ features: ['image'] }), content })
+// 破棄しないと、DOM の変化をまとめる ProseMirror のタイマーがテスト環境の破棄後に走り、CI で落ちることがある
+const editors: Editor[] = []
+afterEach(() => {
+  while (editors.length > 0) editors.pop()?.destroy()
+})
+
+const createEditor = (content: string, features: RichTextFeature[] = ['image']) => {
+  const editor = new Editor({ extensions: configureExtensions({ features }), content })
+  editors.push(editor)
+
+  return editor
+}
 
 const createDeferred = <T>() => {
   let resolve!: (value: T) => void
@@ -210,10 +220,10 @@ describe('uploadAndInsertImage', () => {
   })
 
   it('表の列ごと消したら、表の中へは挿入しない', async () => {
-    const editor = new Editor({
-      extensions: configureExtensions({ features: ['image', 'table'] }),
-      content: '<table><tr><td><p>a</p></td><td><p></p></td></tr></table>',
-    })
+    const editor = createEditor('<table><tr><td><p>a</p></td><td><p></p></td></tr></table>', [
+      'image',
+      'table',
+    ])
     let emptyCellPos = 0
     editor.state.doc.descendants((node, pos) => {
       if (node.type.name === 'paragraph' && node.content.size === 0) emptyCellPos = pos + 1
