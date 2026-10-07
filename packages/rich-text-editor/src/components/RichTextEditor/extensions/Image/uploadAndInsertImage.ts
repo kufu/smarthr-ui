@@ -44,8 +44,8 @@ export const uploadAndInsertImage = async (
     if (at === null || getImagePlaceholderGeneration(view) !== generation) return
 
     // 挿入すると表示はされるが、保存した内容を表示するときに落ちる
-    if (!isSafeImageSrc(result.src)) {
-      throw new Error(`RichTextEditor: 画像の src に使えない URL です: ${String(result.src)}`)
+    if (!isSafeImageSrc(result?.src)) {
+      throw new Error(`RichTextEditor: 画像の src に使えない URL です: ${String(result?.src)}`)
     }
 
     editor

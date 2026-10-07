@@ -39,8 +39,8 @@ const imageDoc = (src: string): RichTextJSON => ({
   content: [{ type: 'image', attrs: { src, alt: 'x' } }],
 })
 
-const upload = async (src: string) => {
-  const onImageUpload = vi.fn().mockResolvedValue({ src })
+const uploadResult = async (result: unknown) => {
+  const onImageUpload = vi.fn().mockResolvedValue(result)
   const onImageUploadError = vi.fn()
   render(
     <RichTextEditor
@@ -59,6 +59,8 @@ const upload = async (src: string) => {
 
   return { file, onImageUploadError }
 }
+
+const upload = async (src: string) => uploadResult({ src })
 
 const pasteHTML = async (html: string) => {
   render(<RichTextEditor features={['image']} />, { wrapper: Wrapper })
@@ -91,6 +93,23 @@ describe('画像の src の検証', () => {
 
       await waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
       expect(onImageUploadError).toHaveBeenCalledWith(expect.any(Error), file)
+      expect(document.querySelector('.ProseMirror img')).toBeNull()
+    })
+
+    it.each([
+      ['src が無い', {}],
+      ['src が空文字の', { src: '' }],
+      ['src が文字列でない', { src: 123 }],
+      ['src が null の', { src: null }],
+      ['結果が undefined の', undefined],
+    ])('%s場合は挿入せず onImageUploadError へ渡す', async (_, result) => {
+      const { file, onImageUploadError } = await uploadResult(result)
+
+      await waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
+      expect(onImageUploadError).toHaveBeenCalledWith(
+        expect.objectContaining({ message: expect.stringContaining('src に使えない') }),
+        file,
+      )
       expect(document.querySelector('.ProseMirror img')).toBeNull()
     })
   })
