@@ -10,7 +10,7 @@ import type { FC } from 'react'
 type Props = SHRComponentPropsWithRef<
   typeof ControlledStepFormDialog,
   Parameters<typeof useRemoteTrigger>[0],
-  { omit: 'isOpen' | 'onClickClose' | 'id' }
+  { omit: 'isOpen' }
 >
 
 export const StepFormDialog: FC<Props> = ({
