@@ -13,11 +13,9 @@ type ObjectTermType = {
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
 type Props = SHRComponentPropsWithRef<
-  'div',
+  typeof ItemWrapper,
   {
     term: ReactNode | ObjectTermType
-    fullWidth?: boolean
-    maxColumns?: number
   }
 >
 
