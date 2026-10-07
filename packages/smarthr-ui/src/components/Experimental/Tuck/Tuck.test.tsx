@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react'
-import { type ComponentProps, Fragment } from 'react'
+import { type ComponentPropsWithoutRef, Fragment } from 'react'
 
 import { Tuck } from './client'
 
@@ -50,7 +50,7 @@ describe('Tuck', () => {
     vi.restoreAllMocks()
   })
 
-  const renderTuck = (props: Partial<ComponentProps<typeof Tuck>> = {}) => {
+  const renderTuck = (props: Partial<ComponentPropsWithoutRef<typeof Tuck>> = {}) => {
     const renderTucked = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
 
     const result = render(

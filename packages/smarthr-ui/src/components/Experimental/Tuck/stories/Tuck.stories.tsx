@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
 import { Chip } from '../../../Chip'
-import { DialogCloser, DialogContent, DialogTrigger, DialogWrapper } from '../../../Dialog'
+import { Dialog } from '../../../Dialog'
 import { DropdownMenuButton } from '../../../Dropdown'
 import { Cluster, Sidebar, Stack } from '../../../Layout'
 import { TabItem } from '../../../TabBar'
@@ -146,39 +146,42 @@ export const ButtonsIntoDropdown: StoryObj<typeof Tuck> = {
 
 export const ChipsIntoDialog: StoryObj<typeof Tuck> = {
   name: 'Chip を2行まで表示し、残りは Dialog に逃がす',
-  render: () => (
-    <ResizableBox>
-      {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- Tuck は子要素を複数のアイテムとして Cluster に並べるため */}
-      <Cluster align="center">
-        <Tuck
-          maxLines={2}
-          renderTucked={(items) => (
-            <DialogWrapper>
-              <DialogTrigger>
-                <Button size="S">他{items.length}件</Button>
-              </DialogTrigger>
-              <DialogContent ariaLabel="すべてのスキル">
-                <Stack className="shr-p-1.5">
-                  <Cluster>
-                    {SKILLS.map((skill) => (
-                      <Chip key={skill}>{skill}</Chip>
-                    ))}
-                  </Cluster>
-                  <DialogCloser>
-                    <Button>閉じる</Button>
-                  </DialogCloser>
-                </Stack>
-              </DialogContent>
-            </DialogWrapper>
-          )}
-        >
-          {SKILLS.map((skill) => (
-            <Chip key={skill}>{skill}</Chip>
-          ))}
-        </Tuck>
-      </Cluster>
-    </ResizableBox>
-  ),
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false)
+    const handleClose = () => setIsOpen(false)
+
+    return (
+      <>
+        <ResizableBox>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- Tuck は子要素を複数のアイテムとして Cluster に並べるため */}
+          <Cluster align="center">
+            <Tuck
+              maxLines={2}
+              renderTucked={(items) => (
+                <Button size="S" onClick={() => setIsOpen(true)}>
+                  他{items.length}件
+                </Button>
+              )}
+            >
+              {SKILLS.map((skill) => (
+                <Chip key={skill}>{skill}</Chip>
+              ))}
+            </Tuck>
+          </Cluster>
+        </ResizableBox>
+        <Dialog isOpen={isOpen} ariaLabel="すべてのスキル" onPressEscape={handleClose}>
+          <Stack className="shr-p-1.5">
+            <Cluster>
+              {SKILLS.map((skill) => (
+                <Chip key={skill}>{skill}</Chip>
+              ))}
+            </Cluster>
+            <Button onClick={handleClose}>閉じる</Button>
+          </Stack>
+        </Dialog>
+      </>
+    )
+  },
 }
 
 const TABS = [
