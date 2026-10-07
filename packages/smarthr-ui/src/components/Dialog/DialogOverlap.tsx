@@ -1,22 +1,20 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-  useRef,
-} from 'react'
+import { type FC, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
 import { Center } from '../Layout'
 
-type Props = PropsWithChildren<{
-  isOpen: boolean
-  className?: string
-  as?: ComponentPropsWithoutRef<typeof Center>['as']
-}>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    isOpen: boolean
+  },
+  { as: true }
+>
 
 const classNameGenerator = tv({
   base: [
@@ -36,7 +34,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
+export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,7 +50,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       unmountOnExit
       classNames="shr-dialog-transition"
     >
-      <Center as={as} ref={nodeRef} verticalCentering className={actualClassName}>
+      <Center {...rest} as={as} ref={nodeRef} verticalCentering className={actualClassName}>
         {isOpen ? children : childrenBuffer}
       </Center>
     </CSSTransition>
