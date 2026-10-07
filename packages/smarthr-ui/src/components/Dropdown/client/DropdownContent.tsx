@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, useContext, useMemo } from 'react'
+import { type FC, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Portal } from '../../Portal'
@@ -8,6 +8,8 @@ import { DropdownCloser } from '../DropdownCloser'
 
 import { DropdownContext } from './Dropdown'
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   base: [
@@ -18,17 +20,21 @@ const classNameGenerator = tv({
   ],
 })
 
-type BaseProps = {
-  /**
-   * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
-   *  この場合は、 `DropdownCloser` を用いてドロップダウンを閉じることができる。
-   */
-  controllable?: boolean
-}
-// HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
-// クリックハンドラが必要な場合はchildren側に要素をラップして設定する
-type Props = BaseProps &
-  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps | 'onClick' | 'data-dropdown-mounted'>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /**
+     * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
+     *  この場合は、 `DropdownCloser` を用いてドロップダウンを閉じることができる。
+     */
+    controllable?: boolean
+  },
+  {
+    // HINT: onClickはroot divのクリックをドロップダウンを閉じる処理にdelegateしているため受け付けない。
+    // クリックハンドラが必要な場合はchildren側に要素をラップして設定する
+    omit: 'onClick' | 'data-dropdown-mounted'
+  }
+>
 
 export const DropdownContent: FC<Props> = ({
   children,
