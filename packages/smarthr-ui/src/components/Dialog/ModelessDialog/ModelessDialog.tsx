@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  type ComponentPropsWithRef,
   type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
@@ -33,78 +32,75 @@ import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { DialogPortal } from '../DialogPortal'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
 import type { DialogSize } from '../types'
 
-type BaseProps = Pick<
-  ComponentPropsWithoutRef<typeof DialogBody>,
-  'contentBgColor' | 'contentPadding'
-> & {
-  /**
-   * ダイアログのタイトルの内容
-   */
-  heading: ReactNode
-  /**
-   * ダイアログのフッタ部分の内容
-   */
-  footer?: ReactNode
-  /**
-   * ダイアログが開かれているかどうかの真偽値
-   */
-  isOpen: boolean
-  /**
-   * 閉じるボタンを押下したときのハンドラ
-   */
-  onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
-  /**
-   * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
-   */
-  onPressEscape?: (e: KeyboardEvent) => void
-  /**
-   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-   * ダイアログの幅
-   */
-  width?: string | number
-  /**
-   * ダイアログの大きさ
-   */
-  size?: DialogSize
-  /**
-   * ダイアログの高さ
-   */
-  height?: string | number
-  /**
-   * ダイアログを開いたときの初期 top 位置
-   */
-  top?: string | number
-  /**
-   * ダイアログを開いたときの初期 left 位置
-   */
-  left?: string | number
-  /**
-   * ダイアログを開いたときの初期 right 位置
-   */
-  right?: string | number
-  /**
-   * ダイアログを開いたときの初期 bottom 位置
-   */
-  bottom?: string | number
-  /**
-   * ポータルの container となる DOM 要素を追加する親要素。
-   * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
-   * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
-   * 呼び出し側で要素が確定してから渡すこと。
-   */
-  portalParent?: HTMLElement
-  /**
-   * リサイズ可能かどうか
-   */
-  resizable?: boolean
-}
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<typeof Panel>,
-    keyof BaseProps | 'role' | 'radius' | 'layer' | 'overflow' | 'style' | 'aria-labelledby'
-  >
+type Props = SHRComponentPropsWithRef<
+  typeof Panel,
+  Pick<ComponentPropsWithoutRef<typeof DialogBody>, 'contentBgColor' | 'contentPadding'> & {
+    /**
+     * ダイアログのタイトルの内容
+     */
+    heading: ReactNode
+    /**
+     * ダイアログのフッタ部分の内容
+     */
+    footer?: ReactNode
+    /**
+     * ダイアログが開かれているかどうかの真偽値
+     */
+    isOpen: boolean
+    /**
+     * 閉じるボタンを押下したときのハンドラ
+     */
+    onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    /**
+     * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
+     */
+    onPressEscape?: (e: KeyboardEvent) => void
+    /**
+     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
+     * ダイアログの幅
+     */
+    width?: string | number
+    /**
+     * ダイアログの大きさ
+     */
+    size?: DialogSize
+    /**
+     * ダイアログの高さ
+     */
+    height?: string | number
+    /**
+     * ダイアログを開いたときの初期 top 位置
+     */
+    top?: string | number
+    /**
+     * ダイアログを開いたときの初期 left 位置
+     */
+    left?: string | number
+    /**
+     * ダイアログを開いたときの初期 right 位置
+     */
+    right?: string | number
+    /**
+     * ダイアログを開いたときの初期 bottom 位置
+     */
+    bottom?: string | number
+    /**
+     * ポータルの container となる DOM 要素を追加する親要素。
+     * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
+     * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+     * 呼び出し側で要素が確定してから渡すこと。
+     */
+    portalParent?: HTMLElement
+    /**
+     * リサイズ可能かどうか
+     */
+    resizable?: boolean
+  },
+  { omit: 'role' | 'radius' | 'layer' | 'overflow' | 'style' | 'aria-labelledby' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -139,7 +135,7 @@ const classNameGenerator = tv({
       XL: { wrapper: dialogSize.XL },
       XXL: { wrapper: dialogSize.XXL },
       FULL: { wrapper: dialogSize.FULL },
-    } satisfies Record<NonNullable<BaseProps['size']>, { wrapper: string }>,
+    } satisfies Record<NonNullable<Props['size']>, { wrapper: string }>,
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
