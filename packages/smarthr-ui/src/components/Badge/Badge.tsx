@@ -16,13 +16,8 @@ type Props = SHRComponentPropsWithoutRef<
     overflowCount?: number
     /** 0値を表示するかどうか */
     showZero?: boolean
-    /**
-     * 色の種類
-     *
-     * TODO: HTMLのtype属性と紛れやすく、tv側のvariant名もcolorであるため、
-     * 破壊的変更を伴うタイミングでcolorへリネームする
-     */
-    type?: Color
+    /** 色の種類 */
+    color?: Color
     /** ドット表示するかどうか */
     dot?: boolean
   }
@@ -101,7 +96,7 @@ export const Badge = memo<Props>(({ count, showZero, dot, children, ...rest }) =
 const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   count,
   overflowCount,
-  type,
+  color,
   dot,
   children,
   className,
@@ -111,7 +106,7 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   const withChildren = !!children
   const classNames = useMemo(() => {
     const { wrapper, pill, dotElement } = classNameGenerator({
-      color: type || 'blue',
+      color: color || 'blue',
       withChildren,
     })
 
@@ -120,7 +115,7 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
       pill: pill(),
       dot: dotElement(),
     }
-  }, [withChildren, type, className])
+  }, [withChildren, color, className])
 
   return (
     <span {...rest} className={classNames.wrapper}>
