@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { configureExtensions } from '../configureExtensions'
 
+import { imageUploadPlaceholderKey } from './imageUploadPlaceholder'
 import { uploadAndInsertImage } from './uploadAndInsertImage'
 
 import type { ImageUploadResult } from '../../types'
@@ -141,6 +142,53 @@ describe('uploadAndInsertImage', () => {
     expect(imagePositions(editor)).toHaveLength(2)
     expect(editor.getHTML()).toContain('https://example.com/a.png')
     expect(editor.getHTML()).toContain('https://example.com/b.png')
+  })
+
+  it.each([
+    ['先に始めた方', true],
+    ['後から始めた方', false],
+  ])(
+    '段落の末尾の同じ位置へ並行してアップロードすると、%sが先に完了しても両方挿入される',
+    async (_, firstCompletesFirst) => {
+      const editor = createEditor('<p>hello</p>')
+      const first = createDeferred<ImageUploadResult>()
+      const second = createDeferred<ImageUploadResult>()
+      const doneFirst = uploadAndInsertImage(editor, file(), 6, () => first.promise)
+      const doneSecond = uploadAndInsertImage(editor, file(), 6, () => second.promise)
+      const completeFirst = async () => {
+        first.resolve({ src: 'https://example.com/a.png' })
+        await doneFirst
+      }
+      const completeSecond = async () => {
+        second.resolve({ src: 'https://example.com/b.png' })
+        await doneSecond
+      }
+
+      if (firstCompletesFirst) {
+        await completeFirst()
+        await completeSecond()
+      } else {
+        await completeSecond()
+        await completeFirst()
+      }
+
+      expect(imagePositions(editor)).toHaveLength(2)
+      expect(editor.getHTML()).toContain('https://example.com/a.png')
+      expect(editor.getHTML()).toContain('https://example.com/b.png')
+      expect(imageUploadPlaceholderKey.getState(editor.state)?.placeholders).toEqual([])
+    },
+  )
+
+  it('挿入位置から後ろを消しても、挿入位置そのものが残っていれば挿入する', async () => {
+    const editor = createEditor('<p>hello</p><p>world</p>')
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), 1, () => deferred.promise)
+
+    editor.chain().setTextSelection({ from: 1, to: 13 }).deleteSelection().run()
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(imagePositions(editor)).toHaveLength(1)
   })
 
   it('アップロード失敗は onImageUploadError で通知する', async () => {

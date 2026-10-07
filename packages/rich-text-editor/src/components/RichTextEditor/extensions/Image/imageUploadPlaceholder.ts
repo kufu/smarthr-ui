@@ -4,11 +4,17 @@ import { Decoration, DecorationSet } from '@tiptap/pm/view'
 import type { Transaction } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 
+type Placeholder = { id: object; pos: number }
+
 /**
  * generation は文書の世代。全消去・差し替えのたびに増える。
  * アップロード開始時と完了時で値が違えば、挿入先の文書はもう存在しない。
  */
-type PlaceholderState = { decorations: DecorationSet; generation: number }
+type PlaceholderState = {
+  placeholders: readonly Placeholder[]
+  decorations: DecorationSet
+  generation: number
+}
 
 export const imageUploadPlaceholderKey = new PluginKey<PlaceholderState>('imageUploadPlaceholder')
 
@@ -31,28 +37,50 @@ export const imageUploadPlaceholderPlugin = (): Plugin<PlaceholderState> =>
   new Plugin<PlaceholderState>({
     key: imageUploadPlaceholderKey,
     state: {
-      init: () => ({ decorations: DecorationSet.empty, generation: 0 }),
+      init: () => ({ placeholders: [], decorations: DecorationSet.empty, generation: 0 }),
       apply(tr, state) {
         const meta = tr.getMeta(imageUploadPlaceholderKey) as PlaceholderMeta | undefined
 
         if (meta && 'reset' in meta) {
-          return { decorations: DecorationSet.empty, generation: state.generation + 1 }
+          return {
+            placeholders: [],
+            decorations: DecorationSet.empty,
+            generation: state.generation + 1,
+          }
         }
 
-        let decorations = state.decorations.map(tr.mapping, tr.doc)
+        if (!meta && (!tr.docChanged || state.placeholders.length === 0)) return state
+
+        // DecorationSet.map は位置の片側が置き換わっただけでも widget を捨てる。段落の末尾へ
+        // 画像を挿入すると閉じタグごと置き換わるため、同じ位置で待つ別のアップロードが消えていた
+        let placeholders = state.placeholders.flatMap(({ id, pos }) => {
+          const mapped = tr.mapping.mapResult(pos, 1)
+
+          return mapped.deletedAcross ? [] : [{ id, pos: mapped.pos }]
+        })
+
+        if (
+          !meta &&
+          placeholders.length === state.placeholders.length &&
+          placeholders.every(({ pos }, i) => pos === state.placeholders[i].pos)
+        ) {
+          return state
+        }
 
         if (meta && 'add' in meta) {
-          const widget = Decoration.widget(meta.add.pos, createPlaceholderElement, {
-            id: meta.add.id,
-          })
-          decorations = decorations.add(tr.doc, [widget])
+          placeholders = [...placeholders, meta.add]
         } else if (meta && 'remove' in meta) {
-          decorations = decorations.remove(
-            decorations.find(undefined, undefined, (spec) => spec.id === meta.remove.id),
-          )
+          placeholders = placeholders.filter(({ id }) => id !== meta.remove.id)
         }
 
-        return { decorations, generation: state.generation }
+        const decorations = DecorationSet.create(
+          tr.doc,
+          placeholders.map(({ id, pos }) =>
+            Decoration.widget(pos, createPlaceholderElement, { id }),
+          ),
+        )
+
+        return { placeholders, decorations, generation: state.generation }
       },
     },
     props: {
@@ -91,11 +119,9 @@ export const resetImagePlaceholders = (tr: Transaction): Transaction =>
 
 /** id のプレースホルダの現在位置を返す。見つからなければ null。 */
 export const findImagePlaceholderPos = (view: EditorView, id: object): number | null => {
-  const state = imageUploadPlaceholderKey.getState(view.state)
+  const found = imageUploadPlaceholderKey
+    .getState(view.state)
+    ?.placeholders.find((placeholder) => placeholder.id === id)
 
-  if (!state) return null
-
-  const found = state.decorations.find(undefined, undefined, (spec) => spec.id === id)
-
-  return found.length > 0 ? found[0].from : null
+  return found ? found.pos : null
 }
