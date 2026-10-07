@@ -30,11 +30,6 @@ type Props = {
   defaultView?: ChartViewType
 }
 
-type TableData = {
-  headers: ReactNode[]
-  dataRows: ReactNode[][]
-}
-
 export const LineChart: React.FC<Props> = ({
   data,
   title,

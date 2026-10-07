@@ -21,11 +21,6 @@ type Props = {
   defaultView?: ChartViewType
 }
 
-type TableData = {
-  headers: ReactNode[]
-  dataRows: ReactNode[][]
-}
-
 export const RadarChart: React.FC<Props> = ({
   data,
   title,
