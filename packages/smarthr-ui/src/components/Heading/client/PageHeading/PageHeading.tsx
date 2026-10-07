@@ -36,7 +36,9 @@ type Props = SHRComponentPropsWithRef<
     /** title要素のsuffix */
     pageTitleSuffix?: string
   },
-  { omit: keyof StyleTypeMapProps[keyof StyleTypeMapProps] | 'role' | 'aria-level' }
+  {
+    omit: Exclude<keyof StyleTypeMapProps[keyof StyleTypeMapProps], 'size'> | 'role' | 'aria-level'
+  }
 >
 
 const classNameGenerator = tv({

@@ -4,14 +4,14 @@ import { ControlledActionDialog } from '../ControlledActionDialog'
 
 import { useRemoteTrigger } from './useRemoteTrigger'
 
-import type { ComponentPropsWithRef, FC } from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC } from 'react'
 
-type BaseProps = Parameters<typeof useRemoteTrigger>[0]
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<typeof ControlledActionDialog>,
-    keyof BaseProps | 'isOpen' | 'onClickClose' | 'id'
-  >
+type Props = SHRComponentPropsWithRef<
+  typeof ControlledActionDialog,
+  Parameters<typeof useRemoteTrigger>[0],
+  { omit: 'isOpen' }
+>
 
 export const ActionDialog: FC<Props> = ({
   id,
