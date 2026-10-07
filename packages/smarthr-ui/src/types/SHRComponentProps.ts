@@ -25,7 +25,7 @@ export type SHRComponentProps<
   Options extends OptionsType = object,
 > = AsProp<Options> &
   DistributiveOmit<Override, AsOmitKey<Options> | OmitKey<Options>> &
-  DistributiveOmit<Base, keyof Override | OmitKey<Options>>
+  DistributiveOmit<Base, keyof Override | OmitKey<Options> | AsOmitKey<Options>>
 
 export type SHRComponentPropsWithRef<
   Base extends ElementType,
