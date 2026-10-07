@@ -7,7 +7,7 @@ type ChartName = Exclude<ChartType, 'bubble' | 'scatter' | 'polarArea'>
 
 type Props<T extends ChartName> = {
   data: ChartData<T>
-  options: Partial<ChartOptions<T>>
+  options?: ChartOptions<T>
 }
 
 type TableData = {
@@ -26,10 +26,12 @@ export const TableView = <T extends ChartName>({
   options,
 }: Props<T>) => {
   const generateTableData = (): TableData => {
-    const xTitle = (options as Partial<ChartOptions<'bar' | 'line'>>).scales?.x?.title?.text
+    const scales = (options as Partial<ChartOptions<'bar' | 'line'>>).scales
+    const topLeftTitle =
+      options?.indexAxis === 'y' ? scales?.y?.title?.text : scales?.x?.title?.text
 
     return {
-      headers: [xTitle ?? '', ...(data.datasets?.map((dataset) => dataset.label) ?? [])],
+      headers: [topLeftTitle ?? '', ...(data.datasets?.map((dataset) => dataset.label) ?? [])],
       dataRows:
         data.labels?.map((label, index) => [
           label as ReactNode,
@@ -46,14 +48,23 @@ export const TableView = <T extends ChartName>({
         <tbody>
           <tr>
             {tableData.headers.map((header, index) => (
-              <Th key={`header-${index}`}>{header}</Th>
+              <Th key={`header-${index}`} scope="col">
+                {header}
+              </Th>
             ))}
           </tr>
           {tableData.dataRows.map((row, rowIndex) => (
             <tr key={`row-${rowIndex}`}>
-              {row.map((cell, cellIndex) => (
-                <Td key={`cell-${cellIndex}`}>{cell}</Td>
-              ))}
+              {row.map((cell, cellIndex) =>
+                cellIndex === 0 ? (
+                  // 1例目は必ずデータセットのラベル列として扱うので、Th要素としてレンダリングする
+                  <Th className="!shr-bg-white" key={`cell-${cellIndex}`} scope="row">
+                    {cell}
+                  </Th>
+                ) : (
+                  <Td key={`cell-${cellIndex}`}>{cell}</Td>
+                ),
+              )}
             </tr>
           ))}
         </tbody>
