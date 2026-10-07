@@ -191,6 +191,44 @@ describe('uploadAndInsertImage', () => {
     expect(imagePositions(editor)).toHaveLength(1)
   })
 
+  it.each([
+    ['次の段落と結合', (editor: Editor) => editor.chain().setTextSelection(6).joinForward().run()],
+    [
+      '見出しへ変更',
+      (editor: Editor) => editor.chain().setTextSelection(6).setNode('heading', { level: 2 }).run(),
+    ],
+  ])('挿入位置の直後で%sしても、挿入位置が残っていれば挿入する', async (_, edit) => {
+    const editor = createEditor('<p>hello</p><p>world</p>')
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), 6, () => deferred.promise)
+
+    edit(editor)
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(imagePositions(editor)).toHaveLength(1)
+  })
+
+  it('表の列ごと消したら、表の中へは挿入しない', async () => {
+    const editor = new Editor({
+      extensions: configureExtensions({ features: ['image', 'table'] }),
+      content: '<table><tr><td><p>a</p></td><td><p></p></td></tr></table>',
+    })
+    let emptyCellPos = 0
+    editor.state.doc.descendants((node, pos) => {
+      if (node.type.name === 'paragraph' && node.content.size === 0) emptyCellPos = pos + 1
+    })
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), emptyCellPos, () => deferred.promise)
+
+    editor.chain().setTextSelection(emptyCellPos).deleteColumn().run()
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(imagePositions(editor)).toHaveLength(0)
+    expect(editor.getHTML().match(/<table/g)).toHaveLength(1)
+  })
+
   it('アップロード失敗は onImageUploadError で通知する', async () => {
     const editor = createEditor('<p>hello</p>')
     const onImageUploadError = vi.fn()

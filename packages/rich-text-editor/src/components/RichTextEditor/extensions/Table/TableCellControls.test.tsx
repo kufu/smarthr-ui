@@ -351,35 +351,35 @@ describe('セル移動のキーボード操作', () => {
     return target.tablePos + 1 + target.map.map[index]
   }
   const caretIn = (index: number) => editor.commands.setTextSelection(cellPos(index) + 2)
-  const pressKeyNotPrevented = (key: string, shiftKey = false) =>
-    fireEvent.keyDown(editor.view.dom, { key, shiftKey })
+  const isHandledByEditor = (key: string, shiftKey = false) =>
+    !fireEvent.keyDown(editor.view.dom, { key, shiftKey })
 
   it('Tab で次のセル、Shift+Tab で前のセルへ移り、行の端では隣の行へ移る', () => {
-    expect(pressKeyNotPrevented('Tab')).toBe(false)
+    expect(isHandledByEditor('Tab')).toBe(true)
     expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 2 })
 
-    expect(pressKeyNotPrevented('Tab')).toBe(false)
+    expect(isHandledByEditor('Tab')).toBe(true)
     expect(getTableTarget(editor)!.rect).toMatchObject({ top: 2, left: 0 })
 
-    expect(pressKeyNotPrevented('Tab', true)).toBe(false)
+    expect(isHandledByEditor('Tab', true)).toBe(true)
     expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 2 })
 
     caretIn(3)
-    expect(pressKeyNotPrevented('Tab', true)).toBe(false)
+    expect(isHandledByEditor('Tab', true)).toBe(true)
     expect(getTableTarget(editor)!.rect).toMatchObject({ top: 0, left: 2 })
   })
 
   it('最後のセルの Tab では行を増やさず、ブラウザの既定動作で表の外へ抜けられる', () => {
     caretIn(8)
 
-    expect(pressKeyNotPrevented('Tab')).toBe(true)
+    expect(isHandledByEditor('Tab')).toBe(false)
     expect(getTableTarget(editor)!.map.height).toBe(3)
   })
 
   it('最初のセルの Shift+Tab はブラウザの既定動作に任せる', () => {
     caretIn(0)
 
-    expect(pressKeyNotPrevented('Tab', true)).toBe(true)
+    expect(isHandledByEditor('Tab', true)).toBe(false)
   })
 
   it('表の外では Tab も Shift+F10 も扱わない', () => {
@@ -387,7 +387,7 @@ describe('セル移動のキーボード操作', () => {
     editor.commands.setTextSelection(editor.state.doc.content.size - 1)
 
     expect(editor.isActive('table')).toBe(false)
-    expect(pressKeyNotPrevented('Tab')).toBe(true)
-    expect(pressKeyNotPrevented('F10', true)).toBe(true)
+    expect(isHandledByEditor('Tab')).toBe(false)
+    expect(isHandledByEditor('F10', true)).toBe(false)
   })
 })
