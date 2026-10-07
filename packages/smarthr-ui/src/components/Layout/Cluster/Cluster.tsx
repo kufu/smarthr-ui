@@ -1,16 +1,9 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type ForwardedRef,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ElementType, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SeparatePositiveGap } from '../../../types'
+import type { PositiveGap, SHRComponentPropsWithRef, SeparatePositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type JustifyType =
@@ -25,14 +18,16 @@ type JustifyType =
   | 'space-evenly'
   | 'stretch'
 
-type Props<T extends ElementType> = PropsWithChildren<{
-  as?: T
-  gap?: PositiveGap | SeparatePositiveGap
-  inline?: boolean
-  align?: AlignType
-  justify?: JustifyType
-}> &
-  ComponentPropsWithoutRef<T>
+type Props<T extends ElementType> = SHRComponentPropsWithRef<
+  T,
+  {
+    as?: T
+    gap?: PositiveGap | SeparatePositiveGap
+    inline?: boolean
+    align?: AlignType
+    justify?: JustifyType
+  }
+>
 
 export const clusterClassNameGenerator = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -114,10 +109,16 @@ export const clusterClassNameGenerator = tv({
   },
 })
 
-const ActualCluster = <T extends ElementType = 'div'>(
-  { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLElement>,
-) => {
+export const Cluster = <T extends ElementType = 'div'>({
+  as,
+  gap = 0.5,
+  inline = false,
+  align,
+  justify,
+  className,
+  children,
+  ...rest
+}: Props<T>) => {
   const actualClassName = useMemo(() => {
     const gaps =
       gap instanceof Object
@@ -139,10 +140,11 @@ const ActualCluster = <T extends ElementType = 'div'>(
 
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
-  // ポリモーフィックコンポーネント: asプロパティで要素型を動的に変更可能なため、
-  // refの型を静的に決定できません。HTMLElementを基底型として使用し、
-  // 実際の要素型との整合性はas anyで型アサーションします。
-  const body = <Component {...rest} ref={ref as any} className={actualClassName} />
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
   if (Wrapper) {
     return <Wrapper>{body}</Wrapper>
@@ -150,5 +152,3 @@ const ActualCluster = <T extends ElementType = 'div'>(
 
   return body
 }
-
-export const Cluster = genericsForwardRef(ActualCluster)

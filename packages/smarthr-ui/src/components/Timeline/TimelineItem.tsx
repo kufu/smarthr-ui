@@ -1,36 +1,30 @@
 import dayjs from 'dayjs'
-import {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  useId,
-  useMemo,
-} from 'react'
+import { type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster, Sidebar, Stack } from '../Layout'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 
-type BaseProps = PropsWithChildren<{
-  datetime: Date | string
-  /** 日付の代わりに表示するテキスト */
-  dateLabel?: string
-  /** 時刻のフォーマット */
-  timeFormat?: 'HH:mm:ss' | 'HH:mm' | 'none'
-  /** 日付のサフィックス領域 */
-  dateSuffixArea?: ReactNode
-  /** サイドアクション領域 */
-  sideActionArea?: ReactNode
-  /** 現在のアイテムかどうか */
-  current?: boolean
-}>
-type Props = BaseProps &
-  Omit<
-    ComponentProps<typeof Stack>,
-    keyof BaseProps | 'inline' | 'gap' | 'align' | 'as' | 'aria-current'
-  >
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    datetime: Date | string
+    /** 日付の代わりに表示するテキスト */
+    dateLabel?: string
+    /** 時刻のフォーマット */
+    timeFormat?: 'HH:mm:ss' | 'HH:mm' | 'none'
+    /** 日付のサフィックス領域 */
+    dateSuffixArea?: ReactNode
+    /** サイドアクション領域 */
+    sideActionArea?: ReactNode
+    /** 現在のアイテムかどうか */
+    current?: boolean
+  },
+  { omit: 'aria-current' }
+>
 
 const classNameGenerator = tv({
   slots: {

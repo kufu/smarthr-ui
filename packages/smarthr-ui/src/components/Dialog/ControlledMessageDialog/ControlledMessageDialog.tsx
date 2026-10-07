@@ -1,28 +1,37 @@
-'use client'
-
-import { type ComponentProps, type FC, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  MessageDialogContentInner,
-  type MessageDialogContentInnerProps,
-} from './MessageDialogContentInner'
+import { MessageDialogContentInner } from './MessageDialogContentInner'
 
+import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
 import type { DialogProps } from '../types'
 
+type MessageDialogContentInnerProps = ComponentPropsWithRef<typeof MessageDialogContentInner>
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
-  DialogProps & {
-    heading: HeadingType
-    onClickClose: MessageDialogContentInnerProps['handleClickClose']
-  }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  typeof DialogContentInner,
+  SHRComponentProps<
+    MessageDialogContentInnerProps,
+    DialogProps & {
+      heading: HeadingType
+      onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    },
+    { omit: 'handleClickClose' }
+  >,
+  { omit: 'focusTrapRef' }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,
@@ -42,8 +51,6 @@ export const ControlledMessageDialog: FC<Props> = ({
   isOpen,
   ...rest
 }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
-
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -53,32 +60,34 @@ export const ControlledMessageDialog: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handleClickClose: () => {
+      handleClickClose: (e: MouseEvent<HTMLButtonElement>) => {
         if (latest.isOpen) {
-          latest.onClickClose()
+          latest.onClickClose(e)
         }
       },
     }),
     [latest],
   )
 
-  return createPortal(
-    <DialogContentInner
-      {...rest}
-      isOpen={isOpen}
-      className={className}
-      ariaLabelledby={heading.id}
-      onPressEscape={onPressEscape}
-    >
-      <MessageDialogContentInner
-        contentBgColor={contentBgColor}
-        contentPadding={contentPadding}
-        handleClickClose={functions.handleClickClose}
-        heading={heading}
-        closeButton={closeButton}
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DialogContentInner
+        {...rest}
+        isOpen={isOpen}
+        className={className}
+        ariaLabelledby={heading.id}
+        onPressEscape={onPressEscape}
       >
-        {children}
-      </MessageDialogContentInner>
-    </DialogContentInner>,
+        <MessageDialogContentInner
+          contentBgColor={contentBgColor}
+          contentPadding={contentPadding}
+          handleClickClose={functions.handleClickClose}
+          heading={heading}
+          closeButton={closeButton}
+        >
+          {children}
+        </MessageDialogContentInner>
+      </DialogContentInner>
+    </DialogPortal>
   )
 }

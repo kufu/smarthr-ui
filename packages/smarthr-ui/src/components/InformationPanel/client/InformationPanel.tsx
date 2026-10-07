@@ -1,8 +1,8 @@
 'use client'
 
 import {
+  type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useId,
@@ -14,45 +14,50 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
-import { Heading, type HeadingTagTypes } from '../../Heading'
-import {
-  FaCaretDownIcon,
-  FaCaretUpIcon,
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  WarningIcon,
-} from '../../Icon'
+import { Heading } from '../../Heading'
+import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
-import { Panel, type PanelElementProps } from '../../Panel'
+import { Panel } from '../../Panel'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type ObjectHeadingType = {
   text: ReactNode
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  unrecommendedTag?: HeadingTagTypes
+  unrecommendedTag?: ComponentPropsWithRef<typeof Heading>['unrecommendedTag']
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type BaseProps = PropsWithChildren<{
-  /** パネルのタイトル */
-  heading: HeadingType
-  /** `true` のとき、開閉ボタンを表示する */
-  toggleable?: boolean
-  /** `true` のとき、パネルを開く */
-  active?: boolean
-  /** 開閉ボタン押下時に発火するコールバック関数 */
-  onClickTrigger?: (active: boolean) => void
-  /** パネルの種類 */
-  type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
-  /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
-  bold?: boolean
-}>
 
-type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** パネルのタイトル */
+    heading: HeadingType
+    /** `true` のとき、開閉ボタンを表示する */
+    toggleable?: boolean
+    /** `true` のとき、パネルを開く */
+    active?: boolean
+    /** 開閉ボタン押下時に発火するコールバック関数 */
+    onClickTrigger?: (active: boolean) => void
+    /** パネルの種類 */
+    type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
+    /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
+    bold?: boolean
+  }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
+
+// HINT: warningのアイコンは自身で色を持っているため、色を指定しない
+const ICON_COLOR_MAPPER = {
+  info: 'TEXT_GREY',
+  success: 'MAIN',
+  warning: undefined,
+  error: 'DANGER',
+  sync: 'MAIN',
+} as const
 
 const classNameGenerator = tv({
   slots: {
@@ -75,7 +80,7 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    } satisfies Record<NonNullable<BaseProps['type']>, Record<string, never>>,
+    } satisfies Record<NonNullable<Props['type']>, Record<string, never>>,
     bold: {
       true: {
         header: 'shr-py-1',
@@ -201,21 +206,6 @@ const MemoizedHeading = memo<
     headingObjectConverter,
   )
 
-  const icon = (() => {
-    switch (type) {
-      case 'info':
-        return <FaCircleInfoIcon color="TEXT_GREY" />
-      case 'success':
-        return <FaCircleCheckIcon color="MAIN" />
-      case 'warning':
-        return <WarningIcon />
-      case 'error':
-        return <FaCircleExclamationIcon color="DANGER" />
-      case 'sync':
-        return <FaRotateIcon color="MAIN" />
-    }
-  })()
-
   return (
     <Heading
       {...rest}
@@ -223,7 +213,7 @@ const MemoizedHeading = memo<
       // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       unrecommendedTag={heading.unrecommendedTag}
       icon={{
-        prefix: icon,
+        prefix: <StatusIcon status={type} color={ICON_COLOR_MAPPER[type]} />,
         gap: 0.5,
       }}
     >

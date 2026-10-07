@@ -2,38 +2,31 @@
 
 import { useSquareDetection } from './useSquareDetection'
 
-import type {
-  ButtonHTMLAttributes,
-  FC,
-  ForwardedRef,
-  MouseEvent,
-  PropsWithChildren,
-  ReactNode,
-} from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC, MouseEvent, ReactNode } from 'react'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
   e.stopPropagation()
 }
 
-type BaseProps = PropsWithChildren<{
-  classNames: {
-    wrapper: string
-    inner: string
+type Props = SHRComponentPropsWithRef<
+  'button',
+  {
+    classNames: {
+      wrapper: string
+      inner: string
+    }
+    // HINT: loading中かどうかはloaderの有無で判定する。要素の生成自体は呼び出し元(Button.tsx)が行う
+    loader?: ReactNode
+    prefix?: ReactNode
+    suffix?: ReactNode
   }
-  // HINT: loading中かどうかはloaderの有無で判定する。要素の生成自体は呼び出し元(Button.tsx)が行う
-  loader?: ReactNode
-  buttonRef?: ForwardedRef<HTMLButtonElement>
-  prefix?: ReactNode
-  suffix?: ReactNode
-}>
-
-export type Props = BaseProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+>
 
 export const ActualButton: FC<Props> = ({
   classNames,
   loader,
-  buttonRef,
   prefix,
   suffix,
   children,
@@ -66,7 +59,6 @@ export const ActualButton: FC<Props> = ({
     // eslint-disable-next-line smarthr/best-practice-for-button-element
     <button
       {...rest}
-      ref={buttonRef}
       className={classNames.wrapper}
       aria-disabled={disabled}
       data-loading={loader ? true : undefined}

@@ -41,36 +41,32 @@ const PreviewButton: FC<{
   </Button>
 )
 
-type FileListItemProps = {
+export const FileListItem = memo<{
   file: File
   index: number
   previewable: boolean
   handleDeleteClick: (e: MouseEvent<HTMLButtonElement>) => void
   handlePreviewClick: (file: File) => void
   className: string
-}
-
-export const FileListItem = memo<FileListItemProps>(
-  ({ file, index, previewable, handleDeleteClick, handlePreviewClick, className }) => (
-    <li className={className}>
-      {previewable ? (
-        file.type.startsWith('image/') || file.type === 'application/pdf' ? (
-          <PreviewButton file={file} handlePreviewClick={handlePreviewClick} />
-        ) : (
-          <DownloadAnchorButton file={file} />
-        )
+}>(({ file, index, previewable, handleDeleteClick, handlePreviewClick, className }) => (
+  <li className={className}>
+    {previewable ? (
+      file.type.startsWith('image/') || file.type === 'application/pdf' ? (
+        <PreviewButton file={file} handlePreviewClick={handlePreviewClick} />
       ) : (
-        <span className={FILE_NAME_BUTTON_CLASSNAME}>{file.name}</span>
-      )}
-      <Button
-        value={index}
-        variant="text"
-        className="smarthr-ui-InputFile-deleteButton shr-shrink-0"
-        onClick={handleDeleteClick}
-        prefix={<FaTrashCanIcon />}
-      >
-        <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
-      </Button>
-    </li>
-  ),
-)
+        <DownloadAnchorButton file={file} />
+      )
+    ) : (
+      <span className={FILE_NAME_BUTTON_CLASSNAME}>{file.name}</span>
+    )}
+    <Button
+      value={index}
+      variant="text"
+      className="smarthr-ui-InputFile-deleteButton shr-shrink-0"
+      onClick={handleDeleteClick}
+      prefix={<FaTrashCanIcon />}
+    >
+      <Localizer id="smarthr-ui/InputFile/destroy" defaultText="削除" />
+    </Button>
+  </li>
+))

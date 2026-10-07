@@ -1,28 +1,24 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../../types'
 
-type BaseProps = PropsWithChildren<{
-  /** コンテンツの最小高さ */
-  minHeight?: number | string
-  /** コンテンツの最大幅 */
-  maxWidth?: number | string
-  /** 境界とコンテンツの間の余白 */
-  padding?: Gap
-  /** 天地中央揃えも有効化するかどうか */
-  verticalCentering?: boolean
-  as?: string | ComponentType<any>
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** コンテンツの最小高さ */
+    minHeight?: number | string
+    /** コンテンツの最大幅 */
+    maxWidth?: number | string
+    /** 境界とコンテンツの間の余白 */
+    padding?: Gap
+    /** 天地中央揃えも有効化するかどうか */
+    verticalCentering?: boolean
+    as?: string | ComponentType<any>
+  }
+>
 
 export const centerClassNameGenerator = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',
@@ -57,33 +53,38 @@ export const centerClassNameGenerator = tv({
   },
 })
 
-export const Center = forwardRef<HTMLDivElement, Props>(
-  (
-    { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...rest },
-    ref,
-  ) => {
-    const actualClassName = useMemo(
-      () => centerClassNameGenerator({ padding, verticalCentering, className }),
-      [padding, verticalCentering, className],
-    )
+export const Center: FC<Props> = ({
+  minHeight,
+  maxWidth,
+  padding,
+  verticalCentering,
+  as: Component = 'div',
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => centerClassNameGenerator({ padding, verticalCentering, className }),
+    [padding, verticalCentering, className],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = (
-      <Component
-        {...rest}
-        ref={ref}
-        className={actualClassName}
-        style={{
-          minHeight: minHeight ?? undefined,
-          maxWidth: maxWidth ?? undefined,
-        }}
-      />
-    )
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component
+      {...rest}
+      className={actualClassName}
+      style={{
+        minHeight: minHeight ?? undefined,
+        maxWidth: maxWidth ?? undefined,
+      }}
+    >
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

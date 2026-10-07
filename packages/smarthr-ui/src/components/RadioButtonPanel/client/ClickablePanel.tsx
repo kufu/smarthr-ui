@@ -2,16 +2,20 @@
 
 import { Panel } from '../../Panel'
 
-import type { ComponentType, FC, ReactNode } from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC, ReactNode } from 'react'
 
-type Props = {
-  as?: string | ComponentType<any>
-  children: ReactNode
-  className: string
-}
+type Props = SHRComponentPropsWithRef<
+  typeof Panel,
+  {
+    children: ReactNode
+    className: string
+  },
+  { omit: 'padding' | 'onClick' }
+>
 
-export const ClickablePanel: FC<Props> = ({ as, className, children }) => (
-  <Panel as={as} padding={1} className={className} onClick={handleDelegateClick}>
+export const ClickablePanel: FC<Props> = ({ children, ...rest }) => (
+  <Panel {...rest} padding={1} onClick={handleDelegateClick}>
     {children}
   </Panel>
 )
@@ -47,7 +51,7 @@ const isRadioButtonElementClicked = (path: EventTarget[], currentTarget: EventTa
 }
 
 // 外側の装飾を押しても内側のラジオボタンが押せるようにする
-const handleDelegateClick = (e: React.MouseEvent<HTMLDivElement>) => {
+const handleDelegateClick = (e: React.MouseEvent<HTMLElement>) => {
   // RadioButtonの要素（labelまたはinput）以外がクリックされた場合（description や Base の余白）
   if (!isRadioButtonElementClicked(e.nativeEvent.composedPath(), e.currentTarget)) {
     // Base要素のclickイベントは止める（実装の詳細を隠蔽し、input要素のclickのみを親に伝える）

@@ -1,37 +1,27 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { paddingBlock, paddingInline } from '../../tailwind'
 import { useSectionWrapper } from '../SectioningContent'
 
-import type { Gap } from '../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../types'
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type SeparatePadding = {
-  block?: Gap
-  inline?: Gap
-}
-
-type BaseProps = PropsWithChildren<{
-  /** 角丸の大きさ */
-  radius?: 's' | 'm'
-  /** 影のレイヤー */
-  layer?: 0 | 1 | 2 | 3 | 4
-  /** 境界とコンテンツの間の余白 */
-  padding?: Gap | SeparatePadding
-  /** コンテンツが要素内に収まらない場合の処理方法 */
-  overflow?: Overflow | { x: Overflow; y: Overflow }
-  as?: string | ComponentType<any>
-}>
-export type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
-type Props = BaseProps & ElementProps
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    as?: string | ComponentType<any>
+    /** 角丸の大きさ */
+    radius?: 's' | 'm'
+    /** 影のレイヤー */
+    layer?: 0 | 1 | 2 | 3 | 4
+    /** 境界とコンテンツの間の余白 */
+    padding?: Gap | { block?: Gap; inline?: Gap }
+    /** コンテンツが要素内に収まらない場合の処理方法 */
+    overflow?: Overflow | { x: Overflow; y: Overflow }
+  }
+>
 
 export const panelClassNameGenerator = tv({
   // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
@@ -42,7 +32,7 @@ export const panelClassNameGenerator = tv({
     radius: {
       s: 'shr-rounded-m',
       m: 'shr-rounded-l',
-    } satisfies Record<NonNullable<BaseProps['radius']>, string>,
+    } satisfies Record<NonNullable<Props['radius']>, string>,
     overflowBlock: {
       visible: 'shr-overflow-y-visible',
       hidden: 'shr-overflow-y-hidden',
@@ -63,35 +53,49 @@ export const panelClassNameGenerator = tv({
       2: 'shr-shadow-layer-2',
       3: 'shr-shadow-layer-3',
       4: 'shr-shadow-layer-4',
-    } satisfies Record<NonNullable<BaseProps['layer']>, string>,
+    } satisfies Record<NonNullable<Props['layer']>, string>,
   },
 })
 
-export const Panel = forwardRef<HTMLDivElement, Props>(
-  ({ padding, radius, overflow, layer, as: Component = 'div', className, ...rest }, ref) => {
-    const actualClassName = useMemo(() => {
-      const actualPadding =
-        padding instanceof Object ? padding : { block: padding, inline: padding }
-      const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
+export const Panel: FC<Props> = ({
+  padding,
+  radius,
+  overflow,
+  layer,
+  as: Component = 'div',
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(() => {
+    const actualPadding = padding instanceof Object ? padding : { block: padding, inline: padding }
+    const actualOverflow = overflow instanceof Object ? overflow : { x: overflow, y: overflow }
 
-      return panelClassNameGenerator({
-        paddingBlock: actualPadding.block,
-        paddingInline: actualPadding.inline,
-        radius: radius ?? 'm',
-        overflowBlock: actualOverflow.y,
-        overflowInline: actualOverflow.x,
-        layer: layer ?? 1,
-        className,
-      })
-    }, [layer, overflow, padding, radius, className])
+    return panelClassNameGenerator({
+      paddingBlock: actualPadding.block,
+      paddingInline: actualPadding.inline,
+      radius: radius ?? 'm',
+      overflowBlock: actualOverflow.y,
+      overflowInline: actualOverflow.x,
+      layer: layer ?? 1,
+      className,
+    })
+  }, [layer, overflow, padding, radius, className])
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} />
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}
+
+/** @deprecated Base は非推奨です。Panel を使ってください。 */
+/** @alias */
+export const Base = Panel

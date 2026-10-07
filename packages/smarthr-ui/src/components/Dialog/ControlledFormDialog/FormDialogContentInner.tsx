@@ -1,4 +1,12 @@
-import { type FC, type FormEvent, type PropsWithChildren, type ReactNode, memo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type FormEvent,
+  type MouseEvent,
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
@@ -6,14 +14,12 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
+import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-export type FormDialogHelpers = {
-  close: () => void
-}
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
@@ -31,10 +37,11 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-export type BaseProps = PropsWithChildren<
-  DialogBodyProps & {
+type Props = SHRComponentPropsWithRef<
+  typeof DialogBody,
+  {
     /** ダイアログタイトル */
-    heading: DialogHeadingProps
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** アクションボタン */
     actionButton: ObjectActionButtonType
     /**
@@ -46,13 +53,10 @@ export type BaseProps = PropsWithChildren<
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
+    handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+    responseStatus?: ResponseStatus
   }
 >
-
-export type FormDialogContentInnerProps = BaseProps & {
-  handleClickClose: () => void
-  responseStatus?: ResponseStatus
-}
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
@@ -75,7 +79,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
+export const FormDialogContentInner: FC<Props> = ({
   children,
   heading,
   contentBgColor,
@@ -119,7 +123,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }
 
 const ActionAreaCluster = memo<
-  Pick<FormDialogContentInnerProps, 'handleClickClose'> & {
+  Pick<Props, 'handleClickClose'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
@@ -157,7 +161,7 @@ const ActionButton = memo<
 ))
 
 const CloseButton = memo<{
-  handleClick: FormDialogContentInnerProps['handleClickClose']
+  handleClick: Props['handleClickClose']
   disabled: boolean
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (

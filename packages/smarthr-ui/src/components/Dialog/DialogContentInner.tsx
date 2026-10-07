@@ -1,9 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type RefObject,
   memo,
   useLayoutEffect,
@@ -16,59 +15,59 @@ import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap, type FocusTrapRef } from './FocusTrap'
+import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-export type DialogContentInnerProps = PropsWithChildren<{
-  /**
-   * オーバーレイをクリックした時に発火するコールバック関数
-   * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
-   */
-  onClickOverlay?: () => void
-  /**
-   * エスケープキーを押下した時に発火するコールバック関数
-   * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
-   */
-  onPressEscape?: () => void
-  /**
-   * ダイアログを開いているかどうか
-   */
-  isOpen: boolean
-  /**
-   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-   * ダイアログの幅
-   */
-  width?: string | number
-  /**
-   * ダイアログの大きさ
-   */
-  size?: DialogSize
-  /**
-   * ダイアログの `id`
-   * TODO 使われてなさそうなので確認
-   */
-  id?: string
-  /**
-   * ダイアログを開いた時にフォーカスする対象
-   */
-  firstFocusTarget?: RefObject<HTMLElement>
-  /**
-   * ダイアログの `aria-label`
-   */
-  ariaLabel?: string
-  /**
-   * ダイアログの `aria-labelledby`
-   */
-  ariaLabelledby?: string
-  /**
-   * ダイアログトップのフォーカストラップへの ref
-   */
-  focusTrapRef?: RefObject<FocusTrapRef>
-}>
-type Props = DialogContentInnerProps & Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
+type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 
-export const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /**
+     * オーバーレイをクリックした時に発火するコールバック関数
+     * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
+     */
+    onClickOverlay?: () => void
+    /**
+     * エスケープキーを押下した時に発火するコールバック関数
+     * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
+     */
+    onPressEscape?: (e: KeyboardEvent) => void
+    /**
+     * ダイアログを開いているかどうか
+     */
+    isOpen: boolean
+    /**
+     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
+     * ダイアログの幅
+     */
+    width?: string | number
+    /**
+     * ダイアログの大きさ
+     */
+    size?: DialogSize
+    /**
+     * ダイアログを開いた時にフォーカスする対象
+     */
+    firstFocusTarget?: RefObject<HTMLElement>
+    /**
+     * ダイアログの `aria-label`
+     */
+    ariaLabel?: string
+    /**
+     * ダイアログの `aria-labelledby`
+     */
+    ariaLabelledby?: string
+    /**
+     * ダイアログトップのフォーカストラップへの ref
+     */
+    focusTrapRef?: FocusTrapProps['ref']
+  }
+>
+
+const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 
 const classNameGenerator = tv({
   slots: {
@@ -97,7 +96,6 @@ export const DialogContentInner: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,
-  id,
   width,
   size,
   firstFocusTarget,
@@ -124,9 +122,9 @@ export const DialogContentInner: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      handlePressEscape: () => {
+      handlePressEscape: (e: KeyboardEvent) => {
         if (latest.isOpen) {
-          latest.onPressEscape?.()
+          latest.onPressEscape?.(e)
         }
       },
       handleClickOverlay: () => {
@@ -162,7 +160,6 @@ export const DialogContentInner: FC<Props> = ({
     <DialogOverlap isOpen={isOpen}>
       <div
         ref={callbackRef}
-        id={id}
         className={classNames.layout}
         style={actualWidth ? { width: actualWidth } : undefined}
       >

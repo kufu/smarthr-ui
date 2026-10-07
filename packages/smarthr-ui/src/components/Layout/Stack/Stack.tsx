@@ -1,25 +1,21 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap } from '../../../types'
+import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type Props = PropsWithChildren<{
-  as?: string | ComponentType<any>
-  inline?: boolean
-  gap?: PositiveGap
-  align?: AlignType
-}> &
-  ComponentPropsWithRef<'div'>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    as?: string | ComponentType<any>
+    inline?: boolean
+    gap?: PositiveGap
+    align?: AlignType
+  }
+>
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',
@@ -64,20 +60,30 @@ const classNameGenerator = tv({
   },
 })
 
-export const Stack = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...rest }, ref) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ inline, align, gap, className }),
-      [align, className, gap, inline],
-    )
+export const Stack: FC<Props> = ({
+  as: Component = 'div',
+  inline = false,
+  gap = 1,
+  align,
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ inline, align, gap, className }),
+    [align, className, gap, inline],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} />
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

@@ -6,6 +6,7 @@ import { IntlProvider } from '../../intl'
 import { AppHeader } from './AppHeader'
 
 import type { Launcher } from './types'
+import type { ComponentPropsWithRef } from 'react'
 
 describe('AppHeader', () => {
   let originalMatchMedia: typeof window.matchMedia
@@ -38,7 +39,7 @@ describe('AppHeader', () => {
 
   const DEFAULT_PROPS = { appName: 'テストアプリ', navigations: NAVIGATIONS }
 
-  const renderAppHeader = (props: Partial<React.ComponentProps<typeof AppHeader>> = {}) =>
+  const renderAppHeader = (props: Partial<ComponentPropsWithRef<typeof AppHeader>> = {}) =>
     render(
       <IntlProvider locale="ja">
         <AppHeader {...DEFAULT_PROPS} {...props} />

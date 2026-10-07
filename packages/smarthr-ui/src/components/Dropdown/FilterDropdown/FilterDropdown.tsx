@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEventHandler,
   type ReactNode,
@@ -10,7 +10,7 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../Button'
+import { Button } from '../../Button'
 import { FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -23,37 +23,41 @@ import {
   FilteredIcon,
 } from '../client'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
+
 type ObjectTriggerType = {
   text?: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ButtonProps['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type BaseProps = {
-  /** 引き金となるボタン */
-  trigger?: ReactNode | ObjectTriggerType
-  applyText?: ReactNode
-  cancelText?: ReactNode
-  resetText?: ReactNode
-  children: ReactNode
-  filtered?:
-    | boolean
-    | {
-        iconAlt?: string
-      }
-  responseStatus?: ResponseStatus
-  onApply: MouseEventHandler<HTMLButtonElement>
-  onCancel?: MouseEventHandler<HTMLButtonElement>
-  onReset?: MouseEventHandler<HTMLButtonElement>
-  onOpen?: () => void
-  onClose?: () => void
-}
-type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'button',
+  {
+    /** 引き金となるボタン */
+    trigger?: ReactNode | ObjectTriggerType
+    applyText?: ReactNode
+    cancelText?: ReactNode
+    resetText?: ReactNode
+    children: ReactNode
+    filtered?:
+      | boolean
+      | {
+          iconAlt?: string
+        }
+    responseStatus?: ResponseStatus
+    onApply: MouseEventHandler<HTMLButtonElement>
+    onCancel?: MouseEventHandler<HTMLButtonElement>
+    onReset?: MouseEventHandler<HTMLButtonElement>
+    onOpen?: () => void
+    onClose?: () => void
+  }
+>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
-const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
+const CONTROL_CLUSTER_GAP: ComponentPropsWithRef<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
 const classNameGenerator = tv({
   slots: {

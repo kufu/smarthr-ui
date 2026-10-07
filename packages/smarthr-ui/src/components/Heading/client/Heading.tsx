@@ -1,20 +1,16 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type PropsWithChildren,
-  forwardRef,
-  memo,
-  useContext,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../../SectioningContent'
-import { STYLE_TYPE_MAP, Text, type TextProps } from '../../Text'
+import { STYLE_TYPE_MAP, Text } from '../../Text'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type TextProps = ComponentPropsWithRef<typeof Text>
+type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 type StylingProps =
   | {
@@ -39,23 +35,23 @@ type StylingProps =
       size?: never
     }
 
-export type BaseProps = PropsWithChildren<{
-  /**
-   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
-   */
-  unrecommendedTag?: HeadingTagTypes
-  /** 視覚的に非表示にするフラグ */
-  visuallyHidden?: boolean
-  /** テキスト左に設置するアイコン */
-  icon?: ComponentProps<typeof Text>['icon']
-}> &
-  StylingProps
-
-export type ElementProps = Omit<
-  ComponentProps<'h1'>,
-  keyof BaseProps | keyof TextProps | 'role' | 'aria-level'
+type StyleTypeMapProps = typeof STYLE_TYPE_MAP
+type Props = SHRComponentPropsWithRef<
+  'h2',
+  StylingProps & {
+    /**
+     * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
+     */
+    unrecommendedTag?: HeadingTagTypes
+    /** 視覚的に非表示にするフラグ */
+    visuallyHidden?: boolean
+    /** テキスト左に設置するアイコン */
+    icon?: TextProps['icon']
+  },
+  {
+    omit: Exclude<keyof StyleTypeMapProps[keyof StyleTypeMapProps], 'size'> | 'role' | 'aria-level'
+  }
 >
-type Props = BaseProps & ElementProps
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Heading',
@@ -70,44 +66,48 @@ const classNameGenerator = tv({
 })
 
 export const Heading = memo(
-  forwardRef<HTMLHeadingElement, Props>(
-    (
-      { unrecommendedTag, type = 'sectionTitle', size, className, visuallyHidden, icon, ...rest },
+  ({
+    unrecommendedTag,
+    type = 'sectionTitle',
+    size,
+    className,
+    visuallyHidden,
+    icon,
+    ref,
+    ...rest
+  }: Props) => {
+    const level = useContext(LevelContext)
+
+    let role = undefined
+    let ariaLevel = undefined
+
+    // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
+    if (!unrecommendedTag && level > 6) {
+      role = 'heading'
+      ariaLevel = level
+    }
+
+    const actualClassName = useMemo(
+      () => classNameGenerator({ visuallyHidden, className }),
+      [className, visuallyHidden],
+    )
+    const typography = STYLE_TYPE_MAP[type as keyof StyleTypeMapProps]
+
+    // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
+    // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
+    const commonProps = {
+      as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
+      role,
+      'aria-level': ariaLevel,
+      className: actualClassName,
+      size: type === 'sectionTitle' && size ? size : typography.size,
       ref,
-    ) => {
-      const level = useContext(LevelContext)
+    }
 
-      let role = undefined
-      let ariaLevel = undefined
+    if (visuallyHidden) {
+      return <VisuallyHiddenText {...rest} {...typography} {...commonProps} />
+    }
 
-      // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
-      if (!unrecommendedTag && level > 6) {
-        role = 'heading'
-        ariaLevel = level
-      }
-
-      const actualClassName = useMemo(
-        () => classNameGenerator({ visuallyHidden, className }),
-        [className, visuallyHidden],
-      )
-      const typography = STYLE_TYPE_MAP[type]
-
-      // HINT: unrecommendedTag未指定かつlevel>6の場合はspan要素になるが、
-      // refの型はHTMLHeadingElementのままにしている（呼び出し側は基本的にh1〜h6を期待するため）
-      const commonProps = {
-        as: unrecommendedTag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
-        role,
-        'aria-level': ariaLevel,
-        className: actualClassName,
-        size: type === 'sectionTitle' && size ? size : typography.size,
-        ref,
-      }
-
-      if (visuallyHidden) {
-        return <VisuallyHiddenText {...rest} {...typography} {...commonProps} />
-      }
-
-      return <Text {...rest} {...typography} {...commonProps} icon={icon} />
-    },
-  ),
+    return <Text {...rest} {...typography} {...commonProps} icon={icon} />
+  },
 )

@@ -121,7 +121,7 @@ export default [
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: '(useLayoutEffectRef|useEnhancedEffect)',
+          additionalHooks: 'useLayoutEffectRef',
         },
       ],
       'smarthr/a11y-anchor-has-href-attribute': [
@@ -142,6 +142,26 @@ export default [
       'smarthr/design-system-guideline-bulk-action-row-button': 'off',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'smarthr/best-practice-for-unstable-dependencies': [
+        'error',
+        {
+          'additionalTargetHooks': [
+            'useLayoutEffectRef',
+          ],
+          'additionalUnstableNames': [
+            "icon",
+            "prefix",
+            "suffix",
+            "footer",
+            "subActionArea",
+            "options",
+            "items",
+            'ref',
+            '/Ref$/',
+            '/^on[A-Z]/',
+          ],
+        },
+      ],
       'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
       'smarthr/best-practice-for-no-unnecessary-variable': [
         'error',
@@ -174,6 +194,12 @@ export default [
               importNames: ['VariantProps'],
               message:
                 'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
+            },
+            {
+              name: 'react',
+              importNames: ['ComponentProps'],
+              message:
+                'ComponentPropsの利用は禁止されています。refの有無を明示するため、ComponentPropsWithRefまたはComponentPropsWithoutRefを使用してください。',
             },
           ],
         },

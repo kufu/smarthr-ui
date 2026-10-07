@@ -1,21 +1,14 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type MouseEvent,
-  type ReactNode,
-  memo,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type MouseEvent, type ReactNode, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../../hooks/useLatest'
 import { Button } from '../../Button'
 
-export type Option = {
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
+type Option = {
   /** 選択時に返される値 */
   value: string
   /** ボタンに表示する内容 */
@@ -26,17 +19,20 @@ export type Option = {
   disabled?: boolean
 }
 
-type BaseProps = {
-  /** 選択肢の配列 */
-  options: Option[]
-  /** 選択中の値 */
-  value?: string | null
-  /** 選択肢を押下したときに発火するコールバック関数 */
-  onClickOption?: (value: string) => void
-  /** 各ボタンの大きさ */
-  size?: 'M' | 'S'
-}
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    /** 選択肢の配列 */
+    options: Option[]
+    /** 選択中の値 */
+    value?: string | null
+    /** 選択肢を押下したときに発火するコールバック関数 */
+    onClickOption?: (value: string) => void
+    /** 各ボタンの大きさ */
+    size?: 'M' | 'S'
+  },
+  { omit: 'role' | 'onFocus' | 'onBlur' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -100,7 +96,7 @@ export const SegmentedControl: FC<Props> = ({
 
   const functions = useMemo(
     () => ({
-      callbackRef: (node: HTMLDivElement | null) => {
+      callbackRef: (node: HTMLElement | null) => {
         if (!node) {
           return
         }
@@ -173,14 +169,12 @@ export const SegmentedControl: FC<Props> = ({
     [hasOnClickOption, latest],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(functions.callbackRef)
-
   const excludesSelected = !value || options.every((option) => option.value !== value)
 
   return (
     <div
       {...rest}
-      ref={callbackRef}
+      ref={functions.callbackRef}
       role="toolbar"
       className={classNames.container}
       onFocus={functions.handleDelegateFocus}

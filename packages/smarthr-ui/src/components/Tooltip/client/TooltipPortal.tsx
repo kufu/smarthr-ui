@@ -1,9 +1,22 @@
-import { type FC, type ReactNode, useCallback, useState } from 'react'
+'use client'
+
+import { type FC, type ReactNode, useCallback, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
 import { useTheme } from '../../../hooks/client/useTheme'
 import { debounce } from '../../../libs/debounce'
 import { ControlledTooltip } from '../ControlledTooltip'
+
+const subscribeFullscreenChange = (callback: () => void) => {
+  window.addEventListener('fullscreenchange', callback)
+
+  return () => {
+    window.removeEventListener('fullscreenchange', callback)
+  }
+}
+const getPortalRoot = () => document.fullscreenElement ?? document.body
+const getPortalRootOnSSR = () => null
 
 type Props = {
   messageId: string
@@ -39,12 +52,18 @@ type VerticalType = 'top' | 'middle' | 'bottom'
 
 export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parentRect, isIcon }) => {
   const theme = useTheme()
+  const portalRoot = useSyncExternalStore(
+    subscribeFullscreenChange,
+    getPortalRoot,
+    getPortalRootOnSSR,
+  )
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
 
-  const portalRef = useCallback(
-    (element: HTMLDivElement | null) => {
+  // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
+  const callbackRef = useCallback(
+    (element: HTMLElement | null) => {
       if (!element || !parentRect) {
         return
       }
@@ -77,9 +96,13 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
     [parentRect, theme],
   )
 
-  return (
+  if (!portalRoot) {
+    return null
+  }
+
+  return createPortal(
     <div
-      ref={portalRef}
+      ref={callbackRef}
       role="tooltip"
       className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}
@@ -95,7 +118,8 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
           {message}
         </div>
       </ControlledTooltip>
-    </div>
+    </div>,
+    portalRoot,
   )
 }
 

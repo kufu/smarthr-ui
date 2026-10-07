@@ -1,24 +1,20 @@
-import {
-  type ComponentPropsWithRef,
-  type PropsWithChildren,
-  forwardRef,
-  memo,
-  useId,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 import { ActualCheckbox } from './client'
 
-export type Props = PropsWithChildren<
-  ComponentPropsWithRef<'input'> & {
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof ActualCheckbox,
+  PropsWithChildren<{
     /** `true` のとき、チェック状態を `mixed` にする */
     mixed?: boolean
     /** チェックボックスにエラーがあるかどうか */
     error?: boolean
-  }
+  }>
 >
 
 const classNameGenerator = tv({
@@ -60,48 +56,45 @@ const classNameGenerator = tv({
   },
 })
 
-export const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ mixed, className, children, disabled, id, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
+export const Checkbox: FC<Props> = ({ mixed, className, children, disabled, id, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        innerWrapper: innerWrapper(),
-        box: box(),
-        input: input(),
-        iconWrap: iconWrap(),
-        icon: icon(),
-        label: label(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      innerWrapper: innerWrapper(),
+      box: box(),
+      input: input(),
+      iconWrap: iconWrap(),
+      icon: icon(),
+      label: label(),
+    }
+  }, [className])
 
-    const defaultId = useId()
-    const checkBoxId = id || defaultId
+  const defaultId = useId()
+  const checkBoxId = id || defaultId
 
-    return (
-      <span className={classNames.wrapper} data-disabled={disabled}>
-        <span className={classNames.innerWrapper}>
-          <ActualCheckbox
-            {...rest}
-            checkboxRef={ref}
-            id={checkBoxId}
-            disabled={disabled}
-            mixed={mixed}
-            className={classNames.input}
-          />
-          <AriaHiddenBox className={classNames.box} />
-          <CheckIconArea mixed={mixed} classNames={classNames} />
-        </span>
-        {children && (
-          <label htmlFor={checkBoxId} className={classNames.label}>
-            {children}
-          </label>
-        )}
+  return (
+    <span className={classNames.wrapper} data-disabled={disabled}>
+      <span className={classNames.innerWrapper}>
+        <ActualCheckbox
+          {...rest}
+          id={checkBoxId}
+          disabled={disabled}
+          mixed={mixed}
+          className={classNames.input}
+        />
+        <AriaHiddenBox className={classNames.box} />
+        <CheckIconArea mixed={mixed} classNames={classNames} />
       </span>
-    )
-  },
-)
+      {children && (
+        <label htmlFor={checkBoxId} className={classNames.label}>
+          {children}
+        </label>
+      )}
+    </span>
+  )
+}
 
 const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />

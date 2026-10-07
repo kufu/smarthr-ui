@@ -1,12 +1,15 @@
-import { type ComponentProps, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../Button'
 
-type Props = Omit<
-  ComponentProps<typeof AnchorButton>,
-  'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason'
-> & { enableNew?: boolean }
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof AnchorButton,
+  { enableNew?: boolean },
+  { omit: 'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason' | 'target' }
+>
 
 const classNameGenerator = tv({
   base: [

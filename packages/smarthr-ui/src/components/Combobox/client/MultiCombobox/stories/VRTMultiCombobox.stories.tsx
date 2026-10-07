@@ -1,0 +1,167 @@
+import { useState } from 'react'
+import { userEvent, within } from 'storybook/test'
+
+import { Stack } from '../../../../Layout'
+import { MultiCombobox } from '../MultiCombobox'
+
+import { defaultItems } from './MultiCombobox.stories'
+
+import type { ComboboxItem } from '../../types'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+
+/*
+ * pict multiCombobox.pict
+ * disabled        error   width   selectedItems
+ * false   true    なし    なし
+ * false   false   あり    複数
+ * true    true    あり    一つ
+ * false   false   なし    一つ
+ * true    true    なし    複数
+ * true    false   あり    なし
+ */
+
+const _cases: Array<Omit<Parameters<typeof MultiCombobox>[0], 'items'>> = [
+  { disabled: false, error: true, width: undefined, selectedItems: [] },
+  {
+    disabled: false,
+    error: false,
+    width: '15em',
+    selectedItems: [defaultItems['option 1'], defaultItems['option 4']],
+  },
+  { disabled: true, error: true, width: '15em', selectedItems: [defaultItems['option 3']] },
+  {
+    disabled: false,
+    error: false,
+    width: undefined,
+    selectedItems: [defaultItems['アイテムのラベルがReactNodeの場合']],
+  },
+  {
+    disabled: true,
+    error: true,
+    width: undefined,
+    selectedItems: [
+      defaultItems['option 2'],
+      defaultItems[
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）'
+      ],
+    ],
+  },
+  { disabled: true, error: false, width: '15em', selectedItems: [] },
+]
+
+const waitForRAF = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      resolve()
+    })
+  })
+const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const comboboxes = await canvas.findAllByRole('combobox')
+  comboboxes[comboboxes.length - 1].focus()
+  const body = canvasElement.ownerDocument.body
+  const option1 = await within(body).findByRole('option', { name: 'option 1' })
+  await userEvent.click(option1)
+  await waitForRAF()
+  const option2 = await within(body).findByRole('option', { name: 'option 2' })
+  await userEvent.click(option2)
+  await waitForRAF()
+  const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+export default {
+  title: 'Components/Combobox/MultiCombobox/VRT',
+  component: MultiCombobox,
+  render: (args) => {
+    const items = Object.values(defaultItems)
+    const [selectedItems, setSelectedItems] = useState<Array<ComboboxItem<unknown>>>([])
+    return (
+      <Stack align="flex-start" gap={2} className="shr-h-screen">
+        {_cases.map((props, i) => (
+          <MultiCombobox {...args} {...props} key={i} items={items} />
+        ))}
+        <MultiCombobox
+          {...args}
+          name="default"
+          selectedItems={selectedItems}
+          onChangeSelected={(its) => setSelectedItems(its)}
+          items={items}
+          dropdownHelpMessage="入力でフィルタリングできます。"
+        />
+      </Stack>
+    )
+  },
+  play: playMulti,
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
+  tags: ['!autodocs'],
+} as Meta<typeof MultiCombobox>
+
+export const VRT: StoryObj<typeof MultiCombobox> = {}
+
+export const VRTForcedColors: StoryObj<typeof MultiCombobox> = {
+  ...VRT,
+  parameters: {
+    chromatic: { forcedColors: 'active' },
+  },
+}
+
+const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const combobox = await canvas.findByRole('combobox')
+
+  combobox.focus()
+
+  const body = canvasElement.ownerDocument.body
+  const helpMessage = await within(body).findByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
+}
+
+// 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
+export const VRTOnRightEdge: StoryObj<typeof MultiCombobox> = {
+  render: (args) => (
+    <div className="shr-flex shr-h-screen shr-justify-end">
+      <MultiCombobox
+        {...args}
+        name="onRightEdge"
+        selectedItems={[]}
+        dropdownWidth="30rem"
+        items={Object.values(defaultItems)}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+      />
+    </div>
+  ),
+  play: playOnRightEdge,
+}
+
+const playNoResult = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  const textbox = await canvas.findByRole('combobox')
+
+  textbox.focus()
+  await userEvent.type(textbox, '絶対に一致しない検索文字列')
+
+  const body = canvasElement.ownerDocument.body
+  await within(body).findByText(
+    '一致する選択肢が見つかりませんでした。検索条件を変更してもう一度お試しください。',
+  )
+}
+
+// 候補が無い場合の長いメッセージが、幅の狭いドロップダウン内で折り返されて表示され、
+// 親要素の外にはみ出ないことを確認する
+export const VRTNoResult: StoryObj<typeof MultiCombobox> = {
+  render: (args) => (
+    <div className="shr-w-[10em]">
+      <MultiCombobox
+        {...args}
+        name="noResult"
+        selectedItems={[]}
+        noResultText="一致する選択肢が見つかりませんでした。検索条件を変更してもう一度お試しください。"
+        items={Object.values(defaultItems)}
+      />
+    </div>
+  ),
+  play: playNoResult,
+}

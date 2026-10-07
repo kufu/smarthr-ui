@@ -1,40 +1,38 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type MouseEvent,
-  type ReactNode,
-  type WheelEvent,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, type ReactNode, type WheelEvent, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
 
-type BaseProps = {
-  /** input 要素の `type` 値 */
-  type?: HTMLInputElement['type']
-  /** フォームにエラーがあるかどうか */
-  error?: boolean
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** オートフォーカスを行うかどうか */
-  autoFocus?: boolean
-  /** コンポーネント内の先頭に表示する内容 */
-  prefix?: ReactNode
-  /** コンポーネント内の末尾に表示する内容 */
-  suffix?: ReactNode
-  /** 背景色。readOnly を下地の上に載せる場合に使う */
-  bgColor?: keyof typeof backgroundColor
-  /**
-   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
-   */
-  placeholder?: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps | 'onWheel'>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** input 要素の `type` 値 */
+    type?: HTMLInputElement['type']
+    /** フォームにエラーがあるかどうか */
+    error?: boolean
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** オートフォーカスを行うかどうか */
+    autoFocus?: boolean
+    /** コンポーネント内の先頭に表示する内容 */
+    prefix?: ReactNode
+    /** コンポーネント内の末尾に表示する内容 */
+    suffix?: ReactNode
+    /** 背景色。readOnly を下地の上に載せる場合に使う */
+    bgColor?: keyof typeof backgroundColor
+    /**
+     * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
+     */
+    placeholder?: string
+  },
+  { omit: 'onWheel' | 'children' | 'aria-invalid' }
+>
 
 const backgroundColor = {
   BACKGROUND: 'background',
@@ -83,92 +81,76 @@ const DEFAULT_MAX_ATTR = {
   month: '9999-12',
 }
 
-export const Input = forwardRef<HTMLInputElement, Props>(
-  (
-    {
-      onFocus,
-      onBlur,
-      autoFocus,
-      prefix,
-      suffix,
-      className,
-      width,
-      disabled,
-      error,
-      readOnly,
-      bgColor,
-      type,
-      max,
-      ...rest
-    },
-    ref,
-  ) => {
-    const theme = useTheme()
+export const Input: FC<Props> = ({
+  autoFocus,
+  prefix,
+  suffix,
+  className,
+  width,
+  error,
+  bgColor,
+  type,
+  max,
+  ref,
+  ...rest
+}) => {
+  const theme = useTheme()
 
-    const callbackRef = useOnce((node: HTMLInputElement | null) => {
-      if (node && autoFocus) {
-        node.focus()
-      }
-    })
+  const callbackRef = useOnce((node: HTMLInputElement | null) => {
+    if (node && autoFocus) {
+      node.focus()
+    }
+  })
 
-    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-    const mergedRef = useMergeRefs(callbackRef, ref)
+  const mergedRef = useMergeRefs(callbackRef, ref)
 
-    const classNames = useMemo(() => {
-      const { wrapper, input, affix } = classNameGenerator()
+  const classNames = useMemo(() => {
+    const { wrapper, input, affix } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        input: input(),
-        prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
-        suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      input: input(),
+      prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
+      suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
+    }
+  }, [className])
 
-    const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
-    const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
-    const errorAttr = error || undefined
+  const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
+  const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
+  const errorAttr = error || undefined
 
-    return (
-      <span
-        role="presentation"
-        className={classNames.wrapper}
-        style={{
-          borderColor: styleColor,
-          backgroundColor: styleColor,
-          maxWidth: styleMaxWidth,
-          width: styleMaxWidth ? '100%' : undefined,
-        }}
-        onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
-          delegateEvent.currentTarget
-            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
-            ?.focus()
-        }}
-      >
-        {prefix && <span className={classNames.prefix}>{prefix}</span>}
-        <input
-          {...rest}
-          ref={mergedRef}
-          type={type}
-          disabled={disabled}
-          readOnly={readOnly}
-          max={
-            max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined
-          }
-          className={classNames.input}
-          aria-invalid={errorAttr}
-          data-smarthr-ui-input-error={errorAttr}
-          data-smarthr-ui-input="true"
-          onWheel={type === 'number' ? disableWheel : undefined}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
-        {suffix && <span className={classNames.suffix}>{suffix}</span>}
-      </span>
-    )
-  },
-)
+  return (
+    <span
+      role="presentation"
+      className={classNames.wrapper}
+      style={{
+        borderColor: styleColor,
+        backgroundColor: styleColor,
+        maxWidth: styleMaxWidth,
+        width: styleMaxWidth ? '100%' : undefined,
+      }}
+      onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
+        delegateEvent.currentTarget
+          .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+          ?.focus()
+      }}
+    >
+      {prefix && <span className={classNames.prefix}>{prefix}</span>}
+      <input
+        {...rest}
+        ref={mergedRef}
+        type={type}
+        max={max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined}
+        className={classNames.input}
+        aria-invalid={errorAttr}
+        data-smarthr-ui-input-error={errorAttr}
+        data-smarthr-ui-input="true"
+        onWheel={type === 'number' ? disableWheel : undefined}
+      />
+      {suffix && <span className={classNames.suffix}>{suffix}</span>}
+    </span>
+  )
+}
 
 const disableWheel = (e: WheelEvent) => {
   // wheel イベントに preventDefault はないため

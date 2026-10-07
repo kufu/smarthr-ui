@@ -1,24 +1,22 @@
 import {
-  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
   type ComponentType,
   type ElementType,
   type FC,
-  type PropsWithoutRef,
   type ReactElement,
-  type Ref,
-  forwardRef,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { itemClassNameGenerator } from './itemClassNameGenerator'
 
-import type { ElementRef, ElementRefProps } from '../../types'
-import type { ComponentProps as IconProps } from '../Icon'
+import type { generateIcon } from '../Icon'
+
+type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 
 type ElementProps<T extends ElementType> = Omit<
-  ComponentPropsWithoutRef<T>,
-  keyof AppNaviAnchorProps<T> & ElementRefProps<T>
+  ComponentPropsWithRef<T>,
+  keyof AppNaviAnchorProps<T>
 >
 
 export type AppNaviAnchorProps<T extends ElementType = 'a'> = {
@@ -33,7 +31,7 @@ export type AppNaviAnchorProps<T extends ElementType = 'a'> = {
 }
 
 type AppNaviAnchorComponent = <T extends ElementType = 'a'>(
-  props: AppNaviAnchorProps<T> & ElementProps<T> & ElementRefProps<T>,
+  props: AppNaviAnchorProps<T> & ElementProps<T>,
 ) => ReturnType<FC>
 
 const classNameGenerator = tv({
@@ -43,40 +41,34 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppNaviAnchor: AppNaviAnchorComponent = forwardRef(
-  <T extends ElementType = 'a'>(
-    {
-      children,
-      href,
-      icon: Icon,
-      current,
-      elementAs,
-      ...rest
-    }: PropsWithoutRef<AppNaviAnchorProps<T>> & ElementProps<T>,
-    ref: Ref<ElementRef<T>>,
-  ): ReactElement => {
-    const classNames = useMemo(() => {
-      const { wrapper, icon } = classNameGenerator({ active: current })
+export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a'>({
+  children,
+  href,
+  icon: Icon,
+  current,
+  elementAs,
+  ...rest
+}: AppNaviAnchorProps<T> & ElementProps<T>): ReactElement => {
+  const classNames = useMemo(() => {
+    const { wrapper, icon } = classNameGenerator({ active: current })
 
-      return {
-        wrapper: wrapper(),
-        icon: icon(),
-      }
-    }, [current])
+    return {
+      wrapper: wrapper(),
+      icon: icon(),
+    }
+  }, [current])
 
-    const Component = elementAs || 'a'
+  const Component = elementAs || 'a'
 
-    return (
-      <Component
-        {...rest}
-        ref={ref}
-        href={href}
-        className={classNames.wrapper}
-        aria-current={current ? 'page' : undefined}
-      >
-        {Icon && <Icon className={classNames.icon} />}
-        {children}
-      </Component>
-    )
-  },
-)
+  return (
+    <Component
+      {...rest}
+      href={href}
+      className={classNames.wrapper}
+      aria-current={current ? 'page' : undefined}
+    >
+      {Icon && <Icon className={classNames.icon} />}
+      {children}
+    </Component>
+  )
+}

@@ -1,6 +1,12 @@
 import type { Locale } from '../../intl'
 import type { Header } from '../Header'
-import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
+import type {
+  ComponentPropsWithRef,
+  ComponentType,
+  MouseEvent,
+  ReactElement,
+  ReactNode,
+} from 'react'
 
 export type LocaleProps = {
   onSelectLocale: (locale: Locale) => void
@@ -16,7 +22,7 @@ export type UserInfoProps = {
   enableNew?: boolean
 }
 
-export type HeaderProps = ComponentProps<typeof Header> & {
+export type HeaderProps = ComponentPropsWithRef<typeof Header> & {
   locale?: LocaleProps | null
   enableNew?: boolean
   appName?: ReactNode

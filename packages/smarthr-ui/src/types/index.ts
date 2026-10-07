@@ -4,5 +4,9 @@ export type { Gap, PositiveGap, SeparatePositiveGap } from './Gap'
 // 公開型として維持する。smarthr-design-system側でも未使用であることが確認できたら削除してよい
 /** @public */
 export type { SeparateGap } from './Gap'
-export type { ElementRef, ElementRefProps } from './ComponentTypes'
-export type { ResponseStatus, ResponseStatusWithoutProcessing } from '../hooks/useResponseStatus'
+export type { ResponseStatusWithoutProcessing } from '../hooks/useResponseStatus'
+export type {
+  SHRComponentProps,
+  SHRComponentPropsWithRef,
+  SHRComponentPropsWithoutRef,
+} from './SHRComponentProps'

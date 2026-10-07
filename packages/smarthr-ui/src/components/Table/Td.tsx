@@ -1,26 +1,30 @@
-import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-import type { CellContentWidth } from './type'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-export type BaseProps = PropsWithChildren<{
-  /** テキストの水平方向の配置 */
-  align?: 'left' | 'right'
-  /** テキストの垂直方向の配置 */
-  vAlign?: 'middle' | 'baseline'
-  /** 値が空の場合にハイフンを表示するかどうか */
-  nullable?: boolean
-  /** 横スクロール時、カラムを左右いずれかに固定 */
-  fixed?: 'left' | 'right'
-  contentWidth?:
-    CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'td'>, keyof BaseProps>
+type CellContentWidth = number | string
 
-export const Td = memo<Props>(
-  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
+type Props = SHRComponentPropsWithRef<
+  'td',
+  {
+    /** テキストの水平方向の配置 */
+    align?: 'left' | 'right'
+    /** テキストの垂直方向の配置 */
+    vAlign?: 'middle' | 'baseline'
+    /** 値が空の場合にハイフンを表示するかどうか */
+    nullable?: boolean
+    /** 横スクロール時、カラムを左右いずれかに固定 */
+    fixed?: 'left' | 'right'
+    contentWidth?:
+      CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
+  }
+>
+
+export const Td: FC<Props> = memo(
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, children, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
@@ -45,7 +49,11 @@ export const Td = memo<Props>(
             width: convertContentWidth(contentWidth),
           }
 
-    return <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed} />
+    return (
+      <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed}>
+        {children}
+      </td>
+    )
   },
 )
 
@@ -59,11 +67,11 @@ const classNameGenerator = tv({
     align: {
       left: '',
       right: 'shr-text-right',
-    } satisfies Record<NonNullable<BaseProps['align']>, string>,
+    } satisfies Record<NonNullable<Props['align']>, string>,
     vAlign: {
       middle: '',
       baseline: 'shr-align-baseline',
-    } satisfies Record<NonNullable<BaseProps['vAlign']>, string>,
+    } satisfies Record<NonNullable<Props['vAlign']>, string>,
     nullable: {
       true: "empty:after:shr-content-['-----']",
     },

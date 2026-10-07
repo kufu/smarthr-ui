@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [99.9.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.8.0...smarthr-ui-v99.9.0) (2026-10-01)
+
+
+### Features
+
+* **StepFormDialog:** submitButton等でtext/theme/disabled/hiddenをまとめて返す関数形式をサポート ([#7214](https://github.com/kufu/smarthr-ui/issues/7214)) ([9bb0ac8](https://github.com/kufu/smarthr-ui/commit/9bb0ac8e7fb9133077c4491ef0ff58babf247a77))
+* **Text:** maxLinesをオブジェクト指定にしオーバーフロー時のTooltip表示に対応、LineClampを非推奨化 ([#7172](https://github.com/kufu/smarthr-ui/issues/7172)) ([80286c9](https://github.com/kufu/smarthr-ui/commit/80286c9d1b873a8bfdd1a6231eed8ab28a43c7ba))
+
+
+### Bug Fixes
+
+* Base・BaseColumn を非推奨にし、Panel・Groupbox への移行を促す ([#7171](https://github.com/kufu/smarthr-ui/issues/7171)) ([14a802e](https://github.com/kufu/smarthr-ui/commit/14a802ef9abc30263f95c45b7de4a4ebc4b2bf4c))
+
+## [99.8.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.2...smarthr-ui-v99.8.0) (2026-09-28)
+
+
+### Features
+
+* status iconに代替テキスト追加 ([#7021](https://github.com/kufu/smarthr-ui/issues/7021)) ([b994df0](https://github.com/kufu/smarthr-ui/commit/b994df00e01703c17666edd53f632d71d3657a61))
+
+
+### Bug Fixes
+
+* **FileViewer:** 画像プレビューでコンテナ幅が無限に振動しちらつく問題を修正 ([#7183](https://github.com/kufu/smarthr-ui/issues/7183)) ([41c0573](https://github.com/kufu/smarthr-ui/commit/41c0573ad3696be46b66959b877ba19f59785608))
+* **FormControl, Fieldset:** exampleMessageをi要素かつ立体で表示 ([#5902](https://github.com/kufu/smarthr-ui/issues/5902)) ([94ac679](https://github.com/kufu/smarthr-ui/commit/94ac6791da1e10fac62ef957fb20b659b4a1e6b9))
+* **ListBox:** ローダー表示中のスクリーンリーダー向けアナウンスを修正 ([#7166](https://github.com/kufu/smarthr-ui/issues/7166)) ([a3bcb69](https://github.com/kufu/smarthr-ui/commit/a3bcb692ed09630a2b6ff2b0fecc78fea38a6d4f))
+* **ModelessDialog:** 初回マウント時にisOpen=trueの場合中央寄せがずれる問題を修正 ([#7167](https://github.com/kufu/smarthr-ui/issues/7167)) ([1568844](https://github.com/kufu/smarthr-ui/commit/1568844407e7a225dc65da3f1ce2b4646a682c16))
+* **ThCheckbox:** tooltip位置を調整 ([#7152](https://github.com/kufu/smarthr-ui/issues/7152)) ([6319d8c](https://github.com/kufu/smarthr-ui/commit/6319d8c9869be4b5160bed8d29c8a57ec92c497e))
+
 ## [99.7.2](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.7.1...smarthr-ui-v99.7.2) (2026-09-17)
 
 

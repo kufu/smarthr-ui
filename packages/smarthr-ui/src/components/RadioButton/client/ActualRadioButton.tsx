@@ -6,18 +6,13 @@
 
 import { isIOS } from '../../../libs/ua'
 
-import type { ComponentPropsWithRef, FC, PropsWithChildren, Ref } from 'react'
+import type { ComponentPropsWithRef, FC } from 'react'
 
-type Props = PropsWithChildren<
-  {
-    outerRef: Ref<HTMLInputElement>
-  } & ComponentPropsWithRef<'input'>
->
+type Props = Omit<ComponentPropsWithRef<'input'>, 'children'>
 
-export const ActualRadioButton: FC<Props> = ({ outerRef, required, ...rest }) => (
+export const ActualRadioButton: FC<Props> = ({ required, ...rest }) => (
   <input
     {...rest}
-    ref={outerRef}
     type="radio"
     // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
     //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない

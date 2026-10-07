@@ -1,21 +1,17 @@
-import {
-  type ComponentPropsWithRef,
-  type ForwardedRef,
-  type PropsWithChildren,
-  forwardRef,
-} from 'react'
-
 import { ScrollerSwitcher } from './ScrollerSwitcher'
 
-type Props = PropsWithChildren &
-  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { FC } from 'react'
+
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
     fixedHead?: boolean
   }
+>
 
-export const TableScroller = forwardRef<HTMLDivElement, Props>(
-  ({ children, fixedHead, ...rest }, ref: ForwardedRef<HTMLDivElement>) => (
-    <ScrollerSwitcher {...rest} forwardedRef={ref} fixedHead={fixedHead}>
-      {children}
-    </ScrollerSwitcher>
-  ),
+export const TableScroller: FC<Props> = ({ children, fixedHead, ...rest }) => (
+  <ScrollerSwitcher {...rest} fixedHead={fixedHead}>
+    {children}
+  </ScrollerSwitcher>
 )

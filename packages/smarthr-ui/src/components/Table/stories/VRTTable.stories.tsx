@@ -1,12 +1,12 @@
 import { Button } from '../../Button'
 import { Cluster, Stack } from '../../Layout'
+import { BulkActionRow } from '../BulkActionRow'
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
-import { WakuWakuButton } from '../WakuWakuButton'
-import { BulkActionRow, ThCheckbox } from '../client'
+import { ThCheckbox } from '../ThCheckbox'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -38,7 +38,9 @@ export default {
                   <BulkActionRow>
                     <Cluster inline align="center" className="shr-sticky shr-left-1">
                       <p>n件のオブジェクトが選択されています。</p>
-                      <WakuWakuButton>一覧のオブジェクト9,999件すべてを選択</WakuWakuButton>
+                      <Button variant="tertiary" size="S" className="shr-text-link-darken">
+                        一覧のオブジェクト9,999件すべてを選択
+                      </Button>
                     </Cluster>
                   </BulkActionRow>
                 </thead>

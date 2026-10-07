@@ -1,6 +1,6 @@
-import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react'
+import type { FunctionComponent, ReactNode } from 'react'
 
-export type BaseProps = PropsWithChildren<{
+export type BaseProps = {
   /**
    * ボタンの大きさ
    */
@@ -29,11 +29,9 @@ export type BaseProps = PropsWithChildren<{
   /**
    * ボタンのスタイルの種類
    */
-  variant?: Variant
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'
   /**
    * 処理が走ってるかどうか
    */
   loading?: boolean
-}>
-
-export type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'
+}

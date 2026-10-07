@@ -1,19 +1,23 @@
-import { type ChangeEvent, type ComponentProps, type FC, memo, useMemo } from 'react'
+import { type ChangeEvent, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { BrowserItem } from './BrowserItem'
 
 import type { ItemNode } from './models'
+import type { SHRComponentPropsWithRef } from '../../types'
 
 const getColumnId = (column: number) => `column-${column}`
 
-type BaseProps = {
-  value?: string
-  items: ItemNode[]
-  index: number
-  handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
-}
-type Props = BaseProps & Omit<ComponentProps<'ul'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'ul',
+  {
+    value?: string
+    items: ItemNode[]
+    index: number
+    handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
+  },
+  { omit: 'id' }
+>
 
 const classNameGenerator = tv({
   base: 'shr-px-0.25 shr-py-0.5',

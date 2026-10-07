@@ -1,9 +1,10 @@
 'use client'
 
 import {
+  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
-  type PropsWithChildren,
+  type MouseEvent,
   type ReactNode,
   memo,
   useContext,
@@ -15,14 +16,15 @@ import { type ResponseStatus, useResponseStatus } from '../../../hooks/useRespon
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
-import { DialogBody, type Props as DialogBodyProps } from '../DialogBody'
+import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading, type Props as DialogHeadingProps } from '../DialogHeading'
+import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-import { StepFormDialogContext, type StepItem } from './StepFormDialogProvider'
+import { StepFormDialogContext } from './StepFormDialogProvider'
 
-import type { CommonButtonType } from './type'
+import type { CommonButtonType, StepItem } from './type'
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
@@ -33,10 +35,11 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-export type BaseProps = PropsWithChildren<
-  DialogBodyProps & {
+type Props = SHRComponentPropsWithRef<
+  typeof DialogBody,
+  {
     /** ダイアログタイトル */
-    heading: DialogHeadingProps
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** 現在のStepNo */
     activeStep: number
     /** submitボタン */
@@ -51,17 +54,14 @@ export type BaseProps = PropsWithChildren<
     closeButton: CommonButtonType
     /** 戻るボタン */
     backButton: CommonButtonType
+    firstStep: StepItem
+    handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+    responseStatus?: ResponseStatus
+    /** ステップの総数 */
+    stepLength: number
+    handleClickBack?: () => void
   }
 >
-
-export type StepFormDialogContentInnerProps = BaseProps & {
-  firstStep: StepItem
-  handleClickClose: () => void
-  responseStatus?: ResponseStatus
-  /** ステップの総数 */
-  stepLength: number
-  handleClickBack?: () => void
-}
 
 const BUTTON_COLUMN_GAP = {
   row: 0.5,
@@ -79,7 +79,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = ({
+export const StepFormDialogContentInner: FC<Props> = ({
   children,
   heading,
   activeStep,
@@ -110,8 +110,8 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
   })
 
   const functions = useMemo(() => {
-    const handleCloseAction = () => {
-      latest.handleClickClose()
+    const handleCloseAction = (e?: MouseEvent<HTMLButtonElement>) => {
+      latest.handleClickClose(e)
       setTimeout(() => {
         // HINT: ダイアログが閉じるtransitionが完了してから初期化をしている
         latest.stepQueueRef.current = []
@@ -123,9 +123,7 @@ export const StepFormDialogContentInner: FC<StepFormDialogContentInnerProps> = (
       latest.setCurrentStep(step)
 
       // HINT: stepが切り替わるごとにbodyのscroll位置を先頭に戻す処理
-      if (latest.scrollerRef.current) {
-        latest.scrollerRef.current.scroll(0, 0)
-      }
+      latest.scrollerRef.current?.scroll(0, 0)
     }
 
     return {
@@ -233,7 +231,7 @@ const BackButton = memo<{
 ))
 
 const CloseButton = memo<{
-  handleClick: () => void
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
   variant: CommonButtonType['theme']
   disabled: boolean
   text: ReactNode

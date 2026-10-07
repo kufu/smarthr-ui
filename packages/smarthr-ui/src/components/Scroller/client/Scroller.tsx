@@ -1,24 +1,22 @@
 'use client'
 
-import {
-  type ComponentPropsWithoutRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type ComponentType, type FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../../SectioningContent'
 
-type BaseProps = PropsWithChildren<{
-  as?: string | ComponentType<any>
-  direction?: 'horizontal' | 'vertical' | 'both'
-  styleType?: 'auto' | 'scroll'
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps | 'tabIndex'>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    as?: string | ComponentType<any>
+    direction?: 'horizontal' | 'vertical' | 'both'
+    styleType?: 'auto' | 'scroll'
+  },
+  { omit: 'tabIndex' }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-Scroller',
@@ -67,83 +65,75 @@ const classNameGenerator = tv({
   ],
 })
 
-export const Scroller = forwardRef<HTMLDivElement, Props>(
-  (
-    {
-      as: Component = 'div',
-      direction = 'vertical',
-      styleType = 'auto',
-      className,
-      children,
-      ...rest
-    },
-    ref,
-  ) => {
-    const actualClassName = useMemo(
-      () =>
-        classNameGenerator({
-          direction,
-          styleType,
-          className,
-        }),
-      [direction, styleType, className],
-    )
+export const Scroller: FC<Props> = ({
+  as: Component = 'div',
+  direction = 'vertical',
+  styleType = 'auto',
+  className,
+  children,
+  ref,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () =>
+      classNameGenerator({
+        direction,
+        styleType,
+        className,
+      }),
+    [direction, styleType, className],
+  )
 
-    const callbackRef = useCallback(
-      (node: HTMLDivElement | null) => {
-        if (!node) return
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) return
 
-        const autoTabIndex = () => {
-          let nextTabIndex: '0' | undefined = undefined
+      const autoTabIndex = () => {
+        let nextTabIndex: '0' | undefined = undefined
 
-          switch (direction) {
-            case 'vertical':
-              nextTabIndex = node.scrollHeight > node.clientHeight ? '0' : undefined
-              break
-            case 'horizontal':
-              nextTabIndex = node.scrollWidth > node.clientWidth ? '0' : undefined
-              break
-            case 'both':
-              nextTabIndex =
-                node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth
-                  ? '0'
-                  : undefined
-              break
-          }
-
-          if (nextTabIndex === undefined) {
-            node.removeAttribute('tabIndex')
-          } else {
-            node.setAttribute('tabIndex', nextTabIndex)
-          }
+        switch (direction) {
+          case 'vertical':
+            nextTabIndex = node.scrollHeight > node.clientHeight ? '0' : undefined
+            break
+          case 'horizontal':
+            nextTabIndex = node.scrollWidth > node.clientWidth ? '0' : undefined
+            break
+          case 'both':
+            nextTabIndex =
+              node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth
+                ? '0'
+                : undefined
+            break
         }
 
-        autoTabIndex()
-
-        const resizeObserver = new ResizeObserver(autoTabIndex)
-        resizeObserver.observe(node)
-
-        // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-        // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-        return () => {
+        if (nextTabIndex === undefined) {
           node.removeAttribute('tabIndex')
-          resizeObserver.disconnect()
+        } else {
+          node.setAttribute('tabIndex', nextTabIndex)
         }
-      },
-      [direction],
-    )
+      }
 
-    // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-    // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
-    const mergedRef = useMergeRefs(callbackRef, ref)
+      autoTabIndex()
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = (
-      <Component {...rest} ref={mergedRef} className={actualClassName}>
-        {children}
-      </Component>
-    )
+      const resizeObserver = new ResizeObserver(autoTabIndex)
+      resizeObserver.observe(node)
 
-    return Wrapper ? <Wrapper>{body}</Wrapper> : body
-  },
-)
+      return () => {
+        node.removeAttribute('tabIndex')
+        resizeObserver.disconnect()
+      }
+    },
+    [direction],
+  )
+
+  const mergedRef = useMergeRefs(callbackRef, ref)
+
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} ref={mergedRef} className={actualClassName}>
+      {children}
+    </Component>
+  )
+
+  return Wrapper ? <Wrapper>{body}</Wrapper> : body
+}

@@ -1,9 +1,7 @@
 import {
-  type ComponentProps,
   type ComponentPropsWithoutRef,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -12,44 +10,36 @@ import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { Button } from '../Button'
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  FaTriangleExclamationIcon,
-  FaXmarkIcon,
-  WarningIcon,
-} from '../Icon'
+import { FaXmarkIcon, StatusIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
 
-// TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
-// base="base" も意味が分かりづらい
-type BaseType = 'base' | 'none'
-type TypeType = 'info' | 'success' | 'warning' | 'error' | 'sync'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
-type BaseProps = PropsWithChildren<{
-  /** コンポーネント右の領域 */
-  subActionArea?: ReactNode
-  /** 閉じるボタン押下時に発火させる関数 */
-  onClose?: () => void
-  /** role 属性 */
-  role?: 'alert' | 'status'
-  /** 下地 */
-  base?: BaseType
-  /** メッセージの種類 */
-  type: TypeType
-  /** 強調するかどうか */
-  bold?: boolean
-  /** スライドインするかどうか */
-  animate?: boolean
-}> &
-  Pick<ComponentProps<typeof Panel>, 'layer'>
+type PanelProps = ComponentPropsWithoutRef<typeof Panel>
+type MessageType = ComponentPropsWithoutRef<typeof StatusIcon>['status']
 
-type Props = Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps> & BaseProps
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  Pick<PanelProps, 'layer'> & {
+    /** コンポーネント右の領域 */
+    subActionArea?: ReactNode
+    /** 閉じるボタン押下時に発火させる関数 */
+    onClose?: () => void
+    /** role 属性 */
+    role?: 'alert' | 'status'
+    /** Panel で囲むかどうか */
+    paneled?: boolean
+    /** メッセージの種類 */
+    type: MessageType
+    /** 強調するかどうか */
+    bold?: boolean
+    /** スライドインするかどうか */
+    animate?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -67,12 +57,11 @@ const classNameGenerator = tv({
       'smarthr-ui-NotificationBar-closeButton -shr-mb-0.5 -shr-mr-0.5 -shr-mt-0.5 shr-flex-shrink-0 shr-text-black',
   },
   variants: {
-    base: {
-      none: {},
-      base: {
+    paneled: {
+      true: {
         wrapper: 'shr-py-1 shr-pe-1 shr-ps-1.5',
       },
-    } satisfies Record<BaseType, object>,
+    },
     type: {
       info: {
         icon: 'shr-text-grey',
@@ -85,7 +74,7 @@ const classNameGenerator = tv({
       sync: {
         icon: 'shr-text-main',
       },
-    } satisfies Record<TypeType, object>,
+    } satisfies Record<MessageType, object>,
     bold: {
       true: '',
       false: '',
@@ -157,23 +146,6 @@ const classNameGenerator = tv({
   ],
 })
 
-const ABSTRACT_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-}
-const ICON_MAPPER = {
-  normal: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: WarningIcon,
-  },
-  bold: {
-    ...ABSTRACT_ICON_MAPPER,
-    warning: FaTriangleExclamationIcon,
-  },
-} as const
-
 const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
 export const NotificationBar: FC<Props> = ({
@@ -184,26 +156,26 @@ export const NotificationBar: FC<Props> = ({
   onClose,
   children,
   role,
-  base,
+  paneled,
   layer,
   className,
   ...rest
 }) => {
-  let WrapBase = Fragment
-  let baseProps = {}
+  let Wrapper: typeof Fragment | typeof Panel = Fragment
+  let wrapperProps = {}
 
-  if (base === 'base') {
-    WrapBase = Panel
-    baseProps = {
+  if (paneled) {
+    Wrapper = Panel
+    wrapperProps = {
       layer,
-      overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
+      overflow: 'clip' as PanelProps['overflow'],
     }
   }
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
       bold: !!bold,
-      base: base || 'none',
+      paneled,
     })
 
     return {
@@ -214,10 +186,10 @@ export const NotificationBar: FC<Props> = ({
       actionArea: actionArea(),
       closeButton: closeButton(),
     }
-  }, [animate, base, bold, type, className])
+  }, [animate, paneled, bold, type, className])
 
   return (
-    <WrapBase {...baseProps}>
+    <Wrapper {...wrapperProps}>
       <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
           <MessageArea
@@ -247,7 +219,7 @@ export const NotificationBar: FC<Props> = ({
           </Button>
         )}
       </div>
-    </WrapBase>
+    </Wrapper>
   )
 }
 
@@ -256,20 +228,16 @@ const MessageArea = memo<
     role: 'status' | 'alert'
     classNames: { messageArea: string; icon: string }
   }
->(({ children, role, bold, type, classNames }) => {
-  const Icon = ICON_MAPPER[bold ? 'bold' : 'normal'][type]
-
-  return (
+>(({ children, bold, type, role, classNames }) => (
+  <LiveRegion role={role} className="shr-contents">
     <Text
       className={classNames.messageArea}
       icon={{
-        prefix: <Icon className={classNames.icon} />,
+        prefix: <StatusIcon status={type} bold={bold} className={classNames.icon} />,
         gap: 0.5,
       }}
     >
-      <LiveRegion role={role} className="shr-contents">
-        {children}
-      </LiveRegion>
+      {children}
     </Text>
-  )
-})
+  </LiveRegion>
+))
