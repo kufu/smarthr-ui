@@ -224,6 +224,15 @@ export const GroupedStacks: Story = {
   },
 }
 
+
+export const TableView: Story = {
+  name: 'default table view',
+  args: {
+    data: multiSmall,
+    defaultView: 'table'
+  },
+}
+
 const additionalData = {
   datasets: [
     {
