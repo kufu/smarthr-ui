@@ -10,7 +10,7 @@ import type { FC } from 'react'
 type Props = SHRComponentPropsWithRef<
   typeof ControlledMessageDialog,
   Omit<Parameters<typeof useRemoteTrigger>[0], 'onPressEscape'>,
-  { omit: 'isOpen' | 'onClickClose' }
+  { omit: 'isOpen' }
 >
 
 export const MessageDialog: FC<Props> = ({
