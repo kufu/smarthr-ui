@@ -38,11 +38,6 @@ type Props = {
   disablePatterns?: boolean
 }
 
-type TableData = {
-  headers: ReactNode[]
-  dataRows: ReactNode[][]
-}
-
 export const DoughnutChart: React.FC<Props> = ({
   data,
   title,
