@@ -2,7 +2,6 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithRef,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -30,48 +29,52 @@ import { useMultiOptions } from '../useOptions'
 
 import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
-import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
+import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { BaseProps, ComboboxItem } from '../types'
 
-type BaseProps<T> = ComboboxProps<T> & {
-  /**
-   * 選択されているアイテムのリスト
-   */
-  selectedItems: Array<ComboboxItem<T> & { deletable?: boolean }>
-  /**
-   * 選択されているアイテムのラベルを省略表示するかどうか
-   */
-  selectedItemEllipsis?: boolean
-  /**
-   * テキストボックスの `value` 属性の値。
-   * `onChangeInput` と併せて設定することで、テキストボックスの挙動が制御可能になる。
-   */
-  inputValue?: string
-  /**
-   * 選択されているアイテムの削除ボタンがクリックされた時に発火するコールバック関数
-   */
-  onDelete?: (item: ComboboxItem<T>) => void
-  /**
-   * 選択されているアイテムのリストが変わった時に発火するコールバック関数
-   */
-  onChangeSelected?: (selectedItems: Array<ComboboxItem<T>>) => void
-  /**
-   * コンポーネントがフォーカスされたときに発火するコールバック関数
-   */
-  onFocus?: () => void
-  /**
-   * コンポーネントからフォーカスが外れた時に発火するコールバック関数
-   */
-  onBlur?: () => void
-  /**
-   * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
-   */
-  isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
-  /**
-   * 検索結果が0件の時に表示するコンテンツ
-   */
-  noResultText?: ReactNode
-}
-type Props<T> = BaseProps<T> & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps<unknown>>
+type Props<T> = SHRComponentPropsWithRef<
+  'input',
+  BaseProps<T> & {
+    /**
+     * 選択されているアイテムのリスト
+     */
+    selectedItems: Array<ComboboxItem<T> & { deletable?: boolean }>
+    /**
+     * 選択されているアイテムのラベルを省略表示するかどうか
+     */
+    selectedItemEllipsis?: boolean
+    /**
+     * テキストボックスの `value` 属性の値。
+     * `onChangeInput` と併せて設定することで、テキストボックスの挙動が制御可能になる。
+     */
+    inputValue?: string
+    /**
+     * 選択されているアイテムの削除ボタンがクリックされた時に発火するコールバック関数
+     */
+    onDelete?: (item: ComboboxItem<T>) => void
+    /**
+     * 選択されているアイテムのリストが変わった時に発火するコールバック関数
+     */
+    onChangeSelected?: (selectedItems: Array<ComboboxItem<T>>) => void
+    /**
+     * コンポーネントがフォーカスされたときに発火するコールバック関数
+     */
+    onFocus?: () => void
+    /**
+     * コンポーネントからフォーカスが外れた時に発火するコールバック関数
+     */
+    onBlur?: () => void
+    /**
+     * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
+     */
+    isItemSelected?: (targetItem: ComboboxItem<T>, selectedItems: Array<ComboboxItem<T>>) => boolean
+    /**
+     * 検索結果が0件の時に表示するコンテンツ
+     */
+    noResultText?: ReactNode
+  },
+  { omit: 'children' }
+>
 
 const NOOP = () => undefined
 
