@@ -25,27 +25,32 @@ type Props = SHRComponentPropsWithRef<
   'div',
   {
     /**
-     * 収まらなかったアイテムを表示するための描画関数
-     *
-     * 受け取るのは渡した要素そのもの（元の並び順・元の key）なので、
-     * そのまま描画するほか、`item.props` から元の値を読んで別の要素を組み立てることもできる。
-     * まとめたアイテムは並びからは取り除かれるため、そのまま描画しても DOM に2つ存在することはない
+     * 収まらなかったアイテムのまとめ方
      */
-    renderTucked: (items: Array<ReactElement<any>>) => ReactNode
+    tucked: {
+      /**
+       * まとめたアイテムを表示するための描画関数
+       *
+       * 受け取るのは渡した要素そのもの（元の並び順・元の key）なので、
+       * そのまま描画するほか、`item.props` から元の値を読んで別の要素を組み立てることもできる。
+       * まとめたアイテムは並びからは取り除かれるため、そのまま描画しても DOM に2つ存在することはない
+       */
+      renderer: (items: Array<ReactElement<any>>) => ReactNode
+
+      /**
+       * 収まらないときにまとめるアイテムの範囲
+       * - 'overflowed': 収まる分は表示し、溢れたアイテムだけをまとめる
+       * - 'all': 1つでも溢れたら、すべてのアイテムをまとめる
+       * @default 'overflowed'
+       */
+      scope?: 'overflowed' | 'all'
+    }
 
     /**
      * 折り返して表示する最大行数
      * @default 1
      */
     maxLines?: number
-
-    /**
-     * 収まらないときのアイテムの省略方法
-     * - 'partial': 収まる分は表示し、残りだけを renderTucked に回す
-     * - 'all': 1つでも溢れたら、すべて renderTucked に回す
-     * @default 'partial'
-     */
-    collapse?: 'partial' | 'all'
 
     /**
      * 並べるアイテム。子要素1つを1アイテムとして扱う（Fragment は展開する）。要素以外（文字列など）は無視する。
@@ -112,7 +117,7 @@ const flattenItems = (children: ReactNode, parent?: { id: string; key: string })
     // HINT: 内部の識別子には toArray が付けた key をそのまま使い、Fragment の中は ':' でつなぐ。
     // toArray の key で ':' の直後が '.' になることはないため、単独の key（'a/b' など）とも衝突しない
     const id = parent ? `${parent.id}:${arrayKey}` : arrayKey
-    // HINT: renderTucked 側で key から元データを引けるよう、要素には渡された key を戻す。
+    // HINT: tucked.renderer 側で key から元データを引けるよう、要素には渡された key を戻す。
     // Fragment の中は、展開後に key が重複しないよう Fragment の key を前に付ける
     const originalKey = toOriginalKey(arrayKey, index)
     const key = parent ? `${parent.key}/${originalKey}` : originalKey
@@ -146,7 +151,7 @@ const countLines = (widths: number[], gap: number, available: number) => {
 
 const countVisibleItems = (
   widths: number[],
-  { gap, available, maxLines, collapse, triggerWidth }: Measurement,
+  { gap, available, maxLines, scope, triggerWidth }: Measurement,
 ) => {
   const fits = (visibleWidths: number[]) => countLines(visibleWidths, gap, available) <= maxLines
 
@@ -154,7 +159,7 @@ const countVisibleItems = (
     return widths.length
   }
 
-  if (collapse === 'all') {
+  if (scope === 'all') {
     return 0
   }
 
@@ -172,15 +177,14 @@ type Measurement = {
   gap: number
   available: number
   maxLines: number
-  collapse: NonNullable<Props['collapse']>
+  scope: NonNullable<Props['tucked']['scope']>
   triggerWidth: number
 }
 
 export const Tuck: FC<Props> = ({
   children,
-  renderTucked,
+  tucked: { renderer, scope = 'overflowed' },
   maxLines = 1,
-  collapse = 'partial',
   className,
   ref,
   ...rest
@@ -209,7 +213,7 @@ export const Tuck: FC<Props> = ({
     items,
     tuckedIds,
     maxLines: actualMaxLines,
-    collapse,
+    scope,
     resizeFrame,
   })
 
@@ -273,7 +277,7 @@ export const Tuck: FC<Props> = ({
         gap,
         available: group.getBoundingClientRect().width,
         maxLines: latest.maxLines,
-        collapse: latest.collapse,
+        scope: latest.scope,
         triggerWidth: measured.triggerWidth,
       })
       const nextTuckedIds = latest.items.slice(visibleCount).map((item) => item.id)
@@ -348,7 +352,7 @@ export const Tuck: FC<Props> = ({
       </div>
       <div ref={mergedGroupRef} className={classNames.group}>
         {items.map((item) =>
-          // HINT: まとめたアイテムは renderTucked 側で描画されうるため、並びからは取り除いて二重に存在しないようにする
+          // HINT: まとめたアイテムは tucked.renderer 側で描画されうるため、並びからは取り除いて二重に存在しないようにする
           tuckedIdSet.has(item.id) ? null : (
             <div key={item.id} className={classNames.item} data-tuck-item={item.id}>
               {item.node}
@@ -357,7 +361,7 @@ export const Tuck: FC<Props> = ({
         )}
         {tuckedItems.length > 0 && (
           <div className={classNames.trigger} data-tuck-trigger="">
-            {renderTucked(tuckedItems)}
+            {renderer(tuckedItems)}
           </div>
         )}
       </div>

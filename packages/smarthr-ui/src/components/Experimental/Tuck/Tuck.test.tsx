@@ -15,6 +15,8 @@ const Item = ({ label, width }: { label: string; width: number }) => (
 const isTucked = (label: string) =>
   screen.queryByText(label, { selector: '.smarthr-ui-Tuck-item > *' }) === null
 
+type TuckProps = ComponentPropsWithoutRef<typeof Tuck>
+
 describe('Tuck', () => {
   let resizeCallbacks: Array<() => void> = []
   const OriginalResizeObserver = global.ResizeObserver
@@ -50,11 +52,14 @@ describe('Tuck', () => {
     vi.restoreAllMocks()
   })
 
-  const renderTuck = (props: Partial<ComponentPropsWithoutRef<typeof Tuck>> = {}) => {
-    const renderTucked = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
+  const renderTuck = ({
+    scope,
+    ...rest
+  }: Partial<Omit<TuckProps, 'tucked'>> & Pick<TuckProps['tucked'], 'scope'> = {}) => {
+    const renderer = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
 
     const result = render(
-      <Tuck {...props} renderTucked={renderTucked}>
+      <Tuck {...rest} tucked={{ renderer, scope }}>
         <Item width={100} label="A" />
         <Item width={100} label="B" />
         <Item width={100} label="C" />
@@ -62,27 +67,27 @@ describe('Tuck', () => {
       </Tuck>,
     )
 
-    return { ...result, renderTucked }
+    return { ...result, renderer }
   }
 
-  it('すべて収まる場合はそのまま表示し、renderTucked を呼ばない', () => {
+  it('すべて収まる場合はそのまま表示し、tucked.renderer を呼ばない', () => {
     groupWidth = 400
 
-    const { renderTucked } = renderTuck()
+    const { renderer } = renderTuck()
 
     expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([false, false, false, false])
-    expect(renderTucked).not.toHaveBeenCalled()
+    expect(renderer).not.toHaveBeenCalled()
   })
 
-  it('収まらない場合は、トリガーと合わせて収まる分だけ表示し、残りを renderTucked に渡す', () => {
+  it('収まらない場合は、トリガーと合わせて収まる分だけ表示し、残りを tucked.renderer に渡す', () => {
     // A + B + トリガー(30) = 230 は収まるが、A + B + C + トリガー = 330 は収まらない
     groupWidth = 300
 
-    const { renderTucked } = renderTuck()
+    const { renderer } = renderTuck()
 
     expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([false, false, true, true])
     // key を渡していない子要素は、並び順の番号が key になる
-    expect(renderTucked).toHaveBeenLastCalledWith([
+    expect(renderer).toHaveBeenLastCalledWith([
       expect.objectContaining({ key: '2' }),
       expect.objectContaining({ key: '3' }),
     ])
@@ -98,13 +103,13 @@ describe('Tuck', () => {
     expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([false, false, true, true])
   })
 
-  it('collapse="all" のとき、1つでも溢れたらすべて renderTucked に渡す', () => {
+  it('tucked.scope が "all" のとき、1つでも溢れたらすべて tucked.renderer に渡す', () => {
     groupWidth = 350
 
-    const { renderTucked } = renderTuck({ collapse: 'all' })
+    const { renderer } = renderTuck({ scope: 'all' })
 
     expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([true, true, true, true])
-    expect(renderTucked).toHaveBeenLastCalledWith([
+    expect(renderer).toHaveBeenLastCalledWith([
       expect.objectContaining({ key: '0' }),
       expect.objectContaining({ key: '1' }),
       expect.objectContaining({ key: '2' }),
@@ -129,9 +134,9 @@ describe('Tuck', () => {
   })
 
   describe('children が変わったとき', () => {
-    const renderTucked = (items: unknown[]) => <Item width={30} label={`+${items.length}`} />
+    const renderer = (items: unknown[]) => <Item width={30} label={`+${items.length}`} />
     const template = (items: Array<{ label: string; width: number }>) => (
-      <Tuck renderTucked={renderTucked}>
+      <Tuck tucked={{ renderer }}>
         {items.map(({ label, width }) => (
           <Item key={label} width={width} label={label} />
         ))}
@@ -207,11 +212,11 @@ describe('Tuck', () => {
     })
   })
 
-  it('renderTucked で items を描画しても、同じアイテムが DOM に2つ存在しない', () => {
+  it('tucked.renderer で items を描画しても、同じアイテムが DOM に2つ存在しない', () => {
     groupWidth = 300
 
     render(
-      <Tuck renderTucked={(items) => <div data-width={30}>{items}</div>}>
+      <Tuck tucked={{ renderer: (items) => <div data-width={30}>{items}</div> }}>
         <Item width={100} label="A" />
         <Item width={100} label="B" />
         <Item width={100} label="C" />
@@ -224,15 +229,15 @@ describe('Tuck', () => {
     expect(screen.getByText('C').closest('[data-tuck-trigger]')).not.toBeNull()
   })
 
-  it('renderTucked には、渡した key と props のまま要素が渡る', () => {
+  it('tucked.renderer には、渡した key と props のまま要素が渡る', () => {
     groupWidth = 300
 
-    const renderTucked = vi.fn((items: Array<{ key: string | null; props: { label: string } }>) => (
+    const renderer = vi.fn((items: Array<{ key: string | null; props: { label: string } }>) => (
       <Item width={30} label={items.map((item) => item.props.label).join()} />
     ))
 
     render(
-      <Tuck renderTucked={renderTucked}>
+      <Tuck tucked={{ renderer }}>
         <Item key="a" width={100} label="A" />
         <Item key="b" width={100} label="B" />
         <Item key="c" width={100} label="C" />
@@ -242,20 +247,20 @@ describe('Tuck', () => {
 
     // props から元の値を読めるため、index を渡さなくても元データを引ける
     expect(screen.getByText('C,D')).toBeInTheDocument()
-    expect(renderTucked).toHaveBeenLastCalledWith([
+    expect(renderer).toHaveBeenLastCalledWith([
       expect.objectContaining({ key: 'c' }),
       expect.objectContaining({ key: 'd' }),
     ])
   })
 
-  it('key に `:` や `=` を含む場合や、配列と並べた場合も、渡した key のまま renderTucked に渡る', () => {
+  it('key に `:` や `=` を含む場合や、配列と並べた場合も、渡した key のまま tucked.renderer に渡る', () => {
     // A + トリガーまでしか収まらない
     groupWidth = 200
 
-    const renderTucked = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
+    const renderer = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
 
     render(
-      <Tuck renderTucked={renderTucked}>
+      <Tuck tucked={{ renderer }}>
         <Item width={100} label="A" />
         {[
           <Item key="user:1" width={100} label="B" />,
@@ -265,7 +270,7 @@ describe('Tuck', () => {
       </Tuck>,
     )
 
-    expect(renderTucked).toHaveBeenLastCalledWith([
+    expect(renderer).toHaveBeenLastCalledWith([
       expect.objectContaining({ key: 'user:1' }),
       expect.objectContaining({ key: 'a=b' }),
       expect.objectContaining({ key: 'c' }),
@@ -276,7 +281,7 @@ describe('Tuck', () => {
     groupWidth = 200
 
     render(
-      <Tuck renderTucked={(items) => <Item width={30} label={`+${items.length}`} />}>
+      <Tuck tucked={{ renderer: (items) => <Item width={30} label={`+${items.length}`} /> }}>
         <Fragment key="a">
           <Item key="b" width={100} label="A" />
         </Fragment>
@@ -287,16 +292,16 @@ describe('Tuck', () => {
     )
 
     expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([false, true, true, true])
-    // 表示中の A まで renderTucked に渡ると「+4」になる
+    // 表示中の A まで tucked.renderer に渡ると「+4」になる
     expect(screen.getByText('+3')).toBeInTheDocument()
   })
 
   it('まとめている間に幅が広がったアイテムは、並びに戻したときに測り直して判定する', () => {
     groupWidth = 300
 
-    const renderTucked = (items: unknown[]) => <Item width={30} label={`+${items.length}`} />
+    const renderer = (items: unknown[]) => <Item width={30} label={`+${items.length}`} />
     const template = (dWidth: number) => (
-      <Tuck renderTucked={renderTucked}>
+      <Tuck tucked={{ renderer }}>
         <Item width={100} label="A" />
         <Item width={100} label="B" />
         <Item width={100} label="C" />
@@ -324,12 +329,12 @@ describe('Tuck', () => {
     // +1(60) では C まで収まらず2件隠す → +2(20) なら C も収まるので1件に戻す…を繰り返す
     groupWidth = 330
 
-    const renderTucked = vi.fn((items: unknown[]) => (
+    const renderer = vi.fn((items: unknown[]) => (
       <Item width={items.length === 1 ? 60 : 20} label={`+${items.length}`} />
     ))
 
     render(
-      <Tuck renderTucked={renderTucked}>
+      <Tuck tucked={{ renderer }}>
         <Item width={100} label="A" />
         <Item width={100} label="B" />
         <Item width={100} label="C" />
@@ -343,10 +348,10 @@ describe('Tuck', () => {
   it('Fragment は展開して、中身を1件ずつのアイテムとして扱う', () => {
     groupWidth = 300
 
-    const renderTucked = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
+    const renderer = vi.fn((items: unknown[]) => <Item width={30} label={`+${items.length}`} />)
 
     render(
-      <Tuck renderTucked={renderTucked}>
+      <Tuck tucked={{ renderer }}>
         <Item width={100} label="A" />
         <>
           <Item width={100} label="B" />
@@ -358,7 +363,7 @@ describe('Tuck', () => {
 
     expect(['A', 'B', 'C', 'D'].map(isTucked)).toEqual([false, false, true, true])
     // Fragment の中は「Fragment の番号/中の番号」になる
-    expect(renderTucked).toHaveBeenLastCalledWith([
+    expect(renderer).toHaveBeenLastCalledWith([
       expect.objectContaining({ key: '1/1' }),
       expect.objectContaining({ key: '2' }),
     ])
