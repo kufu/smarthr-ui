@@ -1,5 +1,6 @@
+import { fireEvent } from '@testing-library/react'
 import { Editor } from '@tiptap/core'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, onTestFinished } from 'vitest'
 
 import { configureExtensions } from './configureExtensions'
 
@@ -34,6 +35,8 @@ const typeText = (editor: Editor, text: string) => {
     handler(editor.view, from, to, text, () => editor.state.tr.insertText(text, from, to)),
   )
 }
+
+const YOUTUBE_URL = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 
 const RICH_CONTENT = {
   type: 'doc',
@@ -169,6 +172,50 @@ describe('configureExtensions', () => {
 
       expect(JSON.stringify(editor.getJSON())).toContain('"link"')
       editor.destroy()
+    })
+
+    it.each([
+      [
+        'youtube があるとき YouTube の URL が埋め込みになる',
+        ['youtube'],
+        YOUTUBE_URL,
+        '"youtube"',
+        true,
+      ],
+      [
+        'youtube が無いとき YouTube の URL が埋め込みにならない',
+        ['bold'],
+        YOUTUBE_URL,
+        '"youtube"',
+        false,
+      ],
+      [
+        'link だけのとき YouTube の URL が埋め込みにならない',
+        ['link'],
+        YOUTUBE_URL,
+        '"youtube"',
+        false,
+      ],
+      ['link があるとき URL がリンクになる', ['link'], 'https://example.com', '"link"', true],
+      ['link が無いとき URL がリンクにならない', ['bold'], 'https://example.com', '"link"', false],
+    ] as const)('貼り付け: features に %s', (_name, features, text, converted, applied) => {
+      const editor = createEditor(features)
+      const container = editor.view.dom.parentElement
+      onTestFinished(() => {
+        editor.destroy()
+        container?.remove()
+      })
+
+      fireEvent.paste(editor.view.dom, {
+        clipboardData: {
+          files: [],
+          types: ['text/plain'],
+          getData: (type: string) => (type === 'text/plain' ? text : ''),
+        },
+      })
+
+      expect(JSON.stringify(editor.getJSON()).includes(converted)).toBe(applied)
+      expect(editor.isEmpty).toBe(false)
     })
   })
 
