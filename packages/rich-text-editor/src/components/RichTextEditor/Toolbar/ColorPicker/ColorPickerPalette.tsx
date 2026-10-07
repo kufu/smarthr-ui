@@ -202,8 +202,6 @@ export const ColorPickerPalette: FC<Props> = memo(
               e.stopPropagation()
               arr[Math.max(idx - SWATCHES_PER_ROW, 0)]?.focus()
               break
-            case 'Tab':
-              break
           }
         },
         handleDelegateKeyDown: (e: KeyboardEvent) => {
@@ -222,7 +220,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                 'button:not(:disabled), input:not(:disabled)',
               ) ?? [],
             )
-            const index = focusables.indexOf(document.activeElement as HTMLElement)
+            const index = focusables.indexOf(e.target as HTMLElement)
 
             if ((!e.shiftKey && index === focusables.length - 1) || (e.shiftKey && index === 0)) {
               e.preventDefault()
