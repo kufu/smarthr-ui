@@ -17,6 +17,7 @@ import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 import { Panel } from '../Panel'
 
+import type { SHRComponentPropsWithRef } from '../../types'
 import type { generateIcon } from '../Icon'
 
 type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
@@ -25,26 +26,29 @@ type ButtonType =
   | FunctionComponentElement<ComponentPropsWithRef<typeof Button>>
   | FunctionComponentElement<ComponentPropsWithRef<typeof AnchorButton>>
 
-type BaseProps = {
-  /** この領域の説明 */
-  description?: ReactNode
-  /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
-  primaryButton?: ButtonType
-  /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
-  secondaryButton?: ButtonType
-  /** 表示する tertialy link のプロパティの配列 */
-  tertiaryLinks?: Array<
-    ComponentPropsWithRef<'button'> & {
-      text: ReactNode
-      icon?: ComponentType<IconProps>
-      type?: 'button' | 'reset'
-      onClick?: MouseEventHandler<HTMLButtonElement>
-    }
-  >
-  /** コンポーネントに適用する z-index 値 */
-  zIndex?: number
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** この領域の説明 */
+    description?: ReactNode
+    /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
+    primaryButton?: ButtonType
+    /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
+    secondaryButton?: ButtonType
+    /** 表示する tertialy link のプロパティの配列 */
+    tertiaryLinks?: Array<
+      ComponentPropsWithRef<'button'> & {
+        text: ReactNode
+        icon?: ComponentType<IconProps>
+        type?: 'button' | 'reset'
+        onClick?: MouseEventHandler<HTMLButtonElement>
+      }
+    >
+    /** コンポーネントに適用する z-index 値 */
+    zIndex?: number
+  },
+  { omit: 'style' }
+>
 
 const classNameGenerator = tv({
   slots: {
