@@ -3,21 +3,24 @@
 import { useTheme } from '../../../hooks/client/useTheme'
 import { Stack } from '../../Layout'
 
-import type { FC, PropsWithChildren } from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC } from 'react'
 
-type Props = PropsWithChildren<{
-  className?: string
-  fullWidth?: boolean
-  maxColumns?: number
-}>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    fullWidth?: boolean
+    maxColumns?: number
+  }
+>
 
-export const ItemWrapper: FC<Props> = ({ children, className, maxColumns, fullWidth }) => {
+export const ItemWrapper: FC<Props> = ({ children, maxColumns, fullWidth, ...rest }) => {
   const theme = useTheme()
 
   return (
     <Stack
+      {...rest}
       gap={0.25}
-      className={className}
       style={{
         flexBasis:
           // fullWidth の方が強い

@@ -6,17 +6,20 @@ import { Text } from '../Text'
 
 import { ItemWrapper } from './client'
 
+import type { SHRComponentPropsWithRef } from '../../types'
+
 type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
-// TODO: 必要になったらdivの属性(ComponentPropsWithoutRef<'div'>)を型として受け取れるようにする
-type Props = PropsWithChildren<{
-  term: ReactNode | ObjectTermType
-  fullWidth?: boolean
-  maxColumns?: number
-  className?: string
-}>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    term: ReactNode | ObjectTermType
+    fullWidth?: boolean
+    maxColumns?: number
+  }
+>
 
 const termObjectConverter = (term: ReactNode): ObjectTermType => ({ text: term })
 
@@ -45,6 +48,7 @@ export const DefinitionListItem: FC<Props> = ({
   maxColumns,
   fullWidth,
   className,
+  ...rest
 }) => {
   const term = useObjectAttributes<ReactNode | ObjectTermType, ObjectTermType>(
     orgTerm,
@@ -62,7 +66,12 @@ export const DefinitionListItem: FC<Props> = ({
   }, [fullWidth, className])
 
   return (
-    <ItemWrapper maxColumns={maxColumns} fullWidth={fullWidth} className={classNames.wrapper}>
+    <ItemWrapper
+      {...rest}
+      maxColumns={maxColumns}
+      fullWidth={fullWidth}
+      className={classNames.wrapper}
+    >
       <DefinitionTerm styleType={term.styleType} className={classNames.term}>
         {term.text}
       </DefinitionTerm>
