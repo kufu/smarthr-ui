@@ -1,6 +1,5 @@
 import {
   Children,
-  type ComponentPropsWithoutRef,
   type FC,
   Fragment,
   type PropsWithChildren,
@@ -20,23 +19,28 @@ import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
-type BaseProps = {
-  /** ラベルのテキスト */
-  label?: ReactNode
-  /** 表示するボタンの Props の配列
-   * @deprecated AppNaviButton などのコンポーネントを組み合わせて組み上げてください
-   */
-  buttons?: Array<
-    AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
-  >
-  /** ドロップダウンにキャレットを表示するかどうか
-   * @deprecated キャレットの省略は非推奨です
-   */
-  displayDropdownCaret?: boolean
-  /** 追加の領域 */
-  additionalArea?: ReactNode
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    /** ラベルのテキスト */
+    label?: ReactNode
+    /** 表示するボタンの Props の配列
+     * @deprecated AppNaviButton などのコンポーネントを組み合わせて組み上げてください
+     */
+    buttons?: Array<
+      AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
+    >
+    /** ドロップダウンにキャレットを表示するかどうか
+     * @deprecated キャレットの省略は非推奨です
+     */
+    displayDropdownCaret?: boolean
+    /** 追加の領域 */
+    additionalArea?: ReactNode
+  },
+  { omit: 'aria-labelledby' }
+>
 
 const classNameGenerator = tv({
   slots: {
