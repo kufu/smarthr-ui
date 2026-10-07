@@ -14,6 +14,8 @@ pnpm add @smarthr/smarthr-ui-rich-text-editor
 
 `smarthr-ui` / `react` / `react-dom` / `react-intl` は peerDependencies です。利用アプリ側で入れてください。React は 19 系のみ対応します。
 
+依存に含まれる `happy-dom` は、`RichTextViewer` に HTML を渡してサーバーで描画するときにだけ使います（`@tiptap/html` のサーバー向けの実装が使用）。ブラウザ向けのバンドルには入りませんが、インストールはされます。
+
 ## 使い方
 
 ```tsx
@@ -25,7 +27,9 @@ import { RichTextEditor, RichTextViewer } from '@smarthr/smarthr-ui-rich-text-ed
 
 ### CSS の読み込み順
 
-**必ず `smarthr-ui.css` を先に読み込んでください。** エディタの CSS は本体の Tailwind プリセットを共有しており、本体側のユーティリティを前提にしたスタイルを含みます。順序が逆になると一部の表示が崩れます。
+**必ず `smarthr-ui.css` を先に読み込んでください。** 2つの CSS は同じ Tailwind プリセットから生成しており、同じ規則が両方に入っています。順序が逆になると本体の規則がエディタの規則を上書きし、表の操作メニューの区切り線などが崩れます。
+
+> **既知の問題:** この順序でも、エディタの CSS に入っている本体と同じ規則が、本体の規則の一部を上書きします。例えば、ページ全体の本体の `Button` の枠線の色が変わります（primary はグレーに、text は枠線が見えるように）。エディタの CSS が本体の規則を含まないようにする対応を検討しています。
 
 エディタの CSS には全体に効く reset（preflight）は含まれません。本体と同じプリセット（`preflight: false`）で生成しているため、既存ページのスタイルには影響しません。
 
@@ -51,6 +55,8 @@ const App = () => (
 ## 開発
 
 リポジトリルートから `pnpm rte <script>` で実行します。
+
+lint の型チェック・テスト・CSS のビルドは、本体のビルド成果物（`lib`・`smarthr-ui.css`）を参照します。本体を変更したら、先に `pnpm ui build` を実行してください。
 
 ```sh
 pnpm rte lint        # eslint / knip / prettier / stylelint / tsc
