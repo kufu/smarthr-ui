@@ -4,14 +4,14 @@ import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 
 import { useRemoteTrigger } from './useRemoteTrigger'
 
-import type { ComponentPropsWithRef, FC } from 'react'
+import type { SHRComponentPropsWithRef } from '../../../types'
+import type { FC } from 'react'
 
-type BaseProps = Parameters<typeof useRemoteTrigger>[0]
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<typeof ControlledStepFormDialog>,
-    keyof BaseProps | 'isOpen' | 'onClickClose' | 'id'
-  >
+type Props = SHRComponentPropsWithRef<
+  typeof ControlledStepFormDialog,
+  Parameters<typeof useRemoteTrigger>[0],
+  { omit: 'isOpen' | 'onClickClose' | 'id' }
+>
 
 export const StepFormDialog: FC<Props> = ({
   id,
