@@ -126,9 +126,9 @@ export const DoughnutChart: React.FC<Props> = ({
   }
 
   return (
-    <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
+    <div className={`shr-flex shr-h-full shr-w-full shr-flex-col ${className ?? ''}`}>
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      <div className="shr-grid shr-grid-cols-[1fr_auto_1fr]">
+      <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
         <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
           {title}
         </Text>
@@ -151,25 +151,27 @@ export const DoughnutChart: React.FC<Props> = ({
           ]}
         />
       </div>
-      {view === 'chart' ? (
-        <>
-          <Doughnut
-            ref={chartRef}
-            role="application"
-            data={enhancedData}
-            plugins={plugins}
-            tabIndex={0}
-            // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
-            // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
-            className="shr-relative shr-z-1"
-            aria-label={ariaLabel}
-            options={chartOptions}
-          />
-          <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
-        </>
-      ) : (
-        <TableView data={enhancedData} options={chartOptions} />
-      )}
+      <div className="shr-relative shr-min-h-0 shr-flex-1">
+        {view === 'chart' ? (
+          <>
+            <Doughnut
+              ref={chartRef}
+              role="application"
+              data={enhancedData}
+              plugins={plugins}
+              tabIndex={0}
+              // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
+              // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
+              className="shr-relative shr-z-1"
+              aria-label={ariaLabel}
+              options={chartOptions}
+            />
+            <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
+          </>
+        ) : (
+          <TableView data={enhancedData} options={chartOptions} />
+        )}
+      </div>
     </div>
   )
 }
