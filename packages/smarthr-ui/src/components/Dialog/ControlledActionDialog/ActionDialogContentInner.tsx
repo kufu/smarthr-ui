@@ -4,7 +4,6 @@ import {
   type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useCallback,
@@ -148,14 +147,13 @@ const ActionAreaCluster = memo<
   )
 })
 
-const ActionButton = memo<
-  PropsWithChildren<{
-    variant: ObjectActionButtonType['theme']
-    disabled: ObjectActionButtonType['disabled']
-    loading: boolean
-    handleClick: (e: MouseEvent<HTMLButtonElement>) => void
-  }>
->(({ variant = 'primary', disabled, loading, handleClick, children }) => (
+const ActionButton = memo<{
+  children: Props['children']
+  variant: ObjectActionButtonType['theme']
+  disabled: ObjectActionButtonType['disabled']
+  loading: boolean
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ variant = 'primary', disabled, loading, handleClick, children }) => (
   <Button
     type="submit"
     disabled={disabled}
