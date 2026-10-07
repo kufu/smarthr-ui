@@ -25,7 +25,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
+export const DialogBody: FC<Props> = ({
+  contentBgColor,
+  contentPadding,
+  className,
+  children,
+  ...rest
+}) => {
   const initialized = contentPadding === undefined ? 1.5 : contentPadding
   const actualPaddings =
     initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
@@ -41,5 +47,9 @@ export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, classNam
     [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
   )
 
-  return <Scroller {...rest} className={actualClassName} />
+  return (
+    <Scroller {...rest} className={actualClassName}>
+      {children}
+    </Scroller>
+  )
 }
