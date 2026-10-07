@@ -59,14 +59,6 @@ export const imageUploadPlaceholderPlugin = (): Plugin<PlaceholderState> =>
           return mapped.deletedAcross ? [] : [{ id, pos: mapped.pos }]
         })
 
-        if (
-          !meta &&
-          placeholders.length === state.placeholders.length &&
-          placeholders.every(({ pos }, i) => pos === state.placeholders[i].pos)
-        ) {
-          return state
-        }
-
         if (meta && 'add' in meta) {
           placeholders = [...placeholders, meta.add]
         } else if (meta && 'remove' in meta) {
