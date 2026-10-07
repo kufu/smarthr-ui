@@ -2,7 +2,6 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithRef,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -27,48 +26,52 @@ import { getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { ComboboxItem, BaseProps as ComboboxProps } from '../types'
+import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { BaseProps, ComboboxItem } from '../types'
 
-type BaseProps<T> = ComboboxProps<T> & {
-  /**
-   * 選択されているアイテム
-   */
-  selectedItem: ComboboxItem<T> | null
-  /**
-   * デフォルトで選択されるアイテム
-   */
-  defaultItem?: ComboboxItem<T>
-  /**
-   * コンポーネント内の先頭に表示する内容
-   */
-  prefix?: ReactNode
-  /**
-   * 選択されているアイテムがクリアされた時に発火するコールバック関数
-   */
-  onClear?: () => void
-  /**
-   * 選択されているアイテムがクリアされた時に発火するコールバック関数
-   * 指定している場合、クリア時にonClickを実行せずにonClearClickのみ実行する
-   */
-  onClearClick?: (e: MouseEvent) => void
-  /**
-   * 選択されているアイテムのリストが変わった時に発火するコールバック関数
-   */
-  onChangeSelected?: (selectedItem: ComboboxItem<T> | null) => void
-  /**
-   * コンポーネントがフォーカスされたときに発火するコールバック関数
-   */
-  onFocus?: () => void
-  /**
-   * コンポーネントからフォーカスが外れた時に発火するコールバック関数
-   */
-  onBlur?: () => void
-  /**
-   * 検索結果が0件の時に表示するコンテンツ
-   */
-  noResultText?: ReactNode
-}
-type Props<T> = BaseProps<T> & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps<unknown>>
+type Props<T> = SHRComponentPropsWithRef<
+  'input',
+  BaseProps<T> & {
+    /**
+     * 選択されているアイテム
+     */
+    selectedItem: ComboboxItem<T> | null
+    /**
+     * デフォルトで選択されるアイテム
+     */
+    defaultItem?: ComboboxItem<T>
+    /**
+     * コンポーネント内の先頭に表示する内容
+     */
+    prefix?: ReactNode
+    /**
+     * 選択されているアイテムがクリアされた時に発火するコールバック関数
+     */
+    onClear?: () => void
+    /**
+     * 選択されているアイテムがクリアされた時に発火するコールバック関数
+     * 指定している場合、クリア時にonClickを実行せずにonClearClickのみ実行する
+     */
+    onClearClick?: (e: MouseEvent) => void
+    /**
+     * 選択されているアイテムのリストが変わった時に発火するコールバック関数
+     */
+    onChangeSelected?: (selectedItem: ComboboxItem<T> | null) => void
+    /**
+     * コンポーネントがフォーカスされたときに発火するコールバック関数
+     */
+    onFocus?: () => void
+    /**
+     * コンポーネントからフォーカスが外れた時に発火するコールバック関数
+     */
+    onBlur?: () => void
+    /**
+     * 検索結果が0件の時に表示するコンテンツ
+     */
+    noResultText?: ReactNode
+  },
+  { omit: 'children' }
+>
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
