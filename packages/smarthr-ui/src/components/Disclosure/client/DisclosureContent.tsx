@@ -1,28 +1,26 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { useDisclosure } from './useDisclosure'
 
-type BaseProps = {
-  /** DisclosureTriggerのtargetIdと紐づけるId */
-  id: string
-  /** 開閉状態。デフォルトは閉じている */
-  isOpen?: boolean
-  /** 閉じた状態でContentを要素として存在させるか。デフォルトでは要素は存在しない */
-  visuallyHidden?: boolean
-}
-type DisclosureContentProps = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
 
-export const DisclosureContent: FC<DisclosureContentProps> = ({
-  id,
-  isOpen,
-  visuallyHidden,
-  children,
-  ...rest
-}) => {
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** DisclosureTriggerのtargetIdと紐づけるId */
+    id: string
+    /** 開閉状態。デフォルトは閉じている */
+    isOpen?: boolean
+    /** 閉じた状態でContentを要素として存在させるか。デフォルトでは要素は存在しない */
+    visuallyHidden?: boolean
+  }
+>
+
+export const DisclosureContent: FC<Props> = ({ id, isOpen, visuallyHidden, children, ...rest }) => {
   const [expanded, setExpanded, addDisclosureChangeListener] = useDisclosure(id)
   const [prevIsOpen, setPrevIsOpen] = useState<boolean | undefined>(undefined)
 
