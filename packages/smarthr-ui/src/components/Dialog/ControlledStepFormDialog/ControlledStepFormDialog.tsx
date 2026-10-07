@@ -24,6 +24,7 @@ import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogP
 
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
+import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
 
 type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
 
@@ -60,28 +61,23 @@ type StepFormDialogContentInnerProps = ComponentPropsWithRef<typeof StepFormDial
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type BaseProps = Omit<
-  StepFormDialogContentInnerProps,
-  | 'heading'
-  | 'activeStep'
-  | 'submitButton'
-  | 'closeButton'
-  | 'backButton'
-  | 'handleClickClose'
-  | 'handleClickBack'
-  | 'handleSubmit'
-> &
-  DialogProps & {
-    heading: HeadingType
-    submitButton: ButtonType
-    closeButton?: ButtonType
-    backButton?: ButtonType
-    onSubmit: StepFormDialogContentInnerProps['handleSubmit']
-    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
-    onClickBack?: () => void
-  }
-type Props = BaseProps &
-  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
+type Props = SHRComponentPropsWithRef<
+  typeof DialogContentInner,
+  SHRComponentProps<
+    StepFormDialogContentInnerProps,
+    DialogProps & {
+      heading: HeadingType
+      submitButton: ButtonType
+      closeButton?: ButtonType
+      backButton?: ButtonType
+      onSubmit: StepFormDialogContentInnerProps['handleSubmit']
+      onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+      onClickBack?: () => void
+    },
+    { omit: 'activeStep' | 'handleClickClose' | 'handleClickBack' | 'handleSubmit' }
+  >,
+  { omit: 'focusTrapRef' }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
