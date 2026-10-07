@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, memo } from 'react'
+import { type ComponentPropsWithRef, type FC, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../../intl'
@@ -130,7 +130,9 @@ const FeatureListItem = memo<{
   </li>
 ))
 
-const FeatureName: FC<PropsWithChildren> = ({ children }) => {
+const FeatureName: FC<Pick<ComponentPropsWithRef<typeof FeatureListItem>, 'children'>> = ({
+  children,
+}) => {
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   return isDesktop ? (
