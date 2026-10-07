@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { PageHeading } from '../Heading'
@@ -6,26 +6,26 @@ import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
 
-type BaseProps = {
-  /** ロゴ */
-  logo?: ReactNode
-  /** コンテンツの上に表示されるタイトル */
-  title?: ReactNode
-  /** コンテンツの下に表示されるアンカー要素のリスト */
-  links?: Array<{
-    /** アンカー要素のテキスト */
-    label: ReactNode
-    /** アンカー要素の href */
-    url: string
-    /** アンカー要素の target。`_blank` を設定すると外部リンクアイコンが表示されます。*/
-    target?: string
-  }>
-}
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithoutRef<typeof Center>,
-    keyof BaseProps | 'minHeight' | 'maxWidth' | 'padding' | 'verticalCentering' | 'as'
-  >
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    /** ロゴ */
+    logo?: ReactNode
+    /** コンテンツの上に表示されるタイトル */
+    title?: ReactNode
+    /** コンテンツの下に表示されるアンカー要素のリスト */
+    links?: Array<{
+      /** アンカー要素のテキスト */
+      label: ReactNode
+      /** アンカー要素の href */
+      url: string
+      /** アンカー要素の target。`_blank` を設定すると外部リンクアイコンが表示されます。*/
+      target?: string
+    }>
+  }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-ErrorScreen shr-box-border shr-bg-background shr-p-1.5',

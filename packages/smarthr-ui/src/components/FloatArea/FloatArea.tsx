@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster, Stack } from '../Layout'
@@ -7,6 +7,7 @@ import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
 import type { AbstractSize, CharRelativeSize } from '../../themes'
+import type { SHRComponentPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
@@ -38,25 +39,23 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = {
-  /** 表示する `Button` または `AnchorButton` コンポーネント */
-  primaryButton: ReactNode
-  /** 表示する `Button` または `AnchorButton` コンポーネント */
-  secondaryButton?: ReactNode
-  /** tertiary 領域に表示するボタン */
-  tertiaryButton?: ReactNode
-  /** 操作に対するフィードバックメッセージ */
-  responseStatus?: ResponseStatusWithoutProcessing
-  /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
-  bottom?: CharRelativeSize | AbstractSize
-  /** コンポーネントの `z-index` 値 */
-  zIndex?: number
-}
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithoutRef<typeof Panel>,
-    keyof BaseProps | 'radius' | 'layer' | 'padding' | 'overflow' | 'as'
-  >
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** 表示する `Button` または `AnchorButton` コンポーネント */
+    primaryButton: ReactNode
+    /** 表示する `Button` または `AnchorButton` コンポーネント */
+    secondaryButton?: ReactNode
+    /** tertiary 領域に表示するボタン */
+    tertiaryButton?: ReactNode
+    /** 操作に対するフィードバックメッセージ */
+    responseStatus?: ResponseStatusWithoutProcessing
+    /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
+    bottom?: CharRelativeSize | AbstractSize
+    /** コンポーネントの `z-index` 値 */
+    zIndex?: number
+  }
+>
 
 export const FloatArea: FC<Props> = ({
   primaryButton,
