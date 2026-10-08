@@ -36,7 +36,7 @@ type BaseProps = {
   /** 各ボタンの大きさ */
   size?: 'M' | 'S'
 }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps | 'aria-label'>
 
 const classNameGenerator = tv({
   slots: {
@@ -79,7 +79,6 @@ export const SegmentedControl: FC<Props> = ({
   onClickOption,
   size = 'M',
   className,
-  'aria-label': ariaLabel,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
@@ -186,7 +185,7 @@ export const SegmentedControl: FC<Props> = ({
       ref={functions.callbackRef}
       role="radiogroup"
       className={classNames.container}
-      aria-label={ariaLabel || translated.radioGroupAria}
+      aria-label={translated.radioGroupAria}
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
     >
