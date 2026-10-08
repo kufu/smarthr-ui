@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [100.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.9.0...smarthr-ui-v100.0.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **DefinitionListItem:** props型をterm/children/fullWidth/maxColumns/classNameのみに縮小する ([#7325](https://github.com/kufu/smarthr-ui/issues/7325))
+* **DropdownMenuGroup:** props型をname/children/classNameのみに縮小する ([#7321](https://github.com/kufu/smarthr-ui/issues/7321))
+* SmartHRLogo/SmartHRAILogoのProps型を縮小する ([#7305](https://github.com/kufu/smarthr-ui/issues/7305))
+* **Icon:** ComponentPropsのexportをやめgenerateIconから型を導出する ([#7263](https://github.com/kufu/smarthr-ui/issues/7263))
+* **WakuWakuButton:** 非推奨のWakuWakuButtonを削除する ([#7284](https://github.com/kufu/smarthr-ui/issues/7284))
+* **Header:** AppLauncher/LanguageSwitcherの型生成元をDropdownにする ([#7272](https://github.com/kufu/smarthr-ui/issues/7272))
+* **DefinitionList:** Props型を実態に合わせて縮小する ([#7280](https://github.com/kufu/smarthr-ui/issues/7280))
+* **DropdownTrigger:** HTML属性を受け付けない型にする ([#7277](https://github.com/kufu/smarthr-ui/issues/7277))
+* **NotificaionBar:** `base` propを `paneled` propに変更 ([#7159](https://github.com/kufu/smarthr-ui/issues/7159))
+* **Dialog:** onClickClose/onPressEscapeのイベント型を統一する ([#7040](https://github.com/kufu/smarthr-ui/issues/7040))
+* **Dialog:** DialogWrapperによる非制御パターンを廃止しDialogに一本化する ([#7130](https://github.com/kufu/smarthr-ui/issues/7130))
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008))
+* **Combobox:** ComboboxItem.labelを調整し、stringが必要な箇所に利用できるlabelText属性を追加 ([#6956](https://github.com/kufu/smarthr-ui/issues/6956))
+* **createShadow:** styled-componentsに依存しないようにする ([#6946](https://github.com/kufu/smarthr-ui/issues/6946))
+* **Dialog:** portalParentがRefObjectの場合に意図した位置に配置されない不具合を修正 ([#6942](https://github.com/kufu/smarthr-ui/issues/6942))
+* **UnstyledButton:** disabled属性をaria-disabledに変更しイベントをキャンセル ([#6749](https://github.com/kufu/smarthr-ui/issues/6749))
+
+### Features
+
+* **SHRComponentProps:** asオプションを追加しstring | ComponentType&lt;any&gt;を簡易に指定できるようにする ([#7315](https://github.com/kufu/smarthr-ui/issues/7315)) ([7226ed1](https://github.com/kufu/smarthr-ui/commit/7226ed1b0bef8d07c986ae1598be38b4750a7cf0))
+* SHRComponentProps型ヘルパーを追加する ([#7299](https://github.com/kufu/smarthr-ui/issues/7299)) ([4b06db5](https://github.com/kufu/smarthr-ui/commit/4b06db5e917b756c2028f2dfacaa084188f7f453))
+* **Tuck:** 入りきらない部分を自動的にまとめるコンポーネントを追加 ([#7134](https://github.com/kufu/smarthr-ui/issues/7134)) ([36abd0a](https://github.com/kufu/smarthr-ui/commit/36abd0a75573ed2390019c8a0e54958ba28aba6c))
+* **UnstyledButton:** disabled属性をaria-disabledに変更しイベントをキャンセル ([#6749](https://github.com/kufu/smarthr-ui/issues/6749)) ([6e69bb5](https://github.com/kufu/smarthr-ui/commit/6e69bb542f439e941bc694b9897ba12630a17daf))
+
+
+### Bug Fixes
+
+* **Dialog:** portalParentがRefObjectの場合に意図した位置に配置されない不具合を修正 ([#6942](https://github.com/kufu/smarthr-ui/issues/6942)) ([488b9c3](https://github.com/kufu/smarthr-ui/commit/488b9c34e22947b8554bf79dcb34b8696de437dd))
+* **Dialog:** 閉じた直後にダイアログの中身が開く前の状態で描画されるのを修正する ([#7221](https://github.com/kufu/smarthr-ui/issues/7221)) ([db20215](https://github.com/kufu/smarthr-ui/commit/db20215b4c072f6a9ec0cccc47b266a661fd53b7))
+* **ModelessDialog:** 上方向へのドラッグ範囲が表示位置とずれる問題を修正 ([#7297](https://github.com/kufu/smarthr-ui/issues/7297)) ([1af98f7](https://github.com/kufu/smarthr-ui/commit/1af98f7d5ed7afa04f7de8d4ea47b541a23628cd))
+* **NotificaionBar:** `base` propを `paneled` propに変更 ([#7159](https://github.com/kufu/smarthr-ui/issues/7159)) ([d8f524b](https://github.com/kufu/smarthr-ui/commit/d8f524bd91aa0aa22fd18dde7cbbc28bf7dde8a4))
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008)) ([0346ec8](https://github.com/kufu/smarthr-ui/commit/0346ec8cfe992c17a138bef8fc5aed4e63c66761))
+* **SHRComponentProps:** BaseがUnion型の場合にメンバー固有のプロパティが失われる問題を修正 ([#7311](https://github.com/kufu/smarthr-ui/issues/7311)) ([2f955b8](https://github.com/kufu/smarthr-ui/commit/2f955b86a8d6ec509c614fb9d641102a4ef81962))
+* 実装で上書きされ無視されるpropsを型から除外する ([#7292](https://github.com/kufu/smarthr-ui/issues/7292)) ([2cc5ddf](https://github.com/kufu/smarthr-ui/commit/2cc5ddf579a510fb4dc253abe6ae8e5e9661385a))
+
+
+### Code Refactoring
+
+* **Combobox:** ComboboxItem.labelを調整し、stringが必要な箇所に利用できるlabelText属性を追加 ([#6956](https://github.com/kufu/smarthr-ui/issues/6956)) ([39cd5ae](https://github.com/kufu/smarthr-ui/commit/39cd5ae19cf3b2b5a219479af0a90adb8ee0015d))
+* **createShadow:** styled-componentsに依存しないようにする ([#6946](https://github.com/kufu/smarthr-ui/issues/6946)) ([61fa071](https://github.com/kufu/smarthr-ui/commit/61fa071d7a67b60299ae3db8a245133b224b5087))
+* **DefinitionListItem:** props型をterm/children/fullWidth/maxColumns/classNameのみに縮小する ([#7325](https://github.com/kufu/smarthr-ui/issues/7325)) ([b366b47](https://github.com/kufu/smarthr-ui/commit/b366b4769a9f998898f2c39c986b0bcd60b5c713))
+* **DefinitionList:** Props型を実態に合わせて縮小する ([#7280](https://github.com/kufu/smarthr-ui/issues/7280)) ([fc8976f](https://github.com/kufu/smarthr-ui/commit/fc8976f3b38a0b47d261fefa9310a332832a0329))
+* **Dialog:** DialogWrapperによる非制御パターンを廃止しDialogに一本化する ([#7130](https://github.com/kufu/smarthr-ui/issues/7130)) ([febd6ce](https://github.com/kufu/smarthr-ui/commit/febd6cee717927bd7b1523271e09ee21f8dc3330))
+* **Dialog:** onClickClose/onPressEscapeのイベント型を統一する ([#7040](https://github.com/kufu/smarthr-ui/issues/7040)) ([fc704c0](https://github.com/kufu/smarthr-ui/commit/fc704c03099d42c61d427bbc387136a408cbd361))
+* **DropdownMenuGroup:** props型をname/children/classNameのみに縮小する ([#7321](https://github.com/kufu/smarthr-ui/issues/7321)) ([ad6e4e5](https://github.com/kufu/smarthr-ui/commit/ad6e4e526d8364e0744a34814bd36f7fa2941f46))
+* **DropdownTrigger:** HTML属性を受け付けない型にする ([#7277](https://github.com/kufu/smarthr-ui/issues/7277)) ([aa7b751](https://github.com/kufu/smarthr-ui/commit/aa7b751cfbdaad814585101ce01004b25db952ab))
+* **Header:** AppLauncher/LanguageSwitcherの型生成元をDropdownにする ([#7272](https://github.com/kufu/smarthr-ui/issues/7272)) ([67e0003](https://github.com/kufu/smarthr-ui/commit/67e00030533d0fc579ba3c217b462cd7021787b7))
+* **Icon:** ComponentPropsのexportをやめgenerateIconから型を導出する ([#7263](https://github.com/kufu/smarthr-ui/issues/7263)) ([b7860f6](https://github.com/kufu/smarthr-ui/commit/b7860f6c17720c440282c3040f2c8e58fe9c8e90))
+* SmartHRLogo/SmartHRAILogoのProps型を縮小する ([#7305](https://github.com/kufu/smarthr-ui/issues/7305)) ([45756cc](https://github.com/kufu/smarthr-ui/commit/45756ccbe4dc94f62c940f0a57069a07f510cea1))
+* **WakuWakuButton:** 非推奨のWakuWakuButtonを削除する ([#7284](https://github.com/kufu/smarthr-ui/issues/7284)) ([4d1fb3d](https://github.com/kufu/smarthr-ui/commit/4d1fb3ddfb83e0ed5107f5666548fb0967ad0919))
+
 ## [99.9.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.8.0...smarthr-ui-v99.9.0) (2026-10-01)
 
 

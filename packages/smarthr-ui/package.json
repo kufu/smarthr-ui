@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "99.9.0",
+  "version": "100.0.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -32,7 +32,6 @@
     "@storybook/addon-a11y": "10.5.10",
     "@storybook/addon-docs": "10.5.10",
     "@storybook/cli": "10.5.10",
-    "@storybook/react": "10.5.10",
     "@storybook/react-vite": "10.5.10",
     "@swc/core": "^1.16.2",
     "@testing-library/jest-dom": "^7.0.1",
