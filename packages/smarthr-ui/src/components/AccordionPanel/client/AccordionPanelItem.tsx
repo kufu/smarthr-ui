@@ -1,15 +1,19 @@
 'use client'
 
-import { type ComponentPropsWithoutRef, type FC, createContext, useMemo } from 'react'
+import { type FC, createContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Section } from '../../SectioningContent'
 
-type BaseProps = {
-  /** アイテムを識別するための名前 */
-  name: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'section'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'section',
+  {
+    /** アイテムを識別するための名前 */
+    name: string
+  }
+>
 
 export const AccordionPanelItemContext = createContext<{
   name: string

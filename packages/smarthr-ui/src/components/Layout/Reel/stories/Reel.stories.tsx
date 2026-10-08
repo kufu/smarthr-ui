@@ -2,7 +2,7 @@ import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 import { Reel } from '../Reel'
 
-import type { Gap } from '../../../../types'
+import type { PositiveGap } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
@@ -27,8 +27,8 @@ export const GapStory: StoryObj<typeof Reel> = {
   name: 'gap',
   render: (args) => (
     <Stack>
-      {([undefined, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 8] as Gap[]).map((gap) =>
-        meta.render({ ...args, gap }),
+      {([undefined, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 8] as PositiveGap[]).map(
+        (gap) => meta.render({ ...args, gap }),
       )}
     </Stack>
   ),
@@ -38,8 +38,8 @@ export const Padding: StoryObj<typeof Reel> = {
   name: 'padding',
   render: (args) => (
     <Stack>
-      {([undefined, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 8] as Gap[]).map((padding) =>
-        meta.render({ ...args, padding }),
+      {([undefined, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 8] as PositiveGap[]).map(
+        (padding) => meta.render({ ...args, padding }),
       )}
     </Stack>
   ),

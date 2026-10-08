@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 
 import { Loader } from '../Loader'
 
@@ -8,8 +8,9 @@ import { ActualButton } from './client'
 import { buttonClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<'button', BaseProps>
 
 export const Button: FC<Props> = ({
   type = 'button',

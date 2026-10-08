@@ -1,6 +1,16 @@
-import type { ComponentPropsWithRef, ComponentPropsWithoutRef, ElementType } from 'react'
+import type {
+  ComponentPropsWithRef,
+  ComponentPropsWithoutRef,
+  ComponentType,
+  ElementType,
+} from 'react'
+
+type OptionsType = { as?: boolean; omit?: PropertyKey }
 
 type OmitKey<Options> = Options extends { omit: infer K extends PropertyKey } ? K : never
+type AsOmitKey<Options> = Options extends { as: true } ? 'as' : never
+
+type AsProp<Options> = Options extends { as: true } ? { as?: string | ComponentType<any> } : object
 
 // HINT: 標準のOmit(Pick<T, Exclude<keyof T, K>>)はkeyof Tがunion型の共通キーしか
 // 見ないため、Baseがdiscriminated unionの場合に各メンバー固有のプロパティを失ってしまう。
@@ -12,18 +22,19 @@ type DistributiveOmit<T, K extends PropertyKey> = T extends any ? Omit<T, K> : n
 export type SHRComponentProps<
   Base,
   Override,
-  Options extends { omit?: PropertyKey } = object,
-> = DistributiveOmit<Override, OmitKey<Options>> &
-  DistributiveOmit<Base, keyof Override | OmitKey<Options>>
+  Options extends OptionsType = object,
+> = AsProp<Options> &
+  DistributiveOmit<Override, AsOmitKey<Options> | OmitKey<Options>> &
+  DistributiveOmit<Base, keyof Override | OmitKey<Options> | AsOmitKey<Options>>
 
 export type SHRComponentPropsWithRef<
   Base extends ElementType,
   Override,
-  Options extends { omit?: PropertyKey } = object,
+  Options extends OptionsType = object,
 > = SHRComponentProps<ComponentPropsWithRef<Base>, Override, Options>
 
 export type SHRComponentPropsWithoutRef<
   Base extends ElementType,
   Override,
-  Options extends { omit?: PropertyKey } = object,
+  Options extends OptionsType = object,
 > = SHRComponentProps<ComponentPropsWithoutRef<Base>, Override, Options>

@@ -1,28 +1,32 @@
-import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
 type Color = 'grey' | 'blue' | 'yellow' | 'red'
 
-type BaseProps = {
-  /** 件数 */
-  count?: number
-  /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
-  overflowCount?: number
-  /** 0値を表示するかどうか */
-  showZero?: boolean
-  /**
-   * 色の種類
-   *
-   * TODO: HTMLのtype属性と紛れやすく、tv側のvariant名もcolorであるため、
-   * 破壊的変更を伴うタイミングでcolorへリネームする
-   */
-  type?: Color
-  /** ドット表示するかどうか */
-  dot?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  'span',
+  {
+    /** 件数 */
+    count?: number
+    /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
+    overflowCount?: number
+    /** 0値を表示するかどうか */
+    showZero?: boolean
+    /**
+     * 色の種類
+     *
+     * TODO: HTMLのtype属性と紛れやすく、tv側のvariant名もcolorであるため、
+     * 破壊的変更を伴うタイミングでcolorへリネームする
+     */
+    type?: Color
+    /** ドット表示するかどうか */
+    dot?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
