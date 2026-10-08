@@ -27,11 +27,13 @@ import { RichTextEditor, RichTextViewer } from '@smarthr/smarthr-ui-rich-text-ed
 
 ### CSS の読み込み順
 
-**必ず `smarthr-ui.css` を先に読み込んでください。** 2つの CSS は同じ Tailwind プリセットから生成しており、同じ規則が両方に入っています。順序が逆になると本体の規則がエディタの規則を上書きし、表の操作メニューの区切り線などが崩れます。
+`smarthr-ui.css` とエディタの CSS は、どちらを先に読み込んでも構いません。エディタの CSS のクラスは `shr-rte-` で始まり、本体の `shr-` のクラスとは別の規則です。要素への規則（`body`・`a`・`button` など）は本体と同じ値を両方が持つため、2つの間の順序は結果に影響しません。
 
-> **既知の問題:** この順序でも、エディタの CSS に入っている本体と同じ規則が、本体の規則の一部を上書きします。例えば、ページ全体の本体の `Button` の枠線の色が変わります（primary はグレーに、text は枠線が見えるように）。エディタの CSS が本体の規則を含まないようにする対応を検討しています。
+アプリ独自に要素へ指定するスタイル（`a { color: … }` など）は、エディタの CSS より後に読み込んでください。先に読み込むと、エディタの CSS に含まれる要素への規則で上書きされます。クラスで指定するスタイル（styled-components・Tailwind など）は影響を受けません。
 
-エディタの CSS には全体に効く reset（preflight）は含まれません。本体と同じプリセット（`preflight: false`）で生成しているため、既存ページのスタイルには影響しません。
+`className` でエディタの見た目を上書きする場合、エディタが指定しているプロパティ（文字色・行送りなど）は、エディタの CSS より後に読み込まれる CSS で指定してください。`smarthr-ui.css` にしか無いクラスを渡しても、読み込み順によってはエディタのクラスが優先されます。
+
+エディタの CSS には全体に効く reset（preflight）は含まれません。本体と同じプリセット（`preflight: false`）で生成しているため、要素への規則は `smarthr-ui.css` にあるものと同じです。
 
 ### Provider
 
@@ -56,7 +58,7 @@ const App = () => (
 
 リポジトリルートから `pnpm rte <script>` で実行します。
 
-lint の型チェック・テスト・CSS のビルドは、本体のビルド成果物（`lib`・`smarthr-ui.css`）を参照します。本体を変更したら、先に `pnpm ui build` を実行してください。
+lint の型チェックとテストは、本体のビルド成果物（`lib`）を参照します。本体を変更したら、先に `pnpm ui build` を実行してください。CSS のビルドは本体のプリセットをソース（`../smarthr-ui/src/smarthr-ui-preset`）から読むため、本体のビルドを必要としません。
 
 ```sh
 pnpm rte lint        # eslint / knip / prettier / stylelint / tsc
