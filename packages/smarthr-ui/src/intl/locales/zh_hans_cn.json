@@ -86,6 +86,7 @@
   "smarthr-ui/Pagination/navigationLabel": "分页",
   "smarthr-ui/RequiredLabel/text": "必填",
   "smarthr-ui/SearchInput/iconAlt": "搜索",
+  "smarthr-ui/SegmentedControl/group/ariaLabel": "",
   "smarthr-ui/SideMenu/navigationLabel": "侧边菜单",
   "smarthr-ui/SingleCombobox/destroyButtonIconAlt": "清除",
   "smarthr-ui/SortDropdown/applyText": "应用",
