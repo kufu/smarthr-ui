@@ -11,6 +11,48 @@ import type { Gap, SHRComponentPropsWithRef } from '../../types'
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
+type ActualIconType =
+  | undefined
+  | {
+      /** テキスト左に設置するアイコン */
+      prefix?: ReactNode
+      /** テキスト右に設置するアイコン */
+      suffix?: ReactNode
+      /** アイコンと並べるテキストとの溝 */
+      gap?: CharRelativeSize | AbstractSize
+    }
+type IconType = ActualIconType | ReactNode
+
+type MaxLinesObject = {
+  max: 1 | 2 | 3 | 4 | 5 | 6 | undefined
+  /** true のとき、テキストが省略されている場合のみ Tooltip で全文を表示する */
+  tooltip?: boolean
+}
+type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
+
+type Props<T extends ElementType> = SHRComponentPropsWithRef<
+  T,
+  {
+    /** テキストコンポーネントの HTML タグ名。初期値は span */
+    as?: T
+    /** 強調するかどうかの真偽値。指定すると em 要素になる */
+    emphasis?: boolean
+    /** 見た目の種類 */
+    styleType?: StyleType
+    /** 設置するアイコン */
+    icon?: IconType
+
+    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+    weight?: 'normal' | 'bold'
+    italic?: boolean
+    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+    /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
+    maxLines?: MaxLinesType
+  }
+>
+
 export const STYLE_TYPE_MAP: {
   [key in StyleType]: Pick<Props<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
 } = {
@@ -142,48 +184,6 @@ const wrapperClassNameGenerator = tv({
     } as { [key in Gap]: string },
   },
 })
-
-type ActualIconType =
-  | undefined
-  | {
-      /** テキスト左に設置するアイコン */
-      prefix?: ReactNode
-      /** テキスト右に設置するアイコン */
-      suffix?: ReactNode
-      /** アイコンと並べるテキストとの溝 */
-      gap?: CharRelativeSize | AbstractSize
-    }
-type IconType = ActualIconType | ReactNode
-
-type MaxLinesObject = {
-  max: 1 | 2 | 3 | 4 | 5 | 6 | undefined
-  /** true のとき、テキストが省略されている場合のみ Tooltip で全文を表示する */
-  tooltip?: boolean
-}
-type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
-
-type Props<T extends ElementType> = SHRComponentPropsWithRef<
-  T,
-  {
-    /** テキストコンポーネントの HTML タグ名。初期値は span */
-    as?: T
-    /** 強調するかどうかの真偽値。指定すると em 要素になる */
-    emphasis?: boolean
-    /** 見た目の種類 */
-    styleType?: StyleType
-    /** 設置するアイコン */
-    icon?: IconType
-
-    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
-    weight?: 'normal' | 'bold'
-    italic?: boolean
-    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
-    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
-    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
-    /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
-    maxLines?: MaxLinesType
-  }
->
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
 const maxLinesObjectConverter = (maxLines: 1 | 2 | 3 | 4 | 5 | 6 | undefined): MaxLinesObject => ({
