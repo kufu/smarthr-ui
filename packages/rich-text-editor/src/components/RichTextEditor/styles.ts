@@ -52,7 +52,9 @@ export const editorContentClasses = [
   // 円形CSSスピナー（Loader size="S" 相当の24px）。上辺だけ透明にして回転させる。
   '[&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-my-0.5 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-inline-block [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-size-2 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-rounded-full [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-2 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-solid [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-main [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-t-transparent [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-align-middle [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-animate-[spin_0.8s_linear_infinite] motion-reduce:[&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-animate-none',
   // youtube iframe
-  '[&_.ProseMirror_iframe]:shr-rte-my-0.5 [&_.ProseMirror_iframe]:shr-rte-max-w-full [&_.ProseMirror_iframe]:shr-rte-rounded-m',
+  // inline のままだと下にディセンダ分の隙間ができ、選択枠線が下だけ離れる。
+  // 上下の余白は外側の div[data-youtube-video] が持つので、iframe には付けない。
+  '[&_.ProseMirror_iframe]:shr-rte-block [&_.ProseMirror_iframe]:shr-rte-max-w-full [&_.ProseMirror_iframe]:shr-rte-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video]]:shr-rte-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-rte-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rte-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
   // table (resizable: tableWrapper で囲まれる)
@@ -120,7 +122,7 @@ export const staticContentClasses = [
   // image
   '[&_img]:shr-rte-block [&_img]:shr-rte-max-w-full',
   // youtube iframe
-  '[&_iframe]:shr-rte-max-w-full [&_iframe]:shr-rte-rounded-m',
+  '[&_iframe]:shr-rte-block [&_iframe]:shr-rte-max-w-full [&_iframe]:shr-rte-rounded-m',
   // table (renderWrapper: true で <div class="tableWrapper"> が出力されるので、その内側に table)
   // テーブル自身に inline style で width が付くため、wrapper 側で横スクロールを担保する
   '[&_.tableWrapper]:shr-rte-max-w-full [&_.tableWrapper]:shr-rte-overflow-x-auto',
