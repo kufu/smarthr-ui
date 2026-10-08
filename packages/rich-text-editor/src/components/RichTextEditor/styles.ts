@@ -34,7 +34,7 @@ export const editorContentClasses = [
   // リサイズハンドル(wrapper基準で bottom:0 配置)の下側が画像下端より下にズレる。
   // RichTextViewer 側(staticContentClasses)も block で揃えている。
   '[&_.ProseMirror_img]:shr-rte-my-0.5 [&_.ProseMirror_img]:shr-rte-block [&_.ProseMirror_img]:shr-rte-max-w-full',
-  '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline-offset-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline-main',
+  '[&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_img.ProseMirror-selectednode]:shr-rte-outline-offset-2',
   // 読み込みに失敗した画像（CustomImage の onerror が data-image-error を付ける）
   // 幅・高さが未指定の壊れた画像は箱が潰れてクリックできなくなるため、最小サイズを確保する。
   // 枠線と背景は「ここに画像があるが表示できない」ことを示すためのもの。
@@ -42,9 +42,9 @@ export const editorContentClasses = [
   // image resize container
   '[&_.ProseMirror_[data-resize-container]]:shr-rte-w-fit [&_.ProseMirror_[data-resize-container]]:shr-rte-max-w-full [&_.ProseMirror_[data-resize-container]]:shr-rte-my-0.5',
   '[&_.ProseMirror_[data-resize-container]_img]:shr-rte-my-0',
-  '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline-offset-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline-main',
+  '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_img]:shr-rte-outline-offset-2',
   // image resize handles
-  '[&_.ProseMirror_[data-resize-handle]]:shr-rte-size-[10px] [&_.ProseMirror_[data-resize-handle]]:shr-rte-rounded-full [&_.ProseMirror_[data-resize-handle]]:shr-rte-bg-main [&_.ProseMirror_[data-resize-handle]]:shr-rte-border [&_.ProseMirror_[data-resize-handle]]:shr-rte-border-solid [&_.ProseMirror_[data-resize-handle]]:shr-rte-border-white [&_.ProseMirror_[data-resize-handle]]:shr-rte-shadow-sm [&_.ProseMirror_[data-resize-handle]]:shr-rte-opacity-0 [&_.ProseMirror_[data-resize-handle]]:shr-rte-transition-opacity [&_.ProseMirror_[data-resize-handle]]:shr-rte-z-1 [&_.ProseMirror_[data-resize-handle]]:shr-rte-m-[-5px]',
+  '[&_.ProseMirror_[data-resize-handle]]:shr-rte-size-[10px] [&_.ProseMirror_[data-resize-handle]]:shr-rte-rounded-full [&_.ProseMirror_[data-resize-handle]]:shr-rte-bg-main [&_.ProseMirror_[data-resize-handle]]:shr-rte-border [&_.ProseMirror_[data-resize-handle]]:shr-rte-border-solid [&_.ProseMirror_[data-resize-handle]]:shr-rte-border-white [&_.ProseMirror_[data-resize-handle]]:shr-rte-shadow-layer-1 [&_.ProseMirror_[data-resize-handle]]:shr-rte-opacity-0 [&_.ProseMirror_[data-resize-handle]]:shr-rte-transition-opacity [&_.ProseMirror_[data-resize-handle]]:shr-rte-z-1 [&_.ProseMirror_[data-resize-handle]]:shr-rte-m-[-5px]',
   '[&_.ProseMirror_[data-resize-wrapper]:hover_[data-resize-handle]]:shr-rte-opacity-100',
   '[&_.ProseMirror_[data-resize-container][data-resize-state=true]_[data-resize-handle]]:shr-rte-opacity-100',
   '[&_.ProseMirror[contenteditable=false]_[data-resize-handle]]:shr-rte-hidden',
@@ -54,7 +54,7 @@ export const editorContentClasses = [
   // youtube iframe
   '[&_.ProseMirror_iframe]:shr-rte-my-0.5 [&_.ProseMirror_iframe]:shr-rte-max-w-full [&_.ProseMirror_iframe]:shr-rte-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video]]:shr-rte-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-rte-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rte-rounded-m',
-  '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-main [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-rounded-m',
+  '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
   // table (resizable: tableWrapper で囲まれる)
   // テーブルは内容幅にしてNotion風レイアウトを実現。column-resizingはtable-fixedで動作する。
   // tableWrapperの右と下に +列/+行 バー(24px)用の余白を確保。テーブル幅がそれを超えると
