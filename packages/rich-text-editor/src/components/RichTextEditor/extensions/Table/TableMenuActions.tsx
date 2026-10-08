@@ -1,7 +1,6 @@
 'use client'
 import { CellSelection } from '@tiptap/pm/tables'
 import {
-  Button,
   FaArrowDownIcon,
   FaArrowLeftIcon,
   FaArrowRightIcon,
@@ -18,7 +17,7 @@ import {
 
 import { useIntl } from '../../../../intl'
 
-import { tableMenuItemClass as itemClass } from './tableMenuStyles'
+import { TableMenuItemButton } from './TableMenuItemButton'
 import {
   type TableScope,
   clearTableCells,
@@ -56,11 +55,8 @@ export const TableMenuActions = ({
     pressed?: boolean,
     icon: ReactNode = <FaTableIcon />,
   ) => (
-    <Button
-      type="button"
+    <TableMenuItemButton
       disabled={disabled}
-      variant="text"
-      className={`${itemClass} shr-flex shr-items-center shr-gap-0.5`}
       aria-pressed={pressed}
       onClick={() => handleRun(action)}
       prefix={
@@ -72,7 +68,7 @@ export const TableMenuActions = ({
       }
     >
       {text}
-    </Button>
+    </TableMenuItemButton>
   )
   let hasHeaderCell = editor.state.doc.nodeAt(target.pos)?.type.name === 'tableHeader'
   if (editor.state.selection instanceof CellSelection) {
@@ -244,11 +240,8 @@ export const TableMenuActions = ({
         (features.includes('color') || features.includes('backgroundColor')) && (
           <div className="shr-flex shr-flex-col">
             <hr className="shr-border-shorthand shr-mx-0.75 shr-my-0.25 shr-border-x-0 shr-border-b-0" />
-            <Button
+            <TableMenuItemButton
               ref={colorTriggerRef}
-              type="button"
-              variant="text"
-              className={`${itemClass} shr-flex shr-items-center shr-gap-0.5 [&_.smarthr-ui-Button-body]:shr-flex-1 [&_.smarthr-ui-Button-body]:shr-text-left`}
               aria-haspopup="dialog"
               onKeyDown={(event) => {
                 if (event.key === 'ArrowRight') {
@@ -265,7 +258,7 @@ export const TableMenuActions = ({
                 id: 'smarthr-ui/RichTextEditor/cellColorMenu',
                 defaultText: 'カラー',
               })}
-            </Button>
+            </TableMenuItemButton>
           </div>
         )}
       {scope !== 'table' && (

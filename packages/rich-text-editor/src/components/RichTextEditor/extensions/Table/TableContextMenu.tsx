@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Button, FaArrowLeftIcon, FaEllipsisIcon } from 'smarthr-ui'
+import { FaArrowLeftIcon, FaEllipsisIcon } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
@@ -20,7 +20,7 @@ import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
 import { TableColorPalette } from './TableColorPalette'
 import { TableMenuActions } from './TableMenuActions'
-import { tableMenuItemClass as itemClass } from './tableMenuStyles'
+import { TableMenuItemButton } from './TableMenuItemButton'
 import { TABLE_SHORTCUTS } from './tableShortcuts'
 import { focusTableCell, getTableTarget, runTableAction, selectTableTarget } from './tableTarget'
 
@@ -304,10 +304,7 @@ export const TableContextMenu = ({
               : label}
           </strong>
           {showColors ? (
-            <Button
-              type="button"
-              variant="text"
-              className={itemClass}
+            <TableMenuItemButton
               onClick={() => functions.handleChangeColors(false)}
               prefix={<FaArrowLeftIcon />}
             >
@@ -315,7 +312,7 @@ export const TableContextMenu = ({
                 id: 'smarthr-ui/RichTextEditor/backToTableActions',
                 defaultText: '操作に戻る',
               })}
-            </Button>
+            </TableMenuItemButton>
           ) : (
             <TableMenuActions
               colorTriggerRef={colorTriggerRef}

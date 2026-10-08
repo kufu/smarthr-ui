@@ -162,6 +162,28 @@ describe('table controls', () => {
     },
   )
 
+  it.each([
+    { scope: '行', name: '行を削除', axis: 'height' },
+    { scope: '列', name: '列を削除', axis: 'width' },
+  ] as const)(
+    '1行1列の表の「$name」は、フォーカスできる使用不可の項目として示し、押しても消さない',
+    async ({ scope, name, axis }) => {
+      editor.commands.setContent('<table><tbody><tr><td><p>a</p></td></tr></tbody></table>')
+      editor.commands.setTextSelection(4)
+      const user = userEvent.setup()
+      showControls()
+      screen.getByRole('button', { name: `${scope}の操作` }).focus()
+      await user.keyboard('{ArrowUp}')
+      const dialog = await screen.findByRole('dialog', { name: `${scope}の操作` })
+      const item = within(dialog).getByRole('button', { name })
+      await waitFor(() => expect(item).toHaveFocus())
+      expect(item).toHaveAttribute('aria-disabled', 'true')
+      expect(item).toBeEnabled()
+      await user.click(item)
+      expect(getTableTarget(editor)!.map[axis]).toBe(1)
+    },
+  )
+
   it('moves focus into colors and returns to the color item with Escape', async () => {
     const user = userEvent.setup()
     showControls()
