@@ -285,9 +285,6 @@ importers:
       '@storybook/cli':
         specifier: 10.5.10
         version: 10.5.10(@babel/preset-env@8.0.6(@babel/core@8.0.6))(@types/react@18.3.31)(prettier@3.9.8)(react@19.3.0)(supports-color@10.2.2)
-      '@storybook/react':
-        specifier: 10.5.10
-        version: 10.5.10(@types/react-dom@19.2.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(storybook@10.5.10(@types/react@18.3.31)(prettier@3.9.8)(react@19.3.0))(supports-color@10.2.2)(typescript@5.9.3)
       '@storybook/react-vite':
         specifier: 10.5.10
         version: 10.5.10(@types/react-dom@19.2.7(@types/react@18.3.31))(@types/react@18.3.31)(esbuild@0.28.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rollup@4.63.4)(storybook@10.5.10(@types/react@18.3.31)(prettier@3.9.8)(react@19.3.0))(supports-color@10.2.2)(typescript@5.9.3)(vite@8.2.2(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.0))
