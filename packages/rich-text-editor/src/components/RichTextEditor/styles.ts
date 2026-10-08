@@ -55,7 +55,8 @@ export const editorContentClasses = [
   // inline のままだと下にディセンダ分の隙間ができ、選択枠線が下だけ離れる。
   // 上下の余白は外側の div[data-youtube-video] が持つので、iframe には付けない。
   '[&_.ProseMirror_iframe]:shr-rte-block [&_.ProseMirror_iframe]:shr-rte-max-w-full [&_.ProseMirror_iframe]:shr-rte-rounded-m',
-  '[&_.ProseMirror_div[data-youtube-video]]:shr-rte-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-rte-inline-block [&_.ProseMirror_div[data-youtube-video]]:shr-rte-rounded-m',
+  // inline-block だと動画が続いたときに横に並び、縦に積む RichTextViewer と食い違う
+  '[&_.ProseMirror_div[data-youtube-video]]:shr-rte-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-rte-block [&_.ProseMirror_div[data-youtube-video]]:shr-rte-w-fit [&_.ProseMirror_div[data-youtube-video]]:shr-rte-max-w-full [&_.ProseMirror_div[data-youtube-video]]:shr-rte-rounded-m',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
   // table (resizable: tableWrapper で囲まれる)
   // テーブルは内容幅にしてNotion風レイアウトを実現。column-resizingはtable-fixedで動作する。
