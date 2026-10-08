@@ -115,7 +115,7 @@ export const TabItem: FC<Props> = ({
   )
 }
 
-const TabButton = memo<RenameProps<Props, { onClick: 'handleClick' }>>(
+const TabButton = memo<RenameProps<Props, { handleClick: 'onClick' }>>(
   ({ id, children, suffix, handleClick, className, ...rest }) => {
     const classNames = useMemo(() => {
       const { wrapper, label, suffixWrapper } = classNameGenerator()
