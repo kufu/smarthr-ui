@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type ChangeEvent,
-  type ComponentPropsWithRef,
-  type DragEvent,
-  type FC,
-  useMemo,
-  useRef,
-} from 'react'
+import { type ChangeEvent, type DragEvent, type FC, useMemo, useRef } from 'react'
 
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
@@ -15,15 +8,24 @@ import { useLatest } from '../../../hooks/useLatest'
 
 import { ActualDropZone } from './ActualDropZone'
 
-type Props = Omit<ComponentPropsWithRef<typeof ActualDropZone>, 'multiple' | 'onSelectFiles'> & {
-  /** 選択済みのファイル */
-  files: File[]
-  /**
-   * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
-   * （選択済みのファイルに今回追加されたファイルを結合したものが渡されます）
-   */
-  onSelectFiles: (e: DragEvent<HTMLElement> | ChangeEvent<HTMLInputElement>, files: File[]) => void
-}
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof ActualDropZone,
+  {
+    /** 選択済みのファイル */
+    files: File[]
+    /**
+     * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
+     * （選択済みのファイルに今回追加されたファイルを結合したものが渡されます）
+     */
+    onSelectFiles: (
+      e: DragEvent<HTMLElement> | ChangeEvent<HTMLInputElement>,
+      files: File[],
+    ) => void
+  },
+  { omit: 'multiple' }
+>
 
 export const DropZoneMultiplyAppendable: FC<Props> = ({ files, onSelectFiles, ref, ...rest }) => {
   // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
