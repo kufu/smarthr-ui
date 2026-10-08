@@ -118,7 +118,20 @@ export function useToolbarDropdown(
 
     const place = () => {
       const triggerRect = triggerEl.getBoundingClientRect()
+      // 上限を付けたまま測ると縮んだ高さが返り、上限の付け外しを繰り返すため、外して測る
+      const scrollables = [contentEl, contentEl.firstElementChild].filter(
+        (el): el is Element => !!el,
+      )
+      const scrollTops = scrollables.map((el) => el.scrollTop)
+      const { maxHeight, display } = contentEl.style
+      contentEl.style.maxHeight = ''
+      contentEl.style.display = ''
       const contentHeight = Math.max(contentEl.offsetHeight, contentEl.scrollHeight)
+      contentEl.style.maxHeight = maxHeight
+      contentEl.style.display = display
+      scrollables.forEach((el, i) => {
+        el.scrollTop = scrollTops[i]
+      })
       const spaceBelow = window.innerHeight - triggerRect.bottom - GAP
       const spaceAbove = triggerRect.top - GAP
       const fitsBelow = contentHeight <= spaceBelow
@@ -271,6 +284,9 @@ export function useToolbarDropdown(
             left: `${position.left}px`,
             maxHeight: position.maxHeight ? `${position.maxHeight}px` : undefined,
             overflowY: position.maxHeight ? 'auto' : undefined,
+            // 外枠だけで頭打ちにすると、自前でスクロールする中身（リストボックス）と二重にスクロールバーが出る
+            display: position.maxHeight ? 'flex' : undefined,
+            flexDirection: position.maxHeight ? 'column' : undefined,
           }}
         >
           {children}

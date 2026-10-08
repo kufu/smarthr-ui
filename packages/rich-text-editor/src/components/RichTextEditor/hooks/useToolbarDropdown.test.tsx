@@ -156,6 +156,87 @@ describe('useToolbarDropdown', () => {
     }
   })
 
+  it.each([
+    { fits: true, display: '', maxHeight: '' },
+    { fits: false, display: 'flex', maxHeight: '168px' },
+  ])(
+    '上下に収まるか($fits)で、外枠を高さの上限で中身を縮められる縦並びにするかが決まる',
+    async ({ fits, display, maxHeight }) => {
+      const originalInnerHeight = window.innerHeight
+      Object.defineProperty(window, 'innerHeight', { value: 300, configurable: true })
+
+      try {
+        render(<Harness />)
+        const triggerEl = screen.getByRole('button', { name: '開く' })
+        triggerEl.getBoundingClientRect = () =>
+          ({ left: 0, right: 100, top: 100, bottom: 120, width: 100, height: 20 }) as DOMRect
+        vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(fits ? 100 : 400)
+
+        await userEvent.click(triggerEl)
+        const content = screen.getByRole('listbox').parentElement!
+
+        expect(content.style.display).toBe(display)
+        expect(content.style.flexDirection).toBe(display ? 'column' : '')
+        // 下の余白: 300 - 120 - GAP(2) - VIEWPORT_PADDING
+        expect(content.style.maxHeight).toBe(maxHeight)
+      } finally {
+        vi.restoreAllMocks()
+        Object.defineProperty(window, 'innerHeight', {
+          value: originalInnerHeight,
+          configurable: true,
+        })
+      }
+    },
+  )
+
+  it('高さの上限で縮んだあとに測り直しても、上限を外さない', async () => {
+    const resizeCallbacks: Array<() => void> = []
+    const OriginalResizeObserver = globalThis.ResizeObserver
+    const originalInnerHeight = window.innerHeight
+    globalThis.ResizeObserver = class {
+      constructor(callback: () => void) {
+        resizeCallbacks.push(callback)
+      }
+
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {}
+    } as unknown as typeof ResizeObserver
+    Object.defineProperty(window, 'innerHeight', { value: 300, configurable: true })
+
+    try {
+      render(<Harness />)
+      const triggerEl = screen.getByRole('button', { name: '開く' })
+      triggerEl.getBoundingClientRect = () =>
+        ({ left: 0, right: 100, top: 100, bottom: 120, width: 100, height: 20 }) as DOMRect
+      // 上限が付いている間は外枠の高さまで縮む中身を模す
+      vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function (
+        this: HTMLElement,
+      ) {
+        return this.style.maxHeight ? parseFloat(this.style.maxHeight) : 400
+      })
+
+      await userEvent.click(triggerEl)
+      const content = screen.getByRole('listbox').parentElement!
+
+      expect(content.style.maxHeight).toBe('168px')
+
+      act(() => resizeCallbacks.forEach((callback) => callback()))
+
+      expect(content.style.maxHeight).toBe('168px')
+      expect(content.style.display).toBe('flex')
+    } finally {
+      vi.restoreAllMocks()
+      globalThis.ResizeObserver = OriginalResizeObserver
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight,
+        configurable: true,
+      })
+    }
+  })
+
   describe('avoidTrigger', () => {
     it('既定ではトリガーの左端に揃える', async () => {
       const content = await openWithLayout({
