@@ -91,11 +91,11 @@ export const FontSizeDropdown: FC<Props> = memo(({ disabled, ...rest }) => {
       disabled={disabled || isInHeading}
       selectedIndex={FONT_SIZES.findIndex((s) => s.px === currentSize)}
       valueLabel={currentLabel}
-      triggerContent={<span className="shr-flex-1">{currentLabel}</span>}
+      triggerContent={<span className="shr-rte-flex-1">{currentLabel}</span>}
       fallbackIndex={DEFAULT_INDEX}
       appearance="list"
-      triggerClassName="smarthr-ui-RichTextEditor-FontSizeDropdown shr-min-w-[4em] shr-text-sm"
-      listboxClassName="shr-min-w-[5em]"
+      triggerClassName="smarthr-ui-RichTextEditor-FontSizeDropdown shr-rte-min-w-[4em] shr-rte-text-sm"
+      listboxClassName="shr-rte-min-w-[5em]"
       handleSelect={functions.handleSelect}
       label={localize({
         id: 'smarthr-ui/RichTextEditor/fontSizeDropdownLabel',

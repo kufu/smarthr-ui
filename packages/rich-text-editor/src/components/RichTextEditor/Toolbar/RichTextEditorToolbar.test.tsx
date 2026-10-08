@@ -102,7 +102,7 @@ const tabStopsOf = (toolbar: HTMLElement) =>
     .filter((button) => button.getAttribute('tabindex') === '0')
 
 const heightClassNamesOf = (el: HTMLElement) =>
-  Array.from(el.classList).filter((className) => /^shr-h-/.test(className))
+  Array.from(el.classList).filter((className) => /^shr-rte-h-/.test(className))
 
 describe('RichTextEditorToolbar', () => {
   it('ツールバーの操作要素のクリック領域の高さが全項目で揃っている', async () => {

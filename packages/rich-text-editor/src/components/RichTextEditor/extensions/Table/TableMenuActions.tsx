@@ -58,12 +58,12 @@ export const TableMenuActions = ({
     <TableMenuItemButton
       disabled={disabled}
       aria-pressed={pressed}
-      onClick={() => handleRun(action)}
+      handleClick={() => handleRun(action)}
       prefix={
         pressed === undefined ? (
           icon
         ) : (
-          <FaCheckIcon className={pressed ? 'shr-text-main' : 'shr-invisible'} />
+          <FaCheckIcon className={pressed ? 'shr-rte-text-main' : 'shr-rte-invisible'} />
         )
       }
     >
@@ -238,8 +238,8 @@ export const TableMenuActions = ({
       )}
       {scope !== 'table' &&
         (features.includes('color') || features.includes('backgroundColor')) && (
-          <div className="shr-flex shr-flex-col">
-            <hr className="shr-border-shorthand shr-mx-0.75 shr-my-0.25 shr-border-x-0 shr-border-b-0" />
+          <div className="shr-rte-flex shr-rte-flex-col">
+            <hr className="shr-rte-border-shorthand shr-rte-mx-0.75 shr-rte-my-0.25 shr-rte-border-x-0 shr-rte-border-b-0" />
             <TableMenuItemButton
               ref={colorTriggerRef}
               aria-haspopup="dialog"
@@ -250,7 +250,7 @@ export const TableMenuActions = ({
                   handleChangeColors(true)
                 }
               }}
-              onClick={() => handleChangeColors(true)}
+              handleClick={() => handleChangeColors(true)}
               prefix={<FaPaintbrushIcon />}
               suffix={<FaChevronRightIcon />}
             >

@@ -11,28 +11,28 @@ const classNameGenerator = tv({
   base: [
     'smarthr-ui-RichTextViewer',
     // 行送りは RELAXED(loose: 1.75) を使う。読みやすさ重視の表示専用コンポーネントのため。
-    'shr-text-base shr-leading-loose shr-text-black',
+    'shr-rte-text-base shr-rte-leading-loose shr-rte-text-black',
     ...staticContentClasses,
     // 直下ブロックのブラウザデフォルト縦マージン（h1-h4, p 等の user-agent margin）を打ち消す。
     // staticContentClasses 側ではトップレベル要素の my を指定していないため、間隔は下の
     // space-y(gap) のみで決まり、先頭要素の上マージン・末尾要素の下マージンは出ない。
-    '[&>*]:shr-my-0',
+    '[&>*]:shr-rte-my-0',
   ],
   variants: {
     gap: {
-      0: 'shr-space-y-0',
-      0.25: 'shr-space-y-0.25',
-      0.5: 'shr-space-y-0.5',
-      0.75: 'shr-space-y-0.75',
-      1: 'shr-space-y-1',
-      1.25: 'shr-space-y-1.25',
-      1.5: 'shr-space-y-1.5',
-      2: 'shr-space-y-2',
-      2.5: 'shr-space-y-2.5',
-      3: 'shr-space-y-3',
-      3.5: 'shr-space-y-3.5',
-      4: 'shr-space-y-4',
-      8: 'shr-space-y-8',
+      0: 'shr-rte-space-y-0',
+      0.25: 'shr-rte-space-y-0.25',
+      0.5: 'shr-rte-space-y-0.5',
+      0.75: 'shr-rte-space-y-0.75',
+      1: 'shr-rte-space-y-1',
+      1.25: 'shr-rte-space-y-1.25',
+      1.5: 'shr-rte-space-y-1.5',
+      2: 'shr-rte-space-y-2',
+      2.5: 'shr-rte-space-y-2.5',
+      3: 'shr-rte-space-y-3',
+      3.5: 'shr-rte-space-y-3.5',
+      4: 'shr-rte-space-y-4',
+      8: 'shr-rte-space-y-8',
     } as { [key in RichTextViewerGap]: string },
   },
 })

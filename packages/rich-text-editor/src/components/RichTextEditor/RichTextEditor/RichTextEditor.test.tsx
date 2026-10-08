@@ -491,7 +491,7 @@ describe('RichTextEditor', () => {
           expect(textbox).not.toHaveAttribute('aria-invalid', 'true')
         }
       })
-      expect(wrapperEl()?.className.includes('shr-border-danger')).toBe(expected)
+      expect(wrapperEl()?.className.includes('shr-rte-border-danger')).toBe(expected)
     })
 
     it('FormControl のエラーを解除しても error prop が残っていればエラーのまま', async () => {
@@ -507,7 +507,7 @@ describe('RichTextEditor', () => {
       )
 
       expect(textbox).toHaveAttribute('aria-invalid', 'true')
-      expect(wrapperEl()?.className).toContain('shr-border-danger')
+      expect(wrapperEl()?.className).toContain('shr-rte-border-danger')
     })
 
     it('error prop を解除しても FormControl のエラーが残っていればエラーのまま', async () => {
@@ -523,7 +523,7 @@ describe('RichTextEditor', () => {
       )
 
       expect(textbox).toHaveAttribute('aria-invalid', 'true')
-      expect(wrapperEl()?.className).toContain('shr-border-danger')
+      expect(wrapperEl()?.className).toContain('shr-rte-border-danger')
     })
 
     it('error prop を後から立てると反映される', async () => {
@@ -538,7 +538,7 @@ describe('RichTextEditor', () => {
       )
 
       await waitFor(() => expect(textbox).toHaveAttribute('aria-invalid', 'true'))
-      expect(wrapperEl()?.className).toContain('shr-border-danger')
+      expect(wrapperEl()?.className).toContain('shr-rte-border-danger')
     })
 
     it('aria-describedby の変更で error prop のエラーが消えない', async () => {
@@ -1014,7 +1014,7 @@ describe('RichTextEditor', () => {
      * min-h-[8em] に縦 padding が含まれ、高さ未指定時のデフォルト高さが縮む。
      * jsdom はレイアウトを計算しないので、クラスの付与条件で退行を防ぐ。
      */
-    const BOX_BORDER_CLASS = '[&_.ProseMirror]:shr-box-border'
+    const BOX_BORDER_CLASS = '[&_.ProseMirror]:shr-rte-box-border'
 
     it('height 未指定のとき .ProseMirror を border-box にしない', () => {
       const { container } = render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })

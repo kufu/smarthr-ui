@@ -58,7 +58,7 @@ type Props = {
 }
 
 const buttonClass =
-  'shr-border-none shr-rounded-full shr-bg-white-darken shr-text-grey shr-cursor-pointer hover:shr-text-black aria-expanded:shr-bg-main aria-expanded:shr-text-white focus-visible:shr-focus-indicator'
+  'shr-rte-border-none shr-rte-rounded-full shr-rte-bg-white-darken shr-rte-text-grey shr-rte-cursor-pointer hover:shr-rte-text-black aria-expanded:shr-rte-bg-main aria-expanded:shr-rte-text-white focus-visible:shr-rte-focus-indicator'
 
 export const TableContextMenu = ({
   editor,
@@ -235,7 +235,10 @@ export const TableContextMenu = ({
   const label = localize(LABEL_MESSAGES[scope])
   return (
     <>
-      <span className="shr-absolute shr-z-1 focus-within:shr-z-[3] hover:shr-z-[2]" style={style}>
+      <span
+        className="shr-rte-absolute shr-rte-z-1 focus-within:shr-rte-z-[3] hover:shr-rte-z-[2]"
+        style={style}
+      >
         <ToolbarTooltip
           align={TOOLTIP_ALIGN[scope]}
           shortcut={TABLE_SHORTCUTS[scope]}
@@ -245,7 +248,7 @@ export const TableContextMenu = ({
           <button
             ref={triggerRef}
             type="button"
-            className={`shr-group/cell shr-relative ${scope === 'cell' ? 'shr-cursor-pointer shr-border-none shr-bg-transparent shr-p-0 focus-visible:shr-outline-none' : scope === 'table' ? 'shr-border-shorthand shr-flex shr-cursor-pointer shr-items-center shr-justify-center shr-rounded-m shr-bg-white shr-p-0 shr-text-grey focus-visible:shr-focus-indicator hover:shr-bg-white-darken' : buttonClass}`}
+            className={`shr-rte-group/cell shr-rte-relative ${scope === 'cell' ? 'shr-rte-cursor-pointer shr-rte-border-none shr-rte-bg-transparent shr-rte-p-0 focus-visible:shr-rte-outline-none' : scope === 'table' ? 'shr-rte-border-shorthand shr-rte-flex shr-rte-cursor-pointer shr-rte-items-center shr-rte-justify-center shr-rte-rounded-m shr-rte-bg-white shr-rte-p-0 shr-rte-text-grey focus-visible:shr-rte-focus-indicator hover:shr-rte-bg-white-darken' : buttonClass}`}
             style={{ width: style.width, height: style.height }}
             aria-label={label}
             aria-keyshortcuts={toAriaKeyShortcuts(TABLE_SHORTCUTS[scope], isApple)}
@@ -267,10 +270,10 @@ export const TableContextMenu = ({
           >
             {scope === 'cell' ? (
               <span
-                className="shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-1/2 shr-flex shr-h-[14px] shr-w-[5px] shr--translate-x-1/2 shr--translate-y-1/2 shr-items-center shr-justify-center shr-rounded-s shr-bg-main shr-text-white group-hover/cell:shr-h-[28px] group-hover/cell:shr-w-[16px] group-focus-visible/cell:shr-h-[28px] group-focus-visible/cell:shr-w-[16px] group-aria-expanded/cell:shr-h-[28px] group-aria-expanded/cell:shr-w-[16px]"
+                className="shr-rte-pointer-events-none shr-rte-absolute shr-rte-left-1/2 shr-rte-top-1/2 shr-rte-flex shr-rte-h-[14px] shr-rte-w-[5px] shr-rte--translate-x-1/2 shr-rte--translate-y-1/2 shr-rte-items-center shr-rte-justify-center shr-rte-rounded-s shr-rte-bg-main shr-rte-text-white group-hover/cell:shr-rte-h-[28px] group-hover/cell:shr-rte-w-[16px] group-focus-visible/cell:shr-rte-h-[28px] group-focus-visible/cell:shr-rte-w-[16px] group-aria-expanded/cell:shr-rte-h-[28px] group-aria-expanded/cell:shr-rte-w-[16px]"
                 aria-hidden="true"
               >
-                <span className="shr-text-sm shr-opacity-0 group-hover/cell:shr-opacity-100 group-focus-visible/cell:shr-opacity-100 group-aria-expanded/cell:shr-opacity-100">
+                <span className="shr-rte-text-sm shr-rte-opacity-0 group-hover/cell:shr-rte-opacity-100 group-focus-visible/cell:shr-rte-opacity-100 group-aria-expanded/cell:shr-rte-opacity-100">
                   {'⋮'}
                 </span>
               </span>
@@ -290,7 +293,7 @@ export const TableContextMenu = ({
         <div
           ref={menuRef}
           role="dialog"
-          className="shr-group/table-menu shr-flex shr-flex-col shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3"
+          className="shr-rte-group/table-menu shr-rte-flex shr-rte-flex-col shr-rte-rounded-m shr-rte-bg-white shr-rte-py-0.5 shr-rte-shadow-layer-3"
           style={{ minWidth: 280 }}
           aria-label={label}
           data-keyboard={keyboardNavigation}
@@ -298,14 +301,14 @@ export const TableContextMenu = ({
           onKeyDownCapture={() => setKeyboardNavigation(true)}
           onKeyDown={functions.handleDelegateMenuKeyDown}
         >
-          <strong className="shr-px-1 shr-py-0.5 shr-text-sm shr-leading-none shr-text-grey">
+          <strong className="shr-rte-px-1 shr-rte-py-0.5 shr-rte-text-sm shr-rte-leading-none shr-rte-text-grey">
             {showColors
               ? localize({ id: 'smarthr-ui/RichTextEditor/cellColorMenu', defaultText: 'カラー' })
               : label}
           </strong>
           {showColors ? (
             <TableMenuItemButton
-              onClick={() => functions.handleChangeColors(false)}
+              handleClick={() => functions.handleChangeColors(false)}
               prefix={<FaArrowLeftIcon />}
             >
               {localize({

@@ -80,12 +80,12 @@ export const LineHeightDropdown: FC<Props> = memo((props) => {
         // viewBox が 576x512 と横長で、react-icons は幅と高さの小さいほうに合わせて
         // 縮小するため、16px では高さが 12.4px にしかならない。他のアイコンと同じ
         // 14px にするには 18px が要る。text-lg は 19.2px で行き過ぎる
-        <FaTextHeightIcon className="shr-text-[18px]" />
+        <FaTextHeightIcon className="shr-rte-text-[18px]" />
       }
       fallbackIndex={DEFAULT_INDEX}
       appearance="list"
       triggerClassName="smarthr-ui-RichTextEditor-LineHeightDropdown"
-      listboxClassName="shr-min-w-[7em]"
+      listboxClassName="shr-rte-min-w-[7em]"
       handleSelect={functions.handleSelect}
       label={localize({
         id: 'smarthr-ui/RichTextEditor/lineHeightDropdownLabel',

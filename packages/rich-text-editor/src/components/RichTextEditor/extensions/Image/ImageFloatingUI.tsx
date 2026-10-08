@@ -28,9 +28,9 @@ const classNameGenerator = tv({
   slots: {
     bar: [
       'smarthr-ui-RichTextEditor-ImageFloatingUI',
-      'shr-absolute shr-z-0',
-      'shr-inline-flex shr-items-center shr-gap-0.25',
-      'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-0.25 shr-shadow-layer-2',
+      'shr-rte-absolute shr-rte-z-0',
+      'shr-rte-inline-flex shr-rte-items-center shr-rte-gap-0.25',
+      'shr-rte-border-shorthand shr-rte-rounded-m shr-rte-bg-white shr-rte-p-0.25 shr-rte-shadow-layer-2',
     ],
   },
 })

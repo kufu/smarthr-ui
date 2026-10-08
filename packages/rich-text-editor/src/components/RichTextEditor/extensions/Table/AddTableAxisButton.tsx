@@ -25,11 +25,11 @@ type Props = {
 const classNameGenerator = tv({
   slots: {
     button: [
-      'shr-absolute shr-z-0',
-      'shr-flex shr-items-center shr-justify-center',
-      'shr-cursor-pointer shr-rounded-full shr-border-none shr-bg-white-darken shr-text-xs shr-text-grey',
-      'hover:shr-text-black',
-      'focus-visible:shr-focus-indicator focus-visible:shr-bg-white-darken',
+      'shr-rte-absolute shr-rte-z-0',
+      'shr-rte-flex shr-rte-items-center shr-rte-justify-center',
+      'shr-rte-cursor-pointer shr-rte-rounded-full shr-rte-border-none shr-rte-bg-white-darken shr-rte-text-xs shr-rte-text-grey',
+      'hover:shr-rte-text-black',
+      'focus-visible:shr-rte-focus-indicator focus-visible:shr-rte-bg-white-darken',
     ],
   },
 })
@@ -82,7 +82,7 @@ export const AddTableAxisButton: FC<Props> = memo(
         onBlur={onBlur}
         onClick={handleClick}
       >
-        <FaPlusIcon alt="" className="shr-shrink-0" />
+        <FaPlusIcon alt="" className="shr-rte-shrink-0" />
       </button>
     )
   },

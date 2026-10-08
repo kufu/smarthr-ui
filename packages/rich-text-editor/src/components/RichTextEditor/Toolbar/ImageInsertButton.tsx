@@ -26,12 +26,12 @@ import { ToolbarButton } from './ToolbarButton'
 const classNameGenerator = tv({
   slots: {
     menu: [
-      'shr-border-shorthand shr-flex shr-flex-col shr-rounded-m shr-bg-white shr-py-0.25 shr-shadow-layer-3',
+      'shr-rte-border-shorthand shr-rte-flex shr-rte-flex-col shr-rte-rounded-m shr-rte-bg-white shr-rte-py-0.25 shr-rte-shadow-layer-3',
     ],
     menuItem: [
-      'shr-cursor-pointer shr-whitespace-nowrap shr-border-none shr-bg-transparent shr-px-0.75 shr-py-0.5 shr-text-left shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
+      'shr-rte-cursor-pointer shr-rte-whitespace-nowrap shr-rte-border-none shr-rte-bg-transparent shr-rte-px-0.75 shr-rte-py-0.5 shr-rte-text-left shr-rte-text-sm shr-rte-text-black',
+      'hover:shr-rte-bg-white-darken',
+      'focus-visible:shr-rte-focus-indicator',
     ],
   },
 })
@@ -226,7 +226,7 @@ export const ImageInsertButton: FC<Props> = memo(
           name="imageFile"
           accept={mimeTypes.join(',')}
           tabIndex={-1}
-          className="shr-hidden"
+          className="shr-rte-hidden"
           aria-hidden="true"
           onChange={functions.handleFileChange}
         />

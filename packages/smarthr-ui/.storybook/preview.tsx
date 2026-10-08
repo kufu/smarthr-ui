@@ -17,8 +17,9 @@ import resolveConfig from 'tailwindcss/resolveConfig'
 // build-storybook（Rolldown）の tree-shaking で除去されてしまう。
 // eslint-disable-next-line smarthr/require-barrel-import
 import '../src/configureTwMerge'
+import './tailwind.css'
 // eslint-disable-next-line smarthr/require-barrel-import
-import '../src/styles/index.css'
+import '../../rich-text-editor/src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'
 // eslint-disable-next-line smarthr/require-barrel-import
 import presetConfig from '../src/smarthr-ui-preset'

@@ -13,13 +13,13 @@ describe.each([
 ])('%s エントリの RichTextViewer', (_, Viewer) => {
   it('className で既定のクラスを上書きできる', () => {
     const { container } = render(
-      <Viewer content={content} className="shr-leading-tight shr-text-grey" />,
+      <Viewer content={content} className="shr-rte-leading-tight shr-rte-text-grey" />,
     )
     const classList = [...(container.firstElementChild?.classList ?? [])]
 
-    expect(classList).toContain('shr-text-grey')
-    expect(classList).not.toContain('shr-text-black')
-    expect(classList).toContain('shr-leading-tight')
-    expect(classList).not.toContain('shr-leading-loose')
+    expect(classList).toContain('shr-rte-text-grey')
+    expect(classList).not.toContain('shr-rte-text-black')
+    expect(classList).toContain('shr-rte-leading-tight')
+    expect(classList).not.toContain('shr-rte-leading-loose')
   })
 })

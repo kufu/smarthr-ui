@@ -5,14 +5,14 @@ import { tv } from '../../../../libs/tv'
 
 const faceClassNameGenerator = tv({
   slots: {
-    face: 'shr-border-shorthand shr-flex shr-items-center shr-justify-center shr-rounded-m',
+    face: 'shr-rte-border-shorthand shr-rte-flex shr-rte-items-center shr-rte-justify-center shr-rte-rounded-m',
     letter: '',
   },
   variants: {
     size: {
       // A は他のアイコンと同じ 16px。箱は押下状態のボタン（32px）に近い余白感になる大きさ
-      S: { face: 'shr-size-[26px]', letter: 'shr-text-base' },
-      M: { face: 'shr-size-2', letter: 'shr-text-lg' },
+      S: { face: 'shr-rte-size-[26px]', letter: 'shr-rte-text-base' },
+      M: { face: 'shr-rte-size-2', letter: 'shr-rte-text-lg' },
     },
   },
   defaultVariants: {
@@ -22,13 +22,13 @@ const faceClassNameGenerator = tv({
 
 const buttonClassNameGenerator = tv({
   base: [
-    'shr-relative shr-inline-flex shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-p-0',
-    'hover:shr-shadow-outline',
+    'shr-rte-relative shr-rte-inline-flex shr-rte-cursor-pointer shr-rte-rounded-m shr-rte-border-none shr-rte-bg-transparent shr-rte-p-0',
+    'hover:shr-rte-shadow-outline',
   ],
 })
 
 const CHECK_CLASS_NAME =
-  'shr-absolute shr-bottom-0 shr-right-0 shr-rounded-s shr-bg-white shr-text-xs shr-text-main'
+  'shr-rte-absolute shr-rte-bottom-0 shr-rte-right-0 shr-rte-rounded-s shr-rte-bg-white shr-rte-text-xs shr-rte-text-main'
 
 type FaceProps = {
   color: string

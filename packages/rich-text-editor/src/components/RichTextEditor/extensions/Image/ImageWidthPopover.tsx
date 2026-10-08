@@ -15,8 +15,8 @@ import type { Editor } from '@tiptap/react'
 
 const classNameGenerator = tv({
   slots: {
-    row: 'shr-flex shr-gap-0.5 [align-items:last_baseline]',
-    lock: 'shr-shrink-0 shr-text-grey',
+    row: 'shr-rte-flex shr-rte-gap-0.5 [align-items:last_baseline]',
+    lock: 'shr-rte-shrink-0 shr-rte-text-grey',
   },
 })
 

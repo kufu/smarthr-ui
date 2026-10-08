@@ -91,26 +91,26 @@ const classNameGenerator = tv({
     // items-start は、折り返して段が複数行になってもトグルを右上に留めるため
     toolbar: [
       'smarthr-ui-RichTextEditor-Toolbar',
-      'shr-border-b-shorthand shr-flex shr-items-start shr-gap-0.25 shr-p-0.5',
+      'shr-rte-border-b-shorthand shr-rte-flex shr-rte-items-start shr-rte-gap-0.25 shr-rte-p-0.5',
     ],
     // min-w-0 が無いと段が内容の幅より縮まず、横スクロールが発生しない。
     // overflow-y は auto に計算されるのに任せず hidden を明示する（Scroller と同じ）
     row: [
       'smarthr-ui-RichTextEditor-ToolbarRow',
-      'shr-flex shr-min-w-0 shr-flex-1 shr-items-center shr-gap-0.25',
-      'shr-flex-nowrap shr-overflow-x-auto shr-overflow-y-hidden',
-      'data-[wrapped]:shr-flex-wrap data-[wrapped]:shr-overflow-visible',
+      'shr-rte-flex shr-rte-min-w-0 shr-rte-flex-1 shr-rte-items-center shr-rte-gap-0.25',
+      'shr-rte-flex-nowrap shr-rte-overflow-x-auto shr-rte-overflow-y-hidden',
+      'data-[wrapped]:shr-rte-flex-wrap data-[wrapped]:shr-rte-overflow-visible',
     ],
     // separator を流用すると「もう1つのコントロールのグループ」に見えるため、
     // 全高の罫線で別の領域として切る
     toggleWrapper:
-      'shr-border-l-shorthand shr-flex shr-shrink-0 shr-items-start shr-self-stretch shr-pl-0.5',
+      'shr-rte-border-l-shorthand shr-rte-flex shr-rte-shrink-0 shr-rte-items-start shr-rte-self-stretch shr-rte-pl-0.5',
     // グループの切れ目を示すだけの装飾要素。h-1.5（24px）は各項目の高さ32px（toolbarItemStyle）
     // に対して上下に余白が残る値。mx-0.5（8px）はツールバーのgap-0.25（4px）と
     // 合わせて左右12px空ける。折り返しでも横スクロールでも潰れずに一定幅を保つよう
     // shrink-0 を付ける。
     separator:
-      'smarthr-ui-RichTextEditor-ToolbarSeparator shr-mx-0.5 shr-h-1.5 shr-w-px shr-shrink-0 shr-bg-border',
+      'smarthr-ui-RichTextEditor-ToolbarSeparator shr-rte-mx-0.5 shr-rte-h-1.5 shr-rte-w-px shr-rte-shrink-0 shr-rte-bg-border',
   },
 })
 

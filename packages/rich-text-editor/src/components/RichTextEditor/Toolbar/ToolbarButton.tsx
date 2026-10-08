@@ -13,14 +13,13 @@ const classNameGenerator = tv({
   base: [
     TOOLBAR_ITEM_CLASS_NAME,
     'smarthr-ui-RichTextEditor-ToolbarButton',
-    // tv の variants で指定しないのは、shr- プレフィックスを tailwind-merge に
-    // 設定していないため base の shr-bg-transparent / shr-text-black と競合が
-    // 解決されず、CSS の出現順に負けるため。属性セレクタなら詳細度で上回る。
-    'data-[active]:shr-bg-main data-[active]:shr-text-white',
-    'data-[active]:hover:shr-bg-main-darken',
+    // tv の variants で指定しないのは、押下状態が変わるたびにクラス名を作り直さないため。
+    // 属性セレクタなら base の shr-rte-bg-transparent / shr-rte-text-black を詳細度で上回る。
+    'data-[active]:shr-rte-bg-main data-[active]:shr-rte-text-white',
+    'data-[active]:hover:shr-rte-bg-main-darken',
     // 押下中の disabled は Button の primary に合わせる
-    'data-[active]:disabled:shr-bg-main/50 data-[active]:disabled:shr-text-white/50',
-    'data-[active]:disabled:hover:shr-bg-main/50',
+    'data-[active]:disabled:shr-rte-bg-main/50 data-[active]:disabled:shr-rte-text-white/50',
+    'data-[active]:disabled:hover:shr-rte-bg-main/50',
   ],
 })
 

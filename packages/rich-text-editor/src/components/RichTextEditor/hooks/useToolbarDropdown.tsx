@@ -262,7 +262,7 @@ export function useToolbarDropdown(
       return createPortal(
         <div
           ref={contentRef}
-          className={`shr-absolute shr-z-overlap-base ${isVisible ? 'shr-visible' : 'shr-invisible'}`}
+          className={`shr-rte-absolute shr-rte-z-overlap-base ${isVisible ? 'shr-rte-visible' : 'shr-rte-invisible'}`}
           style={{
             // 既定の縮む幅だと、画面の右端に近いときに縮んだ値で測られ、端からの余白を確保できない
             width: 'max-content',

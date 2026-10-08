@@ -651,13 +651,13 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
       content: [
         {
           type: 'codeBlock',
-          attrs: { language: 'x shr-fixed shr-inset-0' },
+          attrs: { language: 'x shr-fixed shr-inset-0 shr-rte-fixed shr-rte-inset-0' },
           content: [{ type: 'text', text: 'code' }],
         },
       ],
     })
-    expect(html).not.toContain('shr-fixed')
-    expect(react).not.toContain('shr-fixed')
+    expect(html).not.toMatch(/shr-(rte-)?fixed/)
+    expect(react).not.toMatch(/shr-(rte-)?fixed/)
     expect(html).toContain('code')
     expect(react).toContain('code')
   })
@@ -735,20 +735,24 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
 
   it('link の class が両経路で出力されない', () => {
     const { html, react } = bothOutputs(
-      linkDoc({ href: 'https://example.com', class: 'shr-fixed shr-inset-0' }),
+      linkDoc({
+        href: 'https://example.com',
+        class: 'shr-fixed shr-inset-0 shr-rte-fixed shr-rte-inset-0',
+      }),
     )
-    expect(html).not.toContain('shr-fixed')
-    expect(react).not.toContain('shr-fixed')
+    expect(html).not.toMatch(/shr-(rte-)?fixed/)
+    expect(react).not.toMatch(/shr-(rte-)?fixed/)
   })
 
   it('HTML入力の link の rel/class も出力されない', () => {
     const json = normalizeToJSON({
       format: 'html',
-      content: '<p><a href="https://example.com" rel="opener" class="shr-fixed">click</a></p>',
+      content:
+        '<p><a href="https://example.com" rel="opener" class="shr-fixed shr-rte-fixed">click</a></p>',
     })
     const { html, react } = bothOutputs(json)
     for (const output of [html, react]) {
-      expect(output).not.toContain('shr-fixed')
+      expect(output).not.toMatch(/shr-(rte-)?fixed/)
       expect(output).toContain('rel="noopener noreferrer nofollow"')
     }
   })

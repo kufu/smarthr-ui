@@ -24,9 +24,9 @@ import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 
 const classNameGenerator = tv({
   slots: {
-    popup: [TOOLBAR_POPUP_CLASS_NAME, 'shr-min-w-[12em]'],
-    field: 'shr-flex shr-flex-col shr-gap-0.25 shr-text-sm shr-text-black',
-    error: 'shr-text-sm shr-text-danger',
+    popup: [TOOLBAR_POPUP_CLASS_NAME, 'shr-rte-min-w-[12em]'],
+    field: 'shr-rte-flex shr-rte-flex-col shr-rte-gap-0.25 shr-rte-text-sm shr-rte-text-black',
+    error: 'shr-rte-text-sm shr-rte-text-danger',
   },
 })
 

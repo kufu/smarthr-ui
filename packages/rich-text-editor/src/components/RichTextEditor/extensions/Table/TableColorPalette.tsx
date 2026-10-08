@@ -26,9 +26,14 @@ export const TableColorPalette = ({
   const current = getSelectedCellColor(editor, attribute)
   const normalizedCurrent = current === null ? null : normalizeHex(current, '')
   return (
-    <div role="group" className="shr-px-1 shr-py-0.75" aria-label={title}>
-      <div className="shr-mb-0.5 shr-text-sm shr-font-bold shr-text-grey">{title}</div>
-      <div className="shr-grid shr-gap-0.5" style={{ gridTemplateColumns: 'repeat(6, 32px)' }}>
+    <div role="group" className="shr-rte-px-1 shr-rte-py-0.75" aria-label={title}>
+      <div className="shr-rte-mb-0.5 shr-rte-text-sm shr-rte-font-bold shr-rte-text-grey">
+        {title}
+      </div>
+      <div
+        className="shr-rte-grid shr-rte-gap-0.5"
+        style={{ gridTemplateColumns: 'repeat(6, 32px)' }}
+      >
         {(attribute === 'color' ? EDITOR_COLORS : EDITOR_BACKGROUND_COLORS).map((color) => {
           const label = localize({ id: color.labelId, defaultText: color.defaultText })
           const selected =
@@ -39,7 +44,7 @@ export const TableColorPalette = ({
               selected={selected}
               appearance={attribute}
               color={color.value}
-              className="group-data-[keyboard=true]/table-menu:focus:shr-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-outline-none"
+              className="group-data-[keyboard=true]/table-menu:focus:shr-rte-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-rte-outline-none"
               handleClick={() => handleRun(() => setTableCellColor(editor, attribute, color.value))}
               label={label}
             />
@@ -49,7 +54,7 @@ export const TableColorPalette = ({
       <Button
         variant="text"
         size="S"
-        className="shr-mt-0.5"
+        className="shr-rte-mt-0.5"
         onClick={() => handleRun(() => setTableCellColor(editor, attribute, null))}
         prefix={<FaXmarkIcon />}
       >

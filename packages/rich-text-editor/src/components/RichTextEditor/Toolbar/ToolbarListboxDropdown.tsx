@@ -16,35 +16,36 @@ import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 const classNameGenerator = tv({
   slots: {
     trigger: TOOLBAR_ITEM_CLASS_NAME,
-    listbox: 'shr-border-shorthand shr-rounded-m shr-bg-white shr-shadow-layer-3',
+    listbox: 'shr-rte-border-shorthand shr-rte-rounded-m shr-rte-bg-white shr-rte-shadow-layer-3',
     option: [
-      'shr-flex shr-cursor-pointer shr-items-center shr-bg-transparent shr-text-sm shr-text-black',
-      'hover:shr-bg-white-darken',
-      'focus-visible:shr-focus-indicator',
+      'shr-rte-flex shr-rte-cursor-pointer shr-rte-items-center shr-rte-bg-transparent shr-rte-text-sm shr-rte-text-black',
+      'hover:shr-rte-bg-white-darken',
+      'focus-visible:shr-rte-focus-indicator',
     ],
-    checkIcon: 'shr-w-[1em] shr-shrink-0',
+    checkIcon: 'shr-rte-w-[1em] shr-rte-shrink-0',
   },
   variants: {
     appearance: {
       list: {
-        listbox: 'shr-max-h-[20em] shr-overflow-y-auto shr-py-0.25',
-        option: 'shr-w-full shr-gap-0.5 shr-border-none shr-px-0.75 shr-py-0.5 shr-text-left',
+        listbox: 'shr-rte-max-h-[20em] shr-rte-overflow-y-auto shr-rte-py-0.25',
+        option:
+          'shr-rte-w-full shr-rte-gap-0.5 shr-rte-border-none shr-rte-px-0.75 shr-rte-py-0.5 shr-rte-text-left',
       },
       heading: {
         listbox: [
-          'shr-min-w-[10em] shr-py-0.25',
+          'shr-rte-min-w-[10em] shr-rte-py-0.25',
           // 選択肢ごとに文字サイズが違うため行の高さが揃わない。grid-auto-rows:1fr で
           // 全行を最も高い行に合わせる。固定値を書かずに済み、許可レベルが減って
           // 見出し1が消えた場合もその時点の最大に追従する。
-          'shr-grid shr-grid-cols-1 [grid-auto-rows:1fr]',
+          'shr-rte-grid shr-rte-grid-cols-1 [grid-auto-rows:1fr]',
         ],
         option:
-          'shr-border-t-shorthand shr-w-full shr-gap-0.5 shr-px-0.75 shr-py-0.5 shr-text-left first:shr-border-t-0',
+          'shr-rte-border-t-shorthand shr-rte-w-full shr-rte-gap-0.5 shr-rte-px-0.75 shr-rte-py-0.5 shr-rte-text-left first:shr-rte-border-t-0',
       },
       icons: {
-        listbox: 'shr-flex shr-items-center shr-gap-0.25 shr-p-0.25',
+        listbox: 'shr-rte-flex shr-rte-items-center shr-rte-gap-0.25 shr-rte-p-0.25',
         option:
-          'shr-justify-center shr-rounded-m shr-border-none shr-p-0.5 aria-selected:shr-bg-white-darken',
+          'shr-rte-justify-center shr-rte-rounded-m shr-rte-border-none shr-rte-p-0.5 aria-selected:shr-rte-bg-white-darken',
       },
     },
   },
@@ -220,7 +221,7 @@ export const ToolbarListboxDropdown = ({
           onFocus={onFocus}
         >
           {triggerContent}
-          <FaCaretDownIcon className="shr-shrink-0 shr-text-xs" />
+          <FaCaretDownIcon className="shr-rte-shrink-0 shr-rte-text-xs" />
         </button>
       </ToolbarTooltip>
       {renderDropdown(
@@ -266,7 +267,7 @@ export const ToolbarListboxDropdown = ({
                 onKeyDown={functions.handleOptionKeyDown}
               >
                 <span className={classNames.checkIcon}>
-                  {isSelected && <FaCheckIcon className="shr-text-main" />}
+                  {isSelected && <FaCheckIcon className="shr-rte-text-main" />}
                 </span>
                 {option.content}
               </button>

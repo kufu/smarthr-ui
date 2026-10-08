@@ -9,7 +9,7 @@ import { useIntl } from '../../../intl'
 import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 import { isHttpUrl } from './urlValidation'
 
-const DIALOG_CLASS_NAME = `${TOOLBAR_POPUP_CLASS_NAME} shr-box-border shr-w-[20em] shr-max-w-full`
+const DIALOG_CLASS_NAME = `${TOOLBAR_POPUP_CLASS_NAME} shr-rte-box-border shr-rte-w-[20em] shr-rte-max-w-full`
 
 type Props = {
   handleInsert: (src: string) => void

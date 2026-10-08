@@ -239,7 +239,7 @@ export const ColorPickerButton: FC<Props> = memo(
               color={currentColor ?? defaultColor}
               aria-hidden="true"
             />
-            <FaCaretDownIcon className="shr-text-xs" />
+            <FaCaretDownIcon className="shr-rte-text-xs" />
           </button>
         </ToolbarTooltip>
         {renderDropdown(

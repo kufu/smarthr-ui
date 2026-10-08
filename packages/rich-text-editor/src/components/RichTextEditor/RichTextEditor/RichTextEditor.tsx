@@ -32,61 +32,63 @@ const classNameGenerator = tv({
       'smarthr-ui-RichTextEditor',
       // box-border は width 指定時に枠線を含めた実寸にするため。
       // Textarea・Input と揃えないと、同じ width を指定しても並べたときに幅がずれる。
-      'shr-border-shorthand shr-relative shr-box-border shr-rounded-m',
-      'contrast-more:shr-border-high-contrast',
-      'focus-within:shr-focus-indicator--outer',
+      'shr-rte-border-shorthand shr-rte-relative shr-rte-box-border shr-rte-rounded-m',
+      'contrast-more:shr-rte-border-high-contrast',
+      'focus-within:shr-rte-focus-indicator--outer',
     ],
     // z は表の操作ハンドル（TableContextMenu が 1〜3 を使う）より上に置く。
     // sticky + z で積み重ねコンテキストを作るため、内側のツールチップの z-overlap は
     // このコンテキストの中でしか効かず、同値だと後ろにあるハンドルに負ける。
-    toolbarWrapper: 'shr-sticky shr-top-0 shr-z-[4] shr-rounded-t-[inherit] shr-bg-white',
+    toolbarWrapper:
+      'shr-rte-sticky shr-rte-top-0 shr-rte-z-[4] shr-rte-rounded-t-[inherit] shr-rte-bg-white',
     content: [
       'smarthr-ui-RichTextEditor-content',
       // editor area
       // 高さは content div の CSS 変数から受ける。未指定なら auto に解決されるため、
       // min-h との併用で「下限は常に 8em」が prop でもドラッグでも同じ経路で担保される。
-      '[&_.ProseMirror]:shr-h-[var(--shr-rte-editor-height,auto)] [&_.ProseMirror]:shr-min-h-[8em] [&_.ProseMirror]:shr-overflow-y-auto [&_.ProseMirror]:shr-px-0.75 [&_.ProseMirror]:shr-py-0.5 [&_.ProseMirror]:shr-text-base [&_.ProseMirror]:shr-leading-normal [&_.ProseMirror]:shr-text-black [&_.ProseMirror]:shr-outline-none',
+      '[&_.ProseMirror]:shr-rte-h-[var(--shr-rte-editor-height,auto)] [&_.ProseMirror]:shr-rte-min-h-[8em] [&_.ProseMirror]:shr-rte-overflow-y-auto [&_.ProseMirror]:shr-rte-px-0.75 [&_.ProseMirror]:shr-rte-py-0.5 [&_.ProseMirror]:shr-rte-text-base [&_.ProseMirror]:shr-rte-leading-normal [&_.ProseMirror]:shr-rte-text-black [&_.ProseMirror]:shr-rte-outline-none',
       // placeholder
-      '[&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-pointer-events-none [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-float-left [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-h-0 [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-text-grey [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-content-[attr(data-placeholder)]',
+      '[&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-rte-pointer-events-none [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-rte-float-left [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-rte-h-0 [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-rte-text-grey [&_.ProseMirror_p.is-editor-empty:first-child::before]:shr-rte-content-[attr(data-placeholder)]',
       // content styles (shared with RichTextViewer)
       ...editorContentClasses,
     ],
     characterCountArea:
-      'shr-border-t-shorthand shr-px-0.75 shr-py-0.5 shr-text-right shr-text-sm shr-text-grey',
+      'shr-rte-border-t-shorthand shr-rte-px-0.75 shr-rte-py-0.5 shr-rte-text-right shr-rte-text-sm shr-rte-text-grey',
     resizeHandle: [
       'smarthr-ui-RichTextEditor-resizeHandle',
-      // wrapper が shr-relative なので、文字数エリアの有無に関係なく右下に出る。
+      // wrapper が shr-rte-relative なので、文字数エリアの有無に関係なく右下に出る。
       // 角丸からはみ出さないよう僅かに内側に寄せる。
-      // z-1 は TableFloatingUI / ImageFloatingUI が shr-z-0 で絶対配置されるため。
-      'shr-absolute shr-bottom-[2px] shr-right-[2px] shr-z-1',
-      'shr-flex shr-items-center shr-justify-center',
-      'shr-cursor-ns-resize shr-text-sm shr-text-grey',
-      'shr-touch-none',
+      // z-1 は TableFloatingUI / ImageFloatingUI が shr-rte-z-0 で絶対配置されるため。
+      'shr-rte-absolute shr-rte-bottom-[2px] shr-rte-right-[2px] shr-rte-z-1',
+      'shr-rte-flex shr-rte-items-center shr-rte-justify-center',
+      'shr-rte-cursor-ns-resize shr-rte-text-sm shr-rte-text-grey',
+      'shr-rte-touch-none',
     ],
   },
   variants: {
     disabled: {
       true: {
-        wrapper: 'shr-pointer-events-none shr-border-default/50 shr-bg-white-darken',
-        toolbarWrapper: 'shr-bg-white-darken',
-        content: '[&_.ProseMirror]:shr-text-disabled',
+        wrapper: 'shr-rte-pointer-events-none shr-rte-border-default/50 shr-rte-bg-white-darken',
+        toolbarWrapper: 'shr-rte-bg-white-darken',
+        content: '[&_.ProseMirror]:shr-rte-text-disabled',
       },
     },
     readOnly: {
       true: {
-        wrapper: '[&&&]:shr-border-[theme(backgroundColor.background)] [&&&]:shr-bg-background',
+        wrapper:
+          '[&&&]:shr-rte-border-[theme(backgroundColor.background)] [&&&]:shr-rte-bg-background',
       },
     },
     error: {
       true: {
-        wrapper: 'shr-border-danger',
+        wrapper: 'shr-rte-border-danger',
       },
     },
     resizable: {
       true: {
         // 文字数テキストとハンドルが重ならないよう右側を広げる。
-        // shr-px-0.75 を確実に上書きするため、このファイルの既存作法の詳細度引き上げを使う。
-        characterCountArea: '[&&&]:shr-pr-2',
+        // shr-rte-px-0.75 を確実に上書きするため、このファイルの既存作法の詳細度引き上げを使う。
+        characterCountArea: '[&&&]:shr-rte-pr-2',
       },
     },
     hasEditorHeight: {
@@ -95,7 +97,7 @@ const classNameGenerator = tv({
         // 常時付けてはいけない。preflight 無効で既定が content-box のため、
         // 常時 border-box にすると min-h-[8em] に縦 padding が含まれ、
         // 高さ未指定時のデフォルト高さが 144px から 128px に縮む。
-        content: '[&_.ProseMirror]:shr-box-border',
+        content: '[&_.ProseMirror]:shr-rte-box-border',
       },
     },
   },

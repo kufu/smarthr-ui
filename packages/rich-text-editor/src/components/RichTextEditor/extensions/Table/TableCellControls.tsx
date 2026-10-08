@@ -203,7 +203,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
   return (
     <>
       <span
-        className="shr-pointer-events-none shr-absolute shr-rounded-s shr-text-main"
+        className="shr-rte-pointer-events-none shr-rte-absolute shr-rte-rounded-s shr-rte-text-main"
         style={{
           ...highlight,
           outline: '2px solid currentColor',

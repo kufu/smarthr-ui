@@ -21,11 +21,11 @@ const ALL_OPTIONS = [
 // ボタン本体ではなくラベルにだけ付けるのは、ボタンの文字サイズを継承する
 // チェックアイコンまで大きくならないようにするため。
 const OPTION_LABEL_CLASS_NAMES = {
-  normal: 'shr-text-base shr-leading-tight',
-  1: 'shr-text-2xl shr-leading-tight',
-  2: 'shr-text-xl shr-leading-tight',
-  3: 'shr-text-lg shr-leading-tight',
-  4: 'shr-text-base shr-font-bold shr-leading-tight',
+  normal: 'shr-rte-text-base shr-rte-leading-tight',
+  1: 'shr-rte-text-2xl shr-rte-leading-tight',
+  2: 'shr-rte-text-xl shr-rte-leading-tight',
+  3: 'shr-rte-text-lg shr-rte-leading-tight',
+  4: 'shr-rte-text-base shr-rte-font-bold shr-rte-leading-tight',
 } as const
 
 type Props = {
@@ -92,9 +92,9 @@ export const HeadingDropdown: FC<Props> = memo((props) => {
       {...props}
       selectedIndex={allowedOptions.findIndex((o) => o.level === currentLevel)}
       valueLabel={currentLabel}
-      triggerContent={<span className="shr-flex-1">{currentLabel}</span>}
+      triggerContent={<span className="shr-rte-flex-1">{currentLabel}</span>}
       appearance="heading"
-      triggerClassName="smarthr-ui-RichTextEditor-HeadingDropdown shr-min-w-[9em] shr-text-left shr-text-sm"
+      triggerClassName="smarthr-ui-RichTextEditor-HeadingDropdown shr-rte-min-w-[9em] shr-rte-text-left shr-rte-text-sm"
       handleSelect={functions.handleSelect}
       label={localize({
         id: 'smarthr-ui/RichTextEditor/headingDropdownLabel',

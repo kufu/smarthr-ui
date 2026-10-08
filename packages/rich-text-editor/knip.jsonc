@@ -13,10 +13,6 @@
     "vitest.config.ts",
     "vitest-setup.js"
   ],
-  "ignore": [
-    // tailwindcss CLIの入力ファイル。importされないためknipからは到達できない
-    "src/styles/index.css"
-  ],
   "ignoreBinaries": [
     "eslint",
     "prettier",

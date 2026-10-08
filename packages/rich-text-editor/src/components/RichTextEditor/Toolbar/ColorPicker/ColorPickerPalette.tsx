@@ -21,25 +21,25 @@ import { ColorSwatch } from './ColorSwatch'
 
 const SWATCHES_PER_ROW = 6
 const PALETTE_BUTTON_BASE_CLASSES = [
-  'shr-border-shorthand shr-cursor-pointer shr-rounded-m shr-bg-transparent shr-px-0.5 shr-py-0.25 shr-text-sm shr-font-bold shr-text-black',
-  'hover:shr-bg-white-darken',
+  'shr-rte-border-shorthand shr-rte-cursor-pointer shr-rte-rounded-m shr-rte-bg-transparent shr-rte-px-0.5 shr-rte-py-0.25 shr-rte-text-sm shr-rte-font-bold shr-rte-text-black',
+  'hover:shr-rte-bg-white-darken',
 ]
 
 const classNameGenerator = tv({
   slots: {
     palette: [
-      'shr-border-shorthand shr-flex shr-flex-col shr-gap-1 shr-rounded-m shr-bg-white shr-p-0.75 shr-shadow-layer-3',
+      'shr-rte-border-shorthand shr-rte-flex shr-rte-flex-col shr-rte-gap-1 shr-rte-rounded-m shr-rte-bg-white shr-rte-p-0.75 shr-rte-shadow-layer-3',
     ],
-    section: 'shr-flex shr-flex-col shr-gap-0.5',
-    sectionTitle: 'shr-text-xs shr-font-bold shr-text-grey',
-    swatchRow: 'shr-flex shr-gap-0.5',
-    customRow: 'shr-flex shr-items-center shr-gap-0.5',
+    section: 'shr-rte-flex shr-rte-flex-col shr-rte-gap-0.5',
+    sectionTitle: 'shr-rte-text-xs shr-rte-font-bold shr-rte-text-grey',
+    swatchRow: 'shr-rte-flex shr-rte-gap-0.5',
+    customRow: 'shr-rte-flex shr-rte-items-center shr-rte-gap-0.5',
     // input を重ねる基準にするため relative にする。フォーカスリングは中の input に当たるので
     // focus-visible ではなく has-[:focus-visible] で外側に出す
     editButton: [
       ...PALETTE_BUTTON_BASE_CLASSES,
-      'shr-relative shr-inline-flex shr-items-center',
-      'has-[:focus-visible]:shr-focus-indicator',
+      'shr-rte-relative shr-rte-inline-flex shr-rte-items-center',
+      'has-[:focus-visible]:shr-rte-focus-indicator',
     ],
     // 「色を編集」の見た目に重ねる、透明な実寸の色入力。
     // sr-only で隠して button から click() を中継する形は採れない。WebKit はネイティブの
@@ -47,7 +47,7 @@ const classNameGenerator = tv({
     // macOS Safari で無関係な位置に表示され、iOS Safari では何も起きない
     // preflight を切っているため、m-0 を明示しないと input 既定のマージンぶん位置がずれる
     colorInput:
-      'shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0',
+      'shr-rte-absolute shr-rte-left-0 shr-rte-top-0 shr-rte-m-0 shr-rte-h-full shr-rte-w-full shr-rte-cursor-pointer shr-rte-opacity-0',
   },
 })
 
@@ -286,7 +286,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                   selected={isSelected}
                   appearance={appearance}
                   color={color.value}
-                  className="focus-visible:shr-focus-indicator"
+                  className="focus-visible:shr-rte-focus-indicator"
                   data-color-swatch="standard"
                   handleKeyDown={functions.handleSwatchKeyDown}
                   handleClick={() => functions.applyStandardColor(color.value)}
@@ -309,7 +309,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                     selected={isSelected}
                     appearance={appearance}
                     color={color.value}
-                    className="focus-visible:shr-focus-indicator"
+                    className="focus-visible:shr-rte-focus-indicator"
                     data-color-swatch="standard"
                     handleKeyDown={functions.handleSwatchKeyDown}
                     handleClick={() => functions.applyStandardColor(color.value)}
@@ -330,7 +330,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                 selected={customSelected}
                 appearance={appearance}
                 color={customColor}
-                className="focus-visible:shr-focus-indicator"
+                className="focus-visible:shr-rte-focus-indicator"
                 data-color-swatch="custom"
                 handleKeyDown={functions.handleSwatchKeyDown}
                 handleClick={() => functions.applyCustomColor(customColor)}
@@ -366,7 +366,7 @@ export const ColorPickerPalette: FC<Props> = memo(
                     selected={isSelected}
                     appearance={appearance}
                     color={color}
-                    className="focus-visible:shr-focus-indicator"
+                    className="focus-visible:shr-rte-focus-indicator"
                     data-color-swatch="recent"
                     handleKeyDown={functions.handleSwatchKeyDown}
                     handleClick={() => functions.applyRecentColor(color)}
@@ -381,7 +381,7 @@ export const ColorPickerPalette: FC<Props> = memo(
         <Button
           variant="text"
           size="S"
-          className="shr-self-start"
+          className="shr-rte-self-start"
           onClick={functions.removeColor}
           prefix={<FaXmarkIcon />}
         >

@@ -4,12 +4,12 @@ const classNameGenerator = tv({
   base: [
     // align-middle が無いと inline-flex のベースラインが中身に左右される。
     // 空の色スウォッチを持つ背景色トリガーだけ行ボックスが伸び、2px ずれていた。
-    'shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-align-middle',
-    'shr-h-2 shr-min-w-[theme(spacing.2)]',
-    'shr-cursor-pointer shr-rounded-m shr-border-none shr-bg-transparent shr-px-0.5 shr-text-base shr-text-black',
-    'hover:shr-bg-white-darken',
-    'focus-visible:shr-focus-indicator',
-    'disabled:shr-cursor-default disabled:shr-text-disabled disabled:hover:shr-bg-transparent',
+    'shr-rte-inline-flex shr-rte-items-center shr-rte-justify-center shr-rte-gap-0.25 shr-rte-align-middle',
+    'shr-rte-h-2 shr-rte-min-w-[theme(spacing.2)]',
+    'shr-rte-cursor-pointer shr-rte-rounded-m shr-rte-border-none shr-rte-bg-transparent shr-rte-px-0.5 shr-rte-text-base shr-rte-text-black',
+    'hover:shr-rte-bg-white-darken',
+    'focus-visible:shr-rte-focus-indicator',
+    'disabled:shr-rte-cursor-default disabled:shr-rte-text-disabled disabled:hover:shr-rte-bg-transparent',
   ],
 })
 
@@ -18,4 +18,4 @@ export const TOOLBAR_ITEM_CLASS_NAME = classNameGenerator()
 
 /** ツールバーから開くポップアップの外枠で共有するスタイル */
 export const TOOLBAR_POPUP_CLASS_NAME =
-  'shr-border-shorthand shr-rounded-m shr-bg-white shr-p-1 shr-shadow-layer-3'
+  'shr-rte-border-shorthand shr-rte-rounded-m shr-rte-bg-white shr-rte-p-1 shr-rte-shadow-layer-3'

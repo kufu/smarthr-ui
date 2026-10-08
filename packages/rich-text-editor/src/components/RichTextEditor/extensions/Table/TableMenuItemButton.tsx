@@ -1,7 +1,7 @@
 import type { ComponentPropsWithRef, FC, MouseEvent, ReactNode } from 'react'
 
 const CLASS_NAME =
-  'shr-box-border shr-flex shr-w-full shr-cursor-pointer shr-items-center shr-justify-start shr-gap-0.5 shr-whitespace-nowrap shr-rounded-none shr-border-none shr-border-transparent shr-bg-transparent shr-px-1 shr-py-0.75 shr-text-left shr-font-inherit shr-text-base shr-font-normal shr-leading-none shr-text-black hover:shr-bg-white-darken focus-visible:shr-bg-white-darken focus-visible:shr-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-outline-none group-data-[keyboard=true]/table-menu:focus:shr-focus-indicator aria-disabled:shr-cursor-not-allowed aria-disabled:shr-bg-transparent aria-disabled:shr-text-disabled aria-disabled:forced-colors:shr-text-[GrayText] [&_svg]:shr-block [&_svg]:forced-colors:aria-disabled:shr-fill-[GrayText]'
+  'shr-rte-box-border shr-rte-flex shr-rte-w-full shr-rte-cursor-pointer shr-rte-items-center shr-rte-justify-start shr-rte-gap-0.5 shr-rte-whitespace-nowrap shr-rte-rounded-none shr-rte-border-none shr-rte-border-transparent shr-rte-bg-transparent shr-rte-px-1 shr-rte-py-0.75 shr-rte-text-left shr-rte-font-inherit shr-rte-text-base shr-rte-font-normal shr-rte-leading-none shr-rte-text-black hover:shr-rte-bg-white-darken focus-visible:shr-rte-bg-white-darken focus-visible:shr-rte-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-rte-outline-none group-data-[keyboard=true]/table-menu:focus:shr-rte-focus-indicator aria-disabled:shr-rte-cursor-not-allowed aria-disabled:shr-rte-bg-transparent aria-disabled:shr-rte-text-disabled aria-disabled:forced-colors:shr-rte-text-[GrayText] [&_svg]:shr-rte-block [&_svg]:forced-colors:aria-disabled:shr-rte-fill-[GrayText]'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
@@ -11,7 +11,8 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
 type Props = {
   prefix?: ReactNode
   suffix?: ReactNode
-} & Omit<ComponentPropsWithRef<'button'>, 'type' | 'className' | 'prefix'>
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+} & Omit<ComponentPropsWithRef<'button'>, 'type' | 'className' | 'prefix' | 'onClick'>
 
 // HINT: disabled 属性ではなく aria-disabled にするのは、smarthr-ui の Button と同じく
 // 使用不可の項目もフォーカスでき、メニューのキー操作で辿れるようにするため
@@ -20,7 +21,7 @@ export const TableMenuItemButton: FC<Props> = ({
   suffix,
   children,
   disabled,
-  onClick,
+  handleClick,
   ...rest
 }) => (
   <button
@@ -28,10 +29,12 @@ export const TableMenuItemButton: FC<Props> = ({
     type="button"
     className={CLASS_NAME}
     aria-disabled={disabled || undefined}
-    onClick={disabled ? EVENT_CANCELLER : onClick}
+    onClick={disabled ? EVENT_CANCELLER : handleClick}
   >
     {prefix}
-    <span className={suffix ? 'shr-min-w-0 shr-flex-1' : 'shr-min-w-0'}>{children}</span>
+    <span className={suffix ? 'shr-rte-min-w-0 shr-rte-flex-1' : 'shr-rte-min-w-0'}>
+      {children}
+    </span>
     {suffix}
   </button>
 )

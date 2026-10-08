@@ -86,7 +86,7 @@ describe('画像アップロード', () => {
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 
     const file = new File(['x'], 'a.png', { type: 'image/png' })
-    // ファイル input は aria-hidden / shr-hidden のため userEvent.upload が拒否する。
+    // ファイル input は aria-hidden / shr-rte-hidden のため userEvent.upload が拒否する。
     // fireEvent.change で onChange を直接発火させる。
     fireEvent.change(getFileInput(), { target: { files: [file] } })
 

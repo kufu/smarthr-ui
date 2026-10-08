@@ -45,10 +45,7 @@ export default {
     },
     css: {
       postcss: {
-        plugins: [
-          tailwindcss({ config: join(import.meta.dirname, 'tailwind.storybook.config.ts') }),
-          autoprefixer,
-        ],
+        plugins: [tailwindcss(), autoprefixer],
       },
     },
   }),

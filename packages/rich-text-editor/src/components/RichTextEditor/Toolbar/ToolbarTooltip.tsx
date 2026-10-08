@@ -14,36 +14,36 @@ const GAP = 4
 
 const classNameGenerator = tv({
   slots: {
-    wrapper: 'shr-inline-block',
+    wrapper: 'shr-rte-inline-block',
     // absolute だと body に position が付いたページで基準がずれる
     tooltip: [
-      'shr-pointer-events-none shr-fixed shr-z-overlap',
-      'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
-      'shr-whitespace-nowrap shr-rounded-m shr-bg-black shr-px-0.5 shr-py-0.5 shr-text-sm shr-text-white',
+      'shr-rte-pointer-events-none shr-rte-fixed shr-rte-z-overlap',
+      'shr-rte-flex shr-rte-flex-col shr-rte-items-center shr-rte-gap-0.5',
+      'shr-rte-whitespace-nowrap shr-rte-rounded-m shr-rte-bg-black shr-rte-px-0.5 shr-rte-py-0.5 shr-rte-text-sm shr-rte-text-white',
     ],
     // 既定の line-height だと行ボックスに内包された余白の半分がラベル文字の上に乗り、
     // キーの箱（leading-none で文字に密着）との対比で上の余白だけ広く見える。
     // 行ボックスを文字に密着させて上下の余白を揃える。
-    label: 'shr-leading-none',
+    label: 'shr-rte-leading-none',
     // ショートカットのキーを並べる行。ラベルの下に2行目として配置する
-    shortcutRow: 'shr-flex shr-items-center shr-gap-0.25',
+    shortcutRow: 'shr-rte-flex shr-rte-items-center shr-rte-gap-0.25',
     // ツールチップ本体（黒背景）よりわずかに明るい半透明の箱。白文字とのコントラストは
     // 黒背景上で実効的に #333333 相当になり約12:1 確保できる
     // border-style を明示しないと、Tailwind preflight の border-style: solid リセットが
-    // 効いていないこのリポジトリでは border-width が 0 に落ちる（shr-border だけでは効かない）
+    // 効いていないこのリポジトリでは border-width が 0 に落ちる（shr-rte-border だけでは効かない）
     // 枠線を /50 にしているのは、/30 だと黒背景に対して約 2.5:1 で WCAG 1.4.11 の目安
     // 3:1 を下回るため。/50 なら約 5.3:1 になる
     // block のままだと、行ボックスよりフォントの content area が高いぶん文字が上に寄る。
     // flex で中央揃えし、最小幅と高さを揃えてキーごとの箱の大きさのばらつきも抑える。
-    key: 'shr-inline-flex shr-h-[1.5em] shr-min-w-[1.5em] shr-items-center shr-justify-center shr-rounded-s shr-border shr-border-solid shr-border-white/50 shr-bg-white/20 shr-px-0.25 shr-text-xs shr-font-bold shr-leading-none shr-text-white',
+    key: 'shr-rte-inline-flex shr-rte-h-[1.5em] shr-rte-min-w-[1.5em] shr-rte-items-center shr-rte-justify-center shr-rte-rounded-s shr-rte-border shr-rte-border-solid shr-rte-border-white/50 shr-rte-bg-white/20 shr-rte-px-0.25 shr-rte-text-xs shr-rte-font-bold shr-rte-leading-none shr-rte-text-white',
   },
   variants: {
     // ツールチップはトリガーより横に広い。編集領域の端にあるトリガーで中央揃えにすると
     // はみ出した側がウィンドウ外へ出て読めなくなるため、端では内側へ向けて伸ばす。
     align: {
-      center: { tooltip: 'shr--translate-x-1/2' },
+      center: { tooltip: 'shr-rte--translate-x-1/2' },
       start: {},
-      end: { tooltip: 'shr--translate-x-full' },
+      end: { tooltip: 'shr-rte--translate-x-full' },
     },
   },
 })
