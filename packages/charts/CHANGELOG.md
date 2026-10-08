@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.6...smarthr-ui-charts-v0.3.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008))
+
+### Bug Fixes
+
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008)) ([0346ec8](https://github.com/kufu/smarthr-ui/commit/0346ec8cfe992c17a138bef8fc5aed4e63c66761))
+
 ## [0.2.6](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.5...smarthr-ui-charts-v0.2.6) (2026-10-01)
 
 
