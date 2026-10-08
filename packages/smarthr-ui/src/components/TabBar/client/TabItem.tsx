@@ -8,7 +8,7 @@ import { UnstyledButton } from '../../Button'
 import { FaCircleInfoIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { RenameProps, SHRComponentPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -115,32 +115,30 @@ export const TabItem: FC<Props> = ({
   )
 }
 
-const TabButton = memo<
-  Omit<Props, 'onClick'> & {
-    handleClick?: NonNullable<Props['onClick']>
-  }
->(({ id, children, suffix, handleClick, className, ...rest }) => {
-  const classNames = useMemo(() => {
-    const { wrapper, label, suffixWrapper } = classNameGenerator()
+const TabButton = memo<RenameProps<Props, { onClick: 'handleClick' }>>(
+  ({ id, children, suffix, handleClick, className, ...rest }) => {
+    const classNames = useMemo(() => {
+      const { wrapper, label, suffixWrapper } = classNameGenerator()
 
-    return {
-      wrapper: wrapper({ className }),
-      label: label(),
-      suffixWrapper: suffixWrapper(),
-    }
-  }, [className])
+      return {
+        wrapper: wrapper({ className }),
+        label: label(),
+        suffixWrapper: suffixWrapper(),
+      }
+    }, [className])
 
-  return (
-    <UnstyledButton
-      {...rest}
-      type="button"
-      id={id}
-      value={id}
-      className={classNames.wrapper}
-      onClick={handleClick}
-    >
-      <span className={classNames.label}>{children}</span>
-      {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
-    </UnstyledButton>
-  )
-})
+    return (
+      <UnstyledButton
+        {...rest}
+        type="button"
+        id={id}
+        value={id}
+        className={classNames.wrapper}
+        onClick={handleClick}
+      >
+        <span className={classNames.label}>{children}</span>
+        {suffix && <span className={classNames.suffixWrapper}>{suffix}</span>}
+      </UnstyledButton>
+    )
+  },
+)
