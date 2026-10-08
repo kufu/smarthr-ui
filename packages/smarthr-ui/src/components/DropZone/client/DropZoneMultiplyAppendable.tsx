@@ -20,7 +20,7 @@ type Props = Omit<ComponentPropsWithRef<typeof ActualDropZone>, 'multiple' | 'on
   files: File[]
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
-   * <b>（選択済みのファイルに今回追加されたファイルを結合したものが渡されます）</b>
+   * （選択済みのファイルに今回追加されたファイルを結合したものが渡されます）
    */
   onSelectFiles: (e: DragEvent<HTMLElement> | ChangeEvent<HTMLInputElement>, files: File[]) => void
 }
