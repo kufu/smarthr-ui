@@ -243,7 +243,7 @@ export const TableMenuActions = ({
             <TableMenuItemButton
               ref={colorTriggerRef}
               aria-haspopup="dialog"
-              onKeyDown={(event) => {
+              handleKeyDown={(event) => {
                 if (event.key === 'ArrowRight') {
                   event.preventDefault()
                   event.stopPropagation()
