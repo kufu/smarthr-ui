@@ -1,9 +1,9 @@
-import { DropZoneMultiplyAppendable, DropZoneNative } from './client'
+import { ActualDropZone, DropZoneMultiplyAppendable } from './client'
 
 import type { ComponentPropsWithRef, FC } from 'react'
 
 type Props =
-  | (ComponentPropsWithRef<typeof DropZoneNative> & { files?: never })
+  | (ComponentPropsWithRef<typeof ActualDropZone> & { files?: never })
   | (ComponentPropsWithRef<typeof DropZoneMultiplyAppendable> & {
       multiple: {
         /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
@@ -18,5 +18,5 @@ export const DropZone: FC<Props> = (props) => {
     return <DropZoneMultiplyAppendable {...rest} />
   }
 
-  return <DropZoneNative {...props} />
+  return <ActualDropZone {...props} />
 }

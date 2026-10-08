@@ -13,9 +13,9 @@ import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 
-import { DropZoneNative } from './DropZoneNative'
+import { ActualDropZone } from './ActualDropZone'
 
-type Props = Omit<ComponentPropsWithRef<typeof DropZoneNative>, 'multiple' | 'onSelectFiles'> & {
+type Props = Omit<ComponentPropsWithRef<typeof ActualDropZone>, 'multiple' | 'onSelectFiles'> & {
   /** 選択済みのファイル */
   files: File[]
   /**
@@ -66,7 +66,7 @@ export const DropZoneMultiplyAppendable: FC<Props> = ({ files, onSelectFiles, re
   const mergedRef = useMergeRefs(syncFilesRef, ref)
 
   return (
-    <DropZoneNative
+    <ActualDropZone
       {...rest}
       ref={mergedRef}
       multiple
