@@ -10,3 +10,4 @@ export type {
   SHRComponentPropsWithRef,
   SHRComponentPropsWithoutRef,
 } from './SHRComponentProps'
+export type { RequiredProps } from './utils'

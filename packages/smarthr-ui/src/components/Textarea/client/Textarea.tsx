@@ -20,7 +20,7 @@ import { defaultHtmlFontSize } from '../../../themes'
 import { LiveRegion } from '../../LiveRegion'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { RequiredProps, SHRComponentPropsWithRef } from '../../../types'
 
 type Props = SHRComponentPropsWithRef<
   'textarea',
@@ -96,11 +96,14 @@ export const Textarea: FC<Props> = ({ maxLetters, ...rest }) =>
     <ActualTextarea {...rest} />
   )
 
-const MaxLettersTextarea: FC<
-  Omit<Props, 'maxLetters'> & {
-    maxLetters: number
-  }
-> = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
+const MaxLettersTextarea: FC<RequiredProps<Props, 'maxLetters'>> = ({
+  maxLetters,
+  error,
+  value,
+  defaultValue,
+  onChange,
+  ...rest
+}) => {
   const maxLettersId = useId()
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
