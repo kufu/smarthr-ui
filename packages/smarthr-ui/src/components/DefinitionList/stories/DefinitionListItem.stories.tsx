@@ -10,9 +10,6 @@ export default {
   argTypes: {
     term: { control: 'text' },
     children: { control: 'text' },
-    termStyleType: {
-      description: 'DefinitionListItem に指定せず、DefinitionList に指定してください。',
-    },
     maxColumns: {
       description: 'DefinitionListItem に指定せず、DefinitionList に指定してください。',
     },
