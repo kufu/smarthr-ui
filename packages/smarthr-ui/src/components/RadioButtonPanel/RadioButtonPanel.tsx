@@ -46,12 +46,13 @@ export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) =>
   const hasDescription = !!children
 
   const classNames = useMemo(() => {
-    const { base, description, radio } = classNameGenerator({
-      className,
-      hasDescription,
-    })
+    const { base, description, radio } = classNameGenerator()
 
-    return { base: base(), description: description(), radio: radio() }
+    return {
+      base: base({ className, hasDescription }),
+      description: description(),
+      radio: radio({ hasDescription }),
+    }
   }, [hasDescription, className])
 
   return hasDescription ? (
