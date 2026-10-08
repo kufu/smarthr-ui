@@ -9,4 +9,5 @@ export type {
   SHRComponentProps,
   SHRComponentPropsWithRef,
   SHRComponentPropsWithoutRef,
+  NullOverrideProps,
 } from './SHRComponentProps'

@@ -64,3 +64,5 @@ export type SHRComponentPropsWithoutRef<
   Override,
   Options extends OptionsType = object,
 > = SHRComponentProps<ComponentPropsWithoutRef<Base>, Override, Options>
+
+export type NullOverrideProps = object
