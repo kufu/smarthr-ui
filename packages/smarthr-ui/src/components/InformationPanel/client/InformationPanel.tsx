@@ -19,7 +19,7 @@ import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel } from '../../Panel'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -195,11 +195,11 @@ export const InformationPanel: FC<Props> = ({
 }
 
 const MemoizedHeading = memo<
-  Required<Pick<Props, 'type'>> & {
-    heading: Props['heading']
-    id: string
-    className: string
-  }
+  SHRComponentProps<
+    Pick<Props, 'type' | 'heading' | 'id' | 'className'>,
+    object,
+    { required: 'type' | 'heading' | 'id' | 'className' }
+  >
 >(({ type, heading: orgHeading, ...rest }) => {
   const heading = useObjectAttributes<HeadingType, ObjectHeadingType>(
     orgHeading,
