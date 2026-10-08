@@ -52,7 +52,7 @@ describe('useMultiOptions', () => {
     it('新規追加オプションが取得できること', () => {
       const initialProps = {
         items: [],
-        selected: null,
+        selected: [],
         creatable: true,
         inputValue: 'input_data',
       }
