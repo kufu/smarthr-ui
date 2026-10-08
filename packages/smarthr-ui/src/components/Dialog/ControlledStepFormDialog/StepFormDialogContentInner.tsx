@@ -1,11 +1,10 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useContext,
@@ -25,6 +24,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
 import type { CommonButtonType, StepItem } from './type'
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
@@ -35,10 +35,11 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-type Props = PropsWithChildren<
-  ComponentProps<typeof DialogBody> & {
+type Props = SHRComponentPropsWithRef<
+  typeof DialogBody,
+  {
     /** ダイアログタイトル */
-    heading: ComponentProps<typeof DialogHeading>
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** 現在のStepNo */
     activeStep: number
     /** submitボタン */

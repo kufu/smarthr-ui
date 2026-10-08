@@ -465,7 +465,7 @@ export const ListBox = memo(
     }, [latest])
 
     return (
-      <Portal outerRef={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+      <Portal ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         <Scroller
           ref={listBoxRef}
           role="listbox"

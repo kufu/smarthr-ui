@@ -1,9 +1,7 @@
 import {
-  type ComponentProps,
   type ComponentPropsWithoutRef,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -18,31 +16,30 @@ import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
 
-// TODO: base という属性名だとプログラミング文脈に取られかねないためbackgroundなど別の属性名を検討する
-// base="base" も意味が分かりづらい
-type BaseType = 'base' | 'none'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
-type MessageType = ComponentProps<typeof StatusIcon>['status']
+type PanelProps = ComponentPropsWithoutRef<typeof Panel>
+type MessageType = ComponentPropsWithoutRef<typeof StatusIcon>['status']
 
-type BaseProps = PropsWithChildren<{
-  /** コンポーネント右の領域 */
-  subActionArea?: ReactNode
-  /** 閉じるボタン押下時に発火させる関数 */
-  onClose?: () => void
-  /** role 属性 */
-  role?: 'alert' | 'status'
-  /** 下地 */
-  base?: BaseType
-  /** メッセージの種類 */
-  type: MessageType
-  /** 強調するかどうか */
-  bold?: boolean
-  /** スライドインするかどうか */
-  animate?: boolean
-}> &
-  Pick<ComponentProps<typeof Panel>, 'layer'>
-
-type Props = Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps> & BaseProps
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  Pick<PanelProps, 'layer'> & {
+    /** コンポーネント右の領域 */
+    subActionArea?: ReactNode
+    /** 閉じるボタン押下時に発火させる関数 */
+    onClose?: () => void
+    /** role 属性 */
+    role?: 'alert' | 'status'
+    /** Panel で囲むかどうか */
+    paneled?: boolean
+    /** メッセージの種類 */
+    type: MessageType
+    /** 強調するかどうか */
+    bold?: boolean
+    /** スライドインするかどうか */
+    animate?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -60,12 +57,11 @@ const classNameGenerator = tv({
       'smarthr-ui-NotificationBar-closeButton -shr-mb-0.5 -shr-mr-0.5 -shr-mt-0.5 shr-flex-shrink-0 shr-text-black',
   },
   variants: {
-    base: {
-      none: {},
-      base: {
+    paneled: {
+      true: {
         wrapper: 'shr-py-1 shr-pe-1 shr-ps-1.5',
       },
-    } satisfies Record<BaseType, object>,
+    },
     type: {
       info: {
         icon: 'shr-text-grey',
@@ -160,26 +156,26 @@ export const NotificationBar: FC<Props> = ({
   onClose,
   children,
   role,
-  base,
+  paneled,
   layer,
   className,
   ...rest
 }) => {
-  let WrapBase: typeof Fragment | typeof Panel = Fragment
-  let baseProps = {}
+  let Wrapper: typeof Fragment | typeof Panel = Fragment
+  let wrapperProps = {}
 
-  if (base === 'base') {
-    WrapBase = Panel
-    baseProps = {
+  if (paneled) {
+    Wrapper = Panel
+    wrapperProps = {
       layer,
-      overflow: 'hidden' as ComponentProps<typeof Panel>['overflow'],
+      overflow: 'clip' as PanelProps['overflow'],
     }
   }
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
       type,
       bold: !!bold,
-      base: base || 'none',
+      paneled,
     })
 
     return {
@@ -190,10 +186,10 @@ export const NotificationBar: FC<Props> = ({
       actionArea: actionArea(),
       closeButton: closeButton(),
     }
-  }, [animate, base, bold, type, className])
+  }, [animate, paneled, bold, type, className])
 
   return (
-    <WrapBase {...baseProps}>
+    <Wrapper {...wrapperProps}>
       <div {...rest} className={classNames.wrapper}>
         <Cluster gap={1} align="center" justify="flex-end" className={classNames.inner}>
           <MessageArea
@@ -223,7 +219,7 @@ export const NotificationBar: FC<Props> = ({
           </Button>
         )}
       </div>
-    </WrapBase>
+    </Wrapper>
   )
 }
 

@@ -1,12 +1,15 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'span',
   {
     disabled?: boolean
     color?: 'grey' | 'blue' | 'green' | 'orange' | 'red'
     size?: 'S'
-  } & ComponentPropsWithoutRef<'span'>
+  }
 >
 
 const classNameGenerator = tv({

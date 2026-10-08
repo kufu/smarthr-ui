@@ -1,9 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type RefObject,
   memo,
   useLayoutEffect,
@@ -19,51 +18,54 @@ import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type FocusTrapProps = ComponentProps<typeof FocusTrap>
+type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 
-type BaseProps = PropsWithChildren<{
-  /**
-   * オーバーレイをクリックした時に発火するコールバック関数
-   * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
-   */
-  onClickOverlay?: () => void
-  /**
-   * エスケープキーを押下した時に発火するコールバック関数
-   * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
-   */
-  onPressEscape?: (e: KeyboardEvent) => void
-  /**
-   * ダイアログを開いているかどうか
-   */
-  isOpen: boolean
-  /**
-   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-   * ダイアログの幅
-   */
-  width?: string | number
-  /**
-   * ダイアログの大きさ
-   */
-  size?: DialogSize
-  /**
-   * ダイアログを開いた時にフォーカスする対象
-   */
-  firstFocusTarget?: RefObject<HTMLElement>
-  /**
-   * ダイアログの `aria-label`
-   */
-  ariaLabel?: string
-  /**
-   * ダイアログの `aria-labelledby`
-   */
-  ariaLabelledby?: string
-  /**
-   * ダイアログトップのフォーカストラップへの ref
-   */
-  focusTrapRef?: FocusTrapProps['outerRef']
-}>
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /**
+     * オーバーレイをクリックした時に発火するコールバック関数
+     * @todo イベントハンドラー命名規則に従い handleClickOverlay に変更すべき（影響範囲大のため別PR）
+     */
+    onClickOverlay?: () => void
+    /**
+     * エスケープキーを押下した時に発火するコールバック関数
+     * @todo イベントハンドラー命名規則に従い handlePressEscape に変更すべき（影響範囲大のため別PR）
+     */
+    onPressEscape?: (e: KeyboardEvent) => void
+    /**
+     * ダイアログを開いているかどうか
+     */
+    isOpen: boolean
+    /**
+     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
+     * ダイアログの幅
+     */
+    width?: string | number
+    /**
+     * ダイアログの大きさ
+     */
+    size?: DialogSize
+    /**
+     * ダイアログを開いた時にフォーカスする対象
+     */
+    firstFocusTarget?: RefObject<HTMLElement>
+    /**
+     * ダイアログの `aria-label`
+     */
+    ariaLabel?: string
+    /**
+     * ダイアログの `aria-labelledby`
+     */
+    ariaLabelledby?: string
+    /**
+     * ダイアログトップのフォーカストラップへの ref
+     */
+    focusTrapRef?: FocusTrapProps['ref']
+  }
+>
 
 const DIALOG_CONTENT_CLASS_NAME = 'smarthr-ui-Dialog'
 
@@ -173,7 +175,7 @@ export const DialogContentInner: FC<Props> = ({
           aria-labelledby={ariaLabelledby}
           aria-modal="true"
         >
-          <FocusTrap outerRef={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
             {children}
           </FocusTrap>
         </div>

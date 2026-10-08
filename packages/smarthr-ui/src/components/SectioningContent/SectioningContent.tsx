@@ -1,14 +1,20 @@
-import { SectioningFragment } from './client/components'
+import { SectioningFragment } from './client'
 
-import type { ComponentProps, ComponentPropsWithRef, FC, PropsWithChildren } from 'react'
+import type { SHRComponentPropsWithRef } from '../../types'
+import type { FC } from 'react'
 
-type BaseProps = PropsWithChildren<{
+// HINT: article/aside/nav/sectionはHTML仕様上いずれも固有のDOM interfaceを持たずHTMLElementとして
+// 扱われるため、refの型は'section'を代表にしてもas指定時と差異は生じない
+type Props = SHRComponentPropsWithRef<
+  'section',
+  {
+    baseLevel?: number
+  }
+>
+type PropsWithAs = Props & {
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
   as?: 'article' | 'aside' | 'nav' | 'section'
-  baseLevel?: number
-}>
-type PropsWithAs = BaseProps & Omit<ComponentPropsWithRef<'section'>, keyof BaseProps>
-type Props = Omit<ComponentProps<typeof SectioningContent>, 'as'>
+}
 
 const SectioningContent: FC<PropsWithAs> = ({
   children,

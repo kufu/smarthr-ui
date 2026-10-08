@@ -1,4 +1,4 @@
-import { type FC, type HTMLAttributes, type ReactNode, memo, useMemo } from 'react'
+import { type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
@@ -9,24 +9,28 @@ import { FaCaretDownIcon, FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { TextLink } from '../../TextLink'
 
-type Category = {
-  type?: string
-  heading: ReactNode
-  items: AppItem[]
-}
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
 type AppItem = {
   label: ReactNode
   url: string
   target?: string
 }
-type BaseProps = {
-  apps: Category[]
-  urlToShowAll?: string | null
-  /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
-  triggerLabel?: ReactNode
-  enableNew?: boolean
-}
-type Props = BaseProps & Omit<HTMLAttributes<HTMLElement>, keyof BaseProps>
+
+type Props = SHRComponentPropsWithoutRef<
+  typeof Dropdown,
+  {
+    apps: Array<{
+      type?: string
+      heading: ReactNode
+      items: AppItem[]
+    }>
+    urlToShowAll?: string | null
+    /** トリガーボタンのラベル。指定しない場合はIntlProviderから取得 */
+    triggerLabel?: ReactNode
+    enableNew?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {

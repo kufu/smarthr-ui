@@ -1,4 +1,10 @@
-import { type ComponentProps, type FC, type MouseEvent, type ReactNode, memo } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+} from 'react'
 
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
@@ -8,15 +14,20 @@ import { DialogBody } from '../DialogBody'
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
-type Props = ComponentProps<typeof DialogBody> & {
-  /** ダイアログタイトル */
-  heading: ComponentProps<typeof DialogHeading>
-  /** ダイアログの説明 */
-  children: ReactNode
-  /** 閉じるボタン */
-  closeButton?: ReactNode
-  handleClickClose: (e: MouseEvent<HTMLButtonElement>) => void
-}
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof DialogBody,
+  {
+    /** ダイアログタイトル */
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
+    /** ダイアログの説明 */
+    children: ReactNode
+    /** 閉じるボタン */
+    closeButton?: ReactNode
+    handleClickClose: (e: MouseEvent<HTMLButtonElement>) => void
+  }
+>
 
 const CLASS_NAMES = (() => {
   const { wrapper, actionArea } = dialogContentInner()

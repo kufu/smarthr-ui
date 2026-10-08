@@ -7,20 +7,19 @@ import type { FC } from 'react'
 
 const previewableObjectConverter = (org: boolean) => (org ? { searchable: true } : undefined)
 
-export const InputFile: FC<Props> = ({ multiple, previewable: orgPreviewable, ref, ...rest }) => {
+export const InputFile: FC<Props> = ({ multiple, previewable: orgPreviewable, ...rest }) => {
   const previewable = useObjectAttributes<typeof orgPreviewable, PreviewableObjectType | undefined>(
     orgPreviewable,
     previewableObjectConverter,
   )
 
   if (typeof multiple === 'object' && multiple.appendable) {
-    return <InputFileMultiplyAppendable {...rest} outerRef={ref} previewable={previewable} />
+    return <InputFileMultiplyAppendable {...rest} previewable={previewable} />
   }
 
   return (
     <InputFileNative
       {...rest}
-      outerRef={ref}
       previewable={previewable}
       multiple={multiple as boolean | undefined}
     />

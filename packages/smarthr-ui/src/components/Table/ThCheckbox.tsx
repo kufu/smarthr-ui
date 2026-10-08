@@ -1,4 +1,4 @@
-import { type ComponentProps, type ComponentPropsWithRef, type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -7,8 +7,12 @@ import { ControlledTooltip } from '../Tooltip'
 
 import { CheckboxTh } from './client'
 
-type BaseProps = Pick<ComponentProps<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof Checkbox>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof Checkbox,
+  Pick<ComponentPropsWithRef<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
+>
 
 const classNameGenerator = tv({
   slots: {

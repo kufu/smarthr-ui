@@ -4,7 +4,7 @@ import { Cluster } from '../../../Layout'
 import { FilterDropdown } from '../FilterDropdown'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict filter-dropdown.pict
@@ -16,10 +16,7 @@ import type { ComponentProps } from 'react'
  * default     true       false    false
  */
 const _cases: Array<
-  Pick<
-    ComponentProps<typeof FilterDropdown>,
-    'isFiltered' | 'triggerSize' | 'disabled' | 'onlyIconTrigger'
-  >
+  Pick<ComponentPropsWithoutRef<typeof FilterDropdown>, 'trigger' | 'filtered' | 'disabled'>
 > = [
   { trigger: { onlyIcon: true } },
   { trigger: { size: 'S' }, filtered: true, disabled: true },

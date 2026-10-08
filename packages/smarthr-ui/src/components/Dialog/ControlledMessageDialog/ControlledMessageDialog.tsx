@@ -1,4 +1,10 @@
-import { type ComponentProps, type FC, type MouseEvent, type ReactNode, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContentInner } from '../DialogContentInner'
@@ -7,18 +13,25 @@ import { useObjectHeading } from '../useObjectHeading'
 
 import { MessageDialogContentInner } from './MessageDialogContentInner'
 
+import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
 import type { DialogProps } from '../types'
 
-type MessageDialogContentInnerProps = ComponentProps<typeof MessageDialogContentInner>
+type MessageDialogContentInnerProps = ComponentPropsWithRef<typeof MessageDialogContentInner>
 type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type BaseProps = Omit<MessageDialogContentInnerProps, 'heading' | 'handleClickClose'> &
-  DialogProps & {
-    heading: HeadingType
-    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
-  }
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  typeof DialogContentInner,
+  SHRComponentProps<
+    MessageDialogContentInnerProps,
+    DialogProps & {
+      heading: HeadingType
+      onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    },
+    { omit: 'handleClickClose' }
+  >,
+  { omit: 'focusTrapRef' }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,

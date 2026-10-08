@@ -1,11 +1,13 @@
 'use client'
 
-import { type ComponentProps, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { FaArrowLeftIcon } from '../../Icon'
 import { TextLink } from '../TextLink'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   base: 'shr-leading-none',
@@ -17,12 +19,14 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> & {
-  /** インデントするかどうか */
-  indent?: boolean
-  /** `TextLink`に渡す `elementAs` をオプションで指定 */
-  elementAs?: ComponentProps<typeof TextLink>['elementAs']
-}
+type Props = SHRComponentPropsWithRef<
+  typeof TextLink,
+  {
+    /** インデントするかどうか */
+    indent?: boolean
+  },
+  { omit: 'prefix' | 'suffix' }
+>
 
 export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
   const { mobile } = useEnvironment()

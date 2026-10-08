@@ -1,19 +1,12 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type FC,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type ElementType, type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
-export type SideNavSizeType = 'M' | 'S'
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
-type BaseProps = {
+type BaseItemProps = {
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
   prefix?: ReactNode
   /** タイトルのサフィックスの内容。通常、Prefixを使用済みの場合にStatusLabelやChipの配置に用います。 */
@@ -21,28 +14,23 @@ type BaseProps = {
   /** 選択されているアイテムかどうか */
   current?: boolean
 }
-
-type AbstractButtonProps = BaseProps & {
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
-
-type AbstractAnchorProps<T extends ElementType = 'a'> = BaseProps & {
-  href: string
-  /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  elementAs?: T
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
-}
-
-type ButtonProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractButtonProps> &
-  AbstractButtonProps
-
-type AnchorProps<T extends ElementType = 'a'> = Omit<
-  ComponentPropsWithoutRef<'li'>,
-  keyof AbstractAnchorProps<T>
-> &
-  AbstractAnchorProps<T>
+type ButtonProps = SHRComponentPropsWithoutRef<
+  'li',
+  BaseItemProps & {
+    /** アイテムを押下したときに発火するコールバック関数 */
+    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  }
+>
+type AnchorProps<T extends ElementType> = SHRComponentPropsWithoutRef<
+  'li',
+  BaseItemProps & {
+    href: string
+    /** next/link などのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+    elementAs?: T
+    /** アイテムを押下したときに発火するコールバック関数 */
+    onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -145,7 +133,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
 }
 
 const BodyCluster = memo<
-  Pick<BaseProps, 'prefix' | 'suffix'> & {
+  Pick<BaseItemProps, 'prefix' | 'suffix'> & {
     children: ReactNode
     classNames: { body: string; bodyText: string }
   }

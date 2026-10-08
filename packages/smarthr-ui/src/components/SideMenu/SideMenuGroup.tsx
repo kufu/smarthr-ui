@@ -1,19 +1,17 @@
-import {
-  type ComponentPropsWithoutRef,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-type BaseProps = PropsWithChildren<{
-  heading: ReactNode
-}>
-type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'li',
+  {
+    heading: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -23,12 +21,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideMenuGroup = ({
-  heading,
-  children,
-  className,
-  ...rest
-}: BaseProps & ElementProps) => {
+export const SideMenuGroup = ({ heading, children, className, ...rest }: Props) => {
   const classNames = useMemo(() => {
     const { wrapper, list, groupHeading } = classNameGenerator()
 

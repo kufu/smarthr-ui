@@ -1,7 +1,13 @@
-import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 
-import { Panel } from '../../../Panel'
-import { Stack } from '../../Stack'
+import { Panel } from '../../../../Panel'
+import { Stack } from '../../../Stack'
 import { Container } from '../Container'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
@@ -49,7 +55,7 @@ export const Padding: StoryObj<typeof Container> = {
 }
 
 const DisplayDimensionsBase: React.FC<
-  ComponentProps<typeof Panel> & Pick<ComponentProps<typeof Container>, 'size'>
+  ComponentPropsWithRef<typeof Panel> & Pick<ComponentPropsWithoutRef<typeof Container>, 'size'>
 > = ({ size, ...rest }) => {
   const target = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0 })

@@ -1,20 +1,14 @@
-import {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  useId,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
 import { ButtonList } from '../client'
 
-type BaseProps = PropsWithChildren<{
+// TODO: 必要になったらBaseを'li'の型に戻し、restで透過させることを検討する
+type Props = PropsWithChildren<{
   name?: ReactNode
+  className?: string
 }>
-type Props = BaseProps & Omit<ComponentProps<'li'>, keyof BaseProps>
 
 const classNameGenerator = tv({
   base: [

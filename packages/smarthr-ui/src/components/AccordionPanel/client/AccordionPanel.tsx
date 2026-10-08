@@ -1,11 +1,9 @@
 'use client'
 
 import {
-  type ComponentProps,
   type FC,
   type KeyboardEventHandler,
   type MouseEvent,
-  type PropsWithChildren,
   createContext,
   useMemo,
   useState,
@@ -15,19 +13,24 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../../libs/map'
 
-type BaseProps = PropsWithChildren<{
-  /** アイコンの左右位置 */
-  iconPosition?: 'left' | 'right'
-  /** 複数のパネルを同時に開くことを許容するかどうか */
-  expandableMultiply?: boolean
-  /** デフォルトで開いた状態にするアイテムの `name` の配列 */
-  defaultExpanded?: string[]
-  /** トリガのクリックイベントを処理するハンドラ */
-  onClick?: (expandedItems: string[]) => void
-  /** 角丸を適用する範囲 */
-  rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
-}>
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    /** アイコンの左右位置 */
+    iconPosition?: 'left' | 'right'
+    /** 複数のパネルを同時に開くことを許容するかどうか */
+    expandableMultiply?: boolean
+    /** デフォルトで開いた状態にするアイテムの `name` の配列 */
+    defaultExpanded?: string[]
+    /** トリガのクリックイベントを処理するハンドラ */
+    onClick?: (expandedItems: string[]) => void
+    /** 角丸を適用する範囲 */
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+  },
+  { omit: 'role' }
+>
 
 const DEFAULT_EXPANDED_ARRAY: string[] = []
 const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
@@ -65,7 +68,7 @@ const classNameGenerator = tv({
       bottom: [ROUNDED.b_l, ROUNDED.b_r],
       left: [ROUNDED.t_l, ROUNDED.b_l],
     } satisfies Record<
-      Exclude<NonNullable<BaseProps['rounded']>, boolean> | 'true' | 'false',
+      Exclude<NonNullable<Props['rounded']>, boolean> | 'true' | 'false',
       string | string[]
     >,
   },

@@ -1,10 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useId,
@@ -21,32 +19,34 @@ import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel } from '../../Panel'
 
-type HeadingProps = ComponentProps<typeof Heading>
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type ObjectHeadingType = {
   text: ReactNode
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  unrecommendedTag?: HeadingProps['unrecommendedTag']
+  unrecommendedTag?: ComponentPropsWithRef<typeof Heading>['unrecommendedTag']
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type BaseProps = PropsWithChildren<{
-  /** パネルのタイトル */
-  heading: HeadingType
-  /** `true` のとき、開閉ボタンを表示する */
-  toggleable?: boolean
-  /** `true` のとき、パネルを開く */
-  active?: boolean
-  /** 開閉ボタン押下時に発火するコールバック関数 */
-  onClickTrigger?: (active: boolean) => void
-  /** パネルの種類 */
-  type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
-  /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
-  bold?: boolean
-}>
 
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** パネルのタイトル */
+    heading: HeadingType
+    /** `true` のとき、開閉ボタンを表示する */
+    toggleable?: boolean
+    /** `true` のとき、パネルを開く */
+    active?: boolean
+    /** 開閉ボタン押下時に発火するコールバック関数 */
+    onClickTrigger?: (active: boolean) => void
+    /** パネルの種類 */
+    type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
+    /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
+    bold?: boolean
+  }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
@@ -80,7 +80,7 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    } satisfies Record<NonNullable<BaseProps['type']>, Record<string, never>>,
+    } satisfies Record<NonNullable<Props['type']>, Record<string, never>>,
     bold: {
       true: {
         header: 'shr-py-1',

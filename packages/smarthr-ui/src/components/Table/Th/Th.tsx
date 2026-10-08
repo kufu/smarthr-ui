@@ -1,31 +1,30 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithoutRef, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../hooks/useLatest'
+import { useLatest } from '../../../hooks/useLatest'
+import { reelShadowClassNameGenerator } from '../reelShadowStyle'
 
 import { ThSortButton } from './ThSortButton'
-import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-type BaseProps = PropsWithChildren<{
-  /** 並び替え状態 */
-  sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
-  /** 並び替えをクリックした時に発火するコールバック関数 */
-  onSort?: () => void
-  /** 横スクロール時、カラムを左右いずれかに固定 */
-  fixed?: 'left' | 'right'
-  contentWidth?: number | string
-  /** テキストの水平方向の配置 */
-  align?: 'left' | 'right'
-  /** テキストの垂直方向の配置 */
-  vAlign?: 'middle' | 'baseline' | 'bottom'
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'th'>, keyof BaseProps | 'onClick'>
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'th',
+  {
+    /** 並び替え状態 */
+    sort?: ComponentPropsWithoutRef<typeof ThSortButton>['sort']
+    /** 並び替えをクリックした時に発火するコールバック関数 */
+    onSort?: () => void
+    /** 横スクロール時、カラムを左右いずれかに固定 */
+    fixed?: 'left' | 'right'
+    contentWidth?: number | string
+    /** テキストの水平方向の配置 */
+    align?: 'left' | 'right'
+    /** テキストの垂直方向の配置 */
+    vAlign?: 'middle' | 'baseline' | 'bottom'
+  },
+  { omit: 'onClick' }
+>
 
 const classNameGenerator = tv({
   base: [
@@ -42,12 +41,12 @@ const classNameGenerator = tv({
     align: {
       left: '',
       right: 'shr-text-right',
-    } satisfies Record<NonNullable<BaseProps['align']>, string>,
+    } satisfies Record<NonNullable<Props['align']>, string>,
     vAlign: {
       middle: '',
       baseline: 'shr-align-baseline',
       bottom: 'shr-align-bottom',
-    } satisfies Record<NonNullable<BaseProps['vAlign']>, string>,
+    } satisfies Record<NonNullable<Props['vAlign']>, string>,
   },
   defaultVariants: {
     align: 'left',

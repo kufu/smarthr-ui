@@ -1,10 +1,12 @@
-import { type ComponentPropsWithRef, type FC, type ReactNode, memo, useId, useMemo } from 'react'
+import { type FC, type ReactNode, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { SHRComponentPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -47,12 +49,14 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = {
-  children: ReactNode
-  /** ラベルを視覚的に隠すかどうか */
-  unrecommendedLabelHidden?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'input'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    children: ReactNode
+    /** ラベルを視覚的に隠すかどうか */
+    unrecommendedLabelHidden?: boolean
+  }
+>
 
 export const Switch: FC<Props> = ({
   children,

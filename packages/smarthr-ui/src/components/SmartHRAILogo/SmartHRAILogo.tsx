@@ -1,11 +1,18 @@
-import { type ComponentPropsWithoutRef, memo } from 'react'
+import { memo } from 'react'
 
-type BaseProps = {
-  alt?: string
-  width?: number | string
-  height?: number | string
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps | 'fill'>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'svg',
+  {
+    alt?: string
+    width?: number | string
+    height?: number | string
+  },
+  {
+    omit: 'role' | 'viewBox' | 'fill' | 'xmlns' | 'style' | 'aria-label'
+  }
+>
 
 export const SmartHRAILogo = memo<Props>(({ alt, width, height, ...rest }) => (
   <svg

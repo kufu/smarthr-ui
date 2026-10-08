@@ -1,17 +1,15 @@
 import { type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Localizer } from '../../intl'
-import { UnstyledButton } from '../Button'
-import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-type sortTypes = 'asc' | 'desc' | 'none'
+import { Localizer } from '../../../intl'
+import { UnstyledButton } from '../../Button'
+import { FaSortDownIcon, FaSortUpIcon } from '../../Icon'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 type Props = PropsWithChildren<{
   align?: 'left' | 'right'
   handleSort?: () => void
-  sort?: sortTypes
+  sort?: 'asc' | 'desc' | 'none'
 }>
 
 const sortButtonClassNameGenerator = tv({

@@ -1,16 +1,22 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ComponentProps as IconProps, StatusIcon } from '../Icon'
+import { StatusIcon } from '../Icon'
 import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
-type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt' | 'role'>> & {
-  size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  status?: ComponentPropsWithoutRef<typeof StatusIcon>['status']
-  /** role 属性 */
-  role?: 'alert' | 'status'
-}
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof StatusIcon,
+  PropsWithChildren<{
+    size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+    status?: ComponentPropsWithoutRef<typeof StatusIcon>['status']
+    /** role 属性 */
+    role?: 'alert' | 'status'
+  }>,
+  { omit: 'bold' }
+>
 
 const classNameGenerator = tv({
   base: '',

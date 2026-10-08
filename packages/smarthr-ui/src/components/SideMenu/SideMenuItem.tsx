@@ -1,23 +1,19 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type PropsWithChildren,
-  type ReactNode,
-  useMemo,
-} from 'react'
+import { type ElementType, type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
-  elementAs?: AsElement
-  current?: boolean
-  prefix?: ReactNode
-  suffix?: ReactNode
-}>
+import type { SHRComponentPropsWithoutRef } from '../../types'
 
-type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
-  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
+type Props<T extends ElementType> = SHRComponentPropsWithoutRef<
+  T,
+  PropsWithChildren<{
+    elementAs?: T
+    current?: boolean
+    prefix?: ReactNode
+    suffix?: ReactNode
+  }>
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -47,7 +43,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideMenuItem = <AsElement extends ElementType = 'a'>({
+export const SideMenuItem = <T extends ElementType = 'a'>({
   elementAs,
   current,
   prefix,
@@ -56,7 +52,7 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   children,
   className,
   ...rest
-}: Props<AsElement>) => {
+}: Props<T>) => {
   const Component = elementAs ?? 'a'
 
   const classNames = useMemo(() => {

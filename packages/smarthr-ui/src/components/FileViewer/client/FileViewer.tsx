@@ -2,7 +2,7 @@
 
 import Decimal from 'decimal.js'
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -37,6 +37,8 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = 0.2
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
+type OnPasswordType = ComponentPropsWithRef<typeof PDFViewer>['handlePassword']
+
 type Props = {
   file: FileForViewer
   width?: number
@@ -47,7 +49,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+  onPassword?: OnPasswordType
   onLoadError?: (error: unknown) => void
   /** PDF表示時に検索ボックスを表示するかどうか */
   searchable?: boolean
@@ -149,7 +151,7 @@ export const FileViewer: FC<Props> = ({
 const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
-    handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+    handlePassword?: OnPasswordType
     searchable: boolean
   }
 > = ({
