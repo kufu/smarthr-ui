@@ -1,4 +1,4 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Scroller } from '../../Scroller'
@@ -9,10 +9,10 @@ import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
 type Props = SHRComponentPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     gap?: PositiveGap
     padding?: PositiveGap
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({

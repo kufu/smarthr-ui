@@ -21,7 +21,7 @@ import type { ComponentPropsWithoutRef } from 'react'
  * undefined 'M'       undefined undefined _blank
  */
 const _cases: Array<
-  Pick<ComponentPropsWithoutRef<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target'>
+  Pick<ComponentPropsWithoutRef<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target' | 'size'>
 > = [
   {
     href: undefined,

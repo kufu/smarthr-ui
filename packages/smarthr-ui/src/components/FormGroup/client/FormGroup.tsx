@@ -2,7 +2,6 @@
 
 import {
   type ComponentPropsWithRef,
-  type ComponentType,
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -29,7 +28,6 @@ type Props = SHRComponentProps<
     /** グループのラベル名 */
     label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
       Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
-    as?: string | ComponentType<any>
     /** `true` のとき、文字色を `TEXT_DISABLED` にする */
     disabled?: boolean
     LabelComponent: FC<LabelComponentProps>
@@ -38,7 +36,7 @@ type Props = SHRComponentProps<
       childrenWrapper: string
     }
   },
-  { omit: 'className' }
+  { as: true; omit: 'className' }
 >
 
 // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい

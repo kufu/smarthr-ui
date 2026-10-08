@@ -120,8 +120,8 @@ const getExportedDirectoryComponents = async (
           child.elements.forEach((element) => {
             // エイリアス前の元の名前を取得（export { A as B } の場合、Aを取得）
             const componentName = element.propertyName
-              ? `${element.propertyName.escapedText}`
-              : `${element.name.escapedText}`
+              ? element.propertyName.getText(sourceFile)
+              : element.name.getText(sourceFile)
             exportComponents.push(componentName)
           })
         }

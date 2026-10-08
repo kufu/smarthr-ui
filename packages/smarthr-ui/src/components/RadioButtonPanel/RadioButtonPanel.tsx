@@ -1,4 +1,4 @@
-import { type ComponentType, type FC, type ReactNode, useId, useMemo } from 'react'
+import { type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RadioButton } from '../RadioButton'
@@ -10,9 +10,9 @@ import type { SHRComponentPropsWithRef } from '../../types'
 type Props = SHRComponentPropsWithRef<
   typeof RadioButton,
   {
-    as?: string | ComponentType<any>
     label: ReactNode
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({
