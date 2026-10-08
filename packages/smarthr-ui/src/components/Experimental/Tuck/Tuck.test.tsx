@@ -117,6 +117,62 @@ describe('Tuck', () => {
     ])
   })
 
+  describe('領域より広いアイテムがあるとき', () => {
+    // flex-wrap でも領域より広いアイテムは折り返されずに1行を占めてはみ出すため、行数の上では収まって見える
+    it('1件だけでも、はみ出すアイテムはまとめる', () => {
+      groupWidth = 150
+
+      render(
+        <Tuck tucked={{ renderer: (items) => <Item width={30} label={`+${items.length}`} /> }}>
+          <Item width={200} label="A" />
+        </Tuck>,
+      )
+
+      expect(isTucked('A')).toBe(true)
+      expect(screen.getByText('+1')).toBeInTheDocument()
+    })
+
+    it('行数に余裕があっても、そのアイテムから後ろをまとめる', () => {
+      // 3行まで使えば A / B / C と1件ずつ並ぶが、B は1行に収まらない
+      groupWidth = 150
+
+      render(
+        <Tuck
+          maxLines={3}
+          tucked={{ renderer: (items) => <Item width={30} label={`+${items.length}`} /> }}
+        >
+          <Item width={100} label="A" />
+          <Item width={200} label="B" />
+          <Item width={50} label="C" />
+        </Tuck>,
+      )
+
+      expect(['A', 'B', 'C'].map(isTucked)).toEqual([false, true, true])
+      expect(screen.getByText('+2')).toBeInTheDocument()
+    })
+
+    it('tucked.scope が "all" のとき、すべてまとめる', () => {
+      groupWidth = 150
+
+      render(
+        <Tuck
+          maxLines={3}
+          tucked={{
+            renderer: (items) => <Item width={30} label={`+${items.length}`} />,
+            scope: 'all',
+          }}
+        >
+          <Item width={100} label="A" />
+          <Item width={200} label="B" />
+          <Item width={50} label="C" />
+        </Tuck>,
+      )
+
+      expect(['A', 'B', 'C'].map(isTucked)).toEqual([true, true, true])
+      expect(screen.getByText('+3')).toBeInTheDocument()
+    })
+  })
+
   it('幅が広がると、隠していたアイテムを再び表示する', () => {
     groupWidth = 300
 

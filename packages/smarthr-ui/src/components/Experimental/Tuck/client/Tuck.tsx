@@ -132,13 +132,15 @@ const flattenItems = (children: ReactNode, parent?: { id: string; key: string })
     return [{ id, node: cloneElement(child, { key }) }]
   })
 
+// HINT: ブラウザの丸め誤差吸収用
+const ROUNDING_TOLERANCE = 0.01
+
 const countLines = (widths: number[], gap: number, available: number) => {
   let lines = 0
   let lineWidth = 0
 
   for (const width of widths) {
-    // HINT: 0.01はブラウザの丸め誤差吸収用
-    if (lines > 0 && lineWidth + gap + width <= available + 0.01) {
+    if (lines > 0 && lineWidth + gap + width <= available + ROUNDING_TOLERANCE) {
       lineWidth += gap + width
     } else {
       lines++
@@ -153,7 +155,11 @@ const countVisibleItems = (
   widths: number[],
   { gap, available, maxLines, scope, triggerWidth }: Measurement,
 ) => {
-  const fits = (visibleWidths: number[]) => countLines(visibleWidths, gap, available) <= maxLines
+  const fits = (visibleWidths: number[]) =>
+    // HINT: flex-wrap でも、領域より広いアイテムは折り返されずに1行を占めてはみ出す。
+    // 行数を数えるだけでは見逃すため、各アイテムが領域に収まるかも確かめる
+    visibleWidths.every((width) => width <= available + ROUNDING_TOLERANCE) &&
+    countLines(visibleWidths, gap, available) <= maxLines
 
   if (fits(widths)) {
     return widths.length
