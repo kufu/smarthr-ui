@@ -7,6 +7,8 @@ import { defaultItems, prefixes } from './SingleCombobox.stories'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
+type SingleComboboxType = typeof SingleCombobox<{ option: string }>
+
 /* pict singleCombobox.pict
  * disabled        error   width   prefix  selectedItem
  * false   false   なし    なし    あり
@@ -17,7 +19,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
  * true    false   なし    あり    あり
  */
 
-const _cases: Array<Omit<Parameters<typeof SingleCombobox<{ option: string }>>[0], 'items'>> = [
+const _cases: Array<Omit<Parameters<SingleComboboxType>[0], 'items'>> = [
   {
     disabled: false,
     readOnly: false,
@@ -143,7 +145,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} as Meta<typeof SingleCombobox<{ option: string }>>
+} as Meta<SingleComboboxType>
 
 export const VRT: StoryObj<typeof SingleCombobox> = {}
 
@@ -168,7 +170,7 @@ const playOnRightEdge = async ({ canvasElement }: { canvasElement: HTMLElement }
 }
 
 // 画面の右端に寄せた場合に、ドロップダウンが指定された幅を保ったまま左方向に表示されることを確認する
-export const VRTOnRightEdge: StoryObj<typeof SingleCombobox<{ option: string }>> = {
+export const VRTOnRightEdge: StoryObj<SingleComboboxType> = {
   render: (args) => (
     <div className="shr-flex shr-h-screen shr-justify-end">
       <SingleCombobox
@@ -199,7 +201,7 @@ const playNoResult = async ({ canvasElement }: { canvasElement: HTMLElement }) =
 
 // 候補が無い場合の長いメッセージが、幅の狭いドロップダウン内で折り返されて表示され、
 // 親要素の外にはみ出ないことを確認する
-export const VRTNoResult: StoryObj<typeof SingleCombobox<{ option: string }>> = {
+export const VRTNoResult: StoryObj<SingleComboboxType> = {
   render: (args) => (
     <div className="shr-w-[10em]">
       <SingleCombobox
