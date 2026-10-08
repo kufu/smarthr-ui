@@ -8,7 +8,7 @@ import { ThemeProvider } from '../../client/useTheme'
 import { EnvironmentProvider } from './EnvironmentProvider'
 import { useEnvironment } from './useEnvironment'
 
-import type { Meta, StoryObj } from '@storybook/react/*'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { FC, PropsWithChildren } from 'react'
 
 const Content = () => {

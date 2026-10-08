@@ -32,7 +32,6 @@
     "@storybook/addon-a11y": "10.5.10",
     "@storybook/addon-docs": "10.5.10",
     "@storybook/cli": "10.5.10",
-    "@storybook/react": "10.5.10",
     "@storybook/react-vite": "10.5.10",
     "@swc/core": "^1.16.2",
     "@testing-library/jest-dom": "^7.0.1",
