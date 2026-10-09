@@ -43,7 +43,6 @@ const classNameGenerator = tv({
 export const DefinitionListItem: FC<Props> = ({
   term: orgTerm,
   children,
-  maxColumns,
   fullWidth,
   className,
   ...rest
@@ -64,12 +63,7 @@ export const DefinitionListItem: FC<Props> = ({
   }, [fullWidth, className])
 
   return (
-    <ItemWrapper
-      {...rest}
-      maxColumns={maxColumns}
-      fullWidth={fullWidth}
-      className={classNames.wrapper}
-    >
+    <ItemWrapper {...rest} fullWidth={fullWidth} className={classNames.wrapper}>
       <DefinitionTerm styleType={term.styleType} className={classNames.term}>
         {term.text}
       </DefinitionTerm>
