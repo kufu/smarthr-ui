@@ -6,7 +6,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
 import { ImageAltPopover } from './extensions/Image/ImageAltPopover'
-import { ImageWidthPopover } from './extensions/Image/ImageWidthPopover'
+import { IMAGE_SIZE_SPEC, MediaSizePopover } from './extensions/MediaSizePopover'
 import { ALL_FEATURES, configureExtensions } from './extensions/configureExtensions'
 
 import type { FormEvent, ReactNode } from 'react'
@@ -287,7 +287,9 @@ describe('ポップオーバーのフォーム送信', () => {
   describe('画像のサイズ', () => {
     const openPopover = async (user: ReturnType<typeof userEvent.setup>) => {
       const editor = createImageEditor()
-      const onParentSubmit = renderInParentForm(<ImageWidthPopover editor={editor} pos={0} />)
+      const onParentSubmit = renderInParentForm(
+        <MediaSizePopover editor={editor} pos={0} spec={IMAGE_SIZE_SPEC} />,
+      )
       await user.click(screen.getByRole('button', { name: 'サイズ' }))
 
       return {

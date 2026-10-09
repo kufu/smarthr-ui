@@ -7,10 +7,10 @@ import { FaTrashCanIcon } from 'smarthr-ui'
 import { useIntl } from '../../../../intl'
 import { useRovingToolbar } from '../../hooks/useRovingToolbar'
 import { MediaAlignDropdown } from '../MediaAlignDropdown'
+import { IMAGE_SIZE_SPEC, MediaSizePopover } from '../MediaSizePopover'
 import { NodeFloatingToolbar } from '../NodeFloatingToolbar'
 
 import { ImageAltPopover } from './ImageAltPopover'
-import { ImageWidthPopover } from './ImageWidthPopover'
 import { IMAGE_TOOLBAR_BUTTON_CLASS_NAME } from './imageToolbarStyle'
 import { resolveImageElement } from './resolveImageElement'
 
@@ -73,7 +73,7 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
       label={toolbarLabel}
     >
       <ImageAltPopover {...getButtonProps(0)} editor={editor} pos={pos} />
-      <ImageWidthPopover {...getButtonProps(1)} editor={editor} pos={pos} />
+      <MediaSizePopover {...getButtonProps(1)} editor={editor} pos={pos} spec={IMAGE_SIZE_SPEC} />
       <MediaAlignDropdown {...getButtonProps(2)} editor={editor} nodeName="image" pos={pos} />
       <button
         {...getButtonProps(3)}

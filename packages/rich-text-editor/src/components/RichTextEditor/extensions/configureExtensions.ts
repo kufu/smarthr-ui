@@ -139,7 +139,13 @@ export const configureExtensions = ({
   ]
 
   extensions.push(
-    restrict(CustomYoutube.configure(YOUTUBE_OPTIONS)),
+    restrict(
+      CustomYoutube.configure({
+        ...YOUTUBE_OPTIONS,
+        // ドラッグリサイズは NodeView 側の機能なので、操作を剥がすだけでは止まらない
+        isResizable: () => getFeatures().includes('youtube'),
+      }),
+    ),
     restrict(
       CustomTable.configure({
         ...TABLE_OPTIONS,

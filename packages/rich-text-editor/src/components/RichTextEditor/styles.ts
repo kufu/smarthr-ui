@@ -47,13 +47,24 @@ export const editorContentClasses = [
   '[&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-my-0.5 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-inline-block [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-size-2 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-rounded-full [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-2 [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-solid [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-main [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-border-t-transparent [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-align-middle [&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-animate-[spin_0.8s_linear_infinite] motion-reduce:[&_.ProseMirror_.smarthr-ui-RichTextEditor-imageUploadPlaceholder]:shr-rte-animate-none',
   // youtube
   // inline のままだと下にディセンダ分の隙間ができ、選択枠線が下だけ離れる。
-  // 上下の余白は外側の div が持つので、iframe には付けない
-  '[&_.ProseMirror_iframe]:shr-rte-block [&_.ProseMirror_iframe]:shr-rte-max-w-full [&_.ProseMirror_iframe]:shr-rte-rounded-m',
+  // 上下の余白は外側の div が持つので、iframe には付けない。
+  // 既定の border が残ると、幅いっぱいの iframe が枠から 4px はみ出す
+  '[&_.ProseMirror_iframe]:shr-rte-block [&_.ProseMirror_iframe]:shr-rte-max-w-full [&_.ProseMirror_iframe]:shr-rte-rounded-m [&_.ProseMirror_iframe]:shr-rte-border-0',
   // inline-block だと動画が続いたときに横に並び、縦に積む RichTextViewer と食い違う
   '[&_.ProseMirror_div[data-youtube-video]]:shr-rte-my-0.5 [&_.ProseMirror_div[data-youtube-video]]:shr-rte-block [&_.ProseMirror_div[data-youtube-video]]:shr-rte-w-fit [&_.ProseMirror_div[data-youtube-video]]:shr-rte-max-w-full [&_.ProseMirror_div[data-youtube-video]]:shr-rte-rounded-m',
+  '[&_.ProseMirror_[data-resize-container]_div[data-youtube-video]]:shr-rte-my-0',
+  // 枠は flex で、子の min-width が auto のままだと幅を px で決めた動画が縮まずにはみ出す
+  '[&_.ProseMirror_[data-resize-container][data-node=youtube]_[data-resize-wrapper]]:shr-rte-min-w-0',
   // iframe がクリックを奪うと再生が始まるだけで、動画を選択する手段がキー操作しか残らない
-  '[&_.ProseMirror[contenteditable=true]_div[data-youtube-video]:not(.ProseMirror-selectednode)_iframe]:shr-rte-pointer-events-none',
+  // 子孫結合子で選択を見ると、動画を含む引用などが選ばれただけで押せるようになる
+  '[&_.ProseMirror[contenteditable=true]_div[data-youtube-video]_iframe]:shr-rte-pointer-events-none',
+  '[&_.ProseMirror[contenteditable=true]_div[data-youtube-video].ProseMirror-selectednode>iframe]:shr-rte-pointer-events-auto',
+  '[&_.ProseMirror[contenteditable=true]_[data-resize-container].ProseMirror-selectednode>[data-resize-wrapper]>div[data-youtube-video]>iframe]:shr-rte-pointer-events-auto',
+  // ドラッグ中にポインタが iframe に入ると、移動と離す操作を iframe が受け取ってリサイズが止まる。
+  // 選択中の規則に勝つよう、属性を一つ多く重ねる
+  '[&_.ProseMirror[contenteditable=true]_[data-resize-container][data-node=youtube][data-resize-state=true]>[data-resize-wrapper]>div[data-youtube-video]>iframe]:shr-rte-pointer-events-none',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
+  '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline-offset-2',
   // table（resizable のため tableWrapper で囲まれる）
   // 列幅の変更は table-fixed でないと効かない。周りの余白は表の操作 UI の分
   // （上: 列ハンドル、左: 行ハンドル、右・下: +列/+行 バー）

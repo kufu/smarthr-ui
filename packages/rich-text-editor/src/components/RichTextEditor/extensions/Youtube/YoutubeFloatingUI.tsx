@@ -8,6 +8,7 @@ import { useIntl } from '../../../../intl'
 import { useRovingToolbar } from '../../hooks/useRovingToolbar'
 import { IMAGE_TOOLBAR_BUTTON_CLASS_NAME } from '../Image/imageToolbarStyle'
 import { MediaAlignDropdown } from '../MediaAlignDropdown'
+import { MediaSizePopover, YOUTUBE_SIZE_SPEC } from '../MediaSizePopover'
 import { NodeFloatingToolbar } from '../NodeFloatingToolbar'
 
 import type { Editor } from '@tiptap/react'
@@ -44,7 +45,7 @@ export const YoutubeFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
     editor.commands.focus()
   }, [editor])
 
-  const { getButtonProps } = useRovingToolbar({ count: 2, onEscape: handleEscape })
+  const { getButtonProps } = useRovingToolbar({ count: 3, onEscape: handleEscape })
 
   if (pos === null) return null
 
@@ -62,8 +63,9 @@ export const YoutubeFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
       })}
     >
       <MediaAlignDropdown {...getButtonProps(0)} editor={editor} nodeName="youtube" pos={pos} />
+      <MediaSizePopover {...getButtonProps(1)} editor={editor} pos={pos} spec={YOUTUBE_SIZE_SPEC} />
       <button
-        {...getButtonProps(1)}
+        {...getButtonProps(2)}
         type="button"
         className={IMAGE_TOOLBAR_BUTTON_CLASS_NAME}
         aria-label={localize({

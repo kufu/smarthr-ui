@@ -51,6 +51,7 @@ describe('YoutubeFloatingUI', () => {
     })
 
     expect(await screen.findByRole('toolbar', { name: 'YouTube動画の操作' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'サイズ' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: '配置: 左揃え' }))
     await user.click(screen.getByRole('option', { name: '右揃え' }))
@@ -103,7 +104,7 @@ describe('YoutubeFloatingUI', () => {
     expect(iframe().getAttribute('tabindex')).toBe('-1')
   })
 
-  it('配置を変えて動画の DOM が作り直されても、新しい要素の大きさを見張る', async () => {
+  it('配置を変えても、動画の要素の大きさを見張り続ける', async () => {
     const observed = new Set<Element>()
     vi.stubGlobal(
       'ResizeObserver',
@@ -146,7 +147,7 @@ describe('YoutubeFloatingUI', () => {
     })
     const after = editor.view.nodeDOM(2) as Element
 
-    expect(after).not.toBe(before)
+    expect(after).toBe(before)
     await waitFor(() => expect(observed.has(after)).toBe(true))
   })
 
