@@ -364,8 +364,8 @@ export const Overview: Story = {
                   YouTube埋め込み
                   <br />
                   <Text size="S" color="TEXT_GREY">
-                    選ぶと操作バー（配置・削除）を動画の上に出す。編集中は動画プレーヤーを Tab
-                    の移動先から外す
+                    選ぶと操作バー（配置・サイズ・削除）を動画の上に出す。四隅のハンドルでもサイズを変えられる（16:9
+                    固定）。編集中は動画プレーヤーを Tab の移動先から外す
                   </Text>
                 </td>
                 <td style={tdStyle}>

@@ -372,6 +372,33 @@ export const VRTMediaAlign: Story = {
   },
 }
 
+const youtubeSizeContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'youtube',
+      attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 480, height: 270 },
+    },
+    // 16:9 にする前の既定サイズで保存された動画
+    {
+      type: 'youtube',
+      attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 640, height: 480 },
+    },
+  ],
+}
+
+export const VRTYoutubeSize: Story = {
+  name: 'YouTube のサイズ（エディタより広い動画は縦横比を保って縮む）',
+  render: () => (
+    <FormControl label="YouTube のサイズ">
+      <RichTextEditor defaultValue={youtubeSizeContent} features={['youtube']} width={400} />
+    </FormControl>
+  ),
+  parameters: {
+    chromatic: { ignoreSelectors: ['iframe'] },
+  },
+}
+
 export const VRTSizeAndResize: Story = {
   name: 'サイズ指定とリサイズハンドル',
   render: () => (

@@ -411,3 +411,31 @@ export const MediaAlign: Story = {
     chromatic: { ignoreSelectors: ['iframe'] },
   },
 }
+
+export const YoutubeSize: Story = {
+  name: 'YouTube のサイズ（表示幅より広い動画は縦横比を保って縮む）',
+  args: {
+    content: {
+      type: 'doc' as const,
+      content: [
+        {
+          type: 'youtube',
+          attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 480, height: 270 },
+        },
+        // 16:9 にする前の既定サイズで保存された動画
+        {
+          type: 'youtube',
+          attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 640, height: 480 },
+        },
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <div style={{ width: 400 }}>
+      <RichTextViewer content={content} />
+    </div>
+  ),
+  parameters: {
+    chromatic: { ignoreSelectors: ['iframe'] },
+  },
+}
