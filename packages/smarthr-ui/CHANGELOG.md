@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [100.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v100.0.0...smarthr-ui-v100.0.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **ModelessDialog:** classNameがPanel本体に反映されるよう修正する ([#7286](https://github.com/kufu/smarthr-ui/issues/7286)) ([0048372](https://github.com/kufu/smarthr-ui/commit/004837210d96a4f5e93ecd9036cd4aa1210a5bf1))
+
 ## [100.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.9.0...smarthr-ui-v100.0.0) (2026-10-08)
 
 
