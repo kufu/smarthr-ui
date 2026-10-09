@@ -280,6 +280,14 @@ describe('読み取り専用でのリサイズ', () => {
     return width
   }
 
+  it('ハンドルを動かさずに離しただけでは幅を書き換えない', async () => {
+    const { editor } = await mount({})
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle]')!
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    fireEvent.mouseUp(document)
+    expect(imageWidth(editor)).toBe(300)
+  })
+
   it('編集できるときはドラッグで幅が書き換わる', async () => {
     const { editor } = await mount({})
     drag()
