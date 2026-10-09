@@ -176,8 +176,8 @@ export const ModelessDialog: FC<Props> = ({
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
 
     return {
-      overlap: overlap({ className }),
-      wrapper: wrapper({ size, resizable }),
+      overlap: overlap(),
+      wrapper: wrapper({ className, size, resizable }),
       header: headerEl(),
       dialogHandler: dialogHandler(),
     }
