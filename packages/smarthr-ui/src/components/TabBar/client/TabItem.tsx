@@ -117,7 +117,7 @@ export const TabItem: FC<Props> = ({
 
 const TabButton = memo<
   Omit<Props, 'onClick'> & {
-    handleClick?: NonNullable<Props['onClick']>
+    handleClick: Props['onClick']
   }
 >(({ id, children, suffix, handleClick, className, ...rest }) => {
   const classNames = useMemo(() => {
