@@ -120,7 +120,7 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
         width,
         height,
         allowFullScreen: true,
-        style: { border: 0, maxWidth: '100%', aspectRatio: `${width} / ${height}` },
+        style: { border: 0, maxWidth: '100%', height: 'auto', aspectRatio: `${width} / ${height}` },
       }),
     )
   },

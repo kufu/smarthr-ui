@@ -702,8 +702,28 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     const { html, react } = bothOutputs(youtubeDoc({ width: '100%;x', height: -1 }))
     for (const output of [html, react]) {
       expect(output).toContain('width="640"')
-      expect(output).toContain('height="480"')
+      expect(output).toContain('height="360"')
     }
+  })
+
+  it.each([
+    [{ width: 320, height: '100%;x' }, '320', '180'],
+    [{ width: 320 }, '320', '180'],
+    [{ width: 'x', height: 180 }, '320', '180'],
+  ])('youtube の寸法 %o は、正しい側から 16:9 で補う', (size, width, height) => {
+    const { html, react } = bothOutputs(youtubeDoc(size))
+    for (const output of [html, react]) {
+      expect(output).toContain(`width="${width}"`)
+      expect(output).toContain(`height="${height}"`)
+    }
+  })
+
+  it('youtube の iframe は両経路で縦横比を保って縮む', () => {
+    const { html, react } = bothOutputs(youtubeDoc({ width: 320, height: 180 }))
+    expect(html).toContain(
+      'style="border: 0px; max-width: 100%; height: auto; aspect-ratio: 320 / 180;"',
+    )
+    expect(react).toContain('max-width:100%;height:auto;aspect-ratio:320 / 180')
   })
 
   it('youtube の安全な width/height は両経路で保持される', () => {

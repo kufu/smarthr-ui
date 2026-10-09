@@ -1,5 +1,9 @@
 import { normalizeFontSize } from '../extensions/normalizeFontSize'
-import { YOUTUBE_DEFAULT_SIZE } from '../extensions/youtubeOptions'
+import {
+  YOUTUBE_DEFAULT_SIZE,
+  calcYoutubeHeight,
+  calcYoutubeWidth,
+} from '../extensions/youtubeOptions'
 import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 
 import {
@@ -51,10 +55,28 @@ const normalizeStart: AttrNormalizer = (value) =>
   typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0
 
 // React 経路は数値以外を既定値にするため、数値文字列も許可せず両経路の出力を揃える
+const isYoutubeDimension = (value: unknown): value is number =>
+  typeof value === 'number' && isNumericAttr(value)
+
 const normalizeYoutubeDimension =
   (fallback: number): AttrNormalizer =>
   (value) =>
-    typeof value === 'number' && isNumericAttr(value) ? value : fallback
+    isYoutubeDimension(value) ? value : fallback
+
+// 片方だけを既定値に戻すと 320×360 のように比率が崩れるため、正しい側から 16:9 で補う
+const completeYoutubeSize: AttrsNormalizer = (attrs) => {
+  const hasWidth = isYoutubeDimension(attrs.width)
+  const hasHeight = isYoutubeDimension(attrs.height)
+
+  if (hasWidth && !hasHeight) {
+    return { ...attrs, height: calcYoutubeHeight(attrs.width as number) }
+  }
+  if (!hasWidth && hasHeight) {
+    return { ...attrs, width: calcYoutubeWidth(attrs.height as number) }
+  }
+
+  return attrs
+}
 
 const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
   colspan: normalizeSpan,
@@ -122,9 +144,11 @@ type AttrsNormalizer = (attrs: Record<string, unknown>) => Record<string, unknow
  */
 const ATTRS_NORMALIZERS: Record<string, AttrsNormalizer> = {
   youtube: (attrs) => {
-    if (!('src' in attrs)) return attrs
+    const sized = completeYoutubeSize(attrs)
 
-    return { ...attrs, ...(normalizeYoutubeUrl(attrs.src) ?? { src: null }) }
+    if (!('src' in sized)) return sized
+
+    return { ...sized, ...(normalizeYoutubeUrl(sized.src) ?? { src: null }) }
   },
 }
 
