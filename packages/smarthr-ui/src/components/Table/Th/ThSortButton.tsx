@@ -15,7 +15,7 @@ type Props = SHRComponentPropsWithRef<
     handleSort?: () => void
     sort?: 'asc' | 'desc' | 'none'
   },
-  { omit: 'onClick' }
+  { omit: 'onClick' | 'className' }
 >
 
 const sortButtonClassNameGenerator = tv({
