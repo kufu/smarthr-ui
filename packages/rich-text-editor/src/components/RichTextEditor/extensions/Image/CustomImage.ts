@@ -1,7 +1,7 @@
 import { getRenderedAttributes } from '@tiptap/core'
 
-import { IMAGE_ALIGN_STYLES, getMediaAlignStyles } from '../mediaAlign'
-import { PersistentHandlesNodeView, createResizeHandle } from '../resizableMedia'
+import { IMAGE_ALIGN_STYLES, applyMediaAlign } from '../mediaAlign'
+import { PersistentHandlesNodeView } from '../resizableMedia'
 
 import { SafeImage } from './SafeImage'
 
@@ -128,12 +128,6 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         el.style.aspectRatio = displayWidth && ratio ? `${ratio}` : ''
       }
 
-      const applyAlign = (align: unknown) => {
-        const styles = getMediaAlignStyles(IMAGE_ALIGN_STYLES, align) ?? {}
-        nodeView.dom.style.marginLeft = styles.marginLeft ?? ''
-        nodeView.dom.style.marginRight = styles.marginRight ?? ''
-      }
-
       let previousHTMLAttributes: Record<string, unknown> = { ...HTMLAttributes }
 
       const onUpdate = (updatedNode: ProseMirrorNode) => {
@@ -182,7 +176,7 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         // サイズ変更（updateAttributes に width/height 数値）をライブ反映する。
         sizeAttributes = { width: updatedNode.attrs.width, height: updatedNode.attrs.height }
         applyDisplaySize()
-        applyAlign(updatedNode.attrs.align)
+        applyMediaAlign(nodeView.dom, IMAGE_ALIGN_STYLES, updatedNode.attrs.align)
 
         previousHTMLAttributes = newHTMLAttributes
 
@@ -201,25 +195,13 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
           }
         },
         onCommit: (width, height) => {
-          // ドラッグ中に読み取り専用へ切り替わっても、離した時点で書き込まない
-          if (!editor.isEditable) {
-            applyDisplaySize()
-            return
-          }
-
-          const pos = getPos()
-          if (pos !== undefined) {
-            this.editor
-              .chain()
-              .setNodeSelection(pos)
-              .updateAttributes(this.name, { width, height })
-              .run()
-          }
+          nodeView.updateSize({ width, height })
 
           // ドラッグ中の px 指定から確定表示の規則へ戻す
           sizeAttributes = { width, height }
           applyDisplaySize()
         },
+        onCancel: applyDisplaySize,
         onUpdate,
         options: {
           directions,
@@ -228,15 +210,13 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
             height: minHeight,
           },
           preserveAspectRatio: alwaysPreserveAspectRatio === true,
-          // ハンドルを aria-hidden 化して VoiceOver の重複読み上げを防ぐ
-          createCustomHandle: (direction) => createResizeHandle(direction, () => editor.isEditable),
         },
       })
 
       // コンストラクタの applyInitialSize が width/height を px で書くので上書きする
       applyDisplaySize()
 
-      applyAlign(node.attrs.align)
+      applyMediaAlign(nodeView.dom, IMAGE_ALIGN_STYLES, node.attrs.align)
 
       const dom = nodeView.dom
       dom.style.visibility = 'hidden'

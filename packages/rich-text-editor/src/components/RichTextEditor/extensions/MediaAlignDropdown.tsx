@@ -61,7 +61,6 @@ export const MediaAlignDropdown: FC<Props> = memo(({ editor, nodeName, pos, ...r
       handleSelect: (index: number) => {
         const { value } = MEDIA_ALIGN_OPTIONS[index]
 
-        // 他の操作バーのボタンと同じくバーに留まる
         editor
           .chain()
           .setNodeSelection(latest.pos)

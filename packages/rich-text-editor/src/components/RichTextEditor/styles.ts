@@ -60,9 +60,6 @@ export const editorContentClasses = [
   '[&_.ProseMirror[contenteditable=true]_div[data-youtube-video]_iframe]:shr-rte-pointer-events-none',
   '[&_.ProseMirror[contenteditable=true]_div[data-youtube-video].ProseMirror-selectednode>iframe]:shr-rte-pointer-events-auto',
   '[&_.ProseMirror[contenteditable=true]_[data-resize-container].ProseMirror-selectednode>[data-resize-wrapper]>div[data-youtube-video]>iframe]:shr-rte-pointer-events-auto',
-  // ドラッグ中にポインタが iframe に入ると、移動と離す操作を iframe が受け取ってリサイズが止まる。
-  // 選択中の規則に勝つよう、属性を一つ多く重ねる
-  '[&_.ProseMirror[contenteditable=true]_[data-resize-container][data-node=youtube][data-resize-state=true]>[data-resize-wrapper]>div[data-youtube-video]>iframe]:shr-rte-pointer-events-none',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
   '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline-offset-2',
   // table（resizable のため tableWrapper で囲まれる）

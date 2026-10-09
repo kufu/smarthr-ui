@@ -97,6 +97,16 @@ describe('CustomYoutube NodeView', () => {
     expect(iframe().style.aspectRatio).toBe('480 / 270')
   })
 
+  it('ドラッグ中だけ、動画プレーヤーがポインタを受け取らない', async () => {
+    await mount()
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    expect(iframe().style.pointerEvents).toBe('none')
+
+    fireEvent.mouseUp(document)
+    expect(iframe().style.pointerEvents).toBe('')
+  })
+
   it('確定時の幅が最小幅を下回っても、356×200 で保存する', async () => {
     const editor = await mount()
     dragRightBy(10)
@@ -125,6 +135,19 @@ describe('CustomYoutube NodeView', () => {
     fireEvent.mouseUp(document)
 
     expect(attrsOf(editor)).toMatchObject({ width: 640, height: 480 })
+  })
+
+  it('タッチでドラッグ中に動画が消えたら、タッチの購読を外す', async () => {
+    const editor = await mount()
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+    fireEvent.touchStart(handle, { touches: [{ clientX: 0, clientY: 0 }] })
+    const removeEventListener = vi.spyOn(document, 'removeEventListener')
+
+    editor.commands.clearContent()
+
+    await waitFor(() => expect(container()).toBeNull())
+    expect(removeEventListener).toHaveBeenCalledWith('touchend', expect.any(Function))
+    expect(removeEventListener).toHaveBeenCalledWith('touchmove', expect.any(Function))
   })
 
   it('ハンドルを動かさずに離しただけでは寸法を書き換えない', async () => {

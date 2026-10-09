@@ -46,3 +46,11 @@ export const parseMediaAlign = (element: HTMLElement | null): MediaAlign | null 
 // インライン表示の画像には margin auto が効かず、貼り付け元では左に表示されている
 export const parseImageAlign = (element: HTMLElement): MediaAlign | null =>
   element.style.display === 'block' ? parseMediaAlign(element) : null
+
+// img や iframe ではなく、リサイズ用の枠に当てる。中身に当てると枠の内側で寄って、ハンドルと選択枠線だけが残る
+export const applyMediaAlign = (container: HTMLElement, styles: AlignStyles, align: unknown) => {
+  const alignStyles = getMediaAlignStyles(styles, align) ?? {}
+
+  container.style.marginLeft = alignStyles.marginLeft ?? ''
+  container.style.marginRight = alignStyles.marginRight ?? ''
+}

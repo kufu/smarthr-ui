@@ -13,7 +13,7 @@ import type { ResizableNodeViewDirection } from '@tiptap/core'
  * NOTE: `createCustomHandle` を指定すると ResizableNodeView 側の `positionHandle` は
  * スキップされるため、位置指定（top/bottom/left/right）もここで行う必要がある。
  */
-export const createResizeHandle = (
+const createResizeHandle = (
   direction: ResizableNodeViewDirection,
   isEditable: () => boolean,
 ): HTMLElement => {
@@ -48,6 +48,14 @@ export const createResizeHandle = (
   return handle
 }
 
+type ResizableNodeViewOptions = ConstructorParameters<typeof ResizableNodeView>[0]
+
+type PersistentHandlesNodeViewOptions = Omit<ResizableNodeViewOptions, 'options'> & {
+  options?: Omit<NonNullable<ResizableNodeViewOptions['options']>, 'createCustomHandle'>
+  onCancel: () => void
+  onResizingChange?: (resizing: boolean) => void
+}
+
 /**
  * 標準はハンドルを文書の更新時にだけ編集可否に合わせて外し・付け直す。更新を伴わない
  * setEditable では付け直されず、読み取り専用の間に更新が入るとハンドルが消えたままになる。
@@ -57,8 +65,27 @@ export const createResizeHandle = (
 export class PersistentHandlesNodeView extends ResizableNodeView {
   private moved = false
 
-  constructor(options: ConstructorParameters<typeof ResizableNodeView>[0]) {
-    super(options)
+  private onResizingChange?: (resizing: boolean) => void
+
+  private releaseTouch?: () => void
+
+  constructor({
+    editor,
+    options,
+    onCancel,
+    onResizingChange,
+    ...rest
+  }: PersistentHandlesNodeViewOptions) {
+    super({
+      ...rest,
+      editor,
+      options: {
+        ...options,
+        createCustomHandle: (direction) => createResizeHandle(direction, () => editor.isEditable),
+      },
+    })
+
+    this.onResizingChange = onResizingChange
 
     // 標準は動かさずに離しただけでも表示中の寸法で確定する。max-width で縮んで表示されていると、
     // ハンドルに触れただけで保存値が表示の大きさまで小さくなる
@@ -66,8 +93,25 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
     this.onCommit = (width, height) => {
       const { moved } = this
       this.moved = false
+      this.onResizingChange?.(false)
 
-      if (moved) commit(width, height)
+      if (moved && this.editor.isEditable) {
+        commit(width, height)
+      } else {
+        onCancel()
+      }
+    }
+  }
+
+  updateSize(attributes: { width: number; height: number }) {
+    const pos = this.getPos()
+
+    if (pos !== undefined) {
+      this.editor
+        .chain()
+        .setNodeSelection(pos)
+        .updateAttributes(this.node.type.name, attributes)
+        .run()
     }
   }
 
@@ -77,20 +121,32 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
   handleResizeStart(event: MouseEvent | TouchEvent, direction: ResizableNodeViewDirection) {
     // @ts-expect-error 標準の private な処理を呼ぶ
     super.handleResizeStart(event, direction)
+    this.onResizingChange?.(true)
 
     if ('touches' in event) {
       const handleTouchEnd = () => {
+        this.releaseTouch?.()
+        // @ts-expect-error 標準の private な処理を呼ぶ
+        this.handleMouseUp()
+      }
+
+      this.releaseTouch = () => {
+        this.releaseTouch = undefined
         document.removeEventListener('touchend', handleTouchEnd)
         document.removeEventListener('touchcancel', handleTouchEnd)
         // @ts-expect-error 標準の private な処理。標準は touchmove の購読を外さない
         document.removeEventListener('touchmove', this.handleTouchMove)
-        // @ts-expect-error 標準の private な処理を呼ぶ
-        this.handleMouseUp()
       }
 
       document.addEventListener('touchend', handleTouchEnd)
       document.addEventListener('touchcancel', handleTouchEnd)
     }
+  }
+
+  // 標準の destroy はマウスの購読しか外さない。タッチでドラッグ中に消えると document に残る
+  destroy() {
+    this.releaseTouch?.()
+    super.destroy()
   }
 
   // 標準はポインタの移動量をそのまま幅に足す。中央寄せでは両端が半分ずつしか動かず、
