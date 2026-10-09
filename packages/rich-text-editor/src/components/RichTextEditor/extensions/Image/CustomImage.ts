@@ -1,5 +1,7 @@
 import { ResizableNodeView, getRenderedAttributes } from '@tiptap/core'
 
+import { IMAGE_ALIGN_STYLES, getMediaAlignStyles } from '../mediaAlign'
+
 import { SafeImage } from './SafeImage'
 
 import type { NodeViewRendererProps, ResizableNodeViewDirection } from '@tiptap/core'
@@ -74,6 +76,15 @@ const createResizeHandle = (
 // @ts-expect-error 標準の private な更新処理を空にする。コンストラクタがこの名前で購読する
 class PersistentHandlesNodeView extends ResizableNodeView {
   handleEditorUpdate() {}
+
+  // 標準はポインタの移動量をそのまま幅に足す。中央寄せでは両端が半分ずつしか動かず、
+  // ハンドルがポインタの半分の速さになるため、横の移動量を倍にする
+  handleResize(deltaX: number, deltaY: number) {
+    const factor = this.node.attrs.align === 'center' ? 2 : 1
+
+    // @ts-expect-error 標準の private な処理を呼ぶ
+    super.handleResize(deltaX * factor, deltaY)
+  }
 }
 
 /**
@@ -112,11 +123,13 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
     return ({ node, getPos, HTMLAttributes, editor }: NodeViewRendererProps) => {
       const el = document.createElement('img')
 
+      // style（寄せ方）は枠に当てる。img に写すと applyDisplaySize の幅の style を上書きする
       Object.entries(HTMLAttributes).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
           switch (key) {
             case 'width':
             case 'height':
+            case 'style':
               break
             default:
               el.setAttribute(key, String(value))
@@ -179,6 +192,12 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         el.style.aspectRatio = displayWidth && ratio ? `${ratio}` : ''
       }
 
+      const applyAlign = (align: unknown) => {
+        const styles = getMediaAlignStyles(IMAGE_ALIGN_STYLES, align) ?? {}
+        nodeView.dom.style.marginLeft = styles.marginLeft ?? ''
+        nodeView.dom.style.marginRight = styles.marginRight ?? ''
+      }
+
       let previousHTMLAttributes: Record<string, unknown> = { ...HTMLAttributes }
 
       const onUpdate = (updatedNode: ProseMirrorNode) => {
@@ -193,7 +212,13 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
 
         // 直前に存在したが今回無くなった属性を削除（width/height/src は別管理）
         Object.keys(previousHTMLAttributes).forEach((key) => {
-          if (key !== 'src' && key !== 'width' && key !== 'height' && !(key in newHTMLAttributes)) {
+          if (
+            key !== 'src' &&
+            key !== 'width' &&
+            key !== 'height' &&
+            key !== 'style' &&
+            !(key in newHTMLAttributes)
+          ) {
             el.removeAttribute(key)
           }
         })
@@ -204,12 +229,13 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
               case 'src':
               case 'width':
               case 'height':
+              case 'style':
                 break
               default:
                 el.setAttribute(key, String(value))
                 break
             }
-          } else {
+          } else if (key !== 'style') {
             el.removeAttribute(key)
           }
         })
@@ -220,6 +246,7 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         // サイズ変更（updateAttributes に width/height 数値）をライブ反映する。
         sizeAttributes = { width: updatedNode.attrs.width, height: updatedNode.attrs.height }
         applyDisplaySize()
+        applyAlign(updatedNode.attrs.align)
 
         previousHTMLAttributes = newHTMLAttributes
 
@@ -272,6 +299,8 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
 
       // コンストラクタの applyInitialSize が width/height を px で書くので上書きする
       applyDisplaySize()
+
+      applyAlign(node.attrs.align)
 
       const dom = nodeView.dom
       dom.style.visibility = 'hidden'

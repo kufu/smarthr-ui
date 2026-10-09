@@ -338,3 +338,72 @@ describe('読み取り専用でのリサイズ', () => {
     expect(imageWidth(editor)).not.toBe(300)
   })
 })
+
+describe('配置', () => {
+  const mountWithAttrs = async (attrs: Record<string, unknown>) => {
+    const { result } = renderHook(() =>
+      useRichTextEditor({
+        features: ['image'],
+        defaultValue: {
+          type: 'doc',
+          content: [{ type: 'image', attrs: { ...attrs, src: 'https://example.com/a.png' } }],
+        },
+      }),
+    )
+    await waitFor(() => expect(result.current.editor).not.toBeNull())
+    render(<EditorContent editor={result.current.editor!} />)
+    await waitFor(() => expect(document.querySelector('.ProseMirror img')).not.toBeNull())
+
+    return result.current.editor!
+  }
+
+  const resizeContainer = () =>
+    document.querySelector<HTMLElement>('.ProseMirror [data-resize-container]')!
+
+  it('中央・右でリサイズ用の枠に余白が当たり、左で外れる', async () => {
+    const editor = await mountWithAttrs({ align: 'center' })
+    expect(resizeContainer().style.marginLeft).toBe('auto')
+    expect(resizeContainer().style.marginRight).toBe('auto')
+
+    editor.chain().setNodeSelection(0).updateAttributes('image', { align: 'right' }).run()
+    await waitFor(() => expect(resizeContainer().style.marginRight).toBe(''))
+    expect(resizeContainer().style.marginLeft).toBe('auto')
+
+    editor.chain().setNodeSelection(0).updateAttributes('image', { align: null }).run()
+    await waitFor(() => expect(resizeContainer().style.marginLeft).toBe(''))
+  })
+
+  it('alt やサイズを変えても配置が保たれ、img には寄せ方の style が付かない', async () => {
+    const editor = await mountWithAttrs({ align: 'center', width: 200, height: 100 })
+
+    editor
+      .chain()
+      .setNodeSelection(0)
+      .updateAttributes('image', { alt: '説明', width: 150, height: 75 })
+      .run()
+
+    await waitFor(() => {
+      const img = document.querySelector<HTMLImageElement>('.ProseMirror img')!
+      expect(img.getAttribute('alt')).toBe('説明')
+      expect(img.style.width).toBe('150px')
+      expect(img.style.marginLeft).toBe('')
+    })
+    expect(resizeContainer().style.marginLeft).toBe('auto')
+    expect(resizeContainer().style.marginRight).toBe('auto')
+  })
+
+  // jsdom は寸法を持たないので、ドラッグ開始時の幅は 0 になる
+  it.each([
+    [null, '200px'],
+    ['center', '400px'],
+  ])('右下のハンドルを右へ 200px 動かすと、配置 %s では幅が %s になる', async (align, width) => {
+    await mountWithAttrs({ align })
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    fireEvent.mouseMove(document, { clientX: 200, clientY: 0 })
+
+    expect(document.querySelector<HTMLImageElement>('.ProseMirror img')!.style.width).toBe(width)
+
+    fireEvent.mouseUp(document)
+  })
+})
