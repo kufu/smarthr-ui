@@ -17,7 +17,7 @@ import type { Editor } from '@tiptap/react'
  * - 失敗: onImageUploadError を呼ぶ。src が isSafeImageSrc を満たさない場合も失敗とする
  * - finally: プレースホルダを除去
  *
- * 挿入先が失われていた場合は何もせず正常終了する。アップロードは成功しているので
+ * 文書が差し替えられていた場合は何もせず正常終了する。アップロードは成功しているので
  * onImageUploadError は呼ばない。
  */
 export const uploadAndInsertImage = async (
@@ -40,7 +40,7 @@ export const uploadAndInsertImage = async (
     const at = findImagePlaceholderPos(view, id)
 
     // 位置0は有効なので null かどうかで判定する。
-    // 挿入箇所が削除された場合と、文書ごと差し替えられた場合の両方をここで止める。
+    // 文書の差し替えではプレースホルダも消えるため、両方の条件で止める。
     if (at === null || getImagePlaceholderGeneration(view) !== generation) return
 
     // 挿入すると表示はされるが、保存した内容を表示するときに落ちる

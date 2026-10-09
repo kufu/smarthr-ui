@@ -3,7 +3,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { configureExtensions } from '../configureExtensions'
 
-import { imageUploadPlaceholderKey } from './imageUploadPlaceholder'
+import { imageUploadPlaceholderKey, resetImagePlaceholders } from './imageUploadPlaceholder'
 import { uploadAndInsertImage } from './uploadAndInsertImage'
 
 import type { ImageUploadResult, RichTextFeature } from '../../types'
@@ -54,6 +54,16 @@ const imagePositions = (editor: Editor) => {
   return positions
 }
 
+// 空の段落の中の位置。content が空でない段落は対象にしない
+const emptyParagraphPos = (editor: Editor) => {
+  let found = -1
+  editor.state.doc.descendants((node, pos) => {
+    if (found === -1 && node.type.name === 'paragraph' && node.content.size === 0) found = pos + 1
+  })
+
+  return found
+}
+
 describe('uploadAndInsertImage', () => {
   it('完了時にプレースホルダの位置へ挿入する', async () => {
     const editor = createEditor('<p>hello</p>')
@@ -81,7 +91,7 @@ describe('uploadAndInsertImage', () => {
     expect(editor.getHTML()).toMatch(/<p>12he<\/p>.*<img[^>]*>.*<p>llo<\/p>/)
   })
 
-  it('挿入箇所を含む範囲が削除されたら挿入しない', async () => {
+  it('挿入箇所を含む範囲を削除したら、削除した位置に挿入する', async () => {
     const editor = createEditor('<p>hello</p><p>world</p>')
     const onImageUploadError = vi.fn()
     const deferred = createDeferred<ImageUploadResult>()
@@ -97,7 +107,7 @@ describe('uploadAndInsertImage', () => {
     deferred.resolve({ src: 'https://example.com/a.png' })
     await done
 
-    expect(imagePositions(editor)).toHaveLength(0)
+    expect(imagePositions(editor)).toEqual([7])
     expect(onImageUploadError).not.toHaveBeenCalled()
   })
 
@@ -106,7 +116,15 @@ describe('uploadAndInsertImage', () => {
     const deferred = createDeferred<ImageUploadResult>()
     const done = uploadAndInsertImage(editor, file(), 3, () => deferred.promise)
 
-    editor.commands.setContent('<p>replaced</p>')
+    editor
+      .chain()
+      .setContent('<p>replaced</p>')
+      .command(({ tr }) => {
+        resetImagePlaceholders(tr)
+
+        return true
+      })
+      .run()
     deferred.resolve({ src: 'https://example.com/a.png' })
     await done
 
@@ -119,7 +137,15 @@ describe('uploadAndInsertImage', () => {
     const deferred = createDeferred<ImageUploadResult>()
     const done = uploadAndInsertImage(editor, file(), 1, () => deferred.promise)
 
-    editor.commands.clearContent()
+    editor
+      .chain()
+      .clearContent()
+      .command(({ tr }) => {
+        resetImagePlaceholders(tr)
+
+        return true
+      })
+      .run()
     deferred.resolve({ src: 'https://example.com/a.png' })
     await done
 
@@ -219,24 +245,21 @@ describe('uploadAndInsertImage', () => {
     expect(imagePositions(editor)).toHaveLength(1)
   })
 
-  it('表の列ごと消したら、表の中へは挿入しない', async () => {
+  it('表の列ごと消したら、表を割らずに表の後へ挿入する', async () => {
     const editor = createEditor('<table><tr><td><p>a</p></td><td><p></p></td></tr></table>', [
       'image',
       'table',
     ])
-    let emptyCellPos = 0
-    editor.state.doc.descendants((node, pos) => {
-      if (node.type.name === 'paragraph' && node.content.size === 0) emptyCellPos = pos + 1
-    })
     const deferred = createDeferred<ImageUploadResult>()
-    const done = uploadAndInsertImage(editor, file(), emptyCellPos, () => deferred.promise)
+    const at = emptyParagraphPos(editor)
+    const done = uploadAndInsertImage(editor, file(), at, () => deferred.promise)
 
-    editor.chain().setTextSelection(emptyCellPos).deleteColumn().run()
+    editor.chain().setTextSelection(at).deleteColumn().run()
     deferred.resolve({ src: 'https://example.com/a.png' })
     await done
 
-    expect(imagePositions(editor)).toHaveLength(0)
     expect(editor.getHTML().match(/<table/g)).toHaveLength(1)
+    expect(editor.getHTML()).toMatch(/<\/table>.*a\.png/s)
   })
 
   it('アップロード失敗は onImageUploadError で通知する', async () => {
@@ -258,5 +281,125 @@ describe('uploadAndInsertImage', () => {
 
     expect(onImageUploadError).toHaveBeenCalledWith(error, uploaded)
     expect(imagePositions(editor)).toHaveLength(0)
+  })
+
+  it('空の段落で続けてアップロードすると、完了した順に2枚とも入る', async () => {
+    const editor = createEditor('<p>x</p><p></p><p>y</p>')
+    const first = createDeferred<ImageUploadResult>()
+    const second = createDeferred<ImageUploadResult>()
+    const firstDone = uploadAndInsertImage(editor, file(), 4, () => first.promise)
+    const secondDone = uploadAndInsertImage(editor, file(), 4, () => second.promise)
+
+    first.resolve({ src: 'https://example.com/a.png' })
+    await firstDone
+    second.resolve({ src: 'https://example.com/b.png' })
+    await secondDone
+
+    expect(imagePositions(editor)).toHaveLength(2)
+    expect(editor.getHTML()).toMatch(/<p>x<\/p>.*a\.png.*b\.png.*<p>y<\/p>/s)
+  })
+
+  it.each([
+    [
+      '水平線',
+      ['image', 'horizontalRule'],
+      (editor: Editor) => editor.commands.setHorizontalRule(),
+      /<hr>.*a\.png/s,
+    ],
+    [
+      '表',
+      ['image', 'table'],
+      (editor: Editor) => editor.commands.insertTable({ rows: 1, cols: 1 }),
+      /<\/table>.*a\.png/s,
+    ],
+  ] as const)(
+    'アップロード中の空の段落を%sに置き換えても、その後に入る',
+    async (_, features, replace, expected) => {
+      const editor = createEditor('<p>x</p><p></p><p>y</p>', [...features])
+      const deferred = createDeferred<ImageUploadResult>()
+      const done = uploadAndInsertImage(editor, file(), 4, () => deferred.promise)
+
+      editor.commands.setTextSelection(4)
+      replace(editor)
+      deferred.resolve({ src: 'https://example.com/a.png' })
+      await done
+
+      expect(imagePositions(editor)).toHaveLength(1)
+      expect(editor.getHTML()).toMatch(expected)
+    },
+  )
+
+  it('リスト項目を消したら、リストを壊さずにリストの後へ入る', async () => {
+    const editor = createEditor('<ul><li><p>a</p></li><li><p></p></li><li><p>c</p></li></ul>', [
+      'image',
+      'bulletList',
+    ])
+    const at = emptyParagraphPos(editor)
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), at, () => deferred.promise)
+
+    const $at = editor.state.doc.resolve(at)
+    editor.view.dispatch(editor.state.tr.delete($at.before(-1), $at.after(-1)))
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(editor.getHTML()).toMatch(/<ul><li><p>a<\/p><\/li><li><p>c<\/p><\/li><\/ul>.*a\.png/s)
+  })
+
+  it('引用の中の表で列を消したら、引用の中の表の後へ入る', async () => {
+    const editor = createEditor(
+      '<blockquote><table><tr><td><p>a</p></td><td><p></p></td></tr></table></blockquote>',
+      ['image', 'table', 'blockquote'],
+    )
+    const at = emptyParagraphPos(editor)
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), at, () => deferred.promise)
+
+    editor.chain().setTextSelection(at).deleteColumn().run()
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(editor.getHTML()).toMatch(/<\/table>.*a\.png.*<\/blockquote>/s)
+  })
+
+  it('アップロード中の空の段落を Backspace で消したら、前の段落の後に入る', async () => {
+    const editor = createEditor('<p>x</p><p></p><p>y</p>')
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), 4, () => deferred.promise)
+
+    editor.chain().setTextSelection(4).joinBackward().run()
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(editor.getHTML()).toMatch(/<p>x<\/p>.*a\.png.*<p>y<\/p>/s)
+  })
+
+  it('段落の文字の間では位置を動かさず、段落を分けて入る', async () => {
+    const editor = createEditor('<p>hello</p>')
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), 3, () => deferred.promise)
+
+    expect(imageUploadPlaceholderKey.getState(editor.state)?.placeholders[0]?.pos).toBe(3)
+
+    deferred.resolve({ src: 'https://example.com/a.png' })
+    await done
+
+    expect(editor.getHTML()).toMatch(/<p>he<\/p>.*a\.png.*<p>llo<\/p>/s)
+  })
+
+  it('アップロード中の表示は、挿入先と同じ位置に移る', () => {
+    const editor = createEditor('<table><tr><td><p>a</p></td><td><p></p></td></tr></table>', [
+      'image',
+      'table',
+    ])
+    const at = emptyParagraphPos(editor)
+    uploadAndInsertImage(editor, file(), at, () => new Promise(() => {}))
+
+    editor.chain().setTextSelection(at).deleteColumn().run()
+
+    const afterTable = editor.state.doc.child(0).nodeSize
+    const state = imageUploadPlaceholderKey.getState(editor.state)
+    expect(state?.placeholders.map(({ pos }) => pos)).toEqual([afterTable])
+    expect(state?.decorations.find().map(({ from }) => from)).toEqual([afterTable])
   })
 })

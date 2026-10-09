@@ -1,6 +1,7 @@
 import { Plugin, PluginKey } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from '@tiptap/pm/view'
 
+import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import type { Transaction } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 
@@ -22,6 +23,36 @@ type AddAction = { add: { id: object; pos: number } }
 type RemoveAction = { remove: { id: object } }
 type ResetAction = { reset: true }
 type PlaceholderMeta = AddAction | RemoveAction | ResetAction
+
+// 文字のブロックの中は、insertContentAt がブロックを分けて入れるので動かさない
+export const findImageInsertPos = (doc: ProseMirrorNode, pos: number): number => {
+  const imageType = doc.type.schema.nodes.image
+
+  if (!imageType) return pos
+
+  const $pos = doc.resolve(pos)
+
+  if ($pos.parent.isTextblock) return pos
+
+  const index = $pos.index()
+
+  if ($pos.parent.canReplaceWith(index, index, imageType)) return pos
+
+  for (let depth = $pos.depth - 1; depth >= 0; depth--) {
+    const node = $pos.node(depth)
+    const childIndex = $pos.index(depth)
+    const before = $pos.before(depth + 1)
+    const after = $pos.after(depth + 1)
+    const canBefore = node.canReplaceWith(childIndex, childIndex, imageType)
+    const canAfter = node.canReplaceWith(childIndex + 1, childIndex + 1, imageType)
+
+    if (canBefore && canAfter) return pos - before < after - pos ? before : after
+    if (canAfter) return after
+    if (canBefore) return before
+  }
+
+  return pos
+}
 
 const PLACEHOLDER_CLASS = 'smarthr-ui-RichTextEditor-imageUploadPlaceholder'
 
@@ -51,16 +82,19 @@ export const imageUploadPlaceholderPlugin = (): Plugin<PlaceholderState> =>
 
         if (!meta && (!tr.docChanged || state.placeholders.length === 0)) return state
 
-        // DecorationSet.map は位置の片側が置き換わっただけでも widget を捨てる。段落の末尾へ
-        // 画像を挿入すると閉じタグごと置き換わるため、同じ位置で待つ別のアップロードが消えていた
-        let placeholders = state.placeholders.flatMap(({ id, pos }) => {
-          const mapped = tr.mapping.mapResult(pos, 1)
-
-          return mapped.deletedAcross ? [] : [{ id, pos: mapped.pos }]
-        })
+        // 削除をまたいだら捨てる方式は、空の段落が丸ごと置き換わる挿入（続けての貼り付け・
+        // 水平線・表）でも捨ててしまい、利用者が消していない画像が失われていた。
+        // 位置は追い続け、置けない場所に来たら近くの置ける位置へ移す
+        let placeholders = state.placeholders.map(({ id, pos }) => ({
+          id,
+          pos: findImageInsertPos(tr.doc, tr.mapping.map(pos, 1)),
+        }))
 
         if (meta && 'add' in meta) {
-          placeholders = [...placeholders, meta.add]
+          placeholders = [
+            ...placeholders,
+            { id: meta.add.id, pos: findImageInsertPos(tr.doc, meta.add.pos) },
+          ]
         } else if (meta && 'remove' in meta) {
           placeholders = placeholders.filter(({ id }) => id !== meta.remove.id)
         }
