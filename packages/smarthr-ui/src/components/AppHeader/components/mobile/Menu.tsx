@@ -16,7 +16,6 @@ import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
 import { Portal } from '../../../Portal'
-import { Translate } from '../common/Translate'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { MenuAccordion } from './MenuAccordion'
@@ -143,7 +142,7 @@ const ActualFeatureButton: FC<
         prefix={<FaToolboxIcon />}
         suffix={<FaAngleRightIcon className="shr-ms-auto" />}
       >
-        <Translate>{children}</Translate>
+        {children}
       </Button>
     </div>
   )

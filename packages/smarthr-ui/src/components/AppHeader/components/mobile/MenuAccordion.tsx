@@ -14,7 +14,6 @@ import { Heading } from '../../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../../../Icon'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
-import { Translate } from '../common/Translate'
 
 type Props = PropsWithChildren<{
   isOpen: boolean
@@ -48,9 +47,7 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
 
     return (
       <Cluster justify="space-between" align="center">
-        <Heading type="subSubBlockTitle">
-          <Translate>{title}</Translate>
-        </Heading>
+        <Heading type="subSubBlockTitle">{title}</Heading>
 
         <Button
           size="S"

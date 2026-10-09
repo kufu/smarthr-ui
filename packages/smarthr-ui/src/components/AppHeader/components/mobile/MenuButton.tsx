@@ -2,7 +2,6 @@ import { type PropsWithChildren, memo } from 'react'
 
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 type Props = PropsWithChildren<{
   handleClick: () => void
@@ -18,7 +17,7 @@ export const MenuButton = memo<Props>(({ children, handleClick, isCurrent }) => 
     className="[&&]:shr-justify-between [&&]:shr-px-0.5"
     handleClick={handleClick}
   >
-    <Translate>{children}</Translate>
+    {children}
     <FaAngleRightIcon color="TEXT_BLACK" />
   </CommonButton>
 ))

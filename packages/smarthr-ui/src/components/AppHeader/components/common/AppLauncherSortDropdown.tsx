@@ -17,7 +17,6 @@ import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -135,7 +134,7 @@ const TriggerButton = memo<
       className={className}
       suffix={<FaCaretDownIcon />}
     >
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   </DropdownTrigger>
 ))
@@ -160,19 +159,17 @@ const OptionButton = memo<
         selected && (
           <FaCheckIcon
             alt={
-              <Translate>
-                <Localizer
-                  id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected"
-                  defaultText="選択中"
-                />
-              </Translate>
+              <Localizer
+                id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected"
+                defaultText="選択中"
+              />
             }
             color={theme.textColor.main}
           />
         )
       }
     >
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   )
 })

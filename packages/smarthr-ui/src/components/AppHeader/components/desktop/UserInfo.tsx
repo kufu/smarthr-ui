@@ -9,7 +9,6 @@ import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import type { HeaderProps, UserInfoProps } from '../../types'
 
@@ -279,7 +278,7 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
         className={className}
         prefix={<FaGearIcon />}
       >
-        <Translate>{children}</Translate>
+        {children}
       </AnchorButton>
     ),
 )
@@ -288,7 +287,7 @@ const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>
   ({ children, className }) => (
     <DropdownTrigger>
       <Button variant="text" className={className} suffix={<FaCaretDownIcon />}>
-        <Translate>{children}</Translate>
+        {children}
       </Button>
     </DropdownTrigger>
   ),
@@ -304,7 +303,7 @@ const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(
         rel="noopener noreferrer"
         prefix={<FaGearIcon />}
       >
-        <Translate>{children}</Translate>
+        {children}
       </CommonButton>
     ),
 )
