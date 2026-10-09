@@ -341,6 +341,37 @@ export const VRTBrokenImage: Story = {
   ),
 }
 
+const mediaAlignContent = {
+  type: 'doc' as const,
+  content: [null, 'center', 'right'].flatMap((align) => [
+    {
+      type: 'image',
+      attrs: {
+        src: '/fixtures/sample-png.png',
+        alt: `配置 ${align ?? 'left'} の画像`,
+        width: 200,
+        align,
+      },
+    },
+    {
+      type: 'youtube',
+      attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 320, height: 180, align },
+    },
+  ]),
+}
+
+export const VRTMediaAlign: Story = {
+  name: '画像・YouTube の配置（左・中央・右）',
+  render: () => (
+    <FormControl label="画像・YouTube の配置">
+      <RichTextEditor defaultValue={mediaAlignContent} features={['image', 'youtube']} />
+    </FormControl>
+  ),
+  parameters: {
+    chromatic: { ignoreSelectors: ['iframe'] },
+  },
+}
+
 export const VRTSizeAndResize: Story = {
   name: 'サイズ指定とリサイズハンドル',
   render: () => (

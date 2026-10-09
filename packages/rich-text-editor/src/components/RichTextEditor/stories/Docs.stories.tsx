@@ -343,22 +343,35 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   <code>image</code>
                 </td>
-                <td style={tdStyle}>画像挿入</td>
+                <td style={tdStyle}>
+                  画像挿入
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    選ぶと操作バー（代替テキスト・サイズ・配置・削除）を画像の上に出す
+                  </Text>
+                </td>
                 <td style={tdStyle}>
                   <FaImageIcon />
                 </td>
-                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>Alt+Enter / Shift+F10（選択中に操作バーへ移る）</td>
                 <td style={tdStyle}>なし</td>
               </tr>
               <tr>
                 <td style={tdStyle}>
                   <code>youtube</code>
                 </td>
-                <td style={tdStyle}>YouTube埋め込み</td>
+                <td style={tdStyle}>
+                  YouTube埋め込み
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    選ぶと操作バー（配置・削除）を動画の上に出す。編集中は動画プレーヤーを Tab
+                    の移動先から外す
+                  </Text>
+                </td>
                 <td style={tdStyle}>
                   <FaCirclePlayIcon />
                 </td>
-                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>Alt+Enter / Shift+F10（選択中に操作バーへ移る）</td>
                 <td style={tdStyle}>なし</td>
               </tr>
               <tr>

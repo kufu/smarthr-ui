@@ -379,3 +379,35 @@ export const Media: Story = {
     chromatic: { ignoreSelectors: ['iframe'] },
   },
 }
+
+export const MediaAlign: Story = {
+  name: '画像・YouTube の配置（左・中央・右）',
+  args: {
+    content: {
+      type: 'doc' as const,
+      content: [null, 'center', 'right'].flatMap((align) => [
+        {
+          type: 'image',
+          attrs: {
+            src: '/fixtures/sample-png.png',
+            alt: `配置 ${align ?? 'left'} の画像`,
+            width: 200,
+            align,
+          },
+        },
+        {
+          type: 'youtube',
+          attrs: {
+            src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            width: 320,
+            height: 180,
+            align,
+          },
+        },
+      ]),
+    },
+  },
+  parameters: {
+    chromatic: { ignoreSelectors: ['iframe'] },
+  },
+}
