@@ -29,6 +29,8 @@ const ALL_FORMATS_HTML = [
   '<img src="https://example.com/a.png" alt="画像" width="200" height="100">',
   '<img src="data:image/png;base64,AAAA"><img src="blob:https://example.com/x">',
   '<div data-youtube-video><iframe src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" width="320" height="180"></iframe></div>',
+  '<img src="https://example.com/b.png" style="display: block; margin-left: auto; margin-right: auto">',
+  '<div data-youtube-video style="width: fit-content; margin-left: auto"><iframe src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" width="320" height="180"></iframe></div>',
   '<table><tbody><tr><th colspan="2" style="background-color: #eeeeee">見出しセル</th></tr>',
   '<tr><td style="color: #333333" colwidth="120">セル</td><td rowspan="1"><p>セル2</p></td></tr></tbody></table>',
 ].join('')
@@ -48,5 +50,17 @@ describe('createSchemaExtensions', () => {
 
     expect(json).toEqual(generateJSON(ALL_FORMATS_HTML, editorExtensions))
     expect(generateHTML(json, schemaExtensions)).toBe(generateHTML(json, editorExtensions))
+  })
+
+  it('画像と YouTube の配置を読み、同じ style で書き出す', () => {
+    const json = generateJSON(ALL_FORMATS_HTML, schemaExtensions)
+    const html = generateHTML(json, schemaExtensions)
+
+    expect(html).toMatch(
+      /src="https:\/\/example\.com\/b\.png"[^>]*style="display: block; margin-left: auto; margin-right: auto;"/,
+    )
+    expect(html).toContain(
+      '<div data-youtube-video="" style="width: fit-content; margin-left: auto;">',
+    )
   })
 })

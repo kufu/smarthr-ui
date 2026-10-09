@@ -4,6 +4,11 @@ import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
 import {
+  IMAGE_ALIGN_STYLES,
+  YOUTUBE_ALIGN_STYLES,
+  getMediaAlignStyles,
+} from '../extensions/mediaAlign'
+import {
   YOUTUBE_DEFAULT_SIZE,
   YOUTUBE_EMBED_OPTIONS,
   YOUTUBE_IFRAME_ATTRIBUTES,
@@ -86,12 +91,16 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
     const src = node.attrs.src
     const width = parseNumericAttr(node.attrs.width)
     const height = parseNumericAttr(node.attrs.height)
+    const style = {
+      ...(width ? { maxWidth: '100%', height: 'auto' } : {}),
+      ...getMediaAlignStyles(IMAGE_ALIGN_STYLES, node.attrs.align),
+    }
     return createElement('img', {
       src: isSafeImageSrc(src) ? src : undefined,
       alt: typeof node.attrs.alt === 'string' ? node.attrs.alt : '',
       width,
       height,
-      style: width ? { maxWidth: '100%', height: 'auto' } : undefined,
+      style: Object.keys(style).length > 0 ? style : undefined,
     })
   },
   youtube: ({ node }) => {
@@ -101,7 +110,10 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
       typeof node.attrs.height === 'number' ? node.attrs.height : YOUTUBE_DEFAULT_SIZE.height
     return createElement(
       'div',
-      { 'data-youtube-video': '' },
+      {
+        'data-youtube-video': '',
+        style: getMediaAlignStyles(YOUTUBE_ALIGN_STYLES, node.attrs.align),
+      },
       createElement('iframe', {
         ...YOUTUBE_IFRAME_ATTRIBUTES,
         src: toEmbedUrl(node.attrs.src, node.attrs.start),

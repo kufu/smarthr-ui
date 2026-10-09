@@ -714,6 +714,49 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     }
   })
 
+  const imageAlignDoc = (align: unknown) => ({
+    type: 'doc',
+    content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', align } }],
+  })
+
+  it.each([
+    ['center', 'margin-left: auto; margin-right: auto', 'margin-left:auto;margin-right:auto'],
+    ['right', 'display: block; margin-left: auto;"', 'display:block;margin-left:auto"'],
+  ])('画像の配置 %s は両経路で style になる', (align, htmlStyle, reactStyle) => {
+    const { html, react } = bothOutputs(imageAlignDoc(align))
+    expect(html).toContain(htmlStyle)
+    expect(react).toContain(reactStyle)
+  })
+
+  it.each([['left'], ['top'], ['center;position:fixed'], [1]])(
+    '画像の配置 %s は両経路で出力されない',
+    (align) => {
+      const { html, react } = bothOutputs(imageAlignDoc(align))
+      for (const output of [html, react]) expect(output).not.toContain('margin')
+      assertNoInjectedCss({ html, react })
+    },
+  )
+
+  it.each([
+    [
+      'center',
+      'width: fit-content; margin-left: auto; margin-right: auto',
+      'width:fit-content;margin-left:auto;margin-right:auto',
+    ],
+    ['right', 'width: fit-content; margin-left: auto;"', 'width:fit-content;margin-left:auto"'],
+  ])('YouTube の配置 %s は両経路で外側の div の style になる', (align, htmlStyle, reactStyle) => {
+    const { html, react } = bothOutputs(youtubeDoc({ width: 320, height: 180, align }))
+    expect(html).toContain(`<div data-youtube-video="" style="${htmlStyle}`)
+    expect(react).toContain(`<div data-youtube-video="" style="${reactStyle}`)
+    for (const output of [html, react]) expect(output).not.toMatch(/<iframe[^>]*margin/)
+  })
+
+  it.each([['left'], ['x;position:fixed']])('YouTube の配置 %s は両経路で出力されない', (align) => {
+    const { html, react } = bothOutputs(youtubeDoc({ width: 320, height: 180, align }))
+    for (const output of [html, react]) expect(output).not.toContain('margin')
+    assertNoInjectedCss({ html, react })
+  })
+
   const linkDoc = (attrs: Record<string, unknown>) => ({
     type: 'doc',
     content: [

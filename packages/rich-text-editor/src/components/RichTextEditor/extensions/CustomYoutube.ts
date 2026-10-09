@@ -1,13 +1,13 @@
 import { nodePasteRule } from '@tiptap/core'
-import { Youtube } from '@tiptap/extension-youtube'
 
+import { AlignedYoutube } from './AlignedYoutube'
 import { normalizeYoutubeUrl } from './youtubeUrl'
 
 /**
  * 標準の貼り付けルールは貼り付けた文字列をそのまま src にするため、
  * 出力側で落ちる表記が保存される。判定の正規表現は拡張のものを使い、src と start を揃える。
  */
-export const CustomYoutube = Youtube.extend({
+export const CustomYoutube = AlignedYoutube.extend({
   addPasteRules() {
     return (this.parent?.() ?? []).map((rule) =>
       nodePasteRule({

@@ -1,3 +1,5 @@
+import type { MediaAlign } from '../extensions/mediaAlign'
+
 /**
  * 外部から直接 JSON を渡された場合に信頼できない属性値のallowlist。
  *
@@ -56,6 +58,9 @@ export const LINK_REL = 'noopener noreferrer nofollow'
 
 export const isSafeLinkTarget = (target: unknown): target is string =>
   typeof target === 'string' && SAFE_LINK_TARGETS.has(target)
+
+export const isSafeMediaAlign = (align: unknown): align is MediaAlign =>
+  align === 'center' || align === 'right'
 
 export const isSafeTextAlign = (textAlign: unknown): textAlign is string =>
   typeof textAlign === 'string' && SAFE_TEXT_ALIGNS.has(textAlign)

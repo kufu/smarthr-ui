@@ -2,9 +2,9 @@ import { Color } from '@tiptap/extension-color'
 import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
-import { Youtube } from '@tiptap/extension-youtube'
 import { StarterKit } from '@tiptap/starter-kit'
 
+import { AlignedYoutube } from './AlignedYoutube'
 import { SafeImage } from './Image/SafeImage'
 import { LineHeight } from './LineHeight'
 import { CellAppearance } from './Table/CellAppearance'
@@ -52,7 +52,7 @@ export const createSchemaExtensions = (): AnyExtension[] => [
   StarterKit.configure(STARTER_KIT_OPTIONS),
   TextAlign.configure({ types: BLOCK_STYLE_TYPES }),
   SafeImage.configure(IMAGE_OPTIONS),
-  Youtube.configure(YOUTUBE_OPTIONS),
+  AlignedYoutube.configure(YOUTUBE_OPTIONS),
   Table.configure(TABLE_OPTIONS),
   TableRow,
   CellAppearance,
