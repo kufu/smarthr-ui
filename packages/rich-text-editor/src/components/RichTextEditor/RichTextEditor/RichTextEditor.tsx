@@ -11,6 +11,7 @@ import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
+import { YoutubeFloatingUI } from '../extensions/Youtube/YoutubeFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { getDetachedJSON } from '../serializers/getDetachedJSON'
 import { normalizeToJSON } from '../serializers/normalizeToJSON'
@@ -58,7 +59,7 @@ const classNameGenerator = tv({
       'smarthr-ui-RichTextEditor-resizeHandle',
       // wrapper が shr-rte-relative なので、文字数エリアの有無に関係なく右下に出る。
       // 角丸からはみ出さないよう僅かに内側に寄せる。
-      // z-1 は TableFloatingUI / ImageFloatingUI が shr-rte-z-0 で絶対配置されるため。
+      // z-1 は TableFloatingUI / ImageFloatingUI / YoutubeFloatingUI が shr-rte-z-0 で絶対配置されるため。
       'shr-rte-absolute shr-rte-bottom-[2px] shr-rte-right-[2px] shr-rte-z-1',
       'shr-rte-flex shr-rte-items-center shr-rte-justify-center',
       'shr-rte-cursor-ns-resize shr-rte-text-sm shr-rte-text-grey',
@@ -444,6 +445,9 @@ export const RichTextEditor = memo(
           )}
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('image') && (
             <ImageFloatingUI containerRef={wrapperRef} editor={editor} />
+          )}
+          {editor && !readOnly && !disabled && !hideToolbar && features.includes('youtube') && (
+            <YoutubeFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea()} />

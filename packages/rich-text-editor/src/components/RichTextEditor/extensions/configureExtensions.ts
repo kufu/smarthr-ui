@@ -15,6 +15,7 @@ import { DEFAULT_MIME_TYPES, matchesMimeType } from './Image/mimeTypes'
 import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
 import { LineHeight } from './LineHeight'
 import { LinkShortcut } from './LinkShortcut'
+import { MediaToolbarShortcut } from './MediaToolbarShortcut'
 import { CellAppearance } from './Table/CellAppearance'
 import { CustomTable } from './Table/CustomTable'
 import {
@@ -108,6 +109,7 @@ export const configureExtensions = ({
     ),
     // features に無い間も登録しておく。後から足せないため、操作の可否は実行時に判定する。
     restrict(LinkShortcut),
+    MediaToolbarShortcut,
     // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）
     Extension.create({
       name: 'imageUploadPlaceholder',

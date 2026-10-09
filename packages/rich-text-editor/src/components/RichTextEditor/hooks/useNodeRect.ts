@@ -38,9 +38,19 @@ export const useNodeRect = (
       return
     }
 
+    const resizeObserver = new ResizeObserver(() => measure())
+    let observed: HTMLElement | null = null
+
     const measure = () => {
       const el = latest.resolveElement(editor.view.nodeDOM(pos))
       const container = latest.containerRef.current
+
+      // 属性の変更でノードの DOM ごと作り直されると、pos は同じでも見張る要素が変わる
+      if (el !== observed) {
+        if (observed) resizeObserver.unobserve(observed)
+        if (el) resizeObserver.observe(el)
+        observed = el
+      }
 
       if (!el || !container) {
         setNodeRect(null)
@@ -78,10 +88,6 @@ export const useNodeRect = (
       })
     }
 
-    const observed = latest.resolveElement(editor.view.nodeDOM(pos))
-    const resizeObserver = new ResizeObserver(measure)
-
-    if (observed) resizeObserver.observe(observed)
     if (latest.containerRef.current) resizeObserver.observe(latest.containerRef.current)
     // コンテナの高さが固定だと、前にある内容が伸びて対象が動いてもコンテナは発火しない
     resizeObserver.observe(editor.view.dom, { box: 'border-box' })

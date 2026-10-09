@@ -5,9 +5,9 @@ import { type FC, type RefObject, memo, useCallback } from 'react'
 import { FaTrashCanIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../../intl'
-import { tv } from '../../../../libs/tv'
-import { useNodeRect } from '../../hooks/useNodeRect'
 import { useRovingToolbar } from '../../hooks/useRovingToolbar'
+import { MediaAlignDropdown } from '../MediaAlignDropdown'
+import { NodeFloatingToolbar } from '../NodeFloatingToolbar'
 
 import { ImageAltPopover } from './ImageAltPopover'
 import { ImageWidthPopover } from './ImageWidthPopover'
@@ -24,32 +24,10 @@ const findSelectedImagePos = (editor: Editor): number | null => {
   return null
 }
 
-const classNameGenerator = tv({
-  slots: {
-    bar: [
-      'smarthr-ui-RichTextEditor-ImageFloatingUI',
-      'shr-rte-absolute shr-rte-z-0',
-      'shr-rte-inline-flex shr-rte-items-center shr-rte-gap-0.25',
-      'shr-rte-border-shorthand shr-rte-rounded-m shr-rte-bg-white shr-rte-p-0.25 shr-rte-shadow-layer-2',
-    ],
-  },
-})
-
-const CLASS_NAMES = (() => {
-  const { bar } = classNameGenerator()
-
-  return {
-    bar: bar(),
-  }
-})()
-
 type Props = {
   editor: Editor
   containerRef: RefObject<HTMLElement | null>
 }
-
-const BAR_GAP = 6
-const BAR_HEIGHT = 36
 
 export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
   const { localize } = useIntl()
@@ -58,11 +36,9 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
     selector: ({ editor: e }) => (e.isActive('image') ? findSelectedImagePos(e) : null),
   })
 
-  const info = useNodeRect(editor, containerRef, pos, resolveImageElement)
-
   const handleDelete = useCallback(() => {
     if (pos !== null) {
-      editor.chain().setNodeSelection(pos).deleteSelection().run()
+      editor.chain().focus().setNodeSelection(pos).deleteSelection().run()
     }
   }, [editor, pos])
 
@@ -70,13 +46,9 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
     editor.commands.focus()
   }, [editor])
 
-  const { getButtonProps } = useRovingToolbar({ count: 3, onEscape: handleEscape })
+  const { getButtonProps } = useRovingToolbar({ count: 4, onEscape: handleEscape })
 
-  if (pos === null || !info) return null
-
-  const idealTop = info.rect.top - BAR_HEIGHT - BAR_GAP
-  const top = Math.max(idealTop, info.viewport.top)
-  const left = info.rect.left
+  if (pos === null) return null
 
   const toolbarLabel = localize({
     id: 'smarthr-ui/RichTextEditor/imageToolbar',
@@ -91,11 +63,20 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
     defaultText: '削除',
   })
   return (
-    <div role="toolbar" className={CLASS_NAMES.bar} style={{ top, left }} aria-label={toolbarLabel}>
+    <NodeFloatingToolbar
+      containerRef={containerRef}
+      editor={editor}
+      nodeName="image"
+      pos={pos}
+      resolveElement={resolveImageElement}
+      className="smarthr-ui-RichTextEditor-ImageFloatingUI"
+      label={toolbarLabel}
+    >
       <ImageAltPopover {...getButtonProps(0)} editor={editor} pos={pos} />
       <ImageWidthPopover {...getButtonProps(1)} editor={editor} pos={pos} />
+      <MediaAlignDropdown {...getButtonProps(2)} editor={editor} nodeName="image" pos={pos} />
       <button
-        {...getButtonProps(2)}
+        {...getButtonProps(3)}
         type="button"
         className={IMAGE_TOOLBAR_BUTTON_CLASS_NAME}
         aria-label={deleteLabel}
@@ -105,6 +86,6 @@ export const ImageFloatingUI: FC<Props> = memo(({ editor, containerRef }) => {
         <FaTrashCanIcon alt="" />
         {deleteShortLabel}
       </button>
-    </div>
+    </NodeFloatingToolbar>
   )
 })

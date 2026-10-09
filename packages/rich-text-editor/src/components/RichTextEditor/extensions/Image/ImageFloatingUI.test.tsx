@@ -91,6 +91,34 @@ describe('ImageFloatingUI', () => {
       // 画像の上端 200 から、バーの高さ36と間隔6を引いた位置
       expect(bar).toHaveStyle({ left: '27px', top: '106px' })
     })
+
+    it('右に寄せた画像でも、バーを編集領域の右端からはみ出させない', async () => {
+      const editor = new Editor({
+        extensions: configureExtensions({ features: ALL_FEATURES }),
+        content: imageDoc,
+      })
+      editors.push(editor)
+
+      const container = document.createElement('div')
+      document.body.append(container)
+      containers.push(container)
+      mockRect(container, 100, 50)
+      mockRect(editor.view.dom, 100, 50, 600, 400)
+      mockRect(editor.view.dom.querySelector('img')!, 600, 200, 100, 100)
+      // jsdom は描画しないので、バーの幅を与える
+      vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(300)
+      editor.commands.setNodeSelection(2)
+
+      const containerRef = createRef<HTMLElement>()
+      containerRef.current = container
+      render(<ImageFloatingUI containerRef={containerRef} editor={editor as never} />, {
+        wrapper: Wrapper,
+      })
+
+      const bar = await screen.findByRole('toolbar', { name: '画像の操作' })
+      // 画像の左端 500 からだと 800 まで伸びるので、編集領域の右端 600 に収まる 300 へ寄せる
+      await waitFor(() => expect(bar).toHaveStyle({ left: '300px' }))
+    })
   })
 
   it('ポップオーバーを開いている間に画像の位置が動いても、閉じずに入力中の値を保つ', async () => {
@@ -150,5 +178,88 @@ describe('ImageFloatingUI', () => {
     expect(editor.$node('image')).toBeNull()
     expect(editor.getText().trim()).toBe('前')
     expect(screen.queryByRole('toolbar', { name: '画像の操作' })).not.toBeInTheDocument()
+  })
+
+  it('配置で中央を選ぶと align が center になり、左で null に戻る', async () => {
+    const user = userEvent.setup()
+    const editor = new Editor({
+      extensions: configureExtensions({ features: ALL_FEATURES }),
+      content: imageDoc,
+    })
+    const container = document.createElement('div')
+    document.body.append(container)
+    onTestFinished(() => {
+      editor.destroy()
+      container.remove()
+    })
+    editor.commands.setNodeSelection(2)
+
+    render(<ImageFloatingUI containerRef={{ current: container }} editor={editor as never} />, {
+      wrapper: Wrapper,
+    })
+
+    await user.click(await screen.findByRole('button', { name: '配置: 左揃え' }))
+    await user.click(screen.getByRole('option', { name: '中央揃え' }))
+    expect(editor.$node('image')?.attributes.align).toBe('center')
+
+    await user.click(screen.getByRole('button', { name: '配置: 中央揃え' }))
+    await user.click(screen.getByRole('option', { name: '左揃え' }))
+    expect(editor.$node('image')?.attributes.align).toBeNull()
+  })
+
+  it.each(['Shift-F10', 'Alt-Enter'])(
+    '画像を選んで %s を押すと、操作バーの先頭のボタンへ移る',
+    async (key) => {
+      const editor = new Editor({
+        extensions: configureExtensions({ features: ALL_FEATURES }),
+        content: imageDoc,
+      })
+      const container = document.createElement('div')
+      document.body.append(container)
+      onTestFinished(() => {
+        editor.destroy()
+        container.remove()
+      })
+      editor.commands.setNodeSelection(2)
+
+      render(<ImageFloatingUI containerRef={{ current: container }} editor={editor as never} />, {
+        wrapper: Wrapper,
+      })
+      await screen.findByRole('toolbar', { name: '画像の操作' })
+
+      act(() => {
+        editor.commands.keyboardShortcut(key)
+      })
+
+      expect(screen.getByRole('button', { name: '代替テキスト（alt）' })).toHaveFocus()
+    },
+  )
+
+  it('キーボードで画像を削除すると、本文へフォーカスが戻る', async () => {
+    const user = userEvent.setup()
+    const element = document.createElement('div')
+    document.body.append(element)
+    const editor = new Editor({
+      element,
+      extensions: configureExtensions({ features: ALL_FEATURES }),
+      content: imageDoc,
+    })
+    const container = document.createElement('div')
+    document.body.append(container)
+    onTestFinished(() => {
+      editor.destroy()
+      element.remove()
+      container.remove()
+    })
+    editor.commands.setNodeSelection(2)
+
+    render(<ImageFloatingUI containerRef={{ current: container }} editor={editor as never} />, {
+      wrapper: Wrapper,
+    })
+    screen.getByRole('button', { name: '画像を削除' }).focus()
+    await user.keyboard('{Enter}')
+
+    expect(editor.$node('image')).toBeNull()
+    await waitFor(() => expect(editor.view.dom).toHaveFocus())
   })
 })
