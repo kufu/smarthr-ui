@@ -46,7 +46,7 @@ type Props = SHRComponentPropsWithoutRef<
     ) => void
     /**
      * 許可するファイル型を表す1つ以上の固有ファイル型指定子
-     * <b>（ドラッグ&ドロップの挙動には影響しません）</b>
+     * （ドラッグ&ドロップの挙動には影響しません）
      */
     accept?: string
     /** 複数ファイルを選択できるかどうか */
@@ -67,7 +67,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: FC<Props> = ({
+export const ActualDropZone: FC<Props> = ({
   children,
   onSelectFiles,
   multiple = true,
