@@ -9,8 +9,6 @@ import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
 
-import { Translate } from './Translate'
-
 import type { Launcher } from '../../types'
 
 const classNameGenerator = tv({
@@ -79,12 +77,10 @@ const LoadErrorText = memo(() => (
 const EmptyList = memo(() => (
   <div className={CLASS_NAMES.empty}>
     <Text size="S">
-      <Translate>
-        <Localizer
-          id="smarthr-ui/AppHeader/Launcher/emptyText"
-          defaultText="該当するアプリが見つかりませんでした。"
-        />
-      </Translate>
+      <Localizer
+        id="smarthr-ui/AppHeader/Launcher/emptyText"
+        defaultText="該当するアプリが見つかりませんでした。"
+      />
     </Text>
   </div>
 ))

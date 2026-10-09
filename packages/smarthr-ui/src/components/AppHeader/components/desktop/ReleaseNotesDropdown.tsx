@@ -8,7 +8,6 @@ import { FaCaretDownIcon } from '../../../Icon'
 import { Center } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { TextLink } from '../../../TextLink'
-import { Translate } from '../common/Translate'
 
 import type { ReleaseNoteProps } from '../../types'
 
@@ -70,9 +69,7 @@ const ReleaseNoteDropdownTrigger = memo(() => (
       className="shr-rounded-none shr-border-none shr-font-normal [&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180"
       suffix={<FaCaretDownIcon />}
     >
-      <Translate>
-        <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
-      </Translate>
+      <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
     </Button>
   </DropdownTrigger>
 ))
@@ -84,9 +81,7 @@ const StyledLoader = memo(() => (
 ))
 
 const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
-  <div className="shr-whitespace-pre-wrap shr-p-0.75">
-    <Translate>{children}</Translate>
-  </div>
+  <div className="shr-whitespace-pre-wrap shr-p-0.75">{children}</div>
 ))
 
 // HelpLinkではなくTextLinkを使用する理由:
@@ -119,7 +114,7 @@ const SeeAllTextLink = memo<PropsWithChildren<{ href: string }>>(({ href, childr
       className="shr-leading-normal [&&]:shr-underline"
       style={BOX_SHADOW_STYLE}
     >
-      <Translate>{children}</Translate>
+      {children}
     </TextLink>
   </div>
 ))

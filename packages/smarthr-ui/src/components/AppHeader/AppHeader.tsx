@@ -22,9 +22,9 @@ export const AppHeader: FC<HeaderProps> = ({
   fetchFeatures,
   ...rest
 }) => {
-  // NOTE: ヘッダーの出し分けは CSS によって行われているので、useMediaQuery による children の出し分けは本来不要ですが、
-  //  wovn の言語切替カスタム UI の挿入対象となる DOM ("wovn-embedded-widget-anchor" クラスを持った div) が複数描画されていると、
-  //  wovn のスクリプトの仕様上1つ目の DOM にしか UI が挿入されないため、やむを得ず children のみ React のレンダリングレベルでの出し分けをしています。
+  // NOTE: ヘッダーの出し分けは CSS によって行われているので、本来不要ですが、
+  //  childrenはDesktop/Mobile両方のヘッダーが常にマウントされている構造上、両方に渡すとchildrenが二重にレンダリングされてしまうため、
+  //  画面幅に応じてどちらか一方にしか渡さないようにしています。
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   const [lazyFeatures, setLazyFeatures] = useState<{
