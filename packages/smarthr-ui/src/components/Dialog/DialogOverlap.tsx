@@ -34,7 +34,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as, ...rest }) => {
+export const DialogOverlap: FC<Props> = ({ isOpen, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,7 +50,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as, ...r
       unmountOnExit
       classNames="shr-dialog-transition"
     >
-      <Center {...rest} as={as} ref={nodeRef} verticalCentering className={actualClassName}>
+      <Center {...rest} ref={nodeRef} verticalCentering className={actualClassName}>
         {isOpen ? children : childrenBuffer}
       </Center>
     </CSSTransition>
