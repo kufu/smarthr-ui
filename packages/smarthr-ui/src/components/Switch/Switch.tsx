@@ -93,12 +93,16 @@ export const Switch: FC<Props> = ({
 }
 
 const MemoizedLabel = memo<
-  Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
->(({ unrecommendedLabelHidden, htmlFor, children }) => {
+  SHRComponentPropsWithRef<
+    // TODO: 本来はlabelを指定したい
+    typeof Text,
+    Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
+  >
+>(({ unrecommendedLabelHidden, htmlFor, children, ...rest }) => {
   const Component = unrecommendedLabelHidden ? VisuallyHiddenText : Text
 
   return (
-    <Component as="label" htmlFor={htmlFor}>
+    <Component {...rest} as="label" htmlFor={htmlFor}>
       {children}
     </Component>
   )

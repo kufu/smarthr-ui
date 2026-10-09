@@ -8,6 +8,8 @@ import { useTheme } from '../../../hooks/client/useTheme'
 import { debounce } from '../../../libs/debounce'
 import { ControlledTooltip } from '../ControlledTooltip'
 
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
 const subscribeFullscreenChange = (callback: () => void) => {
   window.addEventListener('fullscreenchange', callback)
 
@@ -18,13 +20,17 @@ const subscribeFullscreenChange = (callback: () => void) => {
 const getPortalRoot = () => document.fullscreenElement ?? document.body
 const getPortalRootOnSSR = () => null
 
-type Props = {
-  messageId: string
-  message: ReactNode
-  isVisible: boolean
-  parentRect: DOMRect | null
-  isIcon?: boolean
-}
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    messageId: string
+    message: ReactNode
+    isVisible: boolean
+    parentRect: DOMRect | null
+    isIcon?: boolean
+  },
+  { omit: 'children' | 'role' | 'className' | 'style' | 'aria-hidden' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -50,7 +56,14 @@ const SPACING = 5
 type HorizontalType = 'left' | 'center' | 'right'
 type VerticalType = 'top' | 'middle' | 'bottom'
 
-export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parentRect, isIcon }) => {
+export const TooltipPortal: FC<Props> = ({
+  messageId,
+  message,
+  isVisible,
+  parentRect,
+  isIcon,
+  ...rest
+}) => {
   const theme = useTheme()
   const portalRoot = useSyncExternalStore(
     subscribeFullscreenChange,
@@ -102,6 +115,7 @@ export const TooltipPortal: FC<Props> = ({ messageId, message, isVisible, parent
 
   return createPortal(
     <div
+      {...rest}
       ref={callbackRef}
       role="tooltip"
       className={CLASS_NAMES.container}

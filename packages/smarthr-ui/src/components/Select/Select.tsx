@@ -1,4 +1,4 @@
-import { type PropsWithChildren, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleDownIcon } from '../Icon'
@@ -103,11 +103,10 @@ export const Select = <T extends string>({
   )
 }
 
-const BlankOption = memo<
-  PropsWithChildren<{
-    hasBlank: boolean | undefined
-  }>
->(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
+const BlankOption = memo<{
+  children: string
+  hasBlank: boolean | undefined
+}>(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
 
 const Option = memo<Props<string>['options'][number]>((option) => {
   if ('value' in option) {
