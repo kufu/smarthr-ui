@@ -78,3 +78,11 @@ export const WithCenterContent: Story = {
     ),
   },
 }
+
+export const TableView: Story = {
+  name: 'default table view',
+  args: {
+    data: doughnutSmall,
+    defaultView: 'table',
+  },
+}

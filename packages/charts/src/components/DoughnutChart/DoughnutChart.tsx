@@ -1,8 +1,8 @@
 'use client'
 
-import { useId, useMemo, useRef } from 'react'
+import { ReactNode, useId, useMemo, useRef, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
-import { VisuallyHiddenText } from 'smarthr-ui'
+import { FaChartPieIcon, FaTableIcon, SegmentedControl, VisuallyHiddenText, Text } from 'smarthr-ui'
 
 import { createDoughnutChartOptions, registerChartComponents } from '../../config'
 import {
@@ -15,6 +15,8 @@ import { doughnutSegmentDividerPlugin } from '../../plugins'
 import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
 
 import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
+import { ChartViewType } from '../../helper/data'
+import { TableView } from '../internal/TableView/TableView'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -28,6 +30,8 @@ type Props = {
   children?: React.ReactNode
   className?: string
   options?: Partial<ChartOptions<'doughnut'>>
+  onChangeView?: (value: ChartViewType) => void
+  defaultView?: ChartViewType
   /**
    * ドーナツグラフの柄を無効化するか
    */
@@ -42,7 +46,10 @@ export const DoughnutChart: React.FC<Props> = ({
   className,
   options: externalOptions,
   disablePatterns,
+  onChangeView,
+  defaultView = 'chart',
 }) => {
+  const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
@@ -83,7 +90,7 @@ export const DoughnutChart: React.FC<Props> = ({
         cutout: externalOptions?.cutout ?? CUTOUT_BY_THICKNESS[thickness],
         plugins: {
           ...externalOptions?.plugins,
-          title: title ? { display: true, text: title } : { display: false },
+          title: { display: false },
           keyboardNavigation: {
             liveRegionId: chartId,
           },
@@ -106,23 +113,60 @@ export const DoughnutChart: React.FC<Props> = ({
     [chartAreaPlugin],
   )
 
+  const handleViewChange = (value: ChartViewType) => {
+    setView(value)
+    if (onChangeView) {
+      onChangeView(value)
+    }
+  }
+
   return (
-    <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
+    <div className={`shr-flex shr-h-full shr-w-full shr-flex-col ${className ?? ''}`}>
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
-      <Doughnut
-        ref={chartRef}
-        role="application"
-        data={enhancedData}
-        plugins={plugins}
-        tabIndex={0}
-        // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
-        // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
-        className="shr-relative shr-z-1"
-        aria-label={ariaLabel}
-        options={chartOptions}
-      />
-      <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
+      <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
+        <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+          {title}
+        </Text>
+        <SegmentedControl
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
+          size="s"
+          onClickOption={(value) => handleViewChange(value as ChartViewType)}
+          value={view}
+          options={[
+            {
+              value: 'chart',
+              content: <FaChartPieIcon />,
+              ariaLabel: 'グラフ',
+            },
+            {
+              value: 'table',
+              content: <FaTableIcon />,
+              ariaLabel: 'テーブル',
+            },
+          ]}
+        />
+      </div>
+      <div className="shr-relative shr-min-h-0 shr-flex-1">
+        {view === 'chart' ? (
+          <>
+            <Doughnut
+              ref={chartRef}
+              role="application"
+              data={enhancedData}
+              plugins={plugins}
+              tabIndex={0}
+              // tooltip は canvas の中に描かれるため、position 指定された中央コンテンツより
+              // 後ろに隠れてしまう。canvas 自体を前面に上げて中央コンテンツを背面に回す
+              className="shr-relative shr-z-1"
+              aria-label={ariaLabel}
+              options={chartOptions}
+            />
+            <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
+          </>
+        ) : (
+          <TableView data={enhancedData} options={chartOptions} />
+        )}
+      </div>
     </div>
   )
 }
