@@ -10,6 +10,38 @@ type NormalizedYoutubeUrl = {
   start?: number
 }
 
+const SHARE_TIME = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/i
+
+/** 拡張は embed の URL の start しか読まず、共有 URL の t（`1m30s` など）を引き継げないため自前で読む */
+const parseShareTime = (url: string): number | undefined => {
+  let parsed: URL
+
+  try {
+    parsed = new URL(url)
+  } catch {
+    return undefined
+  }
+
+  const candidates = [
+    parsed.searchParams.get('t'),
+    new URLSearchParams(parsed.hash.slice(1)).get('t'),
+  ]
+
+  for (const t of candidates) {
+    const match = t ? SHARE_TIME.exec(t) : null
+
+    if (match) {
+      const [hours, minutes, seconds] = match.slice(1).map((part) => Number(part ?? 0))
+      const total = hours * 3600 + minutes * 60 + seconds
+
+      // 桁の多い値は Infinity や指数表記になり、埋め込みの URL を壊す
+      if (Number.isSafeInteger(total)) return total
+    }
+  }
+
+  return undefined
+}
+
 /**
  * 保存する YouTube の URL を `https://www.youtube.com/watch?v=ID`（再生リストは
  * `playlist?list=ID`）へ揃える。変換できない場合は null。
@@ -48,7 +80,8 @@ export const normalizeYoutubeUrl = (url: unknown): NormalizedYoutubeUrl | null =
 
   if (!attributes) return null
 
-  const { src, start } = attributes
+  const { src } = attributes
+  const start = attributes.start ?? parseShareTime(absolute)
 
   return typeof start === 'number' && start >= 0 ? { src, start } : { src }
 }

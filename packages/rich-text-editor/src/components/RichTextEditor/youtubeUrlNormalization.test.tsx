@@ -7,6 +7,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
 import { ALL_FEATURES, configureExtensions } from './extensions/configureExtensions'
+import { normalizeYoutubeUrl } from './extensions/youtubeUrl'
 import { serializeToHTML } from './serializers/serializeToHTML'
 import { serializeToReactElement } from './serializers/serializeToReactElement'
 import { toEditorContent } from './serializers/toEditorContent'
@@ -167,6 +168,90 @@ describe('YouTube URL の入力時の正規化', () => {
       })
 
       expect(findYoutubeStart(json)).toBe(0)
+    })
+  })
+
+  describe('共有 URL の t（開始位置）', () => {
+    const findStart = (json: JSONContent): unknown =>
+      json.type === 'youtube'
+        ? json.attrs?.start
+        : json.content?.map(findStart).find((start) => start !== undefined)
+
+    it.each([
+      ['youtu.be の t', 'https://youtu.be/abcdefghijk?t=90', 90],
+      ['youtu.be の共有クエリと t', 'https://youtu.be/abcdefghijk?si=xyz&t=90', 90],
+      ['watch の t（秒）', 'https://www.youtube.com/watch?v=abcdefghijk&t=90s', 90],
+      ['watch の t（分と秒）', 'https://www.youtube.com/watch?v=abcdefghijk&t=1m30s', 90],
+      ['watch の t（時と分）', 'https://www.youtube.com/watch?v=abcdefghijk&t=1h1m', 3660],
+      ['watch のハッシュの t', 'https://www.youtube.com/watch?v=abcdefghijk#t=90', 90],
+    ])('%s を開始位置として引き継ぐ', (_, url, expected) => {
+      const json = toEditorContent({
+        type: 'doc',
+        content: [{ type: 'youtube', attrs: { src: url } }],
+      }) as RichTextJSON
+
+      expect(findYoutubeSrc(json)).toBe(CANONICAL_URL)
+      expect(findStart(json)).toBe(expected)
+      expect(iframeSrc(serializeToHTML(json))).toContain(`start=${expected}`)
+    })
+
+    it.each([
+      ['大文字の単位', 'https://youtu.be/abcdefghijk?t=1M30S', 90],
+      [
+        'クエリの t が不正でもハッシュの t',
+        'https://www.youtube.com/watch?v=abcdefghijk&t=abc#t=90',
+        90,
+      ],
+    ])('%s も読む', (_, url, expected) => {
+      expect(normalizeYoutubeUrl(url)).toEqual({ src: CANONICAL_URL, start: expected })
+    })
+
+    it.each([
+      ['数値でない', 'abc'],
+      ['単位の順が違う', '30s1m'],
+      ['空', ''],
+      ['桁が多すぎる', '9'.repeat(400)],
+    ])('t が%sなら開始位置を持たない', (_, t) => {
+      expect(normalizeYoutubeUrl(`https://youtu.be/abcdefghijk?t=${t}`)).toEqual({
+        src: CANONICAL_URL,
+      })
+    })
+
+    it('JSON に開始位置があれば、URL の t より優先する', () => {
+      const json = toEditorContent({
+        type: 'doc',
+        content: [
+          { type: 'youtube', attrs: { src: 'https://youtu.be/abcdefghijk?t=90', start: 30 } },
+        ],
+      }) as RichTextJSON
+
+      expect(findYoutubeSrc(json)).toBe(CANONICAL_URL)
+      expect(findStart(json)).toBe(30)
+    })
+
+    it('ツールバーから埋め込んでも開始位置を引き継ぐ', async () => {
+      const user = userEvent.setup()
+      const onChange = vi.fn()
+      render(<RichTextEditor features={['youtube']} onChange={onChange} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      await user.click(screen.getByRole('button', { name: 'YouTube動画を埋め込む' }))
+      const urlInput = screen.getByRole('textbox', { name: /^YouTube URL/ })
+      await waitFor(() => expect(urlInput).toHaveFocus())
+      await user.type(urlInput, 'https://youtu.be/abcdefghijk?t=1m30s')
+      await user.click(screen.getByRole('button', { name: '埋め込む' }))
+
+      await waitFor(() => expect(onChange).toHaveBeenCalled())
+      expect(findStart(onChange.mock.lastCall![0] as RichTextJSON)).toBe(90)
+    })
+
+    it('貼り付けても開始位置を引き継ぐ', () => {
+      const editor = new Editor({ extensions: configureExtensions({ features: ALL_FEATURES }) })
+      editor.view.pasteText('https://youtu.be/abcdefghijk?t=1m30s')
+      const json = editor.getJSON() as RichTextJSON
+      editor.destroy()
+
+      expect(findStart(json)).toBe(90)
     })
   })
 

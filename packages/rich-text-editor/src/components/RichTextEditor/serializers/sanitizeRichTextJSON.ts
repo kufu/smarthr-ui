@@ -166,7 +166,14 @@ const ATTRS_NORMALIZERS: Record<string, AttrsNormalizer> = {
 
     if (!('src' in sized)) return sized
 
-    return { ...sized, ...(normalizeYoutubeUrl(sized.src) ?? { src: null }) }
+    const normalized = normalizeYoutubeUrl(sized.src)
+
+    if (!normalized) return { ...sized, src: null }
+
+    // src の開始位置で上書きしないのは、読み込んだだけで再生位置が変わり、保存データとずれるため
+    return sized.start === undefined || sized.start === null
+      ? { ...sized, ...normalized }
+      : { ...sized, src: normalized.src }
   },
 }
 
