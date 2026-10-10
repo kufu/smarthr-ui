@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
@@ -98,6 +98,39 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
 
     expect(screen.getByRole('textbox', { name: /^リンク/ })).toHaveValue('')
   })
+
+  describe.each([/^リンク/, /^テーブルを挿入/, /^YouTube動画を埋め込む/])(
+    '%s のフォーム',
+    (name) => {
+      it('末尾から Tab で閉じてトリガーへ戻る', async () => {
+        const user = userEvent.setup()
+        await renderEditor()
+        await openByClick(user, name)
+
+        within(screen.getByRole('dialog'))
+          .getAllByRole('button')
+          .filter((button) => !(button as HTMLButtonElement).disabled)
+          .at(-1)!
+          .focus()
+        await user.tab()
+
+        expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+        expect(getTrigger(name)).toHaveFocus()
+      })
+
+      it('先頭から Shift+Tab で閉じてトリガーへ戻る', async () => {
+        const user = userEvent.setup()
+        await renderEditor()
+        await openByClick(user, name)
+
+        screen.getByRole('dialog').querySelector('input')!.focus()
+        await user.tab({ shift: true })
+
+        expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+        expect(getTrigger(name)).toHaveFocus()
+      })
+    },
+  )
 
   it('閉じたあとの Escape はツールバーから本文へ戻す', async () => {
     const user = userEvent.setup()

@@ -209,24 +209,6 @@ export const ColorPickerPalette: FC<Props> = memo(
             e.preventDefault()
             e.stopPropagation()
             closeAndFocusTrigger()
-            return
-          }
-
-          // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
-          // ページ末尾の要素へ飛ぶため、他のドロップダウンと同じくトリガーへ戻す
-          if (e.key === 'Tab') {
-            const focusables = Array.from(
-              latest.paletteRef.current?.querySelectorAll<HTMLElement>(
-                'button:not(:disabled), input:not(:disabled)',
-              ) ?? [],
-            )
-            const index = focusables.indexOf(e.target as HTMLElement)
-
-            if ((!e.shiftKey && index === focusables.length - 1) || (e.shiftKey && index === 0)) {
-              e.preventDefault()
-              e.stopPropagation()
-              closeAndFocusTrigger()
-            }
           }
         },
       }

@@ -3,6 +3,7 @@
 import {
   type Dispatch,
   type MutableRefObject,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type SetStateAction,
   useCallback,
@@ -19,6 +20,9 @@ const GAP = 2
 const VIEWPORT_PADDING = 10
 
 const SCROLLABLE_OVERFLOW = /^(auto|scroll|overlay)$/
+
+const TABBABLE_SELECTOR =
+  'a[href], button:not(:disabled), input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled), [tabindex]'
 
 /**
  * トリガーを内包する最も近いスクロールコンテナを、ツールバーの内側に限って探す。
@@ -278,11 +282,31 @@ export function useToolbarDropdown({
     }
   }, [isOpen, isChildPortal])
 
+  // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
+  // ページ末尾の要素へ飛んで開いたまま残る。中身ごとに書くと漏れるため外枠で受ける
+  const handleDelegateKeyDown = useCallback((e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Tab' || e.defaultPrevented || e.nativeEvent.isComposing) return
+
+    const tabbables = Array.from(
+      e.currentTarget.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR),
+    ).filter((el) => el.tabIndex >= 0)
+    const index = tabbables.indexOf(e.target as HTMLElement)
+    const isEdge = e.shiftKey ? index === 0 : index !== -1 && index === tabbables.length - 1
+
+    if (isEdge) {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsOpen(false)
+      triggerRef.current?.focus()
+    }
+  }, [])
+
   const renderDropdown = useCallback(
     (children: ReactNode) => {
       if (!isOpen) return null
 
       return createPortal(
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
           ref={contentRef}
           className={`shr-rte-absolute shr-rte-z-overlap-base ${isVisible ? 'shr-rte-visible' : 'shr-rte-invisible'}`}
@@ -298,12 +322,13 @@ export function useToolbarDropdown({
             display: position.maxHeight ? 'flex' : undefined,
             flexDirection: position.maxHeight ? 'column' : undefined,
           }}
+          onKeyDown={handleDelegateKeyDown}
         >
           {children}
         </div>,
       )
     },
-    [isOpen, position, isVisible, createPortal],
+    [isOpen, position, isVisible, createPortal, handleDelegateKeyDown],
   )
 
   return { isOpen, setIsOpen, triggerRef, renderDropdown }

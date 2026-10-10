@@ -156,6 +156,8 @@ export const TableContextMenu = ({
             (delegateEvent.shiftKey && index === 0)
           ) {
             delegateEvent.preventDefault()
+            // 外枠（useToolbarDropdown）はトリガーへ戻すが、表のメニューはセルへ戻す
+            delegateEvent.stopPropagation()
             close()
           }
         }

@@ -387,3 +387,85 @@ describe('useToolbarDropdown', () => {
     expect(screen.getByRole('button', { name: '開く' })).not.toHaveFocus()
   })
 })
+
+const FormHarness: FC = () => {
+  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
+        開く
+      </button>
+      {renderDropdown(
+        <form aria-label="フォーム">
+          <input name="first" aria-label="先頭" />
+          <input name="middle" aria-label="中間" />
+          <button type="button" disabled>
+            無効
+          </button>
+          <button type="submit">送信</button>
+          <button type="button" tabIndex={-1}>
+            対象外
+          </button>
+        </form>,
+      )}
+      <button type="button">ページの後続</button>
+    </>
+  )
+}
+
+describe('ドロップダウンの両端の Tab', () => {
+  const open = async () => {
+    const user = userEvent.setup()
+    render(<FormHarness />)
+    await user.click(screen.getByRole('button', { name: '開く' }))
+
+    return user
+  }
+
+  it('末尾から Tab で閉じてトリガーへ戻る', async () => {
+    const user = await open()
+    screen.getByRole('button', { name: '送信' }).focus()
+
+    await user.tab()
+
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+  })
+
+  it('先頭から Shift+Tab で閉じてトリガーへ戻る', async () => {
+    const user = await open()
+    screen.getByRole('textbox', { name: '先頭' }).focus()
+
+    await user.tab({ shift: true })
+
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+  })
+
+  it('IME の変換中の Tab では閉じない', async () => {
+    await open()
+    const first = screen.getByRole('textbox', { name: '先頭' })
+    first.focus()
+
+    // macOS の日本語入力は変換候補の移動に Shift+Tab を使う
+    fireEvent.keyDown(first, { key: 'Tab', shiftKey: true, isComposing: true })
+
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('途中の Tab では閉じない', async () => {
+    const user = await open()
+    screen.getByRole('textbox', { name: '先頭' }).focus()
+
+    await user.tab()
+
+    expect(screen.getByRole('textbox', { name: '中間' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'true')
+  })
+})
