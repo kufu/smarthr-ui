@@ -244,9 +244,13 @@ export const RichTextEditor = memo(
         toolbarRef,
       })
 
-      useImperativeHandle(
-        ref,
-        () => ({
+      useImperativeHandle(ref, () => {
+        // Tiptap のコマンドは editable=false でも実行される。書式の操作は利用者の独自ツールバーから
+        // 呼ばれるユーザー操作の代わりなので止める。clear は止めない。フォームのリセットのように
+        // プログラムから呼ぶもので、ネイティブの input も disabled で値の代入は止めないため
+        const chainIfEditable = () => (editor?.isEditable ? editor.chain().focus() : undefined)
+
+        return {
           focus: () => editor?.chain().focus().run(),
           clear: () =>
             editor
@@ -265,18 +269,17 @@ export const RichTextEditor = memo(
           getHTML: () => (editor ? serializeToHTML(editor.getJSON()) : ''),
           getText: () => editor?.getText() ?? '',
           isEmpty: () => editor?.isEmpty ?? true,
-          toggleBold: () => editor?.chain().focus().toggleBold().run(),
-          toggleItalic: () => editor?.chain().focus().toggleItalic().run(),
-          toggleBulletList: () => editor?.chain().focus().toggleBulletList().run(),
-          toggleOrderedList: () => editor?.chain().focus().toggleOrderedList().run(),
-          toggleBlockquote: () => editor?.chain().focus().toggleBlockquote().run(),
-          setHeading: (level: 1 | 2 | 3 | 4) => editor?.chain().focus().setHeading({ level }).run(),
+          toggleBold: () => chainIfEditable()?.toggleBold().run(),
+          toggleItalic: () => chainIfEditable()?.toggleItalic().run(),
+          toggleBulletList: () => chainIfEditable()?.toggleBulletList().run(),
+          toggleOrderedList: () => chainIfEditable()?.toggleOrderedList().run(),
+          toggleBlockquote: () => chainIfEditable()?.toggleBlockquote().run(),
+          setHeading: (level: 1 | 2 | 3 | 4) => chainIfEditable()?.setHeading({ level }).run(),
           setLink: (href: string) =>
-            editor?.chain().focus().extendMarkRange('link').setLink({ href }).run(),
-          unsetLink: () => editor?.chain().focus().extendMarkRange('link').unsetLink().run(),
-        }),
-        [editor],
-      )
+            chainIfEditable()?.extendMarkRange('link').setLink({ href }).run(),
+          unsetLink: () => chainIfEditable()?.extendMarkRange('link').unsetLink().run(),
+        }
+      }, [editor])
 
       // FormControlとの連携:
       // content wrapper divにdata-smarthr-ui-inputを静的に付与し、

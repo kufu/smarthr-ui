@@ -63,11 +63,17 @@ type Position = {
 }
 
 type Options = {
+  layoutKey?: unknown
   /**
    * トリガーに重ねず、その右隣（入らなければ左隣）へ置く。列のハンドルはトリガーの
    * 矩形が列幅そのものなので、既定の左端揃えでは選択中の列を完全に覆ってしまう
    */
   avoidTrigger?: boolean
+  /**
+   * true になったら閉じる。中身の送信ごとに editor.isEditable を確かめる方法は採らない。
+   * 送信の経路が中身ごとに異なり、すべてに漏れなく入れるより、操作させない方が確実なため
+   */
+  disabled?: boolean
 }
 
 /** 右隣を優先し、入らなければ左隣。どちらも入らなければ null */
@@ -88,14 +94,18 @@ type UseToolbarDropdownReturn = {
   renderDropdown: (children: ReactNode) => ReactNode | null
 }
 
-export function useToolbarDropdown(
-  layoutKey?: unknown,
-  { avoidTrigger }: Options = {},
-): UseToolbarDropdownReturn {
+export function useToolbarDropdown({
+  layoutKey,
+  avoidTrigger,
+  disabled,
+}: Options = {}): UseToolbarDropdownReturn {
   const { createPortal, isChildPortal } = usePortal()
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState<Position>({ top: 0, left: 0 })
+
+  if (disabled && isOpen) setIsOpen(false)
+
   const triggerRef = useRef<HTMLButtonElement | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
   const scrollContainerRef = useRef<HTMLElement | null>(null)

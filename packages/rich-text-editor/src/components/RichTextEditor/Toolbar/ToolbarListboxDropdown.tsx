@@ -99,7 +99,9 @@ export const ToolbarListboxDropdown = ({
   ref,
 }: Props) => {
   const isApple = useIsApplePlatform()
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+    disabled,
+  })
   const mergedTriggerRef = useMergeRefs(triggerRef, ref)
   const listboxRef = useRef<HTMLDivElement>(null)
   const isHorizontal = appearance === 'icons'

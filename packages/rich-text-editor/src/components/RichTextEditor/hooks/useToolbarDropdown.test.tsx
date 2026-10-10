@@ -21,7 +21,7 @@ const Harness: FC<HarnessProps> = ({
   scrollableOutside = false,
   avoidTrigger = false,
 }) => {
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(undefined, {
+  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
     avoidTrigger,
   })
 

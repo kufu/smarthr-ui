@@ -65,6 +65,40 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
   })
 
+  it.each(TRIGGERS)('%s: 開いたまま disabled になると閉じる', async (name) => {
+    const user = userEvent.setup()
+    const { rerender } = render(
+      <RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    await openByClick(user, name)
+    rerender(<RichTextEditor disabled features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
+
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('disabled になると入力途中のリンクを適用できなくなり、有効に戻しても入力値は残らない', async () => {
+    const user = userEvent.setup()
+    const { rerender } = render(
+      <RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    await openByClick(user, /^リンク/)
+    await user.type(screen.getByRole('textbox', { name: /^リンク/ }), 'https://example.com')
+    rerender(<RichTextEditor disabled features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
+
+    expect(screen.queryByRole('button', { name: '適用' })).not.toBeInTheDocument()
+
+    rerender(<RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
+    await user.click(getTrigger(/^リンク/))
+
+    expect(screen.getByRole('textbox', { name: /^リンク/ })).toHaveValue('')
+  })
+
   it('閉じたあとの Escape はツールバーから本文へ戻す', async () => {
     const user = userEvent.setup()
     await renderEditor()

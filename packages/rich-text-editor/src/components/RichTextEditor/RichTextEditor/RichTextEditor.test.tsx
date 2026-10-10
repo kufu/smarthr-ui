@@ -1526,6 +1526,79 @@ describe('RichTextEditor', () => {
         isEmpty: true,
       })
     })
+
+    const LINKED_DOC: RichTextJSON = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: '本文',
+              marks: [{ type: 'link', attrs: { href: 'https://example.com' } }],
+            },
+          ],
+        },
+      ],
+    }
+
+    const FORMAT_OPERATIONS: Array<[string, (controller: RichTextEditorController) => void]> = [
+      ['toggleBold', (c) => c.toggleBold()],
+      ['toggleItalic', (c) => c.toggleItalic()],
+      ['toggleBulletList', (c) => c.toggleBulletList()],
+      ['toggleOrderedList', (c) => c.toggleOrderedList()],
+      ['toggleBlockquote', (c) => c.toggleBlockquote()],
+      ['setHeading', (c) => c.setHeading(2)],
+      ['setLink', (c) => c.setLink('https://example.org')],
+      ['unsetLink', (c) => c.unsetLink()],
+    ]
+
+    describe.each(['disabled', 'readOnly'] as const)('%s のとき', (state) => {
+      it.each(FORMAT_OPERATIONS)('%s() は文書を変えない', async (_name, operate) => {
+        const ref = createRef<RichTextEditorController>()
+        const onChange = vi.fn()
+        render(
+          <RichTextEditor
+            ref={ref}
+            disabled={state === 'disabled'}
+            readOnly={state === 'readOnly'}
+            defaultValue={LINKED_DOC}
+            features={[...ALL_FEATURES]}
+            onChange={onChange}
+          />,
+          { wrapper: Wrapper },
+        )
+        await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+        act(() => {
+          getEditor().commands.selectAll()
+        })
+        const before = ref.current!.getJSON()
+
+        act(() => operate(ref.current!))
+
+        expect(ref.current!.getJSON()).toEqual(before)
+        expect(onChange).not.toHaveBeenCalled()
+      })
+
+      it('clear() はプログラムからのリセットとして効く', async () => {
+        const ref = createRef<RichTextEditorController>()
+        render(
+          <RichTextEditor
+            ref={ref}
+            disabled={state === 'disabled'}
+            readOnly={state === 'readOnly'}
+            defaultValue={paragraphDoc('本文')}
+          />,
+          { wrapper: Wrapper },
+        )
+        await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+
+        act(() => ref.current!.clear())
+
+        expect(ref.current!.isEmpty()).toBe(true)
+      })
+    })
   })
 
   describe('編集後の表示の更新', () => {

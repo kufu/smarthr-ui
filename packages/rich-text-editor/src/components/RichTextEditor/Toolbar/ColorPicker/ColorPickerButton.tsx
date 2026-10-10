@@ -143,7 +143,9 @@ export const ColorPickerButton: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const currentColor = useToolbarValue(editor, readCurrentColor)
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+      disabled,
+    })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const paletteRef = useRef<HTMLDivElement>(null)
     const [recentColors, setRecentColors] = useState<string[]>([])

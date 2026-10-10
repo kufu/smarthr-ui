@@ -63,7 +63,9 @@ export const TableInsertDropdown: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+      disabled,
+    })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [rows, setRows] = useState('3')
     const [cols, setCols] = useState('3')

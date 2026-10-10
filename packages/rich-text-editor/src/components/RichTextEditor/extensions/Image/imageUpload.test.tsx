@@ -78,6 +78,23 @@ const imageSrcs = () =>
   )
 
 describe('画像アップロード', () => {
+  it('ファイルを選ぶまでに disabled になっていたらアップロードしない', async () => {
+    const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/a.png' })
+    const { rerender } = render(
+      <RichTextEditor features={['image']} onImageUpload={onImageUpload} />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    // OS のファイル選択ダイアログを開いている間に親が disabled にした状況
+    rerender(<RichTextEditor disabled features={['image']} onImageUpload={onImageUpload} />)
+    fireEvent.change(getFileInput(), { target: { files: [pngFile()] } })
+    await flush()
+
+    expect(onImageUpload).not.toHaveBeenCalled()
+    expect(imageSrcs()).toEqual([])
+  })
+
   it('成功時に画像がエディタへ挿入される', async () => {
     const onImageUpload = vi.fn().mockResolvedValue({ src: 'https://example.com/a.png' })
     render(<RichTextEditor features={['image']} onImageUpload={onImageUpload} />, {

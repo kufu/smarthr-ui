@@ -59,7 +59,10 @@ export const ImageInsertButton: FC<Props> = memo(
       useRichTextEditorContext()
     const { localize } = useIntl()
     const [view, setView] = useState<'menu' | 'url'>('menu')
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(view)
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+      layoutKey: view,
+      disabled,
+    })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
@@ -115,8 +118,14 @@ export const ImageInsertButton: FC<Props> = memo(
           const file = e.target.files?.[0]
           const { onImageUpload, onImageUploadError } = getImageUploadHandlers()
           // accept 属性はダイアログの絞り込みヒントでしかなく利用者が回避できるため、
-          // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する
-          if (file && onImageUpload && matchesMimeType(file.type, latest.mimeTypes)) {
+          // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する。
+          // ダイアログはドロップダウンを閉じてから開くので、disabled で閉じる仕組みでは止まらない
+          if (
+            file &&
+            onImageUpload &&
+            editor.isEditable &&
+            matchesMimeType(file.type, latest.mimeTypes)
+          ) {
             uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
           }
           if (e.target) {

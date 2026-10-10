@@ -126,6 +126,10 @@ export type RichTextViewerProps = {
   gap?: RichTextViewerGap
 }
 
+/**
+ * 書式を変える操作（toggleXxx・setHeading・setLink・unsetLink）は、disabled / readOnly のあいだ何もしない。
+ * clear はプログラムからのリセットとして disabled / readOnly でも効き、onChange も呼ぶ。
+ */
 export type RichTextEditorController = {
   focus: () => void
   clear: () => void

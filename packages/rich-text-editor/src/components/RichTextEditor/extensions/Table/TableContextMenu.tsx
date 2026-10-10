@@ -74,7 +74,8 @@ export const TableContextMenu = ({
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const [showColors, setShowColors] = useState(false)
   // 列のハンドルは矩形が列幅そのものなので、既定の左端揃えでは選択中の列が隠れる
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown(showColors, {
+  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+    layoutKey: showColors,
     avoidTrigger: scope === 'column',
   })
   const colorTriggerRef = useRef<HTMLButtonElement>(null)

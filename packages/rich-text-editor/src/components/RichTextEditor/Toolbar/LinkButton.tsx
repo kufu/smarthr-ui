@@ -36,7 +36,9 @@ export const LinkButton: FC<Props> = memo(
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
     const isLink = useToolbarValue(editor, readers.isLink)
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+      disabled,
+    })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [text, setText] = useState('')
     const [url, setUrl] = useState('')
