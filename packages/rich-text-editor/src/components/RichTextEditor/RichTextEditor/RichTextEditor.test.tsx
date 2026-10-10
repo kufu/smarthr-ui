@@ -876,6 +876,29 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('対応外の見出しレベルの読み込み', () => {
+    it('level 5 の見出しは表示・出力とも level 4 にそろう', async () => {
+      const ref = createRef<RichTextEditorController>()
+      render(
+        <RichTextEditor
+          ref={ref}
+          defaultValue={{
+            type: 'doc',
+            content: [
+              { type: 'heading', attrs: { level: 5 }, content: [{ type: 'text', text: '見出し' }] },
+            ],
+          }}
+          features={['heading']}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('見出し')).toBeInTheDocument())
+
+      expect(document.querySelector('.ProseMirror h4')).toHaveTextContent('見出し')
+      expect(ref.current!.getJSON().content?.[0]?.attrs?.level).toBe(4)
+    })
+  })
+
   describe('ref.getHTML()', () => {
     const IMPERATIVE_FEATURES = ['image', 'color', 'backgroundColor', 'fontSize'] as const
 

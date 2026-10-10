@@ -3,6 +3,7 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
+import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from '../extensions/configureHeading'
 import {
   IMAGE_ALIGN_STYLES,
   YOUTUBE_ALIGN_STYLES,
@@ -76,7 +77,9 @@ const toEmbedUrl = (src: unknown, start: unknown): string | undefined => {
 
 const nodeMapping: Record<string, ReactNodeMapping> = {
   heading: ({ node, children }) => {
-    const level = Math.min(Math.max(Number(node.attrs.level) || 2, 1), 4) as 1 | 2 | 3 | 4
+    const level = SUPPORTED_HEADING_LEVELS.includes(node.attrs.level)
+      ? (node.attrs.level as HeadingLevel)
+      : SUPPORTED_HEADING_LEVELS[0]
     const textAlign = node.attrs.textAlign
     const style: Record<string, string> = {}
     if (isSafeTextAlign(textAlign) && textAlign !== 'left') style.textAlign = textAlign

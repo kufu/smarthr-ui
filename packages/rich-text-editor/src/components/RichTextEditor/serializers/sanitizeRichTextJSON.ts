@@ -1,3 +1,4 @@
+import { SUPPORTED_HEADING_LEVELS } from '../extensions/configureHeading'
 import { normalizeFontSize } from '../extensions/normalizeFontSize'
 import {
   YOUTUBE_DEFAULT_SIZE,
@@ -53,6 +54,23 @@ const normalizeSpan: AttrNormalizer = (value) =>
  */
 const normalizeStart: AttrNormalizer = (value) =>
   typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0
+
+const MIN_HEADING_LEVEL = Math.min(...SUPPORTED_HEADING_LEVELS)
+const MAX_HEADING_LEVEL = Math.max(...SUPPORTED_HEADING_LEVELS)
+
+/**
+ * HTML 経路の Tiptap は対応外のレベルを先頭のレベルへ描き替え、h5・h6 が h1 になる。
+ * レベルの上下関係を保つため、範囲外の値は近い端へ寄せる。数値として読めない値だけ schema の既定値にする
+ */
+const normalizeHeadingLevel: AttrNormalizer = (value) => {
+  const level = typeof value === 'number' || typeof value === 'string' ? Number(value) : Number.NaN
+
+  if (Number.isNaN(level) || (typeof value === 'string' && value.trim() === '')) {
+    return MIN_HEADING_LEVEL
+  }
+
+  return Math.min(Math.max(Math.round(level), MIN_HEADING_LEVEL), MAX_HEADING_LEVEL)
+}
 
 // React 経路は数値以外を既定値にするため、数値文字列も許可せず両経路の出力を揃える
 const isYoutubeDimension = (value: unknown): value is number =>
@@ -115,7 +133,7 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
   },
   codeBlock: { language: nullIfUnsafe(isSafeCodeLanguage) },
   paragraph: { textAlign: nullIfUnsafe(isSafeTextAlign) },
-  heading: { textAlign: nullIfUnsafe(isSafeTextAlign) },
+  heading: { level: normalizeHeadingLevel, textAlign: nullIfUnsafe(isSafeTextAlign) },
   tableCell: TABLE_CELL_GUARDS,
   tableHeader: TABLE_CELL_GUARDS,
   // マーク

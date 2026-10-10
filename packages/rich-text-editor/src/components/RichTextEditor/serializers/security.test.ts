@@ -188,19 +188,6 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).not.toContain('evil_frame')
     })
 
-    it('不正なheading levelがクランプされる', () => {
-      const json = {
-        type: 'doc',
-        content: [
-          { type: 'heading', attrs: { level: 99 }, content: [{ type: 'text', text: 'test' }] },
-        ],
-      }
-      const element = serializeToReactElement(json)
-      const html = renderToStaticMarkup(element as React.ReactElement)
-      expect(html).toContain('<h4')
-      expect(html).not.toContain('<h99')
-    })
-
     it('serializeToHTML: 直接JSON入力の画像の危険な src が除去される', () => {
       const dangerousSrcs = [
         'javascript:alert(1)',
@@ -620,6 +607,31 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 1, rowspan: 2 }))
     expect(html).toContain('rowspan="2"')
     expect(react).toContain('rowSpan="2"')
+  })
+
+  it.each<[unknown, number]>([
+    [99, 4],
+    [5, 4],
+    [Number.POSITIVE_INFINITY, 4],
+    [0, 1],
+    [-1, 1],
+    [Number.NEGATIVE_INFINITY, 1],
+    [2.6, 3],
+    ['3', 3],
+    [Number.NaN, 1],
+    ['', 1],
+    ['abc', 1],
+    [null, 1],
+  ])('不正な heading level (%s) は両経路とも h%i になる', (level, expected) => {
+    const { html, react } = bothOutputs({
+      type: 'doc',
+      content: [{ type: 'heading', attrs: { level }, content: [{ type: 'text', text: 'a' }] }],
+    })
+
+    for (const output of [html, react]) {
+      expect(output).toContain(`<h${expected}`)
+      expect(output).not.toMatch(/<h(?![1-4][\s>])\d/)
+    }
   })
 
   it('React経路で結合セルを描画してもDOMプロパティ名の警告が出ない', () => {
