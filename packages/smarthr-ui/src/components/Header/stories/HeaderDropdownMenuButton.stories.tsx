@@ -15,10 +15,10 @@ export default {
     </Header>
   ),
   argTypes: {
-    label: { control: 'text' },
+    trigger: { control: 'text' },
   },
   args: {
-    label: 'ボタン',
+    trigger: 'ボタン',
   },
   parameters: {
     chromatic: { disableSnapshot: true },

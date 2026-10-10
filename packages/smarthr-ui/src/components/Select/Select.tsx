@@ -1,23 +1,26 @@
-import { type ComponentPropsWithRef, type PropsWithChildren, memo, useMemo } from 'react'
+import { type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleDownIcon } from '../Icon'
 
-import { ActualSelect, type ActualSelectProps, NotOmittingLabelsInMobileSafari } from './client'
+import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** コンポーネントの大きさ */
-  size?: 'M' | 'S'
-  /** 空の選択肢を表示するかどうか */
-  hasBlank?: boolean
-  /** 空の選択肢のラベル */
-  blankLabel?: string
-}
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<'select'>, keyof BaseProps<string> | 'children'>
+type Props<T extends string> = SHRComponentPropsWithRef<
+  typeof ActualSelect<T>,
+  {
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** コンポーネントの大きさ */
+    size?: 'M' | 'S'
+    /** 空の選択肢を表示するかどうか */
+    hasBlank?: boolean
+    /** 空の選択肢のラベル */
+    blankLabel?: string
+  },
+  { omit: 'children' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -64,7 +67,6 @@ export const Select = <T extends string>({
   blankLabel,
   size,
   className,
-  ref,
   ...rest
 }: Props<T>) => {
   const classNames = useMemo(() => {
@@ -87,7 +89,7 @@ export const Select = <T extends string>({
         width: typeof width === 'number' ? `${width}px` : width,
       }}
     >
-      <ActualSelect {...rest} outerRef={ref} className={classNames.select} options={options}>
+      <ActualSelect {...rest} className={classNames.select} options={options}>
         <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />

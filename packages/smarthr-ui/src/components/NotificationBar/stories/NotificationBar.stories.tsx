@@ -40,13 +40,12 @@ export default {
     </div>
   ),
   args: {
-    base: 'none',
+    paneled: false,
     animate: false,
     bold: false,
     type: 'success',
     children: 'String',
     role: 'alert',
-    layer: 0,
     onClose: undefined,
     subActionArea: undefined,
   },
@@ -77,12 +76,12 @@ export const Playground: StoryObj<typeof NotificationBar> = {
   args: {},
 }
 
-export const Base: StoryObj<typeof NotificationBar> = {
-  name: 'base',
+export const Paneled: StoryObj<typeof NotificationBar> = {
+  name: 'paneled',
   render: (args) => (
     <Stack>
-      <NotificationBar {...args} base="none" />
-      <NotificationBar {...args} base="base" />
+      <NotificationBar {...args} paneled={false} />
+      <NotificationBar {...args} paneled={true} />
     </Stack>
   ),
 }
@@ -147,11 +146,11 @@ export const Layer: StoryObj<typeof NotificationBar> = {
   name: 'layer',
   render: (args) => (
     <Stack>
-      <NotificationBar {...args} base="base" layer={0} />
-      <NotificationBar {...args} base="base" layer={1} />
-      <NotificationBar {...args} base="base" layer={2} />
-      <NotificationBar {...args} base="base" layer={3} />
-      <NotificationBar {...args} base="base" layer={4} />
+      <NotificationBar {...args} paneled={true} layer={0} />
+      <NotificationBar {...args} paneled={true} layer={1} />
+      <NotificationBar {...args} paneled={true} layer={2} />
+      <NotificationBar {...args} paneled={true} layer={3} />
+      <NotificationBar {...args} paneled={true} layer={4} />
     </Stack>
   ),
 }

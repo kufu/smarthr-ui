@@ -2,6 +2,13 @@ import { act, renderHook } from '@testing-library/react'
 
 import { computeMatchesForPage, escapeRegExp, normalize, usePDFSearch } from './usePDFSearch'
 
+import type { ComponentPropsWithRef } from 'react'
+import type { Page } from 'react-pdf'
+
+type PDFTextContent = Parameters<
+  NonNullable<ComponentPropsWithRef<typeof Page>['onGetTextSuccess']>
+>[number]
+
 const buildEscapedQuery = (q: string) => escapeRegExp(normalize(q))
 
 const run = (textItems: string[], query: string, startGlobalIndex = 0, pageIndex = 0) =>
@@ -124,7 +131,7 @@ describe('usePDFSearch', () => {
     act(() => {
       const textContent = {
         items: texts.map((str) => ({ str })),
-      }
+      } as PDFTextContent
       view.result.current.generateHandlePDFPageGetTextSuccess(0)(textContent)
     })
     return view
@@ -345,7 +352,7 @@ describe('usePDFSearch', () => {
       const { result } = renderHook(() => usePDFSearch('file-url'))
       const textContent = {
         items: [{ str: 'Hello' }, { str: 'World' }],
-      }
+      } as PDFTextContent
 
       act(() => {
         result.current.generateHandlePDFPageGetTextSuccess(0)(textContent)
@@ -369,7 +376,7 @@ describe('usePDFSearch', () => {
       act(() => {
         result.current.generateHandlePDFPageGetTextSuccess(0)({
           items: [{ str: 'page0' }],
-        })
+        } as PDFTextContent)
       })
 
       // 検索開始
@@ -385,7 +392,7 @@ describe('usePDFSearch', () => {
       act(() => {
         result.current.generateHandlePDFPageGetTextSuccess(1)({
           items: [{ str: 'page1' }],
-        })
+        } as PDFTextContent)
       })
 
       // 新しいページの内容も検索結果に含まれる

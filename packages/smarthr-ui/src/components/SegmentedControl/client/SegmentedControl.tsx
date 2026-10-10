@@ -1,18 +1,12 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type MouseEvent,
-  type ReactNode,
-  memo,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type MouseEvent, type ReactNode, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { Button } from '../../Button'
+
+import type { SHRComponentPropsWithoutRef } from '../../../types'
 
 type Option = {
   /** 選択時に返される値 */
@@ -25,17 +19,20 @@ type Option = {
   disabled?: boolean
 }
 
-type BaseProps = {
-  /** 選択肢の配列 */
-  options: Option[]
-  /** 選択中の値 */
-  value?: string | null
-  /** 選択肢を押下したときに発火するコールバック関数 */
-  onClickOption?: (value: string) => void
-  /** 各ボタンの大きさ */
-  size?: 'M' | 'S'
-}
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithoutRef<
+  'div',
+  {
+    /** 選択肢の配列 */
+    options: Option[]
+    /** 選択中の値 */
+    value?: string | null
+    /** 選択肢を押下したときに発火するコールバック関数 */
+    onClickOption?: (value: string) => void
+    /** 各ボタンの大きさ */
+    size?: 'M' | 'S'
+  },
+  { omit: 'role' | 'onFocus' | 'onBlur' }
+>
 
 const classNameGenerator = tv({
   slots: {

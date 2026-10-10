@@ -1,19 +1,16 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type FC, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 
-type BaseProps = PropsWithChildren<{
-  data?: ReactNode[][]
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'table'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'table',
+  {
+    data?: ReactNode[][]
+  }
+>
 
 const classNameGenerator = tv({
   base: [

@@ -3,7 +3,6 @@
 import dayjs from 'dayjs'
 import {
   type ChangeEvent,
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
@@ -29,52 +28,47 @@ import { Portal } from '../Portal'
 
 import { parseJpnDateString } from './datePickerHelper'
 
+import type { SHRComponentPropsWithRef } from '../../../../types'
+
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
-type BaseProps = {
-  /** input 要素の `value` 属性の値 */
-  value?: string | null
-  /** input 要素の `name` 属性の値 */
-  name?: string
-  /** 選択可能な期間の開始日 */
-  from?: Date
-  /** 選択可能な期間の終了日 */
-  to?: Date
-  /** フォームを無効にするかどうか */
-  disabled?: boolean
-  /**
-   * placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
-   */
-  placeholder?: string
-  /** フォームにエラーがあるかどうか */
-  error?: boolean
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** 入力を独自にパースする場合に、パース処理を記述する関数 */
-  parseInput?: (input: string) => Date | null
-  /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
-  formatDate?: (date: Date | null) => string
-  /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
-  showAlternative?: (date: Date | null) => ReactNode
-  /** @deprecated onChangeDate は非推奨です。onChange を使ってください。 */
-  onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
-  /** 選択された日付が変わった時に発火するコールバック関数 */
-  onChange?: (
-    e: ChangeEvent<HTMLInputElement>,
-    other: { date: Date | null; formatValue: string; errors: string[] },
-  ) => void
-}
-type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<'input'>,
-    | keyof BaseProps
-    | 'type'
-    | 'onChange'
-    | 'onKeyPress'
-    | 'onFocus'
-    | 'aria-expanded'
-    | 'aria-controls'
-    | 'aria-haspopup'
-  >
+
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** input 要素の `value` 属性の値 */
+    value?: string | null
+    /** input 要素の `name` 属性の値 */
+    name?: string
+    /** 選択可能な期間の開始日 */
+    from?: Date
+    /** 選択可能な期間の終了日 */
+    to?: Date
+    /** フォームを無効にするかどうか */
+    disabled?: boolean
+    /**
+     * placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
+     */
+    placeholder?: string
+    /** フォームにエラーがあるかどうか */
+    error?: boolean
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** 入力を独自にパースする場合に、パース処理を記述する関数 */
+    parseInput?: (input: string) => Date | null
+    /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
+    formatDate?: (date: Date | null) => string
+    /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
+    showAlternative?: (date: Date | null) => ReactNode
+    /** @deprecated onChangeDate は非推奨です。onChange を使ってください。 */
+    onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
+    /** 選択された日付が変わった時に発火するコールバック関数 */
+    onChange?: (
+      e: ChangeEvent<HTMLInputElement>,
+      other: { date: Date | null; formatValue: string; errors: string[] },
+    ) => void
+  },
+  { omit: 'type' | 'onKeyPress' | 'onFocus' | 'aria-expanded' | 'aria-controls' | 'aria-haspopup' }
+>
 
 const DEFAULT_FROM = new Date(1900, 0, 1)
 
@@ -443,7 +437,7 @@ export const DatePicker: FC<Props> = ({
 const InputSuffixIcon = memo<{
   classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
-  caretIconColor: ComponentProps<typeof FaCalendarDaysIcon>['color']
+  caretIconColor: ComponentPropsWithRef<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <span className={classNames.inputSuffixLayout}>
     <span className={classNames.inputSuffixWrapper}>

@@ -45,7 +45,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const RadioButton: FC<Props> = ({ children, className, id, disabled, ref, ...rest }) => {
+export const RadioButton: FC<Props> = ({ children, className, id, disabled, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
@@ -66,7 +66,6 @@ export const RadioButton: FC<Props> = ({ children, className, id, disabled, ref,
       <span className={classNames.innerWrapper}>
         <ActualRadioButton
           {...rest}
-          outerRef={ref}
           id={radioButtonId}
           disabled={disabled}
           className={classNames.input}

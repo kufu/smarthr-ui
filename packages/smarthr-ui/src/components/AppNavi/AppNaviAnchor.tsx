@@ -10,7 +10,9 @@ import { tv } from 'tailwind-variants'
 
 import { itemClassNameGenerator } from './itemClassNameGenerator'
 
-import type { ComponentProps as IconProps } from '../Icon'
+import type { generateIcon } from '../Icon'
+
+type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithRef<T>,

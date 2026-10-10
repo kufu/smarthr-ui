@@ -2,15 +2,19 @@ import { type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
-import type { PickerProps } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type Props = {
-  /** フォームにエラーがあるかどうか */
-  error?: boolean
-}
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** フォームにエラーがあるかどうか */
+    error?: boolean
+  },
+  { omit: 'type' | 'children' }
+>
 
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
-export const MonthPicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
+export const MonthPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('Month')
 

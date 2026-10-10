@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 import type { Document } from 'react-pdf'
 
 export type FileForViewer = {
@@ -25,6 +25,6 @@ export type ViewerProps = {
   /**
    * PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PdfViewerでのみ使用されます。
    */
-  handlePassword?: ComponentProps<typeof Document>['onPassword']
+  handlePassword?: ComponentPropsWithRef<typeof Document>['onPassword']
   handleLoadError?: (error: unknown) => void
 }

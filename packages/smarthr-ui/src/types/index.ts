@@ -5,3 +5,8 @@ export type { Gap, PositiveGap, SeparatePositiveGap } from './Gap'
 /** @public */
 export type { SeparateGap } from './Gap'
 export type { ResponseStatusWithoutProcessing } from '../hooks/useResponseStatus'
+export type {
+  SHRComponentProps,
+  SHRComponentPropsWithRef,
+  SHRComponentPropsWithoutRef,
+} from './SHRComponentProps'

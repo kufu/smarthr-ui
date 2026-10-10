@@ -1,10 +1,8 @@
 'use client'
 
 import {
-  type ComponentPropsWithoutRef,
   type ElementType,
   type FC,
-  type Ref,
   createContext,
   useContext,
   useLayoutEffect,
@@ -12,6 +10,8 @@ import {
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 type ParentContextValue = {
   seqs: number[]
@@ -23,15 +23,15 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-type PortalProps = Omit<
-  ComponentPropsWithoutRef<'div'>,
-  'data-portal-child-of' | 'data-portal-current-seq'
-> & {
-  as?: ElementType
-  outerRef?: Ref<HTMLElement>
-}
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    as?: ElementType
+  },
+  { omit: 'data-portal-child-of' | 'data-portal-current-seq' }
+>
 
-export const Portal: FC<PortalProps> = ({ as: Component = 'div', outerRef, children, ...rest }) => {
+export const Portal: FC<Props> = ({ as: Component = 'div', children, ...rest }) => {
   const [currentSeq] = useState(() => ++portalSeq)
   const [mounted, setMounted] = useState(false)
   const parent = useContext(ParentContext)
@@ -53,7 +53,6 @@ export const Portal: FC<PortalProps> = ({ as: Component = 'div', outerRef, child
     <ParentContext.Provider value={{ seqs: calculatedSeqs.parentSeqs }}>
       <Component
         {...rest}
-        ref={outerRef}
         data-portal-current-seq={currentSeq}
         data-portal-child-of={calculatedSeqs.portalChildOf}
       >

@@ -1,17 +1,13 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { ScrollerSwitcher } from '../ScrollerSwitcher'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
+
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -19,10 +15,12 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-type Props = PropsWithChildren &
-  Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren> & {
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
     fixedHead?: boolean
   }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -146,7 +144,7 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
   }, [className])
 
   return (
-    <ScrollerSwitcher forwardedRef={callbackRef} fixedHead={fixedHead}>
+    <ScrollerSwitcher ref={callbackRef} fixedHead={fixedHead}>
       <div className={classNames.wrapper}>
         <div {...rest} className={classNames.inner}>
           {children}

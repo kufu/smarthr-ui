@@ -1,25 +1,21 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap } from '../../../types'
+import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type BaseProps = PropsWithChildren<{
-  as?: string | ComponentType<any>
-  inline?: boolean
-  gap?: PositiveGap
-  align?: AlignType
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    inline?: boolean
+    gap?: PositiveGap
+    align?: AlignType
+  },
+  { as: true }
+>
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',

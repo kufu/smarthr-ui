@@ -1,22 +1,18 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-type BaseProps = PropsWithChildren<{
-  maxLines?: 1 | 2 | 3 | 4 | 5 | 6
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'span'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'span',
+  {
+    maxLines?: 1 | 2 | 3 | 4 | 5 | 6
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -47,7 +43,7 @@ const classNameGenerator = tv({
       6: {
         clampedLine: 'shr-line-clamp-[6]',
       },
-    } satisfies Record<NonNullable<BaseProps['maxLines']>, { clampedLine: string }>,
+    } satisfies Record<NonNullable<Props['maxLines']>, { clampedLine: string }>,
   },
   compoundVariants: [
     {

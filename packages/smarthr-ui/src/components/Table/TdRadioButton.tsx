@@ -1,10 +1,4 @@
-import {
-  type ComponentProps,
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RadioButton } from '../RadioButton'
@@ -12,12 +6,15 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Td } from './Td'
 
-type Props = PropsWithChildren<{
-  /** RadioButtonのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
-  'aria-labelledby': string
-}> &
-  ComponentPropsWithRef<typeof RadioButton> &
-  Pick<ComponentProps<typeof Td>, 'vAlign'>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof RadioButton,
+  Pick<ComponentPropsWithRef<typeof Td>, 'vAlign'> & {
+    /** RadioButtonのaccessible nameとして設定するテキストを参照するためのid属性値。同じ親Tr配下のTdかTh、もしくはその子孫要素のidを指定する。複数要素のテキストを指定する場合は空白区切りでidをつなぐ */
+    'aria-labelledby': string
+  }
+>
 
 const classNameGenerator = tv({
   slots: {

@@ -1,36 +1,27 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { paddingBlock, paddingInline } from '../../tailwind'
 import { useSectionWrapper } from '../SectioningContent'
 
-import type { Gap } from '../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../types'
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type SeparatePadding = {
-  block?: Gap
-  inline?: Gap
-}
-
-type BaseProps = PropsWithChildren<{
-  /** 角丸の大きさ */
-  radius?: 's' | 'm'
-  /** 影のレイヤー */
-  layer?: 0 | 1 | 2 | 3 | 4
-  /** 境界とコンテンツの間の余白 */
-  padding?: Gap | SeparatePadding
-  /** コンテンツが要素内に収まらない場合の処理方法 */
-  overflow?: Overflow | { x: Overflow; y: Overflow }
-  as?: string | ComponentType<any>
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** 角丸の大きさ */
+    radius?: 's' | 'm'
+    /** 影のレイヤー */
+    layer?: 0 | 1 | 2 | 3 | 4
+    /** 境界とコンテンツの間の余白 */
+    padding?: Gap | { block?: Gap; inline?: Gap }
+    /** コンテンツが要素内に収まらない場合の処理方法 */
+    overflow?: Overflow | { x: Overflow; y: Overflow }
+  },
+  { as: true }
+>
 
 export const panelClassNameGenerator = tv({
   // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
@@ -41,7 +32,7 @@ export const panelClassNameGenerator = tv({
     radius: {
       s: 'shr-rounded-m',
       m: 'shr-rounded-l',
-    } satisfies Record<NonNullable<BaseProps['radius']>, string>,
+    } satisfies Record<NonNullable<Props['radius']>, string>,
     overflowBlock: {
       visible: 'shr-overflow-y-visible',
       hidden: 'shr-overflow-y-hidden',
@@ -62,7 +53,7 @@ export const panelClassNameGenerator = tv({
       2: 'shr-shadow-layer-2',
       3: 'shr-shadow-layer-3',
       4: 'shr-shadow-layer-4',
-    } satisfies Record<NonNullable<BaseProps['layer']>, string>,
+    } satisfies Record<NonNullable<Props['layer']>, string>,
   },
 })
 

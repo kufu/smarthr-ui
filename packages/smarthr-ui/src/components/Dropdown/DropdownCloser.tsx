@@ -1,11 +1,16 @@
-import type { ComponentProps, ElementType, FC, PropsWithChildren } from 'react'
+import type { SHRComponentPropsWithRef } from '../../types'
+import type { ElementType, FC } from 'react'
 
 export const DROPDOWN_CLOSER_CLASS_NAME = 'smarthr-ui-Dropdown-closer'
 
-// HINT: onClickは念のためomitしているが、必要に応じて利用可能にすることを検討する
-type Props = PropsWithChildren<
-  Omit<ComponentProps<'div'>, 'onClick'> & {
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
     as?: ElementType
+  },
+  {
+    // HINT: onClickは念のためomitしているが、必要に応じて利用可能にすることを検討する
+    omit: 'onClick'
   }
 >
 

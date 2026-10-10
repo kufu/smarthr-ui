@@ -2,15 +2,19 @@ import { type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
-import type { PickerProps } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type Props = {
-  /** フォームにエラーがあるかどうか */
-  error?: boolean
-}
+type Props = SHRComponentPropsWithRef<
+  'input',
+  {
+    /** フォームにエラーがあるかどうか */
+    error?: boolean
+  },
+  { omit: 'type' | 'children' }
+>
 
 /** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
-export const DatetimeLocalPicker: FC<PickerProps<Props>> = ({ error, className, ...rest }) => {
+export const DatetimeLocalPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, inner } = classNameGenerator('DatetimeLocal')
 

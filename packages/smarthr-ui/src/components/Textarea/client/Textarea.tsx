@@ -2,10 +2,7 @@
 
 import {
   type ChangeEvent,
-  type ComponentProps,
-  type ComponentPropsWithRef,
   type FC,
-  type Ref,
   startTransition,
   useEffect,
   useId,
@@ -23,27 +20,31 @@ import { defaultHtmlFontSize } from '../../../themes'
 import { LiveRegion } from '../../LiveRegion'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-type BaseProps = {
-  /** 入力値にエラーがあるかどうか */
-  error?: boolean
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** 自動でフォーカスされるかどうか */
-  autoFocus?: boolean
-  /** 自動で広がるかどうか */
-  autoResize?: boolean
-  /** 最大行数。超えるとスクロールする。初期値は無限 */
-  maxRows?: number
-  /** 行数の初期値。省略した場合は2 */
-  rows?: number
-  /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
-  maxLetters?: number
-  /**
-   * placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
-   */
-  placeholder?: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'textarea'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'textarea',
+  {
+    /** 入力値にエラーがあるかどうか */
+    error?: boolean
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** 自動でフォーカスされるかどうか */
+    autoFocus?: boolean
+    /** 自動で広がるかどうか */
+    autoResize?: boolean
+    /** 最大行数。超えるとスクロールする。初期値は無限 */
+    maxRows?: number
+    /** 行数の初期値。省略した場合は2 */
+    rows?: number
+    /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
+    maxLetters?: number
+    /**
+     * placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
+     */
+    placeholder?: string
+  }
+>
 type TextareaValue = string | number | readonly string[]
 
 const getStringLength = (value: TextareaValue) => {
@@ -88,19 +89,15 @@ const calculateIdealRows = (
   return currentInputValueRows < maxRows ? currentInputValueRows : maxRows
 }
 
-export const Textarea: FC<Props> = ({ maxLetters, ref, ...rest }) =>
+export const Textarea: FC<Props> = ({ maxLetters, ...rest }) =>
   maxLetters ? (
-    <MaxLettersTextarea {...rest} externalRef={ref} maxLetters={maxLetters} />
+    <MaxLettersTextarea {...rest} maxLetters={maxLetters} />
   ) : (
-    <ActualTextarea {...rest} externalRef={ref} />
+    <ActualTextarea {...rest} />
   )
 
-type LocalTextareaProps = ComponentProps<typeof Textarea> & {
-  externalRef?: Ref<HTMLTextAreaElement>
-}
-
 const MaxLettersTextarea: FC<
-  Omit<LocalTextareaProps, 'maxLetters'> & {
+  Omit<Props, 'maxLetters'> & {
     maxLetters: number
   }
 > = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
@@ -190,7 +187,7 @@ const MaxLettersTextarea: FC<
   )
 }
 
-const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
+const ActualTextarea: FC<Omit<Props, 'maxLetters'>> = ({
   autoFocus,
   width,
   className,
@@ -199,7 +196,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
   rows = 2,
   error,
   onChange,
-  externalRef,
+  ref,
   ...rest
 }) => {
   const theme = useTheme()
@@ -253,7 +250,7 @@ const ActualTextarea: FC<Omit<LocalTextareaProps, 'maxLetters'>> = ({
 
   const errorAttr = error || undefined
 
-  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), externalRef)
+  const mergedRef = useMergeRefs(useOnce(functions.baseCallbackRef), ref)
 
   return (
     <textarea

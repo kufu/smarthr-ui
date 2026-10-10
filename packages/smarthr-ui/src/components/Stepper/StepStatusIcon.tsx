@@ -1,10 +1,11 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
 import type { StatusType } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   base: [
@@ -22,11 +23,15 @@ const classNameGenerator = tv({
   },
 })
 
-type ActualProps = ComponentProps<typeof FaCircleCheckIcon> & {
-  statusType: StatusType
-  statusText?: string
-}
-type Props = Partial<ActualProps>
+type Props = SHRComponentPropsWithRef<
+  typeof FaCircleCheckIcon,
+  {
+    statusType?: StatusType
+    statusText?: string
+  },
+  { omit: 'alt' }
+>
+type ActualProps = Omit<Props, 'statusType'> & Pick<Required<Props>, 'statusType'>
 
 export const StepStatusIcon: FC<Props> = (props) =>
   props.statusType ? <ActualStepStatusIcon {...(props as ActualProps)} /> : null

@@ -4,41 +4,40 @@
 // isIOS・isMobileSafariは実機のUAをブラウザ側で検出する必要がある。Server Componentのままだと
 // navigatorが存在しないサーバ上で1回だけ評価され常にfalseに固定されるため、'use client'が必要
 
-import {
-  type ChangeEvent,
-  type ComponentPropsWithoutRef,
-  type OptgroupHTMLAttributes,
-  type OptionHTMLAttributes,
-  type PropsWithChildren,
-  type Ref,
-  memo,
-} from 'react'
+import { type ChangeEvent, memo } from 'react'
 
 import { isIOS, isMobileSafari } from '../../../libs/ua'
 
-type Option<T extends string> = {
-  value: T
-} & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
-type Optgroup<T extends string> = {
-  label: string
-  options: Array<Option<T>>
-} & OptgroupHTMLAttributes<HTMLOptGroupElement>
+import type { SHRComponentPropsWithRef, SHRComponentPropsWithoutRef } from '../../../types'
 
-type BaseProps<T extends string> = PropsWithChildren<{
-  outerRef?: Ref<HTMLSelectElement>
-  /** 選択肢のデータの配列 */
-  options: Array<Option<T> | Optgroup<T>>
-  /** フォームの値が変わったときに発火するコールバック関数 */
-  onChangeValue?: (value: T) => void
-  /** フォームの値にエラーがあるかどうか */
-  error?: boolean
-}>
+type Option<T extends string> = SHRComponentPropsWithoutRef<
+  'option',
+  {
+    value: T
+  }
+>
+type Optgroup<T extends string> = SHRComponentPropsWithoutRef<
+  'optgroup',
+  {
+    label: string
+    options: Array<Option<T>>
+  }
+>
 
-export type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children' | 'size'>
+type Props<T extends string> = SHRComponentPropsWithRef<
+  'select',
+  {
+    /** 選択肢のデータの配列 */
+    options: Array<Option<T> | Optgroup<T>>
+    /** フォームの値が変わったときに発火するコールバック関数 */
+    onChangeValue?: (value: T) => void
+    /** フォームの値にエラーがあるかどうか */
+    error?: boolean
+  },
+  { omit: 'size' }
+>
 
 export const ActualSelect = <T extends string>({
-  outerRef,
   options,
   onChange,
   onChangeValue,
@@ -51,7 +50,6 @@ export const ActualSelect = <T extends string>({
   return (
     <select
       {...rest}
-      ref={outerRef}
       // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
       //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
       //    - エラーメッセージが表示されない

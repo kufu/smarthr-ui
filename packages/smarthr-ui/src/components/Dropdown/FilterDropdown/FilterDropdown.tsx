@@ -1,5 +1,4 @@
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type FC,
   type MouseEventHandler,
@@ -24,37 +23,41 @@ import {
   FilteredIcon,
 } from '../client'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
+
 type ObjectTriggerType = {
   text?: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ComponentProps<typeof Button>['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type BaseProps = {
-  /** 引き金となるボタン */
-  trigger?: ReactNode | ObjectTriggerType
-  applyText?: ReactNode
-  cancelText?: ReactNode
-  resetText?: ReactNode
-  children: ReactNode
-  filtered?:
-    | boolean
-    | {
-        iconAlt?: string
-      }
-  responseStatus?: ResponseStatus
-  onApply: MouseEventHandler<HTMLButtonElement>
-  onCancel?: MouseEventHandler<HTMLButtonElement>
-  onReset?: MouseEventHandler<HTMLButtonElement>
-  onOpen?: () => void
-  onClose?: () => void
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'button',
+  {
+    /** 引き金となるボタン */
+    trigger?: ReactNode | ObjectTriggerType
+    applyText?: ReactNode
+    cancelText?: ReactNode
+    resetText?: ReactNode
+    children: ReactNode
+    filtered?:
+      | boolean
+      | {
+          iconAlt?: string
+        }
+    responseStatus?: ResponseStatus
+    onApply: MouseEventHandler<HTMLButtonElement>
+    onCancel?: MouseEventHandler<HTMLButtonElement>
+    onReset?: MouseEventHandler<HTMLButtonElement>
+    onOpen?: () => void
+    onClose?: () => void
+  }
+>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
-const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
+const CONTROL_CLUSTER_GAP: ComponentPropsWithRef<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
 const classNameGenerator = tv({
   slots: {

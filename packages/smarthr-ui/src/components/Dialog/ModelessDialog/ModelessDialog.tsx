@@ -1,11 +1,9 @@
 'use client'
 
 import {
-  type ComponentProps,
-  type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type SetStateAction,
@@ -15,7 +13,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import Draggable, { type DraggableBounds } from 'react-draggable'
+import Draggable from 'react-draggable'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
@@ -34,73 +32,75 @@ import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { DialogPortal } from '../DialogPortal'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
 import type { DialogSize } from '../types'
 
-type BaseProps = PropsWithChildren<{
-  /**
-   * ダイアログのタイトルの内容
-   */
-  heading: ReactNode
-  /**
-   * ダイアログのフッタ部分の内容
-   */
-  footer?: ReactNode
-  /**
-   * ダイアログが開かれているかどうかの真偽値
-   */
-  isOpen: boolean
-  /**
-   * 閉じるボタンを押下したときのハンドラ
-   */
-  onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
-  /**
-   * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
-   */
-  onPressEscape?: (e: KeyboardEvent) => void
-  /**
-   * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-   * ダイアログの幅
-   */
-  width?: string | number
-  /**
-   * ダイアログの大きさ
-   */
-  size?: DialogSize
-  /**
-   * ダイアログの高さ
-   */
-  height?: string | number
-  /**
-   * ダイアログを開いたときの初期 top 位置
-   */
-  top?: string | number
-  /**
-   * ダイアログを開いたときの初期 left 位置
-   */
-  left?: string | number
-  /**
-   * ダイアログを開いたときの初期 right 位置
-   */
-  right?: string | number
-  /**
-   * ダイアログを開いたときの初期 bottom 位置
-   */
-  bottom?: string | number
-  /**
-   * ポータルの container となる DOM 要素を追加する親要素。
-   * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
-   * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
-   * 呼び出し側で要素が確定してから渡すこと。
-   */
-  portalParent?: HTMLElement
-  /**
-   * リサイズ可能かどうか
-   */
-  resizable?: boolean
-}>
-type Props = BaseProps &
-  Omit<ComponentProps<typeof DialogBody>, keyof BaseProps> &
-  Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  typeof Panel,
+  Pick<ComponentPropsWithoutRef<typeof DialogBody>, 'contentBgColor' | 'contentPadding'> & {
+    /**
+     * ダイアログのタイトルの内容
+     */
+    heading: ReactNode
+    /**
+     * ダイアログのフッタ部分の内容
+     */
+    footer?: ReactNode
+    /**
+     * ダイアログが開かれているかどうかの真偽値
+     */
+    isOpen: boolean
+    /**
+     * 閉じるボタンを押下したときのハンドラ
+     */
+    onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    /**
+     * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
+     */
+    onPressEscape?: (e: KeyboardEvent) => void
+    /**
+     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
+     * ダイアログの幅
+     */
+    width?: string | number
+    /**
+     * ダイアログの大きさ
+     */
+    size?: DialogSize
+    /**
+     * ダイアログの高さ
+     */
+    height?: string | number
+    /**
+     * ダイアログを開いたときの初期 top 位置
+     */
+    top?: string | number
+    /**
+     * ダイアログを開いたときの初期 left 位置
+     */
+    left?: string | number
+    /**
+     * ダイアログを開いたときの初期 right 位置
+     */
+    right?: string | number
+    /**
+     * ダイアログを開いたときの初期 bottom 位置
+     */
+    bottom?: string | number
+    /**
+     * ポータルの container となる DOM 要素を追加する親要素。
+     * ダイアログのマウントと同時に確定していない要素（例: ダイアログの祖先要素の ref）を
+     * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+     * 呼び出し側で要素が確定してから渡すこと。
+     */
+    portalParent?: HTMLElement
+    /**
+     * リサイズ可能かどうか
+     */
+    resizable?: boolean
+  },
+  { omit: 'role' | 'radius' | 'layer' | 'overflow' | 'style' | 'aria-labelledby' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -135,7 +135,7 @@ const classNameGenerator = tv({
       XL: { wrapper: dialogSize.XL },
       XXL: { wrapper: dialogSize.XXL },
       FULL: { wrapper: dialogSize.FULL },
-    } satisfies Record<NonNullable<BaseProps['size']>, { wrapper: string }>,
+    } satisfies Record<NonNullable<Props['size']>, { wrapper: string }>,
     resizable: {
       true: {
         wrapper: 'shr-resize shr-overflow-auto',
@@ -176,8 +176,8 @@ export const ModelessDialog: FC<Props> = ({
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
 
     return {
-      overlap: overlap({ className }),
-      wrapper: wrapper({ size, resizable }),
+      overlap: overlap(),
+      wrapper: wrapper({ className, size, resizable }),
       header: headerEl(),
       dialogHandler: dialogHandler(),
     }
@@ -299,7 +299,15 @@ export const ModelessDialog: FC<Props> = ({
         lastFocusElementRef.current?.focus()
         latest.onPressEscape?.(e)
       },
-      handleDragStart: (_: any, data: { x: number; y: number }) => setActualPosition(data),
+      handleDragStart: (_: any, data: { x: number; y: number }) => {
+        if (wrapperRef.current) {
+          setDraggableBounds({
+            top: (wrapperRef.current.getBoundingClientRect().top - data.y) * -1,
+          })
+        }
+
+        setActualPosition(data)
+      },
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
         setActualPosition((prev) => ({
           x: prev.x + data.deltaX,
@@ -336,41 +344,24 @@ export const ModelessDialog: FC<Props> = ({
             nextDefaultPosition.left === undefined && nextDefaultPosition.right === undefined
           const isYCenter =
             nextDefaultPosition.top === undefined && nextDefaultPosition.bottom === undefined
-          let nextCentering = latest.centering
 
           if (isXCenter || isYCenter) {
             const rect = node.getBoundingClientRect()
-            const tempCentering = {
+            const nextCentering = {
               top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
               left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
             }
 
-            nextCentering =
-              latest.centering.top === tempCentering.top &&
-              latest.centering.left === tempCentering.left
+            setCentering(
+              latest.centering.top === nextCentering.top &&
+                latest.centering.left === nextCentering.left
                 ? latest.centering
-                : tempCentering
-
-            setCentering(nextCentering)
+                : nextCentering,
+            )
           } else if (latest.centering.top !== undefined || latest.centering.left !== undefined) {
             // HINT: 中央寄せが不要になった場合、以前の値が残るとdefaultPositionより優先されてしまう
-            nextCentering = {}
-
-            setCentering(nextCentering)
+            setCentering({})
           }
-
-          // HINT: 中央寄せの有無に関わらずdraggableBoundsは更新する必要がある
-          setDraggableBounds((current: DraggableBounds | string | false) => {
-            // HINT: centering.topは0になりうるため、undefinedとの区別が必要
-            const nextTop =
-              nextCentering.top !== undefined
-                ? nextCentering.top * -1
-                : node.getBoundingClientRect().top * -1
-
-            return typeof current === 'object' && current.top === nextTop
-              ? current
-              : { top: nextTop }
-          })
 
           node
             .querySelector<HTMLElement>('.smarthr-ui-ModelessDialog-firstFocusTarget[tabindex]')

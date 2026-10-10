@@ -1,18 +1,20 @@
-import { type FC, type PropsWithChildren, type Ref, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { Scroller } from '../Scroller'
 
-import type { Gap } from '../../types'
+import type { Gap, SHRComponentPropsWithRef } from '../../types'
 
-type Props = PropsWithChildren<{
-  ref?: Ref<HTMLDivElement>
-  /** コンテンツ部分の背景色 */
-  contentBgColor?: keyof typeof backgroundColor
-  contentPadding?: Gap | { block?: Gap; inline?: Gap }
-  className?: string | undefined
-}>
+type Props = SHRComponentPropsWithRef<
+  typeof Scroller,
+  {
+    /** コンテンツ部分の背景色 */
+    contentBgColor?: keyof typeof backgroundColor
+    contentPadding?: Gap | { block?: Gap; inline?: Gap }
+  },
+  { omit: 'as' | 'direction' | 'styleType' }
+>
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-Dialog-body', 'shr-flex-auto'],
@@ -23,7 +25,13 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
+export const DialogBody: FC<Props> = ({
+  contentBgColor,
+  contentPadding,
+  className,
+  children,
+  ...rest
+}) => {
   const initialized = contentPadding === undefined ? 1.5 : contentPadding
   const actualPaddings =
     initialized instanceof Object ? initialized : { block: initialized, inline: initialized }
@@ -39,5 +47,9 @@ export const DialogBody: FC<Props> = ({ contentBgColor, contentPadding, classNam
     [actualPaddings.block, actualPaddings.inline, contentBgColor, className],
   )
 
-  return <Scroller {...rest} className={actualClassName} />
+  return (
+    <Scroller {...rest} className={actualClassName}>
+      {children}
+    </Scroller>
+  )
 }

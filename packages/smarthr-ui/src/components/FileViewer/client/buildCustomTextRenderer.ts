@@ -1,8 +1,8 @@
 import type { PDFSearchMatch } from './types'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 import type { Page } from 'react-pdf'
 
-type CustomTextRenderer = NonNullable<ComponentProps<typeof Page>['customTextRenderer']>
+type CustomTextRenderer = NonNullable<ComponentPropsWithRef<typeof Page>['customTextRenderer']>
 
 const MATCH_INDEX_ATTR = 'data-shr-match-index'
 
