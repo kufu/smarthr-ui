@@ -56,6 +56,10 @@ type PersistentHandlesNodeViewOptions = Omit<ResizableNodeViewOptions, 'options'
   onResizingChange?: (resizing: boolean) => void
 }
 
+const NOOP_UPDATE_LISTENER: () => void = Object.assign(() => {}, {
+  bind: () => NOOP_UPDATE_LISTENER,
+})
+
 /**
  * 標準はハンドルを文書の更新時にだけ編集可否に合わせて外し・付け直す。更新を伴わない
  * setEditable では付け直されず、読み取り専用の間に更新が入るとハンドルが消えたままになる。
@@ -115,7 +119,15 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
     }
   }
 
-  handleEditorUpdate() {}
+  // 標準は購読も解除も handleEditorUpdate.bind(this) で行い、bind が毎回別の関数を返すため解除されず、
+  // NodeView を作り直すたびに残る。購読そのものは止められないので、bind しても同じ関数を返すものを渡す。
+  // インスタンスごとに分けないのは、off が同じ関数をまとめて外しても、何もしない関数なので害が無いため
+  get handleEditorUpdate() {
+    return NOOP_UPDATE_LISTENER
+  }
+
+  // 上流が bind をやめてアロー関数のフィールドにすると、親のコンストラクタが代入して例外になる
+  set handleEditorUpdate(_listener: unknown) {}
 
   // 標準は touchend を購読しないため、タッチでは確定もドラッグ中の状態の解除も起きない
   handleResizeStart(event: MouseEvent | TouchEvent, direction: ResizableNodeViewDirection) {
