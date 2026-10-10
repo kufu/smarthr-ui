@@ -876,6 +876,89 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('末尾が段落でない文書', () => {
+    const LIST_END_DOC: RichTextJSON = {
+      type: 'doc',
+      content: [
+        {
+          type: 'bulletList',
+          content: [
+            {
+              type: 'listItem',
+              content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
+            },
+          ],
+        },
+      ],
+    }
+
+    const renderListEnd = async (onChange = vi.fn()) => {
+      render(
+        <RichTextEditor
+          defaultValue={LIST_END_DOC}
+          features={[...ALL_FEATURES]}
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('項目')).toBeInTheDocument())
+
+      return onChange
+    }
+
+    it('キャレットを動かすだけでは、末尾に段落が足されても onChange も履歴も出ない', async () => {
+      const onChange = await renderListEnd()
+
+      act(() => {
+        getEditor().commands.setTextSelection(2)
+      })
+
+      expect(getEditor().state.doc.lastChild?.type.name).toBe('paragraph')
+      expect(onChange).not.toHaveBeenCalled()
+      expect(getEditor().can().undo()).toBe(false)
+    })
+
+    it('末尾に表などを挿入して段落が足されたときは、取り消すと挿入前に戻る', async () => {
+      render(<RichTextEditor defaultValue={paragraphDoc('本文')} features={[...ALL_FEATURES]} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+      const before = getEditor().getJSON()
+
+      act(() => {
+        const editor = getEditor()
+        editor
+          .chain()
+          .insertContentAt(editor.state.doc.content.size, { type: 'horizontalRule' })
+          .run()
+      })
+      expect(getEditor().state.doc.lastChild?.type.name).toBe('paragraph')
+
+      act(() => {
+        getEditor().commands.undo()
+      })
+
+      expect(getEditor().getJSON()).toEqual(before)
+    })
+
+    it('足された段落に入力すると onChange が呼ばれ、取り消せる', async () => {
+      const onChange = await renderListEnd()
+      act(() => {
+        getEditor().commands.setTextSelection(2)
+      })
+
+      act(() => {
+        getEditor().chain().focus('end').insertContent('追記').run()
+      })
+
+      expect(onChange).toHaveBeenCalled()
+      act(() => {
+        getEditor().commands.undo()
+      })
+      expect(getEditor().getText()).not.toContain('追記')
+    })
+  })
+
   describe('対応外の見出しレベルの読み込み', () => {
     it('level 5 の見出しは表示・出力とも level 4 にそろう', async () => {
       const ref = createRef<RichTextEditorController>()

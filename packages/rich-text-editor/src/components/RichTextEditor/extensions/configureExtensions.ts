@@ -33,6 +33,7 @@ import {
   TABLE_OPTIONS,
   YOUTUBE_OPTIONS,
 } from './schemaExtensions'
+import { patchTrailingNode } from './trailingNode'
 
 import type { GetRichTextRuntimeOptions } from './runtimeOptions'
 import type { RichTextFeature } from '../types'
@@ -78,6 +79,7 @@ export const configureExtensions = ({
         // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
         return (this.parent?.() ?? [])
           .map(patchListItemShiftTab)
+          .map(patchTrailingNode)
           .map(limitHeading)
           .map((extension) => restrict(extension))
       },

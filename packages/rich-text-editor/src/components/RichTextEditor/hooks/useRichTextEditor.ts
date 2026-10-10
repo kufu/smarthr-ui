@@ -11,6 +11,7 @@ import {
   reconfigureEditorOperations,
   rememberManagedPlugins,
 } from '../extensions/reconfigureEditorOperations'
+import { isAutoTrailingNodeOnly } from '../extensions/trailingNode'
 import { createChangeMeta } from '../serializers/createChangeMeta'
 import { getDetachedJSON } from '../serializers/getDetachedJSON'
 import { toEditorContent } from '../serializers/toEditorContent'
@@ -146,8 +147,8 @@ export const useRichTextEditor = ({
         return false
       },
     },
-    onUpdate: ({ editor: e }) => {
-      if (!onChange) return
+    onUpdate: ({ editor: e, transaction, appendedTransactions }) => {
+      if (!onChange || isAutoTrailingNodeOnly(transaction, appendedTransactions)) return
 
       // 空判定とテキストは editor と同じ結果にする必要があるため、この時点の値を読んで渡す
       const json = getDetachedJSON(e)
@@ -235,8 +236,8 @@ export const useRichTextEditor = ({
   // placeholder の同期
   useEffect(() => {
     // useEditor も再描画ごとに setOptions で描き直すが、それは editorProps が毎回新しいためで、
-    // メモ化すると止まる。空の transaction で描き直さないのは、appendTransaction を持つ plugin
-    // （TrailingNode など）が文書を変え、操作していないのに onChange と履歴が発生するため
+    // メモ化すると止まる。空の transaction で描き直さないのは、appendTransaction を持つ plugin が
+    // 文書を変えうるため。TrailingNode は onChange と履歴を出さないようにしたが、ほかの plugin は保証できない
     if (editor && !editor.isDestroyed) {
       editor.view.setProps({})
     }
