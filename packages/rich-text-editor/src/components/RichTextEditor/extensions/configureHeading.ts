@@ -58,15 +58,10 @@ export const createHeadingOperationLimiter =
         )
       },
       addInputRules() {
-        const allowedLevels = getAllowedLevels()
-
-        if (allowedLevels.length === 0) return []
-
-        const minLevel = Math.min(...allowedLevels)
-
-        return allowedLevels.map((level) =>
+        // 上流の `#{最小,level}` は配列の順や飛び番で別のレベルに当たるため、# の数と一致させる
+        return getAllowedLevels().map((level) =>
           textblockTypeInputRule({
-            find: new RegExp(`^(#{${minLevel},${level}})\\s$`),
+            find: new RegExp(`^(#{${level}})\\s$`),
             type: this.type,
             getAttributes: { level },
           }),

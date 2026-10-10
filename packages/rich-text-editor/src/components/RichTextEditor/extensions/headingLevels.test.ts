@@ -126,11 +126,16 @@ describe('headingLevels', () => {
       expect(headingLevel(editor)).toBe(2)
     })
 
-    it.each([
-      ['許可外', '#', null],
-      ['許可レベル', '##', 2],
-    ])('Markdown 入力: %s', (_name, hashes, expected) => {
-      const editor = createEditor(`<p>${hashes}</p>`)
+    it.each<[string, string, ReadonlyArray<1 | 2 | 3 | 4>, number | null]>([
+      ['許可外', '#', [2, 3], null],
+      ['許可レベル', '##', [2, 3], 2],
+      ['許可レベルの最大を超える', '####', [2, 3], null],
+      ['降順の配列でも # の数どおり', '##', [3, 2], 2],
+      ['降順の配列で大きいレベル', '###', [3, 2], 3],
+      ['飛び番の間のレベルは変換しない', '##', [1, 3], null],
+      ['飛び番の大きいレベル', '###', [1, 3], 3],
+    ])('Markdown 入力: %s（%s, %j）', (_name, hashes, allowedLevels, expected) => {
+      const editor = createEditor(`<p>${hashes}</p>`, allowedLevels)
       editor.commands.focus('end')
       const { view } = editor
       view.someProp('handleTextInput', (f) =>
