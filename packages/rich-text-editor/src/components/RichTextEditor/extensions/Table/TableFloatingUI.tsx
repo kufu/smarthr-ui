@@ -181,11 +181,16 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
       clearAll()
     }
 
+    // ポインターが表に重なったままだと、キャレットを別の表へ移してもホバー先が優先されて
+    // ボタンが出ない。本文のキー入力をきっかけにしないのは、ツールバーやプログラムからの
+    // 移動を拾えず、選択を動かさないキー（コピーや修飾キー）でもポインター下のボタンが消えるため
     container.addEventListener('mousemove', handleMouseMove)
     container.addEventListener('mouseleave', handleMouseLeave)
+    editor.on('selectionUpdate', handleMouseLeave)
     return () => {
       container.removeEventListener('mousemove', handleMouseMove)
       container.removeEventListener('mouseleave', handleMouseLeave)
+      editor.off('selectionUpdate', handleMouseLeave)
       if (frame !== null) window.cancelAnimationFrame(frame)
     }
   }, [editor, latest])

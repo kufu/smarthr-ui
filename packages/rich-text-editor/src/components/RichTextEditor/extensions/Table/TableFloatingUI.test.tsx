@@ -20,13 +20,14 @@ beforeAll(() => {
 
 // jsdom はレイアウトを計算しないため、表だけに位置と大きさを与える
 const TABLE_RECT = new DOMRect(30, 40, 300, 120)
+const SECOND_TABLE_RECT = new DOMRect(30, 400, 300, 120)
 
 beforeEach(() => {
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
     this: HTMLElement,
   ) {
     if (this instanceof HTMLTableElement || this.classList.contains('tableWrapper')) {
-      return TABLE_RECT
+      return this.textContent?.includes('C1') ? SECOND_TABLE_RECT : TABLE_RECT
     }
 
     return new DOMRect(0, 0, 1000, 800)
@@ -151,5 +152,37 @@ describe('表の行・列の追加ボタン', () => {
         expect(screen.queryByRole('button', { name: ADD_ROW })).not.toBeInTheDocument(),
       )
     })
+  })
+
+  it('ポインターが別の表に重なったままでも、キャレットを移した表に追加ボタンを出す', async () => {
+    const tableOf = (prefix: string) => ({
+      type: 'table',
+      content: [1, 2].map((row) => ({
+        type: 'tableRow',
+        content: [`${prefix}${row}`].map((text) => ({
+          type: 'tableCell',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+        })),
+      })),
+    })
+    render(
+      <RichTextEditor
+        defaultValue={{ type: 'doc', content: [tableOf('A'), tableOf('C')] }}
+        features={['table']}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByText('C2')).toBeInTheDocument())
+    placeCaretIn('A1')
+    fireEvent.mouseMove(screen.getByText('A1'), { clientX: 100, clientY: 60 })
+    await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
+    placeCaretIn('C2')
+
+    fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+    const rowCounts = Array.from(document.querySelectorAll('.ProseMirror table')).map(
+      (table) => table.querySelectorAll('tr').length,
+    )
+    expect(rowCounts).toEqual([2, 3])
   })
 })
