@@ -52,8 +52,8 @@ const createTableCellMapping =
     return createElement(
       tag,
       {
-        colSpan: typeof colspan === 'number' ? colspan : undefined,
-        rowSpan: typeof rowspan === 'number' ? rowspan : undefined,
+        colSpan: colspan > 1 ? colspan : undefined,
+        rowSpan: rowspan > 1 ? rowspan : undefined,
         colwidth: Array.isArray(colwidth) ? colwidth.join(',') : undefined,
         style: Object.keys(style).length > 0 ? style : undefined,
       },

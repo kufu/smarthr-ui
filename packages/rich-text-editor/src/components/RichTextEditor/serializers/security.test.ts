@@ -589,13 +589,38 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
   })
 
   it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY, 1.5, '2'])(
-    '不正な colspan (%s) が既定値の1に戻る',
+    '不正な colspan (%s) が既定値の1に戻り、属性を出力しない',
     (colspan) => {
       const { html, react } = bothOutputs(cellDoc('tableCell', { colspan }))
-      expect(html).toContain('colspan="1"')
-      expect(react).toContain('colSpan="1"')
+      expect(html).not.toMatch(/colspan=/i)
+      expect(react).not.toMatch(/colspan=/i)
+      // 1に戻らないと colgroup の列数が合わなくなる（2セルなので col も2つ）
+      expect(html.match(/<col[\s>]/g)).toHaveLength(2)
     },
   )
+
+  it.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY, 1.5, '2'])(
+    '不正な rowspan (%s) が既定値の1に戻り、属性を出力しない',
+    (rowspan) => {
+      const { html, react } = bothOutputs(cellDoc('tableCell', { rowspan }))
+      expect(html).not.toMatch(/rowspan=/i)
+      expect(react).not.toMatch(/rowspan=/i)
+    },
+  )
+
+  it('結合していないセルは両経路とも colspan/rowspan を出力しない', () => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 1, rowspan: 1 }))
+    for (const output of [html, react]) {
+      expect(output).not.toMatch(/colspan=/i)
+      expect(output).not.toMatch(/rowspan=/i)
+    }
+  })
+
+  it('縦に結合したセルは両経路とも rowspan を出力する', () => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 1, rowspan: 2 }))
+    expect(html).toContain('rowspan="2"')
+    expect(react).toContain('rowSpan="2"')
+  })
 
   it('React経路で結合セルを描画してもDOMプロパティ名の警告が出ない', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
