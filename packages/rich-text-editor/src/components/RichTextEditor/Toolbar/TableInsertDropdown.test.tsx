@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it } from 'vitest'
@@ -69,5 +69,41 @@ describe('TableInsertDropdown の行数・列数', () => {
     expect(rowsInput).toHaveAttribute('max', '100')
     expect(colsInput).toHaveAttribute('min', '1')
     expect(colsInput).toHaveAttribute('max', '20')
+  })
+})
+
+describe('TableInsertDropdown を閉じたとき', () => {
+  it.each([
+    [
+      '外側のクリック',
+      async (user: ReturnType<typeof userEvent.setup>) => user.click(document.body),
+    ],
+    [
+      'トリガーの再クリック',
+      async (user: ReturnType<typeof userEvent.setup>) =>
+        user.click(screen.getByRole('button', { name: 'テーブルを挿入' })),
+    ],
+  ])('%sで閉じると、次に開いたときにエラーが残らない', async (_, close) => {
+    const user = userEvent.setup()
+    await insertTable('0', '3')
+    expect(await screen.findByRole('alert')).toBeInTheDocument()
+
+    await close(user)
+    await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('挿入したあとに開き直すと、前回の行数・列数が残る', async () => {
+    const user = userEvent.setup()
+    await insertTable('5', '4')
+    await waitFor(() => expect(insertedTable()).not.toBeNull())
+    // 挿入時の Tiptap の focus は次のフレームで効くため、それより前に開くと閉じられてしまう
+    await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
+    await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+
+    expect(screen.getByRole('spinbutton', { name: '行数' })).toHaveValue(5)
+    expect(screen.getByRole('spinbutton', { name: '列数' })).toHaveValue(4)
   })
 })

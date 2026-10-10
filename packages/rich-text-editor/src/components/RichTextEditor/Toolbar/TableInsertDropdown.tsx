@@ -98,12 +98,27 @@ export const TableInsertDropdown: FC<Props> = memo(
       defaultText: '挿入',
     })
 
-    const latest = useLatest({ rows, cols, errorMessage, triggerRef, onKeyDown: onKeyDownProp })
+    const latest = useLatest({
+      isOpen,
+      rows,
+      cols,
+      errorMessage,
+      triggerRef,
+      onKeyDown: onKeyDownProp,
+    })
 
     const functions = useMemo(() => {
+      // 閉じる経路は外側クリックや disabled など useToolbarDropdown 側にもあり、そのすべてで
+      // 消すより、開くときに消す方が漏れない
+      const openPopup = () => {
+        if (!latest.isOpen) {
+          setError('')
+          setIsOpen(true)
+        }
+      }
+
       const closePopup = () => {
         setIsOpen(false)
-        setError('')
         latest.triggerRef.current?.focus()
       }
 
@@ -125,8 +140,8 @@ export const TableInsertDropdown: FC<Props> = memo(
             })
             .run()
           setIsOpen(false)
-          setError('')
         },
+        handleTriggerClick: () => (latest.isOpen ? setIsOpen(false) : openPopup()),
         handlePopupKeyDown: (e: KeyboardEvent) => {
           if (e.key === 'Escape') {
             e.preventDefault()
@@ -141,7 +156,7 @@ export const TableInsertDropdown: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(true)
+              openPopup()
               break
             default:
               latest.onKeyDown?.(e)
@@ -168,7 +183,7 @@ export const TableInsertDropdown: FC<Props> = memo(
           tabIndex={tabIndex}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={functions.handleTriggerClick}
           onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
           icon={<FaTableIcon />}
