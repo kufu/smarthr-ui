@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { ToolbarTooltip } from './ToolbarTooltip'
 
-import type { ComponentProps, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 // クリップされた・戻ったをテストから通知できるよう、コールバックを握るモックに差し替える
 const intersectionCallbacks: Array<(entries: Array<{ isIntersecting: boolean }>) => void> = []
@@ -41,7 +41,7 @@ const fireIntersection = (isIntersecting: boolean) => {
   })
 }
 
-const renderTooltip = (props: Partial<ComponentProps<typeof ToolbarTooltip>> = {}) =>
+const renderTooltip = (props: Partial<ComponentPropsWithoutRef<typeof ToolbarTooltip>> = {}) =>
   render(
     <ToolbarTooltip {...props} shortcut="Mod-B" label="太字">
       <button type="button">太字</button>
