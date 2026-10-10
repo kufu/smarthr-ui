@@ -141,6 +141,16 @@ describe('表の行・列の追加ボタン', () => {
       )
     })
 
+    it('帯の追加ボタンは、ポインターを動かさずに続けて押せる', async () => {
+      await renderTable()
+      hover(100, TABLE_RECT.bottom + 10)
+
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+
+      expect(countRows()).toBe(5)
+    })
+
     it('帯から離れると消す', async () => {
       await renderTable()
       hover(100, TABLE_RECT.bottom + 10)
