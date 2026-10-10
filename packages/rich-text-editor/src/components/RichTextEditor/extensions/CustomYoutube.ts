@@ -104,8 +104,9 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
           if (editor.isEditable) applySize(width, calcYoutubeHeight(width))
         },
         onCommit: (width) => {
-          // max-width で縮んだ表示では、読み取った幅が最小幅を下回ることがある
-          const committedWidth = Math.max(Math.round(width), YOUTUBE_MIN_SIZE.width)
+          // max-width で縮んだ表示では、読み取った幅が最小幅を下回ることがある。
+          // 設定の最小幅ではなくドラッグ中の最小幅で寄せないと、最小幅未満の動画が離したときに跳ねる
+          const committedWidth = Math.max(Math.round(width), nodeView.minSize.width)
           const committedHeight = calcYoutubeHeight(committedWidth)
 
           nodeView.updateSize({ width: committedWidth, height: committedHeight })

@@ -73,6 +73,8 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
 
   private releaseTouch?: () => void
 
+  private configuredMinSize: { width: number; height: number }
+
   constructor({
     editor,
     options,
@@ -90,6 +92,7 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
     })
 
     this.onResizingChange = onResizingChange
+    this.configuredMinSize = { ...this.minSize }
 
     // 標準は動かさずに離しただけでも表示中の寸法で確定する。max-width で縮んで表示されていると、
     // ハンドルに触れただけで保存値が表示の大きさまで小さくなる
@@ -131,6 +134,16 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
 
   // 標準は touchend を購読しないため、タッチでは確定もドラッグ中の状態の解除も起きない
   handleResizeStart(event: MouseEvent | TouchEvent, direction: ResizableNodeViewDirection) {
+    // 標準は縦横比を保ったまま幅と高さの両方に最小値を課す。1000×50 のような画像は最初の
+    // 移動で高さが最小値まで引き上げられ、幅も 2000 に跳ねる。最初から下回る辺はそれ以上縮めないだけにする。
+    // 標準はタッチだと開始の中で最初の寸法計算まで行うため、呼ぶ前に設定する
+    const { offsetWidth, offsetHeight } = this.element
+    const { width, height } = this.configuredMinSize
+    this.minSize = {
+      width: offsetWidth > 0 ? Math.min(width, offsetWidth) : width,
+      height: offsetHeight > 0 ? Math.min(height, offsetHeight) : height,
+    }
+
     // @ts-expect-error 標準の private な処理を呼ぶ
     super.handleResizeStart(event, direction)
     this.onResizingChange?.(true)

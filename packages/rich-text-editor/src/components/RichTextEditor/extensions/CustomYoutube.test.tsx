@@ -4,6 +4,8 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 
+import { calcYoutubeHeight } from './youtubeOptions'
+
 import type { RichTextFeature } from '../types'
 import type { Editor } from '@tiptap/react'
 
@@ -111,6 +113,16 @@ describe('CustomYoutube NodeView', () => {
     const editor = await mount()
     dragRightBy(10)
     expect(attrsOf(editor)).toMatchObject({ width: 356, height: 200 })
+  })
+
+  it('最小幅を下回る動画は、離したときに最小幅へ跳ねずドラッグした幅で保存する', async () => {
+    const editor = await mount({ width: 320, height: 180 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 320, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 180, configurable: true })
+
+    dragRightBy(10, 330)
+
+    expect(attrsOf(editor)).toMatchObject({ width: 330, height: calcYoutubeHeight(330) })
   })
 
   it('タッチでドラッグして離すと確定し、ドラッグ中の状態が解ける', async () => {

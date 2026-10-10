@@ -347,6 +347,65 @@ describe('読み取り専用でのリサイズ', () => {
   })
 })
 
+describe('最小サイズを下回る画像のリサイズ', () => {
+  // 1000×50 のように、縦横比を保つと最小の高さ（100px）を満たせない画像
+  const mountWide = async () => {
+    const { result } = renderHook(() =>
+      useRichTextEditor({
+        features: ['image'],
+        defaultValue: {
+          type: 'doc',
+          content: [
+            {
+              type: 'image',
+              attrs: { src: 'https://example.com/wide.png', width: 1000, height: 50 },
+            },
+          ],
+        },
+      }),
+    )
+    await waitFor(() => expect(result.current.editor).not.toBeNull())
+    render(<EditorContent editor={result.current.editor!} />)
+    await waitFor(() => expect(document.querySelector('[data-resize-handle]')).not.toBeNull())
+
+    const img = document.querySelector<HTMLImageElement>('.ProseMirror img')!
+    // jsdom は寸法を持たないため、ドラッグ開始時に読む表示サイズを与える
+    Object.defineProperty(img, 'offsetWidth', { configurable: true, value: 1000 })
+    Object.defineProperty(img, 'offsetHeight', { configurable: true, value: 50 })
+
+    return img
+  }
+
+  it('ドラッグを始めても最小サイズへ跳ねず、ポインターの移動ぶんだけ変わる', async () => {
+    const img = await mountWide()
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    try {
+      fireEvent.mouseMove(document, { clientX: 10, clientY: 0 })
+
+      expect(img.style.width).toBe('1010px')
+    } finally {
+      fireEvent.mouseUp(document)
+    }
+  })
+
+  it('もともと下回っている辺は、それ以上縮めない', async () => {
+    const img = await mountWide()
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    try {
+      fireEvent.mouseMove(document, { clientX: -500, clientY: 0 })
+
+      expect(img.style.width).toBe('1000px')
+      expect(img.style.height).toBe('50px')
+    } finally {
+      fireEvent.mouseUp(document)
+    }
+  })
+})
+
 describe('配置', () => {
   const mountWithAttrs = async (attrs: Record<string, unknown>) => {
     const { result } = renderHook(() =>
