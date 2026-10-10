@@ -334,6 +334,40 @@ describe('table controls', () => {
   })
 })
 
+describe('操作メニューを開けなかったとき', () => {
+  it('押した時点で対象がセルでなくなっていても、ホバーへの追従が止まらない', async () => {
+    showControls()
+
+    act(() => {
+      // 文書が変わってから再描画されるまでの間に押され、トリガーの持つ位置がセルでなくなった状況
+      editor.commands.insertContentAt(0, {
+        type: 'paragraph',
+        content: [{ type: 'text', text: 'あ'.repeat(200) }],
+      })
+      fireEvent.click(screen.getByRole('button', { name: '行の操作' }))
+    })
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+    fireEvent.mouseMove(editor.view.dom.querySelectorAll('td')[0])
+
+    expect(screen.getByRole('button', { name: '行の操作' })).toBeInTheDocument()
+  })
+
+  it('押した時点で位置が別のセルの中を指していても、例外を出さずにそのセルで開く', async () => {
+    showControls()
+    const target = getTableTarget(editor)!
+    // キャレットのあるセルの1つ前のセル
+    const previousCellPos = target.tablePos + 1 + target.map.map[3]
+
+    act(() => {
+      editor.commands.insertContentAt(previousCellPos + 2, 'xx')
+      fireEvent.click(screen.getByRole('button', { name: '行の操作' }))
+    })
+
+    expect(await screen.findByRole('dialog', { name: '行の操作' })).toBeInTheDocument()
+  })
+})
+
 describe('操作メニューのキーボードショートカット', () => {
   // macOS の Option+Shift+英字は別の文字を生むため、event.key だけでは照合できない。
   const cases = [

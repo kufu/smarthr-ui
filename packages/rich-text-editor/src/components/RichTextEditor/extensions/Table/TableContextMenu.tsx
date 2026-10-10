@@ -123,13 +123,17 @@ export const TableContextMenu = ({
 
     return {
       cancelFocus,
-      open: (pos = latest.cellPos, last = false, fromTrigger = false, keyboard = true) => {
-        setKeyboardNavigation(keyboard)
-        returnToTrigger.current = fromTrigger
-        returnPos.current = pos
-        setMenuCellPos(pos)
-        latest.handleTargetLock(latest.scope, pos)
-        if (selectTableTarget(editor, pos, latest.scope)) {
+      open: (requestedPos = latest.cellPos, last = false, fromTrigger = false, keyboard = true) => {
+        // 文書が変わってから再描画されるまでの間に押されると、位置がセルの外や別のセルの中を指す
+        const pos = getTableTarget(editor, requestedPos)?.pos
+
+        if (pos !== undefined) {
+          setKeyboardNavigation(keyboard)
+          returnToTrigger.current = fromTrigger
+          returnPos.current = pos
+          setMenuCellPos(pos)
+          latest.handleTargetLock(latest.scope, pos)
+          selectTableTarget(editor, pos, latest.scope)
           setShowColors(false)
           setIsOpen(true)
           scheduleFocus(() => {

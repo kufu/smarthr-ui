@@ -28,9 +28,11 @@ export const getTableTarget = (editor: Editor, cellPos?: number) => {
   return null
 }
 
-export const selectTableTarget = (editor: Editor, pos: number, scope: TableScope) => {
-  const target = getTableTarget(editor, pos)
+export const selectTableTarget = (editor: Editor, requestedPos: number, scope: TableScope) => {
+  const target = getTableTarget(editor, requestedPos)
   if (!target) return false
+  // CellSelection はセルの開始位置でないと例外になる。セルの中を指していても開始位置へ寄せる
+  const { pos } = target
   const $pos = editor.state.doc.resolve(pos)
   const selection =
     scope === 'table'
