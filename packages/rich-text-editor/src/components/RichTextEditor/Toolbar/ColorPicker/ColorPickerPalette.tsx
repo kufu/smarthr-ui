@@ -18,8 +18,8 @@ import { normalizeHex } from '../../../../libs/normalizeHex'
 import { tv } from '../../../../libs/tv'
 
 import { ColorSwatch } from './ColorSwatch'
+import { SWATCHES_PER_ROW, findSwatchFocusTarget, isPlainArrowKey } from './swatchFocusTarget'
 
-export const SWATCHES_PER_ROW = 5
 const PALETTE_BUTTON_BASE_CLASSES = [
   'shr-rte-border-shorthand shr-rte-cursor-pointer shr-rte-rounded-m shr-rte-bg-transparent shr-rte-px-0.5 shr-rte-py-0.25 shr-rte-text-sm shr-rte-font-bold shr-rte-text-black',
   'hover:shr-rte-bg-white-darken',
@@ -174,34 +174,18 @@ export const ColorPickerPalette: FC<Props> = memo(
           latest.setCustomColor(e.target.value)
         },
         handleSwatchKeyDown: (e: KeyboardEvent) => {
-          const swatches =
-            latest.paletteRef.current?.querySelectorAll<HTMLButtonElement>('[data-color-swatch]')
-          if (!swatches) return
-          const arr = Array.from(swatches)
-          const idx = arr.indexOf(e.currentTarget as HTMLButtonElement)
-          if (idx === -1) return
-
-          switch (e.key) {
-            case 'ArrowRight':
-              e.preventDefault()
-              e.stopPropagation()
-              arr[Math.min(idx + 1, arr.length - 1)]?.focus()
-              break
-            case 'ArrowLeft':
-              e.preventDefault()
-              e.stopPropagation()
-              arr[Math.max(idx - 1, 0)]?.focus()
-              break
-            case 'ArrowDown':
-              e.preventDefault()
-              e.stopPropagation()
-              arr[Math.min(idx + SWATCHES_PER_ROW, arr.length - 1)]?.focus()
-              break
-            case 'ArrowUp':
-              e.preventDefault()
-              e.stopPropagation()
-              arr[Math.max(idx - SWATCHES_PER_ROW, 0)]?.focus()
-              break
+          if (isPlainArrowKey(e)) {
+            // 端で素通りさせないのは、ドロップダウンの外枠やページがスクロールするため
+            e.preventDefault()
+            e.stopPropagation()
+            findSwatchFocusTarget(
+              Array.from(
+                latest.paletteRef.current?.querySelectorAll<HTMLElement>('[data-color-swatch]') ??
+                  [],
+              ),
+              e.currentTarget as HTMLElement,
+              e.key,
+            )?.focus()
           }
         },
         handleDelegateKeyDown: (e: KeyboardEvent) => {

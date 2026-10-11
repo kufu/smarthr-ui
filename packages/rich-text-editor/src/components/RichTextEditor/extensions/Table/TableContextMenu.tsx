@@ -13,6 +13,7 @@ import { FaArrowLeftIcon, FaEllipsisIcon } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
+import { findSwatchFocusTarget, isPlainArrowKey } from '../../Toolbar/ColorPicker/swatchFocusTarget'
 import { ToolbarTooltip } from '../../Toolbar/ToolbarTooltip'
 import { toAriaKeyShortcuts } from '../../Toolbar/shortcutKeys'
 import { useIsApplePlatform } from '../../hooks/useIsApplePlatform'
@@ -206,6 +207,7 @@ export const TableContextMenu = ({
       },
       handleChangeColors: changeColors,
       handleDelegateMenuKeyDown: (delegateEvent: KeyboardEvent<HTMLDivElement>) => {
+        const { key } = delegateEvent
         if (delegateEvent.key === 'Tab') {
           const buttons = Array.from(
             menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [],
@@ -219,6 +221,40 @@ export const TableContextMenu = ({
             // 外枠（useToolbarDropdown）はトリガーへ戻すが、表のメニューはセルへ戻す
             delegateEvent.stopPropagation()
             close()
+          }
+        }
+        const swatch = key.startsWith('Arrow')
+          ? (delegateEvent.target as HTMLElement).closest<HTMLElement>('[data-color-swatch]')
+          : null
+        if (swatch) {
+          if (!isPlainArrowKey(delegateEvent)) return
+          const groupSwatches = Array.from(
+            swatch
+              .closest('[role="group"]')
+              ?.querySelectorAll<HTMLElement>('[data-color-swatch]') ?? [],
+          )
+          let swatchTarget = findSwatchFocusTarget(groupSwatches, swatch, key)
+          if (!swatchTarget && (key === 'ArrowDown' || key === 'ArrowUp')) {
+            const buttons = Array.from(
+              menuRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled)') ?? [],
+            )
+            swatchTarget =
+              key === 'ArrowDown'
+                ? buttons[
+                    (buttons.indexOf(groupSwatches[groupSwatches.length - 1]) + 1) % buttons.length
+                  ]
+                : buttons[(buttons.indexOf(groupSwatches[0]) - 1 + buttons.length) % buttons.length]
+          }
+          if (swatchTarget) {
+            delegateEvent.preventDefault()
+            delegateEvent.stopPropagation()
+            swatchTarget.focus()
+            return
+          }
+          if (key !== 'ArrowLeft') {
+            delegateEvent.preventDefault()
+            delegateEvent.stopPropagation()
+            return
           }
         }
         if (latest.showColors && ['Escape', 'ArrowLeft'].includes(delegateEvent.key)) {

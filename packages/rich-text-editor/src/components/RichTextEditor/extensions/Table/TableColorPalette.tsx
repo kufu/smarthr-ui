@@ -3,9 +3,9 @@ import { Button, FaXmarkIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../../intl'
 import { normalizeHex } from '../../../../libs/normalizeHex'
-import { SWATCHES_PER_ROW } from '../../Toolbar/ColorPicker/ColorPickerPalette'
 import { ColorSwatch } from '../../Toolbar/ColorPicker/ColorSwatch'
 import { EDITOR_BACKGROUND_COLORS } from '../../Toolbar/ColorPicker/backgroundColors'
+import { SWATCHES_PER_ROW } from '../../Toolbar/ColorPicker/swatchFocusTarget'
 import { EDITOR_COLORS } from '../../Toolbar/ColorPicker/textColors'
 
 import { setTableCellColor } from './tableColor'
@@ -46,6 +46,7 @@ export const TableColorPalette = ({
               appearance={attribute}
               color={color.value}
               className="group-data-[keyboard=true]/table-menu:focus:shr-rte-focus-indicator group-data-[keyboard=false]/table-menu:focus:shr-rte-outline-none"
+              data-color-swatch="standard"
               handleClick={() => handleRun(() => setTableCellColor(editor, attribute, color.value))}
               label={label}
             />

@@ -536,6 +536,91 @@ describe('メニューを開いている間に外から文書が変わったと�
   })
 })
 
+describe('カラーのスウォッチのキー操作', () => {
+  const openColors = async () => {
+    const user = userEvent.setup()
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    act(() => within(dialog).getByRole('button', { name: 'カラー' }).focus())
+    await user.keyboard('{ArrowRight}')
+    await waitFor(() => expect(screen.getByRole('button', { name: '操作に戻る' })).toHaveFocus())
+
+    return {
+      user,
+      text: within(screen.getByRole('group', { name: '文字色' })),
+      background: within(screen.getByRole('group', { name: '背景色' })),
+    }
+  }
+
+  it('ArrowLeft は操作に戻らず、左隣のスウォッチへ移る', async () => {
+    const { user, text } = await openColors()
+    act(() => text.getByRole('button', { name: 'グレー' }).focus())
+
+    await user.keyboard('{ArrowLeft}')
+
+    expect(text.getByRole('button', { name: '黒' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: '操作に戻る' })).toBeInTheDocument()
+  })
+
+  it('グループの最後のスウォッチで ArrowRight を押しても、その場に止まりキーを消費する', async () => {
+    const { text } = await openColors()
+    const last = text.getByRole('button', { name: '紫' })
+    act(() => last.focus())
+
+    expect(fireEvent.keyDown(last, { key: 'ArrowRight' })).toBe(false)
+    expect(last).toHaveFocus()
+  })
+
+  it.each(['ArrowLeft', 'ArrowDown'])('修飾キー付きの %s は扱わない', async (key) => {
+    const { text } = await openColors()
+    const swatch = text.getByRole('button', { name: 'グレー' })
+    act(() => swatch.focus())
+
+    expect(fireEvent.keyDown(swatch, { key, altKey: true })).toBe(true)
+    expect(swatch).toHaveFocus()
+    expect(screen.getByRole('button', { name: '操作に戻る' })).toBeInTheDocument()
+  })
+
+  it('スウォッチ以外では、修飾キー付きの ArrowLeft でもこれまでどおり操作に戻る', async () => {
+    await openColors()
+
+    fireEvent.keyDown(screen.getByRole('button', { name: '操作に戻る' }), {
+      key: 'ArrowLeft',
+      altKey: true,
+    })
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'カラー' })).toHaveFocus())
+  })
+
+  it('先頭のスウォッチで ArrowLeft を押すと、操作に戻る', async () => {
+    const { user, text } = await openColors()
+    act(() => text.getByRole('button', { name: '黒' }).focus())
+
+    await user.keyboard('{ArrowLeft}')
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'カラー' })).toHaveFocus())
+  })
+
+  it('上下はグループの中で真下へ移り、グループの端からはリセットを経て隣のグループへ移る', async () => {
+    const { user, text, background } = await openColors()
+    act(() => text.getByRole('button', { name: '黒' }).focus())
+
+    await user.keyboard('{ArrowDown}')
+    expect(text.getByRole('button', { name: '緑' })).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}')
+    expect(text.getByRole('button', { name: '色をリセット' })).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}')
+    expect(background.getByRole('button', { name: 'グレー' })).toHaveFocus()
+
+    await user.keyboard('{ArrowUp}')
+    expect(text.getByRole('button', { name: '色をリセット' })).toHaveFocus()
+  })
+})
+
 describe('操作メニューのキーボードショートカット', () => {
   // macOS の Option+Shift+英字は別の文字を生むため、event.key だけでは照合できない。
   const cases = [

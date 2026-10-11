@@ -204,8 +204,49 @@ describe('ColorPickerButton（文字色）', () => {
       await user.keyboard('{ArrowLeft}')
       expect(screen.getByRole('button', { name: '黒' })).toHaveFocus()
 
-      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowRight}')
+      await user.keyboard('{ArrowDown}{ArrowDown}')
+      expect(screen.getByRole('button', { name: '緑' })).toHaveFocus()
+
+      act(() => screen.getByRole('button', { name: '紫' }).focus())
+      await user.keyboard('{ArrowRight}')
       expect(screen.getByRole('button', { name: '紫' })).toHaveFocus()
+    })
+
+    it('下の行が短い列から下へ移ると、その行の末尾に止まる', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+
+      act(() => screen.getByRole('button', { name: '黄' }).focus())
+      await user.keyboard('{ArrowDown}')
+      expect(screen.getByRole('button', { name: '紫' })).toHaveFocus()
+    })
+
+    it('履歴の行から上へ移ると、見た目の列に合わせて標準の色の最終行へ移る', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      for (const value of ['#123456', '#654321']) {
+        await user.click(screen.getByRole('button', { name: /^文字色/ }))
+        fireEvent.change(document.querySelector('input[name="customColor"]')!, {
+          target: { value },
+        })
+        await waitForEditorFocus()
+      }
+      await openByKey(user)
+
+      act(() => screen.getByRole('button', { name: '履歴: #123456' }).focus())
+      await user.keyboard('{ArrowUp}')
+      expect(screen.getByRole('button', { name: '水色' })).toHaveFocus()
+    })
+
+    it('修飾キー付きの矢印は扱わない', async () => {
+      const user = userEvent.setup()
+      await renderEditor('<p>plain</p>')
+      await openByKey(user)
+      const black = screen.getByRole('button', { name: '黒' })
+
+      expect(fireEvent.keyDown(black, { key: 'ArrowRight', metaKey: true })).toBe(true)
+      expect(black).toHaveFocus()
     })
 
     it('Escape で閉じてトリガーへ戻る', async () => {
