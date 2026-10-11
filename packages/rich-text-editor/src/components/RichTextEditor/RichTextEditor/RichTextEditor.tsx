@@ -346,9 +346,15 @@ export const RichTextEditor = memo(
           // ラベルの中のリンクやボタンは、それ自体の操作が優先される
           const hitsInteractive = !!target?.closest('a, button, input, select, textarea')
 
-          if (isOwnLabel && !hitsInteractive && editor.isEditable) {
+          if (!isOwnLabel || hitsInteractive) return
+
+          if (editor.isEditable) {
             e.preventDefault()
             editor.commands.focus()
+          } else if (proseMirrorEl.tabIndex >= 0) {
+            // readOnly。focus コマンドは選択範囲を作り直すので、要素へのフォーカスだけにする
+            e.preventDefault()
+            proseMirrorEl.focus()
           }
         }
 
@@ -386,6 +392,19 @@ export const RichTextEditor = memo(
 
         toggleAriaState('aria-disabled', disabled)
         toggleAriaState('aria-readonly', readOnly)
+
+        // contenteditable="false" の要素はフォーカスできず、readOnly だと Tab で本文に届かない。
+        // ネイティブの readonly と同じく、disabled でなければ順番に含める
+        if (readOnly && !disabled) {
+          proseMirrorEl.setAttribute('tabindex', '0')
+        } else {
+          proseMirrorEl.removeAttribute('tabindex')
+        }
+
+        // tabindex を外してもフォーカスは残る。ネイティブの input と同じく disabled になったら外す
+        if (disabled && proseMirrorEl === document.activeElement) {
+          proseMirrorEl.blur()
+        }
       }, [editor, disabled, readOnly])
 
       const wrapperStyle = useMemo(

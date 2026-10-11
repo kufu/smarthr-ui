@@ -360,6 +360,115 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('Tab での到達', () => {
+    const renderBetweenButtons = (editor: ReactNode) =>
+      render(
+        <>
+          <button type="button">前</button>
+          {editor}
+          <button type="button">後</button>
+        </>,
+        { wrapper: Wrapper },
+      )
+
+    it('readOnly でも Tab で本文に移れる', async () => {
+      const user = userEvent.setup()
+      renderBetweenButtons(<RichTextEditor readOnly />)
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('contenteditable', 'false'))
+
+      screen.getByRole('button', { name: '前' }).focus()
+      await user.tab()
+
+      expect(textbox).toHaveFocus()
+    })
+
+    it('readOnly の本文にフォーカスしても、末尾がリストの文書に段落を足さない', async () => {
+      const user = userEvent.setup()
+      const value: RichTextJSON = {
+        type: 'doc',
+        content: [
+          {
+            type: 'bulletList',
+            content: [
+              {
+                type: 'listItem',
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: '項目' }] }],
+              },
+            ],
+          },
+        ],
+      }
+      const ref = createRef<RichTextEditorController>()
+      renderBetweenButtons(<RichTextEditor ref={ref} readOnly defaultValue={value} />)
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-readonly', 'true'))
+
+      screen.getByRole('button', { name: '前' }).focus()
+      await user.tab()
+
+      expect(textbox).toHaveFocus()
+      expect(ref.current!.getJSON().content?.map((node) => node.type)).toEqual(['bulletList'])
+    })
+
+    it.each([
+      ['disabled', <RichTextEditor key="d" disabled />],
+      ['disabled と readOnly の両方', <RichTextEditor key="dr" disabled readOnly />],
+    ])('%s のときは Tab で本文を飛ばす', async (_name, editor) => {
+      const user = userEvent.setup()
+      renderBetweenButtons(editor)
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('contenteditable', 'false'))
+
+      screen.getByRole('button', { name: '前' }).focus()
+      await user.tab()
+
+      expect(screen.getByRole('button', { name: '後' })).toHaveFocus()
+    })
+
+    it('readOnly から disabled に切り替えると Tab で本文を飛ばす', async () => {
+      const user = userEvent.setup()
+      const { rerender } = renderBetweenButtons(<RichTextEditor readOnly />)
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-readonly', 'true'))
+
+      rerender(
+        <>
+          <button type="button">前</button>
+          <RichTextEditor disabled />
+          <button type="button">後</button>
+        </>,
+      )
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-disabled', 'true'))
+
+      screen.getByRole('button', { name: '前' }).focus()
+      await user.tab()
+
+      expect(screen.getByRole('button', { name: '後' })).toHaveFocus()
+    })
+
+    it('readOnly の本文にフォーカスしたまま disabled に切り替えると、フォーカスが外れる', async () => {
+      const user = userEvent.setup()
+      const { rerender } = renderBetweenButtons(<RichTextEditor readOnly />)
+      const textbox = await waitFor(() => screen.getByRole('textbox'))
+      await waitFor(() => expect(textbox).toHaveAttribute('aria-readonly', 'true'))
+
+      screen.getByRole('button', { name: '前' }).focus()
+      await user.tab()
+      expect(textbox).toHaveFocus()
+
+      rerender(
+        <>
+          <button type="button">前</button>
+          <RichTextEditor disabled />
+          <button type="button">後</button>
+        </>,
+      )
+
+      await waitFor(() => expect(textbox).not.toHaveFocus())
+    })
+  })
+
   describe('ラベルのクリック', () => {
     it('ラベルをクリックすると本文にフォーカスする', async () => {
       const user = userEvent.setup()
@@ -415,6 +524,24 @@ describe('RichTextEditor', () => {
       await user.click(screen.getByText('ラベル'))
 
       expect(screen.getByRole('textbox')).not.toHaveFocus()
+    })
+
+    it('readOnly のときもフォーカスする', async () => {
+      const user = userEvent.setup()
+      render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label="ラベル">
+          <RichTextEditor readOnly />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() =>
+        expect(screen.getByRole('textbox')).toHaveAttribute('aria-readonly', 'true'),
+      )
+
+      await user.click(screen.getByText('ラベル'))
+
+      await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
     })
 
     it('ラベル内のリンクはリンクの操作を優先する', async () => {
