@@ -286,14 +286,41 @@ export const RichTextEditor = memo(
       // FormControlがuseEffectでid/aria-describedbyを付与する。
       // MutationObserverでwrapperの属性変更を監視し、ProseMirror divに転写する。
       useEffect(() => {
-        if (!editor || !contentRef.current) return
+        // view が無いと editor.view.dom は例外を投げる（マウント前・破棄後）
+        if (!editor || editor.isDestroyed || !contentRef.current) return
 
         const wrapperEl = contentRef.current
-        const proseMirrorEl = wrapperEl.querySelector<HTMLElement>('.ProseMirror')
-        if (!proseMirrorEl) return
+        const proseMirrorEl = editor.view.dom
 
         proseMirrorEl.setAttribute('role', 'textbox')
         proseMirrorEl.setAttribute('aria-multiline', 'true')
+
+        // document から探さないのは、Shadow DOM の中のラベルが見つからないため
+        const root = proseMirrorEl.getRootNode() as Document | ShadowRoot
+
+        const syncLabelledBy = () => {
+          const id = proseMirrorEl.getAttribute('id')
+          // id をセレクターに埋め込まない。引用符などを含むと querySelector が例外を投げる
+          const label = id
+            ? Array.from(root.querySelectorAll('label')).find((el) => el.htmlFor === id)
+            : undefined
+
+          if (label?.id) {
+            proseMirrorEl.setAttribute('aria-labelledby', label.id)
+          } else {
+            proseMirrorEl.removeAttribute('aria-labelledby')
+          }
+        }
+
+        // wrapper の監視だけでは足りない。label の id や for だけが書き換わることがある。
+        // 見つかった label だけを監視しないのは、for を付け替えて戻したときに取りこぼすため。
+        // childList は入力のたびに反応するので見ない。後から差し込まれた label は拾えない
+        const labelObserver = new MutationObserver((records) => {
+          const isRelevant = records.some(
+            ({ target }) => target === proseMirrorEl || (target as Element).tagName === 'LABEL',
+          )
+          if (isRelevant) syncLabelledBy()
+        })
 
         const syncAttributes = () => {
           const id = wrapperEl.getAttribute('id')
@@ -306,15 +333,11 @@ export const RichTextEditor = memo(
 
           if (id) {
             proseMirrorEl.setAttribute('id', id)
+            // wrapper に残すと同じ id が2つになる。付け直されても、この監視でまた本文へ移す
             wrapperEl.removeAttribute('id')
-
-            const label = document.querySelector<HTMLElement>(`label[for="${id}"]`)
-            if (label?.id) {
-              proseMirrorEl.setAttribute('aria-labelledby', label.id)
-            } else {
-              proseMirrorEl.removeAttribute('aria-labelledby')
-            }
           }
+
+          syncLabelledBy()
 
           if (describedBy) {
             proseMirrorEl.setAttribute('aria-describedby', describedBy)
@@ -337,7 +360,7 @@ export const RichTextEditor = memo(
 
         // label の for が指すのは div なので、ブラウザはクリックでフォーカスを移してくれない。
         // 委譲で拾い、for が本文の id と一致するものだけ処理する
-        const handleLabelClick = (e: MouseEvent) => {
+        const handleLabelClick = (e: Event) => {
           const target = e.target as HTMLElement | null
           const label = target?.closest('label')
           const id = proseMirrorEl.getAttribute('id')
@@ -365,11 +388,18 @@ export const RichTextEditor = memo(
           attributes: true,
           attributeFilter: ['id', 'aria-describedby', 'aria-invalid'],
         })
-        document.addEventListener('click', handleLabelClick)
+        labelObserver.observe(root, {
+          attributes: true,
+          attributeFilter: ['id', 'for'],
+          subtree: true,
+        })
+        // document で受けない。Shadow DOM の中のクリックは e.target がホスト要素に置き換わる
+        root.addEventListener('click', handleLabelClick)
 
         return () => {
           observer.disconnect()
-          document.removeEventListener('click', handleLabelClick)
+          labelObserver.disconnect()
+          root.removeEventListener('click', handleLabelClick)
         }
       }, [editor, error])
 
@@ -378,9 +408,8 @@ export const RichTextEditor = memo(
       // 値false（aria-disabled="false"）ではなく属性ごと外すのは、ariaの既定値がfalseであり
       // 「未指定」と同義のため。
       useEffect(() => {
-        if (!editor || !contentRef.current) return
-        const proseMirrorEl = contentRef.current.querySelector<HTMLElement>('.ProseMirror')
-        if (!proseMirrorEl) return
+        if (!editor || editor.isDestroyed) return
+        const proseMirrorEl = editor.view.dom
 
         const toggleAriaState = (name: string, isOn: boolean | undefined) => {
           if (isOn) {
@@ -402,7 +431,8 @@ export const RichTextEditor = memo(
         }
 
         // tabindex を外してもフォーカスは残る。ネイティブの input と同じく disabled になったら外す
-        if (disabled && proseMirrorEl === document.activeElement) {
+        const root = proseMirrorEl.getRootNode() as Document | ShadowRoot
+        if (disabled && proseMirrorEl === root.activeElement) {
           proseMirrorEl.blur()
         }
       }, [editor, disabled, readOnly])

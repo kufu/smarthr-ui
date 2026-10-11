@@ -590,6 +590,133 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('FormControl のラベルとの紐付け', () => {
+    it('ラベルの id が後から変わっても、ラベルの文言を名前として読み上げる', async () => {
+      const { rerender } = render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label={{ text: 'ラベル', id: 'first-label' }}>
+          <RichTextEditor />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() =>
+        expect(screen.getByRole('textbox')).toHaveAttribute('aria-labelledby', 'first-label'),
+      )
+
+      rerender(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label={{ text: 'ラベル', id: 'second-label' }}>
+          <RichTextEditor />
+        </FormControl>,
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox')).toHaveAttribute('aria-labelledby', 'second-label'),
+      )
+      expect(screen.getByRole('textbox', { name: 'ラベル' })).toBeInTheDocument()
+    })
+
+    it('ラベルが別の要素を指すと名前にせず、指し直すと名前に戻す', async () => {
+      const { rerender } = render(
+        <>
+          {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+          <FormControl label={{ text: 'ラベル', htmlFor: 'editor' }}>
+            <RichTextEditor />
+          </FormControl>
+          <div id="other" />
+        </>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: 'ラベル' })).toBeInTheDocument(),
+      )
+
+      rerender(
+        <>
+          {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+          <FormControl label={{ text: 'ラベル', htmlFor: 'other' }}>
+            <RichTextEditor />
+          </FormControl>
+          <div id="other" />
+        </>,
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-labelledby'),
+      )
+
+      rerender(
+        <>
+          {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+          <FormControl label={{ text: 'ラベル', htmlFor: 'editor' }}>
+            <RichTextEditor />
+          </FormControl>
+          <div id="other" />
+        </>,
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: 'ラベル' })).toBeInTheDocument(),
+      )
+    })
+
+    it('Shadow DOM の中でも、ラベルと紐付き、クリックで本文にフォーカスし、disabled で外れる', async () => {
+      const host = document.createElement('div')
+      document.body.appendChild(host)
+      const container = document.createElement('div')
+      const shadowRoot = host.attachShadow({ mode: 'open' })
+      shadowRoot.appendChild(container)
+      // jsdom は navigator.vendor から Safari と判定され、ProseMirror が Shadow DOM 向けに
+      // document.execCommand を呼ぶ。jsdom には無い
+      const execCommand = vi.fn()
+      Object.defineProperty(document, 'execCommand', { configurable: true, value: execCommand })
+
+      try {
+        const { rerender } = render(
+          // eslint-disable-next-line smarthr/a11y-form-control-in-form
+          <FormControl label={{ text: 'ラベル', id: 'shadow-label' }}>
+            <RichTextEditor />
+          </FormControl>,
+          { wrapper: Wrapper, container },
+        )
+
+        const textbox = container.querySelector('[role="textbox"]')
+        await waitFor(() => expect(textbox).toHaveAttribute('aria-labelledby', 'shadow-label'))
+
+        await userEvent.setup().click(within(container).getByText('ラベル'))
+
+        // toHaveFocus は document.activeElement を見るため、Shadow DOM の中のフォーカスを判定できない
+        await waitFor(() => expect(shadowRoot.activeElement).toBe(textbox))
+
+        rerender(
+          // eslint-disable-next-line smarthr/a11y-form-control-in-form
+          <FormControl label={{ text: 'ラベル', id: 'shadow-label' }}>
+            <RichTextEditor disabled />
+          </FormControl>,
+        )
+
+        await waitFor(() => expect(shadowRoot.activeElement).not.toBe(textbox))
+      } finally {
+        host.remove()
+        delete (document as { execCommand?: unknown }).execCommand
+      }
+    })
+
+    it('入力欄の id に引用符が含まれていても、ラベルと紐付く', async () => {
+      render(
+        // eslint-disable-next-line smarthr/a11y-form-control-in-form
+        <FormControl label={{ text: 'ラベル', htmlFor: 'editor"1' }}>
+          <RichTextEditor />
+        </FormControl>,
+        { wrapper: Wrapper },
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: 'ラベル' })).toBeInTheDocument(),
+      )
+    })
+  })
+
   describe('エラー状態', () => {
     const renderInFormControl = (props: { error?: boolean }, errorMessages?: string) =>
       render(
