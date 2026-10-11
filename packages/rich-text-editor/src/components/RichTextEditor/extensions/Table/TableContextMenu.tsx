@@ -22,7 +22,13 @@ import { TableColorPalette } from './TableColorPalette'
 import { TableMenuActions } from './TableMenuActions'
 import { TableMenuItemButton } from './TableMenuItemButton'
 import { TABLE_SHORTCUTS } from './tableShortcuts'
-import { focusTableCell, getTableTarget, runTableAction, selectTableTarget } from './tableTarget'
+import {
+  focusTableCell,
+  getTableTarget,
+  runTableAction,
+  selectTableCell,
+  selectTableTarget,
+} from './tableTarget'
 
 import type { TableScope } from './tableTarget'
 import type { RichTextFeature } from '../../types'
@@ -81,6 +87,7 @@ export const TableContextMenu = ({
   const colorTriggerRef = useRef<HTMLButtonElement>(null)
   const returnToTrigger = useRef(false)
   const focusFrame = useRef<number | null>(null)
+  const restoreFrame = useRef<number | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const [menuCellPos, setMenuCellPos] = useState(cellPos)
   const returnPos = useRef<number | undefined>(cellPos)
@@ -98,6 +105,11 @@ export const TableContextMenu = ({
   const functions = useMemo(() => {
     const cancelFocus = () => {
       if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
+      focusFrame.current = null
+    }
+    const cancelRestoreFocus = () => {
+      if (restoreFrame.current !== null) cancelAnimationFrame(restoreFrame.current)
+      restoreFrame.current = null
     }
     const scheduleFocus = (focus: () => void) => {
       cancelFocus()
@@ -108,6 +120,7 @@ export const TableContextMenu = ({
     }
     const close = (restoreTrigger = false) => {
       cancelFocus()
+      cancelRestoreFocus()
       setIsOpen(false)
       if (restoreTrigger) latest.triggerRef.current?.focus({ preventScroll: true })
       else focusTableCell(editor, returnPos.current)
@@ -123,11 +136,39 @@ export const TableContextMenu = ({
 
     return {
       cancelFocus,
+      // transaction の中で同期的にセルへ戻す方式は採らない。dispatch が入れ子になるうえ、メニュー自身の
+      // 操作では直後の close() もセルへ戻すため二重になる。予約にしておけば close() が取り消す。
+      // focusFrame と分けてアンマウントでは取り消さないのは、キャレットが表の外へ出ると操作ボタンごと
+      // アンマウントされるため
+      scheduleRestoreFocus: () => {
+        cancelRestoreFocus()
+        restoreFrame.current = requestAnimationFrame(() => {
+          restoreFrame.current = null
+          // メニューが外れたあと（body）だけに限る方式は採らない。React の外の変更では再描画が
+          // 別タスクになり、メニューが外れる前にここへ来ることがある
+          const { activeElement } = document
+          if (
+            editor.isDestroyed ||
+            !(activeElement === document.body || menuRef.current?.contains(activeElement))
+          )
+            return
+          const trigger = latest.triggerRef.current
+          if (returnToTrigger.current && trigger?.isConnected) {
+            trigger.focus({ preventScroll: true })
+          } else {
+            // focusTableCell は使わない。Tiptap の focus がさらに次のフレームへ遅らせるため、
+            // その間に移されたフォーカスを奪う
+            selectTableCell(editor, returnPos.current)
+            editor.view.focus()
+          }
+        })
+      },
       open: (requestedPos = latest.cellPos, last = false, fromTrigger = false, keyboard = true) => {
         // 文書が変わってから再描画されるまでの間に押されると、位置がセルの外や別のセルの中を指す
         const pos = getTableTarget(editor, requestedPos)?.pos
 
         if (pos !== undefined) {
+          cancelRestoreFocus()
           setKeyboardNavigation(keyboard)
           returnToTrigger.current = fromTrigger
           returnPos.current = pos
@@ -225,7 +266,10 @@ export const TableContextMenu = ({
         returnPos.current =
           node && ['tableCell', 'tableHeader'].includes(node.type.name) ? result.pos : undefined
       }
-      if (transaction.docChanged) setIsOpen(false)
+      if (transaction.docChanged) {
+        if (menuRef.current?.contains(document.activeElement)) functions.scheduleRestoreFocus()
+        setIsOpen(false)
+      }
     }
     window.addEventListener('scroll', handleScroll, true)
     window.addEventListener('resize', handleScroll)
@@ -236,7 +280,7 @@ export const TableContextMenu = ({
       editor.off('transaction', mapTarget)
       latest.handleTargetLock(latest.scope, null)
     }
-  }, [editor, isOpen, setIsOpen, latest])
+  }, [editor, isOpen, setIsOpen, functions, latest])
 
   if (!target) return null
   const label = localize(LABEL_MESSAGES[scope])

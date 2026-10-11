@@ -9,7 +9,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CellAppearance } from './CellAppearance'
 import { CustomTable } from './CustomTable'
 import { TableCellControls } from './TableCellControls'
-import { getTableTarget } from './tableTarget'
+import { getTableTarget, selectTableCell } from './tableTarget'
+
+vi.mock('./tableTarget', async (importOriginal) => {
+  const actual = await importOriginal<{ selectTableCell: typeof selectTableCell }>()
+
+  return { ...actual, selectTableCell: vi.fn(actual.selectTableCell) }
+})
 
 let editor: Editor
 let container: HTMLDivElement
@@ -365,6 +371,102 @@ describe('操作メニューを開けなかったとき', () => {
     })
 
     expect(await screen.findByRole('dialog', { name: '行の操作' })).toBeInTheDocument()
+  })
+})
+
+describe('メニューを開いている間に外から文書が変わったとき', () => {
+  const openByShortcut = async () => {
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+  }
+
+  const cellIndex = () => {
+    const target = getTableTarget(editor)!
+
+    return target.map.map.indexOf(target.pos - target.tablePos - 1)
+  }
+
+  it('メニューを閉じ、フォーカスを開いたセルへ戻す', async () => {
+    const originalIndex = cellIndex()
+    await openByShortcut()
+
+    act(() => {
+      editor.commands.insertContentAt(0, '<p>前</p>')
+    })
+    await waitForEditorFocus()
+    await waitForEditorFocus()
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(editor.view.dom).toHaveFocus()
+    expect(cellIndex()).toBe(originalIndex)
+  })
+
+  it('メニュー自身の操作で文書が変わったときは、本文へのフォーカスを重ねない', async () => {
+    await openByShortcut()
+    vi.mocked(selectTableCell).mockClear()
+
+    fireEvent.click(screen.getByRole('button', { name: '右に列を挿入' }))
+    await waitForEditorFocus()
+    await waitForEditorFocus()
+
+    expect(selectTableCell).not.toHaveBeenCalled()
+    expect(editor.view.dom).toHaveFocus()
+  })
+
+  it('フォーカスを戻したあとに移したフォーカスは奪わない', async () => {
+    await openByShortcut()
+    const outside = document.createElement('input')
+    document.body.appendChild(outside)
+
+    try {
+      act(() => {
+        editor.commands.insertContentAt(0, '<p>前</p>')
+      })
+      await waitForEditorFocus()
+      act(() => outside.focus())
+      await waitForEditorFocus()
+
+      expect(outside).toHaveFocus()
+    } finally {
+      outside.remove()
+    }
+  })
+
+  it('変わった時点でフォーカスがメニューの外にあれば、その後 body に落ちても本文へ引き込まない', async () => {
+    await openByShortcut()
+    const outside = document.createElement('button')
+    document.body.appendChild(outside)
+
+    act(() => {
+      outside.focus()
+      editor.commands.insertContentAt(0, '<p>前</p>')
+      outside.remove()
+    })
+    await waitForEditorFocus()
+    await waitForEditorFocus()
+
+    expect(document.body).toHaveFocus()
+  })
+
+  it('ハンドルから開いていたら、ハンドルへ戻す', async () => {
+    const user = userEvent.setup()
+    showControls()
+    const column = screen.getByRole('button', { name: '列の操作' })
+    column.focus()
+    await user.keyboard('{Enter}')
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+
+    act(() => {
+      editor.commands.insertContentAt(0, '<p>前</p>', { updateSelection: false })
+    })
+    await waitForEditorFocus()
+    await waitForEditorFocus()
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
   })
 })
 

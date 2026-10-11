@@ -61,7 +61,7 @@ export const clearTableCells = (editor: Editor) => {
   editor.view.dispatch(tr)
 }
 
-export const focusTableCell = (editor: Editor, cellPos?: number) => {
+export const selectTableCell = (editor: Editor, cellPos?: number) => {
   if (cellPos !== undefined && getTableTarget(editor, cellPos)) {
     editor.view.dispatch(
       editor.state.tr.setSelection(TextSelection.near(editor.state.doc.resolve(cellPos + 1))),
@@ -75,6 +75,10 @@ export const focusTableCell = (editor: Editor, cellPos?: number) => {
       ),
     )
   }
+}
+
+export const focusTableCell = (editor: Editor, cellPos?: number) => {
+  selectTableCell(editor, cellPos)
   editor.commands.focus(undefined, { scrollIntoView: false })
 }
 
