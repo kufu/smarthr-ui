@@ -103,19 +103,19 @@ const richContent = {
         { type: 'text', text: '背景色の例: ' },
         {
           type: 'text',
-          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#efe8ce' } }],
           text: '黄色ハイライト',
         },
         { type: 'text', text: '・' },
         {
           type: 'text',
-          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
+          marks: [{ type: 'textStyle', attrs: { backgroundColor: '#ceeff1' } }],
           text: '水色ハイライト',
         },
         { type: 'text', text: '・' },
         {
           type: 'text',
-          marks: [{ type: 'textStyle', attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' } }],
+          marks: [{ type: 'textStyle', attrs: { color: '#9e3b50', backgroundColor: '#efe8ce' } }],
           text: '赤字+黄色背景',
         },
       ],
@@ -163,13 +163,13 @@ export const BackgroundColor: Story = {
             { type: 'text', text: '背景色の例 (JSON): ' },
             {
               type: 'text',
-              marks: [{ type: 'textStyle', attrs: { backgroundColor: '#fbf3c4' } }],
+              marks: [{ type: 'textStyle', attrs: { backgroundColor: '#efe8ce' } }],
               text: '黄色ハイライト',
             },
             { type: 'text', text: '・' },
             {
               type: 'text',
-              marks: [{ type: 'textStyle', attrs: { backgroundColor: '#d2e9f5' } }],
+              marks: [{ type: 'textStyle', attrs: { backgroundColor: '#ceeff1' } }],
               text: '水色ハイライト',
             },
             { type: 'text', text: '・' },
@@ -178,7 +178,7 @@ export const BackgroundColor: Story = {
               marks: [
                 {
                   type: 'textStyle',
-                  attrs: { color: '#e01e5a', backgroundColor: '#fbf3c4' },
+                  attrs: { color: '#9e3b50', backgroundColor: '#efe8ce' },
                 },
               ],
               text: '赤字+黄色背景',
@@ -195,7 +195,7 @@ export const BackgroundColor: Story = {
         content={{
           format: 'html',
           content:
-            '<p>背景色の例 (HTML): <span style="background-color: #fbf3c4">黄色ハイライト</span>・<span style="background-color: #d2e9f5">水色ハイライト</span>・<span style="color: #e01e5a; background-color: #fbf3c4">赤字+黄色背景</span></p>',
+            '<p>背景色の例 (HTML): <span style="background-color: #efe8ce">黄色ハイライト</span>・<span style="background-color: #ceeff1">水色ハイライト</span>・<span style="color: #9e3b50; background-color: #efe8ce">赤字+黄色背景</span></p>',
         }}
       />
     </Stack>

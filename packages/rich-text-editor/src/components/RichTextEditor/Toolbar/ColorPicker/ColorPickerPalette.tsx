@@ -19,7 +19,7 @@ import { tv } from '../../../../libs/tv'
 
 import { ColorSwatch } from './ColorSwatch'
 
-const SWATCHES_PER_ROW = 6
+export const SWATCHES_PER_ROW = 5
 const PALETTE_BUTTON_BASE_CLASSES = [
   'shr-rte-border-shorthand shr-rte-cursor-pointer shr-rte-rounded-m shr-rte-bg-transparent shr-rte-px-0.5 shr-rte-py-0.25 shr-rte-text-sm shr-rte-font-bold shr-rte-text-black',
   'hover:shr-rte-bg-white-darken',

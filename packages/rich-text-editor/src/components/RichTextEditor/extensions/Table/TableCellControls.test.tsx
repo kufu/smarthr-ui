@@ -116,7 +116,7 @@ describe('table controls', () => {
     expect(getTableTarget(editor)!.pos).toBe(originalPos)
     getTableTarget(editor)!.table.forEach((tableRow) =>
       tableRow.forEach((cell, _offset, index) => {
-        expect(cell.attrs.backgroundColor).toBe(index === 1 ? '#fde2ea' : null)
+        expect(cell.attrs.backgroundColor).toBe(index === 1 ? '#fedfe2' : null)
       }),
     )
   })
@@ -346,7 +346,7 @@ describe('table controls', () => {
   it('checks the palette color after loading cell colors from HTML', async () => {
     const user = userEvent.setup()
     editor.commands.setContent(
-      '<table><tr><td style="color: rgb(0, 119, 199); background-color: rgb(253, 226, 234)"><p>Blue</p></td></tr></table>',
+      '<table><tr><td style="color: rgb(15, 100, 170); background-color: rgb(254, 223, 226)"><p>Blue</p></td></tr></table>',
     )
     editor.commands.setTextSelection(4)
     showControls()

@@ -27,7 +27,7 @@ describe('ColorPickerButton（背景色）', () => {
     })
 
     it('標準パレットの色が適用されているときはその色名を含む', async () => {
-      await renderEditor('<p><span style="background-color: #fbf3c4">marked</span></p>')
+      await renderEditor('<p><span style="background-color: #efe8ce">marked</span></p>')
       expect(screen.getByRole('button', { name: '背景色: 黄' })).toBeInTheDocument()
     })
 
@@ -47,7 +47,7 @@ describe('ColorPickerButton（背景色）', () => {
 
     it('背景色をリセットすると「なし」に戻る', async () => {
       const user = userEvent.setup()
-      await renderEditor('<p><span style="background-color: #fbf3c4">marked</span></p>')
+      await renderEditor('<p><span style="background-color: #efe8ce">marked</span></p>')
       await user.click(screen.getByRole('button', { name: /^背景色/ }))
       await user.click(screen.getByRole('button', { name: '背景色をリセット' }))
 

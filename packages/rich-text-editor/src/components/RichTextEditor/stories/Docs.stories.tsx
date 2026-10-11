@@ -744,13 +744,13 @@ export const StaticDisplay: Story = {
                   { type: 'text', text: '文字色の例: ' },
                   {
                     type: 'text',
-                    marks: [{ type: 'textStyle', attrs: { color: '#e01e5a' } }],
+                    marks: [{ type: 'textStyle', attrs: { color: '#9e3b50' } }],
                     text: '赤いテキスト',
                   },
                   { type: 'text', text: 'と' },
                   {
                     type: 'text',
-                    marks: [{ type: 'textStyle', attrs: { color: '#0077c7' } }],
+                    marks: [{ type: 'textStyle', attrs: { color: '#0f64aa' } }],
                     text: '青いテキスト',
                   },
                 ],

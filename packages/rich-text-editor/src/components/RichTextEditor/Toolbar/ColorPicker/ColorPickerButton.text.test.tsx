@@ -31,7 +31,7 @@ describe('ColorPickerButton（文字色）', () => {
     })
 
     it('標準パレットの色が適用されているときはその色名を含む', async () => {
-      await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
+      await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
       expect(screen.getByRole('button', { name: '文字色: 赤' })).toBeInTheDocument()
     })
 
@@ -51,7 +51,7 @@ describe('ColorPickerButton（文字色）', () => {
 
     it('色をリセットすると既定色に戻る', async () => {
       const user = userEvent.setup()
-      await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
+      await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
       await user.click(screen.getByRole('button', { name: /^文字色/ }))
       await user.click(screen.getByRole('button', { name: '色をリセット' }))
 
@@ -75,7 +75,7 @@ describe('ColorPickerButton（文字色）', () => {
 
   it('文字色指定ありのときは既定色が選択状態にならない', async () => {
     const user = userEvent.setup()
-    await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
+    await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     expect(screen.getByRole('button', { name: '黒' })).toHaveAttribute('aria-pressed', 'false')
     expect(screen.getByRole('button', { name: '赤' })).toHaveAttribute('aria-pressed', 'true')
@@ -94,7 +94,7 @@ describe('ColorPickerButton（文字色）', () => {
 
   it('標準パレットに同じ色があるときはカスタムスウォッチを出さない', async () => {
     const user = userEvent.setup()
-    await renderEditor('<p><span style="color: #e01e5a">red</span></p>')
+    await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
 
     expect(screen.queryByRole('button', { name: /^カスタム/ })).not.toBeInTheDocument()
@@ -162,7 +162,7 @@ describe('ColorPickerButton（文字色）', () => {
     await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色/ }))
     fireEvent.change(document.querySelector('input[name="customColor"]')!, {
-      target: { value: '#e01e5a' },
+      target: { value: '#9e3b50' },
     })
     await waitForEditorFocus()
 
@@ -178,7 +178,7 @@ describe('ColorPickerButton（文字色）', () => {
       await waitFor(() => expect(screen.getByRole('button', { name: '黒' })).toHaveFocus())
     }
 
-    it('矢印キーで1行6色の格子を移る', async () => {
+    it('矢印キーで1行5色の格子を移る', async () => {
       const user = userEvent.setup()
       await renderEditor('<p>plain</p>')
       await openByKey(user)
@@ -187,7 +187,7 @@ describe('ColorPickerButton（文字色）', () => {
       expect(screen.getByRole('button', { name: 'グレー' })).toHaveFocus()
 
       await user.keyboard('{ArrowDown}')
-      expect(screen.getByRole('button', { name: '緑' })).toHaveFocus()
+      expect(screen.getByRole('button', { name: '水色' })).toHaveFocus()
 
       await user.keyboard('{ArrowUp}')
       expect(screen.getByRole('button', { name: 'グレー' })).toHaveFocus()
@@ -205,7 +205,7 @@ describe('ColorPickerButton（文字色）', () => {
       expect(screen.getByRole('button', { name: '黒' })).toHaveFocus()
 
       await user.keyboard('{ArrowDown}{ArrowDown}{ArrowRight}')
-      expect(screen.getByRole('button', { name: 'マゼンタ' })).toHaveFocus()
+      expect(screen.getByRole('button', { name: '紫' })).toHaveFocus()
     })
 
     it('Escape で閉じてトリガーへ戻る', async () => {

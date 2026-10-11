@@ -3,6 +3,7 @@ import { Button, FaXmarkIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../../intl'
 import { normalizeHex } from '../../../../libs/normalizeHex'
+import { SWATCHES_PER_ROW } from '../../Toolbar/ColorPicker/ColorPickerPalette'
 import { ColorSwatch } from '../../Toolbar/ColorPicker/ColorSwatch'
 import { EDITOR_BACKGROUND_COLORS } from '../../Toolbar/ColorPicker/backgroundColors'
 import { EDITOR_COLORS } from '../../Toolbar/ColorPicker/textColors'
@@ -32,7 +33,7 @@ export const TableColorPalette = ({
       </div>
       <div
         className="shr-rte-grid shr-rte-gap-0.5"
-        style={{ gridTemplateColumns: 'repeat(6, 32px)' }}
+        style={{ gridTemplateColumns: `repeat(${SWATCHES_PER_ROW}, 32px)` }}
       >
         {(attribute === 'color' ? EDITOR_COLORS : EDITOR_BACKGROUND_COLORS).map((color) => {
           const label = localize({ id: color.labelId, defaultText: color.defaultText })
