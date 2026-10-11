@@ -4,10 +4,12 @@ import {
   type Dispatch,
   type MutableRefObject,
   type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -20,6 +22,12 @@ const GAP = 2
 const VIEWPORT_PADDING = 10
 
 const SCROLLABLE_OVERFLOW = /^(auto|scroll|overlay)$/
+
+const getScrollableAxes = (el: Element) => {
+  const { overflowX, overflowY } = getComputedStyle(el)
+
+  return { x: SCROLLABLE_OVERFLOW.test(overflowX), y: SCROLLABLE_OVERFLOW.test(overflowY) }
+}
 
 const TABBABLE_SELECTOR =
   'a[href], button:not(:disabled), input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled), [tabindex]'
@@ -48,9 +56,9 @@ const findScrollContainer = (el: HTMLElement | null): HTMLElement | null => {
   let current: HTMLElement | null = el?.parentElement ?? null
 
   while (current && toolbar.contains(current)) {
-    const { overflowX, overflowY } = getComputedStyle(current)
+    const overflow = getScrollableAxes(current)
 
-    if (SCROLLABLE_OVERFLOW.test(overflowX) || SCROLLABLE_OVERFLOW.test(overflowY)) {
+    if (overflow.x || overflow.y) {
       return current
     }
 
@@ -58,6 +66,17 @@ const findScrollContainer = (el: HTMLElement | null): HTMLElement | null => {
   }
 
   return null
+}
+
+// スクロールバーの上かを座標で判定する方式は採らない。オーバーレイスクロールバーは幅を持たず、
+// 枠線との区別も付かないため、スクロールできる要素自身への mousedown はまるごと妨げない
+const isScrollable = (el: HTMLElement) => {
+  const overflow = getScrollableAxes(el)
+
+  return (
+    (overflow.y && el.scrollHeight > el.clientHeight) ||
+    (overflow.x && el.scrollWidth > el.clientWidth)
+  )
 }
 
 type Position = {
@@ -260,6 +279,10 @@ export function useToolbarDropdown({
         e.preventDefault()
         e.stopPropagation()
         setIsOpen(false)
+
+        // 無条件にトリガーへ戻す方式は採らない。中身にフォーカスがある間は戻り先を中身が決める
+        // （表のメニューはセルへ戻す）
+        if (document.activeElement === document.body) triggerRef.current?.focus()
       }
     }
 
@@ -282,24 +305,44 @@ export function useToolbarDropdown({
     }
   }, [isOpen, isChildPortal])
 
-  // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
-  // ページ末尾の要素へ飛んで開いたまま残る。中身ごとに書くと漏れるため外枠で受ける
-  const handleDelegateKeyDown = useCallback((e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (e.key !== 'Tab' || e.defaultPrevented || e.nativeEvent.isComposing) return
+  const functions = useMemo(
+    () => ({
+      // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
+      // ページ末尾の要素へ飛んで開いたまま残る。中身ごとに書くと漏れるため外枠で受ける
+      handleDelegateKeyDown: (e: ReactKeyboardEvent<HTMLDivElement>) => {
+        if (e.key !== 'Tab' || e.defaultPrevented || e.nativeEvent.isComposing) return
 
-    const tabbables = Array.from(
-      e.currentTarget.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR),
-    ).filter((el) => el.tabIndex >= 0)
-    const index = tabbables.indexOf(e.target as HTMLElement)
-    const isEdge = e.shiftKey ? index === 0 : index !== -1 && index === tabbables.length - 1
+        const tabbables = Array.from(
+          e.currentTarget.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR),
+        ).filter((el) => el.tabIndex >= 0)
+        const index = tabbables.indexOf(e.target as HTMLElement)
+        const isEdge = e.shiftKey ? index === 0 : index !== -1 && index === tabbables.length - 1
 
-    if (isEdge) {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsOpen(false)
-      triggerRef.current?.focus()
-    }
-  }, [])
+        if (isEdge) {
+          e.preventDefault()
+          e.stopPropagation()
+          setIsOpen(false)
+          triggerRef.current?.focus()
+        }
+      },
+      // フォーカスが中にないときは止めない。マウスで開いてトリガーにフォーカスが残っている場合、
+      // 止めると次の Tab がツールバーの外へ抜けて閉じる。止めなければ押した位置が Tab の起点になる
+      handleDelegateMouseDown: (e: ReactMouseEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement
+
+        if (
+          e.button === 0 &&
+          e.currentTarget.contains(target) &&
+          e.currentTarget.contains(document.activeElement) &&
+          !e.currentTarget.contains(target.closest(TABBABLE_SELECTOR)) &&
+          !isScrollable(target)
+        ) {
+          e.preventDefault()
+        }
+      },
+    }),
+    [],
+  )
 
   const renderDropdown = useCallback(
     (children: ReactNode) => {
@@ -322,13 +365,14 @@ export function useToolbarDropdown({
             display: position.maxHeight ? 'flex' : undefined,
             flexDirection: position.maxHeight ? 'column' : undefined,
           }}
-          onKeyDown={handleDelegateKeyDown}
+          onMouseDown={functions.handleDelegateMouseDown}
+          onKeyDown={functions.handleDelegateKeyDown}
         >
           {children}
         </div>,
       )
     },
-    [isOpen, position, isVisible, createPortal, handleDelegateKeyDown],
+    [isOpen, position, isVisible, createPortal, functions],
   )
 
   return { isOpen, setIsOpen, triggerRef, renderDropdown }

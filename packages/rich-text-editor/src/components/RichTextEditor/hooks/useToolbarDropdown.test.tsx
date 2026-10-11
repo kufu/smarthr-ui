@@ -402,7 +402,17 @@ const FormHarness: FC = () => {
         開く
       </button>
       {renderDropdown(
-        <form aria-label="フォーム">
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <form
+          aria-label="フォーム"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsOpen(false)
+              triggerRef.current?.focus()
+            }
+          }}
+        >
+          <strong>見出し</strong>
           <input name="first" aria-label="先頭" />
           <input name="middle" aria-label="中間" />
           <button type="button" disabled>
@@ -467,5 +477,121 @@ describe('ドロップダウンの両端の Tab', () => {
 
     expect(screen.getByRole('textbox', { name: '中間' })).toHaveFocus()
     expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'true')
+  })
+})
+
+describe('ドロップダウンの余白のクリック', () => {
+  const open = async () => {
+    const user = userEvent.setup()
+    render(<FormHarness />)
+    await user.click(screen.getByRole('button', { name: '開く' }))
+    screen.getByRole('textbox', { name: '先頭' }).focus()
+
+    return user
+  }
+
+  it('フォーカスできない要素をクリックしても、フォーカスは中に残る', async () => {
+    const user = await open()
+
+    await user.click(screen.getByText('見出し'))
+
+    expect(screen.getByRole('textbox', { name: '先頭' })).toHaveFocus()
+  })
+
+  it('余白をクリックしたあとの Tab は中の次の要素へ進む', async () => {
+    const user = await open()
+
+    await user.click(screen.getByRole('form'))
+    await user.tab()
+
+    expect(screen.getByRole('textbox', { name: '中間' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('余白をクリックしたあとの Escape は中身の処理で閉じる', async () => {
+    const user = await open()
+
+    await user.click(screen.getByRole('form'))
+    await user.keyboard('{Escape}')
+
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+  })
+
+  it('入力欄の mousedown は妨げない', async () => {
+    await open()
+
+    const middle = screen.getByRole('textbox', { name: '中間' })
+
+    expect(fireEvent.mouseDown(middle)).toBe(true)
+  })
+
+  it('左ボタン以外の mousedown は止めない', async () => {
+    await open()
+
+    expect(fireEvent.mouseDown(screen.getByRole('form'), { button: 1 })).toBe(true)
+  })
+
+  it('ドロップダウンより外側の祖先がフォーカスできても、余白の mousedown は止める', async () => {
+    await open()
+
+    document.body.setAttribute('tabindex', '-1')
+
+    try {
+      expect(fireEvent.mouseDown(screen.getByRole('form'))).toBe(false)
+    } finally {
+      document.body.removeAttribute('tabindex')
+    }
+  })
+
+  it('スクロールできる要素の mousedown は、スクロールバーの操作を妨げないよう止めない', async () => {
+    await open()
+
+    const form = screen.getByRole('form')
+
+    form.style.overflowY = 'auto'
+    Object.defineProperty(form, 'scrollHeight', { value: 300, configurable: true })
+    Object.defineProperty(form, 'clientHeight', { value: 100, configurable: true })
+
+    expect(fireEvent.mouseDown(form)).toBe(true)
+  })
+
+  it('スクロールの設定があっても、あふれていなければ止める', async () => {
+    await open()
+
+    const form = screen.getByRole('form')
+
+    form.style.overflowY = 'auto'
+
+    expect(fireEvent.mouseDown(form)).toBe(false)
+  })
+})
+
+describe('マウスで開いてフォーカスがトリガーに残っている場合', () => {
+  const open = async () => {
+    const user = userEvent.setup()
+    render(<FormHarness />)
+    await user.click(screen.getByRole('button', { name: '開く' }))
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+
+    return user
+  }
+
+  it('余白の mousedown は、押した位置が次の Tab の起点になるよう止めない', async () => {
+    await open()
+
+    expect(fireEvent.mouseDown(screen.getByRole('form'))).toBe(true)
+  })
+
+  it('余白を押してフォーカスが外れたあとの Escape は、閉じてトリガーへ戻す', async () => {
+    const user = await open()
+
+    await user.click(screen.getByRole('form'))
+    expect(document.body).toHaveFocus()
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
   })
 })
