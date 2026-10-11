@@ -717,6 +717,251 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('FormControl を使わない名前と説明', () => {
+    const EXTERNAL_NAME_ID = 'external-name'
+
+    it('aria-label を名前にする', async () => {
+      render(<RichTextEditor aria-label="本文" />, { wrapper: Wrapper })
+
+      await waitFor(() => expect(screen.getByRole('textbox', { name: '本文' })).toBeInTheDocument())
+    })
+
+    it('aria-labelledby が指す要素の文言を名前にする', async () => {
+      render(
+        <>
+          <span id={EXTERNAL_NAME_ID}>外部の見出し</span>
+          <RichTextEditor aria-labelledby={EXTERNAL_NAME_ID} />
+        </>,
+        { wrapper: Wrapper },
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: '外部の見出し' })).toBeInTheDocument(),
+      )
+    })
+
+    it('id を指定すると、その id を指す label の文言を名前にし、クリックで本文にフォーカスする', async () => {
+      const user = userEvent.setup()
+      render(
+        <>
+          <label id="own-label" htmlFor="own-editor">
+            自前のラベル
+          </label>
+          <RichTextEditor id="own-editor" />
+        </>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: '自前のラベル' })).toHaveAttribute(
+          'id',
+          'own-editor',
+        ),
+      )
+
+      await user.click(screen.getByText('自前のラベル'))
+
+      await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
+    })
+
+    it('id を変えると、新しい id を指す label の文言を名前にする', async () => {
+      const renderWith = (editorId: string) => (
+        <>
+          <label id="first-label" htmlFor="first-editor">
+            ひとつめ
+          </label>
+          <label id="second-label" htmlFor="second-editor">
+            ふたつめ
+          </label>
+          <RichTextEditor id={editorId} />
+        </>
+      )
+      const { rerender } = render(renderWith('first-editor'), { wrapper: Wrapper })
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: 'ひとつめ' })).toBeInTheDocument(),
+      )
+
+      rerender(renderWith('second-editor'))
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: 'ふたつめ' })).toHaveAttribute(
+          'id',
+          'second-editor',
+        ),
+      )
+    })
+
+    it('id の指定をやめると、本文からも id を外す', async () => {
+      const { rerender } = render(<RichTextEditor id="own-editor" />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toHaveAttribute('id', 'own-editor'))
+
+      rerender(<RichTextEditor />)
+
+      await waitFor(() => expect(screen.getByRole('textbox')).not.toHaveAttribute('id'))
+    })
+
+    it('aria-describedby が指す要素の文言を説明にする', async () => {
+      render(
+        <>
+          <p id="external-description">補足</p>
+          <RichTextEditor aria-label="本文" aria-describedby="external-description" />
+        </>,
+        { wrapper: Wrapper },
+      )
+
+      await waitFor(() =>
+        expect(screen.getByRole('textbox', { name: '本文' })).toHaveAccessibleDescription('補足'),
+      )
+    })
+
+    it('aria-label の指定をやめると、本文からも外す', async () => {
+      const { rerender } = render(<RichTextEditor aria-label="本文" />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox', { name: '本文' })).toBeInTheDocument())
+
+      rerender(<RichTextEditor />)
+
+      await waitFor(() => expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-label'))
+    })
+
+    describe('FormControl と併用したとき', () => {
+      it('aria-label を指定すると、FormControl のラベルより優先する', async () => {
+        render(
+          // eslint-disable-next-line smarthr/a11y-form-control-in-form
+          <FormControl label="ラベル">
+            <RichTextEditor aria-label="本文" />
+          </FormControl>,
+          { wrapper: Wrapper },
+        )
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox', { name: '本文' })).toBeInTheDocument(),
+        )
+      })
+
+      it('aria-labelledby の指定をやめると、FormControl のラベルを名前に戻す', async () => {
+        const renderWith = (labelledBy?: string) => (
+          <>
+            <span id={EXTERNAL_NAME_ID}>外部の見出し</span>
+            {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+            <FormControl label="ラベル">
+              <RichTextEditor aria-labelledby={labelledBy} />
+            </FormControl>
+          </>
+        )
+        const { rerender } = render(renderWith(EXTERNAL_NAME_ID), { wrapper: Wrapper })
+        await waitFor(() =>
+          expect(screen.getByRole('textbox', { name: '外部の見出し' })).toBeInTheDocument(),
+        )
+
+        rerender(renderWith(undefined))
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox', { name: 'ラベル' })).toBeInTheDocument(),
+        )
+      })
+
+      it('aria-describedby に FormControl の補足と同じ id を渡しても、重ねて読ませない', async () => {
+        const renderWith = (describedBy?: string) => (
+          // eslint-disable-next-line smarthr/a11y-form-control-in-form
+          <FormControl label="ラベル" helpMessage="FormControl の補足">
+            <RichTextEditor aria-describedby={describedBy} />
+          </FormControl>
+        )
+        const { rerender } = render(renderWith(), { wrapper: Wrapper })
+        const helpMessageId = await waitFor(() => {
+          const { id } = screen.getByText('FormControl の補足')
+          expect(id).not.toBe('')
+          return id
+        })
+
+        rerender(renderWith(helpMessageId))
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox')).toHaveAttribute('aria-describedby', helpMessageId),
+        )
+      })
+
+      it('指定した id を使い、FormControl のラベルと紐付く', async () => {
+        render(
+          // eslint-disable-next-line smarthr/a11y-form-control-in-form
+          <FormControl label="ラベル">
+            <RichTextEditor id="own-editor" />
+          </FormControl>,
+          { wrapper: Wrapper },
+        )
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox', { name: 'ラベル' })).toHaveAttribute(
+            'id',
+            'own-editor',
+          ),
+        )
+      })
+
+      it('aria-labelledby を指定すると、FormControl のラベルより優先する', async () => {
+        render(
+          <>
+            <span id={EXTERNAL_NAME_ID}>外部の見出し</span>
+            {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+            <FormControl label="ラベル">
+              <RichTextEditor aria-labelledby={EXTERNAL_NAME_ID} />
+            </FormControl>
+          </>,
+          { wrapper: Wrapper },
+        )
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox', { name: '外部の見出し' })).toBeInTheDocument(),
+        )
+      })
+
+      it('aria-describedby は FormControl の補足と両方を説明にする', async () => {
+        render(
+          <>
+            <p id="external-description">外部の補足</p>
+            {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+            <FormControl label="ラベル" helpMessage="FormControl の補足">
+              <RichTextEditor aria-describedby="external-description" />
+            </FormControl>
+          </>,
+          { wrapper: Wrapper },
+        )
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox', { name: 'ラベル' })).toHaveAccessibleDescription(
+            '外部の補足 FormControl の補足',
+          ),
+        )
+      })
+
+      it('aria-describedby を変えても、FormControl の補足との両方を説明にする', async () => {
+        const renderWith = (describedBy: string) => (
+          <>
+            <p id="first-description">補足A</p>
+            <p id="second-description">補足B</p>
+            {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
+            <FormControl label="ラベル" helpMessage="FormControl の補足">
+              <RichTextEditor aria-describedby={describedBy} />
+            </FormControl>
+          </>
+        )
+        const { rerender } = render(renderWith('first-description'), { wrapper: Wrapper })
+        await waitFor(() =>
+          expect(screen.getByRole('textbox')).toHaveAccessibleDescription(
+            '補足A FormControl の補足',
+          ),
+        )
+
+        rerender(renderWith('second-description'))
+
+        await waitFor(() =>
+          expect(screen.getByRole('textbox')).toHaveAccessibleDescription(
+            '補足B FormControl の補足',
+          ),
+        )
+      })
+    })
+  })
+
   describe('エラー状態', () => {
     const renderInFormControl = (props: { error?: boolean }, errorMessages?: string) =>
       render(

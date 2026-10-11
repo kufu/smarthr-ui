@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useId, useRef, useState } from 'react'
 import {
   Button,
   FaAlignLeftIcon,
@@ -17,6 +17,7 @@ import {
   FaTableIcon,
   FaUnderlineIcon,
   FormControl,
+  Heading,
   Stack,
   Text,
 } from 'smarthr-ui'
@@ -522,6 +523,57 @@ export const BasicUsage: Story = {
             <pre style={{ fontSize: 12 }}>{JSON.stringify(value, null, 2)}</pre>
           </details>
         )}
+      </Stack>
+    )
+  },
+}
+
+export const WithoutFormControl: Story = {
+  name: 'FormControl を使わない場合（aria-label / aria-labelledby / id）',
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `// 見えるラベルを置けない場合
+<RichTextEditor aria-label="本文" />
+
+// 画面上の見出しなどを名前にする場合
+<Heading type="blockTitle" id={headingId}>コメント</Heading>
+<RichTextEditor aria-labelledby={headingId} />
+
+// 自前の label と紐付ける場合（label にも id が必要）
+<label id={labelId} htmlFor={editorId}>本文</label>
+<RichTextEditor id={editorId} />`,
+      },
+    },
+  },
+  render: () => {
+    const headingId = useId()
+    const labelId = useId()
+    const editorId = useId()
+
+    return (
+      <Stack gap={1.5}>
+        <Text color="TEXT_GREY">
+          原則は FormControl で包んでください。表のセルの中など FormControl
+          を置けない場所では、aria-label・aria-labelledby で本文に名前を付けられます。id
+          を指定すると、自前の label 要素の htmlFor と紐付けられます。このとき label にも id
+          を付けてください（本文は label 要素で紐付けられないため、label の id
+          を名前として参照します）。説明文は aria-describedby で紐付けます。
+        </Text>
+        <RichTextEditor placeholder="aria-label で名前を付けた例" aria-label="本文" />
+        <Stack gap={0.5}>
+          <Heading type="blockTitle" id={headingId}>
+            コメント
+          </Heading>
+          <RichTextEditor placeholder="見出しを名前にした例" aria-labelledby={headingId} />
+        </Stack>
+        <Stack gap={0.5}>
+          <label id={labelId} htmlFor={editorId}>
+            本文（自前の label）
+          </label>
+          <RichTextEditor id={editorId} placeholder="自前の label と紐付けた例" />
+        </Stack>
       </Stack>
     )
   },

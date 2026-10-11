@@ -64,6 +64,23 @@ type RichTextEditorBaseProps = {
   readOnly?: boolean
   error?: boolean
   placeholder?: string
+  /**
+   * 本文の id。FormControl を使わずに `<label htmlFor>` と紐付けるときに使う。
+   * 本文は label 要素で紐付けられないため、label にも id を付けること（その id を aria-labelledby で参照する）。
+   *
+   * FormControl の中では、label に htmlFor を指定していなければ FormControl のラベルがこの id を指す。
+   * 描画後に値を変えても FormControl のラベルは追従しない（Input と同じ）
+   */
+  id?: string
+  /**
+   * 本文の名前。FormControl を使わず、見えるラベルも置けないときに使う。
+   * FormControl のラベルや id で紐付いた label より優先する（ネイティブの入力要素と同じ）
+   */
+  'aria-label'?: string
+  /** 本文の名前になる要素の id。指定すると FormControl のラベルより優先する */
+  'aria-labelledby'?: string
+  /** 本文の説明になる要素の id。FormControl の中では、FormControl の補足やエラーの前に並ぶ */
+  'aria-describedby'?: string
   className?: string
   editorClassName?: string
   /** コンポーネント全体の幅 */

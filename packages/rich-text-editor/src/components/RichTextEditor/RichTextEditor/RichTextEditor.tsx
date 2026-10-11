@@ -123,6 +123,10 @@ export const RichTextEditor = memo(
         error,
         placeholder,
         showCharacterCount,
+        id: editorId,
+        'aria-label': ariaLabel,
+        'aria-labelledby': ariaLabelledBy,
+        'aria-describedby': ariaDescribedBy,
         className,
         editorClassName,
         width,
@@ -281,6 +285,19 @@ export const RichTextEditor = memo(
         }
       }, [editor])
 
+      // wrapper の id を本文へ移す仕組みだけに任せない。移した後は wrapper に id が無く、
+      // 指定をやめても React が消す対象が無いため、本文に古い id が残る
+      useEffect(() => {
+        if (!editor || editor.isDestroyed || !editorId) return
+
+        const proseMirrorEl = editor.view.dom
+        proseMirrorEl.setAttribute('id', editorId)
+
+        return () => {
+          if (proseMirrorEl.id === editorId) proseMirrorEl.removeAttribute('id')
+        }
+      }, [editor, editorId])
+
       // FormControlとの連携:
       // content wrapper divにdata-smarthr-ui-inputを静的に付与し、
       // FormControlがuseEffectでid/aria-describedbyを付与する。
@@ -295,10 +312,28 @@ export const RichTextEditor = memo(
         proseMirrorEl.setAttribute('role', 'textbox')
         proseMirrorEl.setAttribute('aria-multiline', 'true')
 
+        if (ariaLabel) {
+          proseMirrorEl.setAttribute('aria-label', ariaLabel)
+        } else {
+          proseMirrorEl.removeAttribute('aria-label')
+        }
+
         // document から探さないのは、Shadow DOM の中のラベルが見つからないため
         const root = proseMirrorEl.getRootNode() as Document | ShadowRoot
 
         const syncLabelledBy = () => {
+          if (ariaLabelledBy) {
+            proseMirrorEl.setAttribute('aria-labelledby', ariaLabelledBy)
+            return
+          }
+
+          // label を aria-labelledby にすると aria-label より優先されてしまう。
+          // ネイティブの入力要素では aria-label が label より優先される
+          if (ariaLabel) {
+            proseMirrorEl.removeAttribute('aria-labelledby')
+            return
+          }
+
           const id = proseMirrorEl.getAttribute('id')
           // id をセレクターに埋め込まない。引用符などを含むと querySelector が例外を投げる
           const label = id
@@ -324,7 +359,11 @@ export const RichTextEditor = memo(
 
         const syncAttributes = () => {
           const id = wrapperEl.getAttribute('id')
-          const describedBy = wrapperEl.getAttribute('aria-describedby')
+          // 指定値を wrapper に描かない。FormControl が足した id ごと React に上書きされるため
+          const describedByTokens = [ariaDescribedBy, wrapperEl.getAttribute('aria-describedby')]
+            .flatMap((attribute) => attribute?.split(/\s+/) ?? [])
+            .filter(Boolean)
+          const describedBy = [...new Set(describedByTokens)].join(' ')
           // FormControl が出すのは 'true' のみ。'false' を真と読むと常にエラー表示になる
           const externalInvalid = wrapperEl.getAttribute('aria-invalid')
           const invalidFromFormControl = externalInvalid === 'true'
@@ -388,11 +427,13 @@ export const RichTextEditor = memo(
           attributes: true,
           attributeFilter: ['id', 'aria-describedby', 'aria-invalid'],
         })
-        labelObserver.observe(root, {
-          attributes: true,
-          attributeFilter: ['id', 'for'],
-          subtree: true,
-        })
+        if (!ariaLabelledBy && !ariaLabel) {
+          labelObserver.observe(root, {
+            attributes: true,
+            attributeFilter: ['id', 'for'],
+            subtree: true,
+          })
+        }
         // document で受けない。Shadow DOM の中のクリックは e.target がホスト要素に置き換わる
         root.addEventListener('click', handleLabelClick)
 
@@ -401,7 +442,7 @@ export const RichTextEditor = memo(
           labelObserver.disconnect()
           root.removeEventListener('click', handleLabelClick)
         }
-      }, [editor, error])
+      }, [editor, error, ariaLabel, ariaLabelledBy, ariaDescribedBy])
 
       // disabled/readOnlyはどちらも本文がcontenteditable="false"になるだけで区別が付かない。
       // role="textbox"を明示している以上、対応する状態も明示しないと支援技術に伝わらない。
@@ -486,6 +527,8 @@ export const RichTextEditor = memo(
           {toolbar}
           <div
             ref={contentRef}
+            // id は本文に直接付けず、ここから本文へ写す。FormControl はここにある利用者の id を尊重するため
+            id={editorId}
             className={classNames.content({ className: editorClassName })}
             style={contentStyle}
             data-smarthr-ui-input="true"
