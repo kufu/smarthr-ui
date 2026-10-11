@@ -32,20 +32,8 @@ const getScrollableAxes = (el: Element) => {
 const TABBABLE_SELECTOR =
   'a[href], button:not(:disabled), input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled), [tabindex]'
 
-/**
- * トリガーを内包する最も近いスクロールコンテナを、ツールバーの内側に限って探す。
- *
- * 探索を role="toolbar" で打ち切っているのが要点。祖先を body まで遡ると、どの要素が
- * スクロールの購読先になるかが利用者側のツリー次第になってしまう。実際 RichTextEditor を
- * Dialog に置くと DialogBody の Scroller（overflow-y-auto）や ModelessDialog の
- * overflow-auto に行き当たるため、デスクトップでもダイアログ本文をスクロールしただけで
- * ドロップダウンが閉じる。LinkButton や YoutubeInsertButton のように入力欄を持つものでは
- * 入力中の値まで捨てることになる。閉じたいのは「トリガーと一緒に動く段」がスクロールした
- * ときだけなので、ツールバーの外は最初から見に行かない。
- *
- * ページスクロールで座標が追従しないのはこのhookの全利用者に共通の既存挙動であり、
- * ここでは扱わない。
- */
+// 祖先を body まで遡る方式は採らない。Dialog に置くと DialogBody の Scroller などに行き当たり、
+// ダイアログ本文をスクロールしただけで閉じて、入力中の値まで捨てることになるため
 const findScrollContainer = (el: HTMLElement | null): HTMLElement | null => {
   // クラス名ではなくロールを境界にする。段の className は tv() 生成で識別子にできない一方、
   // role="toolbar" はツールバーの定義そのものなので、段構成を変えても境界がずれない
