@@ -88,8 +88,11 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
         iframe.style.aspectRatio = `${width} / ${height}`
       }
 
+      const nodeWidth = (target: ProseMirrorNode) =>
+        parseNumericAttr(target.attrs.width) || YOUTUBE_DEFAULT_SIZE.width
+
       const applyNodeSize = (target: ProseMirrorNode) => {
-        const width = parseNumericAttr(target.attrs.width) || YOUTUBE_DEFAULT_SIZE.width
+        const width = nodeWidth(target)
         const height = parseNumericAttr(target.attrs.height) || calcYoutubeHeight(width)
 
         applySize(width, height)
@@ -104,9 +107,7 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
           if (editor.isEditable) applySize(width, calcYoutubeHeight(width))
         },
         onCommit: (width) => {
-          // max-width で縮んだ表示では、読み取った幅が最小幅を下回ることがある。
-          // 設定の最小幅ではなくドラッグ中の最小幅で寄せないと、最小幅未満の動画が離したときに跳ねる
-          const committedWidth = Math.max(Math.round(width), nodeView.minSize.width)
+          const committedWidth = Math.round(width)
           const committedHeight = calcYoutubeHeight(committedWidth)
 
           nodeView.updateSize({ width: committedWidth, height: committedHeight })
@@ -122,6 +123,12 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
           return true
         },
         onCancel: () => applyNodeSize(nodeView.node),
+        // 高さは幅から 16:9 で決め直すため、保存された高さでは下限を求めない
+        getOwnSize: () => {
+          const width = nodeWidth(nodeView.node)
+
+          return { width, height: calcYoutubeHeight(width) }
+        },
         // ドラッグ中にポインタが iframe に入ると、移動と離す操作を iframe が受け取ってリサイズが止まる
         onResizingChange: (resizing) => {
           iframe.style.pointerEvents = resizing ? 'none' : ''

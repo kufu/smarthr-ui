@@ -109,12 +109,6 @@ describe('CustomYoutube NodeView', () => {
     expect(iframe().style.pointerEvents).toBe('')
   })
 
-  it('確定時の幅が最小幅を下回っても、356×200 で保存する', async () => {
-    const editor = await mount()
-    dragRightBy(10)
-    expect(attrsOf(editor)).toMatchObject({ width: 356, height: 200 })
-  })
-
   it('最小幅を下回る動画は、離したときに最小幅へ跳ねずドラッグした幅で保存する', async () => {
     const editor = await mount({ width: 320, height: 180 })
     Object.defineProperty(video(), 'offsetWidth', { value: 320, configurable: true })
@@ -125,17 +119,80 @@ describe('CustomYoutube NodeView', () => {
     expect(attrsOf(editor)).toMatchObject({ width: 330, height: calcYoutubeHeight(330) })
   })
 
+  it('表示が狭くて縮んでいるだけの動画は、最小幅を下回る幅では保存しない', async () => {
+    const editor = await mount({ width: 640, height: 360 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 300, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 169, configurable: true })
+
+    dragRightBy(10, 310)
+
+    expect(attrsOf(editor)).toMatchObject({ width: 356, height: 200 })
+  })
+
+  it('最小幅を下回る動画も、表示が縮んでいるときは元の幅より小さく保存しない', async () => {
+    const editor = await mount({ width: 320, height: 180 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 250, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 141, configurable: true })
+
+    dragRightBy(10, 260)
+
+    expect(attrsOf(editor)).toMatchObject({ width: 320, height: 180 })
+  })
+
+  it('16:9 でない寸法で保存された動画は、確定時の下限を 16:9 の大きさで求める', async () => {
+    const editor = await mount({ width: 640, height: 300 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 600, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 281, configurable: true })
+
+    dragRightBy(-200, 400)
+
+    expect(attrsOf(editor)).toMatchObject({ width: 400, height: calcYoutubeHeight(400) })
+  })
+
+  it('下限で元の大きさに戻っても、動画を選択する', async () => {
+    const editor = await mount({ width: 320, height: 180 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 250, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 141, configurable: true })
+    editor
+      .chain()
+      .insertContentAt(editor.state.doc.content.size, '<p>後</p>')
+      .setTextSelection(editor.state.doc.content.size - 1)
+      .run()
+    expect(editor.state.selection).not.toMatchObject({ node: { type: { name: 'youtube' } } })
+
+    dragRightBy(10, 260)
+
+    expect(editor.state.selection).toMatchObject({ node: { type: { name: 'youtube' } } })
+  })
+
+  it('下限で元の大きさに戻るときは、文書を変えない', async () => {
+    const editor = await mount({ width: 320, height: 180 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 250, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 141, configurable: true })
+    const handleDocChange = vi.fn()
+    editor.on('transaction', ({ transaction }) => {
+      if (transaction.docChanged) handleDocChange()
+    })
+
+    dragRightBy(10, 260)
+
+    expect(handleDocChange).not.toHaveBeenCalled()
+  })
+
   it('タッチでドラッグして離すと確定し、ドラッグ中の状態が解ける', async () => {
-    const editor = await mount()
+    const editor = await mount({ width: 640, height: 360 })
+    Object.defineProperty(video(), 'offsetWidth', { value: 640, configurable: true })
+    Object.defineProperty(video(), 'offsetHeight', { value: 360, configurable: true })
     const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
     fireEvent.touchStart(handle, { touches: [{ clientX: 0, clientY: 0 }] })
     fireEvent.touchMove(document, { touches: [{ clientX: 200, clientY: 0 }] })
     expect(container()!.dataset.resizeState).toBe('true')
 
+    Object.defineProperty(video(), 'offsetWidth', { value: 840, configurable: true })
     fireEvent.touchEnd(document, { changedTouches: [{ clientX: 200, clientY: 0 }] })
 
     expect(container()!.dataset.resizeState).toBe('false')
-    expect(attrsOf(editor)).toMatchObject({ width: 356, height: 200 })
+    expect(attrsOf(editor)).toMatchObject({ width: 840, height: calcYoutubeHeight(840) })
   })
 
   it('移動量が 0 の mousemove を挟んで離しても寸法を書き換えない', async () => {

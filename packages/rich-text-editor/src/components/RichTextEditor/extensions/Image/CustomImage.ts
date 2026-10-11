@@ -114,7 +114,7 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
        * 高さだけが残って画像が潰れる。ResizableNodeView のコンストラクタが
        * applyInitialSize で px を書くため、生成後にもこれを通す必要がある。
        */
-      const applyDisplaySize = () => {
+      const resolveDisplaySize = () => {
         const width = toPositiveNumber(sizeAttributes.width)
         const height = toPositiveNumber(sizeAttributes.height)
         const naturalRatio =
@@ -122,6 +122,12 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         // height だけ保存されている既存データは、同じ高さになる幅へ置き換える
         const displayWidth = width ?? (height && naturalRatio ? height * naturalRatio : null)
         const ratio = width && height ? width / height : naturalRatio
+
+        return { displayWidth, height, ratio }
+      }
+
+      const applyDisplaySize = () => {
+        const { displayWidth, height, ratio } = resolveDisplaySize()
 
         el.style.width = displayWidth ? `${displayWidth}px` : ''
         el.style.height = displayWidth || height ? 'auto' : ''
@@ -203,6 +209,13 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         },
         onCancel: applyDisplaySize,
         onUpdate,
+        getOwnSize: () => {
+          const { displayWidth, ratio } = resolveDisplaySize()
+
+          return displayWidth && ratio
+            ? { width: displayWidth, height: displayWidth / ratio }
+            : { width: el.naturalWidth, height: el.naturalHeight }
+        },
         options: {
           directions,
           min: {

@@ -54,6 +54,11 @@ type PersistentHandlesNodeViewOptions = Omit<ResizableNodeViewOptions, 'options'
   options?: Omit<NonNullable<ResizableNodeViewOptions['options']>, 'createCustomHandle'>
   onCancel: () => void
   onResizingChange?: (resizing: boolean) => void
+  /**
+   * 確定時の下限の基準。表示サイズからは求めない。max-width で縮んでいることがあり、
+   * 保存された寸法をどう表示に使うか（文字列の扱い・YouTube の 16:9）はメディアごとに違うため
+   */
+  getOwnSize: () => { width: number; height: number }
 }
 
 const NOOP_UPDATE_LISTENER: () => void = Object.assign(() => {}, {
@@ -75,11 +80,16 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
 
   private configuredMinSize: { width: number; height: number }
 
+  private getOwnSize: () => { width: number; height: number }
+
+  private minCommitSize = { width: 0, height: 0 }
+
   constructor({
     editor,
     options,
     onCancel,
     onResizingChange,
+    getOwnSize,
     ...rest
   }: PersistentHandlesNodeViewOptions) {
     super({
@@ -92,6 +102,7 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
     })
 
     this.onResizingChange = onResizingChange
+    this.getOwnSize = getOwnSize
     this.configuredMinSize = { ...this.minSize }
 
     // 標準は動かさずに離しただけでも表示中の寸法で確定する。max-width で縮んで表示されていると、
@@ -103,7 +114,8 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
       this.onResizingChange?.(false)
 
       if (moved && this.editor.isEditable) {
-        commit(width, height)
+        const size = this.raiseToMinCommitSize(width, height)
+        commit(size.width, size.height)
       } else {
         onCancel()
       }
@@ -112,14 +124,20 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
 
   updateSize(attributes: { width: number; height: number }) {
     const pos = this.getPos()
+    if (pos === undefined) return
 
-    if (pos !== undefined) {
-      this.editor
-        .chain()
-        .setNodeSelection(pos)
-        .updateAttributes(this.node.type.name, attributes)
-        .run()
-    }
+    // 下限で元の大きさに戻ったときに、何も変えない変更が onChange と取り消し履歴に残る。
+    // 選択は変わらなくても行う。ハンドルの操作で選択されるのはここだけで、結果によって変えない
+    const unchanged =
+      this.node.attrs.width === attributes.width && this.node.attrs.height === attributes.height
+
+    this.editor
+      .chain()
+      .setNodeSelection(pos)
+      .command(
+        ({ commands }) => unchanged || commands.updateAttributes(this.node.type.name, attributes),
+      )
+      .run()
   }
 
   // 標準は購読も解除も handleEditorUpdate.bind(this) で行い、bind が毎回別の関数を返すため解除されず、
@@ -144,6 +162,10 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
       height: offsetHeight > 0 ? Math.min(height, offsetHeight) : height,
     }
 
+    // 確定時は上で下げた最小値を使わない。max-width で縮んで表示されているだけのメディアまで、
+    // 最小値を割る大きさで保存されるため。元の大きさを基準にする
+    this.minCommitSize = this.computeMinCommitSize(this.getOwnSize())
+
     // @ts-expect-error 標準の private な処理を呼ぶ
     super.handleResizeStart(event, direction)
     this.onResizingChange?.(true)
@@ -166,6 +188,27 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
       document.addEventListener('touchend', handleTouchEnd)
       document.addEventListener('touchcancel', handleTouchEnd)
     }
+  }
+
+  private raiseToMinCommitSize(width: number, height: number) {
+    const { minCommitSize } = this
+
+    // 高さでは判定しない。表示の高さは丸めで縦横比から 1px ずれ、下限ちょうどの確定まで寄せてしまう
+    return width < minCommitSize.width ? minCommitSize : { width, height }
+  }
+
+  private computeMinCommitSize(own: { width: number; height: number }) {
+    const { width, height } = this.configuredMinSize
+
+    // 縦横比を保たない設定では下限を当てない。辺ごとに戻すと、ドラッグ中に許した大きさから
+    // 離した瞬間に跳ね、Shift で縦横比を保ったドラッグも崩れる。この製品では使わない設定
+    if (!this.preserveAspectRatio || !(own.width > 0 && own.height > 0)) {
+      return { width: 0, height: 0 }
+    }
+
+    const scale = Math.min(1, Math.max(width / own.width, height / own.height))
+
+    return { width: Math.round(own.width * scale), height: Math.round(own.height * scale) }
   }
 
   // 標準の destroy はマウスの購読しか外さない。タッチでドラッグ中に消えると document に残る

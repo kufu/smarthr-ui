@@ -348,19 +348,22 @@ describe('読み取り専用でのリサイズ', () => {
 })
 
 describe('最小サイズを下回る画像のリサイズ', () => {
-  // 1000×50 のように、縦横比を保つと最小の高さ（100px）を満たせない画像
-  const mountWide = async () => {
+  const setDisplaySize = (img: HTMLImageElement, width: number, height: number) => {
+    // jsdom は寸法を持たないため、ドラッグの開始・確定時に読む表示サイズを与える
+    Object.defineProperty(img, 'offsetWidth', { configurable: true, value: width })
+    Object.defineProperty(img, 'offsetHeight', { configurable: true, value: height })
+  }
+
+  const mountImage = async (
+    size: Record<string, unknown>,
+    display: { width: number; height: number },
+  ) => {
     const { result } = renderHook(() =>
       useRichTextEditor({
         features: ['image'],
         defaultValue: {
           type: 'doc',
-          content: [
-            {
-              type: 'image',
-              attrs: { src: 'https://example.com/wide.png', width: 1000, height: 50 },
-            },
-          ],
+          content: [{ type: 'image', attrs: { ...size, src: 'https://example.com/a.png' } }],
         },
       }),
     )
@@ -369,12 +372,47 @@ describe('最小サイズを下回る画像のリサイズ', () => {
     await waitFor(() => expect(document.querySelector('[data-resize-handle]')).not.toBeNull())
 
     const img = document.querySelector<HTMLImageElement>('.ProseMirror img')!
-    // jsdom は寸法を持たないため、ドラッグ開始時に読む表示サイズを与える
-    Object.defineProperty(img, 'offsetWidth', { configurable: true, value: 1000 })
-    Object.defineProperty(img, 'offsetHeight', { configurable: true, value: 50 })
+    setDisplaySize(img, display.width, display.height)
 
-    return img
+    return { editor: result.current.editor!, img }
   }
+
+  // 1000×50 のように、縦横比を保つと最小の高さ（100px）を満たせない画像
+  const mountWide = async () =>
+    (await mountImage({ width: 1000, height: 50 }, { width: 1000, height: 50 })).img
+
+  it('表示が狭くて縮んでいるだけの画像は、最小サイズを下回る大きさでは保存しない', async () => {
+    const { editor, img } = await mountImage(
+      { width: 800, height: 400 },
+      { width: 180, height: 90 },
+    )
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    fireEvent.mouseMove(document, { clientX: 10, clientY: 0 })
+    setDisplaySize(img, 190, 95)
+    fireEvent.mouseUp(document)
+
+    expect(editor.$node('image')!.attributes).toMatchObject({ width: 200, height: 100 })
+  })
+
+  it('表示に使われない寸法（文字列）は、下限の基準にしない', async () => {
+    // 文字列の寸法は表示に使われず、画像本来の 4:1 で表示される
+    const { editor, img } = await mountImage(
+      { width: '800', height: '400' },
+      { width: 180, height: 45 },
+    )
+    Object.defineProperty(img, 'naturalWidth', { configurable: true, value: 2000 })
+    Object.defineProperty(img, 'naturalHeight', { configurable: true, value: 500 })
+    const handle = document.querySelector<HTMLElement>('[data-resize-handle="bottom-right"]')!
+
+    fireEvent.mouseDown(handle, { clientX: 0, clientY: 0 })
+    fireEvent.mouseMove(document, { clientX: 10, clientY: 0 })
+    setDisplaySize(img, 190, 48)
+    fireEvent.mouseUp(document)
+
+    expect(editor.$node('image')!.attributes).toMatchObject({ width: 400, height: 100 })
+  })
 
   it('ドラッグを始めても最小サイズへ跳ねず、ポインターの移動ぶんだけ変わる', async () => {
     const img = await mountWide()
