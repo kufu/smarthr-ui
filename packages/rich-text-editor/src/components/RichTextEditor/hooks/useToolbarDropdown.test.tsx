@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { useToolbarDropdown } from './useToolbarDropdown'
 
@@ -235,6 +235,44 @@ describe('useToolbarDropdown', () => {
         configurable: true,
       })
     }
+  })
+
+  describe('外枠の影', () => {
+    const originalInnerHeight = window.innerHeight
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight,
+        configurable: true,
+      })
+    })
+
+    const openWithContentHeight = async (contentHeight: number) => {
+      Object.defineProperty(window, 'innerHeight', { value: 300, configurable: true })
+      render(<Harness />)
+      const triggerEl = screen.getByRole('button', { name: '開く' })
+      triggerEl.getBoundingClientRect = () =>
+        ({ left: 0, right: 100, top: 100, bottom: 120, width: 100, height: 20 }) as DOMRect
+      vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(contentHeight)
+      await userEvent.click(triggerEl)
+
+      return screen.getByRole('listbox').parentElement!
+    }
+
+    it('高さの上限でスクロールするときは、中身の影が切り取られるので外枠に影を付ける', async () => {
+      const content = await openWithContentHeight(400)
+
+      expect(content.style.maxHeight).not.toBe('')
+      expect(content).toHaveClass('shr-rte-shadow-layer-3', 'shr-rte-rounded-m')
+    })
+
+    it('収まるときは、中身の影と重ならないよう外枠に影を付けない', async () => {
+      const content = await openWithContentHeight(100)
+
+      expect(content.style.maxHeight).toBe('')
+      expect(content).not.toHaveClass('shr-rte-shadow-layer-3')
+    })
   })
 
   it('ウィンドウのリサイズで位置を測り直す', async () => {

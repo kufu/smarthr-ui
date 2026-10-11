@@ -347,7 +347,10 @@ export function useToolbarDropdown({
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
           ref={contentRef}
-          className={`shr-rte-absolute shr-rte-z-overlap-base ${isVisible ? 'shr-rte-visible' : 'shr-rte-invisible'}`}
+          className={`shr-rte-absolute shr-rte-z-overlap-base ${isVisible ? 'shr-rte-visible' : 'shr-rte-invisible'} ${
+            // 収まるときに付けないのは、中身の影と重なるため
+            position.maxHeight ? 'shr-rte-rounded-m shr-rte-shadow-layer-3' : ''
+          }`}
           style={{
             // 既定の縮む幅だと、画面の右端に近いときに縮んだ値で測られ、端からの余白を確保できない
             width: 'max-content',
