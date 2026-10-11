@@ -212,7 +212,14 @@ export function useToolbarDropdown({
     // maxHeight で頭打ちになると外枠の大きさは変わらないので、中身も見る
     if (contentEl.firstElementChild) resizeObserver.observe(contentEl.firstElementChild)
 
-    return () => resizeObserver.disconnect()
+    const handleResize = () => flushSync(place)
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', handleResize)
+    }
   }, [isOpen, layoutKey, avoidTrigger])
 
   // 座標はトリガーの移動に追従しないため、トリガーを内包する段が横スクロールすると

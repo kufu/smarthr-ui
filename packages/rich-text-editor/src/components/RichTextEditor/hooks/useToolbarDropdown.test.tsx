@@ -237,6 +237,40 @@ describe('useToolbarDropdown', () => {
     }
   })
 
+  it('ウィンドウのリサイズで位置を測り直す', async () => {
+    const content = await openWithLayout({
+      trigger: { left: 100, right: 300 },
+      contentWidth: 270,
+      viewportWidth: 1000,
+    })
+    const triggerEl = screen.getByRole('button', { name: '開く' })
+
+    triggerEl.getBoundingClientRect = () =>
+      ({ left: 200, right: 400, top: 0, bottom: 20, width: 200, height: 20 }) as DOMRect
+    act(() => {
+      window.dispatchEvent(new Event('resize'))
+    })
+
+    expect(content.style.left).toBe('200px')
+  })
+
+  it('スクロールでは位置を測り直さない', async () => {
+    const content = await openWithLayout({
+      trigger: { left: 100, right: 300 },
+      contentWidth: 270,
+      viewportWidth: 1000,
+    })
+    const triggerEl = screen.getByRole('button', { name: '開く' })
+
+    triggerEl.getBoundingClientRect = () =>
+      ({ left: 200, right: 400, top: 0, bottom: 20, width: 200, height: 20 }) as DOMRect
+    act(() => {
+      window.dispatchEvent(new Event('scroll'))
+    })
+
+    expect(content.style.left).toBe('100px')
+  })
+
   describe('avoidTrigger', () => {
     it('既定ではトリガーの左端に揃える', async () => {
       const content = await openWithLayout({

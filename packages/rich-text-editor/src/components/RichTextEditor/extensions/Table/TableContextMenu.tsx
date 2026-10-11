@@ -56,6 +56,7 @@ const LABEL_MESSAGES = {
 type Props = {
   features: readonly RichTextFeature[]
   openMenuRef?: MutableRefObject<((pos?: number) => void) | null>
+  dismissMenuRef?: MutableRefObject<(() => void) | null>
   handleTargetLock: (scope: TableScope, pos: number | null) => void
   editor: Editor
   cellPos: number
@@ -73,6 +74,7 @@ export const TableContextMenu = ({
   style,
   features,
   openMenuRef,
+  dismissMenuRef,
   handleTargetLock,
 }: Props) => {
   const { localize } = useIntl()
@@ -98,8 +100,10 @@ export const TableContextMenu = ({
     scope,
     showColors,
     openMenuRef,
+    dismissMenuRef,
     handleTargetLock,
     triggerRef,
+    keyboardNavigation,
   })
 
   const functions = useMemo(() => {
@@ -134,35 +138,46 @@ export const TableContextMenu = ({
       })
     }
 
+    // transaction の中で同期的にセルへ戻す方式は採らない。dispatch が入れ子になるうえ、メニュー自身の
+    // 操作では直後の close() もセルへ戻すため二重になる。予約にしておけば close() が取り消す。
+    // focusFrame と分けてアンマウントでは取り消さないのは、キャレットが表の外へ出ると操作ボタンごと
+    // アンマウントされるため
+    const scheduleRestoreFocus = () => {
+      cancelRestoreFocus()
+      restoreFrame.current = requestAnimationFrame(() => {
+        restoreFrame.current = null
+        // メニューが外れたあと（body）だけに限る方式は採らない。React の外の変更では再描画が
+        // 別タスクになり、メニューが外れる前にここへ来ることがある
+        const { activeElement } = document
+        if (
+          editor.isDestroyed ||
+          !(activeElement === document.body || menuRef.current?.contains(activeElement))
+        )
+          return
+        const trigger = latest.triggerRef.current
+        if (returnToTrigger.current && trigger?.isConnected) {
+          trigger.focus({ preventScroll: true })
+        } else {
+          // focusTableCell は使わない。Tiptap の focus がさらに次のフレームへ遅らせるため、
+          // その間に移されたフォーカスを奪う
+          selectTableCell(editor, returnPos.current)
+          editor.view.focus()
+        }
+      })
+    }
+
+    const dismiss = (restoreFocus = true) => {
+      cancelFocus()
+      if (restoreFocus && menuRef.current?.contains(document.activeElement)) scheduleRestoreFocus()
+      setIsOpen(false)
+    }
+
     return {
       cancelFocus,
-      // transaction の中で同期的にセルへ戻す方式は採らない。dispatch が入れ子になるうえ、メニュー自身の
-      // 操作では直後の close() もセルへ戻すため二重になる。予約にしておけば close() が取り消す。
-      // focusFrame と分けてアンマウントでは取り消さないのは、キャレットが表の外へ出ると操作ボタンごと
-      // アンマウントされるため
-      scheduleRestoreFocus: () => {
-        cancelRestoreFocus()
-        restoreFrame.current = requestAnimationFrame(() => {
-          restoreFrame.current = null
-          // メニューが外れたあと（body）だけに限る方式は採らない。React の外の変更では再描画が
-          // 別タスクになり、メニューが外れる前にここへ来ることがある
-          const { activeElement } = document
-          if (
-            editor.isDestroyed ||
-            !(activeElement === document.body || menuRef.current?.contains(activeElement))
-          )
-            return
-          const trigger = latest.triggerRef.current
-          if (returnToTrigger.current && trigger?.isConnected) {
-            trigger.focus({ preventScroll: true })
-          } else {
-            // focusTableCell は使わない。Tiptap の focus がさらに次のフレームへ遅らせるため、
-            // その間に移されたフォーカスを奪う
-            selectTableCell(editor, returnPos.current)
-            editor.view.focus()
-          }
-        })
-      },
+      dismiss,
+      // キーボードで操作していないときは本文へ戻さない。タッチ端末ではソフトキーボードが出て、
+      // セルの位置へスクロールし直されるため
+      dismissHidden: () => dismiss(latest.keyboardNavigation),
       open: (requestedPos = latest.cellPos, last = false, fromTrigger = false, keyboard = true) => {
         // 文書が変わってから再描画されるまでの間に押されると、位置がセルの外や別のセルの中を指す
         const pos = getTableTarget(editor, requestedPos)?.pos
@@ -249,15 +264,10 @@ export const TableContextMenu = ({
 
   useEffect(() => {
     if (!isOpen) return
-    const handleScroll = (event: Event) => {
-      if (!(
-        event.target instanceof Node &&
-        (menuRef.current?.contains(event.target) || event.target === menuRef.current?.parentElement)
-      )) {
-        setIsOpen(false)
-        if (menuRef.current?.contains(document.activeElement))
-          focusTableCell(editor, returnPos.current)
-      }
+    // 高さの変化では閉じない。iOS Safari はスクロールでアドレスバーが縮むたびに resize を発火する
+    const width = window.innerWidth
+    const handleResize = () => {
+      if (window.innerWidth !== width) functions.dismiss()
     }
     const mapTarget = ({ transaction }: { transaction: Transaction }) => {
       if (returnPos.current !== undefined) {
@@ -266,17 +276,15 @@ export const TableContextMenu = ({
         returnPos.current =
           node && ['tableCell', 'tableHeader'].includes(node.type.name) ? result.pos : undefined
       }
-      if (transaction.docChanged) {
-        if (menuRef.current?.contains(document.activeElement)) functions.scheduleRestoreFocus()
-        setIsOpen(false)
-      }
+      if (transaction.docChanged) functions.dismiss()
     }
-    window.addEventListener('scroll', handleScroll, true)
-    window.addEventListener('resize', handleScroll)
+    const { dismissMenuRef: menuDismisser } = latest
+    if (menuDismisser) menuDismisser.current = functions.dismissHidden
+    window.addEventListener('resize', handleResize)
     editor.on('transaction', mapTarget)
     return () => {
-      window.removeEventListener('scroll', handleScroll, true)
-      window.removeEventListener('resize', handleScroll)
+      if (menuDismisser?.current === functions.dismissHidden) menuDismisser.current = null
+      window.removeEventListener('resize', handleResize)
       editor.off('transaction', mapTarget)
       latest.handleTargetLock(latest.scope, null)
     }

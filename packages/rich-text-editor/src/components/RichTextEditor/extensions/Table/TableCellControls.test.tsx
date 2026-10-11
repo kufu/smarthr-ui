@@ -121,14 +121,80 @@ describe('table controls', () => {
     )
   })
 
-  it('keeps a scrollable menu open while its own content scrolls', async () => {
+  it('ページ・エディタ・メニュー自身がスクロールしても、メニューを閉じない', async () => {
     showControls()
     await userEvent.click(screen.getByRole('button', { name: '列の操作' }))
     const dialog = screen.getByRole('dialog', { name: '列の操作' })
     fireEvent.scroll(dialog.parentElement!)
-    expect(dialog).toBeInTheDocument()
+    fireEvent.scroll(container)
     fireEvent.scroll(window)
+    expect(dialog).toBeInTheDocument()
+  })
+
+  it('スクロールでセルが見えなくなったら、メニューを閉じてフォーカスをセルへ戻す', async () => {
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    offscreen = true
+    fireEvent.scroll(window)
+    await waitForEditorFocus()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(editor.view.dom).toHaveFocus()
+  })
+
+  it('マウスで開いていたら、セルが見えなくなって閉じても本文へフォーカスを戻さない', async () => {
+    showControls()
+    await userEvent.click(screen.getByRole('button', { name: '列の操作' }))
+    const dialog = screen.getByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    offscreen = true
+    fireEvent.scroll(window)
+    await waitForEditorFocus()
+    await waitForEditorFocus()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(document.body).toHaveFocus()
+  })
+
+  describe('ウィンドウのリサイズ', () => {
+    const originalInnerWidth = window.innerWidth
+    const originalInnerHeight = window.innerHeight
+
+    afterEach(() => {
+      Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true })
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight,
+        configurable: true,
+      })
+    })
+
+    it('高さだけが変わったときは閉じない', async () => {
+      showControls()
+      await userEvent.click(screen.getByRole('button', { name: '列の操作' }))
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight - 100,
+        configurable: true,
+      })
+      fireEvent(window, new Event('resize'))
+      expect(screen.getByRole('dialog', { name: '列の操作' })).toBeInTheDocument()
+    })
+
+    it('幅が変わったら閉じて、開いたハンドルへフォーカスを戻す', async () => {
+      const user = userEvent.setup()
+      showControls()
+      screen.getByRole('button', { name: '列の操作' }).focus()
+      await user.keyboard('{Enter}')
+      const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+      await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+      Object.defineProperty(window, 'innerWidth', {
+        value: originalInnerWidth - 100,
+        configurable: true,
+      })
+      fireEvent(window, new Event('resize'))
+      await waitForEditorFocus()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
+    })
   })
 
   it('offers both header settings from the table menu at any cell', async () => {

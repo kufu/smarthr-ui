@@ -42,6 +42,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
   const openColumnMenu = useRef<((pos?: number) => void) | null>(null)
   const openRowMenu = useRef<((pos?: number) => void) | null>(null)
   const openCellMenu = useRef<((pos?: number) => void) | null>(null)
+  const dismissMenu = useRef<(() => void) | null>(null)
   const updateGeometry = useRef<(() => void) | null>(null)
   const handleTargetLock = useCallback((scope: TableScope, pos: number | null) => {
     if (pos !== null) lockedTarget.current = { scope, pos }
@@ -58,6 +59,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       const target =
         getTableTarget(editor, lockedTarget.current?.pos ?? hovered) ?? getTableTarget(editor)
       if (!target) {
+        dismissMenu.current?.()
         setGeometry(null)
         return
       }
@@ -114,6 +116,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       const left = Math.max(rect.left, clip.left)
       const right = Math.min(rect.right, clip.right)
       if (right <= left || bottom <= top) {
+        dismissMenu.current?.()
         setGeometry(null)
         return
       }
@@ -213,6 +216,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       />
       <TableContextMenu
         openMenuRef={openTableMenu}
+        dismissMenuRef={dismissMenu}
         features={features}
         editor={editor}
         cellPos={pos}
@@ -227,6 +231,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       />
       <TableContextMenu
         openMenuRef={openColumnMenu}
+        dismissMenuRef={dismissMenu}
         features={features}
         editor={editor}
         cellPos={pos}
@@ -236,6 +241,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       />
       <TableContextMenu
         openMenuRef={openRowMenu}
+        dismissMenuRef={dismissMenu}
         features={features}
         editor={editor}
         cellPos={pos}
@@ -245,6 +251,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       />
       <TableContextMenu
         openMenuRef={openCellMenu}
+        dismissMenuRef={dismissMenu}
         features={features}
         editor={editor}
         cellPos={cellPos}
