@@ -261,6 +261,22 @@ describe('マウント後の props 更新', () => {
     expect(hasBold()).toBe(true)
   })
 
+  it('features の変更が貼り付けの絞り込みへ反映される', async () => {
+    const { rerender } = render(<RichTextEditor features={['bold']} />, { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    rerender(<RichTextEditor features={['bold', 'italic']} />)
+
+    fireEvent.paste(getEditorDom(), {
+      clipboardData: {
+        files: [],
+        types: ['text/html', 'text/plain'],
+        getData: (type: string) => (type === 'text/html' ? '<p><em>斜体</em></p>' : ''),
+      },
+    })
+
+    await waitFor(() => expect(getEditorDom().querySelector('em')).toHaveTextContent('斜体'))
+  })
+
   it('同じ内容の新しい配列では再構成しない', async () => {
     const Host = () => {
       const [, setTick] = useState(0)

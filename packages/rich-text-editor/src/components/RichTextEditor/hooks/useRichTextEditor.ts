@@ -31,6 +31,7 @@ import type {
 } from '../types'
 import type { JSONContent } from '@tiptap/core'
 import type { Node as ProseMirrorNode, Schema } from '@tiptap/pm/model'
+import type { EditorProps } from '@tiptap/pm/view'
 
 /**
  * 末尾の段落まで比べないのは、末尾が段落でない value にはエディタが空の段落を足すため
@@ -113,6 +114,7 @@ export const useRichTextEditor = ({
 
   const latest = useLatest({
     value,
+    toolbarRef,
     features,
     headingLevels,
     placeholder,
@@ -138,12 +140,29 @@ export const useRichTextEditor = ({
 
   const extensions = useMemo(() => configureExtensions({ getRuntimeOptions }), [getRuntimeOptions])
 
-  // schemaは全書式を載せているのでペーストはschemaで止まらない。
-  // featuresの許可リストで絞るのはこのフィルタの責務。
-  const transformPasted = useMemo(
-    () => createPasteFilter(features, headingLevels),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [featuresKey, headingLevelsKey],
+  // 作り直さない。useEditor は editorProps が別物だと setOptions で view を更新し直すため、
+  // 制御モードで値を渡し直すたびや features の変更のたびに、プラグインの更新と装飾の計算が余分に走る
+  const editorProps = useMemo<EditorProps>(
+    () => ({
+      // schemaは全書式を載せているのでペーストはschemaで止まらない。
+      // featuresの許可リストで絞るのはこのフィルタの責務。
+      transformPasted: (slice) => createPasteFilter(latest.features, latest.headingLevels)(slice),
+      handleKeyDown: (_view, event) => {
+        const toolbar = latest.toolbarRef?.current
+
+        // Alt+F10 でtoolbarへフォーカス移動
+        if (event.altKey && event.key === 'F10' && toolbar) {
+          event.preventDefault()
+          const firstButton = toolbar.querySelector<HTMLButtonElement>(
+            'button[tabindex="0"]:not(:disabled)',
+          )
+          firstButton?.focus()
+          return true
+        }
+        return false
+      },
+    }),
+    [latest],
   )
 
   const emitted = useRef<EmittedRecord | null>(null)
@@ -161,21 +180,7 @@ export const useRichTextEditor = ({
     editable: !(readOnly || disabled),
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
-    editorProps: {
-      transformPasted,
-      handleKeyDown: (_view, event) => {
-        // Alt+F10 でtoolbarへフォーカス移動
-        if (event.altKey && event.key === 'F10' && toolbarRef?.current) {
-          event.preventDefault()
-          const firstButton = toolbarRef.current.querySelector<HTMLButtonElement>(
-            'button[tabindex="0"]:not(:disabled)',
-          )
-          firstButton?.focus()
-          return true
-        }
-        return false
-      },
-    },
+    editorProps,
     onUpdate: ({ editor: e, transaction, appendedTransactions }) => {
       if (!onChange || isAutoTrailingNodeOnly(transaction, appendedTransactions)) return
 
@@ -288,8 +293,7 @@ export const useRichTextEditor = ({
 
   // placeholder の同期
   useEffect(() => {
-    // useEditor も再描画ごとに setOptions で描き直すが、それは editorProps が毎回新しいためで、
-    // メモ化すると止まる。空の transaction で描き直さないのは、appendTransaction を持つ plugin が
+    // editorProps を固定しているため、useEditor の setOptions では描き直されない。空の transaction で描き直さないのは、appendTransaction を持つ plugin が
     // 文書を変えうるため。TrailingNode は onChange と履歴を出さないようにしたが、ほかの plugin は保証できない
     if (editor && !editor.isDestroyed) {
       editor.view.setProps({})

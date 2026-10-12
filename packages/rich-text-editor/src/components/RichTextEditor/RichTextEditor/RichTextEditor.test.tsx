@@ -1261,6 +1261,20 @@ describe('RichTextEditor', () => {
     })
   })
 
+  it('値を渡し直して描画し直しても、エディタの設定を組み直さない', async () => {
+    const { rerender } = render(<RichTextEditor value={paragraphDoc('本文')} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+    const setOptions = vi.spyOn(getEditor(), 'setOptions')
+
+    rerender(<RichTextEditor value={paragraphDoc('本文')} />)
+    rerender(<RichTextEditor value={paragraphDoc('差し替えた本文')} />)
+
+    await waitFor(() => expect(screen.getByText('差し替えた本文')).toBeInTheDocument())
+    expect(setOptions).not.toHaveBeenCalled()
+  })
+
   describe('showCharacterCount', () => {
     it('does not show character count by default', async () => {
       render(<RichTextEditor />, { wrapper: Wrapper })
