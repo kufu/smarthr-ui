@@ -209,7 +209,7 @@ export const TableContextMenu = ({
             (delegateEvent.shiftKey && index === 0)
           ) {
             delegateEvent.preventDefault()
-            // 外枠（useToolbarDropdown）はトリガーへ戻すが、表のメニューはセルへ戻す
+            // 外枠（useToolbarDropdown）に任せないのは、外枠はトリガーへ戻すが表のメニューはセルへ戻すため
             delegateEvent.stopPropagation()
             close()
           }

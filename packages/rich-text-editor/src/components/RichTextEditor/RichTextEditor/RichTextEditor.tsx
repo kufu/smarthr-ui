@@ -303,7 +303,6 @@ export const RichTextEditor = memo(
       // FormControlがuseEffectでid/aria-describedbyを付与する。
       // MutationObserverでwrapperの属性変更を監視し、ProseMirror divに転写する。
       useEffect(() => {
-        // view が無いと editor.view.dom は例外を投げる（マウント前・破棄後）
         if (!editor || editor.isDestroyed || !contentRef.current) return
 
         const wrapperEl = contentRef.current
