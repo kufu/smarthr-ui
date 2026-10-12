@@ -1,3 +1,5 @@
+import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from '../extensions/configureHeading'
+
 import type { MediaAlign } from '../extensions/mediaAlign'
 
 /**
@@ -72,3 +74,26 @@ export const isNumericAttr = (value: unknown): value is number | string =>
 
 export const parseNumericAttr = (value: unknown): number | undefined =>
   isNumericAttr(value) ? Number(value) : undefined
+
+const MIN_HEADING_LEVEL = Math.min(...SUPPORTED_HEADING_LEVELS)
+const MAX_HEADING_LEVEL = Math.max(...SUPPORTED_HEADING_LEVELS)
+
+/**
+ * HTML 経路の Tiptap は対応外のレベルを先頭のレベルへ描き替え、h5・h6 が h1 になる。
+ * レベルの上下関係を保つため、範囲外の値は近い端へ寄せる。数値として読めない値だけ schema の既定値にする。
+ *
+ * React 経路でも sanitize 済みの値に任せずこの関数を通す。補正を別々に持つと、
+ * sanitize が変わったときに経路ごとに違うレベルへ寄せてしまうため
+ */
+export const normalizeHeadingLevel = (value: unknown): HeadingLevel => {
+  const level = typeof value === 'number' || typeof value === 'string' ? Number(value) : Number.NaN
+  const clamped =
+    Number.isNaN(level) || (typeof value === 'string' && value.trim() === '')
+      ? MIN_HEADING_LEVEL
+      : Math.min(Math.max(Math.round(level), MIN_HEADING_LEVEL), MAX_HEADING_LEVEL)
+
+  return (
+    SUPPORTED_HEADING_LEVELS.find((supported) => supported === clamped) ??
+    SUPPORTED_HEADING_LEVELS[0]
+  )
+}

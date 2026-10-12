@@ -3,7 +3,6 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
-import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from '../extensions/configureHeading'
 import {
   IMAGE_ALIGN_STYLES,
   YOUTUBE_ALIGN_STYLES,
@@ -25,6 +24,7 @@ import {
   isSafeTextAlign,
   isSafeUrl,
   isSafeYoutubeSrc,
+  normalizeHeadingLevel,
   parseNumericAttr,
 } from './safeAttributes'
 import { sanitizeRichTextJSON } from './sanitizeRichTextJSON'
@@ -77,9 +77,7 @@ const toEmbedUrl = (src: unknown, start: unknown): string | undefined => {
 
 const nodeMapping: Record<string, ReactNodeMapping> = {
   heading: ({ node, children }) => {
-    const level = SUPPORTED_HEADING_LEVELS.includes(node.attrs.level)
-      ? (node.attrs.level as HeadingLevel)
-      : SUPPORTED_HEADING_LEVELS[0]
+    const level = normalizeHeadingLevel(node.attrs.level)
     const textAlign = node.attrs.textAlign
     const style: Record<string, string> = {}
     if (isSafeTextAlign(textAlign) && textAlign !== 'left') style.textAlign = textAlign
