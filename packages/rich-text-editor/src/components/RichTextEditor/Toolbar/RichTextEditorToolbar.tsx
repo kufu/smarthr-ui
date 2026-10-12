@@ -86,6 +86,41 @@ type ToolbarGroup = {
   items: ToolbarItem[]
 }
 
+type ToolbarState = ReturnType<typeof useToolbarState>
+
+// 押下中・無効を action や icon と一緒に作らない。状態が変わるたびに作り直すと、
+// memo 済みのボタンが状態の変わっていないものまで描画し直されるため
+type ButtonItemDefinition = Omit<ButtonItem, 'disabled' | 'active'> & {
+  getDisabled: (state: ToolbarState) => boolean
+  getActive?: (state: ToolbarState) => boolean
+}
+
+type CustomItemDefinition = Omit<CustomItem, 'disabled'> & {
+  getDisabled: (state: ToolbarState) => boolean
+}
+
+type ToolbarItemDefinition = ButtonItemDefinition | CustomItemDefinition
+
+const toToolbarItem = (
+  definition: ToolbarItemDefinition,
+  state: ToolbarState,
+  forceDisabled: boolean,
+): ToolbarItem => {
+  // editorのeditable解除だけではツールバー由来のコマンドは止まらない（Tiptapのcommandはeditableを見ない）ため、
+  // 各itemのdisabledを一括で上書きしてネイティブのdisabled状態に落とす
+  const disabled = forceDisabled || definition.getDisabled(state)
+
+  if (definition.type === 'button') {
+    const { getDisabled: _getDisabled, getActive, ...rest } = definition
+
+    return getActive ? { ...rest, active: getActive(state), disabled } : { ...rest, disabled }
+  }
+
+  const { getDisabled: _getDisabled, ...rest } = definition
+
+  return { ...rest, disabled }
+}
+
 const classNameGenerator = tv({
   slots: {
     // items-start は、折り返して段が複数行になってもトグルを右上に留めるため
@@ -134,17 +169,17 @@ export const RichTextEditorToolbar: FC = memo(() => {
   const { localize } = useIntl()
   const state = useToolbarState(editor)
 
-  const groups = useMemo(() => {
+  const definitions = useMemo(() => {
     const has = (f: RichTextFeature) => features.includes(f)
 
     // 履歴操作（featuresに関係なく常に表示）
-    const history: ToolbarItem[] = [
+    const history: ToolbarItemDefinition[] = [
       {
         type: 'button',
         key: 'undo',
         icon: <FaArrowRotateLeftIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/undo', defaultText: '元に戻す' }),
-        disabled: !state.canUndo,
+        getDisabled: (s) => !s.canUndo,
         action: () => editor.chain().focus().undo().run(),
         shortcut: 'Mod-Z',
       },
@@ -153,34 +188,34 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'redo',
         icon: <FaArrowRotateRightIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/redo', defaultText: 'やり直す' }),
-        disabled: !state.canRedo,
+        getDisabled: (s) => !s.canRedo,
         action: () => editor.chain().focus().redo().run(),
         shortcut: 'Shift-Mod-Z',
       },
     ]
 
     // テキスト装飾
-    const decoration: ToolbarItem[] = []
+    const decoration: ToolbarItemDefinition[] = []
 
     if (has('heading')) {
       decoration.push({
         type: 'heading',
         key: 'heading-dropdown',
-        disabled: state.isNodeSelected,
+        getDisabled: (s) => s.isNodeSelected,
       })
     }
     if (has('fontSize')) {
       decoration.push({
         type: 'fontSize',
         key: 'fontSize-dropdown',
-        disabled: state.isInHeading || state.isNodeSelected,
+        getDisabled: (s) => s.isInHeading || s.isNodeSelected,
       })
     }
     if (has('lineHeight')) {
       decoration.push({
         type: 'lineHeight',
         key: 'lineHeight-dropdown',
-        disabled: state.isNodeSelected,
+        getDisabled: (s) => s.isNodeSelected,
       })
     }
     if (has('bold')) {
@@ -189,8 +224,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'bold',
         icon: <FaBoldIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/bold', defaultText: '太字' }),
-        active: state.isBold,
-        disabled: !state.canBold,
+        getActive: (s) => s.isBold,
+        getDisabled: (s) => !s.canBold,
         action: () => editor.chain().focus().toggleBold().run(),
         shortcut: 'Mod-B',
       })
@@ -201,8 +236,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'italic',
         icon: <FaItalicIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/italic', defaultText: '斜体' }),
-        active: state.isItalic,
-        disabled: !state.canItalic,
+        getActive: (s) => s.isItalic,
+        getDisabled: (s) => !s.canItalic,
         action: () => editor.chain().focus().toggleItalic().run(),
         shortcut: 'Mod-I',
       })
@@ -213,8 +248,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'underline',
         icon: <FaUnderlineIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/underline', defaultText: '下線' }),
-        active: state.isUnderline,
-        disabled: !state.canUnderline,
+        getActive: (s) => s.isUnderline,
+        getDisabled: (s) => !s.canUnderline,
         action: () => editor.chain().focus().toggleUnderline().run(),
         shortcut: 'Mod-U',
       })
@@ -225,35 +260,35 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'strike',
         icon: <FaStrikethroughIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/strike', defaultText: '打ち消し線' }),
-        active: state.isStrike,
-        disabled: !state.canStrike,
+        getActive: (s) => s.isStrike,
+        getDisabled: (s) => !s.canStrike,
         action: () => editor.chain().focus().toggleStrike().run(),
         shortcut: 'Mod-Shift-S',
       })
     }
     if (has('color')) {
-      decoration.push({ type: 'color', key: 'color-picker', disabled: state.isNodeSelected })
+      decoration.push({ type: 'color', key: 'color-picker', getDisabled: (s) => s.isNodeSelected })
     }
     if (has('backgroundColor')) {
       decoration.push({
         type: 'backgroundColor',
         key: 'background-color-picker',
-        disabled: state.isNodeSelected,
+        getDisabled: (s) => s.isNodeSelected,
       })
     }
     if (has('textAlign')) {
       decoration.push({
         type: 'textAlign',
         key: 'textAlign-group',
-        disabled: state.isNodeSelected,
+        getDisabled: (s) => s.isNodeSelected,
       })
     }
 
     // テキストの意味づけ
-    const semantics: ToolbarItem[] = []
+    const semantics: ToolbarItemDefinition[] = []
 
     if (has('link')) {
-      semantics.push({ type: 'link', key: 'link-button', disabled: state.isNodeSelected })
+      semantics.push({ type: 'link', key: 'link-button', getDisabled: (s) => s.isNodeSelected })
     }
     if (has('bulletList')) {
       semantics.push({
@@ -264,8 +299,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
           id: 'smarthr-ui/RichTextEditor/bulletList',
           defaultText: '箇条書きリスト',
         }),
-        active: state.isBulletList,
-        disabled: !state.canBulletList || state.isNodeSelected,
+        getActive: (s) => s.isBulletList,
+        getDisabled: (s) => !s.canBulletList || s.isNodeSelected,
         action: () => editor.chain().focus().toggleBulletList().run(),
         shortcut: 'Mod-Shift-8',
       })
@@ -279,8 +314,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
           id: 'smarthr-ui/RichTextEditor/orderedList',
           defaultText: '番号付きリスト',
         }),
-        active: state.isOrderedList,
-        disabled: !state.canOrderedList || state.isNodeSelected,
+        getActive: (s) => s.isOrderedList,
+        getDisabled: (s) => !s.canOrderedList || s.isNodeSelected,
         action: () => editor.chain().focus().toggleOrderedList().run(),
         shortcut: 'Mod-Shift-7',
       })
@@ -291,8 +326,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'blockquote',
         icon: <FaQuoteLeftIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/blockquote', defaultText: '引用' }),
-        active: state.isBlockquote,
-        disabled: !state.canBlockquote || state.isNodeSelected,
+        getActive: (s) => s.isBlockquote,
+        getDisabled: (s) => !s.canBlockquote || s.isNodeSelected,
         action: () => editor.chain().focus().toggleBlockquote().run(),
         shortcut: 'Mod-Shift-B',
       })
@@ -303,8 +338,8 @@ export const RichTextEditorToolbar: FC = memo(() => {
         key: 'code',
         icon: <FaCodeIcon />,
         label: localize({ id: 'smarthr-ui/RichTextEditor/code', defaultText: 'インラインコード' }),
-        active: state.isCode,
-        disabled: !state.canCode,
+        getActive: (s) => s.isCode,
+        getDisabled: (s) => !s.canCode,
         action: () => editor.chain().focus().toggleCode().run(),
         shortcut: 'Mod-E',
       })
@@ -318,15 +353,15 @@ export const RichTextEditorToolbar: FC = memo(() => {
           id: 'smarthr-ui/RichTextEditor/codeBlock',
           defaultText: 'コードブロック',
         }),
-        active: state.isCodeBlock,
-        disabled: !state.canCodeBlock || state.isNodeSelected,
+        getActive: (s) => s.isCodeBlock,
+        getDisabled: (s) => !s.canCodeBlock || s.isNodeSelected,
         action: () => editor.chain().focus().toggleCodeBlock().run(),
         shortcut: 'Mod-Alt-C',
       })
     }
 
     // 挿入
-    const insertion: ToolbarItem[] = []
+    const insertion: ToolbarItemDefinition[] = []
 
     if (has('horizontalRule')) {
       insertion.push({
@@ -337,18 +372,22 @@ export const RichTextEditorToolbar: FC = memo(() => {
           id: 'smarthr-ui/RichTextEditor/horizontalRule',
           defaultText: '水平線',
         }),
-        disabled: state.isNodeSelected,
+        getDisabled: (s) => s.isNodeSelected,
         action: () => editor.chain().focus().setHorizontalRule().run(),
       })
     }
     if (has('table')) {
-      insertion.push({ type: 'table', key: 'table-dropdown', disabled: state.isNodeSelected })
+      insertion.push({ type: 'table', key: 'table-dropdown', getDisabled: (s) => s.isNodeSelected })
     }
     if (has('image')) {
-      insertion.push({ type: 'image', key: 'image-insert', disabled: state.isNodeSelected })
+      insertion.push({ type: 'image', key: 'image-insert', getDisabled: (s) => s.isNodeSelected })
     }
     if (has('youtube')) {
-      insertion.push({ type: 'youtube', key: 'youtube-insert', disabled: state.isNodeSelected })
+      insertion.push({
+        type: 'youtube',
+        key: 'youtube-insert',
+        getDisabled: (s) => s.isNodeSelected,
+      })
     }
 
     // features で全項目が外れたグループは区切り線も含めて描画しない
@@ -360,20 +399,20 @@ export const RichTextEditorToolbar: FC = memo(() => {
         { id: 'decoration', items: decoration },
         { id: 'semantics', items: semantics },
         { id: 'insertion', items: insertion },
-      ] satisfies ToolbarGroup[]
+      ] satisfies Array<{ id: ToolbarGroup['id']; items: ToolbarItemDefinition[] }>
     ).filter((group) => group.items.length > 0)
 
-    // editorのeditable解除だけではツールバー由来のコマンドは止まらない（Tiptapのcommandはeditableを見ない）ため、
-    // 各itemのdisabledを一括で上書きしてネイティブのdisabled状態に落とす
-    if (disabled) {
-      return filled.map((group) => ({
-        ...group,
-        items: group.items.map((item) => ({ ...item, disabled: true })),
-      }))
-    }
-
     return filled
-  }, [features, state, editor, localize, disabled])
+  }, [features, editor, localize])
+
+  const groups = useMemo<ToolbarGroup[]>(
+    () =>
+      definitions.map((group) => ({
+        id: group.id,
+        items: group.items.map((definition) => toToolbarItem(definition, state, !!disabled)),
+      })),
+    [definitions, state, disabled],
+  )
 
   // トグルの表示を溢れで決めているのは、押しても何も起きないボタンを見せないため
   const latest = useLatest({ isWrapped })

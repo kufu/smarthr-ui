@@ -21,6 +21,7 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
 
+const TRIGGER_ICON = <FaCirclePlayIcon />
 type Props = {
   tabIndex?: number
   disabled?: boolean
@@ -82,6 +83,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
       }
 
       return {
+        handleTriggerClick: () => setIsOpen((prev) => !prev),
         handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
@@ -141,10 +143,10 @@ export const YoutubeInsertButton: FC<Props> = memo(
           tabIndex={tabIndex}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={functions.handleTriggerClick}
           onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
-          icon={<FaCirclePlayIcon />}
+          icon={TRIGGER_ICON}
           label={label}
         />
         {renderDropdown(

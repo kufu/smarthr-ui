@@ -50,6 +50,8 @@ const isValidSize = (value: string, max: number) => {
   return Number.isInteger(num) && num >= 1 && num <= max
 }
 
+const TRIGGER_ICON = <FaTableIcon />
+
 type Props = {
   tabIndex?: number
   disabled?: boolean
@@ -185,7 +187,7 @@ export const TableInsertDropdown: FC<Props> = memo(
           onClick={functions.handleTriggerClick}
           onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
-          icon={<FaTableIcon />}
+          icon={TRIGGER_ICON}
           label={tableLabel}
         />
         {renderDropdown(

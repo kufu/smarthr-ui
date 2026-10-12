@@ -1,10 +1,11 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
+import type { ToolbarButton } from './ToolbarButton'
 import type { RichTextFeature } from '../types'
 import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
@@ -12,7 +13,35 @@ import type { ReactNode } from 'react'
 // 段以外を監視しているコールバック（画像や表の位置追従）を巻き込まないよう絞り込む
 type FakeObserver = { callback: () => void; targets: Element[] }
 
+const { renderedLabels } = vi.hoisted(() => ({ renderedLabels: [] as string[] }))
+
+// Profiler では数えない。ツールバー全体のコミットしか分からず、どのボタンが描画し直されたかを区別できないため
+vi.mock('./ToolbarButton', async (importOriginal) => {
+  const { memo } = await import('react')
+  const actual = await importOriginal<{ ToolbarButton: typeof ToolbarButton }>()
+  const renderButton = (actual.ToolbarButton as unknown as { type?: typeof ToolbarButton }).type
+
+  if (typeof renderButton !== 'function') {
+    throw new Error(
+      'ToolbarButton が memo で包まれていないため、描画回数を数える差し替えを直すこと',
+    )
+  }
+
+  return {
+    ...actual,
+    ToolbarButton: memo((props: Parameters<typeof ToolbarButton>[0]) => {
+      renderedLabels.push(props.label)
+
+      return renderButton(props)
+    }),
+  }
+})
+
 const observers: FakeObserver[] = []
+
+beforeEach(() => {
+  renderedLabels.splice(0)
+})
 
 beforeAll(() => {
   globalThis.ResizeObserver = class {
@@ -105,6 +134,42 @@ const heightClassNamesOf = (el: HTMLElement) =>
   Array.from(el.classList).filter((className) => /^shr-rte-h-/.test(className))
 
 describe('RichTextEditorToolbar', () => {
+  it('書式の状態が変わっても、変わったボタンだけを描画し直す', async () => {
+    render(
+      <RichTextEditor
+        defaultValue={{
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                { type: 'text', text: '太字', marks: [{ type: 'bold' }] },
+                { type: 'text', text: '標準' },
+              ],
+            },
+          ],
+        }}
+        features={['bold', 'italic', 'underline']}
+      />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('toolbar')).toBeInTheDocument())
+    const editor = (screen.getByRole('textbox') as TiptapEditorHTMLElement).editor!
+    act(() => {
+      editor.commands.setTextSelection(5)
+    })
+    renderedLabels.splice(0)
+
+    act(() => {
+      editor.commands.setTextSelection(2)
+    })
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: '太字' })).toHaveAttribute('aria-pressed', 'true'),
+    )
+    expect(renderedLabels).toEqual(['太字'])
+  })
+
   it('ツールバーの操作要素のクリック領域の高さが全項目で揃っている', async () => {
     await renderEditor()
 

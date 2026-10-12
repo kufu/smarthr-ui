@@ -43,6 +43,8 @@ const CLASS_NAMES = (() => {
   }
 })()
 
+const TRIGGER_ICON = <FaImageIcon />
+
 type Props = {
   tabIndex?: number
   disabled?: boolean
@@ -192,7 +194,7 @@ export const ImageInsertButton: FC<Props> = memo(
           onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocus}
           onClick={functions.handleClick}
-          icon={<FaImageIcon />}
+          icon={TRIGGER_ICON}
           label={label}
         />
         {renderDropdown(

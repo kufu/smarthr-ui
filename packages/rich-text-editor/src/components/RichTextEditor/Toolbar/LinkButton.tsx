@@ -22,6 +22,7 @@ import { readers, useToolbarValue } from '../hooks/useToolbarState'
 import { ToolbarButton } from './ToolbarButton'
 import { isHttpUrl, isMailtoUrl } from './urlValidation'
 
+const TRIGGER_ICON = <FaLinkIcon />
 type Props = {
   tabIndex?: number
   disabled?: boolean
@@ -91,6 +92,7 @@ export const LinkButton: FC<Props> = memo(
       }
 
       return {
+        handleTriggerClick: () => setIsOpen((prev) => !prev),
         handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
@@ -209,10 +211,10 @@ export const LinkButton: FC<Props> = memo(
           tabIndex={tabIndex}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={functions.handleTriggerClick}
           onKeyDown={functions.handleTriggerKeyDown}
           onFocus={onFocusProp}
-          icon={<FaLinkIcon />}
+          icon={TRIGGER_ICON}
           label={label}
         />
         {renderDropdown(
