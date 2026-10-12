@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testi
 import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { TextSelection } from '@tiptap/pm/state'
 import StarterKit from '@tiptap/starter-kit'
 import { IntlProvider } from 'smarthr-ui'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -9,12 +10,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CellAppearance } from './CellAppearance'
 import { CustomTable } from './CustomTable'
 import { TableCellControls } from './TableCellControls'
-import { getTableTarget, selectTableCell } from './tableTarget'
+import { focusTableCell, getTableTarget } from './tableTarget'
 
 vi.mock('./tableTarget', async (importOriginal) => {
-  const actual = await importOriginal<{ selectTableCell: typeof selectTableCell }>()
+  const actual = await importOriginal<{ focusTableCell: typeof focusTableCell }>()
 
-  return { ...actual, selectTableCell: vi.fn(actual.selectTableCell) }
+  return { ...actual, focusTableCell: vi.fn(actual.focusTableCell) }
 })
 
 let editor: Editor
@@ -34,6 +35,7 @@ beforeEach(() => {
   scrollIntoView.mockClear()
   Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: () => null })
   HTMLElement.prototype.scrollIntoView = scrollIntoView
+  vi.spyOn(window, 'scrollBy').mockImplementation(() => {})
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
     this: HTMLElement,
   ) {
@@ -93,9 +95,8 @@ const showControls = () =>
     </IntlProvider>,
   )
 
-// メニューの操作後は本文へのフォーカスを Tiptap が次のフレームで行う。待たずに開き直すと、
-// 遅れて本文へ移ったフォーカスでメニューが閉じる
-const waitForEditorFocus = () => act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+// 開いたメニューへのフォーカスと、外からの変更で閉じたあとのセルへの戻しは次のフレームで行う
+const waitForNextFrame = () => act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
 
 describe('table controls', () => {
   it('keeps handles at the clicked cell while a column menu is open and colors only that column', async () => {
@@ -131,6 +132,53 @@ describe('table controls', () => {
     expect(dialog).toBeInTheDocument()
   })
 
+  it.each<[string, (dialog: HTMLElement) => void]>([
+    ['操作を実行', (dialog) => fireEvent.click(within(dialog).getAllByRole('button')[0])],
+    [
+      '列を挿入',
+      (dialog) => fireEvent.click(within(dialog).getByRole('button', { name: '右に列を挿入' })),
+    ],
+    [
+      '最後の項目で Tab',
+      (dialog) => {
+        const buttons = within(dialog).getAllByRole('button')
+        buttons[buttons.length - 1].focus()
+        fireEvent.keyDown(buttons[buttons.length - 1], { key: 'Tab' })
+      },
+    ],
+    ['Escape', () => fireEvent.keyDown(document.activeElement!, { key: 'Escape' })],
+  ])(
+    '%sで閉じるとすぐセルへフォーカスを戻し、その後に移したフォーカスを奪わない',
+    async (_, closeMenu) => {
+      showControls()
+      const outside = document.createElement('button')
+      document.body.appendChild(outside)
+
+      try {
+        const cellCoords = () => {
+          const { map, pos, tablePos } = getTableTarget(editor)!
+
+          return map.findCell(pos - tablePos - 1)
+        }
+        const originalCoords = cellCoords()
+        fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+        const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+        await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+
+        act(() => closeMenu(dialog))
+
+        expect(editor.view.dom).toHaveFocus()
+        expect(editor.state.selection).toBeInstanceOf(TextSelection)
+        expect(cellCoords()).toEqual(originalCoords)
+        outside.focus()
+        await waitForNextFrame()
+        expect(outside).toHaveFocus()
+      } finally {
+        outside.remove()
+      }
+    },
+  )
+
   it('スクロールでセルが見えなくなったら、メニューを閉じてフォーカスをセルへ戻す', async () => {
     showControls()
     fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
@@ -138,7 +186,7 @@ describe('table controls', () => {
     await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
     offscreen = true
     fireEvent.scroll(window)
-    await waitForEditorFocus()
+    await waitForNextFrame()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(editor.view.dom).toHaveFocus()
   })
@@ -150,8 +198,8 @@ describe('table controls', () => {
     await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
     offscreen = true
     fireEvent.scroll(window)
-    await waitForEditorFocus()
-    await waitForEditorFocus()
+    await waitForNextFrame()
+    await waitForNextFrame()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(document.body).toHaveFocus()
   })
@@ -191,7 +239,7 @@ describe('table controls', () => {
         configurable: true,
       })
       fireEvent(window, new Event('resize'))
-      await waitForEditorFocus()
+      await waitForNextFrame()
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
     })
@@ -298,7 +346,7 @@ describe('table controls', () => {
     expect(editor.state.doc.nodeAt(pos)?.type.name).toBe('tableHeader')
     expect(editor.state.doc.nodeAt(pos)?.textContent).toBe('Heading')
     expect(getTableTarget(editor)!.table.firstChild!.firstChild!.type.name).toBe('tableCell')
-    await waitForEditorFocus()
+    await waitForNextFrame()
     await user.click(screen.getByRole('button', { name: 'セルの操作' }))
     await user.click(screen.getByRole('button', { name: '通常のセルに戻す' }))
     expect(editor.state.doc.nodeAt(pos)?.type.name).toBe('tableCell')
@@ -317,7 +365,7 @@ describe('table controls', () => {
       expect(table.child(scope === '行' ? 1 : 0).child(scope === '行' ? 0 : 1).type.name).toBe(
         'tableHeader',
       )
-      await waitForEditorFocus()
+      await waitForNextFrame()
       await user.click(screen.getByRole('button', { name: `${scope}の操作` }))
       expect(screen.getByRole('button', { name: `${scope}をヘッダーにする` })).toHaveAttribute(
         'aria-pressed',
@@ -461,8 +509,8 @@ describe('メニューを開いている間に外から文書が変わったと�
     act(() => {
       editor.commands.insertContentAt(0, '<p>前</p>')
     })
-    await waitForEditorFocus()
-    await waitForEditorFocus()
+    await waitForNextFrame()
+    await waitForNextFrame()
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(editor.view.dom).toHaveFocus()
@@ -471,13 +519,13 @@ describe('メニューを開いている間に外から文書が変わったと�
 
   it('メニュー自身の操作で文書が変わったときは、本文へのフォーカスを重ねない', async () => {
     await openByShortcut()
-    vi.mocked(selectTableCell).mockClear()
+    vi.mocked(focusTableCell).mockClear()
 
     fireEvent.click(screen.getByRole('button', { name: '右に列を挿入' }))
-    await waitForEditorFocus()
-    await waitForEditorFocus()
+    await waitForNextFrame()
+    await waitForNextFrame()
 
-    expect(selectTableCell).not.toHaveBeenCalled()
+    expect(focusTableCell).toHaveBeenCalledTimes(1)
     expect(editor.view.dom).toHaveFocus()
   })
 
@@ -490,9 +538,9 @@ describe('メニューを開いている間に外から文書が変わったと�
       act(() => {
         editor.commands.insertContentAt(0, '<p>前</p>')
       })
-      await waitForEditorFocus()
+      await waitForNextFrame()
       act(() => outside.focus())
-      await waitForEditorFocus()
+      await waitForNextFrame()
 
       expect(outside).toHaveFocus()
     } finally {
@@ -510,8 +558,8 @@ describe('メニューを開いている間に外から文書が変わったと�
       editor.commands.insertContentAt(0, '<p>前</p>')
       outside.remove()
     })
-    await waitForEditorFocus()
-    await waitForEditorFocus()
+    await waitForNextFrame()
+    await waitForNextFrame()
 
     expect(document.body).toHaveFocus()
   })
@@ -528,8 +576,8 @@ describe('メニューを開いている間に外から文書が変わったと�
     act(() => {
       editor.commands.insertContentAt(0, '<p>前</p>', { updateSelection: false })
     })
-    await waitForEditorFocus()
-    await waitForEditorFocus()
+    await waitForNextFrame()
+    await waitForNextFrame()
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()

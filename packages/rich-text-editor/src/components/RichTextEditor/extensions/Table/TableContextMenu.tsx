@@ -23,13 +23,7 @@ import { TableColorPalette } from './TableColorPalette'
 import { TableMenuActions } from './TableMenuActions'
 import { TableMenuItemButton } from './TableMenuItemButton'
 import { TABLE_SHORTCUTS } from './tableShortcuts'
-import {
-  focusTableCell,
-  getTableTarget,
-  runTableAction,
-  selectTableCell,
-  selectTableTarget,
-} from './tableTarget'
+import { focusTableCell, getTableTarget, runTableAction, selectTableTarget } from './tableTarget'
 
 import type { TableScope } from './tableTarget'
 import type { RichTextFeature } from '../../types'
@@ -159,10 +153,7 @@ export const TableContextMenu = ({
         if (returnToTrigger.current && trigger?.isConnected) {
           trigger.focus({ preventScroll: true })
         } else {
-          // focusTableCell は使わない。Tiptap の focus がさらに次のフレームへ遅らせるため、
-          // その間に移されたフォーカスを奪う
-          selectTableCell(editor, returnPos.current)
-          editor.view.focus()
+          focusTableCell(editor, returnPos.current)
         }
       })
     }

@@ -61,7 +61,7 @@ export const clearTableCells = (editor: Editor) => {
   editor.view.dispatch(tr)
 }
 
-export const selectTableCell = (editor: Editor, cellPos?: number) => {
+const selectTableCell = (editor: Editor, cellPos?: number) => {
   if (cellPos !== undefined && getTableTarget(editor, cellPos)) {
     editor.view.dispatch(
       editor.state.tr.setSelection(TextSelection.near(editor.state.doc.resolve(cellPos + 1))),
@@ -77,9 +77,12 @@ export const selectTableCell = (editor: Editor, cellPos?: number) => {
   }
 }
 
+// Tiptap の focus は使わない。次のフレームへ遅らせるため、その間に移されたフォーカスを奪う
 export const focusTableCell = (editor: Editor, cellPos?: number) => {
-  selectTableCell(editor, cellPos)
-  editor.commands.focus(undefined, { scrollIntoView: false })
+  if (!editor.isDestroyed) {
+    selectTableCell(editor, cellPos)
+    editor.view.focus()
+  }
 }
 
 /** メニューの操作1回を、前後の入力や他の表操作と同じUndo単位にまとめない。 */
@@ -167,7 +170,6 @@ export const insertTableAxis = (
   tr.setSelection(TextSelection.near(tr.doc.resolve(tableStart + firstOffset + 1)))
   editor.view.dispatch(tr)
   editor.view.dispatch(closeHistory(editor.state.tr))
-  editor.commands.focus(undefined, { scrollIntoView: false })
 }
 
 // 比較用の正規化では不透明度を落とさない。パレットのhex変換で透明度が失われ、別の色が同じと判定されるため。

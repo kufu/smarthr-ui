@@ -61,6 +61,7 @@ export const AddTableAxisButton: FC<Props> = memo(
         e.preventDefault()
         e.stopPropagation()
         insertTableAxis(editor, axis, 'end', tablePos)
+        editor.view.focus()
       },
       [editor, tablePos, axis],
     )
