@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
 import { Fieldset } from '../FormGroup'
@@ -73,6 +73,34 @@ describe('Checkbox', () => {
       await user.click(checkbox)
 
       expect(checkbox).toBePartiallyChecked()
+    })
+
+    it('mixed を指定したまま checked のみプログラム的に変化した場合(制御)、mixed状態が追従する', async () => {
+      const { rerender } = render(
+        <form>
+          <Fieldset legend="Checkbox">
+            <Checkbox name="checkbox" checked={false} mixed onChange={() => {}}>
+              選択肢
+            </Checkbox>
+          </Fieldset>
+        </form>,
+      )
+
+      expect(screen.getByRole('checkbox')).not.toBePartiallyChecked()
+
+      rerender(
+        <form>
+          <Fieldset legend="Checkbox">
+            <Checkbox name="checkbox" checked={true} mixed onChange={() => {}}>
+              選択肢
+            </Checkbox>
+          </Fieldset>
+        </form>,
+      )
+
+      await waitFor(() => {
+        expect(screen.getByRole('checkbox')).toBePartiallyChecked()
+      })
     })
   })
 })

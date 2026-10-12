@@ -29,14 +29,16 @@ const callbackRef = (node: HTMLInputElement | null) => {
 
   action()
 
-  // ユーザー操作でcheckedが変わった場合も再評価する(data-checked属性はcontrolled時のみ更新されるため拾えない)
+  // ユーザー操作でcheckedが変わった場合も再評価する
   node.addEventListener('change', action)
 
+  // data-checkedはchecked(controlled prop)が変化したことをMutationObserverに伝えるトリガーとしてのみ使う
+  // (判定自体はnode.checkedを見るため、data-checkedの値そのものは判定に使わない)
   const observer = new MutationObserver(action)
 
   observer.observe(node, {
     attributes: true,
-    attributeFilter: ['data-mixed'],
+    attributeFilter: ['data-checked', 'data-mixed'],
   })
 
   return () => {
@@ -58,6 +60,7 @@ export const ActualCheckbox: FC<Props> = ({ ref, checked, mixed, error, ...rest 
       aria-invalid={errorAttr}
       data-smarthr-ui-input-error={errorAttr}
       data-smarthr-ui-input="true"
+      data-checked={checked || undefined}
       data-mixed={mixed || undefined}
     />
   )
