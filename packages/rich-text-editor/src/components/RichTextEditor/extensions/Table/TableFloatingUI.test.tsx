@@ -141,6 +141,17 @@ describe('表の行・列の追加ボタン', () => {
       )
     })
 
+    it('同じ表の中でキャレットを動かしても、帯の追加ボタンを消さない', async () => {
+      await renderTable()
+      placeCaretIn('A1')
+      hover(TABLE_RECT.right + 10, 100)
+      await screen.findByRole('button', { name: ADD_COLUMN })
+
+      placeCaretIn('A2')
+
+      expect(screen.getByRole('button', { name: ADD_COLUMN })).toBeInTheDocument()
+    })
+
     it('帯の追加ボタンは、ポインターを動かさずに続けて押せる', async () => {
       await renderTable()
       hover(100, TABLE_RECT.bottom + 10)
@@ -164,7 +175,7 @@ describe('表の行・列の追加ボタン', () => {
     })
   })
 
-  it('ポインターが別の表に重なったままでも、キャレットを移した表に追加ボタンを出す', async () => {
+  describe('表が複数あるとき・表の前を編集したとき', () => {
     const tableOf = (prefix: string) => ({
       type: 'table',
       content: [1, 2].map((row) => ({
@@ -175,24 +186,95 @@ describe('表の行・列の追加ボタン', () => {
         })),
       })),
     })
-    render(
-      <RichTextEditor
-        defaultValue={{ type: 'doc', content: [tableOf('A'), tableOf('C')] }}
-        features={['table']}
-      />,
-      { wrapper: Wrapper },
-    )
-    await waitFor(() => expect(screen.getByText('C2')).toBeInTheDocument())
-    placeCaretIn('A1')
-    fireEvent.mouseMove(screen.getByText('A1'), { clientX: 100, clientY: 60 })
-    await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+    const paragraphOf = (text: string) => ({
+      type: 'paragraph',
+      content: [{ type: 'text', text }],
+    })
+    const renderDoc = async (content: RichTextJSON['content'], lastText: string) => {
+      render(<RichTextEditor defaultValue={{ type: 'doc', content }} features={['table']} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(screen.getByText(lastText)).toBeInTheDocument())
+    }
+    const rowCounts = () =>
+      Array.from(document.querySelectorAll('.ProseMirror table')).map(
+        (table) => table.querySelectorAll('tr').length,
+      )
+    const hoverBelowFirstTable = async () => {
+      fireEvent.mouseMove(screen.getByRole('textbox'), {
+        clientX: 100,
+        clientY: TABLE_RECT.bottom + 10,
+      })
+      await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+    }
 
-    placeCaretIn('C2')
+    it('ポインターが別の表に重なったままでも、キャレットを移した表に追加ボタンを出し、その表で入力しても移さない', async () => {
+      await renderDoc([tableOf('A'), tableOf('C')], 'C2')
+      placeCaretIn('A1')
+      fireEvent.mouseMove(screen.getByText('A1'), { clientX: 100, clientY: 60 })
+      await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
 
-    fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
-    const rowCounts = Array.from(document.querySelectorAll('.ProseMirror table')).map(
-      (table) => table.querySelectorAll('tr').length,
-    )
-    expect(rowCounts).toEqual([2, 3])
+      placeCaretIn('C2')
+      act(() => {
+        getEditor().commands.insertContent('追記')
+      })
+
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+      expect(rowCounts()).toEqual([2, 3])
+    })
+
+    it('キャレットのある表とは別の表にあとからポインターを重ねても、キャレットの表に追加ボタンを出す', async () => {
+      await renderDoc([tableOf('A'), tableOf('C')], 'C2')
+      placeCaretIn('C2')
+
+      fireEvent.mouseMove(screen.getByText('A1'), { clientX: 100, clientY: 60 })
+      await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+      expect(rowCounts()).toEqual([2, 3])
+    })
+
+    it('帯で前の表に行を足したあと、キャレットを後ろの表へ移すと、後ろの表に追加ボタンを出す', async () => {
+      await renderDoc([tableOf('A'), tableOf('C')], 'C2')
+      placeCaretIn('C1')
+      await hoverBelowFirstTable()
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+      expect(rowCounts()).toEqual([3, 2])
+
+      placeCaretIn('C2')
+
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+      expect(rowCounts()).toEqual([3, 3])
+    })
+
+    it('ポインター下の表が削除されたら、後ろの表へ帯の追加ボタンを移さない', async () => {
+      await renderDoc([paragraphOf('前'), tableOf('A'), tableOf('C')], 'C2')
+      placeCaretIn('前')
+      await hoverBelowFirstTable()
+      await screen.findByRole('button', { name: ADD_ROW })
+
+      act(() => {
+        const { doc } = getEditor().state
+        const from = doc.firstChild!.nodeSize
+        getEditor().commands.deleteRange({ from, to: from + doc.child(1).nodeSize })
+      })
+
+      expect(screen.queryByText('A1')).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: ADD_ROW })).not.toBeInTheDocument()
+    })
+
+    it('表の前を編集して位置がずれても、帯の追加ボタンはポインター下の表に行を足す', async () => {
+      await renderDoc([paragraphOf('前'), tableOf('A')], 'A2')
+      placeCaretIn('前')
+      await hoverBelowFirstTable()
+      await screen.findByRole('button', { name: ADD_ROW })
+
+      act(() => {
+        getEditor().commands.insertContentAt(1, '追記')
+      })
+
+      fireEvent.click(await screen.findByRole('button', { name: ADD_ROW }))
+      expect(rowCounts()).toEqual([3])
+    })
   })
 })

@@ -20,10 +20,11 @@ import {
 } from './tableGeometry'
 
 import type { RichTextFeature } from '../../types'
+import type { Selection, Transaction } from '@tiptap/pm/state'
 import type { Editor } from '@tiptap/react'
 
-const findTablePos = (editor: Editor): number | null => {
-  const { $from } = editor.state.selection
+const findTablePos = (selection: Selection): number | null => {
+  const { $from } = selection
   for (let depth = $from.depth; depth > 0; depth--) {
     if ($from.node(depth).type.name === 'table') {
       return $from.before(depth)
@@ -105,7 +106,7 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
     editor,
     selector: ({ editor: e }) => {
       if (!e.isActive('table')) return null
-      const tablePos = findTablePos(e)
+      const tablePos = findTablePos(e.state.selection)
       if (tablePos === null) return null
       const edge = computeEdgeCells(e, tablePos)
       return { tablePos, edge }
@@ -151,9 +152,13 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
         if (!measured) continue
         const hit = hitTestExtendedTableArea(point, measured.rect, BAR_THICKNESS)
         if (hit.inside) {
-          setHoveredPos(measured.pos)
-          setInRightBar(hit.inRightBar)
-          setInBottomBar(hit.inBottomBar)
+          if (hit.inRightBar || hit.inBottomBar) {
+            setHoveredPos(measured.pos)
+            setInRightBar(hit.inRightBar)
+            setInBottomBar(hit.inBottomBar)
+          } else {
+            clearAll()
+          }
           return
         }
       }
@@ -181,16 +186,38 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
       clearAll()
     }
 
-    // ポインターが表に重なったままだと、キャレットを別の表へ移してもホバー先が優先されて
-    // ボタンが出ない。本文のキー入力をきっかけにしないのは、ツールバーやプログラムからの
-    // 移動を拾えず、選択を動かさないキー（コピーや修飾キー）でもポインター下のボタンが消えるため
+    // 文書が変わっても測り直さないのは、帯の追加で表が伸びるとポインターが表の中に入り、続けて押せなくなるため
+    const handleTransaction = ({
+      transaction,
+      appendedTransactions,
+    }: {
+      transaction: Transaction
+      appendedTransactions: Transaction[]
+    }) => {
+      const transactions = [transaction, ...appendedTransactions]
+      const { doc, selection } = transactions[transactions.length - 1]
+      const caretTablePos = findTablePos(selection)
+
+      setHoveredPos((current) => {
+        if (current === null) return null
+        let mapped = current
+        for (const tr of transactions) {
+          const result = tr.mapping.mapResult(mapped, 1)
+          if (result.deleted) return null
+          mapped = result.pos
+        }
+        if (caretTablePos !== null && caretTablePos !== mapped) return null
+        return doc.nodeAt(mapped)?.type.name === 'table' ? mapped : null
+      })
+    }
+
     container.addEventListener('mousemove', handleMouseMove)
     container.addEventListener('mouseleave', handleMouseLeave)
-    editor.on('selectionUpdate', handleMouseLeave)
+    editor.on('transaction', handleTransaction)
     return () => {
       container.removeEventListener('mousemove', handleMouseMove)
       container.removeEventListener('mouseleave', handleMouseLeave)
-      editor.off('selectionUpdate', handleMouseLeave)
+      editor.off('transaction', handleTransaction)
       if (frame !== null) window.cancelAnimationFrame(frame)
     }
   }, [editor, latest])
