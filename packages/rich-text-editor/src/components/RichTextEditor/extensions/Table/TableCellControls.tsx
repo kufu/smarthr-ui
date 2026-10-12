@@ -4,7 +4,7 @@ import { CellSelection } from '@tiptap/pm/tables'
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useLatest } from '../../../../hooks/useLatest'
-import { getControlOrigin } from '../floatingGeometry'
+import { type RelativeRect, getControlOrigin, isSameRect } from '../floatingGeometry'
 
 import { TableContextMenu } from './TableContextMenu'
 import { type TableScope, getTableTarget } from './tableTarget'
@@ -33,8 +33,13 @@ type Geometry = {
   height: number
   tableLeft: number
   tableTop: number
-  highlight: { top: number; left: number; width: number; height: number }
+  highlight: RelativeRect
 }
+
+const isSameGeometry = (a: Geometry, b: Geometry) =>
+  (Object.keys(a) as Array<keyof Geometry>).every((key) =>
+    key === 'highlight' ? isSameRect(a.highlight, b.highlight) : a[key] === b[key],
+  )
 
 export const TableCellControls = ({ editor, containerRef, features }: Props) => {
   const lockedTarget = useRef<{ scope: TableScope; pos: number } | null>(null)
@@ -55,7 +60,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
     const container = latest.containerRef.current
     if (!container) return
     let hovered: number | undefined
-    const update = () => {
+    const update = (keepIfSame: boolean) => {
       const target =
         getTableTarget(editor, lockedTarget.current?.pos ?? hovered) ?? getTableTarget(editor)
       if (!target) {
@@ -124,7 +129,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       const highlightTop = Math.max(highlightRect.top, viewport.top)
       const { left: originLeft, top: originTop } = getControlOrigin(container)
       const tableRect = table.getBoundingClientRect()
-      setGeometry({
+      const next: Geometry = {
         cellPos: cellTarget.pos,
         highlight: {
           left: highlightLeft - originLeft,
@@ -139,22 +144,33 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
         height: bottom - top,
         tableLeft: clip.left - originLeft,
         tableTop: Math.max(tableRect.top, viewport.top + TABLE_HANDLE_OFFSET) - originTop,
-      })
+      }
+      // 同じセルの上かどうかで測るのを省かない。列幅のドラッグや高さ固定の本文の伸び縮みのように、
+      // イベントの出ないレイアウトの変化に追従できなくなる。
+      // 常に値を比べる方法は採らない。メニューの項目は描画時に editor の状態から決まるため、
+      // 選択や文書の変化では値が同じでも描画し直す必要がある
+      setGeometry((prev) => (keepIfSame && prev && isSameGeometry(prev, next) ? prev : next))
     }
-    updateGeometry.current = update
+    const remeasure = () => update(true)
+    const refresh = () => update(false)
+    const handleLayoutChange = () => remeasure()
+    updateGeometry.current = refresh
     const move = (event: MouseEvent) => {
       if (lockedTarget.current || editor.state.selection instanceof CellSelection) return
       const cell = event.target instanceof Element ? event.target.closest('td, th') : null
       if (!cell || !editor.view.dom.contains(cell)) return
       hovered = editor.view.posAtDOM(cell, 0) - 1
-      update()
+      remeasure()
     }
     const selected = () => {
       hovered = undefined
-      update()
+      refresh()
     }
     const leave = () => {
-      if (!container.querySelector('[aria-expanded="true"]')) selected()
+      if (!container.querySelector('[aria-expanded="true"]')) {
+        hovered = undefined
+        remeasure()
+      }
     }
     let openFrame: number | null = null
     const openActions = (scope: TableScope = 'cell') => {
@@ -163,7 +179,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       hovered = undefined
       const cell = editor.view.nodeDOM(target.pos)
       if (cell instanceof HTMLElement) cell.scrollIntoView({ block: 'nearest', inline: 'nearest' })
-      update()
+      refresh()
       if (openFrame !== null) cancelAnimationFrame(openFrame)
       openFrame = requestAnimationFrame(() => {
         openFrame = requestAnimationFrame(() => {
@@ -183,11 +199,11 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
     editor.on('update', selected)
     container.addEventListener('mousemove', move)
     container.addEventListener('mouseleave', leave)
-    window.addEventListener('scroll', update, true)
-    const observer = new ResizeObserver(update)
+    window.addEventListener('scroll', handleLayoutChange, true)
+    const observer = new ResizeObserver(handleLayoutChange)
     observer.observe(container)
     observer.observe(editor.view.dom)
-    update()
+    refresh()
     return () => {
       if (editor.storage.table?.openActionsMenu === openActions)
         editor.storage.table.openActionsMenu = null
@@ -197,7 +213,7 @@ export const TableCellControls = ({ editor, containerRef, features }: Props) => 
       editor.off('update', selected)
       container.removeEventListener('mousemove', move)
       container.removeEventListener('mouseleave', leave)
-      window.removeEventListener('scroll', update, true)
+      window.removeEventListener('scroll', handleLayoutChange, true)
       observer.disconnect()
     }
   }, [editor, latest])

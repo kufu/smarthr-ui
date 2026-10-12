@@ -10,7 +10,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CellAppearance } from './CellAppearance'
 import { CustomTable } from './CustomTable'
 import { TableCellControls } from './TableCellControls'
+import { TableContextMenu } from './TableContextMenu'
 import { focusTableCell, getTableTarget } from './tableTarget'
+
+vi.mock('./TableContextMenu', async (importOriginal) => {
+  const actual = await importOriginal<{ TableContextMenu: typeof TableContextMenu }>()
+  return { ...actual, TableContextMenu: vi.fn(actual.TableContextMenu) }
+})
 
 vi.mock('./tableTarget', async (importOriginal) => {
   const actual = await importOriginal<{ focusTableCell: typeof focusTableCell }>()
@@ -406,6 +412,50 @@ describe('table controls', () => {
     expect(
       within(screen.getByRole('group', { name: '背景色' })).getByRole('button', { name: '赤' }),
     ).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('位置が変わらないマウスの移動では、操作UIを描画し直さない', () => {
+    showControls()
+    const cells = editor.view.dom.querySelectorAll('td')
+    fireEvent.mouseMove(cells[0])
+    vi.mocked(TableContextMenu).mockClear()
+
+    fireEvent.mouseMove(cells[0])
+    expect(TableContextMenu).not.toHaveBeenCalled()
+
+    fireEvent.mouseMove(cells[1])
+    expect(TableContextMenu).toHaveBeenCalled()
+  })
+
+  it('同じセルの上の移動でも、レイアウトが変わっていれば操作UIを追従させる', () => {
+    showControls()
+    const cells = editor.view.dom.querySelectorAll('td')
+    fireEvent.mouseMove(cells[0])
+    const columnHandle = () =>
+      screen.getByRole('button', { name: '列の操作' }).closest<HTMLElement>('[style*="left"]')!
+    const before = columnHandle().style.width
+
+    // 列幅のドラッグのように、イベントを出さずにセルの位置だけが変わる
+    horizontalOffset = 50
+    fireEvent.mouseMove(cells[0])
+
+    expect(columnHandle().style.width).not.toBe(before)
+  })
+
+  it('メニューを開いたまま選択だけが変わったら、メニューの項目を選択に合わせる', async () => {
+    showControls()
+    await userEvent.click(screen.getByRole('button', { name: 'セルの操作' }))
+    expect(screen.queryByRole('button', { name: 'セルを結合' })).not.toBeInTheDocument()
+
+    const table = getTableTarget(editor)!
+    act(() => {
+      editor.commands.setCellSelection({
+        anchorCell: table.tablePos + 1 + table.map.map[4],
+        headCell: table.tablePos + 1 + table.map.map[5],
+      })
+    })
+
+    expect(await screen.findByRole('button', { name: 'セルを結合' })).toBeInTheDocument()
   })
 
   it('preserves a multiple cell selection when opening its action button', async () => {

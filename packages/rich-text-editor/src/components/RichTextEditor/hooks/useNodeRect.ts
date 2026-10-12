@@ -7,6 +7,7 @@ import {
   type RelativeRect,
   getControlOrigin,
   getRelativeRect,
+  isSameRect,
 } from '../extensions/floatingGeometry'
 
 import type { Editor } from '@tiptap/react'
@@ -17,9 +18,6 @@ export type NodeRect = {
   /** 編集領域の矩形。操作UIのはみ出しを抑える基準にする */
   viewport: RelativeRect
 }
-
-const isSameRect = (a: RelativeRect, b: RelativeRect) =>
-  a.top === b.top && a.left === b.left && a.width === b.width && a.height === b.height
 
 // useEffect で測ると、対象が切り替わった直後の1フレームだけ操作UIが前の位置に出る
 export const useNodeRect = (
