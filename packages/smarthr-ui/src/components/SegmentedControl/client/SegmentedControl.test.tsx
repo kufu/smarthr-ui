@@ -39,4 +39,16 @@ describe('SegmentedControl', () => {
     expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'true')
     expect(screen.getByRole('radio', { name: 'B' })).toHaveAttribute('aria-checked', 'false')
   })
+
+  it('空文字列を選択値に持つ選択肢をdefaultValueに指定した場合、選択状態として扱われる', () => {
+    const optionsWithEmptyValue = [
+      { value: '', content: 'Empty' },
+      { value: 'a', content: 'A' },
+    ]
+
+    render(<SegmentedControl defaultValue="" options={optionsWithEmptyValue} />)
+
+    expect(screen.getByRole('radio', { name: 'Empty' })).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'false')
+  })
 })

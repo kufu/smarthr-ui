@@ -178,7 +178,10 @@ export const SegmentedControl: FC<Props> = ({
     [hasValue, latest],
   )
 
-  const excludesSelected = !actualValue || options.every((option) => option.value !== actualValue)
+  const excludesSelected =
+    actualValue === null ||
+    actualValue === undefined ||
+    options.every((option) => option.value !== actualValue)
 
   return (
     <div
@@ -203,7 +206,7 @@ export const SegmentedControl: FC<Props> = ({
               size={size}
               className={classNames.button}
               aria-label={ariaLabel}
-              aria-checked={checked && !!actualValue}
+              aria-checked={checked}
               handleClick={functions.handleClickOption}
             />
           )
