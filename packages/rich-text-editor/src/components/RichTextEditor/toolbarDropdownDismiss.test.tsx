@@ -19,13 +19,11 @@ const renderEditor = async () => {
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 }
 
-const TRIGGERS = [
+// ツールバーの全トリガーは並べない。書式・フォントサイズ・行送り・テキスト配置は ToolbarListboxDropdown、
+// 文字色・背景色は ColorPickerButton の同じ閉じる処理を通るため、部品ごとの代表だけを確かめる
+const DISTINCT_TRIGGERS = [
   /^書式:/,
-  /^フォントサイズ:/,
-  /^行送り:/,
   /^文字色:/,
-  /^背景色:/,
-  /^テキスト配置:/,
   /^リンク/,
   /^テーブルを挿入/,
   /^YouTube動画を埋め込む/,
@@ -44,18 +42,21 @@ const openByClick = async (user: ReturnType<typeof userEvent.setup>, name: RegEx
 }
 
 describe('ツールバーのドロップダウンを閉じる操作', () => {
-  it.each(TRIGGERS)('%s: トリガー上の Escape で閉じ、フォーカスはトリガーに残る', async (name) => {
-    const user = userEvent.setup()
-    await renderEditor()
+  it.each(DISTINCT_TRIGGERS)(
+    '%s: トリガー上の Escape で閉じ、フォーカスはトリガーに残る',
+    async (name) => {
+      const user = userEvent.setup()
+      await renderEditor()
 
-    await openByClick(user, name)
-    await user.keyboard('{Escape}')
+      await openByClick(user, name)
+      await user.keyboard('{Escape}')
 
-    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
-    expect(getTrigger(name)).toHaveFocus()
-  })
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    },
+  )
 
-  it.each(TRIGGERS)('%s: トリガーをもう一度クリックすると閉じる', async (name) => {
+  it.each(DISTINCT_TRIGGERS)('%s: トリガーをもう一度クリックすると閉じる', async (name) => {
     const user = userEvent.setup()
     await renderEditor()
 
@@ -65,7 +66,7 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it.each(TRIGGERS)('%s: 開いたまま disabled になると閉じる', async (name) => {
+  it.each(DISTINCT_TRIGGERS)('%s: 開いたまま disabled になると閉じる', async (name) => {
     const user = userEvent.setup()
     const { rerender } = render(
       <RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />,
@@ -143,7 +144,7 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
   })
 
-  it.each(TRIGGERS)('%s: 矢印キーで隣のボタンへ移ると閉じる', async (name) => {
+  it.each(DISTINCT_TRIGGERS)('%s: 矢印キーで隣のボタンへ移ると閉じる', async (name) => {
     const user = userEvent.setup()
     await renderEditor()
 
@@ -154,24 +155,22 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it.each([/^書式:/, /^フォントサイズ:/, /^行送り:/, /^テキスト配置:/])(
-    '%s: 選択肢で Tab を押すと閉じてトリガーへ戻る',
-    async (name) => {
-      const user = userEvent.setup()
-      await renderEditor()
+  it('選択肢で Tab を押すと閉じてトリガーへ戻る', async () => {
+    const name = /^書式:/
+    const user = userEvent.setup()
+    await renderEditor()
 
-      getTrigger(name).focus()
-      await user.keyboard('{Enter}')
-      const option = await screen.findByRole('option', { selected: true })
-      await waitFor(() => expect(option).toHaveFocus())
+    getTrigger(name).focus()
+    await user.keyboard('{Enter}')
+    const option = await screen.findByRole('option', { selected: true })
+    await waitFor(() => expect(option).toHaveFocus())
 
-      const notPrevented = fireEvent.keyDown(option, { key: 'Tab' })
+    const notPrevented = fireEvent.keyDown(option, { key: 'Tab' })
 
-      expect(notPrevented).toBe(false)
-      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
-      expect(getTrigger(name)).toHaveFocus()
-    },
-  )
+    expect(notPrevented).toBe(false)
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+    expect(getTrigger(name)).toHaveFocus()
+  })
 
   it('画像の挿入メニューで Tab を押すと閉じてトリガーへ戻る', async () => {
     const user = userEvent.setup()

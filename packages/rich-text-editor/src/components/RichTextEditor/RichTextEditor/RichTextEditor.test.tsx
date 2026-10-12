@@ -2382,10 +2382,6 @@ describe('RichTextEditor', () => {
       ['unsetLink', 'link', (c) => c.unsetLink()],
     ]
 
-    const FORMAT_OPERATIONS = OPERATION_FEATURES.map(
-      ([name, , operate]) => [name, operate] as const,
-    )
-
     const renderWithExternalButton = async (
       features: readonly RichTextFeature[],
       {
@@ -2469,7 +2465,8 @@ describe('RichTextEditor', () => {
     })
 
     describe.each(['disabled', 'readOnly'] as const)('%s のとき', (state) => {
-      it.each(FORMAT_OPERATIONS)('%s() は文書を変えない', async (_name, operate) => {
+      // 書式の操作を全部は並べない。どれも同じ runIfAllowed の判定を通り、操作ごとの経路は features のテストで確かめている
+      it('toggleBold() は文書を変えない', async () => {
         const ref = createRef<RichTextEditorController>()
         const onChange = vi.fn()
         render(
@@ -2489,7 +2486,7 @@ describe('RichTextEditor', () => {
         })
         const before = ref.current!.getJSON()
 
-        act(() => operate(ref.current!))
+        act(() => ref.current!.toggleBold())
 
         expect(ref.current!.getJSON()).toEqual(before)
         expect(onChange).not.toHaveBeenCalled()

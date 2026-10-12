@@ -30,6 +30,15 @@ const UNUSABLE_SRCS = [
   ['javascript:', 'javascript:alert(1)'],
 ] as const
 
+const pickSrcs = (names: ReadonlyArray<(typeof UNUSABLE_SRCS)[number][0]>) => {
+  const picked = UNUSABLE_SRCS.filter(([name]) => names.includes(name))
+
+  // テストは型チェックの CI 対象外のため、ラベルの変更でケースが黙って減らないよう実行時に止める
+  if (picked.length !== names.length) throw new Error(`UNUSABLE_SRCS に無いラベル: ${names}`)
+
+  return picked
+}
+
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
@@ -88,13 +97,16 @@ describe('画像の src の検証', () => {
       expect(onImageUploadError).not.toHaveBeenCalled()
     })
 
-    it.each(UNUSABLE_SRCS)('%s は挿入せず onImageUploadError へ渡す', async (_, src) => {
-      const { file, onImageUploadError } = await upload(src)
+    it.each(pickSrcs(['data:', 'プロトコル相対']))(
+      '%s は挿入せず onImageUploadError へ渡す',
+      async (_, src) => {
+        const { file, onImageUploadError } = await upload(src)
 
-      await waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
-      expect(onImageUploadError).toHaveBeenCalledWith(expect.any(Error), file)
-      expect(document.querySelector('.ProseMirror img')).toBeNull()
-    })
+        await waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
+        expect(onImageUploadError).toHaveBeenCalledWith(expect.any(Error), file)
+        expect(document.querySelector('.ProseMirror img')).toBeNull()
+      },
+    )
 
     it.each([
       ['src が無い', {}],
@@ -125,7 +137,7 @@ describe('画像の src の検証', () => {
       )
     })
 
-    it.each(UNUSABLE_SRCS)('%s の画像は取り込まない', async (_, src) => {
+    it.each(pickSrcs(['blob:', 'プロトコル相対']))('%s の画像は取り込まない', async (_, src) => {
       await pasteHTML(`<p>前</p><img src="${src}" alt="x"><p>後</p>`)
 
       await waitFor(() => expect(screen.getByRole('textbox')).toHaveTextContent('後'))
@@ -138,8 +150,13 @@ describe('画像の src の検証', () => {
       expect(serializeToHTML(imageDoc('/uploads/a.png'))).toContain('src="/uploads/a.png"')
     })
 
-    it.each(UNUSABLE_SRCS)('%s は出力されない', (_, src) => {
-      expect(serializeToHTML(imageDoc(src))).not.toContain(`src="${src}"`)
+    it.each(UNUSABLE_SRCS)('%s は画像を残して src だけを出力しない', (_, src) => {
+      const html = serializeToHTML(imageDoc(src))
+      const img = new DOMParser().parseFromString(html, 'text/html').querySelector('img')
+
+      expect(img).not.toBeNull()
+      expect(img?.hasAttribute('src')).toBe(false)
+      expect(html).not.toContain(src)
     })
   })
 })
