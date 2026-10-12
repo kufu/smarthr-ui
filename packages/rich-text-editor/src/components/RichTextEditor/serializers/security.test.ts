@@ -851,6 +851,18 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(react).not.toMatch(/shr-(rte-)?fixed/)
   })
 
+  it.each([
+    ['相対パス', { href: '/docs/a' }],
+    ['javascript:', { href: 'javascript:alert(1)' }],
+    ['href なし', {}],
+  ])('href が無効なリンク（%s）は、文字を残して a を出力しない', (_, attrs) => {
+    const { html, react } = bothOutputs(linkDoc(attrs))
+    for (const output of [html, react]) {
+      expect(output).not.toContain('<a')
+      expect(output).toContain('click')
+    }
+  })
+
   it('HTML入力の link の rel/class も出力されない', () => {
     const json = resolveRichTextValue({
       format: 'html',

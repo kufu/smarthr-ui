@@ -1,7 +1,8 @@
 import { Fragment, Slice } from '@tiptap/pm/model'
 
+import { sanitizeAttrs, shouldDropMark } from '../serializers/sanitizeRichTextJSON'
+
 import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from './configureHeading'
-import { normalizeFontSize } from './normalizeFontSize'
 import { createTypeAllowChecker } from './restrictOperations'
 
 import type { RichTextFeature } from '../types'
@@ -43,13 +44,6 @@ const clampAttributes = (
  *
  * schemaは常に全書式を載せている（既存データを失わないため）ので、schemaだけでは
  * ペーストを止められない。featuresの許可リストで絞るのはこの層の責務。
- *
- * - mark: 除去（テキストは残す）
- * - textStyle / paragraph の属性: 該当featureが無いものをnullにする
- * - inline contentを持つnode（heading等）: paragraphへ降格
- * - 許可外のレベルの heading: paragraphへ降格（新規適用にあたるため）
- * - blockを持つnode（table / list / blockquote等）: 子を親へ引き上げて平坦化
- * - atom / leaf node（image / youtube / horizontalRule）: 削除
  */
 export const createPasteFilter = (
   features: readonly RichTextFeature[],
@@ -67,19 +61,21 @@ export const createPasteFilter = (
       marks.reduce<Mark[]>((acc, mark) => {
         if (!isAllowedType(mark.type.name)) return acc
 
+        const sanitized = sanitizeAttrs(mark.type.name, mark.attrs)
+
+        if (shouldDropMark(mark.type.name, sanitized)) return acc
+
         if (mark.type.name !== 'textStyle') {
-          acc.push(mark)
+          acc.push(mark.type.create(sanitized))
 
           return acc
         }
 
         const attributes = clampAttributes(
-          mark.attrs,
+          sanitized,
           FEATURE_BY_TEXT_STYLE_ATTRIBUTE,
           isAllowedFeature,
         )
-
-        if ('fontSize' in attributes) attributes.fontSize = normalizeFontSize(attributes.fontSize)
 
         // 属性が全て空になったtextStyleは残す意味がない
         if (Object.values(attributes).every((value) => value === null)) return acc
@@ -130,7 +126,11 @@ export const createPasteFilter = (
         return [toParagraph(node)]
       }
 
-      const attributes = clampAttributes(node.attrs, FEATURE_BY_NODE_ATTRIBUTE, isAllowedFeature)
+      const attributes = clampAttributes(
+        sanitizeAttrs(node.type.name, node.attrs),
+        FEATURE_BY_NODE_ATTRIBUTE,
+        isAllowedFeature,
+      )
 
       return [node.type.create(attributes, Fragment.fromArray(filterFragment(node.content)), marks)]
     }

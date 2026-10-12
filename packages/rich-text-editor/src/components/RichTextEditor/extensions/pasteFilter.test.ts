@@ -372,6 +372,93 @@ describe('createPasteFilter', () => {
     })
   })
 
+  describe('属性の値の検証（読み込みと同じ基準）', () => {
+    const LINK_FEATURES: readonly RichTextFeature[] = ['link']
+
+    it('リンクの rel と class を、読み込み時と同じ値にそろえる', () => {
+      const result = filterSlice(LINK_FEATURES, {
+        content: [
+          paragraph([
+            text('リンク', [
+              {
+                type: 'link',
+                attrs: { href: 'https://example.com', rel: 'opener', class: 'evil big' },
+              },
+            ]),
+          ]),
+        ],
+      })
+
+      const [link] = JSON.parse(JSON.stringify(result.content))[0].content[0].marks
+
+      expect(link.attrs).toMatchObject({ rel: 'noopener noreferrer nofollow', class: null })
+    })
+
+    it.each(['/docs/a', '#sec'])('href %s のリンクは、文字を残してリンクを外す', (href) => {
+      const result = filterSlice(LINK_FEATURES, {
+        content: [paragraph([text('手順', [{ type: 'link', attrs: { href } }])])],
+      })
+
+      expect(JSON.parse(JSON.stringify(result.content))[0].content).toEqual([text('手順')])
+    })
+
+    it('許可していない target を落とす', () => {
+      const result = filterSlice(LINK_FEATURES, {
+        content: [
+          paragraph([
+            text('リンク', [
+              { type: 'link', attrs: { href: 'https://example.com', target: 'evil' } },
+            ]),
+          ]),
+        ],
+      })
+
+      expect(JSON.stringify(result.content)).not.toContain('evil')
+    })
+
+    it('許可していない色を落とし、属性がすべて空になった textStyle は外す', () => {
+      const result = filterSlice(['color', 'backgroundColor'], {
+        content: [
+          paragraph([
+            text('色', [
+              {
+                type: 'textStyle',
+                attrs: { color: 'url(x)', backgroundColor: 'color(srgb 1 0 0)' },
+              },
+            ]),
+          ]),
+        ],
+      })
+
+      expect(JSON.parse(JSON.stringify(result.content))[0].content).toEqual([text('色')])
+    })
+
+    it('表のセルの許可していない色を落とす', () => {
+      const result = filterSlice(['table', 'color'], {
+        content: [
+          {
+            type: 'table',
+            content: [
+              {
+                type: 'tableRow',
+                content: [
+                  {
+                    type: 'tableCell',
+                    attrs: { color: 'url(x)' },
+                    content: [paragraph([text('セル')])],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+
+      expect(JSON.stringify(result.content)).not.toContain('url(x)')
+      expect(JSON.stringify(result.content)).toContain('セル')
+    })
+  })
+
   // schemaは全書式を載せているので、フィルタがエディタに配線されていなければ
   // ペーストでfeatures外の書式が入ってしまう
   describe('エディタへの配線', () => {
@@ -395,6 +482,45 @@ describe('createPasteFilter', () => {
 
       expect(JSON.stringify(pasted.content.toJSON())).not.toContain('italic')
       expect(JSON.stringify(pasted.content.toJSON())).toContain('斜体')
+    })
+
+    it('HTML を貼り付けると、リンクの rel と class は検証した値で文書に入る', async () => {
+      const { result } = renderHook(() => useRichTextEditor({ features: ['link'] }))
+      await waitFor(() => {
+        expect(result.current.editor).not.toBeNull()
+      })
+      const editor = result.current.editor!
+
+      // jsdom には ClipboardEvent が無い
+      editor.view.pasteHTML(
+        '<p><a href="https://example.com" rel="opener" class="evil">リンク</a></p>',
+        new Event('paste') as ClipboardEvent,
+      )
+
+      const json = JSON.stringify(editor.getJSON())
+      expect(json).toContain('noopener noreferrer nofollow')
+      expect(json).not.toContain('opener"')
+      expect(json).not.toContain('evil')
+    })
+
+    it('HTML を貼り付けると、許可していない文字色は文書に入らない', async () => {
+      const { result } = renderHook(() =>
+        useRichTextEditor({ features: ['color', 'backgroundColor'] }),
+      )
+      await waitFor(() => {
+        expect(result.current.editor).not.toBeNull()
+      })
+      const editor = result.current.editor!
+
+      // jsdom には ClipboardEvent が無い
+      editor.view.pasteHTML(
+        '<p><span style="color: color(srgb 1 0 0); background-color: color(srgb 0 1 0)">色</span></p>',
+        new Event('paste') as ClipboardEvent,
+      )
+
+      const json = JSON.stringify(editor.getJSON())
+      expect(json).toContain('色')
+      expect(json).not.toContain('textStyle')
     })
   })
 })

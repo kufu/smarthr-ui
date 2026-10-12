@@ -160,7 +160,7 @@ const ATTRS_NORMALIZERS: Record<string, AttrsNormalizer> = {
   },
 }
 
-const sanitizeAttrs = (
+export const sanitizeAttrs = (
   type: string | undefined,
   rawAttrs: Record<string, unknown>,
 ): Record<string, unknown> => {
@@ -180,6 +180,14 @@ const sanitizeAttrs = (
   }, attrs)
 }
 
+/**
+ * 検証した属性で残せないマークか。貼り付けと読み込みで同じ判定にするため共有する。
+ *
+ * href の無いリンクとして残さないのは、押しても開かないのに見た目だけがリンクになるため。
+ */
+export const shouldDropMark = (type: string, attrs: Record<string, unknown> | undefined) =>
+  type === 'link' && (attrs?.href ?? null) === null
+
 export const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
@@ -189,10 +197,13 @@ const sanitizeMark = (mark: unknown): JSONMark | null => {
   if (!isRecord(mark) || typeof mark.type !== 'string') return null
 
   const { attrs, ...rest } = mark
+  const sanitized = isRecord(attrs) ? sanitizeAttrs(mark.type, attrs) : undefined
+
+  if (shouldDropMark(mark.type, sanitized)) return null
 
   return {
     ...rest,
-    ...(isRecord(attrs) ? { attrs: sanitizeAttrs(mark.type, attrs) } : {}),
+    ...(sanitized ? { attrs: sanitized } : {}),
     type: mark.type,
   }
 }
