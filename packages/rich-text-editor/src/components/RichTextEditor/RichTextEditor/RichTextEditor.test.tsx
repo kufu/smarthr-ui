@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { RichTextEditor } from './RichTextEditor'
 
 import type {
+  RichTextChangeMeta,
   RichTextEditorController,
   RichTextEditorProps,
   RichTextFeature,
@@ -1078,6 +1079,24 @@ describe('RichTextEditor', () => {
       const meta = onChange.mock.calls.at(-1)![1]
       expect(meta.isEmpty).toBe(ref.current!.isEmpty())
       expect(meta.text).toBe(ref.current!.getText())
+    })
+
+    it('onChange で受け取った値を書き換えても、meta.html は通知した時点の本文のまま', async () => {
+      let html: string | undefined
+      const onChange = vi.fn((value: RichTextJSON, meta: RichTextChangeMeta) => {
+        value.content = [{ type: 'paragraph', content: [{ type: 'text', text: '書き換え' }] }]
+        html = meta.html
+      })
+      render(<RichTextEditor onChange={onChange} />, { wrapper: Wrapper })
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+      act(() => {
+        getEditor().commands.insertContent('本文')
+      })
+
+      await waitFor(() => expect(onChange).toHaveBeenCalled())
+      expect(html).toBe('<p>本文</p>')
+      expect(onChange.mock.calls.at(-1)![1].text).toBe('本文')
     })
 
     it('HTML で渡した初期値の features 外の書式を保持する', async () => {

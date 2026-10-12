@@ -1,64 +1,27 @@
-import { createNodeFromContent, getText, isNodeEmpty } from '@tiptap/core'
-
-import { getRichTextSchema, getRichTextSerializers } from './richTextSchema'
+import { getDetachedJSON } from './getDetachedJSON'
 import { serializeToHTML } from './serializeToHTML'
 
-import type { RichTextChangeMeta, RichTextJSON } from '../types'
-import type { Node } from '@tiptap/pm/model'
-
-/** editor.getText() の既定値。ブロックの区切りは空行になる */
-const BLOCK_SEPARATOR = '\n\n'
+import type { RichTextChangeMeta } from '../types'
+import type { Editor } from '@tiptap/core'
 
 /**
- * editor 由来の値。onUpdate の時点で読み取って渡すことで、
- * 後続の編集で meta の中身が変わらないようにする。
+ * 値はすべて通知した時点の editor から読み、後続の編集で meta の中身が変わらないようにする。
  */
-export type RichTextSnapshot = {
-  isEmpty: boolean
-  text: string
-}
-
-const toNode = (json: RichTextJSON): Node =>
-  createNodeFromContent(json, getRichTextSchema(), { errorOnInvalidContent: false }) as Node
-
-/**
- * editor を経由しない呼び出しでも同じ結果を返すため、
- * Tiptap が editor.isEmpty / editor.getText() で使うのと同じ helper を通す。
- */
-const deriveFromJSON = (json: RichTextJSON) => {
-  const node = toNode(json)
-  const textSerializers = getRichTextSerializers()
+export const createChangeMeta = (editor: Editor): RichTextChangeMeta => {
+  const { doc } = editor.state
+  let html: string | undefined
 
   return {
-    isEmpty: isNodeEmpty(node),
-    text: getText(node, { blockSeparator: BLOCK_SEPARATOR, textSerializers }),
-    // 文字数はブロックの区切りを数えない
-    characterCount: getText(node, { blockSeparator: '', textSerializers }).length,
-  }
-}
-
-export const createChangeMeta = (
-  json: RichTextJSON,
-  characterCount?: number,
-  snapshot?: RichTextSnapshot,
-): RichTextChangeMeta => {
-  let derived: ReturnType<typeof deriveFromJSON> | undefined
-  const getDerived = () => {
-    if (!derived) derived = deriveFromJSON(json)
-
-    return derived
-  }
-
-  let _html: string | undefined
-
-  return {
-    json,
+    json: getDetachedJSON(editor),
+    // 利用者に渡す json からは作らない。受け取った値を書き換えられると、ほかの値と食い違うため
     get html() {
-      if (_html === undefined) _html = serializeToHTML(json)
-      return _html
+      html ??= serializeToHTML(doc.toJSON())
+
+      return html
     },
-    text: snapshot ? snapshot.text : getDerived().text,
-    isEmpty: snapshot ? snapshot.isEmpty : getDerived().isEmpty,
-    characterCount: characterCount ?? getDerived().characterCount,
+    text: editor.getText(),
+    isEmpty: editor.isEmpty,
+    // 文字数はブロックの区切りを数えない
+    characterCount: editor.getText({ blockSeparator: '' }).length,
   }
 }

@@ -13,7 +13,6 @@ import {
 } from '../extensions/reconfigureEditorOperations'
 import { isAutoTrailingNodeOnly } from '../extensions/trailingNode'
 import { createChangeMeta } from '../serializers/createChangeMeta'
-import { getDetachedJSON } from '../serializers/getDetachedJSON'
 import {
   getHtmlContent,
   getValueKeys,
@@ -23,7 +22,13 @@ import {
 import { serializeToHTML } from '../serializers/serializeToHTML'
 import { toEditorContent } from '../serializers/toEditorContent'
 
-import type { ImageUploadResult, RichTextFeature, RichTextJSON, RichTextValue } from '../types'
+import type {
+  ImageUploadResult,
+  RichTextChangeMeta,
+  RichTextFeature,
+  RichTextJSON,
+  RichTextValue,
+} from '../types'
 import type { JSONContent } from '@tiptap/core'
 import type { Node as ProseMirrorNode, Schema } from '@tiptap/pm/model'
 
@@ -56,16 +61,8 @@ const isSameDocument = (doc: ProseMirrorNode, content: JSONContent, schema: Sche
 
 type EmittedRecord = {
   doc: ProseMirrorNode
-  isEmpty: boolean
+  meta: RichTextChangeMeta
   consumed: boolean
-  html?: string
-}
-
-// 親に渡した JSON（meta.html の元）から作らないのは、親がそれを書き換えると記録まで変わるため
-const getEmittedHtml = (record: EmittedRecord) => {
-  record.html ??= serializeToHTML(record.doc.toJSON() as RichTextJSON)
-
-  return record.html
 }
 
 const toRoundTripNode = (schema: Schema, html: string): ProseMirrorNode | null => {
@@ -79,7 +76,7 @@ const toRoundTripNode = (schema: Schema, html: string): ProseMirrorNode | null =
 type UseRichTextEditorOptions = {
   value?: RichTextValue
   defaultValue?: RichTextValue
-  onChange?: (value: RichTextJSON, meta: ReturnType<typeof createChangeMeta>) => void
+  onChange?: (value: RichTextJSON, meta: RichTextChangeMeta) => void
   onFocus?: () => void
   onBlur?: () => void
   features?: readonly RichTextFeature[]
@@ -182,15 +179,9 @@ export const useRichTextEditor = ({
     onUpdate: ({ editor: e, transaction, appendedTransactions }) => {
       if (!onChange || isAutoTrailingNodeOnly(transaction, appendedTransactions)) return
 
-      // 空判定とテキストは editor と同じ結果にする必要があるため、この時点の値を読んで渡す
-      const json = getDetachedJSON(e)
-      const characterCount = e.getText({ blockSeparator: '' }).length
-      const meta = createChangeMeta(json, characterCount, {
-        isEmpty: e.isEmpty,
-        text: e.getText(),
-      })
-      emitted.current = { doc: e.state.doc, isEmpty: meta.isEmpty, consumed: false }
-      onChange(json, meta)
+      const meta = createChangeMeta(e)
+      emitted.current = { doc: e.state.doc, meta, consumed: false }
+      onChange(meta.json, meta)
     },
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),
@@ -212,8 +203,8 @@ export const useRichTextEditor = ({
       !!record &&
       !record.consumed &&
       (isNoDataValue(currentValue)
-        ? record.isEmpty
-        : html !== undefined && html === getEmittedHtml(record))
+        ? record.meta.isEmpty
+        : html !== undefined && html === record.meta.html)
 
     if (emitted.current) emitted.current.consumed = true
 
@@ -235,7 +226,7 @@ export const useRichTextEditor = ({
         ? null
         : toRoundTripNode(
             editor.schema,
-            record ? getEmittedHtml(record) : serializeToHTML(editor.getJSON()),
+            record ? record.meta.html : serializeToHTML(editor.getJSON()),
           )
 
     if (roundTrip && isSameDocument(roundTrip, json, editor.schema)) return

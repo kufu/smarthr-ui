@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import { createChangeMeta } from './createChangeMeta'
 import { resolveRichTextValue } from './resolveRichTextValue'
 import { serializeToHTML } from './serializeToHTML'
 
@@ -50,28 +49,6 @@ describe('serializeToHTML', () => {
     }
     const html = serializeToHTML(json)
     expect(html).toContain('<strong>bold</strong>')
-  })
-})
-
-describe('createChangeMeta', () => {
-  it('JSON から meta を生成する', () => {
-    const json: RichTextJSON = {
-      type: 'doc',
-      content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
-    }
-    const meta = createChangeMeta(json)
-    expect(meta.json).toBe(json)
-    expect(meta.html).toContain('hello')
-    expect(meta.text).toBe('hello')
-    expect(meta.isEmpty).toBe(false)
-    expect(meta.characterCount).toBe(5)
-  })
-
-  it('空ドキュメントの meta を生成する', () => {
-    const json: RichTextJSON = { type: 'doc', content: [{ type: 'paragraph' }] }
-    const meta = createChangeMeta(json)
-    expect(meta.isEmpty).toBe(true)
-    expect(meta.characterCount).toBe(0)
   })
 })
 
