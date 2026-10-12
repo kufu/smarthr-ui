@@ -61,55 +61,73 @@ describe('RichTextViewer', () => {
     expect(strong.tagName).toBe('STRONG')
   })
 
-  describe('マークの入れ子の順を、HTML 出力（エディタの描画）とそろえる', () => {
+  describe('マークの入れ子の順と属性を、HTML 出力（エディタの描画）とそろえる', () => {
     const TEXT = '重ねた装飾'
     const docWithMarks = (marks: NonNullable<RichTextJSON['marks']>): RichTextJSON => ({
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: TEXT, marks }] }],
     })
-    const tagsAround = (root: ParentNode) => {
-      const tags: string[] = []
-      const innermost = Array.from(root.querySelectorAll('*')).find(
+    // style は属性の文字列のまま比べない。生の属性は経路によって色の書式（#ff0000 と rgb()）や宣言の順が違うため、
+    // CSSOM で読んだプロパティごとの値で比べる
+    const marksAround = (root: ParentNode) => {
+      const marks: Array<{ tag: string; attributes: Record<string, string> }> = []
+      const innermost = Array.from(root.querySelectorAll<HTMLElement>('*')).find(
         (el) => el.children.length === 0 && el.textContent === TEXT,
       )
       for (let el = innermost; el && el.tagName !== 'P'; el = el.parentElement ?? undefined) {
-        tags.unshift(el.tagName)
+        marks.unshift({
+          tag: el.tagName,
+          attributes: Object.fromEntries(
+            Array.from(el.attributes, ({ name, value }) => [
+              name,
+              name === 'style'
+                ? Array.from(el.style)
+                    .sort()
+                    .map((property) => `${property}: ${el.style.getPropertyValue(property)}`)
+                    .join('; ')
+                : value,
+            ]),
+          ),
+        })
       }
-      return tags
+      return marks
     }
-    const expectSameNesting = (content: RichTextJSON, depth: number) => {
-      const expected = tagsAround(
+    const expectSameMarks = (content: RichTextJSON, depth: number) => {
+      const expected = marksAround(
         new DOMParser().parseFromString(serializeToHTML(content), 'text/html').body,
       )
 
       const { container } = render(<RichTextViewer content={content} />)
 
       expect(expected).toHaveLength(depth)
-      expect(tagsAround(container)).toEqual(expected)
+      expect(marksAround(container)).toEqual(expected)
     }
-    const FONT_SIZE = { type: 'textStyle', attrs: { fontSize: '3.75rem', color: '#ff0000' } }
+    const TEXT_STYLE = {
+      type: 'textStyle',
+      attrs: { fontSize: '3.75rem', color: '#ff0000', backgroundColor: '#00ff00' },
+    }
 
-    it('重なったマークを同じ順で描画する', () => {
-      expectSameNesting(
+    it('重なったマークを同じ順・同じ属性で描画する', () => {
+      expectSameMarks(
         docWithMarks([
           { type: 'underline' },
           { type: 'strike' },
           { type: 'italic' },
           { type: 'bold' },
-          { type: 'link', attrs: { href: 'https://example.com' } },
-          FONT_SIZE,
+          { type: 'link', attrs: { href: 'https://example.com', target: '_self' } },
+          TEXT_STYLE,
         ]),
         6,
       )
     })
 
-    it.each(Object.keys(getRichTextSchema().marks).filter((name) => name !== FONT_SIZE.type))(
-      'スキーマの %s と文字スタイルを重ねても同じ順で描画する',
+    it.each(Object.keys(getRichTextSchema().marks).filter((name) => name !== TEXT_STYLE.type))(
+      'スキーマの %s と文字スタイルを重ねても同じ順・同じ属性で描画する',
       (name) => {
         const mark =
           name === 'link' ? { type: name, attrs: { href: 'https://example.com' } } : { type: name }
 
-        expectSameNesting(docWithMarks([mark, FONT_SIZE]), 2)
+        expectSameMarks(docWithMarks([mark, TEXT_STYLE]), 2)
       },
     )
   })
