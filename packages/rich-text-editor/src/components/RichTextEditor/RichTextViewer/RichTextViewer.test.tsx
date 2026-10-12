@@ -1,11 +1,13 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { getRichTextSchema } from '../serializers/richTextSchema'
+import { serializeToHTML } from '../serializers/serializeToHTML'
 import { serializeToReactElement } from '../serializers/serializeToReactElement'
 
 import { RichTextViewer } from './RichTextViewer'
 
-import type { RichTextViewerProps } from '../types'
+import type { RichTextJSON, RichTextViewerProps } from '../types'
 
 vi.mock('../serializers/serializeToReactElement', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>
@@ -57,6 +59,59 @@ describe('RichTextViewer', () => {
     )
     const strong = screen.getByText('太字')
     expect(strong.tagName).toBe('STRONG')
+  })
+
+  describe('マークの入れ子の順を、HTML 出力（エディタの描画）とそろえる', () => {
+    const TEXT = '重ねた装飾'
+    const docWithMarks = (marks: NonNullable<RichTextJSON['marks']>): RichTextJSON => ({
+      type: 'doc',
+      content: [{ type: 'paragraph', content: [{ type: 'text', text: TEXT, marks }] }],
+    })
+    const tagsAround = (root: ParentNode) => {
+      const tags: string[] = []
+      const innermost = Array.from(root.querySelectorAll('*')).find(
+        (el) => el.children.length === 0 && el.textContent === TEXT,
+      )
+      for (let el = innermost; el && el.tagName !== 'P'; el = el.parentElement ?? undefined) {
+        tags.unshift(el.tagName)
+      }
+      return tags
+    }
+    const expectSameNesting = (content: RichTextJSON, depth: number) => {
+      const expected = tagsAround(
+        new DOMParser().parseFromString(serializeToHTML(content), 'text/html').body,
+      )
+
+      const { container } = render(<RichTextViewer content={content} />)
+
+      expect(expected).toHaveLength(depth)
+      expect(tagsAround(container)).toEqual(expected)
+    }
+    const FONT_SIZE = { type: 'textStyle', attrs: { fontSize: '3.75rem', color: '#ff0000' } }
+
+    it('重なったマークを同じ順で描画する', () => {
+      expectSameNesting(
+        docWithMarks([
+          { type: 'underline' },
+          { type: 'strike' },
+          { type: 'italic' },
+          { type: 'bold' },
+          { type: 'link', attrs: { href: 'https://example.com' } },
+          FONT_SIZE,
+        ]),
+        6,
+      )
+    })
+
+    it.each(Object.keys(getRichTextSchema().marks).filter((name) => name !== FONT_SIZE.type))(
+      'スキーマの %s と文字スタイルを重ねても同じ順で描画する',
+      (name) => {
+        const mark =
+          name === 'link' ? { type: name, attrs: { href: 'https://example.com' } } : { type: name }
+
+        expectSameNesting(docWithMarks([mark, FONT_SIZE]), 2)
+      },
+    )
   })
 
   it('見出しを h タグで描画する', () => {

@@ -132,6 +132,11 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
 }
 
 const markMapping: Record<string, ReactMarkMapping> = {
+  bold: ({ children }) => createElement('strong', null, children),
+  italic: ({ children }) => createElement('em', null, children),
+  underline: ({ children }) => createElement('u', null, children),
+  strike: ({ children }) => createElement('s', null, children),
+  code: ({ children }) => createElement('code', null, children),
   link: ({ mark, children }) => {
     const href = mark.attrs.href
     return createElement(
@@ -157,15 +162,29 @@ const markMapping: Record<string, ReactMarkMapping> = {
   },
 }
 
+// マークをライブラリに包ませないのは、先頭のマークを最も内側に置いてエディタと入れ子が逆になり、
+// 下線・取り消し線が文字サイズや色に合わなくなるため（ueberdosis/tiptap#7299）
+const passThroughMark: ReactMarkMapping = ({ children }) => children
+
+const passThroughMarkMapping = Object.fromEntries(
+  Object.keys(markMapping).map((name) => [name, passThroughMark]),
+)
+
+const renderText: ReactNodeMapping = ({ node }) =>
+  node.marks.reduceRight<ReactNode>((children, mark) => {
+    const renderMark = markMapping[mark.type.name]
+    return renderMark ? renderMark({ mark, children }) : children
+  }, node.text ?? '')
+
 export const serializeToReactElement = (json: RichTextJSON): ReactNode =>
   tiptapRenderToReactElement({
     content: sanitizeRichTextJSON(json),
     extensions: getRichTextExtensions(),
     options: {
-      nodeMapping,
-      markMapping,
+      nodeMapping: { ...nodeMapping, text: renderText },
+      markMapping: passThroughMarkMapping,
       // 別バージョンの schema で保存された型は、装飾を諦めて中身の文字だけを残す
       unhandledNode: ({ children }) => children ?? null,
-      unhandledMark: ({ children }) => children,
+      unhandledMark: passThroughMark,
     },
   })
