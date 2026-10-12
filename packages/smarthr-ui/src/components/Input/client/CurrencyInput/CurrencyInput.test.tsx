@@ -35,6 +35,24 @@ describe('CurrencyInput', () => {
     expect(input).toHaveValue('1000')
   })
 
+  it('defaultValue のみ指定した場合(非制御)、フォーカス中のユーザー入力で値が更新される', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <form>
+        <FormControl label="CurrencyInput">
+          <CurrencyInput name="currency" defaultValue="1000" />
+        </FormControl>
+      </form>,
+    )
+
+    const input = screen.getByRole('textbox')
+    await user.click(input)
+    await user.type(input, '5')
+
+    expect(input).toHaveValue('10005')
+  })
+
   it('defaultValue のみ指定した場合(非制御)、フォーカスを外すと再度フォーマットされる', async () => {
     const user = userEvent.setup()
 
