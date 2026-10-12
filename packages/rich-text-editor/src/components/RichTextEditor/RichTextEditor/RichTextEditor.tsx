@@ -22,8 +22,10 @@ import type {
   RichTextChangeMeta,
   RichTextEditorController,
   RichTextEditorProps,
+  RichTextFeature,
   RichTextJSON,
 } from '../types'
+import type { ChainedCommands } from '@tiptap/core'
 import type { Editor } from '@tiptap/react'
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
 
@@ -150,7 +152,7 @@ export const RichTextEditor = memo(
       )
       const isResizable = !!resizable && !readOnly && !disabled
 
-      const latest = useLatest({ onChange, outputFormat, draggedHeight })
+      const latest = useLatest({ onChange, outputFormat, draggedHeight, features })
 
       const functions = useMemo(
         () => ({
@@ -241,11 +243,25 @@ export const RichTextEditor = memo(
         toolbarRef,
       })
 
-      useImperativeHandle(ref, () => {
-        // Tiptap のコマンドは editable=false でも実行される。書式の操作は利用者の独自ツールバーから
-        // 呼ばれるユーザー操作の代わりなので止める。clear は止めない。フォームのリセットのように
-        // プログラムから呼ぶもので、ネイティブの input も disabled で値の代入は止めないため
-        const chainIfEditable = () => (editor?.isEditable ? editor.chain().focus() : undefined)
+      const controller = useMemo<RichTextEditorController>(() => {
+        // 可否の判定を Tiptap のコマンドに任せない。editable=false でも、features で操作を外した書式でも実行されるため。
+        // clear は止めない。フォームのリセットのようにプログラムから呼ぶもので、
+        // ネイティブの input も disabled で値の代入は止めないため
+        //
+        // chain().focus() から始めない。focus は後続のコマンドが失敗しても requestAnimationFrame で実行され、
+        // 書式が変わらないままフォーカスだけが本文へ移る
+        const runIfAllowed = (
+          feature: RichTextFeature,
+          apply: (chain: ChainedCommands) => ChainedCommands,
+        ) => {
+          if (
+            editor?.isEditable &&
+            latest.features.includes(feature) &&
+            apply(editor.chain()).run()
+          ) {
+            editor.commands.focus()
+          }
+        }
 
         return {
           focus: () => editor?.chain().focus().run(),
@@ -266,17 +282,22 @@ export const RichTextEditor = memo(
           getHTML: () => (editor ? serializeToHTML(editor.getJSON()) : ''),
           getText: () => editor?.getText() ?? '',
           isEmpty: () => editor?.isEmpty ?? true,
-          toggleBold: () => chainIfEditable()?.toggleBold().run(),
-          toggleItalic: () => chainIfEditable()?.toggleItalic().run(),
-          toggleBulletList: () => chainIfEditable()?.toggleBulletList().run(),
-          toggleOrderedList: () => chainIfEditable()?.toggleOrderedList().run(),
-          toggleBlockquote: () => chainIfEditable()?.toggleBlockquote().run(),
-          setHeading: (level: 1 | 2 | 3 | 4) => chainIfEditable()?.setHeading({ level }).run(),
+          toggleBold: () => runIfAllowed('bold', (chain) => chain.toggleBold()),
+          toggleItalic: () => runIfAllowed('italic', (chain) => chain.toggleItalic()),
+          toggleBulletList: () => runIfAllowed('bulletList', (chain) => chain.toggleBulletList()),
+          toggleOrderedList: () =>
+            runIfAllowed('orderedList', (chain) => chain.toggleOrderedList()),
+          toggleBlockquote: () => runIfAllowed('blockquote', (chain) => chain.toggleBlockquote()),
+          setHeading: (level: 1 | 2 | 3 | 4) =>
+            runIfAllowed('heading', (chain) => chain.setHeading({ level })),
           setLink: (href: string) =>
-            chainIfEditable()?.extendMarkRange('link').setLink({ href }).run(),
-          unsetLink: () => chainIfEditable()?.extendMarkRange('link').unsetLink().run(),
+            runIfAllowed('link', (chain) => chain.extendMarkRange('link').setLink({ href })),
+          unsetLink: () =>
+            runIfAllowed('link', (chain) => chain.extendMarkRange('link').unsetLink()),
         }
-      }, [editor])
+      }, [editor, latest])
+
+      useImperativeHandle(ref, () => controller, [controller])
 
       // wrapper の id を本文へ移す仕組みだけに任せない。移した後は wrapper に id が無く、
       // 指定をやめても React が消す対象が無いため、本文に古い id が残る

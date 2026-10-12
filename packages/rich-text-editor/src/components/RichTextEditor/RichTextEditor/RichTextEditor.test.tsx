@@ -6,7 +6,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
 
-import type { RichTextEditorController, RichTextJSON, RichTextValue } from '../types'
+import type {
+  RichTextEditorController,
+  RichTextEditorProps,
+  RichTextFeature,
+  RichTextJSON,
+  RichTextValue,
+} from '../types'
 import type { Editor, TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
@@ -2469,16 +2475,104 @@ describe('RichTextEditor', () => {
       ],
     }
 
-    const FORMAT_OPERATIONS: Array<[string, (controller: RichTextEditorController) => void]> = [
-      ['toggleBold', (c) => c.toggleBold()],
-      ['toggleItalic', (c) => c.toggleItalic()],
-      ['toggleBulletList', (c) => c.toggleBulletList()],
-      ['toggleOrderedList', (c) => c.toggleOrderedList()],
-      ['toggleBlockquote', (c) => c.toggleBlockquote()],
-      ['setHeading', (c) => c.setHeading(2)],
-      ['setLink', (c) => c.setLink('https://example.org')],
-      ['unsetLink', (c) => c.unsetLink()],
+    const OPERATION_FEATURES: Array<
+      [string, RichTextFeature, (controller: RichTextEditorController) => void]
+    > = [
+      ['toggleBold', 'bold', (c) => c.toggleBold()],
+      ['toggleItalic', 'italic', (c) => c.toggleItalic()],
+      ['toggleBulletList', 'bulletList', (c) => c.toggleBulletList()],
+      ['toggleOrderedList', 'orderedList', (c) => c.toggleOrderedList()],
+      ['toggleBlockquote', 'blockquote', (c) => c.toggleBlockquote()],
+      ['setHeading', 'heading', (c) => c.setHeading(2)],
+      ['setLink', 'link', (c) => c.setLink('https://example.org')],
+      ['unsetLink', 'link', (c) => c.unsetLink()],
     ]
+
+    const FORMAT_OPERATIONS = OPERATION_FEATURES.map(
+      ([name, , operate]) => [name, operate] as const,
+    )
+
+    const renderWithExternalButton = async (
+      features: readonly RichTextFeature[],
+      {
+        defaultValue = LINKED_DOC,
+        headingLevels,
+      }: Pick<RichTextEditorProps, 'defaultValue' | 'headingLevels'> = {},
+    ) => {
+      const ref = createRef<RichTextEditorController>()
+      const onChange = vi.fn()
+      render(
+        <>
+          <button type="button">外部のボタン</button>
+          <RichTextEditor
+            ref={ref}
+            defaultValue={defaultValue}
+            features={features}
+            headingLevels={headingLevels}
+            onChange={onChange}
+          />
+        </>,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
+      act(() => {
+        getEditor().commands.selectAll()
+      })
+      const externalButton = screen.getByRole('button', { name: '外部のボタン' })
+      act(() => externalButton.focus())
+
+      return { controller: ref.current!, onChange, externalButton }
+    }
+
+    const waitForFocusFrame = () =>
+      act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
+    it.each(OPERATION_FEATURES)(
+      '%s() は features に %s があるとき、文書を変えて本文にフォーカスする',
+      async (_name, _feature, operate) => {
+        const { controller, onChange } = await renderWithExternalButton(ALL_FEATURES)
+        const before = controller.getJSON()
+
+        act(() => operate(controller))
+        await waitForFocusFrame()
+
+        expect(controller.getJSON()).not.toEqual(before)
+        expect(onChange).toHaveBeenCalled()
+        expect(screen.getByRole('textbox')).toHaveFocus()
+      },
+    )
+
+    it.each(OPERATION_FEATURES)(
+      '%s() は features に %s が無いとき、文書もフォーカスも変えない',
+      async (_name, feature, operate) => {
+        const { controller, onChange, externalButton } = await renderWithExternalButton(
+          ALL_FEATURES.filter((f) => f !== feature),
+        )
+        const before = controller.getJSON()
+
+        act(() => operate(controller))
+        await waitForFocusFrame()
+
+        expect(controller.getJSON()).toEqual(before)
+        expect(onChange).not.toHaveBeenCalled()
+        expect(externalButton).toHaveFocus()
+      },
+    )
+
+    it('setHeading() は headingLevels に無いレベルのとき、文書もフォーカスも変えない', async () => {
+      const { controller, onChange, externalButton } = await renderWithExternalButton(['heading'], {
+        defaultValue: paragraphDoc('本文'),
+        headingLevels: [2],
+      })
+      const before = controller.getJSON()
+
+      act(() => controller.setHeading(3))
+      await waitForFocusFrame()
+
+      expect(controller.getJSON()).toEqual(before)
+      expect(onChange).not.toHaveBeenCalled()
+      expect(externalButton).toHaveFocus()
+    })
 
     describe.each(['disabled', 'readOnly'] as const)('%s のとき', (state) => {
       it.each(FORMAT_OPERATIONS)('%s() は文書を変えない', async (_name, operate) => {

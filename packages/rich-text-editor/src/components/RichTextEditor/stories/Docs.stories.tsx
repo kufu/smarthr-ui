@@ -464,6 +464,13 @@ export const Overview: Story = {
             から始まるパスにしてください。保存後に表示できない <code>blob:</code> や{' '}
             <code>data:</code>、相対パスは失敗として扱います。
             <br />
+            エディタが確かめるのはブラウザが申告する MIME type
+            だけで、ファイルサイズも制限しません。ファイルの形式やサイズはサーバ側で必ず検証してください。
+            <br />
+            <code>acceptedMimeTypes</code> に <code>image/*</code> を指定すると SVG
+            も受け付けます。SVG
+            はスクリプトを含められるため、受け付ける場合はサーバ側で無害化するか、別のオリジンから配信してください。
+            <br />
             SmartHR UI は保存先を持たないため、不要になった画像の削除もエディタは行いません。
             <br />
             編集中の削除をもとにファイルを消すと、undo
@@ -586,7 +593,7 @@ export const Validation: Story = {
     docs: {
       source: {
         language: 'tsx',
-        code: `const ref = useRef<ComponentRef<typeof RichTextEditor>>(null)
+        code: `const ref = useRef<RichTextEditorController>(null)
 const [value, setValue] = useState<RichTextJSON>()
 
 const handleSave = () => {
@@ -854,14 +861,14 @@ export const HeadingLevels: Story = {
 }
 
 export const RefControl: Story = {
-  name: '外部からの操作（ref + hideToolbar）',
+  name: '外部からの操作（ref）',
   parameters: {
     docs: {
       source: {
         language: 'tsx',
-        code: `const ref = useRef<ComponentRef<typeof RichTextEditor>>(null)
+        code: `const ref = useRef<RichTextEditorController>(null)
 
-<RichTextEditor ref={ref} features={[...]} hideToolbar />
+<RichTextEditor ref={ref} features={[...]} />
 
 <button onClick={() => ref.current?.toggleBold()}>太字</button>
 <button onClick={() => ref.current?.clear()}>クリア</button>`,
@@ -874,7 +881,12 @@ export const RefControl: Story = {
       <Stack gap={1.5}>
         <Text color="TEXT_GREY">
           ref
-          を渡すと、外部のボタンからエディタを操作できます。ツールバーを非表示にして独自UIを構築するケースに有用です。
+          を渡すと、外部のボタンからよく使う書式を適用したり、フォーカスや内容のクリアを行ったりできます。標準のツールバーを置き換える用途は想定していません（選択中の書式を読み取る手段がありません）。
+          <br />
+          ref から適用・解除できる書式は、<code>
+            features
+          </code> に含まれるものだけです。見出しは <code>headingLevels</code>{' '}
+          に含まれるレベルだけです。
         </Text>
         <Stack gap={0.5}>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -891,11 +903,10 @@ export const RefControl: Story = {
               クリア
             </Button>
           </div>
-          <FormControl label="ツールバー非表示 + 外部操作">
+          <FormControl label="外部のボタンからの操作">
             <RichTextEditor
               ref={ref}
               features={ALL_FEATURES}
-              hideToolbar
               placeholder="上のボタンで書式を操作できます"
             />
           </FormControl>
@@ -992,6 +1003,12 @@ export const ToolbarDisplay: Story = {
         <code>EnvironmentProvider</code> を置いたうえで画面幅が 751px
         以下）ではツールチップを表示しません。ホバーが無い環境のためで、各ボタンには{' '}
         <code>aria-label</code> が付いているため支援技術には引き続きラベルが伝わります。
+        <br />
+        <code>hideToolbar</code>{' '}
+        でツールバーを隠すと、画像・動画・表の上に出るメニューも表示しません。ツールバーからの挿入と表の行・列の操作はできなくなりますが、
+        <code>features</code>{' '}
+        で許可したものは貼り付けやドロップで入り、ドラッグでのサイズ変更と書式のショートカットも使えます。ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter
+        など）と、リンクを編集する Cmd+K は効きません。
       </Text>
       <FormControl label="ブラウザの幅を狭めると折り返しトグルが現れます">
         <RichTextEditor
