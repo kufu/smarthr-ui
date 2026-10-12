@@ -33,11 +33,11 @@ export type RichTextFeature =
   | 'table'
 
 export type RichTextChangeMeta = {
-  json: RichTextJSON
-  html: string
-  text: string
-  isEmpty: boolean
-  characterCount: number
+  readonly json: RichTextJSON
+  readonly html: string
+  readonly text: string
+  readonly isEmpty: boolean
+  readonly characterCount: number
 }
 
 export type ImageUploadResult = {

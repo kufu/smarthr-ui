@@ -1,4 +1,6 @@
+import { getCharacterCount } from './getCharacterCount'
 import { getDetachedJSON } from './getDetachedJSON'
+import { getPlainText } from './getPlainText'
 import { serializeToHTML } from './serializeToHTML'
 
 import type { RichTextChangeMeta } from '../types'
@@ -8,8 +10,9 @@ import type { Editor } from '@tiptap/core'
  * 値はすべて通知した時点の editor から読み、後続の編集で meta の中身が変わらないようにする。
  */
 export const createChangeMeta = (editor: Editor): RichTextChangeMeta => {
-  const { doc } = editor.state
+  const { doc, schema } = editor.state
   let html: string | undefined
+  let text: string | undefined
 
   return {
     json: getDetachedJSON(editor),
@@ -19,9 +22,12 @@ export const createChangeMeta = (editor: Editor): RichTextChangeMeta => {
 
       return html
     },
-    text: editor.getText(),
+    get text() {
+      text ??= getPlainText(doc, schema)
+
+      return text
+    },
     isEmpty: editor.isEmpty,
-    // 文字数はブロックの区切りを数えない
-    characterCount: editor.getText({ blockSeparator: '' }).length,
+    characterCount: getCharacterCount(doc, schema),
   }
 }

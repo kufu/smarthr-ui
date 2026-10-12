@@ -4,6 +4,8 @@ import { createRef, useState } from 'react'
 import { FormControl, IntlProvider } from 'smarthr-ui'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { getPlainText } from '../serializers/getPlainText'
+
 import { RichTextEditor } from './RichTextEditor'
 
 import type {
@@ -24,6 +26,12 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
 const paragraphDoc = (text: string): RichTextJSON => ({
   type: 'doc',
   content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+})
+
+vi.mock('../serializers/getPlainText', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>
+
+  return { ...actual, getPlainText: vi.fn(actual.getPlainText as typeof getPlainText) }
 })
 
 // jsdom の contenteditable では文字入力を再現できないため、Tiptap が DOM に載せる editor から操作する
@@ -1268,6 +1276,42 @@ describe('RichTextEditor', () => {
         expect(screen.getByRole('textbox')).toBeInTheDocument()
       })
       expect(screen.queryByText(/文字数：/)).not.toBeInTheDocument()
+    })
+
+    it('キャレットを動かすだけでは文字数を数え直さない', async () => {
+      render(<RichTextEditor defaultValue={paragraphDoc('abc')} showCharacterCount />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(screen.getByText('文字数：3')).toBeInTheDocument())
+      vi.mocked(getPlainText).mockClear()
+
+      act(() => {
+        getEditor().commands.setTextSelection(2)
+      })
+
+      expect(getPlainText).not.toHaveBeenCalled()
+    })
+
+    it('1回の入力で、表示と onChange の文字数を1回だけ数える', async () => {
+      const onChange = vi.fn()
+      render(
+        <RichTextEditor
+          defaultValue={paragraphDoc('abc')}
+          showCharacterCount
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByText('文字数：3')).toBeInTheDocument())
+      vi.mocked(getPlainText).mockClear()
+
+      act(() => {
+        getEditor().chain().setTextSelection(4).insertContent('de').run()
+      })
+
+      await waitFor(() => expect(screen.getByText('文字数：5')).toBeInTheDocument())
+      expect(onChange.mock.calls.at(-1)![1].characterCount).toBe(5)
+      expect(getPlainText).toHaveBeenCalledTimes(1)
     })
   })
 

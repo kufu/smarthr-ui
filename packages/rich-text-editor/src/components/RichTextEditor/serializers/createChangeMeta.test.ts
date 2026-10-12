@@ -4,9 +4,16 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { ALL_FEATURES, configureExtensions } from '../extensions/configureExtensions'
 
 import { createChangeMeta } from './createChangeMeta'
+import { getPlainText } from './getPlainText'
 import { serializeToHTML } from './serializeToHTML'
 
 import type { Content } from '@tiptap/core'
+
+vi.mock('./getPlainText', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>
+
+  return { ...actual, getPlainText: vi.fn(actual.getPlainText as typeof getPlainText) }
+})
 
 vi.mock('./serializeToHTML', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>
@@ -100,5 +107,16 @@ describe('createChangeMeta', () => {
     expect(meta.html).toBe('<p>hello</p>')
     expect(meta.html).toBe('<p>hello</p>')
     expect(serialize).toHaveBeenCalledTimes(1)
+  })
+
+  it('text は読まれたときに一度だけ生成して使い回す', () => {
+    const editor = createEditor('<p>hello</p>')
+    const toText = vi.mocked(getPlainText)
+    const meta = createChangeMeta(editor)
+    toText.mockClear()
+
+    expect(meta.text).toBe('hello')
+    expect(meta.text).toBe('hello')
+    expect(toText).toHaveBeenCalledTimes(1)
   })
 })

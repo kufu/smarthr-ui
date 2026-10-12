@@ -13,7 +13,9 @@ import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlacehold
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { YoutubeFloatingUI } from '../extensions/Youtube/YoutubeFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
+import { getCharacterCount } from '../serializers/getCharacterCount'
 import { getDetachedJSON } from '../serializers/getDetachedJSON'
+import { getPlainText } from '../serializers/getPlainText'
 import { createEmptyDocument } from '../serializers/sanitizeRichTextJSON'
 import { serializeToHTML } from '../serializers/serializeToHTML'
 import { editorContentClasses } from '../styles'
@@ -280,7 +282,7 @@ export const RichTextEditor = memo(
           // editor.getHTML() は拡張の renderHTML をそのまま使うためサニタイズされない。
           // onChange の meta.html と同じ結果を返すよう共通シリアライザーを通す。
           getHTML: () => (editor ? serializeToHTML(editor.getJSON()) : ''),
-          getText: () => editor?.getText() ?? '',
+          getText: () => (editor ? getPlainText(editor.state.doc, editor.schema) : ''),
           isEmpty: () => editor?.isEmpty ?? true,
           toggleBold: () => runIfAllowed('bold', (chain) => chain.toggleBold()),
           toggleItalic: () => runIfAllowed('italic', (chain) => chain.toggleItalic()),
@@ -600,7 +602,7 @@ const CharacterCount = memo(({ editor, className }: { editor: Editor; className:
 
   const count = useEditorState({
     editor,
-    selector: ({ editor: e }) => e.getText({ blockSeparator: '' }).length,
+    selector: ({ editor: e }) => getCharacterCount(e.state.doc, e.schema),
   })
 
   return (
