@@ -4,6 +4,7 @@ export { RichTextViewer } from './RichTextViewer/RichTextViewer'
 export type {
   RichTextJSON,
   ExternalRichTextValue,
+  RichTextValue,
   RichTextFeature,
   RichTextChangeMeta,
   RichTextEditorProps,

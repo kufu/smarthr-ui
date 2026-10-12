@@ -68,6 +68,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
 const renderEditor = async () => {
   render(
     <RichTextEditor
+      defaultValue={{ format: 'html', content: '<p>普通 <strong>太字</strong></p>' }}
       features={[
         'bold',
         'italic',
@@ -78,7 +79,6 @@ const renderEditor = async () => {
         'fontSize',
         'color',
       ]}
-      content={{ format: 'html', content: '<p>普通 <strong>太字</strong></p>' }}
     />,
     { wrapper: Wrapper },
   )

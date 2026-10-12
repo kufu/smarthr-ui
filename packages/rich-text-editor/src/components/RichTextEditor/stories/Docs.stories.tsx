@@ -96,7 +96,8 @@ export const Overview: Story = {
               <tr>
                 <td style={tdStyle}>既存のHTMLデータを編集したい / HTML出力がほしい</td>
                 <td style={tdStyle}>
-                  <code>RichTextEditor</code>（<code>content</code> + <code>outputFormat</code>）
+                  <code>RichTextEditor</code>（<code>defaultValue</code> / <code>value</code> +{' '}
+                  <code>outputFormat</code>）
                 </td>
               </tr>
               <tr>
@@ -114,8 +115,8 @@ export const Overview: Story = {
           <Text color="TEXT_GREY">
             features propで有効にする書式を選択できます。undo / redo は常に表示されます。
             <br />
-            features は「編集中に新しく適用できる書式」の指定です。value / defaultValue / content に
-            features 以外の書式が含まれていても、その書式は保持されたまま表示・出力されます。
+            features は「編集中に新しく適用できる書式」の指定です。value / defaultValue に features
+            以外の書式が含まれていても、その書式は保持されたまま表示・出力されます。
             <br />
             Enter で段落分割（&lt;p&gt;）、Shift+Enter / Cmd+Enter
             で同じ段落内の改行（&lt;br&gt;）です。
@@ -653,18 +654,32 @@ const handleSave = () => {
 }
 
 export const HTMLIntegration: Story = {
-  name: 'HTMLデータとの連携（content + outputFormat）',
+  name: 'HTMLデータとの連携（format: html + outputFormat）',
   parameters: {
     docs: {
       source: {
         language: 'tsx',
-        code: `<FormControl label="本文">
+        code: `// 初期値だけ渡す（非制御）
+<FormControl label="本文">
   <RichTextEditor
-    content={{ format: 'html', content: existingHtml }}
+    defaultValue={{ format: 'html', content: existingHtml }}
     outputFormat="html"
     onChange={(html) => save(html)}
   />
-</FormControl>`,
+</FormControl>
+
+// 制御モード。入力は形式を明示するため { format, content }、出力は文字列で受け取る
+<RichTextEditor
+  value={{ format: 'html', content: html }}
+  outputFormat="html"
+  onChange={setHtml}
+/>
+
+// HTML で保存していたデータを JSON へ移行する（outputFormat は既定の json）
+<RichTextEditor
+  defaultValue={{ format: 'html', content: existingHtml }}
+  onChange={(json) => save(json)}
+/>`,
       },
     },
   },
@@ -673,17 +688,18 @@ export const HTMLIntegration: Story = {
     return (
       <Stack gap={1.5}>
         <Text color="TEXT_GREY">
-          既存のHTMLデータを編集し、HTML形式で取得する場合は content で初期データ、outputFormat
-          で出力形式を指定します。
+          HTMLのデータは defaultValue / value に <code>{`{ format: 'html', content }`}</code>{' '}
+          で渡します。出力の形式は outputFormat で決まり、入力の形式とは別に選べます（HTML
+          で読み込んで JSON で受け取ることもできます）。
         </Text>
         <FormControl label="HTML入力 → HTML出力">
           <RichTextEditor
-            features={ALL_FEATURES}
-            content={{
+            defaultValue={{
               format: 'html',
               content:
                 '<h2>既存のHTML</h2><p>このデータは<strong>HTML形式</strong>で保存されていました。</p><ul><li>項目1</li><li>項目2</li></ul>',
             }}
+            features={ALL_FEATURES}
             outputFormat="html"
             onChange={(value) => setOutput(value)}
           />

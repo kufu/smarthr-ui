@@ -1,33 +1,35 @@
 import { describe, expect, it } from 'vitest'
 
 import { createChangeMeta, isEmptyDocument } from './createChangeMeta'
-import { normalizeToJSON } from './normalizeToJSON'
+import { resolveRichTextValue } from './resolveRichTextValue'
 import { serializeToHTML } from './serializeToHTML'
 
-describe('normalizeToJSON', () => {
+import type { RichTextJSON } from '../types'
+
+describe('resolveRichTextValue', () => {
   it('empty format を空ドキュメントに変換する', () => {
-    const result = normalizeToJSON({ format: 'empty' })
+    const result = resolveRichTextValue({ format: 'empty' })
     expect(result.type).toBe('doc')
     expect(result.content).toHaveLength(1)
     expect(result.content![0].type).toBe('paragraph')
   })
 
   it('undefined を空ドキュメントに変換する', () => {
-    const result = normalizeToJSON(undefined)
+    const result = resolveRichTextValue(undefined)
     expect(result.type).toBe('doc')
   })
 
   it('json format をそのまま返す', () => {
-    const json = {
+    const json: RichTextJSON = {
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
     }
-    const result = normalizeToJSON({ format: 'json', content: json })
+    const result = resolveRichTextValue({ format: 'json', content: json })
     expect(result).toBe(json)
   })
 
   it('html format を JSON に変換する', () => {
-    const result = normalizeToJSON({ format: 'html', content: '<p>hello</p>' })
+    const result = resolveRichTextValue({ format: 'html', content: '<p>hello</p>' })
     expect(result.type).toBe('doc')
     expect(result.content).toBeDefined()
     expect(result.content![0].type).toBe('paragraph')
@@ -35,7 +37,7 @@ describe('normalizeToJSON', () => {
   })
 
   it('太字を含む HTML を正しく変換する', () => {
-    const result = normalizeToJSON({
+    const result = resolveRichTextValue({
       format: 'html',
       content: '<p><strong>bold</strong> text</p>',
     })
@@ -48,7 +50,7 @@ describe('normalizeToJSON', () => {
 
 describe('serializeToHTML', () => {
   it('JSON を HTML に変換する', () => {
-    const json = {
+    const json: RichTextJSON = {
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
     }
@@ -57,7 +59,7 @@ describe('serializeToHTML', () => {
   })
 
   it('太字を含む JSON を HTML に変換する', () => {
-    const json = {
+    const json: RichTextJSON = {
       type: 'doc',
       content: [
         {
@@ -92,7 +94,7 @@ describe('isEmptyDocument', () => {
 
 describe('createChangeMeta', () => {
   it('JSON から meta を生成する', () => {
-    const json = {
+    const json: RichTextJSON = {
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
     }
@@ -105,7 +107,7 @@ describe('createChangeMeta', () => {
   })
 
   it('空ドキュメントの meta を生成する', () => {
-    const json = { type: 'doc', content: [{ type: 'paragraph' }] }
+    const json: RichTextJSON = { type: 'doc', content: [{ type: 'paragraph' }] }
     const meta = createChangeMeta(json)
     expect(meta.isEmpty).toBe(true)
     expect(meta.characterCount).toBe(0)
@@ -114,7 +116,7 @@ describe('createChangeMeta', () => {
 
 describe('line-height のシリアライズ', () => {
   it('paragraph の lineHeight 属性が style として HTML 出力される', () => {
-    const json = {
+    const json: RichTextJSON = {
       type: 'doc',
       content: [
         {
@@ -128,7 +130,7 @@ describe('line-height のシリアライズ', () => {
   })
 
   it('lineHeight 属性が無い paragraph には line-height が出力されない', () => {
-    const json = {
+    const json: RichTextJSON = {
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hi' }] }],
     }
@@ -140,13 +142,13 @@ describe('表セルの文字色・背景色', () => {
   it('HTMLの往復でセルの色とインラインの上書きが保持される', () => {
     const html =
       '<table><tr><th style="color: #0077c7; background-color: #fde2ea"><p>base <span style="color: #e01e5a">override</span></p></th></tr></table>'
-    const json = normalizeToJSON({ format: 'html', content: html })
+    const json = resolveRichTextValue({ format: 'html', content: html })
     const cell = json.content![0].content![0].content![0]
     expect(cell.attrs).toMatchObject({
       color: '#0077c7',
       backgroundColor: '#fde2ea',
     })
-    const restored = normalizeToJSON({ format: 'html', content: serializeToHTML(json) })
+    const restored = resolveRichTextValue({ format: 'html', content: serializeToHTML(json) })
     expect(restored).toEqual(json)
     expect(cell.content![0].content![1].marks?.[0].attrs?.color).toBe('#e01e5a')
   })

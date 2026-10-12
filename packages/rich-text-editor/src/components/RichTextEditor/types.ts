@@ -1,11 +1,14 @@
 import type { JSONContent } from '@tiptap/core'
 
-export type RichTextJSON = JSONContent
+/** 中身を JSONContent のまま絞らないのは、保存済みのデータや別バージョンの schema の値を受け付けるため */
+export type RichTextJSON = JSONContent & { type: 'doc' }
 
 export type ExternalRichTextValue =
   | { format: 'json'; content: RichTextJSON }
   | { format: 'html'; content: string }
   | { format: 'empty'; content?: null }
+
+export type RichTextValue = RichTextJSON | ExternalRichTextValue
 
 export type RichTextFeature =
   | 'bold'
@@ -47,15 +50,22 @@ export type ImageUploadResult = {
 }
 
 type RichTextEditorBaseProps = {
-  content?: ExternalRichTextValue
   /**
-   * 表示する内容（controlled）。内容が変わったときだけ本文を差し替え、編集の履歴は残す。
+   * 表示する内容（controlled）。渡すと `defaultValue` は無視する。
+   * 内容が変わったときだけ本文を差し替え、編集の履歴は残す。
+   *
+   * JSON はそのまま、HTML は `{ format: 'html', content }` で渡す。出力の形式は `outputFormat` で決まり、
+   * 入力の形式とは独立している（HTML で読み込んで JSON で受け取ることもできる）。
    *
    * 別のレコードの本文へ切り替えるときは `key` も変えてエディタを作り直すこと。
    * 同じエディタのまま差し替えると、元に戻す操作で切り替え前の本文が戻ってしまう。
    */
-  value?: RichTextJSON
-  defaultValue?: RichTextJSON
+  value?: RichTextValue
+  /**
+   * 初期値。エディタの作成時に1回だけ読む。形式は `value` と同じ。
+   * 別のレコードの本文へ切り替えるときは `key` を変えてエディタを作り直すこと。
+   */
+  defaultValue?: RichTextValue
   onFocus?: () => void
   onBlur?: () => void
   features?: readonly RichTextFeature[]
@@ -134,10 +144,11 @@ export type RichTextViewerProps = {
    * 表示する内容。
    *
    * 壊れた部分は例外を投げずに取り除いて描画する。別バージョンで保存された未知の型は、
-   * 装飾を外して中身の文字だけを残す。それでも描画できない場合は空で描画し、
+   * 装飾を外して中身の文字だけを残す。形式が解決できない値（未知の format など）は空で描画し、
+   * `console.warn` に警告を出力する。それでも描画できない場合は空で描画し、
    * `console.error` にエラーを出力する。
    */
-  content: ExternalRichTextValue | RichTextJSON
+  content: RichTextValue
   className?: string
   /** ブロック要素間の縦間隔。デフォルトは 1（16px）。 */
   gap?: RichTextViewerGap

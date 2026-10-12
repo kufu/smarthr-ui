@@ -1,11 +1,11 @@
 import { type FC, memo, useMemo } from 'react'
 
 import { tv } from '../../../libs/tv'
-import { normalizeToJSON } from '../serializers/normalizeToJSON'
+import { getValueKeys, resolveRichTextValue } from '../serializers/resolveRichTextValue'
 import { serializeToReactElement } from '../serializers/serializeToReactElement'
 import { staticContentClasses } from '../styles'
 
-import type { RichTextJSON, RichTextViewerGap, RichTextViewerProps } from '../types'
+import type { RichTextViewerGap, RichTextViewerProps } from '../types'
 
 const classNameGenerator = tv({
   base: [
@@ -37,21 +37,20 @@ const classNameGenerator = tv({
   },
 })
 
-const isRichTextJSON = (content: RichTextViewerProps['content']): content is RichTextJSON =>
-  // 型を通らない JS の利用者は null を渡しうる
-  content !== null && 'type' in content && content.type === 'doc'
-
 export const RichTextViewer: FC<RichTextViewerProps> = memo(({ content, className, gap = 1 }) => {
+  const [format, contentKey] = getValueKeys(content)
   const element = useMemo(() => {
     try {
-      return serializeToReactElement(isRichTextJSON(content) ? content : normalizeToJSON(content))
+      return serializeToReactElement(resolveRichTextValue(content))
     } catch (error) {
       // 1件の破損データで表示ページ全体を落とさないよう、この Viewer だけを空にする
       console.error(error)
 
       return null
     }
-  }, [content])
+    // content の参照で再計算しないのは、包みを描画のたびに作ると中身が同じでも作り直すため
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [format, contentKey])
 
   return <div className={classNameGenerator({ gap, className })}>{element}</div>
 })

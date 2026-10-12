@@ -114,6 +114,17 @@ describe('RichTextViewer', () => {
     )
   })
 
+  it('中身の同じ HTML を包み直して渡し直しても、描画し直さない', () => {
+    vi.mocked(serializeToReactElement).mockClear()
+    const { rerender } = render(
+      <RichTextViewer content={{ format: 'html', content: '<p>同じ</p>' }} />,
+    )
+
+    rerender(<RichTextViewer content={{ format: 'html', content: '<p>同じ</p>' }} />)
+
+    expect(serializeToReactElement).toHaveBeenCalledTimes(1)
+  })
+
   it('見出しを h タグで描画する', () => {
     const { container } = render(
       <RichTextViewer

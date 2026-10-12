@@ -217,7 +217,7 @@ export const ImageEditing: Story = {
 export const ColorPickerWithExistingContent: Story = {
   name: 'カラーピッカー: 既存コンテンツの色読み込み',
   args: {
-    content: {
+    defaultValue: {
       format: 'html',
       content:
         '<p>色付きテキストを選択してカラーピッカー(A)を開くと、現在の色が反映されます。</p>' +
@@ -233,7 +233,7 @@ export const ColorPickerWithExistingContent: Story = {
 export const BackgroundColorPickerWithExistingContent: Story = {
   name: '背景色ピッカー: 既存コンテンツの背景色読み込み',
   args: {
-    content: {
+    defaultValue: {
       format: 'html',
       content:
         '<p>背景色付きテキストを選択して背景色ピッカー(ハイライト)を開くと、現在の色が反映されます。</p>' +
@@ -254,7 +254,7 @@ export const HTMLIntegration: Story = {
         <FormControl label="HTML入力 → HTML出力">
           <RichTextEditor
             {...rest}
-            content={{
+            defaultValue={{
               format: 'html',
               content:
                 '<h2>既存のHTML</h2><p>このデータは<strong>HTML形式</strong>で保存されていました。</p><ul><li>項目1</li><li>項目2</li></ul>',

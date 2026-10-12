@@ -4,5 +4,6 @@ export { RichTextViewer } from './components/RichTextEditor/RichTextViewer/RichT
 export type {
   ExternalRichTextValue,
   RichTextJSON,
+  RichTextValue,
   RichTextViewerProps,
 } from './components/RichTextEditor/types'

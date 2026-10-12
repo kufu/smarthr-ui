@@ -197,7 +197,7 @@ const sanitizeAttrs = (
   }, attrs)
 }
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
+export const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
 const isPresent = <T>(value: T | null): value is T => value !== null
@@ -234,5 +234,10 @@ const sanitizeNode = (node: unknown): JSONContent | null => {
   }
 }
 
+export const createEmptyDocument = () => ({
+  type: 'doc' as const,
+  content: [{ type: 'paragraph' }],
+})
+
 export const sanitizeRichTextJSON = (json: unknown): JSONContent =>
-  sanitizeNode(json) ?? { type: 'doc', content: [{ type: 'paragraph' }] }
+  sanitizeNode(json) ?? createEmptyDocument()

@@ -6,8 +6,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
 
-import type { ExternalRichTextValue, RichTextEditorController, RichTextJSON } from '../types'
-import type { TiptapEditorHTMLElement } from '@tiptap/core'
+import type { RichTextEditorController, RichTextJSON, RichTextValue } from '../types'
+import type { Editor, TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
@@ -141,8 +141,8 @@ describe('RichTextEditor', () => {
   it('選択中の書式が適用されている切り替えボタンは押下状態になる', async () => {
     render(
       <RichTextEditor
+        defaultValue={{ format: 'html', content: '<p><strong>bold</strong></p>' }}
         features={['bold']}
-        content={{ format: 'html', content: '<p><strong>bold</strong></p>' }}
       />,
       { wrapper: Wrapper },
     )
@@ -1135,14 +1135,14 @@ describe('RichTextEditor', () => {
       expect(meta.text).toBe(ref.current!.getText())
     })
 
-    it('content（HTML）の features 外の書式を保持する', async () => {
+    it('HTML で渡した初期値の features 外の書式を保持する', async () => {
       render(
         <RichTextEditor
-          features={['bold']}
-          content={{
+          defaultValue={{
             format: 'html',
             content: '<h2>見出し</h2><p><em>斜体</em></p><p>無関係な段落</p>',
           }}
+          features={['bold']}
         />,
         { wrapper: Wrapper },
       )
@@ -1323,42 +1323,6 @@ describe('RichTextEditor', () => {
     })
   })
 
-  describe('content prop', () => {
-    it('HTML content を受け取ってエディタを描画する', async () => {
-      render(<RichTextEditor content={{ format: 'html', content: '<p>HTMLコンテンツ</p>' }} />, {
-        wrapper: Wrapper,
-      })
-      await waitFor(() => {
-        expect(screen.getByText('HTMLコンテンツ')).toBeInTheDocument()
-      })
-    })
-
-    it('JSON content を受け取ってエディタを描画する', async () => {
-      render(
-        <RichTextEditor
-          content={{
-            format: 'json',
-            content: {
-              type: 'doc',
-              content: [{ type: 'paragraph', content: [{ type: 'text', text: 'JSONコンテンツ' }] }],
-            },
-          }}
-        />,
-        { wrapper: Wrapper },
-      )
-      await waitFor(() => {
-        expect(screen.getByText('JSONコンテンツ')).toBeInTheDocument()
-      })
-    })
-
-    it('empty content で空のエディタを描画する', async () => {
-      render(<RichTextEditor content={{ format: 'empty' }} />, { wrapper: Wrapper })
-      await waitFor(() => {
-        expect(screen.getByRole('textbox')).toBeInTheDocument()
-      })
-    })
-  })
-
   // imperative API と onChange の meta.html はどちらも「HTML出力」を返すため、
   // どちらを使ってもサニタイズ結果が同じでなければならない。
   describe('ref.setHeading()', () => {
@@ -1484,10 +1448,7 @@ describe('RichTextEditor', () => {
   describe('ref.getHTML()', () => {
     const IMPERATIVE_FEATURES = ['image', 'color', 'backgroundColor', 'fontSize'] as const
 
-    const renderWithRef = async (props: {
-      defaultValue?: RichTextJSON
-      content?: ExternalRichTextValue
-    }) => {
+    const renderWithRef = async (props: { defaultValue?: RichTextValue }) => {
       const ref = createRef<RichTextEditorController>()
       render(<RichTextEditor {...props} ref={ref} features={IMPERATIVE_FEATURES} />, {
         wrapper: Wrapper,
@@ -1538,7 +1499,7 @@ describe('RichTextEditor', () => {
 
     it('HTML入力から読み込んだ危険なCSS値を除去する', async () => {
       const ref = await renderWithRef({
-        content: {
+        defaultValue: {
           format: 'html',
           content: '<p><span style="background-color: url(javascript:alert(1))">x</span></p>',
         },
@@ -1574,7 +1535,7 @@ describe('RichTextEditor', () => {
     // 保存データに pt が残ると、ブラウザのフォントサイズ設定に追従しないまま公開される
     it('HTML入力の pt 指定の文字サイズを rem にそろえて保持する', async () => {
       const ref = await renderWithRef({
-        content: {
+        defaultValue: {
           format: 'html',
           content: '<p><span style="font-size:11pt;color:#353744">本文</span></p>',
         },
@@ -1772,6 +1733,381 @@ describe('RichTextEditor', () => {
 
       await waitFor(() => expect(onChange).toHaveBeenCalled())
       expect(onChange.mock.calls.at(-1)![0]).toMatchObject(paragraphDoc('本文'))
+    })
+  })
+
+  describe('入力の形式（value・defaultValue）', () => {
+    it.each<[string, RichTextValue]>([
+      ['素の JSON', paragraphDoc('初期値')],
+      ['format: json', { format: 'json', content: paragraphDoc('初期値') }],
+      ['format: html', { format: 'html', content: '<p>初期値</p>' }],
+    ])('defaultValue に %s を渡すと初期表示する', async (_, defaultValue) => {
+      render(<RichTextEditor defaultValue={defaultValue} />, { wrapper: Wrapper })
+
+      expect(await screen.findByText('初期値')).toBeInTheDocument()
+    })
+
+    it('HTML で読み込み、outputFormat が既定のときは onChange が JSON を返す', async () => {
+      const onChange = vi.fn()
+      render(
+        <RichTextEditor
+          defaultValue={{ format: 'html', content: '<p>移行</p>' }}
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await screen.findByText('移行')
+
+      act(() => {
+        getEditor().chain().focus('end').insertContent('済').run()
+      })
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ type: 'doc' }),
+        expect.anything(),
+      )
+      expect(onChange.mock.lastCall?.[1].text).toBe('移行済')
+    })
+
+    it('解決できない値は空の文書として表示し、例外を投げない', async () => {
+      render(<RichTextEditor defaultValue={{ format: 'markdown' } as unknown as RichTextValue} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(getEditor()).toBeDefined())
+
+      expect(getEditor().isEmpty).toBe(true)
+    })
+
+    it('空の段落に付けた配置は、onChange の JSON に残る', async () => {
+      const onChange = vi.fn()
+      render(<RichTextEditor defaultValue={{ format: 'empty' }} onChange={onChange} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(getEditor()).toBeDefined())
+
+      act(() => {
+        getEditor().commands.setTextAlign('center')
+      })
+
+      expect(onChange.mock.lastCall?.[1].isEmpty).toBe(true)
+      expect(onChange.mock.lastCall?.[0].content[0].attrs.textAlign).toBe('center')
+    })
+
+    it.each<[string, unknown]>([
+      ['null', null],
+      ['文字列', '<p>本文</p>'],
+    ])('value に %s が渡されても例外を投げず、空として扱う', async (_, value) => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const { rerender } = render(<RichTextEditor value={value as RichTextValue} />, {
+        wrapper: Wrapper,
+      })
+      await waitFor(() => expect(getEditor()).toBeDefined())
+
+      rerender(<RichTextEditor value={value as RichTextValue} />)
+
+      expect(getEditor().isEmpty).toBe(true)
+      vi.restoreAllMocks()
+    })
+
+    // 親が state に持って毎回同じオブジェクトを渡す保存済みの JSON
+    const SAVED_DOC = paragraphDoc('保存前')
+
+    it.each<[string, (text: string) => RichTextValue]>([
+      ['format: html', (text) => ({ format: 'html', content: `<p>${text}</p>` })],
+      ['format: json', () => ({ format: 'json', content: SAVED_DOC })],
+    ])(
+      '%s の value を親が戻さないまま別の理由で再描画しても、入力した文字を消さない',
+      async (_, toValue) => {
+        let rerenderParent = () => {}
+        const Parent = () => {
+          const [, setTick] = useState(0)
+          rerenderParent = () => setTick((tick) => tick + 1)
+
+          // 保存してから値を戻す親のように、onChange を受けてもすぐには value を更新しない
+          return <RichTextEditor value={toValue('保存前')} onChange={() => {}} />
+        }
+        render(<Parent />, { wrapper: Wrapper })
+        await screen.findByText('保存前')
+        act(() => {
+          getEditor().chain().focus('end').insertContent('入力').run()
+        })
+
+        act(() => {
+          rerenderParent()
+        })
+
+        expect(getEditor().state.doc.textContent).toBe('保存前入力')
+      },
+    )
+
+    it.each<[string, RichTextValue, unknown]>([
+      ['html の content を文字列から数値に変える', { format: 'html', content: '123' }, 123],
+      [
+        'toString を持たない content',
+        { format: 'html', content: '<p>本文</p>' },
+        { toString: null },
+      ],
+    ])('value の %s と、例外を投げずに空として扱う', async (_, before, afterContent) => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const { rerender } = render(<RichTextEditor value={before} />, { wrapper: Wrapper })
+      await waitFor(() => expect(getEditor().isEmpty).toBe(false))
+
+      rerender(
+        <RichTextEditor
+          value={{ format: 'html', content: afterContent } as unknown as RichTextValue}
+        />,
+      )
+
+      expect(getEditor().isEmpty).toBe(true)
+      vi.restoreAllMocks()
+    })
+
+    it.each<[string, () => RichTextValue]>([
+      ['format: empty', () => ({ format: 'empty' })],
+      ['null', () => null as unknown as RichTextValue],
+    ])('空になったときに親が %s を戻しても、空の段落に付けた配置を消さない', async (_, toEmpty) => {
+      const Parent = () => {
+        const [value, setValue] = useState<RichTextValue>(paragraphDoc('x'))
+
+        return (
+          <RichTextEditor
+            value={value}
+            onChange={(json, meta) => setValue(meta.isEmpty ? toEmpty() : json)}
+          />
+        )
+      }
+      render(<Parent />, { wrapper: Wrapper })
+      await screen.findByText('x')
+
+      act(() => {
+        getEditor().chain().focus().setTextAlign('center').run()
+      })
+      act(() => {
+        getEditor().chain().setTextSelection({ from: 1, to: 2 }).deleteSelection().run()
+      })
+
+      expect(getEditor().isEmpty).toBe(true)
+      expect(getEditor().state.doc.firstChild?.attrs.textAlign).toBe('center')
+    })
+
+    it('空の段落を中央揃えにしたあとフォームをリセットすると、配置も戻す', async () => {
+      let reset = () => {}
+      const Form = () => {
+        const [value, setValue] = useState<RichTextValue>({ format: 'empty' })
+        reset = () => setValue({ format: 'empty' })
+
+        return <RichTextEditor value={value} onChange={setValue} />
+      }
+      render(<Form />, { wrapper: Wrapper })
+      await waitFor(() => expect(getEditor()).toBeDefined())
+      act(() => {
+        getEditor().commands.setTextAlign('center')
+      })
+      expect(getEditor().state.doc.firstChild?.attrs.textAlign).toBe('center')
+
+      act(() => {
+        reset()
+      })
+
+      expect(getEditor().state.doc.firstChild?.attrs.textAlign).toBeNull()
+    })
+
+    describe('空の本文と空に見える値の差し替え', () => {
+      const emptyTable: RichTextJSON = {
+        type: 'doc',
+        content: [
+          {
+            type: 'table',
+            content: [
+              {
+                type: 'tableRow',
+                content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }],
+              },
+            ],
+          },
+        ],
+      }
+
+      it.each<[string, RichTextValue, RichTextValue, (editor: Editor) => void]>([
+        [
+          '空の本文に、未知の型で包まれた本文を渡すと、修復して読み込む',
+          { format: 'empty' },
+          {
+            type: 'doc',
+            content: [
+              {
+                type: 'callout',
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: '読込' }] }],
+              },
+            ],
+          } as unknown as RichTextJSON,
+          (editor) => expect(editor.state.doc.textContent).toBe('読込'),
+        ],
+        [
+          '空の段落を、中央揃えの空の段落に変えると反映する',
+          { type: 'doc', content: [{ type: 'paragraph' }] },
+          { type: 'doc', content: [{ type: 'paragraph', attrs: { textAlign: 'center' } }] },
+          (editor) => expect(editor.state.doc.firstChild?.attrs.textAlign).toBe('center'),
+        ],
+        [
+          '空の本文に、空のセルだけの表を渡すと反映する',
+          { format: 'empty' },
+          emptyTable,
+          (editor) => expect(editor.state.doc.firstChild?.type.name).toBe('table'),
+        ],
+        [
+          '空の表がある本文に、データが無いことを表す値を渡すと空の段落にする',
+          emptyTable,
+          { format: 'empty' },
+          (editor) => expect(editor.state.doc.firstChild?.type.name).toBe('paragraph'),
+        ],
+      ])('%s', async (_, before, after, assert) => {
+        vi.spyOn(console, 'warn').mockImplementation(() => {})
+        const { rerender } = render(<RichTextEditor value={before} features={['table']} />, {
+          wrapper: Wrapper,
+        })
+        await waitFor(() => expect(getEditor()).toBeDefined())
+
+        rerender(<RichTextEditor value={after} features={['table']} />)
+
+        assert(getEditor())
+        vi.restoreAllMocks()
+      })
+    })
+
+    describe('HTML の制御モード', () => {
+      // 色名の文字色は、出力した HTML を読み戻すと属性が変わり、本文と一致しなくなる
+      const COLORED_HTML = '<p>a<span style="color: red">L</span>c</p>'
+
+      let setFromOutside: (html: string) => void = () => {}
+      let emitted = ''
+      const ControlledHtml = () => {
+        const [html, setHtml] = useState(COLORED_HTML)
+        setFromOutside = setHtml
+
+        return (
+          <RichTextEditor
+            value={{ format: 'html', content: html }}
+            outputFormat="html"
+            onChange={(next) => {
+              emitted = next
+              setHtml(next)
+            }}
+          />
+        )
+      }
+
+      it('onChange の HTML をそのまま戻しても、キャレットの位置を保つ', async () => {
+        render(<ControlledHtml />, { wrapper: Wrapper })
+        await screen.findByText('L')
+        const editor = getEditor()
+
+        act(() => {
+          editor.commands.setTextSelection(2)
+          editor.commands.insertContent('b')
+        })
+        act(() => {
+          editor.commands.insertContent('!')
+        })
+
+        expect(editor.state.doc.textContent).toBe('ab!Lc')
+      })
+
+      it('親が HTML を整形して戻しても、キャレットの位置を保つ', async () => {
+        const Formatting = () => {
+          const [html, setHtml] = useState(COLORED_HTML)
+
+          return (
+            <RichTextEditor
+              value={{ format: 'html', content: html }}
+              outputFormat="html"
+              onChange={(next) => setHtml(`\n${next}\n`)}
+            />
+          )
+        }
+        render(<Formatting />, { wrapper: Wrapper })
+        await screen.findByText('L')
+        const editor = getEditor()
+
+        act(() => {
+          editor.commands.setTextSelection(2)
+          editor.commands.insertContent('b')
+        })
+        act(() => {
+          editor.commands.insertContent('!')
+        })
+
+        expect(editor.state.doc.textContent).toBe('ab!Lc')
+      })
+
+      it('親が通知された JSON を書き換えて HTML で戻すと、書き換えた内容を表示する', async () => {
+        const Uppercase = () => {
+          const [html, setHtml] = useState('<p>ab</p>')
+
+          return (
+            <RichTextEditor
+              value={{ format: 'html', content: html }}
+              onChange={(json) => {
+                json.content![0].content![0].text = 'ABC'
+                setHtml('<p>ABC</p>')
+              }}
+            />
+          )
+        }
+        render(<Uppercase />, { wrapper: Wrapper })
+        await screen.findByText('ab')
+
+        act(() => {
+          getEditor().chain().focus('end').insertContent('c').run()
+        })
+
+        expect(getEditor().state.doc.textContent).toBe('ABC')
+      })
+
+      it('空の見出しで親が空の値を戻しても、見出しを保つ', async () => {
+        const EmptyAsBlank = () => {
+          const [html, setHtml] = useState('<h2>abc</h2>')
+
+          return (
+            <RichTextEditor
+              value={{ format: 'html', content: html }}
+              outputFormat="html"
+              features={['heading']}
+              onChange={(next, meta) => setHtml(meta.isEmpty ? '' : next)}
+            />
+          )
+        }
+        render(<EmptyAsBlank />, { wrapper: Wrapper })
+        await screen.findByText('abc')
+
+        act(() => {
+          getEditor().chain().setTextSelection({ from: 1, to: 4 }).deleteSelection().run()
+        })
+
+        expect(getEditor().isEmpty).toBe(true)
+        expect(getEditor().state.doc.firstChild?.type.name).toBe('heading')
+      })
+
+      it('編集して A を出したあと外から B、さらに A に戻すと、A を表示する', async () => {
+        render(<ControlledHtml />, { wrapper: Wrapper })
+        await screen.findByText('L')
+        const editor = getEditor()
+        act(() => {
+          editor.chain().focus('end').insertContent('d').run()
+        })
+        const emittedA = emitted
+        expect(editor.state.doc.textContent).toBe('aLcd')
+
+        act(() => {
+          setFromOutside('<p>B</p>')
+        })
+        expect(editor.state.doc.textContent).toBe('B')
+
+        act(() => {
+          setFromOutside(emittedA)
+        })
+        expect(editor.state.doc.textContent).toBe('aLcd')
+      })
     })
   })
 
@@ -1997,32 +2333,17 @@ describe('RichTextEditor', () => {
       await waitFor(() => expect(screen.getByText('ab')).toBeInTheDocument())
     })
 
-    it('value・defaultValue・content を同時に渡すと value を表示する', async () => {
+    it('value と defaultValue を同時に渡すと value を表示する', async () => {
       render(
         <RichTextEditor
           value={paragraphDoc('value')}
-          defaultValue={paragraphDoc('defaultValue')}
-          content={{ format: 'html', content: '<p>content</p>' }}
+          defaultValue={{ format: 'html', content: '<p>defaultValue</p>' }}
         />,
         { wrapper: Wrapper },
       )
 
       await waitFor(() => expect(screen.getByText('value')).toBeInTheDocument())
       expect(screen.queryByText('defaultValue')).not.toBeInTheDocument()
-      expect(screen.queryByText('content')).not.toBeInTheDocument()
-    })
-
-    it('value が無ければ defaultValue を content より優先する', async () => {
-      render(
-        <RichTextEditor
-          defaultValue={paragraphDoc('defaultValue')}
-          content={{ format: 'html', content: '<p>content</p>' }}
-        />,
-        { wrapper: Wrapper },
-      )
-
-      await waitFor(() => expect(screen.getByText('defaultValue')).toBeInTheDocument())
-      expect(screen.queryByText('content')).not.toBeInTheDocument()
     })
   })
 
@@ -2125,7 +2446,7 @@ describe('RichTextEditor', () => {
 
       await waitFor(() => expect(screen.getByText('本文')).toBeInTheDocument())
       expect(beforeReady).toEqual({
-        json: { type: 'doc', content: [] },
+        json: { type: 'doc', content: [{ type: 'paragraph' }] },
         html: '',
         text: '',
         isEmpty: true,

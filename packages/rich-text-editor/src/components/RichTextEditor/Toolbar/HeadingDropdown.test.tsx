@@ -5,13 +5,14 @@ import { describe, expect, it } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
+import type { RichTextJSON } from '../types'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
-const H1_DOC = {
+const H1_DOC: RichTextJSON = {
   type: 'doc',
   content: [{ type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '見出し' }] }],
 }

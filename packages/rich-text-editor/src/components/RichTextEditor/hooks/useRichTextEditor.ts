@@ -14,9 +14,16 @@ import {
 import { isAutoTrailingNodeOnly } from '../extensions/trailingNode'
 import { createChangeMeta } from '../serializers/createChangeMeta'
 import { getDetachedJSON } from '../serializers/getDetachedJSON'
+import {
+  getHtmlContent,
+  getValueKeys,
+  isNoDataValue,
+  resolveRichTextValue,
+} from '../serializers/resolveRichTextValue'
+import { serializeToHTML } from '../serializers/serializeToHTML'
 import { toEditorContent } from '../serializers/toEditorContent'
 
-import type { ImageUploadResult, RichTextFeature, RichTextJSON } from '../types'
+import type { ImageUploadResult, RichTextFeature, RichTextJSON, RichTextValue } from '../types'
 import type { JSONContent } from '@tiptap/core'
 import type { Node as ProseMirrorNode, Schema } from '@tiptap/pm/model'
 
@@ -47,9 +54,31 @@ const isSameDocument = (doc: ProseMirrorNode, content: JSONContent, schema: Sche
   )
 }
 
+type EmittedRecord = {
+  doc: ProseMirrorNode
+  isEmpty: boolean
+  consumed: boolean
+  html?: string
+}
+
+// 親に渡した JSON（meta.html の元）から作らないのは、親がそれを書き換えると記録まで変わるため
+const getEmittedHtml = (record: EmittedRecord) => {
+  record.html ??= serializeToHTML(record.doc.toJSON() as RichTextJSON)
+
+  return record.html
+}
+
+const toRoundTripNode = (schema: Schema, html: string): ProseMirrorNode | null => {
+  try {
+    return schema.nodeFromJSON(resolveRichTextValue({ format: 'html', content: html }))
+  } catch {
+    return null
+  }
+}
+
 type UseRichTextEditorOptions = {
-  value?: RichTextJSON
-  defaultValue?: RichTextJSON
+  value?: RichTextValue
+  defaultValue?: RichTextValue
   onChange?: (value: RichTextJSON, meta: ReturnType<typeof createChangeMeta>) => void
   onFocus?: () => void
   onBlur?: () => void
@@ -86,6 +115,7 @@ export const useRichTextEditor = ({
   const headingLevelsKey = headingLevels?.join(',')
 
   const latest = useLatest({
+    value,
     features,
     headingLevels,
     placeholder,
@@ -119,11 +149,13 @@ export const useRichTextEditor = ({
     [featuresKey, headingLevelsKey],
   )
 
+  const emitted = useRef<EmittedRecord | null>(null)
+
   // useEditor が content を読むのは生成時だけなので、schema の検査も初回だけにする
   const [initialContent] = useState(() => {
     const initial = isControlled ? value : defaultValue
 
-    return initial === undefined ? undefined : toEditorContent(initial)
+    return initial === undefined ? undefined : toEditorContent(resolveRichTextValue(initial))
   })
 
   const editor = useEditor({
@@ -153,32 +185,62 @@ export const useRichTextEditor = ({
       // 空判定とテキストは editor と同じ結果にする必要があるため、この時点の値を読んで渡す
       const json = getDetachedJSON(e)
       const characterCount = e.getText({ blockSeparator: '' }).length
-      onChange(
-        json,
-        createChangeMeta(json, characterCount, { isEmpty: e.isEmpty, text: e.getText() }),
-      )
+      const meta = createChangeMeta(json, characterCount, {
+        isEmpty: e.isEmpty,
+        text: e.getText(),
+      })
+      emitted.current = { doc: e.state.doc, isEmpty: meta.isEmpty, consumed: false }
+      onChange(json, meta)
     },
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),
   })
 
+  const [syncFormat, syncContent] = getValueKeys(value)
+
   // controlled mode: 外からのvalue変更を同期
   useEffect(() => {
+    if (!editor || !isControlled) return
+
+    const { value: currentValue } = latest
+    const html = getHtmlContent(currentValue)
+    const { doc } = editor.state
+    const record = emitted.current?.doc === doc ? emitted.current : null
+    // 戻ってきた値かどうかを値だけで判定しないのは、空の段落を中央揃えにしたあとのリセットのように、
+    // 最後に出した値と同じ外からの変更まで省いてしまうため。通知のあと最初の同期に限って見る
+    const isEcho =
+      !!record &&
+      !record.consumed &&
+      (isNoDataValue(currentValue)
+        ? record.isEmpty
+        : html !== undefined && html === getEmittedHtml(record))
+
+    if (emitted.current) emitted.current.consumed = true
+
+    if (isEcho) return
+
+    const json = resolveRichTextValue(currentValue)
+
     // JSON の文字列では、既定値の属性（textAlign: null など）を省いた value が別物と判定され、
     // 本文の作り直しでキャレットと編集履歴が失われる。参照の一致で省くと、onChange で渡した
     // オブジェクトを親が書き換えて戻したときに反映されない。
     // 正規化した値だけで比べないのは、貼り付けたリンクの class のように正規化で変わる属性を
     // 本文が持っていると、onChange の値をそのまま戻しても別物になるため
-    if (
-      !editor ||
-      !isControlled ||
-      !value ||
-      isSameDocument(editor.state.doc, value, editor.schema)
-    ) {
-      return
-    }
+    if (isSameDocument(doc, json, editor.schema)) return
 
-    const nextContent = toEditorContent(value)
+    // HTML を JSON に変換して本文と比べるだけにしないのは、変換で属性（色名の文字色など）が変わり、
+    // 出した値を戻しただけ・親が整形しただけで別物と判定されるため。本文も同じ変換に通して比べる
+    const roundTrip =
+      html === undefined
+        ? null
+        : toRoundTripNode(
+            editor.schema,
+            record ? getEmittedHtml(record) : serializeToHTML(editor.getJSON()),
+          )
+
+    if (roundTrip && isSameDocument(roundTrip, json, editor.schema)) return
+
+    const nextContent = toEditorContent(json)
 
     if (!isSameDocument(editor.state.doc, nextContent, editor.schema)) {
       // 未完了の画像アップロードは差し替えと同じ transaction で無効化する
@@ -192,7 +254,7 @@ export const useRichTextEditor = ({
         })
         .run()
     }
-  }, [editor, isControlled, value])
+  }, [editor, isControlled, syncFormat, syncContent, latest])
 
   // editable 状態の同期
   useEffect(() => {

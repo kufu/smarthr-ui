@@ -9,13 +9,14 @@ import { ALL_FEATURES, configureExtensions } from '../configureExtensions'
 
 import { YoutubeFloatingUI } from './YoutubeFloatingUI'
 
+import type { RichTextJSON } from '../../types'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
-const youtubeDoc = {
+const youtubeDoc: RichTextJSON = {
   type: 'doc',
   content: [
     { type: 'paragraph' },

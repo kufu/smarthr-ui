@@ -1,9 +1,11 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
-import { normalizeToJSON } from './normalizeToJSON'
+import { resolveRichTextValue } from './resolveRichTextValue'
 import { serializeToHTML } from './serializeToHTML'
 import { serializeToReactElement } from './serializeToReactElement'
+
+import type { RichTextJSON } from '../types'
 
 const DANGEROUS_PATTERNS = [
   '<script',
@@ -30,7 +32,7 @@ const dangerousInputs = [
 ]
 
 // これらの入力はTiptapのHTMLパーサーがCSS値をそのままJSONに保持するため、
-// normalizeToJSON段階では javascript: が JSON内に残る。
+// resolveRichTextValue段階では javascript: が JSON内に残る。
 // 安全性はシリアライザー（isSafeColor）の段階で保証される。
 const cssInjectionInputs = [
   '<span style="background-color: url(javascript:alert(1))">x</span>',
@@ -47,10 +49,10 @@ const assertSafe = (output: string) => {
 }
 
 describe('セキュリティ: 危険なHTMLの無害化', () => {
-  describe('normalizeToJSON', () => {
+  describe('resolveRichTextValue', () => {
     dangerousInputs.forEach((input) => {
       it(`"${input.slice(0, 40)}..." を無害化する`, () => {
-        const json = normalizeToJSON({ format: 'html', content: input })
+        const json = resolveRichTextValue({ format: 'html', content: input })
         assertSafe(JSON.stringify(json))
       })
     })
@@ -59,13 +61,13 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
   describe('serializeToHTML', () => {
     dangerousInputs.forEach((input) => {
       it(`往復変換後も安全: "${input.slice(0, 40)}..."`, () => {
-        const json = normalizeToJSON({ format: 'html', content: input })
+        const json = resolveRichTextValue({ format: 'html', content: input })
         assertSafe(serializeToHTML(json))
       })
     })
     cssInjectionInputs.forEach((input) => {
       it(`CSS注入も安全: "${input.slice(0, 40)}..."`, () => {
-        const json = normalizeToJSON({ format: 'html', content: input })
+        const json = resolveRichTextValue({ format: 'html', content: input })
         assertSafe(serializeToHTML(json))
       })
     })
@@ -74,7 +76,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
   describe('serializeToReactElement', () => {
     dangerousInputs.forEach((input) => {
       it(`React要素に変換しても安全: "${input.slice(0, 40)}..."`, () => {
-        const json = normalizeToJSON({ format: 'html', content: input })
+        const json = resolveRichTextValue({ format: 'html', content: input })
         const element = serializeToReactElement(json)
         const html = renderToStaticMarkup(element as React.ReactElement)
         assertSafe(html)
@@ -82,7 +84,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
     cssInjectionInputs.forEach((input) => {
       it(`CSS注入もReact変換後も安全: "${input.slice(0, 40)}..."`, () => {
-        const json = normalizeToJSON({ format: 'html', content: input })
+        const json = resolveRichTextValue({ format: 'html', content: input })
         const element = serializeToReactElement(json)
         const html = renderToStaticMarkup(element as React.ReactElement)
         assertSafe(html)
@@ -92,7 +94,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
 
   describe('直接JSON入力のサニタイズ', () => {
     it('javascript: URLを含むリンクのhrefが除去される', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -113,7 +115,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('data: URLを含むリンクのhrefが除去される', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -141,7 +143,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     it('空白文字で始まるjavascript: URLのhrefが除去される', () => {
       const prefixes = ['  ', '\t', '\n', '\r\n', ' \t\n']
       for (const prefix of prefixes) {
-        const json = {
+        const json: RichTextJSON = {
           type: 'doc',
           content: [
             {
@@ -163,7 +165,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('不正なtarget属性が除去される', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -195,7 +197,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
         'vbscript:msgbox(1)',
       ]
       for (const src of dangerousSrcs) {
-        const json = {
+        const json: RichTextJSON = {
           type: 'doc',
           content: [{ type: 'image', attrs: { src, alt: 'x' } }],
         }
@@ -207,7 +209,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('serializeToHTML: 直接JSON入力の安全な画像 src は保持される', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', alt: 'x' } }],
       }
@@ -215,7 +217,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('paragraph の不正な lineHeight が style に出ない', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -233,7 +235,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('heading の不正な lineHeight が style に出ない', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -251,7 +253,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('heading の安全な lineHeight が保持される', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -267,7 +269,7 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
     })
 
     it('rgb()/rgba() 形式の color/backgroundColor が保持される', () => {
-      const json = {
+      const json: RichTextJSON = {
         type: 'doc',
         content: [
           {
@@ -424,7 +426,9 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
 
   const bothOutputs = (json: Parameters<typeof serializeToHTML>[0]) => ({
     html: serializeToHTML(json),
-    react: renderToStaticMarkup(serializeToReactElement(json) as React.ReactElement),
+    react: renderToStaticMarkup(
+      serializeToReactElement(json as RichTextJSON) as React.ReactElement,
+    ),
   })
 
   const assertNoInjectedCss = (outputs: { html: string; react: string }) => {
@@ -436,7 +440,10 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     }
   }
 
-  const cellDoc = (cellType: 'tableCell' | 'tableHeader', attrs: Record<string, unknown>) => ({
+  const cellDoc = (
+    cellType: 'tableCell' | 'tableHeader',
+    attrs: Record<string, unknown>,
+  ): RichTextJSON => ({
     type: 'doc',
     content: [
       {
@@ -845,7 +852,7 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
   })
 
   it('HTML入力の link の rel/class も出力されない', () => {
-    const json = normalizeToJSON({
+    const json = resolveRichTextValue({
       format: 'html',
       content:
         '<p><a href="https://example.com" rel="opener" class="shr-fixed shr-rte-fixed">click</a></p>',

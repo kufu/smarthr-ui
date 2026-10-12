@@ -243,11 +243,11 @@ describe('RichTextEditorToolbar', () => {
     it('カーソルの移動でラベルだけが変わって幅が増えても、溢れていればトグルを出す', async () => {
       render(
         <RichTextEditor
-          features={['bold', 'fontSize']}
-          content={{
+          defaultValue={{
             format: 'html',
             content: '<p>標準</p><p><span style="font-size: 2rem">大きい</span></p>',
           }}
+          features={['bold', 'fontSize']}
         />,
         { wrapper: Wrapper },
       )
@@ -367,8 +367,8 @@ describe('RichTextEditorToolbar', () => {
     const renderSmallEditor = async () => {
       render(
         <RichTextEditor
+          defaultValue={{ format: 'html', content: '<p>本文</p>' }}
           features={['heading', 'bold', 'italic']}
-          content={{ format: 'html', content: '<p>本文</p>' }}
         />,
         { wrapper: Wrapper },
       )

@@ -14,7 +14,7 @@ import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { YoutubeFloatingUI } from '../extensions/Youtube/YoutubeFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { getDetachedJSON } from '../serializers/getDetachedJSON'
-import { normalizeToJSON } from '../serializers/normalizeToJSON'
+import { createEmptyDocument } from '../serializers/sanitizeRichTextJSON'
 import { serializeToHTML } from '../serializers/serializeToHTML'
 import { editorContentClasses } from '../styles'
 
@@ -108,7 +108,6 @@ export const RichTextEditor = memo(
   forwardRef<RichTextEditorController, RichTextEditorProps>(
     (
       {
-        content,
         value,
         defaultValue,
         outputFormat,
@@ -150,12 +149,6 @@ export const RichTextEditor = memo(
         null,
       )
       const isResizable = !!resizable && !readOnly && !disabled
-
-      const normalizedDefaultValue = useMemo(() => {
-        if (defaultValue) return defaultValue
-        if (content) return normalizeToJSON(content)
-        return undefined
-      }, [defaultValue, content])
 
       const latest = useLatest({ onChange, outputFormat, draggedHeight })
 
@@ -233,7 +226,7 @@ export const RichTextEditor = memo(
 
       const { editor } = useRichTextEditor({
         value,
-        defaultValue: normalizedDefaultValue,
+        defaultValue,
         onChange: onChange ? functions.handleChange : undefined,
         onImageUpload,
         onImageUploadError,
@@ -267,7 +260,7 @@ export const RichTextEditor = memo(
                 return true
               })
               .run(),
-          getJSON: () => (editor ? getDetachedJSON(editor) : { type: 'doc', content: [] }),
+          getJSON: () => (editor ? getDetachedJSON(editor) : createEmptyDocument()),
           // editor.getHTML() は拡張の renderHTML をそのまま使うためサニタイズされない。
           // onChange の meta.html と同じ結果を返すよう共通シリアライザーを通す。
           getHTML: () => (editor ? serializeToHTML(editor.getJSON()) : ''),

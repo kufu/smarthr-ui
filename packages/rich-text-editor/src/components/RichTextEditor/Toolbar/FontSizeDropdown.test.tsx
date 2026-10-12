@@ -23,7 +23,10 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
 
 const renderEditor = async (html: string) => {
   render(
-    <RichTextEditor features={['fontSize', 'color']} content={{ format: 'html', content: html }} />,
+    <RichTextEditor
+      defaultValue={{ format: 'html', content: html }}
+      features={['fontSize', 'color']}
+    />,
     {
       wrapper: Wrapper,
     },

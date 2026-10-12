@@ -10,6 +10,7 @@ import { ALL_FEATURES, configureExtensions } from '../configureExtensions'
 
 import { ImageFloatingUI } from './ImageFloatingUI'
 
+import type { RichTextJSON } from '../../types'
 import type { ReactNode } from 'react'
 
 // jsdom には ResizeObserver が無く、挿入された画像の NodeView がマウント時に参照するため、
@@ -28,7 +29,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
-const imageDoc = {
+const imageDoc: RichTextJSON = {
   type: 'doc',
   content: [
     { type: 'paragraph' },

@@ -13,7 +13,10 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
 
 const renderEditor = async (html: string) => {
   render(
-    <RichTextEditor features={['color', 'fontSize']} content={{ format: 'html', content: html }} />,
+    <RichTextEditor
+      defaultValue={{ format: 'html', content: html }}
+      features={['color', 'fontSize']}
+    />,
     { wrapper: Wrapper },
   )
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
