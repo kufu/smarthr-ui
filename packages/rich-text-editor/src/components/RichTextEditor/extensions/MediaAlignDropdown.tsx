@@ -1,7 +1,7 @@
 'use client'
 
 import { useEditorState } from '@tiptap/react'
-import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
@@ -11,21 +11,19 @@ import {
 } from '../Toolbar/ToolbarListboxDropdown'
 import { ALIGN_OPTIONS, getAlignIcon } from '../Toolbar/alignOptions'
 
-import { IMAGE_TOOLBAR_BUTTON_CLASS_NAME } from './Image/imageToolbarStyle'
+import { MEDIA_TOOLBAR_BUTTON_CLASS_NAME } from './mediaToolbarStyle'
 
+import type { MediaNodeName } from './mediaNode'
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 import type { Editor } from '@tiptap/react'
 
 // 両端揃えは段落用。画像・動画には意味がない
 const MEDIA_ALIGN_OPTIONS = ALIGN_OPTIONS.filter((option) => option.value !== 'justify')
 
-type Props = {
+type Props = RovingButtonProps & {
   editor: Editor
-  nodeName: 'image' | 'youtube'
+  nodeName: MediaNodeName
   pos: number
-  tabIndex?: number
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const MediaAlignDropdown: FC<Props> = memo(({ editor, nodeName, pos, ...rest }) => {
@@ -83,7 +81,7 @@ export const MediaAlignDropdown: FC<Props> = memo(({ editor, nodeName, pos, ...r
         </>
       }
       appearance="icons"
-      triggerClassName={IMAGE_TOOLBAR_BUTTON_CLASS_NAME}
+      triggerClassName={MEDIA_TOOLBAR_BUTTON_CLASS_NAME}
       handleSelect={functions.handleSelect}
       label={label}
       options={options}

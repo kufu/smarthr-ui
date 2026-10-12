@@ -1,15 +1,15 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useId, useMemo, useRef, useState } from 'react'
+import { type FC, memo, useId, useMemo, useRef, useState } from 'react'
 import { FaLockIcon, FaUpRightAndDownLeftFromCenterIcon, FormControl, Input } from 'smarthr-ui'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 
-import { ImagePopoverForm } from './Image/ImagePopoverForm'
-import { calcHeightFromWidth, calcWidthFromHeight } from './Image/aspectRatio'
 import { resolveImageElement } from './Image/resolveImageElement'
+import { MediaPopoverForm } from './MediaPopoverForm'
+import { calcHeightFromWidth, calcWidthFromHeight, isPositiveNumber } from './aspectRatio'
 import {
   YOUTUBE_ASPECT_RATIO,
   YOUTUBE_DEFAULT_SIZE,
@@ -17,6 +17,8 @@ import {
   calcYoutubeHeight,
 } from './youtubeOptions'
 
+import type { MediaNodeName } from './mediaNode'
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 import type { Editor } from '@tiptap/react'
 
 const classNameGenerator = tv({
@@ -40,7 +42,7 @@ const ICON = <FaUpRightAndDownLeftFromCenterIcon alt="" />
 type MediaSize = { width: number | null; height: number | null }
 
 type MediaSizeSpec = {
-  nodeName: 'image' | 'youtube'
+  nodeName: MediaNodeName
   resolveElement: (dom: Node | null) => HTMLElement | null
   getRatio: (element: HTMLElement | null) => { w: number; h: number }
   /** 保存された高さより比率を優先する。比率を変えられない媒体で、比率の違う古い値を見せないため */
@@ -48,8 +50,6 @@ type MediaSizeSpec = {
   normalize: (width: number, height: number) => MediaSize | null
   resetAttributes: MediaSize
 }
-
-const isPositive = (n: number) => Number.isFinite(n) && n > 0
 
 export const IMAGE_SIZE_SPEC: MediaSizeSpec = {
   nodeName: 'image',
@@ -60,8 +60,8 @@ export const IMAGE_SIZE_SPEC: MediaSizeSpec = {
       : { w: 0, h: 0 },
   fixedRatio: false,
   normalize: (width, height) => ({
-    width: isPositive(width) ? width : null,
-    height: isPositive(height) ? height : null,
+    width: isPositiveNumber(width) ? width : null,
+    height: isPositiveNumber(height) ? height : null,
   }),
   resetAttributes: { width: null, height: null },
 }
@@ -76,7 +76,7 @@ export const YOUTUBE_SIZE_SPEC: MediaSizeSpec = {
   fixedRatio: true,
   // 高さは入力値ではなく幅から求め直す。丸めの差で 16:9 から外れた値を保存しないため
   normalize: (width) => {
-    if (!isPositive(width)) return null
+    if (!isPositiveNumber(width)) return null
 
     const w = Math.max(Math.round(width), YOUTUBE_MIN_SIZE.width)
 
@@ -85,14 +85,10 @@ export const YOUTUBE_SIZE_SPEC: MediaSizeSpec = {
   resetAttributes: { ...YOUTUBE_DEFAULT_SIZE },
 }
 
-type Props = {
+type Props = RovingButtonProps & {
   editor: Editor
   pos: number
   spec: MediaSizeSpec
-  tabIndex?: number
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest }) => {
@@ -195,7 +191,7 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
   )
 
   return (
-    <ImagePopoverForm
+    <MediaPopoverForm
       {...rest}
       initialFocusRef={widthInputRef}
       editor={editor}
@@ -234,6 +230,6 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
       <span id={descriptionId} hidden>
         {lockLabel}
       </span>
-    </ImagePopoverForm>
+    </MediaPopoverForm>
   )
 })

@@ -12,17 +12,18 @@ import {
 } from 'react'
 import { Button, Cluster, Stack } from 'smarthr-ui'
 
-import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
-import { useLatest } from '../../../../hooks/useLatest'
-import { useIntl } from '../../../../intl'
-import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../hooks/useLatest'
+import { useIntl } from '../../../intl'
+import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
-import { IMAGE_TOOLBAR_BUTTON_CLASS_NAME } from './imageToolbarStyle'
+import { MEDIA_TOOLBAR_BUTTON_CLASS_NAME } from './mediaToolbarStyle'
 
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 import type { Transaction } from '@tiptap/pm/state'
 import type { Editor } from '@tiptap/react'
 
-type Props = {
+type Props = RovingButtonProps & {
   editor: Editor
   pos: number
   icon: ReactNode
@@ -32,13 +33,9 @@ type Props = {
   handleSubmit: (pos: number) => void
   secondaryAction?: { label: string; handleClick: (pos: number) => void }
   children: ReactNode
-  tabIndex?: number
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
-export const ImagePopoverForm: FC<Props> = ({
+export const MediaPopoverForm: FC<Props> = ({
   editor,
   pos,
   icon,
@@ -184,7 +181,7 @@ export const ImagePopoverForm: FC<Props> = ({
         ref={mergedTriggerRef}
         type="button"
         tabIndex={tabIndex}
-        className={IMAGE_TOOLBAR_BUTTON_CLASS_NAME}
+        className={MEDIA_TOOLBAR_BUTTON_CLASS_NAME}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         onMouseDown={(e) => e.preventDefault()}

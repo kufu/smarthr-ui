@@ -1,4 +1,4 @@
-import { tv } from '../../../../libs/tv'
+import { tv } from '../../../libs/tv'
 
 const classNameGenerator = tv({
   base: [
@@ -9,4 +9,4 @@ const classNameGenerator = tv({
   ],
 })
 
-export const IMAGE_TOOLBAR_BUTTON_CLASS_NAME = classNameGenerator()
+export const MEDIA_TOOLBAR_BUTTON_CLASS_NAME = classNameGenerator()

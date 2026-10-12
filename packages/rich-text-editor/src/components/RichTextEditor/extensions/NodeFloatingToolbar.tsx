@@ -5,6 +5,7 @@ import { type FC, type ReactNode, type RefObject, useCallback, useMemo, useState
 import { tv } from '../../../libs/tv'
 import { useNodeRect } from '../hooks/useNodeRect'
 
+import type { MediaNodeName } from './mediaNode'
 import type { Editor } from '@tiptap/react'
 
 const classNameGenerator = tv({
@@ -18,7 +19,7 @@ const classNameGenerator = tv({
 
 type Props = {
   editor: Editor
-  nodeName: 'image' | 'youtube'
+  nodeName: MediaNodeName
   containerRef: RefObject<HTMLElement | null>
   pos: number
   resolveElement: (dom: Node | null) => HTMLElement | null

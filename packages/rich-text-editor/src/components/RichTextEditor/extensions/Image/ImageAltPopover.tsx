@@ -1,24 +1,20 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo, useRef, useState } from 'react'
+import { type FC, memo, useMemo, useRef, useState } from 'react'
 import { FaPenToSquareIcon, FormControl, Input } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
+import { MediaPopoverForm } from '../MediaPopoverForm'
 
-import { ImagePopoverForm } from './ImagePopoverForm'
-
+import type { RovingButtonProps } from '../../hooks/useRovingToolbar'
 import type { Editor } from '@tiptap/react'
 
 const ICON = <FaPenToSquareIcon alt="" />
 
-type Props = {
+type Props = RovingButtonProps & {
   editor: Editor
   pos: number
-  tabIndex?: number
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
@@ -56,7 +52,7 @@ export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
   )
 
   return (
-    <ImagePopoverForm
+    <MediaPopoverForm
       {...rest}
       initialFocusRef={inputRef}
       editor={editor}
@@ -75,6 +71,6 @@ export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
           onChange={(e) => setAlt(e.target.value)}
         />
       </FormControl>
-    </ImagePopoverForm>
+    </MediaPopoverForm>
   )
 })

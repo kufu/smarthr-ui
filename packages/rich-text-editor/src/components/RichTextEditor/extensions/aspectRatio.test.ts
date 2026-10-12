@@ -1,8 +1,18 @@
 import { describe, expect, it } from 'vitest'
 
-import { calcHeightFromWidth, calcWidthFromHeight } from './aspectRatio'
+import { calcHeightFromWidth, calcWidthFromHeight, isPositiveNumber } from './aspectRatio'
 
 describe('aspectRatio', () => {
+  describe('isPositiveNumber', () => {
+    it.each([1, 0.5, 1e6])('%s は正の数とみなす', (value) => {
+      expect(isPositiveNumber(value)).toBe(true)
+    })
+
+    it.each([0, -1, NaN, Infinity, '100', null, undefined])('%s は正の数とみなさない', (value) => {
+      expect(isPositiveNumber(value)).toBe(false)
+    })
+  })
+
   // 自然サイズ 800x600 (比率 4:3)
   describe('calcHeightFromWidth', () => {
     it('幅から高さを比率で算出する', () => {

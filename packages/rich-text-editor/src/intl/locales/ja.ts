@@ -77,7 +77,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/imageAspectLocked': '縦横比を固定',
   'smarthr-ui/RichTextEditor/imageToolbar': '画像の操作',
   'smarthr-ui/RichTextEditor/imageDelete': '画像を削除',
-  'smarthr-ui/RichTextEditor/imageDeleteShort': '削除',
+  'smarthr-ui/RichTextEditor/mediaDeleteShort': '削除',
   'smarthr-ui/RichTextEditor/mediaAlign': '配置',
   'smarthr-ui/RichTextEditor/youtubeToolbar': 'YouTube動画の操作',
   'smarthr-ui/RichTextEditor/youtubeDelete': 'YouTube動画を削除',

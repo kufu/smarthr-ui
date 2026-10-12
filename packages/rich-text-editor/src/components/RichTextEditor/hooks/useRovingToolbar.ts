@@ -120,3 +120,7 @@ export const useRovingToolbar = ({ count, disabledKeys, onEscape }: UseRovingToo
 
   return { getButtonProps }
 }
+
+export type RovingButtonProps = Partial<
+  ReturnType<ReturnType<typeof useRovingToolbar>['getButtonProps']>
+>

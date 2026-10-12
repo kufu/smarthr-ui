@@ -1,5 +1,6 @@
 import { getRenderedAttributes } from '@tiptap/core'
 
+import { isPositiveNumber } from '../aspectRatio'
 import { IMAGE_ALIGN_STYLES, applyMediaAlign } from '../mediaAlign'
 import { PersistentHandlesNodeView } from '../resizableMedia'
 
@@ -19,9 +20,6 @@ type CustomImageOptions = ImageOptions & {
    */
   isResizable: () => boolean
 }
-
-const toPositiveNumber = (value: unknown): number | null =>
-  typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : null
 
 /**
  * `@tiptap/extension-image` の標準 NodeView は、`updateAttributes` で alt や
@@ -115,8 +113,8 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
        * applyInitialSize で px を書くため、生成後にもこれを通す必要がある。
        */
       const resolveDisplaySize = () => {
-        const width = toPositiveNumber(sizeAttributes.width)
-        const height = toPositiveNumber(sizeAttributes.height)
+        const width = isPositiveNumber(sizeAttributes.width) ? sizeAttributes.width : null
+        const height = isPositiveNumber(sizeAttributes.height) ? sizeAttributes.height : null
         const naturalRatio =
           el.naturalWidth > 0 && el.naturalHeight > 0 ? el.naturalWidth / el.naturalHeight : null
         // height だけ保存されている既存データは、同じ高さになる幅へ置き換える
