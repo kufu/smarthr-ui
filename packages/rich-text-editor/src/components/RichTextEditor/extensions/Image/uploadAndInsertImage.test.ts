@@ -111,25 +111,91 @@ describe('uploadAndInsertImage', () => {
     expect(onImageUploadError).not.toHaveBeenCalled()
   })
 
-  it('文書が差し替えられたら挿入しない', async () => {
-    const editor = createEditor('<p>hello</p>')
-    const deferred = createDeferred<ImageUploadResult>()
-    const done = uploadAndInsertImage(editor, file(), 3, () => deferred.promise)
+  describe('文書が差し替えられたとき', () => {
+    const uploadAcrossReplace = async (result: ImageUploadResult) => {
+      const editor = createEditor('<p>hello</p>')
+      const onImageUploadError = vi.fn()
+      const deferred = createDeferred<ImageUploadResult>()
+      const done = uploadAndInsertImage(
+        editor,
+        file(),
+        3,
+        () => deferred.promise,
+        onImageUploadError,
+      )
 
-    editor
-      .chain()
-      .setContent('<p>replaced</p>')
-      .command(({ tr }) => {
-        resetImagePlaceholders(tr)
+      editor
+        .chain()
+        .setContent('<p>replaced</p>')
+        .command(({ tr }) => {
+          resetImagePlaceholders(tr)
 
-        return true
+          return true
+        })
+        .run()
+      deferred.resolve(result)
+      await done
+
+      return { editor, onImageUploadError }
+    }
+
+    it('挿入せず、エラーも通知しない', async () => {
+      const { editor, onImageUploadError } = await uploadAcrossReplace({
+        src: 'https://example.com/a.png',
       })
-      .run()
-    deferred.resolve({ src: 'https://example.com/a.png' })
+
+      expect(imagePositions(editor)).toHaveLength(0)
+      expect(editor.getText()).toBe('replaced')
+      expect(onImageUploadError).not.toHaveBeenCalled()
+    })
+
+    it('src が使えなければ、挿入せずにエラーを通知する', async () => {
+      const { editor, onImageUploadError } = await uploadAcrossReplace({
+        src: 'blob:https://example.com/a',
+      })
+
+      expect(imagePositions(editor)).toHaveLength(0)
+      expect(onImageUploadError).toHaveBeenCalledWith(
+        expect.objectContaining({ message: expect.stringContaining('src に使えない') }),
+        expect.any(File),
+      )
+    })
+  })
+
+  it('アップロード中にエディタが破棄されても、src が使えなければエラーを通知する', async () => {
+    const editor = createEditor('<p>hello</p>')
+    const onImageUploadError = vi.fn()
+    const deferred = createDeferred<ImageUploadResult>()
+    const done = uploadAndInsertImage(editor, file(), 3, () => deferred.promise, onImageUploadError)
+
+    editor.destroy()
+    deferred.resolve({ src: Object.create(null) })
     await done
 
-    expect(imagePositions(editor)).toHaveLength(0)
-    expect(editor.getText()).toBe('replaced')
+    expect(onImageUploadError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: expect.stringContaining('src に使えない URL です: object'),
+      }),
+      expect.any(File),
+    )
+  })
+
+  it.each([
+    ['数値', 123],
+    ['オブジェクト', { a: 1 }],
+  ])('alt が文字列でない（%s）なら、空の alt で挿入する', async (_, alt) => {
+    const editor = createEditor('<p>hello</p>')
+
+    await uploadAndInsertImage(editor, file(), 6, async () => ({
+      src: 'https://example.com/a.png',
+      alt: alt as unknown as string,
+    }))
+
+    let insertedAlt: unknown
+    editor.state.doc.descendants((node) => {
+      if (node.type.name === 'image') insertedAlt = node.attrs.alt
+    })
+    expect(insertedAlt).toBe('')
   })
 
   it('内容が同じでも全消去をまたいだら挿入しない', async () => {

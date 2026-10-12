@@ -821,6 +821,30 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     assertNoInjectedCss({ html, react })
   })
 
+  it.each([
+    ['数値', 123],
+    ['オブジェクト', { a: 1 }],
+    ['配列', ['x']],
+  ])('画像の alt が文字列でない（%s）とき、両経路とも空の alt を出す', (_, alt) => {
+    const { html, react } = bothOutputs({
+      type: 'doc',
+      content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', alt } }],
+    })
+
+    for (const output of [html, react]) {
+      expect(output).toMatch(/<img[^>]* alt=""/)
+    }
+  })
+
+  it('画像の title が文字列でないとき、出力しない', () => {
+    const { html } = bothOutputs({
+      type: 'doc',
+      content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', title: 123 } }],
+    })
+
+    expect(html).not.toContain('title=')
+  })
+
   const linkDoc = (attrs: Record<string, unknown>) => ({
     type: 'doc',
     content: [

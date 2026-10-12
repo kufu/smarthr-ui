@@ -32,6 +32,11 @@ const nullIfUnsafe =
   (value) =>
     isSafe(value) ? value : null
 
+const nullIfNotString = nullIfUnsafe((value) => typeof value === 'string')
+
+// null に戻さないのは、HTML 経路が alt 属性ごと省き、React 経路の alt="" とずれるため
+const emptyIfNotString: AttrNormalizer = (value) => (typeof value === 'string' ? value : '')
+
 /**
  * colwidth の各要素は table の width 宣言へ合算されるため、
  * 数値以外が混ざるとCSS宣言の追記になる。0 は Tiptap が幅未指定として扱うので許可する。
@@ -103,6 +108,8 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
   // ノード
   image: {
     src: nullIfUnsafe(isSafeImageSrc),
+    alt: emptyIfNotString,
+    title: nullIfNotString,
     width: nullIfUnsafe(isNumericAttr),
     height: nullIfUnsafe(isNumericAttr),
     align: nullIfUnsafe(isSafeMediaAlign),
@@ -126,7 +133,7 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
     // null だと属性ごと落ちて既定値に戻らない
     rel: () => LINK_REL,
     class: () => null,
-    title: nullIfUnsafe((value) => typeof value === 'string'),
+    title: nullIfNotString,
   },
   textStyle: {
     color: nullIfUnsafe(isSafeColor),

@@ -17,7 +17,7 @@ import type { Editor } from '@tiptap/react'
  * - 失敗: onImageUploadError を呼ぶ。src が isSafeImageSrc を満たさない場合も失敗とする
  * - finally: プレースホルダを除去
  *
- * 文書が差し替えられていた場合は何もせず正常終了する。アップロードは成功しているので
+ * 文書が差し替えられていた場合は挿入せずに終わる。src が正しければアップロードは成功しているので
  * onImageUploadError は呼ばない。
  */
 export const uploadAndInsertImage = async (
@@ -35,6 +35,15 @@ export const uploadAndInsertImage = async (
     formData.append('file', file)
     const result = await onImageUpload(file, formData)
 
+    // 挿入すると表示はされるが、保存した内容を表示するときに落ちる。エディタの破棄や
+    // 文書の差し替えで挿入しない場合も通知するのは、利用者の実装の誤りを伝える機会がここにしか無いため
+    if (!isSafeImageSrc(result?.src)) {
+      const src = result?.src
+      throw new Error(
+        `RichTextEditor: 画像の src に使えない URL です: ${typeof src === 'string' ? src : typeof src}`,
+      )
+    }
+
     if (editor.isDestroyed || view.isDestroyed) return
 
     const at = findImagePlaceholderPos(view, id)
@@ -43,16 +52,11 @@ export const uploadAndInsertImage = async (
     // 文書の差し替えではプレースホルダも消えるため、両方の条件で止める。
     if (at === null || getImagePlaceholderGeneration(view) !== generation) return
 
-    // 挿入すると表示はされるが、保存した内容を表示するときに落ちる
-    if (!isSafeImageSrc(result?.src)) {
-      throw new Error(`RichTextEditor: 画像の src に使えない URL です: ${String(result?.src)}`)
-    }
-
     editor
       .chain()
       .insertContentAt(at, {
         type: 'image',
-        attrs: { src: result.src, alt: result.alt ?? '' },
+        attrs: { src: result.src, alt: typeof result.alt === 'string' ? result.alt : '' },
       })
       .run()
   } catch (error) {
