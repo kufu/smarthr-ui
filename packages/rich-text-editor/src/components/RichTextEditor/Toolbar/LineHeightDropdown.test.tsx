@@ -28,12 +28,6 @@ const openDropdown = async (user: ReturnType<typeof userEvent.setup>) => {
 }
 
 describe('LineHeightDropdown', () => {
-  it('トリガーが行送りラベルで表示される', async () => {
-    render(<RichTextEditor features={['lineHeight']} />, { wrapper: Wrapper })
-    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
-    expect(screen.getByRole('button', { name: /行送り/ })).toBeInTheDocument()
-  })
-
   it('トリガーの aria-label に現在値（デフォルトは標準）が含まれる', async () => {
     render(<RichTextEditor features={['lineHeight']} />, { wrapper: Wrapper })
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())

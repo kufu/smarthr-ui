@@ -117,7 +117,8 @@ describe('画像アップロード', () => {
   })
 
   it('失敗時に onImageUploadError が呼ばれ、画像は挿入されない', async () => {
-    const onImageUpload = vi.fn().mockRejectedValue(new Error('boom'))
+    const error = new Error('boom')
+    const onImageUpload = vi.fn().mockRejectedValue(error)
     const onImageUploadError = vi.fn()
     render(
       <RichTextEditor
@@ -135,6 +136,7 @@ describe('画像アップロード', () => {
     await waitFor(() => {
       expect(onImageUploadError).toHaveBeenCalledTimes(1)
     })
+    expect(onImageUploadError).toHaveBeenCalledWith(error, file)
     expect(document.querySelector('.ProseMirror img')).toBeNull()
   })
 

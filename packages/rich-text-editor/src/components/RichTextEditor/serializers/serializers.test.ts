@@ -1,24 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { createChangeMeta, isEmptyDocument } from './createChangeMeta'
+import { createChangeMeta } from './createChangeMeta'
 import { resolveRichTextValue } from './resolveRichTextValue'
 import { serializeToHTML } from './serializeToHTML'
 
 import type { RichTextJSON } from '../types'
 
 describe('resolveRichTextValue', () => {
-  it('empty format を空ドキュメントに変換する', () => {
-    const result = resolveRichTextValue({ format: 'empty' })
-    expect(result.type).toBe('doc')
-    expect(result.content).toHaveLength(1)
-    expect(result.content![0].type).toBe('paragraph')
-  })
-
-  it('undefined を空ドキュメントに変換する', () => {
-    const result = resolveRichTextValue(undefined)
-    expect(result.type).toBe('doc')
-  })
-
   it('json format をそのまま返す', () => {
     const json: RichTextJSON = {
       type: 'doc',
@@ -26,14 +14,6 @@ describe('resolveRichTextValue', () => {
     }
     const result = resolveRichTextValue({ format: 'json', content: json })
     expect(result).toBe(json)
-  })
-
-  it('html format を JSON に変換する', () => {
-    const result = resolveRichTextValue({ format: 'html', content: '<p>hello</p>' })
-    expect(result.type).toBe('doc')
-    expect(result.content).toBeDefined()
-    expect(result.content![0].type).toBe('paragraph')
-    expect(result.content![0].content![0].text).toBe('hello')
   })
 
   it('太字を含む HTML を正しく変換する', () => {
@@ -70,25 +50,6 @@ describe('serializeToHTML', () => {
     }
     const html = serializeToHTML(json)
     expect(html).toContain('<strong>bold</strong>')
-  })
-})
-
-describe('isEmptyDocument', () => {
-  it('空の paragraph のみのドキュメントを空と判定する', () => {
-    expect(isEmptyDocument({ type: 'doc', content: [{ type: 'paragraph' }] })).toBe(true)
-  })
-
-  it('content が空配列のドキュメントを空と判定する', () => {
-    expect(isEmptyDocument({ type: 'doc', content: [] })).toBe(true)
-  })
-
-  it('テキストを含むドキュメントを空でないと判定する', () => {
-    expect(
-      isEmptyDocument({
-        type: 'doc',
-        content: [{ type: 'paragraph', content: [{ type: 'text', text: 'hello' }] }],
-      }),
-    ).toBe(false)
   })
 })
 

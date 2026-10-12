@@ -49,12 +49,12 @@ describe('Viewer の YouTube 埋め込み', () => {
     expect(viewerSrc(insertYoutube(WATCH_URL, 30))).toContain('start=30')
   })
 
-  it.each([
-    ['watch のURL', WATCH_URL],
-    ['youtu.be のURL', 'https://youtu.be/abcdefghijk'],
-    ['開始位置つき', WATCH_URL],
-  ])('%s で HTML 出力と src が一致する', (_name, url) => {
-    const json = insertYoutube(url, 15)
+  it.each<[string, string, number | undefined]>([
+    ['watch のURL', WATCH_URL, 15],
+    ['youtu.be のURL', 'https://youtu.be/abcdefghijk', 15],
+    ['開始位置なし', WATCH_URL, undefined],
+  ])('%s で HTML 出力と src が一致する', (_name, url, start) => {
+    const json = insertYoutube(url, start)
 
     expect(viewerSrc(json)).toBe(iframeSrc(serializeToHTML(json)))
   })

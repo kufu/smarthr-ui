@@ -262,27 +262,6 @@ describe('uploadAndInsertImage', () => {
     expect(editor.getHTML()).toMatch(/<\/table>.*a\.png/s)
   })
 
-  it('アップロード失敗は onImageUploadError で通知する', async () => {
-    const editor = createEditor('<p>hello</p>')
-    const onImageUploadError = vi.fn()
-    const deferred = createDeferred<ImageUploadResult>()
-    const uploaded = file()
-    const done = uploadAndInsertImage(
-      editor,
-      uploaded,
-      3,
-      () => deferred.promise,
-      onImageUploadError,
-    )
-    const error = new Error('boom')
-
-    deferred.reject(error)
-    await done
-
-    expect(onImageUploadError).toHaveBeenCalledWith(error, uploaded)
-    expect(imagePositions(editor)).toHaveLength(0)
-  })
-
   it('空の段落で続けてアップロードすると、完了した順に2枚とも入る', async () => {
     const editor = createEditor('<p>x</p><p></p><p>y</p>')
     const first = createDeferred<ImageUploadResult>()

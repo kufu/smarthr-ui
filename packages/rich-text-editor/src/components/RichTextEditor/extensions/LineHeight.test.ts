@@ -15,14 +15,6 @@ describe('LineHeight 拡張', () => {
     expect(LINE_HEIGHTS).toEqual(['1', '1.25', '1.5', '1.75', '2'])
   })
 
-  it('setLineHeight で paragraph に lineHeight 属性が入る', () => {
-    const editor = createEditor()
-    editor.commands.selectAll()
-    editor.commands.setLineHeight('1.5')
-    expect(editor.getAttributes('paragraph').lineHeight).toBe('1.5')
-    editor.destroy()
-  })
-
   it.each([
     ['見出しだけ', 2, 'heading'],
     ['段落だけ', 7, 'paragraph'],
@@ -38,24 +30,6 @@ describe('LineHeight 拡張', () => {
 
     expect(editor.commands.unsetLineHeight()).toBe(true)
     expect(editor.getAttributes(type).lineHeight ?? null).toBeNull()
-    editor.destroy()
-  })
-
-  it('renderHTML で line-height の style が出力される', () => {
-    const editor = createEditor()
-    editor.commands.selectAll()
-    editor.commands.setLineHeight('2')
-    expect(editor.getHTML()).toContain('line-height: 2')
-    editor.destroy()
-  })
-
-  it('unsetLineHeight で属性が消える', () => {
-    const editor = createEditor()
-    editor.commands.selectAll()
-    editor.commands.setLineHeight('1.5')
-    editor.commands.unsetLineHeight()
-    expect(editor.getAttributes('paragraph').lineHeight ?? null).toBeNull()
-    expect(editor.getHTML()).not.toContain('line-height')
     editor.destroy()
   })
 

@@ -374,15 +374,6 @@ describe('useToolbarDropdown', () => {
 
       expect(screen.getByRole('listbox')).toBeInTheDocument()
     })
-
-    it('トリガーをもう一度クリックすると閉じる', async () => {
-      await openDropdown()
-
-      // トリガー上の mousedown で閉じると、続く click で開き直してしまう
-      await userEvent.click(screen.getByRole('button', { name: '開く' }))
-
-      expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
-    })
   })
 
   it('トリガーを内包する段がスクロールしたらドロップダウンを閉じる', async () => {

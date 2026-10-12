@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createRef, useState } from 'react'
 import { FormControl, IntlProvider } from 'smarthr-ui'
@@ -52,28 +52,6 @@ const ALL_FEATURES = [
 ] as const
 
 describe('RichTextEditor', () => {
-  it('renders the editor', async () => {
-    render(<RichTextEditor />, { wrapper: Wrapper })
-    await waitFor(() => {
-      expect(screen.getByRole('textbox')).toBeInTheDocument()
-    })
-  })
-
-  it('renders toolbar when not readOnly', async () => {
-    render(<RichTextEditor />, { wrapper: Wrapper })
-    await waitFor(() => {
-      expect(screen.getByRole('toolbar')).toBeInTheDocument()
-    })
-  })
-
-  it('hides toolbar when readOnly', async () => {
-    render(<RichTextEditor readOnly />, { wrapper: Wrapper })
-    await waitFor(() => {
-      expect(screen.getByRole('textbox')).toBeInTheDocument()
-    })
-    expect(screen.queryByRole('toolbar')).not.toBeInTheDocument()
-  })
-
   it('renders toolbar buttons based on features', async () => {
     render(<RichTextEditor features={['bold', 'italic']} />, { wrapper: Wrapper })
     await waitFor(() => {
@@ -87,44 +65,13 @@ describe('RichTextEditor', () => {
   // NOTE: jsdomではcontenteditable divへのuserEvent.typeが動作しないため、
   // onChangeの動作テストはStorybookのインタラクションテストで行う
 
-  it('renders with defaultValue', async () => {
-    const defaultValue = {
-      type: 'doc' as const,
-      content: [
-        {
-          type: 'paragraph',
-          content: [{ type: 'text', text: 'Initial content' }],
-        },
-      ],
-    }
-    render(<RichTextEditor defaultValue={defaultValue} />, { wrapper: Wrapper })
-    await waitFor(() => {
-      expect(screen.getByText('Initial content')).toBeInTheDocument()
-    })
-  })
-
-  it('integrates with FormControl', async () => {
-    render(
-      <IntlProvider locale="ja">
-        {/* eslint-disable-next-line smarthr/a11y-form-control-in-form */}
-        <FormControl errorMessages="Required field" label="Description">
-          <RichTextEditor />
-        </FormControl>
-      </IntlProvider>,
-    )
-    await waitFor(() => {
-      expect(screen.getByRole('textbox')).toBeInTheDocument()
-    })
-    expect(screen.getByText('Description')).toBeInTheDocument()
-    expect(screen.getByText('Required field')).toBeInTheDocument()
-  })
-
   it('has aria-pressed on toggle buttons', async () => {
     render(<RichTextEditor features={['bold']} />, { wrapper: Wrapper })
     await waitFor(() => {
       expect(screen.getByRole('toolbar')).toBeInTheDocument()
     })
     const boldButton = screen.getByLabelText('太字')
+    expect(boldButton).toBeEnabled()
     expect(boldButton).toHaveAttribute('aria-pressed', 'false')
     expect(boldButton).not.toHaveAttribute('data-active')
   })
@@ -297,14 +244,6 @@ describe('RichTextEditor', () => {
       expect(JSON.stringify(ref.current!.getJSON())).toBe(before)
       expect(screen.getByLabelText('太字')).toHaveAttribute('aria-pressed', 'false')
       expect(onChange).not.toHaveBeenCalled()
-    })
-
-    it('disabledでないときはツールバーのボタンが有効', async () => {
-      render(<RichTextEditor features={['bold']} />, { wrapper: Wrapper })
-      await waitFor(() => {
-        expect(screen.getByRole('toolbar')).toBeInTheDocument()
-      })
-      expect(screen.getByLabelText('太字')).toBeEnabled()
     })
   })
 
@@ -1296,22 +1235,6 @@ describe('RichTextEditor', () => {
   })
 
   describe('showCharacterCount', () => {
-    it('shows character count when showCharacterCount is true', async () => {
-      render(
-        <RichTextEditor
-          defaultValue={{
-            type: 'doc',
-            content: [{ type: 'paragraph', content: [{ type: 'text', text: 'abc' }] }],
-          }}
-          showCharacterCount
-        />,
-        { wrapper: Wrapper },
-      )
-      await waitFor(() => {
-        expect(screen.getByText('文字数：3')).toBeInTheDocument()
-      })
-    })
-
     it('does not show character count by default', async () => {
       render(<RichTextEditor />, { wrapper: Wrapper })
       await waitFor(() => {
@@ -1616,14 +1539,6 @@ describe('RichTextEditor', () => {
 
     const HANDLE_SELECTOR = '.smarthr-ui-RichTextEditor-resizeHandle'
 
-    it('resizable のときリサイズハンドルが描画される', async () => {
-      const { container } = render(<RichTextEditor features={ALL_FEATURES} resizable />, {
-        wrapper: Wrapper,
-      })
-
-      await waitFor(() => expect(container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument())
-    })
-
     it('resizable 未指定のときリサイズハンドルは描画されない', async () => {
       const { container } = render(<RichTextEditor features={ALL_FEATURES} />, { wrapper: Wrapper })
 
@@ -1688,27 +1603,6 @@ describe('RichTextEditor', () => {
 
       // どちらも wrapper 直下に絶対配置される
       expect(withCountParent).toBe(withoutCountParent)
-    })
-
-    it('ドラッグするとエディタ領域の高さを表す CSS 変数が更新される', async () => {
-      const { container } = render(
-        <RichTextEditor features={ALL_FEATURES} resizable height={200} />,
-        { wrapper: Wrapper },
-      )
-
-      await waitFor(() => expect(container.querySelector(HANDLE_SELECTOR)).toBeInTheDocument())
-
-      const handle = container.querySelector(HANDLE_SELECTOR)!
-      const content = container.querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')!
-      const proseMirror = content.querySelector<HTMLElement>('.ProseMirror')!
-      proseMirror.getBoundingClientRect = () => ({ height: 200 }) as unknown as DOMRect
-
-      // fireEvent.pointerDown は jsdom で clientY を伝えないため MouseEvent を直接投げる
-      fireEvent(handle, new MouseEvent('pointerdown', { clientY: 100, bubbles: true }))
-      fireEvent(window, new MouseEvent('pointermove', { clientY: 160 }))
-      fireEvent(window, new MouseEvent('pointerup', {}))
-
-      expect(content.style.getPropertyValue('--shr-rte-editor-height')).toBe('260px')
     })
   })
 

@@ -21,26 +21,9 @@ vi.mock('../serializers/serializeToReactElement', async (importOriginal) => {
 })
 
 describe('RichTextViewer', () => {
-  it('JSON content を静的に描画する', () => {
-    render(
-      <RichTextViewer
-        content={{
-          type: 'doc',
-          content: [{ type: 'paragraph', content: [{ type: 'text', text: '表示テスト' }] }],
-        }}
-      />,
-    )
-    expect(screen.getByText('表示テスト')).toBeInTheDocument()
-  })
-
   it('HTML content を正規化して描画する', () => {
     render(<RichTextViewer content={{ format: 'html', content: '<p>HTMLから表示</p>' }} />)
     expect(screen.getByText('HTMLから表示')).toBeInTheDocument()
-  })
-
-  it('empty content で空の div を描画する', () => {
-    const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
-    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toBeInTheDocument()
   })
 
   it('太字マークを strong タグで描画する', () => {

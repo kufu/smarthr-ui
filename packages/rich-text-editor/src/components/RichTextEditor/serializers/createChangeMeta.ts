@@ -21,8 +21,6 @@ export type RichTextSnapshot = {
 const toNode = (json: RichTextJSON): Node =>
   createNodeFromContent(json, getRichTextSchema(), { errorOnInvalidContent: false }) as Node
 
-export const isEmptyDocument = (json: RichTextJSON): boolean => isNodeEmpty(toNode(json))
-
 /**
  * editor を経由しない呼び出しでも同じ結果を返すため、
  * Tiptap が editor.isEmpty / editor.getText() で使うのと同じ helper を通す。

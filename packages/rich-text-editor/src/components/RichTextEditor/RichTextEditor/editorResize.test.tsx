@@ -25,10 +25,11 @@ afterEach(() => {
 /**
  * 本文の実測値と CSS 上の下限を固定する。jsdom はレイアウトを持たず、Tailwind も読み込まないため。
  */
-const renderResizable = async (initialHeight: number, minHeight = '0px') => {
-  const { container, rerender } = render(<RichTextEditor features={['bold']} resizable />, {
-    wrapper: Wrapper,
-  })
+const renderResizable = async (initialHeight: number, minHeight = '0px', height?: number) => {
+  const { container, rerender } = render(
+    <RichTextEditor features={['bold']} resizable height={height} />,
+    { wrapper: Wrapper },
+  )
   await waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
 
   const proseMirror = container.querySelector<HTMLElement>('.ProseMirror')!
@@ -45,17 +46,16 @@ const renderResizable = async (initialHeight: number, minHeight = '0px') => {
       )
     })
 
-  const editorHeight = () => {
-    const el = [...container.querySelectorAll<HTMLElement>('[style]')].find((node) =>
-      node.style.getPropertyValue('--shr-rte-editor-height'),
-    )
-    return el?.style.getPropertyValue('--shr-rte-editor-height') ?? null
-  }
+  const editorHeight = () =>
+    container
+      .querySelector<HTMLElement>('[data-smarthr-ui-input="true"]')!
+      .style.getPropertyValue('--shr-rte-editor-height') || null
 
   return {
     editorHeight,
     down: (clientY: number, button = 0) => pointer(handle, 'pointerdown', clientY, button),
-    setReadOnly: () => rerender(<RichTextEditor readOnly features={['bold']} resizable />),
+    setReadOnly: () =>
+      rerender(<RichTextEditor readOnly features={['bold']} resizable height={height} />),
     move: (clientY: number) => pointer(window, 'pointermove', clientY),
     up: () => pointer(window, 'pointerup'),
   }
@@ -68,8 +68,8 @@ describe('高さのドラッグ', () => {
     expect(editorHeight()).toBeNull()
   })
 
-  it('下方向のドラッグ量が開始時の高さに加算される', async () => {
-    const { editorHeight, down, move } = await renderResizable(200)
+  it('下方向のドラッグ量が開始時の高さに加算され、height より優先される', async () => {
+    const { editorHeight, down, move } = await renderResizable(200, '0px', 120)
 
     down(100)
     move(150)
