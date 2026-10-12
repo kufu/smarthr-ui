@@ -20,7 +20,6 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarButton } from './ToolbarButton'
-import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 import { isHttpUrl, isMailtoUrl } from './urlValidation'
 
 type Props = {
@@ -217,7 +216,7 @@ export const LinkButton: FC<Props> = memo(
           label={label}
         />
         {renderDropdown(
-          <div ref={popupRef} role="dialog" className={TOOLBAR_POPUP_CLASS_NAME} aria-label={label}>
+          <div ref={popupRef} role="dialog" className="shr-rte-p-1" aria-label={label}>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <form
               noValidate

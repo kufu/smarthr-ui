@@ -15,7 +15,6 @@ import { Button, Cluster, Stack } from 'smarthr-ui'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
-import { TOOLBAR_POPUP_CLASS_NAME } from '../../Toolbar/toolbarItemStyle'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 
 import { IMAGE_TOOLBAR_BUTTON_CLASS_NAME } from './imageToolbarStyle'
@@ -197,7 +196,7 @@ export const ImagePopoverForm: FC<Props> = ({
         {label}
       </button>
       {renderDropdown(
-        <div ref={dialogRef} role="dialog" className={TOOLBAR_POPUP_CLASS_NAME} aria-label={label}>
+        <div ref={dialogRef} role="dialog" className="shr-rte-p-1" aria-label={label}>
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <form
             noValidate

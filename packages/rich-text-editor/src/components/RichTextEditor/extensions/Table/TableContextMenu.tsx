@@ -388,7 +388,7 @@ export const TableContextMenu = ({
         <div
           ref={menuRef}
           role="dialog"
-          className="shr-rte-group/table-menu shr-rte-flex shr-rte-flex-col shr-rte-rounded-m shr-rte-bg-white shr-rte-py-0.5 shr-rte-shadow-layer-3"
+          className="shr-rte-group/table-menu shr-rte-flex shr-rte-flex-col shr-rte-py-0.5"
           style={{ minWidth: 280 }}
           aria-label={label}
           data-keyboard={keyboardNavigation}

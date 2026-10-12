@@ -27,9 +27,7 @@ const PALETTE_BUTTON_BASE_CLASSES = [
 
 const classNameGenerator = tv({
   slots: {
-    palette: [
-      'shr-rte-border-shorthand shr-rte-flex shr-rte-flex-col shr-rte-gap-1 shr-rte-rounded-m shr-rte-bg-white shr-rte-p-0.75 shr-rte-shadow-layer-3',
-    ],
+    palette: 'shr-rte-flex shr-rte-flex-col shr-rte-gap-1 shr-rte-p-0.75',
     section: 'shr-rte-flex shr-rte-flex-col shr-rte-gap-0.5',
     sectionTitle: 'shr-rte-text-xs shr-rte-font-bold shr-rte-text-grey',
     swatchRow: 'shr-rte-flex shr-rte-gap-0.5',

@@ -20,11 +20,10 @@ import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
-import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 
 const classNameGenerator = tv({
   slots: {
-    popup: [TOOLBAR_POPUP_CLASS_NAME, 'shr-rte-min-w-[12em]'],
+    popup: 'shr-rte-min-w-[12em] shr-rte-p-1',
     field: 'shr-rte-flex shr-rte-flex-col shr-rte-gap-0.25 shr-rte-text-sm shr-rte-text-black',
     error: 'shr-rte-text-sm shr-rte-text-danger',
   },

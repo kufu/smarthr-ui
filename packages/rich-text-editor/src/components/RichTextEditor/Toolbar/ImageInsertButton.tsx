@@ -25,9 +25,7 @@ import { ToolbarButton } from './ToolbarButton'
 
 const classNameGenerator = tv({
   slots: {
-    menu: [
-      'shr-rte-border-shorthand shr-rte-flex shr-rte-flex-col shr-rte-rounded-m shr-rte-bg-white shr-rte-py-0.25 shr-rte-shadow-layer-3',
-    ],
+    menu: 'shr-rte-flex shr-rte-flex-col shr-rte-py-0.25',
     menuItem: [
       'shr-rte-cursor-pointer shr-rte-whitespace-nowrap shr-rte-border-none shr-rte-bg-transparent shr-rte-px-0.75 shr-rte-py-0.5 shr-rte-text-left shr-rte-text-sm shr-rte-text-black',
       'hover:shr-rte-bg-white-darken',

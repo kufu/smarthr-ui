@@ -237,7 +237,7 @@ describe('useToolbarDropdown', () => {
     }
   })
 
-  describe('外枠の影', () => {
+  describe('外枠の見た目', () => {
     const originalInnerHeight = window.innerHeight
 
     afterEach(() => {
@@ -260,19 +260,21 @@ describe('useToolbarDropdown', () => {
       return screen.getByRole('listbox').parentElement!
     }
 
-    it('高さの上限でスクロールするときは、中身の影が切り取られるので外枠に影を付ける', async () => {
-      const content = await openWithContentHeight(400)
+    it.each([
+      { fits: true, contentHeight: 100 },
+      { fits: false, contentHeight: 400 },
+    ])(
+      '上下に収まるか($fits)に関わらず、外枠が枠線・角丸・背景・影を持つ',
+      async ({ fits, contentHeight }) => {
+        const content = await openWithContentHeight(contentHeight)
 
-      expect(content.style.maxHeight).not.toBe('')
-      expect(content).toHaveClass('shr-rte-shadow-layer-3', 'shr-rte-rounded-m')
-    })
-
-    it('収まるときは、中身の影と重ならないよう外枠に影を付けない', async () => {
-      const content = await openWithContentHeight(100)
-
-      expect(content.style.maxHeight).toBe('')
-      expect(content).not.toHaveClass('shr-rte-shadow-layer-3')
-    })
+        expect(content.style.maxHeight === '').toBe(fits)
+        expect(content).toHaveClass('shr-rte-border-shorthand')
+        expect(content).toHaveClass('shr-rte-rounded-m')
+        expect(content).toHaveClass('shr-rte-bg-white')
+        expect(content).toHaveClass('shr-rte-shadow-layer-3')
+      },
+    )
   })
 
   it('ウィンドウのリサイズで位置を測り直す', async () => {

@@ -6,10 +6,9 @@ import { Button, Cluster, FormControl, Input, Stack } from 'smarthr-ui'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 
-import { TOOLBAR_POPUP_CLASS_NAME } from './toolbarItemStyle'
 import { isHttpUrl } from './urlValidation'
 
-const DIALOG_CLASS_NAME = `${TOOLBAR_POPUP_CLASS_NAME} shr-rte-box-border shr-rte-w-[20em] shr-rte-max-w-full`
+const DIALOG_CLASS_NAME = 'shr-rte-box-border shr-rte-w-[20em] shr-rte-max-w-full shr-rte-p-1'
 
 type Props = {
   handleInsert: (src: string) => void

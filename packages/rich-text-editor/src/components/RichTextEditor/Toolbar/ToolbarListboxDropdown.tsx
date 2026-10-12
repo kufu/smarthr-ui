@@ -16,7 +16,7 @@ import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 const classNameGenerator = tv({
   slots: {
     trigger: TOOLBAR_ITEM_CLASS_NAME,
-    listbox: 'shr-rte-border-shorthand shr-rte-rounded-m shr-rte-bg-white shr-rte-shadow-layer-3',
+    listbox: '',
     option: [
       'shr-rte-flex shr-rte-cursor-pointer shr-rte-items-center shr-rte-bg-transparent shr-rte-text-sm shr-rte-text-black',
       'hover:shr-rte-bg-white-darken',
