@@ -25,7 +25,7 @@ type ResetAction = { reset: true }
 type PlaceholderMeta = AddAction | RemoveAction | ResetAction
 
 // 文字のブロックの中は、insertContentAt がブロックを分けて入れるので動かさない
-export const findImageInsertPos = (doc: ProseMirrorNode, pos: number): number => {
+const findImageInsertPos = (doc: ProseMirrorNode, pos: number): number => {
   const imageType = doc.type.schema.nodes.image
 
   if (!imageType) return pos
