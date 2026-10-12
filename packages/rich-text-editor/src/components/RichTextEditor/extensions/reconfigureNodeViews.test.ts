@@ -113,6 +113,28 @@ describe('features の変更と NodeView', () => {
     expect(hasResizeHandle(target)).toBe(true)
   })
 
+  it('NodeView の要否が変わらない変更では、画像を作り直さない', () => {
+    const runtime: RichTextRuntimeOptions = { features: ALL }
+    const target = createEditor(runtime, IMAGE_DOC)
+    const before = target.view.dom.querySelector('img')
+
+    runtime.features = ALL.filter((f) => f !== 'bold')
+    reconfigureEditorOperations(target)
+
+    expect(target.view.dom.querySelector('img')).toBe(before)
+  })
+
+  it('表の列幅変更を保ったままの変更では、表を作り直さない', () => {
+    const runtime: RichTextRuntimeOptions = { features: ALL }
+    const target = createEditor(runtime, TABLE_DOC)
+    const before = target.view.dom.querySelector('table')
+
+    runtime.features = ALL.filter((f) => f !== 'bold')
+    reconfigureEditorOperations(target)
+
+    expect(target.view.dom.querySelector('table')).toBe(before)
+  })
+
   it('image を外しても画像そのものは残る', () => {
     const runtime: RichTextRuntimeOptions = { features: ALL }
     const target = createEditor(runtime, IMAGE_DOC)

@@ -1,6 +1,6 @@
 import { fireEvent, render, renderHook, waitFor } from '@testing-library/react'
 import { EditorContent } from '@tiptap/react'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { useRichTextEditor } from '../../hooks/useRichTextEditor'
 
@@ -227,8 +227,73 @@ describe('CustomImage NodeView', () => {
       expect(img).not.toHaveAttribute('data-image-error')
     })
 
-    // NOTE: 属性を更新すると ProseMirror は NodeView を作り直して <img> 要素ごと
-    // 差し替えるため、掴んだ要素ではなく都度DOMを引き直して検証する。
+    describe('作った時点で読み込みを終えている画像', () => {
+      afterEach(() => {
+        vi.restoreAllMocks()
+      })
+
+      const mockLoadState = (naturalWidth: number) => {
+        vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true)
+        vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(naturalWidth)
+      }
+
+      it('キャッシュから読み込めた画像は、load を待たずに表示する', async () => {
+        mockLoadState(300)
+
+        const { container } = await mountImage()
+
+        expect(container.style.visibility).toBe('')
+        expect(container.style.pointerEvents).toBe('')
+      })
+
+      it('読み込みに失敗した画像は、error が届くまで隠したままにする', async () => {
+        mockLoadState(0)
+
+        const { img, container } = await mountImage()
+
+        expect(container.style.visibility).toBe('hidden')
+
+        img.dispatchEvent(new Event('error'))
+
+        expect(container.style.visibility).toBe('')
+      })
+    })
+
+    it.each([
+      ['null', null],
+      ['空文字', ''],
+    ])('src を %s にした画像は、失敗として表示・操作可能にする', async (_, src) => {
+      const { editor } = await mountImage()
+
+      editor.chain().setNodeSelection(findImagePos(editor)).updateAttributes('image', { src }).run()
+
+      await waitFor(() => {
+        const current = document.querySelector<HTMLImageElement>('.ProseMirror img')!
+        expect(current).not.toHaveAttribute('src')
+        expect(current).toHaveAttribute('data-image-error', 'true')
+        const container = current.closest<HTMLElement>('[data-resize-container]')!
+        expect(container.style.visibility).toBe('')
+        expect(container.style.pointerEvents).toBe('')
+      })
+    })
+
+    it('src の無い画像を入れると、失敗として表示・操作可能にする', async () => {
+      const { editor } = await mountImage()
+
+      editor.commands.setContent({
+        type: 'doc',
+        content: [{ type: 'image', attrs: { src: null } }],
+      })
+
+      await waitFor(() => {
+        const current = document.querySelector<HTMLImageElement>('.ProseMirror img')!
+        expect(current).toHaveAttribute('data-image-error', 'true')
+        expect(current.closest<HTMLElement>('[data-resize-container]')!.style.visibility).toBe('')
+      })
+    })
+
+    // NOTE: 属性の更新で NodeView が作り直されるか、onUpdate で再利用されるかは
+    // 更新の内容で変わるため、掴んだ要素ではなく都度DOMを引き直して検証する。
     it('src を差し替えると失敗の目印が外れる', async () => {
       const { editor, img } = await mountImage()
 

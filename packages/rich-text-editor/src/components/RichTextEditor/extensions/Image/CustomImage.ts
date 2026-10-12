@@ -77,8 +77,8 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
 
       // 読み込み失敗の目印を外す。src が変わったときだけ呼ぶ（onUpdate は無関係な
       // 編集でも走るため、毎回外すと壊れたままの画像から目印が消えてしまう）。
-      // 実測では属性更新で NodeView ごと作り直されて <img> も新品になるが、
-      // 再利用された場合に古い失敗表示が残らないよう保険として持つ。
+      // src を外す更新では NodeView が再利用されて onUpdate を通るため、要素に残った
+      // 古い失敗表示をここで外す。
       const clearLoadFailure = () => {
         delete el.dataset.imageError
       }
@@ -177,6 +177,7 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         })
 
         syncImageSource(newHTMLAttributes.src)
+        if (!el.hasAttribute('src')) handleError()
 
         // 公式 PR でも未対応の width/height を同期し、ポップオーバーでの
         // サイズ変更（updateAttributes に width/height 数値）をライブ反映する。
@@ -240,7 +241,7 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         dom.style.pointerEvents = ''
       }
 
-      el.onload = () => {
+      const handleLoad = () => {
         clearLoadFailure()
         // 自然サイズはここで初めて分かる。height だけ保存されている場合に必要
         applyDisplaySize()
@@ -252,9 +253,21 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
       // マウスでの選択も削除もできなくなる。失敗しても操作できる状態へ戻す。
       // 目印は属性で付け、見た目（枠線と最小サイズ）は styles.ts のCSSに寄せる。
       // alt テキストは <img> のまま残すので、読み上げ内容は成功時と変わらない。
-      el.onerror = () => {
+      const handleError = () => {
         el.dataset.imageError = 'true'
         revealImage()
+      }
+
+      el.onload = handleLoad
+      el.onerror = handleError
+
+      // src が無いと load も error も届かないので、待たずに失敗として扱う（onUpdate も同じ）。
+      // キャッシュ済みの画像も onload は描画のあとに届くため、待つと NodeView を作り直す
+      // たびに1フレーム消える。失敗した画像も complete になるので幅で見分ける
+      if (!el.hasAttribute('src')) {
+        handleError()
+      } else if (el.complete && el.naturalWidth > 0) {
+        handleLoad()
       }
 
       return nodeView
