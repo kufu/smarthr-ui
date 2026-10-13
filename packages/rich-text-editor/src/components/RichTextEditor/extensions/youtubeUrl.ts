@@ -85,3 +85,9 @@ export const normalizeYoutubeUrl = (url: unknown): NormalizedYoutubeUrl | null =
 
   return typeof start === 'number' && start >= 0 ? { src, start } : { src }
 }
+
+// normalizeYoutubeUrl だけで判定すると、v= を持つライブチャットの埋め込みなども動画の URL へ直して受け付ける
+const YOUTUBE_EMBED_URL = /^(?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\//i
+
+export const isYoutubeEmbedSrc = (src: string | null): boolean =>
+  !!src && YOUTUBE_EMBED_URL.test(src) && normalizeYoutubeUrl(src) !== null

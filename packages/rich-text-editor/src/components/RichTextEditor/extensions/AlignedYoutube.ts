@@ -5,12 +5,9 @@ import { parseNumericAttr } from '../serializers/safeAttributes'
 import { YOUTUBE_ALIGN_STYLES, parseMediaAlign, toMediaAlignStyleText } from './mediaAlign'
 import { parseMediaSize } from './parseMediaSize'
 import { calcYoutubeHeight, calcYoutubeWidth, toYoutubeIframeSizeStyle } from './youtubeOptions'
-import { normalizeYoutubeUrl } from './youtubeUrl'
+import { isYoutubeEmbedSrc, normalizeYoutubeUrl } from './youtubeUrl'
 
 import type { Attributes } from '@tiptap/core'
-
-// normalizeYoutubeUrl だけで判定すると、v= を持つライブチャットの埋め込みなども動画の URL へ直して受け付ける
-const YOUTUBE_EMBED_URL = /^(?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\//i
 
 // 片側だけ指定された iframe は、欠けた側が既定値で埋まって 320×360 のように比率が崩れる
 const completeDimensions = (width: unknown, height: unknown) => {
@@ -66,16 +63,12 @@ export const AlignedYoutube = Youtube.extend({
   },
 
   parseHTML() {
-    // this.parent を呼ばないのは、configure するたびに親の規則が重なって入るため
+    // this.parent を呼ばないのは、extend するたびに親の規則が重なって入るため
     return [
       { tag: 'div[data-youtube-video] iframe' },
       {
         tag: 'iframe',
-        getAttrs: (element) => {
-          const src = element.getAttribute('src') ?? ''
-
-          return YOUTUBE_EMBED_URL.test(src) && normalizeYoutubeUrl(src) ? null : false
-        },
+        getAttrs: (element) => (isYoutubeEmbedSrc(element.getAttribute('src')) ? null : false),
       },
     ]
   },
