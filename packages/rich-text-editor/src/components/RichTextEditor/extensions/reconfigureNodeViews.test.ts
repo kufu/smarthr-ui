@@ -135,6 +135,28 @@ describe('features の変更と NodeView', () => {
     expect(target.view.dom.querySelector('table')).toBe(before)
   })
 
+  it('table を付け外ししても、画像も表も作り直さない', () => {
+    const runtime: RichTextRuntimeOptions = { features: ALL }
+    const target = createEditor(runtime, {
+      type: 'doc',
+      content: [...IMAGE_DOC.content, ...TABLE_DOC.content],
+    })
+    const image = target.view.dom.querySelector('img')
+    const table = target.view.dom.querySelector('table')
+
+    runtime.features = ALL.filter((f) => f !== 'table')
+    reconfigureEditorOperations(target)
+
+    expect(target.view.dom.querySelector('img')).toBe(image)
+    expect(target.view.dom.querySelector('table')).toBe(table)
+
+    runtime.features = ALL
+    reconfigureEditorOperations(target)
+
+    expect(target.view.dom.querySelector('img')).toBe(image)
+    expect(target.view.dom.querySelector('table')).toBe(table)
+  })
+
   it('image を外しても画像そのものは残る', () => {
     const runtime: RichTextRuntimeOptions = { features: ALL }
     const target = createEditor(runtime, IMAGE_DOC)

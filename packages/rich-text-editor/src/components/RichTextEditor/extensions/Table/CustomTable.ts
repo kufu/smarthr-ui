@@ -61,6 +61,12 @@ export const CustomTable = Table.extend<CustomTableOptions>({
       : plugins.filter((plugin) => plugin.spec.key !== columnResizingPluginKey)
   },
 
+  // 標準のように列幅を変えられるときだけ columnResizing に任せないのは、features の table を
+  // 付け外しするたびに表の NodeView が入れ替わり、文書全体を描き直すため
+  addNodeView() {
+    return ({ node }) => new CustomTableView(node, this.options.cellMinWidth)
+  },
+
   addStorage() {
     return {
       openActionsMenu: null,

@@ -10,11 +10,10 @@ import type { Plugin } from '@tiptap/pm/state'
 const managedPlugins = new WeakMap<Editor, readonly Plugin[]>()
 
 /**
- * 前回 NodeView を登録したノード名。addNodeView が実行時の値で変えるのは NodeView を
- * 返すかどうかだけなので（features では画像と YouTube のリサイズ、表は編集できるか）、
- * 名前の一覧が同じなら作り直さなくてよい。NodeView の中身を features で変える場合や、
+ * 前回 NodeView を登録したノード名。addNodeView が features で変えるのは NodeView を
+ * 返すかどうかだけなので、名前が同じなら作り直さなくてよい。NodeView の中身を変える場合や
  * addMarkView を使う場合（createNodeViews は markViews も設定し直す）は、名前では
- * 比べられないので、この判定を見直す。
+ * 比べられないので見直す。
  */
 const nodeViewNames = new WeakMap<Editor, string>()
 

@@ -93,6 +93,25 @@ describe('features に table が無いときの表の編集', () => {
     expect(columnResizingPluginKey.getState(target.state)).not.toBeUndefined()
   })
 
+  it('列幅を変えられなくても、表の枠は Tab で止まらない', () => {
+    const runtime: { features: RichTextFeature[] } = { features: ['bold'] }
+    const target = createEditor(runtime)
+    const wrapperTabIndex = () =>
+      target.view.dom.querySelector('.tableWrapper')?.getAttribute('tabindex')
+
+    expect(wrapperTabIndex()).toBe('-1')
+
+    runtime.features = ['table']
+    reconfigureEditorOperations(target)
+
+    expect(wrapperTabIndex()).toBe('-1')
+
+    runtime.features = ['bold']
+    reconfigureEditorOperations(target)
+
+    expect(wrapperTabIndex()).toBe('-1')
+  })
+
   it('features に table があれば従来どおり両方を持つ', () => {
     const target = createEditor({ features: ['table'] })
 
