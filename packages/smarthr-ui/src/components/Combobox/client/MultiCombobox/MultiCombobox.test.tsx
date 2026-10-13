@@ -364,6 +364,66 @@ describe('SingleCombobox', () => {
     expect(combobox()).toHaveValue('ラベル2')
   })
 
+  it('制御時、selectedItems が外部から更新されると選択済みチップの表示が切り替わる', () => {
+    const { rerender } = render(
+      template({
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+      }),
+    )
+
+    expect(screen.getByText('option 1')).toBeInTheDocument()
+    expect(screen.queryByText('option 2')).not.toBeInTheDocument()
+
+    rerender(
+      template({
+        selectedItems: [{ label: 'option 2', value: 'value-2' }],
+      }),
+    )
+
+    expect(screen.queryByText('option 1')).not.toBeInTheDocument()
+    expect(screen.getByText('option 2')).toBeInTheDocument()
+  })
+
+  it('制御時、selectedItems が空の場合のみ required 属性が付与される', () => {
+    const { rerender } = render(
+      template({
+        selectedItems: [],
+        required: true,
+      }),
+    )
+
+    expect(combobox()).toBeRequired()
+
+    rerender(
+      template({
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+        required: true,
+      }),
+    )
+
+    expect(combobox()).not.toBeRequired()
+  })
+
+  it('制御時、selectedItems が空の場合のみ placeholder が表示される', () => {
+    const { rerender } = render(
+      template({
+        selectedItems: [],
+        placeholder: 'プレースホルダー',
+      }),
+    )
+
+    expect(screen.getByText('プレースホルダー')).toBeInTheDocument()
+
+    rerender(
+      template({
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+        placeholder: 'プレースホルダー',
+      }),
+    )
+
+    expect(screen.queryByText('プレースホルダー')).not.toBeInTheDocument()
+  })
+
   describe('非制御(uncontrolled)', () => {
     const items = [
       { label: 'option 1', value: 'value-1' },
