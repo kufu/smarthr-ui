@@ -39,7 +39,9 @@ export const isSafeColor = (color: unknown): color is string =>
   typeof color === 'string' &&
   (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(color) ||
     /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/i.test(color) ||
-    /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|1|0?\.\d+)\s*\)$/i.test(color))
+    /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(?:0|0?\.\d+|1(?:\.0+)?)\s*\)$/i.test(
+      color,
+    ))
 
 // 入力の単位は sanitizeRichTextJSON と貼り付けで rem にそろえるため、rem だけを通す
 export const isSafeFontSize = (fontSize: unknown): fontSize is string =>

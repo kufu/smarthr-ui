@@ -340,6 +340,21 @@ describe('セキュリティ: 危険なHTMLの無害化', () => {
       expect(html).toContain('0.75rem')
     })
 
+    // Froala は #RRGGBBAA の色を alpha を小数2桁にした rgba() で保存する
+    it.each(['rgba(255, 0, 0, 1.00)', 'rgba(255, 0, 0, 1.0)', 'rgba(255, 0, 0, 0.50)'])(
+      '0 から 1 の alpha を小数で書いた rgba() の color は保持される: %s',
+      (color) => {
+        expect(serializeToHTML(textStyleDoc({ color }))).toContain(color)
+      },
+    )
+
+    it.each(['rgba(255, 0, 0, 1.50)', 'rgba(255, 0, 0, 1.01)', 'rgba(255, 0, 0, 01.0)'])(
+      '1 を超える、または 0 から始まる整数部の alpha の rgba() の color は出力されない: %s',
+      (color) => {
+        expect(serializeToHTML(textStyleDoc({ color }))).not.toContain('rgba')
+      },
+    )
+
     it('textStyle の rem 指定の fontSize は保持される', () => {
       const html = serializeToHTML(textStyleDoc({ fontSize: '1.5rem' }))
       expect(html).toContain('1.5rem')
