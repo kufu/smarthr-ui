@@ -297,7 +297,7 @@ const imageWithWidthContent = {
     },
     {
       type: 'image',
-      attrs: { src: 'https://placehold.co/400x300.png', alt: 'sample', width: 200, height: 150 },
+      attrs: { src: '/fixtures/sample-png.png', alt: 'sample', width: 200, height: 60 },
     },
   ],
 }
@@ -327,7 +327,7 @@ const brokenImageContent = {
     },
     {
       type: 'image',
-      attrs: { src: 'https://example.com/does-not-exist.png', alt: '読み込めない画像' },
+      attrs: { src: '/fixtures/does-not-exist.png', alt: '読み込めない画像' },
     },
   ],
 }
