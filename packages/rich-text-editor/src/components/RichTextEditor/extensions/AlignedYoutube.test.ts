@@ -81,6 +81,7 @@ describe('div[data-youtube-video] に包まれていない iframe の読み込�
     ['width: 400px; height: 225px;', 400, 225],
     ['width: 400px;', 400, 225],
     ['height: 225px;', 400, 225],
+    ['width: 400px !important; height: 225px !important;', 400, 225],
   ])('style の %s を属性より優先して %d×%d で読む', (style, width, height) => {
     const json = parse(`<iframe src="${SRC}" width="640" height="360" style="${style}"></iframe>`)
     expect(json.content[0].attrs).toMatchObject({ width, height })

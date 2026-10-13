@@ -3,6 +3,7 @@ import { Youtube } from '@tiptap/extension-youtube'
 import { parseNumericAttr } from '../serializers/safeAttributes'
 
 import { YOUTUBE_ALIGN_STYLES, parseMediaAlign, toMediaAlignStyleText } from './mediaAlign'
+import { parseMediaSize } from './parseMediaSize'
 import { calcYoutubeHeight, calcYoutubeWidth, toYoutubeIframeSizeStyle } from './youtubeOptions'
 import { normalizeYoutubeUrl } from './youtubeUrl'
 
@@ -10,14 +11,6 @@ import type { Attributes } from '@tiptap/core'
 
 // normalizeYoutubeUrl だけで判定すると、v= を持つライブチャットの埋め込みなども動画の URL へ直して受け付ける
 const YOUTUBE_EMBED_URL = /^(?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\//i
-
-const PIXEL_LENGTH = /^(\d+(?:\.\d+)?)px$/
-
-const parsePixelStyle = (element: HTMLElement, property: 'width' | 'height') => {
-  const match = PIXEL_LENGTH.exec(element.style[property].trim())
-
-  return match ? Math.round(Number(match[1])) : null
-}
 
 // 片側だけ指定された iframe は、欠けた側が既定値で埋まって 320×360 のように比率が崩れる
 const completeDimensions = (width: unknown, height: unknown) => {
@@ -37,17 +30,12 @@ const completeDimensions = (width: unknown, height: unknown) => {
 export const AlignedYoutube = Youtube.extend({
   addAttributes() {
     const parent: Attributes = this.parent?.() ?? {}
-    // Froala は大きさを変えると style に書き、width/height 属性は元のまま残す。
-    // 属性と混ぜると縦横比が崩れるため、style に寸法があれば style だけから読む
     const parseDimensions = (element: HTMLElement) => {
-      const styleWidth = parsePixelStyle(element, 'width')
-      const styleHeight = parsePixelStyle(element, 'height')
-      const hasStyleSize = styleWidth !== null || styleHeight !== null
-
-      return completeDimensions(
-        hasStyleSize ? styleWidth : parent.width?.parseHTML?.(element),
-        hasStyleSize ? styleHeight : parent.height?.parseHTML?.(element),
+      const { width, height } = parseMediaSize(element, (property) =>
+        parent[property]?.parseHTML?.(element),
       )
+
+      return completeDimensions(width, height)
     }
 
     return {

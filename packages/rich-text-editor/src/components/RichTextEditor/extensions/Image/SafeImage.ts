@@ -1,7 +1,11 @@
+import { fromString } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
 import { isSafeImageSrc } from '../../serializers/safeAttributes'
 import { IMAGE_ALIGN_STYLES, parseImageAlign, toMediaAlignStyleText } from '../mediaAlign'
+import { parseMediaSize } from '../parseMediaSize'
+
+import type { Attributes } from '@tiptap/core'
 
 /**
  * schema と HTML の読み書きに効く部分だけを持つ画像ノード。
@@ -9,8 +13,20 @@ import { IMAGE_ALIGN_STYLES, parseImageAlign, toMediaAlignStyleText } from '../m
  */
 export const SafeImage = Image.extend({
   addAttributes() {
+    const parent: Attributes = this.parent?.() ?? {}
+    const parseSize = (element: HTMLElement) =>
+      parseMediaSize(element, (property) => fromString(element.getAttribute(property)))
+
     return {
-      ...this.parent?.(),
+      ...parent,
+      width: {
+        ...parent.width,
+        parseHTML: (element: HTMLElement) => parseSize(element).width,
+      },
+      height: {
+        ...parent.height,
+        parseHTML: (element: HTMLElement) => parseSize(element).height,
+      },
       align: {
         default: null,
         parseHTML: (element: HTMLElement) => parseImageAlign(element),
