@@ -36,7 +36,7 @@ type Props<T> = SHRComponentPropsWithRef<
     /**
      * 選択されているアイテム
      */
-    selectedItem: ComboboxItem<T> | null
+    selectedItem?: ComboboxItem<T> | null
     /**
      * デフォルトで選択されるアイテム
      */
@@ -73,6 +73,8 @@ type Props<T> = SHRComponentPropsWithRef<
   },
   { omit: 'children' }
 >
+
+const NOOP = () => undefined
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
@@ -198,8 +200,15 @@ export const SingleCombobox = <T,>({
   // inputValueはユーザーの手入力値も兼ねるため、prevSelectedItemLabelTextの代わりにinputValueと比較すると、
   // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
   const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
+  const [uncontrolledSelectedItem, setUncontrolledSelectedItem] = useState<ComboboxItem<T> | null>(
+    defaultItem ?? null,
+  )
 
-  const selectedItemLabelText = selectedItem ? getSelectedLabelText(selectedItem) : ''
+  const hasSelectedItem = selectedItem !== undefined
+  const actualSelectedItem = hasSelectedItem ? selectedItem : uncontrolledSelectedItem
+  const setSelectedItemIfUncontrolled = hasSelectedItem ? NOOP : setUncontrolledSelectedItem
+
+  const selectedItemLabelText = actualSelectedItem ? getSelectedLabelText(actualSelectedItem) : ''
 
   if (selectedItemLabelText !== prevSelectedItemLabelText) {
     setPrevSelectedItemLabelText(selectedItemLabelText)
@@ -210,7 +219,7 @@ export const SingleCombobox = <T,>({
 
   const { options } = useSingleOptions({
     items,
-    selected: selectedItem,
+    selected: actualSelectedItem,
     creatable,
     inputValue,
     isFilteringDisabled: !isEditing,
@@ -226,6 +235,10 @@ export const SingleCombobox = <T,>({
       onAdd,
       // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
       onSelect: (selected: ComboboxItem<T>) => {
+        if (!hasSelectedItem) {
+          setSelectedItemIfUncontrolled(selected)
+        }
+
         onSelect?.(selected)
         onChangeSelected?.(selected)
 
@@ -262,7 +275,9 @@ export const SingleCombobox = <T,>({
     onKeyPress,
     handleKeyDownListBox,
     defaultItem,
-    selectedItem,
+    selectedItem: actualSelectedItem,
+    hasSelectedItem,
+    setSelectedItemIfUncontrolled,
     isFocused,
     isExpanded,
     isComposing,
@@ -277,9 +292,13 @@ export const SingleCombobox = <T,>({
     let inputNode: HTMLInputElement | null = null
 
     const selectDefaultItem = () => {
-      if (latest.onSelect && latest.defaultItem) {
-        latest.onSelect(latest.defaultItem)
+      if (!latest.defaultItem) return
+
+      if (!latest.hasSelectedItem) {
+        latest.setSelectedItemIfUncontrolled(latest.defaultItem)
       }
+
+      latest.onSelect?.(latest.defaultItem)
     }
     const unfocus = () => {
       if (!latest.isFocused) return
@@ -341,6 +360,10 @@ export const SingleCombobox = <T,>({
         })
 
         if (!isExecutedPreventDefault) {
+          if (!latest.hasSelectedItem) {
+            latest.setSelectedItemIfUncontrolled(null)
+          }
+
           latest.onClear?.()
           latest.onChangeSelected?.(null)
 
@@ -374,6 +397,10 @@ export const SingleCombobox = <T,>({
         setInputValue(value)
 
         if (value === '') {
+          if (!latest.hasSelectedItem) {
+            latest.setSelectedItemIfUncontrolled(null)
+          }
+
           latest.onClear?.()
           latest.onChangeSelected?.(null)
         }
@@ -426,7 +453,7 @@ export const SingleCombobox = <T,>({
   const listBoxCallbackRef = useAreaClickCallbackRef(
     isFocused ? [triggerRef, clearButtonRef] : null,
     functions.unfocus,
-    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
+    isFocused || actualSelectedItem ? undefined : functions.selectDefaultItem,
   )
 
   const initialSelectCallbackRef = useOnce(functions.baseInitialSelectCallbackRef)
@@ -456,7 +483,12 @@ export const SingleCombobox = <T,>({
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
-      data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
+      data-clear-button-hidden={(
+        actualSelectedItem === null ||
+        disabled ||
+        readOnly ||
+        false
+      ).toString()}
     >
       <Input
         {...rest}
