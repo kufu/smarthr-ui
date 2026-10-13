@@ -24,7 +24,7 @@ import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogP
 
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
 import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 
 type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
 
@@ -61,9 +61,9 @@ type StepFormDialogContentInnerProps = ComponentPropsWithRef<typeof StepFormDial
 type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogContentInner,
-  SHRComponentProps<
+  ExtendProps<
     StepFormDialogContentInnerProps,
     DialogProps & {
       heading: HeadingType

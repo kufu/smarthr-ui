@@ -22,7 +22,7 @@ import { DropdownTrigger } from '../DropdownTrigger'
 
 import { type Actions, ButtonList } from './ButtonList'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
@@ -37,7 +37,7 @@ type ObjectTriggerType = {
         component?: ComponentType<ComponentPropsWithoutRef<typeof FaCaretDownIcon>>
       }
 }
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'button',
   {
     /** 引き金となるボタン */

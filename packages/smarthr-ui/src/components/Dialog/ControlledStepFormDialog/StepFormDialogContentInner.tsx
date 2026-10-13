@@ -24,7 +24,7 @@ import { dialogContentInner } from '../dialogInnerStyle'
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
 import type { CommonButtonType, StepItem } from './type'
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
@@ -35,7 +35,7 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogBody,
   {
     /** ダイアログタイトル */
