@@ -38,7 +38,11 @@ type Props<T> = SHRComponentPropsWithRef<
     /**
      * 選択されているアイテムのリスト
      */
-    selectedItems: Array<ComboboxItem<T> & { deletable?: boolean }>
+    selectedItems?: Array<ComboboxItem<T> & { deletable?: boolean }>
+    /**
+     * デフォルトで選択するアイテムのリスト
+     */
+    defaultSelectedItems?: Array<ComboboxItem<T> & { deletable?: boolean }>
     /**
      * 選択されているアイテムのラベルを省略表示するかどうか
      */
@@ -137,6 +141,7 @@ const classNameGenerator = tv({
 export const MultiCombobox = <T,>({
   items,
   selectedItems,
+  defaultSelectedItems,
   name,
   disabled = false,
   required = false,
@@ -171,6 +176,9 @@ export const MultiCombobox = <T,>({
   const [highlighted, setHighlighted] = useState(false)
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
+  const [uncontrolledSelectedItems, setUncontrolledSelectedItems] = useState(
+    defaultSelectedItems ?? [],
+  )
 
   const selectedListId = useId()
 
@@ -179,9 +187,13 @@ export const MultiCombobox = <T,>({
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
 
+  const hasSelectedItems = selectedItems !== undefined
+  const actualSelectedItems = hasSelectedItems ? selectedItems : uncontrolledSelectedItems
+  const setSelectedItemsIfUncontrolled = hasSelectedItems ? NOOP : setUncontrolledSelectedItems
+
   const { options } = useMultiOptions({
     items,
-    selected: selectedItems,
+    selected: actualSelectedItems,
     creatable,
     inputValue,
     isItemSelected,
@@ -195,7 +207,9 @@ export const MultiCombobox = <T,>({
     onChangeSelected,
     onSelect,
     onChangeInput,
-    selectedItems,
+    selectedItems: actualSelectedItems,
+    hasSelectedItems,
+    setSelectedItemsIfUncontrolled,
     deleteFrame,
     selectFrame,
   })
@@ -204,6 +218,15 @@ export const MultiCombobox = <T,>({
     const handleDelete = (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
+      if (!latestForListBox.hasSelectedItems) {
+        handlers.push((deletingItem: ComboboxItem<T>) =>
+          latestForListBox.setSelectedItemsIfUncontrolled(
+            latestForListBox.selectedItems.filter(
+              (selected) => !areItemsEqual(selected, deletingItem),
+            ),
+          ),
+        )
+      }
       if (latestForListBox.onDelete) {
         handlers.push((deletingItem: ComboboxItem<T>) => latestForListBox.onDelete!(deletingItem))
       }
@@ -241,6 +264,12 @@ export const MultiCombobox = <T,>({
           )
 
           if (matchedSelectedItem === undefined) {
+            if (!latestForListBox.hasSelectedItems) {
+              latestForListBox.setSelectedItemsIfUncontrolled(
+                latestForListBox.selectedItems.concat(selected),
+              )
+            }
+
             latestForListBox.onSelect?.(selected)
             latestForListBox.onChangeSelected?.(latestForListBox.selectedItems.concat(selected))
 
@@ -280,7 +309,7 @@ export const MultiCombobox = <T,>({
     highlighted,
     isComposing,
     isInputEmpty,
-    selectedItems,
+    selectedItems: actualSelectedItems,
     setInputValueIfUncontrolled,
     handleKeyDownListBox,
     cleanupAddFrame,
@@ -461,7 +490,7 @@ export const MultiCombobox = <T,>({
         node.focus()
       }
     },
-    [isExpanded, selectedItems, isInputControlled],
+    [isExpanded, actualSelectedItems, isInputControlled],
   )
   const inputSelectEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -476,7 +505,7 @@ export const MultiCombobox = <T,>({
         setInputValueIfUncontrolled('')
       }
     },
-    [selectedItems, setInputValueIfUncontrolled, latest],
+    [actualSelectedItems, setInputValueIfUncontrolled, latest],
   )
 
   const mergedInputRef = useMergeRefs(
@@ -539,7 +568,7 @@ export const MultiCombobox = <T,>({
           className={classNames.selectedList}
           aria-label={localized.selectedListAriaLabel}
         >
-          {selectedItems.map((selectedItem) => (
+          {actualSelectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
               <MultiSelectedItem
                 disabled={disabled}
@@ -558,7 +587,7 @@ export const MultiCombobox = <T,>({
             role="combobox"
             type="text"
             name={name}
-            required={required && selectedItems.length === 0}
+            required={required && actualSelectedItems.length === 0}
             disabled={disabled}
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}
@@ -581,7 +610,7 @@ export const MultiCombobox = <T,>({
           />
         </div>
 
-        {selectedItems.length === 0 && placeholder && !isExpanded && (
+        {actualSelectedItems.length === 0 && placeholder && !isExpanded && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
       </Scroller>

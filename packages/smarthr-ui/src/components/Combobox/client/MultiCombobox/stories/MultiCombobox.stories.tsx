@@ -62,14 +62,14 @@ export default {
         {...args}
         onDelete={(item) =>
           setArgs({
-            selectedItems: args.selectedItems.filter(
+            selectedItems: (args.selectedItems ?? []).filter(
               (selectedItem) => selectedItem.value !== item.value,
             ),
           })
         }
         onSelect={(item) =>
           setArgs({
-            selectedItems: [...args.selectedItems, item],
+            selectedItems: [...(args.selectedItems ?? []), item],
           })
         }
       />

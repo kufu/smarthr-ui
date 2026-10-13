@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../../intl'
@@ -362,5 +362,92 @@ describe('SingleCombobox', () => {
 
     // Backspace によって削除した末尾アイテムはlabelTextとしてテキスト化されること
     expect(combobox()).toHaveValue('ラベル2')
+  })
+
+  describe('非制御(uncontrolled)', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItems を指定しない場合、アイテムを選択するとチップが追加される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(within(screen.getByRole('listitem')).getByText('option 1')).toBeInTheDocument()
+    })
+
+    it('defaultSelectedItems を指定した場合、初期表示にチップが反映される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                items={items}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByText('option 1')).toBeInTheDocument()
+    })
+
+    it('非制御の場合、削除ボタンでチップが削除される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                items={items}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(deleteButtons()[0])
+
+      expect(screen.queryByText('option 1')).not.toBeInTheDocument()
+    })
+
+    it('selectedItems と onChangeSelected を指定した場合(制御)、操作だけでは表示が変わらない', async () => {
+      const onChangeSelected = vi.fn()
+
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                selectedItems={[]}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(onChangeSelected).toHaveBeenCalledWith([{ label: 'option 1', value: 'value-1' }])
+      expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
+    })
   })
 })
