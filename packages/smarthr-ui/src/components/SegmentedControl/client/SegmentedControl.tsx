@@ -178,10 +178,7 @@ export const SegmentedControl: FC<Props> = ({
     [hasValue, latest],
   )
 
-  const excludesSelected =
-    actualValue === null ||
-    actualValue === undefined ||
-    options.every((option) => option.value !== actualValue)
+  const excludesSelected = options.every((option) => option.value !== actualValue)
 
   return (
     <div
