@@ -3,6 +3,7 @@ import { Youtube } from '@tiptap/extension-youtube'
 import { parseNumericAttr } from '../serializers/safeAttributes'
 
 import { YOUTUBE_ALIGN_STYLES, parseMediaAlign, toMediaAlignStyleText } from './mediaAlign'
+import { parseParagraphMediaAlign } from './mediaOnlyParagraph'
 import { parseMediaSize } from './parseMediaSize'
 import { calcYoutubeHeight, calcYoutubeWidth, toYoutubeIframeSizeStyle } from './youtubeOptions'
 import { isYoutubeEmbedSrc, normalizeYoutubeUrl } from './youtubeUrl'
@@ -54,9 +55,10 @@ export const AlignedYoutube = Youtube.extend({
       },
       align: {
         default: null,
-        // parse の対象は iframe なので、寄せ方を持つ外側の div を読む
+        // parse の対象は iframe なので、寄せ方を持つ外側の div か、包んでいる段落の揃えを読む
         parseHTML: (element: HTMLElement) =>
-          parseMediaAlign(element.closest<HTMLElement>('div[data-youtube-video]')),
+          parseMediaAlign(element.closest<HTMLElement>('div[data-youtube-video]')) ??
+          parseParagraphMediaAlign(element),
         renderHTML: () => ({}),
       },
     }

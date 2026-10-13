@@ -3,7 +3,7 @@ import { Image } from '@tiptap/extension-image'
 
 import { isSafeImageSrc } from '../../serializers/safeAttributes'
 import { IMAGE_ALIGN_STYLES, parseImageAlign, toMediaAlignStyleText } from '../mediaAlign'
-import { MEDIA_ONLY_PARAGRAPH_PARSE_RULES } from '../mediaOnlyParagraph'
+import { MEDIA_ONLY_PARAGRAPH_PARSE_RULES, parseParagraphMediaAlign } from '../mediaOnlyParagraph'
 import { parseMediaSize } from '../parseMediaSize'
 
 import type { Attributes } from '@tiptap/core'
@@ -30,7 +30,8 @@ export const SafeImage = Image.extend({
       },
       align: {
         default: null,
-        parseHTML: (element: HTMLElement) => parseImageAlign(element),
+        parseHTML: (element: HTMLElement) =>
+          parseImageAlign(element) ?? parseParagraphMediaAlign(element),
         renderHTML: (attributes: Record<string, unknown>) => {
           const style = toMediaAlignStyleText(IMAGE_ALIGN_STYLES, attributes.align)
 

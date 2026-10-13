@@ -112,3 +112,71 @@ describe('画像か動画しか入っていない段落の読み込み', () => {
     expect(parse(html)).toEqual(expected)
   })
 })
+
+describe('画像か動画しか入っていない段落の揃え', () => {
+  const parseNodes = (html: string) => generateJSON(html, createSchemaExtensions()).content ?? []
+  const GOOGLE_DOCS_IMAGE =
+    '<span style="border:none;display:inline-block;overflow:hidden;width:602px;height:339px;"><img src="https://example.com/image.png" width="602" height="339" style="margin-left:0px;margin-top:0px;"></span>'
+
+  it.each([
+    ['center', 'center'],
+    ['right', 'right'],
+    ['left', null],
+    ['justify', null],
+  ])(
+    'Google ドキュメントの形の、text-align: %s の段落の画像は寄せ方 %s で読む',
+    (textAlign, align) => {
+      const [node] = parseNodes(
+        `<p dir="ltr" style="line-height:1.38;text-align:${textAlign};margin-top:0pt;margin-bottom:0pt;"><span style="font-size:11pt;">${GOOGLE_DOCS_IMAGE}</span></p>`,
+      )
+      expect(node).toMatchObject({ type: 'image', attrs: { align } })
+    },
+  )
+
+  it('動画も段落の揃えで読む', () => {
+    const [node] = parseNodes(`<p style="text-align: right">${VIDEO}</p>`)
+    expect(node).toMatchObject({ type: 'youtube', attrs: { align: 'right' } })
+  })
+
+  it('画像自身の寄せ方を段落の揃えより優先する', () => {
+    const [node] = parseNodes(
+      `<p style="text-align: center"><img src="https://example.com/image.png" style="display: block; margin-left: auto"></p>`,
+    )
+    expect(node).toMatchObject({ type: 'image', attrs: { align: 'right' } })
+  })
+
+  it.each(['display: block', 'float: left'])(
+    '%s の画像には段落の揃えが効かないので使わない',
+    (style) => {
+      const [node] = parseNodes(
+        `<p style="text-align: center"><img src="https://example.com/image.png" style="${style}"></p>`,
+      )
+      expect(node).toMatchObject({ type: 'image', attrs: { align: null } })
+    },
+  )
+
+  it.each(['float: left', 'display: block; text-align: left'])(
+    '画像を包む要素が %s なら、段落の揃えが画像に届かないので使わない',
+    (style) => {
+      const [node] = parseNodes(
+        `<p style="text-align: center"><span style="${style}">${IMG}</span></p>`,
+      )
+      expect(node).toMatchObject({ type: 'image', attrs: { align: null } })
+    },
+  )
+
+  it('文字と混ざった段落の揃えは使わない', () => {
+    expect(parseNodes(`<p style="text-align: center">前${IMG}後</p>`)[1]).toMatchObject({
+      type: 'image',
+      attrs: { align: null },
+    })
+  })
+
+  it('リスト項目の先頭の段落でも揃えを使う', () => {
+    const [list] = parseNodes(`<ul><li><p style="text-align: center">${IMG}</p></li></ul>`)
+    expect(list.content?.[0].content?.[1]).toMatchObject({
+      type: 'image',
+      attrs: { align: 'center' },
+    })
+  })
+})
