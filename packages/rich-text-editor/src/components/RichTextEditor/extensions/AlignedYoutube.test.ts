@@ -55,3 +55,65 @@ describe('AlignedYoutube の HTML 読み込み', () => {
     expect(json.content[0].attrs).toMatchObject({ width, height })
   })
 })
+
+describe('div[data-youtube-video] に包まれていない iframe の読み込み', () => {
+  const parse = (html: string) => generateJSON(html, createSchemaExtensions())
+  const SRC = 'https://www.youtube.com/embed/dQw4w9WgXcQ?&wmode=opaque&rel=0'
+
+  it('YouTube の iframe を動画として読む', () => {
+    const json = parse(
+      `<p dir="ltr"><span style="font-size:11pt;color:#353744;vertical-align:baseline;"><span class="fr-video fr-deletable fr-fvc fr-draggable fr-dvb"><iframe src="${SRC}" frameborder="0" allowfullscreen="" class="fr-draggable"></iframe></span></span><br></p>`,
+    )
+    expect(json.content).toContainEqual(
+      expect.objectContaining({
+        type: 'youtube',
+        attrs: expect.objectContaining({ width: 640, height: 360 }),
+      }),
+    )
+  })
+
+  it('YouTube 以外の iframe は動画として読まない', () => {
+    const json = parse('<iframe src="https://example.com/embed/dQw4w9WgXcQ"></iframe>')
+    expect(JSON.stringify(json)).not.toContain('youtube')
+  })
+
+  it.each([
+    ['width: 400px; height: 225px;', 400, 225],
+    ['width: 400px;', 400, 225],
+    ['height: 225px;', 400, 225],
+  ])('style の %s を属性より優先して %d×%d で読む', (style, width, height) => {
+    const json = parse(`<iframe src="${SRC}" width="640" height="360" style="${style}"></iframe>`)
+    expect(json.content[0].attrs).toMatchObject({ width, height })
+  })
+
+  it('style の寸法が px でなければ属性から読む', () => {
+    const json = parse(
+      `<iframe src="${SRC}" width="640" height="360" style="width: 50%;"></iframe>`,
+    )
+    expect(json.content[0].attrs).toMatchObject({ width: 640, height: 360 })
+  })
+})
+
+describe('包まれていない iframe のうち動画として読まないもの', () => {
+  const parse = (html: string) => generateJSON(html, createSchemaExtensions())
+
+  it.each([
+    'https://www.youtube.com/subscribe_embed?channel=UCx',
+    'https://www.youtube.com/live_chat?v=dQw4w9WgXcQ&embed_domain=example.com',
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  ])('%s', (src) => {
+    expect(JSON.stringify(parse(`<iframe src="${src}"></iframe>`))).not.toContain('youtube')
+  })
+})
+
+describe('プロトコルを省いた src の iframe', () => {
+  it.each([
+    [
+      '<div data-youtube-video><iframe src="//www.youtube.com/embed/dQw4w9WgXcQ?start=30"></iframe></div>',
+    ],
+    ['<iframe src="//www.youtube.com/embed/dQw4w9WgXcQ?start=30"></iframe>'],
+  ])('%s の開始位置を読む', (html) => {
+    const json = generateJSON(html, createSchemaExtensions())
+    expect(json.content[0]).toMatchObject({ type: 'youtube', attrs: { start: 30 } })
+  })
+})
