@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
@@ -8,6 +8,8 @@ import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarListboxDropdown, type ToolbarListboxOption } from './ToolbarListboxDropdown'
+
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 
 const ALL_OPTIONS = [
   { level: null, labelId: 'smarthr-ui/RichTextEditor/headingNormal', defaultText: '標準テキスト' },
@@ -28,12 +30,8 @@ const OPTION_LABEL_CLASS_NAMES = {
   4: 'shr-rte-text-base shr-rte-font-bold shr-rte-leading-tight',
 } as const
 
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const HeadingDropdown: FC<Props> = memo((props) => {

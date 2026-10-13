@@ -29,6 +29,7 @@ import { ColorSwatchFace } from './ColorSwatch'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 
+import type { RovingButtonProps } from '../../hooks/useRovingToolbar'
 import type { Editor } from '@tiptap/react'
 
 const RECENT_LIMIT = 5
@@ -120,13 +121,9 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-type Props = {
+type Props = RovingButtonProps & {
   attribute: keyof typeof CONFIGS
-  tabIndex?: number
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const ColorPickerButton: FC<Props> = memo(

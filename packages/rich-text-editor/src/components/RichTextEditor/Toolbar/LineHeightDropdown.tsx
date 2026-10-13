@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { FaTextHeightIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../intl'
@@ -8,6 +8,8 @@ import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarListboxDropdown, type ToolbarListboxOption } from './ToolbarListboxDropdown'
+
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 
 // value=null はデフォルト（unset）。それ以外は LineHeight 拡張の allowlist と一致させる。
 const LINE_HEIGHT_OPTIONS = [
@@ -20,12 +22,8 @@ const LINE_HEIGHT_OPTIONS = [
 
 const DEFAULT_INDEX = LINE_HEIGHT_OPTIONS.findIndex((o) => o.value === null)
 
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const LineHeightDropdown: FC<Props> = memo((props) => {

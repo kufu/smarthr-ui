@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo } from 'react'
+import { type FC, memo } from 'react'
 import { FaAngleDownIcon, FaAngleUpIcon } from 'smarthr-ui'
 
 import { useIntl } from '../../../intl'
@@ -8,14 +8,12 @@ import { useIntl } from '../../../intl'
 import { ToolbarTooltip } from './ToolbarTooltip'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
-type Props = {
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
+type Props = RovingButtonProps & {
   wrapped: boolean
   handleClick: () => void
-  tabIndex?: number
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 /**

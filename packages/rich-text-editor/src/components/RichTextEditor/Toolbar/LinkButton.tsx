@@ -22,13 +22,11 @@ import { readers, useToolbarValue } from '../hooks/useToolbarState'
 import { ToolbarButton } from './ToolbarButton'
 import { isHttpUrl, isMailtoUrl } from './urlValidation'
 
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
 const TRIGGER_ICON = <FaLinkIcon />
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const LinkButton: FC<Props> = memo(

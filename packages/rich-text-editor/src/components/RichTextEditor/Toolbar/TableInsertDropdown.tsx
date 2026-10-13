@@ -21,6 +21,8 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
 
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
 const classNameGenerator = tv({
   slots: {
     popup: 'shr-rte-min-w-[12em] shr-rte-p-1',
@@ -52,12 +54,8 @@ const isValidSize = (value: string, max: number) => {
 
 const TRIGGER_ICON = <FaTableIcon />
 
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const TableInsertDropdown: FC<Props> = memo(

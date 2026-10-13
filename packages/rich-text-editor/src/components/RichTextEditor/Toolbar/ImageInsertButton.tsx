@@ -23,6 +23,8 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { ImageUrlPopover } from './ImageUrlPopover'
 import { ToolbarButton } from './ToolbarButton'
 
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
 const classNameGenerator = tv({
   slots: {
     menu: 'shr-rte-flex shr-rte-flex-col shr-rte-py-0.25',
@@ -45,12 +47,8 @@ const CLASS_NAMES = (() => {
 
 const TRIGGER_ICON = <FaImageIcon />
 
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const ImageInsertButton: FC<Props> = memo(

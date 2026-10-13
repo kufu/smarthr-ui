@@ -21,13 +21,11 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
 
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
 const TRIGGER_ICON = <FaCirclePlayIcon />
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const YoutubeInsertButton: FC<Props> = memo(

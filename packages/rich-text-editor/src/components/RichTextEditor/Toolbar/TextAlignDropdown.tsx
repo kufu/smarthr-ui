@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
@@ -9,12 +9,10 @@ import { readers, useToolbarValue } from '../hooks/useToolbarState'
 import { ToolbarListboxDropdown, type ToolbarListboxOption } from './ToolbarListboxDropdown'
 import { ALIGN_OPTIONS, getAlignIcon } from './alignOptions'
 
-type Props = {
-  tabIndex?: number
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const TextAlignDropdown: FC<Props> = memo((props) => {

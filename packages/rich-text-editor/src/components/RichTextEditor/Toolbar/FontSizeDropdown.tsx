@@ -1,12 +1,14 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 
 import { useIntl } from '../../../intl'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
 import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarListboxDropdown, type ToolbarListboxOption } from './ToolbarListboxDropdown'
+
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 
 const DEFAULT_ROOT_FONT_SIZE = 16
 const LENGTH_PATTERN = /^(\d+(?:\.\d+)?)(px|rem|em)$/
@@ -51,12 +53,8 @@ const OPTIONS: readonly ToolbarListboxOption[] = FONT_SIZES.map(({ px }) => ({
 
 const DEFAULT_INDEX = FONT_SIZES.findIndex((s) => s.value === null)
 
-type Props = {
-  tabIndex?: number
+type Props = RovingButtonProps & {
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const FontSizeDropdown: FC<Props> = memo(({ disabled, ...rest }) => {

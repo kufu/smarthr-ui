@@ -13,6 +13,8 @@ import { ToolbarTooltip } from './ToolbarTooltip'
 import { toAriaKeyShortcuts } from './shortcutKeys'
 import { TOOLBAR_ITEM_CLASS_NAME } from './toolbarItemStyle'
 
+import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+
 const classNameGenerator = tv({
   slots: {
     trigger: TOOLBAR_ITEM_CLASS_NAME,
@@ -59,7 +61,7 @@ export type ToolbarListboxOption = {
   shortcut?: string
 }
 
-type Props = {
+type Props = RovingButtonProps & {
   label: string
   /** 現在の値。トリガーの名前に「ラベル: 値」として含める */
   valueLabel: string | number
@@ -74,11 +76,7 @@ type Props = {
   listboxClassName?: string
   /** エディタへの適用だけを行う。閉じてトリガーへ戻す処理はこの部品が受け持つ */
   handleSelect: (index: number) => void
-  tabIndex?: number
   disabled?: boolean
-  onKeyDown?: (e: KeyboardEvent) => void
-  onFocus?: () => void
-  ref?: (el: HTMLButtonElement | null) => void
 }
 
 export const ToolbarListboxDropdown = ({
