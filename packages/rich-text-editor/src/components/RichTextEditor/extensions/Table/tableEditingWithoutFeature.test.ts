@@ -29,13 +29,14 @@ const UNEVEN_TABLE: JSONContent = {
 
 let editor: Editor | null = null
 
-const createEditor = (runtime: { features: RichTextFeature[] }) => {
+const createEditor = (runtime: { features: RichTextFeature[] }, editable = true) => {
   const element = document.createElement('div')
   document.body.appendChild(element)
   editor = new Editor({
     element,
     extensions: configureExtensions({ getRuntimeOptions: () => runtime }),
     content: UNEVEN_TABLE,
+    editable,
   })
   rememberManagedPlugins(editor)
 
@@ -119,5 +120,15 @@ describe('features に table が無いときの表の編集', () => {
 
     expect(columnResizingPluginKey.getState(target.state)).not.toBeUndefined()
     expect(rowLengths(target)).toEqual([2, 2])
+  })
+})
+
+describe('編集できない状態で作ったときの列幅の変更', () => {
+  it('編集できるようにすると列幅を変えられる', () => {
+    const target = createEditor({ features: ['table'] }, false)
+
+    target.setEditable(true)
+
+    expect(columnResizingPluginKey.getState(target.state)).not.toBeUndefined()
   })
 })

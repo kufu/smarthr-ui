@@ -1,5 +1,5 @@
 import { Table, type TableOptions, TableView } from '@tiptap/extension-table'
-import { columnResizingPluginKey } from '@tiptap/pm/tables'
+import { columnResizing, columnResizingPluginKey } from '@tiptap/pm/tables'
 
 import { TABLE_SHORTCUTS } from './tableShortcuts'
 
@@ -50,15 +50,26 @@ export const CustomTable = Table.extend<CustomTableOptions>({
     } as CustomTableOptions
   },
 
-  // 標準は columnResizing と tableEditing を1つの配列で返す。操作の制限で丸ごと外すと
-  // CellSelection の扱いや、セル数の崩れを直す fixTables まで消え、features に table が
-  // 無くても読み込んだ表は編集できるのに構造が壊れたまま保存されうる。
+  // 丸ごと外さないのは、features に table が無くても読み込んだ表は編集でき、セル数の崩れを直す fixTables まで消えるため。
+  // 標準の columnResizing を使わないのは、作成時に編集できないと入らず、後から列幅を変えられないため。
+  // View を渡さないのは、表の NodeView を addNodeView だけで決めるため
   addProseMirrorPlugins() {
-    const plugins = this.parent?.() ?? []
+    const plugins = (this.parent?.() ?? []).filter(
+      (plugin) => plugin.spec.key !== columnResizingPluginKey,
+    )
 
-    return this.options.isColumnResizable()
-      ? plugins
-      : plugins.filter((plugin) => plugin.spec.key !== columnResizingPluginKey)
+    if (!this.options.resizable || !this.options.isColumnResizable()) return plugins
+
+    return [
+      columnResizing({
+        handleWidth: this.options.handleWidth,
+        cellMinWidth: this.options.cellMinWidth,
+        defaultCellMinWidth: this.options.cellMinWidth,
+        View: null,
+        lastColumnResizable: this.options.lastColumnResizable,
+      }),
+      ...plugins,
+    ]
   },
 
   // 標準のように列幅を変えられるときだけ columnResizing に任せないのは、features の table を
