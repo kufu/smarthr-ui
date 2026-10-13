@@ -97,7 +97,7 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [size, className])
 
-  const latest = useLatest({ onClickOption, isFocused })
+  const latest = useLatest({ onClickOption, isFocused, hasValue })
 
   const functions = useMemo(
     () => ({
@@ -166,7 +166,7 @@ export const SegmentedControl: FC<Props> = ({
       handleClickOption: (e: MouseEvent<HTMLButtonElement>) => {
         const clickedValue = e.currentTarget.value
 
-        if (!hasValue) {
+        if (!latest.hasValue) {
           setInnerValue(clickedValue)
         }
 
@@ -175,7 +175,7 @@ export const SegmentedControl: FC<Props> = ({
       handleDelegateFocus: () => setIsFocused(true),
       handleDelegateBlur: () => setIsFocused(false),
     }),
-    [hasValue, latest],
+    [latest],
   )
 
   const excludesSelected = options.every((option) => option.value !== actualValue)
