@@ -28,7 +28,6 @@ import { ColorPickerPalette } from './ColorPickerPalette'
 import { ColorSwatchFace } from './ColorSwatch'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
-import { useCurrentColorLabel } from './useCurrentColorLabel'
 
 import type { Editor } from '@tiptap/react'
 
@@ -212,12 +211,17 @@ export const ColorPickerButton: FC<Props> = memo(
       [localize, messages],
     )
 
-    const currentColorLabel = useCurrentColorLabel({
-      currentColor,
-      colors,
-      defaultColor,
-      unsetLabel,
-    })
+    const normalizedCurrentColor =
+      currentColor === null ? null : normalizeHex(currentColor, defaultColor)
+    const matchedColor = colors.find(
+      (color) => normalizeHex(color.value, defaultColor) === normalizedCurrentColor,
+    )
+    const currentColorLabel =
+      normalizedCurrentColor === null
+        ? unsetLabel
+        : matchedColor
+          ? localize({ id: matchedColor.labelId, defaultText: matchedColor.defaultText })
+          : normalizedCurrentColor
 
     return (
       <>
