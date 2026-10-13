@@ -1,6 +1,9 @@
+'use client'
+
 import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { Cluster, Stack } from '../Layout'
 import { Panel } from '../Panel'
 import { ResponseMessage } from '../ResponseMessage'
@@ -10,8 +13,11 @@ import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { SHRComponentPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
+  base: 'smarthr-ui-FloatArea shr-z-fixed-menu -shr-mx-0.5',
   variants: {
+    sticky: {
+      true: 'shr-sticky',
+    },
     bottom: {
       // HINT: Stack直下でもmargin-bottomがリセットされないように詳細度を上げる
       0: 'shr-bottom-0 [&&]:shr-mb-0',
@@ -69,9 +75,10 @@ export const FloatArea: FC<Props> = ({
   className,
   ...rest
 }) => {
+  const { mobile } = useEnvironment()
   const actualClassName = useMemo(
-    () => classNameGenerator({ bottom: bottom ?? 1.5, className }),
-    [bottom, className],
+    () => classNameGenerator({ sticky: !mobile, bottom: bottom ?? 1.5, className }),
+    [bottom, className, mobile],
   )
 
   return (
