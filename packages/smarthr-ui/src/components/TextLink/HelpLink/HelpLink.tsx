@@ -5,9 +5,10 @@ import { TextLink } from '../TextLink'
 
 type Props = Omit<ComponentPropsWithoutRef<typeof TextLink>, 'rel' | 'prefix' | 'suffix'>
 
-export const HelpLink: FC<Props> = memo(({ target, ...rest }) => (
+export const HelpLink: FC<Props> = memo(({ href, target, ...rest }) => (
   <TextLink
     {...rest}
+    href={href}
     rel="help"
     target={target}
     referrerPolicy="no-referrer-when-downgrade"

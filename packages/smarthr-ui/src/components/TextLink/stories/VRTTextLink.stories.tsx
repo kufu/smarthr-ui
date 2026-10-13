@@ -93,7 +93,7 @@ export const VRT: StoryObj<typeof TextLink> = {
   },
 }
 
-export const VRTForcedColors: StoryObj = {
+export const VRTForcedColors: StoryObj<typeof TextLink> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

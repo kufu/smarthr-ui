@@ -28,11 +28,19 @@ const classNameGenerator = tv({
   },
 })
 
-export const HeaderLink = memo<Props>(({ enableNew, className, ...rest }) => {
+export const HeaderLink = memo<Props>(({ enableNew, className, href, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ enableNew, className }),
     [enableNew, className],
   )
 
-  return <AnchorButton {...rest} target="_blank" variant="text" className={actualClassName} />
+  return (
+    <AnchorButton
+      {...rest}
+      href={href}
+      target="_blank"
+      variant="text"
+      className={actualClassName}
+    />
+  )
 })

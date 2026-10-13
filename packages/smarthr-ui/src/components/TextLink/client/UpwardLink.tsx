@@ -28,7 +28,7 @@ type Props = SHRComponentPropsWithRef<
   { omit: 'prefix' | 'suffix' }
 >
 
-export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
+export const UpwardLink = memo<Props>(({ indent, className, href, ...rest }) => {
   const { mobile } = useEnvironment()
   const actualClassName = useMemo(
     () => classNameGenerator({ indent: indent ?? !mobile, className }),
@@ -37,7 +37,7 @@ export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
 
   return (
     <div className={actualClassName}>
-      <TextLink {...rest} prefix={<FaArrowLeftIcon />} />
+      <TextLink {...rest} href={href} prefix={<FaArrowLeftIcon />} />
     </div>
   )
 })
