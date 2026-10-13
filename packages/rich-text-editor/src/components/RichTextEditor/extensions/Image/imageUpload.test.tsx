@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createRef } from 'react'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 
@@ -13,18 +13,6 @@ import type {
 } from '../../types'
 import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
-
-// jsdom には ResizeObserver が無く、挿入された画像の NodeView と ImageFloatingUI が
-// マウント時に参照するため、最小限のスタブを用意する。
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>

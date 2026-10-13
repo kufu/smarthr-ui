@@ -1,23 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 import { serializeToHTML } from '../../serializers/serializeToHTML'
 
 import type { RichTextJSON } from '../../types'
 import type { ReactNode } from 'react'
-
-// jsdom には ResizeObserver が無く、画像の NodeView がマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 // 保存しても次の表示で読めない、または別オリジンを指しうる src
 const UNUSABLE_SRCS = [

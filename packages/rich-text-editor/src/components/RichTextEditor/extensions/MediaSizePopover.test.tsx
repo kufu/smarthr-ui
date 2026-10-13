@@ -2,23 +2,12 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { IntlProvider } from 'smarthr-ui'
-import { afterEach, beforeAll, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import { IMAGE_SIZE_SPEC, MediaSizePopover, YOUTUBE_SIZE_SPEC } from './MediaSizePopover'
 import { ALL_FEATURES, configureExtensions } from './configureExtensions'
 
 import type { ReactNode } from 'react'
-
-// jsdom には ResizeObserver が無く、画像の NodeView がマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>

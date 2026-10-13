@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core'
 import { CellSelection, TableMap } from '@tiptap/pm/tables'
-import { afterEach, beforeAll, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import { addImagePlaceholder, findImagePlaceholderPos } from './Image/imageUploadPlaceholder'
 import { configureExtensions } from './configureExtensions'
@@ -9,17 +9,6 @@ import { reconfigureEditorOperations, rememberManagedPlugins } from './reconfigu
 import type { RichTextRuntimeOptions } from './runtimeOptions'
 import type { RichTextFeature } from '../types'
 import type { AnyExtension } from '@tiptap/core'
-
-// jsdom には ResizeObserver が無く、画像の NodeView がマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 const ALL: readonly RichTextFeature[] = ['bold', 'image', 'table', 'link']
 

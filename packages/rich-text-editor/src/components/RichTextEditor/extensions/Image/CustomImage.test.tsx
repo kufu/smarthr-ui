@@ -1,22 +1,11 @@
 import { fireEvent, render, renderHook, waitFor } from '@testing-library/react'
 import { EditorContent } from '@tiptap/react'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { useRichTextEditor } from '../../hooks/useRichTextEditor'
 
 import type { RichTextJSON } from '../../types'
 import type { Editor } from '@tiptap/react'
-
-// jsdom には ResizeObserver が無く、画像 NodeView がマウント時に参照するためスタブする。
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    } as unknown as typeof ResizeObserver
-  }
-})
 
 const defaultValue: RichTextJSON = {
   type: 'doc',

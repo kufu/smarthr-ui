@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { configureExtensions } from '../configureExtensions'
 
@@ -7,17 +7,6 @@ import { imageUploadPlaceholderKey, resetImagePlaceholders } from './imageUpload
 import { uploadAndInsertImage } from './uploadAndInsertImage'
 
 import type { ImageUploadResult, RichTextFeature } from '../../types'
-
-// jsdom には ResizeObserver が無く、挿入された画像の NodeView がマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 // 破棄しないと、DOM の変化をまとめる ProseMirror のタイマーがテスト環境の破棄後に走り、CI で落ちることがある
 const editors: Editor[] = []

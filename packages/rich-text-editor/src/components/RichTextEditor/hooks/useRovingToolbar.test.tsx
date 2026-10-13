@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createElement, memo } from 'react'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 
@@ -52,14 +52,6 @@ vi.mock('../Toolbar/FontSizeDropdown', (importOriginal) =>
 vi.mock('../Toolbar/ColorPicker/ColorPickerButton', (importOriginal) =>
   trackDropdown('color', 'ColorPickerButton')(importOriginal),
 )
-
-beforeAll(() => {
-  globalThis.ResizeObserver ??= class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver
-})
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>

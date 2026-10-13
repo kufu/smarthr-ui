@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { ALL_FEATURES, configureExtensions } from '../extensions/configureExtensions'
 
@@ -19,17 +19,6 @@ vi.mock('./serializeToHTML', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>
 
   return { ...actual, serializeToHTML: vi.fn(actual.serializeToHTML as typeof serializeToHTML) }
-})
-
-// jsdom には ResizeObserver が無く、画像の NodeView がマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
 })
 
 const editors: Editor[] = []

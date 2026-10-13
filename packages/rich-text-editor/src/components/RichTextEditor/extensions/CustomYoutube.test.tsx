@@ -1,6 +1,6 @@
 import { fireEvent, render, renderHook, waitFor } from '@testing-library/react'
 import { EditorContent } from '@tiptap/react'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 
@@ -8,17 +8,6 @@ import { calcYoutubeHeight } from './youtubeOptions'
 
 import type { RichTextFeature } from '../types'
 import type { Editor } from '@tiptap/react'
-
-// jsdom には ResizeObserver が無く、エディタがマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    } as unknown as typeof ResizeObserver
-  }
-})
 
 const SRC = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 

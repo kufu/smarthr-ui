@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { IntlProvider } from 'smarthr-ui'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
 import { ImageAltPopover } from './extensions/Image/ImageAltPopover'
@@ -10,17 +10,6 @@ import { IMAGE_SIZE_SPEC, MediaSizePopover } from './extensions/MediaSizePopover
 import { ALL_FEATURES, configureExtensions } from './extensions/configureExtensions'
 
 import type { FormEvent, ReactNode } from 'react'
-
-// jsdom には ResizeObserver が無く、画像の NodeView がマウント時に参照する
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>

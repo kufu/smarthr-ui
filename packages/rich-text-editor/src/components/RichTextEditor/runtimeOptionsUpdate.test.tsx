@@ -1,24 +1,13 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createRef, useState } from 'react'
 import { IntlProvider } from 'smarthr-ui'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
 import { reconfigureEditorOperations } from './extensions/reconfigureEditorOperations'
 
 import type { ImageUploadResult, RichTextEditorController, RichTextFeature } from './types'
 import type { ReactNode } from 'react'
-
-// jsdom には ResizeObserver が無く、挿入された画像の NodeView がマウント時に参照する。
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 // 再構成が走った回数を数える。実体はそのまま動かす
 vi.mock('./extensions/reconfigureEditorOperations', async (importOriginal) => {

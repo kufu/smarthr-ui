@@ -1,22 +1,12 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'smarthr-ui'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 
 import type { RichTextJSON } from '../../types'
 import type { TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
-
-beforeAll(() => {
-  if (typeof globalThis.ResizeObserver === 'undefined') {
-    globalThis.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    }
-  }
-})
 
 // jsdom はレイアウトを計算しないため、表だけに位置と大きさを与える
 const TABLE_RECT = new DOMRect(30, 40, 300, 120)

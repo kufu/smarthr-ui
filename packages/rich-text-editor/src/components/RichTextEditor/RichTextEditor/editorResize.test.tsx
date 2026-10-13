@@ -1,18 +1,10 @@
 import { act, render, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'smarthr-ui'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
 
 import type { ReactNode } from 'react'
-
-beforeAll(() => {
-  globalThis.ResizeObserver ??= class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof ResizeObserver
-})
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
