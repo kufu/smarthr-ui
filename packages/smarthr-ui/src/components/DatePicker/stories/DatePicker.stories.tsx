@@ -14,6 +14,9 @@ export default {
     value: {
       control: 'text',
     },
+    defaultValue: {
+      control: 'text',
+    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -28,6 +31,13 @@ export const Value: StoryObj<typeof DatePicker> = {
   name: 'value',
   args: {
     value: '2024-11-06',
+  },
+}
+
+export const DefaultValue: StoryObj<typeof DatePicker> = {
+  name: 'defaultValue',
+  args: {
+    defaultValue: '2024-11-06',
   },
 }
 

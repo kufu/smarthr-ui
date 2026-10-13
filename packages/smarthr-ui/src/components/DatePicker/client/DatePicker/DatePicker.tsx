@@ -37,6 +37,8 @@ type Props = SHRComponentPropsWithRef<
   {
     /** input 要素の `value` 属性の値 */
     value?: string | null
+    /** 非制御コンポーネントとして使う場合の初期値。`value` を指定した場合は無視される */
+    defaultValue?: string | null
     /** input 要素の `name` 属性の値 */
     name?: string
     /** 選択可能な期間の開始日 */
@@ -97,9 +99,15 @@ const parseStringDate = (
   return parseInputFn ? parseInputFn(str) : parseJpnDateString(str)
 }
 
+const formatDateValue = (
+  date: Date | null,
+  formatDateFn: ((date: Date | null) => string) | undefined,
+) => (formatDateFn ? formatDateFn(date) : DEFAULT_DATE_TO_STRING(date))
+
 /** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
 export const DatePicker: FC<Props> = ({
   value,
+  defaultValue,
   name,
   from = DEFAULT_FROM,
   to,
@@ -136,7 +144,11 @@ export const DatePicker: FC<Props> = ({
   const calenderId = useId()
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
-    parseStringDate(value, parseInput),
+    parseStringDate(value ?? defaultValue, parseInput),
+  )
+
+  const [initialInputValue] = useState<string | undefined>(() =>
+    value === undefined ? formatDateValue(selectedDate, formatDate) : undefined,
   )
 
   const isCalendarShown = !!inputRect
@@ -159,8 +171,7 @@ export const DatePicker: FC<Props> = ({
     let inputNode: HTMLInputElement | null = null
     let calendarNode: HTMLElement | null = null
 
-    const dateToString = (date: Date | null) =>
-      latest.formatDate ? latest.formatDate(date) : DEFAULT_DATE_TO_STRING(date)
+    const dateToString = (date: Date | null) => formatDateValue(date, latest.formatDate)
 
     const dateToAlternativeFormat = (d: Date | null) => {
       if (d && latest.showAlternative) return latest.showAlternative(d)
@@ -400,6 +411,7 @@ export const DatePicker: FC<Props> = ({
         ref={mergedRef}
         name={name}
         disabled={disabled}
+        defaultValue={initialInputValue}
         error={error}
         width="100%"
         className={INPUT_CONTAINER_CLASS_NAME}
