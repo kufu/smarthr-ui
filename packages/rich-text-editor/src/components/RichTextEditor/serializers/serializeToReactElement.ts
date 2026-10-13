@@ -99,6 +99,7 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
     return createElement('img', {
       src: isSafeImageSrc(src) ? src : undefined,
       alt: typeof node.attrs.alt === 'string' ? node.attrs.alt : '',
+      title: typeof node.attrs.title === 'string' ? node.attrs.title : undefined,
       width,
       height,
       style: Object.keys(style).length > 0 ? style : undefined,
@@ -143,6 +144,7 @@ const markMapping: Record<string, ReactMarkMapping> = {
         href: isSafeUrl(href) ? href : undefined,
         target: isSafeLinkTarget(mark.attrs.target) ? mark.attrs.target : undefined,
         rel: LINK_REL,
+        title: typeof mark.attrs.title === 'string' ? mark.attrs.title : undefined,
       },
       children,
     )

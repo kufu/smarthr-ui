@@ -8,6 +8,7 @@ import { serializeToReactElement } from '../serializers/serializeToReactElement'
 import { RichTextViewer } from './RichTextViewer'
 
 import type { RichTextJSON, RichTextViewerProps } from '../types'
+import type { JSONContent } from '@tiptap/core'
 
 vi.mock('../serializers/serializeToReactElement', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>
@@ -19,6 +20,21 @@ vi.mock('../serializers/serializeToReactElement', async (importOriginal) => {
     ),
   }
 })
+
+// style は属性の文字列のまま比べない。生の属性は経路によって色の書式（#ff0000 と rgb()）や宣言の順が違うため、
+// CSSOM で読んだプロパティごとの値で比べる
+const attributesOf = (el: Element): Record<string, string> =>
+  Object.fromEntries(
+    Array.from(el.attributes, ({ name, value }) => [
+      name,
+      name === 'style' && el instanceof HTMLElement
+        ? Array.from(el.style)
+            .sort()
+            .map((property) => `${property}: ${el.style.getPropertyValue(property)}`)
+            .join('; ')
+        : value,
+    ]),
+  )
 
 describe('RichTextViewer', () => {
   it('HTML content を正規化して描画する', () => {
@@ -50,28 +66,13 @@ describe('RichTextViewer', () => {
       type: 'doc',
       content: [{ type: 'paragraph', content: [{ type: 'text', text: TEXT, marks }] }],
     })
-    // style は属性の文字列のまま比べない。生の属性は経路によって色の書式（#ff0000 と rgb()）や宣言の順が違うため、
-    // CSSOM で読んだプロパティごとの値で比べる
     const marksAround = (root: ParentNode) => {
       const marks: Array<{ tag: string; attributes: Record<string, string> }> = []
       const innermost = Array.from(root.querySelectorAll<HTMLElement>('*')).find(
         (el) => el.children.length === 0 && el.textContent === TEXT,
       )
       for (let el = innermost; el && el.tagName !== 'P'; el = el.parentElement ?? undefined) {
-        marks.unshift({
-          tag: el.tagName,
-          attributes: Object.fromEntries(
-            Array.from(el.attributes, ({ name, value }) => [
-              name,
-              name === 'style'
-                ? Array.from(el.style)
-                    .sort()
-                    .map((property) => `${property}: ${el.style.getPropertyValue(property)}`)
-                    .join('; ')
-                : value,
-            ]),
-          ),
-        })
+        marks.unshift({ tag: el.tagName, attributes: attributesOf(el) })
       }
       return marks
     }
@@ -113,6 +114,168 @@ describe('RichTextViewer', () => {
         expectSameMarks(docWithMarks([mark, TEXT_STYLE]), 2)
       },
     )
+  })
+
+  it('すべての要素を、HTML 出力と同じ構造・同じ属性で描画する', () => {
+    const text = (value: string, marks?: JSONContent['marks']): JSONContent => ({
+      type: 'text',
+      text: value,
+      marks,
+    })
+    const paragraph = (value: string, attrs?: Record<string, unknown>): JSONContent => ({
+      type: 'paragraph',
+      attrs,
+      content: [text(value)],
+    })
+    const content: RichTextJSON = {
+      type: 'doc',
+      content: [
+        {
+          type: 'heading',
+          attrs: { level: 2, textAlign: 'center', lineHeight: '1.5' },
+          content: [text('見出し')],
+        },
+        paragraph('行間と配置', { textAlign: 'center', lineHeight: '2' }),
+        {
+          type: 'paragraph',
+          content: [
+            text('リンク', [
+              {
+                type: 'link',
+                attrs: { href: 'https://example.com', target: '_self', title: 'リンクの説明' },
+              },
+            ]),
+            { type: 'hardBreak' },
+            text('改行の後'),
+          ],
+        },
+        { type: 'bulletList', content: [{ type: 'listItem', content: [paragraph('点')] }] },
+        {
+          type: 'orderedList',
+          attrs: { start: 3 },
+          content: [{ type: 'listItem', content: [paragraph('番号')] }],
+        },
+        { type: 'blockquote', content: [paragraph('引用')] },
+        { type: 'codeBlock', attrs: { language: 'ts' }, content: [text('const a = 1')] },
+        { type: 'horizontalRule' },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'image',
+              attrs: {
+                src: '/a.png',
+                alt: '代替',
+                title: '画像の説明',
+                width: 200,
+                height: 100,
+                align: 'center',
+              },
+            },
+          ],
+        },
+        {
+          type: 'youtube',
+          attrs: {
+            src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            width: 320,
+            height: 180,
+            start: 10,
+            align: 'right',
+          },
+        },
+        {
+          type: 'table',
+          content: [
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableHeader',
+                  attrs: { colwidth: [120], backgroundColor: '#ff0000' },
+                  content: [paragraph('見出しセル')],
+                },
+                { type: 'tableHeader', attrs: { colspan: 2 }, content: [paragraph('結合')] },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                {
+                  type: 'tableCell',
+                  attrs: { colwidth: [120], color: '#00ff00' },
+                  content: [paragraph('A')],
+                },
+                { type: 'tableCell', content: [paragraph('B')] },
+                { type: 'tableCell', content: [paragraph('C')] },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+    type Tree =
+      { tag: string; attributes: Record<string, string>; children: Tree[] } | { text: string }
+    const toTree = (node: Node): Tree =>
+      node instanceof Element
+        ? {
+            tag: node.tagName,
+            attributes: attributesOf(node),
+            children: Array.from(node.childNodes, toTree),
+          }
+        : { text: node.textContent ?? '' }
+    // 意図して違うところをそろえる
+    // - 幅を指定した画像がはみ出さないよう、Viewer だけ max-width と height を付ける
+    // - HTML 出力の iframe には、Tiptap が URL のクエリ用の設定値を属性としても並べる。ブラウザは無視するため Viewer は出さない
+    const IMAGE_FIT_DECLARATIONS = ['max-width: 100%', 'height: auto']
+    const YOUTUBE_OPTION_ATTRIBUTES = [
+      'autoplay',
+      'disablekbcontrols',
+      'enableiframeapi',
+      'endtime',
+      'ivloadpolicy',
+      'loop',
+      'modestbranding',
+      'origin',
+      'playlist',
+      'rel',
+      'start',
+    ]
+    const alignIntendedDifferences = (expected: Tree, actual: Tree | undefined): void => {
+      if (!actual || !('tag' in expected) || !('tag' in actual)) return
+      if (actual.tag === 'IMG' && actual.attributes.style) {
+        actual.attributes.style = actual.attributes.style
+          .split('; ')
+          .filter((declaration) => !IMAGE_FIT_DECLARATIONS.includes(declaration))
+          .join('; ')
+      }
+      if (expected.tag === 'IFRAME') {
+        YOUTUBE_OPTION_ATTRIBUTES.forEach((name) => delete expected.attributes[name])
+        // 真偽の属性なので、値（"true" と ""）ではなく付いているかだけを比べる
+        if ('allowfullscreen' in expected.attributes && 'allowfullscreen' in actual.attributes) {
+          expected.attributes.allowfullscreen = actual.attributes.allowfullscreen
+        }
+      }
+      expected.children.forEach((child, i) => alignIntendedDifferences(child, actual.children[i]))
+    }
+    const nodeTypesIn = (node: JSONContent): string[] => [
+      node.type ?? '',
+      ...(node.content ?? []).flatMap(nodeTypesIn),
+    ]
+
+    expect(
+      Object.keys(getRichTextSchema().nodes).filter((name) => !nodeTypesIn(content).includes(name)),
+    ).toEqual([])
+
+    const expected = Array.from(
+      new DOMParser().parseFromString(serializeToHTML(content), 'text/html').body.childNodes,
+      toTree,
+    )
+    const { container } = render(<RichTextViewer content={content} />)
+    const actual = Array.from(container.firstElementChild!.childNodes, toTree)
+    expected.forEach((tree, i) => alignIntendedDifferences(tree, actual[i]))
+
+    expect(actual).toEqual(expected)
   })
 
   it('中身の同じ HTML を包み直して渡し直しても、描画し直さない', () => {
