@@ -7,6 +7,7 @@ import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { tv } from '../../../libs/tv'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
+import { isLinkUrl } from '../Toolbar/urlValidation'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
@@ -292,8 +293,16 @@ export const RichTextEditor = memo(
           toggleBlockquote: () => runIfAllowed('blockquote', (chain) => chain.toggleBlockquote()),
           setHeading: (level: 1 | 2 | 3 | 4) =>
             runIfAllowed('heading', (chain) => chain.setHeading({ level })),
-          setLink: (href: string) =>
-            runIfAllowed('link', (chain) => chain.extendMarkRange('link').setLink({ href })),
+          setLink: (href: string) => {
+            const trimmed = href.trim()
+
+            // Tiptap の setLink は相対パスなども通すが、サニタイズと HTML 出力で落ちて保存後にリンクが消える
+            if (isLinkUrl(trimmed)) {
+              runIfAllowed('link', (chain) =>
+                chain.extendMarkRange('link').setLink({ href: trimmed }),
+              )
+            }
+          },
           unsetLink: () =>
             runIfAllowed('link', (chain) => chain.extendMarkRange('link').unsetLink()),
         }

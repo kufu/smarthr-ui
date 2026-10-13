@@ -20,7 +20,7 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { readers, useToolbarValue } from '../hooks/useToolbarState'
 
 import { ToolbarButton } from './ToolbarButton'
-import { isHttpUrl, isMailtoUrl } from './urlValidation'
+import { isLinkUrl } from './urlValidation'
 
 import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 
@@ -99,7 +99,7 @@ export const LinkButton: FC<Props> = memo(
             setError(latest.requiredMessage)
             return
           }
-          if (!isHttpUrl(trimmed) && !isMailtoUrl(trimmed)) {
+          if (!isLinkUrl(trimmed)) {
             setError(latest.invalidMessage)
             return
           }

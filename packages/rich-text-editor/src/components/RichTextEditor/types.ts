@@ -171,6 +171,7 @@ export type RichTextViewerProps = {
  *
  * 書式を変える操作（toggleXxx・setHeading・setLink・unsetLink）は、disabled / readOnly のあいだと、
  * 対応する書式が `features` に無いときは何もしない（既存の書式の解除も含む）。setHeading は `headingLevels` に無いレベルでも何もしない。
+ * setLink は前後の空白を取り除き、`http(s)://` で始まるホストのある URL か宛先のある `mailto:` でなければ何もしない（ツールバーのリンクボタンと同じ基準）。
  * clear はプログラムからのリセットとして disabled / readOnly でも効き、onChange も呼ぶ。
  */
 export type RichTextEditorController = {

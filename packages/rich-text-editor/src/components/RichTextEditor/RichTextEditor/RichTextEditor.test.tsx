@@ -1345,6 +1345,63 @@ describe('RichTextEditor', () => {
     })
   })
 
+  describe('ref.setLink()', () => {
+    const renderWithSelectedText = async () => {
+      const ref = createRef<RichTextEditorController>()
+      const onChange = vi.fn()
+      render(
+        <RichTextEditor
+          ref={ref}
+          value={paragraphDoc('リンク')}
+          features={['link']}
+          onChange={onChange}
+        />,
+        { wrapper: Wrapper },
+      )
+      await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+      act(() => {
+        getEditor().commands.selectAll()
+      })
+
+      return { ref, onChange }
+    }
+
+    it.each(['https://example.com', 'mailto:info@example.com'])(
+      '%s をリンクにする',
+      async (href) => {
+        const { ref } = await renderWithSelectedText()
+        act(() => ref.current!.setLink(href))
+        expect(document.querySelector('.ProseMirror a')).toHaveAttribute('href', href)
+      },
+    )
+
+    it('前後の空白を取り除いてリンクにする', async () => {
+      const { ref } = await renderWithSelectedText()
+      act(() => ref.current!.setLink('  https://example.com  '))
+      expect(document.querySelector('.ProseMirror a')).toHaveAttribute(
+        'href',
+        'https://example.com',
+      )
+    })
+
+    it.each([
+      '/relative/path',
+      'example.com',
+      'ftp://example.com',
+      'tel:0312345678',
+      '',
+      'https://',
+      'mailto:',
+      'https:example.com',
+      'http:/example.com',
+    ])('%j は何もしない', async (href) => {
+      const { ref, onChange } = await renderWithSelectedText()
+      act(() => ref.current!.setLink(href))
+      expect(document.querySelector('.ProseMirror a')).toBeNull()
+      expect(onChange).not.toHaveBeenCalled()
+    })
+  })
+
   describe('末尾が段落でない文書', () => {
     const LIST_END_DOC: RichTextJSON = {
       type: 'doc',

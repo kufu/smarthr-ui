@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { isHttpUrl, isMailtoUrl } from './urlValidation'
+import { isHttpUrl, isLinkUrl, isMailtoUrl } from './urlValidation'
 
 describe('isHttpUrl', () => {
   it.each([
@@ -9,8 +9,6 @@ describe('isHttpUrl', () => {
     'HTTPS://EXAMPLE.com/image.png',
     'https://例え.jp/image.png',
     'https://example.com:8080/image.png?v=1#frag',
-    // URL解析はスラッシュが1つ足りない形をブラウザと同じく正規化する
-    'https:/example.com/image.png',
   ])('URLとして成立する http/https を受け入れる: %s', (url) => {
     expect(isHttpUrl(url)).toBe(true)
   })
@@ -25,6 +23,16 @@ describe('isHttpUrl', () => {
     'example.com/image.png',
     'https:javascript:alert(1)',
   ])('URLとして成立しない値を弾く: %s', (url) => {
+    expect(isHttpUrl(url)).toBe(false)
+  })
+
+  // URL の解析は正規化して受け付けるが、入力した文字列のまま保存され、サニタイズで落ちる
+  it.each([
+    'https:/example.com/image.png',
+    'https:example.com/image.png',
+    'https:\\\\example.com/image.png',
+    '\u0000https://example.com/image.png',
+  ])('http:// か https:// で始まらない値を弾く: %j', (url) => {
     expect(isHttpUrl(url)).toBe(false)
   })
 
@@ -53,10 +61,27 @@ describe('isMailtoUrl', () => {
     expect(isMailtoUrl(url)).toBe(true)
   })
 
-  it.each(['', 'mailto:', 'mailto:   ', 'https://example.com', 'foo@example.com'])(
-    '宛先のない mailto と mailto 以外を弾く: %s',
+  it.each([
+    '',
+    'mailto:',
+    'mailto:   ',
+    'https://example.com',
+    'foo@example.com',
+    '\u0000mailto:foo@example.com',
+  ])('宛先のない mailto と mailto 以外を弾く: %s', (url) => {
+    expect(isMailtoUrl(url)).toBe(false)
+  })
+})
+
+describe('isLinkUrl', () => {
+  it.each(['https://example.com', 'mailto:foo@example.com'])('%s を受け入れる', (url) => {
+    expect(isLinkUrl(url)).toBe(true)
+  })
+
+  it.each(['/relative/path', 'ftp://example.com', 'https:example.com', 'mailto:'])(
+    '%s を弾く',
     (url) => {
-      expect(isMailtoUrl(url)).toBe(false)
+      expect(isLinkUrl(url)).toBe(false)
     },
   )
 })
