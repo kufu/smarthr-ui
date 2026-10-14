@@ -13,10 +13,19 @@ import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { SHRComponentPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-FloatArea shr-z-fixed-menu -shr-mx-0.5',
+  base: 'smarthr-ui-FloatArea shr-z-fixed-menu',
   variants: {
     sticky: {
       true: 'shr-sticky',
+    },
+    bottomFixed: {
+      true: [
+        // HINT: 画面幅いっぱいに広げるため、親の padding を打ち消してビューポート幅で表示する
+        'shr-ms-[calc(50%-50vw)] shr-box-border shr-w-screen shr-rounded-none',
+        // Layer 3 だが、上方向への指定のためベタ書き： https://smarthr.design/products/design-tokens/shadow/
+        '[box-shadow:_0_-4px_8px_2px_rgba(0,_0,_0,_0.24)]',
+      ],
+      false: '-shr-mx-0.5',
     },
     bottom: {
       // HINT: Stack直下でもmargin-bottomがリセットされないように詳細度を上げる
@@ -57,10 +66,12 @@ type Props = SHRComponentPropsWithRef<
     tertiaryButton?: ReactNode
     /** 操作に対するフィードバックメッセージ */
     responseStatus?: ResponseStatusWithoutProcessing
-    /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
+    /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値）。`fixedOnMobile` によりモバイルで下部固定されている間は無視されます */
     bottom?: CharRelativeSize | AbstractSize
     /** コンポーネントの `z-index` 値 */
     zIndex?: number
+    /** モバイル時のみ画面下部に固定する。固定中は画面幅いっぱいに表示され、`bottom` は無視されます */
+    fixedOnMobile?: boolean
   }
 >
 
@@ -71,14 +82,22 @@ export const FloatArea: FC<Props> = ({
   responseStatus,
   bottom,
   zIndex,
+  fixedOnMobile,
   style,
   className,
   ...rest
 }) => {
   const { mobile } = useEnvironment()
+  const bottomFixed = mobile && !!fixedOnMobile
   const actualClassName = useMemo(
-    () => classNameGenerator({ sticky: !mobile, bottom: bottom ?? 1.5, className }),
-    [bottom, className, mobile],
+    () =>
+      classNameGenerator({
+        sticky: !mobile || bottomFixed,
+        bottomFixed,
+        bottom: bottomFixed ? 0 : (bottom ?? 1.5),
+        className,
+      }),
+    [bottom, bottomFixed, className, mobile],
   )
 
   return (

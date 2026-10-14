@@ -94,20 +94,39 @@ export const ResponseStatus: StoryObj<typeof FloatArea> = {
   },
 }
 
+const renderWithLongContent: StoryObj<typeof FloatArea>['render'] = (args) => (
+  <Stack gap={1.5}>
+    {[...Array(15)].map((_, index) => (
+      <Panel key={index} padding={1.5}>
+        <p>スクロールさせて FloatArea の表示位置を確認するための Panel</p>
+      </Panel>
+    ))}
+    <FloatArea {...args} />
+  </Stack>
+)
+
 export const Bottom: StoryObj<typeof FloatArea> = {
   name: 'bottom',
-  render: (args) => (
-    <Stack gap={1.5}>
-      {[...Array(15)].map((_, index) => (
-        <Panel key={index} padding={1.5}>
-          <p>bottom を確認するための Panel</p>
-        </Panel>
-      ))}
-      <FloatArea {...args} />
-    </Stack>
-  ),
+  render: renderWithLongContent,
   args: {
     bottom: 1.5,
+  },
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '400px',
+      },
+    },
+  },
+}
+
+export const FixedOnMobile: StoryObj<typeof FloatArea> = {
+  name: 'fixedOnMobile',
+  render: renderWithLongContent,
+  args: {
+    fixedOnMobile: true,
+    secondaryButton: <Button>キャンセル</Button>,
   },
   parameters: {
     docs: {
