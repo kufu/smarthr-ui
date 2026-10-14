@@ -2,7 +2,6 @@
 
 import dayjs from 'dayjs'
 import {
-  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -23,17 +22,22 @@ import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
-type BaseProps = {
-  /** 選択可能な開始日 */
-  from?: Date
-  /** 選択可能な終了日 */
-  to?: Date
-  /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectDate: (e: MouseEvent, date: Date) => void
-  /** 選択された日付 */
-  value?: Date
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** 選択可能な開始日 */
+    from?: Date
+    /** 選択可能な終了日 */
+    to?: Date
+    /** トリガのセレクトイベントを処理するハンドラ */
+    onSelectDate: (e: MouseEvent, date: Date) => void
+    /** 選択された日付 */
+    value?: Date
+  },
+  { omit: 'children' }
+>
 
 type DayJsType = ReturnType<typeof dayjs>
 

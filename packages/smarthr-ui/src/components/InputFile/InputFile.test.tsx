@@ -15,7 +15,7 @@ describe('InputFile', () => {
     await render(
       <IntlProvider locale="ja">
         <form>
-          <FormControl title="input file">
+          <FormControl label="input file">
             <InputFile name="test" onChange={onChange} label="input file" />
           </FormControl>
         </form>
@@ -32,7 +32,7 @@ describe('InputFile', () => {
     await render(
       <IntlProvider locale="ja">
         <form>
-          <FormControl title="input file">
+          <FormControl label="input file">
             <InputFile name="test" multiple onChange={onChange} label="input file" />
           </FormControl>
         </form>
@@ -50,7 +50,7 @@ describe('InputFile', () => {
   //   await render(
   //     <IntlProvider locale="ja">
   //       <form>
-  //         <FormControl title="input file">
+  //         <FormControl label="input file">
   //           <InputFile
   //             name="test"
   //             label="input file"
@@ -71,7 +71,7 @@ describe('InputFile', () => {
     await render(
       <IntlProvider locale="ja">
         <form>
-          <FormControl title="input file">
+          <FormControl label="input file">
             <InputFile name="test" label="input file" />
           </FormControl>
         </form>
@@ -87,7 +87,7 @@ describe('InputFile', () => {
     await render(
       <IntlProvider locale="ja">
         <form>
-          <FormControl title="input file">
+          <FormControl label="input file">
             <InputFile name="test" label="input file" />
           </FormControl>
         </form>
@@ -106,7 +106,7 @@ describe('InputFile', () => {
     await render(
       <IntlProvider locale="ja">
         <form>
-          <FormControl title="input file">
+          <FormControl label="input file">
             <InputFile name="test" multiple label="input file" />
           </FormControl>
         </form>
@@ -125,7 +125,7 @@ describe('InputFile', () => {
     await render(
       <IntlProvider locale="ja">
         <form>
-          <FormControl title="input file">
+          <FormControl label="input file">
             <InputFile name="test" label="input file" />
           </FormControl>
         </form>

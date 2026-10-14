@@ -1,15 +1,22 @@
 'use client'
 
-import { type ComponentPropsWithoutRef, type FC, useMemo, useRef } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type PropsWithChildren,
+  useMemo,
+  useRef,
+} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
 import { Center } from '../Layout'
 
-type BaseProps = {
+type Props = PropsWithChildren<{
   isOpen: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<typeof Center>, keyof BaseProps>
+  className?: string
+  as?: ComponentPropsWithoutRef<typeof Center>['as']
+}>
 
 const classNameGenerator = tv({
   base: [

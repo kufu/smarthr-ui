@@ -1,24 +1,21 @@
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useId,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 import { ActualCheckbox } from './client'
 
-type BaseProps = PropsWithChildren<{
-  /** `true` のとき、チェック状態を `mixed` にする */
-  mixed?: boolean
-  /** チェックボックスにエラーがあるかどうか */
-  error?: boolean
-}>
-type Props = BaseProps & Omit<ComponentPropsWithRef<typeof ActualCheckbox>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../types'
+
+type Props = SHRComponentPropsWithRef<
+  typeof ActualCheckbox,
+  PropsWithChildren<{
+    /** `true` のとき、チェック状態を `mixed` にする */
+    mixed?: boolean
+    /** チェックボックスにエラーがあるかどうか */
+    error?: boolean
+  }>
+>
 
 const classNameGenerator = tv({
   slots: {

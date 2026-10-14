@@ -3,6 +3,7 @@ import { Stack } from '../../Layout'
 import { Text } from '../Text'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ElementType } from 'react'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
@@ -21,7 +22,7 @@ export default {
     children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
     italic: false,
     emphasis: false,
-    as: 'なし',
+    as: 'なし' as unknown as ElementType,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -208,7 +209,7 @@ export const MaxLines: StoryObj<typeof Text> = {
   name: 'maxLines',
   render: ({ children, ...rest }) => (
     <Stack>
-      {[undefined, 1, 2, 3, 4, 5, 6].map((maxLines) => (
+      {([undefined, 1, 2, 3, 4, 5, 6] as const).map((maxLines) => (
         <div key={maxLines}>
           <b>maxLines: {maxLines || '未指定'}</b>
           <br />

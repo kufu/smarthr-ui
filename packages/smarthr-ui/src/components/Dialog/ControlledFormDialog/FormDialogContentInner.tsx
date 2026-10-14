@@ -1,5 +1,4 @@
 import {
-  type ComponentPropsWithRef,
   type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
@@ -20,6 +19,8 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentInner } from '../dialogInnerStyle'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
+
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
   text: ReactNode
@@ -36,8 +37,9 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-type Props = PropsWithChildren<
-  ComponentPropsWithRef<typeof DialogBody> & {
+type Props = SHRComponentPropsWithRef<
+  typeof DialogBody,
+  {
     /** ダイアログタイトル */
     heading: ComponentPropsWithoutRef<typeof DialogHeading>
     /** アクションボタン */

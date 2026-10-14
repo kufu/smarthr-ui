@@ -1,12 +1,16 @@
-import { type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type BaseProps = {
-  disabled?: boolean
-  color?: 'grey' | 'blue' | 'green' | 'orange' | 'red'
-  size?: 'S'
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'span',
+  {
+    disabled?: boolean
+    color?: 'grey' | 'blue' | 'green' | 'orange' | 'red'
+    size?: 'S'
+  }
+>
 
 const classNameGenerator = tv({
   base: [

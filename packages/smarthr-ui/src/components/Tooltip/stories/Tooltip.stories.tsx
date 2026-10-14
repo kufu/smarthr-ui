@@ -65,7 +65,6 @@ export default {
   args: {
     message: 'ツールチップ',
     children: 'ツールチップ',
-    vertical: 'auto',
   },
   parameters: {
     chromatic: { disableSnapshot: true },

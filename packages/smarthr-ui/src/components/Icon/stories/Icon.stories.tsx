@@ -8,6 +8,7 @@ import { WarningIcon } from '../WarningIcon'
 import { colorSet } from '../generateIcon'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentType } from 'react'
 
 const FaAddressBookIcon = Icons.FaAddressBookIcon
 
@@ -33,13 +34,15 @@ export default {
 export const All: StoryObj<typeof FaAddressBookIcon> = {
   render: (args) => (
     <Stack as="ul" gap={0.75} className="shr-list-none">
-      {[
-        ...Object.entries(Icons),
-        ['WarningIcon', WarningIcon],
-        ['SparklesIcon', SparklesIcon],
-        ['LanguageIcon', LanguageIcon],
-        ['OpenInNewTabIcon', OpenInNewTabIcon],
-      ].map(([name, Icon]) => (
+      {(
+        [
+          ...Object.entries(Icons),
+          ['WarningIcon', WarningIcon],
+          ['SparklesIcon', SparklesIcon],
+          ['LanguageIcon', LanguageIcon],
+          ['OpenInNewTabIcon', OpenInNewTabIcon],
+        ] as Array<[string, ComponentType<any>]>
+      ).map(([name, Icon]) => (
         <li key={name}>
           <Cluster gap={0.5} align="center">
             <Icon {...args} />

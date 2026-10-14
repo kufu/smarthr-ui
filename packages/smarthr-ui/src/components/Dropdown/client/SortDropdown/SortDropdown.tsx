@@ -2,7 +2,6 @@
 
 import {
   type ChangeEvent,
-  type ComponentPropsWithRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -27,33 +26,31 @@ import { Dropdown } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
+import type { SHRComponentPropsWithRef } from '../../../../types'
+
 type SortFieldType = {
   value: string
 } & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 
-type ArgsOnApply = {
-  field: string
-  order: 'asc' | 'desc'
-  newfields: SortFieldType[]
-}
-
-type BaseProps = {
-  /** 並び替え項目 */
-  sortFields: SortFieldType[]
-  /** 並び順の初期値 */
-  defaultOrder: 'asc' | 'desc'
-  sortFieldLabel?: ReactNode
-  sortOrderLegend?: ReactNode
-  ascLabel?: ReactNode
-  descLabel?: ReactNode
-  applyText?: ReactNode
-  cancelText?: ReactNode
-  /** 適用時に発火するイベント */
-  onApply: (args: ArgsOnApply) => void
-  /** キャンセル時に発火するイベント */
-  onCancel?: MouseEventHandler<HTMLButtonElement>
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'button',
+  {
+    /** 並び替え項目 */
+    sortFields: SortFieldType[]
+    /** 並び順の初期値 */
+    defaultOrder: 'asc' | 'desc'
+    sortFieldLabel?: ReactNode
+    sortOrderLegend?: ReactNode
+    ascLabel?: ReactNode
+    descLabel?: ReactNode
+    applyText?: ReactNode
+    cancelText?: ReactNode
+    /** 適用時に発火するイベント */
+    onApply: (args: { field: string; order: 'asc' | 'desc'; newfields: SortFieldType[] }) => void
+    /** キャンセル時に発火するイベント */
+    onCancel?: MouseEventHandler<HTMLButtonElement>
+  }
+>
 
 const ON_SUBMIT = (e: FormEvent) => {
   e.preventDefault()

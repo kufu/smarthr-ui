@@ -2,7 +2,6 @@
 
 import {
   type ComponentPropsWithRef,
-  type ComponentType,
   type FC,
   type PropsWithChildren,
   type ReactNode,
@@ -20,21 +19,25 @@ import { Text } from '../../Text'
 import { CHILDREN_WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
+import type { SHRComponentProps } from '../../../types'
 
-type BaseProps = {
-  ref: Ref<HTMLDivElement>
-  /** グループのラベル名 */
-  label: Omit<ObjectLabelType, 'id' | 'htmlFor'> & Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
-  as?: string | ComponentType<any>
-  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
-  disabled?: boolean
-  LabelComponent: FC<LabelComponentProps>
-  classNames: {
-    wrapper: string
-    childrenWrapper: string
-  }
-}
-type Props = BaseProps & Omit<CommonProps, keyof BaseProps | 'className'>
+type Props = SHRComponentProps<
+  CommonProps,
+  {
+    ref: Ref<HTMLDivElement>
+    /** グループのラベル名 */
+    label: Omit<ObjectLabelType, 'id' | 'htmlFor'> &
+      Required<Pick<ObjectLabelType, 'id' | 'htmlFor'>>
+    /** `true` のとき、文字色を `TEXT_DISABLED` にする */
+    disabled?: boolean
+    LabelComponent: FC<LabelComponentProps>
+    classNames: {
+      wrapper: string
+      childrenWrapper: string
+    }
+  },
+  { as: true; omit: 'className' }
+>
 
 // HINT: errorMessagesの利用方法とReactNodeのためuseMemoでは適切にmemo化しにくい
 // undefined、もしくは空配列の場合は定数のEMPTY_ERROR_MESSAGESと差し替えることで安定化する

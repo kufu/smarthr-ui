@@ -1,34 +1,31 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type MouseEvent,
-  memo,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type MouseEvent, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Scroller } from '../../Scroller'
 
-type BaseProps = {
-  /** 選択された年 */
-  selectedYear?: number
-  /** 選択可能な開始年 */
-  fromYear: number
-  /** 選択可能な終了年 */
-  toYear: number
-  /** トリガのセレクトイベントを処理するハンドラ */
-  handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
-  /** 表示フラグ */
-  isDisplayed: boolean
-  /** HTMLのid属性 */
-  id: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'div'>, keyof BaseProps>
+import type { SHRComponentPropsWithRef } from '../../../types'
+
+type Props = SHRComponentPropsWithRef<
+  'div',
+  {
+    /** 選択された年 */
+    selectedYear?: number
+    /** 選択可能な開始年 */
+    fromYear: number
+    /** 選択可能な終了年 */
+    toYear: number
+    /** トリガのセレクトイベントを処理するハンドラ */
+    handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => void
+    /** 表示フラグ */
+    isDisplayed: boolean
+    /** HTMLのid属性 */
+    id: string
+  }
+>
 type ActualProps = Omit<Props, 'isDisplayed'>
 
 const classNameGenerator = tv({

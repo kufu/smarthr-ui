@@ -1,14 +1,7 @@
 'use client'
 
 import dayjs from 'dayjs'
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type MouseEvent,
-  memo,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -17,22 +10,27 @@ import { UnstyledButton } from '../../Button'
 
 import { isBetween } from './calendarHelper'
 
-type BaseProps = {
-  /** 現在の日付 */
-  current: {
-    day: DayJsType
-    months: Array<Array<number | null>>
-  }
-  /** 選択可能な開始日 */
-  from: Date
-  /** 選択可能な終了日 */
-  to: Date
-  /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectDate: (e: MouseEvent, date: Date) => void
-  /** 選択された日付 */
-  selectedDayText: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'table'>, keyof BaseProps>
+import type { SHRComponentPropsWithoutRef } from '../../../types'
+
+type Props = SHRComponentPropsWithoutRef<
+  'table',
+  {
+    /** 現在の日付 */
+    current: {
+      day: DayJsType
+      months: Array<Array<number | null>>
+    }
+    /** 選択可能な開始日 */
+    from: Date
+    /** 選択可能な終了日 */
+    to: Date
+    /** トリガのセレクトイベントを処理するハンドラ */
+    onSelectDate: (e: MouseEvent, date: Date) => void
+    /** 選択された日付 */
+    selectedDayText: string
+  },
+  { omit: 'children' }
+>
 
 type DayJsType = ReturnType<typeof dayjs>
 

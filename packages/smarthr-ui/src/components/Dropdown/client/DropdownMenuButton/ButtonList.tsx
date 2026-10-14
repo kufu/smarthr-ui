@@ -18,7 +18,7 @@ import type { RemoteDialogTrigger } from '../../../Dialog'
 
 export type Actions = ActionItem | ActionItem[]
 
-// これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
+// これでコンポーネントを絞れるわけではないが Button[variant=text] を使うべきであることを理解できるように型で示す
 type ActionItem =
   | ReactElement<ComponentPropsWithRef<typeof Button>>
   | ReactElement<ComponentPropsWithRef<typeof AnchorButton>>

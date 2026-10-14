@@ -19,6 +19,8 @@ import { Text } from '../Text'
 import { AppLauncher } from './AppLauncher'
 import { HeaderDropdownMenuButton } from './HeaderDropdownMenuButton'
 
+import type { SHRComponentPropsWithRef } from '../../types'
+
 const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-Header', 'shr-bg-brand shr-px-1.25', 'max-md:shr-px-0.75'],
@@ -47,30 +49,32 @@ const classNameGenerator = tv({
   },
 })
 
-type Tenant = PropsWithChildren<{
-  id: string
-  name: ReactNode
-}>
-
-type BaseProps = {
-  /** ロゴ */
-  logo?: ReactElement
-  /** ロゴリンク */
-  logoHref?: string
-  /** 機能名（enableNew と合わせて使います） */
-  featureName?: ReactNode
-  /** 機能群（enableNew と合わせて使います） */
-  apps?: ComponentPropsWithRef<typeof AppLauncher>['apps']
-  /** テナント一覧 */
-  tenants?: Tenant[]
-  /** 現在のテナント ID */
-  currentTenantId?: string
-  /** テナントが選択された時に発火するコールバック関数 */
-  onTenantSelect?: (id: string) => void
-  /** @deprecated internal-ui から利用するので使わないでください。 */
-  enableNew?: boolean
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'header'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'header',
+  {
+    /** ロゴ */
+    logo?: ReactElement
+    /** ロゴリンク */
+    logoHref?: string
+    /** 機能名（enableNew と合わせて使います） */
+    featureName?: ReactNode
+    /** 機能群（enableNew と合わせて使います） */
+    apps?: ComponentPropsWithRef<typeof AppLauncher>['apps']
+    /** テナント一覧 */
+    tenants?: Array<
+      PropsWithChildren<{
+        id: string
+        name: ReactNode
+      }>
+    >
+    /** 現在のテナント ID */
+    currentTenantId?: string
+    /** テナントが選択された時に発火するコールバック関数 */
+    onTenantSelect?: (id: string) => void
+    /** @deprecated internal-ui から利用するので使わないでください。 */
+    enableNew?: boolean
+  }
+>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
 const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const

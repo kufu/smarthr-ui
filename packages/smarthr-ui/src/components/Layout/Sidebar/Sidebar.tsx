@@ -1,7 +1,6 @@
 import {
   type CSSProperties,
   Children,
-  type ComponentType,
   type FC,
   type ReactElement,
   cloneElement,
@@ -19,14 +18,14 @@ type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'basel
 type Props = SHRComponentPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     /** コンポーネントの `min-width` 値 */
     contentsMinWidth?: CSSProperties['minWidth']
     /** 各領域の間隔の指定（gap） */
     gap?: PositiveGap | SeparatePositiveGap
     align?: AlignType
     right?: boolean
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({

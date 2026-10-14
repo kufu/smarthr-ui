@@ -9,7 +9,7 @@ import { getIsInclude } from '../../../libs/map'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-type Props = ComponentPropsWithoutRef<'div'>
+type Props = Omit<ComponentPropsWithoutRef<'div'>, 'id' | 'aria-labelledby' | 'aria-hidden'>
 
 const classNameGenerator = tv({
   base: [

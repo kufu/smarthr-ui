@@ -14,6 +14,7 @@ import { useObjectHeading } from '../useObjectHeading'
 
 import { ActionDialogContentInner } from './ActionDialogContentInner'
 
+import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
 import type { DialogProps } from '../types'
 
 type ActionDialogContentInnerProps = ComponentPropsWithRef<typeof ActionDialogContentInner>
@@ -23,25 +24,27 @@ type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = ActionDialogContentInnerProps['actionButton']
 type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
 
-type BaseProps = Omit<
-  ActionDialogContentInnerProps,
-  'heading' | 'actionButton' | 'closeButton' | 'handleClickAction' | 'handleClickClose'
-> &
-  DialogProps & {
-    heading: HeadingType
-    actionButton: ReactNode | ObjectActionButtonType
-    closeButton?: ReactNode | ObjectCloseButtonType
-    /**
-     * アクションボタンをクリックした時に発火するコールバック関数
-     */
-    onClickAction: ActionDialogContentInnerProps['handleClickAction']
-    /**
-     * 閉じるボタンをクリックした時に発火するコールバック関数
-     */
-    onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
-  }
-type Props = BaseProps &
-  Omit<ComponentPropsWithRef<typeof DialogContentInner>, keyof BaseProps | 'focusTrapRef'>
+type Props = SHRComponentPropsWithRef<
+  typeof DialogContentInner,
+  SHRComponentProps<
+    ActionDialogContentInnerProps,
+    DialogProps & {
+      heading: HeadingType
+      actionButton: ReactNode | ObjectActionButtonType
+      closeButton?: ReactNode | ObjectCloseButtonType
+      /**
+       * アクションボタンをクリックした時に発火するコールバック関数
+       */
+      onClickAction: ActionDialogContentInnerProps['handleClickAction']
+      /**
+       * 閉じるボタンをクリックした時に発火するコールバック関数
+       */
+      onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    },
+    { omit: 'handleClickAction' | 'handleClickClose' }
+  >,
+  { omit: 'focusTrapRef' }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,

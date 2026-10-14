@@ -16,10 +16,7 @@ import type { ComponentPropsWithoutRef } from 'react'
  * default     true       false    false
  */
 const _cases: Array<
-  Pick<
-    ComponentPropsWithoutRef<typeof FilterDropdown>,
-    'isFiltered' | 'triggerSize' | 'disabled' | 'onlyIconTrigger'
-  >
+  Pick<ComponentPropsWithoutRef<typeof FilterDropdown>, 'trigger' | 'filtered' | 'disabled'>
 > = [
   { trigger: { onlyIcon: true } },
   { trigger: { size: 'S' }, filtered: true, disabled: true },

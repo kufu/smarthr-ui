@@ -1,10 +1,11 @@
-import { type ComponentPropsWithRef, type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FontSizes } from '../../themes'
+import type { SHRComponentPropsWithRef } from '../../types'
 import type { IconType } from 'react-icons'
 
 /**
@@ -27,25 +28,24 @@ export const colorSet = {
 
 const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
 
-type BaseProps = {
-  /**アイコンの説明テキスト*/
-  alt?: ReactNode
-  /**
-   * アイコンの色
-   * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
-   */
-  color?: LiteralUnion<keyof typeof colorSet>
-  /**
-   * アイコンの大きさ（フォントサイズの抽象値）
-   * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
-   */
-  size?: FontSizes
-}
-export type Props = BaseProps &
-  Omit<
-    ComponentPropsWithRef<'svg'>,
-    keyof BaseProps | 'stroke' | 'fill' | 'strokeWidth' | 'width' | 'height'
-  >
+export type Props = SHRComponentPropsWithRef<
+  'svg',
+  {
+    /**アイコンの説明テキスト*/
+    alt?: ReactNode
+    /**
+     * アイコンの色
+     * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
+     */
+    color?: LiteralUnion<keyof typeof colorSet>
+    /**
+     * アイコンの大きさ（フォントサイズの抽象値）
+     * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
+     */
+    size?: FontSizes
+  },
+  { omit: 'stroke' | 'fill' | 'strokeWidth' | 'width' | 'height' | 'children' }
+>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています

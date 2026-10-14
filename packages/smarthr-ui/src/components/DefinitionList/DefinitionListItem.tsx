@@ -1,11 +1,4 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
@@ -17,12 +10,13 @@ type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
-type BaseProps = {
+// TODO: 必要になったらdivの属性(ComponentPropsWithoutRef<'div'>)を型として受け取れるようにする
+type Props = PropsWithChildren<{
   term: ReactNode | ObjectTermType
   fullWidth?: boolean
   maxColumns?: number
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+  className?: string
+}>
 
 const termObjectConverter = (term: ReactNode): ObjectTermType => ({ text: term })
 

@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type ElementType, type ReactElement, useMemo } from 'react'
+import { type ElementType, type ReactElement, useMemo } from 'react'
 
 import { OpenInNewTabIcon } from '../Icon'
 
@@ -6,17 +6,19 @@ import { DisabledReason } from './DisabledReason'
 import { AnchorButtonInner } from './client'
 import { anchorClassNameGenerator } from './style'
 
-import type { BaseProps as ButtonProps } from './types'
+import type { BaseProps } from './types'
+import type { SHRComponentPropsWithRef } from '../../types'
 
-type BaseProps<T extends ElementType> = Omit<ButtonProps, 'variant' | 'disabledReason'> & {
-  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
-  elementAs?: T
-  // tertiaryはAnchorButtonでは使用不可
-  variant?: Exclude<ButtonProps['variant'], 'tertiary'>
-  inactiveReason?: ButtonProps['disabledReason']
-}
-type Props<T extends ElementType> = BaseProps<T> &
-  Omit<ComponentPropsWithRef<T>, keyof BaseProps<T>>
+type Props<T extends ElementType> = SHRComponentPropsWithRef<
+  T,
+  Omit<BaseProps, 'variant' | 'disabledReason'> & {
+    /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+    elementAs?: T
+    // tertiaryはAnchorButtonでは使用不可
+    variant?: Exclude<BaseProps['variant'], 'tertiary'>
+    inactiveReason?: BaseProps['disabledReason']
+  }
+>
 
 export const AnchorButton = <T extends ElementType = 'a'>({
   size = 'M',

@@ -1,4 +1,4 @@
-import { type ComponentType, type FC, type ReactNode, useId, useMemo } from 'react'
+import { type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { RadioButton } from '../RadioButton'
@@ -10,9 +10,9 @@ import type { SHRComponentPropsWithRef } from '../../types'
 type Props = SHRComponentPropsWithRef<
   typeof RadioButton,
   {
-    as?: string | ComponentType<any>
     label: ReactNode
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({
@@ -46,12 +46,13 @@ export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) =>
   const hasDescription = !!children
 
   const classNames = useMemo(() => {
-    const { base, description, radio } = classNameGenerator({
-      className,
-      hasDescription,
-    })
+    const { base, description, radio } = classNameGenerator()
 
-    return { base: base(), description: description(), radio: radio() }
+    return {
+      base: base({ className, hasDescription }),
+      description: description(),
+      radio: radio({ hasDescription }),
+    }
   }, [hasDescription, className])
 
   return hasDescription ? (

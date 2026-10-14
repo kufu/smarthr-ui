@@ -88,16 +88,18 @@ export const BgColor: StoryObj<typeof Input> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {[
-        undefined,
-        'background',
-        'column',
-        'base-grey',
-        'over-background',
-        'head',
-        'border',
-        'action-background',
-      ].map((bgColor) => (
+      {(
+        [
+          undefined,
+          'BACKGROUND',
+          'COLUMN',
+          'BASE_GREY',
+          'OVER_BACKGROUND',
+          'HEAD',
+          'BORDER',
+          'ACTION_BACKGROUND',
+        ] as const
+      ).map((bgColor) => (
         <Input {...args} key={bgColor} bgColor={bgColor} />
       ))}
     </Stack>

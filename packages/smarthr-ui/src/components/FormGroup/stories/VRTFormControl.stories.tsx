@@ -5,6 +5,7 @@ import { StatusLabel } from '../../StatusLabel'
 import { FormControl } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithRef } from 'react'
 
 export default {
   title: 'Components/FormControl/VRT',
@@ -14,10 +15,12 @@ export default {
         <FormControl
           {...args}
           key={unrecommendedHide.toString()}
-          label={{
-            ...args.label,
-            unrecommendedHide,
-          }}
+          label={
+            {
+              ...(args.label as Record<string, unknown>),
+              unrecommendedHide,
+            } as ComponentPropsWithRef<typeof FormControl>['label']
+          }
         />
       ))}
     </Stack>

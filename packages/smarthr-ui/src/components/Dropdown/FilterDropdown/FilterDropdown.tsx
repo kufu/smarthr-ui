@@ -23,6 +23,8 @@ import {
   FilteredIcon,
 } from '../client'
 
+import type { SHRComponentPropsWithRef } from '../../../types'
+
 type ObjectTriggerType = {
   text?: ReactNode
   /** 引き金となるボタンの大きさ */
@@ -30,26 +32,28 @@ type ObjectTriggerType = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type BaseProps = {
-  /** 引き金となるボタン */
-  trigger?: ReactNode | ObjectTriggerType
-  applyText?: ReactNode
-  cancelText?: ReactNode
-  resetText?: ReactNode
-  children: ReactNode
-  filtered?:
-    | boolean
-    | {
-        iconAlt?: string
-      }
-  responseStatus?: ResponseStatus
-  onApply: MouseEventHandler<HTMLButtonElement>
-  onCancel?: MouseEventHandler<HTMLButtonElement>
-  onReset?: MouseEventHandler<HTMLButtonElement>
-  onOpen?: () => void
-  onClose?: () => void
-}
-type Props = BaseProps & Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
+type Props = SHRComponentPropsWithRef<
+  'button',
+  {
+    /** 引き金となるボタン */
+    trigger?: ReactNode | ObjectTriggerType
+    applyText?: ReactNode
+    cancelText?: ReactNode
+    resetText?: ReactNode
+    children: ReactNode
+    filtered?:
+      | boolean
+      | {
+          iconAlt?: string
+        }
+    responseStatus?: ResponseStatus
+    onApply: MouseEventHandler<HTMLButtonElement>
+    onCancel?: MouseEventHandler<HTMLButtonElement>
+    onReset?: MouseEventHandler<HTMLButtonElement>
+    onOpen?: () => void
+    onClose?: () => void
+  }
+>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
