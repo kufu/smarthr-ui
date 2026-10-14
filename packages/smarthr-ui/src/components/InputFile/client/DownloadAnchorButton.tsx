@@ -9,10 +9,17 @@ import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { PREVIEW_BUTTON_CLASSNAME } from './style'
 
-export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
+import type { ExistingFile } from '../types'
+
+export const DownloadAnchorButton: FC<{ file: File | ExistingFile }> = ({ file }) => {
   const [href, setHref] = useState('')
 
   useLayoutEffect(() => {
+    if (!(file instanceof File)) {
+      setHref(file.url)
+      return
+    }
+
     const url = URL.createObjectURL(file)
     setHref(url)
 

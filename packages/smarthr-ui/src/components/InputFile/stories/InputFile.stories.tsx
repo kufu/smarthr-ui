@@ -91,3 +91,17 @@ export const OnChange: StoryObj<typeof InputFile> = {
   name: 'onChange',
   args: { onChange: action('changed') },
 }
+
+export const DefaultExistingFiles: StoryObj<typeof InputFile> = {
+  name: 'defaultExistingFiles',
+  args: {
+    multiple: { appendable: true },
+    previewable: true,
+    defaultExistingFiles: [
+      { name: 'sample.pdf', url: 'https://example.com/sample.pdf', contentType: 'application/pdf' },
+      { name: 'image.png', url: 'https://example.com/image.png', contentType: 'image/png' },
+      { name: 'readme.txt', url: 'https://example.com/readme.txt' },
+    ],
+    onDeleteExistingFile: action('deleteExistingFile'),
+  },
+}
