@@ -96,6 +96,16 @@ export const normalizeRowspan = (value: unknown): number =>
   Math.min(normalizeSpan(value), MAX_ROWSPAN)
 
 /**
+ * 短いまま残さないのは、表を編集すると足りない列が穴になり、保存で列幅ごと落ちるため。
+ * すべて 0 を残さないのは、幅未指定と同じ意味で、0 を並べると colspan の分だけ出力が膨らむため
+ */
+export const fitWidthsToColspan = (widths: readonly number[], colspan: number): number[] | null => {
+  const fitted = Array.from({ length: colspan }, (_, i) => widths[i] ?? 0)
+
+  return fitted.some((width) => width > 0) ? fitted : null
+}
+
+/**
  * colwidth の各要素は table の width 宣言へ合算されるため、
  * 数値以外が混ざるとCSS宣言の追記になる。0 は Tiptap が幅未指定として扱うので許可する。
  */

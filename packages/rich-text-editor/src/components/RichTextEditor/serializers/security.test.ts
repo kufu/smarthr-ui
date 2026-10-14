@@ -671,10 +671,17 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     }
   })
 
-  it('colspan より短い colwidth は、両経路とも手を付けずに出力する', () => {
+  it.each([[[]], [[0, 0]]])('すべて幅未指定の colwidth %j は、両経路とも出力しない', (colwidth) => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 2, colwidth }))
+    for (const output of [html, react]) {
+      expect(parse(output).querySelector('td')?.hasAttribute('colwidth')).toBe(false)
+    }
+  })
+
+  it('colspan より短い colwidth は、両経路とも足りない列を幅未指定の 0 で埋める', () => {
     const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 3, colwidth: [100, 120] }))
     for (const output of [html, react]) {
-      expect(output).toContain('colwidth="100,120"')
+      expect(output).toContain('colwidth="100,120,0"')
     }
   })
 

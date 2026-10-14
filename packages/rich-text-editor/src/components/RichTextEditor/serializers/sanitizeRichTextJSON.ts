@@ -9,6 +9,7 @@ import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 
 import {
   LINK_REL,
+  fitWidthsToColspan,
   isNumericAttr,
   isSafeCodeLanguage,
   isSafeColor,
@@ -123,18 +124,14 @@ type AttrsNormalizer = (attrs: Record<string, unknown>) => Record<string, unknow
 
 /**
  * colspan より長いときに落とさず切るのは、colspan の範囲の幅はそのまま使えるため。
- * 短いときに手を付けないのは、0 で埋めると列の追加が幅を測り直さなくなり、
- * 落とすと貼り付けで1列分だけ読めた幅まで消えるため
+ * 短いときに足りない列を幅未指定の 0 で埋めるのは、短いまま残すと表を編集したときに足りない列が穴になり、
+ * 保存で列幅ごと落ちるため。落とさないのは、分かっている列の幅まで消えるため
  */
-const trimColwidthToColspan: AttrsNormalizer = (attrs) => {
-  // 不正な要素を切り落として残りを通さないよう、正しい colwidth だけを切る
+const fitColwidthToColspan: AttrsNormalizer = (attrs) => {
+  // 不正な値を合わせないのは、不正な要素だけが切り落とされ、残りが通ってしまうため
   if (!isSafeColwidth(attrs.colwidth)) return attrs
 
-  const colspan = normalizeColspan(attrs.colspan)
-
-  return attrs.colwidth.length > colspan
-    ? { ...attrs, colwidth: attrs.colwidth.slice(0, colspan) }
-    : attrs
+  return { ...attrs, colwidth: fitWidthsToColspan(attrs.colwidth, normalizeColspan(attrs.colspan)) }
 }
 
 /**
@@ -144,8 +141,8 @@ const trimColwidthToColspan: AttrsNormalizer = (attrs) => {
  * embed の URL の start は揃えると src から消えるので、start 属性へ移す。
  */
 const ATTRS_NORMALIZERS: Record<string, AttrsNormalizer> = {
-  tableCell: trimColwidthToColspan,
-  tableHeader: trimColwidthToColspan,
+  tableCell: fitColwidthToColspan,
+  tableHeader: fitColwidthToColspan,
   youtube: (attrs) => {
     const sized = completeYoutubeSize(attrs)
 

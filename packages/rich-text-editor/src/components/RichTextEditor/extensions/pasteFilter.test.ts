@@ -349,10 +349,36 @@ describe('createPasteFilter', () => {
   })
 
   describe('表の列幅', () => {
-    it('結合セルの列幅が1列分しか読めなくても、分かっている幅を残す', () => {
+    it('結合を数えて <col> から読んだ列幅を、貼り付けでも残す', () => {
       const element = document.createElement('div')
       element.innerHTML =
-        '<table><colgroup><col width="200"><col width="100"></colgroup><tbody><tr><td colspan="2"><p>セル</p></td></tr></tbody></table>'
+        '<table><colgroup><col width="180"/><col width="80"/><col width="140"/></colgroup><tbody>' +
+        '<tr><td colspan="2"><p>AB</p></td><td><p>C</p></td></tr>' +
+        '<tr><td rowspan="2"><p>A1</p></td><td><p>B1</p></td><td><p>C1</p></td></tr>' +
+        '<tr><td><p>B2</p></td><td><p>C2</p></td></tr></tbody></table>'
+      const slice = DOMParser.fromSchema(schema).parseSlice(element)
+
+      const result = createPasteFilter(['table'])(slice)
+      const colwidths: Record<string, unknown> = {}
+      result.content.descendants((node) => {
+        if (node.type.name === 'tableCell') colwidths[node.textContent] = node.attrs.colwidth
+      })
+
+      expect(colwidths).toEqual({
+        AB: [180, 80],
+        C: [140],
+        A1: [180],
+        B1: [80],
+        C1: [140],
+        B2: [80],
+        C2: [140],
+      })
+    })
+
+    it('colspan より短い列幅は、足りない列を幅未指定の 0 で埋める', () => {
+      const element = document.createElement('div')
+      element.innerHTML =
+        '<table><tbody><tr><td colspan="2" colwidth="200"><p>セル</p></td></tr></tbody></table>'
       const slice = DOMParser.fromSchema(schema).parseSlice(element)
 
       const result = createPasteFilter(['table'])(slice)
@@ -361,7 +387,7 @@ describe('createPasteFilter', () => {
         if (node.type.name === 'tableCell') colwidth = node.attrs.colwidth
       })
 
-      expect(colwidth).toEqual([200])
+      expect(colwidth).toEqual([200, 0])
     })
 
     it('colspan より長い列幅は colspan の長さに切る', () => {

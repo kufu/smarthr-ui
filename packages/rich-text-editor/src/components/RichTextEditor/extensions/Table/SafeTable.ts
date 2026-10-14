@@ -6,7 +6,7 @@ import { normalizeColspan } from '../../serializers/safeAttributes'
 import type { DOMOutputSpec } from '@tiptap/pm/model'
 
 // セルの colspan の上限（HTML の仕様）とは別に持つのは、正当な表で <col> を落とさない範囲の値のため
-const MAX_TABLE_COLUMNS = 1000
+export const MAX_TABLE_COLUMNS = 1000
 
 /**
  * 標準は1行目の colspan の合計だけ <col> を作るため、colspan 1000 のセルを並べた小さな JSON から

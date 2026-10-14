@@ -3,6 +3,7 @@ import { TextSelection } from '@tiptap/pm/state'
 import { CellSelection, TableMap, addColumn, addRow, selectedRect } from '@tiptap/pm/tables'
 
 import { normalizeHex } from '../../../../libs/normalizeHex'
+import { isPositiveNumber } from '../aspectRatio'
 
 import type { Editor } from '@tiptap/react'
 
@@ -92,6 +93,22 @@ export const runTableAction = (editor: Editor, action: () => unknown) => {
   editor.view.dispatch(closeHistory(editor.state.tr))
 }
 
+// セルの幅を colspan で均等に割らないのは、幅の分かっている列の分まで幅未指定の列に混ざるため。
+// getBoundingClientRect で測らないのは、transform による拡大縮小が入り、colwidth の px と尺度がずれるため
+const measureUnspecifiedColumn = (
+  element: HTMLElement,
+  colspan: number,
+  colwidth: readonly number[] | null | undefined,
+): number | null => {
+  const known = (colwidth ?? []).slice(0, colspan).filter((width) => width > 0)
+  const unspecified = colspan - known.length
+  const width = Math.round(
+    (element.offsetWidth - known.reduce((sum, value) => sum + value, 0)) / unspecified,
+  )
+
+  return isPositiveNumber(width) ? width : null
+}
+
 /** TableMap を基準に挿入する。結合セルと隣接セルの見た目を壊さないため。 */
 export const insertTableAxis = (
   editor: Editor,
@@ -150,12 +167,18 @@ export const insertTableAxis = (
     const cell = tr.doc.nodeAt(pos)!
     const sourceColumn = reference - map.findCell(sourceOffset).left
     const sourceElement = editor.view.nodeDOM(tableStart + sourceOffset)
+    // ?? にしないのは、0 は幅未指定を表すので、画面で測り直す必要があるため
     const columnWidth =
-      source?.attrs.colwidth?.[sourceColumn] ??
-      (sourceElement instanceof HTMLElement
-        ? Math.round(sourceElement.getBoundingClientRect().width / (source?.attrs.colspan ?? 1)) ||
-          null
-        : null)
+      axis === 'column'
+        ? source?.attrs.colwidth?.[sourceColumn] ||
+          (sourceElement instanceof HTMLElement
+            ? measureUnspecifiedColumn(
+                sourceElement,
+                source?.attrs.colspan ?? 1,
+                source?.attrs.colwidth,
+              )
+            : null)
+        : null
     tr.setNodeMarkup(pos, null, {
       ...cell.attrs,
       ...(axis === 'column' && columnWidth ? { colwidth: [columnWidth] } : {}),

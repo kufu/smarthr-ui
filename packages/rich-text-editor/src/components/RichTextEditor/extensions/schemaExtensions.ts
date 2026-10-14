@@ -1,5 +1,5 @@
 import { Color } from '@tiptap/extension-color'
-import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { StarterKit } from '@tiptap/starter-kit'
@@ -9,6 +9,7 @@ import { SafeImage } from './Image/SafeImage'
 import { LineHeight } from './LineHeight'
 import { CellAppearance } from './Table/CellAppearance'
 import { SafeTable } from './Table/SafeTable'
+import { SafeTableCell, SafeTableHeader } from './Table/SafeTableCell'
 import { SUPPORTED_HEADING_LEVELS } from './configureHeading'
 import {
   YOUTUBE_DEFAULT_SIZE,
@@ -81,8 +82,8 @@ export const createSchemaExtensions = (): AnyExtension[] => [
   SafeTable.configure(TABLE_OPTIONS),
   TableRow,
   CellAppearance,
-  TableHeader,
-  TableCell,
+  SafeTableHeader,
+  SafeTableCell,
   // textStyleはcolor/backgroundColor/fontSizeの入れ物。これがschemaに無いと
   // textStyle markを含むJSONでドキュメント全体が消えるため常に載せる。
   TextStyle,

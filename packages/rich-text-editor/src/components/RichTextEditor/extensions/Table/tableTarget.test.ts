@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core'
 import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { CellSelection } from '@tiptap/pm/tables'
 import StarterKit from '@tiptap/starter-kit'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { CellAppearance } from './CellAppearance'
 import {
@@ -83,6 +83,85 @@ describe('table context actions', () => {
     expect(editor.getHTML()).toContain('width: 180px')
     editor.commands.undo()
     expect(getTableTarget(editor)!.map.width).toBe(3)
+  })
+
+  it('measures the adjacent column when its width is 0, which means unspecified', () => {
+    createEditor()
+    const target = getTableTarget(editor)!
+    selectTableTarget(editor, target.tablePos + 1 + target.map.map[2], 'column')
+    editor.commands.setCellAttribute('colwidth', [0])
+    const rect = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(120)
+    try {
+      insertTableAxis(editor, 'column', 'end', target.tablePos)
+    } finally {
+      rect.mockRestore()
+    }
+    getTableTarget(editor)!.table.forEach((row) =>
+      expect(row.lastChild!.attrs.colwidth).toEqual([120]),
+    )
+  })
+
+  it('measures only the unspecified part of a merged cell for the new column', () => {
+    const cell = (attrs?: Record<string, unknown>) => ({
+      type: 'tableCell',
+      attrs,
+      content: [{ type: 'paragraph' }],
+    })
+    editor = new Editor({
+      extensions: [StarterKit, Table, TableRow, TableCell, TableHeader, CellAppearance],
+      content: {
+        type: 'doc',
+        content: [
+          {
+            type: 'table',
+            content: [{ type: 'tableRow', content: [cell({ colspan: 2, colwidth: [300, 0] })] }],
+          },
+        ],
+      },
+    })
+    const target = getTableTarget(editor, 2)!
+    // 300px の列と幅未指定の列を結合したセルが、400px に描画されている
+    const rect = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(400)
+    try {
+      insertTableAxis(editor, 'column', 'end', target.tablePos)
+    } finally {
+      rect.mockRestore()
+    }
+    expect(getTableTarget(editor, 2)!.table.firstChild!.lastChild!.attrs.colwidth).toEqual([100])
+  })
+
+  it('leaves the new column unspecified when the measured width leaves no room for it', () => {
+    editor = new Editor({
+      extensions: [StarterKit, Table, TableRow, TableCell, TableHeader, CellAppearance],
+      content: {
+        type: 'doc',
+        content: [
+          {
+            type: 'table',
+            content: [
+              {
+                type: 'tableRow',
+                content: [
+                  {
+                    type: 'tableCell',
+                    attrs: { colspan: 2, colwidth: [300, 0] },
+                    content: [{ type: 'paragraph' }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    })
+    const target = getTableTarget(editor, 2)!
+    const rect = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(200)
+    try {
+      insertTableAxis(editor, 'column', 'end', target.tablePos)
+    } finally {
+      rect.mockRestore()
+    }
+    expect(getTableTarget(editor, 2)!.table.firstChild!.lastChild!.attrs.colwidth).toBeNull()
   })
 
   it('inherits adjacent colors on insertion without duplicating a header row', () => {

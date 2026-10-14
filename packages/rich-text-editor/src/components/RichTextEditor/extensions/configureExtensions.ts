@@ -2,7 +2,7 @@ import { Extension } from '@tiptap/core'
 import { Color } from '@tiptap/extension-color'
 import { FileHandler } from '@tiptap/extension-file-handler'
 import { Placeholder } from '@tiptap/extension-placeholder'
-import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { StarterKit } from '@tiptap/starter-kit'
@@ -18,6 +18,7 @@ import { LinkShortcut } from './LinkShortcut'
 import { MediaToolbarShortcut } from './MediaToolbarShortcut'
 import { CellAppearance } from './Table/CellAppearance'
 import { CustomTable } from './Table/CustomTable'
+import { SafeTableCell, SafeTableHeader } from './Table/SafeTableCell'
 import {
   type HeadingLevel,
   SUPPORTED_HEADING_LEVELS,
@@ -160,8 +161,8 @@ export const configureExtensions = ({
     ),
     TableRow,
     CellAppearance,
-    TableHeader,
-    TableCell,
+    SafeTableHeader,
+    SafeTableCell,
     // textStyleはcolor/backgroundColor/fontSizeの入れ物。これがschemaに無いと
     // textStyle markを含むJSONでドキュメント全体が消えるため常に載せる。
     TextStyle.configure(),
