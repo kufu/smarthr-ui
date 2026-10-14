@@ -12,6 +12,8 @@ import type { SHRComponentPropsWithRef } from '../../types'
 type Props<T extends ElementType> = SHRComponentPropsWithRef<
   T,
   Omit<BaseProps, 'variant' | 'disabledReason'> & {
+    /** リンク先のURL。無効化されたリンクを表す場合は `undefined` を明示的に指定する */
+    href: string | undefined
     /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
     elementAs?: T
     // tertiaryはAnchorButtonでは使用不可

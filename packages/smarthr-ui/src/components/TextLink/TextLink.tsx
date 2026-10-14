@@ -8,6 +8,8 @@ import type { SHRComponentPropsWithRef } from '../../types'
 type Props<T extends ElementType> = SHRComponentPropsWithRef<
   T,
   {
+    /** リンク先のURL。無効化されたリンクを表す場合は `undefined` を明示的に指定する */
+    href: string | undefined
     /** テキストのサイズ */
     size?: 'XS' | 'S' | 'M'
     /** リンクをクリックした時に発火するコールバック関数 */
@@ -76,9 +78,9 @@ const ActualTextLink = <T extends ElementType = 'a'>({
   return (
     <Anchor
       {...rest}
-      // HINT: a要素でhrefが存在しない === button[disabled]のように無効化されていることを表す
+      // HINT: a要素でhrefが存在しない(空文字列を含む) === button[disabled]のように無効化されていることを表す
       // そのためhrefが存在せず、かつonClickが設定されている場合、hrefを擬似的に設定することで
-      // disabledではない状態にする (TODO: a11y的にはhrefをoptionalではなく必須属性としたい)
+      // disabledではない状態にする
       href={href ? href : onClick ? '' : undefined}
       target={target}
       rel={rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel}
