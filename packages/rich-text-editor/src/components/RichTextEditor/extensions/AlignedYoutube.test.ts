@@ -87,6 +87,16 @@ describe('div[data-youtube-video] に包まれていない iframe の読み込�
     expect(json.content[0].attrs).toMatchObject({ width, height })
   })
 
+  it.each([
+    ['width="0" height="225"', 400, 225],
+    ['width="400" height="0"', 400, 225],
+    ['width="-5" height="225"', 400, 225],
+    ['width="100%" height="225"', 400, 225],
+  ])('寸法が正の数でなければ指定なしとして、%s を %d×%d で読む', (size, width, height) => {
+    const json = parse(`<iframe src="${SRC}" ${size}></iframe>`)
+    expect(json.content[0].attrs).toMatchObject({ width, height })
+  })
+
   it('style の寸法が px でなければ属性から読む', () => {
     const json = parse(
       `<iframe src="${SRC}" width="640" height="360" style="width: 50%;"></iframe>`,

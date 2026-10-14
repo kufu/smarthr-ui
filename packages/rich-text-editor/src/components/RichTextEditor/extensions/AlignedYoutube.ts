@@ -2,6 +2,7 @@ import { Youtube } from '@tiptap/extension-youtube'
 
 import { parseNumericAttr } from '../serializers/safeAttributes'
 
+import { isPositiveNumber } from './aspectRatio'
 import { YOUTUBE_ALIGN_STYLES, parseMediaAlign, toMediaAlignStyleText } from './mediaAlign'
 import { parseParagraphMediaAlign } from './mediaOnlyParagraph'
 import { parseMediaSize } from './parseMediaSize'
@@ -11,13 +12,16 @@ import { isYoutubeEmbedSrc, normalizeYoutubeUrl } from './youtubeUrl'
 import type { Attributes } from '@tiptap/core'
 
 // 片側だけ指定された iframe は、欠けた側が既定値で埋まって 320×360 のように比率が崩れる
+// 正の数でない寸法も指定なしとして補うのは、sanitize がそう扱い、エディタと Viewer で寸法がずれるため
 const completeDimensions = (width: unknown, height: unknown) => {
   const numericWidth = parseNumericAttr(width)
   const numericHeight = parseNumericAttr(height)
+  const hasWidth = isPositiveNumber(numericWidth)
+  const hasHeight = isPositiveNumber(numericHeight)
 
   return {
-    width: width ?? (numericHeight ? calcYoutubeWidth(numericHeight) : null),
-    height: height ?? (numericWidth ? calcYoutubeHeight(numericWidth) : null),
+    width: hasWidth ? numericWidth : hasHeight ? calcYoutubeWidth(numericHeight) : null,
+    height: hasHeight ? numericHeight : hasWidth ? calcYoutubeHeight(numericWidth) : null,
   }
 }
 

@@ -77,6 +77,29 @@ export const isNumericAttr = (value: unknown): value is number | string =>
 export const parseNumericAttr = (value: unknown): number | undefined =>
   isNumericAttr(value) ? Number(value) : undefined
 
+/**
+ * colspan/rowspan は colgroup を組み立てるループの回数になるため、
+ * 0・NaN・Infinity を渡すと列が消えたり無限ループになる。
+ * null では既定値へ解決されないので schema と同じ 1 に戻す。
+ */
+export const normalizeSpan = (value: unknown): number =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 1 ? value : 1
+
+/**
+ * colwidth の各要素は table の width 宣言へ合算されるため、
+ * 数値以外が混ざるとCSS宣言の追記になる。0 は Tiptap が幅未指定として扱うので許可する。
+ */
+export const isSafeColwidth = (value: unknown): value is number[] =>
+  Array.isArray(value) &&
+  value.every((width) => typeof width === 'number' && Number.isFinite(width) && width >= 0)
+
+/**
+ * Youtube 拡張は start を埋め込みURLのクエリへ文字列連結するため、
+ * 数値以外を通すとクエリの追記になる。null でも 0 と同じ扱いになるが schema の既定値に揃える。
+ */
+export const normalizeStart = (value: unknown): number =>
+  typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0
+
 const MIN_HEADING_LEVEL = Math.min(...SUPPORTED_HEADING_LEVELS)
 const MAX_HEADING_LEVEL = Math.max(...SUPPORTED_HEADING_LEVELS)
 

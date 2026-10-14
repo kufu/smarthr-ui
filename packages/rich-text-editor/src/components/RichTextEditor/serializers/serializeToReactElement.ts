@@ -3,6 +3,7 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
+import { isPositiveNumber } from '../extensions/aspectRatio'
 import {
   IMAGE_ALIGN_STYLES,
   YOUTUBE_ALIGN_STYLES,
@@ -18,6 +19,7 @@ import { getRichTextExtensions } from './richTextSchema'
 import {
   LINK_REL,
   isSafeColor,
+  isSafeColwidth,
   isSafeFontSize,
   isSafeImageSrc,
   isSafeLinkTarget,
@@ -25,6 +27,8 @@ import {
   isSafeUrl,
   isSafeYoutubeSrc,
   normalizeHeadingLevel,
+  normalizeSpan,
+  normalizeStart,
   parseNumericAttr,
 } from './safeAttributes'
 import { sanitizeRichTextJSON } from './sanitizeRichTextJSON'
@@ -43,7 +47,9 @@ type ReactMarkMapping = (ctx: { mark: Mark; children?: ReactNode | ReactNode[] }
 const createTableCellMapping =
   (tag: 'td' | 'th'): ReactNodeMapping =>
   ({ node, children }) => {
-    const { colspan, rowspan, colwidth, align, color, backgroundColor } = node.attrs
+    const { colwidth, align, color, backgroundColor } = node.attrs
+    const colspan = normalizeSpan(node.attrs.colspan)
+    const rowspan = normalizeSpan(node.attrs.rowspan)
     const style: Record<string, string> = {}
 
     if (isSafeTextAlign(align)) style.textAlign = align
@@ -55,7 +61,7 @@ const createTableCellMapping =
       {
         colSpan: colspan > 1 ? colspan : undefined,
         rowSpan: rowspan > 1 ? rowspan : undefined,
-        colwidth: Array.isArray(colwidth) ? colwidth.join(',') : undefined,
+        colwidth: isSafeColwidth(colwidth) ? colwidth.join(',') : undefined,
         style: Object.keys(style).length > 0 ? style : undefined,
       },
       children,
@@ -69,8 +75,11 @@ const createTableCellMapping =
 const toEmbedUrl = (src: unknown, start: unknown): string | undefined => {
   if (!isSafeYoutubeSrc(src)) return undefined
 
-  const startAt = typeof start === 'number' && Number.isFinite(start) && start >= 0 ? start : 0
-  const embedUrl = getEmbedUrlFromYoutubeUrl({ ...YOUTUBE_EMBED_OPTIONS, url: src, startAt })
+  const embedUrl = getEmbedUrlFromYoutubeUrl({
+    ...YOUTUBE_EMBED_OPTIONS,
+    url: src,
+    startAt: normalizeStart(start),
+  })
 
   return isSafeYoutubeSrc(embedUrl) ? embedUrl : undefined
 }
@@ -106,10 +115,10 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
     })
   },
   youtube: ({ node }) => {
-    const width =
-      typeof node.attrs.width === 'number' ? node.attrs.width : YOUTUBE_DEFAULT_SIZE.width
-    const height =
-      typeof node.attrs.height === 'number' ? node.attrs.height : YOUTUBE_DEFAULT_SIZE.height
+    const width = isPositiveNumber(node.attrs.width) ? node.attrs.width : YOUTUBE_DEFAULT_SIZE.width
+    const height = isPositiveNumber(node.attrs.height)
+      ? node.attrs.height
+      : YOUTUBE_DEFAULT_SIZE.height
     return createElement(
       'div',
       {

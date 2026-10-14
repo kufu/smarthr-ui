@@ -15,7 +15,7 @@ import {
   YOUTUBE_IFRAME_ATTRIBUTES,
 } from './youtubeOptions'
 
-import type { AnyExtension } from '@tiptap/core'
+import type { AnyExtension, Attributes, Mark } from '@tiptap/core'
 import type { ImageOptions } from '@tiptap/extension-image'
 import type { TableOptions } from '@tiptap/extension-table'
 import type { YoutubeOptions } from '@tiptap/extension-youtube'
@@ -26,6 +26,26 @@ export const STARTER_KIT_OPTIONS = {
   heading: { levels: [...SUPPORTED_HEADING_LEVELS] },
   link: { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto'] },
 } satisfies Partial<StarterKitOptions>
+
+// title を getAttribute で読むのは、既定の読み込みが "2024" や "true" を数値・真偽値に変え、
+// 文字列でない値として sanitize で消えるため
+export const patchLinkTitle = (extension: AnyExtension): AnyExtension => {
+  if (extension.name !== 'link') return extension
+
+  return (extension as Mark).extend({
+    addAttributes() {
+      const parent: Attributes = this.parent?.() ?? {}
+
+      return {
+        ...parent,
+        title: {
+          ...parent.title,
+          parseHTML: (element: HTMLElement) => element.getAttribute('title'),
+        },
+      }
+    },
+  })
+}
 
 export const BLOCK_STYLE_TYPES = ['heading', 'paragraph']
 
@@ -49,7 +69,11 @@ export const TABLE_OPTIONS = { renderWrapper: true } satisfies Partial<TableOpti
  * ノード順になるので configureExtensions と揃える（テストで一致を確認している）。
  */
 export const createSchemaExtensions = (): AnyExtension[] => [
-  StarterKit.configure(STARTER_KIT_OPTIONS),
+  StarterKit.configure(STARTER_KIT_OPTIONS).extend({
+    addExtensions() {
+      return (this.parent?.() ?? []).map(patchLinkTitle)
+    },
+  }),
   TextAlign.configure({ types: BLOCK_STYLE_TYPES }),
   SafeImage.configure(IMAGE_OPTIONS),
   AlignedYoutube.configure(YOUTUBE_OPTIONS),

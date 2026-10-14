@@ -57,6 +57,16 @@ describe('SafeImage の HTML 読み込み', () => {
     },
   )
 
+  it('alt の無い画像は、空の alt として読む', () => {
+    const json = parse(`<img src="${SRC}">`)
+    expect(json.content[0].attrs).toMatchObject({ alt: '' })
+  })
+
+  it('数字や真偽値に見える alt と title も、文字列のまま読む', () => {
+    const json = parse(`<img src="${SRC}" alt="2024" title="true">`)
+    expect(json.content[0].attrs).toMatchObject({ alt: '2024', title: 'true' })
+  })
+
   it('自分の出力を読み直しても幅が変わらない', () => {
     const doc = {
       type: 'doc',

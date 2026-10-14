@@ -20,6 +20,18 @@ export const SafeImage = Image.extend({
 
     return {
       ...parent,
+      // alt と title を getAttribute で読むのは、既定の読み込みが "2024" や "true" を数値・真偽値に変え、
+      // 文字列でない値として sanitize で消えるため
+      alt: {
+        ...parent.alt,
+        // 既定の null だと HTML 出力が alt 属性ごと省き、Viewer の alt="" とずれる
+        default: '',
+        parseHTML: (element: HTMLElement) => element.getAttribute('alt'),
+      },
+      title: {
+        ...parent.title,
+        parseHTML: (element: HTMLElement) => element.getAttribute('title'),
+      },
       width: {
         ...parent.width,
         parseHTML: (element: HTMLElement) => parseSize(element).width,

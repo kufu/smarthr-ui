@@ -769,6 +769,8 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     [{ width: 320, height: '100%;x' }, '320', '180'],
     [{ width: 320 }, '320', '180'],
     [{ width: 'x', height: 180 }, '320', '180'],
+    [{ width: 0, height: 180 }, '320', '180'],
+    [{ width: 320, height: 0 }, '320', '180'],
   ])('youtube の寸法 %o は、正しい側から 16:9 で補う', (size, width, height) => {
     const { html, react } = bothOutputs(youtubeDoc(size))
     for (const output of [html, react]) {
@@ -837,13 +839,15 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
   })
 
   it.each([
-    ['数値', 123],
-    ['オブジェクト', { a: 1 }],
-    ['配列', ['x']],
-  ])('画像の alt が文字列でない（%s）とき、両経路とも空の alt を出す', (_, alt) => {
+    ['数値', { alt: 123 }],
+    ['オブジェクト', { alt: { a: 1 } }],
+    ['配列', { alt: ['x'] }],
+    ['null', { alt: null }],
+    ['キーが無い', {}],
+  ])('画像の alt が文字列でない（%s）とき、両経路とも空の alt を出す', (_, attrs) => {
     const { html, react } = bothOutputs({
       type: 'doc',
-      content: [{ type: 'image', attrs: { src: 'https://example.com/a.png', alt } }],
+      content: [{ type: 'image', attrs: { ...attrs, src: 'https://example.com/a.png' } }],
     })
 
     for (const output of [html, react]) {

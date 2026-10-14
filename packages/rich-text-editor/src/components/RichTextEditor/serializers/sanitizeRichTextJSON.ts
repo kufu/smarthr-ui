@@ -1,3 +1,4 @@
+import { isPositiveNumber } from '../extensions/aspectRatio'
 import { normalizeFontSize } from '../extensions/normalizeFontSize'
 import {
   YOUTUBE_DEFAULT_SIZE,
@@ -11,6 +12,7 @@ import {
   isNumericAttr,
   isSafeCodeLanguage,
   isSafeColor,
+  isSafeColwidth,
   isSafeImageSrc,
   isSafeLinkTarget,
   isSafeMediaAlign,
@@ -18,6 +20,8 @@ import {
   isSafeUrl,
   isSafeYoutubeSrc,
   normalizeHeadingLevel,
+  normalizeSpan,
+  normalizeStart,
 } from './safeAttributes'
 
 import type { JSONContent } from '@tiptap/core'
@@ -26,7 +30,6 @@ type JSONMark = NonNullable<JSONContent['marks']>[number]
 
 type AttrNormalizer = (value: unknown) => unknown
 
-/** null は拡張のデフォルトへ戻す指示になる（キー削除ではTiptapのattrs解決に乗らない） */
 const nullIfUnsafe =
   (isSafe: (value: unknown) => boolean): AttrNormalizer =>
   (value) =>
@@ -37,42 +40,15 @@ const nullIfNotString = nullIfUnsafe((value) => typeof value === 'string')
 // null に戻さないのは、HTML 経路が alt 属性ごと省き、React 経路の alt="" とずれるため
 const emptyIfNotString: AttrNormalizer = (value) => (typeof value === 'string' ? value : '')
 
-/**
- * colwidth の各要素は table の width 宣言へ合算されるため、
- * 数値以外が混ざるとCSS宣言の追記になる。0 は Tiptap が幅未指定として扱うので許可する。
- */
-const isSafeColwidth = (value: unknown): boolean =>
-  Array.isArray(value) &&
-  value.every((width) => typeof width === 'number' && Number.isFinite(width) && width >= 0)
-
-/**
- * colspan/rowspan は colgroup を組み立てるループの回数になるため、
- * 0・NaN・Infinity を渡すと列が消えたり無限ループになる。
- * null では既定値へ解決されないので schema と同じ 1 に戻す。
- */
-const normalizeSpan: AttrNormalizer = (value) =>
-  typeof value === 'number' && Number.isInteger(value) && value >= 1 ? value : 1
-
-/**
- * Youtube 拡張は start を埋め込みURLのクエリへ文字列連結するため、
- * 数値以外を通すとクエリの追記になる。null でも 0 と同じ扱いになるが schema の既定値に揃える。
- */
-const normalizeStart: AttrNormalizer = (value) =>
-  typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : 0
-
-// React 経路は数値以外を既定値にするため、数値文字列も許可せず両経路の出力を揃える
-const isYoutubeDimension = (value: unknown): value is number =>
-  typeof value === 'number' && isNumericAttr(value)
-
 const normalizeYoutubeDimension =
   (fallback: number): AttrNormalizer =>
   (value) =>
-    isYoutubeDimension(value) ? value : fallback
+    isPositiveNumber(value) ? value : fallback
 
 // 片方だけを既定値に戻すと 320×360 のように比率が崩れるため、正しい側から 16:9 で補う
 const completeYoutubeSize: AttrsNormalizer = (attrs) => {
-  const hasWidth = isYoutubeDimension(attrs.width)
-  const hasHeight = isYoutubeDimension(attrs.height)
+  const hasWidth = isPositiveNumber(attrs.width)
+  const hasHeight = isPositiveNumber(attrs.height)
 
   if (hasWidth && !hasHeight) {
     return { ...attrs, height: calcYoutubeHeight(attrs.width as number) }

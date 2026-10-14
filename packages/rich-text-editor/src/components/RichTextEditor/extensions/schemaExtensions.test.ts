@@ -52,6 +52,18 @@ describe('createSchemaExtensions', () => {
     expect(generateHTML(json, schemaExtensions)).toBe(generateHTML(json, editorExtensions))
   })
 
+  it.each([
+    ['表示', schemaExtensions],
+    ['エディタ', editorExtensions],
+  ])('%s の拡張は、数字に見えるリンクの title も文字列のまま読む', (_, extensions) => {
+    const json = generateJSON(
+      '<p><a href="https://example.com" title="2024">リンク</a></p>',
+      extensions,
+    )
+
+    expect(json.content[0].content[0].marks[0].attrs).toMatchObject({ title: '2024' })
+  })
+
   it('画像と YouTube の配置を読み、同じ style で書き出す', () => {
     const json = generateJSON(ALL_FORMATS_HTML, schemaExtensions)
     const html = generateHTML(json, schemaExtensions)

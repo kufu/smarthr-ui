@@ -32,6 +32,7 @@ import {
   STARTER_KIT_OPTIONS,
   TABLE_OPTIONS,
   YOUTUBE_OPTIONS,
+  patchLinkTitle,
 } from './schemaExtensions'
 import { patchTrailingNode } from './trailingNode'
 
@@ -78,6 +79,7 @@ export const configureExtensions = ({
         // patch を restrict より先に通す。features にリストが無いとき restrict が
         // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
         return (this.parent?.() ?? [])
+          .map(patchLinkTitle)
           .map(patchListItemShiftTab)
           .map(patchTrailingNode)
           .map(limitHeading)
