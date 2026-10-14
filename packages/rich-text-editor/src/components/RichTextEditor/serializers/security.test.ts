@@ -576,7 +576,7 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
   })
 
   it('幅未指定を表す 0 を含む colwidth が保持される', () => {
-    const { html, react } = bothOutputs(cellDoc('tableCell', { colwidth: [0, 180] }))
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 2, colwidth: [0, 180] }))
     expect(html).toContain('colwidth="0,180"')
     expect(react).toContain('colwidth="0,180"')
   })
@@ -644,6 +644,38 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(html).toContain('rowspan="1001"')
     expect(react).toContain('colSpan="1000"')
     expect(react).toContain('rowSpan="1001"')
+  })
+
+  it.each([
+    [65534, 65534],
+    [65535, 65534],
+    [1e21, 65534],
+  ])('rowspan %d は両経路とも %d で出力する', (rowspan, expected) => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { rowspan }))
+    expect(html).toContain(`rowspan="${expected}"`)
+    expect(react).toContain(`rowSpan="${expected}"`)
+  })
+
+  it.each<[string, Record<string, unknown>, string]>([
+    ['colspan より長い', { colspan: 2, colwidth: [100, 120, 140] }, '100,120'],
+    [
+      '1000 に切り詰めた colspan より長い',
+      { colspan: 1001, colwidth: Array(1001).fill(100) },
+      Array(1000).fill(100).join(','),
+    ],
+    ['colspan が無いとき、既定値の 1 より長い', { colwidth: [100, 120] }, '100'],
+  ])('%s colwidth は、両経路とも colspan の長さに切る', (_, attrs, expected) => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', attrs))
+    for (const output of [html, react]) {
+      expect(output).toContain(`colwidth="${expected}"`)
+    }
+  })
+
+  it('colspan より短い colwidth は、両経路とも手を付けずに出力する', () => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 3, colwidth: [100, 120] }))
+    for (const output of [html, react]) {
+      expect(output).toContain('colwidth="100,120"')
+    }
   })
 
   it('縦に結合したセルは両経路とも rowspan を出力する', () => {

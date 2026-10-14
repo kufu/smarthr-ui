@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { Editor } from '@tiptap/core'
-import { Slice } from '@tiptap/pm/model'
+import { DOMParser, Slice } from '@tiptap/pm/model'
 import { describe, expect, it } from 'vitest'
 
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
@@ -345,6 +345,38 @@ describe('createPasteFilter', () => {
       })
 
       expect(JSON.stringify(result.content)).toContain('table')
+    })
+  })
+
+  describe('表の列幅', () => {
+    it('結合セルの列幅が1列分しか読めなくても、分かっている幅を残す', () => {
+      const element = document.createElement('div')
+      element.innerHTML =
+        '<table><colgroup><col width="200"><col width="100"></colgroup><tbody><tr><td colspan="2"><p>セル</p></td></tr></tbody></table>'
+      const slice = DOMParser.fromSchema(schema).parseSlice(element)
+
+      const result = createPasteFilter(['table'])(slice)
+      let colwidth: unknown
+      result.content.descendants((node) => {
+        if (node.type.name === 'tableCell') colwidth = node.attrs.colwidth
+      })
+
+      expect(colwidth).toEqual([200])
+    })
+
+    it('colspan より長い列幅は colspan の長さに切る', () => {
+      const element = document.createElement('div')
+      element.innerHTML =
+        '<table><tbody><tr><td colspan="2" colwidth="100,120,140"><p>セル</p></td></tr></tbody></table>'
+      const slice = DOMParser.fromSchema(schema).parseSlice(element)
+
+      const result = createPasteFilter(['table'])(slice)
+      let colwidth: unknown
+      result.content.descendants((node) => {
+        if (node.type.name === 'tableCell') colwidth = node.attrs.colwidth
+      })
+
+      expect(colwidth).toEqual([100, 120])
     })
   })
 

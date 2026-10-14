@@ -28,7 +28,7 @@ import {
   isSafeYoutubeSrc,
   normalizeColspan,
   normalizeHeadingLevel,
-  normalizeSpan,
+  normalizeRowspan,
   normalizeStart,
   parseNumericAttr,
 } from './safeAttributes'
@@ -50,7 +50,7 @@ const createTableCellMapping =
   ({ node, children }) => {
     const { colwidth, align, color, backgroundColor } = node.attrs
     const colspan = normalizeColspan(node.attrs.colspan)
-    const rowspan = normalizeSpan(node.attrs.rowspan)
+    const rowspan = normalizeRowspan(node.attrs.rowspan)
     const style: Record<string, string> = {}
 
     if (isSafeTextAlign(align)) style.textAlign = align

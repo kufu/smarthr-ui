@@ -82,15 +82,18 @@ export const parseNumericAttr = (value: unknown): number | undefined =>
  * 列が消えたり無限ループになる。rowspan も同じ値で表の対応表が崩れるので、同じ判定を使う。
  * null では既定値へ解決されないので schema と同じ 1 に戻す。
  */
-export const normalizeSpan = (value: unknown): number =>
+const normalizeSpan = (value: unknown): number =>
   typeof value === 'number' && Number.isInteger(value) && value >= 1 ? value : 1
 
-// HTML の仕様の上限。超えた値を 1 に戻さないのは、ブラウザが 1000 列の結合として表示してきた表を崩すため。
-// rowspan に上限を掛けないのは、行数で打ち切られ、ループの回数にならないため
+// HTML の仕様の上限。超えた値を 1 に戻さないのは、ブラウザが上限までの結合として表示してきた表を崩すため
 const MAX_COLSPAN = 1000
+const MAX_ROWSPAN = 65534
 
 export const normalizeColspan = (value: unknown): number =>
   Math.min(normalizeSpan(value), MAX_COLSPAN)
+
+export const normalizeRowspan = (value: unknown): number =>
+  Math.min(normalizeSpan(value), MAX_ROWSPAN)
 
 /**
  * colwidth の各要素は table の width 宣言へ合算されるため、

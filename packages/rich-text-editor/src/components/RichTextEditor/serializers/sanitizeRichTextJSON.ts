@@ -21,7 +21,7 @@ import {
   isSafeYoutubeSrc,
   normalizeColspan,
   normalizeHeadingLevel,
-  normalizeSpan,
+  normalizeRowspan,
   normalizeStart,
 } from './safeAttributes'
 
@@ -63,7 +63,7 @@ const completeYoutubeSize: AttrsNormalizer = (attrs) => {
 
 const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
   colspan: normalizeColspan,
-  rowspan: normalizeSpan,
+  rowspan: normalizeRowspan,
   colwidth: nullIfUnsafe(isSafeColwidth),
   align: nullIfUnsafe(isSafeTextAlign),
   color: nullIfUnsafe(isSafeColor),
@@ -122,12 +122,30 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
 type AttrsNormalizer = (attrs: Record<string, unknown>) => Record<string, unknown>
 
 /**
+ * colspan より長いときに落とさず切るのは、colspan の範囲の幅はそのまま使えるため。
+ * 短いときに手を付けないのは、0 で埋めると列の追加が幅を測り直さなくなり、
+ * 落とすと貼り付けで1列分だけ読めた幅まで消えるため
+ */
+const trimColwidthToColspan: AttrsNormalizer = (attrs) => {
+  // 不正な要素を切り落として残りを通さないよう、正しい colwidth だけを切る
+  if (!isSafeColwidth(attrs.colwidth)) return attrs
+
+  const colspan = normalizeColspan(attrs.colspan)
+
+  return attrs.colwidth.length > colspan
+    ? { ...attrs, colwidth: attrs.colwidth.slice(0, colspan) }
+    : attrs
+}
+
+/**
  * 複数の属性をまたいで直すもの。ATTR_GUARDS より先に適用する。
  *
  * youtube の src は出力で落ちる表記でも同じ動画を指すため、落とさず揃える。
  * embed の URL の start は揃えると src から消えるので、start 属性へ移す。
  */
 const ATTRS_NORMALIZERS: Record<string, AttrsNormalizer> = {
+  tableCell: trimColwidthToColspan,
+  tableHeader: trimColwidthToColspan,
   youtube: (attrs) => {
     const sized = completeYoutubeSize(attrs)
 
