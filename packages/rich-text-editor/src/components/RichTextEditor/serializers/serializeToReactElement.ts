@@ -26,6 +26,7 @@ import {
   isSafeTextAlign,
   isSafeUrl,
   isSafeYoutubeSrc,
+  normalizeColspan,
   normalizeHeadingLevel,
   normalizeSpan,
   normalizeStart,
@@ -48,7 +49,7 @@ const createTableCellMapping =
   (tag: 'td' | 'th'): ReactNodeMapping =>
   ({ node, children }) => {
     const { colwidth, align, color, backgroundColor } = node.attrs
-    const colspan = normalizeSpan(node.attrs.colspan)
+    const colspan = normalizeColspan(node.attrs.colspan)
     const rowspan = normalizeSpan(node.attrs.rowspan)
     const style: Record<string, string> = {}
 

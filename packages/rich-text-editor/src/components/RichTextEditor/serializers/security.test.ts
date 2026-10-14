@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { resolveRichTextValue } from './resolveRichTextValue'
 import { serializeToHTML } from './serializeToHTML'
 import { serializeToReactElement } from './serializeToReactElement'
+import { toEditorContent } from './toEditorContent'
 
 import type { RichTextJSON } from '../types'
 
@@ -623,6 +624,26 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
       expect(output).not.toMatch(/colspan=/i)
       expect(output).not.toMatch(/rowspan=/i)
     }
+  })
+
+  it('HTML から読んだ 1000 を超える colspan も、エディタに渡す前に 1000 に切り詰める', () => {
+    const content = toEditorContent(
+      resolveRichTextValue({
+        format: 'html',
+        content: '<table><tr><td colspan="5000"><p>セル</p></td></tr></table>',
+      }),
+    )
+    const cell = content.content?.[0]?.content?.[0]?.content?.[0]
+
+    expect(cell?.attrs).toMatchObject({ colspan: 1000 })
+  })
+
+  it('1000 を超える colspan は両経路とも 1000 に切り詰め、rowspan は切り詰めない', () => {
+    const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 1001, rowspan: 1001 }))
+    expect(html).toContain('colspan="1000"')
+    expect(html).toContain('rowspan="1001"')
+    expect(react).toContain('colSpan="1000"')
+    expect(react).toContain('rowSpan="1001"')
   })
 
   it('縦に結合したセルは両経路とも rowspan を出力する', () => {

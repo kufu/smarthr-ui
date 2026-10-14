@@ -19,6 +19,7 @@ import {
   isSafeTextAlign,
   isSafeUrl,
   isSafeYoutubeSrc,
+  normalizeColspan,
   normalizeHeadingLevel,
   normalizeSpan,
   normalizeStart,
@@ -61,7 +62,7 @@ const completeYoutubeSize: AttrsNormalizer = (attrs) => {
 }
 
 const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
-  colspan: normalizeSpan,
+  colspan: normalizeColspan,
   rowspan: normalizeSpan,
   colwidth: nullIfUnsafe(isSafeColwidth),
   align: nullIfUnsafe(isSafeTextAlign),
