@@ -5,8 +5,11 @@ import { AnchorButton } from '../Button'
 
 import type { SHRComponentPropsWithRef } from '../../types'
 
+// HINT: typeof AnchorButtonをそのままBaseに使うと、AnchorButtonがgeneric関数コンポーネントであるため
+// SHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、href必須化の型チェックが
+// 機能しない。HeaderLinkはelementAsを使用しないため、typeof AnchorButton<'a'>で単相化して回避する
 type Props = SHRComponentPropsWithRef<
-  typeof AnchorButton,
+  typeof AnchorButton<'a'>,
   { enableNew?: boolean },
   { omit: 'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason' | 'target' }
 >
@@ -28,22 +31,11 @@ const classNameGenerator = tv({
   },
 })
 
-// HINT: hrefはrestに含めずここで明示的に分割代入している。AnchorButtonはgeneric関数コンポーネントのため、
-// typeof AnchorButtonをBaseにしたSHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、
-// restに含めたままではhref必須化の型チェックが機能しない(tscでProperty 'href' is missingが検出できない)
-export const HeaderLink = memo<Props>(({ enableNew, className, href, ...rest }) => {
+export const HeaderLink = memo<Props>(({ enableNew, className, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ enableNew, className }),
     [enableNew, className],
   )
 
-  return (
-    <AnchorButton
-      {...rest}
-      href={href}
-      target="_blank"
-      variant="text"
-      className={actualClassName}
-    />
-  )
+  return <AnchorButton {...rest} target="_blank" variant="text" className={actualClassName} />
 })

@@ -1,17 +1,23 @@
-import { type ComponentPropsWithoutRef, type FC, memo } from 'react'
+import { type ComponentPropsWithoutRef, type ElementType, type FC, memo } from 'react'
 
 import { FaCircleQuestionIcon } from '../../Icon'
 import { TextLink } from '../TextLink'
 
-type Props = Omit<ComponentPropsWithoutRef<typeof TextLink>, 'rel' | 'prefix' | 'suffix'>
+// HINT: typeof TextLinkをそのままBaseに使うと、TextLinkがgeneric関数コンポーネントであるため
+// ComponentPropsWithoutRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、href必須化の型チェックが
+// 機能しない。typeof TextLink<'a'>で単相化することでこれを回避する一方、elementAsもこれに伴い'a'固定の
+// 型になってしまうため、ここだけ元の緩い型(next/linkなどを想定)で定義し直している
+type Props = Omit<
+  ComponentPropsWithoutRef<typeof TextLink<'a'>>,
+  'rel' | 'prefix' | 'suffix' | 'elementAs'
+> & {
+  /** TextLinkを利用しつつnext/linkなどと併用する場合に指定する */
+  elementAs?: ElementType
+}
 
-// HINT: hrefはrestに含めずここで明示的に分割代入している。TextLinkはgeneric関数コンポーネントのため、
-// typeof TextLinkをBaseにしたSHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、
-// restに含めたままではhref必須化の型チェックが機能しない(tscでProperty 'href' is missingが検出できない)
-export const HelpLink: FC<Props> = memo(({ href, target, ...rest }) => (
+export const HelpLink: FC<Props> = memo(({ target, ...rest }) => (
   <TextLink
     {...rest}
-    href={href}
     rel="help"
     target={target}
     referrerPolicy="no-referrer-when-downgrade"

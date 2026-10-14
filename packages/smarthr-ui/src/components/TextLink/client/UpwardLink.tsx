@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useMemo } from 'react'
+import { type ElementType, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
@@ -19,19 +19,26 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
-  typeof TextLink,
-  {
-    /** インデントするかどうか */
-    indent?: boolean
-  },
-  { omit: 'prefix' | 'suffix' }
->
+// HINT: typeof TextLinkをそのままBaseに使うと、TextLinkがgeneric関数コンポーネントであるため
+// SHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、href必須化の型チェックが
+// 機能しない。typeof TextLink<'a'>で単相化することでこれを回避する一方、elementAsもこれに伴い'a'固定の
+// 型になってしまうため、ここだけ元の緩い型(next/linkなどを想定)で定義し直している
+type Props = Omit<
+  SHRComponentPropsWithRef<
+    typeof TextLink<'a'>,
+    {
+      /** インデントするかどうか */
+      indent?: boolean
+    },
+    { omit: 'prefix' | 'suffix' }
+  >,
+  'elementAs'
+> & {
+  /** TextLinkを利用しつつnext/linkなどと併用する場合に指定する */
+  elementAs?: ElementType
+}
 
-// HINT: hrefはrestに含めずここで明示的に分割代入している。TextLinkはgeneric関数コンポーネントのため、
-// typeof TextLinkをBaseにしたSHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、
-// restに含めたままではhref必須化の型チェックが機能しない(tscでProperty 'href' is missingが検出できない)
-export const UpwardLink = memo<Props>(({ indent, className, href, ...rest }) => {
+export const UpwardLink = memo<Props>(({ indent, className, ...rest }) => {
   const { mobile } = useEnvironment()
   const actualClassName = useMemo(
     () => classNameGenerator({ indent: indent ?? !mobile, className }),
@@ -40,7 +47,7 @@ export const UpwardLink = memo<Props>(({ indent, className, href, ...rest }) => 
 
   return (
     <div className={actualClassName}>
-      <TextLink {...rest} href={href} prefix={<FaArrowLeftIcon />} />
+      <TextLink {...rest} prefix={<FaArrowLeftIcon />} />
     </div>
   )
 })
