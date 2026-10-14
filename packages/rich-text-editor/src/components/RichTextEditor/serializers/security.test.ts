@@ -678,6 +678,55 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     }
   })
 
+  const parse = (markup: string) => {
+    const container = document.createElement('div')
+    container.innerHTML = markup
+    return container
+  }
+
+  const wideTableDoc = (colspans: number[]): RichTextJSON => {
+    const row = (r: number) => ({
+      type: 'tableRow',
+      content: colspans.map((colspan, c) => ({
+        type: 'tableCell',
+        attrs: { colspan, colwidth: Array(colspan).fill(100) },
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: `セル${r}-${c}` }] }],
+      })),
+    })
+    return { type: 'doc', content: [{ type: 'table', content: [row(0), row(1)] }] }
+  }
+
+  it.each([
+    [[500, 500], 1000],
+    [[500, 501], 0],
+  ])('1行目の colspan が %j の表は、両経路とも <col> を %d 個出す', (colspans, cols) => {
+    const { html, react } = bothOutputs(wideTableDoc(colspans))
+
+    for (const output of [html, react]) {
+      expect(parse(output).querySelectorAll('col')).toHaveLength(cols)
+    }
+  })
+
+  it('<col> を出さない表も、両経路とも colspan・colwidth・セルの内容を残す', () => {
+    const { html, react } = bothOutputs(wideTableDoc([600, 600]))
+
+    for (const output of [html, react]) {
+      const container = parse(output)
+      expect(container.querySelector('table')?.style.minWidth).toBe('30000px')
+      const cells = Array.from(container.querySelectorAll('td'))
+      expect(cells.map((td) => td.colSpan)).toEqual([600, 600, 600, 600])
+      expect(cells.map((td) => td.getAttribute('colwidth'))).toEqual(
+        Array(4).fill(Array(600).fill(100).join(',')),
+      )
+      expect(cells.map((td) => td.textContent)).toEqual([
+        'セル0-0',
+        'セル0-1',
+        'セル1-0',
+        'セル1-1',
+      ])
+    }
+  })
+
   it('縦に結合したセルは両経路とも rowspan を出力する', () => {
     const { html, react } = bothOutputs(cellDoc('tableCell', { colspan: 1, rowspan: 2 }))
     expect(html).toContain('rowspan="2"')

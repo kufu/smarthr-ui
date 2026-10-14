@@ -1,5 +1,5 @@
 import { Color } from '@tiptap/extension-color'
-import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { StarterKit } from '@tiptap/starter-kit'
@@ -8,6 +8,7 @@ import { AlignedYoutube } from './AlignedYoutube'
 import { SafeImage } from './Image/SafeImage'
 import { LineHeight } from './LineHeight'
 import { CellAppearance } from './Table/CellAppearance'
+import { SafeTable } from './Table/SafeTable'
 import { SUPPORTED_HEADING_LEVELS } from './configureHeading'
 import {
   YOUTUBE_DEFAULT_SIZE,
@@ -77,7 +78,7 @@ export const createSchemaExtensions = (): AnyExtension[] => [
   TextAlign.configure({ types: BLOCK_STYLE_TYPES }),
   SafeImage.configure(IMAGE_OPTIONS),
   AlignedYoutube.configure(YOUTUBE_OPTIONS),
-  Table.configure(TABLE_OPTIONS),
+  SafeTable.configure(TABLE_OPTIONS),
   TableRow,
   CellAppearance,
   TableHeader,

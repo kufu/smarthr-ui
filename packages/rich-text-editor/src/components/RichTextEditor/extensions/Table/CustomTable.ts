@@ -1,6 +1,7 @@
-import { Table, type TableOptions, TableView } from '@tiptap/extension-table'
+import { type TableOptions, TableView } from '@tiptap/extension-table'
 import { columnResizing, columnResizingPluginKey } from '@tiptap/pm/tables'
 
+import { SafeTable } from './SafeTable'
 import { TABLE_SHORTCUTS } from './tableShortcuts'
 
 import type { TableScope } from './tableTarget'
@@ -41,7 +42,7 @@ type CustomTableOptions = TableOptions & {
   isColumnResizable: () => boolean
 }
 
-export const CustomTable = Table.extend<CustomTableOptions>({
+export const CustomTable = SafeTable.extend<CustomTableOptions>({
   addOptions(): CustomTableOptions {
     return {
       ...this.parent?.(),
