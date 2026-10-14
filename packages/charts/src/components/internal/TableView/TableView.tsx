@@ -2,7 +2,6 @@ import { Table, Td, Th } from 'smarthr-ui'
 import { ChartData, ChartOptions, ChartType } from 'chart.js'
 import { ReactNode } from 'react'
 
-
 type ChartName = Exclude<ChartType, 'bubble' | 'scatter' | 'polarArea'>
 
 type Props<T extends ChartName> = {
@@ -21,10 +20,7 @@ const FIRST_COLUMN_CLASS_NAME = [
   '[&>tbody>tr>td:first-child]:shr-min-w-[10rem] [&>tbody>tr>td:first-child]:shr-w-[1%] [&>tbody>tr>td:first-child]:shr-max-w-[24rem]',
 ].join(' ')
 
-export const TableView = <T extends ChartName>({
-  data,
-  options,
-}: Props<T>) => {
+export const TableView = <T extends ChartName>({ data, options }: Props<T>) => {
   const generateTableData = (): TableData => {
     const scales = (options as Partial<ChartOptions<'bar' | 'line'>>).scales
     const topLeftTitle =
@@ -58,7 +54,7 @@ export const TableView = <T extends ChartName>({
               {row.map((cell, cellIndex) =>
                 cellIndex === 0 ? (
                   // 1例目は必ずデータセットのラベル列として扱うので、Th要素としてレンダリングする
-                  <Th className="!shr-bg-white" key={`cell-${cellIndex}`} scope="row">
+                  <Th key={`cell-${cellIndex}`} scope="row" className="!shr-bg-white">
                     {cell}
                   </Th>
                 ) : (
