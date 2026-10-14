@@ -28,6 +28,9 @@ type Props = SHRComponentPropsWithRef<
   { omit: 'prefix' | 'suffix' }
 >
 
+// HINT: hrefはrestに含めずここで明示的に分割代入している。TextLinkはgeneric関数コンポーネントのため、
+// typeof TextLinkをBaseにしたSHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、
+// restに含めたままではhref必須化の型チェックが機能しない(tscでProperty 'href' is missingが検出できない)
 export const UpwardLink = memo<Props>(({ indent, className, href, ...rest }) => {
   const { mobile } = useEnvironment()
   const actualClassName = useMemo(

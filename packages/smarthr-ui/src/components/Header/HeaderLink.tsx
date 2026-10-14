@@ -28,6 +28,9 @@ const classNameGenerator = tv({
   },
 })
 
+// HINT: hrefはrestに含めずここで明示的に分割代入している。AnchorButtonはgeneric関数コンポーネントのため、
+// typeof AnchorButtonをBaseにしたSHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、
+// restに含めたままではhref必須化の型チェックが機能しない(tscでProperty 'href' is missingが検出できない)
 export const HeaderLink = memo<Props>(({ enableNew, className, href, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ enableNew, className }),
