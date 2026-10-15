@@ -24,6 +24,10 @@ const classNameGenerator = tv({
         'shr-ms-[calc(50%-50vw)] shr-box-border shr-w-screen shr-rounded-none',
         // Layer 3 だが、上方向への指定のためベタ書き： https://smarthr.design/products/design-tokens/shadow/
         '[box-shadow:_0_-4px_8px_2px_rgba(0,_0,_0,_0.24)]',
+        /* 仮想キーボードが出る入力要素にフォーカス中は、操作領域を確保するため固定を解除する
+         * 対象は許可リストで指定し、checkbox・radio・date 系など対象外の type は固定を維持する
+         * タッチ端末でキーボードだけ閉じるとフォーカスが残り、解除状態が続くが許容する */
+        '[body:has(:is(input:is(:not([type]),[type=text],[type=email],[type=number],[type=password],[type=search],[type=tel],[type=url]),textarea,[contenteditable]):focus)_&]:shr-static',
       ],
       false: '-shr-mx-0.5',
     },

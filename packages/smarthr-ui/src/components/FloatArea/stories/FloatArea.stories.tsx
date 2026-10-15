@@ -1,10 +1,13 @@
 import { Button } from '../../Button'
+import { FormControl } from '../../FormGroup'
+import { Input } from '../../Input'
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
 import { FloatArea } from '../FloatArea'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithRef, ReactNode } from 'react'
 
 const _primaryButtonOptions = {
   'あり（省略不可）': <Button variant="primary">プライマリーボタン</Button>,
@@ -94,8 +97,12 @@ export const ResponseStatus: StoryObj<typeof FloatArea> = {
   },
 }
 
-const renderWithLongContent: StoryObj<typeof FloatArea>['render'] = (args) => (
+const renderWithLongContent = (
+  args: ComponentPropsWithRef<typeof FloatArea>,
+  leading?: ReactNode,
+) => (
   <Stack gap={1.5}>
+    {leading}
     {[...Array(15)].map((_, index) => (
       <Panel key={index} padding={1.5}>
         <p>スクロールさせて FloatArea の表示位置を確認するための Panel</p>
@@ -107,7 +114,7 @@ const renderWithLongContent: StoryObj<typeof FloatArea>['render'] = (args) => (
 
 export const Bottom: StoryObj<typeof FloatArea> = {
   name: 'bottom',
-  render: renderWithLongContent,
+  render: (args) => renderWithLongContent(args),
   args: {
     bottom: 1.5,
   },
@@ -123,7 +130,13 @@ export const Bottom: StoryObj<typeof FloatArea> = {
 
 export const FixedOnMobile: StoryObj<typeof FloatArea> = {
   name: 'fixedOnMobile',
-  render: renderWithLongContent,
+  render: (args) =>
+    renderWithLongContent(
+      args,
+      <FormControl label="テキスト入力">
+        <Input name="input_text" className="shr-w-full" />
+      </FormControl>,
+    ),
   args: {
     fixedOnMobile: true,
     secondaryButton: <Button>キャンセル</Button>,
