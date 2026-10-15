@@ -6,6 +6,7 @@ import { type RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { useLatest } from '../../../hooks/useLatest'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { configureExtensions } from '../extensions/configureExtensions'
+import { wrapCellFontSize } from '../extensions/pasteCellFontSize'
 import { createPasteFilter } from '../extensions/pasteFilter'
 import {
   reconfigureEditorOperations,
@@ -147,6 +148,9 @@ export const useRichTextEditor = ({
       // schemaは全書式を載せているのでペーストはschemaで止まらない。
       // featuresの許可リストで絞るのはこのフィルタの責務。
       transformPasted: (slice) => createPasteFilter(latest.features, latest.headingLevels)(slice),
+      // 絞り込みを pasteFilter に任せきらないのは、後で捨てる span のために HTML を解析し直さないため
+      transformPastedHTML: (html) =>
+        latest.features.includes('fontSize') ? wrapCellFontSize(html) : html,
       handleKeyDown: (_view, event) => {
         const toolbar = latest.toolbarRef?.current
 
