@@ -134,3 +134,11 @@ export const TargetBlank: StoryObj<typeof AnchorButton> = {
     children: '別タブで開くリンク',
   },
 }
+
+export const NotSpecifiedHrefAttributeWithColoredPrefix: StoryObj<typeof AnchorButton> = {
+  name: 'hrefを未指定の場合、固定colorのprefixアイコンも無効化色になること',
+  args: {
+    href: undefined,
+    prefix: <FaCirclePlusIcon color="MAIN" />,
+  },
+}
