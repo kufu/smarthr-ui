@@ -98,3 +98,11 @@ export const Size: StoryObj<typeof SegmentedControl> = {
     </Stack>
   ),
 }
+
+export const DefaultValue: StoryObj<typeof SegmentedControl> = {
+  name: 'defaultValue',
+  args: {
+    value: undefined,
+    defaultValue: 'crew',
+  },
+}
