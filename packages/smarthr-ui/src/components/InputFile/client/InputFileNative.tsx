@@ -7,6 +7,7 @@ import { useLatest } from '../../../hooks/useLatest'
 import { Stack } from '../../Layout'
 import { Groupbox } from '../../Panel'
 
+import { canUseDownloadAttribute } from './DownloadAnchorButton'
 import { FilePreviewDialog } from './FilePreviewDialog'
 import { FileListItem, LabelRender, StyledFaFolderOpenIcon } from './parts'
 import { classNameGenerator } from './style'
@@ -118,6 +119,10 @@ export const InputFileNative: FC<Props> = ({
           const a = document.createElement('a')
           a.href = file.url
           a.download = file.name
+          if (!canUseDownloadAttribute(file.url)) {
+            a.target = '_blank'
+            a.rel = 'noopener noreferrer'
+          }
           a.click()
           return
         }

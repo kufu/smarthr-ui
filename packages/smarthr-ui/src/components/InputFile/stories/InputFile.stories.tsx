@@ -98,9 +98,13 @@ export const DefaultExistingFiles: StoryObj<typeof InputFile> = {
     multiple: { appendable: true },
     previewable: true,
     defaultExistingFiles: [
-      { name: 'sample.pdf', url: 'https://example.com/sample.pdf', contentType: 'application/pdf' },
-      { name: 'image.png', url: 'https://example.com/image.png', contentType: 'image/png' },
-      { name: 'readme.txt', url: 'https://example.com/readme.txt' },
+      {
+        name: 'sample.pdf',
+        url: '/fixtures/sample-japanese-pdf.pdf',
+        contentType: 'application/pdf',
+      },
+      { name: 'sample.png', url: '/fixtures/sample-png.png', contentType: 'image/png' },
+      { name: 'sample.jpg', url: '/fixtures/sample-jpeg.jpg' },
     ],
     onDeleteExistingFile: action('deleteExistingFile'),
   },

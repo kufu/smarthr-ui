@@ -316,6 +316,72 @@ describe('InputFile', () => {
       expect(link).toHaveAttribute('href', existingFile1.url)
     })
 
+    it('クロスオリジンのURLの場合、ダウンロードリンクにtarget="_blank"が設定されること', async () => {
+      await render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="input file">
+              <InputFile
+                name="test"
+                previewable
+                defaultExistingFiles={[existingFile1]}
+                label="input file"
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const link = screen.getByRole('link', {
+        name: new RegExp(`${existingFile1.name}をダウンロード`),
+      })
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    })
+
+    it('同一オリジンのURLの場合、ダウンロードリンクにtarget属性が設定されないこと', async () => {
+      const sameOriginFile = { name: 'same-origin.pdf', url: '/fixtures/sample.pdf' }
+      await render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="input file">
+              <InputFile
+                name="test"
+                previewable
+                defaultExistingFiles={[sameOriginFile]}
+                label="input file"
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const link = screen.getByRole('link', {
+        name: new RegExp(`${sameOriginFile.name}をダウンロード`),
+      })
+      expect(link).not.toHaveAttribute('target')
+    })
+
+    it('data URLの場合、ダウンロードリンクにtarget属性が設定されないこと', async () => {
+      const dataUrlFile = { name: 'data-url.txt', url: 'data:text/plain,hello' }
+      await render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="input file">
+              <InputFile
+                name="test"
+                previewable
+                defaultExistingFiles={[dataUrlFile]}
+                label="input file"
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const link = screen.getByRole('link', {
+        name: new RegExp(`${dataUrlFile.name}をダウンロード`),
+      })
+      expect(link).not.toHaveAttribute('target')
+    })
+
     it('previewable指定時、contentTypeがimageの項目はプレビューボタンとして表示されること', async () => {
       const imageFile = {
         name: 'image.png',
