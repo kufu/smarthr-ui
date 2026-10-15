@@ -50,6 +50,7 @@ const UNDEFINED_STYLE_VALUES = {
 }
 
 const classNameGenerator = tv({
+  base: 'shr-not-italic',
   variants: {
     size: {
       XXS: 'shr-text-2xs',
