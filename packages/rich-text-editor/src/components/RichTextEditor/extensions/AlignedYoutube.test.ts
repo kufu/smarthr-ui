@@ -128,3 +128,45 @@ describe('プロトコルを省いた src の iframe', () => {
     expect(json.content[0]).toMatchObject({ type: 'youtube', attrs: { start: 30 } })
   })
 })
+
+describe('Froala の動画の寄せ方', () => {
+  const SRC = 'https://www.youtube.com/embed/dQw4w9WgXcQ?&wmode=opaque&rel=0'
+  const alignOf = (html: string) =>
+    (
+      generateJSON(html, createSchemaExtensions()).content as Array<{
+        type: string
+        attrs: { align: unknown }
+      }>
+    ).find((node) => node.type === 'youtube')?.attrs.align
+  const froalaVideo = (className: string, paragraphStyle = '') =>
+    `<p dir="ltr" style="${paragraphStyle}"><span style="font-size:11pt;color:#353744;vertical-align:baseline;"><span class="${className}"><iframe src="${SRC}" frameborder="0" allowfullscreen="" class="fr-draggable"></iframe></span></span><br></p>`
+
+  it.each([
+    ['fr-video fr-deletable fr-fvc fr-draggable fr-dvb', '中央', 'center'],
+    ['fr-video fr-deletable fr-fvc fr-draggable fr-dvb fr-active fr-fvl', '左', null],
+    ['fr-video fr-deletable fr-fvc fr-draggable fr-dvb fr-active fr-fvr', '右', 'right'],
+    ['fr-video fr-dvi fr-fvl', '左', null],
+    ['fr-video fr-dvi fr-fvr', '右', 'right'],
+  ])('class="%s" の動画を%s寄せで読む', (className, _label, align) => {
+    expect(alignOf(froalaVideo(className))).toBe(align)
+  })
+
+  it('左寄せのブロック表示は、段落の揃えに関わらず左で読む', () => {
+    expect(alignOf(froalaVideo('fr-video fr-fvc fr-dvb fr-fvl', 'text-align: center'))).toBeNull()
+  })
+
+  it.each(['fr-video fr-dvi', 'fr-video'])(
+    'インライン表示（class="%s"）は、段落の揃えで読む',
+    (className) => {
+      expect(alignOf(froalaVideo(className, 'text-align: right'))).toBe('right')
+    },
+  )
+
+  it('div[data-youtube-video] に包まれていれば、Froala の class ではなく div の寄せ方で読む', () => {
+    expect(
+      alignOf(
+        `<div data-youtube-video><span class="fr-video fr-dvb fr-fvr"><iframe src="${SRC}"></iframe></span></div>`,
+      ),
+    ).toBeNull()
+  })
+})

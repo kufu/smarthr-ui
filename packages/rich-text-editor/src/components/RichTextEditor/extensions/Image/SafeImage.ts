@@ -2,6 +2,7 @@ import { fromString } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
 import { isSafeImageSrc } from '../../serializers/safeAttributes'
+import { findFroalaImageCaption, parseFroalaImageAlign } from '../froalaMediaAlign'
 import { IMAGE_ALIGN_STYLES, parseImageAlign, toMediaAlignStyleText } from '../mediaAlign'
 import { MEDIA_ONLY_PARAGRAPH_PARSE_RULES, parseParagraphMediaAlign } from '../mediaOnlyParagraph'
 import { parseMediaSize } from '../parseMediaSize'
@@ -42,8 +43,16 @@ export const SafeImage = Image.extend({
       },
       align: {
         default: null,
-        parseHTML: (element: HTMLElement) =>
-          parseImageAlign(element) ?? parseParagraphMediaAlign(element),
+        parseHTML: (element: HTMLElement) => {
+          const alignElement = findFroalaImageCaption(element) ?? element
+          const styleAlign = parseImageAlign(alignElement)
+
+          if (styleAlign !== undefined) return styleAlign
+
+          const froalaAlign = parseFroalaImageAlign(alignElement)
+
+          return froalaAlign === undefined ? parseParagraphMediaAlign(element) : froalaAlign
+        },
         renderHTML: (attributes: Record<string, unknown>) => {
           const style = toMediaAlignStyleText(IMAGE_ALIGN_STYLES, attributes.align)
 

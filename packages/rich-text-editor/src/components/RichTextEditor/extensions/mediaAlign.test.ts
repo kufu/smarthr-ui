@@ -35,9 +35,11 @@ describe('parseImageAlign', () => {
     ['display: block; margin-left: auto; margin-right: auto', 'center'],
     ['display: block; margin: 0 auto', 'center'],
     ['display: block; margin-left: auto', 'right'],
+    ['display: block; margin-left: 0', null],
     // インライン表示の画像には margin auto が効かず、元のページでは左に表示されている
-    ['margin-left: auto', null],
-    ['margin-left: auto; margin-right: auto', null],
+    ['margin-left: auto', undefined],
+    ['margin-left: auto; margin-right: auto', undefined],
+    ['display: block', undefined],
   ])('%s → %s', (style, expected) => {
     expect(parseImageAlign(element(style))).toBe(expected)
   })

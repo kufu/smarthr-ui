@@ -3,6 +3,7 @@ import { Youtube } from '@tiptap/extension-youtube'
 import { parseNumericAttr } from '../serializers/safeAttributes'
 
 import { isPositiveNumber } from './aspectRatio'
+import { parseFroalaYoutubeAlign } from './froalaMediaAlign'
 import { YOUTUBE_ALIGN_STYLES, parseMediaAlign, toMediaAlignStyleText } from './mediaAlign'
 import { parseParagraphMediaAlign } from './mediaOnlyParagraph'
 import { parseMediaSize } from './parseMediaSize'
@@ -59,10 +60,15 @@ export const AlignedYoutube = Youtube.extend({
       },
       align: {
         default: null,
-        // parse の対象は iframe なので、寄せ方を持つ外側の div か、包んでいる段落の揃えを読む
-        parseHTML: (element: HTMLElement) =>
-          parseMediaAlign(element.closest<HTMLElement>('div[data-youtube-video]')) ??
-          parseParagraphMediaAlign(element),
+        parseHTML: (element: HTMLElement) => {
+          const wrapper = element.closest<HTMLElement>('div[data-youtube-video]')
+
+          if (wrapper) return parseMediaAlign(wrapper) ?? parseParagraphMediaAlign(element)
+
+          const froalaAlign = parseFroalaYoutubeAlign(element)
+
+          return froalaAlign === undefined ? parseParagraphMediaAlign(element) : froalaAlign
+        },
         renderHTML: () => ({}),
       },
     }
