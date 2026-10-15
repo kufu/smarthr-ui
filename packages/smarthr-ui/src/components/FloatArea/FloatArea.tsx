@@ -13,49 +13,61 @@ import type { AbstractSize, CharRelativeSize } from '../../themes'
 import type { SHRComponentPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-FloatArea shr-z-fixed-menu',
+  slots: {
+    wrapper: 'smarthr-ui-FloatArea shr-z-fixed-menu',
+    buttonRow: 'shr-flex-wrap-reverse',
+    buttonItem: 'shr-flex-1 [&>*]:shr-w-full',
+    message: 'shr-ms-auto',
+  },
   variants: {
     sticky: {
-      true: 'shr-sticky',
+      true: {
+        wrapper: 'shr-sticky',
+      },
     },
     bottomFixed: {
-      true: [
-        // HINT: 画面幅いっぱいに広げるため、親の padding を打ち消してビューポート幅で表示する
-        'shr-ms-[calc(50%-50vw)] shr-box-border shr-w-screen shr-rounded-none',
-        // Layer 3 だが、上方向への指定のためベタ書き： https://smarthr.design/products/design-tokens/shadow/
-        '[box-shadow:_0_-4px_8px_2px_rgba(0,_0,_0,_0.24)]',
-        /* 仮想キーボードが出る入力要素にフォーカス中は、操作領域を確保するため固定を解除する
-         * 対象は許可リストで指定し、checkbox・radio・date 系など対象外の type は固定を維持する
-         * タッチ端末でキーボードだけ閉じるとフォーカスが残り、解除状態が続くが許容する */
-        '[body:has(:is(input:is(:not([type]),[type=text],[type=email],[type=number],[type=password],[type=search],[type=tel],[type=url]),textarea,[contenteditable]):focus)_&]:shr-static',
-      ],
-      false: '-shr-mx-0.5',
+      true: {
+        wrapper: [
+          // 必ずビューポート幅いっぱい
+          'shr-ms-[calc(50%-50vw)] shr-box-border shr-w-screen shr-rounded-none',
+          // Layer 3 だが、上方向への指定のためベタ書き： https://smarthr.design/products/design-tokens/shadow/
+          '[box-shadow:_0_-4px_8px_2px_rgba(0,_0,_0,_0.24)]',
+          /* 仮想キーボードが出る入力要素にフォーカス中は、操作領域を確保するため固定を解除する
+           * 対象は許可リストで指定し、checkbox・radio・date 系など対象外の type は固定を維持する
+           * タッチ端末でキーボードだけ閉じるとフォーカスが残り、解除状態が続くが許容する */
+          '[body:has(:is(input:is(:not([type]),[type=text],[type=email],[type=number],[type=password],[type=search],[type=tel],[type=url]),textarea,[contenteditable]):focus)_&]:shr-static',
+        ],
+        message: 'shr-ms-[revert]',
+      },
+      false: {
+        wrapper: '-shr-mx-0.5',
+      },
     },
     bottom: {
       // HINT: Stack直下でもmargin-bottomがリセットされないように詳細度を上げる
-      0: 'shr-bottom-0 [&&]:shr-mb-0',
-      0.25: 'shr-bottom-0.25 [&&]:shr-mb-0.25',
-      0.5: 'shr-bottom-0.5 [&&]:shr-mb-0.5',
-      0.75: 'shr-bottom-0.75 [&&]:shr-mb-0.75',
-      1: 'shr-bottom-1 [&&]:shr-mb-1',
-      1.25: 'shr-bottom-1.25 [&&]:shr-mb-1.25',
-      1.5: 'shr-bottom-1.5 [&&]:shr-mb-1.5',
-      2: 'shr-bottom-2 [&&]:shr-mb-2',
-      2.5: 'shr-bottom-2.5 [&&]:shr-mb-2.5',
-      3: 'shr-bottom-3 [&&]:shr-mb-3',
-      3.5: 'shr-bottom-3.5 [&&]:shr-mb-3.5',
-      4: 'shr-bottom-4 [&&]:shr-mb-4',
-      8: 'shr-bottom-8 [&&]:shr-mb-8',
-      X3S: 'shr-bottom-0.25 [&&]:shr-mb-0.25',
-      XXS: 'shr-bottom-0.5 [&&]:shr-mb-0.5',
-      XS: 'shr-bottom-1 [&&]:shr-mb-1',
-      S: 'shr-bottom-1.5 [&&]:shr-mb-1.5',
-      M: 'shr-bottom-2 [&&]:shr-mb-2',
-      L: 'shr-bottom-2.5 [&&]:shr-mb-2.5',
-      XL: 'shr-bottom-3 [&&]:shr-mb-3',
-      XXL: 'shr-bottom-3.5 [&&]:shr-mb-3.5',
-      X3L: 'shr-bottom-4 [&&]:shr-mb-4',
-    } as { [key in CharRelativeSize | AbstractSize]: string },
+      0: { wrapper: 'shr-bottom-0 [&&]:shr-mb-0' },
+      0.25: { wrapper: 'shr-bottom-0.25 [&&]:shr-mb-0.25' },
+      0.5: { wrapper: 'shr-bottom-0.5 [&&]:shr-mb-0.5' },
+      0.75: { wrapper: 'shr-bottom-0.75 [&&]:shr-mb-0.75' },
+      1: { wrapper: 'shr-bottom-1 [&&]:shr-mb-1' },
+      1.25: { wrapper: 'shr-bottom-1.25 [&&]:shr-mb-1.25' },
+      1.5: { wrapper: 'shr-bottom-1.5 [&&]:shr-mb-1.5' },
+      2: { wrapper: 'shr-bottom-2 [&&]:shr-mb-2' },
+      2.5: { wrapper: 'shr-bottom-2.5 [&&]:shr-mb-2.5' },
+      3: { wrapper: 'shr-bottom-3 [&&]:shr-mb-3' },
+      3.5: { wrapper: 'shr-bottom-3.5 [&&]:shr-mb-3.5' },
+      4: { wrapper: 'shr-bottom-4 [&&]:shr-mb-4' },
+      8: { wrapper: 'shr-bottom-8 [&&]:shr-mb-8' },
+      X3S: { wrapper: 'shr-bottom-0.25 [&&]:shr-mb-0.25' },
+      XXS: { wrapper: 'shr-bottom-0.5 [&&]:shr-mb-0.5' },
+      XS: { wrapper: 'shr-bottom-1 [&&]:shr-mb-1' },
+      S: { wrapper: 'shr-bottom-1.5 [&&]:shr-mb-1.5' },
+      M: { wrapper: 'shr-bottom-2 [&&]:shr-mb-2' },
+      L: { wrapper: 'shr-bottom-2.5 [&&]:shr-mb-2.5' },
+      XL: { wrapper: 'shr-bottom-3 [&&]:shr-mb-3' },
+      XXL: { wrapper: 'shr-bottom-3.5 [&&]:shr-mb-3.5' },
+      X3L: { wrapper: 'shr-bottom-4 [&&]:shr-mb-4' },
+    } as { [key in CharRelativeSize | AbstractSize]: { wrapper: string } },
   },
 })
 
@@ -93,29 +105,49 @@ export const FloatArea: FC<Props> = ({
 }) => {
   const { mobile } = useEnvironment()
   const bottomFixed = mobile && !!fixedOnMobile
-  const actualClassName = useMemo(
-    () =>
-      classNameGenerator({
-        sticky: !mobile || bottomFixed,
-        bottomFixed,
-        bottom: bottomFixed ? 0 : (bottom ?? 1.5),
-        className,
-      }),
-    [bottom, bottomFixed, className, mobile],
-  )
+  const classNames = useMemo(() => {
+    const { wrapper, buttonRow, buttonItem, message } = classNameGenerator({
+      sticky: !mobile || bottomFixed,
+      bottomFixed,
+      bottom: bottomFixed ? 0 : (bottom ?? 1.5),
+    })
+
+    return {
+      wrapper: wrapper({ className }),
+      buttonRow: buttonRow(),
+      buttonItem: buttonItem(),
+      message: message(),
+    }
+  }, [bottom, bottomFixed, className, mobile])
 
   return (
-    <Panel {...rest} layer={3} padding={1} className={actualClassName} style={{ ...style, zIndex }}>
+    <Panel
+      {...rest}
+      layer={3}
+      padding={1}
+      className={classNames.wrapper}
+      style={{ ...style, zIndex }}
+    >
       <Stack gap={0.5}>
-        <Cluster>
-          {tertiaryButton}
-          <Cluster gap={1} className="shr-ms-auto">
-            {secondaryButton}
-            {primaryButton}
+        {bottomFixed ? (
+          <>
+            <Cluster gap={{ column: 1, row: 0.5 }} className={classNames.buttonRow}>
+              {secondaryButton && <div className={classNames.buttonItem}>{secondaryButton}</div>}
+              {primaryButton && <div className={classNames.buttonItem}>{primaryButton}</div>}
+            </Cluster>
+            {tertiaryButton}
+          </>
+        ) : (
+          <Cluster>
+            {tertiaryButton}
+            <Cluster gap={1} className="shr-ms-auto">
+              {secondaryButton}
+              {primaryButton}
+            </Cluster>
           </Cluster>
-        </Cluster>
+        )}
         {responseStatus && (
-          <p className="shr-ms-auto">
+          <p className={classNames.message}>
             <ResponseMessage status={responseStatus.status}>{responseStatus.text}</ResponseMessage>
           </p>
         )}
