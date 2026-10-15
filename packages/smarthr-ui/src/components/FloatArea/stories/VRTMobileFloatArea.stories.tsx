@@ -21,10 +21,12 @@ export default {
         responseStatus={{ status: 'error', text: '入力に誤りがあります。' }}
         primaryButton={<Button variant="primary">保存</Button>}
         secondaryButton={<Button>キャンセル</Button>}
-        tertiaryButton={<Button>プレビュー</Button>}
       />
     </Stack>
   ),
+  args: {
+    tertiaryButton: <Button>プレビュー</Button>,
+  },
   globals: {
     viewport: { value: 'vrtMobile' },
   },
@@ -40,3 +42,12 @@ export default {
 } satisfies Meta<typeof FloatArea>
 
 export const Default = {}
+
+export const FixedOnMobile = {
+  args: {
+    fixedOnMobile: true,
+    tertiaryButton: ({ fixedOnMobile }: { fixedOnMobile: boolean }) => (
+      <Button variant={fixedOnMobile ? 'tertiary' : 'secondary'}>プレビュー</Button>
+    ),
+  },
+}
