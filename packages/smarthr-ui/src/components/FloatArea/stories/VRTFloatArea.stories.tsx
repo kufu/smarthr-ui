@@ -35,19 +35,6 @@ export default {
 
 export const VRT = {}
 
-export const VRTMobile = {
-  globals: {
-    viewport: { value: 'vrtMobile' },
-  },
-  parameters: {
-    chromatic: {
-      modes: {
-        vrtMobile: { viewport: 'vrtMobile' },
-      },
-    },
-  },
-}
-
 export const VRTScrolledToEnd = {
   play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const scrollingElement = canvasElement.ownerDocument.scrollingElement!
