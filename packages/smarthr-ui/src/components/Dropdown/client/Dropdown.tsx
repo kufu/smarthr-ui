@@ -269,11 +269,13 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         // HINT: クリックされた要素がクリック処理中にDOMから取り除かれる場合がある(例: DatePickerのYearPickerで年を選択した場合)
         // e.targetから親要素を辿るとポータル外と誤判定してしまうため、イベント発生時点の経路であるcomposedPathで判定する
         const path: EventTarget[] = e.composedPath()
+
+        // ignore events from events within DropdownTrigger and DropdownContent
+        if (path.includes(node)) return
+
         const content = functions.getContent()
 
         if (
-          // ignore events from events within DropdownTrigger and DropdownContent
-          !path.includes(node) &&
           !path.some(
             (target) =>
               (target instanceof HTMLElement || target instanceof SVGElement) &&
