@@ -140,7 +140,9 @@ export const FixedOnMobile: StoryObj<typeof FloatArea> = {
   args: {
     fixedOnMobile: true,
     secondaryButton: <Button>キャンセル</Button>,
-    tertiaryButton: <Button>プレビュー</Button>,
+    tertiaryButton: ({ fixedOnMobile }) => (
+      <Button variant={fixedOnMobile ? 'tertiary' : 'secondary'}>プレビュー</Button>
+    ),
     responseStatus: _responseStatusOptions.error,
   },
   parameters: {

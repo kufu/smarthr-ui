@@ -71,6 +71,11 @@ const classNameGenerator = tv({
   },
 })
 
+type TertiaryButtonState = {
+  /** 実際に画面下部へ固定されているか（`mobile && fixedOnMobile`） */
+  fixedOnMobile: boolean
+}
+
 type Props = SHRComponentPropsWithRef<
   'div',
   {
@@ -78,8 +83,15 @@ type Props = SHRComponentPropsWithRef<
     primaryButton: ReactNode
     /** 表示する `Button` または `AnchorButton` コンポーネント */
     secondaryButton?: ReactNode
-    /** tertiary 領域に表示するボタン */
-    tertiaryButton?: ReactNode
+    /**
+     * tertiary 領域に表示するボタン。下部固定中かどうかを `fixedOnMobile` として受け取れます。
+     *
+     * @example
+     * tertiaryButton={({ fixedOnMobile }) => (
+     *   <Button variant={fixedOnMobile ? 'tertiary' : 'secondary'}>プレビュー</Button>
+     * )}
+     */
+    tertiaryButton?: ReactNode | ((state: TertiaryButtonState) => ReactNode)
     /** 操作に対するフィードバックメッセージ */
     responseStatus?: ResponseStatusWithoutProcessing
     /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値）。`fixedOnMobile` によりモバイルで下部固定されている間は無視されます */
@@ -105,6 +117,10 @@ export const FloatArea: FC<Props> = ({
 }) => {
   const { mobile } = useEnvironment()
   const bottomFixed = mobile && !!fixedOnMobile
+  const actualTertiaryButton =
+    typeof tertiaryButton === 'function'
+      ? tertiaryButton({ fixedOnMobile: bottomFixed })
+      : tertiaryButton
   const classNames = useMemo(() => {
     const { wrapper, buttonRow, buttonItem, message } = classNameGenerator({
       sticky: !mobile || bottomFixed,
@@ -135,11 +151,11 @@ export const FloatArea: FC<Props> = ({
               {secondaryButton && <div className={classNames.buttonItem}>{secondaryButton}</div>}
               {primaryButton && <div className={classNames.buttonItem}>{primaryButton}</div>}
             </Cluster>
-            {tertiaryButton}
+            {actualTertiaryButton}
           </>
         ) : (
           <Cluster>
-            {tertiaryButton}
+            {actualTertiaryButton}
             <Cluster gap={1} className="shr-ms-auto">
               {secondaryButton}
               {primaryButton}
