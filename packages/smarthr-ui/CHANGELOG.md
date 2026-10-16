@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [100.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v100.1.0...smarthr-ui-v100.1.1) (2026-10-16)
+
+
+### Bug Fixes
+
+* **Button:** disabled時にprefix/suffixの固定colorアイコンも無効化色へ揃える ([#7364](https://github.com/kufu/smarthr-ui/issues/7364)) ([c8e98a6](https://github.com/kufu/smarthr-ui/commit/c8e98a60b665d798017958939287e7e83193e358))
+
 ## [100.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v100.0.0...smarthr-ui-v100.1.0) (2026-10-15)
 
 
