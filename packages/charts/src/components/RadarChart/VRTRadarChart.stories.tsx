@@ -51,6 +51,11 @@ export default {
       <div className="shr-h-[400px]">
         <RadarChart data={radarManyAxes} title="多軸" />
       </div>
+
+      {/* パターン8: テーブル表示（defaultView='table'） */}
+      <div className="shr-h-[400px]">
+        <RadarChart data={radarMultiSmall} title="テーブル表示" defaultView="table" />
+      </div>
     </Stack>
   ),
   parameters: {
