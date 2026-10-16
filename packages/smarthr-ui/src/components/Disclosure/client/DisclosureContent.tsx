@@ -6,9 +6,9 @@ import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { useDisclosure } from './useDisclosure'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** DisclosureTriggerのtargetIdと紐づけるId */

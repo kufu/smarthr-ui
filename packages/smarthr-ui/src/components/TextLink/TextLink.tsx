@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props<T extends ElementType> = SHRComponentPropsWithRef<
+type Props<T extends ElementType> = ExtendElementPropsWithRef<
   T,
   {
     /** テキストのサイズ */

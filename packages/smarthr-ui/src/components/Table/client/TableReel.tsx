@@ -7,7 +7,7 @@ import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { ScrollerSwitcher } from '../ScrollerSwitcher'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -15,7 +15,7 @@ const FIXED_RIGHT_SELECTOR = '[data-fixed="right"]'
 
 const HAS_FIXED_SELECTOR = `${TR_SELECTOR} ${FIXED_LEFT_SELECTOR},${TR_SELECTOR} ${FIXED_RIGHT_SELECTOR}`
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     fixedHead?: boolean

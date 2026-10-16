@@ -2,10 +2,10 @@ import { ActualTable } from './ActualTable'
 import { TableScroller } from './TableScroller'
 import { TableReel } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { FC } from 'react'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof ActualTable,
   {
     reel?: boolean

@@ -15,7 +15,7 @@ import { useObjectHeading } from '../useObjectHeading'
 
 import { FormDialogContentInner } from './FormDialogContentInner'
 
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
 type FormDialogContentInnerProps = ComponentPropsWithRef<typeof FormDialogContentInner>
@@ -24,9 +24,9 @@ type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
 type ObjectCloseButtonType = FormDialogContentInnerProps['closeButton']
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogContentInner,
-  SHRComponentProps<
+  ExtendProps<
     FormDialogContentInnerProps,
     DialogProps & {
       heading: HeadingType

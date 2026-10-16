@@ -6,7 +6,7 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { TextOverflowTooltip } from './client'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { Gap, SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
@@ -162,7 +162,7 @@ type MaxLinesObject = {
 }
 type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
 
-type Props<T extends ElementType> = SHRComponentPropsWithRef<
+type Props<T extends ElementType> = ExtendElementPropsWithRef<
   T,
   {
     /** テキストコンポーネントの HTML タグ名。初期値は span */

@@ -6,7 +6,7 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../../hooks/useLatest'
 import { Button } from '../../Button'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 type Option = {
   /** 選択時に返される値 */
@@ -19,7 +19,7 @@ type Option = {
   disabled?: boolean
 }
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** 選択肢の配列 */

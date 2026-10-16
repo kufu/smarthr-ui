@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     start: number
