@@ -141,11 +141,3 @@ export const Suffix: StoryObj<typeof Button> = {
     suffix: <FaCaretDownIcon />,
   },
 }
-
-export const DisabledWithColoredPrefix: StoryObj<typeof Button> = {
-  name: 'disabled時に固定colorのprefixアイコンも無効化色になること',
-  args: {
-    disabled: true,
-    prefix: <FaCirclePlusIcon color="MAIN" />,
-  },
-}
