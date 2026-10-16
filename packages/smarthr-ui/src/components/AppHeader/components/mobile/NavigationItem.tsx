@@ -6,7 +6,6 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../../../hooks/useLatest'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
 import { NavigationContext } from './NavigationContext'
@@ -78,7 +77,7 @@ const NavigationCustomTag = memo<
 
     return (
       <Tag {...rest} className={actualClassName} onClick={handleDelegateClick}>
-        <Translate>{children}</Translate>
+        {children}
       </Tag>
     )
   },
@@ -87,7 +86,7 @@ const NavigationCustomTag = memo<
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (
     <CommonButton elementAs="a" href={href} current={current} boldWhenCurrent className={className}>
-      <Translate>{children}</Translate>
+      {children}
     </CommonButton>
   ),
 )
@@ -116,7 +115,7 @@ const NavigationButton: FC<
       className={className}
       handleClick={functions.handleClick}
     >
-      <Translate>{navigation.children}</Translate>
+      {navigation.children}
     </CommonButton>
   )
 }

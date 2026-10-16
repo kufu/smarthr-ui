@@ -17,7 +17,6 @@ import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -142,7 +141,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           title={translated.searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
+          tooltipMessage={translated.searchInputTitle}
           suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
@@ -213,7 +212,7 @@ const SideNavs = memo<
     () => [
       {
         id: 'favorite',
-        title: <Translate>{favoriteModeText}</Translate>,
+        title: favoriteModeText,
         prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
         current: isFavorite,
       },
@@ -224,7 +223,7 @@ const SideNavs = memo<
     () => [
       {
         id: 'all',
-        title: <Translate>{allModeText}</Translate>,
+        title: allModeText,
         current: isAll,
       },
     ],
@@ -268,9 +267,7 @@ const SideNavs = memo<
       </Section>
 
       <HelpLinkArea className={CLASS_NAMES.help}>
-        <Translate>
-          <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
-        </Translate>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
       </HelpLinkArea>
     </div>
   )
@@ -290,15 +287,13 @@ const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children,
 const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
   ({ children, className }) => (
     <Heading type="subSubBlockTitle" className={className}>
-      <Translate>{children}</Translate>
+      {children}
     </Heading>
   ),
 )
 
 const MemoizedAppListHeading = memo<{ id: string; className?: string }>(({ id, className }) => (
   <Heading type="subSubBlockTitle" id={id} className={className}>
-    <Translate>
-      <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
-    </Translate>
+    <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
   </Heading>
 ))
