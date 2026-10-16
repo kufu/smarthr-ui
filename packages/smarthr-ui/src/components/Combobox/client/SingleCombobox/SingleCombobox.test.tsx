@@ -422,6 +422,151 @@ describe('SingleCombobox', () => {
     await userEvent.keyboard('{enter}')
     expect(onSubmit).not.toHaveBeenCalled()
   })
+
+  describe('非制御(uncontrolled)', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItem を指定しない場合、アイテムを選択すると入力欄に選択ラベルが反映される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+
+    it('defaultItem のみ指定した場合、初期表示に反映される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 1')
+    })
+
+    it('非制御の場合、クリアボタンでクリアされ入力欄が空になる', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(clearButton())
+
+      expect(combobox()).toHaveValue('')
+    })
+
+    it('非制御で defaultItem を指定した場合、クリア後にblurするとdefaultItemに自動的に戻る', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(clearButton())
+      expect(combobox()).toHaveValue('')
+
+      await userEvent.click(combobox())
+      await userEvent.click(document.body)
+
+      expect(combobox()).toHaveValue('option 1')
+    })
+
+    it('selectedItem と onChangeSelected を指定した場合(制御)、操作だけでは表示が変わらない', async () => {
+      const onChangeSelected = vi.fn()
+
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={null}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+
+      expect(onChangeSelected).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
+      expect(combobox()).toHaveValue('')
+    })
+
+    it('制御時、selectedItem が外部から更新されると入力欄の表示が切り替わる', () => {
+      const { rerender } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 1')
+
+      rerender(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={{ label: 'option 2', value: 'value-2' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+  })
 })
 
 test('groupロールが付与されている', async () => {
