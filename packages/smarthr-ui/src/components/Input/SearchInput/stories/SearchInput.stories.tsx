@@ -40,14 +40,6 @@ export const Ai: StoryObj<typeof SearchInput> = {
   },
 }
 
-export const AiDisabled: StoryObj<typeof SearchInput> = {
-  name: 'variant="ai" + disabled',
-  args: {
-    variant: 'ai',
-    disabled: true,
-  },
-}
-
 export const Error: StoryObj<typeof SearchInput> = {
   name: 'error',
   args: {

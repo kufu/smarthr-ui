@@ -44,6 +44,14 @@ export const VRTAi: StoryObj<typeof SearchInput> = {
   },
 }
 
+export const VRTAiDisabled: StoryObj<typeof SearchInput> = {
+  ...VRT,
+  args: {
+    variant: 'ai',
+    disabled: true,
+  },
+}
+
 export const VRTForcedColors = {
   ...VRTFocus,
   parameters: {
