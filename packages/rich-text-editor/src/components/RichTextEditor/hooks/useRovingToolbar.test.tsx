@@ -92,7 +92,7 @@ describe('ツールバーの roving tabindex', () => {
     })
 
     expect(screen.getByRole('button', { name: '太字' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: /^書式:/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^段落スタイル:/ })).toBeInTheDocument()
     expect(rendered.dropdowns).toEqual([])
   })
 

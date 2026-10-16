@@ -51,9 +51,9 @@ export const AddTableAxisButton: FC<Props> = memo(
       axis === 'row'
         ? {
             id: 'smarthr-ui/RichTextEditor/tableAddRowAfter',
-            defaultText: '行を下に追加',
+            defaultText: '下に行を追加',
           }
-        : { id: 'smarthr-ui/RichTextEditor/tableAddColumnAfter', defaultText: '列を右に追加' },
+        : { id: 'smarthr-ui/RichTextEditor/tableAddColumnAfter', defaultText: '右に列を追加' },
     )
 
     const handleClick = useCallback(

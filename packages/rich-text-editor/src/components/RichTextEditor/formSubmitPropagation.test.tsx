@@ -62,7 +62,7 @@ describe('ポップオーバーのフォーム送信', () => {
       await user.click(screen.getByRole('button', { name: 'リンク' }))
 
       // ポップアップは開いた直後に requestAnimationFrame でURL入力へフォーカスを移す
-      const urlInput = screen.getByRole('textbox', { name: /^リンク/ })
+      const urlInput = screen.getByRole('textbox', { name: /^URL/ })
       await waitFor(() => expect(urlInput).toHaveFocus())
 
       return { onParentSubmit, onChange, urlInput }
@@ -159,7 +159,7 @@ describe('ポップオーバーのフォーム送信', () => {
     const openPopover = async (user: ReturnType<typeof userEvent.setup>) => {
       const onParentSubmit = renderInParentForm(<RichTextEditor features={['table']} />)
       await waitForEditor()
-      await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+      await user.click(screen.getByRole('button', { name: '表を挿入' }))
 
       const rowsInput = screen.getByRole('spinbutton', { name: '行数' })
       await waitFor(() => expect(rowsInput).toHaveFocus())
@@ -243,7 +243,7 @@ describe('ポップオーバーのフォーム送信', () => {
     const openPopover = async (user: ReturnType<typeof userEvent.setup>) => {
       const editor = createImageEditor()
       const onParentSubmit = renderInParentForm(<ImageAltPopover editor={editor} pos={0} />)
-      await user.click(screen.getByRole('button', { name: '代替テキスト（alt）' }))
+      await user.click(screen.getByRole('button', { name: '代替テキスト' }))
 
       return {
         editor,
@@ -284,7 +284,7 @@ describe('ポップオーバーのフォーム送信', () => {
       return {
         editor,
         onParentSubmit,
-        widthInput: screen.getByRole('spinbutton', { name: '幅 (px)' }),
+        widthInput: screen.getByRole('spinbutton', { name: '幅（px）' }),
       }
     }
 

@@ -51,7 +51,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
     })
     const urlHelpText = localize({
       id: 'smarthr-ui/RichTextEditor/youtubeUrlHelp',
-      defaultText: 'youtube.com または youtu.be のURLを入力してください',
+      defaultText: 'youtube.com または youtu.be のURLを入力してください。',
     })
     const embedText = localize({
       id: 'smarthr-ui/RichTextEditor/youtubeEmbedButton',
@@ -59,11 +59,11 @@ export const YoutubeInsertButton: FC<Props> = memo(
     })
     const requiredMessage = localize({
       id: 'smarthr-ui/RichTextEditor/youtubeUrlRequired',
-      defaultText: 'URLを入力してください',
+      defaultText: 'URLが入力されていません。',
     })
     const invalidMessage = localize({
       id: 'smarthr-ui/RichTextEditor/youtubeInvalidUrl',
-      defaultText: '有効なYouTube URLを入力してください',
+      defaultText: 'YouTube動画のURLを入力してください。',
     })
 
     const latest = useLatest({

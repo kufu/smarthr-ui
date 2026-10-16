@@ -22,11 +22,11 @@ export const ImageUrlPopover: FC<Props> = memo(({ handleInsert, handleCancel }) 
 
   const requiredMessage = localize({
     id: 'smarthr-ui/RichTextEditor/imageUrlRequired',
-    defaultText: 'URLを入力してください',
+    defaultText: 'URLが入力されていません。',
   })
   const invalidMessage = localize({
     id: 'smarthr-ui/RichTextEditor/imageUrlInvalid',
-    defaultText: '有効なURL（http:// または https://）を入力してください',
+    defaultText: 'URLの形式が正しくありません。',
   })
 
   const latest = useLatest({ url, requiredMessage, invalidMessage, handleInsert, handleCancel })
@@ -80,6 +80,10 @@ export const ImageUrlPopover: FC<Props> = memo(({ handleInsert, handleCancel }) 
     id: 'smarthr-ui/RichTextEditor/imageUrlLabel',
     defaultText: '画像URL',
   })
+  const urlHelpText = localize({
+    id: 'smarthr-ui/RichTextEditor/imageUrlHelp',
+    defaultText: 'http:// または https:// から始まるURLを入力してください。',
+  })
   const insertText = localize({
     id: 'smarthr-ui/RichTextEditor/imageInsertButton',
     defaultText: '挿入',
@@ -90,7 +94,11 @@ export const ImageUrlPopover: FC<Props> = memo(({ handleInsert, handleCancel }) 
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <form noValidate onSubmit={functions.handleSubmit} onKeyDown={functions.handleKeyDown}>
         <Stack gap={0.75}>
-          <FormControl errorMessages={error || undefined} label={urlLabelText}>
+          <FormControl
+            errorMessages={error || undefined}
+            label={urlLabelText}
+            helpMessage={urlHelpText}
+          >
             <Input
               ref={functions.focusOnMount}
               type="url"

@@ -22,10 +22,10 @@ const renderEditor = async () => {
 // ツールバーの全トリガーは並べない。書式・フォントサイズ・行送り・テキスト配置は ToolbarListboxDropdown、
 // 文字色・背景色は ColorPickerButton の同じ閉じる処理を通るため、部品ごとの代表だけを確かめる
 const DISTINCT_TRIGGERS = [
-  /^書式:/,
+  /^段落スタイル:/,
   /^文字色:/,
   /^リンク/,
-  /^テーブルを挿入/,
+  /^表を挿入/,
   /^YouTube動画を埋め込む/,
   /^画像を挿入/,
 ]
@@ -89,7 +89,7 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 
     await openByClick(user, /^リンク/)
-    await user.type(screen.getByRole('textbox', { name: /^リンク/ }), 'https://example.com')
+    await user.type(screen.getByRole('textbox', { name: /^URL/ }), 'https://example.com')
     rerender(<RichTextEditor disabled features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
 
     expect(screen.queryByRole('button', { name: '適用' })).not.toBeInTheDocument()
@@ -97,47 +97,44 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
     rerender(<RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
     await user.click(getTrigger(/^リンク/))
 
-    expect(screen.getByRole('textbox', { name: /^リンク/ })).toHaveValue('')
+    expect(screen.getByRole('textbox', { name: /^URL/ })).toHaveValue('')
   })
 
-  describe.each([/^リンク/, /^テーブルを挿入/, /^YouTube動画を埋め込む/])(
-    '%s のフォーム',
-    (name) => {
-      it('末尾から Tab で閉じてトリガーへ戻る', async () => {
-        const user = userEvent.setup()
-        await renderEditor()
-        await openByClick(user, name)
+  describe.each([/^リンク/, /^表を挿入/, /^YouTube動画を埋め込む/])('%s のフォーム', (name) => {
+    it('末尾から Tab で閉じてトリガーへ戻る', async () => {
+      const user = userEvent.setup()
+      await renderEditor()
+      await openByClick(user, name)
 
-        within(screen.getByRole('dialog'))
-          .getAllByRole('button')
-          .filter((button) => !(button as HTMLButtonElement).disabled)
-          .at(-1)!
-          .focus()
-        await user.tab()
+      within(screen.getByRole('dialog'))
+        .getAllByRole('button')
+        .filter((button) => !(button as HTMLButtonElement).disabled)
+        .at(-1)!
+        .focus()
+      await user.tab()
 
-        expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
-        expect(getTrigger(name)).toHaveFocus()
-      })
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    })
 
-      it('先頭から Shift+Tab で閉じてトリガーへ戻る', async () => {
-        const user = userEvent.setup()
-        await renderEditor()
-        await openByClick(user, name)
+    it('先頭から Shift+Tab で閉じてトリガーへ戻る', async () => {
+      const user = userEvent.setup()
+      await renderEditor()
+      await openByClick(user, name)
 
-        screen.getByRole('dialog').querySelector('input')!.focus()
-        await user.tab({ shift: true })
+      screen.getByRole('dialog').querySelector('input')!.focus()
+      await user.tab({ shift: true })
 
-        expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
-        expect(getTrigger(name)).toHaveFocus()
-      })
-    },
-  )
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    })
+  })
 
   it('閉じたあとの Escape はツールバーから本文へ戻す', async () => {
     const user = userEvent.setup()
     await renderEditor()
 
-    await openByClick(user, /^書式:/)
+    await openByClick(user, /^段落スタイル:/)
     await user.keyboard('{Escape}')
     await user.keyboard('{Escape}')
 
@@ -156,7 +153,7 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
   })
 
   it('選択肢で Tab を押すと閉じてトリガーへ戻る', async () => {
-    const name = /^書式:/
+    const name = /^段落スタイル:/
     const user = userEvent.setup()
     await renderEditor()
 
@@ -178,7 +175,7 @@ describe('ツールバーのドロップダウンを閉じる操作', () => {
 
     getTrigger(/^画像を挿入/).focus()
     await user.keyboard('{Enter}')
-    const item = await screen.findByRole('menuitem', { name: 'ファイルをアップロード' })
+    const item = await screen.findByRole('menuitem', { name: 'ファイルを選択' })
     await waitFor(() => expect(item).toHaveFocus())
 
     const notPrevented = fireEvent.keyDown(item, { key: 'Tab' })

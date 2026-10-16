@@ -70,8 +70,8 @@ const placeCaretIn = (text: string) => {
 const countRows = () => document.querySelectorAll('.ProseMirror tr').length
 const countColumns = () => document.querySelector('.ProseMirror tr')?.children.length
 
-const ADD_ROW = '行を下に追加'
-const ADD_COLUMN = '列を右に追加'
+const ADD_ROW = '下に行を追加'
+const ADD_COLUMN = '右に列を追加'
 
 describe('表の行・列の追加ボタン', () => {
   it('中ほどのセルにキャレットがあるときは出さない', async () => {

@@ -82,6 +82,7 @@
   "smarthr-ui/RichTextEditor/imageFromFile": "",
   "smarthr-ui/RichTextEditor/imageFromUrl": "",
   "smarthr-ui/RichTextEditor/imageUrlLabel": "",
+  "smarthr-ui/RichTextEditor/imageUrlHelp": "",
   "smarthr-ui/RichTextEditor/imageUrlRequired": "",
   "smarthr-ui/RichTextEditor/imageUrlInvalid": "",
   "smarthr-ui/RichTextEditor/link": "",

@@ -116,7 +116,7 @@ describe('table controls', () => {
     await user.click(column)
     expect(row.style.top).toBe(rowTop)
     expect(column.style.left).toBe(columnLeft)
-    await user.click(screen.getByRole('button', { name: 'カラー' }))
+    await user.click(screen.getByRole('button', { name: '色' }))
     const palette = within(screen.getByRole('group', { name: '背景色' }))
     await user.click(palette.getByRole('button', { name: '赤' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -142,7 +142,7 @@ describe('table controls', () => {
     ['操作を実行', (dialog) => fireEvent.click(within(dialog).getAllByRole('button')[0])],
     [
       '列を挿入',
-      (dialog) => fireEvent.click(within(dialog).getByRole('button', { name: '右に列を挿入' })),
+      (dialog) => fireEvent.click(within(dialog).getByRole('button', { name: '右に列を追加' })),
     ],
     [
       '最後の項目で Tab',
@@ -255,8 +255,8 @@ describe('table controls', () => {
     const user = userEvent.setup()
     showControls()
     await user.click(screen.getByRole('button', { name: '表の操作' }))
-    expect(screen.getByRole('button', { name: '最初の列をヘッダーにする' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: '最初の行をヘッダーにする' }))
+    expect(screen.getByRole('button', { name: 'ヘッダー列（最初の列）' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'ヘッダー行（最初の行）' }))
     expect(getTableTarget(editor)!.table.firstChild!.firstChild!.type.name).toBe('tableHeader')
     expect(getTableTarget(editor)!.table.child(1).firstChild!.type.name).toBe('tableCell')
   })
@@ -315,15 +315,15 @@ describe('table controls', () => {
     showControls()
     screen.getByRole('button', { name: '列の操作' }).focus()
     await user.keyboard('{Enter}')
-    const color = await screen.findByRole('button', { name: 'カラー' })
+    const color = await screen.findByRole('button', { name: '色' })
     await waitFor(() =>
       expect(within(screen.getByRole('dialog')).getAllByRole('button')[0]).toHaveFocus(),
     )
     color.focus()
     await user.keyboard('{ArrowRight}')
-    await waitFor(() => expect(screen.getByRole('button', { name: '操作に戻る' })).toHaveFocus())
+    await waitFor(() => expect(screen.getByRole('button', { name: '戻る' })).toHaveFocus())
     await user.keyboard('{Escape}')
-    await waitFor(() => expect(screen.getByRole('button', { name: 'カラー' })).toHaveFocus())
+    await waitFor(() => expect(screen.getByRole('button', { name: '色' })).toHaveFocus())
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     await user.keyboard('{Escape}')
     expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
@@ -364,7 +364,7 @@ describe('table controls', () => {
       const user = userEvent.setup()
       showControls()
       await user.click(screen.getByRole('button', { name: `${scope}の操作` }))
-      await user.click(screen.getByRole('button', { name: `${scope}をヘッダーにする` }))
+      await user.click(screen.getByRole('button', { name: `ヘッダー${scope}` }))
       const table = getTableTarget(editor)!.table
       expect(table.child(1).child(1).type.name).toBe('tableHeader')
       expect(table.child(0).child(0).type.name).toBe('tableCell')
@@ -373,11 +373,11 @@ describe('table controls', () => {
       )
       await waitForNextFrame()
       await user.click(screen.getByRole('button', { name: `${scope}の操作` }))
-      expect(screen.getByRole('button', { name: `${scope}をヘッダーにする` })).toHaveAttribute(
+      expect(screen.getByRole('button', { name: `ヘッダー${scope}` })).toHaveAttribute(
         'aria-pressed',
         'true',
       )
-      await user.click(screen.getByRole('button', { name: `${scope}をヘッダーにする` }))
+      await user.click(screen.getByRole('button', { name: `ヘッダー${scope}` }))
       expect(getTableTarget(editor)!.table.child(1).child(1).type.name).toBe('tableCell')
     },
   )
@@ -405,7 +405,7 @@ describe('table controls', () => {
     editor.commands.setTextSelection(4)
     showControls()
     await user.click(screen.getByRole('button', { name: 'セルの操作' }))
-    await user.click(screen.getByRole('button', { name: 'カラー' }))
+    await user.click(screen.getByRole('button', { name: '色' }))
     expect(
       within(screen.getByRole('group', { name: '文字色' })).getByRole('button', { name: '青' }),
     ).toHaveAttribute('aria-pressed', 'true')
@@ -571,7 +571,7 @@ describe('メニューを開いている間に外から文書が変わったと�
     await openByShortcut()
     vi.mocked(focusTableCell).mockClear()
 
-    fireEvent.click(screen.getByRole('button', { name: '右に列を挿入' }))
+    fireEvent.click(screen.getByRole('button', { name: '右に列を追加' }))
     await waitForNextFrame()
     await waitForNextFrame()
 
@@ -641,9 +641,9 @@ describe('カラーのスウォッチのキー操作', () => {
     fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
     const dialog = await screen.findByRole('dialog', { name: '列の操作' })
     await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
-    act(() => within(dialog).getByRole('button', { name: 'カラー' }).focus())
+    act(() => within(dialog).getByRole('button', { name: '色' }).focus())
     await user.keyboard('{ArrowRight}')
-    await waitFor(() => expect(screen.getByRole('button', { name: '操作に戻る' })).toHaveFocus())
+    await waitFor(() => expect(screen.getByRole('button', { name: '戻る' })).toHaveFocus())
 
     return {
       user,
@@ -659,7 +659,7 @@ describe('カラーのスウォッチのキー操作', () => {
     await user.keyboard('{ArrowLeft}')
 
     expect(text.getByRole('button', { name: '黒' })).toHaveFocus()
-    expect(screen.getByRole('button', { name: '操作に戻る' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '戻る' })).toBeInTheDocument()
   })
 
   it('グループの最後のスウォッチで ArrowRight を押しても、その場に止まりキーを消費する', async () => {
@@ -678,18 +678,18 @@ describe('カラーのスウォッチのキー操作', () => {
 
     expect(fireEvent.keyDown(swatch, { key, altKey: true })).toBe(true)
     expect(swatch).toHaveFocus()
-    expect(screen.getByRole('button', { name: '操作に戻る' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '戻る' })).toBeInTheDocument()
   })
 
   it('スウォッチ以外では、修飾キー付きの ArrowLeft でもこれまでどおり操作に戻る', async () => {
     await openColors()
 
-    fireEvent.keyDown(screen.getByRole('button', { name: '操作に戻る' }), {
+    fireEvent.keyDown(screen.getByRole('button', { name: '戻る' }), {
       key: 'ArrowLeft',
       altKey: true,
     })
 
-    await waitFor(() => expect(screen.getByRole('button', { name: 'カラー' })).toHaveFocus())
+    await waitFor(() => expect(screen.getByRole('button', { name: '色' })).toHaveFocus())
   })
 
   it('先頭のスウォッチで ArrowLeft を押すと、操作に戻る', async () => {
@@ -698,7 +698,7 @@ describe('カラーのスウォッチのキー操作', () => {
 
     await user.keyboard('{ArrowLeft}')
 
-    await waitFor(() => expect(screen.getByRole('button', { name: 'カラー' })).toHaveFocus())
+    await waitFor(() => expect(screen.getByRole('button', { name: '色' })).toHaveFocus())
   })
 
   it('上下はグループの中で真下へ移り、グループの端からはリセットを経て隣のグループへ移る', async () => {

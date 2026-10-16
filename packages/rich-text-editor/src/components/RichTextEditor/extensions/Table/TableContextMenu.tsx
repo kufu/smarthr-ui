@@ -389,7 +389,7 @@ export const TableContextMenu = ({
         >
           <strong className="shr-rte-px-1 shr-rte-py-0.5 shr-rte-text-sm shr-rte-leading-none shr-rte-text-grey">
             {showColors
-              ? localize({ id: 'smarthr-ui/RichTextEditor/cellColorMenu', defaultText: 'カラー' })
+              ? localize({ id: 'smarthr-ui/RichTextEditor/cellColorMenu', defaultText: '色' })
               : label}
           </strong>
           {showColors ? (
@@ -399,7 +399,7 @@ export const TableContextMenu = ({
             >
               {localize({
                 id: 'smarthr-ui/RichTextEditor/backToTableActions',
-                defaultText: '操作に戻る',
+                defaultText: '戻る',
               })}
             </TableMenuItemButton>
           ) : (

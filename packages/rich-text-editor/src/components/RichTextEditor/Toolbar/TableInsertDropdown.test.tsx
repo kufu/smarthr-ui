@@ -16,7 +16,7 @@ const insertTable = async (rows: string, cols: string) => {
   render(<RichTextEditor features={['table']} />, { wrapper: Wrapper })
   await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
 
-  await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+  await user.click(screen.getByRole('button', { name: '表を挿入' }))
   const rowsInput = screen.getByRole('spinbutton', { name: '行数' })
   const colsInput = screen.getByRole('spinbutton', { name: '列数' })
   await waitFor(() => expect(rowsInput).toHaveFocus())
@@ -51,7 +51,7 @@ describe('TableInsertDropdown の行数・列数', () => {
     await insertTable(rows, cols)
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      '行数は1〜100、列数は1〜20の整数を入力してください',
+      '行数は1〜100、列数は1〜20の整数を入力してください。',
     )
     expect(insertedTable()).toBeNull()
   })
@@ -60,7 +60,7 @@ describe('TableInsertDropdown の行数・列数', () => {
     const user = userEvent.setup()
     render(<RichTextEditor features={['table']} />, { wrapper: Wrapper })
     await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
-    await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+    await user.click(screen.getByRole('button', { name: '表を挿入' }))
 
     const rowsInput = screen.getByRole('spinbutton', { name: '行数' })
     const colsInput = screen.getByRole('spinbutton', { name: '列数' })
@@ -81,7 +81,7 @@ describe('TableInsertDropdown を閉じたとき', () => {
     [
       'トリガーの再クリック',
       async (user: ReturnType<typeof userEvent.setup>) =>
-        user.click(screen.getByRole('button', { name: 'テーブルを挿入' })),
+        user.click(screen.getByRole('button', { name: '表を挿入' })),
     ],
   ])('%sで閉じると、次に開いたときにエラーが残らない', async (_, close) => {
     const user = userEvent.setup()
@@ -89,7 +89,7 @@ describe('TableInsertDropdown を閉じたとき', () => {
     expect(await screen.findByRole('alert')).toBeInTheDocument()
 
     await close(user)
-    await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+    await user.click(screen.getByRole('button', { name: '表を挿入' }))
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
@@ -101,7 +101,7 @@ describe('TableInsertDropdown を閉じたとき', () => {
     // 挿入時の Tiptap の focus は次のフレームで効くため、それより前に開くと閉じられてしまう
     await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
 
-    await user.click(screen.getByRole('button', { name: 'テーブルを挿入' }))
+    await user.click(screen.getByRole('button', { name: '表を挿入' }))
 
     expect(screen.getByRole('spinbutton', { name: '行数' })).toHaveValue(5)
     expect(screen.getByRole('spinbutton', { name: '列数' })).toHaveValue(4)

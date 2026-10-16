@@ -42,7 +42,7 @@ const CONFIGS = {
     readCurrentColor: (e: Editor) => getEditorColor(e, 'color'),
     messages: {
       label: { id: 'smarthr-ui/RichTextEditor/color', defaultText: '文字色' },
-      reset: { id: 'smarthr-ui/RichTextEditor/colorReset', defaultText: '色をリセット' },
+      reset: { id: 'smarthr-ui/RichTextEditor/colorReset', defaultText: '文字色をリセット' },
       standardSection: {
         id: 'smarthr-ui/RichTextEditor/colorStandardSection',
         defaultText: '標準の色',
@@ -51,17 +51,20 @@ const CONFIGS = {
         id: 'smarthr-ui/RichTextEditor/colorCustomSection',
         defaultText: 'カスタム',
       },
-      recentSection: { id: 'smarthr-ui/RichTextEditor/colorRecentSection', defaultText: '履歴' },
-      editButton: { id: 'smarthr-ui/RichTextEditor/colorEditButton', defaultText: '色を編集' },
+      recentSection: {
+        id: 'smarthr-ui/RichTextEditor/colorRecentSection',
+        defaultText: '最近使った色',
+      },
+      editButton: { id: 'smarthr-ui/RichTextEditor/colorEditButton', defaultText: 'その他の色' },
       // 未設定は黒が適用された状態と等価なため、パレットの選択状態と揃えて黒として読み上げる
       unset: { id: 'smarthr-ui/RichTextEditor/colorBlack', defaultText: '黒' },
       customSwatch: {
         id: 'smarthr-ui/RichTextEditor/colorCustomSwatchLabel',
-        defaultText: 'カスタム: {color}',
+        defaultText: 'カスタム：{color}',
       },
       recentSwatch: {
         id: 'smarthr-ui/RichTextEditor/colorRecentSwatchLabel',
-        defaultText: '履歴: {color}',
+        defaultText: '履歴：{color}',
       },
     },
   },
@@ -86,21 +89,21 @@ const CONFIGS = {
       },
       recentSection: {
         id: 'smarthr-ui/RichTextEditor/backgroundColorRecentSection',
-        defaultText: '履歴',
+        defaultText: '最近使った色',
       },
       editButton: {
         id: 'smarthr-ui/RichTextEditor/backgroundColorEditButton',
-        defaultText: '背景色を編集',
+        defaultText: 'その他の背景色',
       },
       // 背景色パレットに白のスウォッチは無く、未設定はどの色も選ばれていない状態なので「なし」を読み上げる
       unset: { id: 'smarthr-ui/RichTextEditor/backgroundColorNone', defaultText: 'なし' },
       customSwatch: {
         id: 'smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel',
-        defaultText: '背景色カスタム: {color}',
+        defaultText: 'カスタム：{color}',
       },
       recentSwatch: {
         id: 'smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel',
-        defaultText: '背景色履歴: {color}',
+        defaultText: '履歴：{color}',
       },
     },
   },

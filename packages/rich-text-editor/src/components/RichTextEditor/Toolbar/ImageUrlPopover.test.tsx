@@ -11,7 +11,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
-const INVALID_MESSAGE = '有効なURL（http:// または https://）を入力してください'
+const INVALID_MESSAGE = 'URLの形式が正しくありません。'
 
 const openUrlPopover = async (user: ReturnType<typeof userEvent.setup>) => {
   render(<RichTextEditor features={['image']} />, { wrapper: Wrapper })
@@ -71,6 +71,20 @@ describe('ImageUrlPopover', () => {
 
     expect(screen.getByText(INVALID_MESSAGE)).toBeInTheDocument()
     expect(document.querySelector('.ProseMirror img')).toBeNull()
+  })
+
+  it('エラー文は形式の誤りだけを伝えるため、入力できるURLの条件は説明文としてエラー時も入力欄に関連付けておく', async () => {
+    const user = userEvent.setup()
+    await openUrlPopover(user)
+
+    const input = screen.getByRole('textbox', { name: '画像URL' })
+    await user.type(input, 'example.com/a.png')
+    await user.click(screen.getByRole('button', { name: '挿入' }))
+
+    expect(screen.getByText(INVALID_MESSAGE)).toBeInTheDocument()
+    expect(input).toHaveAccessibleDescription(
+      expect.stringContaining('http:// または https:// から始まるURLを入力してください。'),
+    )
   })
 
   it('開いているあいだはトリガーがダイアログを開いた状態を伝え、押すとメニューを開かずに閉じる', async () => {

@@ -51,11 +51,11 @@ export const LinkButton: FC<Props> = memo(
     })
     const urlLabelText = localize({
       id: 'smarthr-ui/RichTextEditor/linkUrlLabel',
-      defaultText: 'リンク',
+      defaultText: 'URL',
     })
     const urlHelpText = localize({
       id: 'smarthr-ui/RichTextEditor/linkUrlHelp',
-      defaultText: 'http://, https://, mailto: から始まるURLを入力してください',
+      defaultText: 'http://、https://、mailto: のいずれかから始まるURLを入力してください。',
     })
     const applyText = localize({
       id: 'smarthr-ui/RichTextEditor/linkSetButton',
@@ -67,11 +67,11 @@ export const LinkButton: FC<Props> = memo(
     })
     const requiredMessage = localize({
       id: 'smarthr-ui/RichTextEditor/linkUrlRequired',
-      defaultText: 'URLを入力してください',
+      defaultText: 'URLが入力されていません。',
     })
     const invalidMessage = localize({
       id: 'smarthr-ui/RichTextEditor/linkUrlInvalid',
-      defaultText: '有効なURLを入力してください',
+      defaultText: 'URLの形式が正しくありません。',
     })
 
     const latest = useLatest({

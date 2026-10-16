@@ -13,7 +13,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">{children}</IntlProvider>
 )
 
-const INVALID_MESSAGE = '有効なURLを入力してください'
+const INVALID_MESSAGE = 'URLの形式が正しくありません。'
 
 const applyLink = async (user: ReturnType<typeof userEvent.setup>, url: string) => {
   render(<RichTextEditor features={['link']} />, { wrapper: Wrapper })
@@ -22,7 +22,7 @@ const applyLink = async (user: ReturnType<typeof userEvent.setup>, url: string) 
 
   // ポップアップは開いた直後に requestAnimationFrame でURL入力へフォーカスを移すため、
   // それを待たずに入力すると打鍵の途中でフォーカスが飛んで別の欄に入ってしまう
-  const urlInput = screen.getByRole('textbox', { name: /^リンク/ })
+  const urlInput = screen.getByRole('textbox', { name: /^URL/ })
   await waitFor(() => expect(urlInput).toHaveFocus())
 
   await user.type(urlInput, url)
@@ -69,7 +69,7 @@ describe('LinkButton', () => {
     const getEditor = () =>
       (screen.getByRole('textbox', { name: '' }) as TiptapEditorHTMLElement).editor!
     const textInput = () => screen.getByRole('textbox', { name: 'テキスト' })
-    const urlInput = () => screen.getByRole('textbox', { name: /^リンク/ })
+    const urlInput = () => screen.getByRole('textbox', { name: /^URL/ })
 
     const renderWith = async (defaultValue: RichTextJSON) => {
       render(<RichTextEditor defaultValue={defaultValue} features={['link']} />, {

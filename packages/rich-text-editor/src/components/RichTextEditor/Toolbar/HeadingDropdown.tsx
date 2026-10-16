@@ -96,7 +96,7 @@ export const HeadingDropdown: FC<Props> = memo((props) => {
       handleSelect={functions.handleSelect}
       label={localize({
         id: 'smarthr-ui/RichTextEditor/headingDropdownLabel',
-        defaultText: '書式',
+        defaultText: '段落スタイル',
       })}
       options={options}
     />

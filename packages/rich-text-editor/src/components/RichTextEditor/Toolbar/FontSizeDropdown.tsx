@@ -97,7 +97,7 @@ export const FontSizeDropdown: FC<Props> = memo(({ disabled, ...rest }) => {
       handleSelect={functions.handleSelect}
       label={localize({
         id: 'smarthr-ui/RichTextEditor/fontSizeDropdownLabel',
-        defaultText: 'フォントサイズ',
+        defaultText: '文字サイズ',
       })}
       options={OPTIONS}
     />

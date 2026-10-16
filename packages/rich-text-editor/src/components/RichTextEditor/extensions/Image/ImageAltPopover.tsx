@@ -24,11 +24,11 @@ export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
 
   const label = localize({
     id: 'smarthr-ui/RichTextEditor/imageAltLabel',
-    defaultText: '代替テキスト（alt）',
+    defaultText: '代替テキスト',
   })
   const helpText = localize({
     id: 'smarthr-ui/RichTextEditor/imageAltHelp',
-    defaultText: '画像の内容を説明してください',
+    defaultText: '画像の内容を説明してください。',
   })
 
   const latest = useLatest({ alt })

@@ -50,8 +50,8 @@ describe('画像', () => {
       },
     )
     await user.click(screen.getByRole('button', { name: 'サイズ' }))
-    const widthInput = screen.getByRole('spinbutton', { name: '幅 (px)' })
-    const heightInput = screen.getByRole('spinbutton', { name: '高さ (px)' })
+    const widthInput = screen.getByRole('spinbutton', { name: '幅（px）' })
+    const heightInput = screen.getByRole('spinbutton', { name: '高さ（px）' })
     await user.clear(widthInput)
     await user.type(widthInput, '300')
     await user.clear(heightInput)
@@ -79,7 +79,7 @@ describe('画像', () => {
     })
     const trigger = screen.getByRole('button', { name: 'サイズ' })
     await user.click(trigger)
-    await user.click(screen.getByRole('button', { name: 'リセット' }))
+    await user.click(screen.getByRole('button', { name: '元のサイズに戻す' }))
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(trigger).toHaveFocus()
@@ -97,8 +97,8 @@ describe('画像', () => {
       wrapper: Wrapper,
     })
     await user.click(screen.getByRole('button', { name: 'サイズ' }))
-    const widthInput = screen.getByRole('spinbutton', { name: '幅 (px)' })
-    const heightInput = screen.getByRole('spinbutton', { name: '高さ (px)' })
+    const widthInput = screen.getByRole('spinbutton', { name: '幅（px）' })
+    const heightInput = screen.getByRole('spinbutton', { name: '高さ（px）' })
 
     await user.clear(widthInput)
     await user.type(widthInput, '300')
@@ -124,10 +124,10 @@ describe('鍵アイコン', () => {
     })
     await user.click(screen.getByRole('button', { name: 'サイズ' }))
 
-    expect(screen.getByRole('spinbutton', { name: '幅 (px)' })).toHaveAccessibleDescription(
+    expect(screen.getByRole('spinbutton', { name: '幅（px）' })).toHaveAccessibleDescription(
       '縦横比を固定',
     )
-    expect(screen.getByRole('spinbutton', { name: '高さ (px)' })).toHaveAccessibleDescription(
+    expect(screen.getByRole('spinbutton', { name: '高さ（px）' })).toHaveAccessibleDescription(
       '縦横比を固定',
     )
     const texts = screen.getAllByText('縦横比を固定')
@@ -167,8 +167,8 @@ describe('YouTube', () => {
 
     return {
       user,
-      widthInput: screen.getByRole('spinbutton', { name: '幅 (px)' }),
-      heightInput: screen.getByRole('spinbutton', { name: '高さ (px)' }),
+      widthInput: screen.getByRole('spinbutton', { name: '幅（px）' }),
+      heightInput: screen.getByRole('spinbutton', { name: '高さ（px）' }),
     }
   }
 
@@ -219,7 +219,7 @@ describe('YouTube', () => {
     const editor = createYoutubeEditor()
     const { user } = await open(editor)
 
-    await user.click(screen.getByRole('button', { name: 'リセット' }))
+    await user.click(screen.getByRole('button', { name: '元のサイズに戻す' }))
 
     expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: 640, height: 360 })
   })

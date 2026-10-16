@@ -38,7 +38,7 @@ describe('ImageAltPopover', () => {
     const { rerender } = render(<ImageAltPopover editor={editor as never} pos={2} />, {
       wrapper: Wrapper,
     })
-    await user.click(screen.getByRole('button', { name: '代替テキスト（alt）' }))
+    await user.click(screen.getByRole('button', { name: '代替テキスト' }))
     const input = screen.getByRole('textbox', { name: /^代替テキスト/ })
     await user.type(input, 'の説明')
 
@@ -72,7 +72,7 @@ describe('ImageAltPopover', () => {
     const { rerender } = render(<ImageAltPopover editor={editor as never} pos={0} />, {
       wrapper: Wrapper,
     })
-    const trigger = screen.getByRole('button', { name: '代替テキスト（alt）' })
+    const trigger = screen.getByRole('button', { name: '代替テキスト' })
     await user.click(trigger)
     await user.type(screen.getByRole('textbox', { name: /^代替テキスト/ }), 'の説明')
 
@@ -100,7 +100,7 @@ describe('ImageAltPopover', () => {
     editor.commands.setNodeSelection(0)
 
     render(<ImageAltPopover editor={editor as never} pos={0} />, { wrapper: Wrapper })
-    const trigger = screen.getByRole('button', { name: '代替テキスト（alt）' })
+    const trigger = screen.getByRole('button', { name: '代替テキスト' })
     await user.click(trigger)
     await user.type(screen.getByRole('textbox', { name: /^代替テキスト/ }), '説明{Enter}')
 
@@ -128,7 +128,7 @@ describe('ImageAltPopover', () => {
     const { rerender } = render(<ImageAltPopover editor={editor as never} pos={2} />, {
       wrapper: Wrapper,
     })
-    await user.click(screen.getByRole('button', { name: '代替テキスト（alt）' }))
+    await user.click(screen.getByRole('button', { name: '代替テキスト' }))
     await user.type(screen.getByRole('textbox', { name: /^代替テキスト/ }), 'の説明')
 
     act(() => {

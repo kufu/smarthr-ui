@@ -259,7 +259,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
         type: 'button',
         key: 'strike',
         icon: <FaStrikethroughIcon />,
-        label: localize({ id: 'smarthr-ui/RichTextEditor/strike', defaultText: '打ち消し線' }),
+        label: localize({ id: 'smarthr-ui/RichTextEditor/strike', defaultText: '取り消し線' }),
         getActive: (s) => s.isStrike,
         getDisabled: (s) => !s.canStrike,
         action: () => editor.chain().focus().toggleStrike().run(),

@@ -125,7 +125,7 @@ describe('ImageFloatingUI', () => {
     render(<ImageFloatingUI containerRef={containerRef} editor={editor as never} />, {
       wrapper: Wrapper,
     })
-    await user.click(await screen.findByRole('button', { name: '代替テキスト（alt）' }))
+    await user.click(await screen.findByRole('button', { name: '代替テキスト' }))
     const input = screen.getByRole('textbox', { name: /^代替テキスト/ })
     await user.type(input, '説明')
 
@@ -133,7 +133,7 @@ describe('ImageFloatingUI', () => {
       editor.commands.insertContentAt(1, '前', { updateSelection: false })
     })
 
-    expect(screen.getByRole('dialog', { name: '代替テキスト（alt）' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: '代替テキスト' })).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: /^代替テキスト/ })).toHaveValue('説明')
 
     editor.destroy()
@@ -220,7 +220,7 @@ describe('ImageFloatingUI', () => {
         editor.commands.keyboardShortcut(key)
       })
 
-      expect(screen.getByRole('button', { name: '代替テキスト（alt）' })).toHaveFocus()
+      expect(screen.getByRole('button', { name: '代替テキスト' })).toHaveFocus()
     },
   )
 

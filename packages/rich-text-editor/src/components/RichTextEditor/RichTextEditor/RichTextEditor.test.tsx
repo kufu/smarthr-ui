@@ -95,7 +95,7 @@ describe('RichTextEditor', () => {
     expect(screen.getByLabelText('元に戻す')).not.toHaveAttribute('aria-pressed')
     expect(screen.getByLabelText('やり直す')).not.toHaveAttribute('aria-pressed')
     expect(screen.getByLabelText('水平線')).not.toHaveAttribute('aria-pressed')
-    expect(screen.getByLabelText('テーブルを挿入')).not.toHaveAttribute('aria-pressed')
+    expect(screen.getByLabelText('表を挿入')).not.toHaveAttribute('aria-pressed')
     expect(screen.getByLabelText('画像を挿入')).not.toHaveAttribute('aria-pressed')
     expect(screen.getByLabelText('YouTube動画を埋め込む')).not.toHaveAttribute('aria-pressed')
   })
@@ -138,13 +138,13 @@ describe('RichTextEditor', () => {
         '元に戻す',
         'やり直す',
         // テキスト装飾
-        '書式: 標準テキスト',
-        'フォントサイズ: 16',
+        '段落スタイル: 標準テキスト',
+        '文字サイズ: 16',
         '行送り: 1.75（標準）',
         '太字',
         '斜体',
         '下線',
-        '打ち消し線',
+        '取り消し線',
         '文字色: 黒',
         '背景色: なし',
         'テキスト配置: 左揃え',
@@ -157,7 +157,7 @@ describe('RichTextEditor', () => {
         'コードブロック',
         // 挿入
         '水平線',
-        'テーブルを挿入',
+        '表を挿入',
         '画像を挿入',
         'YouTube動画を埋め込む',
       ])

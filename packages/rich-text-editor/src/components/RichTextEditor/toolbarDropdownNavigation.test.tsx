@@ -42,7 +42,7 @@ describe('ツールバーのドロップダウン内のキーボード操作', (
     const user = userEvent.setup()
     await renderEditor()
 
-    const options = await openByKey(user, /^書式:/, '{Enter}', 'option')
+    const options = await openByKey(user, /^段落スタイル:/, '{Enter}', 'option')
     const last = options[options.length - 1]
     expect(options[0]).toHaveFocus()
 
@@ -66,7 +66,7 @@ describe('ツールバーのドロップダウン内のキーボード操作', (
     const user = userEvent.setup()
     await renderEditor()
 
-    const options = await openByKey(user, /^書式:/, '{ArrowUp}', 'option')
+    const options = await openByKey(user, /^段落スタイル:/, '{ArrowUp}', 'option')
 
     expect(options[options.length - 1]).toHaveFocus()
   })

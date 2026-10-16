@@ -102,15 +102,15 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
   const label = localize({ id: 'smarthr-ui/RichTextEditor/imageWidth', defaultText: 'サイズ' })
   const widthLabel = localize({
     id: 'smarthr-ui/RichTextEditor/imageWidthLabel',
-    defaultText: '幅 (px)',
+    defaultText: '幅（px）',
   })
   const heightLabel = localize({
     id: 'smarthr-ui/RichTextEditor/imageHeightLabel',
-    defaultText: '高さ (px)',
+    defaultText: '高さ（px）',
   })
   const resetLabel = localize({
     id: 'smarthr-ui/RichTextEditor/imageSizeReset',
-    defaultText: 'リセット',
+    defaultText: '元のサイズに戻す',
   })
   const lockLabel = localize({
     id: 'smarthr-ui/RichTextEditor/imageAspectLocked',

@@ -39,7 +39,7 @@ const classNameGenerator = tv({
       'shr-rte-relative shr-rte-inline-flex shr-rte-items-center',
       'has-[:focus-visible]:shr-rte-focus-indicator',
     ],
-    // 「色を編集」の見た目に重ねる、透明な実寸の色入力。
+    // 「その他の色」の見た目に重ねる、透明な実寸の色入力。
     // sr-only で隠して button から click() を中継する形は採れない。WebKit はネイティブの
     // カラーピッカーを input の矩形にアンカーするため、clip された 1x1px の input では
     // macOS Safari で無関係な位置に表示され、iOS Safari では何も起きない

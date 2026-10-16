@@ -327,7 +327,7 @@ describe('RichTextEditorToolbar', () => {
       act(() => {
         editor.commands.setTextSelection(editor.state.doc.content.size - 2)
       })
-      const trigger = await screen.findByRole('button', { name: /^フォントサイズ: 32/ })
+      const trigger = await screen.findByRole('button', { name: /^文字サイズ: 32/ })
       setWidths(500)
       fireResizeOf(itemOf(trigger))
 
@@ -451,13 +451,13 @@ describe('RichTextEditorToolbar', () => {
       expect(screen.getByRole('button', { name: '斜体' })).toHaveFocus()
 
       await user.keyboard('{Home}')
-      expect(screen.getByRole('button', { name: /^書式:/ })).toHaveFocus()
+      expect(screen.getByRole('button', { name: /^段落スタイル:/ })).toHaveFocus()
     })
 
     it('左右キーは無効な項目を飛ばす', async () => {
       const user = userEvent.setup()
       const editor = await renderSmallEditor()
-      act(() => screen.getByRole('button', { name: /^書式:/ }).focus())
+      act(() => screen.getByRole('button', { name: /^段落スタイル:/ }).focus())
 
       // 先頭の「元に戻す」「やり直す」は無効なので、左で末尾へ折り返す
       await user.keyboard('{ArrowLeft}')
@@ -470,7 +470,7 @@ describe('RichTextEditorToolbar', () => {
 
       // 無効な「やり直す」を飛ばす
       await user.keyboard('{ArrowRight}')
-      expect(screen.getByRole('button', { name: /^書式:/ })).toHaveFocus()
+      expect(screen.getByRole('button', { name: /^段落スタイル:/ })).toHaveFocus()
     })
 
     it('本文で Alt+F10 を押すと、最後にフォーカスしていたツールバーの項目へ移る', async () => {
@@ -480,7 +480,7 @@ describe('RichTextEditorToolbar', () => {
 
       act(() => textbox.focus())
       await user.keyboard('{Alt>}{F10}{/Alt}')
-      expect(screen.getByRole('button', { name: /^書式:/ })).toHaveFocus()
+      expect(screen.getByRole('button', { name: /^段落スタイル:/ })).toHaveFocus()
 
       await user.keyboard('{ArrowRight}')
       await user.keyboard('{Escape}')

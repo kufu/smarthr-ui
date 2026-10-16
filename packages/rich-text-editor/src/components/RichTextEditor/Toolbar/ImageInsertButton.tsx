@@ -174,7 +174,7 @@ export const ImageInsertButton: FC<Props> = memo(
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })
     const uploadLabel = localize({
       id: 'smarthr-ui/RichTextEditor/imageFromFile',
-      defaultText: 'ファイルをアップロード',
+      defaultText: 'ファイルを選択',
     })
     const urlLabel = localize({
       id: 'smarthr-ui/RichTextEditor/imageFromUrl',

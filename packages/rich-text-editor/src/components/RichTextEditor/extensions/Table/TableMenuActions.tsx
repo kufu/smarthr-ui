@@ -84,7 +84,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/toggleSelectedRow',
-              defaultText: '行をヘッダーにする',
+              defaultText: 'ヘッダー行',
             }),
             () => toggleSelectedCellHeaders(editor),
             false,
@@ -98,7 +98,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/insertAbove',
-              defaultText: '上に行を挿入',
+              defaultText: '上に行を追加',
             }),
             () => insertTableAxis(editor, 'row', 'before'),
             false,
@@ -108,7 +108,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/insertBelow',
-              defaultText: '下に行を挿入',
+              defaultText: '下に行を追加',
             }),
             () => insertTableAxis(editor, 'row', 'after'),
             false,
@@ -122,7 +122,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/toggleSelectedColumn',
-              defaultText: '列をヘッダーにする',
+              defaultText: 'ヘッダー列',
             }),
             () => toggleSelectedCellHeaders(editor),
             false,
@@ -136,7 +136,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/insertLeft',
-              defaultText: '左に列を挿入',
+              defaultText: '左に列を追加',
             }),
             () => insertTableAxis(editor, 'column', 'before'),
             false,
@@ -146,7 +146,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/insertRight',
-              defaultText: '右に列を挿入',
+              defaultText: '右に列を追加',
             }),
             () => insertTableAxis(editor, 'column', 'after'),
             false,
@@ -200,7 +200,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/toggleFirstRow',
-              defaultText: '最初の行をヘッダーにする',
+              defaultText: 'ヘッダー行（最初の行）',
             }),
             () => editor.commands.toggleHeaderRow(),
             false,
@@ -212,7 +212,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/toggleFirstColumn',
-              defaultText: '最初の列をヘッダーにする',
+              defaultText: 'ヘッダー列（最初の列）',
             }),
             () => editor.commands.toggleHeaderColumn(),
             false,
@@ -256,7 +256,7 @@ export const TableMenuActions = ({
             >
               {localize({
                 id: 'smarthr-ui/RichTextEditor/cellColorMenu',
-                defaultText: 'カラー',
+                defaultText: '色',
               })}
             </TableMenuItemButton>
           </div>
@@ -266,7 +266,7 @@ export const TableMenuActions = ({
           {item(
             localize({
               id: 'smarthr-ui/RichTextEditor/clearContents',
-              defaultText: '内容をクリア',
+              defaultText: '内容を削除',
             }),
             () => clearTableCells(editor),
             false,

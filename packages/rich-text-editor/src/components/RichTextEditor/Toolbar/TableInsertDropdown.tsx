@@ -75,14 +75,14 @@ export const TableInsertDropdown: FC<Props> = memo(
     const errorMessage = localize(
       {
         id: 'smarthr-ui/RichTextEditor/tableInvalidSize',
-        defaultText: '行数は1〜{maxRows}、列数は1〜{maxCols}の整数を入力してください',
+        defaultText: '行数は1〜{maxRows}、列数は1〜{maxCols}の整数を入力してください。',
       },
       { maxRows: MAX_ROWS, maxCols: MAX_COLS },
     )
 
     const tableLabel = localize({
       id: 'smarthr-ui/RichTextEditor/tableInsert',
-      defaultText: 'テーブルを挿入',
+      defaultText: '表を挿入',
     })
     const rowsLabel = localize({
       id: 'smarthr-ui/RichTextEditor/tableRowsLabel',

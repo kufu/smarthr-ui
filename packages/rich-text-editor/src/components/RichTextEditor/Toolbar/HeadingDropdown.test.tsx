@@ -23,7 +23,7 @@ const renderAllLevels = async () => {
 }
 
 const selectOption = async (user: ReturnType<typeof userEvent.setup>, name: string) => {
-  await user.click(screen.getByRole('button', { name: /^書式:/ }))
+  await user.click(screen.getByRole('button', { name: /^段落スタイル:/ }))
   await user.click(screen.getByRole('option', { name }))
   // 選択後の本文へのフォーカスは Tiptap が次のフレームで行う。続けて開き直すと、
   // 遅れて本文へ移ったフォーカスでドロップダウンが閉じる
@@ -41,14 +41,14 @@ describe('HeadingDropdown', () => {
   it('許可外のレベルの見出しでも現在の書式を表示する', async () => {
     await renderEditor()
 
-    expect(screen.getByRole('button', { name: '書式: 見出し1' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '段落スタイル: 見出し1' })).toBeInTheDocument()
   })
 
   it('選択肢は許可レベルだけ出す', async () => {
     const user = userEvent.setup()
     await renderEditor()
 
-    await user.click(screen.getByRole('button', { name: '書式: 見出し1' }))
+    await user.click(screen.getByRole('button', { name: '段落スタイル: 見出し1' }))
 
     const listbox = screen.getByRole('listbox')
     expect(within(listbox).getByRole('option', { name: '標準テキスト' })).toBeInTheDocument()
