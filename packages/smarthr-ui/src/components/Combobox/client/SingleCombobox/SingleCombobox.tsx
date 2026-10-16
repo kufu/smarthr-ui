@@ -16,6 +16,7 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useOnce } from '../../../../hooks/client/useOnce'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
 import { Localizer } from '../../../../intl'
@@ -302,6 +303,12 @@ export const SingleCombobox = <T,>({
     return {
       selectDefaultItem,
       unfocus,
+      // マウント時、selectedItemが未選択ならdefaultItemを初期値として選択する
+      baseInitialSelectCallbackRef: (node: HTMLInputElement | null) => {
+        if (node && !latest.selectedItem) {
+          selectDefaultItem()
+        }
+      },
       inputCallbackRef: (node: HTMLInputElement | null) => {
         inputNode = node
 
@@ -422,7 +429,9 @@ export const SingleCombobox = <T,>({
     isFocused || selectedItem ? undefined : functions.selectDefaultItem,
   )
 
-  const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
+  const initialSelectCallbackRef = useOnce(functions.baseInitialSelectCallbackRef)
+
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, initialSelectCallbackRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
