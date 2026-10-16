@@ -56,4 +56,62 @@ describe('DatePicker', () => {
     await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
   })
+
+  it('defaultValue のみ指定した場合(非制御)、初期表示時点でフォーマット済みの値が表示されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+    expect(textbox).toHaveProperty('value', '2024/09/25')
+  })
+
+  it('defaultValue のみ指定した場合(非制御)、カレンダーの初期選択日が反映されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+
+    act(() => textbox.click())
+
+    expect(screen.getByRole('button', { name: '25' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('defaultValue のみ指定した場合(非制御)、ユーザー入力後もフォーカスを失うとフォーマットされること', async () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+    await userEvent.clear(textbox)
+    await userEvent.type(textbox, '平成4年5月29日{tab}')
+    expect(textbox).toHaveProperty('value', '1992/05/29')
+  })
+
+  it('value と defaultValue を両方指定した場合、value が優先されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker
+            name="date"
+            value="2024-09-25"
+            defaultValue="2020-01-01"
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+    expect(textbox).toHaveProperty('value', '2024/09/25')
+  })
 })
