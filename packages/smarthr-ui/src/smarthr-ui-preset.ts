@@ -2,6 +2,7 @@ import { darken } from 'polished'
 import plugin from 'tailwindcss/plugin'
 
 import {
+  aiGradationColors,
   createSpacingByChar,
   defaultColor,
   defaultFontSize,
@@ -408,6 +409,28 @@ export default {
           borderLeftWidth: theme('borderWidth.DEFAULT'),
           borderLeftStyle: 'solid',
           borderLeftColor: theme('borderColor.default'),
+        },
+        '.bg-ai-gradation': {
+          backgroundImage: `linear-gradient(135deg, ${aiGradationColors.start} 10%, ${aiGradationColors.mid} 66%, ${aiGradationColors.end} 100%)`,
+        },
+        /**
+         * border-image は border-radius と共存できないため、
+         * 疑似要素 + mask-composite によるくり抜きでグラデーション枠を表現する
+         */
+        '.border-ai-gradation': {
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: '0',
+            borderRadius: 'inherit',
+            padding: theme('borderWidth.DEFAULT'),
+            backgroundImage: `linear-gradient(135deg, ${aiGradationColors.start} 10%, ${aiGradationColors.mid} 66%, ${aiGradationColors.end} 100%)`,
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+            pointerEvents: 'none',
+          },
         },
       })
       addBase({
