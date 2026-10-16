@@ -504,7 +504,7 @@ export const VRTHeadingDropdownOpen: Story = {
       <RichTextEditor defaultValue={richContent} features={ALL_FEATURES} headingLevels={[2, 3]} />
     </FormControl>
   ),
-  play: openToolbarPopup(/^書式/),
+  play: openToolbarPopup(/^段落スタイル/),
 }
 
 export const VRTLinkPopoverOpen: Story = {
