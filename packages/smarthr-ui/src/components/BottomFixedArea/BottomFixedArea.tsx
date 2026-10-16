@@ -6,7 +6,6 @@ import {
   type FC,
   type FunctionComponentElement,
   type MouseEventHandler,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -137,7 +136,7 @@ export const BottomFixedArea: FC<Props> = ({
   )
 }
 
-const Description = memo<PropsWithChildren>(
+const Description = memo<{ children: Props['description'] }>(
   ({ children }) =>
     children && <p className="smarthr-ui-BottomFixedArea-description">{children}</p>,
 )

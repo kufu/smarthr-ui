@@ -1,4 +1,4 @@
-import { type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
@@ -42,8 +42,10 @@ export const SideMenuGroup = ({ heading, children, className, ...rest }: Props) 
   )
 }
 
-const GroupHeading = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
-  <Heading type="subBlockTitle" className={className}>
-    {children}
-  </Heading>
-))
+const GroupHeading = memo<{ children: Props['heading']; className: string }>(
+  ({ children, className }) => (
+    <Heading type="subBlockTitle" className={className}>
+      {children}
+    </Heading>
+  ),
+)

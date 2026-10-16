@@ -1,14 +1,20 @@
 'use client'
 
-import { type FC, type PropsWithChildren, useCallback } from 'react'
+import { type FC, useCallback } from 'react'
 
 import { Portal as OriginalPortal } from '../../Portal'
 
-type Props = PropsWithChildren<{
-  inputRect: DOMRect
-}>
+import type { SHRComponentPropsWithoutRef } from '../../../types'
 
-export const Portal: FC<Props> = ({ inputRect, children }) => {
+type Props = SHRComponentPropsWithoutRef<
+  typeof OriginalPortal,
+  {
+    inputRect: DOMRect
+  },
+  { omit: 'className' }
+>
+
+export const Portal: FC<Props> = ({ inputRect, children, ...rest }) => {
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
       if (node) {
@@ -23,6 +29,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
 
   return (
     <OriginalPortal
+      {...rest}
       ref={callbackRef}
       // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
       // 余白があるとPortal要素の下端がCalendarの外側になり、

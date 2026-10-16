@@ -1,10 +1,12 @@
 'use client'
 
-import { type FC, type PropsWithChildren, useCallback } from 'react'
+import { type FC, useCallback } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 
 import { TRIGGER_EVENT } from './useRemoteTrigger'
+
+import type { SHRComponentPropsWithoutRef } from '../../../types'
 
 const CAPTURE_OPTION = {
   capture: true,
@@ -18,12 +20,16 @@ const dispatchRemoteDialogTrigger = (ariaControls: string) => {
   )
 }
 
-export const RemoteDialogTrigger: FC<
-  PropsWithChildren<{
+type Props = SHRComponentPropsWithoutRef<
+  'span',
+  {
     targetId: string
     onClick?: (open: () => void) => void
-  }>
-> = ({ targetId, children, onClick }) => {
+  },
+  { omit: 'className' }
+>
+
+export const RemoteDialogTrigger: FC<Props> = ({ targetId, children, onClick, ...rest }) => {
   const latest = useLatest({ onClick })
 
   const callbackRef = useCallback(
@@ -104,7 +110,7 @@ export const RemoteDialogTrigger: FC<
   )
 
   return (
-    <span ref={callbackRef} className="smarthr-ui-RemoteDialogTrigger shr-contents">
+    <span {...rest} ref={callbackRef} className="smarthr-ui-RemoteDialogTrigger shr-contents">
       {children}
     </span>
   )

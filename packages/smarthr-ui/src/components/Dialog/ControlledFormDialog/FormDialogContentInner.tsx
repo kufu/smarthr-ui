@@ -3,7 +3,6 @@ import {
   type FC,
   type FormEvent,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   memo,
 } from 'react'
@@ -142,13 +141,12 @@ const ActionAreaCluster = memo<
   </Cluster>
 ))
 
-const ActionButton = memo<
-  PropsWithChildren<{
-    variant: ObjectActionButtonType['theme']
-    disabled: ObjectActionButtonType['disabled']
-    loading: boolean
-  }>
->(({ variant = 'primary', disabled, loading, children }) => (
+const ActionButton = memo<{
+  children: ObjectActionButtonType['text']
+  variant: ObjectActionButtonType['theme']
+  disabled: ObjectActionButtonType['disabled']
+  loading: boolean
+}>(({ variant = 'primary', disabled, loading, children }) => (
   <Button
     type="submit"
     disabled={disabled}
