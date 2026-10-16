@@ -11,7 +11,7 @@ export default {
     count: 0,
     overflowCount: 99,
     showZero: true,
-    type: 'blue',
+    color: 'blue',
     dot: false,
   },
   parameters: {
@@ -70,13 +70,13 @@ export const ShowZero: StoryObj<typeof Badge> = {
 }
 
 export const Type: StoryObj<typeof Badge> = {
-  name: 'type',
+  name: 'color',
   render: (args) => (
     <Cluster>
-      <Badge {...args} type="blue" />
-      <Badge {...args} type="yellow" />
-      <Badge {...args} type="red" />
-      <Badge {...args} type="grey" />
+      <Badge {...args} color="blue" />
+      <Badge {...args} color="yellow" />
+      <Badge {...args} color="red" />
+      <Badge {...args} color="grey" />
     </Cluster>
   ),
   args: {},
