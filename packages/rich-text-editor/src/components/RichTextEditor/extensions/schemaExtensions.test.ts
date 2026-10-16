@@ -1,4 +1,4 @@
-import { getSchema } from '@tiptap/core'
+import { getAttributesFromExtensions, getSchema, resolveExtensions } from '@tiptap/core'
 import { generateHTML, generateJSON } from '@tiptap/html'
 import { describe, expect, it } from 'vitest'
 
@@ -62,6 +62,30 @@ describe('createSchemaExtensions', () => {
     )
 
     expect(json.content[0].content[0].marks[0].attrs).toMatchObject({ title: '2024' })
+  })
+
+  // 全属性に parseHTML を求めないのは、既定の読み込みで数値・真偽値に変わっても sanitize で正しい値に直る属性があるため
+  it.each([
+    ['表示', schemaExtensions],
+    ['エディタ', editorExtensions],
+  ])('%s の拡張で parseHTML を持たない属性は、確認済みのものだけ', (_, extensions) => {
+    const attributes = getAttributesFromExtensions(resolveExtensions(extensions))
+    const withoutParseHTML = attributes
+      .filter(({ attribute }) => !attribute.parseHTML)
+      .map(({ type, name }) => `${type}.${name}`)
+      .sort()
+
+    expect(withoutParseHTML).toEqual([
+      'heading.level',
+      'image.src',
+      'link.class',
+      'link.rel',
+      'link.target',
+      'tableCell.colspan',
+      'tableCell.rowspan',
+      'tableHeader.colspan',
+      'tableHeader.rowspan',
+    ])
   })
 
   it('画像と YouTube の配置を読み、同じ style で書き出す', () => {
