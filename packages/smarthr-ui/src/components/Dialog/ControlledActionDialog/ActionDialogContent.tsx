@@ -18,7 +18,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogInnerStyle'
 
 import type { SHRComponentPropsWithRef } from '../../../types'
 
@@ -63,7 +63,7 @@ type Props = SHRComponentPropsWithRef<
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+  const { wrapper, actionArea, buttonArea, message } = dialogContent()
 
   return {
     wrapper: wrapper(),
@@ -73,7 +73,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const ActionDialogContentInner: FC<Props> = ({
+export const ActionDialogContent: FC<Props> = ({
   children,
   heading,
   contentBgColor,
