@@ -7,7 +7,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { DialogContent } from '../DialogContent'
+import { DialogContentInner } from '../DialogContentInner'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -21,7 +21,7 @@ type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
 type Props = SHRComponentPropsWithRef<
-  typeof DialogContent,
+  typeof DialogContentInner,
   SHRComponentProps<
     MessageDialogContentInnerProps,
     DialogProps & {
@@ -71,7 +71,7 @@ export const ControlledMessageDialog: FC<Props> = ({
 
   return (
     <DialogPortal id={id} parent={portalParent}>
-      <DialogContent
+      <DialogContentInner
         {...rest}
         isOpen={isOpen}
         className={className}
@@ -87,7 +87,7 @@ export const ControlledMessageDialog: FC<Props> = ({
         >
           {children}
         </MessageDialogContentInner>
-      </DialogContent>
+      </DialogContentInner>
     </DialogPortal>
   )
 }

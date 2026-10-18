@@ -93,7 +93,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogContent: FC<Props> = ({
+export const DialogContentInner: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,

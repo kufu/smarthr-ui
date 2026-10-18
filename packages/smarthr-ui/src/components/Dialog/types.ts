@@ -1,10 +1,10 @@
-import type { DialogContent } from './DialogContent'
+import type { DialogContentInner } from './DialogContentInner'
 import type { ComponentPropsWithRef } from 'react'
 
-type DialogContentProps = ComponentPropsWithRef<typeof DialogContent>
+type DialogContentInnerProps = ComponentPropsWithRef<typeof DialogContentInner>
 
 export type DialogProps = Pick<
-  DialogContentProps,
+  DialogContentInnerProps,
   | 'width'
   | 'size'
   | 'firstFocusTarget'

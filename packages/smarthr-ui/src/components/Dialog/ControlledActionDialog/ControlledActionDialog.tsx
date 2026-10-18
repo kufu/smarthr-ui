@@ -8,7 +8,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { DialogContent } from '../DialogContent'
+import { DialogContentInner } from '../DialogContentInner'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -25,7 +25,7 @@ type ObjectActionButtonType = ActionDialogContentInnerProps['actionButton']
 type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
 
 type Props = SHRComponentPropsWithRef<
-  typeof DialogContent,
+  typeof DialogContentInner,
   SHRComponentProps<
     ActionDialogContentInnerProps,
     DialogProps & {
@@ -103,7 +103,7 @@ export const ControlledActionDialog: FC<Props> = ({
 
   return (
     <DialogPortal id={id} parent={portalParent}>
-      <DialogContent
+      <DialogContentInner
         {...rest}
         isOpen={isOpen}
         className={className}
@@ -123,7 +123,7 @@ export const ControlledActionDialog: FC<Props> = ({
         >
           {children}
         </ActionDialogContentInner>
-      </DialogContent>
+      </DialogContentInner>
     </DialogPortal>
   )
 }
