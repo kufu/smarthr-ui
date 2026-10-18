@@ -79,6 +79,8 @@ export function getContentBoxStyle(
     left: number
   },
 ) {
+  const padding = 10
+
   const contentBox: {
     top: string
     left?: string
@@ -91,12 +93,15 @@ export function getContentBoxStyle(
 
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
     // ドロップダウンのサイズがトリガの下側の領域に収まる場合
+    // HINT: 表示後にコンテンツの高さが動的に変わっても画面外にはみ出さないよう、
+    // 収まる場合でも常にその時点の残りスペースをmax-heightとして設定しておく
     contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
+    contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
   } else if (triggerRect.top - contentSize.height >= 0) {
     // ドロップダウンのサイズがトリガの上川の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.top - contentSize.height + 5}px`
+    contentBox.maxHeight = `${triggerRect.top - padding}px`
   } else {
-    const padding = 10
     const triggerHeight = triggerRect.bottom - triggerRect.top
 
     if (triggerRect.top + triggerHeight / 2 < windowSize.height / 2) {

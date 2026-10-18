@@ -9,7 +9,7 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '135px', // 140 - 5
       left: '-5px', // trigger left - 5
-      maxHeight: '',
+      maxHeight: '650px', // 800 - 140 - 10
     })
   })
 
@@ -21,7 +21,7 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '205px', // 600 - 400 + 5
       left: '-5px', // trigger left - 5
-      maxHeight: '',
+      maxHeight: '590px', // 600 - 10
     })
   })
 
@@ -57,7 +57,7 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '135px', // 140 - 5
       right: '375px', // window width - trigger right - 5
-      maxHeight: '',
+      maxHeight: '650px', // 800 - 140 - 10
     })
   })
 
@@ -69,7 +69,7 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '635px', // 140 - 5 + 500
       left: '595px', // trigger left + scroll left - 5
-      maxHeight: '',
+      maxHeight: '650px', // 800 - 140 - 10
     })
   })
 })
