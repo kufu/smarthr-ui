@@ -15,7 +15,7 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
-import { DialogContentInner } from '../DialogContentInner'
+import { DialogContent } from '../DialogContent'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -62,7 +62,7 @@ type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
 type Props = SHRComponentPropsWithRef<
-  typeof DialogContentInner,
+  typeof DialogContent,
   SHRComponentProps<
     StepFormDialogContentInnerProps,
     DialogProps & {
@@ -269,7 +269,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   )
 
   return (
-    <DialogContentInner
+    <DialogContent
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
@@ -294,6 +294,6 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       >
         {children}
       </StepFormDialogContentInner>
-    </DialogContentInner>
+    </DialogContent>
   )
 }
