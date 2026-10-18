@@ -19,7 +19,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
 import { StepFormDialogContext } from './StepFormDialogProvider'
 

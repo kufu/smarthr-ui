@@ -12,7 +12,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
 import type { SHRComponentPropsWithRef } from '../../../types'
 
