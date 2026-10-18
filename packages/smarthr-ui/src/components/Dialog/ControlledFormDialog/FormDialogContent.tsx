@@ -17,7 +17,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
 import type { SHRComponentPropsWithRef } from '../../../types'
 
@@ -60,15 +60,15 @@ type Props = SHRComponentPropsWithRef<
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
-const formDialogContentInner = tv({
-  extend: dialogContentInner,
+const formDialogContent = tv({
+  extend: dialogContent,
   slots: {
     form: 'shr-contents',
   },
 })
 
 const CLASS_NAMES = (() => {
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContent()
 
   return {
     form: form(),
@@ -79,7 +79,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const FormDialogContentInner: FC<Props> = ({
+export const FormDialogContent: FC<Props> = ({
   children,
   heading,
   contentBgColor,
