@@ -156,6 +156,7 @@ export const MultiCombobox = <T,>({
   dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className,
+  title,
   onChange,
   onChangeInput,
   onAdd,
@@ -521,14 +522,15 @@ export const MultiCombobox = <T,>({
     [actualSelectedItems, setInputValueIfUncontrolled, latest],
   )
   // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
-  // 選択済みアイテムの有無をsetCustomValidityで別途検証する
+  // 選択済みアイテムの有無をsetCustomValidityで別途検証する。titleが指定されている場合は
+  // 利用者が意図したメッセージを優先する
   const inputValidityEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
       node?.setCustomValidity(
-        required && actualSelectedItems.length === 0 ? localized.requiredMessage : '',
+        required && actualSelectedItems.length === 0 ? title || localized.requiredMessage : '',
       )
     },
-    [required, actualSelectedItems, localized],
+    [required, actualSelectedItems, title, localized],
   )
 
   const mergedInputRef = useMergeRefs(
@@ -620,6 +622,7 @@ export const MultiCombobox = <T,>({
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
+            title={title}
             className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}

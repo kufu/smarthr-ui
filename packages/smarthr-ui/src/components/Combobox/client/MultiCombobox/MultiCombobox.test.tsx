@@ -662,5 +662,39 @@ describe('SingleCombobox', () => {
 
       expect(combobox()).toHaveProperty('validity.valid', true)
     })
+
+    it('titleが指定されている場合、requiredの妥当性エラーメッセージにtitleの値が使われること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                required
+                selectedItems={[]}
+                title="少なくとも1つ選択してください"
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validationMessage', '少なくとも1つ選択してください')
+    })
+
+    it('titleが指定されていない場合、requiredの妥当性エラーメッセージにデフォルトの文言が使われること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" required selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validationMessage', '1つ以上選択してください')
+    })
   })
 })
