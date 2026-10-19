@@ -1,4 +1,4 @@
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { ReactNode } from 'react'
 
 export type PreviewableObjectType = {
@@ -6,7 +6,7 @@ export type PreviewableObjectType = {
   searchable?: boolean
 }
 
-export type Props = SHRComponentPropsWithRef<
+export type Props = ExtendElementPropsWithRef<
   'input',
   {
     /** コンポーネントのサイズ */

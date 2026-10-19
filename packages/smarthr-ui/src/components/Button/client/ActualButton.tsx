@@ -2,7 +2,7 @@
 
 import { useSquareDetection } from './useSquareDetection'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { FC, MouseEvent, ReactNode } from 'react'
 
 const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
@@ -10,7 +10,7 @@ const EVENT_CANCELLER = (e: MouseEvent<HTMLButtonElement>) => {
   e.stopPropagation()
 }
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'button',
   {
     classNames: {

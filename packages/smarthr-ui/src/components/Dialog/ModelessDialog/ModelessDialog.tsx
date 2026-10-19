@@ -32,10 +32,10 @@ import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { DialogPortal } from '../DialogPortal'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { DialogSize } from '../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Panel,
   Pick<ComponentPropsWithoutRef<typeof DialogBody>, 'contentBgColor' | 'contentPadding'> & {
     /**
@@ -176,8 +176,8 @@ export const ModelessDialog: FC<Props> = ({
     const { overlap, wrapper, headerEl, dialogHandler } = classNameGenerator()
 
     return {
-      overlap: overlap({ className }),
-      wrapper: wrapper({ size, resizable }),
+      overlap: overlap(),
+      wrapper: wrapper({ className, size, resizable }),
       header: headerEl(),
       dialogHandler: dialogHandler(),
     }

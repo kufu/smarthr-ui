@@ -7,9 +7,9 @@ import { AnchorButtonInner } from './client'
 import { anchorClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props<T extends ElementType> = SHRComponentPropsWithRef<
+type Props<T extends ElementType> = ExtendElementPropsWithRef<
   T,
   Omit<BaseProps, 'variant' | 'disabledReason'> & {
     /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */

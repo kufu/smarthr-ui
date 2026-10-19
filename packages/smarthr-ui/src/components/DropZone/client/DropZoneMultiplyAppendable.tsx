@@ -8,9 +8,9 @@ import { useLatest } from '../../../hooks/useLatest'
 
 import { ActualDropZone } from './ActualDropZone'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof ActualDropZone,
   {
     /** 選択済みのファイル */

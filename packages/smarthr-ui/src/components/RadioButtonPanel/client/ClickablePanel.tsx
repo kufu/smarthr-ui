@@ -2,10 +2,10 @@
 
 import { Panel } from '../../Panel'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { FC, ReactNode } from 'react'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Panel,
   {
     children: ReactNode

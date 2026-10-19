@@ -806,6 +806,25 @@ const functions = useMemo(() => ({ ... }), [isExpanded, latest])
 
 `functions` が再作成されると、それを依存配列に持つ他の hook まで連鎖して再実行されます。ユーザー操作で変化し得る値は依存配列に入れず、`latest` 経由で参照してください。
 
+**注意: 「boolean化した値」の安定性は型だけでは決まらない**
+
+boolean型であること自体は安定性を保証しません。安定しているかどうかは、そのpropが実際のコンポーネント利用シーンでどう使われるか次第です。
+
+- `hasHrefTemplate`（関数propの有無）: 「関数は一度設定されたら設定され続ける」という実用上の特性があるため安定とみなせる
+- `hasValue = value !== undefined`（値型propの有無）: 「`value`がundefinedの状態から始まり、ユーザー操作をきっかけに具体的な値になることでuncontrolledからcontrolledへ切り替わる」ようなhybridパターンでは、ユーザー操作に連動して変化しうる
+
+同じ「propの有無を示すboolean」という形でも、安定性はpropの性質や想定される利用パターンによって変わります。判断に迷う場合は、そのコンポーネントが実際にどう使われるかを人間に確認してください。`latest`に含めてもロジック上問題がない（＝`functions`内でその値を参照する処理が、都度最新値を見ても正しく動作する）場合は、迷ったら`latest`に含める方を優先してください。`latest`に含めるコストは低く、誤って依存配列に直接含めて`functions`が不要に再生成される方がリスクが大きいためです。
+
+```typescript
+// ❌ hasValueは値型propの有無を示すbooleanであり、ユーザー操作で変化しうる
+const hasValue = value !== undefined
+const functions = useMemo(() => ({ ... }), [hasValue, latest])
+
+// ✅ latestに含めて参照する
+const latest = useLatest({ onClickOption, hasValue })
+const functions = useMemo(() => ({ ... }), [latest])
+```
+
 **依存配列の順序ルール:**
 functionsを他のhookの依存配列に含める場合、基本的に最後尾に配置しますが、`latest`（useLatestの結果）よりは前に配置します：
 
