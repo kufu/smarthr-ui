@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
@@ -128,7 +128,7 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** レンダリングするタグ */

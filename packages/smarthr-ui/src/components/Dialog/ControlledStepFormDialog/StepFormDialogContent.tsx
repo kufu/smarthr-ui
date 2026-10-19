@@ -19,12 +19,12 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
 import type { CommonButtonType, StepItem } from './type'
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */
@@ -35,7 +35,7 @@ type StepFormHelpers = {
   currentStep: StepItem
 }
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogBody,
   {
     /** ダイアログタイトル */
@@ -69,7 +69,7 @@ const BUTTON_COLUMN_GAP = {
 } as const
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+  const { wrapper, actionArea, buttonArea, message } = dialogContent()
 
   return {
     wrapper: wrapper(),
@@ -79,7 +79,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const StepFormDialogContentInner: FC<Props> = ({
+export const StepFormDialogContent: FC<Props> = ({
   children,
   heading,
   activeStep,

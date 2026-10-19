@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { backgroundColor } from '../../../tailwind'
 import { Panel } from '../Panel'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Panel,
   {
     /** 背景色 */

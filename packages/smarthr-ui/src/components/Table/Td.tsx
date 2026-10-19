@@ -3,11 +3,11 @@ import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 type CellContentWidth = number | string
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'td',
   {
     /** テキストの水平方向の配置 */

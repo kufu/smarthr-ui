@@ -18,11 +18,11 @@ import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap } from './FocusTrap'
 
 import type { DialogSize } from './types'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /**
@@ -92,7 +92,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DialogContentInner: FC<Props> = ({
+export const DialogContent: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,

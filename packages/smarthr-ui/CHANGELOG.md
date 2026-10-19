@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [100.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v100.0.0...smarthr-ui-v100.1.0) (2026-10-15)
+
+
+### Features
+
+* **SegmentedControl:** defaultValueを追加し非制御(uncontrolled)使用に対応する ([#7351](https://github.com/kufu/smarthr-ui/issues/7351)) ([1953eba](https://github.com/kufu/smarthr-ui/commit/1953ebadd69c86b5ab2440a5153f8721a3bcf1a0))
+
+
+### Bug Fixes
+
+* **Checkbox:** mixed状態を非制御(uncontrolled)使用時でも機能させる ([#7349](https://github.com/kufu/smarthr-ui/issues/7349)) ([dedaccc](https://github.com/kufu/smarthr-ui/commit/dedaccc0e3b5f4ff62d433c36d8c1ff9d6a2dffa))
+* **Dropdown:** ポータル内でクリックした要素がクリック処理中に取り除かれるとDropdownが閉じてしまう問題を修正する ([#7361](https://github.com/kufu/smarthr-ui/issues/7361)) ([db60a62](https://github.com/kufu/smarthr-ui/commit/db60a629ea45ba91700d472653f516655a423045))
+* **FloatArea:** sticky 解除時の余白を維持する ([#7350](https://github.com/kufu/smarthr-ui/issues/7350)) ([8ff9b5e](https://github.com/kufu/smarthr-ui/commit/8ff9b5eae9cabce5f4bf4126adebfeca1a2cc09e))
+* **ModelessDialog:** classNameがPanel本体に反映されるよう修正する ([#7286](https://github.com/kufu/smarthr-ui/issues/7286)) ([0048372](https://github.com/kufu/smarthr-ui/commit/004837210d96a4f5e93ecd9036cd4aa1210a5bf1))
+
 ## [100.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v99.9.0...smarthr-ui-v100.0.0) (2026-10-08)
 
 
