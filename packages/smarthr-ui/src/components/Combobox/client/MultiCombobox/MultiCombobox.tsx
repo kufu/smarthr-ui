@@ -187,9 +187,11 @@ export const MultiCombobox = <T,>({
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
 
-  const hasSelectedItems = selectedItems !== undefined
-  const actualSelectedItems = hasSelectedItems ? selectedItems : uncontrolledSelectedItems
-  const setSelectedItemsIfUncontrolled = hasSelectedItems ? NOOP : setUncontrolledSelectedItems
+  const isSelectedItemsControlled = selectedItems !== undefined
+  const actualSelectedItems = isSelectedItemsControlled ? selectedItems : uncontrolledSelectedItems
+  const setSelectedItemsIfUncontrolled = isSelectedItemsControlled
+    ? NOOP
+    : setUncontrolledSelectedItems
 
   const { options } = useMultiOptions({
     items,
@@ -208,7 +210,7 @@ export const MultiCombobox = <T,>({
     onSelect,
     onChangeInput,
     selectedItems: actualSelectedItems,
-    hasSelectedItems,
+    isSelectedItemsControlled,
     setSelectedItemsIfUncontrolled,
     deleteFrame,
     selectFrame,
@@ -218,7 +220,7 @@ export const MultiCombobox = <T,>({
     const handleDelete = (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
-      if (!latestForListBox.hasSelectedItems) {
+      if (!latestForListBox.isSelectedItemsControlled) {
         handlers.push((deletingItem: ComboboxItem<T>) =>
           latestForListBox.setSelectedItemsIfUncontrolled(
             latestForListBox.selectedItems.filter(
@@ -264,7 +266,7 @@ export const MultiCombobox = <T,>({
           )
 
           if (matchedSelectedItem === undefined) {
-            if (!latestForListBox.hasSelectedItems) {
+            if (!latestForListBox.isSelectedItemsControlled) {
               latestForListBox.setSelectedItemsIfUncontrolled(
                 latestForListBox.selectedItems.concat(selected),
               )
