@@ -21,7 +21,7 @@ type DefaultTableProps = {
     headers: ReactNode[]
     rows: TableRow[]
   }
-  classNames: Record<keyof ReturnType<typeof classNameGenerator>, string>
+  classNames: TableClassNames
 }
 
 type GroupedTableProps = {
@@ -31,8 +31,10 @@ type GroupedTableProps = {
   }
   // TODO: smarthr-ui-charts自信が翻訳プロバイダーを持つ時入れます
   // localize: ReturnType<typeof useIntl>['localize']
-  classNames: Record<keyof ReturnType<typeof classNameGenerator>, string>
+  classNames: TableClassNames
 }
+
+type TableClassNames = ReturnType<typeof buildClassNames>
 
 const classNameGenerator = tv({
   slots: {
@@ -54,6 +56,7 @@ const classNameGenerator = tv({
       'focus-visible:shr-focus-indicator',
     ],
     contentPushRight: ['shr-text-right', 'shr-tabular-nums'],
+    headerCell: '',
   },
   compoundSlots: [
     {
@@ -68,8 +71,41 @@ const classNameGenerator = tv({
       },
       false: {},
     },
+    headerPosition: {
+      first: { headerCell: 'min-[750px]:shr-pl-1.5' },
+      middle: { headerCell: '' },
+      last: { headerCell: 'shr-text-right' },
+    } satisfies Record<'first' | 'middle' | 'last', { headerCell: string }>,
   },
 })
+
+const buildClassNames = (grouped: boolean) => {
+  const {
+    button,
+    title,
+    titleWrapper,
+    verticalHeader,
+    leftIcon,
+    rowTh,
+    contentPushRight,
+    headerCell,
+  } = classNameGenerator()
+
+  return {
+    button: button(),
+    title: title(),
+    titleWrapper: titleWrapper(),
+    verticalHeader: verticalHeader(),
+    leftIcon: leftIcon(),
+    rowTh: rowTh({ grouped }),
+    contentPushRight: contentPushRight(),
+    headerCell: {
+      first: headerCell({ headerPosition: 'first' }),
+      middle: headerCell({ headerPosition: 'middle' }),
+      last: headerCell({ headerPosition: 'last' }),
+    },
+  }
+}
 
 export const TableView = <T extends ChartName>({ data, options }: Props<T>) => {
   // TODO: smarthr-ui-charts自信が翻訳プロバイダーを持つ時入れます
@@ -81,20 +117,7 @@ export const TableView = <T extends ChartName>({ data, options }: Props<T>) => {
     return stackIds.size > 1
   }, [data.datasets])
 
-  const classNames = useMemo(() => {
-    const { button, title, titleWrapper, verticalHeader, leftIcon, rowTh, contentPushRight } =
-      classNameGenerator()
-
-    return {
-      button: button(),
-      title: title(),
-      titleWrapper: titleWrapper(),
-      verticalHeader: verticalHeader(),
-      leftIcon: leftIcon(),
-      rowTh: rowTh({ grouped: isGrouped }),
-      contentPushRight: contentPushRight(),
-    }
-  }, [isGrouped])
+  const classNames = useMemo(() => buildClassNames(isGrouped), [isGrouped])
 
   const topLeftHeader = useMemo(() => {
     const scales = (options as Partial<ChartOptions<'bar' | 'line'>>).scales
@@ -202,13 +225,21 @@ const GroupedTable = ({ data, classNames }: GroupedTableProps) => {
     <Table className={classNames.verticalHeader}>
       <tbody>
         <tr>
-          <Th contentWidth={13} className="min-[750px]:shr-pl-1.5">
-            {headers[0]}
-          </Th>
-          <Th>{headers[1]}</Th>
-          <Th contentWidth={3} className="shr-text-right">
-            {headers[2]}
-          </Th>
+          {headers.map((header, headerIndex) => {
+            const isLast = headerIndex === headers.length - 1
+            const contentWidth = headerIndex === 0 ? 13 : isLast ? 3 : undefined
+            const thClassName =
+              headerIndex === 0
+                ? classNames.headerCell.first
+                : isLast
+                  ? classNames.headerCell.last
+                  : classNames.headerCell.middle
+            return (
+              <Th key={`header-${headerIndex}`} contentWidth={contentWidth} className={thClassName}>
+                {header}
+              </Th>
+            )
+          })}
         </tr>
         {groups.map((group, groupIndex) => {
           const isExpandable = group.rows.length > 1
