@@ -67,7 +67,6 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "Possível mover na horizontal e na vertical pressionando as teclas de seta",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "{top} px da parte de cima, {left} px da parte de baixo",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": ": apagar",
-  "smarthr-ui/MultiCombobox/requiredMessage": "",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "Itens selecionados",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "Fechar",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "Primeiro",

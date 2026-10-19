@@ -76,7 +76,6 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "按方向键可上下左右移动",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "距顶部 {top} px，距左侧 {left} px",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": "：删除",
-  "smarthr-ui/MultiCombobox/requiredMessage": "",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "已选项目",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "关闭",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "移至开头",

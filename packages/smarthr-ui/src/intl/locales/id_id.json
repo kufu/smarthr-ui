@@ -67,7 +67,6 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "Tekan tombol panah untuk menavigasi ke atas, bawah, kiri, dan kanan.",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "{top} px dari atas, {left} px dari kiri",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": ": hapus",
-  "smarthr-ui/MultiCombobox/requiredMessage": "",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "Item yang dipilih",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "Tutup",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "Ke halaman pertama",
