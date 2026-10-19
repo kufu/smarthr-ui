@@ -510,4 +510,102 @@ describe('SingleCombobox', () => {
       expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
     })
   })
+
+  describe('FormData', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItems の値が name でFormDataから取得できること', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                selectedItems={[
+                  { label: 'option 1', value: 'value-1' },
+                  { label: 'option 2', value: 'value-2' },
+                ]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual(['value-1', 'value-2'])
+    })
+
+    it('非制御(uncontrolled)で削除後、FormDataの値も追従すること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                items={items}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(deleteButtons()[0])
+
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual([])
+    })
+
+    it('selectedItems が空のとき、FormDataに値が含まれないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual([])
+    })
+
+    it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+              <MultiCombobox
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(0)
+    })
+
+    it('検索用テキストボックスの name には `${name}-query` が設定されること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveAttribute('name', 'default-query')
+    })
+  })
 })
