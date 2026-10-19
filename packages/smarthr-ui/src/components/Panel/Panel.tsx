@@ -4,11 +4,11 @@ import { tv } from 'tailwind-variants'
 import { paddingBlock, paddingInline } from '../../tailwind'
 import { useSectionWrapper } from '../SectioningContent'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** 角丸の大きさ */

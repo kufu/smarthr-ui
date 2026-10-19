@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     type?: 'grey' | 'blue' | 'green' | 'red' | 'warning' | 'error'

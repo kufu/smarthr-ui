@@ -16,12 +16,12 @@ import { LiveRegion } from '../LiveRegion'
 import { Panel } from '../Panel'
 import { Text } from '../Text'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 type PanelProps = ComponentPropsWithoutRef<typeof Panel>
 type MessageType = ComponentPropsWithoutRef<typeof StatusIcon>['status']
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   Pick<PanelProps, 'layer'> & {
     /** コンポーネント右の領域 */

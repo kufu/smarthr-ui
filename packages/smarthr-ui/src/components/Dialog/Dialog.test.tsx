@@ -198,6 +198,18 @@ describe('Dialog', () => {
     ).toHaveFocus()
   })
 
+  it('ダイアログの内容が画面に収まるよう、max-heightとoverflow-y-autoが設定されること', () => {
+    renderWithIntl(
+      <Dialog isOpen ariaLabel="Dialog">
+        本文
+      </Dialog>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'Dialog' })
+    expect(dialog).toHaveClass('shr-max-h-[calc(100dvh-theme(spacing.2))]')
+    expect(dialog).toHaveClass('shr-overflow-y-auto')
+  })
+
   it('Escapeキー押下時、onPressEscapeに実際のKeyboardEventが渡されること', async () => {
     const handlePressEscape = vi.fn()
     const DialogTemplateWithPressEscape: FC = () => {

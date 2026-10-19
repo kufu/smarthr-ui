@@ -19,22 +19,18 @@ type AsProp<Options> = Options extends { as: true } ? { as?: string | ComponentT
 // OverrideもBase同様discriminated unionになりうるため、omitの適用には同じ理由でDistributiveOmitを使う
 type DistributiveOmit<T, K extends PropertyKey> = T extends any ? Omit<T, K> : never
 
-export type SHRComponentProps<
-  Base,
-  Override,
-  Options extends OptionsType = object,
-> = AsProp<Options> &
+export type ExtendProps<Base, Override, Options extends OptionsType = object> = AsProp<Options> &
   DistributiveOmit<Override, AsOmitKey<Options> | OmitKey<Options>> &
   DistributiveOmit<Base, keyof Override | OmitKey<Options> | AsOmitKey<Options>>
 
-export type SHRComponentPropsWithRef<
+export type ExtendElementPropsWithRef<
   Base extends ElementType,
   Override,
   Options extends OptionsType = object,
-> = SHRComponentProps<ComponentPropsWithRef<Base>, Override, Options>
+> = ExtendProps<ComponentPropsWithRef<Base>, Override, Options>
 
-export type SHRComponentPropsWithoutRef<
+export type ExtendElementPropsWithoutRef<
   Base extends ElementType,
   Override,
   Options extends OptionsType = object,
-> = SHRComponentProps<ComponentPropsWithoutRef<Base>, Override, Options>
+> = ExtendProps<ComponentPropsWithoutRef<Base>, Override, Options>

@@ -9,25 +9,25 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { DialogContentInner } from '../DialogContentInner'
+import { DialogContent } from '../DialogContent'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { FormDialogContentInner } from './FormDialogContentInner'
+import { FormDialogContent } from './FormDialogContent'
 
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
-type FormDialogContentInnerProps = ComponentPropsWithRef<typeof FormDialogContentInner>
-type ObjectHeadingType = Omit<FormDialogContentInnerProps['heading'], 'id'>
+type FormDialogContentProps = ComponentPropsWithRef<typeof FormDialogContent>
+type ObjectHeadingType = Omit<FormDialogContentProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
-type ObjectActionButtonType = FormDialogContentInnerProps['actionButton']
-type ObjectCloseButtonType = FormDialogContentInnerProps['closeButton']
+type ObjectActionButtonType = FormDialogContentProps['actionButton']
+type ObjectCloseButtonType = FormDialogContentProps['closeButton']
 
-type Props = SHRComponentPropsWithRef<
-  typeof DialogContentInner,
-  SHRComponentProps<
-    FormDialogContentInnerProps,
+type Props = ExtendElementPropsWithRef<
+  typeof DialogContent,
+  ExtendProps<
+    FormDialogContentProps,
     DialogProps & {
       heading: HeadingType
       actionButton: ReactNode | ObjectActionButtonType
@@ -107,14 +107,14 @@ export const ControlledFormDialog: FC<Props> = ({
 
   return (
     <DialogPortal id={id} parent={portalParent}>
-      <DialogContentInner
+      <DialogContent
         {...rest}
         isOpen={isOpen}
         className={className}
         ariaLabelledby={heading.id}
         onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       >
-        <FormDialogContentInner
+        <FormDialogContent
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
           responseStatus={responseStatus}
@@ -126,8 +126,8 @@ export const ControlledFormDialog: FC<Props> = ({
           subActionArea={subActionArea}
         >
           {children}
-        </FormDialogContentInner>
-      </DialogContentInner>
+        </FormDialogContent>
+      </DialogContent>
     </DialogPortal>
   )
 }

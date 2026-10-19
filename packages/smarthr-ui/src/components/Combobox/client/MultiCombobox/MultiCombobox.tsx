@@ -29,10 +29,10 @@ import { useMultiOptions } from '../useOptions'
 
 import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { BaseProps, ComboboxItem } from '../types'
 
-type Props<T> = SHRComponentPropsWithRef<
+type Props<T> = ExtendElementPropsWithRef<
   'input',
   BaseProps<T> & {
     /**

@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../Button'
 import { Cluster } from '../Layout'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 type BaseItemProps = {
   /** タイトルのプレフィックスの内容。通常、StatusLabelやIconの配置に用います。 */
@@ -14,14 +14,14 @@ type BaseItemProps = {
   /** 選択されているアイテムかどうか */
   current?: boolean
 }
-type ButtonProps = SHRComponentPropsWithoutRef<
+type ButtonProps = ExtendElementPropsWithoutRef<
   'li',
   BaseItemProps & {
     /** アイテムを押下したときに発火するコールバック関数 */
     onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   }
 >
-type AnchorProps<T extends ElementType> = SHRComponentPropsWithoutRef<
+type AnchorProps<T extends ElementType> = ExtendElementPropsWithoutRef<
   'li',
   BaseItemProps & {
     href: string

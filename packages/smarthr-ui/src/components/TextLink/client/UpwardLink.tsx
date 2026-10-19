@@ -7,7 +7,7 @@ import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { FaArrowLeftIcon } from '../../Icon'
 import { TextLink } from '../TextLink'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   base: 'shr-leading-none',
@@ -19,7 +19,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof TextLink,
   {
     /** インデントするかどうか */
