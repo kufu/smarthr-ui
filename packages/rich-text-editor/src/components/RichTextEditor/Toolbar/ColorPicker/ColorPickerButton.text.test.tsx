@@ -34,7 +34,7 @@ describe('ColorPickerButton（文字色）', () => {
     })
 
     it('標準パレットの色が適用されているときはその色名を含む', async () => {
-      await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
+      await renderEditor('<p><span style="color: #9e3b4e">red</span></p>')
       expect(screen.getByRole('button', { name: '文字色: 赤' })).toBeInTheDocument()
     })
 
@@ -54,7 +54,7 @@ describe('ColorPickerButton（文字色）', () => {
 
     it('文字色をリセットすると既定色に戻る', async () => {
       const user = userEvent.setup()
-      await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
+      await renderEditor('<p><span style="color: #9e3b4e">red</span></p>')
       await user.click(screen.getByRole('button', { name: /^文字色:/ }))
       await user.click(screen.getByRole('button', { name: '文字色をリセット' }))
 
@@ -78,7 +78,7 @@ describe('ColorPickerButton（文字色）', () => {
 
   it('文字色指定ありのときは既定色が選択状態にならない', async () => {
     const user = userEvent.setup()
-    await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
+    await renderEditor('<p><span style="color: #9e3b4e">red</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色:/ }))
     expect(screen.getByRole('button', { name: '黒' })).toHaveAttribute('aria-pressed', 'false')
     expect(screen.getByRole('button', { name: '赤' })).toHaveAttribute('aria-pressed', 'true')
@@ -97,7 +97,7 @@ describe('ColorPickerButton（文字色）', () => {
 
   it('標準パレットに同じ色があるときはカスタムスウォッチを出さない', async () => {
     const user = userEvent.setup()
-    await renderEditor('<p><span style="color: #9e3b50">red</span></p>')
+    await renderEditor('<p><span style="color: #9e3b4e">red</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色:/ }))
 
     expect(screen.queryByRole('button', { name: /^カスタム/ })).not.toBeInTheDocument()
@@ -165,7 +165,7 @@ describe('ColorPickerButton（文字色）', () => {
     await renderEditor('<p><span style="color: #ff8800">custom</span></p>')
     await user.click(screen.getByRole('button', { name: /^文字色:/ }))
     fireEvent.change(document.querySelector('input[name="customColor"]')!, {
-      target: { value: '#9e3b50' },
+      target: { value: '#9e3b4e' },
     })
     await waitForEditorFocus()
 

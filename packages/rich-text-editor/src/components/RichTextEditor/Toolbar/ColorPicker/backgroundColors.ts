@@ -7,32 +7,32 @@ export const EDITOR_BACKGROUND_COLORS = [
     defaultText: 'グレー',
   },
   {
-    value: '#fedfe2',
+    value: '#ffdfe2',
     labelId: 'smarthr-ui/RichTextEditor/backgroundColorRed',
     defaultText: '赤',
   },
   {
-    value: '#fbe2d2',
+    value: '#fae3d1',
     labelId: 'smarthr-ui/RichTextEditor/backgroundColorOrange',
     defaultText: 'オレンジ',
   },
   {
-    value: '#efe8ce',
+    value: '#f1e8ce',
     labelId: 'smarthr-ui/RichTextEditor/backgroundColorYellow',
     defaultText: '黄',
   },
   {
-    value: '#daefda',
+    value: '#d5efdf',
     labelId: 'smarthr-ui/RichTextEditor/backgroundColorGreen',
     defaultText: '緑',
   },
   {
-    value: '#ceeff1',
+    value: '#cef0f1',
     labelId: 'smarthr-ui/RichTextEditor/backgroundColorLightBlue',
     defaultText: '水色',
   },
   {
-    value: '#d7eaff',
+    value: '#d6ebff',
     labelId: 'smarthr-ui/RichTextEditor/backgroundColorBlue',
     defaultText: '青',
   },

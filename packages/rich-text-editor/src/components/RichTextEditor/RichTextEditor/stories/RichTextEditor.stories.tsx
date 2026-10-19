@@ -223,7 +223,7 @@ export const ColorPickerWithExistingContent: Story = {
         '<p>色付きテキストを選択してカラーピッカー(A)を開くと、現在の色が反映されます。</p>' +
         '<p><span style="color: rgb(255, 0, 0)">rgb()形式の赤</span>(rgb(255, 0, 0) → #ff0000 として読み込まれる)</p>' +
         '<p><span style="color: #fff">#fff 短縮形式 (背景白なので見えませんが、3桁hex → #ffffff として読み込まれる)</span></p>' +
-        '<p><span style="color: #9e3b50">標準パレットの赤 (#9e3b50)</span> — 標準スウォッチにチェックが出る</p>' +
+        '<p><span style="color: #9e3b4e">標準パレットの赤 (#9e3b4e)</span> — 標準スウォッチにチェックが出る</p>' +
         '<p><span style="color: #ff6600">標準にない橙 (#ff6600)</span> — カスタムスウォッチにチェックが出る</p>' +
         '<p><span style="color: rgb(116, 74, 157)">標準と一致するrgb (#744a9d 紫)</span> — 標準スウォッチにチェックが出る</p>',
     },
@@ -237,10 +237,10 @@ export const BackgroundColorPickerWithExistingContent: Story = {
       format: 'html',
       content:
         '<p>背景色付きテキストを選択して背景色ピッカー(ハイライト)を開くと、現在の色が反映されます。</p>' +
-        '<p><span style="background-color: #efe8ce">黄色ハイライト (#efe8ce) — 標準パレットにチェックが出る</span></p>' +
-        '<p><span style="background-color: #ceeff1">水色ハイライト (#ceeff1) — 標準パレットにチェックが出る</span></p>' +
+        '<p><span style="background-color: #f1e8ce">黄色ハイライト (#f1e8ce) — 標準パレットにチェックが出る</span></p>' +
+        '<p><span style="background-color: #cef0f1">水色ハイライト (#cef0f1) — 標準パレットにチェックが出る</span></p>' +
         '<p><span style="background-color: #ff9900">標準にない橙 (#ff9900) — カスタムスウォッチにチェックが出る</span></p>' +
-        '<p><span style="background-color: #efe8ce"><span style="color: #9e3b50">背景色と文字色の組み合わせ</span></span></p>',
+        '<p><span style="background-color: #f1e8ce"><span style="color: #9e3b4e">背景色と文字色の組み合わせ</span></span></p>',
     },
   },
 }
