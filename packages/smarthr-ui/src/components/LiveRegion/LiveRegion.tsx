@@ -4,9 +4,9 @@ import { type FC, type ReactNode, useCallback, useState } from 'react'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     announceDelay?: number

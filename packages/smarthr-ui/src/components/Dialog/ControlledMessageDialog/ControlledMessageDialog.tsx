@@ -13,16 +13,16 @@ import { useObjectHeading } from '../useObjectHeading'
 
 import { MessageDialogContent } from './MessageDialogContent'
 
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
 type MessageDialogContentProps = ComponentPropsWithRef<typeof MessageDialogContent>
 type ObjectHeadingType = Omit<MessageDialogContentProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogContent,
-  SHRComponentProps<
+  ExtendProps<
     MessageDialogContentProps,
     DialogProps & {
       heading: HeadingType

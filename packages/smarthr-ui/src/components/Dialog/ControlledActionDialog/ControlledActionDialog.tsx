@@ -14,7 +14,7 @@ import { useObjectHeading } from '../useObjectHeading'
 
 import { ActionDialogContent } from './ActionDialogContent'
 
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
 type ActionDialogContentProps = ComponentPropsWithRef<typeof ActionDialogContent>
@@ -24,9 +24,9 @@ type HeadingType = ReactNode | ObjectHeadingType
 type ObjectActionButtonType = ActionDialogContentProps['actionButton']
 type ObjectCloseButtonType = ActionDialogContentProps['closeButton']
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogContent,
-  SHRComponentProps<
+  ExtendProps<
     ActionDialogContentProps,
     DialogProps & {
       heading: HeadingType

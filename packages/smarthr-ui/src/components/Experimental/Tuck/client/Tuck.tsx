@@ -19,9 +19,9 @@ import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /**

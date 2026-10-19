@@ -8,9 +8,9 @@ import { ActualButton } from './client'
 import { buttonClassNameGenerator } from './style'
 
 import type { BaseProps } from './types'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<'button', BaseProps>
+type Props = ExtendElementPropsWithRef<'button', BaseProps>
 
 export const Button: FC<Props> = ({
   type = 'button',

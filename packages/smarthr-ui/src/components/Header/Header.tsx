@@ -19,7 +19,7 @@ import { Text } from '../Text'
 import { AppLauncher } from './AppLauncher'
 import { HeaderDropdownMenuButton } from './HeaderDropdownMenuButton'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -49,7 +49,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'header',
   {
     /** ロゴ */

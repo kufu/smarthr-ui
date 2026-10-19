@@ -19,7 +19,7 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading } from '../DialogHeading'
 import { dialogContent } from '../dialogContentStyle'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
@@ -37,7 +37,7 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogBody,
   {
     /** ダイアログタイトル */
