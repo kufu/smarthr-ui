@@ -4,14 +4,13 @@ import { ControlledMessageDialog } from '../ControlledMessageDialog'
 
 import { useRemoteTrigger } from './useRemoteTrigger'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { FC } from 'react'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof ControlledMessageDialog,
-  // TODO: SHRComponentPropsWithRefが改善すればこのOmitは消して、omitオプションで設定できるようになるので調整する
-  Omit<Parameters<typeof useRemoteTrigger>[0], 'onPressEscape'>,
-  { omit: 'isOpen' }
+  Parameters<typeof useRemoteTrigger>[0],
+  { omit: 'isOpen' | 'onPressEscape' }
 >
 
 export const MessageDialog: FC<Props> = ({

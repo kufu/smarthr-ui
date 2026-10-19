@@ -3,11 +3,11 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 type Color = 'grey' | 'blue' | 'yellow' | 'red'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     /** 件数 */

@@ -1,17 +1,16 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { paddingBlock, paddingInline } from '../../tailwind'
 import { useSectionWrapper } from '../SectioningContent'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     /** 角丸の大きさ */
     radius?: 's' | 'm'
     /** 影のレイヤー */
@@ -20,7 +19,8 @@ type Props = SHRComponentPropsWithRef<
     padding?: Gap | { block?: Gap; inline?: Gap }
     /** コンテンツが要素内に収まらない場合の処理方法 */
     overflow?: Overflow | { x: Overflow; y: Overflow }
-  }
+  },
+  { as: true }
 >
 
 export const panelClassNameGenerator = tv({

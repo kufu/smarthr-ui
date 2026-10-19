@@ -1,4 +1,4 @@
-import type { PositiveGap, SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef, PositiveGap } from '../../../types'
 import type { StatusLabel } from '../../StatusLabel'
 import type { Text } from '../../Text'
 import type { ComponentPropsWithoutRef, FunctionComponentElement, ReactNode } from 'react'
@@ -21,7 +21,7 @@ export type ObjectLabelType = {
   id?: string
 }
 
-export type CommonProps = SHRComponentPropsWithoutRef<
+export type CommonProps = ExtendElementPropsWithoutRef<
   'div',
   {
     /** タイトル右の領域 */

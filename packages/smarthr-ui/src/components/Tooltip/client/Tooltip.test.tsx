@@ -96,11 +96,11 @@ describe('Tooltip', () => {
 
       showTooltip(wrapper)
       // 表示中は位置計算の style が付与される
-      expect(getPopup().style.maxWidth).not.toBe('')
+      expect(getPopup()!.style.maxWidth).not.toBe('')
 
       hideTooltip(wrapper)
       // 非表示になったら位置計算の style を引きずらない
-      expect(getPopup().style.maxWidth).toBe('')
+      expect(getPopup()!.style.maxWidth).toBe('')
     })
 
     it('非表示中に window の resize が発火しても、位置計算の inline style が付与されない', () => {
@@ -124,7 +124,7 @@ describe('Tooltip', () => {
           vi.advanceTimersByTime(100)
         })
 
-        expect(getPopup().style.maxWidth).toBe('')
+        expect(getPopup()!.style.maxWidth).toBe('')
       } finally {
         vi.useRealTimers()
       }

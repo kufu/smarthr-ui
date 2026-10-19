@@ -8,11 +8,6 @@ import { DropdownMenuButton } from '../DropdownMenuButton'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-const _sampleTriggerIcons = {
-  undefined,
-  'FaGearIcon（onlyIconTrigger の時のみ動作）': FaGearIcon,
-}
-
 const WrappedButton = () => <Button>操作5</Button>
 
 export default {

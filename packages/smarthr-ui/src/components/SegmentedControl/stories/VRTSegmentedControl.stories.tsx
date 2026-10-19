@@ -2,9 +2,12 @@ import { userEvent } from 'storybook/test'
 
 import { FaChartAreaIcon, FaChartBarIcon, FaChartLineIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { type Option, SegmentedControl } from '../client'
+import { SegmentedControl } from '../client'
 
 import type { StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithRef } from 'react'
+
+type Option = ComponentPropsWithRef<typeof SegmentedControl>['options'][number]
 
 const chartBarIcon = <FaChartBarIcon />
 const chartAreaIcon = <FaChartAreaIcon />

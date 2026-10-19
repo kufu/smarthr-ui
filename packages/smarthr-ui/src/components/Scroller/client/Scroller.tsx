@@ -1,21 +1,20 @@
 'use client'
 
-import { type ComponentType, type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     direction?: 'horizontal' | 'vertical' | 'both'
     styleType?: 'auto' | 'scroll'
   },
-  { omit: 'tabIndex' }
+  { as: true; omit: 'tabIndex' }
 >
 
 const classNameGenerator = tv({

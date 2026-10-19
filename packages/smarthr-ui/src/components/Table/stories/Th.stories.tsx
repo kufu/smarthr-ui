@@ -23,7 +23,6 @@ export default {
   render: Template,
   argTypes: {
     fixed: { description: 'TableReel を組み合わせると機能します。' },
-    decorators: { control: false },
   },
   args: {},
   parameters: {

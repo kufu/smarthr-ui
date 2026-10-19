@@ -18,12 +18,12 @@ import { useLatest } from '../../../hooks/useLatest'
 
 import { TooltipPortal } from './TooltipPortal'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     /** ツールチップ内に表示するメッセージ */

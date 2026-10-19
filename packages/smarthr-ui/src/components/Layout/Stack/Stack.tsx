@@ -1,20 +1,20 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     inline?: boolean
     gap?: PositiveGap
     align?: AlignType
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({

@@ -1,7 +1,6 @@
 import {
   type CSSProperties,
   Children,
-  type ComponentType,
   type FC,
   type ReactElement,
   cloneElement,
@@ -12,21 +11,21 @@ import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SHRComponentPropsWithRef, SeparatePositiveGap } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap, SeparatePositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     /** コンポーネントの `min-width` 値 */
     contentsMinWidth?: CSSProperties['minWidth']
     /** 各領域の間隔の指定（gap） */
     gap?: PositiveGap | SeparatePositiveGap
     align?: AlignType
     right?: boolean
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({

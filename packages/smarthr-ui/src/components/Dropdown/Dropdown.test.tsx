@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { act, useState } from 'react'
+import { flushSync } from 'react-dom'
 
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
@@ -9,6 +10,7 @@ import { DatePicker } from '../DatePicker'
 import { Dialog } from '../Dialog'
 import { FormControl } from '../FormGroup'
 import { Stack } from '../Layout'
+import { Portal } from '../Portal'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from './client'
 
@@ -331,6 +333,53 @@ describe('Dropdown', () => {
       await waitForAnimationFrame()
       await user.click(screen.getByRole('button', { name: '4' }))
 
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('ポータル内でクリックした要素がクリック処理中にDOMから取り除かれても外側のDropdownが閉じないこと', async () => {
+      // HINT: DatePickerのYearPickerで年を選択すると、クリックされた年ボタンはDropdownの外側クリック判定より前にアンマウントされる
+      // ブラウザではReactのリスナーとDropdownのリスナーの間でマイクロタスクが実行されるため再レンダリングが挟まるが、
+      // jsdomでは挟まらないため、flushSyncで同じ状況を再現する
+      const RemoveOnClick = () => {
+        const [removed, setRemoved] = useState(false)
+
+        return (
+          <Portal>
+            {removed ? (
+              <span>Removed</span>
+            ) : (
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  flushSync(() => setRemoved(true))
+                }}
+              >
+                Remove
+              </Button>
+            )}
+          </Portal>
+        )
+      }
+      const user = userEvent.setup()
+      render(
+        <Dropdown>
+          <DropdownTrigger>
+            <Button>Trigger</Button>
+          </DropdownTrigger>
+          <DropdownContent controllable>
+            <RemoveOnClick />
+          </DropdownContent>
+        </Dropdown>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('button', { name: 'Remove' }))
+
+      expect(screen.getByText('Removed')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
         'aria-expanded',
         'true',

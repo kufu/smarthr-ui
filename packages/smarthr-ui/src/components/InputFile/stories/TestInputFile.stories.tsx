@@ -24,7 +24,7 @@ export const ManualTest1 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" title="multipleかつsubmitのテスト">
+      <InformationPanel type="info" heading="multipleかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -47,7 +47,7 @@ export const ManualTest1 = () => {
         }}
       >
         <Stack>
-          <FormControl title="ファイル">
+          <FormControl label="ファイル">
             <InputFile name="files" multiple hasFileList label="ファイルを選択" />
           </FormControl>
           <Button type="submit">送信</Button>
@@ -65,7 +65,7 @@ export const ManualTest2 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" title="multiple.appendableかつsubmitのテスト">
+      <InformationPanel type="info" heading="multiple.appendableかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -90,7 +90,7 @@ export const ManualTest2 = () => {
         }}
       >
         <Stack>
-          <FormControl title="ファイル">
+          <FormControl label="ファイル">
             <InputFile
               name="files"
               multiple={{ appendable: true }}
@@ -113,7 +113,7 @@ export const ManualTest3 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" title="multipleかつonChangeのテスト">
+      <InformationPanel type="info" heading="multipleかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>
@@ -126,7 +126,7 @@ export const ManualTest3 = () => {
           e.preventDefault()
         }}
       >
-        <FormControl title="ファイル">
+        <FormControl label="ファイル">
           <InputFile
             name="files"
             multiple
@@ -150,7 +150,7 @@ export const ManualTest4 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" title="multiple.appendableかつonChangeのテスト">
+      <InformationPanel type="info" heading="multiple.appendableかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>
@@ -166,7 +166,7 @@ export const ManualTest4 = () => {
           e.preventDefault()
         }}
       >
-        <FormControl title="ファイル">
+        <FormControl label="ファイル">
           <InputFile
             name="files"
             multiple={{ appendable: true }}

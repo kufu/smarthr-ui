@@ -19,7 +19,6 @@ export default {
   render: Template,
   argTypes: {
     checked: { control: 'boolean' },
-    decorators: { control: false },
   },
   args: {},
   parameters: {

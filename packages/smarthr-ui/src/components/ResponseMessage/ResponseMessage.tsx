@@ -5,9 +5,9 @@ import { StatusIcon } from '../Icon'
 import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof StatusIcon,
   PropsWithChildren<{
     size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>

@@ -28,11 +28,11 @@ import { Portal } from '../Portal'
 
 import { parseJpnDateString } from './datePickerHelper'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'input',
   {
     /** input 要素の `value` 属性の値 */

@@ -1,18 +1,18 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Scroller } from '../../Scroller'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
-    as?: string | ComponentType<any>
     gap?: PositiveGap
     padding?: PositiveGap
-  }
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({

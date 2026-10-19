@@ -1,11 +1,11 @@
-import { type ComponentType, type FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** コンテンツの最小高さ */
@@ -16,8 +16,8 @@ type Props = SHRComponentPropsWithRef<
     padding?: Gap
     /** 天地中央揃えも有効化するかどうか */
     verticalCentering?: boolean
-    as?: string | ComponentType<any>
-  }
+  },
+  { as: true }
 >
 
 export const centerClassNameGenerator = tv({

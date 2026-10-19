@@ -19,7 +19,6 @@ describe('ControlledFormDialog', () => {
         <Button onClick={() => setIsOpen(true)}>ControlledFormDialog</Button>
         <ControlledFormDialog
           isOpen={isOpen}
-          actionText="保存"
           onSubmit={(_, { close }) => {
             close()
           }}
@@ -27,6 +26,7 @@ describe('ControlledFormDialog', () => {
             setIsOpen(false)
           }}
           heading="ControlledFormDialog"
+          actionButton="保存"
         >
           ダイアログの中身です
         </ControlledFormDialog>
@@ -66,7 +66,6 @@ describe('ControlledFormDialog', () => {
         {isOpen && (
           <ControlledFormDialog
             isOpen
-            actionText="実行"
             firstFocusTarget={openedFocusRef}
             onSubmit={(_, { close }) => {
               close()
@@ -75,6 +74,7 @@ describe('ControlledFormDialog', () => {
               setIsOpen(false)
             }}
             heading="開いた状態で投入されたダイアログ"
+            actionButton="実行"
           >
             <FormControl
               label={
@@ -124,10 +124,10 @@ describe('ControlledFormDialog', () => {
       <IntlProvider locale="ja">
         <ControlledFormDialog
           isOpen
-          actionText="保存"
           onSubmit={(_, { close }) => close()}
           onClickClose={handleClickClose}
           heading="ControlledFormDialog"
+          actionButton="保存"
         >
           ダイアログの中身です
         </ControlledFormDialog>
@@ -146,10 +146,10 @@ describe('ControlledFormDialog', () => {
       <IntlProvider locale="ja">
         <ControlledFormDialog
           isOpen
-          actionText="保存"
           onSubmit={(_, { close }) => close()}
           onClickClose={handleClickClose}
           heading="ControlledFormDialog"
+          actionButton="保存"
         >
           ダイアログの中身です
         </ControlledFormDialog>
