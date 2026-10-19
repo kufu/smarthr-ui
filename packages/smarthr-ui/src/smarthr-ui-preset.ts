@@ -433,6 +433,24 @@ export default {
           },
         },
       })
+      // HINT: 強制カラーモードではbackgroundImageのグラデーションが除去され枠線が消えるため、
+      // 疑似要素を無効化しシステムカラーの単色枠線に差し替える。
+      // tailwindcssのprefix機能が、@media内に複数セレクタを含むaddComponentsの呼び出しを
+      // 重複出力してしまう既知の問題を回避するため、addComponentsの呼び出しとセレクタを分けている
+      addComponents({
+        '@media (forced-colors: active)': {
+          '.border-ai-gradation': {
+            border: `${theme('borderWidth.DEFAULT')} solid CanvasText`,
+          },
+        },
+      })
+      addComponents({
+        '@media (forced-colors: active)': {
+          '.border-ai-gradation::before': {
+            display: 'none',
+          },
+        },
+      })
       addBase({
         body: {
           overflowWrap: 'break-word',
