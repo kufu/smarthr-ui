@@ -31,13 +31,17 @@ export const InputFileNative: FC<Props> = ({
   error,
   defaultExistingFiles,
   onDeleteExistingFile,
+  multiple,
   ref,
   ...rest
 }) => {
   const [files, setFiles] = useState<File[]>([])
-  const [existingFiles, setExistingFiles] = useState<ExistingFile[]>(
-    () => defaultExistingFiles ?? [],
-  )
+  const [existingFiles, setExistingFiles] = useState<ExistingFile[]>(() => {
+    const initial = defaultExistingFiles ?? []
+
+    // HINT: multipleでない場合、設定できるファイルは常に1つだけにする
+    return multiple ? initial : initial.slice(0, 1)
+  })
   const [previewFile, setPreviewFile] = useState<File | ExistingFile | null>(null)
   const labelId = useId()
 
@@ -54,7 +58,14 @@ export const InputFileNative: FC<Props> = ({
     }
   }, [size, className])
 
-  const latest = useLatest({ onChange, files, existingFiles, onDeleteExistingFile, previewFile })
+  const latest = useLatest({
+    onChange,
+    files,
+    existingFiles,
+    onDeleteExistingFile,
+    previewFile,
+    multiple,
+  })
 
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
@@ -64,6 +75,11 @@ export const InputFileNative: FC<Props> = ({
     const updateFiles = (newFiles: File[]) => {
       latest.onChange?.(newFiles)
       setFiles(newFiles)
+
+      // HINT: multipleでない場合、新しいファイルの選択で既存ファイルを置き換える
+      if (!latest.multiple && newFiles.length > 0) {
+        setExistingFiles([])
+      }
     }
 
     return {
@@ -175,6 +191,7 @@ export const InputFileNative: FC<Props> = ({
           ref={mergedRef}
           type="file"
           disabled={disabled}
+          multiple={multiple}
           className={classNames.input}
           aria-invalid={errorAttr}
           aria-labelledby={labelId}

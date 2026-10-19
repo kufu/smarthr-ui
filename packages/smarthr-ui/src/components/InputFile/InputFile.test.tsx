@@ -180,6 +180,43 @@ describe('InputFile', () => {
       expect(items[1]).toHaveTextContent(file1.name)
     })
 
+    it('multipleでない場合、ファイルを選択すると既存ファイルが置き換わること', async () => {
+      await render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" defaultExistingFiles={[existingFile1]} label="input file" />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const input = screen.getByLabelText('input file')
+      await userEvent.upload(input, file1)
+
+      const items = screen.getAllByRole('listitem')
+      expect(items).toHaveLength(1)
+      expect(items[0]).toHaveTextContent(file1.name)
+    })
+
+    it('multipleでない場合、defaultExistingFilesに複数件渡しても1件のみ表示されること', async () => {
+      await render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="input file">
+              <InputFile
+                name="test"
+                defaultExistingFiles={[existingFile1, existingFile2]}
+                label="input file"
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const items = screen.getAllByRole('listitem')
+      expect(items).toHaveLength(1)
+      expect(items[0]).toHaveTextContent(existingFile1.name)
+    })
+
     it('削除ボタンをクリックすると一覧から消え、onDeleteExistingFileが正しい引数で呼ばれること', async () => {
       const onDeleteExistingFile = vi.fn()
       await render(
@@ -212,6 +249,7 @@ describe('InputFile', () => {
             <FormControl label="input file">
               <InputFile
                 name="test"
+                multiple
                 defaultExistingFiles={[existingFile1, existingFile2]}
                 onDeleteExistingFile={onDeleteExistingFile}
                 label="input file"
