@@ -8,26 +8,26 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { DialogContentInner } from '../DialogContentInner'
+import { DialogContent } from '../DialogContent'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { ActionDialogContentInner } from './ActionDialogContentInner'
+import { ActionDialogContent } from './ActionDialogContent'
 
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
-type ActionDialogContentInnerProps = ComponentPropsWithRef<typeof ActionDialogContentInner>
+type ActionDialogContentProps = ComponentPropsWithRef<typeof ActionDialogContent>
 
-type ObjectHeadingType = Omit<ActionDialogContentInnerProps['heading'], 'id'>
+type ObjectHeadingType = Omit<ActionDialogContentProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
-type ObjectActionButtonType = ActionDialogContentInnerProps['actionButton']
-type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
+type ObjectActionButtonType = ActionDialogContentProps['actionButton']
+type ObjectCloseButtonType = ActionDialogContentProps['closeButton']
 
-type Props = SHRComponentPropsWithRef<
-  typeof DialogContentInner,
-  SHRComponentProps<
-    ActionDialogContentInnerProps,
+type Props = ExtendElementPropsWithRef<
+  typeof DialogContent,
+  ExtendProps<
+    ActionDialogContentProps,
     DialogProps & {
       heading: HeadingType
       actionButton: ReactNode | ObjectActionButtonType
@@ -35,7 +35,7 @@ type Props = SHRComponentPropsWithRef<
       /**
        * アクションボタンをクリックした時に発火するコールバック関数
        */
-      onClickAction: ActionDialogContentInnerProps['handleClickAction']
+      onClickAction: ActionDialogContentProps['handleClickAction']
       /**
        * 閉じるボタンをクリックした時に発火するコールバック関数
        */
@@ -85,7 +85,7 @@ export const ControlledActionDialog: FC<Props> = ({
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
   const functions = useMemo(() => {
-    const handleClickAction: ActionDialogContentInnerProps['handleClickAction'] = (e, helpers) => {
+    const handleClickAction: ActionDialogContentProps['handleClickAction'] = (e, helpers) => {
       if (latest.isOpen) {
         latest.onClickAction(e, helpers)
       }
@@ -103,14 +103,14 @@ export const ControlledActionDialog: FC<Props> = ({
 
   return (
     <DialogPortal id={id} parent={portalParent}>
-      <DialogContentInner
+      <DialogContent
         {...rest}
         isOpen={isOpen}
         className={className}
         ariaLabelledby={heading.id}
         onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       >
-        <ActionDialogContentInner
+        <ActionDialogContent
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
           responseStatus={responseStatus}
@@ -122,8 +122,8 @@ export const ControlledActionDialog: FC<Props> = ({
           subActionArea={subActionArea}
         >
           {children}
-        </ActionDialogContentInner>
-      </DialogContentInner>
+        </ActionDialogContent>
+      </DialogContent>
     </DialogPortal>
   )
 }

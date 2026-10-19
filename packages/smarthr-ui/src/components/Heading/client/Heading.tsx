@@ -7,7 +7,7 @@ import { LevelContext } from '../../SectioningContent'
 import { STYLE_TYPE_MAP, Text } from '../../Text'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type TextProps = ComponentPropsWithRef<typeof Text>
 type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
@@ -36,7 +36,7 @@ type StylingProps =
     }
 
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'h2',
   StylingProps & {
     /**

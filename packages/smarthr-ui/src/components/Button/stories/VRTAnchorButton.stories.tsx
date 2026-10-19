@@ -85,6 +85,14 @@ const _cases: Array<ComponentPropsWithoutRef<typeof AnchorButton>> = [
     suffix: undefined,
     wide: true,
   },
+  {
+    size: 'M',
+    href: undefined,
+    inactiveReason: undefined,
+    prefix: <FaCirclePlusIcon color="MAIN" />,
+    suffix: undefined,
+    wide: false,
+  },
 ]
 
 const Template: StoryFn<typeof AnchorButton> = (args) => (

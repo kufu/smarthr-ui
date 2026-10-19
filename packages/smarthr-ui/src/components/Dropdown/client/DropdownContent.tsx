@@ -9,7 +9,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContext } from './Dropdown'
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   base: [
@@ -20,7 +20,7 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /**

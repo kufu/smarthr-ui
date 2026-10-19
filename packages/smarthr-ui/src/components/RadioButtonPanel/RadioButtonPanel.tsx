@@ -5,9 +5,9 @@ import { RadioButton } from '../RadioButton'
 
 import { ClickablePanel } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof RadioButton,
   {
     label: ReactNode
