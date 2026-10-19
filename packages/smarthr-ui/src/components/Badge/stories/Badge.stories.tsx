@@ -69,7 +69,7 @@ export const ShowZero: StoryObj<typeof Badge> = {
   },
 }
 
-export const Type: StoryObj<typeof Badge> = {
+export const Color: StoryObj<typeof Badge> = {
   name: 'color',
   render: (args) => (
     <Cluster>
