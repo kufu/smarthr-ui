@@ -129,4 +129,39 @@ describe('DatePicker', () => {
     const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
     expect(textbox).toHaveProperty('value', '2024/09/25')
   })
+
+  it('value に null、defaultValue に値を指定した場合、defaultValue は無視されshowAlternativeの初期表示もされないこと', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker
+            name="date"
+            value={null}
+            defaultValue="2020-01-01"
+            showAlternative={(d) => (d ? `alt:${d.getFullYear()}` : null)}
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+    expect(textbox).toHaveProperty('value', '')
+    expect(screen.queryByText('alt:2020')).not.toBeInTheDocument()
+  })
+
+  it('value・defaultValue とも未指定の場合、formatDate が渡されていても初期表示は空のままであること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker
+            name="date"
+            formatDate={(d) => (d ? d.toISOString() : '未選択')}
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+    expect(textbox).toHaveProperty('value', '')
+  })
 })

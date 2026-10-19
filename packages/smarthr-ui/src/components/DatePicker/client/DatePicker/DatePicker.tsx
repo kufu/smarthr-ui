@@ -143,7 +143,7 @@ export const DatePicker: FC<Props> = ({
   const calenderId = useId()
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
-    parseStringDate(value ?? defaultValue, parseInput),
+    parseStringDate(value !== undefined ? value : defaultValue, parseInput),
   )
 
   const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(() =>
@@ -151,7 +151,9 @@ export const DatePicker: FC<Props> = ({
   )
 
   const [initialInputValue] = useState<string | undefined>(() =>
-    value === undefined ? formatDateValue(selectedDate, formatDate) : undefined,
+    value === undefined && defaultValue !== undefined
+      ? formatDateValue(selectedDate, formatDate)
+      : undefined,
   )
 
   const isCalendarShown = !!inputRect
