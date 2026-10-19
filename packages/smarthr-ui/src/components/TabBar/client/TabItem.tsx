@@ -8,7 +8,7 @@ import { UnstyledButton } from '../../Button'
 import { FaCircleInfoIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -37,7 +37,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof UnstyledButton,
   {
     /** タブの ID */

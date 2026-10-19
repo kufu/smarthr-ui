@@ -4,9 +4,9 @@ import { type FC, type Ref, type RefObject, useImperativeHandle, useMemo } from 
 
 import { tabbable } from '../../libs/tabbable'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     firstFocusTarget?: RefObject<HTMLElement>

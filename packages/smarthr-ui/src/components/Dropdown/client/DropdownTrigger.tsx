@@ -7,9 +7,9 @@ import { Tooltip } from '../../Tooltip'
 
 import { DropdownContext } from './Dropdown'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     tooltip?: { message: ReactNode; show?: boolean }

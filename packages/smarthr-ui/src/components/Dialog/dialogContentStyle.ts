@@ -1,6 +1,6 @@
 import { tv } from 'tailwind-variants'
 
-export const dialogContentInner = tv({
+export const dialogContent = tv({
   slots: {
     wrapper: 'shr-flex shr-max-h-[calc(100dvh-theme(spacing.2))] shr-flex-col',
     actionArea: [

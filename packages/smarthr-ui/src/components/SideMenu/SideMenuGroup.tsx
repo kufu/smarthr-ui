@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'li',
   {
     heading: ReactNode

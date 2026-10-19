@@ -4,9 +4,9 @@ import { type FC, useCallback } from 'react'
 
 import { Portal as OriginalPortal } from '../../Portal'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   typeof OriginalPortal,
   {
     inputRect: DOMRect

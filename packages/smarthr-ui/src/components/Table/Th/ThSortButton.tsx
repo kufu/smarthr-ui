@@ -6,9 +6,9 @@ import { UnstyledButton } from '../../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../../Icon'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof UnstyledButton,
   {
     align?: 'left' | 'right'

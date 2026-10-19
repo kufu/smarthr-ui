@@ -1,12 +1,13 @@
+'use client'
+
 import {
   type ComponentPropsWithoutRef,
   type FC,
-  type FormEvent,
   type MouseEvent,
   type ReactNode,
   memo,
+  useCallback,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
@@ -16,9 +17,9 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */
@@ -36,7 +37,7 @@ type ObjectCloseButtonType = {
   disabled?: boolean
 }
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof DialogBody,
   {
     /** ダイアログタイトル */
@@ -45,9 +46,10 @@ type Props = SHRComponentPropsWithRef<
     actionButton: ObjectActionButtonType
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
-     * @param e フォームイベント
+     * @param e マウスイベント
+     * @param helpers ダイアログ操作のためのヘルパー関数
      */
-    handleSubmit: (e: FormEvent<HTMLFormElement>) => void
+    handleClickAction: (e: MouseEvent<Element>, helpers: { close: () => void }) => void
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -59,18 +61,10 @@ type Props = SHRComponentPropsWithRef<
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
-const formDialogContentInner = tv({
-  extend: dialogContentInner,
-  slots: {
-    form: 'shr-contents',
-  },
-})
-
 const CLASS_NAMES = (() => {
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentInner()
+  const { wrapper, actionArea, buttonArea, message } = dialogContent()
 
   return {
-    form: form(),
     wrapper: wrapper(),
     actionArea: actionArea(),
     buttonArea: buttonArea(),
@@ -78,81 +72,95 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const FormDialogContentInner: FC<Props> = ({
+export const ActionDialogContent: FC<Props> = ({
   children,
   heading,
   contentBgColor,
   contentPadding,
   actionButton,
-  handleSubmit,
+  handleClickAction,
   handleClickClose,
   responseStatus,
   closeButton,
   subActionArea,
 }) => {
-  const calculatedResponseStatus = useResponseStatus(responseStatus)
+  const calcedResponseStatus = useResponseStatus(responseStatus)
 
   return (
-    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
-      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
-        <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-          {children}
-        </DialogBody>
-        <div className={CLASS_NAMES.actionArea}>
-          <Cluster justify="space-between">
-            {subActionArea}
-            <ActionAreaCluster
-              loading={calculatedResponseStatus.isProcessing}
-              className={CLASS_NAMES.buttonArea}
-              handleClickClose={handleClickClose}
-              closeButton={closeButton}
-              actionButton={actionButton}
-            />
-          </Cluster>
-          <DialogContentResponseStatusMessage
-            responseStatus={calculatedResponseStatus}
-            className={CLASS_NAMES.message}
+      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+        {children}
+      </DialogBody>
+      <div className={CLASS_NAMES.actionArea}>
+        <Cluster justify="space-between">
+          {subActionArea}
+          <ActionAreaCluster
+            loading={calcedResponseStatus.isProcessing}
+            className={CLASS_NAMES.buttonArea}
+            handleClickClose={handleClickClose}
+            handleClickAction={handleClickAction}
+            closeButton={closeButton}
+            actionButton={actionButton}
           />
-        </div>
-      </form>
+        </Cluster>
+        <DialogContentResponseStatusMessage
+          responseStatus={calcedResponseStatus}
+          className={CLASS_NAMES.message}
+        />
+      </div>
     </Section>
   )
 }
 
 const ActionAreaCluster = memo<
-  Pick<Props, 'handleClickClose'> & {
+  Pick<Props, 'handleClickClose' | 'handleClickAction'> & {
     actionButton: ObjectActionButtonType
     closeButton: ObjectCloseButtonType
     loading: boolean
     className: string
   }
->(({ handleClickClose, closeButton, actionButton, loading, className }) => (
-  <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
-    <CloseButton
-      disabled={closeButton.disabled || loading}
-      text={closeButton.text}
-      handleClick={handleClickClose}
-    />
-    <ActionButton disabled={actionButton.disabled} loading={loading} variant={actionButton.theme}>
-      {actionButton.text}
-    </ActionButton>
-  </Cluster>
-))
+>(({ handleClickClose, handleClickAction, closeButton, actionButton, loading, className }) => {
+  const handleClickActionWithHelpers = useCallback(
+    (e: MouseEvent<Element>) => {
+      handleClickAction(e, { close: handleClickClose })
+    },
+    [handleClickAction, handleClickClose],
+  )
+
+  return (
+    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+      <CloseButton
+        disabled={closeButton.disabled || loading}
+        text={closeButton.text}
+        handleClick={handleClickClose}
+      />
+      <ActionButton
+        disabled={actionButton.disabled}
+        loading={loading}
+        variant={actionButton.theme}
+        handleClick={handleClickActionWithHelpers}
+      >
+        {actionButton.text}
+      </ActionButton>
+    </Cluster>
+  )
+})
 
 const ActionButton = memo<{
-  children: ObjectActionButtonType['text']
+  children: Props['children']
   variant: ObjectActionButtonType['theme']
   disabled: ObjectActionButtonType['disabled']
   loading: boolean
-}>(({ variant = 'primary', disabled, loading, children }) => (
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ variant = 'primary', disabled, loading, handleClick, children }) => (
   <Button
     type="submit"
     disabled={disabled}
     loading={loading}
     variant={variant}
     className="smarthr-ui-Dialog-actionButton"
+    onClick={handleClick}
   >
     {children}
   </Button>
@@ -164,6 +172,6 @@ const CloseButton = memo<{
   text: ReactNode
 }>(({ handleClick, disabled, text }) => (
   <Button disabled={disabled} className="smarthr-ui-Dialog-closeButton" onClick={handleClick}>
-    {text ?? <Localizer id="smarthr-ui/FormDialog/closeButtonLabel" defaultText="キャンセル" />}
+    {text ?? <Localizer id="smarthr-ui/ActionDialog/closeButtonLabel" defaultText="キャンセル" />}
   </Button>
 ))

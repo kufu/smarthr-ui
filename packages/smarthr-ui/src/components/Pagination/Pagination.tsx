@@ -8,7 +8,7 @@ import { PaginationControllerItemButton } from './PaginationControllerItemButton
 import { PaginationItemButton, Wrapper } from './client'
 
 import type { AnchorProps, ButtonProps } from './type'
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -45,8 +45,8 @@ type CommonProps = {
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
-type ActualButtonProps = SHRComponentPropsWithoutRef<typeof Wrapper, CommonProps & ButtonProps>
-type ActualAnchorProps = SHRComponentPropsWithoutRef<typeof Wrapper, CommonProps & AnchorProps>
+type ActualButtonProps = ExtendElementPropsWithoutRef<typeof Wrapper, CommonProps & ButtonProps>
+type ActualAnchorProps = ExtendElementPropsWithoutRef<typeof Wrapper, CommonProps & AnchorProps>
 type Props = ActualButtonProps | ActualAnchorProps
 
 export const Pagination: FC<Props> = (props) =>

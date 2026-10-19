@@ -14,7 +14,7 @@ import {
 import { WarningIcon } from './WarningIcon'
 
 import type { Props as IconProps } from './generateIcon'
-import type { SHRComponentProps } from '../../types'
+import type { ExtendProps } from '../../types'
 
 const ICON_MAPPER = {
   // HINT: infoは装飾として扱うため、代替テキストを設定しない
@@ -43,7 +43,7 @@ const BOLD_ICON_MAPPER = {
   warning: { Component: FaTriangleExclamationIcon, alt: ICON_MAPPER.warning.alt },
 } as const
 
-type Props = SHRComponentProps<
+type Props = ExtendProps<
   IconProps,
   {
     /** アイコンが表す状態 */

@@ -1,11 +1,11 @@
 import { SectioningFragment } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { FC } from 'react'
 
 // HINT: article/aside/nav/sectionはHTML仕様上いずれも固有のDOM interfaceを持たずHTMLElementとして
 // 扱われるため、refの型は'section'を代表にしてもas指定時と差異は生じない
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'section',
   {
     baseLevel?: number

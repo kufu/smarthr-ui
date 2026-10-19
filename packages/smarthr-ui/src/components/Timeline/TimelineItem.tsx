@@ -6,9 +6,9 @@ import { Cluster, Sidebar, Stack } from '../Layout'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     datetime: Date | string

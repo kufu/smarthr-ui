@@ -6,7 +6,7 @@ import { useLatest } from '../../../hooks/useLatest'
 
 import { TRIGGER_EVENT } from './useRemoteTrigger'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 const CAPTURE_OPTION = {
   capture: true,
@@ -20,7 +20,7 @@ const dispatchRemoteDialogTrigger = (ariaControls: string) => {
   )
 }
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     targetId: string

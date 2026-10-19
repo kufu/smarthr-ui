@@ -4,9 +4,9 @@ import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
 import { Translate } from '../common/Translate'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'button',
   {
     handleClick: () => void

@@ -10,9 +10,9 @@ import { Text } from '../../Text'
 import { CHILDREN_WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 
-type Props = SHRComponentProps<
+type Props = ExtendProps<
   CommonProps,
   {
     ref: Ref<HTMLDivElement>
@@ -238,7 +238,7 @@ export const FormGroup: FC<Props> = ({
 }
 
 export const LabelBody: FC<
-  SHRComponentPropsWithRef<typeof Text, Pick<LabelComponentProps, 'statusLabels'>>
+  ExtendElementPropsWithRef<typeof Text, Pick<LabelComponentProps, 'statusLabels'>>
 > = ({ statusLabels, children, ...rest }) => (
   <>
     <Text {...rest}>
@@ -253,7 +253,7 @@ export const LabelBody: FC<
 )
 
 export const LabelCluster: FC<
-  SHRComponentPropsWithRef<typeof Cluster, { as?: 'label' }, { omit: 'align' | 'className' }>
+  ExtendElementPropsWithRef<typeof Cluster, { as?: 'label' }, { omit: 'align' | 'className' }>
 > = ({ children, ...rest }) => (
   <Cluster {...rest} align="center" className="smarthr-ui-FormControl-label">
     {children}

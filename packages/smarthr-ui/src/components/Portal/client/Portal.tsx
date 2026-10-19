@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ParentContextValue = {
   seqs: number[]
@@ -23,7 +23,7 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     as?: ElementType

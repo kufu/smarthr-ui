@@ -6,7 +6,7 @@ import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -49,7 +49,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'input',
   {
     children: ReactNode
@@ -93,7 +93,7 @@ export const Switch: FC<Props> = ({
 }
 
 const MemoizedLabel = memo<
-  SHRComponentPropsWithRef<
+  ExtendElementPropsWithRef<
     // TODO: 本来はlabelを指定したい
     typeof Text,
     Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }

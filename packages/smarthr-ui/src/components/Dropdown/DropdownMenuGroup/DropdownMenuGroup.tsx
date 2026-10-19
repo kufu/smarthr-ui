@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { Text } from '../../Text'
 import { ButtonList } from '../client'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'li',
   {
     name?: ReactNode

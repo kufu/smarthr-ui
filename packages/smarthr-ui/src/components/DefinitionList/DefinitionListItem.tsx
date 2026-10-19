@@ -6,13 +6,13 @@ import { Text } from '../Text'
 
 import { ItemWrapper } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 type ObjectTermType = {
   text: ReactNode
   styleType?: 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 }
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof ItemWrapper,
   {
     term: ReactNode | ObjectTermType

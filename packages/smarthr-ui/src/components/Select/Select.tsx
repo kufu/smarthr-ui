@@ -5,9 +5,9 @@ import { FaAngleDownIcon } from '../Icon'
 
 import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props<T extends string> = SHRComponentPropsWithRef<
+type Props<T extends string> = ExtendElementPropsWithRef<
   typeof ActualSelect<T>,
   {
     /** コンポーネントの幅 */

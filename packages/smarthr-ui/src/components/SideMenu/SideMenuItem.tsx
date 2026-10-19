@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props<T extends ElementType> = SHRComponentPropsWithoutRef<
+type Props<T extends ElementType> = ExtendElementPropsWithoutRef<
   T,
   {
     elementAs?: T

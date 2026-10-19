@@ -2,10 +2,10 @@
 
 import { useSquareDetection } from './useSquareDetection'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 import type { FC, ReactNode } from 'react'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     prefix?: ReactNode

@@ -8,7 +8,7 @@ import { useTheme } from '../../../hooks/client/useTheme'
 import { debounce } from '../../../libs/debounce'
 import { ControlledTooltip } from '../ControlledTooltip'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 const subscribeFullscreenChange = (callback: () => void) => {
   window.addEventListener('fullscreenchange', callback)
@@ -20,7 +20,7 @@ const subscribeFullscreenChange = (callback: () => void) => {
 const getPortalRoot = () => document.fullscreenElement ?? document.body
 const getPortalRootOnSSR = () => null
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     messageId: string
