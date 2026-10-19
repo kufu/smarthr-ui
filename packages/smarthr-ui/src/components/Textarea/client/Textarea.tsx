@@ -20,9 +20,9 @@ import { defaultHtmlFontSize } from '../../../themes'
 import { LiveRegion } from '../../LiveRegion'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'textarea',
   {
     /** 入力値にエラーがあるかどうか */

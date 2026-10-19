@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { OpenInNewTabIcon } from '../Icon'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props<T extends ElementType> = SHRComponentPropsWithRef<
+type Props<T extends ElementType> = ExtendElementPropsWithRef<
   T,
   {
     /** リンク先のURL。無効化されたリンクを表す場合は `undefined` を明示的に指定する */

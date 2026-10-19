@@ -5,9 +5,9 @@ import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 import { ActualCheckbox } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof ActualCheckbox,
   PropsWithChildren<{
     /** `true` のとき、チェック状態を `mixed` にする */

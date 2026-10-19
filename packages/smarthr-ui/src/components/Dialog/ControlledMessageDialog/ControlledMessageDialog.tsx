@@ -7,23 +7,23 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { DialogContentInner } from '../DialogContentInner'
+import { DialogContent } from '../DialogContent'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { MessageDialogContentInner } from './MessageDialogContentInner'
+import { MessageDialogContent } from './MessageDialogContent'
 
-import type { SHRComponentProps, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
-type MessageDialogContentInnerProps = ComponentPropsWithRef<typeof MessageDialogContentInner>
-type ObjectHeadingType = Omit<MessageDialogContentInnerProps['heading'], 'id'>
+type MessageDialogContentProps = ComponentPropsWithRef<typeof MessageDialogContent>
+type ObjectHeadingType = Omit<MessageDialogContentProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type Props = SHRComponentPropsWithRef<
-  typeof DialogContentInner,
-  SHRComponentProps<
-    MessageDialogContentInnerProps,
+type Props = ExtendElementPropsWithRef<
+  typeof DialogContent,
+  ExtendProps<
+    MessageDialogContentProps,
     DialogProps & {
       heading: HeadingType
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
@@ -71,14 +71,14 @@ export const ControlledMessageDialog: FC<Props> = ({
 
   return (
     <DialogPortal id={id} parent={portalParent}>
-      <DialogContentInner
+      <DialogContent
         {...rest}
         isOpen={isOpen}
         className={className}
         ariaLabelledby={heading.id}
         onPressEscape={onPressEscape}
       >
-        <MessageDialogContentInner
+        <MessageDialogContent
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
           handleClickClose={functions.handleClickClose}
@@ -86,8 +86,8 @@ export const ControlledMessageDialog: FC<Props> = ({
           closeButton={closeButton}
         >
           {children}
-        </MessageDialogContentInner>
-      </DialogContentInner>
+        </MessageDialogContent>
+      </DialogContent>
     </DialogPortal>
   )
 }

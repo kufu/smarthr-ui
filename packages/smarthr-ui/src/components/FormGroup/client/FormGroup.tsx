@@ -19,9 +19,9 @@ import { Text } from '../../Text'
 import { CHILDREN_WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
-import type { SHRComponentProps } from '../../../types'
+import type { ExtendProps } from '../../../types'
 
-type Props = SHRComponentProps<
+type Props = ExtendProps<
   CommonProps,
   {
     ref: Ref<HTMLDivElement>

@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { AutoColSpanTd } from './client'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'tbody',
   {
     /** 境界とコンテンツの間の余白 */

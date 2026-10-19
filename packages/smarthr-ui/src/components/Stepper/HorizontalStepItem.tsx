@@ -6,9 +6,9 @@ import { Text } from '../Text'
 import { StepCounter } from './StepCounter'
 
 import type { HorizontalStep, StatusType } from './types'
-import type { SHRComponentProps } from '../../types'
+import type { ExtendProps } from '../../types'
 
-type Props = SHRComponentProps<
+type Props = ExtendProps<
   HorizontalStep,
   {
     statusType?: StatusType

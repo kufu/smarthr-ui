@@ -7,7 +7,7 @@ import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { FaArrowLeftIcon } from '../../Icon'
 import { TextLink } from '../TextLink'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   base: 'shr-leading-none',
@@ -20,11 +20,11 @@ const classNameGenerator = tv({
 })
 
 // HINT: typeof TextLinkをそのままBaseに使うと、TextLinkがgeneric関数コンポーネントであるため
-// SHRComponentPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、href必須化の型チェックが
+// ExtendElementPropsWithRef内部のkeyof/Omit処理でProps全体の型情報がanyに潰れ、href必須化の型チェックが
 // 機能しない。typeof TextLink<'a'>で単相化することでこれを回避する一方、elementAsもこれに伴い'a'固定の
 // 型になってしまうため、ここだけ元の緩い型(next/linkなどを想定)で定義し直している
 type Props = Omit<
-  SHRComponentPropsWithRef<
+  ExtendElementPropsWithRef<
     typeof TextLink<'a'>,
     {
       /** インデントするかどうか */

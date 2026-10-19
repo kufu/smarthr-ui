@@ -5,7 +5,7 @@ import { Localizer } from '../../intl'
 import { FaCircleCheckIcon, FaCircleXmarkIcon } from '../Icon'
 
 import type { StatusType } from './types'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   base: [
@@ -23,7 +23,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof FaCircleCheckIcon,
   {
     statusType?: StatusType

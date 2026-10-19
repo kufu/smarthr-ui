@@ -7,7 +7,7 @@ import { ResponseMessage } from '../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-FloatArea shr-sticky shr-z-fixed-menu -shr-mx-0.5',
@@ -40,7 +40,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** 表示する `Button` または `AnchorButton` コンポーネント */

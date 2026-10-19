@@ -2,11 +2,11 @@ import { type ComponentPropsWithRef, type ReactElement, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import type { TimelineItem } from './TimelineItem'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 type TimelineItem = ReactElement<ComponentPropsWithRef<typeof TimelineItem>>
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'ol',
   {
     children: TimelineItem | TimelineItem[]
