@@ -30,7 +30,7 @@ import { useMultiOptions } from '../useOptions'
 import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
-import type { BaseProps, ComboboxItem } from '../types'
+import type { BaseProps, ComboboxItem, DeletableComboboxItem } from '../types'
 
 type Props<T> = ExtendElementPropsWithRef<
   'input',
@@ -38,11 +38,11 @@ type Props<T> = ExtendElementPropsWithRef<
     /**
      * 選択されているアイテムのリスト
      */
-    selectedItems?: Array<ComboboxItem<T> & { deletable?: boolean }>
+    selectedItems?: Array<DeletableComboboxItem<T>>
     /**
      * デフォルトで選択するアイテムのリスト
      */
-    defaultSelectedItems?: Array<ComboboxItem<T> & { deletable?: boolean }>
+    defaultSelectedItems?: Array<DeletableComboboxItem<T>>
     /**
      * 選択されているアイテムのラベルを省略表示するかどうか
      */

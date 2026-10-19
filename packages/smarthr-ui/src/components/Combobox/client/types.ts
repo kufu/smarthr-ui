@@ -36,6 +36,13 @@ export type ComboboxItem<T> = ComboboxItemBase<T> &
       }
   )
 
+export type DeletableComboboxItem<T> = ComboboxItem<T> & {
+  /**
+   * `MultiCombobox` で削除可能かどうか。省略時は `true` 扱い
+   */
+  deletable?: boolean
+}
+
 export type ComboboxOption<T> = {
   id: string
   selected: boolean
