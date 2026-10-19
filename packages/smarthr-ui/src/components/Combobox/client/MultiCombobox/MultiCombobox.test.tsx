@@ -607,5 +607,60 @@ describe('SingleCombobox', () => {
 
       expect(combobox()).toHaveAttribute('name', 'default-query')
     })
+
+    it('disabledの場合、hidden inputも無効化されFormDataに値が含まれないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                disabled
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual([])
+    })
+
+    it('requiredかつ選択項目が無い場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" required selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.type(combobox(), 'option')
+
+      expect(combobox()).toHaveProperty('validity.valid', false)
+    })
+
+    it('requiredでも選択項目があれば検索用テキストボックスの妥当性を満たすこと', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                required
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validity.valid', true)
+    })
   })
 })

@@ -76,6 +76,7 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "Có thể di chuyển lên xuống trái phải bằng phím mũi tên",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "Từ trên xuống {top}px, từ trái sang {left}px",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": ": Xoá",
+  "smarthr-ui/MultiCombobox/requiredMessage": "",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "Mục đã chọn",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "Đóng",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "Trở về đầu",

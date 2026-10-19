@@ -76,6 +76,7 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "Can be moved up, down, left, or right using arrow keys",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "{top}px from top, {left}px from left",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": ": remove",
+  "smarthr-ui/MultiCombobox/requiredMessage": "",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "Selected items",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "Close",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "First",

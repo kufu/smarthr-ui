@@ -76,6 +76,7 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "やじるしキーで　上・下・左・右に　うごかせます",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "上から{top}px、左から{left}px",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": "を　消します",
+  "smarthr-ui/MultiCombobox/requiredMessage": "",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "えらんだ　もの",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "閉じる",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "最初へ",

@@ -485,6 +485,17 @@ export const MultiCombobox = <T,>({
     functions.blur,
   )
 
+  const localized = useLocalize({
+    selectedListAriaLabel: {
+      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+      defaultText: '選択済みアイテム',
+    },
+    requiredMessage: {
+      id: 'smarthr-ui/MultiCombobox/requiredMessage',
+      defaultText: '1つ以上選択してください',
+    },
+  })
+
   // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
   const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -509,11 +520,22 @@ export const MultiCombobox = <T,>({
     },
     [actualSelectedItems, setInputValueIfUncontrolled, latest],
   )
+  // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
+  // 選択済みアイテムの有無をsetCustomValidityで別途検証する
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(
+        required && actualSelectedItems.length === 0 ? localized.requiredMessage : '',
+      )
+    },
+    [required, actualSelectedItems, localized],
+  )
 
   const mergedInputRef = useMergeRefs(
     functions.inputCallbackRef,
     inputFocusEffectRef,
     inputSelectEffectRef,
+    inputValidityEffectRef,
     ref,
   )
 
@@ -541,13 +563,6 @@ export const MultiCombobox = <T,>({
     }
   }, [className])
 
-  const localized = useLocalize({
-    selectedListAriaLabel: {
-      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
-      defaultText: '選択済みアイテム',
-    },
-  })
-
   const errorAttr = error || undefined
 
   return (
@@ -570,6 +585,7 @@ export const MultiCombobox = <T,>({
             key={`hidden-${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}
             type="hidden"
             name={name}
+            disabled={disabled}
             value={selectedItem.value}
           />
         ))}
