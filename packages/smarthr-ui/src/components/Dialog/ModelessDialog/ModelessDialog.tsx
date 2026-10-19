@@ -32,10 +32,10 @@ import { DialogBody } from '../DialogBody'
 import { DialogOverlap } from '../DialogOverlap'
 import { DialogPortal } from '../DialogPortal'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { DialogSize } from '../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Panel,
   Pick<ComponentPropsWithoutRef<typeof DialogBody>, 'contentBgColor' | 'contentPadding'> & {
     /**

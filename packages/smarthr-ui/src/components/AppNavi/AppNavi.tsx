@@ -19,9 +19,9 @@ import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** ラベルのテキスト */
