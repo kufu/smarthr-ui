@@ -12,7 +12,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -30,7 +30,7 @@ type Props = ExtendElementPropsWithRef<
 >
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea } = dialogContentInner()
+  const { wrapper, actionArea } = dialogContent()
 
   return {
     wrapper: wrapper(),
@@ -38,7 +38,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const MessageDialogContentInner: FC<Props> = ({
+export const MessageDialogContent: FC<Props> = ({
   heading,
   contentBgColor,
   contentPadding,

@@ -15,11 +15,11 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
-import { DialogContentInner } from '../DialogContentInner'
+import { DialogContent } from '../DialogContent'
 import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { StepFormDialogContentInner } from './StepFormDialogContentInner'
+import { StepFormDialogContent } from './StepFormDialogContent'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
@@ -56,21 +56,21 @@ type ButtonType = ButtonArgType | ObjectButtonType | ButtonResolverType
 const isButtonResolverResult = (value: unknown): value is ButtonResolverResult =>
   !!value && typeof value === 'object' && !Array.isArray(value) && !isValidElement(value)
 
-type StepFormDialogContentInnerProps = ComponentPropsWithRef<typeof StepFormDialogContentInner>
+type StepFormDialogContentProps = ComponentPropsWithRef<typeof StepFormDialogContent>
 
-type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
+type ObjectHeadingType = Omit<StepFormDialogContentProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
 type Props = ExtendElementPropsWithRef<
-  typeof DialogContentInner,
+  typeof DialogContent,
   ExtendProps<
-    StepFormDialogContentInnerProps,
+    StepFormDialogContentProps,
     DialogProps & {
       heading: HeadingType
       submitButton: ButtonType
       closeButton?: ButtonType
       backButton?: ButtonType
-      onSubmit: StepFormDialogContentInnerProps['handleSubmit']
+      onSubmit: StepFormDialogContentProps['handleSubmit']
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
       onClickBack?: () => void
     },
@@ -269,7 +269,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   )
 
   return (
-    <DialogContentInner
+    <DialogContent
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
@@ -277,7 +277,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       ariaLabelledby={heading.id}
       onPressEscape={closeButton.disabled ? undefined : onPressEscape}
     >
-      <StepFormDialogContentInner
+      <StepFormDialogContent
         activeStep={activeStep}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
@@ -293,7 +293,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         backButton={backButton}
       >
         {children}
-      </StepFormDialogContentInner>
-    </DialogContentInner>
+      </StepFormDialogContent>
+    </DialogContent>
   )
 }

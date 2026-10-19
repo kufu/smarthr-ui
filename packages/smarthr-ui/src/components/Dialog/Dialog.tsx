@@ -1,18 +1,14 @@
-import { DialogContentInner } from './DialogContentInner'
+import { DialogContent } from './DialogContent'
 import { DialogPortal } from './DialogPortal'
 
 import type { DialogProps } from './types'
 import type { ExtendElementPropsWithRef } from '../../types'
 import type { FC } from 'react'
 
-type Props = ExtendElementPropsWithRef<
-  typeof DialogContentInner,
-  DialogProps,
-  { omit: 'focusTrapRef' }
->
+type Props = ExtendElementPropsWithRef<typeof DialogContent, DialogProps, { omit: 'focusTrapRef' }>
 
 export const Dialog: FC<Props> = ({ className, portalParent, id, ...rest }) => (
   <DialogPortal id={id} parent={portalParent}>
-    <DialogContentInner {...rest} className={className} />
+    <DialogContent {...rest} className={className} />
   </DialogPortal>
 )

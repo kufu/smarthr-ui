@@ -19,7 +19,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContentInner } from '../dialogInnerStyle'
+import { dialogContent } from '../dialogContentStyle'
 
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
@@ -69,7 +69,7 @@ const BUTTON_COLUMN_GAP = {
 } as const
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContentInner()
+  const { wrapper, actionArea, buttonArea, message } = dialogContent()
 
   return {
     wrapper: wrapper(),
@@ -79,7 +79,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const StepFormDialogContentInner: FC<Props> = ({
+export const StepFormDialogContent: FC<Props> = ({
   children,
   heading,
   activeStep,
