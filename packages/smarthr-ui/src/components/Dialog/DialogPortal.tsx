@@ -3,9 +3,9 @@
 import { type FC, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     parent?: HTMLElement

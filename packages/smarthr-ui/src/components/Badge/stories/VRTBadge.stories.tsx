@@ -7,18 +7,18 @@ export default {
   title: 'Components/Badge/VRT',
   /* ペアワイズ法は使わずにすべての組み合わせを網羅する */
   render: (args: any) => {
-    const types = ['grey', 'blue', 'red', 'yellow'] as const
+    const colors = ['grey', 'blue', 'red', 'yellow'] as const
     return (
       <Stack {...args} style={{ padding: '1rem' }}>
-        {types.map((type, i) => (
+        {colors.map((color, i) => (
           <Cluster key={i}>
             <>
-              <Badge type={type} count={0} showZero={false} />
-              <Badge type={type} count={0} showZero={true} />
-              <Badge type={type} count={1} />
-              <Badge type={type} count={10} overflowCount={10} />
-              <Badge type={type} count={10} overflowCount={9} />
-              <Badge type={type} dot={true} />
+              <Badge count={0} showZero={false} color={color} />
+              <Badge count={0} showZero={true} color={color} />
+              <Badge count={1} color={color} />
+              <Badge count={10} overflowCount={10} color={color} />
+              <Badge count={10} overflowCount={9} color={color} />
+              <Badge dot={true} color={color} />
             </>
           </Cluster>
         ))}

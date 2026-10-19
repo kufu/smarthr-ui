@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'table',
   {
     data?: ReactNode[][]

@@ -6,9 +6,9 @@ import { tv } from 'tailwind-variants'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     direction?: 'horizontal' | 'vertical' | 'both'

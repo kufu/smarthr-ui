@@ -1,9 +1,9 @@
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { ElementType, FC } from 'react'
 
 export const DROPDOWN_CLOSER_CLASS_NAME = 'smarthr-ui-Dropdown-closer'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     as?: ElementType

@@ -5,7 +5,7 @@ import { color as defaultColorPalette, fontSize, textColor } from '../../tailwin
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FontSizes } from '../../themes'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { IconType } from 'react-icons'
 
 /**
@@ -28,7 +28,7 @@ export const colorSet = {
 
 const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
 
-export type Props = SHRComponentPropsWithRef<
+export type Props = ExtendElementPropsWithRef<
   'svg',
   {
     /**アイコンの説明テキスト*/

@@ -6,7 +6,7 @@ export type { Gap, PositiveGap, SeparatePositiveGap } from './Gap'
 export type { SeparateGap } from './Gap'
 export type { ResponseStatusWithoutProcessing } from '../hooks/useResponseStatus'
 export type {
-  SHRComponentProps,
-  SHRComponentPropsWithRef,
-  SHRComponentPropsWithoutRef,
-} from './SHRComponentProps'
+  ExtendProps,
+  ExtendElementPropsWithRef,
+  ExtendElementPropsWithoutRef,
+} from './ExtendProps'

@@ -7,9 +7,9 @@ import { Section } from '../SectioningContent'
 import { StepCounter } from './StepCounter'
 
 import type { StatusType, VerticalStep } from './types'
-import type { SHRComponentProps } from '../../types'
+import type { ExtendProps } from '../../types'
 
-type Props = SHRComponentProps<
+type Props = ExtendProps<
   VerticalStep,
   {
     statusType?: StatusType

@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { AnchorButton } from '../Button'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof AnchorButton,
   { enableNew?: boolean },
   { omit: 'variant' | 'size' | 'wide' | 'loading' | 'inactiveReason' | 'target' }
