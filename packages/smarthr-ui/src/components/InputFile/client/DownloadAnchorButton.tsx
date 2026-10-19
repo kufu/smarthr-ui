@@ -9,12 +9,39 @@ import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
 import { PREVIEW_BUTTON_CLASSNAME } from './style'
 
-export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
-  const [href, setHref] = useState('')
+import type { ExistingFile } from '../types'
+
+type AnchorAttributes = {
+  href: string
+  target?: '_blank'
+}
+
+// HINT: download属性はsame-origin URL・same-origin blob:・data:スキームでのみ機能し、
+// それ以外(クロスオリジン)では無視されて通常のナビゲーションが発生する
+// (https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#download)
+export const canUseDownloadAttribute = (url: string): boolean => {
+  try {
+    const parsed = new URL(url, window.location.href)
+    return parsed.protocol === 'data:' || parsed.origin === window.location.origin
+  } catch {
+    return false
+  }
+}
+
+export const DownloadAnchorButton: FC<{ file: File | ExistingFile }> = ({ file }) => {
+  const [anchorAttributes, setAnchorAttributes] = useState<AnchorAttributes>({ href: '' })
 
   useLayoutEffect(() => {
+    if (!(file instanceof File)) {
+      setAnchorAttributes({
+        href: file.url,
+        target: canUseDownloadAttribute(file.url) ? undefined : '_blank',
+      })
+      return
+    }
+
     const url = URL.createObjectURL(file)
-    setHref(url)
+    setAnchorAttributes({ href: url })
 
     return () => {
       URL.revokeObjectURL(url)
@@ -23,7 +50,8 @@ export const DownloadAnchorButton: FC<{ file: File }> = ({ file }) => {
 
   return (
     <AnchorButton
-      href={href}
+      href={anchorAttributes.href}
+      target={anchorAttributes.target}
       download={file.name}
       variant="text"
       className={PREVIEW_BUTTON_CLASSNAME}

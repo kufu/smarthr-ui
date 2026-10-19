@@ -6,6 +6,15 @@ export type PreviewableObjectType = {
   searchable?: boolean
 }
 
+export type ExistingFile = {
+  /** ファイル名 */
+  name: string
+  /** ファイルのダウンロード・プレビュー用URL */
+  url: string
+  /** MIMEタイプ。プレビュー可否(画像/PDF判定)に使う。未指定時はダウンロードリンク扱いになる */
+  contentType?: string
+}
+
 export type Props = ExtendElementPropsWithRef<
   'input',
   {
@@ -26,6 +35,10 @@ export type Props = ExtendElementPropsWithRef<
           /** ファイル複数選択の際に、選択済みのファイルと結合するかどうか */
           appendable?: boolean
         }
+    /** 既にアップロード済みのファイルの初期一覧 */
+    defaultExistingFiles?: ExistingFile[]
+    /** アップロード済みファイルが削除されたときに発火するコールバック関数 */
+    onDeleteExistingFile?: (file: ExistingFile, index: number) => void
   },
   { omit: 'children' }
 >
