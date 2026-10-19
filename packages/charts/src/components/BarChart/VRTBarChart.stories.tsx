@@ -5,6 +5,7 @@ import {
   manyPoints,
   multiSmall,
   singleSmall,
+  stackedGroupsExpanded,
 } from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
@@ -107,6 +108,11 @@ export default {
       {/* パターン13: テーブル表示（defaultView='table'） */}
       <div className="shr-h-[400px]">
         <BarChart data={multiSmall} title="テーブル表示" defaultView="table" />
+      </div>
+
+      {/* パターン14: グループ化テーブル表示（stackでグループ化されたデータセット、defaultView='table'） */}
+      <div className="shr-h-[400px]">
+        <BarChart data={stackedGroupsExpanded} title="グループ化テーブル表示" defaultView="table" />
       </div>
     </Stack>
   ),
