@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** コンテンツの最小高さ */

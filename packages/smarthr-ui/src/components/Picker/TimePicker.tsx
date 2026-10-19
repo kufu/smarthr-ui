@@ -2,9 +2,9 @@ import { type FC, useMemo } from 'react'
 
 import { classNameGenerator } from './style'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'input',
   {
     /** フォームにエラーがあるかどうか */

@@ -13,9 +13,9 @@ import { tv } from 'tailwind-variants'
 import { useLatest } from '../../../hooks/useLatest'
 import { flatArrayToMap, mapToKeyArray } from '../../../libs/map'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** アイコンの左右位置 */

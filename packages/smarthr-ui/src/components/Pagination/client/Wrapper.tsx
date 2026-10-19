@@ -6,10 +6,10 @@ import { useLatest } from '../../../hooks/useLatest'
 import { useLocalize } from '../../../intl'
 import { Nav } from '../../SectioningContent'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 import type { ClickableProps } from '../type'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   typeof Nav,
   ClickableProps,
   { omit: 'baseLevel' | 'aria-label' | 'onClick' }

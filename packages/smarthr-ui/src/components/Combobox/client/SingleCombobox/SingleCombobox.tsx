@@ -27,10 +27,10 @@ import { getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { BaseProps, ComboboxItem } from '../types'
 
-type Props<T> = SHRComponentPropsWithRef<
+type Props<T> = ExtendElementPropsWithRef<
   'input',
   BaseProps<T> & {
     /**

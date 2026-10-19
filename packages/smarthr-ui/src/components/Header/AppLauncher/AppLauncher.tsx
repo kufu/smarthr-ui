@@ -9,7 +9,7 @@ import { FaCaretDownIcon, FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { TextLink } from '../../TextLink'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 type AppItem = {
   label: ReactNode
@@ -17,7 +17,7 @@ type AppItem = {
   target?: string
 }
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   typeof Dropdown,
   {
     apps: Array<{
