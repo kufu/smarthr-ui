@@ -208,7 +208,7 @@ export const SegmentedControl: FC<Props> = ({
             size={size}
             className={classNames.button}
             aria-label={buttonAriaLabel}
-            aria-checked={checked && !!value}
+            aria-checked={checked}
             handleClick={functions.handleClickOption}
           />
         )
