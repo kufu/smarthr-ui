@@ -492,6 +492,190 @@ describe('SingleCombobox', () => {
       expect(combobox()).toHaveValue('option 2')
     })
   })
+
+  describe('FormData', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItem の値が name でFormDataから取得できること', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('default')).toBe('value-1')
+    })
+
+    it('非制御(uncontrolled)でクリア後、FormDataの値も追従すること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(clearButton())
+
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('default')).toBeNull()
+    })
+
+    it('selectedItem が null のとき、FormDataに値が含まれないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" selectedItem={null} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('default')).toBeNull()
+    })
+
+    it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+              <SingleCombobox
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(0)
+    })
+
+    it('検索用テキストボックスの name には `${name}-query` が設定されること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" selectedItem={null} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveAttribute('name', 'default-query')
+    })
+
+    it('disabledの場合、hidden inputも無効化されFormDataに値が含まれないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                disabled
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('default')).toBeNull()
+    })
+
+    it('requiredかつ未選択の場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" required selectedItem={null} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.type(combobox(), 'option')
+
+      expect(combobox()).toHaveProperty('validity.valid', false)
+    })
+
+    it('requiredでも選択済みなら検索用テキストボックスの妥当性を満たすこと', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                required
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validity.valid', true)
+    })
+
+    it('titleが指定されている場合、requiredの妥当性エラーメッセージにtitleの値が使われること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                required
+                selectedItem={null}
+                title="選択項目を指定してください"
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validationMessage', '選択項目を指定してください')
+    })
+
+    it('titleが指定されていない場合、requiredの妥当性エラーメッセージにデフォルトの文言が使われること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" required selectedItem={null} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validationMessage', '選択してください')
+    })
+  })
 })
 
 test('groupロールが付与されている', async () => {

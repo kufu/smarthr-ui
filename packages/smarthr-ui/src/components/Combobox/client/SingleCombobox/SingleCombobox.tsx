@@ -15,10 +15,11 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Localizer } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
 import { Input } from '../../../Input'
@@ -172,6 +173,7 @@ export const SingleCombobox = <T,>({
   width,
   dropdownWidth = 'auto',
   className,
+  title,
   onChange,
   onChangeInput,
   onAdd,
@@ -203,9 +205,11 @@ export const SingleCombobox = <T,>({
     null,
   )
 
-  const hasSelectedItem = selectedItem !== undefined
-  const actualSelectedItem = hasSelectedItem ? selectedItem : uncontrolledSelectedItem
-  const setSelectedItemIfUncontrolled = hasSelectedItem ? NOOP : setUncontrolledSelectedItem
+  const isSelectedItemControlled = selectedItem !== undefined
+  const actualSelectedItem = isSelectedItemControlled ? selectedItem : uncontrolledSelectedItem
+  const setSelectedItemIfUncontrolled = isSelectedItemControlled
+    ? NOOP
+    : setUncontrolledSelectedItem
 
   const selectedItemLabelText = actualSelectedItem ? getSelectedLabelText(actualSelectedItem) : ''
 
@@ -234,7 +238,7 @@ export const SingleCombobox = <T,>({
       onAdd,
       // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
       onSelect: (selected: ComboboxItem<T>) => {
-        if (!hasSelectedItem) {
+        if (!isSelectedItemControlled) {
           setSelectedItemIfUncontrolled(selected)
         }
 
@@ -275,7 +279,7 @@ export const SingleCombobox = <T,>({
     handleKeyDownListBox,
     emptySelectionFallbackItem,
     selectedItem: actualSelectedItem,
-    hasSelectedItem,
+    isSelectedItemControlled,
     setSelectedItemIfUncontrolled,
     isFocused,
     isExpanded,
@@ -293,7 +297,7 @@ export const SingleCombobox = <T,>({
     const selectFallbackItem = () => {
       if (!latest.emptySelectionFallbackItem) return
 
-      if (!latest.hasSelectedItem) {
+      if (!latest.isSelectedItemControlled) {
         latest.setSelectedItemIfUncontrolled(latest.emptySelectionFallbackItem)
       }
 
@@ -353,7 +357,7 @@ export const SingleCombobox = <T,>({
         })
 
         if (!isExecutedPreventDefault) {
-          if (!latest.hasSelectedItem) {
+          if (!latest.isSelectedItemControlled) {
             latest.setSelectedItemIfUncontrolled(null)
           }
 
@@ -390,7 +394,7 @@ export const SingleCombobox = <T,>({
         setInputValue(value)
 
         if (value === '') {
-          if (!latest.hasSelectedItem) {
+          if (!latest.isSelectedItemControlled) {
             latest.setSelectedItemIfUncontrolled(null)
           }
 
@@ -449,7 +453,25 @@ export const SingleCombobox = <T,>({
     isFocused || actualSelectedItem ? undefined : functions.selectFallbackItem,
   )
 
-  const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
+  const localized = useLocalize({
+    requiredMessage: {
+      id: 'smarthr-ui/SingleCombobox/requiredMessage',
+      defaultText: '選択してください',
+    },
+  })
+
+  // HINT: 検索用inputのnativeバリデーションは入力値(選択中アイテムのラベル)の有無しか検証できないため、
+  // 選択状態の有無をsetCustomValidityで別途検証する。titleが指定されている場合は利用者が意図したメッセージを優先する
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(
+        required && !actualSelectedItem ? title || localized.requiredMessage : '',
+      )
+    },
+    [required, actualSelectedItem, title, localized],
+  )
+
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, inputValidityEffectRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
@@ -481,13 +503,16 @@ export const SingleCombobox = <T,>({
         false
       ).toString()}
     >
+      {name && actualSelectedItem && (
+        <input type="hidden" name={name} disabled={disabled} value={actualSelectedItem.value} />
+      )}
       <Input
         {...rest}
         ref={mergedRef}
         role="combobox"
         type="text"
-        name={name}
-        required={required}
+        name={name ? `${name}-query` : undefined}
+        required={required && !actualSelectedItem}
         disabled={disabled}
         readOnly={readOnly}
         value={inputValue}
@@ -495,6 +520,7 @@ export const SingleCombobox = <T,>({
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
         placeholder={placeholder}
         error={error}
+        title={title}
         className={classNames.input}
         aria-haspopup="listbox"
         aria-controls={listBoxId}
