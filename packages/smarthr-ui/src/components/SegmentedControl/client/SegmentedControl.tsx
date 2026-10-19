@@ -7,7 +7,7 @@ import { useLatest } from '../../../hooks/useLatest'
 import { useLocalize } from '../../../intl'
 import { Button } from '../../Button'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 type Option = {
   /** 選択時に返される値 */
@@ -20,13 +20,15 @@ type Option = {
   disabled?: boolean
 }
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** 選択肢の配列 */
     options: Option[]
     /** 選択中の値 */
     value?: string | null
+    /** デフォルトで選択する値 */
+    defaultValue?: string | null
     /** 選択肢を押下したときに発火するコールバック関数 */
     onClickOption?: (value: string) => void
     /** 各ボタンの大きさ */
@@ -73,6 +75,7 @@ const classNameGenerator = tv({
 export const SegmentedControl: FC<Props> = ({
   options,
   value,
+  defaultValue,
   onClickOption,
   size = 'M',
   className,
@@ -85,6 +88,10 @@ export const SegmentedControl: FC<Props> = ({
       defaultText: '表示切り替え',
     },
   })
+  const [innerValue, setInnerValue] = useState(defaultValue ?? null)
+
+  const hasValue = value !== undefined
+  const actualValue = hasValue ? value : innerValue
 
   const classNames = useMemo(() => {
     const { container, button } = classNameGenerator()
@@ -95,9 +102,7 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [size, className])
 
-  const latest = useLatest({ onClickOption, isFocused })
-
-  const hasOnClickOption = !!onClickOption
+  const latest = useLatest({ onClickOption, isFocused, hasValue })
 
   const functions = useMemo(
     () => ({
@@ -163,18 +168,22 @@ export const SegmentedControl: FC<Props> = ({
           document.removeEventListener('keydown', handleKeyDown)
         }
       },
-      handleClickOption: hasOnClickOption
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            latest.onClickOption?.(e.currentTarget.value)
-          }
-        : undefined,
+      handleClickOption: (e: MouseEvent<HTMLButtonElement>) => {
+        const clickedValue = e.currentTarget.value
+
+        if (!latest.hasValue) {
+          setInnerValue(clickedValue)
+        }
+
+        latest.onClickOption?.(clickedValue)
+      },
       handleDelegateFocus: () => setIsFocused(true),
       handleDelegateBlur: () => setIsFocused(false),
     }),
-    [hasOnClickOption, latest],
+    [latest],
   )
 
-  const excludesSelected = !value || options.every((option) => option.value !== value)
+  const excludesSelected = options.every((option) => option.value !== actualValue)
 
   return (
     <div
@@ -187,7 +196,7 @@ export const SegmentedControl: FC<Props> = ({
       onBlur={functions.handleDelegateBlur}
     >
       {options.map((option, index) => {
-        const checked = value === option.value
+        const checked = actualValue === option.value
         const { ariaLabel: buttonAriaLabel, ...optionRest } = option
 
         return (
@@ -213,7 +222,7 @@ const SegmentedControlButton = memo<
     Omit<Props['options'][number], 'content' | 'ariaLabel'> & {
       content: ReactNode
       'aria-label'?: string
-      handleClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => void
       checked: boolean
       tabIndex: number
       'aria-checked': boolean

@@ -3,11 +3,11 @@ import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap } from '../../../types'
 
 type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     inline?: boolean

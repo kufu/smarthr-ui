@@ -26,13 +26,13 @@ import { Dropdown } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type SortFieldType = {
   value: string
 } & Omit<OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'button',
   {
     /** 並び替え項目 */

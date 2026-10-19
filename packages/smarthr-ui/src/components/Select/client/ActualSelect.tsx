@@ -8,15 +8,15 @@ import { type ChangeEvent, memo } from 'react'
 
 import { isIOS, isMobileSafari } from '../../../libs/ua'
 
-import type { SHRComponentPropsWithRef, SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendElementPropsWithoutRef } from '../../../types'
 
-type Option<T extends string> = SHRComponentPropsWithoutRef<
+type Option<T extends string> = ExtendElementPropsWithoutRef<
   'option',
   {
     value: T
   }
 >
-type Optgroup<T extends string> = SHRComponentPropsWithoutRef<
+type Optgroup<T extends string> = ExtendElementPropsWithoutRef<
   'optgroup',
   {
     label: string
@@ -24,7 +24,7 @@ type Optgroup<T extends string> = SHRComponentPropsWithoutRef<
   }
 >
 
-type Props<T extends string> = SHRComponentPropsWithRef<
+type Props<T extends string> = ExtendElementPropsWithRef<
   'select',
   {
     /** 選択肢のデータの配列 */
