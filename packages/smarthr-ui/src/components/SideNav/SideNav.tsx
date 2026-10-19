@@ -1,9 +1,9 @@
 import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'ul',
   {
     /** 各アイテムの大きさ */

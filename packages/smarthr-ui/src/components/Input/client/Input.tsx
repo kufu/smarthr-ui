@@ -7,9 +7,9 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'input',
   {
     /** input 要素の `type` 値 */

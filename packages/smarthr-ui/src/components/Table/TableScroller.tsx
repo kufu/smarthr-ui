@@ -1,9 +1,9 @@
 import { ScrollerSwitcher } from './ScrollerSwitcher'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 import type { FC } from 'react'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     fixedHead?: boolean

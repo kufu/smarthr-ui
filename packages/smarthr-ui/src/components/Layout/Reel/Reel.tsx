@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { Scroller } from '../../Scroller'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { PositiveGap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     gap?: PositiveGap

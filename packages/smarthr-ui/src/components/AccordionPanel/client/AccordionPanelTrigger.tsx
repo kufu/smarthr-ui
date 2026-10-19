@@ -19,13 +19,13 @@ import { Cluster } from '../../Layout'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 import type { Text } from '../../Text'
 
 type TextProps = ComponentPropsWithoutRef<typeof Text>
 type HeadingProps = ComponentPropsWithoutRef<typeof Heading>
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'button',
   {
     /** ヘッダ部分のテキストのスタイル */

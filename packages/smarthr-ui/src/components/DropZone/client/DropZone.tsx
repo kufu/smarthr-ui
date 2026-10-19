@@ -18,7 +18,7 @@ import { Button } from '../../Button'
 import { FaFolderOpenIcon } from '../../Icon'
 import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -34,7 +34,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /**
