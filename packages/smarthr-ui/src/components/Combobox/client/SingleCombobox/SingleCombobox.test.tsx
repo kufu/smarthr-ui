@@ -165,6 +165,13 @@ describe('SingleCombobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(5)
   })
 
+  it('isFilteringDisabledにfalseを明示した場合でも、未入力(選択中アイテムのラベル表示のみ)では絞り込まれないこと', async () => {
+    render(template({ isFilteringDisabled: false }))
+
+    await userEvent.click(combobox())
+    expect(screen.getAllByRole('option')).toHaveLength(5)
+  })
+
   it('コンボボックスがフォーカスされていないときに選択解除ボタンを押下してもリストボックスが表示されること', async () => {
     const onClear = vi.fn()
     render(template({ onClear }))

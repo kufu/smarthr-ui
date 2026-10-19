@@ -213,7 +213,7 @@ export const SingleCombobox = <T,>({
     selected: selectedItem,
     creatable,
     inputValue,
-    isFilteringDisabled: isFilteringDisabled ?? !isEditing,
+    isFilteringDisabled: isFilteringDisabled || !isEditing,
   })
 
   const selectFrame = useAnimationFrame()
