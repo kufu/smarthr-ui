@@ -498,23 +498,11 @@ describe('Dropdown', () => {
     })
   })
 
-  describe('上側に開いた後にコンテンツの高さが変わる場合', () => {
-    const OriginalResizeObserver = global.ResizeObserver
-    let resizeCallbacks: Array<() => void> = []
-    let contentHeight = 200
+  describe('上側に開く場合', () => {
+    let contentHeight = 300
 
     beforeEach(() => {
-      resizeCallbacks = []
-      contentHeight = 200
-
-      global.ResizeObserver = class {
-        constructor(callback: () => void) {
-          resizeCallbacks.push(callback)
-        }
-        observe() {}
-        unobserve() {}
-        disconnect() {}
-      } as unknown as typeof ResizeObserver
+      contentHeight = 300
 
       vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
         callback(0)
@@ -548,11 +536,10 @@ describe('Dropdown', () => {
     })
 
     afterEach(() => {
-      global.ResizeObserver = OriginalResizeObserver
       vi.restoreAllMocks()
     })
 
-    it('ResizeObserverが検知した高さ変化を受けて表示位置が再計算されること', () => {
+    it('transform: translateY(-100%) でトリガ上端に固定され、開いた後のコンテンツの高さ変化に再計算なしで追従すること', () => {
       render(template)
 
       act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
@@ -560,14 +547,14 @@ describe('Dropdown', () => {
       const content = screen
         .getByRole('button', { name: 'Button1' })
         .closest('.smarthr-ui-Dropdown-content') as HTMLElement
-      const initialTop = content.style.insetBlockStart
 
-      contentHeight = 300
-      act(() => {
-        resizeCallbacks.forEach((callback) => callback())
-      })
+      expect(content.style.transform).toBe('translateY(-100%)')
+      expect(content.style.insetBlockStart).toBe('705px') // トリガ上端(700) + 5
 
-      expect(content.style.insetBlockStart).not.toBe(initialTop)
+      // HINT: 開いた後に高さが変わっても、top はトリガ基準の固定値のまま変わらないこと
+      // (transform: translateY(-100%) によって実際のレンダリング後の高さ分だけ描画位置がずれる)
+      contentHeight = 600
+      expect(content.style.insetBlockStart).toBe('705px')
     })
   })
 })
