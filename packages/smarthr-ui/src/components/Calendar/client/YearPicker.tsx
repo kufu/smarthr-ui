@@ -7,9 +7,9 @@ import { useIntl } from '../../../intl'
 import { UnstyledButton } from '../../Button'
 import { Scroller } from '../../Scroller'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** 選択された年 */

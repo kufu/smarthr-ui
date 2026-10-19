@@ -5,9 +5,9 @@ import { LiveRegion } from '../LiveRegion'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'span',
   {
     /** ローダーの大きさ */

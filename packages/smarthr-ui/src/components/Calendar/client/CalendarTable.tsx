@@ -10,9 +10,9 @@ import { UnstyledButton } from '../../Button'
 
 import { isBetween } from './calendarHelper'
 
-import type { SHRComponentPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'table',
   {
     /** 現在の日付 */

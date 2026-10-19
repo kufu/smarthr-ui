@@ -19,7 +19,7 @@ import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
 import { Sidebar } from '../../Layout'
 import { Panel } from '../../Panel'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectHeadingType = {
   text: ReactNode
@@ -30,7 +30,7 @@ type ObjectHeadingType = {
 }
 type HeadingType = ReactNode | ObjectHeadingType
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** パネルのタイトル */
