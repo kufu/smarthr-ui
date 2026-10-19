@@ -149,6 +149,18 @@ describe('DatePicker', () => {
     expect(screen.queryByText('alt:2020')).not.toBeInTheDocument()
   })
 
+  it('defaultValue が parseInput で解析できない場合、入力欄に defaultValue がそのまま残ること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker name="date" defaultValue="invalid-date-string" parseInput={() => null} />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'DatePicker' })
+    expect(textbox).toHaveProperty('value', 'invalid-date-string')
+  })
+
   it('value・defaultValue とも未指定の場合、formatDate が渡されていても初期表示は空のままであること', () => {
     renderWithIntl(
       <form>

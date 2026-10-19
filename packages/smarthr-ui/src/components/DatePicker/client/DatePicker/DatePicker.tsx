@@ -150,11 +150,13 @@ export const DatePicker: FC<Props> = ({
     selectedDate && showAlternative ? showAlternative(selectedDate) : null,
   )
 
-  const [initialInputValue] = useState<string | undefined>(() =>
-    value === undefined && defaultValue !== undefined
-      ? formatDateValue(selectedDate, formatDate)
-      : undefined,
-  )
+  const [initialInputValue] = useState<string | undefined>(() => {
+    if (value !== undefined || defaultValue === undefined) {
+      return undefined
+    }
+
+    return selectedDate ? formatDateValue(selectedDate, formatDate) : (defaultValue ?? '')
+  })
 
   const isCalendarShown = !!inputRect
 
