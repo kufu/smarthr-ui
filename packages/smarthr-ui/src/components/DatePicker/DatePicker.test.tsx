@@ -98,6 +98,21 @@ describe('DatePicker', () => {
     expect(textbox).toHaveProperty('value', '1992/05/29')
   })
 
+  it('defaultValue のみ指定した場合(非制御)、初期表示時点でshowAlternativeの内容が表示されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="DatePicker">
+          <DatePicker
+            name="date"
+            defaultValue="2024-09-25"
+            showAlternative={(d) => (d ? `alt:${d.getFullYear()}` : null)}
+          />
+        </FormControl>
+      </form>,
+    )
+    expect(screen.getByText('alt:2024')).toBeVisible()
+  })
+
   it('value と defaultValue を両方指定した場合、value が優先されること', () => {
     renderWithIntl(
       <form>

@@ -140,11 +140,14 @@ export const DatePicker: FC<Props> = ({
   const [isInputFocused, setIsInputFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-  const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
   const calenderId = useId()
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
     parseStringDate(value ?? defaultValue, parseInput),
+  )
+
+  const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(() =>
+    selectedDate && showAlternative ? showAlternative(selectedDate) : null,
   )
 
   const [initialInputValue] = useState<string | undefined>(() =>
