@@ -5,9 +5,9 @@ import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'span',
   {
     as: ElementType

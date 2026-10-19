@@ -2,10 +2,10 @@
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { FC } from 'react'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'input',
   {
     /** `true` のとき、チェック状態を `mixed` にする */

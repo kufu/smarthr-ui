@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { Tooltip } from '../../Tooltip'
 import { Input } from '../client'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Input,
   {
     /** 入力欄に紐付けるツールチップに表示するメッセージ */
