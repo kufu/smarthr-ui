@@ -77,7 +77,7 @@ const NavigationCustomTag = memo<
 
     return (
       <Tag {...rest} className={actualClassName} onClick={handleDelegateClick}>
-        {children}
+        <span>{children}</span>
       </Tag>
     )
   },
