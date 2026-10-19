@@ -61,6 +61,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
   const focusFrame = useAnimationFrame()
+  const resizeFrame = useAnimationFrame()
 
   const latest = useLatest({
     active,
@@ -71,6 +72,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     contentId,
     theme,
     focusFrame,
+    resizeFrame,
     contentStyles,
   })
 
@@ -133,6 +135,17 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
         updateContentStyles()
         node.setAttribute('data-dropdown-mounted', 'true')
+
+        // HINT: 開いた後にコンテンツの高さが動的に変わると、上側に開いている場合は
+        // 表示位置(top)がトリガとの距離がずれたままになるため、高さの変化を検知して再計算する。
+        // updateContentStyles はコンテンツ自体の大きさを変えうるため、ResizeObserver の
+        // コールバックから同期的に呼ぶと「ResizeObserver loop completed with undelivered
+        // notifications」を発生させる。次フレームに逃がす
+        const resizeObserver = new ResizeObserver(() =>
+          latest.resizeFrame.request(updateContentStyles),
+        )
+
+        resizeObserver.observe(node)
 
         // HINT: このコンポーネントは Dropdown が開かれた時のみマウントされるが、マウント直後は
         // 位置計算が完了していないためコンテンツが誤った位置にちらつくのを防ぐために
@@ -212,6 +225,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         window.addEventListener('keydown', handleKeyDown)
 
         return () => {
+          resizeObserver.disconnect()
+          latest.resizeFrame.cancel()
           latest.focusFrame.cancel()
           window.removeEventListener('keydown', handleKeyDown)
 

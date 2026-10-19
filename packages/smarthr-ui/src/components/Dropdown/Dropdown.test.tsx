@@ -497,4 +497,77 @@ describe('Dropdown', () => {
       )
     })
   })
+
+  describe('上側に開いた後にコンテンツの高さが変わる場合', () => {
+    const OriginalResizeObserver = global.ResizeObserver
+    let resizeCallbacks: Array<() => void> = []
+    let contentHeight = 200
+
+    beforeEach(() => {
+      resizeCallbacks = []
+      contentHeight = 200
+
+      global.ResizeObserver = class {
+        constructor(callback: () => void) {
+          resizeCallbacks.push(callback)
+        }
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      } as unknown as typeof ResizeObserver
+
+      vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+        callback(0)
+        return 0
+      })
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: Element,
+      ) {
+        // HINT: トリガーを画面下寄りに配置し、ドロップダウンが上側に開く状況を再現する
+        const isTrigger = this.tagName === 'BUTTON' && this.textContent === 'Trigger'
+
+        return {
+          top: isTrigger ? 700 : 0,
+          bottom: isTrigger ? 740 : 0,
+          left: 0,
+          right: 120,
+          width: 120,
+          height: isTrigger ? 40 : 0,
+          x: 0,
+          y: 0,
+          toJSON: () => {},
+        } as DOMRect
+      })
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get() {
+          return contentHeight
+        },
+      })
+    })
+
+    afterEach(() => {
+      global.ResizeObserver = OriginalResizeObserver
+      vi.restoreAllMocks()
+    })
+
+    it('ResizeObserverが検知した高さ変化を受けて表示位置が再計算されること', () => {
+      render(template)
+
+      act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+
+      const content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+      const initialTop = content.style.insetBlockStart
+
+      contentHeight = 300
+      act(() => {
+        resizeCallbacks.forEach((callback) => callback())
+      })
+
+      expect(content.style.insetBlockStart).not.toBe(initialTop)
+    })
+  })
 })
