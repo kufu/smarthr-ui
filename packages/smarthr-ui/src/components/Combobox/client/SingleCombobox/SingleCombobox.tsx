@@ -16,7 +16,6 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
-import { useOnce } from '../../../../hooks/client/useOnce'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
 import { Localizer } from '../../../../intl'
@@ -38,9 +37,9 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     selectedItem: ComboboxItem<T> | null
     /**
-     * デフォルトで選択されるアイテム
+     * フォーカスが外れた際、selectedItemが未選択の場合に自動選択されるアイテム
      */
-    defaultItem?: ComboboxItem<T>
+    emptySelectionFallbackItem?: ComboboxItem<T>
     /**
      * コンポーネント内の先頭に表示する内容
      */
@@ -156,7 +155,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
 export const SingleCombobox = <T,>({
   items,
   selectedItem,
-  defaultItem,
+  emptySelectionFallbackItem,
   name,
   disabled,
   readOnly,
@@ -261,7 +260,7 @@ export const SingleCombobox = <T,>({
     onBlur,
     onKeyPress,
     handleKeyDownListBox,
-    defaultItem,
+    emptySelectionFallbackItem,
     selectedItem,
     isFocused,
     isExpanded,
@@ -276,9 +275,9 @@ export const SingleCombobox = <T,>({
   const functions = useMemo(() => {
     let inputNode: HTMLInputElement | null = null
 
-    const selectDefaultItem = () => {
-      if (latest.onSelect && latest.defaultItem) {
-        latest.onSelect(latest.defaultItem)
+    const selectFallbackItem = () => {
+      if (latest.onSelect && latest.emptySelectionFallbackItem) {
+        latest.onSelect(latest.emptySelectionFallbackItem)
       }
     }
     const unfocus = () => {
@@ -296,19 +295,13 @@ export const SingleCombobox = <T,>({
       } else {
         // HINT: 未選択の場合はinputValueに手入力値が残るため、isEditingは解除しない
         // 解除してしまうと「入力値が表示されているのに絞り込みが効いていない」状態になる
-        selectDefaultItem()
+        selectFallbackItem()
       }
     }
 
     return {
-      selectDefaultItem,
+      selectFallbackItem,
       unfocus,
-      // マウント時、selectedItemが未選択ならdefaultItemを初期値として選択する
-      baseInitialSelectCallbackRef: (node: HTMLInputElement | null) => {
-        if (node && !latest.selectedItem) {
-          selectDefaultItem()
-        }
-      },
       inputCallbackRef: (node: HTMLInputElement | null) => {
         inputNode = node
 
@@ -426,12 +419,10 @@ export const SingleCombobox = <T,>({
   const listBoxCallbackRef = useAreaClickCallbackRef(
     isFocused ? [triggerRef, clearButtonRef] : null,
     functions.unfocus,
-    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
+    isFocused || selectedItem ? undefined : functions.selectFallbackItem,
   )
 
-  const initialSelectCallbackRef = useOnce(functions.baseInitialSelectCallbackRef)
-
-  const mergedRef = useMergeRefs(functions.inputCallbackRef, initialSelectCallbackRef, ref)
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =

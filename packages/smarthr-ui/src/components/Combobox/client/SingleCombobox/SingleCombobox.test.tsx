@@ -116,9 +116,9 @@ describe('SingleCombobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(1)
   })
 
-  it('未選択のままblurしてdefaultItemが選択された場合は、絞り込みが解除されること', async () => {
+  it('未選択のままblurしてemptySelectionFallbackItemが選択された場合は、絞り込みが解除されること', async () => {
     // 実際の利用方法を模して、親コンポーネントがselectedItemを状態として管理する
-    const DefaultItemComboboxWrapper = () => {
+    const FallbackItemComboboxWrapper = () => {
       const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
 
       return (
@@ -128,7 +128,7 @@ describe('SingleCombobox', () => {
               <SingleCombobox
                 name="default"
                 selectedItem={selectedItem}
-                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                emptySelectionFallbackItem={{ label: 'option 1', value: 'value-1' }}
                 onSelect={setSelectedItem}
                 onChangeSelected={setSelectedItem}
                 items={[
@@ -143,52 +143,19 @@ describe('SingleCombobox', () => {
       )
     }
 
-    render(<DefaultItemComboboxWrapper />)
-
-    // マウント時にdefaultItemが自動選択されるため、クリアして未選択状態を作る
-    await userEvent.click(clearButton())
+    render(<FallbackItemComboboxWrapper />)
 
     await userEvent.click(combobox())
     await userEvent.type(combobox(), 'option 2')
     expect(screen.getAllByRole('option')).toHaveLength(1)
 
-    // 未選択のままblurするとdefaultItemが選択され、inputの表示値もそのラベルになる
+    // 未選択のままblurするとemptySelectionFallbackItemが選択され、inputの表示値もそのラベルになる
     await userEvent.click(document.body)
     expect(combobox()).toHaveValue('option 1')
 
     // 選択中アイテムのラベルは手入力値ではないため、絞り込みには使われないこと
     await userEvent.click(combobox())
     expect(screen.getAllByRole('option')).toHaveLength(3)
-  })
-
-  it('selectedItem が未選択で defaultItem を指定した場合、マウント時に defaultItem が選択されること', () => {
-    // 実際の利用方法を模して、親コンポーネントがselectedItemを状態として管理する
-    const MountDefaultItemWrapper = () => {
-      const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
-
-      return (
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox
-                name="default"
-                selectedItem={selectedItem}
-                defaultItem={{ label: 'option 2', value: 'value-2' }}
-                onSelect={setSelectedItem}
-                items={[
-                  { label: 'option 1', value: 'value-1' },
-                  { label: 'option 2', value: 'value-2' },
-                ]}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>
-      )
-    }
-
-    render(<MountDefaultItemWrapper />)
-
-    expect(combobox()).toHaveValue('option 2')
   })
 
   it('コンボボックスがフォーカスされていないときに選択解除ボタンを押下してもリストボックスが表示されること', async () => {
