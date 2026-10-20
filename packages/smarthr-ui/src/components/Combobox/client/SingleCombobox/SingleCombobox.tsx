@@ -38,6 +38,10 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     selectedItem?: ComboboxItem<T> | null
     /**
+     * 非制御(uncontrolled)コンポーネントとして使う場合の初期値。`selectedItem` を指定した場合は無視される
+     */
+    defaultItem?: ComboboxItem<T>
+    /**
      * フォーカスが外れた際、selectedItemが未選択の場合に自動選択されるアイテム
      */
     emptySelectionFallbackItem?: ComboboxItem<T>
@@ -158,6 +162,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
 export const SingleCombobox = <T,>({
   items,
   selectedItem,
+  defaultItem,
   emptySelectionFallbackItem,
   name,
   disabled,
@@ -202,7 +207,7 @@ export const SingleCombobox = <T,>({
   // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
   const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
   const [uncontrolledSelectedItem, setUncontrolledSelectedItem] = useState<ComboboxItem<T> | null>(
-    null,
+    defaultItem ?? null,
   )
 
   const isSelectedItemControlled = selectedItem !== undefined

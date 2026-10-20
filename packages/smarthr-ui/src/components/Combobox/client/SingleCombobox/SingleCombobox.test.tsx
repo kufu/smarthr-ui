@@ -433,6 +433,48 @@ describe('SingleCombobox', () => {
       expect(combobox()).toHaveValue('')
     })
 
+    it('defaultItem のみ指定した場合、初期表示に反映される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 1')
+    })
+
+    it('非制御で defaultItem を指定した場合、クリア後にblurしても空のまま維持される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(clearButton())
+      expect(combobox()).toHaveValue('')
+
+      await userEvent.click(combobox())
+      await userEvent.click(document.body)
+
+      expect(combobox()).toHaveValue('')
+    })
+
     it('selectedItem と onChangeSelected を指定した場合(制御)、操作だけでは表示が変わらない', async () => {
       const onChangeSelected = vi.fn()
 
