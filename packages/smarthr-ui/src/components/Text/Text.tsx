@@ -64,6 +64,9 @@ const classNameGenerator = tv({
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
     } satisfies Record<NonNullable<Props<ElementType>['weight']>, string>,
+    emphasis: {
+      true: 'shr-not-italic',
+    },
     italic: {
       true: 'shr-italic',
     },
@@ -226,12 +229,24 @@ const ActualText = <T extends ElementType = 'span'>({
       weight: weight || styleTypeValues.weight,
       color: color || styleTypeValues.color,
       leading: leading || styleTypeValues.leading,
+      emphasis,
       italic,
       whiteSpace,
       maxLines: maxLines.max,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, maxLines.max, className, styleType])
+  }, [
+    size,
+    weight,
+    emphasis,
+    italic,
+    color,
+    leading,
+    whiteSpace,
+    maxLines.max,
+    className,
+    styleType,
+  ])
   const hasIcon = !!icon
   const iconGap = icon?.gap
 
