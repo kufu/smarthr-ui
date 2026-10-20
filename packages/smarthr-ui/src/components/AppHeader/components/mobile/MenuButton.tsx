@@ -2,7 +2,6 @@ import { memo } from 'react'
 
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
 
@@ -25,7 +24,7 @@ export const MenuButton = memo<Props>(({ children, handleClick, isCurrent, ...re
     className="[&&]:shr-justify-between [&&]:shr-px-0.5"
     handleClick={handleClick}
   >
-    <Translate>{children}</Translate>
+    {children}
     <FaAngleRightIcon color="TEXT_BLACK" />
   </CommonButton>
 ))

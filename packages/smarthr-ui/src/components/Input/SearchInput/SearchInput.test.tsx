@@ -30,4 +30,14 @@ describe('SearchInput', () => {
 
     expect(input).toHaveValue('検索ワード追加')
   })
+
+  it('variant="ai"の場合、検索アイコンがグラデーション表示になること', () => {
+    render(
+      <IntlProvider locale="ja">
+        <SearchInput name="search" variant="ai" />
+      </IntlProvider>,
+    )
+
+    expect(document.querySelector('svg linearGradient')).toBeInTheDocument()
+  })
 })
