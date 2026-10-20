@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { EnvironmentProvider } from '../../hooks/client/useEnvironment'
 import { IntlProvider } from '../../intl'
 import { FormControl } from '../FormGroup'
 
@@ -14,11 +15,13 @@ describe('InputFile', () => {
     const onChange = vi.fn()
     await render(
       <IntlProvider locale="ja">
-        <form>
-          <FormControl label="input file">
-            <InputFile name="test" onChange={onChange} label="input file" />
-          </FormControl>
-        </form>
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" onChange={onChange} label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
       </IntlProvider>,
     )
     const input = screen.getByLabelText('input file')
@@ -31,11 +34,13 @@ describe('InputFile', () => {
     const onChange = vi.fn()
     await render(
       <IntlProvider locale="ja">
-        <form>
-          <FormControl label="input file">
-            <InputFile name="test" multiple onChange={onChange} label="input file" />
-          </FormControl>
-        </form>
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" multiple onChange={onChange} label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
       </IntlProvider>,
     )
     const input = screen.getByLabelText('input file')
@@ -70,11 +75,13 @@ describe('InputFile', () => {
   it('ファイル選択後、ファイルリストが表示されること', async () => {
     await render(
       <IntlProvider locale="ja">
-        <form>
-          <FormControl label="input file">
-            <InputFile name="test" label="input file" />
-          </FormControl>
-        </form>
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
       </IntlProvider>,
     )
     const input = screen.getByLabelText('input file')
@@ -86,11 +93,13 @@ describe('InputFile', () => {
   it.skip('ファイル選択後、削除するとinputのvalueには存在しないこと', async () => {
     await render(
       <IntlProvider locale="ja">
-        <form>
-          <FormControl label="input file">
-            <InputFile name="test" label="input file" />
-          </FormControl>
-        </form>
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
       </IntlProvider>,
     )
     const input: HTMLInputElement = screen.getByLabelText('input file')
@@ -105,11 +114,13 @@ describe('InputFile', () => {
   it.skip('multipleで複数ファイル選択後、1つ削除すると削除したもののみinputのvalueには存在しないこと', async () => {
     await render(
       <IntlProvider locale="ja">
-        <form>
-          <FormControl label="input file">
-            <InputFile name="test" multiple label="input file" />
-          </FormControl>
-        </form>
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" multiple label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
       </IntlProvider>,
     )
     const input: HTMLInputElement = screen.getByLabelText('input file')
@@ -124,11 +135,13 @@ describe('InputFile', () => {
   it.skip('ファイル削除後、ファイルリストに存在しないこと', async () => {
     await render(
       <IntlProvider locale="ja">
-        <form>
-          <FormControl label="input file">
-            <InputFile name="test" label="input file" />
-          </FormControl>
-        </form>
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
       </IntlProvider>,
     )
     const input = screen.getByLabelText('input file')

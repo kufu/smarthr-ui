@@ -10,20 +10,14 @@ export type Environment = {
   matches: Record<keyof CreatedMediaQueryTheme, boolean>
 }
 
-const defaultEnvironment: Environment = {
-  mobile: false,
-  matches: {
-    SCREEN_SMALL: false,
-    COLOR_MODE_FORCED: false,
-    COLOR_SCHEME_LIGHT: true,
-    COLOR_SCHEME_DARK: false,
-    MOTION_REDUCED: false,
-  },
-}
-
 export const EnvironmentContext = createContext<Environment | null>(null)
 
 export const useEnvironment = () => {
   const environment = useContext(EnvironmentContext)
-  return environment || defaultEnvironment
+
+  if (environment === null) {
+    throw new Error('useEnvironment は EnvironmentProvider の内側で使用してください')
+  }
+
+  return environment
 }
