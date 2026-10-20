@@ -91,9 +91,7 @@ export const ElementAs: Story = {
   args: {
     elementAs: _elementAsOptions.あり,
     href: undefined,
-    // HINT: toはelementAsに渡すカスタムコンポーネント(_elementAsOptions.あり)専用のpropでHelpLink自体の
-    // propsには存在しないが、実行時はelementAs先にrest経由で渡るため、型上はここでのみ許容する
     to: '#',
     children: 'next/link などを想定したリンク',
-  } as Story['args'] & { to: string },
+  },
 }
