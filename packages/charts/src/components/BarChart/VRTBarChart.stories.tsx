@@ -107,12 +107,12 @@ export default {
 
       {/* パターン13: テーブル表示（defaultView='table'） */}
       <div className="shr-h-[400px]">
-        <BarChart data={multiSmall} title="テーブル表示" defaultView="table" />
+        <BarChart data={multiSmall} defaultView="table" title="テーブル表示" />
       </div>
 
       {/* パターン14: グループ化テーブル表示（stackでグループ化されたデータセット、defaultView='table'） */}
       <div className="shr-h-[400px]">
-        <BarChart data={stackedGroupsExpanded} title="グループ化テーブル表示" defaultView="table" />
+        <BarChart data={stackedGroupsExpanded} defaultView="table" title="グループ化テーブル表示" />
       </div>
     </Stack>
   ),
