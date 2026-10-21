@@ -461,13 +461,12 @@ export const SingleCombobox = <T,>({
 
   // HINT: 検索用inputのnativeバリデーションは入力値(選択中アイテムのラベル)の有無しか検証できないため、
   // 選択状態の有無をsetCustomValidityで別途検証する。titleが指定されている場合は利用者が意図したメッセージを優先する
+  const actualRequired = required && !actualSelectedItem
   const inputValidityEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
-      node?.setCustomValidity(
-        required && !actualSelectedItem ? title || localized.requiredMessage : '',
-      )
+      node?.setCustomValidity(actualRequired ? title || localized.requiredMessage : '')
     },
-    [required, actualSelectedItem, title, localized],
+    [actualRequired, title, localized],
   )
 
   const mergedRef = useMergeRefs(functions.inputCallbackRef, inputValidityEffectRef, ref)
@@ -511,7 +510,7 @@ export const SingleCombobox = <T,>({
         role="combobox"
         type="text"
         name={name ? `${name}-query` : undefined}
-        required={required && !actualSelectedItem}
+        required={actualRequired}
         disabled={disabled}
         readOnly={readOnly}
         value={inputValue}
