@@ -5,10 +5,9 @@ import { type FC, useRef, useState } from 'react'
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { Fieldset, FormControl } from '../FormGroup'
-import { Input } from '../Input'
+import { Input, WarekiPicker } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
-import { WarekiPicker } from '../WarekiPicker'
 
 import { Dialog } from './Dialog'
 

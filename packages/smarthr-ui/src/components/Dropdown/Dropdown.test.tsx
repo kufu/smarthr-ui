@@ -8,9 +8,9 @@ import { Button } from '../Button'
 import { SingleCombobox } from '../Combobox'
 import { Dialog } from '../Dialog'
 import { FormControl } from '../FormGroup'
+import { WarekiPicker } from '../Input'
 import { Stack } from '../Layout'
 import { Portal } from '../Portal'
-import { WarekiPicker } from '../WarekiPicker'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from './client'
 

@@ -2,17 +2,16 @@ import dayjs from 'dayjs'
 import { userEvent, within } from 'storybook/test'
 
 import { Cluster } from '../../../Layout'
-import { DatePicker } from '../client'
+import { WarekiPicker } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
-  title: 'Components/DatePicker（非推奨）/VRT',
-  component: DatePicker,
+  title: 'Components/WarekiPicker/VRT',
+  component: WarekiPicker,
   render: (args) => {
     const value = '2024/11/06'
     const width = '100%'
-    const showAlternative = (_: Date | null) => <div>alt</div>
     const formatDate = (date: Date | null) => dayjs(date).format('YYYY年MM月DD')
 
     const matrices = [
@@ -26,28 +25,26 @@ export default {
       <Cluster>
         {matrices.map((m) => (
           <>
-            <DatePicker {...args} name="datepicker_default" disabled={m.disabled} error={m.error} />
-            <DatePicker
-              name="datepicker_value"
+            <WarekiPicker
+              {...args}
+              name="warekipicker_default"
+              disabled={m.disabled}
+              error={m.error}
+            />
+            <WarekiPicker
+              name="warekipicker_value"
               disabled={m.disabled}
               value={value}
               error={m.error}
             />
-            <DatePicker
-              name="datepicker_width"
+            <WarekiPicker
+              name="warekipicker_width"
               disabled={m.disabled}
               error={m.error}
               width={width}
             />
-            <DatePicker
-              name="datepicker_showalternative"
-              disabled={m.disabled}
-              value={value}
-              error={m.error}
-              showAlternative={showAlternative}
-            />
-            <DatePicker
-              name="datepicker_formatdate"
+            <WarekiPicker
+              name="warekipicker_formatdate"
               disabled={m.disabled}
               value={value}
               error={m.error}
@@ -62,7 +59,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof DatePicker>
+} satisfies Meta<typeof WarekiPicker>
 
 export const VRT = {}
 
@@ -74,13 +71,15 @@ export const VRTForcedColors: StoryObj = {
 }
 
 export const VRTExpanded: StoryObj = {
-  render: (args) => <DatePicker {...args} className="shr-h-[500px] shr-min-w-[500px]" />,
+  render: (args) => <WarekiPicker {...args} className="shr-h-[500px] shr-min-w-[500px]" />,
   args: {
     value: '2024/11/06',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(canvas.getByRole('textbox'))
+    const calendarHeader = await within(canvasElement.ownerDocument.body).findByText('2024年11月')
+    await userEvent.click(calendarHeader)
   },
 }
 
@@ -111,7 +110,7 @@ export const VRTExpandedBottom: StoryObj = {
   ...VRTExpanded,
   render: (args) => (
     <div className="shr-relative shr-h-[100vh] shr-w-full">
-      <DatePicker {...args} className="shr-absolute shr-bottom-0" />
+      <WarekiPicker {...args} className="shr-absolute shr-bottom-0" />
     </div>
   ),
 }
