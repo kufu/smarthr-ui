@@ -21,9 +21,9 @@ import { useLayoutEffectRef } from '../../../../../hooks/client/useLayoutEffectR
 import { useMergeRefs } from '../../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../../hooks/useLatest'
-import { Calendar } from '../../../../Calendar'
 import { FaCalendarDaysIcon } from '../../../../Icon'
 import { Input } from '../../../../Input'
+import { Calendar } from '../../../Calendar'
 import { Portal } from '../Portal'
 
 import { parseJpnDateString } from './datePickerHelper'

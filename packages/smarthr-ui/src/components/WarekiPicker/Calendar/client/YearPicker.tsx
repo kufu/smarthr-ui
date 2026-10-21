@@ -3,11 +3,11 @@
 import { type FC, type MouseEvent, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
-import { UnstyledButton } from '../../Button'
-import { Scroller } from '../../Scroller'
+import { useIntl } from '../../../../intl'
+import { UnstyledButton } from '../../../Button'
+import { Scroller } from '../../../Scroller'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type Props = ExtendElementPropsWithRef<
   'div',

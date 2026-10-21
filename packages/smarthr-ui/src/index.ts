@@ -130,8 +130,6 @@ export {
   UnexpectedErrorScreen,
 } from './components/ErrorScreen'
 /** @public */
-export { Calendar } from './components/Calendar'
-/** @public */
 export { SegmentedControl } from './components/SegmentedControl'
 /** @public */
 export { FormControl, Fieldset } from './components/FormGroup'
@@ -176,7 +174,7 @@ export { TimePicker, MonthPicker, DatetimeLocalPicker } from './components/Picke
 /** @public */
 export { Browser } from './components/Browser'
 /** @public */
-export { DatePicker, WarekiPicker } from './components/WarekiPicker'
+export { Calendar, DatePicker, WarekiPicker } from './components/WarekiPicker'
 /** @public */
 export { AppHeader } from './components/AppHeader'
 /** @public */
