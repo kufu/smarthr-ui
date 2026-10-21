@@ -7,9 +7,9 @@ import { ControlledTooltip } from '../Tooltip'
 
 import { CheckboxTh } from './client'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Checkbox,
   Pick<ComponentPropsWithRef<typeof CheckboxTh>, 'vAlign' | 'fixed' | 'rowSpan' | 'colSpan'>
 >

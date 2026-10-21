@@ -4,10 +4,10 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { defaultHtmlFontSize } from '../../../themes'
 import { Scroller } from '../../Scroller'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 import type { FC } from 'react'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     direction: 'both'

@@ -10,11 +10,11 @@ import { IS_NEXT_JS } from '../../../../libs/nextjs'
 import { STYLE_TYPE_MAP, Text } from '../../../Text'
 import { VisuallyHiddenText, visuallyHiddenTextClassName } from '../../../VisuallyHiddenText'
 
-import type { SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type TextProps = ComponentPropsWithRef<typeof Text>
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'h1',
   {
     /**

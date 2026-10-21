@@ -12,8 +12,10 @@ import { FaXmarkIcon } from '../../Icon'
 import { Center, Cluster } from '../../Layout'
 import { Loader } from '../../Loader'
 
+import type { ExistingFile } from '../types'
+
 type Props = {
-  file: File | null
+  file: File | ExistingFile | null
   handleClose: () => void
   handleDownload: () => void
   searchable?: boolean
@@ -31,6 +33,11 @@ export const FilePreviewDialog: FC<Props> = memo(
         return
       }
 
+      if (!(file instanceof File)) {
+        setBlobUrl(file.url)
+        return
+      }
+
       const url = URL.createObjectURL(file)
       setBlobUrl(url)
 
@@ -44,7 +51,7 @@ export const FilePreviewDialog: FC<Props> = memo(
         <FileViewer
           file={{
             url: blobUrl,
-            contentType: file.type,
+            contentType: file instanceof File ? file.type : (file.contentType ?? ''),
             alt: file.name,
           }}
           searchable={searchable}

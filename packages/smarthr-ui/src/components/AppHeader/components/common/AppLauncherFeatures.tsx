@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, memo } from 'react'
+import { type ComponentPropsWithRef, type FC, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../../intl'
@@ -8,8 +8,6 @@ import { Center } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
-
-import { Translate } from './Translate'
 
 import type { Launcher } from '../../types'
 
@@ -79,12 +77,10 @@ const LoadErrorText = memo(() => (
 const EmptyList = memo(() => (
   <div className={CLASS_NAMES.empty}>
     <Text size="S">
-      <Translate>
-        <Localizer
-          id="smarthr-ui/AppHeader/Launcher/emptyText"
-          defaultText="該当するアプリが見つかりませんでした。"
-        />
-      </Translate>
+      <Localizer
+        id="smarthr-ui/AppHeader/Launcher/emptyText"
+        defaultText="該当するアプリが見つかりませんでした。"
+      />
     </Text>
   </div>
 ))
@@ -130,7 +126,9 @@ const FeatureListItem = memo<{
   </li>
 ))
 
-const FeatureName: FC<PropsWithChildren> = ({ children }) => {
+const FeatureName: FC<Pick<ComponentPropsWithRef<typeof FeatureListItem>, 'children'>> = ({
+  children,
+}) => {
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   return isDesktop ? (

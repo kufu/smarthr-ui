@@ -2,9 +2,9 @@
 
 import dayjs from 'dayjs'
 import {
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   memo,
   useId,
   useMemo,
@@ -22,9 +22,9 @@ import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** 選択可能な開始日 */
@@ -213,9 +213,9 @@ export const Calendar: FC<Props> = ({
   )
 }
 
-const YearMonthRender = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => <div className={className}>{children}</div>,
-)
+const YearMonthRender = memo<ComponentPropsWithRef<'div'>>(({ children, ...rest }) => (
+  <div {...rest}>{children}</div>
+))
 
 const YearSelectButton = memo<{
   'aria-expanded': boolean

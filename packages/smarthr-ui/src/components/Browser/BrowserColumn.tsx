@@ -4,11 +4,11 @@ import { tv } from 'tailwind-variants'
 import { BrowserItem } from './BrowserItem'
 
 import type { ItemNode } from './models'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const getColumnId = (column: number) => `column-${column}`
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'ul',
   {
     value?: string

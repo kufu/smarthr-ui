@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  type MouseEvent,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -15,7 +8,7 @@ import { UnstyledButton } from '../../Button'
 import { FaCircleInfoIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -44,7 +37,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof UnstyledButton,
   {
     /** タブの ID */
@@ -73,6 +66,7 @@ export const TabItem: FC<Props> = ({
   disabled,
   disabledReason,
   onClick,
+  children,
   ...rest
 }) => {
   const latest = useLatest({ onClick })
@@ -107,20 +101,24 @@ export const TabItem: FC<Props> = ({
           {...rest}
           {...buttonAttrs}
           suffix={disabledReason.icon || <FaCircleInfoIcon color="TEXT_GREY" />}
-        />
+        >
+          {children}
+        </TabButton>
       </Tooltip>
     )
   }
 
-  return <TabButton {...rest} {...tabAttrs} {...buttonAttrs} />
+  return (
+    <TabButton {...rest} {...tabAttrs} {...buttonAttrs}>
+      {children}
+    </TabButton>
+  )
 }
 
 const TabButton = memo<
-  PropsWithChildren<
-    Omit<Props, 'onClick'> & {
-      handleClick?: NonNullable<Props['onClick']>
-    }
-  >
+  Omit<Props, 'onClick'> & {
+    handleClick: Props['onClick']
+  }
 >(({ id, children, suffix, handleClick, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, label, suffixWrapper } = classNameGenerator()

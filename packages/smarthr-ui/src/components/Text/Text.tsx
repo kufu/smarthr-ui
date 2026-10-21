@@ -6,7 +6,7 @@ import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { TextOverflowTooltip } from './client'
 
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { Gap, SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
 type StyleType =
   'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
@@ -64,6 +64,9 @@ const classNameGenerator = tv({
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
     } satisfies Record<NonNullable<Props<ElementType>['weight']>, string>,
+    emphasis: {
+      true: 'shr-not-italic',
+    },
     italic: {
       true: 'shr-italic',
     },
@@ -162,7 +165,7 @@ type MaxLinesObject = {
 }
 type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
 
-type Props<T extends ElementType> = SHRComponentPropsWithRef<
+type Props<T extends ElementType> = ExtendElementPropsWithRef<
   T,
   {
     /** テキストコンポーネントの HTML タグ名。初期値は span */
@@ -226,12 +229,24 @@ const ActualText = <T extends ElementType = 'span'>({
       weight: weight || styleTypeValues.weight,
       color: color || styleTypeValues.color,
       leading: leading || styleTypeValues.leading,
+      emphasis,
       italic,
       whiteSpace,
       maxLines: maxLines.max,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, maxLines.max, className, styleType])
+  }, [
+    size,
+    weight,
+    emphasis,
+    italic,
+    color,
+    leading,
+    whiteSpace,
+    maxLines.max,
+    className,
+    styleType,
+  ])
   const hasIcon = !!icon
   const iconGap = icon?.gap
 

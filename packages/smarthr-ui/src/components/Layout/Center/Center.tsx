@@ -3,9 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** コンテンツの最小高さ */
@@ -60,6 +60,7 @@ export const Center: FC<Props> = ({
   verticalCentering,
   as: Component = 'div',
   className,
+  style,
   children,
   ...rest
 }) => {
@@ -74,8 +75,9 @@ export const Center: FC<Props> = ({
       {...rest}
       className={actualClassName}
       style={{
-        minHeight: minHeight ?? undefined,
-        maxWidth: maxWidth ?? undefined,
+        ...style,
+        minHeight: minHeight ?? style?.minHeight,
+        maxWidth: maxWidth ?? style?.maxWidth,
       }}
     >
       {children}

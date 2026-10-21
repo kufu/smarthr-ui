@@ -7,7 +7,7 @@ export type { AbstractSize, CharRelativeSize, PositiveCharRelativeSize } from '.
 export { createSpacingByChar, primitiveTokens } from './createSpacing'
 export type { FontSizes } from './createFontSize'
 export { defaultHtmlFontSize, defaultFontSize } from './createFontSize'
-export { defaultColor } from './createColor'
+export { aiGradationColors, defaultColor } from './createColor'
 export { defaultTextColor } from './createTextColor'
 export { defaultShadow } from './createShadow'
 export { defaultWidth } from './createWidth'

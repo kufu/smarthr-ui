@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  type Ref,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react'
+import { type FC, type ReactNode, type Ref, useCallback, useMemo, useRef } from 'react'
 
 import { FaCircleExclamationIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -19,9 +10,9 @@ import { Text } from '../../Text'
 import { CHILDREN_WRAPPER_SELECTOR } from './constants'
 
 import type { CommonProps, LabelComponentProps, ObjectLabelType } from './type'
-import type { SHRComponentProps } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 
-type Props = SHRComponentProps<
+type Props = ExtendProps<
   CommonProps,
   {
     ref: Ref<HTMLDivElement>
@@ -247,11 +238,10 @@ export const FormGroup: FC<Props> = ({
 }
 
 export const LabelBody: FC<
-  Pick<ComponentPropsWithRef<typeof Text>, 'styleType' | 'icon' | 'children'> &
-    Pick<LabelComponentProps, 'statusLabels'>
-> = ({ styleType, icon, children, statusLabels }) => (
+  ExtendElementPropsWithRef<typeof Text, Pick<LabelComponentProps, 'statusLabels'>>
+> = ({ statusLabels, children, ...rest }) => (
   <>
-    <Text styleType={styleType} icon={icon}>
+    <Text {...rest}>
       <span className="smarthr-ui-FormControl-labelText">{children}</span>
     </Text>
     {statusLabels.length > 0 && (
@@ -263,7 +253,7 @@ export const LabelBody: FC<
 )
 
 export const LabelCluster: FC<
-  PropsWithChildren<{ as?: 'label'; htmlFor?: string; id?: string; 'aria-hidden'?: 'true' }>
+  ExtendElementPropsWithRef<typeof Cluster, { as?: 'label' }, { omit: 'align' | 'className' }>
 > = ({ children, ...rest }) => (
   <Cluster {...rest} align="center" className="smarthr-ui-FormControl-label">
     {children}

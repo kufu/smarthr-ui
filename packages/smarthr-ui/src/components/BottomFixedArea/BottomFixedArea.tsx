@@ -6,7 +6,6 @@ import {
   type FC,
   type FunctionComponentElement,
   type MouseEventHandler,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
@@ -17,7 +16,7 @@ import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 import { Panel } from '../Panel'
 
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { generateIcon } from '../Icon'
 
 type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
@@ -26,7 +25,7 @@ type ButtonType =
   | FunctionComponentElement<ComponentPropsWithRef<typeof Button>>
   | FunctionComponentElement<ComponentPropsWithRef<typeof AnchorButton>>
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** この領域の説明 */
@@ -137,7 +136,7 @@ export const BottomFixedArea: FC<Props> = ({
   )
 }
 
-const Description = memo<PropsWithChildren>(
+const Description = memo<{ children: Props['description'] }>(
   ({ children }) =>
     children && <p className="smarthr-ui-BottomFixedArea-description">{children}</p>,
 )

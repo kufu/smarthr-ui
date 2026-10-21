@@ -2,7 +2,6 @@ import {
   Children,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   isValidElement,
   memo,
@@ -19,9 +18,9 @@ import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** ラベルのテキスト */
@@ -104,7 +103,7 @@ export const AppNavi: FC<Props> = ({
   )
 }
 
-const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
+const MemoizedStatusLabel = memo<{ id: string; children: Props['label'] }>(
   ({ id, children }) =>
     children && (
       <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>
