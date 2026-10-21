@@ -30,17 +30,27 @@ const loadReactPDFModule = (): Promise<ReactPDFModule> => {
       .then((mod) => {
         const { pdfjs } = mod
 
-        // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
-        // @ts-expect-error
-        if (typeof window.Promise.withResolvers === 'undefined') {
+        // iOS 17.3以下ではPromise.withResolversが、Safari 18未満・Chrome 126未満ではURL.parseが未定義のため、polyfillを適用する
+        if (
           // @ts-expect-error
-          window.Promise.withResolvers = function () {
+          typeof window.Promise.withResolvers === 'undefined' ||
+          typeof URL.parse === 'undefined'
+        ) {
+          // @ts-expect-error
+          window.Promise.withResolvers ??= function () {
             let resolve, reject
             const promise = new Promise((res, rej) => {
               resolve = res
               reject = rej
             })
             return { promise, resolve, reject }
+          }
+          URL.parse ??= (url, base) => {
+            try {
+              return new URL(url, base)
+            } catch {
+              return null
+            }
           }
           // web workerもpolyfillされたものを読み込む
           pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
