@@ -135,15 +135,10 @@ export const FloatArea: FC<Props> = ({
       message: message(),
     }
   }, [bottom, bottomFixed, className, mobile])
+  const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Panel
-      {...rest}
-      layer={3}
-      padding={1}
-      className={classNames.wrapper}
-      style={{ ...style, zIndex }}
-    >
+    <Panel {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
       <Stack gap={0.5}>
         {bottomFixed ? (
           <>
