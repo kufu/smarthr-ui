@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { describe, expect, it } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
@@ -8,7 +8,9 @@ import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 const renderEditor = async (html: string) => {

@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, onTestFinished, vi } from 'vitest'
 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
@@ -13,7 +13,9 @@ import type { RichTextJSON } from '../../types'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 const youtubeDoc: RichTextJSON = {

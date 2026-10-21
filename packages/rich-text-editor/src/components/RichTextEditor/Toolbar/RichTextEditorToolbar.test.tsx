@@ -88,7 +88,9 @@ const ALL_FEATURES: RichTextFeature[] = [
 ]
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 const MobileWrapper = ({ children }: { children: ReactNode }) => (

@@ -4,7 +4,7 @@ import { Editor } from '@tiptap/core'
 import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextSelection } from '@tiptap/pm/state'
 import StarterKit from '@tiptap/starter-kit'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { CellAppearance } from './CellAppearance'
@@ -93,11 +93,13 @@ afterEach(() => {
 const showControls = () =>
   render(
     <IntlProvider locale="ja">
-      <TableCellControls
-        containerRef={{ current: container }}
-        editor={editor}
-        features={['table', 'color', 'backgroundColor']}
-      />
+      <EnvironmentProvider>
+        <TableCellControls
+          containerRef={{ current: container }}
+          editor={editor}
+          features={['table', 'color', 'backgroundColor']}
+        />
+      </EnvironmentProvider>
     </IntlProvider>,
   )
 

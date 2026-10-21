@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createElement, memo } from 'react'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
@@ -54,7 +54,9 @@ vi.mock('../Toolbar/ColorPicker/ColorPickerButton', (importOriginal) =>
 )
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 const renderEditor = async () => {

@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createRef, useState } from 'react'
-import { FormControl, IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, FormControl, IntlProvider } from 'smarthr-ui'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { getPlainText } from '../serializers/getPlainText'
@@ -20,7 +20,9 @@ import type { Editor, TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 const paragraphDoc = (text: string): RichTextJSON => ({

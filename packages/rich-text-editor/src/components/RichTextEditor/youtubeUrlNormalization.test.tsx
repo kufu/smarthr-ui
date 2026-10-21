@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Editor } from '@tiptap/core'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor/RichTextEditor'
@@ -44,7 +44,9 @@ afterAll(() => {
 })
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 const findYoutubeSrc = (json: JSONContent): unknown =>

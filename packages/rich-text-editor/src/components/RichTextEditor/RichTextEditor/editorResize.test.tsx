@@ -1,5 +1,5 @@
 import { act, render, waitFor } from '@testing-library/react'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from './RichTextEditor'
@@ -7,7 +7,9 @@ import { RichTextEditor } from './RichTextEditor'
 import type { ReactNode } from 'react'
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 afterEach(() => {

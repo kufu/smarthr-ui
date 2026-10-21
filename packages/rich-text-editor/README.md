@@ -37,7 +37,7 @@ import { RichTextEditor, RichTextViewer } from '@smarthr/smarthr-ui-rich-text-ed
 
 ### Provider
 
-翻訳とテーマは本体のものを使います。エディタ専用の Provider はありません。
+翻訳・テーマ・環境（モバイル判定）は本体のものを使います。本体の `IntlProvider` と `EnvironmentProvider` の内側に置いてください。エディタ専用の Provider はありません。
 
 ```tsx
 import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
@@ -52,7 +52,7 @@ const App = () => (
 )
 ```
 
-`EnvironmentProvider` が無い環境ではモバイル判定が常に `false` になり、タッチ環境でもツールチップを描画します。ツールバーの構成は Provider の有無では変わりません。
+`EnvironmentProvider` は必須です。無いとツールバーを描画するときにエラーになります。`readOnly` や `hideToolbar` でツールバーを出していない間はエラーにならず、ツールバーを出したときに初めて起きるため、ツールバーを出さない画面でも置いてください。モバイル判定に使い、モバイルではツールバーのツールチップを描画しません。
 
 ## 開発
 

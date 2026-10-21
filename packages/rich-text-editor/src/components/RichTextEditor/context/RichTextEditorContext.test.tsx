@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { IntlProvider } from 'smarthr-ui'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
@@ -22,7 +22,9 @@ vi.mock('./RichTextEditorContext', async (importOriginal) => {
 })
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
-  <IntlProvider locale="ja">{children}</IntlProvider>
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
 )
 
 // 利用者がインラインで配列や関数を書き、親の都合で再レンダーした状況

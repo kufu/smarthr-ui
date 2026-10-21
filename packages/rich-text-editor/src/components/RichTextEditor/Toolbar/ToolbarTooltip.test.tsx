@@ -41,11 +41,16 @@ const fireIntersection = (isIntersecting: boolean) => {
   })
 }
 
+const Wrapper = ({ children }: { children: ReactNode }) => (
+  <EnvironmentProvider>{children}</EnvironmentProvider>
+)
+
 const renderTooltip = (props: Partial<ComponentPropsWithoutRef<typeof ToolbarTooltip>> = {}) =>
   render(
     <ToolbarTooltip {...props} shortcut="Mod-B" label="太字">
       <button type="button">太字</button>
     </ToolbarTooltip>,
+    { wrapper: Wrapper },
   )
 
 const tooltipOf = (label: string) =>
@@ -141,6 +146,7 @@ describe('ToolbarTooltip', () => {
       <ToolbarTooltip shortcut="Mod-B" label="太字">
         <button type="button">太字</button>
       </ToolbarTooltip>,
+      { wrapper: Wrapper },
     )
 
     await userEvent.hover(screen.getByRole('button'))
@@ -168,6 +174,7 @@ describe('ToolbarTooltip', () => {
       <ToolbarTooltip shortcut="Mod-B" label="太字">
         <button type="button">太字</button>
       </ToolbarTooltip>,
+      { wrapper: Wrapper },
     )
 
     await userEvent.hover(screen.getByRole('button'))
