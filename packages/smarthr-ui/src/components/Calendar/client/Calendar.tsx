@@ -2,9 +2,9 @@
 
 import dayjs from 'dayjs'
 import {
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   memo,
   useId,
   useMemo,
@@ -213,9 +213,9 @@ export const Calendar: FC<Props> = ({
   )
 }
 
-const YearMonthRender = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => <div className={className}>{children}</div>,
-)
+const YearMonthRender = memo<ComponentPropsWithRef<'div'>>(({ children, ...rest }) => (
+  <div {...rest}>{children}</div>
+))
 
 const YearSelectButton = memo<{
   'aria-expanded': boolean

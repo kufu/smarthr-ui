@@ -2,7 +2,6 @@ import {
   Children,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   isValidElement,
   memo,
@@ -104,7 +103,7 @@ export const AppNavi: FC<Props> = ({
   )
 }
 
-const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
+const MemoizedStatusLabel = memo<{ id: string; children: Props['label'] }>(
   ({ id, children }) =>
     children && (
       <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>
