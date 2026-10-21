@@ -116,9 +116,9 @@ describe('SingleCombobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(1)
   })
 
-  it('未選択のままblurしてdefaultItemが選択された場合は、絞り込みが解除されること', async () => {
+  it('未選択のままblurしてemptySelectionFallbackItemが選択された場合は、絞り込みが解除されること', async () => {
     // 実際の利用方法を模して、親コンポーネントがselectedItemを状態として管理する
-    const DefaultItemComboboxWrapper = () => {
+    const FallbackItemComboboxWrapper = () => {
       const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
 
       return (
@@ -128,8 +128,9 @@ describe('SingleCombobox', () => {
               <SingleCombobox
                 name="default"
                 selectedItem={selectedItem}
-                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                emptySelectionFallbackItem={{ label: 'option 1', value: 'value-1' }}
                 onSelect={setSelectedItem}
+                onChangeSelected={setSelectedItem}
                 items={[
                   { label: 'option 1', value: 'value-1' },
                   { label: 'option 2', value: 'value-2' },
@@ -142,13 +143,13 @@ describe('SingleCombobox', () => {
       )
     }
 
-    render(<DefaultItemComboboxWrapper />)
+    render(<FallbackItemComboboxWrapper />)
 
     await userEvent.click(combobox())
     await userEvent.type(combobox(), 'option 2')
     expect(screen.getAllByRole('option')).toHaveLength(1)
 
-    // 未選択のままblurするとdefaultItemが選択され、inputの表示値もそのラベルになる
+    // 未選択のままblurするとemptySelectionFallbackItemが選択され、inputの表示値もそのラベルになる
     await userEvent.click(document.body)
     expect(combobox()).toHaveValue('option 1')
 

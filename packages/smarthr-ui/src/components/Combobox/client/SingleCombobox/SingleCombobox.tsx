@@ -37,9 +37,9 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     selectedItem: ComboboxItem<T> | null
     /**
-     * デフォルトで選択されるアイテム
+     * フォーカスが外れた際、selectedItemが未選択の場合に自動選択されるアイテム
      */
-    defaultItem?: ComboboxItem<T>
+    emptySelectionFallbackItem?: ComboboxItem<T>
     /**
      * コンポーネント内の先頭に表示する内容
      */
@@ -155,7 +155,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
 export const SingleCombobox = <T,>({
   items,
   selectedItem,
-  defaultItem,
+  emptySelectionFallbackItem,
   name,
   disabled,
   readOnly,
@@ -260,7 +260,7 @@ export const SingleCombobox = <T,>({
     onBlur,
     onKeyPress,
     handleKeyDownListBox,
-    defaultItem,
+    emptySelectionFallbackItem,
     selectedItem,
     isFocused,
     isExpanded,
@@ -275,9 +275,9 @@ export const SingleCombobox = <T,>({
   const functions = useMemo(() => {
     let inputNode: HTMLInputElement | null = null
 
-    const selectDefaultItem = () => {
-      if (latest.onSelect && latest.defaultItem) {
-        latest.onSelect(latest.defaultItem)
+    const selectFallbackItem = () => {
+      if (latest.onSelect && latest.emptySelectionFallbackItem) {
+        latest.onSelect(latest.emptySelectionFallbackItem)
       }
     }
     const unfocus = () => {
@@ -295,12 +295,12 @@ export const SingleCombobox = <T,>({
       } else {
         // HINT: 未選択の場合はinputValueに手入力値が残るため、isEditingは解除しない
         // 解除してしまうと「入力値が表示されているのに絞り込みが効いていない」状態になる
-        selectDefaultItem()
+        selectFallbackItem()
       }
     }
 
     return {
-      selectDefaultItem,
+      selectFallbackItem,
       unfocus,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         inputNode = node
@@ -419,7 +419,7 @@ export const SingleCombobox = <T,>({
   const listBoxCallbackRef = useAreaClickCallbackRef(
     isFocused ? [triggerRef, clearButtonRef] : null,
     functions.unfocus,
-    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
+    isFocused || selectedItem ? undefined : functions.selectFallbackItem,
   )
 
   const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
