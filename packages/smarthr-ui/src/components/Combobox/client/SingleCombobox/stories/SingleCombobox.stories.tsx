@@ -104,7 +104,7 @@ export default {
       options: Object.keys(defaultItems),
       mapping: defaultItems,
     },
-    defaultItem: {
+    emptySelectionFallbackItem: {
       control: { type: 'select' },
       options: Object.keys(defaultItems),
       mapping: defaultItems,
@@ -139,10 +139,10 @@ export const SelectedItem: StoryObj<typeof SingleCombobox> = {
 }
 
 export const DefaultItem: StoryObj<typeof SingleCombobox> = {
-  name: 'defaultItem',
+  name: 'emptySelectionFallbackItem',
   args: {
     selectedItem: undefined,
-    defaultItem: defaultItems['option 4'],
+    emptySelectionFallbackItem: defaultItems['option 4'],
   },
 }
 
