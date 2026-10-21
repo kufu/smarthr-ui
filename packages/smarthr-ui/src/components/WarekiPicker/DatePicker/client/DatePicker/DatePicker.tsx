@@ -15,20 +15,20 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
-import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
-import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
-import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
-import { useTheme } from '../../../../hooks/client/useTheme'
-import { useLatest } from '../../../../hooks/useLatest'
-import { Calendar } from '../../../Calendar'
-import { FaCalendarDaysIcon } from '../../../Icon'
-import { Input } from '../../../Input'
+import { useAnimationFrame } from '../../../../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../../../hooks/client/useTheme'
+import { useLatest } from '../../../../../hooks/useLatest'
+import { Calendar } from '../../../../Calendar'
+import { FaCalendarDaysIcon } from '../../../../Icon'
+import { Input } from '../../../../Input'
 import { Portal } from '../Portal'
 
 import { parseJpnDateString } from './datePickerHelper'
 
-import type { ExtendElementPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../../types'
 
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
 
@@ -104,7 +104,7 @@ const formatDateValue = (
   formatDateFn: ((date: Date | null) => string) | undefined,
 ) => (formatDateFn ? formatDateFn(date) : DEFAULT_DATE_TO_STRING(date))
 
-/** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
+/** @deprecated DatePicker は非推奨です。WarekiPicker を使ってください。 */
 export const DatePicker: FC<Props> = ({
   value,
   defaultValue,

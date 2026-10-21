@@ -132,8 +132,6 @@ export {
 /** @public */
 export { Calendar } from './components/Calendar'
 /** @public */
-export { DatePicker } from './components/DatePicker'
-/** @public */
 export { SegmentedControl } from './components/SegmentedControl'
 /** @public */
 export { FormControl, Fieldset } from './components/FormGroup'
@@ -178,7 +176,7 @@ export { TimePicker, MonthPicker, DatetimeLocalPicker } from './components/Picke
 /** @public */
 export { Browser } from './components/Browser'
 /** @public */
-export { WarekiPicker } from './components/WarekiPicker'
+export { DatePicker, WarekiPicker } from './components/WarekiPicker'
 /** @public */
 export { AppHeader } from './components/AppHeader'
 /** @public */

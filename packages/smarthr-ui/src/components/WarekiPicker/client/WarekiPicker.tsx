@@ -4,7 +4,7 @@ import { type ComponentPropsWithRef, type FC, useCallback } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
-import { DatePicker } from '../../DatePicker'
+import { DatePicker } from '../DatePicker'
 
 type Props = Omit<ComponentPropsWithRef<typeof DatePicker>, 'showAlternative'>
 

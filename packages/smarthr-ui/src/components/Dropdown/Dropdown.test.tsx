@@ -6,11 +6,11 @@ import { flushSync } from 'react-dom'
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { SingleCombobox } from '../Combobox'
-import { DatePicker } from '../DatePicker'
 import { Dialog } from '../Dialog'
 import { FormControl } from '../FormGroup'
 import { Stack } from '../Layout'
 import { Portal } from '../Portal'
+import { DatePicker } from '../WarekiPicker'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from './client'
 

@@ -4,11 +4,11 @@ import { type FC, useRef, useState } from 'react'
 
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
-import { DatePicker } from '../DatePicker'
 import { Fieldset, FormControl } from '../FormGroup'
 import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
+import { DatePicker } from '../WarekiPicker'
 
 import { Dialog } from './Dialog'
 
