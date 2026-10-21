@@ -2,9 +2,9 @@
 
 import { type FC, useCallback } from 'react'
 
-import { Portal as OriginalPortal } from '../../Portal'
+import { Portal as OriginalPortal } from '../../../../Portal'
 
-import type { ExtendElementPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../../../types'
 
 type Props = ExtendElementPropsWithoutRef<
   typeof OriginalPortal,

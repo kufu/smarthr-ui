@@ -6,9 +6,9 @@ import { flushSync } from 'react-dom'
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { SingleCombobox } from '../Combobox'
-import { DatePicker } from '../DatePicker'
 import { Dialog } from '../Dialog'
 import { FormControl } from '../FormGroup'
+import { WarekiPicker } from '../Input'
 import { Stack } from '../Layout'
 import { Portal } from '../Portal'
 
@@ -303,7 +303,7 @@ describe('Dropdown', () => {
       )
     })
 
-    it('DatePickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
+    it('WarekiPickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
       const user = userEvent.setup()
       render(
         <IntlProvider locale="ja">
@@ -314,7 +314,7 @@ describe('Dropdown', () => {
             <DropdownContent controllable>
               <form>
                 <FormControl label="日付">
-                  <DatePicker name="test" value={undefined} onChangeDate={() => {}} />
+                  <WarekiPicker name="test" value={undefined} onChangeDate={() => {}} />
                 </FormControl>
               </form>
             </DropdownContent>
