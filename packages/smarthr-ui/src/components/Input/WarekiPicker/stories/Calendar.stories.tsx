@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { Calendar } from '../client'
+import { Calendar } from '../Calendar'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
