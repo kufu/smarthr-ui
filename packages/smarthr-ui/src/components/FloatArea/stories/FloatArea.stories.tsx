@@ -3,7 +3,7 @@ import { FormControl } from '../../FormGroup'
 import { Input } from '../../Input'
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
-import { FloatArea } from '../FloatArea'
+import { FloatArea } from '../client'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'

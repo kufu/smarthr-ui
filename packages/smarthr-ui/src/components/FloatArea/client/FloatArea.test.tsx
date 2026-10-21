@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 
-import { EnvironmentProvider } from '../../hooks/client/useEnvironment'
-import { Button } from '../Button'
+import { EnvironmentProvider } from '../../../hooks/client/useEnvironment'
+import { Button } from '../../Button'
 
 import { FloatArea } from './FloatArea'
 

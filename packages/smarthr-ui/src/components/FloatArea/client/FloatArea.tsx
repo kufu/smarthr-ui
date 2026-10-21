@@ -3,14 +3,14 @@
 import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
-import { Cluster, Stack } from '../Layout'
-import { Panel } from '../Panel'
-import { ResponseMessage } from '../ResponseMessage'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
+import { Cluster, Stack } from '../../Layout'
+import { Panel } from '../../Panel'
+import { ResponseMessage } from '../../ResponseMessage'
 
-import type { ResponseStatusWithoutProcessing } from '../../hooks/useResponseStatus'
-import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { SHRComponentPropsWithRef } from '../../types'
+import type { ResponseStatusWithoutProcessing } from '../../../hooks/useResponseStatus'
+import type { AbstractSize, CharRelativeSize } from '../../../themes'
+import type { SHRComponentPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
