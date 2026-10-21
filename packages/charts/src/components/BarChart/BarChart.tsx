@@ -45,6 +45,8 @@ type Props = {
   data: ChartData<'bar'>
   title?: string
   options?: Partial<ChartOptions<'bar'>>
+  stacked?: boolean
+  orientation?: 'horizontal' | 'vertical'
 } & BarChartColorProps
 
 export const BarChart: React.FC<Props> = ({
@@ -53,20 +55,25 @@ export const BarChart: React.FC<Props> = ({
   options: externalOptions,
   disablePatterns,
   singleTone,
+  orientation = 'vertical',
+  stacked,
 }) => {
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
+  const hasSingleTone = !!singleTone
+  const singleToneFrom = singleTone?.from
+  const singleToneTo = singleTone?.to
   const chartColors = useMemo(
     () =>
       getChartColors(data.datasets.length, {
         disablePatterns,
-        singleTone: Boolean(singleTone),
-        toneFrom: singleTone?.from,
-        toneTo: singleTone?.to,
+        singleTone: hasSingleTone,
+        toneFrom: singleToneFrom,
+        toneTo: singleToneTo,
       }),
-    [data.datasets.length, disablePatterns, singleTone?.from, singleTone?.to],
+    [data.datasets.length, disablePatterns, hasSingleTone, singleToneFrom, singleToneTo],
   )
 
   const ariaLabel = useMemo(() => {
@@ -82,15 +89,26 @@ export const BarChart: React.FC<Props> = ({
       datasets: data.datasets.map((dataset, index) => ({
         ...dataset,
         ...chartColors[index],
+        ...(stacked && index > 0 ? { borderSkipped: false } : {}),
       })),
     }),
-    [data, chartColors],
+    [data, chartColors, stacked],
   )
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
         ...externalOptions,
+        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        scales: {
+          ...externalOptions?.scales,
+          ...(stacked
+            ? {
+                x: { ...externalOptions?.scales?.x, stacked: true },
+                y: { ...externalOptions?.scales?.y, stacked: true },
+              }
+            : {}),
+        },
         plugins: {
           ...externalOptions?.plugins,
           title: title
@@ -103,15 +121,18 @@ export const BarChart: React.FC<Props> = ({
               },
           keyboardNavigation: {
             liveRegionId: chartId,
+            stacked,
+            horizontal: orientation === 'horizontal',
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [title, chartId, externalOptions, orientation, stacked],
   )
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Bar
         ref={chartRef}
         role="application"

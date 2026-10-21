@@ -79,7 +79,7 @@ export const CommonButton = memo<Props>(
             onClick={handleClick as AnchorProps['handleClick']}
           >
             {prefix}
-            {children}
+            <span>{children}</span>
           </a>
         )
       case 'button':
@@ -91,7 +91,7 @@ export const CommonButton = memo<Props>(
             onClick={handleClick as ButtonProps['handleClick']}
           >
             {prefix}
-            {children}
+            <span>{children}</span>
           </button>
         )
     }

@@ -6,7 +6,7 @@ import {
 } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
   title: 'Components/AccordionPanel/AccordionPanelTrigger',
@@ -47,7 +47,7 @@ export const HeadingType: StoryObj<typeof AccordionPanelTrigger> = {
           'blockTitle',
           'subBlockTitle',
           'subSubBlockTitle',
-        ] as Array<ComponentProps<typeof AccordionPanelTrigger>['headingType']>
+        ] as Array<ComponentPropsWithoutRef<typeof AccordionPanelTrigger>['headingType']>
       ).map((headingType) => (
         <AccordionPanelItem key={headingType} name={`accorion-panel-item-${headingType}`}>
           <AccordionPanelTrigger {...args} headingType={headingType}>
@@ -66,7 +66,7 @@ export const UnrecommendedHeadingTag: StoryObj<typeof AccordionPanelTrigger> = {
     <AccordionPanel>
       {(
         [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as Array<
-          ComponentProps<typeof AccordionPanelTrigger>['unrecommendedHeadingTag']
+          ComponentPropsWithoutRef<typeof AccordionPanelTrigger>['unrecommendedHeadingTag']
         >
       ).map((unrecommendedHeadingTag) => (
         <AccordionPanelItem

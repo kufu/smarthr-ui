@@ -1,12 +1,12 @@
 'use client'
 
-import { type ComponentProps, type FC, useCallback } from 'react'
+import { type ComponentPropsWithRef, type FC, useCallback } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { DatePicker } from '../../DatePicker'
 
-type Props = Omit<ComponentProps<typeof DatePicker>, 'showAlternative'>
+type Props = Omit<ComponentPropsWithRef<typeof DatePicker>, 'showAlternative'>
 
 const handleShowWareki = (date: Date | null, locale: string) => {
   if (!date) {

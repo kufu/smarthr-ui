@@ -6,6 +6,7 @@ import { Fieldset } from '../client'
 import { _childrenOptions } from './Fieldset.stories'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithRef } from 'react'
 
 export default {
   title: 'Components/Fieldset/VRT',
@@ -17,10 +18,12 @@ export default {
             {...args}
             key={`${unrecommendedHide}${disabled}`}
             disabled={disabled}
-            legend={{
-              ...args.legend,
-              unrecommendedHide,
-            }}
+            legend={
+              {
+                ...(args.legend as Record<string, unknown>),
+                unrecommendedHide,
+              } as ComponentPropsWithRef<typeof Fieldset>['legend']
+            }
           >
             <Stack>
               <Fieldset

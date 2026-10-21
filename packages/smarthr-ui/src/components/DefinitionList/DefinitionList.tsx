@@ -1,9 +1,12 @@
-import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
 
-type Props = PropsWithChildren<ComponentProps<'dl'>>
+// TODO: ComponentPropsWithRef<'dl'>に修正し、dlが受け取れる属性をすべて設定可能にする
+type Props = PropsWithChildren<{
+  className?: string
+}>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-DefinitionList shr-my-[initial]',

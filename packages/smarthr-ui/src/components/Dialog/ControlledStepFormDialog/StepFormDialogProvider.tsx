@@ -10,12 +10,7 @@ import {
   useState,
 } from 'react'
 
-export type StepItem = {
-  /** StepのID */
-  id: string
-  /** 何ステップ目か */
-  stepNumber: number
-}
+import type { StepItem } from './type'
 
 type StepFormDialogContextType = {
   stepQueueRef: MutableRefObject<StepItem[]>

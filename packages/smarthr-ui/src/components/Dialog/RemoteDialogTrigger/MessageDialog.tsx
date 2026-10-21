@@ -4,13 +4,14 @@ import { ControlledMessageDialog } from '../ControlledMessageDialog'
 
 import { useRemoteTrigger } from './useRemoteTrigger'
 
-import type { ComponentProps, FC } from 'react'
+import type { ExtendElementPropsWithRef } from '../../../types'
+import type { FC } from 'react'
 
-type Props = Omit<
-  ComponentProps<typeof ControlledMessageDialog>,
-  'isOpen' | 'onClickClose' | 'id'
-> &
-  Parameters<typeof useRemoteTrigger>[0]
+type Props = ExtendElementPropsWithRef<
+  typeof ControlledMessageDialog,
+  Parameters<typeof useRemoteTrigger>[0],
+  { omit: 'isOpen' | 'onPressEscape' }
+>
 
 export const MessageDialog: FC<Props> = ({
   id,

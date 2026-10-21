@@ -197,4 +197,45 @@ describe('Dialog', () => {
       screen.getByRole('textbox', { name: '特定の要素をフォーカスするダイアログのInput' }),
     ).toHaveFocus()
   })
+
+  it('ダイアログの内容が画面に収まるよう、max-heightとoverflow-y-autoが設定されること', () => {
+    renderWithIntl(
+      <Dialog isOpen ariaLabel="Dialog">
+        本文
+      </Dialog>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'Dialog' })
+    expect(dialog).toHaveClass('shr-max-h-[calc(100dvh-theme(spacing.2))]')
+    expect(dialog).toHaveClass('shr-overflow-y-auto')
+  })
+
+  it('Escapeキー押下時、onPressEscapeに実際のKeyboardEventが渡されること', async () => {
+    const handlePressEscape = vi.fn()
+    const DialogTemplateWithPressEscape: FC = () => {
+      const [isOpen, setIsOpen] = useState<boolean>(true)
+      return (
+        <Dialog
+          isOpen={isOpen}
+          ariaLabel="Escapeイベント検証ダイアログ"
+          onPressEscape={(e) => {
+            handlePressEscape(e)
+            setIsOpen(false)
+          }}
+        >
+          <p>本文</p>
+        </Dialog>
+      )
+    }
+    renderWithIntl(<DialogTemplateWithPressEscape />)
+
+    expect(screen.getByRole('dialog', { name: 'Escapeイベント検証ダイアログ' })).toBeVisible()
+
+    await userEvent.keyboard('{Escape}')
+
+    expect(handlePressEscape).toHaveBeenCalledTimes(1)
+    const receivedEvent = handlePressEscape.mock.calls[0][0]
+    expect(receivedEvent).toBeInstanceOf(KeyboardEvent)
+    expect(receivedEvent.key).toBe('Escape')
+  })
 })

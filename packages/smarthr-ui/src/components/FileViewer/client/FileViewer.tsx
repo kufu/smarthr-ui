@@ -2,7 +2,7 @@
 
 import Decimal from 'decimal.js'
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -37,6 +37,8 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = 0.2
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
+type OnPasswordType = ComponentPropsWithRef<typeof PDFViewer>['handlePassword']
+
 type Props = {
   file: FileForViewer
   width?: number
@@ -47,7 +49,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+  onPassword?: OnPasswordType
   onLoadError?: (error: unknown) => void
   /** PDF表示時に検索ボックスを表示するかどうか */
   searchable?: boolean
@@ -149,7 +151,7 @@ export const FileViewer: FC<Props> = ({
 const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
-    handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+    handlePassword?: OnPasswordType
     searchable: boolean
   }
 > = ({
@@ -246,7 +248,12 @@ const ActualFileViewer: FC<
       }
 
       const resizeObserver = new ResizeObserver(() => {
-        setWidth((node.clientWidth ?? 0) - 64)
+        // HINT: clientWidthではなくoffsetWidthを使う。offsetWidthは境界ボックスのサイズで
+        // 縦スクロールバーの出現/消失(clientWidthのみに影響する)の影響を受けないため、
+        // 画像の高さがコンテナ境界付近にある場合のsetWidthの無限往復(ちらつき)を防げる。
+        // 64px差し引くことでスクロールバー分(15px程度)の余白が確保されるため、
+        // 画像とスクロールバーが重なることはない
+        setWidth((node.offsetWidth ?? 0) - 64)
       })
 
       resizeObserver.observe(node)

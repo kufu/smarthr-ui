@@ -1,0 +1,68 @@
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+} from 'react'
+
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { Cluster } from '../../Layout'
+import { Section } from '../../SectioningContent'
+import { DialogBody } from '../DialogBody'
+import { DialogHeading } from '../DialogHeading'
+import { dialogContent } from '../dialogContentStyle'
+
+import type { ExtendElementPropsWithRef } from '../../../types'
+
+type Props = ExtendElementPropsWithRef<
+  typeof DialogBody,
+  {
+    /** ダイアログタイトル */
+    heading: ComponentPropsWithoutRef<typeof DialogHeading>
+    /** ダイアログの説明 */
+    children: ReactNode
+    /** 閉じるボタン */
+    closeButton?: ReactNode
+    handleClickClose: (e: MouseEvent<HTMLButtonElement>) => void
+  }
+>
+
+const CLASS_NAMES = (() => {
+  const { wrapper, actionArea } = dialogContent()
+
+  return {
+    wrapper: wrapper(),
+    actionArea: actionArea(),
+  }
+})()
+
+export const MessageDialogContent: FC<Props> = ({
+  heading,
+  contentBgColor,
+  contentPadding,
+  children,
+  handleClickClose,
+  closeButton,
+}) => (
+  <Section className={CLASS_NAMES.wrapper}>
+    <DialogHeading {...heading} />
+    <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+      {children}
+    </DialogBody>
+    <FooterCluster handleClickClose={handleClickClose} closeButton={closeButton} />
+  </Section>
+)
+
+const FooterCluster = memo<Pick<Props, 'handleClickClose' | 'closeButton'>>(
+  ({ handleClickClose, closeButton }) => (
+    <Cluster as="footer" justify="flex-end" className={CLASS_NAMES.actionArea}>
+      <Button className="smarthr-ui-Dialog-closeButton" onClick={handleClickClose}>
+        {closeButton ?? (
+          <Localizer id="smarthr-ui/MessageDialog/closeButtonLabel" defaultText="閉じる" />
+        )}
+      </Button>
+    </Cluster>
+  ),
+)

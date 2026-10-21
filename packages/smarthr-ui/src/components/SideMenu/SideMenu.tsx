@@ -6,18 +6,18 @@ import { Heading } from '../Heading'
 import { Panel } from '../Panel'
 import { Nav } from '../SectioningContent'
 
+type Props = PropsWithChildren<
+  Pick<ComponentPropsWithoutRef<typeof Panel>, 'radius' | 'layer' | 'className'> & {
+    /**
+     * @default ul
+     */
+    elementAs?: 'ul' | 'ol'
+  }
+>
+
 const classNameGenerator = tv({
   base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',
 })
-
-type Props = PropsWithChildren<
-  Pick<ComponentPropsWithoutRef<typeof Panel>, 'radius' | 'layer' | 'className'>
-> & {
-  /**
-   * @default ul
-   */
-  elementAs?: 'ul' | 'ol'
-}
 
 export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])

@@ -4,9 +4,9 @@ import { Groupbox } from '../../Panel'
 import { Button } from '../Button'
 
 import type { StoryFn, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
-type Variant = ComponentProps<typeof Button>['variant']
+type Variant = ComponentPropsWithoutRef<typeof Button>['variant']
 
 /**
  * $ pict button.pict.txt /e:button-seeds.pict.txt
@@ -64,6 +64,9 @@ const Template: StoryFn = (args) => (
               prefix={<FaCirclePlusIcon />}
             >
               ボタン
+            </Button>
+            <Button disabled variant={variant} prefix={<FaCirclePlusIcon color="MAIN" />}>
+              固定colorアイコンも無効化色になること
             </Button>
           </Cluster>
         </Groupbox>

@@ -2,7 +2,7 @@ import { Stack } from '../../Layout'
 import { InformationPanel } from '../client'
 
 import type { Meta } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict information-panel.pict
@@ -20,7 +20,7 @@ import type { ComponentProps } from 'react'
  * sync    false  false     true
  */
 const _cases: Array<
-  Pick<ComponentProps<typeof InformationPanel>, 'type' | 'bold' | 'toggleable' | 'active'>
+  Pick<ComponentPropsWithoutRef<typeof InformationPanel>, 'type' | 'bold' | 'toggleable' | 'active'>
 > = [
   { type: 'success', bold: false, toggleable: true, active: true },
   { type: 'info', bold: false, toggleable: false, active: false },

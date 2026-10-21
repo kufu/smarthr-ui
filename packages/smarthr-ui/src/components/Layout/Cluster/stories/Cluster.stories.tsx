@@ -2,13 +2,13 @@ import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 import { Cluster, clusterClassNameGenerator } from '../Cluster'
 
-import type { Gap as GapType } from '../../../../types'
+import type { PositiveGap } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const clusterGap = Object.keys(clusterClassNameGenerator.variants.rowGap)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
-  .sort() as GapType[]
+  .sort() as PositiveGap[]
 
 export default {
   title: 'Components/Layout/Cluster',

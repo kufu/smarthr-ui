@@ -4,9 +4,9 @@ import { Groupbox } from '../../Panel'
 import { AnchorButton } from '../AnchorButton'
 
 import type { StoryFn, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
-type Variant = ComponentProps<typeof AnchorButton>['variant']
+type Variant = ComponentPropsWithoutRef<typeof AnchorButton>['variant']
 
 /**
  * $ pict anchor-button.txt
@@ -20,7 +20,7 @@ type Variant = ComponentProps<typeof AnchorButton>['variant']
  * s       true     あり           あり   なし   false
  * default true     なし           あり   なし   true
  */
-const _cases: Array<ComponentProps<typeof AnchorButton>> = [
+const _cases: Array<ComponentPropsWithoutRef<typeof AnchorButton>> = [
   {
     size: 'S',
     href: undefined,
@@ -84,6 +84,14 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: true,
+  },
+  {
+    size: 'M',
+    href: undefined,
+    inactiveReason: undefined,
+    prefix: <FaCirclePlusIcon color="MAIN" />,
+    suffix: undefined,
+    wide: false,
   },
 ]
 

@@ -6,7 +6,7 @@ import { FormControl } from '../../../FormGroup'
 
 import { MultiCombobox } from './MultiCombobox'
 
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 
 describe('SingleCombobox', () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('SingleCombobox', () => {
     items,
     selectedItems,
     ...rest
-  }: Partial<ComponentProps<typeof MultiCombobox>>) => (
+  }: Partial<ComponentPropsWithRef<typeof MultiCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
         <FormControl label="コンボボックス">
@@ -334,5 +334,33 @@ describe('SingleCombobox', () => {
 
     // Backspace によって削除した末尾アイテムはテキスト化されること
     expect(combobox()).toHaveValue('option 2')
+  })
+
+  it('BackspaceキーでReactNodeアイテムを削除すると、入力値にlabelTextが復元されること', async () => {
+    const onDelete = vi.fn()
+    const element = <span>アイコン付きラベル</span>
+    render(
+      template({
+        selectedItems: [
+          { label: 'option 1', value: 'value-1' },
+          { label: element, value: 'value-2', labelText: 'ラベル2' },
+        ],
+        onDelete,
+      }),
+    )
+
+    // リストボックスを開く
+    await userEvent.keyboard('{tab}')
+
+    // Backspace キーで末尾のアイテム(ReactNodeラベル)が削除されること
+    await userEvent.keyboard('{backspace}')
+    expect(onDelete).toHaveBeenCalledWith({
+      label: element,
+      value: 'value-2',
+      labelText: 'ラベル2',
+    })
+
+    // Backspace によって削除した末尾アイテムはlabelTextとしてテキスト化されること
+    expect(combobox()).toHaveValue('ラベル2')
   })
 })

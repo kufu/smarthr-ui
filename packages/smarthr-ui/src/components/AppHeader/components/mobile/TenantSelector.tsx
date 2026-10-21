@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -26,11 +26,10 @@ const tenantDropdownTriggerButton = tv({
 
 const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = tenantDropdownTriggerButton()
 
-type Props = {
-  tenants?: ComponentProps<typeof Header>['tenants']
-  currentTenantId?: ComponentProps<typeof Header>['currentTenantId']
-  onTenantSelect?: ComponentProps<typeof Header>['onTenantSelect']
-}
+type Props = Pick<
+  ComponentPropsWithRef<typeof Header>,
+  'tenants' | 'currentTenantId' | 'onTenantSelect'
+>
 
 export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSelect }) => {
   const tenantName = useMemo(() => {

@@ -23,7 +23,7 @@ type MessageDescriptor<T extends keyof Messages> = Omit<ReactIntlMessageDescript
 /**
  * useIntlフックの戻り値の型定義
  */
-export type UseIntlReturn = {
+type UseIntlReturn = {
   /** メッセージのローカライズ関数 */
   localize: <T extends keyof Messages>(
     descriptor: MessageDescriptor<T>,

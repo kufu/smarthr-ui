@@ -2,17 +2,13 @@
 
 import { type FC, type PropsWithChildren, useCallback } from 'react'
 
-import { usePortal } from '../../../hooks/client/usePortal'
+import { Portal as OriginalPortal } from '../../Portal'
 
 type Props = PropsWithChildren<{
   inputRect: DOMRect
 }>
 
 export const Portal: FC<Props> = ({ inputRect, children }) => {
-  const { createPortal } = usePortal()
-
-  // HINT: cleanup functionをreturnしていないためuseCallbackRefCleanupForReact18は不要。
-  // React v18の対応を切ったらこのコメントも削除する
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
       if (node) {
@@ -25,8 +21,8 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
     [inputRect],
   )
 
-  return createPortal(
-    <div
+  return (
+    <OriginalPortal
       ref={callbackRef}
       // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
       // 余白があるとPortal要素の下端がCalendarの外側になり、
@@ -34,7 +30,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
       className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-flex shr-leading-none"
     >
       {children}
-    </div>,
+    </OriginalPortal>
   )
 }
 

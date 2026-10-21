@@ -134,7 +134,7 @@ const sortFeatures = (
   return featuresRes
 }
 
-export const looseInclude = (looseSearchQuery: string, featureName: string) =>
+const looseInclude = (looseSearchQuery: string, featureName: string) =>
   // HINT: normalizeは1文字ずつ変換処理を行う関係で思いため、変換せずにマッチするかどうかを確認する
   featureName.includes(looseSearchQuery) || normalize(featureName).includes(looseSearchQuery)
 

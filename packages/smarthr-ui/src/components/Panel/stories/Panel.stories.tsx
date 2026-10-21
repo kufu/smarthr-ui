@@ -4,7 +4,7 @@ import { Panel, panelClassNameGenerator } from '../Panel'
 
 import type { Gap } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
@@ -12,7 +12,7 @@ const basePadding = Object.keys(panelClassNameGenerator.variants.paddingBlock)
   .sort() as Gap[]
 const baseOverflow = [undefined, 'visible', 'hidden', 'clip', 'scroll', 'auto'] as const
 const baseLayer = Object.keys(panelClassNameGenerator.variants.layer).map(Number) as Array<
-  ComponentProps<typeof Panel>['layer']
+  ComponentPropsWithoutRef<typeof Panel>['layer']
 >
 
 export default {

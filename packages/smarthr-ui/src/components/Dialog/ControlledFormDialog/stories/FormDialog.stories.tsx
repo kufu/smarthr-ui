@@ -1,4 +1,4 @@
-import { type ComponentProps, useRef, useState } from 'react'
+import { type ComponentPropsWithRef, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
@@ -139,7 +139,7 @@ export const ResponseStatus: StoryObj<typeof ControlledFormDialog> = {
   render: (args) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof ControlledFormDialog>['responseStatus']>()
+      useState<ComponentPropsWithRef<typeof ControlledFormDialog>['responseStatus']>()
 
     return (
       <>
@@ -225,16 +225,16 @@ export const SubActionArea: StoryObj<typeof ControlledFormDialog> = {
 export const PortalParent: StoryObj<typeof ControlledFormDialog> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledFormDialog
           {...args}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           isOpen={open}
           onClickClose={() => setOpen(false)}
           onSubmit={(e, { close }) => {

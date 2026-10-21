@@ -5,12 +5,9 @@ import { Localizer } from '../../../../intl'
 import { AnchorButton } from '../../../Button'
 import { FaArrowRightIcon, FaStarIcon } from '../../../Icon'
 import { Center } from '../../../Layout'
-import { LineClamp } from '../../../LineClamp'
 import { Loader } from '../../../Loader'
 import { Text } from '../../../Text'
 import { mediaQuery, useMediaQuery } from '../../hooks/useMediaQuery'
-
-import { Translate } from './Translate'
 
 import type { Launcher } from '../../types'
 
@@ -80,12 +77,10 @@ const LoadErrorText = memo(() => (
 const EmptyList = memo(() => (
   <div className={CLASS_NAMES.empty}>
     <Text size="S">
-      <Translate>
-        <Localizer
-          id="smarthr-ui/AppHeader/Launcher/emptyText"
-          defaultText="該当するアプリが見つかりませんでした。"
-        />
-      </Translate>
+      <Localizer
+        id="smarthr-ui/AppHeader/Launcher/emptyText"
+        defaultText="該当するアプリが見つかりませんでした。"
+      />
     </Text>
   </div>
 ))
@@ -134,5 +129,11 @@ const FeatureListItem = memo<{
 const FeatureName: FC<PropsWithChildren> = ({ children }) => {
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
-  return isDesktop ? <LineClamp maxLines={2}>{children}</LineClamp> : children
+  return isDesktop ? (
+    <Text as="span" maxLines={{ max: 2, tooltip: true }}>
+      {children}
+    </Text>
+  ) : (
+    children
+  )
 }

@@ -1,34 +1,27 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
 type Color = 'grey' | 'blue' | 'yellow' | 'red'
 
-type BaseProps = PropsWithChildren<{
-  /** 件数 */
-  count?: number
-  /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
-  overflowCount?: number
-  /** 0値を表示するかどうか */
-  showZero?: boolean
-  /**
-   * 色の種類
-   *
-   * TODO: HTMLのtype属性と紛れやすく、tv側のvariant名もcolorであるため、
-   * 破壊的変更を伴うタイミングでcolorへリネームする
-   */
-  type?: Color
-  /** ドット表示するかどうか */
-  dot?: boolean
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps>
+type Props = ExtendElementPropsWithoutRef<
+  'span',
+  {
+    /** 件数 */
+    count?: number
+    /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
+    overflowCount?: number
+    /** 0値を表示するかどうか */
+    showZero?: boolean
+    /** 色の種類 */
+    color?: Color
+    /** ドット表示するかどうか */
+    dot?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -103,7 +96,7 @@ export const Badge = memo<Props>(({ count, showZero, dot, children, ...rest }) =
 const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   count,
   overflowCount,
-  type,
+  color,
   dot,
   children,
   className,
@@ -113,7 +106,7 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   const withChildren = !!children
   const classNames = useMemo(() => {
     const { wrapper, pill, dotElement } = classNameGenerator({
-      color: type || 'blue',
+      color: color || 'blue',
       withChildren,
     })
 
@@ -122,7 +115,7 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
       pill: pill(),
       dot: dotElement(),
     }
-  }, [withChildren, type, className])
+  }, [withChildren, color, className])
 
   return (
     <span {...rest} className={classNames.wrapper}>

@@ -1,7 +1,5 @@
 import { type ReactNode, useCallback, useState } from 'react'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-
 // HINT: prefix, suffixが存在せず、かつIcon,svg,img,Loaderのいずれかが単一でbodyに含まれるButtonかチェックしたい
 // このSELECTORはbody内の対象を列挙する
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
@@ -22,35 +20,33 @@ export const useSquareDetection = ({
 
   // HINT: prefix, suffixはinner要素のmount/unmountを伴わずに変化しうるため、data-only-body属性として
   // DOMに反映し、MutationObserver自身にその変化も監視させることで、callback refのmount時チェックだけで完結させる
-  const callbackRef = useCallbackRefCleanupForReact18(
-    useCallback((node: HTMLElement | null) => {
-      if (!node) return
+  const callbackRef = useCallback((node: HTMLElement | null) => {
+    if (!node) return
 
-      const checkSquare = () => {
-        if (node.getAttribute('data-only-body') !== 'true') {
-          setSquare(false)
+    const checkSquare = () => {
+      if (node.getAttribute('data-only-body') !== 'true') {
+        setSquare(false)
 
-          return
-        }
-
-        setSquare(node.children.length === 1 && node.children[0].matches(ICON_SELECTOR))
+        return
       }
 
-      checkSquare()
+      setSquare(node.children.length === 1 && node.children[0].matches(ICON_SELECTOR))
+    }
 
-      const observer = new MutationObserver(checkSquare)
+    checkSquare()
 
-      observer.observe(node, {
-        childList: true,
-        attributes: true,
-        attributeFilter: ['data-only-body'],
-      })
+    const observer = new MutationObserver(checkSquare)
 
-      return () => {
-        observer.disconnect()
-      }
-    }, []),
-  )
+    observer.observe(node, {
+      childList: true,
+      attributes: true,
+      attributeFilter: ['data-only-body'],
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return {
     square,

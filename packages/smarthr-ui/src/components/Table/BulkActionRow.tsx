@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AutoColSpanTd } from './client'
@@ -14,11 +14,9 @@ const classNameGenerator = tv({
   },
 })
 
-export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> = ({
-  children,
-  className,
-  ...rest
-}) => {
+type Props = ComponentPropsWithRef<'tr'>
+
+export const BulkActionRow: FC<Props> = ({ children, className, ...rest }) => {
   const classNames = useMemo(() => {
     const { wrapper, cell } = classNameGenerator()
 

@@ -17,7 +17,6 @@ import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -48,10 +47,10 @@ const CLASS_NAMES = (() => {
 
 type Props = {
   sortType: Launcher['sortType']
-  onSelectSortType: (sortType: Launcher['sortType']) => void
+  handleSelectSortType: (sortType: Launcher['sortType']) => void
 }
 
-export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
+export const AppLauncherSortDropdown: FC<Props> = ({ sortType, handleSelectSortType }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const options = useMemo<Array<[Launcher['sortType'], JSX.Element]>>(
@@ -86,7 +85,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
 
   const onClickOption = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectSortType(e.currentTarget.value as Launcher['sortType'])
+      handleSelectSortType(e.currentTarget.value as Launcher['sortType'])
 
       // Dropdown がネストしており、この Dropdown のみ閉じて親の Dropdown は開いたままというのができない
       // そのため、無理矢理クリックイベントを発生させて実現している
@@ -97,7 +96,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
         }
       }, 0)
     },
-    [onSelectSortType],
+    [handleSelectSortType],
   )
 
   return (
@@ -135,7 +134,7 @@ const TriggerButton = memo<
       className={className}
       suffix={<FaCaretDownIcon />}
     >
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   </DropdownTrigger>
 ))
@@ -160,19 +159,17 @@ const OptionButton = memo<
         selected && (
           <FaCheckIcon
             alt={
-              <Translate>
-                <Localizer
-                  id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected"
-                  defaultText="選択中"
-                />
-              </Translate>
+              <Localizer
+                id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected"
+                defaultText="選択中"
+              />
             }
             color={theme.textColor.main}
           />
         )
       }
     >
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   )
 })

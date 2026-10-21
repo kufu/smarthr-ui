@@ -1,14 +1,7 @@
 'use client'
 
 import dayjs from 'dayjs'
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type MouseEvent,
-  memo,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -17,22 +10,27 @@ import { UnstyledButton } from '../../Button'
 
 import { isBetween } from './calendarHelper'
 
-type BaseProps = {
-  /** 現在の日付 */
-  current: {
-    day: DayJsType
-    months: Array<Array<number | null>>
-  }
-  /** 選択可能な開始日 */
-  from: Date
-  /** 選択可能な終了日 */
-  to: Date
-  /** トリガのセレクトイベントを処理するハンドラ */
-  onSelectDate: (e: MouseEvent, date: Date) => void
-  /** 選択された日付 */
-  selectedDayText: string
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'table'>, keyof BaseProps>
+import type { ExtendElementPropsWithoutRef } from '../../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'table',
+  {
+    /** 現在の日付 */
+    current: {
+      day: DayJsType
+      months: Array<Array<number | null>>
+    }
+    /** 選択可能な開始日 */
+    from: Date
+    /** 選択可能な終了日 */
+    to: Date
+    /** トリガのセレクトイベントを処理するハンドラ */
+    onSelectDate: (e: MouseEvent, date: Date) => void
+    /** 選択された日付 */
+    selectedDayText: string
+  },
+  { omit: 'children' }
+>
 
 type DayJsType = ReturnType<typeof dayjs>
 
@@ -46,9 +44,9 @@ const classNameGenerator = tv({
     th: 'smarthr-ui-CalendarTable-headCell shr-px-0 shr-py-0.5 shr-text-center shr-align-middle shr-font-normal shr-text-grey',
     td: 'smarthr-ui-CalendarTable-dataCell shr-p-0 shr-align-middle',
     cellButton:
-      'shr-group shr-flex shr-items-center shr-justify-center shr-px-0.5 shr-py-0.25 disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
+      'shr-group shr-flex shr-items-center shr-justify-center shr-px-0.5 shr-py-0.25 aria-disabled:shr-cursor-not-allowed aria-disabled:shr-text-disabled',
     dateCell: [
-      'shr-box-border shr-flex shr-h-[1.75rem] shr-w-[1.75rem] shr-items-center shr-justify-center shr-rounded-[50%] shr-leading-[0] group-[:not(:disabled)]:group-hover:shr-bg-base-grey group-[:not(:disabled)]:group-hover:shr-text-black',
+      'shr-box-border shr-flex shr-h-[1.75rem] shr-w-[1.75rem] shr-items-center shr-justify-center shr-rounded-[50%] shr-leading-[0] group-[:not([aria-disabled])]:group-hover:shr-bg-base-grey group-[:not([aria-disabled])]:group-hover:shr-text-black',
       '[[aria-pressed="true"]>&&&]:shr-bg-main [[aria-pressed="true"]>&&&]:shr-text-white',
       '[[data-is-today="true"]>&&&]:shr-border-shorthand [[aria-pressed="true"]>&&&]:contrast-more:shr-border-high-contrast',
     ],

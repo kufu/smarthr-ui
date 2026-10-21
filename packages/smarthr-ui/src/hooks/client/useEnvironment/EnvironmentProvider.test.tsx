@@ -158,6 +158,17 @@ describe('EnvironmentProvider', () => {
     expect(mobile).toBe('true')
   })
 
+  test('EnvironmentProviderの外側でuseEnvironmentを呼ぶとエラーになる', () => {
+    // Reactが出力するエラーログ(console.error)を抑制する
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    expect(() => render(<Consumer />)).toThrow(
+      'useEnvironment は EnvironmentProvider の内側で使用してください',
+    )
+
+    consoleErrorSpy.mockRestore()
+  })
+
   test('ネストしたEnvironmentProviderでは、内側で指定していない値を外側から継承する', () => {
     mediaQueryLists.set(SCREEN_SMALL_QUERY, new MockMediaQueryList(SCREEN_SMALL_QUERY, false))
 

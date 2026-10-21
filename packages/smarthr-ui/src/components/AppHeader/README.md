@@ -8,7 +8,7 @@ props を埋めていくだけで良い感じに共通のヘッダー/ナビゲ�
 `xxxAdditionalContent` 以外の props は積極的に埋めてください。
 
 ```ts
-export type HeaderProps = ComponentProps<typeof Header> & {
+type HeaderProps = ComponentPropsWithRef<typeof Header> & {
   locale?: LocaleProps | null
   enableNew?: boolean
   appName?: ReactNode
@@ -27,8 +27,6 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 
 下記に、少し特殊な動きをするものやパッと見分かりづらいであろうと思われる props だけ補足説明を書きます。
 
-- `locale`
-  - 多言語対応に wovn を使っている場合はこの props は不要です。
 - `tenants`
   - デスクトップ表示時
     - Header コンポーネントと同じです。
@@ -58,9 +56,5 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 
 ## 多言語対応について
 
-- wovn を使っているアプリの場合
-  - 内部で表示されているテキストに関しては、すべて `woven-enabled="true"` がついています。
-  - 外部から渡すテキストは全て `ReactNode` 型で受け取るようになっているので、`<span woven-enabled="true">ほげ</span>` みたいなものを渡すようにしてください。
-- 辞書を持っているアプリの場合
-  - コンポーネント側で辞書を持っているので、`locale` の props を埋めると内部的に持っているテキストは翻訳されます。
-  - 外部から渡すテキストはアプリケーション側で翻訳されたものを渡すようにしてください。
+- コンポーネント側で辞書を持っているので、`locale` の props を埋めると内部的に持っているテキストは翻訳されます。
+- 外部から渡すテキストはアプリケーション側で翻訳されたものを渡すようにしてください。

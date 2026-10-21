@@ -21,7 +21,7 @@ import { VisuallyHiddenText } from '../../../VisuallyHiddenText'
 
 import type { ComboboxItem } from '../types'
 
-export type Props<T> = {
+type Props<T> = {
   item: ComboboxItem<T> & { deletable?: boolean }
   disabled: boolean
   handleDelete: (item: ComboboxItem<T>) => void
@@ -41,7 +41,7 @@ const classNameGenerator = tv({
       'shr-group/deleteButton',
       'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
       'focus-visible:shr-outline-none',
-      'disabled:shr-cursor-not-allowed',
+      'aria-disabled:shr-cursor-not-allowed',
     ],
     deleteButtonIcon:
       'group-focus-visible/deleteButton:shr-focus-indicator--outer group-focus-visible/deleteButton:shr-rounded-full',

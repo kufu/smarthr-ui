@@ -12,7 +12,7 @@ import { DropdownTrigger } from '../../DropdownTrigger'
 import { DropdownMenuButton } from '../DropdownMenuButton'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict dropdown-menu-button.pict
@@ -24,7 +24,7 @@ import type { ComponentProps } from 'react'
  * default     false           undefined
  * default     true            指定あり
  */
-const _cases: Array<Pick<ComponentProps<typeof DropdownMenuButton>, 'trigger'>> = [
+const _cases: Array<Pick<ComponentPropsWithoutRef<typeof DropdownMenuButton>, 'trigger'>> = [
   { trigger: { children: 'その他の操作', size: 'S', onlyIcon: true } },
   { trigger: { children: 'その他の操作', size: 'S' } },
   { trigger: { children: 'その他の操作', onlyIcon: true } },

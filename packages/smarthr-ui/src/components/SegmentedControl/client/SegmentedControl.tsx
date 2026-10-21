@@ -1,21 +1,14 @@
 'use client'
 
-import {
-  type ComponentProps,
-  type FC,
-  type MouseEvent,
-  type ReactNode,
-  memo,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type MouseEvent, type ReactNode, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLatest } from '../../../hooks/useLatest'
 import { Button } from '../../Button'
 
-export type Option = {
+import type { ExtendElementPropsWithoutRef } from '../../../types'
+
+type Option = {
   /** 選択時に返される値 */
   value: string
   /** ボタンに表示する内容 */
@@ -26,17 +19,22 @@ export type Option = {
   disabled?: boolean
 }
 
-type BaseProps = {
-  /** 選択肢の配列 */
-  options: Option[]
-  /** 選択中の値 */
-  value?: string | null
-  /** 選択肢を押下したときに発火するコールバック関数 */
-  onClickOption?: (value: string) => void
-  /** 各ボタンの大きさ */
-  size?: 'M' | 'S'
-}
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
+    /** 選択肢の配列 */
+    options: Option[]
+    /** 選択中の値 */
+    value?: string | null
+    /** デフォルトで選択する値 */
+    defaultValue?: string | null
+    /** 選択肢を押下したときに発火するコールバック関数 */
+    onClickOption?: (value: string) => void
+    /** 各ボタンの大きさ */
+    size?: 'M' | 'S'
+  },
+  { omit: 'role' | 'onFocus' | 'onBlur' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -77,12 +75,17 @@ const classNameGenerator = tv({
 export const SegmentedControl: FC<Props> = ({
   options,
   value,
+  defaultValue,
   onClickOption,
   size = 'M',
   className,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false)
+  const [innerValue, setInnerValue] = useState(defaultValue ?? null)
+
+  const hasValue = value !== undefined
+  const actualValue = hasValue ? value : innerValue
 
   const classNames = useMemo(() => {
     const { container, buttonGroup, button } = classNameGenerator()
@@ -94,9 +97,7 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [size, className])
 
-  const latest = useLatest({ onClickOption, isFocused })
-
-  const hasOnClickOption = !!onClickOption
+  const latest = useLatest({ onClickOption, isFocused, hasValue })
 
   const functions = useMemo(
     () => ({
@@ -162,25 +163,27 @@ export const SegmentedControl: FC<Props> = ({
           document.removeEventListener('keydown', handleKeyDown)
         }
       },
-      handleClickOption: hasOnClickOption
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            latest.onClickOption?.(e.currentTarget.value)
-          }
-        : undefined,
+      handleClickOption: (e: MouseEvent<HTMLButtonElement>) => {
+        const clickedValue = e.currentTarget.value
+
+        if (!latest.hasValue) {
+          setInnerValue(clickedValue)
+        }
+
+        latest.onClickOption?.(clickedValue)
+      },
       handleDelegateFocus: () => setIsFocused(true),
       handleDelegateBlur: () => setIsFocused(false),
     }),
-    [hasOnClickOption, latest],
+    [latest],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(functions.callbackRef)
-
-  const excludesSelected = !value || options.every((option) => option.value !== value)
+  const excludesSelected = options.every((option) => option.value !== actualValue)
 
   return (
     <div
       {...rest}
-      ref={callbackRef}
+      ref={functions.callbackRef}
       role="toolbar"
       className={classNames.container}
       onFocus={functions.handleDelegateFocus}
@@ -188,7 +191,7 @@ export const SegmentedControl: FC<Props> = ({
     >
       <div role="radiogroup" className={classNames.buttonGroup}>
         {options.map((option, index) => {
-          const checked = value === option.value
+          const checked = actualValue === option.value
           const { ariaLabel, ...optionRest } = option
 
           return (
@@ -200,7 +203,7 @@ export const SegmentedControl: FC<Props> = ({
               size={size}
               className={classNames.button}
               aria-label={ariaLabel}
-              aria-checked={checked && !!value}
+              aria-checked={checked}
               handleClick={functions.handleClickOption}
             />
           )
@@ -215,7 +218,7 @@ const SegmentedControlButton = memo<
     Omit<Props['options'][number], 'content' | 'ariaLabel'> & {
       content: ReactNode
       'aria-label'?: string
-      handleClick: undefined | ((e: MouseEvent<HTMLButtonElement>) => void)
+      handleClick: (e: MouseEvent<HTMLButtonElement>) => void
       checked: boolean
       tabIndex: number
       'aria-checked': boolean
