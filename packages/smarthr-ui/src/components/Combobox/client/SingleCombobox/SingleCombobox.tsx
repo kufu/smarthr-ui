@@ -78,8 +78,6 @@ type Props<T> = ExtendElementPropsWithRef<
   { omit: 'children' }
 >
 
-const NOOP = () => undefined
-
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
 
@@ -212,9 +210,6 @@ export const SingleCombobox = <T,>({
 
   const isSelectedItemControlled = selectedItem !== undefined
   const actualSelectedItem = isSelectedItemControlled ? selectedItem : uncontrolledSelectedItem
-  const setSelectedItemIfUncontrolled = isSelectedItemControlled
-    ? NOOP
-    : setUncontrolledSelectedItem
 
   const selectedItemLabelText = actualSelectedItem ? getSelectedLabelText(actualSelectedItem) : ''
 
@@ -244,7 +239,7 @@ export const SingleCombobox = <T,>({
       // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
       onSelect: (selected: ComboboxItem<T>) => {
         if (!isSelectedItemControlled) {
-          setSelectedItemIfUncontrolled(selected)
+          setUncontrolledSelectedItem(selected)
         }
 
         onSelect?.(selected)
@@ -285,7 +280,6 @@ export const SingleCombobox = <T,>({
     emptySelectionFallbackItem,
     selectedItem: actualSelectedItem,
     isSelectedItemControlled,
-    setSelectedItemIfUncontrolled,
     isFocused,
     isExpanded,
     isComposing,
@@ -303,7 +297,7 @@ export const SingleCombobox = <T,>({
       if (!latest.emptySelectionFallbackItem) return
 
       if (!latest.isSelectedItemControlled) {
-        latest.setSelectedItemIfUncontrolled(latest.emptySelectionFallbackItem)
+        setUncontrolledSelectedItem(latest.emptySelectionFallbackItem)
       }
 
       latest.onSelect?.(latest.emptySelectionFallbackItem)
@@ -363,7 +357,7 @@ export const SingleCombobox = <T,>({
 
         if (!isExecutedPreventDefault) {
           if (!latest.isSelectedItemControlled) {
-            latest.setSelectedItemIfUncontrolled(null)
+            setUncontrolledSelectedItem(null)
           }
 
           latest.onClear?.()
@@ -400,7 +394,7 @@ export const SingleCombobox = <T,>({
 
         if (value === '') {
           if (!latest.isSelectedItemControlled) {
-            latest.setSelectedItemIfUncontrolled(null)
+            setUncontrolledSelectedItem(null)
           }
 
           latest.onClear?.()
