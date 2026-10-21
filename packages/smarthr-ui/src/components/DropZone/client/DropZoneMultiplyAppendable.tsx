@@ -28,7 +28,7 @@ type Props = ExtendElementPropsWithRef<
 >
 
 export const DropZoneMultiplyAppendable: FC<Props> = ({ files, onSelectFiles, ref, ...rest }) => {
-  // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
+  // Safari 15.3 以下において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
   const isUpdatingFilesRef = useRef(false)
 
   const latest = useLatest({ files, onSelectFiles })

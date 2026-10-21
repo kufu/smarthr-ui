@@ -251,5 +251,24 @@ describe('DropZone', () => {
       expect(filesSetter).toHaveBeenCalled()
       expect(onSelectFiles).not.toHaveBeenCalled()
     })
+
+    it('ドロップ時の input.files への代入で change が発火しても onSelectFiles は1回だけ呼ばれる', () => {
+      // Safari の input.files 代入時の挙動を再現する
+      filesSetter.mockImplementation(function (this: HTMLInputElement) {
+        fireEvent.change(this)
+      })
+      const onSelectFiles = vi.fn()
+      const { container } = renderAppendable([existingFile], onSelectFiles)
+
+      const dropZone = container.querySelector('.smarthr-ui-DropZone')
+      if (!dropZone) throw new Error('DropZone not found')
+
+      fireEvent.drop(dropZone, {
+        dataTransfer: { files: createFileList([newFile]), types: ['Files'] },
+      })
+
+      expect(onSelectFiles).toHaveBeenCalledTimes(1)
+      expect(onSelectFiles).toHaveBeenCalledWith(expect.anything(), [existingFile, newFile])
+    })
   })
 })
