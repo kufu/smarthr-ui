@@ -13,9 +13,7 @@ import type { Launcher } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
-    empty: ['shr-p-1 shr-text-center'],
-    loadError: ['shr-whitespace-pre-wrap shr-p-1 shr-text-center'],
-    loading: ['shr-py-3'],
+    message: ['shr-p-1 shr-text-center'],
     list: ['shr-list-none', '[&>li]:shr-px-0.5 [&>li]:shr-py-0.25'],
     listItem: [
       'smarthr-ui-AppLauncher-listItem',
@@ -26,12 +24,10 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  const { empty, loadError, loading, list, listItem } = classNameGenerator()
+  const { message, list, listItem } = classNameGenerator()
 
   return {
-    empty: empty(),
-    loadError: loadError(),
-    loading: loading(),
+    message: message(),
     list: list(),
     listItem: listItem(),
   }
@@ -57,14 +53,14 @@ export const AppLauncherFeatures: FC<Props> = ({ features, page, loading, error 
 }
 
 const LoadingList = memo(() => (
-  <Center className={CLASS_NAMES.loading}>
+  <Center padding={3}>
     <Loader />
   </Center>
 ))
 
 const LoadErrorText = memo(() => (
-  <div className={CLASS_NAMES.loadError}>
-    <Text size="S">
+  <div className={CLASS_NAMES.message}>
+    <Text whiteSpace="pre-wrap" size="S">
       <Localizer
         id="smarthr-ui/AppHeader/Launcher/loadError"
         defaultText={`アプリ一覧の読み込みに失敗しました。
@@ -75,7 +71,7 @@ const LoadErrorText = memo(() => (
 ))
 
 const EmptyList = memo(() => (
-  <div className={CLASS_NAMES.empty}>
+  <div className={CLASS_NAMES.message}>
     <Text size="S">
       <Localizer
         id="smarthr-ui/AppHeader/Launcher/emptyText"

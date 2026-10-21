@@ -96,11 +96,7 @@ export const DesktopHeader: FC<InternalHeaderProps> = ({
               )}
 
               {schoolUrl && (
-                <HeaderLink
-                  href={schoolUrl}
-                  className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
-                  prefix={<FaGraduationCapIcon />}
-                >
+                <HeaderLink href={schoolUrl} prefix={<FaGraduationCapIcon />}>
                   <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
                 </HeaderLink>
               )}
@@ -113,9 +109,6 @@ export const DesktopHeader: FC<InternalHeaderProps> = ({
               rel="help"
               referrerPolicy="no-referrer-when-downgrade"
               enableNew={enableNew}
-              className={
-                enableNew ? undefined : 'shr-flex shr-items-center shr-py-0.75 shr-leading-none'
-              }
               prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
             >
               <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />

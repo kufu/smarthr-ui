@@ -6,6 +6,7 @@ import { Button } from '../../../Button'
 import { Dialog } from '../../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
+import { Text } from '../../../Text'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
 
@@ -19,7 +20,7 @@ const classNameGenerator = tv({
     iconButtonInner: [
       'shr-border-shorthand shr-block shr-flex shr-items-center shr-justify-center shr-rounded-full shr-bg-white shr-p-0.25',
     ],
-    dropdownUserName: ['shr-box-border shr-min-w-[246px] shr-px-1 shr-py-0.75 shr-text-sm'],
+    dropdownUserName: ['shr-box-border shr-min-w-[246px] shr-px-1 shr-py-0.75'],
     dropdownButtonArea: ['shr-border-t-shorthand shr-p-0.5'],
   },
 })
@@ -91,9 +92,9 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
         </DropdownTrigger>
 
         <DropdownContent>
-          <div className={CLASS_NAMES.dropdownUserName}>
-            <p>{displayName}</p>
-          </div>
+          <Text as="p" size="S" className={CLASS_NAMES.dropdownUserName}>
+            {displayName}
+          </Text>
 
           {(locale || accountUrl) && (
             <div className={CLASS_NAMES.dropdownButtonArea}>

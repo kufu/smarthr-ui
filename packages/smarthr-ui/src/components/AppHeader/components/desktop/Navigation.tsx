@@ -11,7 +11,6 @@ import {
 import { AnchorButton, Button } from '../../../Button'
 import { DropdownMenuGroup } from '../../../Dropdown'
 import { Cluster } from '../../../Layout'
-import { commonButtonClassNameGenerator } from '../common/CommonButton'
 
 import { ReleaseNotesDropdown } from './ReleaseNotesDropdown'
 
@@ -33,6 +32,8 @@ const classNameGenerator = tv({
   ],
 })
 
+const CLASS_NAME = classNameGenerator()
+
 type Props = {
   appName: ReactNode
   navigations: NavigationType[]
@@ -48,7 +49,6 @@ export const Navigation: FC<Props> = ({
   releaseNote,
   enableNew,
 }) => {
-  const className = useMemo(() => classNameGenerator(), [])
   const actualNavigations = useMemo(() => buildNavigations(navigations), [navigations])
 
   return (
@@ -60,7 +60,7 @@ export const Navigation: FC<Props> = ({
           {releaseNote && <ReleaseNotesDropdown {...releaseNote} />}
         </Cluster>
       }
-      className={className}
+      className={CLASS_NAME}
       data-with-releasenote={!!releaseNote}
       label={enableNew ? undefined : appName}
     >
@@ -109,21 +109,9 @@ const buildDropdownMenu = (navigations: Array<ChildNavigation | ChildNavigationG
     return <DropdownNavigationButton {...navigation} key={index} />
   })
 
-const DropdownCustomTag = memo<NavigationCustomTag>(
-  ({ elementAs: Component, current, className, ...rest }) => {
-    const actualClassName = useMemo(
-      () =>
-        commonButtonClassNameGenerator({
-          current,
-          className,
-          rounded: false,
-        }),
-      [current, className],
-    )
-
-    return <Component {...rest} className={actualClassName} aria-current={current || undefined} />
-  },
-)
+const DropdownCustomTag = memo<NavigationCustomTag>(({ current, ...rest }) => (
+  <AnchorButton {...rest} aria-current={current || undefined} />
+))
 const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (
   <AnchorButton {...rest} aria-current={current ? 'page' : undefined} />
 ))

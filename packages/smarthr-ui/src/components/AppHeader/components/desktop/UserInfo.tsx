@@ -84,7 +84,7 @@ export const UserInfo: FC<Props> = ({
   }
 
   if (!accountUrl && !desktopAdditionalContent) {
-    return <span className="shr-text-white">{displayName}</span>
+    return <Text color="TEXT_WHITE">{displayName}</Text>
   }
 
   return (

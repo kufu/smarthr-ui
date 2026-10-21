@@ -10,16 +10,18 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
+import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
 
 import type { Header } from '../../../Header'
 
+// HINT: Button[variant=text] をテナント名のテキストに近い見た目にするための上書き
 const tenantDropdownTriggerButton = tv({
   base: [
-    'shr-cursor-pointer shr-rounded-s shr-border-none shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm',
-    'hover:shr-bg-white-darken',
+    'shr-min-h-0 shr-whitespace-normal shr-rounded-s shr-border-none shr-px-0.5 shr-py-0.25 shr-text-start shr-font-normal shr-leading-normal',
+    '[&_.smarthr-ui-Button-body]:shr-leading-normal',
     '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
   ],
 })
@@ -116,9 +118,13 @@ const TenantDropdown: FC<
 
 const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
   <DropdownTrigger>
-    <button type="button" className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}>
+    <Button
+      variant="text"
+      size="S"
+      className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}
+      suffix={<FaCaretDownIcon color="TEXT_BLACK" />}
+    >
       {children}
-      <FaCaretDownIcon color="TEXT_BLACK" className="shr-ms-0.5" />
-    </button>
+    </Button>
   </DropdownTrigger>
 ))

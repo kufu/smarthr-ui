@@ -1,5 +1,4 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { type FC, type PropsWithChildren, memo } from 'react'
 
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
@@ -7,61 +6,49 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { Center } from '../../../Layout'
 import { Loader } from '../../../Loader'
+import { Text } from '../../../Text'
 import { TextLink } from '../../../TextLink'
 
 import type { ReleaseNoteProps } from '../../types'
 
-const wrapperClassNameGenerator = tv({
-  base: 'shr-w-[400px]',
-  variants: {
-    type: {
-      content: '',
-    },
-  },
-})
-
 const BOX_SHADOW_STYLE = { boxShadow: 'none' }
 
-export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => {
-  const wrapperClassName = useMemo(() => wrapperClassNameGenerator(), [])
-
-  return (
-    <div className="shr-border-l-shorthand shr-ms-0.5">
-      <Dropdown>
-        <ReleaseNoteDropdownTrigger />
-        <DropdownContent controllable className="shr-mr-1.25">
-          <div className="shr-w-[400px]">
-            {loading ? (
-              <StyledLoader />
-            ) : error || !links ? (
-              <LoadErrorText>
-                <Localizer
-                  id="smarthr-ui/AppHeader/releaseNotesLoadError"
-                  defaultText={`リリースノートの読み込みに失敗しました。
+export const ReleaseNotesDropdown: FC<ReleaseNoteProps> = ({ indexUrl, links, loading, error }) => (
+  <div className="shr-border-l-shorthand shr-ms-0.5">
+    <Dropdown>
+      <ReleaseNoteDropdownTrigger />
+      <DropdownContent controllable className="shr-mr-1.25">
+        <div className="shr-w-[400px]">
+          {loading ? (
+            <StyledLoader />
+          ) : error || !links ? (
+            <LoadErrorText>
+              <Localizer
+                id="smarthr-ui/AppHeader/releaseNotesLoadError"
+                defaultText={`リリースノートの読み込みに失敗しました。
 時間をおいて、やり直してください。`}
+              />
+            </LoadErrorText>
+          ) : (
+            <>
+              {links.slice(0, 5).map(({ title, url }, index) => (
+                <ArticleLink key={index} href={url}>
+                  {title}
+                </ArticleLink>
+              ))}
+              <SeeAllTextLink href={indexUrl}>
+                <Localizer
+                  id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+                  defaultText="すべてのリリースノートを見る"
                 />
-              </LoadErrorText>
-            ) : (
-              <div className={wrapperClassName}>
-                {links.slice(0, 5).map(({ title, url }, index) => (
-                  <ArticleLink key={index} href={url}>
-                    {title}
-                  </ArticleLink>
-                ))}
-                <SeeAllTextLink href={indexUrl}>
-                  <Localizer
-                    id="smarthr-ui/AppHeader/seeAllReleaseNotes"
-                    defaultText="すべてのリリースノートを見る"
-                  />
-                </SeeAllTextLink>
-              </div>
-            )}
-          </div>
-        </DropdownContent>
-      </Dropdown>
-    </div>
-  )
-}
+              </SeeAllTextLink>
+            </>
+          )}
+        </div>
+      </DropdownContent>
+    </Dropdown>
+  </div>
+)
 
 const ReleaseNoteDropdownTrigger = memo(() => (
   <DropdownTrigger>
@@ -75,13 +62,15 @@ const ReleaseNoteDropdownTrigger = memo(() => (
 ))
 
 const StyledLoader = memo(() => (
-  <Center className="shr-py-3">
+  <Center padding={3}>
     <Loader />
   </Center>
 ))
 
 const LoadErrorText = memo<PropsWithChildren>(({ children }) => (
-  <div className="shr-whitespace-pre-wrap shr-p-0.75">{children}</div>
+  <Text as="p" whiteSpace="pre-wrap" className="shr-p-0.75">
+    {children}
+  </Text>
 ))
 
 // HelpLinkではなくTextLinkを使用する理由:

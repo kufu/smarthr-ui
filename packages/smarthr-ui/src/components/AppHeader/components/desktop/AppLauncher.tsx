@@ -49,7 +49,7 @@ const appLauncher = tv({
       '[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-shrink-0 [&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-align-bottom',
     ],
     sideNavHeading: ['shr-px-1 shr-py-0.75 shr-text-xs shr-text-black'],
-    help: ['smarthr-ui-AppLauncher-help', 'shr-mt-auto shr-px-1 shr-text-xs'],
+    help: ['smarthr-ui-AppLauncher-help', 'shr-mt-auto shr-px-1'],
     main: ['smarthr-ui-AppLauncher-main', 'shr-grid shr-min-h-0'],
     mainInner: ['shr-grid shr-min-h-0 shr-grid-rows-[auto_1fr]'],
     contentHead: [
@@ -278,6 +278,7 @@ const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children,
     <HelpLink
       href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
       target="_blank"
+      size="XS"
     >
       {children}
     </HelpLink>

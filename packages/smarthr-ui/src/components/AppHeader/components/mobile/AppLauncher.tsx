@@ -123,13 +123,12 @@ const SearchResultText = memo<PropsWithChildren>(({ children }) => (
 
 const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
   <div className={className}>
-    <Text size="XS">
-      <HelpLink
-        href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
-        target="_blank"
-      >
-        {children}
-      </HelpLink>
-    </Text>
+    <HelpLink
+      href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+      target="_blank"
+      size="XS"
+    >
+      {children}
+    </HelpLink>
   </div>
 ))

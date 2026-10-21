@@ -21,10 +21,10 @@ export const MenuButton = memo<Props>(({ children, handleClick, isCurrent, ...re
     type="button"
     current={isCurrent}
     boldWhenCurrent
-    className="[&&]:shr-justify-between [&&]:shr-px-0.5"
+    className="shr-gap-0 shr-px-0.5"
     handleClick={handleClick}
+    suffix={<FaAngleRightIcon color="TEXT_BLACK" />}
   >
     {children}
-    <FaAngleRightIcon color="TEXT_BLACK" />
   </CommonButton>
 ))

@@ -6,6 +6,7 @@ import { type Locale, localeMap } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
 import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
+import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
 import { CommonButton } from '../common/CommonButton'
 
@@ -13,9 +14,7 @@ import type { LocaleProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
-    header: [
-      'shr-border-b-shorthand shr-flex shr-items-center shr-justify-between shr-gap-1 shr-px-1 shr-py-0.75',
-    ],
+    header: ['shr-border-b-shorthand shr-px-1 shr-py-0.75'],
     headerTitle: ['shr-font-normal [&&]:shr-text-base'],
     buttonWrapper: ['shr-p-0.5'],
     button: ['[&&:not(:has(svg))]:shr-ps-2.5'],
@@ -84,14 +83,14 @@ export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose
 const SelectorHeading = memo<
   Pick<Props, 'onClickClose'> & { wrapperClassName: string; className: string }
 >(({ onClickClose, wrapperClassName, className }) => (
-  <div className={wrapperClassName}>
+  <Cluster justify="space-between" align="center" gap={1} className={wrapperClassName}>
     {/* eslint-disable-next-line smarthr/require-i18n-text */}
     <Heading className={className}>Language</Heading>
     <Button type="button" size="S" onClick={onClickClose}>
       {/* eslint-disable-next-line smarthr/require-i18n-text */}
       <FaXmarkIcon alt="close" />
     </Button>
-  </div>
+  </Cluster>
 ))
 
 const LocaleButton = memo<{

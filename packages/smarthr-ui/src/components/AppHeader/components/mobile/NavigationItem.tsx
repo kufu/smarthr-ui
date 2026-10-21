@@ -4,6 +4,7 @@ import { type FC, type MouseEvent, memo, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
+import { AnchorButton } from '../../../Button'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
 
@@ -19,7 +20,7 @@ import type {
 } from '../../types'
 
 const classNameGenerator = tv({
-  base: ['[&&]:shr-px-0.5'],
+  base: ['shr-px-0.5'],
 })
 
 type Props = { navigation: Navigation; handleClickNavigation: () => void }
@@ -56,32 +57,30 @@ export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation })
 
 const NavigationCustomTag = memo<
   NavigationCustomTag & Pick<Props, 'handleClickNavigation'> & { className: string }
->(
-  ({
-    children,
-    elementAs: Tag,
-    current,
-    className,
-    handleClickNavigation: handleDelegateClick,
-    ...rest
-  }) => {
-    const actualClassName = useMemo(
-      () =>
-        commonButtonClassNameGenerator({
-          current,
-          boldWhenCurrent: true,
-          className,
-        }),
-      [current, className],
-    )
+>(({ children, elementAs: Tag, current, className, handleClickNavigation, ...rest }) => {
+  const actualClassName = useMemo(
+    () =>
+      commonButtonClassNameGenerator({
+        current,
+        boldWhenCurrent: true,
+        className,
+      }),
+    [current, className],
+  )
 
-    return (
-      <Tag {...rest} className={actualClassName} onClick={handleDelegateClick}>
-        <span>{children}</span>
-      </Tag>
-    )
-  },
-)
+  return (
+    <AnchorButton
+      {...rest}
+      elementAs={Tag}
+      variant="text"
+      wide
+      className={actualClassName}
+      onClick={handleClickNavigation}
+    >
+      {children}
+    </AnchorButton>
+  )
+})
 
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (
