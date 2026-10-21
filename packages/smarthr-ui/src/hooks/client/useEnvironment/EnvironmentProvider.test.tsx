@@ -158,11 +158,17 @@ describe('EnvironmentProvider', () => {
     expect(mobile).toBe('true')
   })
 
-  test('EnvironmentProviderの外側でuseEnvironmentを呼ぶとエラーになる', () => {
+  test('EnvironmentProviderの外側でuseEnvironmentを呼ぶとエラーになる', async () => {
     // Reactが出力するエラーログ(console.error)を抑制する
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
-    expect(() => render(<Consumer />)).toThrow(
+    // HINT: テスト全体ではvitest-setup.jsでrender()を常にEnvironmentProviderで包んでいるため、
+    // このテストの検証対象である「Provider無し」の状況を再現するには実体のrenderを使う必要がある
+    const { render: actualRender } = (await vi.importActual('@testing-library/react')) as {
+      render: typeof render
+    }
+
+    expect(() => actualRender(<Consumer />)).toThrow(
       'useEnvironment は EnvironmentProvider の内側で使用してください',
     )
 
