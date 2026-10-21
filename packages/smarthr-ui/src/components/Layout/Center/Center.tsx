@@ -60,7 +60,6 @@ export const Center: FC<Props> = ({
   verticalCentering,
   as: Component = 'div',
   className,
-  style,
   children,
   ...rest
 }) => {
@@ -75,7 +74,6 @@ export const Center: FC<Props> = ({
       {...rest}
       className={actualClassName}
       style={{
-        ...style,
         minHeight: minHeight ?? undefined,
         maxWidth: maxWidth ?? undefined,
       }}
