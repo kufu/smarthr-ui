@@ -8,14 +8,14 @@ import { Select } from '../../Select'
 import { StatusLabel } from '../../StatusLabel'
 import { STYLE_TYPE_MAP } from '../../Text'
 import { Textarea } from '../../Textarea'
-import { DatePicker } from '../../WarekiPicker'
+import { WarekiPicker } from '../../WarekiPicker'
 import { FormControl } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _childrenOptions = {
   '<Input />': <Input name="formcontrol_input" />,
-  '<DatePicker />': <DatePicker name="formcontrol_datepicker" />,
+  '<WarekiPicker />': <WarekiPicker name="formcontrol_datepicker" />,
   '<CurrencyInput />': <CurrencyInput name="formcontrol_currencyinput" />,
   '<Textarea />': <Textarea name="formcontrol_textarea" />,
   '<Select />': <Select name="formcontrol_select" hasBlank options={[]} />,

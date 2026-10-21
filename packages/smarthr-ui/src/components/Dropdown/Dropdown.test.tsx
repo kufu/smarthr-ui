@@ -10,7 +10,7 @@ import { Dialog } from '../Dialog'
 import { FormControl } from '../FormGroup'
 import { Stack } from '../Layout'
 import { Portal } from '../Portal'
-import { DatePicker } from '../WarekiPicker'
+import { WarekiPicker } from '../WarekiPicker'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from './client'
 
@@ -303,7 +303,7 @@ describe('Dropdown', () => {
       )
     })
 
-    it('DatePickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
+    it('WarekiPickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
       const user = userEvent.setup()
       render(
         <IntlProvider locale="ja">
@@ -314,7 +314,7 @@ describe('Dropdown', () => {
             <DropdownContent controllable>
               <form>
                 <FormControl label="日付">
-                  <DatePicker name="test" value={undefined} onChangeDate={() => {}} />
+                  <WarekiPicker name="test" value={undefined} onChangeDate={() => {}} />
                 </FormControl>
               </form>
             </DropdownContent>

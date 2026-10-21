@@ -8,7 +8,7 @@ import { Fieldset, FormControl } from '../FormGroup'
 import { Input } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
-import { DatePicker } from '../WarekiPicker'
+import { WarekiPicker } from '../WarekiPicker'
 
 import { Dialog } from './Dialog'
 
@@ -35,7 +35,7 @@ describe('Dialog', () => {
                 The value of isOpen must be managed by you, but you can customize content freely.
               </p>
               <FormControl label="dialog_datepicker">
-                <DatePicker
+                <WarekiPicker
                   name="dialog_datepicker"
                   value="2021-01-01"
                   formatDate={(_date) => (_date ? _date.toDateString() : '')}
