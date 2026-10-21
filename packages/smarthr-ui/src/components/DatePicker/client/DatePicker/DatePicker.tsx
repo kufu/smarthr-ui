@@ -21,12 +21,10 @@ import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Calendar } from '../../../Calendar'
+import { parseJpnDateString } from '../../../../libs/parseJpnDateString'
+import { Calendar, CalendarPortal } from '../../../Calendar'
 import { FaCalendarDaysIcon } from '../../../Icon'
 import { Input } from '../../../Input'
-import { Portal } from '../Portal'
-
-import { parseJpnDateString } from './datePickerHelper'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
 
@@ -438,7 +436,7 @@ export const DatePicker: FC<Props> = ({
         }
       />
       {inputRect && (
-        <Portal inputRect={inputRect}>
+        <CalendarPortal inputRect={inputRect}>
           <Calendar
             ref={mergedCalendarRef}
             id={calenderId}
@@ -447,7 +445,7 @@ export const DatePicker: FC<Props> = ({
             to={to}
             onSelectDate={functions.handleSelectDateCalendar}
           />
-        </Portal>
+        </CalendarPortal>
       )}
     </div>
   )

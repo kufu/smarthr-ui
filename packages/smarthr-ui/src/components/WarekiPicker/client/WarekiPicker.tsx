@@ -4,26 +4,16 @@ import { type ComponentPropsWithRef, type FC, useCallback } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
+import { formatWarekiDate } from '../../../libs/formatWarekiDate'
 import { DatePicker } from '../../DatePicker'
 
 type Props = Omit<ComponentPropsWithRef<typeof DatePicker>, 'showAlternative'>
-
-const handleShowWareki = (date: Date | null, locale: string) => {
-  if (!date) {
-    return null
-  }
-
-  // 和暦を使う
-  return date.toLocaleDateString(`${locale}-u-ca-japanese`, {
-    dateStyle: 'long',
-  })
-}
 
 export const WarekiPicker: FC<Props> = (props) => {
   const { locale } = useIntl()
   const latest = useLatest({ locale })
   const showAlternative = useCallback(
-    (date: Date | null) => handleShowWareki(date, latest.locale),
+    (date: Date | null) => formatWarekiDate(date, latest.locale),
     [latest],
   )
 

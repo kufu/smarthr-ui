@@ -14,7 +14,7 @@ type Props = ExtendElementPropsWithoutRef<
   { omit: 'className' }
 >
 
-export const Portal: FC<Props> = ({ inputRect, children, ...rest }) => {
+export const CalendarPortal: FC<Props> = ({ inputRect, children, ...rest }) => {
   const callbackRef = useCallback(
     (node: HTMLElement | null) => {
       if (node) {
@@ -34,7 +34,7 @@ export const Portal: FC<Props> = ({ inputRect, children, ...rest }) => {
       // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
       // 余白があるとPortal要素の下端がCalendarの外側になり、
       // 外側クリック判定(useOuterClick)が意図せず発火する
-      className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-flex shr-leading-none"
+      className="smarthr-ui-Calendar-portal shr-absolute shr-z-overlap shr-flex shr-leading-none"
     >
       {children}
     </OriginalPortal>

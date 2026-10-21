@@ -1,1 +1,1 @@
-export { Calendar } from './client'
+export { Calendar, CalendarPortal } from './client'
