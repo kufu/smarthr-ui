@@ -134,7 +134,9 @@ export const SelectedItem: StoryObj<typeof SingleCombobox> = {
 export const DefaultItem: StoryObj<typeof SingleCombobox> = {
   name: 'emptySelectionFallbackItem',
   render: (args) => {
-    const [selectItem, setSelectItem] = useState(args.emptySelectionFallbackItem)
+    const [selectItem, setSelectItem] = useState<typeof args.emptySelectionFallbackItem | null>(
+      null,
+    )
     return (
       <SingleCombobox
         {...args}
