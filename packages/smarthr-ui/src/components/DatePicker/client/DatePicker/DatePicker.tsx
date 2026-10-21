@@ -3,11 +3,9 @@
 import dayjs from 'dayjs'
 import {
   type ChangeEvent,
-  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type ReactNode,
-  memo,
   useId,
   useMemo,
   useRef,
@@ -22,8 +20,7 @@ import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
 import { parseJpnDateString } from '../../../../libs/parseJpnDateString'
-import { Calendar, CalendarPortal } from '../../../Calendar'
-import { FaCalendarDaysIcon } from '../../../Icon'
+import { Calendar, CalendarPortal, CalendarValueSuffix } from '../../../Calendar'
 import { Input } from '../../../Input'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
@@ -75,10 +72,6 @@ const DEFAULT_FROM = new Date(1900, 0, 1)
 const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-DatePicker shr-inline-block',
-    inputSuffixLayout: 'shr-box-border shr-h-full shr-py-0.5',
-    inputSuffixWrapper:
-      'shr-border-l-shorthand shr-box-border shr-flex shr-h-full shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
-    inputSuffixText: 'shr-text-gray shr-me-0.5 shr-text-sm',
   },
 })
 
@@ -124,14 +117,10 @@ export const DatePicker: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const classNames = useMemo(() => {
-    const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } =
-      classNameGenerator()
+    const { container } = classNameGenerator()
 
     return {
       container: container({ className }),
-      inputSuffixLayout: inputSuffixLayout(),
-      inputSuffixWrapper: inputSuffixWrapper(),
-      inputSuffixText: inputSuffixText(),
     }
   }, [className])
 
@@ -428,10 +417,9 @@ export const DatePicker: FC<Props> = ({
         onFocus={functions.handleFocusInput}
         onBlur={functions.handleBlur}
         suffix={
-          <InputSuffixIcon
+          <CalendarValueSuffix
             alternativeFormat={showAlternative ? alternativeFormat : null}
             caretIconColor={caretIconColor}
-            classNames={classNames}
           />
         }
       />
@@ -450,16 +438,3 @@ export const DatePicker: FC<Props> = ({
     </div>
   )
 }
-
-const InputSuffixIcon = memo<{
-  classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
-  alternativeFormat: null | ReactNode
-  caretIconColor: ComponentPropsWithRef<typeof FaCalendarDaysIcon>['color']
-}>(({ classNames, alternativeFormat, caretIconColor }) => (
-  <span className={classNames.inputSuffixLayout}>
-    <span className={classNames.inputSuffixWrapper}>
-      {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
-      <FaCalendarDaysIcon color={caretIconColor} />
-    </span>
-  </span>
-))

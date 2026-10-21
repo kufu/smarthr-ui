@@ -1,1 +1,1 @@
-export { Calendar, CalendarPortal } from './client'
+export { Calendar, CalendarPortal, CalendarValueSuffix } from './client'
