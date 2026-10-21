@@ -53,4 +53,43 @@ describe('Input', () => {
 
     expect(children.indexOf('action')).toBeLessThan(children.indexOf('suffix'))
   })
+
+  it('FormControlを使わない単体利用でも、prefix/suffixのidがaria-labelledbyに結合される', () => {
+    render(
+      // eslint-disable-next-line smarthr/a11y-input-in-form-control
+      <Input name="input" prefix="定員" suffix="名" />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    const labelledBy = textbox.getAttribute('aria-labelledby')!.split(' ')
+
+    expect(labelledBy).toHaveLength(3)
+    expect(labelledBy[1]).toBe(textbox.id)
+  })
+
+  it('subActionAreaはaria-labelledbyに一切影響しない', () => {
+    render(
+      <form>
+        <FormControl label="Input">
+          <Input name="input" suffix="名" subActionArea={<button type="button">クリア</button>} />
+        </FormControl>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).not.toHaveAccessibleName(/クリア/)
+  })
+
+  it('prefix/suffixがいずれも無い場合、aria-labelledbyが設定されない(従来通り)', () => {
+    render(
+      <form>
+        <FormControl label="Input">
+          <Input name="input" />
+        </FormControl>
+      </form>,
+    )
+
+    const textbox = screen.getByRole('textbox')
+
+    expect(textbox).not.toHaveAttribute('aria-labelledby')
+  })
 })

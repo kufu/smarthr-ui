@@ -53,6 +53,43 @@ describe('FormControl', () => {
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
   })
 
+  it('suffixを持つInputのaria-labelledbyに、input id・suffix id・label idが順に合流する', () => {
+    render(
+      <form>
+        <FormControl label="定員">
+          <Input name="test" suffix="名" />
+        </FormControl>
+      </form>,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    const labelledBy = textbox.getAttribute('aria-labelledby')!.split(' ')
+    const labelId = screen.getByText('定員').closest('.smarthr-ui-FormControl-label')!.id
+
+    expect(labelledBy).toHaveLength(3)
+    expect(labelledBy[2]).toBe(labelId)
+    expect(textbox).toHaveAccessibleName('定員 名')
+  })
+
+  it('利用者が指定したaria-labelledbyは保持されたまま、prefix/suffix/label idが合流する', () => {
+    const externalLabelId = 'external-label'
+
+    render(
+      <form>
+        <span id={externalLabelId}>外部ラベル</span>
+        <FormControl label="定員">
+          <Input name="test" aria-labelledby={externalLabelId} suffix="名" />
+        </FormControl>
+      </form>,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    const labelledBy = textbox.getAttribute('aria-labelledby')!.split(' ')
+
+    expect(labelledBy[0]).toBe(externalLabelId)
+    expect(textbox).toHaveAccessibleName('外部ラベル 定員 名')
+  })
+
   // HINT: labelが縦方向のwrapper直下に来るとalign-items:stretchで全幅に広がり、
   // テキストが無い部分をクリックしても入力要素にフォーカスが移ってしまう
   describe.each([

@@ -1,6 +1,7 @@
 import { action } from 'storybook/actions'
 
 import { UnstyledButton } from '../../Button'
+import { FormControl } from '../../FormGroup'
 import { FaCircleXmarkIcon, FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { SearchInput } from '../SearchInput'
@@ -83,6 +84,17 @@ export const Suffix: StoryObj<typeof Input> = {
   args: {
     suffix: <FaMagnifyingGlassIcon alt="検索" />,
   },
+}
+
+export const PrefixSuffixWithFormControl: StoryObj<typeof Input> = {
+  name: 'prefix/suffix（FormControlと組み合わせた場合のaria-labelledby確認用）',
+  render: (args) => (
+    <form>
+      <FormControl label="定員">
+        <Input {...args} prefix="￥" suffix="円" />
+      </FormControl>
+    </form>
+  ),
 }
 
 export const SubActionArea: StoryObj<typeof Input> = {

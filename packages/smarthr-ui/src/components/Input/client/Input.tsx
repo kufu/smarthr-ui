@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type MouseEvent, type ReactNode, type WheelEvent, useMemo } from 'react'
+import { type FC, type MouseEvent, type ReactNode, type WheelEvent, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
@@ -88,6 +88,8 @@ export const Input: FC<Props> = ({
   prefix,
   suffix,
   subActionArea,
+  id,
+  'aria-labelledby': ariaLabelledBy,
   className,
   width,
   error,
@@ -119,6 +121,18 @@ export const Input: FC<Props> = ({
     }
   }, [className])
 
+  const commonId = useId()
+  // HINT: WAI-ARIA9(https://www.w3.org/WAI/WCAG21/Techniques/aria/ARIA9)に倣い、
+  // prefix/suffixがある場合はlabel・prefix・input・suffixをaria-labelledbyで結合し、
+  // 単位などのテキストも含めて読み上げられるようにする
+  const hasAffix = !!(prefix || suffix)
+  const inputId = hasAffix ? (id ?? `${commonId}-input`) : id
+  const prefixId = `${commonId}-prefix`
+  const suffixId = `${commonId}-suffix`
+  const actualAriaLabelledBy = hasAffix
+    ? [ariaLabelledBy, prefix && prefixId, inputId, suffix && suffixId].filter(Boolean).join(' ')
+    : ariaLabelledBy
+
   const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
   const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
   const errorAttr = error || undefined
@@ -139,20 +153,30 @@ export const Input: FC<Props> = ({
           ?.focus()
       }}
     >
-      {prefix && <span className={classNames.prefix}>{prefix}</span>}
+      {prefix && (
+        <span id={prefixId} className={classNames.prefix}>
+          {prefix}
+        </span>
+      )}
       <input
         {...rest}
         ref={mergedRef}
         type={type}
+        id={inputId}
         max={max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined}
         className={classNames.input}
         aria-invalid={errorAttr}
+        aria-labelledby={actualAriaLabelledBy || undefined}
         data-smarthr-ui-input-error={errorAttr}
         data-smarthr-ui-input="true"
         onWheel={type === 'number' ? disableWheel : undefined}
       />
       {subActionArea && <span className={classNames.subActionArea}>{subActionArea}</span>}
-      {suffix && <span className={classNames.suffix}>{suffix}</span>}
+      {suffix && (
+        <span id={suffixId} className={classNames.suffix}>
+          {suffix}
+        </span>
+      )}
     </span>
   )
 }
