@@ -292,15 +292,17 @@ export const SingleCombobox = <T,>({
 
   const functions = useMemo(() => {
     let inputNode: HTMLInputElement | null = null
+    const updateUncontrolledSelectedItem = (item: ComboboxItem<T> | null) => {
+      if (!latest.isSelectedItemControlled) {
+        setUncontrolledSelectedItem(item)
+      }
+    }
 
     const selectFallbackItem = () => {
-      if (!latest.emptySelectionFallbackItem) return
-
-      if (!latest.isSelectedItemControlled) {
-        setUncontrolledSelectedItem(latest.emptySelectionFallbackItem)
+      if (latest.emptySelectionFallbackItem) {
+        updateUncontrolledSelectedItem(latest.emptySelectionFallbackItem)
+        latest.onSelect?.(latest.emptySelectionFallbackItem)
       }
-
-      latest.onSelect?.(latest.emptySelectionFallbackItem)
     }
     const unfocus = () => {
       if (!latest.isFocused) return
@@ -356,10 +358,7 @@ export const SingleCombobox = <T,>({
         })
 
         if (!isExecutedPreventDefault) {
-          if (!latest.isSelectedItemControlled) {
-            setUncontrolledSelectedItem(null)
-          }
-
+          updateUncontrolledSelectedItem(null)
           latest.onClear?.()
           latest.onChangeSelected?.(null)
 
@@ -393,10 +392,7 @@ export const SingleCombobox = <T,>({
         setInputValue(value)
 
         if (value === '') {
-          if (!latest.isSelectedItemControlled) {
-            setUncontrolledSelectedItem(null)
-          }
-
+          updateUncontrolledSelectedItem(null)
           latest.onClear?.()
           latest.onChangeSelected?.(null)
         }
@@ -494,12 +490,7 @@ export const SingleCombobox = <T,>({
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
-      data-clear-button-hidden={(
-        actualSelectedItem === null ||
-        disabled ||
-        readOnly ||
-        false
-      ).toString()}
+      data-clear-button-hidden={actualSelectedItem === null || disabled || readOnly || false}
     >
       {name && actualSelectedItem && (
         <input type="hidden" name={name} disabled={disabled} value={actualSelectedItem.value} />
