@@ -23,7 +23,7 @@ import { useTheme } from '../../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../../hooks/useLatest'
 import { FaCalendarDaysIcon } from '../../../../Icon'
 import { Input } from '../../../client'
-import { Calendar } from '../../client'
+import { Calendar } from '../Calendar'
 
 import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'

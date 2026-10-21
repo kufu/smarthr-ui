@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react'
 
-import { IntlProvider } from '../../../../intl'
-import { FormControl } from '../../../FormGroup'
+import { IntlProvider } from '../../../../../intl'
+import { FormControl } from '../../../../FormGroup'
 
-import { DatePicker } from './client'
+import { DatePicker } from './DatePicker'
 
 describe('DatePicker', () => {
   const renderWithIntl = (component: React.ReactElement) =>
