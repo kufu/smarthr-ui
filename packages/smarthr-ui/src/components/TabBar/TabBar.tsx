@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -22,7 +22,7 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     /** `true` のとき、TabBar に下線を表示する */

@@ -1,10 +1,26 @@
 import { render, screen } from '@testing-library/react'
 
 import { IntlProvider } from '../../intl'
+import { FaCircleInfoIcon } from '../Icon'
 
 import { Button } from './Button'
 
 describe('Button', () => {
+  describe('disabled時のアイコン色', () => {
+    it('固定colorを持つprefixアイコンでも、aria-disabled時に無効化色へ揃えるクラスが付与される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <Button disabled prefix={<FaCircleInfoIcon color="MAIN" />}>
+            button
+          </Button>
+        </IntlProvider>,
+      )
+      const wrapper = screen.getByRole('button')
+      expect(wrapper).toHaveClass('[&_.smarthr-ui-Icon]:aria-disabled:!shr-text-color-inherit')
+      expect(wrapper).toHaveClass('[&_.smarthr-ui-Icon]:aria-disabled:shr-fill-current')
+    })
+  })
+
   describe('onClick', () => {
     it('disabled / loading でない場合、発火する', async () => {
       const onClick = vi.fn()

@@ -6,9 +6,9 @@ import { tv } from 'tailwind-variants'
 import { useEnvironment } from '../../../../hooks/client/useEnvironment'
 import { paddingBlock, paddingInline } from '../../../../tailwind'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     size?: 'NARROW' | 'DEFAULT' | 'WIDE' | 'FULL'

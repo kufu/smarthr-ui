@@ -23,7 +23,7 @@ import {
   FilteredIcon,
 } from '../client'
 
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectTriggerType = {
   text?: ReactNode
@@ -32,7 +32,7 @@ type ObjectTriggerType = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'button',
   {
     /** 引き金となるボタン */

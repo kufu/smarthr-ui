@@ -4,9 +4,9 @@ import { tv } from 'tailwind-variants'
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { Scroller } from '../Scroller'
 
-import type { Gap, SHRComponentPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Scroller,
   {
     /** コンテンツ部分の背景色 */

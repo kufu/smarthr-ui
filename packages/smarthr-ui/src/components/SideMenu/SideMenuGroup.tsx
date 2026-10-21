@@ -1,12 +1,12 @@
-import { type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-import type { SHRComponentPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props = SHRComponentPropsWithoutRef<
+type Props = ExtendElementPropsWithoutRef<
   'li',
   {
     heading: ReactNode
@@ -42,8 +42,10 @@ export const SideMenuGroup = ({ heading, children, className, ...rest }: Props) 
   )
 }
 
-const GroupHeading = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
-  <Heading type="subBlockTitle" className={className}>
-    {children}
-  </Heading>
-))
+const GroupHeading = memo<{ children: Props['heading']; className: string }>(
+  ({ children, className }) => (
+    <Heading type="subBlockTitle" className={className}>
+      {children}
+    </Heading>
+  ),
+)

@@ -65,6 +65,9 @@ const Template: StoryFn = (args) => (
             >
               ボタン
             </Button>
+            <Button disabled variant={variant} prefix={<FaCirclePlusIcon color="MAIN" />}>
+              固定colorアイコンも無効化色になること
+            </Button>
           </Cluster>
         </Groupbox>
       ),

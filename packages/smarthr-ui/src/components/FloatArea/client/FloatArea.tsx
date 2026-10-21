@@ -10,7 +10,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 
 import type { ResponseStatusWithoutProcessing } from '../../../hooks/useResponseStatus'
 import type { AbstractSize, CharRelativeSize } from '../../../themes'
-import type { SHRComponentPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -76,7 +76,7 @@ type TertiaryButtonState = {
   fixedOnMobile: boolean
 }
 
-type Props = SHRComponentPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   'div',
   {
     /** 表示する `Button` または `AnchorButton` コンポーネント */
