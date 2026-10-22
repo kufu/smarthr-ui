@@ -17,9 +17,6 @@ type Props = ExtendProps<
 
 export const WarekiPicker: FC<Props> = ({ showAlternative, ...rest }) => {
   const { locale } = useIntl()
-  // HINT: 実用上showAlternativeはモバイル判定等でfalse/それ以外を切り替えるだけであるため、
-  // このboolean自体は安定しているとみなせる
-  const hasShowAlternative = showAlternative !== false
   const latest = useLatest({ showAlternative, locale })
 
   // HINT: showAlternativeの値によってDatePicker/別コンポーネントを出し分けると、
@@ -44,9 +41,12 @@ export const WarekiPicker: FC<Props> = ({ showAlternative, ...rest }) => {
   )
 
   // HINT: DatePicker はshowAlternativeがfalsyな場合、即座に別表記を非表示にする。
-  // hasShowAlternativeがfalseの間はundefinedを渡すことで、選択日が変わらないまま
+  // showAlternativeがfalseの間はundefinedを渡すことで、選択日が変わらないまま
   // true→falseに切り替えても以前の別表記が残らないようにする
   return (
-    <DatePicker {...rest} showAlternative={hasShowAlternative ? resolveAlternative : undefined} />
+    <DatePicker
+      {...rest}
+      showAlternative={showAlternative === false ? undefined : resolveAlternative}
+    />
   )
 }
