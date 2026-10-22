@@ -112,6 +112,24 @@ describe('SingleCombobox', () => {
     expect(listbox()).not.toBeInTheDocument()
   })
 
+  it('入力途中の文字列がある状態で閉じると、再度開いたときに文字列が残っていないこと', async () => {
+    render(template({}))
+
+    // 検索文字列を入力する
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option')
+    expect(combobox()).toHaveValue('option')
+
+    // 何も選択せずに外側クリックで閉じる
+    await userEvent.click(document.body)
+    expect(listbox()).not.toBeInTheDocument()
+
+    // 再度開いても入力値が残っていないこと
+    await userEvent.click(combobox())
+    expect(combobox()).toHaveValue('')
+    expect(screen.getAllByRole('option')).toHaveLength(5)
+  })
+
   it('リストボックスが展開されているときのESCキー入力はdocumentまで伝搬せず、閉じているときは伝搬すること', async () => {
     const handleDocumentKeyDown = vi.fn()
     document.addEventListener('keydown', handleDocumentKeyDown)
