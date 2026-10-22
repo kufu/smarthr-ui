@@ -40,18 +40,14 @@ type Props = ExtendElementPropsWithRef<
     value?: string | null
     /** 非制御コンポーネントとして使う場合の初期値。`value` を指定した場合は無視される */
     defaultValue?: string | null
-    /** input 要素の `name` 属性の値 */
-    name?: string
-    /** 選択可能な期間の開始日 */
-    from?: Date
-    /** 選択可能な期間の終了日 */
-    to?: Date
-    /** フォームを無効にするかどうか */
-    disabled?: boolean
     /**
      * placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
      */
     placeholder?: string
+    /** 選択可能な期間の開始日 */
+    from?: Date
+    /** 選択可能な期間の終了日 */
+    to?: Date
     /** フォームにエラーがあるかどうか */
     error?: boolean
     /** コンポーネントの幅 */
@@ -105,7 +101,6 @@ const formatDateValue = (
   formatDateFn: ((date: Date | null) => string) | undefined,
 ) => (formatDateFn ? formatDateFn(date) : DEFAULT_DATE_TO_STRING(date))
 
-/** @deprecated DatePicker は非推奨です。WarekiPicker を使ってください。 */
 export const DatePicker: FC<Props> = ({
   value,
   defaultValue,
