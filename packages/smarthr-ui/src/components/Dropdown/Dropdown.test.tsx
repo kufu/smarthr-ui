@@ -504,10 +504,6 @@ describe('Dropdown', () => {
     beforeEach(() => {
       contentHeight = 300
 
-      vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
-        callback(0)
-        return 0
-      })
       vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
       vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
         this: Element,
@@ -551,9 +547,11 @@ describe('Dropdown', () => {
       expect(content.style.transform).toBe('translateY(-100%)')
       expect(content.style.insetBlockStart).toBe('705px') // トリガ上端(700) + 5
 
-      // HINT: 開いた後に高さが変わっても、top はトリガ基準の固定値のまま変わらないこと
+      // HINT: 開いた後に高さが変わり再計算が走っても、top の計算式はコンテンツの高さを
+      // 参照しないため、トリガ基準の固定値のまま変わらないこと
       // (transform: translateY(-100%) によって実際のレンダリング後の高さ分だけ描画位置がずれる)
       contentHeight = 600
+      act(() => window.dispatchEvent(new Event('resize')))
       expect(content.style.insetBlockStart).toBe('705px')
     })
   })
