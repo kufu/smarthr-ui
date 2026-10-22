@@ -1477,6 +1477,24 @@ effect の統合は「最終状態は同じだが途中経過が変わる」変�
 - 内部 state が DOM に出ない場合は、渡し先のコンポーネントをモックして prop を捕捉する
 - `debounce` や `requestAnimationFrame` を挟む場合はフェイクタイマーで経過させる
 
+## 依存関係の脆弱性対応（`pnpm audit` 失敗時）
+
+CI の `ci/circleci: audit` が失敗した場合、以下の手順で対応する。
+
+1. `pnpm audit` をルートで実行し、脆弱性の対象パッケージ・影響範囲・修正済みバージョンを確認する
+2. 対象パッケージを `packages/smarthr-ui`・`packages/charts`・`sandbox/next` など、依存している各ワークスペースで `pnpm update <package> --latest` または `pnpm add -D <package>@<version>` により更新する
+   - 1つのワークスペースだけ更新しても他のワークスペースの依存グラフには反映されない。`pnpm why <package>` で依存経路を確認し、`pnpm audit` の `Paths` に出てくる全ワークスペースで更新する
+3. `pnpm-workspace.yaml` の `minimumReleaseAge`（新規リリースから一定期間が経つまでインストールを禁止する設定）により、最新バージョンへの更新がブロックされることがある
+   - `pnpm audit` 実行時に `Safe-chain: Some package versions were suppressed during package metadata resolution due to minimum package age.` と表示された場合はこれが原因
+   - 対象パッケージの `npm view <package>@<version>` や `curl -s https://registry.npmjs.org/<package>` の `time` フィールドでリリース日時を確認し、`minimumReleaseAge`（分単位、現状10080分=7日）を超えた最も新しいバージョンを特定する
+   - 修正済みバージョンのうち `minimumReleaseAge` を満たす最も古いバージョンへ、`pnpm add -D <package>@<version>` のようにバージョンを明示して更新する（`--latest` は age 制限で弾かれた場合に無言で古いバージョンへ据え置かれることがあるため、age を満たすバージョンが分かっている場合はバージョン指定が確実）
+   - どうしても最新版が必要な場合のみ、`minimumReleaseAgeExclude` に `パッケージ名@バージョン` を追記して個別に除外する。その際は「`minimumReleaseAge` 経過後に削除可」のコメントを添える（既存の `nanoid@3.3.18` 等のエントリを参照）
+4. 全ワークスペースで `pnpm audit` を再実行し、対象の脆弱性が解消されたことを確認する（`braces` など既知の `ignoreGhsas` 登録済みのものは解消確認の対象外）
+5. 更新後、影響を受けた各ワークスペースで通常の検証（`eslint`、`tsc --noEmit -p tsconfig.build.json`、`vitest run`、`prettier --check`、`knip --exclude duplicates`）を行う
+   - `tsc --noEmit` はプロジェクト引数（`-p tsconfig.build.json` 等）を省略するとルートの `tsconfig.json` を使ってしまい、依存先ワークスペースのソースまで型チェック対象に含めて誤ったエラーを出すことがある。各ワークスペースの `package.json` の `lint:tsc` スクリプトに書かれたコマンドをそのまま使うこと
+   - 依存更新時に無関係な既存ファイルの prettier 崩れが検出されることがあるが、今回の対応スコープ外であれば修正せず据え置く
+6. `minimumReleaseAgeExclude` に、今回の対応で不要になった（`minimumReleaseAge` を経過した）過去のエントリが残っていないか確認し、不要なら削除する
+
 ## スキル
 
 - **PR作成** (`.claude/skills/pr-creator/`): PR作成時にリポジトリのテンプレートに沿った本文を生成する
