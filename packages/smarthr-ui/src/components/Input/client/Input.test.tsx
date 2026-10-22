@@ -34,4 +34,23 @@ describe('Input', () => {
 
     expect(input).toHaveValue('初期値追加')
   })
+
+  it('subActionAreaがsuffixより手前(input側)に配置される', () => {
+    render(
+      <form>
+        <FormControl label="Input">
+          <Input
+            name="input"
+            suffix={<span>suffix</span>}
+            subActionArea={<button type="button">action</button>}
+          />
+        </FormControl>
+      </form>,
+    )
+
+    const wrapper = screen.getByRole('textbox').closest('.smarthr-ui-Input')!
+    const children = Array.from(wrapper.children).map((el) => el.textContent)
+
+    expect(children.indexOf('action')).toBeLessThan(children.indexOf('suffix'))
+  })
 })

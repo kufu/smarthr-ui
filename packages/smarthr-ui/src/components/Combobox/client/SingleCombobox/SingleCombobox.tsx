@@ -478,7 +478,7 @@ export const SingleCombobox = <T,>({
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
         prefix={prefix}
-        suffix={
+        subActionArea={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}
