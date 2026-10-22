@@ -166,9 +166,10 @@ export const WarekiPicker: FC<Props> = ({
     parseStringDate(value !== undefined ? value : defaultValue, parseInput),
   )
 
-  const [alternativeFormat, setAlternativeFormat] = useState<ReactNode>(() =>
-    resolveAlternativeFormat(selectedDate, showAlternative, locale),
-  )
+  // HINT: selectedDate・showAlternative・localeから導出できる値のため、stateで持たずレンダー中に計算する。
+  // selectedDate変更時のみ再計算するstateにすると、showAlternativeだけを切り替えた際に
+  // 以前の表示が残ってしまう
+  const alternativeFormat = resolveAlternativeFormat(selectedDate, showAlternative, locale)
 
   const [initialInputValue] = useState<string | undefined>(() => {
     if (value !== undefined || defaultValue === undefined) {
@@ -201,9 +202,6 @@ export const WarekiPicker: FC<Props> = ({
 
     const dateToString = (date: Date | null) => formatDateValue(date, latest.formatDate)
 
-    const dateToAlternativeFormat = (d: Date | null) =>
-      resolveAlternativeFormat(d, latest.showAlternative, latest.locale)
-
     const stringToDate = (str: string | null | undefined) => parseStringDate(str, latest.parseInput)
 
     const updateDate = (e: ChangeLikeEvent, newDate: Date | null) => {
@@ -227,7 +225,6 @@ export const WarekiPicker: FC<Props> = ({
       const formatValue = dateToString(nextDate)
 
       inputNode.value = formatValue
-      setAlternativeFormat(dateToAlternativeFormat(nextDate))
       setSelectedDate(nextDate)
 
       if (latest.onChange) {
@@ -271,7 +268,6 @@ export const WarekiPicker: FC<Props> = ({
     return {
       stringToDate,
       dateToString,
-      dateToAlternativeFormat,
       closeCalendar,
       openCalendar,
       calendarCallbackRef: (node: HTMLElement | null) => {
@@ -384,7 +380,6 @@ export const WarekiPicker: FC<Props> = ({
 
         if (newDate && dayjs(newDate).isValid()) {
           node.value = functions.dateToString(newDate)
-          setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
           setSelectedDate(newDate)
 
           return
