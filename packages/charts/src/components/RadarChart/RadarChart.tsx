@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { Radar } from 'react-chartjs-2'
 import {
   FaCircleNodesIcon,
@@ -13,8 +13,8 @@ import {
 import { createRadarChartOptions, registerChartComponents } from '../../config'
 import { getRadarChartColors } from '../../helper'
 
+import type { ChartViewType } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
-import { ChartViewType } from '../../helper/data'
 import { TableView } from '../internal/TableView/TableView'
 
 registerChartComponents()
@@ -79,9 +79,7 @@ export const RadarChart: React.FC<Props> = ({
 
   const handleViewChange = (value: ChartViewType) => {
     setView(value)
-    if (onChangeView) {
-      onChangeView(value)
-    }
+    onChangeView?.(value)
   }
 
   return (

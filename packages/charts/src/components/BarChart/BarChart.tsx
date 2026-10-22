@@ -15,9 +15,8 @@ import {
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
 
-import type { SingleToneLevel } from '../../helper'
+import type { ChartViewType, SingleToneLevel } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
-import { ChartViewType } from '../../helper/data'
 import { TableView } from '../internal/TableView/TableView'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
@@ -139,9 +138,7 @@ export const BarChart: React.FC<Props> = ({
 
   const handleViewChange = (value: ChartViewType) => {
     setView(value)
-    if (onChangeView) {
-      onChangeView(value)
-    }
+    onChangeView?.(value)
   }
 
   return (
