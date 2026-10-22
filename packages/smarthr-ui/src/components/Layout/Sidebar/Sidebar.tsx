@@ -120,8 +120,9 @@ const itemClassNameGenerator = tv({
  * </Sidebar>
  *
  * // After
- * <Cluster layout="main sub">
- *   <div>メイン</div>
+ * // Sidebar right のデフォルト値(gap=1, contentsMinWidth="50%")に合わせる場合
+ * <Cluster layout="main sub" gap={1}>
+ *   <div className="shr-min-w-[50%]">メイン</div>
  *   <div>サブ</div>
  * </Cluster>
  * ```
