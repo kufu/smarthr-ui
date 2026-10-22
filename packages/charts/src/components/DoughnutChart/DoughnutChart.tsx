@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { FaChartPieIcon, FaTableIcon, SegmentedControl, VisuallyHiddenText, Text } from 'smarthr-ui'
 
@@ -15,7 +15,7 @@ import { doughnutSegmentDividerPlugin } from '../../plugins'
 import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
 
 import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
-import { ChartViewType } from '../../helper/data'
+import type { ChartViewType } from '../../helper'
 import { TableView } from '../internal/TableView/TableView'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
@@ -129,7 +129,7 @@ export const DoughnutChart: React.FC<Props> = ({
         </Text>
         <SegmentedControl
           className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
-          size="s"
+          size="S"
           onClickOption={(value) => handleViewChange(value as ChartViewType)}
           value={view}
           options={[

@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import {
   FaTableIcon,
@@ -14,7 +14,7 @@ import { createLineChartOptions, registerChartComponents } from '../../config'
 import { getLineChartColors } from '../../helper'
 
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
-import { ChartViewType } from '../../helper/data'
+import type { ChartViewType } from '../../helper'
 import { TableView } from '../internal/TableView/TableView'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
@@ -80,9 +80,7 @@ export const LineChart: React.FC<Props> = ({
 
   const handleViewChange = (value: ChartViewType) => {
     setView(value)
-    if (onChangeView) {
-      onChangeView(value)
-    }
+    onChangeView?.(value)
   }
 
   return (
