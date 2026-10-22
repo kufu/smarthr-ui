@@ -86,7 +86,7 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
           const tokens = inputLabelledByIds.split(' ')
           // HINT: 自分が過去に追加したid以外（=外部由来のid）だけを残す
           const externalTokens = tokens.filter((token) => token !== managedRef.current.labelId)
-          const nextTokens = label.id ? [...externalTokens, label.id] : externalTokens
+          const nextTokens = label.id ? [label.id, ...externalTokens] : externalTokens
           const nextValue = nextTokens.join(' ')
 
           if (nextValue !== inputLabelledByIds) {

@@ -53,7 +53,7 @@ describe('FormControl', () => {
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
   })
 
-  it('suffixを持つInputのaria-labelledbyに、input id・suffix id・label idが順に合流する', () => {
+  it('suffixを持つInputのaria-labelledbyに、label id・input id・suffix idが順に合流する', () => {
     render(
       <form>
         <FormControl label="定員">
@@ -67,11 +67,11 @@ describe('FormControl', () => {
     const labelId = screen.getByText('定員').closest('.smarthr-ui-FormControl-label')!.id
 
     expect(labelledBy).toHaveLength(3)
-    expect(labelledBy[2]).toBe(labelId)
+    expect(labelledBy[0]).toBe(labelId)
     expect(textbox).toHaveAccessibleName('定員 名')
   })
 
-  it('利用者が指定したaria-labelledbyは保持されたまま、prefix/suffix/label idが合流する', () => {
+  it('利用者が指定したaria-labelledbyは保持されたまま、label/prefix/suffix idが合流する', () => {
     const externalLabelId = 'external-label'
 
     render(
@@ -85,9 +85,11 @@ describe('FormControl', () => {
 
     const textbox = screen.getByRole('textbox')
     const labelledBy = textbox.getAttribute('aria-labelledby')!.split(' ')
+    const labelId = screen.getByText('定員').closest('.smarthr-ui-FormControl-label')!.id
 
-    expect(labelledBy[0]).toBe(externalLabelId)
-    expect(textbox).toHaveAccessibleName('外部ラベル 定員 名')
+    expect(labelledBy[0]).toBe(labelId)
+    expect(labelledBy).toContain(externalLabelId)
+    expect(textbox).toHaveAccessibleName('定員 外部ラベル 名')
   })
 
   // HINT: labelが縦方向のwrapper直下に来るとalign-items:stretchで全幅に広がり、

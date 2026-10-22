@@ -88,8 +88,7 @@ describe('Input', () => {
       </form>,
     )
 
-    // aria-labelledbyでinput自身のidを参照すると、その位置にlabel[for]のテキストが挿入される
-    expect(screen.getByRole('textbox')).toHaveAccessibleName('￥ 定員 円')
+    expect(screen.getByRole('textbox')).toHaveAccessibleName('定員 ￥ 円')
   })
 
   it('prefix/suffixがいずれも無い場合、aria-labelledbyが設定されない(従来通り)', () => {
