@@ -232,7 +232,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           e.currentTarget.contains(e.target) &&
           (!document.activeElement || document.activeElement === document.body)
         ) {
-          dummyFocusContent?.focus()
+          dummyFocusContent?.focus({ preventScroll: true })
         }
       },
       // HINT: Dialog > Dropdown の構造になっている場合、Dialog よりも先に Dropdown が Esc キーを受け取って伝播を止める必要があるので、DropdownContent に keydown イベントを設定する
