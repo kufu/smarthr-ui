@@ -9,19 +9,20 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '135px', // 140 - 5
       left: '-5px', // trigger left - 5
-      maxHeight: '',
+      maxHeight: '650px', // 800 - 140 - 10
     })
   })
 
-  it('returns top style when the bottom side of the trigger does not have enough space to display content but top side has', () => {
+  it('returns top style anchored to the trigger top with translateY(-100%) when the bottom side of the trigger does not have enough space to display content but top side has', () => {
     const triggerRect = { top: 600, bottom: 640, left: 0, right: 120 }
     const contentSize = { width: 300, height: 400 }
     const windowSize = { width: 1000, height: 800 }
     const scroll = { top: 0, left: 0 }
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
-      top: '205px', // 600 - 400 + 5
+      top: '605px', // 600 + 5
       left: '-5px', // trigger left - 5
-      maxHeight: '',
+      maxHeight: '590px', // 600 - 10
+      transform: 'translateY(-100%)',
     })
   })
 
@@ -57,7 +58,7 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '135px', // 140 - 5
       right: '375px', // window width - trigger right - 5
-      maxHeight: '',
+      maxHeight: '650px', // 800 - 140 - 10
     })
   })
 
@@ -69,7 +70,7 @@ describe('getContentBoxStyle', () => {
     expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
       top: '635px', // 140 - 5 + 500
       left: '595px', // trigger left + scroll left - 5
-      maxHeight: '',
+      maxHeight: '650px', // 800 - 140 - 10
     })
   })
 })

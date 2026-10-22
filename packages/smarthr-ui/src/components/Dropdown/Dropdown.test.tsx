@@ -497,4 +497,62 @@ describe('Dropdown', () => {
       )
     })
   })
+
+  describe('上側に開く場合', () => {
+    let contentHeight = 300
+
+    beforeEach(() => {
+      contentHeight = 300
+
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: Element,
+      ) {
+        // HINT: トリガーを画面下寄りに配置し、ドロップダウンが上側に開く状況を再現する
+        const isTrigger = this.tagName === 'BUTTON' && this.textContent === 'Trigger'
+
+        return {
+          top: isTrigger ? 700 : 0,
+          bottom: isTrigger ? 740 : 0,
+          left: 0,
+          right: 120,
+          width: 120,
+          height: isTrigger ? 40 : 0,
+          x: 0,
+          y: 0,
+          toJSON: () => {},
+        } as DOMRect
+      })
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get() {
+          return contentHeight
+        },
+      })
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('transform: translateY(-100%) でトリガ上端に固定され、開いた後のコンテンツの高さ変化に再計算なしで追従すること', () => {
+      render(template)
+
+      act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+
+      const content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+
+      expect(content.style.transform).toBe('translateY(-100%)')
+      expect(content.style.insetBlockStart).toBe('705px') // トリガ上端(700) + 5
+
+      // HINT: 開いた後に高さが変わり再計算が走っても、top の計算式はコンテンツの高さを
+      // 参照しないため、トリガ基準の固定値のまま変わらないこと
+      // (transform: translateY(-100%) によって実際のレンダリング後の高さ分だけ描画位置がずれる)
+      contentHeight = 600
+      act(() => window.dispatchEvent(new Event('resize')))
+      expect(content.style.insetBlockStart).toBe('705px')
+    })
+  })
 })
