@@ -72,4 +72,24 @@ describe('Input', () => {
 
     expect(button).toHaveFocus()
   })
+
+  it('subActionArea内の要素をクリックすると、Inputの外側の祖先要素のonClickも発火する', async () => {
+    const user = userEvent.setup()
+    const handleClickAncestor = vi.fn()
+
+    render(
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, smarthr/best-practice-for-interactive-element
+      <div onClick={handleClickAncestor}>
+        <form>
+          <FormControl label="Input">
+            <Input name="input" subActionArea={<button type="button">action</button>} />
+          </FormControl>
+        </form>
+      </div>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'action' }))
+
+    expect(handleClickAncestor).toHaveBeenCalledTimes(1)
+  })
 })

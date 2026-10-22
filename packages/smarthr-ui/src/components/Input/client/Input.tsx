@@ -6,6 +6,7 @@ import { tv } from 'tailwind-variants'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
+import { findDelegateTarget } from '../../../libs/delegate'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -134,9 +135,11 @@ export const Input: FC<Props> = ({
         width: styleMaxWidth ? '100%' : undefined,
       }}
       onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
-        delegateEvent.currentTarget
-          .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
-          ?.focus()
+        if (!findDelegateTarget(delegateEvent, '.smarthr-ui-Input-subActionArea')) {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }
       }}
     >
       {prefix && <span className={classNames.prefix}>{prefix}</span>}
@@ -152,11 +155,7 @@ export const Input: FC<Props> = ({
         onWheel={type === 'number' ? disableWheel : undefined}
       />
       {subActionArea && (
-        <span
-          role="presentation"
-          className={classNames.subActionArea}
-          onClick={handleDelegateClickSubActionArea}
-        >
+        <span role="presentation" className={classNames.subActionArea}>
           {subActionArea}
         </span>
       )}
@@ -170,10 +169,4 @@ const disableWheel = (e: WheelEvent) => {
   if (e.target) {
     ;(e.target as HTMLInputElement).blur()
   }
-}
-
-// HINT: wrapperのonClickでinputにフォーカスが移ると、subActionArea内の要素のフォーカスが失われるため、
-// 伝播を止めてwrapperのonClickが実行されないようにする
-const handleDelegateClickSubActionArea = (delegateEvent: MouseEvent<HTMLSpanElement>) => {
-  delegateEvent.stopPropagation()
 }
