@@ -80,7 +80,7 @@ const classNameGenerator = tv({
     inputSuffixLayout: 'shr-box-border shr-h-full shr-py-0.5',
     inputSuffixWrapper:
       'shr-border-l-shorthand shr-box-border shr-flex shr-h-full shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
-    inputSuffixText: 'shr-text-gray shr-me-0.5 shr-text-sm',
+    inputSuffixText: 'shr-text-gray shr-me-0.5 shr-ms-0.5 shr-text-sm',
   },
 })
 
@@ -460,8 +460,8 @@ const InputSuffixIcon = memo<{
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <span className={classNames.inputSuffixLayout}>
     <span className={classNames.inputSuffixWrapper}>
-      {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
       <FaCalendarDaysIcon color={caretIconColor} />
+      {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
     </span>
   </span>
 ))
