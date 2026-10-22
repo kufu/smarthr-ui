@@ -24,6 +24,8 @@ type Props = ExtendElementPropsWithRef<
     prefix?: ReactNode
     /** コンポーネント内の末尾に表示する内容 */
     suffix?: ReactNode
+    /** コンポーネント内の、inputとsuffixの間に表示する操作用の要素（ボタン等） */
+    subActionArea?: ReactNode
     /** 背景色。readOnly を下地の上に載せる場合に使う */
     bgColor?: keyof typeof backgroundColor
     /**
@@ -85,6 +87,7 @@ export const Input: FC<Props> = ({
   autoFocus,
   prefix,
   suffix,
+  subActionArea,
   className,
   width,
   error,
@@ -112,6 +115,7 @@ export const Input: FC<Props> = ({
       input: input(),
       prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
       suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
+      subActionArea: affix({ className: 'smarthr-ui-Input-subActionArea' }),
     }
   }, [className])
 
@@ -147,6 +151,17 @@ export const Input: FC<Props> = ({
         data-smarthr-ui-input="true"
         onWheel={type === 'number' ? disableWheel : undefined}
       />
+      {subActionArea && (
+        // HINT: wrapperのonClickでinputにフォーカスが移ると、subActionArea内の要素のフォーカスが失われるため、
+        // 伝播を止めてwrapperのonClickが実行されないようにする
+        <span
+          role="presentation"
+          className={classNames.subActionArea}
+          onClick={(delegateEvent) => delegateEvent.stopPropagation()}
+        >
+          {subActionArea}
+        </span>
+      )}
       {suffix && <span className={classNames.suffix}>{suffix}</span>}
     </span>
   )
