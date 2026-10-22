@@ -152,12 +152,10 @@ export const Input: FC<Props> = ({
         onWheel={type === 'number' ? disableWheel : undefined}
       />
       {subActionArea && (
-        // HINT: wrapperのonClickでinputにフォーカスが移ると、subActionArea内の要素のフォーカスが失われるため、
-        // 伝播を止めてwrapperのonClickが実行されないようにする
         <span
           role="presentation"
           className={classNames.subActionArea}
-          onClick={(delegateEvent) => delegateEvent.stopPropagation()}
+          onClick={handleDelegateClickSubActionArea}
         >
           {subActionArea}
         </span>
@@ -172,4 +170,10 @@ const disableWheel = (e: WheelEvent) => {
   if (e.target) {
     ;(e.target as HTMLInputElement).blur()
   }
+}
+
+// HINT: wrapperのonClickでinputにフォーカスが移ると、subActionArea内の要素のフォーカスが失われるため、
+// 伝播を止めてwrapperのonClickが実行されないようにする
+const handleDelegateClickSubActionArea = (delegateEvent: MouseEvent<HTMLSpanElement>) => {
+  delegateEvent.stopPropagation()
 }
