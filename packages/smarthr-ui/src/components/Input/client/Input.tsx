@@ -89,6 +89,7 @@ export const Input: FC<Props> = ({
   suffix,
   subActionArea,
   id,
+  'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   className,
   width,
@@ -124,8 +125,10 @@ export const Input: FC<Props> = ({
   const commonId = useId()
   // HINT: WAI-ARIA9(https://www.w3.org/WAI/WCAG21/Techniques/aria/ARIA9)に倣い、
   // prefix/suffixがある場合はlabel・prefix・input・suffixをaria-labelledbyで結合し、
-  // 単位などのテキストも含めて読み上げられるようにする
-  const hasAffix = !!(prefix || suffix)
+  // 単位などのテキストも含めて読み上げられるようにする。aria-labelledbyはaria-labelより
+  // 優先されるため、利用者がaria-labelを指定している場合は自動生成を行わず、
+  // 既存のアクセシブルネームを壊さないようにする
+  const hasAffix = !!(prefix || suffix) && !ariaLabel
   const inputId = hasAffix ? (id ?? `${commonId}-input`) : id
   const prefixId = `${commonId}-prefix`
   const suffixId = `${commonId}-suffix`
@@ -168,6 +171,7 @@ export const Input: FC<Props> = ({
         max={max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined}
         className={classNames.input}
         aria-invalid={errorAttr}
+        aria-label={ariaLabel}
         aria-labelledby={actualAriaLabelledBy || undefined}
         data-smarthr-ui-input-error={errorAttr}
         data-smarthr-ui-input="true"

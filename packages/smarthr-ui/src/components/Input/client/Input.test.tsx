@@ -91,6 +91,15 @@ describe('Input', () => {
     expect(screen.getByRole('textbox')).toHaveAccessibleName('定員 ￥ 円')
   })
 
+  it('aria-labelが指定されている場合、prefix/suffixがあってもaria-labelledbyを自動生成せず、既存のaria-labelを保持する', () => {
+    render(<Input name="input" aria-label="検索" prefix="￥" suffix="円" />)
+
+    const textbox = screen.getByRole('textbox')
+
+    expect(textbox).not.toHaveAttribute('aria-labelledby')
+    expect(textbox).toHaveAccessibleName('検索')
+  })
+
   it('prefix/suffixがいずれも無い場合、aria-labelledbyが設定されない(従来通り)', () => {
     render(
       <form>
