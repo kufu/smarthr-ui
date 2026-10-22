@@ -32,6 +32,7 @@ import type { ExtendElementPropsWithRef } from '../../../../../types'
 
 type ChangeLikeEvent = ChangeEvent | React.KeyboardEvent | MouseEvent
 
+// TODO: WarekiPickerとして統合する
 type Props = ExtendElementPropsWithRef<
   'input',
   {

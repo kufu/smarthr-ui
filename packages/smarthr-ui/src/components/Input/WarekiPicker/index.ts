@@ -1,1 +1,1 @@
-export { WarekiPicker, Calendar, DatePicker } from './client'
+export { WarekiPicker, Calendar } from './client'

@@ -7,24 +7,40 @@ import { useIntl } from '../../../../intl'
 
 import { DatePicker } from './DatePicker'
 
-type Props = Omit<ComponentPropsWithRef<typeof DatePicker>, 'showAlternative'>
+import type { ExtendProps } from '../../../../types'
 
-const handleShowWareki = (date: Date | null, locale: string) => {
-  if (!date) {
-    return null
+type DatePickerProps = ComponentPropsWithRef<typeof DatePicker>
+type Props = ExtendProps<
+  DatePickerProps,
+  { showAlternative?: boolean | DatePickerProps['showAlternative'] }
+>
+
+export const WarekiPicker: FC<Props> = ({ showAlternative, ...rest }) => {
+  if (typeof showAlternative === 'function') {
+    return <DatePicker {...rest} showAlternative={showAlternative} />
   }
 
-  // 和暦を使う
-  return date.toLocaleDateString(`${locale}-u-ca-japanese`, {
-    dateStyle: 'long',
-  })
+  if (showAlternative === false) {
+    return <DatePicker {...rest} />
+  }
+
+  return <ActualWarekiPicker {...rest} />
 }
 
-export const WarekiPicker: FC<Props> = (props) => {
+const ActualWarekiPicker: FC<Omit<Props, 'showAlternative'>> = (props) => {
   const { locale } = useIntl()
   const latest = useLatest({ locale })
   const showAlternative = useCallback(
-    (date: Date | null) => handleShowWareki(date, latest.locale),
+    (date: Date | null) => {
+      if (!date) {
+        return null
+      }
+
+      // 和暦を使う
+      return date.toLocaleDateString(`${latest.locale}-u-ca-japanese`, {
+        dateStyle: 'long',
+      })
+    },
     [latest],
   )
 

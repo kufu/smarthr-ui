@@ -266,7 +266,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       const handleClickBody = (e: any) => {
         if (!active || !node) return
 
-        // HINT: クリックされた要素がクリック処理中にDOMから取り除かれる場合がある(例: DatePickerのYearPickerで年を選択した場合)
+        // HINT: クリックされた要素がクリック処理中にDOMから取り除かれる場合がある(例: WarekiPickerのYearPickerで年を選択した場合)
         // e.targetから親要素を辿るとポータル外と誤判定してしまうため、イベント発生時点の経路であるcomposedPathで判定する
         const path: EventTarget[] = e.composedPath()
 

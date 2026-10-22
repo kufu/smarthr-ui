@@ -340,7 +340,7 @@ describe('Dropdown', () => {
     })
 
     it('ポータル内でクリックした要素がクリック処理中にDOMから取り除かれても外側のDropdownが閉じないこと', async () => {
-      // HINT: DatePickerのYearPickerで年を選択すると、クリックされた年ボタンはDropdownの外側クリック判定より前にアンマウントされる
+      // HINT: WarekiPickerのYearPickerで年を選択すると、クリックされた年ボタンはDropdownの外側クリック判定より前にアンマウントされる
       // ブラウザではReactのリスナーとDropdownのリスナーの間でマイクロタスクが実行されるため再レンダリングが挟まるが、
       // jsdomでは挟まらないため、flushSyncで同じ状況を再現する
       const RemoveOnClick = () => {

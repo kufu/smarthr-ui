@@ -69,4 +69,47 @@ describe('WarekiPicker', () => {
     expect(textbox).toHaveProperty('value', '2024/09/04')
     expect(textbox).toHaveProperty('ariaExpanded', 'false')
   })
+
+  it('showAlternativeにfalseを指定した場合、和暦の別表記を表示しない', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker
+            name="date"
+            value="2024-09-25"
+            showAlternative={false}
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+      'ja',
+    )
+
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    act(() => textbox.click())
+
+    expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
+  })
+
+  it('showAlternativeに関数を指定した場合、その関数の結果を別表記として表示する', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker
+            name="date"
+            value="2024-09-25"
+            showAlternative={(date) => (date ? `custom:${date.getFullYear()}` : null)}
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+      'ja',
+    )
+
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    act(() => textbox.click())
+
+    expect(screen.getByText('custom:2024')).toBeTruthy()
+    expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
+  })
 })
