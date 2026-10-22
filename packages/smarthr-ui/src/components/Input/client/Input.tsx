@@ -154,7 +154,9 @@ export const Input: FC<Props> = ({
       }}
     >
       {prefix && (
-        <span id={prefixId} className={classNames.prefix}>
+        // HINT: aria-labelledbyでinputのアクセシブルネームに合流させるため、
+        // 独立した要素としてスクリーンリーダーに読み上げられないようaria-hiddenにする
+        <span id={prefixId} className={classNames.prefix} aria-hidden>
           {prefix}
         </span>
       )}
@@ -173,7 +175,9 @@ export const Input: FC<Props> = ({
       />
       {subActionArea && <span className={classNames.subActionArea}>{subActionArea}</span>}
       {suffix && (
-        <span id={suffixId} className={classNames.suffix}>
+        // HINT: aria-labelledbyでinputのアクセシブルネームに合流させるため、
+        // 独立した要素としてスクリーンリーダーに読み上げられないようaria-hiddenにする
+        <span id={suffixId} className={classNames.suffix} aria-hidden>
           {suffix}
         </span>
       )}
