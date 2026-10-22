@@ -11,6 +11,8 @@ minimumReleaseAgeExclude:
   - vitest@4.1.11
   # Security update: source-map-js@1.2.2 (minimumReleaseAge 経過後に削除可)
   - source-map-js@1.2.2
+  # Renovate security update: storybook@10.6.2
+  - storybook@10.6.2
 allowBuilds:
   '@swc/core': true
   canvas: true
