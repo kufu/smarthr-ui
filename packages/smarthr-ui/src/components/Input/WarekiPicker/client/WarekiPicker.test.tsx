@@ -138,11 +138,43 @@ describe('WarekiPicker', () => {
 
     const textboxBefore = screen.getByRole('textbox', { name: 'WarekiPicker' })
 
+    expect(screen.getByText('令和6年9月25日')).toBeTruthy()
+
     act(() => screen.getByRole('button', { name: 'toggle' }).click())
 
     const textboxAfter = screen.getByRole('textbox', { name: 'WarekiPicker' })
 
     expect(textboxAfter).toBe(textboxBefore)
     expect(textboxAfter).toHaveProperty('value', '2024/09/25')
+  })
+
+  it('選択日が変わらないままshowAlternativeをtrueからfalseに切り替えると、別表記が消える', () => {
+    const Wrapper = () => {
+      const [showAlternative, setShowAlternative] = useState(true)
+
+      return (
+        <form>
+          <FormControl label="WarekiPicker">
+            <WarekiPicker
+              name="date"
+              defaultValue="2024-09-25"
+              showAlternative={showAlternative}
+              onChangeDate={vi.fn()}
+            />
+          </FormControl>
+          <button type="button" onClick={() => setShowAlternative(false)}>
+            toggle
+          </button>
+        </form>
+      )
+    }
+
+    renderWithIntl(<Wrapper />)
+
+    expect(screen.getByText('令和6年9月25日')).toBeTruthy()
+
+    act(() => screen.getByRole('button', { name: 'toggle' }).click())
+
+    expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
   })
 })
