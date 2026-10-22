@@ -1,6 +1,9 @@
+'use client'
+
 import { type FC, type ReactNode, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useEnvironment } from '../../hooks/client/useEnvironment'
 import { FaCheckIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
@@ -57,6 +60,15 @@ const classNameGenerator = tv({
         ],
         iconWrapper: 'shr-size-[theme(fontSize.base)]',
       },
+      true: {
+        wrapper: [
+          'shr-w-[calc(theme(fontSize.xl)*2)]',
+          'before:shr-size-[theme(fontSize.xl)]',
+          'has-[:checked]:before:shr-ms-[theme(fontSize.xl)]',
+        ],
+        iconWrapper: 'shr-size-[theme(fontSize.xl)]',
+        icon: 'shr-size-[theme(fontSize.base)]',
+      },
     },
   },
   defaultVariants: {
@@ -70,12 +82,15 @@ type Props = ExtendElementPropsWithRef<
     children: ReactNode
     /** ラベルを視覚的に隠すかどうか */
     unrecommendedLabelHidden?: boolean
+    /** 大きいサイズで表示するかどうか。未指定の場合は EnvironmentProvider の mobile に連動する */
+    large?: boolean
   }
 >
 
 export const Switch: FC<Props> = ({
   children,
   unrecommendedLabelHidden,
+  large,
   className,
   id,
   ...rest
@@ -83,8 +98,11 @@ export const Switch: FC<Props> = ({
   const defaultId = useId()
   const inputId = id || defaultId
 
+  const { mobile } = useEnvironment()
+  const isLarge = large ?? mobile
+
   const classNames = useMemo(() => {
-    const { wrapper, input, icon, iconWrapper } = classNameGenerator()
+    const { wrapper, input, icon, iconWrapper } = classNameGenerator({ large: isLarge })
 
     return {
       wrapper: wrapper({ className }),
@@ -92,7 +110,7 @@ export const Switch: FC<Props> = ({
       icon: icon(),
       iconWrapper: iconWrapper(),
     }
-  }, [className])
+  }, [isLarge, className])
 
   return (
     <Cluster align="center" className="shr-relative">
