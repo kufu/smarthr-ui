@@ -50,6 +50,14 @@ export default {
               error={m.error}
               formatDate={formatDate}
             />
+            <WarekiPicker
+              name="warekipicker_narrow"
+              disabled={m.disabled}
+              value={value}
+              error={m.error}
+              formatDate={formatDate}
+              width="240px"
+            />
           </>
         ))}
       </Cluster>
