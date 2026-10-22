@@ -17,6 +17,17 @@ describe('AnchorButton', () => {
     expect(screen.getByRole('link', { name: '新規作成 別タブで開く' })).toBeVisible()
   })
 
+  test('hrefに空文字列を指定し、inactiveReasonも指定した場合、DisabledReasonでラップされること', () => {
+    const { container } = render(
+      <IntlProvider locale="ja">
+        <AnchorButton href="" inactiveReason={{ message: 'ボタンが無効な理由' }}>
+          新規作成
+        </AnchorButton>
+      </IntlProvider>,
+    )
+    expect(container.querySelector('.smarthr-ui-Button-disabledWrapper')).toBeInTheDocument()
+  })
+
   describe('無効化時のアイコン色', () => {
     it('固定colorを持つprefixアイコンでも、href未指定時に無効化色へ揃えるクラスが付与される', () => {
       render(
