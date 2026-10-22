@@ -84,7 +84,7 @@ const classNameGenerator = tv({
     inputContainer: INPUT_CONTAINER_CLASS_NAME,
     inputSuffixIcon:
       'shr-border-l-shorthand shr-box-border shr-flex shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
-    inputSuffixText: `${INPUT_SUFFIX_TEXT_CLASS_NAME} shr-text-gray shr-me-0.5 shr-ms-0.5 shr-text-sm`,
+    inputSuffixText: `${INPUT_SUFFIX_TEXT_CLASS_NAME} shr-text-gray shr-me-0.5 shr-ms-0.5 shr-py-0.5 shr-text-sm`,
   },
   variants: {
     hasAlternative: {
@@ -92,10 +92,16 @@ const classNameGenerator = tv({
        * ⚠️ Input 内部のクラス名に依存するため、Input を変更する場合は要注意 */
       true: {
         inputContainer: [
-          'shr-flex-wrap',
+          'shr-flex-wrap shr-gap-y-0',
           '[&_.smarthr-ui-Input-suffix]:shr-contents',
           '[&_.smarthr-ui-Input-input]:shr-w-auto [&_.smarthr-ui-Input-input]:shr-min-w-[10ch] [&_.smarthr-ui-Input-input]:shr-basis-[10ch]',
           '[&_.smarthr-ui-DatePicker-inputSuffixText]:shr-ms-0',
+          /* 折り返し時のみ上段と下段の間に点線を出す。1行時は線の位置が下の枠線に重なり、枠線に隠れて見えない */
+          '[background-image:repeating-linear-gradient(to_right,theme(borderColor.default)_0_2px,transparent_2px_4px)]',
+          '[background-origin:content-box]',
+          '[background-position:0_calc(theme(fontSize.base)_+_theme(spacing[0.75])_*_2)]',
+          '[background-size:100%_1px]',
+          '[background-repeat:no-repeat]',
         ],
       },
     },
