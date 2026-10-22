@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { act, useState } from 'react'
 
 import { IntlProvider } from '../../../../intl'
@@ -50,23 +51,29 @@ describe('WarekiPicker', () => {
     expect(warekiText).toBeTruthy()
   })
 
-  it('和暦表示のDatePickerが正しく動作する', async () => {
+  it('カレンダーから日付を選択することができる', async () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
           <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
         </FormControl>
       </form>,
-      'ja',
     )
-
     const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
 
+    // カレンダーを開く
     act(() => textbox.click())
+
+    // カレンダーが開かれていることを確認
     expect(textbox).toHaveProperty('ariaExpanded', 'true')
 
+    // 日にちを選択する
     act(() => screen.getByRole('button', { name: '4' }).click())
+
+    // 日付がテキストボックスに入ることを確認
     expect(textbox).toHaveProperty('value', '2024/09/04')
+
+    // 選択後はカレンダーが閉じられていることを確認
     expect(textbox).toHaveProperty('ariaExpanded', 'false')
   })
 
@@ -176,5 +183,138 @@ describe('WarekiPicker', () => {
     act(() => screen.getByRole('button', { name: 'toggle' }).click())
 
     expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
+  })
+
+  it('フォーカスを失うときにテキストボックスの内容がフォーマットされること', async () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" onChangeDate={vi.fn()} />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    await userEvent.type(textbox, '平成4年5月29日{tab}')
+    expect(textbox).toHaveProperty('value', '1992/05/29')
+  })
+
+  it('defaultValue のみ指定した場合(非制御)、初期表示時点でフォーマット済みの値が表示されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    expect(textbox).toHaveProperty('value', '2024/09/25')
+  })
+
+  it('defaultValue のみ指定した場合(非制御)、カレンダーの初期選択日が反映されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+
+    act(() => textbox.click())
+
+    expect(screen.getByRole('button', { name: '25' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('defaultValue のみ指定した場合(非制御)、ユーザー入力後もフォーカスを失うとフォーマットされること', async () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    await userEvent.clear(textbox)
+    await userEvent.type(textbox, '平成4年5月29日{tab}')
+    expect(textbox).toHaveProperty('value', '1992/05/29')
+  })
+
+  it('defaultValue のみ指定した場合(非制御)、初期表示時点でshowAlternativeの内容が表示されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker
+            name="date"
+            defaultValue="2024-09-25"
+            showAlternative={(d) => (d ? `alt:${d.getFullYear()}` : null)}
+          />
+        </FormControl>
+      </form>,
+    )
+    expect(screen.getByText('alt:2024')).toBeVisible()
+  })
+
+  it('value と defaultValue を両方指定した場合、value が優先されること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker
+            name="date"
+            value="2024-09-25"
+            defaultValue="2020-01-01"
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    expect(textbox).toHaveProperty('value', '2024/09/25')
+  })
+
+  it('value に null、defaultValue に値を指定した場合、defaultValue は無視されshowAlternativeの初期表示もされないこと', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker
+            name="date"
+            value={null}
+            defaultValue="2020-01-01"
+            showAlternative={(d) => (d ? `alt:${d.getFullYear()}` : null)}
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    expect(textbox).toHaveProperty('value', '')
+    expect(screen.queryByText('alt:2020')).not.toBeInTheDocument()
+  })
+
+  it('defaultValue が parseInput で解析できない場合、入力欄に defaultValue がそのまま残ること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="invalid-date-string" parseInput={() => null} />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    expect(textbox).toHaveProperty('value', 'invalid-date-string')
+  })
+
+  it('value・defaultValue とも未指定の場合、formatDate が渡されていても初期表示は空のままであること', () => {
+    renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker
+            name="date"
+            formatDate={(d) => (d ? d.toISOString() : '未選択')}
+            onChangeDate={vi.fn()}
+          />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    expect(textbox).toHaveProperty('value', '')
   })
 })
