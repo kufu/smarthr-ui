@@ -12,7 +12,7 @@ const classNameGenerator = tv({
   slots: {
     wrapper: [
       // Switch 本体
-      'shr-border-shorthand shr-relative shr-inline-flex shr-h-fit shr-w-[calc(theme(fontSize.base)*2)] shr-items-center shr-rounded-full shr-bg-white',
+      'shr-border-shorthand shr-relative shr-inline-flex shr-h-fit shr-items-center shr-rounded-full shr-bg-white',
       // 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。
       'shr-p-px',
       // :focus-visible-within の代替, なぜかhasが機能しないので以下の書き方で代用している
@@ -23,9 +23,9 @@ const classNameGenerator = tv({
       'supports-[not_selector(:has(+_*))]:shr-border-[revert] supports-[not_selector(:has(+_*))]:shr-bg-[revert]',
 
       // Switch ツマミ
-      'before:shr-box-border before:shr-inline-block before:shr-size-[theme(fontSize.base)] before:shr-scale-[calc(2/3)] before:shr-rounded-full before:shr-border before:shr-border-solid before:shr-border-[theme(textColor.grey)] before:shr-bg-[theme(textColor.grey)] before:shr-transition-[transform,margin] before:shr-duration-150 before:shr-ease-out before:shr-content-[""]',
+      'before:shr-box-border before:shr-inline-block before:shr-scale-[calc(2/3)] before:shr-rounded-full before:shr-border before:shr-border-solid before:shr-border-[theme(textColor.grey)] before:shr-bg-[theme(textColor.grey)] before:shr-transition-[transform,margin] before:shr-duration-150 before:shr-ease-out before:shr-content-[""]',
       'has-[input:disabled:not(:checked)]:before:shr-border-[theme(textColor.disabled)] has-[input:disabled:not(:checked)]:before:shr-bg-[theme(textColor.disabled)]',
-      'has-[:checked]:before:shr-border-shorthand has-[:checked]:before:shr-ms-[theme(fontSize.base)] has-[:checked]:before:shr-scale-100 has-[:checked]:before:shr-bg-white',
+      'has-[:checked]:before:shr-border-shorthand has-[:checked]:before:shr-scale-100 has-[:checked]:before:shr-bg-white',
       'forced-colors:has-[input:not(:disabled)]:before:shr-bg-[ButtonBorder]',
       'forced-colors:has-[:disabled:not(:checked)]:before:shr-border-solid forced-colors:has-[:disabled:not(:checked)]:before:shr-border-[GrayText]',
       'forced-colors:has-[:disabled:checked]:before:shr-border-[GrayText]',
@@ -38,7 +38,7 @@ const classNameGenerator = tv({
     ],
     iconWrapper: [
       'smarthr-ui-Switch-iconWrapper',
-      'shr-pointer-events-none shr-absolute shr-hidden shr-size-[theme(fontSize.base)] shr-items-center shr-justify-center',
+      'shr-pointer-events-none shr-absolute shr-hidden shr-items-center shr-justify-center',
       '[:checked~&]:shr-flex',
     ],
     icon: [
@@ -46,6 +46,21 @@ const classNameGenerator = tv({
       'forced-colors:shr-fill-[ButtonText]',
       'forced-colors:[:disabled~.smarthr-ui-Switch-iconWrapper_&]:shr-fill-[GrayText]',
     ],
+  },
+  variants: {
+    large: {
+      false: {
+        wrapper: [
+          'shr-w-[calc(theme(fontSize.base)*2)]',
+          'before:shr-size-[theme(fontSize.base)]',
+          'has-[:checked]:before:shr-ms-[theme(fontSize.base)]',
+        ],
+        iconWrapper: 'shr-size-[theme(fontSize.base)]',
+      },
+    },
+  },
+  defaultVariants: {
+    large: false,
   },
 })
 
