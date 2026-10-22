@@ -27,7 +27,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
@@ -43,7 +43,7 @@ describe('WarekiPicker', () => {
       'en-us',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     const warekiText = screen.getByText('September 25, 6 Reiwa')
@@ -60,7 +60,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     act(() => textbox.click())
     expect(textbox).toHaveProperty('ariaExpanded', 'true')
