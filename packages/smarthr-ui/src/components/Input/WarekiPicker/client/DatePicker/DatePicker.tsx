@@ -75,13 +75,37 @@ type Props = ExtendElementPropsWithRef<
 
 const DEFAULT_FROM = new Date(1900, 0, 1)
 
+const INPUT_SUFFIX_TEXT_CLASS_NAME = 'smarthr-ui-DatePicker-inputSuffixText'
+
+const INPUT_CONTAINER_CLASS_NAME = 'smarthr-ui-DatePicker-inputContainer'
+
 const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-DatePicker shr-inline-block',
-    inputSuffixLayout: 'shr-box-border shr-h-full shr-py-0.5',
-    inputSuffixWrapper:
-      'shr-border-l-shorthand shr-box-border shr-flex shr-h-full shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
-    inputSuffixText: 'shr-text-gray shr-me-0.5 shr-text-sm',
+    inputContainer: INPUT_CONTAINER_CLASS_NAME,
+    inputSuffixIcon:
+      'shr-border-l-shorthand shr-box-border shr-flex shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
+    inputSuffixText: `${INPUT_SUFFIX_TEXT_CLASS_NAME} shr-text-gray shr-me-0.5 shr-ms-0.5 shr-py-0.5 shr-text-sm`,
+  },
+  variants: {
+    hasAlternative: {
+      /* 和暦テキストが画面幅に収まらない場合は input の最小幅(10ch)を下限として flex-wrap で下段へ折り返す。
+       * ⚠️ Input 内部のクラス名に依存するため、Input を変更する場合は要注意 */
+      true: {
+        inputContainer: [
+          'shr-flex-wrap shr-gap-y-0',
+          '[&_.smarthr-ui-Input-suffix]:shr-contents',
+          '[&_.smarthr-ui-Input-input]:shr-w-auto [&_.smarthr-ui-Input-input]:shr-min-w-[10ch] [&_.smarthr-ui-Input-input]:shr-basis-[10ch]',
+          '[&_.smarthr-ui-DatePicker-inputSuffixText]:shr-ms-0',
+          /* 折り返し時のみ上段と下段の間に点線を出す。1行時は線の位置が下の枠線に重なり、枠線に隠れて見えない */
+          '[background-image:repeating-linear-gradient(to_right,theme(borderColor.default)_0_2px,transparent_2px_4px)]',
+          '[background-origin:content-box]',
+          '[background-position:0_calc(theme(fontSize.base)_+_theme(spacing[0.75])_*_2)]',
+          '[background-size:100%_1px]',
+          '[background-repeat:no-repeat]',
+        ],
+      },
+    },
   },
 })
 
@@ -90,7 +114,6 @@ const DEFAULT_DATE_TO_STRING = (d: Date | null) =>
   d ? dayjs(d).format(DEFAULT_DATE_TO_STRING_FORMAT) : ''
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
 const SMARTHR_UI_INPUT_SELECTOR = '[data-smarthr-ui-input="true"]'
-const INPUT_CONTAINER_CLASS_NAME = 'smarthr-ui-DatePicker-inputContainer'
 
 const parseStringDate = (
   str: string | null | undefined,
@@ -126,17 +149,17 @@ export const DatePicker: FC<Props> = ({
   ...rest
 }) => {
   const theme = useTheme()
+  const hasAlternative = !!showAlternative
   const classNames = useMemo(() => {
-    const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } =
-      classNameGenerator()
+    const { container, inputContainer, inputSuffixIcon, inputSuffixText } = classNameGenerator()
 
     return {
       container: container({ className }),
-      inputSuffixLayout: inputSuffixLayout(),
-      inputSuffixWrapper: inputSuffixWrapper(),
+      inputContainer: inputContainer({ hasAlternative }),
+      inputSuffixIcon: inputSuffixIcon(),
       inputSuffixText: inputSuffixText(),
     }
-  }, [className])
+  }, [className, hasAlternative])
 
   const [isInputFocused, setIsInputFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -422,7 +445,7 @@ export const DatePicker: FC<Props> = ({
         defaultValue={initialInputValue}
         error={error}
         width="100%"
-        className={INPUT_CONTAINER_CLASS_NAME}
+        className={classNames.inputContainer}
         aria-expanded={isCalendarShown}
         aria-controls={calenderId}
         aria-haspopup={true}
@@ -455,14 +478,14 @@ export const DatePicker: FC<Props> = ({
 }
 
 const InputSuffixIcon = memo<{
-  classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
+  classNames: { inputSuffixIcon: string; inputSuffixText: string }
   alternativeFormat: null | ReactNode
   caretIconColor: ComponentPropsWithRef<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
-  <span className={classNames.inputSuffixLayout}>
-    <span className={classNames.inputSuffixWrapper}>
-      {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
+  <>
+    <span className={classNames.inputSuffixIcon}>
       <FaCalendarDaysIcon color={caretIconColor} />
     </span>
-  </span>
+    {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
+  </>
 ))
