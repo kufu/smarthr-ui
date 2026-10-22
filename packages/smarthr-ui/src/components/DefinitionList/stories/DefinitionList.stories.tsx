@@ -26,8 +26,11 @@ export const Playground: StoryObj<typeof DefinitionList> = {
 
 export const Gap: StoryObj<typeof DefinitionList> = {
   name: 'gap',
+  args: {
+    gap: 3,
+  },
   render: (args) => (
-    <DefinitionList {...args} gap={3}>
+    <DefinitionList {...args}>
       <DefinitionListItem maxColumns={2} term="定義リストアイテム1">
         定義リストアイテム1説明
       </DefinitionListItem>
