@@ -34,11 +34,14 @@ export const clusterClassNameGenerator = tv({
   base: [
     'shr-flex-wrap [&:empty]:shr-gap-0',
     // layout="main sub" の場合
-    '[&[data-layout="main sub"]_>_:nth-child(1)]:shr-grow-[999] [&[data-layout="main sub"]_>_:nth-child(1)]:shr-basis-0',
-    '[&[data-layout="main sub"]_>_:nth-child(2)]:shr-grow',
+    // HINT: Tailwindのクラス名はスペースをクラスの区切り文字として扱うため、
+    // 属性値内のスペースはアンダースコアでエスケープする必要がある。
+    // 生成されるCSSセレクタ自体は data-layout="main sub" (スペース) に戻るため、属性値側の変更は不要
+    '[&[data-layout="main_sub"]_>_:nth-child(1)]:shr-grow-[999] [&[data-layout="main_sub"]_>_:nth-child(1)]:shr-basis-0',
+    '[&[data-layout="main_sub"]_>_:nth-child(2)]:shr-grow',
     // layout="sub main" の場合
-    '[&[data-layout="sub main"]_>_:nth-child(1)]:shr-grow',
-    '[&[data-layout="sub main"]_>_:nth-child(2)]:shr-grow-[999] [&[data-layout="sub main"]_>_:nth-child(2)]:shr-basis-0',
+    '[&[data-layout="sub_main"]_>_:nth-child(1)]:shr-grow',
+    '[&[data-layout="sub_main"]_>_:nth-child(2)]:shr-grow-[999] [&[data-layout="sub_main"]_>_:nth-child(2)]:shr-basis-0',
   ],
   variants: {
     inline: {
