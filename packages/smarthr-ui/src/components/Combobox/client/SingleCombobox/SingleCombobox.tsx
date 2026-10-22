@@ -167,6 +167,7 @@ export const SingleCombobox = <T,>({
   autoComplete,
   dropdownHelpMessage,
   isLoading,
+  isFilteringDisabled,
   width,
   dropdownWidth = 'auto',
   className,
@@ -212,7 +213,7 @@ export const SingleCombobox = <T,>({
     selected: selectedItem,
     creatable,
     inputValue,
-    isFilteringDisabled: !isEditing,
+    isFilteringDisabled: isFilteringDisabled || !isEditing,
   })
 
   const selectFrame = useAnimationFrame()
