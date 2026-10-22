@@ -1,0 +1,23 @@
+// HINT: Storybookは本体パッケージの.storybookから起動しているため、こちらではstorybookのentryを持たない。
+//
+// 本体はexportsに "./lib/*" のワイルドカードがあるためsrc全体がentry扱いになり、
+// それを打ち消すためにincludeEntryExportsを有効にしている。
+// このパッケージのexportsはワイルドカードを含まず（"." と "./viewer"）、entryはsrc/index.tsとsrc/viewer.tsに限られるため、その設定は不要。
+{
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  "vitest": false,
+  "entry": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "rollup.*.config.js",
+    "vitest.config.ts",
+    "vitest-setup.js"
+  ],
+  "ignoreBinaries": [
+    "eslint",
+    "prettier",
+    "stylelint",
+    "knip"
+  ],
+  "ignoreExportsUsedInFile": true
+}
