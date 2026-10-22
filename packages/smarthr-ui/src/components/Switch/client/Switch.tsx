@@ -3,13 +3,13 @@
 import { type FC, type ReactNode, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEnvironment } from '../../hooks/client/useEnvironment'
-import { FaCheckIcon } from '../Icon'
-import { Cluster } from '../Layout'
-import { Text } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { useEnvironment } from '../../../hooks/client/useEnvironment'
+import { FaCheckIcon } from '../../Icon'
+import { Cluster } from '../../Layout'
+import { Text } from '../../Text'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { ExtendElementPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 const classNameGenerator = tv({
   slots: {

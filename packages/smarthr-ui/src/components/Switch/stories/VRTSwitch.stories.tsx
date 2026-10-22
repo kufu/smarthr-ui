@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { Switch } from '../Switch'
+import { Switch } from '../client'
 
 import type { Meta } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'

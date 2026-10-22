@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event'
 
 import { EnvironmentProvider } from '../../hooks/client/useEnvironment'
 
-import { Switch } from './Switch'
+import { Switch } from './client'
 
 import type { Environment } from '../../hooks/client/useEnvironment'
 import type { ComponentPropsWithoutRef } from 'react'
