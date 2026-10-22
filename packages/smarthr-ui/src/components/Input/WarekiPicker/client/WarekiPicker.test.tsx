@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { act } from 'react'
+import { act, useState } from 'react'
 
 import { IntlProvider } from '../../../../intl'
 import { FormControl } from '../../../FormGroup'
@@ -111,5 +111,38 @@ describe('WarekiPicker', () => {
 
     expect(screen.getByText('custom:2024')).toBeTruthy()
     expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
+  })
+
+  it('showAlternativeの値を動的に切り替えても再マウントされない', () => {
+    const Wrapper = () => {
+      const [showAlternative, setShowAlternative] = useState(true)
+
+      return (
+        <form>
+          <FormControl label="WarekiPicker">
+            <WarekiPicker
+              name="date"
+              defaultValue="2024-09-25"
+              showAlternative={showAlternative}
+              onChangeDate={vi.fn()}
+            />
+          </FormControl>
+          <button type="button" onClick={() => setShowAlternative(false)}>
+            toggle
+          </button>
+        </form>
+      )
+    }
+
+    renderWithIntl(<Wrapper />)
+
+    const textboxBefore = screen.getByRole('textbox', { name: 'WarekiPicker' })
+
+    act(() => screen.getByRole('button', { name: 'toggle' }).click())
+
+    const textboxAfter = screen.getByRole('textbox', { name: 'WarekiPicker' })
+
+    expect(textboxAfter).toBe(textboxBefore)
+    expect(textboxAfter).toHaveProperty('value', '2024/09/25')
   })
 })

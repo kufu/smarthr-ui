@@ -16,27 +16,27 @@ type Props = ExtendProps<
 >
 
 export const WarekiPicker: FC<Props> = ({ showAlternative, ...rest }) => {
-  if (typeof showAlternative === 'function') {
-    return <DatePicker {...rest} showAlternative={showAlternative} />
-  }
-
-  if (showAlternative === false) {
-    return <DatePicker {...rest} />
-  }
-
-  return <ActualWarekiPicker {...rest} />
-}
-
-const ActualWarekiPicker: FC<Omit<Props, 'showAlternative'>> = (props) => {
   const { locale } = useIntl()
-  const latest = useLatest({ locale })
-  const showAlternative = useCallback(
+  const latest = useLatest({ showAlternative, locale })
+
+  // HINT: showAlternativeの値によってDatePicker/別コンポーネントを出し分けると、
+  // Reactがコンポーネント型の変化とみなして再マウントし、非制御input使用時に
+  // 入力値・フォーカスが失われる。常に同じDatePickerへ、解決済みの関数を渡す
+  const resolveAlternative = useCallback(
     (date: Date | null) => {
+      if (typeof latest.showAlternative === 'function') {
+        return latest.showAlternative(date)
+      }
+
+      if (latest.showAlternative === false) {
+        return null
+      }
+
       if (!date) {
         return null
       }
 
-      // 和暦を使う
+      // 和暦を使う(showAlternativeが未指定、またはtrueの場合のデフォルト)
       return date.toLocaleDateString(`${latest.locale}-u-ca-japanese`, {
         dateStyle: 'long',
       })
@@ -44,5 +44,5 @@ const ActualWarekiPicker: FC<Omit<Props, 'showAlternative'>> = (props) => {
     [latest],
   )
 
-  return <DatePicker {...props} showAlternative={showAlternative} />
+  return <DatePicker {...rest} showAlternative={resolveAlternative} />
 }
