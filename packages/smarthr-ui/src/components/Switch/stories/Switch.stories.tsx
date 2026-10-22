@@ -19,6 +19,9 @@ export default {
     disabled: {
       control: 'boolean',
     },
+    large: {
+      control: 'boolean',
+    },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -45,5 +48,12 @@ export const Disabled: StoryObj<typeof Switch> = {
   name: 'disabled',
   args: {
     disabled: true,
+  },
+}
+
+export const Large: StoryObj<typeof Switch> = {
+  name: 'large',
+  args: {
+    large: true,
   },
 }
