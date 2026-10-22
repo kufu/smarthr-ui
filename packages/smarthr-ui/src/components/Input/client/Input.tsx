@@ -151,7 +151,17 @@ export const Input: FC<Props> = ({
         data-smarthr-ui-input="true"
         onWheel={type === 'number' ? disableWheel : undefined}
       />
-      {subActionArea && <span className={classNames.subActionArea}>{subActionArea}</span>}
+      {subActionArea && (
+        // HINT: wrapperのonClickでinputにフォーカスが移ると、subActionArea内の要素のフォーカスが失われるため、
+        // 伝播を止めてwrapperのonClickが実行されないようにする
+        <span
+          role="presentation"
+          className={classNames.subActionArea}
+          onClick={(delegateEvent) => delegateEvent.stopPropagation()}
+        >
+          {subActionArea}
+        </span>
+      )}
       {suffix && <span className={classNames.suffix}>{suffix}</span>}
     </span>
   )
