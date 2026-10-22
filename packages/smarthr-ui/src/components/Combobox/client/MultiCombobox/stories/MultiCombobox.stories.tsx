@@ -57,20 +57,30 @@ export default {
   component: MultiCombobox,
   render: (args) => {
     const [_, setArgs] = useArgs()
+    // HINT: selectedItems が未指定(非制御)の場合は MultiCombobox 自身の内部状態管理に任せ、
+    // args への反映は行わない(反映すると非制御のつもりが突然制御状態になってしまう)
+    const { selectedItems } = args
+
     return (
       <MultiCombobox
         {...args}
-        onDelete={(item) =>
-          setArgs({
-            selectedItems: args.selectedItems.filter(
-              (selectedItem) => selectedItem.value !== item.value,
-            ),
-          })
+        onDelete={
+          selectedItems
+            ? (item) =>
+                setArgs({
+                  selectedItems: selectedItems.filter(
+                    (selectedItem) => selectedItem.value !== item.value,
+                  ),
+                })
+            : undefined
         }
-        onSelect={(item) =>
-          setArgs({
-            selectedItems: [...args.selectedItems, item],
-          })
+        onSelect={
+          selectedItems
+            ? (item) =>
+                setArgs({
+                  selectedItems: [...selectedItems, item],
+                })
+            : undefined
         }
       />
     )

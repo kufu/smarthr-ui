@@ -30,7 +30,7 @@ import { useMultiOptions } from '../useOptions'
 import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
-import type { BaseProps, ComboboxItem } from '../types'
+import type { BaseProps, ComboboxItem, DeletableComboboxItem } from '../types'
 
 type Props<T> = ExtendElementPropsWithRef<
   'input',
@@ -38,7 +38,11 @@ type Props<T> = ExtendElementPropsWithRef<
     /**
      * 選択されているアイテムのリスト
      */
-    selectedItems: Array<ComboboxItem<T> & { deletable?: boolean }>
+    selectedItems?: Array<DeletableComboboxItem<T>>
+    /**
+     * デフォルトで選択するアイテムのリスト
+     */
+    defaultSelectedItems?: Array<DeletableComboboxItem<T>>
     /**
      * 選択されているアイテムのラベルを省略表示するかどうか
      */
@@ -137,6 +141,7 @@ const classNameGenerator = tv({
 export const MultiCombobox = <T,>({
   items,
   selectedItems,
+  defaultSelectedItems,
   name,
   disabled = false,
   required = false,
@@ -151,6 +156,7 @@ export const MultiCombobox = <T,>({
   dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className,
+  title,
   onChange,
   onChangeInput,
   onAdd,
@@ -171,6 +177,9 @@ export const MultiCombobox = <T,>({
   const [highlighted, setHighlighted] = useState(false)
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
+  const [uncontrolledSelectedItems, setUncontrolledSelectedItems] = useState(
+    defaultSelectedItems ?? [],
+  )
 
   const selectedListId = useId()
 
@@ -179,9 +188,15 @@ export const MultiCombobox = <T,>({
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
 
+  const isSelectedItemsControlled = selectedItems !== undefined
+  const actualSelectedItems = isSelectedItemsControlled ? selectedItems : uncontrolledSelectedItems
+  const setSelectedItemsIfUncontrolled = isSelectedItemsControlled
+    ? NOOP
+    : setUncontrolledSelectedItems
+
   const { options } = useMultiOptions({
     items,
-    selected: selectedItems,
+    selected: actualSelectedItems,
     creatable,
     inputValue,
     isItemSelected,
@@ -195,7 +210,9 @@ export const MultiCombobox = <T,>({
     onChangeSelected,
     onSelect,
     onChangeInput,
-    selectedItems,
+    selectedItems: actualSelectedItems,
+    isSelectedItemsControlled,
+    setSelectedItemsIfUncontrolled,
     deleteFrame,
     selectFrame,
   })
@@ -204,6 +221,15 @@ export const MultiCombobox = <T,>({
     const handleDelete = (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
+      if (!latestForListBox.isSelectedItemsControlled) {
+        handlers.push((deletingItem: ComboboxItem<T>) =>
+          latestForListBox.setSelectedItemsIfUncontrolled(
+            latestForListBox.selectedItems.filter(
+              (selected) => !areItemsEqual(selected, deletingItem),
+            ),
+          ),
+        )
+      }
       if (latestForListBox.onDelete) {
         handlers.push((deletingItem: ComboboxItem<T>) => latestForListBox.onDelete!(deletingItem))
       }
@@ -241,6 +267,12 @@ export const MultiCombobox = <T,>({
           )
 
           if (matchedSelectedItem === undefined) {
+            if (!latestForListBox.isSelectedItemsControlled) {
+              latestForListBox.setSelectedItemsIfUncontrolled(
+                latestForListBox.selectedItems.concat(selected),
+              )
+            }
+
             latestForListBox.onSelect?.(selected)
             latestForListBox.onChangeSelected?.(latestForListBox.selectedItems.concat(selected))
 
@@ -280,7 +312,7 @@ export const MultiCombobox = <T,>({
     highlighted,
     isComposing,
     isInputEmpty,
-    selectedItems,
+    selectedItems: actualSelectedItems,
     setInputValueIfUncontrolled,
     handleKeyDownListBox,
     cleanupAddFrame,
@@ -454,6 +486,17 @@ export const MultiCombobox = <T,>({
     functions.blur,
   )
 
+  const localized = useLocalize({
+    selectedListAriaLabel: {
+      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+      defaultText: '選択済みアイテム',
+    },
+    requiredMessage: {
+      id: 'smarthr-ui/MultiCombobox/requiredMessage',
+      defaultText: '1つ以上選択してください',
+    },
+  })
+
   // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
   const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -461,7 +504,7 @@ export const MultiCombobox = <T,>({
         node.focus()
       }
     },
-    [isExpanded, selectedItems, isInputControlled],
+    [isExpanded, actualSelectedItems, isInputControlled],
   )
   const inputSelectEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -476,13 +519,25 @@ export const MultiCombobox = <T,>({
         setInputValueIfUncontrolled('')
       }
     },
-    [selectedItems, setInputValueIfUncontrolled, latest],
+    [actualSelectedItems, setInputValueIfUncontrolled, latest],
+  )
+  // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
+  // 選択済みアイテムの有無をsetCustomValidityで別途検証する。titleが指定されている場合は
+  // 利用者が意図したメッセージを優先する
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(
+        required && actualSelectedItems.length === 0 ? title || localized.requiredMessage : '',
+      )
+    },
+    [required, actualSelectedItems, title, localized],
   )
 
   const mergedInputRef = useMergeRefs(
     functions.inputCallbackRef,
     inputFocusEffectRef,
     inputSelectEffectRef,
+    inputValidityEffectRef,
     ref,
   )
 
@@ -510,13 +565,6 @@ export const MultiCombobox = <T,>({
     }
   }, [className])
 
-  const localized = useLocalize({
-    selectedListAriaLabel: {
-      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
-      defaultText: '選択済みアイテム',
-    },
-  })
-
   const errorAttr = error || undefined
 
   return (
@@ -533,13 +581,24 @@ export const MultiCombobox = <T,>({
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}
     >
+      {name &&
+        actualSelectedItems.map((selectedItem) => (
+          <input
+            key={`hidden-${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}
+            type="hidden"
+            name={name}
+            disabled={disabled}
+            value={selectedItem.value}
+          />
+        ))}
+
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
           className={classNames.selectedList}
           aria-label={localized.selectedListAriaLabel}
         >
-          {selectedItems.map((selectedItem) => (
+          {actualSelectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
               <MultiSelectedItem
                 disabled={disabled}
@@ -557,12 +616,13 @@ export const MultiCombobox = <T,>({
             ref={mergedInputRef}
             role="combobox"
             type="text"
-            name={name}
-            required={required && selectedItems.length === 0}
+            name={name ? `${name}-query` : undefined}
+            required={required && actualSelectedItems.length === 0}
             disabled={disabled}
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
+            title={title}
             className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
@@ -581,7 +641,7 @@ export const MultiCombobox = <T,>({
           />
         </div>
 
-        {selectedItems.length === 0 && placeholder && !isExpanded && (
+        {actualSelectedItems.length === 0 && placeholder && !isExpanded && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
       </Scroller>

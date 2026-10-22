@@ -76,6 +76,7 @@
   "smarthr-ui/ModelessDialog/dialogHandlerDescription": "矢印キーを押して上下左右に移動できます",
   "smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText": "上から{top}px、左から{left}px",
   "smarthr-ui/MultiCombobox/destroyButtonIconAltSuffix": "を削除",
+  "smarthr-ui/MultiCombobox/requiredMessage": "1つ以上選択してください",
   "smarthr-ui/MultiCombobox/selectedListAriaLabel": "選択済みアイテム",
   "smarthr-ui/NotificationBar/closeButtonIconAlt": "閉じる",
   "smarthr-ui/Pagination/controllerItemButtonFirstLabel": "最初へ",

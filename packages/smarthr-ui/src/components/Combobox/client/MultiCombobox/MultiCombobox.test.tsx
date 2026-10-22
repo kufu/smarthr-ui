@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../../../intl'
@@ -362,5 +362,339 @@ describe('SingleCombobox', () => {
 
     // Backspace によって削除した末尾アイテムはlabelTextとしてテキスト化されること
     expect(combobox()).toHaveValue('ラベル2')
+  })
+
+  it('制御時、selectedItems が外部から更新されると選択済みチップの表示が切り替わる', () => {
+    const { rerender } = render(
+      template({
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+      }),
+    )
+
+    expect(screen.getByText('option 1')).toBeInTheDocument()
+    expect(screen.queryByText('option 2')).not.toBeInTheDocument()
+
+    rerender(
+      template({
+        selectedItems: [{ label: 'option 2', value: 'value-2' }],
+      }),
+    )
+
+    expect(screen.queryByText('option 1')).not.toBeInTheDocument()
+    expect(screen.getByText('option 2')).toBeInTheDocument()
+  })
+
+  it('制御時、selectedItems が空の場合のみ required 属性が付与される', () => {
+    const { rerender } = render(
+      template({
+        selectedItems: [],
+        required: true,
+      }),
+    )
+
+    expect(combobox()).toBeRequired()
+
+    rerender(
+      template({
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+        required: true,
+      }),
+    )
+
+    expect(combobox()).not.toBeRequired()
+  })
+
+  it('制御時、selectedItems が空の場合のみ placeholder が表示される', () => {
+    const { rerender } = render(
+      template({
+        selectedItems: [],
+        placeholder: 'プレースホルダー',
+      }),
+    )
+
+    expect(screen.getByText('プレースホルダー')).toBeInTheDocument()
+
+    rerender(
+      template({
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+        placeholder: 'プレースホルダー',
+      }),
+    )
+
+    expect(screen.queryByText('プレースホルダー')).not.toBeInTheDocument()
+  })
+
+  describe('非制御(uncontrolled)', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItems を指定しない場合、アイテムを選択するとチップが追加される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(within(screen.getByRole('listitem')).getByText('option 1')).toBeInTheDocument()
+    })
+
+    it('defaultSelectedItems を指定した場合、初期表示にチップが反映される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                items={items}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByText('option 1')).toBeInTheDocument()
+    })
+
+    it('非制御の場合、削除ボタンでチップが削除される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                items={items}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(deleteButtons()[0])
+
+      expect(screen.queryByText('option 1')).not.toBeInTheDocument()
+    })
+
+    it('selectedItems と onChangeSelected を指定した場合(制御)、操作だけでは表示が変わらない', async () => {
+      const onChangeSelected = vi.fn()
+
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                selectedItems={[]}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(onChangeSelected).toHaveBeenCalledWith([{ label: 'option 1', value: 'value-1' }])
+      expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('FormData', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItems の値が name でFormDataから取得できること', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                selectedItems={[
+                  { label: 'option 1', value: 'value-1' },
+                  { label: 'option 2', value: 'value-2' },
+                ]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual(['value-1', 'value-2'])
+    })
+
+    it('非制御(uncontrolled)で削除後、FormDataの値も追従すること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                items={items}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(deleteButtons()[0])
+
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual([])
+    })
+
+    it('selectedItems が空のとき、FormDataに値が含まれないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual([])
+    })
+
+    it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+              <MultiCombobox
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(0)
+    })
+
+    it('検索用テキストボックスの name には `${name}-query` が設定されること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveAttribute('name', 'default-query')
+    })
+
+    it('disabledの場合、hidden inputも無効化されFormDataに値が含まれないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                disabled
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.getAll('default')).toEqual([])
+    })
+
+    it('requiredかつ選択項目が無い場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" required selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.type(combobox(), 'option')
+
+      expect(combobox()).toHaveProperty('validity.valid', false)
+    })
+
+    it('requiredでも選択項目があれば検索用テキストボックスの妥当性を満たすこと', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                required
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validity.valid', true)
+    })
+
+    it('titleが指定されている場合、requiredの妥当性エラーメッセージにtitleの値が使われること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                required
+                selectedItems={[]}
+                title="少なくとも1つ選択してください"
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validationMessage', '少なくとも1つ選択してください')
+    })
+
+    it('titleが指定されていない場合、requiredの妥当性エラーメッセージにデフォルトの文言が使われること', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" required selectedItems={[]} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveProperty('validationMessage', '1つ以上選択してください')
+    })
   })
 })
