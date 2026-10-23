@@ -15,7 +15,7 @@ type Props = ExtendElementPropsWithoutRef<
   }
 >
 
-export const AccordionPanelItemContext = createContext<{
+export const AccordionItemContext = createContext<{
   name: string
   triggerId: string
   contentId: string
@@ -26,24 +26,24 @@ export const AccordionPanelItemContext = createContext<{
 })
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
+  base: ['smarthr-ui-Accordion-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
-export const AccordionPanelItem: FC<Props> = ({ name, className, children, ...rest }) => {
+export const AccordionItem: FC<Props> = ({ name, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <AccordionPanelItemContext.Provider
+    <AccordionItemContext.Provider
       value={{
         name,
         triggerId: `${name}-trigger`,
         contentId: `${name}-content`,
       }}
     >
-      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- 組み合わせて利用するAccordionPanelTriggerが内部でHeadingを持つ */}
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- 組み合わせて利用するAccordionTriggerが内部でHeadingを持つ */}
       <Section {...rest} className={actualClassName}>
         {children}
       </Section>
-    </AccordionPanelItemContext.Provider>
+    </AccordionItemContext.Provider>
   )
 }
