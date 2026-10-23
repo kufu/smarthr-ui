@@ -54,7 +54,8 @@ jobs:
           # ミャンマー語(my)は翻訳未整備のためダウンロード対象から除外する
           download_translations_args: "--exclude-language my"
           localization_branch_name: ${{ steps.generate-branch-name.outputs.name }}
-          crowdin_branch_name: ${{ github.ref_name }}
+          # NOTE: テスト用に一時的にmasterへ固定。動作確認後に ${{ github.ref_name }} へ戻す
+          crowdin_branch_name: master
           create_pull_request: true
           pull_request_title: 'chore(i18n): 定期辞書更新'
           pull_request_body: ${{ steps.read-pr-template.outputs.PR_BODY }}
