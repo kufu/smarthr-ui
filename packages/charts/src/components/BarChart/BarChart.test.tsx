@@ -1,7 +1,10 @@
+import { act } from 'react'
+import { type Root, createRoot } from 'react-dom/client'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { SINGLE_CHART_COLORS } from '../../helper'
+import { stackedGroupsExpanded } from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
 
@@ -70,5 +73,62 @@ describe('BarChart', () => {
     expect(datasets.map((dataset) => [dataset.label, dataset.borderColor])).toStrictEqual([
       ['現在', SINGLE_CHART_COLORS[5]],
     ])
+  })
+
+  describe('テーブル表示', () => {
+    let roots: Root[] = []
+
+    const renderTable = (props: Partial<React.ComponentProps<typeof BarChart>> = {}) => {
+      const container = document.body.appendChild(document.createElement('div'))
+      const root = createRoot(container)
+      roots.push(root)
+      // HINT: actで包まないとReact 19では描画が後回しになり、afterEachでモックを戻した後に
+      //       new ResizeObserver が実行されて "ResizeObserver is not a constructor" になる
+      act(() => root.render(<BarChart {...defaultProps} {...props} defaultView="table" />))
+      return container
+    }
+
+    const OriginalResizeObserver = global.ResizeObserver
+
+    beforeEach(() => {
+      ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+
+      // jsdomにResizeObserverがないため、Tableのスクロール監視をモックする
+      global.ResizeObserver = class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      } as unknown as typeof ResizeObserver
+    })
+
+    afterEach(() => {
+      act(() => roots.forEach((root) => root.unmount()))
+      roots = []
+      document.body.innerHTML = ''
+      global.ResizeObserver = OriginalResizeObserver
+    })
+
+    it('グループの行を開閉できる', () => {
+      const container = renderTable({ data: stackedGroupsExpanded })
+      const toggleButton = container.querySelector('button[aria-expanded]') as HTMLButtonElement
+      const childRows = toggleButton
+        .getAttribute('aria-controls')!
+        .split(' ')
+        .map((id) => document.getElementById(id) as HTMLElement)
+
+      expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
+      expect(childRows.every((row) => row.hasAttribute('hidden'))).toBe(true)
+      act(() => toggleButton.click())
+
+      expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
+      expect(childRows.every((row) => row.hasAttribute('hidden'))).toBe(false)
+    })
+
+    it('グルーピングされていないデータセットはDOM順に描画される', () => {
+      const container = renderTable()
+      const cellTexts = [...container.querySelectorAll('th, td')].map((cell) => cell.textContent)
+
+      expect(cellTexts).toStrictEqual(['', '1年前', '現在', 'レベル1', '1', '3'])
+    })
   })
 })

@@ -3,6 +3,8 @@
  * Playground Story と VRT Story で重複を排除するために使用
  */
 
+import type { ChartData } from 'chart.js'
+
 /**
  * 少データポイント（5個）- 単一データセット
  */
@@ -38,8 +40,7 @@ export const multiSmall = {
 }
 
 /**
- * stackedGroups・stackedGroupItemLabels・stackedGroupsExpanded の共通の元データ。
- * ここだけ直せば3つとも連動する（グループ名・項目ラベル・値の対応関係を手で書き分ける必要がない）
+ * stackedGroupsExpanded の元データ。ここだけ直せばグループ名・項目ラベル・値の対応関係を手で書き分ける必要がない
  */
 const stackedGroupsSource = [
   { group: 'データ1', values: [12, 19, 3, 5, 2] },
@@ -49,15 +50,16 @@ const stackedGroupsSource = [
 ]
 
 /**
- * stackedGroups と同じ値を、項目1つにつき1データセットへ展開したもの
- * 各データセットは自分のグループの位置だけ値を持ち、他のグループはnullにする。
- * こうすると凡例・ツールチップの両方が系列（値1〜値5）ではなく項目ごとの固有ラベルになる
+ * stackedGroupsSource を、項目1つにつき1データセットへ展開したもの。
+ * グループ名をそのままカテゴリ（label）にし、各グループの値はそのグループ自身のカテゴリ位置にのみ積み上げる
+ * （他カテゴリは null にして描画させない）。`stack`に同じグループ名を設定したデータセット同士が束ねられる
  */
-export const stackedGroupsExpanded = {
+export const stackedGroupsExpanded: ChartData<'bar'> = {
   labels: stackedGroupsSource.map((g) => g.group),
   datasets: stackedGroupsSource.flatMap((g, groupIndex) =>
     g.values.map((value, itemIndex) => ({
       label: `${g.group}の項目${itemIndex + 1}`,
+      stack: g.group,
       data: stackedGroupsSource.map((_, i) => (i === groupIndex ? value : null)),
     })),
   ),
