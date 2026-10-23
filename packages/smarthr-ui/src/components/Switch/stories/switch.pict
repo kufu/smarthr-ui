@@ -1,3 +1,4 @@
 unrecommendedLabelHidden: false, true
 defaultChecked: false, true
 disabled: false, true
+size: S, M
