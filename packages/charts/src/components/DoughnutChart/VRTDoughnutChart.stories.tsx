@@ -65,6 +65,11 @@ export default {
           </Text>
         </DoughnutChart>
       </div>
+
+      {/* パターン10: テーブル表示（defaultView='table'） */}
+      <div className="shr-h-[400px]">
+        <DoughnutChart data={doughnutSmall} title="テーブル表示" defaultView="table" />
+      </div>
     </Stack>
   ),
   parameters: {

@@ -110,3 +110,11 @@ export const WithChartJsOptions: Story = {
     },
   },
 }
+
+export const TableView: Story = {
+  name: 'default table view',
+  args: {
+    data: multiSmall,
+    defaultView: 'table',
+  },
+}
