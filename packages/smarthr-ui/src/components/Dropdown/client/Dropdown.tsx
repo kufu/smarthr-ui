@@ -189,15 +189,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
               return
             }
 
-            const target = trigger ? tabbable(trigger)[0] : undefined
-
-            if (target && e.target === target) {
-              // close the dropdown when the Trigger is focused and Esc key is pressed
-              handleDelegateClickCloser()
-
-              return
-            }
-
             for (const inner of tabbable(node)) {
               if (inner === e.target) {
                 // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
