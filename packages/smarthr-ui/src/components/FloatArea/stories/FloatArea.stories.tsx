@@ -1,10 +1,13 @@
 import { Button } from '../../Button'
+import { FormControl } from '../../FormGroup'
+import { Input } from '../../Input'
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
-import { FloatArea } from '../FloatArea'
+import { FloatArea } from '../client'
 
 import type { ResponseStatusWithoutProcessing } from '../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithRef, ReactNode } from 'react'
 
 const _primaryButtonOptions = {
   'あり（省略不可）': <Button variant="primary">プライマリーボタン</Button>,
@@ -94,20 +97,53 @@ export const ResponseStatus: StoryObj<typeof FloatArea> = {
   },
 }
 
+const renderWithLongContent = (
+  args: ComponentPropsWithRef<typeof FloatArea>,
+  leading?: ReactNode,
+) => (
+  <Stack gap={1.5}>
+    {leading}
+    {[...Array(15)].map((_, index) => (
+      <Panel key={index} padding={1.5}>
+        <p>スクロールさせて FloatArea の表示位置を確認するための Panel</p>
+      </Panel>
+    ))}
+    <FloatArea {...args} />
+  </Stack>
+)
+
 export const Bottom: StoryObj<typeof FloatArea> = {
   name: 'bottom',
-  render: (args) => (
-    <Stack gap={1.5}>
-      {[...Array(15)].map((_, index) => (
-        <Panel key={index} padding={1.5}>
-          <p>bottom を確認するための Panel</p>
-        </Panel>
-      ))}
-      <FloatArea {...args} />
-    </Stack>
-  ),
+  render: (args) => renderWithLongContent(args),
   args: {
     bottom: 1.5,
+  },
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '400px',
+      },
+    },
+  },
+}
+
+export const FixedOnMobile: StoryObj<typeof FloatArea> = {
+  name: 'fixedOnMobile',
+  render: (args) =>
+    renderWithLongContent(
+      args,
+      <FormControl label="テキスト入力">
+        <Input name="input_text" className="shr-w-full" />
+      </FormControl>,
+    ),
+  args: {
+    fixedOnMobile: true,
+    secondaryButton: <Button>キャンセル</Button>,
+    tertiaryButton: ({ fixedOnMobile }) => (
+      <Button variant={fixedOnMobile ? 'tertiary' : 'secondary'}>プレビュー</Button>
+    ),
+    responseStatus: _responseStatusOptions.error,
   },
   parameters: {
     docs: {

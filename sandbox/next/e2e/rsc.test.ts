@@ -18,7 +18,6 @@ const SERVER_COMPONENTS = [
   'DefinitionListItem',
   'ErrorScreen',
   'Fieldset',
-  'FloatArea',
   'Groupbox',
   'Header',
   'HeaderDropdownMenuButton',
@@ -79,6 +78,7 @@ const CLIENT_COMPONENTS: string[] = [
   'DropdownMenuButton', // キーボード操作のためのuseRef
   'DropdownTrigger', // 開閉状態管理のためのuseContext
   'EmptyTableBody', // テーブルヘッダーのカウントのためのuseRef
+  'FloatArea',      // モバイル表示の切替のため
   'FormControl',    // Input要素への自動紐づけのためのuseRefなど
   'Heading',        // 見出しレベルの自動生成のため
   'InformationPanel', // 開閉状態の管理のためのuseState
