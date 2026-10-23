@@ -51,8 +51,8 @@ const classNameGenerator = tv({
     ],
   },
   variants: {
-    large: {
-      false: {
+    size: {
+      S: {
         wrapper: [
           'shr-w-[calc(theme(fontSize.base)*2)]',
           'before:shr-size-[theme(fontSize.base)]',
@@ -60,7 +60,7 @@ const classNameGenerator = tv({
         ],
         iconWrapper: 'shr-size-[theme(fontSize.base)]',
       },
-      true: {
+      M: {
         wrapper: [
           'shr-w-[calc(theme(fontSize.xl)*2)]',
           'before:shr-size-[theme(fontSize.xl)]',
@@ -72,7 +72,7 @@ const classNameGenerator = tv({
     },
   },
   defaultVariants: {
-    large: false,
+    size: 'S',
   },
 })
 
@@ -82,15 +82,15 @@ type Props = ExtendElementPropsWithRef<
     children: ReactNode
     /** ラベルを視覚的に隠すかどうか */
     unrecommendedLabelHidden?: boolean
-    /** 大きいサイズで表示するかどうか。未指定の場合は EnvironmentProvider の mobile に連動する */
-    large?: boolean
+    /** コンポーネントの大きさ。未指定の場合は EnvironmentProvider の mobile に連動する */
+    size?: 'S' | 'M'
   }
 >
 
 export const Switch: FC<Props> = ({
   children,
   unrecommendedLabelHidden,
-  large,
+  size,
   className,
   id,
   ...rest
@@ -99,10 +99,10 @@ export const Switch: FC<Props> = ({
   const inputId = id || defaultId
 
   const { mobile } = useEnvironment()
-  const isLarge = large ?? mobile
+  const actualSize = size ?? (mobile ? 'M' : 'S')
 
   const classNames = useMemo(() => {
-    const { wrapper, input, icon, iconWrapper } = classNameGenerator({ large: isLarge })
+    const { wrapper, input, icon, iconWrapper } = classNameGenerator({ size: actualSize })
 
     return {
       wrapper: wrapper({ className }),
@@ -110,7 +110,7 @@ export const Switch: FC<Props> = ({
       icon: icon(),
       iconWrapper: iconWrapper(),
     }
-  }, [isLarge, className])
+  }, [actualSize, className])
 
   return (
     <Cluster align="center" className="shr-relative">

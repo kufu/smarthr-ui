@@ -6,55 +6,55 @@ import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict switch.pict
- * unrecommendedLabelHidden  defaultChecked  disabled  large
- * true                      false           true      false
- * false                     true            false     true
- * false                     false           false     false
- * false                     true            true      false
- * true                      false           true      true
- * true                      true            false     true
+ * unrecommendedLabelHidden  defaultChecked  disabled  size
+ * true                      false           true      S
+ * false                     true            false     M
+ * false                     false           false     S
+ * false                     true            true      S
+ * true                      false           true      M
+ * true                      true            false     M
  */
 const _cases: Array<ComponentPropsWithoutRef<typeof Switch>> = [
   {
     unrecommendedLabelHidden: true,
     defaultChecked: false,
     disabled: true,
-    large: false,
+    size: 'S',
     children: 'ラベル',
   },
   {
     unrecommendedLabelHidden: false,
     defaultChecked: true,
     disabled: false,
-    large: true,
+    size: 'M',
     children: 'ラベル',
   },
   {
     unrecommendedLabelHidden: false,
     defaultChecked: false,
     disabled: false,
-    large: false,
+    size: 'S',
     children: 'ラベル',
   },
   {
     unrecommendedLabelHidden: false,
     defaultChecked: true,
     disabled: true,
-    large: false,
+    size: 'S',
     children: 'ラベル',
   },
   {
     unrecommendedLabelHidden: true,
     defaultChecked: false,
     disabled: true,
-    large: true,
+    size: 'M',
     children: 'ラベル',
   },
   {
     unrecommendedLabelHidden: true,
     defaultChecked: true,
     disabled: false,
-    large: true,
+    size: 'M',
     children: 'ラベル',
   },
 ]

@@ -8,8 +8,8 @@ import { Switch } from './client'
 import type { Environment } from '../../hooks/client/useEnvironment'
 import type { ComponentPropsWithoutRef } from 'react'
 
-const NORMAL_WRAPPER_CLASS = 'shr-w-[calc(theme(fontSize.base)*2)]'
-const LARGE_WRAPPER_CLASS = 'shr-w-[calc(theme(fontSize.xl)*2)]'
+const S_WRAPPER_CLASS = 'shr-w-[calc(theme(fontSize.base)*2)]'
+const M_WRAPPER_CLASS = 'shr-w-[calc(theme(fontSize.xl)*2)]'
 
 const renderSwitch = (
   props: ComponentPropsWithoutRef<typeof Switch>,
@@ -54,38 +54,38 @@ describe('Switch', () => {
     expect(switchB).toBeChecked()
   })
 
-  describe('サイズ（large / mobile）', () => {
-    it('mobile 環境では大きいサイズになる', () => {
+  describe('サイズ（size / mobile）', () => {
+    it('mobile 環境では M サイズになる', () => {
       renderSwitch({ children: 'スイッチ' }, { mobile: true })
 
-      expect(getWrapper()).toHaveClass(LARGE_WRAPPER_CLASS)
-      expect(getWrapper()).not.toHaveClass(NORMAL_WRAPPER_CLASS)
+      expect(getWrapper()).toHaveClass(M_WRAPPER_CLASS)
+      expect(getWrapper()).not.toHaveClass(S_WRAPPER_CLASS)
     })
 
-    it('mobile 以外の環境では通常サイズになる', () => {
+    it('mobile 以外の環境では S サイズになる', () => {
       renderSwitch({ children: 'スイッチ' }, { mobile: false })
 
-      expect(getWrapper()).toHaveClass(NORMAL_WRAPPER_CLASS)
-      expect(getWrapper()).not.toHaveClass(LARGE_WRAPPER_CLASS)
+      expect(getWrapper()).toHaveClass(S_WRAPPER_CLASS)
+      expect(getWrapper()).not.toHaveClass(M_WRAPPER_CLASS)
     })
 
-    it('large を指定すると mobile 以外の環境でも大きいサイズになる', () => {
-      renderSwitch({ large: true, children: 'スイッチ' }, { mobile: false })
+    it('size="M" を指定すると mobile 以外の環境でも M サイズになる', () => {
+      renderSwitch({ size: 'M', children: 'スイッチ' }, { mobile: false })
 
-      expect(getWrapper()).toHaveClass(LARGE_WRAPPER_CLASS)
+      expect(getWrapper()).toHaveClass(M_WRAPPER_CLASS)
     })
 
-    it('large のときはチェックアイコンも大きくなる', () => {
-      renderSwitch({ large: true, children: 'スイッチ' }, { mobile: false })
+    it('M サイズのときはチェックアイコンも大きくなる', () => {
+      renderSwitch({ size: 'M', children: 'スイッチ' }, { mobile: false })
 
       expect(getWrapper().querySelector('svg')).toHaveClass('shr-size-[theme(fontSize.base)]')
     })
 
-    it('large={false} を指定すると mobile 環境でも通常サイズになる', () => {
-      renderSwitch({ large: false, children: 'スイッチ' }, { mobile: true })
+    it('size="S" を指定すると mobile 環境でも S サイズになる', () => {
+      renderSwitch({ size: 'S', children: 'スイッチ' }, { mobile: true })
 
-      expect(getWrapper()).toHaveClass(NORMAL_WRAPPER_CLASS)
-      expect(getWrapper()).not.toHaveClass(LARGE_WRAPPER_CLASS)
+      expect(getWrapper()).toHaveClass(S_WRAPPER_CLASS)
+      expect(getWrapper()).not.toHaveClass(M_WRAPPER_CLASS)
     })
   })
 })
