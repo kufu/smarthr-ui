@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [101.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v101.0.0...smarthr-ui-v101.1.0) (2026-10-23)
+
+
+### Features
+
+* **DropZone:** multiple={{ appendable: true }} で選択済みのファイルに追加できるようにする ([#7331](https://github.com/kufu/smarthr-ui/issues/7331)) ([9b5951b](https://github.com/kufu/smarthr-ui/commit/9b5951b0359baa2310874615875068291ff1cd08))
+
+
+### Bug Fixes
+
+* Dialog 上の Dropdown を Esc キーで閉じたときに Dialog が閉じてしまうのを防ぐ ([#7398](https://github.com/kufu/smarthr-ui/issues/7398)) ([3179dad](https://github.com/kufu/smarthr-ui/commit/3179dad09245ada9c86eb206dde4e3b3f10ea468))
+
 ## [101.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v100.1.0...smarthr-ui-v101.0.0) (2026-10-22)
 
 

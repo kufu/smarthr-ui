@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.3.0...smarthr-ui-charts-v0.3.1) (2026-10-23)
+
+
+### Bug Fixes
+
+* **LineChart:** storiesのimport文にprettierを適用する ([#7401](https://github.com/kufu/smarthr-ui/issues/7401)) ([3ce2a43](https://github.com/kufu/smarthr-ui/commit/3ce2a43454452c646c8cd496a79367f02b0f3397))
+
 ## [0.3.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.6...smarthr-ui-charts-v0.3.0) (2026-10-08)
 
 
