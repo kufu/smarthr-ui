@@ -74,17 +74,16 @@ type Props = ExtendElementPropsWithRef<
 
 const DEFAULT_FROM = new Date(1900, 0, 1)
 
-const INPUT_SUFFIX_TEXT_CLASS_NAME = 'smarthr-ui-DatePicker-inputSuffixText'
-
 const INPUT_CONTAINER_CLASS_NAME = 'smarthr-ui-DatePicker-inputContainer'
 
 const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-DatePicker shr-inline-block',
     inputContainer: INPUT_CONTAINER_CLASS_NAME,
-    inputSuffixIcon:
+    inputSuffixIconWrapper:
       'shr-border-l-shorthand shr-box-border shr-flex shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
-    inputSuffixText: `${INPUT_SUFFIX_TEXT_CLASS_NAME} shr-text-gray shr-me-0.5 shr-ms-0.5 shr-py-0.5 shr-text-sm`,
+    alternativeFormatWrapper:
+      'smarthr-ui-DatePicker-alternativeFormatWrapper shr-text-gray shr-me-0.5 shr-ms-0.5 shr-py-0.5 shr-text-sm',
   },
   variants: {
     hasAlternative: {
@@ -95,7 +94,7 @@ const classNameGenerator = tv({
           'shr-flex-wrap shr-gap-y-0',
           '[&_.smarthr-ui-Input-suffix]:shr-contents',
           '[&_.smarthr-ui-Input-input]:shr-w-auto [&_.smarthr-ui-Input-input]:shr-min-w-[10ch] [&_.smarthr-ui-Input-input]:shr-basis-[10ch]',
-          '[&_.smarthr-ui-DatePicker-inputSuffixText]:shr-ms-0',
+          '[&_.smarthr-ui-DatePicker-alternativeFormatWrapper]:shr-ms-0',
           /* 折り返し時のみ上段と下段の間に点線を出す。1行時は線の位置が下の枠線に重なり、枠線に隠れて見えない */
           '[background-image:repeating-linear-gradient(to_right,theme(borderColor.default)_0_2px,transparent_2px_4px)]',
           '[background-origin:content-box]',
@@ -150,13 +149,14 @@ export const DatePicker: FC<Props> = ({
   const theme = useTheme()
   const hasAlternative = !!showAlternative
   const classNames = useMemo(() => {
-    const { container, inputContainer, inputSuffixIcon, inputSuffixText } = classNameGenerator()
+    const { container, inputContainer, inputSuffixIconWrapper, alternativeFormatWrapper } =
+      classNameGenerator()
 
     return {
       container: container({ className }),
       inputContainer: inputContainer({ hasAlternative }),
-      inputSuffixIcon: inputSuffixIcon(),
-      inputSuffixText: inputSuffixText(),
+      inputSuffixIconWrapper: inputSuffixIconWrapper(),
+      alternativeFormatWrapper: alternativeFormatWrapper(),
     }
   }, [className, hasAlternative])
 
@@ -453,7 +453,7 @@ export const DatePicker: FC<Props> = ({
         onFocus={functions.handleFocusInput}
         onBlur={functions.handleBlur}
         suffix={
-          <InputSuffixIcon
+          <InputSuffix
             alternativeFormat={showAlternative ? alternativeFormat : null}
             caretIconColor={caretIconColor}
             classNames={classNames}
@@ -476,15 +476,17 @@ export const DatePicker: FC<Props> = ({
   )
 }
 
-const InputSuffixIcon = memo<{
-  classNames: { inputSuffixIcon: string; inputSuffixText: string }
+const InputSuffix = memo<{
+  classNames: { inputSuffixIconWrapper: string; alternativeFormatWrapper: string }
   alternativeFormat: null | ReactNode
   caretIconColor: ComponentPropsWithRef<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <>
-    <span className={classNames.inputSuffixIcon}>
+    <span className={classNames.inputSuffixIconWrapper}>
       <FaCalendarDaysIcon color={caretIconColor} />
     </span>
-    {alternativeFormat && <span className={classNames.inputSuffixText}>{alternativeFormat}</span>}
+    {alternativeFormat && (
+      <span className={classNames.alternativeFormatWrapper}>{alternativeFormat}</span>
+    )}
   </>
 ))
