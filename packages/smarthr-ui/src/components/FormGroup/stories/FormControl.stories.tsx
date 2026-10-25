@@ -1,8 +1,7 @@
 import { MultiCombobox, SingleCombobox } from '../../Combobox'
-import { DatePicker } from '../../DatePicker'
 import { DropZone } from '../../DropZone'
 import { FaAddressBookIcon } from '../../Icon'
-import { CurrencyInput, Input } from '../../Input'
+import { CurrencyInput, Input, WarekiPicker } from '../../Input'
 import { InputFile } from '../../InputFile'
 import { Cluster, Stack } from '../../Layout'
 import { Select } from '../../Select'
@@ -15,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _childrenOptions = {
   '<Input />': <Input name="formcontrol_input" />,
-  '<DatePicker />': <DatePicker name="formcontrol_datepicker" />,
+  '<WarekiPicker />': <WarekiPicker name="formcontrol_datepicker" />,
   '<CurrencyInput />': <CurrencyInput name="formcontrol_currencyinput" />,
   '<Textarea />': <Textarea name="formcontrol_textarea" />,
   '<Select />': <Select name="formcontrol_select" hasBlank options={[]} />,

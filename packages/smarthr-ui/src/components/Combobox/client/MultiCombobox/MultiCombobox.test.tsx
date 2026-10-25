@@ -363,4 +363,42 @@ describe('SingleCombobox', () => {
     // Backspace によって削除した末尾アイテムはlabelTextとしてテキスト化されること
     expect(combobox()).toHaveValue('ラベル2')
   })
+
+  it('検索用のinputのnameには `-query` サフィックスが付与されること', () => {
+    render(template({ name: 'department' }))
+
+    expect(combobox()).toHaveAttribute('name', 'department-query')
+  })
+
+  it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから複数取得できること', () => {
+    const { container } = render(
+      template({
+        name: 'department',
+        selectedItems: [
+          { label: 'option 1', value: 'value-1' },
+          { label: 'option 2', value: 'value-2' },
+        ],
+      }),
+    )
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.getAll('department')).toEqual(['value-1', 'value-2'])
+  })
+
+  it('未選択の場合、hidden inputが存在せずFormDataにnameのキーが含まれないこと', () => {
+    const { container } = render(template({ name: 'department', selectedItems: [] }))
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.has('department')).toBe(false)
+  })
+
+  it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
+    const { container } = render(template({ name: 'department', disabled: true }))
+
+    const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
+
+    expect(hiddenInput).toBeDisabled()
+  })
 })

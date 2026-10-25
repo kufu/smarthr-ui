@@ -495,6 +495,7 @@ export const SingleCombobox = <T,>({
       {name && actualSelectedItem && (
         <input type="hidden" name={name} disabled={disabled} value={actualSelectedItem.value} />
       )}
+
       <Input
         {...rest}
         ref={mergedRef}
@@ -525,7 +526,7 @@ export const SingleCombobox = <T,>({
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
         prefix={prefix}
-        suffix={
+        subActionArea={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}

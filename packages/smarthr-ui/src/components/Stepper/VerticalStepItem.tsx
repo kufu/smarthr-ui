@@ -106,9 +106,7 @@ export const VerticalStepItem: FC<Props> = ({
         </div>
         <div className={classNames.body}>
           <div className={classNames.headingWrapper}>
-            <Heading type="sectionTitle" className={classNames.heading}>
-              {label}
-            </Heading>
+            <Heading className={classNames.heading}>{label}</Heading>
           </div>
           <div className={classNames.inner}>{children}</div>
         </div>
