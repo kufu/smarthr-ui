@@ -433,14 +433,14 @@ describe('SingleCombobox', () => {
       expect(combobox()).toHaveValue('')
     })
 
-    it('defaultItem のみ指定した場合、初期表示に反映される', () => {
+    it('defaultSelectedItem のみ指定した場合、初期表示に反映される', () => {
       render(
         <IntlProvider locale="ja">
           <form>
             <FormControl label="コンボボックス">
               <SingleCombobox
                 name="default"
-                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
                 items={items}
               />
             </FormControl>
@@ -451,14 +451,14 @@ describe('SingleCombobox', () => {
       expect(combobox()).toHaveValue('option 1')
     })
 
-    it('非制御で defaultItem を指定した場合、クリア後にblurしても空のまま維持される', async () => {
+    it('非制御で defaultSelectedItem を指定した場合、クリア後にblurしても空のまま維持される', async () => {
       render(
         <IntlProvider locale="ja">
           <form>
             <FormControl label="コンボボックス">
               <SingleCombobox
                 name="default"
-                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
                 items={items}
               />
             </FormControl>
@@ -567,7 +567,7 @@ describe('SingleCombobox', () => {
             <FormControl label="コンボボックス">
               <SingleCombobox
                 name="default"
-                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
                 items={items}
               />
             </FormControl>
