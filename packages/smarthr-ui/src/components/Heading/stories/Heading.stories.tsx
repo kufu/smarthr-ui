@@ -25,7 +25,7 @@ export const Type: StoryObj<typeof Heading> = {
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'size'>) => (
     <Stack>
       <Heading {...args}>type未指定</Heading>
-      <Heading {...args} type="sectionTitle">
+      <Heading {...args}>
         SectionTitle
       </Heading>
       <Heading {...args} type="blockTitle">
@@ -45,16 +45,16 @@ export const Size: StoryObj<typeof Heading> = {
   name: 'size',
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'type'>) => (
     <Stack>
-      <Heading {...args} type="sectionTitle">
+      <Heading {...args}>
         SectionTitle (size未指定)
       </Heading>
-      <Heading {...args} type="sectionTitle" size="XXL">
+      <Heading {...args} size="XXL">
         SectionTitle XXL
       </Heading>
-      <Heading {...args} type="sectionTitle" size="XL">
+      <Heading {...args} size="XL">
         SectionTitle XL
       </Heading>
-      <Heading {...args} type="sectionTitle" size="L">
+      <Heading {...args} size="L">
         SectionTitle L
       </Heading>
     </Stack>

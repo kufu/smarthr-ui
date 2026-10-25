@@ -164,7 +164,7 @@ const Content: FC<
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
+          <Button size="S" onClick={functions.handleDialogClose}>
             <FaXmarkIcon
               alt={
                 <Localizer
