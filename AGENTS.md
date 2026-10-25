@@ -1,4 +1,4 @@
-# CODING_RULE.md
+# AGENTS.md
 
 このファイルは、Claude Code (claude.ai/code) などのAIコーディングエージェントがこのリポジトリで作業する際のガイドです。
 
