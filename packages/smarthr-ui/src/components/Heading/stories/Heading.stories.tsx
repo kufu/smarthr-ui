@@ -25,7 +25,10 @@ export const Type: StoryObj<typeof Heading> = {
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'size'>) => (
     <Stack>
       <Heading {...args}>type未指定</Heading>
-      <Heading {...args}>SectionTitle</Heading>
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
+      <Heading {...args} type="sectionTitle">
+        SectionTitle
+      </Heading>
       <Heading {...args} type="blockTitle">
         BlockTitle
       </Heading>
