@@ -33,6 +33,7 @@ export const SmartHRLogo = memo<Props>(({ alt, width, height, fill, className, .
     {...rest}
     role="img"
     viewBox="0 0 150 28"
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
     className={classNameGenerator({ className, fill: fill ?? 'white' })}
     style={width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }}
     aria-label={alt || 'SmartHR（スマートHR）'}
