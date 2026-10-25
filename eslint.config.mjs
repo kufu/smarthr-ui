@@ -224,9 +224,10 @@ export default [
   {
     files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
     rules: {
-      'smarthr/require-i18n-text': 'off',
       'smarthr/best-practice-for-lazy-variable': 'off',
       'smarthr/best-practice-for-no-unnecessary-variable': 'off',
+      'smarthr/best-practice-for-tailwind-variants': 'off',
+      'smarthr/require-i18n-text': 'off',
     },
   },
   {
