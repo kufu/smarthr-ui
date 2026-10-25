@@ -7,6 +7,7 @@ const visuallyHiddenTextClassNameGenerator = tv({
   base: 'shr-absolute shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap shr-border-0 shr-p-0 [clip-path:inset(100%)] [clip:rect(0_0_0_0)]',
 })
 
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 export const visuallyHiddenTextClassName = visuallyHiddenTextClassNameGenerator()
 
 type Props<T extends ElementType> = ExtendElementPropsWithRef<T, { as?: T }>
