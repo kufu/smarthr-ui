@@ -2,9 +2,9 @@
 
 import dayjs from 'dayjs'
 import {
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   memo,
   useId,
   useMemo,
@@ -12,17 +12,17 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../../hooks/useLatest'
-import { Localizer, useDateFormat } from '../../../intl'
-import { Button } from '../../Button'
-import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../../Icon'
-import { Cluster } from '../../Layout'
+import { useLatest } from '../../../../../hooks/useLatest'
+import { Localizer, useDateFormat } from '../../../../../intl'
+import { Button } from '../../../../Button'
+import { FaCaretDownIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../../../../Icon'
+import { Cluster } from '../../../../Layout'
 
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getMonthArray, getToDate, isBetween, minDate } from './calendarHelper'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../../types'
 
 type Props = ExtendElementPropsWithRef<
   'div',
@@ -213,9 +213,9 @@ export const Calendar: FC<Props> = ({
   )
 }
 
-const YearMonthRender = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => <div className={className}>{children}</div>,
-)
+const YearMonthRender = memo<ComponentPropsWithRef<'div'>>(({ children, ...rest }) => (
+  <div {...rest}>{children}</div>
+))
 
 const YearSelectButton = memo<{
   'aria-expanded': boolean
@@ -252,7 +252,7 @@ const MonthDirectionCluster = memo<{
   )
 
   return (
-    <Cluster gap={0.5} className={className}>
+    <Cluster className={className}>
       <Button
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
         size="S"

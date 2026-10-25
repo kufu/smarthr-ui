@@ -581,17 +581,6 @@ export const MultiCombobox = <T,>({
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}
     >
-      {name &&
-        actualSelectedItems.map((selectedItem) => (
-          <input
-            key={`hidden-${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}
-            type="hidden"
-            name={name}
-            disabled={disabled}
-            value={selectedItem.value}
-          />
-        ))}
-
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
@@ -600,6 +589,9 @@ export const MultiCombobox = <T,>({
         >
           {actualSelectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
+              {name && (
+                <input type="hidden" name={name} disabled={disabled} value={selectedItem.value} />
+              )}
               <MultiSelectedItem
                 disabled={disabled}
                 item={selectedItem}

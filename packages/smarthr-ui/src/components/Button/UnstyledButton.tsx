@@ -16,7 +16,9 @@ const classNameGenerator = tv({
   ],
 })
 
-export const UnstyledButton: FC<ComponentPropsWithRef<'button'>> = ({
+type Props = Omit<ComponentPropsWithRef<'button'>, 'aria-disabled'>
+
+export const UnstyledButton: FC<Props> = ({
   type = 'button',
   disabled,
   onClick,

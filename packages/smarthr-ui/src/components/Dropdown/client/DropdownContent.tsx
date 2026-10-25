@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useContext, useMemo } from 'react'
+import { type FC, type KeyboardEventHandler, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Portal } from '../../Portal'
@@ -40,12 +40,23 @@ export const DropdownContent: FC<Props> = ({
   children,
   className,
   controllable = false,
+  onKeyDown,
   ...rest
 }) => {
-  const { active, contentId, contentStyles, contentCallbackRef, handleDelegateClickContentCloser } =
-    useContext(DropdownContext)
+  const {
+    active,
+    contentId,
+    contentStyles,
+    contentCallbackRef,
+    handleDelegateClickContent,
+    handleDelegateKeyDownContent,
+  } = useContext(DropdownContext)
 
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+  const handleDelegateKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    onKeyDown?.(e)
+    handleDelegateKeyDownContent(e)
+  }
 
   return (
     // HINT: DropdownのTriggerにはaria-controlsが設定されている
@@ -58,7 +69,8 @@ export const DropdownContent: FC<Props> = ({
           role="presentation"
           className={actualClassName}
           style={contentStyles.wrapper}
-          onClick={handleDelegateClickContentCloser}
+          onClick={handleDelegateClickContent}
+          onKeyDown={handleDelegateKeyDown}
         >
           {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
           <div tabIndex={-1} className={DUMMY_FOCUS_CONTENT_CLASSNAME} />

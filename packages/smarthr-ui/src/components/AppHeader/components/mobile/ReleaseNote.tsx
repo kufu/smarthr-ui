@@ -6,7 +6,6 @@ import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
 import { TextLink } from '../../../TextLink'
-import { Translate } from '../common/Translate'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
 
@@ -28,6 +27,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
 
   return {
@@ -53,13 +53,11 @@ const ActualReleaseNote: FC<{
         <Loader />
       </Center>
     ) : data.error ? (
-      <Translate>
-        <Localizer
-          id="smarthr-ui/AppHeader/releaseNotesLoadError"
-          defaultText={`リリースノートの読み込みに失敗しました。
+      <Localizer
+        id="smarthr-ui/AppHeader/releaseNotesLoadError"
+        defaultText={`リリースノートの読み込みに失敗しました。
 時間をおいて、やり直してください。`}
-        />
-      </Translate>
+      />
     ) : (
       <Stack>
         {data.links.slice(0, 5).map((link) => (
@@ -88,12 +86,10 @@ const ActualReleaseNote: FC<{
         className={CLASS_NAMES.indexLinkAnchor}
         suffix={<OpenInNewTabIcon className={CLASS_NAMES.icon} />}
       >
-        <Translate>
-          <Localizer
-            id="smarthr-ui/AppHeader/seeAllReleaseNotes"
-            defaultText="すべてのリリースノートを見る"
-          />
-        </Translate>
+        <Localizer
+          id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+          defaultText="すべてのリリースノートを見る"
+        />
       </TextLink>
     </div>
   </div>

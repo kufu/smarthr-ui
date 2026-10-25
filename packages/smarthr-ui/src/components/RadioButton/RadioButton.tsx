@@ -84,11 +84,6 @@ const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const LabeledChildren = memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
-  ({ htmlFor, className, children }) =>
-    children && (
-      <label htmlFor={htmlFor} className={className}>
-        {children}
-      </label>
-    ),
+const LabeledChildren = memo<ComponentPropsWithRef<'label'>>(
+  ({ children, ...rest }) => children && <label {...rest}>{children}</label>,
 )

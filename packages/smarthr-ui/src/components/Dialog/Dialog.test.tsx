@@ -4,9 +4,8 @@ import { type FC, useRef, useState } from 'react'
 
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
-import { DatePicker } from '../DatePicker'
 import { Fieldset, FormControl } from '../FormGroup'
-import { Input } from '../Input'
+import { Input, WarekiPicker } from '../Input'
 import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
@@ -35,7 +34,7 @@ describe('Dialog', () => {
                 The value of isOpen must be managed by you, but you can customize content freely.
               </p>
               <FormControl label="dialog_datepicker">
-                <DatePicker
+                <WarekiPicker
                   name="dialog_datepicker"
                   value="2021-01-01"
                   formatDate={(_date) => (_date ? _date.toDateString() : '')}
@@ -196,6 +195,18 @@ describe('Dialog', () => {
     expect(
       screen.getByRole('textbox', { name: '特定の要素をフォーカスするダイアログのInput' }),
     ).toHaveFocus()
+  })
+
+  it('ダイアログの内容が画面に収まるよう、max-heightとoverflow-y-autoが設定されること', () => {
+    renderWithIntl(
+      <Dialog isOpen ariaLabel="Dialog">
+        本文
+      </Dialog>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'Dialog' })
+    expect(dialog).toHaveClass('shr-max-h-[calc(100dvh-theme(spacing.2))]')
+    expect(dialog).toHaveClass('shr-overflow-y-auto')
   })
 
   it('Escapeキー押下時、onPressEscapeに実際のKeyboardEventが渡されること', async () => {
