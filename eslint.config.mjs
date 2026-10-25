@@ -124,52 +124,6 @@ export default [
           additionalHooks: 'useLayoutEffectRef',
         },
       ],
-      'smarthr/a11y-anchor-has-href-attribute': [
-        'error',
-        {
-          checkType: 'allow-spread-attributes',
-        },
-      ],
-      'smarthr/a11y-input-has-name-attribute': [
-        'error',
-        {
-          checkType: 'allow-spread-attributes',
-        },
-      ],
-      'smarthr/best-practice-for-consecutive-definition-list': 'off',
-      'smarthr/best-practice-for-default-props': 'off',
-      'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
-      'smarthr/design-system-guideline-bulk-action-row-button': 'off',
-      'smarthr/best-practice-for-rest-parameters': 'error',
-      'smarthr/best-practice-for-unnesessary-early-return': 'error',
-      'smarthr/best-practice-for-unstable-dependencies': [
-        'error',
-        {
-          'additionalTargetHooks': [
-            'useLayoutEffectRef',
-          ],
-          'additionalUnstableNames': [
-            "icon",
-            "prefix",
-            "suffix",
-            "footer",
-            "subActionArea",
-            "options",
-            "items",
-            'ref',
-            '/Ref$/',
-            '/^on[A-Z]/',
-          ],
-        },
-      ],
-      'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
-      'smarthr/best-practice-for-no-unnecessary-variable': [
-        'error',
-        {
-          fix: false,
-          maxComplexity: 3,
-        },
-      ],
       'no-restricted-syntax': [
         'error',
         {
@@ -202,6 +156,53 @@ export default [
                 'ComponentPropsの利用は禁止されています。refの有無を明示するため、ComponentPropsWithRefまたはComponentPropsWithoutRefを使用してください。',
             },
           ],
+        },
+      ],
+      'smarthr/a11y-anchor-has-href-attribute': [
+        'error',
+        {
+          checkType: 'allow-spread-attributes',
+        },
+      ],
+      'smarthr/a11y-input-has-name-attribute': [
+        'error',
+        {
+          checkType: 'allow-spread-attributes',
+        },
+      ],
+      // 'smarthr/best-practice-for-consecutive-definition-list': 'off',
+      // 'smarthr/best-practice-for-default-props': 'off',
+      // 'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
+      // 'smarthr/design-system-guideline-bulk-action-row-button': 'off',
+      'smarthr/best-practice-for-tailwind-variants': 'error',
+      'smarthr/best-practice-for-rest-parameters': 'error',
+      'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'smarthr/best-practice-for-unstable-dependencies': [
+        'error',
+        {
+          'additionalTargetHooks': [
+            'useLayoutEffectRef',
+          ],
+          'additionalUnstableNames': [
+            "icon",
+            "prefix",
+            "suffix",
+            "footer",
+            "subActionArea",
+            "options",
+            "items",
+            'ref',
+            '/Ref$/',
+            '/^on[A-Z]/',
+          ],
+        },
+      ],
+      'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
+      'smarthr/best-practice-for-no-unnecessary-variable': [
+        'error',
+        {
+          fix: false,
+          maxComplexity: 3,
         },
       ],
     },
