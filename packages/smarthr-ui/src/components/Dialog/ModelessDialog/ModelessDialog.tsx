@@ -503,11 +503,7 @@ const CloseButton = memo<{
   handleClick: (e: MouseEvent<HTMLButtonElement>) => void
 }>(({ handleClick, className }) => (
   <div className={className}>
-    <Button
-      size="S"
-      className="smarthr-ui-ModelessDialog-closeButton"
-      onClick={handleClick}
-    >
+    <Button size="S" className="smarthr-ui-ModelessDialog-closeButton" onClick={handleClick}>
       <FaXmarkIcon
         alt={<Localizer id="smarthr-ui/ModelessDialog/closeButtonIconAlt" defaultText="閉じる" />}
       />
