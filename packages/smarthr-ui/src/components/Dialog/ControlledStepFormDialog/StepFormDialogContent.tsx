@@ -69,6 +69,7 @@ const BUTTON_COLUMN_GAP = {
 } as const
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, actionArea, buttonArea, message } = dialogContentClassNameGenerator()
 
   return {

@@ -59,7 +59,7 @@ type Props = ExtendElementPropsWithRef<
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
-const formDialogContent = tv({
+const formDialogContentClassNameGenerator = tv({
   extend: dialogContentClassNameGenerator,
   slots: {
     form: 'shr-contents',
@@ -67,7 +67,8 @@ const formDialogContent = tv({
 })
 
 const CLASS_NAMES = (() => {
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContent()
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentClassNameGenerator()
 
   return {
     form: form(),
