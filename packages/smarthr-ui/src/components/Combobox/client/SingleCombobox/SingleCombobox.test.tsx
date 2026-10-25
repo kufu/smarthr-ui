@@ -389,6 +389,36 @@ describe('SingleCombobox', () => {
     await userEvent.keyboard('{enter}')
     expect(onSubmit).not.toHaveBeenCalled()
   })
+
+  it('検索用のinputのnameには `-query` サフィックスが付与されること', () => {
+    render(template({ name: 'department' }))
+
+    expect(combobox()).toHaveAttribute('name', 'department-query')
+  })
+
+  it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから取得できること', () => {
+    const { container } = render(template({ name: 'department' }))
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.get('department')).toBe('value-1')
+  })
+
+  it('未選択の場合、hidden inputが存在せずFormDataにnameのキーが含まれないこと', () => {
+    const { container } = render(template({ name: 'department', selectedItem: null }))
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.has('department')).toBe(false)
+  })
+
+  it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
+    const { container } = render(template({ name: 'department', disabled: true }))
+
+    const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
+
+    expect(hiddenInput).toBeDisabled()
+  })
 })
 
 test('groupロールが付与されている', async () => {

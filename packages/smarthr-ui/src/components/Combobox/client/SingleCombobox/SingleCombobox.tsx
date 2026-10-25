@@ -449,12 +449,16 @@ export const SingleCombobox = <T,>({
       }}
       data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
     >
+      {name && selectedItem && (
+        <input type="hidden" name={name} disabled={disabled} value={selectedItem.value} />
+      )}
+
       <Input
         {...rest}
         ref={mergedRef}
         role="combobox"
         type="text"
-        name={name}
+        name={name ? `${name}-query` : undefined}
         required={required}
         disabled={disabled}
         readOnly={readOnly}

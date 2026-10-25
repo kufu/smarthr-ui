@@ -541,6 +541,9 @@ export const MultiCombobox = <T,>({
         >
           {selectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
+              {name && (
+                <input type="hidden" name={name} disabled={disabled} value={selectedItem.value} />
+              )}
               <MultiSelectedItem
                 disabled={disabled}
                 item={selectedItem}
@@ -557,7 +560,7 @@ export const MultiCombobox = <T,>({
             ref={mergedInputRef}
             role="combobox"
             type="text"
-            name={name}
+            name={name ? `${name}-query` : undefined}
             required={required && selectedItems.length === 0}
             disabled={disabled}
             value={inputValue}
