@@ -16,7 +16,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogContentStyle'
+import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -60,7 +60,7 @@ type Props = ExtendElementPropsWithRef<
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const formDialogContent = tv({
-  extend: dialogContent,
+  extend: dialogContentClassNameGenerator,
   slots: {
     form: 'shr-contents',
   },
