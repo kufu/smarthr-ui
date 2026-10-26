@@ -119,7 +119,7 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
         'smarthr-ui-ListItem',
         'shr-flex shr-list-none shr-flex-col shr-bg-white',
         divider !== false &&
-          'after:shr-border-b-shorthand after:shr-flex after:shr-w-full after:shr-flex-col after:shr-content-[""]',
+          'after:shr-border-b-shorthand after:shr-flex after:shr-flex-col after:shr-content-[""]',
       ],
       slot: 'shr-no-underline focus-visible:shr-focus-indicator [&[href]:hover]:shr-bg-white-darken',
       content: 'shr-flex shr-flex-col [:focus-visible>&]:shr-focus-indicator',
@@ -227,6 +227,7 @@ export const ListItem: ListItem = <
   const divider = modifiedDivider ?? inheritedDivider
   const { paddingBlockStart, paddingBlockEnd, paddingInlineStart, paddingInlineEnd } =
     mapPaddingModifierToPadding(padding)
+  const slotClassName = slot?.props?.className
   const actualClassName = useMemo(() => {
     const generatedClasses = classNameGenerator(divider)()
     return {
@@ -237,7 +238,7 @@ export const ListItem: ListItem = <
         paddingInlineStart,
         paddingInlineEnd,
       }),
-      slot: generatedClasses.slot({}),
+      slot: generatedClasses.slot({ className: slotClassName }),
       content: generatedClasses.content({
         paddingBlockStart,
         paddingBlockEnd,
@@ -245,7 +246,15 @@ export const ListItem: ListItem = <
         paddingInlineEnd,
       }),
     }
-  }, [className, divider, paddingBlockStart, paddingBlockEnd, paddingInlineStart, paddingInlineEnd])
+  }, [
+    className,
+    slotClassName,
+    divider,
+    paddingBlockStart,
+    paddingBlockEnd,
+    paddingInlineStart,
+    paddingInlineEnd,
+  ])
   const SlotRenderer = slot?.renderer ?? 'div'
 
   return (
@@ -262,7 +271,7 @@ export const ListItem: ListItem = <
                     {heading}
                   </Text>
                 </Heading>
-                <Text as="p" size="S" leading="TIGHT" color="TEXT_GREY">
+                <Text as="div" size="S" leading="TIGHT" color="TEXT_GREY">
                   {children}
                 </Text>
               </Stack>
