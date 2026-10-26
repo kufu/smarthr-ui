@@ -279,6 +279,7 @@ export const SingleCombobox = <T,>({
     onKeyPress,
     handleKeyDownListBox,
     emptySelectionFallbackItem,
+    defaultSelectedItem,
     selectedItem: actualSelectedItem,
     isSelectedItemControlled,
     isFocused,
@@ -330,10 +331,20 @@ export const SingleCombobox = <T,>({
       inputCallbackRef: (node: HTMLInputElement | null) => {
         inputNode = node
 
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // 選択状態をdefaultSelectedItemへ戻すためにresetイベントを監視する
+        const associatedForm = node?.form
+        const handleReset = () => {
+          updateUncontrolledSelectedItem(latest.defaultSelectedItem ?? null)
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
         return () => {
           inputNode = null
           latest.cleanupAddFrame()
           latest.selectFrame.cancel()
+          associatedForm?.removeEventListener('reset', handleReset)
         }
       },
       handleFocus: () => {
