@@ -419,6 +419,29 @@ describe('SingleCombobox', () => {
 
     expect(hiddenInput).toBeDisabled()
   })
+
+  it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {
+    const { container } = render(
+      <IntlProvider locale="ja">
+        <form id="external-form" />
+        <form>
+          <FormControl label="コンボボックス">
+            <SingleCombobox
+              form="external-form"
+              name="department"
+              selectedItem={{ label: 'option 1', value: 'value-1' }}
+              items={[{ label: 'option 1', value: 'value-1' }]}
+            />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
+
+    expect(formData.get('department')).toBe('value-1')
+    expect(combobox()).toHaveAttribute('form', 'external-form')
+  })
 })
 
 test('groupロールが付与されている', async () => {
