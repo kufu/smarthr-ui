@@ -1,2 +1,1 @@
-export { List } from './List'
-export { ListItem, ListItemAnchor } from './ListItem'
+export { List, ListItem, ListItemAnchor } from './client'

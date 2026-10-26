@@ -1,7 +1,6 @@
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { List } from '../List'
-import { ListItemAnchor } from '../ListItem'
+import { List, ListItemAnchor } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

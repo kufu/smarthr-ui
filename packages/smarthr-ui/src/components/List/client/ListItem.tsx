@@ -11,11 +11,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Heading } from '../Heading'
-import { FaChevronRightIcon } from '../Icon'
-import { Sidebar, Stack } from '../Layout'
-import { SectioningFragment } from '../SectioningContent'
-import { Text } from '../Text'
+import { Heading } from '../../Heading'
+import { FaChevronRightIcon } from '../../Icon'
+import { Sidebar, Stack } from '../../Layout'
+import { SectioningFragment } from '../../SectioningContent'
+import { Text } from '../../Text'
 
 import { ListDividerContext } from './List'
 

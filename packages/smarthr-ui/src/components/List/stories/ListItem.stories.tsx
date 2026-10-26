@@ -2,8 +2,7 @@ import { Button } from '../../Button'
 import { FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { List } from '../List'
-import { ListItem } from '../ListItem'
+import { List, ListItem } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
