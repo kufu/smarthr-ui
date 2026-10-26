@@ -50,7 +50,7 @@ export const Fill: StoryObj<typeof SmartHRAILogo> = {
   name: 'fill',
   render: (args) => (
     <Stack inline align="start" className="shr-bg-background">
-      {([undefined, 'black', 'white', 'brand', 'color'] as const).map((fill) => (
+      {([undefined, 'black', 'white', 'brand'] as const).map((fill) => (
         <SmartHRAILogo {...args} key={fill || 'undefined'} fill={fill} />
       ))}
     </Stack>

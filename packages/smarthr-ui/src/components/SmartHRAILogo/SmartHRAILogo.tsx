@@ -14,8 +14,8 @@ type Props = ExtendElementPropsWithoutRef<
     height?: number | string
     /** シンボルマークと「AI」のみで表示するかどうか */
     compact?: boolean
-    /** ロゴの色 */
-    fill?: 'black' | 'white' | 'brand' | 'color'
+    /** ロゴの色。未指定の場合はカラーで表示する */
+    fill?: 'black' | 'white' | 'brand'
   },
   { omit: 'role' | 'viewBox' | 'xmlns' | 'style' | 'aria-label' }
 >
@@ -29,25 +29,23 @@ const classNameGenerator = tv({
   base: 'smarthr-ui-SmartHRAILogo',
   variants: {
     compact: {
-      true: '',
       false: 'shr-align-bottom',
     },
     fill: {
       black: 'shr-fill-black',
       white: 'shr-fill-white',
       brand: 'shr-fill-brand',
-      color: '',
     } satisfies Record<NonNullable<Props['fill']>, string>,
   },
 })
 
 export const SmartHRAILogo = memo<Props>(
-  ({ alt, width, height, compact = true, fill = 'color', className, ...rest }) => {
+  ({ alt, width, height, compact = true, fill, className, ...rest }) => {
     const id = useId()
     const { name, viewBox, Body } = compact ? COMPACT_LOGO : LOGOTYPE
     // HINT: useIdは別のReact rootと重複しうるため、nameを含めて異なる形状のグラデーションを参照しないようにする
     const idPrefix = `${id}-${name}`
-    const monochrome = fill !== 'color'
+    const monochrome = !!fill
 
     return (
       <svg
