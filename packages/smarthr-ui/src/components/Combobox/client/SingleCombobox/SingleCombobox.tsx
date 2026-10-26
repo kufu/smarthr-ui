@@ -449,8 +449,8 @@ export const SingleCombobox = <T,>({
       }}
       data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
     >
-      {name && selectedItem && (
-        <input type="hidden" name={name} disabled={disabled} value={selectedItem.value} />
+      {name && (
+        <input type="hidden" name={name} disabled={disabled} value={selectedItem?.value ?? ''} />
       )}
 
       <Input

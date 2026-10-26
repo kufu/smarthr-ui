@@ -404,12 +404,12 @@ describe('SingleCombobox', () => {
     expect(formData.get('department')).toBe('value-1')
   })
 
-  it('未選択の場合、hidden inputが存在せずFormDataにnameのキーが含まれないこと', () => {
+  it('未選択の場合、hidden inputの値が空文字でFormDataから取得できること', () => {
     const { container } = render(template({ name: 'department', selectedItem: null }))
 
     const formData = new FormData(container.querySelector('form')!)
 
-    expect(formData.has('department')).toBe(false)
+    expect(formData.get('department')).toBe('')
   })
 
   it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
