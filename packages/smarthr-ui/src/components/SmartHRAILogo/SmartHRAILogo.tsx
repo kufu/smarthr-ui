@@ -12,8 +12,8 @@ type Props = ExtendElementPropsWithoutRef<
     width?: number | string
     /** コンポーネントの高さ */
     height?: number | string
-    /** ロゴの種類 */
-    type?: 'label' | 'logotype'
+    /** シンボルマークと「AI」のみで表示するかどうか */
+    compact?: boolean
     /** ロゴの色 */
     fill?: 'black' | 'white' | 'brand' | 'color'
   },
@@ -28,10 +28,10 @@ type BodyProps = {
 const classNameGenerator = tv({
   base: 'smarthr-ui-SmartHRAILogo',
   variants: {
-    type: {
-      label: '',
-      logotype: 'shr-align-bottom',
-    } satisfies Record<NonNullable<Props['type']>, string>,
+    compact: {
+      true: '',
+      false: 'shr-align-bottom',
+    },
     fill: {
       black: 'shr-fill-black',
       white: 'shr-fill-white',
@@ -42,11 +42,11 @@ const classNameGenerator = tv({
 })
 
 export const SmartHRAILogo = memo<Props>(
-  ({ alt, width, height, type = 'label', fill = 'color', className, ...rest }) => {
+  ({ alt, width, height, compact = true, fill = 'color', className, ...rest }) => {
     const id = useId()
-    // HINT: useIdは別のReact rootと重複しうるため、typeを含めて異なる形状のグラデーションを参照しないようにする
-    const idPrefix = `${id}-${type}`
-    const { viewBox, Body } = TYPES[type]
+    const { name, viewBox, Body } = compact ? COMPACT_LOGO : LOGOTYPE
+    // HINT: useIdは別のReact rootと重複しうるため、nameを含めて異なる形状のグラデーションを参照しないようにする
+    const idPrefix = `${id}-${name}`
     const monochrome = fill !== 'color'
 
     return (
@@ -58,7 +58,7 @@ export const SmartHRAILogo = memo<Props>(
         fill={monochrome ? undefined : 'none'}
         xmlns="http://www.w3.org/2000/svg"
         // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
-        className={classNameGenerator({ className, type, fill })}
+        className={classNameGenerator({ className, compact, fill })}
         style={width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }}
         aria-label={alt || 'SmartHR（スマートHR） AI'}
       >
@@ -68,7 +68,7 @@ export const SmartHRAILogo = memo<Props>(
   },
 )
 
-const LabelBody: FC<BodyProps> = ({ idPrefix, monochrome }) => (
+const CompactBody: FC<BodyProps> = ({ idPrefix, monochrome }) => (
   <>
     <path
       fill={monochrome ? undefined : '#00C4CC'}
@@ -270,9 +270,7 @@ const LogotypeBody: FC<BodyProps> = ({ idPrefix, monochrome }) => (
   </>
 )
 
-const TYPES = {
-  label: { viewBox: '0 0 53 24', Body: LabelBody },
-  logotype: { viewBox: '0 0 1123 160', Body: LogotypeBody },
-} as const satisfies Record<NonNullable<Props['type']>, { viewBox: string; Body: FC<BodyProps> }>
+const COMPACT_LOGO = { name: 'compact', viewBox: '0 0 53 24', Body: CompactBody }
+const LOGOTYPE = { name: 'logotype', viewBox: '0 0 1123 160', Body: LogotypeBody }
 
 const convertValue = (value: number | string) => (typeof value === 'string' ? value : `${value}px`)

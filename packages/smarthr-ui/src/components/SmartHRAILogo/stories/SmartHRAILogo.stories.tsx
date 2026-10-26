@@ -35,12 +35,12 @@ export const Height: StoryObj<typeof SmartHRAILogo> = {
   },
 }
 
-export const Type: StoryObj<typeof SmartHRAILogo> = {
-  name: 'type',
+export const Compact: StoryObj<typeof SmartHRAILogo> = {
+  name: 'compact',
   render: (args) => (
     <Stack inline align="start">
-      {([undefined, 'label', 'logotype'] as const).map((type) => (
-        <SmartHRAILogo {...args} key={type || 'undefined'} type={type} />
+      {([undefined, true, false] as const).map((compact) => (
+        <SmartHRAILogo {...args} key={String(compact)} compact={compact} />
       ))}
     </Stack>
   ),
