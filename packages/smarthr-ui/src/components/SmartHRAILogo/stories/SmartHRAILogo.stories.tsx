@@ -1,3 +1,4 @@
+import { Stack } from '../../Layout'
 import { SmartHRAILogo } from '../SmartHRAILogo'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -32,4 +33,27 @@ export const Height: StoryObj<typeof SmartHRAILogo> = {
   args: {
     height: '2em',
   },
+}
+
+export const Type: StoryObj<typeof SmartHRAILogo> = {
+  name: 'type',
+  render: (args) => (
+    <Stack inline align="start">
+      {([undefined, 'label', 'logotype'] as const).map((type) => (
+        <SmartHRAILogo {...args} key={type || 'undefined'} type={type} />
+      ))}
+    </Stack>
+  ),
+}
+
+export const Fill: StoryObj<typeof SmartHRAILogo> = {
+  name: 'fill',
+  render: (args) => (
+    <Stack inline align="start" className="shr-bg-background">
+      {([undefined, 'black', 'white', 'brand', 'color'] as const).map((fill) => (
+        <SmartHRAILogo {...args} key={fill || 'undefined'} fill={fill} />
+      ))}
+    </Stack>
+  ),
+  globals: { backgrounds: { value: 'background' } },
 }

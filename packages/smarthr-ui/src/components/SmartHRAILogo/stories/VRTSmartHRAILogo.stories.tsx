@@ -1,14 +1,21 @@
 import { Stack } from '../../Layout'
 import { SmartHRAILogo } from '../SmartHRAILogo'
 
+import { Fill } from './SmartHRAILogo.stories'
+
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/SmartHRAILogo/VRT',
-  render: (args) => (
+  render: (args, context) => (
     <Stack inline align="start">
-      <SmartHRAILogo {...args} width="5em" />
-      <SmartHRAILogo {...args} height="2em" />
+      {(['label', 'logotype'] as const).map((type) => (
+        <Stack key={type} inline align="start">
+          <SmartHRAILogo {...args} type={type} width="5em" />
+          <SmartHRAILogo {...args} type={type} height="2em" />
+          {Fill.render && Fill.render({ ...args, type }, context)}
+        </Stack>
+      ))}
     </Stack>
   ),
   parameters: {
