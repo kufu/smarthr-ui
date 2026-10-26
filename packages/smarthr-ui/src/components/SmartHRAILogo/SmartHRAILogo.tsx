@@ -28,6 +28,10 @@ type BodyProps = {
 const classNameGenerator = tv({
   base: 'smarthr-ui-SmartHRAILogo',
   variants: {
+    type: {
+      label: '',
+      logotype: 'shr-align-bottom',
+    } satisfies Record<NonNullable<Props['type']>, string>,
     fill: {
       black: 'shr-fill-black',
       white: 'shr-fill-white',
@@ -54,7 +58,7 @@ export const SmartHRAILogo = memo<Props>(
         fill={monochrome ? undefined : 'none'}
         xmlns="http://www.w3.org/2000/svg"
         // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
-        className={classNameGenerator({ className, fill })}
+        className={classNameGenerator({ className, type, fill })}
         style={width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }}
         aria-label={alt || 'SmartHR（スマートHR） AI'}
       >
