@@ -560,7 +560,7 @@ describe('SingleCombobox', () => {
       expect(formData.get('default')).toBe('value-1')
     })
 
-    it('非制御(uncontrolled)でクリア後、FormDataの値も追従すること', async () => {
+    it('非制御(uncontrolled)でクリア後、FormDataの値が空文字でFormDataから取得できること', async () => {
       const { container } = render(
         <IntlProvider locale="ja">
           <form>
@@ -579,10 +579,10 @@ describe('SingleCombobox', () => {
 
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.get('default')).toBeNull()
+      expect(formData.get('default')).toBe('')
     })
 
-    it('selectedItem が null のとき、FormDataに値が含まれないこと', () => {
+    it('selectedItem が null のとき、hidden inputの値が空文字でFormDataから取得できること', () => {
       const { container } = render(
         <IntlProvider locale="ja">
           <form>
@@ -594,7 +594,7 @@ describe('SingleCombobox', () => {
       )
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.get('default')).toBeNull()
+      expect(formData.get('default')).toBe('')
     })
 
     it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
@@ -716,6 +716,29 @@ describe('SingleCombobox', () => {
       )
 
       expect(combobox()).toHaveProperty('validationMessage', '選択してください')
+    })
+
+    it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form id="external-form" />
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                form="external-form"
+                name="default"
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
+
+      expect(formData.get('default')).toBe('value-1')
+      expect(combobox()).toHaveAttribute('form', 'external-form')
     })
   })
 })

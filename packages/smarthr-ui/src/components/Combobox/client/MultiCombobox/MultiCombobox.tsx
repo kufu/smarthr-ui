@@ -164,6 +164,7 @@ export const MultiCombobox = <T,>({
   noResultText,
   style,
   ref,
+  form,
   ...rest
 }: Props<T>) => {
   const triggerRef = useRef<HTMLDivElement>(null)
@@ -533,6 +534,10 @@ export const MultiCombobox = <T,>({
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}
     >
+      {name && selectedItems.length === 0 && (
+        <input type="hidden" form={form} name={name} disabled={disabled} value="" />
+      )}
+
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
@@ -542,7 +547,13 @@ export const MultiCombobox = <T,>({
           {selectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
               {name && (
-                <input type="hidden" name={name} disabled={disabled} value={selectedItem.value} />
+                <input
+                  type="hidden"
+                  form={form}
+                  name={name}
+                  disabled={disabled}
+                  value={selectedItem.value}
+                />
               )}
               <MultiSelectedItem
                 disabled={disabled}
@@ -560,6 +571,7 @@ export const MultiCombobox = <T,>({
             ref={mergedInputRef}
             role="combobox"
             type="text"
+            form={form}
             name={name ? `${name}-query` : undefined}
             required={required && selectedItems.length === 0}
             disabled={disabled}
