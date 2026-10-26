@@ -316,10 +316,7 @@ const Controller: FC<ControllerProps> = memo(
         className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
         aria-hidden="true"
       />
-      <Cluster
-        gap={0.5}
-        className="shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-items-center shr-justify-center shr-justify-self-center shr-py-0.5"
-      >
+      <Cluster className="shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-items-center shr-justify-center shr-justify-self-center shr-py-0.5">
         <Cluster gap={0}>
           <Button
             disabled={scale <= scaleSteps[0]}
