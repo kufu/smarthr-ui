@@ -539,7 +539,7 @@ describe('SingleCombobox', () => {
       expect(formData.getAll('default')).toEqual(['value-1', 'value-2'])
     })
 
-    it('非制御(uncontrolled)で削除後、FormDataの値も追従すること', async () => {
+    it('非制御(uncontrolled)で削除後、hidden inputの値が空文字でFormDataから取得できること', async () => {
       const { container } = render(
         <IntlProvider locale="ja">
           <form>
@@ -558,10 +558,10 @@ describe('SingleCombobox', () => {
 
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.getAll('default')).toEqual([])
+      expect(formData.getAll('default')).toEqual([''])
     })
 
-    it('selectedItems が空のとき、FormDataに値が含まれないこと', () => {
+    it('selectedItems が空のとき、hidden inputの値が空文字でFormDataから取得できること', () => {
       const { container } = render(
         <IntlProvider locale="ja">
           <form>
@@ -573,7 +573,7 @@ describe('SingleCombobox', () => {
       )
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.getAll('default')).toEqual([])
+      expect(formData.getAll('default')).toEqual([''])
     })
 
     it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
@@ -695,6 +695,29 @@ describe('SingleCombobox', () => {
       )
 
       expect(combobox()).toHaveProperty('validationMessage', '1つ以上選択してください')
+    })
+
+    it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form id="external-form" />
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                form="external-form"
+                name="default"
+                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
+
+      expect(formData.getAll('default')).toEqual(['value-1'])
+      expect(combobox()).toHaveAttribute('form', 'external-form')
     })
   })
 })

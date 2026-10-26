@@ -183,6 +183,7 @@ export const SingleCombobox = <T,>({
   noResultText,
   style,
   ref,
+  form,
   ...rest
 }: Props<T>) => {
   const theme = useTheme()
@@ -449,8 +450,14 @@ export const SingleCombobox = <T,>({
       }}
       data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
     >
-      {name && selectedItem && (
-        <input type="hidden" name={name} disabled={disabled} value={selectedItem.value} />
+      {name && (
+        <input
+          type="hidden"
+          form={form}
+          name={name}
+          disabled={disabled}
+          value={selectedItem?.value ?? ''}
+        />
       )}
 
       <Input
@@ -458,6 +465,7 @@ export const SingleCombobox = <T,>({
         ref={mergedRef}
         role="combobox"
         type="text"
+        form={form}
         name={name ? `${name}-query` : undefined}
         required={required}
         disabled={disabled}
