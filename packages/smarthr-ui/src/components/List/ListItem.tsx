@@ -260,7 +260,7 @@ export const ListItem: ListItem = <
                     {heading}
                   </Text>
                 </Heading>
-                <Text as="p" leading="TIGHT" size="S" color="TEXT_GREY">
+                <Text as="p" size="S" leading="TIGHT" color="TEXT_GREY">
                   {children}
                 </Text>
               </Stack>
@@ -294,8 +294,8 @@ export const ListItemAnchor: ListItemAnchor = <
     <ListItem
       {...rest}
       slot={{ renderer: slotRenderer, props: slotProps }}
-      padding={padding ?? { inline: { end: 0.5 } }}
       action={<FaChevronRightIcon color="TEXT_LINK" />}
+      padding={padding ?? { inline: { end: 0.5 } }}
     />
   )
 }

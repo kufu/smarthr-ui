@@ -5,7 +5,7 @@ import {
   createContext,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 type ListDivider = 'full' | 'content' | false
 
@@ -14,9 +14,7 @@ type AbstractProps = {
 }
 
 type Props = PropsWithChildren<
-  AbstractProps &
-    VariantProps<typeof classNameGenerator> &
-    Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
+  AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
 >
 
 export const ListDividerContext = createContext<ListDivider>('full')

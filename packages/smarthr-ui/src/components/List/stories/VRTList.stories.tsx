@@ -12,7 +12,6 @@ const Template = ({ id }: { id?: string }) => (
     {(['full', 'content', false] as const).map((divider) => (
       <List key={String(divider)}>
         <ListItem
-          heading="タイトル"
           status={<StatusLabel>完了</StatusLabel>}
           action={
             <Button>
@@ -20,24 +19,25 @@ const Template = ({ id }: { id?: string }) => (
             </Button>
           }
           divider={divider}
+          heading="タイトル"
         >
           説明テキスト
         </ListItem>
-        <ListItem heading="タイトル" status={<StatusLabel>完了</StatusLabel>} divider={divider}>
+        <ListItem status={<StatusLabel>完了</StatusLabel>} divider={divider} heading="タイトル">
           説明テキスト
         </ListItem>
-        <ListItem heading="タイトル" divider={divider}>
+        <ListItem divider={divider} heading="タイトル">
           説明テキスト
         </ListItem>
         <ListItemAnchor
-          heading="タイトル"
-          status={<StatusLabel>完了</StatusLabel>}
           href="#item"
+          status={<StatusLabel>完了</StatusLabel>}
           divider={divider}
+          heading="タイトル"
         >
           説明テキスト
         </ListItemAnchor>
-        <ListItemAnchor heading="タイトル" href="#item" divider={divider}>
+        <ListItemAnchor href="#item" divider={divider} heading="タイトル">
           説明テキスト
         </ListItemAnchor>
       </List>

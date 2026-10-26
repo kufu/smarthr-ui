@@ -16,20 +16,20 @@ export default {
     children: (
       <>
         <ListItem
-          heading="タイトル"
           status={<StatusLabel>完了</StatusLabel>}
           action={
             <Button>
               <FaPencilIcon alt="編集" />
             </Button>
           }
+          heading="タイトル"
         >
           説明テキスト
         </ListItem>
-        <ListItem heading="タイトル" status={<StatusLabel>完了</StatusLabel>}>
+        <ListItem status={<StatusLabel>完了</StatusLabel>} heading="タイトル">
           説明テキスト
         </ListItem>
-        <ListItemAnchor heading="タイトル" status={<StatusLabel>完了</StatusLabel>} href="#1">
+        <ListItemAnchor href="#1" status={<StatusLabel>完了</StatusLabel>} heading="タイトル">
           説明テキスト
         </ListItemAnchor>
       </>
