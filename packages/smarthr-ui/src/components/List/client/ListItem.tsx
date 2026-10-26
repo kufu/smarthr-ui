@@ -19,7 +19,7 @@ import { Text } from '../../Text'
 
 import { ListDividerContext } from './List'
 
-type ListItemPadding = 0 | 0.025 | 0.5 | 1 | 1.5
+type ListItemPadding = 0 | 0.25 | 0.5 | 1 | 1.5
 
 type ListItemPaddingModifier =
   | ListItemPadding
@@ -119,7 +119,7 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
         'smarthr-ui-ListItem',
         'shr-flex shr-list-none shr-flex-col shr-bg-white',
         divider !== false &&
-          'after:w-full after:shr-border-b-shorthand after:shr-flex after:shr-flex-col after:shr-content-[""]',
+          'after:shr-border-b-shorthand after:shr-flex after:shr-w-full after:shr-flex-col after:shr-content-[""]',
       ],
       slot: 'shr-no-underline focus-visible:shr-focus-indicator [&[href]:hover]:shr-bg-white-darken',
       content: 'shr-flex shr-flex-col [:focus-visible>&]:shr-focus-indicator',
@@ -129,8 +129,8 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
         0: {
           content: 'shr-pt-0',
         },
-        0.025: {
-          content: 'shr-pt-0.025',
+        0.25: {
+          content: 'shr-pt-0.25',
         },
         0.5: {
           content: 'shr-pt-0.5',
@@ -146,8 +146,8 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
         0: {
           content: 'shr-pb-0',
         },
-        0.025: {
-          content: 'shr-pb-0.025',
+        0.25: {
+          content: 'shr-pb-0.25',
         },
         0.5: {
           content: 'shr-pb-0.5',
@@ -164,9 +164,9 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
           li: divider === 'content' && 'after:shr-ms-0',
           content: 'shr-ps-0',
         },
-        0.025: {
-          li: divider === 'content' && 'after:shr-ms-0.025',
-          content: 'shr-ps-0.025',
+        0.25: {
+          li: divider === 'content' && 'after:shr-ms-0.25',
+          content: 'shr-ps-0.25',
         },
         0.5: {
           li: divider === 'content' && 'after:shr-ms-0.5',
@@ -186,9 +186,9 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
           li: divider === 'content' && 'after:shr-me-0',
           content: 'shr-pe-0',
         },
-        0.025: {
-          li: divider === 'content' && 'after:shr-me-0.025',
-          content: 'shr-pe-0.025',
+        0.25: {
+          li: divider === 'content' && 'after:shr-me-0.25',
+          content: 'shr-pe-0.25',
         },
         0.5: {
           li: divider === 'content' && 'after:shr-me-0.5',
