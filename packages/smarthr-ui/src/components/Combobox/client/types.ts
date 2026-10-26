@@ -49,7 +49,9 @@ export type BaseProps<T> = {
    */
   items: Array<ComboboxItem<T>>
   /**
-   * input 要素の `name` 属性の値
+   * input 要素の `name` 属性の値。
+   * `MultiCombobox` では、選択済みアイテムの値を保持する hidden input 群の `name` が `${name}[]` になり、
+   * 検索用テキストボックスの `name` には `query_${name}` が設定される
    */
   name?: string
   /**

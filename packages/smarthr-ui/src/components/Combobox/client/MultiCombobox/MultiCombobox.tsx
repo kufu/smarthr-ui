@@ -550,7 +550,7 @@ export const MultiCombobox = <T,>({
       onKeyPress={functions.handleDelegateKeyPress}
     >
       {name && selectedItems.length === 0 && (
-        <input type="hidden" form={form} name={name} disabled={disabled} value="" />
+        <input type="hidden" form={form} name={`${name}[]`} disabled={disabled} value="" />
       )}
 
       <Scroller className={classNames.inputArea}>
@@ -565,7 +565,7 @@ export const MultiCombobox = <T,>({
                 <input
                   type="hidden"
                   form={form}
-                  name={name}
+                  name={`${name}[]`}
                   disabled={disabled}
                   value={selectedItem.value}
                 />
