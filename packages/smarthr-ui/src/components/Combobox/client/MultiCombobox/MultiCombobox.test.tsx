@@ -402,6 +402,46 @@ describe('SingleCombobox', () => {
     expect(hiddenInput).toBeDisabled()
   })
 
+  it('requiredかつ未選択の場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+    render(
+      <IntlProvider locale="ja">
+        <form>
+          <FormControl label="コンボボックス">
+            <MultiCombobox
+              name="default"
+              required
+              selectedItems={[]}
+              items={[{ label: 'option 1', value: 'value-1' }]}
+            />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    await userEvent.type(combobox(), 'option')
+
+    expect(combobox()).toHaveProperty('validity.valid', false)
+  })
+
+  it('requiredでも選択項目があれば検索用テキストボックスの妥当性を満たすこと', () => {
+    render(
+      <IntlProvider locale="ja">
+        <form>
+          <FormControl label="コンボボックス">
+            <MultiCombobox
+              name="default"
+              required
+              selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              items={[{ label: 'option 1', value: 'value-1' }]}
+            />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    expect(combobox()).toHaveProperty('validity.valid', true)
+  })
+
   it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {
     const { container } = render(
       <IntlProvider locale="ja">
