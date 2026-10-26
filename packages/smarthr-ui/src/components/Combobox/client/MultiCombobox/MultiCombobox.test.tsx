@@ -1,11 +1,13 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 
 import { IntlProvider } from '../../../../intl'
 import { FormControl } from '../../../FormGroup'
 
 import { MultiCombobox } from './MultiCombobox'
 
+import type { ComboboxItem } from '../types'
 import type { ComponentPropsWithRef } from 'react'
 
 describe('SingleCombobox', () => {
@@ -508,6 +510,119 @@ describe('SingleCombobox', () => {
 
       expect(onChangeSelected).toHaveBeenCalledWith([{ label: 'option 1', value: 'value-1' }])
       expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
+    })
+
+    it('非制御で選択を変更後、form.reset()を呼ぶとdefaultSelectedItemsに戻ること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      await userEvent.keyboard('{escape}')
+      expect(screen.getByText('option 1')).toBeInTheDocument()
+      expect(screen.getByText('option 2')).toBeInTheDocument()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(screen.getByText('option 1')).toBeInTheDocument()
+      expect(screen.queryByText('option 2')).not.toBeInTheDocument()
+    })
+
+    it('非制御でdefaultSelectedItemsを指定しない場合、form.reset()を呼ぶと未選択に戻ること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+      await userEvent.keyboard('{escape}')
+      expect(screen.getByText('option 1')).toBeInTheDocument()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(screen.queryByText('option 1')).not.toBeInTheDocument()
+    })
+
+    it('form.reset()を呼んでも、onChangeSelectedは呼ばれないこと', async () => {
+      const onChangeSelected = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                onChangeSelected={onChangeSelected}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      onChangeSelected.mockClear()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(onChangeSelected).not.toHaveBeenCalled()
+    })
+
+    it('制御時(selectedItems指定)は、form.reset()を呼んでも表示が変わらないこと', async () => {
+      const ControlledComboboxWrapper = () => {
+        const [selectedItems, setSelectedItems] = useState<Array<ComboboxItem<string>>>([
+          { label: 'option 2', value: 'value-2' },
+        ])
+
+        return (
+          <IntlProvider locale="ja">
+            <form>
+              <FormControl label="コンボボックス">
+                <MultiCombobox
+                  name="default"
+                  selectedItems={selectedItems}
+                  onChangeSelected={setSelectedItems}
+                  items={items}
+                />
+              </FormControl>
+            </form>
+          </IntlProvider>
+        )
+      }
+
+      const { container } = render(<ControlledComboboxWrapper />)
+
+      expect(screen.getByText('option 2')).toBeInTheDocument()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(screen.getByText('option 2')).toBeInTheDocument()
     })
   })
 

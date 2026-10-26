@@ -314,7 +314,9 @@ export const MultiCombobox = <T,>({
     isComposing,
     isInputEmpty,
     selectedItems: actualSelectedItems,
+    defaultSelectedItems,
     setInputValueIfUncontrolled,
+    setSelectedItemsIfUncontrolled,
     handleKeyDownListBox,
     cleanupAddFrame,
     focusFrame,
@@ -322,6 +324,13 @@ export const MultiCombobox = <T,>({
 
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
+    let associatedForm: HTMLFormElement | null = null
+
+    // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+    // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する
+    const handleReset = () => {
+      latest.setSelectedItemsIfUncontrolled(latest.defaultSelectedItems ?? [])
+    }
 
     const handleDelete = listBoxFunctions.handleDelete
 
@@ -395,10 +404,18 @@ export const MultiCombobox = <T,>({
       blur,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         input = node
+
+        if (node) {
+          associatedForm = node.form
+          associatedForm?.addEventListener('reset', handleReset)
+        }
+
         if (!node) {
           listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
+          associatedForm?.removeEventListener('reset', handleReset)
+          associatedForm = null
         }
       },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLElement>) => {
