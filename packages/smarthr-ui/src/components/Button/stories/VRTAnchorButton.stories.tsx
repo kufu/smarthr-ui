@@ -1,12 +1,12 @@
-import { BaseColumn } from '../../Base'
 import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { AnchorButton } from '../AnchorButton'
 
-import type { StoryFn, StoryObj } from '@storybook/react-webpack5'
-import type { ComponentProps } from 'react'
+import type { StoryFn, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
 
-type Variant = ComponentProps<typeof AnchorButton>['variant']
+type Variant = ComponentPropsWithoutRef<typeof AnchorButton>['variant']
 
 /**
  * $ pict anchor-button.txt
@@ -20,7 +20,7 @@ type Variant = ComponentProps<typeof AnchorButton>['variant']
  * s       true     あり           あり   なし   false
  * default true     なし           あり   なし   true
  */
-const _cases: Array<ComponentProps<typeof AnchorButton>> = [
+const _cases: Array<ComponentPropsWithoutRef<typeof AnchorButton>> = [
   {
     size: 'S',
     href: undefined,
@@ -84,21 +84,29 @@ const _cases: Array<ComponentProps<typeof AnchorButton>> = [
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: true,
+  },
+  {
+    size: 'M',
+    href: undefined,
+    inactiveReason: undefined,
+    prefix: <FaCirclePlusIcon color="MAIN" />,
+    suffix: undefined,
+    wide: false,
   },
 ]
 
 const Template: StoryFn<typeof AnchorButton> = (args) => (
   <Stack>
     {[undefined, 'hover', 'focus-visible'].map((id) => (
-      <Stack id={id} key={id}>
+      <Stack key={id} id={id}>
         {(['secondary', 'primary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
-          <BaseColumn bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'} key={variant}>
+          <Groupbox key={variant} bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'}>
             <Cluster align="center">
               {_cases.map((props, index) => (
-                <AnchorButton {...args} {...props} variant={variant} key={index} />
+                <AnchorButton {...args} {...props} key={index} variant={variant} />
               ))}
             </Cluster>
-          </BaseColumn>
+          </Groupbox>
         ))}
       </Stack>
     ))}

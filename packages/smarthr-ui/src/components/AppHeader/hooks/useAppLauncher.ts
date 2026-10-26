@@ -1,5 +1,7 @@
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+
 import type { Launcher } from '../types'
 
 export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
@@ -50,12 +52,24 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     (e: ChangeEvent<HTMLInputElement>) => changeSearchQuery(e.currentTarget.value),
     [changeSearchQuery],
   )
+
+  const clearSearchQueryFrame = useAnimationFrame()
+
   const onClickClearSearchQuery = useCallback(() => {
     // HINT: 別のスレッドにしないとドロップダウンが閉じてしまう
-    requestAnimationFrame(() => {
+    clearSearchQueryFrame.request(() => {
       changeSearchQuery('')
     })
-  }, [changeSearchQuery])
+  }, [changeSearchQuery, clearSearchQueryFrame])
+
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        clearSearchQueryFrame.cancel()
+      }
+    },
+    [clearSearchQueryFrame],
+  )
 
   return {
     features,
@@ -67,6 +81,7 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   }
 }
 
@@ -119,7 +134,7 @@ const sortFeatures = (
   return featuresRes
 }
 
-export const looseInclude = (looseSearchQuery: string, featureName: string) =>
+const looseInclude = (looseSearchQuery: string, featureName: string) =>
   // HINT: normalizeは1文字ずつ変換処理を行う関係で思いため、変換せずにマッチするかどうかを確認する
   featureName.includes(looseSearchQuery) || normalize(featureName).includes(looseSearchQuery)
 

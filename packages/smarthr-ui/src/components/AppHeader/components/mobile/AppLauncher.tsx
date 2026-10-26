@@ -1,7 +1,7 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
+import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCircleXmarkIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
@@ -12,7 +12,6 @@ import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
 
@@ -20,6 +19,8 @@ import type { Launcher } from '../../types'
 
 type Props = {
   features: Array<Launcher['feature']>
+  loading?: boolean
+  error?: boolean
 }
 
 const classNameGenerator = tv({
@@ -36,7 +37,20 @@ const classNameGenerator = tv({
   },
 })
 
-export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
+const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    searchArea: searchArea(),
+    headArea: headArea(),
+    scrollArea: scrollArea(),
+    bottomArea: bottomArea(),
+  }
+})()
+
+export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error }) => {
   const {
     features,
     page,
@@ -47,70 +61,51 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures }) => {
     setSortType,
     onChangeSearchQuery,
     onClickClearSearchQuery,
+    callbackRef,
   } = useAppLauncher(baseFeatures)
 
-  const classNames = useMemo(() => {
-    const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
-
-    return {
-      wrapper: wrapper(),
-      searchArea: searchArea(),
-      headArea: headArea(),
-      scrollArea: scrollArea(),
-      bottomArea: bottomArea(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      searchInputTitle: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
-        defaultText: 'アプリ名を入力してください。',
-      }),
-      searchResultText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
-        defaultText: '検索結果',
-      }),
-      helpText: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/helpText',
-        defaultText: 'よく使うアプリとは',
-      }),
-    }),
-    [localize],
-  )
+  const { searchInputTitle } = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+  })
 
   return (
-    <div className={classNames.wrapper}>
-      <div className={classNames.searchArea}>
+    <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
+      <div className={CLASS_NAMES.searchArea}>
         <SearchInput
           name="search"
-          title={translated.searchInputTitle}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
-          width="100%"
           value={searchQuery}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          title={searchInputTitle}
+          width="100%"
           onChange={onChangeSearchQuery}
+          tooltipMessage={searchInputTitle}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
 
-      <Cluster className={classNames.headArea} justify="space-between" align="center">
+      <Cluster justify="space-between" align="center" className={CLASS_NAMES.headArea}>
         {mode === 'search' ? (
-          <SearchResultText>{translated.searchResultText}</SearchResultText>
+          <SearchResultText>
+            <Localizer id="smarthr-ui/AppHeader/Launcher/searchResultText" defaultText="検索結果" />
+          </SearchResultText>
         ) : (
-          <AppLauncherFilterDropdown page={page} onSelectPage={changePage} />
+          <AppLauncherFilterDropdown page={page} handleSelectPage={changePage} />
         )}
 
         {(mode === 'search' || page === 'all') && (
-          <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
+          <AppLauncherSortDropdown sortType={sortType} handleSelectSortType={setSortType} />
         )}
       </Cluster>
 
-      <Scroller className={classNames.scrollArea} styleType="scroll">
-        <AppLauncherFeatures features={features} page={page} />
+      <Scroller styleType="scroll" className={CLASS_NAMES.scrollArea}>
+        <AppLauncherFeatures features={features} page={page} loading={loading} error={error} />
       </Scroller>
 
-      <BottomArea className={classNames.bottomArea}>{translated.helpText}</BottomArea>
+      <BottomArea className={CLASS_NAMES.bottomArea}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+      </BottomArea>
     </div>
   )
 }
@@ -123,7 +118,7 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SearchResultText = memo<PropsWithChildren>(({ children }) => (
   <Text size="S" weight="bold">
-    <Translate>{children}</Translate>
+    {children}
   </Text>
 ))
 
@@ -134,7 +129,7 @@ const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, c
         href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
         target="_blank"
       >
-        <Translate>{children}</Translate>
+        {children}
       </HelpLink>
     </Text>
   </div>

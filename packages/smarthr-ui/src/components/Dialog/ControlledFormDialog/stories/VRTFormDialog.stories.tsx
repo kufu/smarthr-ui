@@ -1,9 +1,9 @@
 import { Button } from '../../../Button'
-import { FormControl } from '../../../FormControl'
+import { FormControl } from '../../../FormGroup'
 import { Input } from '../../../Input'
 import { ControlledFormDialog } from '../ControlledFormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/ControlledFormDialog/VRT',

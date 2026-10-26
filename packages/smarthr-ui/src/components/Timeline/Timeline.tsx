@@ -1,14 +1,17 @@
-import { type ComponentProps, type ReactElement, useMemo } from 'react'
+import { type ComponentPropsWithRef, type ReactElement, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import type { TimelineItem } from './TimelineItem'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type TimelineItem = ReactElement<ComponentProps<typeof TimelineItem>>
+type TimelineItem = ReactElement<ComponentPropsWithRef<typeof TimelineItem>>
 
-type AbstractProps = {
-  children: TimelineItem | TimelineItem[]
-}
-type Props = AbstractProps & Omit<ComponentProps<'ol'>, keyof AbstractProps>
+type Props = ExtendElementPropsWithRef<
+  'ol',
+  {
+    children: TimelineItem | TimelineItem[]
+  }
+>
 
 const classNameGenerator = tv({
   base: 'shr-list-none',
@@ -16,6 +19,7 @@ const classNameGenerator = tv({
 
 export const Timeline: React.FC<Props> = ({ className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
+
   return (
     <ol {...rest} className={actualClassName}>
       {children}

@@ -1,5 +1,7 @@
-import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
+
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
@@ -39,7 +41,7 @@ const classNameGenerator = tv({
       ],
       right: '',
       left: '',
-    },
+    } satisfies Record<NonNullable<Props['horizontal']>, string | string[]>,
     vertical: {
       top: [
         'before:-shr-top-[5px]',
@@ -67,7 +69,7 @@ const classNameGenerator = tv({
         'after:shr-top-1/2',
         'after:-shr-translate-y-[5px]',
       ],
-    },
+    } satisfies Record<NonNullable<Props['vertical']>, string | string[]>,
     triggerIcon: {
       true: '',
     },
@@ -126,13 +128,16 @@ const classNameGenerator = tv({
   ],
 })
 
-type AbstractProps = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & {
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
     /** レンダリングするタグ */
     as?: 'div' | 'span'
+    horizontal?: 'center' | 'right' | 'left'
+    vertical?: 'top' | 'bottom' | 'middle'
+    triggerIcon?: boolean
   }
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
 
 export const ControlledTooltip = memo<Props>(
   ({ horizontal, vertical, triggerIcon, className, as: Component = 'div', ...rest }) => {

@@ -1,5 +1,3 @@
-'use client'
-
 import { type FC, memo } from 'react'
 
 import { Localizer } from '../../../intl'

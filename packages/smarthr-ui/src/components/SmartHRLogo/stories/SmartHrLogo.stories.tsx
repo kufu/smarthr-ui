@@ -1,18 +1,15 @@
-import { backgroundColor } from '../../../tailwind'
 import { Stack } from '../../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/SmartHRLogo',
   component: SmartHRLogo,
   render: (args) => <SmartHRLogo {...args} />,
   args: {},
+  globals: { backgrounds: { value: 'brand' } },
   parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.brand }],
-    },
     chromatic: { disableSnapshot: true },
   },
 } satisfies Meta<typeof SmartHRLogo>
@@ -43,15 +40,11 @@ export const Height: StoryObj<typeof SmartHRLogo> = {
 export const Fill: StoryObj<typeof SmartHRLogo> = {
   name: 'fill',
   render: (args) => (
-    <Stack className="shr-bg-background" inline>
+    <Stack inline className="shr-bg-background">
       {[undefined, 'white', 'brand', 'black'].map((fill) => (
         <SmartHRLogo {...args} key={fill || 'undefined'} fill={fill as any} />
       ))}
     </Stack>
   ),
-  parameters: {
-    backgrounds: {
-      values: [{ name: 'light', value: backgroundColor.background }],
-    },
-  },
+  globals: { backgrounds: { value: 'background' } },
 }

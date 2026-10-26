@@ -1,14 +1,14 @@
-import { type ComponentProps, useRef, useState } from 'react'
+import { type ComponentPropsWithRef, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
-import { FormControl } from '../../../FormControl'
+import { FormControl } from '../../../FormGroup'
 import { Input } from '../../../Input'
 import { Cluster } from '../../../Layout'
 import { RadioButton } from '../../../RadioButton'
 import { ControlledFormDialog } from '../ControlledFormDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
   string: '30em',
@@ -36,9 +36,9 @@ export default {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ControlledFormDialog
           {...rest}
+          isOpen={open}
           onClickClose={handleClose}
           onSubmit={handleSubmit}
-          isOpen={open}
         >
           <FormControl label="名前">
             <Input name="name" />
@@ -139,7 +139,7 @@ export const ResponseStatus: StoryObj<typeof ControlledFormDialog> = {
   render: (args) => {
     const [open, setOpen] = useState(false)
     const [responseStatus, setResponseStatus] =
-      useState<ComponentProps<typeof ControlledFormDialog>['responseStatus']>()
+      useState<ComponentPropsWithRef<typeof ControlledFormDialog>['responseStatus']>()
 
     return (
       <>
@@ -225,16 +225,16 @@ export const SubActionArea: StoryObj<typeof ControlledFormDialog> = {
 export const PortalParent: StoryObj<typeof ControlledFormDialog> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledFormDialog
           {...args}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           isOpen={open}
           onClickClose={() => setOpen(false)}
           onSubmit={(e, { close }) => {

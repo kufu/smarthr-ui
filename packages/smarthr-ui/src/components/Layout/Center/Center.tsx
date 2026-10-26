@@ -1,30 +1,24 @@
-'use client'
-
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../../types'
 
-type AbstractProps = PropsWithChildren<{
-  /** コンテンツの最小高さ */
-  minHeight?: number | string
-  /** コンテンツの最大幅 */
-  maxWidth?: number | string
-  /** 境界とコンテンツの間の余白 */
-  padding?: Gap
-  /** 天地中央揃えも有効化するかどうか */
-  verticalCentering?: boolean
-  as?: string | ComponentType<any>
-}>
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    /** コンテンツの最小高さ */
+    minHeight?: number | string
+    /** コンテンツの最大幅 */
+    maxWidth?: number | string
+    /** 境界とコンテンツの間の余白 */
+    padding?: Gap
+    /** 天地中央揃えも有効化するかどうか */
+    verticalCentering?: boolean
+  },
+  { as: true }
+>
 
 export const centerClassNameGenerator = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',
@@ -59,30 +53,40 @@ export const centerClassNameGenerator = tv({
   },
 })
 
-export const Center = forwardRef<HTMLDivElement, Props>(
-  (
-    { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...rest },
-    ref,
-  ) => {
-    const style = useMemo(
-      () => ({
-        minHeight: minHeight ?? undefined,
-        maxWidth: maxWidth ?? undefined,
-      }),
-      [minHeight, maxWidth],
-    )
-    const actualClassName = useMemo(
-      () => centerClassNameGenerator({ padding, verticalCentering, className }),
-      [padding, verticalCentering, className],
-    )
+export const Center: FC<Props> = ({
+  minHeight,
+  maxWidth,
+  padding,
+  verticalCentering,
+  as: Component = 'div',
+  className,
+  style,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => centerClassNameGenerator({ padding, verticalCentering, className }),
+    [padding, verticalCentering, className],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} style={style} />
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component
+      {...rest}
+      className={actualClassName}
+      style={{
+        ...style,
+        minHeight: minHeight ?? style?.minHeight,
+        maxWidth: maxWidth ?? style?.maxWidth,
+      }}
+    >
+      {children}
+    </Component>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

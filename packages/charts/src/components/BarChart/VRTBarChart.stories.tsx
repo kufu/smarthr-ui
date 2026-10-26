@@ -61,7 +61,27 @@ export default {
         <BarChart data={manyPoints} title="多データポイント" />
       </div>
 
-      {/* パターン9: chartjs-plugin-annotation options */}
+      {/* パターン9: 複数データセット(3個)、タイトルあり、ラベルなし、大サイズ(600px)、多データ(12個)、横並び */}
+      <div className="shr-h-[600px]">
+        <BarChart data={manyPoints} disablePatterns orientation="horizontal" title="横並び" />
+      </div>
+
+      {/* パターン10: 複数データセット(3個)、タイトルあり、ラベルなし、標準サイズ、多データ(12個)、スタック */}
+      <div className="shr-h-[400px]">
+        <BarChart data={manyPoints} disablePatterns stacked title="スタック" />
+      </div>
+      {/* パターン11: 複数データセット(3個)、タイトルあり、ラベルなし、標準サイズ、多データ(12個)、スタック + 横並び */}
+      <div className="shr-h-[400px]">
+        <BarChart
+          data={manyPoints}
+          disablePatterns
+          orientation="horizontal"
+          stacked
+          title="スタック + 横並び"
+        />
+      </div>
+
+      {/* パターン12: chartjs-plugin-annotation options */}
       <div className="shr-h-[400px]">
         <BarChart
           data={singleSmall}

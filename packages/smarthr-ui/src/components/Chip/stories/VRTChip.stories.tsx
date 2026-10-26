@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { Chip } from '../Chip'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Chip/VRT',
@@ -9,7 +9,7 @@ export default {
     <Stack align="flex-start">
       {[undefined, true].map((disabled) =>
         ['grey', 'blue', 'green', 'orange', 'red'].map((color) => (
-          <Chip {...args} disabled={disabled} key={`${disabled}${color}`} color={color as any} />
+          <Chip {...args} key={`${disabled}${color}`} disabled={disabled} color={color as any} />
         )),
       )}
     </Stack>

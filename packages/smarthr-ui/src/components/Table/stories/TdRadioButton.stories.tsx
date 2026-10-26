@@ -2,7 +2,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdRadioButton } from '../TdRadioButton'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof TdRadioButton> = (args) => (
   <Table>
@@ -38,7 +38,7 @@ export const AriaLabelledBy: StoryObj<typeof TdRadioButton> = {
       <Table>
         <tbody>
           <tr>
-            <TdRadioButton {...args} aria-labelledby={ariaLabelledby} vAlign="baseline" />
+            <TdRadioButton {...args} vAlign="baseline" aria-labelledby={ariaLabelledby} />
             <Td id={ariaLabelledby}>ラベル名</Td>
           </tr>
         </tbody>

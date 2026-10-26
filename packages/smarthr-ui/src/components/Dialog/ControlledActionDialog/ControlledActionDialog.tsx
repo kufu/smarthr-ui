@@ -1,35 +1,50 @@
-'use client'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
-import { type ComponentProps, type FC, type ReactNode, useCallback } from 'react'
-
+import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { DialogContent } from '../DialogContent'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  ActionDialogContentInner,
-  type ActionDialogContentInnerProps,
-  type ActionDialogHelpers,
-} from './ActionDialogContentInner'
+import { ActionDialogContent } from './ActionDialogContent'
 
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
 
-type ObjectHeadingType = Omit<ActionDialogContentInnerProps['heading'], 'id'>
-type HeadingType = ReactNode | ObjectHeadingType
-type ObjectActionButtonType = ActionDialogContentInnerProps['actionButton']
-type ObjectCloseButtonType = ActionDialogContentInnerProps['closeButton']
+type ActionDialogContentProps = ComponentPropsWithRef<typeof ActionDialogContent>
 
-type AbstractProps = Omit<
-  ActionDialogContentInnerProps,
-  'heading' | 'actionButton' | 'closeButton'
-> &
-  DialogProps & {
-    heading: HeadingType
-    actionButton: ReactNode | ObjectActionButtonType
-    closeButton?: ReactNode | ObjectCloseButtonType
-  }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
+type ObjectHeadingType = Omit<ActionDialogContentProps['heading'], 'id'>
+type HeadingType = ReactNode | ObjectHeadingType
+type ObjectActionButtonType = ActionDialogContentProps['actionButton']
+type ObjectCloseButtonType = ActionDialogContentProps['closeButton']
+
+type Props = ExtendElementPropsWithRef<
+  typeof DialogContent,
+  ExtendProps<
+    ActionDialogContentProps,
+    DialogProps & {
+      heading: HeadingType
+      actionButton: ReactNode | ObjectActionButtonType
+      closeButton?: ReactNode | ObjectCloseButtonType
+      /**
+       * アクションボタンをクリックした時に発火するコールバック関数
+       */
+      onClickAction: ActionDialogContentProps['handleClickAction']
+      /**
+       * 閉じるボタンをクリックした時に発火するコールバック関数
+       */
+      onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    },
+    { omit: 'handleClickAction' | 'handleClickClose' }
+  >,
+  { omit: 'focusTrapRef' }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({
   text,
@@ -54,7 +69,6 @@ export const ControlledActionDialog: FC<Props> = ({
   isOpen,
   ...rest
 }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
     headingObjectConverter,
@@ -68,42 +82,48 @@ export const ControlledActionDialog: FC<Props> = ({
     buttonObjectConverter,
   )
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
-  const actualOnClickAction = useCallback(
-    (e: React.MouseEvent<Element>, helpers: ActionDialogHelpers) => {
-      if (isOpen) {
-        onClickAction(e, helpers)
+  const functions = useMemo(() => {
+    const handleClickAction: ActionDialogContentProps['handleClickAction'] = (e, helpers) => {
+      if (latest.isOpen) {
+        latest.onClickAction(e, helpers)
       }
-    },
-    [isOpen, onClickAction],
-  )
+    }
 
-  return createPortal(
-    <DialogContentInner
-      {...rest}
-      isOpen={isOpen}
-      ariaLabelledby={heading.id}
-      className={className}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
-    >
-      <ActionDialogContentInner
-        heading={heading}
-        contentBgColor={contentBgColor}
-        contentPadding={contentPadding}
-        actionButton={actionButton}
-        closeButton={closeButton}
-        onClickClose={actualOnClickClose}
-        onClickAction={actualOnClickAction}
-        subActionArea={subActionArea}
-        responseStatus={responseStatus}
+    return {
+      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
+        if (latest.isOpen) {
+          latest.onClickClose(e)
+        }
+      },
+      handleClickAction,
+    }
+  }, [latest])
+
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DialogContent
+        {...rest}
+        isOpen={isOpen}
+        className={className}
+        ariaLabelledby={heading.id}
+        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       >
-        {children}
-      </ActionDialogContentInner>
-    </DialogContentInner>,
+        <ActionDialogContent
+          contentBgColor={contentBgColor}
+          contentPadding={contentPadding}
+          responseStatus={responseStatus}
+          handleClickClose={functions.handleClickClose}
+          handleClickAction={functions.handleClickAction}
+          heading={heading}
+          actionButton={actionButton}
+          closeButton={closeButton}
+          subActionArea={subActionArea}
+        >
+          {children}
+        </ActionDialogContent>
+      </DialogContent>
+    </DialogPortal>
   )
 }

@@ -1,19 +1,25 @@
-import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
+
+import { LiveRegion } from '../LiveRegion'
 
 import { LoaderSpinner } from './LoaderSpinner'
 
-type AbstractProps = {
-  /** ローダーの大きさ */
-  size?: 'S' | 'M'
-  /** 代替テキスト */
-  alt?: ReactNode
-  /** 表示するメッセージ */
-  text?: ReactNode
-  /** コンポーネントの色調 */
-  type?: 'primary' | 'light'
-}
-type Props = AbstractProps & Omit<ComponentProps<'span'>, keyof AbstractProps>
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'span',
+  {
+    /** ローダーの大きさ */
+    size?: 'S' | 'M'
+    /** 代替テキスト */
+    alt?: ReactNode
+    /** 表示するメッセージ */
+    text?: ReactNode
+    /** コンポーネントの色調 */
+    type?: 'primary' | 'light'
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -33,8 +39,9 @@ const classNameGenerator = tv({
 })
 
 export const Loader = memo<Props>(
-  ({ size = 'M', alt, text, type = 'primary', role = 'status', className, ...rest }) => {
-    const classNames = useMemo(() => {
+  ({ size = 'M', alt, text, type = 'primary', className, ...rest }) => {
+    const classNames = (() => {
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
       const { wrapper, textSlot } = classNameGenerator({
         type,
       })
@@ -43,13 +50,13 @@ export const Loader = memo<Props>(
         wrapper: wrapper({ className }),
         text: textSlot(),
       }
-    }, [type, className])
+    })()
 
     return (
-      <span {...rest} role={role} className={classNames.wrapper}>
-        <LoaderSpinner type={type} size={size} alt={alt} />
+      <LiveRegion {...rest} className={classNames.wrapper}>
+        <LoaderSpinner type={type} alt={alt} size={size} />
         {text && <span className={classNames.text}>{text}</span>}
-      </span>
+      </LiveRegion>
     )
   },
 )

@@ -1,4 +1,4 @@
-import { type ComponentProps, Fragment } from 'react'
+import { type ComponentPropsWithRef, Fragment } from 'react'
 
 import { Stack } from '../../Layout'
 import { SideNav } from '../SideNav'
@@ -6,9 +6,9 @@ import { SideNavItemAnchor, SideNavItemButton } from '../SideNavItemButton'
 
 import { _sideNavItems } from './SideNav.stories'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
-const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'M', 'S']
+const sizeCasse: Array<ComponentPropsWithRef<typeof SideNav>['size']> = [undefined, 'M', 'S']
 
 export default {
   title: 'Components/SideNav/VRT',
@@ -23,7 +23,7 @@ export default {
       {[undefined, 'hover', 'focus-visible'].map((id, index) => (
         <Fragment key={index}>
           {sizeCasse.map((size, i) => (
-            <SideNav {...args} key={`${index}-${i}`} size={size} id={id}>
+            <SideNav {...args} key={`${index}-${i}`} id={id} size={size}>
               {_sideNavItems.map((item) =>
                 i % 2 === 0 ? (
                   <SideNavItemButton {...item} key={item.id} />

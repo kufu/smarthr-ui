@@ -9,8 +9,8 @@ export const WarningIcon = /*#__PURE__*/ generateIcon((props) => (
       className="smarthr-ui-WarningIcon-wrapper shr-fill-warning-yellow shr-stroke-black shr-stroke-0.5"
     />
     <path
-      className="smarthr-ui-WarningIcon-mark shr-fill-black"
       d="M8 5a.748.748 0 0 0-.75.75v3.5c0 .416.334.75.75.75s.75-.334.75-.75v-3.5A.748.748 0 0 0 8 5Zm1 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0Z"
+      className="smarthr-ui-WarningIcon-mark shr-fill-black"
     />
   </IconBase>
 ))

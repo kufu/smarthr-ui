@@ -1,0 +1,33 @@
+import { Scroller } from '../Scroller'
+
+// HINT: client/index.ts経由だとTableReelの再export分も巻き込まれ、
+// TableReel.tsx(../ScrollerSwitcherを直接import)との間で循環依存になるため直接importする
+// eslint-disable-next-line smarthr/require-barrel-import
+import { FixedHeadTableScroller } from './client/FixedHeadTableScroller'
+
+import type { ExtendElementPropsWithRef } from '../../types'
+import type { FC } from 'react'
+
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    fixedHead?: boolean
+  }
+>
+
+const SCROLLER_PROPS = {
+  direction: 'both' as const,
+  // fixedHead のとき、スクロールインスタンスがTableからWrapperに変わるため、Wrapperに対して高さとoverflowを指定する
+  className: 'shr-h-[inherit] shr-max-h-[inherit] shr-scroll-pb-0.5',
+}
+
+export const ScrollerSwitcher: FC<Props> = ({ children, fixedHead, ...rest }) =>
+  fixedHead ? (
+    <FixedHeadTableScroller {...rest} {...SCROLLER_PROPS}>
+      {children}
+    </FixedHeadTableScroller>
+  ) : (
+    <Scroller {...rest} {...SCROLLER_PROPS}>
+      {children}
+    </Scroller>
+  )

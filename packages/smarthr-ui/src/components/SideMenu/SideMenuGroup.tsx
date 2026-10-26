@@ -1,19 +1,17 @@
-import {
-  type ComponentPropsWithoutRef,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 
-type AbstractProps = PropsWithChildren<{
-  heading: ReactNode
-}>
-type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof AbstractProps>
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'li',
+  {
+    heading: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -23,12 +21,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideMenuGroup = ({
-  heading,
-  children,
-  className,
-  ...rest
-}: AbstractProps & ElementProps) => {
+export const SideMenuGroup = ({ heading, children, className, ...rest }: Props) => {
   const classNames = useMemo(() => {
     const { wrapper, list, groupHeading } = classNameGenerator()
 
@@ -49,8 +42,10 @@ export const SideMenuGroup = ({
   )
 }
 
-const GroupHeading = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
-  <Heading type="subBlockTitle" className={className}>
-    {children}
-  </Heading>
-))
+const GroupHeading = memo<{ children: Props['heading']; className: string }>(
+  ({ children, className }) => (
+    <Heading type="subBlockTitle" className={className}>
+      {children}
+    </Heading>
+  ),
+)

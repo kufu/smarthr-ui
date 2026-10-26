@@ -1,8 +1,14 @@
-import { chartJsOptionsExamples, multiSmall, singleSmall } from '../__stories__/testData'
+import {
+  chartJsOptionsExamples,
+  multi20Datasets,
+  multiSmall,
+  singleSmall,
+} from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { TooltipItem } from 'chart.js'
 
 const meta: Meta<typeof BarChart> = {
   title: 'Charts/BarChart',
@@ -38,6 +44,19 @@ export const Playground: Story = {
     options: {
       control: 'object',
     },
+    disablePatterns: {
+      control: 'boolean',
+    },
+    singleTone: {
+      control: 'object',
+    },
+    stacked: {
+      control: 'boolean',
+    },
+    orientation: {
+      control: 'select',
+      options: ['horizontal', 'vertical'],
+    },
   },
 }
 
@@ -50,6 +69,52 @@ export const Default: Story = {
 export const MultipleDatasets: Story = {
   args: {
     data: multiSmall,
+  },
+}
+
+export const WithoutPattern: Story = {
+  name: 'disablePatterns',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+  },
+}
+
+export const SingleTone: Story = {
+  name: 'singleTone',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+  },
+}
+
+// 範囲を狭めると濃淡差が小さくなり、系列が多くても色が重複しやすくなる
+export const ToneRange: Story = {
+  name: 'singleTone（範囲を狭める）',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 2 },
+  },
+}
+
+// from を to より大きくすると、第一系列がいちばん濃くなる
+export const DescendingTone: Story = {
+  name: 'singleTone（from > to）',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 5, to: 0 },
+  },
+}
+
+export const ManyDatasets: Story = {
+  args: {
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: multi20Datasets,
+    },
   },
 }
 
@@ -108,6 +173,69 @@ export const WithAnnotations: Story = {
               yMax: 10,
               borderColor: 'rgb(255, 99, 132)',
               borderWidth: 2,
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const Horizontal: Story = {
+  name: 'horizontal',
+  args: {
+    data: multiSmall,
+    orientation: 'horizontal',
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+  },
+}
+
+export const Stacked: Story = {
+  name: 'stacked',
+  args: {
+    data: multiSmall,
+    stacked: true,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+    orientation: 'horizontal',
+  },
+}
+
+const additionalData = {
+  datasets: [
+    {
+      data: ['Aの補足情報', 'Bの補足情報', 'Cの補足情報', 'Dの補足情報', 'Eの補足情報'],
+    },
+  ],
+}
+export const WithTooltipCallbacks: Story = {
+  name: 'with tooltip callbacks options',
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        tooltip: {
+          titleColor: '#ED1A3D', // 保護しているプロパティの上書きができないことの検証
+          callbacks: {
+            label: function (context: TooltipItem<'bar'>) {
+              // 本来表示するラベル
+              let label = context.dataset.label || ''
+              if (label) {
+                label += ': '
+              }
+              // 単位を付与する
+              if (context.parsed.y !== null) {
+                label += context.parsed.y + '人'
+              }
+              // 補足情報を追加する
+              const additionalDataLabel =
+                additionalData.datasets[context.datasetIndex].data[context.dataIndex]
+              if (additionalDataLabel) {
+                label += `（${additionalDataLabel}）`
+              }
+
+              return label
             },
           },
         },

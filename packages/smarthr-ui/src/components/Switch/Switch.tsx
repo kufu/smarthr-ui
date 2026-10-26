@@ -1,18 +1,12 @@
-import {
-  type InputHTMLAttributes,
-  type PropsWithChildren,
-  type ReactNode,
-  forwardRef,
-  memo,
-  useId,
-  useMemo,
-} from 'react'
+import { type FC, type ReactNode, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -55,65 +49,69 @@ const classNameGenerator = tv({
   },
 })
 
-type Props = InputHTMLAttributes<HTMLInputElement> & {
-  children: ReactNode
-  /** ラベルを視覚的に隠すかどうか */
-  unrecommendedLabelHidden?: boolean
+type Props = ExtendElementPropsWithRef<
+  'input',
+  {
+    children: ReactNode
+    /** ラベルを視覚的に隠すかどうか */
+    unrecommendedLabelHidden?: boolean
+  }
+>
+
+export const Switch: FC<Props> = ({
+  children,
+  unrecommendedLabelHidden,
+  className,
+  id,
+  ...rest
+}) => {
+  const defaultId = useId()
+  const inputId = id || defaultId
+
+  const classNames = useMemo(() => {
+    const { wrapper, input, icon, iconWrapper } = classNameGenerator()
+
+    return {
+      wrapper: wrapper({ className }),
+      input: input(),
+      icon: icon(),
+      iconWrapper: iconWrapper(),
+    }
+  }, [className])
+
+  return (
+    <Cluster align="center" className="shr-relative">
+      <MemoizedLabel htmlFor={inputId} unrecommendedLabelHidden={unrecommendedLabelHidden}>
+        {children}
+      </MemoizedLabel>
+      <span className={classNames.wrapper}>
+        <input {...rest} role="switch" type="checkbox" id={inputId} className={classNames.input} />
+        <MemoizedSuffixIcon classNames={classNames} />
+      </span>
+    </Cluster>
+  )
 }
 
-export const Switch = forwardRef<HTMLInputElement, Props>(
-  ({ children, unrecommendedLabelHidden, className, id, ...rest }, ref) => {
-    const defaultId = useId()
-    const inputId = id || defaultId
-
-    const classNames = useMemo(() => {
-      const { wrapper, input, icon, iconWrapper } = classNameGenerator()
-
-      return {
-        wrapper: wrapper({ className }),
-        input: input(),
-        icon: icon(),
-        iconWrapper: iconWrapper(),
-      }
-    }, [className])
-
-    return (
-      <Cluster align="center" className="shr-relative">
-        <MemoizedLabel htmlFor={inputId} unrecommendedLabelHidden={unrecommendedLabelHidden}>
-          {children}
-        </MemoizedLabel>
-        <span className={classNames.wrapper}>
-          <input
-            {...rest}
-            type="checkbox"
-            role="switch"
-            id={inputId}
-            className={classNames.input}
-            ref={ref}
-          />
-          <MemoizedSuffixIcon className={classNames.iconWrapper} iconClassName={classNames.icon} />
-        </span>
-      </Cluster>
-    )
-  },
-)
-
 const MemoizedLabel = memo<
-  Pick<Props, 'unrecommendedLabelHidden'> & PropsWithChildren<{ htmlFor: string }>
->(({ unrecommendedLabelHidden, htmlFor, children }) => {
+  ExtendElementPropsWithRef<
+    // TODO: 本来はlabelを指定したい
+    typeof Text,
+    Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
+  >
+>(({ unrecommendedLabelHidden, htmlFor, children, ...rest }) => {
   const Component = unrecommendedLabelHidden ? VisuallyHiddenText : Text
 
   return (
-    <Component as="label" htmlFor={htmlFor}>
+    <Component {...rest} as="label" htmlFor={htmlFor}>
       {children}
     </Component>
   )
 })
 
-const MemoizedSuffixIcon = memo<{ className: string; iconClassName: string }>(
-  ({ className, iconClassName }) => (
-    <span className={className}>
-      <FaCheckIcon className={iconClassName} size="XXS" />
+const MemoizedSuffixIcon = memo<{ classNames: { iconWrapper: string; icon: string } }>(
+  ({ classNames }) => (
+    <span className={classNames.iconWrapper}>
+      <FaCheckIcon size="XXS" className={classNames.icon} />
     </span>
   ),
 )

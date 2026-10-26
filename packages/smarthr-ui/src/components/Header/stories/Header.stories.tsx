@@ -5,16 +5,16 @@ import { Header } from '../Header'
 import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 import { HeaderLink } from '../HeaderLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _logoOptions = {
   default: undefined,
   custom: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
+      fill="none"
       width="24"
       height="24"
-      fill="none"
       className="shr-p-0.75 shr-align-bottom"
     >
       <path
@@ -144,7 +144,7 @@ export const Tenants: StoryObj<typeof Header> = {
   render: (args) => (
     <Stack>
       {Object.entries(_tenantsOptions).map(([key, value]) => (
-        <Header {...args} tenants={value} key={key} />
+        <Header {...args} key={key} tenants={value} />
       ))}
     </Stack>
   ),

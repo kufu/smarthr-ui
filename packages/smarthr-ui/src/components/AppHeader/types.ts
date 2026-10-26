@@ -1,6 +1,12 @@
 import type { Locale } from '../../intl'
 import type { Header } from '../Header'
-import type { ComponentProps, ComponentType, MouseEvent, ReactElement, ReactNode } from 'react'
+import type {
+  ComponentPropsWithRef,
+  ComponentType,
+  MouseEvent,
+  ReactElement,
+  ReactNode,
+} from 'react'
 
 export type LocaleProps = {
   onSelectLocale: (locale: Locale) => void
@@ -16,7 +22,7 @@ export type UserInfoProps = {
   enableNew?: boolean
 }
 
-export type HeaderProps = ComponentProps<typeof Header> & {
+export type HeaderProps = ComponentPropsWithRef<typeof Header> & {
   locale?: LocaleProps | null
   enableNew?: boolean
   appName?: ReactNode
@@ -28,7 +34,21 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   desktopNavigationAdditionalContent?: ReactNode
   releaseNote?: ReleaseNoteProps | null
   features?: Array<Launcher['feature']>
+  /**
+   * 指定するとアプリランチャーを開いたタイミングでアプリ一覧を取得します（遅延ロード）。
+   * 指定した場合、features は無視されます。
+   */
+  fetchFeatures?: () => Promise<Array<Launcher['feature']>>
   mobileAdditionalContent?: ReactNode
+}
+
+/** AppHeader が内部の DesktopHeader・MobileHeader へ渡す props */
+export type InternalHeaderProps = Omit<HeaderProps, 'features' | 'fetchFeatures'> & {
+  features: Array<Launcher['feature']>
+  isAppLauncherAvailable: boolean
+  featuresLoading: boolean
+  featuresError: boolean
+  handleOpenAppLauncher: () => void
 }
 
 export type Navigation = NavigationLink | NavigationCustomTag | NavigationButton | NavigationGroup

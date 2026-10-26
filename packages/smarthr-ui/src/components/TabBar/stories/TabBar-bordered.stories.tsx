@@ -1,6 +1,6 @@
 import TabBarStories from './TabBar.stories'
 
-import type { StoryObj } from '@storybook/react-webpack5'
+import type { StoryObj } from '@storybook/react-vite'
 
 export default {
   ...TabBarStories,

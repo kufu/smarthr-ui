@@ -2,7 +2,7 @@ import { Button } from '../../../Button'
 import { MessageDialog } from '../MessageDialog'
 import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/RemoteDialogTrigger',
@@ -26,3 +26,16 @@ export default {
 } as Meta<typeof RemoteDialogTrigger>
 
 export const Playground: StoryObj<typeof RemoteDialogTrigger> = {}
+
+export const Disabled: StoryObj<typeof RemoteDialogTrigger> = {
+  render: (args) => (
+    <>
+      <RemoteDialogTrigger {...args}>
+        <Button disabled>ダイアログを開く（disabled）</Button>
+      </RemoteDialogTrigger>
+      <MessageDialog id="remote-dialog" heading="リモートトリガーメッセージダイアログ">
+        RemoteDialogTrigger
+      </MessageDialog>
+    </>
+  ),
+}

@@ -2,7 +2,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof TdCheckbox> = (args) => (
   <Table>
@@ -38,7 +38,7 @@ export const AriaLabelledBy: StoryObj<typeof TdCheckbox> = {
       <Table>
         <tbody>
           <tr>
-            <TdCheckbox {...args} aria-labelledby={ariaLabelledBy} vAlign="baseline" />
+            <TdCheckbox {...args} vAlign="baseline" aria-labelledby={ariaLabelledBy} />
             <Td id={ariaLabelledBy}>ラベル名</Td>
           </tr>
         </tbody>

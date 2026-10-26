@@ -4,12 +4,8 @@ import { Button } from '../../Button'
 import { Checkbox } from '../../Checkbox'
 import { Input } from '../../Input'
 import { Dialog } from '../Dialog'
-import { DialogCloser } from '../DialogCloser'
-import { DialogContent } from '../DialogContent'
-import { DialogTrigger } from '../DialogTrigger'
-import { DialogWrapper } from '../DialogWrapper'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _widthOptions = {
   string: '30em',
@@ -19,7 +15,6 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog',
   component: Dialog,
-  subcomponents: { DialogWrapper, DialogTrigger, DialogContent, DialogCloser },
   render: (args) => {
     const [open, setOpen] = useState(false)
     return (
@@ -82,7 +77,7 @@ export const FirstFocusTarget: StoryObj<typeof Dialog> = {
         <Dialog {...args} firstFocusTarget={inputRef} isOpen={open} onPressEscape={handleClose}>
           <label>
             入力要素
-            <Input name="dialog_input" ref={inputRef} />
+            <Input ref={inputRef} name="dialog_input" />
           </label>
         </Dialog>
       </>
@@ -148,13 +143,13 @@ export const PortalParent: StoryObj<typeof Dialog> = {
   name: 'portalParent',
   render: (args) => {
     const [open, setOpen] = useState(false)
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
-        <Dialog {...args} isOpen={open} portalParent={parentRef}>
+        <Dialog {...args} isOpen={open} portalParent={parentEl ?? undefined}>
           ダイアログコンテンツ
           <Button onClick={() => setOpen(false)}>閉じる</Button>
         </Dialog>

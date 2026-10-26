@@ -1,5 +1,4 @@
-import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { type FC, memo, useMemo } from 'react'
 
 import { Text } from '../../../Text'
 import { isChildNavigationGroup } from '../../utils'
@@ -14,14 +13,10 @@ import type {
 
 type Props = {
   navigations: NavigationType[] | NavigationGroup['childNavigations']
-  onClickNavigation: () => void
+  handleClickNavigation: () => void
 }
 
-const separatorClassNameGenerator = tv({
-  base: ['[&&]:shr-border-b-shorthand [&&]:shr-mx-0 [&&]:shr-my-0.5'],
-})
-
-export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
+export const Navigation: FC<Props> = ({ navigations, handleClickNavigation }) => (
   <div>
     {navigations.map((navigation, i) =>
       isChildNavigationGroup(navigation) ? (
@@ -29,14 +24,14 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
           key={i}
           navigation={navigation}
           separated={i + 1 !== navigations.length}
-          onClickNavigation={onClickNavigation}
+          handleClickNavigation={handleClickNavigation}
         />
       ) : (
         <TerminalItem
           key={i}
           navigation={navigation}
           nextNavigation={navigations[i + 1]}
-          onClickNavigation={onClickNavigation}
+          handleClickNavigation={handleClickNavigation}
         />
       ),
     )}
@@ -44,40 +39,46 @@ export const Navigation: FC<Props> = ({ navigations, onClickNavigation }) => (
 )
 
 const ItemGroup: FC<
-  Pick<Props, 'onClickNavigation'> & {
+  Pick<Props, 'handleClickNavigation'> & {
     navigation: ChildNavigationGroup
     separated: boolean
   }
-> = ({ navigation: { childNavigations, title }, onClickNavigation, separated }) => (
+> = ({ navigation: { childNavigations, title }, handleClickNavigation, separated }) => (
   <>
     <ItemGroupTitleText>{title}</ItemGroupTitleText>
     {childNavigations.map((childNavigation, j) => (
-      <NavigationItem key={j} navigation={childNavigation} onClickNavigation={onClickNavigation} />
+      <NavigationItem
+        key={j}
+        navigation={childNavigation}
+        handleClickNavigation={handleClickNavigation}
+      />
     ))}
     {separated && <Separator />}
   </>
 )
 
-const ItemGroupTitleText = memo<PropsWithChildren>(({ children }) => (
-  <Text styleType="subSubBlockTitle" as="p" className="shr-py-0.5">
+const ItemGroupTitleText = memo<{ children: ChildNavigationGroup['title'] }>(({ children }) => (
+  <Text as="p" styleType="subSubBlockTitle" className="shr-py-0.5">
     {children}
   </Text>
 ))
 
 const TerminalItem: FC<
-  Pick<Props, 'onClickNavigation'> & {
+  Pick<Props, 'handleClickNavigation'> & {
     navigation: NavigationType
     nextNavigation: NavigationType | NavigationGroup['childNavigations'][number]
   }
-> = ({ navigation, nextNavigation, onClickNavigation }) => {
+> = ({ navigation, nextNavigation, handleClickNavigation }) => {
   const isSeparated = useMemo(() => isChildNavigationGroup(nextNavigation), [nextNavigation])
 
   return (
     <>
-      <NavigationItem navigation={navigation} onClickNavigation={onClickNavigation} />
+      <NavigationItem navigation={navigation} handleClickNavigation={handleClickNavigation} />
       {isSeparated && <Separator />}
     </>
   )
 }
 
-const Separator = memo(() => <hr className={separatorClassNameGenerator()} />)
+const Separator = memo(() => (
+  <hr className="[&&]:shr-border-b-shorthand [&&]:shr-mx-0 [&&]:shr-my-0.5" />
+))

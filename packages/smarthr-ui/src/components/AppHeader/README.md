@@ -8,7 +8,7 @@ props を埋めていくだけで良い感じに共通のヘッダー/ナビゲ�
 `xxxAdditionalContent` 以外の props は積極的に埋めてください。
 
 ```ts
-export type HeaderProps = ComponentProps<typeof Header> & {
+type HeaderProps = ComponentPropsWithRef<typeof Header> & {
   locale?: LocaleProps | null
   enableNew?: boolean
   appName?: ReactNode
@@ -20,14 +20,13 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   desktopNavigationAdditionalContent?: ReactNode
   releaseNote?: ReleaseNoteProps | null
   features?: Array<Launcher['feature']>
+  fetchFeatures?: () => Promise<Array<Launcher['feature']>>
   mobileAdditionalContent?: ReactNode
 }
 ```
 
 下記に、少し特殊な動きをするものやパッと見分かりづらいであろうと思われる props だけ補足説明を書きます。
 
-- `locale`
-  - 多言語対応に wovn を使っている場合はこの props は不要です。
 - `tenants`
   - デスクトップ表示時
     - Header コンポーネントと同じです。
@@ -40,6 +39,11 @@ export type HeaderProps = ComponentProps<typeof Header> & {
   - AppNavi コンポーネントの buttons にはなかった、ドロップダウン内でのナビゲーションのグルーピングができるようになっています。
     - storybook の「VRT Navigation Dropdown Group」を参考にしてください。
   - **navigations props に値が渡されているときのみ、モバイル表示時にハンバーガーメニューが表示されます。独自実装の ハンバーガーメニューが存在する場合は、navigations props を利用するタイミングで移行してください。**
+- `features` / `fetchFeatures`
+  - どちらもアプリランチャー（ヘッダーの「アプリ」ボタン）に表示するアプリ一覧を渡す props です。
+  - `fetchFeatures` を指定すると、アプリランチャーを開いたタイミング（デスクトップの「アプリ」ボタン押下 / モバイルの「アプリ一覧」タップ）で呼び出してアプリ一覧を取得します（遅延ロード）。取得中は Loader、失敗時はエラーメッセージを表示し、失敗時は次にランチャーを開いたときに再試行します。
+  - `fetchFeatures` を指定した場合、`features` は無視されます。
+  - デスクトップ・モバイルのどちらから開いても呼び出しは1回だけで、初回取得に成功した結果は同一マウント中キャッシュされます。
 - `desktopAdditionalContent`
   - ユーザー名をクリックしたときのドロップダウンの、「個人設定」の下に入れたいものがある場合に使います。
   - 見た目の共通化のため、乱用は避けてください
@@ -52,9 +56,5 @@ export type HeaderProps = ComponentProps<typeof Header> & {
 
 ## 多言語対応について
 
-- wovn を使っているアプリの場合
-  - 内部で表示されているテキストに関しては、すべて `woven-enabled="true"` がついています。
-  - 外部から渡すテキストは全て `ReactNode` 型で受け取るようになっているので、`<span woven-enabled="true">ほげ</span>` みたいなものを渡すようにしてください。
-- 辞書を持っているアプリの場合
-  - コンポーネント側で辞書を持っているので、`locale` の props を埋めると内部的に持っているテキストは翻訳されます。
-  - 外部から渡すテキストはアプリケーション側で翻訳されたものを渡すようにしてください。
+- コンポーネント側で辞書を持っているので、`locale` の props を埋めると内部的に持っているテキストは翻訳されます。
+- 外部から渡すテキストはアプリケーション側で翻訳されたものを渡すようにしてください。

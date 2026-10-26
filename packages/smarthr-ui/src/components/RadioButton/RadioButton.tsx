@@ -1,16 +1,14 @@
-'use client'
-
 import {
   type ComponentPropsWithRef,
+  type FC,
   type PropsWithChildren,
-  forwardRef,
   memo,
   useId,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isIOS } from '../../libs/ua'
+import { ActualRadioButton } from './client'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
@@ -47,62 +45,45 @@ const classNameGenerator = tv({
   },
 })
 
-export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, required, id, disabled, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
+export const RadioButton: FC<Props> = ({ children, className, id, disabled, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, innerWrapper, box, input, label } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        innerWrapper: innerWrapper(),
-        box: box(),
-        input: input(),
-        label: label(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      innerWrapper: innerWrapper(),
+      box: box(),
+      input: input(),
+      label: label(),
+    }
+  }, [className])
 
-    const defaultId = useId()
-    const radioButtonId = id || defaultId
+  const defaultId = useId()
+  const radioButtonId = id || defaultId
 
-    return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
-        <span className={classNames.innerWrapper}>
-          <input
-            {...rest}
-            ref={ref}
-            type="radio"
-            id={radioButtonId}
-            // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
-            //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
-            //    - エラーメッセージが表示されない
-            //    - 問題のある入力フィールドまでスクロールしない
-            // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
-            // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
-            required={isIOS ? undefined : required}
-            disabled={disabled}
-            onChange={onChange}
-            className={classNames.input}
-            data-smarthr-ui-input="true"
-          />
-          <AriaHiddenBox className={classNames.box} />
-        </span>
-        <LabeledChildren htmlFor={radioButtonId} className={classNames.label}>
-          {children}
-        </LabeledChildren>
+  return (
+    <span className={classNames.wrapper} data-disabled={disabled}>
+      <span className={classNames.innerWrapper}>
+        <ActualRadioButton
+          {...rest}
+          id={radioButtonId}
+          disabled={disabled}
+          className={classNames.input}
+          data-smarthr-ui-input="true"
+        />
+        <AriaHiddenBox className={classNames.box} />
       </span>
-    )
-  },
-)
+      <LabeledChildren htmlFor={radioButtonId} className={classNames.label}>
+        {children}
+      </LabeledChildren>
+    </span>
+  )
+}
 
 const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const LabeledChildren = memo<PropsWithChildren<{ htmlFor: string; className: string }>>(
-  ({ htmlFor, className, children }) =>
-    children && (
-      <label htmlFor={htmlFor} className={className}>
-        {children}
-      </label>
-    ),
+const LabeledChildren = memo<ComponentPropsWithRef<'label'>>(
+  ({ children, ...rest }) => children && <label {...rest}>{children}</label>,
 )

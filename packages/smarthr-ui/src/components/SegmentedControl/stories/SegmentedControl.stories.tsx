@@ -8,9 +8,9 @@ import {
   FaTableIcon,
 } from '../../Icon'
 import { Stack } from '../../Layout'
-import { SegmentedControl } from '../SegmentedControl'
+import { SegmentedControl } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const tableIcon = <FaTableIcon />
 const chartBarIcon = <FaChartBarIcon />
@@ -97,4 +97,12 @@ export const Size: StoryObj<typeof SegmentedControl> = {
       <SegmentedControl {...args} size="S" />
     </Stack>
   ),
+}
+
+export const DefaultValue: StoryObj<typeof SegmentedControl> = {
+  name: 'defaultValue',
+  args: {
+    value: undefined,
+    defaultValue: 'crew',
+  },
 }

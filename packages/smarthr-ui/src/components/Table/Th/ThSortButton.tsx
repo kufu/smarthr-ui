@@ -1,0 +1,89 @@
+import { memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
+
+import { Localizer } from '../../../intl'
+import { UnstyledButton } from '../../Button'
+import { FaSortDownIcon, FaSortUpIcon } from '../../Icon'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
+
+import type { ExtendElementPropsWithRef } from '../../../types'
+
+type Props = ExtendElementPropsWithRef<
+  typeof UnstyledButton,
+  {
+    align?: 'left' | 'right'
+    handleSort?: () => void
+    sort?: 'asc' | 'desc' | 'none'
+  },
+  { omit: 'onClick' | 'className' }
+>
+
+const sortButtonClassNameGenerator = tv({
+  base: 'shr-relative -shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-items-center shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
+  variants: {
+    align: {
+      left: '',
+      right: 'shr-justify-end',
+    } satisfies Record<NonNullable<Props['align']>, string>,
+  },
+})
+
+export const ThSortButton = memo<Props>(({ align, sort, handleSort, children, ...rest }) => {
+  const className = useMemo(() => sortButtonClassNameGenerator({ align }), [align])
+
+  return (
+    <UnstyledButton {...rest} className={className} onClick={handleSort}>
+      {children}
+      <SortIcon />
+      {sort && (
+        <VisuallyHiddenText>
+          {sort === 'asc' ? (
+            <Localizer id="smarthr-ui/Th/sortDirectionAsc" defaultText="昇順" />
+          ) : sort === 'desc' ? (
+            <Localizer id="smarthr-ui/Th/sortDirectionDesc" defaultText="降順" />
+          ) : (
+            <Localizer id="smarthr-ui/Th/sortDirectionNone" defaultText="並び替えなし" />
+          )}
+        </VisuallyHiddenText>
+      )}
+    </UnstyledButton>
+  )
+})
+
+const sortIconClassNameGenerator = tv({
+  slots: {
+    wrapper: 'smarthr-ui-Icon-extended shr-relative shr-h-1 shr-w-1',
+    upIcon: [
+      'shr-absolute shr-left-0 shr-top-0',
+      'shr-text-base',
+      '[[aria-sort="none"]_&]:shr-text-disabled',
+      '[[aria-sort="ascending"]_&]:shr-text-black',
+      '[[aria-sort="descending"]_&]:shr-text-disabled',
+    ],
+    downIcon: [
+      'shr-absolute shr-left-0 shr-top-0',
+      'shr-text-base',
+      '[[aria-sort="none"]_&]:shr-text-disabled',
+      '[[aria-sort="ascending"]_&]:shr-text-disabled',
+      '[[aria-sort="descending"]_&]:shr-text-black',
+    ],
+  },
+})
+
+const SORT_ICON_CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { wrapper, upIcon, downIcon } = sortIconClassNameGenerator()
+
+  return {
+    wrapper: wrapper(),
+    upIcon: upIcon(),
+    downIcon: downIcon(),
+  }
+})()
+
+const SortIcon = memo(() => (
+  <span className={SORT_ICON_CLASS_NAMES.wrapper}>
+    <FaSortUpIcon className={SORT_ICON_CLASS_NAMES.upIcon} />
+    <FaSortDownIcon className={SORT_ICON_CLASS_NAMES.downIcon} />
+  </span>
+))

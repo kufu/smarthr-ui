@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { AnchorButton, Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
@@ -9,7 +9,6 @@ import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import type { HeaderProps, UserInfoProps } from '../../types'
 
@@ -102,7 +101,7 @@ export const UserInfo: FC<Props> = ({
   )
 }
 
-export const ActualUserInfo: FC<Props & { displayName: string }> = ({
+const ActualUserInfo: FC<Props & { displayName: string }> = ({
   email,
   empCode,
   firstName,
@@ -139,14 +138,6 @@ export const ActualUserInfo: FC<Props & { displayName: string }> = ({
     }
   }, [enableNew])
 
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      userSetting: localize({ id: 'smarthr-ui/AppHeader/userSettings', defaultText: '個人設定' }),
-    }),
-    [localize],
-  )
-
   const currentTenantName = useMemo(
     () => tenants?.find((tenant) => tenant.id === currentTenantId)?.name,
     [tenants, currentTenantId],
@@ -177,7 +168,7 @@ export const ActualUserInfo: FC<Props & { displayName: string }> = ({
           className={classNames.userSummary}
         />
         <DropdownContentButton href={accountUrl} className={classNames.dropdownContentButton}>
-          {translated.userSetting}
+          <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
         </DropdownContentButton>
         {desktopAdditionalContent}
       </DropdownMenuButton>
@@ -190,7 +181,9 @@ export const ActualUserInfo: FC<Props & { displayName: string }> = ({
         {displayName}
       </DisplayNameDropdownTrigger>
       <DropdownContent className={classNames.dropdownContent}>
-        <AccountLink href={accountUrl}>{translated.userSetting}</AccountLink>
+        <AccountLink href={accountUrl}>
+          <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
+        </AccountLink>
         {desktopAdditionalContent}
       </DropdownContent>
     </Dropdown>
@@ -282,10 +275,10 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        prefix={<FaGearIcon />}
         className={className}
+        prefix={<FaGearIcon />}
       >
-        <Translate>{children}</Translate>
+        {children}
       </AnchorButton>
     ),
 )
@@ -293,8 +286,8 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
 const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
   ({ children, className }) => (
     <DropdownTrigger>
-      <Button variant="text" suffix={<FaCaretDownIcon />} className={className}>
-        <Translate>{children}</Translate>
+      <Button variant="text" className={className} suffix={<FaCaretDownIcon />}>
+        {children}
       </Button>
     </DropdownTrigger>
   ),
@@ -310,7 +303,7 @@ const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(
         rel="noopener noreferrer"
         prefix={<FaGearIcon />}
       >
-        <Translate>{children}</Translate>
+        {children}
       </CommonButton>
     ),
 )

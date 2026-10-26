@@ -1,17 +1,18 @@
 'use client'
 
-import {
-  type FC,
-  type MouseEvent,
-  type ReactElement,
-  cloneElement,
-  useCallback,
-  useMemo,
-} from 'react'
+import { type FC, useCallback } from 'react'
 
-import { TRIGGER_EVENT } from '../useRemoteTrigger'
+import { useLatest } from '../../../hooks/useLatest'
 
-const onClickRemoteDialogTrigger = (ariaControls: string) => {
+import { TRIGGER_EVENT } from './useRemoteTrigger'
+
+import type { ExtendElementPropsWithoutRef } from '../../../types'
+
+const CAPTURE_OPTION = {
+  capture: true,
+}
+
+const dispatchRemoteDialogTrigger = (ariaControls: string) => {
   document.dispatchEvent(
     new CustomEvent(TRIGGER_EVENT, {
       detail: { id: ariaControls },
@@ -19,37 +20,98 @@ const onClickRemoteDialogTrigger = (ariaControls: string) => {
   )
 }
 
-export const RemoteDialogTrigger: FC<{
-  targetId: string
-  onClick?: (open: () => void) => void
-  children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
-}> = ({ targetId, children, onClick, ...rest }) => {
-  const actualOnClick = useCallback(
-    (e: MouseEvent<HTMLElement>) => {
-      // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
-      // 先にariaControlsを取得しておく
-      const ariaControls = e.currentTarget.getAttribute('aria-controls') as string
+type Props = ExtendElementPropsWithoutRef<
+  'span',
+  {
+    targetId: string
+    onClick?: (open: () => void) => void
+  },
+  { omit: 'className' }
+>
 
-      if (onClick) {
-        return onClick(() => {
-          onClickRemoteDialogTrigger(ariaControls)
-        })
+export const RemoteDialogTrigger: FC<Props> = ({ targetId, children, onClick, ...rest }) => {
+  const latest = useLatest({ onClick })
+
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (!node) {
+        return
       }
 
-      onClickRemoteDialogTrigger(ariaControls)
+      const handleClick = (e: Event) => {
+        // HINT: onClick内で非同期処理される場合、e.currentTargetがnullになってしまう可能性があるため
+        // 先にariaControlsを取得しておく
+        const ariaControls = (e.currentTarget as HTMLElement).getAttribute(
+          'aria-controls',
+        ) as string
+
+        if (latest.onClick) {
+          return latest.onClick(() => {
+            dispatchRemoteDialogTrigger(ariaControls)
+          })
+        }
+
+        dispatchRemoteDialogTrigger(ariaControls)
+      }
+
+      const getClickableElement = () =>
+        node.querySelector<HTMLButtonElement | HTMLAnchorElement>('button, a')
+
+      // 現在の子要素に対して処理を実行
+      const setupElement = () => {
+        const element = getClickableElement()
+        if (!element) {
+          return
+        }
+
+        element.setAttribute('aria-haspopup', 'dialog')
+        element.setAttribute('aria-controls', targetId)
+
+        // Button は native disabled ではなく aria-disabled を使うため、
+        // 無効時はリスナーを貼らず Dialog が開かないようにする（DropdownTrigger と同じ）
+        if (
+          !('disabled' in element && element.disabled) &&
+          element.getAttribute('aria-disabled') !== 'true'
+        ) {
+          // HINT: DropdownCloser のonClickより先に実行するため、キャプチャフェーズで処理する
+          element.addEventListener('click', handleClick, CAPTURE_OPTION)
+        }
+      }
+
+      const clearEventListener = () => {
+        // 既存のイベントリスナーをクリーンアップ
+        const element = getClickableElement()
+        element?.removeEventListener('click', handleClick, CAPTURE_OPTION)
+      }
+
+      // 初回セットアップ
+      setupElement()
+
+      // MutationObserverでDOM変更を監視
+      const observer = new MutationObserver(() => {
+        clearEventListener()
+        setupElement()
+      })
+
+      observer.observe(node, {
+        childList: true,
+        subtree: true,
+        // button要素の disabled / aria-disabled が動的に変化した場合も検知してリスナーを貼り直す
+        attributes: true,
+        attributeFilter: ['disabled', 'aria-disabled'],
+      })
+
+      return () => {
+        observer.disconnect()
+        clearEventListener()
+      }
     },
-    [onClick],
-  )
-  const actualTrigger = useMemo(
-    () =>
-      cloneElement(children as ReactElement, {
-        ...rest,
-        onClick: actualOnClick,
-        'aria-haspopup': 'dialog',
-        'aria-controls': targetId,
-      }),
-    [children, actualOnClick, targetId, rest],
+    [targetId, latest],
   )
 
-  return actualTrigger
+  return (
+    <span {...rest} ref={callbackRef} className="smarthr-ui-RemoteDialogTrigger shr-contents">
+      {children}
+    </span>
+  )
 }

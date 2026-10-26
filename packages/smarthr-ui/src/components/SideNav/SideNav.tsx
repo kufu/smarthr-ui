@@ -1,37 +1,16 @@
-import {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  useMemo,
-} from 'react'
-import { Children, cloneElement } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { SideNavItemButton, type SideNavSizeType } from './SideNavItemButton'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-export type SideNavItemButtonProps = Omit<
-  ComponentProps<typeof SideNavItemButton>,
-  'size' | 'onClick'
+type Props = ExtendElementPropsWithoutRef<
+  'ul',
+  {
+    /** 各アイテムの大きさ */
+    size?: 'M' | 'S'
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+  }
 >
-
-type AbstractProps = PropsWithChildren<{
-  /** 各アイテムのデータの配列
-   * @deprecated SideNavItemButton を使ってください
-   */
-  items?: SideNavItemButtonProps[]
-  /** 各アイテムの大きさ */
-  size?: SideNavSizeType
-  /** アイテムを押下したときに発火するコールバック関数 */
-  onClick?: (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>,
-    id: string,
-  ) => void
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}> &
-  VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
 
 const ROUNDED = {
   t_l: '[&>.smarthr-ui-SideNav-item:first-child]:shr-rounded-tl-l',
@@ -51,74 +30,22 @@ const classNameGenerator = tv({
       right: ['shr-rounded-r-l', ROUNDED.t_r, ROUNDED.b_r],
       bottom: ['shr-rounded-b-l', ROUNDED.b_l, ROUNDED.b_r],
       left: ['shr-rounded-l-l', ROUNDED.t_l, ROUNDED.b_l],
-    },
+    } satisfies Record<Exclude<NonNullable<Props['rounded']>, boolean> | 'true', string[]>,
   },
   defaultVariants: {
     rounded: false,
   },
 })
 
-export const SideNav: FC<Props> = ({
-  items,
-  size = 'M',
-  onClick,
-  className,
-  rounded,
-  children,
-  ...rest
-}) => {
-  const actualOnClick = useMemo(
-    () =>
-      onClick
-        ? (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) =>
-            onClick(
-              e,
-              ((e as React.MouseEvent<HTMLButtonElement, MouseEvent>).currentTarget.value ||
-                e.currentTarget.getAttribute('data-value')) as string,
-            )
-        : undefined,
-    [onClick],
-  )
-
+export const SideNav: FC<Props> = ({ size = 'M', className, rounded, children, ...rest }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ rounded, className }),
     [rounded, className],
   )
 
   return (
-    <ul {...rest} className={actualClassName}>
-      {items
-        ? items.map((item) => (
-            <SideNavItemButton
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              prefix={item.prefix}
-              current={item.current}
-              size={size}
-              onClick={actualOnClick}
-            />
-          ))
-        : children &&
-          Children.map(children, (child) => {
-            if (
-              child &&
-              typeof child === 'object' &&
-              'type' in child &&
-              child.type === SideNavItemButton
-            ) {
-              return cloneElement(
-                child as React.ReactElement<ComponentProps<typeof SideNavItemButton>>,
-                {
-                  // 子コンポーネントに対して親コンポーネントから onClick size を一括で適用
-                  size,
-                  onClick: actualOnClick,
-                },
-              )
-            }
-
-            return child
-          })}
+    <ul {...rest} className={actualClassName} data-size={size}>
+      {children}
     </ul>
   )
 }

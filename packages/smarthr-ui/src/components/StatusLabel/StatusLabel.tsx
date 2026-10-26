@@ -1,13 +1,17 @@
-import {
-  type ComponentPropsWithoutRef,
-  type FC,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { FaCircleExclamationIcon, FaTriangleExclamationIcon } from '../Icon'
+
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'span',
+  {
+    type?: 'grey' | 'blue' | 'green' | 'red' | 'warning' | 'error'
+    bold?: boolean
+  }
+>
 
 const classNameGenerator = tv({
   base: [
@@ -26,7 +30,7 @@ const classNameGenerator = tv({
       red: 'shr-text-danger',
       warning: 'shr-border-warning-yellow shr-bg-warning-yellow shr-text-black',
       error: 'shr-border-danger shr-bg-danger shr-text-white',
-    },
+    } satisfies Record<NonNullable<Props['type']>, string | string[]>,
     bold: {
       true: 'shr-text-white',
     },
@@ -61,9 +65,6 @@ const classNameGenerator = tv({
     },
   ],
 })
-
-type AbstractProps = PropsWithChildren<VariantProps<typeof classNameGenerator>>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'span'>, keyof AbstractProps>
 
 export const StatusLabel = memo<Props>(
   ({ type = 'grey', bold = false, className, children, ...rest }) => {

@@ -1,7 +1,7 @@
 import { Stack } from '../../Layout'
 import { SmartHRAILogo } from '../SmartHRAILogo'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/SmartHRAILogo/VRT',

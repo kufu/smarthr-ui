@@ -2,6 +2,8 @@ import type { Chart } from 'chart.js'
 
 export type KeyboardNavigationOptions = {
   liveRegionId?: string
+  stacked?: boolean
+  horizontal?: boolean
 }
 
 type ChartWithKeyboardHandler = {
@@ -12,6 +14,8 @@ export const keyboardNavigationPlugin = {
   id: 'keyboardNavigation',
   defaults: {
     liveRegionId: undefined,
+    stacked: false,
+    horizontal: false,
   },
   afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
@@ -40,30 +44,71 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
-      switch (event.key) {
-        case 'ArrowRight':
-          nextDataIndex = (nextDataIndex + 1) % dataLength
-          break
-        case 'ArrowDown':
-          nextDatasetIndex = (nextDatasetIndex + 1) % datasets.length
-          break
-        case 'ArrowLeft':
-          nextDataIndex = (nextDataIndex - 1 + dataLength) % dataLength
-          break
-        case 'ArrowUp':
-          nextDatasetIndex = (nextDatasetIndex - 1 + datasets.length) % datasets.length
-          break
-        case 'Escape':
-        case 'Tab':
-          nextDatasetIndex = -1
-          nextDataIndex = -1
-          break
+      const moveData = (delta: number) => {
+        event.preventDefault()
+        nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength
       }
+      const moveDataset = (delta: number) => {
+        event.preventDefault()
+        nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length
+      }
+      const reset = () => {
+        nextDatasetIndex = -1
+        nextDataIndex = -1
+      }
+
+      const compoundMoveDataAndDataset = (delta: number) => {
+        // データとデータセットの境界に到達したかどうかを判定
+        const atBoundary =
+          delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
+
+        if (atBoundary) {
+          moveData(delta)
+          nextDatasetIndex = delta > 0 ? 0 : datasets.length - 1
+        } else {
+          moveDataset(delta)
+        }
+      }
+
+      const defaultBindings: Record<string, () => void> = {
+        Escape: reset,
+        Tab: reset,
+      }
+
+      const bindings: Record<string, () => void> = options.horizontal
+        ? options.stacked
+          ? {
+              ...defaultBindings,
+              ArrowDown: () => moveData(1),
+              ArrowUp: () => moveData(-1),
+              ArrowRight: () => moveDataset(1),
+              ArrowLeft: () => moveDataset(-1),
+            }
+          : {
+              ...defaultBindings,
+              ArrowDown: () => compoundMoveDataAndDataset(1),
+              ArrowUp: () => compoundMoveDataAndDataset(-1),
+            }
+        : options.stacked
+          ? {
+              ...defaultBindings,
+              ArrowRight: () => moveData(1),
+              ArrowLeft: () => moveData(-1),
+              ArrowDown: () => moveDataset(-1),
+              ArrowUp: () => moveDataset(1),
+            }
+          : {
+              ...defaultBindings,
+              ArrowRight: () => compoundMoveDataAndDataset(1),
+              ArrowLeft: () => compoundMoveDataAndDataset(-1),
+            }
+
+      bindings[event.key]?.()
 
       if (nextDatasetIndex === -1 && nextDataIndex === -1) {
         canvas.style.outline = ''
         chart.setActiveElements([])
-        chart.tooltip.setActiveElements([], { x: 0, y: 0 })
+        chart.tooltip?.setActiveElements([], { x: 0, y: 0 })
         chart.update()
         // ライブリージョンのクリア処理
         if (liveRegionElement) {
@@ -80,18 +125,23 @@ export const keyboardNavigationPlugin = {
       chart.setActiveElements([
         { datasetIndex: actualNextDatasetIndex, index: actualNextDataIndex },
       ])
-      chart.tooltip.setActiveElements(
+      chart.tooltip?.setActiveElements(
         [{ datasetIndex: actualNextDatasetIndex, index: actualNextDataIndex }],
         { x: 0, y: 0 },
       )
       chart.update()
 
-      const datasetLabel = datasets[actualNextDatasetIndex].label
-      const label = labels[actualNextDataIndex]
-      const value = datasets[actualNextDatasetIndex].data[actualNextDataIndex]
-      const liveRegionText = `${datasetLabel} ${label} ${value}`
-
       if (liveRegionElement) {
+        const datasetLabel = datasets[actualNextDatasetIndex].label
+        // labels は ChartData 上で任意（undefined 可）のため、無条件参照で落ちないよう防御する
+        const label = labels?.[actualNextDataIndex]
+        const value = datasets[actualNextDatasetIndex].data[actualNextDataIndex]
+        // datasetLabel（系列名）や label（項目名）が無いチャート（例: 系列名を持たない
+        // ProgressDoughnutChart）でも "undefined" を読み上げないよう、空要素を除いて連結する。
+        // value は 0 も有効な値のため除外しない。
+        const liveRegionText = [datasetLabel, label, value]
+          .filter((part) => part !== null && part !== undefined && part !== '')
+          .join(' ')
         liveRegionElement.textContent = liveRegionText
       } else {
         console.warn('Live region element is null, cannot update text')

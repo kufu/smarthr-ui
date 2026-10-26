@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
-import { BaseColumn } from '../../Base'
 import { Button } from '../../Button'
-import { FormControl } from '../../FormControl'
+import { FormControl } from '../../FormGroup'
 import { Heading } from '../../Heading'
 import { InformationPanel } from '../../InformationPanel'
 import { Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { InputFile } from '../InputFile'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/InputFile/Test',
@@ -24,7 +24,7 @@ export const ManualTest1 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" title="multipleかつsubmitのテスト">
+      <InformationPanel type="info" heading="multipleかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -47,16 +47,16 @@ export const ManualTest1 = () => {
         }}
       >
         <Stack>
-          <FormControl title="ファイル">
-            <InputFile label="ファイルを選択" name="files" multiple hasFileList />
+          <FormControl label="ファイル">
+            <InputFile name="files" multiple hasFileList label="ファイルを選択" />
           </FormControl>
           <Button type="submit">送信</Button>
         </Stack>
       </form>
       <Heading>送信結果</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{result}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }
@@ -65,7 +65,7 @@ export const ManualTest2 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" title="multiple.appendableかつsubmitのテスト">
+      <InformationPanel type="info" heading="multiple.appendableかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -90,21 +90,21 @@ export const ManualTest2 = () => {
         }}
       >
         <Stack>
-          <FormControl title="ファイル">
+          <FormControl label="ファイル">
             <InputFile
-              label="ファイルを選択"
               name="files"
               multiple={{ appendable: true }}
               hasFileList
+              label="ファイルを選択"
             />
           </FormControl>
           <Button type="submit">送信</Button>
         </Stack>
       </form>
       <Heading>送信結果</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{result}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }
@@ -113,7 +113,7 @@ export const ManualTest3 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" title="multipleかつonChangeのテスト">
+      <InformationPanel type="info" heading="multipleかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>
@@ -126,22 +126,22 @@ export const ManualTest3 = () => {
           e.preventDefault()
         }}
       >
-        <FormControl title="ファイル">
+        <FormControl label="ファイル">
           <InputFile
+            name="files"
+            multiple
+            hasFileList
             onChange={(files) => {
               setValue(files)
             }}
             label="ファイルを選択"
-            name="files"
-            multiple
-            hasFileList
           />
         </FormControl>
       </form>
       <Heading>onChange</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{value.map((file) => file.name).join('\n')}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }
@@ -150,7 +150,7 @@ export const ManualTest4 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" title="multiple.appendableかつonChangeのテスト">
+      <InformationPanel type="info" heading="multiple.appendableかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>
@@ -166,22 +166,22 @@ export const ManualTest4 = () => {
           e.preventDefault()
         }}
       >
-        <FormControl title="ファイル">
+        <FormControl label="ファイル">
           <InputFile
+            name="files"
+            multiple={{ appendable: true }}
+            hasFileList
             onChange={(files) => {
               setValue(files)
             }}
             label="ファイルを選択"
-            name="files"
-            multiple={{ appendable: true }}
-            hasFileList
           />
         </FormControl>
       </form>
       <Heading>onChange</Heading>
-      <BaseColumn>
+      <Groupbox>
         <output className="shr-whitespace-pre">{value.map((file) => file.name).join('\n')}</output>
-      </BaseColumn>
+      </Groupbox>
     </Stack>
   )
 }

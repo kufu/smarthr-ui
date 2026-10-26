@@ -1,19 +1,23 @@
-import { type ChangeEvent, type ComponentProps, type FC, memo, useMemo } from 'react'
+import { type ChangeEvent, type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { BrowserItem } from './BrowserItem'
 
 import type { ItemNode } from './models'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const getColumnId = (column: number) => `column-${column}`
 
-type AbstractProps = {
-  value?: string
-  items: ItemNode[]
-  index: number
-  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
-}
-type Props = AbstractProps & Omit<ComponentProps<'ul'>, keyof AbstractProps>
+type Props = ExtendElementPropsWithRef<
+  'ul',
+  {
+    value?: string
+    items: ItemNode[]
+    index: number
+    handleChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
+  },
+  { omit: 'id' }
+>
 
 const classNameGenerator = tv({
   base: 'shr-px-0.25 shr-py-0.5',
@@ -23,31 +27,31 @@ export const BrowserColumn: FC<Props> = ({
   items,
   index: columnIndex,
   value,
-  onChangeInput,
+  handleChangeInput,
   className,
   ...rest
 }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <ul {...rest} className={actualClassName} id={getColumnId(columnIndex)}>
+    <ul {...rest} id={getColumnId(columnIndex)} className={actualClassName}>
       {items.map((item, rowIndex) => (
         <ListItem
           key={rowIndex}
+          value={value}
           itemValue={item.value}
           itemLabel={item.label}
           itemHasChildren={item.children.length > 0}
-          value={value}
           columnIndex={columnIndex}
           rowIndex={rowIndex}
-          onChangeInput={onChangeInput}
+          handleChangeInput={handleChangeInput}
         />
       ))}
     </ul>
   )
 }
 
-type ListItemProps = Pick<Props, 'value' | 'onChangeInput'> & {
+type ListItemProps = Pick<Props, 'value' | 'handleChangeInput'> & {
   itemValue: ItemNode['value']
   itemLabel: ItemNode['label']
   itemHasChildren: boolean
@@ -56,7 +60,7 @@ type ListItemProps = Pick<Props, 'value' | 'onChangeInput'> & {
 }
 
 const ListItem = memo<ListItemProps>(
-  ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, onChangeInput }) => {
+  ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, handleChangeInput }) => {
     const selected = itemValue === value
     const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined
     const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
@@ -70,7 +74,7 @@ const ListItem = memo<ListItemProps>(
           itemHasChildren={itemHasChildren}
           columnIndex={columnIndex}
           tabIndex={tabIndex}
-          onChangeInput={onChangeInput}
+          handleChangeInput={handleChangeInput}
         />
       </li>
     )

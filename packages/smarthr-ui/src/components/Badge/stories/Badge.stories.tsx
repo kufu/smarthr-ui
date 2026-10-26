@@ -1,7 +1,7 @@
 import { Cluster, Stack } from '../../Layout'
 import { Badge } from '../Badge'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Badge',
@@ -11,7 +11,7 @@ export default {
     count: 0,
     overflowCount: 99,
     showZero: true,
-    type: 'blue',
+    color: 'blue',
     dot: false,
   },
   parameters: {
@@ -29,7 +29,7 @@ export const Count: StoryObj<typeof Badge> = {
   render: (args) => (
     <Cluster>
       {new Array(10).fill(0).map((_, i) => (
-        <Badge {...args} count={i + 1} key={i} />
+        <Badge {...args} key={i} count={i + 1} />
       ))}
     </Cluster>
   ),
@@ -69,14 +69,14 @@ export const ShowZero: StoryObj<typeof Badge> = {
   },
 }
 
-export const Type: StoryObj<typeof Badge> = {
-  name: 'type',
+export const Color: StoryObj<typeof Badge> = {
+  name: 'color',
   render: (args) => (
     <Cluster>
-      <Badge {...args} type="blue" />
-      <Badge {...args} type="yellow" />
-      <Badge {...args} type="red" />
-      <Badge {...args} type="grey" />
+      <Badge {...args} color="blue" />
+      <Badge {...args} color="yellow" />
+      <Badge {...args} color="red" />
+      <Badge {...args} color="grey" />
     </Cluster>
   ),
   args: {},

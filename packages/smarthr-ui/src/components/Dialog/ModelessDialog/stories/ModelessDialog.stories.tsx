@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
 import { ModelessDialog } from '../ModelessDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/ModelessDialog',
@@ -16,9 +16,9 @@ export default {
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         <ModelessDialog
           {...rest}
-          heading={heading || 'モードレスダイアログ'}
           isOpen={open}
           onClickClose={onClickClose ?? (() => setOpen(false))}
+          heading={heading || 'モードレスダイアログ'}
         >
           ダイアログコンテンツ
         </ModelessDialog>
@@ -112,20 +112,20 @@ export const Bottom: StoryObj<typeof ModelessDialog> = {
 export const PortalParent: StoryObj<typeof ModelessDialog> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
 
     return (
       <>
-        <div ref={parentRef}>
+        <div ref={setParentEl}>
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ModelessDialog
           {...args}
-          heading="ポータルに開いたダイアログ"
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           isOpen={open}
           onClickClose={() => setOpen(false)}
+          heading="ポータルに開いたダイアログ"
         >
           ダイアログコンテンツ
         </ModelessDialog>

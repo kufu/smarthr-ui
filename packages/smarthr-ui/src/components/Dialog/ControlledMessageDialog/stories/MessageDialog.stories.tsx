@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
 import { ControlledMessageDialog } from '../ControlledMessageDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/ControlledMessageDialog',
@@ -16,7 +16,7 @@ export default {
     return (
       <>
         <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
-        <ControlledMessageDialog {...rest} onClickClose={handleClose} isOpen={open} />
+        <ControlledMessageDialog {...rest} isOpen={open} onClickClose={handleClose} />
       </>
     )
   },
@@ -96,16 +96,16 @@ export const CloseButton: StoryObj<typeof ControlledMessageDialog> = {
 export const PortalParent: StoryObj<typeof ControlledMessageDialog> = {
   name: 'portalParent',
   render: (args) => {
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     const [open, setOpen] = useState(false)
     return (
       <>
-        <div className="shr-px-1.5 shr-py-2" ref={parentRef}>
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
         <ControlledMessageDialog
           {...args}
-          portalParent={parentRef}
+          portalParent={parentEl ?? undefined}
           isOpen={open}
           onClickClose={() => setOpen(false)}
         />

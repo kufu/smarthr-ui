@@ -1,24 +1,30 @@
-import { type PropsWithChildren, memo } from 'react'
+import { memo } from 'react'
 
 import { FaAngleRightIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
-type Props = PropsWithChildren<{
-  onClick: () => void
-  isCurrent?: boolean
-}>
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
-export const MenuButton = memo<Props>(({ children, onClick, isCurrent }) => (
+type Props = ExtendElementPropsWithRef<
+  'button',
+  {
+    handleClick: () => void
+    isCurrent?: boolean
+  },
+  { omit: 'onClick' | 'type' | 'className' }
+>
+
+export const MenuButton = memo<Props>(({ children, handleClick, isCurrent, ...rest }) => (
   <CommonButton
+    {...rest}
     elementAs="button"
     type="button"
-    onClick={onClick}
     current={isCurrent}
     boldWhenCurrent
     className="[&&]:shr-justify-between [&&]:shr-px-0.5"
+    handleClick={handleClick}
   >
-    <Translate>{children}</Translate>
+    {children}
     <FaAngleRightIcon color="TEXT_BLACK" />
   </CommonButton>
 ))

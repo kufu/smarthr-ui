@@ -108,13 +108,16 @@ const createBaseChartOptions = <T extends ChartType>({
 
   const internalLegendLabels = generateLegendOptions(chartType)
 
-  // 外部pluginsからtooltipを除外（内部設定を保護するため）
-  const { tooltip: _tooltip, ...pluginsRest } = options.plugins || {}
-
-  // 外部オプションからplugins.tooltipを除外したオプションを作成
+  // 外部オプションからinternalTooltipConfigの指定を保護したオプションを作成
   const safeExternalOptions = {
     ...options,
-    plugins: pluginsRest,
+    plugins: {
+      ...options.plugins,
+      tooltip: {
+        ...(options.plugins?.tooltip ?? {}),
+        ...internalTooltipConfig,
+      },
+    },
   }
 
   const baseDefaults = {
@@ -123,7 +126,7 @@ const createBaseChartOptions = <T extends ChartType>({
     maintainAspectRatio: false,
     events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove', 'keydown', 'keyup'],
     plugins: {
-      ...pluginsRest,
+      ...options.plugins,
       legend: {
         position: 'bottom' as const,
         labels: internalLegendLabels,
@@ -221,4 +224,15 @@ export const createRadarChartOptions = (
 
   // scalesDefaultsをベースに、baseOptionsをマージ(外部設定を優先)
   return deepmerge(scalesDefaults, baseOptions) as Partial<ChartOptions<'radar'>>
+}
+
+export const createDoughnutChartOptions = (
+  options: Partial<ChartOptions<'doughnut'>> = {},
+): Partial<ChartOptions<'doughnut'>> => {
+  const baseOptions = createBaseChartOptions({
+    chartType: 'doughnut',
+    options,
+  })
+
+  return baseOptions as unknown as Partial<ChartOptions<'doughnut'>>
 }

@@ -6,7 +6,21 @@ import { Section } from '../SectioningContent'
 
 import { StepCounter } from './StepCounter'
 
-import type { VerticalStep } from './types'
+import type { StatusType, VerticalStep } from './types'
+import type { ExtendProps } from '../../types'
+
+type Props = ExtendProps<
+  VerticalStep,
+  {
+    statusType?: StatusType
+    statusText?: string
+    /** ステップ数 */
+    stepNumber: number
+    /** 現在地かどうか */
+    current: boolean
+  },
+  { omit: 'status' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -29,12 +43,12 @@ const classNameGenerator = tv({
     ],
   },
   variants: {
-    status: {
+    statusType: {
       completed: {
         stepCounter: ['after:shr-bg-main', 'forced-colors:after:shr-bg-[Highlight]'],
       },
       closed: {},
-    },
+    } satisfies Record<StatusType, object>,
     current: {
       true: {
         heading: 'shr-font-bold',
@@ -44,7 +58,7 @@ const classNameGenerator = tv({
   },
   compoundVariants: [
     {
-      status: ['completed', 'closed'],
+      statusType: ['completed', 'closed'],
       current: false,
       className: {
         heading: 'shr-text-grey',
@@ -53,43 +67,46 @@ const classNameGenerator = tv({
   ],
 })
 
-type Props = VerticalStep & {
-  /** ステップ数 */
-  stepNumber: number
-  /** 現在地かどうか */
-  current: boolean
-}
-
-export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
+export const VerticalStepItem: FC<Props> = ({
+  stepNumber,
+  label,
+  statusType,
+  statusText,
+  children,
+  current,
+}) => {
   const classNames = useMemo(() => {
     const { wrapper, section, headingWrapper, heading, body, inner, stepCounter } =
-      classNameGenerator({
-        status: typeof status === 'object' ? status.type : status,
-        current,
-      })
+      classNameGenerator()
 
     return {
       wrapper: wrapper(),
       section: section(),
       headingWrapper: headingWrapper(),
-      heading: heading(),
+      heading: heading({
+        statusType,
+        current,
+      }),
       body: body(),
       inner: inner(),
-      stepCounter: stepCounter(),
+      stepCounter: stepCounter({ statusType }),
     }
-  }, [current, status])
+  }, [statusType, current])
 
   return (
-    <li aria-current={current ? 'step' : undefined} className={classNames.wrapper}>
+    <li className={classNames.wrapper} aria-current={current ? 'step' : undefined}>
       <Section className={classNames.section}>
         <div className={classNames.stepCounter}>
-          <StepCounter status={status} current={current} stepNumber={stepNumber} />
+          <StepCounter
+            statusType={statusType}
+            statusText={statusText}
+            current={current}
+            stepNumber={stepNumber}
+          />
         </div>
         <div className={classNames.body}>
           <div className={classNames.headingWrapper}>
-            <Heading type="sectionTitle" className={classNames.heading}>
-              {label}
-            </Heading>
+            <Heading className={classNames.heading}>{label}</Heading>
           </div>
           <div className={classNames.inner}>{children}</div>
         </div>

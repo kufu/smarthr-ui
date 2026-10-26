@@ -1,10 +1,11 @@
-import { type ComponentProps, type ReactNode, memo, useMemo } from 'react'
+import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { FontSizes } from '../../themes'
+import type { ExtendElementPropsWithRef } from '../../types'
 import type { IconType } from 'react-icons'
 
 /**
@@ -27,25 +28,24 @@ export const colorSet = {
 
 const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
 
-type IconProps = {
-  /**
-   * アイコンの色
-   * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
-   */
-  color?: LiteralUnion<keyof typeof colorSet>
-  /**
-   * アイコンの大きさ（フォントサイズの抽象値）
-   * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
-   */
-  size?: FontSizes
-}
-
-type AbstractProps = {
-  /**アイコンの説明テキスト*/
-  alt?: ReactNode
-}
-export type Props = AbstractProps &
-  Omit<IconProps & Omit<ComponentProps<'svg'>, keyof IconProps>, keyof AbstractProps>
+export type Props = ExtendElementPropsWithRef<
+  'svg',
+  {
+    /**アイコンの説明テキスト*/
+    alt?: ReactNode
+    /**
+     * アイコンの色
+     * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
+     */
+    color?: LiteralUnion<keyof typeof colorSet>
+    /**
+     * アイコンの大きさ（フォントサイズの抽象値）
+     * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
+     */
+    size?: FontSizes
+  },
+  { omit: 'stroke' | 'fill' | 'strokeWidth' | 'width' | 'height' | 'children' }
+>
 
 // HINT: smarthr-ui-Icon-extendedはアイコン+α(例えば複数のアイコンをまとめて一つにしているなど)を表すclass
 // altなどもVisuallyHiddenTextで表現している関係上、squareの計算などの際に複数要素として判断されると認知と違う結果になるため使用しています
@@ -71,17 +71,18 @@ export const generateIcon = (SvgIcon: IconType) => {
       size,
       ...rest
     }) => {
-      const actualAriaHidden = useMemo(() => {
-        if (ariaHidden !== undefined) {
-          return ariaHidden
-        }
-
-        if (alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)) {
-          return true
-        }
-
-        return undefined
-      }, [ariaHidden, alt, ariaLabel, ariaLabelledby])
+      const actualAriaHidden =
+        ariaHidden !== undefined
+          ? ariaHidden
+          : alt !== undefined || (ariaLabel === undefined && ariaLabelledby === undefined)
+            ? true
+            : undefined
+      const replacedColor =
+        color && existsColor(color)
+          ? colorSet[color] in textColor
+            ? textColor[colorSet[color] as keyof typeof textColor]
+            : (defaultColorPalette[colorSet[color] as keyof typeof defaultColorPalette] as string)
+          : color
 
       const classNames = useMemo(() => {
         const { icon, wrapperWithAlt } = classNameGenerator()
@@ -92,38 +93,24 @@ export const generateIcon = (SvgIcon: IconType) => {
         }
       }, [className])
 
-      const replacedColor = useMemo(() => {
-        if (color && existsColor(color)) {
-          const colorName = colorSet[color]
-
-          if (colorName in textColor) {
-            return textColor[colorName as keyof typeof textColor]
-          }
-
-          return defaultColorPalette[colorName as keyof typeof defaultColorPalette] as string
-        }
-
-        return color
-      }, [color])
-
       const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
           {...rest}
+          role={role}
           stroke="currentColor"
           fill="currentColor"
-          strokeWidth="0"
+          focusable={focusable}
           // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
           size={iconSize}
+          strokeWidth="0"
           width={iconSize}
           height={iconSize}
           color={replacedColor}
           className={classNames.icon}
-          role={role}
           aria-hidden={actualAriaHidden}
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledby}
-          focusable={focusable}
         />
       )
 

@@ -4,8 +4,8 @@ import { FaCircleQuestionIcon, OpenInNewTabIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { TextLink } from '../TextLink'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
-import type { ComponentProps } from 'react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict text-link.pict
@@ -21,7 +21,7 @@ import type { ComponentProps } from 'react'
  * undefined 'M'       undefined undefined _blank
  */
 const _cases: Array<
-  Pick<ComponentProps<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target'>
+  Pick<ComponentPropsWithoutRef<typeof TextLink>, 'href' | 'prefix' | 'suffix' | 'target' | 'size'>
 > = [
   {
     href: undefined,

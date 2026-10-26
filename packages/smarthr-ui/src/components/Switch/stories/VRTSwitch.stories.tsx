@@ -1,8 +1,8 @@
 import { Stack } from '../../Layout'
 import { Switch } from '../Switch'
 
-import type { Meta } from '@storybook/react-webpack5'
-import type { ComponentProps } from 'react'
+import type { Meta } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict switch.pict
@@ -12,7 +12,7 @@ import type { ComponentProps } from 'react'
  * false                     false           true
  * false                     true            false
  */
-const _cases: Array<ComponentProps<typeof Switch>> = [
+const _cases: Array<ComponentPropsWithoutRef<typeof Switch>> = [
   {
     unrecommendedLabelHidden: true,
     defaultChecked: true,
@@ -44,7 +44,7 @@ export default {
   render: (args) => (
     <Stack>
       {[undefined, 'focus-visible'].map((id) => (
-        <Stack align="flex-start" id={id} key={id}>
+        <Stack key={id} id={id} align="flex-start">
           {_cases.map((props, i) => (
             <Switch {...props} {...args} key={i} className="smarthr-ui-Switch" />
           ))}

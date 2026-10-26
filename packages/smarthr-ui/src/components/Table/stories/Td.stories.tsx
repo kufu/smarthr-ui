@@ -3,7 +3,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { Th } from '../Th'
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
 const Template: StoryFn<typeof Td> = (args) => (
   <Table>
@@ -82,23 +82,13 @@ export const Fixed: StoryObj<typeof Td> = {
       <Table fixedHead reel>
         <thead>
           <tr>
-            <Th {...args} fixed="left">
-              fixed: left
-            </Th>
-            <Th {...args} fixed="left">
-              fixed: left
-            </Th>
+            <Th fixed="left">fixed: left</Th>
+            <Th fixed="left">fixed: left</Th>
             {[...Array(20)].map((_, i) => (
-              <Th {...args} key={i}>
-                表カラム{i + 1}
-              </Th>
+              <Th key={i}>表カラム{i + 1}</Th>
             ))}
-            <Th {...args} fixed="right">
-              fixed: left
-            </Th>
-            <Th {...args} fixed="right">
-              fixed: left
-            </Th>
+            <Th fixed="right">fixed: left</Th>
+            <Th fixed="right">fixed: left</Th>
           </tr>
         </thead>
         <tbody>

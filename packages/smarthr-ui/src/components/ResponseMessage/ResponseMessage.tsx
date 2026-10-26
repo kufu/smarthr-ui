@@ -1,22 +1,24 @@
 import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import {
-  FaCircleCheckIcon,
-  FaCircleExclamationIcon,
-  FaCircleInfoIcon,
-  FaRotateIcon,
-  type ComponentProps as IconProps,
-  WarningIcon,
-} from '../Icon'
+import { StatusIcon } from '../Icon'
+import { LiveRegion } from '../LiveRegion'
 import { Text } from '../Text'
 
-type Props = PropsWithChildren<Omit<IconProps, 'size' | 'alt'>> & {
-  size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
-  status?: keyof typeof STATUS_ICON_MAPPER
-}
+import type { ExtendElementPropsWithRef } from '../../types'
 
-export const classNameGenerator = tv({
+type Props = ExtendElementPropsWithRef<
+  typeof StatusIcon,
+  PropsWithChildren<{
+    size?: Extract<ComponentPropsWithoutRef<typeof Text>['size'], 'XS' | 'S' | 'M'>
+    status?: ComponentPropsWithoutRef<typeof StatusIcon>['status']
+    /** role 属性 */
+    role?: 'alert' | 'status'
+  }>,
+  { omit: 'bold' }
+>
+
+const classNameGenerator = tv({
   base: '',
   variants: {
     status: {
@@ -29,21 +31,30 @@ export const classNameGenerator = tv({
   },
 })
 
-const STATUS_ICON_MAPPER = {
-  info: FaCircleInfoIcon,
-  success: FaCircleCheckIcon,
-  warning: WarningIcon,
-  error: FaCircleExclamationIcon,
-  sync: FaRotateIcon,
-} as const
+const ROLE_STATUS_TYPE_REGEX = /^(info|sync|success)$/
 
-export const ResponseMessage: FC<Props> = ({ status = 'info', size, children, ...rest }) => {
-  const className = useMemo(() => classNameGenerator({ status }), [status])
-  const TextIcon = STATUS_ICON_MAPPER[status]
+export const ResponseMessage: FC<Props> = ({
+  status = 'info',
+  size,
+  role,
+  className,
+  children,
+  ...rest
+}) => {
+  const iconClassName = useMemo(() => classNameGenerator({ status }), [status])
 
   return (
-    <Text icon={<TextIcon {...rest} className={className} />} size={size}>
-      {children}
-    </Text>
+    <LiveRegion
+      role={role || (ROLE_STATUS_TYPE_REGEX.test(status) ? 'status' : 'alert')}
+      className="shr-contents"
+    >
+      <Text
+        size={size}
+        className={className}
+        icon={<StatusIcon {...rest} status={status} className={iconClassName} />}
+      >
+        {children}
+      </Text>
+    </LiveRegion>
   )
 }

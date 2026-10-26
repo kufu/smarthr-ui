@@ -1,24 +1,19 @@
-'use client'
-
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { Scroller } from '../../Scroller'
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap } from '../../../types'
 
-type Props = VariantProps<typeof classNameGenerator> &
-  PropsWithChildren<{
-    as?: string | ComponentType<any>
-  }> &
-  ComponentPropsWithRef<'div'>
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    gap?: PositiveGap
+    padding?: PositiveGap
+  },
+  { as: true }
+>
 
 const classNameGenerator = tv({
   base: [
@@ -54,7 +49,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-3',
       XXL: 'shr-gap-3.5',
       X3L: 'shr-gap-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<NonNullable<Props['gap']>, string>,
     padding: {
       0: 'shr-p-0',
       0.25: 'shr-p-0.25',
@@ -78,34 +73,33 @@ const classNameGenerator = tv({
       XL: 'shr-p-3',
       XXL: 'shr-p-3.5',
       X3L: 'shr-p-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<NonNullable<Props['padding']>, string>,
   },
 })
 
-export const Reel = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', gap = 0.5, padding = 0, className, children, ...rest }, ref) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ gap, padding, className }),
-      [className, gap, padding],
-    )
+export const Reel: FC<Props> = ({
+  as: Component = 'div',
+  gap = 0.5,
+  padding = 0,
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ gap, padding, className }),
+    [className, gap, padding],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = (
-      <Scroller
-        {...rest}
-        as={Component}
-        ref={ref}
-        direction="horizontal"
-        className={actualClassName}
-      >
-        {children}
-      </Scroller>
-    )
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Scroller {...rest} as={Component} direction="horizontal" className={actualClassName}>
+      {children}
+    </Scroller>
+  )
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    return body
-  },
-)
+  return body
+}

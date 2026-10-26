@@ -1,26 +1,19 @@
-import {
-  type ComponentProps,
-  type ElementType,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useMemo,
-} from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type ElementType, type ReactNode, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
+import { TextOverflowTooltip } from './client'
+
 import type { AbstractSize, CharRelativeSize } from '../../themes'
-import type { Gap } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
 type StyleType =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
+  'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
 
-export const STYLE_TYPE_MAP: { [key in StyleType]: VariantProps<typeof classNameGenerator> } = {
+export const STYLE_TYPE_MAP: {
+  [key in StyleType]: Pick<Props<ElementType>, 'size' | 'leading' | 'weight' | 'color'>
+} = {
   screenTitle: {
     size: 'XL',
     leading: 'TIGHT',
@@ -66,10 +59,13 @@ const classNameGenerator = tv({
       L: 'shr-text-lg',
       XL: 'shr-text-xl',
       XXL: 'shr-text-2xl',
-    },
+    } satisfies Record<NonNullable<Props<ElementType>['size']>, string>,
     weight: {
       normal: 'shr-font-normal',
       bold: 'shr-font-bold',
+    } satisfies Record<NonNullable<Props<ElementType>['weight']>, string>,
+    emphasis: {
+      true: 'shr-not-italic',
     },
     italic: {
       true: 'shr-italic',
@@ -81,20 +77,20 @@ const classNameGenerator = tv({
       TEXT_DISABLED: 'shr-text-disabled',
       TEXT_LINK: 'shr-text-link',
       inherit: 'shr-text-color-inherit',
-    },
+    } satisfies Record<NonNullable<Props<ElementType>['color']>, string>,
     leading: {
       NONE: 'shr-leading-none',
       TIGHT: 'shr-leading-tight',
       NORMAL: 'shr-leading-normal',
       LOOSE: 'shr-leading-loose',
-    },
+    } satisfies Record<NonNullable<Props<ElementType>['leading']>, string>,
     whiteSpace: {
       normal: 'shr-whitespace-normal',
       nowrap: 'shr-whitespace-nowrap',
       pre: 'shr-whitespace-pre',
       'pre-line': 'shr-whitespace-pre-line',
       'pre-wrap': 'shr-whitespace-pre-wrap',
-    },
+    } satisfies Record<NonNullable<Props<ElementType>['whiteSpace']>, string>,
     maxLines: {
       1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       2: 'shr-line-clamp-[2]',
@@ -102,7 +98,7 @@ const classNameGenerator = tv({
       4: 'shr-line-clamp-[4]',
       5: 'shr-line-clamp-[5]',
       6: 'shr-line-clamp-[6]',
-    },
+    } satisfies Record<NonNullable<MaxLinesObject['max']>, string>,
   },
 })
 
@@ -162,37 +158,63 @@ type ActualIconType =
     }
 type IconType = ActualIconType | ReactNode
 
-// VariantProps を使うとコメントが書けない〜🥹
-export type TextProps<T extends ElementType = 'span'> = VariantProps<typeof classNameGenerator> & {
-  /** テキストコンポーネントの HTML タグ名。初期値は span */
-  as?: T
-  /** 強調するかどうかの真偽値。指定すると em 要素になる */
-  emphasis?: boolean
-  /** 見た目の種類 */
-  styleType?: StyleType
-  /** 設置するアイコン */
-  icon?: IconType
+type MaxLinesObject = {
+  max: 1 | 2 | 3 | 4 | 5 | 6 | undefined
+  /** true のとき、テキストが省略されている場合のみ Tooltip で全文を表示する */
+  tooltip?: boolean
 }
+type MaxLinesType = 1 | 2 | 3 | 4 | 5 | 6 | MaxLinesObject | undefined
+
+type Props<T extends ElementType> = ExtendElementPropsWithRef<
+  T,
+  {
+    /** テキストコンポーネントの HTML タグ名。初期値は span */
+    as?: T
+    /** 強調するかどうかの真偽値。指定すると em 要素になる */
+    emphasis?: boolean
+    /** 見た目の種類 */
+    styleType?: StyleType
+    /** 設置するアイコン */
+    icon?: IconType
+
+    size?: 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+    weight?: 'normal' | 'bold'
+    italic?: boolean
+    color?: 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'inherit'
+    leading?: 'NONE' | 'TIGHT' | 'NORMAL' | 'LOOSE'
+    whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap'
+    /** 最大表示行数。オブジェクト形式で指定すると、省略時に Tooltip で全文を表示するかどうかも指定できる */
+    maxLines?: MaxLinesType
+  }
+>
 
 const iconObjectConverter = (icon: ReactNode) => (icon ? { prefix: icon } : undefined)
+const maxLinesObjectConverter = (maxLines: 1 | 2 | 3 | 4 | 5 | 6 | undefined): MaxLinesObject => ({
+  max: maxLines,
+})
 
 const ActualText = <T extends ElementType = 'span'>({
   emphasis,
   styleType,
   icon: orgIcon,
   weight = emphasis ? 'bold' : undefined,
-  as: Component = emphasis ? 'em' : 'span',
+  as,
   size,
   italic,
   color,
   leading,
   whiteSpace,
-  maxLines,
+  maxLines: orgMaxLines,
   className,
   children,
   ...rest
-}: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
-  if (maxLines !== undefined && (maxLines < 1 || maxLines > 6)) {
+}: Props<T>) => {
+  const maxLines = useObjectAttributes<MaxLinesType, MaxLinesObject>(
+    orgMaxLines,
+    maxLinesObjectConverter,
+  )
+
+  if (maxLines.max !== undefined && (maxLines.max < 1 || maxLines.max > 6)) {
     throw new Error('"maxLines" は 1 ~ 6 の範囲で指定してください')
   }
 
@@ -207,28 +229,51 @@ const ActualText = <T extends ElementType = 'span'>({
       weight: weight || styleTypeValues.weight,
       color: color || styleTypeValues.color,
       leading: leading || styleTypeValues.leading,
+      emphasis,
       italic,
       whiteSpace,
-      maxLines,
+      maxLines: maxLines.max,
       className,
     })
-  }, [size, weight, italic, color, leading, whiteSpace, maxLines, className, styleType])
+  }, [
+    size,
+    weight,
+    emphasis,
+    italic,
+    color,
+    leading,
+    whiteSpace,
+    maxLines.max,
+    className,
+    styleType,
+  ])
+  const hasIcon = !!icon
+  const iconGap = icon?.gap
+
   const wrapperClassName = useMemo(
-    () => (icon ? wrapperClassNameGenerator({ gap: icon.gap || 0.25 }) : ''),
-    [icon],
+    () => (hasIcon ? wrapperClassNameGenerator({ gap: iconGap || 0.25 }) : ''),
+    [hasIcon, iconGap],
   )
 
-  return (
+  const content = icon ? (
+    <span className={wrapperClassName}>
+      {icon.prefix}
+      {children}
+      {icon.suffix}
+    </span>
+  ) : (
+    children
+  )
+
+  const Component = as || (emphasis ? 'em' : 'span')
+
+  return maxLines.tooltip ? (
+    <TextOverflowTooltip {...rest} as={Component} className={actualClassName}>
+      {content}
+    </TextOverflowTooltip>
+  ) : (
     <Component {...rest} className={actualClassName}>
-      {icon ? (
-        <span className={wrapperClassName}>
-          {icon.prefix}
-          {children}
-          {icon.suffix}
-        </span>
-      ) : (
-        children
-      )}
+      {content}
     </Component>
   )
 }

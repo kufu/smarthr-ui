@@ -1,15 +1,17 @@
 'use client'
 
 import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
-import { useRemoteTrigger } from '../useRemoteTrigger'
 
-import type { ComponentProps, FC } from 'react'
+import { useRemoteTrigger } from './useRemoteTrigger'
 
-type Props = Omit<
-  ComponentProps<typeof ControlledStepFormDialog>,
-  'isOpen' | 'onClickClose' | 'id'
-> &
-  Parameters<typeof useRemoteTrigger>[0]
+import type { ExtendElementPropsWithRef } from '../../../types'
+import type { FC } from 'react'
+
+type Props = ExtendElementPropsWithRef<
+  typeof ControlledStepFormDialog,
+  Parameters<typeof useRemoteTrigger>[0],
+  { omit: 'isOpen' }
+>
 
 export const StepFormDialog: FC<Props> = ({
   id,
@@ -20,11 +22,7 @@ export const StepFormDialog: FC<Props> = ({
   onPressEscape,
   ...rest
 }) => {
-  const {
-    isOpen,
-    onClickClose: actualOnClickClose,
-    onPressEscape: actualOnPressEscape,
-  } = useRemoteTrigger({
+  const { isOpen, handleClickClose, handlePressEscape } = useRemoteTrigger({
     id,
     onClickClose,
     onPressEscape,
@@ -38,8 +36,8 @@ export const StepFormDialog: FC<Props> = ({
       {...rest}
       id={id}
       isOpen={isOpen}
-      onClickClose={actualOnClickClose}
-      onPressEscape={actualOnPressEscape}
+      onClickClose={handleClickClose}
+      onPressEscape={handlePressEscape}
     />
   )
 }

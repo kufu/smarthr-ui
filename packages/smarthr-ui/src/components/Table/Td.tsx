@@ -1,23 +1,30 @@
-import { type ComponentPropsWithoutRef, type PropsWithChildren, memo, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { reelShadowClassNameGenerator } from './reelShadowStyle'
 
-import type { CellContentWidth } from './type'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-export type AbstractProps = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> & {
+type CellContentWidth = number | string
+
+type Props = ExtendElementPropsWithRef<
+  'td',
+  {
+    /** テキストの水平方向の配置 */
+    align?: 'left' | 'right'
+    /** テキストの垂直方向の配置 */
+    vAlign?: 'middle' | 'baseline'
+    /** 値が空の場合にハイフンを表示するかどうか */
+    nullable?: boolean
     /** 横スクロール時、カラムを左右いずれかに固定 */
     fixed?: 'left' | 'right'
     contentWidth?:
-      | CellContentWidth
-      | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
+      CellContentWidth | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
   }
 >
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'td'>, keyof AbstractProps>
 
-export const Td = memo<Props>(
-  ({ align, vAlign, nullable, fixed, contentWidth, className, style, ...rest }) => {
+export const Td: FC<Props> = memo(
+  ({ align, vAlign, nullable, fixed, contentWidth, className, style, children, ...rest }) => {
     const actualClassName = useMemo(() => {
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
@@ -29,23 +36,24 @@ export const Td = memo<Props>(
 
       return `${base} ${shadow}`
     }, [align, className, fixed, nullable, vAlign])
-    const actualStyle = useMemo(() => {
-      if (typeof contentWidth === 'object') {
-        return {
-          ...style,
-          width: convertContentWidth(contentWidth.base),
-          minWidth: convertContentWidth(contentWidth.min),
-          maxWidth: convertContentWidth(contentWidth.max),
-        }
-      }
+    const actualStyle =
+      typeof contentWidth === 'object'
+        ? {
+            ...style,
+            width: convertContentWidth(contentWidth.base),
+            minWidth: convertContentWidth(contentWidth.min),
+            maxWidth: convertContentWidth(contentWidth.max),
+          }
+        : {
+            ...style,
+            width: convertContentWidth(contentWidth),
+          }
 
-      return {
-        ...style,
-        width: convertContentWidth(contentWidth),
-      }
-    }, [style, contentWidth])
-
-    return <td {...rest} data-fixed={fixed} className={actualClassName} style={actualStyle} />
+    return (
+      <td {...rest} className={actualClassName} style={actualStyle} data-fixed={fixed}>
+        {children}
+      </td>
+    )
   },
 )
 
@@ -59,11 +67,11 @@ const classNameGenerator = tv({
     align: {
       left: '',
       right: 'shr-text-right',
-    },
+    } satisfies Record<NonNullable<Props['align']>, string>,
     vAlign: {
       middle: '',
       baseline: 'shr-align-baseline',
-    },
+    } satisfies Record<NonNullable<Props['vAlign']>, string>,
     nullable: {
       true: "empty:after:shr-content-['-----']",
     },

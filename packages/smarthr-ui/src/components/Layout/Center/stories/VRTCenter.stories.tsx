@@ -2,7 +2,7 @@ import { Center } from '../Center'
 
 import { Padding } from './Center.stories'
 
-import type { Meta } from '@storybook/react-webpack5'
+import type { Meta } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Layout/Center/VRT',

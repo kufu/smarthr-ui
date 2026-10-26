@@ -11,12 +11,12 @@ describe('Browser', () => {
     render(
       <IntlProvider locale="ja">
         <Browser
+          onSelectItem={onSelectItem}
           items={[
             { value: '1', label: 'アイテム1' },
             { value: '2', label: 'アイテム2' },
             { value: '3', label: 'アイテム3' },
           ]}
-          onSelectItem={onSelectItem}
         />
         <a href="/">次の要素</a>
       </IntlProvider>,
@@ -31,12 +31,12 @@ describe('Browser', () => {
     render(
       <IntlProvider locale="ja">
         <Browser
+          value="2"
           items={[
             { value: '1', label: 'アイテム1' },
             { value: '2', label: 'アイテム2' },
             { value: '3', label: 'アイテム3' },
           ]}
-          value="2"
         />
         <a href="/">次の要素</a>
       </IntlProvider>,
@@ -58,6 +58,8 @@ describe('Browser', () => {
     render(
       <IntlProvider locale="ja">
         <Browser
+          value="2-2"
+          onSelectItem={onSelectItem}
           items={[
             {
               value: '1-1',
@@ -84,8 +86,6 @@ describe('Browser', () => {
             },
             { value: '1-3', label: 'アイテム1-3' },
           ]}
-          value="2-2"
-          onSelectItem={onSelectItem}
         />
         ,
       </IntlProvider>,

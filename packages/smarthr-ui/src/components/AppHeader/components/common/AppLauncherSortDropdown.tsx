@@ -12,12 +12,11 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../../../hooks/useTheme'
-import { useIntl } from '../../../../intl'
+import { useTheme } from '../../../../hooks/client/useTheme'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -36,63 +35,58 @@ const classNameGenerator = tv({
   },
 })
 
+const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { trigger, contentBody, contentButton } = classNameGenerator()
+
+  return {
+    trigger: trigger(),
+    contentBody: contentBody(),
+    contentButton: contentButton(),
+  }
+})()
+
 type Props = {
   sortType: Launcher['sortType']
-  onSelectSortType: (sortType: Launcher['sortType']) => void
+  handleSelectSortType: (sortType: Launcher['sortType']) => void
 }
 
-export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType }) => {
+export const AppLauncherSortDropdown: FC<Props> = ({ sortType, handleSelectSortType }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
 
-  const classNames = useMemo(() => {
-    const { trigger, contentBody, contentButton } = classNameGenerator()
-
-    return {
-      trigger: trigger(),
-      contentBody: contentBody(),
-      contentButton: contentButton(),
-    }
-  }, [])
-
-  const { localize } = useIntl()
-  const translated = useMemo(
-    () => ({
-      label: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownLabel',
-        defaultText: '表示順',
-      }),
-      selected: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownSelected',
-        defaultText: '選択中',
-      }),
-      default: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault',
-        defaultText: 'デフォルト',
-      }),
-      asc: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameAsc',
-        defaultText: 'アプリ名の昇順',
-      }),
-      desc: localize({
-        id: 'smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameDesc',
-        defaultText: 'アプリ名の降順',
-      }),
-    }),
-    [localize],
-  )
-
-  const options = useMemo(
+  const options = useMemo<Array<[Launcher['sortType'], JSX.Element]>>(
     () => [
-      ['default', translated.default],
-      ['name/asc', translated.asc],
-      ['name/desc', translated.desc],
+      [
+        'default',
+        <Localizer
+          key="default"
+          id="smarthr-ui/AppHeader/Launcher/sortDropdownOrderDefault"
+          defaultText="デフォルト"
+        />,
+      ],
+      [
+        'name/asc',
+        <Localizer
+          key="name/asc"
+          id="smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameAsc"
+          defaultText="アプリ名の昇順"
+        />,
+      ],
+      [
+        'name/desc',
+        <Localizer
+          key="name/desc"
+          id="smarthr-ui/AppHeader/Launcher/sortDropdownOrderNameDesc"
+          defaultText="アプリ名の降順"
+        />,
+      ],
     ],
-    [translated],
+    [],
   )
 
   const onClickOption = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
-      onSelectSortType(e.currentTarget.value as Launcher['sortType'])
+      handleSelectSortType(e.currentTarget.value as Launcher['sortType'])
 
       // Dropdown がネストしており、この Dropdown のみ閉じて親の Dropdown は開いたままというのができない
       // そのため、無理矢理クリックイベントを発生させて実現している
@@ -103,24 +97,23 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, onSelectSortType 
         }
       }, 0)
     },
-    [onSelectSortType],
+    [handleSelectSortType],
   )
 
   return (
     <Dropdown>
-      <TriggerButton triggerRef={triggerRef} className={classNames.trigger}>
-        {translated.label}
+      <TriggerButton triggerRef={triggerRef} className={CLASS_NAMES.trigger}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownLabel" defaultText="表示順" />
       </TriggerButton>
       <DropdownContent controllable>
-        <div role="listbox" className={classNames.contentBody}>
+        <div role="listbox" className={CLASS_NAMES.contentBody}>
           {options.map(([value, children], i) => (
             <OptionButton
               key={i}
               value={value}
               selected={value === sortType}
-              selectedAlt={translated.selected}
+              className={CLASS_NAMES.contentButton}
               onClick={onClickOption}
-              className={classNames.contentButton}
             >
               {children}
             </OptionButton>
@@ -137,12 +130,12 @@ const TriggerButton = memo<
   <DropdownTrigger>
     <Button
       ref={triggerRef}
-      size="S"
       variant="text"
-      suffix={<FaCaretDownIcon />}
+      size="S"
       className={className}
+      suffix={<FaCaretDownIcon />}
     >
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   </DropdownTrigger>
 ))
@@ -151,26 +144,33 @@ const OptionButton = memo<
   PropsWithChildren<{
     value: string
     selected: boolean
-    selectedAlt: string
     onClick: (e: MouseEvent<HTMLButtonElement>) => void
     className: string
   }>
->(({ value, selected, selectedAlt, onClick, children, className }) => {
+>(({ value, selected, onClick, children, className }) => {
   const theme = useTheme()
   return (
     <Button
-      value={value}
       role="option"
-      aria-selected={selected}
+      value={value}
       className={className}
+      aria-selected={selected}
+      onClick={onClick}
       prefix={
         selected && (
-          <FaCheckIcon color={theme.textColor.main} alt={<Translate>{selectedAlt}</Translate>} />
+          <FaCheckIcon
+            alt={
+              <Localizer
+                id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected"
+                defaultText="選択中"
+              />
+            }
+            color={theme.textColor.main}
+          />
         )
       }
-      onClick={onClick}
     >
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   )
 })

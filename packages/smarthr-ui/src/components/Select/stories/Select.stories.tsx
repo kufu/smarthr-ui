@@ -3,7 +3,7 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { Select } from '../Select'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Select',
@@ -62,7 +62,7 @@ export const Width: StoryObj<typeof Select> = {
   render: (args) => (
     <Stack align="flex-start">
       {['15em', '50%', 200].map((width) => (
-        <Select {...args} width={width} key={width} />
+        <Select {...args} key={width} width={width} />
       ))}
     </Stack>
   ),
@@ -72,8 +72,8 @@ export const Size: StoryObj<typeof Select> = {
   name: 'size',
   render: (args) => (
     <Stack align="flex-start">
-      {[undefined, 'default', 's'].map((size) => (
-        <Select {...args} size={size as any} key={size} />
+      {([undefined, 'M', 'S'] as const).map((size) => (
+        <Select {...args} key={String(size)} size={size} />
       ))}
     </Stack>
   ),

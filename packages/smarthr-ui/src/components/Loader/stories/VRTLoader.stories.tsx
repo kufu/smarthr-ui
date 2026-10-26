@@ -1,8 +1,8 @@
 import { Stack } from '../../Layout'
 import { Loader } from '../Loader'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
-import type { ComponentProps } from 'react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict loader.pict
@@ -12,7 +12,7 @@ import type { ComponentProps } from 'react'
  * s    あり  light
  * s    なし  primary
  */
-const _cases: Array<ComponentProps<typeof Loader>> = [
+const _cases: Array<ComponentPropsWithoutRef<typeof Loader>> = [
   { size: 'M', text: undefined, type: 'light' },
   { size: 'M', text: '読込中', type: 'primary' },
   { size: 'S', text: '読込中', type: 'light' },
@@ -24,7 +24,7 @@ export default {
   render: (args) => (
     <Stack>
       {_cases.map((props, i) => (
-        <div className={props.type === 'light' ? 'shr-bg-scrim' : ''} key={i}>
+        <div key={i} className={props.type === 'light' ? 'shr-bg-scrim' : ''}>
           <Loader {...args} {...props} />
         </div>
       ))}

@@ -1,7 +1,9 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
+
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -20,11 +22,14 @@ const classNameGenerator = tv({
   },
 })
 
-type AbstractProps = PropsWithChildren<{
-  /** `true` のとき、TabBar に下線を表示する */
-  bordered?: boolean
-}>
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps | 'role'>
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
+    /** `true` のとき、TabBar に下線を表示する */
+    bordered?: boolean
+  },
+  { omit: 'role' }
+>
 
 export const TabBar: FC<Props> = ({ className, bordered, children, ...rest }) => {
   const classNames = useMemo(() => {

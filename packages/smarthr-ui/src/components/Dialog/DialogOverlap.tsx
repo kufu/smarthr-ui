@@ -1,23 +1,19 @@
-import {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+'use client'
+
+import { type FC, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
 import { Center } from '../Layout'
 
-type Props = PropsWithChildren<
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'div',
   {
     isOpen: boolean
-    as?: ComponentProps<typeof Center>['as']
-  } & ComponentProps<'div'>
+  },
+  { as: true }
 >
 
 const classNameGenerator = tv({
@@ -38,17 +34,13 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) => {
-  const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
-  const nodeRef = useRef<HTMLDivElement>(null)
-
+export const DialogOverlap: FC<Props> = ({ isOpen, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  useEffect(() => {
-    if (isOpen) {
-      setChildrenBuffer(children)
-    }
-  }, [isOpen, children])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const childrenBuffer = useMemo(() => children, [isOpen])
+
+  const nodeRef = useRef<HTMLDivElement>(null)
 
   return (
     <CSSTransition
@@ -58,7 +50,7 @@ export const DialogOverlap: FC<Props> = ({ isOpen, className, children, as }) =>
       unmountOnExit
       classNames="shr-dialog-transition"
     >
-      <Center ref={nodeRef} verticalCentering className={actualClassName} as={as}>
+      <Center {...rest} ref={nodeRef} verticalCentering className={actualClassName}>
         {isOpen ? children : childrenBuffer}
       </Center>
     </CSSTransition>

@@ -1,6 +1,6 @@
 import { RadioButtonPanel } from '../RadioButtonPanel'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const _asOptions = { なし: undefined, '<span>': 'span', '<p>': 'p' }
 

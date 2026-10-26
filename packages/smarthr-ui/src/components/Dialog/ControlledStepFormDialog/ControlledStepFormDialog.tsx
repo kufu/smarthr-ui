@@ -1,66 +1,170 @@
 'use client'
 
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type FormEvent,
+  type MouseEvent,
   type ReactNode,
-  useCallback,
+  isValidElement,
   useContext,
   useMemo,
   useRef,
 } from 'react'
 
-import { useIntl } from '../../../intl'
-import { DialogContentInner } from '../DialogContentInner'
-import { useDialogPortal } from '../useDialogPortal'
+import { useLatest } from '../../../hooks/useLatest'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
+import { useLocalize } from '../../../intl'
+import { DialogContent } from '../DialogContent'
+import { DialogPortal } from '../DialogPortal'
 import { useObjectHeading } from '../useObjectHeading'
 
-import {
-  StepFormDialogContentInner,
-  type StepFormDialogContentInnerProps,
-} from './StepFormDialogContentInner'
+import { StepFormDialogContent } from './StepFormDialogContent'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
-import {
-  type ButtonArgType,
-  type ObjectButtonType,
-  useStepFormDialogButton,
-} from './useStepFormDialogButton'
 
-import type { FocusTrapRef } from '../FocusTrap'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
+import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 
-type ObjectHeadingType = Omit<StepFormDialogContentInnerProps['heading'], 'id'>
+type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
+
+type VariableFunctionType<T> = (currentStep: StepItem) => T
+type ObjectButtonType = {
+  text?: ButtonArgType
+  /** ボタンを非表示にするかどうか */
+  hidden?: boolean | VariableFunctionType<boolean>
+  /** ボタンを無効にするかどうか */
+  disabled?: boolean | VariableFunctionType<boolean>
+  /** ボタンのスタイル */
+  theme?: ButtonThemeType | VariableFunctionType<ButtonThemeType>
+}
+
+/** text/theme/disabled/hiddenをまとめて1つの関数で解決する場合の戻り値。関数のネストは許容しない */
+type ButtonResolverResult = {
+  text?: ReactNode
+  theme?: ButtonThemeType
+  disabled?: boolean
+  hidden?: boolean
+}
+/** currentStepに応じてtext/theme/disabled/hiddenをまとめて返す関数形式 */
+type ButtonResolverType = (currentStep: StepItem, defaultText: ReactNode) => ButtonResolverResult
+
+type ButtonType = ButtonArgType | ObjectButtonType | ButtonResolverType
+
+// HINT: ButtonArgTypeの関数部分とButtonResolverTypeはどちらも`(currentStep, defaultText) => ...`という
+// 同じ引数形だが、戻り値がReactNodeかButtonResolverResultかで実行時に判別する
+const isButtonResolverResult = (value: unknown): value is ButtonResolverResult =>
+  !!value && typeof value === 'object' && !Array.isArray(value) && !isValidElement(value)
+
+type StepFormDialogContentProps = ComponentPropsWithRef<typeof StepFormDialogContent>
+
+type ObjectHeadingType = Omit<StepFormDialogContentProps['heading'], 'id'>
 type HeadingType = ReactNode | ObjectHeadingType
 
-type DefaultTextsType = Record<
-  'closeButtonLabel' | 'nextButtonLabel' | 'backButtonLabel',
-  ReactNode
+type Props = ExtendElementPropsWithRef<
+  typeof DialogContent,
+  ExtendProps<
+    StepFormDialogContentProps,
+    DialogProps & {
+      heading: HeadingType
+      submitButton: ButtonType
+      closeButton?: ButtonType
+      backButton?: ButtonType
+      onSubmit: StepFormDialogContentProps['handleSubmit']
+      onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+      onClickBack?: () => void
+    },
+    { omit: 'activeStep' | 'handleClickClose' | 'handleClickBack' | 'handleSubmit' }
+  >,
+  { omit: 'focusTrapRef' }
 >
-
-type AbstractProps = Omit<
-  StepFormDialogContentInnerProps,
-  'heading' | 'activeStep' | 'submitButton' | 'closeButton' | 'backButton'
-> &
-  DialogProps & {
-    heading: HeadingType
-    submitButton: ButtonArgType | ObjectButtonType
-    closeButton?: ButtonArgType | ObjectButtonType
-    backButton?: ButtonArgType | ObjectButtonType
-  }
-type Props = AbstractProps & Omit<ComponentProps<'div'>, keyof AbstractProps>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
-export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstStep, ...rest }) => {
-  const { createPortal } = useDialogPortal(portalParent, id)
+// HINT: ButtonResolverType(関数)もtextとして保持し、呼び出し後にisButtonResolverResultで判別する
+type InternalObjectButtonType = Omit<ObjectButtonType, 'text'> & {
+  text?: ButtonArgType | ButtonResolverType
+}
 
-  return createPortal(
+const buttonObjectConverter = (
+  text: ButtonArgType | ButtonResolverType,
+): InternalObjectButtonType => ({
+  text,
+})
+
+type UseStepFormDialogButtonProps = {
+  button: ButtonType
+  currentStep: StepItem
+  defaultValues: {
+    text: ReactNode
+    theme?: ButtonThemeType
+  }
+}
+
+const useStepFormDialogButton = ({
+  button,
+  currentStep,
+  defaultValues: { text: defaultText, theme: defaultTheme },
+}: UseStepFormDialogButtonProps): CommonButtonType => {
+  const {
+    text: tempText,
+    theme: tempTheme,
+    disabled: tempDisabled,
+    hidden: tempHidden,
+  } = useObjectAttributes<ButtonType, InternalObjectButtonType>(button, buttonObjectConverter)
+
+  const actualButton = useMemo((): CommonButtonType => {
+    let text = tempText ?? defaultText
+    let textFunc = false
+    let actualTempTheme = tempTheme
+    let actualTempDisabled = tempDisabled
+    let actualTempHidden = tempHidden
+
+    if (typeof text === 'function') {
+      textFunc = true
+
+      const result = text(currentStep, defaultText)
+
+      if (isButtonResolverResult(result)) {
+        text = result.text ?? defaultText
+        actualTempTheme = result.theme ?? actualTempTheme
+        actualTempDisabled = result.disabled ?? actualTempDisabled
+        actualTempHidden = result.hidden ?? actualTempHidden
+      } else {
+        text = result
+      }
+    }
+
+    const actualTheme = actualTempTheme || defaultTheme
+    const theme = typeof actualTheme === 'function' ? actualTheme(currentStep) : actualTheme
+    const disabled =
+      typeof actualTempDisabled === 'function'
+        ? actualTempDisabled(currentStep)
+        : actualTempDisabled
+    const hidden =
+      typeof actualTempHidden === 'function' ? actualTempHidden(currentStep) : actualTempHidden
+
+    return {
+      text,
+      theme,
+      disabled,
+      hidden,
+      functionCall: {
+        text: textFunc,
+      },
+    }
+  }, [currentStep, tempText, tempTheme, tempDisabled, tempHidden, defaultText, defaultTheme])
+
+  return actualButton
+}
+
+export const ControlledStepFormDialog: FC<Props> = ({ portalParent, id, firstStep, ...rest }) => (
+  <DialogPortal id={id} parent={portalParent}>
     <StepFormDialogProvider firstStep={firstStep}>
       <ActualControlledStepFormDialog {...rest} firstStep={firstStep} />
-    </StepFormDialogProvider>,
-  )
-}
+    </StepFormDialogProvider>
+  </DialogPortal>
+)
 
 const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   children,
@@ -81,26 +185,22 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   isOpen,
   ...rest
 }) => {
-  const { localize } = useIntl()
-  const defaultTexts: DefaultTextsType = useMemo(
-    () => ({
-      closeButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
-        defaultText: 'キャンセル',
-      }),
-      nextButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
-        defaultText: '次へ',
-      }),
-      backButtonLabel: localize({
-        id: 'smarthr-ui/StepFormDialog/backButtonLabel',
-        defaultText: '戻る',
-      }),
-    }),
-    [localize],
-  )
+  const defaultTexts = useLocalize({
+    closeButtonLabel: {
+      id: 'smarthr-ui/StepFormDialog/closeButtonLabel',
+      defaultText: 'キャンセル',
+    },
+    nextButtonLabel: {
+      id: 'smarthr-ui/StepFormDialog/nextButtonLabel',
+      defaultText: '次へ',
+    },
+    backButtonLabel: {
+      id: 'smarthr-ui/StepFormDialog/backButtonLabel',
+      defaultText: '戻る',
+    },
+  })
   const { currentStep } = useContext(StepFormDialogContext)
-  const activeStep = useMemo(() => currentStep?.stepNumber ?? 1, [currentStep])
+  const activeStep = currentStep?.stepNumber ?? 1
 
   const heading = useObjectHeading<HeadingType, ObjectHeadingType>(
     orgHeading,
@@ -140,58 +240,60 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
     },
   })
 
-  const focusTrapRef = useRef<FocusTrapRef>(null)
+  const focusTrapRef = useRef<{ focus: () => void } | null>(null)
 
-  const actualOnClickClose = useCallback(() => {
-    if (isOpen) {
-      focusTrapRef.current?.focus()
-      onClickClose()
-    }
-  }, [isOpen, onClickClose])
+  const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
-  const onDelegateSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
-      if (isOpen) {
-        focusTrapRef.current?.focus()
-        onSubmit(e, helpers)
-      }
-    },
-    [onSubmit, isOpen],
+  const functions = useMemo(
+    () => ({
+      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onClickClose(e)
+        }
+      },
+      handleSubmit: (e: FormEvent<HTMLFormElement>, helpers: Parameters<typeof onSubmit>[1]) => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onSubmit(e, helpers)
+        }
+      },
+      handleClickBack: () => {
+        if (latest.isOpen) {
+          focusTrapRef.current?.focus()
+          latest.onClickBack?.()
+        }
+      },
+    }),
+    [latest],
   )
 
-  const actualOnClickBack = useCallback(() => {
-    if (isOpen) {
-      focusTrapRef.current?.focus()
-      onClickBack?.()
-    }
-  }, [isOpen, onClickBack])
-
   return (
-    <DialogContentInner
+    <DialogContent
       {...rest}
-      isOpen={isOpen}
-      ariaLabelledby={heading.id}
-      className={className}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
       focusTrapRef={focusTrapRef}
+      isOpen={isOpen}
+      className={className}
+      ariaLabelledby={heading.id}
+      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
     >
-      <StepFormDialogContentInner
-        heading={heading}
+      <StepFormDialogContent
         activeStep={activeStep}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
         firstStep={firstStep}
         stepLength={stepLength}
+        responseStatus={responseStatus}
+        handleClickClose={functions.handleClickClose}
+        handleSubmit={functions.handleSubmit}
+        handleClickBack={functions.handleClickBack}
+        heading={heading}
         submitButton={submitButton}
         closeButton={closeButton}
         backButton={backButton}
-        onClickClose={actualOnClickClose}
-        onSubmit={onDelegateSubmit}
-        onClickBack={actualOnClickBack}
-        responseStatus={responseStatus}
       >
         {children}
-      </StepFormDialogContentInner>
-    </DialogContentInner>
+      </StepFormDialogContent>
+    </DialogContent>
   )
 }

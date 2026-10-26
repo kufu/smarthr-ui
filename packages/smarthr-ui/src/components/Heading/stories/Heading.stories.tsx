@@ -1,8 +1,8 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Heading } from '../Heading'
+import { Heading } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
@@ -25,6 +25,7 @@ export const Type: StoryObj<typeof Heading> = {
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'size'>) => (
     <Stack>
       <Heading {...args}>type未指定</Heading>
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
       <Heading {...args} type="sectionTitle">
         SectionTitle
       </Heading>
@@ -45,16 +46,14 @@ export const Size: StoryObj<typeof Heading> = {
   name: 'size',
   render: (args: Omit<ComponentPropsWithoutRef<typeof Heading>, 'type'>) => (
     <Stack>
-      <Heading {...args} type="sectionTitle">
-        SectionTitle (size未指定)
-      </Heading>
-      <Heading {...args} type="sectionTitle" size="XXL">
+      <Heading {...args}>SectionTitle (size未指定)</Heading>
+      <Heading {...args} size="XXL">
         SectionTitle XXL
       </Heading>
-      <Heading {...args} type="sectionTitle" size="XL">
+      <Heading {...args} size="XL">
         SectionTitle XL
       </Heading>
-      <Heading {...args} type="sectionTitle" size="L">
+      <Heading {...args} size="L">
         SectionTitle L
       </Heading>
     </Stack>

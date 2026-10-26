@@ -3,8 +3,8 @@ import { action } from 'storybook/actions'
 import { Stack } from '../../Layout'
 import { Pagination } from '../Pagination'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
-import type { ReactNode } from 'react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { HTMLAttributes, MouseEvent, ReactNode } from 'react'
 
 const meta = {
   title: 'Components/Pagination',

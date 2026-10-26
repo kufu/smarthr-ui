@@ -1,92 +1,98 @@
-import {
-  type PropsWithChildren,
-  type RefObject,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react'
+'use client'
+
+import { type FC, type Ref, type RefObject, useImperativeHandle, useMemo } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
-type Props = PropsWithChildren<{
-  firstFocusTarget?: RefObject<HTMLElement>
-}>
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-export type FocusTrapRef = {
-  focus: () => void
-}
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
+    firstFocusTarget?: RefObject<HTMLElement>
+    ref?: Ref<{ focus: () => void }>
+  }
+>
 
-export const FocusTrap = forwardRef<FocusTrapRef, Props>(({ firstFocusTarget, children }, ref) => {
-  const innerRef = useRef<HTMLDivElement | null>(null)
-  const dummyFocusRef = useRef<HTMLDivElement>(null)
+const DUMMY_FOCUS_CLASSNAME = 'smarthr-ui-Dialog-dummyFocus'
+const DUMMY_FOCUS_SELECTOR = `.${DUMMY_FOCUS_CLASSNAME}[tabIndex]`
 
-  useImperativeHandle(ref, () => ({
-    focus: () => {
-      if (firstFocusTarget?.current) {
-        firstFocusTarget.current.focus()
-      } else {
-        dummyFocusRef.current?.focus()
-      }
-    },
-  }))
+export const FocusTrap: FC<Props> = ({ firstFocusTarget, ref, children, ...rest }) => {
+  const functions = useMemo(() => {
+    let inner: HTMLElement | null = null
+    const findDummyFocus = () => inner?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || innerRef.current === null) {
-        return
-      }
+    const focus = () => {
+      ;(firstFocusTarget?.current || findDummyFocus())?.focus()
+    }
 
-      const tabbables = tabbable(innerRef.current).filter((elm) => elm.tabIndex >= 0)
+    return {
+      callbackRef: (node: HTMLElement | null) => {
+        inner = node
 
-      if (tabbables.length === 0) {
-        return
-      }
-
-      const firstTabbable = tabbables[0]
-      const lastTabbable = tabbables[tabbables.length - 1]
-      const currentFocused = tabbables.find((elm) => elm === e.target)
-
-      if (e.shiftKey) {
-        if (currentFocused === firstTabbable || document.activeElement === dummyFocusRef.current) {
-          e.preventDefault()
-          lastTabbable.focus()
+        if (!node) {
+          return
         }
-      } else if (currentFocused === lastTabbable) {
-        e.preventDefault()
-        firstTabbable.focus()
-      }
-    }
 
-    window.addEventListener('keydown', handleKeyDown)
+        // FocusTrap がマウントされた時点のフォーカス要素を保存
+        const triggerElement = document.activeElement
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [])
+        const rAFId = requestAnimationFrame(focus)
 
-  useEffect(() => {
-    const triggerElement = document.activeElement
+        const handleKeyDown = (e: KeyboardEvent) => {
+          // IME 変換中の Tab は変換候補の選択に使われるため、フォーカストラップの対象外にする。
+          // ここで preventDefault してしまうと、Dialog 内で日本語入力中に Tab を押しても
+          // 変換候補が確定されず、未確定文字列がそのまま入力されてしまう。
+          if (e.key !== 'Tab' || e.isComposing) {
+            return
+          }
 
-    if (firstFocusTarget?.current) {
-      firstFocusTarget.current.focus()
-    } else {
-      dummyFocusRef.current?.focus()
-    }
+          const tabbables = tabbable(node).filter((elm) => elm.tabIndex >= 0)
 
-    return () => {
-      // フォーカストラップ終了時にトリガにフォーカスを戻す
-      if (triggerElement instanceof HTMLElement) {
-        triggerElement.focus()
-      }
+          if (tabbables.length === 0) {
+            return
+          }
+
+          const firstTabbable = tabbables[0]
+          const lastTabbable = tabbables[tabbables.length - 1]
+          const currentFocused = tabbables.find((elm) => elm === e.target)
+
+          if (e.shiftKey) {
+            if (currentFocused === firstTabbable || document.activeElement === findDummyFocus()) {
+              e.preventDefault()
+              lastTabbable.focus()
+            }
+          } else if (currentFocused === lastTabbable) {
+            e.preventDefault()
+            firstTabbable.focus()
+          }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+
+        return () => {
+          inner = null
+          cancelAnimationFrame(rAFId)
+          window.removeEventListener('keydown', handleKeyDown)
+
+          if (triggerElement instanceof HTMLElement) {
+            triggerElement.focus()
+          }
+        }
+      },
+      focus,
     }
   }, [firstFocusTarget])
 
+  useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
+
   return (
-    <div ref={innerRef}>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */}
-      <div ref={dummyFocusRef} tabIndex={-1} />
+    <div {...rest} ref={functions.callbackRef}>
+      {!firstFocusTarget && (
+        /* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- dummy element for focus management. */
+        <div tabIndex={-1} className={DUMMY_FOCUS_CLASSNAME} />
+      )}
       {children}
     </div>
   )
-})
+}

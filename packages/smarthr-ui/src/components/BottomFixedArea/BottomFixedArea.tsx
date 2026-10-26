@@ -1,51 +1,53 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type ComponentType,
   type FC,
   type FunctionComponentElement,
   type MouseEventHandler,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Base } from '../Base'
 import { type AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
+import { Panel } from '../Panel'
 
-import { validateElement } from './helper'
+import type { ExtendElementPropsWithRef } from '../../types'
+import type { generateIcon } from '../Icon'
 
-import type { ComponentProps as IconProps } from '../Icon'
+type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 
-export type ButtonType =
-  | FunctionComponentElement<ComponentProps<typeof Button>>
-  | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
+type ButtonType =
+  | FunctionComponentElement<ComponentPropsWithRef<typeof Button>>
+  | FunctionComponentElement<ComponentPropsWithRef<typeof AnchorButton>>
 
-type AbstractProps = {
-  /** この領域の説明 */
-  description?: ReactNode
-  /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
-  primaryButton?: ButtonType
-  /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
-  secondaryButton?: ButtonType
-  /** 表示する tertialy link のプロパティの配列 */
-  tertiaryLinks?: Array<
-    ComponentPropsWithRef<'button'> & {
-      text: ReactNode
-      icon?: ComponentType<IconProps>
-      type?: 'button' | 'reset'
-      onClick?: MouseEventHandler<HTMLButtonElement>
-    }
-  >
-  /** コンポーネントに適用する z-index 値 */
-  zIndex?: number
-}
-type Props = AbstractProps & Omit<ComponentPropsWithRef<'div'>, keyof AbstractProps>
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    /** この領域の説明 */
+    description?: ReactNode
+    /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
+    primaryButton?: ButtonType
+    /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
+    secondaryButton?: ButtonType
+    /** 表示する tertialy link のプロパティの配列 */
+    tertiaryLinks?: Array<
+      ComponentPropsWithRef<'button'> & {
+        text: ReactNode
+        icon?: ComponentType<IconProps>
+        type?: 'button' | 'reset'
+        onClick?: MouseEventHandler<HTMLButtonElement>
+      }
+    >
+    /** コンポーネントに適用する z-index 値 */
+    zIndex?: number
+  },
+  { omit: 'style' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -88,7 +90,7 @@ export const BottomFixedArea: FC<Props> = ({
   validateElement(primaryButton, secondaryButton)
 
   return (
-    <Base {...rest} className={classNames.wrapper} style={style}>
+    <Panel {...rest} className={classNames.wrapper} style={style}>
       <Stack>
         <Description>{description}</Description>
         <Stack gap={0.25}>
@@ -118,8 +120,8 @@ export const BottomFixedArea: FC<Props> = ({
                     <Button
                       {...tertiaryRest}
                       variant="text"
-                      prefix={Icon && <Icon />}
                       className={classNames.tertiaryButton}
+                      prefix={Icon && <Icon />}
                     >
                       {text}
                     </Button>
@@ -130,11 +132,43 @@ export const BottomFixedArea: FC<Props> = ({
           )}
         </Stack>
       </Stack>
-    </Base>
+    </Panel>
   )
 }
 
-const Description = memo<PropsWithChildren>(
+const Description = memo<{ children: Props['description'] }>(
   ({ children }) =>
     children && <p className="smarthr-ui-BottomFixedArea-description">{children}</p>,
 )
+
+const validateElement = (primary?: ButtonType, secondary?: ButtonType) => {
+  if (primary) {
+    const { displayName } = primary.type
+
+    if (
+      ((displayName !== 'Button' && displayName !== 'AnchorButton') ||
+        !('variant' in primary.props) ||
+        primary.props.variant !== 'primary') &&
+      displayName !== 'PrimaryButton' &&
+      displayName !== 'PrimaryButtonAnchor'
+    ) {
+      console.error(
+        'SmartHR UI: the primaryButton props accepts "primary" Button or AnchorButton component',
+      )
+    }
+  }
+  if (secondary) {
+    const { displayName } = secondary.type
+
+    if (
+      ((displayName !== 'Button' && displayName !== 'AnchorButton') ||
+        ('variant' in secondary.props && secondary?.props.variant !== 'secondary')) &&
+      displayName !== 'SecondaryButton' &&
+      displayName !== 'SecondaryButtonAnchor'
+    ) {
+      console.error(
+        'SmartHR UI: the secondaryButton props accepts "secondary" Button or AnchorButton component',
+      )
+    }
+  }
+}

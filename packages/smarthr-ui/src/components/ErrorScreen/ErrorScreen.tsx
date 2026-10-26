@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, type ReactNode, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { PageHeading } from '../Heading'
@@ -6,26 +6,26 @@ import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
 
-type AbstractProps = {
-  /** ロゴ */
-  logo?: ReactNode
-  /** コンテンツの上に表示されるタイトル */
-  title?: ReactNode
-  /** コンテンツの下に表示されるアンカー要素のリスト */
-  links?: Array<{
-    /** アンカー要素のテキスト */
-    label: ReactNode
-    /** アンカー要素の href */
-    url: string
-    /** アンカー要素の target。`_blank` を設定すると外部リンクアイコンが表示されます。*/
-    target?: string
-  }>
-  /** 表示するコンテンツ */
-  children?: ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}
-type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'div'>, keyof AbstractProps>
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
+    /** ロゴ */
+    logo?: ReactNode
+    /** コンテンツの上に表示されるタイトル */
+    title?: ReactNode
+    /** コンテンツの下に表示されるアンカー要素のリスト */
+    links?: Array<{
+      /** アンカー要素のテキスト */
+      label: ReactNode
+      /** アンカー要素の href */
+      url: string
+      /** アンカー要素の target。`_blank` を設定すると外部リンクアイコンが表示されます。*/
+      target?: string
+    }>
+  }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-ErrorScreen shr-box-border shr-bg-background shr-p-1.5',
@@ -35,7 +35,7 @@ export const ErrorScreen: FC<Props> = ({ logo, title, links, children, className
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <Center {...rest} minHeight="100vh" verticalCentering className={actualClassName}>
+    <Center {...rest} verticalCentering minHeight="100vh" className={actualClassName}>
       <Stack gap={1.5} align="center" className="[&&&]:shr-my-auto">
         <div className="smarthr-ui-ErrorScreen-logo">
           {logo || <SmartHRLogo fill="brand" className="shr-p-0.75" />}

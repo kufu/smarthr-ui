@@ -1,10 +1,12 @@
-import { AccordionPanel } from '../AccordionPanel'
-import { AccordionPanelContent } from '../AccordionPanelContent'
-import { AccordionPanelItem } from '../AccordionPanelItem'
-import { AccordionPanelTrigger } from '../AccordionPanelTrigger'
+import {
+  AccordionPanel,
+  AccordionPanelContent,
+  AccordionPanelItem,
+  AccordionPanelTrigger,
+} from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
-import type { ComponentProps } from 'react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export default {
   title: 'Components/AccordionPanel/AccordionPanelTrigger',
@@ -45,9 +47,9 @@ export const HeadingType: StoryObj<typeof AccordionPanelTrigger> = {
           'blockTitle',
           'subBlockTitle',
           'subSubBlockTitle',
-        ] as Array<ComponentProps<typeof AccordionPanelTrigger>['headingType']>
+        ] as Array<ComponentPropsWithoutRef<typeof AccordionPanelTrigger>['headingType']>
       ).map((headingType) => (
-        <AccordionPanelItem name={`accorion-panel-item-${headingType}`} key={headingType}>
+        <AccordionPanelItem key={headingType} name={`accorion-panel-item-${headingType}`}>
           <AccordionPanelTrigger {...args} headingType={headingType}>
             {headingType ?? '未指定'}
           </AccordionPanelTrigger>
@@ -64,12 +66,12 @@ export const UnrecommendedHeadingTag: StoryObj<typeof AccordionPanelTrigger> = {
     <AccordionPanel>
       {(
         [undefined, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as Array<
-          ComponentProps<typeof AccordionPanelTrigger>['unrecommendedHeadingTag']
+          ComponentPropsWithoutRef<typeof AccordionPanelTrigger>['unrecommendedHeadingTag']
         >
       ).map((unrecommendedHeadingTag) => (
         <AccordionPanelItem
-          name={`accorion-panel-item-${unrecommendedHeadingTag}`}
           key={unrecommendedHeadingTag}
+          name={`accorion-panel-item-${unrecommendedHeadingTag}`}
         >
           <AccordionPanelTrigger {...args} unrecommendedHeadingTag={unrecommendedHeadingTag}>
             {unrecommendedHeadingTag ?? '未指定'}

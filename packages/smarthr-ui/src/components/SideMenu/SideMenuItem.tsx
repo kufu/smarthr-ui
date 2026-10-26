@@ -1,23 +1,19 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type PropsWithChildren,
-  type ReactNode,
-  useMemo,
-} from 'react'
+import { type ElementType, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../Text'
 
-type AbstractProps<AsElement extends ElementType> = PropsWithChildren<{
-  elementAs?: AsElement
-  current?: boolean
-  prefix?: ReactNode
-  suffix?: ReactNode
-}>
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type Props<AsElement extends ElementType = 'a'> = AbstractProps<AsElement> &
-  Omit<ComponentPropsWithoutRef<AsElement>, keyof AbstractProps<AsElement>>
+type Props<T extends ElementType> = ExtendElementPropsWithoutRef<
+  T,
+  {
+    elementAs?: T
+    current?: boolean
+    prefix?: ReactNode
+    suffix?: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -47,7 +43,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideMenuItem = <AsElement extends ElementType = 'a'>({
+export const SideMenuItem = <T extends ElementType = 'a'>({
   elementAs,
   current,
   prefix,
@@ -56,15 +52,8 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   children,
   className,
   ...rest
-}: Props<AsElement>) => {
+}: Props<T>) => {
   const Component = elementAs ?? 'a'
-  const ariaCurrent = useMemo(() => {
-    if (!current || !href) {
-      return undefined
-    }
-
-    return href[0] === '#' ? true : 'page'
-  }, [current, href])
 
   const classNames = useMemo(() => {
     const { wrapper, content, iconWrapper } = classNameGenerator()
@@ -78,7 +67,11 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
 
   return (
     <li className={classNames.wrapper}>
-      <Component {...rest} href={href} aria-current={ariaCurrent}>
+      <Component
+        {...rest}
+        href={href}
+        aria-current={current && href ? (href[0] === '#' ? true : 'page') : undefined}
+      >
         <Text size="M" leading="TIGHT" className={classNames.content}>
           {prefix && <span className={classNames.iconWrapper}>{prefix}</span>}
           <Text weight={current ? 'bold' : undefined}>{children}</Text>

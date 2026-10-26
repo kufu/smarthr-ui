@@ -70,14 +70,15 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
 
   return (
     <div className="shr-relative shr-h-full shr-w-full">
-      <VisuallyHiddenText aria-live="polite" id={chartId}></VisuallyHiddenText>
+      <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
+      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Line
-        tabIndex={0}
-        role="application"
         ref={chartRef}
+        role="application"
         data={enhancedData}
-        options={chartOptions}
+        tabIndex={0}
         aria-label={ariaLabel}
+        options={chartOptions}
       />
     </div>
   )

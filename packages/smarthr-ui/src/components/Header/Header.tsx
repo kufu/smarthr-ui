@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -8,8 +8,9 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
 import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
@@ -17,6 +18,8 @@ import { Text } from '../Text'
 
 import { AppLauncher } from './AppLauncher'
 import { HeaderDropdownMenuButton } from './HeaderDropdownMenuButton'
+
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -46,31 +49,32 @@ const classNameGenerator = tv({
   },
 })
 
-type Tenant = PropsWithChildren<{
-  id: string
-  name: ReactNode
-}>
-
-type AbstractProps = PropsWithChildren<{
-  /** ロゴ */
-  logo?: ReactElement
-  /** ロゴリンク */
-  logoHref?: string
-  /** 機能名（enableNew と合わせて使います） */
-  featureName?: ReactNode
-  /** 機能群（enableNew と合わせて使います） */
-  apps?: ComponentProps<typeof AppLauncher>['apps']
-  /** テナント一覧 */
-  tenants?: Tenant[]
-  /** 現在のテナント ID */
-  currentTenantId?: string
-  /** テナントが選択された時に発火するコールバック関数 */
-  onTenantSelect?: (id: string) => void
-  /** @deprecated internal-ui から利用するので使わないでください。 */
-  enableNew?: boolean
-}> &
-  VariantProps<typeof classNameGenerator>
-type Props = AbstractProps & Omit<ComponentProps<'header'>, keyof AbstractProps>
+type Props = ExtendElementPropsWithRef<
+  'header',
+  {
+    /** ロゴ */
+    logo?: ReactElement
+    /** ロゴリンク */
+    logoHref?: string
+    /** 機能名（enableNew と合わせて使います） */
+    featureName?: ReactNode
+    /** 機能群（enableNew と合わせて使います） */
+    apps?: ComponentPropsWithRef<typeof AppLauncher>['apps']
+    /** テナント一覧 */
+    tenants?: Array<
+      PropsWithChildren<{
+        id: string
+        name: ReactNode
+      }>
+    >
+    /** 現在のテナント ID */
+    currentTenantId?: string
+    /** テナントが選択された時に発火するコールバック関数 */
+    onTenantSelect?: (id: string) => void
+    /** @deprecated internal-ui から利用するので使わないでください。 */
+    enableNew?: boolean
+  }
+>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
 const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const
@@ -86,6 +90,7 @@ export const Header: FC<Props> = ({
   onTenantSelect,
   children,
   className,
+  ...rest
 }) => {
   const classNames = useMemo(() => {
     const {
@@ -105,12 +110,31 @@ export const Header: FC<Props> = ({
     }
   }, [enableNew, className])
 
+  const latest = useLatest({ onTenantSelect })
+
+  const hasOnTenantSelect = !!onTenantSelect
+
+  const functions = useMemo(
+    () => ({
+      handleTenantSelect: hasOnTenantSelect
+        ? (e: MouseEvent<HTMLButtonElement>) => latest.onTenantSelect?.(e.currentTarget.value)
+        : undefined,
+    }),
+    [hasOnTenantSelect, latest],
+  )
+
   return (
-    <Cluster as="header" justify="space-between" gap={COMMON_GAP} className={classNames.wrapper}>
+    <Cluster
+      {...rest}
+      as="header"
+      justify="space-between"
+      gap={COMMON_GAP}
+      className={classNames.wrapper}
+    >
       <Cluster align="center" gap={COMMON_GAP}>
-        <Logo href={logoHref} enableNew={enableNew} className={classNames.logoLink}>
+        <LogoLink href={logoHref} enableNew={enableNew} className={classNames.logoLink}>
           {logo}
-        </Logo>
+        </LogoLink>
         {enableNew ? (
           <MemoizedAppLauncher featureName={featureName} apps={apps} enableNew={enableNew} />
         ) : (
@@ -118,7 +142,7 @@ export const Header: FC<Props> = ({
             currentTenantId={currentTenantId}
             tenants={tenants}
             classNames={classNames}
-            onTenantSelect={onTenantSelect}
+            handleTenantSelect={functions.handleTenantSelect}
           />
         )}
       </Cluster>
@@ -129,7 +153,7 @@ export const Header: FC<Props> = ({
   )
 }
 
-const Logo = memo<
+const LogoLink = memo<
   Pick<Props, 'enableNew'> & { children: Props['logo']; href: Props['logoHref']; className: string }
 >(({ children, href, enableNew, className }) => (
   <a href={href || '/'} className={className}>
@@ -143,10 +167,11 @@ const MemoizedAppLauncher = memo<Pick<Props, 'featureName' | 'apps' | 'enableNew
 )
 
 const TenantSwitcher = memo<
-  Pick<Props, 'currentTenantId' | 'tenants' | 'onTenantSelect'> & {
+  Pick<Props, 'currentTenantId' | 'tenants'> & {
     classNames: { tenantInfo: string; tenantNameText: string }
+    handleTenantSelect?: (e: MouseEvent<HTMLButtonElement>) => void
   }
->(({ currentTenantId, tenants, classNames, onTenantSelect }) => {
+>(({ currentTenantId, tenants, classNames, handleTenantSelect }) => {
   const currentTenantName = useMemo(() => {
     if (tenants && tenants.length >= 1) {
       const current = tenants.find(({ id }) => id === currentTenantId)
@@ -162,9 +187,9 @@ const TenantSwitcher = memo<
       <div className={classNames.tenantInfo}>
         {tenants && tenants.length > 1 ? (
           <MultiTenantDropdownMenuButton
-            trigger={currentTenantName}
             tenants={tenants}
-            onTenantSelect={onTenantSelect}
+            handleTenantSelect={handleTenantSelect}
+            trigger={currentTenantName}
           />
         ) : (
           <Text color="TEXT_WHITE" className={classNames.tenantNameText}>
@@ -177,25 +202,16 @@ const TenantSwitcher = memo<
 })
 
 const MultiTenantDropdownMenuButton = memo<
-  Pick<Required<Props>, 'tenants'> & Pick<Props, 'onTenantSelect'> & { trigger: ReactNode }
->(({ trigger, tenants, onTenantSelect }) => {
-  const onClick = useMemo(
-    () =>
-      onTenantSelect
-        ? (e: MouseEvent<HTMLButtonElement>) => {
-            onTenantSelect(e.currentTarget.value)
-          }
-        : undefined,
-    [onTenantSelect],
-  )
-
-  return (
-    <HeaderDropdownMenuButton trigger={trigger}>
-      {tenants.map(({ id, name }) => (
-        <Button key={id} value={id} onClick={onClick}>
-          {name}
-        </Button>
-      ))}
-    </HeaderDropdownMenuButton>
-  )
-})
+  Pick<Required<Props>, 'tenants'> & {
+    trigger: ReactNode
+    handleTenantSelect?: (e: MouseEvent<HTMLButtonElement>) => void
+  }
+>(({ trigger, tenants, handleTenantSelect }) => (
+  <HeaderDropdownMenuButton trigger={trigger}>
+    {tenants.map(({ id, name }) => (
+      <Button key={id} value={id} onClick={handleTenantSelect}>
+        {name}
+      </Button>
+    ))}
+  </HeaderDropdownMenuButton>
+))

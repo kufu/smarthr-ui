@@ -1,6 +1,6 @@
 import { ModelessDialog } from '../ModelessDialog'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dialog/ModelessDialog/VRT',
@@ -36,5 +36,12 @@ export const VRTForcedColors: StoryObj<typeof ModelessDialog> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
+  },
+}
+
+export const VRTLongHeading: StoryObj<typeof ModelessDialog> = {
+  args: {
+    heading:
+      'ModelessDialog?%20%20%20%20%20%20%20%20%20%20&amp;%20%20%20%20%20%20=%20%20%20%20%20%20%20%20-%20%20%20%20%20%20%20%20--%20%20%20%20%20%20%20%20_%20%20%20%20%20%20%20%20__%20%20%20%20%20%20%20%20',
   },
 }

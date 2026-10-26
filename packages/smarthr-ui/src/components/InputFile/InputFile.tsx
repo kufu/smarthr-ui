@@ -1,16 +1,27 @@
-'use client'
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 
-import { forwardRef } from 'react'
+import { InputFileMultiplyAppendable, InputFileNative } from './client'
 
-import { InputFileMultiplyAppendable } from './InputFileMultiplyAppendable'
-import { InputFileNative } from './InputFileNative'
+import type { PreviewableObjectType, Props } from './types'
+import type { FC } from 'react'
 
-import type { Props } from './types'
+const previewableObjectConverter = (org: boolean) => (org ? { searchable: true } : undefined)
 
-export const InputFile = forwardRef<HTMLInputElement, Props>(({ multiple, ...rest }, ref) => {
+export const InputFile: FC<Props> = ({ multiple, previewable: orgPreviewable, ...rest }) => {
+  const previewable = useObjectAttributes<typeof orgPreviewable, PreviewableObjectType | undefined>(
+    orgPreviewable,
+    previewableObjectConverter,
+  )
+
   if (typeof multiple === 'object' && multiple.appendable) {
-    return <InputFileMultiplyAppendable {...rest} ref={ref} />
+    return <InputFileMultiplyAppendable {...rest} previewable={previewable} />
   }
 
-  return <InputFileNative {...rest} multiple={multiple as boolean | undefined} ref={ref} />
-})
+  return (
+    <InputFileNative
+      {...rest}
+      previewable={previewable}
+      multiple={multiple as boolean | undefined}
+    />
+  )
+}

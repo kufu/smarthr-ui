@@ -2,7 +2,7 @@ import { Button } from '../../Button'
 import { Header } from '../Header'
 import { HeaderDropdownMenuButton } from '../HeaderDropdownMenuButton'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Header/HeaderDropdownMenuButton',
@@ -15,10 +15,10 @@ export default {
     </Header>
   ),
   argTypes: {
-    label: { control: 'text' },
+    trigger: { control: 'text' },
   },
   args: {
-    label: 'ボタン',
+    trigger: 'ボタン',
   },
   parameters: {
     chromatic: { disableSnapshot: true },

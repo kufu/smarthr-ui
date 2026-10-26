@@ -1,12 +1,17 @@
 'use client'
 
 import { ControlledActionDialog } from '../ControlledActionDialog'
-import { useRemoteTrigger } from '../useRemoteTrigger'
 
-import type { ComponentProps, FC } from 'react'
+import { useRemoteTrigger } from './useRemoteTrigger'
 
-type Props = Omit<ComponentProps<typeof ControlledActionDialog>, 'isOpen' | 'onClickClose' | 'id'> &
-  Parameters<typeof useRemoteTrigger>[0]
+import type { ExtendElementPropsWithRef } from '../../../types'
+import type { FC } from 'react'
+
+type Props = ExtendElementPropsWithRef<
+  typeof ControlledActionDialog,
+  Parameters<typeof useRemoteTrigger>[0],
+  { omit: 'isOpen' }
+>
 
 export const ActionDialog: FC<Props> = ({
   id,
@@ -17,19 +22,22 @@ export const ActionDialog: FC<Props> = ({
   onPressEscape,
   ...rest
 }) => {
-  const {
-    isOpen,
-    onClickClose: actualOnClickClose,
-    onPressEscape: actualOnPressEscape,
-  } = useRemoteTrigger({ id, onClickClose, onPressEscape, onToggle, onOpen, onClose })
+  const { isOpen, handleClickClose, handlePressEscape } = useRemoteTrigger({
+    id,
+    onClickClose,
+    onPressEscape,
+    onToggle,
+    onOpen,
+    onClose,
+  })
 
   return (
     <ControlledActionDialog
       {...rest}
       id={id}
       isOpen={isOpen}
-      onClickClose={actualOnClickClose}
-      onPressEscape={actualOnPressEscape}
+      onClickClose={handleClickClose}
+      onPressEscape={handlePressEscape}
     />
   )
 }

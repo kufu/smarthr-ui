@@ -1,27 +1,20 @@
-'use client'
-
-import {
-  type ComponentPropsWithRef,
-  type PropsWithChildren,
-  forwardRef,
-  memo,
-  useEffect,
-  useId,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from 'react'
+import { type FC, type PropsWithChildren, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
-export type Props = PropsWithChildren<
-  ComponentPropsWithRef<'input'> & {
+import { ActualCheckbox } from './client'
+
+import type { ExtendElementPropsWithRef } from '../../types'
+
+type Props = ExtendElementPropsWithRef<
+  typeof ActualCheckbox,
+  PropsWithChildren<{
     /** `true` のとき、チェック状態を `mixed` にする */
     mixed?: boolean
     /** チェックボックスにエラーがあるかどうか */
     error?: boolean
-  }
+  }>
 >
 
 const classNameGenerator = tv({
@@ -63,89 +56,58 @@ const classNameGenerator = tv({
   },
 })
 
-export const Checkbox = forwardRef<HTMLInputElement, Props>(
-  ({ checked, mixed, error, className, children, disabled, id, ...rest }, ref) => {
-    const classNames = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
+export const Checkbox: FC<Props> = ({ mixed, className, children, disabled, id, ...rest }) => {
+  const classNames = useMemo(() => {
+    const { wrapper, innerWrapper, box, input, iconWrap, icon, label } = classNameGenerator()
 
-      return {
-        wrapper: wrapper({ className }),
-        innerWrapper: innerWrapper(),
-        box: box(),
-        input: input(),
-        iconWrap: iconWrap(),
-        icon: icon(),
-        label: label(),
-      }
-    }, [className])
+    return {
+      wrapper: wrapper({ className }),
+      innerWrapper: innerWrapper(),
+      box: box(),
+      input: input(),
+      iconWrap: iconWrap(),
+      icon: icon(),
+      label: label(),
+    }
+  }, [className])
 
-    const inputRef = useRef<HTMLInputElement>(null)
+  const defaultId = useId()
+  const checkBoxId = id || defaultId
 
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
-
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.indeterminate = !!(checked && mixed)
-      }
-    }, [checked, mixed])
-
-    const defaultId = useId()
-    const checkBoxId = id || defaultId
-
-    return (
-      <span data-disabled={disabled} className={classNames.wrapper}>
-        <span className={classNames.innerWrapper}>
-          <input
-            {...rest}
-            ref={inputRef}
-            type="checkbox"
-            id={checkBoxId}
-            checked={checked}
-            disabled={disabled}
-            aria-invalid={error || undefined}
-            className={classNames.input}
-            data-smarthr-ui-input="true"
-          />
-          <AriaHiddenBox className={classNames.box} />
-          <CheckIconArea
-            mixed={mixed}
-            className={classNames.iconWrap}
-            iconClassName={classNames.icon}
-          />
-        </span>
-
-        <LabeledChildren htmlFor={checkBoxId} className={classNames.label}>
-          {children}
-        </LabeledChildren>
+  return (
+    <span className={classNames.wrapper} data-disabled={disabled}>
+      <span className={classNames.innerWrapper}>
+        <ActualCheckbox
+          {...rest}
+          id={checkBoxId}
+          disabled={disabled}
+          mixed={mixed}
+          className={classNames.input}
+        />
+        <AriaHiddenBox className={classNames.box} />
+        <CheckIconArea mixed={mixed} classNames={classNames} />
       </span>
-    )
-  },
-)
+      {children && (
+        <label htmlFor={checkBoxId} className={classNames.label}>
+          {children}
+        </label>
+      )}
+    </span>
+  )
+}
 
 const AriaHiddenBox = memo<{ className: string }>(({ className }) => (
   <span className={className} aria-hidden="true" />
 ))
 
-const CheckIconArea = memo<Pick<Props, 'mixed'> & { className: string; iconClassName: string }>(
-  ({ mixed, className, iconClassName }) => (
-    <span className={className}>
-      {mixed ? (
-        <FaMinusIcon className={iconClassName} />
-      ) : (
-        <FaCheckIcon className={iconClassName} />
-      )}
-    </span>
-  ),
-)
+const CheckIconArea = memo<
+  Pick<Props, 'mixed'> & { classNames: { iconWrap: string; icon: string } }
+>(({ mixed, classNames }) => {
+  const Icon = mixed ? FaMinusIcon : FaCheckIcon
 
-const LabeledChildren = memo<PropsWithChildren<{ className: string; htmlFor: string }>>(
-  ({ children, htmlFor, className }) =>
-    children && (
-      <label htmlFor={htmlFor} className={className}>
-        {children}
-      </label>
-    ),
-)
+  return (
+    <span className={classNames.iconWrap}>
+      <Icon className={classNames.icon} />
+    </span>
+  )
+})

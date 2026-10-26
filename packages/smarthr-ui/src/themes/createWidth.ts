@@ -15,15 +15,10 @@ const MAX_COLUMN_LENGTH = 12
 const baseColumnWidth =
   (BASE_SCREEN_WIDTH - OUTER_PADDING - GUTTER * (MAX_COLUMN_LENGTH - 1)) / MAX_COLUMN_LENGTH
 
-const calculateColumnWidths = () =>
-  Object.fromEntries<string>(
-    Array.from({ length: MAX_COLUMN_LENGTH }, (_, i) => {
-      const colNum = i + 1
-      const columnWidth = baseColumnWidth * colNum + GUTTER * (colNum - 1)
-      return [`col${colNum}`, `${columnWidth}px`]
-    }),
-  ) as Record<`col${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12}`, PixelWidth>
-
-const primitiveTokens = calculateColumnWidths()
-
-export const defaultWidth = primitiveTokens
+export const defaultWidth = Object.fromEntries<string>(
+  Array.from({ length: MAX_COLUMN_LENGTH }, (_, i) => {
+    const colNum = i + 1
+    const columnWidth = baseColumnWidth * colNum + GUTTER * (colNum - 1)
+    return [`col${colNum}`, `${columnWidth}px`]
+  }),
+) as Record<`col${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12}`, PixelWidth>

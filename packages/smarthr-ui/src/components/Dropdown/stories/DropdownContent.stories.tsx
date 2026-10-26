@@ -1,9 +1,7 @@
 import { Button } from '../../Button'
-import { Dropdown } from '../Dropdown'
-import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Dropdown/DropdownContent',

@@ -3,7 +3,7 @@ import { userEvent, within } from 'storybook/test'
 import { Width } from './SearchInput.stories'
 
 import type { SearchInput } from '../SearchInput'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/Input/SearchInput/VRT',
@@ -34,6 +34,21 @@ export const VRTFocus: StoryObj<typeof SearchInput> = {
     const canvas = within(canvasElement)
     const { length, [length - 1]: last } = canvas.getAllByRole('textbox')
     last.focus()
+  },
+}
+
+export const VRTAi: StoryObj<typeof SearchInput> = {
+  ...VRT,
+  args: {
+    variant: 'ai',
+  },
+}
+
+export const VRTAiDisabled: StoryObj<typeof SearchInput> = {
+  ...VRT,
+  args: {
+    variant: 'ai',
+    disabled: true,
   },
 }
 

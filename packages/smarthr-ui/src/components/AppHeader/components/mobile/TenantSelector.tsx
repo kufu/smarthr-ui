@@ -1,22 +1,22 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
   memo,
-  useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
 
 import type { Header } from '../../../Header'
 
-const tenantDropdownTriggerButton = tv({
+const classNameGenerator = tv({
   base: [
     'shr-cursor-pointer shr-rounded-s shr-border-none shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm',
     'hover:shr-bg-white-darken',
@@ -24,11 +24,13 @@ const tenantDropdownTriggerButton = tv({
   ],
 })
 
-type Props = {
-  tenants?: ComponentProps<typeof Header>['tenants']
-  currentTenantId?: ComponentProps<typeof Header>['currentTenantId']
-  onTenantSelect?: ComponentProps<typeof Header>['onTenantSelect']
-}
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = classNameGenerator()
+
+type Props = Pick<
+  ComponentPropsWithRef<typeof Header>,
+  'tenants' | 'currentTenantId' | 'onTenantSelect'
+>
 
 export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSelect }) => {
   const tenantName = useMemo(() => {
@@ -41,10 +43,10 @@ export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSe
 
   return tenantName ? (
     <ActualTenantSelector
-      tenants={tenants as ActualProps['tenants']}
       currentTenantId={currentTenantId}
-      onTenantSelect={onTenantSelect}
+      tenants={tenants as ActualProps['tenants']}
       tenantName={tenantName}
+      onTenantSelect={onTenantSelect}
     />
   ) : null
 }
@@ -64,10 +66,10 @@ const ActualTenantSelector: FC<ActualProps> = ({
 
   return (
     <TenantDropdown
-      tenants={tenants}
       currentTenantId={currentTenantId}
-      onTenantSelect={onTenantSelect}
+      tenants={tenants}
       tenantName={tenantName}
+      onTenantSelect={onTenantSelect}
     />
   )
 }
@@ -75,11 +77,15 @@ const ActualTenantSelector: FC<ActualProps> = ({
 const TenantDropdown: FC<
   Omit<ActualProps, 'onTenantSelect'> & Required<Pick<ActualProps, 'onTenantSelect'>>
 > = ({ tenants, currentTenantId, onTenantSelect, tenantName }) => {
-  const onClickTenantName = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      onTenantSelect(e.currentTarget.value)
-    },
-    [onTenantSelect],
+  const latest = useLatest({ onTenantSelect })
+
+  const functions = useMemo(
+    () => ({
+      handleClickTenantName: (e: MouseEvent<HTMLButtonElement>) => {
+        latest.onTenantSelect(e.currentTarget.value)
+      },
+    }),
+    [latest],
   )
 
   return (
@@ -97,7 +103,7 @@ const TenantDropdown: FC<
                 type="button"
                 value={tenant.id}
                 current={isCurrent}
-                onClick={isCurrent ? undefined : onClickTenantName}
+                handleClick={isCurrent ? undefined : functions.handleClickTenantName}
               >
                 {tenant.name}
               </CommonButton>
@@ -109,15 +115,11 @@ const TenantDropdown: FC<
   )
 }
 
-const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => {
-  const actualClassName = useMemo(() => tenantDropdownTriggerButton(), [])
-
-  return (
-    <DropdownTrigger>
-      <button type="button" className={actualClassName}>
-        {children}
-        <FaCaretDownIcon className="shr-ms-0.5" color="TEXT_BLACK" />
-      </button>
-    </DropdownTrigger>
-  )
-})
+const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
+  <DropdownTrigger>
+    <button type="button" className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}>
+      {children}
+      <FaCaretDownIcon color="TEXT_BLACK" className="shr-ms-0.5" />
+    </button>
+  </DropdownTrigger>
+))

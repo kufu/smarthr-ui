@@ -1,7 +1,7 @@
 import { type FC, type PropsWithChildren, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { localeMap, useIntl } from '../../../../intl'
+import { Localizer, localeMap, useIntl } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { Header, HeaderLink, LanguageSwitcher } from '../../../Header'
@@ -12,13 +12,12 @@ import {
   FaToolboxIcon,
 } from '../../../Icon'
 import { Cluster } from '../../../Layout'
-import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
 import { UserInfo } from './UserInfo'
 
-import type { HeaderProps } from '../../types'
+import type { HeaderProps, InternalHeaderProps } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -32,7 +31,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DesktopHeader: FC<HeaderProps> = ({
+export const DesktopHeader: FC<InternalHeaderProps> = ({
   enableNew,
   className = '',
   appName,
@@ -47,6 +46,10 @@ export const DesktopHeader: FC<HeaderProps> = ({
   desktopNavigationAdditionalContent,
   releaseNote,
   features,
+  isAppLauncherAvailable,
+  featuresLoading,
+  featuresError,
+  handleOpenAppLauncher,
   locale: localeProps,
   ...rest
 }) => {
@@ -59,39 +62,35 @@ export const DesktopHeader: FC<HeaderProps> = ({
     }
   }, [className])
 
-  const { localize, locale } = useIntl()
-  const translated = useMemo(
-    () => ({
-      appLauncherLabel: localize({
-        id: 'smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel',
-        defaultText: 'アプリ',
-      }),
-      school: localize({ id: 'smarthr-ui/AppHeader/school', defaultText: 'スクール' }),
-      help: localize({ id: 'smarthr-ui/AppHeader/help', defaultText: 'ヘルプ' }),
-    }),
-    [localize],
-  )
+  const { locale } = useIntl()
 
   return (
     <>
       <Header
         {...rest}
+        currentTenantId={currentTenantId}
         enableNew={enableNew}
-        className={classNames.wrapper}
         featureName={appName}
         tenants={tenants}
-        currentTenantId={currentTenantId}
+        className={classNames.wrapper}
       >
         <Cluster align="center" className="shr--me-0.25">
           {!enableNew && (
             <>
-              {features && features.length > 0 && (
-                <Dropdown>
+              {isAppLauncherAvailable && (
+                <Dropdown onOpen={handleOpenAppLauncher}>
                   <AppLauncherButton enableNew={enableNew} className={classNames.appsButton}>
-                    {translated.appLauncherLabel}
+                    <Localizer
+                      id="smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel"
+                      defaultText="アプリ"
+                    />
                   </AppLauncherButton>
                   <DropdownContent controllable>
-                    <AppLauncher features={features} />
+                    <AppLauncher
+                      features={features}
+                      loading={featuresLoading}
+                      error={featuresError}
+                    />
                   </DropdownContent>
                 </Dropdown>
               )}
@@ -99,10 +98,10 @@ export const DesktopHeader: FC<HeaderProps> = ({
               {schoolUrl && (
                 <HeaderLink
                   href={schoolUrl}
-                  prefix={<FaGraduationCapIcon />}
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
+                  prefix={<FaGraduationCapIcon />}
                 >
-                  <Translate>{translated.school}</Translate>
+                  <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
                 </HeaderLink>
               )}
             </>
@@ -111,13 +110,15 @@ export const DesktopHeader: FC<HeaderProps> = ({
           {helpPageUrl && (
             <HeaderLink
               href={helpPageUrl}
-              prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
+              rel="help"
+              referrerPolicy="no-referrer-when-downgrade"
+              enableNew={enableNew}
               className={
                 enableNew ? undefined : 'shr-flex shr-items-center shr-py-0.75 shr-leading-none'
               }
-              enableNew={enableNew}
+              prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
             >
-              <Translate>{translated.help}</Translate>
+              <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
             </HeaderLink>
           )}
 
@@ -125,8 +126,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
             <LanguageSwitcher
               localeMap={localeMap}
               locale={locale}
-              onLanguageSelect={localeProps.onSelectLocale as (locale: string) => void}
               enableNew={enableNew}
+              onLanguageSelect={localeProps.onSelectLocale as (locale: string) => void}
             />
           )}
 
@@ -135,8 +136,8 @@ export const DesktopHeader: FC<HeaderProps> = ({
           {userInfo && (
             <UserInfo
               {...userInfo}
-              tenants={tenants}
               currentTenantId={currentTenantId}
+              tenants={tenants}
               desktopAdditionalContent={desktopAdditionalContent}
               enableNew={enableNew}
             />
@@ -161,8 +162,8 @@ const AppLauncherButton = memo<
   Pick<HeaderProps, 'enableNew'> & PropsWithChildren<{ className: string }>
 >(({ enableNew, children, className }) => (
   <DropdownTrigger>
-    <Button prefix={enableNew ?? <FaToolboxIcon />} className={className}>
-      <Translate>{children}</Translate>
+    <Button className={className} prefix={enableNew ?? <FaToolboxIcon />}>
+      {children}
     </Button>
   </DropdownTrigger>
 ))

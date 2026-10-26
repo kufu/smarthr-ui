@@ -1,7 +1,7 @@
 import { DefinitionList } from '../DefinitionList'
 import { DefinitionListItem } from '../DefinitionListItem'
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
   title: 'Components/DefinitionList/DefinitionListItem',
@@ -10,12 +10,6 @@ export default {
   argTypes: {
     term: { control: 'text' },
     children: { control: 'text' },
-    termStyleType: {
-      description: 'DefinitionListItem に指定せず、DefinitionList に指定してください。',
-    },
-    maxColumns: {
-      description: 'DefinitionListItem に指定せず、DefinitionList に指定してください。',
-    },
   },
   args: {
     term: '定義リストアイテム',

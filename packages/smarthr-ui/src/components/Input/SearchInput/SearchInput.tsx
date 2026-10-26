@@ -1,13 +1,17 @@
-import { type ComponentProps, type ReactNode, forwardRef, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { Localizer } from '../../../intl'
+import { FaMagnifyingGlassIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
 
-import { SearchInputIcon } from './SearchInputIcon'
+import { AiMagnifyingGlassIcon } from './AiMagnifyingGlassIcon'
 
-type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
-  /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
-  tooltipMessage: ReactNode
+type Props = Omit<ComponentPropsWithRef<typeof InputWithTooltip>, 'prefix'> & {
+  /**
+   * `'ai'` のとき、検索アイコンをAIサービスのブランドカラー(グラデーション)で表示する
+   */
+  variant?: 'ai'
 }
 
 const classNameGenerator = tv({
@@ -25,32 +29,38 @@ const classNameGenerator = tv({
   },
 })
 
-export const SearchInput = forwardRef<HTMLInputElement, Props>(
-  ({ width, className, ...rest }, ref) => {
-    const labelStyle = useMemo(
-      () => ({
-        width: typeof width === 'number' ? `${width}px` : width,
-      }),
-      [width],
-    )
-    const classNames = useMemo(() => {
-      const { label, input } = classNameGenerator({ existsWidth: !!labelStyle.width })
+export const SearchInput: FC<Props> = ({ width, className, variant, ...rest }) => {
+  const labelStyle = {
+    width: typeof width === 'number' ? `${width}px` : width,
+  }
+  const existsWidth = !!labelStyle.width
 
-      return {
-        label: label({ className }),
-        input: input(),
-      }
-    }, [labelStyle.width, className])
+  const classNames = useMemo(() => {
+    const { label, input } = classNameGenerator({ existsWidth })
 
-    return (
-      <label className={classNames.label} style={labelStyle}>
-        <InputWithTooltip
-          {...rest}
-          ref={ref}
-          prefix={<SearchInputIcon />}
-          className={classNames.input}
-        />
-      </label>
-    )
-  },
-)
+    return {
+      label: label({ className }),
+      input: input(),
+    }
+  }, [existsWidth, className])
+
+  return (
+    <label className={classNames.label} style={labelStyle}>
+      <InputWithTooltip
+        {...rest}
+        className={classNames.input}
+        prefix={
+          variant === 'ai' ? (
+            <AiMagnifyingGlassIcon
+              alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
+            />
+          ) : (
+            <FaMagnifyingGlassIcon
+              alt={<Localizer id="smarthr-ui/SearchInput/iconAlt" defaultText="検索" />}
+            />
+          )
+        }
+      />
+    </label>
+  )
+}
