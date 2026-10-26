@@ -390,10 +390,10 @@ describe('SingleCombobox', () => {
     expect(onSubmit).not.toHaveBeenCalled()
   })
 
-  it('検索用のinputのnameには `-query` サフィックスが付与されること', () => {
+  it('検索用のinputのnameには `query_` プレフィックスが付与されること', () => {
     render(template({ name: 'department' }))
 
-    expect(combobox()).toHaveAttribute('name', 'department-query')
+    expect(combobox()).toHaveAttribute('name', 'query_department')
   })
 
   it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから取得できること', () => {

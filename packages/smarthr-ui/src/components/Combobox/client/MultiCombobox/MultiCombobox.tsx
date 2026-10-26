@@ -587,7 +587,7 @@ export const MultiCombobox = <T,>({
             role="combobox"
             type="text"
             form={form}
-            name={name ? `${name}-query` : undefined}
+            name={name ? `query_${name}` : undefined}
             required={required && selectedItems.length === 0}
             disabled={disabled}
             value={inputValue}
