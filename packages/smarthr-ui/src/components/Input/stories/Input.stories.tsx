@@ -1,6 +1,7 @@
 import { action } from 'storybook/actions'
 
-import { FaMagnifyingGlassIcon } from '../../Icon'
+import { UnstyledButton } from '../../Button'
+import { FaCircleXmarkIcon, FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { SearchInput } from '../SearchInput'
 import { CurrencyInput, Input } from '../client'
@@ -81,6 +82,17 @@ export const Suffix: StoryObj<typeof Input> = {
   name: 'suffix',
   args: {
     suffix: <FaMagnifyingGlassIcon alt="検索" />,
+  },
+}
+
+export const SubActionArea: StoryObj<typeof Input> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <UnstyledButton>
+        <FaCircleXmarkIcon alt="クリア" />
+      </UnstyledButton>
+    ),
   },
 }
 

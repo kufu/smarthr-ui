@@ -4,6 +4,7 @@ import {
   type FC,
   type MouseEvent,
   type PropsWithChildren,
+  type KeyboardEvent as ReactKeyboardEvent,
   createContext,
   useId,
   useMemo,
@@ -34,7 +35,8 @@ type DropdownContextType = {
   triggerLayoutEffectRef: (node: HTMLElement | null) => void
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
-  handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
+  handleDelegateClickContent: (e: MouseEvent<HTMLElement>) => void
+  handleDelegateKeyDownContent: (e: ReactKeyboardEvent<HTMLElement>) => void
   contentId: string
 }
 
@@ -47,7 +49,8 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerLayoutEffectRef: NOOP,
   contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
-  handleDelegateClickContentCloser: NOOP,
+  handleDelegateClickContent: NOOP,
+  handleDelegateKeyDownContent: NOOP,
   contentId: '',
 })
 
@@ -182,30 +185,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
               target!.focus()
               handleDelegateClickCloser()
             }
-          } else if (KEY_ESCAPE.test(e.key)) {
-            if (e.target && e.target === dummyFocusContent) {
-              handleDelegateClickCloser()
-
-              return
-            }
-
-            const target = trigger ? tabbable(trigger)[0] : undefined
-
-            if (target && e.target === target) {
-              // close the dropdown when the Trigger is focused and Esc key is pressed
-              handleDelegateClickCloser()
-
-              return
-            }
-
-            for (const inner of tabbable(node)) {
-              if (inner === e.target) {
-                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-                handleDelegateClickCloser()
-
-                break
-              }
-            }
           }
         }
 
@@ -239,11 +218,31 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           }
         }
       },
-      handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => {
+      handleDelegateClickContent: (e: MouseEvent<HTMLElement>) => {
         const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
 
         // HINT: Dropdownがネストしている場合、もっとも近いDropdownだけを閉じる
         if (closer?.closest(`.${DROPDOWN_CONTENT_CLASS_NAME}`) === e.currentTarget) {
+          handleDelegateClickCloser()
+        } else if (
+          // HINT: DropdownContent 内のフォーカスできない要素をクリックすると、フォーカスは body に移る。
+          // これが Dialog > Dropdown の構造で発生すると 、body が Esc キーのイベントを受けてしまい、Dropdown だけでなく下にある Dialog も閉じてしまう。
+          // これを防ぐため、DropdownContent クリック時は Dropdown 内のダミー要素にフォーカスをする
+          e.target instanceof Node &&
+          e.currentTarget.contains(e.target) &&
+          (!document.activeElement || document.activeElement === document.body)
+        ) {
+          dummyFocusContent?.focus({ preventScroll: true })
+        }
+      },
+      // HINT: Dialog > Dropdown の構造になっている場合、Dialog よりも先に Dropdown が Esc キーを受け取って伝播を止める必要があるので、DropdownContent に keydown イベントを設定する
+      handleDelegateKeyDownContent: (e: ReactKeyboardEvent<HTMLElement>) => {
+        if (
+          KEY_ESCAPE.test(e.key) &&
+          e.target instanceof Node &&
+          e.currentTarget.contains(e.target)
+        ) {
+          e.stopPropagation()
           handleDelegateClickCloser()
         }
       },
@@ -266,7 +265,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       const handleClickBody = (e: any) => {
         if (!active || !node) return
 
-        // HINT: クリックされた要素がクリック処理中にDOMから取り除かれる場合がある(例: DatePickerのYearPickerで年を選択した場合)
+        // HINT: クリックされた要素がクリック処理中にDOMから取り除かれる場合がある(例: WarekiPickerのYearPickerで年を選択した場合)
         // e.targetから親要素を辿るとポータル外と誤判定してしまうため、イベント発生時点の経路であるcomposedPathで判定する
         const path: EventTarget[] = e.composedPath()
 
@@ -315,7 +314,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
         triggerLayoutEffectRef,
         contentCallbackRef: functions.contentCallbackRef,
         handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
-        handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
+        handleDelegateClickContent: functions.handleDelegateClickContent,
+        handleDelegateKeyDownContent: functions.handleDelegateKeyDownContent,
         contentId,
       }}
     >

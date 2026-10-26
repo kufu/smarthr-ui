@@ -252,7 +252,7 @@ const MonthDirectionCluster = memo<{
   )
 
   return (
-    <Cluster gap={0.5} className={className}>
+    <Cluster className={className}>
       <Button
         disabled={isSelectingYear || prev.isBefore(from, 'month')}
         size="S"
