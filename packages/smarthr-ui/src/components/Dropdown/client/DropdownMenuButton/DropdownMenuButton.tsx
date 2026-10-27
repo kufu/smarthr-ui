@@ -26,7 +26,7 @@ import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
-  children: ReactNode
+  text: ReactNode
   /** 引き金となるボタンの大きさ */
   size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
@@ -102,7 +102,7 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
 }
 
 const triggerObjectConverter = (trigger: ReactNode) => ({
-  children: trigger,
+  text: trigger,
 })
 
 const classNameGenerator = tv({
@@ -198,7 +198,7 @@ export const DropdownMenuButton: FC<Props> = ({
   ...rest
 }) => {
   const {
-    children: triggerChildren,
+    text: triggerText,
     size: triggerSize,
     onlyIcon: onlyIconTrigger,
   } = useObjectAttributes<ReactNode | ObjectTriggerType, ObjectTriggerType>(
@@ -223,7 +223,7 @@ export const DropdownMenuButton: FC<Props> = ({
         triggerSize={triggerSize}
         classNames={classNames}
       >
-        {triggerChildren}
+        {triggerText}
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
         <menu ref={menuCallbackRef} role="menu" className={classNames.actionList}>
@@ -237,7 +237,7 @@ export const DropdownMenuButton: FC<Props> = ({
 type MemoizedTriggerButtonProps = Omit<Props, 'trigger' | 'children' | 'onOpen' | 'onClose'> & {
   onlyIconTrigger: ObjectTriggerType['onlyIcon']
   triggerSize: ObjectTriggerType['size']
-  children: ObjectTriggerType['children']
+  children: ObjectTriggerType['text']
   classNames: {
     triggerWrapper: string
     triggerButton: string
@@ -286,7 +286,7 @@ const MemoizedTriggerButton = memo<MemoizedTriggerButtonProps>(
 
 const TriggerLabelText = memo<{
   onlyIconTrigger: ObjectTriggerType['onlyIcon']
-  children: ObjectTriggerType['children']
+  children: ObjectTriggerType['text']
 }>(({ children, onlyIconTrigger }) => {
   if (!onlyIconTrigger) {
     return children
