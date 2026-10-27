@@ -6,6 +6,7 @@ import { tv } from 'tailwind-variants'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
+import { findDelegateTarget } from '../../../libs/delegate'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -173,9 +174,11 @@ export const Input: FC<Props> = ({
         width: styleMaxWidth ? '100%' : undefined,
       }}
       onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
-        delegateEvent.currentTarget
-          .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
-          ?.focus()
+        if (!findDelegateTarget(delegateEvent, '.smarthr-ui-Input-subActionArea')) {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }
       }}
     >
       {prefix && (
@@ -199,7 +202,11 @@ export const Input: FC<Props> = ({
         data-smarthr-ui-input="true"
         onWheel={type === 'number' ? disableWheel : undefined}
       />
-      {subActionArea && <span className={classNames.subActionArea}>{subActionArea}</span>}
+      {subActionArea && (
+        <span role="presentation" className={classNames.subActionArea}>
+          {subActionArea}
+        </span>
+      )}
       {suffix && (
         // HINT: aria-labelledbyでinputのアクセシブルネームに合流させるため、
         // 独立した要素としてスクリーンリーダーに読み上げられないようaria-hiddenにする

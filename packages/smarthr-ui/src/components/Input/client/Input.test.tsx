@@ -51,6 +51,8 @@ describe('Input', () => {
     const wrapper = screen.getByRole('textbox').closest('.smarthr-ui-Input')!
     const children = Array.from(wrapper.children).map((el) => el.textContent)
 
+    expect(children).toContain('action')
+    expect(children).toContain('suffix')
     expect(children.indexOf('action')).toBeLessThan(children.indexOf('suffix'))
   })
 
@@ -112,5 +114,42 @@ describe('Input', () => {
     const textbox = screen.getByRole('textbox')
 
     expect(textbox).not.toHaveAttribute('aria-labelledby')
+  })
+
+  it('subActionArea内の要素をクリックしても、inputにフォーカスが移らずフォーカスが保たれる', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <form>
+        <FormControl label="Input">
+          <Input name="input" subActionArea={<button type="button">action</button>} />
+        </FormControl>
+      </form>,
+    )
+
+    const button = screen.getByRole('button', { name: 'action' })
+    await user.click(button)
+
+    expect(button).toHaveFocus()
+  })
+
+  it('subActionArea内の要素をクリックすると、Inputの外側の祖先要素のonClickも発火する', async () => {
+    const user = userEvent.setup()
+    const handleClickAncestor = vi.fn()
+
+    render(
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, smarthr/best-practice-for-interactive-element
+      <div onClick={handleClickAncestor}>
+        <form>
+          <FormControl label="Input">
+            <Input name="input" subActionArea={<button type="button">action</button>} />
+          </FormControl>
+        </form>
+      </div>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'action' }))
+
+    expect(handleClickAncestor).toHaveBeenCalledTimes(1)
   })
 })

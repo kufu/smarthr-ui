@@ -1,5 +1,4 @@
 import { type FC, memo, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { Text } from '../../../Text'
 import { isChildNavigationGroup } from '../../utils'
@@ -16,10 +15,6 @@ type Props = {
   navigations: NavigationType[] | NavigationGroup['childNavigations']
   handleClickNavigation: () => void
 }
-
-const separatorClassNameGenerator = tv({
-  base: ['[&&]:shr-border-b-shorthand [&&]:shr-mx-0 [&&]:shr-my-0.5'],
-})
 
 export const Navigation: FC<Props> = ({ navigations, handleClickNavigation }) => (
   <div>
@@ -84,4 +79,6 @@ const TerminalItem: FC<
   )
 }
 
-const Separator = memo(() => <hr className={separatorClassNameGenerator()} />)
+const Separator = memo(() => (
+  <hr className="[&&]:shr-border-b-shorthand [&&]:shr-mx-0 [&&]:shr-my-0.5" />
+))

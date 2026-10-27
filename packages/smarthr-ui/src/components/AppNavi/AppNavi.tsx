@@ -57,6 +57,7 @@ const classNameGenerator = tv({
   },
 })
 
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
 const classNames = {
   statusLabel: statusLabel(),

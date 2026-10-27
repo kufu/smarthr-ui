@@ -24,14 +24,7 @@ export { FileViewer } from './components/FileViewer'
 /** @public */
 export { FloatArea } from './components/FloatArea'
 /** @public */
-export {
-  Input,
-  CurrencyInput,
-  SearchInput,
-  Calendar,
-  DatePicker,
-  WarekiPicker,
-} from './components/Input'
+export { Input, CurrencyInput, SearchInput, Calendar, WarekiPicker } from './components/Input'
 /** @public */
 export { InputFile } from './components/InputFile'
 /** @public */

@@ -8,6 +8,7 @@ import {
   type Ref,
   memo,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -46,7 +47,7 @@ type Props = ExtendElementPropsWithoutRef<
     ) => void
     /**
      * 許可するファイル型を表す1つ以上の固有ファイル型指定子
-     * <b>（ドラッグ&ドロップの挙動には影響しません）</b>
+     * （ドラッグ&ドロップの挙動には影響しません）
      */
     accept?: string
     /** 複数ファイルを選択できるかどうか */
@@ -67,7 +68,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: FC<Props> = ({
+export const ActualDropZone: FC<Props> = ({
   children,
   onSelectFiles,
   multiple = true,
@@ -78,6 +79,8 @@ export const DropZone: FC<Props> = ({
   ...rest
 }) => {
   const [filesDraggedOver, setFilesDraggedOver] = useState(false)
+  // Safari 15.3 以下において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
+  const isUpdatingFilesRef = useRef(false)
 
   const classNames = useMemo(() => {
     const { wrapper, button } = classNameGenerator()
@@ -101,7 +104,9 @@ export const DropZone: FC<Props> = ({
           const input = e.currentTarget.querySelector<HTMLInputElement>(inputFileSelector)
 
           if (input) {
+            isUpdatingFilesRef.current = true
             input.files = e.dataTransfer.files
+            isUpdatingFilesRef.current = false
           }
           latest.onSelectFiles(e, e.dataTransfer.files)
         }
@@ -114,7 +119,9 @@ export const DropZone: FC<Props> = ({
         setFilesDraggedOver(false)
       },
       handleChange: (e: ChangeEvent<HTMLInputElement>) => {
-        latest.onSelectFiles(e, e.target.files)
+        if (!isUpdatingFilesRef.current) {
+          latest.onSelectFiles(e, e.target.files)
+        }
       },
       handleClickButton: (e: MouseEvent<HTMLButtonElement>) => {
         e.currentTarget
