@@ -6,9 +6,9 @@ import { flushSync } from 'react-dom'
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 import { SingleCombobox } from '../Combobox'
-import { DatePicker } from '../DatePicker'
 import { Dialog } from '../Dialog'
 import { FormControl } from '../FormGroup'
+import { WarekiPicker } from '../Input'
 import { Stack } from '../Layout'
 import { Portal } from '../Portal'
 
@@ -303,7 +303,7 @@ describe('Dropdown', () => {
       )
     })
 
-    it('DatePickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
+    it('WarekiPickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
       const user = userEvent.setup()
       render(
         <IntlProvider locale="ja">
@@ -314,7 +314,7 @@ describe('Dropdown', () => {
             <DropdownContent controllable>
               <form>
                 <FormControl label="日付">
-                  <DatePicker name="test" value={undefined} onChangeDate={() => {}} />
+                  <WarekiPicker name="test" value={undefined} onChangeDate={() => {}} />
                 </FormControl>
               </form>
             </DropdownContent>
@@ -340,7 +340,7 @@ describe('Dropdown', () => {
     })
 
     it('ポータル内でクリックした要素がクリック処理中にDOMから取り除かれても外側のDropdownが閉じないこと', async () => {
-      // HINT: DatePickerのYearPickerで年を選択すると、クリックされた年ボタンはDropdownの外側クリック判定より前にアンマウントされる
+      // HINT: WarekiPickerのYearPickerで年を選択すると、クリックされた年ボタンはDropdownの外側クリック判定より前にアンマウントされる
       // ブラウザではReactのリスナーとDropdownのリスナーの間でマイクロタスクが実行されるため再レンダリングが挟まるが、
       // jsdomでは挟まらないため、flushSyncで同じ状況を再現する
       const RemoveOnClick = () => {
@@ -444,13 +444,103 @@ describe('Dropdown', () => {
     })
   })
 
-  describe('Dialog内にDropdown(内側にCombobox)がネストしている場合', () => {
-    it('Comboboxのオプションをクリックしても内側のDropdownが閉じないこと', async () => {
+  describe('Dialog内にDropdownがネストしている場合', () => {
+    const renderDialogWithDropdown = () => {
+      const handlePressEscape = vi.fn()
+
+      render(
+        <IntlProvider locale="ja">
+          <Dialog isOpen ariaLabel="Dialog" onPressEscape={handlePressEscape}>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button>InnerTrigger</Button>
+              </DropdownTrigger>
+              <DropdownContent controllable>
+                <p>InnerText</p>
+                <Button>InnerButton</Button>
+              </DropdownContent>
+            </Dropdown>
+          </Dialog>
+        </IntlProvider>,
+      )
+
+      return { handlePressEscape }
+    }
+
+    const openDropdown = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    }
+
+    it('DropdownContent内の要素にフォーカスがある状態でEscキーを押すと、Dropdownのみ閉じDialogは閉じないこと', async () => {
       const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      await openDropdown(user)
+      await user.click(screen.getByRole('button', { name: 'InnerButton' }))
+      await user.keyboard('{Escape}')
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveFocus()
+      expect(handlePressEscape).not.toHaveBeenCalled()
+    })
+
+    it('DropdownContent内のフォーカスできない要素をクリックした後にEscキーを押すと、Dropdownのみ閉じDialogは閉じないこと', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      await openDropdown(user)
+      await user.click(screen.getByRole('button', { name: 'InnerButton' }))
+      await user.click(screen.getByText('InnerText'))
+      await user.keyboard('{Escape}')
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(handlePressEscape).not.toHaveBeenCalled()
+    })
+
+    it('DropdownContent内のフォーカスできる要素をクリックした場合は、その要素からフォーカスを移さないこと', async () => {
+      const user = userEvent.setup()
+      renderDialogWithDropdown()
+
+      await openDropdown(user)
+      await user.click(screen.getByRole('button', { name: 'InnerButton' }))
+
+      expect(screen.getByRole('button', { name: 'InnerButton' })).toHaveFocus()
+    })
+
+    it('Dropdownが閉じた状態でトリガーにフォーカスがありEscキーを押すと、Dialogが閉じること', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      screen.getByRole('button', { name: 'InnerTrigger' }).focus()
+      await user.keyboard('{Escape}')
+
+      expect(handlePressEscape).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('Dialog内にDropdown(内側にCombobox)がネストしている場合', () => {
+    const renderDialogWithDropdown = () => {
+      const handlePressEscape = vi.fn()
       const DialogWithDropdown = () => {
         const [isOpen, setIsOpen] = useState(true)
         return (
-          <Dialog isOpen={isOpen} ariaLabel="Dialog" onClickOverlay={() => setIsOpen(false)}>
+          <Dialog
+            isOpen={isOpen}
+            ariaLabel="Dialog"
+            onClickOverlay={() => setIsOpen(false)}
+            onPressEscape={handlePressEscape}
+          >
             <Dropdown>
               <DropdownTrigger>
                 <Button>InnerTrigger</Button>
@@ -479,6 +569,12 @@ describe('Dropdown', () => {
           <DialogWithDropdown />
         </IntlProvider>,
       )
+      return { handlePressEscape }
+    }
+
+    it('Comboboxのオプションをクリックしても内側のDropdownが閉じないこと', async () => {
+      const user = userEvent.setup()
+      renderDialogWithDropdown()
 
       await user.click(screen.getByRole('button', { name: 'InnerTrigger' }))
       await waitForAnimationFrame()
@@ -495,6 +591,26 @@ describe('Dropdown', () => {
         'aria-expanded',
         'true',
       )
+    })
+
+    it('Comboboxのリストが開いた状態でEscキーを押すと、リストのみ閉じDropdownとDialogは閉じないこと', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      await user.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('combobox'))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('option', { name: 'option 1' })).toBeVisible()
+
+      await user.keyboard('{Escape}')
+
+      expect(screen.queryByRole('option', { name: 'option 1' })).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+      expect(handlePressEscape).not.toHaveBeenCalled()
     })
   })
 

@@ -51,6 +51,8 @@ jobs:
           upload_sources: false
           upload_translations: false
           download_translations: true
+          # ミャンマー語(my)は翻訳未整備のためダウンロード対象から除外する
+          download_translations_args: "--exclude-language my"
           localization_branch_name: ${{ steps.generate-branch-name.outputs.name }}
           crowdin_branch_name: ${{ github.ref_name }}
           create_pull_request: true

@@ -8,7 +8,6 @@ import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCaretDownIcon, FaCheckIcon } from '../../../Icon'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -33,6 +32,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { trigger, contentBody, contentButton } = classNameGenerator()
 
   return {
@@ -60,19 +60,14 @@ const MemoizedDropdownTrigger = memo<{ page: Launcher['page']; className: string
   ({ page, className }) => (
     <DropdownTrigger>
       <Button size="S" className={className} suffix={<FaCaretDownIcon />}>
-        <Translate>
-          {page === 'favorite' ? (
-            <Localizer
-              id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
-              defaultText="よく使うアプリ"
-            />
-          ) : (
-            <Localizer
-              id="smarthr-ui/AppHeader/Launcher/allModeText"
-              defaultText="すべてのアプリ"
-            />
-          )}
-        </Translate>
+        {page === 'favorite' ? (
+          <Localizer
+            id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
+            defaultText="よく使うアプリ"
+          />
+        ) : (
+          <Localizer id="smarthr-ui/AppHeader/Launcher/allModeText" defaultText="すべてのアプリ" />
+        )}
       </Button>
     </DropdownTrigger>
   ),
@@ -97,9 +92,7 @@ const ContentBody = memo<
   const buttonPrefix = (
     <FaCheckIcon
       alt={
-        <Translate>
-          <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected" defaultText="選択中" />
-        </Translate>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/sortDropdownSelected" defaultText="選択中" />
       }
       color={theme.textColor.main}
     />
@@ -115,12 +108,10 @@ const ContentBody = memo<
         onClick={handleClickButton}
         prefix={isFavorite && buttonPrefix}
       >
-        <Translate>
-          <Localizer
-            id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
-            defaultText="よく使うアプリ"
-          />
-        </Translate>
+        <Localizer
+          id="smarthr-ui/AppHeader/Launcher/favoriteModeText"
+          defaultText="よく使うアプリ"
+        />
       </Button>
       <Button
         role="option"
@@ -130,9 +121,7 @@ const ContentBody = memo<
         onClick={handleClickButton}
         prefix={!isFavorite && buttonPrefix}
       >
-        <Translate>
-          <Localizer id="smarthr-ui/AppHeader/Launcher/allModeText" defaultText="すべてのアプリ" />
-        </Translate>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/allModeText" defaultText="すべてのアプリ" />
       </Button>
     </div>
   )

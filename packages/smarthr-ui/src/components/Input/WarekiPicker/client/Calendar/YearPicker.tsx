@@ -3,11 +3,11 @@
 import { type FC, type MouseEvent, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
-import { UnstyledButton } from '../../Button'
-import { Scroller } from '../../Scroller'
+import { useIntl } from '../../../../../intl'
+import { UnstyledButton } from '../../../../Button'
+import { Scroller } from '../../../../Scroller'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../../types'
 
 type Props = ExtendElementPropsWithRef<
   'div',
@@ -44,6 +44,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { overlay, container, yearButton, yearWrapper } = classNameGenerator()
 
   return {

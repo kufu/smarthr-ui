@@ -30,6 +30,11 @@ const loadReactPDFModule = (): Promise<ReactPDFModule> => {
       .then((mod) => {
         const { pdfjs } = mod
 
+        // HINT: react-pdfが読み込むpdfjs-distは通常ビルドで、新しいAPIが存在する前提で書かれている。
+        // 未対応の環境ではメインスレッドにpolyfillを適用する。web workerはwindowとグローバルが別でpolyfillが効かないため、
+        // polyfill済みのlegacyビルドを読み込む
+        let useLegacyWorker = false
+
         // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
         // @ts-expect-error
         if (typeof window.Promise.withResolvers === 'undefined') {
@@ -42,7 +47,23 @@ const loadReactPDFModule = (): Promise<ReactPDFModule> => {
             })
             return { promise, resolve, reject }
           }
-          // web workerもpolyfillされたものを読み込む
+          useLegacyWorker = true
+        }
+
+        // iOS 18未満ではURL.parseが未定義のため、polyfillを適用する
+        // HINT: pdfjs-dist 5.0.375 から、getDocumentでのURL解決などにURL.parseが使われている
+        if (typeof window.URL.parse === 'undefined') {
+          window.URL.parse = (url, base) => {
+            try {
+              return new URL(url, base)
+            } catch {
+              return null
+            }
+          }
+          useLegacyWorker = true
+        }
+
+        if (useLegacyWorker) {
           pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
         } else {
           // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい

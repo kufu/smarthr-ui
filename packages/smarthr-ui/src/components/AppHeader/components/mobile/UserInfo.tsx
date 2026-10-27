@@ -8,7 +8,6 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import { LanguageSelector } from './LanguageSelector'
 
@@ -26,6 +25,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = classNameGenerator()
 
   return {
@@ -118,9 +118,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
                   rel="noopener noreferrer"
                   prefix={<FaGearIcon />}
                 >
-                  <Translate>
-                    <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
-                  </Translate>
+                  <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
                 </CommonButton>
               )}
             </div>
