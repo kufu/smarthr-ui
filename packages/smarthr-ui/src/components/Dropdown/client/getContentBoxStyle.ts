@@ -95,13 +95,13 @@ export function getContentBoxStyle(
     maxHeight: '',
   }
 
-  if (triggerRect.bottom + contentSize.height <= windowSize.height) {
+  if (triggerRect.bottom + contentSize.height + padding <= windowSize.height) {
     // ドロップダウンのサイズがトリガの下側の領域に収まる場合
     // HINT: 表示後にコンテンツの高さが動的に変わっても画面外にはみ出さないよう、
     // 収まる場合でも常にその時点の残りスペースをmax-heightとして設定しておく
     contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
     contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
-  } else if (triggerRect.top - contentSize.height >= 0) {
+  } else if (triggerRect.top - contentSize.height - padding >= 0) {
     // ドロップダウンのサイズがトリガの上側の領域に収まる場合
     // HINT: topをコンテンツの高さに依存させず常にトリガ上端に固定し、transform: translateY(-100%)で
     // 実際のレンダリング後の高さ分だけ上にずらす。これにより開いた後の高さ変化にも
