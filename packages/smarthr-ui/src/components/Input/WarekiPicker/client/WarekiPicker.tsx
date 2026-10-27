@@ -286,12 +286,17 @@ export const WarekiPicker: FC<Props> = ({
 
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
         // selectedDate(ひいては和暦alt表示・カレンダーの選択日ハイライト)をマウント時の初期値へ戻すため、
-        // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる
+        // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる。
+        // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
+        // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
+        // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
         const associatedForm = node.form
-        const handleReset = () => {
-          if (!latest.isControlled) {
-            setSelectedDate(latest.initialSelectedDate)
-          }
+        const handleReset = (e: Event) => {
+          queueMicrotask(() => {
+            if (!e.defaultPrevented && !latest.isControlled) {
+              setSelectedDate(latest.initialSelectedDate)
+            }
+          })
         }
 
         associatedForm?.addEventListener('reset', handleReset)

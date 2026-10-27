@@ -254,15 +254,16 @@ describe('WarekiPicker', () => {
     expect(textbox).toHaveProperty('value', '2024/10/15')
     expect(screen.getByText('令和6年10月15日')).toBeVisible()
 
-    act(() => {
+    await act(async () => {
       container.querySelector('form')!.reset()
+      await Promise.resolve()
     })
 
     expect(textbox).toHaveProperty('value', '2024/09/25')
     expect(screen.getByText('令和6年9月25日')).toBeVisible()
   })
 
-  it('マウント後にdefaultValueが変更されても、form.reset()ではマウント時のdefaultValueに戻ること', () => {
+  it('マウント後にdefaultValueが変更されても、form.reset()ではマウント時のdefaultValueに戻ること', async () => {
     const { container, rerender } = renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
@@ -282,12 +283,37 @@ describe('WarekiPicker', () => {
       </IntlProvider>,
     )
 
-    act(() => {
+    await act(async () => {
       container.querySelector('form')!.reset()
+      await Promise.resolve()
     })
 
     expect(textbox).toHaveProperty('value', '2024/09/25')
     expect(screen.getByText('令和6年9月25日')).toBeVisible()
+  })
+
+  it('onResetでpreventDefault()が呼ばれた場合、入力欄も和暦alt表示も変更されないこと', async () => {
+    const { container } = renderWithIntl(
+      <form onReset={(e) => e.preventDefault()}>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+
+    await userEvent.clear(textbox)
+    await userEvent.type(textbox, '2024/10/15{tab}')
+    expect(textbox).toHaveProperty('value', '2024/10/15')
+    expect(screen.getByText('令和6年10月15日')).toBeVisible()
+
+    await act(async () => {
+      container.querySelector('form')!.reset()
+      await Promise.resolve()
+    })
+
+    expect(textbox).toHaveProperty('value', '2024/10/15')
+    expect(screen.getByText('令和6年10月15日')).toBeVisible()
   })
 
   it('制御時(value指定)は、form.reset()を呼んでも表示が変わらないこと', () => {
