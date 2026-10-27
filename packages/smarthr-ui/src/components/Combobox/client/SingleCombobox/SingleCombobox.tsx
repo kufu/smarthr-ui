@@ -485,7 +485,10 @@ export const SingleCombobox = <T,>({
         type="text"
         form={form}
         name={name ? `query_${name}` : undefined}
-        required={actualRequired}
+        // HINT: 選択済みならInputにはラベル文字が入っている
+        // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合actualRequiredもtrueであることは保証されない
+        // requiredを設定することでスクリーンリーダーなどに常に必須であることが正しく伝わる
+        required={required}
         disabled={disabled}
         readOnly={readOnly}
         value={inputValue}
