@@ -523,7 +523,7 @@ describe('Dropdown', () => {
           toJSON: () => {},
         } as DOMRect
       })
-      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+      Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
         configurable: true,
         get() {
           return contentHeight
@@ -553,6 +553,92 @@ describe('Dropdown', () => {
       contentHeight = 600
       act(() => window.dispatchEvent(new Event('resize')))
       expect(content.style.insetBlockStart).toBe('705px')
+    })
+  })
+
+  describe('閉じて開き直す場合', () => {
+    let actualContentHeight = 32
+
+    beforeEach(() => {
+      actualContentHeight = 32
+
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: Element,
+      ) {
+        // HINT: トリガーを画面下寄りに配置し、開いた後に項目が増えて画面内に収まらなくなる状況を再現する
+        const isTrigger = this.tagName === 'BUTTON' && this.textContent === 'Trigger'
+
+        return {
+          top: isTrigger ? 500 : 0,
+          bottom: isTrigger ? 540 : 0,
+          left: 0,
+          right: 120,
+          width: 120,
+          height: isTrigger ? 40 : 0,
+          x: 0,
+          y: 0,
+          toJSON: () => {},
+        } as DOMRect
+      })
+      // scrollHeightは、要素自身にmax-heightが設定されていても、overflow: visibleな子要素の
+      // はみ出し分を含めて本来のコンテンツの高さを正しく返す(実際のブラウザの挙動を再現)
+      Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+        configurable: true,
+        get() {
+          return actualContentHeight
+        },
+      })
+      // offsetHeightは、要素自身、または子孫要素にmax-heightが設定されていればその値で制約される
+      // (子のmax-height制約が親のレイアウト計算上の高さにも影響する実際のブラウザの挙動を再現。
+      // 閉じても前回のmax-heightがstateとして残り、開き直すとbodyへ適用された状態でマウントされる状況を再現する)
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get(this: HTMLElement) {
+          const target = this.style.maxHeight
+            ? this
+            : (this.querySelector<HTMLElement>('[style*="max-height"]') ?? this)
+          const maxHeight = Number.parseFloat(target.style.maxHeight)
+          return Number.isNaN(maxHeight)
+            ? actualContentHeight
+            : Math.min(actualContentHeight, maxHeight)
+        },
+      })
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('開き直した際、前回のmax-height制約を受けずに本来の高さで上下判定されること', () => {
+      render(template)
+
+      const trigger = screen.getByRole('button', { name: 'Trigger', expanded: false })
+
+      // 1回目: 小さいコンテンツ(32px)は下側の余白(260px)に収まるため下に開く
+      act(() => trigger.click())
+      let content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+
+      expect(content.style.insetBlockStart).toBe('535px') // トリガ下端(540) - 5
+      expect(content.style.transform).toBe('')
+
+      // 閉じる
+      act(() => trigger.click())
+
+      // コンテンツが大幅に増え、下にも上にも余白だけでは収まらなくなる(上側によりギリギリ収まる)
+      actualContentHeight = 482
+
+      // 開き直す
+      act(() => trigger.click())
+      content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+
+      // 下(260px)には収まらないが、上(490px)には収まるため上に開くべき
+      expect(content.style.transform).toBe('translateY(-100%)')
+      expect(content.style.insetBlockStart).toBe('505px') // トリガ上端(500) + 5
     })
   })
 })

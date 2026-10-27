@@ -25,7 +25,10 @@ export const generateContentStyle = (
     triggerButton.getBoundingClientRect(),
     {
       width: content.offsetWidth,
-      height: content.offsetHeight,
+      // HINT: 前回開いた際のmax-heightがstateとして残り、再度開いた際にbodyへ適用された状態で
+      // マウントされる。offsetHeightだとそのmax-height制約込みの高さになってしまうため、
+      // overflow: visibleな子要素のはみ出し分も含めて測れるscrollHeightを使う
+      height: content.scrollHeight,
     },
     {
       width: document.body.clientWidth,
