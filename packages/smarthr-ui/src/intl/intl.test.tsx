@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react'
+import dayjs from 'dayjs'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
 import { IntlProvider, useAvailableLocales } from './IntlProvider'
@@ -543,6 +544,62 @@ describe('intl', () => {
           )
           const { getWeekStartDay } = renderHook(() => useDateFormat(), { wrapper }).result.current
           expect(getWeekStartDay()).toBe(1)
+        })
+      })
+    })
+
+    describe('formatRelativeTime', () => {
+      const now = new Date(2025, 1 - 1, 15, 12, 0, 0) // 2025年1月15日 12:00
+      const renderFormatter = (locale: string) => {
+        const wrapper: FC<PropsWithChildren> = ({ children }) => (
+          <IntlProvider locale={locale}>{children}</IntlProvider>
+        )
+        return renderHook(() => useDateFormat(), { wrapper }).result.current.formatRelativeTime
+      }
+      const before = (ms: number) => dayjs(now).subtract(ms, 'ms').toDate()
+      const after = (ms: number) => dayjs(now).add(ms, 'ms').toDate()
+      const SECOND = 1000
+      const MINUTE = 60 * SECOND
+      const HOUR = 60 * MINUTE
+      const DAY = 24 * HOUR
+
+      describe('unit selection (ja)', () => {
+        const formatRelativeTime = renderFormatter('ja')
+
+        it.each([
+          ['0秒', before(0), '今'],
+          ['44秒前', before(44 * SECOND), '今'],
+          ['45秒前', before(45 * SECOND), '1分前'],
+          ['44分前', before(44 * MINUTE), '44分前'],
+          ['45分前', before(45 * MINUTE), '1時間前'],
+          ['21時間前', before(21 * HOUR), '21時間前'],
+          ['22時間前', before(22 * HOUR), '1日前'],
+          ['3日前', before(3 * DAY), '3日前'],
+          ['25日前', before(25 * DAY), '25日前'],
+          ['26日前', new Date(2024, 12 - 1, 20, 12, 0, 0), '1か月前'],
+          ['3か月前', new Date(2024, 10 - 1, 15, 12, 0, 0), '3か月前'],
+          ['11か月前', new Date(2024, 2 - 1, 15, 12, 0, 0), '1年前'],
+          ['2年前', new Date(2023, 1 - 1, 15, 12, 0, 0), '2年前'],
+          ['2時間後', after(2 * HOUR), '2時間後'],
+          ['3日後', after(3 * DAY), '3日後'],
+        ])('%s', (_, date, expected) => {
+          expect(formatRelativeTime({ date, now })).toBe(expected)
+        })
+      })
+
+      describe('locale variations (3日前)', () => {
+        it.each([
+          ['ja', '3日前'],
+          ['ja-easy', '3日前'],
+          ['en-us', '3 days ago'],
+          ['id-id', '3 hari yang lalu'],
+          ['ko', '3일 전'],
+          ['pt', 'há 3 dias'],
+          ['vi', '3 ngày trước'],
+          ['zh-cn', '3天前'],
+          ['zh-tw', '3天前'],
+        ])('%s', (locale, expected) => {
+          expect(renderFormatter(locale)({ date: before(3 * DAY), now })).toBe(expected)
         })
       })
     })

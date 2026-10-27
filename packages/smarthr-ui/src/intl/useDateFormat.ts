@@ -2,6 +2,7 @@
 
 // HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
 // react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useIntl as useReactIntl } from 'react-intl'
 
@@ -73,6 +74,12 @@ export type FormatTimestampProps = {
   timeParts?: readonly [TimePart, ...TimePart[]]
 }
 
+type FormatRelativeTimeProps = {
+  date: Date
+  /** 基準日時。デフォルトは現在日時 */
+  now?: Date
+}
+
 /**
  * useDateFormatフックの戻り値の型定義
  */
@@ -142,6 +149,9 @@ export type UseDateFormatReturn = {
    * formatTimestamp({ date: new Date(), timeParts: ['hour', 'minute', 'second'] }) // "2024/01/15 10:30:45" (ja)
    */
   formatTimestamp(props: FormatTimestampProps): string
+
+  /** 相対時間（例: "3日前"）でフォーマットする */
+  formatRelativeTime(props: FormatRelativeTimeProps): string
 
   /**
    * 現在のロケールに基づいて週の開始日を決定する関数
@@ -275,6 +285,30 @@ const TIME_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
   'zh-tw': COMMON_TIME_FORMAT,
 } as const
 
+// 丸めた差分が max 未満ならその単位で表示する。値は dayjs の fromNow() に揃えている
+const RELATIVE_TIME_THRESHOLDS: ReadonlyArray<{
+  unit: 'minute' | 'hour' | 'day' | 'month' | 'year'
+  max: number
+}> = [
+  { unit: 'minute', max: 45 },
+  { unit: 'hour', max: 22 },
+  { unit: 'day', max: 26 },
+  { unit: 'month', max: 11 },
+  { unit: 'year', max: Infinity },
+]
+
+// この秒数未満の差分は「今」と表示する
+const RELATIVE_TIME_NOW_THRESHOLD_SECONDS = 45
+
+const removeSpaceAfterNumber = (base: string) => base.replace(/(\d)\s+/g, '$1')
+
+// 例: "3 日前" → "3日前"
+const RELATIVE_TIME_REPLACERS: Partial<Record<keyof typeof locales, (base: string) => string>> = {
+  ja: removeSpaceAfterNumber,
+  'ja-easy': removeSpaceAfterNumber,
+  'zh-tw': removeSpaceAfterNumber,
+}
+
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
 const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
@@ -403,6 +437,34 @@ export const useDateFormat = (): UseDateFormatReturn => {
         const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
         const formattedTime = formatTime({ date, parts: timeParts })
         return `${formattedDate} ${formattedTime}`
+      },
+      formatRelativeTime: ({ date, now = new Date() }: FormatRelativeTimeProps): string => {
+        const target = dayjs(date)
+        const replacer = RELATIVE_TIME_REPLACERS[locale]
+        const format = (
+          value: number,
+          unit: Intl.RelativeTimeFormatUnit,
+          numeric: 'auto' | 'always',
+        ) => {
+          const formatted = intl.formatRelativeTime(value, unit, { numeric })
+          return replacer ? replacer(formatted) : formatted
+        }
+
+        if (Math.abs(target.diff(now, 'second', true)) < RELATIVE_TIME_NOW_THRESHOLD_SECONDS) {
+          return format(0, 'second', 'auto')
+        }
+
+        for (const { unit, max } of RELATIVE_TIME_THRESHOLDS) {
+          const diff = target.diff(now, unit, true)
+          const rounded = Math.max(1, Math.round(Math.abs(diff)))
+
+          if (rounded < max) {
+            return format(diff < 0 ? -rounded : rounded, unit, 'always')
+          }
+        }
+
+        // 最後の max が Infinity のため到達しない
+        return ''
       },
       getWeekStartDay: (): number => DATE_FORMATS[locale].weekStartDay,
     }
