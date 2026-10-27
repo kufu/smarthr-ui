@@ -134,9 +134,17 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
-#### コンポーネントの初期値（デフォルトprops）を変更する場合
+#### smarthr-uiの変更が`eslint-plugin-smarthr`に波及する場合
 
-公開コンポーネントのデフォルト値を変更した場合、`eslint-plugin-smarthr`（別リポジトリ `kufu/tamatebako` で管理）の `smarthr/best-practice-for-default-props` ルールが持つ `DEFAULT_PROPS` 定義も追従して更新する必要がある。このルールは特定のコンポーネントに限らず、デフォルト値を持つpropsがあるコンポーネント全般が対象になりうる。デフォルト値と同じpropsの明示的指定を検出・自動削除するもので、smarthr-ui側のデフォルト値をハードコードして保持しているため、乖離すると誤ったfix提案（変更後のデフォルト値を知らずに古い値として削除を促す等）をしてしまう。
+`eslint-plugin-smarthr`（別リポジトリ `kufu/tamatebako` で管理）は、smarthr-uiのデフォルト値やバージョン間の破壊的変更を独自に保持しており、smarthr-ui側を変更しても自動では追従されない。以下に該当する変更を行った場合は、`kufu/tamatebako` 側の対応も忘れずに行うこと。
+
+**公開コンポーネントのデフォルト値（デフォルトprops）を変更する場合**
+
+`smarthr/best-practice-for-default-props` ルールが持つ `DEFAULT_PROPS` 定義を更新すること。対象は特定のコンポーネントに限らず、デフォルト値を持つpropsがあるコンポーネント全般が対象になりうる。このルールはデフォルト値と同じpropsの明示的指定を検出・自動削除するもので、smarthr-ui側のデフォルト値をハードコードして保持しているため、乖離すると誤ったfix提案（変更後のデフォルト値を知らずに古い値として削除を促す等）をしてしまう。
+
+**破壊的変更（コンポーネント名・propsのリネーム等）を行う場合**
+
+`smarthr/autofixer-smarthr-ui-migration` ルールに新しいバージョン移行ルール（`rules/autofixer-smarthr-ui-migration/versions/vXX-to-vYY/`）を追加すること。このルールは利用プロダクト側がバージョンを跨いで移行する際に、破壊的変更を自動修正するためのもの。追加を怠ると、利用プロダクト側にこのPRの破壊的変更に対する自動修正手段が提供されないままになる。
 
 #### `'use client'` を付けるべきかの判定
 
