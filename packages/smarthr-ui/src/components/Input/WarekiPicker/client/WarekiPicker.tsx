@@ -194,6 +194,8 @@ export const WarekiPicker: FC<Props> = ({
     isInputFocused,
     selectedDate,
     closeFrame,
+    defaultValue,
+    isControlled: value !== undefined,
   })
 
   const functions = useMemo(() => {
@@ -278,6 +280,18 @@ export const WarekiPicker: FC<Props> = ({
 
         if (!node) return
 
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // selectedDate(ひいては和暦alt表示・カレンダーの選択日ハイライト)をdefaultValueへ戻すため、
+        // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる
+        const associatedForm = node.form
+        const handleReset = () => {
+          if (!latest.isControlled) {
+            setSelectedDate(parseStringDate(latest.defaultValue, latest.parseInput))
+          }
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
         const handleKeyDown = (e: KeyboardEvent) => {
           if (!calendarNode || e.key !== 'Tab') {
             return
@@ -326,6 +340,7 @@ export const WarekiPicker: FC<Props> = ({
 
         return () => {
           window.removeEventListener('keydown', handleKeyDown)
+          associatedForm?.removeEventListener('reset', handleReset)
           latest.closeFrame.cancel()
         }
       },
