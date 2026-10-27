@@ -26,7 +26,7 @@ type BodyProps = {
 }
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-SmartHRAILogo',
+  base: 'smarthr-ui-SmartHRAILogo forced-colors:shr-fill-[CanvasText]',
   variants: {
     compact: {
       false: 'shr-align-bottom',
