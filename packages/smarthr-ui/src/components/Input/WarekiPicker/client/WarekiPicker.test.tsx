@@ -262,6 +262,34 @@ describe('WarekiPicker', () => {
     expect(screen.getByText('令和6年9月25日')).toBeVisible()
   })
 
+  it('マウント後にdefaultValueが変更されても、form.reset()ではマウント時のdefaultValueに戻ること', () => {
+    const { container, rerender } = renderWithIntl(
+      <form>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+
+    rerender(
+      <IntlProvider locale="ja">
+        <form>
+          <FormControl label="WarekiPicker">
+            <WarekiPicker name="date" defaultValue="2024-12-01" />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    expect(textbox).toHaveProperty('value', '2024/09/25')
+    expect(screen.getByText('令和6年9月25日')).toBeVisible()
+  })
+
   it('制御時(value指定)は、form.reset()を呼んでも表示が変わらないこと', () => {
     const { container } = renderWithIntl(
       <form>
