@@ -134,6 +134,10 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
 
+#### コンポーネントの初期値（デフォルトprops）を変更する場合
+
+`Stack`/`Cluster`/`Reel`/`Sidebar`/`Heading`/`Button`などのデフォルト値を変更した場合、`eslint-plugin-smarthr`（別リポジトリ `kufu/tamatebako` で管理）の `smarthr/best-practice-for-default-props` ルールが持つ `DEFAULT_PROPS` 定義も追従して更新する必要がある。このルールはデフォルト値と同じpropsの明示的指定を検出・自動削除するもので、smarthr-ui側のデフォルト値をハードコードして保持しているため、乖離すると誤ったfix提案（変更後のデフォルト値を知らずに古い値として削除を促す等）をしてしまう。
+
 #### `'use client'` を付けるべきかの判定
 
 判定は **Next.js の React Server Components を基準**とします。Next.js はサーバ側のモジュールを `react-server` 条件で解決するため、React の `react-server` ビルドが export する API のみが Server Component で使えます。それ以外を使う場合は `'use client'` が必要です。
