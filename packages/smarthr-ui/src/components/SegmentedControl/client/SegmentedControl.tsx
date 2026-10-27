@@ -97,7 +97,7 @@ export const SegmentedControl: FC<Props> = ({
     }
   }, [size, className])
 
-  const latest = useLatest({ onClickOption, isFocused, hasValue })
+  const latest = useLatest({ onClickOption, isFocused, hasValue, defaultValue })
 
   const functions = useMemo(
     () => ({
@@ -159,8 +159,22 @@ export const SegmentedControl: FC<Props> = ({
 
         document.addEventListener('keydown', handleKeyDown)
 
+        // HINT: 非制御時、祖先のform要素でform.reset()(React 19のaction成功時の自動resetを含む)が
+        // 発生した場合に選択状態をdefaultValueへ戻すため、resetイベントを監視する。
+        // SegmentedControlはnative formコントロールを持たないため、form属性による外部form関連付けはサポートせず、
+        // 祖先のform要素のみを対象にする
+        const associatedForm = node.closest('form')
+        const handleReset = () => {
+          if (!latest.hasValue) {
+            setInnerValue(latest.defaultValue ?? null)
+          }
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
         return () => {
           document.removeEventListener('keydown', handleKeyDown)
+          associatedForm?.removeEventListener('reset', handleReset)
         }
       },
       handleClickOption: (e: MouseEvent<HTMLButtonElement>) => {
