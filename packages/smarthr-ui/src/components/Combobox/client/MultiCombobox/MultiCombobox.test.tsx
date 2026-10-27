@@ -383,7 +383,7 @@ describe('SingleCombobox', () => {
 
     const formData = new FormData(container.querySelector('form')!)
 
-    expect(formData.getAll('department[]')).toEqual(['value-1', 'value-2'])
+    expect(formData.getAll('department')).toEqual(['value-1', 'value-2'])
   })
 
   it('未選択の場合、hidden inputの値が空文字でFormDataから取得できること', () => {
@@ -391,13 +391,30 @@ describe('SingleCombobox', () => {
 
     const formData = new FormData(container.querySelector('form')!)
 
-    expect(formData.get('department[]')).toBe('')
+    expect(formData.get('department')).toBe('')
+  })
+
+  it('nameに利用者自身が`[]`を付けた場合、そのまま使われ二重にならないこと', () => {
+    const { container } = render(
+      template({
+        name: 'department[]',
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+      }),
+    )
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.getAll('department[]')).toEqual(['value-1'])
+
+    // eslint-disable-next-line smarthr/best-practice-for-nested-attributes-array-index -- 二重に[]が付かないことを確認するテスト用セレクタであり、実際のname属性ではない
+    const doubledNameSelector = 'input[type="hidden"][name="department[][]"]'
+    expect(container.querySelector(doubledNameSelector)).not.toBeInTheDocument()
   })
 
   it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
     const { container } = render(template({ name: 'department', disabled: true }))
 
-    const hiddenInput = container.querySelector('input[type="hidden"][name="department[]"]')
+    const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
 
     expect(hiddenInput).toBeDisabled()
   })
@@ -461,7 +478,7 @@ describe('SingleCombobox', () => {
 
     const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
 
-    expect(formData.getAll('department[]')).toEqual(['value-1'])
+    expect(formData.getAll('department')).toEqual(['value-1'])
     expect(combobox()).toHaveAttribute('form', 'external-form')
   })
 })
