@@ -122,7 +122,7 @@ const itemClassNameGenerator = tv({
  * // After
  * <Cluster grow="start" gap={1}>
  *   <div>メイン</div>
- *   <div>サブ</div>
+ *   <div className="shr-grow">サブ</div>
  * </Cluster>
  * ```
  */
