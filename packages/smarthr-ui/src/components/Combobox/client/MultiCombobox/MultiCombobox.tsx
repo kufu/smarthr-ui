@@ -492,13 +492,12 @@ export const MultiCombobox = <T,>({
   )
   // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
   // 選択済みアイテムの有無をsetCustomValidityで別途検証する
+  const actualRequired = required && selectedItems.length === 0
   const inputValidityEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
-      node?.setCustomValidity(
-        required && selectedItems.length === 0 ? localized.requiredMessage : '',
-      )
+      node?.setCustomValidity(actualRequired ? localized.requiredMessage : '')
     },
-    [selectedItems, localized, required],
+    [actualRequired, localized],
   )
 
   const mergedInputRef = useMergeRefs(
@@ -588,7 +587,11 @@ export const MultiCombobox = <T,>({
             type="text"
             form={form}
             name={name ? `query_${name}` : undefined}
-            required={required && selectedItems.length === 0}
+            // HINT: SingleComboboxとは違い、選択済みの場合別途SelectedItemが表示されるため、Inputは空になる
+            // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合でも
+            // 選択済みアイテムがある場合はactualRequiredはfalseになる
+            // requiredにすると選択アイテムがあるのにsubmitできなくなる
+            required={actualRequired}
             disabled={disabled}
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}
