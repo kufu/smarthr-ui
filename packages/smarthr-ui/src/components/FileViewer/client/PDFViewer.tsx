@@ -24,17 +24,19 @@ type ReactPDFModule = {
 }
 
 let reactPDFModulePromise: Promise<ReactPDFModule> | undefined
+// HINT: polyfillを適用すると以降はAPIが存在すると判定されるため、importを再試行する際も初回の判定結果を使う
+let shouldUseLegacyWorker: boolean | undefined
 
 const loadReactPDFModule = (): Promise<ReactPDFModule> => {
   if (!reactPDFModulePromise) {
     // HINT: pdfjs-distはモジュール評価時にも新しいAPIを参照するため、importより前にpolyfillを適用する
-    const useLegacyWorker = applyPDFJSPolyfills()
+    shouldUseLegacyWorker ??= applyPDFJSPolyfills()
 
     reactPDFModulePromise = import('react-pdf')
       .then((mod) => {
         const { pdfjs } = mod
 
-        if (useLegacyWorker) {
+        if (shouldUseLegacyWorker) {
           pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
         } else {
           // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい

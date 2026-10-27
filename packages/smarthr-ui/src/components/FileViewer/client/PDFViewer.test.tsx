@@ -70,4 +70,51 @@ describe('PDFViewer', () => {
       '//unpkg.com/pdfjs-dist@0.0.0/legacy/build/pdf.worker.min.mjs',
     )
   })
+
+  test('react-pdfの読み込みを再試行する場合も、初回の判定でworkerを選ぶ', async () => {
+    // HINT: 初回にpolyfillを適用すると、再試行時にはAPIが存在すると判定される
+    const polyfillResults = [true, false]
+    const pdfjs = {
+      version: '0.0.0',
+      GlobalWorkerOptions: { workerSrc: '' },
+    }
+    let importCount = 0
+
+    vi.resetModules()
+    vi.doMock('./applyPDFJSPolyfills', () => ({
+      applyPDFJSPolyfills: () => polyfillResults.shift(),
+    }))
+    vi.doMock('react-pdf', () => {
+      importCount++
+
+      if (importCount === 1) {
+        throw new Error('チャンクの取得に失敗')
+      }
+
+      return { Document: () => null, Page: () => null, pdfjs }
+    })
+
+    const { PDFViewer } = await import('./PDFViewer')
+    const handleLoadError = vi.fn()
+    const props = {
+      file: FILE,
+      scale: 1,
+      rotation: undefined,
+      width: 100,
+      handleLoad: () => undefined,
+      handleLoadError,
+    }
+
+    const { unmount } = render(<PDFViewer {...props} />)
+
+    await waitFor(() => expect(handleLoadError).toHaveBeenCalled())
+    unmount()
+
+    render(<PDFViewer {...props} />)
+
+    await waitFor(() => expect(pdfjs.GlobalWorkerOptions.workerSrc).not.toBe(''))
+    expect(pdfjs.GlobalWorkerOptions.workerSrc).toBe(
+      '//unpkg.com/pdfjs-dist@0.0.0/legacy/build/pdf.worker.min.mjs',
+    )
+  })
 })
