@@ -1,17 +1,19 @@
 import type { FunctionComponent, ReactNode } from 'react'
 
+export type ObjectDisabledReasonType = {
+  icon?: FunctionComponent
+  message: ReactNode
+}
+
 export type BaseProps = {
   /**
    * ボタンの大きさ
    */
   size?: 'M' | 'S'
   /**
-   * 無効な理由
+   * 無効な理由。ReactNodeを直接指定した場合はmessageとして扱われる
    */
-  disabledReason?: {
-    icon?: FunctionComponent
-    message: ReactNode
-  }
+  disabledReason?: ReactNode | ObjectDisabledReasonType
   /**
    * ボタン内の先頭に表示する内容。
    * 通常は、アイコンを表示するために用いる。

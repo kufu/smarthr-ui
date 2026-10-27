@@ -29,4 +29,39 @@ describe('AnchorButton', () => {
       expect(wrapper).toHaveClass('[&:not([href])_.smarthr-ui-Icon]:shr-fill-current')
     })
   })
+
+  describe('inactiveReason', () => {
+    it('オブジェクト形式で指定した場合、ツールチップに理由が表示される(従来通り)', () => {
+      render(
+        <IntlProvider locale="ja">
+          <AnchorButton inactiveReason={{ message: '遷移できない理由' }}>新規作成</AnchorButton>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByText('遷移できない理由')).toBeInTheDocument()
+    })
+
+    it('ReactNode(文字列)を直接指定した場合も、ツールチップに理由が表示される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <AnchorButton inactiveReason="遷移できない理由">新規作成</AnchorButton>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByText('遷移できない理由')).toBeInTheDocument()
+    })
+
+    it('href を指定している場合、inactiveReason を指定しても無効化ラッパーが描画されない', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <AnchorButton href="/" inactiveReason="遷移できない理由">
+            新規作成
+          </AnchorButton>
+        </IntlProvider>,
+      )
+
+      expect(container.querySelector('.smarthr-ui-Button-disabledWrapper')).not.toBeInTheDocument()
+      expect(screen.queryByText('遷移できない理由')).not.toBeInTheDocument()
+    })
+  })
 })
