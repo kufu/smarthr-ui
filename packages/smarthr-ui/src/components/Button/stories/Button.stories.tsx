@@ -27,7 +27,7 @@ export default {
 const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon /> }
 const prefixes = { なし: '', あり: <FaCirclePlusIcon /> }
 const suffixes = { なし: '', あり: <FaCaretDownIcon /> }
-const disabledReasons = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
+const disabledReasons = { なし: undefined, あり: { text: 'ボタンが無効な理由' } }
 
 export const ButtonControl: StoryObj<typeof Button> = {
   name: 'Playground',
@@ -102,7 +102,7 @@ export const DisabledReason: StoryObj<typeof Button> = {
   name: 'disabledReason',
   args: {
     disabled: true,
-    disabledReason: { message: 'ボタンが無効な理由' },
+    disabledReason: { text: 'ボタンが無効な理由' },
   },
 }
 

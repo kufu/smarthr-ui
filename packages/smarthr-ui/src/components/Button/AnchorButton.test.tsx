@@ -34,7 +34,7 @@ describe('AnchorButton', () => {
     it('オブジェクト形式で指定した場合、ツールチップに理由が表示される(従来通り)', () => {
       render(
         <IntlProvider locale="ja">
-          <AnchorButton inactiveReason={{ message: '遷移できない理由' }}>新規作成</AnchorButton>
+          <AnchorButton inactiveReason={{ text: '遷移できない理由' }}>新規作成</AnchorButton>
         </IntlProvider>,
       )
 

@@ -12,8 +12,8 @@ type Props = {
   disabledReason: ReactNode | ObjectDisabledReasonType
 }
 
-const disabledReasonObjectConverter = (message: ReactNode): ObjectDisabledReasonType => ({
-  message,
+const disabledReasonObjectConverter = (text: ReactNode): ObjectDisabledReasonType => ({
+  text,
 })
 
 const classNameGenerator = tv({
@@ -52,7 +52,7 @@ export const DisabledReason: FC<Props> = ({ button, disabledReason: orgDisabledR
       <TooltipIcon
         className={CLASS_NAMES.tooltip}
         icon={disabledReason.icon}
-        message={disabledReason.message}
+        message={disabledReason.text}
       />
     </div>
   )

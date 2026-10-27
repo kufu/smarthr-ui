@@ -48,7 +48,7 @@ const _cases: Array<ComponentPropsWithoutRef<typeof AnchorButton>> = [
   {
     size: 'M',
     href: undefined,
-    inactiveReason: { message: 'ボタンが無効な理由' },
+    inactiveReason: { text: 'ボタンが無効な理由' },
     prefix: undefined,
     suffix: <FaCaretDownIcon />,
     wide: false,
@@ -64,7 +64,7 @@ const _cases: Array<ComponentPropsWithoutRef<typeof AnchorButton>> = [
   {
     size: 'M',
     href: undefined,
-    inactiveReason: { message: 'ボタンが無効な理由' },
+    inactiveReason: { text: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: false,
@@ -72,7 +72,7 @@ const _cases: Array<ComponentPropsWithoutRef<typeof AnchorButton>> = [
   {
     size: 'S',
     href: undefined,
-    inactiveReason: { message: 'ボタンが無効な理由' },
+    inactiveReason: { text: 'ボタンが無効な理由' },
     prefix: <FaCirclePlusIcon />,
     suffix: undefined,
     wide: false,

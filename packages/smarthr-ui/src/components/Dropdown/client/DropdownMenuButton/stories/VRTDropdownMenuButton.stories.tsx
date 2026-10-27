@@ -42,7 +42,7 @@ export default {
         <DropdownMenuButton {...args} {...props} key={i}>
           <DropdownMenuGroup name="グループ1">
             <Button>操作1</Button>
-            <Button disabled disabledReason={{ message: '非推奨な理由' }}>
+            <Button disabled disabledReason={{ text: '非推奨な理由' }}>
               操作2
             </Button>
             <RemoteDialogTrigger targetId="remote-dialog">

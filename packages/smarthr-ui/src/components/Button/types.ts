@@ -2,7 +2,7 @@ import type { FunctionComponent, ReactNode } from 'react'
 
 export type ObjectDisabledReasonType = {
   icon?: FunctionComponent
-  message: ReactNode
+  text: ReactNode
 }
 
 export type BaseProps = {
@@ -11,7 +11,7 @@ export type BaseProps = {
    */
   size?: 'M' | 'S'
   /**
-   * 無効な理由。ReactNodeを直接指定した場合はmessageとして扱われる
+   * 無効な理由。ReactNodeを直接指定した場合はtextとして扱われる
    */
   disabledReason?: ReactNode | ObjectDisabledReasonType
   /**

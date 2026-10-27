@@ -25,7 +25,7 @@ describe('Button', () => {
     it('オブジェクト形式で指定した場合、ツールチップに理由が表示される(従来通り)', () => {
       render(
         <IntlProvider locale="ja">
-          <Button disabled disabledReason={{ message: 'ボタンが無効な理由' }}>
+          <Button disabled disabledReason={{ text: 'ボタンが無効な理由' }}>
             button
           </Button>
         </IntlProvider>,
