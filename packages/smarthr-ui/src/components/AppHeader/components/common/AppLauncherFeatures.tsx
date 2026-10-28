@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren, memo } from 'react'
+import { type ComponentPropsWithRef, type FC, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../../intl'
@@ -26,6 +26,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { empty, loadError, loading, list, listItem } = classNameGenerator()
 
   return {
@@ -126,7 +127,9 @@ const FeatureListItem = memo<{
   </li>
 ))
 
-const FeatureName: FC<PropsWithChildren> = ({ children }) => {
+const FeatureName: FC<Pick<ComponentPropsWithRef<typeof FeatureListItem>, 'children'>> = ({
+  children,
+}) => {
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   return isDesktop ? (

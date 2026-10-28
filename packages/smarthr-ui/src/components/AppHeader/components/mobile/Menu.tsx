@@ -136,7 +136,6 @@ const ActualFeatureButton: FC<
   return (
     <div className={className}>
       <Button
-        variant="secondary"
         wide
         onClick={handleClick}
         prefix={<FaToolboxIcon />}

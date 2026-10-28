@@ -4,17 +4,15 @@ import { Td } from '../Td'
 
 import { useTableHeadCellCount } from './useTableHeadCellCount'
 
-import type { FC, PropsWithChildren } from 'react'
+import type { ComponentPropsWithoutRef, FC } from 'react'
 
-type Props = PropsWithChildren<{
-  className?: string
-}>
+type Props = Omit<ComponentPropsWithoutRef<typeof Td>, 'colSpan'>
 
-export const AutoColSpanTd: FC<Props> = ({ children, className }) => {
+export const AutoColSpanTd: FC<Props> = ({ children, ...rest }) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableCellElement>()
 
   return (
-    <Td ref={countHeadCellRef} colSpan={count} className={className}>
+    <Td {...rest} ref={countHeadCellRef} colSpan={count}>
       {children}
     </Td>
   )

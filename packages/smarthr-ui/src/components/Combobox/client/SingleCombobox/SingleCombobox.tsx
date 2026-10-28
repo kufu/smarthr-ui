@@ -15,10 +15,11 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Localizer } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
 import { Input } from '../../../Input'
@@ -37,9 +38,9 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     selectedItem: ComboboxItem<T> | null
     /**
-     * デフォルトで選択されるアイテム
+     * フォーカスが外れた際、selectedItemが未選択の場合に自動選択されるアイテム
      */
-    defaultItem?: ComboboxItem<T>
+    emptySelectionFallbackItem?: ComboboxItem<T>
     /**
      * コンポーネント内の先頭に表示する内容
      */
@@ -155,7 +156,7 @@ const SuffixButtons = memo<SuffixButtonsProps>(
 export const SingleCombobox = <T,>({
   items,
   selectedItem,
-  defaultItem,
+  emptySelectionFallbackItem,
   name,
   disabled,
   readOnly,
@@ -183,6 +184,7 @@ export const SingleCombobox = <T,>({
   noResultText,
   style,
   ref,
+  form,
   ...rest
 }: Props<T>) => {
   const theme = useTheme()
@@ -260,7 +262,7 @@ export const SingleCombobox = <T,>({
     onBlur,
     onKeyPress,
     handleKeyDownListBox,
-    defaultItem,
+    emptySelectionFallbackItem,
     selectedItem,
     isFocused,
     isExpanded,
@@ -275,9 +277,9 @@ export const SingleCombobox = <T,>({
   const functions = useMemo(() => {
     let inputNode: HTMLInputElement | null = null
 
-    const selectDefaultItem = () => {
-      if (latest.onSelect && latest.defaultItem) {
-        latest.onSelect(latest.defaultItem)
+    const selectFallbackItem = () => {
+      if (latest.onSelect && latest.emptySelectionFallbackItem) {
+        latest.onSelect(latest.emptySelectionFallbackItem)
       }
     }
     const unfocus = () => {
@@ -295,12 +297,12 @@ export const SingleCombobox = <T,>({
       } else {
         // HINT: 未選択の場合はinputValueに手入力値が残るため、isEditingは解除しない
         // 解除してしまうと「入力値が表示されているのに絞り込みが効いていない」状態になる
-        selectDefaultItem()
+        selectFallbackItem()
       }
     }
 
     return {
-      selectDefaultItem,
+      selectFallbackItem,
       unfocus,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         inputNode = node
@@ -419,10 +421,27 @@ export const SingleCombobox = <T,>({
   const listBoxCallbackRef = useAreaClickCallbackRef(
     isFocused ? [triggerRef, clearButtonRef] : null,
     functions.unfocus,
-    isFocused || selectedItem ? undefined : functions.selectDefaultItem,
+    isFocused || selectedItem ? undefined : functions.selectFallbackItem,
   )
 
-  const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
+  const localized = useLocalize({
+    requiredMessage: {
+      id: 'smarthr-ui/SingleCombobox/requiredMessage',
+      defaultText: '選択してください',
+    },
+  })
+
+  // HINT: 検索用inputのnativeバリデーションは入力値(選択中アイテムのラベル)の有無しか検証できないため、
+  // 選択状態の有無をsetCustomValidityで別途検証する
+  const actualRequired = required && !selectedItem
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(actualRequired ? localized.requiredMessage : '')
+    },
+    [actualRequired, localized],
+  )
+
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, inputValidityEffectRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
@@ -449,12 +468,26 @@ export const SingleCombobox = <T,>({
       }}
       data-clear-button-hidden={(selectedItem === null || disabled || readOnly || false).toString()}
     >
+      {name && (
+        <input
+          type="hidden"
+          form={form}
+          name={name}
+          disabled={disabled}
+          value={selectedItem?.value ?? ''}
+        />
+      )}
+
       <Input
         {...rest}
         ref={mergedRef}
         role="combobox"
         type="text"
-        name={name}
+        form={form}
+        name={name ? `query_${name}` : undefined}
+        // HINT: 選択済みならInputにはラベル文字が入っている
+        // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合actualRequiredもtrueであることは保証されない
+        // requiredを設定することでスクリーンリーダーなどに常に必須であることが正しく伝わる
         required={required}
         disabled={disabled}
         readOnly={readOnly}
@@ -478,7 +511,7 @@ export const SingleCombobox = <T,>({
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
         prefix={prefix}
-        suffix={
+        subActionArea={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
             caretIconColor={caretIconColor}
