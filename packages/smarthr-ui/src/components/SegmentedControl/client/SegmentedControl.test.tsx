@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { IntlProvider } from 'react-intl'
 
@@ -58,5 +58,42 @@ describe('SegmentedControl', () => {
 
     expect(screen.getByRole('radio', { name: 'Empty' })).toHaveAttribute('aria-checked', 'true')
     expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'false')
+  })
+
+  it('非制御で選択を変更後、祖先のform要素でform.reset()を呼ぶとdefaultValueに戻ること', async () => {
+    const user = userEvent.setup()
+
+    const { container } = render(
+      <form>
+        <SegmentedControl defaultValue="a" options={options} />
+      </form>,
+    )
+
+    await user.click(screen.getByRole('radio', { name: 'B' }))
+
+    expect(screen.getByRole('radio', { name: 'B' })).toHaveAttribute('aria-checked', 'true')
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByRole('radio', { name: 'B' })).toHaveAttribute('aria-checked', 'false')
+  })
+
+  it('制御時(value指定)は、祖先のform要素でform.reset()を呼んでも選択状態が変わらないこと', () => {
+    const { container } = render(
+      <form>
+        <SegmentedControl value="b" onClickOption={() => {}} options={options} />
+      </form>,
+    )
+
+    expect(screen.getByRole('radio', { name: 'B' })).toHaveAttribute('aria-checked', 'true')
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    expect(screen.getByRole('radio', { name: 'B' })).toHaveAttribute('aria-checked', 'true')
   })
 })
