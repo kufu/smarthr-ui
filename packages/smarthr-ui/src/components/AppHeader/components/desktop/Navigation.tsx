@@ -34,6 +34,16 @@ const classNameGenerator = tv({
 
 const CLASS_NAME = classNameGenerator()
 
+// HINT: カスタムタグの項目は、他の項目より行間が広く current 時に背景色が付く見た目を維持するための上書き
+const dropdownCustomTagClassNameGenerator = tv({
+  base: 'shr-leading-normal',
+  variants: {
+    current: {
+      true: 'shr-bg-white-darken',
+    },
+  },
+})
+
 type Props = {
   appName: ReactNode
   navigations: NavigationType[]
@@ -109,9 +119,14 @@ const buildDropdownMenu = (navigations: Array<ChildNavigation | ChildNavigationG
     return <DropdownNavigationButton {...navigation} key={index} />
   })
 
-const DropdownCustomTag = memo<NavigationCustomTag>(({ current, ...rest }) => (
-  <AnchorButton {...rest} aria-current={current || undefined} />
-))
+const DropdownCustomTag = memo<NavigationCustomTag>(({ current, className, ...rest }) => {
+  const actualClassName = useMemo(
+    () => dropdownCustomTagClassNameGenerator({ current, className }),
+    [current, className],
+  )
+
+  return <AnchorButton {...rest} className={actualClassName} aria-current={current || undefined} />
+})
 const DropdownMenuAnchorButton = memo<NavigationLink>(({ current, ...rest }) => (
   <AnchorButton {...rest} aria-current={current ? 'page' : undefined} />
 ))

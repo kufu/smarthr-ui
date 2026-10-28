@@ -18,10 +18,11 @@ import { CommonButton } from '../common/CommonButton'
 import type { Header } from '../../../Header'
 
 // HINT: Button[variant=text] をテナント名のテキストに近い見た目にするための上書き
+// 置き換え前の素の button 要素と同じく、文字色は UA 既定の ButtonText、行の高さは line-height: normal にし、
+// アイコンはテキストのベースラインに揃える
 const tenantDropdownTriggerButton = tv({
   base: [
-    'shr-min-h-0 shr-whitespace-normal shr-rounded-s shr-border-none shr-px-0.5 shr-py-0.25 shr-text-start shr-font-normal shr-leading-normal',
-    '[&_.smarthr-ui-Button-body]:shr-leading-normal',
+    'shr-items-baseline shr-whitespace-normal shr-rounded-s shr-border-none shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm shr-font-normal shr-text-[color:ButtonText] [&&]:shr-leading-[normal]',
     '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
   ],
 })
@@ -120,7 +121,6 @@ const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => 
   <DropdownTrigger>
     <Button
       variant="text"
-      size="S"
       className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}
       suffix={<FaCaretDownIcon color="TEXT_BLACK" />}
     >
