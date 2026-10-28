@@ -6,12 +6,27 @@ import dayjs from 'dayjs'
 
 import { type FormatDateProps, useDateFormat } from './useDateFormat'
 
+type AbsoluteProps = Omit<FormatDateProps, 'date'> & {
+  notation?: 'absolute'
+  date: string | Date
+}
+
+type RelativeProps = {
+  notation: 'relative'
+  date: string | Date
+  now?: Date
+}
+
+type Props = AbsoluteProps | RelativeProps
+
 /**
  * 日付を現在のロケールに応じてフォーマットして表示するコンポーネント
  * time要素でラップされ、ISO形式の日付文字列がdateTime属性に設定されます
  *
  * @param props - フォーマットのオプション
  * @param props.date - フォーマット対象の日付
+ * @param props.notation - 'absolute'（デフォルト）または 'relative'（例: 「3日前」）
+ * @param props.now - relative の基準日時。デフォルトは現在日時
  * @param props.parts - 表示する日付のパーツ。指定しない場合は全て表示
  * @param props.options - フォーマットオプション
  * @param props.options.disableSlashInJa - 日本語ロケールでスラッシュを無効化し、月を長形式で表示する
@@ -48,14 +63,25 @@ import { type FormatDateProps, useDateFormat } from './useDateFormat'
  *   options={{ capitalizeFirstLetter: true }}
  * />
  * // <time datetime="2024-01-15T10:30:00.000Z">Seg.</time> (pt)（指定しなければ "seg."）
+ *
+ * // 相対時間で表示
+ * <DateFormatter date={threeDaysAgo} notation="relative" />
+ * // <time datetime="2024-01-12T10:30:00.000Z" title="2024/01/12 19:30">3日前</time>
  */
-export const DateFormatter = ({
-  date: orgDate,
-  ...rest
-}: Omit<FormatDateProps, 'date'> & {
-  date: string | Date
-}) => {
+export const DateFormatter = (props: Props) => {
+  const { formatDate, formatRelativeTime, formatTimestamp } = useDateFormat()
+
+  if (props.notation === 'relative') {
+    const { date: orgDate, now } = props
+    const date = dayjs(orgDate).toDate()
+    return (
+      <time dateTime={date.toISOString()} title={formatTimestamp({ date })}>
+        {formatRelativeTime({ date, now })}
+      </time>
+    )
+  }
+
+  const { date: orgDate, notation: _notation, ...rest } = props
   const date = dayjs(orgDate).toDate()
-  const { formatDate } = useDateFormat()
   return <time dateTime={date.toISOString()}>{formatDate({ ...rest, date })}</time>
 }

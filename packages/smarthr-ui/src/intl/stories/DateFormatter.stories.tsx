@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 import { DateFormatter } from '../DateFormatter'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -99,6 +101,30 @@ export const DifferentDates: Story = {
       <div>
         <strong>2025年12月25日:</strong> <DateFormatter date="2025-12-25" />
       </div>
+    </div>
+  ),
+}
+
+const relativeNow = dayjs('2025-01-15T12:00:00+09:00').toDate()
+
+export const Relative: Story = {
+  name: '相対時間で表示（notation="relative"）',
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {[
+        ['10秒前', '2025-01-15T11:59:50+09:00'],
+        ['5分前', '2025-01-15T11:55:00+09:00'],
+        ['3時間前', '2025-01-15T09:00:00+09:00'],
+        ['3日前', '2025-01-12T12:00:00+09:00'],
+        ['2か月前', '2024-11-15T12:00:00+09:00'],
+        ['2年前', '2023-01-15T12:00:00+09:00'],
+        ['3日後', '2025-01-18T12:00:00+09:00'],
+      ].map(([label, date]) => (
+        <div key={label}>
+          <strong>{label}:</strong>{' '}
+          <DateFormatter date={date} notation="relative" now={relativeNow} />
+        </div>
+      ))}
     </div>
   ),
 }
