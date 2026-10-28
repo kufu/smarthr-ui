@@ -21,12 +21,13 @@ import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Calendar } from '../../../Calendar'
+import { useIntl } from '../../../../intl'
 import { FaCalendarDaysIcon } from '../../../Icon'
-import { Input } from '../../../Input'
-import { Portal } from '../Portal'
+import { Input } from '../../client'
 
-import { parseJpnDateString } from './datePickerHelper'
+import { Calendar } from './Calendar'
+import { Portal } from './Portal'
+import { parseJpnDateString } from './warekiPickerHelper'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
 
@@ -39,18 +40,14 @@ type Props = ExtendElementPropsWithRef<
     value?: string | null
     /** 非制御コンポーネントとして使う場合の初期値。`value` を指定した場合は無視される */
     defaultValue?: string | null
-    /** input 要素の `name` 属性の値 */
-    name?: string
-    /** 選択可能な期間の開始日 */
-    from?: Date
-    /** 選択可能な期間の終了日 */
-    to?: Date
-    /** フォームを無効にするかどうか */
-    disabled?: boolean
     /**
      * placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
      */
     placeholder?: string
+    /** 選択可能な期間の開始日 */
+    from?: Date
+    /** 選択可能な期間の終了日 */
+    to?: Date
     /** フォームにエラーがあるかどうか */
     error?: boolean
     /** コンポーネントの幅 */
@@ -59,8 +56,13 @@ type Props = ExtendElementPropsWithRef<
     parseInput?: (input: string) => Date | null
     /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
     formatDate?: (date: Date | null) => string
-    /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
-    showAlternative?: (date: Date | null) => ReactNode
+    /**
+     * 入出力用文字列と併記する別表記を制御する。
+     * - 省略 / `true`: 和暦を別表記として表示する(デフォルト)
+     * - `false`: 別表記を表示しない
+     * - 関数: その関数の結果を別表記として使う
+     */
+    showAlternative?: boolean | ((date: Date | null) => ReactNode)
     /** @deprecated onChangeDate は非推奨です。onChange を使ってください。 */
     onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
     /** 選択された日付が変わった時に発火するコールバック関数 */
@@ -104,8 +106,25 @@ const formatDateValue = (
   formatDateFn: ((date: Date | null) => string) | undefined,
 ) => (formatDateFn ? formatDateFn(date) : DEFAULT_DATE_TO_STRING(date))
 
-/** @deprecated DatePicker は非推奨です。Input[type=date] を使ってください。 */
-export const DatePicker: FC<Props> = ({
+// HINT: showAlternativeは`boolean | 関数`を受け取る。falseなら別表記なし、関数ならその結果をそのまま使い、
+// 省略/trueの場合はデフォルトの和暦表記を使う
+const resolveAlternativeFormat = (
+  date: Date | null,
+  showAlternative: boolean | ((date: Date | null) => ReactNode) | undefined,
+  locale: string,
+): ReactNode => {
+  if (!date || showAlternative === false) {
+    return null
+  }
+
+  if (typeof showAlternative === 'function') {
+    return showAlternative(date)
+  }
+
+  return date.toLocaleDateString(`${locale}-u-ca-japanese`, { dateStyle: 'long' })
+}
+
+export const WarekiPicker: FC<Props> = ({
   value,
   defaultValue,
   name,
@@ -125,6 +144,7 @@ export const DatePicker: FC<Props> = ({
   ...rest
 }) => {
   const theme = useTheme()
+  const { locale } = useIntl()
   const classNames = useMemo(() => {
     const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } =
       classNameGenerator()
@@ -146,9 +166,10 @@ export const DatePicker: FC<Props> = ({
     parseStringDate(value !== undefined ? value : defaultValue, parseInput),
   )
 
-  const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(() =>
-    selectedDate && showAlternative ? showAlternative(selectedDate) : null,
-  )
+  // HINT: selectedDate・showAlternative・localeから導出できる値のため、stateで持たずレンダー中に計算する。
+  // selectedDate変更時のみ再計算するstateにすると、showAlternativeだけを切り替えた際に
+  // 以前の表示が残ってしまう
+  const alternativeFormat = resolveAlternativeFormat(selectedDate, showAlternative, locale)
 
   const [initialInputValue] = useState<string | undefined>(() => {
     if (value !== undefined || defaultValue === undefined) {
@@ -168,6 +189,7 @@ export const DatePicker: FC<Props> = ({
     parseInput,
     formatDate,
     showAlternative,
+    locale,
     onBlur,
     isInputFocused,
     selectedDate,
@@ -179,11 +201,6 @@ export const DatePicker: FC<Props> = ({
     let calendarNode: HTMLElement | null = null
 
     const dateToString = (date: Date | null) => formatDateValue(date, latest.formatDate)
-
-    const dateToAlternativeFormat = (d: Date | null) => {
-      if (d && latest.showAlternative) return latest.showAlternative(d)
-      return null
-    }
 
     const stringToDate = (str: string | null | undefined) => parseStringDate(str, latest.parseInput)
 
@@ -208,11 +225,6 @@ export const DatePicker: FC<Props> = ({
       const formatValue = dateToString(nextDate)
 
       inputNode.value = formatValue
-
-      if (latest.showAlternative) {
-        setAlternativeFormat(dateToAlternativeFormat(nextDate))
-      }
-
       setSelectedDate(nextDate)
 
       if (latest.onChange) {
@@ -256,7 +268,6 @@ export const DatePicker: FC<Props> = ({
     return {
       stringToDate,
       dateToString,
-      dateToAlternativeFormat,
       closeCalendar,
       openCalendar,
       calendarCallbackRef: (node: HTMLElement | null) => {
@@ -282,7 +293,7 @@ export const DatePicker: FC<Props> = ({
 
           if (latest.isInputFocused) {
             if (e.shiftKey) {
-              // move focus from Input to previous elements of DatePicker
+              // move focus from Input to previous elements of WarekiPicker
               closeCalendar()
 
               return
@@ -305,7 +316,7 @@ export const DatePicker: FC<Props> = ({
               e.preventDefault()
             }
           } else if (currentFocused === calendarButtonAry.at(-1)) {
-            // move focus from Calendar to next elements of DatePicker
+            // move focus from Calendar to next elements of WarekiPicker
             node.focus()
             closeCalendar()
           }
@@ -369,11 +380,6 @@ export const DatePicker: FC<Props> = ({
 
         if (newDate && dayjs(newDate).isValid()) {
           node.value = functions.dateToString(newDate)
-
-          if (latest.showAlternative) {
-            setAlternativeFormat(functions.dateToAlternativeFormat(newDate))
-          }
-
           setSelectedDate(newDate)
 
           return
@@ -431,7 +437,7 @@ export const DatePicker: FC<Props> = ({
         onBlur={functions.handleBlur}
         suffix={
           <InputSuffixIcon
-            alternativeFormat={showAlternative ? alternativeFormat : null}
+            alternativeFormat={alternativeFormat}
             caretIconColor={caretIconColor}
             classNames={classNames}
           />
@@ -455,7 +461,7 @@ export const DatePicker: FC<Props> = ({
 
 const InputSuffixIcon = memo<{
   classNames: { inputSuffixLayout: string; inputSuffixWrapper: string; inputSuffixText: string }
-  alternativeFormat: null | ReactNode
+  alternativeFormat: ReactNode
   caretIconColor: ComponentPropsWithRef<typeof FaCalendarDaysIcon>['color']
 }>(({ classNames, alternativeFormat, caretIconColor }) => (
   <span className={classNames.inputSuffixLayout}>

@@ -26,7 +26,7 @@ type Props = {
   error?: boolean
 }
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppLauncher',
@@ -85,7 +85,8 @@ const CLASS_NAMES = (() => {
     mainInner,
     contentHead,
     scrollArea,
-  } = appLauncher()
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  } = classNameGenerator()
 
   return {
     wrapper: wrapper(),

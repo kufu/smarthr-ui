@@ -6,6 +6,7 @@ export const INITIAL_CONTENT_STYLES: {
     insetInlineStart?: string
     insetInlineEnd?: string
     maxWidth: string
+    transform?: string
   }
   body: {
     maxHeight?: string
@@ -24,7 +25,10 @@ export const generateContentStyle = (
     triggerButton.getBoundingClientRect(),
     {
       width: content.offsetWidth,
-      height: content.offsetHeight,
+      // HINT: 前回開いた際のmax-heightがstateとして残り、再度開いた際にbodyへ適用された状態で
+      // マウントされる。offsetHeightだとそのmax-height制約込みの高さになってしまうため、
+      // overflow: visibleな子要素のはみ出し分も含めて測れるscrollHeightを使う
+      height: content.scrollHeight,
     },
     {
       width: document.body.clientWidth,
@@ -46,6 +50,7 @@ export const generateContentStyle = (
       insetInlineStart: contentBox.left || undefined,
       insetInlineEnd: contentBox.right || undefined,
       maxWidth: `calc(100% - ${leftMargin} - ${rightMargin})`,
+      transform: contentBox.transform,
     },
     body: {
       maxHeight: contentBox.maxHeight || undefined,
@@ -57,6 +62,7 @@ export const generateContentStyle = (
     current.wrapper.insetInlineStart === nextStyle.wrapper.insetInlineStart &&
     current.wrapper.insetInlineEnd === nextStyle.wrapper.insetInlineEnd &&
     current.wrapper.maxWidth === nextStyle.wrapper.maxWidth &&
+    current.wrapper.transform === nextStyle.wrapper.transform &&
     current.body.maxHeight === nextStyle.body.maxHeight
   ) {
     return current
@@ -79,24 +85,34 @@ export function getContentBoxStyle(
     left: number
   },
 ) {
+  const padding = 10
+
   const contentBox: {
     top: string
     left?: string
     right?: string
     maxHeight: string
+    transform?: string
   } = {
     top: 'auto',
     maxHeight: '',
   }
 
-  if (triggerRect.bottom + contentSize.height <= windowSize.height) {
+  if (triggerRect.bottom + contentSize.height + padding <= windowSize.height) {
     // ドロップダウンのサイズがトリガの下側の領域に収まる場合
+    // HINT: 表示後にコンテンツの高さが動的に変わっても画面外にはみ出さないよう、
+    // 収まる場合でも常にその時点の残りスペースをmax-heightとして設定しておく
     contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
-  } else if (triggerRect.top - contentSize.height >= 0) {
-    // ドロップダウンのサイズがトリガの上川の領域に収まる場合
-    contentBox.top = `${scroll.top + triggerRect.top - contentSize.height + 5}px`
+    contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
+  } else if (triggerRect.top - contentSize.height - padding >= 0) {
+    // ドロップダウンのサイズがトリガの上側の領域に収まる場合
+    // HINT: topをコンテンツの高さに依存させず常にトリガ上端に固定し、transform: translateY(-100%)で
+    // 実際のレンダリング後の高さ分だけ上にずらす。これにより開いた後の高さ変化にも
+    // JSでの再計算なしに追従できる(下端は常にトリガ上端に接したままになる)
+    contentBox.top = `${scroll.top + triggerRect.top + 5}px`
+    contentBox.maxHeight = `${triggerRect.top - padding}px`
+    contentBox.transform = 'translateY(-100%)'
   } else {
-    const padding = 10
     const triggerHeight = triggerRect.bottom - triggerRect.top
 
     if (triggerRect.top + triggerHeight / 2 < windowSize.height / 2) {

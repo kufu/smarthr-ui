@@ -22,6 +22,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
 
   return {
@@ -86,7 +87,7 @@ const SelectorHeading = memo<
   <Cluster justify="space-between" align="center" gap={1} className={wrapperClassName}>
     {/* eslint-disable-next-line smarthr/require-i18n-text */}
     <Heading className={className}>Language</Heading>
-    <Button type="button" size="S" onClick={onClickClose}>
+    <Button size="S" onClick={onClickClose}>
       {/* eslint-disable-next-line smarthr/require-i18n-text */}
       <FaXmarkIcon alt="close" />
     </Button>

@@ -32,6 +32,7 @@ const classNameGenerator = tv({
   ],
 })
 
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 const CLASS_NAME = classNameGenerator()
 
 // HINT: カスタムタグの項目は、他の項目より行間が広く current 時に背景色が付く見た目を維持するための上書き

@@ -20,14 +20,15 @@ import type { Header } from '../../../Header'
 // HINT: Button[variant=text] をテナント名のテキストに近い見た目にするための上書き
 // 置き換え前の素の button 要素と同じく、文字色は UA 既定の ButtonText、行の高さは line-height: normal にし、
 // アイコンはテキストのベースラインに揃える
-const tenantDropdownTriggerButton = tv({
+const classNameGenerator = tv({
   base: [
     'shr-items-baseline shr-whitespace-normal shr-rounded-s shr-border-none shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm shr-font-normal shr-text-[color:ButtonText] [&&]:shr-leading-[normal]',
     '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
   ],
 })
 
-const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = tenantDropdownTriggerButton()
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = classNameGenerator()
 
 type Props = Pick<
   ComponentPropsWithRef<typeof Header>,

@@ -1,7 +1,6 @@
 'use client'
 
 import { type FC, type MouseEvent, memo, useContext, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { AnchorButton } from '../../../Button'
@@ -19,14 +18,10 @@ import type {
   NavigationLink,
 } from '../../types'
 
-const classNameGenerator = tv({
-  base: ['shr-px-0.5'],
-})
-
 type Props = { navigation: Navigation; handleClickNavigation: () => void }
 
 export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation }) => {
-  const className = classNameGenerator()
+  const className = 'shr-px-0.5'
 
   if ('elementAs' in navigation) {
     return (
