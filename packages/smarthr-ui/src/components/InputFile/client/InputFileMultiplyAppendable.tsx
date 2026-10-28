@@ -192,6 +192,7 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
         <FilePreviewDialog
           file={previewFile}
           searchable={previewable?.searchable}
+          onPassword={previewable?.onPassword}
           handleClose={functions.handleClosePreview}
           handleDownload={functions.handleDownload}
         />
