@@ -6,9 +6,12 @@ export * from './FaIcon'
 export { generateIcon } from './generateIcon'
 
 /** @public */
-export { WarningIcon } from './WarningIcon'
+export { FilterIcon } from './FilterIcon'
 /** @public */
 export { SparklesIcon } from './SparklesIcon'
+/** @public */
+export { WarningIcon } from './WarningIcon'
+
 export { LanguageIcon } from './LanguageIcon'
 export { OpenInNewTabIcon } from './OpenInNewTabIcon'
 export { StatusIcon } from './StatusIcon'

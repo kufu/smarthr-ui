@@ -1,18 +1,13 @@
 'use client'
 
-import { memo } from 'react'
+import { type FC, memo } from 'react'
 
 import { useIntl } from '../../../intl'
-import { FaCircleCheckIcon } from '../../Icon'
+import { FaCircleCheckIcon } from '../FaIcon'
 
-import type { FC } from 'react'
-
-type Props = {
-  className?: string
+export const FilterCheckIcon: FC<{
   alt?: string
-}
-
-export const FilteredIcon: FC<Props> = memo(({ className, alt }) => {
+}> = memo(({ alt }) => {
   const { localize } = useIntl()
 
   // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
@@ -23,5 +18,10 @@ export const FilteredIcon: FC<Props> = memo(({ className, alt }) => {
       defaultText: '適用中',
     })
 
-  return <FaCircleCheckIcon className={className} aria-label={actualAlt} />
+  return (
+    <FaCircleCheckIcon
+      className="shr-absolute shr-bottom-[2px] shr-right-[-4px] shr-h-[0.5em] shr-w-[0.5em]"
+      aria-label={actualAlt}
+    />
+  )
 })
