@@ -7,6 +7,12 @@ import { FormControl } from '../FormGroup'
 
 import { InputFile } from './InputFile'
 
+const mockFileViewer = vi.fn(() => null)
+
+vi.mock('../FileViewer', () => ({
+  FileViewer: (props: unknown) => mockFileViewer(props),
+}))
+
 describe('InputFile', () => {
   const file1 = new File(['foo'], 'foo.txt', { type: 'text/plain' })
   const file2 = new File(['bar'], 'bar.txt', { type: 'text/plain' })
@@ -466,6 +472,38 @@ describe('InputFile', () => {
       expect(
         screen.getByRole('button', { name: new RegExp(`${imageFile.name}のプレビューを開く`) }),
       ).toBeInTheDocument()
+    })
+
+    it('previewable.onPasswordを指定した場合、プレビューを開くとFileViewerにそのまま渡されること', async () => {
+      const pdfFile = {
+        name: 'document.pdf',
+        url: 'https://example.com/document.pdf',
+        contentType: 'application/pdf',
+      }
+      const onPassword = vi.fn()
+
+      await render(
+        <IntlProvider locale="ja">
+          <EnvironmentProvider>
+            <form>
+              <FormControl label="input file">
+                <InputFile
+                  name="test"
+                  previewable={{ onPassword }}
+                  defaultExistingFiles={[pdfFile]}
+                  label="input file"
+                />
+              </FormControl>
+            </form>
+          </EnvironmentProvider>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(
+        screen.getByRole('button', { name: new RegExp(`${pdfFile.name}のプレビューを開く`) }),
+      )
+
+      expect(mockFileViewer).toHaveBeenCalledWith(expect.objectContaining({ onPassword }))
     })
   })
 })
