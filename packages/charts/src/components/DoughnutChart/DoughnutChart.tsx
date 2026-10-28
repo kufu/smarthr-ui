@@ -109,7 +109,6 @@ export const DoughnutChart: React.FC<Props> = ({
   return (
     <div className={`shr-relative shr-h-full shr-w-full ${className ?? ''}`}>
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Doughnut
         ref={chartRef}
         role="application"
