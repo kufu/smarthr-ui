@@ -36,8 +36,9 @@ const classNameGenerator = tv({
 const CLASS_NAME = classNameGenerator()
 
 // HINT: カスタムタグの項目は、他の項目より行間が広く current 時に背景色が付く見た目を維持するための上書き
+// shr-border-none は、focus-indicator の白い内枠が border-shorthand によって細くならないようにするため
 const dropdownCustomTagClassNameGenerator = tv({
-  base: 'shr-leading-normal',
+  base: 'shr-border-none shr-leading-normal',
   variants: {
     current: {
       true: 'shr-bg-white-darken',
