@@ -37,3 +37,8 @@ auditConfig:
     # tailwindcss が braces を使うのは設定ファイルの content に書いた glob の展開のみで、外部入力を扱わないためignoreする。
     # braces の修正版がリリースされるか、Tailwind CSS v4 へ移行したタイミングで削除する
     - GHSA-vfj7-8cjw-p6xm
+    # HINT: deepmerge@4.2.0-4.3.1 のprototype pollution(CVSS 2.7、low)。修正版は未リリース。
+    # packages/charts の chartConfig.ts で、利用者がReact props経由で静的に渡すChart.jsオプションの
+    # マージにのみ使用しており、HTTPリクエスト等の動的な外部入力を直接扱わないためignoreする。
+    # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
+    - GHSA-gcqx-w48m-w2h4
