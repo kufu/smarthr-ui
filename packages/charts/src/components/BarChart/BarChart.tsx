@@ -149,8 +149,8 @@ export const BarChart: React.FC<Props> = ({
           {title}
         </Text>
         <SegmentedControl
-          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
           size="S"
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
           onClickOption={(value) => handleViewChange(value as ChartViewType)}
           value={view}
           options={[

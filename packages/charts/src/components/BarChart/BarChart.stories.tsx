@@ -203,7 +203,7 @@ export const Stacked: Story = {
   },
 }
 
-// グループごとの値の集まり（データ1 = [12, 19, 3, 5, 2] など）を、グループ名1つのxカテゴリの中に積み上げて表示する
+// グループごとの値の集まり（データ1 = [12, 19, 3, 5, 2] など）を、グループ名ごとに1本の積み上げ棒として並べて表示する
 export const GroupedStacks: Story = {
   name: 'grouped stacks',
   args: {
@@ -213,23 +213,15 @@ export const GroupedStacks: Story = {
     orientation: 'horizontal',
     options: {
       skipNull: true,
-      plugins: {
-        tooltip: {
-          filter: function (tooltipItem: TooltipItem<'bar'>) {
-            return tooltipItem.parsed.x !== null
-          },
-        },
-      },
     },
   },
 }
-
 
 export const TableView: Story = {
   name: 'default table view',
   args: {
     data: multiSmall,
-    defaultView: 'table'
+    defaultView: 'table',
   },
 }
 
