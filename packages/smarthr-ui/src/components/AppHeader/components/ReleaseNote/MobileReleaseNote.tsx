@@ -1,0 +1,86 @@
+import { memo } from 'react'
+import { tv } from 'tailwind-variants'
+
+import { Localizer } from '../../../../intl'
+import { OpenInNewTabIcon } from '../../../Icon'
+import { Center, Stack } from '../../../Layout'
+import { Loader } from '../../../Loader'
+import { TextLink } from '../../../TextLink'
+
+import type { ReleaseNoteProps } from '../../types'
+
+const classNameGenerator = tv({
+  slots: {
+    anchor: [
+      'shr-text-base shr-text-link shr-shadow-none [&&]:shr-underline',
+      '[&&]:hover:shr-no-underline',
+    ],
+    icon: ['shr-ms-0.5'],
+    indexLinkWrapper: ['shr-mt-2 shr-text-end'],
+    indexLinkAnchor: [
+      'shr-text-base shr-text-link shr-shadow-none [&&]:shr-no-underline',
+      '[&&]:hover:shr-underline',
+    ],
+  },
+})
+
+const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { anchor, icon, indexLinkWrapper, indexLinkAnchor } = classNameGenerator()
+
+  return {
+    anchor: anchor(),
+    icon: icon(),
+    indexLinkWrapper: indexLinkWrapper(),
+    indexLinkAnchor: indexLinkAnchor(),
+  }
+})()
+
+export const MobileReleaseNote = memo<ReleaseNoteProps>(({ indexUrl, links, loading, error }) => (
+  <div>
+    {loading ? (
+      <Center>
+        <Loader />
+      </Center>
+    ) : error ? (
+      <Localizer
+        id="smarthr-ui/AppHeader/releaseNotesLoadError"
+        defaultText={`リリースノートの読み込みに失敗しました。
+時間をおいて、やり直してください。`}
+      />
+    ) : (
+      <Stack>
+        {links.slice(0, 5).map((link) => (
+          <div key={link.url}>
+            <TextLink
+              href={link.url}
+              target="_blank"
+              rel="noopener"
+              referrerPolicy="no-referrer-when-downgrade"
+              className={CLASS_NAMES.anchor}
+              suffix={<OpenInNewTabIcon className={CLASS_NAMES.icon} />}
+            >
+              {link.title}
+            </TextLink>
+          </div>
+        ))}
+      </Stack>
+    )}
+
+    <div className={CLASS_NAMES.indexLinkWrapper}>
+      <TextLink
+        href={indexUrl}
+        target="_blank"
+        rel="noopener"
+        referrerPolicy="no-referrer-when-downgrade"
+        className={CLASS_NAMES.indexLinkAnchor}
+        suffix={<OpenInNewTabIcon className={CLASS_NAMES.icon} />}
+      >
+        <Localizer
+          id="smarthr-ui/AppHeader/seeAllReleaseNotes"
+          defaultText="すべてのリリースノートを見る"
+        />
+      </TextLink>
+    </div>
+  </div>
+))

@@ -1,0 +1,328 @@
+'use client'
+
+import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
+
+import { useTheme } from '../../../../hooks/client/useTheme'
+import { Localizer, useLocalize } from '../../../../intl'
+import { Button, UnstyledButton } from '../../../Button'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
+import { Heading } from '../../../Heading'
+import { FaCircleXmarkIcon, FaStarIcon, FaToolboxIcon } from '../../../Icon'
+import { SearchInput } from '../../../Input'
+import { Cluster } from '../../../Layout'
+import { Scroller } from '../../../Scroller'
+import { Section } from '../../../SectioningContent'
+import { SideNav, SideNavItemButton } from '../../../SideNav'
+import { HelpLink } from '../../../TextLink'
+
+import { FeatureList } from './FeatureList'
+import { LauncherSortDropdown } from './LauncherSortDropdown'
+import { useLauncher } from './useLauncher'
+
+import type { HeaderProps, Launcher } from '../../types'
+
+type PanelProps = {
+  features: Array<Launcher['feature']>
+  loading?: boolean
+  error?: boolean
+}
+
+type Props = PanelProps &
+  Pick<HeaderProps, 'enableNew'> & {
+    handleOpen: () => void
+  }
+
+const classNameGenerator = tv({
+  slots: {
+    trigger: [
+      'shr-border-none shr-bg-transparent shr-px-0.25 shr-font-normal shr-text-white',
+      'hover:shr-border-transparent hover:shr-bg-transparent',
+      'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+      'forced-colors:shr-border-shorthand',
+    ],
+    wrapper: [
+      'smarthr-ui-AppLauncher',
+      'shr-grid shr-h-[40rem] shr-w-[38rem] shr-grid-rows-[auto_1fr]',
+    ],
+    searchArea: [
+      'smarthr-ui-AppLauncher-searchArea',
+      'shr-border-b-shorthand shr-p-1',
+      '[&_.smarthr-ui-Input]:shr-h-[42px]',
+    ],
+    inner: ['smarthr-ui-AppLauncher-inner', 'shr-grid shr-min-h-0 shr-grid-cols-[11rem_1fr]'],
+    side: [
+      'smarthr-ui-AppLauncher-side',
+      'shr-border-r-shorthand shr-flex shr-flex-col shr-bg-column shr-pb-1 shr-pt-0.5',
+      '[&_hr]:shr-m-0.5 [&_hr]:shr-h-[1px] [&_hr]:shr-border-none [&_hr]:shr-bg-border',
+    ],
+    sideNav: [
+      '[&_.smarthr-ui-SideNav-item>button]:shr-px-1 [&_.smarthr-ui-SideNav-item>button]:shr-py-0.75',
+      '[&_.smarthr-ui-SideNav-item>button>span]:shr-flex-nowrap',
+      '[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-shrink-0 [&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-align-bottom',
+    ],
+    sideNavHeading: ['shr-px-1 shr-py-0.75 shr-text-xs shr-text-black'],
+    help: ['smarthr-ui-AppLauncher-help', 'shr-mt-auto shr-px-1'],
+    main: ['smarthr-ui-AppLauncher-main', 'shr-grid shr-min-h-0'],
+    mainInner: ['shr-grid shr-min-h-0 shr-grid-rows-[auto_1fr]'],
+    contentHead: [
+      'shr-min-h-[2rem] shr-px-1 shr-py-0.75',
+      '[&_.smarthr-ui-Heading]:shr-text-black',
+    ],
+    scrollArea: ['shr-h-[509px]'],
+  },
+  variants: {
+    noIcon: {
+      true: {
+        sideNav: ['[&_.smarthr-ui-SideNav-item>button]:shr-pl-1.5'],
+      },
+    },
+    selected: {
+      false: {
+        sideNav: ['[&_.smarthr-ui-SideNav-item>button_.smarthr-ui-Icon]:shr-text-grey'],
+      },
+    },
+  },
+})
+
+const CLASS_NAMES = (() => {
+  const {
+    trigger,
+    wrapper,
+    searchArea,
+    inner,
+    side,
+    sideNav,
+    sideNavHeading,
+    help,
+    main,
+    mainInner,
+    contentHead,
+    scrollArea,
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  } = classNameGenerator()
+
+  return {
+    trigger: trigger(),
+    wrapper: wrapper(),
+    searchArea: searchArea(),
+    inner: inner(),
+    side: side(),
+    unselectedSideNav: sideNav({ selected: false }),
+    selectedSideNav: sideNav({ noIcon: true, selected: true }),
+    sideNavHeading: sideNavHeading(),
+    help: help(),
+    main: main(),
+    mainInner: mainInner(),
+    contentHead: contentHead(),
+    scrollArea: scrollArea(),
+  }
+})()
+
+export const DesktopLauncher: FC<Props> = ({ enableNew, handleOpen, ...rest }) => (
+  <Dropdown onOpen={handleOpen}>
+    <LauncherTrigger enableNew={enableNew} />
+    <DropdownContent controllable>
+      <LauncherPanel {...rest} />
+    </DropdownContent>
+  </Dropdown>
+)
+
+const LauncherTrigger = memo<Pick<HeaderProps, 'enableNew'>>(({ enableNew }) => (
+  <DropdownTrigger>
+    <Button className={CLASS_NAMES.trigger} prefix={enableNew ?? <FaToolboxIcon />}>
+      <Localizer id="smarthr-ui/AppHeader/DesktopHeader/appLauncherLabel" defaultText="アプリ" />
+    </Button>
+  </DropdownTrigger>
+))
+
+const LauncherPanel: FC<PanelProps> = ({ features: baseFeatures, loading, error }) => {
+  const {
+    features,
+    page,
+    mode,
+    sortType,
+    searchQuery,
+    changePage,
+    setSortType,
+    onChangeSearchQuery,
+    onClickClearSearchQuery,
+    callbackRef,
+  } = useLauncher(baseFeatures)
+
+  const translated = useLocalize({
+    searchInputTitle: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchInputTitle',
+      defaultText: 'アプリ名を入力してください。',
+    },
+    favoriteModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/favoriteModeText',
+      defaultText: 'よく使うアプリ',
+    },
+    allModeText: {
+      id: 'smarthr-ui/AppHeader/Launcher/allModeText',
+      defaultText: 'すべてのアプリ',
+    },
+  })
+
+  return (
+    <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
+      <div className={CLASS_NAMES.searchArea}>
+        <SearchInput
+          name="search"
+          value={searchQuery}
+          title={translated.searchInputTitle}
+          width="100%"
+          onChange={onChangeSearchQuery}
+          tooltipMessage={translated.searchInputTitle}
+          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+        />
+      </div>
+
+      <div className={CLASS_NAMES.inner}>
+        <SideNavs
+          mode={mode}
+          page={page}
+          changePage={changePage}
+          favoriteModeText={translated.favoriteModeText}
+          allModeText={translated.allModeText}
+        />
+        <div className={CLASS_NAMES.main}>
+          <Section className={CLASS_NAMES.mainInner}>
+            <Cluster align="center" justify="space-between" className={CLASS_NAMES.contentHead}>
+              <MemoizedSubSubBlockHeading>
+                {mode === 'search' ? (
+                  <Localizer
+                    id="smarthr-ui/AppHeader/Launcher/searchResultText"
+                    defaultText="検索結果"
+                  />
+                ) : page === 'favorite' ? (
+                  translated.favoriteModeText
+                ) : (
+                  translated.allModeText
+                )}
+              </MemoizedSubSubBlockHeading>
+
+              {(mode === 'search' || page === 'all') && (
+                <LauncherSortDropdown sortType={sortType} handleSelectSortType={setSortType} />
+              )}
+            </Cluster>
+
+            <Scroller className={CLASS_NAMES.scrollArea}>
+              <FeatureList features={features} page={page} loading={loading} error={error} />
+            </Scroller>
+          </Section>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
+  <UnstyledButton onClick={onClick}>
+    <FaCircleXmarkIcon />
+  </UnstyledButton>
+))
+
+const SideNavs = memo<
+  Pick<ReturnType<typeof useLauncher>, 'mode' | 'page' | 'changePage'> & {
+    favoriteModeText: string
+    allModeText: string
+  }
+>(({ mode, page, changePage, favoriteModeText, allModeText }) => {
+  const theme = useTheme()
+  const listHeadingId = useId()
+  const isNotSearch = mode !== 'search'
+  const isFavorite = isNotSearch && page === 'favorite'
+  const isAll = isNotSearch && page === 'all'
+
+  const unselectedItems = useMemo(
+    () => [
+      {
+        id: 'favorite',
+        title: favoriteModeText,
+        prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
+        current: isFavorite,
+      },
+    ],
+    [isFavorite, favoriteModeText, theme.textColor.white],
+  )
+  const selectedItems = useMemo(
+    () => [
+      {
+        id: 'all',
+        title: allModeText,
+        current: isAll,
+      },
+    ],
+    [isAll, allModeText],
+  )
+
+  const onClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      changePage(e.currentTarget.value as Launcher['page'])
+    },
+    [changePage],
+  )
+
+  return (
+    <div className={CLASS_NAMES.side}>
+      <SideNav size="S" className={CLASS_NAMES.unselectedSideNav} aria-label={favoriteModeText}>
+        {unselectedItems.map((item) => (
+          <SideNavItemButton
+            key={item.id}
+            id={item.id}
+            current={item.current}
+            onClick={onClick}
+            prefix={item.prefix}
+          >
+            {item.title}
+          </SideNavItemButton>
+        ))}
+      </SideNav>
+
+      <hr />
+
+      <Section>
+        <MemoizedAppListHeading id={listHeadingId} className={CLASS_NAMES.sideNavHeading} />
+        <SideNav size="S" className={CLASS_NAMES.selectedSideNav} aria-labelledby={listHeadingId}>
+          {selectedItems.map((item) => (
+            <SideNavItemButton key={item.id} id={item.id} current={item.current} onClick={onClick}>
+              {item.title}
+            </SideNavItemButton>
+          ))}
+        </SideNav>
+      </Section>
+
+      <HelpLinkArea className={CLASS_NAMES.help}>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
+      </HelpLinkArea>
+    </div>
+  )
+})
+
+const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children, className }) => (
+  <div className={className}>
+    <HelpLink
+      href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
+      target="_blank"
+      size="XS"
+    >
+      {children}
+    </HelpLink>
+  </div>
+))
+
+const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
+  ({ children, className }) => (
+    <Heading type="subSubBlockTitle" className={className}>
+      {children}
+    </Heading>
+  ),
+)
+
+const MemoizedAppListHeading = memo<{ id: string; className?: string }>(({ id, className }) => (
+  <Heading type="subSubBlockTitle" id={id} className={className}>
+    <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
+  </Heading>
+))

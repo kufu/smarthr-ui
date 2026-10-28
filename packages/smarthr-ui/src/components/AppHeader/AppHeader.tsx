@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react'
 
 import { useLatest } from '../../hooks/useLatest'
 
-import { DesktopHeader } from './components/desktop/DesktopHeader'
-import { MobileHeader } from './components/mobile/MobileHeader'
+import { DesktopHeader } from './DesktopHeader'
+import { MobileHeader } from './MobileHeader'
 import { mediaQuery, useMediaQuery } from './hooks/useMediaQuery'
 
 import type { HeaderProps, Launcher } from './types'

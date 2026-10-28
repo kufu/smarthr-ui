@@ -1,0 +1,114 @@
+import { type MouseEvent, memo, useCallback, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
+
+import { useAvailableLocales, useIntl } from '../../../../intl'
+import { type Locale, localeMap } from '../../../../intl'
+import { Button } from '../../../Button'
+import { Heading } from '../../../Heading'
+import { FaCheckIcon, FaXmarkIcon } from '../../../Icon'
+import { Cluster } from '../../../Layout'
+import { Section } from '../../../SectioningContent'
+import { CommonButton } from '../common/CommonButton'
+
+import type { LocaleProps } from '../../types'
+
+const classNameGenerator = tv({
+  slots: {
+    header: ['shr-border-b-shorthand shr-px-1 shr-py-0.75'],
+    headerTitle: ['shr-font-normal [&&]:shr-text-base'],
+    buttonWrapper: ['shr-p-0.5'],
+    button: ['[&&:not(:has(svg))]:shr-ps-2.5'],
+  },
+})
+
+const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
+
+  return {
+    header: header(),
+    headerTitle: headerTitle(),
+    buttonWrapper: buttonWrapper(),
+    button: button(),
+  }
+})()
+
+type Props = {
+  locale: LocaleProps
+  onClickClose: () => void
+}
+
+export const LanguageSelector = memo<Props>(({ locale: localeProps, onClickClose }) => {
+  const { locale } = useIntl()
+  const availableLocales = useAvailableLocales()
+  const { locales } = useMemo(
+    () => ({
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
+    }),
+    [availableLocales],
+  )
+
+  const onClickLocale = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      localeProps.onSelectLocale(e.currentTarget.value as Locale)
+    },
+    [localeProps],
+  )
+
+  return (
+    <Section>
+      <SelectorHeading
+        wrapperClassName={CLASS_NAMES.header}
+        className={CLASS_NAMES.headerTitle}
+        onClickClose={onClickClose}
+      />
+      <div className={CLASS_NAMES.buttonWrapper}>
+        {locales.map(([localeKey, label]) => (
+          <LocaleButton
+            key={localeKey}
+            value={localeKey as Locale}
+            selected={localeKey === locale}
+            className={CLASS_NAMES.button}
+            onClick={onClickLocale}
+          >
+            {label}
+          </LocaleButton>
+        ))}
+      </div>
+    </Section>
+  )
+})
+
+const SelectorHeading = memo<
+  Pick<Props, 'onClickClose'> & { wrapperClassName: string; className: string }
+>(({ onClickClose, wrapperClassName, className }) => (
+  <Cluster justify="space-between" align="center" gap={1} className={wrapperClassName}>
+    {/* eslint-disable-next-line smarthr/require-i18n-text */}
+    <Heading className={className}>Language</Heading>
+    <Button size="S" onClick={onClickClose}>
+      {/* eslint-disable-next-line smarthr/require-i18n-text */}
+      <FaXmarkIcon alt="close" />
+    </Button>
+  </Cluster>
+))
+
+const LocaleButton = memo<{
+  value: Locale
+  selected: boolean
+  className: string
+  children: string
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ value, selected, className, children, onClick }) => (
+  <CommonButton
+    elementAs="button"
+    type="button"
+    value={value}
+    className={className}
+    handleClick={onClick}
+    prefix={selected && <FaCheckIcon color="MAIN" />}
+  >
+    {children}
+  </CommonButton>
+))

@@ -7,38 +7,28 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { AnchorButton, Button } from '../../../Button'
+
+// HINT: Button[variant=text] をメニューの項目として使うための上書き
 export const commonButtonClassNameGenerator = tv({
   base: [
-    '[&&]:shr-box-border [&&]:shr-flex [&&]:shr-w-full [&&]:shr-cursor-pointer [&&]:shr-items-center [&&]:shr-border-none [&&]:shr-bg-transparent [&&]:shr-px-1 [&&]:shr-py-0.5 [&&]:shr-text-base [&&]:shr-leading-normal [&&]:shr-text-black [&&]:shr-no-underline',
-    '[&&]:hover:shr-bg-white-darken',
-    '[&&]:focus-visible:shr-focus-indicator [&&]:focus-visible:shr-bg-white-darken',
+    'shr-flex shr-justify-start shr-whitespace-normal shr-border-none shr-py-0.5 shr-text-left shr-font-normal shr-leading-normal',
   ],
   variants: {
-    prefix: {
-      true: ['[&&]:shr-gap-0.5'],
-    },
     current: {
-      true: ['[&&]:shr-bg-white-darken'],
+      true: ['shr-bg-white-darken'],
     },
     boldWhenCurrent: {
       true: null,
-      false: ['[&&]:shr-font-normal'],
-    },
-    rounded: {
-      true: ['[&&]:shr-rounded-m'],
-      false: ['[&&]:shr-rounded-none'],
     },
   },
   compoundVariants: [
     {
       boldWhenCurrent: true,
       current: true,
-      className: ['[&&]:shr-font-bold'],
+      className: ['shr-font-bold'],
     },
   ],
-  defaultVariants: {
-    rounded: true,
-  },
 })
 
 type AnchorProps = Omit<ComponentPropsWithoutRef<'a'>, 'prefix' | 'onClick'> & {
@@ -50,49 +40,38 @@ type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'prefix' | 'onClick'
 
 type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & ButtonProps)) & {
   prefix?: ReactNode
+  suffix?: ReactNode
   current?: boolean
   boldWhenCurrent?: boolean
 }
 
 export const CommonButton = memo<Props>(
-  ({ elementAs, prefix, current, boldWhenCurrent, className, children, handleClick, ...rest }) => {
-    const hasPrefix = !!prefix
-
+  ({ elementAs, current, boldWhenCurrent, className, handleClick, ...rest }) => {
     const actualClassName = useMemo(
-      () =>
-        commonButtonClassNameGenerator({
-          prefix: hasPrefix,
-          current,
-          boldWhenCurrent,
-          className,
-        }),
-      [current, hasPrefix, boldWhenCurrent, className],
+      () => commonButtonClassNameGenerator({ current, boldWhenCurrent, className }),
+      [current, boldWhenCurrent, className],
     )
 
     switch (elementAs) {
       case 'a':
         return (
-          // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-          <a
+          <AnchorButton
             {...(rest as AnchorProps)}
+            variant="text"
+            wide
             className={actualClassName}
             onClick={handleClick as AnchorProps['handleClick']}
-          >
-            {prefix}
-            <span>{children}</span>
-          </a>
+          />
         )
       case 'button':
         return (
-          // eslint-disable-next-line smarthr/best-practice-for-button-element
-          <button
+          <Button
             {...(rest as ButtonProps)}
+            variant="text"
+            wide
             className={actualClassName}
             onClick={handleClick as ButtonProps['handleClick']}
-          >
-            {prefix}
-            <span>{children}</span>
-          </button>
+          />
         )
     }
 
