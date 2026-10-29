@@ -1,11 +1,11 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 // HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
 // react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
 import { type ComponentPropsWithRef, memo } from 'react'
 import { FormattedMessage as ReactIntlFormattedMessage } from 'react-intl'
 
-import type { typedJa } from './locales'
+import type { typedJa } from '../locales'
 
 type Messages = Record<keyof typeof typedJa, string>
 

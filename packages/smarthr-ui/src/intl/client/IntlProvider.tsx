@@ -1,12 +1,12 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 // HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
 // react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
 import { type FC, type PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { IntlContext, IntlProvider as ReactIntlProvider } from 'react-intl'
 
-import { type Locale, convertLang, localeMap } from './localeMap'
-import { locales } from './locales'
+import { type Locale, convertLang, localeMap } from '../localeMap'
+import { locales } from '../locales'
 
 // Object.keys は常に string[] を返却するが、locales は実行時に変更されないため、as 型キャストを使用することは自明に安全なので使用している
 const allLocaleKeys = Object.keys(localeMap) as Locale[]

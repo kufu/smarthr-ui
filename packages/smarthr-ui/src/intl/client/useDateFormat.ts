@@ -1,11 +1,11 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 // HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
 // react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
 import { useMemo } from 'react'
 import { useIntl as useReactIntl } from 'react-intl'
 
-import { locales } from './locales'
+import { locales } from '../locales'
 
 type DatePart = 'year' | 'month' | 'day' | 'weekday'
 
