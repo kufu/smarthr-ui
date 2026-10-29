@@ -146,7 +146,7 @@ export const MultiCombobox = <T,>({
   autoComplete,
   dropdownHelpMessage,
   isLoading,
-  isFilteringDisabled,
+  disableFiltering,
   selectedItemEllipsis,
   width,
   dropdownWidth = 'auto',
@@ -187,7 +187,7 @@ export const MultiCombobox = <T,>({
     creatable,
     inputValue,
     isItemSelected,
-    isFilteringDisabled,
+    disableFiltering,
   })
   const deleteFrame = useAnimationFrame()
   const selectFrame = useAnimationFrame()

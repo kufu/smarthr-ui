@@ -144,8 +144,8 @@ describe('SingleCombobox', () => {
     expect(listbox()).not.toBeInTheDocument()
   })
 
-  it('isFilteringDisabledがtrueの場合、入力値に一致しないitemsも絞り込まれず表示されること', async () => {
-    render(template({ selectedItems: [], isFilteringDisabled: true }))
+  it('disableFilteringがtrueの場合、入力値に一致しないitemsも絞り込まれず表示されること', async () => {
+    render(template({ selectedItems: [], disableFiltering: true }))
 
     await userEvent.click(combobox())
     await userEvent.type(combobox(), 'option 2')

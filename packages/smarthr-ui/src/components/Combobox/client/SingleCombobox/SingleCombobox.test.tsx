@@ -158,16 +158,16 @@ describe('SingleCombobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(3)
   })
 
-  it('isFilteringDisabledがtrueの場合、入力値に一致しないitemsも絞り込まれず表示されること', async () => {
-    render(template({ selectedItem: null, isFilteringDisabled: true }))
+  it('disableFilteringがtrueの場合、入力値に一致しないitemsも絞り込まれず表示されること', async () => {
+    render(template({ selectedItem: null, disableFiltering: true }))
 
     await userEvent.click(combobox())
     await userEvent.type(combobox(), 'option 2')
     expect(screen.getAllByRole('option')).toHaveLength(5)
   })
 
-  it('isFilteringDisabledにfalseを明示した場合でも、未入力(選択中アイテムのラベル表示のみ)では絞り込まれないこと', async () => {
-    render(template({ isFilteringDisabled: false }))
+  it('disableFilteringにfalseを明示した場合でも、未入力(選択中アイテムのラベル表示のみ)では絞り込まれないこと', async () => {
+    render(template({ disableFiltering: false }))
 
     await userEvent.click(combobox())
     expect(screen.getAllByRole('option')).toHaveLength(5)
