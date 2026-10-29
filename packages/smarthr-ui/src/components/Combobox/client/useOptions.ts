@@ -15,7 +15,7 @@ type BaseUseOptionsProps<T> = {
   items: Array<ComboboxItem<T>>
   creatable?: boolean
   inputValue?: string
-  isFilteringDisabled?: boolean
+  disableFiltering?: boolean
 }
 
 export const useSingleOptions = <T>({
@@ -51,7 +51,7 @@ export const useMultiOptions = <T>({
 }
 
 function useOptions<T>(
-  { items, creatable, inputValue = '', isFilteringDisabled = false }: BaseUseOptionsProps<T>,
+  { items, creatable, inputValue = '', disableFiltering = false }: BaseUseOptionsProps<T>,
   isSelected: (item: ComboboxItem<T>) => boolean,
 ) {
   const newItemId = useId()
@@ -78,7 +78,7 @@ function useOptions<T>(
           ]
         : existedOptions
 
-    if (isFilteringDisabled || !inputValue) {
+    if (disableFiltering || !inputValue) {
       return allOptions
     }
 
@@ -89,7 +89,7 @@ function useOptions<T>(
     )
     // TODO: itemsの安定化方法を検討中
     // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
-  }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
+  }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, disableFiltering])
 
   return {
     options,
