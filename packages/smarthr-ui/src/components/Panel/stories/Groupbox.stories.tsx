@@ -90,6 +90,21 @@ export const Rounded: StoryObj<typeof Groupbox> = {
   ),
 }
 
+export const Fit: StoryObj<typeof Groupbox> = {
+  name: 'fit',
+  render: (args) => (
+    <Stack>
+      <Groupbox {...args}>fit未指定</Groupbox>
+      <Groupbox {...args} fit={true}>
+        fit: true
+      </Groupbox>
+      <Groupbox {...args} fit={false}>
+        fit: false
+      </Groupbox>
+    </Stack>
+  ),
+}
+
 export const As: StoryObj<typeof Groupbox> = {
   name: 'as',
   args: {
