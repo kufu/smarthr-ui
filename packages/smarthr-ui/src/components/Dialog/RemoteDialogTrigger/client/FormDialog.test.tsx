@@ -2,9 +2,9 @@ import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
-import { IntlProvider } from '../../../intl'
-import { Button } from '../../Button'
-import { Input } from '../../Input'
+import { IntlProvider } from '../../../../intl'
+import { Button } from '../../../Button'
+import { Input } from '../../../Input'
 
 import { FormDialog } from './FormDialog'
 import { RemoteDialogTrigger } from './RemoteDialogTrigger'

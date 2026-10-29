@@ -1,12 +1,12 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, useCallback } from 'react'
 
-import { useLatest } from '../../../hooks/useLatest'
+import { useLatest } from '../../../../hooks/useLatest'
 
 import { TRIGGER_EVENT } from './useRemoteTrigger'
 
-import type { ExtendElementPropsWithoutRef } from '../../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../../types'
 
 const CAPTURE_OPTION = {
   capture: true,

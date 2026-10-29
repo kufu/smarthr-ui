@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react'
 
-import { IntlProvider } from '../../../intl'
-import { Button } from '../../Button'
+import { IntlProvider } from '../../../../intl'
+import { Button } from '../../../Button'
 
 import { MessageDialog } from './MessageDialog'
 import { RemoteDialogTrigger } from './RemoteDialogTrigger'
