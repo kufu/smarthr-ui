@@ -1,6 +1,6 @@
 import Story from './UnstyledButton.stories'
 
-import type { UnstyledButton } from '../UnstyledButton'
+import type { UnstyledButton } from '../client'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
