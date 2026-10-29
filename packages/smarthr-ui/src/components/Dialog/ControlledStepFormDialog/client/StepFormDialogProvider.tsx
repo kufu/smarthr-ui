@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type FC,
@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 
-import type { StepItem } from './type'
+import type { StepItem } from '../type'
 
 type StepFormDialogContextType = {
   stepQueueRef: MutableRefObject<StepItem[]>

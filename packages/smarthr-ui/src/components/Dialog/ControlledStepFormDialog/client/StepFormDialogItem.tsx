@@ -2,7 +2,7 @@
 
 import { type FC, type PropsWithChildren, useContext } from 'react'
 
-import { StepFormDialogContext } from '../StepFormDialogProvider'
+import { StepFormDialogContext } from './StepFormDialogProvider'
 
 import type { StepItem } from '../type'
 

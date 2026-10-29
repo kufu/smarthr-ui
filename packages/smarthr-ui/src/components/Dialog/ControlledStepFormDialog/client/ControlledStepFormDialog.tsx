@@ -17,8 +17,9 @@ import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../../intl'
 import { DialogContent, DialogPortal } from '../../client'
 import { useObjectHeading } from '../../useObjectHeading'
-import { StepFormDialogContent } from '../StepFormDialogContent'
-import { StepFormDialogContext, StepFormDialogProvider } from '../StepFormDialogProvider'
+
+import { StepFormDialogContent } from './StepFormDialogContent'
+import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
 import type { ExtendElementPropsWithRef, ExtendProps } from '../../../../types'
 import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../../types'
