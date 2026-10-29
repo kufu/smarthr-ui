@@ -166,6 +166,10 @@ export const WarekiPicker: FC<Props> = ({
     parseStringDate(value !== undefined ? value : defaultValue, parseInput),
   )
 
+  // HINT: 非制御時、form.reset()でDOM上のinput.valueはネイティブのdefaultValueへ戻る(マウント時点の値に固定)。
+  // selectedDateもそれと同じ基準に戻す必要があるため、マウント後のdefaultValue変更の影響を受けない値を保持しておく
+  const [initialSelectedDate] = useState(selectedDate)
+
   // HINT: selectedDate・showAlternative・localeから導出できる値のため、stateで持たずレンダー中に計算する。
   // selectedDate変更時のみ再計算するstateにすると、showAlternativeだけを切り替えた際に
   // 以前の表示が残ってしまう
@@ -194,6 +198,8 @@ export const WarekiPicker: FC<Props> = ({
     isInputFocused,
     selectedDate,
     closeFrame,
+    initialSelectedDate,
+    isControlled: value !== undefined,
   })
 
   const functions = useMemo(() => {
@@ -278,6 +284,23 @@ export const WarekiPicker: FC<Props> = ({
 
         if (!node) return
 
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // selectedDate(ひいては和暦alt表示・カレンダーの選択日ハイライト)をマウント時の初期値へ戻すため、
+        // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる。
+        // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
+        // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
+        // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
+        const associatedForm = node.form
+        const handleReset = (e: Event) => {
+          queueMicrotask(() => {
+            if (!e.defaultPrevented && !latest.isControlled) {
+              setSelectedDate(latest.initialSelectedDate)
+            }
+          })
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
         const handleKeyDown = (e: KeyboardEvent) => {
           if (!calendarNode || e.key !== 'Tab') {
             return
@@ -326,6 +349,7 @@ export const WarekiPicker: FC<Props> = ({
 
         return () => {
           window.removeEventListener('keydown', handleKeyDown)
+          associatedForm?.removeEventListener('reset', handleReset)
           latest.closeFrame.cancel()
         }
       },
