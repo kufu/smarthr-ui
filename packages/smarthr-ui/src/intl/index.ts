@@ -6,7 +6,7 @@ export {
   DateFormatter,
   IntlProvider,
   useAvailableLocales,
+  TimestampFormatter,
 } from './client'
-export { TimestampFormatter } from './TimestampFormatter'
 export { locales } from './locales'
 export { convertLang, localeMap, type Locale } from './localeMap'
