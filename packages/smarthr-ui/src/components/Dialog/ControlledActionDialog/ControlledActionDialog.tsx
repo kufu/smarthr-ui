@@ -11,7 +11,7 @@ import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { DialogContent, DialogPortal } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
-import { ActionDialogContent } from './ActionDialogContent'
+import { ActionDialogContent } from './client'
 
 import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
 import type { DialogProps } from '../types'
