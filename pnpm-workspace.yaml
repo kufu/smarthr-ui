@@ -29,7 +29,7 @@ overrides:
   shell-quote@>=1.8.4 <1.11.0: '>=1.11.0'
   smol-toml@<=1.8.0: '>=1.9.0'
   qs@<6.16.0: '>=6.16.2'
-  colord@<2.9.4: '>=2.9.4'
+  colord@<2.9.4: '>=2.9.7'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
