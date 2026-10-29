@@ -14,8 +14,7 @@ import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
-import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap } from './client'
+import { DialogOverlap, FocusTrap } from './client'
 
 import type { DialogSize } from './types'
 import type { ExtendElementPropsWithRef } from '../../types'

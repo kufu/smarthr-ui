@@ -1,12 +1,12 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-import { Center } from '../Layout'
+import { Center } from '../../Layout'
 
-import type { ExtendElementPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 type Props = ExtendElementPropsWithoutRef<
   'div',
