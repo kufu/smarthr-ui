@@ -8,7 +8,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { DialogContent } from '../DialogContent'
-import { DialogPortal } from '../DialogPortal'
+import { DialogPortal } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { MessageDialogContent } from './MessageDialogContent'

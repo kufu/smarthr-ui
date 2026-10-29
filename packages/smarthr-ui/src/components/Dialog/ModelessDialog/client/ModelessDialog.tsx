@@ -30,7 +30,7 @@ import { LiveRegion } from '../../../LiveRegion'
 import { Panel } from '../../../Panel'
 import { DialogBody } from '../../DialogBody'
 import { DialogOverlap } from '../../DialogOverlap'
-import { DialogPortal } from '../../DialogPortal'
+import { DialogPortal } from '../../client'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { DialogSize } from '../../types'
