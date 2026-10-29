@@ -249,6 +249,12 @@ export default [
     },
   },
   {
+    files: ['packages/charts/**'],
+    rules: {
+      'local-rules/require-client-directory': 'off',
+    },
+  },
+  {
     ignores: [
       'sandbox/',
       'storybook-static/',

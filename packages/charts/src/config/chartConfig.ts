@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   ArcElement,

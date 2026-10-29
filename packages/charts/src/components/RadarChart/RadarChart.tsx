@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { useId, useMemo, useRef } from 'react'
 import { Radar } from 'react-chartjs-2'
