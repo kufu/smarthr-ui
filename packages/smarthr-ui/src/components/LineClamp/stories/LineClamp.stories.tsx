@@ -1,6 +1,6 @@
 import { Stack } from '../../Layout'
 import { TextLink } from '../../TextLink'
-import { LineClamp } from '../LineClamp'
+import { LineClamp } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

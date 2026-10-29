@@ -1,1 +1,1 @@
-export { LineClamp } from './LineClamp'
+export { LineClamp } from './client'

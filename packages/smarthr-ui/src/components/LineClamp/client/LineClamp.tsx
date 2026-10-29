@@ -1,11 +1,11 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../../Tooltip'
 
-import type { ExtendElementPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type Props = ExtendElementPropsWithRef<
   'span',
