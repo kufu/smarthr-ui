@@ -109,6 +109,23 @@ const itemClassNameGenerator = tv({
   },
 })
 
+/**
+ * @deprecated Clusterのgrow propを使用してください
+ * @example
+ * ```tsx
+ * // Before
+ * <Sidebar right>
+ *   <div>メイン</div>
+ *   <div>サブ</div>
+ * </Sidebar>
+ *
+ * // After
+ * <Cluster grow="start" gap={1}>
+ *   <div>メイン</div>
+ *   <div className="shr-grow">サブ</div>
+ * </Cluster>
+ * ```
+ */
 export const Sidebar: FC<Props> = ({
   as: Component = 'div',
   align = 'stretch',
