@@ -1,10 +1,10 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 // HINT: useDateFormat経由でreact-intlに到達する。react-intlはRSC非対応のため、
 // 利用側へ境界を移せない。
 import dayjs from 'dayjs'
 
-import { type FormatDateProps, useDateFormat } from './useDateFormat'
+import { type FormatDateProps, useDateFormat } from '../useDateFormat'
 
 /**
  * 日付を現在のロケールに応じてフォーマットして表示するコンポーネント
