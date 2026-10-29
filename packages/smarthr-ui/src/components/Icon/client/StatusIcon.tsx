@@ -1,20 +1,19 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { memo, useMemo } from 'react'
 
-import { useIntl } from '../../intl'
-
+import { useIntl } from '../../../intl'
 import {
   FaCircleCheckIcon,
   FaCircleExclamationIcon,
   FaCircleInfoIcon,
   FaRotateIcon,
   FaTriangleExclamationIcon,
-} from './FaIcon'
-import { WarningIcon } from './WarningIcon'
+} from '../FaIcon'
+import { WarningIcon } from '../WarningIcon'
 
-import type { Props as IconProps } from './generateIcon'
-import type { ExtendProps } from '../../types'
+import type { ExtendProps } from '../../../types'
+import type { Props as IconProps } from '../generateIcon'
 
 const ICON_MAPPER = {
   // HINT: infoは装飾として扱うため、代替テキストを設定しない
