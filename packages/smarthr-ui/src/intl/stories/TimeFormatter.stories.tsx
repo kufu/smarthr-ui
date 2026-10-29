@@ -1,4 +1,4 @@
-import { TimeFormatter } from '../TimeFormatter'
+import { TimeFormatter } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
