@@ -1,10 +1,10 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, type Ref, type RefObject, useImperativeHandle, useMemo } from 'react'
 
-import { tabbable } from '../../libs/tabbable'
+import { tabbable } from '../../../libs/tabbable'
 
-import type { ExtendElementPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 type Props = ExtendElementPropsWithoutRef<
   'div',

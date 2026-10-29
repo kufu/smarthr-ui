@@ -15,7 +15,7 @@ import { useLatest } from '../../hooks/useLatest'
 import { dialogSize } from '../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap } from './FocusTrap'
+import { FocusTrap } from './client'
 
 import type { DialogSize } from './types'
 import type { ExtendElementPropsWithRef } from '../../types'
