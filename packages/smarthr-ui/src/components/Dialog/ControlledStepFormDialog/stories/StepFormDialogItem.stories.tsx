@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
-import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
 import { StepFormDialogItem } from '../StepFormDialogItem'
+import { ControlledStepFormDialog } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
