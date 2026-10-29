@@ -4,7 +4,7 @@
 // 利用側へ境界を移せない。
 import dayjs from 'dayjs'
 
-import { type FormatTimestampProps, useDateFormat } from '../useDateFormat'
+import { type FormatTimestampProps, useDateFormat } from './useDateFormat'
 
 /**
  * タイムスタンプ（日付＋時刻）を現在のロケールに応じてフォーマットして表示するコンポーネント

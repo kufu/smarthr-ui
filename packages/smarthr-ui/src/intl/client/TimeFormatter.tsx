@@ -5,7 +5,7 @@
 import dayjs from 'dayjs'
 import { memo } from 'react'
 
-import { type FormatTimeProps, useDateFormat } from '../useDateFormat'
+import { type FormatTimeProps, useDateFormat } from './useDateFormat'
 
 /**
  * 時刻を現在のロケールに応じてフォーマットして表示するコンポーネント
