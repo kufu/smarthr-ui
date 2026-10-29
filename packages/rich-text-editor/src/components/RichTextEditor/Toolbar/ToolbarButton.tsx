@@ -1,6 +1,6 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, type ReactNode, memo } from 'react'
+import { type ComponentPropsWithRef, type FC, type ReactNode, memo, useMemo } from 'react'
 
 import { tv } from '../../../libs/tv'
 import { useIsApplePlatform } from '../hooks/useIsApplePlatform'
@@ -51,6 +51,7 @@ export const ToolbarButton: FC<Props> = memo(
     ...rest
   }) => {
     const isApple = useIsApplePlatform()
+    const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
     return (
       <ToolbarTooltip
@@ -63,7 +64,7 @@ export const ToolbarButton: FC<Props> = memo(
           ref={ref}
           type="button"
           disabled={disabled}
-          className={classNameGenerator({ className })}
+          className={actualClassName}
           aria-label={label}
           aria-expanded={ariaExpanded}
           aria-pressed={toggle ? active : undefined}

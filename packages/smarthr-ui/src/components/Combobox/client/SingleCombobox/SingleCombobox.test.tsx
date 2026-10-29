@@ -389,6 +389,73 @@ describe('SingleCombobox', () => {
     await userEvent.keyboard('{enter}')
     expect(onSubmit).not.toHaveBeenCalled()
   })
+
+  it('検索用のinputのnameには `query_` プレフィックスが付与されること', () => {
+    render(template({ name: 'department' }))
+
+    expect(combobox()).toHaveAttribute('name', 'query_department')
+  })
+
+  it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから取得できること', () => {
+    const { container } = render(template({ name: 'department' }))
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.get('department')).toBe('value-1')
+  })
+
+  it('未選択の場合、hidden inputの値が空文字でFormDataから取得できること', () => {
+    const { container } = render(template({ name: 'department', selectedItem: null }))
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.get('department')).toBe('')
+  })
+
+  it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
+    const { container } = render(template({ name: 'department', disabled: true }))
+
+    const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
+
+    expect(hiddenInput).toBeDisabled()
+  })
+
+  it('requiredかつ未選択の場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+    render(template({ required: true, selectedItem: null }))
+
+    await userEvent.type(combobox(), 'option')
+
+    expect(combobox()).toHaveProperty('validity.valid', false)
+  })
+
+  it('requiredでも選択済みなら検索用テキストボックスの妥当性を満たすこと', () => {
+    render(template({ required: true }))
+
+    expect(combobox()).toHaveProperty('validity.valid', true)
+  })
+
+  it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {
+    const { container } = render(
+      <IntlProvider locale="ja">
+        <form id="external-form" />
+        <form>
+          <FormControl label="コンボボックス">
+            <SingleCombobox
+              form="external-form"
+              name="department"
+              selectedItem={{ label: 'option 1', value: 'value-1' }}
+              items={[{ label: 'option 1', value: 'value-1' }]}
+            />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
+
+    expect(formData.get('department')).toBe('value-1')
+    expect(combobox()).toHaveAttribute('form', 'external-form')
+  })
 })
 
 test('groupロールが付与されている', async () => {

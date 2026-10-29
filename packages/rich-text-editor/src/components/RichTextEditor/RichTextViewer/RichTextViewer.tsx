@@ -51,6 +51,7 @@ export const RichTextViewer: FC<RichTextViewerProps> = memo(({ content, classNam
     // content の参照で再計算しないのは、包みを描画のたびに作ると中身が同じでも作り直すため
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [format, contentKey])
+  const actualClassName = useMemo(() => classNameGenerator({ gap, className }), [gap, className])
 
-  return <div className={classNameGenerator({ gap, className })}>{element}</div>
+  return <div className={actualClassName}>{element}</div>
 })

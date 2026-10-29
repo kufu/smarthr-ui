@@ -46,6 +46,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, header, content } = classNameGenerator()
 
   return {
@@ -164,7 +165,7 @@ const Content: FC<
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
+          <Button size="S" onClick={functions.handleDialogClose}>
             <FaXmarkIcon
               alt={
                 <Localizer

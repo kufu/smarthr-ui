@@ -19,7 +19,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogContentStyle'
+import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
@@ -69,7 +69,8 @@ const BUTTON_COLUMN_GAP = {
 } as const
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContent()
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { wrapper, actionArea, buttonArea, message } = dialogContentClassNameGenerator()
 
   return {
     wrapper: wrapper(),

@@ -153,7 +153,7 @@ export const DefaultItem: StoryObj<typeof SingleCombobox> = {
 export const Prefix: StoryObj<typeof SingleCombobox> = {
   name: 'prefix',
   render: (args) => (
-    <Stack gap={1}>
+    <Stack>
       <SingleCombobox {...args} prefix={prefixes['なし']} />
       <SingleCombobox {...args} prefix={prefixes['あり']} />
     </Stack>

@@ -1,16 +1,20 @@
 import { type FC, type FunctionComponent, type JSX, type ReactNode, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useObjectAttributes } from '../../hooks/useObjectAttributes'
 import { FaCircleInfoIcon } from '../Icon'
 import { Tooltip } from '../Tooltip'
 
+import type { ObjectDisabledReasonType } from './types'
+
 type Props = {
   button: JSX.Element
-  disabledReason: {
-    icon?: FunctionComponent
-    message: ReactNode
-  }
+  disabledReason: ReactNode | ObjectDisabledReasonType
 }
+
+const disabledReasonObjectConverter = (text: ReactNode): ObjectDisabledReasonType => ({
+  text,
+})
 
 const classNameGenerator = tv({
   slots: {
@@ -27,6 +31,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, tooltip } = classNameGenerator()
 
   return {
@@ -35,16 +40,23 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const DisabledReason: FC<Props> = ({ button, disabledReason }) => (
-  <div className={CLASS_NAMES.wrapper}>
-    {button}
-    <TooltipIcon
-      className={CLASS_NAMES.tooltip}
-      icon={disabledReason.icon}
-      message={disabledReason.message}
-    />
-  </div>
-)
+export const DisabledReason: FC<Props> = ({ button, disabledReason: orgDisabledReason }) => {
+  const disabledReason = useObjectAttributes<
+    ReactNode | ObjectDisabledReasonType,
+    ObjectDisabledReasonType
+  >(orgDisabledReason, disabledReasonObjectConverter)
+
+  return (
+    <div className={CLASS_NAMES.wrapper}>
+      {button}
+      <TooltipIcon
+        className={CLASS_NAMES.tooltip}
+        icon={disabledReason.icon}
+        message={disabledReason.text}
+      />
+    </div>
+  )
+}
 
 const TooltipIcon = memo<{
   icon?: FunctionComponent

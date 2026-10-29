@@ -9,4 +9,5 @@ const classNameGenerator = tv({
   ],
 })
 
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 export const MEDIA_TOOLBAR_BUTTON_CLASS_NAME = classNameGenerator()

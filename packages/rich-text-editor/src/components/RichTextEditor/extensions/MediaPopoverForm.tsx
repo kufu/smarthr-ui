@@ -202,14 +202,9 @@ export const MediaPopoverForm: FC<Props> = ({
           >
             <Stack gap={0.75}>
               {children}
-              <Cluster gap={0.5} justify="flex-end">
+              <Cluster justify="flex-end">
                 {secondaryAction && (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="S"
-                    onClick={functions.handleSecondaryAction}
-                  >
+                  <Button size="S" onClick={functions.handleSecondaryAction}>
                     {secondaryAction.label}
                   </Button>
                 )}

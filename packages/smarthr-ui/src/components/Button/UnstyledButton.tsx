@@ -1,11 +1,27 @@
 'use client'
 
-import { type ComponentPropsWithRef, type FC, type SyntheticEvent, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type FC,
+  type KeyboardEvent,
+  type SyntheticEvent,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 const EVENT_CANCELLER = (e: SyntheticEvent) => {
   e.preventDefault()
   e.stopPropagation()
+}
+
+const SPACE_KEY = ' '
+
+// HINT: aria-disabled のボタンにはフォーカスが当たるので、Tab や Esc まで止めると抜けられなくなる
+// 止めるのはボタンを押す Enter と Space だけにしている
+const DISABLED_KEY_DOWN_CANCELLER = (e: KeyboardEvent) => {
+  if (e.key === 'Enter' || e.key === SPACE_KEY) {
+    EVENT_CANCELLER(e)
+  }
 }
 
 const classNameGenerator = tv({
@@ -36,7 +52,7 @@ export const UnstyledButton: FC<Props> = ({
       className={actualClassName}
       aria-disabled={disabled || undefined}
       onClick={disabled ? EVENT_CANCELLER : onClick}
-      onKeyDown={disabled ? EVENT_CANCELLER : onKeyDown}
+      onKeyDown={disabled ? DISABLED_KEY_DOWN_CANCELLER : onKeyDown}
     >
       {children}
     </button>

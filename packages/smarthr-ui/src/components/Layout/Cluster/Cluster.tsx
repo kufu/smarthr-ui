@@ -26,11 +26,20 @@ type Props<T extends ElementType> = ExtendElementPropsWithRef<
     inline?: boolean
     align?: AlignType
     justify?: JustifyType
+    /**
+     * 先頭(`start`)または末尾(`end`)の要素を伸ばし、残りの幅を埋める。
+     * 対象の要素には `min-width: 50%` が設定される
+     */
+    grow?: 'start' | 'end'
   }
 >
 
 export const clusterClassNameGenerator = tv({
-  base: 'shr-flex-wrap [&:empty]:shr-gap-0',
+  base: [
+    'shr-flex-wrap [&:empty]:shr-gap-0',
+    '[&[data-grow="start"]_>_:first-child]:shr-min-w-[50%] [&[data-grow="start"]_>_:first-child]:shr-grow-[999] [&[data-grow="start"]_>_:first-child]:shr-basis-0',
+    '[&[data-grow="end"]_>_:last-child]:shr-min-w-[50%] [&[data-grow="end"]_>_:last-child]:shr-grow-[999] [&[data-grow="end"]_>_:last-child]:shr-basis-0',
+  ],
   variants: {
     inline: {
       true: 'shr-inline-flex',
@@ -115,6 +124,7 @@ export const Cluster = <T extends ElementType = 'div'>({
   inline = false,
   align,
   justify,
+  grow,
   className,
   children,
   ...rest
@@ -141,7 +151,7 @@ export const Cluster = <T extends ElementType = 'div'>({
   const Component = as || 'div'
   const Wrapper = useSectionWrapper(Component)
   const body = (
-    <Component {...rest} className={actualClassName}>
+    <Component {...rest} className={actualClassName} data-grow={grow}>
       {children}
     </Component>
   )

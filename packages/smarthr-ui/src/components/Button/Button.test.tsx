@@ -21,6 +21,43 @@ describe('Button', () => {
     })
   })
 
+  describe('disabledReason', () => {
+    it('オブジェクト形式で指定した場合、ツールチップに理由が表示される(従来通り)', () => {
+      render(
+        <IntlProvider locale="ja">
+          <Button disabled disabledReason={{ text: 'ボタンが無効な理由' }}>
+            button
+          </Button>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByText('ボタンが無効な理由')).toBeInTheDocument()
+    })
+
+    it('ReactNode(文字列)を直接指定した場合も、ツールチップに理由が表示される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <Button disabled disabledReason="ボタンが無効な理由">
+            button
+          </Button>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByText('ボタンが無効な理由')).toBeInTheDocument()
+    })
+
+    it('disabled でない場合、disabledReason を指定しても無効化ラッパーが描画されない', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <Button disabledReason="ボタンが無効な理由">button</Button>
+        </IntlProvider>,
+      )
+
+      expect(container.querySelector('.smarthr-ui-Button-disabledWrapper')).not.toBeInTheDocument()
+      expect(screen.queryByText('ボタンが無効な理由')).not.toBeInTheDocument()
+    })
+  })
+
   describe('onClick', () => {
     it('disabled / loading でない場合、発火する', async () => {
       const onClick = vi.fn()

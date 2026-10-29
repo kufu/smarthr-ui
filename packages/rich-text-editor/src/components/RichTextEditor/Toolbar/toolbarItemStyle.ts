@@ -14,4 +14,5 @@ const classNameGenerator = tv({
 })
 
 /** ツールバーのボタン・ドロップダウンのトリガーで共有するスタイル */
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 export const TOOLBAR_ITEM_CLASS_NAME = classNameGenerator()

@@ -250,10 +250,9 @@ export const LinkButton: FC<Props> = memo(
                     }}
                   />
                 </FormControl>
-                <Cluster gap={0.5} justify="space-between">
+                <Cluster justify="space-between">
                   {isLink ? (
                     <Button
-                      type="button"
                       variant="text"
                       size="S"
                       onClick={functions.handleUnsetLink}

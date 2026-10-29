@@ -520,13 +520,26 @@ export const RichTextEditor = memo(
         return { '--shr-rte-editor-height': editorHeight } as CSSProperties
       }, [draggedHeight, height])
 
-      const classNames = classNameGenerator({
-        disabled,
-        readOnly,
-        error: error || formControlInvalid,
-        resizable: isResizable,
-        hasEditorHeight: contentStyle !== undefined,
-      })
+      const invalid = error || formControlInvalid
+      const hasEditorHeight = contentStyle !== undefined
+      const classNames = useMemo(() => {
+        const { wrapper, toolbarWrapper, content, characterCountArea, resizeHandle } =
+          classNameGenerator({
+            disabled,
+            readOnly,
+            error: invalid,
+            resizable: isResizable,
+            hasEditorHeight,
+          })
+
+        return {
+          wrapper: wrapper({ className }),
+          toolbarWrapper: toolbarWrapper(),
+          content: content({ className: editorClassName }),
+          characterCountArea: characterCountArea(),
+          resizeHandle: resizeHandle(),
+        }
+      }, [disabled, readOnly, invalid, isResizable, hasEditorHeight, className, editorClassName])
 
       // editorが未初期化でもwrapperは常に描画する
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
@@ -540,20 +553,20 @@ export const RichTextEditor = memo(
           onImageUpload={onImageUpload}
           onImageUploadError={onImageUploadError}
         >
-          <div ref={toolbarRef} className={classNames.toolbarWrapper()}>
+          <div ref={toolbarRef} className={classNames.toolbarWrapper}>
             <RichTextEditorToolbar />
           </div>
         </RichTextEditorProvider>
       )
 
       return (
-        <div ref={wrapperRef} className={classNames.wrapper({ className })} style={wrapperStyle}>
+        <div ref={wrapperRef} className={classNames.wrapper} style={wrapperStyle}>
           {toolbar}
           <div
             ref={contentRef}
             // id は本文に直接付けず、ここから本文へ写す。FormControl はここにある利用者の id を尊重するため
             id={editorId}
-            className={classNames.content({ className: editorClassName })}
+            className={classNames.content}
             style={contentStyle}
             data-smarthr-ui-input="true"
           >
@@ -569,11 +582,11 @@ export const RichTextEditor = memo(
             <YoutubeFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
           {editor && showCharacterCount && !readOnly && (
-            <CharacterCount editor={editor} className={classNames.characterCountArea()} />
+            <CharacterCount editor={editor} className={classNames.characterCountArea} />
           )}
           {isResizable && (
             <div
-              className={classNames.resizeHandle()}
+              className={classNames.resizeHandle}
               aria-hidden="true"
               onPointerDown={functions.handleResizePointerDown}
             >

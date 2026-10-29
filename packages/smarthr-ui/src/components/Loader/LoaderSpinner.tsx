@@ -116,8 +116,8 @@ const classNameGenerator = tv({
 })
 
 export const LoaderSpinner: FC<Props> = ({ size = 'M', alt, type = 'primary' }) => {
-  // HINT: LoaderSpinnerは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
   const classNames = (() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
     const { spinner, line, cog, cogInner } = classNameGenerator({
       type,
       size,
