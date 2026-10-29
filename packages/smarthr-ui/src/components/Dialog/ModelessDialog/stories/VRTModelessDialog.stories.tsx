@@ -1,4 +1,4 @@
-import { ModelessDialog } from '../ModelessDialog'
+import { ModelessDialog } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

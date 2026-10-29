@@ -1,1 +1,1 @@
-export { ModelessDialog } from './ModelessDialog'
+export { ModelessDialog } from './client'
