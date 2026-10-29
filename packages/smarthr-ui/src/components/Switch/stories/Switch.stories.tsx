@@ -1,4 +1,5 @@
-import { Switch } from '../Switch'
+import { Stack } from '../../Layout'
+import { Switch } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -18,6 +19,10 @@ export default {
     },
     disabled: {
       control: 'boolean',
+    },
+    size: {
+      control: 'select',
+      options: ['S', 'M'],
     },
   },
   parameters: {
@@ -46,4 +51,15 @@ export const Disabled: StoryObj<typeof Switch> = {
   args: {
     disabled: true,
   },
+}
+
+export const Size: StoryObj<typeof Switch> = {
+  name: 'size',
+  render: (args) => (
+    <Stack align="flex-start">
+      {([undefined, 'S', 'M'] as const).map((size) => (
+        <Switch {...args} key={String(size)} size={size} />
+      ))}
+    </Stack>
+  ),
 }
