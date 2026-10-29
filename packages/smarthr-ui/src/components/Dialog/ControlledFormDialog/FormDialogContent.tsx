@@ -3,7 +3,6 @@ import {
   type FC,
   type FormEvent,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   memo,
 } from 'react'
@@ -17,7 +16,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogContentStyle'
+import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -60,15 +59,16 @@ type Props = ExtendElementPropsWithRef<
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
-const formDialogContent = tv({
-  extend: dialogContent,
+const formDialogContentClassNameGenerator = tv({
+  extend: dialogContentClassNameGenerator,
   slots: {
     form: 'shr-contents',
   },
 })
 
 const CLASS_NAMES = (() => {
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContent()
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentClassNameGenerator()
 
   return {
     form: form(),
@@ -142,13 +142,12 @@ const ActionAreaCluster = memo<
   </Cluster>
 ))
 
-const ActionButton = memo<
-  PropsWithChildren<{
-    variant: ObjectActionButtonType['theme']
-    disabled: ObjectActionButtonType['disabled']
-    loading: boolean
-  }>
->(({ variant = 'primary', disabled, loading, children }) => (
+const ActionButton = memo<{
+  children: ObjectActionButtonType['text']
+  variant: ObjectActionButtonType['theme']
+  disabled: ObjectActionButtonType['disabled']
+  loading: boolean
+}>(({ variant = 'primary', disabled, loading, children }) => (
   <Button
     type="submit"
     disabled={disabled}

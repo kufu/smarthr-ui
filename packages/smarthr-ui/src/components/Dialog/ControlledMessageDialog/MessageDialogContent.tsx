@@ -12,7 +12,7 @@ import { Cluster } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogContentStyle'
+import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -30,7 +30,8 @@ type Props = ExtendElementPropsWithRef<
 >
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea } = dialogContent()
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { wrapper, actionArea } = dialogContentClassNameGenerator()
 
   return {
     wrapper: wrapper(),

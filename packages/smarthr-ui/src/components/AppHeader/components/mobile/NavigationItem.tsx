@@ -1,12 +1,10 @@
 'use client'
 
 import { type FC, type MouseEvent, memo, useContext, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { isChildNavigation } from '../../utils'
 import { CommonButton, commonButtonClassNameGenerator } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import { MenuButton } from './MenuButton'
 import { NavigationContext } from './NavigationContext'
@@ -19,14 +17,10 @@ import type {
   NavigationLink,
 } from '../../types'
 
-const classNameGenerator = tv({
-  base: ['[&&]:shr-px-0.5'],
-})
-
 type Props = { navigation: Navigation; handleClickNavigation: () => void }
 
 export const NavigationItem: FC<Props> = ({ navigation, handleClickNavigation }) => {
-  const className = classNameGenerator()
+  const className = '[&&]:shr-px-0.5'
 
   if ('elementAs' in navigation) {
     return (
@@ -78,7 +72,7 @@ const NavigationCustomTag = memo<
 
     return (
       <Tag {...rest} className={actualClassName} onClick={handleDelegateClick}>
-        <Translate>{children}</Translate>
+        <span>{children}</span>
       </Tag>
     )
   },
@@ -87,7 +81,7 @@ const NavigationCustomTag = memo<
 const NavigationLink = memo<NavigationLink & { className: string }>(
   ({ href, current, children, className }) => (
     <CommonButton elementAs="a" href={href} current={current} boldWhenCurrent className={className}>
-      <Translate>{children}</Translate>
+      {children}
     </CommonButton>
   ),
 )
@@ -116,7 +110,7 @@ const NavigationButton: FC<
       className={className}
       handleClick={functions.handleClick}
     >
-      <Translate>{navigation.children}</Translate>
+      {navigation.children}
     </CommonButton>
   )
 }

@@ -12,7 +12,6 @@ import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
 
@@ -39,6 +38,7 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
 
   return {
@@ -80,7 +80,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           title={searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
-          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
+          tooltipMessage={searchInputTitle}
           suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
         />
       </div>
@@ -118,7 +118,7 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SearchResultText = memo<PropsWithChildren>(({ children }) => (
   <Text size="S" weight="bold">
-    <Translate>{children}</Translate>
+    {children}
   </Text>
 ))
 
@@ -129,7 +129,7 @@ const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, c
         href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
         target="_blank"
       >
-        <Translate>{children}</Translate>
+        {children}
       </HelpLink>
     </Text>
   </div>

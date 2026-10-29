@@ -25,12 +25,12 @@ import type { ComponentPropsWithoutRef } from 'react'
  * default     true            指定あり
  */
 const _cases: Array<Pick<ComponentPropsWithoutRef<typeof DropdownMenuButton>, 'trigger'>> = [
-  { trigger: { children: 'その他の操作', size: 'S', onlyIcon: true } },
-  { trigger: { children: 'その他の操作', size: 'S' } },
-  { trigger: { children: 'その他の操作', onlyIcon: true } },
-  { trigger: { children: 'その他の操作', size: 'S', onlyIcon: { component: FaGearIcon } } },
+  { trigger: { text: 'その他の操作', size: 'S', onlyIcon: true } },
+  { trigger: { text: 'その他の操作', size: 'S' } },
+  { trigger: { text: 'その他の操作', onlyIcon: true } },
+  { trigger: { text: 'その他の操作', size: 'S', onlyIcon: { component: FaGearIcon } } },
   { trigger: 'その他の操作' },
-  { trigger: { children: 'その他の操作', onlyIcon: { component: FaGearIcon } } },
+  { trigger: { text: 'その他の操作', onlyIcon: { component: FaGearIcon } } },
 ]
 
 export default {
@@ -42,7 +42,7 @@ export default {
         <DropdownMenuButton {...args} {...props} key={i}>
           <DropdownMenuGroup name="グループ1">
             <Button>操作1</Button>
-            <Button disabled disabledReason={{ message: '非推奨な理由' }}>
+            <Button disabled disabledReason={{ text: '非推奨な理由' }}>
               操作2
             </Button>
             <RemoteDialogTrigger targetId="remote-dialog">

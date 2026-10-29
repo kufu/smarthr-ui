@@ -1,16 +1,22 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import { IntlProvider } from 'react-intl'
 
 import { SegmentedControl } from './SegmentedControl'
+
+import type { locales } from '../../../intl'
 
 const options = [
   { value: 'a', content: 'A' },
   { value: 'b', content: 'B' },
 ]
 
+const renderWithIntl = (component: React.ReactElement, locale: keyof typeof locales = 'ja') =>
+  render(<IntlProvider locale={locale}>{component}</IntlProvider>)
+
 describe('SegmentedControl', () => {
   it('defaultValue のみ指定した場合(非制御)、初期選択状態が反映される', () => {
-    render(<SegmentedControl defaultValue="a" options={options} />)
+    renderWithIntl(<SegmentedControl defaultValue="a" options={options} />)
 
     expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'true')
     expect(screen.getByRole('radio', { name: 'B' })).toHaveAttribute('aria-checked', 'false')
@@ -19,7 +25,7 @@ describe('SegmentedControl', () => {
   it('defaultValue のみ指定した場合(非制御)、ユーザー操作で選択状態が切り替わる', async () => {
     const user = userEvent.setup()
 
-    render(<SegmentedControl defaultValue="a" options={options} />)
+    renderWithIntl(<SegmentedControl defaultValue="a" options={options} />)
 
     await user.click(screen.getByRole('radio', { name: 'B' }))
 
@@ -31,7 +37,9 @@ describe('SegmentedControl', () => {
     const user = userEvent.setup()
     const handleClickOption = vi.fn()
 
-    render(<SegmentedControl value="a" onClickOption={handleClickOption} options={options} />)
+    renderWithIntl(
+      <SegmentedControl value="a" onClickOption={handleClickOption} options={options} />,
+    )
 
     await user.click(screen.getByRole('radio', { name: 'B' }))
 
@@ -46,7 +54,7 @@ describe('SegmentedControl', () => {
       { value: 'a', content: 'A' },
     ]
 
-    render(<SegmentedControl defaultValue="" options={optionsWithEmptyValue} />)
+    renderWithIntl(<SegmentedControl defaultValue="" options={optionsWithEmptyValue} />)
 
     expect(screen.getByRole('radio', { name: 'Empty' })).toHaveAttribute('aria-checked', 'true')
     expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'false')

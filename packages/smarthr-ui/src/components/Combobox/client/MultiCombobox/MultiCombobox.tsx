@@ -165,6 +165,7 @@ export const MultiCombobox = <T,>({
   noResultText,
   style,
   ref,
+  form,
   ...rest
 }: Props<T>) => {
   const triggerRef = useRef<HTMLDivElement>(null)
@@ -456,6 +457,17 @@ export const MultiCombobox = <T,>({
     functions.blur,
   )
 
+  const localized = useLocalize({
+    selectedListAriaLabel: {
+      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+      defaultText: '選択済みアイテム',
+    },
+    requiredMessage: {
+      id: 'smarthr-ui/MultiCombobox/requiredMessage',
+      defaultText: '1つ以上選択してください',
+    },
+  })
+
   // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
   const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -480,11 +492,21 @@ export const MultiCombobox = <T,>({
     },
     [selectedItems, setInputValueIfUncontrolled, latest],
   )
+  // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
+  // 選択済みアイテムの有無をsetCustomValidityで別途検証する
+  const actualRequired = required && selectedItems.length === 0
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(actualRequired ? localized.requiredMessage : '')
+    },
+    [actualRequired, localized],
+  )
 
   const mergedInputRef = useMergeRefs(
     functions.inputCallbackRef,
     inputFocusEffectRef,
     inputSelectEffectRef,
+    inputValidityEffectRef,
     ref,
   )
 
@@ -512,13 +534,6 @@ export const MultiCombobox = <T,>({
     }
   }, [className])
 
-  const localized = useLocalize({
-    selectedListAriaLabel: {
-      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
-      defaultText: '選択済みアイテム',
-    },
-  })
-
   const errorAttr = error || undefined
 
   return (
@@ -535,6 +550,10 @@ export const MultiCombobox = <T,>({
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}
     >
+      {name && selectedItems.length === 0 && (
+        <input type="hidden" form={form} name={name} disabled={disabled} value="" />
+      )}
+
       <Scroller className={classNames.inputArea}>
         <ul
           id={selectedListId}
@@ -543,6 +562,15 @@ export const MultiCombobox = <T,>({
         >
           {selectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
+              {name && (
+                <input
+                  type="hidden"
+                  form={form}
+                  name={name}
+                  disabled={disabled}
+                  value={selectedItem.value}
+                />
+              )}
               <MultiSelectedItem
                 disabled={disabled}
                 item={selectedItem}
@@ -559,8 +587,13 @@ export const MultiCombobox = <T,>({
             ref={mergedInputRef}
             role="combobox"
             type="text"
-            name={name}
-            required={required && selectedItems.length === 0}
+            form={form}
+            name={name ? `query_${name}` : undefined}
+            // HINT: SingleComboboxとは違い、選択済みの場合別途SelectedItemが表示されるため、Inputは空になる
+            // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合でも
+            // 選択済みアイテムがある場合はactualRequiredはfalseになる
+            // requiredにすると選択アイテムがあるのにsubmitできなくなる
+            required={actualRequired}
             disabled={disabled}
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}

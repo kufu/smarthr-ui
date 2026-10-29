@@ -4,7 +4,6 @@ import {
   type ComponentPropsWithoutRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useCallback,
@@ -18,7 +17,7 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogContentStyle'
+import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -63,7 +62,8 @@ type Props = ExtendElementPropsWithRef<
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
 const CLASS_NAMES = (() => {
-  const { wrapper, actionArea, buttonArea, message } = dialogContent()
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  const { wrapper, actionArea, buttonArea, message } = dialogContentClassNameGenerator()
 
   return {
     wrapper: wrapper(),
@@ -148,14 +148,13 @@ const ActionAreaCluster = memo<
   )
 })
 
-const ActionButton = memo<
-  PropsWithChildren<{
-    variant: ObjectActionButtonType['theme']
-    disabled: ObjectActionButtonType['disabled']
-    loading: boolean
-    handleClick: (e: MouseEvent<HTMLButtonElement>) => void
-  }>
->(({ variant = 'primary', disabled, loading, handleClick, children }) => (
+const ActionButton = memo<{
+  children: Props['children']
+  variant: ObjectActionButtonType['theme']
+  disabled: ObjectActionButtonType['disabled']
+  loading: boolean
+  handleClick: (e: MouseEvent<HTMLButtonElement>) => void
+}>(({ variant = 'primary', disabled, loading, handleClick, children }) => (
   <Button
     type="submit"
     disabled={disabled}

@@ -2,7 +2,6 @@ import {
   Children,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   isValidElement,
   memo,
@@ -58,6 +57,7 @@ const classNameGenerator = tv({
   },
 })
 
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
 const classNames = {
   statusLabel: statusLabel(),
@@ -104,7 +104,7 @@ export const AppNavi: FC<Props> = ({
   )
 }
 
-const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
+const MemoizedStatusLabel = memo<{ id: string; children: Props['label'] }>(
   ({ id, children }) =>
     children && (
       <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>
