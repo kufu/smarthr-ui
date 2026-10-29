@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type ComponentPropsWithRef,
@@ -10,15 +10,15 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
-import { useLatest } from '../../hooks/useLatest'
-import { dialogSize } from '../../tailwind'
+import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLatest } from '../../../hooks/useLatest'
+import { dialogSize } from '../../../tailwind'
 
 import { DialogOverlap } from './DialogOverlap'
 import { FocusTrap } from './FocusTrap'
 
-import type { DialogSize } from './types'
-import type { ExtendElementPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
+import type { DialogSize } from '../types'
 
 type FocusTrapProps = ComponentPropsWithRef<typeof FocusTrap>
 

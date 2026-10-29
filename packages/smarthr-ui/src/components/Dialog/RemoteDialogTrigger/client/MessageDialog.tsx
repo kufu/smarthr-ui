@@ -1,10 +1,10 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
-import { ControlledMessageDialog } from '../ControlledMessageDialog'
+import { ControlledMessageDialog } from '../../ControlledMessageDialog'
 
 import { useRemoteTrigger } from './useRemoteTrigger'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { FC } from 'react'
 
 type Props = ExtendElementPropsWithRef<

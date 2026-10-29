@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type ComponentPropsWithoutRef,
@@ -9,17 +9,17 @@ import {
   useCallback,
 } from 'react'
 
-import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { Localizer } from '../../../intl'
-import { Button } from '../../Button'
-import { Cluster } from '../../Layout'
-import { Section } from '../../SectioningContent'
-import { DialogBody } from '../DialogBody'
-import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading } from '../DialogHeading'
-import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
+import { type ResponseStatus, useResponseStatus } from '../../../../hooks/useResponseStatus'
+import { Localizer } from '../../../../intl'
+import { Button } from '../../../Button'
+import { Cluster } from '../../../Layout'
+import { Section } from '../../../SectioningContent'
+import { DialogBody } from '../../DialogBody'
+import { DialogContentResponseStatusMessage } from '../../DialogContentResponseStatusMessage'
+import { DialogHeading } from '../../DialogHeading'
+import { dialogContentClassNameGenerator } from '../../dialogContentClassNameGenerator'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type ObjectActionButtonType = {
   /** アクションボタンのラベル */

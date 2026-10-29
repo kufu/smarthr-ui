@@ -2,8 +2,7 @@ import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
 import { StepFormDialogItem } from '../../ControlledStepFormDialog'
-import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
-import { StepFormDialog } from '../StepFormDialog'
+import { RemoteDialogTrigger, StepFormDialog } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

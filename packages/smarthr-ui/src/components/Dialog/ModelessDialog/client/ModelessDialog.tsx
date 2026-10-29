@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type ComponentPropsWithoutRef,
@@ -16,24 +16,23 @@ import {
 import Draggable from 'react-draggable'
 import { tv } from 'tailwind-variants'
 
-import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
-import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
-import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { useLatest } from '../../../hooks/useLatest'
-import { Localizer, useIntl } from '../../../intl'
-import { dialogSize } from '../../../tailwind'
-import { Button } from '../../Button'
-import { Heading } from '../../Heading'
-import { FaGripIcon, FaXmarkIcon } from '../../Icon'
-import { LiveRegion } from '../../LiveRegion'
-import { Panel } from '../../Panel'
-import { DialogBody } from '../DialogBody'
-import { DialogOverlap } from '../DialogOverlap'
-import { DialogPortal } from '../DialogPortal'
+import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
+import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer, useIntl } from '../../../../intl'
+import { dialogSize } from '../../../../tailwind'
+import { Button } from '../../../Button'
+import { Heading } from '../../../Heading'
+import { FaGripIcon, FaXmarkIcon } from '../../../Icon'
+import { LiveRegion } from '../../../LiveRegion'
+import { Panel } from '../../../Panel'
+import { DialogBody } from '../../DialogBody'
+import { DialogOverlap, DialogPortal } from '../../client'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
-import type { DialogSize } from '../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
+import type { DialogSize } from '../../types'
 
 type Props = ExtendElementPropsWithRef<
   typeof Panel,

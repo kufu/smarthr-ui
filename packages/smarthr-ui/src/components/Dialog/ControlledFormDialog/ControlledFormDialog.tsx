@@ -9,8 +9,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { DialogContent } from '../DialogContent'
-import { DialogPortal } from '../DialogPortal'
+import { DialogContent, DialogPortal } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { FormDialogContent } from './FormDialogContent'

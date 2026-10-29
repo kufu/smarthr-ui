@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
-import { IntlProvider } from '../../../intl'
-import { Button } from '../../Button'
+import { IntlProvider } from '../../../../intl'
+import { Button } from '../../../Button'
 
 import { ModelessDialog } from './ModelessDialog'
 

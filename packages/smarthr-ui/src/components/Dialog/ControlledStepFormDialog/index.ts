@@ -1,2 +1,1 @@
-export { ControlledStepFormDialog } from './ControlledStepFormDialog'
-export { StepFormDialogItem } from './StepFormDialogItem'
+export { StepFormDialogItem, ControlledStepFormDialog } from './client'

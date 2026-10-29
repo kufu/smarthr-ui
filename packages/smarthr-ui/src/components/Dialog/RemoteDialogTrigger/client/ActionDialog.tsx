@@ -1,19 +1,19 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
-import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
+import { ControlledActionDialog } from '../../ControlledActionDialog'
 
 import { useRemoteTrigger } from './useRemoteTrigger'
 
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { FC } from 'react'
 
 type Props = ExtendElementPropsWithRef<
-  typeof ControlledStepFormDialog,
+  typeof ControlledActionDialog,
   Parameters<typeof useRemoteTrigger>[0],
   { omit: 'isOpen' }
 >
 
-export const StepFormDialog: FC<Props> = ({
+export const ActionDialog: FC<Props> = ({
   id,
   onClickClose,
   onToggle,
@@ -32,7 +32,7 @@ export const StepFormDialog: FC<Props> = ({
   })
 
   return (
-    <ControlledStepFormDialog
+    <ControlledActionDialog
       {...rest}
       id={id}
       isOpen={isOpen}

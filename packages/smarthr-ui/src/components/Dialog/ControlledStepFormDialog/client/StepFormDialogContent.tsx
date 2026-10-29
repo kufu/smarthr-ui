@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type ComponentPropsWithoutRef,
@@ -11,20 +11,20 @@ import {
   useMemo,
 } from 'react'
 
-import { useLatest } from '../../../hooks/useLatest'
-import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { Button } from '../../Button'
-import { Cluster } from '../../Layout'
-import { Section } from '../../SectioningContent'
-import { DialogBody } from '../DialogBody'
-import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
-import { DialogHeading } from '../DialogHeading'
-import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
+import { useLatest } from '../../../../hooks/useLatest'
+import { type ResponseStatus, useResponseStatus } from '../../../../hooks/useResponseStatus'
+import { Button } from '../../../Button'
+import { Cluster } from '../../../Layout'
+import { Section } from '../../../SectioningContent'
+import { DialogBody } from '../../DialogBody'
+import { DialogContentResponseStatusMessage } from '../../DialogContentResponseStatusMessage'
+import { DialogHeading } from '../../DialogHeading'
+import { dialogContentClassNameGenerator } from '../../dialogContentClassNameGenerator'
 
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
-import type { CommonButtonType, StepItem } from './type'
-import type { ExtendElementPropsWithRef } from '../../../types'
+import type { ExtendElementPropsWithRef } from '../../../../types'
+import type { CommonButtonType, StepItem } from '../type'
 
 type StepFormHelpers = {
   /** 指定したステップに移動する関数 */

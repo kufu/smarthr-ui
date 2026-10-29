@@ -1,9 +1,9 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import type { ExtendElementPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type Props = ExtendElementPropsWithRef<
   'div',

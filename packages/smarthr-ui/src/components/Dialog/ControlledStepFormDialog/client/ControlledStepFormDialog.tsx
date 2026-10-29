@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type ComponentPropsWithRef,
@@ -12,19 +12,18 @@ import {
   useRef,
 } from 'react'
 
-import { useLatest } from '../../../hooks/useLatest'
-import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
-import { useLocalize } from '../../../intl'
-import { DialogContent } from '../DialogContent'
-import { DialogPortal } from '../DialogPortal'
-import { useObjectHeading } from '../useObjectHeading'
+import { useLatest } from '../../../../hooks/useLatest'
+import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
+import { useLocalize } from '../../../../intl'
+import { DialogContent, DialogPortal } from '../../client'
+import { useObjectHeading } from '../../useObjectHeading'
 
 import { StepFormDialogContent } from './StepFormDialogContent'
 import { StepFormDialogContext, StepFormDialogProvider } from './StepFormDialogProvider'
 
-import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../types'
-import type { ButtonThemeType, CommonButtonType, StepItem } from './type'
-import type { ExtendElementPropsWithRef, ExtendProps } from '../../../types'
+import type { ExtendElementPropsWithRef, ExtendProps } from '../../../../types'
+import type { DialogProps /** コンテンツなにもないDialogの基本props */ } from '../../types'
+import type { ButtonThemeType, CommonButtonType, StepItem } from '../type'
 
 type ButtonArgType = ReactNode | ((currentStep: StepItem, defaultText: ReactNode) => ReactNode)
 

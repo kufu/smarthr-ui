@@ -1,4 +1,4 @@
-import { ControlledStepFormDialog } from '../ControlledStepFormDialog'
+import { ControlledStepFormDialog } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
