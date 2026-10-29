@@ -15,10 +15,11 @@ import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useTheme } from '../../../../hooks/client/useTheme'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Localizer } from '../../../../intl'
+import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
 import { Input } from '../../../Input'
@@ -423,7 +424,24 @@ export const SingleCombobox = <T,>({
     isFocused || selectedItem ? undefined : functions.selectFallbackItem,
   )
 
-  const mergedRef = useMergeRefs(functions.inputCallbackRef, ref)
+  const localized = useLocalize({
+    requiredMessage: {
+      id: 'smarthr-ui/SingleCombobox/requiredMessage',
+      defaultText: '選択してください',
+    },
+  })
+
+  // HINT: 検索用inputのnativeバリデーションは入力値(選択中アイテムのラベル)の有無しか検証できないため、
+  // 選択状態の有無をsetCustomValidityで別途検証する
+  const actualRequired = required && !selectedItem
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(actualRequired ? localized.requiredMessage : '')
+    },
+    [actualRequired, localized],
+  )
+
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, inputValidityEffectRef, ref)
 
   const classNames = useMemo(() => {
     const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
@@ -466,7 +484,10 @@ export const SingleCombobox = <T,>({
         role="combobox"
         type="text"
         form={form}
-        name={name ? `${name}-query` : undefined}
+        name={name ? `query_${name}` : undefined}
+        // HINT: 選択済みならInputにはラベル文字が入っている
+        // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合actualRequiredもtrueであることは保証されない
+        // requiredを設定することでスクリーンリーダーなどに常に必須であることが正しく伝わる
         required={required}
         disabled={disabled}
         readOnly={readOnly}

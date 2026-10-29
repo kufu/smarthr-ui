@@ -632,26 +632,26 @@ describe('SingleCombobox', () => {
       { label: 'option 2', value: 'value-2' },
     ]
 
-    it('selectedItems の値が name でFormDataから取得できること', () => {
+    it('検索用のinputのnameには `query_` プレフィックスが付与されること', () => {
+      render(template({ name: 'department' }))
+
+      expect(combobox()).toHaveAttribute('name', 'query_department')
+    })
+
+    it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから複数取得できること', () => {
       const { container } = render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox
-                name="default"
-                selectedItems={[
-                  { label: 'option 1', value: 'value-1' },
-                  { label: 'option 2', value: 'value-2' },
-                ]}
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
+        template({
+          name: 'department',
+          selectedItems: [
+            { label: 'option 1', value: 'value-1' },
+            { label: 'option 2', value: 'value-2' },
+          ],
+        }),
       )
+
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.getAll('default')).toEqual(['value-1', 'value-2'])
+      expect(formData.getAll('department')).toEqual(['value-1', 'value-2'])
     })
 
     it('非制御(uncontrolled)で削除後、hidden inputの値が空文字でFormDataから取得できること', async () => {
@@ -676,19 +676,12 @@ describe('SingleCombobox', () => {
       expect(formData.getAll('default')).toEqual([''])
     })
 
-    it('selectedItems が空のとき、hidden inputの値が空文字でFormDataから取得できること', () => {
-      const { container } = render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox name="default" selectedItems={[]} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+    it('未選択の場合、hidden inputの値が空文字でFormDataから取得できること', () => {
+      const { container } = render(template({ name: 'department', selectedItems: [] }))
+
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.getAll('default')).toEqual([''])
+      expect(formData.get('department')).toBe('')
     })
 
     it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
@@ -709,50 +702,33 @@ describe('SingleCombobox', () => {
       expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(0)
     })
 
-    it('検索用テキストボックスの name には `${name}-query` が設定されること', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox name="default" selectedItems={[]} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
-
-      expect(combobox()).toHaveAttribute('name', 'default-query')
-    })
-
-    it('disabledの場合、hidden inputも無効化されFormDataに値が含まれないこと', () => {
+    it('nameに利用者自身が`[]`を付けた場合、そのまま使われ二重にならないこと', () => {
       const { container } = render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox
-                name="default"
-                disabled
-                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
+        template({
+          name: 'department[]',
+          selectedItems: [{ label: 'option 1', value: 'value-1' }],
+        }),
       )
+
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.getAll('default')).toEqual([])
+      expect(formData.getAll('department[]')).toEqual(['value-1'])
+
+      // eslint-disable-next-line smarthr/best-practice-for-nested-attributes-array-index -- 二重に[]が付かないことを確認するテスト用セレクタであり、実際のname属性ではない
+      const doubledNameSelector = 'input[type="hidden"][name="department[][]"]'
+      expect(container.querySelector(doubledNameSelector)).not.toBeInTheDocument()
+    })
+
+    it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
+      const { container } = render(template({ name: 'department', disabled: true }))
+
+      const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
+
+      expect(hiddenInput).toBeDisabled()
     })
 
     it('requiredかつ選択項目が無い場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox name="default" required selectedItems={[]} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true, selectedItems: [] }))
 
       await userEvent.type(combobox(), 'option')
 
@@ -760,54 +736,25 @@ describe('SingleCombobox', () => {
     })
 
     it('requiredでも選択項目があれば検索用テキストボックスの妥当性を満たすこと', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox
-                name="default"
-                required
-                selectedItems={[{ label: 'option 1', value: 'value-1' }]}
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true }))
 
       expect(combobox()).toHaveProperty('validity.valid', true)
     })
 
     it('titleが指定されている場合、requiredの妥当性エラーメッセージにtitleの値が使われること', () => {
       render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox
-                name="default"
-                required
-                selectedItems={[]}
-                title="少なくとも1つ選択してください"
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
+        template({
+          required: true,
+          selectedItems: [],
+          title: '少なくとも1つ選択してください',
+        }),
       )
 
       expect(combobox()).toHaveProperty('validationMessage', '少なくとも1つ選択してください')
     })
 
     it('titleが指定されていない場合、requiredの妥当性エラーメッセージにデフォルトの文言が使われること', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <MultiCombobox name="default" required selectedItems={[]} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true, selectedItems: [] }))
 
       expect(combobox()).toHaveProperty('validationMessage', '1つ以上選択してください')
     })
@@ -820,9 +767,9 @@ describe('SingleCombobox', () => {
             <FormControl label="コンボボックス">
               <MultiCombobox
                 form="external-form"
-                name="default"
+                name="department"
                 selectedItems={[{ label: 'option 1', value: 'value-1' }]}
-                items={items}
+                items={[{ label: 'option 1', value: 'value-1' }]}
               />
             </FormControl>
           </form>
@@ -831,7 +778,7 @@ describe('SingleCombobox', () => {
 
       const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
 
-      expect(formData.getAll('default')).toEqual(['value-1'])
+      expect(formData.getAll('department')).toEqual(['value-1'])
       expect(combobox()).toHaveAttribute('form', 'external-form')
     })
   })
