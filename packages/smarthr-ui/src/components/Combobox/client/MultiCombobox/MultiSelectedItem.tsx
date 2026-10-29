@@ -19,10 +19,10 @@ import { FaCircleXmarkIcon } from '../../../Icon'
 import { Tooltip } from '../../../Tooltip'
 import { VisuallyHiddenText } from '../../../VisuallyHiddenText'
 
-import type { ComboboxItem } from '../types'
+import type { ComboboxItem, DeletableComboboxItem } from '../types'
 
 type Props<T> = {
-  item: ComboboxItem<T> & { deletable?: boolean }
+  item: DeletableComboboxItem<T>
   disabled: boolean
   handleDelete: (item: ComboboxItem<T>) => void
   enableEllipsis?: boolean
