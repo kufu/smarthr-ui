@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client-directory
 
 import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'

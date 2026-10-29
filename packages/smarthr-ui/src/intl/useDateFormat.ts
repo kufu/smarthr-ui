@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client-directory
 
 // HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
 // react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
