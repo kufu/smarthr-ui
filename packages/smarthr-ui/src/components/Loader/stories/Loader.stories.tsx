@@ -26,7 +26,7 @@ export const Size: StoryObj<typeof Loader> = {
   render: (args) => (
     <Stack align="flex-start">
       <Loader {...args} />
-      <Loader {...args} size="M" />
+      <Loader {...args} />
       <Loader {...args} size="S" />
     </Stack>
   ),
@@ -47,7 +47,7 @@ export const Type: StoryObj<typeof Loader> = {
   render: (args) => (
     <Stack align="flex-start">
       <Loader {...args} />
-      <Loader {...args} type="primary" />
+      <Loader {...args} />
       <div className="shr-bg-scrim">
         <Loader {...args} type="light" />
       </div>

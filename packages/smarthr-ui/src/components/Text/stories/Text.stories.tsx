@@ -183,7 +183,7 @@ export const IconGap: StoryObj<typeof Text> = {
   name: 'icon.gap',
   render: (args) => (
     <Stack>
-      <Text {...args} icon={{ prefix: <FaAddressBookIcon /> }}>
+      <Text {...args} icon={<FaAddressBookIcon />}>
         default 0.25
       </Text>
       <Text {...args} icon={{ prefix: <FaAddressBookIcon />, gap: 0.5 }}>

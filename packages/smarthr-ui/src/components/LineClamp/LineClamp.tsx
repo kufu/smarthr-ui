@@ -90,6 +90,7 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
   }, [children, maxLines])
 
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
       maxLines,
     })

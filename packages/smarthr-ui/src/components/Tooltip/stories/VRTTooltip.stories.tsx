@@ -31,7 +31,7 @@ export default {
           </span>
         </Tooltip>
       </div>
-      <Tooltip type="description" message="description">
+      <Tooltip message="description">
         <Button>ボタン</Button>
       </Tooltip>
       <Tooltip type="label" triggerType="icon" message="label">
@@ -39,12 +39,10 @@ export default {
           <FaPencilIcon />
         </Button>
       </Tooltip>
-      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
+      <Tooltip message="wrapper + focusable">
         <Button>ボタン</Button>
       </Tooltip>
-      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
-        テキスト
-      </Tooltip>
+      <Tooltip message="wrapper + non-focusable">テキスト</Tooltip>
       <Tooltip ariaDescribedbyTarget="inner" message="inner + focusable">
         <Button>ボタン</Button>
       </Tooltip>

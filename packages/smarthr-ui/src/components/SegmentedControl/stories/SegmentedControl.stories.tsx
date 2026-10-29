@@ -94,7 +94,7 @@ export const Size: StoryObj<typeof SegmentedControl> = {
   name: 'size',
   render: (args) => (
     <Stack>
-      <SegmentedControl {...args} size="M" />
+      <SegmentedControl {...args} />
       <SegmentedControl {...args} size="S" />
     </Stack>
   ),

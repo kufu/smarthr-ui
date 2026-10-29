@@ -142,15 +142,13 @@ export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
     <Stack>
       <Cluster>
         wrapper + focusable:
-        <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
+        <Tooltip message="wrapper + focusable">
           <Button>ボタン</Button>
         </Tooltip>
       </Cluster>
       <Cluster>
         wrapper + non-focusable:
-        <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
-          テキスト
-        </Tooltip>
+        <Tooltip message="wrapper + non-focusable">テキスト</Tooltip>
       </Cluster>
       <Cluster>
         inner + focusable:

@@ -154,6 +154,7 @@ export const InformationPanel: FC<Props> = ({
       heading: headingClassName,
       toggleableButton,
       content,
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     } = classNameGenerator({
       type,
       bold,

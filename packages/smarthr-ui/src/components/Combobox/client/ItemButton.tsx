@@ -42,9 +42,8 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   new: classNameGenerator({ new: true }),
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+
   select: classNameGenerator({ new: false }),
 }
 

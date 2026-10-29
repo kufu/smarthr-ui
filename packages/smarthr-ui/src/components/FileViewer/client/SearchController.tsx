@@ -44,6 +44,7 @@ export const SearchController: FC<Props> = memo(({ search }) => {
   } = search
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { wrapper, inputArea } = classNameGenerator({ mobile })
     return { wrapper: wrapper(), inputArea: inputArea() }
   }, [mobile])

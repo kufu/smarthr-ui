@@ -16,6 +16,7 @@ type Props = ExtendElementPropsWithRef<
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
 export const MonthPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { wrapper, inner } = classNameGenerator('Month')
 
     return {

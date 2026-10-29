@@ -21,6 +21,7 @@ type Props = CommonProps & {
 
 export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) => {
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const generators = classNameGenerator()
 
     return {

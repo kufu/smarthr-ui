@@ -100,6 +100,7 @@ export const Header: FC<Props> = ({
       tenantInfo: tenantInfoStyle,
       tenantNameText,
       actions,
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     } = classNameGenerator({ enableNew })
 
     return {

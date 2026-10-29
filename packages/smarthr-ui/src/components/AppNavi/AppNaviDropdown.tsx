@@ -48,6 +48,7 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   displayCaret,
 }) => {
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { wrapper, icon } = classNameGenerator({ active: current })
 
     return {

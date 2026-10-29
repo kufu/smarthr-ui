@@ -50,6 +50,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a
   ...rest
 }: AppNaviAnchorProps<T> & ElementProps<T>): ReactElement => {
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { wrapper, icon } = classNameGenerator({ active: current })
 
     return {

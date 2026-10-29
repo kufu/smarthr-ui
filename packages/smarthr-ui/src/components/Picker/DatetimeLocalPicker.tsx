@@ -16,6 +16,7 @@ type Props = ExtendElementPropsWithRef<
 /** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
 export const DatetimeLocalPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { wrapper, inner } = classNameGenerator('DatetimeLocal')
 
     return {

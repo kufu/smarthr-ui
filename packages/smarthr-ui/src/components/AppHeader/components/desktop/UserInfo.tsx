@@ -123,6 +123,7 @@ const ActualUserInfo: FC<Props & { displayName: string }> = ({
       dropdownContent,
       accountImage,
       placeholderImage,
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     } = classNameGenerator({
       enableNew,
     })

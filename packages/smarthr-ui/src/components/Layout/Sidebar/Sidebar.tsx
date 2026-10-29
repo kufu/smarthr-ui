@@ -152,6 +152,7 @@ export const Sidebar: FC<Props> = ({
     [align, gaps.row, gaps.column, className],
   )
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const { firstItem, lastItem } = itemClassNameGenerator({ right })
 
     return {

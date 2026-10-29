@@ -39,6 +39,7 @@ describe('Input', () => {
     render(
       <form>
         <FormControl label="Input">
+          {/* eslint-disable-next-line smarthr/design-system-guideline-prohibit-input-affix-interactive-element */}
           <Input
             name="input"
             suffix={<span>suffix</span>}

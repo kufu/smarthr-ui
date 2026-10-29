@@ -153,7 +153,7 @@ export const InnerMargin: StoryObj<typeof Fieldset> = {
 export const StatusLabels: StoryObj<typeof Fieldset> = {
   name: 'statusLabels',
   args: {
-    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
+    statusLabels: <StatusLabel>任意</StatusLabel>,
   },
 }
 

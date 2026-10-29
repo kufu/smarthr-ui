@@ -27,9 +27,7 @@ export const Size: StoryObj<typeof PageHeading> = {
       <PageHeading {...args} size="XXL">
         ScreenTitle XXL
       </PageHeading>
-      <PageHeading {...args} size="XL">
-        ScreenTitle XL
-      </PageHeading>
+      <PageHeading {...args}>ScreenTitle XL</PageHeading>
       <PageHeading {...args} size="XXL">
         SectionTitle XXL
       </PageHeading>

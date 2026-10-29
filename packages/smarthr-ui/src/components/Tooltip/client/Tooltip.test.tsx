@@ -57,7 +57,7 @@ describe('Tooltip', () => {
 
     it('children が focusable なとき ariaDescribedbyTarget="wrapper" を指定しても children の accessible description になる', () => {
       render(
-        <Tooltip ariaDescribedbyTarget="wrapper" message="説明テキスト">
+        <Tooltip message="説明テキスト">
           <Button>ボタン</Button>
         </Tooltip>,
       )
