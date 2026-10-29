@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
-import { IntlProvider, useAvailableLocales } from './IntlProvider'
+import { IntlProvider, useAvailableLocales } from './client'
 import { convertLang } from './localeMap'
 import { locales } from './locales'
 import { useDateFormat } from './useDateFormat'
