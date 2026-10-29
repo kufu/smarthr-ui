@@ -364,10 +364,10 @@ describe('SingleCombobox', () => {
     expect(combobox()).toHaveValue('ラベル2')
   })
 
-  it('検索用のinputのnameには `-query` サフィックスが付与されること', () => {
+  it('検索用のinputのnameには `query_` プレフィックスが付与されること', () => {
     render(template({ name: 'department' }))
 
-    expect(combobox()).toHaveAttribute('name', 'department-query')
+    expect(combobox()).toHaveAttribute('name', 'query_department')
   })
 
   it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから複数取得できること', () => {
@@ -394,12 +394,69 @@ describe('SingleCombobox', () => {
     expect(formData.get('department')).toBe('')
   })
 
+  it('nameに利用者自身が`[]`を付けた場合、そのまま使われ二重にならないこと', () => {
+    const { container } = render(
+      template({
+        name: 'department[]',
+        selectedItems: [{ label: 'option 1', value: 'value-1' }],
+      }),
+    )
+
+    const formData = new FormData(container.querySelector('form')!)
+
+    expect(formData.getAll('department[]')).toEqual(['value-1'])
+
+    // eslint-disable-next-line smarthr/best-practice-for-nested-attributes-array-index -- 二重に[]が付かないことを確認するテスト用セレクタであり、実際のname属性ではない
+    const doubledNameSelector = 'input[type="hidden"][name="department[][]"]'
+    expect(container.querySelector(doubledNameSelector)).not.toBeInTheDocument()
+  })
+
   it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
     const { container } = render(template({ name: 'department', disabled: true }))
 
     const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
 
     expect(hiddenInput).toBeDisabled()
+  })
+
+  it('requiredかつ未選択の場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+    render(
+      <IntlProvider locale="ja">
+        <form>
+          <FormControl label="コンボボックス">
+            <MultiCombobox
+              name="default"
+              required
+              selectedItems={[]}
+              items={[{ label: 'option 1', value: 'value-1' }]}
+            />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    await userEvent.type(combobox(), 'option')
+
+    expect(combobox()).toHaveProperty('validity.valid', false)
+  })
+
+  it('requiredでも選択項目があれば検索用テキストボックスの妥当性を満たすこと', () => {
+    render(
+      <IntlProvider locale="ja">
+        <form>
+          <FormControl label="コンボボックス">
+            <MultiCombobox
+              name="default"
+              required
+              selectedItems={[{ label: 'option 1', value: 'value-1' }]}
+              items={[{ label: 'option 1', value: 'value-1' }]}
+            />
+          </FormControl>
+        </form>
+      </IntlProvider>,
+    )
+
+    expect(combobox()).toHaveProperty('validity.valid', true)
   })
 
   it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {

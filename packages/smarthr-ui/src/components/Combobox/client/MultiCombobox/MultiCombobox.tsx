@@ -455,6 +455,17 @@ export const MultiCombobox = <T,>({
     functions.blur,
   )
 
+  const localized = useLocalize({
+    selectedListAriaLabel: {
+      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
+      defaultText: '選択済みアイテム',
+    },
+    requiredMessage: {
+      id: 'smarthr-ui/MultiCombobox/requiredMessage',
+      defaultText: '1つ以上選択してください',
+    },
+  })
+
   // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
   const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -479,11 +490,21 @@ export const MultiCombobox = <T,>({
     },
     [selectedItems, setInputValueIfUncontrolled, latest],
   )
+  // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
+  // 選択済みアイテムの有無をsetCustomValidityで別途検証する
+  const actualRequired = required && selectedItems.length === 0
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(actualRequired ? localized.requiredMessage : '')
+    },
+    [actualRequired, localized],
+  )
 
   const mergedInputRef = useMergeRefs(
     functions.inputCallbackRef,
     inputFocusEffectRef,
     inputSelectEffectRef,
+    inputValidityEffectRef,
     ref,
   )
 
@@ -510,13 +531,6 @@ export const MultiCombobox = <T,>({
       suffixIcon: suffixIcon(),
     }
   }, [className])
-
-  const localized = useLocalize({
-    selectedListAriaLabel: {
-      id: 'smarthr-ui/MultiCombobox/selectedListAriaLabel',
-      defaultText: '選択済みアイテム',
-    },
-  })
 
   const errorAttr = error || undefined
 
@@ -572,8 +586,12 @@ export const MultiCombobox = <T,>({
             role="combobox"
             type="text"
             form={form}
-            name={name ? `${name}-query` : undefined}
-            required={required && selectedItems.length === 0}
+            name={name ? `query_${name}` : undefined}
+            // HINT: SingleComboboxとは違い、選択済みの場合別途SelectedItemが表示されるため、Inputは空になる
+            // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合でも
+            // 選択済みアイテムがある場合はactualRequiredはfalseになる
+            // requiredにすると選択アイテムがあるのにsubmitできなくなる
+            required={actualRequired}
             disabled={disabled}
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}

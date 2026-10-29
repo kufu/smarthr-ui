@@ -651,23 +651,18 @@ describe('SingleCombobox', () => {
       { label: 'option 2', value: 'value-2' },
     ]
 
-    it('selectedItem の値が name でFormDataから取得できること', () => {
-      const { container } = render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox
-                name="default"
-                selectedItem={{ label: 'option 1', value: 'value-1' }}
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+    it('検索用のinputのnameには `query_` プレフィックスが付与されること', () => {
+      render(template({ name: 'department' }))
+
+      expect(combobox()).toHaveAttribute('name', 'query_department')
+    })
+
+    it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから取得できること', () => {
+      const { container } = render(template({ name: 'department' }))
+
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.get('default')).toBe('value-1')
+      expect(formData.get('department')).toBe('value-1')
     })
 
     it('非制御(uncontrolled)でクリア後、FormDataの値が空文字でFormDataから取得できること', async () => {
@@ -692,19 +687,12 @@ describe('SingleCombobox', () => {
       expect(formData.get('default')).toBe('')
     })
 
-    it('selectedItem が null のとき、hidden inputの値が空文字でFormDataから取得できること', () => {
-      const { container } = render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox name="default" selectedItem={null} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+    it('未選択の場合、hidden inputの値が空文字でFormDataから取得できること', () => {
+      const { container } = render(template({ name: 'department', selectedItem: null }))
+
       const formData = new FormData(container.querySelector('form')!)
 
-      expect(formData.get('default')).toBe('')
+      expect(formData.get('department')).toBe('')
     })
 
     it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
@@ -725,50 +713,16 @@ describe('SingleCombobox', () => {
       expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(0)
     })
 
-    it('検索用テキストボックスの name には `${name}-query` が設定されること', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox name="default" selectedItem={null} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+    it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
+      const { container } = render(template({ name: 'department', disabled: true }))
 
-      expect(combobox()).toHaveAttribute('name', 'default-query')
-    })
+      const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
 
-    it('disabledの場合、hidden inputも無効化されFormDataに値が含まれないこと', () => {
-      const { container } = render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox
-                name="default"
-                disabled
-                selectedItem={{ label: 'option 1', value: 'value-1' }}
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
-      const formData = new FormData(container.querySelector('form')!)
-
-      expect(formData.get('default')).toBeNull()
+      expect(hiddenInput).toBeDisabled()
     })
 
     it('requiredかつ未選択の場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox name="default" required selectedItem={null} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true, selectedItem: null }))
 
       await userEvent.type(combobox(), 'option')
 
@@ -776,54 +730,19 @@ describe('SingleCombobox', () => {
     })
 
     it('requiredでも選択済みなら検索用テキストボックスの妥当性を満たすこと', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox
-                name="default"
-                required
-                selectedItem={{ label: 'option 1', value: 'value-1' }}
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true }))
 
       expect(combobox()).toHaveProperty('validity.valid', true)
     })
 
     it('titleが指定されている場合、requiredの妥当性エラーメッセージにtitleの値が使われること', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox
-                name="default"
-                required
-                selectedItem={null}
-                title="選択項目を指定してください"
-                items={items}
-              />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true, selectedItem: null, title: '選択項目を指定してください' }))
 
       expect(combobox()).toHaveProperty('validationMessage', '選択項目を指定してください')
     })
 
     it('titleが指定されていない場合、requiredの妥当性エラーメッセージにデフォルトの文言が使われること', () => {
-      render(
-        <IntlProvider locale="ja">
-          <form>
-            <FormControl label="コンボボックス">
-              <SingleCombobox name="default" required selectedItem={null} items={items} />
-            </FormControl>
-          </form>
-        </IntlProvider>,
-      )
+      render(template({ required: true, selectedItem: null }))
 
       expect(combobox()).toHaveProperty('validationMessage', '選択してください')
     })
@@ -836,9 +755,9 @@ describe('SingleCombobox', () => {
             <FormControl label="コンボボックス">
               <SingleCombobox
                 form="external-form"
-                name="default"
+                name="department"
                 selectedItem={{ label: 'option 1', value: 'value-1' }}
-                items={items}
+                items={[{ label: 'option 1', value: 'value-1' }]}
               />
             </FormControl>
           </form>
@@ -847,7 +766,7 @@ describe('SingleCombobox', () => {
 
       const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
 
-      expect(formData.get('default')).toBe('value-1')
+      expect(formData.get('department')).toBe('value-1')
       expect(combobox()).toHaveAttribute('form', 'external-form')
     })
   })
