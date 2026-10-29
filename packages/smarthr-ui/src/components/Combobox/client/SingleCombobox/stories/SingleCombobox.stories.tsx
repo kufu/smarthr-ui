@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
 import { FaCirclePlusIcon } from '../../../../Icon'
@@ -75,11 +74,19 @@ export default {
   component: SingleCombobox,
   render: (args) => {
     const [, setArgs] = useArgs()
+    const { selectedItem } = args
+
     return (
       <SingleCombobox
         {...args}
-        onClearClick={() => setArgs({ selectedItem: null })}
-        onSelect={(item) => setArgs({ selectedItem: item.data?.option })}
+        onClearClick={
+          selectedItem !== undefined ? () => setArgs({ selectedItem: null }) : undefined
+        }
+        onSelect={
+          selectedItem !== undefined
+            ? (item) => setArgs({ selectedItem: item.data?.option })
+            : undefined
+        }
       />
     )
   },
@@ -133,19 +140,8 @@ export const SelectedItem: StoryObj<typeof SingleCombobox> = {
 
 export const DefaultItem: StoryObj<typeof SingleCombobox> = {
   name: 'emptySelectionFallbackItem',
-  render: (args) => {
-    const [selectItem, setSelectItem] = useState<typeof args.emptySelectionFallbackItem | null>(
-      null,
-    )
-    return (
-      <SingleCombobox
-        {...args}
-        selectedItem={selectItem ?? null}
-        onSelect={(item) => setSelectItem(item)}
-      />
-    )
-  },
   args: {
+    selectedItem: undefined,
     emptySelectionFallbackItem: defaultItems['option 4'],
   },
 }
