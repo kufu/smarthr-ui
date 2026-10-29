@@ -1,10 +1,10 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, type PropsWithChildren, useContext } from 'react'
 
-import { StepFormDialogContext } from './StepFormDialogProvider'
+import { StepFormDialogContext } from '../StepFormDialogProvider'
 
-import type { StepItem } from './type'
+import type { StepItem } from '../type'
 
 type Props = PropsWithChildren<StepItem>
 
