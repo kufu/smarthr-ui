@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client-directory
 
 import { ControlledMessageDialog } from '../ControlledMessageDialog'
 

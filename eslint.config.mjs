@@ -26,9 +26,7 @@ export default [
     rules: {
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
-      // HINT: 既存コードの 'use client' client/ ディレクトリ移行が段階的に進行中のため、
-      // 一旦 warn として登録し、移行完了後に error へ切り替える(best-practice-for-tailwind-variantsと同様の運用)
-      'local-rules/require-client-directory': 'warn',
+      'local-rules/require-client-directory': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {

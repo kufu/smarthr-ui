@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client-directory
 
 import { type FC, useMemo, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
