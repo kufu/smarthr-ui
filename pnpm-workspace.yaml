@@ -28,7 +28,7 @@ overrides:
   source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
   shell-quote@>=1.8.4 <1.11.0: '>=1.11.0'
   smol-toml@<=1.8.0: '>=1.9.0'
-  qs@<6.16.0: '>=6.16.0'
+  qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.4'
 auditConfig:
   ignoreGhsas:
@@ -42,3 +42,6 @@ auditConfig:
     # マージにのみ使用しており、HTTPリクエスト等の動的な外部入力を直接扱わないためignoreする。
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
+minimumReleaseAgeExclude:
+  # Renovate security update: qs@6.16.2
+  - qs@6.16.2
