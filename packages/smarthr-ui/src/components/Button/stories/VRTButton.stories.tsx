@@ -38,7 +38,7 @@ const Template: StoryFn = (args) => (
             </Button>
             <Button
               disabled
-              disabledReason={{ message: 'ボタンが無効な理由' }}
+              disabledReason={{ text: 'ボタンが無効な理由' }}
               variant={variant}
               suffix={<FaCaretDownIcon />}
             >
@@ -58,7 +58,7 @@ const Template: StoryFn = (args) => (
             </Button>
             <Button
               disabled
-              disabledReason={{ message: 'ボタンが無効な理由' }}
+              disabledReason={{ text: 'ボタンが無効な理由' }}
               variant={variant}
               size="S"
               prefix={<FaCirclePlusIcon />}
