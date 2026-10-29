@@ -6,10 +6,20 @@
 
 const path = require('node:path')
 
-const isUseClientDirective = (node) =>
-  node.type === 'ExpressionStatement' &&
-  (node.directive === 'use client' ||
-    (node.expression.type === 'Literal' && node.expression.value === 'use client'))
+const isDirectivePrologueStatement = (node) =>
+  node.type === 'ExpressionStatement' && node.directive !== undefined
+
+const findUseClientDirective = (body) => {
+  for (const statement of body) {
+    if (!isDirectivePrologueStatement(statement)) {
+      return undefined
+    }
+    if (statement.directive === 'use client') {
+      return statement
+    }
+  }
+  return undefined
+}
 
 module.exports = {
   meta: {
@@ -29,19 +39,21 @@ module.exports = {
   create(context) {
     return {
       Program(node) {
-        const [firstStatement] = node.body
+        const useClientStatement = findUseClientDirective(node.body)
 
-        if (!firstStatement || !isUseClientDirective(firstStatement)) {
+        if (!useClientStatement) {
           return
         }
 
         const filename = context.filename ?? context.getFilename()
-        const normalized = filename.split(path.sep).join(path.posix.sep)
+        const cwd = context.cwd ?? context.getCwd()
+        const relative = path.relative(cwd, filename)
+        const normalized = relative.split(path.sep).join(path.posix.sep)
         const segments = normalized.split(path.posix.sep)
 
         if (!segments.includes('client')) {
           context.report({
-            node,
+            node: useClientStatement,
             messageId: 'requireClientDirectory',
           })
         }

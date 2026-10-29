@@ -2,6 +2,9 @@
  * @fileoverview Tests for require-client-directory rule
  */
 
+const assert = require('node:assert')
+const test = require('node:test')
+
 const { RuleTester } = require('eslint')
 const rule = require('./require-client-directory')
 
@@ -65,6 +68,16 @@ ruleTester.run('require-client-directory', rule, {
       `,
       filename: 'src/components/Foo/Foo.tsx',
     },
+
+    // directive prologueではない括弧付き文字列式は 'use client' として扱わない
+    {
+      code: `
+        ('use client')
+
+        export const Foo = () => null
+      `,
+      filename: 'src/components/Foo/Foo.tsx',
+    },
   ],
 
   invalid: [
@@ -100,5 +113,44 @@ ruleTester.run('require-client-directory', rule, {
       filename: 'src/components/Foo/clientHelpers/Foo.tsx',
       errors: [{ messageId: 'requireClientDirectory' }],
     },
+
+    // 'use strict' など他のdirectiveの後に 'use client' が続く場合も検出する
+    {
+      code: `
+        'use strict'
+        'use client'
+
+        export const Foo = () => null
+      `,
+      filename: 'src/components/Foo/Foo.tsx',
+      errors: [{ messageId: 'requireClientDirectory' }],
+    },
   ],
+})
+
+// RuleTesterはcwdをテストケースごとに変更できないため、リポジトリ自体が
+// `client`という名前を含むディレクトリ配下に置かれているケースはcontext.cwd/filenameを
+// 直接渡してcreate()を呼び出し検証する
+test('リポジトリ外側の親ディレクトリ名に client が含まれていても判定に影響しない', () => {
+  const programNode = {
+    type: 'Program',
+    body: [
+      {
+        type: 'ExpressionStatement',
+        directive: 'use client',
+        expression: { type: 'Literal', value: 'use client' },
+      },
+    ],
+  }
+  const reports = []
+  const context = {
+    cwd: '/workspace/client/smarthr-ui',
+    filename: '/workspace/client/smarthr-ui/packages/smarthr-ui/src/components/Foo/Foo.tsx',
+    report: (descriptor) => reports.push(descriptor),
+  }
+
+  rule.create(context).Program(programNode)
+
+  assert.strictEqual(reports.length, 1)
+  assert.strictEqual(reports[0].messageId, 'requireClientDirectory')
 })
