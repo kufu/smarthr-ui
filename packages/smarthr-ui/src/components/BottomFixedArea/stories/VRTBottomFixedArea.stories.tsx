@@ -1,4 +1,4 @@
-import { BottomFixedArea } from '../BottomFixedArea'
+import { BottomFixedArea } from '../client'
 
 import {
   _primaryButtonOptions,

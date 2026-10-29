@@ -2,7 +2,7 @@ import { action } from 'storybook/actions'
 
 import { Button } from '../../Button'
 import { FaThumbtackIcon } from '../../Icon'
-import { BottomFixedArea } from '../BottomFixedArea'
+import { BottomFixedArea } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

@@ -1,1 +1,1 @@
-export { LiveRegion } from './LiveRegion'
+export { LiveRegion } from './client'

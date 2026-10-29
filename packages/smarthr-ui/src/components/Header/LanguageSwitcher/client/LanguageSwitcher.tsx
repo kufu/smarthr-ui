@@ -1,17 +1,17 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, type KeyboardEvent, type MouseEvent, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useLatest } from '../../../hooks/useLatest'
-import { Localizer, useAvailableLocales } from '../../../intl'
-import { tabbable } from '../../../libs/tabbable'
-import { Button } from '../../Button'
-import { Dropdown, DropdownContent, DropdownTrigger } from '../../Dropdown'
-import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../Icon'
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer, useAvailableLocales } from '../../../../intl'
+import { tabbable } from '../../../../libs/tabbable'
+import { Button } from '../../../Button'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
+import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../../Icon'
 
-import type { Locale } from '../../../intl'
-import type { ExtendElementPropsWithoutRef } from '../../../types'
+import type { Locale } from '../../../../intl'
+import type { ExtendElementPropsWithoutRef } from '../../../../types'
 
 type Props = ExtendElementPropsWithoutRef<
   typeof Dropdown,

@@ -1,10 +1,10 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 
-import type { ExtendElementPropsWithoutRef } from '../../types'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
 
 type Props = ExtendElementPropsWithoutRef<
   'span',

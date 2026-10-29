@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import {
   type ComponentPropsWithRef,
@@ -12,12 +12,12 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type AnchorButton, Button } from '../Button'
-import { Cluster, Stack } from '../Layout'
-import { Panel } from '../Panel'
+import { type AnchorButton, Button } from '../../Button'
+import { Cluster, Stack } from '../../Layout'
+import { Panel } from '../../Panel'
 
-import type { ExtendElementPropsWithRef } from '../../types'
-import type { generateIcon } from '../Icon'
+import type { ExtendElementPropsWithRef } from '../../../types'
+import type { generateIcon } from '../../Icon'
 
 type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 

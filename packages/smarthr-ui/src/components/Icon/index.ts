@@ -14,4 +14,4 @@ export { WarningIcon } from './WarningIcon'
 
 export { LanguageIcon } from './LanguageIcon'
 export { OpenInNewTabIcon } from './OpenInNewTabIcon'
-export { StatusIcon } from './StatusIcon'
+export { StatusIcon } from './client'

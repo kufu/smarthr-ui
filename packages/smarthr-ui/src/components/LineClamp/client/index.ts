@@ -1,0 +1,1 @@
+export { LineClamp } from './LineClamp'
