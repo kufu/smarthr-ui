@@ -1,7 +1,6 @@
 export { useIntl, useLocalize } from './useIntl'
 export { useDateFormat } from './useDateFormat'
-export { Localizer } from './Localizer'
-export { DateFormatter, IntlProvider, useAvailableLocales } from './client'
+export { Localizer, DateFormatter, IntlProvider, useAvailableLocales } from './client'
 export { TimeFormatter } from './TimeFormatter'
 export { TimestampFormatter } from './TimestampFormatter'
 export { locales } from './locales'

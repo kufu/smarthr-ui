@@ -1,4 +1,4 @@
-import { Localizer } from '../Localizer'
+import { Localizer } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
