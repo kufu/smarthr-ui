@@ -7,8 +7,7 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../hooks/useLatest'
-import { DialogContent } from '../DialogContent'
-import { DialogPortal } from '../client'
+import { DialogContent, DialogPortal } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { MessageDialogContent } from './MessageDialogContent'

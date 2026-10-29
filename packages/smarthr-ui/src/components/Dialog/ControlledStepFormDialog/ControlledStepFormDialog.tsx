@@ -15,8 +15,7 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { useLocalize } from '../../../intl'
-import { DialogContent } from '../DialogContent'
-import { DialogPortal } from '../client'
+import { DialogContent, DialogPortal } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { StepFormDialogContent } from './StepFormDialogContent'
