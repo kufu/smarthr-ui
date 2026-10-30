@@ -1,1 +1,1 @@
-export { FloatArea } from './FloatArea'
+export { FloatArea } from './client'

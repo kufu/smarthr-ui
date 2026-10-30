@@ -3,7 +3,7 @@ import { fireEvent } from 'storybook/test'
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
-import { FloatArea } from '../FloatArea'
+import { FloatArea } from '../client'
 
 import type { Meta } from '@storybook/react-vite'
 
