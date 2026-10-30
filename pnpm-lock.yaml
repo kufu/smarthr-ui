@@ -75,7 +75,7 @@ importers:
         version: 9.0.5(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
       stylelint-config-smarthr:
         specifier: ^3.0.2
-        version: 3.0.2(postcss-styled-syntax@0.7.2(postcss@8.5.28))(stylelint-config-standard@40.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3)))(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
+        version: 3.0.2(postcss-styled-syntax@0.7.4(postcss@8.5.28))(stylelint-config-standard@40.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3)))(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
       stylelint-config-standard:
         specifier: ^40.0.0
         version: 40.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
@@ -358,8 +358,8 @@ importers:
         specifier: ^8.5.28
         version: 8.5.28
       postcss-styled-syntax:
-        specifier: ^0.7.2
-        version: 0.7.2(postcss@8.5.28)
+        specifier: ^0.7.4
+        version: 0.7.4(postcss@8.5.28)
       postcss-syntax:
         specifier: ^0.36.2
         version: 0.36.2(postcss@8.5.28)
@@ -5450,8 +5450,8 @@ packages:
     resolution: {integrity: sha512-wWBro/7hJ40ye6TPiXkUQoXKCw23xSsjriUvqd7Uls9Sso3oLiON1flc18cCdnjgCRXw4fBVqUJJeOdDTh3P3g==}
     engines: {node: '>=4'}
 
-  postcss-styled-syntax@0.7.2:
-    resolution: {integrity: sha512-PrxG8BC6yh6pmrHx7NrseYt5TiSN57LbGYZxmreg7co7g+zXe6BwUfsZ6r/gghxbtabde3Z0hinelXj4jlJF4Q==}
+  postcss-styled-syntax@0.7.4:
+    resolution: {integrity: sha512-wRRWfMTQEFtFv94NpfOAx/GLM7vfHRsgHQIEhBlBw3C7XXuFG6ASTGbR8VdINoF84uBx4lxHdWRUQ+VDi5jNpA==}
     engines: {node: '>=14.17'}
     peerDependencies:
       postcss: ^8.5.28
@@ -11965,7 +11965,7 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-styled-syntax@0.7.2(postcss@8.5.28):
+  postcss-styled-syntax@0.7.4(postcss@8.5.28):
     dependencies:
       postcss: 8.5.28
       typescript: 6.0.3
@@ -12702,9 +12702,9 @@ snapshots:
     dependencies:
       stylelint: 17.14.1(supports-color@10.2.2)(typescript@5.9.3)
 
-  stylelint-config-smarthr@3.0.2(postcss-styled-syntax@0.7.2(postcss@8.5.28))(stylelint-config-standard@40.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3)))(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3)):
+  stylelint-config-smarthr@3.0.2(postcss-styled-syntax@0.7.4(postcss@8.5.28))(stylelint-config-standard@40.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3)))(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3)):
     dependencies:
-      postcss-styled-syntax: 0.7.2(postcss@8.5.28)
+      postcss-styled-syntax: 0.7.4(postcss@8.5.28)
       stylelint: 17.14.1(supports-color@10.2.2)(typescript@5.9.3)
       stylelint-config-standard: 40.0.0(stylelint@17.14.1(supports-color@10.2.2)(typescript@5.9.3))
 
