@@ -21,7 +21,8 @@ export default {
       <RemoteDialogTrigger targetId="remoteDialog" onClick={action('open-remote-dialog')}>
         <Button>操作3</Button>
       </RemoteDialogTrigger>
-      <Button disabled={true} disabledReason="disabled." onClick={action('action4')}>
+      {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため */}
+      <Button disabled={true} disabledReason={{ text: 'disabled.' }} onClick={action('action4')}>
         操作4
       </Button>
       <WrappedButton />

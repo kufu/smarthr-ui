@@ -94,7 +94,8 @@ export const Size: StoryObj<typeof SegmentedControl> = {
   name: 'size',
   render: (args) => (
     <Stack>
-      <SegmentedControl {...args} />
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
+      <SegmentedControl {...args} size="M" />
       <SegmentedControl {...args} size="S" />
     </Stack>
   ),

@@ -57,7 +57,8 @@ describe('Tooltip', () => {
 
     it('children が focusable なとき ariaDescribedbyTarget="wrapper" を指定しても children の accessible description になる', () => {
       render(
-        <Tooltip message="説明テキスト">
+        // eslint-disable-next-line smarthr/best-practice-for-default-props -- ariaDescribedbyTarget="wrapper"を明示指定した場合の挙動を検証するテストのため
+        <Tooltip ariaDescribedbyTarget="wrapper" message="説明テキスト">
           <Button>ボタン</Button>
         </Tooltip>,
       )

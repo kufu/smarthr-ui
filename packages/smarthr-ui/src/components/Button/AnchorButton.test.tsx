@@ -34,7 +34,8 @@ describe('AnchorButton', () => {
     it('オブジェクト形式で指定した場合、ツールチップに理由が表示される(従来通り)', () => {
       render(
         <IntlProvider locale="ja">
-          <AnchorButton inactiveReason="遷移できない理由">新規作成</AnchorButton>
+          {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため */}
+          <AnchorButton inactiveReason={{ text: '遷移できない理由' }}>新規作成</AnchorButton>
         </IntlProvider>,
       )
 

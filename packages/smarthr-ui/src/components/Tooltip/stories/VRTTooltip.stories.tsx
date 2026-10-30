@@ -31,7 +31,8 @@ export default {
           </span>
         </Tooltip>
       </div>
-      <Tooltip message="description">
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- typeのバリエーションを網羅するVRTのため */}
+      <Tooltip type="description" message="description">
         <Button>ボタン</Button>
       </Tooltip>
       <Tooltip type="label" triggerType="icon" message="label">
@@ -39,10 +40,14 @@ export default {
           <FaPencilIcon />
         </Button>
       </Tooltip>
-      <Tooltip message="wrapper + focusable">
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ariaDescribedbyTargetのバリエーションを網羅するVRTのため */}
+      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
         <Button>ボタン</Button>
       </Tooltip>
-      <Tooltip message="wrapper + non-focusable">テキスト</Tooltip>
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ariaDescribedbyTargetのバリエーションを網羅するVRTのため */}
+      <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
+        テキスト
+      </Tooltip>
       <Tooltip ariaDescribedbyTarget="inner" message="inner + focusable">
         <Button>ボタン</Button>
       </Tooltip>
