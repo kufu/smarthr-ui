@@ -16,11 +16,11 @@ type Props = ExtendElementPropsWithRef<
 /** @deprecated DatetimeLocalPicker は非推奨です。Input[type="datetime-local"] を使ってください。 */
 export const DatetimeLocalPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
-    const { wrapper, inner } = classNameGenerator('DatetimeLocal')
+    const { wrapper, inner } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ className }),
-      inner: inner(),
+      wrapper: wrapper({ componentType: 'DatetimeLocal', className }),
+      inner: inner({ componentType: 'DatetimeLocal' }),
     }
   }, [className])
 
