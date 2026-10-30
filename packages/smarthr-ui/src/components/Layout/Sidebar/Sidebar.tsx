@@ -152,11 +152,12 @@ export const Sidebar: FC<Props> = ({
     [align, gaps.row, gaps.column, className],
   )
   const classNames = useMemo(() => {
-    const { firstItem, lastItem } = itemClassNameGenerator({ right })
+    const { firstItem, lastItem } = itemClassNameGenerator()
+    const variantProps = { right }
 
     return {
-      firstItem: firstItem(),
-      lastItem: lastItem(),
+      firstItem: firstItem(variantProps),
+      lastItem: lastItem(variantProps),
     }
   }, [right])
   const styles = useMemo(() => {
