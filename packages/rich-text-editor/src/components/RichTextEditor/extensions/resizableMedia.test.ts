@@ -9,10 +9,7 @@ import { configureExtensions } from './configureExtensions'
 const MEDIA_DOC = {
   type: 'doc',
   content: [
-    {
-      type: 'paragraph',
-      content: [{ type: 'image', attrs: { src: 'https://example.com/a.png' } }],
-    },
+    { type: 'image', attrs: { src: 'https://example.com/a.png' } },
     { type: 'youtube', attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' } },
   ],
 }

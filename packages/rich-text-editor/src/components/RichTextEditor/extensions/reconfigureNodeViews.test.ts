@@ -14,12 +14,7 @@ const ALL: readonly RichTextFeature[] = ['bold', 'image', 'table', 'link']
 
 const IMAGE_DOC = {
   type: 'doc',
-  content: [
-    {
-      type: 'paragraph',
-      content: [{ type: 'image', attrs: { src: 'https://example.com/a.png' } }],
-    },
-  ],
+  content: [{ type: 'image', attrs: { src: 'https://example.com/a.png' } }],
 }
 
 const TABLE_DOC = {
@@ -210,7 +205,10 @@ describe('features の変更と NodeView', () => {
 
   it('再構成でアップロード中のプレースホルダを失わない', () => {
     const runtime: RichTextRuntimeOptions = { features: ALL }
-    const target = createEditor(runtime, IMAGE_DOC)
+    const target = createEditor(runtime, {
+      type: 'doc',
+      content: [{ type: 'paragraph' }, ...IMAGE_DOC.content],
+    })
     const { id } = addImagePlaceholder(target.view, 1)
 
     expect(findImagePlaceholderPos(target.view, id)).not.toBeNull()

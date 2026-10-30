@@ -11,13 +11,8 @@ const defaultValue: RichTextJSON = {
   type: 'doc',
   content: [
     {
-      type: 'paragraph',
-      content: [
-        {
-          type: 'image',
-          attrs: { src: 'https://example.com/a.png', alt: 'OLD', width: 300, height: 200 },
-        },
-      ],
+      type: 'image',
+      attrs: { src: 'https://example.com/a.png', alt: 'OLD', width: 300, height: 200 },
     },
   ],
 }
