@@ -25,6 +25,7 @@ describe('Button', () => {
     it('オブジェクト形式で指定した場合、ツールチップに理由が表示される(従来通り)', () => {
       render(
         <IntlProvider locale="ja">
+          {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため */}
           <Button disabled disabledReason={{ text: 'ボタンが無効な理由' }}>
             button
           </Button>

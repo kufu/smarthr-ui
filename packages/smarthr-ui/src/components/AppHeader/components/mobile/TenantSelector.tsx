@@ -24,7 +24,6 @@ const classNameGenerator = tv({
   ],
 })
 
-// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = classNameGenerator()
 
 type Props = Pick<

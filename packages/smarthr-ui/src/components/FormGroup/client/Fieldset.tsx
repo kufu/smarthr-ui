@@ -96,6 +96,7 @@ export const Fieldset: FC<Props> = ({ legend: orgLegend, innerMargin, className,
   const baseId = useId()
 
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const generators = fieldsetClassNameGenerator()
 
     return {

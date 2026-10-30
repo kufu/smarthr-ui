@@ -183,6 +183,7 @@ export const IconGap: StoryObj<typeof Text> = {
   name: 'icon.gap',
   render: (args) => (
     <Stack>
+      {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- icon.gapのバリエーション比較の一貫性のため */}
       <Text {...args} icon={{ prefix: <FaAddressBookIcon /> }}>
         default 0.25
       </Text>
