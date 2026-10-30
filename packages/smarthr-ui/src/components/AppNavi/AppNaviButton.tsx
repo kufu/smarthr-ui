@@ -38,12 +38,12 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
   onClick,
 }) => {
   const classNames = useMemo(() => {
-    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
-    const { wrapper, icon } = classNameGenerator({ active: current })
+    const { wrapper, icon } = classNameGenerator()
+    const variantProps = { active: current }
 
     return {
-      wrapper: wrapper(),
-      icon: icon(),
+      wrapper: wrapper(variantProps),
+      icon: icon(variantProps),
     }
   }, [current])
 

@@ -36,12 +36,11 @@ export const SearchInput: FC<Props> = ({ width, className, variant, ...rest }) =
   const existsWidth = !!labelStyle.width
 
   const classNames = useMemo(() => {
-    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
-    const { label, input } = classNameGenerator({ existsWidth })
+    const { label, input } = classNameGenerator()
 
     return {
       label: label({ className }),
-      input: input(),
+      input: input({ existsWidth }),
     }
   }, [existsWidth, className])
 

@@ -105,16 +105,13 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   // HINT: boolean化することでmemoが有効になる可能性を高くする
   const withChildren = !!children
   const classNames = useMemo(() => {
-    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
-    const { wrapper, pill, dotElement } = classNameGenerator({
-      color: color || 'blue',
-      withChildren,
-    })
+    const { wrapper, pill, dotElement } = classNameGenerator()
+    const variantProps = { color: color || 'blue', withChildren }
 
     return {
       wrapper: wrapper({ className }),
-      pill: pill(),
-      dot: dotElement(),
+      pill: pill(variantProps),
+      dot: dotElement(variantProps),
     }
   }, [withChildren, color, className])
 

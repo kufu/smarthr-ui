@@ -172,20 +172,17 @@ export const NotificationBar: FC<Props> = ({
     }
   }
   const classNames = useMemo(() => {
-    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
-    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator({
-      type,
-      bold: !!bold,
-      paneled,
-    })
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator()
+    const boldValue = !!bold
+    const iconCloseButtonVariantProps = { type, bold: boldValue }
 
     return {
-      wrapper: wrapper({ animate, className }),
+      wrapper: wrapper({ type, bold: boldValue, paneled, animate, className }),
       inner: inner(),
       messageArea: messageArea(),
-      icon: icon(),
+      icon: icon(iconCloseButtonVariantProps),
       actionArea: actionArea(),
-      closeButton: closeButton(),
+      closeButton: closeButton(iconCloseButtonVariantProps),
     }
   }, [animate, paneled, bold, type, className])
 

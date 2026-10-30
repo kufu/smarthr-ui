@@ -1,6 +1,6 @@
 import { MaxLines } from './LineClamp.stories'
 
-import type { LineClamp } from '../LineClamp'
+import type { LineClamp } from '../client'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {

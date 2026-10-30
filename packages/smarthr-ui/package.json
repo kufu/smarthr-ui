@@ -56,7 +56,7 @@
     "playwright": "^1.63.0",
     "plop": "^4.0.5",
     "postcss": "^8.5.28",
-    "postcss-styled-syntax": "^0.7.2",
+    "postcss-styled-syntax": "^0.7.4",
     "postcss-syntax": "^0.36.2",
     "react": "^19.3.0",
     "react-docgen-typescript": "^2.4.0",

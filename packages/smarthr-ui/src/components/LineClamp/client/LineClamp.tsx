@@ -1,11 +1,11 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client'
 
 import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Tooltip } from '../Tooltip'
+import { Tooltip } from '../../Tooltip'
 
-import type { ExtendElementPropsWithRef } from '../../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type Props = ExtendElementPropsWithRef<
   'span',
@@ -90,14 +90,11 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
   }, [children, maxLines])
 
   const classNames = useMemo(() => {
-    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
-    const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
-      maxLines,
-    })
+    const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator()
 
     return {
-      base: base({ className }),
-      clampedLine: clampedLine(),
+      base: base({ maxLines, className }),
+      clampedLine: clampedLine({ maxLines }),
       shadowElementWrapper: shadowElementWrapper(),
       shadowElement: shadowElement(),
     }
