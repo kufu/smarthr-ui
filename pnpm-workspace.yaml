@@ -27,7 +27,7 @@ overrides:
   brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
   source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
   shell-quote@>=1.8.4 <1.11.0: '>=1.11.0'
-  smol-toml@<=1.8.0: '>=1.9.0'
+  smol-toml@<=1.8.0: '>=1.9.1'
   qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.7'
 auditConfig:
