@@ -117,13 +117,14 @@ export const FloatArea: FC<Props> = ({
 }) => {
   const { mobile } = useEnvironment()
   const bottomFixed = mobile && !!fixedOnMobile
+  const sticky = !mobile || bottomFixed
   const actualTertiaryButton =
     typeof tertiaryButton === 'function'
       ? tertiaryButton({ fixedOnMobile: bottomFixed })
       : tertiaryButton
   const classNames = useMemo(() => {
     const { wrapper, buttonRow, buttonItem, message } = classNameGenerator({
-      sticky: !mobile || bottomFixed,
+      sticky,
       bottomFixed,
       bottom: bottomFixed ? 0 : (bottom ?? 1.5),
     })
@@ -134,11 +135,17 @@ export const FloatArea: FC<Props> = ({
       buttonItem: buttonItem(),
       message: message(),
     }
-  }, [bottom, bottomFixed, className, mobile])
+  }, [bottom, bottomFixed, className, sticky])
   const actualStyle = useMemo(() => ({ ...style, zIndex }), [style, zIndex])
 
   return (
-    <Panel {...rest} layer={3} padding={1} className={classNames.wrapper} style={actualStyle}>
+    <Panel
+      {...rest}
+      layer={sticky ? 3 : 1}
+      padding={1}
+      className={classNames.wrapper}
+      style={actualStyle}
+    >
       <Stack gap={0.5}>
         {bottomFixed ? (
           <>
