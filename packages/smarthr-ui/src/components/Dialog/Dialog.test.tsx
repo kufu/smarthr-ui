@@ -124,7 +124,8 @@ describe('Dialog', () => {
     await userEvent.tab({ shift: true })
     expect(screen.getByRole('button', { name: 'close' })).toHaveFocus()
     await userEvent.tab()
-    expect(screen.getByRole('textbox', { name: 'dialog_datepicker' })).toHaveFocus()
+    // suffixに表示される和暦表記がaria-labelledbyで合流するため、アクセシブルネームに含まれる
+    expect(screen.getByRole('textbox', { name: 'dialog_datepicker 令和3年1月1日' })).toHaveFocus()
   })
 
   it('IME 変換中の Tab はフォーカストラップの対象外になること', async () => {
