@@ -163,7 +163,7 @@ export const InnerMargin: StoryObj<typeof FormControl> = {
 export const StatusLabels: StoryObj<typeof FormControl> = {
   name: 'statusLabels',
   args: {
-    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
+    statusLabels: <StatusLabel>任意</StatusLabel>,
   },
 }
 

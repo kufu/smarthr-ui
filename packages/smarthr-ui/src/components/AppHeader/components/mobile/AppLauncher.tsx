@@ -81,7 +81,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           width="100%"
           onChange={onChangeSearchQuery}
           tooltipMessage={searchInputTitle}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          // TODO: subActionArea内のクリックではInputが検索欄にフォーカスを戻さないため、
+          // クリア後に検索欄へフォーカスを戻す対応が必要（desktop/AppLauncher.tsxも同様）
+          subActionArea={
+            mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
+          }
         />
       </div>
 
