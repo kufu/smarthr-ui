@@ -90,15 +90,16 @@ export const editorContentClasses = [
   '[&_.ProseMirror_p]:shr-rte-my-0 [&_.ProseMirror_p]:shr-rte-leading-loose',
   // VoiceOver がブロックの境目の単語をつなげて読むため、末尾にゼロ幅スペースを足す
   // https://tiptap.dev/docs/guides/accessibility
-  // 空のブロックは trailingBreak の後ろに2行目ができて高さが倍になるため除外する。
+  // 空のブロックや改行で終わるブロックは、ProseMirror が末尾に足す trailingBreak の後ろに
+  // 1行増えるため除外する。
   // li・blockquote は中身の p に付くので対象にしない（付けると1行分伸びる）。
   // Tailwind はソースを文字列のまま読むため、'\\200B' と書くとバックスラッシュ2つの
   // クラスとして生成され、実行時のクラス名と一致しない。String.raw で両者を揃える。
-  String.raw`[&_.ProseMirror_p:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-rte-content-['\200B']`,
-  String.raw`[&_.ProseMirror_h1:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-rte-content-['\200B']`,
-  String.raw`[&_.ProseMirror_h2:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-rte-content-['\200B']`,
-  String.raw`[&_.ProseMirror_h3:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-rte-content-['\200B']`,
-  String.raw`[&_.ProseMirror_h4:not(:has(>br.ProseMirror-trailingBreak:only-child))::after]:shr-rte-content-['\200B']`,
+  String.raw`[&_.ProseMirror_p:not(:has(>br.ProseMirror-trailingBreak))::after]:shr-rte-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h1:not(:has(>br.ProseMirror-trailingBreak))::after]:shr-rte-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h2:not(:has(>br.ProseMirror-trailingBreak))::after]:shr-rte-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h3:not(:has(>br.ProseMirror-trailingBreak))::after]:shr-rte-content-['\200B']`,
+  String.raw`[&_.ProseMirror_h4:not(:has(>br.ProseMirror-trailingBreak))::after]:shr-rte-content-['\200B']`,
 ] as const
 
 /** RichTextViewer 用: 直下の要素向けスタイル */

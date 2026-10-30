@@ -288,6 +288,38 @@ export const BackgroundColor: Story = {
   ),
 }
 
+const trailingHardBreakContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'paragraph',
+      content: [{ type: 'text', text: '行末で改行した段落' }, { type: 'hardBreak' }],
+    },
+    {
+      type: 'paragraph',
+      content: [{ type: 'text', text: '次の段落' }],
+    },
+    {
+      type: 'heading',
+      attrs: { level: 2 },
+      content: [{ type: 'text', text: '行末で改行した見出し' }, { type: 'hardBreak' }],
+    },
+    {
+      type: 'paragraph',
+      content: [{ type: 'text', text: '次の段落' }],
+    },
+  ],
+}
+
+export const VRTTrailingHardBreak: Story = {
+  name: '行末で改行したブロック',
+  render: () => (
+    <FormControl label="行末で改行したブロック">
+      <RichTextEditor defaultValue={trailingHardBreakContent} features={['heading']} />
+    </FormControl>
+  ),
+}
+
 const imageWithWidthContent = {
   type: 'doc' as const,
   content: [
