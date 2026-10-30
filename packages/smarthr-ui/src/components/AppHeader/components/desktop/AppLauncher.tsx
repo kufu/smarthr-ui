@@ -85,6 +85,7 @@ const CLASS_NAMES = (() => {
     mainInner,
     contentHead,
     scrollArea,
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   } = classNameGenerator()
 
   return {
