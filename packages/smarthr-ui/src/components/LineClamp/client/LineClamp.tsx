@@ -90,13 +90,11 @@ export const LineClamp: FC<Props> = ({ maxLines = 3, children, className, ...res
   }, [children, maxLines])
 
   const classNames = useMemo(() => {
-    const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator({
-      maxLines,
-    })
+    const { base, clampedLine, shadowElementWrapper, shadowElement } = classNameGenerator()
 
     return {
-      base: base({ className }),
-      clampedLine: clampedLine(),
+      base: base({ maxLines, className }),
+      clampedLine: clampedLine({ maxLines }),
       shadowElementWrapper: shadowElementWrapper(),
       shadowElement: shadowElement(),
     }

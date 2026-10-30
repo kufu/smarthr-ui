@@ -154,17 +154,15 @@ export const InformationPanel: FC<Props> = ({
       heading: headingClassName,
       toggleableButton,
       content,
-    } = classNameGenerator({
-      type,
-      bold,
-    })
+    } = classNameGenerator()
+    const variantProps = { type, bold }
 
     return {
       wrapper: wrapper({ className }),
-      header: header(),
-      heading: headingClassName(),
+      header: header(variantProps),
+      heading: headingClassName(variantProps),
       toggleableButton: toggleableButton(),
-      content: content(),
+      content: content(variantProps),
     }
   }, [type, bold, className])
 
