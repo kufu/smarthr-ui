@@ -20,7 +20,7 @@ overrides:
   brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
   source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
   shell-quote@>=1.8.4 <1.11.0: '>=1.11.0'
-  smol-toml@<=1.8.0: '>=1.9.0'
+  smol-toml@<=1.8.0: '>=1.9.1'
   qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.7'
 
@@ -5927,8 +5927,8 @@ packages:
     resolution: {integrity: sha512-qMCMfhY040cVHT43K9BFygqYbUPFZKHOg7K73mtTWJRb8pyP3fzf4Ixd5SzdEJQ6MRUg/WBnOLxghZtKKurENQ==}
     engines: {node: '>=10'}
 
-  smol-toml@1.9.0:
-    resolution: {integrity: sha512-hpd+HLON7HdZXqYchMM/+LaTTbdK0AU3NngIJ4KVyWbY9bfQqdL9cD+4yf6dUoU2Ap4VsU0JkQi6FxAI1B2mXQ==}
+  smol-toml@1.9.1:
+    resolution: {integrity: sha512-j7WyPdf0CJoutMzMoPLF/bVXHtKZIT9Rb4eGeEbWw8X2t5oirjPgpL+OpaENZrILYaXqYwnVH+qgUwVbl+pUJQ==}
     engines: {node: '>= 18'}
 
   source-map-js@1.2.2:
@@ -11289,7 +11289,7 @@ snapshots:
       oxc-parser: 0.137.0
       oxc-resolver: 11.21.3
       picomatch: 4.0.7
-      smol-toml: 1.9.0
+      smol-toml: 1.9.1
       strip-json-comments: 5.0.3
       tinyglobby: 0.2.17
       unbash: 4.0.2
@@ -12525,7 +12525,7 @@ snapshots:
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
 
-  smol-toml@1.9.0: {}
+  smol-toml@1.9.1: {}
 
   source-map-js@1.2.2: {}
 
