@@ -31,11 +31,9 @@
     "format": "run-s -c format:*",
     "format:eslint": "eslint --fix './src/**/*.ts{,x}'",
     "format:prettier": "prettier --write './src/**/*.ts{,x}'",
-    "format:stylelint": "stylelint --fix './src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './src/**/*.ts{,x}'",
     "lint:prettier": "prettier --check './src/**/*.ts{,x}'",
-    "lint:style": "stylelint './src/**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit -p tsconfig.build.json",
     "prepublishOnly": "run-s clean build",
     "storybook": "storybook dev -p 6007",
@@ -46,8 +44,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0",
-    "smarthr-ui": "workspace:^",
-    "styled-components": "^5.0.1"
+    "smarthr-ui": "workspace:^"
   },
   "dependencies": {
     "@smarthr/patternomaly": "^2.0.0",
@@ -70,7 +67,6 @@
     "@types/node": "^20.19.43",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^19.2.7",
-    "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.27",
     "glob": "13.0.6",
     "jsdom": "^26.1.0",
@@ -83,7 +79,6 @@
     "rollup": "^4.63.4",
     "smarthr-ui": "workspace:^",
     "storybook": "10.6.2",
-    "styled-components": "^5.3.11",
     "tailwind-variants": "^0.3.1",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",

@@ -45,7 +45,6 @@
     "eslint-plugin-storybook",
     "http-server",
     "playwright",
-    "postcss-styled-syntax",
     "postcss-syntax",
     "rollup-plugin-preserve-directives",
     "rollup-plugin-rename-node-modules",
@@ -56,7 +55,6 @@
     "tsc",
     "eslint",
     "prettier",
-    "stylelint",
     "knip"
   ],
 }
