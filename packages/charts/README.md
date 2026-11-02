@@ -15,7 +15,7 @@ smarthr-ui-charts は、SmartHR UI デザインシステムとシームレスに
 npm install smarthr-ui-charts
 
 # 必要な peer dependencies
-npm install smarthr-ui react react-dom styled-components
+npm install smarthr-ui react react-dom react-intl styled-components
 ```
 
 ## 開発状況

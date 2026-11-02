@@ -30,17 +30,17 @@ yarn add smarthr-ui
 pnpm add smarthr-ui
 ```
 
-peerDependencies として React, React-DOM, styled-components が必要です。
+peerDependencies として React, React-DOM, react-intl, styled-components が必要です。
 
 ```sh
 // with npm
-npm install react react-dom styled-components
+npm install react react-dom react-intl styled-components
 
 // with yarn
-yarn add react react-dom styled-components
+yarn add react react-dom react-intl styled-components
 
 // with pnpm
-pnpm add react react-dom styled-components
+pnpm add react react-dom react-intl styled-components
 ```
 
 ## 使いかた
