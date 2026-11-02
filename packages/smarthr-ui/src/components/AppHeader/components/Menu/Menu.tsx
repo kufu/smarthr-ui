@@ -1,25 +1,16 @@
-import {
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  memo,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../../../hooks/useLatest'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
-import { Portal } from '../../../Portal'
+import { Drawer } from '../Drawer'
 import { MobileNavigation } from '../Navigation'
 import { MenuButton } from '../common/MenuButton'
 
 import { MenuAccordion } from './MenuAccordion'
-import { MenuDialog, type MenuPage } from './MenuDialog'
+import { type MenuPage, MenuPageContent, MenuPageHeading } from './MenuPage'
 
 import type { InternalHeaderProps, Navigation, NavigationGroup } from '../../types'
 
@@ -30,8 +21,6 @@ const classNameGenerator = tv({
 const TOP_PAGE: MenuPage = { type: 'top' }
 const LAUNCHER_PAGE: MenuPage = { type: 'launcher' }
 const RELEASE_NOTE_PAGE: MenuPage = { type: 'releaseNote' }
-
-let scrollPosition = 0
 
 type Props = Pick<
   InternalHeaderProps,
@@ -82,18 +71,6 @@ export const Menu: FC<Props> = ({
     [latest],
   )
 
-  useEffect(() => {
-    if (isOpen) {
-      scrollPosition = window.scrollY
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-      setTimeout(() => window.scrollTo(0, scrollPosition), 0)
-    }
-  }, [isOpen])
-
-  const callbackRef = useEscapeCallbackRef(functions.handleClose)
-
   const className = useMemo(() => classNameGenerator(), [])
 
   return (
@@ -104,19 +81,33 @@ export const Menu: FC<Props> = ({
         }
         onClick={functions.handleOpen}
       />
-      <Portal>
-        <MenuDialog
-          callbackRef={callbackRef}
-          isOpen={isOpen}
+      <Drawer
+        isOpen={isOpen}
+        closeLabel={
+          <Localizer
+            id="smarthr-ui/AppHeader/MobileHeader/closeMenu"
+            defaultText="メニューを閉じる"
+          />
+        }
+        handleClose={functions.handleClose}
+        // HINT: 閉じたあとに次に開いたときはトップページから表示する
+        handleExited={functions.handleBackToTop}
+        heading={
+          <MenuPageHeading
+            page={page}
+            tenantSelector={tenantSelector}
+            handleBackToTop={functions.handleBackToTop}
+          />
+        }
+      >
+        <MenuPageContent
           page={page}
           features={features}
           isAppLauncherAvailable={isAppLauncherAvailable}
           featuresLoading={featuresLoading}
           featuresError={featuresError}
           releaseNote={releaseNote}
-          tenantSelector={tenantSelector}
           handleClose={functions.handleClose}
-          handleBackToTop={functions.handleBackToTop}
           handleOpenNavigationGroup={functions.handleOpenNavigationGroup}
         >
           {isAppLauncherAvailable && (
@@ -149,8 +140,8 @@ export const Menu: FC<Props> = ({
               <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
             </ReleaseNoteButton>
           )}
-        </MenuDialog>
-      </Portal>
+        </MenuPageContent>
+      </Drawer>
     </>
   )
 }

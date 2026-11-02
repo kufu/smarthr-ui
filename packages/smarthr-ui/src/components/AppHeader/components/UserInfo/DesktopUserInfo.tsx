@@ -2,12 +2,12 @@ import { type FC, type PropsWithChildren, type ReactNode, memo, useMemo } from '
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../../intl'
-import { AnchorButton, Button } from '../../../Button'
-import { Dropdown, DropdownContent, DropdownMenuButton, DropdownTrigger } from '../../../Dropdown'
-import { FaCaretDownIcon, FaGearIcon, FaUserIcon } from '../../../Icon'
+import { AnchorButton } from '../../../Button'
+import { DropdownMenuButton } from '../../../Dropdown'
+import { HeaderDropdownMenuButton } from '../../../Header'
+import { FaGearIcon, FaUserIcon } from '../../../Icon'
 import { Cluster, Stack } from '../../../Layout'
 import { Text } from '../../../Text'
-import { CommonButton } from '../common/CommonButton'
 
 import { buildDisplayName } from './buildDisplayName'
 
@@ -28,25 +28,8 @@ const classNameGenerator = tv({
       '[&&.smarthr-ui-AnchorButton]:shr-p-0.75 [&&.smarthr-ui-AnchorButton]:shr-py-0.75',
       '[&&.smarthr-ui-Button]:shr-p-0.75 [&&.smarthr-ui-Button]:shr-py-0.75',
     ],
-    button: [
-      '[&&]:shr-border-transparent [&&]:shr-font-normal [&&]:last-of-type:-shr-me-0.25',
-      '[&&]:focus-visible:shr-bg-transparent',
-      "[&[aria-expanded='true']_.smarthr-ui-Icon:last-child]:shr-rotate-180",
-    ],
-    dropdownContent: '[&&]:shr-whitespace-pre [&&]:shr-p-0.5',
     accountImage: '',
     placeholderImage: 'shr-p-0.5',
-  },
-  variants: {
-    enableNew: {
-      true: {
-        button: '[&&]:shr-px-0.5',
-      },
-      false: {
-        button:
-          '[&&]:shr-bg-transparent [&&]:shr-px-0.25 [&&]:shr-text-white [&&]:hover:shr-bg-transparent',
-      },
-    },
   },
   compoundSlots: [
     {
@@ -56,6 +39,20 @@ const classNameGenerator = tv({
     },
   ],
 })
+
+const CLASS_NAMES = (() => {
+  const { userSummary, dropdownMenuButton, dropdownContentButton, accountImage, placeholderImage } =
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+    classNameGenerator()
+
+  return {
+    userSummary: userSummary(),
+    dropdownMenuButton: dropdownMenuButton(),
+    dropdownContentButton: dropdownContentButton(),
+    accountImage: accountImage(),
+    placeholderImage: placeholderImage(),
+  }
+})()
 
 type Props = UserInfoProps &
   Pick<HeaderProps, 'desktopAdditionalContent' | 'tenants' | 'currentTenantId'>
@@ -115,30 +112,6 @@ const ActualUserInfo: FC<Props & { displayName: string }> = ({
   enableNew,
   displayName,
 }) => {
-  const classNames = useMemo(() => {
-    const {
-      userSummary,
-      dropdownMenuButton,
-      dropdownContentButton,
-      button,
-      dropdownContent,
-      accountImage,
-      placeholderImage,
-    } = classNameGenerator({
-      enableNew,
-    })
-
-    return {
-      userSummary: userSummary(),
-      dropdownMenuButton: dropdownMenuButton(),
-      dropdownContentButton: dropdownContentButton(),
-      button: button(),
-      dropdownContent: dropdownContent(),
-      accountImage: accountImage(),
-      placeholderImage: placeholderImage(),
-    }
-  }, [enableNew])
-
   const currentTenantName = useMemo(
     () => tenants?.find((tenant) => tenant.id === currentTenantId)?.name,
     [tenants, currentTenantId],
@@ -147,7 +120,7 @@ const ActualUserInfo: FC<Props & { displayName: string }> = ({
   if (enableNew) {
     return (
       <DropdownMenuButton
-        className={classNames.dropdownMenuButton}
+        className={CLASS_NAMES.dropdownMenuButton}
         trigger={
           <DropdownMenuLabel
             firstName={firstName}
@@ -155,8 +128,8 @@ const ActualUserInfo: FC<Props & { displayName: string }> = ({
             email={email}
             accountImageUrl={accountImageUrl}
             currentTenantName={currentTenantName}
-            accountImageClassName={classNames.accountImage}
-            placeHolderImageClassName={classNames.placeholderImage}
+            accountImageClassName={CLASS_NAMES.accountImage}
+            placeHolderImageClassName={CLASS_NAMES.placeholderImage}
           />
         }
       >
@@ -166,9 +139,9 @@ const ActualUserInfo: FC<Props & { displayName: string }> = ({
           firstName={firstName}
           lastName={lastName}
           email={email}
-          className={classNames.userSummary}
+          className={CLASS_NAMES.userSummary}
         />
-        <DropdownContentButton href={accountUrl} className={classNames.dropdownContentButton}>
+        <DropdownContentButton href={accountUrl} className={CLASS_NAMES.dropdownContentButton}>
           <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
         </DropdownContentButton>
         {desktopAdditionalContent}
@@ -177,17 +150,12 @@ const ActualUserInfo: FC<Props & { displayName: string }> = ({
   }
 
   return (
-    <Dropdown>
-      <DisplayNameDropdownTrigger className={classNames.button}>
-        {displayName}
-      </DisplayNameDropdownTrigger>
-      <DropdownContent className={classNames.dropdownContent}>
-        <AccountLink href={accountUrl}>
-          <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
-        </AccountLink>
-        {desktopAdditionalContent}
-      </DropdownContent>
-    </Dropdown>
+    <HeaderDropdownMenuButton trigger={displayName}>
+      <AccountLink href={accountUrl}>
+        <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
+      </AccountLink>
+      {desktopAdditionalContent}
+    </HeaderDropdownMenuButton>
   )
 }
 
@@ -284,27 +252,11 @@ const DropdownContentButton = memo<PropsWithChildren<{ href?: string | null; cla
     ),
 )
 
-const DisplayNameDropdownTrigger = memo<PropsWithChildren<{ className: string }>>(
-  ({ children, className }) => (
-    <DropdownTrigger>
-      <Button variant="text" className={className} suffix={<FaCaretDownIcon />}>
-        {children}
-      </Button>
-    </DropdownTrigger>
-  ),
-)
-
 const AccountLink = memo<PropsWithChildren<{ href?: string | null }>>(
   ({ href, children }) =>
     href && (
-      <CommonButton
-        elementAs="a"
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        prefix={<FaGearIcon />}
-      >
+      <AnchorButton href={href} target="_blank" rel="noopener noreferrer" prefix={<FaGearIcon />}>
         {children}
-      </CommonButton>
+      </AnchorButton>
     ),
 )

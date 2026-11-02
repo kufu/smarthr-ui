@@ -2,30 +2,16 @@ import {
   type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
-  memo,
   useMemo,
 } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../../hooks/useLatest'
-import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
-import { FaCaretDownIcon } from '../../../Icon'
-import { CommonButton } from '../common/CommonButton'
+import { Button } from '../../../Button'
+import { DropdownMenuButton } from '../../../Dropdown'
+import { FaCheckIcon } from '../../../Icon'
 
 import type { Header } from '../../../Header'
-
-const classNameGenerator = tv({
-  base: [
-    'shr-cursor-pointer shr-rounded-s shr-border-none shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm',
-    'hover:shr-bg-white-darken',
-    '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
-  ],
-})
-
-// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
-const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = classNameGenerator()
 
 type Props = Pick<
   ComponentPropsWithRef<typeof Header>,
@@ -88,38 +74,25 @@ const TenantDropdown: FC<
     [latest],
   )
 
-  return (
-    <Dropdown>
-      <MemoizedTenantDropdownTrigger>{tenantName}</MemoizedTenantDropdownTrigger>
-      <DropdownContent controllable>
-        <div className="shr-p-0.5">
-          {tenants.map((tenant) => {
-            const isCurrent = tenant.id === currentTenantId
+  const trigger = useMemo(() => ({ children: tenantName, size: 'S' as const }), [tenantName])
 
-            return (
-              <CommonButton
-                key={tenant.id}
-                elementAs="button"
-                type="button"
-                value={tenant.id}
-                current={isCurrent}
-                handleClick={isCurrent ? undefined : functions.handleClickTenantName}
-              >
-                {tenant.name}
-              </CommonButton>
-            )
-          })}
-        </div>
-      </DropdownContent>
-    </Dropdown>
+  return (
+    <DropdownMenuButton trigger={trigger}>
+      {tenants.map((tenant) => {
+        const isCurrent = tenant.id === currentTenantId
+
+        return (
+          <Button
+            key={tenant.id}
+            value={tenant.id}
+            aria-current={isCurrent || undefined}
+            onClick={isCurrent ? undefined : functions.handleClickTenantName}
+            prefix={isCurrent && <FaCheckIcon color="MAIN" />}
+          >
+            {tenant.name}
+          </Button>
+        )
+      })}
+    </DropdownMenuButton>
   )
 }
-
-const MemoizedTenantDropdownTrigger = memo<PropsWithChildren>(({ children }) => (
-  <DropdownTrigger>
-    <button type="button" className={TENANT_DROPDOWN_TRIGGER_CLASS_NAME}>
-      {children}
-      <FaCaretDownIcon color="TEXT_BLACK" className="shr-ms-0.5" />
-    </button>
-  </DropdownTrigger>
-))

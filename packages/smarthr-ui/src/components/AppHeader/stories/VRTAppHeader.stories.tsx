@@ -178,7 +178,7 @@ export const VRTReleaseNoteError: Story = {
 export const VRTSetting: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.click(canvas.getByRole('button', { name: '栄子 須磨（001）' }))
+    await userEvent.click(canvas.getByRole('button', { name: '栄子 須磨（001） 候補を開く' }))
     await waitForAnimationFrame()
   },
 }
