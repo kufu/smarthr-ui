@@ -2,13 +2,13 @@ import { ColorBox } from '../../ComponentsForStories'
 import { Stack } from '../../Stack'
 import { Cluster, clusterClassNameGenerator } from '../Cluster'
 
-import type { Gap as GapType } from '../../../../types'
+import type { PositiveGap } from '../../../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const clusterGap = Object.keys(clusterClassNameGenerator.variants.rowGap)
   // Tシャツサイズは後方互換性のために残しており、できるだけ使われたくない
   .filter((v) => !isNaN(Number(v)))
-  .sort() as GapType[]
+  .sort() as PositiveGap[]
 
 export default {
   title: 'Components/Layout/Cluster',
@@ -110,4 +110,35 @@ export const As: StoryObj<typeof Cluster> = {
   args: {
     as: 'section',
   },
+}
+
+export const GrowStart: StoryObj<typeof Cluster> = {
+  name: 'grow="start"',
+  render: (args) => (
+    <Cluster {...args} grow="start" className="shr-bg-background">
+      <div>先頭の要素が残りの幅いっぱいに広がる</div>
+      <div>固定幅</div>
+    </Cluster>
+  ),
+}
+
+export const GrowEnd: StoryObj<typeof Cluster> = {
+  name: 'grow="end"',
+  render: (args) => (
+    <Cluster {...args} grow="end" className="shr-bg-background">
+      <div>固定幅</div>
+      <div>末尾の要素が残りの幅いっぱいに広がる</div>
+    </Cluster>
+  ),
+}
+
+export const GrowWithThreeItems: StoryObj<typeof Cluster> = {
+  name: 'grow（3要素構成）',
+  render: (args) => (
+    <Cluster {...args} grow="end" className="shr-bg-background">
+      <div>固定幅1</div>
+      <div>固定幅2</div>
+      <div>末尾の要素が残りの幅いっぱいに広がる</div>
+    </Cluster>
+  ),
 }

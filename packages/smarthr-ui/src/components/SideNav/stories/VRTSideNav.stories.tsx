@@ -1,4 +1,4 @@
-import { type ComponentProps, Fragment } from 'react'
+import { type ComponentPropsWithRef, Fragment } from 'react'
 
 import { Stack } from '../../Layout'
 import { SideNav } from '../SideNav'
@@ -8,7 +8,7 @@ import { _sideNavItems } from './SideNav.stories'
 
 import type { Meta } from '@storybook/react-vite'
 
-const sizeCasse: Array<ComponentProps<typeof SideNav>['size']> = [undefined, 'M', 'S']
+const sizeCasse: Array<ComponentPropsWithRef<typeof SideNav>['size']> = [undefined, 'M', 'S']
 
 export default {
   title: 'Components/SideNav/VRT',

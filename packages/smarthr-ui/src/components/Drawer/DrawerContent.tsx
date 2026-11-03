@@ -2,7 +2,7 @@
 
 import { type FC, useContext } from 'react'
 
-import { useDialogPortal } from '../Dialog'
+import { DialogPortal } from '../Dialog'
 
 import { DrawerContentInner } from './DrawerContentInner'
 import { DrawerContext } from './DrawerWrapper'
@@ -13,9 +13,8 @@ type Props = UncontrolledDrawerProps & DirectChildren
 
 export const DrawerContent: FC<Props> = ({ portalParent, id, ...rest }) => {
   const { handleClickClose, active } = useContext(DrawerContext)
-  const { createPortal } = useDialogPortal(portalParent, id)
-
-  return createPortal(
+  return (
+    <DialogPortal id={id} parent={portalParent}>
     <DrawerContentInner
       {...rest}
       hasPortalParent={Boolean(portalParent)}
@@ -23,6 +22,7 @@ export const DrawerContent: FC<Props> = ({ portalParent, id, ...rest }) => {
       onClickClose={handleClickClose}
       onClickOverlay={handleClickClose}
       onPressEscape={handleClickClose}
-    />,
+    />
+    </DialogPortal>
   )
 }

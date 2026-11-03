@@ -54,6 +54,16 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
     },
 
+    // useLayoutEffectRef - 依存配列にlatestと他の依存（OK）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const layoutEffectRef = useLayoutEffectRef((node) => {
+          latest.onChange()
+        }, [someValue, latest])
+      `,
+    },
+
     // useLatest()由来でないlatest変数（useState）
     {
       code: `

@@ -1,1 +1,1 @@
-export { BottomFixedArea } from './BottomFixedArea'
+export { BottomFixedArea } from './client'

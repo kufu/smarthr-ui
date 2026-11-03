@@ -1,13 +1,26 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { act, useState } from 'react'
+import { flushSync } from 'react-dom'
 
+import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
+import { SingleCombobox } from '../Combobox'
+import { Dialog } from '../Dialog'
+import { FormControl } from '../FormGroup'
+import { WarekiPicker } from '../Input'
 import { Stack } from '../Layout'
+import { Portal } from '../Portal'
 
-import { Dropdown } from './Dropdown'
-import { DropdownContent } from './DropdownContent'
-import { DropdownTrigger } from './DropdownTrigger'
+import { Dropdown, DropdownContent, DropdownTrigger } from './client'
+
+// DropdownContent は requestAnimationFrame 経由でフォーカスを当てる
+const waitForAnimationFrame = () =>
+  act(async () => {
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
+  })
 
 describe('Dropdown', () => {
   const template = (
@@ -34,9 +47,26 @@ describe('Dropdown', () => {
   })
 
   it('トリガーボタンとドロップダウンの間でフォーカスの行き来ができること', async () => {
+    // HINT: userEvent.clickの内部処理とjsdomのrequestAnimationFrameの実行タイミングが競合し、
+    // 環境によって「クリック直後はまだrAFが発火していないこと」の検証が不安定になるため、
+    // requestAnimationFrameをspyして発火タイミングを手動で制御する
+    const rafCallbacks: FrameRequestCallback[] = []
+    const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      rafCallbacks.push(callback)
+      return rafCallbacks.length
+    })
+
     render(template)
 
-    act(() => screen.getByRole('button', { name: 'Trigger' }).click())
+    await userEvent.click(screen.getByRole('button', { name: 'Trigger' }))
+
+    // requestAnimationFrameの前はTriggerにフォーカスが残ったままであること(早すぎるfocus実行を検知する)
+    expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
+
+    act(() => {
+      rafCallbacks.forEach((callback) => callback(0))
+    })
+    rafSpy.mockRestore()
 
     expect(screen.getByRole('button', { name: 'Button1' })).not.toHaveFocus()
     await userEvent.tab()
@@ -62,6 +92,7 @@ describe('Dropdown', () => {
   it('ドロップダウン展開後にShift+Tabでトリガーにフォーカスが戻るとドロップダウンが閉じること', async () => {
     render(template)
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    await waitForAnimationFrame()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     await userEvent.tab()
@@ -72,10 +103,11 @@ describe('Dropdown', () => {
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
 
-  it('ドロップダウンからフォーカスが外れるとドロップダウンが閉じること', async () => {
+  it('ドロップダウン展開後に最後の要素からTabするとトリガーにフォーカスが戻りドロップダウンが閉じること', async () => {
     render(template)
 
     act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    await waitForAnimationFrame()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     await userEvent.tab()
@@ -85,6 +117,7 @@ describe('Dropdown', () => {
     await userEvent.tab()
     expect(screen.getByRole('button', { name: 'Button3' })).toHaveFocus()
     await userEvent.tab()
+    expect(screen.getByRole('button', { name: 'Trigger' })).toHaveFocus()
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
 
@@ -138,6 +171,590 @@ describe('Dropdown', () => {
 
       await user.click(screen.getByRole('button', { name: 'Trigger' }))
       expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
+    })
+  })
+
+  describe('Dropdownがネストしている場合', () => {
+    const NestedTemplate = (
+      <Dropdown>
+        <DropdownTrigger>
+          <Button>OuterTrigger</Button>
+        </DropdownTrigger>
+        <DropdownContent controllable>
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>InnerTrigger</Button>
+            </DropdownTrigger>
+            <DropdownContent>
+              <Button>InnerButton</Button>
+            </DropdownContent>
+          </Dropdown>
+          <Button>AfterInnerDropdown</Button>
+        </DropdownContent>
+      </Dropdown>
+    )
+
+    it('内側のDropdownContent内(controllable未指定)のクリックで内側のみ閉じ、外側は開いたままであること', async () => {
+      render(NestedTemplate)
+
+      await userEvent.click(screen.getByRole('button', { name: 'OuterTrigger' }))
+      await userEvent.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await userEvent.click(screen.getByRole('button', { name: 'InnerButton' }))
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('内側のDropdownContent内の最後の要素からTabすると内側のトリガーにフォーカスが戻り、外側は開いたままであること', async () => {
+      render(NestedTemplate)
+
+      await userEvent.click(screen.getByRole('button', { name: 'OuterTrigger' }))
+      await waitForAnimationFrame()
+      await userEvent.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+
+      screen.getByRole('button', { name: 'InnerButton' }).focus()
+      await userEvent.tab()
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveFocus()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('内側のDropdownContent内のアイテムからTabで抜けた後、続けてTabすると内側のDropdownの直後の要素にフォーカスが移り、外側は開いたままであること', async () => {
+      render(NestedTemplate)
+
+      await userEvent.click(screen.getByRole('button', { name: 'OuterTrigger' }))
+      await waitForAnimationFrame()
+      await userEvent.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+
+      screen.getByRole('button', { name: 'InnerButton' }).focus()
+      await userEvent.tab()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveFocus()
+
+      await userEvent.tab()
+      expect(screen.getByRole('button', { name: 'AfterInnerDropdown' })).toHaveFocus()
+      expect(screen.getByRole('button', { name: 'OuterTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+  })
+
+  describe('DropdownContent内にポータルを使う別コンポーネントがネストしている場合', () => {
+    it('Comboboxのオプションをクリックしても外側のDropdownが閉じないこと', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>Trigger</Button>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <form>
+                <FormControl label="コンボボックス">
+                  <SingleCombobox
+                    name="test"
+                    selectedItem={null}
+                    items={[
+                      { label: 'option 1', value: 'value-1' },
+                      { label: 'option 2', value: 'value-2' },
+                    ]}
+                  />
+                </FormControl>
+              </form>
+            </DropdownContent>
+          </Dropdown>
+        </IntlProvider>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await user.click(screen.getByRole('combobox'))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('WarekiPickerのカレンダー内の日付をクリックしても外側のDropdownが閉じないこと', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>Trigger</Button>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <form>
+                <FormControl label="日付">
+                  <WarekiPicker name="test" value={undefined} onChangeDate={() => {}} />
+                </FormControl>
+              </form>
+            </DropdownContent>
+          </Dropdown>
+        </IntlProvider>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await user.click(screen.getByRole('textbox'))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('button', { name: '4' }))
+
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('ポータル内でクリックした要素がクリック処理中にDOMから取り除かれても外側のDropdownが閉じないこと', async () => {
+      // HINT: WarekiPickerのYearPickerで年を選択すると、クリックされた年ボタンはDropdownの外側クリック判定より前にアンマウントされる
+      // ブラウザではReactのリスナーとDropdownのリスナーの間でマイクロタスクが実行されるため再レンダリングが挟まるが、
+      // jsdomでは挟まらないため、flushSyncで同じ状況を再現する
+      const RemoveOnClick = () => {
+        const [removed, setRemoved] = useState(false)
+
+        return (
+          <Portal>
+            {removed ? (
+              <span>Removed</span>
+            ) : (
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  flushSync(() => setRemoved(true))
+                }}
+              >
+                Remove
+              </Button>
+            )}
+          </Portal>
+        )
+      }
+      const user = userEvent.setup()
+      render(
+        <Dropdown>
+          <DropdownTrigger>
+            <Button>Trigger</Button>
+          </DropdownTrigger>
+          <DropdownContent controllable>
+            <RemoveOnClick />
+          </DropdownContent>
+        </Dropdown>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('button', { name: 'Remove' }))
+
+      expect(screen.getByText('Removed')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+  })
+
+  describe('DropdownContent内にDialogがネストしている場合', () => {
+    const SimpleDialog = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>OpenDialog</Button>
+          <Dialog isOpen={isOpen} ariaLabel="Dialog" onClickOverlay={() => setIsOpen(false)}>
+            <p>Dialog Content</p>
+          </Dialog>
+        </>
+      )
+    }
+
+    it('Dialogを開くボタンのクリックでは外側のDropdownが閉じないが、Dialogの中の要素をクリックすると外側のDropdownが閉じること', async () => {
+      const user = userEvent.setup()
+      render(
+        <IntlProvider locale="ja">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button>Trigger</Button>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <SimpleDialog />
+            </DropdownContent>
+          </Dropdown>
+        </IntlProvider>,
+      )
+
+      await user.click(screen.getByRole('button', { name: 'Trigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await user.click(screen.getByRole('button', { name: 'OpenDialog' }))
+      await waitForAnimationFrame()
+
+      expect(screen.getByText('Dialog Content')).toBeVisible()
+      // Dialogを開くボタン自体はDropdownのポータル内の操作なので、外側のDropdownは閉じない
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      // DialogはParentContextに関与しない独立したポータル実装であり、モーダルUIとして
+      // Dropdownとは独立して扱われるべきなので、Dialog内の要素をクリックすると
+      // Dropdownからは「外側がクリックされた」と判定され、Dropdownは閉じるのが正しい
+      await user.click(screen.getByText('Dialog Content'))
+
+      expect(screen.getByRole('button', { name: 'Trigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+    })
+  })
+
+  describe('Dialog内にDropdownがネストしている場合', () => {
+    const renderDialogWithDropdown = () => {
+      const handlePressEscape = vi.fn()
+
+      render(
+        <IntlProvider locale="ja">
+          <Dialog isOpen ariaLabel="Dialog" onPressEscape={handlePressEscape}>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button>InnerTrigger</Button>
+              </DropdownTrigger>
+              <DropdownContent controllable>
+                <p>InnerText</p>
+                <Button>InnerButton</Button>
+              </DropdownContent>
+            </Dropdown>
+          </Dialog>
+        </IntlProvider>,
+      )
+
+      return { handlePressEscape }
+    }
+
+    const openDropdown = async (user: ReturnType<typeof userEvent.setup>) => {
+      await user.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    }
+
+    it('DropdownContent内の要素にフォーカスがある状態でEscキーを押すと、Dropdownのみ閉じDialogは閉じないこと', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      await openDropdown(user)
+      await user.click(screen.getByRole('button', { name: 'InnerButton' }))
+      await user.keyboard('{Escape}')
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveFocus()
+      expect(handlePressEscape).not.toHaveBeenCalled()
+    })
+
+    it('DropdownContent内のフォーカスできない要素をクリックした後にEscキーを押すと、Dropdownのみ閉じDialogは閉じないこと', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      await openDropdown(user)
+      await user.click(screen.getByRole('button', { name: 'InnerButton' }))
+      await user.click(screen.getByText('InnerText'))
+      await user.keyboard('{Escape}')
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+      expect(handlePressEscape).not.toHaveBeenCalled()
+    })
+
+    it('DropdownContent内のフォーカスできる要素をクリックした場合は、その要素からフォーカスを移さないこと', async () => {
+      const user = userEvent.setup()
+      renderDialogWithDropdown()
+
+      await openDropdown(user)
+      await user.click(screen.getByRole('button', { name: 'InnerButton' }))
+
+      expect(screen.getByRole('button', { name: 'InnerButton' })).toHaveFocus()
+    })
+
+    it('Dropdownが閉じた状態でトリガーにフォーカスがありEscキーを押すと、Dialogが閉じること', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      screen.getByRole('button', { name: 'InnerTrigger' }).focus()
+      await user.keyboard('{Escape}')
+
+      expect(handlePressEscape).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('Dialog内にDropdown(内側にCombobox)がネストしている場合', () => {
+    const renderDialogWithDropdown = () => {
+      const handlePressEscape = vi.fn()
+      const DialogWithDropdown = () => {
+        const [isOpen, setIsOpen] = useState(true)
+        return (
+          <Dialog
+            isOpen={isOpen}
+            ariaLabel="Dialog"
+            onClickOverlay={() => setIsOpen(false)}
+            onPressEscape={handlePressEscape}
+          >
+            <Dropdown>
+              <DropdownTrigger>
+                <Button>InnerTrigger</Button>
+              </DropdownTrigger>
+              <DropdownContent controllable>
+                <form>
+                  <FormControl label="コンボボックス">
+                    <SingleCombobox
+                      name="test"
+                      selectedItem={null}
+                      items={[
+                        { label: 'option 1', value: 'value-1' },
+                        { label: 'option 2', value: 'value-2' },
+                      ]}
+                    />
+                  </FormControl>
+                </form>
+              </DropdownContent>
+            </Dropdown>
+          </Dialog>
+        )
+      }
+
+      render(
+        <IntlProvider locale="ja">
+          <DialogWithDropdown />
+        </IntlProvider>,
+      )
+      return { handlePressEscape }
+    }
+
+    it('Comboboxのオプションをクリックしても内側のDropdownが閉じないこと', async () => {
+      const user = userEvent.setup()
+      renderDialogWithDropdown()
+
+      await user.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+
+      await user.click(screen.getByRole('combobox'))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('option', { name: 'option 1' }))
+
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+    })
+
+    it('Comboboxのリストが開いた状態でEscキーを押すと、リストのみ閉じDropdownとDialogは閉じないこと', async () => {
+      const user = userEvent.setup()
+      const { handlePressEscape } = renderDialogWithDropdown()
+
+      await user.click(screen.getByRole('button', { name: 'InnerTrigger' }))
+      await waitForAnimationFrame()
+      await user.click(screen.getByRole('combobox'))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('option', { name: 'option 1' })).toBeVisible()
+
+      await user.keyboard('{Escape}')
+
+      expect(screen.queryByRole('option', { name: 'option 1' })).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'InnerTrigger' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      )
+      expect(handlePressEscape).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('上側に開く場合', () => {
+    let contentHeight = 300
+
+    beforeEach(() => {
+      contentHeight = 300
+
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: Element,
+      ) {
+        // HINT: トリガーを画面下寄りに配置し、ドロップダウンが上側に開く状況を再現する
+        const isTrigger = this.tagName === 'BUTTON' && this.textContent === 'Trigger'
+
+        return {
+          top: isTrigger ? 700 : 0,
+          bottom: isTrigger ? 740 : 0,
+          left: 0,
+          right: 120,
+          width: 120,
+          height: isTrigger ? 40 : 0,
+          x: 0,
+          y: 0,
+          toJSON: () => {},
+        } as DOMRect
+      })
+      Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+        configurable: true,
+        get() {
+          return contentHeight
+        },
+      })
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('transform: translateY(-100%) でトリガ上端に固定され、開いた後のコンテンツの高さ変化に再計算なしで追従すること', () => {
+      render(template)
+
+      act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+
+      const content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+
+      expect(content.style.transform).toBe('translateY(-100%)')
+      expect(content.style.insetBlockStart).toBe('705px') // トリガ上端(700) + 5
+
+      // HINT: 開いた後に高さが変わり再計算が走っても、top の計算式はコンテンツの高さを
+      // 参照しないため、トリガ基準の固定値のまま変わらないこと
+      // (transform: translateY(-100%) によって実際のレンダリング後の高さ分だけ描画位置がずれる)
+      contentHeight = 600
+      act(() => window.dispatchEvent(new Event('resize')))
+      expect(content.style.insetBlockStart).toBe('705px')
+    })
+  })
+
+  describe('閉じて開き直す場合', () => {
+    let actualContentHeight = 32
+
+    beforeEach(() => {
+      actualContentHeight = 32
+
+      vi.spyOn(window, 'innerHeight', 'get').mockReturnValue(800)
+      vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: Element,
+      ) {
+        // HINT: トリガーを画面下寄りに配置し、開いた後に項目が増えて画面内に収まらなくなる状況を再現する
+        const isTrigger = this.tagName === 'BUTTON' && this.textContent === 'Trigger'
+
+        return {
+          top: isTrigger ? 500 : 0,
+          bottom: isTrigger ? 540 : 0,
+          left: 0,
+          right: 120,
+          width: 120,
+          height: isTrigger ? 40 : 0,
+          x: 0,
+          y: 0,
+          toJSON: () => {},
+        } as DOMRect
+      })
+      // scrollHeightは、要素自身にmax-heightが設定されていても、overflow: visibleな子要素の
+      // はみ出し分を含めて本来のコンテンツの高さを正しく返す(実際のブラウザの挙動を再現)
+      Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+        configurable: true,
+        get() {
+          return actualContentHeight
+        },
+      })
+      // offsetHeightは、要素自身、または子孫要素にmax-heightが設定されていればその値で制約される
+      // (子のmax-height制約が親のレイアウト計算上の高さにも影響する実際のブラウザの挙動を再現。
+      // 閉じても前回のmax-heightがstateとして残り、開き直すとbodyへ適用された状態でマウントされる状況を再現する)
+      Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+        configurable: true,
+        get(this: HTMLElement) {
+          const target = this.style.maxHeight
+            ? this
+            : (this.querySelector<HTMLElement>('[style*="max-height"]') ?? this)
+          const maxHeight = Number.parseFloat(target.style.maxHeight)
+          return Number.isNaN(maxHeight)
+            ? actualContentHeight
+            : Math.min(actualContentHeight, maxHeight)
+        },
+      })
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('開き直した際、前回のmax-height制約を受けずに本来の高さで上下判定されること', () => {
+      render(template)
+
+      const trigger = screen.getByRole('button', { name: 'Trigger', expanded: false })
+
+      // 1回目: 小さいコンテンツ(32px)は下側の余白(260px)に収まるため下に開く
+      act(() => trigger.click())
+      let content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+
+      expect(content.style.insetBlockStart).toBe('535px') // トリガ下端(540) - 5
+      expect(content.style.transform).toBe('')
+
+      // 閉じる
+      act(() => trigger.click())
+
+      // コンテンツが大幅に増え、下にも上にも余白だけでは収まらなくなる(上側によりギリギリ収まる)
+      actualContentHeight = 482
+
+      // 開き直す
+      act(() => trigger.click())
+      content = screen
+        .getByRole('button', { name: 'Button1' })
+        .closest('.smarthr-ui-Dropdown-content') as HTMLElement
+
+      // 下(260px)には収まらないが、上(490px)には収まるため上に開くべき
+      expect(content.style.transform).toBe('translateY(-100%)')
+      expect(content.style.insetBlockStart).toBe('505px') // トリガ上端(500) + 5
     })
   })
 })

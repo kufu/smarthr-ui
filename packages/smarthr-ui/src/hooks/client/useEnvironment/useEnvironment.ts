@@ -1,5 +1,5 @@
 'use client'
-// TODO: 将来的にuse clientを削除し、smarthr-uiを利用する側で 'use client' を設定するようにする
+// HINT: このhookは外部公開されているため、安全のため use clientを残す
 
 import { createContext, useContext } from 'react'
 
@@ -10,20 +10,14 @@ export type Environment = {
   matches: Record<keyof CreatedMediaQueryTheme, boolean>
 }
 
-const defaultEnvironment: Environment = {
-  mobile: false,
-  matches: {
-    SCREEN_SMALL: false,
-    COLOR_MODE_FORCED: false,
-    COLOR_SCHEME_LIGHT: true,
-    COLOR_SCHEME_DARK: false,
-    MOTION_REDUCED: false,
-  },
-}
-
 export const EnvironmentContext = createContext<Environment | null>(null)
 
 export const useEnvironment = () => {
   const environment = useContext(EnvironmentContext)
-  return environment || defaultEnvironment
+
+  if (environment === null) {
+    throw new Error('useEnvironment は EnvironmentProvider の内側で使用してください')
+  }
+
+  return environment
 }

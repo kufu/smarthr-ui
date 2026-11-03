@@ -1,5 +1,5 @@
 import { Stack } from '../../Layout'
-import { Textarea } from '../Textarea'
+import { Textarea } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

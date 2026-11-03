@@ -1,9 +1,7 @@
 import {
   Children,
-  type ComponentPropsWithoutRef,
   type FC,
   Fragment,
-  type PropsWithChildren,
   type ReactNode,
   isValidElement,
   memo,
@@ -20,23 +18,28 @@ import { AppNaviButton, type AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, type AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, type AppNaviDropdownProps } from './AppNaviDropdown'
 
-type BaseProps = PropsWithChildren<{
-  /** ラベルのテキスト */
-  label?: ReactNode
-  /** 表示するボタンの Props の配列
-   * @deprecated AppNaviButton などのコンポーネントを組み合わせて組み上げてください
-   */
-  buttons?: Array<
-    AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
-  >
-  /** ドロップダウンにキャレットを表示するかどうか
-   * @deprecated キャレットの省略は非推奨です
-   */
-  displayDropdownCaret?: boolean
-  /** 追加の領域 */
-  additionalArea?: ReactNode
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
+    /** ラベルのテキスト */
+    label?: ReactNode
+    /** 表示するボタンの Props の配列
+     * @deprecated AppNaviButton などのコンポーネントを組み合わせて組み上げてください
+     */
+    buttons?: Array<
+      AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
+    >
+    /** ドロップダウンにキャレットを表示するかどうか
+     * @deprecated キャレットの省略は非推奨です
+     */
+    displayDropdownCaret?: boolean
+    /** 追加の領域 */
+    additionalArea?: ReactNode
+  },
+  { omit: 'aria-labelledby' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -54,6 +57,7 @@ const classNameGenerator = tv({
   },
 })
 
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 const { wrapper, statusLabel, buttonsEl, listItem, additionalAreaEl } = classNameGenerator()
 const classNames = {
   statusLabel: statusLabel(),
@@ -100,7 +104,7 @@ export const AppNavi: FC<Props> = ({
   )
 }
 
-const MemoizedStatusLabel = memo<PropsWithChildren<{ id: string }>>(
+const MemoizedStatusLabel = memo<{ id: string; children: Props['label'] }>(
   ({ id, children }) =>
     children && (
       <StatusLabel id={id} className={classNames.statusLabel} aria-hidden={true}>

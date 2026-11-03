@@ -8,7 +8,7 @@ import {
   FaTableIcon,
 } from '../../Icon'
 import { Stack } from '../../Layout'
-import { SegmentedControl } from '../SegmentedControl'
+import { SegmentedControl } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -24,13 +24,14 @@ export default {
   render: (args) => <SegmentedControl {...args} />,
   args: {
     options: [
-      { value: 'departments', content: '部署' },
-      { value: 'crew', content: '従業員' },
-      { value: 'both', content: '部署と従業員' },
+      { value: 'departments', content: '部署', ariaLabel: '部署' },
+      { value: 'crew', content: '従業員', ariaLabel: '従業員' },
+      { value: 'both', content: '部署と従業員', ariaLabel: '部署と従業員' },
     ],
     value: 'departments',
     onClickOption: (value) => action('onClickOption')(value),
     size: 'M',
+    ariaLabel: '',
     className: '',
   },
   parameters: {
@@ -97,4 +98,12 @@ export const Size: StoryObj<typeof SegmentedControl> = {
       <SegmentedControl {...args} size="S" />
     </Stack>
   ),
+}
+
+export const DefaultValue: StoryObj<typeof SegmentedControl> = {
+  name: 'defaultValue',
+  args: {
+    value: undefined,
+    defaultValue: 'crew',
+  },
 }

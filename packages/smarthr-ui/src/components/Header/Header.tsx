@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -8,7 +8,7 @@ import {
   memo,
   useMemo,
 } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 import { Button } from '../Button'
@@ -19,6 +19,8 @@ import { Text } from '../Text'
 import { AppLauncher } from './AppLauncher'
 import { HeaderDropdownMenuButton } from './HeaderDropdownMenuButton'
 
+import type { ExtendElementPropsWithRef } from '../../types'
+
 const classNameGenerator = tv({
   slots: {
     wrapper: ['smarthr-ui-Header', 'shr-bg-brand shr-px-1.25', 'max-md:shr-px-0.75'],
@@ -27,6 +29,7 @@ const classNameGenerator = tv({
       /* ロゴが持つ padding 分だけ調整 */
       '-shr-ms-0.75',
       'focus-visible:shr-focus-indicator',
+      '[&>svg]:forced-colors:shr-fill-[LinkText]',
     ],
     tenantInfo: ['smarthr-ui-Header-tenantInfo', 'shr-ms-auto'],
     tenantNameText: 'shr-px-0.25',
@@ -47,31 +50,32 @@ const classNameGenerator = tv({
   },
 })
 
-type Tenant = PropsWithChildren<{
-  id: string
-  name: ReactNode
-}>
-
-type BaseProps = PropsWithChildren<{
-  /** ロゴ */
-  logo?: ReactElement
-  /** ロゴリンク */
-  logoHref?: string
-  /** 機能名（enableNew と合わせて使います） */
-  featureName?: ReactNode
-  /** 機能群（enableNew と合わせて使います） */
-  apps?: ComponentProps<typeof AppLauncher>['apps']
-  /** テナント一覧 */
-  tenants?: Tenant[]
-  /** 現在のテナント ID */
-  currentTenantId?: string
-  /** テナントが選択された時に発火するコールバック関数 */
-  onTenantSelect?: (id: string) => void
-  /** @deprecated internal-ui から利用するので使わないでください。 */
-  enableNew?: boolean
-}> &
-  VariantProps<typeof classNameGenerator>
-type Props = BaseProps & Omit<ComponentProps<'header'>, keyof BaseProps>
+type Props = ExtendElementPropsWithRef<
+  'header',
+  {
+    /** ロゴ */
+    logo?: ReactElement
+    /** ロゴリンク */
+    logoHref?: string
+    /** 機能名（enableNew と合わせて使います） */
+    featureName?: ReactNode
+    /** 機能群（enableNew と合わせて使います） */
+    apps?: ComponentPropsWithRef<typeof AppLauncher>['apps']
+    /** テナント一覧 */
+    tenants?: Array<
+      PropsWithChildren<{
+        id: string
+        name: ReactNode
+      }>
+    >
+    /** 現在のテナント ID */
+    currentTenantId?: string
+    /** テナントが選択された時に発火するコールバック関数 */
+    onTenantSelect?: (id: string) => void
+    /** @deprecated internal-ui から利用するので使わないでください。 */
+    enableNew?: boolean
+  }
+>
 
 const COMMON_GAP = { column: 0.25, row: 0 } as const
 const CHILDREN_GAP = { column: 0.5, row: 0.25 } as const
@@ -96,14 +100,14 @@ export const Header: FC<Props> = ({
       tenantInfo: tenantInfoStyle,
       tenantNameText,
       actions,
-    } = classNameGenerator({ enableNew })
+    } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ className }),
+      wrapper: wrapper({ enableNew, className }),
       logoLink: logoLink(),
       tenantInfo: tenantInfoStyle(),
       tenantNameText: tenantNameText(),
-      actions: actions(),
+      actions: actions({ enableNew }),
     }
   }, [enableNew, className])
 

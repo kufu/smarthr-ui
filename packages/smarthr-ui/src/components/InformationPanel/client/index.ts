@@ -1,0 +1,1 @@
+export { InformationPanel } from './InformationPanel'

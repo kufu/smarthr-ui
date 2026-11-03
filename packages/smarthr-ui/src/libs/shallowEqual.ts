@@ -14,13 +14,12 @@ export const shallowEqual = <A = any, B = any>(a: A, b: B): boolean => {
     return false
   }
 
+  const recordA = a as Record<string, unknown>
+  const recordB = b as Record<string, unknown>
+
   for (let i = 0; i < keysA.length; i++) {
     const key = keysA[i]
-    if (
-      !Object.prototype.hasOwnProperty.call(b, key) ||
-      // @ts-expect-error key should be in keyof a and b
-      !Object.is(a[key], b[key])
-    ) {
+    if (!Object.prototype.hasOwnProperty.call(b, key) || !Object.is(recordA[key], recordB[key])) {
       return false
     }
   }

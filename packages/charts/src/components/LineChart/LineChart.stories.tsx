@@ -1,4 +1,9 @@
-import { chartJsOptionsExamples, multi20Datasets, multiSmall, singleSmall } from '../__stories__/testData'
+import {
+  chartJsOptionsExamples,
+  multi20Datasets,
+  multiSmall,
+  singleSmall,
+} from '../__stories__/testData'
 
 import { LineChart } from './LineChart'
 

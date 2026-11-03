@@ -1,16 +1,16 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import type { SideNavSizeType } from './SideNavItemButton'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
-type BaseProps = PropsWithChildren<{
-  /** 各アイテムの大きさ */
-  size?: SideNavSizeType
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}> &
-  VariantProps<typeof classNameGenerator>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof BaseProps>
+type Props = ExtendElementPropsWithoutRef<
+  'ul',
+  {
+    /** 各アイテムの大きさ */
+    size?: 'M' | 'S'
+    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
+  }
+>
 
 const ROUNDED = {
   t_l: '[&>.smarthr-ui-SideNav-item:first-child]:shr-rounded-tl-l',
@@ -30,7 +30,7 @@ const classNameGenerator = tv({
       right: ['shr-rounded-r-l', ROUNDED.t_r, ROUNDED.b_r],
       bottom: ['shr-rounded-b-l', ROUNDED.b_l, ROUNDED.b_r],
       left: ['shr-rounded-l-l', ROUNDED.t_l, ROUNDED.b_l],
-    },
+    } satisfies Record<Exclude<NonNullable<Props['rounded']>, boolean> | 'true', string[]>,
   },
   defaultVariants: {
     rounded: false,

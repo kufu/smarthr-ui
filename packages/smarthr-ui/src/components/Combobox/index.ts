@@ -1,2 +1,1 @@
-export { MultiCombobox } from './MultiCombobox'
-export { SingleCombobox } from './SingleCombobox'
+export { MultiCombobox, SingleCombobox } from './client'

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 
 import { Button } from '../../Button'
 import { Drawer } from '../Drawer'
@@ -119,11 +119,11 @@ export const BottomLongContent: StoryObj<typeof Drawer> = {
  */
 const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> => ({
   render: () => {
-    const containerRef = useRef<HTMLDivElement>(null)
+    const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
     return (
       <div
-        ref={containerRef}
+        ref={setContainer}
         style={{
           position: 'relative',
           width: '24rem',
@@ -133,7 +133,7 @@ const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> =>
         }}
       >
         <div style={{ padding: '1rem' }}>コンテナの内側だけを覆います。</div>
-        <Drawer isOpen modality="modeless" portalParent={containerRef} position={position} size="L">
+        <Drawer isOpen modality="modeless" portalParent={container ?? undefined} position={position} size="L">
           {drawerChildren(() => {})}
         </Drawer>
       </div>

@@ -41,7 +41,7 @@ module.exports = {
     const sourceCode = context.sourceCode || context.getSourceCode()
 
     // latest.xxxの使用や依存配列の位置チェックを許可するフック名
-    const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo)$/
+    const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo|LayoutEffectRef)$/
 
     /**
      * 識別子が useLatest() 呼び出しに束縛されているかチェック

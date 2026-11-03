@@ -36,7 +36,7 @@ export type DrawerControlledProps = {
 
 export type DrawerPortalProps = {
   /** Portal の追加先 */
-  portalParent?: HTMLElement | RefObject<HTMLElement>
+  portalParent?: HTMLElement
   /** ルート要素の id */
   id?: string
 }

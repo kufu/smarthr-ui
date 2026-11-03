@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '../../Button'
 import { Drawer } from '../Drawer'
@@ -175,11 +175,11 @@ export const PortalParent: StoryObj<typeof Drawer> = {
   render: () => {
     const [open, setOpen] = useState(false)
     const handleClose = () => setOpen(false)
-    const containerRef = useRef<HTMLDivElement>(null)
+    const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
     return (
       <div
-        ref={containerRef}
+        ref={setContainer}
         style={{
           position: 'relative',
           height: '24rem',
@@ -194,7 +194,7 @@ export const PortalParent: StoryObj<typeof Drawer> = {
         <Drawer
           isOpen={open}
           position="right"
-          portalParent={containerRef}
+          portalParent={container ?? undefined}
           modality="modeless"
           size="L"
           ariaLabel="コンテナ内詳細パネル"

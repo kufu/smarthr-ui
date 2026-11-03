@@ -2,8 +2,8 @@
 
 import {
   type CSSProperties,
+  type ComponentPropsWithRef,
   type FC,
-  type RefObject,
   useEffect,
   useId,
   useMemo,
@@ -12,9 +12,10 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useBodyScrollLock } from '../../hooks/client/useBodyScrollLock'
 import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../hooks/useLatest'
-import { FocusTrap, type FocusTrapRef, useBodyScrollLock } from '../Dialog'
+import { FocusTrap } from '../Dialog'
 
 import { DrawerContentContext } from './DrawerContentContext'
 import { DrawerHeadingContext } from './DrawerHeadingContext'
@@ -34,7 +35,7 @@ export type DrawerContentInnerProps = DrawerCommonProps &
   DirectChildren & {
     id?: string
     className?: string
-    focusTrapRef?: RefObject<FocusTrapRef>
+    focusTrapRef?: ComponentPropsWithRef<typeof FocusTrap>['ref']
     /** Portal 先が指定されているか（modeless の absolute/fixed 切替に使う） */
     hasPortalParent?: boolean
   }

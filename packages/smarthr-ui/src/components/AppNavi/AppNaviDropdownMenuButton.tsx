@@ -46,6 +46,7 @@ const classNameGenerator = tv({
     ],
   },
 })
+// eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
 const { trigger, actionItem } = classNameGenerator()
 const TRIGGER_CLASSNAME = trigger()
 

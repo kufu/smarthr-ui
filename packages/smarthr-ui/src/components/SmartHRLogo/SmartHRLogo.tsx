@@ -1,24 +1,30 @@
-import { type ComponentPropsWithoutRef, memo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { memo } from 'react'
+import { tv } from 'tailwind-variants'
 
-type BaseProps = {
-  /** コンポーネントのタイトル */
-  alt?: string
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** コンポーネントの高さ */
-  height?: number | string
-} & VariantProps<typeof classNameGenerator>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'svg'>, keyof BaseProps>
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'svg',
+  {
+    /** コンポーネントのタイトル */
+    alt?: string
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** コンポーネントの高さ */
+    height?: number | string
+    fill?: 'white' | 'brand' | 'black'
+  },
+  { omit: 'role' | 'viewBox' | 'style' | 'aria-label' }
+>
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom'],
+  base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom', 'forced-colors:shr-fill-[CanvasText]'],
   variants: {
     fill: {
       white: 'shr-fill-white',
       brand: 'shr-fill-brand',
       black: 'shr-fill-black',
-    },
+    } satisfies Record<NonNullable<Props['fill']>, string>,
   },
 })
 
@@ -27,6 +33,7 @@ export const SmartHRLogo = memo<Props>(({ alt, width, height, fill, className, .
     {...rest}
     role="img"
     viewBox="0 0 150 28"
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
     className={classNameGenerator({ className, fill: fill ?? 'white' })}
     style={width ? { width: convertValue(width) } : { height: convertValue(height || '1.5em') }}
     aria-label={alt || 'SmartHR（スマートHR）'}

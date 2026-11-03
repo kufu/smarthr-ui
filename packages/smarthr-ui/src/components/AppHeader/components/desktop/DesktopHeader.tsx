@@ -12,7 +12,6 @@ import {
   FaToolboxIcon,
 } from '../../../Icon'
 import { Cluster } from '../../../Layout'
-import { Translate } from '../common/Translate'
 
 import { AppLauncher } from './AppLauncher'
 import { Navigation } from './Navigation'
@@ -102,9 +101,7 @@ export const DesktopHeader: FC<InternalHeaderProps> = ({
                   className="shr-flex shr-items-center shr-py-0.75 shr-leading-none"
                   prefix={<FaGraduationCapIcon />}
                 >
-                  <Translate>
-                    <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
-                  </Translate>
+                  <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
                 </HeaderLink>
               )}
             </>
@@ -121,9 +118,7 @@ export const DesktopHeader: FC<InternalHeaderProps> = ({
               }
               prefix={enableNew ? <FaRegCircleQuestionIcon /> : <FaCircleQuestionIcon />}
             >
-              <Translate>
-                <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
-              </Translate>
+              <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
             </HeaderLink>
           )}
 
@@ -168,7 +163,7 @@ const AppLauncherButton = memo<
 >(({ enableNew, children, className }) => (
   <DropdownTrigger>
     <Button className={className} prefix={enableNew ?? <FaToolboxIcon />}>
-      <Translate>{children}</Translate>
+      {children}
     </Button>
   </DropdownTrigger>
 ))

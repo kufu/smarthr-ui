@@ -1,15 +1,21 @@
-import {
-  type ComponentPropsWithRef,
-  type ComponentType,
-  type PropsWithChildren,
-  forwardRef,
-  useMemo,
-} from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent'
 
-import type { Gap } from '../../../types'
+import type { ExtendElementPropsWithRef, PositiveGap } from '../../../types'
+
+type AlignType = 'start' | 'flex-start' | 'end' | 'flex-end' | 'center' | 'baseline' | 'stretch'
+
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    inline?: boolean
+    gap?: PositiveGap
+    align?: AlignType
+  },
+  { as: true }
+>
 
 const classNameGenerator = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',
@@ -41,7 +47,7 @@ const classNameGenerator = tv({
       XL: 'shr-gap-y-3',
       XXL: 'shr-gap-y-3.5',
       X3L: 'shr-gap-y-4',
-    } as { [key in Gap]: string },
+    } satisfies Record<PositiveGap, string>,
     align: {
       start: 'shr-items-start',
       'flex-start': 'shr-items-start',
@@ -50,30 +56,34 @@ const classNameGenerator = tv({
       center: 'shr-items-center',
       baseline: 'shr-items-baseline',
       stretch: 'shr-items-stretch',
-    },
+    } satisfies Record<AlignType, string>,
   },
 })
 
-type Props = VariantProps<typeof classNameGenerator> &
-  PropsWithChildren<{
-    as?: string | ComponentType<any>
-  }> &
-  ComponentPropsWithRef<'div'>
+export const Stack: FC<Props> = ({
+  as: Component = 'div',
+  inline = false,
+  gap = 1,
+  align,
+  className,
+  children,
+  ...rest
+}) => {
+  const actualClassName = useMemo(
+    () => classNameGenerator({ inline, align, gap, className }),
+    [align, className, gap, inline],
+  )
 
-export const Stack = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...rest }, ref) => {
-    const actualClassName = useMemo(
-      () => classNameGenerator({ inline, align, gap, className }),
-      [align, className, gap, inline],
-    )
+  const Wrapper = useSectionWrapper(Component)
+  const body = (
+    <Component {...rest} className={actualClassName}>
+      {children}
+    </Component>
+  )
 
-    const Wrapper = useSectionWrapper(Component)
-    const body = <Component {...rest} ref={ref} className={actualClassName} />
+  if (Wrapper) {
+    return <Wrapper>{body}</Wrapper>
+  }
 
-    if (Wrapper) {
-      return <Wrapper>{body}</Wrapper>
-    }
-
-    return body
-  },
-)
+  return body
+}

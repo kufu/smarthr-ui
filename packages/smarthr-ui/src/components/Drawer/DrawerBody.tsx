@@ -1,16 +1,19 @@
-import { type ComponentProps, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { Scroller } from '../Scroller'
 
-import type { Gap } from '../../types'
+import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
-export type DrawerBodyProps = PropsWithChildren<
-  Pick<VariantProps<typeof classNameGenerator>, 'contentBgColor'> & {
+export type DrawerBodyProps = ExtendElementPropsWithRef<
+  typeof Scroller,
+  {
+    /** コンテンツ部分の背景色 */
+    contentBgColor?: keyof typeof backgroundColor
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
-    className?: string | undefined
-  } & Pick<ComponentProps<'div'>, 'ref'>
+  },
+  { omit: 'as' | 'direction' | 'styleType' }
 >
 
 // DialogBody とほぼ同一だが、Drawer 側は今後 bottom のドラッグ連動で責務が変わる

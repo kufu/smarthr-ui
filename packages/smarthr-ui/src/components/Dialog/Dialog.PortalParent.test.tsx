@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '../Button'
 import { Heading } from '../Heading'
@@ -12,53 +12,44 @@ const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFra
 
 describe('Dialog (Portal Parent)', () => {
   const DialogTemplate = () => {
-    const portalParentRef = useRef<HTMLDivElement>(null)
+    // portalParent は確定済みの要素を渡す必要があるため、ダイアログと同時にマウントされる
+    // 祖先要素の ref をそのまま渡すのではなく、callback ref で要素が確定してから渡す
+    const [portalParent, setPortalParent] = useState<HTMLDivElement | null>(null)
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-      <div ref={portalParentRef} data-testid="portal-parent">
+      <div ref={setPortalParent} data-testid="portal-parent">
         <Button onClick={() => setIsOpen(true)}>Dialog を開く</Button>
-        <Dialog
-          isOpen={isOpen}
-          portalParent={portalParentRef}
-          ariaLabel="Dialog"
-          onPressEscape={() => setIsOpen(false)}
-        >
-          <Section>
-            <Heading>Dialog</Heading>
-            <p>Dialog を近接要素に生成しています。</p>
-          </Section>
-          <div>
-            <Button onClick={() => setIsOpen(false)}>閉じる</Button>
-          </div>
-        </Dialog>
+        {portalParent && (
+          <Dialog
+            isOpen={isOpen}
+            portalParent={portalParent}
+            ariaLabel="Dialog"
+            onPressEscape={() => setIsOpen(false)}
+          >
+            <Section>
+              <Heading>Dialog</Heading>
+              <p>Dialog を近接要素に生成しています。</p>
+            </Section>
+            <div>
+              <Button onClick={() => setIsOpen(false)}>閉じる</Button>
+            </div>
+          </Dialog>
+        )}
       </div>
     )
   }
-  // React は子から順にコミットするため、portalParent に渡した ref が Dialog の
-  // 祖先要素を指す場合、Dialog 側の useLayoutEffect の時点ではまだ ref が付いていない。
-  // ここで body へフォールバックしたままだと、absolute 配置の基準が指定要素にならない。
-  it('portalParent に指定した要素の内側に生成されること', async () => {
-    render(<DialogTemplate />)
-
-    await userEvent.tab()
-    await userEvent.keyboard('{enter}')
-
-    const dialog = screen.getByRole('dialog', { name: 'Dialog' })
-    const portalParent = screen.getByTestId('portal-parent')
-
-    await waitFor(() => {
-      expect(portalParent).toContainElement(dialog)
-    })
-  })
-
   it('body 以外を親にしたダイアログが開閉できること', async () => {
     render(<DialogTemplate />)
 
     expect(screen.queryByRole('dialog', { name: 'Dialog' })).toBeNull()
     await userEvent.tab()
     await userEvent.keyboard('{enter}')
-    expect(screen.getByRole('dialog', { name: 'Dialog' })).toBeVisible()
+
+    const dialogEl = screen.getByRole('dialog', { name: 'Dialog' })
+    expect(dialogEl).toBeVisible()
+    // 実際に指定した portalParent の中に生成されていることを確認する
+    expect(screen.getByTestId('portal-parent')).toContainElement(dialogEl)
 
     // FocusTrap はカスケード更新完了後の requestAnimationFrame でフォーカスするため、フレームが進むのを待つ
     await waitForAnimationFrame()

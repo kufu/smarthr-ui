@@ -2,9 +2,10 @@ import { FaAddressBookIcon } from '../../Icon'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { FormControl } from '../FormControl'
+import { FormControl } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithRef } from 'react'
 
 export default {
   title: 'Components/FormControl/VRT',
@@ -14,10 +15,12 @@ export default {
         <FormControl
           {...args}
           key={unrecommendedHide.toString()}
-          label={{
-            ...args.label,
-            unrecommendedHide,
-          }}
+          label={
+            {
+              ...(args.label as Record<string, unknown>),
+              unrecommendedHide,
+            } as ComponentPropsWithRef<typeof FormControl>['label']
+          }
         />
       ))}
     </Stack>
@@ -28,7 +31,7 @@ export default {
       text: 'フォームコントロール',
       icon: <FaAddressBookIcon />,
     },
-    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
+    statusLabels: <StatusLabel>任意</StatusLabel>,
     subActionArea: (
       <Cluster justify="space-between">
         <div>サブアクションエリア（start)</div>

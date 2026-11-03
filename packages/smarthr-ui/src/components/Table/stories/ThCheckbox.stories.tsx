@@ -1,5 +1,5 @@
 import { Table } from '../Table'
-import { ThCheckbox } from '../client'
+import { ThCheckbox } from '../ThCheckbox'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
@@ -19,7 +19,6 @@ export default {
   render: Template,
   argTypes: {
     checked: { control: 'boolean' },
-    decorators: { control: false },
   },
   args: {},
   parameters: {

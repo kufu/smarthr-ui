@@ -10,7 +10,7 @@ import { type CreatedTheme, createTheme } from '../../themes'
 /** @public */
 export type Theme = CreatedTheme
 
-export const ThemeContext = createContext<CreatedTheme>(createTheme())
+const ThemeContext = createContext<CreatedTheme>(createTheme())
 
 export const useTheme = () => useContext(ThemeContext)
 

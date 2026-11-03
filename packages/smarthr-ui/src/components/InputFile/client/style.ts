@@ -1,5 +1,7 @@
 import { tv } from 'tailwind-variants'
 
+import type { Props } from '../types'
+
 export const FILE_NAME_BUTTON_CLASSNAME =
   'smarthr-ui-InputFile-fileName shr-justify-start shr-min-w-0 shr-break-all shr-whitespace-normal shr-text-left'
 export const PREVIEW_BUTTON_CLASSNAME = `${FILE_NAME_BUTTON_CLASSNAME} shr-p-0 shr-font-normal shr-text-link`
@@ -34,7 +36,7 @@ export const classNameGenerator = tv({
       S: {
         inputWrapper: 'shr-p-0.5 shr-text-sm',
       },
-    },
+    } satisfies Record<NonNullable<Props['size']>, { inputWrapper: string }>,
   },
   defaultVariants: {
     size: 'M',

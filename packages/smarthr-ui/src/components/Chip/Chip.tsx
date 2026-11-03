@@ -1,9 +1,15 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { type FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<
-  VariantProps<typeof classNameGenerator> &
-    ComponentPropsWithoutRef<'span'> & { disabled?: boolean }
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'span',
+  {
+    disabled?: boolean
+    color?: 'grey' | 'blue' | 'green' | 'orange' | 'red'
+    size?: 'S'
+  }
 >
 
 const classNameGenerator = tv({
@@ -20,10 +26,10 @@ const classNameGenerator = tv({
       green: 'shr-border-green',
       orange: 'shr-border-orange',
       red: 'shr-border-danger',
-    },
+    } satisfies Record<NonNullable<Props['color']>, string>,
     size: {
       S: 'shr-px-0.5 shr-py-0.25 shr-text-sm',
-    },
+    } satisfies Record<NonNullable<Props['size']>, string>,
   },
 })
 

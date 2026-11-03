@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client-directory
 
 import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
@@ -17,7 +17,6 @@ import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import type { Launcher } from '../../types'
 
@@ -27,7 +26,7 @@ type Props = {
   error?: boolean
 }
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppLauncher',
@@ -86,7 +85,8 @@ const CLASS_NAMES = (() => {
     mainInner,
     contentHead,
     scrollArea,
-  } = appLauncher()
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
+  } = classNameGenerator()
 
   return {
     wrapper: wrapper(),
@@ -142,8 +142,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           title={translated.searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
-          tooltipMessage={<Translate>{translated.searchInputTitle}</Translate>}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          tooltipMessage={translated.searchInputTitle}
+          // TODO: subActionArea内のクリックではInputが検索欄にフォーカスを戻さないため、
+          // クリア後に検索欄へフォーカスを戻す対応が必要（mobile/AppLauncher.tsxも同様）
+          subActionArea={
+            mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
+          }
         />
       </div>
 
@@ -172,7 +176,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
               </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (
-                <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
+                <AppLauncherSortDropdown sortType={sortType} handleSelectSortType={setSortType} />
               )}
             </Cluster>
 
@@ -213,7 +217,7 @@ const SideNavs = memo<
     () => [
       {
         id: 'favorite',
-        title: <Translate>{favoriteModeText}</Translate>,
+        title: favoriteModeText,
         prefix: <FaStarIcon color={isFavorite ? theme.textColor.white : undefined} />,
         current: isFavorite,
       },
@@ -224,7 +228,7 @@ const SideNavs = memo<
     () => [
       {
         id: 'all',
-        title: <Translate>{allModeText}</Translate>,
+        title: allModeText,
         current: isAll,
       },
     ],
@@ -268,9 +272,7 @@ const SideNavs = memo<
       </Section>
 
       <HelpLinkArea className={CLASS_NAMES.help}>
-        <Translate>
-          <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
-        </Translate>
+        <Localizer id="smarthr-ui/AppHeader/Launcher/helpText" defaultText="よく使うアプリとは" />
       </HelpLinkArea>
     </div>
   )
@@ -290,15 +292,13 @@ const HelpLinkArea = memo<PropsWithChildren<{ className: string }>>(({ children,
 const MemoizedSubSubBlockHeading = memo<PropsWithChildren<{ className?: string }>>(
   ({ children, className }) => (
     <Heading type="subSubBlockTitle" className={className}>
-      <Translate>{children}</Translate>
+      {children}
     </Heading>
   ),
 )
 
 const MemoizedAppListHeading = memo<{ id: string; className?: string }>(({ id, className }) => (
   <Heading type="subSubBlockTitle" id={id} className={className}>
-    <Translate>
-      <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
-    </Translate>
+    <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />
   </Heading>
 ))

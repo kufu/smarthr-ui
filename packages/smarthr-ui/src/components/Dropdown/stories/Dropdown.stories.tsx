@@ -1,10 +1,10 @@
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../Button'
-import { Dropdown } from '../Dropdown'
+import { Stack } from '../../Layout'
 import { DropdownCloser } from '../DropdownCloser'
-import { DropdownContent } from '../DropdownContent'
-import { DropdownTrigger } from '../DropdownTrigger'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -36,4 +36,27 @@ export default {
 export const DropdownControl: StoryObj<typeof Dropdown> = {
   name: 'Playground',
   args: {},
+}
+
+export const ContentHeightIncreasesAfterOpen: StoryObj<typeof Dropdown> = {
+  name: '開いた後にコンテンツの高さが変化しても画面内に収まりスクロールできること',
+  render: (args) => {
+    const [itemCount, setItemCount] = useState(1)
+
+    return (
+      <Dropdown {...args}>
+        <DropdownTrigger>
+          <Button>ドロップダウンボタン</Button>
+        </DropdownTrigger>
+        <DropdownContent controllable>
+          <Stack>
+            <Button onClick={() => setItemCount((count) => count + 10)}>項目を10件追加する</Button>
+            {Array.from({ length: itemCount }, (_, i) => (
+              <p key={i}>項目 {i + 1}</p>
+            ))}
+          </Stack>
+        </DropdownContent>
+      </Dropdown>
+    )
+  },
 }

@@ -539,15 +539,15 @@ describe('Drawer（modeless）', () => {
   // dvh のままだとコンテナからはみ出し、grabber とヘッダが上に切れる
   it('portalParent 指定の bottom はコンテナ基準の高さになること', async () => {
     const PortalTemplate: FC = () => {
-      const containerRef = useRef<HTMLDivElement>(null)
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
       return (
-        <div ref={containerRef}>
+        <div ref={setContainer}>
           <Drawer
             isOpen
             position="bottom"
             modality="modeless"
-            portalParent={containerRef}
+            portalParent={container ?? undefined}
             ariaLabel="コンテナ内ドロワー"
           >
             <p>content</p>
@@ -565,15 +565,15 @@ describe('Drawer（modeless）', () => {
   // クラスが正しくてもポータルが外に出ていれば absolute の基準がコンテナにならない
   it('portalParent の内側にポータルが生成されること', async () => {
     const PortalTemplate: FC = () => {
-      const containerRef = useRef<HTMLDivElement>(null)
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
       return (
-        <div ref={containerRef} data-testid="portal-parent">
+        <div ref={setContainer} data-testid="portal-parent">
           <Drawer
             isOpen
             position="right"
             modality="modeless"
-            portalParent={containerRef}
+            portalParent={container ?? undefined}
             ariaLabel="コンテナ内ドロワー"
           >
             <p>content</p>
@@ -592,15 +592,15 @@ describe('Drawer（modeless）', () => {
 
   it('portalParent 指定の right はコンテナ基準の最大幅になること', async () => {
     const PortalTemplate: FC = () => {
-      const containerRef = useRef<HTMLDivElement>(null)
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
       return (
-        <div ref={containerRef}>
+        <div ref={setContainer}>
           <Drawer
             isOpen
             position="right"
             modality="modeless"
-            portalParent={containerRef}
+            portalParent={container ?? undefined}
             size="M"
             ariaLabel="コンテナ内右ドロワー"
           >
@@ -722,14 +722,14 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
   it('modeless かつ portalParent 指定時は layout が absolute であること', async () => {
     const Template: FC = () => {
       const [isOpen, setIsOpen] = useState(false)
-      const ref = useRef<HTMLDivElement>(null)
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <div ref={ref} style={{ position: 'relative' }} data-testid="container" />
+          <div ref={setContainer} style={{ position: 'relative' }} data-testid="container" />
           <Drawer
             isOpen={isOpen}
-            portalParent={ref}
+            portalParent={container ?? undefined}
             modality="modeless"
             ariaLabel="absolute drawer"
             onClickClose={() => setIsOpen(false)}
