@@ -30,6 +30,10 @@ overrides:
   smol-toml@<=1.8.0: '>=1.9.1'
   qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.7'
+  # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
+  # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
+  'sucrase>glob': '>=14.0.2'
+  'glob>minimatch': '>=11.0.1'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
@@ -45,3 +49,10 @@ auditConfig:
 minimumReleaseAgeExclude:
   # Renovate security update: qs@6.16.2
   - qs@6.16.2
+  # Renovate security update: glob@14.0.2
+  - glob@14.0.2
+  # security update: pnpm auditで検出されたDoS/AbortSignal bypass脆弱性の修正版。
+  # CIのauditジョブを即時通すため、公開直後でもminimumReleaseAgeの対象外にする
+  - glob@14.0.3
+  - minimatch@11.0.3
+  - '@isaacs/nonrecursive-glob-match@1.0.3'
