@@ -1,49 +1,21 @@
-import type { DrawerSize } from './drawerSize'
-import type { PropsWithChildren, ReactNode, RefObject } from 'react'
+import type { DrawerContent } from './client'
+import type { ExtendElementPropsWithRef } from '../../types'
 
 export type DrawerPosition = 'right' | 'left' | 'bottom'
 
 export type DrawerModality = 'modal' | 'modeless'
 
-export type DrawerCommonProps = {
-  /** スライドする方向。既定は 'right' */
-  position?: DrawerPosition
-  /** right/left の幅。bottom では無視される */
-  size?: DrawerSize
-  /** aria-label（ariaLabelledby と排他で必須） */
-  ariaLabel?: string
-  /** aria-labelledby（ariaLabel と排他で必須） */
-  ariaLabelledby?: string
-  /** 開いたときに最初にフォーカスする要素。未指定ならドロワー先頭にフォーカスする */
-  firstFocusTarget?: RefObject<HTMLElement>
-  /**
-   * モーダル/非モーダルの切り替え。既定は 'modal'。
-   * 'modeless' ではオーバーレイ無し・背後操作可（スクロールロック無し・フォーカストラップ無し・aria-modal 無し）。
-   */
-  modality?: DrawerModality
-}
-
-export type DrawerControlledProps = {
-  /** 開いているかどうか */
-  isOpen: boolean
-  /** 閉じるボタン押下時 */
-  onClickClose?: () => void
-  /** オーバーレイクリック時 */
-  onClickOverlay?: () => void
-  /** Escape 押下時 */
-  onPressEscape?: () => void
-}
-
-export type DrawerPortalProps = {
-  /** Portal の追加先 */
-  portalParent?: HTMLElement
-  /** ルート要素の id */
-  id?: string
-}
-
-export type DrawerProps = DrawerCommonProps &
-  DrawerControlledProps &
-  DrawerPortalProps &
-  PropsWithChildren
-
-export type DirectChildren = { children?: ReactNode }
+export type DrawerProps = ExtendElementPropsWithRef<
+  typeof DrawerContent,
+  {
+    id?: string
+    /**
+     * DOM 上でドロワーの要素を追加する親要素。
+     * ドロワーのマウントと同時に確定していない要素（例: ドロワーの祖先要素の ref）を
+     * 渡すと、その要素がまだ DOM に存在しない可能性があるため意図通りに動作しない。
+     * 呼び出し側で要素が確定してから渡すこと。
+     */
+    portalParent?: HTMLElement
+  },
+  { omit: 'hasPortalParent' }
+>

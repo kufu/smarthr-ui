@@ -6,7 +6,7 @@ import { Scroller } from '../Scroller'
 
 import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
-export type DrawerBodyProps = ExtendElementPropsWithRef<
+type Props = ExtendElementPropsWithRef<
   typeof Scroller,
   {
     /** コンテンツ部分の背景色 */
@@ -27,12 +27,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const DrawerBody: FC<DrawerBodyProps> = ({
-  contentBgColor,
-  contentPadding,
-  className,
-  ...rest
-}) => {
+export const DrawerBody: FC<Props> = ({ contentBgColor, contentPadding, className, ...rest }) => {
   const actualPaddings = useMemo(() => {
     const initialized = contentPadding === undefined ? 1.5 : contentPadding
 

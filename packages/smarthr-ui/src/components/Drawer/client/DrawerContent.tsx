@@ -2,8 +2,9 @@
 
 import {
   type CSSProperties,
-  type ComponentPropsWithRef,
   type FC,
+  type MouseEvent,
+  type RefObject,
   useEffect,
   useId,
   useMemo,
@@ -14,6 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { useBodyScrollLock } from '../../../hooks/client/useBodyScrollLock'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { FocusTrap } from '../../Dialog'
 import { drawerSize } from '../drawerSize'
@@ -22,22 +24,41 @@ import { DrawerContext } from './DrawerContext'
 import { DRAWER_TRANSITION_DURATION } from './drawerTransition'
 import { useDrawerDrag } from './useDrawerDrag'
 
-import type {
-  DirectChildren,
-  DrawerCommonProps,
-  DrawerControlledProps,
-  DrawerPosition,
-} from '../types'
+import type { ExtendElementPropsWithRef } from '../../../types'
+import type { DrawerSize } from '../drawerSize'
+import type { DrawerModality, DrawerPosition } from '../types'
 
-type Props = DrawerCommonProps &
-  DrawerControlledProps &
-  DirectChildren & {
-    id?: string
-    className?: string
-    focusTrapRef?: ComponentPropsWithRef<typeof FocusTrap>['ref']
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    /** スライドする方向。既定は 'right' */
+    position?: DrawerPosition
+    /** right/left の幅。bottom では無視される */
+    size?: DrawerSize
+    /**
+     * モーダル/非モーダルの切り替え。既定は 'modal'。
+     * 'modeless' ではオーバーレイ無し・背後操作可（スクロールロック無し・フォーカストラップ無し・aria-modal 無し）。
+     */
+    modality?: DrawerModality
+    /** 開いているかどうか */
+    isOpen: boolean
+    /** DrawerHeader の閉じるボタン押下時と、bottom の grabber をドラッグして閉じたとき */
+    onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    /** オーバーレイクリック時 */
+    onClickOverlay?: () => void
+    /** Escape 押下時 */
+    onPressEscape?: (e: KeyboardEvent) => void
+    /** aria-label（ariaLabelledby と排他で必須） */
+    ariaLabel?: string
+    /** aria-labelledby（ariaLabel と排他で必須） */
+    ariaLabelledby?: string
+    /** 開いたときに最初にフォーカスする要素。未指定ならドロワー先頭にフォーカスする */
+    firstFocusTarget?: RefObject<HTMLElement>
     /** Portal 先が指定されているか（modeless の absolute/fixed 切替に使う） */
     hasPortalParent?: boolean
-  }
+  },
+  { omit: 'style' }
+>
 
 // Tailwind の子孫セレクタ方式が効かなかったため、transform/opacity は JS 側で当てる
 const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
@@ -131,10 +152,10 @@ export const DrawerContent: FC<Props> = ({
   modality = 'modal',
   hasPortalParent = false,
   firstFocusTarget,
-  focusTrapRef,
-  id,
   className,
   children,
+  ref,
+  ...rest
 }) => {
   const autoHeadingId = useId()
   const innerRef = useRef<HTMLDivElement>(null)
@@ -154,14 +175,14 @@ export const DrawerContent: FC<Props> = ({
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
   const functions = useMemo(
     () => ({
-      handlePressEscape: () => {
+      handlePressEscape: (e: KeyboardEvent) => {
         if (latest.isOpen) {
-          latest.onPressEscape?.()
+          latest.onPressEscape?.(e)
         }
       },
-      handleClickClose: () => {
+      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
         if (latest.isOpen) {
-          latest.onClickClose?.()
+          latest.onClickClose?.(e)
         }
       },
       handleClickOverlay: () => {
@@ -244,6 +265,7 @@ export const DrawerContent: FC<Props> = ({
   )
 
   const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
+  const mergedRef = useMergeRefs(innerRef, ref)
 
   useBodyScrollLock(isOpen && modality === 'modal')
 
@@ -278,7 +300,7 @@ export const DrawerContent: FC<Props> = ({
     </DrawerContext.Provider>
   )
   return (
-    <div ref={escapeCallbackRef} id={id} className={classNames.layout}>
+    <div ref={escapeCallbackRef} className={classNames.layout}>
       {modality === 'modal' && (
         /* eslint-disable-next-line smarthr/best-practice-for-interactive-element */
         <div
@@ -289,7 +311,8 @@ export const DrawerContent: FC<Props> = ({
         />
       )}
       <div
-        ref={innerRef}
+        {...rest}
+        ref={mergedRef}
         role="dialog"
         className={classNames.inner}
         style={innerStyle}
@@ -303,7 +326,6 @@ export const DrawerContent: FC<Props> = ({
           両モダリティで同じ DOM 構造になる副次効果もある。
         */}
         <FocusTrap
-          ref={focusTrapRef}
           firstFocusTarget={firstFocusTarget}
           trapFocus={modality === 'modal'}
           className={classNames.focusTrap}

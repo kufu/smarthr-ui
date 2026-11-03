@@ -951,3 +951,47 @@ describe('Drawer（自動ラベル付け）', () => {
     expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-labelledby')
   })
 })
+
+describe('Drawer（イベントと属性）', () => {
+  it('Escape で onPressEscape に KeyboardEvent が渡ること', async () => {
+    const onPressEscape = vi.fn()
+    renderWithIntl(
+      <Drawer isOpen ariaLabel="イベント" onPressEscape={onPressEscape}>
+        <p>content</p>
+      </Drawer>,
+    )
+
+    await userEvent.keyboard('{Escape}')
+
+    expect(onPressEscape).toHaveBeenCalledTimes(1)
+    expect(onPressEscape.mock.calls[0][0]).toBeInstanceOf(KeyboardEvent)
+  })
+
+  it('DrawerHeader の閉じるボタンで onClickClose にクリックイベントが渡ること', async () => {
+    const onClickClose = vi.fn()
+    renderWithIntl(
+      <Drawer isOpen ariaLabel="イベント" onClickClose={onClickClose}>
+        <DrawerHeader title="タイトル" />
+      </Drawer>,
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    expect(onClickClose).toHaveBeenCalledTimes(1)
+    expect(onClickClose.mock.calls[0][0]).toHaveProperty('type', 'click')
+  })
+
+  it('div の属性と ref が dialog 要素に渡ること', () => {
+    const ref = { current: null as HTMLDivElement | null }
+    renderWithIntl(
+      <Drawer ref={ref} isOpen className="custom" ariaLabel="属性" data-testid="drawer">
+        <p>content</p>
+      </Drawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '属性' })
+    expect(dialog).toBe(screen.getByTestId('drawer'))
+    expect(dialog).toHaveClass('custom')
+    expect(ref.current).toBe(dialog)
+  })
+})

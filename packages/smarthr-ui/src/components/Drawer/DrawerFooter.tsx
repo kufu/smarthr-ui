@@ -1,5 +1,7 @@
-import { type FC, type PropsWithChildren, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
+
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   base: [
@@ -8,10 +10,10 @@ const classNameGenerator = tv({
   ],
 })
 
-export type DrawerFooterProps = PropsWithChildren<{ className?: string }>
+type Props = ExtendElementPropsWithRef<'div', object>
 
-export const DrawerFooter: FC<DrawerFooterProps> = ({ className, children }) => {
+export const DrawerFooter: FC<Props> = ({ className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
-  return <div className={actualClassName}>{children}</div>
+  return <div {...rest} className={actualClassName} />
 }

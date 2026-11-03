@@ -1,6 +1,14 @@
 'use client'
 
-import { type FC, type ReactNode, memo, useContext, useEffect, useMemo } from 'react'
+import {
+  type FC,
+  type MouseEvent,
+  type ReactNode,
+  memo,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useIntl } from '../../../intl'
@@ -12,16 +20,21 @@ import { Text } from '../../Text'
 
 import { DrawerContext } from './DrawerContext'
 
-export type DrawerHeaderProps = {
-  /** タイトル */
-  title: ReactNode
-  /** サブタイトル */
-  subtitle?: ReactNode
-  /** 見出しの id。未指定なら Drawer が自動生成した id で dialog と接続される */
-  id?: string
-  /** 閉じるボタン押下時。未指定なら Drawer の onClickClose を使う */
-  onClickClose?: () => void
-}
+import type { ExtendElementPropsWithRef } from '../../../types'
+
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    /** タイトル */
+    title: ReactNode
+    /** サブタイトル */
+    subtitle?: ReactNode
+    /** 見出しの id。未指定なら Drawer が自動生成した id で dialog と接続される */
+    id?: string
+    /** 閉じるボタン押下時。未指定なら Drawer の onClickClose を使う */
+    onClickClose?: (e?: MouseEvent<HTMLButtonElement>) => void
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -33,7 +46,14 @@ const classNameGenerator = tv({
   },
 })
 
-export const DrawerHeader: FC<DrawerHeaderProps> = ({ title, subtitle, id, onClickClose }) => {
+export const DrawerHeader: FC<Props> = ({
+  title,
+  subtitle,
+  id,
+  onClickClose,
+  className,
+  ...rest
+}) => {
   const { handleClickClose, headingId, registerHeadingId } = useContext(DrawerContext)
   const actualOnClickClose = onClickClose ?? handleClickClose
   const actualHeadingId = id ?? headingId
@@ -46,11 +66,12 @@ export const DrawerHeader: FC<DrawerHeaderProps> = ({ title, subtitle, id, onCli
 
   const classNames = useMemo(() => {
     const { wrapper, closeButton } = classNameGenerator()
-    return { wrapper: wrapper(), closeButton: closeButton() }
-  }, [])
+
+    return { wrapper: wrapper({ className }), closeButton: closeButton() }
+  }, [className])
 
   return (
-    <div className={classNames.wrapper}>
+    <div {...rest} className={classNames.wrapper}>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading>
         <Stack as="span" gap={0.25}>
@@ -69,7 +90,10 @@ export const DrawerHeader: FC<DrawerHeaderProps> = ({ title, subtitle, id, onCli
   )
 }
 
-const CloseButton = memo<{ onClick: () => void; className: string }>(({ onClick, className }) => {
+const CloseButton = memo<{
+  onClick: (e?: MouseEvent<HTMLButtonElement>) => void
+  className: string
+}>(({ onClick, className }) => {
   const { localize } = useIntl()
   const alt = localize({ id: 'smarthr-ui/Drawer/closeButtonIconAlt', defaultText: '閉じる' })
 
