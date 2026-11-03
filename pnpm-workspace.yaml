@@ -45,3 +45,5 @@ auditConfig:
 minimumReleaseAgeExclude:
   # Renovate security update: qs@6.16.2
   - qs@6.16.2
+  # Renovate security update: glob@14.0.2
+  - glob@14.0.2
