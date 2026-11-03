@@ -7,6 +7,8 @@ import {
   useState,
 } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
+
 import { DRAWER_TRANSITION_DURATION } from './drawerTransition'
 
 // ドラッグ終了後の投影距離（速度 × この係数 だけ進むと仮定）
@@ -65,6 +67,7 @@ type UseDrawerDragArgs = {
 }
 
 export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs) => {
+  const latest = useLatest({ targetRef, onClose })
   const [dragOffset, setDragOffset] = useState(0)
   // ドラッグ中はトランジションを切り、指に追従させるために state で持つ
   const [isDragging, setIsDragging] = useState(false)
@@ -124,7 +127,7 @@ export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs)
   const onPointerDown = useCallback(
     (e: ReactPointerEvent) => {
       clearRestoreTimer()
-      fullSizeRef.current = targetRef.current?.getBoundingClientRect().height ?? 0
+      fullSizeRef.current = latest.targetRef.current?.getBoundingClientRect().height ?? 0
       draggingRef.current = {
         startCoord: e.clientY,
         lastCoord: e.clientY,
@@ -134,7 +137,7 @@ export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs)
       setIsDragging(true)
       ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
     },
-    [targetRef, clearRestoreTimer],
+    [clearRestoreTimer, latest],
   )
 
   const onPointerMove = useCallback((e: ReactPointerEvent) => {
@@ -171,12 +174,12 @@ export const useDrawerDrag = ({ targetRef, isOpen, onClose }: UseDrawerDragArgs)
 
       if (result.type === 'close') {
         endDraggingForClose()
-        onClose?.()
+        latest.onClose?.()
       } else {
         endDragging()
       }
     },
-    [dragOffset, onClose, endDragging, endDraggingForClose],
+    [dragOffset, endDragging, endDraggingForClose, latest],
   )
 
   const onPointerCancel = useCallback(() => {

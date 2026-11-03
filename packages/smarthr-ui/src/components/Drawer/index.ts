@@ -1,5 +1,5 @@
 export { Drawer } from './Drawer'
-export { DrawerHeader } from './DrawerHeader'
+export { DrawerHeader } from './client'
 export { DrawerBody } from './DrawerBody'
 export { DrawerFooter } from './DrawerFooter'
 export type { DrawerProps, DrawerPosition, DrawerModality } from './types'

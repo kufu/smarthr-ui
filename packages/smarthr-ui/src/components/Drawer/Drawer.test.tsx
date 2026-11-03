@@ -8,7 +8,7 @@ import { Button } from '../Button'
 import { Drawer } from './Drawer'
 import { DrawerBody } from './DrawerBody'
 import { DrawerFooter } from './DrawerFooter'
-import { DrawerHeader } from './DrawerHeader'
+import { DrawerHeader } from './client'
 
 import type { DrawerPosition } from './types'
 

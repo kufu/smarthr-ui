@@ -3,15 +3,14 @@
 import { type FC, type ReactNode, memo, useContext, useEffect, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../intl'
-import { Button } from '../Button'
-import { Heading } from '../Heading'
-import { FaXmarkIcon } from '../Icon'
-import { Stack } from '../Layout'
-import { Text } from '../Text'
+import { useIntl } from '../../../intl'
+import { Button } from '../../Button'
+import { Heading } from '../../Heading'
+import { FaXmarkIcon } from '../../Icon'
+import { Stack } from '../../Layout'
+import { Text } from '../../Text'
 
-import { DrawerContentContext } from './DrawerContentContext'
-import { DrawerHeadingContext } from './DrawerHeadingContext'
+import { DrawerContext } from './DrawerContext'
 
 export type DrawerHeaderProps = {
   /** タイトル */
@@ -20,7 +19,7 @@ export type DrawerHeaderProps = {
   subtitle?: ReactNode
   /** 見出しの id。未指定なら Drawer が自動生成した id で dialog と接続される */
   id?: string
-  /** 閉じるボタン押下時。未指定なら Uncontrolled の Context を使う */
+  /** 閉じるボタン押下時。未指定なら Drawer の onClickClose を使う */
   onClickClose?: () => void
 }
 
@@ -35,8 +34,7 @@ const classNameGenerator = tv({
 })
 
 export const DrawerHeader: FC<DrawerHeaderProps> = ({ title, subtitle, id, onClickClose }) => {
-  const { handleClickClose } = useContext(DrawerContentContext)
-  const { headingId, registerHeadingId } = useContext(DrawerHeadingContext)
+  const { handleClickClose, headingId, registerHeadingId } = useContext(DrawerContext)
   const actualOnClickClose = onClickClose ?? handleClickClose
   const actualHeadingId = id ?? headingId
 
@@ -76,7 +74,7 @@ const CloseButton = memo<{ onClick: () => void; className: string }>(({ onClick,
   const alt = localize({ id: 'smarthr-ui/Drawer/closeButtonIconAlt', defaultText: '閉じる' })
 
   return (
-    <Button type="button" size="S" className={className} onClick={onClick}>
+    <Button size="S" className={className} onClick={onClick}>
       <FaXmarkIcon alt={alt} />
     </Button>
   )

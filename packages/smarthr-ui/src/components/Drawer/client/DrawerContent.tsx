@@ -12,14 +12,13 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useBodyScrollLock } from '../../hooks/client/useBodyScrollLock'
-import { useEscapeCallbackRef } from '../../hooks/client/useEscapeCallbackRef'
-import { useLatest } from '../../hooks/useLatest'
-import { FocusTrap } from '../Dialog'
+import { useBodyScrollLock } from '../../../hooks/client/useBodyScrollLock'
+import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
+import { useLatest } from '../../../hooks/useLatest'
+import { FocusTrap } from '../../Dialog'
+import { drawerSize } from '../drawerSize'
 
-import { DrawerContentContext } from './DrawerContentContext'
-import { DrawerHeadingContext } from './DrawerHeadingContext'
-import { drawerSize } from './drawerSize'
+import { DrawerContext } from './DrawerContext'
 import { DRAWER_TRANSITION_DURATION } from './drawerTransition'
 import { useDrawerDrag } from './useDrawerDrag'
 
@@ -28,9 +27,9 @@ import type {
   DrawerCommonProps,
   DrawerControlledProps,
   DrawerPosition,
-} from './types'
+} from '../types'
 
-export type DrawerContentInnerProps = DrawerCommonProps &
+type Props = DrawerCommonProps &
   DrawerControlledProps &
   DirectChildren & {
     id?: string
@@ -120,7 +119,7 @@ const closedTransform: Record<DrawerPosition, string> = {
   bottom: 'translateY(100%)',
 }
 
-export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
+export const DrawerContent: FC<Props> = ({
   position = 'right',
   size,
   isOpen,
@@ -249,13 +248,13 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
   useBodyScrollLock(isOpen && modality === 'modal')
 
   // ドラッグ中は毎フレーム再レンダーされるため、作り直すと DrawerHeader まで巻き込む
-  const contentContextValue = useMemo(
-    () => ({ handleClickClose: functions.handleClickClose }),
-    [functions],
-  )
-  const headingContextValue = useMemo(
-    () => ({ headingId: autoHeadingId, registerHeadingId: setRegisteredHeadingId }),
-    [autoHeadingId],
+  const contextValue = useMemo(
+    () => ({
+      handleClickClose: functions.handleClickClose,
+      headingId: autoHeadingId,
+      registerHeadingId: setRegisteredHeadingId,
+    }),
+    [autoHeadingId, functions],
   )
 
   if (!shouldMount) return null
@@ -273,12 +272,10 @@ export const DrawerContentInner: FC<DrawerContentInnerProps> = ({
     </div>
   )
   const drawerBody = (
-    <DrawerContentContext.Provider value={contentContextValue}>
-      <DrawerHeadingContext.Provider value={headingContextValue}>
-        {position === 'bottom' && handleElement}
-        {children}
-      </DrawerHeadingContext.Provider>
-    </DrawerContentContext.Provider>
+    <DrawerContext.Provider value={contextValue}>
+      {position === 'bottom' && handleElement}
+      {children}
+    </DrawerContext.Provider>
   )
   return (
     <div ref={escapeCallbackRef} id={id} className={classNames.layout}>

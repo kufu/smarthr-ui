@@ -4,7 +4,7 @@ import { Button } from '../../Button'
 import { Drawer } from '../Drawer'
 import { DrawerBody } from '../DrawerBody'
 import { DrawerFooter } from '../DrawerFooter'
-import { DrawerHeader } from '../DrawerHeader'
+import { DrawerHeader } from '../client'
 
 import { IsOpen } from './Drawer.stories'
 
@@ -133,7 +133,13 @@ const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> =>
         }}
       >
         <div style={{ padding: '1rem' }}>コンテナの内側だけを覆います。</div>
-        <Drawer isOpen modality="modeless" portalParent={container ?? undefined} position={position} size="L">
+        <Drawer
+          isOpen
+          modality="modeless"
+          portalParent={container ?? undefined}
+          position={position}
+          size="L"
+        >
           {drawerChildren(() => {})}
         </Drawer>
       </div>
