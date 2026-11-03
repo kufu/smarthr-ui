@@ -7,7 +7,6 @@ import {
   type PointerEvent,
   type RefObject,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
@@ -21,9 +20,9 @@ import { useLatest } from '../../../hooks/useLatest'
 import { FocusTrap } from '../../Dialog'
 import { drawerSize } from '../drawerSize'
 
-import { DrawerContext } from './DrawerContext'
+import { DrawerContext, useDrawerContextValue } from './DrawerContext'
 import { decayVelocity, shouldCloseOnDragEnd } from './drawerDrag'
-import { DRAWER_TRANSITION_DURATION } from './drawerTransition'
+import { DRAWER_TRANSITION_DURATION, DRAWER_TRANSITION_EASING } from './drawerTransition'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 import type { DrawerSize } from '../drawerSize'
@@ -66,9 +65,8 @@ type Props = ExtendElementPropsWithRef<
 >
 
 // Tailwind の子孫セレクタ方式が効かなかったため、transform/opacity は JS 側で当てる
-const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
-const TRANSITION_TRANSFORM = `transform ${DRAWER_TRANSITION_DURATION}ms ${EASING}`
-const TRANSITION_OPACITY = `opacity ${DRAWER_TRANSITION_DURATION}ms ${EASING}`
+const TRANSITION_TRANSFORM = `transform ${DRAWER_TRANSITION_DURATION}ms ${DRAWER_TRANSITION_EASING}`
+const TRANSITION_OPACITY = `opacity ${DRAWER_TRANSITION_DURATION}ms ${DRAWER_TRANSITION_EASING}`
 
 const classNameGenerator = tv({
   slots: {
@@ -162,17 +160,14 @@ export const DrawerContent: FC<Props> = ({
   ref,
   ...rest
 }) => {
-  const autoHeadingId = useId()
   const innerRef = useRef<HTMLDivElement>(null)
 
-  // 常に autoHeadingId を指すと、ヘッダ無しのときに参照先が存在しない属性になる
-  const [registeredHeadingId, setRegisteredHeadingId] = useState<string | undefined>(undefined)
-
-  const resolvedLabelledby = useMemo(() => {
-    if (ariaLabel) return undefined
-
-    return ariaLabelledby ?? registeredHeadingId
-  }, [ariaLabel, ariaLabelledby, registeredHeadingId])
+  const { contextValue, resolvedLabelledby } = useDrawerContextValue({
+    isOpen,
+    onClickClose,
+    ariaLabel,
+    ariaLabelledby,
+  })
 
   // ref で持たないのは、ドラッグ中はトランジションを切った再描画で指に追従させるため
   const [dragOffset, setDragOffset] = useState(0)
@@ -189,15 +184,10 @@ export const DrawerContent: FC<Props> = ({
     velocity: number
   } | null>(null)
 
-  const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay })
+  const latest = useLatest({ isOpen, onPressEscape, onClickOverlay })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
   const functions = useMemo(() => {
-    const handleClickClose = (e?: MouseEvent<HTMLButtonElement>) => {
-      if (latest.isOpen) {
-        latest.onClickClose?.(e)
-      }
-    }
     const clearRestoreTimer = () => {
       if (restoreTimerRef.current) {
         clearTimeout(restoreTimerRef.current)
@@ -216,7 +206,6 @@ export const DrawerContent: FC<Props> = ({
     }
 
     return {
-      handleClickClose,
       clearRestoreTimer,
       endDragging,
       handlePressEscape: (e: KeyboardEvent) => {
@@ -289,12 +278,12 @@ export const DrawerContent: FC<Props> = ({
           restoreTimerRef.current = null
           setDragOffset(0)
         }, DRAWER_TRANSITION_DURATION)
-        handleClickClose()
+        contextValue.handleClickClose()
       },
       handlePointerCancel: cancelDragging,
       handleLostPointerCapture: cancelDragging,
     }
-  }, [latest])
+  }, [contextValue, latest])
 
   const classNames = useMemo(() => {
     const { layout, overlay, inner, handleArea, handleBar, focusTrap } = classNameGenerator()
@@ -358,16 +347,6 @@ export const DrawerContent: FC<Props> = ({
   const mergedRef = useMergeRefs(innerRef, ref)
 
   useBodyScrollLock(isOpen && modality === 'modal')
-
-  // ドラッグ中は毎フレーム再レンダーされるため、作り直すと DrawerHeader まで巻き込む
-  const contextValue = useMemo(
-    () => ({
-      handleClickClose: functions.handleClickClose,
-      headingId: autoHeadingId,
-      registerHeadingId: setRegisteredHeadingId,
-    }),
-    [autoHeadingId, functions],
-  )
 
   if (!shouldMount) return null
 
