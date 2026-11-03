@@ -37,7 +37,6 @@ const SERVER_COMPONENTS = [
   'SpreadsheetTableCorner',
   'StatusLabel',
   'Stepper',
-  'Switch',
   'TabBar',
   'Table',
   'Td',
@@ -101,6 +100,7 @@ const CLIENT_COMPONENTS: string[] = [
   'Sidebar',        // 見出しレベルの自動生成のため
   'SingleCombobox', // プルダウン表示のためのcreatePortalなど
   'Stack',          // 見出しレベルの自動生成のため
+  'Switch',         // mobile 判定のための useEnvironment
   'TableReel',      // scroll監視のためのuseEffect
   'Textarea',       // オートフォーカスや文字数カウントのための状態管理
   'ThCheckbox',     // 多言語化対応のため

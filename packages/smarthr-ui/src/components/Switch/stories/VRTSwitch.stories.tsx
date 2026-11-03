@@ -1,40 +1,60 @@
 import { Stack } from '../../Layout'
-import { Switch } from '../Switch'
+import { Switch } from '../client'
 
 import type { Meta } from '@storybook/react-vite'
 import type { ComponentPropsWithoutRef } from 'react'
 
 /**
  * $ pict switch.pict
- * unrecommendedLabelHidden  defaultChecked  disabled
- * true                      true            true
- * true                      false           false
- * false                     false           true
- * false                     true            false
+ * unrecommendedLabelHidden  defaultChecked  disabled  size
+ * true                      false           true      S
+ * false                     true            false     M
+ * false                     false           false     S
+ * false                     true            true      S
+ * true                      false           true      M
+ * true                      true            false     M
  */
 const _cases: Array<ComponentPropsWithoutRef<typeof Switch>> = [
   {
     unrecommendedLabelHidden: true,
+    defaultChecked: false,
+    disabled: true,
+    size: 'S',
+    children: 'ラベル',
+  },
+  {
+    unrecommendedLabelHidden: false,
+    defaultChecked: true,
+    disabled: false,
+    size: 'M',
+    children: 'ラベル',
+  },
+  {
+    unrecommendedLabelHidden: false,
+    defaultChecked: false,
+    disabled: false,
+    size: 'S',
+    children: 'ラベル',
+  },
+  {
+    unrecommendedLabelHidden: false,
     defaultChecked: true,
     disabled: true,
+    size: 'S',
     children: 'ラベル',
   },
   {
     unrecommendedLabelHidden: true,
     defaultChecked: false,
-    disabled: undefined,
-    children: 'ラベル',
-  },
-  {
-    unrecommendedLabelHidden: false,
-    defaultChecked: undefined,
     disabled: true,
+    size: 'M',
     children: 'ラベル',
   },
   {
-    unrecommendedLabelHidden: undefined,
+    unrecommendedLabelHidden: true,
     defaultChecked: true,
     disabled: false,
+    size: 'M',
     children: 'ラベル',
   },
 ]
