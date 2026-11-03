@@ -304,6 +304,7 @@ export const SingleCombobox = <T,>({
       if (latest.emptySelectionFallbackItem) {
         updateUncontrolledSelectedItem(latest.emptySelectionFallbackItem)
         latest.onSelect?.(latest.emptySelectionFallbackItem)
+        latest.onChangeSelected?.(latest.emptySelectionFallbackItem)
       }
     }
     const unfocus = () => {
