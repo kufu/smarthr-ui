@@ -1,5 +1,7 @@
-import type { DrawerContent } from './client'
+import type { InlineDrawerLayout } from './InlineDrawerLayout'
+import type { DrawerContent, InlineDrawer } from './client'
 import type { ExtendElementPropsWithRef } from '../../types'
+import type { ComponentPropsWithRef } from 'react'
 
 export type DrawerPosition = 'right' | 'left' | 'bottom'
 
@@ -20,3 +22,7 @@ export type DrawerProps = ExtendElementPropsWithRef<
   },
   { omit: 'hasPortalParent' }
 >
+
+export type InlineDrawerProps = ComponentPropsWithRef<typeof InlineDrawer>
+
+export type InlineDrawerLayoutProps = ComponentPropsWithRef<typeof InlineDrawerLayout>

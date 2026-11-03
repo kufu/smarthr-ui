@@ -8,3 +8,6 @@ export const drawerSize = {
 } as const
 
 export type DrawerSize = keyof typeof drawerSize
+
+// FULL を許すとメインの幅が 0 になり、横に並べる意味が無くなる
+export type InlineDrawerSize = Exclude<DrawerSize, 'FULL'>

@@ -29,7 +29,7 @@ type Props = ExtendElementPropsWithRef<
     title: ReactNode
     /** サブタイトル */
     subtitle?: ReactNode
-    /** 見出しの id。未指定なら Drawer が自動生成した id で dialog と接続される */
+    /** 見出しの id。未指定なら Drawer / InlineDrawer が自動生成した id でパネルと接続される */
     id?: string
     /** 閉じるボタン押下時。未指定なら Drawer の onClickClose を使う */
     onClickClose?: (e?: MouseEvent<HTMLButtonElement>) => void

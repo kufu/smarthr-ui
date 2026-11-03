@@ -1,6 +1,13 @@
 export { Drawer } from './Drawer'
-export { DrawerHeader } from './client'
+export { DrawerHeader, InlineDrawer } from './client'
 export { DrawerBody } from './DrawerBody'
 export { DrawerFooter } from './DrawerFooter'
-export type { DrawerProps, DrawerPosition, DrawerModality } from './types'
-export type { DrawerSize } from './drawerSize'
+export { InlineDrawerLayout } from './InlineDrawerLayout'
+export type {
+  DrawerProps,
+  DrawerPosition,
+  DrawerModality,
+  InlineDrawerProps,
+  InlineDrawerLayoutProps,
+} from './types'
+export type { DrawerSize, InlineDrawerSize } from './drawerSize'
