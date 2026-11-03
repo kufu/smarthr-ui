@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type RefObject,
-  memo,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, type RefObject, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useBodyScrollLock } from '../../../hooks/client/useBodyScrollLock'
