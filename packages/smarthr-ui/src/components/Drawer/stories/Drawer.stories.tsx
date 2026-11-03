@@ -3,26 +3,18 @@ import { useState } from 'react'
 import { Button } from '../../Button'
 import { Drawer } from '../Drawer'
 import { DrawerBody } from '../DrawerBody'
-import { DrawerCloser } from '../DrawerCloser'
-import { DrawerContent } from '../DrawerContent'
 import { DrawerFooter } from '../DrawerFooter'
 import { DrawerHeader } from '../DrawerHeader'
-import { DrawerTrigger } from '../DrawerTrigger'
-import { DrawerWrapper } from '../DrawerWrapper'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-// Controlled では Drawer に onClickClose を渡せば、配下の DrawerHeader / DrawerCloser は
+// Drawer に onClickClose を渡せば、配下の DrawerHeader は
 // Context 経由で自動的にその閉じ処理を使う（個別に onClickClose を渡す必要はない）。
 
 export default {
   title: 'Components/Drawer',
   component: Drawer,
   subcomponents: {
-    DrawerWrapper,
-    DrawerTrigger,
-    DrawerContent,
-    DrawerCloser,
     DrawerHeader,
     DrawerBody,
     DrawerFooter,
@@ -95,35 +87,6 @@ export const IsOpen: StoryObj<typeof Drawer> = {
       </>
     )
   },
-}
-
-/**
- * Uncontrolled な使い方。`DrawerWrapper` でラップし、`DrawerTrigger` で開き、
- * `DrawerCloser` や `DrawerHeader` の閉じるボタンで閉じる。開閉状態を自分で管理する必要がない。
- */
-export const Uncontrolled: StoryObj<typeof Drawer> = {
-  name: 'Uncontrolled（Wrapper + Trigger）',
-  render: () => (
-    <DrawerWrapper>
-      <DrawerTrigger>
-        <Button>ドロワーを開く</Button>
-      </DrawerTrigger>
-      <DrawerContent position="right" size="M">
-        <DrawerHeader subtitle="サブタイトル" title="ドロワータイトル" />
-        <DrawerBody>
-          <p>Uncontrolled なドロワーです。開閉状態は内部で管理されます。</p>
-        </DrawerBody>
-        <DrawerFooter>
-          <DrawerCloser>
-            <Button>キャンセル</Button>
-          </DrawerCloser>
-          <DrawerCloser>
-            <Button variant="primary">保存</Button>
-          </DrawerCloser>
-        </DrawerFooter>
-      </DrawerContent>
-    </DrawerWrapper>
-  ),
 }
 
 /**

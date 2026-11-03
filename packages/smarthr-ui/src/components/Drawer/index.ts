@@ -1,8 +1,4 @@
 export { Drawer } from './Drawer'
-export { DrawerWrapper } from './DrawerWrapper'
-export { DrawerTrigger } from './DrawerTrigger'
-export { DrawerContent } from './DrawerContent'
-export { DrawerCloser } from './DrawerCloser'
 export { DrawerHeader } from './DrawerHeader'
 export { DrawerBody } from './DrawerBody'
 export { DrawerFooter } from './DrawerFooter'

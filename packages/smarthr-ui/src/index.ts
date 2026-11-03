@@ -49,16 +49,7 @@ export {
   StepFormDialogItem,
 } from './components/Dialog'
 /** @public */
-export {
-  Drawer,
-  DrawerBody,
-  DrawerCloser,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTrigger,
-  DrawerWrapper,
-} from './components/Drawer'
+export { Drawer, DrawerBody, DrawerFooter, DrawerHeader } from './components/Drawer'
 /** @public */
 export type { DrawerProps, DrawerPosition, DrawerSize, DrawerModality } from './components/Drawer'
 /** @public */

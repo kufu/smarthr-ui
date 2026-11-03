@@ -46,6 +46,4 @@ export type DrawerProps = DrawerCommonProps &
   DrawerPortalProps &
   PropsWithChildren
 
-export type UncontrolledDrawerProps = DrawerCommonProps & DrawerPortalProps & PropsWithChildren
-
 export type DirectChildren = { children?: ReactNode }

@@ -7,12 +7,8 @@ import { Button } from '../Button'
 
 import { Drawer } from './Drawer'
 import { DrawerBody } from './DrawerBody'
-import { DrawerCloser } from './DrawerCloser'
-import { DrawerContent } from './DrawerContent'
 import { DrawerFooter } from './DrawerFooter'
 import { DrawerHeader } from './DrawerHeader'
-import { DrawerTrigger } from './DrawerTrigger'
-import { DrawerWrapper } from './DrawerWrapper'
 
 import type { DrawerPosition } from './types'
 
@@ -147,44 +143,6 @@ describe('Drawer（Controlled）', () => {
         expect(el).toHaveClass('shr-contents')
       }
     }
-  })
-})
-
-describe('Drawer（Uncontrolled）', () => {
-  const UncontrolledTemplate: FC = () => (
-    <DrawerWrapper>
-      <DrawerTrigger>
-        <Button>open</Button>
-      </DrawerTrigger>
-      <DrawerContent ariaLabel="非制御ドロワー">
-        <p>uncontrolled content</p>
-        <DrawerCloser>
-          <Button>close</Button>
-        </DrawerCloser>
-      </DrawerContent>
-    </DrawerWrapper>
-  )
-
-  it('トリガで開き、DrawerCloser で閉じられること', async () => {
-    renderWithIntl(<UncontrolledTemplate />)
-    expect(screen.queryByRole('dialog', { name: '非制御ドロワー' })).toBeNull()
-
-    await userEvent.click(screen.getByRole('button', { name: 'open' }))
-    expect(screen.getByRole('dialog', { name: '非制御ドロワー' })).toBeVisible()
-
-    await userEvent.click(screen.getByRole('button', { name: 'close' }))
-    await waitFor(() => {
-      expect(screen.queryByRole('dialog', { name: '非制御ドロワー' })).toBeNull()
-    })
-  })
-
-  it('トリガの aria-expanded が開閉に応じて切り替わること', async () => {
-    renderWithIntl(<UncontrolledTemplate />)
-    const triggerWrapper = screen.getByRole('button', { name: 'open' }).parentElement
-    expect(triggerWrapper).toHaveAttribute('aria-expanded', 'false')
-
-    await userEvent.click(screen.getByRole('button', { name: 'open' }))
-    expect(triggerWrapper).toHaveAttribute('aria-expanded', 'true')
   })
 })
 
