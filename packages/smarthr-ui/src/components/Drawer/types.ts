@@ -8,6 +8,7 @@ export type DrawerModality = 'modal' | 'modeless'
 export type DrawerProps = ExtendElementPropsWithRef<
   typeof DrawerContent,
   {
+    /** ポータルのラッパー要素に付与する id。role="dialog" の要素ではない点は Dialog と同じ */
     id?: string
     /**
      * DOM 上でドロワーの要素を追加する親要素。

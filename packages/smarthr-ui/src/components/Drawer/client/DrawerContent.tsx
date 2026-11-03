@@ -4,6 +4,7 @@ import {
   type CSSProperties,
   type FC,
   type MouseEvent,
+  type PointerEvent,
   type RefObject,
   useEffect,
   useId,
@@ -21,8 +22,8 @@ import { FocusTrap } from '../../Dialog'
 import { drawerSize } from '../drawerSize'
 
 import { DrawerContext } from './DrawerContext'
+import { decayVelocity, shouldCloseOnDragEnd } from './drawerDrag'
 import { DRAWER_TRANSITION_DURATION } from './drawerTransition'
-import { useDrawerDrag } from './useDrawerDrag'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 import type { DrawerSize } from '../drawerSize'
@@ -37,13 +38,14 @@ type Props = ExtendElementPropsWithRef<
     size?: DrawerSize
     /**
      * モーダル/非モーダルの切り替え。既定は 'modal'。
-     * 'modeless' ではオーバーレイ無し・背後操作可（スクロールロック無し・フォーカストラップ無し・aria-modal 無し）。
+     * 'modeless' ではオーバーレイ無し・背後操作可（スクロールロック無し・Tab の循環無し・aria-modal 無し）。
+     * 開いたときのドロワーへのフォーカス移動と、閉じたときのトリガへの復帰は modal と同じく行う。
      */
     modality?: DrawerModality
     /** 開いているかどうか */
     isOpen: boolean
     /** DrawerHeader の閉じるボタン押下時と、bottom の grabber をドラッグして閉じたとき */
-    onClickClose?: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+    onClickClose?: (e?: MouseEvent<HTMLButtonElement>) => void
     /** オーバーレイクリック時 */
     onClickOverlay?: () => void
     /** Escape 押下時 */
@@ -52,12 +54,15 @@ type Props = ExtendElementPropsWithRef<
     ariaLabel?: string
     /** aria-labelledby（ariaLabel と排他で必須） */
     ariaLabelledby?: string
-    /** 開いたときに最初にフォーカスする要素。未指定ならドロワー先頭にフォーカスする */
+    /**
+     * 開いたときに最初にフォーカスする要素。未指定ならドロワー先頭にフォーカスする。
+     * スクロール領域の見えていない位置にある要素を指定しても、その位置まではスクロールしない
+     */
     firstFocusTarget?: RefObject<HTMLElement>
     /** Portal 先が指定されているか（modeless の absolute/fixed 切替に使う） */
     hasPortalParent?: boolean
   },
-  { omit: 'style' }
+  { omit: 'style' | 'aria-label' | 'aria-labelledby' }
 >
 
 // Tailwind の子孫セレクタ方式が効かなかったため、transform/opacity は JS 側で当てる
@@ -76,7 +81,7 @@ const classNameGenerator = tv({
     ],
     handleArea: [
       'smarthr-ui-Drawer-handle',
-      'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-items-center shr-justify-center',
+      'shr-flex shr-min-h-[1.75rem] shr-w-full shr-shrink-0 shr-cursor-row-resize shr-touch-none shr-select-none shr-items-center shr-justify-center',
     ],
     handleBar: ['shr-h-0.25 shr-w-[2.5rem] shr-rounded-full shr-bg-border'],
     // FocusTrap の div がボックスを作ると inner の flex コンテキストが途切れる
@@ -159,7 +164,6 @@ export const DrawerContent: FC<Props> = ({
 }) => {
   const autoHeadingId = useId()
   const innerRef = useRef<HTMLDivElement>(null)
-  const rafRef = useRef<number | null>(null)
 
   // 常に autoHeadingId を指すと、ヘッダ無しのときに参照先が存在しない属性になる
   const [registeredHeadingId, setRegisteredHeadingId] = useState<string | undefined>(undefined)
@@ -170,19 +174,54 @@ export const DrawerContent: FC<Props> = ({
     return ariaLabelledby ?? registeredHeadingId
   }, [ariaLabel, ariaLabelledby, registeredHeadingId])
 
+  // ref で持たないのは、ドラッグ中はトランジションを切った再描画で指に追従させるため
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  // pointerdown のたびに測り直すパネルの実寸(px)。
+  // ビューポートの回転やコンテナのリサイズで全開サイズは変わるため、開いた瞬間の値では足りない。
+  const fullSizeRef = useRef(0)
+  const restoreTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pointerRef = useRef<{
+    pointerId: number
+    startCoord: number
+    lastCoord: number
+    lastTime: number
+    velocity: number
+  } | null>(null)
+
   const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
-  const functions = useMemo(
-    () => ({
+  const functions = useMemo(() => {
+    const handleClickClose = (e?: MouseEvent<HTMLButtonElement>) => {
+      if (latest.isOpen) {
+        latest.onClickClose?.(e)
+      }
+    }
+    const clearRestoreTimer = () => {
+      if (restoreTimerRef.current) {
+        clearTimeout(restoreTimerRef.current)
+        restoreTimerRef.current = null
+      }
+    }
+    const endDragging = (offset = 0) => {
+      pointerRef.current = null
+      setIsDragging(false)
+      setDragOffset(offset)
+    }
+    const cancelDragging = (e: PointerEvent<HTMLDivElement>) => {
+      if (pointerRef.current?.pointerId === e.pointerId) {
+        endDragging()
+      }
+    }
+
+    return {
+      handleClickClose,
+      clearRestoreTimer,
+      endDragging,
       handlePressEscape: (e: KeyboardEvent) => {
         if (latest.isOpen) {
           latest.onPressEscape?.(e)
-        }
-      },
-      handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => {
-        if (latest.isOpen) {
-          latest.onClickClose?.(e)
         }
       },
       handleClickOverlay: () => {
@@ -190,15 +229,72 @@ export const DrawerContent: FC<Props> = ({
           latest.onClickOverlay?.()
         }
       },
-    }),
-    [latest],
-  )
+      handlePointerDown: (e: PointerEvent<HTMLDivElement>) => {
+        if (latest.isOpen && e.button === 0 && e.isPrimary) {
+          clearRestoreTimer()
+          fullSizeRef.current = innerRef.current?.getBoundingClientRect().height ?? 0
+          pointerRef.current = {
+            pointerId: e.pointerId,
+            startCoord: e.clientY,
+            lastCoord: e.clientY,
+            lastTime: e.timeStamp,
+            velocity: 0,
+          }
+          setIsDragging(true)
+          e.currentTarget.setPointerCapture?.(e.pointerId)
+        }
+      },
+      handlePointerMove: (e: PointerEvent<HTMLDivElement>) => {
+        const pointer = pointerRef.current
 
-  const drag = useDrawerDrag({
-    targetRef: innerRef,
-    isOpen,
-    onClose: functions.handleClickClose,
-  })
+        if (pointer?.pointerId !== e.pointerId) return
+
+        const coord = e.clientY
+        const dt = e.timeStamp - pointer.lastTime || 1
+        // 閉じ方向の速度(px/ms)。閉じる動き = サイズ減少なので velocity を負にする
+        pointer.velocity = -(coord - pointer.lastCoord) / dt
+        pointer.lastCoord = coord
+        pointer.lastTime = e.timeStamp
+
+        setDragOffset(Math.min(fullSizeRef.current, Math.max(0, coord - pointer.startCoord)))
+      },
+      handlePointerUp: (e: PointerEvent<HTMLDivElement>) => {
+        const pointer = pointerRef.current
+
+        if (pointer?.pointerId !== e.pointerId) return
+
+        const fullSize = fullSizeRef.current
+        // 最後の pointermove の座標を使わないのは、pointermove がまとめて届き、離した位置が pointerup にしか無い場合があるため
+        const offset = Math.min(fullSize, Math.max(0, e.clientY - pointer.startCoord))
+        const shouldClose = shouldCloseOnDragEnd({
+          fullSize,
+          currentSize: fullSize - offset,
+          velocity: decayVelocity({
+            velocity: pointer.velocity,
+            idleMs: e.timeStamp - pointer.lastTime,
+          }),
+        })
+
+        if (!shouldClose) {
+          endDragging()
+
+          return
+        }
+
+        // isOpen が false になるのを待つだけにしないのは、onClickClose を受けて閉じるかは利用者次第で、
+        // 閉じなかった場合にパネルが画面外に居座って操作できなくなるため
+        endDragging(fullSize)
+        clearRestoreTimer()
+        restoreTimerRef.current = setTimeout(() => {
+          restoreTimerRef.current = null
+          setDragOffset(0)
+        }, DRAWER_TRANSITION_DURATION)
+        handleClickClose()
+      },
+      handlePointerCancel: cancelDragging,
+      handleLostPointerCapture: cancelDragging,
+    }
+  }, [latest])
 
   const classNames = useMemo(() => {
     const { layout, overlay, inner, handleArea, handleBar, focusTrap } = classNameGenerator()
@@ -215,49 +311,43 @@ export const DrawerContent: FC<Props> = ({
   }, [position, size, modality, hasPortalParent, className])
 
   const openedTransform = useMemo(() => {
-    if (position !== 'bottom' || drag.translateOffset === 0) return 'translateY(0)'
-    return `translateY(${drag.translateOffset}px)`
-  }, [position, drag.translateOffset])
+    if (position !== 'bottom' || dragOffset === 0) return 'translateY(0)'
+    return `translateY(${dragOffset}px)`
+  }, [position, dragOffset])
 
   // react-transition-group は状態遷移が不安定だったため自前で制御する
   const [shouldMount, setShouldMount] = useState(isOpen)
   const [entered, setEntered] = useState(false)
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    functions.endDragging()
+
     if (isOpen) {
-      if (closeTimerRef.current) {
-        clearTimeout(closeTimerRef.current)
-        closeTimerRef.current = null
-      }
       setShouldMount(true)
       setEntered(false)
-      const raf1 = requestAnimationFrame(() => {
-        const raf2 = requestAnimationFrame(() => setEntered(true))
-        rafRef.current = raf2
+      let rafId = requestAnimationFrame(() => {
+        rafId = requestAnimationFrame(() => setEntered(true))
       })
-      rafRef.current = raf1
       return () => {
-        if (rafRef.current) cancelAnimationFrame(rafRef.current)
+        cancelAnimationFrame(rafId)
+        functions.clearRestoreTimer()
       }
     }
 
     setEntered(false)
-    closeTimerRef.current = setTimeout(() => setShouldMount(false), DRAWER_TRANSITION_DURATION)
-    return () => {
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
-    }
-  }, [isOpen])
+    const closeTimer = setTimeout(() => setShouldMount(false), DRAWER_TRANSITION_DURATION)
+    return () => clearTimeout(closeTimer)
+  }, [isOpen, functions])
 
   const innerStyle = useMemo<CSSProperties>(() => {
-    if (drag.isDragging) {
+    if (isDragging) {
       return { transform: openedTransform, transition: 'none' }
     }
     return {
       transform: entered ? openedTransform : closedTransform[position],
       transition: TRANSITION_TRANSFORM,
     }
-  }, [drag.isDragging, openedTransform, entered, position])
+  }, [isDragging, openedTransform, entered, position])
 
   const overlayStyle = useMemo<CSSProperties>(
     () => ({ opacity: entered ? 1 : 0, transition: TRANSITION_OPACITY }),
@@ -285,10 +375,11 @@ export const DrawerContent: FC<Props> = ({
     <div
       className={classNames.handleArea}
       aria-hidden="true"
-      onPointerCancel={drag.onPointerCancel}
-      onPointerDown={drag.onPointerDown}
-      onPointerMove={drag.onPointerMove}
-      onPointerUp={drag.onPointerUp}
+      onLostPointerCapture={functions.handleLostPointerCapture}
+      onPointerCancel={functions.handlePointerCancel}
+      onPointerDown={functions.handlePointerDown}
+      onPointerMove={functions.handlePointerMove}
+      onPointerUp={functions.handlePointerUp}
     >
       <span className={classNames.handleBar} />
     </div>
@@ -321,13 +412,13 @@ export const DrawerContent: FC<Props> = ({
         aria-labelledby={resolvedLabelledby}
       >
         {/*
-          modeless でも FocusTrap を通すのは、開いたときのフォーカス移動と閉じたときの
-          復帰が modal と同じく必要なため。循環（Tab のトラップ）だけを trapFocus で切る。
-          両モダリティで同じ DOM 構造になる副次効果もある。
+          スライド完了後に初回フォーカスする案は、FocusTrap がマウント直後にフォーカスするため採れない。
+          スライド前の画面外の要素へのフォーカスで祖先がスクロールしないよう preventScroll を指定する
         */}
         <FocusTrap
           firstFocusTarget={firstFocusTarget}
           trapFocus={modality === 'modal'}
+          preventScroll
           className={classNames.focusTrap}
         >
           {drawerBody}

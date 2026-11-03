@@ -17,9 +17,11 @@ import type { DrawerPosition } from './types'
 if (typeof PointerEvent === 'undefined') {
   class PointerEventPolyfill extends MouseEvent {
     pointerId?: number
+    isPrimary: boolean
     constructor(type: string, params: PointerEventInit & { timeStamp?: number } = {}) {
       super(type, params)
       this.pointerId = params.pointerId
+      this.isPrimary = params.isPrimary ?? true
       if (params.timeStamp !== undefined) {
         Object.defineProperty(this, 'timeStamp', { value: params.timeStamp, configurable: true })
       }
@@ -297,6 +299,105 @@ describe('Drawer ドラッグハンドル', () => {
     dragHandle(handle, { to: 20, moveAt: DOWN_AT + 10, upAt: DOWN_AT + 200 })
 
     expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('主ボタン以外の押下ではドラッグを始めないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, button: 2, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 200 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('ドラッグ中のポインタ以外の移動は無視すること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 2, clientY: 300, timeStamp: DOWN_AT + 200 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 10, timeStamp: DOWN_AT + 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('閉じアニメーション中に grabber を押しても、開いた位置へ戻らないこと', async () => {
+    const ui = (isOpen: boolean) => (
+      <IntlProvider locale="ja">
+        <Drawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
+          <p>bottom content</p>
+        </Drawer>
+      </IntlProvider>
+    )
+    const { rerender } = render(ui(true))
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+    rerender(ui(false))
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+
+    expect(screen.getByRole('dialog', { name: 'ボトムドロワー' }).style.transform).toBe(
+      'translateY(100%)',
+    )
+  })
+
+  it('最後の pointermove より先の、離した位置で閉じ判定をすること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 150, timeStamp: DOWN_AT + 1000 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 1200 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  it('ドラッグ中のポインタ以外の pointercancel ではドラッグを終えず、キャプチャが外れたら終えること', async () => {
+    const { handle } = renderBottomDrawer()
+    const dialog = stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 100, timeStamp: DOWN_AT + 100 })
+    fireEvent.pointerCancel(handle, { pointerId: 2 })
+
+    expect(dialog.style.transition).toBe('none')
+
+    fireEvent.lostPointerCapture(handle, { pointerId: 1 })
+
+    expect(dialog.style.transition).not.toBe('none')
+  })
+
+  it('pointerdown を経ない pointerup では閉じ判定をしないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    // onClickClose で isOpen を変えないため、閉じ位置に送られたまま復帰待ちになる
+    dragHandle(handle, { to: 300 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 300 })
+
+    expect(onClickClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('ドラッグ中に外から閉じられても、トランジション付きで閉じ位置へ動くこと', async () => {
+    const ui = (isOpen: boolean) => (
+      <IntlProvider locale="ja">
+        <Drawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
+          <p>bottom content</p>
+        </Drawer>
+      </IntlProvider>
+    )
+    const { rerender } = render(ui(true))
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 100, timeStamp: DOWN_AT + 100 })
+    rerender(ui(false))
+
+    const dialog = screen.getByRole('dialog', { name: 'ボトムドロワー' })
+    expect(dialog.style.transition).not.toBe('none')
+    expect(dialog.style.transform).toBe('translateY(100%)')
   })
 
   it('勢いよく動かしてすぐ離せばフリックとして閉じること', async () => {
@@ -993,5 +1094,39 @@ describe('Drawer（イベントと属性）', () => {
     expect(dialog).toBe(screen.getByTestId('drawer'))
     expect(dialog).toHaveClass('custom')
     expect(ref.current).toBe(dialog)
+  })
+})
+
+describe('Drawer（開閉とフォーカス）', () => {
+  const Template: FC<{ modality?: 'modal' | 'modeless' }> = ({ modality }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <Drawer isOpen={isOpen} modality={modality} ariaLabel="フォーカス">
+          <Button onClick={() => setIsOpen(false)}>close</Button>
+        </Drawer>
+      </>
+    )
+  }
+
+  const waitFocusInside = () =>
+    waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'フォーカス' })).toContainElement(
+        document.activeElement as HTMLElement,
+      )
+    })
+
+  it('modeless でも、閉じたときにトリガへフォーカスを戻すこと', async () => {
+    renderWithIntl(<Template modality="modeless" />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    await waitFocusInside()
+
+    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'close' })).toBeNull()
+    })
+
+    expect(screen.getByRole('button', { name: 'open' })).toHaveFocus()
   })
 })
