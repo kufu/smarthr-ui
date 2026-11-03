@@ -46,7 +46,6 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, header, content } = classNameGenerator()
 
   return {
@@ -181,7 +180,7 @@ const Content: FC<
       {isAppLauncherSelected && isAppLauncherAvailable ? (
         <AppLauncher features={features} loading={featuresLoading} error={featuresError} />
       ) : (
-        <Scroller direction="vertical" className={CLASS_NAMES.content}>
+        <Scroller className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
