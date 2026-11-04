@@ -11,7 +11,7 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../../Heading'
-import { Sidebar, Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { SectioningFragment } from '../../SectioningContent'
 import { Text } from '../../Text'
 
@@ -287,7 +287,7 @@ export const ListItem: ListItem = <
         {/* @ts-expect-error 型が複雑で推論できないため */}
         <SlotRenderer {...slot?.props} className={actualClassName.slot}>
           <div className={actualClassName.content}>
-            <Sidebar right align="center" gap={0.5}>
+            <Cluster grow="start" align="center">
               <Stack align="start" gap={0.5}>
                 {status}
                 <Heading className="shr-inline-flex">
@@ -302,7 +302,7 @@ export const ListItem: ListItem = <
                 )}
               </Stack>
               {action}
-            </Sidebar>
+            </Cluster>
           </div>
         </SlotRenderer>
       </SectioningFragment>
