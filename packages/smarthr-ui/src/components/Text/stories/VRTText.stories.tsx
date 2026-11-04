@@ -3,10 +3,10 @@ import { Stack } from '../../Layout'
 import { STYLE_TYPE_MAP, Text } from '../Text'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 // $ pict text.pict
-const pict = pictParser<ComponentProps<typeof Stack>>(
+const pict = pictParser<ComponentPropsWithoutRef<typeof Stack>>(
   `size	weight	color	leading	emphasis	prefixIcon	suffixIcon	maxLines
    undefined	normal	TEXT_LINK	undefined	false	undefined	undefined	1
    XL	bold	undefined	TIGHT	true	undefined	<Icon />	undefined
@@ -90,17 +90,18 @@ export default {
   render: (args) => (
     <Stack gap={0.5}>
       {/* styleType ごとにペアワイズ法で抽出したパターンをあてる */}
-      {[undefined, ...Object.keys(STYLE_TYPE_MAP)].map((styleType) =>
-        pict.map((props, i) => (
-          <Text
-            {...props}
-            {...args}
-            key={i}
-            styleType={styleType}
-            // 白文字だと見えないので背景色を変える
-            className={props.color === 'TEXT_WHITE' ? 'shr-bg-black' : undefined}
-          />
-        )),
+      {[undefined, ...(Object.keys(STYLE_TYPE_MAP) as Array<keyof typeof STYLE_TYPE_MAP>)].map(
+        (styleType) =>
+          pict.map((props, i) => (
+            <Text
+              {...props}
+              {...args}
+              key={i}
+              styleType={styleType}
+              // 白文字だと見えないので背景色を変える
+              className={props.color === 'TEXT_WHITE' ? 'shr-bg-black' : undefined}
+            />
+          )),
       )}
     </Stack>
   ),

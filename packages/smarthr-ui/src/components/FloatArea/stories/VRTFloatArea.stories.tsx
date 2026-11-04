@@ -1,3 +1,5 @@
+import { fireEvent } from 'storybook/test'
+
 import { Button } from '../../Button'
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
@@ -32,6 +34,16 @@ export default {
 } satisfies Meta<typeof FloatArea>
 
 export const VRT = {}
+
+export const VRTScrolledToEnd = {
+  play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const scrollingElement = canvasElement.ownerDocument.scrollingElement!
+
+    await fireEvent.scroll(scrollingElement, {
+      target: { scrollTop: scrollingElement.scrollHeight },
+    })
+  },
+}
 
 export const VRTForcedColors = {
   ...VRT,

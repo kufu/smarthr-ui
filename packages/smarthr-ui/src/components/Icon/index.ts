@@ -1,8 +1,17 @@
 // eslint-disable-next-line no-restricted-syntax -- FaIconから202個のアイコンをexport
 export * from './FaIcon'
-export { generateIcon, type Props as ComponentProps } from './generateIcon'
+// HINT: smarthr-uiは型を公開APIとして提供しない方針のため、Props型はexportしない。
+// アイコンに渡せるpropsの型が必要な場合はComponentPropsWithRef<ReturnType<typeof generateIcon>>で導出する
+/** @public */
+export { generateIcon } from './generateIcon'
 
-export { WarningIcon } from './WarningIcon'
+/** @public */
+export { FilterIcon } from './FilterIcon'
+/** @public */
 export { SparklesIcon } from './SparklesIcon'
+/** @public */
+export { WarningIcon } from './WarningIcon'
+
 export { LanguageIcon } from './LanguageIcon'
 export { OpenInNewTabIcon } from './OpenInNewTabIcon'
+export { StatusIcon } from './client'

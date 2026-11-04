@@ -1,1 +1,2 @@
-export { DropZone } from './DropZone'
+export { ActualDropZone } from './ActualDropZone'
+export { DropZoneMultiplyAppendable } from './DropZoneMultiplyAppendable'

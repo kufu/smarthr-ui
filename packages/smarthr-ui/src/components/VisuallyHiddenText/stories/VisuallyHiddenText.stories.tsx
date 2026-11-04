@@ -2,6 +2,7 @@ import { Stack } from '../../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ElementType } from 'react'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<div>': 'div', '<span>': 'span' }
 
@@ -18,7 +19,7 @@ export default {
   },
   args: {
     children: 'スクリーンリーダーのみが読み上げるテキストです',
-    as: 'なし',
+    as: 'なし' as unknown as ElementType,
   },
 } as Meta<typeof VisuallyHiddenText>
 

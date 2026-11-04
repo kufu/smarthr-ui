@@ -35,7 +35,7 @@ export type CreatedBackgroundColorTheme = {
   transparent: 'transparent'
 }
 
-export const defaultBackgroundColor: CreatedBackgroundColorTheme = {
+const defaultBackgroundColor: CreatedBackgroundColorTheme = {
   black: defaultColor.GREY_100,
   white: defaultColor.WHITE,
   'white-darken': darken(0.05, defaultColor.WHITE),

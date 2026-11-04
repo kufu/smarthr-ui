@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
+import { EnvironmentProvider } from '../../../hooks/client/useEnvironment'
 import { IntlProvider } from '../../../intl'
 
 import { SearchController } from './SearchController'
@@ -25,7 +26,9 @@ const renderController = ({
   }
   render(
     <IntlProvider locale="ja">
-      <SearchController search={search} />
+      <EnvironmentProvider>
+        <SearchController search={search} />
+      </EnvironmentProvider>
     </IntlProvider>,
   )
   return { search, input: screen.getByRole('textbox') }

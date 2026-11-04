@@ -4,6 +4,7 @@ import storybook from 'eslint-plugin-storybook'
 
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
+import requireClientDirectory from './eslint-local-rules/require-client-directory.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -17,6 +18,7 @@ export default [
         rules: {
           'best-practice-for-use-latest': bestPracticeForUseLatest,
           'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
+          'require-client-directory': requireClientDirectory,
         },
       },
       perfectionist,
@@ -24,22 +26,51 @@ export default [
     rules: {
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
+      'local-rules/require-client-directory': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {
           type: 'unsorted',
           groups: [
-            'key', 'as', 'namedAs', 'ref', 'namedRef',
-            'role', 'type', 'id', 'htmlFor', 'form',
-            'name', 'required', 'disabled', 'readOnly', 'value', 'checked',
+            'key',
+            'as',
+            'namedAs',
+            'ref',
+            'namedRef',
+            'role',
+            'type',
+            'id',
+            'htmlFor',
+            'form',
+            'name',
+            'required',
+            'disabled',
+            'readOnly',
+            'value',
+            'checked',
             'linkAttribute',
             'unknown',
             'tabIndex',
             'title',
-            'styleType', 'size', 'width', 'decoration', 'className', 'style',
-            'ariaAttribute', 'dataAttribute',
-            'functions', 'setCallback', 'onCallback', 'handleCallback',
-            'prefix', 'headerLike', 'trigger', 'children', 'items', 'button', 'suffix',
+            'styleType',
+            'size',
+            'width',
+            'decoration',
+            'className',
+            'style',
+            'ariaAttribute',
+            'dataAttribute',
+            'functions',
+            'setCallback',
+            'onCallback',
+            'handleCallback',
+            'prefix',
+            'headerLike',
+            'trigger',
+            'children',
+            'items',
+            'button',
+            'suffix',
           ],
           customGroups: [
             { groupName: 'key', elementNamePattern: '^key$' },
@@ -65,7 +96,10 @@ export default [
             { groupName: 'size', elementNamePattern: '^size$' },
             { groupName: 'setCallback', elementNamePattern: '^set[A-Z]' },
             { groupName: 'width', elementNamePattern: '((^w|W)idth|(^h|H)eight)$' },
-            { groupName: 'decoration', elementNamePattern: '^(color|wide|weight|leading|triggerType|innerMargin|padding)$' },
+            {
+              groupName: 'decoration',
+              elementNamePattern: '^(color|wide|weight|leading|triggerType|innerMargin|padding)$',
+            },
             { groupName: 'className', elementNamePattern: '(^c|C)lassName(s)?$' },
             { groupName: 'style', elementNamePattern: '^style$' },
             { groupName: 'ariaAttribute', elementNamePattern: '^aria' },
@@ -79,7 +113,10 @@ export default [
             { groupName: 'children', elementNamePattern: '^(children|message)$' },
             { groupName: 'items', elementNamePattern: '((^i|I)tems|(^o|O)ptions)$' },
             { groupName: 'button', elementNamePattern: 'Button$' },
-            { groupName: 'suffix', elementNamePattern: '(^suffix|^footer|^subActionArea|Message)$' },
+            {
+              groupName: 'suffix',
+              elementNamePattern: '(^suffix|^footer|^subActionArea|Message)$',
+            },
           ],
         },
       ],
@@ -121,33 +158,7 @@ export default [
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: '(useLayoutEffectRef|useEnhancedEffect)',
-        },
-      ],
-      'smarthr/a11y-anchor-has-href-attribute': [
-        'error',
-        {
-          checkType: 'allow-spread-attributes',
-        },
-      ],
-      'smarthr/a11y-input-has-name-attribute': [
-        'error',
-        {
-          checkType: 'allow-spread-attributes',
-        },
-      ],
-      'smarthr/best-practice-for-consecutive-definition-list': 'off',
-      'smarthr/best-practice-for-default-props': 'off',
-      'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
-      'smarthr/design-system-guideline-bulk-action-row-button': 'off',
-      'smarthr/best-practice-for-rest-parameters': 'error',
-      'smarthr/best-practice-for-unnesessary-early-return': 'error',
-      'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
-      'smarthr/best-practice-for-no-unnecessary-variable': [
-        'error',
-        {
-          fix: false,
-          maxComplexity: 3,
+          additionalHooks: 'useLayoutEffectRef',
         },
       ],
       'no-restricted-syntax': [
@@ -165,12 +176,82 @@ export default [
           message: 'import * as は使用できません。個別にimportしてください。',
         },
       ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'tailwind-variants',
+              importNames: ['VariantProps'],
+              message:
+                'VariantPropsの利用は禁止されています。tvのvariants定義に依存せず、明示的な型定義を使用してください。',
+            },
+            {
+              name: 'react',
+              importNames: ['ComponentProps'],
+              message:
+                'ComponentPropsの利用は禁止されています。refの有無を明示するため、ComponentPropsWithRefまたはComponentPropsWithoutRefを使用してください。',
+            },
+          ],
+        },
+      ],
+      'smarthr/a11y-anchor-has-href-attribute': [
+        'error',
+        {
+          checkType: 'allow-spread-attributes',
+        },
+      ],
+      'smarthr/a11y-input-has-name-attribute': [
+        'error',
+        {
+          checkType: 'allow-spread-attributes',
+        },
+      ],
+      // 'smarthr/best-practice-for-consecutive-definition-list': 'off',
+      // 'smarthr/best-practice-for-default-props': 'off',
+      // 'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
+      // 'smarthr/design-system-guideline-bulk-action-row-button': 'off',
+      'smarthr/best-practice-for-tailwind-variants': 'error',
+      'smarthr/best-practice-for-rest-parameters': 'error',
+      'smarthr/best-practice-for-unnesessary-early-return': 'error',
+      'smarthr/best-practice-for-unstable-dependencies': [
+        'error',
+        {
+          additionalTargetHooks: ['useLayoutEffectRef'],
+          additionalUnstableNames: [
+            'icon',
+            'prefix',
+            'suffix',
+            'footer',
+            'subActionArea',
+            'options',
+            'items',
+            'ref',
+            '/Ref$/',
+            '/^on[A-Z]/',
+          ],
+        },
+      ],
+      'smarthr/best-practice-for-lazy-variable': ['error', { fix: true }],
+      'smarthr/best-practice-for-no-unnecessary-variable': [
+        'error',
+        {
+          fix: false,
+          maxComplexity: 3,
+        },
+      ],
     },
   },
   {
     files: ['**/ja.ts'],
     rules: {
       'smarthr/require-i18n-translation-sync': 'error',
+    },
+  },
+  {
+    files: ['packages/charts/**'],
+    rules: {
+      'local-rules/require-client-directory': 'off',
     },
   },
   {
@@ -182,11 +263,18 @@ export default [
     ],
   },
   {
-    files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    files: [
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/__tests__/**',
+      '**/*.stories.tsx',
+      'packages/smarthr-ui/.storybook',
+    ],
     rules: {
-      'smarthr/require-i18n-text': 'off',
       'smarthr/best-practice-for-lazy-variable': 'off',
       'smarthr/best-practice-for-no-unnecessary-variable': 'off',
+      'smarthr/best-practice-for-tailwind-variants': 'off',
+      'smarthr/require-i18n-text': 'off',
     },
   },
   {

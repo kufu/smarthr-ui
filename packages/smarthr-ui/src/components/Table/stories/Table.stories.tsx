@@ -1,12 +1,13 @@
 import { Stack } from '../../Layout'
 import { Panel } from '../../Panel'
 import { Text } from '../../Text'
+import { BulkActionRow } from '../BulkActionRow'
+import { EmptyTableBody } from '../EmptyTableBody'
 import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { Th } from '../Th'
-import { WakuWakuButton } from '../WakuWakuButton'
-import { BulkActionRow, EmptyTableBody, ThCheckbox } from '../client'
+import { ThCheckbox } from '../ThCheckbox'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
@@ -39,7 +40,6 @@ export default {
     TdCheckbox,
     BulkActionRow,
     EmptyTableBody,
-    WakuWakuButton,
   },
   render: Template,
   parameters: {

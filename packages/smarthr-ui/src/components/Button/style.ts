@@ -135,6 +135,12 @@ export const buttonClassNameGenerator = tv({
       /* disabled ではなく aria-disabled で文字色が変わらないため、強制カラーモード時の色を指定 */
       'aria-disabled:forced-colors:shr-border-[GrayText] aria-disabled:forced-colors:shr-text-[GrayText]',
       '[&_.smarthr-ui-Icon]:forced-colors:aria-disabled:shr-fill-[GrayText]',
+      /* アイコンにcolor propで固定色が指定されていても、aria-disabled時は無効化色に揃える。
+      react-icons(IconBase)はcolor propをstyle="color: ..."というインラインスタイルとしても
+      出力するため、通常のクラスセレクタでは上書きできず!importantが必要(fillはプレゼンテーション属性の
+      みでインラインスタイルを持たないため!importantなしで上書きできる) */
+      '[&_.smarthr-ui-Icon]:aria-disabled:!shr-text-color-inherit',
+      '[&_.smarthr-ui-Icon]:aria-disabled:shr-fill-current',
     ],
     loader: [
       'shr-align-bottom',
@@ -220,6 +226,12 @@ export const anchorClassNameGenerator = tv({
       '[&:not([href])]:shr-bg-clip-padding',
       '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
       '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
+      /* アイコンにcolor propで固定色が指定されていても、無効化時は無効化色に揃える。
+      react-icons(IconBase)はcolor propをstyle="color: ..."というインラインスタイルとしても
+      出力するため、通常のクラスセレクタでは上書きできず!importantが必要(fillはプレゼンテーション属性の
+      みでインラインスタイルを持たないため!importantなしで上書きできる) */
+      '[&:not([href])_.smarthr-ui-Icon]:!shr-text-color-inherit',
+      '[&:not([href])_.smarthr-ui-Icon]:shr-fill-current',
     ],
   },
   variants: {

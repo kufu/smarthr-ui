@@ -33,6 +33,13 @@ export const Disabled: StoryObj<typeof SearchInput> = {
   },
 }
 
+export const Ai: StoryObj<typeof SearchInput> = {
+  name: 'variant="ai"',
+  args: {
+    variant: 'ai',
+  },
+}
+
 export const Error: StoryObj<typeof SearchInput> = {
   name: 'error',
   args: {

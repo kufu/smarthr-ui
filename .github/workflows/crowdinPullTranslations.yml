@@ -45,12 +45,14 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           
       - name: Download translations from Crowdin
-        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2.17.1
+        uses: crowdin/github-action@df474cdfb9f41d6ae777118749477c2cdf7cacc8 # v3.2.0
         with:
           config: crowdin.yml
           upload_sources: false
           upload_translations: false
           download_translations: true
+          # ミャンマー語(my)は翻訳未整備のためダウンロード対象から除外する
+          download_translations_args: "--exclude-language my"
           localization_branch_name: ${{ steps.generate-branch-name.outputs.name }}
           crowdin_branch_name: ${{ github.ref_name }}
           create_pull_request: true

@@ -4,10 +4,6 @@ import { Button } from '../../Button'
 import { Checkbox } from '../../Checkbox'
 import { Input } from '../../Input'
 import { Dialog } from '../Dialog'
-import { DialogCloser } from '../DialogCloser'
-import { DialogContent } from '../DialogContent'
-import { DialogTrigger } from '../DialogTrigger'
-import { DialogWrapper } from '../DialogWrapper'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -19,7 +15,6 @@ const _widthOptions = {
 export default {
   title: 'Components/Dialog',
   component: Dialog,
-  subcomponents: { DialogWrapper, DialogTrigger, DialogContent, DialogCloser },
   render: (args) => {
     const [open, setOpen] = useState(false)
     return (
@@ -148,13 +143,13 @@ export const PortalParent: StoryObj<typeof Dialog> = {
   name: 'portalParent',
   render: (args) => {
     const [open, setOpen] = useState(false)
-    const parentRef = useRef<HTMLDivElement>(null)
+    const [parentEl, setParentEl] = useState<HTMLDivElement | null>(null)
     return (
       <>
-        <div ref={parentRef} className="shr-px-1.5 shr-py-2">
+        <div ref={setParentEl} className="shr-px-1.5 shr-py-2">
           <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
         </div>
-        <Dialog {...args} isOpen={open} portalParent={parentRef}>
+        <Dialog {...args} isOpen={open} portalParent={parentEl ?? undefined}>
           ダイアログコンテンツ
           <Button onClick={() => setOpen(false)}>閉じる</Button>
         </Dialog>

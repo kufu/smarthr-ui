@@ -1,9 +1,6 @@
-'use client'
-
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
-  type FormEvent,
   type MouseEventHandler,
   type ReactNode,
   useMemo,
@@ -12,57 +9,49 @@ import { tv } from 'tailwind-variants'
 
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { Localizer, useIntl } from '../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../Button'
-import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
+import { Localizer } from '../../../intl'
+import { Button } from '../../Button'
+import { FaRotateLeftIcon, FilterIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { DropdownCloser } from '../DropdownCloser'
-import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
+import { Dropdown, DropdownContent, DropdownTrigger, FilterDropdownForm } from '../client'
+
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectTriggerType = {
   text?: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ButtonProps['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?: boolean
 }
-type BaseProps = {
-  /** 引き金となるボタン */
-  trigger?: ReactNode | ObjectTriggerType
-  applyText?: ReactNode
-  cancelText?: ReactNode
-  resetText?: ReactNode
-  children: ReactNode
-  filtered?:
-    | boolean
-    | {
-        iconAlt?: string
-      }
-  responseStatus?: ResponseStatus
-  onApply: MouseEventHandler<HTMLButtonElement>
-  onCancel?: MouseEventHandler<HTMLButtonElement>
-  onReset?: MouseEventHandler<HTMLButtonElement>
-  onOpen?: () => void
-  onClose?: () => void
-}
-type Props = BaseProps & Omit<ComponentProps<'button'>, keyof BaseProps>
+type Props = ExtendElementPropsWithRef<
+  'button',
+  {
+    /** 引き金となるボタン */
+    trigger?: ReactNode | ObjectTriggerType
+    applyText?: ReactNode
+    cancelText?: ReactNode
+    resetText?: ReactNode
+    children: ReactNode
+    filtered?: ComponentPropsWithRef<typeof FilterIcon>['checked']
+    responseStatus?: ResponseStatus
+    onApply: MouseEventHandler<HTMLButtonElement>
+    onCancel?: MouseEventHandler<HTMLButtonElement>
+    onReset?: MouseEventHandler<HTMLButtonElement>
+    onOpen?: () => void
+    onClose?: () => void
+  }
+>
 
 const triggerObjectConverter = (trigger: ReactNode): ObjectTriggerType => ({ text: trigger })
 
-const CONTROL_CLUSTER_GAP: ComponentProps<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
-const ON_SUBMIT = (e: FormEvent) => {
-  e.preventDefault()
-}
+const CONTROL_CLUSTER_GAP: ComponentPropsWithRef<typeof Cluster>['gap'] = { column: 1, row: 0.5 }
 
 const classNameGenerator = tv({
   slots: {
-    iconWrapper: [
-      'smarthr-ui-Icon-extended',
-      'shr-relative shr-leading-none',
-      'data-[filtered=true]:shr-text-main',
-    ],
-    filteredIcon: 'shr-absolute shr-bottom-[2px] shr-right-[-4px] shr-h-[0.5em] shr-w-[0.5em]',
+    iconWrapper: '',
     inner: 'shr-p-1.5',
     actionArea: 'shr-border-t-shorthand shr-sticky shr-bottom-0 shr-bg-white shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
@@ -98,34 +87,15 @@ export const FilterDropdown: FC<Props> = ({
     orgTrigger,
     triggerObjectConverter,
   )
-  const { localize } = useIntl()
-
-  const filteredIconAlt = useMemo(
-    () =>
-      (typeof filtered === 'object' && filtered.iconAlt) ||
-      localize({
-        id: 'smarthr-ui/FilterDropdown/status',
-        defaultText: '適用中',
-      }),
-    [filtered, localize],
-  )
 
   const calcedResponseStatus = useResponseStatus(responseStatus)
 
   const classNames = useMemo(() => {
-    const {
-      iconWrapper,
-      filteredIcon,
-      inner,
-      actionArea,
-      resetButtonArea,
-      rightButtonArea,
-      message,
-    } = classNameGenerator()
+    const { iconWrapper, inner, actionArea, resetButtonArea, rightButtonArea, message } =
+      classNameGenerator()
 
     return {
       iconWrapper: iconWrapper({ triggerSize: trigger.size }),
-      filteredIcon: filteredIcon(),
       inner: inner(),
       actionArea: actionArea(),
       resetButtonArea: resetButtonArea(),
@@ -138,19 +108,16 @@ export const FilterDropdown: FC<Props> = ({
     <Localizer id="smarthr-ui/FilterDropdown/triggerText" defaultText="絞り込み" />
   )
 
-  const FilterIcon = (
-    <span className={classNames.iconWrapper} data-filtered={!!filtered}>
-      <FaFilterIcon alt={trigger.onlyIcon ? triggerText : undefined} />
-
-      {filtered && (
-        // HINT: altに揃えたいが、styleが複雑になってしまうためaria-labelを利用している
-        <FaCircleCheckIcon className={classNames.filteredIcon} aria-label={filteredIconAlt} />
-      )}
-    </span>
+  const filterIcon = (
+    <FilterIcon
+      checked={filtered}
+      alt={trigger.onlyIcon ? triggerText : undefined}
+      className={classNames.iconWrapper}
+    />
   )
 
-  const suffix = trigger.onlyIcon ? undefined : FilterIcon
-  const content = trigger.onlyIcon ? FilterIcon : triggerText
+  const suffix = trigger.onlyIcon ? undefined : filterIcon
+  const content = trigger.onlyIcon ? filterIcon : triggerText
 
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
@@ -160,7 +127,7 @@ export const FilterDropdown: FC<Props> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <form onSubmit={ON_SUBMIT}>
+        <FilterDropdownForm>
           <div className={classNames.inner}>{children}</div>
           <Stack gap={0.5} className={classNames.actionArea}>
             <Cluster gap={1} align="center" justify="space-between">
@@ -219,7 +186,7 @@ export const FilterDropdown: FC<Props> = ({
               </div>
             )}
           </Stack>
-        </form>
+        </FilterDropdownForm>
       </DropdownContent>
     </Dropdown>
   )

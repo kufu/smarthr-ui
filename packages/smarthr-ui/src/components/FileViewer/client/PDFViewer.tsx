@@ -1,10 +1,12 @@
 'use client'
 
-import { type FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { Scroller } from '../../Scroller'
 
+import { applyPDFJSPolyfills } from './applyPDFJSPolyfills'
 import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
@@ -22,26 +24,19 @@ type ReactPDFModule = {
 }
 
 let reactPDFModulePromise: Promise<ReactPDFModule> | undefined
+// HINT: polyfillを適用すると以降はAPIが存在すると判定されるため、importを再試行する際も初回の判定結果を使う
+let shouldUseLegacyWorker: boolean | undefined
 
 const loadReactPDFModule = (): Promise<ReactPDFModule> => {
   if (!reactPDFModulePromise) {
+    // HINT: pdfjs-distはモジュール評価時にも新しいAPIを参照するため、importより前にpolyfillを適用する
+    shouldUseLegacyWorker ??= applyPDFJSPolyfills()
+
     reactPDFModulePromise = import('react-pdf')
       .then((mod) => {
         const { pdfjs } = mod
 
-        // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
-        // @ts-expect-error
-        if (typeof window.Promise.withResolvers === 'undefined') {
-          // @ts-expect-error
-          window.Promise.withResolvers = function () {
-            let resolve, reject
-            const promise = new Promise((res, rej) => {
-              resolve = res
-              reject = rej
-            })
-            return { promise, resolve, reject }
-          }
-          // web workerもpolyfillされたものを読み込む
+        if (shouldUseLegacyWorker) {
           pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
         } else {
           // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
@@ -100,6 +95,23 @@ export const PDFViewer: FC<Props> = memo(
     const [pdfNumPages, setPdfNumPages] = useState(1)
     const [reactPDFModule, setReactPDFModule] = useState<ReactPDFModule | null>(null)
 
+    const options = useMemo(
+      () =>
+        ({
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // 非latin文字を読み込むためのオプション
+          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
+          // cMapUrl: '/cmaps/',
+          cMapUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/cmaps/`,
+          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
+          // JPEG 2000画像を含むPDFのデコードに必要
+          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-jpeg-2000
+          // wasmUrl: '/wasm/',
+          wasmUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/wasm/`,
+        }) satisfies DocumentProps['options'],
+      [reactPDFModule],
+    )
+
     const latest = useLatest({
       rotation,
       pdfNumPages,
@@ -107,27 +119,6 @@ export const PDFViewer: FC<Props> = memo(
       handlePDFLoaded,
       handleLoadError,
     })
-
-    useEffect(() => {
-      let cancelled = false
-
-      loadReactPDFModule().then(
-        (mod) => {
-          if (!cancelled) {
-            setReactPDFModule(mod)
-          }
-        },
-        (error) => {
-          if (!cancelled) {
-            latest.handleLoadError?.(error)
-          }
-        },
-      )
-
-      return () => {
-        cancelled = true
-      }
-    }, [latest])
 
     const functions = useMemo(() => {
       const handleDocumentLoadSuccess: NonNullable<DocumentProps['onLoadSuccess']> = ({
@@ -151,7 +142,8 @@ export const PDFViewer: FC<Props> = memo(
       }
     }, [latest])
 
-    const cancelApplyIdRef = useRef<number | null>(null)
+    const applyFrame = useAnimationFrame()
+
     const callbackRef = useCallback(
       (node: HTMLElement | null) => {
         if (node) {
@@ -169,34 +161,38 @@ export const PDFViewer: FC<Props> = memo(
               els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
               els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
             } else if (performance.now() - start < 1000) {
-              cancelApplyIdRef.current = requestAnimationFrame(apply)
+              applyFrame.request(apply)
             }
           }
-          cancelApplyIdRef.current = requestAnimationFrame(apply)
-        } else if (cancelApplyIdRef.current !== null) {
-          cancelAnimationFrame(cancelApplyIdRef.current)
+          applyFrame.request(apply)
+        } else {
+          applyFrame.cancel()
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
-      [currentMatchIndex, matches],
+      [currentMatchIndex, matches, applyFrame],
     )
 
-    const options = useMemo(
-      () =>
-        ({
-          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-          // 非latin文字を読み込むためのオプション
-          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-non-latin-characters
-          // cMapUrl: '/cmaps/',
-          cMapUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/cmaps/`,
-          // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
-          // JPEG 2000画像を含むPDFのデコードに必要
-          // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-jpeg-2000
-          // wasmUrl: '/wasm/',
-          wasmUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/wasm/`,
-        }) satisfies DocumentProps['options'],
-      [reactPDFModule],
-    )
+    useEffect(() => {
+      let cancelled = false
+
+      loadReactPDFModule().then(
+        (mod) => {
+          if (!cancelled) {
+            setReactPDFModule(mod)
+          }
+        },
+        (error) => {
+          if (!cancelled) {
+            latest.handleLoadError?.(error)
+          }
+        },
+      )
+
+      return () => {
+        cancelled = true
+      }
+    }, [latest])
 
     if (!reactPDFModule) {
       return null
@@ -214,6 +210,9 @@ export const PDFViewer: FC<Props> = memo(
             file={file.url}
             rotate={rotation}
             externalLinkTarget="_blank"
+            // HINT: react-pdf v11からSuspenseとError Boundaryでの読み込み・エラー処理がデフォルトになった。
+            // FileViewerはonLoadErrorなどのコールバックで状態を管理しているため、従来の挙動を維持する
+            suspense={false}
             loading={null}
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             onLoadSuccess={functions.handleDocumentLoadSuccess}

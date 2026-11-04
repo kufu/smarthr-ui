@@ -2,7 +2,7 @@
 
 import Decimal from 'decimal.js'
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -37,6 +37,8 @@ import type { FileForViewer } from './types'
 const defaultScaleStep = 0.2
 const defaultScaleSteps = [0.2, 0.6, 1, 1.6, 2, 3]
 
+type OnPasswordType = ComponentPropsWithRef<typeof PDFViewer>['handlePassword']
+
 type Props = {
   file: FileForViewer
   width?: number
@@ -47,7 +49,7 @@ type Props = {
   scaleSteps?: number[]
 
   scaleStep?: number
-  onPassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+  onPassword?: OnPasswordType
   onLoadError?: (error: unknown) => void
   /** PDF表示時に検索ボックスを表示するかどうか */
   searchable?: boolean
@@ -149,7 +151,7 @@ export const FileViewer: FC<Props> = ({
 const PDFFileViewer: FC<
   CommonViewerProps & {
     setRotation: (value: number | undefined) => void
-    handlePassword?: ComponentProps<typeof PDFViewer>['handlePassword']
+    handlePassword?: OnPasswordType
     searchable: boolean
   }
 > = ({
@@ -246,7 +248,12 @@ const ActualFileViewer: FC<
       }
 
       const resizeObserver = new ResizeObserver(() => {
-        setWidth((node.clientWidth ?? 0) - 64)
+        // HINT: clientWidthではなくoffsetWidthを使う。offsetWidthは境界ボックスのサイズで
+        // 縦スクロールバーの出現/消失(clientWidthのみに影響する)の影響を受けないため、
+        // 画像の高さがコンテナ境界付近にある場合のsetWidthの無限往復(ちらつき)を防げる。
+        // 64px差し引くことでスクロールバー分(15px程度)の余白が確保されるため、
+        // 画像とスクロールバーが重なることはない
+        setWidth((node.offsetWidth ?? 0) - 64)
       })
 
       resizeObserver.observe(node)
@@ -275,7 +282,7 @@ const ActualFileViewer: FC<
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
         {loading && (
           <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
-            <Loader type="light" size="M" />
+            <Loader type="light" />
           </div>
         )}
         <div className={loading ? 'shr-invisible' : ''}>
@@ -309,10 +316,7 @@ const Controller: FC<ControllerProps> = memo(
         className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
         aria-hidden="true"
       />
-      <Cluster
-        gap={0.5}
-        className="shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-items-center shr-justify-center shr-justify-self-center shr-py-0.5"
-      >
+      <Cluster className="shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-items-center shr-justify-center shr-justify-self-center shr-py-0.5">
         <Cluster gap={0}>
           <Button
             disabled={scale <= scaleSteps[0]}
