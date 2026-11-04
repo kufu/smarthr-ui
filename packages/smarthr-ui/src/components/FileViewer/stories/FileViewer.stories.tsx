@@ -92,3 +92,10 @@ export const Searchable: Story = {
     searchable: false,
   },
 }
+
+export const DisableFontFace: Story = {
+  name: 'disableFontFace',
+  args: {
+    disableFontFace: true,
+  },
+}

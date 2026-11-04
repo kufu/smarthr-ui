@@ -88,6 +88,7 @@ export const PDFViewer: FC<Props> = memo(
     handlePDFLoaded,
     handlePassword,
     handleLoadError,
+    disableFontFace,
     search,
   }) => {
     const matches = search?.matches
@@ -108,8 +109,9 @@ export const PDFViewer: FC<Props> = memo(
           // 参考: https://github.com/wojtekmaj/react-pdf?tab=readme-ov-file#support-for-jpeg-2000
           // wasmUrl: '/wasm/',
           wasmUrl: `//unpkg.com/pdfjs-dist@${reactPDFModule?.pdfjs.version}/wasm/`,
+          disableFontFace,
         }) satisfies DocumentProps['options'],
-      [reactPDFModule],
+      [reactPDFModule, disableFontFace],
     )
 
     const latest = useLatest({

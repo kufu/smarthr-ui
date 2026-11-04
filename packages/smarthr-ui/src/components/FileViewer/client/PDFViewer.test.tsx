@@ -117,4 +117,52 @@ describe('PDFViewer', () => {
       '//unpkg.com/pdfjs-dist@0.0.0/legacy/build/pdf.worker.min.mjs',
     )
   })
+
+  describe('disableFontFace', () => {
+    const renderWithDisableFontFace = async (disableFontFace?: boolean) => {
+      const documentOptions: Array<Record<string, unknown> | undefined> = []
+      const pdfjs = { version: '0.0.0', GlobalWorkerOptions: { workerSrc: '' } }
+
+      vi.resetModules()
+      vi.doMock('./applyPDFJSPolyfills', () => ({ applyPDFJSPolyfills: () => false }))
+      vi.doMock('react-pdf', () => ({
+        Document: ({ options }: { options?: Record<string, unknown> }) => {
+          documentOptions.push(options)
+
+          return null
+        },
+        Page: () => null,
+        pdfjs,
+      }))
+
+      const { PDFViewer } = await import('./PDFViewer')
+
+      render(
+        <PDFViewer
+          file={FILE}
+          scale={1}
+          rotation={undefined}
+          disableFontFace={disableFontFace}
+          width={100}
+          handleLoad={() => undefined}
+        />,
+      )
+
+      await waitFor(() => expect(documentOptions.length).toBeGreaterThan(0))
+
+      return documentOptions[documentOptions.length - 1]
+    }
+
+    test('trueを指定すると、pdf.jsのoptionsにdisableFontFace: trueが渡される', async () => {
+      const options = await renderWithDisableFontFace(true)
+
+      expect(options?.disableFontFace).toBe(true)
+    })
+
+    test('指定しない場合は、pdf.jsの既定値を使うためdisableFontFaceはundefinedになる', async () => {
+      const options = await renderWithDisableFontFace()
+
+      expect(options?.disableFontFace).toBeUndefined()
+    })
+  })
 })
