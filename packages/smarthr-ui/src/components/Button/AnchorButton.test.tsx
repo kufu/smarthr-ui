@@ -14,7 +14,10 @@ describe('AnchorButton', () => {
         </AnchorButton>
       </IntlProvider>,
     )
-    expect(screen.getByRole('link', { name: '新規作成 別タブで開く' })).toBeVisible()
+    // HINT: 実ブラウザでは単語間に空白が入る("新規作成 別タブで開く")が、testing-libraryが使う
+    // dom-accessibility-apiはdisplay:inline要素の境界に空白を挿入しないため、jsdom環境では空白なしになる。
+    // 環境差に依らずマッチするよう空白の有無を許容する
+    expect(screen.getByRole('link', { name: /^新規作成\s?別タブで開く$/ })).toBeVisible()
   })
 
   describe('無効化時のアイコン色', () => {
