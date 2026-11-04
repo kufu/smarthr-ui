@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 type Leading = {
   NONE: number
@@ -28,5 +28,5 @@ export const createLeading = (userLeading?: LeadingProperty): CreatedLeading => 
     return defaultLeading
   }
 
-  return merge({ ...defaultLeading }, userLeading)
+  return merge(defaultLeading, userLeading)
 }

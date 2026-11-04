@@ -1,4 +1,4 @@
-import type { DialogContent } from './DialogContent'
+import type { DialogContent } from './client'
 import type { ComponentPropsWithRef } from 'react'
 
 type DialogContentProps = ComponentPropsWithRef<typeof DialogContent>

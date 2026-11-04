@@ -154,24 +154,21 @@ export const InformationPanel: FC<Props> = ({
       heading: headingClassName,
       toggleableButton,
       content,
-    } = classNameGenerator({
-      type,
-      bold,
-    })
+    } = classNameGenerator()
+    const variantProps = { type, bold }
 
     return {
       wrapper: wrapper({ className }),
-      header: header(),
-      heading: headingClassName(),
+      header: header(variantProps),
+      heading: headingClassName(variantProps),
       toggleableButton: toggleableButton(),
-      content: content(),
+      content: content(variantProps),
     }
   }, [type, bold, className])
 
   return (
     <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
       <Sidebar align="baseline" right className={classNames.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <MemoizedHeading
           type={type}
           id={`${id}-heading`}

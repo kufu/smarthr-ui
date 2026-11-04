@@ -71,7 +71,6 @@ export const LineChart: React.FC<Props> = ({ data, title, options: externalOptio
   return (
     <div className="shr-relative shr-h-full shr-w-full">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
       <Line
         ref={chartRef}
         role="application"

@@ -49,7 +49,11 @@ export type BaseProps<T> = {
    */
   items: Array<ComboboxItem<T>>
   /**
-   * input 要素の `name` 属性の値
+   * input 要素の `name` 属性の値。
+   * `MultiCombobox` では、選択済みアイテムの値を保持する hidden input 群の `name` にそのまま使われ、
+   * 検索用テキストボックスの `name` には `query_${name}` が設定される。
+   * 複数の hidden input は同じ `name` を持つため、Railsなど配列として受け取りたい場合は
+   * `name="ids[]"` のように `[]` を含めて指定すること（自動では付与されない）
    */
   name?: string
   /**

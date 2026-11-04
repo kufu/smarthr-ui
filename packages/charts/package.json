@@ -1,7 +1,7 @@
 {
   "name": "@smarthr/smarthr-ui-charts",
   "description": "Chart components for SmartHR UI built with React.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "SmartHR-UI Team",
   "type": "module",
   "main": "lib/index.js",
@@ -72,7 +72,7 @@
     "@types/react-dom": "^19.2.7",
     "@types/styled-components": "^5.1.36",
     "autoprefixer": "^10.4.27",
-    "glob": "13.0.6",
+    "glob": "14.0.2",
     "jsdom": "^26.1.0",
     "npm-run-all2": "^9.0.3",
     "postcss": "^8.5.28",
