@@ -16,8 +16,8 @@ describe('FloatArea', () => {
 
   it('スクロールコンテナ内に配置された場合、data-sticky-to-viewport属性が付与されないこと', () => {
     render(
-      // HINT: jsdomは算出値でoverflowをoverflowX・overflowYに展開しないため、個別プロパティで指定する
-      <div style={{ overflowY: 'auto' }}>
+      // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- テスト用のスクロールコンテナ
+      <div className="shr-overflow-y-auto">
         <div>
           <FloatArea primaryButton={<Button variant="primary">保存</Button>} />
         </div>
@@ -29,11 +29,29 @@ describe('FloatArea', () => {
 
   it('overflow: clipの要素はスクロールコンテナにならないため、viewportが基準とみなされること', () => {
     render(
-      <div style={{ overflowX: 'clip', overflowY: 'clip' }}>
+      <div className="shr-overflow-clip">
         <FloatArea primaryButton={<Button variant="primary">保存</Button>} />
       </div>,
     )
 
     expect(getFloatArea()).toHaveAttribute('data-sticky-to-viewport')
+  })
+
+  it('再レンダリングされても、判定結果が維持されること', () => {
+    const { rerender } = render(
+      // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- テスト用のスクロールコンテナ
+      <div className="shr-overflow-y-auto">
+        <FloatArea primaryButton={<Button variant="primary">保存</Button>} />
+      </div>,
+    )
+
+    rerender(
+      // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex -- テスト用のスクロールコンテナ
+      <div className="shr-overflow-y-auto">
+        <FloatArea bottom={1} primaryButton={<Button variant="primary">保存</Button>} />
+      </div>,
+    )
+
+    expect(getFloatArea()).not.toHaveAttribute('data-sticky-to-viewport')
   })
 })
