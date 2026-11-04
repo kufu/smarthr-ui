@@ -37,4 +37,21 @@ describe('merge', () => {
       list: [4],
     })
   })
+
+  it('`__proto__` キーはプロトタイプを変更せず、通常のプロパティとして扱う', () => {
+    const source = JSON.parse('{"__proto__":{"x":1}}')
+
+    const actual = merge({}, source) as Record<string, unknown>
+
+    expect(Object.getPrototypeOf(actual)).toBe(Object.prototype)
+    expect(actual.x).toBeUndefined()
+    expect(Object.prototype.hasOwnProperty.call(actual, '__proto__')).toBe(true)
+    expect(Object.getOwnPropertyDescriptor(actual, '__proto__')?.value).toEqual({ x: 1 })
+  })
+
+  it('targetが継承しているプロパティはマージ対象にしない', () => {
+    const actual = merge({}, { constructor: { a: 1 } }) as Record<string, unknown>
+
+    expect(Object.getOwnPropertyDescriptor(actual, 'constructor')?.value).toEqual({ a: 1 })
+  })
 })
