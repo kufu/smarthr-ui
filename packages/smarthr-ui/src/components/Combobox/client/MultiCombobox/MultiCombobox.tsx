@@ -355,6 +355,11 @@ export const MultiCombobox = <T,>({
       if (latest.isExpanded) {
         latest.onBlur?.()
         setIsExpanded(false)
+
+        if (!latest.isInputEmpty) {
+          latest.setInputValueIfUncontrolled('')
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+        }
       }
     }
 

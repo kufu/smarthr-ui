@@ -42,6 +42,7 @@ export default {
         <DropdownMenuButton {...args} {...props} key={i}>
           <DropdownMenuGroup name="グループ1">
             <Button>操作1</Button>
+            {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため */}
             <Button disabled disabledReason={{ text: '非推奨な理由' }}>
               操作2
             </Button>

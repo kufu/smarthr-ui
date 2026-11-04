@@ -26,12 +26,14 @@ type Props = ExtendElementPropsWithRef<
 export const Td: FC<Props> = memo(
   ({ align, vAlign, nullable, fixed, contentWidth, className, style, children, ...rest }) => {
     const actualClassName = useMemo(() => {
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
       if (!fixed) {
         return base
       }
 
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
       const shadow = reelShadowClassNameGenerator({ direction: fixed })
 
       return `${base} ${shadow}`
