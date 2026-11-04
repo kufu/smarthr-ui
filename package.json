@@ -6,7 +6,6 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
-    "@rollup/plugin-json": "^6.1.0",
     "eslint": "^9.39.5",
     "eslint-config-smarthr": "^14.14.0",
     "eslint-plugin-perfectionist": "^5.10.1",
@@ -17,7 +16,6 @@
     "prettier": "^3.9.8",
     "prettier-config-smarthr": "^1.0.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "ts-node": "^10.9.2",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3"
   },

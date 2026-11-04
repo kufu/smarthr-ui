@@ -1,6 +1,6 @@
 import { darken, rgba, transparentize } from 'polished'
 
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 // TODO: リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
 // 可能性があるため残している。利用状況を確認し、使われていなければ削除する:
@@ -104,8 +104,7 @@ export const createColor = (userColor?: ColorProperty): CreatedColorTheme => {
   }
 
   return merge(
-    colors,
-    userColor,
+    merge(colors, userColor),
     !userColor.OUTLINE && userColor.MAIN ? { OUTLINE: transparentize(0.5, userColor.MAIN) } : null,
   )
 }
