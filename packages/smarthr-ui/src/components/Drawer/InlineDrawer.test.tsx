@@ -15,16 +15,20 @@ import { InlineDrawerLayout } from './InlineDrawerLayout'
 import { DrawerHeader, InlineDrawer } from './client'
 
 import type { InlineDrawerSize } from './drawerSize'
+import type { InlineDrawerProps } from './types'
 
 const PANEL_ID = 'filter-panel'
+const EXTERNAL_LABEL_ID = 'external-label'
 
 const renderWithIntl = (ui: ReactElement) => render(<IntlProvider locale="ja">{ui}</IntlProvider>)
 
-const Template: FC<{
-  initialOpen?: boolean
-  size?: InlineDrawerSize
-  onClickClose?: () => void
-}> = ({ initialOpen = false, size, onClickClose }) => {
+const Template: FC<
+  {
+    initialOpen?: boolean
+    size?: InlineDrawerSize
+    onClickClose?: () => void
+  } & Pick<InlineDrawerProps, 'aria-label' | 'aria-labelledby'>
+> = ({ initialOpen = false, size, onClickClose, ...rest }) => {
   const [isOpen, setIsOpen] = useState(initialOpen)
   const close = () => {
     onClickClose?.()
@@ -34,7 +38,7 @@ const Template: FC<{
   return (
     <InlineDrawerLayout
       left={
-        <InlineDrawer id={PANEL_ID} isOpen={isOpen} size={size} onClickClose={close}>
+        <InlineDrawer {...rest} id={PANEL_ID} isOpen={isOpen} size={size} onClickClose={close}>
           <DrawerHeader title="絞り込み" />
           <DrawerBody>
             <form>
@@ -61,13 +65,42 @@ const trigger = () => screen.getByRole('button', { name: '絞り込みを切り�
 const panel = () => document.getElementById(PANEL_ID)!
 
 describe('InlineDrawer', () => {
-  it('開いているとき、DrawerHeader の title をアクセシブル名に持つ補足ランドマークになること', () => {
+  it('開いているとき、DrawerHeader の title をアクセシブル名に持つ region ランドマークになること', () => {
     renderWithIntl(<Template initialOpen />)
 
-    expect(screen.getByRole('complementary', { name: '絞り込み' })).toBe(panel())
+    expect(screen.getByRole('region', { name: '絞り込み' })).toBe(panel())
   })
 
-  it('閉じると aside が DOM に残ったまま hidden と inert になり、aria-controls の参照先が存在し続けること', async () => {
+  it('aria-label を指定すると、DrawerHeader の title ではなく aria-label がアクセシブル名になること', () => {
+    renderWithIntl(<Template initialOpen aria-label="従業員の絞り込み" />)
+
+    expect(screen.getByRole('region', { name: '従業員の絞り込み' })).toBe(panel())
+    expect(panel()).not.toHaveAttribute('aria-labelledby')
+  })
+
+  it('aria-labelledby を指定すると、参照先の要素がアクセシブル名になること', () => {
+    renderWithIntl(
+      <>
+        <p id={EXTERNAL_LABEL_ID}>外部のラベル</p>
+        <Template initialOpen aria-labelledby={EXTERNAL_LABEL_ID} />
+      </>,
+    )
+
+    expect(screen.getByRole('region', { name: '外部のラベル' })).toBe(panel())
+  })
+
+  it('aria-label と aria-labelledby を両方指定すると、ネイティブの属性と同じく aria-labelledby がアクセシブル名になること', () => {
+    renderWithIntl(
+      <>
+        <p id={EXTERNAL_LABEL_ID}>外部のラベル</p>
+        <Template initialOpen aria-label="従業員の絞り込み" aria-labelledby={EXTERNAL_LABEL_ID} />
+      </>,
+    )
+
+    expect(screen.getByRole('region', { name: '外部のラベル' })).toBe(panel())
+  })
+
+  it('閉じると section が DOM に残ったまま hidden と inert になり、aria-controls の参照先が存在し続けること', async () => {
     renderWithIntl(<Template initialOpen />)
 
     await userEvent.click(trigger())
@@ -75,7 +108,7 @@ describe('InlineDrawer', () => {
     await waitFor(() => expect(panel()).toHaveAttribute('hidden'))
     expect(panel()).toHaveAttribute('inert')
     expect(document.getElementById(trigger().getAttribute('aria-controls')!)).toBe(panel())
-    expect(screen.queryByRole('complementary')).not.toBeInTheDocument()
+    expect(screen.queryByRole('region')).not.toBeInTheDocument()
   })
 
   it('閉じている状態から開くと、hidden と inert が外れること', async () => {
@@ -188,12 +221,12 @@ describe('InlineDrawerLayout', () => {
     renderWithIntl(
       <InlineDrawerLayout
         left={
-          <InlineDrawer id="left" isOpen ariaLabel="左" onClickClose={() => undefined}>
+          <InlineDrawer id="left" isOpen aria-label="左" onClickClose={() => undefined}>
             左
           </InlineDrawer>
         }
         right={
-          <InlineDrawer id="right" isOpen ariaLabel="右" onClickClose={() => undefined}>
+          <InlineDrawer id="right" isOpen aria-label="右" onClickClose={() => undefined}>
             右
           </InlineDrawer>
         }
@@ -202,9 +235,9 @@ describe('InlineDrawerLayout', () => {
       </InlineDrawerLayout>,
     )
 
-    const left = screen.getByRole('complementary', { name: '左' })
+    const left = screen.getByRole('region', { name: '左' })
     const main = screen.getByText('メイン')
-    const right = screen.getByRole('complementary', { name: '右' })
+    const right = screen.getByRole('region', { name: '右' })
 
     expect(left.compareDocumentPosition(main) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(main.compareDocumentPosition(right) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()

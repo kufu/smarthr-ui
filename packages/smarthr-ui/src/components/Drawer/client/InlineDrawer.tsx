@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
-import { Aside } from '../../SectioningContent'
+import { Section } from '../../SectioningContent'
 import { drawerSize } from '../drawerSize'
 
 import { DrawerContext, useDrawerContextValue } from './DrawerContext'
@@ -23,9 +23,9 @@ import type { ExtendElementPropsWithRef } from '../../../types'
 import type { InlineDrawerSize } from '../drawerSize'
 
 type Props = ExtendElementPropsWithRef<
-  'aside',
+  'section',
   {
-    /** パネル（aside）の id。トリガーの aria-controls に同じ値を指定する。閉じている間も aside は DOM に残る */
+    /** パネル（section）の id。トリガーの aria-controls に同じ値を指定する。閉じている間も section は DOM に残る */
     id: string
     /** 開いているかどうか */
     isOpen: boolean
@@ -33,12 +33,12 @@ type Props = ExtendElementPropsWithRef<
     size?: InlineDrawerSize
     /** DrawerHeader の閉じるボタン押下時 */
     onClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    /** aria-label。未指定なら DrawerHeader の title がアクセシブル名になる */
-    ariaLabel?: string
-    /** aria-labelledby。未指定なら DrawerHeader の title がアクセシブル名になる */
-    ariaLabelledby?: string
+    /** 未指定なら DrawerHeader の title がアクセシブル名になる */
+    'aria-label'?: string
+    /** 未指定なら DrawerHeader の title がアクセシブル名になる */
+    'aria-labelledby'?: string
   },
-  { omit: 'style' | 'hidden' | 'inert' | 'aria-label' | 'aria-labelledby' }
+  { omit: 'style' | 'hidden' | 'inert' }
 >
 
 type Phase = 'hidden' | 'opening' | 'open' | 'closing'
@@ -87,14 +87,14 @@ export const InlineDrawer: FC<Props> = ({
   isOpen,
   size = 'S',
   onClickClose,
-  ariaLabel,
-  ariaLabelledby,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
   className,
   children,
   ref,
   ...rest
 }) => {
-  const asideRef = useRef<HTMLElement>(null)
+  const panelRef = useRef<HTMLElement>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
   const [phase, setPhase] = useState<Phase>(isOpen ? 'open' : 'hidden')
   const latest = useLatest({ id, phase })
@@ -107,7 +107,7 @@ export const InlineDrawer: FC<Props> = ({
   })
 
   useLayoutEffect(() => {
-    const panel = asideRef.current
+    const panel = panelRef.current
 
     if (!panel) return
 
@@ -166,11 +166,11 @@ export const InlineDrawer: FC<Props> = ({
     return { wrapper: wrapper({ size, className }), inner: inner({ size }) }
   }, [size, className])
 
-  const mergedRef = useMergeRefs(asideRef, ref)
+  const mergedRef = useMergeRefs(panelRef, ref)
 
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    <Aside
+    <Section
       {...rest}
       {...PHASE_ATTRIBUTES[phase]}
       ref={mergedRef}
@@ -182,6 +182,6 @@ export const InlineDrawer: FC<Props> = ({
       <div className={classNames.inner}>
         <DrawerContext.Provider value={contextValue}>{children}</DrawerContext.Provider>
       </div>
-    </Aside>
+    </Section>
   )
 }

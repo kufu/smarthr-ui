@@ -55,6 +55,6 @@ export const useDrawerContextValue = ({
 
   return {
     contextValue,
-    resolvedLabelledby: ariaLabel ? undefined : (ariaLabelledby ?? registeredHeadingId),
+    resolvedLabelledby: ariaLabelledby ?? (ariaLabel ? undefined : registeredHeadingId),
   }
 }
