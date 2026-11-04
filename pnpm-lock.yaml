@@ -217,18 +217,9 @@ importers:
       dayjs:
         specifier: ^1.11.23
         version: 1.11.23
-      decimal.js:
-        specifier: ^10.6.0
-        version: 10.6.0
       intl-messageformat:
         specifier: ^11.2.15
         version: 11.2.15
-      lodash.merge:
-        specifier: ^4.6.2
-        version: 4.6.2
-      lodash.range:
-        specifier: ^3.2.0
-        version: 3.2.0
       polished:
         specifier: ^4.3.1
         version: 4.3.1
@@ -302,12 +293,6 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.7
         version: 14.6.8(@testing-library/dom@10.4.2)
-      '@types/lodash.merge':
-        specifier: ^4.6.9
-        version: 4.6.9
-      '@types/lodash.range':
-        specifier: ^3.2.9
-        version: 3.2.9
       '@types/node':
         specifier: ^20.19.43
         version: 20.19.43
@@ -3083,15 +3068,6 @@ packages:
   '@types/liftoff@4.0.3':
     resolution: {integrity: sha512-UgbL2kR5pLrWICvr8+fuSg0u43LY250q7ZMkC+XKC3E+rs/YBDEnQIzsnhU5dYsLlwMi3R75UvCL87pObP1sxw==}
 
-  '@types/lodash.merge@4.6.9':
-    resolution: {integrity: sha512-23sHDPmzd59kUgWyKGiOMO2Qb9YtqRO/x4IhkgNUiPQ1+5MUVqi6bCZeq9nBJ17msjIMbEIO5u+XW4Kz6aGUhQ==}
-
-  '@types/lodash.range@3.2.9':
-    resolution: {integrity: sha512-JNStPShiaR3ROKIAgtzChBhouPBCJxMI/Fj7Xa1cG51A2EMRyosvtL4fiGXOFiQddaxjZmNVYkZGsDRt8fFKPg==}
-
-  '@types/lodash@4.14.182':
-    resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
-
   '@types/mdx@2.0.14':
     resolution: {integrity: sha512-T48PeuJtvLosNTPVhfnIp3i/n3a4g4Bad7YCq5k64D4u7NwDrAotikQ+5+sjtUvBmxCMlbo3dVL+C2dP0rWHzg==}
 
@@ -4914,9 +4890,6 @@ packages:
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
-
-  lodash.range@3.2.0:
-    resolution: {integrity: sha512-Fgkb7SinmuzqgIhNhAElo0BL/R1rHCnhwSZf78omqSwvWqD0kD2ssOAutQonDKH/ldS8BxA72ORYI09qAY9CYg==}
 
   lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
@@ -9189,16 +9162,6 @@ snapshots:
       '@types/fined': 1.1.5
       '@types/node': 20.19.43
 
-  '@types/lodash.merge@4.6.9':
-    dependencies:
-      '@types/lodash': 4.14.182
-
-  '@types/lodash.range@3.2.9':
-    dependencies:
-      '@types/lodash': 4.14.182
-
-  '@types/lodash@4.14.182': {}
-
   '@types/mdx@2.0.14': {}
 
   '@types/node@20.19.43':
@@ -11337,8 +11300,6 @@ snapshots:
   lodash.debounce@4.0.8: {}
 
   lodash.merge@4.6.2: {}
-
-  lodash.range@3.2.0: {}
 
   lodash.truncate@4.4.2: {}
 
