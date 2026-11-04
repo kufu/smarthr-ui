@@ -12,3 +12,6 @@ global.ResizeObserver = class ResizeObserver {
 
 // react-pdf(pdfjs-dist)がモジュールロード時に参照するため必要なモック
 global.DOMMatrix = class DOMMatrix {}
+
+// jsdomがwindow.scrollToを実装していないため必要なモック
+window.scrollTo = () => {}

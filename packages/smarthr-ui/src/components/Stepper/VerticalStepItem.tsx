@@ -7,15 +7,20 @@ import { Section } from '../SectioningContent'
 import { StepCounter } from './StepCounter'
 
 import type { StatusType, VerticalStep } from './types'
+import type { ExtendProps } from '../../types'
 
-type Props = Omit<VerticalStep, 'status'> & {
-  statusType?: StatusType
-  statusText?: string
-  /** ステップ数 */
-  stepNumber: number
-  /** 現在地かどうか */
-  current: boolean
-}
+type Props = ExtendProps<
+  VerticalStep,
+  {
+    statusType?: StatusType
+    statusText?: string
+    /** ステップ数 */
+    stepNumber: number
+    /** 現在地かどうか */
+    current: boolean
+  },
+  { omit: 'status' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -101,9 +106,7 @@ export const VerticalStepItem: FC<Props> = ({
         </div>
         <div className={classNames.body}>
           <div className={classNames.headingWrapper}>
-            <Heading type="sectionTitle" className={classNames.heading}>
-              {label}
-            </Heading>
+            <Heading className={classNames.heading}>{label}</Heading>
           </div>
           <div className={classNames.inner}>{children}</div>
         </div>

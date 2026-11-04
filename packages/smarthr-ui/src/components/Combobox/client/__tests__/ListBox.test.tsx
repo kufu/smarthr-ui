@@ -1,5 +1,4 @@
 import { act, render, screen } from '@testing-library/react'
-import { createRef } from 'react'
 import { vi } from 'vitest'
 
 import { ListBox } from '../useListbox'
@@ -29,8 +28,7 @@ const buildOptions = (count: number) =>
 
 describe('ListBox - Intersection(スクロール末端検知による追加読み込み)', () => {
   const options = buildOptions(OPTION_COUNT)
-  const listBoxRef = createRef<HTMLDivElement>()
-  const activeRef = createRef<HTMLButtonElement>()
+  const listBoxRef = () => undefined
 
   beforeEach(() => {
     MockIntersectionObserver.instances = []
@@ -45,7 +43,6 @@ describe('ListBox - Intersection(スクロール末端検知による追加読�
     render(
       <ListBox
         listBoxRef={listBoxRef}
-        activeRef={activeRef}
         activeOptionId={undefined}
         listBoxId="listbox"
         isExpanded

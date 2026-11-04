@@ -1,20 +1,18 @@
-import {
-  type ComponentProps,
-  type FC,
-  type PropsWithChildren,
-  type ReactNode,
-  useId,
-  useMemo,
-} from 'react'
+import { type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
 import { ButtonList } from '../client'
 
-type BaseProps = PropsWithChildren<{
-  name?: ReactNode
-}>
-type Props = BaseProps & Omit<ComponentProps<'li'>, keyof BaseProps>
+import type { ExtendElementPropsWithRef } from '../../../types'
+
+type Props = ExtendElementPropsWithRef<
+  'li',
+  {
+    name?: ReactNode
+  },
+  { omit: 'role' }
+>
 
 const classNameGenerator = tv({
   base: [
@@ -40,7 +38,7 @@ const classNameGenerator = tv({
 // 属性を付与している（ButtonList.tsx側で判定に使用）
 type DropdownMenuGroupComponent = FC<Props> & { __isSmarthrUIDropdownMenuGroup: true }
 
-export const DropdownMenuGroup = (({ name, children, className }) => {
+export const DropdownMenuGroup = (({ name, children, className, ...rest }) => {
   const subMenuId = useId()
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
@@ -51,7 +49,12 @@ export const DropdownMenuGroup = (({ name, children, className }) => {
   )
 
   return (
-    <li role="presentation" className={actualClassName} data-smarthr-ui-dropdown-menu-group>
+    <li
+      {...rest}
+      role="presentation"
+      className={actualClassName}
+      data-smarthr-ui-dropdown-menu-group
+    >
       {name ? (
         <>
           <Text

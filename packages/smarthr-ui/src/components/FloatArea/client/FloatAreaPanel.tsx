@@ -1,10 +1,11 @@
 'use client'
 
+import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { Panel } from '../../Panel'
 
-import type { ComponentProps, FC } from 'react'
+import type { ComponentPropsWithRef, FC } from 'react'
 
-type Props = Omit<ComponentProps<typeof Panel>, 'ref'>
+type Props = ComponentPropsWithRef<typeof Panel>
 
 // HINT: overflowがvisible・clip以外の要素はスクロールコンテナになり、stickyの基準になる。
 // 祖先を辿って算出値を調べるのは重いため、smarthr-uiのクラスで指定されたものに限定して判定する
@@ -37,7 +38,11 @@ const callbackRef = (node: HTMLDivElement | null) => {
   )
 }
 
-export const FloatAreaPanel: FC<Props> = (props) => (
-  // HINT: 多くの場合viewportが基準になるため、初期状態では属性を付与しておく
-  <Panel {...props} ref={callbackRef} data-sticky-to-viewport />
-)
+export const FloatAreaPanel: FC<Props> = ({ ref, ...rest }) => {
+  const mergedRef = useMergeRefs(callbackRef, ref)
+
+  return (
+    // HINT: 多くの場合viewportが基準になるため、初期状態では属性を付与しておく
+    <Panel {...rest} ref={mergedRef} data-sticky-to-viewport />
+  )
+}

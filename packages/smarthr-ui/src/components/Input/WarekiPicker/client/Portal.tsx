@@ -1,0 +1,70 @@
+'use client'
+
+import { type FC, useCallback } from 'react'
+
+import { getSafeAreaInsets } from '../../../../libs/safeAreaInsets'
+import { Portal as OriginalPortal } from '../../../Portal'
+
+import type { ExtendElementPropsWithoutRef } from '../../../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  typeof OriginalPortal,
+  {
+    inputRect: DOMRect
+  },
+  { omit: 'className' }
+>
+
+export const Portal: FC<Props> = ({ inputRect, children, ...rest }) => {
+  const callbackRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (node) {
+        const position = getPortalPosition(inputRect, node.offsetHeight)
+
+        node.style.top = `${position.top}px`
+        node.style.left = `${position.left}px`
+      }
+    },
+    [inputRect],
+  )
+
+  return (
+    <OriginalPortal
+      {...rest}
+      ref={callbackRef}
+      // HINT: shr-flex は子(Calendar)のinline-block由来の余白を消すために必要。
+      // 余白があるとPortal要素の下端がCalendarの外側になり、
+      // 外側クリック判定(useOuterClick)が意図せず発火する
+      className="smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-flex shr-leading-none"
+    >
+      {children}
+    </OriginalPortal>
+  )
+}
+
+// HINT: 上方向表示はcontentHeightを引いて位置を決めるため、
+// Portalとinputの重なりが下方向表示と同じになるよう小さい値にしている
+const PORTAL_POSITION_MARGIN_FOR_TOP = 2
+const PORTAL_POSITION_MARGIN_FOR_BOTTOM = 4
+
+function getPortalPosition(inputRect: DOMRect, contentHeight: number) {
+  const { innerHeight, pageYOffset } = window
+  // HINT: safe areaに重ならない領域を、カレンダーを表示できる範囲とする
+  const safeAreaInsets = getSafeAreaInsets()
+  const safeBottom = innerHeight - safeAreaInsets.bottom
+  const top =
+    // has no space on bottom side
+    inputRect.bottom + contentHeight > safeBottom &&
+    // top side space bigger than bottom side
+    inputRect.top - safeAreaInsets.top > safeBottom - inputRect.bottom
+      ? // display on top side
+        pageYOffset + inputRect.top - contentHeight + PORTAL_POSITION_MARGIN_FOR_TOP
+      : // display on bottom side
+        pageYOffset + inputRect.bottom - PORTAL_POSITION_MARGIN_FOR_BOTTOM
+  const left = pageXOffset + inputRect.left
+
+  return {
+    top,
+    left,
+  }
+}

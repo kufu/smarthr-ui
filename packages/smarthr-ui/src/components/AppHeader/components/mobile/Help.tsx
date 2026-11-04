@@ -5,7 +5,6 @@ import { Button } from '../../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaCircleQuestionIcon, FaGraduationCapIcon } from '../../../Icon'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 type Props = {
   helpPageUrl?: string | null
@@ -46,9 +45,7 @@ const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => (
         referrerPolicy="no-referrer-when-downgrade"
         prefix={<FaCircleQuestionIcon />}
       >
-        <Translate>
-          <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
-        </Translate>
+        <Localizer id="smarthr-ui/AppHeader/help" defaultText="ヘルプ" />
       </CommonButton>
     )}
     {schoolUrl && (
@@ -59,9 +56,7 @@ const ContentBody = memo<Props>(({ helpPageUrl, schoolUrl }) => (
         rel="noopener noreferrer"
         prefix={<FaGraduationCapIcon />}
       >
-        <Translate>
-          <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
-        </Translate>
+        <Localizer id="smarthr-ui/AppHeader/school" defaultText="スクール" />
       </CommonButton>
     )}
   </div>

@@ -6,6 +6,7 @@ import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLatest } from '../../../hooks/useLatest'
 import { Scroller } from '../../Scroller'
 
+import { applyPDFJSPolyfills } from './applyPDFJSPolyfills'
 import { SELECTED_MATCH_CLASS, matchSelector } from './buildCustomTextRenderer'
 import { ReactPDFStyle } from './generatedReactPDFStyle'
 
@@ -23,26 +24,19 @@ type ReactPDFModule = {
 }
 
 let reactPDFModulePromise: Promise<ReactPDFModule> | undefined
+// HINT: polyfillを適用すると以降はAPIが存在すると判定されるため、importを再試行する際も初回の判定結果を使う
+let shouldUseLegacyWorker: boolean | undefined
 
 const loadReactPDFModule = (): Promise<ReactPDFModule> => {
   if (!reactPDFModulePromise) {
+    // HINT: pdfjs-distはモジュール評価時にも新しいAPIを参照するため、importより前にpolyfillを適用する
+    shouldUseLegacyWorker ??= applyPDFJSPolyfills()
+
     reactPDFModulePromise = import('react-pdf')
       .then((mod) => {
         const { pdfjs } = mod
 
-        // iOS 17.3以下ではPromise.withResolversが未定義のため、polyfillを適用する
-        // @ts-expect-error
-        if (typeof window.Promise.withResolvers === 'undefined') {
-          // @ts-expect-error
-          window.Promise.withResolvers = function () {
-            let resolve, reject
-            const promise = new Promise((res, rej) => {
-              resolve = res
-              reject = rej
-            })
-            return { promise, resolve, reject }
-          }
-          // web workerもpolyfillされたものを読み込む
+        if (shouldUseLegacyWorker) {
           pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`
         } else {
           // TODO: バンドラの関係でCDNから読み込んでいるが、smarthr-uiから配信するようにしたい
@@ -216,6 +210,9 @@ export const PDFViewer: FC<Props> = memo(
             file={file.url}
             rotate={rotation}
             externalLinkTarget="_blank"
+            // HINT: react-pdf v11からSuspenseとError Boundaryでの読み込み・エラー処理がデフォルトになった。
+            // FileViewerはonLoadErrorなどのコールバックで状態を管理しているため、従来の挙動を維持する
+            suspense={false}
             loading={null}
             className="shr-flex shr-w-fit shr-flex-col shr-items-center shr-gap-1"
             onLoadSuccess={functions.handleDocumentLoadSuccess}

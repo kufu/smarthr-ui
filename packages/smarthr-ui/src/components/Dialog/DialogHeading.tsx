@@ -4,7 +4,7 @@ import { Heading } from '../Heading'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
-export type Props = {
+type Props = {
   /** ダイアログタイトル */
   text: ReactNode
   /** ダイアログサブタイトル */

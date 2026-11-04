@@ -1,6 +1,6 @@
 'use client'
 
-import { type MouseEvent, type RefObject, memo } from 'react'
+import { type MouseEvent, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../../intl'
@@ -11,7 +11,7 @@ import type { ComboboxOption } from './types'
 
 type Props = Omit<ComboboxOption<unknown>, 'item'> &
   Omit<ComboboxOption<unknown>['item'], 'data' | 'value'> & {
-    activeRef: RefObject<HTMLButtonElement> | undefined
+    active: boolean
   }
 
 const classNameGenerator = tv({
@@ -43,6 +43,7 @@ const classNameGenerator = tv({
 
 const CLASS_NAMES = {
   new: classNameGenerator({ new: true }),
+
   select: classNameGenerator({ new: false }),
 }
 
@@ -54,16 +55,15 @@ const handleMouseDown = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault()
 }
 
-export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, activeRef }) => (
+export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, active }) => (
   <button
-    ref={activeRef}
     role="option"
     type="button"
     id={id}
     disabled={isNew ? undefined : disabled}
     className={isNew ? CLASS_NAMES.new : CLASS_NAMES.select}
     aria-selected={isNew ? false : selected}
-    data-active={!!activeRef}
+    data-active={active}
     onMouseDown={handleMouseDown}
   >
     {isNew ? (

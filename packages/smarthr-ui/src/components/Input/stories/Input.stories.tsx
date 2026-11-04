@@ -1,6 +1,7 @@
 import { action } from 'storybook/actions'
 
-import { FaMagnifyingGlassIcon } from '../../Icon'
+import { UnstyledButton } from '../../Button'
+import { FaCircleXmarkIcon, FaMagnifyingGlassIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { SearchInput } from '../SearchInput'
 import { CurrencyInput, Input } from '../client'
@@ -84,20 +85,33 @@ export const Suffix: StoryObj<typeof Input> = {
   },
 }
 
+export const SubActionArea: StoryObj<typeof Input> = {
+  name: 'subActionArea',
+  args: {
+    subActionArea: (
+      <UnstyledButton>
+        <FaCircleXmarkIcon alt="クリア" />
+      </UnstyledButton>
+    ),
+  },
+}
+
 export const BgColor: StoryObj<typeof Input> = {
   name: 'bgColor',
   render: (args) => (
     <Stack>
-      {[
-        undefined,
-        'background',
-        'column',
-        'base-grey',
-        'over-background',
-        'head',
-        'border',
-        'action-background',
-      ].map((bgColor) => (
+      {(
+        [
+          undefined,
+          'BACKGROUND',
+          'COLUMN',
+          'BASE_GREY',
+          'OVER_BACKGROUND',
+          'HEAD',
+          'BORDER',
+          'ACTION_BACKGROUND',
+        ] as const
+      ).map((bgColor) => (
         <Input {...args} key={bgColor} bgColor={bgColor} />
       ))}
     </Stack>

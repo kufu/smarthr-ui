@@ -1,11 +1,40 @@
 import type { ChangeEvent, ReactNode } from 'react'
 
-export type ComboboxItem<T> = {
+type ComboboxItemBase<T> = {
   value: string
-  label: ReactNode
   disabled?: boolean
   data?: T
 }
+
+export type ComboboxItem<T> = ComboboxItemBase<T> &
+  (
+    | {
+        label: string
+        /**
+         * 検索・アイテムの同一性判定・選択済みアイテムの表示に使う文字列。候補とMultiComboboxの選択済みチップにはlabelを表示する。
+         * 省略時は `label` がそのまま使われる。
+         *
+         * `label` に含まれていても `labelText` に含まれない文字列は検索対象にならない。
+         * アイテムの同一性は `value` とこの文字列（未指定時は `label`）で判定するため、
+         * `items` と `selectedItem` / `selectedItems` を別々に生成する場合も同じ値を指定すること。
+         * `SingleCombobox` では選択済みアイテムのinput表示テキストとしてもこの値が使われる。
+         */
+        labelText?: string
+      }
+    | {
+        label: ReactNode
+        /**
+         * 検索・アイテムの同一性判定・選択済みアイテムの表示に使う文字列。
+         * `label` が `ReactNode` の場合は必須。
+         *
+         * `label` に含まれていても `labelText` に含まれない文字列は検索対象にならない。
+         * アイテムの同一性は `value` とこの文字列で判定するため、
+         * `items` と `selectedItem` / `selectedItems` を別々に生成する場合も同じ値を指定すること。
+         * `SingleCombobox` では選択済みアイテムのinput表示テキストとしてもこの値が使われる。
+         */
+        labelText: string
+      }
+  )
 
 export type ComboboxOption<T> = {
   id: string
@@ -20,7 +49,11 @@ export type BaseProps<T> = {
    */
   items: Array<ComboboxItem<T>>
   /**
-   * input 要素の `name` 属性の値
+   * input 要素の `name` 属性の値。
+   * `MultiCombobox` では、選択済みアイテムの値を保持する hidden input 群の `name` にそのまま使われ、
+   * 検索用テキストボックスの `name` には `query_${name}` が設定される。
+   * 複数の hidden input は同じ `name` を持つため、Railsなど配列として受け取りたい場合は
+   * `name="ids[]"` のように `[]` を含めて指定すること（自動では付与されない）
    */
   name?: string
   /**

@@ -7,7 +7,7 @@ import ts from 'typescript'
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
-const IGNORE_COMPONENTS = ['Experimental', 'OpenInNewTabIcon', 'LiveRegion']
+const IGNORE_COMPONENTS = ['Experimental', 'OpenInNewTabIcon', 'LiveRegion', 'Portal']
 const IGNORE_INNER_DIRS = [
   'Input/InputWithTooltip',
   'Browser/models',
@@ -120,8 +120,8 @@ const getExportedDirectoryComponents = async (
           child.elements.forEach((element) => {
             // エイリアス前の元の名前を取得（export { A as B } の場合、Aを取得）
             const componentName = element.propertyName
-              ? `${element.propertyName.escapedText}`
-              : `${element.name.escapedText}`
+              ? element.propertyName.getText(sourceFile)
+              : element.name.getText(sourceFile)
             exportComponents.push(componentName)
           })
         }

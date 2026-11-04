@@ -7,8 +7,7 @@ import { Table } from '../Table'
 import { Td } from '../Td'
 import { TdCheckbox } from '../TdCheckbox'
 import { Th } from '../Th'
-import { WakuWakuButton } from '../WakuWakuButton'
-import { ThCheckbox } from '../client'
+import { ThCheckbox } from '../ThCheckbox'
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite'
 
@@ -41,7 +40,6 @@ export default {
     TdCheckbox,
     BulkActionRow,
     EmptyTableBody,
-    WakuWakuButton,
   },
   render: Template,
   parameters: {

@@ -9,7 +9,7 @@ import {
 } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 
 const _defaultExpandedOptions = {
   あり: ['accordion-panel-2'],
@@ -56,7 +56,9 @@ export const IconPosition: StoryObj<typeof AccordionPanel> = {
   render: (args) => (
     <Stack>
       {(
-        [undefined, 'left', 'right'] as Array<ComponentProps<typeof AccordionPanel>['iconPosition']>
+        [undefined, 'left', 'right'] as Array<
+          ComponentPropsWithoutRef<typeof AccordionPanel>['iconPosition']
+        >
       ).map((iconPosition) => (
         <AccordionPanel {...args} key={iconPosition} iconPosition={iconPosition}>
           {[...Array(3)].map((_, i) => (
@@ -122,7 +124,7 @@ export const OnClick: StoryObj<typeof AccordionPanel> = {
 export const Rounded: StoryObj<typeof AccordionPanel> = {
   name: 'rounded',
   render: (args) => {
-    const template = (rounded?: ComponentProps<typeof AccordionPanel>['rounded']) => (
+    const template = (rounded?: ComponentPropsWithoutRef<typeof AccordionPanel>['rounded']) => (
       <AccordionPanel {...args} rounded={rounded}>
         {[...Array(2)].map((_, i) => (
           <AccordionPanelItem key={i + 1} name={`accordion-panel-${i + 1}`}>

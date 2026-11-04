@@ -8,7 +8,6 @@ export default {
   component: ResponseMessage,
   render: (args) => <ResponseMessage {...args} />,
   argTypes: {
-    alt: { control: 'text' },
     status: {
       control: 'select',
       options: ['info', 'success', 'warning', 'error', 'sync'],
@@ -19,7 +18,6 @@ export default {
   args: {
     children: 'レスポンスメッセージ',
     status: 'info',
-    alt: '',
   },
   parameters: {
     chromatic: { disableSnapshot: true },

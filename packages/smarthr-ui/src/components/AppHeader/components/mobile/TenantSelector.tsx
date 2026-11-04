@@ -1,5 +1,5 @@
 import {
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type FC,
   type MouseEvent,
   type PropsWithChildren,
@@ -16,7 +16,7 @@ import { CommonButton } from '../common/CommonButton'
 
 import type { Header } from '../../../Header'
 
-const tenantDropdownTriggerButton = tv({
+const classNameGenerator = tv({
   base: [
     'shr-cursor-pointer shr-rounded-s shr-border-none shr-bg-white shr-px-0.5 shr-py-0.25 shr-text-start shr-text-sm',
     'hover:shr-bg-white-darken',
@@ -24,13 +24,12 @@ const tenantDropdownTriggerButton = tv({
   ],
 })
 
-const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = tenantDropdownTriggerButton()
+const TENANT_DROPDOWN_TRIGGER_CLASS_NAME = classNameGenerator()
 
-type Props = {
-  tenants?: ComponentProps<typeof Header>['tenants']
-  currentTenantId?: ComponentProps<typeof Header>['currentTenantId']
-  onTenantSelect?: ComponentProps<typeof Header>['onTenantSelect']
-}
+type Props = Pick<
+  ComponentPropsWithRef<typeof Header>,
+  'tenants' | 'currentTenantId' | 'onTenantSelect'
+>
 
 export const TenantSelector: FC<Props> = ({ tenants, currentTenantId, onTenantSelect }) => {
   const tenantName = useMemo(() => {

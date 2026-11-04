@@ -8,11 +8,6 @@ import { DropdownMenuButton } from '../DropdownMenuButton'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-const _sampleTriggerIcons = {
-  undefined,
-  'FaGearIcon（onlyIconTrigger の時のみ動作）': FaGearIcon,
-}
-
 const WrappedButton = () => <Button>操作5</Button>
 
 export default {
@@ -26,7 +21,8 @@ export default {
       <RemoteDialogTrigger targetId="remoteDialog" onClick={action('open-remote-dialog')}>
         <Button>操作3</Button>
       </RemoteDialogTrigger>
-      <Button disabled={true} disabledReason={{ message: 'disabled.' }} onClick={action('action4')}>
+      {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため */}
+      <Button disabled={true} disabledReason={{ text: 'disabled.' }} onClick={action('action4')}>
         操作4
       </Button>
       <WrappedButton />
@@ -43,7 +39,7 @@ export default {
 export const Playground: StoryObj<typeof DropdownMenuButton> = {
   args: {
     trigger: {
-      children: 'その他の操作',
+      text: 'その他の操作',
       size: 'M',
     },
   },
@@ -60,7 +56,7 @@ export const TriggerSize: StoryObj<typeof DropdownMenuButton> = {
   name: 'trigger.size',
   args: {
     trigger: {
-      children: 'ドロップダウンメニューボタンラベル',
+      text: 'ドロップダウンメニューボタンラベル',
       size: 'S',
     },
   },
@@ -70,7 +66,7 @@ export const TriggerOnlyIcon: StoryObj<typeof DropdownMenuButton> = {
   name: 'trigger.onlyIcon',
   args: {
     trigger: {
-      children: 'ドロップダウンメニューボタンラベル',
+      text: 'ドロップダウンメニューボタンラベル',
       // onlyIcon が falsy の時は、開閉を示唆する FaCaretDownIcon が表示されます
       onlyIcon: true,
     },
@@ -81,7 +77,7 @@ export const TriggerOnlyIconComponent: StoryObj<typeof DropdownMenuButton> = {
   name: 'trigger.onlyIcon.component',
   args: {
     trigger: {
-      children: 'ドロップダウンメニューボタンラベル',
+      text: 'ドロップダウンメニューボタンラベル',
       onlyIcon: {
         component: FaGearIcon,
       },

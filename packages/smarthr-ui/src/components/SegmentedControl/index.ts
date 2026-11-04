@@ -1,1 +1,1 @@
-export { SegmentedControl, type Option as SegmentedControlOption } from './client'
+export { SegmentedControl } from './client'

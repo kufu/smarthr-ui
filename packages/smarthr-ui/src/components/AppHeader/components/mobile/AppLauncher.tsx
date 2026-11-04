@@ -12,7 +12,6 @@ import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
 
@@ -83,8 +82,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           title={searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
-          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          tooltipMessage={searchInputTitle}
+          // TODO: subActionArea内のクリックではInputが検索欄にフォーカスを戻さないため、
+          // クリア後に検索欄へフォーカスを戻す対応が必要（desktop/AppLauncher.tsxも同様）
+          subActionArea={
+            mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
+          }
         />
       </div>
 
@@ -98,7 +101,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
         )}
 
         {(mode === 'search' || page === 'all') && (
-          <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
+          <AppLauncherSortDropdown sortType={sortType} handleSelectSortType={setSortType} />
         )}
       </Cluster>
 
@@ -121,7 +124,7 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SearchResultText = memo<PropsWithChildren>(({ children }) => (
   <Text size="S" weight="bold">
-    <Translate>{children}</Translate>
+    {children}
   </Text>
 ))
 
@@ -132,7 +135,7 @@ const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, c
         href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
         target="_blank"
       >
-        <Translate>{children}</Translate>
+        {children}
       </HelpLink>
     </Text>
   </div>

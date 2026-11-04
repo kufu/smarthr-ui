@@ -1,4 +1,4 @@
-base: base (10), none
+paneled: true (10), false
 bold: true, false
 type: error, warning, info, success, sync
 children: String (10), ReactNode
@@ -6,5 +6,5 @@ subActionArea: ReactNode, undefined (10)
 layer: 0, 1, 2, 3, 4, undefined
 onClose: yes, no
 
-IF [base] = "none" THEN [layer] = "undefined";
+IF [paneled] = "false" THEN [layer] = "undefined";
 

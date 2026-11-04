@@ -1,17 +1,19 @@
-import type { FunctionComponent, PropsWithChildren, ReactNode } from 'react'
+import type { FunctionComponent, ReactNode } from 'react'
 
-export type BaseProps = PropsWithChildren<{
+export type ObjectDisabledReasonType = {
+  icon?: FunctionComponent
+  text: ReactNode
+}
+
+export type BaseProps = {
   /**
    * ボタンの大きさ
    */
   size?: 'M' | 'S'
   /**
-   * 無効な理由
+   * 無効な理由。ReactNodeを直接指定した場合はtextとして扱われる
    */
-  disabledReason?: {
-    icon?: FunctionComponent
-    message: ReactNode
-  }
+  disabledReason?: ReactNode | ObjectDisabledReasonType
   /**
    * ボタン内の先頭に表示する内容。
    * 通常は、アイコンを表示するために用いる。
@@ -29,11 +31,9 @@ export type BaseProps = PropsWithChildren<{
   /**
    * ボタンのスタイルの種類
    */
-  variant?: Variant
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'
   /**
    * 処理が走ってるかどうか
    */
   loading?: boolean
-}>
-
-export type Variant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'skeleton' | 'text'
+}

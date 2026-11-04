@@ -4,7 +4,7 @@ import {
   type FC,
   type MouseEvent,
   type PropsWithChildren,
-  type ReactNode,
+  type KeyboardEvent as ReactKeyboardEvent,
   createContext,
   useId,
   useMemo,
@@ -12,14 +12,13 @@ import {
 } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { usePortal } from '../../../hooks/client/usePortal'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { findDelegateTarget } from '../../../libs/delegate'
 import { tabbable } from '../../../libs/tabbable'
+import { isChildPortal } from '../../Portal'
 import { DROPDOWN_CLOSER_CLASS_NAME } from '../DropdownCloser'
 
 import { DROPDOWN_CONTENT_CLASS_NAME, DUMMY_FOCUS_CONTENT_CLASSNAME } from './constants'
@@ -36,8 +35,9 @@ type DropdownContextType = {
   triggerLayoutEffectRef: (node: HTMLElement | null) => void
   contentCallbackRef: (node: HTMLElement | null) => void
   handleDelegateClickTrigger: (e: MouseEvent<HTMLElement>) => void
-  handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => void
-  DropdownContentRoot: FC<{ children: ReactNode }>
+  handleDelegateClickContent: (e: MouseEvent<HTMLElement>) => void
+  handleDelegateKeyDownContent: (e: ReactKeyboardEvent<HTMLElement>) => void
+  contentId: string
 }
 
 const KEY_ESCAPE = /^Esc(ape)?$/
@@ -49,8 +49,9 @@ export const DropdownContext = createContext<DropdownContextType>({
   triggerLayoutEffectRef: NOOP,
   contentCallbackRef: NOOP,
   handleDelegateClickTrigger: NOOP,
-  handleDelegateClickContentCloser: NOOP,
-  DropdownContentRoot: NOOP,
+  handleDelegateClickContent: NOOP,
+  handleDelegateKeyDownContent: NOOP,
+  contentId: '',
 })
 
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
@@ -59,9 +60,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const [contentStyles, setContentStyles] = useState(INITIAL_CONTENT_STYLES)
 
   const contentId = useId()
-  const { createPortal, isChildPortal, PortalParentProvider } = usePortal({
-    rootId: contentId,
-  })
 
   const openFrame = useAnimationFrame()
   const closeFrame = useAnimationFrame()
@@ -69,10 +67,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
 
   const latest = useLatest({
     active,
-    isChildPortal,
     onOpen,
     onClose,
-    createPortal,
     openFrame,
     closeFrame,
     contentId,
@@ -86,11 +82,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     let triggerButton: HTMLButtonElement | null | undefined = null
     let content: HTMLElement | null = null
     let dummyFocusContent: HTMLElement | null | undefined = null
-
-    // This is the root container of a dropdown content located in outside the DOM tree
-    const DropdownContentRoot: FC<{ children: ReactNode }> = (props) =>
-      latest.active ? latest.createPortal(props.children) : null
-    DropdownContentRoot.displayName = 'DropdownContentRoot'
 
     const updateContentStyles = () => {
       if (content && triggerButton) {
@@ -121,8 +112,8 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     }
 
     return {
-      DropdownContentRoot,
       updateContentStyles,
+      getContent: () => content,
       triggerCallbackRef: (node: HTMLElement | null) => {
         trigger = node
         triggerButton = node?.querySelector<HTMLButtonElement>('button')
@@ -134,7 +125,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           latest.closeFrame.cancel()
         }
       },
-      baseContentCallbackRef: (node: HTMLElement | null) => {
+      contentCallbackRef: (node: HTMLElement | null) => {
         content = node
 
         if (!node) {
@@ -194,30 +185,6 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
               target!.focus()
               handleDelegateClickCloser()
             }
-          } else if (KEY_ESCAPE.test(e.key)) {
-            if (e.target && e.target === dummyFocusContent) {
-              handleDelegateClickCloser()
-
-              return
-            }
-
-            const target = trigger ? tabbable(trigger)[0] : undefined
-
-            if (target && e.target === target) {
-              // close the dropdown when the Trigger is focused and Esc key is pressed
-              handleDelegateClickCloser()
-
-              return
-            }
-
-            for (const inner of tabbable(node)) {
-              if (inner === e.target) {
-                // close the dropdown when an element that is included in dropdown content is focused and Esc key is pressed
-                handleDelegateClickCloser()
-
-                break
-              }
-            }
           }
         }
 
@@ -251,11 +218,31 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
           }
         }
       },
-      handleDelegateClickContentCloser: (e: MouseEvent<HTMLElement>) => {
+      handleDelegateClickContent: (e: MouseEvent<HTMLElement>) => {
         const closer = findDelegateTarget<HTMLElement>(e, `.${DROPDOWN_CLOSER_CLASS_NAME}`)
 
         // HINT: Dropdownがネストしている場合、もっとも近いDropdownだけを閉じる
         if (closer?.closest(`.${DROPDOWN_CONTENT_CLASS_NAME}`) === e.currentTarget) {
+          handleDelegateClickCloser()
+        } else if (
+          // HINT: DropdownContent 内のフォーカスできない要素をクリックすると、フォーカスは body に移る。
+          // これが Dialog > Dropdown の構造で発生すると 、body が Esc キーのイベントを受けてしまい、Dropdown だけでなく下にある Dialog も閉じてしまう。
+          // これを防ぐため、DropdownContent クリック時は Dropdown 内のダミー要素にフォーカスをする
+          e.target instanceof Node &&
+          e.currentTarget.contains(e.target) &&
+          (!document.activeElement || document.activeElement === document.body)
+        ) {
+          dummyFocusContent?.focus({ preventScroll: true })
+        }
+      },
+      // HINT: Dialog > Dropdown の構造になっている場合、Dialog よりも先に Dropdown が Esc キーを受け取って伝播を止める必要があるので、DropdownContent に keydown イベントを設定する
+      handleDelegateKeyDownContent: (e: ReactKeyboardEvent<HTMLElement>) => {
+        if (
+          KEY_ESCAPE.test(e.key) &&
+          e.target instanceof Node &&
+          e.currentTarget.contains(e.target)
+        ) {
+          e.stopPropagation()
           handleDelegateClickCloser()
         }
       },
@@ -276,14 +263,24 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
       if (!active) return
 
       const handleClickBody = (e: any) => {
-        if (!active || !node) {
-          return
-        }
+        if (!active || !node) return
+
+        // HINT: クリックされた要素がクリック処理中にDOMから取り除かれる場合がある(例: WarekiPickerのYearPickerで年を選択した場合)
+        // e.targetから親要素を辿るとポータル外と誤判定してしまうため、イベント発生時点の経路であるcomposedPathで判定する
+        const path: EventTarget[] = e.composedPath()
 
         // ignore events from events within DropdownTrigger and DropdownContent
-        const isClickedInTrigger = e.composedPath().includes(node)
+        if (path.includes(node)) return
 
-        if (!isClickedInTrigger && !latest.isChildPortal(e.target)) {
+        const content = functions.getContent()
+
+        if (
+          !path.some(
+            (target) =>
+              (target instanceof HTMLElement || target instanceof SVGElement) &&
+              isChildPortal(target, content),
+          )
+        ) {
           setActive(false)
           functions.actualClose()
         }
@@ -309,23 +306,20 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     baseTriggerLayoutEffectRef,
   )
 
-  const contentCallbackRef = useCallbackRefCleanupForReact18(functions.baseContentCallbackRef)
-
   return (
-    <PortalParentProvider>
-      <DropdownContext.Provider
-        value={{
-          active,
-          contentStyles,
-          triggerLayoutEffectRef,
-          contentCallbackRef,
-          handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
-          handleDelegateClickContentCloser: functions.handleDelegateClickContentCloser,
-          DropdownContentRoot: functions.DropdownContentRoot,
-        }}
-      >
-        {children}
-      </DropdownContext.Provider>
-    </PortalParentProvider>
+    <DropdownContext.Provider
+      value={{
+        active,
+        contentStyles,
+        triggerLayoutEffectRef,
+        contentCallbackRef: functions.contentCallbackRef,
+        handleDelegateClickTrigger: functions.handleDelegateClickTrigger,
+        handleDelegateClickContent: functions.handleDelegateClickContent,
+        handleDelegateKeyDownContent: functions.handleDelegateKeyDownContent,
+        contentId,
+      }}
+    >
+      {children}
+    </DropdownContext.Provider>
   )
 }

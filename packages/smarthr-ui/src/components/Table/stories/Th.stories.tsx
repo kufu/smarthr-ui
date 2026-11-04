@@ -23,7 +23,6 @@ export default {
   render: Template,
   argTypes: {
     fixed: { description: 'TableReel を組み合わせると機能します。' },
-    decorators: { control: false },
   },
   args: {},
   parameters: {
@@ -116,7 +115,7 @@ export const Fixed: StoryObj<typeof Th> = {
   name: 'fixed',
   render: (args) => (
     <div className="shr-w-[50vw]">
-      <Table reel>
+      <Table>
         <thead>
           <tr>
             <Th {...args} fixed="left">

@@ -24,7 +24,7 @@ export default {
 const childrens = { 文字列: 'ボタン', アイコン: <FaCirclePlusIcon /> }
 const prefixes = { なし: undefined, あり: <FaCirclePlusIcon /> }
 const suffixes = { なし: undefined, あり: <FaCaretDownIcon />, null: null }
-const disabledReasons = { なし: undefined, あり: { message: 'ボタンが無効な理由' } }
+const disabledReasons = { なし: undefined, あり: { text: 'ボタンが無効な理由' } }
 const targets = { なし: undefined, _blank: '_blank' }
 
 export const ButtonControl: StoryObj<typeof AnchorButton> = {
@@ -102,7 +102,7 @@ export const InactiveReason: StoryObj<typeof AnchorButton> = {
   name: 'inactiveReason',
   args: {
     href: undefined,
-    inactiveReason: { message: 'ボタンが無効な理由' },
+    inactiveReason: { text: 'ボタンが無効な理由' },
   },
 }
 

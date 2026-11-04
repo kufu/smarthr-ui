@@ -1,8 +1,8 @@
 'use client'
 
 import {
-  type ComponentProps,
   type ComponentPropsWithRef,
+  type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
   type ReactNode,
@@ -12,10 +12,9 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useCallbackRefCleanupForReact18 } from '../../../../hooks/client/useCallbackRefCleanupForReact18'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../../intl'
-import { Button, type BaseProps as ButtonProps } from '../../../Button'
+import { Button } from '../../../Button'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../../Icon'
 import { Dropdown, DropdownContext } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
@@ -23,31 +22,34 @@ import { DropdownTrigger } from '../DropdownTrigger'
 
 import { type Actions, ButtonList } from './ButtonList'
 
+import type { ExtendElementPropsWithRef } from '../../../../types'
+
 type ObjectTriggerType = {
   /** 引き金となるボタンラベル */
-  children: ReactNode
+  text: ReactNode
   /** 引き金となるボタンの大きさ */
-  size?: ButtonProps['size']
+  size?: ComponentPropsWithRef<typeof Button>['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIcon?:
     | boolean
     | {
         /** 引き金となるアイコンを差し替えたい場合（onlyIcon=true の場合のみ有効） */
-        component?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
+        component?: ComponentType<ComponentPropsWithoutRef<typeof FaCaretDownIcon>>
       }
 }
-type BaseProps = {
-  /** 引き金となるボタン */
-  trigger: ReactNode | ObjectTriggerType
-  /** 操作群 */
-  children: Actions
-  /** ドロップダウンメニューが開かれた際のイベント */
-  onOpen?: () => void
-  /** ドロップダウンメニューが閉じられた際のイベント */
-  onClose?: () => void
-}
-type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof BaseProps>
-type Props = BaseProps & ElementProps
+type Props = ExtendElementPropsWithRef<
+  'button',
+  {
+    /** 引き金となるボタン */
+    trigger: ReactNode | ObjectTriggerType
+    /** 操作群 */
+    children: Actions
+    /** ドロップダウンメニューが開かれた際のイベント */
+    onOpen?: () => void
+    /** ドロップダウンメニューが閉じられた際のイベント */
+    onClose?: () => void
+  }
+>
 
 const TABBABLE_SELECTOR = 'li button,li a,li [tabindex]:not([tabindex="-1"])'
 const DISABLED_SELECTOR = ':disabled,[aria-disabled="true"]'
@@ -100,7 +102,7 @@ const moveFocus = (element: Element, direction: 1 | -1) => {
 }
 
 const triggerObjectConverter = (trigger: ReactNode) => ({
-  children: trigger,
+  text: trigger,
 })
 
 const classNameGenerator = tv({
@@ -195,7 +197,7 @@ export const DropdownMenuButton: FC<Props> = ({
   ...rest
 }) => {
   const {
-    children: triggerChildren,
+    text: triggerText,
     size: triggerSize,
     onlyIcon: onlyIconTrigger,
   } = useObjectAttributes<ReactNode | ObjectTriggerType, ObjectTriggerType>(
@@ -212,8 +214,6 @@ export const DropdownMenuButton: FC<Props> = ({
     [className],
   )
 
-  const callbackRef = useCallbackRefCleanupForReact18(menuCallbackRef)
-
   return (
     <Dropdown onOpen={onOpen} onClose={onClose}>
       <MemoizedTriggerButton
@@ -222,10 +222,10 @@ export const DropdownMenuButton: FC<Props> = ({
         triggerSize={triggerSize}
         classNames={classNames}
       >
-        {triggerChildren}
+        {triggerText}
       </MemoizedTriggerButton>
       <DropdownContent controllable={true}>
-        <menu ref={callbackRef} role="menu" className={classNames.actionList}>
+        <menu ref={menuCallbackRef} role="menu" className={classNames.actionList}>
           <ButtonList>{children}</ButtonList>
         </menu>
       </DropdownContent>
@@ -233,57 +233,59 @@ export const DropdownMenuButton: FC<Props> = ({
   )
 }
 
-const MemoizedTriggerButton = memo<
-  ElementProps & {
-    onlyIconTrigger: ObjectTriggerType['onlyIcon']
-    triggerSize: ObjectTriggerType['size']
-    children: ObjectTriggerType['children']
-    classNames: {
-      triggerWrapper: string
-      triggerButton: string
-    }
+type MemoizedTriggerButtonProps = Omit<Props, 'trigger' | 'children' | 'onOpen' | 'onClose'> & {
+  onlyIconTrigger: ObjectTriggerType['onlyIcon']
+  triggerSize: ObjectTriggerType['size']
+  children: ObjectTriggerType['text']
+  classNames: {
+    triggerWrapper: string
+    triggerButton: string
   }
->(({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
-  const { active } = useContext(DropdownContext)
+}
 
-  return (
-    <DropdownTrigger
-      tooltip={{ show: !!onlyIconTrigger, message: children }}
-      className={classNames.triggerWrapper}
-    >
-      <Button
-        {...rest}
-        size={triggerSize}
-        className={classNames.triggerButton}
-        suffix={
-          !onlyIconTrigger && (
-            <FaCaretDownIcon
-              alt={
-                active ? (
-                  <Localizer
-                    id="smarthr-ui/DropdownMenuButton/triggerActive"
-                    defaultText="候補を閉じる"
-                  />
-                ) : (
-                  <Localizer
-                    id="smarthr-ui/DropdownMenuButton/triggerInactive"
-                    defaultText="候補を開く"
-                  />
-                )
-              }
-            />
-          )
-        }
+const MemoizedTriggerButton = memo<MemoizedTriggerButtonProps>(
+  ({ onlyIconTrigger, triggerSize, children, classNames, ...rest }) => {
+    const { active } = useContext(DropdownContext)
+
+    return (
+      <DropdownTrigger
+        tooltip={{ show: !!onlyIconTrigger, message: children }}
+        className={classNames.triggerWrapper}
       >
-        <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
-      </Button>
-    </DropdownTrigger>
-  )
-})
+        <Button
+          {...rest}
+          size={triggerSize}
+          className={classNames.triggerButton}
+          suffix={
+            !onlyIconTrigger && (
+              <FaCaretDownIcon
+                alt={
+                  active ? (
+                    <Localizer
+                      id="smarthr-ui/DropdownMenuButton/triggerActive"
+                      defaultText="候補を閉じる"
+                    />
+                  ) : (
+                    <Localizer
+                      id="smarthr-ui/DropdownMenuButton/triggerInactive"
+                      defaultText="候補を開く"
+                    />
+                  )
+                }
+              />
+            )
+          }
+        >
+          <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
+        </Button>
+      </DropdownTrigger>
+    )
+  },
+)
 
 const TriggerLabelText = memo<{
   onlyIconTrigger: ObjectTriggerType['onlyIcon']
-  children: ObjectTriggerType['children']
+  children: ObjectTriggerType['text']
 }>(({ children, onlyIconTrigger }) => {
   if (!onlyIconTrigger) {
     return children

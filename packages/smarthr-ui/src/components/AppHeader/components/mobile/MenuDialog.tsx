@@ -58,7 +58,7 @@ const CLASS_NAMES = (() => {
 })()
 
 type Props = PropsWithChildren<{
-  callbackRef: RefCallback<HTMLDivElement>
+  callbackRef: RefCallback<HTMLElement>
   isOpen: boolean
   setIsOpen: Dispatch<boolean>
   tenantSelector: ReactNode
@@ -84,7 +84,7 @@ export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
   )
 }
 
-export const Content: FC<
+const Content: FC<
   Omit<Props, 'callbackRef' | 'isOpen'> & {
     domRef: RefObject<HTMLSelectElement>
   }
@@ -127,8 +127,6 @@ export const Content: FC<
       // HINT: Contentをanimationで非表示にしたい
       // アニメーションが終われば、CSSTransitionのchildrenはunmountされるため、
       // unmount時に操作内容のclearを行う
-      // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-      // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
       callbackRef: () => () => {
         clearReleaseNote()
         clearAppLauncher()
@@ -141,8 +139,6 @@ export const Content: FC<
     }
   }, [latest])
 
-  // HINT: useMergeRefsはv18でもcallbackRefのcleanup関数に対応している
-  // もしuseMergeRefsをなくす場合、react v18対応が不要になっているかどうか確認する
   const mergedRef = useMergeRefs(functions.callbackRef, domRef)
 
   return (
@@ -170,7 +166,7 @@ export const Content: FC<
             <div>{tenantSelector}</div>
           )}
 
-          <Button variant="secondary" size="S" onClick={functions.handleDialogClose}>
+          <Button size="S" onClick={functions.handleDialogClose}>
             <FaXmarkIcon
               alt={
                 <Localizer
@@ -186,7 +182,7 @@ export const Content: FC<
       {isAppLauncherSelected && isAppLauncherAvailable ? (
         <AppLauncher features={features} loading={featuresLoading} error={featuresError} />
       ) : (
-        <Scroller direction="vertical" className={CLASS_NAMES.content}>
+        <Scroller className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (
