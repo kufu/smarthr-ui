@@ -36,7 +36,7 @@ export const useDrawerContextValue = ({
   const headingId = useId()
   // 常に headingId を指すと、ヘッダ無しのときに参照先が存在しない属性になる
   const [registeredHeadingId, setRegisteredHeadingId] = useState<string | undefined>(undefined)
-  const latest = useLatest({ isOpen, onClickClose })
+  const latest = useLatest({ isOpen, onClickClose, headingId })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る。
   // また開閉やドラッグで作り直すと DrawerHeader まで巻き込むため、latest 経由で参照する
@@ -47,10 +47,10 @@ export const useDrawerContextValue = ({
           latest.onClickClose?.(e)
         }
       },
-      headingId,
+      headingId: latest.headingId,
       registerHeadingId: setRegisteredHeadingId,
     }),
-    [headingId, latest],
+    [latest],
   )
 
   return {

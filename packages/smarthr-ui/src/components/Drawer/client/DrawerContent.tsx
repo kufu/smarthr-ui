@@ -184,7 +184,12 @@ export const DrawerContent: FC<Props> = ({
     velocity: number
   } | null>(null)
 
-  const latest = useLatest({ isOpen, onPressEscape, onClickOverlay })
+  const latest = useLatest({
+    isOpen,
+    onPressEscape,
+    onClickOverlay,
+    handleClickClose: contextValue.handleClickClose,
+  })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
   const functions = useMemo(() => {
@@ -278,12 +283,12 @@ export const DrawerContent: FC<Props> = ({
           restoreTimerRef.current = null
           setDragOffset(0)
         }, DRAWER_TRANSITION_DURATION)
-        contextValue.handleClickClose()
+        latest.handleClickClose()
       },
       handlePointerCancel: cancelDragging,
       handleLostPointerCapture: cancelDragging,
     }
-  }, [contextValue, latest])
+  }, [latest])
 
   const classNames = useMemo(() => {
     const { layout, overlay, inner, handleArea, handleBar, focusTrap } = classNameGenerator()
