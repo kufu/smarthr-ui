@@ -24,8 +24,7 @@ type Props = ExtendElementPropsWithRef<
 >
 
 export const panelClassNameGenerator = tv({
-  // TODO: smarthr-ui-Base はBaseコンポーネントのaliasが削除されてから消す
-  base: 'smarthr-ui-Panel smarthr-ui-Base shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
+  base: 'smarthr-ui-Panel shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock,
     paddingInline,
@@ -95,7 +94,3 @@ export const Panel: FC<Props> = ({
 
   return body
 }
-
-/** @deprecated Base は非推奨です。Panel を使ってください。 */
-/** @alias */
-export const Base = Panel

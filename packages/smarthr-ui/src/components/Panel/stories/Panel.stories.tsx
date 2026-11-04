@@ -16,9 +16,9 @@ const baseLayer = Object.keys(panelClassNameGenerator.variants.layer).map(Number
 >
 
 export default {
-  title: 'Components/Base',
+  title: 'Components/Panel',
   component: Panel,
-  subcomponents: { BaseColumn: Groupbox },
+  subcomponents: { Groupbox },
   render: (args) => <Panel {...args} />,
   argTypes: {
     padding: {
