@@ -58,7 +58,7 @@ export const FilePreviewDialog: FC<Props> = memo(
         />
       ) : (
         <Center className="shr-h-full">
-          <Loader size="M" />
+          <Loader />
         </Center>
       )
     const actionAreaButtons = (

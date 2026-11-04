@@ -31,7 +31,6 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, tooltip } = classNameGenerator()
 
   return {

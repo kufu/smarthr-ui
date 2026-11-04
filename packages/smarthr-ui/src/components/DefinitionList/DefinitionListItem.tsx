@@ -53,6 +53,7 @@ export const DefinitionListItem: FC<Props> = ({
   )
 
   const classNames = useMemo(() => {
+    // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
     const cs = classNameGenerator()
 
     return {

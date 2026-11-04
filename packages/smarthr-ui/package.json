@@ -44,7 +44,7 @@
     "babel-plugin-polyfill-regenerator": "^1.0.0",
     "chromatic": "^18.1.0",
     "eslint-plugin-storybook": "10.5.10",
-    "glob": "13.0.6",
+    "glob": "14.0.2",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
     "npm-run-all2": "^9.0.3",
