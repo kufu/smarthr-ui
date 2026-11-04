@@ -26,6 +26,7 @@ export const Size: StoryObj<typeof Loader> = {
   render: (args) => (
     <Stack align="flex-start">
       <Loader {...args} />
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
       <Loader {...args} size="M" />
       <Loader {...args} size="S" />
     </Stack>
@@ -47,6 +48,7 @@ export const Type: StoryObj<typeof Loader> = {
   render: (args) => (
     <Stack align="flex-start">
       <Loader {...args} />
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
       <Loader {...args} type="primary" />
       <div className="shr-bg-scrim">
         <Loader {...args} type="light" />

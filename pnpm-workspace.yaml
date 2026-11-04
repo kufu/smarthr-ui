@@ -15,20 +15,24 @@ overrides:
   esbuild@>=0.17.0 <0.28.1: '>=0.28.2'
   tar@<=7.5.15: '>=7.5.22'
   js-yaml@>=4.0.0 <=5.2.1: '>=5.4.3'
-  '@babel/core@<=7.29.0': '>=8.0.7'
+  '@babel/core@<=7.29.0': '>=8.0.9'
   # react-docgen が Babel 8 に未対応のため、Babel 7 を使用する（reactjs/react-docgen#1102）
-  'react-docgen>@babel/core': '^7.28.6'
+  'react-docgen>@babel/core': '^7.29.7'
   sharp@<0.35.5: '>=0.35.5'
   nanoid@<3.3.18: '>=3.3.18 <7'
-  browserslist@<=4.28.6: '>=4.29.4'
+  browserslist@<=4.28.6: '>=4.29.5'
   postcss-selector-parser@>=6.1.0 <6.1.3: '>=7.1.7'
   brace-expansion@>=2.0.0 <2.1.7: '>=2.1.7 <3.0.0'
   brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
   source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
   shell-quote@>=1.8.4 <1.11.0: '>=1.11.0'
-  smol-toml@<=1.8.0: '>=1.9.0'
+  smol-toml@<=1.8.0: '>=1.9.1'
   qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.7'
+  # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
+  # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
+  'sucrase>glob': '>=14.0.2'
+  'glob>minimatch': '>=11.0.1'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
@@ -44,3 +48,10 @@ auditConfig:
 minimumReleaseAgeExclude:
   # Renovate security update: qs@6.16.2
   - qs@6.16.2
+  # Renovate security update: glob@14.0.2
+  - glob@14.0.2
+  # security update: pnpm auditで検出されたDoS/AbortSignal bypass脆弱性の修正版。
+  # CIのauditジョブを即時通すため、公開直後でもminimumReleaseAgeの対象外にする
+  - glob@14.0.3
+  - minimatch@11.0.3
+  - '@isaacs/nonrecursive-glob-match@1.0.3'
