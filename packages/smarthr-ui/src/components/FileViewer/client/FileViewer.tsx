@@ -89,8 +89,16 @@ export const FileViewer: FC<Props> = ({
 }) => {
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
+  const [prevDisableFontFace, setPrevDisableFontFace] = useState(disableFontFace)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
+
+  // HINT: disableFontFaceが変わるとreact-pdfが文書を再読み込みするため、読み込み中表示を出せるようloadedを戻す。
+  // 再読み込み完了時にhandleLoadedが再度呼ばれてtrueに戻る
+  if (prevDisableFontFace !== disableFontFace) {
+    setPrevDisableFontFace(disableFontFace)
+    setLoaded(false)
+  }
 
   const hasWidth = fixedWidth !== undefined
 
