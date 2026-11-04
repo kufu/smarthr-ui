@@ -24,7 +24,7 @@ overrides:
   qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.7'
   sucrase>glob: '>=14.0.2'
-  glob>minimatch: '>=11.0.1'
+  glob>minimatch: '>=11.0.2'
 
 importers:
 
