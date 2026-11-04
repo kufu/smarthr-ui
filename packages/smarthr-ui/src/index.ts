@@ -182,7 +182,7 @@ export { Scroller } from './components/Scroller'
 
 // layout components
 /** @public */
-export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, Container, Reel, Stack } from './components/Layout'
 
 // hooks
 /** @public */
