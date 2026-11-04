@@ -16,9 +16,6 @@
     "prettier": "^3.9.8",
     "prettier-config-smarthr": "^1.0.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "stylelint": "^17.14.1",
-    "stylelint-config-smarthr": "^3.0.2",
-    "stylelint-config-standard": "^40.0.0",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3"
   },

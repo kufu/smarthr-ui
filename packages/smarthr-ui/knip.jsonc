@@ -40,7 +40,6 @@
     "@storybook/cli",
     "@testing-library/jest-dom",
     "playwright",
-    "postcss-styled-syntax",
     "rollup-plugin-preserve-directives",
     "rollup-plugin-rename-node-modules",
     "tslib",
@@ -50,7 +49,6 @@
     "tsc",
     "eslint",
     "prettier",
-    "stylelint",
     "knip"
   ],
 }
