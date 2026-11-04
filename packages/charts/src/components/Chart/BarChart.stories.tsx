@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { TooltipItem } from 'chart.js'
 
 const meta: Meta<typeof BarChart> = {
-  title: 'Charts/BarChart',
+  title: 'Charts/Chart/BarChart',
   component: BarChart,
   decorators: [
     (Story) => (
