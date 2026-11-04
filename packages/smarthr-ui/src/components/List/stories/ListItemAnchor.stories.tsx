@@ -1,6 +1,6 @@
-import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { List, ListItemAnchor } from '../client'
+import { ListItemAnchor } from '../ListItemAnchor'
+import { List } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -29,18 +29,4 @@ export const Status: StoryObj<typeof ListItemAnchor> = {
   args: {
     status: <StatusLabel>完了</StatusLabel>,
   },
-}
-
-export const Divider: StoryObj<typeof ListItemAnchor> = {
-  name: 'divider',
-  render: (args) => (
-    <Stack>
-      {(['full', 'content', false] as const).map((divider) => (
-        <List key={String(divider)}>
-          <ListItemAnchor {...args} divider={divider} />
-          <ListItemAnchor {...args} divider={divider} />
-        </List>
-      ))}
-    </Stack>
-  ),
 }

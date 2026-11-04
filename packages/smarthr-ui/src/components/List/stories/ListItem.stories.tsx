@@ -43,20 +43,6 @@ export const Action: StoryObj<typeof ListItem> = {
   },
 }
 
-export const Divider: StoryObj<typeof ListItem> = {
-  name: 'divider',
-  render: (args) => (
-    <Stack>
-      {(['full', 'content', false] as const).map((divider) => (
-        <List key={String(divider)}>
-          <ListItem {...args} divider={divider} />
-          <ListItem {...args} divider={divider} />
-        </List>
-      ))}
-    </Stack>
-  ),
-}
-
 export const Padding: StoryObj<typeof ListItem> = {
   name: 'padding',
   render: (args) => (

@@ -2,14 +2,15 @@ import { Button } from '../../Button'
 import { FaPencilIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { StatusLabel } from '../../StatusLabel'
-import { List, ListItem, ListItemAnchor } from '../client'
+import { ListItemAnchor } from '../ListItemAnchor'
+import { List, ListItem } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const Template = ({ id }: { id?: string }) => (
   <Stack id={id}>
     {(['full', 'content', false] as const).map((divider) => (
-      <List key={String(divider)}>
+      <List key={String(divider)} divider={divider}>
         <ListItem
           status={<StatusLabel>完了</StatusLabel>}
           action={
@@ -17,26 +18,19 @@ const Template = ({ id }: { id?: string }) => (
               <FaPencilIcon alt="編集" />
             </Button>
           }
-          divider={divider}
           heading="タイトル"
         >
           説明テキスト
         </ListItem>
-        <ListItem status={<StatusLabel>完了</StatusLabel>} divider={divider} heading="タイトル">
+        <ListItem status={<StatusLabel>完了</StatusLabel>} heading="タイトル">
           説明テキスト
         </ListItem>
-        <ListItem divider={divider} heading="タイトル">
-          説明テキスト
-        </ListItem>
-        <ListItemAnchor
-          href="#item"
-          status={<StatusLabel>完了</StatusLabel>}
-          divider={divider}
-          heading="タイトル"
-        >
+        <ListItem heading="タイトル">説明テキスト</ListItem>
+        <ListItem heading="タイトル" />
+        <ListItemAnchor href="#item" status={<StatusLabel>完了</StatusLabel>} heading="タイトル">
           説明テキスト
         </ListItemAnchor>
-        <ListItemAnchor href="#item" divider={divider} heading="タイトル">
+        <ListItemAnchor href="#item" heading="タイトル">
           説明テキスト
         </ListItemAnchor>
       </List>

@@ -4,7 +4,6 @@ import {
   type ComponentPropsWithoutRef,
   type ElementType,
   type FC,
-  type PropsWithChildren,
   type ReactNode,
   useContext,
   useMemo,
@@ -12,16 +11,25 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { Heading } from '../../Heading'
-import { FaChevronRightIcon } from '../../Icon'
 import { Sidebar, Stack } from '../../Layout'
 import { SectioningFragment } from '../../SectioningContent'
 import { Text } from '../../Text'
 
-import { ListDividerContext } from './List'
+import { type ListDivider, ListDividerContext } from './List'
 
+/** アイテム内側の余白の大きさ。テーマのスペーシングの値に対応する */
 type ListItemPadding = 0 | 0.25 | 0.5 | 1 | 1.5
 
-type ListItemPaddingModifier =
+/**
+ * アイテム内側の余白の指定方法
+ *
+ * - 数値: 上下左右をまとめて指定する
+ * - `{ block, inline }` に数値: 上下（block）と左右（inline）をそれぞれ指定する
+ * - `{ block: { start, end }, inline: { start, end } }`: 各辺を個別に指定する
+ *
+ * 指定しなかった方向・辺は既定値の `1` になる
+ */
+export type ListItemPaddingModifier =
   | ListItemPadding
   | {
       block?: ListItemPadding
@@ -38,6 +46,7 @@ type ListItemPaddingModifier =
       }
     }
 
+/** ListItemPaddingModifierを各辺の値に展開したもの */
 type Padding = {
   paddingBlockStart: ListItemPadding
   paddingBlockEnd: ListItemPadding
@@ -52,6 +61,7 @@ const defaultPadding: Padding = {
   paddingInlineEnd: 1,
 } as const
 
+// paddingの3通りの指定方法を、tvのvariantsに渡せる各辺の値に揃える
 const mapPaddingModifierToPadding = (paddingModifier: ListItemPaddingModifier): Padding => {
   if (paddingModifier === undefined) {
     return defaultPadding
@@ -94,25 +104,41 @@ const mapPaddingModifierToPadding = (paddingModifier: ListItemPaddingModifier): 
   }
 }
 
-type AbstractProps<Slot extends ElementType<{ className?: string; children?: ReactNode }>> =
-  PropsWithChildren<{
-    padding?: ListItemPaddingModifier
-    slot?: { renderer: Slot; props?: ComponentPropsWithoutRef<Slot> }
-    divider?: 'full' | 'content' | false
-    status?: ReactNode
-    heading: ReactNode
-    action?: ReactNode
-  }>
+type AbstractProps<Slot extends ElementType<{ className?: string; children?: ReactNode }>> = {
+  /**
+   * アイテム内側の余白。数値で上下左右をまとめて、`block`/`inline` で上下と左右を、
+   * さらに `start`/`end` で各辺を個別に指定できる
+   *
+   * @default 1
+   */
+  padding?: ListItemPaddingModifier
+  /**
+   * アイテムの内容を包む要素。`renderer` に描画する要素またはコンポーネントを、`props` にそのpropsを指定する
+   *
+   * @default { renderer: 'div' }
+   */
+  slot?: { renderer: Slot; props?: ComponentPropsWithoutRef<Slot> }
+  /** 見出しの上に表示するステータス。`StatusLabel` などを配置する */
+  status?: ReactNode
+  /** アイテムの見出し。`Heading` として描画され、見出しレベルは周囲のセクションから自動で決まる */
+  heading: ReactNode
+  /** アイテムの右端に配置する操作。`Button` などを配置する */
+  action?: ReactNode
+  /** 見出しの下に表示する説明。省略した場合は説明の領域ごと描画しない */
+  children?: ReactNode
+}
 
 type ElementProps<Slot extends ElementType<{ className?: string; children?: ReactNode }>> = Omit<
   ComponentPropsWithoutRef<'li'>,
   keyof AbstractProps<Slot>
 >
 
-type Props<Slot extends ElementType<{ className?: string; children?: ReactNode }>> =
+export type ListItemProps<Slot extends ElementType<{ className?: string; children?: ReactNode }>> =
   AbstractProps<Slot> & ElementProps<Slot>
 
-const classNameGenerator = (divider: 'full' | 'content' | false) =>
+// HINT: 区切り線は::after疑似要素のborderで引く。divider="content"のときは疑似要素に
+// アイテムの左右のpaddingと同じ値のmarginを付け、内容と同じ幅に揃える
+const classNameGenerator = (divider: ListDivider) =>
   tv({
     slots: {
       li: [
@@ -207,7 +233,7 @@ const classNameGenerator = (divider: 'full' | 'content' | false) =>
   })
 
 type ListItem = <Slot extends ElementType<{ className?: string; children?: ReactNode }>>(
-  props: Props<Slot>,
+  props: ListItemProps<Slot>,
 ) => ReturnType<FC>
 
 export const ListItem: ListItem = <
@@ -217,14 +243,12 @@ export const ListItem: ListItem = <
   status,
   heading,
   action,
-  divider: modifiedDivider,
   className,
   children,
   slot,
   ...rest
-}: Props<Slot>) => {
-  const inheritedDivider = useContext(ListDividerContext)
-  const divider = modifiedDivider ?? inheritedDivider
+}: ListItemProps<Slot>) => {
+  const divider = useContext(ListDividerContext)
   const { paddingBlockStart, paddingBlockEnd, paddingInlineStart, paddingInlineEnd } =
     mapPaddingModifierToPadding(padding)
   const slotClassName = slot?.props?.className
@@ -271,9 +295,11 @@ export const ListItem: ListItem = <
                     {heading}
                   </Text>
                 </Heading>
-                <Text as="div" size="S" leading="TIGHT" color="TEXT_GREY">
-                  {children}
-                </Text>
+                {children && (
+                  <Text as="div" size="S" leading="TIGHT" color="TEXT_GREY">
+                    {children}
+                  </Text>
+                )}
               </Stack>
               {action}
             </Sidebar>
@@ -281,32 +307,5 @@ export const ListItem: ListItem = <
         </SlotRenderer>
       </SectioningFragment>
     </li>
-  )
-}
-
-type ListItemAnchorProps<Slot extends ElementType<{ className?: string; children?: ReactNode }>> =
-  Omit<Props<Slot>, 'action'> & { href: ComponentPropsWithoutRef<'a'>['href'] }
-
-type ListItemAnchor = <Slot extends ElementType<{ className?: string; children?: ReactNode }>>(
-  props: ListItemAnchorProps<Slot>,
-) => ReturnType<FC>
-
-export const ListItemAnchor: ListItemAnchor = <
-  Slot extends ElementType<{ className?: string; children?: ReactNode }>,
->({
-  slot,
-  href,
-  padding,
-  ...rest
-}: ListItemAnchorProps<Slot>) => {
-  const slotRenderer = slot?.renderer || 'a'
-  const slotProps = { ...slot?.props, href }
-  return (
-    <ListItem
-      {...rest}
-      slot={{ renderer: slotRenderer, props: slotProps }}
-      action={<FaChevronRightIcon color="TEXT_LINK" />}
-      padding={padding ?? { inline: { end: 0.5 } }}
-    />
   )
 }
