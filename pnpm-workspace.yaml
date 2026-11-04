@@ -5,12 +5,11 @@ packages:
 minimumReleaseAge: 10080
 
 allowBuilds:
-  '@swc/core': true
   canvas: true
   esbuild: true
   sharp: true
 overrides:
-  postcss@<8.5.10: ^8.5.31
+  postcss@<8.5.10: ^8.5.32
   # esbuild@0.28.1 より新しいバージョンが minimumReleaseAge を超過したタイミングで削除可
   esbuild@<=0.24.2: '>=0.28.2'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.2'

@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 export const defaultHtmlFontSize = 16
 const defaultScaleFactor = 6
@@ -50,11 +50,5 @@ export const createFontSize = (userFontSize?: FontSizeProperty): CreatedFontSize
 
   const { scaleFactor, ...rest } = userFontSize
 
-  return merge(
-    {
-      ...defaultFontSize,
-    },
-    scaleFactor ? getSizes(scaleFactor) : {},
-    rest,
-  )
+  return merge(scaleFactor ? getSizes(scaleFactor) : defaultFontSize, rest)
 }

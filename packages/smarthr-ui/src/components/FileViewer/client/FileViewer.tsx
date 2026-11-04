@@ -1,6 +1,5 @@
 'use client'
 
-import Decimal from 'decimal.js'
 import {
   type ComponentPropsWithRef,
   type FC,
@@ -97,9 +96,12 @@ export const FileViewer: FC<Props> = ({
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
-      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+      const step = latest.scaleStep ?? defaultScaleStep
+
+      // HINT: 小数を足し引きすると浮動小数点の誤差(0.6 - 0.2 = 0.39999999999999997 など)が出るため、
+      // 有効桁数で丸めて取り除く
       setScale((currentScale) =>
-        new Decimal(currentScale)[mode](latest.scaleStep ?? defaultScaleStep).toNumber(),
+        Number((mode === 'add' ? currentScale + step : currentScale - step).toPrecision(12)),
       )
     }
 
