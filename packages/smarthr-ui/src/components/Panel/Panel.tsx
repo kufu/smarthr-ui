@@ -1,12 +1,13 @@
 import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { paddingBlock, paddingInline } from '../../tailwind'
+import { backgroundColor, paddingBlock, paddingInline } from '../../tailwind'
 import { useSectionWrapper } from '../SectioningContent'
 
 import type { ExtendElementPropsWithRef, Gap } from '../../types'
 
 type Overflow = 'visible' | 'hidden' | 'clip' | 'scroll' | 'auto'
+type BgColor = 'WHITE' | 'OVER_BACKGROUND'
 
 type Props = ExtendElementPropsWithRef<
   'div',
@@ -19,15 +20,21 @@ type Props = ExtendElementPropsWithRef<
     padding?: Gap | { block?: Gap; inline?: Gap }
     /** コンテンツが要素内に収まらない場合の処理方法 */
     overflow?: Overflow | { x: Overflow; y: Overflow }
+    /** 背景色 */
+    bgColor?: BgColor
   },
   { as: true }
 >
 
 export const panelClassNameGenerator = tv({
-  base: 'smarthr-ui-Panel shr-bg-white forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
+  base: 'smarthr-ui-Panel forced-colors:shr-border-shorthand contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock,
     paddingInline,
+    bgColor: {
+      WHITE: backgroundColor.WHITE,
+      OVER_BACKGROUND: backgroundColor.OVER_BACKGROUND,
+    } satisfies Record<BgColor, string>,
     radius: {
       s: 'shr-rounded-m',
       m: 'shr-rounded-l',
@@ -61,6 +68,7 @@ export const Panel: FC<Props> = ({
   radius,
   overflow,
   layer,
+  bgColor,
   as: Component = 'div',
   className,
   children,
@@ -77,9 +85,10 @@ export const Panel: FC<Props> = ({
       overflowBlock: actualOverflow.y,
       overflowInline: actualOverflow.x,
       layer: layer ?? 1,
+      bgColor: bgColor ?? 'WHITE',
       className,
     })
-  }, [layer, overflow, padding, radius, className])
+  }, [layer, overflow, padding, radius, bgColor, className])
 
   const Wrapper = useSectionWrapper(Component)
   const body = (

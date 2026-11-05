@@ -1,7 +1,5 @@
-import { Text } from 'smarthr-ui'
+import { Stack, Text } from 'smarthr-ui'
 
-// eslint-disable-next-line smarthr/require-barrel-import
-import { Stack } from '../../../../smarthr-ui/src/components/Layout'
 import { doughnutSingleSegment, doughnutSmall, doughnutWithZero } from '../__stories__/testData'
 
 import { DoughnutChart } from './DoughnutChart'

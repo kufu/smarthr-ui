@@ -58,11 +58,6 @@ type Props = ExtendElementPropsWithRef<
      */
     onPressEscape?: (e: KeyboardEvent) => void
     /**
-     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-     * ダイアログの幅
-     */
-    width?: string | number
-    /**
      * ダイアログの大きさ
      */
     size?: DialogSize
@@ -153,7 +148,6 @@ export const ModelessDialog: FC<Props> = ({
   isOpen,
   onPressEscape,
   resizable = false,
-  width,
   size,
   height,
   top,
@@ -419,7 +413,6 @@ export const ModelessDialog: FC<Props> = ({
               left: centering.left ?? defaultPosition.left,
               right: defaultPosition.right,
               bottom: defaultPosition.bottom,
-              width: size ? undefined : width,
               height,
             }}
             aria-labelledby={labelId}

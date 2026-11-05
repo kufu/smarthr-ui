@@ -5,7 +5,7 @@ import { RadarChart } from './RadarChart'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta: Meta<typeof RadarChart> = {
-  title: 'Charts/RadarChart',
+  title: 'Charts/Chart/RadarChart',
   component: RadarChart,
   decorators: [
     (Story) => (
