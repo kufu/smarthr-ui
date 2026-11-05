@@ -1,2 +1,2 @@
-export { Base, Panel } from './Panel'
-export { BaseColumn, Groupbox } from './Groupbox'
+export { Panel } from './Panel'
+export { Groupbox } from './Groupbox'
