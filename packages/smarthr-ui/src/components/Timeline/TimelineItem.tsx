@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { type FC, type ReactNode, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Cluster, Sidebar, Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 
@@ -96,10 +96,10 @@ export const TimelineItem: FC<Props> = ({
     </Cluster>
   )
   const dateContent = dateSuffixArea ? (
-    <Sidebar align="center" gap={0.5} className={classNames.dateArea}>
+    <Cluster align="center" grow="end" className={classNames.dateArea}>
       {timeContent}
       <div>{dateSuffixArea}</div>
-    </Sidebar>
+    </Cluster>
   ) : (
     timeContent
   )

@@ -29,6 +29,4 @@ const LocalizerInner = <ID extends keyof Messages>({
   />
 )
 
-// eslint-disable-next-line smarthr/best-practice-for-no-unnecessary-variable
-const typedMemo: <T>(c: T) => T = memo
-export const Localizer = typedMemo(LocalizerInner)
+export const Localizer = (memo as <T>(c: T) => T)(LocalizerInner)
