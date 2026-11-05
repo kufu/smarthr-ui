@@ -4,11 +4,12 @@ import { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { registerChartComponents } from '../../config'
-import { BarChart } from '../BarChart'
-import { LineChart } from '../LineChart'
-import { RadarChart } from '../RadarChart'
 
-import type { BarChartColorProps } from '../BarChart'
+import { BarChart } from './BarChart'
+import { LineChart } from './LineChart'
+import { RadarChart } from './RadarChart'
+
+import type { BarChartColorProps } from './BarChart'
 import type { ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()

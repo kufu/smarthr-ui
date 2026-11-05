@@ -1,5 +1,5 @@
-// eslint-disable-next-line smarthr/require-barrel-import
-import { Stack } from '../../../../smarthr-ui/src/components/Layout'
+import { Stack } from 'smarthr-ui'
+
 import {
   chartJsOptionsExamples,
   manyPoints,
@@ -10,7 +10,7 @@ import {
 import { BarChart } from './BarChart'
 
 export default {
-  title: 'Charts/BarChart/VRT',
+  title: 'Charts/Chart/BarChart/VRT',
   render: (args) => (
     <Stack {...args}>
       {/* パターン1: 単一データセット、タイトルなし、ラベルなし、標準サイズ、少データ */}
