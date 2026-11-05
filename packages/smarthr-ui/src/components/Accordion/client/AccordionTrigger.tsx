@@ -16,8 +16,8 @@ import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../../Icon'
 import { Cluster } from '../../Layout'
 
-import { AccordionPanelContext } from './AccordionPanel'
-import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { AccordionContext } from './Accordion'
+import { AccordionItemContext } from './AccordionItem'
 
 import type { ExtendElementPropsWithoutRef } from '../../../types'
 import type { Text } from '../../Text'
@@ -45,13 +45,13 @@ const classNameGenerator = tv({
     title: 'shr-grow shr-leading-tight',
     titleWrapper: 'shr-flex-nowrap',
     button: [
-      'smarthr-ui-AccordionPanel-trigger',
+      'smarthr-ui-Accordion-trigger',
       'shr-group shr-w-full shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0.75 shr-text-left shr-text-inherit shr-text-color-inherit',
       'disabled:shr-cursor-not-allowed disabled:shr-bg-white-darken disabled:shr-text-disabled',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
-      // Panel 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Panel に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
-      '[.smarthr-ui-Panel_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Panel_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
+      // Panel 直下に Accordion がある場合、背景が付き抜けないように角丸を指定（Panel に overflow: hidden を与えるとフォーカスリングが表示されなくなる）
+      '[.smarthr-ui-Panel_>_.smarthr-ui-Accordion_.smarthr-ui-Accordion-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Panel_>_.smarthr-ui-Accordion_.smarthr-ui-Accordion-item:last-child_&]:shr-rounded-b-l',
     ],
     leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',
     rightIcon: 'group-aria-expanded:-shr-rotate-180',
@@ -64,7 +64,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const AccordionPanelTrigger: FC<Props> = ({
+export const AccordionTrigger: FC<Props> = ({
   children,
   className,
   headingType = 'blockTitle',
@@ -83,9 +83,9 @@ export const AccordionPanelTrigger: FC<Props> = ({
     }
   }, [className])
 
-  const { name, contentId, triggerId } = useContext(AccordionPanelItemContext)
+  const { name, contentId, triggerId } = useContext(AccordionItemContext)
   const { iconPosition, expandedItems, handleClickTrigger, handleKeyDown } =
-    useContext(AccordionPanelContext)
+    useContext(AccordionContext)
 
   const isExpanded = useMemo(() => getIsInclude(expandedItems, name), [expandedItems, name])
 
