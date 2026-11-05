@@ -108,9 +108,4 @@ export type BaseProps<T> = {
    * アイテムが選択された時に発火するコールバック関数
    */
   onSelect?: (item: ComboboxItem<T>) => void
-  /**
-   * input 要素の `value` が変わった時に発火するコールバック関数
-   * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
-   */
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }

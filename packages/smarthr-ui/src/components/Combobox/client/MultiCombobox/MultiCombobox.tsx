@@ -151,7 +151,6 @@ export const MultiCombobox = <T,>({
   dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className,
-  onChange,
   onChangeInput,
   onAdd,
   onDelete,
@@ -271,7 +270,6 @@ export const MultiCombobox = <T,>({
   const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
-    onChange,
     onChangeInput,
     onFocus,
     onBlur,
@@ -427,9 +425,7 @@ export const MultiCombobox = <T,>({
         }
       },
       handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
-        const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
-
-        handlers.forEach((h) => h(e))
+        latest.onChangeInput?.(e)
         latest.setInputValueIfUncontrolled(e.currentTarget.value)
       },
       handleFocusInput: () => {

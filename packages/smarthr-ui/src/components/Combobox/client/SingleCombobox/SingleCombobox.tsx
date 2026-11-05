@@ -170,7 +170,6 @@ export const SingleCombobox = <T,>({
   width,
   dropdownWidth = 'auto',
   className,
-  onChange,
   onChangeInput,
   onAdd,
   onSelect,
@@ -251,7 +250,6 @@ export const SingleCombobox = <T,>({
     })
 
   const latest = useLatest({
-    onChange,
     onChangeInput,
     onSelect,
     onClear,
@@ -358,7 +356,6 @@ export const SingleCombobox = <T,>({
         }
       },
       handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
-        latest.onChange?.(e)
         latest.onChangeInput?.(e)
 
         if (!latest.isEditing) setIsEditing(true)
