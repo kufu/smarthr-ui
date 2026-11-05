@@ -609,6 +609,96 @@ describe('Drawer（modeless）', () => {
     expect(dialog.contains(document.activeElement)).toBe(false)
   })
 
+  it('閉じたときに、ページをスクロールさせずにトリガへフォーカスが戻ること', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    const trigger = screen.getByRole('button', { name: 'open' })
+    const focusSpy = vi.spyOn(trigger, 'focus')
+    await userEvent.click(trigger)
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'モードレスドロワー' })).toBeVisible()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+
+    await waitFor(() => {
+      expect(trigger).toHaveFocus()
+    })
+    expect(focusSpy).toHaveBeenLastCalledWith({ preventScroll: true })
+  })
+
+  it('フォーカスをドロワーの外へ移したあとに閉じたときは、トリガへフォーカスを戻さないこと', async () => {
+    const Template: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <Button onClick={() => setIsOpen(false)}>ページから閉じる</Button>
+          <Drawer
+            isOpen={isOpen}
+            position="right"
+            modality="modeless"
+            ariaLabel="モードレスドロワー"
+          >
+            <Button>中のボタン</Button>
+          </Drawer>
+        </>
+      )
+    }
+    renderWithIntl(<Template />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+
+    const focusSpy = vi.spyOn(screen.getByRole('button', { name: 'open' }), 'focus')
+    const pageButton = screen.getByRole('button', { name: 'ページから閉じる' })
+    await userEvent.click(pageButton)
+
+    await waitFor(() => {
+      expect(dialog).not.toBeInTheDocument()
+    })
+    expect(focusSpy).not.toHaveBeenCalled()
+    expect(pageButton).toHaveFocus()
+  })
+
+  it('キーボードで閉じてトリガが :focus-visible になったときは、トリガが見える位置までだけスクロールすること', async () => {
+    const scrolled: Array<{ text: string | null; options: unknown }> = []
+    const { scrollIntoView } = Element.prototype
+    Element.prototype.scrollIntoView = function (this: HTMLElement, options) {
+      scrolled.push({ text: this.textContent, options })
+    }
+    const matches = Element.prototype.matches
+    vi.spyOn(Element.prototype, 'matches').mockImplementation(function (this: Element, selector) {
+      return selector === ':focus-visible' ? true : matches.call(this, selector)
+    })
+
+    try {
+      renderWithIntl(<ModelessTemplate />)
+      const trigger = screen.getByRole('button', { name: 'open' })
+      await userEvent.click(trigger)
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: 'モードレスドロワー' })).toBeVisible()
+      })
+      scrolled.length = 0
+
+      await userEvent.click(screen.getByRole('button', { name: 'close' }))
+
+      await waitFor(() => {
+        expect(trigger).toHaveFocus()
+      })
+      expect(scrolled).toEqual([{ text: 'open', options: { block: 'nearest' } }])
+    } finally {
+      vi.restoreAllMocks()
+      Element.prototype.scrollIntoView = scrollIntoView
+    }
+  })
+
   it('modeless でも ×（onClickClose）で閉じられること', async () => {
     renderWithIntl(<ModelessTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
@@ -698,6 +788,69 @@ describe('Drawer（modeless）', () => {
     const dialog = screen.getByRole('dialog', { name: 'コンテナ内右ドロワー' })
     expect(dialog).toHaveClass('shr-max-w-[calc(100%-theme(spacing.2))]')
     expect(dialog).not.toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
+  })
+
+  it.each<{ position: 'right' | 'left'; align: string; border: string }>([
+    { position: 'right', align: 'shr-ml-auto', border: 'shr-border-l-shorthand' },
+    { position: 'left', align: 'shr-mr-auto', border: 'shr-border-r-shorthand' },
+  ])(
+    'portalParent 指定の $position は、コンテナの端に寄せたまま画面の上端に張り付き、高さが画面を超えず、境界線をメイン側にだけ引くこと',
+    ({ position, align, border }) => {
+      const PortalTemplate: FC = () => {
+        const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+        return (
+          <div ref={setContainer}>
+            <Drawer
+              isOpen
+              position={position}
+              modality="modeless"
+              portalParent={container ?? undefined}
+              ariaLabel="コンテナ内ドロワー"
+            >
+              <DrawerBody>
+                <p>body</p>
+              </DrawerBody>
+              <DrawerFooter>
+                <Button>保存</Button>
+              </DrawerFooter>
+            </Drawer>
+          </div>
+        )
+      }
+      renderWithIntl(<PortalTemplate />)
+
+      const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
+      expect(dialog).toHaveClass('shr-sticky', 'shr-top-0', 'shr-h-[min(100%,100dvh)]')
+      expect(dialog).not.toHaveClass('shr-absolute')
+      expect(dialog.parentElement).toHaveClass('shr-flex')
+      expect(dialog).toHaveClass(align)
+      expect(dialog).toHaveClass(border)
+      expect(dialog).not.toHaveClass('shr-border-shorthand')
+      expect(dialog).toHaveAttribute('data-in-container')
+      expect(dialog).toHaveClass('shr-group/drawer')
+      expect(dialog.querySelector('.smarthr-ui-Drawer-footer')).toHaveClass(
+        'group-data-[in-container]/drawer:shr-sticky',
+        'group-data-[in-container]/drawer:shr-bottom-0',
+        'group-data-[in-container]/drawer:shr-bg-white',
+      )
+      expect(dialog.querySelector('.smarthr-ui-Drawer-body')).toHaveClass(
+        'group-data-[in-container]/drawer:shr-overscroll-auto',
+      )
+    },
+  )
+
+  it('portalParent なしの right は画面の右端に固定され、フッターを張り付かせないこと', () => {
+    renderWithIntl(
+      <Drawer isOpen position="right" modality="modeless" ariaLabel="画面固定右ドロワー">
+        <p>content</p>
+      </Drawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
+    expect(dialog).toHaveClass('shr-absolute', 'shr-right-0', 'shr-h-full', 'shr-border-shorthand')
+    expect(dialog).not.toHaveClass('shr-sticky')
+    expect(dialog).not.toHaveAttribute('data-in-container')
   })
 
   it('portalParent なしの right はビューポート基準の最大幅のままであること', async () => {
@@ -1153,5 +1306,96 @@ describe('Drawer（開閉とフォーカス）', () => {
     })
 
     expect(screen.getByRole('button', { name: 'open' })).toHaveFocus()
+  })
+})
+
+describe('Drawer（portalParent で画面の下にはみ出した分の本文の下の空き）', () => {
+  const Template: FC<{ withPortalParent?: boolean; modality?: 'modal' | 'modeless' }> = ({
+    withPortalParent = true,
+    modality = 'modeless',
+  }) => {
+    const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+    return (
+      <div ref={setContainer}>
+        <Drawer
+          isOpen
+          position="right"
+          modality={modality}
+          portalParent={withPortalParent ? (container ?? undefined) : undefined}
+          ariaLabel="はみ出し"
+        >
+          <DrawerBody>
+            <p>body</p>
+          </DrawerBody>
+          <DrawerFooter>
+            <Button>保存</Button>
+          </DrawerFooter>
+        </Drawer>
+      </div>
+    )
+  }
+
+  const VIEWPORT_HEIGHT = 768
+
+  const scrollWithPanelBottom = (panelBottom: number) => {
+    const dialog = screen.getByRole('dialog', { name: 'はみ出し' })
+
+    vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(VIEWPORT_HEIGHT)
+
+    vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue({ bottom: panelBottom } as DOMRect)
+    fireEvent.scroll(window)
+
+    return dialog
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('ページのスクロールに合わせて、パネルが画面の下にはみ出している分を本文の下に空けること', () => {
+    renderWithIntl(<Template />)
+
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT + 230)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('230px')
+    expect(dialog.querySelector('.smarthr-ui-Drawer-body')).toHaveClass(
+      'group-data-[in-container]/drawer:shr-mb-[var(--smarthr-ui-drawer-hidden-bottom,0px)]',
+    )
+  })
+
+  it('パネルが画面に収まっていれば、本文の下を空けないこと', () => {
+    renderWithIntl(<Template />)
+
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT - 10)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('0px')
+  })
+
+  it('portalParent が無ければ、本文の下の空きを指定しないこと', () => {
+    renderWithIntl(<Template withPortalParent={false} />)
+
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT + 230)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('')
+  })
+
+  it('開いたまま張り付かない表示に切り替わったら、本文の下の空きを外し、スクロールでも指定しないこと', async () => {
+    const { rerender } = renderWithIntl(<Template />)
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT + 230)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('230px')
+
+    rerender(
+      <IntlProvider locale="ja">
+        <Template modality="modal" />
+      </IntlProvider>,
+    )
+
+    await waitFor(() => {
+      expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('')
+    })
+    fireEvent.scroll(window)
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('')
   })
 })

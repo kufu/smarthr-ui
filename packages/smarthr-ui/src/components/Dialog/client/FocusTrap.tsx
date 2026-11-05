@@ -11,9 +11,15 @@ type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     firstFocusTarget?: RefObject<HTMLElement>
-    /** Tab を内側で循環させる。false でも開いたときのフォーカス移動と閉じたときの復帰は行う。既定は true */
+    /**
+     * Tab を内側で循環させる。既定は true。
+     * false でも開いたときのフォーカス移動は行い、閉じたときのトリガへの復帰はフォーカスが内側か body にあるときだけ行う
+     */
     trapFocus?: boolean
-    /** 開いたときと、ref の focus() でのフォーカス移動で祖先をスクロールさせない */
+    /**
+     * 開いたとき、ref の focus()、閉じたときのトリガへの復帰でのフォーカス移動で祖先をスクロールさせない。
+     * 復帰したトリガが :focus-visible になるキーボード操作では、トリガが見える位置までだけスクロールする
+     */
     preventScroll?: boolean
     ref?: Ref<{ focus: () => void }>
   }
@@ -91,8 +97,19 @@ export const FocusTrap: FC<Props> = ({
           cancelAnimationFrame(rAFId)
           window.removeEventListener('keydown', handleKeyDown)
 
-          if (triggerElement instanceof HTMLElement) {
-            triggerElement.focus()
+          const { activeElement } = document
+
+          // フォーカスがどこにあっても戻す案は、Tab を閉じ込めないときに背後で操作している要素からフォーカスを奪うため採らない
+          if (
+            triggerElement instanceof HTMLElement &&
+            (latest.trapFocus || activeElement === document.body || node.contains(activeElement))
+          ) {
+            triggerElement.focus({ preventScroll: latest.preventScroll })
+
+            // 常にスクロールしない案は、キーボードで閉じたときに画面外のトリガにあるフォーカスが見えなくなるため採らない
+            if (latest.preventScroll && triggerElement.matches(':focus-visible')) {
+              triggerElement.scrollIntoView({ block: 'nearest' })
+            }
           }
         }
       },

@@ -7,6 +7,7 @@ const classNameGenerator = tv({
   base: [
     'smarthr-ui-Drawer-footer',
     'shr-border-t-shorthand shr-flex shr-flex-[0_0_auto] shr-items-center shr-justify-end shr-gap-1 shr-p-1',
+    'group-data-[in-container]/drawer:shr-sticky group-data-[in-container]/drawer:shr-bottom-0 group-data-[in-container]/drawer:shr-bg-white',
   ],
 })
 

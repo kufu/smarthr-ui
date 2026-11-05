@@ -1,6 +1,10 @@
 import { useState } from 'react'
 
 import { Button } from '../../Button'
+import { FormControl } from '../../FormGroup'
+import { Input } from '../../Input'
+import { Panel } from '../../Panel'
+import { Table, Td, Th } from '../../Table'
 import { Drawer } from '../Drawer'
 import { DrawerBody } from '../DrawerBody'
 import { DrawerFooter } from '../DrawerFooter'
@@ -170,6 +174,72 @@ export const PortalParent: StoryObj<typeof Drawer> = {
           </DrawerBody>
           <DrawerFooter>
             <Button onClick={handleClose}>閉じる</Button>
+          </DrawerFooter>
+        </Drawer>
+      </div>
+    )
+  },
+}
+
+const ROWS = Array.from({ length: 30 }, (_, i) => i + 1)
+
+/**
+ * 一覧の `Panel` を `portalParent` にすると、一覧の右端に重なって開く。
+ * ページをスクロールしても見出しは画面の上端に、フッターは画面の下端に残る。
+ * `Panel` の角丸に合わせて切り抜くため `overflow="clip"` を指定している（`hidden` だと張り付かない）。
+ */
+export const PortalParentInPage: StoryObj<typeof Drawer> = {
+  name: 'portalParent（ページの一部に出す）',
+  parameters: { layout: 'fullscreen' },
+  render: () => {
+    const [open, setOpen] = useState(true)
+    const handleClose = () => setOpen(false)
+    const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+    return (
+      <div style={{ padding: '2rem' }}>
+        <Button onClick={() => setOpen(true)}>詳細パネルを開く</Button>
+        <p>ページをスクロールしても、パネルの見出しとフッターは画面内に残ります。</p>
+        <Panel ref={setContainer} overflow="clip" className="shr-relative">
+          <Table>
+            <thead>
+              <tr>
+                <Th>社員番号</Th>
+                <Th>氏名</Th>
+                <Th>部署</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {ROWS.map((n) => (
+                <tr key={n}>
+                  <Td>{String(n).padStart(5, '0')}</Td>
+                  <Td>従業員 {n}</Td>
+                  <Td>開発部</Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Panel>
+        <Drawer
+          isOpen={open}
+          position="right"
+          portalParent={container ?? undefined}
+          modality="modeless"
+          size="S"
+          onClickClose={handleClose}
+        >
+          <DrawerHeader title="詳細" />
+          <DrawerBody>
+            {ROWS.slice(0, 20).map((n) => (
+              <FormControl key={n} label={`項目 ${n}`}>
+                <Input name={`field-${n}`} />
+              </FormControl>
+            ))}
+          </DrawerBody>
+          <DrawerFooter>
+            <Button variant="primary" onClick={handleClose}>
+              保存
+            </Button>
           </DrawerFooter>
         </Drawer>
       </div>

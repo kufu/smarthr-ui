@@ -39,7 +39,8 @@ type Props = ExtendElementPropsWithRef<
     /**
      * モーダル/非モーダルの切り替え。既定は 'modal'。
      * 'modeless' ではオーバーレイ無し・背後操作可（スクロールロック無し・Tab の循環無し・aria-modal 無し）。
-     * 開いたときのドロワーへのフォーカス移動と、閉じたときのトリガへの復帰は modal と同じく行う。
+     * 開いたときのドロワーへのフォーカス移動は modal と同じく行う。閉じたときのトリガへの復帰は、
+     * フォーカスがドロワーの中にあるときだけ行う（背後へ移していたら、そのままにする）。
      */
     modality?: DrawerModality
     /** 開いているかどうか */
@@ -76,7 +77,7 @@ const classNameGenerator = tv({
     overlay: ['smarthr-ui-Drawer-overlay', 'shr-absolute shr-inset-0 shr-bg-scrim'],
     inner: [
       'smarthr-ui-Drawer',
-      'shr-border-shorthand shr-pointer-events-auto shr-absolute shr-flex shr-flex-col shr-bg-white shr-shadow-layer-3',
+      'shr-group/drawer shr-pointer-events-auto shr-flex shr-flex-col shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
     handleArea: [
@@ -89,14 +90,11 @@ const classNameGenerator = tv({
   },
   variants: {
     position: {
-      right: {
-        inner: 'shr-inset-y-0 shr-right-0 shr-h-full',
-      },
-      left: {
-        inner: 'shr-inset-y-0 shr-left-0 shr-h-full',
-      },
+      right: {},
+      left: {},
       bottom: {
-        inner: 'shr-inset-x-0 shr-bottom-0 shr-w-full shr-rounded-t-l',
+        inner:
+          'shr-border-shorthand shr-absolute shr-inset-x-0 shr-bottom-0 shr-w-full shr-rounded-t-l',
       },
     },
     size: {
@@ -116,18 +114,38 @@ const classNameGenerator = tv({
       fixed: { layout: 'shr-fixed' },
       absolute: { layout: 'shr-absolute' },
     },
+    // 見えている高さをスクロールのたびに測ってパネルに当てる案は、パネルが伸び縮みして見づらいため採らない
+    stickyInContainer: {
+      true: {
+        layout: 'shr-flex shr-items-start',
+        inner:
+          'shr-sticky shr-top-0 shr-h-[min(100%,100dvh)] shr-max-w-[calc(100%-theme(spacing.2))]',
+      },
+    },
   },
   // パネルの上限は fixed ならビューポート、absolute ならコンテナが基準。間違えると親からはみ出す
   compoundVariants: [
     {
       position: ['right', 'left'],
       layoutPosition: 'fixed',
-      class: { inner: 'shr-max-w-[calc(100dvw-theme(spacing.2))]' },
+      class: {
+        inner:
+          'shr-border-shorthand shr-absolute shr-inset-y-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.2))]',
+      },
+    },
+    { position: 'right', layoutPosition: 'fixed', class: { inner: 'shr-right-0' } },
+    { position: 'left', layoutPosition: 'fixed', class: { inner: 'shr-left-0' } },
+    // コンテナの縁に重なる辺にも境界線を引く案は、コンテナの角丸で線が途切れるため採らない。
+    // justify-end / justify-start で寄せる案は、dir="rtl" の中で左右が入れ替わり、translateX でのスライドと食い違うため採らない
+    {
+      position: 'right',
+      stickyInContainer: true,
+      class: { inner: 'shr-border-l-shorthand shr-ml-auto' },
     },
     {
-      position: ['right', 'left'],
-      layoutPosition: 'absolute',
-      class: { inner: 'shr-max-w-[calc(100%-theme(spacing.2))]' },
+      position: 'left',
+      stickyInContainer: true,
+      class: { inner: 'shr-border-r-shorthand shr-mr-auto' },
     },
     {
       position: 'bottom',
@@ -141,6 +159,57 @@ const classNameGenerator = tv({
     },
   ],
 })
+
+const HIDDEN_BOTTOM_PROPERTY = '--smarthr-ui-drawer-hidden-bottom'
+
+const hiddenBottomCallbackRef = (node: HTMLDivElement | null) => {
+  if (!node) return
+
+  let unsubscribe: (() => void) | undefined
+
+  const subscribe = () => {
+    unsubscribe?.()
+    unsubscribe = undefined
+
+    if (!node.hasAttribute('data-in-container')) return
+
+    let hiddenBottom = ''
+    const update = () => {
+      const next = `${Math.max(0, node.getBoundingClientRect().bottom - document.documentElement.clientHeight)}px`
+
+      if (next !== hiddenBottom) {
+        hiddenBottom = next
+        node.style.setProperty(HIDDEN_BOTTOM_PROPERTY, next)
+      }
+    }
+
+    update()
+
+    const resizeObserver = new ResizeObserver(update)
+
+    resizeObserver.observe(node)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+
+    unsubscribe = () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+      node.style.removeProperty(HIDDEN_BOTTOM_PROPERTY)
+    }
+  }
+
+  subscribe()
+
+  const mutationObserver = new MutationObserver(subscribe)
+
+  mutationObserver.observe(node, { attributes: true, attributeFilter: ['data-in-container'] })
+
+  return () => {
+    mutationObserver.disconnect()
+    unsubscribe?.()
+  }
+}
 
 const closedTransform: Record<DrawerPosition, string> = {
   right: 'translateX(100%)',
@@ -186,7 +255,16 @@ export const DrawerContent: FC<Props> = ({
     velocity: number
   } | null>(null)
 
-  const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay, autoHeadingId })
+  const layoutPosition = modality === 'modeless' && hasPortalParent ? 'absolute' : 'fixed'
+  const isStickyInContainer = layoutPosition === 'absolute' && position !== 'bottom'
+
+  const latest = useLatest({
+    isOpen,
+    onPressEscape,
+    onClickClose,
+    onClickOverlay,
+    autoHeadingId,
+  })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
   const functions = useMemo(() => {
@@ -296,16 +374,23 @@ export const DrawerContent: FC<Props> = ({
   const classNames = useMemo(() => {
     const { layout, overlay, inner, handleArea, handleBar, focusTrap } = classNameGenerator()
     const appliedSize = position === 'bottom' ? undefined : size
-    const layoutPosition = modality === 'modeless' && hasPortalParent ? 'absolute' : 'fixed'
+
     return {
-      layout: layout({ modality, layoutPosition }),
+      layout: layout({ modality, layoutPosition, stickyInContainer: isStickyInContainer }),
       overlay: overlay(),
-      inner: inner({ position, size: appliedSize, modality, layoutPosition, className }),
+      inner: inner({
+        position,
+        size: appliedSize,
+        modality,
+        layoutPosition,
+        stickyInContainer: isStickyInContainer,
+        className,
+      }),
       handleArea: handleArea(),
       handleBar: handleBar(),
       focusTrap: focusTrap(),
     }
-  }, [position, size, modality, hasPortalParent, className])
+  }, [position, size, modality, layoutPosition, isStickyInContainer, className])
 
   const openedTransform = useMemo(() => {
     if (position !== 'bottom' || dragOffset === 0) return 'translateY(0)'
@@ -352,7 +437,7 @@ export const DrawerContent: FC<Props> = ({
   )
 
   const escapeCallbackRef = useEscapeCallbackRef(functions.handlePressEscape)
-  const mergedRef = useMergeRefs(innerRef, ref)
+  const mergedRef = useMergeRefs(innerRef, hiddenBottomCallbackRef, ref)
 
   useBodyScrollLock(isOpen && modality === 'modal')
 
@@ -410,10 +495,13 @@ export const DrawerContent: FC<Props> = ({
         aria-modal={modality === 'modal' || undefined}
         aria-label={ariaLabel}
         aria-labelledby={resolvedLabelledby}
+        data-in-container={isStickyInContainer || undefined}
       >
         {/*
           スライド完了後に初回フォーカスする案は、FocusTrap がマウント直後にフォーカスするため採れない。
-          スライド前の画面外の要素へのフォーカスで祖先がスクロールしないよう preventScroll を指定する
+          スライド前の画面外の要素へのフォーカスで祖先がスクロールしないよう preventScroll を指定する。
+          マウスで閉じたときにもトリガの位置までスクロールさせる案は、modeless でページをスクロールしたあとに
+          閉じるとページが突然飛ぶため採らない
         */}
         <FocusTrap
           firstFocusTarget={firstFocusTarget}
