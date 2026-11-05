@@ -39,7 +39,7 @@ export const TableView = <T extends ChartName>({ data, options }: Props<T>) => {
   const tableData = generateTableData()
 
   return (
-    <div className="shr-py-0.5">
+    <div className="shr-h-full shr-mt-0.5">
       <Table className={FIRST_COLUMN_CLASS_NAME}>
         <tbody>
           <tr>
