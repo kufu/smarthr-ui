@@ -100,11 +100,14 @@ const classNameGenerator = tv({
       },
     },
     size: {
+      XS: { inner: drawerSize.XS },
       S: { inner: drawerSize.S },
       M: { inner: drawerSize.M },
       L: { inner: drawerSize.L },
+      XL: { inner: drawerSize.XL },
+      XXL: { inner: drawerSize.XXL },
       FULL: { inner: drawerSize.FULL },
-    },
+    } satisfies Record<DrawerSize, { inner: string }>,
     modality: {
       modal: {},
       modeless: { layout: 'shr-pointer-events-none' },

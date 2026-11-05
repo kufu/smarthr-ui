@@ -70,8 +70,6 @@ export const ModelessRight: StoryObj<typeof Drawer> = {
   ),
 }
 
-const SIZES: DrawerSize[] = ['S', 'M', 'L', 'FULL']
-
 const sizeStory = (
   size: DrawerSize,
   position: DrawerPosition = 'right',
@@ -84,10 +82,13 @@ const sizeStory = (
   ),
 })
 
-export const SizeS = sizeStory(SIZES[0])
-export const SizeM = sizeStory(SIZES[1])
-export const SizeL = sizeStory(SIZES[2])
-export const SizeFull = sizeStory(SIZES[3])
+export const SizeXS = sizeStory('XS')
+export const SizeS = sizeStory('S')
+export const SizeM = sizeStory('M')
+export const SizeL = sizeStory('L')
+export const SizeXL = sizeStory('XL')
+export const SizeXXL = sizeStory('XXL')
+export const SizeFull = sizeStory('FULL')
 
 /**
  * modal では children が FocusTrap に包まれる。ここでボックスが挟まると

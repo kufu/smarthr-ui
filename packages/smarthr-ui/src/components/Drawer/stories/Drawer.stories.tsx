@@ -51,7 +51,7 @@ export default {
     },
     size: {
       control: 'radio',
-      options: ['S', 'M', 'L', 'FULL'],
+      options: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'FULL'],
     },
     portalParent: {
       control: false,
