@@ -91,11 +91,7 @@ const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
       // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
       const base = classNameGenerator({ className, align, vAlign })
 
-      if (!fixed) {
-        return base
-      }
-
-      return `${base} ${reelShadowClassNameGenerator({ direction: fixed })}`
+      return fixed ? `${base} ${reelShadowClassNameGenerator({ direction: fixed })}` : base
     }, [align, fixed, vAlign, className])
 
     return (
