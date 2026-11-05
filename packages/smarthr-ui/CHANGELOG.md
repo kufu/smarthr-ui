@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [102.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v102.0.0...smarthr-ui-v102.1.0) (2026-11-05)
+
+
+### Features
+
+* **Cluster:** grow属性で段落ち時の優先制御を実現しSidebarを非推奨化 ([#7404](https://github.com/kufu/smarthr-ui/issues/7404)) ([5fe84d1](https://github.com/kufu/smarthr-ui/commit/5fe84d11203b7bbc799765ccaaec1089216bf320))
+* **Panel:** 背景色を指定するbgColor propsを追加する ([#7474](https://github.com/kufu/smarthr-ui/issues/7474)) ([fdf807c](https://github.com/kufu/smarthr-ui/commit/fdf807c3532d8432b664291f83ba72cccad8e1ae))
+* **WarekiPicker:** 幅が狭いときに和暦表示を下段へ折り返す ([#7399](https://github.com/kufu/smarthr-ui/issues/7399)) ([31c5a95](https://github.com/kufu/smarthr-ui/commit/31c5a95abed1f9e797ac84a534479d09750f12bf))
+
+
+### Bug Fixes
+
+* createThemeが既定のテーマ値を書き換える問題を修正し、lodash・decimal.jsを削除する ([#7465](https://github.com/kufu/smarthr-ui/issues/7465)) ([a79e6f2](https://github.com/kufu/smarthr-ui/commit/a79e6f241a42d688f0fd225494b1053a2e7e7a06))
+* **MultiCombobox:** 入力途中の文字列が閉じて再度開くと復元してしまう不具合を修正する ([#7383](https://github.com/kufu/smarthr-ui/issues/7383)) ([152f9d6](https://github.com/kufu/smarthr-ui/commit/152f9d61b3ede0bc2455f6741529a6c3d914d77a))
+* **PageCounter:** enダッシュを半角ハイフンに修正する ([#7487](https://github.com/kufu/smarthr-ui/issues/7487)) ([812a1a9](https://github.com/kufu/smarthr-ui/commit/812a1a95f25779222e9647625d9c15059d3370c8))
+* **UnstyledButton:** disabled のときに Tab や Esc でフォーカスを移動できない問題を修正 ([#7431](https://github.com/kufu/smarthr-ui/issues/7431)) ([2ce152e](https://github.com/kufu/smarthr-ui/commit/2ce152e14b7c35bb3d6f67572ba50de4ce8d52b6))
+
 ## [102.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v101.0.0...smarthr-ui-v102.0.0) (2026-10-29)
 
 

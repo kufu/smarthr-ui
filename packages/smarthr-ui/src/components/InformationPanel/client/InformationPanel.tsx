@@ -168,7 +168,7 @@ export const InformationPanel: FC<Props> = ({
 
   return (
     <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
-      <Cluster align="baseline" grow="start" className={classNames.header}>
+      <Cluster align="baseline" grow="start" gap={1} className={classNames.header}>
         <MemoizedHeading
           type={type}
           id={`${id}-heading`}

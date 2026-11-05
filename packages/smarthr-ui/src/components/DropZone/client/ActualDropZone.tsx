@@ -135,8 +135,8 @@ export const ActualDropZone: FC<Props> = ({
   const errorAttr = error || undefined
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
+      role="presentation"
       className={classNames.wrapper}
       data-files-dragged-over={filesDraggedOver || undefined}
       onDrop={functions.handleDrop}
