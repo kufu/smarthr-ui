@@ -14,7 +14,7 @@ import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef
 import { useLatest } from '../../../hooks/useLatest'
 import { dialogSize } from '../../../tailwind'
 
-import { DialogOverlap } from './DialogOverlap'
+import { DialogOverlapCenter } from './DialogOverlapCenter'
 import { FocusTrap } from './FocusTrap'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
@@ -150,7 +150,7 @@ export const DialogContent: FC<Props> = ({
   }, [isOpen])
 
   return (
-    <DialogOverlap isOpen={isOpen}>
+    <DialogOverlapCenter isOpen={isOpen}>
       <div ref={callbackRef} className={classNames.layout}>
         <Overlay
           className={classNames.background}
@@ -169,7 +169,7 @@ export const DialogContent: FC<Props> = ({
           </FocusTrap>
         </div>
       </div>
-    </DialogOverlap>
+    </DialogOverlapCenter>
   )
 }
 
