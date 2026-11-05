@@ -9,7 +9,7 @@ overrides:
   esbuild@<=0.24.2: '>=0.28.2'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.2'
   tar@<=7.5.15: '>=7.5.22'
-  js-yaml@>=4.0.0 <=5.2.1: '>=5.4.3'
+  js-yaml@>=4.0.0 <=5.2.1: '>=5.5.0'
   '@babel/core@<=7.29.0': '>=8.0.10'
   react-docgen>@babel/core: ^7.29.7
   sharp@<0.35.5: '>=0.35.5'
@@ -24,7 +24,7 @@ overrides:
   qs@<6.16.0: '>=6.16.2'
   colord@<2.9.4: '>=2.9.7'
   sucrase>glob: '>=14.0.3'
-  glob>minimatch: '>=11.0.1'
+  glob>minimatch: '>=11.0.2'
 
 importers:
 
