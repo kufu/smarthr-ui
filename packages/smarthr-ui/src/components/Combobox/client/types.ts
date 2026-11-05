@@ -36,6 +36,13 @@ export type ComboboxItem<T> = ComboboxItemBase<T> &
       }
   )
 
+export type DeletableComboboxItem<T> = ComboboxItem<T> & {
+  /**
+   * `MultiCombobox` で削除可能かどうか。省略時は `true` 扱い
+   */
+  deletable?: boolean
+}
+
 export type ComboboxOption<T> = {
   id: string
   selected: boolean
@@ -74,6 +81,10 @@ export type BaseProps<T> = {
   error?: boolean
   /**
    * `true` のとき、 `items` 内に存在しないアイテムを新しく追加できるようになる
+   *
+   * 新規追加したアイテムは選択状態に自動では反映されないため、
+   * `selectedItem` / `selectedItems` による制御（`onAdd` で `items` に追加した上で選択状態を更新する）と組み合わせて使用すること。
+   * `defaultSelectedItem` / `defaultSelectedItems` のみを指定した非制御の使用方法では、新規追加したアイテムは選択されない。
    */
   creatable?: boolean
   /**
@@ -102,6 +113,9 @@ export type BaseProps<T> = {
   onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
    * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
+   *
+   * このコールバックは追加の通知のみを行い、選択状態の更新は行わない。
+   * `items` への追加と選択状態の更新（`selectedItem` / `selectedItems` と `onChangeSelected` 等）は呼び出し側で行うこと。
    */
   onAdd?: (label: string) => void
   /**
