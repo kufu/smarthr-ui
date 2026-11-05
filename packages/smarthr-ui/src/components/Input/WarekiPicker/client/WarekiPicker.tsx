@@ -217,6 +217,8 @@ export const WarekiPicker: FC<Props> = ({
     isInputFocused,
     selectedDate,
     closeFrame,
+    isCalendarShown,
+    disabled,
   })
 
   const functions = useMemo(() => {
@@ -292,7 +294,11 @@ export const WarekiPicker: FC<Props> = ({
       stringToDate,
       dateToString,
       closeCalendar,
-      openCalendar,
+      handleDelegateClick: () => {
+        if (!latest.isCalendarShown && !latest.disabled) {
+          openCalendar()
+        }
+      },
       calendarCallbackRef: (node: HTMLElement | null) => {
         calendarNode = node
       },
@@ -358,7 +364,7 @@ export const WarekiPicker: FC<Props> = ({
         latest.onBlur?.(e)
       },
       handleDelegateKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
-        if (ESCAPE_KEY_REGEX.test(e.key)) {
+        if (latest.isCalendarShown && ESCAPE_KEY_REGEX.test(e.key)) {
           e.stopPropagation()
           // delay hiding calendar because calendar will be displayed when input is focused
           latest.closeFrame.request(closeCalendar)
@@ -431,7 +437,6 @@ export const WarekiPicker: FC<Props> = ({
         : theme.textColor.grey
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-interactive-element
     <div
       ref={containerRef}
       role="presentation"
@@ -439,8 +444,8 @@ export const WarekiPicker: FC<Props> = ({
       style={{
         width: typeof width === 'number' ? `${width}px` : width,
       }}
-      onClick={!isCalendarShown && !disabled ? functions.openCalendar : undefined}
-      onKeyDown={isCalendarShown ? functions.handleDelegateKeyDown : undefined}
+      onClick={functions.handleDelegateClick}
+      onKeyDown={functions.handleDelegateKeyDown}
     >
       <Input
         {...rest}
