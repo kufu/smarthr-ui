@@ -119,8 +119,6 @@ export { ControlledTooltip as Balloon } from './components/Tooltip'
 /** @public */
 export { Tooltip } from './components/Tooltip'
 /** @public */
-export { BottomFixedArea } from './components/BottomFixedArea'
-/** @public */
 export {
   ErrorScreen,
   AuthErrorScreen,

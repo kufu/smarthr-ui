@@ -59,5 +59,3 @@ export const Button: FC<Props> = ({
 
   return button
 }
-// BottomFixedArea での判定に用いるために displayName を明示的に設定する
-Button.displayName = 'Button'
