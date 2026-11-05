@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 
 import { FormControl } from '../../../FormGroup'
@@ -69,5 +69,57 @@ describe('CurrencyInput', () => {
     await user.tab()
 
     expect(input).toHaveValue('1,000')
+  })
+
+  it('非制御で値を変更後、form.reset()を呼ぶとdefaultValueのフォーマット済みの値に戻ること', async () => {
+    const user = userEvent.setup()
+
+    const { container } = render(
+      <form>
+        <FormControl label="CurrencyInput">
+          <CurrencyInput name="currency" defaultValue="1000" />
+        </FormControl>
+      </form>,
+    )
+
+    const input = screen.getByRole('textbox')
+    await user.click(input)
+    await user.clear(input)
+    await user.type(input, '2000000')
+    await user.tab()
+
+    expect(input).toHaveValue('2,000,000')
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    // HINT: resetイベントは実際に値がリセットされる前に発火するため、
+    // CurrencyInput側はrequestAnimationFrameで次のフレームまでフォーマットを遅延させている
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    })
+
+    expect(input).toHaveValue('1,000')
+  })
+
+  it('制御時(value指定)は、form.reset()を呼んでも表示が変わらないこと', () => {
+    const { container } = render(
+      <form>
+        <FormControl label="CurrencyInput">
+          <CurrencyInput name="currency" value="2,000,000" onChange={() => {}} />
+        </FormControl>
+      </form>,
+    )
+
+    const input = screen.getByRole('textbox')
+
+    expect(input).toHaveValue('2,000,000')
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    expect(input).toHaveValue('2,000,000')
   })
 })

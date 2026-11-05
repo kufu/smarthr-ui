@@ -2,6 +2,7 @@
 
 import { type FC, type FocusEvent, useEffect, useMemo, useRef, useState } from 'react'
 
+import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../../hooks/client/useOnce'
 import { useLatest } from '../../../../hooks/useLatest'
@@ -35,6 +36,7 @@ export const CurrencyInput: FC<Props> = ({
 }) => {
   const innerRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onFocus,
@@ -42,6 +44,7 @@ export const CurrencyInput: FC<Props> = ({
     onFormatValue,
     value,
     defaultValue,
+    resetFrame,
   })
 
   const functions = useMemo(() => {
@@ -59,6 +62,27 @@ export const CurrencyInput: FC<Props> = ({
       baseCallbackRef: (node: HTMLInputElement | null) => {
         if (node && latest.value === undefined && latest.defaultValue !== undefined) {
           formatCurrencyValue(latest.defaultValue)
+        }
+
+        const associatedForm = node?.form
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // ネイティブのdefaultValueへの復帰により失われるフォーマット(カンマ区切り等)をかけ直す。
+        // resetイベントは実際に値がリセットされる前に発火するため、次のフレームで値を読み直す
+        const handleReset = () => {
+          if (latest.value === undefined) {
+            latest.resetFrame.request(() => {
+              if (innerRef.current) {
+                formatCurrencyValue(innerRef.current.value)
+              }
+            })
+          }
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
+        return () => {
+          associatedForm?.removeEventListener('reset', handleReset)
+          latest.resetFrame.cancel()
         }
       },
       formatCurrencyValue,
