@@ -171,12 +171,6 @@ export const DrawerContent: FC<Props> = ({
   // 常に autoHeadingId を指すと、ヘッダ無しのときに参照先が存在しない属性になる
   const [registeredHeadingId, setRegisteredHeadingId] = useState<string | undefined>(undefined)
 
-  const resolvedLabelledby = useMemo(() => {
-    if (ariaLabel) return undefined
-
-    return ariaLabelledby ?? registeredHeadingId
-  }, [ariaLabel, ariaLabelledby, registeredHeadingId])
-
   // ref で持たないのは、ドラッグ中はトランジションを切った再描画で指に追従させるため
   const [dragOffset, setDragOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -192,7 +186,7 @@ export const DrawerContent: FC<Props> = ({
     velocity: number
   } | null>(null)
 
-  const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay })
+  const latest = useLatest({ isOpen, onPressEscape, onClickClose, onClickOverlay, autoHeadingId })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
   const functions = useMemo(() => {
@@ -366,13 +360,16 @@ export const DrawerContent: FC<Props> = ({
   const contextValue = useMemo(
     () => ({
       handleClickClose: functions.handleClickClose,
-      headingId: autoHeadingId,
+      headingId: latest.autoHeadingId,
       registerHeadingId: setRegisteredHeadingId,
     }),
-    [autoHeadingId, functions],
+    [functions, latest],
   )
 
   if (!shouldMount) return null
+
+  // ネイティブの属性と同じく、ariaLabel より ariaLabelledby を優先する
+  const resolvedLabelledby = ariaLabelledby ?? (ariaLabel ? undefined : registeredHeadingId)
 
   const handleElement = (
     <div

@@ -196,6 +196,31 @@ describe('Drawer サブコンポーネント', () => {
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
     expect(screen.getByRole('dialog', { name: '自動ラベル見出し' })).toBeVisible()
   })
+
+  it('ariaLabel を指定すると、DrawerHeader の見出しではなく ariaLabel が名前になること', () => {
+    renderWithIntl(
+      <Drawer isOpen ariaLabel="指定したラベル">
+        <DrawerHeader title="見出し" />
+      </Drawer>,
+    )
+
+    expect(screen.getByRole('dialog', { name: '指定したラベル' })).not.toHaveAttribute(
+      'aria-labelledby',
+    )
+  })
+
+  it('ariaLabel と ariaLabelledby を両方指定すると、Dialog と同じく ariaLabelledby が名前になること', () => {
+    renderWithIntl(
+      <>
+        <p id="external-label">外部のラベル</p>
+        <Drawer isOpen ariaLabel="指定したラベル" ariaLabelledby="external-label">
+          <DrawerHeader title="見出し" />
+        </Drawer>
+      </>,
+    )
+
+    expect(screen.getByRole('dialog', { name: '外部のラベル' })).toBeInTheDocument()
+  })
 })
 
 describe('Drawer ドラッグハンドル', () => {
