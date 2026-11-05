@@ -52,6 +52,8 @@ type Props = {
   onLoadError?: (error: unknown) => void
   /** PDF表示時に検索ボックスを表示するかどうか */
   searchable?: boolean
+  /** PDFの埋め込みフォントをFontFaceに登録せず、pdf.jsが直接描画するかどうか */
+  disableFontFace?: boolean
 }
 
 // 共通のprops（ImageとPDFで共有）
@@ -82,11 +84,20 @@ export const FileViewer: FC<Props> = ({
   onPassword,
   onLoadError,
   searchable = true,
+  disableFontFace,
 }) => {
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
+  const [prevDisableFontFace, setPrevDisableFontFace] = useState(disableFontFace)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
   const [width, setWidth] = useState(fixedWidth ?? 0)
+
+  // HINT: disableFontFaceが変わるとreact-pdfが文書を再読み込みするため、読み込み中表示を出せるようloadedを戻す。
+  // 再読み込み完了時にhandleLoadedが再度呼ばれてtrueに戻る
+  if (prevDisableFontFace !== disableFontFace) {
+    setPrevDisableFontFace(disableFontFace)
+    setLoaded(false)
+  }
 
   const hasWidth = fixedWidth !== undefined
 
@@ -142,6 +153,7 @@ export const FileViewer: FC<Props> = ({
     <PDFFileViewer
       {...commonAttrs}
       searchable={searchable}
+      disableFontFace={disableFontFace}
       setRotation={setRotation}
       handlePassword={functions.handlePassword}
     />
@@ -155,6 +167,7 @@ const PDFFileViewer: FC<
     setRotation: (value: number | undefined) => void
     handlePassword?: OnPasswordType
     searchable: boolean
+    disableFontFace?: boolean
   }
 > = ({
   file,
@@ -170,6 +183,7 @@ const PDFFileViewer: FC<
   handlePassword,
   handleLoadError,
   searchable,
+  disableFontFace,
 }) => {
   const search = usePDFSearch(file.url)
 
@@ -188,6 +202,7 @@ const PDFFileViewer: FC<
         rotation={rotation}
         file={file}
         search={searchable ? search : undefined}
+        disableFontFace={disableFontFace}
         width={width}
         handleLoad={functions.handleLoaded}
         handlePDFLoaded={setRotation}

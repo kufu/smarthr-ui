@@ -117,4 +117,69 @@ describe('PDFViewer', () => {
       '//unpkg.com/pdfjs-dist@0.0.0/legacy/build/pdf.worker.min.mjs',
     )
   })
+
+  describe('disableFontFace', () => {
+    const documentOptions: Array<Record<string, unknown> | undefined> = []
+
+    const renderWithDisableFontFace = async (disableFontFace?: boolean) => {
+      documentOptions.length = 0
+      const pdfjs = { version: '0.0.0', GlobalWorkerOptions: { workerSrc: '' } }
+
+      vi.resetModules()
+      vi.doMock('./applyPDFJSPolyfills', () => ({ applyPDFJSPolyfills: () => false }))
+      vi.doMock('react-pdf', () => ({
+        Document: ({ options }: { options?: Record<string, unknown> }) => {
+          documentOptions.push(options)
+
+          return null
+        },
+        Page: () => null,
+        pdfjs,
+      }))
+
+      const { PDFViewer } = await import('./PDFViewer')
+
+      const renderViewer = (value?: boolean) => (
+        <PDFViewer
+          file={FILE}
+          scale={1}
+          rotation={undefined}
+          disableFontFace={value}
+          width={100}
+          handleLoad={() => undefined}
+        />
+      )
+
+      const { rerender } = render(renderViewer(disableFontFace))
+
+      await waitFor(() => expect(documentOptions.length).toBeGreaterThan(0))
+
+      return {
+        options: documentOptions[documentOptions.length - 1],
+        rerenderWith: (value?: boolean) => rerender(renderViewer(value)),
+      }
+    }
+
+    test('trueを指定すると、pdf.jsのoptionsにdisableFontFace: trueが渡される', async () => {
+      const { options } = await renderWithDisableFontFace(true)
+
+      expect(options?.disableFontFace).toBe(true)
+    })
+
+    test('指定しない場合は、pdf.jsの既定値を使うためdisableFontFaceはundefinedになる', async () => {
+      const { options } = await renderWithDisableFontFace()
+
+      expect(options?.disableFontFace).toBeUndefined()
+    })
+
+    test('マウント後に値が変わると、pdf.jsのoptionsも更新される', async () => {
+      const { rerenderWith } = await renderWithDisableFontFace(true)
+
+      rerenderWith(false)
+
+      await waitFor(() =>
+        expect(documentOptions[documentOptions.length - 1]?.disableFontFace).toBe(false),
+      )
+    })
+  })
 })

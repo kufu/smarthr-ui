@@ -27,4 +27,6 @@ export type ViewerProps = {
    */
   handlePassword?: ComponentPropsWithRef<typeof Document>['onPassword']
   handleLoadError?: (error: unknown) => void
+  /** pdf.jsのdisableFontFaceオプション。PDFViewerでのみ使用されます。 */
+  disableFontFace?: boolean
 }
