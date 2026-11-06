@@ -44,13 +44,46 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
+      // 値がnullの位置は棒がないので移動先にしない
+      const hasValue = (datasetIndex: number, dataIndex: number) => {
+        // 未フォーカス(-1)は先頭として扱う
+        const value = datasets[Math.max(datasetIndex, 0)]?.data[Math.max(dataIndex, 0)]
+        return value !== null && value !== undefined
+      }
+
+      const stepData = (delta: number) => {
+        nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength
+      }
+      const stepDataset = (delta: number) => {
+        nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length
+      }
+      // 全部nullでも止まるようにmaxStepsで打ち切る
+      const stepUntilValue = (step: () => void, maxSteps: number) => {
+        for (let i = 0; i < maxSteps; i++) {
+          step()
+
+          if (hasValue(nextDatasetIndex, nextDataIndex)) {
+            return
+          }
+        }
+      }
+
       const moveData = (delta: number) => {
         event.preventDefault()
-        nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength
+        stepData(delta)
+
+        // 移動先に値がなければ、値を持つ最初のデータセットにする
+        if (!hasValue(nextDatasetIndex, nextDataIndex)) {
+          const datasetIndex = datasets.findIndex((_, index) => hasValue(index, nextDataIndex))
+
+          if (datasetIndex !== -1) {
+            nextDatasetIndex = datasetIndex
+          }
+        }
       }
       const moveDataset = (delta: number) => {
         event.preventDefault()
-        nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length
+        stepUntilValue(() => stepDataset(delta), datasets.length)
       }
       const reset = () => {
         nextDatasetIndex = -1
@@ -58,16 +91,19 @@ export const keyboardNavigationPlugin = {
       }
 
       const compoundMoveDataAndDataset = (delta: number) => {
-        // データとデータセットの境界に到達したかどうかを判定
-        const atBoundary =
-          delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
+        event.preventDefault()
+        stepUntilValue(() => {
+          // データとデータセットの境界に到達したかどうかを判定
+          const atBoundary =
+            delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
 
-        if (atBoundary) {
-          moveData(delta)
-          nextDatasetIndex = delta > 0 ? 0 : datasets.length - 1
-        } else {
-          moveDataset(delta)
-        }
+          if (atBoundary) {
+            stepData(delta)
+            nextDatasetIndex = delta > 0 ? 0 : datasets.length - 1
+          } else {
+            stepDataset(delta)
+          }
+        }, datasets.length * dataLength)
       }
 
       const defaultBindings: Record<string, () => void> = {
