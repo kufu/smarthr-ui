@@ -2,22 +2,21 @@
 
 import { useId, useMemo, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
-
 import {
-  VisuallyHiddenText,
-  Text,
-  SegmentedControl,
-  FaTableIcon,
-  FaChartColumnIcon,
   FaChartBarIcon,
+  FaChartColumnIcon,
+  FaTableIcon,
+  SegmentedControl,
+  Text,
+  VisuallyHiddenText,
 } from 'smarthr-ui'
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
+import { TableView } from '../internal/TableView/TableView'
 
 import type { ChartViewType, SingleToneLevel } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
-import { TableView } from '../internal/TableView/TableView'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -60,6 +59,10 @@ type Props = {
   defaultView?: ChartViewType
 } & BarChartColorProps
 
+// stackが複数ある積み上げは、カテゴリごとに内訳をまとめた表にする
+const isGroupedStacks = (data: ChartData<'bar'>, stacked?: boolean) =>
+  !!stacked && new Set(data.datasets.map((dataset) => dataset.stack)).size > 1
+
 export const BarChart: React.FC<Props> = ({
   data,
   title,
@@ -73,6 +76,7 @@ export const BarChart: React.FC<Props> = ({
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
+  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
@@ -109,9 +113,13 @@ export const BarChart: React.FC<Props> = ({
     [data, chartColors, stacked],
   )
 
+  const grouped = isGroupedStacks(data, stacked)
+
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
+        // 値のない位置に棒の場所を取らないようにする
+        ...(grouped ? { skipNull: true } : {}),
         ...externalOptions,
         ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
         scales: {
@@ -133,7 +141,7 @@ export const BarChart: React.FC<Props> = ({
           },
         },
       }),
-    [chartId, externalOptions, orientation, stacked],
+    [chartId, externalOptions, grouped, orientation, stacked],
   )
 
   const handleViewChange = (value: ChartViewType) => {
@@ -145,14 +153,16 @@ export const BarChart: React.FC<Props> = ({
     <div className="shr-flex shr-h-full shr-w-full shr-flex-col">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
-        <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
-          {title}
-        </Text>
+        {title && (
+          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+            {title}
+          </Text>
+        )}
         <SegmentedControl
-          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
-          size="S"
-          onClickOption={(value) => handleViewChange(value as ChartViewType)}
           value={view}
+          size="S"
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
+          onClickOption={(value) => handleViewChange(value as ChartViewType)}
           options={[
             {
               value: 'chart',
@@ -179,7 +189,12 @@ export const BarChart: React.FC<Props> = ({
             options={chartOptions}
           />
         ) : (
-          <TableView data={enhancedData} options={chartOptions} />
+          <TableView
+            data={enhancedData}
+            grouped={grouped}
+            aria-labelledby={title ? titleId : undefined}
+            options={chartOptions}
+          />
         )}
       </div>
     </div>

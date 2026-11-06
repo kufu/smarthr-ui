@@ -37,27 +37,24 @@ export const multiSmall = {
   ],
 }
 
-/**
- * stackedGroups・stackedGroupItemLabels・stackedGroupsExpanded の共通の元データ。
- * ここだけ直せば3つとも連動する（グループ名・項目ラベル・値の対応関係を手で書き分ける必要がない）
- */
 const stackedGroupsSource = [
-  { group: 'データ1', values: [12, 19, 3, 5, 2] },
-  { group: 'データ2', values: [8, 11, 15, 7, 9] },
-  { group: 'データ3', values: [5, 14, 8, 12, 6] },
-  { group: 'データ4', values: [30] },
+  { group: '項目A', values: [12, 19, 3] },
+  { group: '項目B', values: [8, 11] },
+  { group: '項目C', values: [5, 14, 8, 12] },
+  { group: '項目D', values: [30] },
+  { group: '項目E', values: [18, 4] },
+  { group: '項目F', values: [9, 0, 6] },
 ]
 
 /**
- * stackedGroups と同じ値を、項目1つにつき1データセットへ展開したもの
- * 各データセットは自分のグループの位置だけ値を持ち、他のグループはnullにする。
- * こうすると凡例・ツールチップの両方が系列（値1〜値5）ではなく項目ごとの固有ラベルになる
+ * 内訳ごとにデータセットを分け、stackにグループ名を入れたもの
  */
-export const stackedGroupsExpanded = {
+export const stackedGroups = {
   labels: stackedGroupsSource.map((g) => g.group),
   datasets: stackedGroupsSource.flatMap((g, groupIndex) =>
     g.values.map((value, itemIndex) => ({
-      label: `${g.group}の項目${itemIndex + 1}`,
+      label: `${g.group}のデータ${itemIndex + 1}`,
+      stack: g.group,
       data: stackedGroupsSource.map((_, i) => (i === groupIndex ? value : null)),
     })),
   ),

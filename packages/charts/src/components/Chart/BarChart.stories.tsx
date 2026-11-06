@@ -3,7 +3,7 @@ import {
   multi20Datasets,
   multiSmall,
   singleSmall,
-  stackedGroupsExpanded,
+  stackedGroups,
 } from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
@@ -207,29 +207,18 @@ export const Stacked: Story = {
 export const GroupedStacks: Story = {
   name: 'grouped stacks',
   args: {
-    data: stackedGroupsExpanded,
+    data: stackedGroups,
     stacked: true,
     disablePatterns: true,
     orientation: 'horizontal',
-    options: {
-      skipNull: true,
-      plugins: {
-        tooltip: {
-          filter: function (tooltipItem: TooltipItem<'bar'>) {
-            return tooltipItem.parsed.x !== null
-          },
-        },
-      },
-    },
   },
 }
-
 
 export const TableView: Story = {
   name: 'default table view',
   args: {
     data: multiSmall,
-    defaultView: 'table'
+    defaultView: 'table',
   },
 }
 
