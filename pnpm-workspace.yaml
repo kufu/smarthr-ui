@@ -27,7 +27,7 @@ overrides:
   source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
   shell-quote@>=1.8.4 <1.11.0: '>=1.11.0'
   smol-toml@<=1.8.0: '>=1.9.1'
-  qs@<6.16.0: '>=6.16.2'
+  qs@<6.16.0: '>=6.17.1'
   colord@<2.9.4: '>=2.9.7'
   # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
   # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
