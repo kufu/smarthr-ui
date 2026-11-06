@@ -138,8 +138,6 @@ export { SideNav, SideNavItemButton, SideNavItemAnchor } from './components/Side
 /** @public */
 export { Text } from './components/Text'
 /** @public */
-export { LineClamp } from './components/LineClamp'
-/** @public */
 export { NotificationBar } from './components/NotificationBar'
 /** @public */
 export {
