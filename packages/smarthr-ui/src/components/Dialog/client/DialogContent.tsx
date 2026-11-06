@@ -14,7 +14,7 @@ import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef
 import { useLatest } from '../../../hooks/useLatest'
 import { dialogSize } from '../../../tailwind'
 
-import { DialogOverlap } from './DialogOverlap'
+import { DialogOverlapCenter } from './DialogOverlapCenter'
 import { FocusTrap } from './FocusTrap'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
@@ -39,11 +39,6 @@ type Props = ExtendElementPropsWithRef<
      * ダイアログを開いているかどうか
      */
     isOpen: boolean
-    /**
-     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-     * ダイアログの幅
-     */
-    width?: string | number
     /**
      * ダイアログの大きさ
      */
@@ -106,7 +101,6 @@ export const DialogContent: FC<Props> = ({
   onClickOverlay,
   onPressEscape,
   isOpen,
-  width,
   size,
   firstFocusTarget,
   ariaLabel,
@@ -126,8 +120,6 @@ export const DialogContent: FC<Props> = ({
       background: background(),
     }
   }, [size, className])
-  // width は deprecated なので、size が指定されている場合は width を無視する
-  const actualWidth = size ? undefined : typeof width === 'number' ? `${width}px` : width
 
   const latest = useLatest({ isOpen, onPressEscape, onClickOverlay })
 
@@ -168,12 +160,8 @@ export const DialogContent: FC<Props> = ({
   }, [isOpen])
 
   return (
-    <DialogOverlap isOpen={isOpen} className={classNames.overlap}>
-      <div
-        ref={callbackRef}
-        className={classNames.layout}
-        style={actualWidth ? { width: actualWidth } : undefined}
-      >
+    <DialogOverlapCenter isOpen={isOpen} className={classNames.overlap}>
+      <div ref={callbackRef} className={classNames.layout}>
         <Overlay
           className={classNames.background}
           handleClickOverlay={isOpen ? functions.handleClickOverlay : undefined}
@@ -191,7 +179,7 @@ export const DialogContent: FC<Props> = ({
           </FocusTrap>
         </div>
       </div>
-    </DialogOverlap>
+    </DialogOverlapCenter>
   )
 }
 

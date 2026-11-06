@@ -14,7 +14,7 @@ import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Localizer, useLocalize } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -100,17 +100,6 @@ const Content: FC<
     setIsAppLauncherSelected,
   } = useContext(AppLauncherContext)
 
-  const translated = useLocalize({
-    launcherListText: {
-      id: 'smarthr-ui/AppHeader/Launcher/listText',
-      defaultText: 'アプリ一覧',
-    },
-    latestReleaseNotes: {
-      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-      defaultText: '最新のリリースノート',
-    },
-  })
-
   const latest = useLatest({
     setIsOpen,
     setIsAppLauncherSelected,
@@ -140,28 +129,34 @@ const Content: FC<
   }, [latest])
 
   const mergedRef = useMergeRefs(functions.callbackRef, domRef)
+  const selectedHeadingAttr = isAppLauncherSelected
+    ? {
+        title: <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />,
+        handleClickBack: functions.clearAppLauncher,
+      }
+    : isReleaseNoteSelected
+      ? {
+          title: (
+            <Localizer
+              id="smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes"
+              defaultText="最新のリリースノート"
+            />
+          ),
+          handleClickBack: functions.clearReleaseNote,
+        }
+      : selectedNavigationGroup
+        ? {
+            title: selectedNavigationGroup.children,
+            handleClickBack: functions.clearNavigationGroup,
+          }
+        : null
 
   return (
     <Section ref={mergedRef} role="dialog" className={CLASS_NAMES.wrapper} aria-modal="true">
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
-          {isAppLauncherSelected ? (
-            <MenuSubHeading
-              title={translated.launcherListText}
-              handleClickBack={functions.clearAppLauncher}
-            />
-          ) : isReleaseNoteSelected ? (
-            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading
-              title={translated.latestReleaseNotes}
-              handleClickBack={functions.clearReleaseNote}
-            />
-          ) : selectedNavigationGroup ? (
-            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading
-              title={selectedNavigationGroup.children}
-              handleClickBack={functions.clearNavigationGroup}
-            />
+          {selectedHeadingAttr ? (
+            <MenuSubHeading {...selectedHeadingAttr} />
           ) : (
             <div>{tenantSelector}</div>
           )}

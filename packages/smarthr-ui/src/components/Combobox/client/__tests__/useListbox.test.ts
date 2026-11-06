@@ -44,7 +44,8 @@ describe('useListbox', () => {
     rerender = renderHookResult.rerender
   })
 
-  const mockKeyEvent = (key: string) => ({ key, stopPropagation: vi.fn() }) as any
+  const mockKeyEvent = (key: string) =>
+    ({ key, preventDefault: vi.fn(), stopPropagation: vi.fn() }) as any
 
   it('options が変更されても activeOption が維持されること', () => {
     act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
@@ -80,6 +81,12 @@ describe('useListbox', () => {
       expect(result.current.activeOption).toEqual(options[0])
     })
 
+    it('ブラウザのデフォルト動作(ページスクロール等)を防ぐためpreventDefaultが呼ばれること', () => {
+      const event = mockKeyEvent('ArrowDown')
+      act(() => result.current.handleKeyDownListBox(event))
+      expect(event.preventDefault).toHaveBeenCalled()
+    })
+
     it('disabled な option が飛ばされること', () => {
       act(() => result.current.listBoxProps.handleHoverOption(options[1]))
       act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowDown')))
@@ -106,6 +113,12 @@ describe('useListbox', () => {
 
       act(() => result.current.handleKeyDownListBox(mockKeyEvent('ArrowUp')))
       expect(result.current.activeOption).toEqual(options[3])
+    })
+
+    it('ブラウザのデフォルト動作(ページスクロール等)を防ぐためpreventDefaultが呼ばれること', () => {
+      const event = mockKeyEvent('ArrowUp')
+      act(() => result.current.handleKeyDownListBox(event))
+      expect(event.preventDefault).toHaveBeenCalled()
     })
   })
 

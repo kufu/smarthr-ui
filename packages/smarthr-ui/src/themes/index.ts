@@ -5,6 +5,7 @@ export {
 } from './createMediaQuery'
 export type { AbstractSize, CharRelativeSize, PositiveCharRelativeSize } from './createSpacing'
 export { createSpacingByChar, primitiveTokens } from './createSpacing'
+/** @public */
 export type { FontSizes } from './createFontSize'
 export { defaultHtmlFontSize, defaultFontSize } from './createFontSize'
 export { aiGradationColors, defaultColor } from './createColor'

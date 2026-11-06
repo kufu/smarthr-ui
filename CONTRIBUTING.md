@@ -30,7 +30,6 @@ The SmartHR UI uses [CircleCI](https://circleci.com/).
 
 - lint
   - Grammar check with ESLint
-  - Style description check by stylelint
   - TypeScript grammar check with `tsc --noEmit`
 - Unit test
   - Unit and component testing with [Vitest](https://vitest.dev/)

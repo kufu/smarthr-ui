@@ -1,4 +1,6 @@
 import { defaultBorder } from '../createBorder'
+import { defaultColor } from '../createColor'
+import { defaultInteraction } from '../createInteraction'
 import { defaultLeading } from '../createLeading'
 import { createTheme } from '../createTheme'
 
@@ -135,5 +137,18 @@ describe('createTheme', () => {
   it('returns theme "space" is the same as "spacingByChar"', () => {
     const { space, spacingByChar } = createTheme()
     expect(space).toEqual(spacingByChar)
+  })
+
+  it('does not mutate default values', () => {
+    const expectedColor = structuredClone(defaultColor)
+    const expectedInteraction = structuredClone(defaultInteraction)
+
+    createTheme({
+      color: { MAIN: '#001', WHITE: '#002' },
+      interaction: { hover: { feedbackOpacity: '.1' } },
+    })
+
+    expect(defaultColor).toEqual(expectedColor)
+    expect(defaultInteraction).toEqual(expectedInteraction)
   })
 })

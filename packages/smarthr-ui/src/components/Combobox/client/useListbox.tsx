@@ -235,9 +235,14 @@ export const useListbox = <T,>({
         setNavigationType('key')
 
         if (KEY_DOWN_REGEX.test(e.key)) {
+          // HINT: MultiComboboxの削除ボタンにフォーカスがある状態など、input以外からこのハンドラへ
+          // 到達する経路ではpreventDefaultされないため、ブラウザ側のデフォルトキー操作(iOS Safariでの
+          // ページスクロール等)が発生してしまう。ここで明示的に止める
+          e.preventDefault()
           e.stopPropagation()
           moveActiveOptionIndex(latest.activeOption, 1)
         } else if (KEY_UP_REGEX.test(e.key)) {
+          e.preventDefault()
           e.stopPropagation()
           moveActiveOptionIndex(latest.activeOption, -1)
         } else if (e.key === 'Enter') {

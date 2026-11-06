@@ -30,7 +30,7 @@ import { FaGripIcon, FaXmarkIcon } from '../../../Icon'
 import { LiveRegion } from '../../../LiveRegion'
 import { Panel } from '../../../Panel'
 import { DialogBody } from '../../DialogBody'
-import { DialogOverlap, DialogPortal } from '../../client'
+import { DialogOverlapCenter, DialogPortal } from '../../client'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { DialogSize } from '../../types'
@@ -58,11 +58,6 @@ type Props = ExtendElementPropsWithRef<
      * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
      */
     onPressEscape?: (e: KeyboardEvent) => void
-    /**
-     * @deprecated ダイアログの幅を指定する場合は、`width` ではなく `size` を使用してください。
-     * ダイアログの幅
-     */
-    width?: string | number
     /**
      * ダイアログの大きさ
      */
@@ -157,7 +152,6 @@ export const ModelessDialog: FC<Props> = ({
   isOpen,
   onPressEscape,
   resizable = false,
-  width,
   size,
   height,
   top,
@@ -410,7 +404,7 @@ export const ModelessDialog: FC<Props> = ({
 
   return (
     <DialogPortal parent={portalParent}>
-      <DialogOverlap as="section" isOpen={isOpen} className={classNames.overlap}>
+      <DialogOverlapCenter as="section" isOpen={isOpen} className={classNames.overlap}>
         <Draggable
           {...Draggable.defaultProps}
           nodeRef={wrapperRef}
@@ -435,7 +429,6 @@ export const ModelessDialog: FC<Props> = ({
               left: centering.left ?? defaultPosition.left,
               right: defaultPosition.right,
               bottom: defaultPosition.bottom,
-              width: size ? undefined : width,
               height,
             }}
             aria-labelledby={labelId}
@@ -448,7 +441,6 @@ export const ModelessDialog: FC<Props> = ({
                 handleArrowKeyDown={functions.handleArrowKeyDown}
               />
               <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
-                {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
                 <Heading>{heading}</Heading>
               </div>
               <CloseButton
@@ -474,7 +466,7 @@ export const ModelessDialog: FC<Props> = ({
             </LiveRegion>
           </Panel>
         </Draggable>
-      </DialogOverlap>
+      </DialogOverlapCenter>
     </DialogPortal>
   )
 }

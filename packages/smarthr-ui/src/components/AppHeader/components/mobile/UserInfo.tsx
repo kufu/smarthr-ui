@@ -126,7 +126,13 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
       </Dropdown>
 
       {locale && (
-        <Dialog isOpen={languageDialogOpen} width={246} onClickOverlay={functions.dialogClose}>
+        // HINT: widthが非推奨になったため、className直指定に変更。246pxは既存のsize(XS=col3=424px〜)
+        // のいずれにも該当しないため丸められない。デザイン上妥当であればsize="XS"への統一を検討する
+        <Dialog
+          isOpen={languageDialogOpen}
+          className="shr-w-[246px]"
+          onClickOverlay={functions.dialogClose}
+        >
           <LanguageSelector locale={locale} onClickClose={functions.dialogClose} />
         </Dialog>
       )}

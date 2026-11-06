@@ -34,7 +34,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, className, children, ...rest }) => {
+export const DialogOverlapCenter: FC<Props> = ({ isOpen, className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

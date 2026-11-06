@@ -29,14 +29,7 @@ export const Td: FC<Props> = memo(
       // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
       const base = classNameGenerator({ align, vAlign, nullable, className })
 
-      if (!fixed) {
-        return base
-      }
-
-      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
-      const shadow = reelShadowClassNameGenerator({ direction: fixed })
-
-      return `${base} ${shadow}`
+      return fixed ? `${base} ${reelShadowClassNameGenerator({ direction: fixed })}` : base
     }, [align, className, fixed, nullable, vAlign])
     const actualStyle =
       typeof contentWidth === 'object'

@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 export const defaultHtmlFontSize = 16
 const defaultScaleFactor = 6
@@ -24,8 +24,10 @@ export type CreatedFontSizeTheme = {
   XXL: string
 }
 
-// smarthr-design-systemでdeep importされています:
+// リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
+// 可能性があるため残している:
 // import type { FontSizes } from 'smarthr-ui/lib/themes/createFontSize'
+/** @public */
 export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
 
 const getFontSize = (scaleFactor: number, diff: number = 0) =>
@@ -50,11 +52,5 @@ export const createFontSize = (userFontSize?: FontSizeProperty): CreatedFontSize
 
   const { scaleFactor, ...rest } = userFontSize
 
-  return merge(
-    {
-      ...defaultFontSize,
-    },
-    scaleFactor ? getSizes(scaleFactor) : {},
-    rest,
-  )
+  return merge(scaleFactor ? getSizes(scaleFactor) : defaultFontSize, rest)
 }

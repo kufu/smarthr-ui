@@ -1,9 +1,9 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { type FC, useLayoutEffect, useState } from 'react'
 
-import { DialogOverlap } from './DialogOverlap'
+import { DialogOverlapCenter } from './DialogOverlapCenter'
 
-describe('DialogOverlap', () => {
+describe('DialogOverlapCenter', () => {
   const Probe: FC<{ value: string; log: string[] }> = ({ value, log }) => {
     useLayoutEffect(() => {
       log.push(value)
@@ -39,9 +39,9 @@ describe('DialogOverlap', () => {
         >
           edit and close
         </button>
-        <DialogOverlap isOpen={isOpen}>
+        <DialogOverlapCenter isOpen={isOpen}>
           <Probe value={value} log={log} />
-        </DialogOverlap>
+        </DialogOverlapCenter>
       </>
     )
   }

@@ -5,7 +5,6 @@ type DialogContentProps = ComponentPropsWithRef<typeof DialogContent>
 
 export type DialogProps = Pick<
   DialogContentProps,
-  | 'width'
   | 'size'
   | 'firstFocusTarget'
   | 'ariaLabel'

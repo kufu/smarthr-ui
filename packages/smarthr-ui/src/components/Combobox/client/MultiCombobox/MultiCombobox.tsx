@@ -73,7 +73,7 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     noResultText?: ReactNode
   },
-  { omit: 'children' }
+  { omit: 'children' | 'onChange' }
 >
 
 const NOOP = () => undefined
@@ -146,12 +146,12 @@ export const MultiCombobox = <T,>({
   autoComplete,
   dropdownHelpMessage,
   isLoading,
+  disableFiltering,
   selectedItemEllipsis,
   width,
   dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className,
-  onChange,
   onChangeInput,
   onAdd,
   onDelete,
@@ -186,6 +186,7 @@ export const MultiCombobox = <T,>({
     creatable,
     inputValue,
     isItemSelected,
+    disableFiltering,
   })
   const deleteFrame = useAnimationFrame()
   const selectFrame = useAnimationFrame()
@@ -271,7 +272,6 @@ export const MultiCombobox = <T,>({
   const focusFrame = useAnimationFrame()
 
   const latest = useLatest({
-    onChange,
     onChangeInput,
     onFocus,
     onBlur,
@@ -427,9 +427,7 @@ export const MultiCombobox = <T,>({
         }
       },
       handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
-        const handlers = [latest.onChange, latest.onChangeInput].filter((h) => !!h)
-
-        handlers.forEach((h) => h(e))
+        latest.onChangeInput?.(e)
         latest.setInputValueIfUncontrolled(e.currentTarget.value)
       },
       handleFocusInput: () => {

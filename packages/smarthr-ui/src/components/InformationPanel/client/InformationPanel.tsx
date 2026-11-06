@@ -16,7 +16,7 @@ import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
-import { Sidebar } from '../../Layout'
+import { Cluster } from '../../Layout'
 import { Panel } from '../../Panel'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
@@ -168,7 +168,7 @@ export const InformationPanel: FC<Props> = ({
 
   return (
     <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
-      <Sidebar align="baseline" right className={classNames.header}>
+      <Cluster align="baseline" grow="start" gap={1} className={classNames.header}>
         <MemoizedHeading
           type={type}
           id={`${id}-heading`}
@@ -183,7 +183,7 @@ export const InformationPanel: FC<Props> = ({
             onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
           />
         )}
-      </Sidebar>
+      </Cluster>
       <div id={contentId} className={classNames.content} aria-hidden={!active}>
         {children}
       </div>

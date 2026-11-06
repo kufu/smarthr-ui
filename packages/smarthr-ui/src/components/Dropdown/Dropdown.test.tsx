@@ -314,7 +314,7 @@ describe('Dropdown', () => {
             <DropdownContent controllable>
               <form>
                 <FormControl label="日付">
-                  <WarekiPicker name="test" value={undefined} onChangeDate={() => {}} />
+                  <WarekiPicker name="test" value={undefined} onChange={() => {}} />
                 </FormControl>
               </form>
             </DropdownContent>
