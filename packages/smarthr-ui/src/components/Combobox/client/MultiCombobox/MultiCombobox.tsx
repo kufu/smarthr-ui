@@ -73,7 +73,7 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     noResultText?: ReactNode
   },
-  { omit: 'children' }
+  { omit: 'children' | 'onChange' }
 >
 
 const NOOP = () => undefined

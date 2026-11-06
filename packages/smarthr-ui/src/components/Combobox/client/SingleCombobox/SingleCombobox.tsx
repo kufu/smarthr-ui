@@ -71,7 +71,7 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     noResultText?: ReactNode
   },
-  { omit: 'children' }
+  { omit: 'children' | 'onChange' }
 >
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
