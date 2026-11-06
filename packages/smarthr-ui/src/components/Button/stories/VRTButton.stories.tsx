@@ -38,6 +38,7 @@ const Template: StoryFn = (args) => (
             </Button>
             <Button
               disabled
+              // eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため
               disabledReason={{ text: 'ボタンが無効な理由' }}
               variant={variant}
               suffix={<FaCaretDownIcon />}
@@ -58,6 +59,7 @@ const Template: StoryFn = (args) => (
             </Button>
             <Button
               disabled
+              // eslint-disable-next-line smarthr/best-practice-for-object-props -- object形式での指定を検証するテストのため
               disabledReason={{ text: 'ボタンが無効な理由' }}
               variant={variant}
               size="S"

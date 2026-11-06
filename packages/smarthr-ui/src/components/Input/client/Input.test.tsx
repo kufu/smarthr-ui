@@ -39,6 +39,7 @@ describe('Input', () => {
     render(
       <form>
         <FormControl label="Input">
+          {/* eslint-disable-next-line smarthr/design-system-guideline-prohibit-input-affix-interactive-element */}
           <Input
             name="input"
             suffix={<span>suffix</span>}
@@ -75,11 +76,10 @@ describe('Input', () => {
 
   it('subActionArea内の要素をクリックすると、Inputの外側の祖先要素のonClickも発火する', async () => {
     const user = userEvent.setup()
-    const handleClickAncestor = vi.fn()
+    const handleDelegateClick = vi.fn()
 
     render(
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, smarthr/best-practice-for-interactive-element
-      <div onClick={handleClickAncestor}>
+      <div role="presentation" onClick={handleDelegateClick}>
         <form>
           <FormControl label="Input">
             <Input name="input" subActionArea={<button type="button">action</button>} />
@@ -90,6 +90,6 @@ describe('Input', () => {
 
     await user.click(screen.getByRole('button', { name: 'action' }))
 
-    expect(handleClickAncestor).toHaveBeenCalledTimes(1)
+    expect(handleDelegateClick).toHaveBeenCalledTimes(1)
   })
 })

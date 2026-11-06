@@ -53,12 +53,12 @@ export const DefinitionListItem: FC<Props> = ({
   )
 
   const classNames = useMemo(() => {
-    const cs = classNameGenerator()
+    const { wrapper, term: termSlot, description } = classNameGenerator()
 
     return {
-      wrapper: cs.wrapper({ fullWidth, className }),
-      term: cs.term(),
-      description: cs.description(),
+      wrapper: wrapper({ fullWidth, className }),
+      term: termSlot(),
+      description: description(),
     }
   }, [fullWidth, className])
 

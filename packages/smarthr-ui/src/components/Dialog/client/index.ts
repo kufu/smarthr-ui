@@ -1,4 +1,4 @@
 export { FocusTrap } from './FocusTrap'
 export { DialogPortal } from './DialogPortal'
-export { DialogOverlap } from './DialogOverlap'
+export { DialogOverlapCenter } from './DialogOverlapCenter'
 export { DialogContent } from './DialogContent'

@@ -146,6 +146,7 @@ export const MultiCombobox = <T,>({
   autoComplete,
   dropdownHelpMessage,
   isLoading,
+  disableFiltering,
   selectedItemEllipsis,
   width,
   dropdownWidth = 'auto',
@@ -186,6 +187,7 @@ export const MultiCombobox = <T,>({
     creatable,
     inputValue,
     isItemSelected,
+    disableFiltering,
   })
   const deleteFrame = useAnimationFrame()
   const selectFrame = useAnimationFrame()
@@ -355,6 +357,11 @@ export const MultiCombobox = <T,>({
       if (latest.isExpanded) {
         latest.onBlur?.()
         setIsExpanded(false)
+
+        if (!latest.isInputEmpty) {
+          latest.setInputValueIfUncontrolled('')
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+        }
       }
     }
 

@@ -21,11 +21,11 @@ type Props = CommonProps & {
 
 export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) => {
   const classNames = useMemo(() => {
-    const generators = classNameGenerator()
+    const { wrapper, childrenWrapper } = classNameGenerator()
 
     return {
-      wrapper: generators.wrapper({ className }),
-      childrenWrapper: generators.childrenWrapper(),
+      wrapper: wrapper({ className }),
+      childrenWrapper: childrenWrapper(),
     }
   }, [className])
 

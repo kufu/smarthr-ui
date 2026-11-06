@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 export type RadiusProperty = {
   s?: string
@@ -26,5 +26,5 @@ export const createRadius = (userRadius?: RadiusProperty): CreatedRadiusTheme =>
     return defaultRadius
   }
 
-  return merge({ ...defaultRadius }, userRadius)
+  return merge(defaultRadius, userRadius)
 }

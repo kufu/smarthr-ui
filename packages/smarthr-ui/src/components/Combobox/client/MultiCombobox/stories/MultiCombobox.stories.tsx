@@ -135,6 +135,13 @@ export const IsLoading: StoryObj<typeof MultiCombobox> = {
   },
 }
 
+export const IsFilteringDisabled: StoryObj<typeof MultiCombobox> = {
+  name: 'disableFiltering',
+  args: {
+    disableFiltering: true,
+  },
+}
+
 export const Width: StoryObj<typeof MultiCombobox> = {
   name: 'width',
   args: {

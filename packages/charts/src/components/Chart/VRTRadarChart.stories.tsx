@@ -1,5 +1,5 @@
-// eslint-disable-next-line smarthr/require-barrel-import
-import { Stack } from '../../../../smarthr-ui/src/components/Layout'
+import { Stack } from 'smarthr-ui'
+
 import {
   chartJsOptionsExamples,
   radarManyAxes,
@@ -10,7 +10,7 @@ import {
 import { RadarChart } from './RadarChart'
 
 export default {
-  title: 'Charts/RadarChart/VRT',
+  title: 'Charts/Chart/RadarChart/VRT',
   render: (args) => (
     <Stack {...args}>
       {/* パターン1: 単一データセット、タイトルなし */}
