@@ -46,6 +46,9 @@ auditConfig:
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
 minimumReleaseAgeExclude:
+  # eslint-config-smarthr@14.14.2とその依存のeslint-plugin-smarthr@6.29.2: minimumReleaseAge経過後に削除可
+  - eslint-config-smarthr@14.14.2
+  - eslint-plugin-smarthr@6.29.2
   # Renovate security update: qs@6.16.2
   - qs@6.16.2
   # Renovate security update: glob@14.0.2
