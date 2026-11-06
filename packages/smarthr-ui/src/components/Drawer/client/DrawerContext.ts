@@ -4,6 +4,9 @@ import { type MouseEvent, createContext } from 'react'
 
 type DrawerContextType = {
   handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
+  close: () => void
+  /** 閉じるアニメーション中も DOM に残るため、DrawerForm が送信を受けてよいかの判定に使う */
+  getIsOpen: () => boolean
   /** DrawerHeader が id 未指定のときに使う自動生成 id */
   headingId: string
   /** DrawerHeader が実際に適用した id。有無ではなく id を登録させるのは、id 指定にも対応するため */
@@ -14,6 +17,10 @@ export const DrawerContext = createContext<DrawerContextType>({
   handleClickClose: () => {
     /* noop */
   },
+  close: () => {
+    /* noop */
+  },
+  getIsOpen: () => false,
   headingId: '',
   registerHeadingId: () => {
     /* noop */

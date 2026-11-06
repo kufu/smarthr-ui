@@ -25,7 +25,7 @@ export default {
 
 const drawerChildren = (handleClose: () => void) => (
   <>
-    <DrawerHeader subtitle="サブタイトル" title="ドロワータイトル" onClickClose={handleClose} />
+    <DrawerHeader subtitle="サブタイトル" title="ドロワータイトル" />
     <DrawerBody>
       <p>ドロワーのコンテンツです。ここにコンテンツを配置します。</p>
     </DrawerBody>

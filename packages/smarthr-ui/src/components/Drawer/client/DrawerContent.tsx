@@ -62,6 +62,11 @@ type Props = ExtendElementPropsWithRef<
     firstFocusTarget?: RefObject<HTMLElement>
     /** Portal 先が指定されているか（modeless の absolute/fixed 切替に使う） */
     hasPortalParent?: boolean
+    /**
+     * DrawerForm から閉じるときの処理。未指定なら onClickClose を使う。
+     * onClickClose で兼ねないのは、Remote 版では onClickClose が利用者の確認を挟む入口のため
+     */
+    handleClose?: () => void
   },
   { omit: 'style' | 'aria-label' | 'aria-labelledby' }
 >
@@ -228,6 +233,7 @@ export const DrawerContent: FC<Props> = ({
   ariaLabelledby,
   modality = 'modal',
   hasPortalParent = false,
+  handleClose,
   firstFocusTarget,
   className,
   children,
@@ -263,6 +269,7 @@ export const DrawerContent: FC<Props> = ({
     onPressEscape,
     onClickClose,
     onClickOverlay,
+    handleClose,
     autoHeadingId,
   })
 
@@ -292,6 +299,13 @@ export const DrawerContent: FC<Props> = ({
 
     return {
       handleClickClose,
+      getIsOpen: () => latest.isOpen,
+      close: () => {
+        if (latest.isOpen) {
+          const close = latest.handleClose ?? latest.onClickClose
+          close?.()
+        }
+      },
       clearRestoreTimer,
       endDragging,
       handlePressEscape: (e: KeyboardEvent) => {
@@ -445,6 +459,8 @@ export const DrawerContent: FC<Props> = ({
   const contextValue = useMemo(
     () => ({
       handleClickClose: functions.handleClickClose,
+      close: functions.close,
+      getIsOpen: functions.getIsOpen,
       headingId: latest.autoHeadingId,
       registerHeadingId: setRegisteredHeadingId,
     }),

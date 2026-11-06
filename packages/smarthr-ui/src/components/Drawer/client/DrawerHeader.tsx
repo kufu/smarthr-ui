@@ -31,8 +31,6 @@ type Props = ExtendElementPropsWithRef<
     subtitle?: ReactNode
     /** 見出しの id。未指定なら Drawer が自動生成した id で dialog と接続される */
     id?: string
-    /** 閉じるボタン押下時。未指定なら Drawer の onClickClose を使う */
-    onClickClose?: (e?: MouseEvent<HTMLButtonElement>) => void
   }
 >
 
@@ -46,16 +44,8 @@ const classNameGenerator = tv({
   },
 })
 
-export const DrawerHeader: FC<Props> = ({
-  title,
-  subtitle,
-  id,
-  onClickClose,
-  className,
-  ...rest
-}) => {
+export const DrawerHeader: FC<Props> = ({ title, subtitle, id, className, ...rest }) => {
   const { handleClickClose, headingId, registerHeadingId } = useContext(DrawerContext)
-  const actualOnClickClose = onClickClose ?? handleClickClose
   const actualHeadingId = id ?? headingId
 
   useEffect(() => {
@@ -85,7 +75,7 @@ export const DrawerHeader: FC<Props> = ({
           </Text>
         </Stack>
       </Heading>
-      <CloseButton className={classNames.closeButton} onClick={actualOnClickClose} />
+      <CloseButton className={classNames.closeButton} onClick={handleClickClose} />
     </div>
   )
 }

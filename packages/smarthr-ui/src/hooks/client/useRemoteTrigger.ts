@@ -47,28 +47,29 @@ export function useRemoteTrigger({
       }
     }
 
+    const close = () => {
+      updateIsOpen(false)
+    }
+
     return {
       updateIsOpen,
+      close,
       cleanupToggleFrame: () => {
         latest.toggleFrame.cancel()
       },
       handleClickClose: () => {
         if (latest.onClickClose) {
-          return latest.onClickClose(() => {
-            updateIsOpen(false)
-          })
+          return latest.onClickClose(close)
         }
 
-        updateIsOpen(false)
+        close()
       },
       handlePressEscape: () => {
         if (latest.onPressEscape) {
-          return latest.onPressEscape(() => {
-            updateIsOpen(false)
-          })
+          return latest.onPressEscape(close)
         }
 
-        updateIsOpen(false)
+        close()
       },
     }
   }, [latest])
@@ -91,6 +92,7 @@ export function useRemoteTrigger({
 
   return {
     isOpen,
+    close: functions.close,
     handleClickClose: functions.handleClickClose,
     handlePressEscape: functions.handlePressEscape,
   }

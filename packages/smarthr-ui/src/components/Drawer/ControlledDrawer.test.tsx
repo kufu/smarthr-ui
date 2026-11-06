@@ -160,7 +160,7 @@ describe('ControlledDrawer サブコンポーネント', () => {
             ariaLabel="ヘッダ付き"
             onClickClose={() => setIsOpen(false)}
           >
-            <DrawerHeader title="タイトル" onClickClose={() => setIsOpen(false)} />
+            <DrawerHeader title="タイトル" />
             <DrawerBody>
               <p>body</p>
             </DrawerBody>
@@ -188,7 +188,7 @@ describe('ControlledDrawer サブコンポーネント', () => {
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
           <ControlledDrawer isOpen={isOpen} onClickClose={() => setIsOpen(false)}>
-            <DrawerHeader title="自動ラベル見出し" onClickClose={() => setIsOpen(false)} />
+            <DrawerHeader title="自動ラベル見出し" />
             <DrawerBody>
               <p>body</p>
             </DrawerBody>
@@ -516,38 +516,6 @@ describe('ControlledDrawer ドラッグハンドル', () => {
     renderWithIntl(<HorizontalTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
     expect(document.querySelector('.smarthr-ui-Drawer-handle')).toBeNull()
-  })
-})
-
-describe('ControlledDrawer Controlled の close 自動接続', () => {
-  it('Controlled でも DrawerHeader に onClickClose を渡さず Context 経由で閉じられること', async () => {
-    const Template: FC = () => {
-      const [isOpen, setIsOpen] = useState(false)
-      return (
-        <>
-          <Button onClick={() => setIsOpen(true)}>open</Button>
-          {/* onClickClose は ControlledDrawer にだけ渡し、DrawerHeader には渡さない */}
-          <ControlledDrawer
-            isOpen={isOpen}
-            ariaLabel="自動close"
-            onClickClose={() => setIsOpen(false)}
-          >
-            <DrawerHeader title="タイトル" />
-            <DrawerBody>
-              <p>body</p>
-            </DrawerBody>
-          </ControlledDrawer>
-        </>
-      )
-    }
-    renderWithIntl(<Template />)
-    await userEvent.click(screen.getByRole('button', { name: 'open' }))
-    expect(screen.getByRole('dialog', { name: '自動close' })).toBeVisible()
-
-    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
-    await waitFor(() => {
-      expect(screen.queryByRole('dialog', { name: '自動close' })).toBeNull()
-    })
   })
 })
 

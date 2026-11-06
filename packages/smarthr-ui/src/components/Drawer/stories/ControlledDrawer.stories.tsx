@@ -12,9 +12,6 @@ import { DrawerHeader } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-// ControlledDrawer に onClickClose を渡せば、配下の DrawerHeader は
-// Context 経由で自動的にその閉じ処理を使う（個別に onClickClose を渡す必要はない）。
-
 export default {
   title: 'Components/Drawer/ControlledDrawer',
   component: ControlledDrawer,
