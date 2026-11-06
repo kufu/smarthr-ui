@@ -1,0 +1,802 @@
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Editor } from '@tiptap/core'
+import { TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { TextSelection } from '@tiptap/pm/state'
+import StarterKit from '@tiptap/starter-kit'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { CellAppearance } from './CellAppearance'
+import { CustomTable } from './CustomTable'
+import { TableCellControls } from './TableCellControls'
+import { TableContextMenu } from './TableContextMenu'
+import { focusTableCell, getTableTarget } from './tableTarget'
+
+vi.mock('./TableContextMenu', async (importOriginal) => {
+  const actual = await importOriginal<{ TableContextMenu: typeof TableContextMenu }>()
+  return { ...actual, TableContextMenu: vi.fn(actual.TableContextMenu) }
+})
+
+vi.mock('./tableTarget', async (importOriginal) => {
+  const actual = await importOriginal<{ focusTableCell: typeof focusTableCell }>()
+
+  return { ...actual, focusTableCell: vi.fn(actual.focusTableCell) }
+})
+
+let editor: Editor
+let container: HTMLDivElement
+let offscreen = false
+let horizontalOffset = 0
+const originalElementFromPoint = document.elementFromPoint
+const originalScrollIntoView = HTMLElement.prototype.scrollIntoView
+const scrollIntoView = vi.fn(() => {
+  offscreen = false
+  window.dispatchEvent(new Event('scroll'))
+})
+
+beforeEach(() => {
+  offscreen = false
+  horizontalOffset = 0
+  scrollIntoView.mockClear()
+  Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: () => null })
+  HTMLElement.prototype.scrollIntoView = scrollIntoView
+  vi.spyOn(window, 'scrollBy').mockImplementation(() => {})
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+    this: HTMLElement,
+  ) {
+    if (this instanceof HTMLTableCellElement) {
+      const row = this.parentElement as HTMLTableRowElement
+      return new DOMRect(
+        30 + this.cellIndex * 100 - horizontalOffset,
+        (offscreen ? 700 : 40) + row.rowIndex * 40,
+        100,
+        40,
+      )
+    }
+    if (this instanceof HTMLTableElement || this.classList.contains('tableWrapper'))
+      return new DOMRect(30, 40, 300, 120)
+    return new DOMRect(0, 0, 500, 400)
+  })
+  container = document.createElement('div')
+  document.body.appendChild(container)
+  const element = document.createElement('div')
+  container.appendChild(element)
+  editor = new Editor({
+    element,
+    extensions: [
+      StarterKit,
+      CustomTable.configure({ resizable: true }),
+      TableRow,
+      TableCell,
+      TableHeader,
+      CellAppearance,
+    ],
+  })
+  editor.commands.insertTable({ rows: 3, cols: 3, withHeaderRow: false })
+  const target = getTableTarget(editor)!
+  editor.commands.setTextSelection(target.tablePos + 1 + target.map.map[4] + 2)
+})
+
+afterEach(() => {
+  cleanup()
+  editor.destroy()
+  container.remove()
+  HTMLElement.prototype.scrollIntoView = originalScrollIntoView
+  Object.defineProperty(document, 'elementFromPoint', {
+    configurable: true,
+    value: originalElementFromPoint,
+  })
+  vi.restoreAllMocks()
+})
+
+const showControls = () =>
+  render(
+    <IntlProvider locale="ja">
+      <EnvironmentProvider>
+        <TableCellControls
+          containerRef={{ current: container }}
+          editor={editor}
+          features={['table', 'color', 'backgroundColor']}
+        />
+      </EnvironmentProvider>
+    </IntlProvider>,
+  )
+
+// 開いたメニューへのフォーカスと、外からの変更で閉じたあとのセルへの戻しは次のフレームで行う
+const waitForNextFrame = () => act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+
+describe('table controls', () => {
+  it('keeps handles at the clicked cell while a column menu is open and colors only that column', async () => {
+    const user = userEvent.setup()
+    const originalPos = getTableTarget(editor)!.pos
+    showControls()
+    const row = screen.getByRole('button', { name: '行の操作' })
+    const column = screen.getByRole('button', { name: '列の操作' })
+    const rowTop = row.style.top
+    const columnLeft = column.style.left
+    await user.click(column)
+    expect(row.style.top).toBe(rowTop)
+    expect(column.style.left).toBe(columnLeft)
+    await user.click(screen.getByRole('button', { name: '色' }))
+    const palette = within(screen.getByRole('group', { name: '背景色' }))
+    await user.click(palette.getByRole('button', { name: '赤' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(getTableTarget(editor)!.pos).toBe(originalPos)
+    getTableTarget(editor)!.table.forEach((tableRow) =>
+      tableRow.forEach((cell, _offset, index) => {
+        expect(cell.attrs.backgroundColor).toBe(index === 1 ? '#ffdfe2' : null)
+      }),
+    )
+  })
+
+  it('ページ・エディタ・メニュー自身がスクロールしても、メニューを閉じない', async () => {
+    showControls()
+    await userEvent.click(screen.getByRole('button', { name: '列の操作' }))
+    const dialog = screen.getByRole('dialog', { name: '列の操作' })
+    fireEvent.scroll(dialog.parentElement!)
+    fireEvent.scroll(container)
+    fireEvent.scroll(window)
+    expect(dialog).toBeInTheDocument()
+  })
+
+  it.each<[string, (dialog: HTMLElement) => void]>([
+    ['操作を実行', (dialog) => fireEvent.click(within(dialog).getAllByRole('button')[0])],
+    [
+      '列を挿入',
+      (dialog) => fireEvent.click(within(dialog).getByRole('button', { name: '右に列を追加' })),
+    ],
+    [
+      '最後の項目で Tab',
+      (dialog) => {
+        const buttons = within(dialog).getAllByRole('button')
+        buttons[buttons.length - 1].focus()
+        fireEvent.keyDown(buttons[buttons.length - 1], { key: 'Tab' })
+      },
+    ],
+    ['Escape', () => fireEvent.keyDown(document.activeElement!, { key: 'Escape' })],
+  ])(
+    '%sで閉じるとすぐセルへフォーカスを戻し、その後に移したフォーカスを奪わない',
+    async (_, closeMenu) => {
+      showControls()
+      const outside = document.createElement('button')
+      document.body.appendChild(outside)
+
+      try {
+        const cellCoords = () => {
+          const { map, pos, tablePos } = getTableTarget(editor)!
+
+          return map.findCell(pos - tablePos - 1)
+        }
+        const originalCoords = cellCoords()
+        fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+        const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+        await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+
+        act(() => closeMenu(dialog))
+
+        expect(editor.view.dom).toHaveFocus()
+        expect(editor.state.selection).toBeInstanceOf(TextSelection)
+        expect(cellCoords()).toEqual(originalCoords)
+        outside.focus()
+        await waitForNextFrame()
+        expect(outside).toHaveFocus()
+      } finally {
+        outside.remove()
+      }
+    },
+  )
+
+  it('スクロールでセルが見えなくなったら、メニューを閉じてフォーカスをセルへ戻す', async () => {
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    offscreen = true
+    fireEvent.scroll(window)
+    await waitForNextFrame()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(editor.view.dom).toHaveFocus()
+  })
+
+  it('マウスで開いていたら、セルが見えなくなって閉じても本文へフォーカスを戻さない', async () => {
+    showControls()
+    await userEvent.click(screen.getByRole('button', { name: '列の操作' }))
+    const dialog = screen.getByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    offscreen = true
+    fireEvent.scroll(window)
+    await waitForNextFrame()
+    await waitForNextFrame()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(document.body).toHaveFocus()
+  })
+
+  describe('ウィンドウのリサイズ', () => {
+    const originalInnerWidth = window.innerWidth
+    const originalInnerHeight = window.innerHeight
+
+    afterEach(() => {
+      Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, configurable: true })
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight,
+        configurable: true,
+      })
+    })
+
+    it('高さだけが変わったときは閉じない', async () => {
+      showControls()
+      await userEvent.click(screen.getByRole('button', { name: '列の操作' }))
+      Object.defineProperty(window, 'innerHeight', {
+        value: originalInnerHeight - 100,
+        configurable: true,
+      })
+      fireEvent(window, new Event('resize'))
+      expect(screen.getByRole('dialog', { name: '列の操作' })).toBeInTheDocument()
+    })
+
+    it('幅が変わったら閉じて、開いたハンドルへフォーカスを戻す', async () => {
+      const user = userEvent.setup()
+      showControls()
+      screen.getByRole('button', { name: '列の操作' }).focus()
+      await user.keyboard('{Enter}')
+      const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+      await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+      Object.defineProperty(window, 'innerWidth', {
+        value: originalInnerWidth - 100,
+        configurable: true,
+      })
+      fireEvent(window, new Event('resize'))
+      await waitForNextFrame()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
+    })
+  })
+
+  it('offers both header settings from the table menu at any cell', async () => {
+    const user = userEvent.setup()
+    showControls()
+    await user.click(screen.getByRole('button', { name: '表の操作' }))
+    expect(screen.getByRole('button', { name: 'ヘッダー列（最初の列）' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'ヘッダー行（最初の行）' }))
+    expect(getTableTarget(editor)!.table.firstChild!.firstChild!.type.name).toBe('tableHeader')
+    expect(getTableTarget(editor)!.table.child(1).firstChild!.type.name).toBe('tableCell')
+  })
+
+  it.each(['行', '列', '表', 'セル'])(
+    'supports keyboard opening and navigation for %s actions',
+    async (scope) => {
+      const user = userEvent.setup()
+      showControls()
+      const trigger = screen.getByRole('button', { name: `${scope}の操作` })
+      trigger.focus()
+      await user.keyboard('{ArrowDown}')
+      const dialog = await screen.findByRole('dialog', { name: `${scope}の操作` })
+      const buttons = within(dialog)
+        .getAllByRole('button')
+        .filter((button) => !(button as HTMLButtonElement).disabled)
+      await waitFor(() => expect(buttons[0]).toHaveFocus())
+      await user.keyboard('{End}')
+      expect(buttons.at(-1)).toHaveFocus()
+      await user.keyboard('{ArrowDown}')
+      expect(buttons[0]).toHaveFocus()
+      await user.keyboard('{Escape}')
+      expect(trigger).toHaveFocus()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      await user.keyboard('{ArrowUp}')
+      await waitFor(() =>
+        expect(within(screen.getByRole('dialog')).getAllByRole('button').at(-1)).toHaveFocus(),
+      )
+    },
+  )
+
+  it.each([
+    { scope: '行', name: '行を削除', axis: 'height' },
+    { scope: '列', name: '列を削除', axis: 'width' },
+  ] as const)(
+    '1行1列の表の「$name」は、フォーカスできる使用不可の項目として示し、押しても消さない',
+    async ({ scope, name, axis }) => {
+      editor.commands.setContent('<table><tbody><tr><td><p>a</p></td></tr></tbody></table>')
+      editor.commands.setTextSelection(4)
+      const user = userEvent.setup()
+      showControls()
+      screen.getByRole('button', { name: `${scope}の操作` }).focus()
+      await user.keyboard('{ArrowUp}')
+      const dialog = await screen.findByRole('dialog', { name: `${scope}の操作` })
+      const item = within(dialog).getByRole('button', { name })
+      await waitFor(() => expect(item).toHaveFocus())
+      expect(item).toHaveAttribute('aria-disabled', 'true')
+      expect(item).toBeEnabled()
+      await user.click(item)
+      expect(getTableTarget(editor)!.map[axis]).toBe(1)
+    },
+  )
+
+  it('moves focus into colors and returns to the color item with Escape', async () => {
+    const user = userEvent.setup()
+    showControls()
+    screen.getByRole('button', { name: '列の操作' }).focus()
+    await user.keyboard('{Enter}')
+    const color = await screen.findByRole('button', { name: '色' })
+    await waitFor(() =>
+      expect(within(screen.getByRole('dialog')).getAllByRole('button')[0]).toHaveFocus(),
+    )
+    color.focus()
+    await user.keyboard('{ArrowRight}')
+    await waitFor(() => expect(screen.getByRole('button', { name: '戻る' })).toHaveFocus())
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.getByRole('button', { name: '色' })).toHaveFocus())
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
+  })
+
+  it.each([
+    { scope: 'table', label: '表', key: 'T', code: 'KeyT' },
+    { scope: 'column', label: '列', key: 'C', code: 'KeyC' },
+    { scope: 'row', label: '行', key: 'R', code: 'KeyR' },
+  ])('opens $scope actions directly from the cell shortcut', async ({ label, key, code }) => {
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key, code, altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: `${label}の操作` })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('toggles only the selected cell header and preserves its contents', async () => {
+    const user = userEvent.setup()
+    editor.commands.insertContent('Heading')
+    const pos = getTableTarget(editor)!.pos
+    showControls()
+    await user.click(screen.getByRole('button', { name: 'セルの操作' }))
+    await user.click(screen.getByRole('button', { name: 'ヘッダーセルにする' }))
+    expect(editor.state.doc.nodeAt(pos)?.type.name).toBe('tableHeader')
+    expect(editor.state.doc.nodeAt(pos)?.textContent).toBe('Heading')
+    expect(getTableTarget(editor)!.table.firstChild!.firstChild!.type.name).toBe('tableCell')
+    await waitForNextFrame()
+    await user.click(screen.getByRole('button', { name: 'セルの操作' }))
+    await user.click(screen.getByRole('button', { name: '通常のセルに戻す' }))
+    expect(editor.state.doc.nodeAt(pos)?.type.name).toBe('tableCell')
+  })
+
+  it.each(['行', '列'])(
+    'toggles the selected middle %s header without changing the first one',
+    async (scope) => {
+      const user = userEvent.setup()
+      showControls()
+      await user.click(screen.getByRole('button', { name: `${scope}の操作` }))
+      await user.click(screen.getByRole('button', { name: `ヘッダー${scope}` }))
+      const table = getTableTarget(editor)!.table
+      expect(table.child(1).child(1).type.name).toBe('tableHeader')
+      expect(table.child(0).child(0).type.name).toBe('tableCell')
+      expect(table.child(scope === '行' ? 1 : 0).child(scope === '行' ? 0 : 1).type.name).toBe(
+        'tableHeader',
+      )
+      await waitForNextFrame()
+      await user.click(screen.getByRole('button', { name: `${scope}の操作` }))
+      expect(screen.getByRole('button', { name: `ヘッダー${scope}` })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      )
+      await user.click(screen.getByRole('button', { name: `ヘッダー${scope}` }))
+      expect(getTableTarget(editor)!.table.child(1).child(1).type.name).toBe('tableCell')
+    },
+  )
+
+  it('keeps selection actions available when the anchor cell is scrolled out', async () => {
+    const user = userEvent.setup()
+    const target = getTableTarget(editor)!
+    editor.commands.setCellSelection({
+      anchorCell: target.tablePos + 1 + target.map.map[0],
+      headCell: target.tablePos + 1 + target.map.map[2],
+    })
+    showControls()
+    horizontalOffset = 100
+    fireEvent.scroll(window)
+    await user.click(screen.getByRole('button', { name: 'セルの操作' }))
+    await user.click(screen.getByRole('button', { name: 'セルを結合' }))
+    expect(getTableTarget(editor)!.table.firstChild!.firstChild!.attrs.colspan).toBe(3)
+  })
+
+  it('checks the palette color after loading cell colors from HTML', async () => {
+    const user = userEvent.setup()
+    editor.commands.setContent(
+      '<table><tr><td style="color: rgb(4, 101, 169); background-color: rgb(255, 223, 226)"><p>Blue</p></td></tr></table>',
+    )
+    editor.commands.setTextSelection(4)
+    showControls()
+    await user.click(screen.getByRole('button', { name: 'セルの操作' }))
+    await user.click(screen.getByRole('button', { name: '色' }))
+    expect(
+      within(screen.getByRole('group', { name: '文字色' })).getByRole('button', { name: '青' }),
+    ).toHaveAttribute('aria-pressed', 'true')
+    expect(
+      within(screen.getByRole('group', { name: '背景色' })).getByRole('button', { name: '赤' }),
+    ).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('位置が変わらないマウスの移動では、操作UIを描画し直さない', () => {
+    showControls()
+    const cells = editor.view.dom.querySelectorAll('td')
+    fireEvent.mouseMove(cells[0])
+    vi.mocked(TableContextMenu).mockClear()
+
+    fireEvent.mouseMove(cells[0])
+    expect(TableContextMenu).not.toHaveBeenCalled()
+
+    fireEvent.mouseMove(cells[1])
+    expect(TableContextMenu).toHaveBeenCalled()
+  })
+
+  it('同じセルの上の移動でも、レイアウトが変わっていれば操作UIを追従させる', () => {
+    showControls()
+    const cells = editor.view.dom.querySelectorAll('td')
+    fireEvent.mouseMove(cells[0])
+    const columnHandle = () =>
+      screen.getByRole('button', { name: '列の操作' }).closest<HTMLElement>('[style*="left"]')!
+    const before = columnHandle().style.width
+
+    // 列幅のドラッグのように、イベントを出さずにセルの位置だけが変わる
+    horizontalOffset = 50
+    fireEvent.mouseMove(cells[0])
+
+    expect(columnHandle().style.width).not.toBe(before)
+  })
+
+  it('メニューを開いたまま選択だけが変わったら、メニューの項目を選択に合わせる', async () => {
+    showControls()
+    await userEvent.click(screen.getByRole('button', { name: 'セルの操作' }))
+    expect(screen.queryByRole('button', { name: 'セルを結合' })).not.toBeInTheDocument()
+
+    const table = getTableTarget(editor)!
+    act(() => {
+      editor.commands.setCellSelection({
+        anchorCell: table.tablePos + 1 + table.map.map[4],
+        headCell: table.tablePos + 1 + table.map.map[5],
+      })
+    })
+
+    expect(await screen.findByRole('button', { name: 'セルを結合' })).toBeInTheDocument()
+  })
+
+  it('preserves a multiple cell selection when opening its action button', async () => {
+    const user = userEvent.setup()
+    const table = getTableTarget(editor)!
+    editor.commands.setCellSelection({
+      anchorCell: table.tablePos + 1 + table.map.map[4],
+      headCell: table.tablePos + 1 + table.map.map[5],
+    })
+    showControls()
+    fireEvent.mouseMove(editor.view.dom.querySelectorAll('td')[5])
+    await user.click(screen.getByRole('button', { name: 'セルの操作' }))
+    await user.click(screen.getByRole('button', { name: 'セルを結合' }))
+    expect(getTableTarget(editor)!.table.child(1).child(1).attrs.colspan).toBe(2)
+  })
+
+  it.each([
+    { scope: '行', width: 3, height: 2 },
+    { scope: '列', width: 2, height: 3 },
+  ])('deletes only the selected $scope', async ({ scope, width, height }) => {
+    showControls()
+    await userEvent.click(screen.getByRole('button', { name: `${scope}の操作` }))
+    await userEvent.click(screen.getByRole('button', { name: `${scope}を削除` }))
+    expect(getTableTarget(editor)!.map).toMatchObject({ width, height })
+    act(() => {
+      editor.commands.undo()
+    })
+    expect(getTableTarget(editor)!.map).toMatchObject({ width: 3, height: 3 })
+  })
+
+  it('opens keyboard actions after revealing a selected cell outside the viewport', async () => {
+    offscreen = true
+    showControls()
+    expect(screen.queryByRole('button', { name: 'セルの操作' })).not.toBeInTheDocument()
+    expect(editor.storage.table?.openActionsMenu).toBeTypeOf('function')
+    act(() => editor.storage.table?.openActionsMenu?.())
+    const dialog = await screen.findByRole('dialog', { name: 'セルの操作' })
+    await waitFor(() =>
+      expect(within(dialog).getByRole('button', { name: 'ヘッダーセルにする' })).toHaveFocus(),
+    )
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' })
+    const user = userEvent.setup()
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 1 })
+  })
+})
+
+describe('操作メニューを開けなかったとき', () => {
+  it('押した時点で対象がセルでなくなっていても、ホバーへの追従が止まらない', async () => {
+    showControls()
+
+    act(() => {
+      // 文書が変わってから再描画されるまでの間に押され、トリガーの持つ位置がセルでなくなった状況
+      editor.commands.insertContentAt(0, {
+        type: 'paragraph',
+        content: [{ type: 'text', text: 'あ'.repeat(200) }],
+      })
+      fireEvent.click(screen.getByRole('button', { name: '行の操作' }))
+    })
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+    fireEvent.mouseMove(editor.view.dom.querySelectorAll('td')[0])
+
+    expect(screen.getByRole('button', { name: '行の操作' })).toBeInTheDocument()
+  })
+
+  it('押した時点で位置が別のセルの中を指していても、例外を出さずにそのセルで開く', async () => {
+    showControls()
+    const target = getTableTarget(editor)!
+    // キャレットのあるセルの1つ前のセル
+    const previousCellPos = target.tablePos + 1 + target.map.map[3]
+
+    act(() => {
+      editor.commands.insertContentAt(previousCellPos + 2, 'xx')
+      fireEvent.click(screen.getByRole('button', { name: '行の操作' }))
+    })
+
+    expect(await screen.findByRole('dialog', { name: '行の操作' })).toBeInTheDocument()
+  })
+})
+
+describe('メニューを開いている間に外から文書が変わったとき', () => {
+  const openByShortcut = async () => {
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+  }
+
+  const cellIndex = () => {
+    const target = getTableTarget(editor)!
+
+    return target.map.map.indexOf(target.pos - target.tablePos - 1)
+  }
+
+  it('メニューを閉じ、フォーカスを開いたセルへ戻す', async () => {
+    const originalIndex = cellIndex()
+    await openByShortcut()
+
+    act(() => {
+      editor.commands.insertContentAt(0, '<p>前</p>')
+    })
+    await waitForNextFrame()
+    await waitForNextFrame()
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(editor.view.dom).toHaveFocus()
+    expect(cellIndex()).toBe(originalIndex)
+  })
+
+  it('メニュー自身の操作で文書が変わったときは、本文へのフォーカスを重ねない', async () => {
+    await openByShortcut()
+    vi.mocked(focusTableCell).mockClear()
+
+    fireEvent.click(screen.getByRole('button', { name: '右に列を追加' }))
+    await waitForNextFrame()
+    await waitForNextFrame()
+
+    expect(focusTableCell).toHaveBeenCalledTimes(1)
+    expect(editor.view.dom).toHaveFocus()
+  })
+
+  it('フォーカスを戻したあとに移したフォーカスは奪わない', async () => {
+    await openByShortcut()
+    const outside = document.createElement('input')
+    document.body.appendChild(outside)
+
+    try {
+      act(() => {
+        editor.commands.insertContentAt(0, '<p>前</p>')
+      })
+      await waitForNextFrame()
+      act(() => outside.focus())
+      await waitForNextFrame()
+
+      expect(outside).toHaveFocus()
+    } finally {
+      outside.remove()
+    }
+  })
+
+  it('変わった時点でフォーカスがメニューの外にあれば、その後 body に落ちても本文へ引き込まない', async () => {
+    await openByShortcut()
+    const outside = document.createElement('button')
+    document.body.appendChild(outside)
+
+    act(() => {
+      outside.focus()
+      editor.commands.insertContentAt(0, '<p>前</p>')
+      outside.remove()
+    })
+    await waitForNextFrame()
+    await waitForNextFrame()
+
+    expect(document.body).toHaveFocus()
+  })
+
+  it('ハンドルから開いていたら、ハンドルへ戻す', async () => {
+    const user = userEvent.setup()
+    showControls()
+    const column = screen.getByRole('button', { name: '列の操作' })
+    column.focus()
+    await user.keyboard('{Enter}')
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+
+    act(() => {
+      editor.commands.insertContentAt(0, '<p>前</p>', { updateSelection: false })
+    })
+    await waitForNextFrame()
+    await waitForNextFrame()
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '列の操作' })).toHaveFocus()
+  })
+})
+
+describe('カラーのスウォッチのキー操作', () => {
+  const openColors = async () => {
+    const user = userEvent.setup()
+    showControls()
+    fireEvent.keyDown(editor.view.dom, { key: 'C', code: 'KeyC', altKey: true, shiftKey: true })
+    const dialog = await screen.findByRole('dialog', { name: '列の操作' })
+    await waitFor(() => expect(within(dialog).getAllByRole('button')[0]).toHaveFocus())
+    act(() => within(dialog).getByRole('button', { name: '色' }).focus())
+    await user.keyboard('{ArrowRight}')
+    await waitFor(() => expect(screen.getByRole('button', { name: '戻る' })).toHaveFocus())
+
+    return {
+      user,
+      text: within(screen.getByRole('group', { name: '文字色' })),
+      background: within(screen.getByRole('group', { name: '背景色' })),
+    }
+  }
+
+  it('ArrowLeft は操作に戻らず、左隣のスウォッチへ移る', async () => {
+    const { user, text } = await openColors()
+    act(() => text.getByRole('button', { name: 'グレー' }).focus())
+
+    await user.keyboard('{ArrowLeft}')
+
+    expect(text.getByRole('button', { name: '黒' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: '戻る' })).toBeInTheDocument()
+  })
+
+  it('グループの最後のスウォッチで ArrowRight を押しても、その場に止まりキーを消費する', async () => {
+    const { text } = await openColors()
+    const last = text.getByRole('button', { name: '紫' })
+    act(() => last.focus())
+
+    expect(fireEvent.keyDown(last, { key: 'ArrowRight' })).toBe(false)
+    expect(last).toHaveFocus()
+  })
+
+  it.each(['ArrowLeft', 'ArrowDown'])('修飾キー付きの %s は扱わない', async (key) => {
+    const { text } = await openColors()
+    const swatch = text.getByRole('button', { name: 'グレー' })
+    act(() => swatch.focus())
+
+    expect(fireEvent.keyDown(swatch, { key, altKey: true })).toBe(true)
+    expect(swatch).toHaveFocus()
+    expect(screen.getByRole('button', { name: '戻る' })).toBeInTheDocument()
+  })
+
+  it('スウォッチ以外では、修飾キー付きの ArrowLeft でもこれまでどおり操作に戻る', async () => {
+    await openColors()
+
+    fireEvent.keyDown(screen.getByRole('button', { name: '戻る' }), {
+      key: 'ArrowLeft',
+      altKey: true,
+    })
+
+    await waitFor(() => expect(screen.getByRole('button', { name: '色' })).toHaveFocus())
+  })
+
+  it('先頭のスウォッチで ArrowLeft を押すと、操作に戻る', async () => {
+    const { user, text } = await openColors()
+    act(() => text.getByRole('button', { name: '黒' }).focus())
+
+    await user.keyboard('{ArrowLeft}')
+
+    await waitFor(() => expect(screen.getByRole('button', { name: '色' })).toHaveFocus())
+  })
+
+  it('上下はグループの中で真下へ移り、グループの端からはリセットを経て隣のグループへ移る', async () => {
+    const { user, text, background } = await openColors()
+    act(() => text.getByRole('button', { name: '黒' }).focus())
+
+    await user.keyboard('{ArrowDown}')
+    expect(text.getByRole('button', { name: '緑' })).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}')
+    expect(text.getByRole('button', { name: '色をリセット' })).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}')
+    expect(background.getByRole('button', { name: 'グレー' })).toHaveFocus()
+
+    await user.keyboard('{ArrowUp}')
+    expect(text.getByRole('button', { name: '色をリセット' })).toHaveFocus()
+  })
+})
+
+describe('操作メニューのキーボードショートカット', () => {
+  // macOS の Option+Shift+英字は別の文字を生むため、event.key だけでは照合できない。
+  const cases = [
+    { platform: 'macOS', key: 'Ç', keyCode: 67, shiftKey: true, name: '列の操作' },
+    { platform: 'Windows', key: 'C', keyCode: 67, shiftKey: true, name: '列の操作' },
+    { platform: 'macOS', key: 'Â', keyCode: 82, shiftKey: true, name: '行の操作' },
+    { platform: 'Windows', key: 'R', keyCode: 82, shiftKey: true, name: '行の操作' },
+    { platform: 'macOS', key: 'ˆ', keyCode: 84, shiftKey: true, name: '表の操作' },
+    { platform: 'Windows', key: 'T', keyCode: 84, shiftKey: true, name: '表の操作' },
+    { platform: '共通', key: 'Enter', keyCode: 13, shiftKey: false, name: 'セルの操作' },
+    {
+      platform: '共通',
+      key: 'F10',
+      keyCode: 121,
+      shiftKey: true,
+      altKey: false,
+      name: 'セルの操作',
+    },
+  ]
+
+  it.each(cases)(
+    '$platform の $key で「$name」が開く',
+    async ({ key, keyCode, shiftKey, altKey = true, name }) => {
+      showControls()
+      act(() => {
+        fireEvent.keyDown(editor.view.dom, { altKey, key, keyCode, shiftKey, which: keyCode })
+      })
+      expect(await screen.findByRole('dialog', { name })).toBeInTheDocument()
+    },
+  )
+})
+
+describe('セル移動のキーボード操作', () => {
+  const cellPos = (index: number) => {
+    const target = getTableTarget(editor)!
+
+    return target.tablePos + 1 + target.map.map[index]
+  }
+  const caretIn = (index: number) => editor.commands.setTextSelection(cellPos(index) + 2)
+  const isHandledByEditor = (key: string, shiftKey = false) =>
+    !fireEvent.keyDown(editor.view.dom, { key, shiftKey })
+
+  it('Tab で次のセル、Shift+Tab で前のセルへ移り、行の端では隣の行へ移る', () => {
+    expect(isHandledByEditor('Tab')).toBe(true)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 2 })
+
+    expect(isHandledByEditor('Tab')).toBe(true)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 2, left: 0 })
+
+    expect(isHandledByEditor('Tab', true)).toBe(true)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 1, left: 2 })
+
+    caretIn(3)
+    expect(isHandledByEditor('Tab', true)).toBe(true)
+    expect(getTableTarget(editor)!.rect).toMatchObject({ top: 0, left: 2 })
+  })
+
+  it('最後のセルの Tab では行を増やさず、ブラウザの既定動作で表の外へ抜けられる', () => {
+    caretIn(8)
+
+    expect(isHandledByEditor('Tab')).toBe(false)
+    expect(getTableTarget(editor)!.map.height).toBe(3)
+  })
+
+  it('最初のセルの Shift+Tab はブラウザの既定動作に任せる', () => {
+    caretIn(0)
+
+    expect(isHandledByEditor('Tab', true)).toBe(false)
+  })
+
+  it('表の外では Tab も Shift+F10 も扱わない', () => {
+    showControls()
+    editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+
+    expect(editor.isActive('table')).toBe(false)
+    expect(isHandledByEditor('Tab')).toBe(false)
+    expect(isHandledByEditor('F10', true)).toBe(false)
+  })
+})

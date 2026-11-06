@@ -38,9 +38,15 @@ commands:
           paths:
             - node_modules
           key: dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
+  # rich-text-editor の lint:tsc とテストは smarthr-ui のビルド成果物を参照するため、
+  # 先に本体をビルドしておく必要がある
+  build-smarthr-ui:
+    steps:
+      - run: pnpm ui build
   check-source:
     steps:
       - run: pnpm ui lint
+      - run: pnpm rte lint
   audit:
     steps:
       - checkout
@@ -48,6 +54,7 @@ commands:
   run-npm-test:
     steps:
       - run: pnpm ui test
+      - run: pnpm rte test
   # SCとしてつかえるかどうかのテストを行っているが、費用対効果が薄いためoffにしています
   # 良いテスト方法を発見した場合置き換えます 2026/02/05
   # run-e2e-test:
@@ -99,6 +106,7 @@ jobs:
     resource_class: medium
     steps:
       - setup-for-test
+      - build-smarthr-ui
       - check-source
       - run-npm-test
   node-active-lts:
@@ -106,6 +114,7 @@ jobs:
     resource_class: medium
     steps:
       - setup-for-test
+      - build-smarthr-ui
       - check-source
       - run-npm-test
   # e2e-test:

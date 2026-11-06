@@ -1,0 +1,200 @@
+import { getEmbedUrlFromYoutubeUrl } from '@tiptap/extension-youtube'
+import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/static-renderer'
+import { type ReactNode, createElement } from 'react'
+
+import { isAllowedLineHeight } from '../extensions/LineHeight'
+import { isPositiveNumber } from '../extensions/aspectRatio'
+import {
+  IMAGE_ALIGN_STYLES,
+  YOUTUBE_ALIGN_STYLES,
+  getMediaAlignStyles,
+} from '../extensions/mediaAlign'
+import {
+  YOUTUBE_DEFAULT_SIZE,
+  YOUTUBE_EMBED_OPTIONS,
+  YOUTUBE_IFRAME_ATTRIBUTES,
+} from '../extensions/youtubeOptions'
+
+import { getRichTextExtensions } from './richTextSchema'
+import {
+  LINK_REL,
+  isSafeColor,
+  isSafeColwidth,
+  isSafeFontSize,
+  isSafeImageSrc,
+  isSafeLinkTarget,
+  isSafeTextAlign,
+  isSafeUrl,
+  isSafeYoutubeSrc,
+  normalizeColspan,
+  normalizeHeadingLevel,
+  normalizeRowspan,
+  normalizeStart,
+  parseNumericAttr,
+} from './safeAttributes'
+import { sanitizeRichTextJSON } from './sanitizeRichTextJSON'
+
+import type { RichTextJSON } from '../types'
+import type { Mark, Node } from '@tiptap/pm/model'
+
+type ReactNodeMapping = (ctx: { node: Node; children?: ReactNode | ReactNode[] }) => ReactNode
+
+type ReactMarkMapping = (ctx: { mark: Mark; children?: ReactNode | ReactNode[] }) => ReactNode
+
+/**
+ * @tiptap/static-renderer の既定マッピングは拡張の renderHTML が返すHTML属性名をそのまま
+ * React へ渡すため、colspan/rowspan が unknown property の警告になる。
+ */
+const createTableCellMapping =
+  (tag: 'td' | 'th'): ReactNodeMapping =>
+  ({ node, children }) => {
+    const { colwidth, align, color, backgroundColor } = node.attrs
+    const colspan = normalizeColspan(node.attrs.colspan)
+    const rowspan = normalizeRowspan(node.attrs.rowspan)
+    const style: Record<string, string> = {}
+
+    if (isSafeTextAlign(align)) style.textAlign = align
+    if (isSafeColor(color)) style.color = color
+    if (isSafeColor(backgroundColor)) style.backgroundColor = backgroundColor
+
+    return createElement(
+      tag,
+      {
+        colSpan: colspan > 1 ? colspan : undefined,
+        rowSpan: rowspan > 1 ? rowspan : undefined,
+        colwidth: isSafeColwidth(colwidth) ? colwidth.join(',') : undefined,
+        style: Object.keys(style).length > 0 ? style : undefined,
+      },
+      children,
+    )
+  }
+
+/**
+ * watch や youtu.be のURLは iframe に置いても再生できないため、埋め込み用へ変換する。
+ * 変換に失敗したときに元のURLへ戻さないのは、検証を通っていない値を出さないため。
+ */
+const toEmbedUrl = (src: unknown, start: unknown): string | undefined => {
+  if (!isSafeYoutubeSrc(src)) return undefined
+
+  const embedUrl = getEmbedUrlFromYoutubeUrl({
+    ...YOUTUBE_EMBED_OPTIONS,
+    url: src,
+    startAt: normalizeStart(start),
+  })
+
+  return isSafeYoutubeSrc(embedUrl) ? embedUrl : undefined
+}
+
+const nodeMapping: Record<string, ReactNodeMapping> = {
+  heading: ({ node, children }) => {
+    const level = normalizeHeadingLevel(node.attrs.level)
+    const textAlign = node.attrs.textAlign
+    const style: Record<string, string> = {}
+    if (isSafeTextAlign(textAlign) && textAlign !== 'left') style.textAlign = textAlign
+    if (isAllowedLineHeight(node.attrs.lineHeight)) style.lineHeight = node.attrs.lineHeight
+    return createElement(
+      `h${level}`,
+      { style: Object.keys(style).length > 0 ? style : undefined },
+      children,
+    )
+  },
+  image: ({ node }) => {
+    const src = node.attrs.src
+    const width = parseNumericAttr(node.attrs.width)
+    const height = parseNumericAttr(node.attrs.height)
+    const style = {
+      ...(width ? { maxWidth: '100%', height: 'auto' } : {}),
+      ...getMediaAlignStyles(IMAGE_ALIGN_STYLES, node.attrs.align),
+    }
+    return createElement('img', {
+      src: isSafeImageSrc(src) ? src : undefined,
+      alt: typeof node.attrs.alt === 'string' ? node.attrs.alt : '',
+      title: typeof node.attrs.title === 'string' ? node.attrs.title : undefined,
+      width,
+      height,
+      style: Object.keys(style).length > 0 ? style : undefined,
+    })
+  },
+  youtube: ({ node }) => {
+    const width = isPositiveNumber(node.attrs.width) ? node.attrs.width : YOUTUBE_DEFAULT_SIZE.width
+    const height = isPositiveNumber(node.attrs.height)
+      ? node.attrs.height
+      : YOUTUBE_DEFAULT_SIZE.height
+    return createElement(
+      'div',
+      {
+        'data-youtube-video': '',
+        style: getMediaAlignStyles(YOUTUBE_ALIGN_STYLES, node.attrs.align),
+      },
+      createElement('iframe', {
+        ...YOUTUBE_IFRAME_ATTRIBUTES,
+        src: toEmbedUrl(node.attrs.src, node.attrs.start),
+        width,
+        height,
+        allowFullScreen: true,
+        style: { border: 0, maxWidth: '100%', height: 'auto', aspectRatio: `${width} / ${height}` },
+      }),
+    )
+  },
+  tableCell: createTableCellMapping('td'),
+  tableHeader: createTableCellMapping('th'),
+}
+
+const markMapping: Record<string, ReactMarkMapping> = {
+  bold: ({ children }) => createElement('strong', null, children),
+  italic: ({ children }) => createElement('em', null, children),
+  underline: ({ children }) => createElement('u', null, children),
+  strike: ({ children }) => createElement('s', null, children),
+  code: ({ children }) => createElement('code', null, children),
+  link: ({ mark, children }) => {
+    const href = mark.attrs.href
+    return createElement(
+      'a',
+      {
+        href: isSafeUrl(href) ? href : undefined,
+        target: isSafeLinkTarget(mark.attrs.target) ? mark.attrs.target : undefined,
+        rel: LINK_REL,
+        title: typeof mark.attrs.title === 'string' ? mark.attrs.title : undefined,
+      },
+      children,
+    )
+  },
+  textStyle: ({ mark, children }) => {
+    const style: Record<string, string> = {}
+    if (isSafeColor(mark.attrs.color)) style.color = mark.attrs.color
+    if (isSafeColor(mark.attrs.backgroundColor)) style.backgroundColor = mark.attrs.backgroundColor
+    if (isSafeFontSize(mark.attrs.fontSize)) style.fontSize = mark.attrs.fontSize
+    return createElement(
+      'span',
+      { style: Object.keys(style).length > 0 ? style : undefined },
+      children,
+    )
+  },
+}
+
+// マークをライブラリに包ませないのは、先頭のマークを最も内側に置いてエディタと入れ子が逆になり、
+// 下線・取り消し線が文字サイズや色に合わなくなるため（ueberdosis/tiptap#7299）
+const passThroughMark: ReactMarkMapping = ({ children }) => children
+
+const passThroughMarkMapping = Object.fromEntries(
+  Object.keys(markMapping).map((name) => [name, passThroughMark]),
+)
+
+const renderText: ReactNodeMapping = ({ node }) =>
+  node.marks.reduceRight<ReactNode>((children, mark) => {
+    const renderMark = markMapping[mark.type.name]
+    return renderMark ? renderMark({ mark, children }) : children
+  }, node.text ?? '')
+
+export const serializeToReactElement = (json: RichTextJSON): ReactNode =>
+  tiptapRenderToReactElement({
+    content: sanitizeRichTextJSON(json),
+    extensions: getRichTextExtensions(),
+    options: {
+      nodeMapping: { ...nodeMapping, text: renderText },
+      markMapping: passThroughMarkMapping,
+      // 別バージョンの schema で保存された型は、装飾を諦めて中身の文字だけを残す
+      unhandledNode: ({ children }) => children ?? null,
+      unhandledMark: passThroughMark,
+    },
+  })
