@@ -5,7 +5,7 @@ export type DrawerPosition = 'right' | 'left' | 'bottom'
 
 export type DrawerModality = 'modal' | 'modeless'
 
-export type DrawerProps = ExtendElementPropsWithRef<
+export type ControlledDrawerProps = ExtendElementPropsWithRef<
   typeof DrawerContent,
   {
     /** ポータルのラッパー要素に付与する id。role="dialog" の要素ではない点は Dialog と同じ */

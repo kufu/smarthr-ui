@@ -1,6 +1,6 @@
-export { Drawer } from './Drawer'
+export { ControlledDrawer } from './ControlledDrawer'
 export { DrawerHeader } from './client'
 export { DrawerBody } from './DrawerBody'
 export { DrawerFooter } from './DrawerFooter'
-export type { DrawerProps, DrawerPosition, DrawerModality } from './types'
+export type { ControlledDrawerProps, DrawerPosition, DrawerModality } from './types'
 export type { DrawerSize } from './drawerSize'

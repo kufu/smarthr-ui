@@ -5,7 +5,7 @@ import { type FC, Profiler, useRef, useState } from 'react'
 import { IntlProvider } from '../../intl'
 import { Button } from '../Button'
 
-import { Drawer } from './Drawer'
+import { ControlledDrawer } from './ControlledDrawer'
 import { DrawerBody } from './DrawerBody'
 import { DrawerFooter } from './DrawerFooter'
 import { DrawerHeader } from './client'
@@ -59,7 +59,7 @@ const ControlledTemplate: FC<{ position?: DrawerPosition }> = ({ position }) => 
   return (
     <>
       <Button onClick={() => setIsOpen(true)}>open</Button>
-      <Drawer
+      <ControlledDrawer
         isOpen={isOpen}
         position={position}
         ariaLabel="テストドロワー"
@@ -69,12 +69,12 @@ const ControlledTemplate: FC<{ position?: DrawerPosition }> = ({ position }) => 
       >
         <p>drawer content</p>
         <Button onClick={() => setIsOpen(false)}>close</Button>
-      </Drawer>
+      </ControlledDrawer>
     </>
   )
 }
 
-describe('Drawer（Controlled）', () => {
+describe('ControlledDrawer（Controlled）', () => {
   it('トリガで開き、閉じるボタンで閉じられること', async () => {
     renderWithIntl(<ControlledTemplate />)
     expect(screen.queryByRole('dialog', { name: 'テストドロワー' })).toBeNull()
@@ -123,7 +123,7 @@ describe('Drawer（Controlled）', () => {
   // ボックスを作ると flex コンテキストが途切れ、body のスクロールと footer の固定が効かなくなる
   it('dialog と body/footer の間に挟まる要素がボックスを作らないこと', async () => {
     renderWithIntl(
-      <Drawer isOpen ariaLabel="レイアウト検証">
+      <ControlledDrawer isOpen ariaLabel="レイアウト検証">
         <DrawerHeader title="タイトル" />
         <DrawerBody>
           <p>body</p>
@@ -131,7 +131,7 @@ describe('Drawer（Controlled）', () => {
         <DrawerFooter>
           <Button>footer button</Button>
         </DrawerFooter>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     const dialog = screen.getByRole('dialog', { name: 'レイアウト検証' })
@@ -148,14 +148,18 @@ describe('Drawer（Controlled）', () => {
   })
 })
 
-describe('Drawer サブコンポーネント', () => {
+describe('ControlledDrawer サブコンポーネント', () => {
   it('DrawerHeader の閉じるボタン（×）で閉じられること', async () => {
     const HeaderTemplate: FC = () => {
       const [isOpen, setIsOpen] = useState(false)
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <Drawer isOpen={isOpen} ariaLabel="ヘッダ付き" onClickClose={() => setIsOpen(false)}>
+          <ControlledDrawer
+            isOpen={isOpen}
+            ariaLabel="ヘッダ付き"
+            onClickClose={() => setIsOpen(false)}
+          >
             <DrawerHeader title="タイトル" onClickClose={() => setIsOpen(false)} />
             <DrawerBody>
               <p>body</p>
@@ -163,7 +167,7 @@ describe('Drawer サブコンポーネント', () => {
             <DrawerFooter>
               <Button>footer button</Button>
             </DrawerFooter>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -183,12 +187,12 @@ describe('Drawer サブコンポーネント', () => {
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <Drawer isOpen={isOpen} onClickClose={() => setIsOpen(false)}>
+          <ControlledDrawer isOpen={isOpen} onClickClose={() => setIsOpen(false)}>
             <DrawerHeader title="自動ラベル見出し" onClickClose={() => setIsOpen(false)} />
             <DrawerBody>
               <p>body</p>
             </DrawerBody>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -199,9 +203,9 @@ describe('Drawer サブコンポーネント', () => {
 
   it('ariaLabel を指定すると、DrawerHeader の見出しではなく ariaLabel が名前になること', () => {
     renderWithIntl(
-      <Drawer isOpen ariaLabel="指定したラベル">
+      <ControlledDrawer isOpen ariaLabel="指定したラベル">
         <DrawerHeader title="見出し" />
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     expect(screen.getByRole('dialog', { name: '指定したラベル' })).not.toHaveAttribute(
@@ -213,9 +217,9 @@ describe('Drawer サブコンポーネント', () => {
     renderWithIntl(
       <>
         <p id="external-label">外部のラベル</p>
-        <Drawer isOpen ariaLabel="指定したラベル" ariaLabelledby="external-label">
+        <ControlledDrawer isOpen ariaLabel="指定したラベル" ariaLabelledby="external-label">
           <DrawerHeader title="見出し" />
-        </Drawer>
+        </ControlledDrawer>
       </>,
     )
 
@@ -223,20 +227,20 @@ describe('Drawer サブコンポーネント', () => {
   })
 })
 
-describe('Drawer ドラッグハンドル', () => {
+describe('ControlledDrawer ドラッグハンドル', () => {
   const VerticalTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>open</Button>
-        <Drawer
+        <ControlledDrawer
           isOpen={isOpen}
           position="bottom"
           ariaLabel="ボトムドロワー"
           onClickClose={() => setIsOpen(false)}
         >
           <p>bottom content</p>
-        </Drawer>
+        </ControlledDrawer>
       </>
     )
   }
@@ -261,9 +265,14 @@ describe('Drawer ドラッグハンドル', () => {
 
   const renderBottomDrawer = (onClickClose: () => void = vi.fn()) => {
     renderWithIntl(
-      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={onClickClose}>
+      <ControlledDrawer
+        isOpen
+        position="bottom"
+        ariaLabel="ボトムドロワー"
+        onClickClose={onClickClose}
+      >
         <p>bottom content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     return {
@@ -351,9 +360,9 @@ describe('Drawer ドラッグハンドル', () => {
   it('閉じアニメーション中に grabber を押しても、開いた位置へ戻らないこと', async () => {
     const ui = (isOpen: boolean) => (
       <IntlProvider locale="ja">
-        <Drawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
+        <ControlledDrawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
           <p>bottom content</p>
-        </Drawer>
+        </ControlledDrawer>
       </IntlProvider>
     )
     const { rerender } = render(ui(true))
@@ -407,9 +416,9 @@ describe('Drawer ドラッグハンドル', () => {
   it('ドラッグ中に外から閉じられても、トランジション付きで閉じ位置へ動くこと', async () => {
     const ui = (isOpen: boolean) => (
       <IntlProvider locale="ja">
-        <Drawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
+        <ControlledDrawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
           <p>bottom content</p>
-        </Drawer>
+        </ControlledDrawer>
       </IntlProvider>
     )
     const { rerender } = render(ui(true))
@@ -454,7 +463,12 @@ describe('Drawer ドラッグハンドル', () => {
   it('ドラッグ中に DrawerHeader が再レンダーされないこと', async () => {
     let renderCount = 0
     renderWithIntl(
-      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー" onClickClose={() => undefined}>
+      <ControlledDrawer
+        isOpen
+        position="bottom"
+        ariaLabel="ボトムドロワー"
+        onClickClose={() => undefined}
+      >
         <Profiler
           id="header"
           onRender={() => {
@@ -466,7 +480,7 @@ describe('Drawer ドラッグハンドル', () => {
         <DrawerBody>
           <p>body</p>
         </DrawerBody>
-      </Drawer>,
+      </ControlledDrawer>,
     )
     const dialog = stubPanelHeight(400)
     const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
@@ -488,14 +502,14 @@ describe('Drawer ドラッグハンドル', () => {
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <Drawer
+          <ControlledDrawer
             isOpen={isOpen}
             position="right"
             ariaLabel="右ドロワー"
             onClickClose={() => setIsOpen(false)}
           >
             <p>right content</p>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -505,20 +519,24 @@ describe('Drawer ドラッグハンドル', () => {
   })
 })
 
-describe('Drawer Controlled の close 自動接続', () => {
+describe('ControlledDrawer Controlled の close 自動接続', () => {
   it('Controlled でも DrawerHeader に onClickClose を渡さず Context 経由で閉じられること', async () => {
     const Template: FC = () => {
       const [isOpen, setIsOpen] = useState(false)
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          {/* onClickClose は Drawer にだけ渡し、DrawerHeader には渡さない */}
-          <Drawer isOpen={isOpen} ariaLabel="自動close" onClickClose={() => setIsOpen(false)}>
+          {/* onClickClose は ControlledDrawer にだけ渡し、DrawerHeader には渡さない */}
+          <ControlledDrawer
+            isOpen={isOpen}
+            ariaLabel="自動close"
+            onClickClose={() => setIsOpen(false)}
+          >
             <DrawerHeader title="タイトル" />
             <DrawerBody>
               <p>body</p>
             </DrawerBody>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -533,13 +551,13 @@ describe('Drawer Controlled の close 自動接続', () => {
   })
 })
 
-describe('Drawer（modeless）', () => {
+describe('ControlledDrawer（modeless）', () => {
   const ModelessTemplate: FC<{ onPressEscape?: () => void }> = ({ onPressEscape }) => {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>open</Button>
-        <Drawer
+        <ControlledDrawer
           isOpen={isOpen}
           position="right"
           modality="modeless"
@@ -549,7 +567,7 @@ describe('Drawer（modeless）', () => {
         >
           <p>modeless content</p>
           <Button onClick={() => setIsOpen(false)}>close</Button>
-        </Drawer>
+        </ControlledDrawer>
       </>
     )
   }
@@ -635,14 +653,14 @@ describe('Drawer（modeless）', () => {
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
           <Button onClick={() => setIsOpen(false)}>ページから閉じる</Button>
-          <Drawer
+          <ControlledDrawer
             isOpen={isOpen}
             position="right"
             modality="modeless"
             ariaLabel="モードレスドロワー"
           >
             <Button>中のボタン</Button>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -717,7 +735,7 @@ describe('Drawer（modeless）', () => {
 
       return (
         <div ref={setContainer}>
-          <Drawer
+          <ControlledDrawer
             isOpen
             position="bottom"
             modality="modeless"
@@ -725,7 +743,7 @@ describe('Drawer（modeless）', () => {
             ariaLabel="コンテナ内ドロワー"
           >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </div>
       )
     }
@@ -743,7 +761,7 @@ describe('Drawer（modeless）', () => {
 
       return (
         <div ref={setContainer} data-testid="portal-parent">
-          <Drawer
+          <ControlledDrawer
             isOpen
             position="right"
             modality="modeless"
@@ -751,7 +769,7 @@ describe('Drawer（modeless）', () => {
             ariaLabel="コンテナ内ドロワー"
           >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </div>
       )
     }
@@ -770,7 +788,7 @@ describe('Drawer（modeless）', () => {
 
       return (
         <div ref={setContainer}>
-          <Drawer
+          <ControlledDrawer
             isOpen
             position="right"
             modality="modeless"
@@ -779,7 +797,7 @@ describe('Drawer（modeless）', () => {
             ariaLabel="コンテナ内右ドロワー"
           >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </div>
       )
     }
@@ -801,7 +819,7 @@ describe('Drawer（modeless）', () => {
 
         return (
           <div ref={setContainer}>
-            <Drawer
+            <ControlledDrawer
               isOpen
               position={position}
               modality="modeless"
@@ -814,7 +832,7 @@ describe('Drawer（modeless）', () => {
               <DrawerFooter>
                 <Button>保存</Button>
               </DrawerFooter>
-            </Drawer>
+            </ControlledDrawer>
           </div>
         )
       }
@@ -842,9 +860,9 @@ describe('Drawer（modeless）', () => {
 
   it('portalParent なしの right は画面の右端に固定され、フッターを張り付かせないこと', () => {
     renderWithIntl(
-      <Drawer isOpen position="right" modality="modeless" ariaLabel="画面固定右ドロワー">
+      <ControlledDrawer isOpen position="right" modality="modeless" ariaLabel="画面固定右ドロワー">
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
@@ -855,9 +873,15 @@ describe('Drawer（modeless）', () => {
 
   it('portalParent なしの right はビューポート基準の最大幅のままであること', async () => {
     renderWithIntl(
-      <Drawer isOpen position="right" modality="modeless" size="M" ariaLabel="画面固定右ドロワー">
+      <ControlledDrawer
+        isOpen
+        position="right"
+        modality="modeless"
+        size="M"
+        ariaLabel="画面固定右ドロワー"
+      >
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
@@ -866,9 +890,9 @@ describe('Drawer（modeless）', () => {
 
   it('portalParent なしの bottom はビューポート基準の高さのままであること', async () => {
     renderWithIntl(
-      <Drawer isOpen position="bottom" modality="modeless" ariaLabel="画面固定ドロワー">
+      <ControlledDrawer isOpen position="bottom" modality="modeless" ariaLabel="画面固定ドロワー">
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定ドロワー' })
@@ -881,7 +905,7 @@ describe('Drawer（modeless）', () => {
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <Drawer
+          <ControlledDrawer
             isOpen={isOpen}
             modality="modeless"
             ariaLabel="modeless escape"
@@ -889,7 +913,7 @@ describe('Drawer（modeless）', () => {
             onPressEscape={() => setIsOpen(false)}
           >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -904,15 +928,19 @@ describe('Drawer（modeless）', () => {
   })
 })
 
-describe('Drawer（modal 既定の回帰）', () => {
+describe('ControlledDrawer（modal 既定の回帰）', () => {
   const DefaultTemplate: FC = () => {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>open</Button>
-        <Drawer isOpen={isOpen} ariaLabel="モーダルドロワー" onClickClose={() => setIsOpen(false)}>
+        <ControlledDrawer
+          isOpen={isOpen}
+          ariaLabel="モーダルドロワー"
+          onClickClose={() => setIsOpen(false)}
+        >
           <p>modal content</p>
-        </Drawer>
+        </ControlledDrawer>
       </>
     )
   }
@@ -935,7 +963,7 @@ describe('Drawer（modal 既定の回帰）', () => {
   })
 })
 
-describe('Drawer レイアウト基準（modeless の配置）', () => {
+describe('ControlledDrawer レイアウト基準（modeless の配置）', () => {
   const getLayout = () => document.querySelector('.smarthr-ui-Drawer-layout') as HTMLElement | null
 
   it('modal（既定）では layout が fixed であること', async () => {
@@ -944,9 +972,13 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <Drawer isOpen={isOpen} ariaLabel="fixed drawer" onClickClose={() => setIsOpen(false)}>
+          <ControlledDrawer
+            isOpen={isOpen}
+            ariaLabel="fixed drawer"
+            onClickClose={() => setIsOpen(false)}
+          >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -964,7 +996,7 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
           <div ref={setContainer} style={{ position: 'relative' }} data-testid="container" />
-          <Drawer
+          <ControlledDrawer
             isOpen={isOpen}
             portalParent={container ?? undefined}
             modality="modeless"
@@ -972,7 +1004,7 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
             onClickClose={() => setIsOpen(false)}
           >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -988,14 +1020,14 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
       return (
         <>
           <Button onClick={() => setIsOpen(true)}>open</Button>
-          <Drawer
+          <ControlledDrawer
             isOpen={isOpen}
             modality="modeless"
             ariaLabel="modeless fixed"
             onClickClose={() => setIsOpen(false)}
           >
             <p>content</p>
-          </Drawer>
+          </ControlledDrawer>
         </>
       )
     }
@@ -1006,11 +1038,11 @@ describe('Drawer レイアウト基準（modeless の配置）', () => {
   })
 })
 
-describe('Drawer size', () => {
+describe('ControlledDrawer size', () => {
   const SizedTemplate: FC<{ position: 'bottom' | 'right' }> = ({ position }) => (
-    <Drawer isOpen position={position} size="M" ariaLabel="サイズ確認">
+    <ControlledDrawer isOpen position={position} size="M" ariaLabel="サイズ確認">
       <p>content</p>
-    </Drawer>
+    </ControlledDrawer>
   )
 
   it('left/right では size のクラスが当たること', () => {
@@ -1026,12 +1058,12 @@ describe('Drawer size', () => {
   })
 })
 
-describe('Drawer あふれ防止', () => {
+describe('ControlledDrawer あふれ防止', () => {
   it('left/right にビューポート幅の max ガードが当たること', () => {
     renderWithIntl(
-      <Drawer isOpen position="right" size="L" ariaLabel="右ドロワー">
+      <ControlledDrawer isOpen position="right" size="L" ariaLabel="右ドロワー">
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
     expect(screen.getByRole('dialog', { name: '右ドロワー' })).toHaveClass(
       'shr-max-w-[calc(100dvw-theme(spacing.2))]',
@@ -1040,9 +1072,9 @@ describe('Drawer あふれ防止', () => {
 
   it('bottom の高さがコンテンツによらず固定されること', () => {
     renderWithIntl(
-      <Drawer isOpen position="bottom" ariaLabel="ボトムドロワー">
+      <ControlledDrawer isOpen position="bottom" ariaLabel="ボトムドロワー">
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
     expect(screen.getByRole('dialog', { name: 'ボトムドロワー' })).toHaveClass(
       'shr-h-[calc(100dvh-theme(spacing.2))]',
@@ -1052,7 +1084,7 @@ describe('Drawer あふれ防止', () => {
 
 // FocusTrap のラッパーに display: contents を当てているため、tabbable の探索や
 // フォーカス順が崩れていないかをここで担保する。
-describe('Drawer（modal のフォーカス）', () => {
+describe('ControlledDrawer（modal のフォーカス）', () => {
   const FocusTemplate: FC<{ firstFocusTarget?: boolean }> = ({ firstFocusTarget }) => {
     const [isOpen, setIsOpen] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -1060,7 +1092,7 @@ describe('Drawer（modal のフォーカス）', () => {
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>open</Button>
-        <Drawer
+        <ControlledDrawer
           isOpen={isOpen}
           position="right"
           firstFocusTarget={firstFocusTarget ? inputRef : undefined}
@@ -1074,7 +1106,7 @@ describe('Drawer（modal のフォーカス）', () => {
           <DrawerFooter>
             <Button onClick={() => setIsOpen(false)}>閉じる</Button>
           </DrawerFooter>
-        </Drawer>
+        </ControlledDrawer>
       </>
     )
   }
@@ -1134,7 +1166,7 @@ describe('Drawer（modal のフォーカス）', () => {
 
 // 閉じアニメーション中もドロワーは DOM に残るため、setOpen((v) => !v) と
 // 書いている利用者は閉じ途中のクリックで開き直ってしまう。
-describe('Drawer（閉じアニメーション中の再発火）', () => {
+describe('ControlledDrawer（閉じアニメーション中の再発火）', () => {
   const ClosingTemplate: FC<{
     onClickOverlay: () => void
     onClickClose: () => void
@@ -1144,7 +1176,7 @@ describe('Drawer（閉じアニメーション中の再発火）', () => {
     return (
       <>
         <Button onClick={() => setIsOpen(false)}>外から閉じる</Button>
-        <Drawer
+        <ControlledDrawer
           isOpen={isOpen}
           position="right"
           ariaLabel="閉じ中ドロワー"
@@ -1155,7 +1187,7 @@ describe('Drawer（閉じアニメーション中の再発火）', () => {
           <DrawerBody>
             <p>content</p>
           </DrawerBody>
-        </Drawer>
+        </ControlledDrawer>
       </>
     )
   }
@@ -1190,15 +1222,15 @@ describe('Drawer（閉じアニメーション中の再発火）', () => {
 
 // ヘッダ無し・ラベル無しで aria-labelledby を付けると参照先が存在せず、
 // アクセシブル名が空になる。
-describe('Drawer（自動ラベル付け）', () => {
+describe('ControlledDrawer（自動ラベル付け）', () => {
   it('DrawerHeader があれば見出しがアクセシブル名になること', () => {
     renderWithIntl(
-      <Drawer isOpen position="right">
+      <ControlledDrawer isOpen position="right">
         <DrawerHeader title="ドロワータイトル" />
         <DrawerBody>
           <p>content</p>
         </DrawerBody>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     expect(screen.getByRole('dialog', { name: 'ドロワータイトル' })).toBeVisible()
@@ -1206,12 +1238,12 @@ describe('Drawer（自動ラベル付け）', () => {
 
   it('DrawerHeader に id を渡してもその id が参照されること', () => {
     renderWithIntl(
-      <Drawer isOpen position="right">
+      <ControlledDrawer isOpen position="right">
         <DrawerHeader id="custom-heading" title="独自 id の見出し" />
         <DrawerBody>
           <p>content</p>
         </DrawerBody>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     const dialog = screen.getByRole('dialog', { name: '独自 id の見出し' })
@@ -1220,24 +1252,24 @@ describe('Drawer（自動ラベル付け）', () => {
 
   it('DrawerHeader もラベルも無ければ aria-labelledby を付けないこと', () => {
     renderWithIntl(
-      <Drawer isOpen position="right">
+      <ControlledDrawer isOpen position="right">
         <DrawerBody>
           <p>content</p>
         </DrawerBody>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-labelledby')
   })
 })
 
-describe('Drawer（イベントと属性）', () => {
+describe('ControlledDrawer（イベントと属性）', () => {
   it('Escape で onPressEscape に KeyboardEvent が渡ること', async () => {
     const onPressEscape = vi.fn()
     renderWithIntl(
-      <Drawer isOpen ariaLabel="イベント" onPressEscape={onPressEscape}>
+      <ControlledDrawer isOpen ariaLabel="イベント" onPressEscape={onPressEscape}>
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     await userEvent.keyboard('{Escape}')
@@ -1249,9 +1281,9 @@ describe('Drawer（イベントと属性）', () => {
   it('DrawerHeader の閉じるボタンで onClickClose にクリックイベントが渡ること', async () => {
     const onClickClose = vi.fn()
     renderWithIntl(
-      <Drawer isOpen ariaLabel="イベント" onClickClose={onClickClose}>
+      <ControlledDrawer isOpen ariaLabel="イベント" onClickClose={onClickClose}>
         <DrawerHeader title="タイトル" />
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
@@ -1263,9 +1295,9 @@ describe('Drawer（イベントと属性）', () => {
   it('div の属性と ref が dialog 要素に渡ること', () => {
     const ref = { current: null as HTMLDivElement | null }
     renderWithIntl(
-      <Drawer ref={ref} isOpen className="custom" ariaLabel="属性" data-testid="drawer">
+      <ControlledDrawer ref={ref} isOpen className="custom" ariaLabel="属性" data-testid="drawer">
         <p>content</p>
-      </Drawer>,
+      </ControlledDrawer>,
     )
 
     const dialog = screen.getByRole('dialog', { name: '属性' })
@@ -1275,15 +1307,15 @@ describe('Drawer（イベントと属性）', () => {
   })
 })
 
-describe('Drawer（開閉とフォーカス）', () => {
+describe('ControlledDrawer（開閉とフォーカス）', () => {
   const Template: FC<{ modality?: 'modal' | 'modeless' }> = ({ modality }) => {
     const [isOpen, setIsOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>open</Button>
-        <Drawer isOpen={isOpen} modality={modality} ariaLabel="フォーカス">
+        <ControlledDrawer isOpen={isOpen} modality={modality} ariaLabel="フォーカス">
           <Button onClick={() => setIsOpen(false)}>close</Button>
-        </Drawer>
+        </ControlledDrawer>
       </>
     )
   }
@@ -1309,7 +1341,7 @@ describe('Drawer（開閉とフォーカス）', () => {
   })
 })
 
-describe('Drawer（portalParent で画面の下にはみ出した分の本文の下の空き）', () => {
+describe('ControlledDrawer（portalParent で画面の下にはみ出した分の本文の下の空き）', () => {
   const Template: FC<{ withPortalParent?: boolean; modality?: 'modal' | 'modeless' }> = ({
     withPortalParent = true,
     modality = 'modeless',
@@ -1318,7 +1350,7 @@ describe('Drawer（portalParent で画面の下にはみ出した分の本文の
 
     return (
       <div ref={setContainer}>
-        <Drawer
+        <ControlledDrawer
           isOpen
           position="right"
           modality={modality}
@@ -1331,7 +1363,7 @@ describe('Drawer（portalParent で画面の下にはみ出した分の本文の
           <DrawerFooter>
             <Button>保存</Button>
           </DrawerFooter>
-        </Drawer>
+        </ControlledDrawer>
       </div>
     )
   }

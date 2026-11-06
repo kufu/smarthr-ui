@@ -1,19 +1,19 @@
 import { useState } from 'react'
 
 import { Button } from '../../Button'
-import { Drawer } from '../Drawer'
+import { ControlledDrawer } from '../ControlledDrawer'
 import { DrawerBody } from '../DrawerBody'
 import { DrawerFooter } from '../DrawerFooter'
 import { DrawerHeader } from '../client'
 
-import { IsOpen } from './Drawer.stories'
+import { IsOpen } from './ControlledDrawer.stories'
 
 import type { DrawerSize } from '../drawerSize'
 import type { DrawerPosition } from '../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
-  title: 'Components/Drawer/VRT',
+  title: 'Components/Drawer/ControlledDrawer/VRT',
   args: {
     isOpen: true,
   },
@@ -21,7 +21,7 @@ export default {
     chromatic: { disableSnapshot: false },
   },
   tags: ['!autodocs'],
-} satisfies Meta<typeof Drawer>
+} satisfies Meta<typeof ControlledDrawer>
 
 const drawerChildren = (handleClose: () => void) => (
   <>
@@ -38,47 +38,47 @@ const drawerChildren = (handleClose: () => void) => (
   </>
 )
 
-export const Right: StoryObj<typeof Drawer> = {
+export const Right: StoryObj<typeof ControlledDrawer> = {
   render: () => (
-    <Drawer isOpen position="right">
+    <ControlledDrawer isOpen position="right">
       {drawerChildren(() => {})}
-    </Drawer>
+    </ControlledDrawer>
   ),
 }
 
-export const Left: StoryObj<typeof Drawer> = {
+export const Left: StoryObj<typeof ControlledDrawer> = {
   render: () => (
-    <Drawer isOpen position="left">
+    <ControlledDrawer isOpen position="left">
       {drawerChildren(() => {})}
-    </Drawer>
+    </ControlledDrawer>
   ),
 }
 
-export const Bottom: StoryObj<typeof Drawer> = {
+export const Bottom: StoryObj<typeof ControlledDrawer> = {
   render: () => (
-    <Drawer isOpen position="bottom">
+    <ControlledDrawer isOpen position="bottom">
       {drawerChildren(() => {})}
-    </Drawer>
+    </ControlledDrawer>
   ),
 }
 
-export const ModelessRight: StoryObj<typeof Drawer> = {
+export const ModelessRight: StoryObj<typeof ControlledDrawer> = {
   render: () => (
-    <Drawer isOpen modality="modeless" position="right">
+    <ControlledDrawer isOpen modality="modeless" position="right">
       {drawerChildren(() => {})}
-    </Drawer>
+    </ControlledDrawer>
   ),
 }
 
 const sizeStory = (
   size: DrawerSize,
   position: DrawerPosition = 'right',
-): StoryObj<typeof Drawer> => ({
+): StoryObj<typeof ControlledDrawer> => ({
   name: `size: ${size}`,
   render: () => (
-    <Drawer isOpen position={position} size={size}>
+    <ControlledDrawer isOpen position={position} size={size}>
       {drawerChildren(() => {})}
-    </Drawer>
+    </ControlledDrawer>
   ),
 })
 
@@ -95,9 +95,9 @@ export const SizeFull = sizeStory('FULL')
  * DrawerBody がスクロールせず、DrawerFooter がパネル外へ押し出される。
  * jsdom はレイアウトしないため、この崩れを捕まえられるのは VRT だけ。
  */
-export const BottomLongContent: StoryObj<typeof Drawer> = {
+export const BottomLongContent: StoryObj<typeof ControlledDrawer> = {
   render: () => (
-    <Drawer isOpen position="bottom">
+    <ControlledDrawer isOpen position="bottom">
       <DrawerHeader subtitle="サブタイトル" title="ドロワータイトル" />
       <DrawerBody>
         {Array.from({ length: 40 }, (_, i) => (
@@ -108,7 +108,7 @@ export const BottomLongContent: StoryObj<typeof Drawer> = {
         <Button>キャンセル</Button>
         <Button variant="primary">保存</Button>
       </DrawerFooter>
-    </Drawer>
+    </ControlledDrawer>
   ),
 }
 
@@ -118,7 +118,7 @@ export const BottomLongContent: StoryObj<typeof Drawer> = {
  * overflow: hidden なコンテナでは閉じるボタンやヘッダが切れる。
  * jsdom はレイアウトしないため、実寸のはみ出しを捕まえられるのは VRT だけ。
  */
-const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> => ({
+const portalParentStory = (position: DrawerPosition): StoryObj<typeof ControlledDrawer> => ({
   render: () => {
     const [container, setContainer] = useState<HTMLDivElement | null>(null)
 
@@ -134,7 +134,7 @@ const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> =>
         }}
       >
         <div style={{ padding: '1rem' }}>コンテナの内側だけを覆います。</div>
-        <Drawer
+        <ControlledDrawer
           isOpen
           modality="modeless"
           portalParent={container ?? undefined}
@@ -142,7 +142,7 @@ const portalParentStory = (position: DrawerPosition): StoryObj<typeof Drawer> =>
           size="L"
         >
           {drawerChildren(() => {})}
-        </Drawer>
+        </ControlledDrawer>
       </div>
     )
   },
@@ -154,7 +154,7 @@ export const PortalParentBottom = portalParentStory('bottom')
 
 export const VRT = IsOpen
 
-export const VRTForcedColors: StoryObj<typeof Drawer> = {
+export const VRTForcedColors: StoryObj<typeof ControlledDrawer> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
