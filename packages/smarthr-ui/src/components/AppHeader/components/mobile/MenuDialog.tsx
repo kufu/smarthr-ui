@@ -33,7 +33,9 @@ import { ReleaseNoteContext } from './ReleaseNoteContext'
 const classNameGenerator = tv({
   slots: {
     wrapper: [
-      'shr-fixed shr-left-0 shr-top-0 shr-flex shr-h-full shr-w-full shr-flex-col shr-bg-white',
+      'shr-fixed shr-left-0 shr-top-0 shr-box-border shr-flex shr-h-full shr-w-full shr-flex-col shr-bg-white',
+      // HINT: 下端はスクロール領域の内側で余白を取り、コンテンツがツールバー等の下までスクロールできるようにする
+      'shr-pl-[env(safe-area-inset-left)] shr-pr-[env(safe-area-inset-right)] shr-pt-[env(safe-area-inset-top)]',
       'shr-translate-opacity shr-opacity-0 shr-duration-150',
       '[&&.shr-sp-menu-enter-active]:shr-opacity-100',
       '[&&.shr-sp-menu-enter-done]:shr-opacity-100',
@@ -41,7 +43,7 @@ const classNameGenerator = tv({
       '[&&.shr-sp-menu-exit-done]:shr-opacity-0',
     ],
     header: 'shr-border-b-shorthand shr-sticky shr-top-0 shr-px-0.75 shr-py-0.5',
-    content: 'shr-p-1',
+    content: 'shr-p-1 shr-pb-[calc(theme(spacing.1)+env(safe-area-inset-bottom))]',
   },
 })
 

@@ -2,6 +2,7 @@
 
 import { type FC, useCallback } from 'react'
 
+import { getSafeAreaInsets } from '../../../../libs/safeAreaInsets'
 import { Portal as OriginalPortal } from '../../../Portal'
 
 import type { ExtendElementPropsWithoutRef } from '../../../../types'
@@ -48,11 +49,14 @@ const PORTAL_POSITION_MARGIN_FOR_BOTTOM = 4
 
 function getPortalPosition(inputRect: DOMRect, contentHeight: number) {
   const { innerHeight, pageYOffset } = window
+  // HINT: safe areaに重ならない領域を、カレンダーを表示できる範囲とする
+  const safeAreaInsets = getSafeAreaInsets()
+  const safeBottom = innerHeight - safeAreaInsets.bottom
   const top =
     // has no space on bottom side
-    inputRect.bottom + contentHeight > innerHeight &&
+    inputRect.bottom + contentHeight > safeBottom &&
     // top side space bigger than bottom side
-    inputRect.top > innerHeight - inputRect.bottom
+    inputRect.top - safeAreaInsets.top > safeBottom - inputRect.bottom
       ? // display on top side
         pageYOffset + inputRect.top - contentHeight + PORTAL_POSITION_MARGIN_FOR_TOP
       : // display on bottom side
