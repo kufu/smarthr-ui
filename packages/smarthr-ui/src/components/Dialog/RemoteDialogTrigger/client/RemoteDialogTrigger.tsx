@@ -2,9 +2,8 @@
 
 import { type FC, useCallback } from 'react'
 
+import { TRIGGER_EVENT } from '../../../../hooks/client/useRemoteTrigger'
 import { useLatest } from '../../../../hooks/useLatest'
-
-import { TRIGGER_EVENT } from './useRemoteTrigger'
 
 import type { ExtendElementPropsWithoutRef } from '../../../../types'
 
