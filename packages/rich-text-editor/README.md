@@ -61,7 +61,7 @@ const App = () => (
 lint の型チェックとテストは、本体のビルド成果物（`lib`）を参照します。本体を変更したら、先に `pnpm ui build` を実行してください。CSS のビルドは本体のプリセットをソース（`../smarthr-ui/src/smarthr-ui-preset`）から読むため、本体のビルドを必要としません。
 
 ```sh
-pnpm rte lint        # eslint / knip / prettier / stylelint / tsc
+pnpm rte lint        # eslint / knip / prettier / tsc
 pnpm rte lint:tsc    # 型チェックのみ
 pnpm rte exec vitest run
 pnpm rte build       # ESM / CJS / 型定義 / CSS

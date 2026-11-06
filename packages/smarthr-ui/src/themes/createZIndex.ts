@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 export type ZIndexProperty = {
   AUTO?: 'auto'
@@ -29,10 +29,5 @@ export const createZIndex = (userZIndex?: ZIndexProperty): CreatedZindexTheme =>
     return defaultZIndex
   }
 
-  return merge(
-    {
-      ...defaultZIndex,
-    },
-    userZIndex,
-  )
+  return merge(defaultZIndex, userZIndex)
 }

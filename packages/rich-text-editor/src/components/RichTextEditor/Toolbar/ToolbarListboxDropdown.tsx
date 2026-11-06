@@ -105,13 +105,13 @@ export const ToolbarListboxDropdown = ({
   const isHorizontal = appearance === 'icons'
 
   const classNames = useMemo(() => {
-    const generated = classNameGenerator({ appearance })
+    const { trigger, listbox, option, checkIcon } = classNameGenerator()
 
     return {
-      trigger: generated.trigger({ className: triggerClassName }),
-      listbox: generated.listbox({ className: listboxClassName }),
-      option: generated.option(),
-      checkIcon: generated.checkIcon(),
+      trigger: trigger({ className: triggerClassName }),
+      listbox: listbox({ appearance, className: listboxClassName }),
+      option: option({ appearance }),
+      checkIcon: checkIcon(),
     }
   }, [appearance, triggerClassName, listboxClassName])
 

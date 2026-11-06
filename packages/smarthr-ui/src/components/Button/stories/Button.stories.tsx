@@ -2,7 +2,7 @@ import { FaCaretDownIcon, FaCirclePlusIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { AnchorButton } from '../AnchorButton'
 import { Button } from '../Button'
-import { UnstyledButton } from '../UnstyledButton'
+import { UnstyledButton } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

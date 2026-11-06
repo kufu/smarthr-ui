@@ -196,6 +196,13 @@ export const IsLoading: StoryObj<typeof SingleCombobox> = {
   },
 }
 
+export const IsFilteringDisabled: StoryObj<typeof SingleCombobox> = {
+  name: 'disableFiltering',
+  args: {
+    disableFiltering: true,
+  },
+}
+
 export const Width: StoryObj<typeof SingleCombobox> = {
   name: 'width',
   args: {

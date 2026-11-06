@@ -16,7 +16,6 @@
   "ignoreBinaries": [
     "eslint",
     "prettier",
-    "stylelint",
     "knip"
   ],
   "ignoreExportsUsedInFile": true

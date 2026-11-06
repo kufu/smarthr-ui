@@ -11,6 +11,7 @@ import { Heading } from '../../Heading'
 import { FaXmarkIcon } from '../../Icon'
 import { Center, Cluster } from '../../Layout'
 import { Loader } from '../../Loader'
+import { Section } from '../../SectioningContent'
 
 import type { ExistingFile } from '../types'
 
@@ -58,7 +59,7 @@ export const FilePreviewDialog: FC<Props> = memo(
         />
       ) : (
         <Center className="shr-h-full">
-          <Loader size="M" />
+          <Loader />
         </Center>
       )
     const actionAreaButtons = (
@@ -81,12 +82,11 @@ export const FilePreviewDialog: FC<Props> = memo(
           onClickOverlay={handleClose}
           onPressEscape={handleClose}
         >
-          <div className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
+          <Section className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
             <Cluster
               align="center"
               className="shr-border-b-shorthand shr-shrink-0 shr-px-1 shr-py-0.5"
             >
-              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
               <Heading className="shr-min-w-0 shr-grow shr-truncate shr-text-base">
                 {file?.name}
               </Heading>
@@ -103,7 +103,7 @@ export const FilePreviewDialog: FC<Props> = memo(
             >
               {actionAreaButtons}
             </Cluster>
-          </div>
+          </Section>
         </Dialog>
       )
     }

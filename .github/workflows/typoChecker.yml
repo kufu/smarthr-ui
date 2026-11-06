@@ -15,6 +15,6 @@ jobs:
         echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Use custom config file
-      uses: crate-ci/typos@512fc24f32f44ab01972217aaaf3dc86ec234d53 # v1.50.2
+      uses: crate-ci/typos@7f9d0819ca1c008ade73f4b41fa9d258d48f605b # v1.51.1
       with:
         config: ./.typos.toml

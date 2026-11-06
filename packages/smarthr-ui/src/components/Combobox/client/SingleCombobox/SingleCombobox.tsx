@@ -71,7 +71,7 @@ type Props<T> = ExtendElementPropsWithRef<
      */
     noResultText?: ReactNode
   },
-  { omit: 'children' }
+  { omit: 'children' | 'onChange' }
 >
 
 const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
@@ -164,14 +164,13 @@ export const SingleCombobox = <T,>({
   prefix,
   error,
   creatable,
-  placeholder,
   autoComplete,
   dropdownHelpMessage,
   isLoading,
+  disableFiltering,
   width,
   dropdownWidth = 'auto',
   className,
-  onChange,
   onChangeInput,
   onAdd,
   onSelect,
@@ -214,7 +213,7 @@ export const SingleCombobox = <T,>({
     selected: selectedItem,
     creatable,
     inputValue,
-    isFilteringDisabled: !isEditing,
+    disableFiltering: disableFiltering || !isEditing,
   })
 
   const selectFrame = useAnimationFrame()
@@ -252,7 +251,6 @@ export const SingleCombobox = <T,>({
     })
 
   const latest = useLatest({
-    onChange,
     onChangeInput,
     onSelect,
     onClear,
@@ -359,7 +357,6 @@ export const SingleCombobox = <T,>({
         }
       },
       handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
-        latest.onChange?.(e)
         latest.onChangeInput?.(e)
 
         if (!latest.isEditing) setIsEditing(true)
@@ -493,8 +490,6 @@ export const SingleCombobox = <T,>({
         readOnly={readOnly}
         value={inputValue}
         autoComplete={autoComplete ?? 'off'}
-        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-        placeholder={placeholder}
         error={error}
         className={classNames.input}
         aria-haspopup="listbox"

@@ -113,6 +113,12 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const locale = context.globals?.locale
+
+      useEffect(() => {
+        // やさしい日本語に対応するBCP 47の言語タグは無いため、jaとして扱う
+        document.documentElement.lang = locale === 'ja-easy' ? 'ja' : locale
+      }, [locale])
+
       return (
         <IntlProvider locale={locale}>
           <EnvironmentProvider>

@@ -1,6 +1,5 @@
 'use client'
 
-import Decimal from 'decimal.js'
 import {
   type ComponentPropsWithRef,
   type FC,
@@ -97,9 +96,12 @@ export const FileViewer: FC<Props> = ({
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
-      // Decimal.jsのadd/subはnumberを直接受け取れるため、事前にDecimal化する必要はない
+      const step = latest.scaleStep ?? defaultScaleStep
+
+      // HINT: 小数を足し引きすると浮動小数点の誤差(0.6 - 0.2 = 0.39999999999999997 など)が出るため、
+      // 有効桁数で丸めて取り除く
       setScale((currentScale) =>
-        new Decimal(currentScale)[mode](latest.scaleStep ?? defaultScaleStep).toNumber(),
+        Number((mode === 'add' ? currentScale + step : currentScale - step).toPrecision(12)),
       )
     }
 
@@ -282,7 +284,7 @@ const ActualFileViewer: FC<
       <div className="shr-z-[0] shr-mx-auto shr-my-0 shr-box-border shr-flex shr-w-fit shr-flex-shrink-0 shr-grow shr-items-center shr-justify-center shr-px-2 shr-pb-2">
         {loading && (
           <div className="shr-pointer-events-none shr-fixed shr-inset-0 shr-flex shr-h-full shr-w-full shr-items-center shr-justify-center">
-            <Loader type="light" size="M" />
+            <Loader type="light" />
           </div>
         )}
         <div className={loading ? 'shr-invisible' : ''}>

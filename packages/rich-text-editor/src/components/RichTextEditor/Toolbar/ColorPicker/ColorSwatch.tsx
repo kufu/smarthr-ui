@@ -43,9 +43,9 @@ export const ColorSwatchFace: FC<FaceProps & Omit<ComponentPropsWithRef<'span'>,
     const isTextColor = appearance === 'color'
 
     const classNames = useMemo(() => {
-      const { face, letter } = faceClassNameGenerator({ size })
+      const { face, letter } = faceClassNameGenerator()
 
-      return { face: face({ className }), letter: letter() }
+      return { face: face({ size, className }), letter: letter({ size }) }
     }, [size, className])
 
     const style = useMemo(

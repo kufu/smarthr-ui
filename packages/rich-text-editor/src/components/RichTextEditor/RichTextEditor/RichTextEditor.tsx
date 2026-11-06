@@ -524,19 +524,13 @@ export const RichTextEditor = memo(
       const hasEditorHeight = contentStyle !== undefined
       const classNames = useMemo(() => {
         const { wrapper, toolbarWrapper, content, characterCountArea, resizeHandle } =
-          classNameGenerator({
-            disabled,
-            readOnly,
-            error: invalid,
-            resizable: isResizable,
-            hasEditorHeight,
-          })
+          classNameGenerator()
 
         return {
-          wrapper: wrapper({ className }),
-          toolbarWrapper: toolbarWrapper(),
-          content: content({ className: editorClassName }),
-          characterCountArea: characterCountArea(),
+          wrapper: wrapper({ disabled, readOnly, error: invalid, className }),
+          toolbarWrapper: toolbarWrapper({ disabled }),
+          content: content({ disabled, hasEditorHeight, className: editorClassName }),
+          characterCountArea: characterCountArea({ resizable: isResizable }),
           resizeHandle: resizeHandle(),
         }
       }, [disabled, readOnly, invalid, isResizable, hasEditorHeight, className, editorClassName])

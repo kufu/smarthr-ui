@@ -38,15 +38,8 @@
     "@rollup/plugin-replace",
     "@rollup/plugin-typescript",
     "@storybook/cli",
-    "@swc/core",
     "@testing-library/jest-dom",
-    "babel-plugin-polyfill-corejs2",
-    "babel-plugin-polyfill-regenerator",
-    "eslint-plugin-storybook",
-    "http-server",
     "playwright",
-    "postcss-styled-syntax",
-    "postcss-syntax",
     "rollup-plugin-preserve-directives",
     "rollup-plugin-rename-node-modules",
     "tslib",
@@ -56,7 +49,6 @@
     "tsc",
     "eslint",
     "prettier",
-    "stylelint",
     "knip"
   ],
 }

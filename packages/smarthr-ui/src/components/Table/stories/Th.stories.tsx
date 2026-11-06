@@ -115,7 +115,7 @@ export const Fixed: StoryObj<typeof Th> = {
   name: 'fixed',
   render: (args) => (
     <div className="shr-w-[50vw]">
-      <Table reel>
+      <Table>
         <thead>
           <tr>
             <Th {...args} fixed="left">

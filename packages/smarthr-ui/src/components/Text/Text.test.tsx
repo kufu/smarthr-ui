@@ -20,15 +20,15 @@ describe('Text', () => {
     })
 
     test('object 指定で tooltip が未指定の場合、Tooltip 関連の要素は追加されない', () => {
-      const { container } = render(<Text maxLines={{ max: 3 }}>テキスト</Text>)
+      const { container } = render(<Text maxLines={3}>テキスト</Text>)
 
       expect(container.querySelector('.smarthr-ui-Text-overflowTooltipWrapper')).toBeNull()
     })
 
     test('"maxLines.max" が範囲外の場合エラーになる', () => {
-      expect(() =>
-        render(<Text maxLines={{ max: 7 as 1 | 2 | 3 | 4 | 5 | 6 }}>テキスト</Text>),
-      ).toThrow('"maxLines" は 1 ~ 6 の範囲で指定してください')
+      expect(() => render(<Text maxLines={7 as 1 | 2 | 3 | 4 | 5 | 6}>テキスト</Text>)).toThrow(
+        '"maxLines" は 1 ~ 6 の範囲で指定してください',
+      )
     })
 
     describe('object指定でtooltipがtrueの場合', () => {

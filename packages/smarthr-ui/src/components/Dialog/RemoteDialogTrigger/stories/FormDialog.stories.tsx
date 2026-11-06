@@ -1,8 +1,7 @@
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
-import { FormDialog } from '../FormDialog'
-import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
+import { FormDialog, RemoteDialogTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

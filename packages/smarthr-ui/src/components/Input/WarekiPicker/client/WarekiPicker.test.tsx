@@ -22,7 +22,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChange={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
@@ -38,7 +38,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChange={vi.fn()} />
         </FormControl>
       </form>,
       'en-us',
@@ -55,7 +55,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChange={vi.fn()} />
         </FormControl>
       </form>,
     )
@@ -81,12 +81,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker
-            name="date"
-            value="2024-09-25"
-            showAlternative={false}
-            onChangeDate={vi.fn()}
-          />
+          <WarekiPicker name="date" value="2024-09-25" showAlternative={false} onChange={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
@@ -106,7 +101,7 @@ describe('WarekiPicker', () => {
             name="date"
             value="2024-09-25"
             showAlternative={(date) => (date ? `custom:${date.getFullYear()}` : null)}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
@@ -131,7 +126,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
@@ -166,7 +161,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
@@ -189,7 +184,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" onChange={vi.fn()} />
         </FormControl>
       </form>,
     )
@@ -262,7 +257,7 @@ describe('WarekiPicker', () => {
             name="date"
             value="2024-09-25"
             defaultValue="2020-01-01"
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
@@ -280,7 +275,7 @@ describe('WarekiPicker', () => {
             value={null}
             defaultValue="2020-01-01"
             showAlternative={(d) => (d ? `alt:${d.getFullYear()}` : null)}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
@@ -309,7 +304,7 @@ describe('WarekiPicker', () => {
           <WarekiPicker
             name="date"
             formatDate={(d) => (d ? d.toISOString() : '未選択')}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
@@ -322,12 +317,7 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker
-            name="date"
-            value="2024-09-25"
-            showAlternative={false}
-            onChangeDate={vi.fn()}
-          />
+          <WarekiPicker name="date" value="2024-09-25" showAlternative={false} onChange={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
@@ -347,7 +337,7 @@ describe('WarekiPicker', () => {
             name="date"
             value="2024-09-25"
             showAlternative={(date) => (date ? `custom:${date.getFullYear()}` : null)}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
@@ -372,7 +362,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
@@ -407,7 +397,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
