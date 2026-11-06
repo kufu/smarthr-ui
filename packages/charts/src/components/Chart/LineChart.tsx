@@ -3,19 +3,19 @@
 import { useId, useMemo, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import {
+  FaChartLineIcon,
   FaTableIcon,
   SegmentedControl,
-  VisuallyHiddenText,
   Text,
-  FaChartLineIcon,
+  VisuallyHiddenText,
 } from 'smarthr-ui'
 
 import { createLineChartOptions, registerChartComponents } from '../../config'
 import { getLineChartColors } from '../../helper'
-
-import type { Chart, ChartData, ChartOptions } from 'chart.js'
-import type { ChartViewType } from '../../helper'
 import { TableView } from '../internal/TableView/TableView'
+
+import type { ChartViewType } from '../../helper'
+import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -39,6 +39,7 @@ export const LineChart: React.FC<Props> = ({
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
+  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'line'>>(null)
   const chartColors = useMemo(
     () => getLineChartColors(data.datasets.length),
@@ -87,14 +88,16 @@ export const LineChart: React.FC<Props> = ({
     <div className="shr-flex shr-h-full shr-w-full shr-flex-col">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
-        <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
-          {title}
-        </Text>
+        {title && (
+          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+            {title}
+          </Text>
+        )}
         <SegmentedControl
-          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
-          size="S"
-          onClickOption={(value) => handleViewChange(value as ChartViewType)}
           value={view}
+          size="S"
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
+          onClickOption={(value) => handleViewChange(value as ChartViewType)}
           options={[
             {
               value: 'chart',
@@ -121,7 +124,11 @@ export const LineChart: React.FC<Props> = ({
             options={chartOptions}
           />
         ) : (
-          <TableView data={enhancedData} options={chartOptions} />
+          <TableView
+            data={enhancedData}
+            aria-labelledby={title ? titleId : undefined}
+            options={chartOptions}
+          />
         )}
       </div>
     </div>

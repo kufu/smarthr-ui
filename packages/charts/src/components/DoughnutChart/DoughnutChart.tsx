@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useRef, useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
-import { FaChartPieIcon, FaTableIcon, SegmentedControl, VisuallyHiddenText, Text } from 'smarthr-ui'
+import { FaChartPieIcon, FaTableIcon, SegmentedControl, Text, VisuallyHiddenText } from 'smarthr-ui'
 
 import { createDoughnutChartOptions, registerChartComponents } from '../../config'
 import {
@@ -13,10 +13,10 @@ import {
 } from '../../helper'
 import { doughnutSegmentDividerPlugin } from '../../plugins'
 import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
-
-import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
-import type { ChartViewType } from '../../helper'
 import { TableView } from '../internal/TableView/TableView'
+
+import type { ChartViewType } from '../../helper'
+import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
@@ -51,6 +51,7 @@ export const DoughnutChart: React.FC<Props> = ({
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
+  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
   const chartColors = useMemo(
@@ -115,23 +116,23 @@ export const DoughnutChart: React.FC<Props> = ({
 
   const handleViewChange = (value: ChartViewType) => {
     setView(value)
-    if (onChangeView) {
-      onChangeView(value)
-    }
+    onChangeView?.(value)
   }
 
   return (
     <div className={`shr-flex shr-h-full shr-w-full shr-flex-col ${className ?? ''}`}>
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
-        <Text as="label" styleType="blockTitle" className="shr-col-start-2 shr-self-center">
-          {title}
-        </Text>
+        {title && (
+          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+            {title}
+          </Text>
+        )}
         <SegmentedControl
-          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
-          size="S"
-          onClickOption={(value) => handleViewChange(value as ChartViewType)}
           value={view}
+          size="S"
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
+          onClickOption={(value) => handleViewChange(value as ChartViewType)}
           options={[
             {
               value: 'chart',
@@ -164,7 +165,11 @@ export const DoughnutChart: React.FC<Props> = ({
             <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
           </>
         ) : (
-          <TableView data={enhancedData} options={chartOptions} />
+          <TableView
+            data={enhancedData}
+            aria-labelledby={title ? titleId : undefined}
+            options={chartOptions}
+          />
         )}
       </div>
     </div>
