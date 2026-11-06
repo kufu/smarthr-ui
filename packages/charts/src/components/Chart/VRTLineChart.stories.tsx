@@ -60,6 +60,11 @@ export default {
       <div className="shr-h-[400px]">
         <LineChart data={manyPoints} title="多データポイント" />
       </div>
+
+      {/* パターン9: テーブル表示（defaultView='table'） */}
+      <div className="shr-h-[400px]">
+        <LineChart data={multiSmall} title="テーブル表示" defaultView="table" />
+      </div>
     </Stack>
   ),
   parameters: {

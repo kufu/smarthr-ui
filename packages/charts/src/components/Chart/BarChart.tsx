@@ -1,13 +1,21 @@
 'use client'
 
-import { useId, useMemo, useRef } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
-import { VisuallyHiddenText } from 'smarthr-ui'
+import {
+  FaChartBarIcon,
+  FaChartColumnIcon,
+  FaTableIcon,
+  SegmentedControl,
+  Text,
+  VisuallyHiddenText,
+} from 'smarthr-ui'
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
+import { TableView } from '../internal/TableView/TableView'
 
-import type { SingleToneLevel } from '../../helper'
+import type { ChartViewType, SingleToneLevel } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
@@ -47,7 +55,13 @@ type Props = {
   options?: Partial<ChartOptions<'bar'>>
   stacked?: boolean
   orientation?: 'horizontal' | 'vertical'
+  onChangeView?: (value: ChartViewType) => void
+  defaultView?: ChartViewType
 } & BarChartColorProps
+
+// stackが複数ある積み上げは、カテゴリごとに内訳をまとめた表にする
+const isGroupedStacks = (data: ChartData<'bar'>, stacked?: boolean) =>
+  !!stacked && new Set(data.datasets.map((dataset) => dataset.stack)).size > 1
 
 export const BarChart: React.FC<Props> = ({
   data,
@@ -57,8 +71,12 @@ export const BarChart: React.FC<Props> = ({
   singleTone,
   orientation = 'vertical',
   stacked,
+  onChangeView,
+  defaultView = 'chart',
 }) => {
+  const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
+  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
@@ -95,9 +113,13 @@ export const BarChart: React.FC<Props> = ({
     [data, chartColors, stacked],
   )
 
+  const grouped = isGroupedStacks(data, stacked)
+
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
+        // 値のない位置に棒の場所を取らないようにする
+        ...(grouped ? { skipNull: true } : {}),
         ...externalOptions,
         ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
         scales: {
@@ -111,14 +133,7 @@ export const BarChart: React.FC<Props> = ({
         },
         plugins: {
           ...externalOptions?.plugins,
-          title: title
-            ? {
-                display: true,
-                text: title,
-              }
-            : {
-                display: false,
-              },
+          title: { display: false },
           keyboardNavigation: {
             liveRegionId: chartId,
             stacked,
@@ -126,20 +141,62 @@ export const BarChart: React.FC<Props> = ({
           },
         },
       }),
-    [title, chartId, externalOptions, orientation, stacked],
+    [chartId, externalOptions, grouped, orientation, stacked],
   )
 
+  const handleViewChange = (value: ChartViewType) => {
+    setView(value)
+    onChangeView?.(value)
+  }
+
   return (
-    <div className="shr-relative shr-h-full shr-w-full">
+    <div className="shr-flex shr-h-full shr-w-full shr-flex-col">
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
-      <Bar
-        ref={chartRef}
-        role="application"
-        data={enhancedData}
-        tabIndex={0}
-        aria-label={ariaLabel}
-        options={chartOptions}
-      />
+      <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
+        {title && (
+          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+            {title}
+          </Text>
+        )}
+        <SegmentedControl
+          value={view}
+          size="S"
+          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
+          onClickOption={(value) => handleViewChange(value as ChartViewType)}
+          options={[
+            {
+              value: 'chart',
+              content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
+              ariaLabel: 'グラフ',
+            },
+            {
+              value: 'table',
+              content: <FaTableIcon />,
+              ariaLabel: 'テーブル',
+            },
+          ]}
+        />
+      </div>
+      <div className="shr-relative shr-min-h-0 shr-flex-1">
+        {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
+        {view === 'chart' ? (
+          <Bar
+            ref={chartRef}
+            role="application"
+            data={enhancedData}
+            tabIndex={0}
+            aria-label={ariaLabel}
+            options={chartOptions}
+          />
+        ) : (
+          <TableView
+            data={enhancedData}
+            grouped={grouped}
+            aria-labelledby={title ? titleId : undefined}
+            options={chartOptions}
+          />
+        )}
+      </div>
     </div>
   )
 }

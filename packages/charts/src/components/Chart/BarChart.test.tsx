@@ -1,7 +1,9 @@
 import { renderToStaticMarkup } from 'react-dom/server'
+import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SINGLE_CHART_COLORS } from '../../helper'
+import { testViewToggle } from '../internal/testing/testViewToggle'
 
 import { BarChart } from './BarChart'
 
@@ -35,7 +37,11 @@ const defaultProps = {
 
 const render = (props: Partial<React.ComponentProps<typeof BarChart>> = {}) => {
   renderedData = undefined
-  renderToStaticMarkup(<BarChart {...defaultProps} {...props} />)
+  renderToStaticMarkup(
+    <IntlProvider locale="ja">
+      <BarChart {...defaultProps} {...props} />
+    </IntlProvider>,
+  )
 
   return renderedData!.datasets as Array<ChartDataset<'bar'> & { borderColor: string }>
 }
@@ -70,5 +76,58 @@ describe('BarChart', () => {
     expect(datasets.map((dataset) => [dataset.label, dataset.borderColor])).toStrictEqual([
       ['現在', SINGLE_CHART_COLORS[5]],
     ])
+  })
+
+  describe('テーブル表示', () => {
+    const stackedGroupsData = {
+      labels: ['項目A', '項目B'],
+      datasets: [
+        { label: '項目Aの内訳1', stack: '項目A', data: [12, null] },
+        { label: '項目Aの内訳2', stack: '項目A', data: [19, null] },
+        { label: '項目Bの内訳1', stack: '項目B', data: [null, 8] },
+      ],
+    }
+
+    const isGroupedTable = (props: Partial<React.ComponentProps<typeof BarChart>>) => {
+      document.body.innerHTML = renderToStaticMarkup(
+        <IntlProvider locale="ja">
+          <BarChart {...defaultProps} {...props} defaultView="table" />
+        </IntlProvider>,
+      )
+      return document.querySelector('th[scope="rowgroup"]') !== null
+    }
+
+    it('stackを指定した積み上げは、グループ形式になる', () => {
+      expect(isGroupedTable({ data: stackedGroupsData, stacked: true })).toBe(true)
+    })
+
+    it('積み上げでなければ従来の形式になる', () => {
+      expect(isGroupedTable({ data: stackedGroupsData })).toBe(false)
+    })
+
+    it('全datasetが同じstackの積み上げは従来の形式になる', () => {
+      expect(
+        isGroupedTable({
+          data: {
+            labels: ['項目A', '項目B'],
+            datasets: stackedGroupsData.datasets.map((dataset) => ({ ...dataset, stack: '共通' })),
+          },
+          stacked: true,
+        }),
+      ).toBe(false)
+    })
+
+    testViewToggle((onChangeView) => <BarChart {...defaultProps} onChangeView={onChangeView} />)
+
+    it('titleがあるとき、tableのアクセシブルネームとして関連付ける', () => {
+      document.body.innerHTML = renderToStaticMarkup(
+        <IntlProvider locale="ja">
+          <BarChart {...defaultProps} defaultView="table" title="グラフのタイトル" />
+        </IntlProvider>,
+      )
+      const labelId = document.querySelector('table')!.getAttribute('aria-labelledby')!
+
+      expect(document.getElementById(labelId)?.textContent).toBe('グラフのタイトル')
+    })
   })
 })
