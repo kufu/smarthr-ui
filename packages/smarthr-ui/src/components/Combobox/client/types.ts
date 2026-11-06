@@ -77,6 +77,11 @@ export type BaseProps<T> = {
    */
   creatable?: boolean
   /**
+   * `true` のとき、`inputValue` による絞り込みを無効化する。
+   * サーバーサイド検索と組み合わせるなど、`items` が既に絞り込み済みの場合に指定する
+   */
+  disableFiltering?: boolean
+  /**
    * input 要素の `placeholder` 属性の値
    */
   placeholder?: string
