@@ -1,8 +1,7 @@
 'use client'
 
+import { useRemoteTrigger } from '../../../../hooks/client/useRemoteTrigger'
 import { ControlledFormDialog } from '../../ControlledFormDialog'
-
-import { useRemoteTrigger } from './useRemoteTrigger'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { FC } from 'react'

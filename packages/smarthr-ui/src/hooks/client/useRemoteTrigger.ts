@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
-import { useLatest } from '../../../../hooks/useLatest'
+import { useLatest } from '../useLatest'
+
+import { useAnimationFrame } from './useAnimationFrame'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
 
