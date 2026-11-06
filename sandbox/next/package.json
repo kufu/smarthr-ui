@@ -17,7 +17,7 @@
   "devDependencies": {
     "@playwright/test": "1.55.1",
     "@types/node": "20.19.43",
-    "@types/react": "18.3.31",
+    "@types/react": "19.3.0",
     "@types/react-dom": "19.2.7",
     "postcss": "8.5.28",
     "tailwindcss": "3.4.19",

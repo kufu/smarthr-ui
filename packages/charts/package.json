@@ -65,7 +65,7 @@
     "@storybook/react": "10.6.2",
     "@storybook/react-vite": "10.6.2",
     "@types/node": "^20.19.43",
-    "@types/react": "^18.3.31",
+    "@types/react": "^19.3.0",
     "@types/react-dom": "^19.2.7",
     "autoprefixer": "^10.4.27",
     "glob": "14.0.2",
