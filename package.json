@@ -6,7 +6,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
-    "eslint": "^9.39.5",
+    "eslint": "^10.13.0",
     "eslint-config-smarthr": "^14.14.0",
     "eslint-plugin-perfectionist": "^5.10.1",
     "eslint-plugin-storybook": "^10.5.10",
