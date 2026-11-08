@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
-import { FaCaretDownIcon, FaEllipsisIcon } from '../../../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, FaEllipsisIcon } from '../../../Icon'
 import { Dropdown, DropdownContext } from '../Dropdown'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownTrigger } from '../DropdownTrigger'
@@ -108,8 +108,7 @@ const triggerObjectConverter = (trigger: ReactNode) => ({
 const classNameGenerator = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
-    triggerButton:
-      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
+    triggerButton: 'smarthr-ui-DropdownMenuButton-trigger',
     actionList: [
       'smarthr-ui-DropdownMenuButton-panel',
       'shr-list-none shr-py-0.5',
@@ -257,23 +256,27 @@ const MemoizedTriggerButton = memo<MemoizedTriggerButtonProps>(
           size={triggerSize}
           className={classNames.triggerButton}
           suffix={
-            !onlyIconTrigger && (
-              <FaCaretDownIcon
+            !onlyIconTrigger &&
+            // HINT: 開閉の状態をアイコンの向きで示す。アイコンを回転させるのではなく入れ替える
+            (active ? (
+              <FaCaretUpIcon
                 alt={
-                  active ? (
-                    <Localizer
-                      id="smarthr-ui/DropdownMenuButton/triggerActive"
-                      defaultText="候補を閉じる"
-                    />
-                  ) : (
-                    <Localizer
-                      id="smarthr-ui/DropdownMenuButton/triggerInactive"
-                      defaultText="候補を開く"
-                    />
-                  )
+                  <Localizer
+                    id="smarthr-ui/DropdownMenuButton/triggerActive"
+                    defaultText="候補を閉じる"
+                  />
                 }
               />
-            )
+            ) : (
+              <FaCaretDownIcon
+                alt={
+                  <Localizer
+                    id="smarthr-ui/DropdownMenuButton/triggerInactive"
+                    defaultText="候補を開く"
+                  />
+                }
+              />
+            ))
           }
         >
           <TriggerLabelText onlyIconTrigger={onlyIconTrigger}>{children}</TriggerLabelText>
