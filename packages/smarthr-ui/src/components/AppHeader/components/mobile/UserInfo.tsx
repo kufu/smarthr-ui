@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type FC, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
