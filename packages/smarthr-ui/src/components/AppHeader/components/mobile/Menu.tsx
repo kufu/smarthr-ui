@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client-directory
+
 import {
   type FC,
   type PropsWithChildren,
