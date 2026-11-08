@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client' // eslint-disable-line local-rules/require-client
 
 import { type Dispatch, type SetStateAction, createContext } from 'react'
 
