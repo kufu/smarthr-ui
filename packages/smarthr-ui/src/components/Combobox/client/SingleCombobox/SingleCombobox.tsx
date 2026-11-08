@@ -108,7 +108,7 @@ const classNameGenerator = tv({
 })
 
 type SuffixButtonsProps = {
-  clearButtonRef: RefObject<HTMLButtonElement>
+  clearButtonRef: RefObject<HTMLButtonElement | null>
   caretIconColor: string
   handleClickClear: (e: MouseEvent) => void
   handleClickIcon: (e: MouseEvent) => void
