@@ -1,8 +1,8 @@
 // HINT: package.jsonのexportsが明示的なサブパスのみで "./lib/*" のようなワイルドカードを
 // 持たないため、knipはpackage.jsonのexportsマッピング先（src/index.ts、src/types/index.ts、
-// src/smarthr-ui-preset.ts、src/components/Experimental/index.ts、src/hooks/client/useSV/index.ts）
-// を自動的にentryとして認識する。project設定でsrc全体を解析対象に含めることで、
-// entryからreachableでない本当に未使用なfile/exportも検知できる。
+// src/smarthr-ui-preset.ts、src/components/Experimental/index.ts）を自動的にentryとして
+// 認識する。project設定でsrc全体を解析対象に含めることで、entryからreachableでない
+// 本当に未使用なfile/exportも検知できる。
 //
 // includeEntryExportsを有効にしているため、内部から一度も参照されないexport（＝公開専用のAPI）も
 // 報告される。それらは定義元やsrc/index.ts側に /** @public */ を付けて除外する。
@@ -22,6 +22,11 @@
   },
   "entry": ["scripts/**/*.ts"],
   "project": ["src/**/*.{ts,tsx}"],
+  "ignore": [
+    // HINT: @betaの開発中機能で外部に公開していないため、knipは未使用ファイルとして検知する。
+    // 実装が固まり正式公開するタイミングでpackage.jsonのexportsに追加し、この行を削除する
+    "src/hooks/client/useSV/**",
+  ],
   "includeEntryExports": true,
   "tags": ["-public"],
   "ignoreDependencies": [

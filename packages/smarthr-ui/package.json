@@ -110,11 +110,6 @@
       "import": "./lib/components/Experimental/index.js",
       "require": "./lib/components/Experimental/index.cjs"
     },
-    "./lib/hooks/client/useSV": {
-      "types": "./lib/hooks/client/useSV/index.d.ts",
-      "import": "./lib/hooks/client/useSV/index.js",
-      "require": "./lib/hooks/client/useSV/index.cjs"
-    },
     "./smarthr-ui.css": "./smarthr-ui.css",
     "./package.json": "./package.json",
     "./metadata.json": "./metadata.json"
