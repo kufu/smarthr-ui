@@ -22,17 +22,8 @@ type CustomImageOptions = ImageOptions & {
 }
 
 /**
- * `@tiptap/extension-image` の標準 NodeView は、`updateAttributes` で alt や
- * width/height を変更しても ProseMirror モデルは更新されるものの、画面上の
- * `<img>` 要素へ反映しない（onUpdate が DOM を同期せず true を返すだけ）。
- * これは upstream issue #7240 / 未マージ PR #7568 と同じ問題。
- *
- * ここでは標準の resizable NodeView を再現しつつ、onUpdate で属性を `<img>` へ
- * 同期するよう修正する。さらに公式 PR でも未対応の width/height（style）まで
- * 同期し、ポップオーバーによるサイズ変更もライブで反映されるようにする。
- *
- * onResize / onCommit / options は標準実装と同一。読み込み完了まで隠す挙動も踏襲するが、
- * 標準に無い onerror を足して失敗時に操作できる状態へ戻す。
+ * `@tiptap/extension-image` の標準 NodeView を使わないのは、onUpdate で width/height を
+ * `<img>` へ反映せず、ポップオーバーでのサイズ変更が画面に出ないため。
  */
 export const CustomImage = SafeImage.extend<CustomImageOptions>({
   addOptions() {
@@ -81,7 +72,7 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         delete el.dataset.imageError
       }
 
-      // src を要素へ同期する（空文字/未設定なら属性自体を外す）。公式 PR #7568 準拠。
+      // src を要素へ同期する（空文字/未設定なら属性自体を外す）。
       const syncImageSource = (src: unknown) => {
         if (typeof src === 'string' && src !== '') {
           if (el.getAttribute('src') !== src) {
@@ -177,8 +168,8 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         syncImageSource(newHTMLAttributes.src)
         if (!el.hasAttribute('src')) handleError()
 
-        // 公式 PR でも未対応の width/height を同期し、ポップオーバーでの
-        // サイズ変更（updateAttributes に width/height 数値）をライブ反映する。
+        // 標準は width/height を同期しないため、ポップオーバーでの
+        // サイズ変更（updateAttributes に width/height 数値）をここで反映する。
         sizeAttributes = { width: updatedNode.attrs.width, height: updatedNode.attrs.height }
         applyDisplaySize()
         applyMediaAlign(nodeView.dom, IMAGE_ALIGN_STYLES, updatedNode.attrs.align)
@@ -246,9 +237,8 @@ export const CustomImage = SafeImage.extend<CustomImageOptions>({
         revealImage()
       }
 
-      // 標準実装は onload しか見ていないため、404・期限切れの署名URL・ネットワーク障害で
-      // 読み込みに失敗すると永久に不可視かつ pointer-events: none のまま残り、
-      // マウスでの選択も削除もできなくなる。失敗しても操作できる状態へ戻す。
+      // 標準実装も読み込みに失敗したら表示へ戻すだけなので、404・期限切れの署名URL・
+      // ネットワーク障害で壊れた画像は小さく目印も無く、選んだり削除したりしにくい。
       // 目印は属性で付け、見た目（枠線と最小サイズ）は styles.ts のCSSに寄せる。
       // alt テキストは <img> のまま残すので、読み上げ内容は成功時と変わらない。
       const handleError = () => {
