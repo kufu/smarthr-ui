@@ -4,7 +4,7 @@ import { keyboardNavigationPlugin } from './keyboardNavigationPlugin'
 
 import type { Chart } from 'chart.js'
 
-const setup = (options: { stacked?: boolean; horizontal?: boolean }) => {
+const setup = (options: { stacked?: boolean; horizontal?: boolean; skipZero?: boolean }) => {
   const canvas = document.createElement('canvas')
   canvas.tabIndex = 0
   document.body.appendChild(canvas)
@@ -18,6 +18,7 @@ const setup = (options: { stacked?: boolean; horizontal?: boolean }) => {
         { label: '項目Aの内訳1', data: [12, null] },
         { label: '項目Bの内訳1', data: [null, 8] },
         { label: '項目Aの内訳2', data: [19, null] },
+        { label: '項目Bの内訳2', data: [null, 0] },
       ],
     },
     getActiveElements: () => active,
@@ -58,5 +59,13 @@ describe('keyboardNavigationPlugin', () => {
     expect(press('ArrowDown')).toEqual({ datasetIndex: 0, index: 0 })
     expect(press('ArrowDown')).toEqual({ datasetIndex: 2, index: 0 })
     expect(press('ArrowDown')).toEqual({ datasetIndex: 1, index: 1 })
+  })
+
+  it('skipZeroを指定すると、値が0の位置も飛ばす', () => {
+    const press = setup({ stacked: true, horizontal: true, skipZero: true })
+
+    press('ArrowDown')
+    press('ArrowDown')
+    expect(press('ArrowRight')).toEqual({ datasetIndex: 1, index: 1 })
   })
 })

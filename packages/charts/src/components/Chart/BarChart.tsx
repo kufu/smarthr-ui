@@ -138,6 +138,7 @@ export const BarChart: React.FC<Props> = ({
             liveRegionId: chartId,
             stacked,
             horizontal: orientation === 'horizontal',
+            skipZero: true,
           },
         },
       }),
@@ -178,7 +179,6 @@ export const BarChart: React.FC<Props> = ({
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">
-        {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
         {view === 'chart' ? (
           <Bar
             ref={chartRef}

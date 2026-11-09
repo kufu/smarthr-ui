@@ -94,6 +94,7 @@ export const DoughnutChart: React.FC<Props> = ({
           title: { display: false },
           keyboardNavigation: {
             liveRegionId: chartId,
+            skipZero: true,
           },
           doughnutSegmentDivider: {
             // チャートは Base（WHITE）の上に置かれる前提。BACKGROUND は Base の背後に
@@ -103,7 +104,7 @@ export const DoughnutChart: React.FC<Props> = ({
           },
         },
       }) as ChartOptions<'doughnut'>,
-    [title, thickness, chartId, externalOptions],
+    [thickness, chartId, externalOptions],
   )
 
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を

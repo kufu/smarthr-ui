@@ -4,6 +4,8 @@ export type KeyboardNavigationOptions = {
   liveRegionId?: string
   stacked?: boolean
   horizontal?: boolean
+  // 0が表示されないグラフ（棒・ドーナツ）で、0の位置に移動しないようにする
+  skipZero?: boolean
 }
 
 type ChartWithKeyboardHandler = {
@@ -16,6 +18,7 @@ export const keyboardNavigationPlugin = {
     liveRegionId: undefined,
     stacked: false,
     horizontal: false,
+    skipZero: false,
   },
   afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
@@ -44,11 +47,11 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
-      // 値がnullの位置は棒がないので移動先にしない
+      // 表示されない位置は移動先にしない
       const hasValue = (datasetIndex: number, dataIndex: number) => {
         // 未フォーカス(-1)は先頭として扱う
         const value = datasets[Math.max(datasetIndex, 0)]?.data[Math.max(dataIndex, 0)]
-        return value !== null && value !== undefined
+        return value !== null && value !== undefined && !(options.skipZero && value === 0)
       }
 
       // 端を越えたら反対側に回り込む
