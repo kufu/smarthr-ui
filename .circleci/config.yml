@@ -13,6 +13,12 @@ executors:
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
+  node-26:
+    docker:
+      - image: cimg/node:26.13.0
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts-browsers:
     docker:
       - image: cimg/node:24.22.1-browsers
@@ -108,6 +114,13 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
+  node-26:
+    executor: node-26
+    resource_class: medium
+    steps:
+      - setup-for-test
+      - check-source
+      - run-npm-test
   # e2e-test:
   #   executor: node-active-lts-browsers
   #   working_directory: ~/repo
@@ -139,6 +152,8 @@ workflows:
       - node-maintenance:
           context: smarthr-dockerhub
       - node-active-lts:
+          context: smarthr-dockerhub
+      - node-26:
           context: smarthr-dockerhub
       # - e2e-test:
       #     context: smarthr-dockerhub
