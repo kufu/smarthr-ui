@@ -28,7 +28,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
@@ -44,7 +44,7 @@ describe('WarekiPicker', () => {
       'en-us',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     const warekiText = screen.getByText('September 25, 6 Reiwa')
@@ -59,7 +59,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     // カレンダーを開く
     act(() => textbox.click())
@@ -87,7 +87,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
@@ -108,7 +108,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('custom:2024')).toBeTruthy()
@@ -138,13 +138,13 @@ describe('WarekiPicker', () => {
 
     renderWithIntl(<Wrapper />)
 
-    const textboxBefore = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxBefore = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
 
     act(() => screen.getByRole('button', { name: 'toggle' }).click())
 
-    const textboxAfter = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxAfter = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(textboxAfter).toBe(textboxBefore)
     expect(textboxAfter).toHaveProperty('value', '2024/09/25')
@@ -188,7 +188,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
   })
@@ -201,7 +201,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '2024/09/25')
   })
 
@@ -213,7 +213,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     act(() => textbox.click())
 
@@ -228,7 +228,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     await userEvent.clear(textbox)
     await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
@@ -262,7 +262,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '2024/09/25')
   })
 
@@ -280,7 +280,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '')
     expect(screen.queryByText('alt:2020')).not.toBeInTheDocument()
   })
@@ -293,7 +293,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', 'invalid-date-string')
   })
 
@@ -309,7 +309,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '')
   })
 
@@ -323,7 +323,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
@@ -344,7 +344,7 @@ describe('WarekiPicker', () => {
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('custom:2024')).toBeTruthy()
@@ -374,13 +374,13 @@ describe('WarekiPicker', () => {
 
     renderWithIntl(<Wrapper />)
 
-    const textboxBefore = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxBefore = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
 
     act(() => screen.getByRole('button', { name: 'toggle' }).click())
 
-    const textboxAfter = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxAfter = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(textboxAfter).toBe(textboxBefore)
     expect(textboxAfter).toHaveProperty('value', '2024/09/25')

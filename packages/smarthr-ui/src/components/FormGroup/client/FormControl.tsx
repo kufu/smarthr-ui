@@ -77,15 +77,16 @@ export const FormControl: FC<Props> = ({ label: orgLabel, className, ...rest }) 
         }
       }
 
-      if (input instanceof HTMLInputElement && input.type === 'file') {
+      if (input instanceof HTMLInputElement) {
         const inputLabelledByIds = input.getAttribute('aria-labelledby')
 
+        // HINT: aria-labelledbyを明示的に設定しているinput(InputFile、prefix/suffix付きInput等)は、
+        // それを設定した時点でlabel要素のfor紐付けによる自動読み上げが失われるため、label要素の可視ラベルをアクセシブルネームに合流させる
         if (inputLabelledByIds) {
           const tokens = inputLabelledByIds.split(' ')
           // HINT: 自分が過去に追加したid以外（=外部由来のid）だけを残す
           const externalTokens = tokens.filter((token) => token !== managedRef.current.labelId)
-          // InputFileの場合はlabel要素の可視ラベルをアクセシブルネームに含める
-          const nextTokens = label.id ? [...externalTokens, label.id] : externalTokens
+          const nextTokens = label.id ? [label.id, ...externalTokens] : externalTokens
           const nextValue = nextTokens.join(' ')
 
           if (nextValue !== inputLabelledByIds) {
