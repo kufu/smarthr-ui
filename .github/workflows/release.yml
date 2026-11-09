@@ -77,6 +77,6 @@ jobs:
 
       - name: Publish rich-text-editor
         if: ${{ needs.release_please.outputs.rich_text_editor_released == 'true' }}
-        run: pnpm --filter @smarthr/smarthr-ui-rich-text-editor publish --no-git-checks --access public --provenance
+        run: pnpm --filter @smarthr-ui/rich-text-editor publish --no-git-checks --access public --provenance
         env:
           NPM_CONFIG_PROVENANCE: true

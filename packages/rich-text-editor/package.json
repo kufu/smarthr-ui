@@ -1,5 +1,5 @@
 {
-  "name": "@smarthr/smarthr-ui-rich-text-editor",
+  "name": "@smarthr-ui/rich-text-editor",
   "description": "Rich text editor components for SmartHR UI built with React and Tiptap.",
   "version": "0.1.0",
   "author": "SmartHR-UI Team",

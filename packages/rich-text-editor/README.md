@@ -1,4 +1,4 @@
-# @smarthr/smarthr-ui-rich-text-editor
+# @smarthr-ui/rich-text-editor
 
 SmartHR UI のリッチテキストエディタ。[Tiptap](https://tiptap.dev/) をベースにしています。
 
@@ -9,7 +9,7 @@ SmartHR UI のリッチテキストエディタ。[Tiptap](https://tiptap.dev/) 
 ## インストール
 
 ```sh
-pnpm add @smarthr/smarthr-ui-rich-text-editor
+pnpm add @smarthr-ui/rich-text-editor
 ```
 
 `smarthr-ui` / `react` / `react-dom` / `react-intl` は peerDependencies です。利用アプリ側で入れてください。React は 19 系のみ対応します。
@@ -20,9 +20,9 @@ pnpm add @smarthr/smarthr-ui-rich-text-editor
 
 ```tsx
 import 'smarthr-ui/smarthr-ui.css'
-import '@smarthr/smarthr-ui-rich-text-editor/styles.css'
+import '@smarthr-ui/rich-text-editor/styles.css'
 
-import { RichTextEditor, RichTextViewer } from '@smarthr/smarthr-ui-rich-text-editor'
+import { RichTextEditor, RichTextViewer } from '@smarthr-ui/rich-text-editor'
 ```
 
 ### CSS の読み込み順
@@ -41,7 +41,7 @@ import { RichTextEditor, RichTextViewer } from '@smarthr/smarthr-ui-rich-text-ed
 
 ```tsx
 import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
-import { RichTextEditor } from '@smarthr/smarthr-ui-rich-text-editor'
+import { RichTextEditor } from '@smarthr-ui/rich-text-editor'
 
 const App = () => (
   <IntlProvider locale="ja">
