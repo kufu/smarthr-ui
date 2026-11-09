@@ -5,11 +5,10 @@ import { SafeTable } from './SafeTable'
 import { TABLE_SHORTCUTS } from './tableShortcuts'
 
 import type { TableScope } from './tableTarget'
-import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 class CustomTableView extends TableView {
-  constructor(node: ProseMirrorNode, cellMinWidth: number) {
-    super(node, cellMinWidth)
+  constructor(...rest: ConstructorParameters<typeof TableView>) {
+    super(...rest)
     // Chrome の focusable scrollable region 対策: Tab で wrapper にフォーカスが奪われないようにする
     this.dom.setAttribute('tabindex', '-1')
   }
@@ -53,7 +52,7 @@ export const CustomTable = SafeTable.extend<CustomTableOptions>({
 
   // 丸ごと外さないのは、features に table が無くても読み込んだ表は編集でき、セル数の崩れを直す fixTables まで消えるため。
   // 標準の columnResizing を使わないのは、作成時に編集できないと入らず、後から列幅を変えられないため。
-  // View を渡さないのは、表の NodeView を addNodeView だけで決めるため
+  // View を渡さないのは、表の NodeView を標準の addNodeView（options.View の CustomTableView）だけで決めるため
   addProseMirrorPlugins() {
     const plugins = (this.parent?.() ?? []).filter(
       (plugin) => plugin.spec.key !== columnResizingPluginKey,
@@ -71,12 +70,6 @@ export const CustomTable = SafeTable.extend<CustomTableOptions>({
       }),
       ...plugins,
     ]
-  },
-
-  // 標準のように列幅を変えられるときだけ columnResizing に任せないのは、features の table を
-  // 付け外しするたびに表の NodeView が入れ替わり、文書全体を描き直すため
-  addNodeView() {
-    return ({ node }) => new CustomTableView(node, this.options.cellMinWidth)
   },
 
   addStorage() {

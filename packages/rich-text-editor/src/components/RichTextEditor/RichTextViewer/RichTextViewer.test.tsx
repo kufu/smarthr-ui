@@ -116,6 +116,40 @@ describe('RichTextViewer', () => {
     )
   })
 
+  it.each(Object.keys(getRichTextSchema().marks))(
+    '改行に付いたマーク（%s）は、改行を包まず前後の文字だけを包む',
+    (name) => {
+      const mark =
+        name === 'link' ? { type: name, attrs: { href: 'https://example.com' } } : { type: name }
+
+      const { container } = render(
+        <RichTextViewer
+          content={{
+            type: 'doc',
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  { type: 'text', text: '前', marks: [mark] },
+                  { type: 'hardBreak', marks: [mark] },
+                  { type: 'text', text: '後', marks: [mark] },
+                ],
+              },
+            ],
+          }}
+        />,
+      )
+
+      const children = Array.from(container.querySelector('p')?.children ?? [])
+
+      expect(children.map((el) => (el.tagName === 'BR' ? 'BR' : el.textContent))).toEqual([
+        '前',
+        'BR',
+        '後',
+      ])
+    },
+  )
+
   it('すべての要素を、HTML 出力と同じ構造・同じ属性で描画する', () => {
     const text = (value: string, marks?: JSONContent['marks']): JSONContent => ({
       type: 'text',
