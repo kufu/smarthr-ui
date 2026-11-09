@@ -51,26 +51,33 @@ export const keyboardNavigationPlugin = {
         return value !== null && value !== undefined
       }
 
-      const stepData = (delta: number) => {
-        nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength
-      }
-      const stepDataset = (delta: number) => {
-        nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length
-      }
-      // 全部nullでも止まるようにmaxStepsで打ち切る
-      const stepUntilValue = (step: () => void, maxSteps: number) => {
-        for (let i = 0; i < maxSteps; i++) {
-          step()
+      // 端を越えたら反対側に回り込む
+      const wrapIndex = (index: number, length: number) => ((index % length) + length) % length
 
-          if (hasValue(nextDatasetIndex, nextDataIndex)) {
-            return
+      // currentからdelta方向に一周して、条件に合う最初の位置を返す
+      const findNext = (
+        current: number,
+        delta: number,
+        length: number,
+        isTarget: (index: number) => boolean,
+      ) => {
+        for (let step = 1; step <= length; step++) {
+          const index = wrapIndex(current + delta * step, length)
+
+          if (isTarget(index)) {
+            return index
           }
         }
+
+        return current
       }
+
+      // 未フォーカス(-1)から戻る方向に動くときも末尾に着くよう、0から数える
+      const startIndex = (index: number, delta: number) => (index === -1 && delta < 0 ? 0 : index)
 
       const moveData = (delta: number) => {
         event.preventDefault()
-        stepData(delta)
+        nextDataIndex = wrapIndex(startIndex(nextDataIndex, delta) + delta, dataLength)
 
         // 移動先に値がなければ、値を持つ最初のデータセットにする
         if (!hasValue(nextDatasetIndex, nextDataIndex)) {
@@ -83,27 +90,33 @@ export const keyboardNavigationPlugin = {
       }
       const moveDataset = (delta: number) => {
         event.preventDefault()
-        stepUntilValue(() => stepDataset(delta), datasets.length)
+        nextDatasetIndex = findNext(
+          startIndex(nextDatasetIndex, delta),
+          delta,
+          datasets.length,
+          (index) => hasValue(index, nextDataIndex),
+        )
       }
       const reset = () => {
         nextDatasetIndex = -1
         nextDataIndex = -1
       }
 
+      // 全ての棒をカテゴリ順・データセット順に一列に並べて移動する
       const compoundMoveDataAndDataset = (delta: number) => {
         event.preventDefault()
-        stepUntilValue(() => {
-          // データとデータセットの境界に到達したかどうかを判定
-          const atBoundary =
-            delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
+        const datasetCount = datasets.length
+        const currentPosition =
+          nextDataIndex === -1 ? -1 : nextDataIndex * datasetCount + nextDatasetIndex
+        const nextPosition = findNext(
+          startIndex(currentPosition, delta),
+          delta,
+          datasetCount * dataLength,
+          (position) => hasValue(position % datasetCount, Math.floor(position / datasetCount)),
+        )
 
-          if (atBoundary) {
-            stepData(delta)
-            nextDatasetIndex = delta > 0 ? 0 : datasets.length - 1
-          } else {
-            stepDataset(delta)
-          }
-        }, datasets.length * dataLength)
+        nextDataIndex = Math.floor(nextPosition / datasetCount)
+        nextDatasetIndex = nextPosition % datasetCount
       }
 
       const defaultBindings: Record<string, () => void> = {
