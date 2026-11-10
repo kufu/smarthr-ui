@@ -71,6 +71,7 @@ export const RadarChart: React.FC<Props> = ({
             display: false,
           },
           keyboardNavigation: {
+            ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
           },
         },

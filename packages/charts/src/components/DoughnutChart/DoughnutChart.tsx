@@ -93,8 +93,8 @@ export const DoughnutChart: React.FC<Props> = ({
           ...externalOptions?.plugins,
           title: { display: false },
           keyboardNavigation: {
+            ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
-            skipZero: true,
           },
           doughnutSegmentDivider: {
             // チャートは Base（WHITE）の上に置かれる前提。BACKGROUND は Base の背後に

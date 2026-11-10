@@ -4,7 +4,7 @@ export type KeyboardNavigationOptions = {
   liveRegionId?: string
   stacked?: boolean
   horizontal?: boolean
-  // 0が表示されないグラフ（棒・ドーナツ）で、0の位置に移動しないようにする
+  // 0の位置に移動しないようにする。チャートの options.plugins.keyboardNavigation.skipZero で指定する
   skipZero?: boolean
 }
 
