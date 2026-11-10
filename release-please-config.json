@@ -16,7 +16,8 @@
     },
     "packages/rich-text-editor": {
       "initial-version": "0.1.0",
-      "component": "smarthr-ui-rich-text-editor"
+      "component": "smarthr-ui-rich-text-editor",
+      "release-as": "0.1.0"
     }
   }
 }
