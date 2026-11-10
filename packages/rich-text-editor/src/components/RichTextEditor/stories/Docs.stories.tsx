@@ -640,7 +640,7 @@ const handleSave = () => {
         <FormControl errorMessages={error || undefined} label="本文">
           <RichTextEditor
             ref={ref}
-            error={!!error}
+            error={Boolean(error)}
             features={ALL_FEATURES}
             placeholder="何か入力してから保存してください"
             onChange={(json) => {

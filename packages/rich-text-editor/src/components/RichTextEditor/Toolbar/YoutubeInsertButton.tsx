@@ -166,7 +166,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
                     type="url"
                     name="youtubeUrl"
                     value={url}
-                    error={!!error}
+                    error={Boolean(error)}
                     width="100%"
                     onChange={(e) => {
                       setUrl(e.target.value)

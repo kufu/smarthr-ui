@@ -52,7 +52,7 @@ const isSameDocument = (doc: ProseMirrorNode, content: JSONContent, schema: Sche
   const last = doc.lastChild
 
   return (
-    !!last &&
+    last !== null &&
     last.type.name === 'paragraph' &&
     last.childCount === 0 &&
     last.sameMarkup(last.type.create()) &&
@@ -209,7 +209,7 @@ export const useRichTextEditor = ({
     // 戻ってきた値かどうかを値だけで判定しないのは、空の段落を中央揃えにしたあとのリセットのように、
     // 最後に出した値と同じ外からの変更まで省いてしまうため。通知のあと最初の同期に限って見る
     const isEcho =
-      !!record &&
+      record !== null &&
       !record.consumed &&
       (isNoDataValue(currentValue)
         ? record.meta.isEmpty

@@ -206,7 +206,7 @@ export const TableInsertDropdown: FC<Props> = memo(
                       value={rows}
                       min={1}
                       max={MAX_ROWS}
-                      error={!!error}
+                      error={Boolean(error)}
                       width="5em"
                       onChange={(e) => {
                         setRows(e.target.value)
@@ -221,7 +221,7 @@ export const TableInsertDropdown: FC<Props> = memo(
                       value={cols}
                       min={1}
                       max={MAX_COLS}
-                      error={!!error}
+                      error={Boolean(error)}
                       width="5em"
                       onChange={(e) => {
                         setCols(e.target.value)

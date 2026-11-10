@@ -90,4 +90,4 @@ export const normalizeYoutubeUrl = (url: unknown): NormalizedYoutubeUrl | null =
 const YOUTUBE_EMBED_URL = /^(?:https?:)?\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\//i
 
 export const isYoutubeEmbedSrc = (src: string | null): boolean =>
-  !!src && YOUTUBE_EMBED_URL.test(src) && normalizeYoutubeUrl(src) !== null
+  src !== null && YOUTUBE_EMBED_URL.test(src) && normalizeYoutubeUrl(src) !== null

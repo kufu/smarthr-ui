@@ -140,8 +140,8 @@ export function useToolbarDropdown({
     const place = () => {
       const triggerRect = triggerEl.getBoundingClientRect()
       // 上限を付けたまま測ると縮んだ高さが返り、上限の付け外しを繰り返すため、外して測る
-      const scrollables = [contentEl, contentEl.firstElementChild].filter(
-        (el): el is Element => !!el,
+      const scrollables = [contentEl, contentEl.firstElementChild].filter((el): el is Element =>
+        Boolean(el),
       )
       const scrollTops = scrollables.map((el) => el.scrollTop)
       const { maxHeight, display } = contentEl.style
@@ -258,7 +258,7 @@ export function useToolbarDropdown({
     if (!isOpen) return
 
     const isInside = (target: HTMLElement) =>
-      !!triggerRef.current?.contains(target) || isChildPortal(target)
+      Boolean(triggerRef.current?.contains(target)) || isChildPortal(target)
 
     const handleMouseDown = (e: MouseEvent) => {
       if (!isInside(e.target as HTMLElement)) {

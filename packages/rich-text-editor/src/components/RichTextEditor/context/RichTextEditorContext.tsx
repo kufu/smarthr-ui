@@ -55,7 +55,7 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const featuresKey = features.join(',')
   const headingLevelsKey = headingLevels.join(',')
   const acceptedMimeTypesKey = acceptedMimeTypes?.join(',')
-  const hasImageUpload = !!onImageUpload
+  const hasImageUpload = Boolean(onImageUpload)
   const latest = useLatest({
     features,
     headingLevels,
