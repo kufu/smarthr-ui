@@ -315,6 +315,13 @@ export const ModelessDialog: FC<Props> = ({
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
+        if (
+          document.activeElement instanceof HTMLElement &&
+          !node?.contains(document.activeElement)
+        ) {
+          lastFocusElementRef.current = document.activeElement
+        }
+
         const oldDefaultPosition = latest.defaultPosition
         const nextDefaultPosition =
           oldDefaultPosition.top === latest.top &&

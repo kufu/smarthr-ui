@@ -203,4 +203,54 @@ describe('ModelessDialog', () => {
     dragVertically(-500)
     expect(screen.getByRole('dialog', { name: '位置指定' }).getBoundingClientRect().top).toBe(0)
   })
+
+  test('ダイアログを閉じると、そのダイアログを開いたボタンにフォーカスが戻る', async () => {
+    const user = userEvent.setup()
+
+    const Test: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <IntlProvider locale="ja">
+          <Button onClick={() => setIsOpen(true)}>開く</Button>
+          <ModelessDialog
+            isOpen={isOpen}
+            onClickClose={() => setIsOpen(false)}
+            heading="ダイアログ"
+          />
+        </IntlProvider>
+      )
+    }
+    render(<Test />)
+
+    await user.click(screen.getByRole('button', { name: '開く' }))
+    expect(screen.getByRole('dialog', { name: 'ダイアログ' })).toBeVisible()
+    await user.click(screen.getByRole('button', { name: '閉じる' }))
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+  })
+
+  test('ダイアログを開いてから、ダイアログの外で作業し、そのあと閉じると、最後にフォーカスされた要素にフォーカスが戻る', async () => {
+    const user = userEvent.setup()
+
+    const Test: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <IntlProvider locale="ja">
+          <Button onClick={() => setIsOpen(true)}>開く</Button>
+          <Button>関係ないボタン</Button>
+          <ModelessDialog
+            isOpen={isOpen}
+            onClickClose={() => setIsOpen(false)}
+            heading="ダイアログ"
+          />
+        </IntlProvider>
+      )
+    }
+    render(<Test />)
+
+    await user.click(screen.getByRole('button', { name: '開く' }))
+    expect(screen.getByRole('dialog', { name: 'ダイアログ' })).toBeVisible()
+    await user.click(screen.getByRole('button', { name: '関係ないボタン' }))
+    await user.click(screen.getByRole('button', { name: '閉じる' }))
+    expect(screen.getByRole('button', { name: '関係ないボタン' })).toHaveFocus()
+  })
 })
