@@ -4,3 +4,6 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
   disconnect() {}
 }
+
+// act() を使うテストで React の警告が出ないようにする
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
