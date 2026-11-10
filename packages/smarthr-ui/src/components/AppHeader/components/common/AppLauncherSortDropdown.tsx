@@ -1,7 +1,8 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client' // eslint-disable-line local-rules/require-client
 
 import {
   type FC,
+  type JSX,
   type MouseEvent,
   type PropsWithChildren,
   type RefObject,
@@ -124,7 +125,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, handleSelectSortT
 }
 
 const TriggerButton = memo<
-  PropsWithChildren<{ triggerRef: RefObject<HTMLButtonElement>; className: string }>
+  PropsWithChildren<{ triggerRef: RefObject<HTMLButtonElement | null>; className: string }>
 >(({ triggerRef, children, className }) => (
   <DropdownTrigger>
     <Button

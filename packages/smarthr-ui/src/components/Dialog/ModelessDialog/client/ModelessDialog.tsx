@@ -460,6 +460,7 @@ const Handler = memo<{
   handleArrowKeyDown: (e: ReactKeyboardEvent) => void
 }>(({ handleArrowKeyDown, ...rest }) => {
   const { localize } = useIntl()
+  const handlerDescriptionId = useId()
 
   return (
     <>
@@ -474,12 +475,12 @@ const Handler = memo<{
           id: 'smarthr-ui/ModelessDialog/dialogHandlerAriaRoleDescription',
           defaultText: 'ドラッグ可能',
         })}
-        aria-describedby="handler-description"
+        aria-describedby={handlerDescriptionId}
         onKeyDown={handleArrowKeyDown}
       >
         <FaGripIcon />
       </button>
-      <div id="handler-description" className="shr-hidden">
+      <div id={handlerDescriptionId} className="shr-hidden">
         <Localizer
           id="smarthr-ui/ModelessDialog/dialogHandlerDescription"
           defaultText="矢印キーを押して上下左右に移動できます"

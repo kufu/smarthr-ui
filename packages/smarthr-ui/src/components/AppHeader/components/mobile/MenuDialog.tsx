@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import {
   type Dispatch,
   type FC,
@@ -84,7 +86,7 @@ export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
 
 const Content: FC<
   Omit<Props, 'callbackRef' | 'isOpen'> & {
-    domRef: RefObject<HTMLSelectElement>
+    domRef: RefObject<HTMLSelectElement | null>
   }
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
