@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
@@ -202,5 +202,58 @@ describe('ModelessDialog', () => {
     await userEvent.click(screen.getByRole('button', { name: '開く' }))
     dragVertically(-500)
     expect(screen.getByRole('dialog', { name: '位置指定' }).getBoundingClientRect().top).toBe(0)
+  })
+
+  test('フォーカスが管理される', async () => {
+    const Test: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <IntlProvider locale="ja">
+          <Button onClick={() => setIsOpen(true)}>開く</Button>
+          <ModelessDialog
+            isOpen={isOpen}
+            onClickClose={() => setIsOpen(false)}
+            heading="ダイアログ"
+          />
+        </IntlProvider>
+      )
+    }
+    render(<Test />)
+
+    await userEvent.click(screen.getByRole('button', { name: '開く' }))
+    expect(screen.getByRole('dialog', { name: 'ダイアログ' })).toBeVisible()
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+    expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+  })
+
+  test('複数のダイアログを同時に開いてもフォーカスが管理される', async () => {
+    const Test: FC = () => {
+      const [isOpenA, setIsOpenA] = useState(false)
+      const [isOpenB, setIsOpenB] = useState(false)
+      return (
+        <IntlProvider locale="ja">
+          <Button onClick={() => setIsOpenA(true)}>Aを開く</Button>
+          <Button onClick={() => setIsOpenB(true)}>Bを開く</Button>
+          <ModelessDialog isOpen={isOpenA} heading="ダイアログA" />
+          <ModelessDialog isOpen={isOpenB} heading="ダイアログB" />
+        </IntlProvider>
+      )
+    }
+    render(<Test />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'Aを開く' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Bを開く' }))
+    await userEvent.click(
+      within(screen.getByRole('dialog', { name: 'ダイアログB' })).getByRole('button', {
+        name: '閉じる',
+      }),
+    )
+    expect(screen.getByRole('button', { name: 'Bを開く' })).toHaveFocus()
+    await userEvent.click(
+      within(screen.getByRole('dialog', { name: 'ダイアログA' })).getByRole('button', {
+        name: '閉じる',
+      }),
+    )
+    expect(screen.getByRole('button', { name: 'Aを開く' })).toHaveFocus()
   })
 })

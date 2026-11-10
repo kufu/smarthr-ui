@@ -315,6 +315,10 @@ export const ModelessDialog: FC<Props> = ({
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
       if (isOpen) {
+        if (document.activeElement instanceof HTMLElement) {
+          lastFocusElementRef.current = document.activeElement
+        }
+
         const oldDefaultPosition = latest.defaultPosition
         const nextDefaultPosition =
           oldDefaultPosition.top === latest.top &&
@@ -364,18 +368,8 @@ export const ModelessDialog: FC<Props> = ({
         functions.setActualPosition({ x: 0, y: 0 })
       }
 
-      const focusHandler = (e: FocusEvent) => {
-        // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
-        if (e.target instanceof HTMLElement && !node?.contains(e.target)) {
-          lastFocusElementRef.current = e.target
-        }
-      }
-
-      document.addEventListener('focus', focusHandler, true)
-
       return () => {
         functions.cleanupLiveRegion()
-        document.removeEventListener('focus', focusHandler, true)
       }
     },
     [isOpen, functions, latest],
