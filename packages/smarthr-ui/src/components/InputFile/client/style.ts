@@ -12,13 +12,10 @@ export const classNameGenerator = tv({
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
     fileItem: 'shr-flex shr-items-center',
     inputWrapper: [
-      'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
+      'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
       '[&&&]:has-[[aria-invalid]]:shr-border-danger',
-      'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
-      'has-[:disabled]:shr-border-disabled has-[:disabled]:shr-bg-white-darken has-[:disabled]:shr-text-disabled',
-      'has-[:disabled]:hover:shr-border-disabled has-[:disabled]:hover:shr-text-disabled',
     ],
     input: [
       'smarthr-ui-InputFile-input',
@@ -29,6 +26,53 @@ export const classNameGenerator = tv({
     prefix: 'shr-me-0.5 shr-inline-flex',
   },
   variants: {
+    /* Buttonのvariantと同じ見た目にする。
+    inputはwrapper内に不可視で重ねているため、disabledは has-[:disabled] で表現する。
+    has-[:disabled] だけでは hover の指定に負けるため、hover で変化させるプロパティは has-[:disabled]:hover で打ち消す */
+    variant: {
+      secondary: {
+        inputWrapper: [
+          'shr-bg-white',
+          'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
+          'has-[:disabled]:shr-border-disabled has-[:disabled]:shr-bg-white-darken has-[:disabled]:shr-text-disabled',
+          'has-[:disabled]:hover:shr-border-disabled has-[:disabled]:hover:shr-text-disabled',
+        ],
+      },
+      tertiary: {
+        inputWrapper: [
+          'shr-border-transparent shr-bg-transparent shr-font-normal shr-text-link',
+          'hover:shr-bg-white-darken',
+          'has-[:disabled]:shr-bg-transparent has-[:disabled]:shr-text-link/50',
+          'has-[:disabled]:hover:shr-bg-transparent',
+        ],
+      },
+      danger: {
+        inputWrapper: [
+          'shr-border-danger shr-bg-danger shr-text-white',
+          'hover:shr-border-danger-darken hover:shr-bg-danger-darken',
+          'has-[:disabled]:shr-border-danger/50 has-[:disabled]:shr-bg-danger/50 has-[:disabled]:shr-text-white/50',
+          /* alpha color を使用しているので、背景色と干渉させない */
+          'has-[:disabled]:shr-bg-clip-padding',
+          'has-[:disabled]:hover:shr-border-danger/50 has-[:disabled]:hover:shr-bg-danger/50',
+        ],
+      },
+      skeleton: {
+        inputWrapper: [
+          'shr-border-white shr-bg-transparent shr-text-white',
+          'hover:shr-border-white-darken hover:shr-bg-overlay hover:shr-text-white-darken',
+          'has-[:disabled]:shr-border-white/50 has-[:disabled]:shr-bg-transparent has-[:disabled]:shr-text-white/50',
+          'has-[:disabled]:hover:shr-border-white/50 has-[:disabled]:hover:shr-bg-transparent has-[:disabled]:hover:shr-text-white/50',
+        ],
+      },
+      text: {
+        inputWrapper: [
+          'shr-border-transparent shr-bg-transparent shr-text-black',
+          'hover:shr-bg-white-darken',
+          'has-[:disabled]:shr-bg-transparent has-[:disabled]:shr-text-disabled',
+          'has-[:disabled]:hover:shr-bg-transparent',
+        ],
+      },
+    } satisfies Record<NonNullable<Props['variant']>, { inputWrapper: string[] }>,
     size: {
       M: {
         inputWrapper: 'shr-px-1 shr-py-0.75 shr-text-base',
@@ -39,6 +83,7 @@ export const classNameGenerator = tv({
     } satisfies Record<NonNullable<Props['size']>, { inputWrapper: string }>,
   },
   defaultVariants: {
+    variant: 'secondary',
     size: 'M',
   },
 })
