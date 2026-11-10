@@ -59,10 +59,6 @@ type Props = {
   defaultView?: ChartViewType
 } & BarChartColorProps
 
-// stackが複数ある積み上げは、カテゴリごとに内訳をまとめた表にする
-const isGroupedStacks = (data: ChartData<'bar'>, stacked?: boolean) =>
-  !!stacked && new Set(data.datasets.map((dataset) => dataset.stack)).size > 1
-
 export const BarChart: React.FC<Props> = ({
   data,
   title,
@@ -113,15 +109,11 @@ export const BarChart: React.FC<Props> = ({
     [data, chartColors, stacked],
   )
 
-  const grouped = isGroupedStacks(data, stacked)
-
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
         ...externalOptions,
         ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
-        // 値のない位置に棒の場所を取らないようにする
-        skipNull: grouped,
         scales: {
           ...externalOptions?.scales,
           ...(stacked
@@ -135,14 +127,13 @@ export const BarChart: React.FC<Props> = ({
           ...externalOptions?.plugins,
           title: { display: false },
           keyboardNavigation: {
-            ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
             stacked,
             horizontal: orientation === 'horizontal',
           },
         },
       }),
-    [chartId, externalOptions, grouped, orientation, stacked],
+    [chartId, externalOptions, orientation, stacked],
   )
 
   const handleViewChange = (value: string) => {
@@ -191,7 +182,6 @@ export const BarChart: React.FC<Props> = ({
         ) : (
           <TableView
             data={enhancedData}
-            grouped={grouped}
             aria-labelledby={title ? titleId : undefined}
             options={chartOptions}
           />

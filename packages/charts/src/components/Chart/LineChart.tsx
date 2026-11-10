@@ -72,7 +72,6 @@ export const LineChart: React.FC<Props> = ({
           ...externalOptions?.plugins,
           title: { display: false },
           keyboardNavigation: {
-            ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
           },
         },
