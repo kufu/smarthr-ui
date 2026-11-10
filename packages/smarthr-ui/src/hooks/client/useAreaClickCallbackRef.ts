@@ -25,7 +25,7 @@ export function useAreaClickCallbackRef(
   onInner?: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
-  const hasOtherRefs = !!otherRefs
+  const hasOtherRefs = Boolean(otherRefs)
 
   return useCallback(
     (node: HTMLElement | null) => {

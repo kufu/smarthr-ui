@@ -161,6 +161,7 @@ export default [
           additionalHooks: 'useLayoutEffectRef',
         },
       ],
+      'no-implicit-coercion': 'error',
       'no-restricted-syntax': [
         'error',
         {

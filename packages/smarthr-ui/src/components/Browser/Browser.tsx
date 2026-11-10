@@ -61,7 +61,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   }, [rootNode, value])
 
   const latest = useLatest({ onSelectItem, value, rootNode })
-  const hasOnSelectItem = !!onSelectItem
+  const hasOnSelectItem = Boolean(onSelectItem)
 
   const functions = useMemo(() => {
     // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)

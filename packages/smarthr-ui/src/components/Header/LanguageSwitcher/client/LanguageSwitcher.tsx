@@ -125,7 +125,7 @@ export const LanguageSwitcher: FC<Props> = ({
 
   const latest = useLatest({ onLanguageSelect })
 
-  const hasOnLanguageSelect = !!onLanguageSelect
+  const hasOnLanguageSelect = Boolean(onLanguageSelect)
   const functions = useMemo(
     () => ({
       handleClickLanguageSelect: hasOnLanguageSelect

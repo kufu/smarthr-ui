@@ -30,7 +30,7 @@ export const FilterIcon: FC<Props> = ({ checked, alt, className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <span {...rest} className={actualClassName} data-checked={!!checked}>
+    <span {...rest} className={actualClassName} data-checked={Boolean(checked)}>
       <FaFilterIcon alt={alt} />
       {checked && <FilterCheckIcon alt={typeof checked === 'object' ? checked.alt : undefined} />}
     </span>

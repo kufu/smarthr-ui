@@ -129,8 +129,8 @@ export const Input: FC<Props> = ({
   // 優先されるため、利用者がaria-labelを指定している場合は自動生成を行わず、
   // 既存のアクセシブルネームを壊さないようにする
   const commonId = useId()
-  const hasPrefix = !!prefix
-  const hasSuffix = !!suffix
+  const hasPrefix = Boolean(prefix)
+  const hasSuffix = Boolean(suffix)
   const idAttrs = useMemo(() => {
     const prefixId = hasPrefix ? `${commonId}-prefix` : undefined
     const suffixId = hasSuffix ? `${commonId}-suffix` : undefined
