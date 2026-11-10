@@ -136,6 +136,22 @@ export const BarChart: React.FC<Props> = ({
     [chartId, externalOptions, orientation, stacked],
   )
 
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
+        ariaLabel: 'グラフ',
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: 'テーブル',
+      },
+    ],
+    [orientation],
+  )
+
   const handleViewChange = (value: string) => {
     setView(value as ChartViewType)
     onChangeView?.(value as ChartViewType)
@@ -155,18 +171,7 @@ export const BarChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={[
-            {
-              value: 'chart',
-              content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
-              ariaLabel: 'グラフ',
-            },
-            {
-              value: 'table',
-              content: <FaTableIcon />,
-              ariaLabel: 'テーブル',
-            },
-          ]}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">

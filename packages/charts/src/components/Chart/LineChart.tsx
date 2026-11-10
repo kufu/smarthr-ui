@@ -20,6 +20,19 @@ import type { Chart, ChartData, ChartOptions } from 'chart.js'
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
 
+const VIEW_OPTIONS = [
+  {
+    value: 'chart',
+    content: <FaChartLineIcon />,
+    ariaLabel: 'グラフ',
+  },
+  {
+    value: 'table',
+    content: <FaTableIcon />,
+    ariaLabel: 'テーブル',
+  },
+]
+
 type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
@@ -98,18 +111,7 @@ export const LineChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={[
-            {
-              value: 'chart',
-              content: <FaChartLineIcon />,
-              ariaLabel: 'グラフ',
-            },
-            {
-              value: 'table',
-              content: <FaTableIcon />,
-              ariaLabel: 'テーブル',
-            },
-          ]}
+          options={VIEW_OPTIONS}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">
