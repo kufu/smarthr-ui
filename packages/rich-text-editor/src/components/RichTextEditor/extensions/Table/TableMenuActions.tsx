@@ -36,7 +36,7 @@ type Props = {
   features: readonly RichTextFeature[]
   handleRun: (action: () => unknown) => void
   handleChangeColors: (show: boolean) => void
-  colorTriggerRef: RefObject<HTMLButtonElement>
+  colorTriggerRef: RefObject<HTMLButtonElement | null>
 }
 export const TableMenuActions = ({
   editor,

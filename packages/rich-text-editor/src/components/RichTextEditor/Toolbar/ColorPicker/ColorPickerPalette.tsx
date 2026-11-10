@@ -74,10 +74,10 @@ export type ColorPaletteEntry = {
 }
 
 type Props = {
-  paletteRef: RefObject<HTMLDivElement>
+  paletteRef: RefObject<HTMLDivElement | null>
   /** スウォッチの見せ方。文字色なら白地に色付きの A で表す */
   appearance: 'color' | 'backgroundColor'
-  triggerRef: RefObject<HTMLButtonElement>
+  triggerRef: RefObject<HTMLButtonElement | null>
   setIsOpen: (open: boolean) => void
   colors: readonly ColorPaletteEntry[]
   defaultColor: string
