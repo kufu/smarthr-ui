@@ -1,9 +1,10 @@
+import { act } from 'react'
+import { createRoot } from 'react-dom/client'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SINGLE_CHART_COLORS } from '../../helper'
-import { testViewToggle } from '../internal/testing/testViewToggle'
 
 import { BarChart } from './BarChart'
 
@@ -79,7 +80,34 @@ describe('BarChart', () => {
   })
 
   describe('テーブル表示', () => {
-    testViewToggle((onChangeView) => <BarChart {...defaultProps} onChangeView={onChangeView} />)
+    it('切り替えボタンでグラフと表を切り替え、onChangeViewに通知する', () => {
+      const onChangeView = vi.fn()
+      const container = document.body.appendChild(document.createElement('div'))
+      const root = createRoot(container)
+      const hasTable = () => container.querySelector('table') !== null
+      const clickButton = (label: string) =>
+        act(() => container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!.click())
+
+      act(() =>
+        root.render(
+          <IntlProvider locale="ja">
+            <BarChart {...defaultProps} onChangeView={onChangeView} />
+          </IntlProvider>,
+        ),
+      )
+      expect(hasTable()).toBe(false)
+
+      clickButton('テーブル')
+      expect(hasTable()).toBe(true)
+      expect(onChangeView).toHaveBeenLastCalledWith('table')
+
+      clickButton('グラフ')
+      expect(hasTable()).toBe(false)
+      expect(onChangeView).toHaveBeenLastCalledWith('chart')
+
+      act(() => root.unmount())
+      container.remove()
+    })
 
     it('titleがあるとき、tableのアクセシブルネームとして関連付ける', () => {
       document.body.innerHTML = renderToStaticMarkup(

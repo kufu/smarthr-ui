@@ -1,6 +1,7 @@
-import { describe, vi } from 'vitest'
-
-import { testViewToggle } from '../internal/testing/testViewToggle'
+import { act } from 'react'
+import { createRoot } from 'react-dom/client'
+import { IntlProvider } from 'smarthr-ui'
+import { describe, expect, it, vi } from 'vitest'
 
 import { RadarChart } from './RadarChart'
 
@@ -13,5 +14,32 @@ const data = {
 }
 
 describe('RadarChart', () => {
-  testViewToggle((onChangeView) => <RadarChart data={data} onChangeView={onChangeView} />)
+  it('切り替えボタンでグラフと表を切り替え、onChangeViewに通知する', () => {
+    const onChangeView = vi.fn()
+    const container = document.body.appendChild(document.createElement('div'))
+    const root = createRoot(container)
+    const hasTable = () => container.querySelector('table') !== null
+    const clickButton = (label: string) =>
+      act(() => container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!.click())
+
+    act(() =>
+      root.render(
+        <IntlProvider locale="ja">
+          <RadarChart data={data} onChangeView={onChangeView} />
+        </IntlProvider>,
+      ),
+    )
+    expect(hasTable()).toBe(false)
+
+    clickButton('テーブル')
+    expect(hasTable()).toBe(true)
+    expect(onChangeView).toHaveBeenLastCalledWith('table')
+
+    clickButton('グラフ')
+    expect(hasTable()).toBe(false)
+    expect(onChangeView).toHaveBeenLastCalledWith('chart')
+
+    act(() => root.unmount())
+    container.remove()
+  })
 })
