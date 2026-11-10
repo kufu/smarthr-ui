@@ -2,6 +2,8 @@
 import { render, waitFor } from '@testing-library/react'
 import { createRef } from 'react'
 
+import { FaAddressBookIcon } from '../../../Icon'
+
 import { PageHeading } from './PageHeading'
 
 const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
@@ -74,6 +76,59 @@ describe('PageHeading', () => {
     await waitForAnimationFrame()
     expect(document.title).toBe('')
     expect(document.querySelector(`*[aria-live="polite"]`)).toBeNull()
+  })
+
+  test.each([true, false])(
+    'autoPageTitle=%sでも見出しにアイコンを表示する',
+    async (autoPageTitle) => {
+      const { getByRole, getByTestId } = render(
+        <PageHeading autoPageTitle={autoPageTitle} icon={<FaAddressBookIcon data-testid="icon" />}>
+          これはタイトルです
+        </PageHeading>,
+      )
+
+      expect(getByRole('heading', { level: 1, name: 'これはタイトルです' })).toContainElement(
+        getByTestId('icon'),
+      )
+      await waitForAnimationFrame()
+      expect(document.title).toBe(autoPageTitle ? 'これはタイトルです｜SmartHR（スマートHR）' : '')
+    },
+  )
+
+  test.each([true, false])(
+    'visuallyHiddenではautoPageTitle=%sでもアイコンを描画しない',
+    async (autoPageTitle) => {
+      const { getByRole, queryByTestId } = render(
+        <PageHeading
+          autoPageTitle={autoPageTitle}
+          visuallyHidden
+          icon={<FaAddressBookIcon data-testid="icon" />}
+        >
+          これはタイトルです
+        </PageHeading>,
+      )
+
+      expect(getByRole('heading', { level: 1 })).toHaveTextContent('これはタイトルです')
+      expect(queryByTestId('icon')).not.toBeInTheDocument()
+      expect(getByRole('heading', { level: 1 })).not.toHaveAttribute('icon')
+      await waitForAnimationFrame()
+      expect(document.title).toBe(autoPageTitle ? 'これはタイトルです｜SmartHR（スマートHR）' : '')
+    },
+  )
+
+  test.each([
+    [undefined, '連絡帳これはタイトルです｜SmartHR（スマートHR）'],
+    ['ページタイトル', 'ページタイトル｜SmartHR（スマートHR）'],
+  ])('アイコンの代替テキストがある場合もpageTitle=%sに従う', async (pageTitle, expected) => {
+    render(
+      <PageHeading pageTitle={pageTitle} icon={<FaAddressBookIcon alt="連絡帳" />}>
+        これはタイトルです
+      </PageHeading>,
+    )
+
+    await waitForAnimationFrame()
+    expect(document.title).toBe(expected)
+    expect(document.querySelector('[aria-live="polite"]')).toHaveTextContent(expected)
   })
 
   test('Next.js環境ではページのタイトルを設定しない', async () => {

@@ -25,6 +25,8 @@ type Props = ExtendElementPropsWithRef<
     size?: Extract<TextProps['size'], 'XXL' | 'XL' | 'L'>
     /** 視覚的に非表示にするフラグ */
     visuallyHidden?: boolean
+    /** テキストと並べて表示するアイコン。visuallyHiddenの場合は表示しません。 */
+    icon?: TextProps['icon']
     /**
      * title要素の自動生成フラグ
      *
@@ -147,23 +149,25 @@ const ActualHeading: FC<ActualHeadingProps> = ({
   size,
   className,
   children,
+  icon,
   ...rest
 }) => {
   const actualClassName = useMemo(
     () => classNameGenerator({ visuallyHidden, className }),
     [className, visuallyHidden],
   )
-  const Component = visuallyHidden ? VisuallyHiddenText : Text
+  const commonProps = {
+    ...rest,
+    ...STYLE_TYPE_MAP.screenTitle,
+    as: 'h1' as const,
+    size: size || STYLE_TYPE_MAP.screenTitle.size,
+    className: actualClassName,
+    children,
+  }
 
-  return (
-    <Component
-      {...rest}
-      {...STYLE_TYPE_MAP.screenTitle}
-      as="h1"
-      size={size || STYLE_TYPE_MAP.screenTitle.size}
-      className={actualClassName}
-    >
-      {children}
-    </Component>
+  return visuallyHidden ? (
+    <VisuallyHiddenText {...commonProps} />
+  ) : (
+    <Text {...commonProps} icon={icon} />
   )
 }

@@ -1,3 +1,4 @@
+import { FaAddressBookIcon } from '../../../../Icon'
 import { Stack } from '../../../../Layout'
 import { PageHeading } from '../PageHeading'
 
@@ -17,6 +18,13 @@ export default {
 export const PageHeadingControl: StoryObj<typeof PageHeading> = {
   name: 'Playground',
   args: {},
+}
+
+export const Icon: StoryObj<typeof PageHeading> = {
+  name: 'icon',
+  args: {
+    icon: <FaAddressBookIcon />,
+  },
 }
 
 export const Size: StoryObj<typeof PageHeading> = {

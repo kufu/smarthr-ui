@@ -1,3 +1,6 @@
+import { Fragment } from 'react'
+
+import { FaAddressBookIcon } from '../../../../Icon'
 import { Stack } from '../../../../Layout'
 import { PageHeading } from '../PageHeading'
 
@@ -11,14 +14,17 @@ export default {
     return (
       <Stack {...args}>
         {sizes.map((size) => (
-          <>
-            <PageHeading visuallyHidden={true} size={size}>
+          <Fragment key={size || 'default'}>
+            <PageHeading visuallyHidden={true} size={size} icon={<FaAddressBookIcon />}>
               {size ? size : 'undefined'}
             </PageHeading>
             <PageHeading visuallyHidden={false} size={size}>
               {size ? size : 'undefined'}
             </PageHeading>
-          </>
+            <PageHeading size={size} icon={<FaAddressBookIcon />}>
+              {size ? size : 'undefined'}
+            </PageHeading>
+          </Fragment>
         ))}
       </Stack>
     )
