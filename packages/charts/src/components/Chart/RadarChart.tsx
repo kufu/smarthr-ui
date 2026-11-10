@@ -76,12 +76,12 @@ export const RadarChart: React.FC<Props> = ({
           },
         },
       }),
-    [title, chartId, externalOptions],
+    [chartId, externalOptions],
   )
 
-  const handleViewChange = (value: ChartViewType) => {
-    setView(value)
-    onChangeView?.(value)
+  const handleViewChange = (value: string) => {
+    setView(value as ChartViewType)
+    onChangeView?.(value as ChartViewType)
   }
 
   return (
@@ -96,8 +96,8 @@ export const RadarChart: React.FC<Props> = ({
         <SegmentedControl
           value={view}
           size="S"
-          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
-          onClickOption={(value) => handleViewChange(value as ChartViewType)}
+          className="shr-col-start-3 shr-justify-self-end"
+          onClickOption={handleViewChange}
           options={[
             {
               value: 'chart',
@@ -113,7 +113,6 @@ export const RadarChart: React.FC<Props> = ({
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">
-        {/* eslint-disable-next-line smarthr/a11y-scroller-has-tabindex */}
         {view === 'chart' ? (
           <Radar
             ref={chartRef}

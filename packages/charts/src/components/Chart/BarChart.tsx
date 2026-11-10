@@ -118,10 +118,10 @@ export const BarChart: React.FC<Props> = ({
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
-        // 値のない位置に棒の場所を取らないようにする
-        skipNull: grouped,
         ...externalOptions,
         ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        // 値のない位置に棒の場所を取らないようにする
+        skipNull: grouped,
         scales: {
           ...externalOptions?.scales,
           ...(stacked
@@ -145,9 +145,9 @@ export const BarChart: React.FC<Props> = ({
     [chartId, externalOptions, grouped, orientation, stacked],
   )
 
-  const handleViewChange = (value: ChartViewType) => {
-    setView(value)
-    onChangeView?.(value)
+  const handleViewChange = (value: string) => {
+    setView(value as ChartViewType)
+    onChangeView?.(value as ChartViewType)
   }
 
   return (
@@ -162,8 +162,8 @@ export const BarChart: React.FC<Props> = ({
         <SegmentedControl
           value={view}
           size="S"
-          className="shr-col-start-3 shr-justify-self-end [&_button]:shr-p-0.5"
-          onClickOption={(value) => handleViewChange(value as ChartViewType)}
+          className="shr-col-start-3 shr-justify-self-end"
+          onClickOption={handleViewChange}
           options={[
             {
               value: 'chart',
