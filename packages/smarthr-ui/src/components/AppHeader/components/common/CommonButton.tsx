@@ -56,7 +56,7 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
 
 export const CommonButton = memo<Props>(
   ({ elementAs, prefix, current, boldWhenCurrent, className, children, handleClick, ...rest }) => {
-    const hasPrefix = !!prefix
+    const hasPrefix = Boolean(prefix)
 
     const actualClassName = useMemo(
       () =>

@@ -409,7 +409,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
     () =>
       definitions.map((group) => ({
         id: group.id,
-        items: group.items.map((definition) => toToolbarItem(definition, state, !!disabled)),
+        items: group.items.map((definition) => toToolbarItem(definition, state, Boolean(disabled))),
       })),
     [definitions, state, disabled],
   )
@@ -498,7 +498,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
   const disabledFlags = useMemo(() => {
     const items = groups.flatMap((group) => group.items).map((item) => item.disabled)
 
-    return isWrapped || isOverflowing ? [...items, !!disabled] : items
+    return isWrapped || isOverflowing ? [...items, Boolean(disabled)] : items
   }, [groups, isWrapped, isOverflowing, disabled])
 
   const toggleIndex = isWrapped || isOverflowing ? disabledFlags.length - 1 : -1

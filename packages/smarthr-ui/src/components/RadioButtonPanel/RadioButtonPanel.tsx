@@ -43,7 +43,7 @@ const classNameGenerator = tv({
 })
 
 export const RadioButtonPanel: FC<Props> = ({ children, className, ...rest }) => {
-  const hasDescription = !!children
+  const hasDescription = Boolean(children)
 
   const classNames = useMemo(() => {
     const { base, description, radio } = classNameGenerator()

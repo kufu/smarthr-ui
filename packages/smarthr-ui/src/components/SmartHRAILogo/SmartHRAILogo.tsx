@@ -45,7 +45,7 @@ export const SmartHRAILogo = memo<Props>(
     const { name, viewBox, Body } = compact ? COMPACT_LOGO : LOGOTYPE
     // HINT: useIdは別のReact rootと重複しうるため、nameを含めて異なる形状のグラデーションを参照しないようにする
     const idPrefix = `${id}-${name}`
-    const monochrome = !!fill
+    const monochrome = Boolean(fill)
 
     return (
       <svg

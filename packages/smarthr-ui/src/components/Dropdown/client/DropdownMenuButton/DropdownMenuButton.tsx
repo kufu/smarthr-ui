@@ -248,7 +248,7 @@ const MemoizedTriggerButton = memo<MemoizedTriggerButtonProps>(
 
     return (
       <DropdownTrigger
-        tooltip={{ show: !!onlyIconTrigger, message: children }}
+        tooltip={{ show: Boolean(onlyIconTrigger), message: children }}
         className={classNames.triggerWrapper}
       >
         <Button

@@ -104,7 +104,7 @@ export const ImageUrlPopover: FC<Props> = memo(({ handleInsert, handleCancel }) 
               type="url"
               name="imageUrl"
               value={url}
-              error={!!error}
+              error={Boolean(error)}
               width="100%"
               onChange={(e) => {
                 setUrl(e.target.value)

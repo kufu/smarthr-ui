@@ -153,7 +153,7 @@ export const RichTextEditor = memo(
       const dragOriginRef = useRef<{ clientY: number; height: number; minHeight: number } | null>(
         null,
       )
-      const isResizable = !!resizable && !readOnly && !disabled
+      const isResizable = Boolean(resizable) && !readOnly && !disabled
 
       const latest = useLatest({ onChange, outputFormat, draggedHeight, features })
 
@@ -428,9 +428,9 @@ export const RichTextEditor = memo(
           const label = target?.closest('label')
           const id = proseMirrorEl.getAttribute('id')
 
-          const isOwnLabel = !!label && !!id && label.htmlFor === id
+          const isOwnLabel = Boolean(label) && Boolean(id) && label?.htmlFor === id
           // ラベルの中のリンクやボタンは、それ自体の操作が優先される
-          const hitsInteractive = !!target?.closest('a, button, input, select, textarea')
+          const hitsInteractive = Boolean(target?.closest('a, button, input, select, textarea'))
 
           if (!isOwnLabel || hitsInteractive) return
 

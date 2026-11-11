@@ -242,7 +242,7 @@ export const LinkButton: FC<Props> = memo(
                     type="url"
                     name="linkUrl"
                     value={url}
-                    error={!!error}
+                    error={Boolean(error)}
                     width="100%"
                     onChange={(e) => {
                       setUrl(e.target.value)

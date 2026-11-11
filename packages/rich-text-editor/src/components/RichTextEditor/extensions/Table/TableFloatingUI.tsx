@@ -113,8 +113,8 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
     },
     equalityFn: (a, b) =>
       a === b ||
-      (!!a &&
-        !!b &&
+      (a !== null &&
+        b !== null &&
         a.tablePos === b.tablePos &&
         a.edge.isRightmostColumnSelected === b.edge.isRightmostColumnSelected &&
         a.edge.isBottommostRowSelected === b.edge.isBottommostRowSelected),

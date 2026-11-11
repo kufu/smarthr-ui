@@ -26,7 +26,7 @@ type Props = {
 export const FilePreviewDialog: FC<Props> = memo(
   ({ file, handleClose, handleDownload, searchable, onPassword }) => {
     const [blobUrl, setBlobUrl] = useState<string>()
-    const isOpen = !!file
+    const isOpen = Boolean(file)
     const { mobile } = useEnvironment()
 
     useLayoutEffect(() => {
@@ -49,7 +49,7 @@ export const FilePreviewDialog: FC<Props> = memo(
     }, [file])
 
     const fileViewer =
-      isOpen && blobUrl ? (
+      file && blobUrl ? (
         <FileViewer
           file={{
             url: blobUrl,

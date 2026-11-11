@@ -128,7 +128,7 @@ export const useListbox = <T,>({
   const addFrame = useAnimationFrame()
 
   const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
-  const hasOnAdd = !!onAdd
+  const hasOnAdd = Boolean(onAdd)
 
   const functions = useMemo(() => {
     let listBox: HTMLElement | null = null
