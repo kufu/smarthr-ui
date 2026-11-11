@@ -111,15 +111,13 @@ export const TableFloatingUI: FC<Props> = memo(({ editor, containerRef, features
       const edge = computeEdgeCells(e, tablePos)
       return { tablePos, edge }
     },
-    equalityFn: (a, b) => {
-      if (a === b) return true
-      if (!a || !b) return false
-      return (
+    equalityFn: (a, b) =>
+      a === b ||
+      (a !== null &&
+        b !== null &&
         a.tablePos === b.tablePos &&
         a.edge.isRightmostColumnSelected === b.edge.isRightmostColumnSelected &&
-        a.edge.isBottommostRowSelected === b.edge.isBottommostRowSelected
-      )
-    },
+        a.edge.isBottommostRowSelected === b.edge.isBottommostRowSelected),
   })
   const tablePos = activeSelection?.tablePos ?? null
   const activeInfo = useNodeRect(editor, containerRef, tablePos, resolveTableDisplayElementFromDOM)
