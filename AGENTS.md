@@ -689,7 +689,7 @@ const functions = useMemo(
 const functions = useMemo(() => ({ ... }), [onClick, hrefTemplate, latest])
 
 // ✅ boolean化してプリミティブ値として安定化
-const hasHrefTemplate = !!hrefTemplate
+const hasHrefTemplate = Boolean(hrefTemplate)
 const functions = useMemo(
   () => ({
     actualHrefTemplate: hasHrefTemplate
