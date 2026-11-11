@@ -161,6 +161,8 @@ export default [
           additionalHooks: 'useLayoutEffectRef',
         },
       ],
+      // HINT: 将来eslint-config-smarthr側にデフォルトで含まれる予定。
+      //  正式に取り込まれたタイミングでこの行は削除する
       'no-implicit-coercion': 'error',
       'no-restricted-syntax': [
         'error',
