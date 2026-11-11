@@ -113,7 +113,7 @@ export const Header: FC<Props> = ({
 
   const latest = useLatest({ onTenantSelect })
 
-  const hasOnTenantSelect = !!onTenantSelect
+  const hasOnTenantSelect = Boolean(onTenantSelect)
 
   const functions = useMemo(
     () => ({

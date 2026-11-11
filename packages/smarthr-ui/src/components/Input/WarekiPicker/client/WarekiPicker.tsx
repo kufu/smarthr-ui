@@ -63,8 +63,6 @@ type Props = ExtendElementPropsWithRef<
      * - 関数: その関数の結果を別表記として使う
      */
     showAlternative?: boolean | ((date: Date | null) => ReactNode)
-    /** @deprecated onChangeDate は非推奨です。onChange を使ってください。 */
-    onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
     /** 選択された日付が変わった時に発火するコールバック関数 */
     onChange?: (
       e: ChangeEvent<HTMLInputElement>,
@@ -159,7 +157,6 @@ export const WarekiPicker: FC<Props> = ({
   parseInput,
   formatDate,
   showAlternative,
-  onChangeDate,
   onChange,
   onBlur,
   ref,
@@ -202,13 +199,12 @@ export const WarekiPicker: FC<Props> = ({
     return selectedDate ? formatDateValue(selectedDate, formatDate) : (defaultValue ?? '')
   })
 
-  const isCalendarShown = !!inputRect
+  const isCalendarShown = Boolean(inputRect)
 
   const closeFrame = useAnimationFrame()
 
   const latest = useLatest({
     onChange,
-    onChangeDate,
     parseInput,
     formatDate,
     showAlternative,
@@ -273,8 +269,6 @@ export const WarekiPicker: FC<Props> = ({
           } as ChangeEvent<HTMLInputElement>,
           { date: nextDate, formatValue, errors },
         )
-      } else if (latest.onChangeDate) {
-        latest.onChangeDate(nextDate, formatValue, { errors })
       }
     }
 

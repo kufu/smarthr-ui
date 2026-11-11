@@ -138,8 +138,6 @@ export { ControlledTooltip as Balloon } from './components/Tooltip'
 /** @public */
 export { Tooltip } from './components/Tooltip'
 /** @public */
-export { BottomFixedArea } from './components/BottomFixedArea'
-/** @public */
 export {
   ErrorScreen,
   AuthErrorScreen,
@@ -158,8 +156,6 @@ export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton, SideNavItemAnchor } from './components/SideNav'
 /** @public */
 export { Text } from './components/Text'
-/** @public */
-export { LineClamp } from './components/LineClamp'
 /** @public */
 export { NotificationBar } from './components/NotificationBar'
 /** @public */
@@ -201,7 +197,7 @@ export { Scroller } from './components/Scroller'
 
 // layout components
 /** @public */
-export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, Container, Reel, Stack } from './components/Layout'
 
 // hooks
 /** @public */

@@ -40,7 +40,7 @@ type Props<T> = {
   onSelect: (item: ComboboxItem<T>) => void
   isExpanded: boolean
   isLoading?: boolean
-  triggerRef: RefObject<HTMLElement>
+  triggerRef: RefObject<HTMLElement | null>
   /** 検索結果が0件の時に表示するコンテンツ */
   noResultText?: ReactNode
 }
@@ -128,7 +128,7 @@ export const useListbox = <T,>({
   const addFrame = useAnimationFrame()
 
   const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
-  const hasOnAdd = !!onAdd
+  const hasOnAdd = Boolean(onAdd)
 
   const functions = useMemo(() => {
     let listBox: HTMLElement | null = null

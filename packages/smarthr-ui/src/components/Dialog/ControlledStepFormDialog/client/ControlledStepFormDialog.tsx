@@ -53,7 +53,7 @@ type ButtonType = ButtonArgType | ObjectButtonType | ButtonResolverType
 // HINT: ButtonArgTypeの関数部分とButtonResolverTypeはどちらも`(currentStep, defaultText) => ...`という
 // 同じ引数形だが、戻り値がReactNodeかButtonResolverResultかで実行時に判別する
 const isButtonResolverResult = (value: unknown): value is ButtonResolverResult =>
-  !!value && typeof value === 'object' && !Array.isArray(value) && !isValidElement(value)
+  Boolean(value) && typeof value === 'object' && !Array.isArray(value) && !isValidElement(value)
 
 type StepFormDialogContentProps = ComponentPropsWithRef<typeof StepFormDialogContent>
 

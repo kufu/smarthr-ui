@@ -166,7 +166,7 @@ export const InputFileNative: FC<Props> = ({
               key={`existing-${index}`}
               file={file}
               index={index}
-              previewable={!!previewable}
+              previewable={Boolean(previewable)}
               className={classNames.fileItem}
               handleDeleteClick={functions.handleDelete}
               handlePreviewClick={setPreviewFile}
@@ -177,7 +177,7 @@ export const InputFileNative: FC<Props> = ({
               key={`new-${index}`}
               file={file}
               index={index}
-              previewable={!!previewable}
+              previewable={Boolean(previewable)}
               className={classNames.fileItem}
               handleDeleteClick={functions.handleDelete}
               handlePreviewClick={setPreviewFile}
@@ -206,6 +206,7 @@ export const InputFileNative: FC<Props> = ({
         <FilePreviewDialog
           file={previewFile}
           searchable={previewable?.searchable}
+          onPassword={previewable?.onPassword}
           handleClose={functions.handleClosePreview}
           handleDownload={functions.handleDownload}
         />

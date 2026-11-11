@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, memo, useLayoutEffect, useState } from 'react'
+import { type ComponentPropsWithRef, type FC, memo, useLayoutEffect, useState } from 'react'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { Localizer } from '../../../intl'
@@ -20,12 +20,13 @@ type Props = {
   handleClose: () => void
   handleDownload: () => void
   searchable?: boolean
+  onPassword?: ComponentPropsWithRef<typeof FileViewer>['onPassword']
 }
 
 export const FilePreviewDialog: FC<Props> = memo(
-  ({ file, handleClose, handleDownload, searchable }) => {
+  ({ file, handleClose, handleDownload, searchable, onPassword }) => {
     const [blobUrl, setBlobUrl] = useState<string>()
-    const isOpen = !!file
+    const isOpen = Boolean(file)
     const { mobile } = useEnvironment()
 
     useLayoutEffect(() => {
@@ -48,7 +49,7 @@ export const FilePreviewDialog: FC<Props> = memo(
     }, [file])
 
     const fileViewer =
-      isOpen && blobUrl ? (
+      file && blobUrl ? (
         <FileViewer
           file={{
             url: blobUrl,
@@ -56,6 +57,7 @@ export const FilePreviewDialog: FC<Props> = memo(
             alt: file.name,
           }}
           searchable={searchable}
+          onPassword={onPassword}
         />
       ) : (
         <Center className="shr-h-full">

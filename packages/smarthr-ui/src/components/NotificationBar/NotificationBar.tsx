@@ -173,7 +173,7 @@ export const NotificationBar: FC<Props> = ({
   }
   const classNames = useMemo(() => {
     const { wrapper, inner, messageArea, icon, actionArea, closeButton } = classNameGenerator()
-    const boldValue = !!bold
+    const boldValue = Boolean(bold)
     const iconCloseButtonVariantProps = { type, bold: boldValue }
 
     return {
