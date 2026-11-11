@@ -91,8 +91,8 @@ export const FileViewer: FC<Props> = ({
   const hasWidth = fixedWidth !== undefined
 
   const latest = useLatest({ scaleStep, rotation, onLoadError, onPassword })
-  const hasOnLoadError = !!onLoadError
-  const hasOnPassword = !!onPassword
+  const hasOnLoadError = Boolean(onLoadError)
+  const hasOnPassword = Boolean(onPassword)
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
