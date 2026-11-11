@@ -390,19 +390,20 @@ describe('RichTextViewer', () => {
     expect(container.querySelector('pre code')).toHaveTextContent('const x = 1')
   })
 
-  it('gap 未指定時はデフォルトで shr-rte-space-y-1 クラスが付く', () => {
+  it('gap を指定しないと、直下のブロックを等間隔にせず、エディタと同じ余白で間隔を決める', () => {
     const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
-    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('shr-rte-space-y-1')
+    const viewer = container.querySelector('.smarthr-ui-RichTextViewer')
+
+    expect(viewer?.className).not.toMatch(/space-y-/)
+    expect(viewer).not.toHaveClass('[&>*]:shr-rte-my-0')
   })
 
-  it('gap 指定時に対応する shr-rte-space-y クラスが付く', () => {
+  it('gap を指定すると、直下のブロックの余白を消して等間隔にする', () => {
     const { container } = render(<RichTextViewer content={{ format: 'empty' }} gap={2} />)
-    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('shr-rte-space-y-2')
-  })
+    const viewer = container.querySelector('.smarthr-ui-RichTextViewer')
 
-  it('直下要素の縦マージンをリセットするクラスが付く', () => {
-    const { container } = render(<RichTextViewer content={{ format: 'empty' }} />)
-    expect(container.querySelector('.smarthr-ui-RichTextViewer')).toHaveClass('[&>*]:shr-rte-my-0')
+    expect(viewer).toHaveClass('shr-rte-space-y-2')
+    expect(viewer).toHaveClass('[&>*]:shr-rte-my-0')
   })
 
   describe('壊れた JSON でも例外を投げず、正常な部分を描画する', () => {

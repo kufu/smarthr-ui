@@ -102,6 +102,16 @@ export const editorContentClasses = [
   String.raw`[&_.ProseMirror_h4:not(:has(>br.ProseMirror-trailingBreak))::after]:shr-rte-content-['\200B']`,
 ] as const
 
+/** RichTextViewer 用: gap を指定しないときのブロックの縦の余白。editorContentClasses と同じ値にする */
+export const staticBlockSpacingClasses = [
+  // 要素ごとのセレクタにしないのは、詳細度が下の先頭・末尾の余白を消す指定を上回るため
+  '[&_:where(ul,ol,blockquote,h1,h2,h3,h4,pre,img,div[data-youtube-video])]:shr-rte-my-0.5',
+  '[&_:where(hr)]:shr-rte-my-1',
+  // 隣り合う表をエディタのように広げないのは、エディタで広げる理由が操作 UI の帯を重ねないためで、表示には帯が無いため
+  '[&_:where(.tableWrapper)]:shr-rte-my-2',
+  '[&>:first-child]:shr-rte-mt-0 [&>:last-child]:shr-rte-mb-0',
+] as const
+
 /** RichTextViewer 用: 直下の要素向けスタイル */
 export const staticContentClasses = [
   // lists
@@ -117,7 +127,9 @@ export const staticContentClasses = [
   '[&_h4]:shr-rte-text-base [&_h4]:shr-rte-font-bold [&_h4]:shr-rte-leading-tight [&_h4]:shr-rte-text-black',
   // code
   '[&_:not(pre)>code]:shr-rte-rounded-m [&_:not(pre)>code]:shr-rte-bg-white-darken [&_:not(pre)>code]:shr-rte-px-0.25 [&_:not(pre)>code]:shr-rte-py-[0.125rem] [&_:not(pre)>code]:shr-rte-text-sm',
-  '[&_pre]:shr-rte-overflow-x-auto [&_pre]:shr-rte-rounded-m [&_pre]:shr-rte-bg-white-darken [&_pre]:shr-rte-p-0.75 [&_pre]:shr-rte-text-sm',
+  // 行送りを親から受け継がないのは、本文全体の行送りがエディタ（1.5）と表示（1.75）で違うため。
+  // 長い行を既定のように折り返さずにおかないのは、エディタが ProseMirror の CSS で折り返すため
+  '[&_pre]:shr-rte-overflow-x-auto [&_pre]:shr-rte-rounded-m [&_pre]:shr-rte-bg-white-darken [&_pre]:shr-rte-p-0.75 [&_pre]:shr-rte-text-sm [&_pre]:shr-rte-leading-normal [&_pre]:shr-rte-whitespace-pre-wrap',
   // horizontal rule
   '[&_hr]:shr-rte-border-t-shorthand',
   // link

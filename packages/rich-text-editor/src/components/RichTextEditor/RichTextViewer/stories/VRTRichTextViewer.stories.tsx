@@ -1,5 +1,6 @@
 import { Stack } from 'smarthr-ui'
 
+import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 import { RichTextViewer } from '../RichTextViewer'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -244,6 +245,82 @@ export const Gap: Story = {
       <RichTextViewer content={content} gap={2} />
     </Stack>
   ),
+}
+
+const paragraph = (text: string) => ({ type: 'paragraph', content: [{ type: 'text', text }] })
+const listItem = (content: Array<Record<string, unknown>>) => ({ type: 'listItem', content })
+
+export const SameAsEditor: Story = {
+  name: 'エディタと同じ表示（左: エディタ、右: 表示）',
+  args: {
+    content: {
+      type: 'doc',
+      content: [
+        paragraph('段落1'),
+        paragraph('段落2'),
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '見出し' }] },
+        paragraph('段落3'),
+        {
+          type: 'bulletList',
+          content: [
+            listItem([
+              paragraph('項目1'),
+              { type: 'bulletList', content: [listItem([paragraph('入れ子の項目')])] },
+            ]),
+            listItem([paragraph('項目2')]),
+          ],
+        },
+        paragraph('段落4'),
+        paragraph('    行頭の空白と    連続した空白'),
+        { type: 'blockquote', content: [paragraph('引用')] },
+        { type: 'codeBlock', content: [{ type: 'text', text: 'const x = 1' }] },
+        {
+          type: 'codeBlock',
+          content: [
+            {
+              type: 'text',
+              text: `const message = ${Array(12).fill("'長い行は折り返す'").join(' + ')}`,
+            },
+          ],
+        },
+        { type: 'horizontalRule' },
+        { type: 'image', attrs: { src: '/fixtures/sample-png.png', alt: '画像', width: 120 } },
+        {
+          type: 'youtube',
+          attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', width: 160, height: 90 },
+        },
+        {
+          type: 'table',
+          content: [
+            {
+              type: 'tableRow',
+              content: [
+                { type: 'tableHeader', content: [paragraph('見出しセル')] },
+                { type: 'tableHeader', content: [paragraph('見出しセル')] },
+              ],
+            },
+            {
+              type: 'tableRow',
+              content: [
+                { type: 'tableCell', content: [paragraph('セル')] },
+                { type: 'tableCell', content: [paragraph('セル')] },
+              ],
+            },
+          ],
+        },
+        paragraph('段落5'),
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+      <RichTextEditor defaultValue={content} hideToolbar />
+      <RichTextViewer content={content} />
+    </div>
+  ),
+  parameters: {
+    chromatic: { ignoreSelectors: ['iframe'] },
+  },
 }
 
 export const Table: Story = {
