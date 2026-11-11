@@ -1,4 +1,4 @@
-import { DialogPortal } from '../Dialog'
+import { DialogPortal } from '../DialogPortal'
 
 import { DrawerContent } from './client'
 

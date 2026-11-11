@@ -18,7 +18,7 @@ import { useBodyScrollLock } from '../../../hooks/client/useBodyScrollLock'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
-import { FocusTrap } from '../../Dialog'
+import { FocusTrap } from '../../FocusTrap'
 import { drawerSize } from '../drawerSize'
 
 import { DrawerContext } from './DrawerContext'

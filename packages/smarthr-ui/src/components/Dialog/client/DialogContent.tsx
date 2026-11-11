@@ -7,9 +7,9 @@ import { useBodyScrollLock } from '../../../hooks/client/useBodyScrollLock'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../../hooks/useLatest'
 import { dialogSize } from '../../../tailwind'
+import { FocusTrap } from '../../FocusTrap'
 
 import { DialogOverlapCenter } from './DialogOverlapCenter'
-import { FocusTrap } from './FocusTrap'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 import type { DialogSize } from '../types'

@@ -4,7 +4,7 @@ import { type FC, useMemo } from 'react'
 
 import { useRemoteTrigger } from '../../../hooks/client/useRemoteTrigger'
 import { useLatest } from '../../../hooks/useLatest'
-import { DialogPortal } from '../../Dialog'
+import { DialogPortal } from '../../DialogPortal'
 
 import { DrawerContent } from './DrawerContent'
 
