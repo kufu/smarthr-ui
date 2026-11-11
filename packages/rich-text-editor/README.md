@@ -2,9 +2,7 @@
 
 SmartHR UI のリッチテキストエディタ。[Tiptap](https://tiptap.dev/) をベースにしています。
 
-`smarthr-ui` 本体とは別のパッケージ・別のバージョンとして公開します。エディタの修正を、本体のバージョンを動かさずに適用・差し戻しできるようにするためです。
-
-> **未公開です。** バージョン・peer の対応範囲は確定していません。
+`smarthr-ui` 本体とは別のパッケージ・別のバージョンとして公開しています。エディタの修正を、本体のバージョンを動かさずに適用・差し戻しできるようにするためです。
 
 ## インストール
 
@@ -23,6 +21,18 @@ import 'smarthr-ui/smarthr-ui.css'
 import '@smarthr-ui/rich-text-editor/styles.css'
 
 import { RichTextEditor, RichTextViewer } from '@smarthr-ui/rich-text-editor'
+```
+
+props と使い方の例は [Storybook の利用ガイド](https://story.smarthr-ui.dev/?path=/docs/editor-docs--docs) にまとめています。
+
+### 表示だけのページ
+
+表示だけのページでは、`@smarthr-ui/rich-text-editor/viewer` から `RichTextViewer` を読み込んでください。
+
+```tsx
+import '@smarthr-ui/rich-text-editor/styles.css'
+
+import { RichTextViewer } from '@smarthr-ui/rich-text-editor/viewer'
 ```
 
 ### CSS の読み込み順
@@ -73,11 +83,7 @@ Storybook は本体パッケージのものに相乗りしています。`pnpm u
 
 ### smarthr-ui の Dropdown の中に置いた場合
 
-Portal の親子関係を管理する `usePortal` を本体からコピーして持っているため、Context と採番が本体と共有されていません（採番の衝突は接頭辞 `rte-` で避けています）。
-
-そのため **`Dropdown` の中にエディタを置き、エディタのツールバードロップダウンをクリックすると、外側の `Dropdown` が閉じます。** `Dialog` は `usePortal` を使っていないため影響を受けません。
-
-共通 hook を [kufu/tamatebako](https://github.com/kufu/tamatebako) へ集約したうえで、本体・エディタの双方がそちらを参照するようになった時点で解消します。
+`Dropdown` の中にエディタを置くと、ツールバーで開いたドロップダウン（見出しや文字色の選択など）の中をクリックしたときに、外側の `Dropdown` が閉じます。`Dialog` の中に置いた場合は起きません。
 
 ### 翻訳
 
