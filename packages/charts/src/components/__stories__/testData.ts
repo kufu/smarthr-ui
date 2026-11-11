@@ -37,6 +37,29 @@ export const multiSmall = {
   ],
 }
 
+const stackedGroupsSource = [
+  { group: '項目A', values: [12, 19, 3] },
+  { group: '項目B', values: [8, 11] },
+  { group: '項目C', values: [5, 14, 8, 12] },
+  { group: '項目D', values: [30] },
+  { group: '項目E', values: [18, 4] },
+  { group: '項目F', values: [9, 0, 6] },
+]
+
+/**
+ * 内訳ごとにデータセットを分け、stackにグループ名を入れたもの
+ */
+export const stackedGroups = {
+  labels: stackedGroupsSource.map((g) => g.group),
+  datasets: stackedGroupsSource.flatMap((g, groupIndex) =>
+    g.values.map((value, itemIndex) => ({
+      label: `${g.group}のデータ${itemIndex + 1}`,
+      stack: g.group,
+      data: stackedGroupsSource.map((_, i) => (i === groupIndex ? value : null)),
+    })),
+  ),
+}
+
 /**
  * 少データポイント（5個）- 多数データセット（20個）の datasets 部分
  * labels はチャート種別ごとに story 側で付与する
