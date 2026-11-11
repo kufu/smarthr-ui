@@ -205,7 +205,9 @@ describe('Dialog', () => {
     )
 
     const dialog = screen.getByRole('dialog', { name: 'Dialog' })
-    expect(dialog).toHaveClass('shr-max-h-[calc(100dvh-theme(spacing.2))]')
+    expect(dialog).toHaveClass(
+      'shr-max-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+    )
     expect(dialog).toHaveClass('shr-overflow-y-auto')
   })
 
