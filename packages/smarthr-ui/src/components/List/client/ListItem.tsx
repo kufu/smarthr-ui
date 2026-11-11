@@ -15,7 +15,7 @@ import { Cluster, Stack } from '../../Layout'
 import { SectioningFragment } from '../../SectioningContent'
 import { Text } from '../../Text'
 
-import { type ListDivider, ListDividerContext } from './List'
+import { ListDividerContext } from './List'
 
 /** アイテム内側の余白の大きさ。テーマのスペーシングの値に対応する */
 type ListItemPadding = 0 | 0.25 | 0.5 | 1 | 1.5
@@ -138,99 +138,164 @@ export type ListItemProps<Slot extends ElementType<{ className?: string; childre
 
 // HINT: 区切り線は::after疑似要素のborderで引く。divider="content"のときは疑似要素に
 // アイテムの左右のpaddingと同じ値のmarginを付け、内容と同じ幅に揃える
-const classNameGenerator = (divider: ListDivider) =>
-  tv({
-    slots: {
-      li: [
-        'smarthr-ui-ListItem',
-        'shr-flex shr-list-none shr-flex-col shr-bg-white',
-        divider !== false &&
-          'after:shr-border-b-shorthand after:shr-flex after:shr-flex-col after:shr-content-[""]',
-      ],
-      slot: 'shr-no-underline focus-visible:shr-focus-indicator [&[href]:hover]:shr-bg-white-darken',
-      content: 'shr-flex shr-flex-col [:focus-visible>&]:shr-focus-indicator',
+const classNameGenerator = tv({
+  slots: {
+    li: ['smarthr-ui-ListItem', 'shr-flex shr-list-none shr-flex-col shr-bg-white'],
+    slot: 'shr-no-underline focus-visible:shr-focus-indicator [&[href]:hover]:shr-bg-white-darken',
+    content: 'shr-flex shr-flex-col [:focus-visible>&]:shr-focus-indicator',
+  },
+  variants: {
+    divider: {
+      full: {
+        li: 'after:shr-border-b-shorthand after:shr-flex after:shr-flex-col after:shr-content-[""]',
+      },
+      content: {
+        li: 'after:shr-border-b-shorthand after:shr-flex after:shr-flex-col after:shr-content-[""]',
+      },
+      false: {},
     },
-    variants: {
-      paddingBlockStart: {
-        0: {
-          content: 'shr-pt-0',
-        },
-        0.25: {
-          content: 'shr-pt-0.25',
-        },
-        0.5: {
-          content: 'shr-pt-0.5',
-        },
-        1: {
-          content: 'shr-pt-1',
-        },
-        1.5: {
-          content: 'shr-pt-1.5',
-        },
+    paddingBlockStart: {
+      0: {
+        content: 'shr-pt-0',
       },
-      paddingBlockEnd: {
-        0: {
-          content: 'shr-pb-0',
-        },
-        0.25: {
-          content: 'shr-pb-0.25',
-        },
-        0.5: {
-          content: 'shr-pb-0.5',
-        },
-        1: {
-          content: 'shr-pb-1',
-        },
-        1.5: {
-          content: 'shr-pb-1.5',
-        },
+      0.25: {
+        content: 'shr-pt-0.25',
       },
-      paddingInlineStart: {
-        0: {
-          li: divider === 'content' && 'after:shr-ms-0',
-          content: 'shr-ps-0',
-        },
-        0.25: {
-          li: divider === 'content' && 'after:shr-ms-0.25',
-          content: 'shr-ps-0.25',
-        },
-        0.5: {
-          li: divider === 'content' && 'after:shr-ms-0.5',
-          content: 'shr-ps-0.5',
-        },
-        1: {
-          li: divider === 'content' && 'after:shr-ms-1',
-          content: 'shr-ps-1',
-        },
-        1.5: {
-          li: divider === 'content' && 'after:shr-ms-1.5',
-          content: 'shr-ps-1.5',
-        },
+      0.5: {
+        content: 'shr-pt-0.5',
       },
-      paddingInlineEnd: {
-        0: {
-          li: divider === 'content' && 'after:shr-me-0',
-          content: 'shr-pe-0',
-        },
-        0.25: {
-          li: divider === 'content' && 'after:shr-me-0.25',
-          content: 'shr-pe-0.25',
-        },
-        0.5: {
-          li: divider === 'content' && 'after:shr-me-0.5',
-          content: 'shr-pe-0.5',
-        },
-        1: {
-          li: divider === 'content' && 'after:shr-me-1',
-          content: 'shr-pe-1',
-        },
-        1.5: {
-          li: divider === 'content' && 'after:shr-me-1.5',
-          content: 'shr-pe-1.5',
-        },
+      1: {
+        content: 'shr-pt-1',
+      },
+      1.5: {
+        content: 'shr-pt-1.5',
       },
     },
-  })
+    paddingBlockEnd: {
+      0: {
+        content: 'shr-pb-0',
+      },
+      0.25: {
+        content: 'shr-pb-0.25',
+      },
+      0.5: {
+        content: 'shr-pb-0.5',
+      },
+      1: {
+        content: 'shr-pb-1',
+      },
+      1.5: {
+        content: 'shr-pb-1.5',
+      },
+    },
+    paddingInlineStart: {
+      0: {
+        content: 'shr-ps-0',
+      },
+      0.25: {
+        content: 'shr-ps-0.25',
+      },
+      0.5: {
+        content: 'shr-ps-0.5',
+      },
+      1: {
+        content: 'shr-ps-1',
+      },
+      1.5: {
+        content: 'shr-ps-1.5',
+      },
+    },
+    paddingInlineEnd: {
+      0: {
+        content: 'shr-pe-0',
+      },
+      0.25: {
+        content: 'shr-pe-0.25',
+      },
+      0.5: {
+        content: 'shr-pe-0.5',
+      },
+      1: {
+        content: 'shr-pe-1',
+      },
+      1.5: {
+        content: 'shr-pe-1.5',
+      },
+    },
+  },
+  compoundVariants: [
+    {
+      divider: 'content',
+      paddingInlineStart: 0,
+      className: {
+        li: 'after:shr-ms-0',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineStart: 0.25,
+      className: {
+        li: 'after:shr-ms-0.25',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineStart: 0.5,
+      className: {
+        li: 'after:shr-ms-0.5',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineStart: 1,
+      className: {
+        li: 'after:shr-ms-1',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineStart: 1.5,
+      className: {
+        li: 'after:shr-ms-1.5',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineEnd: 0,
+      className: {
+        li: 'after:shr-me-0',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineEnd: 0.25,
+      className: {
+        li: 'after:shr-me-0.25',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineEnd: 0.5,
+      className: {
+        li: 'after:shr-me-0.5',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineEnd: 1,
+      className: {
+        li: 'after:shr-me-1',
+      },
+    },
+    {
+      divider: 'content',
+      paddingInlineEnd: 1.5,
+      className: {
+        li: 'after:shr-me-1.5',
+      },
+    },
+  ],
+})
 
 type ListItem = <Slot extends ElementType<{ className?: string; children?: ReactNode }>>(
   props: ListItemProps<Slot>,
@@ -253,17 +318,18 @@ export const ListItem: ListItem = <
     mapPaddingModifierToPadding(padding)
   const slotClassName = slot?.props?.className
   const actualClassName = useMemo(() => {
-    const generatedClasses = classNameGenerator(divider)()
+    const classNames = classNameGenerator()
     return {
-      li: generatedClasses.li({
+      li: classNames.li({
         className,
+        divider,
         paddingBlockStart,
         paddingBlockEnd,
         paddingInlineStart,
         paddingInlineEnd,
       }),
-      slot: generatedClasses.slot({ className: slotClassName }),
-      content: generatedClasses.content({
+      slot: classNames.slot({ className: slotClassName }),
+      content: classNames.content({
         paddingBlockStart,
         paddingBlockEnd,
         paddingInlineStart,

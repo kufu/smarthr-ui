@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-export type ListDivider = 'full' | 'content' | false
+type ListDivider = 'full' | 'content' | false
 
 type AbstractProps = {
   /**
