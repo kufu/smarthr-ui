@@ -46,7 +46,7 @@ export const Variant: StoryObj<typeof InputFile> = {
   name: 'variant',
   render: (args) => (
     <Stack align="flex-start">
-      {([undefined, 'secondary', 'tertiary', 'danger', 'text'] as const).map((variant) => (
+      {([undefined, 'secondary', 'tertiary', 'text'] as const).map((variant) => (
         <InputFile {...args} key={String(variant)} variant={variant} />
       ))}
       <Groupbox bgColor="GREY_20">

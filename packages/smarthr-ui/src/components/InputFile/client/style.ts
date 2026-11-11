@@ -46,16 +46,6 @@ export const classNameGenerator = tv({
           'has-[:disabled]:hover:shr-bg-transparent',
         ],
       },
-      danger: {
-        inputWrapper: [
-          'shr-border-danger shr-bg-danger shr-text-white',
-          'hover:shr-border-danger-darken hover:shr-bg-danger-darken',
-          'has-[:disabled]:shr-border-danger/50 has-[:disabled]:shr-bg-danger/50 has-[:disabled]:shr-text-white/50',
-          /* alpha color を使用しているので、背景色と干渉させない */
-          'has-[:disabled]:shr-bg-clip-padding',
-          'has-[:disabled]:hover:shr-border-danger/50 has-[:disabled]:hover:shr-bg-danger/50',
-        ],
-      },
       skeleton: {
         inputWrapper: [
           'shr-border-white shr-bg-transparent shr-text-white',

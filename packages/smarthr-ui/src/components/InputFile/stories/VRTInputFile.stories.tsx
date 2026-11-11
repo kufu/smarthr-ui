@@ -62,7 +62,7 @@ export const VRTVariant: StoryObj<typeof InputFile> = {
     <Stack>
       {[undefined, 'hover', 'focus-within'].map((id) => (
         <Stack key={id} id={id}>
-          {(['secondary', 'tertiary', 'danger', 'text', 'skeleton'] as Variant[]).map((variant) => (
+          {(['secondary', 'tertiary', 'text', 'skeleton'] as Variant[]).map((variant) => (
             <Groupbox key={variant} bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'}>
               <Cluster align="center">
                 {[false, true].map((disabled) =>

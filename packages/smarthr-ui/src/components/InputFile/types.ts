@@ -24,8 +24,8 @@ export type Props = ExtendElementPropsWithRef<
   {
     /** コンポーネントのサイズ */
     size?: 'M' | 'S'
-    /** ファイル選択ボタンのスタイルの種類。Buttonのvariantと同じ見た目になる(primaryは使用不可) */
-    variant?: Exclude<ComponentPropsWithRef<typeof Button>['variant'], 'primary'>
+    /** ファイル選択ボタンのスタイルの種類。Buttonのvariantと同じ見た目になる(primary・dangerは使用不可) */
+    variant?: Exclude<ComponentPropsWithRef<typeof Button>['variant'], 'primary' | 'danger'>
     /** フォームのラベル */
     label: ReactNode
     /** ファイルの選択に変更があったときに発火するコールバック関数 */
