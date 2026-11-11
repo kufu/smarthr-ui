@@ -607,7 +607,7 @@ const handleSave = () => {
 <FormControl label="本文" errorMessages={error}>
   <RichTextEditor
     ref={ref}
-    error={!!error}
+    error={Boolean(error)}
     onChange={(json) => setValue(json)}
   />
 </FormControl>
