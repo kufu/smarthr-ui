@@ -11,7 +11,7 @@ import type { ExtendElementPropsWithoutRef } from '../../../types'
 type Props = ExtendElementPropsWithoutRef<'span', object, { omit: 'className' | 'onClick' }>
 
 // onClick(close) を持たせないのは、閉じる前の確認を Drawer の onClickClose の1か所に集めるため
-export const DrawerCloser: FC<Props> = (props) => {
+export const DrawerCloser: FC<Props> = ({ children, ...rest }) => {
   const { handleClickClose } = useContext(DrawerContext)
 
   const handleDelegateClick = useCallback(
@@ -27,10 +27,8 @@ export const DrawerCloser: FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
-    <span
-      {...props}
-      className="smarthr-ui-Drawer-closer shr-contents"
-      onClick={handleDelegateClick}
-    />
+    <span {...rest} className="smarthr-ui-Drawer-closer shr-contents" onClick={handleDelegateClick}>
+      {children}
+    </span>
   )
 }

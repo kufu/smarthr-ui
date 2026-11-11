@@ -30,11 +30,11 @@ export const Drawer: FC<DrawerProps> = ({
     onClose,
   })
 
-  const hasOnClickOverlay = !!onClickOverlay
-  const latest = useLatest({ onClickOverlay })
+  const hasOnClickOverlay = Boolean(onClickOverlay)
+  const latest = useLatest({ onClickOverlay, close })
   const handleClickOverlay = useMemo(
-    () => (hasOnClickOverlay ? () => latest.onClickOverlay?.(close) : undefined),
-    [hasOnClickOverlay, close, latest],
+    () => (hasOnClickOverlay ? () => latest.onClickOverlay?.(latest.close) : undefined),
+    [hasOnClickOverlay, latest],
   )
 
   return (

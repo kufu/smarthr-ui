@@ -6,12 +6,12 @@ import {
   type ReactNode,
   memo,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useIntl } from '../../../intl'
+import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaXmarkIcon } from '../../Icon'
@@ -48,7 +48,8 @@ export const DrawerHeader: FC<Props> = ({ title, subtitle, id, className, ...res
   const { handleClickClose, headingId, registerHeadingId } = useContext(DrawerContext)
   const actualHeadingId = id ?? headingId
 
-  useEffect(() => {
+  // useEffect にしないのは、FocusTrap が rAF でフォーカスする前に aria-labelledby を確定させるため
+  useLayoutEffect(() => {
     registerHeadingId(actualHeadingId)
 
     return () => registerHeadingId(undefined)
@@ -60,20 +61,26 @@ export const DrawerHeader: FC<Props> = ({ title, subtitle, id, className, ...res
     return { wrapper: wrapper({ className }), closeButton: closeButton() }
   }, [className])
 
+  const headingTitle = (
+    <Text id={actualHeadingId} size="L" leading="TIGHT">
+      {title}
+    </Text>
+  )
+
   return (
     <div {...rest} className={classNames.wrapper}>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading>
-        <Stack as="span" gap={0.25}>
-          {subtitle && (
+        {subtitle ? (
+          <Stack as="span" gap={0.25}>
             <Text size="S" leading="TIGHT" color="TEXT_GREY">
               {subtitle}
             </Text>
-          )}
-          <Text id={actualHeadingId} size="L" leading="TIGHT">
-            {title}
-          </Text>
-        </Stack>
+            {headingTitle}
+          </Stack>
+        ) : (
+          headingTitle
+        )}
       </Heading>
       <CloseButton className={classNames.closeButton} onClick={handleClickClose} />
     </div>
@@ -83,13 +90,10 @@ export const DrawerHeader: FC<Props> = ({ title, subtitle, id, className, ...res
 const CloseButton = memo<{
   onClick: (e?: MouseEvent<HTMLButtonElement>) => void
   className: string
-}>(({ onClick, className }) => {
-  const { localize } = useIntl()
-  const alt = localize({ id: 'smarthr-ui/Drawer/closeButtonIconAlt', defaultText: '閉じる' })
-
-  return (
-    <Button size="S" className={className} onClick={onClick}>
-      <FaXmarkIcon alt={alt} />
-    </Button>
-  )
-})
+}>(({ onClick, className }) => (
+  <Button size="S" className={className} onClick={onClick}>
+    <FaXmarkIcon
+      alt={<Localizer id="smarthr-ui/Drawer/closeButtonIconAlt" defaultText="閉じる" />}
+    />
+  </Button>
+))
