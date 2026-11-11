@@ -2,11 +2,12 @@ import { act, renderHook } from '@testing-library/react'
 import { createRef } from 'react'
 import { vi } from 'vitest'
 
-import { getSafeAreaInsets } from '../../../../libs/safeAreaInsets'
 import { useListbox } from '../useListbox'
 
-vi.mock('../../../../libs/safeAreaInsets', () => ({
-  getSafeAreaInsets: vi.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })),
+const getSafeAreaInsets = vi.hoisted(() => vi.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })))
+
+vi.mock('../../../../hooks/client/useSafeAreaInsets', () => ({
+  useSafeAreaInsets: () => getSafeAreaInsets,
 }))
 
 describe('useListbox', () => {
@@ -313,10 +314,10 @@ describe('useListbox', () => {
     describe('safe area がある場合', () => {
       beforeEach(() => {
         // iPhoneの横向き(viewport-fit=cover)を想定した値
-        vi.mocked(getSafeAreaInsets).mockReturnValue({ top: 0, right: 59, bottom: 21, left: 59 })
+        getSafeAreaInsets.mockReturnValue({ top: 0, right: 59, bottom: 21, left: 59 })
       })
 
-      afterEach(() => vi.mocked(getSafeAreaInsets).mockReset())
+      afterEach(() => getSafeAreaInsets.mockReset())
 
       it('右側の safe area に重なる場合、入力欄の右端に揃うこと', () => {
         // 右側に使える幅 = 1000 - 59 - 500 - 8 = 433
@@ -335,10 +336,10 @@ describe('useListbox', () => {
   })
 
   describe('calculateRect による縦方向の位置の算出', () => {
-    afterEach(() => vi.mocked(getSafeAreaInsets).mockReset())
+    afterEach(() => getSafeAreaInsets.mockReset())
 
     it('下側の safe area に重なる場合、入力欄の上側に表示されること', () => {
-      vi.mocked(getSafeAreaInsets).mockReturnValue({ top: 59, right: 0, bottom: 34, left: 0 })
+      getSafeAreaInsets.mockReturnValue({ top: 59, right: 0, bottom: 34, left: 0 })
 
       const trigger = document.createElement('div')
       // 下側に使える幅 = 768 - 34 - 568 = 166 のため、高さ 200 のリストボックスは収まらない

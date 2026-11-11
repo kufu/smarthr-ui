@@ -17,11 +17,11 @@ import { tv } from 'tailwind-variants'
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useSafeAreaInsets } from '../../../hooks/client/useSafeAreaInsets'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
-import { getSafeAreaInsets } from '../../../libs/safeAreaInsets'
 import { FaCircleInfoIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Loader } from '../../Loader'
@@ -128,7 +128,17 @@ export const useListbox = <T,>({
 
   const addFrame = useAnimationFrame()
 
-  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
+  const getSafeAreaInsets = useSafeAreaInsets()
+  const latest = useLatest({
+    onAdd,
+    onSelect,
+    activeOption,
+    options,
+    triggerRef,
+    theme,
+    getSafeAreaInsets,
+    addFrame,
+  })
   const hasOnAdd = !!onAdd
 
   const functions = useMemo(() => {
@@ -173,7 +183,7 @@ export const useListbox = <T,>({
 
         const rect = latest.triggerRef.current.getBoundingClientRect()
         // HINT: safe areaに重ならない領域を、リストボックスを表示できる範囲とする
-        const safeAreaInsets = getSafeAreaInsets()
+        const safeAreaInsets = latest.getSafeAreaInsets()
         const bottomSpace = window.innerHeight - safeAreaInsets.bottom - rect.bottom
         const topSpace = rect.top - safeAreaInsets.top
         const listBoxHeight = Math.min(

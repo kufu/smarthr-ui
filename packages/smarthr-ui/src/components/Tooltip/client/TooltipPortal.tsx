@@ -4,9 +4,9 @@ import { type FC, type ReactNode, useCallback, useState, useSyncExternalStore } 
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
+import { type SafeAreaInsets, useSafeAreaInsets } from '../../../hooks/client/useSafeAreaInsets'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { debounce } from '../../../libs/debounce'
-import { type SafeAreaInsets, getSafeAreaInsets } from '../../../libs/safeAreaInsets'
 import { ControlledTooltip } from '../ControlledTooltip'
 
 import type { ExtendElementPropsWithoutRef } from '../../../types'
@@ -66,6 +66,7 @@ export const TooltipPortal: FC<Props> = ({
   ...rest
 }) => {
   const theme = useTheme()
+  const getSafeAreaInsets = useSafeAreaInsets()
   const portalRoot = useSyncExternalStore(
     subscribeFullscreenChange,
     getPortalRoot,
@@ -113,7 +114,7 @@ export const TooltipPortal: FC<Props> = ({
         debouncedAction.cancel()
       }
     },
-    [parentRect, theme],
+    [parentRect, theme, getSafeAreaInsets],
   )
 
   if (!portalRoot) {

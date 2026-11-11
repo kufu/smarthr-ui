@@ -3,15 +3,16 @@ import userEvent from '@testing-library/user-event'
 import { type FC, useState } from 'react'
 
 import { IntlProvider } from '../../../../intl'
-import { getSafeAreaInsets } from '../../../../libs/safeAreaInsets'
 import { Button } from '../../../Button'
 
 import { ModelessDialog } from './ModelessDialog'
 
 const NO_SAFE_AREA_INSETS = { top: 0, right: 0, bottom: 0, left: 0 }
 
-vi.mock('../../../../libs/safeAreaInsets', () => ({
-  getSafeAreaInsets: vi.fn(() => NO_SAFE_AREA_INSETS),
+const getSafeAreaInsets = vi.hoisted(() => vi.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })))
+
+vi.mock('../../../../hooks/client/useSafeAreaInsets', () => ({
+  useSafeAreaInsets: () => getSafeAreaInsets,
 }))
 
 describe('ModelessDialog', () => {
@@ -214,11 +215,11 @@ describe('ModelessDialog', () => {
   describe('safe area がある場合', () => {
     beforeEach(() => {
       // iPhoneの縦向き(viewport-fit=cover)を想定した値
-      vi.mocked(getSafeAreaInsets).mockReturnValue({ top: 59, right: 0, bottom: 34, left: 0 })
+      getSafeAreaInsets.mockReturnValue({ top: 59, right: 0, bottom: 34, left: 0 })
     })
 
     afterEach(() => {
-      vi.mocked(getSafeAreaInsets).mockReturnValue(NO_SAFE_AREA_INSETS)
+      getSafeAreaInsets.mockReturnValue(NO_SAFE_AREA_INSETS)
     })
 
     // HINT: jsdomにはレイアウトが無いため、style.topとドラッグ量から画面上の位置を算出して返す

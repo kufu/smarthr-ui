@@ -1,4 +1,4 @@
-import { type SafeAreaInsets, getSafeAreaInsets } from '../../../libs/safeAreaInsets'
+import type { SafeAreaInsets } from '../../../hooks/client/useSafeAreaInsets'
 
 type Size = { width: number; height: number }
 
@@ -22,8 +22,8 @@ export const generateContentStyle = (
   triggerButton: HTMLButtonElement,
   content: HTMLElement,
   defaultMargin: string,
+  safeAreaInsets: SafeAreaInsets,
 ): ContentStyleType => {
-  const safeAreaInsets = getSafeAreaInsets()
   const contentBox = getContentBoxStyle(
     triggerButton.getBoundingClientRect(),
     {

@@ -20,9 +20,9 @@ import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
 import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useSafeAreaInsets } from '../../../../hooks/client/useSafeAreaInsets'
 import { useLatest } from '../../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../../intl'
-import { getSafeAreaInsets } from '../../../../libs/safeAreaInsets'
 import { dialogSize } from '../../../../tailwind'
 import { Button } from '../../../Button'
 import { Heading } from '../../../Heading'
@@ -195,6 +195,7 @@ export const ModelessDialog: FC<Props> = ({
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
   const liveRegionFrame = useAnimationFrame()
+  const getSafeAreaInsets = useSafeAreaInsets()
   const latest = useLatest({
     isOpen,
     onClickClose,
@@ -206,6 +207,7 @@ export const ModelessDialog: FC<Props> = ({
     defaultPosition,
     centering,
     liveRegionFrame,
+    getSafeAreaInsets,
   })
 
   const functions = useMemo(() => {
@@ -303,7 +305,7 @@ export const ModelessDialog: FC<Props> = ({
           const initialTop = wrapperRef.current.getBoundingClientRect().top - data.y
 
           setDraggableBounds({
-            top: Math.min(0, getSafeAreaInsets().top - initialTop),
+            top: Math.min(0, latest.getSafeAreaInsets().top - initialTop),
           })
         }
 
@@ -349,7 +351,7 @@ export const ModelessDialog: FC<Props> = ({
           if (isXCenter || isYCenter) {
             const rect = node.getBoundingClientRect()
             // HINT: safe areaに重ならない領域の中央に配置する
-            const safeAreaInsets = getSafeAreaInsets()
+            const safeAreaInsets = latest.getSafeAreaInsets()
             const safeHeight = window.innerHeight - safeAreaInsets.top - safeAreaInsets.bottom
             const safeWidth = window.innerWidth - safeAreaInsets.left - safeAreaInsets.right
             const nextCentering = {
