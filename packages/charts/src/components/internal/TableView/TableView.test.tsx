@@ -95,11 +95,19 @@ describe('TableView', () => {
     it('縦向きのときはx軸をカテゴリ、y軸を値の見出しにする', () => {
       const table = renderTable({
         data,
-        options: { ...options, indexAxis: 'x', scales: { x: { title: { text: '軸X' } }, y: { title: { text: '軸Y' } } } },
+        options: {
+          ...options,
+          indexAxis: 'x',
+          scales: { x: { title: { text: '軸X' } }, y: { title: { text: '軸Y' } } },
+        },
         grouped: true,
       })
 
-      expect(Array.from(table.querySelectorAll('thead th')).map(textOf)).toEqual(['軸X', '内訳', '軸Y'])
+      expect(Array.from(table.querySelectorAll('thead th')).map(textOf)).toEqual([
+        '軸X',
+        '内訳',
+        '軸Y',
+      ])
     })
   })
 })
