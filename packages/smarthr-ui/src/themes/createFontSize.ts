@@ -24,12 +24,6 @@ export type CreatedFontSizeTheme = {
   XXL: string
 }
 
-// リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
-// 可能性があるため残している:
-// import type { FontSizes } from 'smarthr-ui/lib/themes/createFontSize'
-/** @public */
-export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
-
 const getFontSize = (scaleFactor: number, diff: number = 0) =>
   // calc(1rem * scaleFactor / (scaleFactor + diff))
   `${scaleFactor / (scaleFactor + diff)}rem`
