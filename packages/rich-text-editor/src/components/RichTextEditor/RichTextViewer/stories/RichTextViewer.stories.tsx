@@ -9,14 +9,12 @@ const meta = {
     chromatic: { disableSnapshot: true },
     layout: 'padded',
   },
-  args: {
-    gap: 1,
-  },
   argTypes: {
     gap: {
       control: { type: 'select' },
       options: [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 8],
-      description: 'ブロック要素間の縦間隔（数値トークン）。デフォルトは 1（16px）。',
+      description:
+        'ブロック要素間の縦間隔（数値トークン）。指定すると直下のブロックをこの間隔で並べる。指定しない場合はエディタと同じ間隔。',
     },
   },
 } satisfies Meta<typeof RichTextViewer>

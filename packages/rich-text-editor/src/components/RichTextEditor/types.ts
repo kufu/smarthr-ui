@@ -161,7 +161,10 @@ export type RichTextViewerProps = {
    */
   content: RichTextValue
   className?: string
-  /** ブロック要素間の縦間隔。デフォルトは 1（16px）。 */
+  /**
+   * ブロック要素間の縦間隔。指定すると、直下のブロックをこの間隔で並べる。
+   * 指定しない場合は、エディタと同じ間隔で並べる。
+   */
   gap?: RichTextViewerGap
 }
 

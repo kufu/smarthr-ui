@@ -3,7 +3,7 @@ import { type FC, memo, useMemo } from 'react'
 import { tv } from '../../../libs/tv'
 import { getValueKeys, resolveRichTextValue } from '../serializers/resolveRichTextValue'
 import { serializeToReactElement } from '../serializers/serializeToReactElement'
-import { staticContentClasses } from '../styles'
+import { staticBlockSpacingClasses, staticContentClasses } from '../styles'
 
 import type { RichTextViewerGap, RichTextViewerProps } from '../types'
 
@@ -12,13 +12,17 @@ const classNameGenerator = tv({
     'smarthr-ui-RichTextViewer',
     // 行送りは RELAXED(loose: 1.75) を使う。読みやすさ重視の表示専用コンポーネントのため。
     'shr-rte-text-base shr-rte-leading-loose shr-rte-text-black',
+    // 空白と折り返しを既定のままにしないのは、エディタが ProseMirror の CSS で行頭や連続した空白をそのまま表示し、長い単語を折り返すため
+    'shr-rte-whitespace-break-spaces shr-rte-break-words',
+    // block のままにしないのは、入れ子の要素の余白がマージンの相殺で外にはみ出すため
+    'shr-rte-flow-root',
     ...staticContentClasses,
-    // 直下ブロックのブラウザデフォルト縦マージン（h1-h4, p 等の user-agent margin）を打ち消す。
-    // staticContentClasses 側ではトップレベル要素の my を指定していないため、間隔は下の
-    // space-y(gap) のみで決まり、先頭要素の上マージン・末尾要素の下マージンは出ない。
-    '[&>*]:shr-rte-my-0',
   ],
   variants: {
+    uniformGap: {
+      true: '[&>*]:shr-rte-my-0',
+      false: staticBlockSpacingClasses,
+    },
     gap: {
       0: 'shr-rte-space-y-0',
       0.25: 'shr-rte-space-y-0.25',
@@ -37,7 +41,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const RichTextViewer: FC<RichTextViewerProps> = memo(({ content, className, gap = 1 }) => {
+export const RichTextViewer: FC<RichTextViewerProps> = memo(({ content, className, gap }) => {
   const [format, contentKey] = getValueKeys(content)
   const element = useMemo(() => {
     try {
@@ -51,7 +55,10 @@ export const RichTextViewer: FC<RichTextViewerProps> = memo(({ content, classNam
     // content の参照で再計算しないのは、包みを描画のたびに作ると中身が同じでも作り直すため
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [format, contentKey])
-  const actualClassName = useMemo(() => classNameGenerator({ gap, className }), [gap, className])
+  const actualClassName = useMemo(
+    () => classNameGenerator({ uniformGap: gap !== undefined, gap, className }),
+    [gap, className],
+  )
 
   return <div className={actualClassName}>{element}</div>
 })
