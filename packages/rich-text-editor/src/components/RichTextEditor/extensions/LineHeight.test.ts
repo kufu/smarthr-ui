@@ -1,0 +1,77 @@
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { describe, expect, it } from 'vitest'
+
+import { LINE_HEIGHTS, LineHeight, isAllowedLineHeight } from './LineHeight'
+
+const createEditor = () =>
+  new Editor({
+    extensions: [StarterKit, LineHeight.configure({ types: ['paragraph', 'heading'] })],
+    content: '<p>hello</p>',
+  })
+
+describe('LineHeight 拡張', () => {
+  it('LINE_HEIGHTS は 1/1.25/1.5/1.75/2 を持つ', () => {
+    expect(LINE_HEIGHTS).toEqual(['1', '1.25', '1.5', '1.75', '2'])
+  })
+
+  it.each([
+    ['見出しだけ', 2, 'heading'],
+    ['段落だけ', 7, 'paragraph'],
+  ])('%sを選んでいても、その型に適用・解除できる', (_, pos, type) => {
+    const editor = new Editor({
+      extensions: [StarterKit, LineHeight.configure({ types: ['paragraph', 'heading'] })],
+      content: '<h2>見出し</h2><p>本文</p>',
+    })
+    editor.commands.setTextSelection(pos)
+
+    expect(editor.commands.setLineHeight('2')).toBe(true)
+    expect(editor.getAttributes(type).lineHeight).toBe('2')
+
+    expect(editor.commands.unsetLineHeight()).toBe(true)
+    expect(editor.getAttributes(type).lineHeight ?? null).toBeNull()
+    editor.destroy()
+  })
+
+  it('allowlist 外の値は適用されない', () => {
+    const editor = createEditor()
+    editor.commands.selectAll()
+    editor.commands.setLineHeight('99')
+    expect(editor.getAttributes('paragraph').lineHeight ?? null).toBeNull()
+    editor.commands.setLineHeight('1.5;color:red')
+    expect(editor.getAttributes('paragraph').lineHeight ?? null).toBeNull()
+    editor.destroy()
+  })
+
+  it('parseHTML は allowlist 外の line-height を取り込まない', () => {
+    const editor = new Editor({
+      extensions: [StarterKit, LineHeight.configure({ types: ['paragraph', 'heading'] })],
+      content: '<p style="line-height: 3">x</p>',
+    })
+    expect(editor.getAttributes('paragraph').lineHeight ?? null).toBeNull()
+    editor.destroy()
+  })
+
+  it('parseHTML は allowlist 内の line-height を取り込む', () => {
+    const editor = new Editor({
+      extensions: [StarterKit, LineHeight.configure({ types: ['paragraph', 'heading'] })],
+      content: '<p style="line-height: 1.5">x</p>',
+    })
+    expect(editor.getAttributes('paragraph').lineHeight).toBe('1.5')
+    editor.destroy()
+  })
+})
+
+describe('isAllowedLineHeight', () => {
+  it('allowlist 内の値で true を返す', () => {
+    expect(isAllowedLineHeight('1')).toBe(true)
+    expect(isAllowedLineHeight('2')).toBe(true)
+  })
+
+  it('allowlist 外・非文字列で false を返す', () => {
+    expect(isAllowedLineHeight('99')).toBe(false)
+    expect(isAllowedLineHeight('1;color:red')).toBe(false)
+    expect(isAllowedLineHeight(null)).toBe(false)
+    expect(isAllowedLineHeight(1.5)).toBe(false)
+  })
+})

@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [103.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v102.1.0...smarthr-ui-v103.0.0) (2026-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Combobox:** 非推奨のonChangeを削除する ([#7500](https://github.com/kufu/smarthr-ui/issues/7500))
+* 非推奨のLineClampを削除する ([#7481](https://github.com/kufu/smarthr-ui/issues/7481))
+* 非推奨のSidebarを削除する ([#7489](https://github.com/kufu/smarthr-ui/issues/7489))
+* **BottomFixedArea:** 非推奨のBottomFixedAreaを削除する ([#7491](https://github.com/kufu/smarthr-ui/issues/7491))
+* **WarekiPicker:** 非推奨のonChangeDateを削除する ([#7499](https://github.com/kufu/smarthr-ui/issues/7499))
+* **Icon:** 非推奨のsizeを削除する ([#7503](https://github.com/kufu/smarthr-ui/issues/7503))
+* Dialog/ModelessDialogの非推奨width属性を削除する ([#7490](https://github.com/kufu/smarthr-ui/issues/7490))
+
+### Features
+
+* **Combobox:** disableFilteringを追加しクライアント側絞り込みを無効化できるようにする ([#7366](https://github.com/kufu/smarthr-ui/issues/7366)) ([9eecb7c](https://github.com/kufu/smarthr-ui/commit/9eecb7c2b2454a2c474c690762d9de57522e3640))
+* **InputFile:** onPassword属性を追加し、パスワード保護PDFを閲覧可能にする ([#7426](https://github.com/kufu/smarthr-ui/issues/7426)) ([bad8eb0](https://github.com/kufu/smarthr-ui/commit/bad8eb000f8dc38730156cbb00602d729687cadc))
+* **Input:** prefix/suffix使用時にaria-labelledbyでlabel・input・prefix・suffixを紐づける ([#7386](https://github.com/kufu/smarthr-ui/issues/7386)) ([c9b7f31](https://github.com/kufu/smarthr-ui/commit/c9b7f31c04e1cd92644517a7e9670c5573477351))
+* **RichTextEditor:** Tiptapベースのリッチテキストエディタを追加 ([#6269](https://github.com/kufu/smarthr-ui/issues/6269)) ([8540d4f](https://github.com/kufu/smarthr-ui/commit/8540d4f2b433a7347482d41e24bd78a27a9c84c7))
+* **TextLink:** hrefが未指定の場合にdisabled的な見た目にする ([#7438](https://github.com/kufu/smarthr-ui/issues/7438)) ([735c736](https://github.com/kufu/smarthr-ui/commit/735c736d85026abdc887a36810cefc66f85d67b0))
+
+
+### Bug Fixes
+
+* **AppHeader:** client専用APIを使用しているのに'use client'が無いファイルに追加する ([#7518](https://github.com/kufu/smarthr-ui/issues/7518)) ([f67cd39](https://github.com/kufu/smarthr-ui/commit/f67cd3946b2757ef18ce2ee7277392ded16a0e11))
+* **Combobox:** 矢印キー操作でpreventDefaultし、ページスクロールの誤発火を防ぐ ([#7457](https://github.com/kufu/smarthr-ui/issues/7457)) ([76f0419](https://github.com/kufu/smarthr-ui/commit/76f0419b878272c348a363b0d97a94acf1102fee))
+* **Dialog:** 縦幅が狭いときにダイアログ全体にもスクロールバーが出る問題を修正 ([#7528](https://github.com/kufu/smarthr-ui/issues/7528)) ([c21c682](https://github.com/kufu/smarthr-ui/commit/c21c6826959a20513b3c26af2e62068294d3401e))
+* **DropdownMenuButton:** 開閉を示すアイコンを回転ではなく入れ替えで表現する ([#7461](https://github.com/kufu/smarthr-ui/issues/7461)) ([8e8776f](https://github.com/kufu/smarthr-ui/commit/8e8776fa7d19a66f38003deed834403c79640828))
+* ModelessDialog のハンドラーの説明に重複する ID が設定されている問題を修正 ([#7524](https://github.com/kufu/smarthr-ui/issues/7524)) ([6a552d3](https://github.com/kufu/smarthr-ui/commit/6a552d3d230ed6afd6441dbfe9715b25466316dd))
+* **RemoteDialogTrigger:** Docsページで2つのダイアログが表示される不具合を修正 ([#7514](https://github.com/kufu/smarthr-ui/issues/7514)) ([e4b9df8](https://github.com/kufu/smarthr-ui/commit/e4b9df81e1290d49e6ae0075db61bb9d10b68e6d))
+
+
+### Code Refactoring
+
+* **BottomFixedArea:** 非推奨のBottomFixedAreaを削除する ([#7491](https://github.com/kufu/smarthr-ui/issues/7491)) ([a0e1681](https://github.com/kufu/smarthr-ui/commit/a0e1681eee1ab90605a1ff65fe2f185dde0e75c7))
+* **Combobox:** 非推奨のonChangeを削除する ([#7500](https://github.com/kufu/smarthr-ui/issues/7500)) ([9e810e2](https://github.com/kufu/smarthr-ui/commit/9e810e2c3774ca76cf689d707adcb3b534aee9d2))
+* Dialog/ModelessDialogの非推奨width属性を削除する ([#7490](https://github.com/kufu/smarthr-ui/issues/7490)) ([75de311](https://github.com/kufu/smarthr-ui/commit/75de3110086eb026f9bbbc39f9837ffab793e5ed))
+* **Icon:** 非推奨のsizeを削除する ([#7503](https://github.com/kufu/smarthr-ui/issues/7503)) ([e5f0662](https://github.com/kufu/smarthr-ui/commit/e5f06627281061017beb3ca21d200ae4bc861703))
+* **WarekiPicker:** 非推奨のonChangeDateを削除する ([#7499](https://github.com/kufu/smarthr-ui/issues/7499)) ([9f572f5](https://github.com/kufu/smarthr-ui/commit/9f572f5abf4a34041fbb4e4be89da6a1589cf2ad))
+* 非推奨のLineClampを削除する ([#7481](https://github.com/kufu/smarthr-ui/issues/7481)) ([d26d4a6](https://github.com/kufu/smarthr-ui/commit/d26d4a64d9564cbfce8d09ccacfa198d773a8aa9))
+* 非推奨のSidebarを削除する ([#7489](https://github.com/kufu/smarthr-ui/issues/7489)) ([67f1dc0](https://github.com/kufu/smarthr-ui/commit/67f1dc0b8734093325976714383bfb241bbb2261))
+
 ## [102.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v102.0.0...smarthr-ui-v102.1.0) (2026-11-05)
 
 
