@@ -166,11 +166,7 @@ export const DoughnutChart: React.FC<Props> = ({
             <DoughnutCenterContent chartArea={chartArea}>{children}</DoughnutCenterContent>
           </>
         ) : (
-          <TableView
-            data={enhancedData}
-            caption={title}
-            options={chartOptions}
-          />
+          <TableView data={enhancedData} caption={title} options={chartOptions} />
         )}
       </div>
     </div>

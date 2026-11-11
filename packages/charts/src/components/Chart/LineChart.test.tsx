@@ -20,7 +20,9 @@ describe('LineChart', () => {
     const root = createRoot(container)
     const hasTable = () => container.querySelector('table') !== null
     const clickButton = (label: string) =>
-      act(() => container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!.click())
+      act(() =>
+        container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!.click(),
+      )
 
     act(() =>
       root.render(

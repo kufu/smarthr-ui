@@ -19,11 +19,7 @@ const FIRST_COLUMN_CLASS_NAME =
 // 行見出しは白背景にする
 const ROW_HEADER_CLASS_NAME = '[&_th:not([scope=col])]:shr-bg-white'
 
-export const TableView = <T extends ChartType>({
-  data,
-  options,
-  caption,
-}: Props<T>) => {
+export const TableView = <T extends ChartType>({ data, options, caption }: Props<T>) => {
   const { scales } = options as Partial<ChartOptions<'bar' | 'line'>>
   const headers: ReactNode[] = [
     options?.indexAxis === 'y' ? scales?.y?.title?.text : scales?.x?.title?.text,

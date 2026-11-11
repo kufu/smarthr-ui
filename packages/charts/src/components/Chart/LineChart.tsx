@@ -124,11 +124,7 @@ export const LineChart: React.FC<Props> = ({
             options={chartOptions}
           />
         ) : (
-          <TableView
-            data={enhancedData}
-            caption={title}
-            options={chartOptions}
-          />
+          <TableView data={enhancedData} caption={title} options={chartOptions} />
         )}
       </div>
     </div>

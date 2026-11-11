@@ -123,11 +123,7 @@ export const RadarChart: React.FC<Props> = ({
             options={chartOptions}
           />
         ) : (
-          <TableView
-            data={enhancedData}
-            caption={title}
-            options={chartOptions}
-          />
+          <TableView data={enhancedData} caption={title} options={chartOptions} />
         )}
       </div>
     </div>

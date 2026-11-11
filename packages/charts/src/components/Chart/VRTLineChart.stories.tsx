@@ -63,7 +63,7 @@ export default {
 
       {/* パターン9: テーブル表示（defaultView='table'） */}
       <div className="shr-h-[400px]">
-        <LineChart data={multiSmall} title="テーブル表示" defaultView="table" />
+        <LineChart data={multiSmall} defaultView="table" title="テーブル表示" />
       </div>
     </Stack>
   ),
