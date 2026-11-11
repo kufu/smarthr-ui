@@ -6,7 +6,7 @@ import type { Panel } from '../Panel'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
-  title: 'Components/Base/VRT',
+  title: 'Components/Panel/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}
