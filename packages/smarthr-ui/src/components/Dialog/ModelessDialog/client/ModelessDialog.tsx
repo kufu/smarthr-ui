@@ -160,7 +160,7 @@ export const ModelessDialog: FC<Props> = ({
   ...rest
 }) => {
   const labelId = useId()
-  const lastFocusElementRef = useRef<HTMLElement | null>(null)
+  const lastFocusOutsideRef = useRef<HTMLElement | null>(null)
   // HINT: top/left/right/bottomは「開いたときの初期位置」であるため、
   // 開いている最中のprops変更では追従させず、開くたびに最新の値へ更新する
   const [defaultPosition, setDefaultPosition] = useState(() => ({ top, left, right, bottom }))
@@ -285,11 +285,11 @@ export const ModelessDialog: FC<Props> = ({
         }
       },
       handleClickClose: (e: MouseEvent<HTMLButtonElement>) => {
-        lastFocusElementRef.current?.focus()
+        lastFocusOutsideRef.current?.focus()
         latest.onClickClose?.(e)
       },
       handlePressEscape: (e: KeyboardEvent) => {
-        lastFocusElementRef.current?.focus()
+        lastFocusOutsideRef.current?.focus()
         latest.onPressEscape?.(e)
       },
       handleDragStart: (_: any, data: { x: number; y: number }) => {
@@ -314,13 +314,15 @@ export const ModelessDialog: FC<Props> = ({
 
   const layoutEffectRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
-      if (isOpen) {
-        if (
-          document.activeElement instanceof HTMLElement &&
-          !node?.contains(document.activeElement)
-        ) {
-          lastFocusElementRef.current = document.activeElement
+      const captureOutsideFocus = (element: EventTarget | null) => {
+        // 現在フォーカスがあたっている要素がModeless dialog外の要素であれば、lastFocusOutsideRefに代入する
+        if (element instanceof HTMLElement && !node?.contains(element)) {
+          lastFocusOutsideRef.current = element
         }
+      }
+
+      if (isOpen) {
+        captureOutsideFocus(document.activeElement)
 
         const oldDefaultPosition = latest.defaultPosition
         const nextDefaultPosition =
@@ -372,10 +374,7 @@ export const ModelessDialog: FC<Props> = ({
       }
 
       const focusHandler = (e: FocusEvent) => {
-        // e.target(現在フォーカスがあたっている要素)がModeless dialog外の要素であれば、lastFocusElementRefに代入する
-        if (e.target instanceof HTMLElement && !node?.contains(e.target)) {
-          lastFocusElementRef.current = e.target
-        }
+        captureOutsideFocus(e.target)
       }
 
       document.addEventListener('focus', focusHandler, true)
