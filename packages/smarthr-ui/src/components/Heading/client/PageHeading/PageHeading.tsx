@@ -14,6 +14,10 @@ import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type TextProps = ComponentPropsWithRef<typeof Text>
 type StyleTypeMapProps = typeof STYLE_TYPE_MAP
+// HINT: PageHeading(h1)はページ内に1つしか存在しない前提のコンポーネントのため、
+//  他の見出しと視覚的に見分けるためのicon等を設定する必要がなく、意図的にpropsを用意していない。
+//  完了/未完了などページの状態を示したい場合も、PageHeadingではなく本文側のコンポーネント
+//  (ResponseMessageなど)で表現すること。検討の経緯: https://github.com/kufu/smarthr-ui/pull/7530
 type Props = ExtendElementPropsWithRef<
   'h1',
   {
