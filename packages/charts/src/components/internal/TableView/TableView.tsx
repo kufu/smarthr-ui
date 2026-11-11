@@ -1,4 +1,4 @@
-import { Table, Td, Th } from 'smarthr-ui'
+import { Table, Td, Th, VisuallyHiddenText } from 'smarthr-ui'
 
 import type { ChartType as BaseChartType, ChartData, ChartOptions } from 'chart.js'
 import type { ReactNode } from 'react'
@@ -8,7 +8,8 @@ type ChartType = Exclude<BaseChartType, 'bubble' | 'scatter' | 'polarArea'>
 type Props<T extends ChartType> = {
   data: ChartData<T>
   options?: ChartOptions<T>
-  'aria-labelledby'?: string
+  /** 表のアクセシブルネーム。見出しはチャート側で表示しているので、caption は視覚的に隠す */
+  caption?: string
 }
 
 // 1列目（見出し列）のみ幅を抑える
@@ -21,7 +22,7 @@ const ROW_HEADER_CLASS_NAME = '[&_th:not([scope=col])]:shr-bg-white'
 export const TableView = <T extends ChartType>({
   data,
   options,
-  'aria-labelledby': ariaLabelledby,
+  caption,
 }: Props<T>) => {
   const { scales } = options as Partial<ChartOptions<'bar' | 'line'>>
   const headers: ReactNode[] = [
@@ -35,10 +36,8 @@ export const TableView = <T extends ChartType>({
 
   return (
     <div className="shr-mt-0.5 shr-h-full">
-      <Table
-        className={`${FIRST_COLUMN_CLASS_NAME} ${ROW_HEADER_CLASS_NAME}`}
-        aria-labelledby={ariaLabelledby}
-      >
+      <Table className={`${FIRST_COLUMN_CLASS_NAME} ${ROW_HEADER_CLASS_NAME}`}>
+        {caption && <VisuallyHiddenText as="caption">{caption}</VisuallyHiddenText>}
         <tbody>
           <tr>
             {headers.map((header, index) => (

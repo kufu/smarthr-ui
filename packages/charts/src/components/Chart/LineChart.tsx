@@ -52,7 +52,6 @@ export const LineChart: React.FC<Props> = ({
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
-  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'line'>>(null)
   const chartColors = useMemo(
     () => getLineChartColors(data.datasets.length),
@@ -102,7 +101,7 @@ export const LineChart: React.FC<Props> = ({
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
         {title && (
-          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+          <Text styleType="blockTitle" className="shr-col-start-2 shr-self-center">
             {title}
           </Text>
         )}
@@ -127,7 +126,7 @@ export const LineChart: React.FC<Props> = ({
         ) : (
           <TableView
             data={enhancedData}
-            aria-labelledby={title ? titleId : undefined}
+            caption={title}
             options={chartOptions}
           />
         )}

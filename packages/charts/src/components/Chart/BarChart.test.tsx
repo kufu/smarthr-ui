@@ -109,15 +109,16 @@ describe('BarChart', () => {
       container.remove()
     })
 
-    it('titleがあるとき、tableのアクセシブルネームとして関連付ける', () => {
+    it('titleがあるとき、tableのcaptionとしてアクセシブルネームにする', () => {
       document.body.innerHTML = renderToStaticMarkup(
         <IntlProvider locale="ja">
           <BarChart {...defaultProps} defaultView="table" title="グラフのタイトル" />
         </IntlProvider>,
       )
-      const labelId = document.querySelector('table')!.getAttribute('aria-labelledby')!
+      const table = document.querySelector('table')!
 
-      expect(document.getElementById(labelId)?.textContent).toBe('グラフのタイトル')
+      expect(table.firstElementChild?.tagName).toBe('CAPTION')
+      expect(table.querySelector('caption')?.textContent).toBe('グラフのタイトル')
     })
   })
 })

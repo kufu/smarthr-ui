@@ -64,7 +64,6 @@ export const DoughnutChart: React.FC<Props> = ({
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
-  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'doughnut'>>(null)
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
   const chartColors = useMemo(
@@ -137,7 +136,7 @@ export const DoughnutChart: React.FC<Props> = ({
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
         {title && (
-          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+          <Text styleType="blockTitle" className="shr-col-start-2 shr-self-center">
             {title}
           </Text>
         )}
@@ -169,7 +168,7 @@ export const DoughnutChart: React.FC<Props> = ({
         ) : (
           <TableView
             data={enhancedData}
-            aria-labelledby={title ? titleId : undefined}
+            caption={title}
             options={chartOptions}
           />
         )}

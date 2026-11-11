@@ -72,7 +72,6 @@ export const BarChart: React.FC<Props> = ({
 }) => {
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
-  const titleId = `${chartId}-title`
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
@@ -162,7 +161,7 @@ export const BarChart: React.FC<Props> = ({
       <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
       <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
         {title && (
-          <Text id={titleId} styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+          <Text styleType="blockTitle" className="shr-col-start-2 shr-self-center">
             {title}
           </Text>
         )}
@@ -187,7 +186,7 @@ export const BarChart: React.FC<Props> = ({
         ) : (
           <TableView
             data={enhancedData}
-            aria-labelledby={title ? titleId : undefined}
+            caption={title}
             options={chartOptions}
           />
         )}
