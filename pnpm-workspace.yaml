@@ -32,7 +32,7 @@ overrides:
   # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
   # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
   'sucrase>glob': '>=14.0.3'
-  'glob>minimatch': '>=11.0.3'
+  'glob>minimatch': '>=11.0.4'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
