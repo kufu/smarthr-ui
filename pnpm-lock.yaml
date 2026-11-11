@@ -230,7 +230,7 @@ importers:
         specifier: ^21.0.4
         version: 21.0.4
       intl-messageformat:
-        specifier: ^11.2.14
+        specifier: ^11.2.15
         version: 11.2.15
       tailwind-variants:
         specifier: ^0.3.1
