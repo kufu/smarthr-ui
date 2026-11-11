@@ -1,8 +1,6 @@
 import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { backgroundColor } from '../../tailwind'
-
 import type { ExtendElementPropsWithoutRef } from '../../types'
 
 type BgColor = 'WHITE' | 'COLUMN'
@@ -27,12 +25,12 @@ const ROUNDED = {
 const ROUNDED_ALL = ['shr-rounded-l', ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-SideNav', 'shr-relative shr-list-none'],
+  base: [
+    'smarthr-ui-SideNav',
+    'shr-relative shr-list-none',
+    'data-[bg-color=COLUMN]:shr-bg-column data-[bg-color=WHITE]:shr-bg-white',
+  ],
   variants: {
-    bgColor: {
-      WHITE: backgroundColor.WHITE,
-      COLUMN: backgroundColor.COLUMN,
-    } satisfies Record<BgColor, string>,
     rounded: {
       true: ROUNDED_ALL,
       all: ROUNDED_ALL,
@@ -56,8 +54,8 @@ export const SideNav: FC<Props> = ({
   ...rest
 }) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ bgColor, rounded, className }),
-    [bgColor, rounded, className],
+    () => classNameGenerator({ rounded, className }),
+    [rounded, className],
   )
 
   return (
