@@ -292,10 +292,14 @@ export const SingleCombobox = <T,>({
         // inputValueを選択中アイテムのラベルへ戻すため、手入力による絞り込みも解除する
         setIsEditing(false)
         setInputValue(getSelectedLabelText(latest.selectedItem))
-      } else {
-        // HINT: 未選択の場合はinputValueに手入力値が残るため、isEditingは解除しない
-        // 解除してしまうと「入力値が表示されているのに絞り込みが効いていない」状態になる
+      } else if (latest.emptySelectionFallbackItem) {
         selectFallbackItem()
+      } else {
+        // 未選択のままフォーカスが外れた場合、手入力値を破棄して未選択の表示(空)に戻す
+        // 制御コンポーネントの場合に親側でinputValueを更新できるように、onChangeInputも空文字で発火する
+        setIsEditing(false)
+        setInputValue('')
+        latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
       }
     }
 

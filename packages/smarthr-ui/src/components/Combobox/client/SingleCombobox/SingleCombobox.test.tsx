@@ -98,8 +98,9 @@ describe('SingleCombobox', () => {
     expect(listbox()).not.toBeInTheDocument()
   })
 
-  it('未選択のままblurしても、入力値が残っている限り絞り込みが維持されること', async () => {
-    render(template({ selectedItem: null }))
+  it('未選択のままblurすると、入力値がクリアされて未選択の表示に戻ること', async () => {
+    const onChangeInput = vi.fn()
+    render(template({ selectedItem: null, onChangeInput }))
 
     // 入力すると絞り込まれる
     await userEvent.click(combobox())
@@ -110,10 +111,32 @@ describe('SingleCombobox', () => {
     await userEvent.click(document.body)
     expect(listbox()).not.toBeInTheDocument()
 
-    // 再度フォーカスしたとき、入力値が残っているなら絞り込みも維持されていること
+    // blurすると手入力値が破棄され、未選択の表示(空)に戻ること
+    expect(combobox()).toHaveValue('')
+
+    // 制御コンポーネントとして検索語を管理する親にも、クリアされたことが通知されること
+    expect(onChangeInput).toHaveBeenLastCalledWith(
+      expect.objectContaining({ target: expect.objectContaining({ value: '' }) }),
+    )
+
+    // 再度フォーカスしたとき、絞り込みも解除されすべての選択肢が表示されること
     await userEvent.click(combobox())
+    expect(screen.getAllByRole('option')).toHaveLength(5)
+  })
+
+  it('選択済み状態で手入力後にblurすると、入力値が選択中アイテムのラベルに戻ること', async () => {
+    render(template({}))
+
+    await userEvent.click(combobox())
+    await userEvent.clear(combobox())
+    await userEvent.type(combobox(), 'option 2')
     expect(combobox()).toHaveValue('option 2')
-    expect(screen.getAllByRole('option')).toHaveLength(1)
+
+    // 外側クリックでblurする
+    await userEvent.click(document.body)
+
+    // 選択を変えていないため、入力値が選択中アイテム(option 1)のラベルに戻ること
+    expect(combobox()).toHaveValue('option 1')
   })
 
   it('未選択のままblurしてemptySelectionFallbackItemが選択された場合は、絞り込みが解除されること', async () => {
