@@ -35,7 +35,7 @@ type Props = ExtendElementPropsWithoutRef<
 const DEFAULT_EXPANDED_ARRAY: string[] = []
 const DEFAULT_EXPANDED_MAP = flatArrayToMap(DEFAULT_EXPANDED_ARRAY)
 
-export const AccordionPanelContext = createContext<{
+export const AccordionContext = createContext<{
   iconPosition: 'left' | 'right'
   expandedItems: Map<string, string>
   handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
@@ -48,16 +48,16 @@ export const AccordionPanelContext = createContext<{
 })
 
 const ROUNDED = {
-  t_l: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tl-l',
-  t_r: '[&>.smarthr-ui-AccordionPanel-item:first-child_.smarthr-ui-AccordionPanel-trigger]:shr-rounded-tr-l',
-  b_l: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-bl-l',
-  b_r: '[&>.smarthr-ui-AccordionPanel-item:last-child_.smarthr-ui-AccordionPanel-trigger:not([aria-expanded="true"])]:shr-rounded-br-l',
+  t_l: '[&>.smarthr-ui-Accordion-item:first-child_.smarthr-ui-Accordion-trigger]:shr-rounded-tl-l',
+  t_r: '[&>.smarthr-ui-Accordion-item:first-child_.smarthr-ui-Accordion-trigger]:shr-rounded-tr-l',
+  b_l: '[&>.smarthr-ui-Accordion-item:last-child_.smarthr-ui-Accordion-trigger:not([aria-expanded="true"])]:shr-rounded-bl-l',
+  b_r: '[&>.smarthr-ui-Accordion-item:last-child_.smarthr-ui-Accordion-trigger:not([aria-expanded="true"])]:shr-rounded-br-l',
 }
 
 const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
-  base: 'smarthr-ui-AccordionPanel',
+  base: 'smarthr-ui-Accordion',
   variants: {
     rounded: {
       true: ROUNDED_ALL,
@@ -77,7 +77,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const AccordionPanel: FC<Props> = ({
+export const Accordion: FC<Props> = ({
   iconPosition = 'left',
   expandableMultiply = true,
   defaultExpanded = DEFAULT_EXPANDED_ARRAY,
@@ -177,7 +177,7 @@ export const AccordionPanel: FC<Props> = ({
   }, [latest])
 
   return (
-    <AccordionPanelContext.Provider
+    <AccordionContext.Provider
       value={{
         handleClickTrigger: functions.handleClickTrigger,
         handleKeyDown: functions.handleKeyDown,
@@ -188,7 +188,7 @@ export const AccordionPanel: FC<Props> = ({
       <div {...rest} ref={functions.callbackRef} role="presentation" className={actualClassName}>
         {children}
       </div>
-    </AccordionPanelContext.Provider>
+    </AccordionContext.Provider>
   )
 }
 
