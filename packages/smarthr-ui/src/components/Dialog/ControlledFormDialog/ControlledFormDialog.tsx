@@ -36,8 +36,8 @@ type Props = ExtendElementPropsWithRef<
       /**
        * フォーム送信時に発火するコールバック関数
        *
-       * `formProps.action` を渡していない場合は `preventDefault` された状態で呼ばれます。
-       * 渡している場合は `preventDefault` されていない状態で呼ばれ、この中で `preventDefault` すると action は実行されません。
+       * `formProps.action` と送信ボタンの `formAction` のどちらも無い場合は `preventDefault` された状態で呼ばれます。
+       * どちらかがある場合は `preventDefault` されていない状態で呼ばれ、この中で `preventDefault` すると action は実行されません。
        */
       onSubmit?: (e: FormEvent<HTMLFormElement>, helpers: { close: () => void }) => void
       /**
@@ -45,6 +45,7 @@ type Props = ExtendElementPropsWithRef<
        *
        * `action` を渡すと送信時に `preventDefault` されず、React の form action として実行されます。
        * `action` に URL を渡した場合は、ブラウザ標準のフォーム送信としてページ遷移します。
+       * children 内の送信ボタンに `formAction` を渡した場合も同様に、その action が実行されます。
        * `formProps.onSubmit` は `onSubmit` より先に呼ばれ、この中で `preventDefault` すると
        * `onSubmit` と action はどちらも実行されません。
        * ダイアログを閉じている間（閉じるアニメーション中）も `formProps.onSubmit` は呼ばれますが、
@@ -135,8 +136,9 @@ export const ControlledFormDialog: FC<Props> = ({
         }
 
         // HINT: ReactはsubmitイベントがdefaultPreventedかどうかでactionを実行するか判定するため、
-        // actionがある場合はpreventDefaultしない
-        if (!latest.formProps?.action) {
+        // form・送信ボタンのどちらかにactionがある場合はpreventDefaultしない。
+        // ReactはformActionに関数を渡すとformaction属性も付与するため、属性の有無で判定できる
+        if (!latest.formProps?.action && !e.nativeEvent.submitter?.hasAttribute('formaction')) {
           e.preventDefault()
         }
 
