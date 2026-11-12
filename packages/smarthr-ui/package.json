@@ -100,15 +100,15 @@
       "import": "./lib/types/index.js",
       "require": "./lib/types/index.cjs"
     },
-    "./lib/*": {
-      "types": "./lib/*.d.ts",
-      "import": "./lib/*.js",
-      "require": "./lib/*.cjs"
+    "./smarthr-ui-preset": {
+      "types": "./lib/smarthr-ui-preset.d.ts",
+      "import": "./lib/smarthr-ui-preset.js",
+      "require": "./lib/smarthr-ui-preset.cjs"
     },
-    "./esm/*": {
-      "types": "./lib/*.d.ts",
-      "import": "./lib/*.js",
-      "require": "./lib/*.cjs"
+    "./lib/components/Experimental": {
+      "types": "./lib/components/Experimental/index.d.ts",
+      "import": "./lib/components/Experimental/index.js",
+      "require": "./lib/components/Experimental/index.cjs"
     },
     "./smarthr-ui.css": "./smarthr-ui.css",
     "./package.json": "./package.json",
