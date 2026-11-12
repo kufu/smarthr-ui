@@ -22,13 +22,13 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChange={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
@@ -38,13 +38,13 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChange={vi.fn()} />
         </FormControl>
       </form>,
       'en-us',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     const warekiText = screen.getByText('September 25, 6 Reiwa')
@@ -55,11 +55,11 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" value="2024-09-25" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" value="2024-09-25" onChange={vi.fn()} />
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     // カレンダーを開く
     act(() => textbox.click())
@@ -81,18 +81,13 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker
-            name="date"
-            value="2024-09-25"
-            showAlternative={false}
-            onChangeDate={vi.fn()}
-          />
+          <WarekiPicker name="date" value="2024-09-25" showAlternative={false} onChange={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
@@ -106,14 +101,14 @@ describe('WarekiPicker', () => {
             name="date"
             value="2024-09-25"
             showAlternative={(date) => (date ? `custom:${date.getFullYear()}` : null)}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('custom:2024')).toBeTruthy()
@@ -131,7 +126,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
@@ -143,13 +138,13 @@ describe('WarekiPicker', () => {
 
     renderWithIntl(<Wrapper />)
 
-    const textboxBefore = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxBefore = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
 
     act(() => screen.getByRole('button', { name: 'toggle' }).click())
 
-    const textboxAfter = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxAfter = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(textboxAfter).toBe(textboxBefore)
     expect(textboxAfter).toHaveProperty('value', '2024/09/25')
@@ -166,7 +161,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
@@ -189,11 +184,11 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker name="date" onChangeDate={vi.fn()} />
+          <WarekiPicker name="date" onChange={vi.fn()} />
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
   })
@@ -206,7 +201,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '2024/09/25')
   })
 
@@ -218,7 +213,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     act(() => textbox.click())
 
@@ -233,7 +228,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     await userEvent.clear(textbox)
     await userEvent.type(textbox, '平成4年5月29日{tab}')
     expect(textbox).toHaveProperty('value', '1992/05/29')
@@ -247,7 +242,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     await userEvent.clear(textbox)
     await userEvent.type(textbox, '2024/10/15{tab}')
@@ -271,7 +266,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     rerender(
       <IntlProvider locale="ja">
@@ -300,7 +295,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     await userEvent.clear(textbox)
     await userEvent.type(textbox, '2024/10/15{tab}')
@@ -324,7 +319,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(textbox).toHaveProperty('value', '2024/10/15')
     expect(screen.getByText('令和6年10月15日')).toBeVisible()
@@ -359,12 +354,12 @@ describe('WarekiPicker', () => {
             name="date"
             value="2024-09-25"
             defaultValue="2020-01-01"
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '2024/09/25')
   })
 
@@ -377,12 +372,12 @@ describe('WarekiPicker', () => {
             value={null}
             defaultValue="2020-01-01"
             showAlternative={(d) => (d ? `alt:${d.getFullYear()}` : null)}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '')
     expect(screen.queryByText('alt:2020')).not.toBeInTheDocument()
   })
@@ -395,7 +390,7 @@ describe('WarekiPicker', () => {
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', 'invalid-date-string')
   })
 
@@ -406,12 +401,12 @@ describe('WarekiPicker', () => {
           <WarekiPicker
             name="date"
             formatDate={(d) => (d ? d.toISOString() : '未選択')}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
     )
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     expect(textbox).toHaveProperty('value', '')
   })
 
@@ -419,18 +414,13 @@ describe('WarekiPicker', () => {
     renderWithIntl(
       <form>
         <FormControl label="WarekiPicker">
-          <WarekiPicker
-            name="date"
-            value="2024-09-25"
-            showAlternative={false}
-            onChangeDate={vi.fn()}
-          />
+          <WarekiPicker name="date" value="2024-09-25" showAlternative={false} onChange={vi.fn()} />
         </FormControl>
       </form>,
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.queryByText('令和6年9月25日')).not.toBeInTheDocument()
@@ -444,14 +434,14 @@ describe('WarekiPicker', () => {
             name="date"
             value="2024-09-25"
             showAlternative={(date) => (date ? `custom:${date.getFullYear()}` : null)}
-            onChangeDate={vi.fn()}
+            onChange={vi.fn()}
           />
         </FormControl>
       </form>,
       'ja',
     )
 
-    const textbox = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
     act(() => textbox.click())
 
     expect(screen.getByText('custom:2024')).toBeTruthy()
@@ -469,7 +459,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>
@@ -481,13 +471,13 @@ describe('WarekiPicker', () => {
 
     renderWithIntl(<Wrapper />)
 
-    const textboxBefore = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxBefore = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(screen.getByText('令和6年9月25日')).toBeTruthy()
 
     act(() => screen.getByRole('button', { name: 'toggle' }).click())
 
-    const textboxAfter = screen.getByRole('textbox', { name: 'WarekiPicker' })
+    const textboxAfter = screen.getByRole('textbox', { name: /^WarekiPicker/ })
 
     expect(textboxAfter).toBe(textboxBefore)
     expect(textboxAfter).toHaveProperty('value', '2024/09/25')
@@ -504,7 +494,7 @@ describe('WarekiPicker', () => {
               name="date"
               defaultValue="2024-09-25"
               showAlternative={showAlternative}
-              onChangeDate={vi.fn()}
+              onChange={vi.fn()}
             />
           </FormControl>
           <button type="button" onClick={() => setShowAlternative(false)}>

@@ -29,6 +29,7 @@ const classNameGenerator = tv({
       /* ロゴが持つ padding 分だけ調整 */
       '-shr-ms-0.75',
       'focus-visible:shr-focus-indicator',
+      '[&>svg]:forced-colors:shr-fill-[LinkText]',
     ],
     tenantInfo: ['smarthr-ui-Header-tenantInfo', 'shr-ms-auto'],
     tenantNameText: 'shr-px-0.25',
@@ -99,20 +100,20 @@ export const Header: FC<Props> = ({
       tenantInfo: tenantInfoStyle,
       tenantNameText,
       actions,
-    } = classNameGenerator({ enableNew })
+    } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ className }),
+      wrapper: wrapper({ enableNew, className }),
       logoLink: logoLink(),
       tenantInfo: tenantInfoStyle(),
       tenantNameText: tenantNameText(),
-      actions: actions(),
+      actions: actions({ enableNew }),
     }
   }, [enableNew, className])
 
   const latest = useLatest({ onTenantSelect })
 
-  const hasOnTenantSelect = !!onTenantSelect
+  const hasOnTenantSelect = Boolean(onTenantSelect)
 
   const functions = useMemo(
     () => ({

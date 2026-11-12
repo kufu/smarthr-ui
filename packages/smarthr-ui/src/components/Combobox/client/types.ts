@@ -49,7 +49,11 @@ export type BaseProps<T> = {
    */
   items: Array<ComboboxItem<T>>
   /**
-   * input 要素の `name` 属性の値
+   * input 要素の `name` 属性の値。
+   * `MultiCombobox` では、選択済みアイテムの値を保持する hidden input 群の `name` にそのまま使われ、
+   * 検索用テキストボックスの `name` には `query_${name}` が設定される。
+   * 複数の hidden input は同じ `name` を持つため、Railsなど配列として受け取りたい場合は
+   * `name="ids[]"` のように `[]` を含めて指定すること（自動では付与されない）
    */
   name?: string
   /**
@@ -72,6 +76,11 @@ export type BaseProps<T> = {
    * `true` のとき、 `items` 内に存在しないアイテムを新しく追加できるようになる
    */
   creatable?: boolean
+  /**
+   * `true` のとき、`inputValue` による絞り込みを無効化する。
+   * サーバーサイド検索と組み合わせるなど、`items` が既に絞り込み済みの場合に指定する
+   */
+  disableFiltering?: boolean
   /**
    * input 要素の `placeholder` 属性の値
    */
@@ -104,9 +113,4 @@ export type BaseProps<T> = {
    * アイテムが選択された時に発火するコールバック関数
    */
   onSelect?: (item: ComboboxItem<T>) => void
-  /**
-   * input 要素の `value` が変わった時に発火するコールバック関数
-   * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
-   */
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }

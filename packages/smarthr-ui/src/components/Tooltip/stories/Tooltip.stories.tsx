@@ -142,12 +142,14 @@ export const AriaDescribedbyTarget: StoryObj<typeof Tooltip> = {
     <Stack>
       <Cluster>
         wrapper + focusable:
+        {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ariaDescribedbyTargetの値比較が目的のstoryのため */}
         <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + focusable">
           <Button>ボタン</Button>
         </Tooltip>
       </Cluster>
       <Cluster>
         wrapper + non-focusable:
+        {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ariaDescribedbyTargetの値比較が目的のstoryのため */}
         <Tooltip ariaDescribedbyTarget="wrapper" message="wrapper + non-focusable">
           テキスト
         </Tooltip>

@@ -18,7 +18,7 @@ type Props = ExtendElementPropsWithoutRef<
 >
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom'],
+  base: ['smarthr-ui-SmartHRLogo', 'shr-align-bottom', 'forced-colors:shr-fill-[CanvasText]'],
   variants: {
     fill: {
       white: 'shr-fill-white',

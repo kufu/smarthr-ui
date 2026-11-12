@@ -1,7 +1,8 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client
 
 import {
   type FC,
+  type JSX,
   type MouseEvent,
   type PropsWithChildren,
   type RefObject,
@@ -36,7 +37,6 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { trigger, contentBody, contentButton } = classNameGenerator()
 
   return {
@@ -125,7 +125,7 @@ export const AppLauncherSortDropdown: FC<Props> = ({ sortType, handleSelectSortT
 }
 
 const TriggerButton = memo<
-  PropsWithChildren<{ triggerRef: RefObject<HTMLButtonElement>; className: string }>
+  PropsWithChildren<{ triggerRef: RefObject<HTMLButtonElement | null>; className: string }>
 >(({ triggerRef, children, className }) => (
   <DropdownTrigger>
     <Button

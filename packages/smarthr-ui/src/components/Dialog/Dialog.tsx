@@ -1,5 +1,4 @@
-import { DialogContent } from './DialogContent'
-import { DialogPortal } from './DialogPortal'
+import { DialogContent, DialogPortal } from './client'
 
 import type { DialogProps } from './types'
 import type { ExtendElementPropsWithRef } from '../../types'

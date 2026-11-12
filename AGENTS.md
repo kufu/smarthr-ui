@@ -2,11 +2,16 @@
 
 このファイルは、Claude Code (claude.ai/code) などのAIコーディングエージェントがこのリポジトリで作業する際のガイドです。
 
+## 取り扱い注意事項
+
+このリポジトリは public です。作業中に他のプライベートリポジトリ（社内の別プロダクト、非公開のコードベースなど）の名前や内容に言及する必要が生じても、PR本文・コミットメッセージ・コードコメント・Issueなど公開される場所には書かないでください。
+
 ## プロジェクト概要
 
-SmartHR UI は、SmartHR の全アプリケーションで使用される React コンポーネントライブラリです。pnpm モノレポ構成で、2つのパッケージがあります：
+SmartHR UI は、SmartHR の全アプリケーションで使用される React コンポーネントライブラリです。pnpm モノレポ構成で、3つのパッケージがあります：
 - **`packages/smarthr-ui`** — メインの UI コンポーネントライブラリ（npm に `smarthr-ui` として公開）
 - **`packages/charts`** — チャートコンポーネント（npm に `@smarthr/smarthr-ui-charts` として公開）
+- **`packages/rich-text-editor`** — リッチテキストエディタコンポーネント（npm に `@smarthr-ui/rich-text-editor` として公開）
 
 ## よく使うコマンド
 
@@ -31,7 +36,7 @@ pnpm ui test -- --run src/components/Button/Button.test.tsx
 # パターンに一致するテストの実行
 pnpm ui test -- --run -t "Button"
 
-# Lint（eslint, prettier, stylelint, tsc を並列実行）
+# Lint（eslint, knip, prettier, tsc を並列実行）
 pnpm ui lint
 
 # フォーマット（自動修正）
@@ -49,7 +54,7 @@ pnpm ui scaffold:storybook
 ### スタイリング: Tailwind CSS + tailwind-variants
 コンポーネントは **Tailwind CSS v3** と **tailwind-variants (`tv`)** を使用してバリアントベースのスタイリングを行います。Tailwind プリセットは `packages/smarthr-ui/src/smarthr-ui-preset.ts` に定義されており、カスタムデザイントークン（色、スペーシング、フォントサイズ、シャドウ、z-index、幅）を含みます。コンポーネントは `tv()` でクラス名を生成します（CSS-in-JS ではありません）。
 
-利用者はスタイル適用のために `smarthr-ui/smarthr-ui.css` をインポートする必要があります。styled-components はまだ peer dependency ですが、Tailwind への移行が進んでいます。
+利用者はスタイル適用のために `smarthr-ui/smarthr-ui.css` をインポートする必要があります。styled-components には依存していません。
 
 ### コンポーネント構成
 各コンポーネントは `packages/smarthr-ui/src/components/<ComponentName>/` に配置され、以下のファイルで構成されます：
@@ -64,7 +69,7 @@ pnpm ui scaffold:storybook
 コンポーネントは `src/intl/` のカスタム i18n システムを使用します。ユーザー向けテキストは `<Localizer>` または `useIntl()` でラップします。ロケールファイルは `src/intl/locales/` にあります。`react-intl` は peer dependency です。
 
 ### テーマ
-デザイントークンは `src/themes/` に定義され、`createTheme()` で公開されます。`ThemeProvider`（styled-components）と Tailwind プリセットの両方がこれらのトークンを使用します。
+デザイントークンは `src/themes/` に定義され、`createTheme()` で公開されます。`ThemeProvider` と Tailwind プリセットの両方がこれらのトークンを使用します。
 
 ### テスト
 - **フレームワーク**: Vitest（jsdom 環境）
@@ -133,6 +138,18 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 ### コンポーネント
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
+
+#### smarthr-uiの変更が`eslint-plugin-smarthr`に波及する場合
+
+`eslint-plugin-smarthr`（別リポジトリ `kufu/tamatebako` で管理）は、smarthr-uiのデフォルト値やバージョン間の破壊的変更を独自に保持しており、smarthr-ui側を変更しても自動では追従されない。以下に該当する変更を行った場合は、`kufu/tamatebako` 側の対応も忘れずに行うこと。
+
+**公開コンポーネントのデフォルト値（デフォルトprops）を変更する場合**
+
+`smarthr/best-practice-for-default-props` ルールが持つ `DEFAULT_PROPS` 定義を更新すること。対象は特定のコンポーネントに限らず、デフォルト値を持つpropsがあるコンポーネント全般が対象になりうる。このルールはデフォルト値と同じpropsの明示的指定を検出・自動削除するもので、smarthr-ui側のデフォルト値をハードコードして保持しているため、乖離すると誤ったfix提案（変更後のデフォルト値を知らずに古い値として削除を促す等）をしてしまう。
+
+**破壊的変更（コンポーネント名・propsのリネーム等）を行う場合**
+
+`smarthr/autofixer-smarthr-ui-migration` ルールに新しいバージョン移行ルール（`rules/autofixer-smarthr-ui-migration/versions/vXX-to-vYY/`）を追加すること。このルールは利用プロダクト側がバージョンを跨いで移行する際に、破壊的変更を自動修正するためのもの。追加を怠ると、利用プロダクト側にこのPRの破壊的変更に対する自動修正手段が提供されないままになる。
 
 #### `'use client'` を付けるべきかの判定
 
@@ -427,7 +444,7 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 - `styled-components@5.3.11` — モジュールスコープで `createContext` を呼びガードが無いため、`react-server` 条件で import した時点で `TypeError` になる。これを import する経路があると Server Component にできない
 
-  RSC に対応するのは **v6.3.0 以降**。v6.0〜v6.2 は未対応で、実測でも `v6.2.0` は `TypeError`、`v6.3.0` は成功する。`StyleSheetManager` の RSC 対応はさらに後の v6.4.0 から。なお peer は `^5.0.1` のため、更新は破壊的変更になる
+  RSC に対応するのは **v6.3.0 以降**。v6.0〜v6.2 は未対応で、実測でも `v6.2.0` は `TypeError`、`v6.3.0` は成功する。`StyleSheetManager` の RSC 対応はさらに後の v6.4.0 から。なお smarthr-ui は styled-components に依存していないので、実装やビルド出力に再び持ち込まないこと
 - ブラウザグローバル（`window` `document` `navigator`）— `typeof window !== 'undefined'` でガードされていれば SSR では落ちないが、Server Component では常に else 側に倒れる。挙動として許容できるか判断が必要
 - **関数を props で渡している箇所** — Server Component は通常の関数をシリアライズできないため、host 要素にも Client Component にも渡せない
 
@@ -672,7 +689,7 @@ const functions = useMemo(
 const functions = useMemo(() => ({ ... }), [onClick, hrefTemplate, latest])
 
 // ✅ boolean化してプリミティブ値として安定化
-const hasHrefTemplate = !!hrefTemplate
+const hasHrefTemplate = Boolean(hrefTemplate)
 const functions = useMemo(
   () => ({
     actualHrefTemplate: hasHrefTemplate

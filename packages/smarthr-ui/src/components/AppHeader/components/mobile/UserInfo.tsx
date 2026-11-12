@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type FC, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -25,7 +27,6 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { iconButton, iconButtonInner, dropdownUserName, dropdownButtonArea } = classNameGenerator()
 
   return {
@@ -127,7 +128,13 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
       </Dropdown>
 
       {locale && (
-        <Dialog isOpen={languageDialogOpen} width={246} onClickOverlay={functions.dialogClose}>
+        // HINT: widthが非推奨になったため、className直指定に変更。246pxは既存のsize(XS=col3=424px〜)
+        // のいずれにも該当しないため丸められない。デザイン上妥当であればsize="XS"への統一を検討する
+        <Dialog
+          isOpen={languageDialogOpen}
+          className="shr-w-[246px]"
+          onClickOverlay={functions.dialogClose}
+        >
           <LanguageSelector locale={locale} onClickClose={functions.dialogClose} />
         </Dialog>
       )}

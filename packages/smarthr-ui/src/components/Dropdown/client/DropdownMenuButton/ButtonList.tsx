@@ -54,7 +54,7 @@ const isDropdownMenuGroupType = (item: ReactElement): boolean => {
 // client referenceとして正しく解決されるため、Server Componentからでも利用できる
 export const ButtonList: FC<{ children: Actions }> = ({ children }) =>
   Children.map(children, (item): ReactNode => {
-    if (!item || !isValidElement(item)) {
+    if (!item || !isValidElement<{ children?: ReactNode }>(item)) {
       return null
     }
 

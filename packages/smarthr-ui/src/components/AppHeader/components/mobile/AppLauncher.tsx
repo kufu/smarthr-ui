@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -33,12 +35,14 @@ const classNameGenerator = tv({
     ],
     headArea: 'shr-px-1 shr-py-0.75',
     scrollArea: 'shr-flex-1 shr-basis-0',
-    bottomArea: 'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+    bottomArea: [
+      'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+      'shr-pb-[calc(theme(spacing[0.75])+env(safe-area-inset-bottom))]',
+    ],
   },
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, searchArea, headArea, scrollArea, bottomArea } = classNameGenerator()
 
   return {
@@ -81,7 +85,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           width="100%"
           onChange={onChangeSearchQuery}
           tooltipMessage={searchInputTitle}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          // TODO: subActionArea内のクリックではInputが検索欄にフォーカスを戻さないため、
+          // クリア後に検索欄へフォーカスを戻す対応が必要（desktop/AppLauncher.tsxも同様）
+          subActionArea={
+            mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
+          }
         />
       </div>
 

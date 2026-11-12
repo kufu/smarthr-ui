@@ -1,0 +1,245 @@
+import {
+  chartJsOptionsExamples,
+  multi20Datasets,
+  multiSmall,
+  singleSmall,
+} from '../__stories__/testData'
+
+import { BarChart } from './BarChart'
+
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { TooltipItem } from 'chart.js'
+
+const meta: Meta<typeof BarChart> = {
+  title: 'Charts/Chart/BarChart',
+  component: BarChart,
+  decorators: [
+    (Story) => (
+      <div className="shr-h-[500px]">
+        <Story />
+      </div>
+    ),
+  ],
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+}
+
+export default meta
+
+type Story = StoryObj<typeof BarChart>
+
+export const Playground: Story = {
+  args: {
+    data: singleSmall,
+    title: 'Bar Chart',
+  },
+  argTypes: {
+    data: {
+      control: 'object',
+    },
+    title: {
+      control: 'text',
+    },
+    options: {
+      control: 'object',
+    },
+    disablePatterns: {
+      control: 'boolean',
+    },
+    singleTone: {
+      control: 'object',
+    },
+    stacked: {
+      control: 'boolean',
+    },
+    orientation: {
+      control: 'select',
+      options: ['horizontal', 'vertical'],
+    },
+  },
+}
+
+export const Default: Story = {
+  args: {
+    data: singleSmall,
+  },
+}
+
+export const MultipleDatasets: Story = {
+  args: {
+    data: multiSmall,
+  },
+}
+
+export const WithoutPattern: Story = {
+  name: 'disablePatterns',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+  },
+}
+
+export const SingleTone: Story = {
+  name: 'singleTone',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+  },
+}
+
+// 範囲を狭めると濃淡差が小さくなり、系列が多くても色が重複しやすくなる
+export const ToneRange: Story = {
+  name: 'singleTone（範囲を狭める）',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 2 },
+  },
+}
+
+// from を to より大きくすると、第一系列がいちばん濃くなる
+export const DescendingTone: Story = {
+  name: 'singleTone（from > to）',
+  args: {
+    data: multiSmall,
+    disablePatterns: true,
+    singleTone: { from: 5, to: 0 },
+  },
+}
+
+export const ManyDatasets: Story = {
+  args: {
+    data: {
+      labels: ['A', 'B', 'C', 'D', 'E'],
+      datasets: multi20Datasets,
+    },
+  },
+}
+
+export const Title: Story = {
+  name: 'title',
+  args: {
+    data: singleSmall,
+    title: 'Title',
+  },
+  argTypes: {
+    title: {
+      control: 'text',
+    },
+  },
+}
+
+export const WithChartJsOptions: Story = {
+  name: 'with Chart.js options',
+  args: {
+    data: {
+      labels: [
+        'レベル1',
+        'レベル2',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル3',
+        'レベル4',
+        'レベル5',
+      ],
+      datasets: [
+        {
+          label: '人数',
+          data: [95, 48, 138, 138, 138, 138, 138, 138, 138, 88, 42],
+        },
+      ],
+    },
+    options: chartJsOptionsExamples.comprehensive,
+  },
+}
+
+export const WithAnnotations: Story = {
+  name: 'with chartjs-plugin-annotation options',
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        annotation: {
+          annotations: {
+            average: {
+              type: 'line',
+              yMin: 10,
+              yMax: 10,
+              borderColor: 'rgb(255, 99, 132)',
+              borderWidth: 2,
+            },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const Horizontal: Story = {
+  name: 'horizontal',
+  args: {
+    data: multiSmall,
+    orientation: 'horizontal',
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+  },
+}
+
+export const Stacked: Story = {
+  name: 'stacked',
+  args: {
+    data: multiSmall,
+    stacked: true,
+    disablePatterns: true,
+    singleTone: { from: 0, to: 5 },
+    orientation: 'horizontal',
+  },
+}
+
+const additionalData = {
+  datasets: [
+    {
+      data: ['Aの補足情報', 'Bの補足情報', 'Cの補足情報', 'Dの補足情報', 'Eの補足情報'],
+    },
+  ],
+}
+export const WithTooltipCallbacks: Story = {
+  name: 'with tooltip callbacks options',
+  args: {
+    data: singleSmall,
+    options: {
+      plugins: {
+        tooltip: {
+          titleColor: '#ED1A3D', // 保護しているプロパティの上書きができないことの検証
+          callbacks: {
+            label: function (context: TooltipItem<'bar'>) {
+              // 本来表示するラベル
+              let label = context.dataset.label || ''
+              if (label) {
+                label += ': '
+              }
+              // 単位を付与する
+              if (context.parsed.y !== null) {
+                label += context.parsed.y + '人'
+              }
+              // 補足情報を追加する
+              const additionalDataLabel =
+                additionalData.datasets[context.datasetIndex].data[context.dataIndex]
+              if (additionalDataLabel) {
+                label += `（${additionalDataLabel}）`
+              }
+
+              return label
+            },
+          },
+        },
+      },
+    },
+  },
+}

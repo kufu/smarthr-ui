@@ -20,6 +20,7 @@ type Props = Omit<LowerProps, 'multiple'>
 
 export const InputFileMultiplyAppendable: FC<Props> = ({
   className,
+  variant,
   size,
   label,
   hasFileList = true,
@@ -44,13 +45,13 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
 
     return {
       wrapper: wrapper({ className }),
-      inputWrapper: inputWrapper({ size }),
+      inputWrapper: inputWrapper({ variant, size }),
       fileList: fileList(),
       fileItem: fileItem(),
       input: input(),
       prefix: prefix(),
     }
-  }, [size, className])
+  }, [variant, size, className])
 
   // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
   const isUpdatingFilesRef = useRef(false)
@@ -152,7 +153,7 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
               key={`existing-${index}`}
               file={file}
               index={index}
-              previewable={!!previewable}
+              previewable={Boolean(previewable)}
               className={classNames.fileItem}
               handleDeleteClick={functions.handleDelete}
               handlePreviewClick={setPreviewFile}
@@ -163,7 +164,7 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
               key={`new-${index}`}
               file={file}
               index={index}
-              previewable={!!previewable}
+              previewable={Boolean(previewable)}
               className={classNames.fileItem}
               handleDeleteClick={functions.handleDelete}
               handlePreviewClick={setPreviewFile}
@@ -192,6 +193,7 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
         <FilePreviewDialog
           file={previewFile}
           searchable={previewable?.searchable}
+          onPassword={previewable?.onPassword}
           handleClose={functions.handleClosePreview}
           handleDownload={functions.handleDownload}
         />
