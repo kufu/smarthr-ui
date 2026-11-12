@@ -305,6 +305,7 @@ export const MultiCombobox = <T,>({
 
   const latest = useLatest({
     onChangeInput,
+    onChangeSelected,
     onFocus,
     onBlur,
     onKeyPress,
@@ -314,6 +315,7 @@ export const MultiCombobox = <T,>({
     isComposing,
     isInputEmpty,
     selectedItems: actualSelectedItems,
+    isSelectedItemsControlled,
     defaultSelectedItems,
     setInputValueIfUncontrolled,
     setSelectedItemsIfUncontrolled,
@@ -335,7 +337,20 @@ export const MultiCombobox = <T,>({
       queueMicrotask(() => {
         if (e.defaultPrevented) return
 
-        latest.setSelectedItemsIfUncontrolled(latest.defaultSelectedItems ?? [])
+        if (!latest.isSelectedItemsControlled) {
+          const nextSelectedItems = latest.defaultSelectedItems ?? []
+          const hasSelectedItemsChanged =
+            latest.selectedItems.length !== nextSelectedItems.length ||
+            latest.selectedItems.some(
+              (item, index) => !areItemsEqual(item, nextSelectedItems[index]),
+            )
+
+          latest.setSelectedItemsIfUncontrolled(nextSelectedItems)
+
+          if (hasSelectedItemsChanged) {
+            latest.onChangeSelected?.(nextSelectedItems)
+          }
+        }
 
         // HINT: 選択状態がdefaultSelectedItemsと同じ(=未変更)場合、selectedItemsの参照が
         // 変わらずinputSelectEffectRefが発火しないため、検索文字列は明示的にクリアする。
