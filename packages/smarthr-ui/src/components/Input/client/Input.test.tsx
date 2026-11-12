@@ -39,6 +39,7 @@ describe('Input', () => {
     render(
       <form>
         <FormControl label="Input">
+          {/* eslint-disable-next-line smarthr/design-system-guideline-prohibit-input-affix-interactive-element */}
           <Input
             name="input"
             suffix={<span>suffix</span>}
@@ -54,6 +55,66 @@ describe('Input', () => {
     expect(children).toContain('action')
     expect(children).toContain('suffix')
     expect(children.indexOf('action')).toBeLessThan(children.indexOf('suffix'))
+  })
+
+  it('FormControlを使わない単体利用でも、prefix/suffixのidがaria-labelledbyに結合される', () => {
+    render(
+      // eslint-disable-next-line smarthr/a11y-input-in-form-control
+      <Input name="input" prefix="定員" suffix="名" />,
+    )
+
+    const textbox = screen.getByRole('textbox')
+    const labelledBy = textbox.getAttribute('aria-labelledby')!.split(' ')
+
+    expect(labelledBy).toHaveLength(3)
+    expect(labelledBy[1]).toBe(textbox.id)
+  })
+
+  it('subActionAreaはaria-labelledbyに一切影響しない', () => {
+    render(
+      <form>
+        <FormControl label="Input">
+          <Input name="input" suffix="名" subActionArea={<button type="button">クリア</button>} />
+        </FormControl>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).not.toHaveAccessibleName(/クリア/)
+  })
+
+  it('FormControlと組み合わせた場合、label・prefix・suffixがアクセシブルネームに合流する', () => {
+    render(
+      <form>
+        <FormControl label="定員">
+          <Input name="input" prefix="￥" suffix="円" />
+        </FormControl>
+      </form>,
+    )
+
+    expect(screen.getByRole('textbox')).toHaveAccessibleName('定員 ￥ 円')
+  })
+
+  it('aria-labelが指定されている場合、prefix/suffixがあってもaria-labelledbyを自動生成せず、既存のaria-labelを保持する', () => {
+    render(<Input name="input" aria-label="検索" prefix="￥" suffix="円" />)
+
+    const textbox = screen.getByRole('textbox')
+
+    expect(textbox).not.toHaveAttribute('aria-labelledby')
+    expect(textbox).toHaveAccessibleName('検索')
+  })
+
+  it('prefix/suffixがいずれも無い場合、aria-labelledbyが設定されない(従来通り)', () => {
+    render(
+      <form>
+        <FormControl label="Input">
+          <Input name="input" />
+        </FormControl>
+      </form>,
+    )
+
+    const textbox = screen.getByRole('textbox')
+
+    expect(textbox).not.toHaveAttribute('aria-labelledby')
   })
 
   it('subActionArea内の要素をクリックしても、inputにフォーカスが移らずフォーカスが保たれる', async () => {
@@ -75,11 +136,10 @@ describe('Input', () => {
 
   it('subActionArea内の要素をクリックすると、Inputの外側の祖先要素のonClickも発火する', async () => {
     const user = userEvent.setup()
-    const handleClickAncestor = vi.fn()
+    const handleDelegateClick = vi.fn()
 
     render(
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, smarthr/best-practice-for-interactive-element
-      <div onClick={handleClickAncestor}>
+      <div role="presentation" onClick={handleDelegateClick}>
         <form>
           <FormControl label="Input">
             <Input name="input" subActionArea={<button type="button">action</button>} />
@@ -90,6 +150,6 @@ describe('Input', () => {
 
     await user.click(screen.getByRole('button', { name: 'action' }))
 
-    expect(handleClickAncestor).toHaveBeenCalledTimes(1)
+    expect(handleDelegateClick).toHaveBeenCalledTimes(1)
   })
 })

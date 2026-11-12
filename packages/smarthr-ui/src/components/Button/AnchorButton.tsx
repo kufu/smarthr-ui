@@ -72,6 +72,3 @@ export const AnchorButton = <T extends ElementType = 'a'>({
 
   return button
 }
-
-// BottomFixedArea での判定に用いるために displayName を明示的に設定する
-AnchorButton.displayName = 'AnchorButton'

@@ -46,7 +46,7 @@ export default {
       text: 'フィールドセットタイトル',
       icon: <FaAddressBookIcon />,
     },
-    statusLabels: <StatusLabel type="grey">任意</StatusLabel>,
+    statusLabels: <StatusLabel>任意</StatusLabel>,
     subActionArea: (
       <Cluster justify="space-between">
         <div>サブアクションエリア（start)</div>

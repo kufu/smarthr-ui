@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import {
   type Dispatch,
   type FC,
@@ -14,7 +16,7 @@ import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
-import { Localizer, useLocalize } from '../../../../intl'
+import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FocusTrap } from '../../../Dialog'
 import { FaXmarkIcon } from '../../../Icon'
@@ -33,7 +35,9 @@ import { ReleaseNoteContext } from './ReleaseNoteContext'
 const classNameGenerator = tv({
   slots: {
     wrapper: [
-      'shr-fixed shr-left-0 shr-top-0 shr-flex shr-h-full shr-w-full shr-flex-col shr-bg-white',
+      'shr-fixed shr-left-0 shr-top-0 shr-box-border shr-flex shr-h-full shr-w-full shr-flex-col shr-bg-white',
+      // HINT: 下端はスクロール領域の内側で余白を取り、コンテンツがツールバー等の下までスクロールできるようにする
+      'shr-pl-[env(safe-area-inset-left)] shr-pr-[env(safe-area-inset-right)] shr-pt-[env(safe-area-inset-top)]',
       'shr-translate-opacity shr-opacity-0 shr-duration-150',
       '[&&.shr-sp-menu-enter-active]:shr-opacity-100',
       '[&&.shr-sp-menu-enter-done]:shr-opacity-100',
@@ -41,12 +45,11 @@ const classNameGenerator = tv({
       '[&&.shr-sp-menu-exit-done]:shr-opacity-0',
     ],
     header: 'shr-border-b-shorthand shr-sticky shr-top-0 shr-px-0.75 shr-py-0.5',
-    content: 'shr-p-1',
+    content: 'shr-p-1 shr-pb-[calc(theme(spacing.1)+env(safe-area-inset-bottom))]',
   },
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { wrapper, header, content } = classNameGenerator()
 
   return {
@@ -85,7 +88,7 @@ export const MenuDialog: FC<Props> = ({ callbackRef, isOpen, ...rest }) => {
 
 const Content: FC<
   Omit<Props, 'callbackRef' | 'isOpen'> & {
-    domRef: RefObject<HTMLSelectElement>
+    domRef: RefObject<HTMLSelectElement | null>
   }
 > = ({ domRef, children, setIsOpen, tenantSelector }) => {
   const { selectedNavigationGroup, setSelectedNavigationGroup } = useContext(NavigationContext)
@@ -98,17 +101,6 @@ const Content: FC<
     isAppLauncherSelected,
     setIsAppLauncherSelected,
   } = useContext(AppLauncherContext)
-
-  const translated = useLocalize({
-    launcherListText: {
-      id: 'smarthr-ui/AppHeader/Launcher/listText',
-      defaultText: 'アプリ一覧',
-    },
-    latestReleaseNotes: {
-      id: 'smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes',
-      defaultText: '最新のリリースノート',
-    },
-  })
 
   const latest = useLatest({
     setIsOpen,
@@ -139,28 +131,34 @@ const Content: FC<
   }, [latest])
 
   const mergedRef = useMergeRefs(functions.callbackRef, domRef)
+  const selectedHeadingAttr = isAppLauncherSelected
+    ? {
+        title: <Localizer id="smarthr-ui/AppHeader/Launcher/listText" defaultText="アプリ一覧" />,
+        handleClickBack: functions.clearAppLauncher,
+      }
+    : isReleaseNoteSelected
+      ? {
+          title: (
+            <Localizer
+              id="smarthr-ui/AppHeader/MobileHeader/latestReleaseNotes"
+              defaultText="最新のリリースノート"
+            />
+          ),
+          handleClickBack: functions.clearReleaseNote,
+        }
+      : selectedNavigationGroup
+        ? {
+            title: selectedNavigationGroup.children,
+            handleClickBack: functions.clearNavigationGroup,
+          }
+        : null
 
   return (
     <Section ref={mergedRef} role="dialog" className={CLASS_NAMES.wrapper} aria-modal="true">
       <div className={CLASS_NAMES.header}>
         <Cluster justify="space-between" align="center">
-          {isAppLauncherSelected ? (
-            <MenuSubHeading
-              title={translated.launcherListText}
-              handleClickBack={functions.clearAppLauncher}
-            />
-          ) : isReleaseNoteSelected ? (
-            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading
-              title={translated.latestReleaseNotes}
-              handleClickBack={functions.clearReleaseNote}
-            />
-          ) : selectedNavigationGroup ? (
-            // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-            <MenuSubHeading
-              title={selectedNavigationGroup.children}
-              handleClickBack={functions.clearNavigationGroup}
-            />
+          {selectedHeadingAttr ? (
+            <MenuSubHeading {...selectedHeadingAttr} />
           ) : (
             <div>{tenantSelector}</div>
           )}
@@ -181,7 +179,7 @@ const Content: FC<
       {isAppLauncherSelected && isAppLauncherAvailable ? (
         <AppLauncher features={features} loading={featuresLoading} error={featuresError} />
       ) : (
-        <Scroller direction="vertical" className={CLASS_NAMES.content}>
+        <Scroller className={CLASS_NAMES.content}>
           {isReleaseNoteSelected ? (
             <ReleaseNote />
           ) : selectedNavigationGroup ? (

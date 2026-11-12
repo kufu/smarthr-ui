@@ -4,6 +4,7 @@ import { type FC, type MouseEvent, type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
+import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { UnstyledButton } from '../../Button'
 import { FaCircleInfoIcon } from '../../Icon'
 import { Tooltip } from '../../Tooltip'
@@ -37,6 +38,10 @@ const classNameGenerator = tv({
   },
 })
 
+type ObjectDisabledReasonType = {
+  icon?: ReactNode
+  text: ReactNode
+}
 type Props = ExtendElementPropsWithRef<
   typeof UnstyledButton,
   {
@@ -51,24 +56,30 @@ type Props = ExtendElementPropsWithRef<
     /**
      * 無効な理由
      */
-    disabledReason?: {
-      icon?: ReactNode
-      message: ReactNode
-    }
+    disabledReason?: ReactNode | ObjectDisabledReasonType
     /** タブをクリックした時に発火するコールバック関数 */
     onClick: (e: MouseEvent<HTMLButtonElement>) => void
   },
   { omit: 'aria-selected' | 'type' | 'role' | 'value' }
 >
 
+const disabledReasonObjectConverter = (text: ReactNode): ObjectDisabledReasonType => ({
+  text,
+})
+
 export const TabItem: FC<Props> = ({
   selected = false,
   disabled,
-  disabledReason,
+  disabledReason: orgDisabledReason,
   onClick,
   children,
   ...rest
 }) => {
+  const disabledReason = useObjectAttributes<
+    ReactNode | ObjectDisabledReasonType,
+    ObjectDisabledReasonType
+  >(orgDisabledReason, disabledReasonObjectConverter)
+
   const latest = useLatest({ onClick })
 
   const functions = useMemo(
@@ -89,13 +100,13 @@ export const TabItem: FC<Props> = ({
     disabled,
   }
 
-  if (disabled && disabledReason) {
+  if (disabled && disabledReason.text) {
     return (
       <Tooltip
         {...tabAttrs}
         className="focus-visible:shr-focus-indicator"
         aria-disabled={disabled}
-        message={disabledReason.message}
+        message={disabledReason.text}
       >
         <TabButton
           {...rest}

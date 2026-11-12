@@ -247,7 +247,7 @@ const ActualText = <T extends ElementType = 'span'>({
     className,
     styleType,
   ])
-  const hasIcon = !!icon
+  const hasIcon = Boolean(icon)
   const iconGap = icon?.gap
 
   const wrapperClassName = useMemo(
