@@ -20,6 +20,7 @@ import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
 import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useSafeAreaInsets } from '../../../../hooks/client/useSafeAreaInsets'
 import { useLatest } from '../../../../hooks/useLatest'
 import { Localizer, useIntl } from '../../../../intl'
 import { dialogSize } from '../../../../tailwind'
@@ -99,8 +100,11 @@ type Props = ExtendElementPropsWithRef<
 const classNameGenerator = tv({
   slots: {
     overlap: 'shr-inset-[unset]',
-    wrapper:
-      'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-max-h-[calc(100svh-theme(spacing[0.5]))] shr-max-w-[calc(100vw-theme(spacing[0.5]))] shr-flex-col',
+    wrapper: [
+      'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
+      'shr-max-h-[calc(100svh-theme(spacing[0.5])-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+      'shr-max-w-[calc(100vw-theme(spacing[0.5])-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+    ],
     headerEl: [
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center',
       'shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5',
@@ -191,6 +195,7 @@ export const ModelessDialog: FC<Props> = ({
   const [draggableBounds, setDraggableBounds] = useState(Draggable.defaultProps.bounds)
 
   const liveRegionFrame = useAnimationFrame()
+  const getSafeAreaInsets = useSafeAreaInsets()
   const latest = useLatest({
     isOpen,
     onClickClose,
@@ -202,6 +207,7 @@ export const ModelessDialog: FC<Props> = ({
     defaultPosition,
     centering,
     liveRegionFrame,
+    getSafeAreaInsets,
   })
 
   const functions = useMemo(() => {
@@ -294,8 +300,12 @@ export const ModelessDialog: FC<Props> = ({
       },
       handleDragStart: (_: any, data: { x: number; y: number }) => {
         if (wrapperRef.current) {
+          // HINT: ドラッグでsafe areaに重ならないよう、上端をsafe areaの下端までに制限する。
+          // 初期位置がすでにsafe areaに重なっている場合は、ドラッグ開始時に位置が飛ばないよう初期位置を上限にする
+          const initialTop = wrapperRef.current.getBoundingClientRect().top - data.y
+
           setDraggableBounds({
-            top: (wrapperRef.current.getBoundingClientRect().top - data.y) * -1,
+            top: Math.min(0, latest.getSafeAreaInsets().top - initialTop),
           })
         }
 
@@ -349,9 +359,17 @@ export const ModelessDialog: FC<Props> = ({
 
           if (isXCenter || isYCenter) {
             const rect = node.getBoundingClientRect()
+            // HINT: safe areaに重ならない領域の中央に配置する
+            const safeAreaInsets = latest.getSafeAreaInsets()
+            const safeHeight = window.innerHeight - safeAreaInsets.top - safeAreaInsets.bottom
+            const safeWidth = window.innerWidth - safeAreaInsets.left - safeAreaInsets.right
             const nextCentering = {
-              top: isYCenter ? Math.max(0, window.innerHeight / 2 - rect.height / 2) : undefined,
-              left: isXCenter ? Math.max(0, window.innerWidth / 2 - rect.width / 2) : undefined,
+              top: isYCenter
+                ? safeAreaInsets.top + Math.max(0, safeHeight / 2 - rect.height / 2)
+                : undefined,
+              left: isXCenter
+                ? safeAreaInsets.left + Math.max(0, safeWidth / 2 - rect.width / 2)
+                : undefined,
             }
 
             setCentering(

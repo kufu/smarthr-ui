@@ -36,6 +36,24 @@ describe('InputFile', () => {
     expect(onChange).toHaveBeenCalledWith([file1])
   })
 
+  it.each([
+    ['multiple未指定', undefined],
+    ['multiple.appendable', { appendable: true }],
+  ] as const)('%s: variantはinput要素の属性として出力されないこと', async (_, multiple) => {
+    await render(
+      <IntlProvider locale="ja">
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" multiple={multiple} variant="tertiary" label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
+      </IntlProvider>,
+    )
+    expect(screen.getByLabelText('input file')).not.toHaveAttribute('variant')
+  })
+
   it('multipleでファイル選択時にonChangeが発火すること', async () => {
     const onChange = vi.fn()
     await render(
