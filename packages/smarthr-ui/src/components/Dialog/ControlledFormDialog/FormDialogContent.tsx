@@ -1,9 +1,9 @@
 import {
   type ComponentPropsWithoutRef,
   type FC,
-  type FormEvent,
   type MouseEvent,
   type ReactNode,
+  type SubmitEvent,
   memo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -47,7 +47,9 @@ type Props = ExtendElementPropsWithRef<
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
      */
-    handleSubmit: (e: FormEvent<HTMLFormElement>) => void
+    handleSubmit: (e: SubmitEvent<HTMLFormElement>) => void
+    /** form要素に渡す属性 */
+    formProps?: Omit<ComponentPropsWithoutRef<'form'>, 'children' | 'className'>
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -85,6 +87,7 @@ export const FormDialogContent: FC<Props> = ({
   contentPadding,
   actionButton,
   handleSubmit,
+  formProps,
   handleClickClose,
   responseStatus,
   closeButton,
@@ -96,7 +99,7 @@ export const FormDialogContent: FC<Props> = ({
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
-      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
+      <form {...formProps} className={CLASS_NAMES.form} onSubmit={handleSubmit}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>

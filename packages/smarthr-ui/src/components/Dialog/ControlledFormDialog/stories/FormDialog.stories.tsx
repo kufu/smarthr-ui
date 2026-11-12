@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, useRef, useState } from 'react'
+import { type ComponentPropsWithRef, useActionState, useRef, useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
@@ -181,6 +181,80 @@ export const ResponseStatus: StoryObj<typeof ControlledFormDialog> = {
               processing
             </RadioButton>
           </Cluster>
+        </ControlledFormDialog>
+      </>
+    )
+  },
+}
+
+type FormActionState = {
+  status: 'idle' | 'success' | 'error'
+  message?: string
+  name: string
+}
+
+export const FormPropsAction: StoryObj<typeof ControlledFormDialog> = {
+  name: 'formProps.action',
+  render: (args) => {
+    const [open, setOpen] = useState(false)
+    const [validationError, setValidationError] = useState<string>()
+    const [state, formAction, pending] = useActionState(
+      async (_prev: FormActionState, formData: FormData): Promise<FormActionState> => {
+        const name = String(formData.get('name'))
+
+        // server action を模して、1秒後に結果を返す
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        if (name === 'エラー') {
+          return { status: 'error', message: 'サーバーでエラーが発生しました', name }
+        }
+
+        action('action')(name)
+        setOpen(false)
+
+        return { status: 'success', name: '' }
+      },
+      { status: 'idle', name: '' },
+    )
+
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>ダイアログを開く</Button>
+        <ControlledFormDialog
+          {...args}
+          isOpen={open}
+          formProps={{
+            action: formAction,
+            noValidate: true,
+            onSubmit: (e) => {
+              // クライアントでのバリデーションに失敗した場合は preventDefault して action を実行させない
+              if (!new FormData(e.currentTarget).get('name')) {
+                e.preventDefault()
+                setValidationError('名前を入力してください')
+
+                return
+              }
+
+              setValidationError(undefined)
+            },
+          }}
+          responseStatus={
+            pending
+              ? { status: 'processing' }
+              : state.status === 'error'
+                ? { status: 'error', text: state.message }
+                : undefined
+          }
+          onClickClose={() => setOpen(false)}
+        >
+          <FormControl
+            errorMessages={validationError}
+            label="名前"
+            helpMessage="「エラー」と入力するとサーバーエラーになります"
+          >
+            {/* action 完了後に React がフォームをリセットするため、エラー時は送信した値を defaultValue で復元する */}
+            <Input name="name" defaultValue={state.name} />
+          </FormControl>
         </ControlledFormDialog>
       </>
     )
