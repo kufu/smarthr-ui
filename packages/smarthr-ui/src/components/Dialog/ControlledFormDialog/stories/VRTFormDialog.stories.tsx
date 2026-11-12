@@ -3,7 +3,6 @@ import { expect, within } from 'storybook/test'
 import { Button } from '../../../Button'
 import { Fieldset, FormControl } from '../../../FormGroup'
 import { Input } from '../../../Input'
-import { Cluster } from '../../../Layout'
 import { ControlledFormDialog } from '../ControlledFormDialog'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -54,31 +53,20 @@ export const VRTNestedScroll: StoryObj<typeof ControlledFormDialog> = {
     width: undefined,
     size: 'XXL',
     contentPadding: 0,
-    heading: 'フォームとヘルプを個別にスクロールするダイアログ',
+    heading: '入れ子のスクロール領域を持つダイアログ',
     subActionArea: undefined,
     responseStatus: undefined,
     children: (
-      <Cluster gap={0} align="stretch">
-        <div
-          role="region"
-          style={{ flex: 1, minWidth: 0, maxHeight: '60svh', overflowY: 'auto' }}
-          aria-label="フォーム"
-        >
-          <div style={{ height: 950 }}>フォームの先頭</div>
-          <Fieldset legend="自動ログイン">
-            <Input name="loginSetting" width="100%" aria-label="ログイン設定" />
-          </Fieldset>
-          <div style={{ height: 200 }} />
-          <Fieldset legend="従業員のSSO利用">
-            <Input name="ssoSetting" width="100%" aria-label="SSO設定" />
-          </Fieldset>
-        </div>
-        <iframe
-          srcDoc="<p>ヘルプの先頭</p><div style='height:2000px'></div><p>ヘルプの末尾</p>"
-          title="ヘルプ"
-          style={{ flex: 1, minWidth: 0, height: '60svh', border: 0 }}
-        />
-      </Cluster>
+      <div role="region" style={{ maxHeight: '60svh', overflowY: 'auto' }} aria-label="フォーム">
+        <div style={{ height: 950 }}>フォームの先頭</div>
+        <Fieldset legend="基本情報">
+          <Input name="basicInfo" width="100%" aria-label="基本情報の入力" />
+        </Fieldset>
+        <div style={{ height: 200 }} />
+        <Fieldset legend="詳細情報">
+          <Input name="detailInfo" width="100%" aria-label="詳細情報の入力" />
+        </Fieldset>
+      </div>
     ),
   },
   parameters: {
