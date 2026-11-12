@@ -1,5 +1,6 @@
 import { useArgs } from 'storybook/preview-api'
 
+import { Button } from '../../../../Button'
 import { Stack } from '../../../../Layout'
 import { MultiCombobox } from '../MultiCombobox'
 
@@ -204,4 +205,20 @@ export const Deletable: StoryObj<typeof MultiCombobox> = {
       { label: 'option 3', value: 'value-3' },
     ],
   },
+}
+
+export const FormReset: StoryObj<typeof MultiCombobox> = {
+  name: 'form.reset()の挙動確認(非制御)',
+  render: () => (
+    <form>
+      <Stack>
+        <MultiCombobox
+          name="multi_combobox_reset_demo"
+          defaultSelectedItems={[defaultItems['option 1'], defaultItems['option 2']]}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット</Button>
+      </Stack>
+    </form>
+  ),
 }
