@@ -18,7 +18,7 @@ const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 const fieldsetClassNameGenerator = tv({
   extend: classNameGenerator,
   slots: {
-    // HINT: absoluteなlegendが祖先のスクロール領域を広げないよう、fieldsetを包含ブロックにする
+    // HINT: 隠しlegendをfieldset自身を基準に配置する
     wrapper: 'shr-relative',
   },
   variants: {
