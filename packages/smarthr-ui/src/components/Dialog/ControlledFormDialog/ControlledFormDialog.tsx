@@ -47,6 +47,8 @@ type Props = ExtendElementPropsWithRef<
        * `action` に URL を渡した場合は、ブラウザ標準のフォーム送信としてページ遷移します。
        * `formProps.onSubmit` は `onSubmit` より先に呼ばれ、この中で `preventDefault` すると
        * `onSubmit` と action はどちらも実行されません。
+       * ダイアログを閉じている間（閉じるアニメーション中）も `formProps.onSubmit` は呼ばれますが、
+       * `onSubmit` と action は実行されません。
        *
        * action 完了後に React が非制御の入力要素をリセットするため、ダイアログを開いたままにする場合は
        * `defaultValue` などで入力値を復元してください。
@@ -118,15 +120,17 @@ export const ControlledFormDialog: FC<Props> = ({
         // このformのactionも実行されなくなるため、actionの有無に関わらず実行する
         e.stopPropagation()
 
-        if (!latest.isOpen) {
-          e.preventDefault()
-
-          return
-        }
-
+        // HINT: conformのresetなどはsubmitイベント経由で状態を更新するため、閉じるtransition中でも
+        // formProps.onSubmitは呼ぶ必要がある。onSubmitとactionは閉じている間は実行しない
         latest.formProps?.onSubmit?.(e)
 
         if (e.defaultPrevented) {
+          return
+        }
+
+        if (!latest.isOpen) {
+          e.preventDefault()
+
           return
         }
 

@@ -286,7 +286,7 @@ describe('ControlledFormDialog の formProps', () => {
     expect(parentSubmit).not.toHaveBeenCalled()
   })
 
-  it('閉じている間に送信されても formProps.onSubmit、onSubmit、action が呼ばれないこと', async () => {
+  it('閉じている間に送信されると、formProps.onSubmit は呼ばれ、onSubmit と action は呼ばれないこと', async () => {
     const action = vi.fn()
     const formOnSubmit = vi.fn()
     const onSubmit = vi.fn()
@@ -305,7 +305,7 @@ describe('ControlledFormDialog の formProps', () => {
 
     await act(() => fireEvent.submit(form))
 
-    expect(formOnSubmit).not.toHaveBeenCalled()
+    expect(formOnSubmit).toHaveBeenCalledTimes(1)
     expect(onSubmit).not.toHaveBeenCalled()
     expect(action).not.toHaveBeenCalled()
   })
