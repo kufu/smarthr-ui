@@ -80,12 +80,23 @@ describe('BarChart', () => {
   })
 
   describe('テーブル表示', () => {
-    const stackedGroupsData = {
+    const groupedStacksData = {
       labels: ['項目A', '項目B'],
       datasets: [
-        { label: '項目Aの内訳1', stack: '項目A', data: [12, null] },
-        { label: '項目Aの内訳2', stack: '項目A', data: [19, null] },
-        { label: '項目Bの内訳1', stack: '項目B', data: [null, 8] },
+        { label: '項目Aの内訳1', data: [12, null] },
+        { label: '項目Aの内訳2', data: [19, null] },
+        { label: '項目Bの内訳1', data: [null, 8] },
+      ],
+    }
+
+    // 各月に男性・女性の積み上げ棒を並べる、stack本来の使い方
+    const stackedByGenderData = {
+      labels: ['1月', '2月'],
+      datasets: [
+        { label: '男性 正社員', stack: '男性', data: [10, 11] },
+        { label: '男性 契約', stack: '男性', data: [3, 4] },
+        { label: '女性 正社員', stack: '女性', data: [9, 10] },
+        { label: '女性 契約', stack: '女性', data: [5, 5] },
       ],
     }
 
@@ -98,22 +109,26 @@ describe('BarChart', () => {
       return document.querySelector('th[scope="rowgroup"]') !== null
     }
 
-    it('stackを指定した積み上げは、グループ形式になる', () => {
-      expect(isGroupedTable({ data: stackedGroupsData, stacked: true })).toBe(true)
+    it('どのdatasetも値を持つカテゴリが1つ以下なら、積み上げの有無に関わらずグループ形式になる', () => {
+      expect(isGroupedTable({ data: groupedStacksData, stacked: true })).toBe(true)
+      expect(isGroupedTable({ data: groupedStacksData })).toBe(true)
     })
 
-    it('積み上げでなければ従来の形式になる', () => {
-      expect(isGroupedTable({ data: stackedGroupsData })).toBe(false)
+    it('stackで複数の積み上げ棒を並べても、各datasetが複数カテゴリに値を持てば従来の形式になる', () => {
+      expect(isGroupedTable({ data: stackedByGenderData, stacked: true })).toBe(false)
     })
 
-    it('全datasetが同じstackの積み上げは従来の形式になる', () => {
+    it('カテゴリが1つだけなら従来の形式になる', () => {
+      expect(isGroupedTable(defaultProps)).toBe(false)
+    })
+
+    it('データセットが1つだけなら従来の形式になる', () => {
       expect(
         isGroupedTable({
           data: {
-            labels: ['項目A', '項目B'],
-            datasets: stackedGroupsData.datasets.map((dataset) => ({ ...dataset, stack: '共通' })),
+            labels: ['項目A', '項目B', '項目C'],
+            datasets: [{ label: 'データ1', data: [5, null, null] }],
           },
-          stacked: true,
         }),
       ).toBe(false)
     })
