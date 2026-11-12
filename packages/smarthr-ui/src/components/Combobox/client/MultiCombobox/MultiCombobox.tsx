@@ -333,8 +333,16 @@ export const MultiCombobox = <T,>({
     // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
     const handleReset = (e: Event) => {
       queueMicrotask(() => {
-        if (!e.defaultPrevented) {
-          latest.setSelectedItemsIfUncontrolled(latest.defaultSelectedItems ?? [])
+        if (e.defaultPrevented) return
+
+        latest.setSelectedItemsIfUncontrolled(latest.defaultSelectedItems ?? [])
+
+        // HINT: 選択状態がdefaultSelectedItemsと同じ(=未変更)場合、selectedItemsの参照が
+        // 変わらずinputSelectEffectRefが発火しないため、検索文字列は明示的にクリアする。
+        // blurと同様にisInputEmptyでガードし、親へのonChangeInput通知も合わせて行う
+        if (!latest.isInputEmpty) {
+          latest.setInputValueIfUncontrolled('')
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
         }
       })
     }

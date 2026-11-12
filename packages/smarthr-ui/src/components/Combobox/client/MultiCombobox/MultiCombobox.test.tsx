@@ -684,6 +684,68 @@ describe('SingleCombobox', () => {
       expect(screen.getByText('option 1')).toBeInTheDocument()
       expect(screen.getByText('option 2')).toBeInTheDocument()
     })
+
+    it('選択状態を変更していない場合でも、form.reset()で検索文字列がクリアされ、onChangeInputが一度だけ呼ばれること', async () => {
+      const onChangeInput = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                onChangeInput={onChangeInput}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.type(combobox(), 'option')
+      expect(combobox()).toHaveValue('option')
+      onChangeInput.mockClear()
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('')
+      expect(onChangeInput).toHaveBeenCalledTimes(1)
+    })
+
+    it('選択状態が変わる場合、form.reset()でonChangeInputが重複して呼ばれないこと', async () => {
+      const onChangeInput = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                onChangeInput={onChangeInput}
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      await userEvent.keyboard('{escape}')
+      await userEvent.type(combobox(), 'option')
+      onChangeInput.mockClear()
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('')
+      expect(onChangeInput).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('FormData', () => {
