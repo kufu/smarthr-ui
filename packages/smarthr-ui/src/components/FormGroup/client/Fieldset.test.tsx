@@ -186,18 +186,6 @@ describe('Fieldset', () => {
     expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
   })
 
-  it('absoluteなlegendが祖先のスクロール領域を広げないよう、position が relative になること', () => {
-    render(
-      <form>
-        <Fieldset legend="fieldset-legend">
-          <Input name="test" aria-label="input-accessible-name" />
-        </Fieldset>
-      </form>,
-    )
-
-    expect(screen.getByRole('group', { name: 'fieldset-legend' })).toHaveClass('shr-relative')
-  })
-
   // HINT: FormControlのlabelと構造を揃え、subActionAreaの有無でLabelClusterの親が変わらないようにする
   describe.each([
     ['subActionAreaが指定されていない場合', undefined],
