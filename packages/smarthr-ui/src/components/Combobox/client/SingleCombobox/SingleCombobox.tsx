@@ -298,8 +298,10 @@ export const SingleCombobox = <T,>({
         selectFallbackItem()
       } else {
         // 未選択のままフォーカスが外れた場合、手入力値を破棄して未選択の表示(空)に戻す
+        // 制御コンポーネントの場合に親側でinputValueを更新できるように、onChangeInputも空文字で発火する
         setIsEditing(false)
         setInputValue('')
+        latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
       }
     }
 

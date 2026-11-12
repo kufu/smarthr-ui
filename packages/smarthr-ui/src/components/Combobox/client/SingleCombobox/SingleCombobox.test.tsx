@@ -99,7 +99,8 @@ describe('SingleCombobox', () => {
   })
 
   it('未選択のままblurすると、入力値がクリアされて未選択の表示に戻ること', async () => {
-    render(template({ selectedItem: null }))
+    const onChangeInput = vi.fn()
+    render(template({ selectedItem: null, onChangeInput }))
 
     // 入力すると絞り込まれる
     await userEvent.click(combobox())
@@ -112,6 +113,11 @@ describe('SingleCombobox', () => {
 
     // blurすると手入力値が破棄され、未選択の表示(空)に戻ること
     expect(combobox()).toHaveValue('')
+
+    // 制御コンポーネントとして検索語を管理する親にも、クリアされたことが通知されること
+    expect(onChangeInput).toHaveBeenLastCalledWith(
+      expect.objectContaining({ target: expect.objectContaining({ value: '' }) }),
+    )
 
     // 再度フォーカスしたとき、絞り込みも解除されすべての選択肢が表示されること
     await userEvent.click(combobox())
