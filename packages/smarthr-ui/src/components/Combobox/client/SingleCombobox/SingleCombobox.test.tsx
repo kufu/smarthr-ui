@@ -567,7 +567,7 @@ describe('SingleCombobox', () => {
       expect(screen.getAllByRole('option')).toHaveLength(items.length)
     })
 
-    it('form.reset()を呼んでも、onChangeSelectedは呼ばれないこと', async () => {
+    it('form.reset()で選択状態が変わる場合、onChangeSelectedがdefaultSelectedItemで呼ばれること', async () => {
       const onChangeSelected = vi.fn()
       const { container } = render(
         <IntlProvider locale="ja">
@@ -587,6 +587,32 @@ describe('SingleCombobox', () => {
       await userEvent.click(combobox())
       await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
       onChangeSelected.mockClear()
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(onChangeSelected).toHaveBeenCalledTimes(1)
+      expect(onChangeSelected).toHaveBeenCalledWith({ label: 'option 1', value: 'value-1' })
+    })
+
+    it('form.reset()で選択状態が変わらない場合、onChangeSelectedは呼ばれないこと', async () => {
+      const onChangeSelected = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
 
       await act(async () => {
         container.querySelector('form')!.reset()

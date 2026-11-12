@@ -23,7 +23,7 @@ import { Localizer, useLocalize } from '../../../../intl'
 import { UnstyledButton } from '../../../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
 import { Input } from '../../../Input'
-import { getSelectedLabelText } from '../helper'
+import { areItemsEqual, getSelectedLabelText } from '../helper'
 import { ListBox, useListbox } from '../useListbox'
 import { useSingleOptions } from '../useOptions'
 
@@ -338,18 +338,23 @@ export const SingleCombobox = <T,>({
         const associatedForm = node?.form
         const handleReset = (e: Event) => {
           queueMicrotask(() => {
-            if (e.defaultPrevented) return
-
-            const nextSelectedItem = latest.defaultSelectedItem ?? null
-
-            updateUncontrolledSelectedItem(nextSelectedItem)
-
             // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
             // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
             // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
-            if (!latest.isSelectedItemControlled) {
-              setIsEditing(false)
-              setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+            if (e.defaultPrevented || latest.isSelectedItemControlled) return
+
+            const nextSelectedItem = latest.defaultSelectedItem ?? null
+            const hasSelectedItemChanged =
+              latest.selectedItem === null
+                ? nextSelectedItem !== null
+                : nextSelectedItem === null || !areItemsEqual(latest.selectedItem, nextSelectedItem)
+
+            updateUncontrolledSelectedItem(nextSelectedItem)
+            setIsEditing(false)
+            setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+
+            if (hasSelectedItemChanged) {
+              latest.onChangeSelected?.(nextSelectedItem)
             }
           })
         }
