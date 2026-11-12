@@ -120,7 +120,7 @@ export const BarChart: React.FC<Props> = ({
         ...externalOptions,
         ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
         // 値のない位置に棒の場所を取らないようにする
-        skipNull: grouped,
+        skipNull: externalOptions?.skipNull ?? grouped,
         scales: {
           ...externalOptions?.scales,
           ...(stacked
