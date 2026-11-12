@@ -538,6 +538,32 @@ describe('SingleCombobox', () => {
       expect(combobox()).toHaveValue('')
     })
 
+    it('未選択のまま検索文字列を入力した状態でform.reset()を呼ぶと、入力値がクリアされること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.type(combobox(), 'option 2')
+      expect(combobox()).toHaveValue('option 2')
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(combobox()).toHaveValue('')
+
+      // 絞り込みも解除されすべての選択肢が表示されること
+      await userEvent.click(combobox())
+      expect(screen.getAllByRole('option')).toHaveLength(items.length)
+    })
+
     it('form.reset()を呼んでも、onChangeSelectedは呼ばれないこと', async () => {
       const onChangeSelected = vi.fn()
       const { container } = render(

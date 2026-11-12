@@ -334,7 +334,17 @@ export const SingleCombobox = <T,>({
         // 選択状態をdefaultSelectedItemへ戻すためにresetイベントを監視する
         const associatedForm = node?.form
         const handleReset = () => {
-          updateUncontrolledSelectedItem(latest.defaultSelectedItem ?? null)
+          const nextSelectedItem = latest.defaultSelectedItem ?? null
+
+          updateUncontrolledSelectedItem(nextSelectedItem)
+
+          // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
+          // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
+          // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
+          if (!latest.isSelectedItemControlled) {
+            setIsEditing(false)
+            setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+          }
         }
 
         associatedForm?.addEventListener('reset', handleReset)
