@@ -100,20 +100,20 @@ export const Header: FC<Props> = ({
       tenantInfo: tenantInfoStyle,
       tenantNameText,
       actions,
-    } = classNameGenerator({ enableNew })
+    } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ className }),
+      wrapper: wrapper({ enableNew, className }),
       logoLink: logoLink(),
       tenantInfo: tenantInfoStyle(),
       tenantNameText: tenantNameText(),
-      actions: actions(),
+      actions: actions({ enableNew }),
     }
   }, [enableNew, className])
 
   const latest = useLatest({ onTenantSelect })
 
-  const hasOnTenantSelect = !!onTenantSelect
+  const hasOnTenantSelect = Boolean(onTenantSelect)
 
   const functions = useMemo(
     () => ({

@@ -42,6 +42,7 @@ const classNameGenerator = tv({
       '[:checked~&]:shr-flex',
     ],
     icon: [
+      'shr-text-[length:theme(fontSize.2xs)]',
       'shr-fill-white',
       'forced-colors:shr-fill-[ButtonText]',
       'forced-colors:[:disabled~.smarthr-ui-Switch-iconWrapper_&]:shr-fill-[GrayText]',
@@ -111,7 +112,7 @@ const MemoizedLabel = memo<
 const MemoizedSuffixIcon = memo<{ classNames: { iconWrapper: string; icon: string } }>(
   ({ classNames }) => (
     <span className={classNames.iconWrapper}>
-      <FaCheckIcon size="XXS" className={classNames.icon} />
+      <FaCheckIcon className={classNames.icon} />
     </span>
   ),
 )

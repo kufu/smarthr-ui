@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type MouseEvent, memo, useCallback, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -23,7 +25,6 @@ const classNameGenerator = tv({
 })
 
 const CLASS_NAMES = (() => {
-  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- module scopeで定義されており十分にmemo化されている。誤検知
   const { header, headerTitle, buttonWrapper, button } = classNameGenerator()
 
   return {

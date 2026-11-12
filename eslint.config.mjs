@@ -4,6 +4,7 @@ import storybook from 'eslint-plugin-storybook'
 
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
+import requireClient from './eslint-local-rules/require-client.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -17,6 +18,7 @@ export default [
         rules: {
           'best-practice-for-use-latest': bestPracticeForUseLatest,
           'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
+          'require-client': requireClient,
         },
       },
       perfectionist,
@@ -24,22 +26,51 @@ export default [
     rules: {
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
+      'local-rules/require-client': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {
           type: 'unsorted',
           groups: [
-            'key', 'as', 'namedAs', 'ref', 'namedRef',
-            'role', 'type', 'id', 'htmlFor', 'form',
-            'name', 'required', 'disabled', 'readOnly', 'value', 'checked',
+            'key',
+            'as',
+            'namedAs',
+            'ref',
+            'namedRef',
+            'role',
+            'type',
+            'id',
+            'htmlFor',
+            'form',
+            'name',
+            'required',
+            'disabled',
+            'readOnly',
+            'value',
+            'checked',
             'linkAttribute',
             'unknown',
             'tabIndex',
             'title',
-            'styleType', 'size', 'width', 'decoration', 'className', 'style',
-            'ariaAttribute', 'dataAttribute',
-            'functions', 'setCallback', 'onCallback', 'handleCallback',
-            'prefix', 'headerLike', 'trigger', 'children', 'items', 'button', 'suffix',
+            'styleType',
+            'size',
+            'width',
+            'decoration',
+            'className',
+            'style',
+            'ariaAttribute',
+            'dataAttribute',
+            'functions',
+            'setCallback',
+            'onCallback',
+            'handleCallback',
+            'prefix',
+            'headerLike',
+            'trigger',
+            'children',
+            'items',
+            'button',
+            'suffix',
           ],
           customGroups: [
             { groupName: 'key', elementNamePattern: '^key$' },
@@ -65,7 +96,10 @@ export default [
             { groupName: 'size', elementNamePattern: '^size$' },
             { groupName: 'setCallback', elementNamePattern: '^set[A-Z]' },
             { groupName: 'width', elementNamePattern: '((^w|W)idth|(^h|H)eight)$' },
-            { groupName: 'decoration', elementNamePattern: '^(color|wide|weight|leading|triggerType|innerMargin|padding)$' },
+            {
+              groupName: 'decoration',
+              elementNamePattern: '^(color|wide|weight|leading|triggerType|innerMargin|padding)$',
+            },
             { groupName: 'className', elementNamePattern: '(^c|C)lassName(s)?$' },
             { groupName: 'style', elementNamePattern: '^style$' },
             { groupName: 'ariaAttribute', elementNamePattern: '^aria' },
@@ -79,7 +113,10 @@ export default [
             { groupName: 'children', elementNamePattern: '^(children|message)$' },
             { groupName: 'items', elementNamePattern: '((^i|I)tems|(^o|O)ptions)$' },
             { groupName: 'button', elementNamePattern: 'Button$' },
-            { groupName: 'suffix', elementNamePattern: '(^suffix|^footer|^subActionArea|Message)$' },
+            {
+              groupName: 'suffix',
+              elementNamePattern: '(^suffix|^footer|^subActionArea|Message)$',
+            },
           ],
         },
       ],
@@ -124,6 +161,9 @@ export default [
           additionalHooks: 'useLayoutEffectRef',
         },
       ],
+      // HINT: 将来eslint-config-smarthr側にデフォルトで含まれる予定。
+      //  正式に取り込まれたタイミングでこの行は削除する
+      'no-implicit-coercion': 'error',
       'no-restricted-syntax': [
         'error',
         {
@@ -170,6 +210,12 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
+      'smarthr/best-practice-for-interactive-element': [
+        'error',
+        {
+          additionalInteractiveComponentRegex: ['RichTextEditor'],
+        },
+      ],
       // 'smarthr/best-practice-for-consecutive-definition-list': 'off',
       // 'smarthr/best-practice-for-default-props': 'off',
       // 'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
@@ -180,17 +226,15 @@ export default [
       'smarthr/best-practice-for-unstable-dependencies': [
         'error',
         {
-          'additionalTargetHooks': [
-            'useLayoutEffectRef',
-          ],
-          'additionalUnstableNames': [
-            "icon",
-            "prefix",
-            "suffix",
-            "footer",
-            "subActionArea",
-            "options",
-            "items",
+          additionalTargetHooks: ['useLayoutEffectRef'],
+          additionalUnstableNames: [
+            'icon',
+            'prefix',
+            'suffix',
+            'footer',
+            'subActionArea',
+            'options',
+            'items',
             'ref',
             '/Ref$/',
             '/^on[A-Z]/',
@@ -214,6 +258,12 @@ export default [
     },
   },
   {
+    files: ['packages/charts/**', 'packages/rich-text-editor/**'],
+    rules: {
+      'local-rules/require-client': 'off',
+    },
+  },
+  {
     ignores: [
       'sandbox/',
       'storybook-static/',
@@ -222,12 +272,19 @@ export default [
     ],
   },
   {
-    files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**', '**/*.stories.tsx', 'packages/smarthr-ui/.storybook'],
+    files: [
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/__tests__/**',
+      '**/*.stories.tsx',
+      'packages/smarthr-ui/.storybook',
+    ],
     rules: {
       'smarthr/best-practice-for-lazy-variable': 'off',
       'smarthr/best-practice-for-no-unnecessary-variable': 'off',
       'smarthr/best-practice-for-tailwind-variants': 'off',
       'smarthr/require-i18n-text': 'off',
+      'local-rules/require-client': 'off',
     },
   },
   {

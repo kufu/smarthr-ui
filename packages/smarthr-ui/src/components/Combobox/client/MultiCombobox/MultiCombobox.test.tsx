@@ -114,6 +114,24 @@ describe('SingleCombobox', () => {
     expect(listbox()).not.toBeInTheDocument()
   })
 
+  it('入力途中の文字列がある状態で閉じると、再度開いたときに文字列が残っていないこと', async () => {
+    render(template({}))
+
+    // 検索文字列を入力する
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option')
+    expect(combobox()).toHaveValue('option')
+
+    // 何も選択せずに外側クリックで閉じる
+    await userEvent.click(document.body)
+    expect(listbox()).not.toBeInTheDocument()
+
+    // 再度開いても入力値が残っていないこと
+    await userEvent.click(combobox())
+    expect(combobox()).toHaveValue('')
+    expect(screen.getAllByRole('option')).toHaveLength(5)
+  })
+
   it('リストボックスが展開されているときのESCキー入力はdocumentまで伝搬せず、閉じているときは伝搬すること', async () => {
     const handleDocumentKeyDown = vi.fn()
     document.addEventListener('keydown', handleDocumentKeyDown)
@@ -144,6 +162,14 @@ describe('SingleCombobox', () => {
     // 選択解除ボタンをクリックしてもリストボックスが表示されないことを確認
     await userEvent.click(deleteButtons()[0])
     expect(listbox()).not.toBeInTheDocument()
+  })
+
+  it('disableFilteringがtrueの場合、入力値に一致しないitemsも絞り込まれず表示されること', async () => {
+    render(template({ selectedItems: [], disableFiltering: true }))
+
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option 2')
+    expect(screen.getAllByRole('option')).toHaveLength(5)
   })
 
   it('新しいアイテムを追加できること', async () => {

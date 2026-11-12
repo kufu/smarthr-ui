@@ -1,9 +1,13 @@
 import { userEvent } from 'storybook/test'
 
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { InputFile } from '../InputFile'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
+
+type Variant = ComponentPropsWithoutRef<typeof InputFile>['variant']
 
 export default {
   title: 'Components/InputFile/VRT',
@@ -47,6 +51,43 @@ export const VRT = {
 }
 
 export const VRTForcedColors: StoryObj = {
+  parameters: {
+    ...VRT.parameters,
+    chromatic: { forcedColors: 'active' },
+  },
+}
+
+export const VRTVariant: StoryObj<typeof InputFile> = {
+  render: (args) => (
+    <Stack>
+      {[undefined, 'hover', 'focus-within'].map((id) => (
+        <Stack key={id} id={id}>
+          {(['secondary', 'tertiary', 'text', 'skeleton'] as Variant[]).map((variant) => (
+            <Groupbox key={variant} bgColor={variant === 'skeleton' ? 'GREY_20' : 'WHITE'}>
+              <Cluster align="center">
+                {[false, true].map((disabled) =>
+                  [false, true].map((error) => (
+                    <InputFile
+                      {...args}
+                      key={`${disabled}-${error}`}
+                      disabled={disabled}
+                      error={error}
+                      variant={variant}
+                    />
+                  )),
+                )}
+              </Cluster>
+            </Groupbox>
+          ))}
+        </Stack>
+      ))}
+    </Stack>
+  ),
+  parameters: VRT.parameters,
+}
+
+export const VRTVariantForcedColors: StoryObj<typeof InputFile> = {
+  render: VRTVariant.render,
   parameters: {
     ...VRT.parameters,
     chromatic: { forcedColors: 'active' },

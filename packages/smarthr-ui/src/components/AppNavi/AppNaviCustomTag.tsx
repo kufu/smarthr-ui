@@ -37,11 +37,12 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, icon } = classNameGenerator({ active: current })
+    const { wrapper, icon } = classNameGenerator()
+    const variantProps = { active: current }
 
     return {
-      wrapper: wrapper(),
-      icon: icon(),
+      wrapper: wrapper(variantProps),
+      icon: icon(variantProps),
     }
   }, [current])
 

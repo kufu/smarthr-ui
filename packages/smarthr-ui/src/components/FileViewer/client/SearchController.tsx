@@ -44,8 +44,8 @@ export const SearchController: FC<Props> = memo(({ search }) => {
   } = search
   const { mobile } = useEnvironment()
   const classNames = useMemo(() => {
-    const { wrapper, inputArea } = classNameGenerator({ mobile })
-    return { wrapper: wrapper(), inputArea: inputArea() }
+    const { wrapper, inputArea } = classNameGenerator()
+    return { wrapper: wrapper({ mobile }), inputArea: inputArea() }
   }, [mobile])
 
   const noMatches = matchCount === 0
