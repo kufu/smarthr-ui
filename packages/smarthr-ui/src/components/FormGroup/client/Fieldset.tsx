@@ -17,6 +17,10 @@ const legendObjectConverter = (legend: ReactNode) => ({ text: legend })
 
 const fieldsetClassNameGenerator = tv({
   extend: classNameGenerator,
+  slots: {
+    // HINT: absoluteなlegendが祖先のスクロール領域を広げないよう、fieldsetを包含ブロックにする
+    wrapper: 'shr-relative',
+  },
   variants: {
     // TODO: innerMarginが未指定、初期値の場合、childrenの上部の余白を広げることで
     // FormControlとの差をわかりやすくしている
