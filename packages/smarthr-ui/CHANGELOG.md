@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [103.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v103.0.0...smarthr-ui-v103.1.0) (2026-11-12)
+
+
+### Features
+
+* **InputFile:** variant属性を追加 ([#7533](https://github.com/kufu/smarthr-ui/issues/7533)) ([2cf684a](https://github.com/kufu/smarthr-ui/commit/2cf684a9d92baf42a602957a7ee51c523d901825))
+* iOSのsafe area(env(safe-area-inset-*))に対応 ([#7160](https://github.com/kufu/smarthr-ui/issues/7160)) ([bf4ae61](https://github.com/kufu/smarthr-ui/commit/bf4ae61026efb7ce8c77c861cfa83d38385ea10e))
+
+
+### Bug Fixes
+
+* **ModelessDialog:** ダイアログを開いた直後にもフォーカスを戻すべき要素が設定されるように修正 ([#7527](https://github.com/kufu/smarthr-ui/issues/7527)) ([10fcafe](https://github.com/kufu/smarthr-ui/commit/10fcafe7b7e507803d3f0e6dc6ee77f3300fab2a))
+* **Textarea:** maxLettersの文字数カウンタをform.reset()に対応させる ([#7414](https://github.com/kufu/smarthr-ui/issues/7414)) ([4b54bf8](https://github.com/kufu/smarthr-ui/commit/4b54bf8f346538be87f5a8d53f4be857450837fa))
+
 ## [103.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v102.1.0...smarthr-ui-v103.0.0) (2026-11-10)
 
 
