@@ -1,5 +1,6 @@
 import { useArgs } from 'storybook/preview-api'
 
+import { Button } from '../../../../Button'
 import { FaCirclePlusIcon } from '../../../../Icon'
 import { Stack } from '../../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
@@ -240,4 +241,20 @@ export const NoResultText: StoryObj<typeof SingleCombobox> = {
     items: [],
     noResultText: '該当する商品が見つかりません',
   },
+}
+
+export const FormReset: StoryObj<typeof SingleCombobox> = {
+  name: 'form.reset()の挙動確認(非制御)',
+  render: () => (
+    <form>
+      <Stack>
+        <SingleCombobox
+          name="single_combobox_reset_demo"
+          defaultSelectedItem={defaultItems['option 2']}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット</Button>
+      </Stack>
+    </form>
+  ),
 }
