@@ -156,6 +156,7 @@ export const PortalParent: StoryObj<typeof ControlledDrawer> = {
         ref={setContainer}
         style={{
           position: 'relative',
+          width: '24rem',
           height: '24rem',
           border: '1px solid #ccc',
           overflow: 'hidden',
