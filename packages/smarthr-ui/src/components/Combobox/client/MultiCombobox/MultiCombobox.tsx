@@ -327,9 +327,16 @@ export const MultiCombobox = <T,>({
     let associatedForm: HTMLFormElement | null = null
 
     // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
-    // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する
-    const handleReset = () => {
-      latest.setSelectedItemsIfUncontrolled(latest.defaultSelectedItems ?? [])
+    // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する。
+    // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
+    // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
+    // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
+    const handleReset = (e: Event) => {
+      queueMicrotask(() => {
+        if (!e.defaultPrevented) {
+          latest.setSelectedItemsIfUncontrolled(latest.defaultSelectedItems ?? [])
+        }
+      })
     }
 
     const handleDelete = listBoxFunctions.handleDelete

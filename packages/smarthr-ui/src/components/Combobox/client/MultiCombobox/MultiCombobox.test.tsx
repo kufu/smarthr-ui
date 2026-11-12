@@ -559,8 +559,9 @@ describe('SingleCombobox', () => {
       expect(screen.getByText('option 1')).toBeInTheDocument()
       expect(screen.getByText('option 2')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(screen.getByText('option 1')).toBeInTheDocument()
@@ -583,8 +584,9 @@ describe('SingleCombobox', () => {
       await userEvent.keyboard('{escape}')
       expect(screen.getByText('option 1')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(screen.queryByText('option 1')).not.toBeInTheDocument()
@@ -611,8 +613,9 @@ describe('SingleCombobox', () => {
       await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
       onChangeSelected.mockClear()
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(onChangeSelected).not.toHaveBeenCalled()
@@ -644,10 +647,41 @@ describe('SingleCombobox', () => {
 
       expect(screen.getByText('option 2')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
+      expect(screen.getByText('option 2')).toBeInTheDocument()
+    })
+
+    it('onResetでpreventDefault()が呼ばれた場合、選択状態が変更されないこと', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form onReset={(e) => e.preventDefault()}>
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                name="default"
+                defaultSelectedItems={[{ label: 'option 1', value: 'value-1' }]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      await userEvent.keyboard('{escape}')
+      expect(screen.getByText('option 1')).toBeInTheDocument()
+      expect(screen.getByText('option 2')).toBeInTheDocument()
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(screen.getByText('option 1')).toBeInTheDocument()
       expect(screen.getByText('option 2')).toBeInTheDocument()
     })
   })
