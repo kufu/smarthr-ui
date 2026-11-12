@@ -203,7 +203,7 @@ export const Stacked: Story = {
   },
 }
 
-// グループごとの値の集まり（データ1 = [12, 19, 3, 5, 2] など）を、グループ名1つのxカテゴリの中に積み上げて表示する
+// 項目ごとに内訳が異なるデータは、内訳を積み上げた1本の棒で表示する。表は項目ごとに内訳をまとめる
 export const GroupedStacks: Story = {
   name: 'grouped stacks',
   args: {

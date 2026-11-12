@@ -59,9 +59,17 @@ type Props = {
   defaultView?: ChartViewType
 } & BarChartColorProps
 
-// stackが複数ある積み上げは、カテゴリごとに内訳をまとめた表にする
-const isGroupedStacks = (data: ChartData<'bar'>, stacked?: boolean) =>
-  !!stacked && new Set(data.datasets.map((dataset) => dataset.stack)).size > 1
+// どのデータセットも値を持つカテゴリが1つ以下なら、カテゴリごとに内訳を積み上げたデータとみなす
+const isGroupedStackData = ({ labels = [], datasets }: ChartData<'bar'>) => {
+  // カテゴリやデータセットが1つだけなら、どんなデータでも条件を満たしてしまう
+  if (labels.length <= 1 || datasets.length <= 1) {
+    return false
+  }
+
+  return datasets.every(
+    ({ data }) => data.filter((value) => value !== null && value !== undefined).length <= 1,
+  )
+}
 
 export const BarChart: React.FC<Props> = ({
   data,
@@ -112,7 +120,7 @@ export const BarChart: React.FC<Props> = ({
     [data, chartColors, stacked],
   )
 
-  const grouped = isGroupedStacks(data, stacked)
+  const grouped = isGroupedStackData(data)
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>

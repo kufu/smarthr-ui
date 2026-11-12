@@ -47,14 +47,13 @@ const stackedGroupsSource = [
 ]
 
 /**
- * 内訳ごとにデータセットを分け、stackにグループ名を入れたもの
+ * 項目ごとに内訳が異なるデータ。内訳ごとにデータセットを分け、その項目以外はnullにする
  */
 export const stackedGroups = {
   labels: stackedGroupsSource.map((g) => g.group),
   datasets: stackedGroupsSource.flatMap((g, groupIndex) =>
     g.values.map((value, itemIndex) => ({
       label: `${g.group}のデータ${itemIndex + 1}`,
-      stack: g.group,
       data: stackedGroupsSource.map((_, i) => (i === groupIndex ? value : null)),
     })),
   ),
