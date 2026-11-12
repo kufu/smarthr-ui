@@ -61,7 +61,7 @@ export const Navigation: FC<Props> = ({
         </Cluster>
       }
       className={className}
-      data-with-releasenote={!!releaseNote}
+      data-with-releasenote={Boolean(releaseNote)}
       label={enableNew ? undefined : appName}
     >
       {actualNavigations}

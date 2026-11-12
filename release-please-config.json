@@ -13,6 +13,9 @@
     },
     "packages/charts": {
       "initial-version": "0.1.0"
+    },
+    "packages/rich-text-editor": {
+      "initial-version": "0.1.0"
     }
   }
 }

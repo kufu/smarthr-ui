@@ -199,7 +199,7 @@ export const WarekiPicker: FC<Props> = ({
     return selectedDate ? formatDateValue(selectedDate, formatDate) : (defaultValue ?? '')
   })
 
-  const isCalendarShown = !!inputRect
+  const isCalendarShown = Boolean(inputRect)
 
   const closeFrame = useAnimationFrame()
 

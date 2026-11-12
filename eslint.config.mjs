@@ -4,7 +4,7 @@ import storybook from 'eslint-plugin-storybook'
 
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
-import requireClientDirectory from './eslint-local-rules/require-client-directory.js'
+import requireClient from './eslint-local-rules/require-client.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -18,7 +18,7 @@ export default [
         rules: {
           'best-practice-for-use-latest': bestPracticeForUseLatest,
           'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
-          'require-client-directory': requireClientDirectory,
+          'require-client': requireClient,
         },
       },
       perfectionist,
@@ -26,7 +26,7 @@ export default [
     rules: {
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
-      'local-rules/require-client-directory': 'error',
+      'local-rules/require-client': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {
@@ -161,6 +161,9 @@ export default [
           additionalHooks: 'useLayoutEffectRef',
         },
       ],
+      // HINT: 将来eslint-config-smarthr側にデフォルトで含まれる予定。
+      //  正式に取り込まれたタイミングでこの行は削除する
+      'no-implicit-coercion': 'error',
       'no-restricted-syntax': [
         'error',
         {
@@ -207,6 +210,12 @@ export default [
           checkType: 'allow-spread-attributes',
         },
       ],
+      'smarthr/best-practice-for-interactive-element': [
+        'error',
+        {
+          additionalInteractiveComponentRegex: ['RichTextEditor'],
+        },
+      ],
       // 'smarthr/best-practice-for-consecutive-definition-list': 'off',
       // 'smarthr/best-practice-for-default-props': 'off',
       // 'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
@@ -249,9 +258,9 @@ export default [
     },
   },
   {
-    files: ['packages/charts/**'],
+    files: ['packages/charts/**', 'packages/rich-text-editor/**'],
     rules: {
-      'local-rules/require-client-directory': 'off',
+      'local-rules/require-client': 'off',
     },
   },
   {
@@ -275,6 +284,7 @@ export default [
       'smarthr/best-practice-for-no-unnecessary-variable': 'off',
       'smarthr/best-practice-for-tailwind-variants': 'off',
       'smarthr/require-i18n-text': 'off',
+      'local-rules/require-client': 'off',
     },
   },
   {

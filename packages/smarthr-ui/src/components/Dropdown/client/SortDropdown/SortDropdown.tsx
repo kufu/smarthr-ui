@@ -89,7 +89,7 @@ export const SortDropdown: FC<Props> = ({
     onApply,
     onCancel,
   })
-  const hasOnCancel = !!onCancel
+  const hasOnCancel = Boolean(onCancel)
 
   const functions = useMemo(
     () => ({

@@ -16,7 +16,7 @@ type StepFormDialogContextType = {
   stepQueueRef: MutableRefObject<StepItem[]>
   currentStep: StepItem
   setCurrentStep: (step: StepItem) => void
-  scrollerRef: RefObject<HTMLDivElement>
+  scrollerRef: RefObject<HTMLDivElement | null>
 }
 export const StepFormDialogContext = createContext<StepFormDialogContextType>({
   stepQueueRef: { current: [] },

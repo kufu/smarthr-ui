@@ -10,6 +10,7 @@ import { Cluster } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
 import { Dialog } from './Dialog'
+import { DialogBody } from './DialogBody'
 
 const waitForAnimationFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
 
@@ -124,7 +125,8 @@ describe('Dialog', () => {
     await userEvent.tab({ shift: true })
     expect(screen.getByRole('button', { name: 'close' })).toHaveFocus()
     await userEvent.tab()
-    expect(screen.getByRole('textbox', { name: 'dialog_datepicker' })).toHaveFocus()
+    // suffixに表示される和暦表記がaria-labelledbyで合流するため、アクセシブルネームに含まれる
+    expect(screen.getByRole('textbox', { name: 'dialog_datepicker 令和3年1月1日' })).toHaveFocus()
   })
 
   it('IME 変換中の Tab はフォーカストラップの対象外になること', async () => {
@@ -209,6 +211,26 @@ describe('Dialog', () => {
       'shr-max-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
     )
     expect(dialog).toHaveClass('shr-overflow-y-auto')
+  })
+
+  it('border-box 環境でも内側の max-height を超えないよう、box-sizing が content-box になること', () => {
+    renderWithIntl(
+      <Dialog isOpen ariaLabel="Dialog">
+        本文
+      </Dialog>,
+    )
+
+    expect(screen.getByRole('dialog', { name: 'Dialog' })).toHaveClass('shr-box-content')
+  })
+
+  it('DialogBody 内の absolute 要素が外側のスクロール範囲を広げないよう、position が relative になること', () => {
+    renderWithIntl(
+      <Dialog isOpen ariaLabel="Dialog">
+        <DialogBody>本文</DialogBody>
+      </Dialog>,
+    )
+
+    expect(screen.getByText('本文')).toHaveClass('smarthr-ui-Dialog-body', 'shr-relative')
   })
 
   it('Escapeキー押下時、onPressEscapeに実際のKeyboardEventが渡されること', async () => {

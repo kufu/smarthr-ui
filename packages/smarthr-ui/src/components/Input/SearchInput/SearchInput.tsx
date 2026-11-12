@@ -33,7 +33,7 @@ export const SearchInput: FC<Props> = ({ width, className, variant, ...rest }) =
   const labelStyle = {
     width: typeof width === 'number' ? `${width}px` : width,
   }
-  const existsWidth = !!labelStyle.width
+  const existsWidth = Boolean(labelStyle.width)
 
   const classNames = useMemo(() => {
     const { label, input } = classNameGenerator()

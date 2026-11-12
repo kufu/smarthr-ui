@@ -78,6 +78,7 @@ const classNameGenerator = tv({
     ],
     inner: [
       DIALOG_CONTENT_CLASS_NAME,
+      'shr-box-content',
       'shr-border-shorthand shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
       'shr-max-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
       'shr-overflow-y-auto',
