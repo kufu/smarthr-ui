@@ -3,7 +3,6 @@ import {
   type FC,
   type MouseEvent,
   type ReactNode,
-  type SubmitEvent,
   memo,
 } from 'react'
 import { tv } from 'tailwind-variants'
@@ -47,7 +46,9 @@ type Props = ExtendElementPropsWithRef<
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
      */
-    handleSubmit: (e: SubmitEvent<HTMLFormElement>) => void
+    // HINT: SubmitEvent は @types/react 19.2.10 以降にしか存在せず、型定義に直接書くと
+    // それより古い @types/react の利用者で型エラーになるため、form の onSubmit の型から取り出す
+    handleSubmit: NonNullable<ComponentPropsWithoutRef<'form'>['onSubmit']>
     /** form要素に渡す属性 */
     formProps?: Omit<ComponentPropsWithoutRef<'form'>, 'children' | 'className'>
     /** 閉じるボタン */

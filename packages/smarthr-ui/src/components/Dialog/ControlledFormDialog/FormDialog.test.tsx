@@ -294,6 +294,35 @@ describe('ControlledFormDialog の formProps', () => {
     expect(onSubmit.mock.calls[0][0].defaultPrevented).toBe(false)
   })
 
+  it('subActionArea の送信ボタンに formAction を渡すと、FormData 付きで formAction が呼ばれること', async () => {
+    const saveDraft = vi.fn()
+    render(
+      <IntlProvider locale="ja">
+        <ControlledFormDialog
+          isOpen
+          onSubmit={() => {}}
+          onClickClose={() => {}}
+          heading="ControlledFormDialog"
+          actionButton="保存"
+          subActionArea={
+            <Button type="submit" formAction={saveDraft}>
+              下書き保存
+            </Button>
+          }
+        >
+          <FormControl label="名前">
+            <Input name="name" defaultValue="スマート 太郎" />
+          </FormControl>
+        </ControlledFormDialog>
+      </IntlProvider>,
+    )
+
+    await act(() => userEvent.click(screen.getByRole('button', { name: '下書き保存' })))
+
+    expect(saveDraft).toHaveBeenCalledTimes(1)
+    expect((saveDraft.mock.calls[0][0] as FormData).get('name')).toBe('スマート 太郎')
+  })
+
   it('children 内の送信ボタンに formAction があっても、formAction の無いボタンでの送信では onSubmit に preventDefault 済みのイベントが渡されること', async () => {
     const saveDraft = vi.fn()
     const onSubmit = vi.fn()

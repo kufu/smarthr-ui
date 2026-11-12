@@ -5,7 +5,6 @@ import {
   type FormEvent,
   type MouseEvent,
   type ReactNode,
-  type SubmitEvent,
   useMemo,
 } from 'react'
 
@@ -113,37 +112,39 @@ export const ControlledFormDialog: FC<Props> = ({
       }
     }
 
+    const handleSubmit: FormDialogContentProps['handleSubmit'] = (e) => {
+      // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
+      // 親formが意図せずsubmitされてしまう場合がある。また親formのonSubmitがpreventDefaultすると、
+      // このformのactionも実行されなくなるため、actionの有無に関わらず実行する
+      e.stopPropagation()
+
+      // HINT: conformのresetなどはsubmitイベント経由で状態を更新するため、閉じるtransition中でも
+      // formProps.onSubmitは呼ぶ必要がある。onSubmitとactionは閉じている間は実行しない
+      latest.formProps?.onSubmit?.(e)
+
+      if (e.defaultPrevented) {
+        return
+      }
+
+      if (!latest.isOpen) {
+        e.preventDefault()
+
+        return
+      }
+
+      // HINT: ReactはsubmitイベントがdefaultPreventedかどうかでactionを実行するか判定するため、
+      // form・送信ボタンのどちらかにactionがある場合はpreventDefaultしない。
+      // ReactはformActionに関数を渡すとformaction属性も付与するため、属性の有無で判定できる
+      if (!latest.formProps?.action && !e.nativeEvent.submitter?.hasAttribute('formaction')) {
+        e.preventDefault()
+      }
+
+      latest.onSubmit?.(e, { close: handleClickClose })
+    }
+
     return {
       handleClickClose,
-      handleSubmit: (e: SubmitEvent<HTMLFormElement>) => {
-        // HINT: React Portals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
-        // 親formが意図せずsubmitされてしまう場合がある。また親formのonSubmitがpreventDefaultすると、
-        // このformのactionも実行されなくなるため、actionの有無に関わらず実行する
-        e.stopPropagation()
-
-        // HINT: conformのresetなどはsubmitイベント経由で状態を更新するため、閉じるtransition中でも
-        // formProps.onSubmitは呼ぶ必要がある。onSubmitとactionは閉じている間は実行しない
-        latest.formProps?.onSubmit?.(e)
-
-        if (e.defaultPrevented) {
-          return
-        }
-
-        if (!latest.isOpen) {
-          e.preventDefault()
-
-          return
-        }
-
-        // HINT: ReactはsubmitイベントがdefaultPreventedかどうかでactionを実行するか判定するため、
-        // form・送信ボタンのどちらかにactionがある場合はpreventDefaultしない。
-        // ReactはformActionに関数を渡すとformaction属性も付与するため、属性の有無で判定できる
-        if (!latest.formProps?.action && !e.nativeEvent.submitter?.hasAttribute('formaction')) {
-          e.preventDefault()
-        }
-
-        latest.onSubmit?.(e, { close: handleClickClose })
-      },
+      handleSubmit,
     }
   }, [latest])
 
