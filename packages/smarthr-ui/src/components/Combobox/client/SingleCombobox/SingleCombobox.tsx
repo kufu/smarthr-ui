@@ -331,20 +331,27 @@ export const SingleCombobox = <T,>({
         inputNode = node
 
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
-        // 選択状態をdefaultSelectedItemへ戻すためにresetイベントを監視する
+        // 選択状態をdefaultSelectedItemへ戻すためにresetイベントを監視する。
+        // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
+        // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
+        // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
         const associatedForm = node?.form
-        const handleReset = () => {
-          const nextSelectedItem = latest.defaultSelectedItem ?? null
+        const handleReset = (e: Event) => {
+          queueMicrotask(() => {
+            if (e.defaultPrevented) return
 
-          updateUncontrolledSelectedItem(nextSelectedItem)
+            const nextSelectedItem = latest.defaultSelectedItem ?? null
 
-          // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
-          // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
-          // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
-          if (!latest.isSelectedItemControlled) {
-            setIsEditing(false)
-            setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
-          }
+            updateUncontrolledSelectedItem(nextSelectedItem)
+
+            // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
+            // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
+            // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
+            if (!latest.isSelectedItemControlled) {
+              setIsEditing(false)
+              setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+            }
+          })
         }
 
         associatedForm?.addEventListener('reset', handleReset)

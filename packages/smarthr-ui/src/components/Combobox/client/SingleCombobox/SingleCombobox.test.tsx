@@ -509,8 +509,9 @@ describe('SingleCombobox', () => {
       await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
       expect(combobox()).toHaveValue('option 2')
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(combobox()).toHaveValue('option 1')
@@ -531,8 +532,9 @@ describe('SingleCombobox', () => {
       await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
       expect(combobox()).toHaveValue('option 1')
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(combobox()).toHaveValue('')
@@ -553,8 +555,9 @@ describe('SingleCombobox', () => {
       await userEvent.type(combobox(), 'option 2')
       expect(combobox()).toHaveValue('option 2')
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(combobox()).toHaveValue('')
@@ -585,8 +588,9 @@ describe('SingleCombobox', () => {
       await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
       onChangeSelected.mockClear()
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(onChangeSelected).not.toHaveBeenCalled()
@@ -619,8 +623,36 @@ describe('SingleCombobox', () => {
 
       expect(combobox()).toHaveValue('option 2')
 
-      act(() => {
+      await act(async () => {
         container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+
+    it('onResetでpreventDefault()が呼ばれた場合、選択状態が変更されないこと', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form onReset={(e) => e.preventDefault()}>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      expect(combobox()).toHaveValue('option 2')
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
       })
 
       expect(combobox()).toHaveValue('option 2')
