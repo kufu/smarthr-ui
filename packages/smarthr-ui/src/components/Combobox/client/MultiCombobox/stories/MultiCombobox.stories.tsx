@@ -222,3 +222,19 @@ export const FormReset: StoryObj<typeof MultiCombobox> = {
     </form>
   ),
 }
+
+export const FormResetWithPreventDefault: StoryObj<typeof MultiCombobox> = {
+  name: 'form.reset()がキャンセルされた場合の挙動確認(非制御)',
+  render: () => (
+    <form onReset={(e) => e.preventDefault()}>
+      <Stack>
+        <MultiCombobox
+          name="multi_combobox_reset_cancel_demo"
+          defaultSelectedItems={[defaultItems['option 1'], defaultItems['option 2']]}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット(キャンセルされるはず)</Button>
+      </Stack>
+    </form>
+  ),
+}

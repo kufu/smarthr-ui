@@ -302,6 +302,7 @@ export const MultiCombobox = <T,>({
     })
 
   const focusFrame = useAnimationFrame()
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onChangeInput,
@@ -322,6 +323,7 @@ export const MultiCombobox = <T,>({
     handleKeyDownListBox,
     cleanupAddFrame,
     focusFrame,
+    resetFrame,
   })
 
   const functions = useMemo(() => {
@@ -330,11 +332,12 @@ export const MultiCombobox = <T,>({
 
     // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
     // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する。
-    // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
-    // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
-    // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
+    // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+    // 実行されるが、そのタイミングはqueueMicrotaskでは追いつかない(実機検証で確認済み)。
+    // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
+    // (defaultPrevented)が確定した後に判定できるようにする
     const handleReset = (e: Event) => {
-      queueMicrotask(() => {
+      latest.resetFrame.request(() => {
         if (e.defaultPrevented) return
 
         if (!latest.isSelectedItemsControlled) {
@@ -449,6 +452,7 @@ export const MultiCombobox = <T,>({
           listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
+          latest.resetFrame.cancel()
           associatedForm?.removeEventListener('reset', handleReset)
           associatedForm = null
         }
