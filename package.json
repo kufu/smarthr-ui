@@ -7,7 +7,7 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "eslint": "^9.39.5",
-    "eslint-config-smarthr": "^14.14.0",
+    "eslint-config-smarthr": "^14.14.2",
     "eslint-plugin-perfectionist": "^5.10.1",
     "eslint-plugin-storybook": "^10.5.10",
     "husky": "^9.1.7",
