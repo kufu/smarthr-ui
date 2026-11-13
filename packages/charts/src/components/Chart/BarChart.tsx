@@ -61,7 +61,7 @@ type Props = {
 
 // どのデータセットも値を持つカテゴリが1つ以下なら、カテゴリごとに内訳を積み上げたデータとみなす
 const isGroupedStackData = ({ labels = [], datasets }: ChartData<'bar'>) => {
-  // カテゴリやデータセットが1つだけなら、どんなデータでも条件を満たしてしまう
+  // カテゴリか系列が1つだけのデータは見分けられないので、内訳を積み上げたデータとはみなさない
   if (labels.length <= 1 || datasets.length <= 1) {
     return false
   }
