@@ -30,7 +30,7 @@ import { useMultiOptions } from '../useOptions'
 import { DELETE_BUTTON_SELECTOR, MultiSelectedItem } from './MultiSelectedItem'
 
 import type { ExtendElementPropsWithRef } from '../../../../types'
-import type { BaseProps, ComboboxItem } from '../types'
+import type { BaseProps, ComboboxItem, DeletableComboboxItem } from '../types'
 
 type Props<T> = ExtendElementPropsWithRef<
   'input',
@@ -38,7 +38,11 @@ type Props<T> = ExtendElementPropsWithRef<
     /**
      * 選択されているアイテムのリスト
      */
-    selectedItems: Array<ComboboxItem<T> & { deletable?: boolean }>
+    selectedItems?: Array<DeletableComboboxItem<T>>
+    /**
+     * デフォルトで選択するアイテムのリスト
+     */
+    defaultSelectedItems?: Array<DeletableComboboxItem<T>>
     /**
      * 選択されているアイテムのラベルを省略表示するかどうか
      */
@@ -137,6 +141,7 @@ const classNameGenerator = tv({
 export const MultiCombobox = <T,>({
   items,
   selectedItems,
+  defaultSelectedItems,
   name,
   disabled = false,
   required = false,
@@ -152,6 +157,7 @@ export const MultiCombobox = <T,>({
   dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className,
+  title,
   onChangeInput,
   onAdd,
   onDelete,
@@ -172,6 +178,9 @@ export const MultiCombobox = <T,>({
   const [highlighted, setHighlighted] = useState(false)
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
+  const [uncontrolledSelectedItems, setUncontrolledSelectedItems] = useState(
+    defaultSelectedItems ?? [],
+  )
 
   const selectedListId = useId()
 
@@ -180,9 +189,15 @@ export const MultiCombobox = <T,>({
   const setInputValueIfUncontrolled = isInputControlled ? NOOP : setUncontrolledInputValue
   const isInputEmpty = !inputValue
 
+  const isSelectedItemsControlled = selectedItems !== undefined
+  const actualSelectedItems = isSelectedItemsControlled ? selectedItems : uncontrolledSelectedItems
+  const setSelectedItemsIfUncontrolled = isSelectedItemsControlled
+    ? NOOP
+    : setUncontrolledSelectedItems
+
   const { options } = useMultiOptions({
     items,
-    selected: selectedItems,
+    selected: actualSelectedItems,
     creatable,
     inputValue,
     isItemSelected,
@@ -197,7 +212,9 @@ export const MultiCombobox = <T,>({
     onChangeSelected,
     onSelect,
     onChangeInput,
-    selectedItems,
+    selectedItems: actualSelectedItems,
+    isSelectedItemsControlled,
+    setSelectedItemsIfUncontrolled,
     deleteFrame,
     selectFrame,
   })
@@ -206,6 +223,15 @@ export const MultiCombobox = <T,>({
     const handleDelete = (item: ComboboxItem<T>) => {
       const handlers: Array<(deletingItem: ComboboxItem<T>) => void> = []
 
+      if (!latestForListBox.isSelectedItemsControlled) {
+        handlers.push((deletingItem: ComboboxItem<T>) =>
+          latestForListBox.setSelectedItemsIfUncontrolled(
+            latestForListBox.selectedItems.filter(
+              (selected) => !areItemsEqual(selected, deletingItem),
+            ),
+          ),
+        )
+      }
       if (latestForListBox.onDelete) {
         handlers.push((deletingItem: ComboboxItem<T>) => latestForListBox.onDelete!(deletingItem))
       }
@@ -243,6 +269,12 @@ export const MultiCombobox = <T,>({
           )
 
           if (matchedSelectedItem === undefined) {
+            if (!latestForListBox.isSelectedItemsControlled) {
+              latestForListBox.setSelectedItemsIfUncontrolled(
+                latestForListBox.selectedItems.concat(selected),
+              )
+            }
+
             latestForListBox.onSelect?.(selected)
             latestForListBox.onChangeSelected?.(latestForListBox.selectedItems.concat(selected))
 
@@ -270,9 +302,11 @@ export const MultiCombobox = <T,>({
     })
 
   const focusFrame = useAnimationFrame()
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onChangeInput,
+    onChangeSelected,
     onFocus,
     onBlur,
     onKeyPress,
@@ -281,15 +315,55 @@ export const MultiCombobox = <T,>({
     highlighted,
     isComposing,
     isInputEmpty,
-    selectedItems,
+    selectedItems: actualSelectedItems,
+    isSelectedItemsControlled,
+    defaultSelectedItems,
     setInputValueIfUncontrolled,
+    setSelectedItemsIfUncontrolled,
     handleKeyDownListBox,
     cleanupAddFrame,
     focusFrame,
+    resetFrame,
   })
 
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
+    let associatedForm: HTMLFormElement | null = null
+
+    // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+    // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する。
+    // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+    // 実行されるが、そのタイミングはqueueMicrotaskでは追いつかない(実機検証で確認済み)。
+    // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
+    // (defaultPrevented)が確定した後に判定できるようにする
+    const handleReset = (e: Event) => {
+      latest.resetFrame.request(() => {
+        if (e.defaultPrevented) return
+
+        if (!latest.isSelectedItemsControlled) {
+          const nextSelectedItems = latest.defaultSelectedItems ?? []
+          const hasSelectedItemsChanged =
+            latest.selectedItems.length !== nextSelectedItems.length ||
+            latest.selectedItems.some(
+              (item, index) => !areItemsEqual(item, nextSelectedItems[index]),
+            )
+
+          latest.setSelectedItemsIfUncontrolled(nextSelectedItems)
+
+          if (hasSelectedItemsChanged) {
+            latest.onChangeSelected?.(nextSelectedItems)
+          }
+        }
+
+        // HINT: 選択状態がdefaultSelectedItemsと同じ(=未変更)場合、selectedItemsの参照が
+        // 変わらずinputSelectEffectRefが発火しないため、検索文字列は明示的にクリアする。
+        // blurと同様にisInputEmptyでガードし、親へのonChangeInput通知も合わせて行う
+        if (!latest.isInputEmpty) {
+          latest.setInputValueIfUncontrolled('')
+          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+        }
+      })
+    }
 
     const handleDelete = listBoxFunctions.handleDelete
 
@@ -368,10 +442,19 @@ export const MultiCombobox = <T,>({
       blur,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         input = node
+
+        if (node) {
+          associatedForm = node.form
+          associatedForm?.addEventListener('reset', handleReset)
+        }
+
         if (!node) {
           listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
+          latest.resetFrame.cancel()
+          associatedForm?.removeEventListener('reset', handleReset)
+          associatedForm = null
         }
       },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLElement>) => {
@@ -476,7 +559,7 @@ export const MultiCombobox = <T,>({
         node.focus()
       }
     },
-    [isExpanded, selectedItems, isInputControlled],
+    [isExpanded, actualSelectedItems, isInputControlled],
   )
   const inputSelectEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -491,16 +574,17 @@ export const MultiCombobox = <T,>({
         setInputValueIfUncontrolled('')
       }
     },
-    [selectedItems, setInputValueIfUncontrolled, latest],
+    [actualSelectedItems, setInputValueIfUncontrolled, latest],
   )
   // HINT: 検索用inputのnativeバリデーションは検索文字列の有無しか検証できないため、
-  // 選択済みアイテムの有無をsetCustomValidityで別途検証する
-  const actualRequired = required && selectedItems.length === 0
+  // 選択済みアイテムの有無をsetCustomValidityで別途検証する。titleが指定されている場合は
+  // 利用者が意図したメッセージを優先する
+  const actualRequired = required && actualSelectedItems.length === 0
   const inputValidityEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
-      node?.setCustomValidity(actualRequired ? localized.requiredMessage : '')
+      node?.setCustomValidity(actualRequired ? title || localized.requiredMessage : '')
     },
-    [actualRequired, localized],
+    [actualRequired, title, localized],
   )
 
   const mergedInputRef = useMergeRefs(
@@ -551,7 +635,7 @@ export const MultiCombobox = <T,>({
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}
     >
-      {name && selectedItems.length === 0 && (
+      {name && actualSelectedItems.length === 0 && (
         <input type="hidden" form={form} name={name} disabled={disabled} value="" />
       )}
 
@@ -561,7 +645,7 @@ export const MultiCombobox = <T,>({
           className={classNames.selectedList}
           aria-label={localized.selectedListAriaLabel}
         >
-          {selectedItems.map((selectedItem) => (
+          {actualSelectedItems.map((selectedItem) => (
             <li key={`${getSelectedLabelText(selectedItem)}-${selectedItem.value}`}>
               {name && (
                 <input
@@ -599,6 +683,7 @@ export const MultiCombobox = <T,>({
             value={inputValue}
             autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
+            title={title}
             className={classNames.input}
             aria-activedescendant={activeOption?.id}
             aria-controls={`${listBoxId} ${selectedListId}`}
@@ -617,7 +702,7 @@ export const MultiCombobox = <T,>({
           />
         </div>
 
-        {selectedItems.length === 0 && placeholder && !isExpanded && (
+        {actualSelectedItems.length === 0 && placeholder && !isExpanded && (
           <p className={classNames.placeholder}>{placeholder}</p>
         )}
       </Scroller>
