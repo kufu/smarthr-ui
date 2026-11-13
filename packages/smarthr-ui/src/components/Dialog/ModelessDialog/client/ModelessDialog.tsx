@@ -326,7 +326,7 @@ export const ModelessDialog: FC<Props> = ({
     (node: HTMLElement | null) => {
       const captureOutsideFocus = (element: EventTarget | null) => {
         // 現在フォーカスがあたっている要素がModeless dialog外の要素であれば、lastFocusOutsideRefに代入する
-        if (element instanceof HTMLElement && !node?.contains(element)) {
+        if (node && element instanceof HTMLElement && !node.contains(element)) {
           lastFocusOutsideRef.current = element
         }
       }
