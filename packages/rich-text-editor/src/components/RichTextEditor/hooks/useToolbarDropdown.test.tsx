@@ -1,8 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useToolbarDropdown } from './useToolbarDropdown'
+import { type DropdownAnchor, useToolbarDropdown } from './useToolbarDropdown'
 
 import type { FC } from 'react'
 
@@ -12,6 +12,7 @@ type HarnessProps = {
   /** ツールバーの外側にスクロールコンテナを置くか（Dialog の本文などを模したもの） */
   scrollableOutside?: boolean
   avoidTrigger?: boolean
+  anchor?: DropdownAnchor
 }
 
 // スクロールコンテナの判定は getComputedStyle を見るため、jsdom でも効くインラインスタイルで作る
@@ -20,8 +21,9 @@ const Harness: FC<HarnessProps> = ({
   scrollableRow = true,
   scrollableOutside = false,
   avoidTrigger = false,
+  anchor,
 }) => {
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
+  const { isOpen, setIsOpen, openFrom, triggerRef, renderDropdown } = useToolbarDropdown({
     avoidTrigger,
   })
 
@@ -43,6 +45,11 @@ const Harness: FC<HarnessProps> = ({
   return (
     <div style={scrollableOutside ? { overflowY: 'auto' } : undefined} data-testid="outside">
       {toolbar}
+      {anchor && (
+        <button type="button" onClick={() => openFrom(anchor)}>
+          キャレットから開く
+        </button>
+      )}
       {renderDropdown(
         <div role="listbox">
           <button role="option" type="button" aria-selected="false">
@@ -440,6 +447,80 @@ describe('useToolbarDropdown', () => {
     expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
   })
 
+  describe('openFrom', () => {
+    const ANCHOR_RECT = { left: 400, right: 401, top: 200, bottom: 220 }
+    const anchor: DropdownAnchor = { getAnchorRect: () => ANCHOR_RECT, returnFocus: () => {} }
+
+    beforeEach(() => {
+      Object.defineProperty(window, 'innerWidth', { value: 1000, configurable: true })
+    })
+
+    const stubTriggerRect = () => {
+      screen.getByRole('button', { name: '開く' }).getBoundingClientRect = () =>
+        ({ left: 100, right: 300, top: 0, bottom: 20, width: 200, height: 20 }) as DOMRect
+    }
+
+    it('渡した矩形の下に置く', async () => {
+      render(<Harness anchor={anchor} />)
+      stubTriggerRect()
+
+      await userEvent.click(screen.getByRole('button', { name: 'キャレットから開く' }))
+      const content = screen.getByRole('listbox').parentElement!
+
+      expect(content.style.top).toBe('222px')
+      expect(content.style.left).toBe('400px')
+    })
+
+    it('閉じたあとにトリガーから開き直すと、トリガーの下に置く', async () => {
+      const user = userEvent.setup()
+      render(<Harness anchor={anchor} />)
+      stubTriggerRect()
+
+      await user.click(screen.getByRole('button', { name: 'キャレットから開く' }))
+      await user.keyboard('{Escape}')
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: '開く' }))
+      const content = screen.getByRole('listbox').parentElement!
+
+      expect(content.style.top).toBe('22px')
+      expect(content.style.left).toBe('100px')
+    })
+
+    it('外側がスクロールすると、渡した矩形に合わせて置き直す', async () => {
+      let rect = ANCHOR_RECT
+      render(<Harness anchor={{ getAnchorRect: () => rect, returnFocus: () => {} }} />)
+      await userEvent.click(screen.getByRole('button', { name: 'キャレットから開く' }))
+      const content = screen.getByRole('listbox').parentElement!
+
+      rect = { ...ANCHOR_RECT, top: 100, bottom: 120 }
+      fireEvent.scroll(screen.getByTestId('outside'))
+
+      expect(content.style.top).toBe('122px')
+    })
+
+    it('中身自身のスクロールでは置き直さない', async () => {
+      let rect = ANCHOR_RECT
+      render(<Harness anchor={{ getAnchorRect: () => rect, returnFocus: () => {} }} />)
+      await userEvent.click(screen.getByRole('button', { name: 'キャレットから開く' }))
+      const content = screen.getByRole('listbox').parentElement!
+
+      rect = { ...ANCHOR_RECT, top: 100, bottom: 120 }
+      fireEvent.scroll(screen.getByRole('listbox'))
+
+      expect(content.style.top).toBe('222px')
+    })
+
+    it('トリガーを内包する段がスクロールしても閉じない', async () => {
+      render(<Harness anchor={anchor} />)
+
+      await userEvent.click(screen.getByRole('button', { name: 'キャレットから開く' }))
+      scrollBy(screen.getByTestId('row'), { left: 250 })
+
+      expect(screen.getByRole('listbox')).toBeInTheDocument()
+    })
+  })
+
   it('フォーカスがドロップダウン外にあるときはスクロールで閉じてもフォーカスを奪わない', async () => {
     await openDropdown()
 
@@ -454,10 +535,12 @@ describe('useToolbarDropdown', () => {
 })
 
 const FormHarness: FC = () => {
-  const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown()
+  const { isOpen, setIsOpen, openFrom, restoreFocus, triggerRef, renderDropdown } =
+    useToolbarDropdown()
 
   return (
     <>
+      <input name="body" aria-label="本文" />
       <button
         ref={triggerRef}
         type="button"
@@ -466,6 +549,17 @@ const FormHarness: FC = () => {
       >
         開く
       </button>
+      <button
+        type="button"
+        onClick={() =>
+          openFrom({
+            getAnchorRect: () => ({ left: 0, right: 0, top: 0, bottom: 0 }),
+            returnFocus: () => screen.getByRole('textbox', { name: '本文' }).focus(),
+          })
+        }
+      >
+        キャレットから開く
+      </button>
       {renderDropdown(
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <form
@@ -473,7 +567,7 @@ const FormHarness: FC = () => {
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
               setIsOpen(false)
-              triggerRef.current?.focus()
+              restoreFocus()
             }
           }}
         >
@@ -658,5 +752,48 @@ describe('マウスで開いてフォーカスがトリガーに残っている�
 
     expect(screen.getByRole('button', { name: '開く' })).toHaveAttribute('aria-expanded', 'false')
     expect(screen.getByRole('button', { name: '開く' })).toHaveFocus()
+  })
+})
+
+describe('openFrom で開いたときのフォーカスの戻り先', () => {
+  const open = async () => {
+    const user = userEvent.setup()
+    render(<FormHarness />)
+    await user.click(screen.getByRole('button', { name: 'キャレットから開く' }))
+    expect(screen.getByRole('form')).toBeInTheDocument()
+
+    return user
+  }
+
+  it('末尾から Tab で閉じて、トリガーではなく渡した戻り先へ戻る', async () => {
+    const user = await open()
+    screen.getByRole('button', { name: '送信' }).focus()
+
+    await user.tab()
+
+    expect(screen.queryByRole('form')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: '本文' })).toHaveFocus()
+  })
+
+  it('中身の Escape で閉じて、渡した戻り先へ戻る', async () => {
+    const user = await open()
+    screen.getByRole('textbox', { name: '先頭' }).focus()
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('form')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: '本文' })).toHaveFocus()
+  })
+
+  it('フォーカスが外れたあとの Escape は、閉じて渡した戻り先へ戻る', async () => {
+    const user = await open()
+
+    await user.click(screen.getByRole('form'))
+    expect(document.body).toHaveFocus()
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('form')).not.toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: '本文' })).toHaveFocus()
   })
 })

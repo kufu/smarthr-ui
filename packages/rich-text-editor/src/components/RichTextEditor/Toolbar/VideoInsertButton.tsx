@@ -20,12 +20,15 @@ import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
 import { findDelegateTarget } from '../../../libs/delegate'
+import { toSearchText } from '../../../libs/searchText'
 import { tv } from '../../../libs/tv'
 import { useRichTextEditorContext } from '../context/RichTextEditorContext'
+import { VideoIcon } from '../extensions/Video/VideoIcon'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 import { isSafeVideoSrc } from '../serializers/safeAttributes'
 
 import { ToolbarButton } from './ToolbarButton'
+import { useInsertDialogOpener } from './useInsertDialogOpener'
 
 import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 import type { RichTextVideo } from '../types'
@@ -66,32 +69,8 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-/** smarthr-ui に動画のアイコンが無いため、エディタ内に持つ */
-const VideoIcon: FC = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    focusable="false"
-    width="1em"
-    height="1em"
-    aria-hidden="true"
-  >
-    <rect x="1.5" y="5.5" rx="2.5" width="14" height="13" />
-    <path d="M16.5 10.2 22.5 6.8v10.4l-6-3.4z" />
-  </svg>
-)
-
 const TRIGGER_ICON = <VideoIcon />
 const SEARCH_ICON = <FaMagnifyingGlassIcon />
-
-const KATAKANA = /[ァ-ヶ]/g
-const KATAKANA_TO_HIRAGANA = 0x60
-
-const toSearchText = (text: string) =>
-  text
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(KATAKANA, (char) => String.fromCharCode(char.charCodeAt(0) - KATAKANA_TO_HIRAGANA))
 
 const formatDuration = (seconds: number | undefined): string | null => {
   if (seconds === undefined || !Number.isFinite(seconds) || seconds < 0) return null
@@ -336,13 +315,15 @@ type Props = RovingButtonProps & {
 
 export const VideoInsertButton: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown, onFocus, ref: refProp }) => {
+    const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({ disabled })
+    const { isOpen, setIsOpen, openFrom, restoreFocus, triggerRef, renderDropdown } =
+      useToolbarDropdown({ disabled })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/video', defaultText: '動画を挿入' })
 
-    const latest = useLatest({ triggerRef, onKeyDown })
+    const latest = useLatest({ onKeyDown })
 
     const functions = useMemo(
       () => ({
@@ -362,12 +343,14 @@ export const VideoInsertButton: FC<Props> = memo(
         },
         handleDismiss: () => {
           setIsOpen(false)
-          latest.triggerRef.current?.focus()
+          restoreFocus()
         },
         handleInserted: () => setIsOpen(false),
       }),
-      [setIsOpen, latest],
+      [setIsOpen, restoreFocus, latest],
     )
+
+    useInsertDialogOpener(editor, 'video', openFrom)
 
     return (
       <>

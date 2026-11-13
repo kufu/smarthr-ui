@@ -32,6 +32,7 @@ export type RichTextFeature =
   | 'youtube'
   | 'video'
   | 'table'
+  | 'slashCommand'
 
 export type RichTextChangeMeta = {
   readonly json: RichTextJSON
@@ -84,10 +85,18 @@ type RichTextEditorBaseProps = {
   defaultValue?: RichTextValue
   onFocus?: () => void
   onBlur?: () => void
+  /**
+   * 使える書式と、挿入できるブロック。既定は太字・斜体・箇条書きリスト・番号付きリスト・リンク。
+   *
+   * `slashCommand` を含めると、本文の最上位の空の段落で `/` か `／` を打ったときにメニューが開き、
+   * その段落をブロックに置き換えるか、続けて打つ文字の文字色・背景色を選べる。並ぶのは features で
+   * 許可したブロックと色、headingLevels の見出しで、画像・YouTube・動画はツールバーに挿入ボタンが
+   * 出ているときだけ並ぶ（動画は loadVideos も要る）。
+   */
   features?: readonly RichTextFeature[]
   /**
-   * ツールバーを表示しない。画像・動画・表の上に出るメニューも表示しないため、ツールバーからの挿入と
-   * 表の行・列の操作はできなくなる。features で許可したものは、貼り付けやドロップでは入る。
+   * ツールバーを表示しない。画像・動画・表の上に出るメニューとスラッシュコマンドのメニューも表示しないため、
+   * ツールバーからの挿入と表の行・列の操作はできなくなる。features で許可したものは、貼り付けやドロップでは入る。
    * ドラッグでのサイズ変更と、features で許可した書式のショートカット・入力ルールは使える。
    * ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter など）と、リンクを編集する Cmd+K は効かない。
    */
