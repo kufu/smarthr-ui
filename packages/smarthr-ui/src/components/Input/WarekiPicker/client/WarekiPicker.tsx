@@ -206,6 +206,7 @@ export const WarekiPicker: FC<Props> = ({
   const isCalendarShown = Boolean(inputRect)
 
   const closeFrame = useAnimationFrame()
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onChange,
@@ -217,6 +218,7 @@ export const WarekiPicker: FC<Props> = ({
     isInputFocused,
     selectedDate,
     closeFrame,
+    resetFrame,
     initialSelectedDate,
     isControlled: value !== undefined,
     isCalendarShown,
@@ -310,12 +312,13 @@ export const WarekiPicker: FC<Props> = ({
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
         // selectedDate(ひいては和暦alt表示・カレンダーの選択日ハイライト)をマウント時の初期値へ戻すため、
         // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる。
-        // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
-        // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
-        // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
+        // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+        // 実行されるが、そのタイミングはqueueMicrotaskを多重にネストしても追いつかない(実機検証で確認済み)。
+        // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
+        // (defaultPrevented)が確定した後に判定できるようにする
         const associatedForm = node.form
         const handleReset = (e: Event) => {
-          queueMicrotask(() => {
+          latest.resetFrame.request(() => {
             if (!e.defaultPrevented && !latest.isControlled) {
               setSelectedDate(latest.initialSelectedDate)
             }
@@ -374,6 +377,7 @@ export const WarekiPicker: FC<Props> = ({
           window.removeEventListener('keydown', handleKeyDown)
           associatedForm?.removeEventListener('reset', handleReset)
           latest.closeFrame.cancel()
+          latest.resetFrame.cancel()
         }
       },
       handleBlur: (e: React.FocusEvent<HTMLInputElement>) => {

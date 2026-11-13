@@ -288,6 +288,15 @@ describe('WarekiPicker', () => {
   })
 
   it('onResetでpreventDefault()が呼ばれた場合、入力欄も和暦alt表示も変更されないこと', async () => {
+    // HINT: resetFrame(requestAnimationFrame)での判定が、ネイティブイベントのtarget phaseと
+    // Reactの合成イベント(onReset, bubble phase)の実行順序に依存するテストのため、
+    // 同期実行する通常モックではなく実際の非同期なrequestAnimationFrameで検証する。
+    // ただしjsdom環境ではonResetのディスパッチがtarget phaseと同期的に完結するため、
+    // resetFrameをqueueMicrotaskにしてもこのテストは通ってしまう(デグレを検知できない)。
+    // 実ブラウザでのみ、ネイティブのbutton[type=reset]操作時にonResetのディスパッチが
+    // 1フレーム以上遅延する現象を実機で確認し、requestAnimationFrameでの対応が必要と判断した
+    vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
     const { container } = renderWithIntl(
       <form onReset={(e) => e.preventDefault()}>
         <FormControl label="WarekiPicker">
@@ -304,7 +313,34 @@ describe('WarekiPicker', () => {
 
     await act(async () => {
       container.querySelector('form')!.reset()
-      await Promise.resolve()
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    })
+
+    expect(textbox).toHaveProperty('value', '2024/10/15')
+    expect(screen.getByText('令和6年10月15日')).toBeVisible()
+  })
+
+  it('リセットボタン(type="reset")押下でonResetがpreventDefault()された場合も、入力欄・和暦alt表示が変更されないこと', async () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+    renderWithIntl(
+      <form onReset={(e) => e.preventDefault()}>
+        <FormControl label="WarekiPicker">
+          <WarekiPicker name="date" defaultValue="2024-09-25" />
+        </FormControl>
+        <button type="reset">リセット</button>
+      </form>,
+    )
+    const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
+
+    await userEvent.clear(textbox)
+    await userEvent.type(textbox, '2024/10/15{tab}')
+    expect(textbox).toHaveProperty('value', '2024/10/15')
+    expect(screen.getByText('令和6年10月15日')).toBeVisible()
+
+    await act(async () => {
+      await userEvent.click(screen.getByRole('button', { name: 'リセット' }))
+      await new Promise((resolve) => requestAnimationFrame(resolve))
     })
 
     expect(textbox).toHaveProperty('value', '2024/10/15')
