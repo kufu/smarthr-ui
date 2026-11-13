@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [103.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v103.1.0...smarthr-ui-v103.1.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **AppLauncher:** クリアボタン押下後に検索欄へフォーカスが戻らない問題を修正 ([#7550](https://github.com/kufu/smarthr-ui/issues/7550)) ([ff8aecd](https://github.com/kufu/smarthr-ui/commit/ff8aecd27c28abe23bd6faca0022df60e2f2f277))
+* **SingleCombobox:** 未選択状態でblurした際に入力値が残留する問題を修正する ([#7476](https://github.com/kufu/smarthr-ui/issues/7476)) ([29d37e5](https://github.com/kufu/smarthr-ui/commit/29d37e592b1e57927946fae261b9b2ab9e6a8aa6))
+
 ## [103.1.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v103.0.0...smarthr-ui-v103.1.0) (2026-11-12)
 
 
