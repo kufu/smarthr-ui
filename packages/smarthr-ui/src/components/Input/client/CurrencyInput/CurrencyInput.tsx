@@ -60,11 +60,15 @@ export const CurrencyInput: FC<Props> = ({
     }
 
     return {
-      baseCallbackRef: (node: HTMLInputElement | null) => {
+      initialFormatCallbackRef: (node: HTMLInputElement | null) => {
         if (node && latest.value === undefined && latest.defaultValue !== undefined) {
           formatCurrencyValue(latest.defaultValue)
         }
-
+      },
+      // HINT: StrictModeの開発環境ではref callbackがattach→detach→再attachされる。
+      // reset listenerはattachのたびに登録し直す必要があるため、
+      // 初回のみ実行されるuseOnceでは包まずこのref callbackで都度登録する
+      resetListenerCallbackRef: (node: HTMLInputElement | null) => {
         const associatedForm = node?.form
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
         // ネイティブのdefaultValueへの復帰により失われるフォーマット(カンマ区切り等)をかけ直す。
@@ -103,9 +107,14 @@ export const CurrencyInput: FC<Props> = ({
     }
   }, [latest])
 
-  const callbackRef = useOnce(functions.baseCallbackRef)
+  const initialFormatCallbackRef = useOnce(functions.initialFormatCallbackRef)
 
-  const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
+  const mergedRef = useMergeRefs(
+    innerRef,
+    initialFormatCallbackRef,
+    functions.resetListenerCallbackRef,
+    ref,
+  )
 
   useEffect(() => {
     if (!isFocused) {
