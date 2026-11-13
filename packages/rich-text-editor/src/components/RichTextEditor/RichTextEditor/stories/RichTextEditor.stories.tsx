@@ -529,3 +529,47 @@ export const VideoEmbedding: Story = {
     )
   },
 }
+
+export const SlashCommand: Story = {
+  name: 'スラッシュコマンド',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [value, setValue] = useState<RichTextJSON>({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: '空の行で / か ／ を打つと、その行をブロックに置き換えるメニューが開きます。',
+            },
+          ],
+        },
+        { type: 'paragraph' },
+      ],
+    })
+
+    return (
+      <Stack>
+        <FormControl
+          label="スラッシュコマンド"
+          helpMessage="↑↓ で選び、Enter で挿入、Esc で閉じます。打った文字で絞り込めます（例: みだし、list、h2）。"
+        >
+          <RichTextEditor
+            {...rest}
+            value={value}
+            features={[...ALL_FEATURES, 'slashCommand']}
+            loadVideos={loadSampleVideos}
+            onChange={setValue}
+            onImageUpload={mockImageUpload}
+            onImageUploadError={mockImageUploadError}
+          />
+        </FormControl>
+        <div>
+          <p>保存内容の表示</p>
+          <RichTextViewer content={value} />
+        </div>
+      </Stack>
+    )
+  },
+}

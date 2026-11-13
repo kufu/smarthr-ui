@@ -167,6 +167,9 @@ importers:
 
   packages/rich-text-editor:
     dependencies:
+      '@floating-ui/dom':
+        specifier: ^1.8.0
+        version: 1.8.0
       '@tiptap/core':
         specifier: ^3.34.0
         version: 3.34.0(@tiptap/pm@3.34.0)
@@ -209,6 +212,9 @@ importers:
       '@tiptap/static-renderer':
         specifier: ^3.34.0
         version: 3.34.0(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@tiptap/suggestion':
+        specifier: ^3.34.0
+        version: 3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)
       happy-dom:
         specifier: ^21.0.4
         version: 21.0.4
@@ -2546,6 +2552,13 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@tiptap/suggestion@3.34.0':
+    resolution: {integrity: sha512-+gu9T9lc+6UeREkxIZan/HtMkmlT6LJmI7XqhaXl9nxCkVDy0KmaTs1Us03FafNbJ9yHLPq2ykth87CMWWsMcw==}
+    peerDependencies:
+      '@floating-ui/dom': ^1.0.0
+      '@tiptap/core': 3.34.0
+      '@tiptap/pm': 3.34.0
 
   '@tybys/wasm-util@0.10.4':
     resolution: {integrity: sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A==}
@@ -6151,16 +6164,13 @@ snapshots:
   '@floating-ui/core@1.8.0':
     dependencies:
       '@floating-ui/utils': 0.2.12
-    optional: true
 
   '@floating-ui/dom@1.8.0':
     dependencies:
       '@floating-ui/core': 1.8.0
       '@floating-ui/utils': 0.2.12
-    optional: true
 
-  '@floating-ui/utils@0.2.12':
-    optional: true
+  '@floating-ui/utils@0.2.12': {}
 
   '@formatjs/fast-memoize@3.1.7': {}
 
@@ -7345,6 +7355,12 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
+
+  '@tiptap/suggestion@3.34.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.34.0(@tiptap/pm@3.34.0))(@tiptap/pm@3.34.0)':
+    dependencies:
+      '@floating-ui/dom': 1.8.0
+      '@tiptap/core': 3.34.0(@tiptap/pm@3.34.0)
+      '@tiptap/pm': 3.34.0
 
   '@tybys/wasm-util@0.10.4':
     dependencies:
