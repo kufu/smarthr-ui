@@ -171,15 +171,16 @@ describe('ControlledFormDialog', () => {
   })
 })
 
-describe('ControlledFormDialog の formProps', () => {
+describe('ControlledFormDialog の action', () => {
   type DialogProps = ComponentPropsWithRef<typeof ControlledFormDialog>
 
   const ActionFormDialog: FC<
-    Partial<Pick<DialogProps, 'isOpen' | 'formProps' | 'onSubmit'>> & PropsWithChildren
-  > = ({ isOpen = true, formProps, onSubmit, children }) => (
+    Partial<Pick<DialogProps, 'isOpen' | 'action' | 'formProps' | 'onSubmit'>> & PropsWithChildren
+  > = ({ isOpen = true, action, formProps, onSubmit, children }) => (
     <IntlProvider locale="ja">
       <ControlledFormDialog
         isOpen={isOpen}
+        action={action}
         formProps={formProps}
         onSubmit={onSubmit}
         onClickClose={() => {}}
@@ -198,7 +199,7 @@ describe('ControlledFormDialog の formProps', () => {
 
   it('action を渡すと、送信時にフォームの値を含む FormData で action が呼ばれること', async () => {
     const action = vi.fn()
-    render(<ActionFormDialog formProps={{ action }} />)
+    render(<ActionFormDialog action={action} />)
 
     await clickSubmit()
 
@@ -206,17 +207,12 @@ describe('ControlledFormDialog の formProps', () => {
     expect((action.mock.calls[0][0] as FormData).get('name')).toBe('スマート 太郎')
   })
 
-  it('formProps.onSubmit、onSubmit、action の順に呼ばれること', async () => {
+  it('onSubmit、action の順に呼ばれること', async () => {
     const calls: string[] = []
     render(
       <ActionFormDialog
-        formProps={{
-          action: () => {
-            calls.push('action')
-          },
-          onSubmit: () => {
-            calls.push('formProps.onSubmit')
-          },
+        action={() => {
+          calls.push('action')
         }}
         onSubmit={() => {
           calls.push('onSubmit')
@@ -226,28 +222,12 @@ describe('ControlledFormDialog の formProps', () => {
 
     await clickSubmit()
 
-    expect(calls).toEqual(['formProps.onSubmit', 'onSubmit', 'action'])
-  })
-
-  it('formProps.onSubmit で preventDefault すると、onSubmit と action が呼ばれないこと', async () => {
-    const action = vi.fn()
-    const onSubmit = vi.fn()
-    render(
-      <ActionFormDialog
-        formProps={{ action, onSubmit: (e) => e.preventDefault() }}
-        onSubmit={onSubmit}
-      />,
-    )
-
-    await clickSubmit()
-
-    expect(onSubmit).not.toHaveBeenCalled()
-    expect(action).not.toHaveBeenCalled()
+    expect(calls).toEqual(['onSubmit', 'action'])
   })
 
   it('action を渡した場合、onSubmit には preventDefault されていないイベントと close が渡されること', async () => {
     const onSubmit = vi.fn()
-    render(<ActionFormDialog formProps={{ action: () => {} }} onSubmit={onSubmit} />)
+    render(<ActionFormDialog action={() => {}} onSubmit={onSubmit} />)
 
     await clickSubmit()
 
@@ -258,7 +238,7 @@ describe('ControlledFormDialog の formProps', () => {
 
   it('action を渡した場合、onSubmit で preventDefault すると action が呼ばれないこと', async () => {
     const action = vi.fn()
-    render(<ActionFormDialog formProps={{ action }} onSubmit={(e) => e.preventDefault()} />)
+    render(<ActionFormDialog action={action} onSubmit={(e) => e.preventDefault()} />)
 
     await clickSubmit()
 
@@ -276,7 +256,7 @@ describe('ControlledFormDialog の formProps', () => {
     expect(onSubmit.mock.calls[0][1].close).toBeInstanceOf(Function)
   })
 
-  it('children 内の送信ボタンに formAction を渡すと、formProps.action が無くても FormData 付きで formAction が呼ばれること', async () => {
+  it('children 内の送信ボタンに formAction を渡すと、action が無くても FormData 付きで formAction が呼ばれること', async () => {
     const saveDraft = vi.fn()
     const onSubmit = vi.fn()
     render(
@@ -345,7 +325,7 @@ describe('ControlledFormDialog の formProps', () => {
     const parentSubmit = vi.fn((e) => e.preventDefault())
     render(
       <form onSubmit={parentSubmit}>
-        <ActionFormDialog formProps={{ action }} />
+        <ActionFormDialog action={action} />
       </form>,
     )
 
@@ -355,36 +335,44 @@ describe('ControlledFormDialog の formProps', () => {
     expect(parentSubmit).not.toHaveBeenCalled()
   })
 
-  it('閉じている間に送信されると、formProps.onSubmit は呼ばれ、onSubmit と action は呼ばれないこと', async () => {
+  it('action を渡した場合、閉じている間に送信されると onSubmit は呼ばれ、action は呼ばれないこと', async () => {
     const action = vi.fn()
-    const formOnSubmit = vi.fn()
     const onSubmit = vi.fn()
-    const { rerender } = render(
-      <ActionFormDialog formProps={{ action, onSubmit: formOnSubmit }} onSubmit={onSubmit} />,
-    )
+    const { rerender } = render(<ActionFormDialog action={action} onSubmit={onSubmit} />)
     // HINT: 閉じるtransition中はformが描画されたままになるため、その間の送信を再現する
     const form = screen.getByRole('button', { name: '保存' }).closest('form')!
-    rerender(
-      <ActionFormDialog
-        isOpen={false}
-        formProps={{ action, onSubmit: formOnSubmit }}
-        onSubmit={onSubmit}
-      />,
-    )
+    rerender(<ActionFormDialog isOpen={false} action={action} onSubmit={onSubmit} />)
 
     await act(() => fireEvent.submit(form))
 
-    expect(formOnSubmit).toHaveBeenCalledTimes(1)
-    expect(onSubmit).not.toHaveBeenCalled()
+    expect(onSubmit).toHaveBeenCalledTimes(1)
     expect(action).not.toHaveBeenCalled()
   })
 
+  it('action を渡さない場合、閉じている間に送信されても onSubmit は呼ばれないこと', async () => {
+    const onSubmit = vi.fn()
+    const { rerender } = render(<ActionFormDialog onSubmit={onSubmit} />)
+    const form = screen.getByRole('button', { name: '保存' }).closest('form')!
+    rerender(<ActionFormDialog isOpen={false} onSubmit={onSubmit} />)
+
+    await act(() => fireEvent.submit(form))
+
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
   it('formProps の属性が form 要素に渡されること', () => {
-    render(<ActionFormDialog formProps={{ action: () => {}, id: 'form-id', noValidate: true }} />)
+    render(<ActionFormDialog action={() => {}} formProps={{ id: 'form-id', noValidate: true }} />)
 
     const form = screen.getByRole('button', { name: '保存' }).closest('form')!
 
     expect(form).toHaveAttribute('id', 'form-id')
     expect(form).toHaveAttribute('novalidate')
+  })
+
+  it('formProps に onSubmit を含むオブジェクトは型エラーになること', () => {
+    const formProps = { id: 'form-id', onSubmit: () => {} }
+
+    // @ts-expect-error onSubmit は formProps ではなく onSubmit props で渡す
+    render(<ActionFormDialog formProps={formProps} />)
   })
 })

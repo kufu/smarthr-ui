@@ -1,6 +1,5 @@
 import {
   type ComponentPropsWithRef,
-  type ComponentPropsWithoutRef,
   type FC,
   type FormEvent,
   type MouseEvent,
@@ -35,27 +34,32 @@ type Props = ExtendElementPropsWithRef<
       /**
        * フォーム送信時に発火するコールバック関数
        *
-       * `formProps.action` と送信ボタンの `formAction` のどちらも無い場合は `preventDefault` された状態で呼ばれます。
-       * どちらかがある場合は `preventDefault` されていない状態で呼ばれ、この中で `preventDefault` すると action は実行されません。
+       * `action` と送信ボタンの `formAction` のどちらも無い場合は `preventDefault` された状態で呼ばれ、
+       * ダイアログを閉じている間（閉じるアニメーション中）は呼ばれません。
+       *
+       * どちらかがある場合は `preventDefault` されていない状態で呼ばれ、この中で `preventDefault` すると
+       * action は実行されません。また、ダイアログを閉じている間も呼ばれますが、その場合 action は実行されません。
        */
       onSubmit?: (e: FormEvent<HTMLFormElement>, helpers: { close: () => void }) => void
       /**
-       * form要素に渡す属性
+       * form要素の action 属性
        *
-       * `action` を渡すと送信時に `preventDefault` されず、React の form action として実行されます。
-       * `action` に URL を渡した場合は、ブラウザ標準のフォーム送信としてページ遷移します。
+       * 関数を渡すと送信時に `preventDefault` されず、React の form action として実行されます。
+       * URL を渡した場合は、ブラウザ標準のフォーム送信としてページ遷移します。
        * children 内の送信ボタンに `formAction` を渡した場合も同様に、その action が実行されます。
-       * `formProps.onSubmit` は `onSubmit` より先に呼ばれ、この中で `preventDefault` すると
-       * `onSubmit` と action はどちらも実行されません。
-       * ダイアログを閉じている間（閉じるアニメーション中）も `formProps.onSubmit` は呼ばれますが、
-       * `onSubmit` と action は実行されません。
        *
        * action 完了後に React が非制御の入力要素をリセットするため、ダイアログを開いたままにする場合は
        * `defaultValue` などで入力値を復元してください。
        * RemoteDialogTrigger 経由の FormDialog には action 完了後に閉じる手段がないため、
        * 閉じる必要がある場合は `isOpen` を制御できる ControlledFormDialog を使ってください。
        */
-      formProps?: Omit<ComponentPropsWithoutRef<'form'>, 'children' | 'className'>
+      action?: FormDialogContentProps['action']
+      /**
+       * form要素に渡す属性
+       *
+       * `onSubmit` と `action` はそれぞれ同名の props で指定してください。
+       */
+      formProps?: FormDialogContentProps['formProps']
       /**
        * 閉じるボタンをクリックした時に発火するコールバック関数
        */
@@ -78,6 +82,7 @@ export const ControlledFormDialog: FC<Props> = ({
   contentPadding,
   actionButton: orgActionButton,
   onSubmit,
+  action,
   formProps,
   onClickClose,
   onPressEscape = onClickClose,
@@ -103,7 +108,7 @@ export const ControlledFormDialog: FC<Props> = ({
     buttonObjectConverter,
   )
 
-  const latest = useLatest({ onClickClose, onSubmit, formProps, isOpen })
+  const latest = useLatest({ onClickClose, onSubmit, action, isOpen })
 
   const functions = useMemo(() => {
     const handleClickClose = (e?: MouseEvent<HTMLButtonElement>) => {
@@ -118,28 +123,29 @@ export const ControlledFormDialog: FC<Props> = ({
       // このformのactionも実行されなくなるため、actionの有無に関わらず実行する
       e.stopPropagation()
 
-      // HINT: conformのresetなどはsubmitイベント経由で状態を更新するため、閉じるtransition中でも
-      // formProps.onSubmitは呼ぶ必要がある。onSubmitとactionは閉じている間は実行しない
-      latest.formProps?.onSubmit?.(e)
-
-      if (e.defaultPrevented) {
-        return
-      }
-
-      if (!latest.isOpen) {
-        e.preventDefault()
-
-        return
-      }
-
       // HINT: ReactはsubmitイベントがdefaultPreventedかどうかでactionを実行するか判定するため、
       // form・送信ボタンのどちらかにactionがある場合はpreventDefaultしない。
       // ReactはformActionに関数を渡すとformaction属性も付与するため、属性の有無で判定できる
-      if (!latest.formProps?.action && !e.nativeEvent.submitter?.hasAttribute('formaction')) {
+      const hasAction =
+        Boolean(latest.action) || Boolean(e.nativeEvent.submitter?.hasAttribute('formaction'))
+
+      if (!hasAction) {
         e.preventDefault()
+
+        if (latest.isOpen) {
+          latest.onSubmit?.(e, { close: handleClickClose })
+        }
+
+        return
       }
 
+      // HINT: conformのresetなどはsubmitイベント経由で状態を更新するため、閉じるtransition中でも
+      // onSubmitは呼ぶ必要がある。actionは閉じている間は実行しない
       latest.onSubmit?.(e, { close: handleClickClose })
+
+      if (!latest.isOpen) {
+        e.preventDefault()
+      }
     }
 
     return {
@@ -161,6 +167,7 @@ export const ControlledFormDialog: FC<Props> = ({
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
           responseStatus={responseStatus}
+          action={action}
           formProps={formProps}
           handleClickClose={functions.handleClickClose}
           handleSubmit={functions.handleSubmit}

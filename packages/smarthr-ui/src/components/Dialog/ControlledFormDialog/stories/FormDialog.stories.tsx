@@ -193,8 +193,8 @@ type FormActionState = {
   name: string
 }
 
-export const FormPropsAction: StoryObj<typeof ControlledFormDialog> = {
-  name: 'formProps.action',
+export const FormAction: StoryObj<typeof ControlledFormDialog> = {
+  name: 'action',
   render: (args) => {
     const [open, setOpen] = useState(false)
     const [validationError, setValidationError] = useState<string>()
@@ -223,21 +223,8 @@ export const FormPropsAction: StoryObj<typeof ControlledFormDialog> = {
         <ControlledFormDialog
           {...args}
           isOpen={open}
-          formProps={{
-            action: formAction,
-            noValidate: true,
-            onSubmit: (e) => {
-              // クライアントでのバリデーションに失敗した場合は preventDefault して action を実行させない
-              if (!new FormData(e.currentTarget).get('name')) {
-                e.preventDefault()
-                setValidationError('名前を入力してください')
-
-                return
-              }
-
-              setValidationError(undefined)
-            },
-          }}
+          action={formAction}
+          formProps={{ noValidate: true }}
           responseStatus={
             pending
               ? { status: 'processing' }
@@ -245,6 +232,17 @@ export const FormPropsAction: StoryObj<typeof ControlledFormDialog> = {
                 ? { status: 'error', text: state.message }
                 : undefined
           }
+          onSubmit={(e) => {
+            // クライアントでのバリデーションに失敗した場合は preventDefault して action を実行させない
+            if (!new FormData(e.currentTarget).get('name')) {
+              e.preventDefault()
+              setValidationError('名前を入力してください')
+
+              return
+            }
+
+            setValidationError(undefined)
+          }}
           onClickClose={() => setOpen(false)}
         >
           <FormControl
