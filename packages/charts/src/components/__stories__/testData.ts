@@ -219,6 +219,12 @@ export const chartJsOptionsExamples = {
         },
         suggestedMax: 150,
       },
+      x: {
+        title: {
+          display: true,
+          text: 'ユーザーレベル',
+        },
+      },
     },
     datasets: {
       bar: {

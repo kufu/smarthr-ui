@@ -93,3 +93,11 @@ export const WithCustomRScale: Story = {
     },
   },
 }
+
+export const TableView: Story = {
+  name: 'default table view',
+  args: {
+    data: radarMultiSmall,
+    defaultView: 'table',
+  },
+}

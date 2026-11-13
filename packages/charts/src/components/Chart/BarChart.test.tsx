@@ -1,4 +1,7 @@
+import { act } from 'react'
+import { createRoot } from 'react-dom/client'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { IntlProvider } from 'smarthr-ui'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SINGLE_CHART_COLORS } from '../../helper'
@@ -35,7 +38,11 @@ const defaultProps = {
 
 const render = (props: Partial<React.ComponentProps<typeof BarChart>> = {}) => {
   renderedData = undefined
-  renderToStaticMarkup(<BarChart {...defaultProps} {...props} />)
+  renderToStaticMarkup(
+    <IntlProvider locale="ja">
+      <BarChart {...defaultProps} {...props} />
+    </IntlProvider>,
+  )
 
   return renderedData!.datasets as Array<ChartDataset<'bar'> & { borderColor: string }>
 }
@@ -70,5 +77,50 @@ describe('BarChart', () => {
     expect(datasets.map((dataset) => [dataset.label, dataset.borderColor])).toStrictEqual([
       ['現在', SINGLE_CHART_COLORS[5]],
     ])
+  })
+
+  describe('テーブル表示', () => {
+    it('切り替えボタンでグラフと表を切り替え、onChangeViewに通知する', () => {
+      const onChangeView = vi.fn()
+      const container = document.body.appendChild(document.createElement('div'))
+      const root = createRoot(container)
+      const hasTable = () => container.querySelector('table') !== null
+      const clickButton = (label: string) =>
+        act(() =>
+          container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!.click(),
+        )
+
+      act(() =>
+        root.render(
+          <IntlProvider locale="ja">
+            <BarChart {...defaultProps} onChangeView={onChangeView} />
+          </IntlProvider>,
+        ),
+      )
+      expect(hasTable()).toBe(false)
+
+      clickButton('テーブル')
+      expect(hasTable()).toBe(true)
+      expect(onChangeView).toHaveBeenLastCalledWith('table')
+
+      clickButton('グラフ')
+      expect(hasTable()).toBe(false)
+      expect(onChangeView).toHaveBeenLastCalledWith('chart')
+
+      act(() => root.unmount())
+      container.remove()
+    })
+
+    it('titleがあるとき、tableのcaptionとしてアクセシブルネームにする', () => {
+      document.body.innerHTML = renderToStaticMarkup(
+        <IntlProvider locale="ja">
+          <BarChart {...defaultProps} defaultView="table" title="グラフのタイトル" />
+        </IntlProvider>,
+      )
+      const table = document.querySelector('table')!
+
+      expect(table.firstElementChild?.tagName).toBe('CAPTION')
+      expect(table.querySelector('caption')?.textContent).toBe('グラフのタイトル')
+    })
   })
 })
