@@ -4,7 +4,7 @@ import { type FC, type ReactNode, createContext, useContext, useMemo } from 'rea
 
 import { useLatest } from '../../../hooks/useLatest'
 
-import type { ImageUploadResult, RichTextFeature } from '../types'
+import type { ImageUploadResult, RichTextEditorProps, RichTextFeature } from '../types'
 import type { Editor } from '@tiptap/react'
 
 type RichTextEditorContextValue = {
@@ -22,6 +22,8 @@ type RichTextEditorContextValue = {
     onImageUploadError?: (error: unknown, file: File) => void
   }
   acceptedMimeTypes?: string[]
+  hasVideoSource: boolean
+  getVideoHandlers: () => Pick<RichTextEditorProps, 'loadVideos'>
 }
 
 const DEFAULT_HEADING_LEVELS: ReadonlyArray<1 | 2 | 3 | 4> = [1, 2, 3, 4]
@@ -36,6 +38,7 @@ type ProviderProps = {
   onImageUpload?: (file: File, formData: FormData) => Promise<ImageUploadResult>
   onImageUploadError?: (error: unknown, file: File) => void
   acceptedMimeTypes?: string[]
+  loadVideos?: RichTextEditorProps['loadVideos']
   children: ReactNode
 }
 
@@ -47,6 +50,7 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   onImageUpload,
   onImageUploadError,
   acceptedMimeTypes,
+  loadVideos,
   children,
 }) => {
   // 利用者は配列や関数をインラインで渡しがちで、そのままでは再レンダーのたびに
@@ -56,12 +60,14 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const headingLevelsKey = headingLevels.join(',')
   const acceptedMimeTypesKey = acceptedMimeTypes?.join(',')
   const hasImageUpload = Boolean(onImageUpload)
+  const hasVideoSource = Boolean(loadVideos)
   const latest = useLatest({
     features,
     headingLevels,
     acceptedMimeTypes,
     onImageUpload,
     onImageUploadError,
+    loadVideos,
   })
 
   const value = useMemo<RichTextEditorContextValue>(
@@ -76,9 +82,20 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
         onImageUploadError: latest.onImageUploadError,
       }),
       acceptedMimeTypes: latest.acceptedMimeTypes,
+      hasVideoSource,
+      getVideoHandlers: () => ({ loadVideos: latest.loadVideos }),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [editor, disabled, featuresKey, headingLevelsKey, acceptedMimeTypesKey, hasImageUpload, latest],
+    [
+      editor,
+      disabled,
+      featuresKey,
+      headingLevelsKey,
+      acceptedMimeTypesKey,
+      hasImageUpload,
+      hasVideoSource,
+      latest,
+    ],
   )
 
   return <RichTextEditorContext.Provider value={value}>{children}</RichTextEditorContext.Provider>

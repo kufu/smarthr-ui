@@ -1,24 +1,34 @@
-import { isSafeImageSrc } from '../serializers/safeAttributes'
+import { isSafeImageSrc, isSafeVideoSrc } from '../serializers/safeAttributes'
 
+import { readVideoSrc } from './Video/readVideoSrc'
 import { isYoutubeEmbedSrc } from './youtubeUrl'
 
 import type { MediaAlign } from './mediaAlign'
 import type { TagParseRule } from '@tiptap/pm/model'
 
+// &nbsp; は trim で消えるが、読み込みでは文字として残り段落になる
 const COLLAPSIBLE_WHITESPACE = /^[ \t\n\r\f]*$/
 
-const isReadableMedia = (element: Element) =>
-  element.tagName === 'IMG'
-    ? isSafeImageSrc(element.getAttribute('src'))
-    : isYoutubeEmbedSrc(element.getAttribute('src'))
+// textContent で見ないのは、video の中の再生できないブラウザ向けの代替テキストまで数えるため
+const hasText = (node: Node): boolean => {
+  if (node.nodeType === node.TEXT_NODE) return !COLLAPSIBLE_WHITESPACE.test(node.nodeValue ?? '')
+  if (node.nodeName === 'VIDEO') return false
+
+  return Array.from(node.childNodes).some(hasText)
+}
+
+const isReadableMedia = (element: Element) => {
+  if (element.tagName === 'IMG') return isSafeImageSrc(element.getAttribute('src'))
+  if (element.tagName === 'VIDEO') return isSafeVideoSrc(readVideoSrc(element))
+
+  return isYoutubeEmbedSrc(element.getAttribute('src'))
+}
 
 const hasTextBefore = (container: Node, target: Node): boolean => {
   for (const child of Array.from(container.childNodes)) {
     if (child === target) return false
     if (child.contains(target)) return hasTextBefore(child, target)
-    // コメントの textContent はコメントの中身を返すが、読み込んでも文字にならない
-    if (child.nodeType === child.COMMENT_NODE) continue
-    if (!COLLAPSIBLE_WHITESPACE.test(child.textContent ?? '')) return true
+    if (hasText(child)) return true
   }
 
   return false
@@ -28,10 +38,9 @@ const hasTextBefore = (container: Node, target: Node): boolean => {
 const mediaOnlyParagraphs = new WeakMap<Element, boolean>()
 
 const judgeContainsOnlyMedia = (paragraph: Element) => {
-  // &nbsp; は trim で消えるが、読み込みでは文字として残り段落になる
-  if (!COLLAPSIBLE_WHITESPACE.test(paragraph.textContent ?? '')) return false
+  if (hasText(paragraph)) return false
 
-  const media = Array.from(paragraph.querySelectorAll('img, iframe'))
+  const media = Array.from(paragraph.querySelectorAll('img, iframe, video'))
 
   return media.length > 0 && media.every(isReadableMedia)
 }

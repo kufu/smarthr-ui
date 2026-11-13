@@ -10,6 +10,7 @@ import { LineHeight } from './LineHeight'
 import { CellAppearance } from './Table/CellAppearance'
 import { SafeTable } from './Table/SafeTable'
 import { SafeTableCell, SafeTableHeader } from './Table/SafeTableCell'
+import { Video } from './Video/Video'
 import { SUPPORTED_HEADING_LEVELS } from './configureHeading'
 import {
   YOUTUBE_DEFAULT_SIZE,
@@ -79,6 +80,7 @@ export const createSchemaExtensions = (): AnyExtension[] => [
   TextAlign.configure({ types: BLOCK_STYLE_TYPES }),
   SafeImage.configure(IMAGE_OPTIONS),
   AlignedYoutube.configure(YOUTUBE_OPTIONS),
+  Video,
   SafeTable.configure(TABLE_OPTIONS),
   TableRow,
   CellAppearance,

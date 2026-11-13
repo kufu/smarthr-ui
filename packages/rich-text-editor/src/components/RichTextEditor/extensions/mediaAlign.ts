@@ -15,6 +15,8 @@ export const YOUTUBE_ALIGN_STYLES: AlignStyles = {
   right: { width: 'fit-content', marginLeft: 'auto' },
 }
 
+export const VIDEO_ALIGN_STYLES: AlignStyles = YOUTUBE_ALIGN_STYLES
+
 const toKebabCase = (property: string) => property.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)
 
 export const getMediaAlignStyles = (

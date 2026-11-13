@@ -180,3 +180,25 @@ describe('画像か動画しか入っていない段落の揃え', () => {
     })
   })
 })
+
+describe('video の代替テキスト', () => {
+  const parseNodes = (html: string) => generateJSON(html, createSchemaExtensions()).content ?? []
+  const WITH_FALLBACK = '<video src="/a.mp4">Your browser does not support HTML5 video.</video>'
+  const WITHOUT_FALLBACK = '<video src="/a.mp4"></video>'
+
+  it.each([
+    ['段落', (video: string) => `<p>${video}</p>`],
+    ['揃えを指定した段落', (video: string) => `<p style="text-align: center">${video}</p>`],
+    ['リスト項目の2つ目の段落', (video: string) => `<ul><li><p>前</p><p>${video}</p></li></ul>`],
+    [
+      'リスト項目の、動画だけの段落の後ろの段落',
+      (video: string) => `<ul><li><p>${video}</p><p>${IMG}</p></li></ul>`,
+    ],
+    [
+      'リスト項目の、動画の後ろの段落',
+      (video: string) => `<ul><li>${video}<p>${IMG}</p></li></ul>`,
+    ],
+  ])('%s の読み込みを、代替テキストの有無で変えない', (_, toHTML) => {
+    expect(parseNodes(toHTML(WITH_FALLBACK))).toEqual(parseNodes(toHTML(WITHOUT_FALLBACK)))
+  })
+})
