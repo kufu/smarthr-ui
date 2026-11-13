@@ -1,6 +1,7 @@
 import { action } from 'storybook/actions'
 
 import { Stack } from '../../Layout'
+import { Groupbox } from '../../Panel'
 import { InputFile } from '../InputFile'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -37,6 +38,20 @@ export const Size: StoryObj<typeof InputFile> = {
       {([undefined, 'M', 'S'] as const).map((size) => (
         <InputFile {...args} key={String(size)} size={size} />
       ))}
+    </Stack>
+  ),
+}
+
+export const Variant: StoryObj<typeof InputFile> = {
+  name: 'variant',
+  render: (args) => (
+    <Stack align="flex-start">
+      {([undefined, 'secondary', 'tertiary', 'text'] as const).map((variant) => (
+        <InputFile {...args} key={String(variant)} variant={variant} />
+      ))}
+      <Groupbox bgColor="GREY_20">
+        <InputFile {...args} variant="skeleton" />
+      </Groupbox>
     </Stack>
   ),
 }

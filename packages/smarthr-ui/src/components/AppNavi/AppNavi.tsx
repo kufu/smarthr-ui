@@ -114,7 +114,7 @@ const MemoizedStatusLabel = memo<{ id: string; children: Props['label'] }>(
 
 const renderButtons = (children: ReactNode) =>
   Children.map(children, (child): ReactNode => {
-    if (!child || !isValidElement(child)) {
+    if (!child || !isValidElement<{ children?: ReactNode }>(child)) {
       return null
     }
 

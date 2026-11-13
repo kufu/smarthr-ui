@@ -62,7 +62,7 @@ export const BarChart: React.FC<Props> = ({
   const chartRef = useRef<Chart<'bar'>>(null)
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
-  const hasSingleTone = !!singleTone
+  const hasSingleTone = Boolean(singleTone)
   const singleToneFrom = singleTone?.from
   const singleToneTo = singleTone?.to
   const chartColors = useMemo(

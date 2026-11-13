@@ -17,7 +17,7 @@ type Props = ExtendElementPropsWithRef<
 >
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-Dialog-body', 'shr-flex-auto'],
+  base: ['smarthr-ui-Dialog-body', 'shr-relative', 'shr-flex-auto'],
   variants: {
     paddingBlock,
     paddingInline,

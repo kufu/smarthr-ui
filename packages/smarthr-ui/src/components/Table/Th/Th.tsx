@@ -63,7 +63,7 @@ const SortableTh: FC<
   }
 > = ({ sort, onSort, align, children, ...rest }) => {
   const latest = useLatest({ onSort })
-  const hasOnSort = !!onSort
+  const hasOnSort = Boolean(onSort)
 
   const functions = useMemo(
     () => ({

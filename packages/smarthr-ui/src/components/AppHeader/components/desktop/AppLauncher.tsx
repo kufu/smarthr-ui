@@ -1,4 +1,4 @@
-'use client' // eslint-disable-line local-rules/require-client-directory
+'use client' // eslint-disable-line local-rules/require-client
 
 import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
@@ -115,6 +115,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     onChangeSearchQuery,
     onClickClearSearchQuery,
     callbackRef,
+    searchInputRef,
   } = useAppLauncher(baseFeatures)
 
   const translated = useLocalize({
@@ -136,14 +137,13 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
+          ref={searchInputRef}
           name="search"
           value={searchQuery}
           title={translated.searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
           tooltipMessage={translated.searchInputTitle}
-          // TODO: subActionArea内のクリックではInputが検索欄にフォーカスを戻さないため、
-          // クリア後に検索欄へフォーカスを戻す対応が必要（mobile/AppLauncher.tsxも同様）
           subActionArea={
             mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
           }

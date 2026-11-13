@@ -1,4 +1,5 @@
 {
-  "packages/smarthr-ui": "102.1.0",
-  "packages/charts": "0.3.1"
+  "packages/smarthr-ui": "103.1.0",
+  "packages/charts": "0.3.1",
+  "packages/rich-text-editor": "0.1.1"
 }

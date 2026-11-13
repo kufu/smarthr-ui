@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -33,7 +35,10 @@ const classNameGenerator = tv({
     ],
     headArea: 'shr-px-1 shr-py-0.75',
     scrollArea: 'shr-flex-1 shr-basis-0',
-    bottomArea: 'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+    bottomArea: [
+      'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+      'shr-pb-[calc(theme(spacing[0.75])+env(safe-area-inset-bottom))]',
+    ],
   },
 })
 
@@ -61,6 +66,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     onChangeSearchQuery,
     onClickClearSearchQuery,
     callbackRef,
+    searchInputRef,
   } = useAppLauncher(baseFeatures)
 
   const { searchInputTitle } = useLocalize({
@@ -74,14 +80,13 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
+          ref={searchInputRef}
           name="search"
           value={searchQuery}
           title={searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
           tooltipMessage={searchInputTitle}
-          // TODO: subActionArea内のクリックではInputが検索欄にフォーカスを戻さないため、
-          // クリア後に検索欄へフォーカスを戻す対応が必要（desktop/AppLauncher.tsxも同様）
           subActionArea={
             mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
           }

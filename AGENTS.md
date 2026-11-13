@@ -8,9 +8,10 @@
 
 ## プロジェクト概要
 
-SmartHR UI は、SmartHR の全アプリケーションで使用される React コンポーネントライブラリです。pnpm モノレポ構成で、2つのパッケージがあります：
+SmartHR UI は、SmartHR の全アプリケーションで使用される React コンポーネントライブラリです。pnpm モノレポ構成で、3つのパッケージがあります：
 - **`packages/smarthr-ui`** — メインの UI コンポーネントライブラリ（npm に `smarthr-ui` として公開）
 - **`packages/charts`** — チャートコンポーネント（npm に `@smarthr/smarthr-ui-charts` として公開）
+- **`packages/rich-text-editor`** — リッチテキストエディタコンポーネント（npm に `@smarthr-ui/rich-text-editor` として公開）
 
 ## よく使うコマンド
 
@@ -688,7 +689,7 @@ const functions = useMemo(
 const functions = useMemo(() => ({ ... }), [onClick, hrefTemplate, latest])
 
 // ✅ boolean化してプリミティブ値として安定化
-const hasHrefTemplate = !!hrefTemplate
+const hasHrefTemplate = Boolean(hrefTemplate)
 const functions = useMemo(
   () => ({
     actualHrefTemplate: hasHrefTemplate

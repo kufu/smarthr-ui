@@ -103,7 +103,7 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   ...rest
 }) => {
   // HINT: boolean化することでmemoが有効になる可能性を高くする
-  const withChildren = !!children
+  const withChildren = Boolean(children)
   const classNames = useMemo(() => {
     const { wrapper, pill, dotElement } = classNameGenerator()
     const variantProps = { color: color || 'blue', withChildren }

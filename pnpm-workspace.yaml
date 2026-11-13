@@ -17,7 +17,7 @@ overrides:
   js-yaml@>=4.0.0 <=5.2.1: '>=5.5.0'
   '@babel/core@<=7.29.0': '>=8.0.10'
   # react-docgen が Babel 8 に未対応のため、Babel 7 を使用する（reactjs/react-docgen#1102）
-  'react-docgen>@babel/core': '^7.29.7'
+  'react-docgen>@babel/core': '^7.29.13'
   sharp@<0.35.5: '>=0.35.5'
   nanoid@<3.3.18: '>=3.3.18 <7'
   browserslist@<=4.28.6: '>=4.29.5'
@@ -28,11 +28,11 @@ overrides:
   shell-quote@>=1.8.4 <1.11.0: '>=1.12.0'
   smol-toml@<=1.8.0: '>=1.9.1'
   qs@<6.16.0: '>=6.17.1'
-  colord@<2.9.4: '>=2.9.7'
+  colord@<2.9.4: '>=2.10.0'
   # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
   # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
   'sucrase>glob': '>=14.0.3'
-  'glob>minimatch': '>=11.0.3'
+  'glob>minimatch': '>=11.0.4'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
@@ -46,9 +46,6 @@ auditConfig:
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
 minimumReleaseAgeExclude:
-  # eslint-config-smarthr@14.14.2とその依存のeslint-plugin-smarthr@6.29.2: minimumReleaseAge経過後に削除可
-  - eslint-config-smarthr@14.14.2
-  - eslint-plugin-smarthr@6.29.2
   # Renovate security update: qs@6.16.2
   - qs@6.16.2
   # Renovate security update: glob@14.0.2
