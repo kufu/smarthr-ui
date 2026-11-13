@@ -229,6 +229,7 @@ export const SingleCombobox = <T,>({
   })
 
   const selectFrame = useAnimationFrame()
+  const resetFrame = useAnimationFrame()
 
   const { listBoxProps, activeOption, cleanupAddFrame, handleKeyDownListBox, listBoxId } =
     useListbox<T>({
@@ -288,6 +289,7 @@ export const SingleCombobox = <T,>({
     readOnly,
     cleanupAddFrame,
     selectFrame,
+    resetFrame,
   })
 
   const functions = useMemo(() => {
@@ -332,12 +334,13 @@ export const SingleCombobox = <T,>({
 
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
         // 選択状態をdefaultSelectedItemへ戻すためにresetイベントを監視する。
-        // resetイベントはform要素への直接リスナー(target phase)がバブリング先のonResetより先に実行されるため、
-        // 他のリスナーがpreventDefault()するかどうかはこの時点でまだ確定していない。
-        // 全リスナー実行後(defaultPreventedが確定した後)にチェックするためqueueMicrotaskで遅延させる
+        // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+        // 実行されるが、そのタイミングはqueueMicrotaskでは追いつかない(実機検証で確認済み)。
+        // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
+        // (defaultPrevented)が確定した後に判定できるようにする
         const associatedForm = node?.form
         const handleReset = (e: Event) => {
-          queueMicrotask(() => {
+          latest.resetFrame.request(() => {
             // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
             // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
             // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
@@ -365,6 +368,7 @@ export const SingleCombobox = <T,>({
           inputNode = null
           latest.cleanupAddFrame()
           latest.selectFrame.cancel()
+          latest.resetFrame.cancel()
           associatedForm?.removeEventListener('reset', handleReset)
         }
       },

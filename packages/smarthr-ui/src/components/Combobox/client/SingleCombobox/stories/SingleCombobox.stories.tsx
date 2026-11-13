@@ -258,3 +258,19 @@ export const FormReset: StoryObj<typeof SingleCombobox> = {
     </form>
   ),
 }
+
+export const FormResetWithPreventDefault: StoryObj<typeof SingleCombobox> = {
+  name: 'form.reset()がキャンセルされた場合の挙動確認(非制御)',
+  render: () => (
+    <form onReset={(e) => e.preventDefault()}>
+      <Stack>
+        <SingleCombobox
+          name="single_combobox_reset_cancel_demo"
+          defaultSelectedItem={defaultItems['option 2']}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット(キャンセルされるはず)</Button>
+      </Stack>
+    </form>
+  ),
+}

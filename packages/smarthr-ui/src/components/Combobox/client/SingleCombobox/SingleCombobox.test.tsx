@@ -658,6 +658,15 @@ describe('SingleCombobox', () => {
     })
 
     it('onResetでpreventDefault()が呼ばれた場合、選択状態が変更されないこと', async () => {
+      // HINT: resetFrame(requestAnimationFrame)での判定が、ネイティブイベントのtarget phaseと
+      // Reactの合成イベント(onReset, bubble phase)の実行順序に依存するテストのため、
+      // 同期実行する通常モックではなく実際の非同期なrequestAnimationFrameで検証する。
+      // ただしjsdom環境ではonResetのディスパッチがtarget phaseと同期的に完結するため、
+      // resetFrameをqueueMicrotaskにしてもこのテストは通ってしまう(デグレを検知できない)。
+      // 実ブラウザでのみ、ネイティブのbutton[type=reset]操作時にonResetのディスパッチが
+      // 1フレーム以上遅延する現象を実機で確認し、requestAnimationFrameでの対応が必要と判断した
+      vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
       const { container } = render(
         <IntlProvider locale="ja">
           <form onReset={(e) => e.preventDefault()}>
@@ -678,7 +687,7 @@ describe('SingleCombobox', () => {
 
       await act(async () => {
         container.querySelector('form')!.reset()
-        await Promise.resolve()
+        await new Promise((resolve) => requestAnimationFrame(resolve))
       })
 
       expect(combobox()).toHaveValue('option 2')
