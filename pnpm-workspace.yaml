@@ -32,7 +32,7 @@ overrides:
   # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
   # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
   'sucrase>glob': '>=14.0.3'
-  'glob>minimatch': '>=11.0.5'
+  'glob>minimatch': '>=11.0.7'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
@@ -46,6 +46,8 @@ auditConfig:
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
 minimumReleaseAgeExclude:
+  # GHSA-cf2h-pxjq-68xw のDoS修正版を適用するため、7日間の待機対象から除外する
+  - minimatch@11.0.7
   # Renovate security update: qs@6.16.2
   - qs@6.16.2
   # Renovate security update: glob@14.0.2
