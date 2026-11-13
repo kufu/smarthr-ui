@@ -2,6 +2,7 @@
 
 import { type ChangeEvent, type FC, useId, useMemo, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Stack } from '../../Layout'
@@ -45,6 +46,7 @@ export const InputFileNative: FC<Props> = ({
   })
   const [previewFile, setPreviewFile] = useState<File | ExistingFile | null>(null)
   const labelId = useId()
+  const resetFrame = useAnimationFrame()
 
   const classNames = useMemo(() => {
     const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = classNameGenerator()
@@ -66,6 +68,7 @@ export const InputFileNative: FC<Props> = ({
     onDeleteExistingFile,
     previewFile,
     multiple,
+    resetFrame,
   })
 
   const functions = useMemo(() => {
@@ -88,8 +91,24 @@ export const InputFileNative: FC<Props> = ({
         input = node
         isUpdatingFiles = false
 
+        const associatedForm = node?.form
+        // HINT: form.reset()はネイティブのinput[type=file]のfilesを空にするが、
+        // 他のinput/textareaと異なりchangeイベントは発火しないため、filesステートの表示が追従しない。
+        // resetイベントは実際にfilesがリセットされる前に発火するため、次のフレームで読み直す
+        const handleReset = (e: Event) => {
+          latest.resetFrame.request(() => {
+            if (!e.defaultPrevented && latest.files.length > 0) {
+              updateFiles([])
+            }
+          })
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
         return () => {
           isUpdatingFiles = false
+          associatedForm?.removeEventListener('reset', handleReset)
+          latest.resetFrame.cancel()
         }
       },
       handleChange: (e: ChangeEvent<HTMLInputElement>) => {
