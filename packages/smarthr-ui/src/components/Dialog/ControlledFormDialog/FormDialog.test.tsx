@@ -245,6 +245,24 @@ describe('ControlledFormDialog の action', () => {
     expect(action).not.toHaveBeenCalled()
   })
 
+  it('action に空文字を渡した場合も、onSubmit に preventDefault されていないイベントが渡されること', async () => {
+    let defaultPrevented: boolean | undefined
+    render(
+      <ActionFormDialog
+        action=""
+        onSubmit={(e) => {
+          defaultPrevented = e.defaultPrevented
+          // HINT: jsdomはページ遷移を伴うフォーム送信を実装していないため止める
+          e.preventDefault()
+        }}
+      />,
+    )
+
+    await clickSubmit()
+
+    expect(defaultPrevented).toBe(false)
+  })
+
   it('action を渡さない場合は、onSubmit に preventDefault 済みのイベントと close が渡されること', async () => {
     const onSubmit = vi.fn()
     render(<ActionFormDialog formProps={{ noValidate: true }} onSubmit={onSubmit} />)

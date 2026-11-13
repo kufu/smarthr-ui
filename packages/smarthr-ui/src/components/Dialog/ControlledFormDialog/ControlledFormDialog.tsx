@@ -126,8 +126,9 @@ export const ControlledFormDialog: FC<Props> = ({
       // HINT: ReactはsubmitイベントがdefaultPreventedかどうかでactionを実行するか判定するため、
       // form・送信ボタンのどちらかにactionがある場合はpreventDefaultしない。
       // ReactはformActionに関数を渡すとformaction属性も付与するため、属性の有無で判定できる
+      // 空文字のactionは現在のURLへの送信を表すため、真偽値ではなくundefinedかどうかで判定する
       const hasAction =
-        Boolean(latest.action) || Boolean(e.nativeEvent.submitter?.hasAttribute('formaction'))
+        latest.action !== undefined || Boolean(e.nativeEvent.submitter?.hasAttribute('formaction'))
 
       if (!hasAction) {
         e.preventDefault()
