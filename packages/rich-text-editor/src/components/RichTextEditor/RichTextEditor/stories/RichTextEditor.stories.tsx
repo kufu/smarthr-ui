@@ -4,7 +4,7 @@ import { Button, Cluster, FormControl, Stack } from 'smarthr-ui'
 import { RichTextViewer } from '../../RichTextViewer/RichTextViewer'
 import { RichTextEditor } from '../RichTextEditor'
 
-import type { RichTextJSON } from '../../types'
+import type { RichTextJSON, RichTextVideo } from '../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const ALL_FEATURES = [
@@ -24,6 +24,7 @@ const ALL_FEATURES = [
   'backgroundColor',
   'image',
   'youtube',
+  'video',
   'fontSize',
   'lineHeight',
   'textAlign',
@@ -441,6 +442,84 @@ export const TableEditing: Story = {
           helpMessage="行・列・セルのボタンから操作できます。セル内でAlt+EnterまたはShift+F10を押してもメニューが開きます。"
         >
           <RichTextEditor {...rest} value={value} onChange={setValue} />
+        </FormControl>
+        <div>
+          <p>保存内容の表示</p>
+          <RichTextViewer content={value} />
+        </div>
+      </Stack>
+    )
+  },
+}
+
+const SAMPLE_VIDEOS: RichTextVideo[] = [
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    title: 'サンプル動画A',
+    poster: '/fixtures/sample-jpeg.jpg',
+    duration: 5,
+  },
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+    title: 'サンプル動画B',
+    duration: 6,
+  },
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    title: 'Sample Video C',
+    duration: 125,
+  },
+  { src: '//example.com/a.mp4', title: '不正な src の動画' },
+]
+
+const loadSampleVideos = ({ signal }: { signal: AbortSignal }) =>
+  new Promise<readonly RichTextVideo[]>((resolve, reject) => {
+    const timer = setTimeout(() => resolve(SAMPLE_VIDEOS), 600)
+
+    signal.addEventListener('abort', () => {
+      clearTimeout(timer)
+      reject(signal.reason)
+    })
+  })
+
+export const VideoEmbedding: Story = {
+  name: '動画の埋め込み',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [value, setValue] = useState<RichTextJSON>({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'ツールバーの動画のボタンから、アップロード済みの動画を選んで挿入できます。',
+            },
+          ],
+        },
+        {
+          type: 'video',
+          attrs: {
+            src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+            title: 'サンプル動画A',
+          },
+        },
+        { type: 'paragraph' },
+      ],
+    })
+
+    return (
+      <Stack>
+        <FormControl
+          label="動画の埋め込み"
+          helpMessage="動画をクリックして選ぶと、操作バーが出ます。選んだ状態で Alt+Enter を押すと操作バーへ移ります。"
+        >
+          <RichTextEditor
+            {...rest}
+            value={value}
+            loadVideos={loadSampleVideos}
+            onChange={setValue}
+          />
         </FormControl>
         <div>
           <p>保存内容の表示</p>

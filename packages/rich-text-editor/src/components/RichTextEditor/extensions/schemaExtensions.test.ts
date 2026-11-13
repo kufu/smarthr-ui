@@ -31,6 +31,9 @@ const ALL_FORMATS_HTML = [
   '<div data-youtube-video><iframe src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" width="320" height="180"></iframe></div>',
   '<img src="https://example.com/b.png" style="display: block; margin-left: auto; margin-right: auto">',
   '<div data-youtube-video style="width: fit-content; margin-left: auto"><iframe src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" width="320" height="180"></iframe></div>',
+  '<div data-video style="width: fit-content; margin-left: auto"><video src="https://example.com/a.mp4" poster="/a.jpg" title="動画の説明" width="320" height="180" controls></video></div>',
+  '<p><video src="/b.mp4"></video></p><video><source src="/c.mp4" type="video/mp4"></video>',
+  '<video src="javascript:alert(1)"></video><video src="//example.com/d.mp4"></video>',
   '<table><tbody><tr><th colspan="2" style="background-color: #eeeeee">見出しセル</th></tr>',
   '<tr><td style="color: #333333" colwidth="120">セル</td><td rowspan="1"><p>セル2</p></td></tr></tbody></table>',
 ].join('')
@@ -98,5 +101,97 @@ describe('createSchemaExtensions', () => {
     expect(html).toContain(
       '<div data-youtube-video="" style="width: fit-content; margin-left: auto;">',
     )
+  })
+
+  describe('動画', () => {
+    const EMPTY_VIDEO_ATTRS = {
+      src: null,
+      poster: null,
+      title: null,
+      width: null,
+      height: null,
+      align: null,
+    }
+    const videoAttrs = (attrs: Record<string, unknown>) => ({ ...EMPTY_VIDEO_ATTRS, ...attrs })
+
+    it('属性と配置を読み、再生できる形で書き出す', () => {
+      const json = generateJSON(
+        '<div data-video style="width: fit-content; margin-left: auto; margin-right: auto"><video src="https://example.com/a.mp4" poster="/a.jpg" title="動画の説明" width="320" height="180"></video></div>',
+        schemaExtensions,
+      )
+
+      expect(json.content).toEqual([
+        {
+          type: 'video',
+          attrs: videoAttrs({
+            src: 'https://example.com/a.mp4',
+            poster: '/a.jpg',
+            title: '動画の説明',
+            width: 320,
+            height: 180,
+            align: 'center',
+          }),
+        },
+      ])
+      expect(generateHTML(json, schemaExtensions)).toBe(
+        '<div data-video="" style="width: fit-content; margin-left: auto; margin-right: auto;"><video src="https://example.com/a.mp4" poster="/a.jpg" title="動画の説明" width="320" height="180" style="aspect-ratio: 320 / 180;" controls="" preload="metadata" playsinline=""></video></div>',
+      )
+    })
+
+    it.each([
+      ['段落で包んだ video', '<p><video src="/a.mp4"></video></p>'],
+      ['source で指定した video', '<video><source src="/a.mp4" type="video/mp4"></video>'],
+      ['素の video', '<video src="/a.mp4"></video>'],
+    ])('%s を、前後に空の段落を作らずに読む', (_, html) => {
+      expect(generateJSON(html, schemaExtensions).content).toEqual([
+        { type: 'video', attrs: videoAttrs({ src: '/a.mp4' }) },
+      ])
+    })
+
+    it('段落の揃えを動画の配置として読む', () => {
+      const json = generateJSON(
+        '<p style="text-align: right"><video src="/a.mp4"></video></p>',
+        schemaExtensions,
+      )
+
+      expect(json.content).toEqual([
+        { type: 'video', attrs: videoAttrs({ src: '/a.mp4', align: 'right' }) },
+      ])
+    })
+
+    it('代替テキストのある video だけの段落も、空の段落を作らず揃えを保ったまま読み書きする', () => {
+      const json = generateJSON(
+        '<p style="text-align: center"><video src="/a.mp4">Your browser does not support HTML5 video.</video></p>',
+        schemaExtensions,
+      )
+
+      expect(json.content).toEqual([
+        { type: 'video', attrs: videoAttrs({ src: '/a.mp4', align: 'center' }) },
+      ])
+      expect(generateJSON(generateHTML(json, schemaExtensions), schemaExtensions)).toEqual(json)
+    })
+
+    it.each([
+      ['javascript:', '<video src="javascript:alert(1)"></video>'],
+      ['別ホストを指す //', '<video src="//example.com/a.mp4"></video>'],
+      ['別ホストを指す /\\', '<video src="/\\example.com/a.mp4"></video>'],
+      ['data:', '<video src="data:video/mp4;base64,AAAA"></video>'],
+      ['source の javascript:', '<video><source src="javascript:alert(1)"></video>'],
+      [
+        '不正な src と正しい source',
+        '<video src="javascript:alert(1)"><source src="/a.mp4"></video>',
+      ],
+    ])('src が %s の動画は読まない', (_, html) => {
+      expect(JSON.stringify(generateJSON(html, schemaExtensions))).not.toContain('"video"')
+    })
+
+    it('不正な poster は読まず、動画は残す', () => {
+      const json = generateJSON(
+        '<video src="/a.mp4" poster="javascript:alert(1)"></video>',
+        schemaExtensions,
+      )
+
+      expect(json.content).toEqual([{ type: 'video', attrs: videoAttrs({ src: '/a.mp4' }) }])
+    })
   })
 })

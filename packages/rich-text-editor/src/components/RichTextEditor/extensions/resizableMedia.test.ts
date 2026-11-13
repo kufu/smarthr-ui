@@ -11,6 +11,7 @@ const MEDIA_DOC = {
   content: [
     { type: 'image', attrs: { src: 'https://example.com/a.png' } },
     { type: 'youtube', attrs: { src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' } },
+    { type: 'video', attrs: { src: '/a.mp4' } },
   ],
 }
 
@@ -28,7 +29,7 @@ describe('リサイズできるメディアの NodeView', () => {
   it('作り直しても editor の update の購読が増えない', () => {
     const editor = new Editor({
       element: document.createElement('div'),
-      extensions: configureExtensions({ features: ['image', 'youtube'] }),
+      extensions: configureExtensions({ features: ['image', 'youtube', 'video'] }),
       content: MEDIA_DOC,
     })
     editors.push(editor)
