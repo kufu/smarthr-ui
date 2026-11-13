@@ -103,6 +103,35 @@ describe('CurrencyInput', () => {
     expect(input).toHaveValue('1,000')
   })
 
+  it('非制御で値を変更しフォーカスした状態のままform.reset()を呼ぶと、カンマなしでdefaultValueに戻ること', async () => {
+    const user = userEvent.setup()
+
+    const { container } = render(
+      <form>
+        <FormControl label="CurrencyInput">
+          <CurrencyInput name="currency" defaultValue="1000" />
+        </FormControl>
+      </form>,
+    )
+
+    const input = screen.getByRole('textbox')
+    await user.click(input)
+    await user.clear(input)
+    await user.type(input, '2000000')
+
+    expect(input).toHaveValue('2000000')
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    })
+
+    expect(input).toHaveValue('1000')
+  })
+
   it('制御時(value指定)は、form.reset()を呼んでも表示が変わらないこと', () => {
     const { container } = render(
       <form>

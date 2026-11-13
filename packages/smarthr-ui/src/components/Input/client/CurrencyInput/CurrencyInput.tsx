@@ -45,6 +45,7 @@ export const CurrencyInput: FC<Props> = ({
     value,
     defaultValue,
     resetFrame,
+    isFocused,
   })
 
   const functions = useMemo(() => {
@@ -67,11 +68,13 @@ export const CurrencyInput: FC<Props> = ({
         const associatedForm = node?.form
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
         // ネイティブのdefaultValueへの復帰により失われるフォーマット(カンマ区切り等)をかけ直す。
-        // resetイベントは実際に値がリセットされる前に発火するため、次のフレームで値を読み直す
+        // resetイベントは実際に値がリセットされる前に発火するため、次のフレームで値を読み直す。
+        // フォーカス中は通常の入力時と同様にカンマを付けない(付けると入力継続時に不正な値になる)。
+        // フォーカスが外れた際は107行目付近のuseEffectが改めてフォーマットする
         const handleReset = () => {
           if (latest.value === undefined) {
             latest.resetFrame.request(() => {
-              if (innerRef.current) {
+              if (innerRef.current && !latest.isFocused) {
                 formatCurrencyValue(innerRef.current.value)
               }
             })
