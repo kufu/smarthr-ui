@@ -11,6 +11,7 @@ import { isLinkUrl } from '../Toolbar/urlValidation'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
+import { SlashMenu } from '../extensions/Slash/SlashMenu'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
 import { VideoFloatingUI } from '../extensions/Video/VideoFloatingUI'
 import { YoutubeFloatingUI } from '../extensions/Youtube/YoutubeFloatingUI'
@@ -537,6 +538,8 @@ export const RichTextEditor = memo(
         }
       }, [disabled, readOnly, invalid, isResizable, hasEditorHeight, className, editorClassName])
 
+      const showEditingChrome = editor !== null && !readOnly && !disabled && !hideToolbar
+
       // editorが未初期化でもwrapperは常に描画する
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
       const toolbar = editor && !readOnly && !hideToolbar && (
@@ -569,17 +572,20 @@ export const RichTextEditor = memo(
           >
             {editor && <EditorContent editor={editor} />}
           </div>
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('table') && (
+          {showEditingChrome && features.includes('table') && (
             <TableFloatingUI containerRef={wrapperRef} features={features} editor={editor} />
           )}
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('image') && (
+          {showEditingChrome && features.includes('image') && (
             <ImageFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('youtube') && (
+          {showEditingChrome && features.includes('youtube') && (
             <YoutubeFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('video') && (
+          {showEditingChrome && features.includes('video') && (
             <VideoFloatingUI containerRef={wrapperRef} editor={editor} />
+          )}
+          {showEditingChrome && features.includes('slashCommand') && (
+            <SlashMenu editor={editor} features={features} headingLevels={headingLevels} />
           )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea} />

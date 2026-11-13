@@ -22,6 +22,7 @@ const FEATURE_BY_NAME: Readonly<Record<string, RichTextFeature>> = {
   link: 'link',
   // schema を持たない操作専用の extension。Mod-K のショートカットを features で絞る
   linkShortcut: 'link',
+  slashCommand: 'slashCommand',
   heading: 'heading',
   image: 'image',
   youtube: 'youtube',

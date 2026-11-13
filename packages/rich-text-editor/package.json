@@ -53,6 +53,7 @@
     "smarthr-ui": "workspace:^"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.8.0",
     "@tiptap/core": "^3.32.2",
     "@tiptap/extension-color": "^3.32.2",
     "@tiptap/extension-file-handler": "^3.32.2",
@@ -67,6 +68,7 @@
     "@tiptap/react": "^3.32.2",
     "@tiptap/starter-kit": "^3.32.2",
     "@tiptap/static-renderer": "^3.32.2",
+    "@tiptap/suggestion": "^3.32.2",
     "happy-dom": "^21.0.4",
     "intl-messageformat": "^11.2.15",
     "tailwind-variants": "^0.3.1"
