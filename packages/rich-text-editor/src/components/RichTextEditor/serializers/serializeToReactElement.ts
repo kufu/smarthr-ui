@@ -3,9 +3,11 @@ import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/stat
 import { type ReactNode, createElement } from 'react'
 
 import { isAllowedLineHeight } from '../extensions/LineHeight'
+import { toVideoAspectRatio } from '../extensions/Video/Video'
 import { isPositiveNumber } from '../extensions/aspectRatio'
 import {
   IMAGE_ALIGN_STYLES,
+  VIDEO_ALIGN_STYLES,
   YOUTUBE_ALIGN_STYLES,
   getMediaAlignStyles,
 } from '../extensions/mediaAlign'
@@ -25,6 +27,7 @@ import {
   isSafeLinkTarget,
   isSafeTextAlign,
   isSafeUrl,
+  isSafeVideoSrc,
   isSafeYoutubeSrc,
   normalizeColspan,
   normalizeHeadingLevel,
@@ -137,6 +140,29 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
         height,
         allowFullScreen: true,
         style: { border: 0, maxWidth: '100%', height: 'auto', aspectRatio: `${width} / ${height}` },
+      }),
+    )
+  },
+  video: ({ node }) => {
+    const { src, poster, title, width, height } = node.attrs
+
+    if (!isSafeVideoSrc(src)) return null
+
+    const aspectRatio = toVideoAspectRatio(width, height)
+
+    return createElement(
+      'div',
+      { 'data-video': '', style: getMediaAlignStyles(VIDEO_ALIGN_STYLES, node.attrs.align) },
+      createElement('video', {
+        src,
+        poster: isSafeVideoSrc(poster) ? poster : undefined,
+        title: typeof title === 'string' ? title : undefined,
+        width: parseNumericAttr(width),
+        height: parseNumericAttr(height),
+        style: aspectRatio ? { aspectRatio } : undefined,
+        controls: true,
+        preload: 'metadata',
+        playsInline: true,
       }),
     )
   },
