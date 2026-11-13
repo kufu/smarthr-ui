@@ -1,7 +1,6 @@
 import {
   type ComponentPropsWithoutRef,
   type FC,
-  type FormEvent,
   type MouseEvent,
   type ReactNode,
   memo,
@@ -47,7 +46,21 @@ type Props = ExtendElementPropsWithRef<
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
      */
-    handleSubmit: (e: FormEvent<HTMLFormElement>) => void
+    // HINT: SubmitEvent は @types/react 19.2.10 以降にしか存在せず、型定義に直接書くと
+    // それより古い @types/react の利用者で型エラーになるため、form の onSubmit の型から取り出す
+    handleSubmit: NonNullable<ComponentPropsWithoutRef<'form'>['onSubmit']>
+    /** form要素のaction属性 */
+    action?: ComponentPropsWithoutRef<'form'>['action']
+    /** form要素に渡す属性 */
+    // HINT: Omitだけでは、getFormPropsの戻り値などonSubmitを含むオブジェクトを渡しても型エラーにならず、
+    // handleSubmitで上書きされて黙って捨てられてしまうため、neverで渡せないことを明示する
+    formProps?: Omit<
+      ComponentPropsWithoutRef<'form'>,
+      'children' | 'className' | 'onSubmit' | 'action'
+    > & {
+      onSubmit?: never
+      action?: never
+    }
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
@@ -85,6 +98,8 @@ export const FormDialogContent: FC<Props> = ({
   contentPadding,
   actionButton,
   handleSubmit,
+  action,
+  formProps,
   handleClickClose,
   responseStatus,
   closeButton,
@@ -96,7 +111,7 @@ export const FormDialogContent: FC<Props> = ({
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section className={CLASS_NAMES.wrapper}>
       <DialogHeading {...heading} />
-      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
+      <form {...formProps} action={action} className={CLASS_NAMES.form} onSubmit={handleSubmit}>
         <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
           {children}
         </DialogBody>
