@@ -100,6 +100,47 @@ describe('Textarea', () => {
       expect(screen.getAllByText(/あと6文字/)[0]).toBeInTheDocument()
     })
 
+    it('onResetでpreventDefault()が呼ばれた場合、form.reset()を呼んでも文字数カウンタが変わらないこと', async () => {
+      vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+      const user = userEvent.setup()
+
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form onReset={(e) => e.preventDefault()}>
+            <FormControl label="Textarea">
+              <Textarea name="textarea" defaultValue="テキスト" maxLetters={10} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      const textarea = screen.getByRole('textbox')
+
+      await user.clear(textarea)
+      await user.type(textarea, 'もっと長いテキストを入力してみる')
+
+      expect(screen.getAllByText(/文字オーバー/)[0]).toBeInTheDocument()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      // HINT: resetFrame(requestAnimationFrame)での判定が、ネイティブイベントのtarget phaseと
+      // Reactの合成イベント(onReset, bubble phase)の実行順序に依存するテストのため、
+      // 同期実行する通常モックではなく実際の非同期なrequestAnimationFrameで検証する。
+      // ただしjsdom環境ではonResetのディスパッチがtarget phaseと同期的に完結するため、
+      // resetFrameをqueueMicrotaskにしてもこのテストは通ってしまう(デグレを検知できない)。
+      // 実ブラウザでのみ、ネイティブのbutton[type=reset]操作時にonResetのディスパッチが
+      // 1フレーム以上遅延する現象を実機で確認し、requestAnimationFrameでの対応が必要と判断した
+      await act(async () => {
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
+
+      expect(textarea).toHaveProperty('value', 'もっと長いテキストを入力してみる')
+      expect(screen.getAllByText(/文字オーバー/)[0]).toBeInTheDocument()
+    })
+
     it('制御時(value指定)は、form.reset()を呼んでも文字数カウンタが変わらないこと', () => {
       const { container } = render(
         <IntlProvider locale="ja">
