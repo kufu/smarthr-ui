@@ -7,7 +7,14 @@ import ts from 'typescript'
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
-const IGNORE_COMPONENTS = ['Experimental', 'OpenInNewTabIcon', 'LiveRegion', 'Portal']
+const IGNORE_COMPONENTS = [
+  'Experimental',
+  'OpenInNewTabIcon',
+  'LiveRegion',
+  'Portal',
+  'DialogPortal',
+  'FocusTrap',
+]
 const IGNORE_INNER_DIRS = [
   'Input/InputWithTooltip',
   'Browser/models',

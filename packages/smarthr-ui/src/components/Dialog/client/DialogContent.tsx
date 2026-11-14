@@ -1,21 +1,15 @@
 'use client'
 
-import {
-  type ComponentPropsWithRef,
-  type FC,
-  type RefObject,
-  memo,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
+import { type ComponentPropsWithRef, type FC, type RefObject, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useBodyScrollLock } from '../../../hooks/client/useBodyScrollLock'
 import { useEscapeCallbackRef } from '../../../hooks/client/useEscapeCallbackRef'
 import { useLatest } from '../../../hooks/useLatest'
 import { dialogSize } from '../../../tailwind'
+import { FocusTrap } from '../../FocusTrap'
 
 import { DialogOverlapCenter } from './DialogOverlapCenter'
-import { FocusTrap } from './FocusTrap'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 import type { DialogSize } from '../types'
@@ -143,23 +137,7 @@ export const DialogContent: FC<Props> = ({
 
   const callbackRef = useEscapeCallbackRef(functions.handlePressEscape)
 
-  useLayoutEffect(() => {
-    if (!isOpen) return
-
-    const body = document.body
-    const scrollBarWidth = window.innerWidth - body.clientWidth
-    const originalPaddingRight = getComputedStyle(body).getPropertyValue('padding-right')
-
-    const bodyStyle = body.style
-
-    bodyStyle.paddingInlineEnd = `${scrollBarWidth + parseInt(originalPaddingRight, 10)}px`
-    bodyStyle.overflow = 'hidden'
-
-    return () => {
-      bodyStyle.paddingInlineEnd = ''
-      bodyStyle.overflow = ''
-    }
-  }, [isOpen])
+  useBodyScrollLock(isOpen)
 
   return (
     <DialogOverlapCenter isOpen={isOpen} className={classNames.overlap}>

@@ -1,0 +1,53 @@
+'use client'
+
+import { type FC, useMemo } from 'react'
+
+import { useRemoteTrigger } from '../../../hooks/client/useRemoteTrigger'
+import { useLatest } from '../../../hooks/useLatest'
+import { DialogPortal } from '../../DialogPortal'
+
+import { DrawerContent } from './DrawerContent'
+
+import type { DrawerProps } from '../types'
+
+export const Drawer: FC<DrawerProps> = ({
+  id,
+  portalParent,
+  onClickClose,
+  onPressEscape,
+  onClickOverlay,
+  onToggle,
+  onOpen,
+  onClose,
+  ...rest
+}) => {
+  const { isOpen, close, handleClickClose, handlePressEscape } = useRemoteTrigger({
+    id,
+    onClickClose,
+    onPressEscape,
+    onToggle,
+    onOpen,
+    onClose,
+  })
+
+  const hasOnClickOverlay = Boolean(onClickOverlay)
+  const latest = useLatest({ onClickOverlay, close })
+  const handleClickOverlay = useMemo(
+    () => (hasOnClickOverlay ? () => latest.onClickOverlay?.(latest.close) : undefined),
+    [hasOnClickOverlay, latest],
+  )
+
+  return (
+    <DialogPortal id={id} parent={portalParent}>
+      <DrawerContent
+        {...rest}
+        isOpen={isOpen}
+        hasPortalParent={Boolean(portalParent)}
+        onClickClose={handleClickClose}
+        onPressEscape={handlePressEscape}
+        onClickOverlay={handleClickOverlay}
+        handleClose={close}
+      />
+    </DialogPortal>
+  )
+}

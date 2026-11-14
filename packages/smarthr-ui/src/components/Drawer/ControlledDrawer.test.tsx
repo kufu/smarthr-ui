@@ -1,0 +1,1401 @@
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { type FC, Profiler, useRef, useState } from 'react'
+
+import { IntlProvider } from '../../intl'
+import { Button } from '../Button'
+
+import { ControlledDrawer } from './ControlledDrawer'
+import { DrawerBody } from './DrawerBody'
+import { DrawerFooter } from './DrawerFooter'
+import { DrawerHeader } from './client'
+
+import type { DrawerPosition } from './types'
+
+// jsdom は PointerEvent 未実装で clientX/clientY と timeStamp が落ちるため補う。
+// timeStamp は同一 tick で同値になり、速度が距離に対して過大になる。
+if (typeof PointerEvent === 'undefined') {
+  class PointerEventPolyfill extends MouseEvent {
+    pointerId?: number
+    isPrimary: boolean
+    constructor(type: string, params: PointerEventInit & { timeStamp?: number } = {}) {
+      super(type, params)
+      this.pointerId = params.pointerId
+      this.isPrimary = params.isPrimary ?? true
+      if (params.timeStamp !== undefined) {
+        Object.defineProperty(this, 'timeStamp', { value: params.timeStamp, configurable: true })
+      }
+    }
+  }
+  // @ts-expect-error -- jsdom に PointerEvent が無いため補う
+  global.PointerEvent = PointerEventPolyfill
+}
+
+const renderWithIntl = (ui: React.ReactElement) =>
+  render(<IntlProvider locale="ja">{ui}</IntlProvider>)
+
+// jsdom はレイアウトしないため getBoundingClientRect が常に 0 を返す。
+// swipe-to-dismiss はパネルの実測高を閾値の基準にするので、明示的に与える。
+const stubPanelHeight = (height: number) => {
+  const dialog = screen.getByRole('dialog')
+
+  vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue({
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    right: 390,
+    bottom: height,
+    width: 390,
+    height,
+    toJSON: () => ({}),
+  })
+
+  return dialog
+}
+
+const ControlledTemplate: FC<{ position?: DrawerPosition }> = ({ position }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>open</Button>
+      <ControlledDrawer
+        isOpen={isOpen}
+        position={position}
+        ariaLabel="テストドロワー"
+        onClickClose={() => setIsOpen(false)}
+        onClickOverlay={() => setIsOpen(false)}
+        onPressEscape={() => setIsOpen(false)}
+      >
+        <p>drawer content</p>
+        <Button onClick={() => setIsOpen(false)}>close</Button>
+      </ControlledDrawer>
+    </>
+  )
+}
+
+describe('ControlledDrawer（Controlled）', () => {
+  it('トリガで開き、閉じるボタンで閉じられること', async () => {
+    renderWithIntl(<ControlledTemplate />)
+    expect(screen.queryByRole('dialog', { name: 'テストドロワー' })).toBeNull()
+
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(screen.getByRole('dialog', { name: 'テストドロワー' })).toBeVisible()
+
+    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'テストドロワー' })).toBeNull()
+    })
+  })
+
+  it('Escape キーで onPressEscape が呼ばれ閉じること', async () => {
+    renderWithIntl(<ControlledTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(screen.getByRole('dialog', { name: 'テストドロワー' })).toBeVisible()
+
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'テストドロワー' })).toBeNull()
+    })
+  })
+
+  it('オーバーレイクリックで onClickOverlay が呼ばれ閉じること', async () => {
+    renderWithIntl(<ControlledTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const overlay = screen
+      .getAllByRole('presentation')
+      .find((el) => el.classList.contains('smarthr-ui-Drawer-overlay'))
+    expect(overlay).toBeTruthy()
+    await userEvent.click(overlay as HTMLElement)
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'テストドロワー' })).toBeNull()
+    })
+  })
+
+  it('role=dialog と aria-modal=true を持つこと', async () => {
+    renderWithIntl(<ControlledTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    const dialog = screen.getByRole('dialog', { name: 'テストドロワー' })
+    expect(dialog).toHaveAttribute('aria-modal', 'true')
+  })
+
+  // ボックスを作ると flex コンテキストが途切れ、body のスクロールと footer の固定が効かなくなる
+  it('dialog と body/footer の間に挟まる要素がボックスを作らないこと', async () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen ariaLabel="レイアウト検証">
+        <DrawerHeader title="タイトル" />
+        <DrawerBody>
+          <p>body</p>
+        </DrawerBody>
+        <DrawerFooter>
+          <Button>footer button</Button>
+        </DrawerFooter>
+      </ControlledDrawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'レイアウト検証' })
+    const body = dialog.querySelector('.smarthr-ui-Drawer-body') as HTMLElement
+    const footer = dialog.querySelector('.smarthr-ui-Drawer-footer') as HTMLElement
+    expect(body).toBeTruthy()
+    expect(footer).toBeTruthy()
+
+    for (const target of [body, footer]) {
+      for (let el = target.parentElement; el && el !== dialog; el = el.parentElement) {
+        expect(el).toHaveClass('shr-contents')
+      }
+    }
+  })
+})
+
+describe('ControlledDrawer サブコンポーネント', () => {
+  it('DrawerHeader の閉じるボタン（×）で閉じられること', async () => {
+    const HeaderTemplate: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            ariaLabel="ヘッダ付き"
+            onClickClose={() => setIsOpen(false)}
+          >
+            <DrawerHeader title="タイトル" />
+            <DrawerBody>
+              <p>body</p>
+            </DrawerBody>
+            <DrawerFooter>
+              <Button>footer button</Button>
+            </DrawerFooter>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<HeaderTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(screen.getByRole('dialog', { name: 'ヘッダ付き' })).toBeVisible()
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'ヘッダ付き' })).toBeNull()
+    })
+  })
+
+  it('ariaLabel 未指定でも DrawerHeader の見出しで dialog がラベル付けされること', async () => {
+    const AutoLabelTemplate: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer isOpen={isOpen} onClickClose={() => setIsOpen(false)}>
+            <DrawerHeader title="自動ラベル見出し" />
+            <DrawerBody>
+              <p>body</p>
+            </DrawerBody>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<AutoLabelTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(screen.getByRole('dialog', { name: '自動ラベル見出し' })).toBeVisible()
+  })
+
+  it('ariaLabel を指定すると、DrawerHeader の見出しではなく ariaLabel が名前になること', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen ariaLabel="指定したラベル">
+        <DrawerHeader title="見出し" />
+      </ControlledDrawer>,
+    )
+
+    expect(screen.getByRole('dialog', { name: '指定したラベル' })).not.toHaveAttribute(
+      'aria-labelledby',
+    )
+  })
+
+  it('ariaLabel と ariaLabelledby を両方指定すると、Dialog と同じく ariaLabelledby が名前になること', () => {
+    renderWithIntl(
+      <>
+        <p id="external-label">外部のラベル</p>
+        <ControlledDrawer isOpen ariaLabel="指定したラベル" ariaLabelledby="external-label">
+          <DrawerHeader title="見出し" />
+        </ControlledDrawer>
+      </>,
+    )
+
+    expect(screen.getByRole('dialog', { name: '外部のラベル' })).toBeInTheDocument()
+  })
+})
+
+describe('ControlledDrawer ドラッグハンドル', () => {
+  const VerticalTemplate: FC = () => {
+    const [isOpen, setIsOpen] = useState(false)
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <ControlledDrawer
+          isOpen={isOpen}
+          position="bottom"
+          ariaLabel="ボトムドロワー"
+          onClickClose={() => setIsOpen(false)}
+        >
+          <p>bottom content</p>
+        </ControlledDrawer>
+      </>
+    )
+  }
+
+  it('bottom では grabber を描画すること', async () => {
+    renderWithIntl(<VerticalTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle')
+    expect(handle).toBeVisible()
+  })
+
+  it('grabber がアクセシビリティツリーに現れないこと', async () => {
+    renderWithIntl(<VerticalTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+    expect(handle).toHaveAttribute('aria-hidden', 'true')
+    // aria-hidden 配下も含めて（hidden: true）、grabber は操作可能な要素を持たない
+    expect(within(handle).queryAllByRole('button', { hidden: true })).toHaveLength(0)
+  })
+
+  const renderBottomDrawer = (onClickClose: () => void = vi.fn()) => {
+    renderWithIntl(
+      <ControlledDrawer
+        isOpen
+        position="bottom"
+        ariaLabel="ボトムドロワー"
+        onClickClose={onClickClose}
+      >
+        <p>bottom content</p>
+      </ControlledDrawer>,
+    )
+
+    return {
+      onClickClose,
+      handle: document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement,
+    }
+  }
+
+  // React の SyntheticEvent は timeStamp が falsy だと Date.now() で埋めるため、
+  // 0 は使わずに必ず正の値を渡す。
+  const DOWN_AT = 1000
+
+  const dragHandle = (
+    handle: HTMLElement,
+    { to, moveAt = DOWN_AT + 200, upAt = moveAt }: { to: number; moveAt?: number; upAt?: number },
+  ) => {
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: to, timeStamp: moveAt })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: to, timeStamp: upAt })
+  }
+
+  it('grabber を下にドラッグすると onClickClose が呼ばれること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    dragHandle(handle, { to: 300 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  it('grabber を少しだけドラッグしても閉じないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    dragHandle(handle, { to: 40 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  // ビューポート高に固定すると、回転やリサイズ後のパネルで割合が合わなくなる
+  it('閉じ判定がパネルの実測高を基準にすること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    // window.innerHeight (jsdom は 768) より十分小さいパネル。
+    // 250px は実測高 300 の 83% だが、768 基準なら 33% にしかならない
+    stubPanelHeight(300)
+
+    // 1000ms かけてゆっくり動かし、フリック判定ではなく位置判定に載せる
+    dragHandle(handle, { to: 250, moveAt: DOWN_AT + 1000 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  it('勢いよく動かしても静止してから離せばフリック扱いしないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    // 10ms で 20px（= 2px/ms）動かしたあと 190ms 静止してから離す
+    dragHandle(handle, { to: 20, moveAt: DOWN_AT + 10, upAt: DOWN_AT + 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('主ボタン以外の押下ではドラッグを始めないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, button: 2, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 200 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('ドラッグ中のポインタ以外の移動は無視すること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 2, clientY: 300, timeStamp: DOWN_AT + 200 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 10, timeStamp: DOWN_AT + 200 })
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+
+  it('閉じアニメーション中に grabber を押しても、開いた位置へ戻らないこと', async () => {
+    const ui = (isOpen: boolean) => (
+      <IntlProvider locale="ja">
+        <ControlledDrawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
+          <p>bottom content</p>
+        </ControlledDrawer>
+      </IntlProvider>
+    )
+    const { rerender } = render(ui(true))
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+    rerender(ui(false))
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+
+    expect(screen.getByRole('dialog', { name: 'ボトムドロワー' }).style.transform).toBe(
+      'translateY(100%)',
+    )
+  })
+
+  it('最後の pointermove より先の、離した位置で閉じ判定をすること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 150, timeStamp: DOWN_AT + 1000 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 1200 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  it('ドラッグ中のポインタ以外の pointercancel ではドラッグを終えず、キャプチャが外れたら終えること', async () => {
+    const { handle } = renderBottomDrawer()
+    const dialog = stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 100, timeStamp: DOWN_AT + 100 })
+    fireEvent.pointerCancel(handle, { pointerId: 2 })
+
+    expect(dialog.style.transition).toBe('none')
+
+    fireEvent.lostPointerCapture(handle, { pointerId: 1 })
+
+    expect(dialog.style.transition).not.toBe('none')
+  })
+
+  it('pointerdown を経ない pointerup では閉じ判定をしないこと', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    // onClickClose で isOpen を変えないため、閉じ位置に送られたまま復帰待ちになる
+    dragHandle(handle, { to: 300 })
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 300, timeStamp: DOWN_AT + 300 })
+
+    expect(onClickClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('ドラッグ中に外から閉じられても、トランジション付きで閉じ位置へ動くこと', async () => {
+    const ui = (isOpen: boolean) => (
+      <IntlProvider locale="ja">
+        <ControlledDrawer isOpen={isOpen} position="bottom" ariaLabel="ボトムドロワー">
+          <p>bottom content</p>
+        </ControlledDrawer>
+      </IntlProvider>
+    )
+    const { rerender } = render(ui(true))
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+    stubPanelHeight(400)
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: DOWN_AT })
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 100, timeStamp: DOWN_AT + 100 })
+    rerender(ui(false))
+
+    const dialog = screen.getByRole('dialog', { name: 'ボトムドロワー' })
+    expect(dialog.style.transition).not.toBe('none')
+    expect(dialog.style.transform).toBe('translateY(100%)')
+  })
+
+  it('勢いよく動かしてすぐ離せばフリックとして閉じること', async () => {
+    const { onClickClose, handle } = renderBottomDrawer()
+    stubPanelHeight(400)
+
+    dragHandle(handle, { to: 20, moveAt: DOWN_AT + 10 })
+
+    expect(onClickClose).toHaveBeenCalled()
+  })
+
+  // 確認ダイアログを挟む等で isOpen を落とさない利用者がいるため、送りっぱなしにできない
+  it('スワイプで閉じたあと isOpen が true のままなら開き位置へ戻ること', async () => {
+    const { handle } = renderBottomDrawer(() => undefined)
+    const dialog = stubPanelHeight(400)
+    await waitFor(() => {
+      expect(dialog.style.transform).toBe('translateY(0)')
+    })
+
+    dragHandle(handle, { to: 300 })
+    expect(dialog.style.transform).toBe('translateY(400px)')
+
+    await waitFor(() => {
+      expect(dialog.style.transform).toBe('translateY(0)')
+    })
+  })
+
+  // Context の値を作り直すと、毎フレーム再レンダーされるドラッグ中に DrawerHeader まで巻き込む
+  it('ドラッグ中に DrawerHeader が再レンダーされないこと', async () => {
+    let renderCount = 0
+    renderWithIntl(
+      <ControlledDrawer
+        isOpen
+        position="bottom"
+        ariaLabel="ボトムドロワー"
+        onClickClose={() => undefined}
+      >
+        <Profiler
+          id="header"
+          onRender={() => {
+            renderCount += 1
+          }}
+        >
+          <DrawerHeader title="タイトル" />
+        </Profiler>
+        <DrawerBody>
+          <p>body</p>
+        </DrawerBody>
+      </ControlledDrawer>,
+    )
+    const dialog = stubPanelHeight(400)
+    const handle = document.querySelector('.smarthr-ui-Drawer-handle') as HTMLElement
+
+    renderCount = 0
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 0, timeStamp: 1000 })
+    for (let i = 1; i <= 5; i++) {
+      fireEvent.pointerMove(handle, { pointerId: 1, clientY: i * 10, timeStamp: 1000 + i * 16 })
+    }
+
+    // ドラッグ位置は反映されている（＝再レンダーは起きている）
+    expect(dialog.style.transform).toBe('translateY(50px)')
+    expect(renderCount).toBe(0)
+  })
+
+  it('横方向（right）では grabber を描画しないこと', async () => {
+    const HorizontalTemplate: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            position="right"
+            ariaLabel="右ドロワー"
+            onClickClose={() => setIsOpen(false)}
+          >
+            <p>right content</p>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<HorizontalTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(document.querySelector('.smarthr-ui-Drawer-handle')).toBeNull()
+  })
+})
+
+describe('ControlledDrawer（modeless）', () => {
+  const ModelessTemplate: FC<{ onPressEscape?: () => void }> = ({ onPressEscape }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <ControlledDrawer
+          isOpen={isOpen}
+          position="right"
+          modality="modeless"
+          ariaLabel="モードレスドロワー"
+          onClickClose={() => setIsOpen(false)}
+          onPressEscape={onPressEscape}
+        >
+          <p>modeless content</p>
+          <Button onClick={() => setIsOpen(false)}>close</Button>
+        </ControlledDrawer>
+      </>
+    )
+  }
+
+  it('オーバーレイを描画しないこと', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const overlay = screen
+      .queryAllByRole('presentation')
+      .find((el) => el.classList.contains('smarthr-ui-Drawer-overlay'))
+    expect(overlay).toBeUndefined()
+  })
+
+  it('aria-modal を付けないこと（role=dialog は維持）', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+    expect(dialog).not.toHaveAttribute('aria-modal')
+  })
+
+  it('body のスクロールをロックしないこと', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    expect(document.body.style.overflow).not.toBe('hidden')
+  })
+
+  it('開いたときにドロワー内へフォーカスが移ること', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+  })
+
+  it('Tab はドロワー内に閉じ込めないこと（背後へ出られる）', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+
+    // 末尾まで Tab を送っても循環せず、いずれドロワーの外へ出る
+    for (let i = 0; i < 12; i++) {
+      await userEvent.tab()
+      if (!dialog.contains(document.activeElement)) break
+    }
+
+    expect(dialog.contains(document.activeElement)).toBe(false)
+  })
+
+  it('閉じたときに、ページをスクロールさせずにトリガへフォーカスが戻ること', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    const trigger = screen.getByRole('button', { name: 'open' })
+    const focusSpy = vi.spyOn(trigger, 'focus')
+    await userEvent.click(trigger)
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'モードレスドロワー' })).toBeVisible()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+
+    await waitFor(() => {
+      expect(trigger).toHaveFocus()
+    })
+    expect(focusSpy).toHaveBeenLastCalledWith({ preventScroll: true })
+  })
+
+  it('フォーカスをドロワーの外へ移したあとに閉じたときは、トリガへフォーカスを戻さないこと', async () => {
+    const Template: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <Button onClick={() => setIsOpen(false)}>ページから閉じる</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            position="right"
+            modality="modeless"
+            ariaLabel="モードレスドロワー"
+          >
+            <Button>中のボタン</Button>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<Template />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+
+    const focusSpy = vi.spyOn(screen.getByRole('button', { name: 'open' }), 'focus')
+    const pageButton = screen.getByRole('button', { name: 'ページから閉じる' })
+    await userEvent.click(pageButton)
+
+    await waitFor(() => {
+      expect(dialog).not.toBeInTheDocument()
+    })
+    expect(focusSpy).not.toHaveBeenCalled()
+    expect(pageButton).toHaveFocus()
+  })
+
+  it('キーボードで閉じてトリガが :focus-visible になったときは、トリガが見える位置までだけスクロールすること', async () => {
+    const scrolled: Array<{ text: string | null; options: unknown }> = []
+    const { scrollIntoView } = Element.prototype
+    Element.prototype.scrollIntoView = function (this: HTMLElement, options) {
+      scrolled.push({ text: this.textContent, options })
+    }
+    const matches = Element.prototype.matches
+    vi.spyOn(Element.prototype, 'matches').mockImplementation(function (this: Element, selector) {
+      return selector === ':focus-visible' ? true : matches.call(this, selector)
+    })
+
+    try {
+      renderWithIntl(<ModelessTemplate />)
+      const trigger = screen.getByRole('button', { name: 'open' })
+      await userEvent.click(trigger)
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog', { name: 'モードレスドロワー' })).toBeVisible()
+      })
+      scrolled.length = 0
+
+      await userEvent.click(screen.getByRole('button', { name: 'close' }))
+
+      await waitFor(() => {
+        expect(trigger).toHaveFocus()
+      })
+      expect(scrolled).toEqual([{ text: 'open', options: { block: 'nearest' } }])
+    } finally {
+      vi.restoreAllMocks()
+      Element.prototype.scrollIntoView = scrollIntoView
+    }
+  })
+
+  it('modeless でも ×（onClickClose）で閉じられること', async () => {
+    renderWithIntl(<ModelessTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(screen.getByRole('dialog', { name: 'モードレスドロワー' })).toBeVisible()
+
+    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'モードレスドロワー' })).toBeNull()
+    })
+  })
+
+  // dvh のままだとコンテナからはみ出し、grabber とヘッダが上に切れる
+  it('portalParent 指定の bottom はコンテナ基準の高さになること', async () => {
+    const PortalTemplate: FC = () => {
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+      return (
+        <div ref={setContainer}>
+          <ControlledDrawer
+            isOpen
+            position="bottom"
+            modality="modeless"
+            portalParent={container ?? undefined}
+            ariaLabel="コンテナ内ドロワー"
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </div>
+      )
+    }
+    renderWithIntl(<PortalTemplate />)
+
+    const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
+    expect(dialog).toHaveClass('shr-h-[calc(100%-theme(spacing.2))]')
+    expect(dialog).not.toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
+  })
+
+  // クラスが正しくてもポータルが外に出ていれば absolute の基準がコンテナにならない
+  it('portalParent の内側にポータルが生成されること', async () => {
+    const PortalTemplate: FC = () => {
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+      return (
+        <div ref={setContainer} data-testid="portal-parent">
+          <ControlledDrawer
+            isOpen
+            position="right"
+            modality="modeless"
+            portalParent={container ?? undefined}
+            ariaLabel="コンテナ内ドロワー"
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </div>
+      )
+    }
+    renderWithIntl(<PortalTemplate />)
+
+    const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
+
+    await waitFor(() => {
+      expect(screen.getByTestId('portal-parent')).toContainElement(dialog)
+    })
+  })
+
+  it('portalParent 指定の right はコンテナ基準の最大幅になること', async () => {
+    const PortalTemplate: FC = () => {
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+      return (
+        <div ref={setContainer}>
+          <ControlledDrawer
+            isOpen
+            position="right"
+            modality="modeless"
+            portalParent={container ?? undefined}
+            size="M"
+            ariaLabel="コンテナ内右ドロワー"
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </div>
+      )
+    }
+    renderWithIntl(<PortalTemplate />)
+
+    const dialog = screen.getByRole('dialog', { name: 'コンテナ内右ドロワー' })
+    expect(dialog).toHaveClass('shr-max-w-[calc(100%-theme(spacing.2))]')
+    expect(dialog).not.toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
+  })
+
+  it.each<{ position: 'right' | 'left'; align: string; border: string }>([
+    { position: 'right', align: 'shr-ml-auto', border: 'shr-border-l-shorthand' },
+    { position: 'left', align: 'shr-mr-auto', border: 'shr-border-r-shorthand' },
+  ])(
+    'portalParent 指定の $position は、コンテナの端に寄せたまま画面の上端に張り付き、高さが画面を超えず、境界線をメイン側にだけ引くこと',
+    ({ position, align, border }) => {
+      const PortalTemplate: FC = () => {
+        const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+        return (
+          <div ref={setContainer}>
+            <ControlledDrawer
+              isOpen
+              position={position}
+              modality="modeless"
+              portalParent={container ?? undefined}
+              ariaLabel="コンテナ内ドロワー"
+            >
+              <DrawerBody>
+                <p>body</p>
+              </DrawerBody>
+              <DrawerFooter>
+                <Button>保存</Button>
+              </DrawerFooter>
+            </ControlledDrawer>
+          </div>
+        )
+      }
+      renderWithIntl(<PortalTemplate />)
+
+      const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
+      expect(dialog).toHaveClass('shr-sticky', 'shr-top-0', 'shr-h-[min(100%,100dvh)]')
+      expect(dialog).not.toHaveClass('shr-absolute')
+      expect(dialog.parentElement).toHaveClass('shr-flex')
+      expect(dialog).toHaveClass(align)
+      expect(dialog).toHaveClass(border)
+      expect(dialog).not.toHaveClass('shr-border-shorthand')
+      expect(dialog).toHaveAttribute('data-in-container')
+      expect(dialog).toHaveClass('shr-group/drawer')
+      expect(dialog.querySelector('.smarthr-ui-Drawer-footer')).toHaveClass(
+        'group-data-[in-container]/drawer:shr-sticky',
+        'group-data-[in-container]/drawer:shr-bottom-0',
+        'group-data-[in-container]/drawer:shr-bg-white',
+      )
+      expect(dialog.querySelector('.smarthr-ui-Drawer-body')).toHaveClass(
+        'group-data-[in-container]/drawer:shr-overscroll-auto',
+      )
+    },
+  )
+
+  it('portalParent なしの right は画面の右端に固定され、フッターを張り付かせないこと', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="right" modality="modeless" ariaLabel="画面固定右ドロワー">
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
+    expect(dialog).toHaveClass('shr-absolute', 'shr-right-0', 'shr-h-full', 'shr-border-shorthand')
+    expect(dialog).not.toHaveClass('shr-sticky')
+    expect(dialog).not.toHaveAttribute('data-in-container')
+  })
+
+  it('portalParent なしの right はビューポート基準の最大幅のままであること', async () => {
+    renderWithIntl(
+      <ControlledDrawer
+        isOpen
+        position="right"
+        modality="modeless"
+        size="M"
+        ariaLabel="画面固定右ドロワー"
+      >
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
+    expect(dialog).toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
+  })
+
+  it('portalParent なしの bottom はビューポート基準の高さのままであること', async () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="bottom" modality="modeless" ariaLabel="画面固定ドロワー">
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '画面固定ドロワー' })
+    expect(dialog).toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
+  })
+
+  it('modeless でも onPressEscape を渡せば Escape で閉じること', async () => {
+    const TemplateWithEscape: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            modality="modeless"
+            ariaLabel="modeless escape"
+            onClickClose={() => setIsOpen(false)}
+            onPressEscape={() => setIsOpen(false)}
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<TemplateWithEscape />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(screen.getByRole('dialog', { name: 'modeless escape' })).toBeVisible()
+
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'modeless escape' })).toBeNull()
+    })
+  })
+})
+
+describe('ControlledDrawer（modal 既定の回帰）', () => {
+  const DefaultTemplate: FC = () => {
+    const [isOpen, setIsOpen] = useState(false)
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <ControlledDrawer
+          isOpen={isOpen}
+          ariaLabel="モーダルドロワー"
+          onClickClose={() => setIsOpen(false)}
+        >
+          <p>modal content</p>
+        </ControlledDrawer>
+      </>
+    )
+  }
+
+  it('modal（既定）ではオーバーレイを描画すること', async () => {
+    renderWithIntl(<DefaultTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const overlay = screen
+      .getAllByRole('presentation')
+      .find((el) => el.classList.contains('smarthr-ui-Drawer-overlay'))
+    expect(overlay).toBeTruthy()
+  })
+
+  it('modal（既定）では body のスクロールをロックすること', async () => {
+    renderWithIntl(<DefaultTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    expect(document.body.style.overflow).toBe('hidden')
+  })
+})
+
+describe('ControlledDrawer レイアウト基準（modeless の配置）', () => {
+  const getLayout = () => document.querySelector('.smarthr-ui-Drawer-layout') as HTMLElement | null
+
+  it('modal（既定）では layout が fixed であること', async () => {
+    const Template: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            ariaLabel="fixed drawer"
+            onClickClose={() => setIsOpen(false)}
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<Template />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(getLayout()).toHaveClass('shr-fixed')
+    expect(getLayout()).not.toHaveClass('shr-absolute')
+  })
+
+  it('modeless かつ portalParent 指定時は layout が absolute であること', async () => {
+    const Template: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      const [container, setContainer] = useState<HTMLDivElement | null>(null)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <div ref={setContainer} style={{ position: 'relative' }} data-testid="container" />
+          <ControlledDrawer
+            isOpen={isOpen}
+            portalParent={container ?? undefined}
+            modality="modeless"
+            ariaLabel="absolute drawer"
+            onClickClose={() => setIsOpen(false)}
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<Template />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(getLayout()).toHaveClass('shr-absolute')
+    expect(getLayout()).not.toHaveClass('shr-fixed')
+  })
+
+  it('modeless でも portalParent 未指定時は layout が fixed であること', async () => {
+    const Template: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            modality="modeless"
+            ariaLabel="modeless fixed"
+            onClickClose={() => setIsOpen(false)}
+          >
+            <p>content</p>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<Template />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    expect(getLayout()).toHaveClass('shr-fixed')
+    expect(getLayout()).not.toHaveClass('shr-absolute')
+  })
+})
+
+describe('ControlledDrawer size', () => {
+  const SizedTemplate: FC<{ position: 'bottom' | 'right' }> = ({ position }) => (
+    <ControlledDrawer isOpen position={position} size="M" ariaLabel="サイズ確認">
+      <p>content</p>
+    </ControlledDrawer>
+  )
+
+  it('left/right では size のクラスが当たること', () => {
+    renderWithIntl(<SizedTemplate position="right" />)
+    expect(screen.getByRole('dialog', { name: 'サイズ確認' })).toHaveClass('shr-w-col5')
+  })
+
+  it('bottom では size を無視して幅フルにすること', () => {
+    renderWithIntl(<SizedTemplate position="bottom" />)
+    const dialog = screen.getByRole('dialog', { name: 'サイズ確認' })
+    expect(dialog).not.toHaveClass('shr-w-col5')
+    expect(dialog).toHaveClass('shr-w-full')
+  })
+})
+
+describe('ControlledDrawer あふれ防止', () => {
+  it('left/right にビューポート幅の max ガードが当たること', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="right" size="L" ariaLabel="右ドロワー">
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+    expect(screen.getByRole('dialog', { name: '右ドロワー' })).toHaveClass(
+      'shr-max-w-[calc(100dvw-theme(spacing.2))]',
+    )
+  })
+
+  it('bottom の高さがコンテンツによらず固定されること', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="bottom" ariaLabel="ボトムドロワー">
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+    expect(screen.getByRole('dialog', { name: 'ボトムドロワー' })).toHaveClass(
+      'shr-h-[calc(100dvh-theme(spacing.2))]',
+    )
+  })
+})
+
+// FocusTrap のラッパーに display: contents を当てているため、tabbable の探索や
+// フォーカス順が崩れていないかをここで担保する。
+describe('ControlledDrawer（modal のフォーカス）', () => {
+  const FocusTemplate: FC<{ firstFocusTarget?: boolean }> = ({ firstFocusTarget }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <ControlledDrawer
+          isOpen={isOpen}
+          position="right"
+          firstFocusTarget={firstFocusTarget ? inputRef : undefined}
+          ariaLabel="フォーカス確認ドロワー"
+          onClickClose={() => setIsOpen(false)}
+        >
+          <DrawerBody>
+            <input ref={inputRef} name="first" aria-label="最初の入力" />
+            <input name="second" aria-label="次の入力" />
+          </DrawerBody>
+          <DrawerFooter>
+            <Button onClick={() => setIsOpen(false)}>閉じる</Button>
+          </DrawerFooter>
+        </ControlledDrawer>
+      </>
+    )
+  }
+
+  it('開いたときにドロワー内へフォーカスが移ること', async () => {
+    renderWithIntl(<FocusTemplate />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'フォーカス確認ドロワー' })
+
+    await waitFor(() => {
+      expect(dialog.contains(document.activeElement)).toBe(true)
+    })
+  })
+
+  it('firstFocusTarget を指定した要素にフォーカスできること', async () => {
+    renderWithIntl(<FocusTemplate firstFocusTarget />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: '最初の入力' })).toHaveFocus()
+    })
+  })
+
+  it('Tab がドロワー内で循環すること', async () => {
+    renderWithIntl(<FocusTemplate firstFocusTarget />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: '最初の入力' })).toHaveFocus()
+    })
+
+    screen.getByRole('button', { name: '閉じる' }).focus()
+    await userEvent.tab()
+
+    const dialog = screen.getByRole('dialog', { name: 'フォーカス確認ドロワー' })
+    expect(dialog.contains(document.activeElement)).toBe(true)
+    expect(screen.getByRole('button', { name: 'open' })).not.toHaveFocus()
+  })
+
+  it('閉じたときにトリガへフォーカスが戻ること', async () => {
+    renderWithIntl(<FocusTemplate />)
+    const trigger = screen.getByRole('button', { name: 'open' })
+    await userEvent.click(trigger)
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'フォーカス確認ドロワー' })).toBeVisible()
+    })
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    await waitFor(() => {
+      expect(trigger).toHaveFocus()
+    })
+  })
+})
+
+// 閉じアニメーション中もドロワーは DOM に残るため、setOpen((v) => !v) と
+// 書いている利用者は閉じ途中のクリックで開き直ってしまう。
+describe('ControlledDrawer（閉じアニメーション中の再発火）', () => {
+  const ClosingTemplate: FC<{
+    onClickOverlay: () => void
+    onClickClose: () => void
+  }> = ({ onClickOverlay, onClickClose }) => {
+    const [isOpen, setIsOpen] = useState(true)
+
+    return (
+      <>
+        <Button onClick={() => setIsOpen(false)}>外から閉じる</Button>
+        <ControlledDrawer
+          isOpen={isOpen}
+          position="right"
+          ariaLabel="閉じ中ドロワー"
+          onClickClose={onClickClose}
+          onClickOverlay={onClickOverlay}
+        >
+          <DrawerHeader title="タイトル" />
+          <DrawerBody>
+            <p>content</p>
+          </DrawerBody>
+        </ControlledDrawer>
+      </>
+    )
+  }
+
+  const getOverlay = () => document.querySelector('.smarthr-ui-Drawer-overlay') as HTMLElement
+
+  it('閉じ始めたあとのオーバーレイクリックで onClickOverlay を呼ばないこと', async () => {
+    const onClickOverlay = vi.fn()
+    const onClickClose = vi.fn()
+    renderWithIntl(<ClosingTemplate onClickClose={onClickClose} onClickOverlay={onClickOverlay} />)
+
+    await userEvent.click(getOverlay())
+    expect(onClickOverlay).toHaveBeenCalledTimes(1)
+
+    await userEvent.click(screen.getByRole('button', { name: '外から閉じる' }))
+    await userEvent.click(getOverlay())
+
+    expect(onClickOverlay).toHaveBeenCalledTimes(1)
+  })
+
+  it('閉じ始めたあとの × クリックで onClickClose を呼ばないこと', async () => {
+    const onClickOverlay = vi.fn()
+    const onClickClose = vi.fn()
+    renderWithIntl(<ClosingTemplate onClickClose={onClickClose} onClickOverlay={onClickOverlay} />)
+
+    await userEvent.click(screen.getByRole('button', { name: '外から閉じる' }))
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    expect(onClickClose).not.toHaveBeenCalled()
+  })
+})
+
+// ヘッダ無し・ラベル無しで aria-labelledby を付けると参照先が存在せず、
+// アクセシブル名が空になる。
+describe('ControlledDrawer（自動ラベル付け）', () => {
+  it('DrawerHeader があれば見出しがアクセシブル名になること', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="right">
+        <DrawerHeader title="ドロワータイトル" />
+        <DrawerBody>
+          <p>content</p>
+        </DrawerBody>
+      </ControlledDrawer>,
+    )
+
+    expect(screen.getByRole('dialog', { name: 'ドロワータイトル' })).toBeVisible()
+  })
+
+  it('DrawerHeader に id を渡してもその id が参照されること', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="right">
+        <DrawerHeader id="custom-heading" title="独自 id の見出し" />
+        <DrawerBody>
+          <p>content</p>
+        </DrawerBody>
+      </ControlledDrawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '独自 id の見出し' })
+    expect(dialog).toHaveAttribute('aria-labelledby', 'custom-heading')
+  })
+
+  it('DrawerHeader もラベルも無ければ aria-labelledby を付けないこと', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="right">
+        <DrawerBody>
+          <p>content</p>
+        </DrawerBody>
+      </ControlledDrawer>,
+    )
+
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-labelledby')
+  })
+})
+
+describe('ControlledDrawer（イベントと属性）', () => {
+  it('Escape で onPressEscape に KeyboardEvent が渡ること', async () => {
+    const onPressEscape = vi.fn()
+    renderWithIntl(
+      <ControlledDrawer isOpen ariaLabel="イベント" onPressEscape={onPressEscape}>
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+
+    await userEvent.keyboard('{Escape}')
+
+    expect(onPressEscape).toHaveBeenCalledTimes(1)
+    expect(onPressEscape.mock.calls[0][0]).toBeInstanceOf(KeyboardEvent)
+  })
+
+  it('DrawerHeader の閉じるボタンで onClickClose にクリックイベントが渡ること', async () => {
+    const onClickClose = vi.fn()
+    renderWithIntl(
+      <ControlledDrawer isOpen ariaLabel="イベント" onClickClose={onClickClose}>
+        <DrawerHeader title="タイトル" />
+      </ControlledDrawer>,
+    )
+
+    await userEvent.click(screen.getByRole('button', { name: '閉じる' }))
+
+    expect(onClickClose).toHaveBeenCalledTimes(1)
+    expect(onClickClose.mock.calls[0][0]).toHaveProperty('type', 'click')
+  })
+
+  it('div の属性と ref が dialog 要素に渡ること', () => {
+    const ref = { current: null as HTMLDivElement | null }
+    renderWithIntl(
+      <ControlledDrawer ref={ref} isOpen className="custom" ariaLabel="属性" data-testid="drawer">
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: '属性' })
+    expect(dialog).toBe(screen.getByTestId('drawer'))
+    expect(dialog).toHaveClass('custom')
+    expect(ref.current).toBe(dialog)
+  })
+})
+
+describe('ControlledDrawer（開閉とフォーカス）', () => {
+  const Template: FC<{ modality?: 'modal' | 'modeless' }> = ({ modality }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    return (
+      <>
+        <Button onClick={() => setIsOpen(true)}>open</Button>
+        <ControlledDrawer isOpen={isOpen} modality={modality} ariaLabel="フォーカス">
+          <Button onClick={() => setIsOpen(false)}>close</Button>
+        </ControlledDrawer>
+      </>
+    )
+  }
+
+  const waitFocusInside = () =>
+    waitFor(() => {
+      expect(screen.getByRole('dialog', { name: 'フォーカス' })).toContainElement(
+        document.activeElement as HTMLElement,
+      )
+    })
+
+  it('modeless でも、閉じたときにトリガへフォーカスを戻すこと', async () => {
+    renderWithIntl(<Template modality="modeless" />)
+    await userEvent.click(screen.getByRole('button', { name: 'open' }))
+    await waitFocusInside()
+
+    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'close' })).toBeNull()
+    })
+
+    expect(screen.getByRole('button', { name: 'open' })).toHaveFocus()
+  })
+})
+
+describe('ControlledDrawer（portalParent で画面の下にはみ出した分の本文の下の空き）', () => {
+  const Template: FC<{ withPortalParent?: boolean; modality?: 'modal' | 'modeless' }> = ({
+    withPortalParent = true,
+    modality = 'modeless',
+  }) => {
+    const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
+    return (
+      <div ref={setContainer}>
+        <ControlledDrawer
+          isOpen
+          position="right"
+          modality={modality}
+          portalParent={withPortalParent ? (container ?? undefined) : undefined}
+          ariaLabel="はみ出し"
+        >
+          <DrawerBody>
+            <p>body</p>
+          </DrawerBody>
+          <DrawerFooter>
+            <Button>保存</Button>
+          </DrawerFooter>
+        </ControlledDrawer>
+      </div>
+    )
+  }
+
+  const VIEWPORT_HEIGHT = 768
+
+  const scrollWithPanelBottom = (panelBottom: number) => {
+    const dialog = screen.getByRole('dialog', { name: 'はみ出し' })
+
+    vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(VIEWPORT_HEIGHT)
+
+    vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue({ bottom: panelBottom } as DOMRect)
+    fireEvent.scroll(window)
+
+    return dialog
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('ページのスクロールに合わせて、パネルが画面の下にはみ出している分を本文の下に空けること', () => {
+    renderWithIntl(<Template />)
+
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT + 230)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('230px')
+    expect(dialog.querySelector('.smarthr-ui-Drawer-body')).toHaveClass(
+      'group-data-[in-container]/drawer:shr-mb-[var(--smarthr-ui-drawer-hidden-bottom,0px)]',
+    )
+  })
+
+  it('パネルが画面に収まっていれば、本文の下を空けないこと', () => {
+    renderWithIntl(<Template />)
+
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT - 10)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('0px')
+  })
+
+  it('portalParent が無ければ、本文の下の空きを指定しないこと', () => {
+    renderWithIntl(<Template withPortalParent={false} />)
+
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT + 230)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('')
+  })
+
+  it('開いたまま張り付かない表示に切り替わったら、本文の下の空きを外し、スクロールでも指定しないこと', async () => {
+    const { rerender } = renderWithIntl(<Template />)
+    const dialog = scrollWithPanelBottom(VIEWPORT_HEIGHT + 230)
+
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('230px')
+
+    rerender(
+      <IntlProvider locale="ja">
+        <Template modality="modal" />
+      </IntlProvider>,
+    )
+
+    await waitFor(() => {
+      expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('')
+    })
+    fireEvent.scroll(window)
+    expect(dialog.style.getPropertyValue('--smarthr-ui-drawer-hidden-bottom')).toBe('')
+  })
+})
