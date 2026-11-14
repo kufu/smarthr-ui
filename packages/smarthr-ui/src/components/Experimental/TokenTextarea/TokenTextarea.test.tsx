@@ -3,7 +3,7 @@ import { createRef } from 'react'
 
 import { TokenTextarea, type TokenTextareaHandle, type TokenTextareaSegment } from './client'
 // eslint-disable-next-line smarthr/require-barrel-import -- 公開しない DOM と値の変換処理を直接テストするため
-import { readClipboard, readValue, toHtml } from './client/editor'
+import { readClipboard, readValue, toHtml, verifyTokens } from './client/editor'
 
 const NAME = { value: 'name', label: '氏名' }
 const DEPT = { value: 'dept', label: '部署' }
@@ -52,6 +52,18 @@ describe('TokenTextarea editor', () => {
       'あ<b>い</b><div>う<br>え</div><div><br></div><p>お<span style="font-size: 1rem">か</span><img data-smarthr-ui-token="name" alt="氏名"></p><style>x{}</style>'
 
     expect(readValue(root)).toEqual(['あい\nう\nえ\n\nおか', NAME])
+  })
+
+  it('信頼できないトークンは、許可した一覧にある value のみ残し label を一覧のものに置き換える', () => {
+    const spoofed = [
+      { value: 'dept', label: '偽の表示' },
+      { value: 'secret', label: '氏名' },
+      'さん',
+    ]
+
+    expect(verifyTokens(spoofed, [DEPT], false)).toEqual([DEPT, '氏名さん'])
+    expect(verifyTokens(spoofed, undefined, false)).toEqual(['偽の表示氏名さん'])
+    expect(verifyTokens(spoofed, undefined, true)).toEqual(spoofed)
   })
 
   it('TokenTextarea からコピーした内容以外は書式を捨ててテキストとして読む', () => {
@@ -210,5 +222,110 @@ describe('TokenTextarea', () => {
 
     expect(textbox).toHaveAttribute('contenteditable', 'false')
     expect(textbox).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  describe('外部からの HTML', () => {
+    const SPOOFED_HTML =
+      '<b>a</b><img data-smarthr-ui-token="secret" alt="氏名" src="https://example.com/x.png" onerror="alert(1)"><img data-smarthr-ui-token="dept" alt="偽">'
+
+    const lastInsertedHtml = () =>
+      vi.mocked(document.execCommand).mock.calls.at(-1)?.[2] as string | undefined
+
+    it('偽装されたトークンは、tokens に無ければラベルの文字列として貼り付ける', () => {
+      render(<TokenTextarea name="body" defaultValue={['x']} aria-label="本文" />)
+
+      const textbox = screen.getByRole('textbox')
+      const paste = createClipboardEvent('paste', { 'text/html': SPOOFED_HTML, 'text/plain': 'a' })
+
+      act(() => {
+        textbox.focus()
+        textbox.dispatchEvent(paste.event)
+      })
+
+      expect(lastInsertedHtml()).toBe('a氏名偽')
+    })
+
+    it('tokens にある value のみトークンとして貼り付け、label は tokens のものを使う', () => {
+      render(<TokenTextarea name="body" defaultValue={['x']} tokens={[DEPT]} aria-label="本文" />)
+
+      const textbox = screen.getByRole('textbox')
+      const paste = createClipboardEvent('paste', { 'text/html': SPOOFED_HTML, 'text/plain': 'a' })
+
+      act(() => {
+        textbox.focus()
+        textbox.dispatchEvent(paste.event)
+      })
+
+      const html = lastInsertedHtml()!
+
+      expect(html).toMatch(
+        /^a氏名<img data-smarthr-ui-token="dept" alt="部署" src="data:image\/gif;[^"]*">$/,
+      )
+      expect(html).not.toContain('onerror')
+      expect(html).not.toContain('example.com')
+    })
+
+    it('同じページでコピーした内容はトークンを保ったまま貼り付ける', () => {
+      render(<TokenTextarea name="body" defaultValue={[NAME, 'さん']} aria-label="本文" />)
+
+      const textbox = screen.getByRole('textbox')
+      const line = textbox.querySelector('div')!
+      const copy = createClipboardEvent('copy')
+
+      act(() => {
+        textbox.focus()
+        document.getSelection()!.setBaseAndExtent(line, 0, line, 2)
+        textbox.dispatchEvent(copy.event)
+      })
+
+      act(() => {
+        textbox.dispatchEvent(createClipboardEvent('paste', copy.store).event)
+      })
+
+      expect(lastInsertedHtml()).toMatch(/^<img data-smarthr-ui-token="name" alt="氏名"[^>]*>さん$/)
+    })
+
+    it('外部からのドロップは、検証した値としてドロップ位置に挿入する', () => {
+      render(<TokenTextarea name="body" defaultValue={['x']} aria-label="本文" />)
+
+      const textbox = screen.getByRole('textbox')
+      const drop = new Event('drop', { bubbles: true, cancelable: true })
+
+      Object.defineProperty(drop, 'dataTransfer', {
+        value: createClipboardEvent('drop', { 'text/html': SPOOFED_HTML, 'text/plain': 'a' }).event
+          .clipboardData,
+      })
+
+      act(() => {
+        textbox.dispatchEvent(drop)
+      })
+
+      expect(drop.defaultPrevented).toBe(true)
+      expect(lastInsertedHtml()).toBe('a氏名偽')
+    })
+
+    it('paste イベントを経由せずに HTML を持ち込む入力も、検証した値として挿入する', () => {
+      render(<TokenTextarea name="body" defaultValue={['x']} aria-label="本文" />)
+
+      const textbox = screen.getByRole('textbox')
+      const event = new InputEvent('beforeinput', {
+        inputType: 'insertFromPasteAsQuotation',
+        bubbles: true,
+        cancelable: true,
+      })
+      const store: Record<string, string> = { 'text/html': SPOOFED_HTML, 'text/plain': 'a' }
+
+      Object.defineProperty(event, 'dataTransfer', {
+        value: { types: Object.keys(store), getData: (format: string) => store[format] ?? '' },
+      })
+      Object.defineProperty(event, 'getTargetRanges', { value: () => [] })
+
+      act(() => {
+        textbox.dispatchEvent(event)
+      })
+
+      expect(event.defaultPrevented).toBe(true)
+      expect(lastInsertedHtml()).toBe('a氏名偽')
+    })
   })
 })

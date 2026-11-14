@@ -174,6 +174,29 @@ export const toHtml = (value: TokenTextareaValue) => {
 export const toInlineHtml = (value: TokenTextareaValue) =>
   value.map((segment) => (isToken(segment) ? toTokenHtml(segment) : escapeHtml(segment))).join('')
 
+/**
+ * クリップボードやドロップなど、外部から来た値のトークンを検証する。
+ * 外部の HTML は `data-smarthr-ui-token` 属性を書くだけでトークンを偽装できるため、
+ * 信頼できない場合は `allowed` にある value のみトークンとして残し、ラベルも `allowed` のものに置き換える。
+ * それ以外はラベルの文字列として取り込む
+ */
+export const verifyTokens = (
+  value: TokenTextareaValue,
+  allowed: TokenTextareaToken[] | undefined,
+  trusted: boolean,
+): TokenTextareaValue =>
+  normalizeValue(
+    value.map((segment) => {
+      if (!isToken(segment) || trusted) {
+        return segment
+      }
+
+      const found = allowed?.find((token) => token.value === segment.value)
+
+      return found ? { value: found.value, label: found.label } : segment.label
+    }),
+  )
+
 export const readClipboard = (data: DataTransfer | null): TokenTextareaValue | null => {
   if (!data) {
     return null

@@ -29,6 +29,7 @@ import {
   toHtml,
   toInlineHtml,
   toPlainText,
+  verifyTokens,
 } from './editor'
 
 import type { ExtendElementPropsWithoutRef } from '../../../../types'
@@ -63,6 +64,12 @@ type Props = ExtendElementPropsWithoutRef<
      * 見た目はクリックなどの操作を受け付けない。読み上げには label が使われる
      */
     renderToken?: (token: TokenTextareaToken) => ReactNode
+    /**
+     * 貼り付けやドロップで受け入れるトークン。value が一致するものだけをトークンとして取り込み、label はこちらの値を使う。
+     * 一覧にないトークンはラベルの文字列として取り込む。
+     * 省略した場合、同じページの TokenTextarea でコピー・ドラッグしたもの以外のトークンは全て文字列として取り込む
+     */
+    tokens?: TokenTextareaToken[]
     /** 入力値にエラーがあるかどうか */
     error?: boolean
     /** 入力できない状態にするかどうか */
@@ -118,6 +125,31 @@ const defaultRenderToken = (token: TokenTextareaToken) => <Chip>{token.label}</C
 type TokenItem = { key: number; token: TokenTextareaToken; image: HTMLImageElement }
 
 /** 編集操作をブラウザ標準の undo 履歴に載せるため、execCommand で行う */
+const getRangeFromPoint = (doc: Document, x: number, y: number) => {
+  if (typeof doc.caretPositionFromPoint === 'function') {
+    const position = doc.caretPositionFromPoint(x, y)
+
+    if (!position) {
+      return null
+    }
+
+    const range = doc.createRange()
+
+    range.setStart(position.offsetNode, position.offset)
+
+    return range
+  }
+
+  // caretPositionFromPoint を持たないブラウザ(古い Safari など)向け
+  return typeof doc.caretRangeFromPoint === 'function' ? doc.caretRangeFromPoint(x, y) : null
+}
+
+/**
+ * 同じページの TokenTextarea で最後にコピー・ドラッグした値。
+ * 貼り付けられた値がこれと一致する場合のみ、トークンを検証せずに信頼する
+ */
+let lastExportedValue: TokenTextareaValue | null = null
+
 const execEditCommand = (command: 'insertHTML' | 'insertText' | 'delete', value?: string) =>
   document.execCommand(command, false, value)
 
@@ -126,6 +158,7 @@ export const TokenTextarea: FC<Props> = ({
   defaultValue,
   onChange,
   renderToken = defaultRenderToken,
+  tokens,
   error,
   disabled,
   width,
@@ -149,7 +182,16 @@ export const TokenTextarea: FC<Props> = ({
     range: Range | null
     keys: WeakMap<HTMLImageElement, number>
     nextKey: number
-  }>({ value: [], composing: false, range: null, keys: new WeakMap(), nextKey: 0 })
+    /** この編集領域の中からドラッグしているか。編集領域内での移動はブラウザ標準の挙動に任せる */
+    draggingInside: boolean
+  }>({
+    value: [],
+    composing: false,
+    range: null,
+    keys: new WeakMap(),
+    nextKey: 0,
+    draggingInside: false,
+  })
   const [items, setItems] = useState<TokenItem[]>([])
 
   const classNames = useMemo(() => {
@@ -158,7 +200,7 @@ export const TokenTextarea: FC<Props> = ({
     return { wrapper: wrapper({ className }) }
   }, [className])
 
-  const latest = useLatest({ value, defaultValue, onChange, autoFocus, disabled, items })
+  const latest = useLatest({ value, defaultValue, onChange, tokens, autoFocus, disabled, items })
 
   const functions = useMemo(() => {
     const getEditor = () => editorRef.current
@@ -259,8 +301,8 @@ export const TokenTextarea: FC<Props> = ({
       }
     }
 
-    /** 最後の選択範囲に挿入する。ブラウザ標準の undo で取り消せる */
-    const insert = (insertValue: TokenTextareaValue) => {
+    /** 指定した範囲(省略時は最後の選択範囲)に挿入する。ブラウザ標準の undo で取り消せる */
+    const insert = (insertValue: TokenTextareaValue, target?: Range | null) => {
       const editor = getEditor()
 
       if (!editor || latest.disabled) {
@@ -268,11 +310,12 @@ export const TokenTextarea: FC<Props> = ({
       }
 
       const selection = document.getSelection()
-      const { range } = stateRef.current
 
       editor.focus({ preventScroll: true })
 
       if (selection) {
+        const range = target ?? stateRef.current.range
+
         if (range && editor.contains(range.startContainer)) {
           selection.removeAllRanges()
           selection.addRange(range)
@@ -296,6 +339,19 @@ export const TokenTextarea: FC<Props> = ({
           ? toHtml(normalized)
           : toInlineHtml(normalized),
       )
+    }
+
+    /** クリップボードやドロップで外部から来た内容を、検証済みの値として読み取る */
+    const importData = (data: DataTransfer | null) => {
+      const imported = readClipboard(data)
+
+      if (!imported) {
+        return null
+      }
+
+      const trusted = lastExportedValue !== null && isSameValue(imported, lastExportedValue)
+
+      return verifyTokens(imported, latest.tokens, trusted)
     }
 
     return {
@@ -335,9 +391,40 @@ export const TokenTextarea: FC<Props> = ({
         }
 
         const handleBeforeInput = (e: InputEvent) => {
-          // 太字などの書式設定は受け付けない
-          if (latest.disabled || e.inputType.startsWith('format')) {
+          // 太字などの書式設定やリンクの挿入は受け付けない
+          if (latest.disabled || e.inputType.startsWith('format') || e.inputType === 'insertLink') {
             e.preventDefault()
+
+            return
+          }
+
+          // HINT: paste イベントを経由しない貼り付け(引用として貼り付け、作文ツールによる置き換えなど)で
+          // HTML やファイルが持ち込まれる場合も、貼り付けと同じく検証した値として挿入する。
+          // 編集領域内でのドラッグによる移動は、自身の内容なのでブラウザ標準の挙動に任せる
+          const data = e.dataTransfer
+
+          if (
+            !data ||
+            (e.inputType === 'insertFromDrop' && state.draggingInside) ||
+            !(data.types.includes('text/html') || data.types.includes('Files'))
+          ) {
+            return
+          }
+
+          e.preventDefault()
+
+          const [targetRange] = e.getTargetRanges()
+          const range = targetRange ? doc.createRange() : null
+
+          if (range && targetRange) {
+            range.setStart(targetRange.startContainer, targetRange.startOffset)
+            range.setEnd(targetRange.endContainer, targetRange.endOffset)
+          }
+
+          const imported = importData(data)
+
+          if (imported) {
+            insert(imported, range)
           }
         }
         const handleInput = (e: Event) => {
@@ -359,6 +446,13 @@ export const TokenTextarea: FC<Props> = ({
             state.range = selection.getRangeAt(0).cloneRange()
           }
         }
+        const exportSelection = (data: DataTransfer, selection: Selection) => {
+          const fragment = readValue(selection.getRangeAt(0).cloneContents())
+
+          data.setData('text/plain', toPlainText(fragment))
+          data.setData('text/html', toHtml(fragment))
+          lastExportedValue = fragment
+        }
         const writeClipboard = (e: ClipboardEvent) => {
           const selection = doc.getSelection()
 
@@ -366,11 +460,8 @@ export const TokenTextarea: FC<Props> = ({
             return false
           }
 
-          const fragment = readValue(selection.getRangeAt(0).cloneContents())
-
           e.preventDefault()
-          e.clipboardData.setData('text/plain', toPlainText(fragment))
-          e.clipboardData.setData('text/html', toHtml(fragment))
+          exportSelection(e.clipboardData, selection)
 
           return true
         }
@@ -385,10 +476,44 @@ export const TokenTextarea: FC<Props> = ({
         const handlePaste = (e: ClipboardEvent) => {
           e.preventDefault()
 
-          const pasted = readClipboard(e.clipboardData)
+          const pasted = importData(e.clipboardData)
 
           if (pasted) {
             insert(pasted)
+          }
+        }
+        const handleDragStart = (e: DragEvent) => {
+          const selection = doc.getSelection()
+
+          state.draggingInside = true
+
+          // HINT: ドラッグする内容もコピーと同じ形式にし、他の TokenTextarea へドロップした際にトークンを保てるようにする
+          if (selection?.rangeCount && !selection.isCollapsed && e.dataTransfer) {
+            exportSelection(e.dataTransfer, selection)
+          }
+        }
+        const handleDragEnd = () => {
+          state.draggingInside = false
+        }
+        // HINT: 外部からのドロップはブラウザ標準のままだと HTML が DOM にそのまま入るため、
+        // 貼り付けと同じく検証した値としてドロップ位置に挿入する
+        const handleDrop = (e: DragEvent) => {
+          if (state.draggingInside) {
+            return
+          }
+
+          e.preventDefault()
+
+          if (latest.disabled) {
+            return
+          }
+
+          const imported = importData(e.dataTransfer)
+
+          if (imported) {
+            const range = getRangeFromPoint(doc, e.clientX, e.clientY)
+
+            insert(imported, range && editor.contains(range.startContainer) ? range : null)
           }
         }
         // HINT: Safari は編集領域内の画像をクリックすると選択範囲が消えるため、クリックした側にキャレットを置く
@@ -429,6 +554,9 @@ export const TokenTextarea: FC<Props> = ({
         editor.addEventListener('copy', handleCopy)
         editor.addEventListener('cut', handleCut)
         editor.addEventListener('paste', handlePaste)
+        editor.addEventListener('dragstart', handleDragStart)
+        editor.addEventListener('dragend', handleDragEnd)
+        editor.addEventListener('drop', handleDrop)
         editor.addEventListener('mousedown', handleMouseDown)
         doc.addEventListener('selectionchange', handleSelectionChange)
 
@@ -443,6 +571,9 @@ export const TokenTextarea: FC<Props> = ({
           editor.removeEventListener('copy', handleCopy)
           editor.removeEventListener('cut', handleCut)
           editor.removeEventListener('paste', handlePaste)
+          editor.removeEventListener('dragstart', handleDragStart)
+          editor.removeEventListener('dragend', handleDragEnd)
+          editor.removeEventListener('drop', handleDrop)
           editor.removeEventListener('mousedown', handleMouseDown)
           doc.removeEventListener('selectionchange', handleSelectionChange)
         }

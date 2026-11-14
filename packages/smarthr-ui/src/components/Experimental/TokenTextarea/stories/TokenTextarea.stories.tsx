@@ -63,11 +63,14 @@ const meta = {
   },
   args: {
     defaultValue: DEFAULT_VALUE,
+    // 貼り付けやドロップで受け入れるトークン
+    tokens: TOKENS,
     width: 480,
   },
   argTypes: {
     value: { control: false },
     defaultValue: { control: false },
+    tokens: { control: false },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
