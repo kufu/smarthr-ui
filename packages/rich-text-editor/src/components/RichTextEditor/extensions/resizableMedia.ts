@@ -1,6 +1,64 @@
 import { ResizableNodeView } from '@tiptap/core'
+import { DOMSerializer } from '@tiptap/pm/model'
 
 import type { ResizableNodeViewDirection } from '@tiptap/core'
+import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
+
+// style は NodeView の寸法、tabindex は編集中だけ付けるプラグインが持つ。描画し直した要素に無いからといって消さない
+const UNSYNCED_PLAYER_ATTRIBUTES = new Set(['style', 'tabindex'])
+
+export const renderNodeDOM = (node: ProseMirrorNode): HTMLElement => {
+  const { dom } = DOMSerializer.renderSpec(document, node.type.spec.toDOM!(node))
+
+  return dom as HTMLElement
+}
+
+const isSpecAttributes = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value) && !('nodeType' in value)
+
+const findSpecAttributes = (spec: unknown, tag: string): Record<string, unknown> | null => {
+  if (!Array.isArray(spec)) return null
+
+  const [name, attributes] = spec
+  const hasAttributes = isSpecAttributes(attributes)
+
+  if (name === tag) return hasAttributes ? attributes : {}
+
+  for (const child of spec.slice(hasAttributes ? 2 : 1)) {
+    const found = findSpecAttributes(child, tag)
+
+    if (found) return found
+  }
+
+  return null
+}
+
+/**
+ * 属性が変わったものだけを写す。iframe・video の src は同じ値でも設定し直すと読み込み直しになり、
+ * 再生が止まる。
+ * 写す元は描画した要素ではなく toDOM の出力から読む。video は文書に入れなくても src を設定した時点で
+ * 動画を読み込み始める
+ */
+export const syncPlayerAttributes = (target: Element, node: ProseMirrorNode) => {
+  const spec = findSpecAttributes(node.type.spec.toDOM!(node), target.localName) ?? {}
+  // 名前を小文字にするのは、toDOM が返す disableKBcontrols などを HTML の setAttribute が小文字で持つため
+  const source = new Map(
+    Object.entries(spec)
+      .filter(([, value]) => value !== null && value !== undefined)
+      .map(([name, value]) => [name.toLowerCase(), String(value)]),
+  )
+
+  Array.from(target.attributes).forEach(({ name }) => {
+    if (!UNSYNCED_PLAYER_ATTRIBUTES.has(name) && !source.has(name)) {
+      target.removeAttribute(name)
+    }
+  })
+  source.forEach((value, name) => {
+    if (!UNSYNCED_PLAYER_ATTRIBUTES.has(name) && target.getAttribute(name) !== value) {
+      target.setAttribute(name, value)
+    }
+  })
+}
 
 /**
  * リサイズハンドルを生成する。標準の `createHandle` + `positionHandle` を再現しつつ、
@@ -122,7 +180,7 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
     }
   }
 
-  updateSize(attributes: { width: number; height: number }) {
+  updateSize(attributes: { width: number; height: number | null }) {
     const pos = this.getPos()
     if (pos === undefined) return
 

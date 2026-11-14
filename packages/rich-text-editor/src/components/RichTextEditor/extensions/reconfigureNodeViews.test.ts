@@ -97,6 +97,25 @@ describe('features の変更と NodeView', () => {
     expect(hasResizeHandle(target)).toBe(true)
   })
 
+  it('video を外すと動画のリサイズハンドルが消え、戻すと出る', () => {
+    const features: readonly RichTextFeature[] = ['bold', 'video']
+    const runtime: RichTextRuntimeOptions = { features }
+    const target = createEditor(runtime, {
+      type: 'doc',
+      content: [{ type: 'video', attrs: { src: '/a.mp4' } }],
+    })
+
+    expect(hasResizeHandle(target)).toBe(true)
+
+    runtime.features = ['bold']
+    reconfigureEditorOperations(target)
+    expect(hasResizeHandle(target)).toBe(false)
+
+    runtime.features = features
+    reconfigureEditorOperations(target)
+    expect(hasResizeHandle(target)).toBe(true)
+  })
+
   it('NodeView の要否が変わらない変更では、画像を作り直さない', () => {
     const runtime: RichTextRuntimeOptions = { features: ALL }
     const target = createEditor(runtime, IMAGE_DOC)

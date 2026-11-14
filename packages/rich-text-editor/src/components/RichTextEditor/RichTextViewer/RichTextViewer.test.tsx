@@ -219,6 +219,17 @@ describe('RichTextViewer', () => {
           },
         },
         {
+          type: 'video',
+          attrs: {
+            src: 'https://example.com/a.mp4',
+            poster: '/a.jpg',
+            title: '動画の説明',
+            width: 320,
+            height: 180,
+            align: 'center',
+          },
+        },
+        {
           type: 'table',
           content: [
             {
@@ -310,6 +321,38 @@ describe('RichTextViewer', () => {
     expected.forEach((tree, i) => alignIntendedDifferences(tree, actual[i]))
 
     expect(actual).toEqual(expected)
+  })
+
+  it('動画は再生できる形で描画し、CORS のモードにしない', () => {
+    const { container } = render(
+      <RichTextViewer
+        content={{ type: 'doc', content: [{ type: 'video', attrs: { src: '/a.mp4' } }] }}
+      />,
+    )
+    const video = container.querySelector('video')
+
+    expect(video).toHaveAttribute('src', '/a.mp4')
+    expect(video).toHaveAttribute('controls')
+    expect(video).toHaveAttribute('preload', 'metadata')
+    expect(video).toHaveAttribute('playsinline')
+    expect(video).not.toHaveAttribute('crossorigin')
+  })
+
+  it('src が不正な動画は、再生できない枠を描かない', () => {
+    const { container } = render(
+      <RichTextViewer
+        content={{
+          type: 'doc',
+          content: [
+            { type: 'paragraph', content: [{ type: 'text', text: '前' }] },
+            { type: 'video', attrs: { src: 'javascript:alert(1)' } },
+          ],
+        }}
+      />,
+    )
+
+    expect(container.querySelector('video, [data-video]')).toBeNull()
+    expect(container).toHaveTextContent('前')
   })
 
   it('中身の同じ HTML を包み直して渡し直しても、描画し直さない', () => {

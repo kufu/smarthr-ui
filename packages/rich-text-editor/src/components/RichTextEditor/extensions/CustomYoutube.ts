@@ -1,19 +1,16 @@
 import { nodePasteRule } from '@tiptap/core'
-import { DOMSerializer } from '@tiptap/pm/model'
-import { Plugin } from '@tiptap/pm/state'
 
 import { parseNumericAttr } from '../serializers/safeAttributes'
 
 import { AlignedYoutube } from './AlignedYoutube'
 import { YOUTUBE_ALIGN_STYLES, applyMediaAlign } from './mediaAlign'
-import { PersistentHandlesNodeView } from './resizableMedia'
+import { PersistentHandlesNodeView, renderNodeDOM, syncPlayerAttributes } from './resizableMedia'
 import { YOUTUBE_DEFAULT_SIZE, YOUTUBE_MIN_SIZE, calcYoutubeHeight } from './youtubeOptions'
 import { normalizeYoutubeUrl } from './youtubeUrl'
 
 import type { NodeViewRendererProps } from '@tiptap/core'
 import type { YoutubeOptions } from '@tiptap/extension-youtube'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
-import type { EditorView } from '@tiptap/pm/view'
 
 type CustomYoutubeOptions = YoutubeOptions & {
   /**
@@ -21,42 +18,6 @@ type CustomYoutubeOptions = YoutubeOptions & {
    * 画像と同じく、features の変更で NodeView を作り直したときに最新の値を読めるよう関数で受ける。
    */
   isResizable: () => boolean
-}
-
-// style は NodeView の寸法、tabindex は編集中だけ付けるプラグインが持つ。描画し直した iframe に無いからといって消さない
-const UNSYNCED_IFRAME_ATTRIBUTES = new Set(['style', 'tabindex'])
-
-const syncPlayerTabIndex = (view: EditorView) => {
-  view.dom.querySelectorAll('div[data-youtube-video] iframe').forEach((iframe) => {
-    if (view.editable) {
-      iframe.setAttribute('tabindex', '-1')
-    } else {
-      iframe.removeAttribute('tabindex')
-    }
-  })
-}
-
-const renderVideo = (node: ProseMirrorNode): HTMLElement => {
-  const { dom } = DOMSerializer.renderSpec(document, node.type.spec.toDOM!(node))
-
-  return dom as HTMLElement
-}
-
-/**
- * 属性が変わったものだけを写す。iframe の src は同じ値でも設定し直すと読み込み直しになり、
- * 再生が止まる。
- */
-const syncIframeAttributes = (target: HTMLIFrameElement, source: HTMLIFrameElement) => {
-  Array.from(target.attributes).forEach(({ name }) => {
-    if (!UNSYNCED_IFRAME_ATTRIBUTES.has(name) && !source.hasAttribute(name)) {
-      target.removeAttribute(name)
-    }
-  })
-  Array.from(source.attributes).forEach(({ name, value }) => {
-    if (!UNSYNCED_IFRAME_ATTRIBUTES.has(name) && target.getAttribute(name) !== value) {
-      target.setAttribute(name, value)
-    }
-  })
 }
 
 /**
@@ -75,7 +36,7 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
     if (!this.options.isResizable() || typeof document === 'undefined') return null
 
     return ({ node, getPos, editor }: NodeViewRendererProps) => {
-      const element = renderVideo(node)
+      const element = renderNodeDOM(node)
       // 寄せ方は枠に当てる。div に残すと枠の内側で寄って、選択枠線だけが動く
       element.removeAttribute('style')
       const iframe = element.querySelector('iframe')!
@@ -116,7 +77,7 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
         onUpdate: (updatedNode) => {
           if (updatedNode.type !== node.type) return false
 
-          syncIframeAttributes(iframe, renderVideo(updatedNode).querySelector('iframe')!)
+          syncPlayerAttributes(iframe, updatedNode)
           applyNodeSize(updatedNode)
           applyMediaAlign(nodeView.dom, YOUTUBE_ALIGN_STYLES, updatedNode.attrs.align)
 
@@ -156,36 +117,5 @@ export const CustomYoutube = AlignedYoutube.extend<CustomYoutubeOptions>({
         getAttributes: (match) => normalizeYoutubeUrl(match.input),
       }),
     )
-  },
-
-  addProseMirrorPlugins() {
-    return [
-      ...(this.parent?.() ?? []),
-      // 編集中に Tab が動画プレーヤーの中を順にたどると、本文の後ろの操作バーや次の入力欄へ
-      // 届かない。出力の HTML には残さないよう、属性ではなく描画後の DOM に付ける
-      new Plugin({
-        view: (editorView) => {
-          let editable = editorView.editable
-          // Tiptap はプラグインの後に nodeViews を設定して本文を描き直す。文書と編集可否だけを見ると、
-          // 描き直しで作られた iframe に付かないまま残る
-          let { nodeViews } = editorView.props
-          syncPlayerTabIndex(editorView)
-
-          return {
-            update: (view, prevState) => {
-              if (
-                view.state.doc !== prevState.doc ||
-                view.editable !== editable ||
-                view.props.nodeViews !== nodeViews
-              ) {
-                editable = view.editable
-                nodeViews = view.props.nodeViews
-                syncPlayerTabIndex(view)
-              }
-            },
-          }
-        },
-      }),
-    ]
   },
 })

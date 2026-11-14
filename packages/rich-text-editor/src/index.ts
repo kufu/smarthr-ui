@@ -10,4 +10,5 @@ export {
   type RichTextEditorController,
   type RichTextViewerProps,
   type ImageUploadResult,
+  type RichTextVideo,
 } from './components/RichTextEditor'

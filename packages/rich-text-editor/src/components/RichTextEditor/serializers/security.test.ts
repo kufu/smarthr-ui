@@ -2,6 +2,8 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
 import { resolveRichTextValue } from './resolveRichTextValue'
+import { getRichTextSchema } from './richTextSchema'
+import { sanitizeAttrs } from './sanitizeRichTextJSON'
 import { serializeToHTML } from './serializeToHTML'
 import { serializeToReactElement } from './serializeToReactElement'
 import { toEditorContent } from './toEditorContent'
@@ -30,6 +32,9 @@ const dangerousInputs = [
   '<p><object data="data:text/html,<script>alert(1)</script>"></object></p>',
   '<style>body{display:none}</style>',
   '<svg onload="alert(1)"></svg>',
+  '<video src="javascript:alert(1)"></video>',
+  '<video src="/a.mp4" poster="javascript:alert(1)"></video>',
+  '<video><source src="javascript:alert(1)"></video>',
 ]
 
 // これらの入力はTiptapのHTMLパーサーがCSS値をそのままJSONに保持するため、
@@ -973,6 +978,99 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(html).not.toContain('title=')
   })
 
+  const SAFE_VIDEO_ATTRS = { src: 'https://example.com/a.mp4' }
+  const videoDoc = (attrs: Record<string, unknown>) => ({
+    type: 'doc',
+    content: [{ type: 'video', attrs: { ...SAFE_VIDEO_ATTRS, ...attrs } }],
+  })
+
+  const UNSAFE_MEDIA_URLS = [
+    'javascript:alert(1)',
+    '//evil.example/a.mp4',
+    '/\\evil.example/a.mp4',
+    '/\t/evil.example/a.mp4',
+  ]
+
+  it.each(UNSAFE_MEDIA_URLS)(
+    '動画の src が %j のとき、両経路で src を出さず、Viewer は動画を描かない',
+    (src) => {
+      const { html, react } = bothOutputs(videoDoc({ src }))
+
+      for (const output of [html, react]) {
+        expect(output).not.toContain('evil.example')
+        expect(output).not.toContain('javascript:')
+      }
+      expect(html).not.toMatch(/<video[^>]* src=/)
+      expect(react).not.toContain('<video')
+    },
+  )
+
+  it.each(UNSAFE_MEDIA_URLS)(
+    '動画の poster が %j のとき、両経路で poster だけを出さない',
+    (poster) => {
+      const { html, react } = bothOutputs(videoDoc({ poster }))
+
+      for (const output of [html, react]) {
+        expect(output).not.toContain('evil.example')
+        expect(output).not.toContain('javascript:')
+        expect(output).not.toContain('poster=')
+        expect(output).toContain('src="https://example.com/a.mp4"')
+      }
+    },
+  )
+
+  it('HTML から読んだ動画も、不正な poster を両経路で出さない', () => {
+    const json = resolveRichTextValue({
+      format: 'html',
+      content: '<video src="/a.mp4" poster="//evil.example/a.jpg"></video>',
+    })
+    const { html, react } = bothOutputs(json)
+
+    for (const output of [html, react]) {
+      expect(output).not.toContain('evil.example')
+      expect(output).toContain('src="/a.mp4"')
+    }
+  })
+
+  it('動画の width/height と配置に追記したCSS宣言が、両経路で出力されない', () => {
+    const outputs = bothOutputs(
+      videoDoc({
+        width: '320;position:fixed',
+        height: INJECTED_CSS,
+        align: 'center;position:fixed',
+      }),
+    )
+
+    assertNoInjectedCss(outputs)
+    for (const output of Object.values(outputs)) {
+      expect(output).not.toContain('width=')
+      expect(output).not.toContain('margin')
+    }
+  })
+
+  it('動画の title が文字列でないとき、両経路で出力しない', () => {
+    const { html, react } = bothOutputs(videoDoc({ title: { toString: () => 'x' } }))
+
+    for (const output of [html, react]) expect(output).not.toContain('title=')
+  })
+
+  it('動画の安全な属性と配置は、両経路で同じ値を保つ', () => {
+    const { html, react } = bothOutputs(
+      videoDoc({ poster: '/a.jpg', title: '説明', width: 320, height: 180, align: 'right' }),
+    )
+
+    expect(html).toContain('<div data-video="" style="width: fit-content; margin-left: auto;">')
+    expect(react).toContain('<div data-video="" style="width:fit-content;margin-left:auto">')
+    expect(html).toContain('style="aspect-ratio: 320 / 180;"')
+    expect(react).toContain('style="aspect-ratio:320 / 180"')
+    for (const output of [html, react]) {
+      expect(output).toContain('poster="/a.jpg"')
+      expect(output).toContain('title="説明"')
+      expect(output).toContain('width="320"')
+      expect(output).toContain('height="180"')
+    }
+  })
+
   const linkDoc = (attrs: Record<string, unknown>) => ({
     type: 'doc',
     content: [
@@ -1040,5 +1138,26 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
 
     expect(() => bothOutputs(json)).not.toThrow()
     expect(json).toEqual(snapshot)
+  })
+})
+
+describe('sanitize の対象', () => {
+  // 値が属性としてそのまま出るだけで、style・URL・class・クエリに組み込まれないことを確かめた型
+  const UNCHECKED_TYPES = ['orderedList']
+
+  it('属性を持つノードとマークは、検査不要と確かめたもの以外、不正な値を直す', () => {
+    const schema = getRichTextSchema()
+    const types = [...Object.values(schema.nodes), ...Object.values(schema.marks)].filter(
+      (type) => Object.keys(type.spec.attrs ?? {}).length > 0,
+    )
+    const unchecked = types.filter((type) => {
+      const attrs = Object.fromEntries(
+        Object.keys(type.spec.attrs ?? {}).map((name) => [name, { injected: true }]),
+      )
+
+      return sanitizeAttrs(type.name, attrs) === attrs
+    })
+
+    expect(unchecked.map((type) => type.name).sort()).toEqual(UNCHECKED_TYPES)
   })
 })

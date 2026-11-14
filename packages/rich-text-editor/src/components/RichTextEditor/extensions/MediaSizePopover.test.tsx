@@ -4,7 +4,12 @@ import { Editor } from '@tiptap/core'
 import { IntlProvider } from 'smarthr-ui'
 import { afterEach, describe, expect, it } from 'vitest'
 
-import { IMAGE_SIZE_SPEC, MediaSizePopover, YOUTUBE_SIZE_SPEC } from './MediaSizePopover'
+import {
+  IMAGE_SIZE_SPEC,
+  MediaSizePopover,
+  VIDEO_SIZE_SPEC,
+  YOUTUBE_SIZE_SPEC,
+} from './MediaSizePopover'
 import { ALL_FEATURES, configureExtensions } from './configureExtensions'
 
 import type { ReactNode } from 'react'
@@ -222,5 +227,126 @@ describe('YouTube', () => {
     await user.click(screen.getByRole('button', { name: '元のサイズに戻す' }))
 
     expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: 640, height: 360 })
+  })
+})
+
+const createVideoEditor = (
+  attrs: Record<string, unknown>,
+  metadata: { videoWidth: number; videoHeight: number } = { videoWidth: 0, videoHeight: 0 },
+) => {
+  const editor = new Editor({
+    extensions: configureExtensions({ features: ALL_FEATURES }),
+    content: {
+      type: 'doc',
+      content: [
+        { type: 'paragraph' },
+        { type: 'video', attrs: { ...attrs, src: 'https://example.com/a.mp4' } },
+      ],
+    },
+  })
+  editors.push(editor)
+  editor.commands.setNodeSelection(2)
+  const video = editor.view.dom.querySelector('video')!
+  Object.defineProperty(video, 'videoWidth', { value: metadata.videoWidth, configurable: true })
+  Object.defineProperty(video, 'videoHeight', { value: metadata.videoHeight, configurable: true })
+
+  return editor
+}
+
+describe('動画', () => {
+  const open = async (editor: Editor) => {
+    const user = userEvent.setup()
+    render(<MediaSizePopover editor={editor as never} pos={2} spec={VIDEO_SIZE_SPEC} />, {
+      wrapper: Wrapper,
+    })
+    await user.click(screen.getByRole('button', { name: 'サイズ' }))
+
+    return {
+      user,
+      widthInput: screen.getByRole('spinbutton', { name: '幅（px）' }),
+      heightInput: screen.getByRole('spinbutton', { name: '高さ（px）' }),
+    }
+  }
+
+  it('16:9 の動画に 640×480 が保存されていれば、表示している 640×480 の比率で高さを追従させる', async () => {
+    const { user, widthInput, heightInput } = await open(
+      createVideoEditor({ width: 640, height: 480 }, { videoWidth: 1280, videoHeight: 720 }),
+    )
+    expect(widthInput).toHaveValue(640)
+    expect(heightInput).toHaveValue(480)
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '320')
+    expect(heightInput).toHaveValue(240)
+  })
+
+  it('動画を読み込む前でも、保存された寸法の比率で高さを追従させる', async () => {
+    const { user, widthInput, heightInput } = await open(
+      createVideoEditor({ width: 640, height: 480 }),
+    )
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '320')
+    expect(heightInput).toHaveValue(240)
+  })
+
+  it('最小より小さい幅は、縦横比を保ったまま縦横とも最小を割らない大きさに広げて保存する', async () => {
+    const editor = createVideoEditor({}, { videoWidth: 1280, videoHeight: 720 })
+    const { user, widthInput } = await open(editor)
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '5')
+    await user.click(screen.getByRole('button', { name: '適用' }))
+
+    expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: 178, height: 100 })
+  })
+
+  it('縦横比が分からないうちは、読み込み前の 300×150 の枠の高さを保存せず、幅だけを保存する', async () => {
+    const editor = createVideoEditor({})
+    const video = editor.view.dom.querySelector('video')!
+    Object.defineProperty(video, 'offsetWidth', { value: 300, configurable: true })
+    Object.defineProperty(video, 'offsetHeight', { value: 150, configurable: true })
+    const { user, widthInput } = await open(editor)
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '200')
+    await user.click(screen.getByRole('button', { name: '適用' }))
+
+    expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: 200, height: null })
+  })
+
+  it('縦横比が分からないうちも、最小より小さい幅は最小の幅に広げて保存する', async () => {
+    const editor = createVideoEditor({})
+    const { user, widthInput } = await open(editor)
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '1')
+    await user.click(screen.getByRole('button', { name: '適用' }))
+
+    expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: 100, height: null })
+  })
+
+  it('幅を空にして適用すると、高さだけを残さず元の大きさに戻す', async () => {
+    const editor = createVideoEditor({ width: 640, height: 360 })
+    const { user, widthInput } = await open(editor)
+
+    await user.clear(widthInput)
+    await user.click(screen.getByRole('button', { name: '適用' }))
+
+    expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject({ width: null, height: null })
+  })
+
+  it.each([
+    ['縦横比が分かる', { width: 640, height: 360 }, { width: 321, height: 181 }],
+    ['縦横比が分からない', {}, { width: 321, height: null }],
+  ])('%sとき、小数の幅は整数に丸め、高さは丸めた幅から求める', async (_, attrs, expected) => {
+    const editor = createVideoEditor(attrs)
+    const { user, widthInput } = await open(editor)
+
+    await user.clear(widthInput)
+    await user.type(widthInput, '320.6')
+    await user.click(screen.getByRole('button', { name: '適用' }))
+
+    expect(editor.state.doc.nodeAt(2)?.attrs).toMatchObject(expected)
   })
 })

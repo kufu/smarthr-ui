@@ -62,6 +62,16 @@ export const editorContentClasses = [
   '[&_.ProseMirror[contenteditable=true]_[data-resize-container].ProseMirror-selectednode>[data-resize-wrapper]>div[data-youtube-video]>iframe]:shr-rte-pointer-events-auto',
   '[&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-youtube-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
   '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-youtube-video]]:shr-rte-outline-offset-2',
+  // video
+  '[&_.ProseMirror_div[data-video]]:shr-rte-my-0.5 [&_.ProseMirror_div[data-video]]:shr-rte-block [&_.ProseMirror_div[data-video]]:shr-rte-w-fit [&_.ProseMirror_div[data-video]]:shr-rte-max-w-full [&_.ProseMirror_div[data-video]]:shr-rte-rounded-m',
+  '[&_.ProseMirror_div[data-video]_video]:shr-rte-block [&_.ProseMirror_div[data-video]_video]:shr-rte-h-auto [&_.ProseMirror_div[data-video]_video]:shr-rte-max-w-full [&_.ProseMirror_div[data-video]_video]:shr-rte-rounded-m',
+  '[&_.ProseMirror[contenteditable=true]_div[data-video]_video]:shr-rte-pointer-events-none',
+  '[&_.ProseMirror_[data-resize-container]_div[data-video]]:shr-rte-my-0',
+  '[&_.ProseMirror_[data-resize-container][data-node=video]_[data-resize-wrapper]]:shr-rte-min-w-0',
+  '[&_.ProseMirror[contenteditable=true]_div[data-video].ProseMirror-selectednode>video]:shr-rte-pointer-events-auto',
+  '[&_.ProseMirror[contenteditable=true]_[data-resize-container].ProseMirror-selectednode>[data-resize-wrapper]>div[data-video]>video]:shr-rte-pointer-events-auto',
+  '[&_.ProseMirror_div[data-video].ProseMirror-selectednode]:shr-rte-outline [&_.ProseMirror_div[data-video].ProseMirror-selectednode]:shr-rte-outline-2 [&_.ProseMirror_div[data-video].ProseMirror-selectednode]:shr-rte-outline-offset-2',
+  '[&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-video]]:shr-rte-outline [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-video]]:shr-rte-outline-2 [&_.ProseMirror_[data-resize-container].ProseMirror-selectednode_div[data-video]]:shr-rte-outline-offset-2',
   // table（resizable のため tableWrapper で囲まれる）
   // 列幅の変更は table-fixed でないと効かない。周りの余白は表の操作 UI の分
   // （上: 列ハンドル、左: 行ハンドル、右・下: +列/+行 バー）
@@ -105,7 +115,7 @@ export const editorContentClasses = [
 /** RichTextViewer 用: gap を指定しないときのブロックの縦の余白。editorContentClasses と同じ値にする */
 export const staticBlockSpacingClasses = [
   // 要素ごとのセレクタにしないのは、詳細度が下の先頭・末尾の余白を消す指定を上回るため
-  '[&_:where(ul,ol,blockquote,h1,h2,h3,h4,pre,img,div[data-youtube-video])]:shr-rte-my-0.5',
+  '[&_:where(ul,ol,blockquote,h1,h2,h3,h4,pre,img,div[data-youtube-video],div[data-video])]:shr-rte-my-0.5',
   '[&_:where(hr)]:shr-rte-my-1',
   // 隣り合う表をエディタのように広げないのは、エディタで広げる理由が操作 UI の帯を重ねないためで、表示には帯が無いため
   '[&_:where(.tableWrapper)]:shr-rte-my-2',
@@ -138,6 +148,8 @@ export const staticContentClasses = [
   '[&_img]:shr-rte-block [&_img]:shr-rte-max-w-full',
   // youtube iframe
   '[&_iframe]:shr-rte-block [&_iframe]:shr-rte-max-w-full [&_iframe]:shr-rte-rounded-m',
+  // video
+  '[&_video]:shr-rte-block [&_video]:shr-rte-h-auto [&_video]:shr-rte-max-w-full [&_video]:shr-rte-rounded-m',
   // table (renderWrapper: true で <div class="tableWrapper"> が出力されるので、その内側に table)
   // 表自身には inline style で width が付くため、横スクロールは wrapper 側で持つ
   '[&_.tableWrapper]:shr-rte-max-w-full [&_.tableWrapper]:shr-rte-overflow-x-auto',
