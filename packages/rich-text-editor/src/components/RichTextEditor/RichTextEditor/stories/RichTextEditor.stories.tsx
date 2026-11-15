@@ -396,6 +396,7 @@ export const InForm: Story = {
           <FormControl label="リッチテキストエディタ">
             <RichTextEditor {...rest} />
           </FormControl>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要 */}
           <Cluster align="center">
             <Button type="submit" variant="primary">
               保存
