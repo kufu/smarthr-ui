@@ -31,7 +31,7 @@ overrides:
   colord@<2.9.4: '>=2.10.0'
   # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
   # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
-  'sucrase>glob': '>=14.0.3'
+  'sucrase>glob': '>=14.0.4'
   'glob>minimatch': '>=11.0.7'
 auditConfig:
   ignoreGhsas:
