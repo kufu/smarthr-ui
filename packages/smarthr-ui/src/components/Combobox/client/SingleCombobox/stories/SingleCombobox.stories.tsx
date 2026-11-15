@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
+import { Button } from '../../../../Button'
 import { FaCirclePlusIcon } from '../../../../Icon'
 import { Stack } from '../../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
@@ -75,11 +75,19 @@ export default {
   component: SingleCombobox,
   render: (args) => {
     const [, setArgs] = useArgs()
+    const { selectedItem } = args
+
     return (
       <SingleCombobox
         {...args}
-        onClearClick={() => setArgs({ selectedItem: null })}
-        onSelect={(item) => setArgs({ selectedItem: item.data?.option })}
+        onClearClick={
+          selectedItem !== undefined ? () => setArgs({ selectedItem: null }) : undefined
+        }
+        onSelect={
+          selectedItem !== undefined
+            ? (item) => setArgs({ selectedItem: item.data?.option })
+            : undefined
+        }
       />
     )
   },
@@ -133,19 +141,8 @@ export const SelectedItem: StoryObj<typeof SingleCombobox> = {
 
 export const DefaultItem: StoryObj<typeof SingleCombobox> = {
   name: 'emptySelectionFallbackItem',
-  render: (args) => {
-    const [selectItem, setSelectItem] = useState<typeof args.emptySelectionFallbackItem | null>(
-      null,
-    )
-    return (
-      <SingleCombobox
-        {...args}
-        selectedItem={selectItem ?? null}
-        onSelect={(item) => setSelectItem(item)}
-      />
-    )
-  },
   args: {
+    selectedItem: undefined,
     emptySelectionFallbackItem: defaultItems['option 4'],
   },
 }
@@ -244,4 +241,36 @@ export const NoResultText: StoryObj<typeof SingleCombobox> = {
     items: [],
     noResultText: '該当する商品が見つかりません',
   },
+}
+
+export const FormReset: StoryObj<typeof SingleCombobox> = {
+  name: 'form.reset()の挙動確認(非制御)',
+  render: () => (
+    <form>
+      <Stack>
+        <SingleCombobox
+          name="single_combobox_reset_demo"
+          defaultSelectedItem={defaultItems['option 2']}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット</Button>
+      </Stack>
+    </form>
+  ),
+}
+
+export const FormResetWithPreventDefault: StoryObj<typeof SingleCombobox> = {
+  name: 'form.reset()がキャンセルされた場合の挙動確認(非制御)',
+  render: () => (
+    <form onReset={(e) => e.preventDefault()}>
+      <Stack>
+        <SingleCombobox
+          name="single_combobox_reset_cancel_demo"
+          defaultSelectedItem={defaultItems['option 2']}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット(キャンセルされるはず)</Button>
+      </Stack>
+    </form>
+  ),
 }
