@@ -186,6 +186,10 @@ export const WarekiPicker: FC<Props> = ({
     parseStringDate(value !== undefined ? value : defaultValue, parseInput),
   )
 
+  // HINT: 非制御時、form.reset()でDOM上のinput.valueはネイティブのdefaultValueへ戻る(マウント時点の値に固定)。
+  // selectedDateもそれと同じ基準に戻す必要があるため、マウント後のdefaultValue変更の影響を受けない値を保持しておく
+  const [initialSelectedDate] = useState(selectedDate)
+
   // HINT: selectedDate・showAlternative・localeから導出できる値のため、stateで持たずレンダー中に計算する。
   // selectedDate変更時のみ再計算するstateにすると、showAlternativeだけを切り替えた際に
   // 以前の表示が残ってしまう
@@ -202,6 +206,7 @@ export const WarekiPicker: FC<Props> = ({
   const isCalendarShown = Boolean(inputRect)
 
   const closeFrame = useAnimationFrame()
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onChange,
@@ -213,6 +218,9 @@ export const WarekiPicker: FC<Props> = ({
     isInputFocused,
     selectedDate,
     closeFrame,
+    resetFrame,
+    initialSelectedDate,
+    isControlled: value !== undefined,
     isCalendarShown,
     disabled,
   })
@@ -301,6 +309,24 @@ export const WarekiPicker: FC<Props> = ({
 
         if (!node) return
 
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // selectedDate(ひいては和暦alt表示・カレンダーの選択日ハイライト)をマウント時の初期値へ戻すため、
+        // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる。
+        // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+        // 実行されるが、そのタイミングはqueueMicrotaskを多重にネストしても追いつかない(実機検証で確認済み)。
+        // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
+        // (defaultPrevented)が確定した後に判定できるようにする
+        const associatedForm = node.form
+        const handleReset = (e: Event) => {
+          latest.resetFrame.request(() => {
+            if (!e.defaultPrevented && !latest.isControlled) {
+              setSelectedDate(latest.initialSelectedDate)
+            }
+          })
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
         const handleKeyDown = (e: KeyboardEvent) => {
           if (!calendarNode || e.key !== 'Tab') {
             return
@@ -349,7 +375,9 @@ export const WarekiPicker: FC<Props> = ({
 
         return () => {
           window.removeEventListener('keydown', handleKeyDown)
+          associatedForm?.removeEventListener('reset', handleReset)
           latest.closeFrame.cancel()
+          latest.resetFrame.cancel()
         }
       },
       handleBlur: (e: React.FocusEvent<HTMLInputElement>) => {

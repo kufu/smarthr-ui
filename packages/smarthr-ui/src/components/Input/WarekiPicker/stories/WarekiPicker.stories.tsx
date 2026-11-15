@@ -95,3 +95,23 @@ export const FormatDate: StoryObj<typeof WarekiPicker> = {
     formatDate: (date) => dayjs(date).format('YYYY年MM月DD日'),
   },
 }
+
+export const FormReset: StoryObj<typeof WarekiPicker> = {
+  name: 'form.reset()の挙動確認(非制御)',
+  render: () => (
+    <form>
+      <WarekiPicker name="wareki" defaultValue="2024-09-25" />
+      <button type="reset">リセット</button>
+    </form>
+  ),
+}
+
+export const FormResetWithPreventDefault: StoryObj<typeof WarekiPicker> = {
+  name: 'form.reset()がキャンセルされた場合の挙動確認(非制御)',
+  render: () => (
+    <form onReset={(e) => e.preventDefault()}>
+      <WarekiPicker name="wareki" defaultValue="2024-09-25" />
+      <button type="reset">リセット(キャンセルされるはず)</button>
+    </form>
+  ),
+}
