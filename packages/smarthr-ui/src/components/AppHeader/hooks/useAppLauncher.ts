@@ -1,4 +1,4 @@
-import { type ChangeEvent, useCallback, useEffect, useState } from 'react'
+import { type ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 
@@ -53,9 +53,15 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     [changeSearchQuery],
   )
 
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
   const clearSearchQueryFrame = useAnimationFrame()
 
   const onClickClearSearchQuery = useCallback(() => {
+    // HINT: Inputのwrapper要素はsubActionArea内のクリックをフォーカス委譲の対象外としているため、
+    // ここで明示的に検索欄へフォーカスを戻す
+    searchInputRef.current?.focus()
+
     // HINT: 別のスレッドにしないとドロップダウンが閉じてしまう
     clearSearchQueryFrame.request(() => {
       changeSearchQuery('')
@@ -82,6 +88,7 @@ export const useAppLauncher = (baseFeatures: Array<Launcher['feature']>) => {
     onChangeSearchQuery,
     onClickClearSearchQuery,
     callbackRef,
+    searchInputRef,
   }
 }
 
