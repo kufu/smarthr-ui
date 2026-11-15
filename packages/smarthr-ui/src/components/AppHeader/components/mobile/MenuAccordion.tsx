@@ -46,7 +46,7 @@ const AccordionHeading = memo<Omit<Props, 'children'> & { id: string }>(
     const onClickButton = useCallback(() => setIsOpen((prev) => !prev), [setIsOpen])
 
     return (
-      <Cluster justify="space-between" align="center">
+      <Cluster justify="space-between" align="center" grow="start">
         <Heading type="subSubBlockTitle">{title}</Heading>
 
         <Button

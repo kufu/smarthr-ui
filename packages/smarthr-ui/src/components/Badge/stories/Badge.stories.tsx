@@ -54,10 +54,12 @@ export const ShowZero: StoryObj<typeof Badge> = {
   name: 'showZero',
   render: (args) => (
     <Stack>
+      {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要 */}
       <Cluster>
         <span>true</span>
         <Badge {...args} showZero={true} count={0} />
       </Cluster>
+      {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要 */}
       <Cluster>
         <span>false</span>
         <Badge {...args} showZero={false} count={0} />

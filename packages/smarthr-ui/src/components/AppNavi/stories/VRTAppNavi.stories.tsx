@@ -22,6 +22,7 @@ export default {
   args: {
     label: '機能名',
     additionalArea: (
+      // eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要
       <Cluster align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
         <Button size="S" prefix={<FaArrowsRotateIcon />}>

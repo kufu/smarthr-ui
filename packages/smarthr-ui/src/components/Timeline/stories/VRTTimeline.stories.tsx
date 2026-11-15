@@ -19,6 +19,7 @@ export default {
       <TimelineItem
         datetime="2025-06-09T00:00:00.000Z"
         dateSuffixArea={
+          // eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要
           <Cluster align="center">
             <Button variant="text" size="S">
               ボタン
@@ -38,6 +39,7 @@ export default {
         datetime="2023-06-11"
         timeFormat="HH:mm:ss"
         dateSuffixArea={
+          // eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要
           <Cluster align="center">
             <Button variant="text" size="S">
               ボタン

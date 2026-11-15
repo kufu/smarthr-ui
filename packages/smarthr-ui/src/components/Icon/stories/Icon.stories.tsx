@@ -47,6 +47,7 @@ export const All: StoryObj<typeof FaAddressBookIcon> = {
         ] as Array<[string, ComponentType<any>]>
       ).map(([name, Icon]) => (
         <li key={name}>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要 */}
           <Cluster align="center">
             <Icon {...args} />
             <span>{name}</span>

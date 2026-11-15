@@ -129,6 +129,7 @@ const ActionAreaCluster = memo<
     className: string
   }
 >(({ handleClickClose, closeButton, actionButton, loading, className }) => (
+  // eslint-disable-next-line smarthr/best-practice-for-layouts -- 閉じるボタンとアクションボタンは両方とも本来のサイズで並べる意図のため、growは不要
   <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
     <CloseButton
       disabled={closeButton.disabled || loading}

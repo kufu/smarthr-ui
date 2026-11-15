@@ -36,6 +36,7 @@ export default {
                     {fixed === 'right' && <Th fixed={fixed}>操作</Th>}
                   </tr>
                   <BulkActionRow>
+                    {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要 */}
                     <Cluster inline align="center" className="shr-sticky shr-left-1">
                       <p>n件のオブジェクトが選択されています。</p>
                       <Button variant="tertiary" size="S" className="shr-text-link-darken">
