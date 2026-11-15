@@ -564,11 +564,12 @@ describe('SingleCombobox', () => {
     })
 
     it('未選択のまま検索文字列を入力した状態でform.reset()を呼ぶと、入力値がクリアされること', async () => {
+      const onChangeInput = vi.fn()
       const { container } = render(
         <IntlProvider locale="ja">
           <form>
             <FormControl label="コンボボックス">
-              <SingleCombobox name="default" items={items} />
+              <SingleCombobox name="default" onChangeInput={onChangeInput} items={items} />
             </FormControl>
           </form>
         </IntlProvider>,
@@ -577,6 +578,7 @@ describe('SingleCombobox', () => {
       await userEvent.click(combobox())
       await userEvent.type(combobox(), 'option 2')
       expect(combobox()).toHaveValue('option 2')
+      onChangeInput.mockClear()
 
       await act(async () => {
         container.querySelector('form')!.reset()
@@ -588,6 +590,33 @@ describe('SingleCombobox', () => {
       // 絞り込みも解除されすべての選択肢が表示されること
       await userEvent.click(combobox())
       expect(screen.getAllByRole('option')).toHaveLength(items.length)
+
+      // HINT: 親がonChangeInputで検索語を管理し絞り込みに使っている場合、reset後も
+      // 古い検索語が残ったままになってしまうため、空文字で通知されることを確認する
+      expect(onChangeInput).toHaveBeenCalledOnce()
+      expect(onChangeInput).toHaveBeenCalledWith(
+        expect.objectContaining({ target: expect.objectContaining({ value: '' }) }),
+      )
+    })
+
+    it('検索文字列を入力していない状態でform.reset()を呼んでも、onChangeInputは呼ばれないこと', async () => {
+      const onChangeInput = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" onChangeInput={onChangeInput} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(onChangeInput).not.toHaveBeenCalled()
     })
 
     it('form.reset()で選択状態が変わる場合、onChangeSelectedがdefaultSelectedItemで呼ばれること', async () => {

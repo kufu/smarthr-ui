@@ -281,6 +281,7 @@ export const SingleCombobox = <T,>({
     defaultSelectedItem,
     selectedItem: actualSelectedItem,
     isSelectedItemControlled,
+    inputValue,
     isFocused,
     isExpanded,
     isComposing,
@@ -359,6 +360,13 @@ export const SingleCombobox = <T,>({
             updateUncontrolledSelectedItem(nextSelectedItem)
             setIsEditing(false)
             setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+
+            // HINT: 選択時(259行目)と同様、親がonChangeInputで検索語(手入力値)を管理し
+            // 絞り込みに使っている場合、reset後も古い検索語が残ったままになってしまうため
+            // 空文字で発火する。現在の入力欄が既に空の場合は発火不要
+            if (latest.inputValue !== '') {
+              latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+            }
 
             if (hasSelectedItemChanged) {
               latest.onChangeSelected?.(nextSelectedItem)
