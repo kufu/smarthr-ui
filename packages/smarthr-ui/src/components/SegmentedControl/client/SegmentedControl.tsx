@@ -229,7 +229,6 @@ const SegmentedControlButton = memo<
       className: string
     }
 >(({ checked, content, handleClick, ...rest }) => (
-  // eslint-disable-next-line smarthr/best-practice-for-interactive-element
   <Button {...rest} role="radio" variant={checked ? 'primary' : 'secondary'} onClick={handleClick}>
     {content}
   </Button>

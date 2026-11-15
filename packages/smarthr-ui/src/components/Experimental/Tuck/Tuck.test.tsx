@@ -123,6 +123,7 @@ describe('Tuck', () => {
       groupWidth = 150
 
       render(
+        // eslint-disable-next-line smarthr/best-practice-for-layouts -- 子要素が1件の場合の挙動を検証するテスト
         <Tuck tucked={{ renderer: (items) => <Item width={30} label={`+${items.length}`} /> }}>
           <Item width={200} label="A" />
         </Tuck>,
