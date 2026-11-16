@@ -26,6 +26,12 @@ describe('formatShortcutTokens', () => {
     expect(formatShortcutTokens('Mod-Alt-C', false)).toEqual(['Ctrl', 'Alt', 'C'])
   })
 
+  it('↑↓ は矢印の記号で表し、aria-keyshortcuts ではキー名のままにする', () => {
+    expect(formatShortcutTokens('Ctrl-Shift-ArrowUp', true)).toEqual(['Control', 'Shift', '↑'])
+    expect(formatShortcutTokens('Alt-Shift-ArrowDown', false)).toEqual(['Alt', 'Shift', '↓'])
+    expect(toAriaKeyShortcuts('Ctrl-Shift-ArrowUp', true)).toBe('Control+Shift+ArrowUp')
+  })
+
   it('Mod を含まないショートカットも扱える', () => {
     expect(formatShortcutTokens('Alt-Enter', true)).toEqual(['Option', 'Enter'])
     expect(formatShortcutTokens('Alt-Enter', false)).toEqual(['Alt', 'Enter'])

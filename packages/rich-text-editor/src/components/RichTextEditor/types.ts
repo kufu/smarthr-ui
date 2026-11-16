@@ -33,6 +33,7 @@ export type RichTextFeature =
   | 'video'
   | 'table'
   | 'slashCommand'
+  | 'blockActions'
 
 export type RichTextChangeMeta = {
   readonly json: RichTextJSON
@@ -60,7 +61,11 @@ export type RichTextVideo = {
   src: string
   /** 一覧と本文に出す名前 */
   title: string
-  /** サムネイル画像の URL。条件は src と同じで、満たさない動画は一覧に出さない */
+  /**
+   * サムネイル画像の URL。条件は src と同じで、満たさない動画は一覧に出さない。
+   * 動画と同じ解像度の画像にすること。サイズを変えていない動画は再生までサムネイルの大きさで表示され、
+   * 解像度が違うと再生した瞬間に枠の大きさが変わる。
+   */
   poster?: string | null
   /** 再生時間（秒）。一覧に出すだけで、本文には保存しない */
   duration?: number
@@ -92,13 +97,19 @@ type RichTextEditorBaseProps = {
    * その段落をブロックに置き換えるか、続けて打つ文字の文字色・背景色を選べる。並ぶのは features で
    * 許可したブロックと色、headingLevels の見出しで、画像・YouTube・動画はツールバーに挿入ボタンが
    * 出ているときだけ並ぶ（動画は loadVideos も要る）。
+   *
+   * `blockActions` を含めると、最上位のブロック（段落・見出し・リスト・表・画像・動画など）を移動・複製・削除できる。
+   * 移動は macOS で Control+Shift+↑/↓、それ以外で Alt+Shift+↑/↓。Cmd+/（Windows・Linux は Ctrl+/）か、
+   * ブロックの左に出る ⋮⋮ のクリックでメニューを開き、⋮⋮ のドラッグでも並べ替えられる。
+   * `slashCommand` も含めると、⋮⋮ の隣の ＋ で下に空の行を足してスラッシュコマンドを開ける。
    */
   features?: readonly RichTextFeature[]
   /**
    * ツールバーを表示しない。画像・動画・表の上に出るメニューとスラッシュコマンドのメニューも表示しないため、
    * ツールバーからの挿入と表の行・列の操作はできなくなる。features で許可したものは、貼り付けやドロップでは入る。
    * ドラッグでのサイズ変更と、features で許可した書式のショートカット・入力ルールは使える。
-   * ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter など）と、リンクを編集する Cmd+K は効かない。
+   * ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter・ブロックメニューの Cmd+/ など）と、リンクを編集する Cmd+K は効かない。
+   * ブロックを移動するキーは効くが、ブロックの左の ⋮⋮ と ＋ は出ず、複製はできない。
    */
   hideToolbar?: boolean
   disabled?: boolean

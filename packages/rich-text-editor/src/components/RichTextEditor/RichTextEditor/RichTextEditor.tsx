@@ -9,6 +9,9 @@ import { tv } from '../../../libs/tv'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { isLinkUrl } from '../Toolbar/urlValidation'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
+import { BlockAnnouncer } from '../extensions/Block/BlockAnnouncer'
+import { BlockHandle } from '../extensions/Block/BlockHandle'
+import { BlockMenu } from '../extensions/Block/BlockMenu'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { SlashMenu } from '../extensions/Slash/SlashMenu'
@@ -43,6 +46,8 @@ const classNameGenerator = tv({
       'shr-rte-border-shorthand shr-rte-relative shr-rte-box-border shr-rte-rounded-m',
       'contrast-more:shr-rte-border-high-contrast',
       'focus-within:shr-rte-focus-indicator--outer',
+      // ブロックの ⋮⋮ のドラッグ中は、落とし先を BlockHandle が線で示す。標準のカーソルは別の位置を指しうる
+      '[&[data-block-dragging]_.prosemirror-dropcursor-block]:shr-rte-hidden [&[data-block-dragging]_.prosemirror-dropcursor-inline]:shr-rte-hidden',
     ],
     // z は表の操作ハンドル（TableContextMenu が 1〜3 を使う）より上に置く。
     // sticky + z で積み重ねコンテキストを作るため、内側のツールチップの z-overlap は
@@ -97,6 +102,16 @@ const classNameGenerator = tv({
         // 文字数テキストとハンドルが重ならないよう右側を広げる。
         // shr-rte-px-0.75 を確実に上書きするため、このファイルの既存作法の詳細度引き上げを使う。
         characterCountArea: '[&&&]:shr-rte-pr-2',
+      },
+    },
+    // ブロックのつまみ（＋ ⋮⋮）を本文の左に置き、表の行ハンドルとも重ねないための余白。幅は BlockHandle の枠と揃える。
+    // [&_.ProseMirror]:shr-rte-px-0.75 を確実に上書きするため、詳細度を引き上げる
+    blockGutter: {
+      grip: {
+        content: '[&&&_.ProseMirror]:shr-rte-pl-2.5',
+      },
+      gripAndAdd: {
+        content: '[&&&_.ProseMirror]:shr-rte-pl-4',
       },
     },
     hasEditorHeight: {
@@ -525,6 +540,15 @@ export const RichTextEditor = memo(
 
       const invalid = error || formControlInvalid
       const hasEditorHeight = contentStyle !== undefined
+      const showEditingChrome = editor !== null && !readOnly && !disabled && !hideToolbar
+      const showBlockHandle = showEditingChrome && features.includes('blockActions')
+      // readOnly・disabled には連動させない。切り替えのたびに本文が横にずれ、折り返しも変わる
+      const blockGutter =
+        hideToolbar || !features.includes('blockActions')
+          ? undefined
+          : features.includes('slashCommand')
+            ? 'gripAndAdd'
+            : 'grip'
       const classNames = useMemo(() => {
         const { wrapper, toolbarWrapper, content, characterCountArea, resizeHandle } =
           classNameGenerator()
@@ -532,13 +556,25 @@ export const RichTextEditor = memo(
         return {
           wrapper: wrapper({ disabled, readOnly, error: invalid, className }),
           toolbarWrapper: toolbarWrapper({ disabled }),
-          content: content({ disabled, hasEditorHeight, className: editorClassName }),
+          content: content({
+            disabled,
+            hasEditorHeight,
+            blockGutter,
+            className: editorClassName,
+          }),
           characterCountArea: characterCountArea({ resizable: isResizable }),
           resizeHandle: resizeHandle(),
         }
-      }, [disabled, readOnly, invalid, isResizable, hasEditorHeight, className, editorClassName])
-
-      const showEditingChrome = editor !== null && !readOnly && !disabled && !hideToolbar
+      }, [
+        disabled,
+        readOnly,
+        invalid,
+        isResizable,
+        hasEditorHeight,
+        blockGutter,
+        className,
+        editorClassName,
+      ])
 
       // editorが未初期化でもwrapperは常に描画する
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
@@ -586,6 +622,16 @@ export const RichTextEditor = memo(
           )}
           {showEditingChrome && features.includes('slashCommand') && (
             <SlashMenu editor={editor} features={features} headingLevels={headingLevels} />
+          )}
+          {showBlockHandle && (
+            <>
+              <BlockHandle containerRef={wrapperRef} editor={editor} features={features} />
+              <BlockMenu editor={editor} />
+            </>
+          )}
+          {/* hideToolbar では隠さない。移動のキーはツールバーが無くても効く */}
+          {editor && !readOnly && !disabled && features.includes('blockActions') && (
+            <BlockAnnouncer editor={editor} />
           )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea} />

@@ -7,6 +7,7 @@ import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { StarterKit } from '@tiptap/starter-kit'
 
+import { BlockActions } from './Block/BlockActions'
 import { CustomYoutube } from './CustomYoutube'
 import { CustomImage } from './Image/CustomImage'
 import { createImagePasteExtension } from './Image/imagePaste'
@@ -119,6 +120,7 @@ export const configureExtensions = ({
     // features に無い間も登録しておく。後から足せないため、操作の可否は実行時に判定する。
     restrict(LinkShortcut),
     restrict(SlashCommand),
+    restrict(BlockActions.configure({ getFeatures })),
     InsertDialogs,
     MediaToolbarShortcut,
     PlayerIsolation,
@@ -218,6 +220,7 @@ const FEATURE_SET = {
   video: true,
   table: true,
   slashCommand: true,
+  blockActions: true,
 } as const satisfies Record<RichTextFeature, true>
 
 /** すべての feature */

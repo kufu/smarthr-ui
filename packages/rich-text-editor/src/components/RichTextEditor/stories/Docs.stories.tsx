@@ -24,32 +24,35 @@ import {
 
 import { RichTextEditor } from '../RichTextEditor/RichTextEditor'
 import { RichTextViewer } from '../RichTextViewer/RichTextViewer'
+import { VideoIcon } from '../extensions/Video/VideoIcon'
+import { ALL_FEATURES } from '../extensions/configureExtensions'
 
-import type { RichTextEditorController, RichTextJSON } from '../types'
+import type { RichTextEditorController, RichTextJSON, RichTextVideo } from '../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-const ALL_FEATURES = [
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'code',
-  'heading',
-  'bulletList',
-  'orderedList',
-  'blockquote',
-  'codeBlock',
-  'horizontalRule',
-  'link',
-  'color',
-  'backgroundColor',
-  'fontSize',
-  'lineHeight',
-  'textAlign',
-  'image',
-  'youtube',
-  'table',
-] as const
+const SAMPLE_VIDEOS: readonly RichTextVideo[] = [
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    title: '花のサンプル動画',
+    poster: 'https://placehold.co/960x540/e2e8f0/64748b.png?text=Sample+Video',
+    duration: 5,
+  },
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+    title: 'サムネイルの無いサンプル動画',
+    duration: 6,
+  },
+]
+
+const loadSampleVideos = ({ signal }: { signal: AbortSignal }) =>
+  new Promise<readonly RichTextVideo[]>((resolve, reject) => {
+    const timer = setTimeout(() => resolve(SAMPLE_VIDEOS), 600)
+
+    signal.addEventListener('abort', () => {
+      clearTimeout(timer)
+      reject(signal.reason)
+    })
+  })
 
 const meta = {
   title: 'Editor/Docs',
@@ -378,6 +381,26 @@ export const Overview: Story = {
               </tr>
               <tr>
                 <td style={tdStyle}>
+                  <code>video</code>
+                </td>
+                <td style={tdStyle}>
+                  動画埋め込み
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    <code>loadVideos</code> が返すアップロード済みの動画から選んで挿入する。
+                    <code>loadVideos</code>{' '}
+                    を渡さないとボタンを出さない。本文の動画を選ぶと、操作バー（配置・サイズ・削除）を動画の上に出す。四隅のハンドルでもサイズを変えられる（動画の縦横比を保つ）。編集中は動画プレーヤーを
+                    Tab の移動先から外す
+                  </Text>
+                </td>
+                <td style={tdStyle}>
+                  <VideoIcon />
+                </td>
+                <td style={tdStyle}>Alt+Enter / Shift+F10（選択中に操作バーへ移る）</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
                   <code>table</code>
                 </td>
                 <td style={tdStyle}>
@@ -396,6 +419,50 @@ export const Overview: Story = {
                   Alt+Shift+T / C / R（表・列・行の操作メニュー）
                   <br />
                   Alt+Enter / Shift+F10（セルの操作メニュー）
+                </td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>slashCommand</code>
+                </td>
+                <td style={tdStyle}>
+                  スラッシュコマンド
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    リスト・引用・表の外の空の段落で <code>/</code> か <code>／</code>{' '}
+                    を打つとメニューを開く。その段落をブロックに置き換えるか、続けて打つ文字の文字色・背景色を選べる。並ぶのは
+                    features で許可したブロックと色、headingLevels
+                    の見出しだけ。画像・YouTube・動画は、ツールバーに挿入ボタンが出ているときだけ並ぶ
+                  </Text>
+                </td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>
+                  <code>/</code> か <code>／</code>（空の段落で開く）
+                </td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
+                  <code>blockActions</code>
+                </td>
+                <td style={tdStyle}>
+                  ブロックの移動・複製・削除
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    対象は最上位のブロック（段落・見出し・リスト・表・画像・動画など）。マウスを載せたブロックの左に
+                    ⋮⋮ を出す。⋮⋮
+                    はドラッグで並べ替えられ、クリックするとメニュー（上へ移動・下へ移動・複製・削除）を開く。slashCommand
+                    もあると、⋮⋮ の隣の ＋ で下に空の段落を足してスラッシュコマンドを開く
+                  </Text>
+                </td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>
+                  Control+Shift+↑ / ↓（macOS）
+                  <br />
+                  Alt+Shift+↑ / ↓（Windows・Linux）
+                  <br />
+                  Cmd+/（ブロックメニュー）
                 </td>
                 <td style={tdStyle}>なし</td>
               </tr>
@@ -434,6 +501,44 @@ export const Overview: Story = {
                 <td style={tdStyle}>
                   本文からツールバーへフォーカスを移します。移動先は直前に操作したボタン（ツールバーを未操作なら先頭のボタン）です。ツールバー内は左右矢印キー・Home・End
                   で移動し、Escape で本文へ戻ります。
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>スラッシュコマンドのメニュー</td>
+                <td style={tdStyle}>
+                  <code>/</code> か <code>／</code>（開く）
+                  <br />
+                  ↑ / ↓（項目を選ぶ）
+                  <br />
+                  Enter（選んだ項目を実行）
+                  <br />
+                  Escape（閉じる）
+                </td>
+                <td style={tdStyle}>
+                  <code>features</code> に <code>slashCommand</code>{' '}
+                  があるときだけ効きます。リスト・引用・表の外の空の段落で打つと開き、続けて打った文字で項目を絞り込みます。↑
+                  / ↓ は端まで進むと反対の端へ戻ります。
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>ブロックを上へ・下へ移動</td>
+                <td style={tdStyle}>
+                  Control+Shift+↑ / ↓（macOS）
+                  <br />
+                  Alt+Shift+↑ / ↓（Windows・Linux）
+                </td>
+                <td style={tdStyle}>
+                  <code>features</code> に <code>blockActions</code>{' '}
+                  があるときだけ効きます。キャレットのあるブロック（リストや表は全体）を動かし、移した先を読み上げます。選択が複数のブロックにまたがるときはまとめて動かします。
+                </td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>ブロックメニューを開く</td>
+                <td style={tdStyle}>Cmd+/</td>
+                <td style={tdStyle}>
+                  <code>blockActions</code>{' '}
+                  があるときだけ効きます。上へ移動・下へ移動・複製・削除を選べ、表・画像・動画の上でも開きます。Escape
+                  で本文の元の位置へ戻ります。
                 </td>
               </tr>
               <tr>
@@ -499,7 +604,7 @@ export const BasicUsage: Story = {
       'heading', 'bulletList', 'orderedList',
       'blockquote', 'codeBlock', 'horizontalRule',
       'link', 'color', 'backgroundColor', 'fontSize', 'lineHeight', 'textAlign',
-      'image', 'youtube', 'table',
+      'image', 'youtube', 'table', 'slashCommand', 'blockActions',
     ]}
     onChange={(json) => setValue(json)}
     placeholder="ここに本文を入力してください"
@@ -722,6 +827,91 @@ export const HTMLIntegration: Story = {
   },
 }
 
+export const VideoEmbedding: Story = {
+  name: '動画の埋め込み（loadVideos）',
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `import type { RichTextVideo } from '@smarthr-ui/rich-text-editor'
+
+const loadVideos = async ({ signal }: { signal: AbortSignal }): Promise<RichTextVideo[]> => {
+  const response = await fetch('/api/videos', { signal })
+
+  if (!response.ok) throw new Error(\`\${response.status}\`)
+
+  const videos: AppVideo[] = await response.json()
+
+  return videos.map((video) => ({
+    src: video.playbackUrl,
+    title: video.name,
+    poster: video.thumbnailUrl,
+    duration: video.durationSeconds,
+  }))
+}
+
+<FormControl label="本文">
+  <RichTextEditor features={[..., 'video']} loadVideos={loadVideos} />
+</FormControl>`,
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState<RichTextJSON | undefined>()
+    return (
+      <Stack gap={1.5}>
+        <Text color="TEXT_GREY">
+          <code>features</code> に <code>video</code> を入れて <code>loadVideos</code>{' '}
+          を渡すと、ツールバーに動画のボタンが出ます。エディタは動画をアップロードしません。アップロード済みの動画の一覧を{' '}
+          <code>loadVideos</code> で返してください。
+          <br />
+          エディタは一覧を開くたびに <code>loadVideos</code> を呼び、一覧を閉じると{' '}
+          <code>signal</code>{' '}
+          を中断します。一覧はキャッシュしないため、別の画面でアップロードした動画も次に開いたときに出ます。返す値は{' '}
+          <code>RichTextVideo</code>（<code>src</code>・<code>title</code>・<code>poster?</code>・
+          <code>duration?</code>
+          ）の配列です。名前での絞り込みは、返した一覧の中でエディタが行います。
+          <code>loadVideos</code> が reject
+          すると、一覧の代わりにエラーと再読み込みのボタンを出します。
+          <br />
+          エディタは <code>src</code>・<code>title</code>・<code>poster</code>{' '}
+          を本文にそのまま保存します。<code>duration</code> は一覧に出すだけです。期限付きの署名 URL
+          のように、後で読めなくなる URL は渡さないでください。エディタは動画の要素に crossorigin
+          を付けないため、配信元の Cookie で認可できます。
+          <br />
+          <code>src</code> と <code>poster</code> は http(s) の URL か、<code>/</code>{' '}
+          から始まるルート相対パスにしてください。それ以外の値を持つ動画は一覧に出さず、開発者向けに{' '}
+          <code>console.warn</code> を出します。
+          <br />
+          サムネイル（<code>poster</code>
+          ）は、動画と同じ解像度の画像にしてください。サイズを変えていない動画を、ブラウザは再生を始めるまでサムネイルの大きさで表示し、再生すると動画の大きさに切り替えます。解像度が違うと、再生した瞬間に枠の大きさが変わります。
+          <br />
+          挿入した動画を選ぶと、操作バー（配置・サイズ・削除）を動画の上に出します。キーボードでは、動画を選んだ状態で
+          Alt+Enter か Shift+F10
+          を押すと操作バーへ移ります。四隅のハンドルをドラッグしてもサイズを変えられます。
+          <br />
+          動画を含む本文は、動画に対応した版のエディタと RichTextViewer
+          で扱ってください。古い版は動画を表示せず、利用者にも知らせません。古い版のエディタで開いて保存すると、動画は本文から消えます。
+        </Text>
+        <FormControl label="本文">
+          <RichTextEditor
+            features={ALL_FEATURES}
+            loadVideos={loadSampleVideos}
+            placeholder="ツールバーの動画のボタンから、サンプルの動画を挿入できます"
+            onChange={(json) => setValue(json)}
+          />
+        </FormControl>
+        {value && (
+          <details>
+            <summary>onChange で受け取った JSON</summary>
+            <pre style={{ fontSize: 12 }}>{JSON.stringify(value, null, 2)}</pre>
+          </details>
+        )}
+      </Stack>
+    )
+  },
+}
+
 export const StaticDisplay: Story = {
   name: '表示専用（RichTextViewer）',
   parameters: {
@@ -742,6 +932,9 @@ export const StaticDisplay: Story = {
         保存済みの内容を表示するだけなら RichTextViewer を使います。editor instance
         を起動せず、ツールバーや画像アップロードの処理も読み込みません。JSON でも HTML
         でも渡せます。
+        <br />
+        動画も表示します。ただし <code>src</code> が http(s) の URL でも <code>/</code>{' '}
+        から始まるルート相対パスでもない動画は表示しません。
       </Text>
       <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16 }}>
         <RichTextViewer
@@ -992,6 +1185,11 @@ export const Resizable: Story = {
 
 export const ToolbarDisplay: Story = {
   name: 'ツールバーの表示',
+  parameters: {
+    docs: {
+      source: { code: null },
+    },
+  },
   render: () => (
     <Stack gap={1.5}>
       <Text color="TEXT_GREY">
@@ -1004,10 +1202,13 @@ export const ToolbarDisplay: Story = {
         <code>aria-label</code> が付いているため支援技術には引き続きラベルが伝わります。
         <br />
         <code>hideToolbar</code>{' '}
-        でツールバーを隠すと、画像・動画・表の上に出るメニューも表示しません。ツールバーからの挿入と表の行・列の操作はできなくなりますが、
+        でツールバーを隠すと、画像・動画・表の上に出るメニュー、スラッシュコマンドのメニュー、ブロックの左の
+        ⋮⋮ と
+        ＋、ブロックメニューも表示しません。ツールバーからの挿入、表の行・列の操作、ブロックの複製はできなくなりますが、
         <code>features</code>{' '}
-        で許可したものは貼り付けやドロップで入り、ドラッグでのサイズ変更と書式のショートカットも使えます。ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter
-        など）と、リンクを編集する Cmd+K は効きません。
+        で許可したものは貼り付けやドロップで入り、ドラッグでのサイズ変更と書式のショートカット・Markdown
+        入力も使えます。ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter・ブロックメニューの
+        Cmd+/ など）と、リンクを編集する Cmd+K は効きません。ブロックを移動するキーは効きます。
       </Text>
       <FormControl label="ブラウザの幅を狭めると折り返しトグルが現れます">
         <RichTextEditor

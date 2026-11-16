@@ -25,7 +25,7 @@ import type { JSXElementConstructor } from 'react'
 
 type MessageId = keyof typeof typedJa
 
-type LabelDescriptor = {
+export type LabelDescriptor = {
   [K in MessageId]: { id: K; defaultText: (typeof typedJa)[K] }
 }[MessageId]
 
@@ -52,6 +52,8 @@ export type BlockCatalogEntry = {
   headingLevel?: HeadingLevel
   group: 'text' | 'media'
   label: LabelDescriptor
+  /** 移動・複製・削除の読み上げで使う名前。label は「表を挿入」のような操作の名前を含むため分ける */
+  name: LabelDescriptor
   keywords: readonly string[]
   icon: JSXElementConstructor<Record<string, never>>
   creation:
@@ -76,6 +78,7 @@ const heading = (level: HeadingLevel): BlockCatalogEntry => ({
   headingLevel: level,
   group: 'text',
   label: HEADING_LABELS[level],
+  name: HEADING_LABELS[level],
   keywords: [`h${level}`, 'heading', 'みだし'],
   icon: FaFontIcon,
   creation: { type: 'command', apply: (chain) => chain.setHeading({ level }) },
@@ -88,6 +91,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: null,
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/headingNormal', defaultText: '標準テキスト' },
+    name: { id: 'smarthr-ui/RichTextEditor/blockNameParagraph', defaultText: '段落' },
     keywords: ['p', 'paragraph', 'text', 'ほんぶん', 'だんらく'],
     icon: FaAlignLeftIcon,
     creation: null,
@@ -102,6 +106,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'bulletList',
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/bulletList', defaultText: '箇条書きリスト' },
+    name: { id: 'smarthr-ui/RichTextEditor/bulletList', defaultText: '箇条書きリスト' },
     keywords: ['ul', 'list', 'bullet', 'りすと', 'かじょうがき'],
     icon: FaListUlIcon,
     creation: { type: 'command', apply: (chain) => chain.toggleBulletList() },
@@ -112,6 +117,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'orderedList',
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/orderedList', defaultText: '番号付きリスト' },
+    name: { id: 'smarthr-ui/RichTextEditor/orderedList', defaultText: '番号付きリスト' },
     keywords: ['ol', 'list', 'number', 'りすと', 'ばんごう'],
     icon: FaListOlIcon,
     creation: { type: 'command', apply: (chain) => chain.toggleOrderedList() },
@@ -122,6 +128,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'blockquote',
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/blockquote', defaultText: '引用' },
+    name: { id: 'smarthr-ui/RichTextEditor/blockquote', defaultText: '引用' },
     keywords: ['quote', 'blockquote', 'いんよう'],
     icon: FaQuoteLeftIcon,
     creation: { type: 'command', apply: (chain) => chain.setBlockquote() },
@@ -132,6 +139,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'codeBlock',
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/codeBlock', defaultText: 'コードブロック' },
+    name: { id: 'smarthr-ui/RichTextEditor/codeBlock', defaultText: 'コードブロック' },
     keywords: ['code', 'pre', 'こーど'],
     icon: FaFileCodeIcon,
     creation: { type: 'command', apply: (chain) => chain.setCodeBlock() },
@@ -142,6 +150,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'horizontalRule',
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/horizontalRule', defaultText: '水平線' },
+    name: { id: 'smarthr-ui/RichTextEditor/horizontalRule', defaultText: '水平線' },
     keywords: ['hr', 'divider', 'line', 'すいへいせん', 'くぎりせん'],
     icon: FaMinusIcon,
     creation: { type: 'command', apply: (chain) => chain.setHorizontalRule() },
@@ -152,6 +161,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'table',
     group: 'text',
     label: { id: 'smarthr-ui/RichTextEditor/tableInsert', defaultText: '表を挿入' },
+    name: { id: 'smarthr-ui/RichTextEditor/blockNameTable', defaultText: '表' },
     keywords: ['table', 'ひょう', 'てーぶる'],
     icon: FaTableIcon,
     // 大きさを尋ねるダイアログを開かないのは、行と列は入れたあとに表のメニューで増減できるため
@@ -166,6 +176,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'image',
     group: 'media',
     label: { id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' },
+    name: { id: 'smarthr-ui/RichTextEditor/blockNameImage', defaultText: '画像' },
     keywords: ['image', 'img', 'picture', 'がぞう', 'しゃしん'],
     icon: FaImageIcon,
     creation: { type: 'dialog', dialog: 'image' },
@@ -176,6 +187,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'youtube',
     group: 'media',
     label: { id: 'smarthr-ui/RichTextEditor/youtube', defaultText: 'YouTube動画を埋め込む' },
+    name: { id: 'smarthr-ui/RichTextEditor/blockNameYoutube', defaultText: 'YouTube動画' },
     keywords: ['youtube', 'ゆーちゅーぶ', 'どうが'],
     icon: FaCirclePlayIcon,
     creation: { type: 'dialog', dialog: 'youtube' },
@@ -186,11 +198,32 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     feature: 'video',
     group: 'media',
     label: { id: 'smarthr-ui/RichTextEditor/video', defaultText: '動画を挿入' },
+    name: { id: 'smarthr-ui/RichTextEditor/blockNameVideo', defaultText: '動画' },
     keywords: ['video', 'movie', 'どうが'],
     icon: VideoIcon,
     creation: { type: 'dialog', dialog: 'video' },
   },
 ]
+
+const EXCERPT_LENGTH = 20
+
+/** 文にしないのは、localize がフックからしか取れないため */
+export const describeBlock = (node: PMNode) => {
+  // 表やリストのセル・項目の間に区切りを入れないと、隣り合う文字が 1 語につながって読まれる
+  const text = (
+    node.isLeaf
+      ? String(node.attrs.alt ?? node.attrs.title ?? '')
+      : node.textBetween(0, node.content.size, ' ')
+  )
+    .replace(/\s+/g, ' ')
+    .trim()
+  const chars = Array.from(text)
+
+  return {
+    blockId: BLOCK_CATALOG.find((entry) => entry.matches(node))?.id ?? null,
+    excerpt: chars.length > EXCERPT_LENGTH ? `${chars.slice(0, EXCERPT_LENGTH).join('')}…` : text,
+  }
+}
 
 export const isBlockAllowed = (
   entry: BlockCatalogEntry,
