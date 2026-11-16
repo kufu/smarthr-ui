@@ -67,7 +67,7 @@ export const HeadingDropdown: FC<Props> = memo((props) => {
     defaultText: currentOption.defaultText,
   })
 
-  const latest = useLatest({ allowedOptions })
+  const latest = useLatest({ editor, allowedOptions })
 
   const functions = useMemo(
     () => ({
@@ -75,15 +75,14 @@ export const HeadingDropdown: FC<Props> = memo((props) => {
         const { level } = latest.allowedOptions[index]
 
         if (level === null) {
-          editor.chain().focus().setParagraph().run()
+          latest.editor.chain().focus().setParagraph().run()
         } else {
           // 選択は冪等にする。toggle だと同じレベルを選び直したときに段落へ戻ってしまう
-          editor.chain().focus().setHeading({ level }).run()
+          latest.editor.chain().focus().setHeading({ level }).run()
         }
       },
     }),
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-    [editor, latest],
+    [latest],
   )
 
   return (
