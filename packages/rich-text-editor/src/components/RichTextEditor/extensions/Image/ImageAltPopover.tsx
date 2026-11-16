@@ -31,25 +31,24 @@ export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
     defaultText: '画像の内容を説明してください。',
   })
 
-  const latest = useLatest({ alt })
+  const latest = useLatest({ editor, alt })
 
   const functions = useMemo(
     () => ({
       handleOpen: (targetPos: number) => {
-        const node = editor.state.doc.nodeAt(targetPos)
+        const node = latest.editor.state.doc.nodeAt(targetPos)
 
         setAlt(typeof node?.attrs.alt === 'string' ? node.attrs.alt : '')
       },
       handleSubmit: (targetPos: number) => {
-        editor
+        latest.editor
           .chain()
           .setNodeSelection(targetPos)
           .updateAttributes('image', { alt: latest.alt })
           .run()
       },
     }),
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-    [editor, latest],
+    [latest],
   )
 
   return (
