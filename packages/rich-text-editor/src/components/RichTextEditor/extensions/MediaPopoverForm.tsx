@@ -71,6 +71,7 @@ export const MediaPopoverForm: FC<Props> = ({
     handleSubmit,
     secondaryAction,
     onKeyDown,
+    setIsOpen,
   })
 
   const functions = useMemo(() => {
@@ -82,7 +83,7 @@ export const MediaPopoverForm: FC<Props> = ({
     const open = () => {
       targetPos.current = latest.pos
       latest.handleOpen(targetPos.current)
-      setIsOpen(true)
+      latest.setIsOpen(true)
       cancelFocus()
       // 開いた直後は位置を測る間 visibility:hidden で、フォーカスを受け付けない
       focusFrame.current = requestAnimationFrame(() => {
@@ -92,7 +93,7 @@ export const MediaPopoverForm: FC<Props> = ({
     }
     const close = () => {
       cancelFocus()
-      setIsOpen(false)
+      latest.setIsOpen(false)
       latest.triggerRef.current?.focus()
     }
 
@@ -132,8 +133,7 @@ export const MediaPopoverForm: FC<Props> = ({
         }
       },
     }
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-  }, [setIsOpen, latest])
+  }, [latest])
 
   useEffect(() => {
     if (!isOpen) return
