@@ -87,6 +87,7 @@ export const FilePreviewDialog: FC<Props> = memo(
           <Section className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
             <Cluster
               align="center"
+              grow="start"
               className="shr-border-b-shorthand shr-shrink-0 shr-px-1 shr-py-0.5"
             >
               <Heading className="shr-min-w-0 shr-grow shr-truncate shr-text-base">
