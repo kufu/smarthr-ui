@@ -28,7 +28,6 @@ export const DatetimeLocalPicker: FC<Props> = ({ error, className, ...rest }) =>
 
   return (
     <span className={classNames.wrapper}>
-      {}
       <input
         {...rest}
         type="datetime-local"

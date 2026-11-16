@@ -22,7 +22,7 @@ export default {
   args: {
     label: '機能名',
     additionalArea: (
-      <Cluster align="center">
+      <Cluster inline align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
         <Button size="S" prefix={<FaArrowsRotateIcon />}>
           データを同期

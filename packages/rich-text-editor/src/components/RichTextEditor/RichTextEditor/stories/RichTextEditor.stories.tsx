@@ -396,7 +396,7 @@ export const InForm: Story = {
           <FormControl label="リッチテキストエディタ">
             <RichTextEditor {...rest} />
           </FormControl>
-          <Cluster align="center">
+          <Cluster inline align="center">
             <Button type="submit" variant="primary">
               保存
             </Button>

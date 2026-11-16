@@ -47,7 +47,7 @@ export const All: StoryObj<typeof FaAddressBookIcon> = {
         ] as Array<[string, ComponentType<any>]>
       ).map(([name, Icon]) => (
         <li key={name}>
-          <Cluster align="center">
+          <Cluster inline align="center">
             <Icon {...args} />
             <span>{name}</span>
           </Cluster>
