@@ -82,7 +82,7 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, ref, children, ...rest 
       },
       focus,
     }
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- firstFocusTargetは外部から渡される値だがrefでありほぼstableのため許可
   }, [firstFocusTarget])
 
   useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])

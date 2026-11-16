@@ -310,6 +310,7 @@ export const MultiCombobox = <T,>({
     onFocus,
     onBlur,
     onKeyPress,
+    listBoxFunctions,
     disabled,
     isExpanded,
     highlighted,
@@ -365,7 +366,7 @@ export const MultiCombobox = <T,>({
       })
     }
 
-    const handleDelete = listBoxFunctions.handleDelete
+    const handleDelete = latest.listBoxFunctions.handleDelete
 
     const getDeletionButtons = () => {
       if (triggerRef.current) {
@@ -449,7 +450,7 @@ export const MultiCombobox = <T,>({
         }
 
         if (!node) {
-          listBoxFunctions.cleanupFrame()
+          latest.listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
           latest.resetFrame.cancel()
@@ -534,8 +535,7 @@ export const MultiCombobox = <T,>({
         latest.onKeyPress?.(e)
       },
     }
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-  }, [listBoxFunctions, latest])
+  }, [latest])
 
   const listBoxCallbackRef = useAreaClickCallbackRef(
     isExpanded ? [triggerRef] : null,
