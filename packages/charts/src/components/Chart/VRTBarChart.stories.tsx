@@ -103,6 +103,11 @@ export default {
           }}
         />
       </div>
+
+      {/* パターン13: テーブル表示（defaultView='table'） */}
+      <div className="shr-h-[400px]">
+        <BarChart data={multiSmall} defaultView="table" title="テーブル表示" />
+      </div>
     </Stack>
   ),
   parameters: {
