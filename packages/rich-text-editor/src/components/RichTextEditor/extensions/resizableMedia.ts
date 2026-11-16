@@ -61,9 +61,7 @@ type PersistentHandlesNodeViewOptions = Omit<ResizableNodeViewOptions, 'options'
   getOwnSize: () => { width: number; height: number }
 }
 
-const NOOP_UPDATE_LISTENER: () => void = Object.assign(() => {}, {
-  bind: () => NOOP_UPDATE_LISTENER,
-})
+const NOOP_UPDATE_LISTENER = () => {}
 
 /**
  * 標準はハンドルを文書の更新時にだけ編集可否に合わせて外し・付け直す。更新を伴わない
@@ -140,14 +138,14 @@ export class PersistentHandlesNodeView extends ResizableNodeView {
       .run()
   }
 
-  // 標準は購読も解除も handleEditorUpdate.bind(this) で行い、bind が毎回別の関数を返すため解除されず、
-  // NodeView を作り直すたびに残る。購読そのものは止められないので、bind しても同じ関数を返すものを渡す。
+  // 標準はコンストラクタでこの名前にアロー関数を代入し、そのまま購読する。購読そのものは止められないので、
+  // 代入は setter で捨て、購読には何もしない関数を渡す。
   // インスタンスごとに分けないのは、off が同じ関数をまとめて外しても、何もしない関数なので害が無いため
   get handleEditorUpdate() {
     return NOOP_UPDATE_LISTENER
   }
 
-  // 上流が bind をやめてアロー関数のフィールドにすると、親のコンストラクタが代入して例外になる
+  // getter だけだと、親のコンストラクタの代入が例外になる
   set handleEditorUpdate(_listener: unknown) {}
 
   // 標準は touchend を購読しないため、タッチでは確定もドラッグ中の状態の解除も起きない
