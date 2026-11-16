@@ -54,11 +54,11 @@ export const ShowZero: StoryObj<typeof Badge> = {
   name: 'showZero',
   render: (args) => (
     <Stack>
-      <Cluster>
+      <Cluster inline>
         <span>true</span>
         <Badge {...args} showZero={true} count={0} />
       </Cluster>
-      <Cluster>
+      <Cluster inline>
         <span>false</span>
         <Badge {...args} showZero={false} count={0} />
       </Cluster>
