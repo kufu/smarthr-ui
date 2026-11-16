@@ -122,6 +122,7 @@ export const ToolbarListboxDropdown = ({
     triggerRef,
     handleSelect,
     onKeyDown,
+    setIsOpen,
   })
 
   const functions = useMemo(() => {
@@ -129,7 +130,7 @@ export const ToolbarListboxDropdown = ({
       listboxRef.current?.querySelectorAll<HTMLElement>('[role="option"]') ?? null
 
     const closeAndFocusTrigger = () => {
-      setIsOpen(false)
+      latest.setIsOpen(false)
       latest.triggerRef.current?.focus()
     }
 
@@ -145,7 +146,7 @@ export const ToolbarListboxDropdown = ({
           case 'ArrowDown':
             e.preventDefault()
             e.stopPropagation()
-            setIsOpen(true)
+            latest.setIsOpen(true)
             requestAnimationFrame(() => {
               const index = latest.selectedIndex >= 0 ? latest.selectedIndex : latest.fallbackIndex
               getOptions()?.[index]?.focus()
@@ -154,7 +155,7 @@ export const ToolbarListboxDropdown = ({
           case 'ArrowUp':
             e.preventDefault()
             e.stopPropagation()
-            setIsOpen(true)
+            latest.setIsOpen(true)
             requestAnimationFrame(() => {
               const buttons = getOptions()
               buttons?.[buttons.length - 1]?.focus()
@@ -202,8 +203,7 @@ export const ToolbarListboxDropdown = ({
         }
       },
     }
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-  }, [setIsOpen, latest])
+  }, [latest])
 
   return (
     <>
