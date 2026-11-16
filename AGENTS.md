@@ -842,6 +842,29 @@ const latest = useLatest({ onClickOption, hasValue })
 const functions = useMemo(() => ({ ... }), [latest])
 ```
 
+**注意: この「迷ったらlatestに含める」判断基準は、`functions`のuseMemoに限らず、`latest`を使っている全てのフック(`useEffect`・`useCallback`等)の依存配列に当てはまる**
+
+本書の別の箇所（`classNames`のuseMemo、callback refの依存配列など）では「実用上マウント後に変化する可能性がほぼない値であれば直接依存配列に含めてよい」という書き方をしていますが、これは**`latest`という選択肢がそもそも無い文脈**での判断基準です。同じコンポーネント内に既に`latest`がある場合は話が別で、値が実際に安定しているかどうかに関わらず、新しく依存配列に加える値は`latest`にまとめて参照する方を優先してください。安定した値を直接依存配列に追加すること自体がダメなのではなく、「せっかく`latest`があるのに使わない」こと自体が、後から見て意図が読み取りにくく、かつ安定性の判断を書き手・レビュワーに都度強いる原因になります。
+
+```tsx
+// ❌ idPrefixはuseId()の結果で実質不変だが、既にlatestがある文脈で直接依存配列に追加している
+const latest = useLatest({ getVideoHandlers })
+
+useEffect(() => {
+  const { loadVideos } = latest.getVideoHandlers()
+  // ...idPrefixを使った処理
+}, [attempt, idPrefix, latest])
+
+// ✅ idPrefixもlatestに含めて参照する
+const latest = useLatest({ getVideoHandlers, idPrefix })
+
+useEffect(() => {
+  const { idPrefix } = latest
+  const { loadVideos } = latest.getVideoHandlers()
+  // ...
+}, [attempt, latest])
+```
+
 **依存配列の順序ルール:**
 functionsを他のhookの依存配列に含める場合、基本的に最後尾に配置しますが、`latest`（useLatestの結果）よりは前に配置します：
 
@@ -1110,7 +1133,7 @@ const mergedRef = useMergeRefs(callbackRef, outerRef)
 
 callback ref 自体は基本的に依存配列を持たない固定参照にし、`MutationObserver` でDOM属性の変化を監視して処理を再実行します。値がすでに要素の属性として存在する場合（`value`、`disabled`、`aria-expanded` など）はそれをそのまま監視対象にでき、存在しない場合のみ `data-*` 属性として新たに表現します。callback ref が再生成されないため、`useMergeRefs` に渡しても他の ref を巻き込みません。実例は `FormGroup.tsx` の `innerCallbackRef`(`data-auto-bind-error-input` などの変化を監視)。
 
-**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。
+**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。ただし、同じコンポーネント内に既に`latest`がある場合は、新しく加える値が安定していても`latest`にまとめることを優先してください（詳細は前述の「迷ったらlatestに含める」判断基準を参照）。
 
 ```tsx
 // ✅ callbackRef自体は空配列で固定。値の変化はdata属性経由で伝える
