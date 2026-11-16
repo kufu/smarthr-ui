@@ -859,7 +859,8 @@ useEffect(() => {
 const latest = useLatest({ getVideoHandlers, idPrefix })
 
 useEffect(() => {
-  const { loadVideos, idPrefix } = latest
+  const { idPrefix } = latest
+  const { loadVideos } = latest.getVideoHandlers()
   // ...
 }, [attempt, latest])
 ```
