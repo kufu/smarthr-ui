@@ -138,8 +138,9 @@ export function getContentBoxStyle(
       contentBox.maxHeight = `${safeBottom - triggerRect.bottom - padding}px`
     } else {
       // 上側の領域のほうが広い場合
-      contentBox.top = `${scroll.top + safeTop + padding + 5}px`
+      contentBox.top = `${scroll.top + triggerRect.top + 5}px`
       contentBox.maxHeight = `${triggerRect.top - safeTop - padding}px`
+      contentBox.transform = 'translateY(-100%)'
     }
   }
 

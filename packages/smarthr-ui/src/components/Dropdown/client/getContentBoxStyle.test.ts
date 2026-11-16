@@ -48,7 +48,7 @@ describe('getContentBoxStyle', () => {
     })
   })
 
-  it('return top style including maxHeight when both of the top and the bottom side does not have enough space to display content and the trigger is in the lower side of the screen', () => {
+  it('returns trigger-anchored top style with translateY and maxHeight when neither side has enough space and the trigger is in the lower side of the screen', () => {
     const triggerRect = { top: 200, bottom: 240, left: 0, right: 120 }
     const contentSize = { width: 300, height: 400 }
     const windowSize = { width: 1000, height: 370 }
@@ -56,9 +56,10 @@ describe('getContentBoxStyle', () => {
     expect(
       getContentBoxStyle(triggerRect, contentSize, windowSize, scroll, NO_SAFE_AREA_INSETS),
     ).toEqual({
-      top: '15px', // 0 + 10 + 5
+      top: '205px', // 200 + 5
       left: '-5px', // trigger left - 5
       maxHeight: '190px', // 200 - 10
+      transform: 'translateY(-100%)',
     })
   })
 
@@ -154,7 +155,7 @@ describe('getContentBoxStyle', () => {
       })
     })
 
-    it('return top style including maxHeight that does not overlap the top safe area', () => {
+    it('returns trigger-anchored top style with translateY and maxHeight that does not overlap the top safe area', () => {
       const triggerRect = { top: 200, bottom: 240, left: 0, right: 120 }
       const contentSize = { width: 300, height: 400 }
       const windowSize = { width: 1000, height: 370 }
@@ -162,9 +163,10 @@ describe('getContentBoxStyle', () => {
       expect(
         getContentBoxStyle(triggerRect, contentSize, windowSize, scroll, SAFE_AREA_INSETS),
       ).toEqual({
-        top: '74px', // 59 + 10 + 5
+        top: '205px', // 200 + 5
         left: '-5px', // trigger left - 5
         maxHeight: '131px', // 200 - 59 - 10
+        transform: 'translateY(-100%)',
       })
     })
 
