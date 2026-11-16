@@ -5,10 +5,10 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/crowdinPullTranslations.yml':
         - 'actions/checkout@v7.0.1'
-        - 'crowdin/github-action@v3.5.1'
+        - 'crowdin/github-action@v3.6.0'
     '.github/workflows/crowdinPushSources.yml':
         - 'actions/checkout@v7.0.1'
-        - 'crowdin/github-action@v3.5.1'
+        - 'crowdin/github-action@v3.6.0'
     '.github/workflows/previewRelease.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
@@ -42,9 +42,9 @@ dependencies:
         commit: 'sha1-4c8b7f51ca60df14e3c5ca82770dfbbe6c3dae85'
         owner_id: 36412122
         repo_id: 181782286
-    'crowdin/github-action@v3.5.1':
-        ref: 'v3.5.1'
-        commit: 'sha1-5b9790df740c85af5412a3a3a91b24988d5d324f'
+    'crowdin/github-action@v3.6.0':
+        ref: 'v3.6.0'
+        commit: 'sha1-d651c77756acbe11a31d77a6fb79d8a239e1e05a'
         owner_id: 861398
         repo_id: 258521306
     'googleapis/release-please-action@v4.4.1':
