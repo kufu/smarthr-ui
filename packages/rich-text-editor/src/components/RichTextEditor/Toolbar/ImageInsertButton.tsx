@@ -169,7 +169,7 @@ export const ImageInsertButton: FC<Props> = memo(
           }
         },
       }
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
+      // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
     }, [editor, getImageUploadHandlers, setIsOpen, latest])
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })

@@ -33,7 +33,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
       code: `
         const hasOnClick = Boolean(onClick)
         const functions = useMemo(() => ({
-          handleClick: () => hasOnClick && latest.onClick(),
+          handleClick: hasOnClick ? latest.onClick : undefined,
         }), [hasOnClick, latest])
       `,
     },
