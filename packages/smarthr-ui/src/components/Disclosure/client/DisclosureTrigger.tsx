@@ -31,7 +31,6 @@ export const DisclosureTrigger: FC<Props> = ({ targetId, children, onClick }) =>
         return
       }
 
-      // eslint-disable-next-line local-rules/best-practice-for-use-latest -- 既存コード、別途latestへの集約を検討
       const removeDisclosureChangeListener = latest.addDisclosureChangeListener()
 
       let currentCleanup: (() => void) | undefined

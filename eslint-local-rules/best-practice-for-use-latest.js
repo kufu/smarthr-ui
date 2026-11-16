@@ -45,6 +45,12 @@ module.exports = {
     // latest.xxxの使用や依存配列の位置チェックを許可するフック名
     const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo|LayoutEffectRef)$/
 
+    // noEagerCaptureチェック専用の対象フック名。useCallbackはコールバック自体が
+    // 呼ばれるたびに本体が再評価されるため、直下でlatest.xxxを変数に代入しても
+    // 呼び出しごとに最新値を取り直すので問題が起きない。依存配列が変わるまで
+    // 本体が再実行されないuseMemo/useEffect/useLayoutEffect/useLayoutEffectRefのみ対象とする
+    const EAGER_CAPTURE_HOOK_PATTERN = /^use((Layout)?Effect|Memo|LayoutEffectRef)$/
+
     /**
      * 識別子が useLatest() 呼び出しに束縛されているかチェック
      */
@@ -122,7 +128,7 @@ module.exports = {
           return (
             grandParent?.type === 'CallExpression' &&
             grandParent.callee.type === 'Identifier' &&
-            ALLOWED_HOOK_PATTERN.test(grandParent.callee.name) &&
+            EAGER_CAPTURE_HOOK_PATTERN.test(grandParent.callee.name) &&
             grandParent.arguments[0] === parent
           )
         }

@@ -208,6 +208,27 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }), [latest])
       `,
     },
+
+    // useCallbackのコールバック直下での代入はOK(呼ばれるたびに本体が再評価されるため)
+    {
+      code: `
+        const latest = useLatest({ addDisclosureChangeListener })
+        const callbackRef = useCallback((node) => {
+          const remove = latest.addDisclosureChangeListener()
+        }, [latest])
+      `,
+    },
+
+    // useCallback直下でMemberExpressionをそのまま代入してもOK
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        const handleClick = useCallback(() => {
+          const onSelect = latest.listBoxFunctions.handleSelect
+          onSelect()
+        }, [latest])
+      `,
+    },
   ],
 
   invalid: [
@@ -564,17 +585,6 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         const latest = useLatest({ getVideoHandlers })
         useEffect(() => {
           const { loadVideos } = latest.getVideoHandlers()
-        }, [latest])
-      `,
-      errors: [{ messageId: 'noEagerCapture' }],
-    },
-
-    // フック直下でlatest.xxx()の呼び出し結果をそのまま変数に代入
-    {
-      code: `
-        const latest = useLatest({ addDisclosureChangeListener })
-        const callbackRef = useCallback((node) => {
-          const remove = latest.addDisclosureChangeListener()
         }, [latest])
       `,
       errors: [{ messageId: 'noEagerCapture' }],
