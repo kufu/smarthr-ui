@@ -77,6 +77,7 @@ export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
         }
       },
     }
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
   }, [queries])
 
   const matches = useSyncExternalStore(

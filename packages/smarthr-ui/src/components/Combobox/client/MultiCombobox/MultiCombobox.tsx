@@ -534,6 +534,7 @@ export const MultiCombobox = <T,>({
         latest.onKeyPress?.(e)
       },
     }
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
   }, [listBoxFunctions, latest])
 
   const listBoxCallbackRef = useAreaClickCallbackRef(

@@ -2,6 +2,7 @@ import smarthr from 'eslint-config-smarthr'
 import perfectionist from 'eslint-plugin-perfectionist'
 import storybook from 'eslint-plugin-storybook'
 
+import bestPracticeForFunctionsDeps from './eslint-local-rules/best-practice-for-functions-deps.js'
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
 import requireClient from './eslint-local-rules/require-client.js'
@@ -16,6 +17,7 @@ export default [
     plugins: {
       'local-rules': {
         rules: {
+          'best-practice-for-functions-deps': bestPracticeForFunctionsDeps,
           'best-practice-for-use-latest': bestPracticeForUseLatest,
           'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
           'require-client': requireClient,
@@ -24,6 +26,7 @@ export default [
       perfectionist,
     },
     rules: {
+      'local-rules/best-practice-for-functions-deps': 'error',
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
       'local-rules/require-client': 'error',

@@ -119,6 +119,7 @@ export const YoutubeInsertButton: FC<Props> = memo(
           }
         },
       }
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
     }, [editor, setIsOpen, latest])
 
     // ポップアップ表示時にURL Inputへフォーカス、閉じたら入力をリセット
