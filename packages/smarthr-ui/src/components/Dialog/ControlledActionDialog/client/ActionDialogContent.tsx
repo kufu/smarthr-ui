@@ -129,7 +129,7 @@ const ActionAreaCluster = memo<
   )
 
   return (
-    <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+    <Cluster inline gap={ACTION_AREA_CLUSTER_GAP} className={className}>
       <CloseButton
         disabled={closeButton.disabled || loading}
         text={closeButton.text}
