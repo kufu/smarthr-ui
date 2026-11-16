@@ -141,6 +141,10 @@ describe('createSchemaExtensions', () => {
     it.each([
       ['段落で包んだ video', '<p><video src="/a.mp4"></video></p>'],
       ['source で指定した video', '<video><source src="/a.mp4" type="video/mp4"></video>'],
+      [
+        'src が空の source に続く source で指定した video',
+        '<video><source src=""><source src="/a.mp4" type="video/mp4"></video>',
+      ],
       ['素の video', '<video src="/a.mp4"></video>'],
     ])('%s を、前後に空の段落を作らずに読む', (_, html) => {
       expect(generateJSON(html, schemaExtensions).content).toEqual([
