@@ -67,21 +67,23 @@ export const YoutubeInsertButton: FC<Props> = memo(
     })
 
     const latest = useLatest({
+      editor,
       url,
       requiredMessage,
       invalidMessage,
       triggerRef,
       onKeyDown: onKeyDownProp,
+      setIsOpen,
     })
 
     const functions = useMemo(() => {
       const closePopup = () => {
-        setIsOpen(false)
+        latest.setIsOpen(false)
         latest.triggerRef.current?.focus()
       }
 
       return {
-        handleTriggerClick: () => setIsOpen((prev) => !prev),
+        handleTriggerClick: () => latest.setIsOpen((prev) => !prev),
         handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
@@ -95,8 +97,8 @@ export const YoutubeInsertButton: FC<Props> = memo(
             setError(latest.invalidMessage)
             return
           }
-          editor.chain().focus().setYoutubeVideo(normalized).run()
-          setIsOpen(false)
+          latest.editor.chain().focus().setYoutubeVideo(normalized).run()
+          latest.setIsOpen(false)
         },
         handlePopupKeyDown: (e: KeyboardEvent) => {
           if (e.key === 'Escape') {
@@ -112,15 +114,14 @@ export const YoutubeInsertButton: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(true)
+              latest.setIsOpen(true)
               break
             default:
               latest.onKeyDown?.(e)
           }
         },
       }
-      // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-    }, [editor, setIsOpen, latest])
+    }, [latest])
 
     // ポップアップ表示時にURL Inputへフォーカス、閉じたら入力をリセット
     useEffect(() => {
