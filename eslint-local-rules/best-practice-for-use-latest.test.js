@@ -149,6 +149,65 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [count, latest])
       `,
     },
+
+    // フック直下でlatest.xxxを関数でラップしている（OK）
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+        }), [latest])
+      `,
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果を関数でラップしている（OK）
+    {
+      code: `
+        const latest = useLatest({ getHandlers })
+        useEffect(() => {
+          const run = () => {
+            const { onRun } = latest.getHandlers()
+            onRun()
+          }
+          run()
+        }, [latest])
+      `,
+    },
+
+    // ネストしたローカル関数の中でlatest.xxxを変数に代入（OK、呼ばれるたびに再評価される）
+    {
+      code: `
+        const latest = useLatest({ value })
+        useEffect(() => {
+          const evaluate = () => {
+            const current = latest.value
+            if (!current) return
+          }
+          evaluate()
+        }, [latest])
+      `,
+    },
+
+    // フック直下でもlatest.xxxRef.currentはRefObjectのcurrent参照と名前から自明なため対象外（OK）
+    {
+      code: `
+        const latest = useLatest({ containerRef })
+        useEffect(() => {
+          const container = latest.containerRef.current
+          if (!container) return
+        }, [latest])
+      `,
+    },
+
+    // latest自体をオブジェクトプロパティの値としてアロー関数内で参照（OK、代入ではない）
+    {
+      code: `
+        const latest = useLatest({ onClick, hasValue })
+        const functions = useMemo(() => ({
+          handleClick: () => (latest.hasValue ? latest.onClick() : undefined),
+        }), [latest])
+      `,
+    },
   ],
 
   invalid: [
@@ -473,6 +532,63 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [{ messageId: 'noForIn' }],
+    },
+
+    // フック直下でlatest.xxxを変数にそのまま代入(MemberExpression)
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        const functions = useMemo(() => {
+          const handleDelete = latest.listBoxFunctions.handleDelete
+          return { handleDelete }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx.yyyを変数にそのまま代入(入れ子のMemberExpression、Refパターンではない)
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        useEffect(() => {
+          const onSelect = latest.listBoxFunctions.handleSelect
+          onSelect()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果をそのまま分割代入
+    {
+      code: `
+        const latest = useLatest({ getVideoHandlers })
+        useEffect(() => {
+          const { loadVideos } = latest.getVideoHandlers()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果をそのまま変数に代入
+    {
+      code: `
+        const latest = useLatest({ addDisclosureChangeListener })
+        const callbackRef = useCallback((node) => {
+          const remove = latest.addDisclosureChangeListener()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // useLayoutEffectRefでも同様に検知する
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const layoutEffectRef = useLayoutEffectRef((node) => {
+          const onChange = latest.onChange
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
     },
   ],
 })

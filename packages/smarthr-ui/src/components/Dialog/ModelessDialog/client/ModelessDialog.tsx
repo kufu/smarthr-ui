@@ -334,6 +334,7 @@ export const ModelessDialog: FC<Props> = ({
       if (isOpen) {
         captureOutsideFocus(document.activeElement)
 
+        // eslint-disable-next-line local-rules/best-practice-for-use-latest -- 既存コード、別途latestへの集約を検討
         const oldDefaultPosition = latest.defaultPosition
         const nextDefaultPosition =
           oldDefaultPosition.top === latest.top &&
@@ -360,6 +361,7 @@ export const ModelessDialog: FC<Props> = ({
           if (isXCenter || isYCenter) {
             const rect = node.getBoundingClientRect()
             // HINT: safe areaに重ならない領域の中央に配置する
+            // eslint-disable-next-line local-rules/best-practice-for-use-latest -- 既存コード、別途latestへの集約を検討
             const safeAreaInsets = latest.getSafeAreaInsets()
             const safeHeight = window.innerHeight - safeAreaInsets.top - safeAreaInsets.bottom
             const safeWidth = window.innerWidth - safeAreaInsets.left - safeAreaInsets.right

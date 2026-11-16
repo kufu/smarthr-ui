@@ -33,6 +33,8 @@ module.exports = {
         'latestに対してObject.keys/values/entries等を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
       noForIn:
         'latestに対してfor...inループを使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
+      noEagerCapture:
+        'latest.xxxの値をフックのコールバック直下で変数に代入すると、代入した瞬間の値に固定されます。呼び出し時に毎回最新値を参照できるよう、関数でラップしてください（例: const x = () => latest.yyy() や prop: () => latest.yyy ? a : b のように、もう一段関数を挟む）。',
     },
     schema: [],
   },
@@ -109,6 +111,75 @@ module.exports = {
     }
 
     /**
+     * ノードが対象フックのコールバック自身の直接のボディ内にあるかチェック
+     * (コールバック内で定義されたネストしたローカル関数の中ではないこと)
+     */
+    function isDirectlyInsideHookCallback(node) {
+      let parent = node.parent
+      while (parent) {
+        if (parent.type === 'ArrowFunctionExpression' || parent.type === 'FunctionExpression') {
+          const grandParent = parent.parent
+          return (
+            grandParent?.type === 'CallExpression' &&
+            grandParent.callee.type === 'Identifier' &&
+            ALLOWED_HOOK_PATTERN.test(grandParent.callee.name) &&
+            grandParent.arguments[0] === parent
+          )
+        }
+        parent = parent.parent
+      }
+      return false
+    }
+
+    /**
+     * MemberExpressionのobjectチェーンを辿り、根本の識別子を返す
+     * (例: latest.a.b.c の場合、latest の Identifier ノードを返す)
+     */
+    function getMemberExpressionRoot(node) {
+      let current = node
+      while (current.type === 'MemberExpression') {
+        current = current.object
+      }
+      return current
+    }
+
+    /**
+     * ノードが `xxxRef.current` のような、RefObjectのcurrent参照であることが
+     * 名前から自明なパターンかチェックする。ref自体は不変の参照であり、
+     * currentを読み出した時点の値として扱うのが一般的なReactパターンのため対象外とする
+     */
+    function isRefCurrentAccess(node) {
+      return (
+        node.type === 'MemberExpression' &&
+        !node.computed &&
+        node.property.type === 'Identifier' &&
+        node.property.name === 'current' &&
+        node.object.type === 'MemberExpression' &&
+        !node.object.computed &&
+        node.object.property.type === 'Identifier' &&
+        /Ref$/.test(node.object.property.name)
+      )
+    }
+
+    /**
+     * ノードが「latest起点ですぐに評価される式」かどうかを判定する
+     * (MemberExpression単体、またはcalleeがMemberExpressionであるCallExpression)。
+     * 関数式（ArrowFunctionExpression/FunctionExpression）は評価を遅延するため対象外
+     */
+    function isEagerLatestExpression(node) {
+      if (!node) return false
+
+      const target = node.type === 'CallExpression' ? node.callee : node
+
+      if (target.type !== 'MemberExpression') return false
+
+      if (isRefCurrentAccess(target)) return false
+
+      const root = getMemberExpressionRoot(target)
+      return root.type === 'Identifier' && root.name === 'latest' && isLatestFromUseLatest(root)
+    }
+
+    /**
      * ノードが依存配列内にあるかチェック
      */
     function isInsideDependencyArray(node) {
@@ -142,6 +213,17 @@ module.exports = {
           node.init.callee.type !== 'Identifier' ||
           node.init.callee.name !== 'useLatest'
         ) {
+          // フックのコールバック直下で、latest.xxxの値をそのまま変数に代入していないかチェック
+          if (
+            node.init &&
+            isEagerLatestExpression(node.init) &&
+            isDirectlyInsideHookCallback(node)
+          ) {
+            context.report({
+              node: node.init,
+              messageId: 'noEagerCapture',
+            })
+          }
           return
         }
 
