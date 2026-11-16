@@ -22,6 +22,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     // 依存配列にlatestのみ
     {
       code: `
+        const latest = useLatest({ onClick })
         const functions = useMemo(() => ({
           handleClick: () => latest.onClick(),
         }), [latest])
@@ -32,6 +33,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     {
       code: `
         const hasOnClick = Boolean(onClick)
+        const latest = useLatest({ onClick })
         const functions = useMemo(() => ({
           handleClick: hasOnClick ? latest.onClick : undefined,
         }), [hasOnClick, latest])
@@ -50,6 +52,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     // functionsという名前でない変数はチェック対象外
     {
       code: `
+        const latest = useLatest({ onClick })
         const other = useMemo(() => ({
           handleClick: () => setIsOpen(true),
         }), [setIsOpen])
@@ -59,6 +62,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     // useMemoでない場合はチェック対象外
     {
       code: `
+        const latest = useLatest({ onClick })
         const functions = useCallback(() => ({
           handleClick: () => setIsOpen(true),
         }), [setIsOpen])
@@ -73,12 +77,33 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
         }))
       `,
     },
+
+    // latestというスコープ内の変数がそもそも無いコンポーネントでは、
+    // 安定した値(editor等)を直接依存配列に含めてもよい
+    {
+      code: `
+        const functions = useMemo(() => ({
+          handleClick: () => editor.chain().focus().run(),
+        }), [editor])
+      `,
+    },
+
+    // latestがuseLatest()由来でない(同名の別の変数)場合はチェック対象外
+    {
+      code: `
+        const [latest, setLatest] = useState(null)
+        const functions = useMemo(() => ({
+          handleClick: () => editor.chain().focus().run(),
+        }), [editor, latest])
+      `,
+    },
   ],
 
   invalid: [
     // 依存配列にsetter関数を直接含めている
     {
       code: `
+        const latest = useLatest({ triggerRef, onKeyDown })
         const functions = useMemo(() => ({
           handleTriggerClick: () => setIsOpen((prev) => !prev),
         }), [setIsOpen, latest])
@@ -89,6 +114,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     // 依存配列に通常の変数・関数を直接含めている
     {
       code: `
+        const latest = useLatest({ handleDismiss, handleInserted })
         const functions = useMemo(() => ({
           handleClick: () => {},
         }), [editor, handleDismiss, handleInserted, latest])
@@ -103,6 +129,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     // hasから始まるが命名規則(大文字開始)に合わないもの
     {
       code: `
+        const latest = useLatest({ hash })
         const functions = useMemo(() => ({
           handleClick: () => {},
         }), [hash, latest])
@@ -113,6 +140,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
     // isXxxx形式はユーザー操作で変化しうる値であることが多いため許可しない
     {
       code: `
+        const latest = useLatest({ isExpanded })
         const functions = useMemo(() => ({
           handleClick: () => {},
         }), [isExpanded, latest])

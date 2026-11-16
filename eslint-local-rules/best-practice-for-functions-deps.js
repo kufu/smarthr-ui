@@ -8,7 +8,7 @@ module.exports = {
     type: 'problem',
     docs: {
       description:
-        '"functions"変数のuseMemo依存配列には、latestおよびhasXxxx形式の安定した値のみを許可する',
+        'useLatestが使われているコンポーネントでは、"functions"変数のuseMemo依存配列にlatestおよびhasXxxx形式の安定した値のみを許可する',
       category: 'Best Practices',
       recommended: true,
     },
@@ -20,7 +20,33 @@ module.exports = {
   },
 
   create(context) {
+    const sourceCode = context.sourceCode || context.getSourceCode()
     const ALLOWED_NAME_PATTERN = /^has[A-Z]/
+
+    // 同じスコープ(またはその祖先)にuseLatest()由来の`latest`変数があるかチェックする。
+    // latestという選択肢がそもそも無いコンポーネントでは、このルールは適用しない
+    function hasLatestInScope(node) {
+      let currentScope = sourceCode.getScope(node)
+
+      while (currentScope) {
+        const variable = currentScope.set.get('latest')
+
+        if (variable) {
+          const def = variable.defs[0]
+
+          return (
+            def?.node.type === 'VariableDeclarator' &&
+            def.node.init?.type === 'CallExpression' &&
+            def.node.init.callee.type === 'Identifier' &&
+            def.node.init.callee.name === 'useLatest'
+          )
+        }
+
+        currentScope = currentScope.upper
+      }
+
+      return false
+    }
 
     return {
       VariableDeclarator(node) {
@@ -32,6 +58,10 @@ module.exports = {
           node.init.callee.type !== 'Identifier' ||
           node.init.callee.name !== 'useMemo'
         ) {
+          return
+        }
+
+        if (!hasLatestInScope(node)) {
           return
         }
 

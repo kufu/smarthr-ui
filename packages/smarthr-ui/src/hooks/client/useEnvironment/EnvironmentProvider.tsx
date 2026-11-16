@@ -77,7 +77,6 @@ export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
     // useLatest を使わず queries を直接依存配列に指定することで、functions が再作成され、
     // useSyncExternalStore が subscribe を再実行して新しいメディアクエリを監視できる
     // queries自体はthemeから取得する想定なので殆どの場合stableだが安全策として依存配列に直接指定する
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 上述の安全策のため
   }, [queries])
 
   const matches = useSyncExternalStore(

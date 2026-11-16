@@ -80,7 +80,6 @@ export const FontSizeDropdown: FC<Props> = memo(({ disabled, ...rest }) => {
         }
       },
     }),
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
     [editor],
   )
 
