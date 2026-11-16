@@ -36,7 +36,7 @@
     "autoprefixer": "^10.4.27",
     "chromatic": "^18.1.0",
     "glob": "14.0.4",
-    "jsdom": "^26.1.0",
+    "jsdom": "^31.0.0",
     "npm-run-all2": "^9.0.4",
     "playwright": "^1.63.0",
     "plop": "^4.0.5",
