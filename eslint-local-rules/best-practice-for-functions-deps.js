@@ -14,7 +14,7 @@ module.exports = {
     },
     messages: {
       invalidDependency:
-        '"functions"のuseMemo依存配列には "latest" または "hasXxxx" 形式の変数のみ含められます。頻繁に変更される値は再作成を招くため、useLatestにまとめて latest 経由で参照してください。',
+        '"functions"のuseMemo依存配列には "latest" または "hasXxxx" 形式の変数のみ含められます。functionsは関数を生成するもののため、再生成が必要な可能性はほぼありません。頻繁に変わる値はもちろん、関数内部から呼び出されるだけの値は、useLatestのlatest変数にまとめることで再作成が必要ないことをコードで明示できます。',
     },
     schema: [],
   },
