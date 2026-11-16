@@ -366,8 +366,6 @@ export const MultiCombobox = <T,>({
       })
     }
 
-    const handleDelete = latest.listBoxFunctions.handleDelete
-
     const getDeletionButtons = () => {
       if (triggerRef.current) {
         const buttons =
@@ -439,7 +437,7 @@ export const MultiCombobox = <T,>({
     }
 
     return {
-      handleDelete,
+      handleDelete: (item: ComboboxItem<T>) => latest.listBoxFunctions.handleDelete(item),
       blur,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         input = node
@@ -491,7 +489,7 @@ export const MultiCombobox = <T,>({
 
           const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
 
-          handleDelete(lastItem)
+          latest.listBoxFunctions.handleDelete(lastItem)
           setHighlighted(true)
           latest.setInputValueIfUncontrolled(getSelectedLabelText(lastItem))
         } else {
