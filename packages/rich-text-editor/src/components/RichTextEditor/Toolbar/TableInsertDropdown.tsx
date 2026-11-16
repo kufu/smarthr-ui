@@ -98,12 +98,14 @@ export const TableInsertDropdown: FC<Props> = memo(
     })
 
     const latest = useLatest({
+      editor,
       isOpen,
       rows,
       cols,
       errorMessage,
       triggerRef,
       onKeyDown: onKeyDownProp,
+      setIsOpen,
     })
 
     const functions = useMemo(() => {
@@ -112,12 +114,12 @@ export const TableInsertDropdown: FC<Props> = memo(
       const openPopup = () => {
         if (!latest.isOpen) {
           setError('')
-          setIsOpen(true)
+          latest.setIsOpen(true)
         }
       }
 
       const closePopup = () => {
-        setIsOpen(false)
+        latest.setIsOpen(false)
         latest.triggerRef.current?.focus()
       }
 
@@ -129,7 +131,7 @@ export const TableInsertDropdown: FC<Props> = memo(
             setError(latest.errorMessage)
             return
           }
-          editor
+          latest.editor
             .chain()
             .focus()
             .insertTable({
@@ -138,9 +140,9 @@ export const TableInsertDropdown: FC<Props> = memo(
               withHeaderRow: true,
             })
             .run()
-          setIsOpen(false)
+          latest.setIsOpen(false)
         },
-        handleTriggerClick: () => (latest.isOpen ? setIsOpen(false) : openPopup()),
+        handleTriggerClick: () => (latest.isOpen ? latest.setIsOpen(false) : openPopup()),
         handlePopupKeyDown: (e: KeyboardEvent) => {
           if (e.key === 'Escape') {
             e.preventDefault()
@@ -162,8 +164,7 @@ export const TableInsertDropdown: FC<Props> = memo(
           }
         },
       }
-      // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-    }, [editor, setIsOpen, latest])
+    }, [latest])
 
     // ポップアップ表示時に行数Inputへフォーカス
     useEffect(() => {
