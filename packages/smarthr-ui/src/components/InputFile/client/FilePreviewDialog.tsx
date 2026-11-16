@@ -87,11 +87,10 @@ export const FilePreviewDialog: FC<Props> = memo(
           <Section className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
             <Cluster
               align="center"
+              grow="start"
               className="shr-border-b-shorthand shr-shrink-0 shr-px-1 shr-py-0.5"
             >
-              <Heading className="shr-min-w-0 shr-grow shr-truncate shr-text-base">
-                {file?.name}
-              </Heading>
+              <Heading className="shr-truncate shr-text-base">{file?.name}</Heading>
               <Button size="S" onClick={handleClose}>
                 <FaXmarkIcon
                   alt={<Localizer id="smarthr-ui/InputFile/closePreview" defaultText="閉じる" />}
