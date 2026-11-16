@@ -45,7 +45,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           
       - name: Download translations from Crowdin
-        uses: crowdin/github-action@v3.5.1
+        uses: crowdin/github-action@v3.6.0
         with:
           config: crowdin.yml
           upload_sources: false
