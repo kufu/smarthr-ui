@@ -75,22 +75,24 @@ export const LinkButton: FC<Props> = memo(
     })
 
     const latest = useLatest({
+      editor,
       text,
       url,
       requiredMessage,
       invalidMessage,
       triggerRef,
       onKeyDown: onKeyDownProp,
+      setIsOpen,
     })
 
     const functions = useMemo(() => {
       const closePopup = () => {
-        setIsOpen(false)
+        latest.setIsOpen(false)
         latest.triggerRef.current?.focus()
       }
 
       return {
-        handleTriggerClick: () => setIsOpen((prev) => !prev),
+        handleTriggerClick: () => latest.setIsOpen((prev) => !prev),
         handleSubmit: (e: FormEvent<HTMLFormElement>) => {
           e.preventDefault()
           e.stopPropagation()
@@ -104,14 +106,14 @@ export const LinkButton: FC<Props> = memo(
             return
           }
 
-          const { from, to } = editor.state.selection
-          const selectedText = editor.state.doc.textBetween(from, to, '')
+          const { from, to } = latest.editor.state.selection
+          const selectedText = latest.editor.state.doc.textBetween(from, to, '')
 
           if (selectedText && latest.text === selectedText) {
-            editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run()
+            latest.editor.chain().focus().extendMarkRange('link').setLink({ href: trimmed }).run()
           } else {
             const finalText = latest.text || selectedText || trimmed
-            editor
+            latest.editor
               .chain()
               .focus()
               .extendMarkRange('link')
@@ -122,11 +124,11 @@ export const LinkButton: FC<Props> = memo(
               })
               .run()
           }
-          setIsOpen(false)
+          latest.setIsOpen(false)
         },
         handleUnsetLink: () => {
-          editor.chain().focus().extendMarkRange('link').unsetLink().run()
-          setIsOpen(false)
+          latest.editor.chain().focus().extendMarkRange('link').unsetLink().run()
+          latest.setIsOpen(false)
         },
         handlePopupKeyDown: (e: KeyboardEvent) => {
           if (e.key === 'Escape') {
@@ -142,15 +144,14 @@ export const LinkButton: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(true)
+              latest.setIsOpen(true)
               break
             default:
               latest.onKeyDown?.(e)
           }
         },
       }
-      // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-    }, [editor, setIsOpen, latest])
+    }, [latest])
 
     // ショートカット（Mod-K）からポップオーバーを開けるよう storage にハンドラを登録。
     //
