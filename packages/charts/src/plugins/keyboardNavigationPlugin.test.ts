@@ -4,7 +4,17 @@ import { keyboardNavigationPlugin } from './keyboardNavigationPlugin'
 
 import type { Chart } from 'chart.js'
 
-const setup = (options: { stacked?: boolean; horizontal?: boolean; skipZero?: boolean }) => {
+const defaultDatasets = [
+  { label: '項目Aの内訳1', data: [12, null] },
+  { label: '項目Bの内訳1', data: [null, 8] },
+  { label: '項目Aの内訳2', data: [19, null] },
+  { label: '項目Bの内訳2', data: [null, 0] },
+]
+
+const setup = (
+  options: { stacked?: boolean; horizontal?: boolean; skipZero?: boolean },
+  datasets: Array<{ label: string; data: Array<number | null> }> = defaultDatasets,
+) => {
   const canvas = document.createElement('canvas')
   canvas.tabIndex = 0
   document.body.appendChild(canvas)
@@ -13,13 +23,8 @@ const setup = (options: { stacked?: boolean; horizontal?: boolean; skipZero?: bo
   const chart = {
     canvas,
     data: {
-      labels: ['項目A', '項目B'],
-      datasets: [
-        { label: '項目Aの内訳1', data: [12, null] },
-        { label: '項目Bの内訳1', data: [null, 8] },
-        { label: '項目Aの内訳2', data: [19, null] },
-        { label: '項目Bの内訳2', data: [null, 0] },
-      ],
+      labels: datasets[0].data.map((_, index) => `項目${index}`),
+      datasets,
     },
     getActiveElements: () => active,
     setActiveElements: (elements: typeof active) => {
@@ -67,5 +72,40 @@ describe('keyboardNavigationPlugin', () => {
     press('ArrowDown')
     press('ArrowDown')
     expect(press('ArrowRight')).toEqual({ datasetIndex: 1, index: 1 })
+  })
+
+  it('積み上げでデータを移動するとき、全てのデータセットに値がないデータは飛ばす', () => {
+    const press = setup({ stacked: true, horizontal: true }, [
+      { label: '商品A', data: [12, null, 8] },
+      { label: '商品B', data: [5, null, 4] },
+    ])
+
+    press('ArrowDown')
+    expect(press('ArrowDown')).toEqual({ datasetIndex: 0, index: 2 })
+  })
+
+  it('skipZeroを指定すると、積み上げで全てのデータセットが0のデータは飛ばす', () => {
+    const press = setup({ stacked: true, horizontal: true, skipZero: true }, [
+      { label: '商品A', data: [12, 0, 8] },
+      { label: '商品B', data: [5, 0, 4] },
+    ])
+
+    press('ArrowDown')
+    expect(press('ArrowDown')).toEqual({ datasetIndex: 0, index: 2 })
+  })
+
+  it('移動先がひとつもないとき、未選択のままにする', () => {
+    const datasets = [
+      { label: '商品A', data: [0, 0] },
+      { label: '商品B', data: [0, 0] },
+    ]
+
+    const press = setup({ skipZero: true }, datasets)
+    expect(press('ArrowLeft')).toBeUndefined()
+    expect(press('ArrowRight')).toBeUndefined()
+
+    const pressStacked = setup({ stacked: true, skipZero: true }, datasets)
+    expect(pressStacked('ArrowLeft')).toBeUndefined()
+    expect(pressStacked('ArrowDown')).toBeUndefined()
   })
 })

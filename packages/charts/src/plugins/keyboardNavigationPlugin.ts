@@ -57,7 +57,7 @@ export const keyboardNavigationPlugin = {
       // 端を越えたら反対側に回り込む
       const wrapIndex = (index: number, length: number) => ((index % length) + length) % length
 
-      // currentからdelta方向に一周して、条件に合う最初の位置を返す
+      // currentからdelta方向に一周して、条件に合う最初の位置を返す。なければnull
       const findNext = (
         current: number,
         delta: number,
@@ -72,7 +72,7 @@ export const keyboardNavigationPlugin = {
           }
         }
 
-        return current
+        return null
       }
 
       // 未フォーカス(-1)から戻る方向に動くときも末尾に着くよう、0から数える
@@ -80,25 +80,34 @@ export const keyboardNavigationPlugin = {
 
       const moveData = (delta: number) => {
         event.preventDefault()
-        nextDataIndex = wrapIndex(startIndex(nextDataIndex, delta) + delta, dataLength)
+        // どのデータセットにも値がないデータは飛ばす
+        const dataIndex = findNext(startIndex(nextDataIndex, delta), delta, dataLength, (index) =>
+          datasets.some((_, datasetIndex) => hasValue(datasetIndex, index)),
+        )
+
+        if (dataIndex === null) {
+          return
+        }
+
+        nextDataIndex = dataIndex
 
         // 移動先に値がなければ、値を持つ最初のデータセットにする
         if (!hasValue(nextDatasetIndex, nextDataIndex)) {
-          const datasetIndex = datasets.findIndex((_, index) => hasValue(index, nextDataIndex))
-
-          if (datasetIndex !== -1) {
-            nextDatasetIndex = datasetIndex
-          }
+          nextDatasetIndex = datasets.findIndex((_, index) => hasValue(index, nextDataIndex))
         }
       }
       const moveDataset = (delta: number) => {
         event.preventDefault()
-        nextDatasetIndex = findNext(
+        const datasetIndex = findNext(
           startIndex(nextDatasetIndex, delta),
           delta,
           datasets.length,
           (index) => hasValue(index, nextDataIndex),
         )
+
+        if (datasetIndex !== null) {
+          nextDatasetIndex = datasetIndex
+        }
       }
       const reset = () => {
         nextDatasetIndex = -1
@@ -118,8 +127,10 @@ export const keyboardNavigationPlugin = {
           (position) => hasValue(position % datasetCount, Math.floor(position / datasetCount)),
         )
 
-        nextDataIndex = Math.floor(nextPosition / datasetCount)
-        nextDatasetIndex = nextPosition % datasetCount
+        if (nextPosition !== null) {
+          nextDataIndex = Math.floor(nextPosition / datasetCount)
+          nextDatasetIndex = nextPosition % datasetCount
+        }
       }
 
       const defaultBindings: Record<string, () => void> = {
