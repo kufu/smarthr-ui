@@ -150,7 +150,13 @@ export const ColorPickerButton: FC<Props> = memo(
     const [recentColors, setRecentColors] = useState<string[]>([])
     const [customColor, setCustomColor] = useState<string>(defaultColor)
 
-    const latest = useLatest({ attribute, defaultColor, onKeyDown: onKeyDownProp })
+    const latest = useLatest({
+      editor,
+      attribute,
+      defaultColor,
+      onKeyDown: onKeyDownProp,
+      setIsOpen,
+    })
 
     const functions = useMemo(
       () => ({
@@ -162,10 +168,10 @@ export const ColorPickerButton: FC<Props> = memo(
           })
         },
         handleApplyColor: (hex: string) => {
-          setEditorColor(editor, latest.attribute, hex)
+          setEditorColor(latest.editor, latest.attribute, hex)
         },
         handleUnsetColor: () => {
-          setEditorColor(editor, latest.attribute, null)
+          setEditorColor(latest.editor, latest.attribute, null)
         },
         handleTriggerKeyDown: (e: KeyboardEvent) => {
           switch (e.key) {
@@ -174,7 +180,7 @@ export const ColorPickerButton: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(true)
+              latest.setIsOpen(true)
               requestAnimationFrame(() => {
                 paletteRef.current
                   ?.querySelector<HTMLButtonElement>('[data-color-swatch="standard"]')
@@ -186,8 +192,7 @@ export const ColorPickerButton: FC<Props> = memo(
           }
         },
       }),
-      // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-      [editor, setIsOpen, latest],
+      [latest],
     )
 
     useEffect(() => {
