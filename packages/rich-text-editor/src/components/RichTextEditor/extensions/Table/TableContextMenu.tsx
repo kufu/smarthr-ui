@@ -91,12 +91,14 @@ export const TableContextMenu = ({
   const target = getTableTarget(editor, isOpen ? menuCellPos : cellPos)
 
   const latest = useLatest({
+    editor,
     cellPos,
     scope,
     showColors,
     openMenuRef,
     dismissMenuRef,
     handleTargetLock,
+    setIsOpen,
     triggerRef,
     keyboardNavigation,
   })
@@ -120,9 +122,9 @@ export const TableContextMenu = ({
     const close = (restoreTrigger = false) => {
       cancelFocus()
       cancelRestoreFocus()
-      setIsOpen(false)
+      latest.setIsOpen(false)
       if (restoreTrigger) latest.triggerRef.current?.focus({ preventScroll: true })
-      else focusTableCell(editor, returnPos.current)
+      else focusTableCell(latest.editor, returnPos.current)
     }
     const changeColors = (show: boolean) => {
       setShowColors(show)
@@ -145,7 +147,7 @@ export const TableContextMenu = ({
         // 別タスクになり、メニューが外れる前にここへ来ることがある
         const { activeElement } = document
         if (
-          editor.isDestroyed ||
+          latest.editor.isDestroyed ||
           !(activeElement === document.body || menuRef.current?.contains(activeElement))
         )
           return
@@ -153,7 +155,7 @@ export const TableContextMenu = ({
         if (returnToTrigger.current && trigger?.isConnected) {
           trigger.focus({ preventScroll: true })
         } else {
-          focusTableCell(editor, returnPos.current)
+          focusTableCell(latest.editor, returnPos.current)
         }
       })
     }
@@ -161,7 +163,7 @@ export const TableContextMenu = ({
     const dismiss = (restoreFocus = true) => {
       cancelFocus()
       if (restoreFocus && menuRef.current?.contains(document.activeElement)) scheduleRestoreFocus()
-      setIsOpen(false)
+      latest.setIsOpen(false)
     }
 
     return {
@@ -172,7 +174,7 @@ export const TableContextMenu = ({
       dismissHidden: () => dismiss(latest.keyboardNavigation),
       open: (requestedPos = latest.cellPos, last = false, fromTrigger = false, keyboard = true) => {
         // 文書が変わってから再描画されるまでの間に押されると、位置がセルの外や別のセルの中を指す
-        const pos = getTableTarget(editor, requestedPos)?.pos
+        const pos = getTableTarget(latest.editor, requestedPos)?.pos
 
         if (pos !== undefined) {
           cancelRestoreFocus()
@@ -181,9 +183,9 @@ export const TableContextMenu = ({
           returnPos.current = pos
           setMenuCellPos(pos)
           latest.handleTargetLock(latest.scope, pos)
-          selectTableTarget(editor, pos, latest.scope)
+          selectTableTarget(latest.editor, pos, latest.scope)
           setShowColors(false)
-          setIsOpen(true)
+          latest.setIsOpen(true)
           scheduleFocus(() => {
             const buttons =
               menuRef.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
@@ -193,7 +195,7 @@ export const TableContextMenu = ({
       },
       close,
       handleRun: (action: () => unknown) => {
-        runTableAction(editor, action)
+        runTableAction(latest.editor, action)
         close()
       },
       handleChangeColors: changeColors,
@@ -276,8 +278,7 @@ export const TableContextMenu = ({
         }
       },
     }
-    // eslint-disable-next-line local-rules/best-practice-for-functions-deps -- 既存コード、別途latestへの集約を検討
-  }, [editor, setIsOpen, latest])
+  }, [latest])
 
   useEffect(() => {
     const { openMenuRef: menuOpener } = latest
