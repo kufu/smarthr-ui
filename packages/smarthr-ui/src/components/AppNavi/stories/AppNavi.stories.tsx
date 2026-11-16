@@ -70,8 +70,8 @@ export const AdditionalArea: StoryObj<typeof AppNavi> = {
   name: 'additionalArea',
   args: {
     additionalArea: (
-      // eslint-disable-next-line smarthr/best-practice-for-layouts -- storyでの表示例のため、growは不要
-      <Cluster align="center">
+      // eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち)
+      <Cluster inline align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
         <Button size="S" prefix={<FaArrowsRotateIcon />}>
           データを同期

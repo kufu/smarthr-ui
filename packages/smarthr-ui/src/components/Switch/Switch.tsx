@@ -81,7 +81,7 @@ export const Switch: FC<Props> = ({
   }, [className])
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts -- ラベルとスイッチ本体は両方とも本来のサイズで並べる意図のため、growは不要
+    // eslint-disable-next-line smarthr/best-practice-for-layouts -- TODO: 本来inline指定が適切だがCluster幅がコンテンツ幅に変わり見た目が変化するため、要デザイン確認の上対応する
     <Cluster align="center" className="shr-relative">
       <MemoizedLabel htmlFor={inputId} unrecommendedLabelHidden={unrecommendedLabelHidden}>
         {children}
