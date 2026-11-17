@@ -14,7 +14,7 @@ module.exports = {
     },
     messages: {
       invalidDependency:
-        '"functions"のuseMemo依存配列には "latest" または "hasXxxx" 形式の変数のみ含められます。functionsは関数を生成するもののため、再生成が必要な可能性はほぼありません。頻繁に変わる値はもちろん、関数内部から呼び出されるだけの値は、useLatestのlatest変数にまとめることで再作成が必要ないことをコードで明示できます。',
+        '"functions"のuseMemo依存配列には "latest"、"hasXxxx" 形式の変数、または依存配列が空のuseCallbackの戻り値のみ含められます。functionsは関数を生成するもののため、再生成が必要な可能性はほぼありません。頻繁に変わる値はもちろん、関数内部から呼び出されるだけの値は、useLatestのlatest変数にまとめることで再作成が必要ないことをコードで明示できます。',
     },
     schema: [],
   },
@@ -48,6 +48,41 @@ module.exports = {
       return false
     }
 
+    // identifierNodeが、依存配列が空(再生成されない)のuseCallbackの戻り値に
+    // 束縛された変数かどうかチェックする。再生成されない関数はfunctionsが
+    // 不要に再作成される原因にならないため、依存配列に含めてもよい
+    function isStableEmptyDepsCallback(identifierNode) {
+      let currentScope = sourceCode.getScope(identifierNode)
+      let variable = null
+
+      while (currentScope) {
+        variable = currentScope.set.get(identifierNode.name)
+        if (variable) break
+        currentScope = currentScope.upper
+      }
+
+      if (!variable) return false
+
+      const def = variable.defs[0]
+
+      if (def?.node.type !== 'VariableDeclarator') return false
+
+      const init = def.node.init
+
+      if (
+        !init ||
+        init.type !== 'CallExpression' ||
+        init.callee.type !== 'Identifier' ||
+        init.callee.name !== 'useCallback'
+      ) {
+        return false
+      }
+
+      const depsArg = init.arguments[1]
+
+      return depsArg?.type === 'ArrayExpression' && depsArg.elements.length === 0
+    }
+
     return {
       VariableDeclarator(node) {
         if (
@@ -76,7 +111,9 @@ module.exports = {
 
           if (
             el.type === 'Identifier' &&
-            (el.name === 'latest' || ALLOWED_NAME_PATTERN.test(el.name))
+            (el.name === 'latest' ||
+              ALLOWED_NAME_PATTERN.test(el.name) ||
+              isStableEmptyDepsCallback(el))
           ) {
             continue
           }
