@@ -296,7 +296,7 @@ module.exports = {
       const propertyNodes = []
 
       for (const prop of argNode.properties) {
-        if (prop.type !== 'Property' || prop.key.type !== 'Identifier') {
+        if (prop.type !== 'Property' || prop.computed || prop.key.type !== 'Identifier') {
           // SpreadElementや算出プロパティ名が含まれる場合は安全側に倒してスキップ
           return
         }
@@ -335,8 +335,15 @@ module.exports = {
               // rest要素(...rest)があると、どのキーが使われるか静的に追跡できないため安全側に倒す
               return
             }
-            if (property.type === 'Property' && property.key.type === 'Identifier') {
+            if (property.type !== 'Property') continue
+            if (property.computed) {
+              // const { [key]: x } = latest のような動的キーは静的に追跡できないため安全側に倒す
+              return
+            }
+            if (property.key.type === 'Identifier') {
               usedNames.add(property.key.name)
+            } else if (property.key.type === 'Literal' && typeof property.key.value === 'string') {
+              usedNames.add(property.key.value)
             }
           }
           continue

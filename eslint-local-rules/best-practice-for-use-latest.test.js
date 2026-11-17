@@ -301,6 +301,29 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
     },
+
+    // useLatestの引数に算出プロパティ名(computed property)が含まれる場合は
+    // 静的に追跡できないため安全側に倒してチェックをスキップする(未使用警告を出さない)
+    {
+      code: `
+        const latest = useLatest({ [key]: value, onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+    },
+
+    // 分割代入が算出プロパティ(const { [key]: x } = latest)の場合は
+    // どのキーが使われるか静的に追跡できないため安全側に倒す(未使用警告を出さない)
+    {
+      code: `
+        const latest = useLatest({ value, onChange })
+        useEffect(() => {
+          const { [key]: selected } = latest
+          onChange(selected)
+        }, [latest])
+      `,
+    },
   ],
 
   invalid: [
@@ -781,6 +804,18 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [{ messageId: 'unusedProperty', data: { name: 'value' } }],
+    },
+
+    // 分割代入の文字列リテラルキー(非computed)も使用済みとして扱う
+    {
+      code: `
+        const latest = useLatest({ value, onChange })
+        useEffect(() => {
+          const { 'value': selected } = latest
+          onChange(selected)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'unusedProperty', data: { name: 'onChange' } }],
     },
   ],
 })
