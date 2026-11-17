@@ -15,6 +15,8 @@ module.exports = {
     messages: {
       invalidDependency:
         '"functions"のuseMemo依存配列には "latest" または "hasXxxx" 形式の変数のみ含められます。functionsは関数を生成するもののため、再生成が必要な可能性はほぼありません。頻繁に変わる値はもちろん、関数内部から呼び出されるだけの値は、useLatestのlatest変数にまとめることで再作成が必要ないことをコードで明示できます。',
+      noCallbackInFunctionsScope:
+        '"{{name}}"は"functions"と同じスコープでuseCallbackとして宣言されています。functionsがある場合、同階層でuseCallbackを個別に使わずfunctions内にまとめてください。',
     },
     schema: [],
   },
@@ -48,6 +50,32 @@ module.exports = {
       return false
     }
 
+    // scope(functionsが宣言されている関数スコープそのもの。祖先スコープは辿らない)
+    // 内で宣言された変数のうち、useCallback呼び出しに束縛されているものを全て返す。
+    // 別コンポーネント・別フック(=別スコープ)のuseCallbackは対象外
+    function getUseCallbackDeclarationsInScope(scope) {
+      const declarations = []
+
+      for (const variable of scope.variables) {
+        for (const def of variable.defs) {
+          if (def.node.type !== 'VariableDeclarator') continue
+
+          const init = def.node.init
+
+          if (
+            init &&
+            init.type === 'CallExpression' &&
+            init.callee.type === 'Identifier' &&
+            init.callee.name === 'useCallback'
+          ) {
+            declarations.push({ name: variable.name, node: def.node })
+          }
+        }
+      }
+
+      return declarations
+    }
+
     return {
       VariableDeclarator(node) {
         if (
@@ -63,6 +91,16 @@ module.exports = {
 
         if (!hasLatestInScope(node)) {
           return
+        }
+
+        const scope = sourceCode.getScope(node)
+
+        for (const { name, node: callbackDeclNode } of getUseCallbackDeclarationsInScope(scope)) {
+          context.report({
+            node: callbackDeclNode.init,
+            messageId: 'noCallbackInFunctionsScope',
+            data: { name },
+          })
         }
 
         const depsArg = node.init.arguments[1]

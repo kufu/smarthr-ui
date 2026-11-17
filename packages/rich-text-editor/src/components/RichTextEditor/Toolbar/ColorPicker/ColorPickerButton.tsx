@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  type KeyboardEvent,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, type KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { FaCaretDownIcon } from 'smarthr-ui'
 
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
@@ -156,6 +147,8 @@ export const ColorPickerButton: FC<Props> = memo(
       defaultColor,
       onKeyDown: onKeyDownProp,
       setIsOpen,
+      localize,
+      messages,
     })
 
     const functions = useMemo(
@@ -191,6 +184,10 @@ export const ColorPickerButton: FC<Props> = memo(
               latest.onKeyDown?.(e)
           }
         },
+        customSwatchLabel: (color: string) =>
+          latest.localize(latest.messages.customSwatch, { color }),
+        recentSwatchLabel: (color: string) =>
+          latest.localize(latest.messages.recentSwatch, { color }),
       }),
       [latest],
     )
@@ -208,15 +205,6 @@ export const ColorPickerButton: FC<Props> = memo(
     const recentSectionLabel = localize(messages.recentSection)
     const editButtonLabel = localize(messages.editButton)
     const unsetLabel = localize(messages.unset)
-    const customSwatchLabel = useCallback(
-      (color: string) => localize(messages.customSwatch, { color }),
-      [localize, messages],
-    )
-    const recentSwatchLabel = useCallback(
-      (color: string) => localize(messages.recentSwatch, { color }),
-      [localize, messages],
-    )
-
     const normalizedCurrentColor =
       currentColor === null ? null : normalizeHex(currentColor, defaultColor)
     const matchedColor = colors.find(
@@ -271,8 +259,8 @@ export const ColorPickerButton: FC<Props> = memo(
             recentSectionLabel={recentSectionLabel}
             editButtonLabel={editButtonLabel}
             resetButtonLabel={resetLabel}
-            customSwatchLabel={customSwatchLabel}
-            recentSwatchLabel={recentSwatchLabel}
+            customSwatchLabel={functions.customSwatchLabel}
+            recentSwatchLabel={functions.recentSwatchLabel}
             setIsOpen={setIsOpen}
             setCustomColor={setCustomColor}
             handleApplyColor={functions.handleApplyColor}
