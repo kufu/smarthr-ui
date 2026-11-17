@@ -8,7 +8,6 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -18,6 +17,7 @@ import { DialogContentResponseStatusMessage } from '../DialogContentResponseStat
 import { DialogHeading } from '../DialogHeading'
 import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
+import type { useResponseStatus } from '../../../hooks/useResponseStatus'
 import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectActionButtonType = {
@@ -53,7 +53,7 @@ type Props = ExtendElementPropsWithRef<
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
     handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    responseStatus?: ResponseStatus
+    calculatedResponseStatus: ReturnType<typeof useResponseStatus>
   }
 >
 
@@ -86,40 +86,36 @@ export const FormDialogContent: FC<Props> = ({
   actionButton,
   handleSubmit,
   handleClickClose,
-  responseStatus,
+  calculatedResponseStatus,
   closeButton,
   subActionArea,
-}) => {
-  const calculatedResponseStatus = useResponseStatus(responseStatus)
-
-  return (
-    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
-      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
-        <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-          {children}
-        </DialogBody>
-        <div className={CLASS_NAMES.actionArea}>
-          <Cluster justify="space-between">
-            {subActionArea}
-            <ActionAreaCluster
-              loading={calculatedResponseStatus.isProcessing}
-              className={CLASS_NAMES.buttonArea}
-              handleClickClose={handleClickClose}
-              closeButton={closeButton}
-              actionButton={actionButton}
-            />
-          </Cluster>
-          <DialogContentResponseStatusMessage
-            responseStatus={calculatedResponseStatus}
-            className={CLASS_NAMES.message}
+}) => (
+  // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
+  <Section className={CLASS_NAMES.wrapper}>
+    <DialogHeading {...heading} />
+    <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
+      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+        {children}
+      </DialogBody>
+      <div className={CLASS_NAMES.actionArea}>
+        <Cluster justify="space-between">
+          {subActionArea}
+          <ActionAreaCluster
+            loading={calculatedResponseStatus.isProcessing}
+            className={CLASS_NAMES.buttonArea}
+            handleClickClose={handleClickClose}
+            closeButton={closeButton}
+            actionButton={actionButton}
           />
-        </div>
-      </form>
-    </Section>
-  )
-}
+        </Cluster>
+        <DialogContentResponseStatusMessage
+          responseStatus={calculatedResponseStatus}
+          className={CLASS_NAMES.message}
+        />
+      </div>
+    </form>
+  </Section>
+)
 
 const ActionAreaCluster = memo<
   Pick<Props, 'handleClickClose'> & {

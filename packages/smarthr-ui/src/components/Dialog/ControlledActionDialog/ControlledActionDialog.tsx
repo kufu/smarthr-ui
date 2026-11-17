@@ -8,6 +8,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { DialogContent, DialogPortal } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
@@ -39,8 +40,9 @@ type Props = ExtendElementPropsWithRef<
        * 閉じるボタンをクリックした時に発火するコールバック関数
        */
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+      responseStatus?: ResponseStatus
     },
-    { omit: 'handleClickAction' | 'handleClickClose' }
+    { omit: 'handleClickAction' | 'handleClickClose' | 'calculatedResponseStatus' }
   >,
   { omit: 'focusTrapRef' }
 >
@@ -80,6 +82,7 @@ export const ControlledActionDialog: FC<Props> = ({
     orgCloseButton,
     buttonObjectConverter,
   )
+  const calculatedResponseStatus = useResponseStatus(responseStatus)
 
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
@@ -107,12 +110,14 @@ export const ControlledActionDialog: FC<Props> = ({
         isOpen={isOpen}
         className={className}
         ariaLabelledby={heading.id}
-        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+        onPressEscape={
+          closeButton.disabled || calculatedResponseStatus.isProcessing ? undefined : onPressEscape
+        }
       >
         <ActionDialogContent
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
-          responseStatus={responseStatus}
+          calculatedResponseStatus={calculatedResponseStatus}
           handleClickClose={functions.handleClickClose}
           handleClickAction={functions.handleClickAction}
           heading={heading}

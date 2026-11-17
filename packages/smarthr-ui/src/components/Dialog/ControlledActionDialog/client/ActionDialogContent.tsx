@@ -9,7 +9,6 @@ import {
   useCallback,
 } from 'react'
 
-import { type ResponseStatus, useResponseStatus } from '../../../../hooks/useResponseStatus'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { Cluster } from '../../../Layout'
@@ -19,6 +18,7 @@ import { DialogContentResponseStatusMessage } from '../../DialogContentResponseS
 import { DialogHeading } from '../../DialogHeading'
 import { dialogContentClassNameGenerator } from '../../dialogContentClassNameGenerator'
 
+import type { useResponseStatus } from '../../../../hooks/useResponseStatus'
 import type { ExtendElementPropsWithRef } from '../../../../types'
 
 type ObjectActionButtonType = {
@@ -55,7 +55,7 @@ type Props = ExtendElementPropsWithRef<
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
     handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    responseStatus?: ResponseStatus
+    calculatedResponseStatus: ReturnType<typeof useResponseStatus>
   }
 >
 
@@ -80,38 +80,34 @@ export const ActionDialogContent: FC<Props> = ({
   actionButton,
   handleClickAction,
   handleClickClose,
-  responseStatus,
+  calculatedResponseStatus,
   closeButton,
   subActionArea,
-}) => {
-  const calcedResponseStatus = useResponseStatus(responseStatus)
-
-  return (
-    <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
-      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-        {children}
-      </DialogBody>
-      <div className={CLASS_NAMES.actionArea}>
-        <Cluster justify="space-between">
-          {subActionArea}
-          <ActionAreaCluster
-            loading={calcedResponseStatus.isProcessing}
-            className={CLASS_NAMES.buttonArea}
-            handleClickClose={handleClickClose}
-            handleClickAction={handleClickAction}
-            closeButton={closeButton}
-            actionButton={actionButton}
-          />
-        </Cluster>
-        <DialogContentResponseStatusMessage
-          responseStatus={calcedResponseStatus}
-          className={CLASS_NAMES.message}
+}) => (
+  <Section className={CLASS_NAMES.wrapper}>
+    <DialogHeading {...heading} />
+    <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+      {children}
+    </DialogBody>
+    <div className={CLASS_NAMES.actionArea}>
+      <Cluster justify="space-between">
+        {subActionArea}
+        <ActionAreaCluster
+          loading={calculatedResponseStatus.isProcessing}
+          className={CLASS_NAMES.buttonArea}
+          handleClickClose={handleClickClose}
+          handleClickAction={handleClickAction}
+          closeButton={closeButton}
+          actionButton={actionButton}
         />
-      </div>
-    </Section>
-  )
-}
+      </Cluster>
+      <DialogContentResponseStatusMessage
+        responseStatus={calculatedResponseStatus}
+        className={CLASS_NAMES.message}
+      />
+    </div>
+  </Section>
+)
 
 const ActionAreaCluster = memo<
   Pick<Props, 'handleClickClose' | 'handleClickAction'> & {

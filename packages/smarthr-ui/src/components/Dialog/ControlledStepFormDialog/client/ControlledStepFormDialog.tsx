@@ -14,6 +14,7 @@ import {
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
+import { type ResponseStatus, useResponseStatus } from '../../../../hooks/useResponseStatus'
 import { useLocalize } from '../../../../intl'
 import { DialogContent, DialogPortal } from '../../client'
 import { useObjectHeading } from '../../useObjectHeading'
@@ -72,8 +73,16 @@ type Props = ExtendElementPropsWithRef<
       onSubmit: StepFormDialogContentProps['handleSubmit']
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
       onClickBack?: () => void
+      responseStatus?: ResponseStatus
     },
-    { omit: 'activeStep' | 'handleClickClose' | 'handleClickBack' | 'handleSubmit' }
+    {
+      omit:
+        | 'activeStep'
+        | 'handleClickClose'
+        | 'handleClickBack'
+        | 'handleSubmit'
+        | 'calculatedResponseStatus'
+    }
   >,
   { omit: 'focusTrapRef' }
 >
@@ -240,6 +249,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   })
 
   const focusTrapRef = useRef<{ focus: () => void } | null>(null)
+  const calculatedResponseStatus = useResponseStatus(responseStatus)
 
   const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
@@ -274,7 +284,9 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       isOpen={isOpen}
       className={className}
       ariaLabelledby={heading.id}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+      onPressEscape={
+        closeButton.disabled || calculatedResponseStatus.isProcessing ? undefined : onPressEscape
+      }
     >
       <StepFormDialogContent
         activeStep={activeStep}
@@ -282,7 +294,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         contentPadding={contentPadding}
         firstStep={firstStep}
         stepLength={stepLength}
-        responseStatus={responseStatus}
+        calculatedResponseStatus={calculatedResponseStatus}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}
