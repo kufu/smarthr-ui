@@ -208,10 +208,14 @@ export const ColorPickerButton: FC<Props> = memo(
     const recentSectionLabel = localize(messages.recentSection)
     const editButtonLabel = localize(messages.editButton)
     const unsetLabel = localize(messages.unset)
+    // customSwatchLabel/recentSwatchLabelはラベル生成関数としてJSXに直接渡されるもので、
+    // イベントハンドラ集合のfunctionsとは責務が異なり統合できないため対象外とする
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps
     const customSwatchLabel = useCallback(
       (color: string) => localize(messages.customSwatch, { color }),
       [localize, messages],
     )
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps
     const recentSwatchLabel = useCallback(
       (color: string) => localize(messages.recentSwatch, { color }),
       [localize, messages],

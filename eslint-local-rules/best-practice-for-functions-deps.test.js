@@ -97,6 +97,26 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
         }), [editor, latest])
       `,
     },
+
+    // useCallbackが別コンポーネント(別スコープ)にある場合は対象外
+    {
+      code: `
+        function Inner() {
+          const callbackRef = useCallback((node) => {
+            node?.focus()
+          }, [])
+          return null
+        }
+
+        function Outer() {
+          const latest = useLatest({ onClick })
+          const functions = useMemo(() => ({
+            handleClick: () => latest.onClick(),
+          }), [latest])
+          return null
+        }
+      `,
+    },
   ],
 
   invalid: [
@@ -146,6 +166,50 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
         }), [isExpanded, latest])
       `,
       errors: [{ messageId: 'invalidDependency' }],
+    },
+
+    // 同じスコープにuseCallback(依存配列が空)がある場合は一律NG
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const stableHandler = useCallback(() => {
+          console.log('stable')
+        }, [])
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noCallbackInFunctionsScope', data: { name: 'stableHandler' } }],
+    },
+
+    // 同じスコープにuseCallback(依存配列が非空)がある場合も一律NG
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const handleEscape = useCallback(() => {
+          console.log(editor)
+        }, [editor])
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noCallbackInFunctionsScope', data: { name: 'handleEscape' } }],
+    },
+
+    // 同じスコープに複数のuseCallbackがある場合はその数だけ報告する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const handlerA = useCallback(() => {}, [])
+        const handlerB = useCallback(() => {}, [])
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+        }), [latest])
+      `,
+      errors: [
+        { messageId: 'noCallbackInFunctionsScope', data: { name: 'handlerA' } },
+        { messageId: 'noCallbackInFunctionsScope', data: { name: 'handlerB' } },
+      ],
     },
   ],
 })

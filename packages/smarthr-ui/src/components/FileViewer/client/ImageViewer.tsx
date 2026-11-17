@@ -57,6 +57,9 @@ export const ImageViewer: FC<ViewerProps> = memo(
       }
     }, [latest])
 
+    // callbackRefはref callback(<img ref={callbackRef}>)として使われるもので、
+    // functionsとは責務が異なり統合できないため対象外とする
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps
     const callbackRef = useCallback(
       (node: HTMLImageElement | null) => {
         if (node) {

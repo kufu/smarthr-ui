@@ -473,10 +473,15 @@ export const RichTextEditorToolbar: FC = memo(() => {
     }
   }, [isWrapped, functions])
 
+  // handleEscapeはuseRovingToolbarへのprop渡し専用で、依存配列もeditorにより
+  // 再生成されうるためfunctionsには統合できず対象外とする
+  // eslint-disable-next-line local-rules/best-practice-for-functions-deps
   const handleEscape = useCallback(() => {
     editor.commands.focus()
   }, [editor])
 
+  // handleToggleClickは依存配列が空でfunctions内に統合可能だが、本PRの対象外のため
+  // eslint-disable-next-line local-rules/best-practice-for-functions-deps
   const handleToggleClick = useCallback(() => {
     setIsWrapped((prev) => !prev)
   }, [])
