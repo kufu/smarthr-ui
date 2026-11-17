@@ -117,23 +117,111 @@ module.exports = {
     }
 
     /**
-     * ノードが対象フックのコールバック自身の直接のボディ内にあるかチェック
-     * (コールバック内で定義されたネストしたローカル関数の中ではないこと)
+     * ノードが対象フックのコールバック自身の直接のボディ内にある場合、
+     * そのコールバック関数ノードを返す（コールバック内で定義されたネストした
+     * ローカル関数の中である場合、または対象フックでない場合はnull）
      */
-    function isDirectlyInsideHookCallback(node) {
+    function getDirectHookCallback(node) {
       let parent = node.parent
       while (parent) {
         if (parent.type === 'ArrowFunctionExpression' || parent.type === 'FunctionExpression') {
           const grandParent = parent.parent
-          return (
+          const isHookCallback =
             grandParent?.type === 'CallExpression' &&
             grandParent.callee.type === 'Identifier' &&
             EAGER_CAPTURE_HOOK_PATTERN.test(grandParent.callee.name) &&
             grandParent.arguments[0] === parent
-          )
+
+          return isHookCallback ? parent : null
         }
         parent = parent.parent
       }
+      return null
+    }
+
+    /**
+     * ノードが、hookCallbackNodeより内側のネストした関数の中にあるかチェックする
+     */
+    function isInsideNestedFunctionRelativeTo(node, hookCallbackNode) {
+      let parent = node.parent
+      while (parent && parent !== hookCallbackNode) {
+        if (parent.type === 'ArrowFunctionExpression' || parent.type === 'FunctionExpression') {
+          return true
+        }
+        parent = parent.parent
+      }
+      return false
+    }
+
+    /**
+     * ノードが、ReturnStatementの戻り値としてそのまま公開されているかチェックする
+     * (ObjectExpression/ArrayExpressionでラップされているだけの場合も透過して判定する)。
+     * BinaryExpression・CallExpressionの引数等、値が加工される経路は安全とみなし対象外
+     */
+    function isDirectlyReturned(node) {
+      let current = node
+      let parent = current.parent
+
+      while (parent) {
+        if (parent.type === 'ReturnStatement' && parent.argument === current) {
+          return true
+        }
+
+        // 暗黙return: () => ({ ... }) のようにアロー関数の本体が式自体である形
+        if (parent.type === 'ArrowFunctionExpression' && parent.body === current) {
+          return true
+        }
+
+        if (parent.type === 'Property' && parent.value === current) {
+          current = parent
+          parent = current.parent
+          continue
+        }
+
+        if (
+          (parent.type === 'ObjectExpression' && parent.properties.includes(current)) ||
+          (parent.type === 'ArrayExpression' && parent.elements.includes(current))
+        ) {
+          current = parent
+          parent = current.parent
+          continue
+        }
+
+        break
+      }
+
+      return false
+    }
+
+    /**
+     * declaratorNodeで宣言された変数が、hookCallbackNodeより内側のネストした関数
+     * から参照されている、またはReturnStatementの戻り値としてそのまま公開されて
+     * いる場合にtrueを返す（=latestの値を固定キャプチャしてしまう危険な使い方）。
+     * 同じ関数スコープ内でその場の計算にのみ使われている場合はfalse（安全）
+     */
+    function isCapturedVariableUsedUnsafely(declaratorNode, hookCallbackNode) {
+      if (declaratorNode.id.type !== 'Identifier') return true
+
+      const variables = sourceCode.getDeclaredVariables(declaratorNode)
+      const variable = variables.find((v) => v.name === declaratorNode.id.name)
+
+      if (!variable) return true
+
+      for (const reference of variable.references) {
+        if (reference.identifier === declaratorNode.id) continue
+        if (reference.init) continue
+
+        const refNode = reference.identifier
+
+        if (isInsideNestedFunctionRelativeTo(refNode, hookCallbackNode)) {
+          return true
+        }
+
+        if (isDirectlyReturned(refNode)) {
+          return true
+        }
+      }
+
       return false
     }
 
@@ -220,15 +308,15 @@ module.exports = {
           node.init.callee.name !== 'useLatest'
         ) {
           // フックのコールバック直下で、latest.xxxの値をそのまま変数に代入していないかチェック
-          if (
-            node.init &&
-            isEagerLatestExpression(node.init) &&
-            isDirectlyInsideHookCallback(node)
-          ) {
-            context.report({
-              node: node.init,
-              messageId: 'noEagerCapture',
-            })
+          if (node.init && isEagerLatestExpression(node.init)) {
+            const hookCallbackNode = getDirectHookCallback(node)
+
+            if (hookCallbackNode && isCapturedVariableUsedUnsafely(node, hookCallbackNode)) {
+              context.report({
+                node: node.init,
+                messageId: 'noEagerCapture',
+              })
+            }
           }
           return
         }
@@ -247,6 +335,22 @@ module.exports = {
           context.report({
             node: node.id,
             messageId: 'invalidVariableName',
+          })
+        }
+      },
+
+      // 1.5. 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxxを公開していないかチェック
+      // (例: return { onXxxx: latest.onXxxx }。constに代入する場合と同じ危険性を持つ)
+      Property(node) {
+        if (node.computed || !node.value) return
+        if (!isEagerLatestExpression(node.value)) return
+
+        const hookCallbackNode = getDirectHookCallback(node)
+
+        if (hookCallbackNode && isDirectlyReturned(node.value)) {
+          context.report({
+            node: node.value,
+            messageId: 'noEagerCapture',
           })
         }
       },

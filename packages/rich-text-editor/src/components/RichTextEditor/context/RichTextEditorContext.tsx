@@ -67,7 +67,11 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const value = useMemo<RichTextEditorContextValue>(
     () => ({
       editor,
+      // HINT: featuresKey/headingLevelsKey/acceptedMimeTypesKeyが依存配列に含まれており、
+      // 内容が変化すればuseMemoごと再計算されるため、latestから配列を直接返しても固定化されない
+      // eslint-disable-next-line local-rules/best-practice-for-use-latest
       features: latest.features,
+      // eslint-disable-next-line local-rules/best-practice-for-use-latest
       headingLevels: latest.headingLevels,
       disabled,
       hasImageUpload,
@@ -75,6 +79,7 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
         onImageUpload: latest.onImageUpload,
         onImageUploadError: latest.onImageUploadError,
       }),
+      // eslint-disable-next-line local-rules/best-practice-for-use-latest
       acceptedMimeTypes: latest.acceptedMimeTypes,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
