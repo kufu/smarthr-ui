@@ -184,8 +184,10 @@ export const ColorPickerButton: FC<Props> = memo(
               latest.onKeyDown?.(e)
           }
         },
-        customSwatchLabel: (color: string) => latest.localize(latest.messages.customSwatch, { color }),
-        recentSwatchLabel: (color: string) => latest.localize(latest.messages.recentSwatch, { color }),
+        customSwatchLabel: (color: string) =>
+          latest.localize(latest.messages.customSwatch, { color }),
+        recentSwatchLabel: (color: string) =>
+          latest.localize(latest.messages.recentSwatch, { color }),
       }),
       [latest],
     )
