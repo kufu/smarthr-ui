@@ -98,20 +98,6 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
       `,
     },
 
-    // 依存配列が空(再生成されない)のuseCallbackの戻り値は、再作成の原因に
-    // ならないため依存配列に含めてよい
-    {
-      code: `
-        const latest = useLatest({ onClick })
-        const stableHandler = useCallback(() => {
-          console.log('stable')
-        }, [])
-        const functions = useMemo(() => ({
-          handleClick: () => latest.onClick(),
-          stableHandler,
-        }), [latest, stableHandler])
-      `,
-    },
   ],
 
   invalid: [
@@ -163,7 +149,7 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
       errors: [{ messageId: 'invalidDependency' }],
     },
 
-    // 依存配列を持つuseCallback(再生成されうる)は対象外
+    // 依存配列を持つuseCallback(再生成されうる)は通常の変数と同様invalidDependency
     {
       code: `
         const latest = useLatest({ onClick })
@@ -176,6 +162,22 @@ ruleTester.run('best-practice-for-functions-deps', rule, {
         }), [latest, unstableHandler])
       `,
       errors: [{ messageId: 'invalidDependency' }],
+    },
+
+    // 依存配列が空(再生成されない)のuseCallbackは、functions自体がlatestで
+    // 安定している以上、わざわざ分離せずfunctions内に直接書けるため指摘する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const stableHandler = useCallback(() => {
+          console.log('stable')
+        }, [])
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+          stableHandler,
+        }), [latest, stableHandler])
+      `,
+      errors: [{ messageId: 'preferInlineOverStableCallback', data: { name: 'stableHandler' } }],
     },
   ],
 })
