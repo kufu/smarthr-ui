@@ -41,16 +41,23 @@ const isAtBlockStart = ($pos: ResolvedPos) => $pos.pos === $pos.before(1) + $pos
 /**
  * 深さ 0 の位置（ノード選択の端・ギャップカーソル）は直後のブロックの番号を返すので、
  * 終わりの側だけはそのまま含まない端として使う。
- * ブロックの先頭で終わる選択もそのブロックを含めない。行を選ぶと、次の行の先頭まで選ばれやすい
+ * ブロックの先頭で終わる選択もそのブロックを含めない。行を選ぶと、次の行の先頭まで選ばれやすい。
+ * 全選択のように文書の末尾まで届く 2 つ以上のブロックの範囲は、末尾の空の段落を含めない。
+ * エディタは最後のブロックが段落以外だと末尾に空の段落を足し直すので、含めると操作のたびに増える
  */
 export const resolveBlockRange = (
   doc: PMNode,
   { $from, $to }: { $from: ResolvedPos; $to: ResolvedPos },
 ): BlockRange => {
   const startIndex = Math.min($from.index(0), doc.childCount - 1)
-  const endIndex = $to.depth === 0 || isAtBlockStart($to) ? $to.index(0) : $to.index(0) + 1
+  const reached = $to.depth === 0 || isAtBlockStart($to) ? $to.index(0) : $to.index(0) + 1
+  const endIndex = Math.min(Math.max(reached, startIndex + 1), doc.childCount)
+  // 末尾の空の段落がエディタの足したものかを直前のブロックの種類で見分けないのは、段落へ変換すると直前が段落になり、
+  // 文書の形からは利用者の作った行と見分けられないため。各コマンドではなくここで外すのは、移動・複製・変換・削除が同じ範囲を使うため
+  const endsWithTrailing =
+    endIndex === doc.childCount && endIndex - startIndex > 1 && isEmptyParagraph(doc.lastChild)
 
-  return blockRangeAt(doc, startIndex, Math.min(Math.max(endIndex, startIndex + 1), doc.childCount))
+  return blockRangeAt(doc, startIndex, endsWithTrailing ? endIndex - 1 : endIndex)
 }
 
 export const isCurrentRange = (doc: PMNode, range: BlockRange) => {

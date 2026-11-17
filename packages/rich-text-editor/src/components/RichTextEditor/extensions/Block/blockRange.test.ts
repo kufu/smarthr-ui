@@ -141,6 +141,50 @@ describe('resolveBlockRange', () => {
 
     expect(range).toEqual(blockRangeAt(ABCD, 0, 4))
   })
+
+  describe('文書の末尾の空の段落', () => {
+    const heading = (text: string): JSONContent => ({
+      type: 'heading',
+      attrs: { level: 2 },
+      content: [{ type: 'text', text }],
+    })
+    const doc = createDoc([paragraph('a'), heading('b'), paragraph()])
+    const inLast = (target: PMNode) => target.content.size - 1
+
+    it('2 つ以上のブロックにまたがる全選択では、範囲から外す', () => {
+      expect(resolveBlockRange(doc, new AllSelection(doc))).toEqual(blockRangeAt(doc, 0, 2))
+    })
+
+    it('その中で終わるテキスト選択は、ブロックの先頭で終わる選択として、もともと含めない', () => {
+      const textSelection = TextSelection.create(doc, posOf(doc, 'a'), inLast(doc))
+
+      expect(resolveBlockRange(doc, textSelection)).toEqual(blockRangeAt(doc, 0, 2))
+    })
+
+    it('段落に続く、利用者が作った空の行でも外す', () => {
+      const paragraphs = createDoc([paragraph('a'), paragraph('b'), paragraph()])
+
+      expect(resolveBlockRange(paragraphs, new AllSelection(paragraphs))).toEqual(
+        blockRangeAt(paragraphs, 0, 2),
+      )
+    })
+
+    it('その中だけのキャレットは、その段落を指す', () => {
+      const range = resolveBlockRange(doc, TextSelection.create(doc, inLast(doc)))
+
+      expect(range).toEqual(blockRangeAt(doc, 2, 3))
+    })
+
+    it('末尾の段落が空でないか、選択が末尾まで届かなければ、範囲を変えない', () => {
+      const filled = createDoc([paragraph('a'), heading('b'), paragraph('c')])
+      const toB = TextSelection.create(doc, posOf(doc, 'a'), posOf(doc, 'b') + 1)
+
+      expect(resolveBlockRange(filled, new AllSelection(filled))).toEqual(
+        blockRangeAt(filled, 0, 3),
+      )
+      expect(resolveBlockRange(doc, toB)).toEqual(blockRangeAt(doc, 0, 2))
+    })
+  })
 })
 
 describe('isCurrentRange', () => {
