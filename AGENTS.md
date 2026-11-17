@@ -1076,24 +1076,6 @@ const mergedRef = useMergeRefs(layoutEffectRef, outerRef)
 
 `useLayoutEffectRef` の価値は「`dependencies` 変化時にnodeを変えずにactionを再実行できる」点にあります。`dependencies` が常に `[]` なら、この再実行の恩恵がなく、mount/unmount時にactionを呼ぶだけの通常のcallback refと変わりません。この場合は素直に `useCallback(action, [])` を使ってください。`eslint-local-rules/best-practice-for-use-layout-effect-ref`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。
 
-#### callback ref の cleanup 関数
-
-React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。
-
-```tsx
-// ✅ callback refがcleanup関数を返す
-const callbackRef = useCallback((node: HTMLElement | null) => {
-  if (!node) return
-
-  const observer = new MutationObserver(callback)
-  observer.observe(node, { childList: true })
-
-  return () => observer.disconnect()
-}, [])
-```
-
-複数の ref を1つに統合する場合は `useMergeRefs` を使います。
-
 #### useOnce
 
 渡した callback を初回の呼び出しでのみ実行し、2回目以降は何もしない（`undefined` を返す）ようにラップするフックです（`src/hooks/useOnce.ts`）。callback ref のように複数回呼び出される可能性がある処理を、マウント時に一度だけ実行したい場合に使います。
