@@ -124,6 +124,9 @@ module.exports = {
     function getDirectHookCallback(node) {
       let parent = node.parent
       while (parent) {
+        if (parent.type === 'FunctionDeclaration') {
+          return null
+        }
         if (parent.type === 'ArrowFunctionExpression' || parent.type === 'FunctionExpression') {
           const grandParent = parent.parent
           const isHookCallback =
@@ -145,7 +148,11 @@ module.exports = {
     function isInsideNestedFunctionRelativeTo(node, hookCallbackNode) {
       let parent = node.parent
       while (parent && parent !== hookCallbackNode) {
-        if (parent.type === 'ArrowFunctionExpression' || parent.type === 'FunctionExpression') {
+        if (
+          parent.type === 'ArrowFunctionExpression' ||
+          parent.type === 'FunctionExpression' ||
+          parent.type === 'FunctionDeclaration'
+        ) {
           return true
         }
         parent = parent.parent
@@ -342,7 +349,7 @@ module.exports = {
       // 1.5. 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxxを公開していないかチェック
       // (例: return { onXxxx: latest.onXxxx }。constに代入する場合と同じ危険性を持つ)
       Property(node) {
-        if (node.computed || !node.value) return
+        if (!node.value) return
         if (!isEagerLatestExpression(node.value)) return
 
         const hookCallbackNode = getDirectHookCallback(node)

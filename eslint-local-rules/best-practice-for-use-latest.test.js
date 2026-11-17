@@ -188,6 +188,21 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       `,
     },
 
+    // ネストしたローカル関数がFunctionDeclaration(function宣言)の場合もOK
+    // (evaluate内のreturnは外側のuseEffectの戻り値ではない)
+    {
+      code: `
+        const latest = useLatest({ value })
+        useEffect(() => {
+          function evaluate() {
+            const current = latest.value
+            return current
+          }
+          evaluate()
+        }, [latest])
+      `,
+    },
+
     // フック直下でもlatest.xxxRef.currentはRefObjectのcurrent参照と名前から自明なため対象外（OK）
     {
       code: `
@@ -609,6 +624,22 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       errors: [{ messageId: 'noEagerCapture' }],
     },
 
+    // ネストしたローカル関数がFunctionDeclaration(function宣言)の場合も検知する
+    {
+      code: `
+        const latest = useLatest({ onSelect })
+        useEffect(() => {
+          const onSelect = latest.onSelect
+          function handler() {
+            onSelect()
+          }
+          document.addEventListener('click', handler)
+          return () => document.removeEventListener('click', handler)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
     // フック直下でlatest.xxx()の呼び出し結果をそのまま分割代入(分割代入は常に保守的にエラー)
     {
       code: `
@@ -661,6 +692,17 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         const latest = useLatest({ onClick })
         const functions = useMemo(() => ({
           onClick: latest.onClick,
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 計算プロパティ名(computed property)でも同様に検知する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          ['onClick']: latest.onClick,
         }), [latest])
       `,
       errors: [{ messageId: 'noEagerCapture' }],
