@@ -112,31 +112,6 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
 }
 ```
 
-### TypeScript
-- `interface` ではなく `type` を使用（ESLint ルール `@typescript-eslint/consistent-type-definitions` で強制）
-
-### インポート
-- 型インポートの形式は2つのESLintルールの組み合わせで決まる。**どちらも自動修正されるため、手で書き分ける必要はない**
-  - `@typescript-eslint/consistent-type-imports`（`fixStyle: 'inline-type-imports'`）: 型を値と同じimport文にまとめ、`type` 修飾子を付ける
-  - `@typescript-eslint/no-import-type-side-effects`: import文の指定子が**すべて型**の場合、`import type { ... }` 形式に変換する
-
-  ```typescript
-  // ✅ 値と型が混在する場合はインライン形式
-  import { type FC, useState } from 'react'
-
-  // ✅ すべて型の場合は import type 形式
-  // （`import { type ComponentProps, type ReactNode }` と書いても自動でこの形に修正される）
-  import type { ComponentProps, ReactNode } from 'react'
-  ```
-
-  **注意**: 「すべて型なのに `import type` になっている」のはルール違反ではなく、ルールが要求する正しい形。
-  インライン形式へ直すよう指摘された場合は誤りなので従わない。
-- ワイルドカードの禁止: `export *`、`export * as`、`import * as` は禁止（Icons のみ例外）
-
-### アクセシビリティ
-- 厳格な jsx-a11y ルールを適用
-- `smarthr/a11y-*` カスタム ESLint ルールが有効
-
 ### コンポーネント
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
 - コンポーネントサイズ: 大文字のサイズ値を使用（例: `'S'`、`'M'`、`'L'`）
