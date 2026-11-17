@@ -42,7 +42,7 @@ type Props = ExtendElementPropsWithRef<
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
       responseStatus?: ResponseStatus
     },
-    { omit: 'handleClickAction' | 'handleClickClose' | 'calculatedResponseStatus' }
+    { omit: 'handleClickAction' | 'handleClickClose' }
   >,
   { omit: 'focusTrapRef' }
 >
@@ -61,7 +61,7 @@ export const ControlledActionDialog: FC<Props> = ({
   onClickAction,
   onClickClose,
   onPressEscape = onClickClose,
-  responseStatus,
+  responseStatus: orgResponseStatus,
   closeButton: orgCloseButton,
   subActionArea,
   className,
@@ -82,7 +82,7 @@ export const ControlledActionDialog: FC<Props> = ({
     orgCloseButton,
     buttonObjectConverter,
   )
-  const calculatedResponseStatus = useResponseStatus(responseStatus)
+  const responseStatus = useResponseStatus(orgResponseStatus)
 
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
@@ -111,13 +111,13 @@ export const ControlledActionDialog: FC<Props> = ({
         className={className}
         ariaLabelledby={heading.id}
         onPressEscape={
-          closeButton.disabled || calculatedResponseStatus.isProcessing ? undefined : onPressEscape
+          closeButton.disabled || responseStatus.isProcessing ? undefined : onPressEscape
         }
       >
         <ActionDialogContent
           contentBgColor={contentBgColor}
           contentPadding={contentPadding}
-          calculatedResponseStatus={calculatedResponseStatus}
+          responseStatus={responseStatus}
           handleClickClose={functions.handleClickClose}
           handleClickAction={functions.handleClickAction}
           heading={heading}

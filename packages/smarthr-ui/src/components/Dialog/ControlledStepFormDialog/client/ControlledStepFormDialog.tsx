@@ -76,12 +76,7 @@ type Props = ExtendElementPropsWithRef<
       responseStatus?: ResponseStatus
     },
     {
-      omit:
-        | 'activeStep'
-        | 'handleClickClose'
-        | 'handleClickBack'
-        | 'handleSubmit'
-        | 'calculatedResponseStatus'
+      omit: 'activeStep' | 'handleClickClose' | 'handleClickBack' | 'handleSubmit'
     }
   >,
   { omit: 'focusTrapRef' }
@@ -188,7 +183,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   onClickClose,
   onClickBack,
   onPressEscape = onClickClose,
-  responseStatus,
+  responseStatus: orgResponseStatus,
   className,
   isOpen,
   ...rest
@@ -249,7 +244,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   })
 
   const focusTrapRef = useRef<{ focus: () => void } | null>(null)
-  const calculatedResponseStatus = useResponseStatus(responseStatus)
+  const responseStatus = useResponseStatus(orgResponseStatus)
 
   const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
@@ -285,7 +280,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       className={className}
       ariaLabelledby={heading.id}
       onPressEscape={
-        closeButton.disabled || calculatedResponseStatus.isProcessing ? undefined : onPressEscape
+        closeButton.disabled || responseStatus.isProcessing ? undefined : onPressEscape
       }
     >
       <StepFormDialogContent
@@ -294,7 +289,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
         contentPadding={contentPadding}
         firstStep={firstStep}
         stepLength={stepLength}
-        calculatedResponseStatus={calculatedResponseStatus}
+        responseStatus={responseStatus}
         handleClickClose={functions.handleClickClose}
         handleSubmit={functions.handleSubmit}
         handleClickBack={functions.handleClickBack}

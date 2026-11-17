@@ -55,7 +55,7 @@ type Props = ExtendElementPropsWithRef<
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
     handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    calculatedResponseStatus: ReturnType<typeof useResponseStatus>
+    responseStatus: ReturnType<typeof useResponseStatus>
   }
 >
 
@@ -80,7 +80,7 @@ export const ActionDialogContent: FC<Props> = ({
   actionButton,
   handleClickAction,
   handleClickClose,
-  calculatedResponseStatus,
+  responseStatus,
   closeButton,
   subActionArea,
 }) => (
@@ -93,7 +93,7 @@ export const ActionDialogContent: FC<Props> = ({
       <Cluster justify="space-between">
         {subActionArea}
         <ActionAreaCluster
-          loading={calculatedResponseStatus.isProcessing}
+          loading={responseStatus.isProcessing}
           className={CLASS_NAMES.buttonArea}
           handleClickClose={handleClickClose}
           handleClickAction={handleClickAction}
@@ -102,7 +102,7 @@ export const ActionDialogContent: FC<Props> = ({
         />
       </Cluster>
       <DialogContentResponseStatusMessage
-        responseStatus={calculatedResponseStatus}
+        responseStatus={responseStatus}
         className={CLASS_NAMES.message}
       />
     </div>

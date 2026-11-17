@@ -56,7 +56,7 @@ type Props = ExtendElementPropsWithRef<
     backButton: CommonButtonType
     firstStep: StepItem
     handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    calculatedResponseStatus: ReturnType<typeof useResponseStatus>
+    responseStatus: ReturnType<typeof useResponseStatus>
     /** ステップの総数 */
     stepLength: number
     handleClickBack?: () => void
@@ -92,7 +92,7 @@ export const StepFormDialogContent: FC<Props> = ({
   firstStep,
   handleSubmit,
   handleClickClose,
-  calculatedResponseStatus,
+  responseStatus,
   handleClickBack,
 }) => {
   const { currentStep, stepQueueRef, setCurrentStep, scrollerRef } =
@@ -176,7 +176,7 @@ export const StepFormDialogContent: FC<Props> = ({
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
-                  disabled={backButton.disabled || calculatedResponseStatus.isProcessing}
+                  disabled={backButton.disabled || responseStatus.isProcessing}
                   text={backButton.text}
                   variant={backButton.theme}
                   handleClick={functions.handleBackAction}
@@ -185,7 +185,7 @@ export const StepFormDialogContent: FC<Props> = ({
               <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
-                    disabled={closeButton.disabled || calculatedResponseStatus.isProcessing}
+                    disabled={closeButton.disabled || responseStatus.isProcessing}
                     text={closeButton.text}
                     variant={closeButton.theme}
                     handleClick={functions.handleCloseAction}
@@ -194,7 +194,7 @@ export const StepFormDialogContent: FC<Props> = ({
                 {!submitButton.hidden && (
                   <SubmitButton
                     disabled={submitButton.disabled}
-                    loading={calculatedResponseStatus.isProcessing}
+                    loading={responseStatus.isProcessing}
                     text={submitButton.text}
                     variant={submitButton.theme}
                   />
@@ -202,7 +202,7 @@ export const StepFormDialogContent: FC<Props> = ({
               </Cluster>
             </Cluster>
             <DialogContentResponseStatusMessage
-              responseStatus={calculatedResponseStatus}
+              responseStatus={responseStatus}
               className={CLASS_NAMES.message}
             />
           </div>
