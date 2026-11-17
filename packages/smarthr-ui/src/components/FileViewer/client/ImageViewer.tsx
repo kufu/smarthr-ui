@@ -1,8 +1,7 @@
 'use client'
 
-import { type FC, type SyntheticEvent, memo, useMemo, useState } from 'react'
+import { type FC, type SyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 
-import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useLatest } from '../../../hooks/useLatest'
 
 import type { ViewerProps } from './types'
@@ -58,12 +57,18 @@ export const ImageViewer: FC<ViewerProps> = memo(
       }
     }, [latest])
 
-    const callbackRef = useLayoutEffectRef<HTMLImageElement>(
-      (node) => {
+    // callbackRefはdetach/attachされてもnodeは変わらず実害が無いため、依存配列変化時に
+    // ref参照ごと差し替えて再アタッチさせる軽量な手段としてuseCallbackを意図的に使っている。
+    // useLayoutEffectRefはuseRef+useLayoutEffectを使う分この用途には重く、不要
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps
+    const callbackRef = useCallback(
+      (node: HTMLImageElement | null) => {
         if (node) {
           functions.updateViewConfig(node)
         }
       },
+      // scale, rotation, widthの変化時にもcallbackRefを再実行し、updateViewConfigを再計算させるために必要
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [scale, rotation, width, functions],
     )
 

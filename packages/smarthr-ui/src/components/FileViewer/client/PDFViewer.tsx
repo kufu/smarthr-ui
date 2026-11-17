@@ -1,9 +1,8 @@
 'use client'
 
-import { type FC, memo, useEffect, useMemo, useState } from 'react'
+import { type FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useLatest } from '../../../hooks/useLatest'
 import { Scroller } from '../../Scroller'
 
@@ -145,31 +144,36 @@ export const PDFViewer: FC<Props> = memo(
 
     const applyFrame = useAnimationFrame()
 
-    const callbackRef = useLayoutEffectRef<HTMLElement>(
-      (node) => {
-        if (!node) return undefined
+    // callbackRefはdetach/attachされてもnodeは変わらず実害が無いため、依存配列変化時に
+    // ref参照ごと差し替えて再アタッチさせる軽量な手段としてuseCallbackを意図的に使っている。
+    // useLayoutEffectRefはuseRef+useLayoutEffectを使う分この用途には重く、不要
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps
+    const callbackRef = useCallback(
+      (node: HTMLElement | null) => {
+        if (node) {
+          node
+            .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
+            .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
 
-        node
-          .querySelectorAll(`mark.highlight.${SELECTED_MATCH_CLASS}`)
-          .forEach((el) => el.classList.remove(SELECTED_MATCH_CLASS))
+          if (currentMatchIndex === undefined || currentMatchIndex < 0) return
 
-        if (currentMatchIndex === undefined || currentMatchIndex < 0) return undefined
+          const start = performance.now()
+          const apply = () => {
+            const els = node.querySelectorAll(matchSelector(currentMatchIndex))
 
-        const start = performance.now()
-        const apply = () => {
-          const els = node.querySelectorAll(matchSelector(currentMatchIndex))
-
-          if (els.length > 0) {
-            els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
-            els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
-          } else if (performance.now() - start < 1000) {
-            applyFrame.request(apply)
+            if (els.length > 0) {
+              els.forEach((el) => el.classList.add(SELECTED_MATCH_CLASS))
+              els[0].scrollIntoView({ block: 'center', behavior: 'smooth' })
+            } else if (performance.now() - start < 1000) {
+              applyFrame.request(apply)
+            }
           }
+          applyFrame.request(apply)
+        } else {
+          applyFrame.cancel()
         }
-        applyFrame.request(apply)
-
-        return () => applyFrame.cancel()
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- matchesの変化でcallbackRefを再実行し、ハイライトを再適用させるために必要
       [currentMatchIndex, matches, applyFrame],
     )
 
