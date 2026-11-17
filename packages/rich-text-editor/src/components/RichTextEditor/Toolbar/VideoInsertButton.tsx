@@ -7,7 +7,6 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   memo,
-  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -139,33 +138,40 @@ const toEntries = (videos: readonly RichTextVideo[], idPrefix: string): VideoEnt
   }))
 }
 
-type PickerProps = {
+type PickerPanelProps = {
   label: string
   handleDismiss: () => void
   handleInserted: () => void
 }
 
-const VideoPicker: FC<PickerProps> = ({ label, handleDismiss, handleInserted }) => {
+const VideoPickerPanel: FC<PickerPanelProps> = ({ label, handleDismiss, handleInserted }) => {
   const { editor, getVideoHandlers } = useRichTextEditorContext()
   const { localize } = useIntl()
   const idPrefix = useId()
   const [load, setLoad] = useState<LoadState>({ status: 'loading' })
   const [attempt, setAttempt] = useState(0)
   const [query, setQuery] = useState('')
-  const latest = useLatest({ load, getVideoHandlers })
+  const latest = useLatest({
+    load,
+    getVideoHandlers,
+    editor,
+    idPrefix,
+    handleDismiss,
+    handleInserted,
+  })
 
   useEffect(() => {
-    const { loadVideos } = latest.getVideoHandlers()
-
-    if (!loadVideos) return undefined
-
     const controller = new AbortController()
     const run = async () => {
+      const { loadVideos } = latest.getVideoHandlers()
+
+      if (!loadVideos) return
+
       try {
         const videos = await loadVideos({ signal: controller.signal })
 
         if (!controller.signal.aborted) {
-          setLoad({ status: 'loaded', entries: toEntries(videos, idPrefix) })
+          setLoad({ status: 'loaded', entries: toEntries(videos, latest.idPrefix) })
         }
       } catch {
         if (!controller.signal.aborted) setLoad({ status: 'error' })
@@ -175,22 +181,21 @@ const VideoPicker: FC<PickerProps> = ({ label, handleDismiss, handleInserted }) 
     run()
 
     return () => controller.abort()
-  }, [attempt, idPrefix, latest])
+  }, [attempt, latest])
 
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const focusOnMountRef = useCallback((node: HTMLInputElement | null) => {
-    if (!node) return undefined
-
-    // 開いた直後は位置を測る間 visibility:hidden で、フォーカスを受け付けない
-    const frame = requestAnimationFrame(() => node.focus())
-
-    return () => cancelAnimationFrame(frame)
-  }, [])
-  const searchRef = useMergeRefs(searchInputRef, focusOnMountRef)
   const listRef = useRef<HTMLUListElement>(null)
 
   const functions = useMemo(
     () => ({
+      focusOnMountRef: (node: HTMLInputElement | null) => {
+        if (!node) return undefined
+
+        // 開いた直後は位置を測る間 visibility:hidden で、フォーカスを受け付けない
+        const frame = requestAnimationFrame(() => node.focus())
+
+        return () => cancelAnimationFrame(frame)
+      },
       handleSearchChange: (e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value),
       handleRetry: () => {
         searchInputRef.current?.focus()
@@ -208,12 +213,12 @@ const VideoPicker: FC<PickerProps> = ({ label, handleDismiss, handleInserted }) 
 
         const { src, title, poster } = entry.video
 
-        editor
+        latest.editor
           .chain()
           .focus()
           .insertContent({ type: 'video', attrs: { src, title, poster: poster ?? null } })
           .run()
-        handleInserted()
+        latest.handleInserted()
       },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.nativeEvent.isComposing) return
@@ -221,7 +226,7 @@ const VideoPicker: FC<PickerProps> = ({ label, handleDismiss, handleInserted }) 
         if (e.key === 'Escape') {
           e.preventDefault()
           e.stopPropagation()
-          handleDismiss()
+          latest.handleDismiss()
 
           return
         }
@@ -241,8 +246,10 @@ const VideoPicker: FC<PickerProps> = ({ label, handleDismiss, handleInserted }) 
         next.focus()
       },
     }),
-    [editor, handleDismiss, handleInserted, latest],
+    [latest],
   )
+
+  const searchRef = useMergeRefs(searchInputRef, functions.focusOnMountRef)
 
   const loadingText = localize({
     id: 'smarthr-ui/RichTextEditor/videoLoading',
@@ -342,11 +349,11 @@ export const VideoInsertButton: FC<Props> = memo(
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/video', defaultText: '動画を挿入' })
 
-    const latest = useLatest({ triggerRef, onKeyDown })
+    const latest = useLatest({ triggerRef, onKeyDown, setIsOpen })
 
     const functions = useMemo(
       () => ({
-        handleTriggerClick: () => setIsOpen((prev) => !prev),
+        handleTriggerClick: () => latest.setIsOpen((prev) => !prev),
         handleTriggerKeyDown: (e: KeyboardEvent) => {
           switch (e.key) {
             case 'Enter':
@@ -354,19 +361,19 @@ export const VideoInsertButton: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(true)
+              latest.setIsOpen(true)
               break
             default:
               latest.onKeyDown?.(e)
           }
         },
         handleDismiss: () => {
-          setIsOpen(false)
+          latest.setIsOpen(false)
           latest.triggerRef.current?.focus()
         },
-        handleInserted: () => setIsOpen(false),
+        handleInserted: () => latest.setIsOpen(false),
       }),
-      [setIsOpen, latest],
+      [latest],
     )
 
     return (
@@ -384,7 +391,7 @@ export const VideoInsertButton: FC<Props> = memo(
           label={label}
         />
         {renderDropdown(
-          <VideoPicker
+          <VideoPickerPanel
             handleDismiss={functions.handleDismiss}
             handleInserted={functions.handleInserted}
             label={label}
