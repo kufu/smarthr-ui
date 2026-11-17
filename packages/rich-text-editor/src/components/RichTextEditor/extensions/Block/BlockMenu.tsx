@@ -81,7 +81,7 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
   const focusFrame = useRef<number | null>(null)
   const onCloseRef = useRef<(() => void) | null>(null)
 
-  const latest = useLatest({ range })
+  const latest = useLatest({ editor, range, setIsOpen, openFrom, restoreFocus })
 
   const functions = useMemo(() => {
     const getItems = () =>
@@ -90,19 +90,20 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
     const close = () => {
       if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)
       focusFrame.current = null
-      setIsOpen(false)
-      restoreFocus()
+      latest.setIsOpen(false)
+      latest.restoreFocus()
     }
 
     return {
       open: (target: BlockRange, { getAnchorRect, onClose }: BlockMenuOptions = {}) => {
         setRange(target)
         onCloseRef.current = onClose ?? null
-        openFrom({
+        latest.openFrom({
           getAnchorRect:
-            getAnchorRect ?? (() => editor.view.coordsAtPos(editor.state.selection.head)),
+            getAnchorRect ??
+            (() => latest.editor.view.coordsAtPos(latest.editor.state.selection.head)),
           returnFocus: () => {
-            if (!editor.isDestroyed) editor.view.focus()
+            if (!latest.editor.isDestroyed) latest.editor.view.focus()
           },
         })
 
@@ -110,7 +111,7 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
         // 位置が決まって見えるようになるまでは、項目にフォーカスを移せない
         focusFrame.current = requestAnimationFrame(() => {
           focusFrame.current = null
-          const index = BLOCK_MENU_ITEMS.findIndex(({ run }) => run(editor.can(), target))
+          const index = BLOCK_MENU_ITEMS.findIndex(({ run }) => run(latest.editor.can(), target))
 
           getItems()[index]?.focus()
         })
@@ -120,14 +121,14 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
         if (!transaction.docChanged) return
 
         if (menuRef.current?.contains(document.activeElement)) close()
-        else setIsOpen(false)
+        else latest.setIsOpen(false)
       },
       handleRun: (run: BlockMenuItem['run']) => {
         const target = latest.range
 
         close()
 
-        if (target) run(editor.commands, target)
+        if (target) run(latest.editor.commands, target)
       },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.nativeEvent.isComposing) return
@@ -161,7 +162,7 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
         }
       },
     }
-  }, [editor, setIsOpen, openFrom, restoreFocus, latest])
+  }, [latest])
 
   useEffect(() => {
     const storage = editor.storage.blockActions

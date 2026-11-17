@@ -59,7 +59,7 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
   const frameRef = useRef<number | null>(null)
   const hasAddButton = features.includes('slashCommand')
 
-  const latest = useLatest({ hover, containerRef })
+  const latest = useLatest({ editor, hover, containerRef })
 
   const functions = useMemo(() => {
     const measure = () => {
@@ -68,13 +68,14 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
       const container = latest.containerRef.current
 
       // ドラッグ中に隠すと、掴んでいる ⋮⋮ が外れて dragend が届かない
-      if (!container || editor.isDestroyed || editor.storage.blockActions?.dragSource) return
+      if (!container || latest.editor.isDestroyed || latest.editor.storage.blockActions?.dragSource)
+        return
 
-      const viewRect = editor.view.dom.getBoundingClientRect()
+      const viewRect = latest.editor.view.dom.getBoundingClientRect()
       const pointerY = pointerYRef.current
       const menuIndex = menuIndexRef.current
       // メニューは wrapper の外にあり、ポインタを移すと mouseleave が来る。⋮⋮ から開いた間はそれでも隠さない
-      const menuOpen = menuIndex !== null && menuIndex < editor.state.doc.childCount
+      const menuOpen = menuIndex !== null && menuIndex < latest.editor.state.doc.childCount
 
       if (
         !menuOpen &&
@@ -85,7 +86,7 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
         return
       }
 
-      const rects = getBlockRects(editor.view)
+      const rects = getBlockRects(latest.editor.view)
       const index = menuOpen ? menuIndex : findBlockIndex(rects, pointerY!)
       const top = Math.max(rects[index].top, viewRect.top) - getControlOrigin(container).top
 
@@ -104,8 +105,8 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
     const hoveredRange = () => {
       const index = latest.hover?.index
 
-      return index !== undefined && index < editor.state.doc.childCount
-        ? blockRangeAt(editor.state.doc, index)
+      return index !== undefined && index < latest.editor.state.doc.childCount
+        ? blockRangeAt(latest.editor.state.doc, index)
         : null
     }
 
@@ -132,9 +133,9 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
           return
         }
 
-        const rects = getBlockRects(editor.view)
-        const viewRect = editor.view.dom.getBoundingClientRect()
-        const { paddingLeft, paddingRight } = getComputedStyle(editor.view.dom)
+        const rects = getBlockRects(latest.editor.view)
+        const viewRect = latest.editor.view.dom.getBoundingClientRect()
+        const { paddingLeft, paddingRight } = getComputedStyle(latest.editor.view.dom)
         const y =
           boundary === 0
             ? rects[0].top
@@ -163,8 +164,8 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
         const range = hoveredRange()
 
         if (range) {
-          editor.view.focus()
-          editor.commands.addBlockBelow(range.from)
+          latest.editor.view.focus()
+          latest.editor.commands.addBlockBelow(range.from)
         }
       },
       handleDelegateGripMouseDown: () => {
@@ -173,7 +174,7 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
       },
       handleDelegateGripClick: (e: MouseEvent<HTMLDivElement>) => {
         const container = latest.containerRef.current
-        const openMenu = editor.storage.blockActions?.openMenu
+        const openMenu = latest.editor.storage.blockActions?.openMenu
         const range = hoveredRange()
 
         if (menuOpenAtMouseDownRef.current || !container || !openMenu || !range) return
@@ -187,13 +188,13 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
         openMenu(range, {
           // ⋮⋮ 自身は測らない。本文の内側のスクロールでは ⋮⋮ が 1 フレーム遅れて動き、メニューが前の位置に取り残される
           getAnchorRect: () => {
-            const block = editor.view.nodeDOM(range.from)
+            const block = latest.editor.view.nodeDOM(range.from)
 
             // 文書が変わってから閉じるまでの間にも測られ、そのときにはブロックが無いことがある
             if (block instanceof HTMLElement) {
               top = Math.max(
                 block.getBoundingClientRect().top,
-                editor.view.dom.getBoundingClientRect().top,
+                latest.editor.view.dom.getBoundingClientRect().top,
               )
             }
 
@@ -208,12 +209,12 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
         })
       },
       handleDelegateGripDragStart: (e: DragEvent<HTMLDivElement>) => {
-        const storage = editor.storage.blockActions
+        const storage = latest.editor.storage.blockActions
         const range = hoveredRange()
 
         if (!range || !storage) return
 
-        const dom = editor.view.nodeDOM(range.from)
+        const dom = latest.editor.view.nodeDOM(range.from)
 
         e.dataTransfer.effectAllowed = 'move'
         // Firefox は何かを setData しないとドラッグを始めない
@@ -225,7 +226,7 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
         latest.containerRef.current?.setAttribute(BLOCK_DRAGGING_ATTRIBUTE, '')
       },
       handleDelegateGripDragEnd: () => {
-        const storage = editor.storage.blockActions
+        const storage = latest.editor.storage.blockActions
 
         if (storage) storage.dragSource = null
 
@@ -236,7 +237,7 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
         schedule()
       },
     }
-  }, [editor, latest])
+  }, [latest])
 
   useEffect(() => {
     const container = latest.containerRef.current
