@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 
+import { useLatest } from '../../../hooks/useLatest'
+
 import type { InsertDialogKind, InsertDialogOpener } from '../extensions/insertDialogs'
 import type { Editor } from '@tiptap/core'
 
@@ -12,15 +14,20 @@ export const useInsertDialogOpener = (
   kind: InsertDialogKind,
   opener: InsertDialogOpener,
 ) => {
+  const latest = useLatest({ editor, kind, opener })
+
   useEffect(() => {
-    const storage = editor.storage.insertDialogs
+    const { editor: currentEditor, kind: currentKind } = latest
+    const storage = currentEditor.storage.insertDialogs
 
     if (!storage) return undefined
 
-    storage.openers[kind] = opener
+    const open: InsertDialogOpener = (anchor) => latest.opener(anchor)
+
+    storage.openers[currentKind] = open
 
     return () => {
-      if (storage.openers[kind] === opener) delete storage.openers[kind]
+      if (storage.openers[currentKind] === open) delete storage.openers[currentKind]
     }
-  }, [editor, kind, opener])
+  }, [latest])
 }
