@@ -9,6 +9,7 @@ import {
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { NodeSelection } from '@tiptap/pm/state'
+import { Activity } from 'react'
 import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
 import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 
@@ -689,5 +690,66 @@ describe('つまみのドラッグ', () => {
 
     expect(dropAt(5, [BLOCK_DRAG_TYPE])).toBe(true)
     expect(outline()).toEqual(['aa', 'bb', 'cc'])
+  })
+})
+
+describe('エディタの作り直し', () => {
+  it('Activity で隠してエディタが作り直されても、表示し直すとブロックの操作とスラッシュメニューが新しいエディタで動く', async () => {
+    const ui = (mode: 'visible' | 'hidden') => (
+      <Activity mode={mode}>
+        <RichTextEditor
+          defaultValue={doc([paragraph('aa'), paragraph('bb'), paragraph()])}
+          features={[...FEATURES, 'slashCommand']}
+          aria-label="本文"
+          onImageUpload={vi.fn()}
+        />
+      </Activity>
+    )
+    const { rerender } = render(ui('visible'), { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    const before = getEditor()
+
+    rerender(ui('hidden'))
+    await waitFor(() => expect(before.isDestroyed).toBe(true))
+    rerender(ui('visible'))
+    await waitFor(() => expect(getEditor()).not.toBe(before))
+
+    placeCaret('aa')
+    await openMenuByKey()
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
+
+    pressMove('ArrowDown')
+    expect(outline()).toEqual(['bb', 'aa', 'paragraph'])
+    await waitFor(() => expect(announcement()).toMatch('「aa」'))
+
+    await hoverBlock(0)
+    fireEvent.keyDown(getEditorDom(), { key: 'a' })
+    await nextFrame()
+    expect(screen.queryByTitle(HANDLE_TITLE)).not.toBeInTheDocument()
+
+    const editor = getEditor()
+
+    act(() => {
+      editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+      editor.view.focus()
+    })
+    act(() => {
+      const { from, to } = editor.state.selection
+      const insert = () => editor.state.tr.insertText('/', from, to)
+
+      if (!editor.view.someProp('handleTextInput', (f) => f(editor.view, from, to, '/', insert))) {
+        editor.view.dispatch(insert())
+      }
+    })
+    const listbox = await screen.findByRole('listbox', { name: 'ブロックと色' })
+    const options = () => within(listbox).getAllByRole('option')
+
+    expect(options().some((option) => option.textContent?.includes('画像を挿入'))).toBe(true)
+    expect(options()[0]).toHaveAttribute('aria-selected', 'true')
+
+    fireEvent.keyDown(getEditorDom(), { key: 'ArrowDown' })
+
+    await waitFor(() => expect(options()[1]).toHaveAttribute('aria-selected', 'true'))
   })
 })
