@@ -3,6 +3,7 @@
 import { type FC, memo, useEffect, useState } from 'react'
 import { VisuallyHiddenText } from 'smarthr-ui'
 
+import { useLatest } from '../../../../hooks/useLatest'
 import { type UseIntlReturn, useIntl } from '../../../../intl'
 import { BLOCK_CATALOG } from '../blockCatalog'
 
@@ -86,7 +87,10 @@ export const BlockAnnouncer: FC<Props> = memo(({ editor }) => {
   const { localize } = useIntl()
   const [notice, setNotice] = useState<Notice | null>(null)
 
+  const latest = useLatest({ editor })
+
   useEffect(() => {
+    const { editor: currentEditor } = latest
     let timer: ReturnType<typeof setTimeout> | undefined
 
     const handleTransaction = ({ transaction }: { transaction: Transaction }) => {
@@ -98,8 +102,8 @@ export const BlockAnnouncer: FC<Props> = memo(({ editor }) => {
       // 末尾の空の段落より下へは動かせない。数に入れると「4個中3番目」の次に「最後のブロックです」と読まれる
       const total =
         announcement.type === 'moved'
-          ? lastBoundary(editor.state.doc, announcement.position - 1 + announcement.count)
-          : editor.state.doc.childCount
+          ? lastBoundary(latest.editor.state.doc, announcement.position - 1 + announcement.count)
+          : latest.editor.state.doc.childCount
       const next = { announcement, total }
 
       clearTimeout(timer)
@@ -107,13 +111,13 @@ export const BlockAnnouncer: FC<Props> = memo(({ editor }) => {
       timer = setTimeout(() => setNotice(next), REANNOUNCE_DELAY)
     }
 
-    editor.on('transaction', handleTransaction)
+    currentEditor.on('transaction', handleTransaction)
 
     return () => {
       clearTimeout(timer)
-      editor.off('transaction', handleTransaction)
+      currentEditor.off('transaction', handleTransaction)
     }
-  }, [editor])
+  }, [latest])
 
   return (
     <VisuallyHiddenText as="div" role="status">

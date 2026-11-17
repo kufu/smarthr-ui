@@ -165,18 +165,19 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
   }, [latest])
 
   useEffect(() => {
-    const storage = editor.storage.blockActions
+    const { editor: currentEditor } = latest
+    const storage = currentEditor.storage.blockActions
 
     if (!storage) return undefined
 
     storage.openMenu = functions.open
 
-    if (isOpen) editor.on('transaction', functions.handleTransaction)
+    if (isOpen) currentEditor.on('transaction', functions.handleTransaction)
 
     return () => {
       if (storage.openMenu === functions.open) storage.openMenu = null
 
-      editor.off('transaction', functions.handleTransaction)
+      currentEditor.off('transaction', functions.handleTransaction)
 
       // 閉じる経路は useToolbarDropdown の中（外のクリック・フォーカスの移動）にもあり、isOpen の変化でしか揃えて拾えない
       if (isOpen) {
@@ -186,7 +187,7 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
         onClose?.()
       }
     }
-  }, [editor, isOpen, functions])
+  }, [isOpen, functions, latest])
 
   const shortcuts = getBlockShortcuts(isApple)
 

@@ -222,22 +222,23 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef }) => {
 
   useEffect(() => {
     const container = latest.containerRef.current
-    const storage = editor.storage.blockActions
+    const { editor: currentEditor } = latest
+    const storage = currentEditor.storage.blockActions
 
     if (!container || !storage) return undefined
 
     storage.handleDropTargetChange = functions.handleDropTargetChange
     container.addEventListener('mousemove', functions.handlePointerMove)
     container.addEventListener('mouseleave', functions.handleHide)
-    editor.view.dom.addEventListener('keydown', functions.handleHide)
+    currentEditor.view.dom.addEventListener('keydown', functions.handleHide)
     // bubble で受けないのは、要素のスクロールは window まで bubble せず、本文の内側のスクロールを拾えないため
     window.addEventListener('scroll', functions.handleLayoutChange, true)
     // update では足りない。value の反映は emitUpdate: false で、update を出さずにブロックを減らす
-    editor.on('transaction', functions.handleTransaction)
+    currentEditor.on('transaction', functions.handleTransaction)
 
     const observer = new ResizeObserver(functions.handleLayoutChange)
 
-    observer.observe(editor.view.dom)
+    observer.observe(currentEditor.view.dom)
 
     return () => {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current)
@@ -253,12 +254,12 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef }) => {
 
       container.removeEventListener('mousemove', functions.handlePointerMove)
       container.removeEventListener('mouseleave', functions.handleHide)
-      editor.view.dom.removeEventListener('keydown', functions.handleHide)
+      currentEditor.view.dom.removeEventListener('keydown', functions.handleHide)
       window.removeEventListener('scroll', functions.handleLayoutChange, true)
-      editor.off('transaction', functions.handleTransaction)
+      currentEditor.off('transaction', functions.handleTransaction)
       observer.disconnect()
     }
-  }, [editor, functions, latest])
+  }, [functions, latest])
 
   return (
     <>
