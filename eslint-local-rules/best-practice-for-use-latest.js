@@ -35,6 +35,8 @@ module.exports = {
         'latestに対してfor...inループを使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
       noEagerCapture:
         'latest.xxxの値をフックのコールバック直下で変数に代入すると、代入した瞬間の値に固定されます。呼び出し時に毎回最新値を参照できるよう、関数でラップしてください（例: const x = () => latest.yyy() や prop: () => latest.yyy ? a : b のように、もう一段関数を挟む）。',
+      unusedProperty:
+        'useLatestに渡した "{{name}}" はこのファイル内のどこからもlatest.{{name}}として参照されていません。不要なら削除してください。',
     },
     schema: [],
   },
@@ -281,6 +283,78 @@ module.exports = {
     }
 
     /**
+     * useLatest({ a, b, c })の引数オブジェクトのキーのうち、同じファイル内のどこからも
+     * latest.xxx（分割代入 const { xxx } = latest を含む）として参照されていないものを
+     * 検知する。computed アクセス（latest[key]）やrest要素での分割代入が見つかった場合は、
+     * 静的に追跡できないため安全側に倒してチェックをスキップする
+     */
+    function reportUnusedLatestProperties(declaratorNode) {
+      const argNode = declaratorNode.init.arguments[0]
+
+      if (!argNode || argNode.type !== 'ObjectExpression') return
+
+      const propertyNodes = []
+
+      for (const prop of argNode.properties) {
+        if (prop.type !== 'Property' || prop.key.type !== 'Identifier') {
+          // SpreadElementや算出プロパティ名が含まれる場合は安全側に倒してスキップ
+          return
+        }
+        propertyNodes.push(prop)
+      }
+
+      const variables = sourceCode.getDeclaredVariables(declaratorNode)
+      const variable = variables.find((v) => v.name === 'latest')
+
+      if (!variable) return
+
+      const usedNames = new Set()
+
+      for (const reference of variable.references) {
+        if (reference.identifier === declaratorNode.id) continue
+
+        const refNode = reference.identifier
+        const parent = refNode.parent
+
+        if (parent.type === 'MemberExpression' && parent.object === refNode) {
+          if (parent.computed || parent.property.type !== 'Identifier') {
+            // latest[key]のような動的アクセスは静的に追跡できないため安全側に倒す
+            return
+          }
+          usedNames.add(parent.property.name)
+          continue
+        }
+
+        if (
+          parent.type === 'VariableDeclarator' &&
+          parent.init === refNode &&
+          parent.id.type === 'ObjectPattern'
+        ) {
+          for (const property of parent.id.properties) {
+            if (property.type === 'RestElement') {
+              // rest要素(...rest)があると、どのキーが使われるか静的に追跡できないため安全側に倒す
+              return
+            }
+            if (property.type === 'Property' && property.key.type === 'Identifier') {
+              usedNames.add(property.key.name)
+            }
+          }
+          continue
+        }
+      }
+
+      for (const prop of propertyNodes) {
+        if (!usedNames.has(prop.key.name)) {
+          context.report({
+            node: prop,
+            messageId: 'unusedProperty',
+            data: { name: prop.key.name },
+          })
+        }
+      }
+    }
+
+    /**
      * ノードが依存配列内にあるかチェック
      */
     function isInsideDependencyArray(node) {
@@ -343,7 +417,11 @@ module.exports = {
             node: node.id,
             messageId: 'invalidVariableName',
           })
+          return
         }
+
+        // useLatestに渡したが、どこからも参照されていないプロパティをチェック
+        reportUnusedLatestProperties(node)
       },
 
       // 1.5. 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxxを公開していないかチェック
