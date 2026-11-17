@@ -900,47 +900,7 @@ const functions = useMemo(() => ({
 
 #### useImperativeHandle の依存配列
 
-`useImperativeHandle` には**必ず依存配列を指定**します。
-
-**理由:** 依存配列を省略すると、毎レンダリングで React がcleanupとして `ref(null)` を呼んだあと `ref(node)` を再実行します。これによりcallback refを使う親コンポーネントで不要な処理（DOM操作、副作用など）が毎レンダリング走ります。
-
-**依存配列の決め方:**
-
-```typescript
-// ✅ factory が ref.current を返すだけ、かつ
-//    その要素が初回コミットで無条件にマウントされる → []
-// DOM要素はコンポーネントのライフタイム中に変わらないため、初回のみ実行すれば十分
-useImperativeHandle(ref, () => innerRef.current, [])
-
-// ✅ 条件付きマウント（portal、遅延描画など）
-//    マウントを制御する値を依存配列に含める
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useImperativeHandle(ref, () => containerRef.current, [portalRoot])
-
-// ✅ factory がオブジェクトを返し、中身が useCallback の値に依存する → [theCallback]
-// focus が変わったときのみ ref を再作成する
-const focus = useCallback(() => {
-  firstFocusTarget?.current?.focus()
-}, [firstFocusTarget])
-
-useImperativeHandle(ref, () => ({ focus }), [focus])
-
-// ✅ as prop でレンダリングする DOM 要素が変わる場合 → [Component]
-// factory 内で Component を参照しないが、レンダリング要素が変わると ref が指す型も変わるため必要
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useImperativeHandle(ref, () => wrapperRef.current!, [Component])
-```
-
-**依存配列に含めないもの:**
-
-- factory 内で参照していない値
-  - ただし「ref 対象の（再）マウントを引き起こす値」は例外（`as` の `Component`、portal の `portalRoot` など）
-- `ref` 自体（React が内部で管理するため不要）
-
-```typescript
-// ❌ 依存配列を省略してはいけない
-useImperativeHandle(ref, () => innerRef.current)
-```
+`useImperativeHandle` には**必ず依存配列を指定**します。省略すると毎レンダリングでReactがcleanupとして`ref(null)`を呼んだあと`ref(node)`を再実行し、callback refを使う親コンポーネントで不要な処理が毎レンダリング走ります。依存配列はfactory内で参照している値に加え、「ref対象の（再）マウントを引き起こす値」（`as`の`Component`、portalの`portalRoot`など、factory内で参照していなくても必要）を含めます。`ref`自体は含めません。
 
 #### useMergeRefs
 
