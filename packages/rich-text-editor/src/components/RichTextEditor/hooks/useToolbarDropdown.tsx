@@ -122,7 +122,7 @@ export function useToolbarDropdown({
   const scrollContainerRef = useRef<HTMLElement | null>(null)
   const scrollOffsetRef = useRef({ left: 0, top: 0 })
 
-  const latest = useLatest({ origin })
+  const latest = useLatest({ origin, isChildPortal })
 
   const setIsOpen = useCallback<Dispatch<SetStateAction<boolean>>>((action) => {
     setOrigin((prev) => {
@@ -274,7 +274,7 @@ export function useToolbarDropdown({
       // 指でスクロールしただけの場面でトリガーが画面内へ引き戻され、スクロール操作と喧嘩する
       const shouldRestoreFocus = contentRef.current?.contains(document.activeElement)
 
-      setIsOpen(false)
+      setOrigin(null)
 
       if (shouldRestoreFocus) functions.restoreFocus()
     }
@@ -282,17 +282,17 @@ export function useToolbarDropdown({
     scrollContainer.addEventListener('scroll', handler)
 
     return () => scrollContainer.removeEventListener('scroll', handler)
-  }, [origin, setIsOpen, functions])
+  }, [origin, functions])
 
   useEffect(() => {
     if (!isOpen) return
 
     const isInside = (target: HTMLElement) =>
-      Boolean(triggerRef.current?.contains(target)) || isChildPortal(target)
+      Boolean(triggerRef.current?.contains(target)) || latest.isChildPortal(target)
 
     const handleMouseDown = (e: MouseEvent) => {
       if (!isInside(e.target as HTMLElement)) {
-        setIsOpen(false)
+        setOrigin(null)
       }
     }
 
@@ -300,10 +300,10 @@ export function useToolbarDropdown({
     // 使うため先に処理される。キャプチャで受けてトリガーへ届く前に閉じる
     const handleKeyDown = (e: KeyboardEvent) => {
       // ドロップダウン内の Escape は各コンポーネントが起点へフォーカスを戻して閉じる
-      if (e.key === 'Escape' && !isChildPortal(e.target as HTMLElement)) {
+      if (e.key === 'Escape' && !latest.isChildPortal(e.target as HTMLElement)) {
         e.preventDefault()
         e.stopPropagation()
-        setIsOpen(false)
+        setOrigin(null)
 
         // 無条件に起点へ戻す方式は採らない。中身にフォーカスがある間は戻り先を中身が決める
         // （表のメニューはセルへ戻す）
@@ -315,7 +315,7 @@ export function useToolbarDropdown({
     // フォーカスが実際に移った先を focusin で見る
     const handleFocusIn = (e: FocusEvent) => {
       if (!isInside(e.target as HTMLElement)) {
-        setIsOpen(false)
+        setOrigin(null)
       }
     }
 
@@ -328,7 +328,7 @@ export function useToolbarDropdown({
       document.removeEventListener('keydown', handleKeyDown, true)
       document.removeEventListener('focusin', handleFocusIn)
     }
-  }, [isOpen, isChildPortal, setIsOpen, functions])
+  }, [isOpen, functions, latest])
 
   const renderDropdown = useCallback(
     (children: ReactNode) => {

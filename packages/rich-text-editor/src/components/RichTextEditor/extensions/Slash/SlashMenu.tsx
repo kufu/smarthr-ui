@@ -240,7 +240,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
     selection.query === query && selection.index < items.length ? selection.index : 0
   const activeOptionId = items[activeIndex]?.optionId ?? null
 
-  const latest = useLatest({ editor, items, activeIndex, query })
+  const latest = useLatest({ editor, items, activeIndex, query, listboxId })
 
   const functions = useMemo(() => {
     const runBlock = ({ creation }: BlockCatalogEntry, range: SlashRange) => {
@@ -368,11 +368,20 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
         }
       },
       handleCloseClick: () => exitSuggestion(latest.editor.view, SlashCommandPluginKey),
+      // 段落の先頭だけを起点にしないのは、検索語が折り返したときに入力中の行を覆うため
+      measureAnchor: (from: number, to: number) =>
+        latest.editor.isDestroyed
+          ? null
+          : {
+              ...latest.editor.view.coordsAtPos(from),
+              bottom: latest.editor.view.coordsAtPos(to).bottom,
+            },
     }
   }, [latest])
 
   useEffect(() => {
-    const storage = editor.storage.slashCommand
+    const { editor: currentEditor } = latest
+    const storage = currentEditor.storage.slashCommand
 
     if (!storage) return undefined
 
@@ -381,7 +390,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
     return () => {
       if (storage.handleKeyDown === functions.handleKeyDown) storage.handleKeyDown = null
     }
-  }, [editor, functions])
+  }, [functions, latest])
 
   const isOpen = slash !== null
   const noMatchOptionId = `${idPrefix}-no-match`
@@ -390,13 +399,15 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
   const activeDescendantId = activeOptionId ?? noMatchOptionId
 
   useEffect(() => {
-    if (!isOpen || editor.isDestroyed) return undefined
+    const { editor: currentEditor } = latest
 
-    const dom = editor.view.dom
+    if (!isOpen || currentEditor.isDestroyed) return undefined
+
+    const dom = currentEditor.view.dom
 
     dom.setAttribute('aria-autocomplete', 'list')
 
-    dom.setAttribute('aria-controls', listboxId)
+    dom.setAttribute('aria-controls', latest.listboxId)
     dom.setAttribute('aria-activedescendant', activeDescendantId)
     document.getElementById(activeDescendantId)?.scrollIntoView({ block: 'nearest' })
 
@@ -405,7 +416,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
       dom.removeAttribute('aria-controls')
       dom.removeAttribute('aria-activedescendant')
     }
-  }, [editor, isOpen, listboxId, activeDescendantId])
+  }, [isOpen, activeDescendantId, latest])
 
   const from = slash?.from ?? null
   const to = slash?.to ?? null
@@ -417,11 +428,12 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
     if (from === null || to === null || !contentEl) return undefined
 
     const place = () => {
-      if (editor.isDestroyed) return
+      const anchor = functions.measureAnchor(from, to)
 
-      // 段落の先頭だけを起点にしないのは、検索語が折り返したときに入力中の行を覆うため
+      if (!anchor) return
+
       const next = computeFloatingPlacement({
-        anchor: { ...editor.view.coordsAtPos(from), bottom: editor.view.coordsAtPos(to).bottom },
+        anchor,
         contentWidth: contentEl.offsetWidth,
         contentHeight: measureFloatingHeight(contentEl),
         viewport: { width: window.innerWidth, height: window.innerHeight },
@@ -451,7 +463,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
       window.removeEventListener('scroll', handleScroll, true)
       window.removeEventListener('resize', handleResize)
     }
-  }, [editor, from, to, itemsKey])
+  }, [from, to, itemsKey, functions])
 
   if (!slash) return null
 
