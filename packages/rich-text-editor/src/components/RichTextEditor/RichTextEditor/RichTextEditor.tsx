@@ -104,14 +104,11 @@ const classNameGenerator = tv({
         characterCountArea: '[&&&]:shr-rte-pr-2',
       },
     },
-    // ブロックのつまみ（＋ ⋮⋮）を本文の左に置き、表の行ハンドルとも重ねないための余白。幅は BlockHandle の枠と揃える。
+    // ブロックのつまみ（⋮⋮）を本文の左に置き、表の行ハンドルとも重ねないための余白。幅は BlockHandle の枠と揃える。
     // [&_.ProseMirror]:shr-rte-px-0.75 を確実に上書きするため、詳細度を引き上げる
     blockGutter: {
-      grip: {
+      true: {
         content: '[&&&_.ProseMirror]:shr-rte-pl-2.5',
-      },
-      gripAndAdd: {
-        content: '[&&&_.ProseMirror]:shr-rte-pl-4',
       },
     },
     hasEditorHeight: {
@@ -543,12 +540,7 @@ export const RichTextEditor = memo(
       const showEditingChrome = editor !== null && !readOnly && !disabled && !hideToolbar
       const showBlockHandle = showEditingChrome && features.includes('blockActions')
       // readOnly・disabled には連動させない。切り替えのたびに本文が横にずれ、折り返しも変わる
-      const blockGutter =
-        hideToolbar || !features.includes('blockActions')
-          ? undefined
-          : features.includes('slashCommand')
-            ? 'gripAndAdd'
-            : 'grip'
+      const blockGutter = !hideToolbar && features.includes('blockActions')
       const classNames = useMemo(() => {
         const { wrapper, toolbarWrapper, content, characterCountArea, resizeHandle } =
           classNameGenerator()
@@ -625,7 +617,7 @@ export const RichTextEditor = memo(
           )}
           {showBlockHandle && (
             <>
-              <BlockHandle containerRef={wrapperRef} editor={editor} features={features} />
+              <BlockHandle containerRef={wrapperRef} editor={editor} />
               <BlockMenu editor={editor} />
             </>
           )}
