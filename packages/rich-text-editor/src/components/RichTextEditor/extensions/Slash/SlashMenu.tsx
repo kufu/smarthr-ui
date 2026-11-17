@@ -240,7 +240,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
     selection.query === query && selection.index < items.length ? selection.index : 0
   const activeOptionId = items[activeIndex]?.optionId ?? null
 
-  const latest = useLatest({ items, activeIndex, query })
+  const latest = useLatest({ editor, items, activeIndex, query })
 
   const functions = useMemo(() => {
     const runBlock = ({ creation }: BlockCatalogEntry, range: SlashRange) => {
@@ -249,20 +249,20 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
       if (creation.type === 'command') {
         // run() の戻り値を返さない。途中のコマンドが失敗しても /query の削除は反映されており、
         // false で Enter を通すと、消したあとにさらに改行が入る
-        creation.apply(editor.chain().deleteRange(range)).run()
+        creation.apply(latest.editor.chain().deleteRange(range)).run()
 
         return true
       }
 
-      const opener = editor.storage.insertDialogs?.openers[creation.dialog]
+      const opener = latest.editor.storage.insertDialogs?.openers[creation.dialog]
 
       if (!opener) return false
 
-      editor.chain().deleteRange(range).run()
+      latest.editor.chain().deleteRange(range).run()
       opener({
-        getAnchorRect: () => editor.view.coordsAtPos(editor.state.selection.from),
+        getAnchorRect: () => latest.editor.view.coordsAtPos(latest.editor.state.selection.from),
         returnFocus: () => {
-          if (!editor.isDestroyed) editor.view.focus()
+          if (!latest.editor.isDestroyed) latest.editor.view.focus()
         },
       })
 
@@ -274,7 +274,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
       option: SlashColorOption,
       range: SlashRange,
     ) => {
-      const { storedMarks, doc, schema } = editor.state
+      const { storedMarks, doc, schema } = latest.editor.state
       const textStyle = schema.marks.textStyle
       // setColor・unsetColor を使わないのは、/検索語 を消すと先に選んだ色の stored mark も消え、
       // unsetColor は中身の無い textStyle を stored mark に残して、そのまま本文に入れるため
@@ -285,7 +285,7 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
       }
       const otherMarks = textStyle.removeFromSet(marks)
 
-      editor
+      latest.editor
         .chain()
         .deleteRange(range)
         .command(({ tr }) => {
@@ -304,9 +304,9 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
 
     // 範囲を描画済みの値から読まないのは、打鍵の直後で描画が追いついていなくても、実際に打たれている範囲を消すため
     const run = (item: SlashItem) => {
-      const state = SlashCommandPluginKey.getState(editor.state)
+      const state = SlashCommandPluginKey.getState(latest.editor.state)
 
-      if (!state?.active || !editor.isEditable) return false
+      if (!state?.active || !latest.editor.isEditable) return false
 
       const range = { from: state.range.from, to: state.range.to }
 
@@ -367,9 +367,9 @@ export const SlashMenu: FC<Props> = memo(({ editor, features, headingLevels }) =
           setSelection({ query: latest.query, index })
         }
       },
-      handleCloseClick: () => exitSuggestion(editor.view, SlashCommandPluginKey),
+      handleCloseClick: () => exitSuggestion(latest.editor.view, SlashCommandPluginKey),
     }
-  }, [editor, latest])
+  }, [latest])
 
   useEffect(() => {
     const storage = editor.storage.slashCommand
