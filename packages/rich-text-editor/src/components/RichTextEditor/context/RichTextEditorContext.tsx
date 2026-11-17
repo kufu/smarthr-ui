@@ -57,9 +57,6 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const acceptedMimeTypesKey = acceptedMimeTypes?.join(',')
   const hasImageUpload = Boolean(onImageUpload)
   const latest = useLatest({
-    features,
-    headingLevels,
-    acceptedMimeTypes,
     onImageUpload,
     onImageUploadError,
   })
@@ -67,20 +64,15 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const value = useMemo<RichTextEditorContextValue>(
     () => ({
       editor,
-      // HINT: featuresKey/headingLevelsKey/acceptedMimeTypesKeyが依存配列に含まれており、
-      // 内容が変化すればuseMemoごと再計算されるため、latestから配列を直接返しても固定化されない
-      // eslint-disable-next-line local-rules/best-practice-for-use-latest
-      features: latest.features,
-      // eslint-disable-next-line local-rules/best-practice-for-use-latest
-      headingLevels: latest.headingLevels,
+      features,
+      headingLevels,
       disabled,
       hasImageUpload,
       getImageUploadHandlers: () => ({
         onImageUpload: latest.onImageUpload,
         onImageUploadError: latest.onImageUploadError,
       }),
-      // eslint-disable-next-line local-rules/best-practice-for-use-latest
-      acceptedMimeTypes: latest.acceptedMimeTypes,
+      acceptedMimeTypes,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [editor, disabled, featuresKey, headingLevelsKey, acceptedMimeTypesKey, hasImageUpload, latest],
