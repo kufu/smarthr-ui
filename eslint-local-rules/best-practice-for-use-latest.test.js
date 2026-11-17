@@ -149,6 +149,129 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [count, latest])
       `,
     },
+
+    // フック直下でlatest.xxxを関数でラップしている（OK）
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+        }), [latest])
+      `,
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果を関数でラップしている（OK）
+    {
+      code: `
+        const latest = useLatest({ getHandlers })
+        useEffect(() => {
+          const run = () => {
+            const { onRun } = latest.getHandlers()
+            onRun()
+          }
+          run()
+        }, [latest])
+      `,
+    },
+
+    // ネストしたローカル関数の中でlatest.xxxを変数に代入（OK、呼ばれるたびに再評価される）
+    {
+      code: `
+        const latest = useLatest({ value })
+        useEffect(() => {
+          const evaluate = () => {
+            const current = latest.value
+            if (!current) return
+          }
+          evaluate()
+        }, [latest])
+      `,
+    },
+
+    // ネストしたローカル関数がFunctionDeclaration(function宣言)の場合もOK
+    // (evaluate内のreturnは外側のuseEffectの戻り値ではない)
+    {
+      code: `
+        const latest = useLatest({ value })
+        useEffect(() => {
+          function evaluate() {
+            const current = latest.value
+            return current
+          }
+          evaluate()
+        }, [latest])
+      `,
+    },
+
+    // フック直下でもlatest.xxxRef.currentはRefObjectのcurrent参照と名前から自明なため対象外（OK）
+    {
+      code: `
+        const latest = useLatest({ containerRef })
+        useEffect(() => {
+          const container = latest.containerRef.current
+          if (!container) return
+        }, [latest])
+      `,
+    },
+
+    // latest自体をオブジェクトプロパティの値としてアロー関数内で参照（OK、代入ではない）
+    {
+      code: `
+        const latest = useLatest({ onClick, hasValue })
+        const functions = useMemo(() => ({
+          handleClick: () => (latest.hasValue ? latest.onClick() : undefined),
+        }), [latest])
+      `,
+    },
+
+    // useCallbackのコールバック直下での代入はOK(呼ばれるたびに本体が再評価されるため)
+    {
+      code: `
+        const latest = useLatest({ addDisclosureChangeListener })
+        const callbackRef = useCallback((node) => {
+          const remove = latest.addDisclosureChangeListener()
+        }, [latest])
+      `,
+    },
+
+    // useCallback直下でMemberExpressionをそのまま代入してもOK
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        const handleClick = useCallback(() => {
+          const onSelect = latest.listBoxFunctions.handleSelect
+          onSelect()
+        }, [latest])
+      `,
+    },
+
+    // フック直下で代入しても、同じスコープ内でその場の計算にのみ使われていればOK
+    // (ネストした関数にも、returnの戻り値にも渡されていない)
+    {
+      code: `
+        const latest = useLatest({ defaultPosition, top })
+        useLayoutEffectRef((node) => {
+          if (node) {
+            const oldDefaultPosition = latest.defaultPosition
+            const nextDefaultPosition =
+              oldDefaultPosition.top === latest.top ? oldDefaultPosition : { top: latest.top }
+            setDefaultPosition(nextDefaultPosition)
+          }
+        }, [latest])
+      `,
+    },
+
+    // フック直下で代入した値を、計算式に使って新しい値を作りsetStateに渡すのはOK
+    {
+      code: `
+        const latest = useLatest({ getSafeAreaInsets })
+        useLayoutEffectRef((node) => {
+          const safeAreaInsets = latest.getSafeAreaInsets()
+          const safeHeight = window.innerHeight - safeAreaInsets.top
+          setHeight(safeHeight)
+        }, [latest])
+      `,
+    },
   ],
 
   invalid: [
@@ -473,6 +596,116 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [{ messageId: 'noForIn' }],
+    },
+
+    // フック直下でlatest.xxxを変数にそのまま代入(MemberExpression)
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        const functions = useMemo(() => {
+          const handleDelete = latest.listBoxFunctions.handleDelete
+          return { handleDelete }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx.yyyを変数に代入し、ネストしたローカル関数(後で呼ばれる)の中で使う
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        useEffect(() => {
+          const onSelect = latest.listBoxFunctions.handleSelect
+          const handler = () => onSelect()
+          document.addEventListener('click', handler)
+          return () => document.removeEventListener('click', handler)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // ネストしたローカル関数がFunctionDeclaration(function宣言)の場合も検知する
+    {
+      code: `
+        const latest = useLatest({ onSelect })
+        useEffect(() => {
+          const onSelect = latest.onSelect
+          function handler() {
+            onSelect()
+          }
+          document.addEventListener('click', handler)
+          return () => document.removeEventListener('click', handler)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果をそのまま分割代入(分割代入は常に保守的にエラー)
+    {
+      code: `
+        const latest = useLatest({ getVideoHandlers })
+        useEffect(() => {
+          const { loadVideos } = latest.getVideoHandlers()
+          loadVideos()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // useLayoutEffectRefでも同様に検知する(returnの戻り値としてそのまま公開される)
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const layoutEffectRef = useLayoutEffectRef((node) => {
+          const onChange = latest.onChange
+          return { onChange }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxxを公開している
+    {
+      code: `
+        const latest = useLatest({ onXxxx })
+        const functions = useMemo(() => {
+          return { onXxxx: latest.onXxxx }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxx()の呼び出し結果を公開している
+    {
+      code: `
+        const latest = useLatest({ getHandlers })
+        useEffect(() => {
+          return { onRun: latest.getHandlers() }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 暗黙return(アロー関数の()=>({...})形式)でも同様に検知する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          onClick: latest.onClick,
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 計算プロパティ名(computed property)でも同様に検知する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          ['onClick']: latest.onClick,
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
     },
   ],
 })
