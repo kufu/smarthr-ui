@@ -45,6 +45,15 @@ export type BlockCatalogId =
   | 'youtube'
   | 'video'
 
+export const LIST_NODE_NAMES = ['bulletList', 'orderedList'] as const
+
+export type ConversionShape =
+  | { type: 'textblock'; nodeName: 'paragraph' }
+  | { type: 'textblock'; nodeName: 'heading'; level: HeadingLevel }
+  | { type: 'list'; nodeName: (typeof LIST_NODE_NAMES)[number] }
+  | { type: 'blockquote' }
+  | { type: 'codeBlock' }
+
 export type BlockCatalogEntry = {
   id: BlockCatalogId
   matches: (node: PMNode) => boolean
@@ -60,6 +69,8 @@ export type BlockCatalogEntry = {
     | { type: 'command'; apply: (chain: ChainedCommands) => ChainedCommands }
     | { type: 'dialog'; dialog: InsertDialogKind }
     | null
+  /** 省略できないのは、種類を足すときに変換先にするかを必ず決めるため */
+  conversion: ConversionShape | null
 }
 
 const isType = (name: string) => (node: PMNode) => node.type.name === name
@@ -82,6 +93,7 @@ const heading = (level: HeadingLevel): BlockCatalogEntry => ({
   keywords: [`h${level}`, 'heading', 'みだし'],
   icon: FaFontIcon,
   creation: { type: 'command', apply: (chain) => chain.setHeading({ level }) },
+  conversion: { type: 'textblock', nodeName: 'heading', level },
 })
 
 export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
@@ -95,6 +107,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['p', 'paragraph', 'text', 'ほんぶん', 'だんらく'],
     icon: FaAlignLeftIcon,
     creation: null,
+    conversion: { type: 'textblock', nodeName: 'paragraph' },
   },
   heading(1),
   heading(2),
@@ -110,6 +123,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['ul', 'list', 'bullet', 'りすと', 'かじょうがき'],
     icon: FaListUlIcon,
     creation: { type: 'command', apply: (chain) => chain.toggleBulletList() },
+    conversion: { type: 'list', nodeName: 'bulletList' },
   },
   {
     id: 'orderedList',
@@ -121,6 +135,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['ol', 'list', 'number', 'りすと', 'ばんごう'],
     icon: FaListOlIcon,
     creation: { type: 'command', apply: (chain) => chain.toggleOrderedList() },
+    conversion: { type: 'list', nodeName: 'orderedList' },
   },
   {
     id: 'blockquote',
@@ -132,6 +147,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['quote', 'blockquote', 'いんよう'],
     icon: FaQuoteLeftIcon,
     creation: { type: 'command', apply: (chain) => chain.setBlockquote() },
+    conversion: { type: 'blockquote' },
   },
   {
     id: 'codeBlock',
@@ -143,6 +159,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['code', 'pre', 'こーど'],
     icon: FaFileCodeIcon,
     creation: { type: 'command', apply: (chain) => chain.setCodeBlock() },
+    conversion: { type: 'codeBlock' },
   },
   {
     id: 'horizontalRule',
@@ -154,6 +171,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['hr', 'divider', 'line', 'すいへいせん', 'くぎりせん'],
     icon: FaMinusIcon,
     creation: { type: 'command', apply: (chain) => chain.setHorizontalRule() },
+    conversion: null,
   },
   {
     id: 'table',
@@ -169,6 +187,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
       type: 'command',
       apply: (chain) => chain.insertTable({ rows: 3, cols: 3, withHeaderRow: true }),
     },
+    conversion: null,
   },
   {
     id: 'image',
@@ -180,6 +199,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['image', 'img', 'picture', 'がぞう', 'しゃしん'],
     icon: FaImageIcon,
     creation: { type: 'dialog', dialog: 'image' },
+    conversion: null,
   },
   {
     id: 'youtube',
@@ -191,6 +211,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['youtube', 'ゆーちゅーぶ', 'どうが'],
     icon: FaCirclePlayIcon,
     creation: { type: 'dialog', dialog: 'youtube' },
+    conversion: null,
   },
   {
     id: 'video',
@@ -202,6 +223,7 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
     keywords: ['video', 'movie', 'どうが'],
     icon: VideoIcon,
     creation: { type: 'dialog', dialog: 'video' },
+    conversion: null,
   },
 ]
 
