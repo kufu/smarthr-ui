@@ -1,8 +1,11 @@
 import { Editor, type JSONContent } from '@tiptap/core'
 import { AllSelection, NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { CellSelection } from '@tiptap/pm/tables'
-import { describe, expect, it, onTestFinished } from 'vitest'
+import { describe, expect, it, onTestFinished, vi } from 'vitest'
 
+import { getDetachedJSON } from '../../serializers/getDetachedJSON'
+import { sanitizeRichTextJSON } from '../../serializers/sanitizeRichTextJSON'
+import { toEditorContent } from '../../serializers/toEditorContent'
 import { configureExtensions } from '../configureExtensions'
 
 import { BLOCK_ANNOUNCEMENT_META } from './BlockActions'
@@ -680,6 +683,67 @@ describe('convertBlocks', () => {
       (CONVERSION_IDS.length - 1) * docsWithCurrent + CONVERSION_IDS.length * docsWithoutCurrent
 
     expect(tally).toEqual({ can: converted + docsWithCurrent, converted, undone: converted })
+  })
+
+  it('変換したあとの JSON は、sanitize を通しても、保存して読み込み直しても変わらない', () => {
+    const warn = vi.spyOn(console, 'warn')
+    onTestFinished(() => warn.mockRestore())
+    const styled: JSONContent[] = [
+      {
+        type: 'heading',
+        attrs: { level: 2, textAlign: 'center' },
+        content: [
+          {
+            type: 'text',
+            text: 'aa',
+            marks: [
+              { type: 'bold' },
+              { type: 'textStyle', attrs: { color: '#ff0000', fontSize: '1.25rem' } },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'paragraph',
+        attrs: { textAlign: 'right', lineHeight: '1.8' },
+        content: [
+          {
+            type: 'text',
+            text: 'bb',
+            marks: [{ type: 'link', attrs: { href: 'https://example.com' } }],
+          },
+          { type: 'hardBreak' },
+          { type: 'text', text: 'cc' },
+        ],
+      },
+      { type: 'bulletList', content: [item(paragraph('dd'), bullets('d1'))] },
+      { ...ordered('ee'), attrs: { start: 3 } },
+      quote(heading('ff'), bullets('gg')),
+      code('x\nyy'),
+      image,
+      table,
+    ]
+    let checked = 0
+
+    for (let endIndex = 1; endIndex <= styled.length; endIndex++) {
+      for (const to of CONVERSION_IDS) {
+        const editor = createEditor(styled, ALL)
+
+        expect(
+          editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 0, endIndex), to }),
+        ).toBe(true)
+
+        const json = getDetachedJSON(editor)
+        const reloaded = createEditor(toEditorContent(json).content ?? [], ALL)
+
+        expect(sanitizeRichTextJSON(json)).toEqual(json)
+        expect(getDetachedJSON(reloaded)).toEqual(json)
+        checked++
+      }
+    }
+
+    expect(checked).toBe(styled.length * CONVERSION_IDS.length)
+    expect(warn).not.toHaveBeenCalled()
   })
 
   it('続けて打った文字は、変換とは別に取り消せる', async () => {
