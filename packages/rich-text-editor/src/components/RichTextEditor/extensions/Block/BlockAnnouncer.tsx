@@ -72,6 +72,18 @@ const toSentence = ({ announcement, total }: Notice, localize: UseIntlReturn['lo
         { id: 'smarthr-ui/RichTextEditor/blockDeleted', defaultText: '{block}を削除しました' },
         { block: describeSubject(announcement, localize) },
       )
+    case 'converted':
+      return localize(
+        {
+          id: 'smarthr-ui/RichTextEditor/blockConverted',
+          defaultText: '{block}を{kind}に変換しました',
+        },
+        {
+          block: describeSubject(announcement, localize),
+          // name ではなく label にするのは、メニューで選んだ項目と同じ名前で確かめられるようにするため
+          kind: localize(BLOCK_CATALOG.find(({ id }) => id === announcement.to)!.label),
+        },
+      )
     case 'moveLimit':
       return localize(MOVE_LIMIT_LABELS[announcement.edge])
   }

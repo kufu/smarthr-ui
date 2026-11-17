@@ -120,7 +120,7 @@ export const configureExtensions = ({
     // features に無い間も登録しておく。後から足せないため、操作の可否は実行時に判定する。
     restrict(LinkShortcut),
     restrict(SlashCommand),
-    restrict(BlockActions.configure({ getFeatures })),
+    restrict(BlockActions.configure({ getFeatures, getAllowedHeadingLevels })),
     InsertDialogs,
     MediaToolbarShortcut,
     PlayerIsolation,

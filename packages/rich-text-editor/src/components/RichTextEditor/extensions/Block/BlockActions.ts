@@ -3,8 +3,9 @@ import { closeHistory } from '@tiptap/pm/history'
 import { NodeSelection, Plugin, PluginKey, Selection, TextSelection } from '@tiptap/pm/state'
 
 import { isApplePlatform } from '../../hooks/useIsApplePlatform'
-import { type BlockCatalogId, describeBlock } from '../blockCatalog'
+import { BLOCK_CATALOG, type BlockCatalogId, describeBlock, isBlockAllowed } from '../blockCatalog'
 
+import { planConversion } from './blockConversion'
 import {
   type BlockRange,
   type MoveTarget,
@@ -17,6 +18,7 @@ import {
 import { getBlockShortcuts } from './blockShortcuts'
 
 import type { RichTextFeature } from '../../types'
+import type { HeadingLevel } from '../configureHeading'
 import type { AnchorRect } from '../floatingGeometry'
 import type { Fragment, Node as PMNode } from '@tiptap/pm/model'
 import type { Transaction } from '@tiptap/pm/state'
@@ -31,6 +33,8 @@ declare module '@tiptap/core' {
       moveBlocks: (options: { range?: BlockRange; to: MoveTarget }) => ReturnType
       duplicateBlocks: (options?: { range?: BlockRange }) => ReturnType
       deleteBlocks: (options?: { range?: BlockRange }) => ReturnType
+      /** すでにその種類なら false にせず、何も変えずに true を返す。メニューで今の種類を選び直しても失敗にしないため */
+      convertBlocks: (options: { range?: BlockRange; to: BlockCatalogId }) => ReturnType
     }
   }
 
@@ -57,6 +61,7 @@ type BlockActionsStorage = {
 
 type BlockActionsOptions = {
   getFeatures: () => readonly RichTextFeature[]
+  getAllowedHeadingLevels: () => readonly HeadingLevel[]
 }
 
 // restrict はコマンドを剥がさず、Tiptap のコマンドは editable も見ないので、ここで止める
@@ -86,6 +91,7 @@ type BlockSubject = { blockId: BlockCatalogId | null; excerpt: string; count: nu
 export type BlockAnnouncement =
   | ({ type: 'moved'; position: number } & BlockSubject)
   | ({ type: 'duplicated' | 'deleted' } & BlockSubject)
+  | ({ type: 'converted'; to: BlockCatalogId } & BlockSubject)
   | { type: 'moveLimit'; edge: 'first' | 'last' }
 
 const subjectOf = (content: Fragment): BlockSubject => ({
@@ -146,6 +152,7 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
   addOptions() {
     return {
       getFeatures: () => [],
+      getAllowedHeadingLevels: () => [],
     }
   },
 
@@ -239,6 +246,48 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
             }
 
             announce(tr, { ...subjectOf(content), type: 'deleted' })
+          }
+
+          return true
+        },
+      convertBlocks:
+        ({ range, to }) =>
+        ({ tr, dispatch }) => {
+          const target = targetOf(tr, range)
+          const entry = BLOCK_CATALOG.find(({ id }) => id === to)
+
+          if (
+            !target ||
+            !entry?.conversion ||
+            !isBlockAllowed(
+              entry,
+              this.options.getFeatures(),
+              this.options.getAllowedHeadingLevels(),
+            )
+          ) {
+            return false
+          }
+
+          const plan = planConversion(tr.doc, target, entry.conversion)
+
+          if (plan.type !== 'convert') return plan.type === 'current'
+
+          if (dispatch) {
+            const content = tr.doc.slice(target.from, target.to).content
+            const before = tr.selection
+
+            closeHistory(tr).replaceWith(plan.from, plan.to, plan.content)
+
+            const mapped = before.map(tr.doc, plan.positionMap)
+
+            // 選択の外でスクロールしないのは、⋮⋮ のメニューで離れたブロックを変換すると、見ていた位置からキャレットまで飛ぶため
+            if (before.from <= target.to && before.to >= target.from) {
+              tr.setSelection(toEditableSelection(mapped)).scrollIntoView()
+            } else {
+              tr.setSelection(mapped)
+            }
+
+            announce(tr, { ...subjectOf(content), type: 'converted', to })
           }
 
           return true

@@ -16,10 +16,17 @@ import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 
 import { RichTextEditor } from '../../RichTextEditor/RichTextEditor'
 
 import { BLOCK_DRAG_TYPE } from './BlockActions'
+import { planConversion } from './blockConversion'
 
 import type { RichTextFeature, RichTextJSON } from '../../types'
 import type { Editor, JSONContent, TiptapEditorHTMLElement } from '@tiptap/core'
 import type { ReactNode } from 'react'
+
+vi.mock('./blockConversion', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>
+
+  return { ...actual, planConversion: vi.fn(actual.planConversion as typeof planConversion) }
+})
 
 const Wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider locale="ja">
@@ -42,6 +49,7 @@ const ABC = doc([paragraph('aa'), paragraph('bb'), paragraph('cc')])
 
 type EditorProps = {
   features?: RichTextFeature[]
+  headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   defaultValue?: RichTextJSON
   value?: RichTextJSON
   hideToolbar?: boolean
@@ -97,13 +105,34 @@ const pressMenuKey = () => fireEvent.keyDown(getEditorDom(), { key: '/', ctrlKey
 const announcement = () => screen.getByRole('status').textContent
 
 const queryMenu = () => screen.queryByRole('menu', { name: 'ブロックの操作' })
-const getMenuItem = (name: string) =>
-  within(screen.getByRole('menu', { name: 'ブロックの操作' })).getByRole('menuitem', { name })
+const getMenu = () => screen.getByRole('menu', { name: 'ブロックの操作' })
+const getMenuItem = (name: string) => within(getMenu()).getByRole('menuitem', { name })
+const getConversionItem = (name: string) => within(getMenu()).getByRole('menuitemradio', { name })
+const queryConversionGroup = () => within(getMenu()).queryByRole('group', { name: '変換' })
+const conversionNames = () =>
+  within(getMenu())
+    .queryAllByRole('menuitemradio')
+    .map((item) => item.textContent)
+const checkedNames = () =>
+  within(getMenu())
+    .queryAllByRole('menuitemradio', { checked: true })
+    .map((item) => item.textContent)
+
+const IMAGE: JSONContent = { type: 'image', attrs: { src: '/a.png', alt: 'ロゴ' } }
+
+const selectNode = (pos: number) => {
+  const editor = getEditor()
+
+  act(() => {
+    editor.commands.setNodeSelection(pos)
+    editor.view.focus()
+  })
+}
 
 const openMenuByKey = async () => {
   pressMenuKey()
   await waitFor(() => expect(queryMenu()).toBeInTheDocument())
-  await waitFor(() => expect(document.activeElement?.getAttribute('role')).toBe('menuitem'))
+  await waitFor(() => expect(document.activeElement?.getAttribute('role')).toMatch(/^menuitem/))
 }
 
 const HANDLE_TITLE = 'ドラッグで移動、クリックでメニューを開く'
@@ -272,6 +301,32 @@ describe('移動のキー', () => {
   })
 })
 
+describe('変換の読み上げ', () => {
+  it.each([
+    {
+      name: '1 つのブロック',
+      run: (editor: Editor) => editor.commands.convertBlocks({ to: 'paragraph' }),
+      expected: '見出し2「はじめに」を標準テキストに変換しました',
+    },
+    {
+      name: '3 つのブロック',
+      run: (editor: Editor) => editor.chain().selectAll().convertBlocks({ to: 'bulletList' }).run(),
+      expected: '3個のブロックを箇条書きリストに変換しました',
+    },
+  ])('$name を変換すると、変換前の範囲と変換先の名前を読み上げる', async ({ run, expected }) => {
+    await renderEditor({
+      defaultValue: doc([heading('はじめに'), paragraph('bb'), paragraph('cc')]),
+    })
+    placeCaret('はじめに', 1)
+
+    act(() => {
+      run(getEditor())
+    })
+
+    await waitFor(() => expect(announcement()).toBe(expected))
+  })
+})
+
 describe('表示の条件', () => {
   it('hideToolbar でも移動のキーと読み上げは効き、ブロックメニューのキーは奪わない', async () => {
     await renderEditor({ hideToolbar: true })
@@ -306,11 +361,12 @@ describe('表示の条件', () => {
 
 describe('ブロックメニュー', () => {
   it('Ctrl+/ で開き、使える最初の項目にフォーカスを移す。先頭のブロックでは上へ移動を使えない', async () => {
-    await renderEditor()
-    placeCaret('aa')
+    await renderEditor({ defaultValue: doc([IMAGE, paragraph('bb')]) })
+    selectNode(0)
 
     await openMenuByKey()
 
+    expect(queryConversionGroup()).not.toBeInTheDocument()
     expect(getMenuItem('上へ移動')).toHaveAttribute('aria-disabled', 'true')
     expect(getMenuItem('下へ移動')).toHaveFocus()
     expect(getMenuItem('複製')).not.toHaveAttribute('aria-disabled')
@@ -392,8 +448,8 @@ describe('ブロックメニュー', () => {
 
   it('↑↓ で項目を移り、Tab で閉じて本文へ戻る', async () => {
     const user = userEvent.setup()
-    await renderEditor()
-    placeCaret('bb')
+    await renderEditor({ defaultValue: doc([paragraph('aa'), IMAGE, paragraph('cc')]) })
+    selectNode(4)
     await openMenuByKey()
     expect(getMenuItem('上へ移動')).toHaveFocus()
 
@@ -467,6 +523,274 @@ describe('ブロックメニュー', () => {
   })
 })
 
+describe('ブロックメニューの変換', () => {
+  const ALL: RichTextFeature[] = [
+    'blockActions',
+    'heading',
+    'bulletList',
+    'orderedList',
+    'blockquote',
+    'codeBlock',
+    'table',
+    'image',
+  ]
+  const CONVERSION_NAMES = [
+    '標準テキスト',
+    '見出し1',
+    '見出し2',
+    '見出し3',
+    '見出し4',
+    '箇条書きリスト',
+    '番号付きリスト',
+    '引用',
+    'コードブロック',
+  ]
+  const IMAGE_DOC = doc([paragraph('aa'), IMAGE, paragraph('cc')])
+
+  const recordScrolls = () => {
+    const scrolls: boolean[] = []
+
+    getEditor().on('transaction', ({ transaction }) => scrolls.push(transaction.scrolledIntoView))
+
+    return scrolls
+  }
+
+  it('Ctrl+/ で開くと、上に「変換」の群があり、変換先をカタログの順に並べ、今の種類だけにチェックを付けてフォーカスを移す', async () => {
+    await renderEditor({ features: ALL })
+    placeCaret('bb')
+
+    await openMenuByKey()
+
+    const group = queryConversionGroup()!
+    expect(
+      within(group)
+        .getAllByRole('menuitemradio')
+        .map((item) => item.textContent),
+    ).toEqual(CONVERSION_NAMES)
+    expect(checkedNames()).toEqual(['標準テキスト'])
+    expect(getConversionItem('標準テキスト')).toHaveFocus()
+    expect(within(getMenu()).getByRole('separator')).toBeInTheDocument()
+    expect(
+      group.compareDocumentPosition(getMenuItem('上へ移動')) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it.each([
+    {
+      name: '見出し2の上では、今の種類の見出し2',
+      content: [paragraph('aa'), heading('bb'), paragraph('cc')],
+      select: () => placeCaret('bb'),
+      focused: () => getConversionItem('見出し2'),
+    },
+    {
+      name: '段落と見出しが混ざる範囲では、今の種類が無いので先頭の標準テキスト',
+      content: [paragraph('aa'), heading('bb'), paragraph('cc')],
+      select: () => {
+        const editor = getEditor()
+
+        act(() => {
+          editor.commands.setTextSelection({ from: 2, to: 6 })
+          editor.view.focus()
+        })
+      },
+      focused: () => getConversionItem('標準テキスト'),
+    },
+    {
+      name: '画像の上では、変換の項目が無いので使える最初の操作の上へ移動',
+      content: [paragraph('aa'), IMAGE, paragraph('cc')],
+      select: () => selectNode(4),
+      focused: () => getMenuItem('上へ移動'),
+    },
+  ])('開いたときのフォーカスは、$name', async ({ content, select, focused }) => {
+    await renderEditor({ features: ALL, defaultValue: doc(content) })
+    select()
+
+    await openMenuByKey()
+
+    expect(focused()).toHaveFocus()
+  })
+
+  it('許されていない見出しレベルと、features に無い種類は出さない', async () => {
+    await renderEditor({
+      features: ALL.filter((feature) => feature !== 'codeBlock'),
+      headingLevels: [2, 3],
+    })
+    placeCaret('bb')
+
+    await openMenuByKey()
+
+    expect(conversionNames()).toEqual([
+      '標準テキスト',
+      '見出し2',
+      '見出し3',
+      '箇条書きリスト',
+      '番号付きリスト',
+      '引用',
+    ])
+  })
+
+  it('⋮⋮ で画像のメニューを開くと、変換の群も区切りも出さず、使える最初の操作にフォーカスを移す', async () => {
+    const user = userEvent.setup()
+    await renderEditor({ features: ALL, defaultValue: IMAGE_DOC })
+
+    await hoverBlock(1)
+    await user.click(screen.getByTitle(HANDLE_TITLE))
+
+    await waitFor(() => expect(getMenuItem('上へ移動')).toHaveFocus())
+    expect(queryConversionGroup()).not.toBeInTheDocument()
+    expect(conversionNames()).toEqual([])
+    expect(within(getMenu()).queryByRole('separator')).not.toBeInTheDocument()
+  })
+
+  it('選べる変換先が今の種類しか無ければ、変換の群も区切りも出さず、使える最初の操作にフォーカスを移す', async () => {
+    await renderEditor({ features: ['blockActions'] })
+    placeCaret('bb')
+
+    await openMenuByKey()
+
+    expect(queryConversionGroup()).not.toBeInTheDocument()
+    expect(conversionNames()).toEqual([])
+    expect(within(getMenu()).queryByRole('separator')).not.toBeInTheDocument()
+    expect(getMenuItem('上へ移動')).toHaveFocus()
+  })
+
+  it('features に無い種類のブロックを読み込んでいれば、今の種類でない標準テキストだけの群を出す', async () => {
+    await renderEditor({
+      features: ['blockActions'],
+      defaultValue: doc([paragraph('aa'), heading('bb'), paragraph('cc')]),
+    })
+    placeCaret('bb')
+
+    await openMenuByKey()
+
+    expect(conversionNames()).toEqual(['標準テキスト'])
+    expect(checkedNames()).toEqual([])
+    expect(within(getMenu()).getByRole('separator')).toBeInTheDocument()
+    expect(getConversionItem('標準テキスト')).toHaveFocus()
+  })
+
+  it('↓ ↓ Enter で見出し2を選ぶと、変換して閉じ、本文へ戻り、読み上げる', async () => {
+    const user = userEvent.setup()
+    await renderEditor({ features: ALL })
+    placeCaret('bb', 1)
+    await openMenuByKey()
+
+    await user.keyboard('{ArrowDown}{ArrowDown}')
+    expect(getConversionItem('見出し2')).toHaveFocus()
+    await user.keyboard('{Enter}')
+
+    expect(getEditor().state.doc.child(1).type.name).toBe('heading')
+    expect(getEditor().state.doc.child(1).attrs.level).toBe(2)
+    expect(queryMenu()).not.toBeInTheDocument()
+    expect(getEditorDom()).toHaveFocus()
+    expect(getEditor().state.selection.$head.parentOffset).toBe(1)
+    await waitFor(() => expect(announcement()).toBe('段落「bb」を見出し2に変換しました'))
+  })
+
+  it('チェックの付いた項目を選ぶと、文書を変えずに閉じ、読み上げない', async () => {
+    const user = userEvent.setup()
+    await renderEditor({ features: ALL })
+    placeCaret('bb', 1)
+    const before = getEditor().state.doc
+    await openMenuByKey()
+
+    await user.click(getConversionItem('標準テキスト'))
+
+    expect(queryMenu()).not.toBeInTheDocument()
+    expect(getEditorDom()).toHaveFocus()
+    expect(getEditor().state.doc.eq(before)).toBe(true)
+    expect(getEditor().can().undo()).toBe(false)
+    await act(() => new Promise((resolve) => setTimeout(resolve, 200)))
+    expect(announcement()).toBe('')
+  })
+
+  it('↑↓・Home・End は変換の項目と操作の項目をまたいで循環し、群のラベルと区切りには止まらない', async () => {
+    const user = userEvent.setup()
+    await renderEditor({ features: ALL })
+    placeCaret('bb')
+    await openMenuByKey()
+
+    await user.keyboard('{ArrowUp}')
+    expect(getMenuItem('削除')).toHaveFocus()
+    await user.keyboard('{ArrowDown}')
+    expect(getConversionItem('標準テキスト')).toHaveFocus()
+    await user.keyboard('{End}')
+    expect(getMenuItem('削除')).toHaveFocus()
+    await user.keyboard('{Home}')
+    expect(getConversionItem('標準テキスト')).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}'.repeat(CONVERSION_NAMES.length))
+    expect(getMenuItem('上へ移動')).toHaveFocus()
+    await user.keyboard('{ArrowUp}')
+    expect(getConversionItem('コードブロック')).toHaveFocus()
+
+    await user.keyboard('{ArrowDown}'.repeat(CONVERSION_NAMES.length + 4))
+    expect(getConversionItem('コードブロック')).toHaveFocus()
+  })
+
+  it('段落と見出しが混ざる範囲では、どの項目にもチェックを付けない', async () => {
+    await renderEditor({
+      features: ALL,
+      defaultValue: doc([paragraph('aa'), heading('bb'), paragraph('cc')]),
+    })
+    const editor = getEditor()
+    act(() => {
+      editor.commands.setTextSelection({ from: 2, to: 6 })
+      editor.view.focus()
+    })
+
+    await openMenuByKey()
+
+    expect(conversionNames()).toEqual(CONVERSION_NAMES)
+    expect(checkedNames()).toEqual([])
+  })
+
+  it('⋮⋮ で選択の外のブロックを変換しても、本文の選択は変わらず、スクロールもしない', async () => {
+    const user = userEvent.setup()
+    await renderEditor({ features: ALL })
+    placeCaret('aa', 1)
+    const { selection } = getEditor().state
+    const scrolls = recordScrolls()
+
+    await hoverBlock(2)
+    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await user.click(await screen.findByRole('menuitemradio', { name: '見出し1' }))
+
+    expect(outline()).toEqual(['aa', 'bb', 'cc', 'paragraph'])
+    expect(getEditor().state.doc.child(2).type.name).toBe('heading')
+    expect(getEditor().state.selection.eq(selection)).toBe(true)
+    expect(scrolls).not.toContain(true)
+    await waitFor(() => expect(announcement()).toBe('段落「cc」を見出し1に変換しました'))
+  })
+
+  it('開いている間にスクロールで描き直しても、閉じても、変換先を組み直さない', async () => {
+    const user = userEvent.setup()
+    await renderEditor({ features: ALL })
+    vi.mocked(planConversion).mockClear()
+
+    await hoverBlock(1)
+    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+    expect(planConversion).toHaveBeenCalled()
+
+    const dropdown = getMenu().parentElement!
+    const { top } = dropdown.style
+    vi.mocked(planConversion).mockClear()
+
+    vi.spyOn(getEditor().view.nodeDOM(4) as HTMLElement, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(40, 200, 400, 30),
+    )
+    fireEvent.scroll(document)
+
+    expect(dropdown.style.top).not.toBe(top)
+
+    await user.keyboard('{Escape}')
+
+    expect(queryMenu()).not.toBeInTheDocument()
+    expect(planConversion).not.toHaveBeenCalled()
+  })
+})
+
 describe('つまみ', () => {
   it('ブロックに乗せると ⋮⋮ を出し、クリックするとそのブロックを対象にブロックメニューを開く', async () => {
     const user = userEvent.setup()
@@ -475,7 +799,7 @@ describe('つまみ', () => {
 
     await hoverBlock(2)
     await user.click(screen.getByTitle(HANDLE_TITLE))
-    await waitFor(() => expect(getMenuItem('上へ移動')).toHaveFocus())
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
     await user.click(getMenuItem('削除'))
 
     expect(outline()).toEqual(['aa', 'bb'])
@@ -526,7 +850,7 @@ describe('つまみ', () => {
     await renderEditor()
     await hoverBlock(1)
     await user.click(screen.getByTitle(HANDLE_TITLE))
-    await waitFor(() => expect(getMenuItem('上へ移動')).toHaveFocus())
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
 
     await user.hover(getMenuItem('下へ移動'))
     await nextFrame()
@@ -543,7 +867,7 @@ describe('つまみ', () => {
     await renderEditor()
     await hoverBlock(1)
     await user.click(screen.getByTitle(HANDLE_TITLE))
-    await waitFor(() => expect(getMenuItem('上へ移動')).toHaveFocus())
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
 
     await user.click(screen.getByTitle(HANDLE_TITLE))
     await nextFrame()

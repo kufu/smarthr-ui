@@ -1,13 +1,15 @@
 import { Editor, type JSONContent } from '@tiptap/core'
-import { NodeSelection, TextSelection } from '@tiptap/pm/state'
+import { AllSelection, NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { CellSelection } from '@tiptap/pm/tables'
 import { describe, expect, it, onTestFinished } from 'vitest'
 
 import { configureExtensions } from '../configureExtensions'
 
-import { blockRangeAt } from './blockRange'
+import { BLOCK_ANNOUNCEMENT_META } from './BlockActions'
+import { type BlockRange, blockRangeAt } from './blockRange'
 
 import type { RichTextFeature } from '../../types'
+import type { BlockCatalogId } from '../blockCatalog'
 
 const FEATURES: RichTextFeature[] = ['blockActions', 'bulletList', 'table', 'image', 'heading']
 
@@ -32,9 +34,13 @@ const table: JSONContent = {
   ],
 }
 
-const createEditor = (content: JSONContent[], features = FEATURES) => {
+const createEditor = (
+  content: JSONContent[],
+  features = FEATURES,
+  allowedHeadingLevels?: ReadonlyArray<1 | 2 | 3 | 4>,
+) => {
   const editor = new Editor({
-    extensions: configureExtensions({ features }),
+    extensions: configureExtensions({ features, allowedHeadingLevels }),
     content: { type: 'doc', content },
   })
 
@@ -391,4 +397,346 @@ describe('操作できないとき', () => {
       expect(outline(editor)).toEqual(['aa', 'bb'])
     },
   )
+})
+
+describe('convertBlocks', () => {
+  const ALL: RichTextFeature[] = [
+    'blockActions',
+    'heading',
+    'bulletList',
+    'orderedList',
+    'blockquote',
+    'codeBlock',
+    'table',
+    'image',
+  ]
+  const CONVERSION_IDS: BlockCatalogId[] = [
+    'paragraph',
+    'heading1',
+    'heading2',
+    'heading3',
+    'heading4',
+    'bulletList',
+    'orderedList',
+    'blockquote',
+    'codeBlock',
+  ]
+  const bullets = (...textRest: string[]) => list(textRest)
+  const ordered = (...textRest: string[]) => ({ ...list(textRest), type: 'orderedList' })
+  const quote = (...blockRest: JSONContent[]): JSONContent => ({
+    type: 'blockquote',
+    content: blockRest,
+  })
+  const code = (text: string): JSONContent => ({
+    type: 'codeBlock',
+    attrs: { language: 'js' },
+    content: [{ type: 'text', text }],
+  })
+  const item = (...blockRest: JSONContent[]): JSONContent => ({
+    type: 'listItem',
+    content: blockRest,
+  })
+
+  const recordTransactions = (editor: Editor) => {
+    const records: Array<{ docChanged: boolean; scrolled: boolean; meta: unknown }> = []
+
+    editor.on('transaction', ({ transaction }) =>
+      records.push({
+        docChanged: transaction.docChanged,
+        scrolled: transaction.scrolledIntoView,
+        meta: transaction.getMeta(BLOCK_ANNOUNCEMENT_META),
+      }),
+    )
+
+    return records
+  }
+
+  it('範囲の中のキャレットは、変換後も同じ文字の後ろに残り、そこへスクロールする', () => {
+    const editor = createEditor([paragraph('aa'), paragraph('bb'), paragraph('cc')], ALL)
+    editor.commands.setTextSelection(textPos(editor, 'bb', 1))
+    const records = recordTransactions(editor)
+
+    expect(
+      editor.commands.convertBlocks({
+        range: blockRangeAt(editor.state.doc, 0, 3),
+        to: 'codeBlock',
+      }),
+    ).toBe(true)
+
+    expect(outline(editor)).toEqual(['aa\nbb\ncc', 'paragraph'])
+    expect(editor.state.selection).toBeInstanceOf(TextSelection)
+    expect(caret(editor)).toEqual({ text: 'aa\nbb\ncc', offset: 4 })
+    expect(records[0].scrolled).toBe(true)
+  })
+
+  it('複数のブロックにまたがる選択は、両端が同じ文字に残る', () => {
+    const editor = createEditor([paragraph('aa'), paragraph('bb'), paragraph('cc')], ALL)
+    editor.commands.setTextSelection({
+      from: textPos(editor, 'aa', 1),
+      to: textPos(editor, 'cc', 1),
+    })
+
+    editor.commands.convertBlocks({ to: 'bulletList' })
+
+    const { from, to } = editor.state.selection
+    expect(outline(editor)).toEqual(['aabbcc', 'paragraph'])
+    expect(editor.state.doc.textBetween(from, to, '|')).toBe('a|bb|c')
+  })
+
+  it('画像を選んでいれば、範囲を変換したあとも同じ画像を選んだまま', () => {
+    const editor = createEditor([paragraph('aa'), image, paragraph('cc')], ALL)
+    editor.commands.setNodeSelection(topLevelPos(editor, 1))
+
+    editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 0, 3), to: 'heading1' })
+
+    expect(outline(editor)).toEqual(['aa', 'image', 'cc', 'paragraph'])
+    expect(editor.state.selection).toBeInstanceOf(NodeSelection)
+    expect(editor.state.selection.from).toBe(topLevelPos(editor, 1))
+  })
+
+  it('全選択は、変換したあとも全選択のまま', () => {
+    const editor = createEditor([paragraph('aa'), heading('bb')], ALL)
+    editor.commands.selectAll()
+
+    editor.commands.convertBlocks({ to: 'bulletList' })
+
+    expect(outline(editor)).toEqual(['aabb', 'paragraph'])
+    expect(editor.state.selection).toBeInstanceOf(AllSelection)
+  })
+
+  it('範囲の外の選択は同じ文字に残り、スクロールしない', () => {
+    const editor = createEditor([paragraph('aa'), paragraph('bb'), paragraph('cc')], ALL)
+    editor.commands.setTextSelection(textPos(editor, 'cc', 1))
+    const records = recordTransactions(editor)
+
+    editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 0), to: 'heading1' })
+
+    expect(outline(editor)).toEqual(['aa', 'bb', 'cc'])
+    expect(caret(editor)).toEqual({ text: 'cc', offset: 1 })
+    expect(records.map(({ scrolled }) => scrolled)).toEqual([false])
+  })
+
+  it.each([
+    {
+      name: '前',
+      content: [bullets('xx', 'yy'), paragraph('bb'), paragraph('cc')],
+      caretIn: 'yy',
+      expected: ['xxyybb', 'cc'],
+    },
+    {
+      name: '後ろ',
+      content: [paragraph('aa'), paragraph('bb'), bullets('xx', 'yy')],
+      caretIn: 'xx',
+      expected: ['aa', 'bbxxyy', 'paragraph'],
+    },
+  ])(
+    '$name のリストとつないでも、そのリストの中の選択は同じ文字に残る',
+    ({ content, caretIn, expected }) => {
+      const editor = createEditor(content, ALL)
+      editor.commands.setTextSelection({
+        from: textPos(editor, caretIn, 1),
+        to: textPos(editor, caretIn, 2),
+      })
+      const records = recordTransactions(editor)
+
+      editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 1), to: 'bulletList' })
+
+      const { from, to } = editor.state.selection
+      expect(outline(editor)).toEqual(expected)
+      expect(editor.state.selection).toBeInstanceOf(TextSelection)
+      expect(editor.state.doc.textBetween(from, to)).toBe(caretIn[1])
+      expect(caret(editor)).toEqual({ text: caretIn, offset: 2 })
+      expect(records.map(({ scrolled }) => scrolled)).toEqual([false])
+    },
+  )
+
+  it('末尾のブロックをリストにして足された空の段落も、変換と一緒に 1 回の取り消しで戻る', () => {
+    const editor = createEditor([paragraph('aa')], ALL)
+    editor.commands.setTextSelection(textPos(editor, 'aa', 1))
+    const original = editor.state.doc
+
+    editor.commands.convertBlocks({ to: 'bulletList' })
+    expect(outline(editor)).toEqual(['aa', 'paragraph'])
+
+    editor.commands.undo()
+    expect(editor.state.doc.eq(original)).toBe(true)
+    expect(caret(editor)).toEqual({ text: 'aa', offset: 1 })
+  })
+
+  it('変換が起きたすべての組み合わせで、can と実行がそろい、1 回の取り消しで元の文書に戻る', () => {
+    const cases: Array<{ content: JSONContent[]; range?: [number, number] }> = [
+      { content: [paragraph('a'), paragraph('bb'), paragraph('c')] },
+      { content: [paragraph('a'), heading('bb')] },
+      { content: [bullets('a', 'bb')] },
+      { content: [{ ...ordered('a', 'b'), attrs: { start: 3 } }] },
+      { content: [list(['a']), paragraph('z')], range: [0, 1] },
+      {
+        content: [
+          {
+            type: 'bulletList',
+            content: [item(paragraph('a'), bullets('a1')), item(paragraph('bb'))],
+          },
+        ],
+      },
+      {
+        content: [
+          { type: 'bulletList', content: [item(paragraph('a'), image), item(paragraph('b'))] },
+        ],
+      },
+      { content: [quote(heading('a'), bullets('b', 'c'))] },
+      { content: [code('x\nyy')] },
+      { content: [paragraph('a'), image, paragraph('bb')] },
+      { content: [image] },
+      { content: [table] },
+      { content: [bullets('a'), paragraph('b'), bullets('c')], range: [1, 2] },
+      { content: [bullets('a'), bullets('b')] },
+      { content: [paragraph('a'), table] },
+    ]
+    const tally = { can: 0, converted: 0, undone: 0 }
+
+    for (const { content, range } of cases) {
+      for (const to of CONVERSION_IDS) {
+        const editor = createEditor(content, ALL)
+        // 作った直後の文書と比べないのは、末尾が段落でないと最初の transaction で空の段落が足されるため
+        editor.view.dispatch(editor.state.tr.setSelection(TextSelection.atStart(editor.state.doc)))
+        const original = editor.state.doc
+        const target = blockRangeAt(original, ...(range ?? [0, content.length]))
+
+        const can = editor.can().convertBlocks({ range: target, to })
+
+        expect(editor.commands.convertBlocks({ range: target, to })).toBe(can)
+
+        if (can) tally.can++
+        if (editor.state.doc.eq(original)) continue
+
+        tally.converted++
+        expect(() => editor.state.doc.check()).not.toThrow()
+
+        editor.commands.undo()
+
+        if (editor.state.doc.eq(original)) tally.undone++
+      }
+    }
+
+    const docsWithCurrent = 11
+    const docsWithoutCurrent = 2
+    const converted =
+      (CONVERSION_IDS.length - 1) * docsWithCurrent + CONVERSION_IDS.length * docsWithoutCurrent
+
+    expect(tally).toEqual({ can: converted + docsWithCurrent, converted, undone: converted })
+  })
+
+  it('続けて打った文字は、変換とは別に取り消せる', async () => {
+    const editor = createEditor([paragraph('aa'), paragraph('bb'), paragraph('cc')], ALL)
+    editor.commands.setTextSelection(textPos(editor, 'bb', 2))
+
+    editor.commands.convertBlocks({ to: 'heading2' })
+    await Promise.resolve()
+    editor.commands.insertContent('X')
+    expect(outline(editor)).toEqual(['aa', 'bbX', 'cc'])
+
+    editor.commands.undo()
+    expect(outline(editor)).toEqual(['aa', 'bb', 'cc'])
+    expect(editor.state.doc.child(1).type.name).toBe('heading')
+
+    editor.commands.undo()
+    expect(editor.state.doc.child(1).type.name).toBe('paragraph')
+  })
+
+  it('すでにその種類なら true を返し、文書を変えず、読み上げの知らせも付けない', () => {
+    const editor = createEditor([heading('aa'), paragraph('bb')], ALL)
+    editor.commands.setTextSelection(textPos(editor, 'aa', 1))
+    const original = editor.state.doc
+    const records = recordTransactions(editor)
+
+    expect(editor.can().convertBlocks({ to: 'heading2' })).toBe(true)
+    expect(editor.commands.convertBlocks({ to: 'heading2' })).toBe(true)
+
+    expect(editor.state.doc.eq(original)).toBe(true)
+    expect(records.some(({ docChanged, meta }) => docChanged || meta !== undefined)).toBe(false)
+    expect(editor.can().undo()).toBe(false)
+  })
+
+  it.each([
+    {
+      name: '1 つのブロック',
+      endIndex: 1,
+      expected: { blockId: 'heading2', excerpt: 'はじめに', count: 1 },
+    },
+    {
+      name: '2 つのブロック',
+      endIndex: 2,
+      expected: { blockId: 'heading2', excerpt: 'はじめに', count: 2 },
+    },
+  ])('$name を変換すると、変換前の範囲を主語にして変換先を知らせる', ({ endIndex, expected }) => {
+    const editor = createEditor([heading('はじめに'), paragraph('bb'), paragraph('cc')], ALL)
+    const records = recordTransactions(editor)
+
+    editor.commands.convertBlocks({
+      range: blockRangeAt(editor.state.doc, 0, endIndex),
+      to: 'paragraph',
+    })
+
+    expect(records.map(({ meta }) => meta).filter(Boolean)).toEqual([
+      { ...expected, type: 'converted', to: 'paragraph' },
+    ])
+  })
+})
+
+describe('convertBlocks を使えないとき', () => {
+  const ALL: RichTextFeature[] = ['blockActions', 'heading', 'bulletList', 'codeBlock', 'image']
+
+  const expectRefused = (editor: Editor, options: { range?: BlockRange; to: BlockCatalogId }) => {
+    const original = editor.state.doc
+
+    expect(editor.can().convertBlocks(options)).toBe(false)
+    expect(editor.commands.convertBlocks(options)).toBe(false)
+    expect(editor.state.doc.eq(original)).toBe(true)
+  }
+
+  it('編集できないエディタ', () => {
+    const editor = createEditor([paragraph('aa')], ALL)
+    editor.setEditable(false)
+
+    expectRefused(editor, { to: 'heading1' })
+  })
+
+  it('features に blockActions が無い', () => {
+    expectRefused(createEditor([paragraph('aa')], ['heading', 'bulletList']), { to: 'heading1' })
+  })
+
+  it('features に変換先の種類が無い', () => {
+    expectRefused(createEditor([paragraph('aa')], ['blockActions', 'heading']), {
+      to: 'bulletList',
+    })
+  })
+
+  it('見出しレベルが許されていない。許されたレベルには変換できる', () => {
+    const editor = createEditor([paragraph('aa')], ALL, [2])
+
+    expectRefused(editor, { to: 'heading1' })
+    expect(editor.commands.convertBlocks({ to: 'heading2' })).toBe(true)
+    expect(editor.state.doc.firstChild?.attrs.level).toBe(2)
+  })
+
+  it('文書が変わって位置のずれた範囲', () => {
+    const editor = createEditor([paragraph('aa'), paragraph('bb')], ALL)
+    const range = blockRangeAt(editor.state.doc, 1)
+    editor.commands.insertContentAt(1, 'zz')
+
+    expectRefused(editor, { range, to: 'heading1' })
+  })
+
+  it.each(['table', 'image', 'horizontalRule', 'youtube', 'video'] as const)(
+    '変換先にならない種類 %s',
+    (to) => {
+      expectRefused(createEditor([paragraph('aa')], [...ALL, 'table', 'horizontalRule']), { to })
+    },
+  )
+
+  it('画像だけの範囲', () => {
+    const editor = createEditor([paragraph('aa'), image, paragraph('cc')], ALL)
+
+    expectRefused(editor, { range: blockRangeAt(editor.state.doc, 1), to: 'paragraph' })
+  })
 })
