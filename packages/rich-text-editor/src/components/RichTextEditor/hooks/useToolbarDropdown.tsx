@@ -157,7 +157,7 @@ export function useToolbarDropdown({
         if (isEdge) {
           e.preventDefault()
           e.stopPropagation()
-          setIsOpen(false)
+          setOrigin(null)
           restoreFocus()
         }
       },
@@ -177,7 +177,7 @@ export function useToolbarDropdown({
         }
       },
     }
-  }, [setIsOpen, latest])
+  }, [latest])
 
   useEnhancedEffect(() => {
     if (!origin) {
