@@ -106,7 +106,6 @@ const openMenuByKey = async () => {
 }
 
 const HANDLE_TITLE = 'ドラッグで移動、クリックでメニューを開く'
-const ADD_TITLE = 'ブロックを追加'
 
 /** jsdom はレイアウトしないので、最上位のブロックを 40px おきに縦に並べた矩形を返す */
 const stubBlockRects = () => {
@@ -115,7 +114,7 @@ const stubBlockRects = () => {
   vi.spyOn(editor.view.dom, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 500, 400))
   editor.state.doc.forEach((_node, offset, index) => {
     vi.spyOn(editor.view.nodeDOM(offset) as HTMLElement, 'getBoundingClientRect').mockReturnValue(
-      new DOMRect(64, index * 40, 400, 30),
+      new DOMRect(40, index * 40, 400, 30),
     )
   })
 }
@@ -496,27 +495,6 @@ describe('つまみ', () => {
     expect(getEditor().state.selection.$head.parentOffset).toBe(0)
   })
 
-  it('slashCommand があれば ＋ を出し、押すと下に空の行を足してスラッシュコマンドを開く', async () => {
-    const user = userEvent.setup()
-    await renderEditor({ features: [...FEATURES, 'slashCommand'] })
-
-    await hoverBlock(0)
-    await user.click(screen.getByTitle(ADD_TITLE))
-
-    expect(outline()).toEqual(['aa', '/', 'bb', 'cc'])
-    expect(getEditorDom()).toHaveFocus()
-    expect(await screen.findByRole('listbox', { name: 'ブロックと色' })).toBeInTheDocument()
-  })
-
-  it('slashCommand が無ければ ＋ を出さない', async () => {
-    await renderEditor()
-
-    await hoverBlock(0)
-
-    expect(screen.getByTitle(HANDLE_TITLE)).toBeInTheDocument()
-    expect(screen.queryByTitle(ADD_TITLE)).not.toBeInTheDocument()
-  })
-
   it('文字を打つと隠し、マウスを動かすとまた出す', async () => {
     await renderEditor()
     placeCaret('aa')
@@ -575,24 +553,24 @@ describe('つまみ', () => {
     await waitFor(() => expect(queryMenu()).toBeInTheDocument())
   })
 
-  it('value でブロックが減っても、＋ と ⋮⋮ は今あるブロックだけを対象にする', async () => {
+  it('value でブロックが減っても、⋮⋮ は今あるブロックだけを対象にする', async () => {
+    const user = userEvent.setup()
     const errors = recordUncaughtErrors()
-    const features: RichTextFeature[] = [...FEATURES, 'slashCommand']
-    const { rerender } = await renderEditor({ features, value: ABC })
+    const { rerender } = await renderEditor({ value: ABC })
     await hoverBlock(2)
 
     rerender({ value: doc([paragraph('aa')]) })
-    fireEvent.click(screen.getByTitle(ADD_TITLE))
     fireEvent.click(screen.getByTitle(HANDLE_TITLE))
 
     expect(errors).toEqual([])
-    expect(outline()).toEqual(['aa'])
+    expect(queryMenu()).not.toBeInTheDocument()
 
     await nextFrame()
-    fireEvent.click(screen.getByTitle(ADD_TITLE))
+    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await user.click(await screen.findByRole('menuitem', { name: '複製' }))
 
     expect(errors).toEqual([])
-    expect(outline()).toEqual(['aa', '/'])
+    expect(outline()).toEqual(['aa', 'aa'])
   })
 })
 

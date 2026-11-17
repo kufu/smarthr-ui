@@ -365,24 +365,11 @@ describe('取り消しの単位', () => {
   })
 })
 
-describe('addBlockBelow', () => {
-  it('指した最上位のブロックのすぐ下に空の段落を足し、キャレットを置く', () => {
-    const editor = createEditor([paragraph('aa'), list(['x1', 'x2']), paragraph('cc')])
-
-    expect(editor.commands.addBlockBelow(topLevelPos(editor, 1))).toBe(true)
-
-    expect(outline(editor)).toEqual(['aa', 'x1x2', 'paragraph', 'cc'])
-    expect(editor.state.selection.$head.index(0)).toBe(2)
-    expect(editor.state.selection.$head.parent.type.name).toBe('paragraph')
-  })
-})
-
 describe('操作できないとき', () => {
   const run = {
     moveBlocks: (editor: Editor) => editor.commands.moveBlocks({ to: 'down' }),
     duplicateBlocks: (editor: Editor) => editor.commands.duplicateBlocks(),
     deleteBlocks: (editor: Editor) => editor.commands.deleteBlocks(),
-    addBlockBelow: (editor: Editor) => editor.commands.addBlockBelow(0),
   }
 
   it.each(Object.entries(run))('編集できないエディタでは %s は何もしない', (_, command) => {

@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { FaGripVerticalIcon, FaPlusIcon } from 'smarthr-ui'
+import { FaGripVerticalIcon } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
@@ -20,22 +20,17 @@ import { getControlOrigin } from '../floatingGeometry'
 import { BLOCK_DRAG_TYPE, getBlockRects } from './BlockActions'
 import { blockRangeAt, findBlockIndex } from './blockRange'
 
-import type { RichTextFeature } from '../../types'
 import type { Transaction } from '@tiptap/pm/state'
 import type { Editor } from '@tiptap/react'
 
 const BLOCK_DRAGGING_ATTRIBUTE = 'data-block-dragging'
 
 const CLASS_NAMES = {
-  // 本文の左の余白（＋ があれば pl-4 = 64px、無ければ pl-2.5 = 40px）に置き、右端を本文の 8px 左に揃える。
+  // 本文の左の余白（pl-2.5 = 40px）に置き、右端を本文の 8px 左に揃える。
   // 表の行ハンドルは本文の 2px 左から始まり、重ならない
   wrapper:
-    'shr-rte-absolute shr-rte-left-0 shr-rte-z-1 shr-rte-flex shr-rte-items-center shr-rte-justify-end shr-rte-gap-[4px]',
-  wrapperGrip: 'shr-rte-w-[32px]',
-  wrapperGripAndAdd: 'shr-rte-w-[56px]',
-  item: 'shr-rte-box-border shr-rte-flex shr-rte-h-[24px] shr-rte-w-[24px] shr-rte-items-center shr-rte-justify-center shr-rte-rounded-s shr-rte-text-base shr-rte-text-grey hover:shr-rte-bg-white-darken hover:shr-rte-text-black',
-  add: 'shr-rte-cursor-pointer shr-rte-border-none shr-rte-bg-transparent shr-rte-p-0',
-  grip: 'shr-rte-cursor-grab data-[active]:shr-rte-bg-white-darken data-[active]:shr-rte-text-black',
+    'shr-rte-absolute shr-rte-left-0 shr-rte-z-1 shr-rte-flex shr-rte-w-[32px] shr-rte-items-center shr-rte-justify-end',
+  grip: 'shr-rte-box-border shr-rte-flex shr-rte-h-[24px] shr-rte-w-[24px] shr-rte-cursor-grab shr-rte-items-center shr-rte-justify-center shr-rte-rounded-s shr-rte-text-base shr-rte-text-grey hover:shr-rte-bg-white-darken hover:shr-rte-text-black data-[active]:shr-rte-bg-white-darken data-[active]:shr-rte-text-black',
   dropLine:
     'shr-rte-pointer-events-none shr-rte-absolute shr-rte-z-1 shr-rte-h-[2px] shr-rte-bg-main forced-colors:shr-rte-bg-[color:Highlight]',
 }
@@ -43,13 +38,12 @@ const CLASS_NAMES = {
 type Props = {
   editor: Editor
   containerRef: RefObject<HTMLElement | null>
-  features: readonly RichTextFeature[]
 }
 
 type Hover = { index: number; top: number; menuOpen: boolean }
 type DropLine = { top: number; left: number; width: number }
 
-export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) => {
+export const BlockHandle: FC<Props> = memo(({ editor, containerRef }) => {
   const { localize } = useIntl()
   const [hover, setHover] = useState<Hover | null>(null)
   const [dropLine, setDropLine] = useState<DropLine | null>(null)
@@ -57,7 +51,6 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
   const menuIndexRef = useRef<number | null>(null)
   const menuOpenAtMouseDownRef = useRef(false)
   const frameRef = useRef<number | null>(null)
-  const hasAddButton = features.includes('slashCommand')
 
   const latest = useLatest({ editor, hover, containerRef })
 
@@ -155,18 +148,6 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
             ? prev
             : next,
         )
-      },
-      handleAddMouseDown: (e: MouseEvent<HTMLButtonElement>) => {
-        // 本文からフォーカスを奪うと、足した行で開くスラッシュコマンドが閉じる
-        e.preventDefault()
-      },
-      handleAddClick: () => {
-        const range = hoveredRange()
-
-        if (range) {
-          latest.editor.view.focus()
-          latest.editor.commands.addBlockBelow(range.from)
-        }
       },
       handleDelegateGripMouseDown: () => {
         // click の時点では、mousedown を外のクリックとみなしたメニューがもう閉じている
@@ -282,27 +263,8 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
   return (
     <>
       {hover && (
-        // ホバーでしか見えないものを読み上げや Tab の順に入れない。キーボードの経路は Mod+/・移動のキー・/
-        <div
-          className={`${CLASS_NAMES.wrapper} ${hasAddButton ? CLASS_NAMES.wrapperGripAndAdd : CLASS_NAMES.wrapperGrip}`}
-          style={{ top: hover.top }}
-          aria-hidden="true"
-        >
-          {hasAddButton && (
-            <button
-              type="button"
-              tabIndex={-1}
-              title={localize({
-                id: 'smarthr-ui/RichTextEditor/blockAdd',
-                defaultText: 'ブロックを追加',
-              })}
-              className={`${CLASS_NAMES.item} ${CLASS_NAMES.add}`}
-              onMouseDown={functions.handleAddMouseDown}
-              onClick={functions.handleAddClick}
-            >
-              <FaPlusIcon />
-            </button>
-          )}
+        // ホバーでしか見えないものを読み上げや Tab の順に入れない。キーボードの経路は Mod+/・移動のキー
+        <div className={CLASS_NAMES.wrapper} style={{ top: hover.top }} aria-hidden="true">
           {/* button にしないのは、Firefox が button からのドラッグを始めないため https://bugzilla.mozilla.org/show_bug.cgi?id=568313 */}
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
@@ -311,7 +273,7 @@ export const BlockHandle: FC<Props> = memo(({ editor, containerRef, features }) 
               id: 'smarthr-ui/RichTextEditor/blockHandle',
               defaultText: 'ドラッグで移動、クリックでメニューを開く',
             })}
-            className={`${CLASS_NAMES.item} ${CLASS_NAMES.grip}`}
+            className={CLASS_NAMES.grip}
             data-active={hover.menuOpen || undefined}
             onMouseDown={functions.handleDelegateGripMouseDown}
             onClick={functions.handleDelegateGripClick}

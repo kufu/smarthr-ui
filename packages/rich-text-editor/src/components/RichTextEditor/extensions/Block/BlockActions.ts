@@ -8,7 +8,6 @@ import { type BlockCatalogId, describeBlock } from '../blockCatalog'
 import {
   type BlockRange,
   type MoveTarget,
-  blockRangeAt,
   findBoundaryIndex,
   isCurrentRange,
   isEmptyParagraph,
@@ -32,8 +31,6 @@ declare module '@tiptap/core' {
       moveBlocks: (options: { range?: BlockRange; to: MoveTarget }) => ReturnType
       duplicateBlocks: (options?: { range?: BlockRange }) => ReturnType
       deleteBlocks: (options?: { range?: BlockRange }) => ReturnType
-      /** pos を含む最上位のブロックのすぐ下に空の段落を足す。スラッシュコマンドのメニューが描かれていれば / も入れて開く */
-      addBlockBelow: (pos: number) => ReturnType
     }
   }
 
@@ -242,38 +239,6 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
             }
 
             announce(tr, { ...subjectOf(content), type: 'deleted' })
-          }
-
-          return true
-        },
-      addBlockBelow:
-        (pos) =>
-        ({ tr, dispatch, editor }) => {
-          if (
-            !isActive(this.editor, this.options) ||
-            !Number.isInteger(pos) ||
-            pos < 0 ||
-            pos > tr.doc.content.size
-          ) {
-            return false
-          }
-
-          if (dispatch) {
-            const index = Math.min(tr.doc.resolve(pos).index(0), tr.doc.childCount - 1)
-            const { to } = blockRangeAt(tr.doc, index)
-
-            closeHistory(tr).insert(to, tr.doc.type.schema.nodes.paragraph.create())
-            tr.setSelection(TextSelection.create(tr.doc, to + 1))
-
-            // メニューが描かれていない（hideToolbar など）ときに入れると、開かない / だけが残る
-            if (
-              this.options.getFeatures().includes('slashCommand') &&
-              editor.storage.slashCommand?.handleKeyDown
-            ) {
-              tr.insertText('/')
-            }
-
-            tr.scrollIntoView()
           }
 
           return true

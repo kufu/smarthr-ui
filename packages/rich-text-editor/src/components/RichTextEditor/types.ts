@@ -101,7 +101,6 @@ type RichTextEditorBaseProps = {
    * `blockActions` を含めると、最上位のブロック（段落・見出し・リスト・表・画像・動画など）を移動・複製・削除できる。
    * 移動は macOS で Control+Shift+↑/↓、それ以外で Alt+Shift+↑/↓。Cmd+/（Windows・Linux は Ctrl+/）か、
    * ブロックの左に出る ⋮⋮ のクリックでメニューを開き、⋮⋮ のドラッグでも並べ替えられる。
-   * `slashCommand` も含めると、⋮⋮ の隣の ＋ で下に空の行を足してスラッシュコマンドを開ける。
    */
   features?: readonly RichTextFeature[]
   /**
@@ -109,7 +108,7 @@ type RichTextEditorBaseProps = {
    * ツールバーからの挿入と表の行・列の操作はできなくなる。features で許可したものは、貼り付けやドロップでは入る。
    * ドラッグでのサイズ変更と、features で許可した書式のショートカット・入力ルールは使える。
    * ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter・ブロックメニューの Cmd+/ など）と、リンクを編集する Cmd+K は効かない。
-   * ブロックを移動するキーは効くが、ブロックの左の ⋮⋮ と ＋ は出ず、複製はできない。
+   * ブロックを移動するキーは効くが、ブロックの左の ⋮⋮ は出ず、複製はできない。
    */
   hideToolbar?: boolean
   disabled?: boolean
