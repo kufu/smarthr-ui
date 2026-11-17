@@ -4,6 +4,8 @@ export type KeyboardNavigationOptions = {
   liveRegionId?: string
   stacked?: boolean
   horizontal?: boolean
+  // 0の位置に移動しないようにする。チャートの options.plugins.keyboardNavigation.skipZero で指定する
+  skipZero?: boolean
 }
 
 type ChartWithKeyboardHandler = {
@@ -16,6 +18,7 @@ export const keyboardNavigationPlugin = {
     liveRegionId: undefined,
     stacked: false,
     horizontal: false,
+    skipZero: false,
   },
   afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
@@ -44,29 +47,89 @@ export const keyboardNavigationPlugin = {
       let nextDatasetIndex = activeElements.length > 0 ? activeElements[0].datasetIndex : -1
       let nextDataIndex = activeElements.length > 0 ? activeElements[0].index : -1
 
+      // 表示されない位置は移動先にしない
+      const hasValue = (datasetIndex: number, dataIndex: number) => {
+        // 未フォーカス(-1)は先頭として扱う
+        const value = datasets[Math.max(datasetIndex, 0)]?.data[Math.max(dataIndex, 0)]
+        return value !== null && value !== undefined && !(options.skipZero && value === 0)
+      }
+
+      // 端を越えたら反対側に回り込む
+      const wrapIndex = (index: number, length: number) => ((index % length) + length) % length
+
+      // currentからdelta方向に一周して、条件に合う最初の位置を返す。なければnull
+      const findNext = (
+        current: number,
+        delta: number,
+        length: number,
+        isTarget: (index: number) => boolean,
+      ) => {
+        for (let step = 1; step <= length; step++) {
+          const index = wrapIndex(current + delta * step, length)
+
+          if (isTarget(index)) {
+            return index
+          }
+        }
+
+        return null
+      }
+
+      // 未フォーカス(-1)から戻る方向に動くときも末尾に着くよう、0から数える
+      const startIndex = (index: number, delta: number) => (index === -1 && delta < 0 ? 0 : index)
+
       const moveData = (delta: number) => {
         event.preventDefault()
-        nextDataIndex = (nextDataIndex + delta + dataLength) % dataLength
+        // どのデータセットにも値がないデータは飛ばす
+        const dataIndex = findNext(startIndex(nextDataIndex, delta), delta, dataLength, (index) =>
+          datasets.some((_, datasetIndex) => hasValue(datasetIndex, index)),
+        )
+
+        if (dataIndex === null) {
+          return
+        }
+
+        nextDataIndex = dataIndex
+
+        // 移動先に値がなければ、値を持つ最初のデータセットにする
+        if (!hasValue(nextDatasetIndex, nextDataIndex)) {
+          nextDatasetIndex = datasets.findIndex((_, index) => hasValue(index, nextDataIndex))
+        }
       }
       const moveDataset = (delta: number) => {
         event.preventDefault()
-        nextDatasetIndex = (nextDatasetIndex + delta + datasets.length) % datasets.length
+        const datasetIndex = findNext(
+          startIndex(nextDatasetIndex, delta),
+          delta,
+          datasets.length,
+          (index) => hasValue(index, nextDataIndex),
+        )
+
+        if (datasetIndex !== null) {
+          nextDatasetIndex = datasetIndex
+        }
       }
       const reset = () => {
         nextDatasetIndex = -1
         nextDataIndex = -1
       }
 
+      // 全ての棒をカテゴリ順・データセット順に一列に並べて移動する
       const compoundMoveDataAndDataset = (delta: number) => {
-        // データとデータセットの境界に到達したかどうかを判定
-        const atBoundary =
-          delta > 0 ? nextDatasetIndex === datasets.length - 1 : nextDatasetIndex === 0
+        event.preventDefault()
+        const datasetCount = datasets.length
+        const currentPosition =
+          nextDataIndex === -1 ? -1 : nextDataIndex * datasetCount + nextDatasetIndex
+        const nextPosition = findNext(
+          startIndex(currentPosition, delta),
+          delta,
+          datasetCount * dataLength,
+          (position) => hasValue(position % datasetCount, Math.floor(position / datasetCount)),
+        )
 
-        if (atBoundary) {
-          moveData(delta)
-          nextDatasetIndex = delta > 0 ? 0 : datasets.length - 1
-        } else {
-          moveDataset(delta)
+        if (nextPosition !== null) {
+          nextDataIndex = Math.floor(nextPosition / datasetCount)
+          nextDatasetIndex = nextPosition % datasetCount
         }
       }
 

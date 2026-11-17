@@ -59,6 +59,18 @@ type Props = {
   defaultView?: ChartViewType
 } & BarChartColorProps
 
+// どのデータセットも値を持つカテゴリが1つ以下なら、カテゴリごとに内訳を積み上げたデータとみなす
+const isGroupedStackData = ({ labels = [], datasets }: ChartData<'bar'>) => {
+  // カテゴリか系列が1つだけのデータは見分けられないので、内訳を積み上げたデータとはみなさない
+  if (labels.length <= 1 || datasets.length <= 1) {
+    return false
+  }
+
+  return datasets.every(
+    ({ data }) => data.filter((value) => value !== null && value !== undefined).length <= 1,
+  )
+}
+
 export const BarChart: React.FC<Props> = ({
   data,
   title,
@@ -108,11 +120,15 @@ export const BarChart: React.FC<Props> = ({
     [data, chartColors, stacked],
   )
 
+  const grouped = isGroupedStackData(data)
+
   const chartOptions: ChartOptions<'bar'> = useMemo(
     () =>
       createBarChartOptions({
         ...externalOptions,
         ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        // 値のない位置に棒の場所を取らないようにする
+        skipNull: externalOptions?.skipNull ?? grouped,
         scales: {
           ...externalOptions?.scales,
           ...(stacked
@@ -126,13 +142,14 @@ export const BarChart: React.FC<Props> = ({
           ...externalOptions?.plugins,
           title: { display: false },
           keyboardNavigation: {
+            ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
             stacked,
             horizontal: orientation === 'horizontal',
           },
         },
       }),
-    [chartId, externalOptions, orientation, stacked],
+    [chartId, externalOptions, grouped, orientation, stacked],
   )
 
   const viewOptions = useMemo(
@@ -184,7 +201,7 @@ export const BarChart: React.FC<Props> = ({
             options={chartOptions}
           />
         ) : (
-          <TableView data={enhancedData} caption={title} options={chartOptions} />
+          <TableView data={enhancedData} caption={title} grouped={grouped} options={chartOptions} />
         )}
       </div>
     </div>
