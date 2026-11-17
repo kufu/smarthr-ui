@@ -79,6 +79,20 @@ const caret = (editor: Editor) => {
 
 const topLevelPos = (editor: Editor, index: number) => blockRangeAt(editor.state.doc, index).from
 
+const recordTransactions = (editor: Editor) => {
+  const records: Array<{ docChanged: boolean; scrolled: boolean; meta: unknown }> = []
+
+  editor.on('transaction', ({ transaction }) =>
+    records.push({
+      docChanged: transaction.docChanged,
+      scrolled: transaction.scrolledIntoView,
+      meta: transaction.getMeta(BLOCK_ANNOUNCEMENT_META),
+    }),
+  )
+
+  return records
+}
+
 describe('moveBlocks', () => {
   it('キャレットのあるブロックを上へ・下へ動かし、キャレットはブロックの中の同じ位置に残る', () => {
     const editor = createEditor([paragraph('aa'), paragraph('bb'), paragraph('cc')])
@@ -277,6 +291,23 @@ describe('duplicateBlocks', () => {
     expect(editor.state.selection).toBeInstanceOf(NodeSelection)
     expect(editor.state.selection.from).toBe(topLevelPos(editor, 2))
   })
+
+  it('全選択して続けて複製しても、文書の末尾の空の段落は複製せず、間に残らない', () => {
+    const editor = createEditor([paragraph('aa'), heading('bb')])
+    const records = recordTransactions(editor)
+
+    editor.commands.selectAll()
+    editor.commands.duplicateBlocks()
+    expect(outline(editor)).toEqual(['aa', 'bb', 'aa', 'bb', 'paragraph'])
+
+    editor.commands.selectAll()
+    editor.commands.duplicateBlocks()
+    expect(outline(editor)).toEqual(['aa', 'bb', 'aa', 'bb', 'aa', 'bb', 'aa', 'bb', 'paragraph'])
+    expect(records.map(({ meta }) => meta).filter(Boolean)).toEqual([
+      { type: 'duplicated', blockId: 'paragraph', excerpt: 'aa', count: 2 },
+      { type: 'duplicated', blockId: 'paragraph', excerpt: 'aa', count: 4 },
+    ])
+  })
 })
 
 describe('deleteBlocks', () => {
@@ -437,20 +468,6 @@ describe('convertBlocks', () => {
     content: blockRest,
   })
 
-  const recordTransactions = (editor: Editor) => {
-    const records: Array<{ docChanged: boolean; scrolled: boolean; meta: unknown }> = []
-
-    editor.on('transaction', ({ transaction }) =>
-      records.push({
-        docChanged: transaction.docChanged,
-        scrolled: transaction.scrolledIntoView,
-        meta: transaction.getMeta(BLOCK_ANNOUNCEMENT_META),
-      }),
-    )
-
-    return records
-  }
-
   it('範囲の中のキャレットは、変換後も同じ文字の後ろに残り、そこへスクロールする', () => {
     const editor = createEditor([paragraph('aa'), paragraph('bb'), paragraph('cc')], ALL)
     editor.commands.setTextSelection(textPos(editor, 'bb', 1))
@@ -502,6 +519,45 @@ describe('convertBlocks', () => {
 
     expect(outline(editor)).toEqual(['aabb', 'paragraph'])
     expect(editor.state.selection).toBeInstanceOf(AllSelection)
+  })
+
+  it('全選択して続けて変換しても、文書の末尾の空の段落は変換せず、ブロックが増えない', () => {
+    const editor = createEditor([paragraph('aa'), heading('bb')], ALL)
+    editor.commands.selectAll()
+    const records = recordTransactions(editor)
+    const h1 = (text: string) => ({ ...heading(text), attrs: { level: 1 } })
+
+    editor.commands.convertBlocks({ to: 'heading1' })
+    editor.commands.convertBlocks({ to: 'heading1' })
+
+    expect(editor.state.doc.toJSON()).toEqual(
+      editor.schema
+        .nodeFromJSON({ type: 'doc', content: [h1('aa'), h1('bb'), paragraph()] })
+        .toJSON(),
+    )
+    expect(records.map(({ meta }) => meta).filter(Boolean)).toEqual([
+      { type: 'converted', to: 'heading1', blockId: 'paragraph', excerpt: 'aa', count: 2 },
+    ])
+  })
+
+  it('全選択して段落と見出し1へ交互に変換しても、ブロックが増えない', () => {
+    const editor = createEditor([paragraph('aa'), heading('bb')], ALL)
+    editor.commands.selectAll()
+
+    const steps = [
+      { to: 'paragraph', type: 'paragraph' },
+      { to: 'heading1', type: 'heading' },
+      { to: 'paragraph', type: 'paragraph' },
+      { to: 'heading1', type: 'heading' },
+    ] as const
+
+    for (const { to, type } of steps) {
+      editor.commands.convertBlocks({ to })
+
+      const { doc } = editor.state
+      expect(outline(editor)).toEqual(['aa', 'bb', 'paragraph'])
+      expect([doc.child(0).type.name, doc.child(1).type.name]).toEqual([type, type])
+    }
   })
 
   it('範囲の外の選択は同じ文字に残り、スクロールしない', () => {
