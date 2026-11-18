@@ -3,6 +3,7 @@ import {
   multi20Datasets,
   multiSmall,
   singleSmall,
+  stackedGroups,
 } from '../__stories__/testData'
 
 import { BarChart } from './BarChart'
@@ -199,6 +200,25 @@ export const Stacked: Story = {
     disablePatterns: true,
     singleTone: { from: 0, to: 5 },
     orientation: 'horizontal',
+  },
+}
+
+// 項目ごとに内訳が異なるデータは、内訳を積み上げた1本の棒で表示する。表は項目ごとに内訳をまとめる
+export const GroupedStacks: Story = {
+  name: 'grouped stacks',
+  args: {
+    data: stackedGroups,
+    stacked: true,
+    disablePatterns: true,
+    orientation: 'horizontal',
+  },
+}
+
+export const TableView: Story = {
+  name: 'default table view',
+  args: {
+    data: multiSmall,
+    defaultView: 'table',
   },
 }
 

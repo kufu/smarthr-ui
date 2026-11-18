@@ -310,6 +310,7 @@ export const MultiCombobox = <T,>({
     onFocus,
     onBlur,
     onKeyPress,
+    listBoxFunctions,
     disabled,
     isExpanded,
     highlighted,
@@ -364,8 +365,6 @@ export const MultiCombobox = <T,>({
         }
       })
     }
-
-    const handleDelete = listBoxFunctions.handleDelete
 
     const getDeletionButtons = () => {
       if (triggerRef.current) {
@@ -438,7 +437,7 @@ export const MultiCombobox = <T,>({
     }
 
     return {
-      handleDelete,
+      handleDelete: (item: ComboboxItem<T>) => latest.listBoxFunctions.handleDelete(item),
       blur,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         input = node
@@ -449,7 +448,7 @@ export const MultiCombobox = <T,>({
         }
 
         if (!node) {
-          listBoxFunctions.cleanupFrame()
+          latest.listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
           latest.resetFrame.cancel()
@@ -490,7 +489,7 @@ export const MultiCombobox = <T,>({
 
           const lastItem = latest.selectedItems[latest.selectedItems.length - 1]
 
-          handleDelete(lastItem)
+          latest.listBoxFunctions.handleDelete(lastItem)
           setHighlighted(true)
           latest.setInputValueIfUncontrolled(getSelectedLabelText(lastItem))
         } else {
@@ -534,7 +533,7 @@ export const MultiCombobox = <T,>({
         latest.onKeyPress?.(e)
       },
     }
-  }, [listBoxFunctions, latest])
+  }, [latest])
 
   const listBoxCallbackRef = useAreaClickCallbackRef(
     isExpanded ? [triggerRef] : null,

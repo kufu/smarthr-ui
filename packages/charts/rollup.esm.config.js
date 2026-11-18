@@ -15,7 +15,13 @@ const peerDependencies = packageJson.peerDependencies
   : []
 
 const entryPoints = globSync('src/**/*.{ts,tsx}', {
-  ignore: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', '**/__tests__/*.{ts,tsx}', '**/*.d.ts'],
+  ignore: [
+    '**/*.stories.{ts,tsx}',
+    '**/*.test.{ts,tsx}',
+    '**/__tests__/*.{ts,tsx}',
+    '**/__stories__/*.{ts,tsx}',
+    '**/*.d.ts',
+  ],
 })
 
 /** @type {import('rollup').RollupOptions} */

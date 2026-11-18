@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  Fragment,
-  type ReactNode,
-  memo,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, Fragment, type ReactNode, memo, useMemo, useRef, useState } from 'react'
 import {
   FaArrowRotateLeftIcon,
   FaArrowRotateRightIcon,
@@ -415,7 +406,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
   )
 
   // トグルの表示を溢れで決めているのは、押しても何も起きないボタンを見せないため
-  const latest = useLatest({ isWrapped })
+  const latest = useLatest({ isWrapped, editor })
 
   const functions = useMemo(
     () => ({
@@ -436,6 +427,12 @@ export const RichTextEditorToolbar: FC = memo(() => {
           toolbar.clientWidth - (parseFloat(paddingLeft) || 0) - (parseFloat(paddingRight) || 0)
 
         setIsOverflowing(row.scrollWidth > innerWidth)
+      },
+      handleEscape: () => {
+        latest.editor.commands.focus()
+      },
+      handleToggleClick: () => {
+        setIsWrapped((prev) => !prev)
       },
     }),
     [latest],
@@ -473,14 +470,6 @@ export const RichTextEditorToolbar: FC = memo(() => {
     }
   }, [isWrapped, functions])
 
-  const handleEscape = useCallback(() => {
-    editor.commands.focus()
-  }, [editor])
-
-  const handleToggleClick = useCallback(() => {
-    setIsWrapped((prev) => !prev)
-  }, [])
-
   // 区切り線をフォーカス対象に含めないため、ボタンの通し番号は描画前に確定させる。
   // JSX の中でカウンタを進めると描画が副作用を持つため useMemo の中で振る。
   // 順番は DOM 順（段の項目 → トグル）に合わせる。これで左右キーの移動が見た目と一致する。
@@ -510,7 +499,11 @@ export const RichTextEditorToolbar: FC = memo(() => {
   )
 
   const count = disabledFlags.length
-  const { getButtonProps } = useRovingToolbar({ count, disabledKeys, onEscape: handleEscape })
+  const { getButtonProps } = useRovingToolbar({
+    count,
+    disabledKeys,
+    onEscape: functions.handleEscape,
+  })
 
   const toolbarLabel = localize({
     id: 'smarthr-ui/RichTextEditor/toolbarLabel',
@@ -595,7 +588,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
             {...getButtonProps(toggleIndex)}
             disabled={disabled}
             wrapped={isWrapped}
-            handleClick={handleToggleClick}
+            handleClick={functions.handleToggleClick}
           />
         </div>
       )}

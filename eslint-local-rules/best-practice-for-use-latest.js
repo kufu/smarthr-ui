@@ -33,6 +33,10 @@ module.exports = {
         'latestに対してObject.keys/values/entries等を使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
       noForIn:
         'latestに対してfor...inループを使用することはできません。latest.xxxのようにプロパティアクセスしてください。',
+      noEagerCapture:
+        'latest.xxxの値をフックのコールバック直下で変数に代入すると、代入した瞬間の値に固定されます。呼び出し時に毎回最新値を参照できるよう、関数でラップしてください（例: const x = () => latest.yyy() や prop: () => latest.yyy ? a : b のように、もう一段関数を挟む）。',
+      unusedProperty:
+        'useLatestに渡した "{{name}}" はこのファイル内のどこからもlatest.{{name}}として参照されていません。不要なら削除してください。',
     },
     schema: [],
   },
@@ -42,6 +46,12 @@ module.exports = {
 
     // latest.xxxの使用や依存配列の位置チェックを許可するフック名
     const ALLOWED_HOOK_PATTERN = /^use((Layout)?Effect|Callback|Memo|LayoutEffectRef)$/
+
+    // noEagerCaptureチェック専用の対象フック名。useCallbackはコールバック自体が
+    // 呼ばれるたびに本体が再評価されるため、直下でlatest.xxxを変数に代入しても
+    // 呼び出しごとに最新値を取り直すので問題が起きない。依存配列が変わるまで
+    // 本体が再実行されないuseMemo/useEffect/useLayoutEffect/useLayoutEffectRefのみ対象とする
+    const EAGER_CAPTURE_HOOK_PATTERN = /^use((Layout)?Effect|Memo|LayoutEffectRef)$/
 
     /**
      * 識別子が useLatest() 呼び出しに束縛されているかチェック
@@ -109,6 +119,249 @@ module.exports = {
     }
 
     /**
+     * ノードが対象フックのコールバック自身の直接のボディ内にある場合、
+     * そのコールバック関数ノードを返す（コールバック内で定義されたネストした
+     * ローカル関数の中である場合、または対象フックでない場合はnull）
+     */
+    function getDirectHookCallback(node) {
+      let parent = node.parent
+      while (parent) {
+        if (parent.type === 'FunctionDeclaration') {
+          return null
+        }
+        if (parent.type === 'ArrowFunctionExpression' || parent.type === 'FunctionExpression') {
+          const grandParent = parent.parent
+          const isHookCallback =
+            grandParent?.type === 'CallExpression' &&
+            grandParent.callee.type === 'Identifier' &&
+            EAGER_CAPTURE_HOOK_PATTERN.test(grandParent.callee.name) &&
+            grandParent.arguments[0] === parent
+
+          return isHookCallback ? parent : null
+        }
+        parent = parent.parent
+      }
+      return null
+    }
+
+    /**
+     * ノードが、hookCallbackNodeより内側のネストした関数の中にあるかチェックする
+     */
+    function isInsideNestedFunctionRelativeTo(node, hookCallbackNode) {
+      let parent = node.parent
+      while (parent && parent !== hookCallbackNode) {
+        if (
+          parent.type === 'ArrowFunctionExpression' ||
+          parent.type === 'FunctionExpression' ||
+          parent.type === 'FunctionDeclaration'
+        ) {
+          return true
+        }
+        parent = parent.parent
+      }
+      return false
+    }
+
+    /**
+     * ノードが、ReturnStatementの戻り値としてそのまま公開されているかチェックする
+     * (ObjectExpression/ArrayExpressionでラップされているだけの場合も透過して判定する)。
+     * BinaryExpression・CallExpressionの引数等、値が加工される経路は安全とみなし対象外
+     */
+    function isDirectlyReturned(node) {
+      let current = node
+      let parent = current.parent
+
+      while (parent) {
+        if (parent.type === 'ReturnStatement' && parent.argument === current) {
+          return true
+        }
+
+        // 暗黙return: () => ({ ... }) のようにアロー関数の本体が式自体である形
+        if (parent.type === 'ArrowFunctionExpression' && parent.body === current) {
+          return true
+        }
+
+        if (parent.type === 'Property' && parent.value === current) {
+          current = parent
+          parent = current.parent
+          continue
+        }
+
+        if (
+          (parent.type === 'ObjectExpression' && parent.properties.includes(current)) ||
+          (parent.type === 'ArrayExpression' && parent.elements.includes(current))
+        ) {
+          current = parent
+          parent = current.parent
+          continue
+        }
+
+        break
+      }
+
+      return false
+    }
+
+    /**
+     * declaratorNodeで宣言された変数が、hookCallbackNodeより内側のネストした関数
+     * から参照されている、またはReturnStatementの戻り値としてそのまま公開されて
+     * いる場合にtrueを返す（=latestの値を固定キャプチャしてしまう危険な使い方）。
+     * 同じ関数スコープ内でその場の計算にのみ使われている場合はfalse（安全）
+     */
+    function isCapturedVariableUsedUnsafely(declaratorNode, hookCallbackNode) {
+      if (declaratorNode.id.type !== 'Identifier') return true
+
+      const variables = sourceCode.getDeclaredVariables(declaratorNode)
+      const variable = variables.find((v) => v.name === declaratorNode.id.name)
+
+      if (!variable) return true
+
+      for (const reference of variable.references) {
+        if (reference.identifier === declaratorNode.id) continue
+        if (reference.init) continue
+
+        const refNode = reference.identifier
+
+        if (isInsideNestedFunctionRelativeTo(refNode, hookCallbackNode)) {
+          return true
+        }
+
+        if (isDirectlyReturned(refNode)) {
+          return true
+        }
+      }
+
+      return false
+    }
+
+    /**
+     * MemberExpressionのobjectチェーンを辿り、根本の識別子を返す
+     * (例: latest.a.b.c の場合、latest の Identifier ノードを返す)
+     */
+    function getMemberExpressionRoot(node) {
+      let current = node
+      while (current.type === 'MemberExpression') {
+        current = current.object
+      }
+      return current
+    }
+
+    /**
+     * ノードが `xxxRef.current` のような、RefObjectのcurrent参照であることが
+     * 名前から自明なパターンかチェックする。ref自体は不変の参照であり、
+     * currentを読み出した時点の値として扱うのが一般的なReactパターンのため対象外とする
+     */
+    function isRefCurrentAccess(node) {
+      return (
+        node.type === 'MemberExpression' &&
+        !node.computed &&
+        node.property.type === 'Identifier' &&
+        node.property.name === 'current' &&
+        node.object.type === 'MemberExpression' &&
+        !node.object.computed &&
+        node.object.property.type === 'Identifier' &&
+        /Ref$/.test(node.object.property.name)
+      )
+    }
+
+    /**
+     * ノードが「latest起点ですぐに評価される式」かどうかを判定する
+     * (MemberExpression単体、またはcalleeがMemberExpressionであるCallExpression)。
+     * 関数式（ArrowFunctionExpression/FunctionExpression）は評価を遅延するため対象外
+     */
+    function isEagerLatestExpression(node) {
+      if (!node) return false
+
+      const target = node.type === 'CallExpression' ? node.callee : node
+
+      if (target.type !== 'MemberExpression') return false
+
+      if (isRefCurrentAccess(target)) return false
+
+      const root = getMemberExpressionRoot(target)
+      return root.type === 'Identifier' && root.name === 'latest' && isLatestFromUseLatest(root)
+    }
+
+    /**
+     * useLatest({ a, b, c })の引数オブジェクトのキーのうち、同じファイル内のどこからも
+     * latest.xxx（分割代入 const { xxx } = latest を含む）として参照されていないものを
+     * 検知する。computed アクセス（latest[key]）やrest要素での分割代入が見つかった場合は、
+     * 静的に追跡できないため安全側に倒してチェックをスキップする
+     */
+    function reportUnusedLatestProperties(declaratorNode) {
+      const argNode = declaratorNode.init.arguments[0]
+
+      if (!argNode || argNode.type !== 'ObjectExpression') return
+
+      const propertyNodes = []
+
+      for (const prop of argNode.properties) {
+        if (prop.type !== 'Property' || prop.computed || prop.key.type !== 'Identifier') {
+          // SpreadElementや算出プロパティ名が含まれる場合は安全側に倒してスキップ
+          return
+        }
+        propertyNodes.push(prop)
+      }
+
+      const variables = sourceCode.getDeclaredVariables(declaratorNode)
+      const variable = variables.find((v) => v.name === 'latest')
+
+      if (!variable) return
+
+      const usedNames = new Set()
+
+      for (const reference of variable.references) {
+        if (reference.identifier === declaratorNode.id) continue
+
+        const refNode = reference.identifier
+        const parent = refNode.parent
+
+        if (parent.type === 'MemberExpression' && parent.object === refNode) {
+          if (parent.computed || parent.property.type !== 'Identifier') {
+            // latest[key]のような動的アクセスは静的に追跡できないため安全側に倒す
+            return
+          }
+          usedNames.add(parent.property.name)
+          continue
+        }
+
+        if (
+          parent.type === 'VariableDeclarator' &&
+          parent.init === refNode &&
+          parent.id.type === 'ObjectPattern'
+        ) {
+          for (const property of parent.id.properties) {
+            if (property.type === 'RestElement') {
+              // rest要素(...rest)があると、どのキーが使われるか静的に追跡できないため安全側に倒す
+              return
+            }
+            if (property.type !== 'Property') continue
+            if (property.computed) {
+              // const { [key]: x } = latest のような動的キーは静的に追跡できないため安全側に倒す
+              return
+            }
+            if (property.key.type === 'Identifier') {
+              usedNames.add(property.key.name)
+            } else if (property.key.type === 'Literal' && typeof property.key.value === 'string') {
+              usedNames.add(property.key.value)
+            }
+          }
+          continue
+        }
+      }
+
+      for (const prop of propertyNodes) {
+        if (!usedNames.has(prop.key.name)) {
+          context.report({
+            node: prop,
+            messageId: 'unusedProperty',
+            data: { name: prop.key.name },
+          })
+        }
+      }
+    }
+
+    /**
      * ノードが依存配列内にあるかチェック
      */
     function isInsideDependencyArray(node) {
@@ -142,6 +395,17 @@ module.exports = {
           node.init.callee.type !== 'Identifier' ||
           node.init.callee.name !== 'useLatest'
         ) {
+          // フックのコールバック直下で、latest.xxxの値をそのまま変数に代入していないかチェック
+          if (node.init && isEagerLatestExpression(node.init)) {
+            const hookCallbackNode = getDirectHookCallback(node)
+
+            if (hookCallbackNode && isCapturedVariableUsedUnsafely(node, hookCallbackNode)) {
+              context.report({
+                node: node.init,
+                messageId: 'noEagerCapture',
+              })
+            }
+          }
           return
         }
 
@@ -159,6 +423,26 @@ module.exports = {
           context.report({
             node: node.id,
             messageId: 'invalidVariableName',
+          })
+          return
+        }
+
+        // useLatestに渡したが、どこからも参照されていないプロパティをチェック
+        reportUnusedLatestProperties(node)
+      },
+
+      // 1.5. 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxxを公開していないかチェック
+      // (例: return { onXxxx: latest.onXxxx }。constに代入する場合と同じ危険性を持つ)
+      Property(node) {
+        if (!node.value) return
+        if (!isEagerLatestExpression(node.value)) return
+
+        const hookCallbackNode = getDirectHookCallback(node)
+
+        if (hookCallbackNode && isDirectlyReturned(node.value)) {
+          context.report({
+            node: node.value,
+            messageId: 'noEagerCapture',
           })
         }
       },

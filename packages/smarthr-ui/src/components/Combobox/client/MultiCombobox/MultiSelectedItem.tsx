@@ -80,30 +80,26 @@ const EXEC_DESTROY_KEY = /^(Enter|Backspace| )$/
 
 export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDelete }: Props<T>) {
   const itemDeletable = item.deletable ?? true
-  const latest = useLatest({ handleDelete, item })
+  const latest = useLatest({ handleDelete, item, itemDeletable })
 
   const functions = useMemo(
-    () =>
-      itemDeletable
-        ? {
-            handleDestroyClick: () => {
-              latest.handleDelete(latest.item)
-            },
-            handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
-              if (EXEC_DESTROY_KEY.test(e.key)) {
-                e.stopPropagation()
+    () => ({
+      handleDestroyClick: () => {
+        if (latest.itemDeletable) {
+          latest.handleDelete(latest.item)
+        }
+      },
+      handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
+        if (latest.itemDeletable && EXEC_DESTROY_KEY.test(e.key)) {
+          e.stopPropagation()
 
-                // HINT: イベントの伝播が止まる関係でonClickに設定したhandleDeleteは実行されない
-                // このタイミングで明示的に削除処理を実行する
-                latest.handleDelete(latest.item)
-              }
-            },
-          }
-        : {
-            handleDestroyClick: undefined,
-            handleDestroyKeyDown: undefined,
-          },
-    [itemDeletable, latest],
+          // HINT: イベントの伝播が止まる関係でonClickに設定したhandleDeleteは実行されない
+          // このタイミングで明示的に削除処理を実行する
+          latest.handleDelete(latest.item)
+        }
+      },
+    }),
+    [latest],
   )
 
   const Component = enableEllipsis ? EllipsisMultiSelectedItem : ActualMultiSelectedItem
@@ -124,8 +120,8 @@ type LowerMultiSelectedItemProps<T> = Omit<Props<T>, 'item' | 'enableEllipsis' |
   itemLabel: ComboboxItem<T>['label']
   itemDeletable: boolean
   functions: {
-    handleDestroyClick?: () => void
-    handleDestroyKeyDown?: (e: KeyboardEvent<HTMLButtonElement>) => void
+    handleDestroyClick: () => void
+    handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void
   }
   classNames: {
     wrapper: string
