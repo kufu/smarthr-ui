@@ -13,6 +13,21 @@ describe('Text', () => {
   })
 
   describe('maxLines', () => {
+    test.each([1, { max: 1, tooltip: true }] as const)(
+      '%j を指定した場合、親の幅は上限としてのみ使う',
+      (maxLines) => {
+        const ref = createRef<HTMLSpanElement>()
+        render(
+          <Text ref={ref} maxLines={maxLines}>
+            短い文章
+          </Text>,
+        )
+
+        expect(ref.current).toHaveClass('shr-max-w-full')
+        expect(ref.current).not.toHaveClass('shr-w-full')
+      },
+    )
+
     test('number を指定した場合、Tooltip 関連の要素は追加されない', () => {
       const { container } = render(<Text maxLines={3}>テキスト</Text>)
 
