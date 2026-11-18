@@ -81,7 +81,7 @@ export const Switch: FC<Props> = ({
   }, [className])
 
   return (
-    <Cluster inline align="center" className="shr-relative">
+    <Cluster as="span" inline align="center" className="shr-relative">
       <MemoizedLabel htmlFor={inputId} unrecommendedLabelHidden={unrecommendedLabelHidden}>
         {children}
       </MemoizedLabel>
