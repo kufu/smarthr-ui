@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  type FC,
-  type KeyboardEvent,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type FC, type KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { FaCaretDownIcon } from 'smarthr-ui'
 
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
@@ -150,7 +141,15 @@ export const ColorPickerButton: FC<Props> = memo(
     const [recentColors, setRecentColors] = useState<string[]>([])
     const [customColor, setCustomColor] = useState<string>(defaultColor)
 
-    const latest = useLatest({ attribute, defaultColor, onKeyDown: onKeyDownProp })
+    const latest = useLatest({
+      editor,
+      attribute,
+      defaultColor,
+      onKeyDown: onKeyDownProp,
+      setIsOpen,
+      localize,
+      messages,
+    })
 
     const functions = useMemo(
       () => ({
@@ -162,10 +161,10 @@ export const ColorPickerButton: FC<Props> = memo(
           })
         },
         handleApplyColor: (hex: string) => {
-          setEditorColor(editor, latest.attribute, hex)
+          setEditorColor(latest.editor, latest.attribute, hex)
         },
         handleUnsetColor: () => {
-          setEditorColor(editor, latest.attribute, null)
+          setEditorColor(latest.editor, latest.attribute, null)
         },
         handleTriggerKeyDown: (e: KeyboardEvent) => {
           switch (e.key) {
@@ -174,7 +173,7 @@ export const ColorPickerButton: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(true)
+              latest.setIsOpen(true)
               requestAnimationFrame(() => {
                 paletteRef.current
                   ?.querySelector<HTMLButtonElement>('[data-color-swatch="standard"]')
@@ -185,8 +184,12 @@ export const ColorPickerButton: FC<Props> = memo(
               latest.onKeyDown?.(e)
           }
         },
+        customSwatchLabel: (color: string) =>
+          latest.localize(latest.messages.customSwatch, { color }),
+        recentSwatchLabel: (color: string) =>
+          latest.localize(latest.messages.recentSwatch, { color }),
       }),
-      [editor, setIsOpen, latest],
+      [latest],
     )
 
     useEffect(() => {
@@ -202,15 +205,6 @@ export const ColorPickerButton: FC<Props> = memo(
     const recentSectionLabel = localize(messages.recentSection)
     const editButtonLabel = localize(messages.editButton)
     const unsetLabel = localize(messages.unset)
-    const customSwatchLabel = useCallback(
-      (color: string) => localize(messages.customSwatch, { color }),
-      [localize, messages],
-    )
-    const recentSwatchLabel = useCallback(
-      (color: string) => localize(messages.recentSwatch, { color }),
-      [localize, messages],
-    )
-
     const normalizedCurrentColor =
       currentColor === null ? null : normalizeHex(currentColor, defaultColor)
     const matchedColor = colors.find(
@@ -265,8 +259,8 @@ export const ColorPickerButton: FC<Props> = memo(
             recentSectionLabel={recentSectionLabel}
             editButtonLabel={editButtonLabel}
             resetButtonLabel={resetLabel}
-            customSwatchLabel={customSwatchLabel}
-            recentSwatchLabel={recentSwatchLabel}
+            customSwatchLabel={functions.customSwatchLabel}
+            recentSwatchLabel={functions.recentSwatchLabel}
             setIsOpen={setIsOpen}
             setCustomColor={setCustomColor}
             handleApplyColor={functions.handleApplyColor}

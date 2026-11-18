@@ -27,6 +27,12 @@ auditConfig:
     # マージにのみ使用しており、HTTPリクエスト等の動的な外部入力を直接扱わないためignoreする。
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
+    # HINT: picomatch@<=4.0.7 のReDoS(CVSS 8.7、high)。修正版は未リリース。
+    # tailwindcss@3 系が chokidar / micromatch / fast-glob 経由で依存しており、braces と同様
+    # 設定ファイルの content に書いた glob パターンの展開にのみ使用する。開発者が静的に書いた
+    # パターンのみを扱い、HTTPリクエスト等の外部入力を直接処理しないためignoreする。
+    # picomatch の修正版がリリースされるか、tailwindcss v4 へ移行したタイミングで削除する
+    - GHSA-fc5q-39xc-vjpf
 minimumReleaseAgeExclude:
   # eslint-config-smarthr@14.16.0とその依存のeslint-plugin-smarthr@6.30.0: ユーザー指示により
   # minimumReleaseAge(7日)の待機を一時解除する(7日経過後にこのエントリ自体は削除可)

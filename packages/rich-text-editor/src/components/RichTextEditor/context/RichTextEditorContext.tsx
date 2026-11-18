@@ -57,9 +57,6 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const acceptedMimeTypesKey = acceptedMimeTypes?.join(',')
   const hasImageUpload = Boolean(onImageUpload)
   const latest = useLatest({
-    features,
-    headingLevels,
-    acceptedMimeTypes,
     onImageUpload,
     onImageUploadError,
   })
@@ -67,15 +64,15 @@ export const RichTextEditorProvider: FC<ProviderProps> = ({
   const value = useMemo<RichTextEditorContextValue>(
     () => ({
       editor,
-      features: latest.features,
-      headingLevels: latest.headingLevels,
+      features,
+      headingLevels,
       disabled,
       hasImageUpload,
       getImageUploadHandlers: () => ({
         onImageUpload: latest.onImageUpload,
         onImageUploadError: latest.onImageUploadError,
       }),
-      acceptedMimeTypes: latest.acceptedMimeTypes,
+      acceptedMimeTypes,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [editor, disabled, featuresKey, headingLevelsKey, acceptedMimeTypesKey, hasImageUpload, latest],

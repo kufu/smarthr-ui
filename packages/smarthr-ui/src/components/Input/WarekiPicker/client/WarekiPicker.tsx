@@ -212,8 +212,6 @@ export const WarekiPicker: FC<Props> = ({
     onChange,
     parseInput,
     formatDate,
-    showAlternative,
-    locale,
     onBlur,
     isInputFocused,
     selectedDate,
