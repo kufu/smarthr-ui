@@ -124,14 +124,6 @@ export function useToolbarDropdown({
 
   const latest = useLatest({ origin, isChildPortal })
 
-  const setIsOpen = useCallback<Dispatch<SetStateAction<boolean>>>((action) => {
-    setOrigin((prev) => {
-      const next = typeof action === 'function' ? action(prev !== null) : action
-
-      return next ? TRIGGER_ORIGIN : null
-    })
-  }, [])
-
   const functions = useMemo(() => {
     const restoreFocus = () => {
       const current = latest.origin
@@ -141,6 +133,13 @@ export function useToolbarDropdown({
     }
 
     return {
+      setIsOpen: (action: SetStateAction<boolean>) => {
+        setOrigin((prev) => {
+          const next = typeof action === 'function' ? action(prev !== null) : action
+
+          return next ? TRIGGER_ORIGIN : null
+        })
+      },
       openFrom: (anchor: DropdownAnchor) => setOrigin({ ...anchor, type: 'anchor' }),
       restoreFocus,
       // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
@@ -363,7 +362,7 @@ export function useToolbarDropdown({
 
   return {
     isOpen,
-    setIsOpen,
+    setIsOpen: functions.setIsOpen,
     openFrom: functions.openFrom,
     restoreFocus: functions.restoreFocus,
     triggerRef,
