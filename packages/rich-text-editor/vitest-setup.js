@@ -61,3 +61,16 @@ global.IntersectionObserver = class IntersectionObserver {
     return []
   }
 }
+
+// jsdom は実際のマウス位置を追跡できないため、本来 :hover は常にマッチしない。
+// ToolbarTooltip 等は pointerenter/leave の状態と :hover の両方を見て「実際にまだ
+// マウスが乗っているか」を判定しており、:hover が常に false だとテストで検証できない。
+// jsdom v30以前は逆に :hover が常に true を返すバグ的挙動だったため、それに合わせて
+// 固定する(pointerenter/leave 側の状態のみで判定されるのと実質同じになる)
+if (typeof Element !== 'undefined') {
+  const originalMatches = Element.prototype.matches
+  Element.prototype.matches = function matches(selector) {
+    if (selector === ':hover') return true
+    return originalMatches.call(this, selector)
+  }
+}
