@@ -12,8 +12,8 @@ type Props = ExtendElementPropsWithoutRef<
   }
 >
 
-export const TableScroller: FC<Props> = ({ children, fixedHead, rounded, ...rest }) => (
-  <ScrollerSwitcher {...rest} fixedHead={fixedHead} rounded={rounded}>
+export const TableScroller: FC<Props> = ({ children, fixedHead, ...rest }) => (
+  <ScrollerSwitcher {...rest} fixedHead={fixedHead}>
     {children}
   </ScrollerSwitcher>
 )
