@@ -318,6 +318,7 @@ const Controller: FC<ControllerProps> = memo(
         className="shr-grow shr-basis-[calc((45em_-_100%)*999)]"
         aria-hidden="true"
       />
+      {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち) */}
       <Cluster
         inline
         className="shr-grow shr-basis-[calc((45em_-_100%)*999)] shr-items-center shr-justify-center shr-justify-self-center shr-py-0.5"
