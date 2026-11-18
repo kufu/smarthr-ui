@@ -57,6 +57,10 @@ export const ImageViewer: FC<ViewerProps> = memo(
       }
     }, [latest])
 
+    // callbackRefはdetach/attachされてもnodeは変わらず実害が無いため、依存配列変化時に
+    // ref参照ごと差し替えて再アタッチさせる軽量な手段としてuseCallbackを意図的に使っている。
+    // useLayoutEffectRefはuseRef+useLayoutEffectを使う分この用途には重く、不要
+    // eslint-disable-next-line local-rules/best-practice-for-functions-deps
     const callbackRef = useCallback(
       (node: HTMLImageElement | null) => {
         if (node) {

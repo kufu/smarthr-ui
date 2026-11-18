@@ -56,7 +56,7 @@ type Props = (({ elementAs: 'a' } & AnchorProps) | ({ elementAs: 'button' } & Bu
 
 export const CommonButton = memo<Props>(
   ({ elementAs, prefix, current, boldWhenCurrent, className, children, handleClick, ...rest }) => {
-    const hasPrefix = !!prefix
+    const hasPrefix = Boolean(prefix)
 
     const actualClassName = useMemo(
       () =>
@@ -79,7 +79,7 @@ export const CommonButton = memo<Props>(
             onClick={handleClick as AnchorProps['handleClick']}
           >
             {prefix}
-            {children}
+            <span>{children}</span>
           </a>
         )
       case 'button':
@@ -91,7 +91,7 @@ export const CommonButton = memo<Props>(
             onClick={handleClick as ButtonProps['handleClick']}
           >
             {prefix}
-            {children}
+            <span>{children}</span>
           </button>
         )
     }

@@ -1,8 +1,8 @@
 'use client'
 
 import {
+  type ComponentPropsWithRef,
   type FC,
-  type PropsWithChildren,
   type ReactNode,
   memo,
   useId,
@@ -14,35 +14,39 @@ import { tv } from 'tailwind-variants'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
-import { Heading, type HeadingTagTypes } from '../../Heading'
+import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon, StatusIcon } from '../../Icon'
-import { Sidebar } from '../../Layout'
-import { Panel, type PanelElementProps } from '../../Panel'
+import { Cluster } from '../../Layout'
+import { Panel } from '../../Panel'
+
+import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectHeadingType = {
   text: ReactNode
   /**
    * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってInformationPanel全体を囲むことで、InformationPanelのheadingのレベルを調整する方法を検討してください
    */
-  unrecommendedTag?: HeadingTagTypes
+  unrecommendedTag?: ComponentPropsWithRef<typeof Heading>['unrecommendedTag']
 }
 type HeadingType = ReactNode | ObjectHeadingType
-type BaseProps = PropsWithChildren<{
-  /** パネルのタイトル */
-  heading: HeadingType
-  /** `true` のとき、開閉ボタンを表示する */
-  toggleable?: boolean
-  /** `true` のとき、パネルを開く */
-  active?: boolean
-  /** 開閉ボタン押下時に発火するコールバック関数 */
-  onClickTrigger?: (active: boolean) => void
-  /** パネルの種類 */
-  type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
-  /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
-  bold?: boolean
-}>
 
-type Props = BaseProps & Omit<PanelElementProps, keyof BaseProps>
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    /** パネルのタイトル */
+    heading: HeadingType
+    /** `true` のとき、開閉ボタンを表示する */
+    toggleable?: boolean
+    /** `true` のとき、パネルを開く */
+    active?: boolean
+    /** 開閉ボタン押下時に発火するコールバック関数 */
+    onClickTrigger?: (active: boolean) => void
+    /** パネルの種類 */
+    type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
+    /** `true` のとき、ヘッダー部分の背景を`type`に応じた色で塗りつぶして強調する（`type`が`info`/`sync`の場合は見た目の変化なし） */
+    bold?: boolean
+  }
+>
 
 const headingObjectConverter = (text: ReactNode) => ({ text })
 
@@ -76,7 +80,7 @@ const classNameGenerator = tv({
       warning: {},
       error: {},
       sync: {},
-    } satisfies Record<NonNullable<BaseProps['type']>, Record<string, never>>,
+    } satisfies Record<NonNullable<Props['type']>, Record<string, never>>,
     bold: {
       true: {
         header: 'shr-py-1',
@@ -150,24 +154,21 @@ export const InformationPanel: FC<Props> = ({
       heading: headingClassName,
       toggleableButton,
       content,
-    } = classNameGenerator({
-      type,
-      bold,
-    })
+    } = classNameGenerator()
+    const variantProps = { type, bold }
 
     return {
       wrapper: wrapper({ className }),
-      header: header(),
-      heading: headingClassName(),
+      header: header(variantProps),
+      heading: headingClassName(variantProps),
       toggleableButton: toggleableButton(),
-      content: content(),
+      content: content(variantProps),
     }
   }, [type, bold, className])
 
   return (
     <Panel {...rest} as="section" className={classNames.wrapper} data-active={active}>
-      <Sidebar align="baseline" right className={classNames.header}>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+      <Cluster align="baseline" grow="start" gap={1} className={classNames.header}>
         <MemoizedHeading
           type={type}
           id={`${id}-heading`}
@@ -182,7 +183,7 @@ export const InformationPanel: FC<Props> = ({
             onClick={() => (onClickTrigger ? onClickTrigger(active) : setActive(!active))}
           />
         )}
-      </Sidebar>
+      </Cluster>
       <div id={contentId} className={classNames.content} aria-hidden={!active}>
         {children}
       </div>

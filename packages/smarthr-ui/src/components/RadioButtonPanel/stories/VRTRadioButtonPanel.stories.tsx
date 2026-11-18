@@ -55,7 +55,7 @@ export const VRT: StoryObj<typeof RadioButtonPanel> = {
   },
 }
 
-export const VRTForcedColors: StoryObj = {
+export const VRTForcedColors: StoryObj<typeof RadioButtonPanel> = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },

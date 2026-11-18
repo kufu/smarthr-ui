@@ -1,6 +1,6 @@
 import { darken } from 'polished'
 
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 import { type ColorProperty, defaultColor } from './createColor'
 

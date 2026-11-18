@@ -43,6 +43,7 @@ const classNameGenerator = tv({
 
 const CLASS_NAMES = {
   new: classNameGenerator({ new: true }),
+
   select: classNameGenerator({ new: false }),
 }
 

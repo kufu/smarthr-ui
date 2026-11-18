@@ -1,7 +1,5 @@
-import { Text } from 'smarthr-ui'
+import { Stack, Text } from 'smarthr-ui'
 
-// eslint-disable-next-line smarthr/require-barrel-import
-import { Stack } from '../../../../smarthr-ui/src/components/Layout'
 import { doughnutSingleSegment, doughnutSmall, doughnutWithZero } from '../__stories__/testData'
 
 import { DoughnutChart } from './DoughnutChart'
@@ -64,6 +62,11 @@ export default {
             1,200人
           </Text>
         </DoughnutChart>
+      </div>
+
+      {/* パターン10: テーブル表示（defaultView='table'） */}
+      <div className="shr-h-[400px]">
+        <DoughnutChart data={doughnutSmall} defaultView="table" title="テーブル表示" />
       </div>
     </Stack>
   ),

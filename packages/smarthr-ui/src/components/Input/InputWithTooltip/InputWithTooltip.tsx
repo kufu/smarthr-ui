@@ -1,26 +1,24 @@
-import { type ComponentProps, type FC, type ReactNode, type Ref, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Tooltip } from '../../Tooltip'
 import { Input } from '../client'
 
-type Props = Omit<ComponentProps<typeof Input>, 'ref'> & {
-  /** 入力欄に紐付けるツールチップに表示するメッセージ */
-  tooltipMessage: ReactNode
-  outerRef?: Ref<HTMLInputElement>
-}
+import type { ExtendElementPropsWithRef } from '../../../types'
+
+type Props = ExtendElementPropsWithRef<
+  typeof Input,
+  {
+    /** 入力欄に紐付けるツールチップに表示するメッセージ */
+    tooltipMessage: ReactNode
+  }
+>
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-InputWithTooltip [&]:shr-overflow-y-visible',
 })
 
-export const InputWithTooltip: FC<Props> = ({
-  tooltipMessage,
-  width,
-  className,
-  outerRef,
-  ...rest
-}) => {
+export const InputWithTooltip: FC<Props> = ({ tooltipMessage, width, className, ...rest }) => {
   const style = {
     width: typeof width === 'number' ? `${width}px` : width,
   }
@@ -31,7 +29,7 @@ export const InputWithTooltip: FC<Props> = ({
     // eslint-disable-next-line smarthr/a11y-scroller-has-tabindex
     <Tooltip tabIndex={-1} className={actualClassName} style={style} message={tooltipMessage}>
       {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
-      <Input {...rest} ref={outerRef} width={style.width} />
+      <Input {...rest} width={style.width} />
     </Tooltip>
   )
 }

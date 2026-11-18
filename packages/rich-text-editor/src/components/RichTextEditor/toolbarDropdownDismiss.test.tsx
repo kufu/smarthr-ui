@@ -1,0 +1,189 @@
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { EnvironmentProvider, IntlProvider } from 'smarthr-ui'
+import { describe, expect, it, vi } from 'vitest'
+
+import { RichTextEditor } from './RichTextEditor/RichTextEditor'
+import { ALL_FEATURES } from './extensions/configureExtensions'
+
+import type { ReactNode } from 'react'
+
+const Wrapper = ({ children }: { children: ReactNode }) => (
+  <IntlProvider locale="ja">
+    <EnvironmentProvider>{children}</EnvironmentProvider>
+  </IntlProvider>
+)
+
+const renderEditor = async () => {
+  render(<RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />, {
+    wrapper: Wrapper,
+  })
+  await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+}
+
+// ツールバーの全トリガーは並べない。書式・フォントサイズ・行送り・テキスト配置は ToolbarListboxDropdown、
+// 文字色・背景色は ColorPickerButton の同じ閉じる処理を通るため、部品ごとの代表だけを確かめる
+const DISTINCT_TRIGGERS = [
+  /^段落スタイル:/,
+  /^文字色:/,
+  /^リンク/,
+  /^表を挿入/,
+  /^YouTube動画を埋め込む/,
+  /^画像を挿入/,
+]
+
+const getTrigger = (name: RegExp) => screen.getByRole('button', { name })
+
+const openByClick = async (user: ReturnType<typeof userEvent.setup>, name: RegExp) => {
+  await user.click(getTrigger(name))
+  expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'true')
+  // マウスで開いた直後の状態を作る。入力欄を持つポップオーバーは次のフレームで
+  // 入力欄へフォーカスを移すため、それを待ってからトリガーへ戻す
+  await act(() => new Promise((resolve) => requestAnimationFrame(resolve)))
+  getTrigger(name).focus()
+}
+
+describe('ツールバーのドロップダウンを閉じる操作', () => {
+  it.each(DISTINCT_TRIGGERS)(
+    '%s: トリガー上の Escape で閉じ、フォーカスはトリガーに残る',
+    async (name) => {
+      const user = userEvent.setup()
+      await renderEditor()
+
+      await openByClick(user, name)
+      await user.keyboard('{Escape}')
+
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    },
+  )
+
+  it.each(DISTINCT_TRIGGERS)('%s: トリガーをもう一度クリックすると閉じる', async (name) => {
+    const user = userEvent.setup()
+    await renderEditor()
+
+    await openByClick(user, name)
+    await user.click(getTrigger(name))
+
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it.each(DISTINCT_TRIGGERS)('%s: 開いたまま disabled になると閉じる', async (name) => {
+    const user = userEvent.setup()
+    const { rerender } = render(
+      <RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    await openByClick(user, name)
+    rerender(<RichTextEditor disabled features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
+
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('disabled になると入力途中のリンクを適用できなくなり、有効に戻しても入力値は残らない', async () => {
+    const user = userEvent.setup()
+    const { rerender } = render(
+      <RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(screen.getByRole('textbox')).toBeInTheDocument())
+
+    await openByClick(user, /^リンク/)
+    await user.type(screen.getByRole('textbox', { name: /^URL/ }), 'https://example.com')
+    rerender(<RichTextEditor disabled features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
+
+    expect(screen.queryByRole('button', { name: '適用' })).not.toBeInTheDocument()
+
+    rerender(<RichTextEditor features={[...ALL_FEATURES]} onImageUpload={vi.fn()} />)
+    await user.click(getTrigger(/^リンク/))
+
+    expect(screen.getByRole('textbox', { name: /^URL/ })).toHaveValue('')
+  })
+
+  describe.each([/^リンク/, /^表を挿入/, /^YouTube動画を埋め込む/])('%s のフォーム', (name) => {
+    it('末尾から Tab で閉じてトリガーへ戻る', async () => {
+      const user = userEvent.setup()
+      await renderEditor()
+      await openByClick(user, name)
+
+      within(screen.getByRole('dialog'))
+        .getAllByRole('button')
+        .filter((button) => !(button as HTMLButtonElement).disabled)
+        .at(-1)!
+        .focus()
+      await user.tab()
+
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    })
+
+    it('先頭から Shift+Tab で閉じてトリガーへ戻る', async () => {
+      const user = userEvent.setup()
+      await renderEditor()
+      await openByClick(user, name)
+
+      screen.getByRole('dialog').querySelector('input')!.focus()
+      await user.tab({ shift: true })
+
+      expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+      expect(getTrigger(name)).toHaveFocus()
+    })
+  })
+
+  it('閉じたあとの Escape はツールバーから本文へ戻す', async () => {
+    const user = userEvent.setup()
+    await renderEditor()
+
+    await openByClick(user, /^段落スタイル:/)
+    await user.keyboard('{Escape}')
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(screen.getByRole('textbox')).toHaveFocus())
+  })
+
+  it.each(DISTINCT_TRIGGERS)('%s: 矢印キーで隣のボタンへ移ると閉じる', async (name) => {
+    const user = userEvent.setup()
+    await renderEditor()
+
+    await openByClick(user, name)
+    await user.keyboard('{ArrowRight}')
+
+    expect(getTrigger(name)).not.toHaveFocus()
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('選択肢で Tab を押すと閉じてトリガーへ戻る', async () => {
+    const name = /^段落スタイル:/
+    const user = userEvent.setup()
+    await renderEditor()
+
+    getTrigger(name).focus()
+    await user.keyboard('{Enter}')
+    const option = await screen.findByRole('option', { selected: true })
+    await waitFor(() => expect(option).toHaveFocus())
+
+    const notPrevented = fireEvent.keyDown(option, { key: 'Tab' })
+
+    expect(notPrevented).toBe(false)
+    expect(getTrigger(name)).toHaveAttribute('aria-expanded', 'false')
+    expect(getTrigger(name)).toHaveFocus()
+  })
+
+  it('画像の挿入メニューで Tab を押すと閉じてトリガーへ戻る', async () => {
+    const user = userEvent.setup()
+    await renderEditor()
+
+    getTrigger(/^画像を挿入/).focus()
+    await user.keyboard('{Enter}')
+    const item = await screen.findByRole('menuitem', { name: 'ファイルを選択' })
+    await waitFor(() => expect(item).toHaveFocus())
+
+    const notPrevented = fireEvent.keyDown(item, { key: 'Tab' })
+
+    expect(notPrevented).toBe(false)
+    expect(getTrigger(/^画像を挿入/)).toHaveAttribute('aria-expanded', 'false')
+    expect(getTrigger(/^画像を挿入/)).toHaveFocus()
+  })
+})

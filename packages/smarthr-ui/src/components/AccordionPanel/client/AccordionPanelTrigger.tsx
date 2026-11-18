@@ -5,7 +5,6 @@ import {
   type FC,
   type KeyboardEventHandler,
   type MouseEvent,
-  type PropsWithChildren,
   memo,
   useContext,
   useMemo,
@@ -13,24 +12,33 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude } from '../../../libs/map'
-import { Heading, type HeadingTagTypes } from '../../Heading'
+import { Heading } from '../../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../../Icon'
 import { Cluster } from '../../Layout'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-import type { TextProps } from '../../Text'
+import type { ExtendElementPropsWithoutRef } from '../../../types'
+import type { Text } from '../../Text'
 
-type BaseProps = PropsWithChildren<{
-  /** ヘッダ部分のテキストのスタイル */
-  headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
-  /**
-   * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
-   */
-  unrecommendedHeadingTag?: HeadingTagTypes
-}>
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'button'>, keyof BaseProps>
+type TextProps = ComponentPropsWithoutRef<typeof Text>
+type HeadingProps = ComponentPropsWithoutRef<typeof Heading>
+
+type Props = ExtendElementPropsWithoutRef<
+  'button',
+  {
+    /** ヘッダ部分のテキストのスタイル */
+    headingType?: Exclude<TextProps['styleType'], 'screenTitle'>
+    /**
+     * 可能な限り利用せず、SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定する方法を検討してください
+     */
+    unrecommendedHeadingTag?: HeadingProps['unrecommendedTag']
+  },
+  {
+    omit: 'type' | 'id' | 'value' | 'aria-expanded' | 'aria-controls' | 'onClick' | 'onKeyDown'
+  }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -101,26 +109,24 @@ export const AccordionPanelTrigger: FC<Props> = ({
 }
 
 const MemoizedHeadingButton = memo<
-  PropsWithChildren<
-    Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'onKeyDown'> & {
-      name: string
-      triggerId: string
-      isExpanded: boolean
-      contentId: string
-      handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
-      handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
-      classNames: {
-        button: string
-        titleWrapper: string
-        leftIcon: string
-        rightIcon: string
-        title: string
-      }
-      iconPosition: 'left' | 'right'
-      headingType: Exclude<TextProps['styleType'], 'screenTitle'>
-      unrecommendedHeadingTag?: HeadingTagTypes
+  Omit<ComponentPropsWithoutRef<'button'>, 'onClick' | 'onKeyDown'> & {
+    name: string
+    triggerId: string
+    isExpanded: boolean
+    contentId: string
+    handleClickTrigger: (e: MouseEvent<HTMLButtonElement>) => void
+    handleKeyDown: KeyboardEventHandler<HTMLButtonElement>
+    classNames: {
+      button: string
+      titleWrapper: string
+      leftIcon: string
+      rightIcon: string
+      title: string
     }
-  >
+    iconPosition: 'left' | 'right'
+    headingType: Exclude<TextProps['styleType'], 'screenTitle'>
+    unrecommendedHeadingTag?: HeadingProps['unrecommendedTag']
+  }
 >(
   ({
     children,

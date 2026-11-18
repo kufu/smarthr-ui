@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { useArgs } from 'storybook/preview-api'
 
+import { Button } from '../../../../Button'
 import { FaCirclePlusIcon } from '../../../../Icon'
 import { Stack } from '../../../../Layout'
 import { SingleCombobox } from '../SingleCombobox'
@@ -59,6 +59,8 @@ export const defaultItems = {
         <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
       </Stack>
     ),
+    labelText:
+      'アイテムのラベルがReactNodeの場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     value: 'value-7',
     data: {
       option: 'アイテムのラベルがReactNodeの場合',
@@ -73,11 +75,19 @@ export default {
   component: SingleCombobox,
   render: (args) => {
     const [, setArgs] = useArgs()
+    const { selectedItem } = args
+
     return (
       <SingleCombobox
         {...args}
-        onClearClick={() => setArgs({ selectedItem: null })}
-        onSelect={(item) => setArgs({ selectedItem: item.data?.option })}
+        onClearClick={
+          selectedItem !== undefined ? () => setArgs({ selectedItem: null }) : undefined
+        }
+        onSelect={
+          selectedItem !== undefined
+            ? (item) => setArgs({ selectedItem: item.data?.option })
+            : undefined
+        }
       />
     )
   },
@@ -95,7 +105,7 @@ export default {
       options: Object.keys(defaultItems),
       mapping: defaultItems,
     },
-    defaultItem: {
+    emptySelectionFallbackItem: {
       control: { type: 'select' },
       options: Object.keys(defaultItems),
       mapping: defaultItems,
@@ -130,26 +140,17 @@ export const SelectedItem: StoryObj<typeof SingleCombobox> = {
 }
 
 export const DefaultItem: StoryObj<typeof SingleCombobox> = {
-  name: 'defaultItem',
-  render: (args) => {
-    const [selectItem, setSelectItem] = useState(args.defaultItem)
-    return (
-      <SingleCombobox
-        {...args}
-        selectedItem={selectItem ?? null}
-        onSelect={(item) => setSelectItem(item)}
-      />
-    )
-  },
+  name: 'emptySelectionFallbackItem',
   args: {
-    defaultItem: defaultItems['option 4'],
+    selectedItem: undefined,
+    emptySelectionFallbackItem: defaultItems['option 4'],
   },
 }
 
 export const Prefix: StoryObj<typeof SingleCombobox> = {
   name: 'prefix',
   render: (args) => (
-    <Stack gap={1}>
+    <Stack>
       <SingleCombobox {...args} prefix={prefixes['なし']} />
       <SingleCombobox {...args} prefix={prefixes['あり']} />
     </Stack>
@@ -189,6 +190,13 @@ export const IsLoading: StoryObj<typeof SingleCombobox> = {
   name: 'isLoading',
   args: {
     isLoading: true,
+  },
+}
+
+export const IsFilteringDisabled: StoryObj<typeof SingleCombobox> = {
+  name: 'disableFiltering',
+  args: {
+    disableFiltering: true,
   },
 }
 
@@ -233,4 +241,36 @@ export const NoResultText: StoryObj<typeof SingleCombobox> = {
     items: [],
     noResultText: '該当する商品が見つかりません',
   },
+}
+
+export const FormReset: StoryObj<typeof SingleCombobox> = {
+  name: 'form.reset()の挙動確認(非制御)',
+  render: () => (
+    <form>
+      <Stack>
+        <SingleCombobox
+          name="single_combobox_reset_demo"
+          defaultSelectedItem={defaultItems['option 2']}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット</Button>
+      </Stack>
+    </form>
+  ),
+}
+
+export const FormResetWithPreventDefault: StoryObj<typeof SingleCombobox> = {
+  name: 'form.reset()がキャンセルされた場合の挙動確認(非制御)',
+  render: () => (
+    <form onReset={(e) => e.preventDefault()}>
+      <Stack>
+        <SingleCombobox
+          name="single_combobox_reset_cancel_demo"
+          defaultSelectedItem={defaultItems['option 2']}
+          items={Object.values(defaultItems)}
+        />
+        <Button type="reset">リセット(キャンセルされるはず)</Button>
+      </Stack>
+    </form>
+  ),
 }

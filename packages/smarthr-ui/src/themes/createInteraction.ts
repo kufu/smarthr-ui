@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 const hoverAnimationDuration = '.3s'
 const hoverAnimationTiming = 'ease-out'
@@ -37,10 +37,5 @@ export const createInteraction = (
     return defaultInteraction
   }
 
-  return merge(
-    {
-      ...defaultInteraction,
-    },
-    userInteraction,
-  )
+  return merge(defaultInteraction, userInteraction)
 }

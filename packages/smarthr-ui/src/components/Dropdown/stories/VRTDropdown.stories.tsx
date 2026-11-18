@@ -1,7 +1,9 @@
+import { type FC, useState } from 'react'
 import { userEvent, within } from 'storybook/test'
 
 import { Button } from '../../Button'
 import { SingleCombobox } from '../../Combobox'
+import { ControlledActionDialog } from '../../Dialog'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -84,6 +86,52 @@ export const VRTComboboxInDropdown: StoryObj<typeof Dropdown> = {
     const combobox = await within(body).findByRole('combobox')
     await userEvent.click(combobox)
     await userEvent.tab()
+    await waitForAnimationFrame()
+  },
+}
+
+const DialogWithDropdown: FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>ダイアログを開く</Button>
+      <ControlledActionDialog
+        isOpen={isOpen}
+        onClickAction={(close) => close()}
+        onClickClose={() => setIsOpen(false)}
+        heading="ダイアログ"
+        actionButton="保存"
+      >
+        <Dropdown>
+          <DropdownTrigger>
+            <Button>ドロップダウンボタン</Button>
+          </DropdownTrigger>
+          <DropdownContent controllable>
+            <Button>ドロップダウンアイテム</Button>
+          </DropdownContent>
+        </Dropdown>
+      </ControlledActionDialog>
+    </>
+  )
+}
+
+export const VRTDropdownInDialog: StoryObj<typeof Dropdown> = {
+  render: () => <DialogWithDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const dialogTrigger = await canvas.findByRole('button', { name: 'ダイアログを開く' })
+    await userEvent.click(dialogTrigger)
+
+    const body = canvasElement.ownerDocument.body
+    const dropdownTrigger = await within(body).findByRole('button', {
+      name: 'ドロップダウンボタン',
+    })
+    await userEvent.click(dropdownTrigger)
+    await waitForAnimationFrame()
+
+    // Dropdown を開いた状態で Esc キーを押し、Dropdown のみ閉じることを確認する
+    await userEvent.keyboard('{Escape}')
     await waitForAnimationFrame()
   },
 }

@@ -8,17 +8,16 @@ import {
   type RefObject,
   memo,
   useId,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
-import { useCallbackRefCleanupForReact18 } from '../../../hooks/client/useCallbackRefCleanupForReact18'
-import { useEnhancedEffect } from '../../../hooks/client/useEnhancedEffect'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
-import { usePortal } from '../../../hooks/client/usePortal'
+import { useSafeAreaInsets } from '../../../hooks/client/useSafeAreaInsets'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { Localizer } from '../../../intl'
@@ -26,6 +25,7 @@ import { findDelegateTarget } from '../../../libs/delegate'
 import { FaCircleInfoIcon } from '../../Icon'
 import { LiveRegion } from '../../LiveRegion'
 import { Loader } from '../../Loader'
+import { Portal } from '../../Portal'
 import { Scroller } from '../../Scroller'
 import { Text } from '../../Text'
 
@@ -41,7 +41,7 @@ type Props<T> = {
   onSelect: (item: ComboboxItem<T>) => void
   isExpanded: boolean
   isLoading?: boolean
-  triggerRef: RefObject<HTMLElement>
+  triggerRef: RefObject<HTMLElement | null>
   /** 検索結果が0件の時に表示するコンテンツ */
   noResultText?: ReactNode
 }
@@ -128,8 +128,18 @@ export const useListbox = <T,>({
 
   const addFrame = useAnimationFrame()
 
-  const latest = useLatest({ onAdd, onSelect, activeOption, options, triggerRef, theme, addFrame })
-  const hasOnAdd = !!onAdd
+  const getSafeAreaInsets = useSafeAreaInsets()
+  const latest = useLatest({
+    onAdd,
+    onSelect,
+    activeOption,
+    options,
+    triggerRef,
+    theme,
+    getSafeAreaInsets,
+    addFrame,
+  })
+  const hasOnAdd = Boolean(onAdd)
 
   const functions = useMemo(() => {
     let listBox: HTMLElement | null = null
@@ -172,8 +182,10 @@ export const useListbox = <T,>({
         }
 
         const rect = latest.triggerRef.current.getBoundingClientRect()
-        const bottomSpace = window.innerHeight - rect.bottom
-        const topSpace = rect.top
+        // HINT: safe areaに重ならない領域を、リストボックスを表示できる範囲とする
+        const safeAreaInsets = latest.getSafeAreaInsets()
+        const bottomSpace = window.innerHeight - safeAreaInsets.bottom - rect.bottom
+        const topSpace = rect.top - safeAreaInsets.top
         const listBoxHeight = Math.min(
           listBox.scrollHeight,
           parseInt(getComputedStyle(listBox).maxHeight, 10),
@@ -204,9 +216,9 @@ export const useListbox = <T,>({
         // ドロップダウンの幅は maxWidth でビューポート右端から余白分を残すよう制限しているため、位置の判定にも同じ余白を使う
         const viewportMargin = parseInt(latest.theme.spacingByChar(0.5), 10)
         // 入力欄の左端を起点に右方向へ表示する場合に使える幅
-        const rightSpace = window.innerWidth - rect.left - viewportMargin
+        const rightSpace = window.innerWidth - safeAreaInsets.right - rect.left - viewportMargin
         // 入力欄の右端を起点に左方向へ表示する場合に使える幅
-        const leftSpace = rect.right
+        const leftSpace = rect.right - safeAreaInsets.left
 
         // ビューポートの左端を基準に計算
         let left = window.pageXOffset
@@ -217,6 +229,9 @@ export const useListbox = <T,>({
         } else if (listBoxWidth <= leftSpace) {
           // 左側に収まる場合は入力欄の右端に揃えて表示
           left += rect.right - listBoxWidth
+        } else {
+          // どちらにも収まらない場合はsafe areaの左端に揃えて表示
+          left += safeAreaInsets.left
         }
 
         setListBoxRect({
@@ -230,9 +245,14 @@ export const useListbox = <T,>({
         setNavigationType('key')
 
         if (KEY_DOWN_REGEX.test(e.key)) {
+          // HINT: MultiComboboxの削除ボタンにフォーカスがある状態など、input以外からこのハンドラへ
+          // 到達する経路ではpreventDefaultされないため、ブラウザ側のデフォルトキー操作(iOS Safariでの
+          // ページスクロール等)が発生してしまう。ここで明示的に止める
+          e.preventDefault()
           e.stopPropagation()
           moveActiveOptionIndex(latest.activeOption, 1)
         } else if (KEY_UP_REGEX.test(e.key)) {
+          e.preventDefault()
           e.stopPropagation()
           moveActiveOptionIndex(latest.activeOption, -1)
         } else if (e.key === 'Enter') {
@@ -297,7 +317,7 @@ export const useListbox = <T,>({
   )
   const mergedListBoxRef = useMergeRefs(listBoxLayoutEffectRef, functions.baseCallbackRef)
 
-  useEnhancedEffect(() => {
+  useLayoutEffect(() => {
     // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       return setActiveOption(null)
@@ -314,6 +334,7 @@ export const useListbox = <T,>({
       window.removeEventListener('resize', functions.calculateRect)
     }
     // HINT: optionsが変わる場合メニューのサイズが変わる可能性がある
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   }, [isExpanded, options, functions])
 
   return {
@@ -376,12 +397,12 @@ export const ListBox = memo(
     dropdownWidth,
     callbackRef,
   }: ListBoxProps<T>) => {
-    const { createPortal } = usePortal()
     const theme = useTheme()
 
     const minLength = useMemo(
       () =>
         (activeOptionId === undefined ? 0 : options.findIndex((o) => o.id === activeOptionId)) + 1,
+      // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
       [activeOptionId, options],
     )
     const [prevMinLength, setPrevMinLength] = useState(minLength)
@@ -394,6 +415,7 @@ export const ListBox = memo(
       setCurrentItemLength((current) => Math.max(current, minLength))
     }
 
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
     const items = useMemo(() => options.slice(0, currentItemLength), [currentItemLength, options])
 
     const styles = useMemo(() => {
@@ -411,7 +433,7 @@ export const ListBox = memo(
             typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
           /* HINT: left に依存させると、算出した幅がさらに maxWidth を縮めて再計算の度に幅が縮んでいくため、
           ビューポート幅のみから算出する */
-          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)})`,
+          maxWidth: `calc(100vw - ${theme.spacingByChar(0.5)} - env(safe-area-inset-left) - env(safe-area-inset-right))`,
           height: height ? `${height}px` : undefined,
         },
       }
@@ -463,8 +485,8 @@ export const ListBox = memo(
       }
     }, [latest])
 
-    return createPortal(
-      <div ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
+    return (
+      <Portal ref={callbackRef} className={CLASS_NAMES.wrapper} style={styles.wrapper}>
         <Scroller
           ref={listBoxRef}
           role="listbox"
@@ -515,15 +537,11 @@ export const ListBox = memo(
             <Intersection callbackRef={functions.intersectCallbackRef} />
           )}
         </Scroller>
-      </div>,
+      </Portal>
     )
   },
 ) as <T>(props: ListBoxProps<T>) => ReactNode
 
 const Intersection = memo<{
   callbackRef: (node: HTMLElement | null) => (() => void) | undefined
-}>(({ callbackRef }) => {
-  const actualCallbackRef = useCallbackRefCleanupForReact18(callbackRef)
-
-  return <div ref={actualCallbackRef} />
-})
+}>(({ callbackRef }) => <div ref={callbackRef} />)

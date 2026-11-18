@@ -1,32 +1,26 @@
-import {
-  type ComponentPropsWithoutRef,
-  type ForwardedRef,
-  type PropsWithChildren,
-  memo,
-  useMemo,
-} from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { genericsForwardRef } from '../../libs/util'
 import { FaAngleDownIcon } from '../Icon'
 
 import { ActualSelect, NotOmittingLabelsInMobileSafari } from './client'
 
-import type { ActualSelectProps } from './client'
+import type { ExtendElementPropsWithRef } from '../../types'
 
-type BaseProps<T extends string> = Omit<ActualSelectProps<T>, 'outerRef' | 'children'> & {
-  /** コンポーネントの幅 */
-  width?: number | string
-  /** コンポーネントの大きさ */
-  size?: 'M' | 'S'
-  /** 空の選択肢を表示するかどうか */
-  hasBlank?: boolean
-  /** 空の選択肢のラベル */
-  blankLabel?: string
-}
-
-type Props<T extends string> = BaseProps<T> &
-  Omit<ComponentPropsWithoutRef<'select'>, keyof BaseProps<string> | 'children'>
+type Props<T extends string> = ExtendElementPropsWithRef<
+  typeof ActualSelect<T>,
+  {
+    /** コンポーネントの幅 */
+    width?: number | string
+    /** コンポーネントの大きさ */
+    size?: 'M' | 'S'
+    /** 空の選択肢を表示するかどうか */
+    hasBlank?: boolean
+    /** 空の選択肢のラベル */
+    blankLabel?: string
+  },
+  { omit: 'children' }
+>
 
 const classNameGenerator = tv({
   slots: {
@@ -66,10 +60,15 @@ const classNameGenerator = tv({
   },
 })
 
-const BaseSelect = <T extends string>(
-  { options, width, hasBlank, blankLabel, size, className, ...rest }: Props<T>,
-  ref: ForwardedRef<HTMLSelectElement>,
-) => {
+export const Select = <T extends string>({
+  options,
+  width,
+  hasBlank,
+  blankLabel,
+  size,
+  className,
+  ...rest
+}: Props<T>) => {
   const classNames = useMemo(() => {
     const { wrapper, select, iconWrap } = classNameGenerator()
     const sizeProps = {
@@ -90,7 +89,7 @@ const BaseSelect = <T extends string>(
         width: typeof width === 'number' ? `${width}px` : width,
       }}
     >
-      <ActualSelect {...rest} outerRef={ref} className={classNames.select} options={options}>
+      <ActualSelect {...rest} className={classNames.select} options={options}>
         <BlankOption hasBlank={hasBlank}>{blankLabel ?? ''}</BlankOption>
         {options.map((option, index) => (
           <Option {...option} key={index} />
@@ -104,11 +103,10 @@ const BaseSelect = <T extends string>(
   )
 }
 
-const BlankOption = memo<
-  PropsWithChildren<{
-    hasBlank: boolean | undefined
-  }>
->(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
+const BlankOption = memo<{
+  children: string
+  hasBlank: boolean | undefined
+}>(({ hasBlank, children }) => hasBlank && <option value="">{children}</option>)
 
 const Option = memo<Props<string>['options'][number]>((option) => {
   if ('value' in option) {
@@ -127,5 +125,3 @@ const Option = memo<Props<string>['options'][number]>((option) => {
     </optgroup>
   )
 })
-
-export const Select = genericsForwardRef(BaseSelect)

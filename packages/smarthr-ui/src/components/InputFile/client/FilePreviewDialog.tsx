@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, memo, useLayoutEffect, useState } from 'react'
+import { type ComponentPropsWithRef, type FC, memo, useLayoutEffect, useState } from 'react'
 
 import { useEnvironment } from '../../../hooks/client/useEnvironment'
 import { Localizer } from '../../../intl'
@@ -11,23 +11,32 @@ import { Heading } from '../../Heading'
 import { FaXmarkIcon } from '../../Icon'
 import { Center, Cluster } from '../../Layout'
 import { Loader } from '../../Loader'
+import { Section } from '../../SectioningContent'
+
+import type { ExistingFile } from '../types'
 
 type Props = {
-  file: File | null
+  file: File | ExistingFile | null
   handleClose: () => void
   handleDownload: () => void
   searchable?: boolean
+  onPassword?: ComponentPropsWithRef<typeof FileViewer>['onPassword']
 }
 
 export const FilePreviewDialog: FC<Props> = memo(
-  ({ file, handleClose, handleDownload, searchable }) => {
+  ({ file, handleClose, handleDownload, searchable, onPassword }) => {
     const [blobUrl, setBlobUrl] = useState<string>()
-    const isOpen = !!file
+    const isOpen = Boolean(file)
     const { mobile } = useEnvironment()
 
     useLayoutEffect(() => {
       if (!file) {
         setBlobUrl(undefined)
+        return
+      }
+
+      if (!(file instanceof File)) {
+        setBlobUrl(file.url)
         return
       }
 
@@ -40,18 +49,19 @@ export const FilePreviewDialog: FC<Props> = memo(
     }, [file])
 
     const fileViewer =
-      isOpen && blobUrl ? (
+      file && blobUrl ? (
         <FileViewer
           file={{
             url: blobUrl,
-            contentType: file.type,
+            contentType: file instanceof File ? file.type : (file.contentType ?? ''),
             alt: file.name,
           }}
           searchable={searchable}
+          onPassword={onPassword}
         />
       ) : (
         <Center className="shr-h-full">
-          <Loader size="M" />
+          <Loader />
         </Center>
       )
     const actionAreaButtons = (
@@ -74,15 +84,14 @@ export const FilePreviewDialog: FC<Props> = memo(
           onClickOverlay={handleClose}
           onPressEscape={handleClose}
         >
-          <div className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
+          <Section className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
             <Cluster
+              inline
               align="center"
+              grow="start"
               className="shr-border-b-shorthand shr-shrink-0 shr-px-1 shr-py-0.5"
             >
-              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-              <Heading className="shr-min-w-0 shr-grow shr-truncate shr-text-base">
-                {file?.name}
-              </Heading>
+              <Heading className="shr-truncate shr-text-base">{file?.name}</Heading>
               <Button size="S" onClick={handleClose}>
                 <FaXmarkIcon
                   alt={<Localizer id="smarthr-ui/InputFile/closePreview" defaultText="閉じる" />}
@@ -96,7 +105,7 @@ export const FilePreviewDialog: FC<Props> = memo(
             >
               {actionAreaButtons}
             </Cluster>
-          </div>
+          </Section>
         </Dialog>
       )
     }

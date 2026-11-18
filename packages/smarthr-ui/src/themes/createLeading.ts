@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 type Leading = {
   NONE: number
@@ -9,12 +9,6 @@ type Leading = {
 
 export type LeadingProperty = Partial<Omit<Leading, 'NONE'>>
 export type CreatedLeading = Leading
-
-// TODO: リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
-// 可能性があるため残している。利用状況を確認し、使われていなければ削除する:
-// import type { Leadings } from 'smarthr-ui/lib/themes/createLeading'
-/** @public */
-export type Leadings = keyof Leading
 
 export const defaultLeading: CreatedLeading = {
   NONE: 1,
@@ -28,5 +22,5 @@ export const createLeading = (userLeading?: LeadingProperty): CreatedLeading => 
     return defaultLeading
   }
 
-  return merge({ ...defaultLeading }, userLeading)
+  return merge(defaultLeading, userLeading)
 }

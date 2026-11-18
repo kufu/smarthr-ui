@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type FC, type PropsWithChildren, memo } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -12,7 +14,6 @@ import { HelpLink } from '../../../TextLink'
 import { useAppLauncher } from '../../hooks/useAppLauncher'
 import { AppLauncherFeatures } from '../common/AppLauncherFeatures'
 import { AppLauncherSortDropdown } from '../common/AppLauncherSortDropdown'
-import { Translate } from '../common/Translate'
 
 import { AppLauncherFilterDropdown } from './AppLauncherFilterDropdown'
 
@@ -34,7 +35,10 @@ const classNameGenerator = tv({
     ],
     headArea: 'shr-px-1 shr-py-0.75',
     scrollArea: 'shr-flex-1 shr-basis-0',
-    bottomArea: 'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+    bottomArea: [
+      'shr-border-t-shorthand shr-px-1 shr-py-0.75',
+      'shr-pb-[calc(theme(spacing[0.75])+env(safe-area-inset-bottom))]',
+    ],
   },
 })
 
@@ -62,6 +66,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     onChangeSearchQuery,
     onClickClearSearchQuery,
     callbackRef,
+    searchInputRef,
   } = useAppLauncher(baseFeatures)
 
   const { searchInputTitle } = useLocalize({
@@ -75,13 +80,16 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
+          ref={searchInputRef}
           name="search"
           value={searchQuery}
           title={searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
-          tooltipMessage={<Translate>{searchInputTitle}</Translate>}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          tooltipMessage={searchInputTitle}
+          subActionArea={
+            mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
+          }
         />
       </div>
 
@@ -95,7 +103,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
         )}
 
         {(mode === 'search' || page === 'all') && (
-          <AppLauncherSortDropdown sortType={sortType} onSelectSortType={setSortType} />
+          <AppLauncherSortDropdown sortType={sortType} handleSelectSortType={setSortType} />
         )}
       </Cluster>
 
@@ -118,7 +126,7 @@ const ClearSearchButton = memo<{ onClick: () => void }>(({ onClick }) => (
 
 const SearchResultText = memo<PropsWithChildren>(({ children }) => (
   <Text size="S" weight="bold">
-    <Translate>{children}</Translate>
+    {children}
   </Text>
 ))
 
@@ -129,7 +137,7 @@ const BottomArea = memo<PropsWithChildren<{ className: string }>>(({ children, c
         href="https://support.smarthr.jp/ja/help/articles/2bfd350d-8e8b-4bbd-a209-426d2eb302cc/"
         target="_blank"
       >
-        <Translate>{children}</Translate>
+        {children}
       </HelpLink>
     </Text>
   </div>

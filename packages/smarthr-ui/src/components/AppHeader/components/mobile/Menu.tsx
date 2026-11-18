@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import {
   type FC,
   type PropsWithChildren,
@@ -12,11 +14,10 @@ import {
 import { tv } from 'tailwind-variants'
 
 import { useEscapeCallbackRef } from '../../../../hooks/client/useEscapeCallbackRef'
-import { usePortal } from '../../../../hooks/client/usePortal'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
 import { FaAngleRightIcon, FaBarsIcon, FaToolboxIcon } from '../../../Icon'
-import { Translate } from '../common/Translate'
+import { Portal } from '../../../Portal'
 
 import { AppLauncherContext } from './AppLauncherContext'
 import { MenuAccordion } from './MenuAccordion'
@@ -44,8 +45,6 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  const { createPortal } = usePortal()
-
   useEffect(() => {
     if (isOpen) {
       scrollPosition = window.scrollY
@@ -68,7 +67,7 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
         }
         onClick={open}
       />
-      {createPortal(
+      <Portal>
         <MenuDialog
           callbackRef={callbackRef}
           isOpen={isOpen}
@@ -95,8 +94,8 @@ export const Menu: FC<Props> = ({ appName, tenantSelector, additionalContent }) 
           <ReleaseNoteButton className={className}>
             <Localizer id="smarthr-ui/AppHeader/releaseNotes" defaultText="リリースノート" />
           </ReleaseNoteButton>
-        </MenuDialog>,
-      )}
+        </MenuDialog>
+      </Portal>
     </>
   )
 }
@@ -139,13 +138,12 @@ const ActualFeatureButton: FC<
   return (
     <div className={className}>
       <Button
-        variant="secondary"
         wide
         onClick={handleClick}
         prefix={<FaToolboxIcon />}
         suffix={<FaAngleRightIcon className="shr-ms-auto" />}
       >
-        <Translate>{children}</Translate>
+        {children}
       </Button>
     </div>
   )

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 
@@ -8,7 +8,7 @@ import { FormControl } from '../../../FormGroup'
 import { SingleCombobox } from './SingleCombobox'
 
 import type { ComboboxItem } from '../types'
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithRef } from 'react'
 
 describe('SingleCombobox', () => {
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('SingleCombobox', () => {
     items,
     selectedItem,
     ...rest
-  }: Partial<ComponentProps<typeof SingleCombobox>>) => (
+  }: Partial<ComponentPropsWithRef<typeof SingleCombobox>>) => (
     <IntlProvider locale="ja">
       <form>
         <FormControl label="コンボボックス">
@@ -98,8 +98,9 @@ describe('SingleCombobox', () => {
     expect(listbox()).not.toBeInTheDocument()
   })
 
-  it('未選択のままblurしても、入力値が残っている限り絞り込みが維持されること', async () => {
-    render(template({ selectedItem: null }))
+  it('未選択のままblurすると、入力値がクリアされて未選択の表示に戻ること', async () => {
+    const onChangeInput = vi.fn()
+    render(template({ selectedItem: null, onChangeInput }))
 
     // 入力すると絞り込まれる
     await userEvent.click(combobox())
@@ -110,15 +111,37 @@ describe('SingleCombobox', () => {
     await userEvent.click(document.body)
     expect(listbox()).not.toBeInTheDocument()
 
-    // 再度フォーカスしたとき、入力値が残っているなら絞り込みも維持されていること
+    // blurすると手入力値が破棄され、未選択の表示(空)に戻ること
+    expect(combobox()).toHaveValue('')
+
+    // 制御コンポーネントとして検索語を管理する親にも、クリアされたことが通知されること
+    expect(onChangeInput).toHaveBeenLastCalledWith(
+      expect.objectContaining({ target: expect.objectContaining({ value: '' }) }),
+    )
+
+    // 再度フォーカスしたとき、絞り込みも解除されすべての選択肢が表示されること
     await userEvent.click(combobox())
-    expect(combobox()).toHaveValue('option 2')
-    expect(screen.getAllByRole('option')).toHaveLength(1)
+    expect(screen.getAllByRole('option')).toHaveLength(5)
   })
 
-  it('未選択のままblurしてdefaultItemが選択された場合は、絞り込みが解除されること', async () => {
+  it('選択済み状態で手入力後にblurすると、入力値が選択中アイテムのラベルに戻ること', async () => {
+    render(template({}))
+
+    await userEvent.click(combobox())
+    await userEvent.clear(combobox())
+    await userEvent.type(combobox(), 'option 2')
+    expect(combobox()).toHaveValue('option 2')
+
+    // 外側クリックでblurする
+    await userEvent.click(document.body)
+
+    // 選択を変えていないため、入力値が選択中アイテム(option 1)のラベルに戻ること
+    expect(combobox()).toHaveValue('option 1')
+  })
+
+  it('未選択のままblurしてemptySelectionFallbackItemが選択された場合は、絞り込みが解除されること', async () => {
     // 実際の利用方法を模して、親コンポーネントがselectedItemを状態として管理する
-    const DefaultItemComboboxWrapper = () => {
+    const FallbackItemComboboxWrapper = () => {
       const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
 
       return (
@@ -128,8 +151,9 @@ describe('SingleCombobox', () => {
               <SingleCombobox
                 name="default"
                 selectedItem={selectedItem}
-                defaultItem={{ label: 'option 1', value: 'value-1' }}
+                emptySelectionFallbackItem={{ label: 'option 1', value: 'value-1' }}
                 onSelect={setSelectedItem}
+                onChangeSelected={setSelectedItem}
                 items={[
                   { label: 'option 1', value: 'value-1' },
                   { label: 'option 2', value: 'value-2' },
@@ -142,19 +166,34 @@ describe('SingleCombobox', () => {
       )
     }
 
-    render(<DefaultItemComboboxWrapper />)
+    render(<FallbackItemComboboxWrapper />)
 
     await userEvent.click(combobox())
     await userEvent.type(combobox(), 'option 2')
     expect(screen.getAllByRole('option')).toHaveLength(1)
 
-    // 未選択のままblurするとdefaultItemが選択され、inputの表示値もそのラベルになる
+    // 未選択のままblurするとemptySelectionFallbackItemが選択され、inputの表示値もそのラベルになる
     await userEvent.click(document.body)
     expect(combobox()).toHaveValue('option 1')
 
     // 選択中アイテムのラベルは手入力値ではないため、絞り込みには使われないこと
     await userEvent.click(combobox())
     expect(screen.getAllByRole('option')).toHaveLength(3)
+  })
+
+  it('disableFilteringがtrueの場合、入力値に一致しないitemsも絞り込まれず表示されること', async () => {
+    render(template({ selectedItem: null, disableFiltering: true }))
+
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option 2')
+    expect(screen.getAllByRole('option')).toHaveLength(5)
+  })
+
+  it('disableFilteringにfalseを明示した場合でも、未入力(選択中アイテムのラベル表示のみ)では絞り込まれないこと', async () => {
+    render(template({ disableFiltering: false }))
+
+    await userEvent.click(combobox())
+    expect(screen.getAllByRole('option')).toHaveLength(5)
   })
 
   it('コンボボックスがフォーカスされていないときに選択解除ボタンを押下してもリストボックスが表示されること', async () => {
@@ -246,6 +285,81 @@ describe('SingleCombobox', () => {
     expect(combobox()).toHaveValue('option 1')
   })
 
+  it('ReactNodeのアイテムを選択すると、入力値がlabelTextになること', async () => {
+    const element = <span>アイコン付きラベル</span>
+    const items: Array<ComboboxItem<string>> = [
+      { label: 'option 1', value: 'value-1' },
+      { label: element, value: 'value-2', labelText: 'ラベル2' },
+    ]
+
+    // selectedItemはcontrolledなため、選択結果を反映するためのラッパーを用意する
+    const Wrapper = () => {
+      const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>(null)
+
+      return (
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={selectedItem}
+                onChangeSelected={setSelectedItem}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>
+      )
+    }
+
+    render(<Wrapper />)
+
+    await userEvent.click(combobox())
+    await userEvent.click(screen.getByRole('option', { name: 'アイコン付きラベル' }))
+
+    // ReactNodeの表示内容ではなく、labelTextがinputの値として反映される
+    expect(combobox()).toHaveValue('ラベル2')
+  })
+
+  it('JSX内の表示内容とは異なるlabelTextで検索されること', async () => {
+    const element = <span>アイコン付きラベル</span>
+    render(
+      template({
+        selectedItem: null,
+        items: [
+          { label: 'option 1', value: 'value-1' },
+          { label: element, value: 'value-2', labelText: '検索用テキスト' },
+        ],
+      }),
+    )
+
+    await userEvent.click(combobox())
+    // JSXの表示内容(「アイコン付きラベル」)には含まれない、labelTextの方の文字列で検索する
+    await userEvent.type(combobox(), '検索用')
+
+    // labelTextに一致するアイテムが検索結果に残り、一致しないアイテムは除外されること
+    expect(screen.getByRole('option', { name: 'アイコン付きラベル' })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: 'option 1' })).not.toBeInTheDocument()
+  })
+
+  it('creatableで入力値が既存アイテムのlabelTextと一致する場合、新規追加候補が出ないこと', async () => {
+    const onAdd = vi.fn()
+    render(
+      template({
+        onAdd,
+        creatable: true,
+        selectedItem: null,
+        items: [{ label: 'option 1', value: 'value-1' }],
+      }),
+    )
+
+    await userEvent.click(combobox())
+    await userEvent.type(combobox(), 'option 1')
+
+    // 既存アイテムのlabelText(未指定のためlabel)と完全一致するため、新規追加候補は表示されない
+    expect(screen.queryByRole('option', { name: '「option 1」を追加' })).not.toBeInTheDocument()
+  })
+
   it('disabled なコンボボックスではアイテムの選択・解除ができないこと', async () => {
     const onClear = vi.fn()
     render(template({ onClear, disabled: true }))
@@ -312,6 +426,509 @@ describe('SingleCombobox', () => {
     await userEvent.keyboard('{tab}')
     await userEvent.keyboard('{enter}')
     expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  describe('非制御(uncontrolled)', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('selectedItem を指定しない場合、アイテムを選択すると入力欄に選択ラベルが反映される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+
+    it('非制御の場合、クリアボタンでクリアされ入力欄が空になる', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+      expect(combobox()).toHaveValue('option 1')
+
+      await userEvent.click(clearButton())
+
+      expect(combobox()).toHaveValue('')
+    })
+
+    it('defaultSelectedItem のみ指定した場合、初期表示に反映される', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 1')
+    })
+
+    it('非制御で defaultSelectedItem を指定した場合、クリア後にblurしても空のまま維持される', async () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(clearButton())
+      expect(combobox()).toHaveValue('')
+
+      await userEvent.click(combobox())
+      await userEvent.click(document.body)
+
+      expect(combobox()).toHaveValue('')
+    })
+
+    it('非制御で選択を変更後、form.reset()を呼ぶとdefaultSelectedItemに戻ること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      expect(combobox()).toHaveValue('option 2')
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('option 1')
+    })
+
+    it('非制御でdefaultSelectedItemを指定しない場合、form.reset()を呼ぶと未選択に戻ること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 1' }))
+      expect(combobox()).toHaveValue('option 1')
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('')
+    })
+
+    it('未選択のまま検索文字列を入力した状態でform.reset()を呼ぶと、入力値がクリアされること', async () => {
+      const onChangeInput = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" onChangeInput={onChangeInput} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.type(combobox(), 'option 2')
+      expect(combobox()).toHaveValue('option 2')
+      onChangeInput.mockClear()
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('')
+
+      // 絞り込みも解除されすべての選択肢が表示されること
+      await userEvent.click(combobox())
+      expect(screen.getAllByRole('option')).toHaveLength(items.length)
+
+      // HINT: 親がonChangeInputで検索語を管理し絞り込みに使っている場合、reset後も
+      // 古い検索語が残ったままになってしまうため、空文字で通知されることを確認する
+      expect(onChangeInput).toHaveBeenCalledOnce()
+      expect(onChangeInput).toHaveBeenCalledWith(
+        expect.objectContaining({ target: expect.objectContaining({ value: '' }) }),
+      )
+    })
+
+    it('検索文字列を入力していない状態でform.reset()を呼んでも、onChangeInputは呼ばれないこと', async () => {
+      const onChangeInput = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox name="default" onChangeInput={onChangeInput} items={items} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(onChangeInput).not.toHaveBeenCalled()
+    })
+
+    it('form.reset()で選択状態が変わる場合、onChangeSelectedがdefaultSelectedItemで呼ばれること', async () => {
+      const onChangeSelected = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      onChangeSelected.mockClear()
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(onChangeSelected).toHaveBeenCalledTimes(1)
+      expect(onChangeSelected).toHaveBeenCalledWith({ label: 'option 1', value: 'value-1' })
+    })
+
+    it('form.reset()で選択状態が変わらない場合、onChangeSelectedは呼ばれないこと', async () => {
+      const onChangeSelected = vi.fn()
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(onChangeSelected).not.toHaveBeenCalled()
+    })
+
+    it('制御時(selectedItem指定)は、form.reset()を呼んでも表示が変わらないこと', async () => {
+      const ControlledComboboxWrapper = () => {
+        const [selectedItem, setSelectedItem] = useState<ComboboxItem<string> | null>({
+          label: 'option 2',
+          value: 'value-2',
+        })
+
+        return (
+          <IntlProvider locale="ja">
+            <form>
+              <FormControl label="コンボボックス">
+                <SingleCombobox
+                  name="default"
+                  selectedItem={selectedItem}
+                  onChangeSelected={setSelectedItem}
+                  items={items}
+                />
+              </FormControl>
+            </form>
+          </IntlProvider>
+        )
+      }
+
+      const { container } = render(<ControlledComboboxWrapper />)
+
+      expect(combobox()).toHaveValue('option 2')
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await Promise.resolve()
+      })
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+
+    it('onResetでpreventDefault()が呼ばれた場合、選択状態が変更されないこと', async () => {
+      // HINT: resetFrame(requestAnimationFrame)での判定が、ネイティブイベントのtarget phaseと
+      // Reactの合成イベント(onReset, bubble phase)の実行順序に依存するテストのため、
+      // 同期実行する通常モックではなく実際の非同期なrequestAnimationFrameで検証する。
+      // ただしjsdom環境ではonResetのディスパッチがtarget phaseと同期的に完結するため、
+      // resetFrameをqueueMicrotaskにしてもこのテストは通ってしまう(デグレを検知できない)。
+      // 実ブラウザでのみ、ネイティブのbutton[type=reset]操作時にonResetのディスパッチが
+      // 1フレーム以上遅延する現象を実機で確認し、requestAnimationFrameでの対応が必要と判断した
+      vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form onReset={(e) => e.preventDefault()}>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      expect(combobox()).toHaveValue('option 2')
+
+      await act(async () => {
+        container.querySelector('form')!.reset()
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+
+    it('selectedItem と onChangeSelected を指定した場合(制御)、操作だけでは表示が変わらない', async () => {
+      const onChangeSelected = vi.fn()
+
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={null}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+
+      expect(onChangeSelected).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
+      expect(combobox()).toHaveValue('')
+    })
+
+    it('制御時、selectedItem が外部から更新されると入力欄の表示が切り替わる', () => {
+      const { rerender } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 1')
+
+      rerender(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                selectedItem={{ label: 'option 2', value: 'value-2' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(combobox()).toHaveValue('option 2')
+    })
+  })
+
+  describe('FormData', () => {
+    const items = [
+      { label: 'option 1', value: 'value-1' },
+      { label: 'option 2', value: 'value-2' },
+    ]
+
+    it('検索用のinputのnameには `query_` プレフィックスが付与されること', () => {
+      render(template({ name: 'department' }))
+
+      expect(combobox()).toHaveAttribute('name', 'query_department')
+    })
+
+    it('選択済みの場合、選択値を持つhidden inputがnameでFormDataから取得できること', () => {
+      const { container } = render(template({ name: 'department' }))
+
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('department')).toBe('value-1')
+    })
+
+    it('非制御(uncontrolled)でクリア後、FormDataの値が空文字でFormDataから取得できること', async () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                name="default"
+                defaultSelectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.click(clearButton())
+
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('default')).toBe('')
+    })
+
+    it('未選択の場合、hidden inputの値が空文字でFormDataから取得できること', () => {
+      const { container } = render(template({ name: 'department', selectedItem: null }))
+
+      const formData = new FormData(container.querySelector('form')!)
+
+      expect(formData.get('department')).toBe('')
+    })
+
+    it('name を指定しない場合、hidden inputがレンダリングされないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+              <SingleCombobox
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={items}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(container.querySelectorAll('input[type="hidden"]')).toHaveLength(0)
+    })
+
+    it('disabledの場合、hidden inputにもdisabledが反映されること', () => {
+      const { container } = render(template({ name: 'department', disabled: true }))
+
+      const hiddenInput = container.querySelector('input[type="hidden"][name="department"]')
+
+      expect(hiddenInput).toBeDisabled()
+    })
+
+    it('requiredかつ未選択の場合、検索文字列を入力しただけではフォームの妥当性を満たさないこと', async () => {
+      render(template({ required: true, selectedItem: null }))
+
+      await userEvent.type(combobox(), 'option')
+
+      expect(combobox()).toHaveProperty('validity.valid', false)
+    })
+
+    it('requiredでも選択済みなら検索用テキストボックスの妥当性を満たすこと', () => {
+      render(template({ required: true }))
+
+      expect(combobox()).toHaveProperty('validity.valid', true)
+    })
+
+    it('titleが指定されている場合、requiredの妥当性エラーメッセージにtitleの値が使われること', () => {
+      render(template({ required: true, selectedItem: null, title: '選択項目を指定してください' }))
+
+      expect(combobox()).toHaveProperty('validationMessage', '選択項目を指定してください')
+    })
+
+    it('titleが指定されていない場合、requiredの妥当性エラーメッセージにデフォルトの文言が使われること', () => {
+      render(template({ required: true, selectedItem: null }))
+
+      expect(combobox()).toHaveProperty('validationMessage', '選択してください')
+    })
+
+    it('form属性で外部のformと関連付けた場合、hidden input・検索用inputともにその外部formに関連付けられること', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form id="external-form" />
+          <form>
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                form="external-form"
+                name="department"
+                selectedItem={{ label: 'option 1', value: 'value-1' }}
+                items={[{ label: 'option 1', value: 'value-1' }]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      const formData = new FormData(container.querySelector('#external-form') as HTMLFormElement)
+
+      expect(formData.get('department')).toBe('value-1')
+      expect(combobox()).toHaveAttribute('form', 'external-form')
+    })
   })
 })
 

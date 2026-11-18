@@ -7,7 +7,6 @@ import { TdCheckbox } from '../TdCheckbox'
 import { TdRadioButton } from '../TdRadioButton'
 import { Th } from '../Th'
 import { ThCheckbox } from '../ThCheckbox'
-import { WakuWakuButton } from '../WakuWakuButton'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -37,9 +36,12 @@ export default {
                     {fixed === 'right' && <Th fixed={fixed}>操作</Th>}
                   </tr>
                   <BulkActionRow>
+                    {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち) */}
                     <Cluster inline align="center" className="shr-sticky shr-left-1">
                       <p>n件のオブジェクトが選択されています。</p>
-                      <WakuWakuButton>一覧のオブジェクト9,999件すべてを選択</WakuWakuButton>
+                      <Button variant="tertiary" size="S" className="shr-text-link-darken">
+                        一覧のオブジェクト9,999件すべてを選択
+                      </Button>
                     </Cluster>
                   </BulkActionRow>
                 </thead>

@@ -1,1 +1,0 @@
-export { LineClamp } from './LineClamp'

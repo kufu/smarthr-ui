@@ -1,25 +1,6 @@
 import { darken, rgba, transparentize } from 'polished'
 
-import { merge } from '../libs/lodash'
-
-// TODO: リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
-// 可能性があるため残している。利用状況を確認し、使われていなければ削除する:
-// import type { TextColors } from 'smarthr-ui/lib/themes/createColor'
-/** @public */
-export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
-// TODO: リポジトリ内では利用していない。smarthr-design-systemからdeep importされている
-// 可能性があるため残している。利用状況を確認し、使われていなければ削除する:
-// import type { GreyScaleColors } from 'smarthr-ui/lib/themes/createColor'
-/** @public */
-export type GreyScaleColors =
-  | keyof typeof greyScale
-  | 'BACKGROUND'
-  | 'COLUMN'
-  | 'BASE_GREY'
-  | 'OVER_BACKGROUND'
-  | 'HEAD'
-  | 'BORDER'
-  | 'ACTION_BACKGROUND'
+import { merge } from '../libs/merge'
 
 const BLACK = '#030302' // hwb(56, 17, 1)
 const greyScale = {
@@ -46,6 +27,8 @@ const primitiveTokens = {
   RED_100: '#e01e5a',
   YELLOW_100: '#ffcc17',
   SMARTHR_BLUE: '#00c4cc',
+  AI_GRADATION_PURPLE: '#6d00cc',
+  AI_GRADATION_PINK: '#cc00c5',
 }
 
 const semanticTokens = {
@@ -73,6 +56,16 @@ const semanticTokens = {
 
 export const defaultColor = { ...semanticTokens, ...greyScale, ...transparencyScale }
 
+/**
+ * AI意匠表現で使用するグラデーションの色定義
+ * via https://kufuinc.slack.com/archives/CDG1XRPTP/p1746075116636199
+ */
+export const aiGradationColors = {
+  start: primitiveTokens.SMARTHR_BLUE,
+  mid: primitiveTokens.AI_GRADATION_PURPLE,
+  end: primitiveTokens.AI_GRADATION_PINK,
+} as const
+
 type Palette = typeof defaultColor
 export type ColorProperty = Partial<Palette>
 export type CreatedColorTheme = Palette & {
@@ -92,8 +85,7 @@ export const createColor = (userColor?: ColorProperty): CreatedColorTheme => {
   }
 
   return merge(
-    colors,
-    userColor,
+    merge(colors, userColor),
     !userColor.OUTLINE && userColor.MAIN ? { OUTLINE: transparentize(0.5, userColor.MAIN) } : null,
   )
 }

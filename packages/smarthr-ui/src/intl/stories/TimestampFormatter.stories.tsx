@@ -1,4 +1,4 @@
-import { TimestampFormatter } from '../TimestampFormatter'
+import { TimestampFormatter } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

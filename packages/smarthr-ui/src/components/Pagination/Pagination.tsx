@@ -1,13 +1,13 @@
-import { type ComponentProps, type FC, memo, useMemo } from 'react'
+import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
 import { PaginationItemButton, Wrapper } from './client'
 
 import type { AnchorProps, ButtonProps } from './type'
+import type { ExtendElementPropsWithoutRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -44,10 +44,9 @@ type CommonProps = {
   /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
-type BaseProps = (CommonProps & ButtonProps) | (CommonProps & AnchorProps)
-
-type WrapperType = ComponentProps<typeof Wrapper>
-type Props = BaseProps & Omit<WrapperType, keyof BaseProps>
+type ActualButtonProps = ExtendElementPropsWithoutRef<typeof Wrapper, CommonProps & ButtonProps>
+type ActualAnchorProps = ExtendElementPropsWithoutRef<typeof Wrapper, CommonProps & AnchorProps>
+type Props = ActualButtonProps | ActualAnchorProps
 
 export const Pagination: FC<Props> = (props) =>
   props.total > 1 ? <ActualPagination {...props} /> : null
@@ -116,7 +115,10 @@ const ItemButtons = memo<
 
     const actualPadding = padding ?? 4
 
-    return range(Math.max(current - actualPadding, 1), Math.min(current + actualPadding, total) + 1)
+    const start = Math.max(current - actualPadding, 1)
+    const end = Math.min(current + actualPadding, total)
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
   }, [current, total, padding, withoutNumbers])
 
   const prevAttrs = {

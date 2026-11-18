@@ -1,7 +1,9 @@
-import { type ComponentProps, type FC, useMemo } from 'react'
+import { type ComponentPropsWithRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown'
+
+type Props = ComponentPropsWithRef<typeof DropdownMenuButton>
 
 const classNameGenerator = tv({
   base: [
@@ -11,10 +13,7 @@ const classNameGenerator = tv({
   ],
 })
 
-export const HeaderDropdownMenuButton: FC<ComponentProps<typeof DropdownMenuButton>> = ({
-  className,
-  ...rest
-}) => {
+export const HeaderDropdownMenuButton: FC<Props> = ({ className, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return <DropdownMenuButton {...rest} className={actualClassName} />

@@ -1,6 +1,6 @@
 import {
   type ChangeEvent,
-  type ComponentProps,
+  type ComponentPropsWithRef,
   type KeyboardEvent,
   useEffect,
   useMemo,
@@ -16,7 +16,7 @@ import type { PDFSearchMatch } from './types'
 import type { Page } from 'react-pdf'
 
 type PDFTextContent = Parameters<
-  NonNullable<ComponentProps<typeof Page>['onGetTextSuccess']>
+  NonNullable<ComponentPropsWithRef<typeof Page>['onGetTextSuccess']>
 >[number]
 
 export const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

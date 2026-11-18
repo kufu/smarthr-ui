@@ -1,9 +1,8 @@
 import { useCallback, useId, useMemo } from 'react'
-import innerText from 'react-innertext'
 
 import { useLatest } from '../../../hooks/useLatest'
 
-import { areItemsEqual, convertMatchableString } from './helper'
+import { areItemsEqual, convertMatchableString, getSelectedLabelText } from './helper'
 
 import type { ComboboxItem, ComboboxOption } from './types'
 
@@ -16,7 +15,7 @@ type BaseUseOptionsProps<T> = {
   items: Array<ComboboxItem<T>>
   creatable?: boolean
   inputValue?: string
-  isFilteringDisabled?: boolean
+  disableFiltering?: boolean
 }
 
 export const useSingleOptions = <T>({
@@ -52,7 +51,7 @@ export const useMultiOptions = <T>({
 }
 
 function useOptions<T>(
-  { items, creatable, inputValue = '', isFilteringDisabled = false }: BaseUseOptionsProps<T>,
+  { items, creatable, inputValue = '', disableFiltering = false }: BaseUseOptionsProps<T>,
   isSelected: (item: ComboboxItem<T>) => boolean,
 ) {
   const newItemId = useId()
@@ -67,7 +66,7 @@ function useOptions<T>(
     }))
 
     const allOptions =
-      creatable && inputValue && items.every((item) => item.label !== inputValue)
+      creatable && inputValue && items.every((item) => getSelectedLabelText(item) !== inputValue)
         ? [
             {
               id: newItemId,
@@ -79,17 +78,18 @@ function useOptions<T>(
           ]
         : existedOptions
 
-    if (isFilteringDisabled || !inputValue) {
+    if (disableFiltering || !inputValue) {
       return allOptions
     }
 
     const convertedInputtedValue = convertMatchableString(inputValue)
 
-    return allOptions.filter(({ item: { label } }) =>
-      convertMatchableString(innerText(label)).includes(convertedInputtedValue),
+    return allOptions.filter(({ item }) =>
+      convertMatchableString(getSelectedLabelText(item)).includes(convertedInputtedValue),
     )
     // TODO: itemsの安定化方法を検討中
-  }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, isFilteringDisabled])
+    // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
+  }, [isSelected, items, optionIdPrefix, inputValue, creatable, newItemId, disableFiltering])
 
   return {
     options,

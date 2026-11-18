@@ -1,0 +1,51 @@
+'use client'
+
+// HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
+// react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
+import { type FC, type PropsWithChildren, createContext, useContext, useMemo } from 'react'
+import { IntlContext, IntlProvider as ReactIntlProvider } from 'react-intl'
+
+import { type Locale, convertLang, localeMap } from '../localeMap'
+import { locales } from '../locales'
+
+// Object.keys は常に string[] を返却するが、locales は実行時に変更されないため、as 型キャストを使用することは自明に安全なので使用している
+const allLocaleKeys = Object.keys(localeMap) as Locale[]
+
+type Props<AvailableLocales extends Locale[] = typeof allLocaleKeys> = PropsWithChildren<{
+  locale: string
+  availableLocales?: string[]
+  // ↑ プロダクト側と smarthr-ui の言語コードの揺れに対応するため、一旦 string, string[] で受け取れるようにする
+  // ↓ 本来は AvailableLocales[number], AvailableLocales で受け取りたいが、プロダクトと smarthr-ui での言語コード統一が終わるまで使えない
+  _not_used_locale?: AvailableLocales[number]
+  _not_used_availableLocales?: AvailableLocales
+}>
+
+const AvailableLocalesContext = createContext<Locale[]>(allLocaleKeys)
+
+export const useAvailableLocales = () => useContext(AvailableLocalesContext)
+
+export const IntlProvider = <AvailableLocales extends Locale[] = typeof allLocaleKeys>({
+  availableLocales,
+  locale,
+  children,
+}: Props<AvailableLocales>): ReturnType<FC> => {
+  // プロダクト側でIntlProviderを使っている場合、プロダクト側のmessagesとマージして提供するためにContextから取得している
+  const intl = useContext(IntlContext)
+
+  const { convertedLocale, convertedAvailableLocales, actualMessages } = useMemo(() => {
+    const _convertedLocale = convertLang(locale)
+    return {
+      convertedLocale: _convertedLocale,
+      convertedAvailableLocales: availableLocales?.map(convertLang),
+      actualMessages: { ...intl?.messages, ...locales[_convertedLocale] },
+    }
+  }, [locale, availableLocales, intl])
+
+  return (
+    <AvailableLocalesContext.Provider value={convertedAvailableLocales ?? allLocaleKeys}>
+      <ReactIntlProvider {...intl} locale={convertedLocale} messages={actualMessages}>
+        {children}
+      </ReactIntlProvider>
+    </AvailableLocalesContext.Provider>
+  )
+}
