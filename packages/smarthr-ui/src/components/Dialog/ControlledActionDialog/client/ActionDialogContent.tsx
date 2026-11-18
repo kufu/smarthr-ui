@@ -129,7 +129,6 @@ const ActionAreaCluster = memo<
   )
 
   return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち)
     <Cluster inline gap={ACTION_AREA_CLUSTER_GAP} className={className}>
       <CloseButton
         disabled={closeButton.disabled || loading}

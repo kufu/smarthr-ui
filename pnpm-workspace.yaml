@@ -28,9 +28,9 @@ auditConfig:
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
 minimumReleaseAgeExclude:
-  # eslint-config-smarthr@14.16.0とその依存のeslint-plugin-smarthr@6.30.0: ユーザー指示により
+  # eslint-config-smarthr@14.17.1とその依存のeslint-plugin-smarthr@6.31.1: ユーザー指示により
   # minimumReleaseAge(7日)の待機を一時解除する(7日経過後にこのエントリ自体は削除可)
-  - eslint-config-smarthr@14.16.0
-  - eslint-plugin-smarthr@6.30.0
+  - eslint-config-smarthr@14.17.1
+  - eslint-plugin-smarthr@6.31.1
   # GHSA-cf2h-pxjq-68xw のDoS修正版を適用するため、7日間の待機対象から除外する
   - minimatch@11.0.7

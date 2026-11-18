@@ -85,7 +85,6 @@ export const FilePreviewDialog: FC<Props> = memo(
           onPressEscape={handleClose}
         >
           <Section className="shr-flex shr-h-[calc(100svh-1rem)] shr-flex-col">
-            {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち) */}
             <Cluster
               inline
               align="center"
