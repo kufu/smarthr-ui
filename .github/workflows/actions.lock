@@ -20,7 +20,7 @@ workflows:
     '.github/workflows/titleCheck.yml': []
     '.github/workflows/typoChecker.yml':
         - 'actions/checkout@v7.0.1'
-        - 'crate-ci/typos@v1.52.0'
+        - 'crate-ci/typos@v1.52.2'
     '.github/workflows/updateLockfile.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
@@ -37,9 +37,9 @@ dependencies:
         commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'
         owner_id: 44036562
         repo_id: 189476904
-    'crate-ci/typos@v1.52.0':
-        ref: 'v1.52.0'
-        commit: 'sha1-4c8b7f51ca60df14e3c5ca82770dfbbe6c3dae85'
+    'crate-ci/typos@v1.52.2':
+        ref: 'v1.52.2'
+        commit: 'sha1-276087d9a4f06398b3e04825487805e2d7375888'
         owner_id: 36412122
         repo_id: 181782286
     'crowdin/github-action@v3.6.0':
