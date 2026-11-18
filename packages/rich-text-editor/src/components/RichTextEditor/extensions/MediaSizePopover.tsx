@@ -117,13 +117,13 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
     defaultText: '縦横比を固定',
   })
 
-  const latest = useLatest({ width, height, spec })
+  const latest = useLatest({ editor, width, height, spec })
 
   const functions = useMemo(
     () => ({
       handleOpen: (targetPos: number) => {
-        const node = editor.state.doc.nodeAt(targetPos)
-        const element = latest.spec.resolveElement(editor.view.nodeDOM(targetPos))
+        const node = latest.editor.state.doc.nodeAt(targetPos)
+        const element = latest.spec.resolveElement(latest.editor.view.nodeDOM(targetPos))
 
         ratioRef.current = latest.spec.getRatio(element)
         // width/height 属性が未設定なら、現在の表示サイズを初期値として入れる
@@ -167,7 +167,7 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
         const attributes = latest.spec.normalize(Number(latest.width), Number(latest.height))
 
         if (attributes) {
-          editor
+          latest.editor
             .chain()
             .setNodeSelection(targetPos)
             .updateAttributes(latest.spec.nodeName, attributes)
@@ -175,14 +175,14 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
         }
       },
       handleReset: (targetPos: number) => {
-        editor
+        latest.editor
           .chain()
           .setNodeSelection(targetPos)
           .updateAttributes(latest.spec.nodeName, latest.spec.resetAttributes)
           .run()
       },
     }),
-    [editor, latest],
+    [latest],
   )
 
   const secondaryAction = useMemo(

@@ -10,6 +10,7 @@ type Props<T extends ChartType> = {
   options?: ChartOptions<T>
   /** 表のアクセシブルネーム。見出しはチャート側で表示しているので、caption は視覚的に隠す */
   caption?: string
+  grouped?: boolean
 }
 
 // 1列目（見出し列）のみ幅を抑える
@@ -19,7 +20,12 @@ const FIRST_COLUMN_CLASS_NAME =
 // 行見出しは白背景にする
 const ROW_HEADER_CLASS_NAME = '[&_th:not([scope=col])]:shr-bg-white'
 
-export const TableView = <T extends ChartType>({ data, options, caption }: Props<T>) => {
+type TableProps<T extends ChartType> = Omit<Props<T>, 'grouped'>
+
+export const TableView = <T extends ChartType>({ grouped, ...rest }: Props<T>) =>
+  grouped ? <GroupedTableView {...rest} /> : <DefaultTableView {...rest} />
+
+const DefaultTableView = <T extends ChartType>({ data, options, caption }: TableProps<T>) => {
   const { scales } = options as Partial<ChartOptions<'bar' | 'line'>>
   const headers: ReactNode[] = [
     options?.indexAxis === 'y' ? scales?.y?.title?.text : scales?.x?.title?.text,
@@ -56,6 +62,66 @@ export const TableView = <T extends ChartType>({ data, options, caption }: Props
             </tr>
           ))}
         </tbody>
+      </Table>
+    </div>
+  )
+}
+
+type Group = {
+  category: ReactNode
+  items: Array<{ name: ReactNode; value: ReactNode }>
+}
+
+// データセットは値のあるカテゴリの内訳として並べる
+const GroupedTableView = <T extends ChartType>({ data, options, caption }: TableProps<T>) => {
+  const { indexAxis, scales, plugins } = (options ?? {}) as Partial<ChartOptions<'bar'>>
+  const [categoryAxis, valueAxis] =
+    indexAxis === 'y' ? (['y', 'x'] as const) : (['x', 'y'] as const)
+  // TODO: smarthr-ui-charts自身が翻訳プロバイダーを持ったら翻訳する
+  const headers = [
+    scales?.[categoryAxis]?.title?.text ?? 'グループ',
+    plugins?.legend?.title?.text ?? 'カテゴリー',
+    scales?.[valueAxis]?.title?.text ?? '値',
+  ]
+
+  const groups: Group[] = (data.labels ?? []).map((label, index) => ({
+    category: label as ReactNode,
+    items: data.datasets
+      .map((dataset) => ({ name: dataset.label, value: dataset.data[index] as ReactNode }))
+      .filter(({ value }) => value !== null && value !== undefined),
+  }))
+
+  return (
+    <div className="shr-mt-0.5 shr-h-full">
+      <Table className={ROW_HEADER_CLASS_NAME}>
+        {caption && <VisuallyHiddenText as="caption">{caption}</VisuallyHiddenText>}
+        <thead>
+          <tr>
+            {headers.map((header, index) => (
+              <Th key={`header-${index}`} scope="col">
+                {header}
+              </Th>
+            ))}
+          </tr>
+        </thead>
+        {groups.map(
+          ({ category, items }, groupIndex) =>
+            items.length > 0 && (
+              <tbody key={`group-${groupIndex}`}>
+                {items.map(({ name, value }, itemIndex) => (
+                  <tr key={`item-${itemIndex}`}>
+                    {itemIndex === 0 && (
+                      <Th scope="rowgroup" rowSpan={items.length} vAlign="baseline">
+                        {category}
+                      </Th>
+                    )}
+                    <Th scope="row">{name}</Th>
+                    <Td>{value}</Td>
+                  </tr>
+                ))}
+              </tbody>
+            ),
+        )}
       </Table>
     </div>
   )
