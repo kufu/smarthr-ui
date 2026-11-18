@@ -27,7 +27,7 @@ jobs:
       - name: Set NPM_CONFIG_BEFORE
         run: |
           echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
-      - uses: googleapis/release-please-action@v4.4.1
+      - uses: googleapis/release-please-action@v5.0.0
         id: release_please
         with:
           config-file: release-please-config.json
