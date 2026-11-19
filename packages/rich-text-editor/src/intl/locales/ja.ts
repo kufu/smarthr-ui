@@ -122,6 +122,7 @@ export const locale = {
   'smarthr-ui/RichTextEditor/blockDuplicate': '複製',
   'smarthr-ui/RichTextEditor/blockDelete': '削除',
   'smarthr-ui/RichTextEditor/blockHandle': 'ドラッグで移動、クリックでメニューを開く',
+  'smarthr-ui/RichTextEditor/blockHandleLabel': '{block}の操作',
   'smarthr-ui/RichTextEditor/blockNameParagraph': '段落',
   'smarthr-ui/RichTextEditor/blockNameTable': '表',
   'smarthr-ui/RichTextEditor/blockNameImage': '画像',

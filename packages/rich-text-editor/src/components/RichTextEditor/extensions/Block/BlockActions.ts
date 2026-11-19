@@ -9,6 +9,7 @@ import { planConversion } from './blockConversion'
 import {
   type BlockRange,
   type MoveTarget,
+  blockStartSelection,
   findBoundaryIndex,
   isCurrentRange,
   isEmptyParagraph,
@@ -49,6 +50,8 @@ export type BlockMenuOptions = {
   getAnchorRect?: () => AnchorRect
   /** Esc・項目の実行・外のクリック・文書の変更など、閉じ方を問わず閉じたときに呼ぶ */
   onClose?: () => void
+  /** 省くと本文へ戻す */
+  returnFocus?: () => void
 }
 
 type BlockActionsStorage = {
@@ -57,6 +60,8 @@ type BlockActionsStorage = {
   dragSource: BlockRange | null
   /** null は、落としても動かない位置か、ドラッグが本文を出たか落としたとき */
   handleDropTargetChange: ((boundary: number | null) => void) | null
+  /** キャレットのあるブロックの ⋮⋮ にフォーカスを移す。⋮⋮ が描かれていなければ null */
+  focusGrip: (() => boolean) | null
 }
 
 type BlockActionsOptions = {
@@ -148,6 +153,8 @@ const announce = (tr: Transaction, announcement: BlockAnnouncement) =>
 
 export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsStorage>({
   name: 'blockActions',
+  // 既定の優先度にしないのは、表の拡張が ← をセルの移動に使い、最初のセルの先頭では表の前へ抜けて ⋮⋮ に移れないため
+  priority: 101,
 
   addOptions() {
     return {
@@ -161,6 +168,7 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
       openMenu: null,
       dragSource: null,
       handleDropTargetChange: null,
+      focusGrip: null,
     }
   },
 
@@ -402,10 +410,24 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
       return true
     }
 
+    // Tab ではなく ← で移すのは、Tab を本文の外へ抜けるのに残し、⋮⋮ が最初の文字のすぐ左に見えているため
+    const focusGrip = () => {
+      const focus = editor.storage.blockActions?.focusGrip
+      const { doc, selection } = editor.state
+
+      if (!focus || !isActive(editor, options) || editor.view.composing) return false
+      if (!selection.empty && !(selection instanceof NodeSelection)) return false
+
+      const { startIndex } = resolveBlockRange(doc, selection)
+
+      return blockStartSelection(doc, startIndex)?.eq(selection) ? focus() : false
+    }
+
     return {
       [shortcuts.moveUp]: move('up'),
       [shortcuts.moveDown]: move('down'),
       [shortcuts.menu]: openMenu,
+      ArrowLeft: focusGrip,
     }
   },
 })

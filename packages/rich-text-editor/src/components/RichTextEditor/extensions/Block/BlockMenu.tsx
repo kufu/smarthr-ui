@@ -130,16 +130,21 @@ export const BlockMenu: FC<Props> = memo(({ editor }) => {
     }
 
     return {
-      open: (target: BlockRange, { getAnchorRect, onClose }: BlockMenuOptions = {}) => {
+      open: (
+        target: BlockRange,
+        { getAnchorRect, onClose, returnFocus }: BlockMenuOptions = {},
+      ) => {
         setRange(target)
         onCloseRef.current = onClose ?? null
         latest.openFrom({
           getAnchorRect:
             getAnchorRect ??
             (() => latest.editor.view.coordsAtPos(latest.editor.state.selection.head)),
-          returnFocus: () => {
-            if (!latest.editor.isDestroyed) latest.editor.view.focus()
-          },
+          returnFocus:
+            returnFocus ??
+            (() => {
+              if (!latest.editor.isDestroyed) latest.editor.view.focus()
+            }),
         })
 
         if (focusFrame.current !== null) cancelAnimationFrame(focusFrame.current)

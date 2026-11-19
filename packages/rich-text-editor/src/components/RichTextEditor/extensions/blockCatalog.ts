@@ -17,7 +17,7 @@ import { VideoIcon } from './Video/VideoIcon'
 
 import type { HeadingLevel } from './configureHeading'
 import type { InsertDialogKind } from './insertDialogs'
-import type { typedJa } from '../../../intl'
+import type { UseIntlReturn, typedJa } from '../../../intl'
 import type { RichTextFeature } from '../types'
 import type { ChainedCommands } from '@tiptap/core'
 import type { Node as PMNode } from '@tiptap/pm/model'
@@ -229,13 +229,16 @@ export const BLOCK_CATALOG: readonly BlockCatalogEntry[] = [
 
 const EXCERPT_LENGTH = 20
 
+// ブロック全体を読まないのは、大きな表やリストの中で打つたびに、⋮⋮ の名前のために全体を文字列にすることになるため
+const EXCERPT_SCAN_SIZE = 1000
+
 /** 文にしないのは、localize がフックからしか取れないため */
 export const describeBlock = (node: PMNode) => {
   // 表やリストのセル・項目の間に区切りを入れないと、隣り合う文字が 1 語につながって読まれる
   const text = (
     node.isLeaf
       ? String(node.attrs.alt ?? node.attrs.title ?? '')
-      : node.textBetween(0, node.content.size, ' ')
+      : node.textBetween(0, Math.min(node.content.size, EXCERPT_SCAN_SIZE), ' ')
   )
     .replace(/\s+/g, ' ')
     .trim()
@@ -245,6 +248,29 @@ export const describeBlock = (node: PMNode) => {
     blockId: BLOCK_CATALOG.find((entry) => entry.matches(node))?.id ?? null,
     excerpt: chars.length > EXCERPT_LENGTH ? `${chars.slice(0, EXCERPT_LENGTH).join('')}…` : text,
   }
+}
+
+export const describeSubject = (
+  { blockId, excerpt, count }: { blockId: BlockCatalogId | null; excerpt: string; count: number },
+  localize: UseIntlReturn['localize'],
+) => {
+  const entry = count === 1 ? BLOCK_CATALOG.find(({ id }) => id === blockId) : undefined
+
+  if (!entry) {
+    return localize(
+      { id: 'smarthr-ui/RichTextEditor/blockCount', defaultText: '{count}個のブロック' },
+      { count },
+    )
+  }
+
+  const name = localize(entry.name)
+
+  return excerpt
+    ? localize(
+        { id: 'smarthr-ui/RichTextEditor/blockWithExcerpt', defaultText: '{name}「{excerpt}」' },
+        { name, excerpt },
+      )
+    : name
 }
 
 export const isBlockAllowed = (
