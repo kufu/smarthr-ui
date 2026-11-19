@@ -1205,7 +1205,7 @@ describe('キーボードでのつまみへの移動', () => {
     placeCaret('bb')
     await openMenuByKey()
 
-    fireEvent.mouseDown(getEditorDom())
+    fireEvent.mouseDown(within(screen.getByRole('toolbar')).getAllByRole('button')[0])
     await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
     placeCaret('aa')
     await act(() => new Promise((resolve) => setTimeout(resolve)))
