@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act, useState } from 'react'
+import { flushSync } from 'react-dom'
 
 import { IntlProvider } from '../../../../intl'
+import { Button } from '../../../Button'
 import { FormControl } from '../../../FormGroup'
 
 import { WarekiPicker } from './WarekiPicker'
@@ -257,6 +259,72 @@ describe('WarekiPicker', () => {
     expect(textbox).toHaveProperty('value', '2024/09/25')
     expect(screen.getByText('令和6年9月25日')).toBeVisible()
   })
+
+  it.each([
+    { form: 'first', timing: 'before', value: '2024/10/15', alternative: '令和6年10月15日' },
+    { form: 'second', timing: 'before', value: '2024/09/25', alternative: '令和6年9月25日' },
+    { form: 'first', timing: 'during', value: '2024/10/15', alternative: '令和6年10月15日' },
+    { form: 'first', timing: 'after', value: '2024/09/25', alternative: '令和6年9月25日' },
+  ])(
+    'form 属性の変更（$timing）と $form のリセットがあっても入力値と和暦表示が一致する',
+    async ({ form, timing, value, alternative }) => {
+      vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+      const Fixture = () => {
+        const [associatedForm, setAssociatedForm] = useState('first')
+
+        return (
+          <>
+            <form
+              id="first"
+              aria-label="最初のフォーム"
+              onReset={() => {
+                if (timing === 'during') {
+                  flushSync(() => setAssociatedForm('second'))
+                }
+              }}
+            >
+              <FormControl label="WarekiPicker">
+                <WarekiPicker form={associatedForm} name="date" defaultValue="2024-09-25" />
+              </FormControl>
+              <Button type="reset">最初のフォームをリセット</Button>
+            </form>
+            <form id="second">
+              <Button type="reset">2つ目のフォームをリセット</Button>
+            </form>
+            <Button onClick={() => setAssociatedForm('second')}>フォームを変更</Button>
+          </>
+        )
+      }
+
+      renderWithIntl(<Fixture />)
+      const textbox = screen.getByRole('textbox', { name: /^WarekiPicker/ })
+
+      await userEvent.clear(textbox)
+      await userEvent.type(textbox, '2024/10/15{tab}')
+      expect(screen.getByText('令和6年10月15日')).toBeVisible()
+
+      const changeForm = screen.getByRole('button', { name: 'フォームを変更' })
+      if (timing === 'before') {
+        await userEvent.click(changeForm)
+      }
+
+      const resetLabel = form === 'first' ? '最初のフォームをリセット' : '2つ目のフォームをリセット'
+      await act(async () => {
+        if (timing === 'after') {
+          const firstForm = screen.getByRole('form', { name: '最初のフォーム' }) as HTMLFormElement
+          firstForm.reset()
+          flushSync(() => changeForm.click())
+        } else {
+          await userEvent.click(screen.getByRole('button', { name: resetLabel }))
+        }
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
+
+      expect(textbox).toHaveValue(value)
+      expect(screen.getByText(alternative)).toBeVisible()
+    },
+  )
 
   it('マウント後にdefaultValueが変更されても、form.reset()ではマウント時のdefaultValueに戻ること', async () => {
     const { container, rerender } = renderWithIntl(
