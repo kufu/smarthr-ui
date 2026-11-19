@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.2](https://github.com/kufu/smarthr-ui/compare/rich-text-editor-v0.1.1...rich-text-editor-v0.1.2) (2026-11-19)
+
+
+### Features
+
+* best-practice-for-functions-depsでfunctionsと同スコープのuseCallback使用を禁止する ([#7588](https://github.com/kufu/smarthr-ui/issues/7588)) ([cc7c3b7](https://github.com/kufu/smarthr-ui/commit/cc7c3b7d5b4e0e9b27b2b598da3450e7642223c0))
+* best-practice-for-use-latestにlatestプロパティの即時代入キャプチャ検知を追加する ([#7584](https://github.com/kufu/smarthr-ui/issues/7584)) ([8dcd34c](https://github.com/kufu/smarthr-ui/commit/8dcd34ceb59cbd4cb4d3b1191320c0dac5bfa0fa))
+* functionsのuseMemo依存配列を検知するESLintルールを追加する ([#7583](https://github.com/kufu/smarthr-ui/issues/7583)) ([02ace01](https://github.com/kufu/smarthr-ui/commit/02ace01a0fbec583beca333ed96578bb1def56e2))
+
 ## [0.1.1](https://github.com/kufu/smarthr-ui/compare/rich-text-editor-v0.1.0...rich-text-editor-v0.1.1) (2026-11-12)
 
 

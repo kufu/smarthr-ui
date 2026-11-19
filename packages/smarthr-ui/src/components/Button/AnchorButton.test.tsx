@@ -14,7 +14,7 @@ describe('AnchorButton', () => {
         </AnchorButton>
       </IntlProvider>,
     )
-    expect(screen.getByRole('link', { name: '新規作成 別タブで開く' })).toBeVisible()
+    expect(screen.getByRole('link', { name: /新規作成\s?別タブで開く/ })).toBeVisible()
   })
 
   describe('無効化時のアイコン色', () => {

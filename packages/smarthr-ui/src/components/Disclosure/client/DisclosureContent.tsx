@@ -21,8 +21,12 @@ type Props = ExtendElementPropsWithRef<
 >
 
 export const DisclosureContent: FC<Props> = ({ id, isOpen, visuallyHidden, children, ...rest }) => {
-  const [expanded, setExpanded, addDisclosureChangeListener] = useDisclosure(id)
-  const [prevIsOpen, setPrevIsOpen] = useState<boolean | undefined>(undefined)
+  // 初回の isOpen は state の初期値として反映する。
+  // animation frame を待つと、StrictMode などでエフェクトが片付けられたときに予約が取り消され、反映されないことがあるため
+  const [expanded, setExpanded, addDisclosureChangeListener, notifyDisclosureChange] =
+    useDisclosure(id, isOpen ?? false)
+  const [initialIsOpen] = useState(isOpen)
+  const [prevIsOpen, setPrevIsOpen] = useState<boolean | undefined>(isOpen)
 
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen)
@@ -32,7 +36,16 @@ export const DisclosureContent: FC<Props> = ({ id, isOpen, visuallyHidden, child
     }
   }
 
-  useEffect(() => addDisclosureChangeListener(), [addDisclosureChangeListener])
+  useEffect(() => {
+    const removeDisclosureChangeListener = addDisclosureChangeListener()
+
+    // 初期値で開いている場合、DisclosureTrigger 側の開閉状態（aria-expanded）にも同期する
+    if (initialIsOpen) {
+      notifyDisclosureChange()
+    }
+
+    return removeDisclosureChangeListener
+  }, [addDisclosureChangeListener, notifyDisclosureChange, initialIsOpen])
 
   if (expanded) {
     return (

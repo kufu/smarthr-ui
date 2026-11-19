@@ -52,4 +52,37 @@ describe('useDisclosure', () => {
       })
     }
   })
+
+  test('initialExpanded を渡すと、animation frame を待たずに初期値として反映される', () => {
+    const { result } = renderHook(() => useDisclosure('disclosure-2', true))
+
+    expect(result.current[0]).toBe(true)
+  })
+
+  test('notifyDisclosureChange で現在の開閉状態が同じidのhookに同期される', async () => {
+    const opened = renderHook(() => useDisclosure('disclosure-3', true))
+    const other = renderHook(() => useDisclosure('disclosure-3'))
+
+    let cleanups: Array<() => void> = []
+
+    act(() => {
+      cleanups = [opened, other].map((c) => c.result.current[2]())
+    })
+
+    try {
+      expect(other.result.current[0]).toBe(false)
+
+      act(() => {
+        opened.result.current[3]()
+      })
+
+      await waitFor(() => {
+        expect(other.result.current[0]).toBe(true)
+      })
+    } finally {
+      act(() => {
+        cleanups.forEach((cleanup) => cleanup())
+      })
+    }
+  })
 })
