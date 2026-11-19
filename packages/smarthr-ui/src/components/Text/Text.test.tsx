@@ -1,6 +1,6 @@
 /* eslint-disable smarthr/best-practice-for-text-component */
 import { act, render, waitFor } from '@testing-library/react'
-import { createRef } from 'react'
+import { type ComponentPropsWithoutRef, createRef } from 'react'
 
 import { Text } from './Text'
 
@@ -121,6 +121,63 @@ describe('Text', () => {
         )
 
         expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+      })
+
+      test('行数の指定がなくCSSで横方向に省略された場合もTooltipを表示する', () => {
+        mockClientHeight(24, 24)
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(120)
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(240)
+
+        const { container } = render(
+          <Text
+            maxLines={{ max: undefined, tooltip: true }}
+            style={{
+              display: 'block',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            長いテキスト
+          </Text>,
+        )
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+      })
+
+      test('カスタムコンポーネントの本文要素が変わった場合は省略を再判定する', async () => {
+        const SwitchableText = ({
+          link,
+          children,
+          ...rest
+        }: ComponentPropsWithoutRef<'span'> & { link: boolean }) =>
+          link ? (
+            <a {...rest} href="#text">
+              {children}
+            </a>
+          ) : (
+            <span {...rest}>{children}</span>
+          )
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(120)
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (
+          this: Element,
+        ) {
+          return this.tagName === 'A' ? 240 : 120
+        })
+        const { container, rerender } = render(
+          <Text as={SwitchableText} link={false} maxLines={{ max: 1, tooltip: true }}>
+            長いテキスト
+          </Text>,
+        )
+        expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+
+        rerender(
+          <Text as={SwitchableText} link maxLines={{ max: 1, tooltip: true }}>
+            長いテキスト
+          </Text>,
+        )
+
+        await waitFor(() => expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull())
       })
 
       test('複数行の計測では、端数を含む本文の幅と文字のスタイルを使う', () => {

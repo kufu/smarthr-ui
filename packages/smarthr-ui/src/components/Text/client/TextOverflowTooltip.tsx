@@ -82,21 +82,61 @@ export const TextOverflowTooltip: FC<Props> = ({
 
   const shadowCallbackRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
-      // node(shadow) -> shadowWrapper(parentElement) -> Component(previousElementSibling)
-      const target = node?.parentElement?.previousElementSibling
-      if (!node || !target) {
+      const shadowWrapper = node?.parentElement
+      const wrapper = shadowWrapper?.parentElement
+      if (!node || !shadowWrapper || !wrapper) {
         return
       }
 
+      let observedTarget: Element | null | undefined
       const checkOverflow = () => {
+        const target = shadowWrapper.previousElementSibling
+        if (target !== observedTarget) {
+          if (observedTarget) {
+            resizeObserver.unobserve(observedTarget)
+          }
+          observedTarget = target
+
+          mutationObserver.disconnect()
+          mutationObserver.observe(wrapper, { childList: true })
+          mutationObserver.observe(node, {
+            childList: true,
+            subtree: true,
+            characterData: true,
+          })
+          if (target) {
+            resizeObserver.observe(target)
+            mutationObserver.observe(target, {
+              attributes: true,
+              attributeFilter: ['class', 'style'],
+            })
+          }
+        }
+
+        if (!target) {
+          setIsOverflowing(false)
+          return
+        }
         if (maxLines === 1) {
           setIsOverflowing(target.scrollWidth > target.clientWidth)
           return
         }
 
+        const style = getComputedStyle(target)
+        if (
+          maxLines === undefined &&
+          style.overflowX !== 'visible' &&
+          (style.whiteSpace === 'nowrap' ||
+            style.whiteSpace === 'pre' ||
+            style.getPropertyValue('text-wrap-mode') === 'nowrap') &&
+          target.scrollWidth > target.clientWidth
+        ) {
+          setIsOverflowing(true)
+          return
+        }
+
         // HINT: -webkit-line-clamp の scrollHeight はブラウザー間で差があるため、同じ幅と文字スタイルの計測用要素と高さを比較する
         // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-        const style = getComputedStyle(target)
         const width = `${getTextWidth(target, style)}px`
         if (node.style.width !== width) {
           node.style.width = width
@@ -110,25 +150,16 @@ export const TextOverflowTooltip: FC<Props> = ({
         setIsOverflowing(node.clientHeight > target.clientHeight)
       }
 
-      checkOverflow()
-
       // HINT: 計測に伴う幅の更新を ResizeObserver の通知サイクルから分離する
       const scheduleCheck = () => frame.request(checkOverflow)
       // HINT: メディアクエリで文字サイズだけが変わる場合、本文のボックスサイズが変わらないことがある
-      const view = target.ownerDocument.defaultView
+      const view = node.ownerDocument.defaultView
       view?.addEventListener('resize', scheduleCheck)
       const resizeObserver = new ResizeObserver(scheduleCheck)
-      resizeObserver.observe(target)
       resizeObserver.observe(node)
-
-      // HINT: 本文のサイズが変わらない場合も、内容や文字スタイルの変更は計測に反映する
       const mutationObserver = new MutationObserver(scheduleCheck)
-      mutationObserver.observe(node, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-      })
-      mutationObserver.observe(target, { attributes: true, attributeFilter: ['class', 'style'] })
+
+      checkOverflow()
 
       return () => {
         view?.removeEventListener('resize', scheduleCheck)
