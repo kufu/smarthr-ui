@@ -5,13 +5,17 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentType,
   type FC,
+  type KeyboardEvent,
   type ReactNode,
   memo,
   useContext,
   useMemo,
+  useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useLatest } from '../../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
 import { Localizer } from '../../../../intl'
 import { Button } from '../../../Button'
@@ -143,31 +147,6 @@ const menuCallbackRef = (node: HTMLElement | null) => {
       )
     })
   }
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!document.activeElement) {
-      return
-    }
-
-    let direction: -1 | 0 | 1 = 0
-
-    // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      direction = e.shiftKey ? -1 : 1
-    } else if (KEY_UP_REGEX.test(e.key)) {
-      // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
-      e.preventDefault()
-      direction = -1
-    } else if (KEY_DOWN_REGEX.test(e.key)) {
-      e.preventDefault()
-      direction = 1
-    }
-
-    if (direction !== 0) {
-      moveFocus(node, direction)
-    }
-  }
-
   setupButtons()
 
   const observer = new MutationObserver(setupButtons)
@@ -179,12 +158,7 @@ const menuCallbackRef = (node: HTMLElement | null) => {
     attributeFilter: ['disabled', 'aria-disabled'],
   })
 
-  document.addEventListener('keydown', handleKeyDown)
-
-  return () => {
-    observer.disconnect()
-    document.removeEventListener('keydown', handleKeyDown)
-  }
+  return () => observer.disconnect()
 }
 
 export const DropdownMenuButton: FC<Props> = ({
@@ -192,9 +166,55 @@ export const DropdownMenuButton: FC<Props> = ({
   children,
   onOpen,
   onClose,
+  onKeyDown,
   className,
   ...rest
 }) => {
+  const menuRef = useRef<HTMLElement>(null)
+  const mergedMenuRef = useMergeRefs(menuRef, menuCallbackRef)
+  const latest = useLatest({ onKeyDown })
+
+  const functions = useMemo(() => {
+    const handleMenuKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+      const menu = menuRef.current
+      // HINT: Reactのイベントはポータルの外側にも伝播するため、DOM上で実際に所属する要素だけを扱う
+      if (
+        !menu ||
+        e.defaultPrevented ||
+        e.isPropagationStopped() ||
+        !(e.target instanceof Node) ||
+        !e.currentTarget.contains(e.target)
+      ) {
+        return
+      }
+
+      let direction: -1 | 0 | 1 = 0
+
+      // HINT: tabとarrow keyで挙動を揃えるため、tabもhandling対象にする
+      if (e.key === 'Tab') {
+        direction = e.shiftKey ? -1 : 1
+      } else if (KEY_UP_REGEX.test(e.key)) {
+        direction = -1
+      } else if (KEY_DOWN_REGEX.test(e.key)) {
+        direction = 1
+      }
+
+      if (direction !== 0) {
+        // HINT: 矢印キーでのフォーカス移動時に背後のページがスクロールしないようにする
+        e.preventDefault()
+        moveFocus(menu, direction)
+      }
+    }
+
+    return {
+      handleDelegateKeyDownContent: handleMenuKeyDown,
+      handleKeyDownTrigger: (e: KeyboardEvent<HTMLButtonElement>) => {
+        latest.onKeyDown?.(e)
+        handleMenuKeyDown(e)
+      },
+    }
+  }, [latest])
+
   const {
     text: triggerText,
     size: triggerSize,
@@ -220,11 +240,12 @@ export const DropdownMenuButton: FC<Props> = ({
         onlyIconTrigger={onlyIconTrigger}
         triggerSize={triggerSize}
         classNames={classNames}
+        onKeyDown={functions.handleKeyDownTrigger}
       >
         {triggerText}
       </MemoizedTriggerButton>
-      <DropdownContent controllable={true}>
-        <menu ref={menuCallbackRef} role="menu" className={classNames.actionList}>
+      <DropdownContent controllable={true} onKeyDown={functions.handleDelegateKeyDownContent}>
+        <menu ref={mergedMenuRef} role="menu" className={classNames.actionList}>
           <ButtonList>{children}</ButtonList>
         </menu>
       </DropdownContent>
