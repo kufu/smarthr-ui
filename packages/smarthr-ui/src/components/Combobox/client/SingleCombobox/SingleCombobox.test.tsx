@@ -540,6 +540,42 @@ describe('SingleCombobox', () => {
       expect(combobox()).toHaveValue('option 1')
     })
 
+    it('所属フォームを切り替えた場合、現在のフォームのリセットだけで初期選択に戻る', async () => {
+      const onChangeSelected = vi.fn()
+      const renderWithForm = (form: string) => (
+        <IntlProvider locale="ja">
+          <form id="first-form">
+            <FormControl label="コンボボックス">
+              <SingleCombobox
+                form={form}
+                name="selection"
+                defaultSelectedItem={items[0]}
+                onChangeSelected={onChangeSelected}
+                items={items}
+              />
+            </FormControl>
+          </form>
+          <form id="second-form" />
+        </IntlProvider>
+      )
+
+      const { container, rerender } = render(renderWithForm('first-form'))
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      onChangeSelected.mockClear()
+
+      rerender(renderWithForm('second-form'))
+      expect(combobox()).toHaveAttribute('form', 'second-form')
+
+      act(() => container.querySelector<HTMLFormElement>('#first-form')!.reset())
+      expect(combobox()).toHaveValue('option 2')
+      expect(onChangeSelected).not.toHaveBeenCalled()
+
+      act(() => container.querySelector<HTMLFormElement>('#second-form')!.reset())
+      expect(combobox()).toHaveValue('option 1')
+      expect(onChangeSelected).toHaveBeenCalledExactlyOnceWith(items[0])
+    })
+
     it('非制御でdefaultSelectedItemを指定しない場合、form.reset()を呼ぶと未選択に戻ること', async () => {
       const { container } = render(
         <IntlProvider locale="ja">
