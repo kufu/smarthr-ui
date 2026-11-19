@@ -2,6 +2,7 @@
 
 import {
   type ChangeEvent,
+  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -330,6 +331,7 @@ export const MultiCombobox = <T,>({
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
     let associatedForm: HTMLFormElement | null = null
+    let keyboardDeleteButton: HTMLButtonElement | null = null
 
     // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
     // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する。
@@ -437,7 +439,37 @@ export const MultiCombobox = <T,>({
     }
 
     return {
-      handleDelete: (item: ComboboxItem<T>) => latest.listBoxFunctions.handleDelete(item),
+      handleDelete: (item: ComboboxItem<T>, button?: HTMLButtonElement) => {
+        keyboardDeleteButton =
+          button && !latest.isExpanded && button.ownerDocument.activeElement === button
+            ? button
+            : null
+        latest.listBoxFunctions.handleDelete(item)
+      },
+      handleDelegateBlur: (e: FocusEvent<HTMLElement>) => {
+        const { target } = e
+        if (target === keyboardDeleteButton) {
+          // フォーカスが別の場所へ移動した場合は復帰を取り消す。削除に伴うblurでは復帰を維持する。
+          queueMicrotask(() => {
+            if (target === keyboardDeleteButton && target.isConnected) {
+              keyboardDeleteButton = null
+            }
+          })
+        }
+      },
+      focusInputAfterSelectionChange: (node: HTMLInputElement) => {
+        const { ownerDocument } = node
+        const wasDeleteButtonRemoved = keyboardDeleteButton?.isConnected === false
+        if (wasDeleteButtonRemoved) {
+          keyboardDeleteButton = null
+        }
+        if (
+          latest.isExpanded ||
+          (wasDeleteButtonRemoved && ownerDocument.activeElement === ownerDocument.body)
+        ) {
+          node.focus()
+        }
+      },
       blur,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         input = node
@@ -448,6 +480,7 @@ export const MultiCombobox = <T,>({
         }
 
         if (!node) {
+          keyboardDeleteButton = null
           latest.listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
@@ -554,11 +587,11 @@ export const MultiCombobox = <T,>({
   // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
   const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
-      if (node && isExpanded) {
-        node.focus()
+      if (node) {
+        functions.focusInputAfterSelectionChange(node)
       }
     },
-    [isExpanded, actualSelectedItems, isInputControlled],
+    [isExpanded, actualSelectedItems, isInputControlled, functions],
   )
   const inputSelectEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -630,6 +663,7 @@ export const MultiCombobox = <T,>({
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      onBlur={functions.handleDelegateBlur}
       onClick={functions.handleDelegateClick}
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}

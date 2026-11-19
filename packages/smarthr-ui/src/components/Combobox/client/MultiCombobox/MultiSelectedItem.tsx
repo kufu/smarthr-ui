@@ -24,7 +24,7 @@ import type { ComboboxItem, DeletableComboboxItem } from '../types'
 type Props<T> = {
   item: DeletableComboboxItem<T>
   disabled: boolean
-  handleDelete: (item: ComboboxItem<T>) => void
+  handleDelete: (item: ComboboxItem<T>, button?: HTMLButtonElement) => void
   enableEllipsis?: boolean
 }
 
@@ -91,11 +91,10 @@ export function MultiSelectedItem<T>({ item, enableEllipsis, disabled, handleDel
       },
       handleDestroyKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
         if (latest.itemDeletable && EXEC_DESTROY_KEY.test(e.key)) {
+          // ボタンのクリックやブラウザーの戻る操作を発生させず、ここで削除する。
+          e.preventDefault()
           e.stopPropagation()
-
-          // HINT: イベントの伝播が止まる関係でonClickに設定したhandleDeleteは実行されない
-          // このタイミングで明示的に削除処理を実行する
-          latest.handleDelete(latest.item)
+          latest.handleDelete(latest.item, e.currentTarget)
         }
       },
     }),
