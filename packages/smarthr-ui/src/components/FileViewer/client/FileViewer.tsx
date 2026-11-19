@@ -86,9 +86,10 @@ export const FileViewer: FC<Props> = ({
   const [scale, setScale] = useState(1)
   const [loaded, setLoaded] = useState(false)
   const [rotation, setRotation] = useState<number | undefined>(undefined)
-  const [width, setWidth] = useState(fixedWidth ?? 0)
+  const [measuredWidth, setMeasuredWidth] = useState(0)
 
   const hasWidth = fixedWidth !== undefined
+  const width = fixedWidth ?? measuredWidth
 
   const latest = useLatest({ scaleStep, rotation, onLoadError, onPassword })
   const hasOnLoadError = Boolean(onLoadError)
@@ -132,7 +133,7 @@ export const FileViewer: FC<Props> = ({
     loaded,
     width,
     hasWidth,
-    setWidth,
+    setWidth: setMeasuredWidth,
     scaleSteps,
     functions,
     handleLoadError: functions.handleLoadError,
