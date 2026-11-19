@@ -1,3 +1,5 @@
+import { Selection } from '@tiptap/pm/state'
+
 import type { Node as PMNode, ResolvedPos } from '@tiptap/pm/model'
 
 /** doc の最上位の子の連続した並び。startIndex は含み、endIndex は含まない */
@@ -35,6 +37,10 @@ export const blockRangeAt = (
 
   return { from, to, startIndex, endIndex }
 }
+
+/** 文字のブロックは最初の文字の前のキャレット、画像などはノード選択 */
+export const blockStartSelection = (doc: PMNode, index: number) =>
+  Selection.findFrom(doc.resolve(blockRangeAt(doc, index).from), 1)
 
 const isAtBlockStart = ($pos: ResolvedPos) => $pos.pos === $pos.before(1) + $pos.depth
 

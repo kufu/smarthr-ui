@@ -5,7 +5,7 @@ import { VisuallyHiddenText } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { type UseIntlReturn, useIntl } from '../../../../intl'
-import { BLOCK_CATALOG } from '../blockCatalog'
+import { BLOCK_CATALOG, describeSubject } from '../blockCatalog'
 
 import { BLOCK_ANNOUNCEMENT_META, type BlockAnnouncement } from './BlockActions'
 import { lastBoundary } from './blockRange'
@@ -15,31 +15,6 @@ import type { Editor } from '@tiptap/react'
 
 // 空にした直後に書き戻すと、支援技術が変化を拾わず、同じ文が続いたときに読まれないことがある
 const REANNOUNCE_DELAY = 100
-
-type Subject = Extract<BlockAnnouncement, { count: number }>
-
-const describeSubject = (
-  { blockId, excerpt, count }: Subject,
-  localize: UseIntlReturn['localize'],
-) => {
-  const entry = count === 1 ? BLOCK_CATALOG.find(({ id }) => id === blockId) : undefined
-
-  if (!entry) {
-    return localize(
-      { id: 'smarthr-ui/RichTextEditor/blockCount', defaultText: '{count}個のブロック' },
-      { count },
-    )
-  }
-
-  const name = localize(entry.name)
-
-  return excerpt
-    ? localize(
-        { id: 'smarthr-ui/RichTextEditor/blockWithExcerpt', defaultText: '{name}「{excerpt}」' },
-        { name, excerpt },
-      )
-    : name
-}
 
 const MOVE_LIMIT_LABELS = {
   first: { id: 'smarthr-ui/RichTextEditor/blockMoveLimitFirst', defaultText: '先頭のブロックです' },

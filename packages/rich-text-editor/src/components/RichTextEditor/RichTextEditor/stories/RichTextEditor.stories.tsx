@@ -608,7 +608,7 @@ export const BlockActions: Story = {
       <Stack>
         <FormControl
           label="ブロック操作"
-          helpMessage="macOS は Control+Shift+↑↓、それ以外は Alt+Shift+↑↓ でキャレットのあるブロックを動かします。Cmd+/（Ctrl+/）でブロックメニューが開きます。"
+          helpMessage="macOS は Control+Shift+↑↓、それ以外は Alt+Shift+↑↓ でキャレットのあるブロックを動かします。Cmd+/（Ctrl+/）でブロックメニューが開きます。ブロックの先頭で ← を押すと ⋮⋮ へ移ります。"
         >
           <RichTextEditor
             {...rest}

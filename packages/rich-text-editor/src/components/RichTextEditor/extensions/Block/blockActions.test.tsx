@@ -137,6 +137,8 @@ const openMenuByKey = async () => {
 
 const HANDLE_TITLE = 'ドラッグで移動、クリックでメニューを開く'
 
+const getGrip = () => screen.getByTitle(HANDLE_TITLE)
+
 /** jsdom はレイアウトしないので、最上位のブロックを 40px おきに縦に並べた矩形を返す */
 const stubBlockRects = () => {
   const editor = getEditor()
@@ -820,17 +822,37 @@ describe('つまみ', () => {
     expect(getEditor().state.selection.$head.parentOffset).toBe(0)
   })
 
-  it('文字を打つと隠し、マウスを動かすとまた出す', async () => {
+  it('本文にフォーカスがあればキャレットのブロックに出し、マウスを乗せると乗せたブロックへ、文字を打つとキャレットのブロックへ戻す', async () => {
     await renderEditor()
     placeCaret('aa')
+    await nextFrame()
+    expect(getGrip()).toHaveAccessibleName('段落「aa」の操作')
+
     await hoverBlock(1)
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
 
     fireEvent.keyDown(getEditorDom(), { key: 'a' })
     await nextFrame()
-    expect(screen.queryByTitle(HANDLE_TITLE)).not.toBeInTheDocument()
+    expect(getGrip()).toHaveAccessibleName('段落「aa」の操作')
+  })
 
-    await hoverBlock(1)
-    expect(screen.getByTitle(HANDLE_TITLE)).toBeInTheDocument()
+  it('本文からフォーカスが外れ、マウスも乗っていなければ出さない', async () => {
+    const user = userEvent.setup()
+    render(
+      <>
+        <RichTextEditor {...DEFAULT_PROPS} aria-label="本文" />
+        <button type="button">外</button>
+      </>,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('aa')
+    await nextFrame()
+    expect(getGrip()).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '外' }))
+    await nextFrame()
+    expect(screen.queryByTitle(HANDLE_TITLE)).not.toBeInTheDocument()
   })
 
   it('hideToolbar ではつまみもメニューも出さない', async () => {
@@ -845,21 +867,25 @@ describe('つまみ', () => {
     expect(queryMenu()).not.toBeInTheDocument()
   })
 
-  it('⋮⋮ で開いたメニューの間はポインタが外れてもつまみを出したままにし、閉じると隠す', async () => {
+  it('⋮⋮ で開いたメニューの間はポインタが外れてもそのブロックに出したままにし、閉じると本文へ戻ってキャレットのブロックに出す', async () => {
     const user = userEvent.setup()
     await renderEditor()
+    placeCaret('aa')
     await hoverBlock(1)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await user.click(getGrip())
     await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+    expect(getGrip()).toHaveAttribute('aria-expanded', 'true')
 
     await user.hover(getMenuItem('下へ移動'))
     await nextFrame()
-    expect(screen.getByTitle(HANDLE_TITLE)).toBeInTheDocument()
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
 
     await user.keyboard('{Escape}')
     await nextFrame()
     expect(queryMenu()).not.toBeInTheDocument()
-    expect(screen.queryByTitle(HANDLE_TITLE)).not.toBeInTheDocument()
+    expect(getEditorDom()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「aa」の操作')
+    expect(getGrip()).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('⋮⋮ で開いたメニューは、もう一度 ⋮⋮ を押すと閉じ、その次に押すとまた開く', async () => {
@@ -872,6 +898,7 @@ describe('つまみ', () => {
     await user.click(screen.getByTitle(HANDLE_TITLE))
     await nextFrame()
     expect(queryMenu()).not.toBeInTheDocument()
+    expect(getEditorDom()).toHaveFocus()
 
     await hoverBlock(1)
     await user.click(screen.getByTitle(HANDLE_TITLE))
@@ -896,6 +923,528 @@ describe('つまみ', () => {
 
     expect(errors).toEqual([])
     expect(outline()).toEqual(['aa', 'aa'])
+  })
+})
+
+describe('キーボードでのつまみへの移動', () => {
+  const pressLeft = (init: KeyboardEventInit = {}) =>
+    fireEvent.keyDown(getEditorDom(), { ...init, key: 'ArrowLeft' })
+  const pressOnGrip = (key: string) => fireEvent.keyDown(getGrip(), { key })
+  const caret = () => {
+    const { $head } = getEditor().state.selection
+
+    return [$head.parent.textContent, $head.parentOffset]
+  }
+  const listItem = (text: string): JSONContent => ({ type: 'listItem', content: [paragraph(text)] })
+
+  it('ブロックの先頭で ← を押すと、そのブロックの ⋮⋮ にフォーカスを移し、→ で本文のそのブロックの先頭へ戻る', async () => {
+    await renderEditor()
+    placeCaret('bb')
+
+    expect(pressLeft()).toBe(false)
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveRole('button')
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
+    expect(getGrip()).toHaveAttribute('aria-haspopup', 'menu')
+    expect(getGrip()).toHaveAttribute('aria-expanded', 'false')
+
+    pressOnGrip('ArrowRight')
+    expect(getEditorDom()).toHaveFocus()
+    expect(caret()).toEqual(['bb', 0])
+  })
+
+  it('ブロックの途中や、Shift を押しているときは ← を奪わない', async () => {
+    await renderEditor()
+    placeCaret('bb', 1)
+    expect(pressLeft()).toBe(true)
+
+    placeCaret('bb')
+    expect(pressLeft({ shiftKey: true })).toBe(true)
+    expect(getEditorDom()).toHaveFocus()
+  })
+
+  it('リストは最初の項目の先頭でだけ、画像は選んでいるときに ⋮⋮ へ移る', async () => {
+    await renderEditor({
+      defaultValue: doc([
+        paragraph('aa'),
+        { type: 'bulletList', content: [listItem('x'), listItem('y')] },
+        IMAGE,
+        paragraph('cc'),
+      ]),
+    })
+    placeCaret('y')
+    expect(pressLeft()).toBe(true)
+
+    placeCaret('x')
+    expect(pressLeft()).toBe(false)
+    expect(getGrip()).toHaveAccessibleName('箇条書きリスト「x y」の操作')
+
+    let imagePos = -1
+
+    getEditor().state.doc.forEach((node, offset) => {
+      if (node.type.name === 'image') imagePos = offset
+    })
+    selectNode(imagePos)
+    expect(pressLeft()).toBe(false)
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('画像「ロゴ」の操作')
+  })
+
+  it('表は最初のセルの先頭で ← を押すと、表の前へ抜けずに表の ⋮⋮ へ移る', async () => {
+    const cell = (text: string): JSONContent => ({ type: 'tableCell', content: [paragraph(text)] })
+
+    await renderEditor({
+      defaultValue: doc([
+        paragraph('aa'),
+        { type: 'table', content: [{ type: 'tableRow', content: [cell('t1'), cell('t2')] }] },
+        paragraph('cc'),
+      ]),
+    })
+    placeCaret('t1')
+
+    expect(pressLeft()).toBe(false)
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('表「t1 t2」の操作')
+    expect(caret()).toEqual(['t1', 0])
+  })
+
+  it('⋮⋮ で ← を押すと前のブロックの末尾へ移り、先頭のブロックでは ⋮⋮ に留まる', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+
+    pressOnGrip('ArrowLeft')
+    expect(getEditorDom()).toHaveFocus()
+    expect(caret()).toEqual(['aa', 2])
+
+    placeCaret('aa')
+    pressLeft()
+    pressOnGrip('ArrowLeft')
+    expect(getGrip()).toHaveFocus()
+    expect(caret()).toEqual(['aa', 0])
+  })
+
+  it('⋮⋮ で ↑↓ を押すと、前後のブロックの ⋮⋮ へ移り、キャレットもそのブロックの先頭へ移る。端では動かない', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+
+    pressOnGrip('ArrowDown')
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「cc」の操作')
+    expect(caret()).toEqual(['cc', 0])
+
+    pressOnGrip('ArrowDown')
+    expect(getGrip()).toHaveAccessibleName('段落「cc」の操作')
+
+    pressOnGrip('ArrowUp')
+    pressOnGrip('ArrowUp')
+    pressOnGrip('ArrowUp')
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「aa」の操作')
+    expect(caret()).toEqual(['aa', 0])
+  })
+
+  it('⋮⋮ で Enter を押すとそのブロックのメニューを開き、Esc で閉じると ⋮⋮ へ戻る', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+
+    pressOnGrip('Enter')
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+    expect(getGrip()).toHaveAttribute('aria-expanded', 'true')
+
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
+  })
+
+  it('メニューを閉じて ⋮⋮ に戻った時点で、閉じたことを伝える', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+    pressOnGrip('Enter')
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+
+    const expandedOnFocus: Array<string | null> = []
+    const grip = getGrip()
+
+    grip.addEventListener('focus', () => expandedOnFocus.push(grip.getAttribute('aria-expanded')))
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    await waitFor(() => expect(grip).toHaveFocus())
+
+    expect(expandedOnFocus).toEqual(['false'])
+  })
+
+  it('⋮⋮ のメニューで変換すると、戻った ⋮⋮ は変換したあとの名前を持つ', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+    pressOnGrip('Enter')
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+
+    const nameOnFocus: Array<string | null> = []
+    const grip = getGrip()
+
+    grip.addEventListener('focus', () => nameOnFocus.push(grip.getAttribute('aria-label')))
+    fireEvent.click(getConversionItem('見出し2'))
+    await waitFor(() => expect(grip).toHaveFocus())
+
+    expect(nameOnFocus).toEqual(['見出し2「bb」の操作'])
+  })
+
+  it('⋮⋮ では、修飾キー付きのショートカットを ⋮⋮ のまま本文と同じに効かせる', async () => {
+    await renderEditor()
+    placeCaret('aa')
+    pressLeft()
+
+    fireEvent.keyDown(getGrip(), { key: 'ArrowDown', altKey: true, shiftKey: true })
+
+    expect(outline()).toEqual(['bb', 'aa', 'cc'])
+    await nextFrame()
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「aa」の操作')
+  })
+
+  it('⋮⋮ で文字のキーを押すと、文字は入れずに本文のそのブロックの先頭へ戻す。Backspace と Delete は何もしない', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+
+    pressOnGrip('Backspace')
+    pressOnGrip('Delete')
+    expect(outline()).toEqual(['aa', 'bb', 'cc'])
+    expect(getGrip()).toHaveFocus()
+
+    expect(pressOnGrip('x')).toBe(false)
+    expect(getEditorDom()).toHaveFocus()
+    expect(caret()).toEqual(['bb', 0])
+    expect(outline()).toEqual(['aa', 'bb', 'cc'])
+  })
+
+  it('⋮⋮ のメニューを開いたまま外の何もない所を押すと、onBlur を呼ぶ', async () => {
+    const onFocus = vi.fn()
+    const onBlur = vi.fn()
+    render(
+      <RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onFocus={onFocus} onBlur={onBlur} />,
+      {
+        wrapper: Wrapper,
+      },
+    )
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+    pressLeft()
+    pressOnGrip('Enter')
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+
+    fireEvent.mouseDown(document.body)
+
+    await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
+    await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
+
+    placeCaret('aa')
+    await waitFor(() => expect(onFocus).toHaveBeenCalledTimes(2))
+  })
+
+  it('フォーカスのある ⋮⋮ が消えても、外へ出たときに onBlur を呼び、戻ったときにまた onFocus を呼ぶ', async () => {
+    const onFocus = vi.fn()
+    const onBlur = vi.fn()
+    const ui = (readOnly: boolean) => (
+      <>
+        <RichTextEditor
+          {...DEFAULT_PROPS}
+          readOnly={readOnly}
+          aria-label="本文"
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />
+        <button type="button">外</button>
+      </>
+    )
+    const { rerender } = render(ui(false), { wrapper: Wrapper })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+    pressLeft()
+    expect(getGrip()).toHaveFocus()
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+
+    rerender(ui(true))
+    expect(screen.queryByTitle(HANDLE_TITLE)).not.toBeInTheDocument()
+
+    act(() => screen.getByRole('button', { name: '外' }).focus())
+    await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
+
+    rerender(ui(false))
+    placeCaret('aa')
+    await waitFor(() => expect(onFocus).toHaveBeenCalledTimes(2))
+  })
+
+  it('ウィンドウを切り替えると onBlur を呼ぶ', async () => {
+    const onBlur = vi.fn()
+    render(<RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onBlur={onBlur} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+
+    vi.spyOn(document, 'hasFocus').mockReturnValue(false)
+    fireEvent.focusOut(getEditorDom())
+
+    await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
+  })
+
+  it('メニューにフォーカスがあるときにエディタの枠の中を押しても、onBlur を呼ばない', async () => {
+    // jsdom の hasFocus は何にもフォーカスが無いと false を返し、ウィンドウにフォーカスがあるかを返すブラウザと食い違う
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true)
+    const onBlur = vi.fn()
+    render(<RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onBlur={onBlur} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+    await openMenuByKey()
+
+    fireEvent.mouseDown(getEditorDom())
+    await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
+    placeCaret('aa')
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+
+    expect(onBlur).not.toHaveBeenCalled()
+  })
+
+  it('支援技術のようにマウスを介さず ⋮⋮ を押しても開き、閉じると ⋮⋮ へ戻る', async () => {
+    const user = userEvent.setup()
+    await renderEditor()
+    placeCaret('aa')
+    await hoverBlock(1)
+    await user.click(getGrip())
+    await waitFor(() => expect(queryMenu()).toBeInTheDocument())
+    await user.click(getGrip())
+    await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
+    await hoverBlock(1)
+
+    fireEvent.click(getGrip(), { detail: 0 })
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+
+    await waitFor(() => expect(getGrip()).toHaveFocus())
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
+  })
+
+  it('マウスで押してフォーカスの付いた ⋮⋮ で、修飾キーだけや効かないショートカットを押してもキャレットを動かさない', async () => {
+    await renderEditor()
+    placeCaret('aa', 1)
+    await hoverBlock(1)
+    act(() => getGrip().focus())
+
+    fireEvent.keyDown(getGrip(), { key: 'Meta', metaKey: true })
+    fireEvent.keyDown(getGrip(), { key: 'c', metaKey: true })
+    fireEvent.keyDown(getGrip(), { key: 'F9', altKey: true })
+
+    expect(caret()).toEqual(['aa', 1])
+  })
+
+  it('キーボードで ⋮⋮ にいる間だけ、枠を描く印を付ける', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    await nextFrame()
+    expect(getGrip()).not.toHaveAttribute('data-keyboard-focus')
+
+    pressLeft()
+    expect(getGrip()).toHaveAttribute('data-keyboard-focus')
+
+    pressOnGrip('ArrowRight')
+    await nextFrame()
+    expect(getGrip()).not.toHaveAttribute('data-keyboard-focus')
+  })
+
+  it('⋮⋮ で Ctrl+/ を押すと、Enter と同じく開き、閉じると ⋮⋮ へ戻る', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+
+    fireEvent.keyDown(getGrip(), { key: '/', ctrlKey: true })
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+    expect(getGrip()).toHaveAttribute('aria-expanded', 'true')
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+
+    await waitFor(() => expect(getGrip()).toHaveFocus())
+  })
+
+  it('外のボタンを押すと、そのボタンの click より先に onBlur を呼ぶ', async () => {
+    const onBlur = vi.fn()
+    const blurCallsAtClick: number[] = []
+    render(
+      <>
+        <RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onBlur={onBlur} />
+        <button type="button" onClick={() => blurCallsAtClick.push(onBlur.mock.calls.length)}>
+          外
+        </button>
+      </>,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+
+    const button = screen.getByRole('button', { name: '外' })
+
+    act(() => {
+      fireEvent.mouseDown(button)
+      button.focus()
+      fireEvent.click(button)
+    })
+
+    expect(blurCallsAtClick).toEqual([1])
+  })
+
+  it('ボタンを押してもフォーカスを移さないブラウザで、ツールバーやメニューを押してフォーカスが body に落ちても onBlur を呼ばず、外を押すと呼ぶ', async () => {
+    // jsdom の hasFocus は何にもフォーカスが無いと false を返し、ウィンドウにフォーカスがあるかを返すブラウザと食い違う
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true)
+    const onBlur = vi.fn()
+    render(<RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onBlur={onBlur} />, {
+      wrapper: Wrapper,
+    })
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+
+    const toolbarButton = within(screen.getByRole('toolbar')).getAllByRole('button')[0]
+
+    act(() => {
+      fireEvent.mouseDown(toolbarButton)
+      getEditorDom().blur()
+      fireEvent.click(toolbarButton)
+    })
+    placeCaret('bb')
+    await openMenuByKey()
+    act(() => {
+      fireEvent.mouseDown(getMenuItem('複製'))
+      ;(document.activeElement as HTMLElement).blur()
+    })
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+    expect(onBlur).not.toHaveBeenCalled()
+
+    fireEvent.mouseDown(document.body)
+    await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
+  })
+
+  it('Shadow DOM の中でも、← で ⋮⋮ へ移ってフォーカスが残り、onBlur を呼ばない', async () => {
+    const onBlur = vi.fn()
+    const host = document.createElement('div')
+    const shadow = host.attachShadow({ mode: 'open' })
+    const container = document.createElement('div')
+
+    // ProseMirror は jsdom を Safari と見なし（navigator.vendor が Apple）、Shadow DOM では jsdom に無い execCommand で選択を読む
+    Object.assign(document, { execCommand: () => false })
+    onTestFinished(() => {
+      Reflect.deleteProperty(document, 'execCommand')
+    })
+    document.body.appendChild(host)
+    shadow.appendChild(container)
+    onTestFinished(() => host.remove())
+    render(<RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onBlur={onBlur} />, {
+      container,
+      wrapper: Wrapper,
+    })
+
+    const editorDom = await waitFor(() => within(container).getByRole('textbox', { name: '本文' }))
+    const editor = (editorDom as TiptapEditorHTMLElement).editor!
+    let pos = -1
+
+    editor.state.doc.descendants((node, offset) => {
+      if (pos === -1 && node.isText && node.text === 'bb') pos = offset
+    })
+    act(() => {
+      editor.commands.setTextSelection(pos)
+      editor.view.focus()
+    })
+    fireEvent.keyDown(editorDom, { key: 'ArrowLeft' })
+    await nextFrame()
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+
+    expect(shadow.activeElement).toBe(within(container).getByTitle(HANDLE_TITLE))
+    expect(onBlur).not.toHaveBeenCalled()
+  })
+
+  it('⋮⋮ にいる間にウィンドウを切り替えても、⋮⋮ は消えずフォーカスも残る', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+
+    fireEvent.focusOut(getGrip())
+    await hoverBlock(0)
+
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
+  })
+
+  it('マウスで押してフォーカスの付いた ⋮⋮ は、ポインタが外れても消さない', async () => {
+    await renderEditor()
+    placeCaret('aa')
+    await hoverBlock(1)
+    act(() => getGrip().focus())
+
+    fireEvent.mouseLeave(getEditorDom().closest('.smarthr-ui-RichTextEditor')!)
+    await nextFrame()
+
+    expect(getGrip()).toHaveFocus()
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
+  })
+
+  it('⋮⋮ から開いたメニューで下へ移動すると、動かしたブロックの ⋮⋮ にフォーカスを残す', async () => {
+    await renderEditor()
+    placeCaret('bb')
+    pressLeft()
+    pressOnGrip(' ')
+    await waitFor(() => expect(queryMenu()).toBeInTheDocument())
+
+    fireEvent.click(getMenuItem('下へ移動'))
+    expect(outline()).toEqual(['aa', 'cc', 'bb'])
+
+    await nextFrame()
+    expect(getGrip()).toHaveFocus()
+    expect(caret()).toEqual(['bb', 0])
+    await waitFor(() => expect(announcement()).toMatch('「bb」'))
+  })
+
+  it('hideToolbar では ← を奪わない', async () => {
+    await renderEditor({ hideToolbar: true })
+    placeCaret('bb')
+
+    expect(pressLeft()).toBe(true)
+    expect(getEditorDom()).toHaveFocus()
+  })
+
+  it('⋮⋮ やメニューへ移っても onFocus・onBlur を呼ばず、エディタの外へ出たときに onBlur を 1 回呼ぶ', async () => {
+    const onFocus = vi.fn()
+    const onBlur = vi.fn()
+    render(
+      <>
+        <RichTextEditor {...DEFAULT_PROPS} aria-label="本文" onFocus={onFocus} onBlur={onBlur} />
+        <button type="button">外</button>
+      </>,
+      { wrapper: Wrapper },
+    )
+    await waitFor(() => expect(getEditorDom()).toBeInTheDocument())
+    placeCaret('bb')
+    await waitFor(() => expect(onFocus).toHaveBeenCalledTimes(1))
+
+    pressLeft()
+    pressOnGrip('Enter')
+    await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    await waitFor(() => expect(getGrip()).toHaveFocus())
+    pressOnGrip('ArrowRight')
+    await act(() => new Promise((resolve) => setTimeout(resolve)))
+
+    expect(onFocus).toHaveBeenCalledTimes(1)
+    expect(onBlur).not.toHaveBeenCalled()
+
+    act(() => screen.getByRole('button', { name: '外' }).focus())
+    await waitFor(() => expect(onBlur).toHaveBeenCalledTimes(1))
+    expect(onFocus).toHaveBeenCalledTimes(1)
   })
 })
 
@@ -929,6 +1478,17 @@ describe('つまみのドラッグ', () => {
 
     return grip
   }
+
+  it('ドラッグを取り消すと、⋮⋮ にフォーカスを残さず本文へ戻す', async () => {
+    await renderEditor()
+    placeCaret('aa')
+    const grip = await startDrag(1)
+
+    act(() => grip.focus())
+    fireEvent.dragEnd(grip)
+
+    expect(getEditorDom()).toHaveFocus()
+  })
 
   it('最上位の境界に落とすとそこへ動かし、features に無い書式も残す。1 回の取り消しで戻る', async () => {
     await renderEditor({
@@ -1048,9 +1608,10 @@ describe('エディタの作り直し', () => {
     await waitFor(() => expect(announcement()).toMatch('「aa」'))
 
     await hoverBlock(0)
+    expect(getGrip()).toHaveAccessibleName('段落「bb」の操作')
     fireEvent.keyDown(getEditorDom(), { key: 'a' })
     await nextFrame()
-    expect(screen.queryByTitle(HANDLE_TITLE)).not.toBeInTheDocument()
+    expect(getGrip()).toHaveAccessibleName('段落「aa」の操作')
 
     const editor = getEditor()
 

@@ -5,6 +5,7 @@ import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useS
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
+import { isActiveElement } from '../../../libs/activeElement'
 import { tv } from '../../../libs/tv'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { isLinkUrl } from '../Toolbar/urlValidation'
@@ -35,7 +36,11 @@ import type {
 } from '../types'
 import type { ChainedCommands } from '@tiptap/core'
 import type { Editor } from '@tiptap/react'
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
+import type {
+  CSSProperties,
+  FocusEvent as ReactFocusEvent,
+  PointerEvent as ReactPointerEvent,
+} from 'react'
 
 const classNameGenerator = tv({
   slots: {
@@ -169,11 +174,75 @@ export const RichTextEditor = memo(
         null,
       )
       const isResizable = Boolean(resizable) && !readOnly && !disabled
+      // 本文の focus・blur で onFocus・onBlur を呼ばないのは、本文から ⋮⋮ やツールバーへ移るたびに呼ばれ、
+      // 利用側の blur での検査などが走るため。エディタの中で最後にフォーカスのあった要素を持ち、外へ出たかはそれで見る
+      const focusedRef = useRef<HTMLElement | null>(null)
+      // ボタンを押してもフォーカスを移さないブラウザ（Safari・macOS の Firefox）では、ツールバーを押すとフォーカスが body に落ちる。
+      // 最後の mousedown がエディタの中（ポータルを含む）なら、body に落ちているだけでは外へ出たと見なさない
+      const pointerInsideRef = useRef(false)
+      const hasFocusCallbacks = Boolean(onFocus || onBlur)
 
-      const latest = useLatest({ onChange, outputFormat, draggedHeight, features })
+      const latest = useLatest({ onChange, onFocus, onBlur, outputFormat, draggedHeight, features })
 
-      const functions = useMemo(
-        () => ({
+      const functions = useMemo(() => {
+        // 移った先を relatedTarget で見ないのは、メニューやダイアログが body 直下のポータルにあり、DOM の包含では
+        // エディタの中か外かを見分けられないため。blur の数でも数えないのは、フォーカスのある要素が消えても
+        // Firefox と Safari は blur を送らないため。続く focus が届いてから、最後の要素がまだフォーカスを持つかを見る
+        let checkTimer: ReturnType<typeof setTimeout> | null = null
+
+        const runCheck = () => {
+          const focused = focusedRef.current
+
+          if (checkTimer !== null) clearTimeout(checkTimer)
+
+          checkTimer = null
+
+          const isParked =
+            pointerInsideRef.current &&
+            (document.activeElement === null || document.activeElement === document.body)
+
+          if (
+            focused &&
+            wrapperRef.current &&
+            (!document.hasFocus() ||
+              !((focused.isConnected && isActiveElement(focused)) || isParked))
+          ) {
+            focusedRef.current = null
+            latest.onBlur?.()
+          }
+        }
+
+        const checkFocus = () => {
+          checkTimer ??= setTimeout(runCheck)
+        }
+
+        return {
+          handleDelegateFocus: (e: ReactFocusEvent) => {
+            const isEntering = focusedRef.current === null
+
+            focusedRef.current = e.target as HTMLElement
+
+            if (isEntering) latest.onFocus?.()
+          },
+          handleDelegateBlur: checkFocus,
+          handleDocumentFocusIn: () => {
+            if (focusedRef.current) checkFocus()
+          },
+          // 中かどうかを e.target で見ないのは、メニューがポータルにあって DOM では外に見え、Shadow DOM では対象がホストに
+          // 置き換わるため。続いて届く handleDelegateMouseDownCapture が中だと付け直す
+          handleDocumentMouseDown: () => {
+            pointerInsideRef.current = false
+
+            if (focusedRef.current) checkFocus()
+          },
+          handleDelegateMouseDownCapture: () => {
+            pointerInsideRef.current = true
+          },
+          // 次のタスクまで待たないのは、タップでは mousedown から click までが同じタスクで送られ、外のボタンの click が
+          // onBlur（利用側の blur での検査など）より先に走るため
+          handleDocumentClick: () => {
+            if (checkTimer !== null) runCheck()
+          },
           handleChange: (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
             if (!latest.onChange) return
             if (latest.outputFormat === 'html') {
@@ -206,9 +275,23 @@ export const RichTextEditor = memo(
               minHeight: parseFloat(getComputedStyle(proseMirror).minHeight) || 0,
             }
           },
-        }),
-        [latest],
-      )
+        }
+      }, [latest])
+
+      // blur だけで確かめないのは、フォーカスのある要素が消えても Firefox と Safari は blur を送らないため
+      useEffect(() => {
+        if (!hasFocusCallbacks) return undefined
+
+        document.addEventListener('focusin', functions.handleDocumentFocusIn, true)
+        document.addEventListener('mousedown', functions.handleDocumentMouseDown, true)
+        document.addEventListener('click', functions.handleDocumentClick, true)
+
+        return () => {
+          document.removeEventListener('focusin', functions.handleDocumentFocusIn, true)
+          document.removeEventListener('mousedown', functions.handleDocumentMouseDown, true)
+          document.removeEventListener('click', functions.handleDocumentClick, true)
+        }
+      }, [hasFocusCallbacks, functions])
 
       // setPointerCapture ではなく window で受ける。ハンドルの外にポインタが出ても
       // 追従させる必要があり、かつ jsdom が setPointerCapture を実装していないため。
@@ -251,8 +334,6 @@ export const RichTextEditor = memo(
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
-        onFocus,
-        onBlur,
         features,
         headingLevels,
         disabled,
@@ -588,7 +669,15 @@ export const RichTextEditor = memo(
       )
 
       return (
-        <div ref={wrapperRef} className={classNames.wrapper} style={wrapperStyle}>
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+        <div
+          ref={wrapperRef}
+          className={classNames.wrapper}
+          style={wrapperStyle}
+          onFocus={functions.handleDelegateFocus}
+          onBlur={functions.handleDelegateBlur}
+          onMouseDownCapture={functions.handleDelegateMouseDownCapture}
+        >
           {toolbar}
           <div
             ref={contentRef}
