@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { EnvironmentProvider } from '../../hooks/client/useEnvironment'
@@ -111,6 +111,118 @@ describe('InputFile', () => {
     const input = screen.getByLabelText('input file')
     await userEvent.upload(input, file1)
     expect(screen.getByText(file1.name)).toBeInTheDocument()
+  })
+
+  it('ファイル選択後、form.reset()を呼ぶとファイルリストが消え、onChangeが空配列で呼ばれること', async () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+    const onChange = vi.fn()
+    const { container } = await render(
+      <IntlProvider locale="ja">
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile name="test" onChange={onChange} label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
+      </IntlProvider>,
+    )
+    const input = screen.getByLabelText('input file')
+    await userEvent.upload(input, file1)
+    expect(screen.getByText(file1.name)).toBeInTheDocument()
+
+    onChange.mockClear()
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    // HINT: resetFrame(requestAnimationFrame)での判定が、ネイティブイベントのtarget phaseと
+    // Reactの合成イベント(onReset, bubble phase)の実行順序に依存するテストのため、
+    // 同期実行する通常モックではなく実際の非同期なrequestAnimationFrameで検証する。
+    // ただしjsdom環境ではonResetのディスパッチがtarget phaseと同期的に完結するため、
+    // resetFrameをqueueMicrotaskにしてもこのテストは通ってしまう(デグレを検知できない)。
+    // 実ブラウザでのみ、ネイティブのbutton[type=reset]操作時にonResetのディスパッチが
+    // 1フレーム以上遅延する現象を実機で確認し、requestAnimationFrameでの対応が必要と判断した
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    })
+
+    expect(screen.queryByText(file1.name)).not.toBeInTheDocument()
+    expect(onChange).toHaveBeenCalledExactlyOnceWith([])
+  })
+
+  // FIXME: DataTransferで落ちるので修正が必要
+  it.skip('multiple.appendableでファイル選択後、form.reset()を呼ぶとファイルリストが消え、onChangeが空配列で呼ばれること', async () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+    const onChange = vi.fn()
+    const { container } = await render(
+      <IntlProvider locale="ja">
+        <EnvironmentProvider>
+          <form>
+            <FormControl label="input file">
+              <InputFile
+                name="test"
+                multiple={{ appendable: true }}
+                onChange={onChange}
+                label="input file"
+              />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
+      </IntlProvider>,
+    )
+    const input = screen.getByLabelText('input file')
+    await userEvent.upload(input, file1)
+    expect(screen.getByText(file1.name)).toBeInTheDocument()
+
+    onChange.mockClear()
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    })
+
+    expect(screen.queryByText(file1.name)).not.toBeInTheDocument()
+    expect(onChange).toHaveBeenCalledExactlyOnceWith([])
+  })
+
+  it('onResetでpreventDefault()が呼ばれた場合、form.reset()を呼んでもファイルリストが変わらないこと', async () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+    const onChange = vi.fn()
+    const { container } = await render(
+      <IntlProvider locale="ja">
+        <EnvironmentProvider>
+          <form onReset={(e) => e.preventDefault()}>
+            <FormControl label="input file">
+              <InputFile name="test" onChange={onChange} label="input file" />
+            </FormControl>
+          </form>
+        </EnvironmentProvider>
+      </IntlProvider>,
+    )
+    const input = screen.getByLabelText('input file')
+    await userEvent.upload(input, file1)
+    expect(screen.getByText(file1.name)).toBeInTheDocument()
+
+    onChange.mockClear()
+
+    act(() => {
+      container.querySelector('form')!.reset()
+    })
+
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+    })
+
+    expect(screen.getByText(file1.name)).toBeInTheDocument()
+    expect(onChange).not.toHaveBeenCalled()
   })
 
   // FIXME: DataTransferで落ちるので修正が必要
