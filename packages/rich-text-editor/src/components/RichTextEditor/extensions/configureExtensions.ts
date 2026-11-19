@@ -16,6 +16,7 @@ import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
 import { LineHeight } from './LineHeight'
 import { LinkShortcut } from './LinkShortcut'
 import { MediaToolbarShortcut } from './MediaToolbarShortcut'
+import { SlashCommand } from './Slash/SlashCommand'
 import { CellAppearance } from './Table/CellAppearance'
 import { CustomTable } from './Table/CustomTable'
 import { SafeTableCell, SafeTableHeader } from './Table/SafeTableCell'
@@ -25,6 +26,7 @@ import {
   SUPPORTED_HEADING_LEVELS,
   createHeadingOperationLimiter,
 } from './configureHeading'
+import { InsertDialogs } from './insertDialogs'
 import { patchListItemShiftTab } from './listItemShiftTab'
 import { PlayerIsolation } from './playerIsolation'
 import { createOperationRestrictor } from './restrictOperations'
@@ -116,6 +118,8 @@ export const configureExtensions = ({
     ),
     // features に無い間も登録しておく。後から足せないため、操作の可否は実行時に判定する。
     restrict(LinkShortcut),
+    restrict(SlashCommand),
+    InsertDialogs,
     MediaToolbarShortcut,
     PlayerIsolation,
     // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）
@@ -213,6 +217,7 @@ const FEATURE_SET = {
   youtube: true,
   video: true,
   table: true,
+  slashCommand: true,
 } as const satisfies Record<RichTextFeature, true>
 
 /** すべての feature */

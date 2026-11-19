@@ -22,8 +22,10 @@ import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ImageUrlPopover } from './ImageUrlPopover'
 import { ToolbarButton } from './ToolbarButton'
+import { useInsertDialogOpener } from './useInsertDialogOpener'
 
 import type { RovingButtonProps } from '../hooks/useRovingToolbar'
+import type { DropdownAnchor } from '../hooks/useToolbarDropdown'
 
 const classNameGenerator = tv({
   slots: {
@@ -57,10 +59,11 @@ export const ImageInsertButton: FC<Props> = memo(
       useRichTextEditorContext()
     const { localize } = useIntl()
     const [view, setView] = useState<'menu' | 'url'>('menu')
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
-      layoutKey: view,
-      disabled,
-    })
+    const { isOpen, setIsOpen, openFrom, restoreFocus, triggerRef, renderDropdown } =
+      useToolbarDropdown({
+        layoutKey: view,
+        disabled,
+      })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const menuRef = useRef<HTMLDivElement>(null)
@@ -72,31 +75,32 @@ export const ImageInsertButton: FC<Props> = memo(
       mimeTypes,
       isOpen,
       view,
-      triggerRef,
       onKeyDown,
       getImageUploadHandlers,
       setIsOpen,
+      openFrom,
+      restoreFocus,
     })
 
     const functions = useMemo(() => {
-      const focusTrigger = () => {
-        const trigger = latest.triggerRef.current
-
-        // 外れた/無効なトリガーへ戻すとフォーカスが body へ落ちる
-        if (trigger?.isConnected && !trigger.matches(':disabled')) trigger.focus()
+      const focusFirstItem = () => {
+        requestAnimationFrame(() => {
+          menuRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
+        })
       }
-      const openMenu = (focusFirstItem: boolean) => {
+      const openMenu = (focusFirst: boolean) => {
         setView('menu')
         latest.setIsOpen(true)
 
-        if (focusFirstItem) {
-          requestAnimationFrame(() => {
-            menuRef.current?.querySelector<HTMLButtonElement>('button')?.focus()
-          })
-        }
+        if (focusFirst) focusFirstItem()
       }
 
       return {
+        openFromAnchor: (anchor: DropdownAnchor) => {
+          setView('menu')
+          latest.openFrom(anchor)
+          focusFirstItem()
+        },
         handleClick: () => {
           if (latest.isOpen) latest.setIsOpen(false)
           else openMenu(false)
@@ -116,6 +120,7 @@ export const ImageInsertButton: FC<Props> = memo(
         },
         handleUploadClick: () => {
           latest.setIsOpen(false)
+          latest.restoreFocus()
           fileInputRef.current?.click()
         },
         handleUrlClick: () => {
@@ -149,7 +154,7 @@ export const ImageInsertButton: FC<Props> = memo(
         },
         handleUrlCancel: () => {
           latest.setIsOpen(false)
-          focusTrigger()
+          latest.restoreFocus()
         },
         handleMenuKeyDown: (e: KeyboardEvent) => {
           const buttons = menuRef.current?.querySelectorAll<HTMLButtonElement>('button')
@@ -173,12 +178,14 @@ export const ImageInsertButton: FC<Props> = memo(
               e.preventDefault()
               e.stopPropagation()
               latest.setIsOpen(false)
-              focusTrigger()
+              latest.restoreFocus()
               break
           }
         },
       }
     }, [latest])
+
+    useInsertDialogOpener(editor, 'image', functions.openFromAnchor)
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })
     const uploadLabel = localize({
