@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { EnvironmentProvider } from '../../../hooks/client/useEnvironment'
@@ -21,6 +21,30 @@ const renderFileViewer = (
   )
 
 describe('FileViewer', () => {
+  it('width が変わると、読み込み済みの画像の幅が更新される', () => {
+    const file = { url: 'preview.png', contentType: 'image/png', alt: 'プレビュー' }
+    const createFileViewer = (width: number) => (
+      <IntlProvider locale="ja">
+        <EnvironmentProvider>
+          <FileViewer file={file} width={width} />
+        </EnvironmentProvider>
+      </IntlProvider>
+    )
+
+    const { rerender } = render(createFileViewer(320))
+    const image = screen.getByAltText('プレビュー')
+    Object.defineProperties(image, {
+      complete: { value: true },
+      naturalWidth: { value: 480 },
+      naturalHeight: { value: 240 },
+    })
+    fireEvent.load(image)
+    expect(image.parentElement).toHaveStyle({ width: '320px' })
+
+    rerender(createFileViewer(640))
+    expect(image.parentElement).toHaveStyle({ width: '640px' })
+  })
+
   // HINT: 1 - 0.1 - 0.1 - 0.1 は浮動小数点では 0.7000000000000001 になるため、
   // 誤差を取り除けていないと最小の拡大率に達しても縮小ボタンが無効にならない
   it('縮小を繰り返して最小の拡大率に達すると、縮小ボタンが無効になる', async () => {
