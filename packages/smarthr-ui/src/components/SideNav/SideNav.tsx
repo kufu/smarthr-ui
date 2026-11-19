@@ -1,13 +1,19 @@
 import { type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { backgroundColor } from '../../tailwind'
+
 import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type BgColor = 'WHITE' | 'COLUMN'
 
 type Props = ExtendElementPropsWithoutRef<
   'ul',
   {
     /** 各アイテムの大きさ */
     size?: 'M' | 'S'
+    /** 背景色 */
+    bgColor?: BgColor
     rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
   }
 >
@@ -21,8 +27,12 @@ const ROUNDED = {
 const ROUNDED_ALL = ['shr-rounded-l', ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
-  base: ['smarthr-ui-SideNav', 'shr-relative shr-list-none shr-bg-column'],
+  base: ['smarthr-ui-SideNav', 'shr-relative shr-list-none'],
   variants: {
+    bgColor: {
+      WHITE: backgroundColor.WHITE,
+      COLUMN: backgroundColor.COLUMN,
+    } satisfies Record<BgColor, string>,
     rounded: {
       true: ROUNDED_ALL,
       all: ROUNDED_ALL,
@@ -37,14 +47,21 @@ const classNameGenerator = tv({
   },
 })
 
-export const SideNav: FC<Props> = ({ size = 'M', className, rounded, children, ...rest }) => {
+export const SideNav: FC<Props> = ({
+  size = 'M',
+  bgColor = 'COLUMN',
+  className,
+  rounded,
+  children,
+  ...rest
+}) => {
   const actualClassName = useMemo(
-    () => classNameGenerator({ rounded, className }),
-    [rounded, className],
+    () => classNameGenerator({ bgColor, rounded, className }),
+    [bgColor, rounded, className],
   )
 
   return (
-    <ul {...rest} className={actualClassName} data-size={size}>
+    <ul {...rest} className={actualClassName} data-size={size} data-bg-color={bgColor}>
       {children}
     </ul>
   )
