@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/react'
 
-export type MediaNodeName = 'image' | 'youtube'
+export type MediaNodeName = 'image' | 'youtube' | 'video'
 
 export const findSelectedNodePos = (editor: Editor, nodeName: MediaNodeName): number | null => {
   if (!editor.isActive(nodeName)) return null

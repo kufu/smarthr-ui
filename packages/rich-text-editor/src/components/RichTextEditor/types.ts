@@ -30,6 +30,7 @@ export type RichTextFeature =
   | 'textAlign'
   | 'image'
   | 'youtube'
+  | 'video'
   | 'table'
 
 export type RichTextChangeMeta = {
@@ -47,6 +48,21 @@ export type ImageUploadResult = {
    */
   src: string
   alt?: string
+}
+
+/** 本文に埋め込める、アップロード済みの動画 */
+export type RichTextVideo = {
+  /**
+   * 再生に使う URL。http(s) の絶対 URL か、`/` から始まるルート相対パス。それ以外の動画は一覧に出さない。
+   * 本文にそのまま保存されるため、期限付きの署名 URL は渡さないこと。
+   */
+  src: string
+  /** 一覧と本文に出す名前 */
+  title: string
+  /** サムネイル画像の URL。条件は src と同じで、満たさない動画は一覧に出さない */
+  poster?: string | null
+  /** 再生時間（秒）。一覧に出すだけで、本文には保存しない */
+  duration?: number
 }
 
 type RichTextEditorBaseProps = {
@@ -130,6 +146,14 @@ type RichTextEditorBaseProps = {
    * 一致しないファイルのドロップ・貼り付けは無視される。
    */
   acceptedMimeTypes?: string[]
+  /**
+   * 挿入できる動画の一覧を返す。features に video があり、これを渡したときだけ、ツールバーに動画の挿入ボタンを出す。
+   * エディタは動画をアップロードしない。
+   *
+   * 一覧を開くたびに呼び、閉じたら signal を中断する。一覧はキャッシュしないため、
+   * 別の画面でアップロードした動画も次に開いたときに出る。絞り込みは返した一覧の中でエディタが行う。
+   */
+  loadVideos?: (context: { signal: AbortSignal }) => Promise<readonly RichTextVideo[]>
 }
 
 export type RichTextEditorProps = RichTextEditorBaseProps &

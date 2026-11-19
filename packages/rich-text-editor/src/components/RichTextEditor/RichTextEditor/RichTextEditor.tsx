@@ -12,6 +12,7 @@ import { RichTextEditorProvider } from '../context/RichTextEditorContext'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
+import { VideoFloatingUI } from '../extensions/Video/VideoFloatingUI'
 import { YoutubeFloatingUI } from '../extensions/Youtube/YoutubeFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { getCharacterCount } from '../serializers/getCharacterCount'
@@ -139,6 +140,7 @@ export const RichTextEditor = memo(
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
+        loadVideos,
       }: RichTextEditorProps,
       ref,
     ) => {
@@ -544,6 +546,7 @@ export const RichTextEditor = memo(
           features={features}
           headingLevels={headingLevels}
           acceptedMimeTypes={acceptedMimeTypes}
+          loadVideos={loadVideos}
           onImageUpload={onImageUpload}
           onImageUploadError={onImageUploadError}
         >
@@ -574,6 +577,9 @@ export const RichTextEditor = memo(
           )}
           {editor && !readOnly && !disabled && !hideToolbar && features.includes('youtube') && (
             <YoutubeFloatingUI containerRef={wrapperRef} editor={editor} />
+          )}
+          {editor && !readOnly && !disabled && !hideToolbar && features.includes('video') && (
+            <VideoFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea} />

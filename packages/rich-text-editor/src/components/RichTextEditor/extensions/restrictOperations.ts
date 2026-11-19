@@ -25,6 +25,7 @@ const FEATURE_BY_NAME: Readonly<Record<string, RichTextFeature>> = {
   heading: 'heading',
   image: 'image',
   youtube: 'youtube',
+  video: 'video',
   table: 'table',
   tableRow: 'table',
   tableHeader: 'table',
