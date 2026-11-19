@@ -129,6 +129,50 @@ describe('Dialog', () => {
     expect(screen.getByRole('textbox', { name: 'dialog_datepicker 令和3年1月1日' })).toHaveFocus()
   })
 
+  it.each([
+    ['Tab', false],
+    ['Shift+Tab', true],
+  ])('タブ移動先がないときも%sでフォーカスがダイアログ内に留まること', async (_, shift) => {
+    renderWithIntl(
+      <>
+        <Button>ダイアログの外</Button>
+        <Dialog isOpen ariaLabel="Dialog">
+          <p>本文</p>
+        </Dialog>
+      </>,
+    )
+
+    const dialog = screen.getByRole('dialog', { name: 'Dialog' })
+    await waitForAnimationFrame()
+    const initialFocus = document.activeElement
+    expect(dialog.contains(initialFocus)).toBe(true)
+
+    await userEvent.tab({ shift })
+
+    expect(document.activeElement).toBe(initialFocus)
+  })
+
+  it('タブ移動先がない別のダイアログが開いていても、フォーカス中のダイアログ内をTabで移動できること', async () => {
+    renderWithIntl(
+      <>
+        <Dialog isOpen ariaLabel="本文のダイアログ">
+          <p>本文</p>
+        </Dialog>
+        <Dialog isOpen ariaLabel="操作用のダイアログ">
+          <Button>最初の操作</Button>
+          <Button>次の操作</Button>
+        </Dialog>
+      </>,
+    )
+
+    await waitForAnimationFrame()
+    screen.getByRole('button', { name: '最初の操作' }).focus()
+
+    await userEvent.tab()
+
+    expect(screen.getByRole('button', { name: '次の操作' })).toHaveFocus()
+  })
+
   it('IME 変換中の Tab はフォーカストラップの対象外になること', async () => {
     renderWithIntl(<DialogTemplate />)
 
