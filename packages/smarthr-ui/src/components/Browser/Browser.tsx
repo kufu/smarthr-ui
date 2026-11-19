@@ -1,11 +1,10 @@
-import { type ChangeEvent, type FC, type KeyboardEventHandler, useMemo } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
 
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
-import { getElementIdFromNode } from './utils'
 
 import type { ExtendElementPropsWithRef } from '../../types'
 
@@ -39,6 +38,7 @@ type Props = ExtendElementPropsWithRef<
 >
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
+  const browserId = useId()
   // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
@@ -111,9 +111,10 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
 
       if (target) {
         e.preventDefault()
-        latest.onSelectItem?.(target.value)
-        e.currentTarget
-          .querySelector<HTMLInputElement>(`#${CSS.escape(getElementIdFromNode(target.value))}`)
+        const itemValue = target.value
+        latest.onSelectItem?.(itemValue)
+        Array.from(e.currentTarget.querySelectorAll<HTMLInputElement>('input[type="radio"]'))
+          .find((input) => input.value === itemValue)
           ?.focus()
       }
     }
@@ -139,6 +140,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
       {columns.map((colItems, index) => (
         <BrowserColumn
           key={index}
+          browserId={browserId}
           value={selectedPath[index]}
           index={index}
           className={classNames.column}
