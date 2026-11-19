@@ -1,5 +1,7 @@
 'use client'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
@@ -16,16 +18,18 @@ type Props = ExtendElementPropsWithRef<
   { omit: 'children' }
 >
 
+const syncMixedState = (node: HTMLInputElement) => {
+  // mixedはchecked===trueの場合の見た目を変えるフラグのため、
+  // 実DOMのcheckedプロパティとdata-mixed属性の両方を見て判定する
+  node.indeterminate = node.checked && node.getAttribute('data-mixed') === 'true'
+}
+
 const callbackRef = (node: HTMLInputElement | null) => {
   if (!node) {
     return
   }
 
-  // mixedはchecked===trueの場合の見た目を変えるフラグのため、
-  // 実DOMのcheckedプロパティとdata-mixed属性の両方を見て判定する
-  const action = () => {
-    node.indeterminate = node.checked && node.getAttribute('data-mixed') === 'true'
-  }
+  const action = () => syncMixedState(node)
 
   action()
 
@@ -48,7 +52,32 @@ const callbackRef = (node: HTMLInputElement | null) => {
 }
 
 export const ActualCheckbox: FC<Props> = ({ ref, checked, mixed, error, ...rest }) => {
-  const mergedRef = useMergeRefs(callbackRef, ref)
+  const resetFrame = useAnimationFrame()
+  const resetCallbackRef = useLayoutEffectRef<HTMLInputElement>(
+    (node) => {
+      if (!node || !mixed) {
+        return
+      }
+
+      const root = node.getRootNode()
+      const handleReset = (event: Event) => {
+        // form属性などで所属フォームが変わるため、イベント発生時のformを参照する。
+        if (event.target === node.form) {
+          // リセット後のcheckedを取得する。リセットがキャンセルされた場合、checkedは変化しない。
+          resetFrame.request(() => syncMixedState(node))
+        }
+      }
+
+      root.addEventListener('reset', handleReset, true)
+
+      return () => {
+        root.removeEventListener('reset', handleReset, true)
+        resetFrame.cancel()
+      }
+    },
+    [mixed, resetFrame],
+  )
+  const mergedRef = useMergeRefs(callbackRef, resetCallbackRef, ref)
   const errorAttr = error || undefined
 
   return (
