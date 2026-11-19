@@ -5,6 +5,7 @@ import { act } from 'react'
 import { IntlProvider } from '../../../../intl'
 import { Button } from '../../../Button'
 import { MessageDialog, RemoteDialogTrigger } from '../../../Dialog'
+import { Input } from '../../../Input'
 
 import { DropdownMenuButton } from './DropdownMenuButton'
 
@@ -40,6 +41,81 @@ describe('DropdownMenuButton', () => {
       )
 
       expect(screen.getByRole('button', { name: /その他の操作/ })).toBeInTheDocument()
+    })
+  })
+
+  describe('キーボード操作', () => {
+    const template = (
+      <IntlProvider locale="ja">
+        <DropdownMenuButton trigger="その他の操作">
+          <Button>操作1</Button>
+          <Button>操作2</Button>
+        </DropdownMenuButton>
+        <Input name="outside" aria-label="メニュー外の入力欄" />
+        <Button>次の操作</Button>
+      </IntlProvider>
+    )
+
+    it.each([
+      { key: 'Tab', role: 'button', name: '次の操作' },
+      { key: 'ArrowRight', role: 'textbox', name: 'メニュー外の入力欄' },
+    ])('メニューを開いても、入力欄の $key の操作を奪わない', async ({ key, role, name }) => {
+      const user = userEvent.setup()
+      render(template)
+
+      await user.click(screen.getByRole('button', { name: /その他の操作/ }))
+      await waitForAnimationFrame()
+      expect(screen.getByRole('menu')).toBeInTheDocument()
+      act(() => screen.getByRole('textbox', { name: 'メニュー外の入力欄' }).focus())
+
+      await user.keyboard(`[${key}]`)
+
+      expect(screen.getByRole(role, { name })).toHaveFocus()
+    })
+
+    it.each(['preventDefault', 'stopPropagation'] as const)(
+      'トリガーの onKeyDown で %s すると、矢印キーでメニュー項目へフォーカスを移さない',
+      async (method) => {
+        const user = userEvent.setup()
+        render(
+          <IntlProvider locale="ja">
+            <DropdownMenuButton onKeyDown={(e) => e[method]()} trigger="その他の操作">
+              <Button>操作1</Button>
+            </DropdownMenuButton>
+          </IntlProvider>,
+        )
+
+        const trigger = screen.getByRole('button', { name: /その他の操作/ })
+        await user.click(trigger)
+        await waitForAnimationFrame()
+        act(() => trigger.focus())
+
+        await user.keyboard('[ArrowDown]')
+
+        expect(trigger).toHaveFocus()
+      },
+    )
+
+    it('開いたメニュー内で項目を移動し、最後の項目からの Tab で閉じる', async () => {
+      const user = userEvent.setup()
+      render(template)
+
+      const trigger = screen.getByRole('button', { name: /その他の操作/ })
+      await user.click(trigger)
+      await waitForAnimationFrame()
+
+      await user.tab()
+      expect(screen.getByRole('menuitem', { name: '操作1' })).toHaveFocus()
+
+      act(() => trigger.focus())
+      await user.keyboard('[ArrowDown]')
+      expect(screen.getByRole('menuitem', { name: '操作1' })).toHaveFocus()
+      await user.keyboard('[ArrowDown]')
+      expect(screen.getByRole('menuitem', { name: '操作2' })).toHaveFocus()
+
+      await user.tab()
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+      expect(trigger).toHaveFocus()
     })
   })
 
