@@ -1,8 +1,10 @@
 'use client'
 
-import { type ElementType, type FC, useCallback, useState } from 'react'
+import { type ElementType, type FC, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
+import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { Tooltip } from '../../Tooltip'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
@@ -11,6 +13,7 @@ type Props = ExtendElementPropsWithRef<
   'span',
   {
     as: ElementType
+    maxLines: number | undefined
   }
 >
 
@@ -33,43 +36,109 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const TextOverflowTooltip: FC<Props> = ({ as: Component, className, children, ...rest }) => {
+const MEASUREMENT_STYLES = [
+  'fontFamily',
+  'fontSize',
+  'fontStyle',
+  'fontWeight',
+  'lineHeight',
+  'letterSpacing',
+  'wordSpacing',
+  'whiteSpace',
+  'wordBreak',
+  'overflowWrap',
+  // HINT: 上の余白は本文の開始位置に影響する。下の余白は行の描画に使われるため、計測側には加えない
+  'paddingTop',
+] as const
+
+const parsePixels = (value: string) => Number.parseFloat(value) || 0
+
+const getTextWidth = (element: Element, style: CSSStyleDeclaration) => {
+  const padding = parsePixels(style.paddingLeft) + parsePixels(style.paddingRight)
+
+  // HINT: clientWidth は整数に丸められるため、折り返し位置が変わらないように使用幅の端数も保つ
+  if (!style.width.endsWith('px')) {
+    return Math.max(0, element.clientWidth - padding)
+  }
+
+  const width = parsePixels(style.width)
+  if (style.boxSizing === 'border-box') {
+    const border = parsePixels(style.borderLeftWidth) + parsePixels(style.borderRightWidth)
+    return Math.max(0, width - padding - border)
+  }
+
+  return width
+}
+
+export const TextOverflowTooltip: FC<Props> = ({
+  as: Component,
+  className,
+  children,
+  maxLines,
+  ...rest
+}) => {
   const [isOverflowing, setIsOverflowing] = useState(false)
+  const frame = useAnimationFrame()
 
-  // HINT: -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
-  // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadow要素と比較している
-  // 参考: https://github.com/kufu/smarthr-ui/pull/4710
-  const shadowCallbackRef = useCallback((node: HTMLElement | null) => {
-    if (!node) {
-      return
-    }
-
-    const checkOverflow = () => {
+  const shadowCallbackRef = useLayoutEffectRef(
+    (node: HTMLElement | null) => {
       // node(shadow) -> shadowWrapper(parentElement) -> Component(previousElementSibling)
-      const target = node.parentElement?.previousElementSibling as HTMLElement | null
+      const target = node?.parentElement?.previousElementSibling
+      if (!node || !target) {
+        return
+      }
 
-      if (target) {
+      const checkOverflow = () => {
+        if (maxLines === 1) {
+          setIsOverflowing(target.scrollWidth > target.clientWidth)
+          return
+        }
+
+        // HINT: -webkit-line-clamp の scrollHeight はブラウザー間で差があるため、同じ幅と文字スタイルの計測用要素と高さを比較する
+        // 参考: https://github.com/kufu/smarthr-ui/pull/4710
+        const style = getComputedStyle(target)
+        const width = `${getTextWidth(target, style)}px`
+        if (node.style.width !== width) {
+          node.style.width = width
+        }
+        for (const property of MEASUREMENT_STYLES) {
+          if (node.style[property] !== style[property]) {
+            node.style[property] = style[property]
+          }
+        }
+
         setIsOverflowing(node.clientHeight > target.clientHeight)
       }
-    }
 
-    checkOverflow()
+      checkOverflow()
 
-    window.addEventListener('resize', checkOverflow)
+      // HINT: 計測に伴う幅の更新を ResizeObserver の通知サイクルから分離する
+      const scheduleCheck = () => frame.request(checkOverflow)
+      // HINT: メディアクエリで文字サイズだけが変わる場合、本文のボックスサイズが変わらないことがある
+      const view = target.ownerDocument.defaultView
+      view?.addEventListener('resize', scheduleCheck)
+      const resizeObserver = new ResizeObserver(scheduleCheck)
+      resizeObserver.observe(target)
+      resizeObserver.observe(node)
 
-    // HINT: childrenの変更を検知するため、nodeの子要素・テキストの変化を監視する
-    const mutationObserver = new MutationObserver(checkOverflow)
-    mutationObserver.observe(node, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    })
+      // HINT: 本文のサイズが変わらない場合も、内容や文字スタイルの変更は計測に反映する
+      const mutationObserver = new MutationObserver(scheduleCheck)
+      mutationObserver.observe(node, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+      mutationObserver.observe(target, { attributes: true, attributeFilter: ['class', 'style'] })
 
-    return () => {
-      window.removeEventListener('resize', checkOverflow)
-      mutationObserver.disconnect()
-    }
-  }, [])
+      return () => {
+        view?.removeEventListener('resize', scheduleCheck)
+        resizeObserver.disconnect()
+        mutationObserver.disconnect()
+        frame.cancel()
+      }
+    },
+    [Component, frame, maxLines],
+  )
 
   const content = (
     <span className={CLASS_NAMES.wrapper}>

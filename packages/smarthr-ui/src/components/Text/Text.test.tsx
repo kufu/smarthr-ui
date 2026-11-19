@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/best-practice-for-text-component */
-import { act, render } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { createRef } from 'react'
 
 import { Text } from './Text'
@@ -59,15 +59,22 @@ describe('Text', () => {
 
       afterEach(() => {
         Object.defineProperty(Element.prototype, 'clientHeight', originalClientHeight)
+        vi.restoreAllMocks()
+        vi.unstubAllGlobals()
+        vi.useRealTimers()
       })
 
-      const mockClientHeight = (visible: number, shadow: number) => {
+      const mockClientHeight = (
+        visible: number,
+        shadow: number | ((node: HTMLElement) => number),
+      ) => {
         Object.defineProperty(Element.prototype, 'clientHeight', {
           configurable: true,
-          get(this: Element) {
-            return this.classList.contains('smarthr-ui-Text-overflowTooltipShadow')
-              ? shadow
-              : visible
+          get(this: HTMLElement) {
+            if (!this.classList.contains('smarthr-ui-Text-overflowTooltipShadow')) {
+              return visible
+            }
+            return typeof shadow === 'number' ? shadow : shadow(this)
           },
         })
       }
@@ -77,10 +84,6 @@ describe('Text', () => {
 
         const { container } = render(<Text maxLines={{ max: 3, tooltip: true }}>テキスト</Text>)
 
-        act(() => {
-          window.dispatchEvent(new Event('resize'))
-        })
-
         expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
       })
 
@@ -88,10 +91,6 @@ describe('Text', () => {
         mockClientHeight(72, 72)
 
         const { container } = render(<Text maxLines={{ max: 3, tooltip: true }}>テキスト</Text>)
-
-        act(() => {
-          window.dispatchEvent(new Event('resize'))
-        })
 
         expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
       })
@@ -107,11 +106,103 @@ describe('Text', () => {
 
         mockClientHeight(72, 72)
 
-        await act(async () => {
-          rerender(<Text maxLines={{ max: 3, tooltip: true }}>別のテキスト</Text>)
-        })
+        rerender(<Text maxLines={{ max: 3, tooltip: true }}>別のテキスト</Text>)
+
+        await waitFor(() => expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull())
+      })
+
+      test('一行表示では折り返さない文字列の横方向の省略を判定する', () => {
+        mockClientHeight(24, 24)
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(120)
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(240)
+
+        const { container } = render(
+          <Text maxLines={{ max: 1, tooltip: true }}>Employee_IDENTIFIER_1234567890</Text>,
+        )
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+      })
+
+      test('複数行の計測では、端数を含む本文の幅と文字のスタイルを使う', () => {
+        mockClientHeight(84, (shadow) =>
+          shadow.style.width === '403.75px' &&
+          shadow.style.fontSize === '24px' &&
+          shadow.style.lineHeight === '26px' &&
+          shadow.style.paddingTop === '14px' &&
+          shadow.style.paddingBottom === ''
+            ? 92
+            : 84,
+        )
+
+        const { container } = render(
+          <Text
+            maxLines={{ max: 2, tooltip: true }}
+            style={{
+              boxSizing: 'border-box',
+              width: '423.75px',
+              padding: '14px 8px 18px',
+              border: '2px solid',
+              fontSize: '24px',
+              lineHeight: '26px',
+            }}
+          >
+            本文
+          </Text>,
+        )
+
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+      })
+
+      test('要素のサイズ変更でTooltipの有無を更新し、アンマウント時に監視と予約を解除する', () => {
+        vi.useFakeTimers()
+        let notifyResize = () => {}
+        const disconnect = vi.fn()
+        vi.stubGlobal(
+          'ResizeObserver',
+          class {
+            constructor(callback: () => void) {
+              notifyResize = callback
+            }
+            observe() {}
+            disconnect = disconnect
+          },
+        )
+        const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame')
+        mockClientHeight(48, 48)
+        const { container, unmount } = render(
+          <Text maxLines={{ max: 2, tooltip: true }}>折り返す本文</Text>,
+        )
 
         expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+
+        mockClientHeight(48, 72)
+        act(() => {
+          notifyResize()
+          vi.advanceTimersToNextFrame()
+        })
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+
+        mockClientHeight(48, 48)
+        act(() => {
+          notifyResize()
+          vi.advanceTimersToNextFrame()
+        })
+        expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+
+        mockClientHeight(48, 72)
+        act(() => {
+          window.dispatchEvent(new Event('resize'))
+          vi.advanceTimersToNextFrame()
+        })
+        expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+
+        disconnect.mockClear()
+        cancelFrame.mockClear()
+        notifyResize()
+        unmount()
+
+        expect(disconnect).toHaveBeenCalled()
+        expect(cancelFrame).toHaveBeenCalled()
       })
 
       test('ref は実際にレンダリングされた要素を指す', () => {
