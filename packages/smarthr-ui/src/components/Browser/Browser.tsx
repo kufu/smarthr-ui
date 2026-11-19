@@ -68,8 +68,13 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
     // https://developer.mozilla.org/ja/docs/Web/API/HTMLElement/focus
     const handleDelegateKeyDown: KeyboardEventHandler = (e) => {
       const selectedNode = latest.value ? latest.rootNode.findByValue(latest.value) : undefined
+      const currentNode =
+        selectedNode ??
+        (e.target instanceof HTMLInputElement
+          ? latest.rootNode.findByValue(e.target.value)
+          : undefined)
 
-      if (!selectedNode) {
+      if (!currentNode) {
         return
       }
 
@@ -77,17 +82,17 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
 
       switch (e.key) {
         case 'ArrowUp': {
-          target = selectedNode.getPrev() ?? selectedNode.parent?.getLastChild()
+          target = currentNode.getPrev() ?? currentNode.parent?.getLastChild()
 
           break
         }
         case 'ArrowDown': {
-          target = selectedNode.getNext() ?? selectedNode.parent?.getFirstChild()
+          target = currentNode.getNext() ?? currentNode.parent?.getFirstChild()
 
           break
         }
         case 'ArrowLeft': {
-          const node = selectedNode.parent
+          const node = currentNode.parent
 
           if (node instanceof ItemNode) {
             target = node
@@ -98,7 +103,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
         case 'ArrowRight':
         case 'Enter':
         case ' ': {
-          target = selectedNode.getFirstChild()
+          target = selectedNode ? currentNode.getFirstChild() : currentNode
 
           break
         }
@@ -107,7 +112,9 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
       if (target) {
         e.preventDefault()
         latest.onSelectItem?.(target.value)
-        document.getElementById(getElementIdFromNode(target.value))?.focus()
+        e.currentTarget
+          .querySelector<HTMLInputElement>(`#${CSS.escape(getElementIdFromNode(target.value))}`)
+          ?.focus()
       }
     }
 

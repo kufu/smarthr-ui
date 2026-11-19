@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../intl'
@@ -25,6 +25,67 @@ describe('Browser', () => {
     expect(screen.getByRole('radio', { name: 'アイテム1' })).toHaveFocus()
     await userEvent.keyboard('[Tab]')
     expect(screen.getByRole('link', { name: '次の要素' })).toHaveFocus()
+  })
+
+  test.each([
+    ['Enter', '1', 'アイテム1'],
+    ['Space', '1', 'アイテム1'],
+    ['ArrowRight', '1', 'アイテム1'],
+    ['ArrowUp', '3', 'アイテム3'],
+    ['ArrowDown', '2', 'アイテム2'],
+  ])('未選択の状態で%sを押すと、%sが選択される', async (key, value, label) => {
+    const onSelectItem = vi.fn()
+    const user = userEvent.setup()
+    render(
+      <IntlProvider locale="ja">
+        <Browser
+          onSelectItem={onSelectItem}
+          items={[
+            { value: '1', label: 'アイテム1' },
+            { value: '2', label: 'アイテム2' },
+            { value: '3', label: 'アイテム3' },
+          ]}
+        />
+      </IntlProvider>,
+    )
+
+    await user.tab()
+    expect(screen.getByRole('radio', { name: 'アイテム1' })).toHaveFocus()
+    expect(onSelectItem).not.toHaveBeenCalled()
+
+    await user.keyboard(`[${key}]`)
+    expect(onSelectItem).toHaveBeenCalledExactlyOnceWith(value)
+    expect(screen.getByRole('radio', { name: label })).toHaveFocus()
+  })
+
+  test('同じ値の別の Browser があっても、操作中の Browser にフォーカスを維持する', async () => {
+    const onSelectItem = vi.fn()
+    const onSelectOther = vi.fn()
+    const user = userEvent.setup()
+    const items = [
+      { value: 'folder:1', label: 'フォルダー1' },
+      { value: 'folder:2', label: 'フォルダー2' },
+    ]
+    render(
+      <IntlProvider locale="ja">
+        <form>
+          <Browser onSelectItem={onSelectOther} items={items} />
+        </form>
+        <form>
+          <Browser onSelectItem={onSelectItem} items={items} />
+        </form>
+      </IntlProvider>,
+    )
+    const [, secondBrowser] = screen.getAllByRole('application')
+    const [firstItem, secondItem] = within(secondBrowser).getAllByRole('radio')
+
+    act(() => firstItem.focus())
+
+    await user.keyboard('[ArrowDown]')
+
+    expect(onSelectItem).toHaveBeenCalledExactlyOnceWith('folder:2')
+    expect(onSelectOther).not.toHaveBeenCalled()
+    expect(secondItem).toHaveFocus()
   })
 
   test('値を指定すると、ラジオボタンがチェックされ、タブストップになる', async () => {
