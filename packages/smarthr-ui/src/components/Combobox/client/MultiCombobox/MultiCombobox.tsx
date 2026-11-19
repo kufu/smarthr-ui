@@ -447,14 +447,9 @@ export const MultiCombobox = <T,>({
         latest.listBoxFunctions.handleDelete(item)
       },
       handleDelegateBlur: (e: FocusEvent<HTMLElement>) => {
-        const { target } = e
-        if (target === keyboardDeleteButton) {
-          // フォーカスが別の場所へ移動した場合は復帰を取り消す。削除に伴うblurでは復帰を維持する。
-          queueMicrotask(() => {
-            if (target === keyboardDeleteButton && target.isConnected) {
-              keyboardDeleteButton = null
-            }
-          })
+        // ReactのonBlurは削除時には発火しないため、親の更新より先に復帰を取り消す。
+        if (e.target === keyboardDeleteButton) {
+          keyboardDeleteButton = null
         }
       },
       focusInputAfterSelectionChange: (node: HTMLInputElement) => {

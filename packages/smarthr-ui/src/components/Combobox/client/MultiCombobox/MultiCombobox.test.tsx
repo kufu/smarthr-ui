@@ -1,6 +1,7 @@
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 
 import { IntlProvider } from '../../../../intl'
 import { FormControl } from '../../../FormGroup'
@@ -402,6 +403,50 @@ describe('SingleCombobox', () => {
     )
 
     expect(screen.queryByRole('button', { name: /を削除$/ })).not.toBeInTheDocument()
+    expect(document.body).toHaveFocus()
+    expect(listbox()).not.toBeInTheDocument()
+  })
+
+  it('フォーカスを外したとき親が同期的に削除しても入力欄へフォーカスを戻さないこと', async () => {
+    const item = { label: 'option 1', value: 'value-1' }
+    const onChangeSelected = vi.fn()
+    const Fixture = () => {
+      const [selectedItems, setSelectedItems] = useState([item])
+
+      const handleBlur = () => {
+        if (onChangeSelected.mock.calls.length > 0) {
+          flushSync(() => setSelectedItems([]))
+        }
+      }
+
+      return (
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl onBlur={handleBlur} label="コンボボックス">
+              <MultiCombobox
+                name="selection"
+                selectedItems={selectedItems}
+                onChangeSelected={onChangeSelected}
+                items={[item]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>
+      )
+    }
+
+    render(<Fixture />)
+
+    await userEvent.tab()
+    await userEvent.keyboard('{ArrowLeft}{Escape}{Enter}')
+
+    const deleteButton = deleteButtons()[0]
+    expect(deleteButton).toHaveFocus()
+    expect(onChangeSelected).toHaveBeenCalledWith([])
+
+    act(() => deleteButton.blur())
+
+    expect(deleteButton).not.toBeInTheDocument()
     expect(document.body).toHaveFocus()
     expect(listbox()).not.toBeInTheDocument()
   })
