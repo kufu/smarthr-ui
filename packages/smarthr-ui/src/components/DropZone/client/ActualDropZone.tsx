@@ -90,7 +90,7 @@ export const ActualDropZone: FC<Props> = ({
     }
   }, [className])
 
-  const latest = useLatest({ onSelectFiles })
+  const latest = useLatest({ disabled, onSelectFiles })
 
   const functions = useMemo(() => {
     const inputFileSelector = 'input[type="file"][data-smarthr-ui-input="true"]'
@@ -100,7 +100,7 @@ export const ActualDropZone: FC<Props> = ({
         overrideEventDefault(e)
         setFilesDraggedOver(false)
 
-        if (e.dataTransfer.types.includes('Files')) {
+        if (!latest.disabled && e.dataTransfer.types.includes('Files')) {
           const input = e.currentTarget.querySelector<HTMLInputElement>(inputFileSelector)
 
           if (input) {
@@ -113,7 +113,7 @@ export const ActualDropZone: FC<Props> = ({
       },
       handleDragOver: (e: DragEvent<HTMLElement>) => {
         overrideEventDefault(e)
-        setFilesDraggedOver(true)
+        setFilesDraggedOver(!latest.disabled)
       },
       handleDragLeave: () => {
         setFilesDraggedOver(false)
@@ -138,7 +138,7 @@ export const ActualDropZone: FC<Props> = ({
     <div
       role="presentation"
       className={classNames.wrapper}
-      data-files-dragged-over={filesDraggedOver || undefined}
+      data-files-dragged-over={(!disabled && filesDraggedOver) || undefined}
       onDrop={functions.handleDrop}
       onDragOver={functions.handleDragOver}
       onDragLeave={functions.handleDragLeave}
