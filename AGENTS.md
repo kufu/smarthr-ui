@@ -78,6 +78,8 @@ pnpm ui scaffold:storybook
 
 ## コード規約
 
+以下のうちESLintカスタムルール（`eslint-local-rules/`）で機械的に検知されるものは、エラーメッセージ自体に理由と対処法が書かれています。各ルールの検知範囲・設計意図は`eslint-local-rules/README.md`にまとめてあるので、違反した時点でそちらを参照してください。本書では、ルールでは検知できない設計判断（何が安定した値か、どう分割すべきかなど）を中心に解説します。
+
 ### 命名規則
 
 #### イベントハンドラー
@@ -109,31 +111,6 @@ export const Wrapper: FC<{ onClick?: () => void }> = ({ onClick }) => {
   return <InternalComponent onClick={onClick} />
 }
 ```
-
-### TypeScript
-- `interface` ではなく `type` を使用（ESLint ルール `@typescript-eslint/consistent-type-definitions` で強制）
-
-### インポート
-- 型インポートの形式は2つのESLintルールの組み合わせで決まる。**どちらも自動修正されるため、手で書き分ける必要はない**
-  - `@typescript-eslint/consistent-type-imports`（`fixStyle: 'inline-type-imports'`）: 型を値と同じimport文にまとめ、`type` 修飾子を付ける
-  - `@typescript-eslint/no-import-type-side-effects`: import文の指定子が**すべて型**の場合、`import type { ... }` 形式に変換する
-
-  ```typescript
-  // ✅ 値と型が混在する場合はインライン形式
-  import { type FC, useState } from 'react'
-
-  // ✅ すべて型の場合は import type 形式
-  // （`import { type ComponentProps, type ReactNode }` と書いても自動でこの形に修正される）
-  import type { ComponentProps, ReactNode } from 'react'
-  ```
-
-  **注意**: 「すべて型なのに `import type` になっている」のはルール違反ではなく、ルールが要求する正しい形。
-  インライン形式へ直すよう指摘された場合は誤りなので従わない。
-- ワイルドカードの禁止: `export *`、`export * as`、`import * as` は禁止（Icons のみ例外）
-
-### アクセシビリティ
-- 厳格な jsx-a11y ルールを適用
-- `smarthr/a11y-*` カスタム ESLint ルールが有効
 
 ### コンポーネント
 - クライアントコンポーネントには `'use client'` ディレクティブを付与
@@ -179,6 +156,8 @@ isValidElement lazy memo use useCallback useDebugValue useId useMemo version
 **使えない**
 
 `useState` `useRef` `useEffect` `useLayoutEffect` `useContext` `useReducer` `useSyncExternalStore` `useImperativeHandle` `createContext`
+
+このリストは`eslint-local-rules/require-client`が参照しているものと同じで、コンポーネントファイル（ファイル名が大文字始まり）でこれらを呼び出しているのに`'use client'`が無い場合は機械的に検知されます（詳細は`eslint-local-rules/README.md`参照）。ただし後述の「モジュールスコープでの呼び出しに注意」「ローカルの hook」「外部パッケージの判定」など、ルールでは検知できない判断が必要な場面も多くあります。
 
 export 一覧は実際のビルドから確認できます。
 
@@ -249,7 +228,7 @@ export const DialogOverlap: FC<Props> = (...) => {
 
 **client 境界が必要なモジュールは `client/` に閉じ込める**
 
-コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。
+コンポーネントから client 専用の処理を切り出したら、`client/` サブディレクトリにまとめます。`client/` は**境界の必要性を表す**ものであり、中身がすべて `'use client'` を持つという意味ではありません。`'use client'` を持つファイルが `client` ディレクトリ配下に置かれているかは`eslint-local-rules/require-client`が機械的に検知しますが、`components/`/`hooks/`への分割要否や`client/index.ts`を作ってよいかはルールでは検知できないため、以降の記述で判断してください。
 
 **デフォルトは `client/` 直下にフラットに配置する。`components/` `hooks/` という下位区分は作らない。**
 
@@ -682,7 +661,7 @@ const functions = useMemo(
 ```
 
 **外部関数のboolean化パターン:**
-外部公開コンポーネントが受け取る関数propsは、利用者側でmemo化されていない可能性が高いため、boolean化して安定化します：
+外部公開コンポーネントが受け取る関数propsは、利用者側でmemo化されていない可能性が高いため、boolean化して安定化します。`functions`のuseMemo依存配列に`latest`/`hasXxxx`形式以外の変数を直接含めると`eslint-local-rules/best-practice-for-functions-deps`がエラーにするため、書き方自体は強制されます（詳細・理由は`eslint-local-rules/README.md`参照）。
 
 ```typescript
 // ❌ 外部から受け取る関数を直接依存配列に入れると、再レンダリング毎に再計算される
@@ -707,15 +686,7 @@ const functions = useMemo(
 )
 ```
 
-**boolean化の判断基準:**
-- **boolean化が必要**: 外部公開コンポーネント（`src/index.ts`からexport）が受け取る関数props
-  - `onClick`, `onChange`, `hrefTemplate`, `onSelectDate` など
-  - 利用者側でmemo化されていない可能性が高い
-- **boolean化が不要**: 内部で生成された関数
-  - `functions.handleClick`, 内部`useCallback`の結果など
-  - 既にmemo化されている想定
-
-**理由**: 関数が「設定される場合は設定され続ける」「設定されない場合は設定されない状態が続く」という実用上の特性があるため、存在有無（boolean）は安定しているが、関数参照は不安定。boolean化により不要な再計算を防ぐ。
+**boolean化が必要なのは外部公開コンポーネント（`src/index.ts`からexport）が受け取る関数props**（`onClick`, `onChange`, `hrefTemplate`, `onSelectDate`など、利用者側でmemo化されていない可能性が高いもの）です。`functions.handleClick`や内部`useCallback`の結果など、内部で生成されすでにmemo化されている関数には不要です。
 
 **共通処理の切り出しパターン:**
 useMemo内で複数のハンドラーが共通の処理を使う場合、その処理を別関数として切り出します。切り出した関数は他のハンドラー内で使用でき、必要に応じてfunctionsオブジェクトのプロパティとしても返すことができます：
@@ -811,17 +782,7 @@ const functions = useMemo(() => {
 
 **functionsは再作成されないように作る:**
 
-`functions` の依存配列には `latest` と、安定していることが保証できる値のみを含めます。上記の boolean 化した値（`hasHrefTemplate` など）も安定しているため含めて構いません。
-
-```typescript
-// ✅ latest と boolean化した値のみ。再作成されない
-const functions = useMemo(() => ({ ... }), [hasHrefTemplate, latest])
-
-// ❌ ユーザー操作で変化する値を含めると再作成される
-const functions = useMemo(() => ({ ... }), [isExpanded, latest])
-```
-
-`functions` が再作成されると、それを依存配列に持つ他の hook まで連鎖して再実行されます。ユーザー操作で変化し得る値は依存配列に入れず、`latest` 経由で参照してください。
+`functions` の依存配列には `latest` と、安定していることが保証できる値のみを含めます（`eslint-local-rules/best-practice-for-functions-deps`が強制）。`functions` が再作成されると、それを依存配列に持つ他の hook まで連鎖して再実行されるため、ユーザー操作で変化し得る値は依存配列に入れず、`latest` 経由で参照してください。
 
 **注意: 「boolean化した値」の安定性は型だけでは決まらない**
 
@@ -842,29 +803,32 @@ const latest = useLatest({ onClickOption, hasValue })
 const functions = useMemo(() => ({ ... }), [latest])
 ```
 
-**依存配列の順序ルール:**
-functionsを他のhookの依存配列に含める場合、基本的に最後尾に配置しますが、`latest`（useLatestの結果）よりは前に配置します：
+**注意: この「迷ったらlatestに含める」判断基準は、`functions`のuseMemoに限らず、`latest`を使っている全てのフック(`useEffect`・`useCallback`等)の依存配列に当てはまる**
 
-```typescript
-const latest = useLatest({ onChange, onSubmit })
+本書の別の箇所（`classNames`のuseMemo、callback refの依存配列など）では「実用上マウント後に変化する可能性がほぼない値であれば直接依存配列に含めてよい」という書き方をしていますが、これは**`latest`という選択肢がそもそも無い文脈**での判断基準です。同じコンポーネント内に既に`latest`がある場合は話が別で、値が実際に安定しているかどうかに関わらず、新しく依存配列に加える値は`latest`にまとめて参照する方を優先してください。安定した値を直接依存配列に追加すること自体がダメなのではなく、「せっかく`latest`があるのに使わない」こと自体が、後から見て意図が読み取りにくく、かつ安定性の判断を書き手・レビュワーに都度強いる原因になります。
 
-const functions = useMemo(() => ({
-  handleChange: () => latest.onChange?.(),
-}), [latest])
+```tsx
+// ❌ idPrefixはuseId()の結果で実質不変だが、既にlatestがある文脈で直接依存配列に追加している
+const latest = useLatest({ getVideoHandlers })
 
-// ✅ 正しい依存配列の順序
 useEffect(() => {
-  // 何らかの処理
-}, [value, isOpen, functions, latest])
-//  ↑通常の値  ↑functions  ↑latest（最後）
+  const { loadVideos } = latest.getVideoHandlers()
+  // ...idPrefixを使った処理
+}, [attempt, idPrefix, latest])
 
-// ❌ 誤った順序
+// ✅ idPrefixもlatestに含めて参照する
+const latest = useLatest({ getVideoHandlers, idPrefix })
+
 useEffect(() => {
-  // 何らかの処理
-}, [value, latest, functions])  // latestがfunctionsより前は不適切
+  const { idPrefix } = latest
+  const { loadVideos } = latest.getVideoHandlers()
+  // ...
+}, [attempt, latest])
 ```
 
-**理由:**
+**依存配列の順序ルール:**
+functionsを他のhookの依存配列に含める場合、基本的に最後尾に配置しますが、`latest`（useLatestの結果）よりは前に配置します（`[value, isOpen, functions, latest]`の順）。`latest`自体を依存配列の最後尾に置くことは`eslint-local-rules/best-practice-for-use-latest`が強制しますが、`functions`がさらにその手前に来るべき理由はルールでは検知されません。
+
 - functionsは基本的に再作成されないが、可能性はゼロではない
 - latestは確実に再作成されない（useLatestの内部実装による保証）
 - 再作成の可能性がより低いものを依存配列の後ろに配置することで、実行速度の最適化と可読性・意図の明確化を実現
@@ -936,47 +900,7 @@ const functions = useMemo(() => ({
 
 #### useImperativeHandle の依存配列
 
-`useImperativeHandle` には**必ず依存配列を指定**します。
-
-**理由:** 依存配列を省略すると、毎レンダリングで React がcleanupとして `ref(null)` を呼んだあと `ref(node)` を再実行します。これによりcallback refを使う親コンポーネントで不要な処理（DOM操作、副作用など）が毎レンダリング走ります。
-
-**依存配列の決め方:**
-
-```typescript
-// ✅ factory が ref.current を返すだけ、かつ
-//    その要素が初回コミットで無条件にマウントされる → []
-// DOM要素はコンポーネントのライフタイム中に変わらないため、初回のみ実行すれば十分
-useImperativeHandle(ref, () => innerRef.current, [])
-
-// ✅ 条件付きマウント（portal、遅延描画など）
-//    マウントを制御する値を依存配列に含める
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useImperativeHandle(ref, () => containerRef.current, [portalRoot])
-
-// ✅ factory がオブジェクトを返し、中身が useCallback の値に依存する → [theCallback]
-// focus が変わったときのみ ref を再作成する
-const focus = useCallback(() => {
-  firstFocusTarget?.current?.focus()
-}, [firstFocusTarget])
-
-useImperativeHandle(ref, () => ({ focus }), [focus])
-
-// ✅ as prop でレンダリングする DOM 要素が変わる場合 → [Component]
-// factory 内で Component を参照しないが、レンダリング要素が変わると ref が指す型も変わるため必要
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useImperativeHandle(ref, () => wrapperRef.current!, [Component])
-```
-
-**依存配列に含めないもの:**
-
-- factory 内で参照していない値
-  - ただし「ref 対象の（再）マウントを引き起こす値」は例外（`as` の `Component`、portal の `portalRoot` など）
-- `ref` 自体（React が内部で管理するため不要）
-
-```typescript
-// ❌ 依存配列を省略してはいけない
-useImperativeHandle(ref, () => innerRef.current)
-```
+`useImperativeHandle` には**必ず依存配列を指定**します。省略すると毎レンダリングでReactがcleanupとして`ref(null)`を呼んだあと`ref(node)`を再実行し、callback refを使う親コンポーネントで不要な処理が毎レンダリング走ります。依存配列はfactory内で参照している値に加え、「ref対象の（再）マウントを引き起こす値」（`as`の`Component`、portalの`portalRoot`など、factory内で参照していなくても必要）を含めます。`ref`自体は含めません。
 
 #### useMergeRefs
 
@@ -1110,7 +1034,7 @@ const mergedRef = useMergeRefs(callbackRef, outerRef)
 
 callback ref 自体は基本的に依存配列を持たない固定参照にし、`MutationObserver` でDOM属性の変化を監視して処理を再実行します。値がすでに要素の属性として存在する場合（`value`、`disabled`、`aria-expanded` など）はそれをそのまま監視対象にでき、存在しない場合のみ `data-*` 属性として新たに表現します。callback ref が再生成されないため、`useMergeRefs` に渡しても他の ref を巻き込みません。実例は `FormGroup.tsx` の `innerCallbackRef`(`data-auto-bind-error-input` などの変化を監視)。
 
-**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。
+**例外**: 依存配列に含める値が `latest`（useLatestの結果、常に参照が安定）や `functions`（前述の functions パターンの結果、再作成されない前提で作る）、あるいは実用上マウント後に変化する可能性がほぼない値（`size` など）であれば、依存配列に含めても再生成の実害はありません。空配列にこだわる必要はなく、値の安定性で判断してください。ただし、同じコンポーネント内に既に`latest`がある場合は、新しく加える値が安定していても`latest`にまとめることを優先してください（詳細は前述の「迷ったらlatestに含める」判断基準を参照）。
 
 ```tsx
 // ✅ callbackRef自体は空配列で固定。値の変化はdata属性経由で伝える
@@ -1150,39 +1074,7 @@ const mergedRef = useMergeRefs(layoutEffectRef, outerRef)
 
 **注意: `dependencies` が常に空配列の場合は使わない**
 
-`useLayoutEffectRef` の価値は「`dependencies` 変化時にnodeを変えずにactionを再実行できる」点にあります。`dependencies` が常に `[]` なら、この再実行の恩恵がなく、mount/unmount時にactionを呼ぶだけの通常のcallback refと変わりません。この場合は素直に `useCallback(action, [])` を使ってください。
-
-```tsx
-// ❌ dependenciesが常に[]なら、useLayoutEffectRefを使う理由がない
-const ref = useLayoutEffectRef((node) => {
-  if (!node) return
-  node.focus()
-}, [])
-
-// ✅ 単純なuseCallbackのcallback refで十分
-const ref = useCallback((node: HTMLElement | null) => {
-  if (!node) return
-  node.focus()
-}, [])
-```
-
-#### callback ref の cleanup 関数
-
-React 19 では callback ref がcleanup関数を返せるようになり、要素がデタッチされる際にReactが自動で実行します。
-
-```tsx
-// ✅ callback refがcleanup関数を返す
-const callbackRef = useCallback((node: HTMLElement | null) => {
-  if (!node) return
-
-  const observer = new MutationObserver(callback)
-  observer.observe(node, { childList: true })
-
-  return () => observer.disconnect()
-}, [])
-```
-
-複数の ref を1つに統合する場合は `useMergeRefs` を使います。
+`useLayoutEffectRef` の価値は「`dependencies` 変化時にnodeを変えずにactionを再実行できる」点にあります。`dependencies` が常に `[]` なら、この再実行の恩恵がなく、mount/unmount時にactionを呼ぶだけの通常のcallback refと変わりません。この場合は素直に `useCallback(action, [])` を使ってください。`eslint-local-rules/best-practice-for-use-layout-effect-ref`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。
 
 #### useOnce
 

@@ -67,7 +67,16 @@ export const ImageInsertButton: FC<Props> = memo(
 
     const mimeTypes = acceptedMimeTypes ?? DEFAULT_MIME_TYPES
 
-    const latest = useLatest({ mimeTypes, isOpen, view, triggerRef, onKeyDown })
+    const latest = useLatest({
+      editor,
+      mimeTypes,
+      isOpen,
+      view,
+      triggerRef,
+      onKeyDown,
+      getImageUploadHandlers,
+      setIsOpen,
+    })
 
     const functions = useMemo(() => {
       const focusTrigger = () => {
@@ -78,7 +87,7 @@ export const ImageInsertButton: FC<Props> = memo(
       }
       const openMenu = (focusFirstItem: boolean) => {
         setView('menu')
-        setIsOpen(true)
+        latest.setIsOpen(true)
 
         if (focusFirstItem) {
           requestAnimationFrame(() => {
@@ -89,7 +98,7 @@ export const ImageInsertButton: FC<Props> = memo(
 
       return {
         handleClick: () => {
-          if (latest.isOpen) setIsOpen(false)
+          if (latest.isOpen) latest.setIsOpen(false)
           else openMenu(false)
         },
         handleTriggerKeyDown: (e: KeyboardEvent) => {
@@ -97,7 +106,7 @@ export const ImageInsertButton: FC<Props> = memo(
             e.preventDefault()
             e.stopPropagation()
 
-            if (latest.isOpen && latest.view === 'url') setIsOpen(false)
+            if (latest.isOpen && latest.view === 'url') latest.setIsOpen(false)
             else openMenu(true)
 
             return
@@ -106,7 +115,7 @@ export const ImageInsertButton: FC<Props> = memo(
           latest.onKeyDown?.(e)
         },
         handleUploadClick: () => {
-          setIsOpen(false)
+          latest.setIsOpen(false)
           fileInputRef.current?.click()
         },
         handleUrlClick: () => {
@@ -114,32 +123,32 @@ export const ImageInsertButton: FC<Props> = memo(
         },
         handleFileChange: (e: ChangeEvent<HTMLInputElement>) => {
           const file = e.target.files?.[0]
-          const { onImageUpload, onImageUploadError } = getImageUploadHandlers()
+          const { onImageUpload, onImageUploadError } = latest.getImageUploadHandlers()
           // accept 属性はダイアログの絞り込みヒントでしかなく利用者が回避できるため、
           // D&D・貼り付けと同じく選ばれたファイルの MIME type を確認する。
           // ダイアログはドロップダウンを閉じてから開くので、disabled で閉じる仕組みでは止まらない
           if (
             file &&
             onImageUpload &&
-            editor.isEditable &&
+            latest.editor.isEditable &&
             matchesMimeType(file.type, latest.mimeTypes)
           ) {
-            uploadAndInsertImage(editor, file, null, onImageUpload, onImageUploadError)
+            uploadAndInsertImage(latest.editor, file, null, onImageUpload, onImageUploadError)
           }
           if (e.target) {
             e.target.value = ''
           }
         },
         handleUrlInsert: (src: string) => {
-          editor
+          latest.editor
             .chain()
             .focus()
             .insertContent({ type: 'image', attrs: { src, alt: '' } })
             .run()
-          setIsOpen(false)
+          latest.setIsOpen(false)
         },
         handleUrlCancel: () => {
-          setIsOpen(false)
+          latest.setIsOpen(false)
           focusTrigger()
         },
         handleMenuKeyDown: (e: KeyboardEvent) => {
@@ -163,13 +172,13 @@ export const ImageInsertButton: FC<Props> = memo(
             case 'Tab':
               e.preventDefault()
               e.stopPropagation()
-              setIsOpen(false)
+              latest.setIsOpen(false)
               focusTrigger()
               break
           }
         },
       }
-    }, [editor, getImageUploadHandlers, setIsOpen, latest])
+    }, [latest])
 
     const label = localize({ id: 'smarthr-ui/RichTextEditor/image', defaultText: '画像を挿入' })
     const uploadLabel = localize({

@@ -25,9 +25,6 @@ export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
   type QueriesType = typeof queries
   const snapshotQueriesRef = useRef<MediaQueryMatches<QueriesType> | null>(null)
 
-  // useLatest を使わず queries を直接依存配列に指定することで、functions が再作成され、
-  // useSyncExternalStore が subscribe を再実行して新しいメディアクエリを監視できる
-  // queries自体はthemeから取得する想定なので殆どの場合stableだが安全策として依存配列に直接指定する
   const functions = useMemo(() => {
     const queryEntries = Object.entries(queries)
     const serverSnapshot = queryEntries.reduce(
@@ -77,6 +74,9 @@ export const EnvironmentProvider: FC<Props> = ({ children, environment }) => {
         }
       },
     }
+    // useLatest を使わず queries を直接依存配列に指定することで、functions が再作成され、
+    // useSyncExternalStore が subscribe を再実行して新しいメディアクエリを監視できる
+    // queries自体はthemeから取得する想定なので殆どの場合stableだが安全策として依存配列に直接指定する
   }, [queries])
 
   const matches = useSyncExternalStore(

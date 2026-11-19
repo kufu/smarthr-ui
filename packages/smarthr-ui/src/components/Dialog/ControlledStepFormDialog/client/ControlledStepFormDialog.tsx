@@ -14,6 +14,7 @@ import {
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../../hooks/useObjectAttributes'
+import { type ResponseStatus, useResponseStatus } from '../../../../hooks/useResponseStatus'
 import { useLocalize } from '../../../../intl'
 import { DialogPortal } from '../../../DialogPortal'
 import { DialogContent } from '../../client'
@@ -73,8 +74,11 @@ type Props = ExtendElementPropsWithRef<
       onSubmit: StepFormDialogContentProps['handleSubmit']
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
       onClickBack?: () => void
+      responseStatus?: ResponseStatus
     },
-    { omit: 'activeStep' | 'handleClickClose' | 'handleClickBack' | 'handleSubmit' }
+    {
+      omit: 'activeStep' | 'handleClickClose' | 'handleClickBack' | 'handleSubmit'
+    }
   >,
   { omit: 'focusTrapRef' }
 >
@@ -180,7 +184,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   onClickClose,
   onClickBack,
   onPressEscape = onClickClose,
-  responseStatus,
+  responseStatus: orgResponseStatus,
   className,
   isOpen,
   ...rest
@@ -241,6 +245,7 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   })
 
   const focusTrapRef = useRef<{ focus: () => void } | null>(null)
+  const responseStatus = useResponseStatus(orgResponseStatus)
 
   const latest = useLatest({ onClickClose, onSubmit, onClickBack, isOpen })
 
@@ -275,7 +280,9 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       isOpen={isOpen}
       className={className}
       ariaLabelledby={heading.id}
-      onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+      onPressEscape={
+        closeButton.disabled || responseStatus.isProcessing ? undefined : onPressEscape
+      }
     >
       <StepFormDialogContent
         activeStep={activeStep}

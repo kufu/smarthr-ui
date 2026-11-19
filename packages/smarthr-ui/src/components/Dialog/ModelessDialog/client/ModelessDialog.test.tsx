@@ -7,6 +7,14 @@ import { Button } from '../../../Button'
 
 import { ModelessDialog } from './ModelessDialog'
 
+const NO_SAFE_AREA_INSETS = { top: 0, right: 0, bottom: 0, left: 0 }
+
+const getSafeAreaInsets = vi.hoisted(() => vi.fn(() => ({ top: 0, right: 0, bottom: 0, left: 0 })))
+
+vi.mock('../../../../hooks/client/useSafeAreaInsets', () => ({
+  useSafeAreaInsets: () => getSafeAreaInsets,
+}))
+
 describe('ModelessDialog', () => {
   afterEach(() => {
     vi.restoreAllMocks()
@@ -252,5 +260,99 @@ describe('ModelessDialog', () => {
     await user.click(screen.getByRole('button', { name: '関係ないボタン' }))
     await user.click(screen.getByRole('button', { name: '閉じる' }))
     expect(screen.getByRole('button', { name: '関係ないボタン' })).toHaveFocus()
+  })
+
+  describe('safe area がある場合', () => {
+    beforeEach(() => {
+      // iPhoneの縦向き(viewport-fit=cover)を想定した値
+      getSafeAreaInsets.mockReturnValue({ top: 59, right: 0, bottom: 34, left: 0 })
+    })
+
+    afterEach(() => {
+      getSafeAreaInsets.mockReturnValue(NO_SAFE_AREA_INSETS)
+    })
+
+    // HINT: jsdomにはレイアウトが無いため、style.topとドラッグ量から画面上の位置を算出して返す
+    const mockRectFromStyle = () =>
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: HTMLElement,
+      ) {
+        const translateY = Number(
+          this.style.transform.match(/translate\([^,]+,\s*(-?[\d.]+)px\)/)?.[1] ?? 0,
+        )
+        const top = (parseFloat(this.style.top) || 0) + translateY
+
+        return {
+          width: 0,
+          height: 0,
+          top,
+          left: 0,
+          right: 0,
+          bottom: top,
+          x: 0,
+          y: 0,
+          toJSON: () => {},
+        }
+      })
+
+    const dragVertically = (deltaY: number) => {
+      fireEvent.mouseDown(screen.getByRole('button', { name: 'ダイアログの位置' }), {
+        clientX: 0,
+        clientY: 500,
+      })
+      fireEvent.mouseMove(document, { clientX: 0, clientY: 500 + deltaY })
+      fireEvent.mouseUp(document, { clientX: 0, clientY: 500 + deltaY })
+    }
+
+    const renderDialog = (top: number) =>
+      render(
+        <IntlProvider locale="ja">
+          <ModelessDialog isOpen top={top} left={100} onClickClose={() => {}} heading="位置指定">
+            <p>ダイアログの中身</p>
+          </ModelessDialog>
+        </IntlProvider>,
+      )
+
+    it('safe area を除いた領域の中央に配置されること', () => {
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: HTMLElement,
+      ) {
+        const size = this.isConnected ? { width: 200, height: 100 } : { width: 0, height: 0 }
+        return { ...size, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => {} }
+      })
+
+      render(
+        <IntlProvider locale="ja">
+          <ModelessDialog isOpen onClickClose={() => {}} heading="中央寄せ">
+            <p>ダイアログの中身</p>
+          </ModelessDialog>
+        </IntlProvider>,
+      )
+
+      const dialog = screen.getByRole('dialog', { name: '中央寄せ' })
+
+      // safe areaの上端 59 + safe areaを除いた高さの半分 - ダイアログの高さの半分
+      expect(dialog.style.top).toBe(`${59 + (window.innerHeight - 59 - 34) / 2 - 50}px`)
+      expect(dialog.style.left).toBe(`${window.innerWidth / 2 - 100}px`)
+    })
+
+    it('safe area の下端より上へはドラッグできないこと', () => {
+      mockRectFromStyle()
+      renderDialog(100)
+
+      dragVertically(200)
+      dragVertically(-500)
+
+      expect(screen.getByRole('dialog', { name: '位置指定' }).getBoundingClientRect().top).toBe(59)
+    })
+
+    it('初期位置が safe area に重なっている場合、位置が飛ばず、初期位置より上へはドラッグできないこと', () => {
+      mockRectFromStyle()
+      renderDialog(20)
+
+      dragVertically(-100)
+
+      expect(screen.getByRole('dialog', { name: '位置指定' }).getBoundingClientRect().top).toBe(20)
+    })
   })
 })

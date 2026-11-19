@@ -9,30 +9,12 @@ allowBuilds:
   esbuild: true
   sharp: true
 overrides:
-  postcss@<8.5.10: ^8.5.32
-  # esbuild@0.28.1 より新しいバージョンが minimumReleaseAge を超過したタイミングで削除可
-  esbuild@<=0.24.2: '>=0.28.2'
-  esbuild@>=0.17.0 <0.28.1: '>=0.28.2'
-  tar@<=7.5.15: '>=7.5.22'
   js-yaml@>=4.0.0 <=5.2.1: '>=5.5.0'
-  '@babel/core@<=7.29.0': '>=8.0.10'
   # react-docgen が Babel 8 に未対応のため、Babel 7 を使用する（reactjs/react-docgen#1102）
-  'react-docgen>@babel/core': '^7.29.7'
-  sharp@<0.35.5: '>=0.35.5'
-  nanoid@<3.3.18: '>=3.3.18 <7'
-  browserslist@<=4.28.6: '>=4.29.5'
-  postcss-selector-parser@>=6.1.0 <6.1.3: '>=7.1.7'
-  brace-expansion@>=2.0.0 <2.1.7: '>=2.1.7 <3.0.0'
-  brace-expansion@>=4.0.0 <5.0.12: '>=5.0.12'
-  source-map-js@>=1.0.0 <1.2.2: '>=1.2.2'
-  shell-quote@>=1.8.4 <1.11.0: '>=1.12.0'
-  smol-toml@<=1.8.0: '>=1.9.1'
-  qs@<6.16.0: '>=6.17.1'
-  colord@<2.9.4: '>=2.10.0'
+  'react-docgen>@babel/core': '^7.29.13'
   # minimatch@11はCJSのdefault exportを廃止しておりeslint-plugin-import(minimatch@3系依存)が
   # 壊れるため、全体ではなくsucraseが使うglob/minimatchにのみ適用する
-  'sucrase>glob': '>=14.0.3'
-  'glob>minimatch': '>=11.0.4'
+  'sucrase>glob': '>=14.0.4'
 auditConfig:
   ignoreGhsas:
     # HINT: braces@<=3.0.3 のスタック枯渇によるDoS。修正版が未リリースで、tailwindcss@3 系の最新版(3.4.19)も
@@ -45,13 +27,16 @@ auditConfig:
     # マージにのみ使用しており、HTTPリクエスト等の動的な外部入力を直接扱わないためignoreする。
     # deepmerge の修正版がリリースされるか、deepmergeに依存しない実装へ置き換えたタイミングで削除する
     - GHSA-gcqx-w48m-w2h4
+    # HINT: picomatch@<=4.0.7 のReDoS(CVSS 8.7、high)。修正版は未リリース。
+    # tailwindcss@3 系が chokidar / micromatch / fast-glob 経由で依存しており、braces と同様
+    # 設定ファイルの content に書いた glob パターンの展開にのみ使用する。開発者が静的に書いた
+    # パターンのみを扱い、HTTPリクエスト等の外部入力を直接処理しないためignoreする。
+    # picomatch の修正版がリリースされるか、tailwindcss v4 へ移行したタイミングで削除する
+    - GHSA-fc5q-39xc-vjpf
 minimumReleaseAgeExclude:
-  # Renovate security update: qs@6.16.2
-  - qs@6.16.2
-  # Renovate security update: glob@14.0.2
-  - glob@14.0.2
-  # security update: pnpm auditで検出されたDoS/AbortSignal bypass脆弱性の修正版。
-  # CIのauditジョブを即時通すため、公開直後でもminimumReleaseAgeの対象外にする
-  - glob@14.0.3
-  - minimatch@11.0.3
-  - '@isaacs/nonrecursive-glob-match@1.0.3'
+  # eslint-config-smarthr@14.16.0とその依存のeslint-plugin-smarthr@6.30.0: ユーザー指示により
+  # minimumReleaseAge(7日)の待機を一時解除する(7日経過後にこのエントリ自体は削除可)
+  - eslint-config-smarthr@14.16.0
+  - eslint-plugin-smarthr@6.30.0
+  # GHSA-cf2h-pxjq-68xw のDoS修正版を適用するため、7日間の待機対象から除外する
+  - minimatch@11.0.7

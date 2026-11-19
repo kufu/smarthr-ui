@@ -22,6 +22,7 @@ type Props = Omit<LowerProps, 'multiple'> & {
 
 export const InputFileNative: FC<Props> = ({
   className,
+  variant,
   size,
   label,
   hasFileList = true,
@@ -50,13 +51,13 @@ export const InputFileNative: FC<Props> = ({
 
     return {
       wrapper: wrapper({ className }),
-      inputWrapper: inputWrapper({ size }),
+      inputWrapper: inputWrapper({ variant, size }),
       fileList: fileList(),
       fileItem: fileItem(),
       input: input(),
       prefix: prefix(),
     }
-  }, [size, className])
+  }, [variant, size, className])
 
   const latest = useLatest({
     onChange,

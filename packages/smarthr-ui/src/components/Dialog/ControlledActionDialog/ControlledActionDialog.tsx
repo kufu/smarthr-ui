@@ -8,6 +8,7 @@ import {
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
+import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { DialogPortal } from '../../DialogPortal'
 import { DialogContent } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
@@ -40,6 +41,7 @@ type Props = ExtendElementPropsWithRef<
        * 閉じるボタンをクリックした時に発火するコールバック関数
        */
       onClickClose: (e?: MouseEvent<HTMLButtonElement> | KeyboardEvent) => void
+      responseStatus?: ResponseStatus
     },
     { omit: 'handleClickAction' | 'handleClickClose' }
   >,
@@ -60,7 +62,7 @@ export const ControlledActionDialog: FC<Props> = ({
   onClickAction,
   onClickClose,
   onPressEscape = onClickClose,
-  responseStatus,
+  responseStatus: orgResponseStatus,
   closeButton: orgCloseButton,
   subActionArea,
   className,
@@ -81,6 +83,7 @@ export const ControlledActionDialog: FC<Props> = ({
     orgCloseButton,
     buttonObjectConverter,
   )
+  const responseStatus = useResponseStatus(orgResponseStatus)
 
   const latest = useLatest({ onClickClose, onClickAction, isOpen })
 
@@ -108,7 +111,9 @@ export const ControlledActionDialog: FC<Props> = ({
         isOpen={isOpen}
         className={className}
         ariaLabelledby={heading.id}
-        onPressEscape={closeButton.disabled ? undefined : onPressEscape}
+        onPressEscape={
+          closeButton.disabled || responseStatus.isProcessing ? undefined : onPressEscape
+        }
       >
         <ActionDialogContent
           contentBgColor={contentBgColor}

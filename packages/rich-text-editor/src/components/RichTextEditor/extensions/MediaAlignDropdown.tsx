@@ -52,21 +52,21 @@ export const MediaAlignDropdown: FC<Props> = memo(({ editor, nodeName, pos, ...r
 
   const label = localize({ id: 'smarthr-ui/RichTextEditor/mediaAlign', defaultText: '配置' })
 
-  const latest = useLatest({ nodeName, pos })
+  const latest = useLatest({ editor, nodeName, pos })
 
   const functions = useMemo(
     () => ({
       handleSelect: (index: number) => {
         const { value } = MEDIA_ALIGN_OPTIONS[index]
 
-        editor
+        latest.editor
           .chain()
           .setNodeSelection(latest.pos)
           .updateAttributes(latest.nodeName, { align: value === 'left' ? null : value })
           .run()
       },
     }),
-    [editor, latest],
+    [latest],
   )
 
   return (

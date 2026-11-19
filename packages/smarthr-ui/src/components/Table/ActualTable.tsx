@@ -10,22 +10,12 @@ type Props = ExtendElementPropsWithRef<
     borderType?: 'vertical' | 'horizontal' | 'both' | 'outer' | 'all'
     /** 罫線のスタイル */
     borderStyle?: 'solid' | 'dotted' | 'dashed'
-    /** 角丸を適用する範囲 */
-    rounded?: boolean | 'all' | 'top' | 'right' | 'bottom' | 'left'
     /** テーブルのレイアウト */
     layout?: 'auto' | 'fixed'
     /** ヘッダーを固定するかどうか */
     fixedHead?: boolean
   }
 >
-
-const ROUNDED = {
-  t_l: '[&>thead:first-child>tr:first-child>th:first-child]:shr-rounded-tl-l [&>thead:first-child>tr:first-child>td:first-child]:shr-rounded-tl-l',
-  t_r: '[&>thead:first-child>tr:first-child>th:last-child]:shr-rounded-tr-l [&>thead:first-child>tr:first-child>td:last-child]:shr-rounded-tr-l',
-  b_l: '[&>tbody:last-child>tr:last-child>th:first-child]:shr-rounded-bl-l [&>tbody:last-child>tr:last-child>td:first-child]:shr-rounded-bl-l',
-  b_r: '[&>tbody:last-child>tr:last-child>th:last-child]:shr-rounded-br-l [&>tbody:last-child>tr:last-child>td:last-child]:shr-rounded-br-l',
-}
-const ROUNDED_ALL = [ROUNDED.t_l, ROUNDED.t_r, ROUNDED.b_l, ROUNDED.b_r]
 
 const classNameGenerator = tv({
   base: [
@@ -49,14 +39,6 @@ const classNameGenerator = tv({
       dotted: '[&_:is(.smarthr-ui-Th,.smarthr-ui-Td)]:shr-border-dotted',
       dashed: '[&_:is(.smarthr-ui-Th,.smarthr-ui-Td)]:shr-border-dashed',
     } satisfies Record<NonNullable<Props['borderStyle']>, string>,
-    rounded: {
-      true: ROUNDED_ALL,
-      all: ROUNDED_ALL,
-      top: [ROUNDED.t_l, ROUNDED.t_r],
-      right: [ROUNDED.t_r, ROUNDED.b_r],
-      bottom: [ROUNDED.b_l, ROUNDED.b_r],
-      left: [ROUNDED.t_l, ROUNDED.b_l],
-    } satisfies Record<Exclude<NonNullable<Props['rounded']>, boolean> | 'true', string[]>,
     layout: {
       auto: '',
       fixed: 'shr-table-fixed',
@@ -98,7 +80,6 @@ export const ActualTable: FC<Props> = ({
   borderStyle,
   fixedHead,
   layout,
-  rounded,
   className,
   children,
   ...rest
@@ -110,10 +91,9 @@ export const ActualTable: FC<Props> = ({
         borderStyle,
         fixedHead,
         layout,
-        rounded,
         className,
       }),
-    [borderType, borderStyle, className, fixedHead, layout, rounded],
+    [borderType, borderStyle, className, fixedHead, layout],
   )
 
   return (

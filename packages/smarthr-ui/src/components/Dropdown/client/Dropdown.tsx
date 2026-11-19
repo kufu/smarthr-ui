@@ -14,6 +14,7 @@ import {
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
+import { useSafeAreaInsets } from '../../../hooks/client/useSafeAreaInsets'
 import { useTheme } from '../../../hooks/client/useTheme'
 import { useLatest } from '../../../hooks/useLatest'
 import { findDelegateTarget } from '../../../libs/delegate'
@@ -56,6 +57,7 @@ export const DropdownContext = createContext<DropdownContextType>({
 
 export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
   const theme = useTheme()
+  const getSafeAreaInsets = useSafeAreaInsets()
   const [active, setActive] = useState(false)
   const [contentStyles, setContentStyles] = useState(INITIAL_CONTENT_STYLES)
 
@@ -73,6 +75,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
     closeFrame,
     contentId,
     theme,
+    getSafeAreaInsets,
     focusFrame,
     contentStyles,
   })
@@ -91,6 +94,7 @@ export const Dropdown: FC<Props> = ({ onOpen, onClose, children }) => {
             triggerButton,
             content,
             latest.theme.spacingByChar(0.5),
+            latest.getSafeAreaInsets(),
           ),
         )
       }

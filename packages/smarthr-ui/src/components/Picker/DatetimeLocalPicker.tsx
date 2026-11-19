@@ -28,7 +28,6 @@ export const DatetimeLocalPicker: FC<Props> = ({ error, className, ...rest }) =>
 
   return (
     <span className={classNames.wrapper}>
-      {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
       <input
         {...rest}
         type="datetime-local"

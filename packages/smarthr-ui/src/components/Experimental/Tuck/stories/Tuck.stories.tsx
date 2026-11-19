@@ -12,7 +12,6 @@ const meta = {
   title: 'Experimental/Tuck',
   component: Tuck,
   render: (args) => (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts -- Tuck は子要素を複数のアイテムとして Cluster に並べるため
     <Cluster align="center">
       <Tuck {...args}>
         {[...Array(20)].map((_, i) => (
