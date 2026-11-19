@@ -56,6 +56,35 @@ const classNameGenerator = tv({
   },
 })
 
+const connectTooltipDescription = (trigger: Element, messageId: string) => {
+  const getDescriptionIds = (): string[] =>
+    trigger.getAttribute('aria-describedby')?.match(/[^ \t\n\f\r]+/g) ?? []
+  const appendTooltipId = () => {
+    const ids = getDescriptionIds()
+    if (!ids.includes(messageId)) {
+      trigger.setAttribute('aria-describedby', [...ids, messageId].join(' '))
+    }
+  }
+
+  appendTooltipId()
+  // 利用者が説明を更新した場合も、最新のIDにツールチップのIDを追加する。
+  const observer = new MutationObserver(appendTooltipId)
+  observer.observe(trigger, { attributes: true, attributeFilter: ['aria-describedby'] })
+
+  return () => {
+    observer.disconnect()
+    const ids = getDescriptionIds()
+    if (ids.includes(messageId)) {
+      const otherIds = ids.filter((id) => id !== messageId)
+      if (otherIds.length > 0) {
+        trigger.setAttribute('aria-describedby', otherIds.join(' '))
+      } else {
+        trigger.removeAttribute('aria-describedby')
+      }
+    }
+  }
+}
+
 export const Tooltip: FC<Props> = ({
   message,
   children,
@@ -172,10 +201,25 @@ export const Tooltip: FC<Props> = ({
       setIsFocusableChild(focusable)
       setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
 
-      // focusableな要素に直接aria属性を設定
-      if (focusable) {
-        childElement?.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+      if (childElement && focusable) {
+        if (!isLabel) {
+          return connectTooltipDescription(childElement, messageId)
+        }
+
+        const originalLabel = childElement.getAttribute('aria-labelledby')
+        childElement.setAttribute('aria-labelledby', messageId)
+
+        return () => {
+          if (childElement.getAttribute('aria-labelledby') === messageId) {
+            if (originalLabel === null) {
+              childElement.removeAttribute('aria-labelledby')
+            } else {
+              childElement.setAttribute('aria-labelledby', originalLabel)
+            }
+          }
+        }
       }
+      return undefined
     },
     [tabIndex, isLabel, messageId],
   )
