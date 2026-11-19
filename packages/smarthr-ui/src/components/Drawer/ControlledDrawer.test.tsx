@@ -12,24 +12,18 @@ import { DrawerHeader } from './client'
 
 import type { DrawerPosition } from './types'
 
-// jsdom は PointerEvent 未実装で clientX/clientY と timeStamp が落ちるため補う。
-// timeStamp は同一 tick で同値になり、速度が距離に対して過大になる。
-if (typeof PointerEvent === 'undefined') {
-  class PointerEventPolyfill extends MouseEvent {
-    pointerId?: number
-    isPrimary: boolean
-    constructor(type: string, params: PointerEventInit & { timeStamp?: number } = {}) {
-      super(type, params)
-      this.pointerId = params.pointerId
-      this.isPrimary = params.isPrimary ?? true
-      if (params.timeStamp !== undefined) {
-        Object.defineProperty(this, 'timeStamp', { value: params.timeStamp, configurable: true })
-      }
+// jsdom の PointerEvent は isPrimary の既定が false で、init の timeStamp を無視して生成時刻を入れる。
+// マウス操作に合わせて isPrimary を true にし、timeStamp は指定値で上書きする。
+// 生成時刻のままだと同一 tick で同値になり、速度が距離に対して過大になる。
+class MousePointerEvent extends PointerEvent {
+  constructor(type: string, params: PointerEventInit & { timeStamp?: number } = {}) {
+    super(type, { ...params, isPrimary: params.isPrimary ?? true })
+    if (params.timeStamp !== undefined) {
+      Object.defineProperty(this, 'timeStamp', { value: params.timeStamp, configurable: true })
     }
   }
-  // @ts-expect-error -- jsdom に PointerEvent が無いため補う
-  global.PointerEvent = PointerEventPolyfill
 }
+global.PointerEvent = MousePointerEvent
 
 const renderWithIntl = (ui: React.ReactElement) =>
   render(<IntlProvider locale="ja">{ui}</IntlProvider>)
@@ -448,14 +442,14 @@ describe('ControlledDrawer ドラッグハンドル', () => {
     const { handle } = renderBottomDrawer(() => undefined)
     const dialog = stubPanelHeight(400)
     await waitFor(() => {
-      expect(dialog.style.transform).toBe('translateY(0)')
+      expect(dialog.style.transform).toBe('translateY(0px)')
     })
 
     dragHandle(handle, { to: 300 })
     expect(dialog.style.transform).toBe('translateY(400px)')
 
     await waitFor(() => {
-      expect(dialog.style.transform).toBe('translateY(0)')
+      expect(dialog.style.transform).toBe('translateY(0px)')
     })
   })
 

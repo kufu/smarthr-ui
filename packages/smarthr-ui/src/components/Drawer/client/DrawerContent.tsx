@@ -270,7 +270,6 @@ export const DrawerContent: FC<Props> = ({
     onClickClose,
     onClickOverlay,
     handleClose,
-    autoHeadingId,
   })
 
   // 閉じアニメーション中も DOM に残るため、isOpen を見ないと再度コールバックが走る
@@ -461,10 +460,10 @@ export const DrawerContent: FC<Props> = ({
       handleClickClose: functions.handleClickClose,
       close: functions.close,
       getIsOpen: functions.getIsOpen,
-      headingId: latest.autoHeadingId,
+      headingId: autoHeadingId,
       registerHeadingId: setRegisteredHeadingId,
     }),
-    [functions, latest],
+    [autoHeadingId, functions],
   )
 
   if (!shouldMount) return null
