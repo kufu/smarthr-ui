@@ -713,7 +713,9 @@ describe('ControlledDrawer（modeless）', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'コンテナ内ドロワー' })
     expect(dialog).toHaveClass('shr-h-[calc(100%-theme(spacing.2))]')
-    expect(dialog).not.toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
+    expect(dialog).not.toHaveClass(
+      'shr-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+    )
   })
 
   // クラスが正しくてもポータルが外に出ていれば absolute の基準がコンテナにならない
@@ -767,7 +769,9 @@ describe('ControlledDrawer（modeless）', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'コンテナ内右ドロワー' })
     expect(dialog).toHaveClass('shr-max-w-[calc(100%-theme(spacing.2))]')
-    expect(dialog).not.toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
+    expect(dialog).not.toHaveClass(
+      'shr-max-w-[calc(100dvw-theme(spacing.2)-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+    )
   })
 
   it.each<{ position: 'right' | 'left'; align: string; border: string }>([
@@ -808,6 +812,7 @@ describe('ControlledDrawer（modeless）', () => {
       expect(dialog).toHaveClass(border)
       expect(dialog).not.toHaveClass('shr-border-shorthand')
       expect(dialog).toHaveAttribute('data-in-container')
+      expect(dialog.className).not.toContain('safe-area-inset')
       expect(dialog).toHaveClass('shr-group/drawer')
       expect(dialog.querySelector('.smarthr-ui-Drawer-footer')).toHaveClass(
         'group-data-[in-container]/drawer:shr-sticky',
@@ -828,7 +833,12 @@ describe('ControlledDrawer（modeless）', () => {
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
-    expect(dialog).toHaveClass('shr-absolute', 'shr-right-0', 'shr-h-full', 'shr-border-shorthand')
+    expect(dialog).toHaveClass(
+      'shr-absolute',
+      'shr-right-0',
+      'shr-inset-y-0',
+      'shr-border-shorthand',
+    )
     expect(dialog).not.toHaveClass('shr-sticky')
     expect(dialog).not.toHaveAttribute('data-in-container')
   })
@@ -847,7 +857,9 @@ describe('ControlledDrawer（modeless）', () => {
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定右ドロワー' })
-    expect(dialog).toHaveClass('shr-max-w-[calc(100dvw-theme(spacing.2))]')
+    expect(dialog).toHaveClass(
+      'shr-max-w-[calc(100dvw-theme(spacing.2)-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+    )
   })
 
   it('portalParent なしの bottom はビューポート基準の高さのままであること', async () => {
@@ -858,7 +870,9 @@ describe('ControlledDrawer（modeless）', () => {
     )
 
     const dialog = screen.getByRole('dialog', { name: '画面固定ドロワー' })
-    expect(dialog).toHaveClass('shr-h-[calc(100dvh-theme(spacing.2))]')
+    expect(dialog).toHaveClass(
+      'shr-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+    )
   })
 
   it('modeless でも onPressEscape を渡せば Escape で閉じること', async () => {
@@ -1016,11 +1030,70 @@ describe('ControlledDrawer size', () => {
     renderWithIntl(<SizedTemplate position="bottom" />)
     const dialog = screen.getByRole('dialog', { name: 'サイズ確認' })
     expect(dialog).not.toHaveClass('shr-w-col5')
-    expect(dialog).toHaveClass('shr-w-full')
+    expect(dialog).toHaveClass(
+      'shr-w-[calc(100%-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+    )
   })
 })
 
+describe('ControlledDrawer safe area', () => {
+  it.each<{ position: DrawerPosition; avoided: string[]; notAvoided: string }>([
+    {
+      position: 'right',
+      avoided: [
+        'shr-pt-[env(safe-area-inset-top)]',
+        'shr-pb-[env(safe-area-inset-bottom)]',
+        'shr-pr-[env(safe-area-inset-right)]',
+        'shr-h-[calc(100%-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+      ],
+      notAvoided: 'shr-pl-[env(safe-area-inset-left)]',
+    },
+    {
+      position: 'left',
+      avoided: [
+        'shr-pt-[env(safe-area-inset-top)]',
+        'shr-pb-[env(safe-area-inset-bottom)]',
+        'shr-pl-[env(safe-area-inset-left)]',
+        'shr-h-[calc(100%-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+      ],
+      notAvoided: 'shr-pr-[env(safe-area-inset-right)]',
+    },
+    {
+      position: 'bottom',
+      avoided: [
+        'shr-pb-[env(safe-area-inset-bottom)]',
+        'shr-pl-[env(safe-area-inset-left)]',
+        'shr-pr-[env(safe-area-inset-right)]',
+        'shr-w-[calc(100%-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+      ],
+      notAvoided: 'shr-pt-[env(safe-area-inset-top)]',
+    },
+  ])(
+    '画面に固定した $position は、画面の端に接する辺だけ safe area を避けること',
+    ({ position, avoided, notAvoided }) => {
+      renderWithIntl(
+        <ControlledDrawer isOpen position={position} ariaLabel="safe area 確認">
+          <p>content</p>
+        </ControlledDrawer>,
+      )
+
+      const dialog = screen.getByRole('dialog', { name: 'safe area 確認' })
+      expect(dialog).toHaveClass(...avoided)
+      expect(dialog).not.toHaveClass(notAvoided)
+    },
+  )
+})
+
 describe('ControlledDrawer あふれ防止', () => {
+  it('border-box 環境でも safe area の padding を引いた寸法が足りなくならないよう、box-sizing が content-box になること', () => {
+    renderWithIntl(
+      <ControlledDrawer isOpen position="right" ariaLabel="右ドロワー">
+        <p>content</p>
+      </ControlledDrawer>,
+    )
+    expect(screen.getByRole('dialog', { name: '右ドロワー' })).toHaveClass('shr-box-content')
+  })
+
   it('left/right にビューポート幅の max ガードが当たること', () => {
     renderWithIntl(
       <ControlledDrawer isOpen position="right" size="L" ariaLabel="右ドロワー">
@@ -1028,7 +1101,7 @@ describe('ControlledDrawer あふれ防止', () => {
       </ControlledDrawer>,
     )
     expect(screen.getByRole('dialog', { name: '右ドロワー' })).toHaveClass(
-      'shr-max-w-[calc(100dvw-theme(spacing.2))]',
+      'shr-max-w-[calc(100dvw-theme(spacing.2)-env(safe-area-inset-left)-env(safe-area-inset-right))]',
     )
   })
 
@@ -1039,7 +1112,7 @@ describe('ControlledDrawer あふれ防止', () => {
       </ControlledDrawer>,
     )
     expect(screen.getByRole('dialog', { name: 'ボトムドロワー' })).toHaveClass(
-      'shr-h-[calc(100dvh-theme(spacing.2))]',
+      'shr-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
     )
   })
 })

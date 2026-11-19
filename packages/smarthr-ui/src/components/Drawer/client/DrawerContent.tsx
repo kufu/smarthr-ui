@@ -82,6 +82,8 @@ const classNameGenerator = tv({
     overlay: ['smarthr-ui-Drawer-overlay', 'shr-absolute shr-inset-0 shr-bg-scrim'],
     inner: [
       'smarthr-ui-Drawer',
+      // box-sizing を利用側に任せる案は、border-box のリセット CSS があると safe area の padding を引いた高さと幅が足りなくなるため採らない
+      'shr-box-content',
       'shr-group/drawer shr-pointer-events-auto shr-flex shr-flex-col shr-bg-white shr-shadow-layer-3',
       'contrast-more:shr-border-high-contrast',
     ],
@@ -98,8 +100,7 @@ const classNameGenerator = tv({
       right: {},
       left: {},
       bottom: {
-        inner:
-          'shr-border-shorthand shr-absolute shr-inset-x-0 shr-bottom-0 shr-w-full shr-rounded-t-l',
+        inner: 'shr-border-shorthand shr-absolute shr-inset-x-0 shr-bottom-0 shr-rounded-t-l',
       },
     },
     size: {
@@ -128,18 +129,31 @@ const classNameGenerator = tv({
       },
     },
   },
-  // パネルの上限は fixed ならビューポート、absolute ならコンテナが基準。間違えると親からはみ出す
+  // パネルの上限は fixed ならビューポート、absolute ならコンテナが基準。間違えると親からはみ出す。
+  // absolute でも safe area を避ける案は、コンテナが画面の端に接しているとは限らず、余計な余白になるため採らない
   compoundVariants: [
     {
       position: ['right', 'left'],
       layoutPosition: 'fixed',
       class: {
-        inner:
-          'shr-border-shorthand shr-absolute shr-inset-y-0 shr-h-full shr-max-w-[calc(100dvw-theme(spacing.2))]',
+        inner: [
+          'shr-border-shorthand shr-absolute shr-inset-y-0',
+          'shr-pb-[env(safe-area-inset-bottom)] shr-pt-[env(safe-area-inset-top)]',
+          'shr-h-[calc(100%-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+          'shr-max-w-[calc(100dvw-theme(spacing.2)-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+        ],
       },
     },
-    { position: 'right', layoutPosition: 'fixed', class: { inner: 'shr-right-0' } },
-    { position: 'left', layoutPosition: 'fixed', class: { inner: 'shr-left-0' } },
+    {
+      position: 'right',
+      layoutPosition: 'fixed',
+      class: { inner: 'shr-right-0 shr-pr-[env(safe-area-inset-right)]' },
+    },
+    {
+      position: 'left',
+      layoutPosition: 'fixed',
+      class: { inner: 'shr-left-0 shr-pl-[env(safe-area-inset-left)]' },
+    },
     // コンテナの縁に重なる辺にも境界線を引く案は、コンテナの角丸で線が途切れるため採らない。
     // justify-end / justify-start で寄せる案は、dir="rtl" の中で左右が入れ替わり、translateX でのスライドと食い違うため採らない
     {
@@ -155,12 +169,18 @@ const classNameGenerator = tv({
     {
       position: 'bottom',
       layoutPosition: 'fixed',
-      class: { inner: 'shr-h-[calc(100dvh-theme(spacing.2))]' },
+      class: {
+        inner: [
+          'shr-pb-[env(safe-area-inset-bottom)] shr-pl-[env(safe-area-inset-left)] shr-pr-[env(safe-area-inset-right)]',
+          'shr-w-[calc(100%-env(safe-area-inset-left)-env(safe-area-inset-right))]',
+          'shr-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
+        ],
+      },
     },
     {
       position: 'bottom',
       layoutPosition: 'absolute',
-      class: { inner: 'shr-h-[calc(100%-theme(spacing.2))]' },
+      class: { inner: 'shr-h-[calc(100%-theme(spacing.2))] shr-w-full' },
     },
   ],
 })
