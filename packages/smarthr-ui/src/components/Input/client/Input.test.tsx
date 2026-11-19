@@ -74,6 +74,7 @@ describe('Input', () => {
     render(
       <form>
         <FormControl label="Input">
+          {/* eslint-disable-next-line smarthr/design-system-guideline-prohibit-input-affix-interactive-element -- subActionAreaがaria-labelledbyに影響しないことを確認するため、意図的に同時指定している */}
           <Input name="input" suffix="名" subActionArea={<button type="button">クリア</button>} />
         </FormControl>
       </form>,

@@ -7,13 +7,13 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "eslint": "^9.39.5",
-    "eslint-config-smarthr": "^14.14.0",
-    "eslint-plugin-perfectionist": "^5.10.1",
-    "eslint-plugin-storybook": "^10.5.10",
+    "eslint-config-smarthr": "^14.16.0",
+    "eslint-plugin-perfectionist": "^5.13.0",
+    "eslint-plugin-storybook": "^10.6.7",
     "husky": "^9.1.7",
     "knip": "^6.26.0",
-    "lint-staged": "^17.2.0",
-    "prettier": "^3.9.10",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.10.0",
     "prettier-config-smarthr": "^1.0.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tsx": "^4.23.15",
@@ -26,5 +26,5 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@11.28.10"
+  "packageManager": "pnpm@11.28.11"
 }

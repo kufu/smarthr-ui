@@ -1,0 +1,65 @@
+# Verifies that every action referenced under .github/workflows is pinned
+# by the lockfile (.github/workflows/actions.lock) via `gh actions-lock --verify`.
+# Runs on pull requests and pushes to master, skipping when nothing under .github/ changed.
+# See https://gh.io/actions-lockfile
+name: Verify Actions lockfile
+
+on:
+  pull_request:
+  push:
+    branches: [ master ]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Detect GitHub configuration changes
+        id: changes
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          FULL_CHECK_REQUIRED: ${{ github.event.created || github.event.deleted || github.event.forced || false }}
+        run: |
+          set -euo pipefail
+
+          changed=true
+          base=""
+          case "$GITHUB_EVENT_NAME" in
+            pull_request)
+              if git rev-parse --verify HEAD^2 > /dev/null 2>&1; then
+                base=HEAD^1
+              fi
+              ;;
+            push)
+              if [[ "$FULL_CHECK_REQUIRED" != true ]]; then
+                base="$BASE_SHA"
+              fi
+              ;;
+          esac
+
+          if [[ -n "$base" ]] && git diff --quiet "$base" HEAD -- .github/; then
+            changed=false
+          fi
+
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Verify Actions lockfile
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          gh extension install github/gh-actions-lock --pin v0.4.0
+          gh actions-lock --verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Skip unchanged GitHub configuration
+        if: steps.changes.outputs.changed == 'false'
+        run: echo "No changes under .github/; lockfile verification skipped."
