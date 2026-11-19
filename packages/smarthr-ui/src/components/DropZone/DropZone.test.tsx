@@ -2,6 +2,7 @@ import { fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { IntlProvider } from '../../intl'
+import { FormControl } from '../FormGroup'
 
 import { DropZone } from './DropZone'
 
@@ -39,6 +40,63 @@ const stubInputFilesSetter = (
 }
 
 describe('DropZone', () => {
+  describe('ファイル入力のアクセシブルネーム', () => {
+    const fileInput = () => document.querySelector('input[type="file"]')
+
+    it.each([
+      ['ja', 'ファイルを選択'],
+      ['en-US', 'Choose file to upload'],
+    ])('%s のファイル選択ボタンと同じ翻訳を使う', (locale, expectedLabel) => {
+      render(
+        <IntlProvider locale={locale}>
+          <DropZone name="file" onSelectFiles={vi.fn()} />
+        </IntlProvider>,
+      )
+
+      expect(fileInput()).toHaveAccessibleName(expectedLabel)
+    })
+
+    it('カスタム文言を使い、関連付けられたラベルの文言も名前に含める', () => {
+      render(
+        <IntlProvider locale="ja">
+          <label htmlFor="report-file">報告書</label>
+          <DropZone
+            id="report-file"
+            name="file"
+            selectButtonLabel="ファイルを追加"
+            onSelectFiles={vi.fn()}
+          />
+        </IntlProvider>,
+      )
+
+      expect(fileInput()).toHaveAccessibleName('報告書 ファイルを追加')
+    })
+
+    it('FormControl のラベルも名前に含める', () => {
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="報告書">
+              <DropZone name="file" onSelectFiles={vi.fn()} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(fileInput()).toHaveAccessibleName('報告書 ファイルを選択')
+    })
+
+    it('明示的な aria-label を優先する', () => {
+      render(
+        <IntlProvider locale="ja">
+          <DropZone name="file" aria-label="報告書の添付ファイル" onSelectFiles={vi.fn()} />
+        </IntlProvider>,
+      )
+
+      expect(fileInput()).toHaveAccessibleName('報告書の添付ファイル')
+    })
+  })
+
   describe('onSelectFiles', () => {
     describe('ファイルをドロップした場合', () => {
       stubInputFilesSetter()
