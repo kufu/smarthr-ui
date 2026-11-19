@@ -54,6 +54,11 @@ const ARIA_KEY_NAMES: Readonly<Record<string, string>> = {
   space: 'Space',
 }
 
+const DISPLAY_KEY_NAMES: Readonly<Record<string, string>> = {
+  arrowup: '↑',
+  arrowdown: '↓',
+}
+
 type ParsedShortcut = {
   modifiers: Modifier[]
   key: string
@@ -99,7 +104,7 @@ const normalizeKeyLabel = (key: string) => (key.length === 1 ? key.toUpperCase()
 export const formatShortcutTokens = (shortcut: string, isApple: boolean): string[] => {
   const { modifiers, key } = parseShortcut(shortcut, isApple)
   const lowerKey = key.toLowerCase()
-  const keyToken = ARIA_KEY_NAMES[lowerKey] ?? normalizeKeyLabel(key)
+  const keyToken = DISPLAY_KEY_NAMES[lowerKey] ?? ARIA_KEY_NAMES[lowerKey] ?? normalizeKeyLabel(key)
 
   const displayOrder = isApple ? APPLE_MODIFIER_DISPLAY_ORDER : NON_APPLE_MODIFIER_DISPLAY_ORDER
   const labels = isApple ? APPLE_MODIFIER_LABELS : NON_APPLE_MODIFIER_LABELS
