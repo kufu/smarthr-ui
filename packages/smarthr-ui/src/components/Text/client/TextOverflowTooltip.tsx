@@ -1,11 +1,19 @@
 'use client'
 
-import { type ElementType, type FC, useState } from 'react'
+import {
+  type ElementType,
+  type FC,
+  type SyntheticEvent,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useLayoutEffectRef } from '../../../hooks/client/useLayoutEffectRef'
-import { Tooltip } from '../../Tooltip'
+import { TooltipPortal } from '../../Tooltip'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -24,6 +32,17 @@ const classNameGenerator = tv({
       'shr-invisible shr-absolute shr-left-0 shr-top-0 shr-h-full shr-w-full shr-overflow-hidden shr-whitespace-normal shr-opacity-0 [display:-webkit-box]',
     shadow: 'smarthr-ui-Text-overflowTooltipShadow shr-absolute shr-left-0 shr-top-0 shr-w-full',
   },
+  variants: {
+    isOverflowing: {
+      true: {
+        wrapper: [
+          'smarthr-ui-Tooltip',
+          'shr-inline-block shr-max-w-full shr-align-bottom',
+          'focus-visible:shr-focus-indicator--outer',
+        ],
+      },
+    },
+  },
 })
 
 const CLASS_NAMES = (() => {
@@ -31,6 +50,7 @@ const CLASS_NAMES = (() => {
 
   return {
     wrapper: wrapper(),
+    tooltipTrigger: wrapper({ isOverflowing: true }),
     shadowWrapper: shadowWrapper(),
     shadow: shadow(),
   }
@@ -47,7 +67,7 @@ const MEASUREMENT_STYLES = [
   'whiteSpace',
   'wordBreak',
   'overflowWrap',
-  // HINT: 上の余白は本文の開始位置に影響する。下の余白は行の描画に使われるため、計測側には加えない
+  // HINT: 計測用の要素には本文の開始位置に影響する上余白を反映する
   'paddingTop',
 ] as const
 
@@ -70,6 +90,31 @@ const getTextWidth = (element: Element, style: CSSStyleDeclaration) => {
   return width
 }
 
+const isLineClamped = (element: Element, style: CSSStyleDeclaration) => {
+  if (style.webkitBoxOrient !== 'vertical' || !(Number(style.webkitLineClamp) > 0)) {
+    return false
+  }
+
+  if (style.display === '-webkit-box' || style.display === '-webkit-inline-box') {
+    return true
+  }
+
+  if (
+    (style.display !== 'flow-root' && style.display !== 'inline-block') ||
+    (element as HTMLElement).style?.display === style.display
+  ) {
+    return false
+  }
+
+  // HINT: Chromium は行数制限中の -webkit-box を flow-root、-webkit-inline-box を inline-block として返す
+  // 高さも指定されている場合は同じ表示形式から区別できないため、高さの実測値で判定する
+  const styleMap = element.computedStyleMap?.()
+  return (
+    styleMap?.get('height')?.toString() === 'auto' &&
+    styleMap.get('max-height')?.toString() === 'none'
+  )
+}
+
 export const TextOverflowTooltip: FC<Props> = ({
   as: Component,
   className,
@@ -78,7 +123,34 @@ export const TextOverflowTooltip: FC<Props> = ({
   ...rest
 }) => {
   const [isOverflowing, setIsOverflowing] = useState(false)
+  const [tooltipRect, setTooltipRect] = useState<DOMRect | null>(null)
+  const messageId = useId()
+  const wrapperRef = useRef<HTMLSpanElement>(null)
   const frame = useAnimationFrame()
+
+  // 親の幅が変わる前から本文にフォーカスやポインターがある場合も表示を更新する
+  useLayoutEffect(() => {
+    const wrapper = wrapperRef.current
+    const activeWrapper =
+      isOverflowing &&
+      wrapper &&
+      (wrapper.contains(wrapper.ownerDocument.activeElement) || wrapper.matches(':hover'))
+        ? wrapper
+        : null
+
+    setTooltipRect(activeWrapper?.getBoundingClientRect() ?? null)
+  }, [isOverflowing])
+
+  const handleDelegateShowTooltip = ({
+    currentTarget,
+    target,
+  }: SyntheticEvent<HTMLSpanElement>) => {
+    if (isOverflowing && currentTarget.contains(target as Node)) {
+      setTooltipRect(currentTarget.getBoundingClientRect())
+    }
+  }
+
+  const handleDelegateHideTooltip = () => setTooltipRect(null)
 
   const shadowCallbackRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -147,7 +219,14 @@ export const TextOverflowTooltip: FC<Props> = ({
           }
         }
 
-        setIsOverflowing(node.clientHeight > target.clientHeight)
+        // HINT: 行数制限の省略記号は、下余白で後続の行が見えていても文字を隠すことがある
+        // clientHeight は整数なので、余白の端数を切り捨て、収まる本文の誤検知を避ける
+        const bottomPadding = Math.floor(parsePixels(style.paddingBottom))
+        const targetHeight =
+          bottomPadding > 0 && isLineClamped(target, style)
+            ? target.clientHeight - bottomPadding
+            : target.clientHeight
+        setIsOverflowing(node.clientHeight > targetHeight)
       }
 
       // HINT: 計測に伴う幅の更新を ResizeObserver の通知サイクルから分離する
@@ -171,8 +250,22 @@ export const TextOverflowTooltip: FC<Props> = ({
     [Component, frame, maxLines],
   )
 
-  const content = (
-    <span className={CLASS_NAMES.wrapper}>
+  const tooltipTabIndex = isOverflowing ? 0 : undefined
+
+  return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <span
+      ref={wrapperRef}
+      tabIndex={tooltipTabIndex}
+      className={isOverflowing ? CLASS_NAMES.tooltipTrigger : CLASS_NAMES.wrapper}
+      aria-describedby={isOverflowing ? messageId : undefined}
+      onPointerEnter={handleDelegateShowTooltip}
+      onPointerLeave={handleDelegateHideTooltip}
+      onTouchStart={handleDelegateShowTooltip}
+      onTouchEnd={handleDelegateHideTooltip}
+      onFocus={handleDelegateShowTooltip}
+      onBlur={handleDelegateHideTooltip}
+    >
       <Component {...rest} className={className}>
         {children}
       </Component>
@@ -182,13 +275,14 @@ export const TextOverflowTooltip: FC<Props> = ({
           {children}
         </span>
       </span>
+      {isOverflowing && (
+        <TooltipPortal
+          messageId={messageId}
+          isVisible={tooltipRect !== null}
+          parentRect={tooltipRect}
+          message={children}
+        />
+      )}
     </span>
   )
-
-  // HINT: isOverflowingがfalse→trueに切り替わるとJSXのルート要素の型が
-  // span→Tooltipに変わるため、Reactはこのサブツリーをアンマウント/リマウントする。
-  // 初回判定(false→true)はcallback ref内での同期的な実行によりペイント前に完結するため
-  // ユーザーには見えないが、resizeなどペイント後にtrue→falseへ戻る場合は
-  // 一瞬のちらつきが理論上発生しうる。発生頻度が低く実害が小さいため許容している
-  return isOverflowing ? <Tooltip message={children}>{content}</Tooltip> : content
 }

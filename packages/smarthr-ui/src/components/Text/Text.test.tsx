@@ -47,11 +47,7 @@ describe('Text', () => {
     })
 
     describe('object指定でtooltipがtrueの場合', () => {
-      // HINT: -webkit-line-clamp の高さ比較用 shadow 要素との clientHeight 比較で
-      // オーバーフローを判定している。isOverflowingがtrueに切り替わるとTooltipで
-      // ラップされる形にJSXのルート要素が変わり、Reactがサブツリーごと再マウントするため、
-      // 個別のDOM要素にモックを仕込んでも再マウントで失われる。className基準の
-      // prototypeレベルのgetterにすることで再マウント後も一貫した値を返すようにする
+      // jsdom ではレイアウトを計測できないため、本文と shadow の高さを設定する
       const originalClientHeight = Object.getOwnPropertyDescriptor(
         Element.prototype,
         'clientHeight',
@@ -210,7 +206,55 @@ describe('Text', () => {
         expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
       })
 
-      test('要素のサイズ変更でTooltipの有無を更新し、アンマウント時に監視と予約を解除する', () => {
+      test.each([
+        {
+          description: '行数制限で省略された場合',
+          display: '-webkit-box',
+          paddingBottom: '24px',
+          targetHeight: 72,
+          shadowHeight: 72,
+          expected: true,
+        },
+        {
+          description: '端数の余白があっても本文が収まる場合',
+          display: '-webkit-box',
+          paddingBottom: '0.54px',
+          targetHeight: 49,
+          shadowHeight: 49,
+          expected: false,
+        },
+        {
+          description: 'display の上書きで行数制限が無効な場合',
+          display: 'flow-root',
+          paddingBottom: '24px',
+          targetHeight: 72,
+          shadowHeight: 72,
+          expected: false,
+        },
+      ] as const)(
+        '下余白があるときも省略の有無を判定する ($description)',
+        ({ display, paddingBottom, targetHeight, shadowHeight, expected }) => {
+          mockClientHeight(targetHeight, shadowHeight)
+
+          const { container } = render(
+            <Text
+              maxLines={{ max: 2, tooltip: true }}
+              style={{
+                display,
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                paddingBottom,
+              }}
+            >
+              本文
+            </Text>,
+          )
+
+          expect(Boolean(container.querySelector('.smarthr-ui-Tooltip'))).toBe(expected)
+        },
+      )
+
+      test('サイズ変更後も本文のフォーカスを保ち、アンマウント時に監視と予約を解除する', () => {
         vi.useFakeTimers()
         let notifyResize = () => {}
         const disconnect = vi.fn()
@@ -226,11 +270,17 @@ describe('Text', () => {
         )
         const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame')
         mockClientHeight(48, 48)
+        const ref = createRef<HTMLAnchorElement>()
         const { container, unmount } = render(
-          <Text maxLines={{ max: 2, tooltip: true }}>折り返す本文</Text>,
+          <Text as="a" ref={ref} href="#text" maxLines={{ max: 2, tooltip: true }}>
+            折り返す本文
+          </Text>,
         )
+        const link = ref.current
+        act(() => link?.focus())
 
         expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+        expect(link).toHaveFocus()
 
         mockClientHeight(48, 72)
         act(() => {
@@ -238,6 +288,9 @@ describe('Text', () => {
           vi.advanceTimersToNextFrame()
         })
         expect(container.querySelector('.smarthr-ui-Tooltip')).not.toBeNull()
+        expect(ref.current).toBe(link)
+        expect(link).toHaveFocus()
+        expect(document.querySelector('[role=tooltip]')).toHaveAttribute('aria-hidden', 'false')
 
         mockClientHeight(48, 48)
         act(() => {
@@ -245,6 +298,8 @@ describe('Text', () => {
           vi.advanceTimersToNextFrame()
         })
         expect(container.querySelector('.smarthr-ui-Tooltip')).toBeNull()
+        expect(ref.current).toBe(link)
+        expect(link).toHaveFocus()
 
         mockClientHeight(48, 72)
         act(() => {
