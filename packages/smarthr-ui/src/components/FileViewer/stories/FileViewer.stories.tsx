@@ -1,3 +1,7 @@
+import { useState } from 'react'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
+
+import { Button } from '../../Button'
 import { FileViewer } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -69,6 +73,54 @@ export const Width: Story = {
   name: 'width',
   args: {
     width: 80,
+  },
+}
+
+const previewImage = {
+  url: '/fixtures/sample-png.png',
+  contentType: 'image/png',
+  alt: 'プレビュー画像',
+}
+
+const WidthChangesExample = () => {
+  const [width, setWidth] = useState<number | undefined>(320)
+  const [containerWidth, setContainerWidth] = useState(800)
+
+  return (
+    <>
+      <Button onClick={() => setWidth(640)}>幅を640pxに変更</Button>
+      <Button onClick={() => setWidth(undefined)}>幅を自動に設定</Button>
+      <Button onClick={() => setContainerWidth(700)}>コンテナを700pxに変更</Button>
+      <Button onClick={() => setWidth(360)}>幅を360pxに変更</Button>
+      <div style={{ width: containerWidth, height: 400 }}>
+        <FileViewer file={previewImage} width={width} />
+      </div>
+    </>
+  )
+}
+
+export const VRTWidthChanges: Story = {
+  render: () => <WidthChangesExample />,
+  tags: ['!autodocs'],
+  parameters: {
+    chromatic: { disableSnapshot: false },
+    throwPlayFunctionExceptions: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const image = await canvas.findByRole('img', { name: 'プレビュー画像' })
+    const expectImageWidth = (width: number) =>
+      waitFor(() => expect(image.getBoundingClientRect().width).toBeCloseTo(width))
+
+    await expectImageWidth(320)
+    await userEvent.click(canvas.getByRole('button', { name: '幅を640pxに変更' }))
+    await expectImageWidth(640)
+    await userEvent.click(canvas.getByRole('button', { name: '幅を自動に設定' }))
+    await expectImageWidth(736)
+    await userEvent.click(canvas.getByRole('button', { name: 'コンテナを700pxに変更' }))
+    await expectImageWidth(636)
+    await userEvent.click(canvas.getByRole('button', { name: '幅を360pxに変更' }))
+    await expectImageWidth(360)
   },
 }
 
