@@ -1,10 +1,8 @@
-import { type ChangeEvent, type FC, type KeyboardEventHandler, memo, useMemo } from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, memo, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaAngleRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-
-import { getElementIdFromNode } from './utils'
 
 import type { ItemNode } from './models'
 
@@ -62,7 +60,7 @@ export const BrowserItem: FC<Props> = ({
   columnIndex,
   handleChangeInput,
 }) => {
-  const inputId = useMemo(() => getElementIdFromNode(itemValue), [itemValue])
+  const inputId = useId()
   const actualClassName = useMemo(
     () => classNameGenerator({ selected, hasChildren: itemHasChildren }),
     [selected, itemHasChildren],

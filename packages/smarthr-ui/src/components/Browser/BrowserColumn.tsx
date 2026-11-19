@@ -6,11 +6,12 @@ import { BrowserItem } from './BrowserItem'
 import type { ItemNode } from './models'
 import type { ExtendElementPropsWithRef } from '../../types'
 
-const getColumnId = (column: number) => `column-${column}`
+const getColumnId = (browserId: string, column: number) => `${browserId}-column-${column}`
 
 type Props = ExtendElementPropsWithRef<
   'ul',
   {
+    browserId: string
     value?: string
     items: ItemNode[]
     index: number
@@ -24,6 +25,7 @@ const classNameGenerator = tv({
 })
 
 export const BrowserColumn: FC<Props> = ({
+  browserId,
   items,
   index: columnIndex,
   value,
@@ -34,10 +36,11 @@ export const BrowserColumn: FC<Props> = ({
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
-    <ul {...rest} id={getColumnId(columnIndex)} className={actualClassName}>
+    <ul {...rest} id={getColumnId(browserId, columnIndex)} className={actualClassName}>
       {items.map((item, rowIndex) => (
         <ListItem
           key={rowIndex}
+          browserId={browserId}
           value={value}
           itemValue={item.value}
           itemLabel={item.label}
@@ -51,7 +54,7 @@ export const BrowserColumn: FC<Props> = ({
   )
 }
 
-type ListItemProps = Pick<Props, 'value' | 'handleChangeInput'> & {
+type ListItemProps = Pick<Props, 'browserId' | 'value' | 'handleChangeInput'> & {
   itemValue: ItemNode['value']
   itemLabel: ItemNode['label']
   itemHasChildren: boolean
@@ -60,9 +63,19 @@ type ListItemProps = Pick<Props, 'value' | 'handleChangeInput'> & {
 }
 
 const ListItem = memo<ListItemProps>(
-  ({ itemValue, itemLabel, itemHasChildren, value, columnIndex, rowIndex, handleChangeInput }) => {
+  ({
+    browserId,
+    itemValue,
+    itemLabel,
+    itemHasChildren,
+    value,
+    columnIndex,
+    rowIndex,
+    handleChangeInput,
+  }) => {
     const selected = itemValue === value
-    const ariaOwns = selected && itemHasChildren ? getColumnId(columnIndex + 1) : undefined
+    const ariaOwns =
+      selected && itemHasChildren ? getColumnId(browserId, columnIndex + 1) : undefined
     const tabIndex = selected || (!value && columnIndex === 0 && rowIndex === 0) ? 0 : -1
 
     return (
