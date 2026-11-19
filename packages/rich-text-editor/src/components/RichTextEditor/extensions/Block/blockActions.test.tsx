@@ -154,11 +154,24 @@ const stubBlockRects = () => {
 const nextFrame = () =>
   act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
 
+let hoveredY = 0
+
 const hoverBlock = async (index: number) => {
   stubBlockRects()
-  fireEvent.mouseMove(getEditorDom(), { clientY: index * 40 + 10 })
+  hoveredY = index * 40 + 10
+  fireEvent.mouseMove(getEditorDom(), { clientY: hoveredY })
   await nextFrame()
 }
+
+/**
+ * user.click で押さないのは、座標 (0, 0) でポインタを ⋮⋮ へ動かすため。押す前にフレームが挟まると、
+ * ⋮⋮ が先頭のブロックへ移り、載せたのと別のブロックのメニューが開く
+ */
+const clickGrip = (user: ReturnType<typeof userEvent.setup>) =>
+  user.pointer([
+    { target: getGrip(), coords: { clientY: hoveredY } },
+    { keys: '[MouseLeft]', target: getGrip(), coords: { clientY: hoveredY } },
+  ])
 
 const recordUncaughtErrors = () => {
   const errors: unknown[] = []
@@ -197,6 +210,7 @@ const pressShortcut = (shortcut: string) => {
 
 beforeEach(() => {
   HTMLElement.prototype.scrollIntoView = vi.fn()
+  hoveredY = 0
 })
 
 afterEach(() => {
@@ -636,7 +650,7 @@ describe('ブロックメニューの変換', () => {
     await renderEditor({ features: ALL, defaultValue: IMAGE_DOC })
 
     await hoverBlock(1)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
 
     await waitFor(() => expect(getMenuItem('上へ移動')).toHaveFocus())
     expect(queryConversionGroup()).not.toBeInTheDocument()
@@ -755,7 +769,7 @@ describe('ブロックメニューの変換', () => {
     const scrolls = recordScrolls()
 
     await hoverBlock(2)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await user.click(await screen.findByRole('menuitemradio', { name: '見出し1' }))
 
     expect(outline()).toEqual(['aa', 'bb', 'cc', 'paragraph'])
@@ -771,7 +785,7 @@ describe('ブロックメニューの変換', () => {
     vi.mocked(planConversion).mockClear()
 
     await hoverBlock(1)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
     expect(planConversion).toHaveBeenCalled()
 
@@ -800,7 +814,7 @@ describe('つまみ', () => {
     placeCaret('aa')
 
     await hoverBlock(2)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
     await user.click(getMenuItem('削除'))
 
@@ -814,7 +828,7 @@ describe('つまみ', () => {
     placeCaret('aa', 1)
 
     await hoverBlock(2)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await user.click(await screen.findByRole('menuitem', { name: '上へ移動' }))
 
     expect(outline()).toEqual(['aa', 'cc', 'bb'])
@@ -872,7 +886,7 @@ describe('つまみ', () => {
     await renderEditor()
     placeCaret('aa')
     await hoverBlock(1)
-    await user.click(getGrip())
+    await clickGrip(user)
     await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
     expect(getGrip()).toHaveAttribute('aria-expanded', 'true')
 
@@ -892,16 +906,16 @@ describe('つまみ', () => {
     const user = userEvent.setup()
     await renderEditor()
     await hoverBlock(1)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await waitFor(() => expect(getConversionItem('標準テキスト')).toHaveFocus())
 
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await nextFrame()
     expect(queryMenu()).not.toBeInTheDocument()
     expect(getEditorDom()).toHaveFocus()
 
     await hoverBlock(1)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await waitFor(() => expect(queryMenu()).toBeInTheDocument())
   })
 
@@ -918,7 +932,7 @@ describe('つまみ', () => {
     expect(queryMenu()).not.toBeInTheDocument()
 
     await nextFrame()
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await user.click(await screen.findByRole('menuitem', { name: '複製' }))
 
     expect(errors).toEqual([])
@@ -1218,9 +1232,9 @@ describe('キーボードでのつまみへの移動', () => {
     await renderEditor()
     placeCaret('aa')
     await hoverBlock(1)
-    await user.click(getGrip())
+    await clickGrip(user)
     await waitFor(() => expect(queryMenu()).toBeInTheDocument())
-    await user.click(getGrip())
+    await clickGrip(user)
     await waitFor(() => expect(queryMenu()).not.toBeInTheDocument())
     await hoverBlock(1)
 
@@ -1555,7 +1569,7 @@ describe('つまみのドラッグ', () => {
     dropAt(85, ['text/html', 'text/plain'])
 
     await hoverBlock(2)
-    await user.click(screen.getByTitle(HANDLE_TITLE))
+    await clickGrip(user)
     await user.click(await screen.findByRole('menuitem', { name: '削除' }))
 
     expect(outline()).toEqual(['aa', 'bb'])
