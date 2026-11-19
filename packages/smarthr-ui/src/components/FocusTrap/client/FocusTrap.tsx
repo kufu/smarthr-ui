@@ -36,14 +36,14 @@ export const FocusTrap: FC<Props> = ({
   children,
   ...rest
 }) => {
-  const latest = useLatest({ trapFocus, preventScroll })
+  const latest = useLatest({ firstFocusTarget, trapFocus, preventScroll })
 
   const functions = useMemo(() => {
     let inner: HTMLElement | null = null
     const findDummyFocus = () => inner?.querySelector<HTMLElement>(DUMMY_FOCUS_SELECTOR)
 
     const focus = () => {
-      ;(firstFocusTarget?.current || findDummyFocus())?.focus({
+      ;(latest.firstFocusTarget?.current || findDummyFocus())?.focus({
         preventScroll: latest.preventScroll,
       })
     }
@@ -115,7 +115,7 @@ export const FocusTrap: FC<Props> = ({
       },
       focus,
     }
-  }, [firstFocusTarget, latest])
+  }, [latest])
 
   useImperativeHandle(ref, () => functions as { focus: () => void }, [functions])
 

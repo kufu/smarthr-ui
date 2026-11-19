@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type FormEvent, useContext, useMemo } from 'react'
+import { type FC, type FormEvent, useCallback, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../../hooks/useLatest'
@@ -23,19 +23,19 @@ const classNameGenerator = tv({
 
 export const DrawerForm: FC<Props> = ({ onSubmit, className, ...rest }) => {
   const { close, getIsOpen } = useContext(DrawerContext)
-  const latest = useLatest({ onSubmit })
+  const latest = useLatest({ onSubmit, close, getIsOpen })
 
-  const handleSubmit = useMemo(
-    () => (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       // HINT: stopPropagation を省くと、ポータル越しに親の form まで submit が伝わる
       e.stopPropagation()
 
-      if (getIsOpen()) {
-        latest.onSubmit(e, { close })
+      if (latest.getIsOpen()) {
+        latest.onSubmit(e, { close: latest.close })
       }
     },
-    [close, getIsOpen, latest],
+    [latest],
   )
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
