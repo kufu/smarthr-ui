@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [104.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v103.1.1...smarthr-ui-v104.0.0) (2026-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Charts:** チャートデータをテーブル表示切り替え機能を追加しました ([#7203](https://github.com/kufu/smarthr-ui/issues/7203))
+
+### Features
+
+* best-practice-for-functions-depsでfunctionsと同スコープのuseCallback使用を禁止する ([#7588](https://github.com/kufu/smarthr-ui/issues/7588)) ([cc7c3b7](https://github.com/kufu/smarthr-ui/commit/cc7c3b7d5b4e0e9b27b2b598da3450e7642223c0))
+* best-practice-for-use-latestにuseLatestの未使用プロパティ検知を追加する ([#7585](https://github.com/kufu/smarthr-ui/issues/7585)) ([3ab195c](https://github.com/kufu/smarthr-ui/commit/3ab195c8df20a99c842f009c4448dc01d1503615))
+* **Charts:** チャートデータをテーブル表示切り替え機能を追加しました ([#7203](https://github.com/kufu/smarthr-ui/issues/7203)) ([6fff279](https://github.com/kufu/smarthr-ui/commit/6fff279b2e43b1fd676f8a6e66346c4224cfcd1c))
+* **FormDialog:** form actionとform要素の属性を渡せるようにする ([#7549](https://github.com/kufu/smarthr-ui/issues/7549)) ([2a1ba49](https://github.com/kufu/smarthr-ui/commit/2a1ba49987760443ea7cf96c7669f9a7f7472acc))
+* functionsのuseMemo依存配列を検知するESLintルールを追加する ([#7583](https://github.com/kufu/smarthr-ui/issues/7583)) ([02ace01](https://github.com/kufu/smarthr-ui/commit/02ace01a0fbec583beca333ed96578bb1def56e2))
+* **Icon:** FaMicrophoneIcon・FaStopIcon・FaPauseIconを追加 ([#7596](https://github.com/kufu/smarthr-ui/issues/7596)) ([30bd32d](https://github.com/kufu/smarthr-ui/commit/30bd32de889e3426d2c69bb41b34ce545749a44a))
+* **MultiCombobox:** selectedItemsをoptional化し非制御(uncontrolled)使用に対応する ([#7352](https://github.com/kufu/smarthr-ui/issues/7352)) ([6c037d0](https://github.com/kufu/smarthr-ui/commit/6c037d08392b89a41378a4822c0f4ed50cd7175e))
+* **SingleCombobox:** selectedItemをoptional化し非制御(uncontrolled)使用に対応する ([#7355](https://github.com/kufu/smarthr-ui/issues/7355)) ([7d08e71](https://github.com/kufu/smarthr-ui/commit/7d08e71fcb81d872a5016ff86619ed587e6e36e4))
+
+
+### Bug Fixes
+
+* **AppHeader:** モバイルメニューのアコーディオン見出しでタイトルが長い場合に開閉ボタンが2行目に落ちるレイアウト崩れを修正する ([#7571](https://github.com/kufu/smarthr-ui/issues/7571)) ([9276082](https://github.com/kufu/smarthr-ui/commit/927608260aba4568c4c173e9446d745ac656b40a))
+* **Dialog:** 処理中(responseStatus.status === "processing")にEscapeキーでダイアログが閉じられる不具合を修正する ([#7592](https://github.com/kufu/smarthr-ui/issues/7592)) ([03d7e46](https://github.com/kufu/smarthr-ui/commit/03d7e46ccf40b71a12ba7fab3f2b6842984bf7a1))
+* **InputFile:** モバイル表示でファイル名が長いとプレビューの閉じるボタンが折り返る不具合を修正する ([#7574](https://github.com/kufu/smarthr-ui/issues/7574)) ([c97a54d](https://github.com/kufu/smarthr-ui/commit/c97a54dd9fc017cac9e4489fc6c7593147a6bdeb))
+* ModelessDialog のフォーカス管理が Strict Mode でだけ壊れる問題を修正 ([#7554](https://github.com/kufu/smarthr-ui/issues/7554)) ([78f01c4](https://github.com/kufu/smarthr-ui/commit/78f01c4dcec691fbafc47294516038f548381e89))
+* **Switch:** 複数のSwitchを横に並べると改行されてしまう不具合を修正する ([#7572](https://github.com/kufu/smarthr-ui/issues/7572)) ([7f44f1a](https://github.com/kufu/smarthr-ui/commit/7f44f1a05ab2dc56fbfcf4de1daa1391b53dc15d))
+* **Text:** maxLines が 1 のとき短い文章が親の幅まで広がる不具合を修正する ([#7595](https://github.com/kufu/smarthr-ui/issues/7595)) ([b61829a](https://github.com/kufu/smarthr-ui/commit/b61829a36b361e9ce85e88d35de775440c28bf52))
+* **WarekiPicker:** 非制御時にform.reset()でdefaultValueへ戻るよう対応する ([#7413](https://github.com/kufu/smarthr-ui/issues/7413)) ([88ef2cc](https://github.com/kufu/smarthr-ui/commit/88ef2cc49baf8d1d5c1568901cc0fe2d79389c38))
+
 ## [103.1.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v103.1.0...smarthr-ui-v103.1.1) (2026-11-13)
 
 

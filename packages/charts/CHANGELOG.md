@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.3.1...smarthr-ui-charts-v0.4.0) (2026-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Charts:** チャートデータをテーブル表示切り替え機能を追加しました ([#7203](https://github.com/kufu/smarthr-ui/issues/7203))
+
+### Features
+
+* **Charts:** チャートデータをテーブル表示切り替え機能を追加しました ([#7203](https://github.com/kufu/smarthr-ui/issues/7203)) ([6fff279](https://github.com/kufu/smarthr-ui/commit/6fff279b2e43b1fd676f8a6e66346c4224cfcd1c))
+* **Charts:** 項目ごとに内訳が異なる積み上げ棒グラフのテーブル表示に対応する ([#7546](https://github.com/kufu/smarthr-ui/issues/7546)) ([5ef9bd5](https://github.com/kufu/smarthr-ui/commit/5ef9bd5362d2788e814eff96cace0d3b74dfcf3c))
+
 ## [0.3.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.3.0...smarthr-ui-charts-v0.3.1) (2026-10-29)
 
 
