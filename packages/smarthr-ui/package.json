@@ -57,7 +57,7 @@
     "tsx": "^4.23.15",
     "typescript-eslint": "^8.72.1",
     "vite": "8.3.8",
-    "vitest": "^4.1.12"
+    "vitest": "^5.1.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
