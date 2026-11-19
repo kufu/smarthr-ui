@@ -1,5 +1,5 @@
 /* eslint-disable smarthr/best-practice-for-text-component */
-import { act, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { type ComponentPropsWithoutRef, createRef } from 'react'
 
 import { Text } from './Text'
@@ -315,6 +315,34 @@ describe('Text', () => {
 
         expect(disconnect).toHaveBeenCalled()
         expect(cancelFrame).toHaveBeenCalled()
+      })
+
+      test('フォーカスとホバーの一方が残る間はTooltipを表示する', () => {
+        mockClientHeight(48, 72)
+        render(
+          <>
+            <Text as="a" href="#link" maxLines={{ max: 2, tooltip: true }}>
+              折り返す本文
+            </Text>
+            <button type="button">次の操作</button>
+          </>,
+        )
+
+        const link = screen.getByRole('link')
+        const button = screen.getByRole('button')
+        const tooltip = screen.getByRole('tooltip', { hidden: true })
+
+        act(() => link.focus())
+        fireEvent.pointerEnter(link)
+        fireEvent.pointerLeave(link)
+        expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+
+        fireEvent.pointerEnter(link)
+        act(() => button.focus())
+        expect(tooltip).toHaveAttribute('aria-hidden', 'false')
+
+        fireEvent.pointerLeave(link)
+        expect(tooltip).toHaveAttribute('aria-hidden', 'true')
       })
 
       test('ref は実際にレンダリングされた要素を指す', () => {

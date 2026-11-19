@@ -3,7 +3,10 @@
 import {
   type ElementType,
   type FC,
-  type SyntheticEvent,
+  type FocusEvent,
+  type PointerEvent,
+  type TouchEvent,
+  useCallback,
   useId,
   useLayoutEffect,
   useRef,
@@ -126,31 +129,73 @@ export const TextOverflowTooltip: FC<Props> = ({
   const [tooltipRect, setTooltipRect] = useState<DOMRect | null>(null)
   const messageId = useId()
   const wrapperRef = useRef<HTMLSpanElement>(null)
+  const pointer = useRef({ hovered: false, touching: false })
   const frame = useAnimationFrame()
 
-  // 親の幅が変わる前から本文にフォーカスやポインターがある場合も表示を更新する
+  const updateTooltipRect = useCallback(
+    (
+      wrapper: HTMLElement,
+      overflowing: boolean,
+      focused = wrapper.contains(wrapper.ownerDocument.activeElement),
+    ) => {
+      const { hovered, touching } = pointer.current
+      const rect =
+        overflowing && (focused || hovered || touching) ? wrapper.getBoundingClientRect() : null
+
+      setTooltipRect((current) =>
+        current &&
+        rect &&
+        current.x === rect.x &&
+        current.y === rect.y &&
+        current.width === rect.width &&
+        current.height === rect.height
+          ? current
+          : rect,
+      )
+    },
+    [],
+  )
+
+  // 省略を初めて検知したときは、表示用のクラスが付いた後の位置を使う
   useLayoutEffect(() => {
-    const wrapper = wrapperRef.current
-    const activeWrapper =
-      isOverflowing &&
-      wrapper &&
-      (wrapper.contains(wrapper.ownerDocument.activeElement) || wrapper.matches(':hover'))
-        ? wrapper
-        : null
+    if (wrapperRef.current) {
+      updateTooltipRect(wrapperRef.current, isOverflowing)
+    }
+  }, [isOverflowing, updateTooltipRect])
 
-    setTooltipRect(activeWrapper?.getBoundingClientRect() ?? null)
-  }, [isOverflowing])
-
-  const handleDelegateShowTooltip = ({
+  const handleDelegatePointer = ({
     currentTarget,
     target,
-  }: SyntheticEvent<HTMLSpanElement>) => {
-    if (isOverflowing && currentTarget.contains(target as Node)) {
-      setTooltipRect(currentTarget.getBoundingClientRect())
+    pointerType,
+    type,
+  }: PointerEvent<HTMLSpanElement>) => {
+    if (pointerType !== 'touch' && currentTarget.contains(target as Node)) {
+      pointer.current.hovered = type === 'pointerenter'
+      updateTooltipRect(currentTarget, isOverflowing)
     }
   }
 
-  const handleDelegateHideTooltip = () => setTooltipRect(null)
+  const handleDelegateTouch = ({ currentTarget, target, type }: TouchEvent<HTMLSpanElement>) => {
+    if (currentTarget.contains(target as Node)) {
+      pointer.current.touching = type === 'touchstart'
+      updateTooltipRect(currentTarget, isOverflowing)
+    }
+  }
+
+  const handleDelegateFocus = ({
+    currentTarget,
+    target,
+    relatedTarget,
+    type,
+  }: FocusEvent<HTMLSpanElement>) => {
+    if (currentTarget.contains(target as Node)) {
+      updateTooltipRect(
+        currentTarget,
+        isOverflowing,
+        type === 'focus' || currentTarget.contains(relatedTarget),
+      )
+    }
+  }
 
   const shadowCallbackRef = useLayoutEffectRef(
     (node: HTMLElement | null) => {
@@ -158,6 +203,11 @@ export const TextOverflowTooltip: FC<Props> = ({
       const wrapper = shadowWrapper?.parentElement
       if (!node || !shadowWrapper || !wrapper) {
         return
+      }
+
+      const reflectOverflow = (overflowing: boolean) => {
+        setIsOverflowing(overflowing)
+        updateTooltipRect(wrapper, overflowing)
       }
 
       let observedTarget: Element | null | undefined
@@ -186,11 +236,11 @@ export const TextOverflowTooltip: FC<Props> = ({
         }
 
         if (!target) {
-          setIsOverflowing(false)
+          reflectOverflow(false)
           return
         }
         if (maxLines === 1) {
-          setIsOverflowing(target.scrollWidth > target.clientWidth)
+          reflectOverflow(target.scrollWidth > target.clientWidth)
           return
         }
 
@@ -203,7 +253,7 @@ export const TextOverflowTooltip: FC<Props> = ({
             style.getPropertyValue('text-wrap-mode') === 'nowrap') &&
           target.scrollWidth > target.clientWidth
         ) {
-          setIsOverflowing(true)
+          reflectOverflow(true)
           return
         }
 
@@ -226,7 +276,7 @@ export const TextOverflowTooltip: FC<Props> = ({
           bottomPadding > 0 && isLineClamped(target, style)
             ? target.clientHeight - bottomPadding
             : target.clientHeight
-        setIsOverflowing(node.clientHeight > targetHeight)
+        reflectOverflow(node.clientHeight > targetHeight)
       }
 
       // HINT: 計測に伴う幅の更新を ResizeObserver の通知サイクルから分離する
@@ -235,6 +285,7 @@ export const TextOverflowTooltip: FC<Props> = ({
       const view = node.ownerDocument.defaultView
       view?.addEventListener('resize', scheduleCheck)
       const resizeObserver = new ResizeObserver(scheduleCheck)
+      resizeObserver.observe(wrapper)
       resizeObserver.observe(node)
       const mutationObserver = new MutationObserver(scheduleCheck)
 
@@ -247,7 +298,7 @@ export const TextOverflowTooltip: FC<Props> = ({
         frame.cancel()
       }
     },
-    [Component, frame, maxLines],
+    [Component, frame, maxLines, updateTooltipRect],
   )
 
   const tooltipTabIndex = isOverflowing ? 0 : undefined
@@ -259,12 +310,13 @@ export const TextOverflowTooltip: FC<Props> = ({
       tabIndex={tooltipTabIndex}
       className={isOverflowing ? CLASS_NAMES.tooltipTrigger : CLASS_NAMES.wrapper}
       aria-describedby={isOverflowing ? messageId : undefined}
-      onPointerEnter={handleDelegateShowTooltip}
-      onPointerLeave={handleDelegateHideTooltip}
-      onTouchStart={handleDelegateShowTooltip}
-      onTouchEnd={handleDelegateHideTooltip}
-      onFocus={handleDelegateShowTooltip}
-      onBlur={handleDelegateHideTooltip}
+      onPointerEnter={handleDelegatePointer}
+      onPointerLeave={handleDelegatePointer}
+      onTouchStart={handleDelegateTouch}
+      onTouchEnd={handleDelegateTouch}
+      onTouchCancel={handleDelegateTouch}
+      onFocus={handleDelegateFocus}
+      onBlur={handleDelegateFocus}
     >
       <Component {...rest} className={className}>
         {children}
