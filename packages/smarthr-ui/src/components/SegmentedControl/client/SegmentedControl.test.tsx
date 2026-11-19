@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { IntlProvider } from 'react-intl'
 
+import { Button } from '../../Button'
+
 import { SegmentedControl } from './SegmentedControl'
 
 import type { locales } from '../../../intl'
@@ -58,5 +60,73 @@ describe('SegmentedControl', () => {
 
     expect(screen.getByRole('radio', { name: 'Empty' })).toHaveAttribute('aria-checked', 'true')
     expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute('aria-checked', 'false')
+  })
+
+  it.each([null, 'a'])(
+    '選択値が %s のとき、先頭の選択肢が無効なら Tab で有効な選択肢へ移動する',
+    async (value) => {
+      const user = userEvent.setup()
+      const mixedOptions = [{ ...options[0], disabled: true }, options[1]]
+
+      renderWithIntl(<SegmentedControl value={value} options={mixedOptions} />)
+
+      await user.tab()
+
+      expect(screen.getByRole('radio', { name: 'B' })).toHaveFocus()
+      expect(screen.getByRole('radio', { name: 'A' })).toHaveAttribute(
+        'aria-checked',
+        String(value === 'a'),
+      )
+    },
+  )
+
+  it('矢印キーで無効な選択肢を飛ばし、有効な選択肢へフォーカスを移す', async () => {
+    const user = userEvent.setup()
+    const handleClickOption = vi.fn()
+    const mixedOptions = [
+      options[0],
+      { ...options[1], disabled: true },
+      { value: 'c', content: 'C' },
+    ]
+
+    renderWithIntl(
+      <SegmentedControl
+        defaultValue="a"
+        onClickOption={handleClickOption}
+        options={mixedOptions}
+      />,
+    )
+
+    const first = screen.getByRole('radio', { name: 'A' })
+    const last = screen.getByRole('radio', { name: 'C' })
+
+    await user.tab()
+    expect(first).toHaveFocus()
+
+    await user.keyboard('{ArrowRight}')
+    expect(last).toHaveFocus()
+    expect(handleClickOption).not.toHaveBeenCalled()
+
+    await user.keyboard('{Enter}')
+    expect(handleClickOption).toHaveBeenCalledOnce()
+    expect(handleClickOption).toHaveBeenCalledWith('c')
+
+    await user.keyboard('{ArrowLeft}')
+    expect(first).toHaveFocus()
+  })
+
+  it('選択肢がすべて無効な場合、Tab でグループに入らない', async () => {
+    const user = userEvent.setup()
+
+    renderWithIntl(
+      <>
+        <SegmentedControl options={options.map((option) => ({ ...option, disabled: true }))} />
+        <Button>次へ</Button>
+      </>,
+    )
+
+    await user.tab()
+
+    expect(screen.getByRole('button', { name: '次へ' })).toHaveFocus()
   })
 })
