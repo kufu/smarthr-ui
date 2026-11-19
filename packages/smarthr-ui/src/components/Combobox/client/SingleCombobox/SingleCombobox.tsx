@@ -346,15 +346,13 @@ export const SingleCombobox = <T,>({
         // 所属フォームはマウント後にも変わるため、ルートで監視して現在の所属を確認する。
         const resetRoot = node?.getRootNode()
         const handleReset = (e: Event) => {
-          const resetForm = e.target
-
-          if (resetForm === node?.form) {
+          // リセット後に所属が変わる場合があるため、イベントを受けた時点の所属で判定する。
+          if (e.target === node?.form) {
             latest.resetFrame.request(() => {
               // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
               // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
               // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
-              if (e.defaultPrevented || latest.isSelectedItemControlled || resetForm !== node?.form)
-                return
+              if (e.defaultPrevented || latest.isSelectedItemControlled) return
 
               const nextSelectedItem = latest.defaultSelectedItem ?? null
               const hasSelectedItemChanged =
