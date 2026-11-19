@@ -7,7 +7,6 @@ import {
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type SetStateAction,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -122,7 +121,7 @@ export function useToolbarDropdown({
   const scrollContainerRef = useRef<HTMLElement | null>(null)
   const scrollOffsetRef = useRef({ left: 0, top: 0 })
 
-  const latest = useLatest({ origin, isChildPortal })
+  const latest = useLatest({ origin, isOpen, isVisible, position, createPortal, isChildPortal })
 
   const functions = useMemo(() => {
     const restoreFocus = () => {
@@ -130,6 +129,41 @@ export function useToolbarDropdown({
 
       if (current?.type === 'anchor') current.returnFocus()
       else triggerRef.current?.focus()
+    }
+
+    // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
+    // ページ末尾の要素へ飛んで開いたまま残る。中身ごとに書くと漏れるため外枠で受ける
+    const handleDelegateKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== 'Tab' || e.defaultPrevented || e.nativeEvent.isComposing) return
+
+      const tabbables = Array.from(
+        e.currentTarget.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR),
+      ).filter((el) => el.tabIndex >= 0)
+      const index = tabbables.indexOf(e.target as HTMLElement)
+      const isEdge = e.shiftKey ? index === 0 : index !== -1 && index === tabbables.length - 1
+
+      if (isEdge) {
+        e.preventDefault()
+        e.stopPropagation()
+        setOrigin(null)
+        restoreFocus()
+      }
+    }
+
+    // フォーカスが中にないときは止めない。マウスで開いてトリガーにフォーカスが残っている場合、
+    // 止めると次の Tab がツールバーの外へ抜けて閉じる。止めなければ押した位置が Tab の起点になる
+    const handleDelegateMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement
+
+      if (
+        e.button === 0 &&
+        e.currentTarget.contains(target) &&
+        e.currentTarget.contains(document.activeElement) &&
+        !e.currentTarget.contains(target.closest(TABBABLE_SELECTOR)) &&
+        !isScrollable(target)
+      ) {
+        e.preventDefault()
+      }
     }
 
     return {
@@ -142,38 +176,34 @@ export function useToolbarDropdown({
       },
       openFrom: (anchor: DropdownAnchor) => setOrigin({ ...anchor, type: 'anchor' }),
       restoreFocus,
-      // ポータルは body 末尾にあり、両端から Tab で抜けるとフォーカスがページの外や
-      // ページ末尾の要素へ飛んで開いたまま残る。中身ごとに書くと漏れるため外枠で受ける
-      handleDelegateKeyDown: (e: ReactKeyboardEvent<HTMLDivElement>) => {
-        if (e.key !== 'Tab' || e.defaultPrevented || e.nativeEvent.isComposing) return
+      renderDropdown: (children: ReactNode) => {
+        if (!latest.isOpen) return null
 
-        const tabbables = Array.from(
-          e.currentTarget.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR),
-        ).filter((el) => el.tabIndex >= 0)
-        const index = tabbables.indexOf(e.target as HTMLElement)
-        const isEdge = e.shiftKey ? index === 0 : index !== -1 && index === tabbables.length - 1
+        const { isVisible: visible, position: placement } = latest
 
-        if (isEdge) {
-          e.preventDefault()
-          e.stopPropagation()
-          setOrigin(null)
-          restoreFocus()
-        }
-      },
-      // フォーカスが中にないときは止めない。マウスで開いてトリガーにフォーカスが残っている場合、
-      // 止めると次の Tab がツールバーの外へ抜けて閉じる。止めなければ押した位置が Tab の起点になる
-      handleDelegateMouseDown: (e: ReactMouseEvent<HTMLDivElement>) => {
-        const target = e.target as HTMLElement
-
-        if (
-          e.button === 0 &&
-          e.currentTarget.contains(target) &&
-          e.currentTarget.contains(document.activeElement) &&
-          !e.currentTarget.contains(target.closest(TABBABLE_SELECTOR)) &&
-          !isScrollable(target)
-        ) {
-          e.preventDefault()
-        }
+        return latest.createPortal(
+          // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+          <div
+            ref={contentRef}
+            className={`shr-rte-border-shorthand shr-rte-absolute shr-rte-z-overlap-base shr-rte-box-border shr-rte-overflow-clip shr-rte-rounded-m shr-rte-bg-white shr-rte-shadow-layer-3 ${visible ? 'shr-rte-visible' : 'shr-rte-invisible'}`}
+            style={{
+              // 既定の縮む幅だと、画面の右端に近いときに縮んだ値で測られ、端からの余白を確保できない
+              width: 'max-content',
+              maxWidth: `calc(100vw - ${VIEWPORT_PADDING * 2}px)`,
+              top: `${placement.top}px`,
+              left: `${placement.left}px`,
+              maxHeight: placement.maxHeight ? `${placement.maxHeight}px` : undefined,
+              overflowY: placement.maxHeight ? 'auto' : undefined,
+              // 外枠だけで頭打ちにすると、自前でスクロールする中身（リストボックス）と二重にスクロールバーが出る
+              display: placement.maxHeight ? 'flex' : undefined,
+              flexDirection: placement.maxHeight ? 'column' : undefined,
+            }}
+            onMouseDown={handleDelegateMouseDown}
+            onKeyDown={handleDelegateKeyDown}
+          >
+            {children}
+          </div>,
+        )
       },
     }
   }, [latest])
@@ -329,43 +359,12 @@ export function useToolbarDropdown({
     }
   }, [isOpen, functions, latest])
 
-  const renderDropdown = useCallback(
-    (children: ReactNode) => {
-      if (!isOpen) return null
-
-      return createPortal(
-        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-        <div
-          ref={contentRef}
-          className={`shr-rte-border-shorthand shr-rte-absolute shr-rte-z-overlap-base shr-rte-box-border shr-rte-overflow-clip shr-rte-rounded-m shr-rte-bg-white shr-rte-shadow-layer-3 ${isVisible ? 'shr-rte-visible' : 'shr-rte-invisible'}`}
-          style={{
-            // 既定の縮む幅だと、画面の右端に近いときに縮んだ値で測られ、端からの余白を確保できない
-            width: 'max-content',
-            maxWidth: `calc(100vw - ${VIEWPORT_PADDING * 2}px)`,
-            top: `${position.top}px`,
-            left: `${position.left}px`,
-            maxHeight: position.maxHeight ? `${position.maxHeight}px` : undefined,
-            overflowY: position.maxHeight ? 'auto' : undefined,
-            // 外枠だけで頭打ちにすると、自前でスクロールする中身（リストボックス）と二重にスクロールバーが出る
-            display: position.maxHeight ? 'flex' : undefined,
-            flexDirection: position.maxHeight ? 'column' : undefined,
-          }}
-          onMouseDown={functions.handleDelegateMouseDown}
-          onKeyDown={functions.handleDelegateKeyDown}
-        >
-          {children}
-        </div>,
-      )
-    },
-    [isOpen, position, isVisible, createPortal, functions],
-  )
-
   return {
     isOpen,
     setIsOpen: functions.setIsOpen,
     openFrom: functions.openFrom,
     restoreFocus: functions.restoreFocus,
     triggerRef,
-    renderDropdown,
+    renderDropdown: functions.renderDropdown,
   }
 }
