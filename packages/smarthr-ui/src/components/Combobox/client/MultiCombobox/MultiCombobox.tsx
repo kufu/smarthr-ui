@@ -331,7 +331,6 @@ export const MultiCombobox = <T,>({
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
     let associatedForm: HTMLFormElement | null = null
-    let keyboardDeleteButton: HTMLButtonElement | null = null
 
     // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
     // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する。
@@ -437,6 +436,8 @@ export const MultiCombobox = <T,>({
         }
       }
     }
+
+    let keyboardDeleteButton: HTMLButtonElement | null = null
 
     return {
       handleDelete: (item: ComboboxItem<T>, button?: HTMLButtonElement) => {
