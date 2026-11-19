@@ -310,20 +310,27 @@ export const WarekiPicker: FC<Props> = ({
         // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
         // selectedDate(ひいては和暦alt表示・カレンダーの選択日ハイライト)をマウント時の初期値へ戻すため、
         // resetイベントを監視する。DOM上のinput.value自体はネイティブのdefaultValueへの復帰に任せる。
-        // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+        // Reactの合成イベント(onReset)のディスパッチはこのリスナーより後に
         // 実行されるが、そのタイミングはqueueMicrotaskを多重にネストしても追いつかない(実機検証で確認済み)。
         // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
         // (defaultPrevented)が確定した後に判定できるようにする
-        const associatedForm = node.form
+        const root = node.getRootNode()
         const handleReset = (e: Event) => {
-          latest.resetFrame.request(() => {
-            if (!e.defaultPrevented && !latest.isControlled) {
-              setSelectedDate(latest.initialSelectedDate)
-            }
-          })
+          // form属性が変わっても、リセット対象が現在の所属フォームかどうかを判定する
+          const resetForm = e.target
+          if (resetForm === node.form) {
+            latest.resetFrame.request(() => {
+              // ネイティブのリセット後に所属が変更された場合も、初期値に戻った入力欄に表示を合わせる。
+              const didReset =
+                resetForm === node.form || node.value === node.defaultValue.replace(/[\r\n]/g, '')
+              if (!e.defaultPrevented && !latest.isControlled && didReset) {
+                setSelectedDate(latest.initialSelectedDate)
+              }
+            })
+          }
         }
 
-        associatedForm?.addEventListener('reset', handleReset)
+        root.addEventListener('reset', handleReset, true)
 
         const handleKeyDown = (e: KeyboardEvent) => {
           if (!calendarNode || e.key !== 'Tab') {
@@ -373,7 +380,7 @@ export const WarekiPicker: FC<Props> = ({
 
         return () => {
           window.removeEventListener('keydown', handleKeyDown)
-          associatedForm?.removeEventListener('reset', handleReset)
+          root.removeEventListener('reset', handleReset, true)
           latest.closeFrame.cancel()
           latest.resetFrame.cancel()
         }
