@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
@@ -110,11 +111,13 @@ const MaxLettersTextarea: FC<
   })
 
   const countError = count > maxLetters
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onChange,
     isControlled: value !== undefined,
     defaultValue,
+    resetFrame,
   })
 
   const functions = useMemo(() => {
@@ -142,19 +145,24 @@ const MaxLettersTextarea: FC<
         latest.onChange?.(e)
       },
       // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
-      // textarea自体の値はネイティブのdefaultValueへの復帰に任せ、countをdefaultValue由来の値へ戻す
+      // textarea自体の値はネイティブのdefaultValueへの復帰に任せ、countをdefaultValue由来の値へ戻す。
+      // resetイベントは、Reactの合成イベント(onReset)によるpreventDefault()の呼び出しより
+      // 先に発火するため、次のフレームまで判定を遅延させてe.defaultPreventedを確認する
       resetCallbackRef: (node: HTMLTextAreaElement | null) => {
         const associatedForm = node?.form
-        const handleReset = () => {
-          if (!latest.isControlled) {
-            setCount(latest.defaultValue ? getStringLength(latest.defaultValue) : 0)
-          }
+        const handleReset = (e: Event) => {
+          latest.resetFrame.request(() => {
+            if (!e.defaultPrevented && !latest.isControlled) {
+              setCount(latest.defaultValue ? getStringLength(latest.defaultValue) : 0)
+            }
+          })
         }
 
         associatedForm?.addEventListener('reset', handleReset)
 
         return () => {
           associatedForm?.removeEventListener('reset', handleReset)
+          latest.resetFrame.cancel()
         }
       },
     }
