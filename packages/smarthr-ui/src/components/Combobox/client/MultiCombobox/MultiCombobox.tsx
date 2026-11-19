@@ -2,6 +2,7 @@
 
 import {
   type ChangeEvent,
+  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
@@ -436,8 +437,35 @@ export const MultiCombobox = <T,>({
       }
     }
 
+    let keyboardDeleteButton: HTMLButtonElement | null = null
+
     return {
-      handleDelete: (item: ComboboxItem<T>) => latest.listBoxFunctions.handleDelete(item),
+      handleDelete: (item: ComboboxItem<T>, button?: HTMLButtonElement) => {
+        keyboardDeleteButton =
+          button && !latest.isExpanded && button.ownerDocument.activeElement === button
+            ? button
+            : null
+        latest.listBoxFunctions.handleDelete(item)
+      },
+      handleDelegateBlur: (e: FocusEvent<HTMLElement>) => {
+        // ReactのonBlurは削除時には発火しないため、親の更新より先に復帰を取り消す。
+        if (e.target === keyboardDeleteButton) {
+          keyboardDeleteButton = null
+        }
+      },
+      focusInputAfterSelectionChange: (node: HTMLInputElement) => {
+        const { ownerDocument } = node
+        const wasDeleteButtonRemoved = keyboardDeleteButton?.isConnected === false
+        if (wasDeleteButtonRemoved) {
+          keyboardDeleteButton = null
+        }
+        if (
+          latest.isExpanded ||
+          (wasDeleteButtonRemoved && ownerDocument.activeElement === ownerDocument.body)
+        ) {
+          node.focus()
+        }
+      },
       blur,
       inputCallbackRef: (node: HTMLInputElement | null) => {
         input = node
@@ -448,6 +476,7 @@ export const MultiCombobox = <T,>({
         }
 
         if (!node) {
+          keyboardDeleteButton = null
           latest.listBoxFunctions.cleanupFrame()
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
@@ -554,11 +583,11 @@ export const MultiCombobox = <T,>({
   // TODO: inputFocusEffectRef, inputSelectEffectRef は一つにまとめられないか検討する
   const inputFocusEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
-      if (node && isExpanded) {
-        node.focus()
+      if (node) {
+        functions.focusInputAfterSelectionChange(node)
       }
     },
-    [isExpanded, actualSelectedItems, isInputControlled],
+    [isExpanded, actualSelectedItems, isInputControlled, functions],
   )
   const inputSelectEffectRef = useLayoutEffectRef(
     (node: HTMLInputElement | null) => {
@@ -630,6 +659,7 @@ export const MultiCombobox = <T,>({
         ...style,
         width: typeof width === 'number' ? `${width}px` : width,
       }}
+      onBlur={functions.handleDelegateBlur}
       onClick={functions.handleDelegateClick}
       onKeyDown={functions.handleDelegateKeyDown}
       onKeyPress={functions.handleDelegateKeyPress}

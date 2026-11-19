@@ -1,6 +1,7 @@
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 
 import { IntlProvider } from '../../../../intl'
 import { FormControl } from '../../../FormGroup'
@@ -339,6 +340,115 @@ describe('SingleCombobox', () => {
     // Enter キーで削除
     await userEvent.keyboard('{enter}')
     expect(onDelete).toHaveBeenCalledWith({ label: 'option 2', value: 'value-2' })
+  })
+
+  it.each(['Enter', 'Backspace'])(
+    'リストボックスを閉じてから%sキーでアイテムを削除すると入力欄にフォーカスが戻ること',
+    async (key) => {
+      const item = { label: 'option 1', value: 'value-1' }
+      render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="コンボボックス">
+              <MultiCombobox name="selection" items={[item]} defaultSelectedItems={[item]} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      await userEvent.tab()
+      await userEvent.keyboard('{ArrowLeft}{Escape}')
+      const deleteButton = screen.getByRole('button', { name: 'option 1 を削除' })
+      expect(deleteButton).toHaveFocus()
+      expect(listbox()).not.toBeInTheDocument()
+
+      await userEvent.keyboard(`{${key}}`)
+      expect(deleteButton).not.toBeInTheDocument()
+      expect(combobox()).toHaveFocus()
+      expect(listbox()).toBeInTheDocument()
+    },
+  )
+
+  it('制御時に削除されなかったアイテムはリストボックスを閉じたままフォーカスを保つこと', async () => {
+    const onChangeSelected = vi.fn()
+    render(template({ onChangeSelected }))
+
+    await userEvent.tab()
+    await userEvent.keyboard('{ArrowLeft}{Escape}{Enter}')
+
+    expect(onChangeSelected).toHaveBeenCalledWith([])
+    expect(deleteButtons()[0]).toHaveFocus()
+    expect(listbox()).not.toBeInTheDocument()
+  })
+
+  it('削除前に別の場所へ移動した場合は入力欄へフォーカスを戻さないこと', async () => {
+    const { rerender } = render(
+      <>
+        {template({ onChangeSelected: vi.fn() })}
+        <button type="button">次の操作</button>
+      </>,
+    )
+
+    await userEvent.tab()
+    await userEvent.keyboard('{ArrowLeft}{Escape}{Enter}')
+    expect(deleteButtons()[0]).toHaveFocus()
+    await userEvent.click(screen.getByRole('button', { name: '次の操作' }))
+    await userEvent.click(document.body)
+
+    rerender(
+      <>
+        {template({ selectedItems: [] })}
+        <button type="button">次の操作</button>
+      </>,
+    )
+
+    expect(screen.queryByRole('button', { name: /を削除$/ })).not.toBeInTheDocument()
+    expect(document.body).toHaveFocus()
+    expect(listbox()).not.toBeInTheDocument()
+  })
+
+  it('フォーカスを外したとき親が同期的に削除しても入力欄へフォーカスを戻さないこと', async () => {
+    const item = { label: 'option 1', value: 'value-1' }
+    const onChangeSelected = vi.fn()
+    const Fixture = () => {
+      const [selectedItems, setSelectedItems] = useState([item])
+
+      const handleBlur = () => {
+        if (onChangeSelected.mock.calls.length > 0) {
+          flushSync(() => setSelectedItems([]))
+        }
+      }
+
+      return (
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl onBlur={handleBlur} label="コンボボックス">
+              <MultiCombobox
+                name="selection"
+                selectedItems={selectedItems}
+                onChangeSelected={onChangeSelected}
+                items={[item]}
+              />
+            </FormControl>
+          </form>
+        </IntlProvider>
+      )
+    }
+
+    render(<Fixture />)
+
+    await userEvent.tab()
+    await userEvent.keyboard('{ArrowLeft}{Escape}{Enter}')
+
+    const deleteButton = deleteButtons()[0]
+    expect(deleteButton).toHaveFocus()
+    expect(onChangeSelected).toHaveBeenCalledWith([])
+
+    act(() => deleteButton.blur())
+
+    expect(deleteButton).not.toBeInTheDocument()
+    expect(document.body).toHaveFocus()
+    expect(listbox()).not.toBeInTheDocument()
   })
 
   it('Backspaceキーでアイテムを削除できること', async () => {
