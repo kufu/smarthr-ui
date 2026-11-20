@@ -121,7 +121,14 @@ describe('keyboardNavigationPlugin', () => {
 describe('keyboardNavigationPlugin（Chart.jsのインスタンス経由）', () => {
   // モックのchartではChart.jsのオプション解決を通らないため、実際のインスタンスで確認する
   it('formatLiveRegionTextの結果をライブリージョンに書き込む', () => {
-    ChartJS.register(BarController, BarElement, CategoryScale, LinearScale)
+    // descriptorsはregister時にしか登録されないため、本番（registerChartComponents）と同じくregisterする
+    ChartJS.register(
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      keyboardNavigationPlugin,
+    )
 
     const canvas = document.createElement('canvas')
     canvas.tabIndex = 0
@@ -156,7 +163,6 @@ describe('keyboardNavigationPlugin（Chart.jsのインスタンス経由）', ()
           keyboardNavigation: { liveRegionId: liveRegion.id, formatLiveRegionText },
         },
       },
-      plugins: [keyboardNavigationPlugin],
     })
 
     canvas.focus()
@@ -170,6 +176,7 @@ describe('keyboardNavigationPlugin（Chart.jsのインスタンス経由）', ()
     })
 
     chart.destroy()
+    ChartJS.unregister(keyboardNavigationPlugin)
     vi.restoreAllMocks()
   })
 })

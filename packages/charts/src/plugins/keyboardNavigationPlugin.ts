@@ -46,6 +46,11 @@ export const keyboardNavigationPlugin = {
     skipZero: false,
     formatLiveRegionText: undefined,
   },
+  // chart.optionsは関数をスクリプタブルオプションとして解決し、Chart.jsのコンテキストで呼んだ戻り値に
+  // 置き換えてしまうため、formatLiveRegionTextは関数のまま取り出せるようにする（tooltipのexternal等と同じ）
+  descriptors: {
+    _scriptable: (name: string) => name !== 'formatLiveRegionText',
+  },
   afterInit: (chart: ChartWithKeyboardHandler, args: any, options: KeyboardNavigationOptions) => {
     const { canvas } = chart
 
@@ -222,11 +227,9 @@ export const keyboardNavigationPlugin = {
 
       if (liveRegionElement) {
         // afterInitはチャート生成時の1度しか実行されず、optionsの変更ではchart.updateが走るだけなので、
-        // 引数のoptionsを参照すると初期値のまま古くなるため、最新の値を都度読み直す。
-        // chart.optionsは関数をスクリプタブルオプションとして解決し、formatLiveRegionTextの戻り値（文字列）に
-        // 置き換えてしまうため、渡した値がそのまま入っているchart.config.optionsから読む
+        // 引数のoptionsを参照すると初期値のまま古くなる。最新の値はchart.optionsから都度読み直す
         const currentOptions: KeyboardNavigationOptions =
-          chart.config.options?.plugins?.keyboardNavigation ?? options
+          chart.options.plugins?.keyboardNavigation ?? options
 
         liveRegionElement.textContent = resolveLiveRegionText(
           {
