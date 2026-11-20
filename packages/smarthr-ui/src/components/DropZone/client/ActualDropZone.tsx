@@ -5,6 +5,7 @@ import {
   type DragEvent,
   type FC,
   type MouseEvent,
+  type ReactNode,
   type Ref,
   memo,
   useMemo,
@@ -62,6 +63,10 @@ type Props = ExtendElementPropsWithoutRef<
     ref?: Ref<HTMLInputElement>
   }
 >
+
+const DEFAULT_SELECT_BUTTON_LABEL = (
+  <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />
+)
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -133,6 +138,7 @@ export const ActualDropZone: FC<Props> = ({
   }, [latest])
 
   const errorAttr = error || undefined
+  const label = selectButtonLabel || DEFAULT_SELECT_BUTTON_LABEL
 
   return (
     <div
@@ -149,10 +155,10 @@ export const ActualDropZone: FC<Props> = ({
         error={error}
         className={classNames.button}
         handleClick={functions.handleClickButton}
-        label={selectButtonLabel}
+        label={label}
       />
-      <VisuallyHiddenText>
-        {/* TODO: この input にアクセシブルネームが設定されていない。VisuallyHiddenText で視覚的に隠されているが aria-hidden ではないためアクセシビリティツリーに残る。aria-label 等で適切なラベルを付与する必要がある */}
+      <VisuallyHiddenText as="label">
+        {label}
         {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
@@ -171,7 +177,7 @@ export const ActualDropZone: FC<Props> = ({
 }
 
 const SelectButton = memo<{
-  label?: string
+  label: ReactNode
   disabled?: boolean
   error?: boolean
   handleClick: (e: MouseEvent<HTMLButtonElement>) => void
@@ -184,6 +190,6 @@ const SelectButton = memo<{
     onClick={handleClick}
     prefix={<FaFolderOpenIcon />}
   >
-    {label || <Localizer id="smarthr-ui/DropZone/selectButtonLabel" defaultText="ファイルを選択" />}
+    {label}
   </Button>
 ))
