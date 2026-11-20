@@ -13,6 +13,7 @@ import {
 
 import { createBarChartOptions, registerChartComponents } from '../../config'
 import { getChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 import { TableView } from '../internal/TableView/TableView'
 
 import type { ChartViewType, SingleToneLevel } from '../../helper'
@@ -85,6 +86,8 @@ export const BarChart: React.FC<Props> = ({
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
   const chartRef = useRef<Chart<'bar'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
   // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
   const hasSingleTone = Boolean(singleTone)
@@ -101,12 +104,22 @@ export const BarChart: React.FC<Props> = ({
     [data.datasets.length, disablePatterns, hasSingleTone, singleToneFrom, singleToneTo],
   )
 
-  const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const barCount = data.datasets[0].data.length
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}棒グラフ ${datasetCount}個のデータ ${barCount}本の棒`
-  }, [title, data])
+  const ariaLabel = useMemo(
+    () =>
+      localize(
+        title
+          ? {
+              id: 'smarthr-ui-charts/BarChart/ariaLabelWithTitle',
+              defaultText: '{title} 棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+            }
+          : {
+              id: 'smarthr-ui-charts/BarChart/ariaLabel',
+              defaultText: '棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+            },
+        { title, datasetCount: data.datasets.length, barCount: data.datasets[0].data.length },
+      ),
+    [title, data, localize],
+  )
 
   const enhancedData: ChartData<'bar'> = useMemo(
     () => ({
@@ -146,10 +159,11 @@ export const BarChart: React.FC<Props> = ({
             liveRegionId: chartId,
             stacked,
             horizontal: orientation === 'horizontal',
+            formatLiveRegionText,
           },
         },
       }),
-    [chartId, externalOptions, grouped, orientation, stacked],
+    [chartId, externalOptions, grouped, orientation, stacked, formatLiveRegionText],
   )
 
   const viewOptions = useMemo(
@@ -157,15 +171,15 @@ export const BarChart: React.FC<Props> = ({
       {
         value: 'chart',
         content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
-        ariaLabel: 'グラフ',
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
       },
       {
         value: 'table',
         content: <FaTableIcon />,
-        ariaLabel: 'テーブル',
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
       },
     ],
-    [orientation],
+    [orientation, localize],
   )
 
   const handleViewChange = (value: string) => {

@@ -11,6 +11,7 @@ import {
   SMARTHR_DEFAULT_COLORS,
   getChartColors,
 } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 import { doughnutSegmentDividerPlugin } from '../../plugins'
 import { DoughnutCenterContent, useChartAreaTracker } from '../DoughnutCenterContent'
 import { TableView } from '../internal/TableView/TableView'
@@ -20,19 +21,6 @@ import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
-
-const VIEW_OPTIONS = [
-  {
-    value: 'chart',
-    content: <FaChartPieIcon />,
-    ariaLabel: 'グラフ',
-  },
-  {
-    value: 'table',
-    content: <FaTableIcon />,
-    ariaLabel: 'テーブル',
-  },
-]
 
 type Props = {
   // 色などはpropsで渡せないようにする
@@ -65,6 +53,8 @@ export const DoughnutChart: React.FC<Props> = ({
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
   const chartRef = useRef<Chart<'doughnut'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const segmentCount = data.labels?.length ?? data.datasets[0]?.data.length ?? 0
   const chartColors = useMemo(
     () => getChartColors<'doughnut'>(segmentCount, { disablePatterns }),
@@ -72,10 +62,22 @@ export const DoughnutChart: React.FC<Props> = ({
   )
   const { chartArea, chartAreaPlugin } = useChartAreaTracker()
 
-  const ariaLabel = useMemo(() => {
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}ドーナツグラフ ${segmentCount}個の項目`
-  }, [title, segmentCount])
+  const ariaLabel = useMemo(
+    () =>
+      localize(
+        title
+          ? {
+              id: 'smarthr-ui-charts/DoughnutChart/ariaLabelWithTitle',
+              defaultText: '{title} ドーナツグラフ {segmentCount}個の項目',
+            }
+          : {
+              id: 'smarthr-ui-charts/DoughnutChart/ariaLabel',
+              defaultText: 'ドーナツグラフ {segmentCount}個の項目',
+            },
+        { title, segmentCount },
+      ),
+    [title, segmentCount, localize],
+  )
 
   const enhancedData: ChartData<'doughnut'> = useMemo(
     () => ({
@@ -107,6 +109,7 @@ export const DoughnutChart: React.FC<Props> = ({
           keyboardNavigation: {
             ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
           doughnutSegmentDivider: {
             // チャートは Base（WHITE）の上に置かれる前提。BACKGROUND は Base の背後に
@@ -116,7 +119,23 @@ export const DoughnutChart: React.FC<Props> = ({
           },
         },
       }) as ChartOptions<'doughnut'>,
-    [thickness, chartId, externalOptions],
+    [thickness, chartId, externalOptions, formatLiveRegionText],
+  )
+
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: <FaChartPieIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
+      },
+    ],
+    [localize],
   )
 
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
@@ -146,7 +165,7 @@ export const DoughnutChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={VIEW_OPTIONS}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">

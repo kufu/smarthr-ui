@@ -12,25 +12,13 @@ import {
 
 import { createRadarChartOptions, registerChartComponents } from '../../config'
 import { getRadarChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 import { TableView } from '../internal/TableView/TableView'
 
 import type { ChartViewType } from '../../helper'
 import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()
-
-const VIEW_OPTIONS = [
-  {
-    value: 'chart',
-    content: <FaCircleNodesIcon />,
-    ariaLabel: 'グラフ',
-  },
-  {
-    value: 'table',
-    content: <FaTableIcon />,
-    ariaLabel: 'テーブル',
-  },
-]
 
 type Props = {
   data: ChartData<'radar'>
@@ -50,17 +38,33 @@ export const RadarChart: React.FC<Props> = ({
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
   const chartRef = useRef<Chart<'radar'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const chartColors = useMemo(
     () => getRadarChartColors(data.datasets.length),
     [data.datasets.length],
   )
 
-  const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const axisCount = data.datasets[0]?.data.length ?? 0
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}レーダーチャート ${datasetCount}個のデータ ${axisCount}個の軸`
-  }, [title, data])
+  const ariaLabel = useMemo(
+    () =>
+      localize(
+        title
+          ? {
+              id: 'smarthr-ui-charts/RadarChart/ariaLabelWithTitle',
+              defaultText: '{title} レーダーチャート {datasetCount}個のデータ {axisCount}個の軸',
+            }
+          : {
+              id: 'smarthr-ui-charts/RadarChart/ariaLabel',
+              defaultText: 'レーダーチャート {datasetCount}個のデータ {axisCount}個の軸',
+            },
+        {
+          title,
+          datasetCount: data.datasets.length,
+          axisCount: data.datasets[0]?.data.length ?? 0,
+        },
+      ),
+    [title, data, localize],
+  )
 
   const enhancedData: ChartData<'radar'> = useMemo(
     () => ({
@@ -85,10 +89,27 @@ export const RadarChart: React.FC<Props> = ({
           keyboardNavigation: {
             ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
         },
       }),
-    [chartId, externalOptions],
+    [chartId, externalOptions, formatLiveRegionText],
+  )
+
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: <FaCircleNodesIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
+      },
+    ],
+    [localize],
   )
 
   const handleViewChange = (value: string) => {
@@ -110,7 +131,7 @@ export const RadarChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={VIEW_OPTIONS}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">

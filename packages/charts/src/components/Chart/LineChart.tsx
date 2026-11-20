@@ -12,6 +12,7 @@ import {
 
 import { createLineChartOptions, registerChartComponents } from '../../config'
 import { getLineChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
 import { TableView } from '../internal/TableView/TableView'
 
 import type { ChartViewType } from '../../helper'
@@ -19,19 +20,6 @@ import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
-
-const VIEW_OPTIONS = [
-  {
-    value: 'chart',
-    content: <FaChartLineIcon />,
-    ariaLabel: 'グラフ',
-  },
-  {
-    value: 'table',
-    content: <FaTableIcon />,
-    ariaLabel: 'テーブル',
-  },
-]
 
 type Props = {
   // 色などはpropsで渡せないようにする
@@ -53,17 +41,29 @@ export const LineChart: React.FC<Props> = ({
   const [view, setView] = useState<ChartViewType>(defaultView)
   const chartId = useId()
   const chartRef = useRef<Chart<'line'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
   const chartColors = useMemo(
     () => getLineChartColors(data.datasets.length),
     [data.datasets.length],
   )
 
-  const ariaLabel = useMemo(() => {
-    const datasetCount = data.datasets.length
-    const pointCount = data.datasets[0].data.length
-    const prefix = title ? `${title} ` : ''
-    return `${prefix}線グラフ ${datasetCount}個のデータ ${pointCount}個のポイント`
-  }, [title, data])
+  const ariaLabel = useMemo(
+    () =>
+      localize(
+        title
+          ? {
+              id: 'smarthr-ui-charts/LineChart/ariaLabelWithTitle',
+              defaultText: '{title} 線グラフ {datasetCount}個のデータ {pointCount}個のポイント',
+            }
+          : {
+              id: 'smarthr-ui-charts/LineChart/ariaLabel',
+              defaultText: '線グラフ {datasetCount}個のデータ {pointCount}個のポイント',
+            },
+        { title, datasetCount: data.datasets.length, pointCount: data.datasets[0].data.length },
+      ),
+    [title, data, localize],
+  )
 
   const enhancedData: ChartData<'line'> = useMemo(
     () => ({
@@ -86,10 +86,27 @@ export const LineChart: React.FC<Props> = ({
           keyboardNavigation: {
             ...externalOptions?.plugins?.keyboardNavigation,
             liveRegionId: chartId,
+            formatLiveRegionText,
           },
         },
       }),
-    [chartId, externalOptions],
+    [chartId, externalOptions, formatLiveRegionText],
+  )
+
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: <FaChartLineIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
+      },
+    ],
+    [localize],
   )
 
   const handleViewChange = (value: string) => {
@@ -111,7 +128,7 @@ export const LineChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={VIEW_OPTIONS}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">
