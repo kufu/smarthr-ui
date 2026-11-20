@@ -147,7 +147,6 @@ export const Calendar: FC<Props> = ({
           capitalizeFirstLetter: true,
         },
       }),
-      selectedText: currentMonth.toString(),
     }
   }, [currentMonth, formatDate, getWeekStartDay])
 
@@ -160,7 +159,19 @@ export const Calendar: FC<Props> = ({
 
         const year = parseInt(e.currentTarget.value, 10)
 
-        setCurrentMonth((prev) => prev.year(year))
+        setCurrentMonth((prev) => {
+          const next = prev.year(year)
+
+          if (next.isBefore(formattedFrom.day, 'month')) {
+            return formattedFrom.day
+          }
+
+          if (next.isAfter(formattedTo.day, 'month')) {
+            return formattedTo.day
+          }
+
+          return next
+        })
         setIsSelectingYear(false)
       },
       handleClickSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
@@ -168,7 +179,7 @@ export const Calendar: FC<Props> = ({
         setIsSelectingYear((current) => !current)
       },
     }),
-    [],
+    [formattedFrom.day, formattedTo.day],
   )
 
   return (
@@ -202,7 +213,7 @@ export const Calendar: FC<Props> = ({
           handleSelectYear={functions.handleSelectYear}
         />
         <CalendarTable
-          selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
+          selectedDayText={isValidValue && value ? value.toUTCString() : ''}
           current={calculatedCurrentMonth}
           from={formattedFrom.date}
           to={formattedTo.date}
