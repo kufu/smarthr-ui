@@ -679,12 +679,35 @@ describe('ControlledDrawer（modeless）', () => {
     }
   })
 
-  it('modeless でも ×（onClickClose）で閉じられること', async () => {
-    renderWithIntl(<ModelessTemplate />)
+  it('modeless でも DrawerHeader の閉じるボタン（×）で閉じられること', async () => {
+    const onClickClose = vi.fn()
+    const ModelessHeaderTemplate: FC = () => {
+      const [isOpen, setIsOpen] = useState(false)
+      return (
+        <>
+          <Button onClick={() => setIsOpen(true)}>open</Button>
+          <ControlledDrawer
+            isOpen={isOpen}
+            position="right"
+            modality="modeless"
+            onClickClose={() => {
+              onClickClose()
+              setIsOpen(false)
+            }}
+          >
+            <DrawerHeader title="モードレスドロワー" />
+            <p>modeless content</p>
+          </ControlledDrawer>
+        </>
+      )
+    }
+    renderWithIntl(<ModelessHeaderTemplate />)
     await userEvent.click(screen.getByRole('button', { name: 'open' }))
-    expect(screen.getByRole('dialog', { name: 'モードレスドロワー' })).toBeVisible()
+    const dialog = screen.getByRole('dialog', { name: 'モードレスドロワー' })
+    expect(dialog).toBeVisible()
 
-    await userEvent.click(screen.getByRole('button', { name: 'close' }))
+    await userEvent.click(within(dialog).getByRole('button', { name: '閉じる' }))
+    expect(onClickClose).toHaveBeenCalledTimes(1)
     await waitFor(() => {
       expect(screen.queryByRole('dialog', { name: 'モードレスドロワー' })).toBeNull()
     })
