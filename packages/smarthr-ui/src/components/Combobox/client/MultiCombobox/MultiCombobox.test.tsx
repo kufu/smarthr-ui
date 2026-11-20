@@ -568,6 +568,94 @@ describe('SingleCombobox', () => {
       expect(screen.queryByText('option 2')).not.toBeInTheDocument()
     })
 
+    it.each([
+      {
+        title: '変更前のフォームのリセットでは選択を維持する',
+        resetOwner: 'first-form',
+        cancelReset: false,
+        moveAfterReset: false,
+        expectReset: false,
+      },
+      {
+        title: '変更後のフォームのリセットで初期選択に戻る',
+        resetOwner: 'second-form',
+        cancelReset: false,
+        moveAfterReset: false,
+        expectReset: true,
+      },
+      {
+        title: '変更後のフォームのリセットがキャンセルされた場合は選択を維持する',
+        resetOwner: 'second-form',
+        cancelReset: true,
+        moveAfterReset: false,
+        expectReset: false,
+      },
+      {
+        title: 'フォームのリセット直後に所属を変更しても初期選択に戻る',
+        resetOwner: 'first-form',
+        cancelReset: false,
+        moveAfterReset: true,
+        expectReset: true,
+      },
+    ])('$title', async ({ resetOwner, cancelReset, moveAfterReset, expectReset }) => {
+      const onChangeSelected = vi.fn()
+      const renderWithForm = (form: string) => (
+        <IntlProvider locale="ja">
+          <form id="first-form">
+            <FormControl label="コンボボックス">
+              <MultiCombobox
+                form={form}
+                name="selection"
+                onChangeSelected={onChangeSelected}
+                defaultSelectedItems={[items[0]]}
+                items={items}
+              />
+            </FormControl>
+          </form>
+          <form
+            id="second-form"
+            onReset={cancelReset ? (event) => event.preventDefault() : undefined}
+          />
+        </IntlProvider>
+      )
+
+      const { container, rerender } = render(renderWithForm('first-form'))
+      await userEvent.click(combobox())
+      await userEvent.click(screen.getByRole('option', { name: 'option 2' }))
+      await userEvent.keyboard('{escape}')
+      expect(screen.getByText('option 2')).toBeInTheDocument()
+      onChangeSelected.mockClear()
+      vi.spyOn(window, 'requestAnimationFrame').mockRestore()
+
+      if (!moveAfterReset) {
+        rerender(renderWithForm('second-form'))
+      }
+
+      const form = container.querySelector<HTMLFormElement>(`#${resetOwner}`)!
+      form.reset()
+
+      if (moveAfterReset) {
+        rerender(renderWithForm('second-form'))
+      }
+
+      await act(async () => {
+        await new Promise((resolve) => requestAnimationFrame(resolve))
+      })
+
+      expect(combobox()).toHaveAttribute('form', 'second-form')
+      const currentForm = container.querySelector<HTMLFormElement>('#second-form')!
+      const submittedValues = new FormData(currentForm).getAll('selection')
+      if (expectReset) {
+        expect(screen.queryByText('option 2')).not.toBeInTheDocument()
+        expect(submittedValues).toEqual([items[0].value])
+        expect(onChangeSelected).toHaveBeenCalledExactlyOnceWith([items[0]])
+      } else {
+        expect(screen.getByText('option 2')).toBeInTheDocument()
+        expect(submittedValues).toEqual(items.map((item) => item.value))
+        expect(onChangeSelected).not.toHaveBeenCalled()
+      }
+    })
+
     it('非制御でdefaultSelectedItemsを指定しない場合、form.reset()を呼ぶと未選択に戻ること', async () => {
       const { container } = render(
         <IntlProvider locale="ja">

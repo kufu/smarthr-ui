@@ -329,41 +329,44 @@ export const MultiCombobox = <T,>({
 
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
-    let associatedForm: HTMLFormElement | null = null
+    let resetRoot: Node | null = null
 
     // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
     // 選択状態をdefaultSelectedItemsへ戻すためにresetイベントを監視する。
-    // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+    // Reactの合成イベント(onReset)のディスパッチはこのリスナーより後に
     // 実行されるが、そのタイミングはqueueMicrotaskでは追いつかない(実機検証で確認済み)。
     // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
     // (defaultPrevented)が確定した後に判定できるようにする
     const handleReset = (e: Event) => {
-      latest.resetFrame.request(() => {
-        if (e.defaultPrevented) return
+      // 所属フォームは変わりうるため、リセットイベントを受けた時点の所属を確認する。
+      if (e.target === input?.form) {
+        latest.resetFrame.request(() => {
+          if (e.defaultPrevented) return
 
-        if (!latest.isSelectedItemsControlled) {
-          const nextSelectedItems = latest.defaultSelectedItems ?? []
-          const hasSelectedItemsChanged =
-            latest.selectedItems.length !== nextSelectedItems.length ||
-            latest.selectedItems.some(
-              (item, index) => !areItemsEqual(item, nextSelectedItems[index]),
-            )
+          if (!latest.isSelectedItemsControlled) {
+            const nextSelectedItems = latest.defaultSelectedItems ?? []
+            const hasSelectedItemsChanged =
+              latest.selectedItems.length !== nextSelectedItems.length ||
+              latest.selectedItems.some(
+                (item, index) => !areItemsEqual(item, nextSelectedItems[index]),
+              )
 
-          latest.setSelectedItemsIfUncontrolled(nextSelectedItems)
+            latest.setSelectedItemsIfUncontrolled(nextSelectedItems)
 
-          if (hasSelectedItemsChanged) {
-            latest.onChangeSelected?.(nextSelectedItems)
+            if (hasSelectedItemsChanged) {
+              latest.onChangeSelected?.(nextSelectedItems)
+            }
           }
-        }
 
-        // HINT: 選択状態がdefaultSelectedItemsと同じ(=未変更)場合、selectedItemsの参照が
-        // 変わらずinputSelectEffectRefが発火しないため、検索文字列は明示的にクリアする。
-        // blurと同様にisInputEmptyでガードし、親へのonChangeInput通知も合わせて行う
-        if (!latest.isInputEmpty) {
-          latest.setInputValueIfUncontrolled('')
-          latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-        }
-      })
+          // HINT: 選択状態がdefaultSelectedItemsと同じ(=未変更)場合、selectedItemsの参照が
+          // 変わらずinputSelectEffectRefが発火しないため、検索文字列は明示的にクリアする。
+          // blurと同様にisInputEmptyでガードし、親へのonChangeInput通知も合わせて行う
+          if (!latest.isInputEmpty) {
+            latest.setInputValueIfUncontrolled('')
+            latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+          }
+        })
+      }
     }
 
     const getDeletionButtons = () => {
@@ -443,8 +446,8 @@ export const MultiCombobox = <T,>({
         input = node
 
         if (node) {
-          associatedForm = node.form
-          associatedForm?.addEventListener('reset', handleReset)
+          resetRoot = node.getRootNode()
+          resetRoot.addEventListener('reset', handleReset, true)
         }
 
         if (!node) {
@@ -452,8 +455,8 @@ export const MultiCombobox = <T,>({
           latest.cleanupAddFrame()
           latest.focusFrame.cancel()
           latest.resetFrame.cancel()
-          associatedForm?.removeEventListener('reset', handleReset)
-          associatedForm = null
+          resetRoot?.removeEventListener('reset', handleReset, true)
+          resetRoot = null
         }
       },
       handleDelegateKeyDown: (e: KeyboardEvent<HTMLElement>) => {
