@@ -14,10 +14,13 @@ import vi from './vi_vn.json'
 import zhCn from './zh_hans_cn.json'
 import zhTw from './zh_hant_tw.json'
 
+import type { locales as uiLocales } from 'smarthr-ui'
+
 // 型定義用にja.tsの型をexport
 export { locale as typedJa } from './ja'
 
-// IntlProviderが渡すlocaleで辞書を引くため、キーはsmarthr-uiのlocalesと揃える必要がある
+// IntlProviderが渡すlocaleで辞書を引くため、キーはsmarthr-uiのlocalesと揃える。
+// smarthr-uiに言語が追加されたときのズレをtscで検知できるよう、型で縛っている
 export const locales = {
   ja,
   'en-us': enUs,
@@ -28,4 +31,4 @@ export const locales = {
   'zh-cn': zhCn,
   'zh-tw': zhTw,
   'ja-easy': jaEasy,
-} satisfies Record<string, Record<string, string>>
+} satisfies Record<keyof typeof uiLocales, Record<string, string>>
