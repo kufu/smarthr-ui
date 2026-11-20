@@ -26,7 +26,7 @@ jobs:
           echo "NPM_CONFIG_BEFORE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
 
       - name: Checkout branch
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       
@@ -45,12 +45,14 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           
       - name: Download translations from Crowdin
-        uses: crowdin/github-action@df474cdfb9f41d6ae777118749477c2cdf7cacc8 # v3.2.0
+        uses: crowdin/github-action@v3.6.0
         with:
           config: crowdin.yml
           upload_sources: false
           upload_translations: false
           download_translations: true
+          # ミャンマー語(my)は翻訳未整備のためダウンロード対象から除外する
+          download_translations_args: "--exclude-language my"
           localization_branch_name: ${{ steps.generate-branch-name.outputs.name }}
           crowdin_branch_name: ${{ github.ref_name }}
           create_pull_request: true

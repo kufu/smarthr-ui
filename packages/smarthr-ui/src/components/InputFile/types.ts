@@ -1,9 +1,13 @@
 import type { ExtendElementPropsWithRef } from '../../types'
-import type { ReactNode } from 'react'
+import type { Button } from '../Button'
+import type { FileViewer } from '../FileViewer'
+import type { ComponentPropsWithRef, ReactNode } from 'react'
 
 export type PreviewableObjectType = {
   /** プレビューダイアログ内のFileViewerで検索機能を有効にするかどうか */
   searchable?: boolean
+  /** PDFファイルのパスワード入力を要求されたときに呼ばれるコールバック関数。PDFファイルのプレビュー時のみ使用される */
+  onPassword?: ComponentPropsWithRef<typeof FileViewer>['onPassword']
 }
 
 export type ExistingFile = {
@@ -20,6 +24,8 @@ export type Props = ExtendElementPropsWithRef<
   {
     /** コンポーネントのサイズ */
     size?: 'M' | 'S'
+    /** ファイル選択ボタンのスタイルの種類。Buttonのvariantと同じ見た目になる(primary・dangerは使用不可) */
+    variant?: Exclude<ComponentPropsWithRef<typeof Button>['variant'], 'primary' | 'danger'>
     /** フォームのラベル */
     label: ReactNode
     /** ファイルの選択に変更があったときに発火するコールバック関数 */

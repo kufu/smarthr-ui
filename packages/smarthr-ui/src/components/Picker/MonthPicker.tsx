@@ -16,11 +16,11 @@ type Props = ExtendElementPropsWithRef<
 /** @deprecated MonthPicker は非推奨です。Input[type="month"] を使ってください。 */
 export const MonthPicker: FC<Props> = ({ error, className, ...rest }) => {
   const classNames = useMemo(() => {
-    const { wrapper, inner } = classNameGenerator('Month')
+    const { wrapper, inner } = classNameGenerator()
 
     return {
-      wrapper: wrapper({ className }),
-      inner: inner(),
+      wrapper: wrapper({ componentType: 'Month', className }),
+      inner: inner({ componentType: 'Month' }),
     }
   }, [className])
 
@@ -28,7 +28,6 @@ export const MonthPicker: FC<Props> = ({ error, className, ...rest }) => {
 
   return (
     <span className={classNames.wrapper}>
-      {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
       <input
         {...rest}
         type="month"

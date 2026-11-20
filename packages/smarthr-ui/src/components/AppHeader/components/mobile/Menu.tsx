@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import {
   type FC,
   type PropsWithChildren,
@@ -136,7 +138,6 @@ const ActualFeatureButton: FC<
   return (
     <div className={className}>
       <Button
-        variant="secondary"
         wide
         onClick={handleClick}
         prefix={<FaToolboxIcon />}

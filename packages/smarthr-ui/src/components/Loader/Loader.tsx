@@ -40,8 +40,8 @@ const classNameGenerator = tv({
 
 export const Loader = memo<Props>(
   ({ size = 'M', alt, text, type = 'primary', className, ...rest }) => {
-    // HINT: Loaderは一度表示されれば属性が変わる可能性はほぼ無いためuseMemoしない
     const classNames = (() => {
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- 再レンダリングされる可能性はほぼないため
       const { wrapper, textSlot } = classNameGenerator({
         type,
       })

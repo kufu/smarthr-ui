@@ -5,7 +5,8 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.stories.tsx",
-    "src/**/__tests__"
+    "src/**/__tests__",
+    "src/**/__stories__"
   ],
   "compilerOptions": {
     "declaration": true,

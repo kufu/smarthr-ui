@@ -1,15 +1,12 @@
 import {
   type ComponentPropsWithoutRef,
   type FC,
-  type FormEvent,
   type MouseEvent,
-  type PropsWithChildren,
   type ReactNode,
   memo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
 import { Localizer } from '../../../intl'
 import { Button } from '../../Button'
 import { Cluster } from '../../Layout'
@@ -17,8 +14,9 @@ import { Section } from '../../SectioningContent'
 import { DialogBody } from '../DialogBody'
 import { DialogContentResponseStatusMessage } from '../DialogContentResponseStatusMessage'
 import { DialogHeading } from '../DialogHeading'
-import { dialogContent } from '../dialogContentStyle'
+import { dialogContentClassNameGenerator } from '../dialogContentClassNameGenerator'
 
+import type { useResponseStatus } from '../../../hooks/useResponseStatus'
 import type { ExtendElementPropsWithRef } from '../../../types'
 
 type ObjectActionButtonType = {
@@ -48,27 +46,41 @@ type Props = ExtendElementPropsWithRef<
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param e フォームイベント
      */
-    handleSubmit: (e: FormEvent<HTMLFormElement>) => void
+    // HINT: SubmitEvent は @types/react 19.2.10 以降にしか存在せず、型定義に直接書くと
+    // それより古い @types/react の利用者で型エラーになるため、form の onSubmit の型から取り出す
+    handleSubmit: NonNullable<ComponentPropsWithoutRef<'form'>['onSubmit']>
+    /** form要素のaction属性 */
+    action?: ComponentPropsWithoutRef<'form'>['action']
+    /** form要素に渡す属性 */
+    // HINT: Omitだけでは、getFormPropsの戻り値などonSubmitを含むオブジェクトを渡しても型エラーにならず、
+    // handleSubmitで上書きされて黙って捨てられてしまうため、neverで渡せないことを明示する
+    formProps?: Omit<
+      ComponentPropsWithoutRef<'form'>,
+      'children' | 'className' | 'onSubmit' | 'action'
+    > & {
+      onSubmit?: never
+      action?: never
+    }
     /** 閉じるボタン */
     closeButton: ObjectCloseButtonType
     /** ダイアログフッターの左端操作領域 */
     subActionArea?: ReactNode
     handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    responseStatus?: ResponseStatus
+    responseStatus: ReturnType<typeof useResponseStatus>
   }
 >
 
 const ACTION_AREA_CLUSTER_GAP = { row: 0.5, column: 1 } as const
 
-const formDialogContent = tv({
-  extend: dialogContent,
+const formDialogContentClassNameGenerator = tv({
+  extend: dialogContentClassNameGenerator,
   slots: {
     form: 'shr-contents',
   },
 })
 
 const CLASS_NAMES = (() => {
-  const { form, wrapper, actionArea, buttonArea, message } = formDialogContent()
+  const { form, wrapper, actionArea, buttonArea, message } = formDialogContentClassNameGenerator()
 
   return {
     form: form(),
@@ -86,41 +98,39 @@ export const FormDialogContent: FC<Props> = ({
   contentPadding,
   actionButton,
   handleSubmit,
+  action,
+  formProps,
   handleClickClose,
   responseStatus,
   closeButton,
   subActionArea,
-}) => {
-  const calculatedResponseStatus = useResponseStatus(responseStatus)
-
-  return (
-    // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
-    <Section className={CLASS_NAMES.wrapper}>
-      <DialogHeading {...heading} />
-      <form className={CLASS_NAMES.form} onSubmit={handleSubmit}>
-        <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
-          {children}
-        </DialogBody>
-        <div className={CLASS_NAMES.actionArea}>
-          <Cluster justify="space-between">
-            {subActionArea}
-            <ActionAreaCluster
-              loading={calculatedResponseStatus.isProcessing}
-              className={CLASS_NAMES.buttonArea}
-              handleClickClose={handleClickClose}
-              closeButton={closeButton}
-              actionButton={actionButton}
-            />
-          </Cluster>
-          <DialogContentResponseStatusMessage
-            responseStatus={calculatedResponseStatus}
-            className={CLASS_NAMES.message}
+}) => (
+  // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
+  <Section className={CLASS_NAMES.wrapper}>
+    <DialogHeading {...heading} />
+    <form {...formProps} action={action} className={CLASS_NAMES.form} onSubmit={handleSubmit}>
+      <DialogBody contentPadding={contentPadding} contentBgColor={contentBgColor}>
+        {children}
+      </DialogBody>
+      <div className={CLASS_NAMES.actionArea}>
+        <Cluster justify="space-between">
+          {subActionArea}
+          <ActionAreaCluster
+            loading={responseStatus.isProcessing}
+            className={CLASS_NAMES.buttonArea}
+            handleClickClose={handleClickClose}
+            closeButton={closeButton}
+            actionButton={actionButton}
           />
-        </div>
-      </form>
-    </Section>
-  )
-}
+        </Cluster>
+        <DialogContentResponseStatusMessage
+          responseStatus={responseStatus}
+          className={CLASS_NAMES.message}
+        />
+      </div>
+    </form>
+  </Section>
+)
 
 const ActionAreaCluster = memo<
   Pick<Props, 'handleClickClose'> & {
@@ -130,7 +140,8 @@ const ActionAreaCluster = memo<
     className: string
   }
 >(({ handleClickClose, closeButton, actionButton, loading, className }) => (
-  <Cluster gap={ACTION_AREA_CLUSTER_GAP} className={className}>
+  // eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち)
+  <Cluster inline gap={ACTION_AREA_CLUSTER_GAP} className={className}>
     <CloseButton
       disabled={closeButton.disabled || loading}
       text={closeButton.text}
@@ -142,13 +153,12 @@ const ActionAreaCluster = memo<
   </Cluster>
 ))
 
-const ActionButton = memo<
-  PropsWithChildren<{
-    variant: ObjectActionButtonType['theme']
-    disabled: ObjectActionButtonType['disabled']
-    loading: boolean
-  }>
->(({ variant = 'primary', disabled, loading, children }) => (
+const ActionButton = memo<{
+  children: ObjectActionButtonType['text']
+  variant: ObjectActionButtonType['theme']
+  disabled: ObjectActionButtonType['disabled']
+  loading: boolean
+}>(({ variant = 'primary', disabled, loading, children }) => (
   <Button
     type="submit"
     disabled={disabled}

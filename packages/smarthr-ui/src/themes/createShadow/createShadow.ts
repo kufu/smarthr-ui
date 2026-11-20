@@ -1,4 +1,4 @@
-import { merge } from '../../libs/lodash'
+import { merge } from '../../libs/merge'
 import { type ColorProperty, defaultColor } from '../createColor'
 
 import { defaultShadow } from './defaultShadow'
@@ -30,12 +30,10 @@ const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
 
 // 将来的になんらか別のデザイントークンに移行したい
 const createFocusIndicatorStyles = (outlineColor: string) => `
-  /* stylelint-disable no-invalid-position-declaration */
   isolation: isolate;
   box-shadow: 0 0 0 2px white;
   outline: 2px solid ${outlineColor};
   outline-offset: 2px;
-  /* stylelint-enable no-invalid-position-declaration */
 `
 
 export const createShadow = (

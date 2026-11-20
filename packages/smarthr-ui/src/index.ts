@@ -24,7 +24,7 @@ export { FileViewer } from './components/FileViewer'
 /** @public */
 export { FloatArea } from './components/FloatArea'
 /** @public */
-export { Input, CurrencyInput, SearchInput } from './components/Input'
+export { Input, CurrencyInput, SearchInput, Calendar, WarekiPicker } from './components/Input'
 /** @public */
 export { InputFile } from './components/InputFile'
 /** @public */
@@ -119,8 +119,6 @@ export { ControlledTooltip as Balloon } from './components/Tooltip'
 /** @public */
 export { Tooltip } from './components/Tooltip'
 /** @public */
-export { BottomFixedArea } from './components/BottomFixedArea'
-/** @public */
 export {
   ErrorScreen,
   AuthErrorScreen,
@@ -129,10 +127,6 @@ export {
   UnauthorizedErrorScreen,
   UnexpectedErrorScreen,
 } from './components/ErrorScreen'
-/** @public */
-export { Calendar } from './components/Calendar'
-/** @public */
-export { DatePicker } from './components/DatePicker'
 /** @public */
 export { SegmentedControl } from './components/SegmentedControl'
 /** @public */
@@ -143,8 +137,6 @@ export { MultiCombobox, SingleCombobox } from './components/Combobox'
 export { SideNav, SideNavItemButton, SideNavItemAnchor } from './components/SideNav'
 /** @public */
 export { Text } from './components/Text'
-/** @public */
-export { LineClamp } from './components/LineClamp'
 /** @public */
 export { NotificationBar } from './components/NotificationBar'
 /** @public */
@@ -178,8 +170,6 @@ export { TimePicker, MonthPicker, DatetimeLocalPicker } from './components/Picke
 /** @public */
 export { Browser } from './components/Browser'
 /** @public */
-export { WarekiPicker } from './components/WarekiPicker'
-/** @public */
 export { AppHeader } from './components/AppHeader'
 /** @public */
 export { Timeline, TimelineItem } from './components/Timeline'
@@ -188,7 +178,7 @@ export { Scroller } from './components/Scroller'
 
 // layout components
 /** @public */
-export { Center, Cluster, Container, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, Container, Reel, Stack } from './components/Layout'
 
 // hooks
 /** @public */

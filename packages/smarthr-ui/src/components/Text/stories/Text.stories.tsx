@@ -1,5 +1,7 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
+import { Table, Td, Th } from '../../Table'
+import { TextLink } from '../../TextLink'
 import { Text } from '../Text'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -183,6 +185,7 @@ export const IconGap: StoryObj<typeof Text> = {
   name: 'icon.gap',
   render: (args) => (
     <Stack>
+      {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- icon.gapのバリエーション比較の一貫性のため */}
       <Text {...args} icon={{ prefix: <FaAddressBookIcon /> }}>
         default 0.25
       </Text>
@@ -247,5 +250,47 @@ export const MaxLinesTooltip: StoryObj<typeof Text> = {
         </div>
       ))}
     </Stack>
+  ),
+}
+
+export const MaxLinesInTextLink: StoryObj<typeof Text> = {
+  name: 'maxLines=1 in TextLink',
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
+  render: ({ children }) => (
+    <div className="shr-max-w-[40em]">
+      <Table layout="fixed">
+        <thead>
+          <tr>
+            <Th scope="col" contentWidth="8em">
+              文章の長さ
+            </Th>
+            <Th scope="col">Tooltip なし</Th>
+            <Th scope="col">Tooltip あり</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { label: '短い', text: '短い文章' },
+            { label: '長い', text: children },
+          ].map(({ label, text }) => (
+            <tr key={label}>
+              <Th scope="row">{label}</Th>
+              <Td>
+                <TextLink href="https://example.com/" target="_blank">
+                  <Text maxLines={1}>{text}</Text>
+                </TextLink>
+              </Td>
+              <Td>
+                <TextLink href="https://example.com/" target="_blank">
+                  <Text maxLines={{ max: 1, tooltip: true }}>{text}</Text>
+                </TextLink>
+              </Td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div>
   ),
 }

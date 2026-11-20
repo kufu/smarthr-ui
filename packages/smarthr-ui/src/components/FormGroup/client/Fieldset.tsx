@@ -96,11 +96,11 @@ export const Fieldset: FC<Props> = ({ legend: orgLegend, innerMargin, className,
   const baseId = useId()
 
   const classNames = useMemo(() => {
-    const generators = fieldsetClassNameGenerator()
+    const { wrapper, childrenWrapper } = fieldsetClassNameGenerator()
 
     return {
-      wrapper: generators.wrapper({ className }),
-      childrenWrapper: generators.childrenWrapper({ withDefaultMargin: innerMargin === undefined }),
+      wrapper: wrapper({ className }),
+      childrenWrapper: childrenWrapper({ withDefaultMargin: innerMargin === undefined }),
     }
   }, [innerMargin, className])
 

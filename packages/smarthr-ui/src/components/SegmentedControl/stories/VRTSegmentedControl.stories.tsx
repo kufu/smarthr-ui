@@ -38,10 +38,13 @@ export default {
   // icon            false                   1       s
   render: () => (
     <Stack>
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ペアワイズ表のsize列との対応を明示するため */}
       <SegmentedControl value={null} size="M" options={iconOptions(true)} />
       <SegmentedControl value={null} size="S" options={textOptions(false)} />
       <SegmentedControl value="3" size="S" options={textOptions(true)} />
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ペアワイズ表のsize列との対応を明示するため */}
       <SegmentedControl value="1" size="M" options={textOptions(false)} />
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- ペアワイズ表のsize列との対応を明示するため */}
       <SegmentedControl value="3" size="M" options={iconOptions(false)} />
       <SegmentedControl value="1" size="S" options={iconOptions(true)} />
       <SegmentedControl value="1" size="S" options={iconOptions(false)} />

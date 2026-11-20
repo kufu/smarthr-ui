@@ -79,7 +79,7 @@ export const Fixed: StoryObj<typeof Td> = {
   name: 'fixed',
   render: (args) => (
     <div className="shr-w-[50vw]" style={{ height: '5rem' }}>
-      <Table fixedHead reel>
+      <Table fixedHead>
         <thead>
           <tr>
             <Th fixed="left">fixed: left</Th>

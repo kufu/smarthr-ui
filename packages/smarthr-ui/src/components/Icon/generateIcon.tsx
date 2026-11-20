@@ -1,10 +1,9 @@
 import { type ReactNode, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { color as defaultColorPalette, fontSize, textColor } from '../../tailwind'
+import { color as defaultColorPalette, textColor } from '../../tailwind'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import type { FontSizes } from '../../themes'
 import type { ExtendElementPropsWithRef } from '../../types'
 import type { IconType } from 'react-icons'
 
@@ -38,11 +37,6 @@ export type Props = ExtendElementPropsWithRef<
      * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
      */
     color?: LiteralUnion<keyof typeof colorSet>
-    /**
-     * アイコンの大きさ（フォントサイズの抽象値）
-     * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
-     */
-    size?: FontSizes
   },
   { omit: 'stroke' | 'fill' | 'strokeWidth' | 'width' | 'height' | 'children' }
 >
@@ -68,7 +62,6 @@ export const generateIcon = (SvgIcon: IconType) => {
       'aria-label': ariaLabel,
       'aria-labelledby': ariaLabelledby,
       focusable = false,
-      size,
       ...rest
     }) => {
       const actualAriaHidden =
@@ -93,7 +86,6 @@ export const generateIcon = (SvgIcon: IconType) => {
         }
       }, [className])
 
-      const iconSize = size ? fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
       const svgIcon = (
         <SvgIcon
           {...rest}
@@ -102,10 +94,11 @@ export const generateIcon = (SvgIcon: IconType) => {
           fill="currentColor"
           focusable={focusable}
           // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
-          size={iconSize}
+          // 親要素やデフォルトフォントサイズを継承するため1emで固定する
+          size="1em"
           strokeWidth="0"
-          width={iconSize}
-          height={iconSize}
+          width="1em"
+          height="1em"
           color={replacedColor}
           className={classNames.icon}
           aria-hidden={actualAriaHidden}

@@ -42,6 +42,8 @@ const setRef = <T>(ref: MergeableRefType<T>, value: T | null) => {
   } else if (ref) {
     ;(ref as MutableRefObject<T | null>).current = value
   }
+
+  return undefined
 }
 
 const cleanupRef = <T>(ref: MergeableRefType<T>, cleanup: (() => void) | undefined) => {

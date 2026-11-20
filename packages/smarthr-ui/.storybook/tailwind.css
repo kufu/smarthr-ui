@@ -1,0 +1,10 @@
+/*
+ * main.ts で tailwindcss に渡す config だけに頼らず @config で明示するのは、Tailwind v3 の PostCSS
+ * プラグインが一度 @config を読むと、その設定を以後のファイルにも使い続けるため。
+ * エディタの CSS（@config でエディタの設定を指す）が先に処理されると、本体の CSS もエディタの設定で生成される。
+ */
+@config "./tailwind.storybook.config.ts";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

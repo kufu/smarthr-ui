@@ -63,7 +63,7 @@ const SortableTh: FC<
   }
 > = ({ sort, onSort, align, children, ...rest }) => {
   const latest = useLatest({ onSort })
-  const hasOnSort = !!onSort
+  const hasOnSort = Boolean(onSort)
 
   const functions = useMemo(
     () => ({
@@ -88,13 +88,10 @@ const SortableTh: FC<
 const ActualTh = memo<Omit<Props, 'onSort' | 'sort'>>(
   ({ children, align, vAlign, fixed, contentWidth, className, style, ...rest }) => {
     const actualClassName = useMemo(() => {
+      // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants
       const base = classNameGenerator({ className, align, vAlign })
 
-      if (!fixed) {
-        return base
-      }
-
-      return `${base} ${reelShadowClassNameGenerator({ direction: fixed })}`
+      return fixed ? `${base} ${reelShadowClassNameGenerator({ direction: fixed })}` : base
     }, [align, fixed, vAlign, className])
 
     return (

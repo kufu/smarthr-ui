@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC, type MouseEvent, type ReactNode, type WheelEvent, useMemo } from 'react'
+import { type FC, type MouseEvent, type ReactNode, type WheelEvent, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../hooks/client/useOnce'
 import { useTheme } from '../../../hooks/client/useTheme'
+import { findDelegateTarget } from '../../../libs/delegate'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
 
@@ -24,6 +25,8 @@ type Props = ExtendElementPropsWithRef<
     prefix?: ReactNode
     /** コンポーネント内の末尾に表示する内容 */
     suffix?: ReactNode
+    /** コンポーネント内の、inputとsuffixの間に表示する操作用の要素（ボタン等） */
+    subActionArea?: ReactNode
     /** 背景色。readOnly を下地の上に載せる場合に使う */
     bgColor?: keyof typeof backgroundColor
     /**
@@ -85,6 +88,10 @@ export const Input: FC<Props> = ({
   autoFocus,
   prefix,
   suffix,
+  subActionArea,
+  id,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   className,
   width,
   error,
@@ -112,8 +119,45 @@ export const Input: FC<Props> = ({
       input: input(),
       prefix: affix({ className: 'smarthr-ui-Input-prefix' }),
       suffix: affix({ className: 'smarthr-ui-Input-suffix' }),
+      subActionArea: affix({ className: 'smarthr-ui-Input-subActionArea' }),
     }
   }, [className])
+
+  // HINT: WAI-ARIA9(https://www.w3.org/WAI/WCAG21/Techniques/aria/ARIA9)に倣い、
+  // prefix/suffixがある場合はlabel・prefix・input・suffixをaria-labelledbyで結合し、
+  // 単位などのテキストも含めて読み上げられるようにする。aria-labelledbyはaria-labelより
+  // 優先されるため、利用者がaria-labelを指定している場合は自動生成を行わず、
+  // 既存のアクセシブルネームを壊さないようにする
+  const commonId = useId()
+  const hasPrefix = Boolean(prefix)
+  const hasSuffix = Boolean(suffix)
+  const idAttrs = useMemo(() => {
+    const prefixId = hasPrefix ? `${commonId}-prefix` : undefined
+    const suffixId = hasSuffix ? `${commonId}-suffix` : undefined
+    const hasAffixId = prefixId || suffixId
+    const inputId = hasAffixId ? (id ?? `${commonId}-input`) : id
+
+    const labelledbyItems = ariaLabelledBy ? [ariaLabelledBy] : []
+
+    if (!ariaLabel) {
+      if (prefixId) {
+        labelledbyItems.push(prefixId)
+      }
+      if (hasAffixId && inputId) {
+        labelledbyItems.push(inputId)
+      }
+      if (suffixId) {
+        labelledbyItems.push(suffixId)
+      }
+    }
+
+    return {
+      inputId,
+      prefixId,
+      suffixId,
+      ariaLabelledBy: labelledbyItems.length === 0 ? undefined : labelledbyItems.join(' '),
+    }
+  }, [hasPrefix, hasSuffix, ariaLabel, ariaLabelledBy, id, commonId])
 
   const styleColor = bgColor ? theme.backgroundColor[backgroundColor[bgColor]] : undefined
   const styleMaxWidth = typeof width === 'number' ? `${width}px` : width
@@ -130,24 +174,46 @@ export const Input: FC<Props> = ({
         width: styleMaxWidth ? '100%' : undefined,
       }}
       onClick={(delegateEvent: MouseEvent<HTMLSpanElement>) => {
-        delegateEvent.currentTarget
-          .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
-          ?.focus()
+        if (!findDelegateTarget(delegateEvent, '.smarthr-ui-Input-subActionArea')) {
+          delegateEvent.currentTarget
+            .querySelector<HTMLInputElement>('[data-smarthr-ui-input="true"]')
+            ?.focus()
+        }
       }}
     >
-      {prefix && <span className={classNames.prefix}>{prefix}</span>}
+      {prefix && (
+        // HINT: aria-labelledbyでinputのアクセシブルネームに合流させるため、
+        // 独立した要素としてスクリーンリーダーに読み上げられないようaria-hiddenにする
+        <span id={idAttrs.prefixId} className={classNames.prefix} aria-hidden>
+          {prefix}
+        </span>
+      )}
       <input
         {...rest}
         ref={mergedRef}
         type={type}
+        id={idAttrs.inputId}
         max={max || (type && DEFAULT_MAX_ATTR[type as keyof typeof DEFAULT_MAX_ATTR]) || undefined}
         className={classNames.input}
         aria-invalid={errorAttr}
+        aria-label={ariaLabel}
+        aria-labelledby={idAttrs.ariaLabelledBy || undefined}
         data-smarthr-ui-input-error={errorAttr}
         data-smarthr-ui-input="true"
         onWheel={type === 'number' ? disableWheel : undefined}
       />
-      {suffix && <span className={classNames.suffix}>{suffix}</span>}
+      {subActionArea && (
+        <span role="presentation" className={classNames.subActionArea}>
+          {subActionArea}
+        </span>
+      )}
+      {suffix && (
+        // HINT: aria-labelledbyでinputのアクセシブルネームに合流させるため、
+        // 独立した要素としてスクリーンリーダーに読み上げられないようaria-hiddenにする
+        <span id={idAttrs.suffixId} className={classNames.suffix} aria-hidden>
+          {suffix}
+        </span>
+      )}
     </span>
   )
 }

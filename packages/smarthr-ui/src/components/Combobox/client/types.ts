@@ -36,6 +36,13 @@ export type ComboboxItem<T> = ComboboxItemBase<T> &
       }
   )
 
+export type DeletableComboboxItem<T> = ComboboxItem<T> & {
+  /**
+   * `MultiCombobox` で削除可能かどうか。省略時は `true` 扱い
+   */
+  deletable?: boolean
+}
+
 export type ComboboxOption<T> = {
   id: string
   selected: boolean
@@ -49,7 +56,11 @@ export type BaseProps<T> = {
    */
   items: Array<ComboboxItem<T>>
   /**
-   * input 要素の `name` 属性の値
+   * input 要素の `name` 属性の値。
+   * `MultiCombobox` では、選択済みアイテムの値を保持する hidden input 群の `name` にそのまま使われ、
+   * 検索用テキストボックスの `name` には `query_${name}` が設定される。
+   * 複数の hidden input は同じ `name` を持つため、Railsなど配列として受け取りたい場合は
+   * `name="ids[]"` のように `[]` を含めて指定すること（自動では付与されない）
    */
   name?: string
   /**
@@ -70,8 +81,17 @@ export type BaseProps<T> = {
   error?: boolean
   /**
    * `true` のとき、 `items` 内に存在しないアイテムを新しく追加できるようになる
+   *
+   * 新規追加したアイテムは選択状態に自動では反映されないため、
+   * `selectedItem` / `selectedItems` による制御（`onAdd` で `items` に追加した上で選択状態を更新する）と組み合わせて使用すること。
+   * `defaultSelectedItem` / `defaultSelectedItems` のみを指定した非制御の使用方法では、新規追加したアイテムは選択されない。
    */
   creatable?: boolean
+  /**
+   * `true` のとき、`inputValue` による絞り込みを無効化する。
+   * サーバーサイド検索と組み合わせるなど、`items` が既に絞り込み済みの場合に指定する
+   */
+  disableFiltering?: boolean
   /**
    * input 要素の `placeholder` 属性の値
    */
@@ -98,15 +118,13 @@ export type BaseProps<T> = {
   onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
    * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
+   *
+   * このコールバックは追加の通知のみを行い、選択状態の更新は行わない。
+   * `items` への追加と選択状態の更新（`selectedItem` / `selectedItems` と `onChangeSelected` 等）は呼び出し側で行うこと。
    */
   onAdd?: (label: string) => void
   /**
    * アイテムが選択された時に発火するコールバック関数
    */
   onSelect?: (item: ComboboxItem<T>) => void
-  /**
-   * input 要素の `value` が変わった時に発火するコールバック関数
-   * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
-   */
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }

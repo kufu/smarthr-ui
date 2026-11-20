@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { useEffect, useState } from 'react'
 
@@ -70,6 +70,54 @@ describe('Textarea', () => {
       await waitFor(() => {
         expect(screen.getByText(/あと6文字/)).toBeInTheDocument()
       })
+    })
+
+    it('非制御で入力を変更後、form.reset()を呼ぶと文字数カウンタがdefaultValueの文字数に戻ること', async () => {
+      const user = userEvent.setup()
+
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="Textarea">
+              <Textarea name="textarea" defaultValue="テキスト" maxLetters={10} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      const textarea = screen.getByRole('textbox')
+
+      await user.clear(textarea)
+      await user.type(textarea, 'もっと長いテキストを入力してみる')
+
+      expect(screen.getAllByText(/文字オーバー/)[0]).toBeInTheDocument()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(textarea).toHaveProperty('value', 'テキスト')
+      expect(screen.getAllByText(/あと6文字/)[0]).toBeInTheDocument()
+    })
+
+    it('制御時(value指定)は、form.reset()を呼んでも文字数カウンタが変わらないこと', () => {
+      const { container } = render(
+        <IntlProvider locale="ja">
+          <form>
+            <FormControl label="Textarea">
+              <Textarea name="textarea" value="もっと長いテキストを入力してみる" maxLetters={10} />
+            </FormControl>
+          </form>
+        </IntlProvider>,
+      )
+
+      expect(screen.getAllByText(/文字オーバー/)[0]).toBeInTheDocument()
+
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+
+      expect(screen.getAllByText(/文字オーバー/)[0]).toBeInTheDocument()
     })
   })
 })

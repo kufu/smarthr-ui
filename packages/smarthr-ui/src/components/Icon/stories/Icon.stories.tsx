@@ -1,6 +1,7 @@
 import { Cluster, Stack } from '../../Layout'
 // eslint-disable-next-line no-restricted-syntax -- 200個以上のアイコンを一覧表示するため
 import * as Icons from '../FaIcon'
+import { FilterIcon } from '../FilterIcon'
 import { LanguageIcon } from '../LanguageIcon'
 import { OpenInNewTabIcon } from '../OpenInNewTabIcon'
 import { SparklesIcon } from '../SparklesIcon'
@@ -41,10 +42,13 @@ export const All: StoryObj<typeof FaAddressBookIcon> = {
           ['SparklesIcon', SparklesIcon],
           ['LanguageIcon', LanguageIcon],
           ['OpenInNewTabIcon', OpenInNewTabIcon],
+          ['FilterIcon', FilterIcon],
+          ['FilterIcon (checked)', (props: any) => <FilterIcon {...props} checked />],
         ] as Array<[string, ComponentType<any>]>
       ).map(([name, Icon]) => (
         <li key={name}>
-          <Cluster gap={0.5} align="center">
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち) */}
+          <Cluster inline align="center">
             <Icon {...args} />
             <span>{name}</span>
           </Cluster>

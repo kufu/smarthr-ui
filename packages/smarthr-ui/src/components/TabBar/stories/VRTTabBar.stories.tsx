@@ -30,7 +30,7 @@ export default {
             <TabItem
               id="tab2"
               disabled
-              disabledReason={{ message: 'タブが無効な理由' }}
+              disabledReason="タブが無効な理由"
               selected
               onClick={action('clicked')}
             >
@@ -50,14 +50,14 @@ export default {
             <TabItem
               id="tab4"
               disabled
-              disabledReason={{ message: 'タブが無効な理由' }}
+              disabledReason="タブが無効な理由"
               onClick={action('clicked')}
             >
               タブ4
             </TabItem>
             <TabItem
               id="tab5"
-              disabledReason={{ message: 'タブが無効な理由' }}
+              disabledReason={{ text: 'タブが無効な理由', icon: <FaCircleExclamationIcon /> }}
               selected
               onClick={action('clicked')}
               suffix={<FaCircleExclamationIcon color="DANGER" />}

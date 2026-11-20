@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { action } from 'storybook/actions'
 
 import { Button } from '../../../Button'
-import { ModelessDialog } from '../ModelessDialog'
+import { ModelessDialog } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

@@ -27,6 +27,7 @@ export const Size: StoryObj<typeof PageHeading> = {
       <PageHeading {...args} size="XXL">
         ScreenTitle XXL
       </PageHeading>
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
       <PageHeading {...args} size="XL">
         ScreenTitle XL
       </PageHeading>

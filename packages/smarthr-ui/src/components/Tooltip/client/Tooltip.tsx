@@ -167,14 +167,14 @@ export const Tooltip: FC<Props> = ({
       }
 
       const childElement = node.firstElementChild as HTMLElement | undefined
-      const focusable = !!childElement && childElement.matches(FOCUSABLE_SELECTOR)
+      const focusable = Boolean(childElement?.matches(FOCUSABLE_SELECTOR))
 
       setIsFocusableChild(focusable)
       setActualTabIndex(tabIndex !== undefined ? tabIndex : focusable ? undefined : 0)
 
       // focusableな要素に直接aria属性を設定
       if (focusable) {
-        childElement.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
+        childElement?.setAttribute(isLabel ? 'aria-labelledby' : 'aria-describedby', messageId)
       }
     },
     [tabIndex, isLabel, messageId],

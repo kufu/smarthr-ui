@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client
 
 import { type FC, type PropsWithChildren, memo, useCallback, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
@@ -26,7 +26,7 @@ type Props = {
   error?: boolean
 }
 
-const appLauncher = tv({
+const classNameGenerator = tv({
   slots: {
     wrapper: [
       'smarthr-ui-AppLauncher',
@@ -85,7 +85,7 @@ const CLASS_NAMES = (() => {
     mainInner,
     contentHead,
     scrollArea,
-  } = appLauncher()
+  } = classNameGenerator()
 
   return {
     wrapper: wrapper(),
@@ -115,6 +115,7 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     onChangeSearchQuery,
     onClickClearSearchQuery,
     callbackRef,
+    searchInputRef,
   } = useAppLauncher(baseFeatures)
 
   const translated = useLocalize({
@@ -136,13 +137,16 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
     <div ref={callbackRef} className={CLASS_NAMES.wrapper}>
       <div className={CLASS_NAMES.searchArea}>
         <SearchInput
+          ref={searchInputRef}
           name="search"
           value={searchQuery}
           title={translated.searchInputTitle}
           width="100%"
           onChange={onChangeSearchQuery}
           tooltipMessage={translated.searchInputTitle}
-          suffix={mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />}
+          subActionArea={
+            mode === 'search' && <ClearSearchButton onClick={onClickClearSearchQuery} />
+          }
         />
       </div>
 

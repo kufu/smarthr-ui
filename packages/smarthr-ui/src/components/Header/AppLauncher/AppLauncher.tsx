@@ -110,7 +110,7 @@ export const AppLauncher: FC<Props> = ({
         className={classNames.appsButton}
       />
       <DropdownContent controllable>
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content -- TODO: navにa11y nameを設定 */}
         <Stack as="nav" gap={1.5} className={classNames.contentWrapper}>
           <Stack gap={1.5}>
             {calculatedApps.base && (

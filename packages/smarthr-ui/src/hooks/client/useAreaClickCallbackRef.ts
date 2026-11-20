@@ -20,12 +20,12 @@ import type { RefObject } from 'react'
  * @param onInner   領域の【内側】がクリックされたときに実行されるオプションのコールバック。
  */
 export function useAreaClickCallbackRef(
-  otherRefs: Array<RefObject<HTMLElement>> | null,
+  otherRefs: Array<RefObject<HTMLElement | null>> | null,
   onOuter: (e: MouseEvent) => void,
   onInner?: (e: MouseEvent) => void,
 ) {
   const latest = useLatest({ otherRefs, onOuter, onInner })
-  const hasOtherRefs = !!otherRefs
+  const hasOtherRefs = Boolean(otherRefs)
 
   return useCallback(
     (node: HTMLElement | null) => {

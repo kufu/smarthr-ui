@@ -1,0 +1,1 @@
+export { FloatAreaPanel } from './FloatAreaPanel'

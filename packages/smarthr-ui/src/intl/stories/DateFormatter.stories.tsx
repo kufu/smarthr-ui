@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { DateFormatter } from '../DateFormatter'
+import { DateFormatter } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

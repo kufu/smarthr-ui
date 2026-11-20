@@ -29,7 +29,7 @@ const baseClassNameGenerator = tv({
     ],
     inner: [
       'smarthr-ui-Button-body',
-      /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+      /* Text の maxLines を併用する場合に、幅を計算してもらうために指定 */
       'shr-min-w-0',
     ],
   },

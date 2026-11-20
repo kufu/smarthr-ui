@@ -22,6 +22,7 @@ type Props = Omit<LowerProps, 'multiple'> & {
 
 export const InputFileNative: FC<Props> = ({
   className,
+  variant,
   size,
   label,
   hasFileList = true,
@@ -50,13 +51,13 @@ export const InputFileNative: FC<Props> = ({
 
     return {
       wrapper: wrapper({ className }),
-      inputWrapper: inputWrapper({ size }),
+      inputWrapper: inputWrapper({ variant, size }),
       fileList: fileList(),
       fileItem: fileItem(),
       input: input(),
       prefix: prefix(),
     }
-  }, [size, className])
+  }, [variant, size, className])
 
   const latest = useLatest({
     onChange,
@@ -166,7 +167,7 @@ export const InputFileNative: FC<Props> = ({
               key={`existing-${index}`}
               file={file}
               index={index}
-              previewable={!!previewable}
+              previewable={Boolean(previewable)}
               className={classNames.fileItem}
               handleDeleteClick={functions.handleDelete}
               handlePreviewClick={setPreviewFile}
@@ -177,7 +178,7 @@ export const InputFileNative: FC<Props> = ({
               key={`new-${index}`}
               file={file}
               index={index}
-              previewable={!!previewable}
+              previewable={Boolean(previewable)}
               className={classNames.fileItem}
               handleDeleteClick={functions.handleDelete}
               handlePreviewClick={setPreviewFile}
@@ -206,6 +207,7 @@ export const InputFileNative: FC<Props> = ({
         <FilePreviewDialog
           file={previewFile}
           searchable={previewable?.searchable}
+          onPassword={previewable?.onPassword}
           handleClose={functions.handleClosePreview}
           handleDownload={functions.handleDownload}
         />

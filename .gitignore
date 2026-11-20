@@ -76,6 +76,7 @@ actual_images
 reg_storybook
 
 smarthr-ui.css
+packages/rich-text-editor/styles.css
 
 .idea
 .vscode

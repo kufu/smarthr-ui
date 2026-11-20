@@ -1,0 +1,219 @@
+'use client'
+
+import { type FC, type KeyboardEvent, type MouseEvent, type ReactNode, memo, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
+
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer, useAvailableLocales } from '../../../../intl'
+import { tabbable } from '../../../../libs/tabbable'
+import { Button } from '../../../Button'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
+import { FaCaretDownIcon, FaCheckIcon, FaGlobeIcon, LanguageIcon } from '../../../Icon'
+
+import type { Locale } from '../../../../intl'
+import type { ExtendElementPropsWithoutRef } from '../../../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  typeof Dropdown,
+  {
+    narrow?: boolean
+    localeMap: Partial<Record<Locale, string>>
+    locale?: string
+    defaultLocale?: string
+    /** 言語切替UIで言語を選択した時に発火するコールバック関数 */
+    onLanguageSelect?: (code: string) => void
+    invert?: boolean
+    enableNew?: boolean
+  }
+>
+
+const ARROW_KEY_REGEX = /^Arrow(Up|Down|Left|Right)$/
+const ARROW_UPS_REGEX = /^Arrow(Up|Left)$/
+
+// 配列のインデックスを循環的に移動する（最初→最後、最後→最初）
+const getCircularIndex = (currentIndex: number, direction: 'up' | 'down', arrayLength: number) => {
+  if (direction === 'up') {
+    // 負の数を避けるため arrayLength を加算してから剰余を取る
+    return (currentIndex - 1 + arrayLength) % arrayLength
+  }
+  // 次の要素へ移動（最後の場合は 0 に戻る）
+  return (currentIndex + 1) % arrayLength
+}
+
+const handleDelegateKeyDownContent = (e: KeyboardEvent<HTMLElement>) => {
+  if (!ARROW_KEY_REGEX.test(e.key)) {
+    return
+  }
+
+  e.preventDefault()
+
+  const buttons = tabbable(e.currentTarget)
+  const currentIndex = buttons.indexOf(e.target as HTMLElement)
+  const direction = ARROW_UPS_REGEX.test(e.key) ? 'up' : 'down'
+  const nextIndex = getCircularIndex(currentIndex, direction, buttons.length)
+
+  buttons[nextIndex]?.focus()
+}
+
+const classNameGenerator = tv({
+  slots: {
+    switchButton: [
+      'shr-border-none shr-bg-transparent shr-px-0.25 shr-font-normal shr-text-white shr-transition-transform shr-duration-100',
+      'hover:shr-border-transparent hover:shr-bg-transparent',
+      'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+      'forced-colors:shr-border-shorthand',
+      '[&_.smarthr-ui-Icon]:aria-expanded:shr-rotate-180',
+    ],
+    languageItemsList: ['shr-p-0.5'],
+    languageItem: ['shr-flex shr-items-center'],
+    languageButton: [
+      'shr-justify-start shr-border-transparent shr-px-0.5 shr-font-normal',
+      '[&:not(:has(svg))]:shr-ps-2',
+      'hover:shr-border-transparent',
+    ],
+  },
+  variants: {
+    invert: {
+      true: {
+        switchButton: [
+          'shr-text-black',
+          'hover:shr-bg-white-darken',
+          'focus-visible:shr-bg-white-darken',
+        ],
+      },
+    },
+    enableNew: {
+      true: {
+        switchButton: 'shr-px-0.5',
+      },
+    },
+  },
+})
+
+export const LanguageSwitcher: FC<Props> = ({
+  narrow,
+  enableNew,
+  invert = enableNew,
+  localeMap,
+  locale,
+  defaultLocale,
+  onLanguageSelect,
+  ...rest
+}) => {
+  const availableLocales = useAvailableLocales()
+  const { locales, defaultCurrentLang } = useMemo(
+    () => ({
+      locales: Object.entries(localeMap).filter(([code]) =>
+        availableLocales.includes(code as Locale),
+      ),
+      defaultCurrentLang: Object.keys(localeMap)[0],
+    }),
+    [localeMap, availableLocales],
+  )
+
+  const currentLang = locale || defaultLocale || defaultCurrentLang
+  const classNames = useMemo(() => {
+    const { languageButton, languageItemsList, languageItem, switchButton } = classNameGenerator()
+
+    return {
+      languageButton: languageButton(),
+      languageItemsList: languageItemsList(),
+      languageItem: languageItem(),
+      switchButton: switchButton({ invert, enableNew }),
+    }
+  }, [enableNew, invert])
+
+  const latest = useLatest({ onLanguageSelect })
+
+  const hasOnLanguageSelect = Boolean(onLanguageSelect)
+  const functions = useMemo(
+    () => ({
+      handleClickLanguageSelect: hasOnLanguageSelect
+        ? (e: MouseEvent<HTMLButtonElement>) => {
+            latest.onLanguageSelect!(e.currentTarget.value)
+          }
+        : undefined,
+    }),
+    [hasOnLanguageSelect, latest],
+  )
+
+  return (
+    <Dropdown {...rest}>
+      <MemoizedDropdownTrigger
+        narrow={narrow}
+        invert={invert}
+        className={classNames.switchButton}
+        label="Language"
+      />
+      <DropdownContent onKeyDown={handleDelegateKeyDownContent}>
+        <ul className={classNames.languageItemsList}>
+          {locales.map(([code, label]) => (
+            <LanguageListItemButton
+              key={code}
+              code={code}
+              current={currentLang === code}
+              classNames={classNames}
+              handleClick={functions.handleClickLanguageSelect}
+            >
+              {label}
+            </LanguageListItemButton>
+          ))}
+        </ul>
+      </DropdownContent>
+    </Dropdown>
+  )
+}
+
+const LanguageListItemButton = memo<{
+  code: string
+  children: string
+  current: boolean
+  handleClick?: (e: MouseEvent<HTMLButtonElement>) => void
+  classNames: {
+    languageItem: string
+    languageButton: string
+  }
+}>(({ code, children, current, handleClick, classNames }) => (
+  <li lang={code} className={classNames.languageItem} aria-current={current}>
+    <Button
+      value={code}
+      wide
+      className={classNames.languageButton}
+      onClick={handleClick}
+      prefix={
+        current ? (
+          <FaCheckIcon
+            alt={<Localizer id="smarthr-ui/LanguageSwitcher/checkIconAlt" defaultText="選択中" />}
+            color="MAIN"
+          />
+        ) : null
+      }
+    >
+      {children}
+    </Button>
+  </li>
+))
+
+const MemoizedDropdownTrigger = memo<
+  Pick<Props, 'narrow' | 'invert'> & { className: string; label: string }
+>(({ narrow, invert, className, label }) => {
+  const Icon = invert ? LanguageIcon : FaGlobeIcon
+  let prefix: ReactNode = undefined
+  let body: ReactNode = label
+
+  if (narrow) {
+    // narrowの時はprefixなし、bodyにアイコン
+    body = <Icon alt={label} />
+  } else {
+    // narrowでない時はprefixにアイコン、bodyはlabel
+    prefix = <Icon />
+  }
+
+  return (
+    <DropdownTrigger>
+      <Button className={className} prefix={prefix} suffix={<FaCaretDownIcon />}>
+        {body}
+      </Button>
+    </DropdownTrigger>
+  )
+})

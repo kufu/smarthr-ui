@@ -1,7 +1,6 @@
 import { type FC, memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { range } from '../../libs/lodash'
 import { Cluster, Reel } from '../Layout'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
@@ -116,7 +115,10 @@ const ItemButtons = memo<
 
     const actualPadding = padding ?? 4
 
-    return range(Math.max(current - actualPadding, 1), Math.min(current + actualPadding, total) + 1)
+    const start = Math.max(current - actualPadding, 1)
+    const end = Math.min(current + actualPadding, total)
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
   }, [current, total, padding, withoutNumbers])
 
   const prevAttrs = {

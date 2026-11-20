@@ -42,6 +42,7 @@ const classNameGenerator = tv({
       '[:checked~&]:shr-flex',
     ],
     icon: [
+      'shr-text-[length:theme(fontSize.2xs)]',
       'shr-fill-white',
       'forced-colors:shr-fill-[ButtonText]',
       'forced-colors:[:disabled~.smarthr-ui-Switch-iconWrapper_&]:shr-fill-[GrayText]',
@@ -80,7 +81,8 @@ export const Switch: FC<Props> = ({
   }, [className])
 
   return (
-    <Cluster align="center" className="shr-relative">
+    // eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち)
+    <Cluster as="span" inline align="center" className="shr-relative">
       <MemoizedLabel htmlFor={inputId} unrecommendedLabelHidden={unrecommendedLabelHidden}>
         {children}
       </MemoizedLabel>
@@ -93,12 +95,16 @@ export const Switch: FC<Props> = ({
 }
 
 const MemoizedLabel = memo<
-  Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
->(({ unrecommendedLabelHidden, htmlFor, children }) => {
+  ExtendElementPropsWithRef<
+    // TODO: 本来はlabelを指定したい
+    typeof Text,
+    Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
+  >
+>(({ unrecommendedLabelHidden, htmlFor, children, ...rest }) => {
   const Component = unrecommendedLabelHidden ? VisuallyHiddenText : Text
 
   return (
-    <Component as="label" htmlFor={htmlFor}>
+    <Component {...rest} as="label" htmlFor={htmlFor}>
       {children}
     </Component>
   )
@@ -107,7 +113,7 @@ const MemoizedLabel = memo<
 const MemoizedSuffixIcon = memo<{ classNames: { iconWrapper: string; icon: string } }>(
   ({ classNames }) => (
     <span className={classNames.iconWrapper}>
-      <FaCheckIcon size="XXS" className={classNames.icon} />
+      <FaCheckIcon className={classNames.icon} />
     </span>
   ),
 )

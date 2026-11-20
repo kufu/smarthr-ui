@@ -97,6 +97,19 @@ export const Layer: StoryObj<typeof Panel> = {
   ),
 }
 
+export const BgColor: StoryObj<typeof Panel> = {
+  name: 'bgColor',
+  render: (args) => (
+    <Stack>
+      {(['WHITE', 'OVER_BACKGROUND'] as const).map((bgColor) => (
+        <Panel {...args} key={bgColor} bgColor={bgColor}>
+          bgColor: {bgColor}
+        </Panel>
+      ))}
+    </Stack>
+  ),
+}
+
 export const As: StoryObj<typeof Panel> = {
   name: 'as',
   args: {

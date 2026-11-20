@@ -98,4 +98,26 @@ describe('ControlledActionDialog', () => {
     expect(receivedEvent).toBeInstanceOf(KeyboardEvent)
     expect(receivedEvent.key).toBe('Escape')
   })
+
+  it('処理中(responseStatus.status === "processing")はEscapeキー押下でonClickCloseが呼ばれないこと', async () => {
+    const handleClickClose = vi.fn()
+    render(
+      <IntlProvider locale="ja">
+        <ControlledActionDialog
+          isOpen
+          responseStatus={{ status: 'processing' }}
+          onClickClose={handleClickClose}
+          onClickAction={(_, { close }) => close()}
+          heading="ControlledActionDialog"
+          actionButton="保存"
+        >
+          <p>本文</p>
+        </ControlledActionDialog>
+      </IntlProvider>,
+    )
+
+    await userEvent.keyboard('{Escape}')
+
+    expect(handleClickClose).not.toHaveBeenCalled()
+  })
 })

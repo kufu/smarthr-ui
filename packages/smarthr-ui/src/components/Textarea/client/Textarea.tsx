@@ -100,7 +100,7 @@ const MaxLettersTextarea: FC<
   Omit<Props, 'maxLetters'> & {
     maxLetters: number
   }
-> = ({ maxLetters, error, value, defaultValue, onChange, ...rest }) => {
+> = ({ maxLetters, error, value, defaultValue, onChange, ref, ...rest }) => {
   const maxLettersId = useId()
   const maxLettersNoticeId = `${maxLettersId}-notice`
 
@@ -113,6 +113,8 @@ const MaxLettersTextarea: FC<
 
   const latest = useLatest({
     onChange,
+    isControlled: value !== undefined,
+    defaultValue,
   })
 
   const functions = useMemo(() => {
@@ -139,6 +141,22 @@ const MaxLettersTextarea: FC<
         updateCount(e.target.value)
         latest.onChange?.(e)
       },
+      // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+      // textarea自体の値はネイティブのdefaultValueへの復帰に任せ、countをdefaultValue由来の値へ戻す
+      resetCallbackRef: (node: HTMLTextAreaElement | null) => {
+        const associatedForm = node?.form
+        const handleReset = () => {
+          if (!latest.isControlled) {
+            setCount(latest.defaultValue ? getStringLength(latest.defaultValue) : 0)
+          }
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
+        return () => {
+          associatedForm?.removeEventListener('reset', handleReset)
+        }
+      },
     }
   }, [latest])
 
@@ -146,10 +164,13 @@ const MaxLettersTextarea: FC<
     functions.updateCount(value ?? '')
   }, [value, functions])
 
+  const mergedRef = useMergeRefs(functions.resetCallbackRef, ref)
+
   return (
     <span className="shr-relative">
       <ActualTextarea
         {...rest}
+        ref={mergedRef}
         value={value}
         defaultValue={defaultValue}
         error={error || countError}

@@ -87,7 +87,7 @@ export const SideNavItemButton: FC<ButtonProps> = ({
   }, [className])
 
   return (
-    <li {...rest} id={id} className={classNames.wrapper} data-current={!!current}>
+    <li {...rest} id={id} className={classNames.wrapper} data-current={Boolean(current)}>
       <UnstyledButton value={id} className={classNames.button} onClick={onClick}>
         <BodyCluster classNames={classNames} prefix={prefix} suffix={suffix}>
           {children}
@@ -122,7 +122,7 @@ export const SideNavItemAnchor = <T extends ElementType = 'a'>({
   const Anchor = elementAs || 'a'
 
   return (
-    <li {...rest} className={classNames.wrapper} data-current={!!current}>
+    <li {...rest} className={classNames.wrapper} data-current={Boolean(current)}>
       <Anchor href={href} className={classNames.button} onClick={onClick}>
         <BodyCluster classNames={classNames} prefix={prefix} suffix={suffix}>
           {children}

@@ -12,7 +12,9 @@ import type { ExistingFile } from '../types'
 
 const isPreviewableFile = (file: File | ExistingFile): boolean => {
   const contentType = file instanceof File ? file.type : file.contentType
-  return !!contentType && (contentType.startsWith('image/') || contentType === 'application/pdf')
+  return Boolean(
+    contentType && (contentType.startsWith('image/') || contentType === 'application/pdf'),
+  )
 }
 
 export const StyledFaFolderOpenIcon = memo<{ className: string }>(({ className }) => (

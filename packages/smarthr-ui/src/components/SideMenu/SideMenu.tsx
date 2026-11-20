@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type FC, type PropsWithChildren, useMemo } from 'react'
+import { type ComponentPropsWithoutRef, type FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Localizer } from '../../intl'
@@ -6,20 +6,21 @@ import { Heading } from '../Heading'
 import { Panel } from '../Panel'
 import { Nav } from '../SectioningContent'
 
-type Props = PropsWithChildren<
-  Pick<ComponentPropsWithoutRef<typeof Panel>, 'radius' | 'layer' | 'className'> & {
-    /**
-     * @default ul
-     */
-    elementAs?: 'ul' | 'ol'
-  }
->
+type Props = Pick<
+  ComponentPropsWithoutRef<typeof Panel>,
+  'radius' | 'layer' | 'className' | 'children'
+> & {
+  /**
+   * @default ul
+   */
+  elementAs?: 'ul' | 'ol'
+}
 
 const classNameGenerator = tv({
   base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',
 })
 
-export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) => {
+export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
 
   return (
@@ -27,7 +28,9 @@ export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) =>
       <Heading visuallyHidden={true}>
         <Localizer id="smarthr-ui/SideMenu/navigationLabel" defaultText="サイドメニュー" />
       </Heading>
-      <Panel {...rest} as={elementAs} className={actualClassName} />
+      <Panel {...rest} as={elementAs} className={actualClassName}>
+        {children}
+      </Panel>
     </Nav>
   )
 }

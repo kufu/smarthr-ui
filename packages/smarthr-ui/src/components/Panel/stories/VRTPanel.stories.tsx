@@ -1,6 +1,6 @@
 import { Stack } from '../../Layout'
 
-import { Layer, Overflow, Padding, Radius } from './Panel.stories'
+import { BgColor, Layer, Overflow, Padding, Radius } from './Panel.stories'
 
 import type { Panel } from '../Panel'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -13,6 +13,7 @@ export default {
       {Radius.render && Radius.render(args, context)}
       {Overflow.render && Overflow.render(args, context)}
       {Layer.render && Layer.render(args, context)}
+      {BgColor.render && BgColor.render(args, context)}
     </Stack>
   ),
   parameters: {

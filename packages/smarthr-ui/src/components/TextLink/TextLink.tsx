@@ -27,7 +27,14 @@ const classNameGenerator = tv({
     anchor: [
       'shr-text-link shr-no-underline shr-shadow-underline',
       'forced-colors:shr-underline',
-      '[&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
+      '[&:not([href])]:shr-text-disabled',
+      '[&:not([href])]:shr-shadow-none',
+      '[&:not([href])]:shr-cursor-not-allowed',
+      '[&:not([href])]:forced-colors:shr-no-underline',
+      // 固定colorを持つprefix/suffixアイコンでも無効化色へ揃える
+      // (react-iconsのcolor propはインラインstyleになるため!importantが必要)
+      '[&:not([href])_.smarthr-ui-Icon]:!shr-text-color-inherit',
+      '[&:not([href])_.smarthr-ui-Icon]:shr-fill-current',
       '[.smarthr-ui-Th_&]:shr-text-link-darken',
     ],
     prefixWrapper: 'shr-me-0.25 shr-align-middle',

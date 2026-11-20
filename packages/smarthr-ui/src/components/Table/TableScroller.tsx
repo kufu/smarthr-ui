@@ -1,5 +1,6 @@
 import { ScrollerSwitcher } from './ScrollerSwitcher'
 
+import type { Rounded } from './ScrollerSwitcher'
 import type { ExtendElementPropsWithoutRef } from '../../types'
 import type { FC } from 'react'
 
@@ -7,6 +8,7 @@ type Props = ExtendElementPropsWithoutRef<
   'div',
   {
     fixedHead?: boolean
+    rounded?: Rounded
   }
 >
 

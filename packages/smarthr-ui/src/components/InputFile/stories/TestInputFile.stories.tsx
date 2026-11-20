@@ -24,7 +24,7 @@ export const ManualTest1 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" heading="multipleかつsubmitのテスト">
+      <InformationPanel heading="multipleかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -65,7 +65,7 @@ export const ManualTest2 = () => {
   const [result, setResult] = useState<string>('')
   return (
     <Stack>
-      <InformationPanel type="info" heading="multiple.appendableかつsubmitのテスト">
+      <InformationPanel heading="multiple.appendableかつsubmitのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>「送信」ボタンを押してください。</li>
@@ -113,7 +113,7 @@ export const ManualTest3 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" heading="multipleかつonChangeのテスト">
+      <InformationPanel heading="multipleかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>
@@ -150,7 +150,7 @@ export const ManualTest4 = () => {
   const [value, setValue] = useState<File[]>([])
   return (
     <Stack>
-      <InformationPanel type="info" heading="multiple.appendableかつonChangeのテスト">
+      <InformationPanel heading="multiple.appendableかつonChangeのテスト">
         <ol className="shr-ms-1.5">
           <li>「ファイルを選択」ボタンを押して、複数のファイルを選択してください。</li>
           <li>送信結果に選択したファイル名が追加されていることを確認してください。</li>

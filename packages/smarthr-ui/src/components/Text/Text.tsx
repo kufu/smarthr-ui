@@ -92,7 +92,7 @@ const classNameGenerator = tv({
       'pre-wrap': 'shr-whitespace-pre-wrap',
     } satisfies Record<NonNullable<Props<ElementType>['whiteSpace']>, string>,
     maxLines: {
-      1: 'shr-inline-block shr-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+      1: 'shr-inline-block shr-max-w-full shr-overflow-x-clip shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       2: 'shr-line-clamp-[2]',
       3: 'shr-line-clamp-[3]',
       4: 'shr-line-clamp-[4]',
@@ -247,7 +247,7 @@ const ActualText = <T extends ElementType = 'span'>({
     className,
     styleType,
   ])
-  const hasIcon = !!icon
+  const hasIcon = Boolean(icon)
   const iconGap = icon?.gap
 
   const wrapperClassName = useMemo(
