@@ -343,45 +343,50 @@ export const SingleCombobox = <T,>({
         // 実行されるが、そのタイミングはqueueMicrotaskでは追いつかない(実機検証で確認済み)。
         // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
         // (defaultPrevented)が確定した後に判定できるようにする
-        const associatedForm = node?.form
+        // 所属フォームはマウント後にも変わるため、ルートで監視して現在の所属を確認する。
+        const resetRoot = node?.getRootNode()
         const handleReset = (e: Event) => {
-          latest.resetFrame.request(() => {
-            // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
-            // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
-            // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
-            if (e.defaultPrevented || latest.isSelectedItemControlled) return
+          // リセット後に所属が変わる場合があるため、イベントを受けた時点の所属で判定する。
+          if (e.target === node?.form) {
+            latest.resetFrame.request(() => {
+              // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
+              // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
+              // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
+              if (e.defaultPrevented || latest.isSelectedItemControlled) return
 
-            const nextSelectedItem = latest.defaultSelectedItem ?? null
-            const hasSelectedItemChanged =
-              latest.selectedItem === null
-                ? nextSelectedItem !== null
-                : nextSelectedItem === null || !areItemsEqual(latest.selectedItem, nextSelectedItem)
+              const nextSelectedItem = latest.defaultSelectedItem ?? null
+              const hasSelectedItemChanged =
+                latest.selectedItem === null
+                  ? nextSelectedItem !== null
+                  : nextSelectedItem === null ||
+                    !areItemsEqual(latest.selectedItem, nextSelectedItem)
 
-            updateUncontrolledSelectedItem(nextSelectedItem)
-            setIsEditing(false)
-            setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+              updateUncontrolledSelectedItem(nextSelectedItem)
+              setIsEditing(false)
+              setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
 
-            // HINT: 選択時(259行目)と同様、親がonChangeInputで検索語(手入力値)を管理し
-            // 絞り込みに使っている場合、reset後も古い検索語が残ったままになってしまうため
-            // 空文字で発火する。現在の入力欄が既に空の場合は発火不要
-            if (latest.inputValue !== '') {
-              latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
-            }
+              // HINT: 選択時(259行目)と同様、親がonChangeInputで検索語(手入力値)を管理し
+              // 絞り込みに使っている場合、reset後も古い検索語が残ったままになってしまうため
+              // 空文字で発火する。現在の入力欄が既に空の場合は発火不要
+              if (latest.inputValue !== '') {
+                latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+              }
 
-            if (hasSelectedItemChanged) {
-              latest.onChangeSelected?.(nextSelectedItem)
-            }
-          })
+              if (hasSelectedItemChanged) {
+                latest.onChangeSelected?.(nextSelectedItem)
+              }
+            })
+          }
         }
 
-        associatedForm?.addEventListener('reset', handleReset)
+        resetRoot?.addEventListener('reset', handleReset, true)
 
         return () => {
           inputNode = null
           latest.cleanupAddFrame()
           latest.selectFrame.cancel()
           latest.resetFrame.cancel()
-          associatedForm?.removeEventListener('reset', handleReset)
+          resetRoot?.removeEventListener('reset', handleReset, true)
         }
       },
       handleFocus: () => {
