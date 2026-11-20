@@ -47,7 +47,9 @@ const cache = createIntlCache()
 const formatters = new Map<keyof typeof locales, IntlShape>()
 
 // chartsのformatterは自身のlocalizeでしか使わず子に渡さないため、プロダクト側のmessagesは混ぜない。
-// 混ぜると辞書が空のロケールでだけプロダクト側の同名キーが優先され、ロケールで挙動が変わってしまう
+// 混ぜると辞書が空のロケールでだけプロダクト側の同名キーが優先され、ロケールで挙動が変わってしまう。
+// chartsはIntlProviderを描画しないので、childrenに渡されたコンポーネントは外側のProviderの辞書をそのまま引ける。
+// charts自前のProviderでchildrenを包む構造に変える場合は、children向けにプロダクト側のmessagesを混ぜる必要がある
 export const getIntl = (locale: keyof typeof locales): IntlShape => {
   const cached = formatters.get(locale)
 
