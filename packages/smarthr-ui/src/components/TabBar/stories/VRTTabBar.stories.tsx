@@ -18,7 +18,8 @@ export default {
    * true     true     true     あり    なし
    * true     false    true     なし    あり
    * true     true     false    あり    あり
-   * true     false    false    なし    なし */
+   * true     false    false    なし    なし
+   * grow は上記とは別に、均等配置と長いタイトルの折り返しを確認する */
   render: (args) => (
     <Stack>
       {[undefined, 'hover', 'focus-visible'].map((variant) => (
@@ -66,6 +67,22 @@ export default {
             </TabItem>
             <TabItem id="tab6" onClick={action('clicked')}>
               タブ6
+            </TabItem>
+          </TabBar>
+          <TabBar grow>
+            <TabItem id="tab7" selected onClick={action('clicked')} suffix={<Badge count={100} />}>
+              タブ7
+            </TabItem>
+            <TabItem
+              id="tab8"
+              disabled
+              disabledReason="タブが無効な理由"
+              onClick={action('clicked')}
+            >
+              タブ8
+            </TabItem>
+            <TabItem id="tab9" onClick={action('clicked')}>
+              折り返しが発生するような長いタイトルを持つタブ9
             </TabItem>
           </TabBar>
         </Stack>
