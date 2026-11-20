@@ -72,6 +72,10 @@ const classNameGenerator = tv({
   },
 })
 
+const DISABLED_RADIO_SELECTOR = ':disabled,[aria-disabled="true"]'
+const KEY_NEXT = /^(Arrow)?(Down|Right)$/
+const KEY_PREVIOUS = /^(Arrow)?(Up|Left)$/
+
 export const SegmentedControl: FC<Props> = ({
   options,
   value,
@@ -112,52 +116,30 @@ export const SegmentedControl: FC<Props> = ({
         }
 
         const handleKeyDown = (e: KeyboardEvent) => {
-          if (!latest.isFocused || !document.activeElement) {
+          const activeElement = document.activeElement
+          if (!latest.isFocused || !activeElement) {
             return
           }
 
-          let radios: NodeListOf<Element> | Element[] = node.querySelectorAll(
-            '[role="radio"]:not(:disabled)',
+          const direction = KEY_NEXT.test(e.key) ? 1 : KEY_PREVIOUS.test(e.key) ? -1 : 0
+          if (!direction) {
+            return
+          }
+
+          const radios = Array.from(
+            node.querySelectorAll<HTMLButtonElement>('button[role="radio"]'),
           )
-
-          if (radios.length < 2) {
-            return
-          }
-
-          radios = Array.from(radios)
-
-          const focusedIndex = radios.indexOf(document.activeElement)
-
+          const focusedIndex = radios.findIndex((radio) => radio === activeElement)
           if (focusedIndex === -1) {
             return
           }
 
-          switch (e.key) {
-            case 'Down':
-            case 'ArrowDown':
-            case 'Right':
-            case 'ArrowRight': {
-              const nextIndex = focusedIndex + 1
-              const nextRadio = radios[nextIndex % radios.length]
-
-              if (nextRadio instanceof HTMLButtonElement) {
-                nextRadio.focus()
-              }
-
-              break
-            }
-            case 'Up':
-            case 'ArrowUp':
-            case 'Left':
-            case 'ArrowLeft': {
-              const nextIndex = focusedIndex - 1
-              const nextRadio = radios[(nextIndex + radios.length) % radios.length]
-
-              if (nextRadio instanceof HTMLButtonElement) {
-                nextRadio.focus()
-              }
-
-              break
+          for (let step = 1; step < radios.length; step++) {
+            const index = (focusedIndex + direction * step + radios.length) % radios.length
+            const radio = radios[index]
+            if (!radio.matches(DISABLED_RADIO_SELECTOR)) {
+              radio.focus()
+              return
             }
           }
         }
@@ -183,7 +165,9 @@ export const SegmentedControl: FC<Props> = ({
     [latest],
   )
 
-  const excludesSelected = options.every((option) => option.value !== actualValue)
+  const tabStop =
+    options.find((option) => !option.disabled && option.value === actualValue) ??
+    options.find((option) => !option.disabled)
 
   return (
     <div
@@ -195,7 +179,7 @@ export const SegmentedControl: FC<Props> = ({
       onFocus={functions.handleDelegateFocus}
       onBlur={functions.handleDelegateBlur}
     >
-      {options.map((option, index) => {
+      {options.map((option) => {
         const checked = actualValue === option.value
         const { ariaLabel: buttonAriaLabel, ...optionRest } = option
 
@@ -204,7 +188,7 @@ export const SegmentedControl: FC<Props> = ({
             {...optionRest}
             key={option.value}
             checked={checked}
-            tabIndex={!isFocused && (excludesSelected ? index === 0 : checked) ? 0 : -1}
+            tabIndex={!isFocused && option === tabStop ? 0 : -1}
             size={size}
             className={classNames.button}
             aria-label={buttonAriaLabel}
