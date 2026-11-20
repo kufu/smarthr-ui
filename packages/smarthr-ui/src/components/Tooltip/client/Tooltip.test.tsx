@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import { Button } from '../../Button'
 import { FaPencilIcon } from '../../Icon'
@@ -47,6 +47,44 @@ describe('Tooltip', () => {
       ).toBeInTheDocument()
     })
 
+    it('children の既存の説明にツールチップの説明を追加する', () => {
+      const helpId = 'save\u00a0help'
+      render(
+        <>
+          <span id={helpId}>入力内容を確認</span>
+          <span id="save-target">下書きが対象</span>
+          <Tooltip message="あとから編集できます">
+            <Button aria-describedby={`${helpId} save-target`}>保存</Button>
+          </Tooltip>
+        </>,
+      )
+
+      expect(screen.getByRole('button', { name: '保存' })).toHaveAccessibleDescription(
+        '入力内容を確認 下書きが対象 あとから編集できます',
+      )
+    })
+
+    it('children の説明が更新されても、ツールチップの説明を維持する', async () => {
+      const renderTooltip = (descriptionId: string) => (
+        <>
+          <span id="first-help">変更前の説明</span>
+          <span id="next-help">変更後の説明</span>
+          <Tooltip message="ツールチップの説明">
+            <Button aria-describedby={descriptionId}>保存</Button>
+          </Tooltip>
+        </>
+      )
+      const { rerender } = render(renderTooltip('first-help'))
+
+      rerender(renderTooltip('next-help'))
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: '保存' })).toHaveAccessibleDescription(
+          '変更後の説明 ツールチップの説明',
+        )
+      })
+    })
+
     it('children が non-focusable な場合、wrapper に aria-describedby が付与される', () => {
       render(<Tooltip message="説明テキスト">テキスト</Tooltip>)
       const wrapper = screen.getByText('テキスト').closest('.smarthr-ui-Tooltip')!
@@ -79,6 +117,31 @@ describe('Tooltip', () => {
       )
       expect(screen.getByRole('button', { name: '保存' })).toBeInTheDocument()
     })
+  })
+
+  it('type を切り替えると、前のツールチップの関連付けを解除する', () => {
+    const labelId = 'save-label'
+    const renderTooltip = (type?: 'label') => (
+      <>
+        <span id={labelId}>保存</span>
+        <span id="save-help">入力内容を確認</span>
+        <Tooltip type={type} message="ツールチップ">
+          <Button aria-labelledby={labelId} aria-describedby="save-help">
+            操作
+          </Button>
+        </Tooltip>
+      </>
+    )
+    const { rerender } = render(renderTooltip())
+    const button = screen.getByRole('button', { name: '保存' })
+
+    rerender(renderTooltip('label'))
+    expect(button).toHaveAccessibleName('ツールチップ')
+    expect(button).toHaveAccessibleDescription('入力内容を確認')
+
+    rerender(renderTooltip())
+    expect(button).toHaveAccessibleName('保存')
+    expect(button).toHaveAccessibleDescription('入力内容を確認 ツールチップ')
   })
 
   // 非表示中に幅計算が走って壊れた maxWidth が inline style に残り、再表示しても直らない不具合の回帰テスト
