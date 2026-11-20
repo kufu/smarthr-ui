@@ -51,9 +51,9 @@ type Props = ExtendElementPropsWithRef<
     onClickOverlay?: () => void
     /** Escape 押下時 */
     onPressEscape?: (e: KeyboardEvent) => void
-    /** aria-label（ariaLabelledby と排他で必須） */
+    /** aria-label。DrawerHeader を置かないときは、ariaLabel か ariaLabelledby のどちらかを指定すること */
     ariaLabel?: string
-    /** aria-labelledby（ariaLabel と排他で必須） */
+    /** aria-labelledby。ariaLabel や DrawerHeader の見出しより優先する */
     ariaLabelledby?: string
     /**
      * 開いたときに最初にフォーカスする要素。未指定ならドロワー先頭にフォーカスする。
