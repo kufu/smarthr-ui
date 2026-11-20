@@ -1,3 +1,11 @@
+import {
+  BarController,
+  BarElement,
+  BasicPlatform,
+  CategoryScale,
+  Chart as ChartJS,
+  LinearScale,
+} from 'chart.js'
 import { describe, expect, it, vi } from 'vitest'
 
 import { keyboardNavigationPlugin, resolveLiveRegionText } from './keyboardNavigationPlugin'
@@ -107,6 +115,62 @@ describe('keyboardNavigationPlugin', () => {
     const pressStacked = setup({ stacked: true, skipZero: true }, datasets)
     expect(pressStacked('ArrowLeft')).toBeUndefined()
     expect(pressStacked('ArrowDown')).toBeUndefined()
+  })
+})
+
+describe('keyboardNavigationPlugin（Chart.jsのインスタンス経由）', () => {
+  // モックのchartではChart.jsのオプション解決を通らないため、実際のインスタンスで確認する
+  it('formatLiveRegionTextの結果をライブリージョンに書き込む', () => {
+    ChartJS.register(BarController, BarElement, CategoryScale, LinearScale)
+
+    const canvas = document.createElement('canvas')
+    canvas.tabIndex = 0
+    document.body.appendChild(canvas)
+
+    // jsdomのcanvasは描画できないため、2Dコンテキストの呼び出しをすべて空振りさせる
+    const context: CanvasRenderingContext2D = new Proxy({} as CanvasRenderingContext2D, {
+      get: (_, key) => {
+        if (key === 'canvas') return canvas
+        if (key === 'measureText') return () => ({ width: 0 })
+        return () => {}
+      },
+      set: () => true,
+    })
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(context)
+
+    const liveRegion = document.createElement('div')
+    liveRegion.id = 'live-region'
+    document.body.appendChild(liveRegion)
+
+    const formatLiveRegionText = vi.fn(
+      ({ datasetLabel, label, value }) => `${label}: ${datasetLabel} ${value}`,
+    )
+    const chart = new ChartJS(canvas, {
+      type: 'bar',
+      platform: BasicPlatform,
+      data: { labels: ['4月'], datasets: [{ label: '正社員', data: [12] }] },
+      options: {
+        animation: false,
+        responsive: false,
+        plugins: {
+          keyboardNavigation: { liveRegionId: liveRegion.id, formatLiveRegionText },
+        },
+      },
+      plugins: [keyboardNavigationPlugin],
+    })
+
+    canvas.focus()
+    canvas.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
+
+    expect(liveRegion.textContent).toBe('4月: 正社員 12')
+    expect(formatLiveRegionText).toHaveBeenCalledWith({
+      datasetLabel: '正社員',
+      label: '4月',
+      value: '12',
+    })
+
+    chart.destroy()
+    vi.restoreAllMocks()
   })
 })
 

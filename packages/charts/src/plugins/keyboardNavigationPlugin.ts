@@ -222,9 +222,11 @@ export const keyboardNavigationPlugin = {
 
       if (liveRegionElement) {
         // afterInitはチャート生成時の1度しか実行されず、optionsの変更ではchart.updateが走るだけなので、
-        // 引数のoptionsを参照すると初期値のまま古くなる。最新の値はchart.optionsから都度読み直す
+        // 引数のoptionsを参照すると初期値のまま古くなるため、最新の値を都度読み直す。
+        // chart.optionsは関数をスクリプタブルオプションとして解決し、formatLiveRegionTextの戻り値（文字列）に
+        // 置き換えてしまうため、渡した値がそのまま入っているchart.config.optionsから読む
         const currentOptions: KeyboardNavigationOptions =
-          chart.options.plugins?.keyboardNavigation ?? options
+          chart.config.options?.plugins?.keyboardNavigation ?? options
 
         liveRegionElement.textContent = resolveLiveRegionText(
           {
