@@ -171,15 +171,15 @@ export const BarChart: React.FC<Props> = ({
       {
         value: 'chart',
         content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
-        ariaLabel: 'グラフ',
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
       },
       {
         value: 'table',
         content: <FaTableIcon />,
-        ariaLabel: 'テーブル',
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
       },
     ],
-    [orientation],
+    [orientation, localize],
   )
 
   const handleViewChange = (value: string) => {

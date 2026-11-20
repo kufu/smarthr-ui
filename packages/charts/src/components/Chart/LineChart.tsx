@@ -21,19 +21,6 @@ import type { Chart, ChartData, ChartOptions } from 'chart.js'
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
 
-const VIEW_OPTIONS = [
-  {
-    value: 'chart',
-    content: <FaChartLineIcon />,
-    ariaLabel: 'グラフ',
-  },
-  {
-    value: 'table',
-    content: <FaTableIcon />,
-    ariaLabel: 'テーブル',
-  },
-]
-
 type Props = {
   // 色などはpropsで渡せないようにする
   // TODO:もっと簡単なデータの型を作る
@@ -106,6 +93,22 @@ export const LineChart: React.FC<Props> = ({
     [chartId, externalOptions, formatLiveRegionText],
   )
 
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: <FaChartLineIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
+      },
+    ],
+    [localize],
+  )
+
   const handleViewChange = (value: string) => {
     setView(value as ChartViewType)
     onChangeView?.(value as ChartViewType)
@@ -125,7 +128,7 @@ export const LineChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={VIEW_OPTIONS}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">

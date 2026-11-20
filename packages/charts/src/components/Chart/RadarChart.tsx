@@ -20,19 +20,6 @@ import type { Chart, ChartData, ChartOptions } from 'chart.js'
 
 registerChartComponents()
 
-const VIEW_OPTIONS = [
-  {
-    value: 'chart',
-    content: <FaCircleNodesIcon />,
-    ariaLabel: 'グラフ',
-  },
-  {
-    value: 'table',
-    content: <FaTableIcon />,
-    ariaLabel: 'テーブル',
-  },
-]
-
 type Props = {
   data: ChartData<'radar'>
   title?: string
@@ -109,6 +96,22 @@ export const RadarChart: React.FC<Props> = ({
     [chartId, externalOptions, formatLiveRegionText],
   )
 
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: <FaCircleNodesIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
+      },
+    ],
+    [localize],
+  )
+
   const handleViewChange = (value: string) => {
     setView(value as ChartViewType)
     onChangeView?.(value as ChartViewType)
@@ -128,7 +131,7 @@ export const RadarChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={VIEW_OPTIONS}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">

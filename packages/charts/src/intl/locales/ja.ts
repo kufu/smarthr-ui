@@ -10,4 +10,9 @@ export const locale = {
   'smarthr-ui-charts/DoughnutChart/ariaLabel': 'ドーナツグラフ {segmentCount}個の項目',
   'smarthr-ui-charts/DoughnutChart/ariaLabelWithTitle': '{title} ドーナツグラフ {segmentCount}個の項目',
   'smarthr-ui-charts/keyboardNavigation/liveRegionText': '{datasetLabel} {label} {value}',
+  'smarthr-ui-charts/viewOptions/chart': 'グラフ',
+  'smarthr-ui-charts/viewOptions/table': 'テーブル',
+  'smarthr-ui-charts/TableView/groupHeader': 'グループ',
+  'smarthr-ui-charts/TableView/categoryHeader': 'カテゴリー',
+  'smarthr-ui-charts/TableView/valueHeader': '値',
 } as const

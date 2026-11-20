@@ -22,19 +22,6 @@ import type { Chart, ChartData, ChartDataset, ChartOptions, Plugin } from 'chart
 // Chart.jsのコンポーネントをモジュールレベルで登録
 registerChartComponents()
 
-const VIEW_OPTIONS = [
-  {
-    value: 'chart',
-    content: <FaChartPieIcon />,
-    ariaLabel: 'グラフ',
-  },
-  {
-    value: 'table',
-    content: <FaTableIcon />,
-    ariaLabel: 'テーブル',
-  },
-]
-
 type Props = {
   // 色などはpropsで渡せないようにする
   data: ChartData<'doughnut'>
@@ -135,6 +122,22 @@ export const DoughnutChart: React.FC<Props> = ({
     [thickness, chartId, externalOptions, formatLiveRegionText],
   )
 
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: <FaChartPieIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/chart', defaultText: 'グラフ' }),
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: localize({ id: 'smarthr-ui-charts/viewOptions/table', defaultText: 'テーブル' }),
+      },
+    ],
+    [localize],
+  )
+
   // chartAreaPlugin は children の有無に関わらず常に渡す。react-chartjs-2 は plugins を
   // chart 生成時（mount 時）にしか読まないため、children が後から付いたときに追加しても
   // 登録されず、chartArea が null のままで中央コンテンツが出なくなる。
@@ -162,7 +165,7 @@ export const DoughnutChart: React.FC<Props> = ({
           size="S"
           className="shr-col-start-3 shr-justify-self-end"
           onClickOption={handleViewChange}
-          options={VIEW_OPTIONS}
+          options={viewOptions}
         />
       </div>
       <div className="shr-relative shr-min-h-0 shr-flex-1">

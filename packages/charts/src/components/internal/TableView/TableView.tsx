@@ -1,4 +1,8 @@
+'use client'
+
 import { Table, Td, Th, VisuallyHiddenText } from 'smarthr-ui'
+
+import { useIntl } from '../../../intl'
 
 import type { ChartType as BaseChartType, ChartData, ChartOptions } from 'chart.js'
 import type { ReactNode } from 'react'
@@ -77,11 +81,14 @@ const GroupedTableView = <T extends ChartType>({ data, options, caption }: Table
   const { indexAxis, scales, plugins } = (options ?? {}) as Partial<ChartOptions<'bar'>>
   const [categoryAxis, valueAxis] =
     indexAxis === 'y' ? (['y', 'x'] as const) : (['x', 'y'] as const)
-  // TODO: smarthr-ui-charts自身が翻訳プロバイダーを持ったら翻訳する
+  const { localize } = useIntl()
   const headers = [
-    scales?.[categoryAxis]?.title?.text ?? 'グループ',
-    plugins?.legend?.title?.text ?? 'カテゴリー',
-    scales?.[valueAxis]?.title?.text ?? '値',
+    scales?.[categoryAxis]?.title?.text ??
+      localize({ id: 'smarthr-ui-charts/TableView/groupHeader', defaultText: 'グループ' }),
+    plugins?.legend?.title?.text ??
+      localize({ id: 'smarthr-ui-charts/TableView/categoryHeader', defaultText: 'カテゴリー' }),
+    scales?.[valueAxis]?.title?.text ??
+      localize({ id: 'smarthr-ui-charts/TableView/valueHeader', defaultText: '値' }),
   ]
 
   const groups: Group[] = (data.labels ?? []).map((label, index) => ({
