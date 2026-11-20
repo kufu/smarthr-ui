@@ -285,20 +285,27 @@ const TIME_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
   'zh-tw': COMMON_TIME_FORMAT,
 } as const
 
-// 丸めた差分が max 未満ならその単位で表示する。値は dayjs の fromNow() に揃えている
+// dayjs の fromNow() と同じ閾値。diffUnit で丸めた差分が max 以下なら unit で表示する（singular は常に 1）
 const RELATIVE_TIME_THRESHOLDS: ReadonlyArray<{
-  unit: 'minute' | 'hour' | 'day' | 'month' | 'year'
+  diffUnit: 'second' | 'minute' | 'hour' | 'day' | 'month' | 'year'
   max: number
+  unit: 'minute' | 'hour' | 'day' | 'month' | 'year'
+  singular?: true
 }> = [
-  { unit: 'minute', max: 45 },
-  { unit: 'hour', max: 22 },
-  { unit: 'day', max: 26 },
-  { unit: 'month', max: 11 },
-  { unit: 'year', max: Infinity },
+  { diffUnit: 'second', max: 89, unit: 'minute', singular: true },
+  { diffUnit: 'minute', max: 44, unit: 'minute' },
+  { diffUnit: 'minute', max: 89, unit: 'hour', singular: true },
+  { diffUnit: 'hour', max: 21, unit: 'hour' },
+  { diffUnit: 'hour', max: 35, unit: 'day', singular: true },
+  { diffUnit: 'day', max: 25, unit: 'day' },
+  { diffUnit: 'day', max: 45, unit: 'month', singular: true },
+  { diffUnit: 'month', max: 10, unit: 'month' },
+  { diffUnit: 'month', max: 17, unit: 'year', singular: true },
+  { diffUnit: 'year', max: Infinity, unit: 'year' },
 ]
 
-// この秒数未満の差分は「今」と表示する
-const RELATIVE_TIME_NOW_THRESHOLD_SECONDS = 45
+// 丸めた差分がこの秒数以下なら「今」と表示する
+const RELATIVE_TIME_NOW_THRESHOLD_SECONDS = 44
 
 const removeSpaceAfterNumber = (base: string) => base.replace(/(\d)\s+/g, '$1')
 
@@ -450,16 +457,20 @@ export const useDateFormat = (): UseDateFormatReturn => {
           return replacer ? replacer(formatted) : formatted
         }
 
-        if (Math.abs(target.diff(now, 'second', true)) < RELATIVE_TIME_NOW_THRESHOLD_SECONDS) {
+        if (
+          Math.round(Math.abs(target.diff(now, 'second', true))) <=
+          RELATIVE_TIME_NOW_THRESHOLD_SECONDS
+        ) {
           return format(0, 'second', 'auto')
         }
 
-        for (const { unit, max } of RELATIVE_TIME_THRESHOLDS) {
-          const diff = target.diff(now, unit, true)
-          const rounded = Math.max(1, Math.round(Math.abs(diff)))
+        for (const { diffUnit, max, unit, singular } of RELATIVE_TIME_THRESHOLDS) {
+          const diff = target.diff(now, diffUnit, true)
+          const rounded = Math.round(Math.abs(diff))
 
-          if (rounded < max) {
-            return format(diff < 0 ? -rounded : rounded, unit, 'always')
+          if (rounded <= max) {
+            const value = singular ? 1 : Math.max(1, rounded)
+            return format(diff < 0 ? -value : value, unit, 'always')
           }
         }
 
