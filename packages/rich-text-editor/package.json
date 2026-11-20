@@ -49,7 +49,7 @@
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0",
+    "react-intl": "^7.0.4 || ^8.0.0 || ^10.0.0 || ^12.0.0",
     "smarthr-ui": "workspace:^"
   },
   "dependencies": {
@@ -68,7 +68,7 @@
     "@tiptap/starter-kit": "^3.33.1",
     "@tiptap/static-renderer": "^3.33.1",
     "happy-dom": "^21.0.4",
-    "intl-messageformat": "^11.2.15",
+    "intl-messageformat": "^12.1.5",
     "tailwind-variants": "^0.3.1"
   },
   "devDependencies": {
@@ -91,7 +91,7 @@
     "postcss": "^8.5.32",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-intl": "^10.2.2",
+    "react-intl": "^12.1.7",
     "rimraf": "^6.1.4",
     "rollup": "^4.68.0",
     "rollup-plugin-preserve-directives": "^0.4.0",
