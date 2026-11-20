@@ -268,7 +268,12 @@ const ActualText = <T extends ElementType = 'span'>({
   const Component = as || (emphasis ? 'em' : 'span')
 
   return maxLines.tooltip ? (
-    <TextOverflowTooltip {...rest} as={Component} className={actualClassName}>
+    <TextOverflowTooltip
+      {...rest}
+      as={Component}
+      maxLines={maxLines.max}
+      className={actualClassName}
+    >
       {content}
     </TextOverflowTooltip>
   ) : (

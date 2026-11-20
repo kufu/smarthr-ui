@@ -1,2 +1,2 @@
 export { ControlledTooltip } from './ControlledTooltip'
-export { Tooltip } from './client'
+export { Tooltip, TooltipPortal } from './client'
