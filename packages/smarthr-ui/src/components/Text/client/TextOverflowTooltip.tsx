@@ -93,6 +93,9 @@ const getTextWidth = (element: Element, style: CSSStyleDeclaration) => {
   return width
 }
 
+const isCssKeyword = (value: CSSStyleValue | undefined, keyword: string) =>
+  value !== undefined && 'value' in value && value.value === keyword
+
 const isLineClamped = (element: Element, style: CSSStyleDeclaration) => {
   if (style.webkitBoxOrient !== 'vertical' || !(Number(style.webkitLineClamp) > 0)) {
     return false
@@ -113,8 +116,9 @@ const isLineClamped = (element: Element, style: CSSStyleDeclaration) => {
   // 高さも指定されている場合は同じ表示形式から区別できないため、高さの実測値で判定する
   const styleMap = element.computedStyleMap?.()
   return (
-    styleMap?.get('height')?.toString() === 'auto' &&
-    styleMap.get('max-height')?.toString() === 'none'
+    styleMap !== undefined &&
+    isCssKeyword(styleMap.get('height'), 'auto') &&
+    isCssKeyword(styleMap.get('max-height'), 'none')
   )
 }
 
