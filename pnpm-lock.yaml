@@ -135,8 +135,8 @@ importers:
         specifier: ^19.3.1
         version: 19.3.1(react@19.3.1)
       react-intl:
-        specifier: ^10.2.2
-        version: 10.2.2(@types/react@19.3.0)(react@19.3.1)
+        specifier: ^12.1.7
+        version: 12.1.7(@types/react@19.3.0)(react@19.3.1)
       rimraf:
         specifier: ^6.1.4
         version: 6.1.4
@@ -213,8 +213,8 @@ importers:
         specifier: ^21.0.4
         version: 21.0.4
       intl-messageformat:
-        specifier: ^11.2.15
-        version: 11.2.15
+        specifier: ^12.1.5
+        version: 12.1.5
       tailwind-variants:
         specifier: ^0.3.1
         version: 0.3.1(tailwindcss@3.4.19(tsx@4.23.15)(yaml@2.9.1))
@@ -277,8 +277,8 @@ importers:
         specifier: ^19.3.1
         version: 19.3.1(react@19.3.1)
       react-intl:
-        specifier: ^10.2.2
-        version: 10.2.2(@types/react@19.3.0)(react@19.3.1)
+        specifier: ^12.1.7
+        version: 12.1.7(@types/react@19.3.0)(react@19.3.1)
       rimraf:
         specifier: ^6.1.4
         version: 6.1.4
@@ -313,8 +313,8 @@ importers:
         specifier: ^1.11.23
         version: 1.11.23
       intl-messageformat:
-        specifier: ^11.2.15
-        version: 11.2.15
+        specifier: ^12.1.5
+        version: 12.1.5
       polished:
         specifier: ^4.3.1
         version: 4.3.1
@@ -422,8 +422,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       react-intl:
-        specifier: ^10.2.2
-        version: 10.2.2(@types/react@19.3.0)(react@19.3.1)
+        specifier: ^12.1.7
+        version: 12.1.7(@types/react@19.3.0)(react@19.3.1)
       rimraf:
         specifier: ^6.1.4
         version: 6.1.4
@@ -1024,14 +1024,14 @@ packages:
   '@formatjs/fast-memoize@3.1.7':
     resolution: {integrity: sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==}
 
-  '@formatjs/icu-messageformat-parser@3.5.18':
-    resolution: {integrity: sha512-wX1efcL8d7K5QapOTRsP/OLTA/kpwe4LwqWyNxDNg5iRs8i9jJbCyxB5P8jc4KOW5oiLzz2DJr+BRY5xMV9+bA==}
+  '@formatjs/icu-messageformat-parser@3.5.23':
+    resolution: {integrity: sha512-iB1fYfhtSGd8uH9A8b1m01Ujcv6QtQnJasefP3jPApmz72L/zNipzf3BdoinTMd1xuviVChjUJWL60iTwjUQ+w==}
 
-  '@formatjs/icu-skeleton-parser@2.1.11':
-    resolution: {integrity: sha512-j8cUmOJzVgkHuS0QiQ6ga76UIoLOFSAMWhs7aZJztH3aAdCOAE6vpC8KVvFB4cU10ON0y2/5oOVmPJ43s2lTwA==}
+  '@formatjs/icu-skeleton-parser@2.1.13':
+    resolution: {integrity: sha512-IdAJ9NrHn7AF0zqncD9UpxQozTYyJtbwwrZnJMEKVxTcOOXtVkUb2XYTpNOGTAv58NCsk0rjRB9G+i2SvBmGAQ==}
 
-  '@formatjs/intl@4.2.1':
-    resolution: {integrity: sha512-GiL0cReencWQkhfJedNLMe0Aorb/wyTRJdi+hLgG9gsDPy4yw2N+EkMcijf5+oGKd5jde75tr5nujsPg78bUTw==}
+  '@formatjs/intl@6.1.5':
+    resolution: {integrity: sha512-WicSXzsz4wO1ksJb6Pp9a+vdOpIkidcEm8ldVtXkqFoMB/o/ETEikyPeCFgTVuSTLBb7ZNJ3ZLKXSQ/X/0+BAg==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -3857,8 +3857,8 @@ packages:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
     engines: {node: '>=10.13.0'}
 
-  intl-messageformat@11.2.15:
-    resolution: {integrity: sha512-W4VNytsXyWgW5lvVchmsb9xgA5rSKqoflu3/IQ9UCtB0z4R+Bx9MoEkwFT/+30RCl/KzUoH0QGGe9lppF5SuvQ==}
+  intl-messageformat@12.1.5:
+    resolution: {integrity: sha512-quhcDFAxy4wr/GrgWgmMjuegoedNUIxGNLORfXgDgdjuv8cBM88ClLTLXmfYC1roMSR1PPc55yUEkpJ5m67W2g==}
 
   is-absolute@1.0.0:
     resolution: {integrity: sha512-dOWoqflvcydARa360Gvv18DZ/gRuHKi2NU/wU5X1ZFzdYfH29nkiNZsF3mp4OJ3H4yo9Mx8A/uAGNzpzPN3yBA==}
@@ -4881,8 +4881,8 @@ packages:
     peerDependencies:
       react: '*'
 
-  react-intl@10.2.2:
-    resolution: {integrity: sha512-LUzjoxGMbk9PWS4Kdr2QAYX8sqIuB3EKiFs6fi4kCgGAgWNlrYlq9ZLKxBg9Yeg9xeaFfeZ139FZ4Ub2w5L6SQ==}
+  react-intl@12.1.7:
+    resolution: {integrity: sha512-DKPrDYGQfQpyW8g8dbEPd6abvinwHPw85LcAT6nmd8+kzexea5egLQu6KZTEGDgP+3ap8dn+sX3JTuS7v0xD4g==}
     peerDependencies:
       '@types/react': '>=18.0.0'
       react: '>=18.0.0'
@@ -6283,17 +6283,17 @@ snapshots:
 
   '@formatjs/fast-memoize@3.1.7': {}
 
-  '@formatjs/icu-messageformat-parser@3.5.18':
+  '@formatjs/icu-messageformat-parser@3.5.23':
     dependencies:
-      '@formatjs/icu-skeleton-parser': 2.1.11
+      '@formatjs/icu-skeleton-parser': 2.1.13
 
-  '@formatjs/icu-skeleton-parser@2.1.11': {}
+  '@formatjs/icu-skeleton-parser@2.1.13': {}
 
-  '@formatjs/intl@4.2.1':
+  '@formatjs/intl@6.1.5':
     dependencies:
       '@formatjs/fast-memoize': 3.1.7
-      '@formatjs/icu-messageformat-parser': 3.5.18
-      intl-messageformat: 11.2.15
+      '@formatjs/icu-messageformat-parser': 3.5.23
+      intl-messageformat: 12.1.5
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -9079,10 +9079,10 @@ snapshots:
 
   interpret@3.1.1: {}
 
-  intl-messageformat@11.2.15:
+  intl-messageformat@12.1.5:
     dependencies:
       '@formatjs/fast-memoize': 3.1.7
-      '@formatjs/icu-messageformat-parser': 3.5.18
+      '@formatjs/icu-messageformat-parser': 3.5.23
 
   is-absolute@1.0.0:
     dependencies:
@@ -10159,12 +10159,12 @@ snapshots:
     dependencies:
       react: 19.3.1
 
-  react-intl@10.2.2(@types/react@19.3.0)(react@19.3.1):
+  react-intl@12.1.7(@types/react@19.3.0)(react@19.3.1):
     dependencies:
-      '@formatjs/icu-messageformat-parser': 3.5.18
-      '@formatjs/intl': 4.2.1
+      '@formatjs/icu-messageformat-parser': 3.5.23
+      '@formatjs/intl': 6.1.5
       '@types/react': 19.3.0
-      intl-messageformat: 11.2.15
+      intl-messageformat: 12.1.5
       react: 19.3.1
 
   react-is@16.13.1: {}
