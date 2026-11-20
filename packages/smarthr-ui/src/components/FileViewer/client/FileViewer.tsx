@@ -90,19 +90,24 @@ export const FileViewer: FC<Props> = ({
 
   const hasWidth = fixedWidth !== undefined
 
-  const latest = useLatest({ scaleStep, rotation, onLoadError, onPassword })
+  const latest = useLatest({ scaleStep, scaleSteps, rotation, onLoadError, onPassword })
   const hasOnLoadError = Boolean(onLoadError)
   const hasOnPassword = Boolean(onPassword)
 
   const functions = useMemo(() => {
     const calculateScale = (mode: 'add' | 'sub') => {
       const step = latest.scaleStep ?? defaultScaleStep
+      const minimumScale = mode === 'sub' ? (latest.scaleSteps ?? defaultScaleSteps)[0] : undefined
 
       // HINT: 小数を足し引きすると浮動小数点の誤差(0.6 - 0.2 = 0.39999999999999997 など)が出るため、
       // 有効桁数で丸めて取り除く
-      setScale((currentScale) =>
-        Number((mode === 'add' ? currentScale + step : currentScale - step).toPrecision(12)),
-      )
+      setScale((currentScale) => {
+        const nextScale = Number(
+          (mode === 'add' ? currentScale + step : currentScale - step).toPrecision(12),
+        )
+
+        return minimumScale !== undefined && nextScale < minimumScale ? minimumScale : nextScale
+      })
     }
 
     return {

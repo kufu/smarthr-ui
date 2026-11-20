@@ -37,6 +37,35 @@ describe('FileViewer', () => {
     expect(scaleDownButton).toHaveAttribute('aria-disabled', 'true')
   })
 
+  it.each([
+    { setting: 'scaleStep', props: { scaleStep: 1 }, percentages: ['20%'] },
+    {
+      setting: 'scaleSteps',
+      props: { scaleSteps: [0.5, 1, 1.5, 2] },
+      percentages: ['80%', '60%', '50%'],
+    },
+  ])('$setting を指定しても、縮小が下限を下回らない', async ({ props, percentages }) => {
+    renderFileViewer(props)
+    const scaleDownButton = screen.getByRole('button', { name: '縮小' })
+
+    for (const percentage of percentages) {
+      await userEvent.click(scaleDownButton)
+      expect(screen.getByText(percentage)).toBeInTheDocument()
+    }
+
+    expect(scaleDownButton).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('scaleSteps が空の場合は縮小の下限を適用しない', async () => {
+    renderFileViewer({ scaleStep: 0.9, scaleSteps: [] })
+    const scaleDownButton = screen.getByRole('button', { name: '縮小' })
+
+    await userEvent.click(scaleDownButton)
+
+    expect(screen.getByText('10%')).toBeInTheDocument()
+    expect(scaleDownButton).not.toHaveAttribute('aria-disabled', 'true')
+  })
+
   it('拡大すると、scaleStep分だけ拡大率が上がる', async () => {
     renderFileViewer({ scaleStep: 0.2 })
 
