@@ -23,12 +23,12 @@ npm install smarthr-ui react react-dom react-intl
 チャートのスクリーンリーダー向けテキスト（`aria-label` やキーボード操作時の読み上げ）は、smarthr-ui の `IntlProvider` に指定したロケールに追従します。
 
 ```tsx
-import { BarChart } from '@smarthr/smarthr-ui-charts'
+import { Chart } from '@smarthr/smarthr-ui-charts'
 import { IntlProvider } from 'smarthr-ui'
 
 const App = () => (
   <IntlProvider locale="en-us">
-    <BarChart data={data} />
+    <Chart type="bar" data={data} />
   </IntlProvider>
 )
 ```
