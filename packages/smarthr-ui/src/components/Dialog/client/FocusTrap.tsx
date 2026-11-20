@@ -50,6 +50,10 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, ref, children, ...rest 
           const tabbables = tabbable(node).filter((elm) => elm.tabIndex >= 0)
 
           if (tabbables.length === 0) {
+            if (node.contains(node.ownerDocument.activeElement)) {
+              e.preventDefault()
+            }
+
             return
           }
 
