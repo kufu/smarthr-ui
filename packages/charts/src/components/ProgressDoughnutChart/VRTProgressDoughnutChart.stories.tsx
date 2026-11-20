@@ -1,7 +1,4 @@
-import { Text } from 'smarthr-ui'
-
-// eslint-disable-next-line smarthr/require-barrel-import
-import { Stack } from '../../../../smarthr-ui/src/components/Layout'
+import { Stack, Text } from 'smarthr-ui'
 
 import { ProgressDoughnutChart } from './ProgressDoughnutChart'
 

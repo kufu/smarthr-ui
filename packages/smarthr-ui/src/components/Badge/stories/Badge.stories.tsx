@@ -11,7 +11,7 @@ export default {
     count: 0,
     overflowCount: 99,
     showZero: true,
-    type: 'blue',
+    color: 'blue',
     dot: false,
   },
   parameters: {
@@ -54,11 +54,13 @@ export const ShowZero: StoryObj<typeof Badge> = {
   name: 'showZero',
   render: (args) => (
     <Stack>
-      <Cluster>
+      {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち) */}
+      <Cluster inline>
         <span>true</span>
         <Badge {...args} showZero={true} count={0} />
       </Cluster>
-      <Cluster>
+      {/* eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち) */}
+      <Cluster inline>
         <span>false</span>
         <Badge {...args} showZero={false} count={0} />
       </Cluster>
@@ -69,14 +71,14 @@ export const ShowZero: StoryObj<typeof Badge> = {
   },
 }
 
-export const Type: StoryObj<typeof Badge> = {
-  name: 'type',
+export const Color: StoryObj<typeof Badge> = {
+  name: 'color',
   render: (args) => (
     <Cluster>
-      <Badge {...args} type="blue" />
-      <Badge {...args} type="yellow" />
-      <Badge {...args} type="red" />
-      <Badge {...args} type="grey" />
+      <Badge {...args} color="blue" />
+      <Badge {...args} color="yellow" />
+      <Badge {...args} color="red" />
+      <Badge {...args} color="grey" />
     </Cluster>
   ),
   args: {},

@@ -1,1 +1,0 @@
-export { BottomFixedArea } from './BottomFixedArea'

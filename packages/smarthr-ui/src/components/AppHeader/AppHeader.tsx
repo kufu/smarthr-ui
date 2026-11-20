@@ -1,4 +1,4 @@
-'use client'
+'use client' // eslint-disable-line local-rules/require-client
 
 import { useMemo, useState } from 'react'
 
@@ -22,9 +22,9 @@ export const AppHeader: FC<HeaderProps> = ({
   fetchFeatures,
   ...rest
 }) => {
-  // NOTE: ヘッダーの出し分けは CSS によって行われているので、useMediaQuery による children の出し分けは本来不要ですが、
-  //  wovn の言語切替カスタム UI の挿入対象となる DOM ("wovn-embedded-widget-anchor" クラスを持った div) が複数描画されていると、
-  //  wovn のスクリプトの仕様上1つ目の DOM にしか UI が挿入されないため、やむを得ず children のみ React のレンダリングレベルでの出し分けをしています。
+  // NOTE: ヘッダーの出し分けは CSS によって行われているので、本来不要ですが、
+  //  childrenはDesktop/Mobile両方のヘッダーが常にマウントされている構造上、両方に渡すとchildrenが二重にレンダリングされてしまうため、
+  //  画面幅に応じてどちらか一方にしか渡さないようにしています。
   const isDesktop = useMediaQuery(mediaQuery.desktop)
 
   const [lazyFeatures, setLazyFeatures] = useState<{
@@ -63,11 +63,12 @@ export const AppHeader: FC<HeaderProps> = ({
   const resolvedFeatures = fetchFeatures
     ? (lazyFeatures.data ?? EMPTY_FEATURES)
     : (features ?? EMPTY_FEATURES)
-  const isAppLauncherAvailable = !!fetchFeatures || resolvedFeatures.length > 0
+  const isAppLauncherAvailable = Boolean(fetchFeatures) || resolvedFeatures.length > 0
   // HINT: Desktopは Dropdown の onOpen（requestAnimationFrame経由）で取得を開始するため、
   //  パネルが開いてから実際に取得が始まるまでに1フレームの猶予がある。
   //  fetchFeatures 指定時に未取得かつ未エラーの状態はすべて取得中として扱い、その間に「該当なし」が表示されるのを防ぐ
-  const featuresLoading = !!fetchFeatures && lazyFeatures.data === null && !lazyFeatures.error
+  const featuresLoading =
+    Boolean(fetchFeatures) && lazyFeatures.data === null && !lazyFeatures.error
 
   // HINT: Desktop,Mobileの両ヘッダーは常にHTML上に存在し、cssでvisibleを切り替えることでSSR環境でのレイアウトシフトが発生しないようにしています
   // 表示切替は画面幅によって決まり、SSR環境では判定出来ないためです

@@ -22,7 +22,8 @@ export default {
   args: {
     label: '機能名',
     additionalArea: (
-      <Cluster align="center">
+      // eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち)
+      <Cluster inline align="center">
         <Text size="S">最終同期： 2024/11/21 10:13</Text>
         <Button size="S" prefix={<FaArrowsRotateIcon />}>
           データを同期
@@ -43,6 +44,12 @@ export default {
       name: 'ドロップダウンボタン 候補を開く',
     })
     await userEvent.click(dropdownButton)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
   tags: ['!autodocs'],
 } satisfies Meta<typeof AppNavi>

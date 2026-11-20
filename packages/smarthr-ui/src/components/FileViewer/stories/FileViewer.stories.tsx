@@ -1,4 +1,4 @@
-import { FileViewer } from '../FileViewer'
+import { FileViewer } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

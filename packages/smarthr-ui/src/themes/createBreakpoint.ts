@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import { merge } from '../libs/merge'
 
 export type BreakpointProperty = {
   SP?: number
@@ -17,5 +17,5 @@ export const createBreakpoint = (userBreakpoint?: BreakpointProperty): CreatedBr
     return defaultBreakpoint
   }
 
-  return merge({ ...defaultBreakpoint }, userBreakpoint)
+  return merge(defaultBreakpoint, userBreakpoint)
 }

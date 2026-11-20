@@ -1,15 +1,19 @@
-import { type ComponentPropsWithoutRef, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
-type BaseProps = {
-  start: number
-  end: number
-  total?: number
-}
-type Props = BaseProps & Omit<ComponentPropsWithoutRef<'div'>, keyof BaseProps>
+import type { ExtendElementPropsWithoutRef } from '../../types'
+
+type Props = ExtendElementPropsWithoutRef<
+  'div',
+  {
+    start: number
+    end: number
+    total?: number
+  }
+>
 
 const classNameGenerator = tv({ base: 'shr-text-base' })
 
@@ -18,8 +22,7 @@ export const PageCounter = memo<Props>(({ start, end, total, className, ...rest 
 
   return (
     <Cluster {...rest} gap={0.25} inline align="baseline" className={actualClassName}>
-      {/* eslint-disable-next-line smarthr/require-i18n-text */}
-      <BoldNumber>{start}</BoldNumber>–<BoldNumber>{end}</BoldNumber>
+      <BoldNumber>{start}</BoldNumber>-<BoldNumber>{end}</BoldNumber>
       <Total>{total}</Total>
     </Cluster>
   )

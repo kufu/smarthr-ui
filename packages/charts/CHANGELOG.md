@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.3.1...smarthr-ui-charts-v0.4.0) (2026-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Charts:** チャートデータをテーブル表示切り替え機能を追加しました ([#7203](https://github.com/kufu/smarthr-ui/issues/7203))
+
+### Features
+
+* **Charts:** チャートデータをテーブル表示切り替え機能を追加しました ([#7203](https://github.com/kufu/smarthr-ui/issues/7203)) ([6fff279](https://github.com/kufu/smarthr-ui/commit/6fff279b2e43b1fd676f8a6e66346c4224cfcd1c))
+* **Charts:** 項目ごとに内訳が異なる積み上げ棒グラフのテーブル表示に対応する ([#7546](https://github.com/kufu/smarthr-ui/issues/7546)) ([5ef9bd5](https://github.com/kufu/smarthr-ui/commit/5ef9bd5362d2788e814eff96cace0d3b74dfcf3c))
+
+## [0.3.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.3.0...smarthr-ui-charts-v0.3.1) (2026-10-29)
+
+
+### Bug Fixes
+
+* **LineChart:** storiesのimport文にprettierを適用する ([#7401](https://github.com/kufu/smarthr-ui/issues/7401)) ([3ce2a43](https://github.com/kufu/smarthr-ui/commit/3ce2a43454452c646c8cd496a79367f02b0f3397))
+
+## [0.3.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.6...smarthr-ui-charts-v0.3.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008))
+
+### Bug Fixes
+
+* peerDependenciesのReactサポートを19系のみに変更する ([#7008](https://github.com/kufu/smarthr-ui/issues/7008)) ([0346ec8](https://github.com/kufu/smarthr-ui/commit/0346ec8cfe992c17a138bef8fc5aed4e63c66761))
+
+## [0.2.6](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.5...smarthr-ui-charts-v0.2.6) (2026-10-01)
+
+
+### Features
+
+* **BarChart:** StackとHorizontalの機能を追加 ([#7096](https://github.com/kufu/smarthr-ui/issues/7096)) ([b3dbd25](https://github.com/kufu/smarthr-ui/commit/b3dbd254953301e51c897b23bc5d0abe13f2eb26))
+
+## [0.2.5](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.4...smarthr-ui-charts-v0.2.5) (2026-09-17)
+
+
+### Bug Fixes
+
+* Chart をキーボードで操作したときにページがスクロールされる問題を修正 ([#7103](https://github.com/kufu/smarthr-ui/issues/7103)) ([5956417](https://github.com/kufu/smarthr-ui/commit/5956417011bcf7577dec29bfd05b68b7eb75ad76))
+
 ## [0.2.4](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.2.3...smarthr-ui-charts-v0.2.4) (2026-09-10)
 
 

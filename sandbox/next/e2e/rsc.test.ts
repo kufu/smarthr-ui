@@ -12,7 +12,6 @@ const SERVER_COMPONENTS = [
   'AppNaviDropdownMenuButton',
   'Badge',
   'Balloon',
-  'BaseColumn',
   'Chip',
   'DatetimeLocalPicker',
   'DefinitionList',
@@ -20,6 +19,7 @@ const SERVER_COMPONENTS = [
   'ErrorScreen',
   'Fieldset',
   'FloatArea',
+  'Groupbox',
   'Header',
   'HeaderDropdownMenuButton',
   'HeaderLink',
@@ -48,7 +48,6 @@ const SERVER_COMPONENTS = [
   'TimePicker',
   'UnstyledButton',
   'VisuallyHiddenText',
-  'WakuWakuButton',
 ]
 
 /**
@@ -74,10 +73,6 @@ const CLIENT_COMPONENTS: string[] = [
   'CurrencyInput',  // フォーマット変換のためのuseEffect
   'DatePicker',     // カレンダー表示のためのcreatePortal
   'Dialog',         // ダイアログ描画のためのcreatePortal
-  'DialogCloser',   // ダイアログ開閉状態管理のためのuseContext
-  'DialogContent',  // ダイアログ描画のためのcreatePortal
-  'DialogTrigger',  // ダイアログ開閉状態管理のためのuseContext
-  'DialogWrapper',  // ダイアログ開閉状態管理のためのuseState
   'Dropdown',        // 開閉状態管理のためのuseStateなど
   'DropdownCloser',  // 開閉状態管理のためのuseContext
   'DropdownContent', // 開閉状態管理のためのuseContext

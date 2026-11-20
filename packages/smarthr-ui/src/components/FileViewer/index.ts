@@ -1,1 +1,1 @@
-export { FileViewer } from './FileViewer'
+export { FileViewer } from './client'

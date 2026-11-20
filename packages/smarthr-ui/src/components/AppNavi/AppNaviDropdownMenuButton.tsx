@@ -46,12 +46,13 @@ const classNameGenerator = tv({
     ],
   },
 })
+
 const { trigger, actionItem } = classNameGenerator()
 const TRIGGER_CLASSNAME = trigger()
 
 const renderItemList = (children: ReactNode) =>
   Children.map(children, (item): ReactNode => {
-    if (!isValidElement(item)) {
+    if (!isValidElement<{ children?: ReactNode; className?: string }>(item)) {
       return null
     }
 
@@ -65,7 +66,7 @@ const renderItemList = (children: ReactNode) =>
       )
     }
 
-    return cloneElement(item as ReactElement, {
+    return cloneElement(item as ReactElement<{ className?: string }>, {
       className: actionItem({ className: item.props.className }),
     })
   })

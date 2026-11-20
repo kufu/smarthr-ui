@@ -1,5 +1,7 @@
-export { RemoteDialogTrigger } from './RemoteDialogTrigger'
-export { MessageDialog } from './MessageDialog'
-export { StepFormDialog } from './StepFormDialog'
-export { FormDialog } from './FormDialog'
-export { ActionDialog } from './ActionDialog'
+export {
+  RemoteDialogTrigger,
+  MessageDialog,
+  StepFormDialog,
+  FormDialog,
+  ActionDialog,
+} from './client'

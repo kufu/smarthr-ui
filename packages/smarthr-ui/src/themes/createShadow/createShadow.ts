@@ -1,10 +1,4 @@
-// HINT: styled-componentsがRSCに対応するのはv6.3.0以降。peerは^5.0.1のため、
-// モジュールスコープでcreateContextを呼びガードが無いバージョンが解決されうる。
-// ただしこのモジュールはcreateTheme経由でuseThemeから使われ、useThemeが'use client'を
-// 持つためサーバ側では評価されない。
-import { type FlattenSimpleInterpolation, css } from 'styled-components'
-
-import { merge } from '../../libs/lodash'
+import { merge } from '../../libs/merge'
 import { type ColorProperty, defaultColor } from '../createColor'
 
 import { defaultShadow } from './defaultShadow'
@@ -29,19 +23,17 @@ export type CreatedShadowTheme = {
   OUTLINE: string
   OUTLINE_MARGIN: string
   UNDERLINE: string
-  focusIndicatorStyles: FlattenSimpleInterpolation
+  focusIndicatorStyles: string
 }
 
 const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
 
 // 将来的になんらか別のデザイントークンに移行したい
-const createFocusIndicatorStyles = (outlineColor: string) => css`
-  /* stylelint-disable no-invalid-position-declaration */
+const createFocusIndicatorStyles = (outlineColor: string) => `
   isolation: isolate;
   box-shadow: 0 0 0 2px white;
   outline: 2px solid ${outlineColor};
   outline-offset: 2px;
-  /* stylelint-enable no-invalid-position-declaration */
 `
 
 export const createShadow = (

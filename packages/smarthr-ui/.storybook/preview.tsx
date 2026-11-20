@@ -7,18 +7,19 @@ import {
   Title,
 } from '@storybook/addon-docs/blocks'
 import { useEffect } from 'react'
-import ReactGA from 'react-ga4'
+import { ReactGAImplementation } from 'react-ga4'
 import { INITIAL_VIEWPORTS } from 'storybook/viewport'
 import resolveConfig from 'tailwindcss/resolveConfig'
 
 // tv() が shr- プレフィックスを認識するために必要。
 // パッケージ利用側では package.json の sideEffects 宣言により index.js 経由で自動実行されるが、
 // プロジェクト内の Storybook はソース（../src）を直接参照するため sideEffects が適用されず、
-// build-storybook（Rollup）の tree-shaking で除去されてしまう。
+// build-storybook（Rolldown）の tree-shaking で除去されてしまう。
 // eslint-disable-next-line smarthr/require-barrel-import
 import '../src/configureTwMerge'
+import './tailwind.css'
 // eslint-disable-next-line smarthr/require-barrel-import
-import '../src/styles/index.css'
+import '../../rich-text-editor/src/styles/index.css'
 import { EnvironmentProvider, IntlProvider, locales } from '../src'
 // eslint-disable-next-line smarthr/require-barrel-import
 import presetConfig from '../src/smarthr-ui-preset'
@@ -29,6 +30,10 @@ const { backgroundColor } = resolveConfig(presetConfig).theme
 
 const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 
+// default importだとVite 8（Rolldown）のCJS interopの変更により
+// ReactGAImplementationインスタンスではなくモジュール全体が渡ってしまうため、named importを使う
+const ReactGA = new ReactGAImplementation()
+
 if (isProduction) {
   ReactGA.initialize('G-65N1S3NF5R')
 }
@@ -38,7 +43,7 @@ const preview: Preview = {
     options: {
       storySort: {
         method: 'alphabetical',
-        order: ['*', 'Charts'],
+        order: ['Components', 'Editor', '*', 'Charts'],
       },
     },
     viewport: {
@@ -108,6 +113,12 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const locale = context.globals?.locale
+
+      useEffect(() => {
+        // やさしい日本語に対応するBCP 47の言語タグは無いため、jaとして扱う
+        document.documentElement.lang = locale === 'ja-easy' ? 'ja' : locale
+      }, [locale])
+
       return (
         <IntlProvider locale={locale}>
           <EnvironmentProvider>

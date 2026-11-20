@@ -24,13 +24,14 @@ export default {
   render: (args) => <SegmentedControl {...args} />,
   args: {
     options: [
-      { value: 'departments', content: '部署' },
-      { value: 'crew', content: '従業員' },
-      { value: 'both', content: '部署と従業員' },
+      { value: 'departments', content: '部署', ariaLabel: '部署' },
+      { value: 'crew', content: '従業員', ariaLabel: '従業員' },
+      { value: 'both', content: '部署と従業員', ariaLabel: '部署と従業員' },
     ],
     value: 'departments',
     onClickOption: (value) => action('onClickOption')(value),
     size: 'M',
+    ariaLabel: '',
     className: '',
   },
   parameters: {
@@ -93,8 +94,17 @@ export const Size: StoryObj<typeof SegmentedControl> = {
   name: 'size',
   render: (args) => (
     <Stack>
+      {/* eslint-disable-next-line smarthr/best-practice-for-default-props -- storyの意図として明示する必要がある */}
       <SegmentedControl {...args} size="M" />
       <SegmentedControl {...args} size="S" />
     </Stack>
   ),
+}
+
+export const DefaultValue: StoryObj<typeof SegmentedControl> = {
+  name: 'defaultValue',
+  args: {
+    value: undefined,
+    defaultValue: 'crew',
+  },
 }

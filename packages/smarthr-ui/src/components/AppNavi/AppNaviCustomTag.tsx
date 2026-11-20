@@ -1,9 +1,17 @@
-import { type ComponentType, type FC, type PropsWithChildren, useMemo } from 'react'
+import {
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type FC,
+  type PropsWithChildren,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { itemClassNameGenerator } from './itemClassNameGenerator'
 
-import type { ComponentProps as IconProps } from '../Icon'
+import type { generateIcon } from '../Icon'
+
+type IconProps = ComponentPropsWithRef<ReturnType<typeof generateIcon>>
 
 export type AppNaviCustomTagProps = PropsWithChildren<{
   /** このボタンのカスタムタグ */
@@ -29,11 +37,12 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   ...rest
 }) => {
   const classNames = useMemo(() => {
-    const { wrapper, icon } = classNameGenerator({ active: current })
+    const { wrapper, icon } = classNameGenerator()
+    const variantProps = { active: current }
 
     return {
-      wrapper: wrapper(),
-      icon: icon(),
+      wrapper: wrapper(variantProps),
+      icon: icon(variantProps),
     }
   }, [current])
 

@@ -1,10 +1,4 @@
-import {
-  type ChangeEvent,
-  type ComponentProps,
-  type FC,
-  type KeyboardEventHandler,
-  useMemo,
-} from 'react'
+import { type ChangeEvent, type FC, type KeyboardEventHandler, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { useLatest } from '../../hooks/useLatest'
@@ -12,6 +6,8 @@ import { useLatest } from '../../hooks/useLatest'
 import { BrowserColumn } from './BrowserColumn'
 import { ItemNode, type ItemNodeLike, RootNode } from './models'
 import { getElementIdFromNode } from './utils'
+
+import type { ExtendElementPropsWithRef } from '../../types'
 
 const classNameGenerator = tv({
   slots: {
@@ -30,17 +26,20 @@ const classNameGenerator = tv({
   },
 })
 
-type BaseProps = {
-  /** 表示する item の配列 */
-  items: ItemNodeLike[]
-  /** 選択中の item の値 */
-  value?: string
-  /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
-  onSelectItem?: (value: string) => void
-}
-type Props = BaseProps & Omit<ComponentProps<'div'>, keyof BaseProps>
+type Props = ExtendElementPropsWithRef<
+  'div',
+  {
+    /** 表示する item の配列 */
+    items: ItemNodeLike[]
+    /** 選択中の item の値 */
+    value?: string
+    /** 選択された際に呼び出されるコールバック。第一引数に item の value を取る。 */
+    onSelectItem?: (value: string) => void
+  }
+>
 
 export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...rest }) => {
+  // eslint-disable-next-line smarthr/best-practice-for-unstable-dependencies
   const rootNode = useMemo(() => RootNode.from({ children: items }), [items])
   const columns = useMemo(() => rootNode.toViewData(value), [rootNode, value])
 
@@ -62,7 +61,7 @@ export const Browser: FC<Props> = ({ value, items, onSelectItem, className, ...r
   }, [rootNode, value])
 
   const latest = useLatest({ onSelectItem, value, rootNode })
-  const hasOnSelectItem = !!onSelectItem
+  const hasOnSelectItem = Boolean(onSelectItem)
 
   const functions = useMemo(() => {
     // FIXME: focusメソッドのfocusVisibleが主要ブラウザでサポートされたら使うようにしたい(現状ではマウスクリックでもfocusのoutlineが出てしまう)

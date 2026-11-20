@@ -59,7 +59,13 @@ export const VRT = {
     const { length, [length - 1]: last } = await canvas.findAllByRole('button', {
       name: /基本機能/,
     })
-    userEvent.click(last)
+    await userEvent.click(last)
+
+    // DropdownContentはrequestAnimationFrame経由でフォーカスを当てるため、
+    // スナップショット撮影前にその発火を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
 } satisfies Meta<typeof Header>
 

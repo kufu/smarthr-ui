@@ -1,3 +1,5 @@
+'use client' // eslint-disable-line local-rules/require-client
+
 import { type FC, memo, useMemo, useState } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -8,7 +10,6 @@ import { Dropdown, DropdownContent, DropdownTrigger } from '../../../Dropdown'
 import { FaGearIcon, FaGlobeIcon, FaUserLargeIcon } from '../../../Icon'
 import { buildDisplayName } from '../../utils'
 import { CommonButton } from '../common/CommonButton'
-import { Translate } from '../common/Translate'
 
 import { LanguageSelector } from './LanguageSelector'
 
@@ -118,9 +119,7 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
                   rel="noopener noreferrer"
                   prefix={<FaGearIcon />}
                 >
-                  <Translate>
-                    <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
-                  </Translate>
+                  <Localizer id="smarthr-ui/AppHeader/userSettings" defaultText="個人設定" />
                 </CommonButton>
               )}
             </div>
@@ -129,7 +128,13 @@ const ActualUserInfo: FC<Pick<Props, 'accountUrl' | 'locale'> & { displayName: s
       </Dropdown>
 
       {locale && (
-        <Dialog isOpen={languageDialogOpen} width={246} onClickOverlay={functions.dialogClose}>
+        // HINT: widthが非推奨になったため、className直指定に変更。246pxは既存のsize(XS=col3=424px〜)
+        // のいずれにも該当しないため丸められない。デザイン上妥当であればsize="XS"への統一を検討する
+        <Dialog
+          isOpen={languageDialogOpen}
+          className="shr-w-[246px]"
+          onClickOverlay={functions.dialogClose}
+        >
           <LanguageSelector locale={locale} onClickClose={functions.dialogClose} />
         </Dialog>
       )}

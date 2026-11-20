@@ -1,1 +1,0 @@
-export { RadarChart } from './RadarChart'

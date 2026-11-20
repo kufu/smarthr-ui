@@ -3,7 +3,7 @@
 import { action } from 'storybook/actions'
 
 import type { AppHeader } from '../AppHeader'
-import type { ComponentProps, FC, PropsWithChildren } from 'react'
+import type { ComponentPropsWithoutRef, FC, PropsWithChildren } from 'react'
 
 const CustomLink: FC<PropsWithChildren<{ to: string; className?: string }>> = ({
   to,
@@ -28,7 +28,7 @@ const buildFeature = (index: number, name: string, favorite: boolean, position?:
   position: position ?? null,
 })
 
-export const args: ComponentProps<typeof AppHeader> = {
+export const args: ComponentPropsWithoutRef<typeof AppHeader> = {
   children: <AdditionalContent>children</AdditionalContent>,
   appName: '勤怠管理',
   tenants: [

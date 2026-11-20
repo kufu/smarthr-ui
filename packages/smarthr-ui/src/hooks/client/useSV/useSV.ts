@@ -41,7 +41,7 @@ export const useSV = <T extends Omit<Parameters<typeof tv>[0], 'base'>>(
 ): SVReturnType<T> => {
   const environment = useEnvironment()
 
-  const applyTV = useMemo(() => {
+  const classNameGenerator = useMemo(() => {
     const config = f(environment)
 
     // config.base がオブジェクトの場合は slots として扱う
@@ -56,7 +56,8 @@ export const useSV = <T extends Omit<Parameters<typeof tv>[0], 'base'>>(
     return tv(config)
   }, [f, environment])
 
-  const classNames = applyTV(props)
+  // eslint-disable-next-line smarthr/best-practice-for-tailwind-variants -- propsがanyでunstableな値になるためuseMemoはしない
+  const classNames = classNameGenerator(props)
 
   if (typeof classNames === 'object' && classNames !== null && !Array.isArray(classNames)) {
     const ret: Record<string, string> = {}

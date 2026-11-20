@@ -1,8 +1,11 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
+import { Table, Td, Th } from '../../Table'
+import { TextLink } from '../../TextLink'
 import { Text } from '../Text'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ElementType } from 'react'
 
 const asOptions = { なし: undefined, '<p>': 'p', '<h1>': 'h1' }
 
@@ -21,7 +24,7 @@ export default {
     children: 'well-working 労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる',
     italic: false,
     emphasis: false,
-    as: 'なし',
+    as: 'なし' as unknown as ElementType,
   },
   parameters: {
     chromatic: { disableSnapshot: true },
@@ -182,6 +185,7 @@ export const IconGap: StoryObj<typeof Text> = {
   name: 'icon.gap',
   render: (args) => (
     <Stack>
+      {/* eslint-disable-next-line smarthr/best-practice-for-object-props -- icon.gapのバリエーション比較の一貫性のため */}
       <Text {...args} icon={{ prefix: <FaAddressBookIcon /> }}>
         default 0.25
       </Text>
@@ -208,7 +212,7 @@ export const MaxLines: StoryObj<typeof Text> = {
   name: 'maxLines',
   render: ({ children, ...rest }) => (
     <Stack>
-      {[undefined, 1, 2, 3, 4, 5, 6].map((maxLines) => (
+      {([undefined, 1, 2, 3, 4, 5, 6] as const).map((maxLines) => (
         <div key={maxLines}>
           <b>maxLines: {maxLines || '未指定'}</b>
           <br />
@@ -227,5 +231,66 @@ export const MaxLines: StoryObj<typeof Text> = {
         </div>
       ))}
     </Stack>
+  ),
+}
+
+export const MaxLinesTooltip: StoryObj<typeof Text> = {
+  name: 'maxLines(tooltip)',
+  render: ({ children, ...rest }) => (
+    <Stack>
+      {[1, 2, 3].map((max) => (
+        <div key={max} style={{ width: '20em' }}>
+          <b>max: {max}</b>
+          <br />
+          <Text {...rest} maxLines={{ max: max as 1 | 2 | 3, tooltip: true }}>
+            {children}
+            {children}
+            {children}
+          </Text>
+        </div>
+      ))}
+    </Stack>
+  ),
+}
+
+export const MaxLinesInTextLink: StoryObj<typeof Text> = {
+  name: 'maxLines=1 in TextLink',
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
+  render: ({ children }) => (
+    <div className="shr-max-w-[40em]">
+      <Table layout="fixed">
+        <thead>
+          <tr>
+            <Th scope="col" contentWidth="8em">
+              文章の長さ
+            </Th>
+            <Th scope="col">Tooltip なし</Th>
+            <Th scope="col">Tooltip あり</Th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { label: '短い', text: '短い文章' },
+            { label: '長い', text: children },
+          ].map(({ label, text }) => (
+            <tr key={label}>
+              <Th scope="row">{label}</Th>
+              <Td>
+                <TextLink href="https://example.com/" target="_blank">
+                  <Text maxLines={1}>{text}</Text>
+                </TextLink>
+              </Td>
+              <Td>
+                <TextLink href="https://example.com/" target="_blank">
+                  <Text maxLines={{ max: 1, tooltip: true }}>{text}</Text>
+                </TextLink>
+              </Td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </div>
   ),
 }

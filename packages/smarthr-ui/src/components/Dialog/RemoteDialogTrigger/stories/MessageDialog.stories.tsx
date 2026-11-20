@@ -1,6 +1,5 @@
 import { Button } from '../../../Button'
-import { MessageDialog } from '../MessageDialog'
-import { RemoteDialogTrigger } from '../RemoteDialogTrigger'
+import { MessageDialog, RemoteDialogTrigger } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

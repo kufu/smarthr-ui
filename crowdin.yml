@@ -48,6 +48,30 @@ files:
         zh-CN: zh_hans_cn
         zh-TW: zh_hant_tw
 
+  # RichTextEditor は別パッケージのため辞書も分かれている
+  # 参照：packages/rich-text-editor/src/intl/locales/
+  - source: packages/rich-text-editor/src/intl/locales/ja.json
+
+    translation: packages/rich-text-editor/src/intl/locales/%locale%.json
+
+    # 本体の dest（ja.json）と衝突しないよう別階層にする
+    dest: rich-text-editor/ja.json
+
+    skip_untranslated_strings: 1
+
+    export_only_approved: 1
+
+    languages_mapping:
+      locale:
+        en-US: en_us
+        id: id_id
+        ja-easy: ja_easy
+        ko: ko_kr
+        pt-BR: pt_br
+        vi: vi_vn
+        zh-CN: zh_hans_cn
+        zh-TW: zh_hant_tw
+
   # chartsパッケージは独自の辞書を持つため、別ファイルとして登録する
   - source: packages/charts/src/intl/locales/ja.json
 
@@ -60,7 +84,6 @@ files:
 
     export_only_approved: 1
 
-    # languages_mappingはfilesのエントリごとに指定する必要がある
     languages_mapping:
       locale:
         en-US: en_us

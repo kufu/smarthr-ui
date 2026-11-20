@@ -52,8 +52,6 @@ export const DisabledReason: StoryObj<typeof TabItem> = {
   name: 'disabledReason',
   args: {
     disabled: true,
-    disabledReason: {
-      message: '無効な理由',
-    },
+    disabledReason: '無効な理由',
   },
 }

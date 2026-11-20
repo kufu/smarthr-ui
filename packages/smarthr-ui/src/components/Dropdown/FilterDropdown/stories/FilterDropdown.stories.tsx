@@ -70,10 +70,10 @@ export const Filtered: StoryObj<typeof FilterDropdown> = {
   },
 }
 export const FilteredIconAlt: StoryObj<typeof FilterDropdown> = {
-  name: 'filtered.iconAlt',
+  name: 'filtered.alt',
   args: {
     filtered: {
-      iconAlt: 'icon alt',
+      alt: 'icon alt',
     },
   },
 }

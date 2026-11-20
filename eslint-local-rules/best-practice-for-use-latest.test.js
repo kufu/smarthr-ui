@@ -19,9 +19,15 @@ const ruleTester = new RuleTester({
 
 ruleTester.run('best-practice-for-use-latest', rule, {
   valid: [
-    // 正しい変数名
+    // 正しい変数名(プロパティが使われている)
     {
-      code: 'const latest = useLatest({ onChange, value })',
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          latest.onChange()
+          latest.value
+        }, [latest])
+      `,
     },
 
     // 依存配列にlatest自体を最後尾に配置
@@ -49,6 +55,16 @@ ruleTester.run('best-practice-for-use-latest', rule, {
       code: `
         const latest = useLatest({ onChange })
         useEffect(() => {
+          latest.onChange()
+        }, [someValue, latest])
+      `,
+    },
+
+    // useLayoutEffectRef - 依存配列にlatestと他の依存（OK）
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const layoutEffectRef = useLayoutEffectRef((node) => {
           latest.onChange()
         }, [someValue, latest])
       `,
@@ -139,6 +155,175 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [count, latest])
       `,
     },
+
+    // フック直下でlatest.xxxを関数でラップしている（OK）
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          handleClick: () => latest.onClick(),
+        }), [latest])
+      `,
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果を関数でラップしている（OK）
+    {
+      code: `
+        const latest = useLatest({ getHandlers })
+        useEffect(() => {
+          const run = () => {
+            const { onRun } = latest.getHandlers()
+            onRun()
+          }
+          run()
+        }, [latest])
+      `,
+    },
+
+    // ネストしたローカル関数の中でlatest.xxxを変数に代入（OK、呼ばれるたびに再評価される）
+    {
+      code: `
+        const latest = useLatest({ value })
+        useEffect(() => {
+          const evaluate = () => {
+            const current = latest.value
+            if (!current) return
+          }
+          evaluate()
+        }, [latest])
+      `,
+    },
+
+    // ネストしたローカル関数がFunctionDeclaration(function宣言)の場合もOK
+    // (evaluate内のreturnは外側のuseEffectの戻り値ではない)
+    {
+      code: `
+        const latest = useLatest({ value })
+        useEffect(() => {
+          function evaluate() {
+            const current = latest.value
+            return current
+          }
+          evaluate()
+        }, [latest])
+      `,
+    },
+
+    // フック直下でもlatest.xxxRef.currentはRefObjectのcurrent参照と名前から自明なため対象外（OK）
+    {
+      code: `
+        const latest = useLatest({ containerRef })
+        useEffect(() => {
+          const container = latest.containerRef.current
+          if (!container) return
+        }, [latest])
+      `,
+    },
+
+    // latest自体をオブジェクトプロパティの値としてアロー関数内で参照（OK、代入ではない）
+    {
+      code: `
+        const latest = useLatest({ onClick, hasValue })
+        const functions = useMemo(() => ({
+          handleClick: () => (latest.hasValue ? latest.onClick() : undefined),
+        }), [latest])
+      `,
+    },
+
+    // useCallbackのコールバック直下での代入はOK(呼ばれるたびに本体が再評価されるため)
+    {
+      code: `
+        const latest = useLatest({ addDisclosureChangeListener })
+        const callbackRef = useCallback((node) => {
+          const remove = latest.addDisclosureChangeListener()
+        }, [latest])
+      `,
+    },
+
+    // useCallback直下でMemberExpressionをそのまま代入してもOK
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        const handleClick = useCallback(() => {
+          const onSelect = latest.listBoxFunctions.handleSelect
+          onSelect()
+        }, [latest])
+      `,
+    },
+
+    // const { xxxx } = latest のような分割代入でプロパティを受け取った場合もOK
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const { onChange, value } = latest
+          onChange(value)
+        }, [latest])
+      `,
+    },
+
+    // 分割代入でrest要素(...rest)を使っている場合は、どのキーが使われるか静的に
+    // 追跡できないため安全側に倒し、未使用警告を出さない
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const { ...rest } = latest
+          doSomething(rest)
+        }, [latest])
+      `,
+    },
+
+    // フック直下で代入しても、同じスコープ内でその場の計算にのみ使われていればOK
+    // (ネストした関数にも、returnの戻り値にも渡されていない)
+    {
+      code: `
+        const latest = useLatest({ defaultPosition, top })
+        useLayoutEffectRef((node) => {
+          if (node) {
+            const oldDefaultPosition = latest.defaultPosition
+            const nextDefaultPosition =
+              oldDefaultPosition.top === latest.top ? oldDefaultPosition : { top: latest.top }
+            setDefaultPosition(nextDefaultPosition)
+          }
+        }, [latest])
+      `,
+    },
+
+    // フック直下で代入した値を、計算式に使って新しい値を作りsetStateに渡すのはOK
+    {
+      code: `
+        const latest = useLatest({ getSafeAreaInsets })
+        useLayoutEffectRef((node) => {
+          const safeAreaInsets = latest.getSafeAreaInsets()
+          const safeHeight = window.innerHeight - safeAreaInsets.top
+          setHeight(safeHeight)
+        }, [latest])
+      `,
+    },
+
+    // useLatestの引数に算出プロパティ名(computed property)が含まれる場合は
+    // 静的に追跡できないため安全側に倒してチェックをスキップする(未使用警告を出さない)
+    {
+      code: `
+        const latest = useLatest({ [key]: value, onChange })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+    },
+
+    // 分割代入が算出プロパティ(const { [key]: x } = latest)の場合は
+    // どのキーが使われるか静的に追跡できないため安全側に倒す(未使用警告を出さない)
+    {
+      code: `
+        const latest = useLatest({ value, onChange })
+        useEffect(() => {
+          const { [key]: selected } = latest
+          onChange(selected)
+        }, [latest])
+      `,
+    },
   ],
 
   invalid: [
@@ -225,7 +410,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const ref = latest
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [{ messageId: 'unusedProperty' }, { messageId: 'noLatestItself' }],
     },
 
     // latest自体を関数に渡す（フック内）
@@ -236,7 +421,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           doSomething(latest)
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [{ messageId: 'unusedProperty' }, { messageId: 'noLatestItself' }],
     },
 
     // latest自体を配列に含める（フック内）
@@ -247,7 +432,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const refs = [latest]
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [{ messageId: 'unusedProperty' }, { messageId: 'noLatestItself' }],
     },
 
     // latest自体をオブジェクトに含める（フック内）
@@ -258,7 +443,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const obj = { ref: latest }
         }, [latest])
       `,
-      errors: [{ messageId: 'noLatestItself' }],
+      errors: [{ messageId: 'unusedProperty' }, { messageId: 'noLatestItself' }],
     },
 
     // 依存配列にプロパティアクセスを含める
@@ -313,7 +498,11 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const obj = { ...latest }
         }, [latest])
       `,
-      errors: [{ messageId: 'noSpread' }],
+      errors: [
+        { messageId: 'unusedProperty' },
+        { messageId: 'unusedProperty' },
+        { messageId: 'noSpread' },
+      ],
     },
 
     // スプレッド構文の使用（配列）
@@ -324,7 +513,11 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           const arr = [...latest]
         }, [latest])
       `,
-      errors: [{ messageId: 'noSpread' }],
+      errors: [
+        { messageId: 'unusedProperty' },
+        { messageId: 'unusedProperty' },
+        { messageId: 'noSpread' },
+      ],
     },
 
     // in演算子の使用
@@ -337,7 +530,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           }
         }, [latest])
       `,
-      errors: [{ messageId: 'noInOperator' }],
+      errors: [{ messageId: 'unusedProperty' }, { messageId: 'noInOperator' }],
     },
 
     // Object.keysの使用
@@ -349,6 +542,8 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -363,6 +558,8 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -377,6 +574,8 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -391,6 +590,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -405,6 +605,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -419,6 +620,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -433,6 +635,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -447,6 +650,7 @@ ruleTester.run('best-practice-for-use-latest', rule, {
         }, [latest])
       `,
       errors: [
+        { messageId: 'unusedProperty' },
         { messageId: 'noObjectMethods' },
         { messageId: 'noLatestItself' },
       ],
@@ -462,7 +666,156 @@ ruleTester.run('best-practice-for-use-latest', rule, {
           }
         }, [latest])
       `,
-      errors: [{ messageId: 'noForIn' }],
+      errors: [
+        { messageId: 'unusedProperty' },
+        { messageId: 'unusedProperty' },
+        { messageId: 'noForIn' },
+      ],
+    },
+
+    // フック直下でlatest.xxxを変数にそのまま代入(MemberExpression)
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        const functions = useMemo(() => {
+          const handleDelete = latest.listBoxFunctions.handleDelete
+          return { handleDelete }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx.yyyを変数に代入し、ネストしたローカル関数(後で呼ばれる)の中で使う
+    {
+      code: `
+        const latest = useLatest({ listBoxFunctions })
+        useEffect(() => {
+          const onSelect = latest.listBoxFunctions.handleSelect
+          const handler = () => onSelect()
+          document.addEventListener('click', handler)
+          return () => document.removeEventListener('click', handler)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // ネストしたローカル関数がFunctionDeclaration(function宣言)の場合も検知する
+    {
+      code: `
+        const latest = useLatest({ onSelect })
+        useEffect(() => {
+          const onSelect = latest.onSelect
+          function handler() {
+            onSelect()
+          }
+          document.addEventListener('click', handler)
+          return () => document.removeEventListener('click', handler)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // フック直下でlatest.xxx()の呼び出し結果をそのまま分割代入(分割代入は常に保守的にエラー)
+    {
+      code: `
+        const latest = useLatest({ getVideoHandlers })
+        useEffect(() => {
+          const { loadVideos } = latest.getVideoHandlers()
+          loadVideos()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // useLayoutEffectRefでも同様に検知する(returnの戻り値としてそのまま公開される)
+    {
+      code: `
+        const latest = useLatest({ onChange })
+        const layoutEffectRef = useLayoutEffectRef((node) => {
+          const onChange = latest.onChange
+          return { onChange }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxxを公開している
+    {
+      code: `
+        const latest = useLatest({ onXxxx })
+        const functions = useMemo(() => {
+          return { onXxxx: latest.onXxxx }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 変数を経由せず、戻り値オブジェクトのプロパティとして直接latest.xxx()の呼び出し結果を公開している
+    {
+      code: `
+        const latest = useLatest({ getHandlers })
+        useEffect(() => {
+          return { onRun: latest.getHandlers() }
+        }, [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 暗黙return(アロー関数の()=>({...})形式)でも同様に検知する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          onClick: latest.onClick,
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // 計算プロパティ名(computed property)でも同様に検知する
+    {
+      code: `
+        const latest = useLatest({ onClick })
+        const functions = useMemo(() => ({
+          ['onClick']: latest.onClick,
+        }), [latest])
+      `,
+      errors: [{ messageId: 'noEagerCapture' }],
+    },
+
+    // useLatestに渡したプロパティがどこからも使われていない
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          latest.onChange()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'unusedProperty', data: { name: 'value' } }],
+    },
+
+    // 分割代入で一部のプロパティのみ受け取り、残りが未使用
+    {
+      code: `
+        const latest = useLatest({ onChange, value })
+        useEffect(() => {
+          const { onChange } = latest
+          onChange()
+        }, [latest])
+      `,
+      errors: [{ messageId: 'unusedProperty', data: { name: 'value' } }],
+    },
+
+    // 分割代入の文字列リテラルキー(非computed)も使用済みとして扱う
+    {
+      code: `
+        const latest = useLatest({ value, onChange })
+        useEffect(() => {
+          const { 'value': selected } = latest
+          onChange(selected)
+        }, [latest])
+      `,
+      errors: [{ messageId: 'unusedProperty', data: { name: 'onChange' } }],
     },
   ],
 })

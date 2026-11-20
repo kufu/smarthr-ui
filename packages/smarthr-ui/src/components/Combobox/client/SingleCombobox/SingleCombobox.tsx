@@ -1,0 +1,598 @@
+'use client'
+
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  type RefObject,
+  memo,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { tv } from 'tailwind-variants'
+
+import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
+import { useAreaClickCallbackRef } from '../../../../hooks/client/useAreaClickCallbackRef'
+import { useLayoutEffectRef } from '../../../../hooks/client/useLayoutEffectRef'
+import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
+import { useTheme } from '../../../../hooks/client/useTheme'
+import { useLatest } from '../../../../hooks/useLatest'
+import { Localizer, useLocalize } from '../../../../intl'
+import { UnstyledButton } from '../../../Button'
+import { FaCaretDownIcon, FaCircleXmarkIcon } from '../../../Icon'
+import { Input } from '../../../Input'
+import { areItemsEqual, getSelectedLabelText } from '../helper'
+import { ListBox, useListbox } from '../useListbox'
+import { useSingleOptions } from '../useOptions'
+
+import type { ExtendElementPropsWithRef } from '../../../../types'
+import type { BaseProps, ComboboxItem } from '../types'
+
+type Props<T> = ExtendElementPropsWithRef<
+  'input',
+  BaseProps<T> & {
+    /**
+     * 選択されているアイテム
+     */
+    selectedItem?: ComboboxItem<T> | null
+    /**
+     * 非制御(uncontrolled)コンポーネントとして使う場合の初期値。`selectedItem` を指定した場合は無視される
+     */
+    defaultSelectedItem?: ComboboxItem<T>
+    /**
+     * フォーカスが外れた際、selectedItemが未選択の場合に自動選択されるアイテム
+     */
+    emptySelectionFallbackItem?: ComboboxItem<T>
+    /**
+     * コンポーネント内の先頭に表示する内容
+     */
+    prefix?: ReactNode
+    /**
+     * 選択されているアイテムがクリアされた時に発火するコールバック関数
+     */
+    onClear?: () => void
+    /**
+     * 選択されているアイテムがクリアされた時に発火するコールバック関数
+     * 指定している場合、クリア時にonClickを実行せずにonClearClickのみ実行する
+     */
+    onClearClick?: (e: MouseEvent) => void
+    /**
+     * 選択されているアイテムのリストが変わった時に発火するコールバック関数
+     */
+    onChangeSelected?: (selectedItem: ComboboxItem<T> | null) => void
+    /**
+     * コンポーネントがフォーカスされたときに発火するコールバック関数
+     */
+    onFocus?: () => void
+    /**
+     * コンポーネントからフォーカスが外れた時に発火するコールバック関数
+     */
+    onBlur?: () => void
+    /**
+     * 検索結果が0件の時に表示するコンテンツ
+     */
+    noResultText?: ReactNode
+  },
+  { omit: 'children' | 'onChange' }
+>
+
+const ESCAPE_KEY_REGEX = /^Esc(ape)?$/
+const ARROW_UP_DOWN_REGEX = /^(Arrow)?(Up|Down)$/
+
+const EMPTY_INPUT_CHANGE_EVENT = {
+  currentTarget: { value: '' },
+  target: { value: '' },
+} as ChangeEvent<HTMLInputElement>
+
+const classNameGenerator = tv({
+  slots: {
+    wrapper:
+      'smarthr-ui-SingleCombobox shr-inline-block [&:has(.smarthr-ui-Input-input:disabled)]:shr-cursor-not-allowed',
+    input: 'smarthr-ui-SingleCombobox-input shr-w-full',
+    caretDownLayout: [
+      'shr-relative -shr-me-0.5 shr-p-0.5',
+      'before:shr-border-0',
+      'before:shr-absolute before:shr-inset-x-0 before:shr-inset-y-0.25 before:shr-w-0 before:shr-border-l before:shr-border-solid before:shr-border-default before:shr-content-[""]',
+    ],
+    caretDownIcon: 'shr-block',
+    clearButton: [
+      'smarthr-ui-SingleCombobox-clearButton',
+      'shr-group/clearButton',
+      'shr-me-0.5',
+      'focus-visible:shr-shadow-none',
+      '[[data-clear-button-hidden=true]_&]:shr-hidden',
+    ],
+    clearButtonIcon: [
+      'shr-block',
+      'group-focus-visible/clearButton:shr-focus-indicator group-focus-visible/clearButton:shr-rounded-full',
+    ],
+  },
+})
+
+type SuffixButtonsProps = {
+  clearButtonRef: RefObject<HTMLButtonElement | null>
+  caretIconColor: string
+  handleClickClear: (e: MouseEvent) => void
+  handleClickIcon: (e: MouseEvent) => void
+  classNames: {
+    clearButton: string
+    clearButtonIcon: string
+    caretDownLayout: string
+    caretDownIcon: string
+  }
+}
+
+const SuffixButtons = memo<SuffixButtonsProps>(
+  ({
+    clearButtonRef,
+    caretIconColor,
+    handleClickClear,
+    handleClickIcon: handleDelegateClickIcon,
+    classNames,
+  }) => (
+    <>
+      <UnstyledButton
+        ref={clearButtonRef}
+        className={classNames.clearButton}
+        onClick={handleClickClear}
+      >
+        <FaCircleXmarkIcon
+          alt={
+            <Localizer id="smarthr-ui/SingleCombobox/destroyButtonIconAlt" defaultText="クリア" />
+          }
+          color="TEXT_BLACK"
+          className={classNames.clearButtonIcon}
+        />
+      </UnstyledButton>
+      <span
+        role="presentation"
+        className={classNames.caretDownLayout}
+        onClick={handleDelegateClickIcon}
+      >
+        <FaCaretDownIcon color={caretIconColor} className={classNames.caretDownIcon} />
+      </span>
+    </>
+  ),
+)
+
+export const SingleCombobox = <T,>({
+  items,
+  selectedItem,
+  defaultSelectedItem,
+  emptySelectionFallbackItem,
+  name,
+  disabled,
+  readOnly,
+  required,
+  prefix,
+  error,
+  creatable,
+  autoComplete,
+  dropdownHelpMessage,
+  isLoading,
+  disableFiltering,
+  width,
+  dropdownWidth = 'auto',
+  className,
+  title,
+  onChangeInput,
+  onAdd,
+  onSelect,
+  onClear,
+  onClearClick,
+  onChangeSelected,
+  onFocus,
+  onBlur,
+  onKeyPress,
+  noResultText,
+  style,
+  ref,
+  form,
+  ...rest
+}: Props<T>) => {
+  const theme = useTheme()
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const clearButtonRef = useRef<HTMLButtonElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isComposing, setIsComposing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+
+  const [inputValue, setInputValue] = useState('')
+  // inputValueはユーザーの手入力値も兼ねるため、prevSelectedItemLabelTextの代わりにinputValueと比較すると、
+  // 手入力中に selectedItemLabelText（不変）との不一致を検知して選択中アイテムのラベルへ強制的に戻ってしまう
+  const [prevSelectedItemLabelText, setPrevSelectedItemLabelText] = useState('')
+  const [uncontrolledSelectedItem, setUncontrolledSelectedItem] = useState<ComboboxItem<T> | null>(
+    defaultSelectedItem ?? null,
+  )
+
+  const isSelectedItemControlled = selectedItem !== undefined
+  const actualSelectedItem = isSelectedItemControlled ? selectedItem : uncontrolledSelectedItem
+
+  const selectedItemLabelText = actualSelectedItem ? getSelectedLabelText(actualSelectedItem) : ''
+
+  if (selectedItemLabelText !== prevSelectedItemLabelText) {
+    setPrevSelectedItemLabelText(selectedItemLabelText)
+    setInputValue(selectedItemLabelText)
+    // inputValueを選択中アイテムのラベルで上書きした場合、それは手入力値ではないため絞り込みには使わない
+    setIsEditing(false)
+  }
+
+  const { options } = useSingleOptions({
+    items,
+    selected: actualSelectedItem,
+    creatable,
+    inputValue,
+    disableFiltering: disableFiltering || !isEditing,
+  })
+
+  const selectFrame = useAnimationFrame()
+  const resetFrame = useAnimationFrame()
+
+  const { listBoxProps, activeOption, cleanupAddFrame, handleKeyDownListBox, listBoxId } =
+    useListbox<T>({
+      options,
+      dropdownHelpMessage,
+      dropdownWidth,
+      onAdd,
+      // HINT: memo化していないが、内部でuseLatestでstableにしているため最適化としてそのまま渡している
+      onSelect: (selected: ComboboxItem<T>) => {
+        if (!isSelectedItemControlled) {
+          setUncontrolledSelectedItem(selected)
+        }
+
+        onSelect?.(selected)
+        onChangeSelected?.(selected)
+
+        // HINT: Dropdown系コンポーネント内でComboboxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // 処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        selectFrame.request(() => {
+          setIsExpanded(false)
+          // HINT:
+          // - 制御コンポーネントの場合に親側でinputValueを更新できるように、選択時にonChangeInputを空文字で発火する
+          // - 対応するdropdownを閉じて以降にonChangeInputを発火する必要がある
+          //   - 先にclearしてしまうと意図せずこの要素のドロップダウンを閉じる前に他要素の再レンダリングを引き起こす可能性がある
+          //   - 例えばFilterDropdownなどで当comboboxを使っている場合、レイアウト上comboboxのdropdown以下の要素がクリックされた扱いになってしまい
+          //     FilterDropdownを意図せず閉じてしまうなどの挙動のバグを引き起こす可能性がある
+          onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+        })
+
+        setIsEditing(false)
+      },
+      isExpanded,
+      isLoading,
+      triggerRef,
+      noResultText,
+    })
+
+  const latest = useLatest({
+    onChangeInput,
+    onSelect,
+    onClear,
+    onClearClick,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    onKeyPress,
+    handleKeyDownListBox,
+    emptySelectionFallbackItem,
+    defaultSelectedItem,
+    selectedItem: actualSelectedItem,
+    isSelectedItemControlled,
+    inputValue,
+    isFocused,
+    isExpanded,
+    isComposing,
+    isEditing,
+    disabled,
+    readOnly,
+    cleanupAddFrame,
+    selectFrame,
+    resetFrame,
+  })
+
+  const functions = useMemo(() => {
+    let inputNode: HTMLInputElement | null = null
+    const updateUncontrolledSelectedItem = (item: ComboboxItem<T> | null) => {
+      if (!latest.isSelectedItemControlled) {
+        setUncontrolledSelectedItem(item)
+      }
+    }
+
+    const selectFallbackItem = () => {
+      if (latest.emptySelectionFallbackItem) {
+        updateUncontrolledSelectedItem(latest.emptySelectionFallbackItem)
+        latest.onSelect?.(latest.emptySelectionFallbackItem)
+        latest.onChangeSelected?.(latest.emptySelectionFallbackItem)
+      }
+    }
+    const unfocus = () => {
+      if (!latest.isFocused) return
+
+      latest.onBlur?.()
+
+      setIsFocused(false)
+      setIsExpanded(false)
+
+      if (latest.selectedItem) {
+        // inputValueを選択中アイテムのラベルへ戻すため、手入力による絞り込みも解除する
+        setIsEditing(false)
+        setInputValue(getSelectedLabelText(latest.selectedItem))
+      } else if (latest.emptySelectionFallbackItem) {
+        selectFallbackItem()
+      } else {
+        // 未選択のままフォーカスが外れた場合、手入力値を破棄して未選択の表示(空)に戻す
+        // 制御コンポーネントの場合に親側でinputValueを更新できるように、onChangeInputも空文字で発火する
+        setIsEditing(false)
+        setInputValue('')
+        latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+      }
+    }
+
+    return {
+      selectFallbackItem,
+      unfocus,
+      inputCallbackRef: (node: HTMLInputElement | null) => {
+        inputNode = node
+
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // 選択状態をdefaultSelectedItemへ戻すためにresetイベントを監視する。
+        // Reactの合成イベント(onReset)のディスパッチはネイティブのtarget phaseリスナーより後に
+        // 実行されるが、そのタイミングはqueueMicrotaskでは追いつかない(実機検証で確認済み)。
+        // 次の描画フレームまで遅延させることで、他のリスナーのpreventDefault()の結果
+        // (defaultPrevented)が確定した後に判定できるようにする
+        const associatedForm = node?.form
+        const handleReset = (e: Event) => {
+          latest.resetFrame.request(() => {
+            // HINT: 選択状態がdefaultSelectedItemと同じ(=未変更)場合、actualSelectedItemが
+            // 変わらずinputValueの自動同期(216行目付近)が発火しないため、手入力中の検索文字列を
+            // 明示的に選択状態へ同期する。制御時はselectedItem自体が変わらないため対象外とする
+            if (e.defaultPrevented || latest.isSelectedItemControlled) return
+
+            const nextSelectedItem = latest.defaultSelectedItem ?? null
+            const hasSelectedItemChanged =
+              latest.selectedItem === null
+                ? nextSelectedItem !== null
+                : nextSelectedItem === null || !areItemsEqual(latest.selectedItem, nextSelectedItem)
+
+            updateUncontrolledSelectedItem(nextSelectedItem)
+            setIsEditing(false)
+            setInputValue(nextSelectedItem ? getSelectedLabelText(nextSelectedItem) : '')
+
+            // HINT: 選択時(259行目)と同様、親がonChangeInputで検索語(手入力値)を管理し
+            // 絞り込みに使っている場合、reset後も古い検索語が残ったままになってしまうため
+            // 空文字で発火する。現在の入力欄が既に空の場合は発火不要
+            if (latest.inputValue !== '') {
+              latest.onChangeInput?.(EMPTY_INPUT_CHANGE_EVENT)
+            }
+
+            if (hasSelectedItemChanged) {
+              latest.onChangeSelected?.(nextSelectedItem)
+            }
+          })
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
+        return () => {
+          inputNode = null
+          latest.cleanupAddFrame()
+          latest.selectFrame.cancel()
+          latest.resetFrame.cancel()
+          associatedForm?.removeEventListener('reset', handleReset)
+        }
+      },
+      handleFocus: () => {
+        latest.onFocus?.()
+        inputNode?.focus()
+        setIsFocused(true)
+
+        if (!latest.isFocused) {
+          setIsExpanded(true)
+        }
+      },
+      handleClickClear: (e: MouseEvent) => {
+        e.stopPropagation()
+
+        let isExecutedPreventDefault = false
+
+        latest.onClearClick?.({
+          ...e,
+          preventDefault: () => {
+            e.preventDefault()
+            isExecutedPreventDefault = true
+          },
+        })
+
+        if (!isExecutedPreventDefault) {
+          updateUncontrolledSelectedItem(null)
+          latest.onClear?.()
+          latest.onChangeSelected?.(null)
+
+          inputNode?.focus()
+
+          setIsFocused(true)
+          setIsExpanded(true)
+        }
+      },
+      handleClickInput: (e: MouseEvent) => {
+        if (latest.disabled || latest.readOnly) {
+          e.stopPropagation()
+
+          return
+        }
+
+        inputNode?.focus()
+
+        if (!latest.isExpanded) {
+          setIsExpanded(true)
+        }
+      },
+      handleChangeInput: (e: ChangeEvent<HTMLInputElement>) => {
+        latest.onChangeInput?.(e)
+
+        if (!latest.isEditing) setIsEditing(true)
+
+        const { value } = e.currentTarget
+
+        setInputValue(value)
+
+        if (value === '') {
+          updateUncontrolledSelectedItem(null)
+          latest.onClear?.()
+          latest.onChangeSelected?.(null)
+        }
+      },
+      handleCompositionStart: () => setIsComposing(true),
+      handleCompositionEnd: () => setIsComposing(false),
+      // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+      // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+      // submitイベントが発生し、formが送信される場合がある
+      handleKeyPress: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') e.preventDefault()
+
+        latest.onKeyPress?.(e)
+      },
+      handleKeyDownInput: (e: KeyboardEvent<HTMLInputElement>) => {
+        if (latest.isComposing) {
+          return
+        }
+
+        if (ESCAPE_KEY_REGEX.test(e.key)) {
+          if (latest.isExpanded) {
+            e.stopPropagation()
+            setIsExpanded(false)
+          }
+        } else if (e.key === 'Tab') {
+          unfocus()
+        } else {
+          if (ARROW_UP_DOWN_REGEX.test(e.key)) {
+            e.preventDefault()
+          }
+
+          inputNode?.focus()
+
+          if (!latest.isExpanded) {
+            setIsExpanded(true)
+          }
+        }
+
+        latest.handleKeyDownListBox(e)
+      },
+    }
+  }, [latest])
+
+  const caretIconColor = isFocused
+    ? theme.textColor.black
+    : disabled || readOnly
+      ? theme.textColor.disabled
+      : theme.textColor.grey
+
+  const listBoxCallbackRef = useAreaClickCallbackRef(
+    isFocused ? [triggerRef, clearButtonRef] : null,
+    functions.unfocus,
+    isFocused || actualSelectedItem ? undefined : functions.selectFallbackItem,
+  )
+
+  const localized = useLocalize({
+    requiredMessage: {
+      id: 'smarthr-ui/SingleCombobox/requiredMessage',
+      defaultText: '選択してください',
+    },
+  })
+
+  // HINT: 検索用inputのnativeバリデーションは入力値(選択中アイテムのラベル)の有無しか検証できないため、
+  // 選択状態の有無をsetCustomValidityで別途検証する。titleが指定されている場合は利用者が意図したメッセージを優先する
+  const actualRequired = required && !actualSelectedItem
+  const inputValidityEffectRef = useLayoutEffectRef(
+    (node: HTMLInputElement | null) => {
+      node?.setCustomValidity(actualRequired ? title || localized.requiredMessage : '')
+    },
+    [actualRequired, title, localized],
+  )
+
+  const mergedRef = useMergeRefs(functions.inputCallbackRef, inputValidityEffectRef, ref)
+
+  const classNames = useMemo(() => {
+    const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
+      classNameGenerator()
+
+    return {
+      wrapper: wrapper({ className }),
+      input: input(),
+      caretDownLayout: caretDownLayout(),
+      caretDownIcon: caretDownIcon(),
+      clearButton: clearButton(),
+      clearButtonIcon: clearButtonIcon(),
+    }
+  }, [className])
+
+  return (
+    <div
+      ref={triggerRef}
+      role="group"
+      className={classNames.wrapper}
+      style={{
+        ...style,
+        width: typeof width === 'number' ? `${width}px` : width,
+      }}
+      data-clear-button-hidden={actualSelectedItem === null || disabled || readOnly || false}
+    >
+      {name && (
+        <input
+          type="hidden"
+          form={form}
+          name={name}
+          disabled={disabled}
+          value={actualSelectedItem?.value ?? ''}
+        />
+      )}
+
+      <Input
+        {...rest}
+        ref={mergedRef}
+        role="combobox"
+        type="text"
+        form={form}
+        name={name ? `query_${name}` : undefined}
+        // HINT: 選択済みならInputにはラベル文字が入っている
+        // actualRequiredはアイテムが選択されているか？も同時に検証するため、requiredがtrueの場合actualRequiredもtrueであることは保証されない
+        // requiredを設定することでスクリーンリーダーなどに常に必須であることが正しく伝わる
+        required={required}
+        disabled={disabled}
+        readOnly={readOnly}
+        value={inputValue}
+        autoComplete={autoComplete ?? 'off'}
+        error={error}
+        title={title}
+        className={classNames.input}
+        aria-haspopup="listbox"
+        aria-controls={listBoxId}
+        aria-expanded={isFocused}
+        aria-activedescendant={activeOption?.id}
+        aria-autocomplete="list"
+        data-smarthr-ui-input="true"
+        onClick={functions.handleClickInput}
+        onChange={functions.handleChangeInput}
+        onFocus={isFocused ? undefined : functions.handleFocus}
+        onCompositionStart={functions.handleCompositionStart}
+        onCompositionEnd={functions.handleCompositionEnd}
+        onKeyDown={functions.handleKeyDownInput}
+        onKeyPress={functions.handleKeyPress}
+        prefix={prefix}
+        subActionArea={
+          <SuffixButtons
+            clearButtonRef={clearButtonRef}
+            caretIconColor={caretIconColor}
+            classNames={classNames}
+            handleClickClear={functions.handleClickClear}
+            handleClickIcon={functions.handleClickInput}
+          />
+        }
+      />
+      {!readOnly && <ListBox {...listBoxProps} callbackRef={listBoxCallbackRef} />}
+    </div>
+  )
+}

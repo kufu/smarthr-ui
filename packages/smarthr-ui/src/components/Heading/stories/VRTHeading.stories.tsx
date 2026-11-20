@@ -1,6 +1,6 @@
 import { FaAddressBookIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Heading } from '../Heading'
+import { Heading } from '../client'
 
 import type { StoryObj } from '@storybook/react-vite'
 

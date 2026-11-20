@@ -1,0 +1,223 @@
+'use client'
+
+import { useId, useMemo, useRef, useState } from 'react'
+import { Bar } from 'react-chartjs-2'
+import {
+  FaChartBarIcon,
+  FaChartColumnIcon,
+  FaTableIcon,
+  SegmentedControl,
+  Text,
+  VisuallyHiddenText,
+} from 'smarthr-ui'
+
+import { createBarChartOptions, registerChartComponents } from '../../config'
+import { getChartColors } from '../../helper'
+import { useIntl, useLiveRegionTextFormatter } from '../../intl'
+import { TableView } from '../internal/TableView/TableView'
+
+import type { ChartViewType, SingleToneLevel } from '../../helper'
+import type { Chart, ChartData, ChartOptions } from 'chart.js'
+
+// Chart.jsのコンポーネントをモジュールレベルで登録
+registerChartComponents()
+
+/** 棒グラフ固有の配色オプション。Chart から type="bar" のときだけ生やすために切り出している */
+export type BarChartColorProps = {
+  /**
+   * 棒グラフの柄を無効化するか
+   */
+  disablePatterns?: boolean
+  /**
+   * 指定すると、系列の色をカテゴリ配色ではなく同系色の濃淡
+   * （SINGLE_CHART_COLORS）にする。値は濃淡の範囲
+   */
+  singleTone?: SingleToneRange
+}
+
+/**
+ * 濃淡の範囲。第一系列を from、最終系列を to の濃さにして、間を均等に配分する。
+ * from > to にすれば第一系列を濃くでき、範囲を狭めれば濃淡差を抑えられる。
+ * 範囲の段数より系列が多いと色が重複するので、そのときは柄で見分ける。
+ * 系列が1つのときは from と to の濃い側を使う。系列数が変わっても強調される系列の
+ * 色が変わらないようにするためで、1系列のときの色を確定させたい場合は
+ * from と to を同じ値にする
+ */
+export type SingleToneRange = {
+  from: SingleToneLevel
+  to: SingleToneLevel
+}
+
+type Props = {
+  // 色などはpropsで渡せないようにする
+  // TODO:もっと簡単なデータの型を作る
+  data: ChartData<'bar'>
+  title?: string
+  options?: Partial<ChartOptions<'bar'>>
+  stacked?: boolean
+  orientation?: 'horizontal' | 'vertical'
+  onChangeView?: (value: ChartViewType) => void
+  defaultView?: ChartViewType
+} & BarChartColorProps
+
+// どのデータセットも値を持つカテゴリが1つ以下なら、カテゴリごとに内訳を積み上げたデータとみなす
+const isGroupedStackData = ({ labels = [], datasets }: ChartData<'bar'>) => {
+  // カテゴリか系列が1つだけのデータは見分けられないので、内訳を積み上げたデータとはみなさない
+  if (labels.length <= 1 || datasets.length <= 1) {
+    return false
+  }
+
+  return datasets.every(
+    ({ data }) => data.filter((value) => value !== null && value !== undefined).length <= 1,
+  )
+}
+
+export const BarChart: React.FC<Props> = ({
+  data,
+  title,
+  options: externalOptions,
+  disablePatterns,
+  singleTone,
+  orientation = 'vertical',
+  stacked,
+  onChangeView,
+  defaultView = 'chart',
+}) => {
+  const [view, setView] = useState<ChartViewType>(defaultView)
+  const chartId = useId()
+  const chartRef = useRef<Chart<'bar'>>(null)
+  const { localize } = useIntl()
+  const formatLiveRegionText = useLiveRegionTextFormatter()
+  // 依存配列をプリミティブに保つため、オブジェクトのまま useMemo に渡さない。
+  // 呼び出し側が singleTone={{ … }} と書くと毎回別参照になり、柄の再生成が走ってしまう
+  const hasSingleTone = Boolean(singleTone)
+  const singleToneFrom = singleTone?.from
+  const singleToneTo = singleTone?.to
+  const chartColors = useMemo(
+    () =>
+      getChartColors(data.datasets.length, {
+        disablePatterns,
+        singleTone: hasSingleTone,
+        toneFrom: singleToneFrom,
+        toneTo: singleToneTo,
+      }),
+    [data.datasets.length, disablePatterns, hasSingleTone, singleToneFrom, singleToneTo],
+  )
+
+  const ariaLabel = useMemo(
+    () =>
+      localize(
+        title
+          ? {
+              id: 'smarthr-ui-charts/BarChart/ariaLabelWithTitle',
+              defaultText: '{title} 棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+            }
+          : {
+              id: 'smarthr-ui-charts/BarChart/ariaLabel',
+              defaultText: '棒グラフ {datasetCount}個のデータ {barCount}本の棒',
+            },
+        { title, datasetCount: data.datasets.length, barCount: data.datasets[0].data.length },
+      ),
+    [title, data, localize],
+  )
+
+  const enhancedData: ChartData<'bar'> = useMemo(
+    () => ({
+      ...data,
+      datasets: data.datasets.map((dataset, index) => ({
+        ...dataset,
+        ...chartColors[index],
+        ...(stacked && index > 0 ? { borderSkipped: false } : {}),
+      })),
+    }),
+    [data, chartColors, stacked],
+  )
+
+  const grouped = isGroupedStackData(data)
+
+  const chartOptions: ChartOptions<'bar'> = useMemo(
+    () =>
+      createBarChartOptions({
+        ...externalOptions,
+        ...(orientation === 'horizontal' ? { indexAxis: 'y' } : {}),
+        // 値のない位置に棒の場所を取らないようにする
+        skipNull: externalOptions?.skipNull ?? grouped,
+        scales: {
+          ...externalOptions?.scales,
+          ...(stacked
+            ? {
+                x: { ...externalOptions?.scales?.x, stacked: true },
+                y: { ...externalOptions?.scales?.y, stacked: true },
+              }
+            : {}),
+        },
+        plugins: {
+          ...externalOptions?.plugins,
+          title: { display: false },
+          keyboardNavigation: {
+            ...externalOptions?.plugins?.keyboardNavigation,
+            liveRegionId: chartId,
+            stacked,
+            horizontal: orientation === 'horizontal',
+            formatLiveRegionText,
+          },
+        },
+      }),
+    [chartId, externalOptions, grouped, orientation, stacked, formatLiveRegionText],
+  )
+
+  const viewOptions = useMemo(
+    () => [
+      {
+        value: 'chart',
+        content: orientation === 'horizontal' ? <FaChartBarIcon /> : <FaChartColumnIcon />,
+        ariaLabel: 'グラフ',
+      },
+      {
+        value: 'table',
+        content: <FaTableIcon />,
+        ariaLabel: 'テーブル',
+      },
+    ],
+    [orientation],
+  )
+
+  const handleViewChange = (value: string) => {
+    setView(value as ChartViewType)
+    onChangeView?.(value as ChartViewType)
+  }
+
+  return (
+    <div className="shr-flex shr-h-full shr-w-full shr-flex-col">
+      <VisuallyHiddenText as="output" role="status" id={chartId}></VisuallyHiddenText>
+      <div className="shr-grid shr-shrink-0 shr-grid-cols-[1fr_auto_1fr]">
+        {title && (
+          <Text styleType="blockTitle" className="shr-col-start-2 shr-self-center">
+            {title}
+          </Text>
+        )}
+        <SegmentedControl
+          value={view}
+          size="S"
+          className="shr-col-start-3 shr-justify-self-end"
+          onClickOption={handleViewChange}
+          options={viewOptions}
+        />
+      </div>
+      <div className="shr-relative shr-min-h-0 shr-flex-1">
+        {view === 'chart' ? (
+          <Bar
+            ref={chartRef}
+            role="application"
+            data={enhancedData}
+            tabIndex={0}
+            aria-label={ariaLabel}
+            options={chartOptions}
+          />
+        ) : (
+          <TableView data={enhancedData} caption={title} grouped={grouped} options={chartOptions} />
+        )}
+      </div>
+    </div>
+  )
+}

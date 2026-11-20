@@ -1,1 +1,0 @@
-export { WarekiPicker } from './client'
