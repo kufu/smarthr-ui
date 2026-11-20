@@ -1,7 +1,10 @@
-import { render } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { createRef } from 'react'
 
+import { BulkActionRow } from './BulkActionRow'
+import { EmptyTableBody } from './EmptyTableBody'
 import { Table } from './Table'
+import { Th } from './Th'
 
 describe('Table', () => {
   test.each([true, false])('reel=%sのときrefがtable要素にアタッチされる', (reel) => {
@@ -18,6 +21,48 @@ describe('Table', () => {
     )
 
     expect(ref.current).toBeInstanceOf(HTMLTableElement)
+  })
+
+  describe('自動で colspan を設定するセル', () => {
+    const createTable = (showExtraColumn: boolean, headerColSpan = 1, headKey = 'header') => (
+      <Table reel={false}>
+        <thead key={headKey}>
+          <tr>
+            <Th colSpan={headerColSpan}>名前</Th>
+            {showExtraColumn && <Th>担当</Th>}
+          </tr>
+          <BulkActionRow>一括操作</BulkActionRow>
+        </thead>
+        <EmptyTableBody>データなし</EmptyTableBody>
+      </Table>
+    )
+
+    const expectColSpan = (colSpan: string) => {
+      expect(screen.getByRole('cell', { name: '一括操作' })).toHaveAttribute('colspan', colSpan)
+      expect(screen.getByRole('cell', { name: 'データなし' })).toHaveAttribute('colspan', colSpan)
+    }
+
+    test('ヘッダーの列を追加・削除すると colspan が更新される', async () => {
+      const { rerender } = render(createTable(false))
+      expectColSpan('1')
+
+      rerender(createTable(true))
+      await waitFor(() => expectColSpan('2'))
+
+      rerender(createTable(false))
+      await waitFor(() => expectColSpan('1'))
+    })
+
+    test('thead を差し替えた後もヘッダーセルの colspan を反映する', async () => {
+      const { rerender } = render(createTable(false))
+      expectColSpan('1')
+
+      rerender(createTable(false, 2, 'replacement'))
+      await waitFor(() => expectColSpan('2'))
+
+      rerender(createTable(false, 3, 'replacement'))
+      await waitFor(() => expectColSpan('3'))
+    })
   })
 
   describe('rounded', () => {
