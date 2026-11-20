@@ -6,6 +6,65 @@ import { FaPencilIcon } from '../../Icon'
 import { Tooltip } from './Tooltip'
 
 describe('Tooltip', () => {
+  describe('ellipsisOnly', () => {
+    it.each([
+      {
+        name: '幅が収まる',
+        scrollWidth: 100,
+        scrollHeight: 20,
+        overflow: 'hidden',
+        clipped: false,
+      },
+      {
+        name: '横が切り詰められる',
+        scrollWidth: 140,
+        scrollHeight: 20,
+        overflow: 'hidden',
+        clipped: true,
+      },
+      {
+        name: '縦が切り詰められる',
+        scrollWidth: 100,
+        scrollHeight: 40,
+        overflow: 'hidden',
+        clipped: true,
+      },
+      {
+        name: 'はみ出した部分が見える',
+        scrollWidth: 140,
+        scrollHeight: 40,
+        overflow: 'visible',
+        clipped: false,
+      },
+    ])('親要素の幅が auto で、$name 場合', ({ scrollWidth, scrollHeight, overflow, clipped }) => {
+      render(
+        <span style={{ width: 'auto' }}>
+          <Tooltip ellipsisOnly message="説明">
+            <span>
+              <span style={{ overflowX: overflow, overflowY: overflow }}>テキスト</span>
+            </span>
+          </Tooltip>
+        </span>,
+      )
+      const trigger = screen.getByText('テキスト')
+      const wrapper = trigger.closest('.smarthr-ui-Tooltip')!
+
+      Object.defineProperties(trigger, {
+        scrollWidth: { value: scrollWidth },
+        clientWidth: { value: 100 },
+        scrollHeight: { value: scrollHeight },
+        clientHeight: { value: 20 },
+      })
+
+      fireEvent.pointerEnter(wrapper)
+
+      expect(screen.getByRole('tooltip', { hidden: true })).toHaveAttribute(
+        'aria-hidden',
+        String(!clipped),
+      )
+    })
+  })
+
   describe('tabIndex', () => {
     it('children がフォーカス可能な要素の場合、wrapper に tabIndex が設定されない', () => {
       render(

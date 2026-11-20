@@ -23,6 +23,22 @@ import type { ExtendElementPropsWithoutRef } from '../../../types'
 const FOCUSABLE_SELECTOR =
   'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
+const isClipped = (element: Element) => {
+  const overflowsHorizontally = element.scrollWidth > element.clientWidth
+  const overflowsVertically = element.scrollHeight > element.clientHeight
+
+  if (!overflowsHorizontally && !overflowsVertically) {
+    return false
+  }
+
+  const { overflowX, overflowY } = getComputedStyle(element)
+
+  return (
+    (overflowsHorizontally && overflowX !== 'visible') ||
+    (overflowsVertically && overflowY !== 'visible')
+  )
+}
+
 type Props = ExtendElementPropsWithoutRef<
   'span',
   {
@@ -108,12 +124,8 @@ export const Tooltip: FC<Props> = ({
       }
 
       if (latest.ellipsisOnly) {
-        const outerWidth = parseInt(
-          window.getComputedStyle(node.parentNode! as HTMLElement, null).width.match(/\d+/)![0],
-          10,
-        )
-
-        if (outerWidth < 0 || outerWidth > node.clientWidth) {
+        // 省略スタイルはトリガ本体や、children 内の要素に指定される。
+        if (!isClipped(node) && !Array.from(node.querySelectorAll('*')).some(isClipped)) {
           return
         }
       }
