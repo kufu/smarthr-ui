@@ -36,20 +36,30 @@ export type UseIntlReturn = {
   locale: keyof typeof locales
 }
 
-const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
+// react-intlのIntlProviderを直接使うプロダクトからは任意の文字列が来るため、
+// inだと'toString'などプロトタイプ上のキーも通ってしまう
+const isValidLocale = (locale: string): locale is keyof typeof locales =>
+  Object.prototype.hasOwnProperty.call(locales, locale)
 
 // ICUのパース結果はcreateIntlの呼び出し間で共有したいため、モジュールスコープに持つ
 const cache = createIntlCache()
+// チャートごとにformatterを組み立てないよう、locale単位で使い回す
+const formatters = new Map<keyof typeof locales, IntlShape>()
 
-export const getIntl = (
-  locale: keyof typeof locales,
-  externalMessages?: IntlShape['messages'],
-): IntlShape =>
-  createIntl(
+// chartsのformatterは自身のlocalizeでしか使わず子に渡さないため、プロダクト側のmessagesは混ぜない。
+// 混ぜると辞書が空のロケールでだけプロダクト側の同名キーが優先され、ロケールで挙動が変わってしまう
+export const getIntl = (locale: keyof typeof locales): IntlShape => {
+  const cached = formatters.get(locale)
+
+  if (cached) {
+    return cached
+  }
+
+  const formatter = createIntl(
     {
       locale,
       defaultLocale: 'ja',
-      messages: { ...externalMessages, ...locales[locale] },
+      messages: locales[locale],
       onError: (error) => {
         if (error.code !== ReactIntlErrorCode.MISSING_TRANSLATION) {
           console.error(error)
@@ -58,6 +68,11 @@ export const getIntl = (
     },
     cache,
   )
+
+  formatters.set(locale, formatter)
+
+  return formatter
+}
 
 /**
  * メッセージローカライズ機能を提供するフック
@@ -72,10 +87,10 @@ export const getIntl = (
  */
 export const useIntl = (): UseIntlReturn => {
   const intl = useContext(IntlContext) as IntlShape | null
+  const locale = intl && isValidLocale(intl.locale) ? intl.locale : 'ja'
 
   const result = useMemo(() => {
-    const locale = intl && isValidLocale(intl.locale) ? intl.locale : 'ja'
-    const chartsIntl = getIntl(locale, intl?.messages)
+    const chartsIntl = getIntl(locale)
 
     return {
       localize: <T extends keyof Messages>(
@@ -85,7 +100,7 @@ export const useIntl = (): UseIntlReturn => {
         chartsIntl.formatMessage({ ...descriptor, defaultMessage: descriptor.defaultText }, values),
       locale,
     }
-  }, [intl])
+  }, [locale])
 
   return result
 }

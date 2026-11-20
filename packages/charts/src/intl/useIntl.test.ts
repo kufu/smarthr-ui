@@ -1,6 +1,9 @@
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { IntlProvider } from 'react-intl'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { getIntl } from './useIntl'
+import { getIntl, useIntl } from './useIntl'
 
 import type { locales } from './locales'
 
@@ -29,29 +32,37 @@ describe('getIntl', () => {
     ).toBe('ドーナツグラフ 4個の項目')
     expect(spy).not.toHaveBeenCalled()
   })
+})
 
-  describe('プロダクト側のmessagesとのマージ', () => {
-    it('プロダクト側のキーを引ける', () => {
-      const intl = getIntl('ja', { 'product/foo': 'プロダクトの文言' })
+describe('useIntl', () => {
+  const Label = () => {
+    const { localize: localizeLabel, locale } = useIntl()
 
-      expect(intl.formatMessage({ id: 'product/foo' })).toBe('プロダクトの文言')
-    })
+    return `${locale}:${localizeLabel(
+      {
+        id: 'smarthr-ui-charts/DoughnutChart/ariaLabel',
+        defaultText: 'ドーナツグラフ {segmentCount}個の項目',
+      },
+      { segmentCount: 4 },
+    )}`
+  }
 
-    it('chartsのキーはプロダクト側に上書きされない', () => {
-      // smarthr-uiのIntlProviderと同様、自身の辞書を後に展開している
-      const intl = getIntl('ja', {
-        'smarthr-ui-charts/DoughnutChart/ariaLabel': '上書きされるべきではない文言',
-      })
+  // smarthr-uiのIntlProviderを通さず、react-intlのIntlProviderを直接使うプロダクトを想定する
+  const render = (locale: string, messages?: Record<string, string>) =>
+    renderToStaticMarkup(
+      createElement(IntlProvider, { locale, messages, onError: () => {} }, createElement(Label)),
+    )
 
-      expect(
-        intl.formatMessage(
-          {
-            id: 'smarthr-ui-charts/DoughnutChart/ariaLabel',
-            defaultMessage: 'ドーナツグラフ {segmentCount}個の項目',
-          },
-          { segmentCount: 4 },
-        ),
-      ).toBe('ドーナツグラフ 4個の項目')
-    })
+  it('プロトタイプ上のキーと同名のロケールはjaとして扱う', () => {
+    expect(render('toString')).toBe('ja:ドーナツグラフ 4個の項目')
   })
+
+  it.each(['ja', 'en-us'])(
+    'プロダクト側のmessagesに同名のキーがあっても、chartsの文言を使う（%s）',
+    (locale) => {
+      expect(
+        render(locale, { 'smarthr-ui-charts/DoughnutChart/ariaLabel': 'プロダクト側の文言' }),
+      ).toBe(`${locale}:ドーナツグラフ 4個の項目`)
+    },
+  )
 })
