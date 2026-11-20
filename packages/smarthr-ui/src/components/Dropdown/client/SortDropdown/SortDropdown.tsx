@@ -94,29 +94,17 @@ export const SortDropdown: FC<Props> = ({
   const functions = useMemo(
     () => ({
       handleChange: (e: ChangeEvent<HTMLSelectElement>) => {
-        const select = e.currentTarget
-        const newLabel = select.options[select.selectedIndex].label
+        const { selectedIndex, options } = e.currentTarget
 
         setInnerFields((currentFields) =>
-          currentFields.map((field) => {
-            if (field.label === newLabel) {
-              if (!field.selected) {
-                return {
-                  ...field,
-                  selected: true,
-                }
-              }
-            } else if (field.selected) {
-              return {
-                ...field,
-                selected: false,
-              }
-            }
+          currentFields.map((field, index) => {
+            // 同じラベルの項目があっても、実際に選択された項目だけを更新する。
+            const selected = index === selectedIndex
 
-            return field
+            return Boolean(field.selected) === selected ? field : { ...field, selected }
           }),
         )
-        setInnerSelectedField(newLabel)
+        setInnerSelectedField(options[selectedIndex]?.label ?? '')
       },
       handleApply: () => {
         setSelectedLabel(latest.innerSelectedField)
