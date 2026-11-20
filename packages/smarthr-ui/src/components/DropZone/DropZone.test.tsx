@@ -41,7 +41,10 @@ const stubInputFilesSetter = (
 describe('DropZone', () => {
   describe('onSelectFiles', () => {
     describe('ファイルをドロップした場合', () => {
-      stubInputFilesSetter()
+      const filesSetter = vi.fn()
+      stubInputFilesSetter(filesSetter)
+
+      afterEach(() => filesSetter.mockClear())
 
       it('onSelectFiles が発火する', () => {
         const onSelectFiles = vi.fn()
@@ -72,6 +75,53 @@ describe('DropZone', () => {
             length: 1,
           }),
         )
+      })
+
+      it('無効な場合、ドロップしたファイルを選択しない', () => {
+        const onSelectFiles = vi.fn()
+        const { container } = render(
+          <IntlProvider locale="ja">
+            <DropZone name="test_file" disabled onSelectFiles={onSelectFiles}>
+              ファイルをドロップ
+            </DropZone>
+          </IntlProvider>,
+        )
+
+        const dropZone = container.querySelector('.smarthr-ui-DropZone')
+        if (!dropZone) throw new Error('DropZone not found')
+
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' })
+        const dataTransfer = { files: createFileList([file]), types: ['Files'] }
+
+        expect(fireEvent.dragOver(dropZone, { dataTransfer })).toBe(false)
+        expect(fireEvent.drop(dropZone, { dataTransfer })).toBe(false)
+
+        expect(filesSetter).not.toHaveBeenCalled()
+        expect(onSelectFiles).not.toHaveBeenCalled()
+      })
+
+      it('ドラッグ中に無効化された場合、ドラッグ中の表示を消す', () => {
+        const onSelectFiles = vi.fn()
+        const renderDropZone = (disabled: boolean) => (
+          <IntlProvider locale="ja">
+            <DropZone name="test_file" disabled={disabled} onSelectFiles={onSelectFiles}>
+              ファイルをドロップ
+            </DropZone>
+          </IntlProvider>
+        )
+        const { container, rerender } = render(renderDropZone(false))
+        const dropZone = container.querySelector('.smarthr-ui-DropZone')
+        if (!dropZone) throw new Error('DropZone not found')
+
+        const dataTransfer = { types: ['Files'] }
+        fireEvent.dragOver(dropZone, { dataTransfer })
+        expect(dropZone).toHaveAttribute('data-files-dragged-over')
+
+        rerender(renderDropZone(true))
+        expect(dropZone).not.toHaveAttribute('data-files-dragged-over')
+
+        fireEvent.dragOver(dropZone, { dataTransfer })
+        expect(dropZone).not.toHaveAttribute('data-files-dragged-over')
       })
     })
 
