@@ -1053,9 +1053,7 @@ describe('ControlledDrawer size', () => {
     renderWithIntl(<SizedTemplate position="bottom" />)
     const dialog = screen.getByRole('dialog', { name: 'サイズ確認' })
     expect(dialog).not.toHaveClass('shr-w-col5')
-    expect(dialog).toHaveClass(
-      'shr-w-[calc(100%-env(safe-area-inset-left)-env(safe-area-inset-right))]',
-    )
+    expect(dialog).toHaveClass('shr-inset-x-0')
   })
 })
 
@@ -1067,7 +1065,6 @@ describe('ControlledDrawer safe area', () => {
         'shr-pt-[env(safe-area-inset-top)]',
         'shr-pb-[env(safe-area-inset-bottom)]',
         'shr-pr-[env(safe-area-inset-right)]',
-        'shr-h-[calc(100%-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
       ],
       notAvoided: 'shr-pl-[env(safe-area-inset-left)]',
     },
@@ -1077,7 +1074,6 @@ describe('ControlledDrawer safe area', () => {
         'shr-pt-[env(safe-area-inset-top)]',
         'shr-pb-[env(safe-area-inset-bottom)]',
         'shr-pl-[env(safe-area-inset-left)]',
-        'shr-h-[calc(100%-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
       ],
       notAvoided: 'shr-pr-[env(safe-area-inset-right)]',
     },
@@ -1087,7 +1083,6 @@ describe('ControlledDrawer safe area', () => {
         'shr-pb-[env(safe-area-inset-bottom)]',
         'shr-pl-[env(safe-area-inset-left)]',
         'shr-pr-[env(safe-area-inset-right)]',
-        'shr-w-[calc(100%-env(safe-area-inset-left)-env(safe-area-inset-right))]',
       ],
       notAvoided: 'shr-pt-[env(safe-area-inset-top)]',
     },

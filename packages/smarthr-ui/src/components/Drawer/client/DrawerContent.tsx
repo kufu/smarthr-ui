@@ -130,7 +130,8 @@ const classNameGenerator = tv({
     },
   },
   // パネルの上限は fixed ならビューポート、absolute ならコンテナが基準。間違えると親からはみ出す。
-  // absolute でも safe area を避ける案は、コンテナが画面の端に接しているとは限らず、余計な余白になるため採らない
+  // absolute でも safe area を避ける案は、コンテナが画面の端に接しているとは限らず、余計な余白になるため採らない。
+  // 両端が接する向きの長さを 100% や calc(100% - safe area) で指定しないのは、content-box では枠線の分だけはみ出すため。inset で両端を決めれば枠線と padding を引いた長さになる
   compoundVariants: [
     {
       position: ['right', 'left'],
@@ -139,7 +140,6 @@ const classNameGenerator = tv({
         inner: [
           'shr-border-shorthand shr-absolute shr-inset-y-0',
           'shr-pb-[env(safe-area-inset-bottom)] shr-pt-[env(safe-area-inset-top)]',
-          'shr-h-[calc(100%-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
           'shr-max-w-[calc(100dvw-theme(spacing.2)-env(safe-area-inset-left)-env(safe-area-inset-right))]',
         ],
       },
@@ -172,7 +172,6 @@ const classNameGenerator = tv({
       class: {
         inner: [
           'shr-pb-[env(safe-area-inset-bottom)] shr-pl-[env(safe-area-inset-left)] shr-pr-[env(safe-area-inset-right)]',
-          'shr-w-[calc(100%-env(safe-area-inset-left)-env(safe-area-inset-right))]',
           'shr-h-[calc(100dvh-theme(spacing.2)-env(safe-area-inset-top)-env(safe-area-inset-bottom))]',
         ],
       },
@@ -180,7 +179,7 @@ const classNameGenerator = tv({
     {
       position: 'bottom',
       layoutPosition: 'absolute',
-      class: { inner: 'shr-h-[calc(100%-theme(spacing.2))] shr-w-full' },
+      class: { inner: 'shr-h-[calc(100%-theme(spacing.2))]' },
     },
   ],
 })
