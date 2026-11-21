@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
-import { useLatest } from '../../../../hooks/useLatest'
+import { useLatest } from '../useLatest'
+
+import { useAnimationFrame } from './useAnimationFrame'
 
 export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
 
@@ -46,28 +47,29 @@ export function useRemoteTrigger({
       }
     }
 
+    const close = () => {
+      updateIsOpen(false)
+    }
+
     return {
       updateIsOpen,
+      close,
       cleanupToggleFrame: () => {
         latest.toggleFrame.cancel()
       },
       handleClickClose: () => {
         if (latest.onClickClose) {
-          return latest.onClickClose(() => {
-            updateIsOpen(false)
-          })
+          return latest.onClickClose(close)
         }
 
-        updateIsOpen(false)
+        close()
       },
       handlePressEscape: () => {
         if (latest.onPressEscape) {
-          return latest.onPressEscape(() => {
-            updateIsOpen(false)
-          })
+          return latest.onPressEscape(close)
         }
 
-        updateIsOpen(false)
+        close()
       },
     }
   }, [latest])
@@ -90,6 +92,7 @@ export function useRemoteTrigger({
 
   return {
     isOpen,
+    close: functions.close,
     handleClickClose: functions.handleClickClose,
     handlePressEscape: functions.handlePressEscape,
   }

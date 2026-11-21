@@ -15,3 +15,6 @@ global.DOMMatrix = class DOMMatrix {}
 
 // jsdomがwindow.scrollToを実装していないため必要なモック
 window.scrollTo = () => {}
+
+// jsdomがElement.prototype.scrollIntoViewを実装していないため必要なモック
+Element.prototype.scrollIntoView = () => {}
