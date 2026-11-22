@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { action } from 'storybook/actions'
 
+import { Badge } from '../../Badge'
 import {
   FaChartAreaIcon,
   FaChartBarIcon,
@@ -42,6 +44,37 @@ export default {
 export const SegmentedControlControl: StoryObj<typeof SegmentedControl> = {
   name: 'Playground',
   args: {},
+}
+
+export const WithCounts: StoryObj<typeof SegmentedControl> = {
+  render: function Render() {
+    const [value, setValue] = useState('departments')
+
+    return (
+      <SegmentedControl
+        value={value}
+        onClickOption={setValue}
+        options={[
+          {
+            value: 'departments',
+            content: (
+              <>
+                部署 <Badge count={12} inverted={value === 'departments'} />
+              </>
+            ),
+          },
+          {
+            value: 'crew',
+            content: (
+              <>
+                従業員 <Badge count={35} inverted={value === 'crew'} />
+              </>
+            ),
+          },
+        ]}
+      />
+    )
+  },
 }
 
 export const Options: StoryObj<typeof SegmentedControl> = {

@@ -18,6 +18,8 @@ type Props = ExtendElementPropsWithoutRef<
     showZero?: boolean
     /** 色の種類 */
     color?: Color
+    /** 背景色と文字色を反転するかどうか */
+    inverted?: boolean
     /** ドット表示するかどうか */
     dot?: boolean
   }
@@ -53,7 +55,23 @@ const classNameGenerator = tv({
         pill: 'shr-bg-danger shr-text-white shr-shadow-[0_0_0_1px_theme(colors.white)]',
         dotElement: 'shr-bg-danger shr-shadow-[0_0_0_1px_theme(colors.white)]',
       },
-    } satisfies Record<Color, object>,
+      greyInverted: {
+        pill: 'shr-bg-white shr-text-[theme(colors.grey.65)] shr-shadow-[0_0_0_1px_theme(colors.grey.65)]',
+        dotElement: 'shr-bg-white shr-shadow-[0_0_0_1px_theme(colors.grey.65)]',
+      },
+      blueInverted: {
+        pill: 'shr-bg-white shr-text-main shr-shadow-[0_0_0_1px_theme(colors.main)]',
+        dotElement: 'shr-bg-white shr-shadow-[0_0_0_1px_theme(colors.main)]',
+      },
+      yellowInverted: {
+        pill: 'shr-text-warning-yellow shr-bg-black shr-shadow-[0_0_0_1px_theme(colors.warning-yellow)]',
+        dotElement: 'shr-bg-black shr-shadow-[0_0_0_1px_theme(colors.warning-yellow)]',
+      },
+      redInverted: {
+        pill: 'shr-bg-white shr-text-danger shr-shadow-[0_0_0_1px_theme(colors.danger)]',
+        dotElement: 'shr-bg-white shr-shadow-[0_0_0_1px_theme(colors.danger)]',
+      },
+    } satisfies Record<Color | `${Color}Inverted`, object>,
     withChildren: {
       // HINT: pill・dotElementで同一の指定になるためcompoundSlotsで扱う
       true: '',
@@ -97,6 +115,7 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   count,
   overflowCount,
   color,
+  inverted,
   dot,
   children,
   className,
@@ -106,14 +125,17 @@ const ActualBadge: FC<Omit<Props, 'showZero'>> = ({
   const withChildren = Boolean(children)
   const classNames = useMemo(() => {
     const { wrapper, pill, dotElement } = classNameGenerator()
-    const variantProps = { color: color || 'blue', withChildren }
+    const variantProps = {
+      color: inverted ? (`${color || 'blue'}Inverted` as const) : color || 'blue',
+      withChildren,
+    }
 
     return {
       wrapper: wrapper({ className }),
       pill: pill(variantProps),
       dot: dotElement(variantProps),
     }
-  }, [withChildren, color, className])
+  }, [withChildren, color, inverted, className])
 
   return (
     <span {...rest} className={classNames.wrapper}>

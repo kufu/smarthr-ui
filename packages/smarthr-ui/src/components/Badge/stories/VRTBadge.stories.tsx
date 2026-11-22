@@ -19,6 +19,8 @@ export default {
               <Badge count={10} overflowCount={10} color={color} />
               <Badge count={10} overflowCount={9} color={color} />
               <Badge dot={true} color={color} />
+              <Badge count={1} inverted color={color} />
+              <Badge dot={true} inverted color={color} />
             </>
           </Cluster>
         ))}
