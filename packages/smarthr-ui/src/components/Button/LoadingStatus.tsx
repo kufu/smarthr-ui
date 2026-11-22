@@ -8,7 +8,11 @@ import { Portal } from '../Portal'
 export const LoadingStatus = memo<{ loading: boolean }>(({ loading }) => (
   <Portal>
     <LiveRegion visuallyHidden={true}>
-      {loading && <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />}
+      {loading && (
+        <span>
+          <Localizer id="smarthr-ui/Button/loading" defaultText="処理中" />
+        </span>
+      )}
     </LiveRegion>
   </Portal>
 ))
