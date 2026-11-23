@@ -99,11 +99,11 @@ const MemoizedLabel = memo<
     typeof Text,
     Pick<Props, 'unrecommendedLabelHidden' | 'children'> & { htmlFor: string }
   >
->(({ unrecommendedLabelHidden, htmlFor, children, ...rest }) => {
+>(({ unrecommendedLabelHidden, children, ...rest }) => {
   const Component = unrecommendedLabelHidden ? VisuallyHiddenText : Text
 
   return (
-    <Component {...rest} as="label" htmlFor={htmlFor}>
+    <Component {...rest} as="label">
       {children}
     </Component>
   )
