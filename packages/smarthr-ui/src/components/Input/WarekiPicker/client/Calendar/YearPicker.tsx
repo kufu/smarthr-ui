@@ -71,7 +71,6 @@ const ActualYearPicker: FC<ActualProps> = ({
   fromYear,
   toYear,
   handleSelectYear,
-  id,
   ...rest
 }) => {
   const [thisYear] = useState(() => new Date().getFullYear())
@@ -87,7 +86,7 @@ const ActualYearPicker: FC<ActualProps> = ({
   }, [toYear, fromYear])
 
   return (
-    <div {...rest} id={id} className={CLASS_NAMES.overlay}>
+    <div {...rest} className={CLASS_NAMES.overlay}>
       <Scroller className={CLASS_NAMES.container}>
         {yearArray.map((year) => (
           <YearButton
