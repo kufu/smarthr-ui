@@ -166,8 +166,6 @@ export const SingleCombobox = <T,>({
   disabled,
   readOnly,
   required,
-  prefix,
-  error,
   creatable,
   autoComplete,
   dropdownHelpMessage,
@@ -565,7 +563,6 @@ export const SingleCombobox = <T,>({
         readOnly={readOnly}
         value={inputValue}
         autoComplete={autoComplete ?? 'off'}
-        error={error}
         title={title}
         className={classNames.input}
         aria-haspopup="listbox"
@@ -581,7 +578,6 @@ export const SingleCombobox = <T,>({
         onCompositionEnd={functions.handleCompositionEnd}
         onKeyDown={functions.handleKeyDownInput}
         onKeyPress={functions.handleKeyPress}
-        prefix={prefix}
         subActionArea={
           <SuffixButtons
             clearButtonRef={clearButtonRef}
