@@ -2,6 +2,7 @@
 
 import { type FC, type FocusEvent, useEffect, useMemo, useRef, useState } from 'react'
 
+import { useAnimationFrame } from '../../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useOnce } from '../../../../hooks/client/useOnce'
 import { useLatest } from '../../../../hooks/useLatest'
@@ -35,6 +36,7 @@ export const CurrencyInput: FC<Props> = ({
 }) => {
   const innerRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const resetFrame = useAnimationFrame()
 
   const latest = useLatest({
     onFocus,
@@ -42,6 +44,8 @@ export const CurrencyInput: FC<Props> = ({
     onFormatValue,
     value,
     defaultValue,
+    resetFrame,
+    isFocused,
   })
 
   const functions = useMemo(() => {
@@ -56,9 +60,36 @@ export const CurrencyInput: FC<Props> = ({
     }
 
     return {
-      baseCallbackRef: (node: HTMLInputElement | null) => {
+      initialFormatCallbackRef: (node: HTMLInputElement | null) => {
         if (node && latest.value === undefined && latest.defaultValue !== undefined) {
           formatCurrencyValue(latest.defaultValue)
+        }
+      },
+      // HINT: StrictModeの開発環境ではref callbackがattach→detach→再attachされる。
+      // reset listenerはattachのたびに登録し直す必要があるため、
+      // 初回のみ実行されるuseOnceでは包まずこのref callbackで都度登録する
+      resetListenerCallbackRef: (node: HTMLInputElement | null) => {
+        const associatedForm = node?.form
+        // HINT: 非制御時、form.reset()(React 19のaction成功時の自動resetを含む)で
+        // ネイティブのdefaultValueへの復帰により失われるフォーマット(カンマ区切り等)をかけ直す。
+        // resetイベントは実際に値がリセットされる前に発火するため、次のフレームで値を読み直す。
+        // フォーカス中は通常の入力時と同様にカンマを付けない(付けると入力継続時に不正な値になる)。
+        // フォーカスが外れた際は107行目付近のuseEffectが改めてフォーマットする
+        const handleReset = () => {
+          if (latest.value === undefined) {
+            latest.resetFrame.request(() => {
+              if (innerRef.current && !latest.isFocused) {
+                formatCurrencyValue(innerRef.current.value)
+              }
+            })
+          }
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
+        return () => {
+          associatedForm?.removeEventListener('reset', handleReset)
+          latest.resetFrame.cancel()
         }
       },
       formatCurrencyValue,
@@ -76,9 +107,14 @@ export const CurrencyInput: FC<Props> = ({
     }
   }, [latest])
 
-  const callbackRef = useOnce(functions.baseCallbackRef)
+  const initialFormatCallbackRef = useOnce(functions.initialFormatCallbackRef)
 
-  const mergedRef = useMergeRefs(innerRef, callbackRef, ref)
+  const mergedRef = useMergeRefs(
+    innerRef,
+    initialFormatCallbackRef,
+    functions.resetListenerCallbackRef,
+    ref,
+  )
 
   useEffect(() => {
     if (!isFocused) {
