@@ -50,33 +50,6 @@ The SmartHR UI uses [CircleCI](https://circleci.com/).
 
 If any of the above is missing, please correct the code.
 
-### Template
-
-````markdown
-# Component name
-
-```tsx
-import { ComponentName } from 'smarthr-ui'
-
-<ComponentName />
-```
-
-## props
-
-| Name      | Required | Type      | DefaultValue       | Description  |
-| --------- | -------- | --------- | ------------------ | ------------ |
-|           | ✔ or -   |           | DefaultValue or -  |              |
-
-````
-
-### Rule
-
-- Required
-  - Required: ✔
-  - Not Required: -
-- DefaultValue
-  - No Default Value: -
-
 ## Release
 
 We use [`release-please`](https://github.com/googleapis/release-please) to release npm packages. It opens a release PR based on conventional commit messages on `master`, and merging that PR triggers the publish to npm automatically. There is no manual release command to run.
