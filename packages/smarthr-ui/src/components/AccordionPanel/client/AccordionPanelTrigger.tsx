@@ -68,7 +68,6 @@ export const AccordionPanelTrigger: FC<Props> = ({
   children,
   className,
   headingType = 'blockTitle',
-  unrecommendedHeadingTag,
   ...rest
 }) => {
   const classNames = useMemo(() => {
@@ -98,7 +97,6 @@ export const AccordionPanelTrigger: FC<Props> = ({
       isExpanded={isExpanded}
       iconPosition={iconPosition}
       headingType={headingType}
-      unrecommendedHeadingTag={unrecommendedHeadingTag}
       classNames={classNames}
       handleClickTrigger={handleClickTrigger}
       handleKeyDown={handleKeyDown}
