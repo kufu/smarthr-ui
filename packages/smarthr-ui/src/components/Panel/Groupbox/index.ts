@@ -1,1 +1,1 @@
-export { BaseColumn, Groupbox } from './Groupbox'
+export { Groupbox } from './Groupbox'

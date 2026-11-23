@@ -60,8 +60,6 @@ export { AnchorButton, Button, UnstyledButton } from './components/Button'
 export { StatusLabel, RequiredLabel } from './components/StatusLabel'
 /** @public */
 export { Panel, Groupbox } from './components/Panel'
-/** @public */
-export { Base, BaseColumn } from './components/Panel'
 /* eslint-disable no-restricted-syntax -- Iconから200以上のアイコンをexport */
 /** @public */
 export * from './components/Icon'

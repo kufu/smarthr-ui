@@ -6,7 +6,7 @@ import type { Groupbox } from '../Groupbox'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 export default {
-  title: 'Components/Base/BaseColumn/VRT',
+  title: 'Components/Panel/Groupbox/VRT',
   render: (args, context) => (
     <Stack>
       {Padding.render && Padding.render(args, context)}
