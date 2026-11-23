@@ -38,5 +38,3 @@ minimumReleaseAgeExclude:
   # minimumReleaseAge(7日)の待機を一時解除する(7日経過後にこのエントリ自体は削除可)
   - eslint-config-smarthr@14.17.1
   - eslint-plugin-smarthr@6.31.1
-  # GHSA-cf2h-pxjq-68xw のDoS修正版を適用するため、7日間の待機対象から除外する
-  - minimatch@11.0.7
