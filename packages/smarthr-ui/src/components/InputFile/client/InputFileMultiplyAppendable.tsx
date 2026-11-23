@@ -2,6 +2,7 @@
 
 import { type ChangeEvent, type FC, useId, useMemo, useRef, useState } from 'react'
 
+import { useAnimationFrame } from '../../../hooks/client/useAnimationFrame'
 import { useMergeRefs } from '../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../hooks/useLatest'
 import { Stack } from '../../Layout'
@@ -55,8 +56,16 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
 
   // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
   const isUpdatingFilesRef = useRef(false)
+  const resetFrame = useAnimationFrame()
 
-  const latest = useLatest({ onChange, files, existingFiles, onDeleteExistingFile, previewFile })
+  const latest = useLatest({
+    onChange,
+    files,
+    existingFiles,
+    onDeleteExistingFile,
+    previewFile,
+    resetFrame,
+  })
 
   const functions = useMemo(() => {
     let input: HTMLInputElement | null = null
@@ -79,6 +88,25 @@ export const InputFileMultiplyAppendable: FC<Props> = ({
     return {
       callbackRef: (node: HTMLInputElement | null) => {
         input = node
+
+        const associatedForm = node?.form
+        // HINT: form.reset()はネイティブのinput[type=file]のfilesを空にするが、
+        // 他のinput/textareaと異なりchangeイベントは発火しないため、filesステートの表示が追従しない。
+        // resetイベントは実際にfilesがリセットされる前に発火するため、次のフレームで読み直す
+        const handleReset = (e: Event) => {
+          latest.resetFrame.request(() => {
+            if (!e.defaultPrevented && input && latest.files.length > 0) {
+              updateFiles(input, [])
+            }
+          })
+        }
+
+        associatedForm?.addEventListener('reset', handleReset)
+
+        return () => {
+          associatedForm?.removeEventListener('reset', handleReset)
+          latest.resetFrame.cancel()
+        }
       },
       handleChange: (e: ChangeEvent<HTMLInputElement>) => {
         // Safari において、input.files への直接代入時はonChangeを発火させない
