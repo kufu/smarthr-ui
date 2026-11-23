@@ -102,11 +102,11 @@ export { DropZone } from './components/DropZone'
 export { DefinitionList, DefinitionListItem } from './components/DefinitionList'
 /** @public */
 export {
-  AccordionPanel,
-  AccordionPanelItem,
-  AccordionPanelContent,
-  AccordionPanelTrigger,
-} from './components/AccordionPanel'
+  Accordion,
+  AccordionItem,
+  AccordionContent,
+  AccordionTrigger,
+} from './components/Accordion'
 /** @public */
 export { InformationPanel } from './components/InformationPanel'
 /**
