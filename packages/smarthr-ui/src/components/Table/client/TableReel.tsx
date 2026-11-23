@@ -8,6 +8,7 @@ import { ScrollerSwitcher } from '../ScrollerSwitcher'
 import { reelShadowClassNameGenerator } from '../reelShadowStyle'
 
 import type { ExtendElementPropsWithRef } from '../../../types'
+import type { Rounded } from '../ScrollerSwitcher'
 
 const TR_SELECTOR = 'table tr'
 const FIXED_LEFT_SELECTOR = '[data-fixed="left"]'
@@ -19,6 +20,7 @@ type Props = ExtendElementPropsWithRef<
   'div',
   {
     fixedHead?: boolean
+    rounded?: Rounded
   }
 >
 
@@ -29,7 +31,7 @@ const classNameGenerator = tv({
   },
 })
 
-export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }) => {
+export const TableReel: FC<Props> = ({ className, children, fixedHead, rounded, ...rest }) => {
   const frame = useAnimationFrame()
 
   const callbackRef = useCallback(
@@ -144,7 +146,7 @@ export const TableReel: FC<Props> = ({ className, children, fixedHead, ...rest }
   }, [className])
 
   return (
-    <ScrollerSwitcher ref={callbackRef} fixedHead={fixedHead}>
+    <ScrollerSwitcher ref={callbackRef} fixedHead={fixedHead} rounded={rounded}>
       <div className={classNames.wrapper}>
         <div {...rest} className={classNames.inner}>
           {children}

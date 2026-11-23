@@ -15,12 +15,12 @@ workflows:
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
-        - 'googleapis/release-please-action@v4.4.1'
+        - 'googleapis/release-please-action@v5.0.0'
         - 'pnpm/action-setup@v6.1.1'
     '.github/workflows/titleCheck.yml': []
     '.github/workflows/typoChecker.yml':
         - 'actions/checkout@v7.0.1'
-        - 'crate-ci/typos@v1.52.0'
+        - 'crate-ci/typos@v1.52.2'
     '.github/workflows/updateLockfile.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
@@ -37,9 +37,9 @@ dependencies:
         commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'
         owner_id: 44036562
         repo_id: 189476904
-    'crate-ci/typos@v1.52.0':
-        ref: 'v1.52.0'
-        commit: 'sha1-4c8b7f51ca60df14e3c5ca82770dfbbe6c3dae85'
+    'crate-ci/typos@v1.52.2':
+        ref: 'v1.52.2'
+        commit: 'sha1-276087d9a4f06398b3e04825487805e2d7375888'
         owner_id: 36412122
         repo_id: 181782286
     'crowdin/github-action@v3.6.0':
@@ -47,9 +47,9 @@ dependencies:
         commit: 'sha1-d651c77756acbe11a31d77a6fb79d8a239e1e05a'
         owner_id: 861398
         repo_id: 258521306
-    'googleapis/release-please-action@v4.4.1':
-        ref: 'v4.4.1'
-        commit: 'sha1-5c625bfb5d1ff62eadeeb3772007f7f66fdcf071'
+    'googleapis/release-please-action@v5.0.0':
+        ref: 'v5.0.0'
+        commit: 'sha1-45996ed1f6d02564a971a2fa1b5860e934307cf7'
         owner_id: 16785467
         repo_id: 262236530
     'pnpm/action-setup@v6.1.1':

@@ -350,6 +350,8 @@ describe('useListbox', () => {
       listBox.style.maxHeight = '300px'
       Object.defineProperty(listBox, 'scrollHeight', { value: 200 })
       listBox.getBoundingClientRect = () => ({ width: 200 }) as DOMRect
+      // HINT: getComputedStyleはDOMに接続されていない要素に対してmaxHeightを算出できないため、接続する
+      document.body.appendChild(listBox)
 
       const props = { ...initialProps, triggerRef: { current: trigger } }
       const renderHookResult = renderHook((p) => useListbox(p), { initialProps: props })
@@ -363,6 +365,8 @@ describe('useListbox', () => {
         left: 0,
         height: undefined,
       })
+
+      document.body.removeChild(listBox)
     })
   })
 })

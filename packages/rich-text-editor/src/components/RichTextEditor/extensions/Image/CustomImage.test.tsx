@@ -60,7 +60,7 @@ describe('CustomImage NodeView', () => {
       expect(img.style.width).toBe('222px')
       // 高さは縦横比に従わせる（表示幅が縮んでも潰れないようにするため）
       expect(img.style.height).toBe('auto')
-      expect(img.style.aspectRatio).toBe('2')
+      expect(img.style.aspectRatio).toBe('2 / 1')
     })
 
     // モデルも一致していること（従来から正しい挙動）
@@ -99,7 +99,7 @@ describe('CustomImage NodeView', () => {
 
       expect(img.style.width).toBe('800px')
       expect(img.style.height).toBe('auto')
-      expect(img.style.aspectRatio).toBe('2')
+      expect(img.style.aspectRatio).toBe('2 / 1')
     })
 
     it('width だけなら自然比率に従わせる', async () => {
@@ -109,7 +109,7 @@ describe('CustomImage NodeView', () => {
 
       expect(img.style.width).toBe('600px')
       expect(img.style.height).toBe('auto')
-      expect(img.style.aspectRatio).toBe('2')
+      expect(img.style.aspectRatio).toBe('2 / 1')
     })
 
     it('height だけなら自然比率から相当する幅を出す', async () => {
@@ -119,7 +119,7 @@ describe('CustomImage NodeView', () => {
 
       expect(img.style.width).toBe('400px')
       expect(img.style.height).toBe('auto')
-      expect(img.style.aspectRatio).toBe('2')
+      expect(img.style.aspectRatio).toBe('2 / 1')
     })
 
     it('両方なしなら何も指定しない', async () => {

@@ -12,7 +12,6 @@ import {
 } from 'react'
 
 import { useLatest } from '../../../../hooks/useLatest'
-import { type ResponseStatus, useResponseStatus } from '../../../../hooks/useResponseStatus'
 import { Button } from '../../../Button'
 import { Cluster } from '../../../Layout'
 import { Section } from '../../../SectioningContent'
@@ -23,6 +22,7 @@ import { dialogContentClassNameGenerator } from '../../dialogContentClassNameGen
 
 import { StepFormDialogContext } from './StepFormDialogProvider'
 
+import type { useResponseStatus } from '../../../../hooks/useResponseStatus'
 import type { ExtendElementPropsWithRef } from '../../../../types'
 import type { CommonButtonType, StepItem } from '../type'
 
@@ -56,7 +56,7 @@ type Props = ExtendElementPropsWithRef<
     backButton: CommonButtonType
     firstStep: StepItem
     handleClickClose: (e?: MouseEvent<HTMLButtonElement>) => void
-    responseStatus?: ResponseStatus
+    responseStatus: ReturnType<typeof useResponseStatus>
     /** ステップの総数 */
     stepLength: number
     handleClickBack?: () => void
@@ -155,8 +155,6 @@ export const StepFormDialogContent: FC<Props> = ({
 
   const stepText = stepLength > 1 ? `（${activeStep}/${stepLength}）` : ''
 
-  const calcedResponseStatus = useResponseStatus(responseStatus)
-
   return (
     // eslint-disable-next-line smarthr/a11y-prohibit-sectioning-content-in-form
     <Section>
@@ -178,7 +176,7 @@ export const StepFormDialogContent: FC<Props> = ({
             <Cluster justify="space-between" gap={{ row: 0.5, column: 2 }}>
               {!backButton.hidden && activeStep > 1 && (
                 <BackButton
-                  disabled={backButton.disabled || calcedResponseStatus.isProcessing}
+                  disabled={backButton.disabled || responseStatus.isProcessing}
                   text={backButton.text}
                   variant={backButton.theme}
                   handleClick={functions.handleBackAction}
@@ -187,7 +185,7 @@ export const StepFormDialogContent: FC<Props> = ({
               <Cluster gap={BUTTON_COLUMN_GAP} className={CLASS_NAMES.buttonArea}>
                 {!closeButton.hidden && (
                   <CloseButton
-                    disabled={closeButton.disabled || calcedResponseStatus.isProcessing}
+                    disabled={closeButton.disabled || responseStatus.isProcessing}
                     text={closeButton.text}
                     variant={closeButton.theme}
                     handleClick={functions.handleCloseAction}
@@ -196,7 +194,7 @@ export const StepFormDialogContent: FC<Props> = ({
                 {!submitButton.hidden && (
                   <SubmitButton
                     disabled={submitButton.disabled}
-                    loading={calcedResponseStatus.isProcessing}
+                    loading={responseStatus.isProcessing}
                     text={submitButton.text}
                     variant={submitButton.theme}
                   />
@@ -204,7 +202,7 @@ export const StepFormDialogContent: FC<Props> = ({
               </Cluster>
             </Cluster>
             <DialogContentResponseStatusMessage
-              responseStatus={calcedResponseStatus}
+              responseStatus={responseStatus}
               className={CLASS_NAMES.message}
             />
           </div>
