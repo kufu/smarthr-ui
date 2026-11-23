@@ -91,7 +91,7 @@ type Props = RovingButtonProps & {
   spec: MediaSizeSpec
 }
 
-export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest }) => {
+export const MediaSizePopover: FC<Props> = memo(({ editor, spec, ...rest }) => {
   const { localize } = useIntl()
   const [width, setWidth] = useState('')
   const [height, setHeight] = useState('')
@@ -195,7 +195,6 @@ export const MediaSizePopover: FC<Props> = memo(({ editor, pos, spec, ...rest })
       {...rest}
       initialFocusRef={widthInputRef}
       editor={editor}
-      pos={pos}
       secondaryAction={secondaryAction}
       handleOpen={functions.handleOpen}
       handleSubmit={functions.handleSubmit}

@@ -17,7 +17,7 @@ type Props = RovingButtonProps & {
   pos: number
 }
 
-export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
+export const ImageAltPopover: FC<Props> = memo(({ editor, ...rest }) => {
   const { localize } = useIntl()
   const [alt, setAlt] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -56,7 +56,6 @@ export const ImageAltPopover: FC<Props> = memo(({ editor, pos, ...rest }) => {
       {...rest}
       initialFocusRef={inputRef}
       editor={editor}
-      pos={pos}
       handleOpen={functions.handleOpen}
       handleSubmit={functions.handleSubmit}
       icon={ICON}
