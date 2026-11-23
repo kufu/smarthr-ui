@@ -4,6 +4,17 @@ Thank you for reading this!
 
 `smarthr-ui` is intended to be used for SmartHR internally, but we are welcoming your contributions!
 
+## Before opening a pull request
+
+Using AI tools to help you write code is fine, but you must be able to explain
+what your change does, why it's needed, and how it fits with this component's
+existing design and conventions. Pull requests that appear to be AI-generated
+without that understanding, or that don't account for the project's existing
+context and conventions, may be rejected without detailed review.
+
+If you're unsure whether your change fits with the project's direction,
+consider opening an issue to discuss it first.
+
 ## Setup
 
 We use `pnpm` for the package manager.
