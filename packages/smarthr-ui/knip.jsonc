@@ -1,36 +1,34 @@
-// HINT: package.jsonのexportsに "./lib/*" のワイルドカードがあるため、
-// knipはsrc/**/* 全体をentryとみなす。entryのexportは既定で「利用済み」扱いになり、
-// 未使用のfile/exportが一切検知されなくなるため includeEntryExports を有効にしている。
+// HINT: package.jsonのexportsが明示的なサブパスのみで "./lib/*" のようなワイルドカードを
+// 持たないため、knipはpackage.jsonのexportsマッピング先（src/index.ts、src/types/index.ts、
+// src/smarthr-ui-preset.ts、src/components/Experimental/index.ts）を自動的にentryとして
+// 認識する。project設定でsrc全体を解析対象に含めることで、entryからreachableでない
+// 本当に未使用なfile/exportも検知できる。
 //
-// includeEntryExportsを有効にすると、内部から一度も参照されないexport（＝公開専用のAPI）も
-// 報告される。それらは src/index.ts 側に /** @public */ を付けて除外する。
+// includeEntryExportsを有効にしているため、内部から一度も参照されないexport（＝公開専用のAPI）も
+// 報告される。それらは定義元やsrc/index.ts側に /** @public */ を付けて除外する。
 //
 // TODO: knipをworkspace単体ではなくルートから全workspace対象で実行するようにしたい。
 // packages/chartsからの参照を追えるようになり、constants.tsなどの@publicが不要になる。
 // ただしignoreDependenciesなどの設定をルートへ集約する必要があり、規模が大きいため別途対応する。
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
-  "vitest": false,
   "storybook": {
     "entry": [
       ".storybook/main.ts",
       ".storybook/preview.tsx",
       ".storybook/manager.ts",
-      ".storybook/tailwind.storybook.config.ts"
-    ]
+      ".storybook/tailwind.storybook.config.ts",
+    ],
   },
-  "entry": [
-    "scripts/**/*.ts"
-  ],
+  "entry": ["scripts/**/*.ts"],
+  "project": ["src/**/*.{ts,tsx}"],
   "ignore": [
-    "rollup.*.config.js",
-    "vitest.config.ts",
-    "vitest-setup.js"
+    // HINT: @betaの開発中機能で外部に公開していないため、knipは未使用ファイルとして検知する。
+    // 実装が固まり正式公開するタイミングでpackage.jsonのexportsに追加し、この行を削除する
+    "src/hooks/client/useSV/**",
   ],
   "includeEntryExports": true,
-  "tags": [
-    "-public"
-  ],
+  "tags": ["-public"],
   "ignoreDependencies": [
     "@rollup/plugin-commonjs",
     "@rollup/plugin-json",
@@ -38,17 +36,11 @@
     "@rollup/plugin-replace",
     "@rollup/plugin-typescript",
     "@storybook/cli",
-    "@testing-library/jest-dom",
     "playwright",
     "rollup-plugin-preserve-directives",
     "rollup-plugin-rename-node-modules",
     "tslib",
-    "typescript-eslint"
+    "typescript-eslint",
   ],
-  "ignoreBinaries": [
-    "tsc",
-    "eslint",
-    "prettier",
-    "knip"
-  ],
+  "ignoreBinaries": ["tsc", "eslint", "prettier", "knip"],
 }
