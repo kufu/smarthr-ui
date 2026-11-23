@@ -184,7 +184,6 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
   onClickBack,
   onPressEscape = onClickClose,
   responseStatus: orgResponseStatus,
-  className,
   isOpen,
   ...rest
 }) => {
@@ -277,7 +276,6 @@ const ActualControlledStepFormDialog: FC<Omit<Props, 'portalParent'>> = ({
       {...rest}
       focusTrapRef={focusTrapRef}
       isOpen={isOpen}
-      className={className}
       ariaLabelledby={heading.id}
       onPressEscape={
         closeButton.disabled || responseStatus.isProcessing ? undefined : onPressEscape

@@ -147,12 +147,10 @@ const resolveAlternativeFormat = (
 export const WarekiPicker: FC<Props> = ({
   value,
   defaultValue,
-  name,
   from = DEFAULT_FROM,
   to,
   disabled,
   width,
-  error,
   className,
   parseInput,
   formatDate,
@@ -470,10 +468,8 @@ export const WarekiPicker: FC<Props> = ({
       <Input
         {...rest}
         ref={mergedRef}
-        name={name}
         disabled={disabled}
         defaultValue={initialInputValue}
-        error={error}
         width="100%"
         className={classNames.inputContainer}
         aria-expanded={isCalendarShown}

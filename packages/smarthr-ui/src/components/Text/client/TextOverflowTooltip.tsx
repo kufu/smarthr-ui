@@ -33,7 +33,7 @@ const CLASS_NAMES = (() => {
   }
 })()
 
-export const TextOverflowTooltip: FC<Props> = ({ as: Component, className, children, ...rest }) => {
+export const TextOverflowTooltip: FC<Props> = ({ as: Component, children, ...rest }) => {
   const [isOverflowing, setIsOverflowing] = useState(false)
 
   // HINT: -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
@@ -73,9 +73,7 @@ export const TextOverflowTooltip: FC<Props> = ({ as: Component, className, child
 
   const content = (
     <span className={CLASS_NAMES.wrapper}>
-      <Component {...rest} className={className}>
-        {children}
-      </Component>
+      <Component {...rest}>{children}</Component>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
       <span className={CLASS_NAMES.shadowWrapper} aria-hidden>
         <span ref={shadowCallbackRef} className={CLASS_NAMES.shadow}>

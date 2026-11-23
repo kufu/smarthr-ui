@@ -15,15 +15,9 @@ type Props<Id extends keyof Messages> = {
   values?: ComponentPropsWithRef<typeof ReactIntlFormattedMessage>['values']
 }
 
-const LocalizerInner = <ID extends keyof Messages>({
-  values,
-  id,
-  defaultText,
-  ...rest
-}: Props<ID>) => (
+const LocalizerInner = <ID extends keyof Messages>({ values, defaultText, ...rest }: Props<ID>) => (
   <ReactIntlFormattedMessage
     {...rest}
-    id={id}
     values={{ ...values, break: values?.break ?? <br /> }}
     defaultMessage={defaultText}
   />

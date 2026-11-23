@@ -45,7 +45,6 @@ export const ToolbarButton: FC<Props> = memo(
     toggle,
     shortcut,
     className,
-    ref,
     disabled,
     'aria-expanded': ariaExpanded,
     ...rest
@@ -61,7 +60,6 @@ export const ToolbarButton: FC<Props> = memo(
       >
         <button
           {...rest}
-          ref={ref}
           type="button"
           disabled={disabled}
           className={actualClassName}

@@ -21,10 +21,16 @@ describe('intl', () => {
     })
 
     it('未翻訳のロケールでは日本語のdefaultTextにフォールバックする', () => {
+      // 日本語をソースとし、翻訳が無いロケールでは defaultText（日本語）へフォールバックする仕様の検証。
+      // Crowdin が全キーを翻訳すると「未翻訳の実キー」が存在しなくなるため、特定の実キーには依存しない。
+      // 辞書に存在しないキーを使い、翻訳が見つからないとき defaultText に落ちる経路を直接検証する。
       const { localize } = renderHook(() => useIntl(), { wrapper: wrapperOf('en-us') }).result
         .current
+      const localizeAny = localize as (descriptor: { id: string; defaultText: string }) => string
 
-      expect(localize({ id: 'smarthr-ui/RichTextEditor/bold', defaultText: '太字' })).toBe('太字')
+      expect(
+        localizeAny({ id: 'smarthr-ui/RichTextEditor/__untranslated__', defaultText: '太字' }),
+      ).toBe('太字')
     })
 
     describe('console への出力', () => {
@@ -36,8 +42,10 @@ describe('intl', () => {
         const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
         const { localize } = renderHook(() => useIntl(), { wrapper: wrapperOf('en-us') }).result
           .current
+        const localizeAny = localize as (descriptor: { id: string; defaultText: string }) => string
 
-        localize({ id: 'smarthr-ui/RichTextEditor/bold', defaultText: '太字' })
+        // 辞書に存在しないキーでフォールバック経路を通し、未翻訳はエラー扱いしないことを検証する
+        localizeAny({ id: 'smarthr-ui/RichTextEditor/__untranslated__', defaultText: '太字' })
 
         expect(consoleError).not.toHaveBeenCalled()
       })

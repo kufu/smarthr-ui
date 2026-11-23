@@ -29,11 +29,11 @@ const callbackRef = (node: HTMLElement | null) => {
   }
 }
 
-export const FixedHeadTableScroller: FC<Props> = ({ children, ref, direction, ...rest }) => {
+export const FixedHeadTableScroller: FC<Props> = ({ children, ref, ...rest }) => {
   const mergedRef = useMergeRefs(callbackRef, ref)
 
   return (
-    <Scroller {...rest} ref={mergedRef} direction={direction}>
+    <Scroller {...rest} ref={mergedRef}>
       {children}
     </Scroller>
   )
