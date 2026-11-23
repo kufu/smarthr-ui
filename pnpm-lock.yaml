@@ -7,7 +7,7 @@ settings:
 overrides:
   js-yaml@>=4.0.0 <=5.2.1: '>=5.5.0'
   react-docgen>@babel/core: ^7.29.13
-  sucrase>glob: '>=14.0.5'
+  sucrase>glob: '>=14.0.6'
 
 importers:
 
