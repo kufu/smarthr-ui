@@ -68,6 +68,19 @@ test('require-safe-browser-translation', () => {
         )
       `,
 
+      // 両方の分岐でkeyが同じ(静的な文字列)ため安全
+      `
+        const Foo = ({ exceeded }) => (
+          <div>
+            {exceeded ? (
+              <Localizer key="same" id="a" defaultText="a" />
+            ) : (
+              <Localizer key="same" id="b" defaultText="b" />
+            )}
+          </div>
+        )
+      `,
+
       // 両方の分岐が文字列リテラルのため安全
       `
         const Foo = ({ checked }) => <div>{checked ? '選択済み' : '無選択'}</div>
@@ -215,6 +228,63 @@ test('require-safe-browser-translation', () => {
           )
         `,
         errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
+      },
+
+      // 同じコンポーネントでもkeyが異なる場合、Reactは要素を再利用しない
+      {
+        code: `
+          const Foo = ({ exceeded }) => (
+            <div>
+              {exceeded ? (
+                <Localizer key="a" id="a" defaultText="a" />
+              ) : (
+                <Localizer key="b" id="b" defaultText="b" />
+              )}
+            </div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
+      },
+
+      // 片方のみkeyがある場合も、Reactは要素を再利用しない
+      {
+        code: `
+          const Foo = ({ exceeded }) => (
+            <div>
+              {exceeded ? (
+                <Localizer key="a" id="a" defaultText="a" />
+              ) : (
+                <Localizer id="b" defaultText="b" />
+              )}
+            </div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
+      },
+
+      // keyが動的な式の場合、静的に同一とは判断できないため安全とみなさない
+      {
+        code: `
+          const Foo = ({ exceeded, dynamicKey }) => (
+            <div>
+              {exceeded ? (
+                <Localizer key={dynamicKey} id="a" defaultText="a" />
+              ) : (
+                <Localizer key={dynamicKey} id="b" defaultText="b" />
+              )}
+            </div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
       },
 
       // {cond && '文字列リテラル'}

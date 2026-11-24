@@ -23,7 +23,9 @@
  *    発生しないため対象外。ただし文字列リテラルとテンプレートリテラルの組み合わせは
  *    どちらも最終的に文字列としてレンダーされるため同じ種類とみなす。Localizerと
  *    FormattedMessageのようにコンポーネント自体が異なる場合は、要素の型が変わるため
- *    対象のまま)
+ *    対象のまま。同じコンポーネントでもJSXの`key`属性が異なる場合、Reactは要素を
+ *    再利用せずアンマウント/マウントするため対象のまま。`key`が動的な式で静的に
+ *    比較できない場合も、安全側に倒して対象のまま扱う)
  *
  * 検知しないパターン(対象外。既知の限界):
  * - JSX属性値(`aria-current={current ? 'page' : undefined}` 等)。HTML属性はテキスト
@@ -55,11 +57,45 @@ const getJSXElementName = (node) => {
   return name.type === 'JSXIdentifier' ? name.name : undefined
 }
 
+// JSXの`key`属性を調べる。Reactはkeyが異なると「型が同じでも別のアイデンティティの要素」と
+// みなし、旧要素をアンマウントしてから新要素をマウントする(propsの更新による再利用をしない)。
+// そのため、両分岐が同じコンポーネントでもkeyが違えば安全とみなせない。
+// 値が静的に比較できない(変数等の動的な式)場合は、安全側に倒して「毎回異なる」ものとして扱う
+let dynamicKeySeq = 0
+const getJSXKeyInfo = (node) => {
+  const attr = node.openingElement.attributes.find(
+    (a) => a.type === 'JSXAttribute' && a.name.name === 'key',
+  )
+
+  if (!attr) {
+    return { present: false, value: undefined }
+  }
+
+  const { value } = attr
+  const literalValue =
+    value && value.type === 'Literal'
+      ? value.value
+      : value && value.type === 'JSXExpressionContainer' && value.expression.type === 'Literal'
+        ? value.expression.value
+        : undefined
+
+  if (literalValue !== undefined) {
+    return { present: true, value: literalValue }
+  }
+
+  // 動的な式は静的に比較できないため、安全側に倒して一意な値を割り当て、
+  // 他のどのkeyとも一致しない(=安全と判断しない)ようにする
+  dynamicKeySeq += 1
+
+  return { present: true, value: `__dynamic_key_${dynamicKeySeq}__` }
+}
+
 // 「要素でラップされていない生のテキストを生成する式」を分類する。
 // kindが同じであれば、Reactはその式に対応するノードを再利用しマウント/アンマウントが
 // 発生しないとみなせる(文字列リテラルとテンプレートリテラルはどちらもkind: 'string'として
 // 同一視する。コンポーネントの場合はタグ名が異なると別の型になるため、keyまで一致している
-// 必要がある)
+// 必要がある。さらにJSXのkey属性が異なる場合もReactは要素を再利用しないため、keyInfoも
+// 一致している必要がある)
 const classifyBareTextExpression = (node) => {
   if (!node) {
     return undefined
@@ -68,7 +104,13 @@ const classifyBareTextExpression = (node) => {
   const componentName = getJSXElementName(node)
 
   if (componentName && TARGET_COMPONENT_NAMES.has(componentName)) {
-    return { kind: 'component', key: componentName, label: `${componentName}要素` }
+    const keyInfo = getJSXKeyInfo(node)
+
+    return {
+      kind: 'component',
+      key: `${componentName}:${keyInfo.present ? keyInfo.value : ''}`,
+      label: `${componentName}要素`,
+    }
   }
 
   if (node.type === 'Literal' && typeof node.value === 'string') {
