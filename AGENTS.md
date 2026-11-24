@@ -449,7 +449,7 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 条件によって出現/消失するテキストが「要素でラップされていない生のテキスト（文字列や `Localizer` 等、実体としてテキストノードしか生成しないもの）」であり、かつ常にマウントされている親要素の**唯一の子でない**場合、ブラウザの自動翻訳機能（Google翻訳等）がテキストノードを別要素（`<font>` 等）に書き換えた後、React が `removeChild`/`insertBefore` で例外を起こしクラッシュする既知の問題がある（詳細: https://github.com/facebook/react/issues/11538 ）。
 
-このパターンに該当する箇所は、`src/components/SafeBrowserTranslation` で必ず包むこと。`{cond && <Localizer ... />}`・`{cond ? <Localizer ... /> : X}` の形で `Localizer`/`FormattedMessage` が条件付きで出入りしている箇所は`eslint-local-rules/require-safe-browser-translation`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。ただし`useState`等の変数経由で出入りするパターン（後述の判断基準の2点目・3点目）はルールでは検知できないため、レビューで見つける必要があります。
+このパターンに該当する箇所は、`src/components/SafeBrowserTranslation` で必ず包むこと。`{cond && <Localizer ... />}`・`{cond ? <Localizer ... /> : X}` の形で `Localizer`/`FormattedMessage`、または文字列リテラル/テンプレートリテラルが条件付きで出入りしている箇所は`eslint-local-rules/require-safe-browser-translation`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。ただし`useState`等の変数経由で出入りするパターン（後述の判断基準の2点目・3点目）はルールでは検知できないため、レビューで見つける必要があります。
 
 ```tsx
 // ❌ Localizerが条件付きで出入りし、親の唯一の子でない場合クラッシュしうる

@@ -48,6 +48,13 @@ test('require-safe-browser-translation', () => {
         )
       `,
 
+      // SafeBrowserTranslationで包まれている(文字列リテラル)
+      `
+        const Foo = ({ loading }) => (
+          <div>{loading && <SafeBrowserTranslation>text</SafeBrowserTranslation>}</div>
+        )
+      `,
+
       // 両方の分岐が対象コンポーネントのため、要素の出入りが発生しない
       `
         const Foo = ({ exceeded }) => (
@@ -58,6 +65,19 @@ test('require-safe-browser-translation', () => {
               <Localizer id="b" defaultText="b" />
             )}
           </div>
+        )
+      `,
+
+      // 両方の分岐が文字列リテラルのため安全
+      `
+        const Foo = ({ checked }) => <div>{checked ? '選択済み' : '無選択'}</div>
+      `,
+
+      // 文字列リテラルとテンプレートリテラルの組み合わせは、どちらも最終的に
+      // 文字列としてレンダーされるため安全
+      `
+        const Foo = ({ checked, name }) => (
+          <div>{checked ? \`\${name}を選択済み\` : '無選択'}</div>
         )
       `,
 
@@ -75,9 +95,24 @@ test('require-safe-browser-translation', () => {
         )
       `,
 
-      // &&の左辺(条件式側)にLocalizerが出てきても対象外
+      // &&の左辺(条件式側)に対象外の要素が出てきても問題ない
       `
-        const Foo = ({ a }) => <div>{Boolean(a) && 'text'}</div>
+        const Foo = ({ a }) => <div>{Boolean(a) && <OtherComponent />}</div>
+      `,
+
+      // 変数・関数呼び出しは型が静的に確定しないため対象外
+      `
+        const Foo = ({ loading, text }) => <div>{loading && text}</div>
+      `,
+
+      // JSX属性値はHTML属性でテキストノードを生成しないため対象外(&&)
+      `
+        const Foo = ({ loading }) => <div aria-label={loading && '処理中'} />
+      `,
+
+      // JSX属性値はHTML属性でテキストノードを生成しないため対象外(三項演算子)
+      `
+        const Foo = ({ current }) => <a aria-current={current ? 'page' : undefined} />
       `,
 
       // ネストした三項演算子で、すべての分岐が対象コンポーネントのため安全
@@ -94,6 +129,19 @@ test('require-safe-browser-translation', () => {
           </div>
         )
       `,
+
+      // テンプレートリテラルと型の確定しない変数(number等)の組み合わせは、
+      // Reactの内部的にはどちらも同じテキストノードとして扱われ安全
+      `
+        const Foo = ({ count, max }) => (
+          <div>{count > max ? \`\${max}+\` : count}</div>
+        )
+      `,
+
+      // 文字列リテラルと変数の組み合わせも同様に安全
+      `
+        const Foo = ({ checked, label }) => <div>{checked ? '選択済み' : label}</div>
+      `,
     ],
 
     invalid: [
@@ -104,7 +152,7 @@ test('require-safe-browser-translation', () => {
             <div>{loading && <Localizer id="x" defaultText="処理中" />}</div>
           )
         `,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { name: 'Localizer' } }],
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
       },
 
       // {cond && <FormattedMessage />}
@@ -115,7 +163,7 @@ test('require-safe-browser-translation', () => {
           )
         `,
         errors: [
-          { messageId: 'requireSafeBrowserTranslation', data: { name: 'FormattedMessage' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'FormattedMessage要素' } },
         ],
       },
 
@@ -126,7 +174,7 @@ test('require-safe-browser-translation', () => {
             <div>{loading ? <Localizer id="x" defaultText="処理中" /> : null}</div>
           )
         `,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { name: 'Localizer' } }],
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
       },
 
       // {cond ? null : <Localizer />}
@@ -136,7 +184,7 @@ test('require-safe-browser-translation', () => {
             <div>{loading ? null : <Localizer id="x" defaultText="処理中" />}</div>
           )
         `,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { name: 'Localizer' } }],
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
       },
 
       // 片方のみ対象コンポーネントの三項演算子(型が異なるため要素の出入りが発生する)
@@ -148,7 +196,7 @@ test('require-safe-browser-translation', () => {
             </div>
           )
         `,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { name: 'Localizer' } }],
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
       },
 
       // ネストした三項演算子で、一部の分岐のみが対象コンポーネント
@@ -166,7 +214,47 @@ test('require-safe-browser-translation', () => {
             </div>
           )
         `,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { name: 'Localizer' } }],
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
+      },
+
+      // {cond && '文字列リテラル'}
+      {
+        code: `
+          const Foo = ({ checked }) => <div>{checked && '選択済み'}</div>
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // {cond && \`テンプレートリテラル\`}
+      {
+        code: `
+          const Foo = ({ checked, name }) => <div>{checked && \`\${name}を選択済み\`}</div>
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'テンプレートリテラル' } },
+        ],
+      },
+
+      // {cond ? '文字列リテラル' : null}
+      {
+        code: `
+          const Foo = ({ checked }) => <div>{checked ? '選択済み' : null}</div>
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // コンポーネントと文字列リテラルの混在(型が異なるため要素の出入りが発生する。
+      // 両方の分岐が危険な式のため、両方に報告される)
+      {
+        code: `
+          const Foo = ({ loading }) => (
+            <div>{loading ? <Localizer id="x" defaultText="処理中" /> : '処理中'}</div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } },
+        ],
       },
     ],
   })
