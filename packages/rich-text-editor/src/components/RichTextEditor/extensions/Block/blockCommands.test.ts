@@ -1,4 +1,5 @@
 import { Editor, type JSONContent } from '@tiptap/core'
+import { GapCursor } from '@tiptap/pm/gapcursor'
 import { AllSelection, NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { CellSelection } from '@tiptap/pm/tables'
 import { describe, expect, it, onTestFinished, vi } from 'vitest'
@@ -362,6 +363,41 @@ describe('deleteBlocks', () => {
     expect(scrolled).toEqual([false])
   })
 
+  it.each([
+    { name: '後ろ', selected: 0, deleted: 1, remaining: '/a.png' },
+    { name: '前', selected: 1, deleted: 0, remaining: '/b.png' },
+  ])(
+    '選んだ画像のすぐ $name のブロックを消しても、画像を選んだままで、スクロールしない',
+    ({ selected, deleted, remaining }) => {
+      const imageB = { ...image, attrs: { src: '/b.png', alt: '写真' } }
+      const editor = createEditor([image, imageB, paragraph('cc')])
+      editor.commands.setNodeSelection(topLevelPos(editor, selected))
+      const records = recordTransactions(editor)
+
+      editor.commands.deleteBlocks({ range: blockRangeAt(editor.state.doc, deleted) })
+
+      expect(outline(editor)).toEqual(['image', 'cc'])
+      const { doc, selection } = editor.state
+      expect(selection).toBeInstanceOf(NodeSelection)
+      expect(doc.nodeAt(selection.from)?.attrs.src).toBe(remaining)
+      expect(records.map(({ scrolled }) => scrolled)).not.toContain(true)
+    },
+  )
+
+  it('ブロックの境目のギャップカーソルは、すぐ後ろのブロックを消しても残り、スクロールしない', () => {
+    const editor = createEditor([table, table, table])
+    const gap = editor.state.doc.resolve(topLevelPos(editor, 1))
+    editor.view.dispatch(editor.state.tr.setSelection(new GapCursor(gap)))
+    const records = recordTransactions(editor)
+
+    editor.commands.deleteBlocks({ range: blockRangeAt(editor.state.doc, 1) })
+
+    expect(outline(editor)).toEqual(['xyzw', 'xyzw', 'paragraph'])
+    expect(editor.state.selection).toBeInstanceOf(GapCursor)
+    expect(editor.state.selection.from).toBe(topLevelPos(editor, 1))
+    expect(records.map(({ scrolled }) => scrolled)).not.toContain(true)
+  })
+
   it('空の段落だけの本文では、段落に寄せなどの属性があっても消せない', () => {
     const editor = createEditor([{ type: 'paragraph', attrs: { textAlign: 'center' } }])
 
@@ -574,6 +610,28 @@ describe('convertBlocks', () => {
     expect(caret(editor)).toEqual({ text: 'cc', offset: 1 })
     expect(records.map(({ scrolled }) => scrolled)).toEqual([false])
   })
+
+  it.each([
+    { name: '前', converted: 0 },
+    { name: '後ろ', converted: 2 },
+  ])(
+    '選んだ画像のすぐ $name のブロックを変換しても、画像を選んだままで、スクロールしない',
+    ({ converted }) => {
+      const editor = createEditor([paragraph('aa'), image, paragraph('cc')], ALL)
+      editor.commands.setNodeSelection(topLevelPos(editor, 1))
+      const records = recordTransactions(editor)
+
+      editor.commands.convertBlocks({
+        range: blockRangeAt(editor.state.doc, converted),
+        to: 'heading1',
+      })
+
+      expect(editor.state.doc.child(converted).type.name).toBe('heading')
+      expect(editor.state.selection).toBeInstanceOf(NodeSelection)
+      expect(editor.state.selection.from).toBe(topLevelPos(editor, 1))
+      expect(records.map(({ scrolled }) => scrolled)).not.toContain(true)
+    },
+  )
 
   it.each([
     {
