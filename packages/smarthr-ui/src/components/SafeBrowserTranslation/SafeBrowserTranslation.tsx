@@ -11,4 +11,6 @@ import type { FC, PropsWithChildren } from 'react'
  * 詳細・適用すべき箇所の判断基準は AGENTS.md を参照。
  * @see https://github.com/facebook/react/issues/11538
  */
-export const TranslateSafeWrapper: FC<PropsWithChildren> = ({ children }) => <span>{children}</span>
+export const SafeBrowserTranslation: FC<PropsWithChildren> = ({ children }) => (
+  <span>{children}</span>
+)

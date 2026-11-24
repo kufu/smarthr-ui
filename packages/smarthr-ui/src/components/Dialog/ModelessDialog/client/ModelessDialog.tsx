@@ -29,7 +29,7 @@ import { Heading } from '../../../Heading'
 import { FaGripIcon, FaXmarkIcon } from '../../../Icon'
 import { LiveRegion } from '../../../LiveRegion'
 import { Panel } from '../../../Panel'
-import { TranslateSafeWrapper } from '../../../TranslateSafeWrapper'
+import { SafeBrowserTranslation } from '../../../SafeBrowserTranslation'
 import { DialogBody } from '../../DialogBody'
 import { DialogOverlapCenter, DialogPortal } from '../../client'
 
@@ -235,7 +235,7 @@ export const ModelessDialog: FC<Props> = ({
           wrapperPosition.left !== oldPosition.left
         ) {
           setLiveRegionText(
-            <TranslateSafeWrapper>
+            <SafeBrowserTranslation>
               <Localizer
                 id="smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText"
                 defaultText="上から{top}px、左から{left}px"
@@ -244,7 +244,7 @@ export const ModelessDialog: FC<Props> = ({
                   left: Math.trunc(wrapperPosition.left).toString(),
                 }}
               />
-            </TranslateSafeWrapper>,
+            </SafeBrowserTranslation>,
           )
         }
       })
