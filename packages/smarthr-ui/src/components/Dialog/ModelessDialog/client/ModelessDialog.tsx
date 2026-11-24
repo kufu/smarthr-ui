@@ -212,9 +212,17 @@ export const ModelessDialog: FC<Props> = ({
   })
 
   const functions = useMemo(() => {
-    const setActualPosition = (pos: SetStateAction<{ x: number; y: number }>) => {
-      setPosition(pos)
-
+    // HINT: ブラウザ翻訳でテキストノードが書き換えられた後にtop/leftだけが変わっても、
+    // keyが無いとReactはSafeBrowserTranslation自身を再利用し中身のnodeValueのみ
+    // 更新しようとする。だがそのノードは既に翻訳によってDOMから切り離されている可能性があり、
+    // 実際の画面DOMは変化しないためLiveRegionのMutationObserverが検知できず読み上げが
+    // 更新されない。位置を反映したkeyでSafeBrowserTranslation自体を再生成させ、
+    // 実際にDOM挿入が起きるようにする(Localizerにkeyを付けると、切り離されたテキスト
+    // ノードを削除しようとして同じNotFoundErrorが再発するため、wrapper側に付けること)。
+    // ただしkeyを変えるたびにブラウザ翻訳も一度外れる(再翻訳されるまで原文が一瞬見える)ため、
+    // ドラッグ中の高頻度な呼び出し(handleDrag)ではアナウンスを抑制し、操作が確定する
+    // タイミング(ドラッグ開始・終了、矢印キー操作)でのみアナウンスする
+    const announcePosition = () => {
       latest.liveRegionFrame.request(() => {
         const wrapperPosition = wrapperRef.current
           ? wrapperRef.current.getBoundingClientRect()
@@ -235,7 +243,9 @@ export const ModelessDialog: FC<Props> = ({
           wrapperPosition.left !== oldPosition.left
         ) {
           setLiveRegionText(
-            <SafeBrowserTranslation>
+            <SafeBrowserTranslation
+              key={`${Math.trunc(wrapperPosition.top)}:${Math.trunc(wrapperPosition.left)}`}
+            >
               <Localizer
                 id="smarthr-ui/ModelessDialog/dialogHandlerLiveRegionText"
                 defaultText="上から{top}px、左から{left}px"
@@ -250,11 +260,25 @@ export const ModelessDialog: FC<Props> = ({
       })
     }
 
+    const setActualPosition = (
+      pos: SetStateAction<{ x: number; y: number }>,
+      options?: { announce?: boolean },
+    ) => {
+      setPosition(pos)
+
+      if (options?.announce !== false) {
+        announcePosition()
+      }
+    }
+
     return {
       cleanupLiveRegion: () => {
         latest.liveRegionFrame.cancel()
       },
       setActualPosition,
+      // HINT: キーを押しっぱなしにするとOSのキーリピートでkeydownが連続発火し、
+      // ドラッグ中と同様に高頻度でSafeBrowserTranslationが再生成されてしまうため、
+      // keydown時はアナウンスを抑制し、キーを離した時(handleArrowKeyUp)にのみアナウンスする
       handleArrowKeyDown: (e: ReactKeyboardEvent) => {
         if (!latest.isOpen || document.activeElement !== e.currentTarget) {
           return
@@ -264,33 +288,55 @@ export const ModelessDialog: FC<Props> = ({
 
         switch (e.key) {
           case 'ArrowUp':
-            setActualPosition((prev) => ({
-              x: prev.x,
-              y: prev.y - movingDistance,
-            }))
+            setActualPosition(
+              (prev) => ({
+                x: prev.x,
+                y: prev.y - movingDistance,
+              }),
+              { announce: false },
+            )
             e.preventDefault()
             break
           case 'ArrowDown':
-            setActualPosition((prev) => ({
-              x: prev.x,
-              y: prev.y + movingDistance,
-            }))
+            setActualPosition(
+              (prev) => ({
+                x: prev.x,
+                y: prev.y + movingDistance,
+              }),
+              { announce: false },
+            )
             e.preventDefault()
             break
           case 'ArrowLeft':
-            setActualPosition((prev) => ({
-              x: prev.x - movingDistance,
-              y: prev.y,
-            }))
+            setActualPosition(
+              (prev) => ({
+                x: prev.x - movingDistance,
+                y: prev.y,
+              }),
+              { announce: false },
+            )
             e.preventDefault()
             break
           case 'ArrowRight':
-            setActualPosition((prev) => ({
-              x: prev.x + movingDistance,
-              y: prev.y,
-            }))
+            setActualPosition(
+              (prev) => ({
+                x: prev.x + movingDistance,
+                y: prev.y,
+              }),
+              { announce: false },
+            )
             e.preventDefault()
             break
+        }
+      },
+      handleArrowKeyUp: (e: ReactKeyboardEvent) => {
+        if (
+          e.key === 'ArrowUp' ||
+          e.key === 'ArrowDown' ||
+          e.key === 'ArrowLeft' ||
+          e.key === 'ArrowRight'
+        ) {
+          announcePosition()
         }
       },
       handleClickClose: (e: MouseEvent<HTMLButtonElement>) => {
@@ -312,13 +358,19 @@ export const ModelessDialog: FC<Props> = ({
           })
         }
 
-        setActualPosition(data)
+        setActualPosition(data, { announce: false })
       },
       handleDrag: (_: any, data: { deltaX: number; deltaY: number }) => {
-        setActualPosition((prev) => ({
-          x: prev.x + data.deltaX,
-          y: prev.y + data.deltaY,
-        }))
+        setActualPosition(
+          (prev) => ({
+            x: prev.x + data.deltaX,
+            y: prev.y + data.deltaY,
+          }),
+          { announce: false },
+        )
+      },
+      handleDragStop: () => {
+        announcePosition()
       },
     }
   }, [latest])
@@ -424,6 +476,7 @@ export const ModelessDialog: FC<Props> = ({
           bounds={draggableBounds ?? false}
           onStart={functions.handleDragStart}
           onDrag={functions.handleDrag}
+          onStop={functions.handleDragStop}
         >
           <Panel
             {...rest}
@@ -450,6 +503,7 @@ export const ModelessDialog: FC<Props> = ({
               <Handler
                 className={classNames.dialogHandler}
                 handleArrowKeyDown={functions.handleArrowKeyDown}
+                handleArrowKeyUp={functions.handleArrowKeyUp}
               />
               <div id={labelId} className="shr-my-1 shr-me-1 shr-min-w-0">
                 <Heading>{heading}</Heading>
@@ -485,7 +539,8 @@ export const ModelessDialog: FC<Props> = ({
 const Handler = memo<{
   className: string
   handleArrowKeyDown: (e: ReactKeyboardEvent) => void
-}>(({ handleArrowKeyDown, ...rest }) => {
+  handleArrowKeyUp: (e: ReactKeyboardEvent) => void
+}>(({ handleArrowKeyDown, handleArrowKeyUp, ...rest }) => {
   const { localize } = useIntl()
   const handlerDescriptionId = useId()
 
@@ -504,6 +559,7 @@ const Handler = memo<{
         })}
         aria-describedby={handlerDescriptionId}
         onKeyDown={handleArrowKeyDown}
+        onKeyUp={handleArrowKeyUp}
       >
         <FaGripIcon />
       </button>

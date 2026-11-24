@@ -287,6 +287,26 @@ test('require-safe-browser-translation', () => {
         ],
       },
 
+      // LocalizerとFormattedMessageの混在は、keyが無くても要素の型自体が異なるため、
+      // Reactは要素を再利用しない
+      {
+        code: `
+          const Foo = ({ exceeded }) => (
+            <div>
+              {exceeded ? (
+                <Localizer id="a" defaultText="a" />
+              ) : (
+                <FormattedMessage id="b" />
+              )}
+            </div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'FormattedMessage要素' } },
+        ],
+      },
+
       // {cond && '文字列リテラル'}
       {
         code: `

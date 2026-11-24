@@ -478,6 +478,21 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 - 三項演算子の両分岐が同じ型の要素で、`key` も同じ（両方未指定を含む）ため、要素自体のマウント/アンマウントが発生しない場合（例: `cond ? <Localizer id="a" /> : <Localizer id="b" />`）。`key` が異なる場合（例: `cond ? <Localizer key="a" /> : <Localizer key="b" />`）は、型が同じでも React が要素を再利用せずアンマウント/マウントするため対象のまま
 - 文字列・数値リテラルが親要素の唯一の子である場合（React が `textContent` で書き換えるため例外を起こさない。`Localizer` 等のコンポーネント経由は含まない）
 
+**`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある。** `SafeBrowserTranslation` で包むだけではクラッシュは防げても、中身が動的に変わるケース（`ModelessDialog` のドラッグ位置アナウンスなど）では別の不具合が起こりうる。`key` が無いと、内容が変わっても React は同じ `SafeBrowserTranslation` 要素を再利用し、中のテキストノードの値だけを更新しようとする。しかしブラウザ翻訳で元のテキストノードが書き換えられていた場合、React が保持する参照は実際の画面上の DOM とは別物になっており、更新してもスクリーンリーダー等（`LiveRegion` の `MutationObserver` など）からは変化として検知されない。
+
+このようなケースでは、内容を一意に表す値を `SafeBrowserTranslation` 自体の `key` に設定し、内容が変わるたびに要素ごと再生成（削除+挿入）されるようにする。これにより実際の DOM 挿入が起き、変更を監視している仕組みが検知できる。
+
+```tsx
+// ✅ 位置が変わるたびにkeyも変わり、SafeBrowserTranslationが再生成される
+<SafeBrowserTranslation key={`${top}:${left}`}>
+  <Localizer id="..." defaultText="上から{top}px、左から{left}px" values={{ top, left }} />
+</SafeBrowserTranslation>
+```
+
+`key` は `SafeBrowserTranslation`（wrapper）側に付けること。`Localizer` 側に付けると、ブラウザ翻訳で切り離されたテキストノードを `Localizer` 自身が削除しようとして、本来防ぎたかった `NotFoundError` が再発するおそれがある。
+
+この判断（内容が動的に変わるかどうか、`key` が必要かどうか）は実行時の振る舞いに依存するため、`eslint-local-rules/require-safe-browser-translation` では機械的に検知できない。`useState` のセッター関数等に渡す形で `SafeBrowserTranslation` を使う場合は、レビューでこの観点を確認すること。
+
 この問題の性質が変わった場合（Reactの挙動変更など対処法自体の見直しが必要になった場合）は、`SafeBrowserTranslation` の実装のみを見直せば、利用箇所を検索するだけで対応すべき場所が一律にわかる。
 
 ### コンポーネントのブラックボックス原則
