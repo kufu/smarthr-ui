@@ -449,9 +449,9 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 条件によって出現/消失するテキストが「要素でラップされていない生のテキスト（`Localizer`/`FormattedMessage` 等、実体としてテキストノードしか生成しないコンポーネント）」である場合、ブラウザの自動翻訳機能（Google翻訳等）がテキストノードを別要素（`<font>` 等）に書き換えた後、React が `removeChild`/`insertBefore` で例外を起こしクラッシュする既知の問題がある（詳細: https://github.com/facebook/react/issues/11538 ）。
 
-**親要素の唯一の子であっても安全にはならない。** React が例外を起こさないのは、文字列・数値リテラルを親要素の直下に単独で置く場合のみ（React がこの場合 `textContent` でテキストを直接書き換え、テキストノードの `removeChild` 自体を行わないため）。`Localizer` のようなコンポーネントは最終的にテキストノードを生成するとしても、この条件には当てはまらず、唯一の子であっても `removeChild` が呼ばれて例外を起こす（実機検証で確認済み: このPRで修正した `LoadingStatus`・`AppLauncher` の該当箇所はどちらも唯一の子だったが実際にクラッシュした）。
+**親要素の唯一の子であっても安全にはならない。** React が例外を起こさないのは、文字列・数値リテラルを親要素の直下に単独で置く場合のみ（この場合 `textContent` で直接書き換え、`removeChild` 自体を行わないため）。`Localizer` のようなコンポーネントは唯一の子であっても `removeChild` が呼ばれて例外を起こす（実機検証で確認済み）。
 
-このパターンに該当する箇所は、`src/components/SafeBrowserTranslation` で必ず包むこと。`{cond && <Localizer ... />}`・`{cond ? <Localizer ... /> : X}` の形で `Localizer`/`FormattedMessage`、または文字列リテラル/テンプレートリテラルが条件付きで出入りしている箇所は`eslint-local-rules/require-safe-browser-translation`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。ただし`useState`等の変数経由で出入りするパターン（後述の判断基準の2点目）はルールでは検知できないため、レビューで見つける必要があります。
+該当箇所は `src/components/SafeBrowserTranslation` で包む。機械的に検知できる範囲は `eslint-local-rules/require-safe-browser-translation` が強制するため、判定基準・検知パターンの詳細はそちらの README を参照（このルールは将来的に `eslint-plugin-smarthr` へ移管予定）。
 
 ```tsx
 // ❌ Localizerは親の唯一の子であってもクラッシュしうる
@@ -465,22 +465,7 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 )}
 ```
 
-**該当するかどうかの判断基準**（すべて満たす場合のみ対象）
-
-- 条件（true/false の切り替わり）によって、対象がマウント/アンマウントされる
-- マウント/アンマウントされる対象が要素を持たないテキスト相当のもの
-  - `Localizer`・`FormattedMessage` 等のコンポーネントの場合、親要素の唯一の子であっても対象（唯一の子かどうかは無関係）
-  - 文字列・数値リテラルの場合、親要素に他の兄弟要素があるときのみ対象（唯一の子なら下記の通り対象外）
-
-**対象外（対応不要）**
-
-- 既に `<span>` 等の要素でラップされている場合
-- 三項演算子の両分岐が同じ型の要素で、`key` も同じ（両方未指定を含む）ため、要素自体のマウント/アンマウントが発生しない場合（例: `cond ? <Localizer id="a" /> : <Localizer id="b" />`）。`key` が異なる場合（例: `cond ? <Localizer key="a" /> : <Localizer key="b" />`）は、型が同じでも React が要素を再利用せずアンマウント/マウントするため対象のまま
-- 文字列・数値リテラルが親要素の唯一の子である場合（React が `textContent` で書き換えるため例外を起こさない。`Localizer` 等のコンポーネント経由は含まない）
-
-**`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある。** `SafeBrowserTranslation` で包むだけではクラッシュは防げても、中身が動的に変わるケース（`ModelessDialog` のドラッグ位置アナウンスなど）では別の不具合が起こりうる。`key` が無いと、内容が変わっても React は同じ `SafeBrowserTranslation` 要素を再利用し、中のテキストノードの値だけを更新しようとする。しかしブラウザ翻訳で元のテキストノードが書き換えられていた場合、React が保持する参照は実際の画面上の DOM とは別物になっており、更新してもスクリーンリーダー等（`LiveRegion` の `MutationObserver` など）からは変化として検知されない。
-
-このようなケースでは、内容を一意に表す値を `SafeBrowserTranslation` 自体の `key` に設定し、内容が変わるたびに要素ごと再生成（削除+挿入）されるようにする。これにより実際の DOM 挿入が起き、変更を監視している仕組みが検知できる。
+**`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある。** 中身が動的に変わるケース（`ModelessDialog` のドラッグ位置アナウンスなど）で `key` が無いと、React は同じ要素を再利用しテキストノードの値だけを更新しようとするが、ブラウザ翻訳で元のノードが書き換えられていると更新が検知されない（`LiveRegion` の `MutationObserver` 等）。内容を一意に表す値を `SafeBrowserTranslation` 自体の `key`（`Localizer` 側ではない）に設定し、要素ごと再生成させることで解決する。
 
 ```tsx
 // ✅ 位置が変わるたびにkeyも変わり、SafeBrowserTranslationが再生成される
@@ -489,11 +474,7 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 </SafeBrowserTranslation>
 ```
 
-`key` は `SafeBrowserTranslation`（wrapper）側に付けること。`Localizer` 側に付けると、ブラウザ翻訳で切り離されたテキストノードを `Localizer` 自身が削除しようとして、本来防ぎたかった `NotFoundError` が再発するおそれがある。
-
-この判断（内容が動的に変わるかどうか、`key` が必要かどうか）は実行時の振る舞いに依存するため、`eslint-local-rules/require-safe-browser-translation` では機械的に検知できない。`useState` のセッター関数等に渡す形で `SafeBrowserTranslation` を使う場合は、レビューでこの観点を確認すること。
-
-この問題の性質が変わった場合（Reactの挙動変更など対処法自体の見直しが必要になった場合）は、`SafeBrowserTranslation` の実装のみを見直せば、利用箇所を検索するだけで対応すべき場所が一律にわかる。
+この判断（内容が動的に変わるかどうか、`key` が必要かどうか）は実行時の振る舞いに依存するため ESLint ルールでは機械的に検知できず、レビューで確認する必要がある。
 
 ### コンポーネントのブラックボックス原則
 

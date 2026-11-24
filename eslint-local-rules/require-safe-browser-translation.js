@@ -233,11 +233,7 @@ module.exports = {
       ConditionalExpression(node) {
         // ネストしたConditionalExpressionの分岐自体は、根本のConditionalExpressionで
         // まとめて処理するためスキップする
-        if (isConditionalBranch(node)) {
-          return
-        }
-
-        if (!isJSXChildPosition(node)) {
+        if (isConditionalBranch(node) || !isJSXChildPosition(node)) {
           return
         }
 
