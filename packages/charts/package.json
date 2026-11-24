@@ -77,6 +77,7 @@
     "react-intl": "^10.2.2",
     "rimraf": "^6.1.4",
     "rollup": "^4.68.3",
+    "rollup-plugin-preserve-directives": "^0.4.0",
     "smarthr-ui": "workspace:^",
     "storybook": "10.6.7",
     "tailwind-variants": "^0.3.1",
