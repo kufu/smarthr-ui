@@ -1,0 +1,1 @@
+export { TranslateSafeWrapper } from './TranslateSafeWrapper'
