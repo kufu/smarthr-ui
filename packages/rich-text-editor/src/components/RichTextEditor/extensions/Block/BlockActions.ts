@@ -110,6 +110,10 @@ const toEditableSelection = (selection: Selection) =>
     ? Selection.near(selection.$from.doc.resolve(selection.from + 1))
     : selection
 
+// 端が接するだけのときを重なりとしないのは、ノード選択の端やギャップカーソルはブロックの境目にあり、隣のブロックを操作しただけで選択が動くため
+const overlapsSelection = (selection: Selection, range: BlockRange) =>
+  selection.from < range.to && selection.to > range.from
+
 // ギャップカーソルは隣のブロックが変わると置けない位置になりうるので、ずらさずに先頭へ置き直す
 const SHIFTABLE_SELECTIONS = ['text', 'node', 'cell']
 
@@ -245,7 +249,7 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
 
             // 選択の外を消したときは、Transaction が写した元の位置のままにし、そこへスクロールもしない。
             // ⋮⋮ のメニューで離れたブロックを消すと、見ていた位置からキャレットまで飛ぶ
-            if (before.from <= target.to && before.to >= target.from) {
+            if (overlapsSelection(before, target)) {
               const $pos = tr.doc.resolve(Math.min(target.from, tr.doc.content.size))
 
               tr.setSelection(
@@ -289,7 +293,7 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
             const mapped = before.map(tr.doc, plan.positionMap)
 
             // 選択の外でスクロールしないのは、⋮⋮ のメニューで離れたブロックを変換すると、見ていた位置からキャレットまで飛ぶため
-            if (before.from <= target.to && before.to >= target.from) {
+            if (overlapsSelection(before, target)) {
               tr.setSelection(toEditableSelection(mapped)).scrollIntoView()
             } else {
               tr.setSelection(mapped)
