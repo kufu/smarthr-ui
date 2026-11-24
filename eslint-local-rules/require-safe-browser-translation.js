@@ -42,7 +42,8 @@
  *   組み合わさっている場合(例: `count > max ? \`${max}+\` : count`)。Reactの内部的には
  *   文字列・数値はどちらも同じ「テキストノード」として扱われ、実際には要素の出入りが
  *   発生せず安全なケースが多いため報告しない(実機検証で確認済み)。ただしLocalizer等の
- *   コンポーネントが絡む場合は要素の型が明確に異なるため、この除外は適用せず報告する
+ *   コンポーネントが絡む場合や、対象外のJSX要素(`<Icon />`等)・Fragmentと組み合わさっている
+ *   場合は要素の型が明確に異なるため、この除外は適用せず報告する
  */
 
 const TARGET_COMPONENT_NAMES = new Set(['Localizer', 'FormattedMessage'])
@@ -133,6 +134,12 @@ const isSameSafeKind = (a, b) => a.kind === b.kind && a.key === b.key
 const isDefinitelyEmptyExpression = (node) => {
   if (!node) {
     return false
+  }
+
+  // JSX要素・Fragmentはnumber等と異なり確実に要素であり、文字列との切り替えで
+  // 要素の出入りが発生する(緩和対象の「型が不明な変数」には該当しない)
+  if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
+    return true
   }
 
   if (node.type === 'Literal' && (node.value === null || node.value === false)) {

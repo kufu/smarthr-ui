@@ -346,6 +346,16 @@ test('require-safe-browser-translation', () => {
           { messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } },
         ],
       },
+
+      // 文字列リテラルと対象外コンポーネント(Icon等)の組み合わせ。number等の
+      // 型不明な変数と違い、JSX要素は確実に要素であり、切り替えで要素の出入りが
+      // 発生するため緩和の対象外(文字列リテラル側は報告される)
+      {
+        code: `
+          const Foo = ({ checked }) => <div>{checked ? '選択済み' : <Icon />}</div>
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
     ],
   })
 })
