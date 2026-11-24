@@ -42,3 +42,14 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
   - `src/intl` 配下で定義されている client 専用 hook 名
 
 このルールが検知するのは「ファイル単体を見て機械的に判定できる」範囲のみです。`client/` 配下のディレクトリ構成の設計判断（`components/`/`hooks/` に分けるべきか、`client/index.ts` を作ってよいか）、外部パッケージが client 専用 API を安全に使っているかの調査、RSC グラフとビルド出力の実測手順などは、ルールでは検知できないため AGENTS.md 本体に記載があります。
+
+## require-safe-browser-translation
+
+ブラウザの自動翻訳機能によるクラッシュ対策（AGENTS.md の「ブラウザの自動翻訳機能によるクラッシュ対策」参照）として、条件によって出入りする `Localizer`/`FormattedMessage` 要素が `SafeBrowserTranslation` で包まれているかを検知します（`requireSafeBrowserTranslation`）。
+
+- `{cond && <Localizer ... />}`（論理AND式の右辺が対象コンポーネント）
+- `{cond ? <Localizer ... /> : X}` / `{cond ? X : <Localizer ... />}`（三項演算子の片方のみが対象コンポーネント）
+
+smarthr-uiには「文言は多言語化する」規約（`smarthr/require-i18n-text`）があり、JSX上のテキストはほぼ必ず `Localizer` を経由するため、「要素でラップされていない生のテキストかどうか」はコンポーネント名のみで機械的に判定できます。三項演算子の両分岐が対象コンポーネントの場合は、Reactが要素を再利用しマウント/アンマウントが発生しないため対象外です。
+
+**このルールが検知できない既知の限界**: `useState` 等の変数に一度代入してから条件付きでレンダーするパターン（例: `setLiveRegionText(<Localizer ... />)` と `setLiveRegionText('')` の組み合わせ）は、構文解析だけでは変数の値の出入りを追跡できないため検知できません。該当しそうな箇所は AGENTS.md の判断基準に沿ってレビューで見つける必要があります。
