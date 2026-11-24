@@ -13,6 +13,8 @@
  *    (smarthr/require-i18n-text)があり、JSX上で表示されるテキストはほぼ必ずこれらを
  *    経由するため、コンポーネント名のみで機械的に判定できる
  * 2. 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定している
+ *    (ただし空文字列`''`は`null`/`undefined`/`false`と同じく「何もレンダーされない」値のため
+ *    「生のテキスト」としては扱わない)
  *
  * 検知するパターン(いずれも JSX の子要素(children)位置にある場合のみ):
  * 1. `{cond && <Localizer .../>}` / `{cond && 'text'}` -
@@ -23,9 +25,11 @@
  *    発生しないため対象外。ただし文字列リテラルとテンプレートリテラルの組み合わせは
  *    どちらも最終的に文字列としてレンダーされるため同じ種類とみなす。Localizerと
  *    FormattedMessageのようにコンポーネント自体が異なる場合は、要素の型が変わるため
- *    対象のまま。同じコンポーネントでもJSXの`key`属性が異なる場合、Reactは要素を
- *    再利用せずアンマウント/マウントするため対象のまま。`key`が動的な式で静的に
- *    比較できない場合も、安全側に倒して対象のまま扱う)
+ *    対象のまま。同じコンポーネントでもJSXの`key`属性が異なる場合(`key`の省略と
+ *    `key=""`のような明示的な空文字列指定も区別する。Reactでは前者がnull、後者が
+ *    ''であり異なる値のため)、Reactは要素を再利用せずアンマウント/マウントするため
+ *    対象のまま。`key`が動的な式、またはJSXSpreadAttribute(`{...props}`)経由で
+ *    静的に存在を判定できない場合も、安全側に倒して対象のまま扱う)
  *
  * 検知しないパターン(対象外。既知の限界):
  * - JSX属性値(`aria-current={current ? 'page' : undefined}` 等)。HTML属性はテキスト
@@ -43,7 +47,14 @@
  *   文字列・数値はどちらも同じ「テキストノード」として扱われ、実際には要素の出入りが
  *   発生せず安全なケースが多いため報告しない(実機検証で確認済み)。ただしLocalizer等の
  *   コンポーネントが絡む場合や、対象外のJSX要素(`<Icon />`等)・Fragmentと組み合わさっている
- *   場合は要素の型が明確に異なるため、この除外は適用せず報告する
+ *   場合は要素の型が明確に異なるため、この除外は適用せず報告する。ネストした三項演算子で
+ *   `null`/`undefined`/`false`/`''`が確定した分岐として混在する場合も、他の分岐が型不明の
+ *   変数であっても「要素の有無」自体が切り替わることが確定しているため、この除外は適用せず
+ *   報告する(例: `a ? 'text' : b ? null : value` は `value` が型不明でも報告する)
+ * - 型不明の変数(number等)が実行時に`null`/`undefined`/`false`になりうる場合(例:
+ *   `{cond ? 'text' : value}` で `value` が`null`を返しうる場合)。型情報のない構文解析では
+ *   変数が実行時にどんな値になりうるか判定できないため検知できない。該当しそうな箇所は
+ *   AGENTS.md の判断基準に沿ってレビューで見つける必要がある
  */
 
 const TARGET_COMPONENT_NAMES = new Set(['Localizer', 'FormattedMessage'])
@@ -64,11 +75,18 @@ const getJSXElementName = (node) => {
 // 値が静的に比較できない(変数等の動的な式)場合は、安全側に倒して「毎回異なる」ものとして扱う
 let dynamicKeySeq = 0
 const getJSXKeyInfo = (node) => {
-  const attr = node.openingElement.attributes.find(
-    (a) => a.type === 'JSXAttribute' && a.name.name === 'key',
-  )
+  const { attributes } = node.openingElement
+  const attr = attributes.find((a) => a.type === 'JSXAttribute' && a.name.name === 'key')
 
   if (!attr) {
+    // JSXSpreadAttribute(`{...props}`)経由でkeyが渡されている可能性があり、
+    // 静的には存在を判定できないため、安全側に倒して動的なkeyと同様に扱う
+    if (attributes.some((a) => a.type === 'JSXSpreadAttribute')) {
+      dynamicKeySeq += 1
+
+      return { present: true, value: `__dynamic_key_${dynamicKeySeq}__` }
+    }
+
     return { present: false, value: undefined }
   }
 
@@ -107,14 +125,18 @@ const classifyBareTextExpression = (node) => {
   if (componentName && TARGET_COMPONENT_NAMES.has(componentName)) {
     const keyInfo = getJSXKeyInfo(node)
 
+    // keyの省略(present: false)と`key=""`のような明示的な空文字列指定は、
+    // Reactでは前者がnull・後者が''で異なる値になるため、presentも比較対象に含める
     return {
       kind: 'component',
-      key: `${componentName}:${keyInfo.present ? keyInfo.value : ''}`,
+      key: `${componentName}:${keyInfo.present}:${keyInfo.present ? keyInfo.value : ''}`,
       label: `${componentName}要素`,
     }
   }
 
-  if (node.type === 'Literal' && typeof node.value === 'string') {
+  // 空文字列はReactが子要素として受け取ってもテキストノードを生成しない
+  // (`null`/`undefined`/`false`と同じく「何もレンダーされない」値のため)
+  if (node.type === 'Literal' && typeof node.value === 'string' && node.value !== '') {
     return { kind: 'string', key: 'string', label: '文字列リテラル' }
   }
 
@@ -142,7 +164,8 @@ const isDefinitelyEmptyExpression = (node) => {
     return true
   }
 
-  if (node.type === 'Literal' && (node.value === null || node.value === false)) {
+  // 空文字列もnull/false同様「何もレンダーされない」ことが確定している
+  if (node.type === 'Literal' && (node.value === null || node.value === false || node.value === '')) {
     return true
   }
 
@@ -272,8 +295,15 @@ module.exports = {
           (entry) => entry.info === undefined && !isDefinitelyEmptyExpression(entry.leaf),
         )
 
+        // ただし確定した空の分岐(`null`/`undefined`/`false`/`''`)が含まれる場合、
+        // 型不明の分岐の実際の値に関わらず「要素の有無」自体が切り替わることが
+        // 確定しているため、上記の緩和を適用せず報告する
+        const hasDefinitelyEmptyBranch = classified.some((entry) =>
+          isDefinitelyEmptyExpression(entry.leaf),
+        )
+
         for (const { leaf, info } of targetEntries) {
-          if (info.kind === 'string' && hasUnclassifiedBranch) {
+          if (info.kind === 'string' && hasUnclassifiedBranch && !hasDefinitelyEmptyBranch) {
             continue
           }
 

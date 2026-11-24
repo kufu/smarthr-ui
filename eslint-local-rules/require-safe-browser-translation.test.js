@@ -155,6 +155,25 @@ test('require-safe-browser-translation', () => {
       `
         const Foo = ({ checked, label }) => <div>{checked ? '選択済み' : label}</div>
       `,
+
+      // 空文字列は「何もレンダーされない」値のため、&&の右辺でも対象外
+      `
+        const Foo = ({ checked }) => <div>{checked && ''}</div>
+      `,
+
+      // 両分岐が空文字列同士の組み合わせも対象外
+      `
+        const Foo = ({ checked }) => <div>{checked ? '' : ''}</div>
+      `,
+
+      // keyを両方省略した場合は対象外(現状維持の確認)
+      `
+        const Foo = ({ exceeded }) => (
+          <div>
+            {exceeded ? <Localizer id="a" defaultText="a" /> : <Localizer id="b" defaultText="b" />}
+          </div>
+        )
+      `,
     ],
 
     invalid: [
@@ -355,6 +374,67 @@ test('require-safe-browser-translation', () => {
           const Foo = ({ checked }) => <div>{checked ? '選択済み' : <Icon />}</div>
         `,
         errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // 文字列リテラルと空文字列の組み合わせ(空文字列は「何もレンダーされない」値のため
+      // 要素の有無そのものが切り替わり危険)
+      {
+        code: `
+          const Foo = ({ loading }) => <div>{loading ? '処理中' : ''}</div>
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // ネストした三項演算子で、未分類の分岐(型不明な変数)と確定した空の分岐(null)が
+      // 混在する場合。typeof valueが不明でも、nullとの切り替えで要素の有無が
+      // 切り替わることは確定しているため報告する
+      {
+        code: `
+          const Foo = ({ a, b, value }) => (
+            <div>{a ? 'text' : b ? null : value}</div>
+          )
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // JSXSpreadAttribute経由でkeyが渡されている場合、静的に値を判定できないため
+      // 安全側に倒して動的なkeyと同様に扱う
+      {
+        code: `
+          const Foo = ({ exceeded }) => (
+            <div>
+              {exceeded ? (
+                <Localizer {...{ key: 'a' }} id="a" defaultText="a" />
+              ) : (
+                <Localizer {...{ key: 'b' }} id="b" defaultText="b" />
+              )}
+            </div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
+      },
+
+      // keyの省略(present: false)と`key=""`のような明示的な空文字列指定は、
+      // Reactでは前者がnull・後者が''であり異なる値のため、Reactは要素を再利用しない
+      {
+        code: `
+          const Foo = ({ exceeded }) => (
+            <div>
+              {exceeded ? (
+                <Localizer key="" id="a" defaultText="a" />
+              ) : (
+                <Localizer id="b" defaultText="b" />
+              )}
+            </div>
+          )
+        `,
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
       },
     ],
   })
