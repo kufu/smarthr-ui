@@ -1,5 +1,3 @@
-import type { FC, PropsWithChildren } from 'react'
-
 /**
  * ブラウザの自動翻訳機能がテキストノードを別要素に置き換えた後も、Reactが安全にアンマウントできるようにするラッパー。
  *
@@ -13,6 +11,4 @@ import type { FC, PropsWithChildren } from 'react'
  * 詳細・適用すべき箇所の判断基準は AGENTS.md を参照。
  * @see https://github.com/facebook/react/issues/11538
  */
-export const SafeBrowserTranslation: FC<PropsWithChildren> = ({ children }) => (
-  <span>{children}</span>
-)
+export const SafeBrowserTranslation = 'span' as const
