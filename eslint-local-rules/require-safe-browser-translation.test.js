@@ -114,7 +114,9 @@ test('require-safe-browser-translation', () => {
             <div>{loading && <FormattedMessage id="x" />}</div>
           )
         `,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { name: 'FormattedMessage' } }],
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { name: 'FormattedMessage' } },
+        ],
       },
 
       // {cond ? <Localizer /> : null}
