@@ -447,12 +447,14 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 #### ブラウザの自動翻訳機能によるクラッシュ対策
 
-条件によって出現/消失するテキストが「要素でラップされていない生のテキスト（文字列や `Localizer` 等、実体としてテキストノードしか生成しないもの）」であり、かつ常にマウントされている親要素の**唯一の子でない**場合、ブラウザの自動翻訳機能（Google翻訳等）がテキストノードを別要素（`<font>` 等）に書き換えた後、React が `removeChild`/`insertBefore` で例外を起こしクラッシュする既知の問題がある（詳細: https://github.com/facebook/react/issues/11538 ）。
+条件によって出現/消失するテキストが「要素でラップされていない生のテキスト（`Localizer`/`FormattedMessage` 等、実体としてテキストノードしか生成しないコンポーネント）」である場合、ブラウザの自動翻訳機能（Google翻訳等）がテキストノードを別要素（`<font>` 等）に書き換えた後、React が `removeChild`/`insertBefore` で例外を起こしクラッシュする既知の問題がある（詳細: https://github.com/facebook/react/issues/11538 ）。
 
-このパターンに該当する箇所は、`src/components/SafeBrowserTranslation` で必ず包むこと。`{cond && <Localizer ... />}`・`{cond ? <Localizer ... /> : X}` の形で `Localizer`/`FormattedMessage`、または文字列リテラル/テンプレートリテラルが条件付きで出入りしている箇所は`eslint-local-rules/require-safe-browser-translation`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。ただし`useState`等の変数経由で出入りするパターン（後述の判断基準の2点目・3点目）はルールでは検知できないため、レビューで見つける必要があります。
+**親要素の唯一の子であっても安全にはならない。** React が例外を起こさないのは、文字列・数値リテラルを親要素の直下に単独で置く場合のみ（React がこの場合 `textContent` でテキストを直接書き換え、テキストノードの `removeChild` 自体を行わないため）。`Localizer` のようなコンポーネントは最終的にテキストノードを生成するとしても、この条件には当てはまらず、唯一の子であっても `removeChild` が呼ばれて例外を起こす（実機検証で確認済み: このPRで修正した `LoadingStatus`・`AppLauncher` の該当箇所はどちらも唯一の子だったが実際にクラッシュした）。
+
+このパターンに該当する箇所は、`src/components/SafeBrowserTranslation` で必ず包むこと。`{cond && <Localizer ... />}`・`{cond ? <Localizer ... /> : X}` の形で `Localizer`/`FormattedMessage`、または文字列リテラル/テンプレートリテラルが条件付きで出入りしている箇所は`eslint-local-rules/require-safe-browser-translation`が機械的に検知します（詳細は`eslint-local-rules/README.md`参照）。ただし`useState`等の変数経由で出入りするパターン（後述の判断基準の2点目）はルールでは検知できないため、レビューで見つける必要があります。
 
 ```tsx
-// ❌ Localizerが条件付きで出入りし、親の唯一の子でない場合クラッシュしうる
+// ❌ Localizerは親の唯一の子であってもクラッシュしうる
 {loading && <Localizer id="..." defaultText="処理中" />}
 
 // ✅ SafeBrowserTranslationで包み、Reactが増減させる対象を常に存在し続ける要素ノードにする
@@ -466,14 +468,15 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 **該当するかどうかの判断基準**（すべて満たす場合のみ対象）
 
 - 条件（true/false の切り替わり）によって、対象がマウント/アンマウントされる
-- マウント/アンマウントされる対象が要素を持たないテキスト相当のもの（文字列、`Localizer`、`FormattedMessage` 等）
-- その対象が、常にマウントされている親要素の中で兄弟要素を持つ（唯一の子ではない）
+- マウント/アンマウントされる対象が要素を持たないテキスト相当のもの
+  - `Localizer`・`FormattedMessage` 等のコンポーネントの場合、親要素の唯一の子であっても対象（唯一の子かどうかは無関係）
+  - 文字列・数値リテラルの場合、親要素に他の兄弟要素があるときのみ対象（唯一の子なら下記の通り対象外）
 
 **対象外（対応不要）**
 
 - 既に `<span>` 等の要素でラップされている場合
 - 三項演算子の両分岐が同じ型の要素で、要素自体のマウント/アンマウントが発生しない場合（例: `cond ? <Localizer id="a" /> : <Localizer id="b" />`）
-- 対象が親要素の唯一の子である場合（React はこのケースで例外を起こさない）
+- 文字列・数値リテラルが親要素の唯一の子である場合（React が `textContent` で書き換えるため例外を起こさない。`Localizer` 等のコンポーネント経由は含まない）
 
 この問題の性質が変わった場合（Reactの挙動変更など対処法自体の見直しが必要になった場合）は、`SafeBrowserTranslation` の実装のみを見直せば、利用箇所を検索するだけで対応すべき場所が一律にわかる。
 
