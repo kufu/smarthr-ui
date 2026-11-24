@@ -43,7 +43,6 @@ export const ControlledMessageDialog: FC<Props> = ({
   onPressEscape = onClickClose,
   contentBgColor,
   contentPadding,
-  className,
   portalParent,
   closeButton,
   id,
@@ -73,7 +72,6 @@ export const ControlledMessageDialog: FC<Props> = ({
       <DialogContent
         {...rest}
         isOpen={isOpen}
-        className={className}
         ariaLabelledby={heading.id}
         onPressEscape={onPressEscape}
       >

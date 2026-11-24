@@ -35,7 +35,6 @@ type Props = ExtendProps<
 const EMPTY_ERROR_MESSAGES: ReactNode[] = []
 
 export const FormGroup: FC<Props> = ({
-  ref,
   label,
   subActionArea,
   innerMargin,
@@ -166,7 +165,6 @@ export const FormGroup: FC<Props> = ({
     <Stack
       {...rest}
       as={as}
-      ref={ref}
       gap={innerMargin ?? 0.5}
       className={classNames.wrapper}
       aria-describedby={as === 'fieldset' ? describedbyIds || undefined : undefined}

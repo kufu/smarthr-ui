@@ -6,6 +6,11 @@ extend-exclude = [
   '!packages/smarthr-ui/src/intl/locales/ja.ts',
   '!packages/smarthr-ui/src/intl/locales/ja_easy.ts',
   '!packages/smarthr-ui/src/intl/locales/en_us.ts',
+  'packages/rich-text-editor/src/intl/locales/*',
+  '!packages/rich-text-editor/src/intl/locales/ja.json',
+  '!packages/rich-text-editor/src/intl/locales/ja.ts',
+  '!packages/rich-text-editor/src/intl/locales/ja_easy.json',
+  '!packages/rich-text-editor/src/intl/locales/en_us.json',
 ]
 
 [default.extend-words]

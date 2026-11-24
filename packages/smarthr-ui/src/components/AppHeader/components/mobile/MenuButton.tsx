@@ -14,7 +14,7 @@ type Props = ExtendElementPropsWithRef<
   { omit: 'onClick' | 'type' | 'className' }
 >
 
-export const MenuButton = memo<Props>(({ children, handleClick, isCurrent, ...rest }) => (
+export const MenuButton = memo<Props>(({ children, isCurrent, ...rest }) => (
   <CommonButton
     {...rest}
     elementAs="button"
@@ -22,7 +22,6 @@ export const MenuButton = memo<Props>(({ children, handleClick, isCurrent, ...re
     current={isCurrent}
     boldWhenCurrent
     className="[&&]:shr-justify-between [&&]:shr-px-0.5"
-    handleClick={handleClick}
   >
     {children}
     <FaAngleRightIcon color="TEXT_BLACK" />

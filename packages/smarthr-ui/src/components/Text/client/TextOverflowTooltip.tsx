@@ -122,13 +122,7 @@ const isLineClamped = (element: Element, style: CSSStyleDeclaration) => {
   )
 }
 
-export const TextOverflowTooltip: FC<Props> = ({
-  as: Component,
-  className,
-  children,
-  maxLines,
-  ...rest
-}) => {
+export const TextOverflowTooltip: FC<Props> = ({ as: Component, children, maxLines, ...rest }) => {
   const [isOverflowing, setIsOverflowing] = useState(false)
   const [tooltipRect, setTooltipRect] = useState<DOMRect | null>(null)
   const messageId = useId()
@@ -322,9 +316,7 @@ export const TextOverflowTooltip: FC<Props> = ({
       onFocus={handleDelegateFocus}
       onBlur={handleDelegateFocus}
     >
-      <Component {...rest} className={className}>
-        {children}
-      </Component>
+      <Component {...rest}>{children}</Component>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
       <span className={CLASS_NAMES.shadowWrapper} aria-hidden>
         <span ref={shadowCallbackRef} className={CLASS_NAMES.shadow}>
