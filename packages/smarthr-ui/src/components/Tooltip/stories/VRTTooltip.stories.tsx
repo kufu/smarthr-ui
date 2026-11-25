@@ -1,4 +1,5 @@
-import { userEvent } from 'storybook/test'
+import { type FC, useState } from 'react'
+import { userEvent, within } from 'storybook/test'
 
 import { Button } from '../../Button'
 import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
@@ -77,5 +78,44 @@ export const VRTForcedColors: StoryObj = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
+  },
+}
+
+const MessageChangeWhileOpen: FC = () => {
+  const [names, setNames] = useState(['ユーザー1'])
+
+  return (
+    // HINT: トリガの上側にツールチップが表示されるよう、上に余白を空ける
+    <div className="shr-p-4 shr-pt-[200px]">
+      <Tooltip
+        message={names.map((name) => (
+          <div key={name}>{name}</div>
+        ))}
+      >
+        <Button
+          onClick={() => setNames((current) => [...current, `ユーザー${current.length + 1}`])}
+        >
+          開いたまま中身を増やす
+        </Button>
+      </Tooltip>
+    </div>
+  )
+}
+
+// 開いたまま中身が変わって高さが増えても、トリガの上側に表示したツールチップが上に伸び、トリガに重ならないことを確認する
+export const VRTMessageChangeWhileOpen: StoryObj = {
+  render: () => <MessageChangeWhileOpen />,
+  play: async ({ canvasElement }) => {
+    const button = await within(canvasElement).findByRole('button')
+
+    await userEvent.hover(button)
+    await userEvent.click(button)
+    await userEvent.click(button)
+    await userEvent.click(button)
+
+    // ResizeObserverによる位置の再計算を待つ
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve())
+    })
   },
 }

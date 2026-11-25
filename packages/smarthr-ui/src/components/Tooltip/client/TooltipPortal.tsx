@@ -85,7 +85,9 @@ export const TooltipPortal: FC<Props> = ({
 
       const action = () => {
         const safeAreaInsets = getSafeAreaInsets()
-        const vertical = calculateVertical(element.offsetHeight, parentRect, safeAreaInsets)
+        // HINT: maxHeightで高さが制限されている場合でも、中身全体の高さを元に計算し直せるよう、
+        // offsetHeightではなくscrollHeightを使う
+        const vertical = calculateVertical(element.scrollHeight, parentRect, safeAreaInsets)
         const horizontal = calculateHorizontal(
           element.offsetWidth,
           parentRect,
@@ -95,6 +97,7 @@ export const TooltipPortal: FC<Props> = ({
 
         setStyle({
           insetBlockStart: vertical.insetBlockStart,
+          transform: vertical.transform,
           insetInlineStart: horizontal.insetInlineStart,
           insetInlineEnd: horizontal.insetInlineEnd,
           maxWidth: horizontal.maxWidth,
@@ -109,9 +112,16 @@ export const TooltipPortal: FC<Props> = ({
 
       window.addEventListener('resize', debouncedAction)
 
+      // HINT: 表示したまま message が変わるなどして大きさが変わった場合も、位置を計算し直す。
+      // containerはmaxHeightで高さが制限されて変化を検知できない場合があるため、中身の吹き出しを監視する
+      const resizeObserver = new ResizeObserver(action)
+
+      resizeObserver.observe(element.firstElementChild ?? element)
+
       return () => {
         window.removeEventListener('resize', debouncedAction)
         debouncedAction.cancel()
+        resizeObserver.disconnect()
       }
     },
     [parentRect, theme, getSafeAreaInsets],
@@ -149,15 +159,27 @@ const calculateVertical = (
   portalHeight: number,
   parentRect: DOMRect,
   safeAreaInsets: SafeAreaInsets,
-): { insetBlockStart: string; maxHeight: string | undefined; alignment: VerticalType } => {
+): {
+  insetBlockStart: string
+  transform: string | undefined
+  maxHeight: string | undefined
+  alignment: VerticalType
+} => {
   // HINT: safe areaに重ならない領域を、ツールチップを表示できる範囲とする
   const safeTop = safeAreaInsets.top
+
+  // HINT: トリガの上側に配置する場合は、ツールチップの下端をトリガの上端(からSPACING分離した位置)に揃える。
+  // 上端の位置で配置すると、表示したまま中身が増えた際に下に伸びてトリガに重なってしまうため、
+  // 下端を基準にして上に伸びるようにする
+  const aboveInsetBlockStart = `${scrollY + parentRect.top - SPACING}px`
+  const aboveTransform = 'translateY(-100%)'
 
   // トリガの上側の領域に収まる場合
   // HINT: トリガとの間にSPACING分の隙間を空けて配置するため、判定にも含める
   if (parentRect.top - portalHeight - SPACING >= safeTop) {
     return {
-      insetBlockStart: `${scrollY + parentRect.top - portalHeight - SPACING}px`,
+      insetBlockStart: aboveInsetBlockStart,
+      transform: aboveTransform,
       maxHeight: undefined,
       alignment: 'bottom',
     }
@@ -169,6 +191,7 @@ const calculateVertical = (
   if (parentRect.bottom + portalHeight + SPACING <= safeBottom) {
     return {
       insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+      transform: undefined,
       maxHeight: undefined,
       alignment: 'top',
     }
@@ -179,7 +202,8 @@ const calculateVertical = (
   // 上側の領域のほうが広い場合
   if (parentRect.top + triggerHeight / 2 >= (safeTop + safeBottom) / 2) {
     return {
-      insetBlockStart: `${scrollY + safeTop + OUTER_MARGIN - SPACING}px`,
+      insetBlockStart: aboveInsetBlockStart,
+      transform: aboveTransform,
       maxHeight: `${parentRect.top - safeTop - OUTER_MARGIN}px`,
       alignment: 'bottom',
     }
@@ -188,6 +212,7 @@ const calculateVertical = (
   // 下側の領域のほうが広い場合
   return {
     insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+    transform: undefined,
     maxHeight: `${safeBottom - parentRect.bottom - OUTER_MARGIN}px`,
     alignment: 'top',
   }
