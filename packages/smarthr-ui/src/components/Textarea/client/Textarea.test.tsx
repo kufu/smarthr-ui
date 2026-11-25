@@ -121,6 +121,39 @@ describe('Textarea', () => {
       expect(textarea).toHaveAccessibleDescription('最大10文字入力できます あと4文字')
     })
 
+    it('非制御の場合、Activityで非表示中にform.reset()されても、再表示時に文字数カウンタが実際の値に合わせて戻る', async () => {
+      const user = userEvent.setup()
+      const Component = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+        <IntlProvider locale="ja">
+          <Activity mode={mode}>
+            <form>
+              <FormControl label="Textarea">
+                <Textarea name="textarea" defaultValue="テキスト" maxLetters={10} />
+              </FormControl>
+            </form>
+          </Activity>
+        </IntlProvider>
+      )
+
+      const { container, rerender } = render(<Component mode="visible" />)
+
+      const textarea = screen.getByRole('textbox', { hidden: true })
+
+      await user.type(textarea, '!!')
+
+      expect(textarea).toHaveAccessibleDescription('最大10文字入力できます あと4文字')
+
+      rerender(<Component mode="hidden" />)
+      // HINT: 非表示中はrefが外れてresetリスナーも外れるため、再表示時にtextareaの実際の値から数え直す必要がある
+      act(() => {
+        container.querySelector('form')!.reset()
+      })
+      rerender(<Component mode="visible" />)
+
+      expect(textarea).toHaveProperty('value', 'テキスト')
+      expect(textarea).toHaveAccessibleDescription('最大10文字入力できます あと6文字')
+    })
+
     it('非制御で入力を変更後、form.reset()を呼ぶと文字数カウンタがdefaultValueの文字数に戻ること', async () => {
       const user = userEvent.setup()
 

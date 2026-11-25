@@ -140,6 +140,12 @@ const MaxLettersTextarea: FC<
           }
         }
 
+        // HINT: Activityで非表示の間はrefが外れてresetリスナーも外れるため、その間のform.reset()は拾えない。
+        // 非制御時はrefが付き直した時点でtextareaの実際の値から数え直す
+        if (node && !latest.isControlled) {
+          setCount(getStringLength(node.value))
+        }
+
         associatedForm?.addEventListener('reset', handleReset)
 
         return () => {
@@ -151,7 +157,7 @@ const MaxLettersTextarea: FC<
 
   useEffect(() => {
     // HINT: valueの変化に文字数カウンタを追従させるのは制御時のみ。
-    // 非制御時(defaultValueのみ渡す場合)はvalueがundefinedのままなので、countはhandleChangeとform.reset()で更新する。
+    // 非制御時(defaultValueのみ渡す場合)はvalueがundefinedのままなので、countはhandleChangeとform.reset()、refの付け直しで更新する。
     // 非制御時にもここでcountを更新すると、StrictModeやActivityの再表示でeffectが再実行された際に
     // 入力済みの文字数が0で上書きされてしまう
     if (value !== undefined) {
