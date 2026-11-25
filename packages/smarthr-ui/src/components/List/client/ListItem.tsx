@@ -319,7 +319,7 @@ export const ListItem: ListItem = <
   slot,
   ...rest
 }: ListItemProps<Slot>) => {
-  const { type: divider, last: dividerLast } = useContext(ListDividerContext)
+  const { width: divider, last: dividerLast } = useContext(ListDividerContext)
   const { paddingBlockStart, paddingBlockEnd, paddingInlineStart, paddingInlineEnd } =
     mapPaddingModifierToPadding(padding)
   const slotClassName = slot?.props?.className

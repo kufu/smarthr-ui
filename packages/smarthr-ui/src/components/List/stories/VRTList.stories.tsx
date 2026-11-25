@@ -11,8 +11,8 @@ import type { ComponentPropsWithoutRef } from 'react'
 const DIVIDERS: Array<ComponentPropsWithoutRef<typeof List>['divider']> = [
   'full',
   'content',
-  { type: 'full', last: true },
-  { type: 'content', last: true },
+  { width: 'full', last: true },
+  { width: 'content', last: true },
   false,
 ]
 

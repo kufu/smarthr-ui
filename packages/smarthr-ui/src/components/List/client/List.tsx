@@ -9,16 +9,16 @@ import {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-type ListDividerType = 'full' | 'content'
+type ListDividerWidth = 'full' | 'content'
 
 /**
  * 区切り線の指定方法
  *
- * - `'full'` / `'content'`: 区切り線の種類だけを指定する。最後のアイテムの下には引かない
- * - `{ type, last }`: 種類に加えて、最後のアイテムの下に引くかを指定する
+ * - `'full'` / `'content'`: 区切り線の幅だけを指定する。最後のアイテムの下には引かない
+ * - `{ width, last }`: 幅に加えて、最後のアイテムの下に引くかを指定する
  * - `false`: 引かない
  */
-type ListDividerModifier = ListDividerType | false | { type: ListDividerType; last?: boolean }
+type ListDividerModifier = ListDividerWidth | false | { width: ListDividerWidth; last?: boolean }
 
 type AbstractProps = {
   /**
@@ -26,7 +26,7 @@ type AbstractProps = {
    *
    * - `'full'`: アイテムの幅いっぱいに引く
    * - `'content'`: アイテムの左右の余白（`padding`）を除いた、内容と同じ幅で引く
-   * - `{ type, last }`: `type` に上記のいずれかを指定する。`last: true` にすると最後のアイテムの下にも引く（既定値は `false`）
+   * - `{ width, last }`: `width` に上記のいずれかを指定する。`last: true` にすると最後のアイテムの下にも引く（既定値は `false`）
    * - `false`: 引かない
    *
    * スクロール領域に配置する場合など、リストの終わりを示したい場合は `last: true` を指定してください
@@ -41,12 +41,12 @@ type AbstractProps = {
 type Props = AbstractProps & Omit<ComponentPropsWithoutRef<'ul'>, keyof AbstractProps>
 
 type ListDivider = {
-  type: ListDividerType | false
+  width: ListDividerWidth | false
   last: boolean
 }
 
 // HINT: 区切り線はリスト単位で揃えるため、ListItemはdividerをpropsではなくこのcontextから受け取る
-export const ListDividerContext = createContext<ListDivider>({ type: 'full', last: false })
+export const ListDividerContext = createContext<ListDivider>({ width: 'full', last: false })
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-List', 'shr-flex shr-flex-col'],
@@ -55,11 +55,11 @@ const classNameGenerator = tv({
 export const List: FC<Props> = ({ className, divider = 'full', children, ...rest }) => {
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
   // HINT: dividerはインラインのオブジェクトで渡されうるため、プリミティブ値に分解してからcontextの値を作る
-  const dividerType = typeof divider === 'object' ? divider.type : divider
+  const dividerWidth = typeof divider === 'object' ? divider.width : divider
   const dividerLast = typeof divider === 'object' ? (divider.last ?? false) : false
   const dividerContextValue = useMemo(
-    () => ({ type: dividerType, last: dividerLast }),
-    [dividerType, dividerLast],
+    () => ({ width: dividerWidth, last: dividerLast }),
+    [dividerWidth, dividerLast],
   )
   return (
     <ListDividerContext.Provider value={dividerContextValue}>
