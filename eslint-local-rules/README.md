@@ -45,13 +45,19 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
 
 ## require-safe-browser-translation
 
-ブラウザの自動翻訳機能によるクラッシュ対策（AGENTS.md の「ブラウザの自動翻訳機能によるクラッシュ対策」参照）として、条件によって出入りする「要素でラップされていない生のテキスト」が `SafeBrowserTranslation` で包まれているかを検知します（`requireSafeBrowserTranslation`）。対象は JSX の子要素（children）位置にある式のみで、JSX属性値（`aria-current={current ? 'page' : undefined}` 等）は対象外です。
+ブラウザの自動翻訳機能によるクラッシュ対策（AGENTS.md の「ブラウザの自動翻訳機能によるクラッシュ対策」参照）として、条件によって出入りする「要素でラップされていない生のテキスト」が要素（`SafeBrowserTranslation` 等）で囲まれているかを検知します（`requireSafeBrowserTranslation`）。対象は JSX の子要素（children）位置にある式のみで、JSX属性値（`aria-current={current ? 'page' : undefined}` 等）は対象外です。
 
-「生のテキスト」として扱うのは次の3種類です。
+「生のテキスト」として扱うのは次の4種類です。
 
 - `Localizer`/`FormattedMessage` 要素。smarthr-uiには「文言は多言語化する」規約（`smarthr/require-i18n-text`）があり、JSX上のテキストはほぼ必ずこれらを経由するため、コンポーネント名のみで機械的に判定できます
 - 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定しています（ただし空文字列 `''`、および補間を持たず静的に空文字列と確定しているテンプレートリテラル（` `` `）は `null`/`undefined`/`false`/`true` と同じく「何もレンダーされない」値のため「生のテキスト」としては扱いません。補間を持つ動的なテンプレートリテラルは対象のままです）
 - `localize(...)`/`formatMessage(...)`（`intl.formatMessage(...)` のようなメンバー式経由も含む）の呼び出し結果。`useIntl` の `localize`（および react-intl の `formatMessage`）は戻り値が常に string 型の `Localizer` の関数版で、呼び出し式のメソッド名のみで機械的に判定できます。文字列リテラルと同じ `kind: 'string'` として扱いますが、戻り値が実行時に空文字列になりうるかは判定できないため、文字列リテラルの空文字列判定のような緩和は適用されません
+- 名称から値が文字列であると推測できる変数・プロパティアクセス。プロパティアクセスは `.` つなぎの文字列に変換した上で判定します（`user?.name` は `user.name` として扱う）。`items[0].name` や `getUser().name` のように `.` つなぎで表せない式は対象外です。`localize(...)` と同じく `kind: 'string'` として扱い、空文字列判定のような緩和は適用されません
+  - `translated.xxx` / `localized.xxx`（`useLocalize` 等で得た、翻訳済みの文言をまとめたオブジェクトの属性）
+  - `name` / `label` / `text` / `title` / `message` / `description`、およびそれらで終わる名称（`label`、`userName`、`user.name`、`user?.department?.fullName` 等）。`rename` や `subtitle` のように別の単語の末尾に含まれているだけの場合は対象外です
+  - 名称のみで判定するため、`isShowName` のように文字列ではない値や、`ReactNode` を受け取る `label` でも対象になります。要素で囲むべきでない正当な理由がある場合は、理由を書いた上で `eslint-disable-next-line` してください
+
+上記以外の変数・関数呼び出しは、文字列である保証がないため対象外です。
 
 検知するパターン:
 
@@ -64,6 +70,20 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
 なお、同じコンポーネント・`key` で要素が再利用される場合もクラッシュは起きませんが、表示内容（`id` 等）が変わるなら `SafeBrowserTranslation` に内容を反映した `key` を設定する必要があります。詳細は AGENTS.md の「`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある」を参照してください（この判断はルールでは検知できません）。
 
 ただし、文字列リテラル/テンプレートリテラルが型の確定しない変数（`number` 等も含む）と組み合わさっている場合も対象外とします。Reactの内部的には文字列・数値はどちらも同じ「テキストノード」として扱われ、実際には要素の出入りが発生せず安全なケースが多いためです（例: `count > max ? \`${max}+\` : count` は実機検証でクラッシュしないことを確認済み）。一方、`null`/`undefined`/`false`/`true`/`''`（および補間を持たず静的に空と確定しているテンプレートリテラル）との組み合わせ、および対象外のJSX要素・Fragment（`<Icon />`等）との組み合わせは、要素の有無そのものが切り替わる（またはnumber等と異なり確実に要素である）ため、この緩和の対象外です。また `Localizer` 等のコンポーネントが絡む場合は要素の型が明確に異なるため、変数との混在でも検知します。ネストした三項演算子で `null`/`undefined`/`false`/`true`/`''` が確定した分岐として混在する場合も、他の分岐が型不明の変数であっても対象のまま検知します（例: `a ? 'text' : b ? null : value` は `value` が型不明でも報告します）。
+
+修正方法:
+
+1. まずマークアップを見直します。意味づけ・スタイルのために要素で囲むべきテキストの場合は、適切な要素で囲みます（`span` に限らず、要素で囲まれていれば検知対象から外れます）
+2. 現状のマークアップが正しい場合は `SafeBrowserTranslation` で囲み、「意味づけ・スタイルのための要素ではなく、ブラウザ翻訳対策のための要素である」ことを明確にします
+3. 三項演算子の全分岐を文字列に揃えられる場合（`Localizer` を `useLocalize` の戻り値に置き換える等）は、要素の出入り自体が発生しなくなるため、要素で囲む必要がなくなります
+
+オプション（いずれも正規表現文字列の配列。デフォルトの対象に追加されます）:
+
+- `additionalTextComponentRegex`: `Localizer`/`FormattedMessage` 以外に、実体としてテキストノードしか生成しないコンポーネントの名称
+- `additionalTextFunctionRegex`: `localize`/`formatMessage` 以外に、戻り値が常に文字列になる関数の名称（メンバー式経由の呼び出しはプロパティ名で判定）
+- `additionalTextVariableRegex`: デフォルトの対象以外に、値が文字列であることが分かっている変数・プロパティアクセスの名称（例: `'^caption$'`、`'\\.kana$'`）
+
+このルールは `eslint-plugin-smarthr` の `smarthr/require-safe-browser-translation` と判定ロジックを揃えています。変更する場合は両方に反映してください。
 
 **このルールが検知できない既知の限界**:
 
