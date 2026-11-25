@@ -14,7 +14,7 @@ type ListDividerType = 'full' | 'content'
 /**
  * 区切り線の指定方法
  *
- * - `'full'` / `'content'`: 区切り線の種類だけを指定する。最後のアイテムの下にも引く
+ * - `'full'` / `'content'`: 区切り線の種類だけを指定する。最後のアイテムの下には引かない
  * - `{ type, last }`: 種類に加えて、最後のアイテムの下に引くかを指定する
  * - `false`: 引かない
  */
@@ -26,11 +26,10 @@ type AbstractProps = {
    *
    * - `'full'`: アイテムの幅いっぱいに引く
    * - `'content'`: アイテムの左右の余白（`padding`）を除いた、内容と同じ幅で引く
-   * - `{ type, last }`: `type` に上記のいずれかを指定する。`last: false` にすると最後のアイテムの下には引かない（既定値は `true`）
+   * - `{ type, last }`: `type` に上記のいずれかを指定する。`last: true` にすると最後のアイテムの下にも引く（既定値は `false`）
    * - `false`: 引かない
    *
-   * スクロール領域に配置する場合など、リストの終わりを示したい場合は最後のアイテムの下にも引き、
-   * `Base` の中に配置する場合など、外側の枠線と重なる場合は `last: false` を指定してください
+   * スクロール領域に配置する場合など、リストの終わりを示したい場合は `last: true` を指定してください
    *
    * @default 'full'
    */
@@ -47,7 +46,7 @@ type ListDivider = {
 }
 
 // HINT: 区切り線はリスト単位で揃えるため、ListItemはdividerをpropsではなくこのcontextから受け取る
-export const ListDividerContext = createContext<ListDivider>({ type: 'full', last: true })
+export const ListDividerContext = createContext<ListDivider>({ type: 'full', last: false })
 
 const classNameGenerator = tv({
   base: ['smarthr-ui-List', 'shr-flex shr-flex-col'],
@@ -57,7 +56,7 @@ export const List: FC<Props> = ({ className, divider = 'full', children, ...rest
   const actualClassName = useMemo(() => classNameGenerator({ className }), [className])
   // HINT: dividerはインラインのオブジェクトで渡されうるため、プリミティブ値に分解してからcontextの値を作る
   const dividerType = typeof divider === 'object' ? divider.type : divider
-  const dividerLast = typeof divider === 'object' ? (divider.last ?? true) : true
+  const dividerLast = typeof divider === 'object' ? (divider.last ?? false) : false
   const dividerContextValue = useMemo(
     () => ({ type: dividerType, last: dividerLast }),
     [dividerType, dividerLast],
