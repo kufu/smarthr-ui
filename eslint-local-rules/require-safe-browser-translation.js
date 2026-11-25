@@ -13,15 +13,18 @@
  *    (smarthr/require-i18n-text)があり、JSX上で表示されるテキストはほぼ必ずこれらを
  *    経由するため、コンポーネント名のみで機械的に判定できる
  * 2. 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定している
- *    (ただし空文字列`''`は`null`/`undefined`/`false`と同じく「何もレンダーされない」値のため
- *    「生のテキスト」としては扱わない)
+ *    (ただし空文字列`''`、および補間を持たず静的に空文字列と確定しているテンプレートリテラル
+ *    (` `` `)は`null`/`undefined`/`false`/`true`と同じく「何もレンダーされない」値のため
+ *    「生のテキスト」としては扱わない。補間を持つ動的なテンプレートリテラルは対象のまま)
  * 3. `localize(...)`/`formatMessage(...)`の呼び出し結果。useIntlの`localize`(および
  *    react-intlの`formatMessage`)は戻り値が常にstring型のLocalizerの関数版で、
  *    呼び出し式のメソッド名のみで機械的に判定できる。文字列リテラルと同じ`kind: 'string'`
  *    として扱う(ただし戻り値が実行時に空文字列になりうるかは判定できないため、
  *    文字列リテラルの空文字列判定のような緩和は適用しない)
  *
- * 検知するパターン(いずれも JSX の子要素(children)位置にある場合のみ):
+ * 検知するパターン(いずれも JSX の子要素(children)位置にある場合のみ。論理AND式の右辺に
+ * 三項演算子が続く場合(`{cond && (cond2 ? <Localizer .../> : null)}`)のように、論理AND式と
+ * 三項演算子が入れ子になっている場合も、&&の右辺を辿って判定するため検知対象になる):
  * 1. `{cond && <Localizer .../>}` / `{cond && 'text'}` -
  *    論理AND式の右辺が上記のいずれか
  * 2. `{cond ? <Localizer .../> : X}` / `{cond ? 'text' : X}` (逆の並びも含む) -
@@ -169,7 +172,11 @@ const classifyBareTextExpression = (node) => {
     return { kind: 'string', key: 'string', label: '文字列リテラル' }
   }
 
-  if (node.type === 'TemplateLiteral') {
+  // 補間を持たず静的に空文字列であることが確定しているテンプレートリテラル(` `` `)は、
+  // 文字列リテラルの空文字列と同じく「何もレンダーされない」値のため対象外とする。
+  // 補間を持つ動的なテンプレートリテラルは、実行時に空になるかどうか判定できないため
+  // 従来通り対象のまま扱う
+  if (node.type === 'TemplateLiteral' && !isStaticallyEmptyTemplateLiteral(node)) {
     return { kind: 'string', key: 'string', label: 'テンプレートリテラル' }
   }
 
@@ -181,6 +188,14 @@ const classifyBareTextExpression = (node) => {
 
   return undefined
 }
+
+// 補間を持たず静的に空文字列であることが確定しているテンプレートリテラル(` `` `)かどうか。
+// 補間を持つ動的なテンプレートリテラルは、実行時に空になるかどうか判定できないため対象外
+const isStaticallyEmptyTemplateLiteral = (node) =>
+  node.type === 'TemplateLiteral' &&
+  node.expressions.length === 0 &&
+  node.quasis.length === 1 &&
+  node.quasis[0].value.cooked === ''
 
 const isSameSafeKind = (a, b) => a.kind === b.kind && a.key === b.key
 
@@ -199,8 +214,17 @@ const isDefinitelyEmptyExpression = (node) => {
     return true
   }
 
-  // 空文字列もnull/false同様「何もレンダーされない」ことが確定している
-  if (node.type === 'Literal' && (node.value === null || node.value === false || node.value === '')) {
+  // 空文字列・trueもnull/false同様「何もレンダーされない」ことが確定している
+  // (Reactはboolean値のtrue/falseをどちらも子要素としてレンダーしない)
+  if (
+    node.type === 'Literal' &&
+    (node.value === null || node.value === false || node.value === true || node.value === '')
+  ) {
+    return true
+  }
+
+  // 補間を持たず静的に空文字列であることが確定しているテンプレートリテラルも同様
+  if (isStaticallyEmptyTemplateLiteral(node)) {
     return true
   }
 
@@ -249,6 +273,25 @@ const isJSXChildPosition = (node) => {
   )
 }
 
+// `{visible && (loading ? <Localizer /> : null)}` のように、ConditionalExpressionが
+// LogicalExpression(&&)の右辺になっている場合、ConditionalExpression自身の直接の親は
+// JSXExpressionContainerではないため isJSXChildPosition だけでは弾かれてしまう。
+// &&の右辺を辿って根まで遡り、最終的にJSX子要素位置に辿り着くかどうかで判定する
+const isJSXChildExpressionPosition = (node) => {
+  let current = node
+
+  while (
+    current.parent &&
+    current.parent.type === 'LogicalExpression' &&
+    current.parent.operator === '&&' &&
+    current.parent.right === current
+  ) {
+    current = current.parent
+  }
+
+  return isJSXChildPosition(current)
+}
+
 module.exports = {
   meta: {
     type: 'problem',
@@ -277,7 +320,7 @@ module.exports = {
 
     return {
       LogicalExpression(node) {
-        if (node.operator !== '&&' || !isJSXChildPosition(node)) {
+        if (node.operator !== '&&' || !isJSXChildExpressionPosition(node)) {
           return
         }
 
@@ -291,7 +334,7 @@ module.exports = {
       ConditionalExpression(node) {
         // ネストしたConditionalExpressionの分岐自体は、根本のConditionalExpressionで
         // まとめて処理するためスキップする
-        if (isConditionalBranch(node) || !isJSXChildPosition(node)) {
+        if (isConditionalBranch(node) || !isJSXChildExpressionPosition(node)) {
           return
         }
 

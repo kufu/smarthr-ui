@@ -195,6 +195,17 @@ test('require-safe-browser-translation', () => {
       `
         const Foo = ({ loading, getText }) => <div>{loading && getText()}</div>
       `,
+
+      // 両分岐が静的に空と確定しているテンプレートリテラル同士の組み合わせは対象外
+      `
+        const Foo = ({ checked }) => <div>{checked ? \`\` : \`\`}</div>
+      `,
+
+      // 空文字列とtrueはどちらも「何もレンダーされない」ことが確定しているため、
+      // 両分岐とも未分類(targetEntriesが空)となり対象外
+      `
+        const Foo = ({ checked }) => <div>{checked ? '' : true}</div>
+      `,
     ],
 
     invalid: [
@@ -487,6 +498,32 @@ test('require-safe-browser-translation', () => {
             data: { label: 'formatMessage()の呼び出し結果' },
           },
         ],
+      },
+
+      // 補間のない空のテンプレートリテラル(``)は空文字列と同じく「何もレンダーされない」値
+      {
+        code: `
+          const Foo = ({ loading }) => <div>{loading ? '処理中' : \`\`}</div>
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // trueもnull/false同様「何もレンダーされない」ことが確定している
+      {
+        code: `
+          const Foo = ({ checked }) => <div>{checked ? '選択済み' : true}</div>
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
+      },
+
+      // 論理AND式の右辺に三項演算子が続く場合も、&&の右辺を辿って判定するため検知する
+      {
+        code: `
+          const Foo = ({ visible, loading }) => (
+            <div>{visible && (loading ? <Localizer id="x" defaultText="処理中" /> : null)}</div>
+          )
+        `,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
       },
     ],
   })
