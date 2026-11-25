@@ -10,7 +10,6 @@ import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
-import { SafeBrowserTranslation } from '../../../SafeBrowserTranslation'
 import { Scroller } from '../../../Scroller'
 import { Section } from '../../../SectioningContent'
 import { SideNav, SideNavItemButton } from '../../../SideNav'
@@ -132,6 +131,10 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
       id: 'smarthr-ui/AppHeader/Launcher/allModeText',
       defaultText: 'すべてのアプリ',
     },
+    searchResultText: {
+      id: 'smarthr-ui/AppHeader/Launcher/searchResultText',
+      defaultText: '検索結果',
+    },
   })
 
   return (
@@ -163,18 +166,11 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           <Section className={CLASS_NAMES.mainInner}>
             <Cluster align="center" justify="space-between" className={CLASS_NAMES.contentHead}>
               <MemoizedSubSubBlockHeading>
-                {mode === 'search' ? (
-                  <SafeBrowserTranslation>
-                    <Localizer
-                      id="smarthr-ui/AppHeader/Launcher/searchResultText"
-                      defaultText="検索結果"
-                    />
-                  </SafeBrowserTranslation>
-                ) : page === 'favorite' ? (
-                  translated.favoriteModeText
-                ) : (
-                  translated.allModeText
-                )}
+                {mode === 'search'
+                  ? translated.searchResultText
+                  : page === 'favorite'
+                    ? translated.favoriteModeText
+                    : translated.allModeText}
               </MemoizedSubSubBlockHeading>
 
               {(mode === 'search' || page === 'all') && (

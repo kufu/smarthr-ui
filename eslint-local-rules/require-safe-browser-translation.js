@@ -1,6 +1,6 @@
 /**
  * @fileoverview ブラウザの自動翻訳機能によるクラッシュ対策として、条件によって出入りする
- * 「要素でラップされていない生のテキスト」がSafeBrowserTranslationで包まれているかを
+ * 「要素でラップされていない生のテキスト」が要素(SafeBrowserTranslation等)で囲まれているかを
  * チェックするルール
  * @author SmartHR
  *
@@ -8,280 +8,141 @@
  * 条件によって当該テキストがアンマウントされるとReactがクラッシュする既知の問題がある。
  * 詳細は AGENTS.md「ブラウザの自動翻訳機能によるクラッシュ対策」を参照。
  *
- * 「要素でラップされていない生のテキスト」として扱うのは次の3種類:
- * 1. Localizer(および FormattedMessage)要素。smarthr-uiには「文言は多言語化する」規約
- *    (smarthr/require-i18n-text)があり、JSX上で表示されるテキストはほぼ必ずこれらを
- *    経由するため、コンポーネント名のみで機械的に判定できる
- * 2. 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定している
- *    (ただし空文字列`''`、および補間を持たず静的に空文字列と確定しているテンプレートリテラル
- *    (` `` `)は`null`/`undefined`/`false`/`true`と同じく「何もレンダーされない」値のため
- *    「生のテキスト」としては扱わない。補間を持つ動的なテンプレートリテラルは対象のまま)
- * 3. `localize(...)`/`formatMessage(...)`の呼び出し結果。useIntlの`localize`(および
- *    react-intlの`formatMessage`)は戻り値が常にstring型のLocalizerの関数版で、
- *    呼び出し式のメソッド名のみで機械的に判定できる。文字列リテラルと同じ`kind: 'string'`
- *    として扱う(ただし戻り値が実行時に空文字列になりうるかは判定できないため、
- *    文字列リテラルの空文字列判定のような緩和は適用しない)
+ * 検知パターン・対象外になるケース・既知の限界・オプションの詳細は
+ * eslint-local-rules/README.md を参照。
  *
- * 検知するパターン(いずれも JSX の子要素(children)位置にある場合のみ。論理AND式の右辺に
- * 三項演算子が続く場合(`{cond && (cond2 ? <Localizer .../> : null)}`)のように、論理AND式と
- * 三項演算子が入れ子になっている場合も、&&の右辺を辿って判定するため検知対象になる):
- * 1. `{cond && <Localizer .../>}` / `{cond && 'text'}` -
- *    論理AND式の右辺が上記のいずれか
- * 2. `{cond ? <Localizer .../> : X}` / `{cond ? 'text' : X}` (逆の並びも含む) -
- *    三項演算子のどちらか一方のみが上記のいずれか
- *    (両方の分岐が同じ種類の場合、Reactは要素を再利用しマウント/アンマウントが
- *    発生しないため対象外。ただし文字列リテラルとテンプレートリテラルの組み合わせは
- *    どちらも最終的に文字列としてレンダーされるため同じ種類とみなす。Localizerと
- *    FormattedMessageのようにコンポーネント自体が異なる場合は、要素の型が変わるため
- *    対象のまま。同じコンポーネントでもJSXの`key`属性が異なる場合(`key`の省略と
- *    `key=""`のような明示的な空文字列指定も区別する。Reactでは前者がnull、後者が
- *    ''であり異なる値のため)、Reactは要素を再利用せずアンマウント/マウントするため
- *    対象のまま。`key`が動的な式、またはJSXSpreadAttribute(`{...props}`)経由で
- *    静的に存在を判定できない場合も、安全側に倒して対象のまま扱う)
- *
- * 検知しないパターン(対象外。既知の限界):
- * - JSX属性値(`aria-current={current ? 'page' : undefined}` 等)。HTML属性はテキスト
- *   ノードを生成せずブラウザ翻訳の影響を受けないため、JSXの子要素位置にある式のみを対象にする
- * - 既に SafeBrowserTranslation 等の要素でラップされている場合
- *   (LogicalExpression/ConditionalExpression の直下が対象でなくなるため、
- *   このルールの仕組み上自然に対象外になる)
- * - useState 等の変数に一度代入してから条件付きでレンダーするパターン
- *   (例: `setLiveRegionText(<Localizer ... />)` と `setLiveRegionText('')` の組み合わせ)。
- *   構文解析だけでは変数の値の出入りを追跡できないため検知できない。該当しそうな箇所は
- *   AGENTS.md の判断基準に沿ってレビューで見つける必要がある
- * - 変数・関数呼び出し等、型が静的に確定しない式(文字列である保証がないため対象外とする。
- *   ただし`localize`/`formatMessage`の呼び出しは前述の通り対象)
- * - 三項演算子で、文字列リテラル/テンプレートリテラルが型の確定しない変数(number等も含む)と
- *   組み合わさっている場合(例: `count > max ? \`${max}+\` : count`)。Reactの内部的には
- *   文字列・数値はどちらも同じ「テキストノード」として扱われ、実際には要素の出入りが
- *   発生せず安全なケースが多いため報告しない(実機検証で確認済み)。ただしLocalizer等の
- *   コンポーネントが絡む場合や、対象外のJSX要素(`<Icon />`等)・Fragmentと組み合わさっている
- *   場合は要素の型が明確に異なるため、この除外は適用せず報告する。ネストした三項演算子で
- *   `null`/`undefined`/`false`/`''`が確定した分岐として混在する場合も、他の分岐が型不明の
- *   変数であっても「要素の有無」自体が切り替わることが確定しているため、この除外は適用せず
- *   報告する(例: `a ? 'text' : b ? null : value` は `value` が型不明でも報告する)
- * - 型不明の変数(number等)が実行時に`null`/`undefined`/`false`になりうる場合(例:
- *   `{cond ? 'text' : value}` で `value` が`null`を返しうる場合)。型情報のない構文解析では
- *   変数が実行時にどんな値になりうるか判定できないため検知できない。該当しそうな箇所は
- *   AGENTS.md の判断基準に沿ってレビューで見つける必要がある
+ * HINT: このルールは eslint-plugin-smarthr の smarthr/require-safe-browser-translation と
+ * 判定ロジックを揃えている。変更する場合は両方に反映すること
  */
 
-const TARGET_COMPONENT_NAMES = new Set(['Localizer', 'FormattedMessage'])
+const SCHEMA = [
+  {
+    type: 'object',
+    properties: {
+      additionalTextComponentRegex: { type: 'array', items: { type: 'string' } },
+      additionalTextFunctionRegex: { type: 'array', items: { type: 'string' } },
+      additionalTextVariableRegex: { type: 'array', items: { type: 'string' } },
+    },
+    additionalProperties: false,
+  },
+]
 
-// useIntlの`localize`(およびreact-intlの`formatMessage`)はLocalizerの関数版で、
-// 戻り値は常にstring型。`intl.formatMessage(...)`のようなメンバー式経由の呼び出しも
-// 対象にするため、メソッド名(プロパティ名)のみで判定する
-const TARGET_CALL_NAMES = new Set(['localize', 'formatMessage'])
+// 実体としてテキストノードしか生成しないコンポーネント
+const TEXT_COMPONENT_NAMES = '^(Localizer|FormattedMessage)$'
+// 戻り値が常に文字列になる関数(上記コンポーネントの関数版)
+const TEXT_FUNCTION_NAMES = '^(localize|formatMessage)$'
+// 値が文字列であると推測できる変数・プロパティアクセス
+// - translated.xxx / localized.xxx: 翻訳済みの文言をまとめたオブジェクトの属性
+// - name / label / text / title / message / description、およびそれらで終わる名称(xxxName、xxx.name 等)
+const TEXT_VARIABLE_NAMES =
+  '^(translated|localized)\\.|(^|\\.)(name|label|text|title|message|description)$|(Name|Label|Text|Title|Message|Description)$'
+
+// HINT: 空配列の場合に末尾が`|`の正規表現(すべての名称にマッチする)を生成しないよう、要素数で判定する
+const generateRegex = (base, additional) =>
+  new RegExp(additional?.length ? `${base}|${additional.join('|')}` : base)
 
 const getJSXElementName = (node) => {
-  if (!node || node.type !== 'JSXElement') {
-    return undefined
-  }
+  if (node.type !== 'JSXElement') return undefined
 
   const { name } = node.openingElement
 
   return name.type === 'JSXIdentifier' ? name.name : undefined
 }
 
+// HINT: `intl.formatMessage(...)` のようなメンバー式経由の呼び出しも対象にするため、プロパティ名でも判定する
 const getCallExpressionName = (node) => {
-  if (!node || node.type !== 'CallExpression') {
-    return undefined
-  }
+  if (node.type !== 'CallExpression') return undefined
 
   const { callee } = node
 
-  if (callee.type === 'Identifier') {
-    return callee.name
-  }
-
-  if (callee.type === 'MemberExpression' && !callee.computed && callee.property.type === 'Identifier') {
+  if (callee.type === 'Identifier') return callee.name
+  if (
+    callee.type === 'MemberExpression' &&
+    !callee.computed &&
+    callee.property.type === 'Identifier'
+  )
     return callee.property.name
+
+  return undefined
+}
+
+// 変数・プロパティアクセスを`.`つなぎの文字列に変換する(例: `user?.name` → `user.name`)
+// HINT: `items[0].name` や `getUser().name` のように`.`つなぎで表せない式は対象外
+const getVariablePath = (node) => {
+  switch (node.type) {
+    case 'Identifier':
+      return node.name
+    case 'ThisExpression':
+      return 'this'
+    case 'ChainExpression':
+    case 'TSNonNullExpression':
+      return getVariablePath(node.expression)
+    case 'MemberExpression': {
+      if (node.computed || node.property.type !== 'Identifier') return undefined
+
+      const objectPath = getVariablePath(node.object)
+
+      return objectPath ? `${objectPath}.${node.property.name}` : undefined
+    }
   }
 
   return undefined
 }
 
-// JSXの`key`属性を調べる。Reactはkeyが異なると「型が同じでも別のアイデンティティの要素」と
-// みなし、旧要素をアンマウントしてから新要素をマウントする(propsの更新による再利用をしない)。
-// そのため、両分岐が同じコンポーネントでもkeyが違えば安全とみなせない。
-// 値が静的に比較できない(変数等の動的な式)場合は、安全側に倒して「毎回異なる」ものとして扱う
-let dynamicKeySeq = 0
-const getJSXKeyInfo = (node) => {
-  const { attributes } = node.openingElement
-  const attr = attributes.find((a) => a.type === 'JSXAttribute' && a.name.name === 'key')
-
-  if (!attr) {
-    // JSXSpreadAttribute(`{...props}`)経由でkeyが渡されている可能性があり、
-    // 静的には存在を判定できないため、安全側に倒して動的なkeyと同様に扱う
-    if (attributes.some((a) => a.type === 'JSXSpreadAttribute')) {
-      dynamicKeySeq += 1
-
-      return { present: true, value: `__dynamic_key_${dynamicKeySeq}__` }
-    }
-
-    return { present: false, value: undefined }
-  }
-
-  const { value } = attr
-  const literalValue =
-    value && value.type === 'Literal'
-      ? value.value
-      : value && value.type === 'JSXExpressionContainer' && value.expression.type === 'Literal'
-        ? value.expression.value
-        : undefined
-
-  if (literalValue !== undefined) {
-    return { present: true, value: literalValue }
-  }
-
-  // 動的な式は静的に比較できないため、安全側に倒して一意な値を割り当て、
-  // 他のどのkeyとも一致しない(=安全と判断しない)ようにする
-  dynamicKeySeq += 1
-
-  return { present: true, value: `__dynamic_key_${dynamicKeySeq}__` }
-}
-
-// 「要素でラップされていない生のテキストを生成する式」を分類する。
-// kindが同じであれば、Reactはその式に対応するノードを再利用しマウント/アンマウントが
-// 発生しないとみなせる(文字列リテラルとテンプレートリテラルはどちらもkind: 'string'として
-// 同一視する。コンポーネントの場合はタグ名が異なると別の型になるため、keyまで一致している
-// 必要がある。さらにJSXのkey属性が異なる場合もReactは要素を再利用しないため、keyInfoも
-// 一致している必要がある)
-const classifyBareTextExpression = (node) => {
-  if (!node) {
-    return undefined
-  }
-
-  const componentName = getJSXElementName(node)
-
-  if (componentName && TARGET_COMPONENT_NAMES.has(componentName)) {
-    const keyInfo = getJSXKeyInfo(node)
-
-    // keyの省略(present: false)と`key=""`のような明示的な空文字列指定は、
-    // Reactでは前者がnull・後者が''で異なる値になるため、presentも比較対象に含める
-    return {
-      kind: 'component',
-      key: `${componentName}:${keyInfo.present}:${keyInfo.present ? keyInfo.value : ''}`,
-      label: `${componentName}要素`,
-    }
-  }
-
-  // 空文字列はReactが子要素として受け取ってもテキストノードを生成しない
-  // (`null`/`undefined`/`false`と同じく「何もレンダーされない」値のため)
-  if (node.type === 'Literal' && typeof node.value === 'string' && node.value !== '') {
-    return { kind: 'string', key: 'string', label: '文字列リテラル' }
-  }
-
-  // 補間を持たず静的に空文字列であることが確定しているテンプレートリテラル(` `` `)は、
-  // 文字列リテラルの空文字列と同じく「何もレンダーされない」値のため対象外とする。
-  // 補間を持つ動的なテンプレートリテラルは、実行時に空になるかどうか判定できないため
-  // 従来通り対象のまま扱う
-  if (node.type === 'TemplateLiteral' && !isStaticallyEmptyTemplateLiteral(node)) {
-    return { kind: 'string', key: 'string', label: 'テンプレートリテラル' }
-  }
-
-  const callName = getCallExpressionName(node)
-
-  if (callName && TARGET_CALL_NAMES.has(callName)) {
-    return { kind: 'string', key: 'string', label: `${callName}()の呼び出し結果` }
-  }
-
-  return undefined
-}
-
-// 補間を持たず静的に空文字列であることが確定しているテンプレートリテラル(` `` `)かどうか。
-// 補間を持つ動的なテンプレートリテラルは、実行時に空になるかどうか判定できないため対象外
+// 補間を持たず、静的に空文字列であることが確定しているテンプレートリテラル(``)かどうか
 const isStaticallyEmptyTemplateLiteral = (node) =>
   node.type === 'TemplateLiteral' &&
   node.expressions.length === 0 &&
   node.quasis.length === 1 &&
   node.quasis[0].value.cooked === ''
 
-const isSameSafeKind = (a, b) => a.kind === b.kind && a.key === b.key
-
-// `null`/`undefined`/`false` は「何もレンダーされない」ことが静的に確定しているリテラル。
-// 型が不明な変数(number等も含みうる)とは異なり、文字列リテラルとの組み合わせでも
-// 「要素の有無そのものが切り替わる」ため依然として危険。型不明な変数との混在時の
-// 緩和対象から除外するために判定する
-const isDefinitelyEmptyExpression = (node) => {
-  if (!node) {
-    return false
+// 「何もレンダーされない」、もしくは「確実に要素である」ことが静的に確定している式かどうか
+// HINT: 型が不明な変数(number等も含みうる)とは異なり、文字列との組み合わせで要素の有無そのものが切り替わることが確定する
+const isDefinitelyNotTextExpression = (node) => {
+  switch (node.type) {
+    case 'JSXElement':
+    case 'JSXFragment':
+      return true
+    case 'Literal':
+      // Reactはbooleanのtrue/false、null、空文字列を子要素としてレンダーしない
+      return node.value === null || node.value === false || node.value === true || node.value === ''
+    case 'TemplateLiteral':
+      return isStaticallyEmptyTemplateLiteral(node)
+    case 'Identifier':
+      return node.name === 'undefined'
   }
 
-  // JSX要素・Fragmentはnumber等と異なり確実に要素であり、文字列との切り替えで
-  // 要素の出入りが発生する(緩和対象の「型が不明な変数」には該当しない)
-  if (node.type === 'JSXElement' || node.type === 'JSXFragment') {
-    return true
-  }
-
-  // 空文字列・trueもnull/false同様「何もレンダーされない」ことが確定している
-  // (Reactはboolean値のtrue/falseをどちらも子要素としてレンダーしない)
-  if (
-    node.type === 'Literal' &&
-    (node.value === null || node.value === false || node.value === true || node.value === '')
-  ) {
-    return true
-  }
-
-  // 補間を持たず静的に空文字列であることが確定しているテンプレートリテラルも同様
-  if (isStaticallyEmptyTemplateLiteral(node)) {
-    return true
-  }
-
-  return node.type === 'Identifier' && node.name === 'undefined'
+  return false
 }
 
-// `a ? x : b ? y : z` のようなネストしたConditionalExpressionは、他のConditionalExpressionの
-// consequent/alternateそのもの。これ単体ではなく、根本のConditionalExpressionでまとめて
-// 全分岐を判定する必要があるため、分岐自身であるノードはスキップする
+// `a ? x : b ? y : z` のようなネストした三項演算子は、根本の三項演算子でまとめて全分岐を判定する
 const isConditionalBranch = (node) => {
   const { parent } = node
 
   return (
-    parent !== undefined &&
     parent.type === 'ConditionalExpression' &&
     (parent.consequent === node || parent.alternate === node)
   )
 }
 
-// ネストしたConditionalExpressionを再帰的に辿り、最終的な分岐(JSXElement等)をすべて集める
-const collectConditionalLeaves = (node, leaves) => {
+const collectConditionalLeaves = (node, leaves = []) => {
   if (node.type === 'ConditionalExpression') {
     collectConditionalLeaves(node.consequent, leaves)
     collectConditionalLeaves(node.alternate, leaves)
   } else {
     leaves.push(node)
   }
+
+  return leaves
 }
 
-// このルールが対象とするのは、ブラウザ翻訳によって書き換えられうる「画面に表示されるテキスト」。
-// JSX属性値(`aria-current={current ? 'page' : undefined}` 等)はHTML属性でありテキストノードを
-// 生成しないため、翻訳機能の影響を受けず対象外。JSXの子要素(children)位置にある式のみを対象にする
-const isJSXChildPosition = (node) => {
-  const container = node.parent
-
-  if (!container || container.type !== 'JSXExpressionContainer') {
-    return false
-  }
-
-  const containerParent = container.parent
-
-  return (
-    containerParent !== undefined &&
-    (containerParent.type === 'JSXElement' || containerParent.type === 'JSXFragment') &&
-    containerParent.children.includes(container)
-  )
-}
-
-// `{visible && (loading ? <Localizer /> : null)}` のように、ConditionalExpressionが
-// LogicalExpression(&&)の右辺になっている場合、ConditionalExpression自身の直接の親は
-// JSXExpressionContainerではないため isJSXChildPosition だけでは弾かれてしまう。
-// &&の右辺を辿って根まで遡り、最終的にJSX子要素位置に辿り着くかどうかで判定する
+// JSXの子要素(children)の位置にある式かどうか
+// HINT: JSX属性値(`aria-current={current ? 'page' : undefined}` 等)はテキストノードを生成せず、ブラウザ翻訳の影響を受けないため対象外
+// `{visible && (loading ? <Localizer /> : null)}` のように&&の右辺にある場合は、&&を根まで遡って判定する
 const isJSXChildExpressionPosition = (node) => {
   let current = node
 
   while (
-    current.parent &&
     current.parent.type === 'LogicalExpression' &&
     current.parent.operator === '&&' &&
     current.parent.right === current
@@ -289,7 +150,12 @@ const isJSXChildExpressionPosition = (node) => {
     current = current.parent
   }
 
-  return isJSXChildPosition(current)
+  const container = current.parent
+
+  return (
+    container.type === 'JSXExpressionContainer' &&
+    (container.parent.type === 'JSXElement' || container.parent.type === 'JSXFragment')
+  )
 }
 
 module.exports = {
@@ -297,19 +163,96 @@ module.exports = {
     type: 'problem',
     docs: {
       description:
-        'ブラウザの自動翻訳機能によるクラッシュを防ぐため、条件によって出入りする生のテキストはSafeBrowserTranslationで包む',
+        'ブラウザの自動翻訳機能によるクラッシュを防ぐため、条件によって出入りする生のテキストは要素(SafeBrowserTranslation等)で囲む',
       category: 'Best Practices',
       recommended: true,
     },
-    schema: [],
+    schema: SCHEMA,
     messages: {
       requireSafeBrowserTranslation:
-        '{{ label }}が条件によって出入りしています。ブラウザの自動翻訳機能によるクラッシュを防ぐため、SafeBrowserTranslationで包んでください。' +
+        '{{ label }}が条件によって出入りしています。ブラウザの自動翻訳機能を利用している場合、Reactがクラッシュする可能性があります。' +
+        '\n - 意味づけ・スタイルのために要素で囲むべきテキストの場合、適切な要素で囲んでください(spanに限らず、テキストと一緒に出入りする要素であれば問題ありません)' +
+        '\n - 現状のマークアップが正しい場合、SafeBrowserTranslationで囲み、意味づけ・スタイルのための要素ではないことを明確にしてください' +
+        '\n - いずれの場合も、条件分岐の内側でテキストを囲んでください。条件分岐の外側を囲んでも解決しません' +
         '\n詳細: AGENTS.md「ブラウザの自動翻訳機能によるクラッシュ対策」',
     },
   },
-
   create(context) {
+    const options = context.options[0] || {}
+    const textComponentRegex = generateRegex(
+      TEXT_COMPONENT_NAMES,
+      options.additionalTextComponentRegex,
+    )
+    const textFunctionRegex = generateRegex(
+      TEXT_FUNCTION_NAMES,
+      options.additionalTextFunctionRegex,
+    )
+    const textVariableRegex = generateRegex(
+      TEXT_VARIABLE_NAMES,
+      options.additionalTextVariableRegex,
+    )
+
+    // JSXのkey属性を調べる
+    // HINT: Reactはkeyが異なると型が同じでも要素を再利用せず、アンマウントしてからマウントする
+    // 値が静的に比較できない場合は、安全側に倒して他のどのkeyとも一致しない値として扱う
+    let dynamicKeySeq = 0
+    const getJSXKey = (node) => {
+      const { attributes } = node.openingElement
+      const attr = attributes.find((a) => a.type === 'JSXAttribute' && a.name.name === 'key')
+
+      if (!attr) {
+        // スプレッド経由でkeyが渡されている可能性があり、静的には存在を判定できない
+        return attributes.some((a) => a.type === 'JSXSpreadAttribute')
+          ? `dynamic:${dynamicKeySeq++}`
+          : 'none'
+      }
+
+      const literal =
+        attr.value?.type === 'JSXExpressionContainer' ? attr.value.expression : attr.value
+
+      // HINT: keyの省略と`key=""`はReactでは異なる値(null と '')のため区別する
+      return literal?.type === 'Literal' ? `static:${literal.value}` : `dynamic:${dynamicKeySeq++}`
+    }
+
+    // 「要素でラップされていない生のテキストを生成する式」を分類する
+    // identityが同じであれば、Reactはノードを再利用しマウント/アンマウントが発生しない
+    const classifyBareText = (node) => {
+      const componentName = getJSXElementName(node)
+
+      if (componentName && textComponentRegex.test(componentName)) {
+        return {
+          isString: false,
+          identity: `${componentName}:${getJSXKey(node)}`,
+          label: `${componentName}要素`,
+        }
+      }
+
+      // 空文字列は「何もレンダーされない」値のため対象外
+      if (node.type === 'Literal' && typeof node.value === 'string' && node.value !== '') {
+        return { isString: true, identity: 'string', label: '文字列リテラル' }
+      }
+
+      // HINT: 補間を持つテンプレートリテラルは実行時に空になるか判定できないため対象とする
+      if (node.type === 'TemplateLiteral' && !isStaticallyEmptyTemplateLiteral(node)) {
+        return { isString: true, identity: 'string', label: 'テンプレートリテラル' }
+      }
+
+      const functionName = getCallExpressionName(node)
+
+      if (functionName && textFunctionRegex.test(functionName)) {
+        return { isString: true, identity: 'string', label: `${functionName}()の呼び出し結果` }
+      }
+
+      const variablePath = getVariablePath(node)
+
+      // HINT: undefinedは「何もレンダーされない」値のため、正規表現にマッチしても対象外
+      if (variablePath && variablePath !== 'undefined' && textVariableRegex.test(variablePath)) {
+        return { isString: true, identity: 'string', label: variablePath }
+      }
+
+      return undefined
+    }
+
     const report = (node, label) => {
       context.report({
         node,
@@ -319,74 +262,46 @@ module.exports = {
     }
 
     return {
-      LogicalExpression(node) {
-        if (node.operator !== '&&' || !isJSXChildExpressionPosition(node)) {
-          return
-        }
+      'LogicalExpression[operator="&&"]': (node) => {
+        if (!isJSXChildExpressionPosition(node)) return
 
-        const info = classifyBareTextExpression(node.right)
+        const info = classifyBareText(node.right)
 
         if (info) {
           report(node.right, info.label)
         }
       },
+      ConditionalExpression: (node) => {
+        if (isConditionalBranch(node) || !isJSXChildExpressionPosition(node)) return
 
-      ConditionalExpression(node) {
-        // ネストしたConditionalExpressionの分岐自体は、根本のConditionalExpressionで
-        // まとめて処理するためスキップする
-        if (isConditionalBranch(node) || !isJSXChildExpressionPosition(node)) {
-          return
-        }
+        const classified = collectConditionalLeaves(node).map((leaf) => ({
+          leaf,
+          info: classifyBareText(leaf),
+        }))
+        const targets = classified.filter((entry) => entry.info)
 
-        const leaves = []
+        if (targets.length === 0) return
 
-        collectConditionalLeaves(node, leaves)
-
-        const classified = leaves.map((leaf) => ({ leaf, info: classifyBareTextExpression(leaf) }))
-        const targetEntries = classified.filter((entry) => entry.info !== undefined)
-
-        if (targetEntries.length === 0) {
-          return
-        }
-
-        // すべての分岐が同じ種類(同じコンポーネント、または文字列同士)の場合、
+        // すべての分岐が同じ種類(同じコンポーネントかつ同じkey、または文字列同士)の場合、
         // Reactはノードを再利用しマウント/アンマウントが発生しないため安全
-        const referenceInfo = targetEntries[0].info
-        const allSameKind = classified.every(
-          (entry) => entry.info !== undefined && isSameSafeKind(entry.info, referenceInfo),
+        const { identity } = targets[0].info
+
+        if (classified.every((entry) => entry.info?.identity === identity)) return
+
+        // 文字列が型の確定しない式(number等も含みうる変数等)とのみ組み合わさっている場合は報告しない
+        // HINT: Reactは文字列・数値をどちらも同じテキストノードとして扱うため、要素の出入りが発生せず安全なケースが多い
+        // (例: `count > max ? \`\${max}+\` : count`)
+        // ただし、何もレンダーされない値・要素が分岐に含まれる場合は要素の有無そのものが切り替わるため報告する
+        const hasDefinitelyNotText = classified.some((entry) =>
+          isDefinitelyNotTextExpression(entry.leaf),
         )
+        const skipString = !hasDefinitelyNotText && classified.some((entry) => !entry.info)
 
-        if (allSameKind) {
-          return
-        }
-
-        // 文字列リテラル/テンプレートリテラルが、型の確定しない変数(number等も含む)と
-        // 組み合わさっている場合は報告しない。Reactの内部的には文字列・数値はどちらも
-        // 同じ「テキストノード」として扱われ、実際にはマウント/アンマウントが発生せず
-        // 安全なケースが多いため(実例: `count > max ? \`${max}+\` : count` のような
-        // テンプレートリテラルとnumber変数の組み合わせはクラッシュしないことを実機確認済み)。
-        // ただし `null`/`undefined`/`false` との組み合わせは「何もレンダーされない」ことが
-        // 確定しており、要素の有無そのものが切り替わるため緩和しない。
-        // 一方Localizer等のコンポーネントは要素の型が明確に異なり安全と判断できないため、
-        // 変数との混在でも報告する
-        const hasUnclassifiedBranch = classified.some(
-          (entry) => entry.info === undefined && !isDefinitelyEmptyExpression(entry.leaf),
-        )
-
-        // ただし確定した空の分岐(`null`/`undefined`/`false`/`''`)が含まれる場合、
-        // 型不明の分岐の実際の値に関わらず「要素の有無」自体が切り替わることが
-        // 確定しているため、上記の緩和を適用せず報告する
-        const hasDefinitelyEmptyBranch = classified.some((entry) =>
-          isDefinitelyEmptyExpression(entry.leaf),
-        )
-
-        for (const { leaf, info } of targetEntries) {
-          if (info.kind === 'string' && hasUnclassifiedBranch && !hasDefinitelyEmptyBranch) {
-            continue
-          }
+        targets.forEach(({ leaf, info }) => {
+          if (info.isString && skipString) return
 
           report(leaf, info.label)
-        }
+        })
       },
     }
   },

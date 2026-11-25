@@ -87,4 +87,22 @@ describe('AppLauncher', () => {
 
     expect(searchInput()).toHaveValue('')
   })
+
+  it('ブラウザ翻訳で通常時の見出しが置換されても、検索開始・解除でクラッシュしないこと', async () => {
+    const user = userEvent.setup()
+    renderAppLauncher()
+
+    const heading = screen.getByRole('heading', { name: 'よく使うアプリ' })
+    const translated = document.createElement('font')
+    translated.textContent = 'Favorite Apps'
+    heading.replaceChild(translated, heading.childNodes[0])
+
+    await user.type(searchInput(), 'アプリA')
+
+    expect(screen.getByRole('heading', { name: '検索結果' })).toBeInTheDocument()
+
+    await user.clear(searchInput())
+
+    expect(screen.getByRole('heading', { name: 'よく使うアプリ' })).toBeInTheDocument()
+  })
 })
