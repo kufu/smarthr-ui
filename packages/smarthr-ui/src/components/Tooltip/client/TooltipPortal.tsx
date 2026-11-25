@@ -35,7 +35,15 @@ type Props = ExtendElementPropsWithoutRef<
 
 const classNameGenerator = tv({
   slots: {
-    container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
+    container: [
+      'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
+      // HINT: トリガとの間に空けているSPACING(5px)分の隙間を、透明な疑似要素で埋める。
+      // 隙間をツールチップの一部としてポインタが当たる範囲にすることで、トリガからツールチップへポインタを移す途中で
+      // トリガのpointerleaveが発生して閉じてしまうことを防ぐ
+      'before:shr-absolute before:shr-inset-x-0 before:shr-h-[5px] before:shr-content-[""]',
+      'data-[vertical=bottom]:before:shr-top-full',
+      'data-[vertical=top]:before:shr-bottom-full',
+    ],
     balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
     balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
   },
@@ -129,6 +137,7 @@ export const TooltipPortal: FC<Props> = ({
       className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}
       aria-hidden={!isVisible}
+      data-vertical={actualVertical}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}

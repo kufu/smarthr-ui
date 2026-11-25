@@ -131,4 +131,67 @@ describe('Tooltip', () => {
       }
     })
   })
+
+  describe('ポインタ・フォーカス・タッチによる表示の切り替え', () => {
+    const getPopup = () => document.querySelector<HTMLElement>('.smarthr-ui-Tooltip-popup')!
+    const isVisible = () => getPopup().getAttribute('aria-hidden') === 'false'
+    const renderTooltip = () => {
+      render(
+        <Tooltip message="説明">
+          <Button>ボタン</Button>
+        </Tooltip>,
+      )
+
+      return screen.getByRole('button', { name: 'ボタン' })
+    }
+
+    it('トリガからツールチップへポインタを移しても閉じず、どちらからも外れたら閉じる', () => {
+      const button = renderTooltip()
+
+      fireEvent.pointerEnter(button)
+      expect(isVisible()).toBe(true)
+
+      fireEvent.pointerLeave(button, { relatedTarget: getPopup() })
+      expect(isVisible()).toBe(true)
+
+      fireEvent.pointerLeave(getPopup(), { relatedTarget: document.body })
+      expect(isVisible()).toBe(false)
+    })
+
+    it('ポインタがツールチップの上にある間は、トリガが blur しても閉じない', () => {
+      const button = renderTooltip()
+
+      // トリガをクリックしてフォーカスした後、ツールチップの中の文字を選択しようとするケース
+      fireEvent.pointerEnter(button)
+      fireEvent.focus(button)
+      fireEvent.pointerLeave(button, { relatedTarget: getPopup() })
+      fireEvent.blur(button)
+      expect(isVisible()).toBe(true)
+
+      fireEvent.pointerLeave(getPopup(), { relatedTarget: document.body })
+      expect(isVisible()).toBe(false)
+    })
+
+    it('キーボード操作では、フォーカスで表示し blur で閉じる', () => {
+      const button = renderTooltip()
+
+      fireEvent.focus(button)
+      expect(isVisible()).toBe(true)
+
+      fireEvent.blur(button)
+      expect(isVisible()).toBe(false)
+    })
+
+    it('タッチ操作では、タッチで表示しタッチを離すと閉じる', () => {
+      const button = renderTooltip()
+
+      // タッチ操作でもpointerenterは発生する
+      fireEvent.pointerEnter(button, { pointerType: 'touch' })
+      fireEvent.touchStart(button)
+      expect(isVisible()).toBe(true)
+
+      fireEvent.touchEnd(button)
+      expect(isVisible()).toBe(false)
+    })
+  })
 })

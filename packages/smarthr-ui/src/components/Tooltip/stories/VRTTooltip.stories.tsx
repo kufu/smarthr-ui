@@ -1,4 +1,4 @@
-import { userEvent } from 'storybook/test'
+import { expect, userEvent, within } from 'storybook/test'
 
 import { Button } from '../../Button'
 import { FaCircleQuestionIcon, FaPencilIcon } from '../../Icon'
@@ -77,5 +77,45 @@ export const VRTForcedColors: StoryObj = {
   ...VRT,
   parameters: {
     chromatic: { forcedColors: 'active' },
+  },
+}
+
+// トリガとツールチップの間の隙間も、ツールチップの一部としてポインタが当たる範囲になっていること
+// (隙間でトリガのpointerleaveが発生すると、トリガからツールチップへポインタを移す途中で閉じてしまう)
+export const VRTPointerAreaBetweenTriggerAndTooltip: StoryObj = {
+  render: () => (
+    // HINT: 1つ目のトリガは上に余白を取らず、ツールチップがトリガの下に表示されるようにする
+    <Stack gap={8} align="flex-start" className="shr-px-4 shr-pb-4">
+      <Tooltip message="トリガの下に表示">
+        <Button>下に表示</Button>
+      </Tooltip>
+      <div className="shr-pt-[100px]">
+        <Tooltip message="トリガの上に表示">
+          <Button>上に表示</Button>
+        </Tooltip>
+      </div>
+    </Stack>
+  ),
+  play: async ({ canvasElement }) => {
+    for (const trigger of within(canvasElement).getAllByRole('button')) {
+      await userEvent.hover(trigger)
+
+      const popup = document
+        .getElementById(trigger.getAttribute('aria-describedby')!)!
+        .closest<HTMLElement>('.smarthr-ui-Tooltip-popup')!
+      const triggerRect = trigger.getBoundingClientRect()
+      const popupRect = popup.getBoundingClientRect()
+      // 隙間の上下方向の中央。横方向は三角(吹き出しの矢印)と重ならない、ツールチップの端に近い位置
+      const y =
+        popupRect.bottom <= triggerRect.top
+          ? (popupRect.bottom + triggerRect.top) / 2
+          : (triggerRect.bottom + popupRect.top) / 2
+      const x = popupRect.left + 2
+
+      await expect(popup.contains(document.elementFromPoint(x, y))).toBe(true)
+    }
+  },
+  parameters: {
+    layout: 'fullscreen',
   },
 }
