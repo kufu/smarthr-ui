@@ -42,7 +42,37 @@ commands:
   # 先に本体をビルドしておく必要がある
   build-smarthr-ui:
     steps:
-      - run: pnpm ui build
+      # 計測用（PRのマージ前に削除する）
+      - run:
+          name: pnpm ui build (measure)
+          shell: /bin/bash -eo pipefail
+          command: |
+            CG=/sys/fs/cgroup
+            if [ -f $CG/memory.current ]; then
+              CUR=$CG/memory.current; STAT_KEY=anon; LIMIT=$(cat $CG/memory.max)
+            else
+              CUR=$CG/memory/memory.usage_in_bytes; STAT_KEY=rss; LIMIT=$(cat $CG/memory/memory.limit_in_bytes)
+            fi
+            STAT=$(dirname $CUR)/memory.stat
+            anon() { awk -v k=$STAT_KEY '$1 == k { print $2 }' $STAT; }
+            echo "MEASURE before usage=$(cat $CUR) anon=$(anon) limit=$LIMIT"
+            (
+              peak=0; peak_anon=0
+              while true; do
+                v=$(cat $CUR); a=$(anon)
+                (( v > peak )) && peak=$v
+                (( a > peak_anon )) && peak_anon=$a
+                echo "$peak $peak_anon" > /tmp/mem-peak
+                sleep 0.1
+              done
+            ) &
+            SAMPLER=$!
+            start=$(date +%s%N)
+            pnpm ui build
+            end=$(date +%s%N)
+            kill $SAMPLER
+            read peak peak_anon < /tmp/mem-peak
+            echo "MEASURE build_ms=$(( (end - start) / 1000000 )) peak_usage=$peak peak_anon=$peak_anon limit=$LIMIT"
   check-source:
     steps:
       - run: pnpm ui lint
