@@ -6,12 +6,28 @@ import { ListItemAnchor } from '../ListItemAnchor'
 import { List, ListItem } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
+
+const _dividerOptions: Record<string, ComponentPropsWithoutRef<typeof List>['divider']> = {
+  "'full'": 'full',
+  "'content'": 'content',
+  "{ width: 'full', last: true }": { width: 'full', last: true },
+  "{ width: 'content', last: true }": { width: 'content', last: true },
+  false: false,
+}
 
 export default {
   title: 'Components/List',
   component: List,
   subcomponents: { ListItem, ListItemAnchor },
   render: (args) => <List {...args} />,
+  argTypes: {
+    divider: {
+      control: 'select',
+      options: Object.keys(_dividerOptions),
+      mapping: _dividerOptions,
+    },
+  },
   args: {
     children: (
       <>
@@ -46,8 +62,8 @@ export const Divider: StoryObj<typeof List> = {
   name: 'divider',
   render: (args) => (
     <Stack>
-      {(['full', 'content', false] as const).map((divider) => (
-        <List {...args} key={String(divider)} divider={divider} />
+      {Object.entries(_dividerOptions).map(([label, divider]) => (
+        <List {...args} key={label} divider={divider} />
       ))}
     </Stack>
   ),
