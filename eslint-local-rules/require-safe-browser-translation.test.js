@@ -174,6 +174,27 @@ test('require-safe-browser-translation', () => {
           </div>
         )
       `,
+
+      // localize()の呼び出し結果がSafeBrowserTranslationで包まれている
+      `
+        const Foo = ({ loading }) => {
+          const { localize } = useIntl()
+          return (
+            <div>
+              {loading && (
+                <SafeBrowserTranslation>
+                  {localize({ id: 'x', defaultText: '処理中' })}
+                </SafeBrowserTranslation>
+              )}
+            </div>
+          )
+        }
+      `,
+
+      // 対象外のメソッド名の呼び出しは文字列である保証がないため対象外
+      `
+        const Foo = ({ loading, getText }) => <div>{loading && getText()}</div>
+      `,
     ],
 
     invalid: [
@@ -434,6 +455,37 @@ test('require-safe-browser-translation', () => {
         errors: [
           { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
           { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
+      },
+
+      // {cond && localize(...)}
+      {
+        code: `
+          const Foo = ({ loading }) => {
+            const { localize } = useIntl()
+            return <div>{loading && localize({ id: 'x', defaultText: '処理中' })}</div>
+          }
+        `,
+        errors: [
+          {
+            messageId: 'requireSafeBrowserTranslation',
+            data: { label: 'localize()の呼び出し結果' },
+          },
+        ],
+      },
+
+      // {cond ? formatMessage(...) : null}(intl.formatMessage(...)のようなメンバー式経由)
+      {
+        code: `
+          const Foo = ({ loading, intl }) => (
+            <div>{loading ? intl.formatMessage({ id: 'x' }) : null}</div>
+          )
+        `,
+        errors: [
+          {
+            messageId: 'requireSafeBrowserTranslation',
+            data: { label: 'formatMessage()の呼び出し結果' },
+          },
         ],
       },
     ],

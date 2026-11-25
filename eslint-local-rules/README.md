@@ -47,10 +47,11 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
 
 ブラウザの自動翻訳機能によるクラッシュ対策（AGENTS.md の「ブラウザの自動翻訳機能によるクラッシュ対策」参照）として、条件によって出入りする「要素でラップされていない生のテキスト」が `SafeBrowserTranslation` で包まれているかを検知します（`requireSafeBrowserTranslation`）。対象は JSX の子要素（children）位置にある式のみで、JSX属性値（`aria-current={current ? 'page' : undefined}` 等）は対象外です。
 
-「生のテキスト」として扱うのは次の2種類です。
+「生のテキスト」として扱うのは次の3種類です。
 
 - `Localizer`/`FormattedMessage` 要素。smarthr-uiには「文言は多言語化する」規約（`smarthr/require-i18n-text`）があり、JSX上のテキストはほぼ必ずこれらを経由するため、コンポーネント名のみで機械的に判定できます
 - 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定しています（ただし空文字列 `''` は `null`/`undefined`/`false` と同じく「何もレンダーされない」値のため「生のテキスト」としては扱いません）
+- `localize(...)`/`formatMessage(...)`（`intl.formatMessage(...)` のようなメンバー式経由も含む）の呼び出し結果。`useIntl` の `localize`（および react-intl の `formatMessage`）は戻り値が常に string 型の `Localizer` の関数版で、呼び出し式のメソッド名のみで機械的に判定できます。文字列リテラルと同じ `kind: 'string'` として扱いますが、戻り値が実行時に空文字列になりうるかは判定できないため、文字列リテラルの空文字列判定のような緩和は適用されません
 
 検知するパターン:
 

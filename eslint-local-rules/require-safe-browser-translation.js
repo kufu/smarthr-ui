@@ -8,13 +8,18 @@
  * 条件によって当該テキストがアンマウントされるとReactがクラッシュする既知の問題がある。
  * 詳細は AGENTS.md「ブラウザの自動翻訳機能によるクラッシュ対策」を参照。
  *
- * 「要素でラップされていない生のテキスト」として扱うのは次の2種類:
+ * 「要素でラップされていない生のテキスト」として扱うのは次の3種類:
  * 1. Localizer(および FormattedMessage)要素。smarthr-uiには「文言は多言語化する」規約
  *    (smarthr/require-i18n-text)があり、JSX上で表示されるテキストはほぼ必ずこれらを
  *    経由するため、コンポーネント名のみで機械的に判定できる
  * 2. 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定している
  *    (ただし空文字列`''`は`null`/`undefined`/`false`と同じく「何もレンダーされない」値のため
  *    「生のテキスト」としては扱わない)
+ * 3. `localize(...)`/`formatMessage(...)`の呼び出し結果。useIntlの`localize`(および
+ *    react-intlの`formatMessage`)は戻り値が常にstring型のLocalizerの関数版で、
+ *    呼び出し式のメソッド名のみで機械的に判定できる。文字列リテラルと同じ`kind: 'string'`
+ *    として扱う(ただし戻り値が実行時に空文字列になりうるかは判定できないため、
+ *    文字列リテラルの空文字列判定のような緩和は適用しない)
  *
  * 検知するパターン(いずれも JSX の子要素(children)位置にある場合のみ):
  * 1. `{cond && <Localizer .../>}` / `{cond && 'text'}` -
@@ -41,7 +46,8 @@
  *   (例: `setLiveRegionText(<Localizer ... />)` と `setLiveRegionText('')` の組み合わせ)。
  *   構文解析だけでは変数の値の出入りを追跡できないため検知できない。該当しそうな箇所は
  *   AGENTS.md の判断基準に沿ってレビューで見つける必要がある
- * - 変数・関数呼び出し等、型が静的に確定しない式(文字列である保証がないため対象外とする)
+ * - 変数・関数呼び出し等、型が静的に確定しない式(文字列である保証がないため対象外とする。
+ *   ただし`localize`/`formatMessage`の呼び出しは前述の通り対象)
  * - 三項演算子で、文字列リテラル/テンプレートリテラルが型の確定しない変数(number等も含む)と
  *   組み合わさっている場合(例: `count > max ? \`${max}+\` : count`)。Reactの内部的には
  *   文字列・数値はどちらも同じ「テキストノード」として扱われ、実際には要素の出入りが
@@ -59,6 +65,11 @@
 
 const TARGET_COMPONENT_NAMES = new Set(['Localizer', 'FormattedMessage'])
 
+// useIntlの`localize`(およびreact-intlの`formatMessage`)はLocalizerの関数版で、
+// 戻り値は常にstring型。`intl.formatMessage(...)`のようなメンバー式経由の呼び出しも
+// 対象にするため、メソッド名(プロパティ名)のみで判定する
+const TARGET_CALL_NAMES = new Set(['localize', 'formatMessage'])
+
 const getJSXElementName = (node) => {
   if (!node || node.type !== 'JSXElement') {
     return undefined
@@ -67,6 +78,24 @@ const getJSXElementName = (node) => {
   const { name } = node.openingElement
 
   return name.type === 'JSXIdentifier' ? name.name : undefined
+}
+
+const getCallExpressionName = (node) => {
+  if (!node || node.type !== 'CallExpression') {
+    return undefined
+  }
+
+  const { callee } = node
+
+  if (callee.type === 'Identifier') {
+    return callee.name
+  }
+
+  if (callee.type === 'MemberExpression' && !callee.computed && callee.property.type === 'Identifier') {
+    return callee.property.name
+  }
+
+  return undefined
 }
 
 // JSXの`key`属性を調べる。Reactはkeyが異なると「型が同じでも別のアイデンティティの要素」と
@@ -142,6 +171,12 @@ const classifyBareTextExpression = (node) => {
 
   if (node.type === 'TemplateLiteral') {
     return { kind: 'string', key: 'string', label: 'テンプレートリテラル' }
+  }
+
+  const callName = getCallExpressionName(node)
+
+  if (callName && TARGET_CALL_NAMES.has(callName)) {
+    return { kind: 'string', key: 'string', label: `${callName}()の呼び出し結果` }
   }
 
   return undefined
