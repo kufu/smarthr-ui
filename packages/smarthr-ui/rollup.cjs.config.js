@@ -62,6 +62,11 @@ export default {
     typescript({
       tsconfig: './tsconfig.build.json',
       noEmit: true,
+      // HINT: 型チェックと型定義の出力は build:types(tsc)で行うため、ここでは省いてメモリ使用量とビルド時間を抑える。
+      // isolatedModules: true なので、型情報なしでも出力されるJSは変わらない
+      noCheck: true,
+      declaration: false,
+      declarationMap: false,
     }),
     preserveDirectives({
       exclude: '**/*.json',
