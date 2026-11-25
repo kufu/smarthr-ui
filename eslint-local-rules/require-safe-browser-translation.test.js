@@ -274,6 +274,17 @@ test('require-safe-browser-translation', () => {
         code: `const Foo = ({ loading, caption }) => <div aria-label={loading ? caption : undefined} />`,
         options: [{ additionalTextVariableRegex: ['^caption$'] }],
       },
+      // オプションに空配列を指定した場合、省略時と同じ結果になる(デフォルトの対象以外は検知されない)
+      {
+        code: `const Foo = ({ loading, content }) => <div>{loading && <span>text</span>}{loading && <Trans id="x" />}{loading && t('x')}{loading && content}{loading && getText()}</div>`,
+        options: [
+          {
+            additionalTextComponentRegex: [],
+            additionalTextFunctionRegex: [],
+            additionalTextVariableRegex: [],
+          },
+        ],
+      },
       // SafeBrowserTranslation以外の要素で囲まれている場合も対象外
       { code: `const Foo = ({ loading }) => <div>{loading && <p>処理中</p>}</div>` },
       {
@@ -757,6 +768,34 @@ test('require-safe-browser-translation', () => {
           { messageId: 'requireSafeBrowserTranslation', data: { label: 'caption' } },
           { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
         ],
+      },
+      // オプションに空配列を指定した場合、省略時と同じ結果になる(デフォルトの対象は引き続き検知される)
+      {
+        code: `const Foo = ({ loading, label }) => <div>{loading && <Localizer id="x" defaultText="処理中" />}{loading && localize({ id: 'x' })}{loading && label}</div>`,
+        options: [
+          {
+            additionalTextComponentRegex: [],
+            additionalTextFunctionRegex: [],
+            additionalTextVariableRegex: [],
+          },
+        ],
+        errors: [
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+          {
+            messageId: 'requireSafeBrowserTranslation',
+            data: { label: 'localize()の呼び出し結果' },
+          },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'label' } },
+        ],
+      },
+      // 条件分岐の外側を要素で囲んでも、テキストノード自体が出入りするため検知される
+      {
+        code: `const Foo = ({ loading }) => <div><Icon /><SafeBrowserTranslation>{loading && <Localizer id="x" defaultText="処理中" />}</SafeBrowserTranslation></div>`,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
+      },
+      {
+        code: `const Foo = ({ loading }) => <div><Icon /><span>{loading ? '処理中' : null}</span></div>`,
+        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: '文字列リテラル' } }],
       },
       // Fragmentの直下にある場合も検知される
       {

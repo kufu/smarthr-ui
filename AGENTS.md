@@ -451,7 +451,7 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 **親要素の唯一の子であっても安全にはならない。** React が例外を起こさないのは、文字列・数値リテラルを親要素の直下に単独で置く場合のみ（この場合 `textContent` で直接書き換え、`removeChild` 自体を行わないため）。`Localizer` のようなコンポーネントは唯一の子であっても `removeChild` が呼ばれて例外を起こす（実機検証で確認済み）。
 
-該当箇所は、まずマークアップを見直す。意味づけ・スタイルのために要素で囲むべきテキストであれば適切な要素で囲む（`span` に限らず、要素で囲まれていれば問題ない）。現状のマークアップが正しい場合は `src/components/SafeBrowserTranslation` で包み、意味づけ・スタイルのための要素ではないことを明確にする。機械的に検知できる範囲は `eslint-local-rules/require-safe-browser-translation` が強制するため、判定基準・検知パターンの詳細はそちらの README を参照（このルールは将来的に `eslint-plugin-smarthr` へ移管予定）。
+該当箇所は、まずマークアップを見直す。意味づけ・スタイルのために要素で囲むべきテキストであれば適切な要素で囲む（`span` に限らず、テキストと一緒に出入りする要素であれば問題ない）。現状のマークアップが正しい場合は `src/components/SafeBrowserTranslation` で包み、意味づけ・スタイルのための要素ではないことを明確にする。いずれの場合も、要素は条件分岐の内側に置く。`<span>{loading && <Localizer ... />}</span>` のように条件分岐の外側を囲んでも、テキストノード自体が出入りすることは変わらないため解決しない。機械的に検知できる範囲は `eslint-local-rules/require-safe-browser-translation` が強制するため、判定基準・検知パターンの詳細はそちらの README を参照（このルールは将来的に `eslint-plugin-smarthr` へ移管予定）。
 
 ```tsx
 // ❌ Localizerは親の唯一の子であってもクラッシュしうる

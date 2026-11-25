@@ -37,8 +37,9 @@ const TEXT_FUNCTION_NAMES = '^(localize|formatMessage)$'
 const TEXT_VARIABLE_NAMES =
   '^(translated|localized)\\.|(^|\\.)(name|label|text|title|message|description)$|(Name|Label|Text|Title|Message|Description)$'
 
+// HINT: 空配列の場合に末尾が`|`の正規表現(すべての名称にマッチする)を生成しないよう、要素数で判定する
 const generateRegex = (base, additional) =>
-  new RegExp(additional ? `${base}|${additional.join('|')}` : base)
+  new RegExp(additional?.length ? `${base}|${additional.join('|')}` : base)
 
 const getJSXElementName = (node) => {
   if (node.type !== 'JSXElement') return undefined
@@ -170,8 +171,9 @@ module.exports = {
     messages: {
       requireSafeBrowserTranslation:
         '{{ label }}が条件によって出入りしています。ブラウザの自動翻訳機能を利用している場合、Reactがクラッシュする可能性があります。' +
-        '\n - 意味づけ・スタイルのために要素で囲むべきテキストの場合、適切な要素で囲んでください(spanに限らず、要素で囲まれていれば問題ありません)' +
+        '\n - 意味づけ・スタイルのために要素で囲むべきテキストの場合、適切な要素で囲んでください(spanに限らず、テキストと一緒に出入りする要素であれば問題ありません)' +
         '\n - 現状のマークアップが正しい場合、SafeBrowserTranslationで囲み、意味づけ・スタイルのための要素ではないことを明確にしてください' +
+        '\n - いずれの場合も、条件分岐の内側でテキストを囲んでください。条件分岐の外側を囲んでも解決しません' +
         '\n詳細: AGENTS.md「ブラウザの自動翻訳機能によるクラッシュ対策」',
     },
   },
