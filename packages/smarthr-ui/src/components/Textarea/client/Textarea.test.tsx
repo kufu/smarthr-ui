@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { useEffect, useState } from 'react'
+import { Activity, StrictMode, useEffect, useState } from 'react'
 
 import { IntlProvider } from '../../../intl'
 import { FormControl } from '../../FormGroup'
@@ -70,6 +70,55 @@ describe('Textarea', () => {
       await waitFor(() => {
         expect(screen.getByText(/あと6文字/)).toBeInTheDocument()
       })
+    })
+
+    // HINT: LiveRegionのスクリーンリーダー用テキストはannounceDelay後に更新されるため、
+    // getAllByTextでは古い値に一致してしまう。textareaのaria-describedbyが参照する視認用テキストで確認する
+    it('非制御の場合、StrictModeでも初期表示時点の文字数カウンタがdefaultValueの文字数になる', () => {
+      render(
+        <StrictMode>
+          <IntlProvider locale="ja">
+            <form>
+              <FormControl label="Textarea">
+                <Textarea name="textarea" defaultValue="テキスト" maxLetters={10} />
+              </FormControl>
+            </form>
+          </IntlProvider>
+        </StrictMode>,
+      )
+
+      expect(screen.getByRole('textbox')).toHaveAccessibleDescription(
+        '最大10文字入力できます あと6文字',
+      )
+    })
+
+    it('非制御の場合、Activityで非表示から再表示しても入力済みの文字数カウンタが維持される', async () => {
+      const user = userEvent.setup()
+      const Component = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+        <IntlProvider locale="ja">
+          <Activity mode={mode}>
+            <form>
+              <FormControl label="Textarea">
+                <Textarea name="textarea" defaultValue="テキスト" maxLetters={10} />
+              </FormControl>
+            </form>
+          </Activity>
+        </IntlProvider>
+      )
+
+      const { rerender } = render(<Component mode="visible" />)
+
+      const textarea = screen.getByRole('textbox')
+
+      await user.type(textarea, '!!')
+
+      expect(textarea).toHaveAccessibleDescription('最大10文字入力できます あと4文字')
+
+      rerender(<Component mode="hidden" />)
+      rerender(<Component mode="visible" />)
+
+      expect(textarea).toHaveProperty('value', 'テキスト!!')
+      expect(textarea).toHaveAccessibleDescription('最大10文字入力できます あと4文字')
     })
 
     it('非制御で入力を変更後、form.reset()を呼ぶと文字数カウンタがdefaultValueの文字数に戻ること', async () => {
