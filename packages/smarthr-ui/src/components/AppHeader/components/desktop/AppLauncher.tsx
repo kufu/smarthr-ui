@@ -166,8 +166,6 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
           <Section className={CLASS_NAMES.mainInner}>
             <Cluster align="center" justify="space-between" className={CLASS_NAMES.contentHead}>
               <MemoizedSubSubBlockHeading>
-                {/* HINT: 全分岐を文字列に揃えることで、Reactは見出しのtextContentを書き換えるだけになる。
-                    要素の出入りが発生しないため、ブラウザ翻訳後に切り替えてもクラッシュしない */}
                 {mode === 'search'
                   ? translated.searchResultText
                   : page === 'favorite'
