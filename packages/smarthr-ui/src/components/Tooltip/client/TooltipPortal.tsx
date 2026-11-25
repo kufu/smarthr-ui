@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useCallback, useState, useSyncExternalStore } from 'react'
+import { type FC, type ReactNode, useCallback, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
@@ -36,8 +36,10 @@ type Props = ExtendElementPropsWithoutRef<
 const classNameGenerator = tv({
   slots: {
     container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
-    balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
-    balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
+    // HINT: 中身をスクロール可能にすると inline-block の baseline が下端になり、下に行の余白ができるため上揃えにする
+    balloon: 'shr-max-w-full shr-align-top [&&&]:shr-whitespace-normal',
+    // HINT: 高さを制限する場合は、吹き出しの中身をスクロールさせて吹き出し自体が制限した高さに収まるようにする
+    balloonText: 'shr-m-0 shr-box-border shr-overflow-y-auto shr-px-1 shr-py-0.5',
   },
 })
 
@@ -75,6 +77,8 @@ export const TooltipPortal: FC<Props> = ({
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
+  const [messageMaxHeight, setMessageMaxHeight] = useState<string | undefined>(undefined)
+  const messageRef = useRef<HTMLDivElement>(null)
 
   // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
   const callbackRef = useCallback(
@@ -83,14 +87,23 @@ export const TooltipPortal: FC<Props> = ({
         return
       }
 
+      // HINT: parentRectは表示した時点のビューポート上の位置のため、その時点のスクロール量と組み合わせて文書上の位置を求める。
+      // 表示したままスクロールした後に再計算した場合も、トリガとの位置関係が崩れないようにする
+      const baseScroll = { x: scrollX, y: scrollY }
+
       const action = () => {
         const safeAreaInsets = getSafeAreaInsets()
-        // HINT: maxHeightで高さが制限されている場合でも、中身全体の高さを元に計算し直せるよう、
-        // offsetHeightではなくscrollHeightを使う
-        const vertical = calculateVertical(element.scrollHeight, parentRect, safeAreaInsets)
+        const messageElement = messageRef.current
+        // HINT: maxHeightで高さが制限され中身がスクロールしている場合でも、中身全体の高さを元に計算し直せるよう、
+        // スクロールで隠れている分を足す
+        const portalHeight =
+          element.offsetHeight +
+          (messageElement ? messageElement.scrollHeight - messageElement.clientHeight : 0)
+        const vertical = calculateVertical(portalHeight, parentRect, baseScroll.y, safeAreaInsets)
         const horizontal = calculateHorizontal(
           element.offsetWidth,
           parentRect,
+          baseScroll.x,
           theme,
           safeAreaInsets,
         )
@@ -101,8 +114,8 @@ export const TooltipPortal: FC<Props> = ({
           insetInlineStart: horizontal.insetInlineStart,
           insetInlineEnd: horizontal.insetInlineEnd,
           maxWidth: horizontal.maxWidth,
-          maxHeight: vertical.maxHeight,
         })
+        setMessageMaxHeight(vertical.maxHeight)
         setActualVertical(vertical.alignment)
         setActualHorizontal(horizontal.alignment)
       }
@@ -146,7 +159,12 @@ export const TooltipPortal: FC<Props> = ({
         triggerIcon={isIcon}
         className={CLASS_NAMES.balloon}
       >
-        <div id={messageId} className={CLASS_NAMES.balloonText}>
+        <div
+          ref={messageRef}
+          id={messageId}
+          className={CLASS_NAMES.balloonText}
+          style={isVisible && messageMaxHeight ? { maxHeight: messageMaxHeight } : undefined}
+        >
           {message}
         </div>
       </ControlledTooltip>
@@ -158,6 +176,7 @@ export const TooltipPortal: FC<Props> = ({
 const calculateVertical = (
   portalHeight: number,
   parentRect: DOMRect,
+  scrollY: number,
   safeAreaInsets: SafeAreaInsets,
 ): {
   insetBlockStart: string
@@ -227,6 +246,7 @@ type ReturnCalculateHorizontalType = {
 const calculateHorizontal = (
   portalWidth: number,
   parentRect: DOMRect,
+  scrollX: number,
   theme: ReturnType<typeof useTheme>,
   safeAreaInsets: SafeAreaInsets,
 ): ReturnCalculateHorizontalType => {
