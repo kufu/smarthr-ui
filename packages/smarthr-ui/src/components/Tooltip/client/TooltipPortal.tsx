@@ -87,10 +87,6 @@ export const TooltipPortal: FC<Props> = ({
         return
       }
 
-      // HINT: parentRectは表示した時点のビューポート上の位置のため、その時点のスクロール量と組み合わせて文書上の位置を求める。
-      // 表示したままスクロールした後に再計算した場合も、トリガとの位置関係が崩れないようにする
-      const baseScroll = { x: scrollX, y: scrollY }
-
       const action = () => {
         const safeAreaInsets = getSafeAreaInsets()
         const messageElement = messageRef.current
@@ -99,11 +95,10 @@ export const TooltipPortal: FC<Props> = ({
         const portalHeight =
           element.offsetHeight +
           (messageElement ? messageElement.scrollHeight - messageElement.clientHeight : 0)
-        const vertical = calculateVertical(portalHeight, parentRect, baseScroll.y, safeAreaInsets)
+        const vertical = calculateVertical(portalHeight, parentRect, safeAreaInsets)
         const horizontal = calculateHorizontal(
           element.offsetWidth,
           parentRect,
-          baseScroll.x,
           theme,
           safeAreaInsets,
         )
@@ -176,7 +171,6 @@ export const TooltipPortal: FC<Props> = ({
 const calculateVertical = (
   portalHeight: number,
   parentRect: DOMRect,
-  scrollY: number,
   safeAreaInsets: SafeAreaInsets,
 ): {
   insetBlockStart: string
@@ -246,7 +240,6 @@ type ReturnCalculateHorizontalType = {
 const calculateHorizontal = (
   portalWidth: number,
   parentRect: DOMRect,
-  scrollX: number,
   theme: ReturnType<typeof useTheme>,
   safeAreaInsets: SafeAreaInsets,
 ): ReturnCalculateHorizontalType => {
