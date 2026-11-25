@@ -71,4 +71,20 @@ describe('AppLauncher', () => {
     expect(searchInput()).toHaveValue('')
     expect(screen.queryByRole('button', { name: '' })).not.toBeInTheDocument()
   })
+
+  it('ブラウザ翻訳で「検索結果」見出しが置換されても、検索解除後クラッシュしないこと', async () => {
+    const user = userEvent.setup()
+    renderAppLauncher()
+
+    await user.type(searchInput(), 'アプリA')
+
+    const heading = screen.getByText('検索結果')
+    const translated = document.createElement('font')
+    translated.textContent = 'Search Results'
+    heading.replaceChild(translated, heading.childNodes[0])
+
+    await user.clear(searchInput())
+
+    expect(searchInput()).toHaveValue('')
+  })
 })

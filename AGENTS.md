@@ -445,6 +445,37 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 `'use client'` の削除は DOM に影響しないため、`innerHTML` を比較して同一であることを確認します。
 
+#### ブラウザの自動翻訳機能によるクラッシュ対策
+
+条件によって出現/消失するテキストが「要素でラップされていない生のテキスト（`Localizer`/`FormattedMessage` 等、実体としてテキストノードしか生成しないコンポーネント）」である場合、ブラウザの自動翻訳機能（Google翻訳等）がテキストノードを別要素（`<font>` 等）に書き換えた後、React が `removeChild`/`insertBefore` で例外を起こしクラッシュする既知の問題がある（詳細: https://github.com/facebook/react/issues/11538 ）。
+
+**親要素の唯一の子であっても安全にはならない。** React が例外を起こさないのは、文字列・数値リテラルを親要素の直下に単独で置く場合のみ（この場合 `textContent` で直接書き換え、`removeChild` 自体を行わないため）。`Localizer` のようなコンポーネントは唯一の子であっても `removeChild` が呼ばれて例外を起こす（実機検証で確認済み）。
+
+該当箇所は `src/components/SafeBrowserTranslation` で包む。機械的に検知できる範囲は `eslint-local-rules/require-safe-browser-translation` が強制するため、判定基準・検知パターンの詳細はそちらの README を参照（このルールは将来的に `eslint-plugin-smarthr` へ移管予定）。
+
+```tsx
+// ❌ Localizerは親の唯一の子であってもクラッシュしうる
+{loading && <Localizer id="..." defaultText="処理中" />}
+
+// ✅ SafeBrowserTranslationで包み、Reactが増減させる対象を常に存在し続ける要素ノードにする
+{loading && (
+  <SafeBrowserTranslation>
+    <Localizer id="..." defaultText="処理中" />
+  </SafeBrowserTranslation>
+)}
+```
+
+**`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある。** 中身が動的に変わるケース（`ModelessDialog` のドラッグ位置アナウンスなど）で `key` が無いと、React は同じ要素を再利用しテキストノードの値だけを更新しようとするが、ブラウザ翻訳で元のノードが書き換えられていると更新が検知されない（`LiveRegion` の `MutationObserver` 等）。内容を一意に表す値を `SafeBrowserTranslation` 自体の `key`（`Localizer` 側ではない）に設定し、要素ごと再生成させることで解決する。
+
+```tsx
+// ✅ 位置が変わるたびにkeyも変わり、SafeBrowserTranslationが再生成される
+<SafeBrowserTranslation key={`${top}:${left}`}>
+  <Localizer id="..." defaultText="上から{top}px、左から{left}px" values={{ top, left }} />
+</SafeBrowserTranslation>
+```
+
+この判断（内容が動的に変わるかどうか、`key` が必要かどうか）は実行時の振る舞いに依存するため ESLint ルールでは機械的に検知できず、レビューで確認する必要がある。
+
 ### コンポーネントのブラックボックス原則
 
 他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。

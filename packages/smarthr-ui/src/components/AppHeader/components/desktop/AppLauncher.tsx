@@ -10,6 +10,7 @@ import { Heading } from '../../../Heading'
 import { FaCircleXmarkIcon, FaStarIcon } from '../../../Icon'
 import { SearchInput } from '../../../Input'
 import { Cluster } from '../../../Layout'
+import { SafeBrowserTranslation } from '../../../SafeBrowserTranslation'
 import { Scroller } from '../../../Scroller'
 import { Section } from '../../../SectioningContent'
 import { SideNav, SideNavItemButton } from '../../../SideNav'
@@ -163,10 +164,12 @@ export const AppLauncher: FC<Props> = ({ features: baseFeatures, loading, error 
             <Cluster align="center" justify="space-between" className={CLASS_NAMES.contentHead}>
               <MemoizedSubSubBlockHeading>
                 {mode === 'search' ? (
-                  <Localizer
-                    id="smarthr-ui/AppHeader/Launcher/searchResultText"
-                    defaultText="検索結果"
-                  />
+                  <SafeBrowserTranslation>
+                    <Localizer
+                      id="smarthr-ui/AppHeader/Launcher/searchResultText"
+                      defaultText="検索結果"
+                    />
+                  </SafeBrowserTranslation>
                 ) : page === 'favorite' ? (
                   translated.favoriteModeText
                 ) : (

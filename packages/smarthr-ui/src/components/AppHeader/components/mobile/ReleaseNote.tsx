@@ -7,6 +7,7 @@ import { Localizer } from '../../../../intl'
 import { OpenInNewTabIcon } from '../../../Icon'
 import { Center, Stack } from '../../../Layout'
 import { Loader } from '../../../Loader'
+import { SafeBrowserTranslation } from '../../../SafeBrowserTranslation'
 import { TextLink } from '../../../TextLink'
 
 import { ReleaseNoteContext } from './ReleaseNoteContext'
@@ -54,11 +55,13 @@ const ActualReleaseNote: FC<{
         <Loader />
       </Center>
     ) : data.error ? (
-      <Localizer
-        id="smarthr-ui/AppHeader/releaseNotesLoadError"
-        defaultText={`リリースノートの読み込みに失敗しました。
+      <SafeBrowserTranslation>
+        <Localizer
+          id="smarthr-ui/AppHeader/releaseNotesLoadError"
+          defaultText={`リリースノートの読み込みに失敗しました。
 時間をおいて、やり直してください。`}
-      />
+        />
+      </SafeBrowserTranslation>
     ) : (
       <Stack>
         {data.links.slice(0, 5).map((link) => (

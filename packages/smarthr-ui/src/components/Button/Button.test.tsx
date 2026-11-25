@@ -6,6 +6,27 @@ import { FaCircleInfoIcon } from '../Icon'
 import { Button } from './Button'
 
 describe('Button', () => {
+  it('ブラウザ翻訳で読み上げ用テキストが置換されても loading を解除できる', () => {
+    const { rerender } = render(
+      <IntlProvider locale="ja">
+        <Button loading>button</Button>
+      </IntlProvider>,
+    )
+    const loadingText = screen.getAllByText('処理中').find((element) => !element.closest('button'))!
+    const translated = document.createElement('font')
+    translated.textContent = 'Loading'
+    loadingText.replaceChild(translated, loadingText.childNodes[0])
+
+    rerender(
+      <IntlProvider locale="ja">
+        <Button>button</Button>
+      </IntlProvider>,
+    )
+
+    expect(screen.getByRole('button', { name: 'button' })).toBeInTheDocument()
+    expect(translated).not.toBeInTheDocument()
+  })
+
   describe('disabled時のアイコン色', () => {
     it('固定colorを持つprefixアイコンでも、aria-disabled時に無効化色へ揃えるクラスが付与される', () => {
       render(
