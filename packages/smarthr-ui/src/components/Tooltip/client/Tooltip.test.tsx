@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import { createPortal } from 'react-dom'
 
 import { Button } from '../../Button'
 import { FaPencilIcon } from '../../Icon'
@@ -169,6 +170,27 @@ describe('Tooltip', () => {
       expect(isVisible()).toBe(true)
 
       fireEvent.pointerLeave(getPopup(), { relatedTarget: document.body })
+      expect(isVisible()).toBe(false)
+    })
+
+    it('children が描画した別の portal にポインタを移した後は、トリガが blur したら閉じる', () => {
+      // Dropdownのメニューのように、children が別の portal を描画しているケース
+      render(
+        <Tooltip message="説明">
+          <Button>ボタン</Button>
+          {createPortal(<div>メニュー</div>, document.body)}
+        </Tooltip>,
+      )
+      const button = screen.getByRole('button', { name: 'ボタン' })
+      const menu = screen.getByText('メニュー')
+
+      fireEvent.pointerEnter(button)
+      fireEvent.focus(button)
+      expect(isVisible()).toBe(true)
+
+      // Reactのツリー上はトリガの子のため、メニューへ移動してもpointerleaveは発生しない
+      fireEvent.pointerOver(menu, { relatedTarget: button })
+      fireEvent.blur(button)
       expect(isVisible()).toBe(false)
     })
 
