@@ -213,7 +213,7 @@ export const Calendar: FC<Props> = ({
           handleSelectYear={functions.handleSelectYear}
         />
         <CalendarTable
-          selectedDayText={isValidValue && value ? value.toUTCString() : ''}
+          selectedDayText={isValidValue && value ? dayjs(value).toString() : ''}
           current={calculatedCurrentMonth}
           from={formattedFrom.date}
           to={formattedTo.date}
