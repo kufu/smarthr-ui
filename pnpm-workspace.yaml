@@ -34,7 +34,7 @@ auditConfig:
     # picomatch の修正版がリリースされるか、tailwindcss v4 へ移行したタイミングで削除する
     - GHSA-fc5q-39xc-vjpf
 minimumReleaseAgeExclude:
-  # eslint-config-smarthr@14.18.0とその依存のeslint-plugin-smarthr@6.32.0: ユーザー指示により
+  # eslint-config-smarthr@14.20.0とその依存のeslint-plugin-smarthr@6.34.0: ユーザー指示により
   # minimumReleaseAge(7日)の待機を一時解除する(7日経過後にこのエントリ自体は削除可)
-  - eslint-config-smarthr@14.18.0
-  - eslint-plugin-smarthr@6.32.0
+  - eslint-config-smarthr@14.20.0
+  - eslint-plugin-smarthr@6.34.0

@@ -6,7 +6,6 @@ import bestPracticeForFunctionsDeps from './eslint-local-rules/best-practice-for
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
 import requireClient from './eslint-local-rules/require-client.js'
-import requireSafeBrowserTranslation from './eslint-local-rules/require-safe-browser-translation.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -22,7 +21,6 @@ export default [
           'best-practice-for-use-latest': bestPracticeForUseLatest,
           'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
           'require-client': requireClient,
-          'require-safe-browser-translation': requireSafeBrowserTranslation,
         },
       },
       perfectionist,
@@ -32,7 +30,6 @@ export default [
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
       'local-rules/require-client': 'error',
-      'local-rules/require-safe-browser-translation': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {
@@ -222,10 +219,6 @@ export default [
           additionalInteractiveComponentRegex: ['RichTextEditor'],
         },
       ],
-      // 'smarthr/best-practice-for-consecutive-definition-list': 'off',
-      // 'smarthr/best-practice-for-default-props': 'off',
-      // 'smarthr/best-practice-for-prohibit-import-smarthr-ui-local': 'off',
-      // 'smarthr/design-system-guideline-bulk-action-row-button': 'off',
       'smarthr/best-practice-for-tailwind-variants': 'error',
       'smarthr/best-practice-for-rest-parameters': 'error',
       'smarthr/best-practice-for-unnesessary-early-return': 'error',
@@ -255,12 +248,9 @@ export default [
           maxComplexity: 3,
         },
       ],
-    },
-  },
-  {
-    files: ['**/ja.ts'],
-    rules: {
-      'smarthr/require-i18n-translation-sync': 'error',
+      // HINT: eslint-config-smarthrはTODOとしてwarn導入中(2026/11)だが、smarthr-ui独自では
+      // ブラウザの自動翻訳機能によるクラッシュ対策として重要なためerrorに引き上げる
+      'smarthr/require-safe-browser-translation': 'error',
     },
   },
   {
