@@ -31,6 +31,7 @@ import {
 } from './configureHeading'
 import { InsertDialogs } from './insertDialogs'
 import { patchListItemShiftTab } from './listItemShiftTab'
+import { PasteIntoEmptyTextblock } from './pasteIntoEmptyTextblock'
 import { PlayerIsolation } from './playerIsolation'
 import { createOperationRestrictor } from './restrictOperations'
 import { NO_RUNTIME_OPTIONS } from './runtimeOptions'
@@ -156,6 +157,7 @@ export const configureExtensions = ({
       },
     }),
     createImagePasteExtension({ getRuntimeOptions: getOptions }),
+    PasteIntoEmptyTextblock,
   ]
 
   extensions.push(
