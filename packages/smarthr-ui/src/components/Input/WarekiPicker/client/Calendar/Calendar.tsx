@@ -154,6 +154,8 @@ export const Calendar: FC<Props> = ({
 
   const [isSelectingYear, setIsSelectingYear] = useState(false)
 
+  const latest = useLatest({ formattedFrom, formattedTo })
+
   const functions = useMemo(
     () => ({
       handleSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
@@ -164,12 +166,12 @@ export const Calendar: FC<Props> = ({
         setCurrentMonth((prev) => {
           const next = prev.year(year)
 
-          if (next.isBefore(formattedFrom.day, 'month')) {
-            return formattedFrom.day
+          if (next.isBefore(latest.formattedFrom.day, 'month')) {
+            return latest.formattedFrom.day
           }
 
-          if (next.isAfter(formattedTo.day, 'month')) {
-            return formattedTo.day
+          if (next.isAfter(latest.formattedTo.day, 'month')) {
+            return latest.formattedTo.day
           }
 
           return next
@@ -181,7 +183,7 @@ export const Calendar: FC<Props> = ({
         setIsSelectingYear((current) => !current)
       },
     }),
-    [formattedFrom.day, formattedTo.day],
+    [latest],
   )
 
   return (
