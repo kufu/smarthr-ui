@@ -11,4 +11,5 @@ export type {
   RichTextEditorController,
   RichTextViewerProps,
   ImageUploadResult,
+  RichTextVideo,
 } from './types'
