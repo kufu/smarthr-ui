@@ -108,9 +108,11 @@ export const Calendar: FC<Props> = ({
   const [prevIsValidValue, setPrevIsValidValue] = useState(isValidValue)
   const [prevValue, setPrevValue] = useState(value)
 
+  const dayInstance = useMemo(() => dayjs(value), [value])
+
   const [currentMonth, setCurrentMonth] = useState(() => {
     if (isValidValue) {
-      return dayjs(value)
+      return dayInstance
     }
 
     const today = dayjs()
@@ -127,7 +129,7 @@ export const Calendar: FC<Props> = ({
     setPrevValue(value)
 
     if (isValidValue) {
-      setCurrentMonth(dayjs(value))
+      setCurrentMonth(dayInstance)
     }
   }
 
@@ -213,7 +215,7 @@ export const Calendar: FC<Props> = ({
           handleSelectYear={functions.handleSelectYear}
         />
         <CalendarTable
-          selectedDayText={isValidValue && value ? dayjs(value).toString() : ''}
+          selectedDayText={isValidValue && value ? dayInstance.toString() : ''}
           current={calculatedCurrentMonth}
           from={formattedFrom.date}
           to={formattedTo.date}
