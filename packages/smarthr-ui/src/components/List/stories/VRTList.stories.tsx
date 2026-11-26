@@ -6,11 +6,20 @@ import { ListItemAnchor } from '../ListItemAnchor'
 import { List, ListItem } from '../client'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ComponentPropsWithoutRef } from 'react'
+
+const DIVIDERS: Array<ComponentPropsWithoutRef<typeof List>['divider']> = [
+  'full',
+  'content',
+  { width: 'full', last: true },
+  { width: 'content', last: true },
+  false,
+]
 
 const Template = ({ id }: { id?: string }) => (
   <Stack id={id}>
-    {(['full', 'content', false] as const).map((divider) => (
-      <List key={String(divider)} divider={divider}>
+    {DIVIDERS.map((divider) => (
+      <List key={JSON.stringify(divider)} divider={divider}>
         <ListItem
           status={<StatusLabel>完了</StatusLabel>}
           action={

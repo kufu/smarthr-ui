@@ -35,9 +35,19 @@ type Props = ExtendElementPropsWithoutRef<
 
 const classNameGenerator = tv({
   slots: {
-    container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
-    balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
-    balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
+    container: [
+      'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
+      // HINT: トリガとの間に空けているSPACING(5px)分の隙間を、透明な疑似要素で埋める。
+      // 隙間をツールチップの一部としてポインタが当たる範囲にすることで、トリガからツールチップへポインタを移す途中で
+      // トリガのpointerleaveが発生して閉じてしまうことを防ぐ
+      'before:shr-absolute before:shr-inset-x-0 before:shr-h-[5px] before:shr-content-[""]',
+      'data-[vertical=bottom]:before:shr-top-full',
+      'data-[vertical=top]:before:shr-bottom-full',
+    ],
+    // HINT: 中身をスクロール可能にすると inline-block の baseline が下端になり、下に行の余白ができるため上揃えにする
+    balloon: 'shr-max-w-full shr-align-top [&&&]:shr-whitespace-normal',
+    // HINT: 高さを制限する場合は、吹き出しの中身をスクロールさせて吹き出し自体が制限した高さに収まるようにする
+    balloonText: 'shr-m-0 shr-box-border shr-overflow-y-auto shr-px-1 shr-py-0.5',
   },
 })
 
@@ -75,6 +85,7 @@ export const TooltipPortal: FC<Props> = ({
   const [style, setStyle] = useState<{ [key: string]: undefined | string }>({})
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
+  const [messageMaxHeight, setMessageMaxHeight] = useState<string | undefined>(undefined)
 
   // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
   const callbackRef = useCallback(
@@ -85,7 +96,13 @@ export const TooltipPortal: FC<Props> = ({
 
       const action = () => {
         const safeAreaInsets = getSafeAreaInsets()
-        const vertical = calculateVertical(element.offsetHeight, parentRect, safeAreaInsets)
+        const messageElement = document.getElementById(messageId)
+        // HINT: maxHeightで高さが制限され中身がスクロールしている場合でも、中身全体の高さを元に計算し直せるよう、
+        // スクロールで隠れている分を足す
+        const portalHeight =
+          element.offsetHeight +
+          (messageElement ? messageElement.scrollHeight - messageElement.clientHeight : 0)
+        const vertical = calculateVertical(portalHeight, parentRect, safeAreaInsets)
         const horizontal = calculateHorizontal(
           element.offsetWidth,
           parentRect,
@@ -95,11 +112,12 @@ export const TooltipPortal: FC<Props> = ({
 
         setStyle({
           insetBlockStart: vertical.insetBlockStart,
+          transform: vertical.transform,
           insetInlineStart: horizontal.insetInlineStart,
           insetInlineEnd: horizontal.insetInlineEnd,
           maxWidth: horizontal.maxWidth,
-          maxHeight: vertical.maxHeight,
         })
+        setMessageMaxHeight(vertical.maxHeight)
         setActualVertical(vertical.alignment)
         setActualHorizontal(horizontal.alignment)
       }
@@ -109,12 +127,20 @@ export const TooltipPortal: FC<Props> = ({
 
       window.addEventListener('resize', debouncedAction)
 
+      // HINT: 表示したまま message が変わった場合も、位置を計算し直す。
+      // ResizeObserverで大きさの変化を監視すると、計算結果のmaxWidthで変わった幅を再び検知して計算が往復し続けることがあるため、
+      // 計算で書き換えるstyle属性は対象外にし、中身の要素や文字の変化だけを監視する
+      const mutationObserver = new MutationObserver(action)
+
+      mutationObserver.observe(element, { childList: true, subtree: true, characterData: true })
+
       return () => {
         window.removeEventListener('resize', debouncedAction)
         debouncedAction.cancel()
+        mutationObserver.disconnect()
       }
     },
-    [parentRect, theme, getSafeAreaInsets],
+    [parentRect, theme, getSafeAreaInsets, messageId],
   )
 
   if (!portalRoot) {
@@ -129,6 +155,7 @@ export const TooltipPortal: FC<Props> = ({
       className={CLASS_NAMES.container}
       style={isVisible ? style : undefined}
       aria-hidden={!isVisible}
+      data-vertical={actualVertical}
     >
       <ControlledTooltip
         horizontal={actualHorizontal}
@@ -136,7 +163,11 @@ export const TooltipPortal: FC<Props> = ({
         triggerIcon={isIcon}
         className={CLASS_NAMES.balloon}
       >
-        <div id={messageId} className={CLASS_NAMES.balloonText}>
+        <div
+          id={messageId}
+          className={CLASS_NAMES.balloonText}
+          style={isVisible && messageMaxHeight ? { maxHeight: messageMaxHeight } : undefined}
+        >
           {message}
         </div>
       </ControlledTooltip>
@@ -149,15 +180,27 @@ const calculateVertical = (
   portalHeight: number,
   parentRect: DOMRect,
   safeAreaInsets: SafeAreaInsets,
-): { insetBlockStart: string; maxHeight: string | undefined; alignment: VerticalType } => {
+): {
+  insetBlockStart: string
+  transform: string | undefined
+  maxHeight: string | undefined
+  alignment: VerticalType
+} => {
   // HINT: safe areaに重ならない領域を、ツールチップを表示できる範囲とする
   const safeTop = safeAreaInsets.top
+
+  // HINT: トリガの上側に配置する場合は、ツールチップの下端をトリガの上端(からSPACING分離した位置)に揃える。
+  // 上端の位置で配置すると、表示したまま中身が増えた際に下に伸びてトリガに重なってしまうため、
+  // 下端を基準にして上に伸びるようにする
+  const aboveInsetBlockStart = `${scrollY + parentRect.top - SPACING}px`
+  const aboveTransform = 'translateY(-100%)'
 
   // トリガの上側の領域に収まる場合
   // HINT: トリガとの間にSPACING分の隙間を空けて配置するため、判定にも含める
   if (parentRect.top - portalHeight - SPACING >= safeTop) {
     return {
-      insetBlockStart: `${scrollY + parentRect.top - portalHeight - SPACING}px`,
+      insetBlockStart: aboveInsetBlockStart,
+      transform: aboveTransform,
       maxHeight: undefined,
       alignment: 'bottom',
     }
@@ -169,6 +212,7 @@ const calculateVertical = (
   if (parentRect.bottom + portalHeight + SPACING <= safeBottom) {
     return {
       insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+      transform: undefined,
       maxHeight: undefined,
       alignment: 'top',
     }
@@ -179,7 +223,8 @@ const calculateVertical = (
   // 上側の領域のほうが広い場合
   if (parentRect.top + triggerHeight / 2 >= (safeTop + safeBottom) / 2) {
     return {
-      insetBlockStart: `${scrollY + safeTop + OUTER_MARGIN - SPACING}px`,
+      insetBlockStart: aboveInsetBlockStart,
+      transform: aboveTransform,
       maxHeight: `${parentRect.top - safeTop - OUTER_MARGIN}px`,
       alignment: 'bottom',
     }
@@ -188,6 +233,7 @@ const calculateVertical = (
   // 下側の領域のほうが広い場合
   return {
     insetBlockStart: `${scrollY + parentRect.bottom + SPACING}px`,
+    transform: undefined,
     maxHeight: `${safeBottom - parentRect.bottom - OUTER_MARGIN}px`,
     alignment: 'top',
   }

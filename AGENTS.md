@@ -445,6 +445,45 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 `'use client'` の削除は DOM に影響しないため、`innerHTML` を比較して同一であることを確認します。
 
+#### ブラウザの自動翻訳機能によるクラッシュ対策
+
+条件によって出現/消失するテキストが「要素でラップされていない生のテキスト（`Localizer`/`FormattedMessage` 等、実体としてテキストノードしか生成しないコンポーネント）」である場合、ブラウザの自動翻訳機能（Google翻訳等）がテキストノードを別要素（`<font>` 等）に書き換えた後、React が `removeChild`/`insertBefore` で例外を起こしクラッシュする既知の問題がある（詳細: https://github.com/facebook/react/issues/11538 ）。
+
+**親要素の唯一の子であっても安全にはならない。** React が例外を起こさないのは、文字列・数値リテラルを親要素の直下に単独で置く場合のみ（この場合 `textContent` で直接書き換え、`removeChild` 自体を行わないため）。`Localizer` のようなコンポーネントは唯一の子であっても `removeChild` が呼ばれて例外を起こす（実機検証で確認済み）。
+
+該当箇所は、まずマークアップを見直す。意味づけ・スタイルのために要素で囲むべきテキストであれば適切な要素で囲む（`span` に限らず、テキストと一緒に出入りする要素であれば問題ない）。現状のマークアップが正しい場合は `src/components/SafeBrowserTranslation` で包み、意味づけ・スタイルのための要素ではないことを明確にする。いずれの場合も、要素は条件分岐の内側に置く。`<span>{loading && <Localizer ... />}</span>` のように条件分岐の外側を囲んでも、テキストノード自体が出入りすることは変わらないため解決しない。機械的に検知できる範囲は `eslint-local-rules/require-safe-browser-translation` が強制するため、判定基準・検知パターンの詳細はそちらの README を参照（このルールは将来的に `eslint-plugin-smarthr` へ移管予定）。
+
+```tsx
+// ❌ Localizerは親の唯一の子であってもクラッシュしうる
+{loading && <Localizer id="..." defaultText="処理中" />}
+
+// ✅ SafeBrowserTranslationで包み、Reactが増減させる対象を常に存在し続ける要素ノードにする
+{loading && (
+  <SafeBrowserTranslation>
+    <Localizer id="..." defaultText="処理中" />
+  </SafeBrowserTranslation>
+)}
+```
+
+**`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある。** 中身が動的に変わるケース（`ModelessDialog` のドラッグ位置アナウンスなど）で `key` が無いと、React は同じ要素を再利用しテキストノードの値だけを更新しようとするが、ブラウザ翻訳で元のノードが書き換えられていると更新が検知されない（`LiveRegion` の `MutationObserver` 等）。内容を一意に表す値を `SafeBrowserTranslation` 自体の `key`（`Localizer` 側ではない）に設定し、要素ごと再生成させることで解決する。
+
+```tsx
+// ✅ 位置が変わるたびにkeyも変わり、SafeBrowserTranslationが再生成される
+<SafeBrowserTranslation key={`${top}:${left}`}>
+  <Localizer id="..." defaultText="上から{top}px、左から{left}px" values={{ top, left }} />
+</SafeBrowserTranslation>
+```
+
+この判断（内容が動的に変わるかどうか、`key` が必要かどうか）は実行時の振る舞いに依存するため ESLint ルールでは機械的に検知できず、レビューで確認する必要がある。
+
+**`SafeBrowserTranslation` は、出入りするテキストを直接囲む位置で使う。** 条件分岐（`&&`・三項演算子・`if` による `return` 等）や `map` メソッドの内側以外にある場合、ESLint ルールが検知する。テキストが出入りしない、もしくは親の要素と一緒に出入りする場合（`<p><SafeBrowserTranslation>text</SafeBrowserTranslation></p>` 等）は不要なため削除し、別の場所の条件分岐によって出入りする場合はその内側に移動する。上記の `useState` に保持するケースのように意図的にその位置で使う場合は、理由を書いた上で `eslint-disable-next-line` する。
+
+**`SafeBrowserTranslation` に `key` 以外の属性を指定しない。** 「意味づけ・スタイルのための要素ではない」ことを明確にするためのコンポーネントのため、`className` や `aria-*` 等が必要な場合は `span` などの適切な要素を使う。
+
+**`Icon` 等、確実に要素であるコンポーネントのみを `SafeBrowserTranslation` で包まない。** `Icon` が `alt` でテキストを持つ場合も、そのテキストは常に要素（`VisuallyHiddenText` 等）でラップされて提供されるため、裸のテキストノードとして出入りすることはない。`Icon` 自体が条件分岐で出入りする場合も、要素ごとマウント/アンマウントされるだけで安全なため、`SafeBrowserTranslation` は不要。ESLint ルールが検知する。
+
+**出入りする要素の直後にある、常に表示されるテキストもクラッシュの原因になる。** `<button>{icon && <Icon />}保存</button>` のような場合、React は `<Icon />` を「保存」のテキストノードの手前に挿入しようとするが、そのテキストノードがブラウザ翻訳で置き換えられていると `insertBefore` で例外を起こす。この場合は常に表示されるテキスト側を `SafeBrowserTranslation` で囲む。このパターンは ESLint ルールでは検知できないため、レビューで確認する必要がある。
+
 ### コンポーネントのブラックボックス原則
 
 他のコンポーネントを使用する際は、そのコンポーネントの**公開インターフェース（props）のみ**を知っている前提でコードを書きます。内部実装（DOM構造・CSS実装の詳細など）を前提としたコードは可能な限り書きません。

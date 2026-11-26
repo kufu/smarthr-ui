@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "104.0.0",
+  "version": "105.0.0",
   "author": "SmartHR-UI Team",
   "type": "module",
   "dependencies": {
@@ -26,7 +26,7 @@
     "@storybook/addon-docs": "10.6.7",
     "@storybook/cli": "10.6.7",
     "@storybook/react-vite": "10.6.7",
-    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.12",
     "@types/node": "^20.19.43",
@@ -57,7 +57,7 @@
     "tsx": "^4.23.15",
     "typescript-eslint": "^8.72.2",
     "vite": "8.3.8",
-    "vitest": "^4.1.12"
+    "vitest": "^5.1.1"
   },
   "peerDependencies": {
     "react": "^19.2.0",
@@ -123,7 +123,7 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "npm-run-all -p build:esm build:cjs build:types build:css -s build:metadata",
+    "build": "npm-run-all -p build:css build:types -s build:esm build:cjs build:metadata",
     "build:cjs": "rollup --config rollup.cjs.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
     "build:esm": "rollup --config rollup.esm.config.js 3>&1 1>&2 2>&3 | grep -v \"→.*lib\" >&2 # rollupがentryPointsを全部出すので抑制",
     "build:types": "tsc -p tsconfig.build.json",

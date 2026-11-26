@@ -1,0 +1,1 @@
+export { SafeBrowserTranslation } from './SafeBrowserTranslation'

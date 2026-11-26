@@ -27,6 +27,8 @@ export const isSafeImageSrc = (src: unknown): src is string =>
   typeof src === 'string' &&
   (/^https?:\/\//i.test(src) || (/^\/(?![/\\])/.test(src) && !/[\t\n\r]/.test(src)))
 
+export const isSafeVideoSrc = isSafeImageSrc
+
 export const isSafeYoutubeSrc = (src: unknown): src is string =>
   typeof src === 'string' &&
   /^https?:\/\/(www\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\//i.test(src)

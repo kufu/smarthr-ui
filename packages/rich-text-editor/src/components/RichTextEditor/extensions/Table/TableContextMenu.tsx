@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { FaArrowLeftIcon, FaEllipsisIcon } from 'smarthr-ui'
+import { FaArrowLeftIcon, FaEllipsisIcon, SafeBrowserTranslation } from 'smarthr-ui'
 
 import { useLatest } from '../../../../hooks/useLatest'
 import { useIntl } from '../../../../intl'
@@ -368,9 +368,9 @@ export const TableContextMenu = ({
             ) : scope === 'table' ? (
               <FaEllipsisIcon />
             ) : scope === 'column' ? (
-              '⋯'
+              <SafeBrowserTranslation>{'⋯'}</SafeBrowserTranslation>
             ) : (
-              '⋮'
+              <SafeBrowserTranslation>{'⋮'}</SafeBrowserTranslation>
             )}
           </button>
         </ToolbarTooltip>

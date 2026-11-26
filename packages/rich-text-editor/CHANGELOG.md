@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.0](https://github.com/kufu/smarthr-ui/compare/rich-text-editor-v0.1.2...rich-text-editor-v0.2.0) (2026-11-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* Reactの最低要求バージョンを19.2.0に引き上げる ([#7590](https://github.com/kufu/smarthr-ui/issues/7590))
+
+### Features
+
+* **RichTextEditor:** アップロード済みの動画を本文に埋め込めるようにする ([#7558](https://github.com/kufu/smarthr-ui/issues/7558)) ([16170dd](https://github.com/kufu/smarthr-ui/commit/16170dd3cb4da714206650b31ea92944e8be0247))
+* **RichTextEditor:** スラッシュコマンドでブロックと色を挿入できるようにする ([#7559](https://github.com/kufu/smarthr-ui/issues/7559)) ([808a959](https://github.com/kufu/smarthr-ui/commit/808a95937d224305a5909a639ef361746934dbad))
+* **RichTextEditor:** ブロックを移動・複製・削除・変換できるようにする ([#7579](https://github.com/kufu/smarthr-ui/issues/7579)) ([bb2d622](https://github.com/kufu/smarthr-ui/commit/bb2d6225573f0b268c7278cdf78d5eefb0368a58))
+
+
+### Bug Fixes
+
+* ブラウザの自動翻訳機能によるクラッシュを防ぐSafeBrowserTranslationとそれを検知するESLintルールを追加する ([#7642](https://github.com/kufu/smarthr-ui/issues/7642)) ([9ee78d9](https://github.com/kufu/smarthr-ui/commit/9ee78d98c82ea6c8af3e581738635f06184cd3e6))
+
+
+### Miscellaneous Chores
+
+* Reactの最低要求バージョンを19.2.0に引き上げる ([#7590](https://github.com/kufu/smarthr-ui/issues/7590)) ([0be6e21](https://github.com/kufu/smarthr-ui/commit/0be6e217ab2b6530abbfed786fa81db476037121))
+
 ## [0.1.2](https://github.com/kufu/smarthr-ui/compare/rich-text-editor-v0.1.1...rich-text-editor-v0.1.2) (2026-11-19)
 
 

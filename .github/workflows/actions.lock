@@ -9,6 +9,7 @@ workflows:
     '.github/workflows/crowdinPushSources.yml':
         - 'actions/checkout@v7.0.1'
         - 'crowdin/github-action@v3.6.0'
+    '.github/workflows/labelExternalPR.yml': []
     '.github/workflows/previewRelease.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'

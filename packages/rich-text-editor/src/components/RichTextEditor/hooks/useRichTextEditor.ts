@@ -79,8 +79,6 @@ type UseRichTextEditorOptions = {
   value?: RichTextValue
   defaultValue?: RichTextValue
   onChange?: (value: RichTextJSON, meta: RichTextChangeMeta) => void
-  onFocus?: () => void
-  onBlur?: () => void
   features?: readonly RichTextFeature[]
   headingLevels?: ReadonlyArray<1 | 2 | 3 | 4>
   disabled?: boolean
@@ -96,8 +94,6 @@ export const useRichTextEditor = ({
   value,
   defaultValue,
   onChange,
-  onFocus,
-  onBlur,
   features = ['bold', 'italic', 'bulletList', 'orderedList', 'link'],
   headingLevels,
   disabled,
@@ -192,8 +188,6 @@ export const useRichTextEditor = ({
       emitted.current = { doc: e.state.doc, meta, consumed: false }
       onChange(meta.json, meta)
     },
-    onFocus: () => onFocus?.(),
-    onBlur: () => onBlur?.(),
   })
 
   const [syncFormat, syncContent] = getValueKeys(value)

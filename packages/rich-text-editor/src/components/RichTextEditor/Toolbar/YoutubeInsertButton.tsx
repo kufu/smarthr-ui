@@ -20,6 +20,7 @@ import { normalizeYoutubeUrl } from '../extensions/youtubeUrl'
 import { useToolbarDropdown } from '../hooks/useToolbarDropdown'
 
 import { ToolbarButton } from './ToolbarButton'
+import { useInsertDialogOpener } from './useInsertDialogOpener'
 
 import type { RovingButtonProps } from '../hooks/useRovingToolbar'
 
@@ -32,9 +33,10 @@ export const YoutubeInsertButton: FC<Props> = memo(
   ({ tabIndex = -1, disabled, onKeyDown: onKeyDownProp, onFocus: onFocusProp, ref: refProp }) => {
     const { editor } = useRichTextEditorContext()
     const { localize } = useIntl()
-    const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
-      disabled,
-    })
+    const { isOpen, setIsOpen, openFrom, restoreFocus, triggerRef, renderDropdown } =
+      useToolbarDropdown({
+        disabled,
+      })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const [url, setUrl] = useState('')
     const [error, setError] = useState('')
@@ -71,15 +73,15 @@ export const YoutubeInsertButton: FC<Props> = memo(
       url,
       requiredMessage,
       invalidMessage,
-      triggerRef,
       onKeyDown: onKeyDownProp,
       setIsOpen,
+      restoreFocus,
     })
 
     const functions = useMemo(() => {
       const closePopup = () => {
         latest.setIsOpen(false)
-        latest.triggerRef.current?.focus()
+        latest.restoreFocus()
       }
 
       return {
@@ -122,6 +124,8 @@ export const YoutubeInsertButton: FC<Props> = memo(
         },
       }
     }, [latest])
+
+    useInsertDialogOpener(editor, 'youtube', openFrom)
 
     // ポップアップ表示時にURL Inputへフォーカス、閉じたら入力をリセット
     useEffect(() => {

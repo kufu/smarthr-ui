@@ -30,9 +30,10 @@ const Wrapper = ({ children }: { children: ReactNode }) => (
 // 利用者がインラインで配列や関数を書き、親の都合で再レンダーした状況
 const renderEditor = () => (
   <RichTextEditor
-    features={['bold', 'heading', 'image']}
+    features={['bold', 'heading', 'image', 'video']}
     headingLevels={[1, 2]}
     acceptedMimeTypes={['image/png']}
+    loadVideos={async () => []}
     onImageUpload={async () => ({ src: 'https://example.com/a.png' })}
     onImageUploadError={() => {}}
   />

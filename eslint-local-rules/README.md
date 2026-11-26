@@ -42,3 +42,82 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
   - `src/intl` 配下で定義されている client 専用 hook 名
 
 このルールが検知するのは「ファイル単体を見て機械的に判定できる」範囲のみです。`client/` 配下のディレクトリ構成の設計判断（`components/`/`hooks/` に分けるべきか、`client/index.ts` を作ってよいか）、外部パッケージが client 専用 API を安全に使っているかの調査、RSC グラフとビルド出力の実測手順などは、ルールでは検知できないため AGENTS.md 本体に記載があります。
+
+## require-safe-browser-translation
+
+ブラウザの自動翻訳機能によるクラッシュ対策（AGENTS.md の「ブラウザの自動翻訳機能によるクラッシュ対策」参照）として、条件によって出入りする「要素でラップされていない生のテキスト」が要素（`SafeBrowserTranslation` 等）で囲まれているかを検知します（`requireSafeBrowserTranslation`）。対象は JSX の子要素（children）位置にある式のみで、JSX属性値（`aria-current={current ? 'page' : undefined}` 等）は対象外です。
+
+「生のテキスト」として扱うのは次の4種類です。
+
+- `Localizer`/`FormattedMessage` 要素。smarthr-uiには「文言は多言語化する」規約（`smarthr/require-i18n-text`）があり、JSX上のテキストはほぼ必ずこれらを経由するため、コンポーネント名のみで機械的に判定できます
+- 文字列リテラル・テンプレートリテラル。型レベルで明らかに文字列であることが確定しています（ただし空文字列 `''`、および補間を持たず静的に空文字列と確定しているテンプレートリテラル（` `` `）は `null`/`undefined`/`false`/`true` と同じく「何もレンダーされない」値のため「生のテキスト」としては扱いません。補間を持つ動的なテンプレートリテラルは対象のままです）
+- `localize(...)`/`formatMessage(...)`（`intl.formatMessage(...)` のようなメンバー式経由も含む）の呼び出し結果。`useIntl` の `localize`（および react-intl の `formatMessage`）は戻り値が常に string 型の `Localizer` の関数版で、呼び出し式のメソッド名のみで機械的に判定できます。文字列リテラルと同じ `kind: 'string'` として扱いますが、戻り値が実行時に空文字列になりうるかは判定できないため、文字列リテラルの空文字列判定のような緩和は適用されません
+- 名称から値が文字列であると推測できる変数・プロパティアクセス。プロパティアクセスは `.` つなぎの文字列に変換した上で判定します（`user?.name` は `user.name` として扱う）。`items[0].name` や `getUser().name` のように `.` つなぎで表せない式は対象外です。`localize(...)` と同じく `kind: 'string'` として扱い、空文字列判定のような緩和は適用されません
+  - `translated.xxx` / `localized.xxx`（`useLocalize` 等で得た、翻訳済みの文言をまとめたオブジェクトの属性）
+  - `name` / `label` / `text` / `title` / `message` / `description`、およびそれらで終わる名称（`label`、`userName`、`user.name`、`user?.department?.fullName` 等）。`rename` や `subtitle` のように別の単語の末尾に含まれているだけの場合は対象外です
+  - 名称のみで判定するため、`isShowName` のように文字列ではない値や、`ReactNode` を受け取る `label` でも対象になります。要素で囲むべきでない正当な理由がある場合は、理由を書いた上で `eslint-disable-next-line` してください
+
+上記以外の変数・関数呼び出しは、文字列である保証がないため対象外です。
+
+検知するパターン:
+
+- `{cond && <Localizer ... />}` / `{cond && 'text'}`（論理AND式の右辺が上記のいずれか）
+- `{cond ? <Localizer ... /> : X}` / `{cond ? 'text' : X}`（三項演算子の片方のみが上記のいずれか）
+- `{cond && (cond2 ? <Localizer ... /> : null)}`（論理AND式の右辺に三項演算子が続く場合も、`&&` の右辺を辿って判定するため検知対象になります）
+
+三項演算子の両分岐が同じ種類（同じコンポーネントかつ `key` も同一、または文字列リテラル/テンプレートリテラル同士）の場合は、Reactが要素を再利用しマウント/アンマウントが発生しないため対象外です。コンポーネントの場合、タグ名が同じでも `key` 属性が異なれば（片方だけ指定されている場合、`key` の省略と `key=""` のような明示的な空文字列指定を区別した場合も含め）Reactは要素を再利用しないため対象のままです。`key` が動的な式、または `JSXSpreadAttribute`（`{...props}`）経由で静的に存在を判定できない場合も、安全側に倒して対象のまま扱います。
+
+なお、同じコンポーネント・`key` で要素が再利用される場合もクラッシュは起きませんが、表示内容（`id` 等）が変わるなら `SafeBrowserTranslation` に内容を反映した `key` を設定する必要があります。詳細は AGENTS.md の「`useState` 等で内容が動的に変わる場合、`SafeBrowserTranslation` に `key` が必要なことがある」を参照してください（この判断はルールでは検知できません）。
+
+ただし、文字列リテラル/テンプレートリテラルが型の確定しない変数（`number` 等も含む）と組み合わさっている場合も対象外とします。Reactの内部的には文字列・数値はどちらも同じ「テキストノード」として扱われ、実際には要素の出入りが発生せず安全なケースが多いためです（例: `count > max ? \`${max}+\` : count` は実機検証でクラッシュしないことを確認済み）。一方、`null`/`undefined`/`false`/`true`/`''`（および補間を持たず静的に空と確定しているテンプレートリテラル）との組み合わせ、および対象外のJSX要素・Fragment（`<Icon />`等）との組み合わせは、要素の有無そのものが切り替わる（またはnumber等と異なり確実に要素である）ため、この緩和の対象外です。また `Localizer` 等のコンポーネントが絡む場合は要素の型が明確に異なるため、変数との混在でも検知します。ネストした三項演算子で `null`/`undefined`/`false`/`true`/`''` が確定した分岐として混在する場合も、他の分岐が型不明の変数であっても対象のまま検知します（例: `a ? 'text' : b ? null : value` は `value` が型不明でも報告します）。
+
+修正方法:
+
+1. まずマークアップを見直します。意味づけ・スタイルのために要素で囲むべきテキストの場合は、適切な要素で囲みます（`span` に限らず、テキストと一緒に出入りする要素であれば検知対象から外れます）
+2. 現状のマークアップが正しい場合は `SafeBrowserTranslation` で囲み、「意味づけ・スタイルのための要素ではなく、ブラウザ翻訳対策のための要素である」ことを明確にします
+   - 1・2のいずれの場合も、要素は条件分岐の内側に置きます。`<span>{loading && <Localizer ... />}</span>` のように条件分岐の外側を囲んでも、テキストノード自体が出入りすることは変わらないため解決しません（このルールでも引き続き検知されます）
+3. 三項演算子の全分岐を文字列に揃えられる場合（`Localizer` を `useLocalize` の戻り値に置き換える等）は、要素の出入り自体が発生しなくなるため、要素で囲む必要がなくなります
+
+`SafeBrowserTranslation` の位置（`invalidSafeBrowserTranslationPosition`）:
+
+`SafeBrowserTranslation` は、出入りするテキストを直接囲む位置で利用します。次のいずれにも該当しない位置にある場合は検知します。
+
+- 論理演算子（`&&` / `||` / `??`）の右辺
+- 三項演算子の分岐
+- `map` / `flatMap` メソッドのコールバック関数の戻り値
+- `if` / `switch` による条件付きの `return`
+- 同じ親の中に、条件分岐・`map` メソッドによって出入りする子要素がある場合（後述の既知の限界にある、出入りする要素の直後にあるテキストを保護する目的での利用です）
+
+Fragmentは要素を生成しないため、Fragment自体の位置で判定します（`{cond && <><SafeBrowserTranslation>text</SafeBrowserTranslation><Icon /></>}` は問題ありません）。
+
+検知された場合は、次のいずれかで対応します。
+
+- テキストが出入りしない場合、もしくは親の要素と一緒に出入りする場合は、`SafeBrowserTranslation` が不要なため削除します（例: `<p><SafeBrowserTranslation>text</SafeBrowserTranslation></p>` は、テキストが `p` と一緒に出入りするため `<p>text</p>` で問題ありません）
+- 別の場所にある条件分岐・`map` メソッドによって出入りする場合は、その条件分岐・`map` メソッドの内側に移動します（例: コンポーネントが `SafeBrowserTranslation` を無条件で直接返している場合、そのコンポーネントを条件付きでレンダーしている呼び出し側で囲みます）
+- `useState` 等に保持してから条件付きでレンダーする等、意図的にその位置で利用している場合は、理由を書いた上で `eslint-disable-next-line` します
+
+`SafeBrowserTranslation` の属性（`invalidSafeBrowserTranslationAttribute`）:
+
+`SafeBrowserTranslation` に `key` 以外の属性（スプレッドを含む）が指定されている場合は検知します。`SafeBrowserTranslation` は「意味づけ・スタイルのための要素ではなく、ブラウザ翻訳対策のための要素である」ことを明確にするためのコンポーネントのため、`className` や `aria-*` 等の属性が必要な場合は `span` などの適切な要素に置き換えます。`key` は要素を再生成させる目的で指定する場合があるため対象外です。
+
+`SafeBrowserTranslation` の中身（`unnecessarySafeBrowserTranslation`）:
+
+位置が正しい場合でも、中身がちょうど1つの子要素で、かつその子要素が `JSXElement` かつテキストコンポーネント（前述の `Localizer`/`FormattedMessage` 等）ではない、つまり「確実に要素である」と判定できる場合（`Icon` 等）に検知します。`Icon` 等のコンポーネントが `alt` でテキストを持つ場合も、そのテキストは常に要素（`VisuallyHiddenText` 等）でラップされて提供されるため、裸のテキストノードとして出入りすることはなく、`SafeBrowserTranslation` で包む必要はありません。検知された場合は `SafeBrowserTranslation` を削除します。
+
+子要素が複数・0件の場合、Fragment経由の場合、`LogicalExpression`（`label || '処理中'` 等）や判定不能な変数など `classifyBareText` で分類できない式の場合は、「確実に要素である」とまでは判定できないため、安全側に倒して対象外とします（「分類できない＝生のテキストではない」と誤って判定すると、実際には出入りする生のテキストを保護している正当な利用を「不要」と誤検知してしまうため）。
+
+オプション（いずれも正規表現文字列の配列。デフォルトの対象に追加されます）:
+
+- `additionalTextComponentRegex`: `Localizer`/`FormattedMessage` 以外に、実体としてテキストノードしか生成しないコンポーネントの名称
+- `additionalTextFunctionRegex`: `localize`/`formatMessage` 以外に、戻り値が常に文字列になる関数の名称（メンバー式経由の呼び出しはプロパティ名で判定）
+- `additionalTextVariableRegex`: デフォルトの対象以外に、値が文字列であることが分かっている変数・プロパティアクセスの名称（例: `'^caption$'`、`'\\.kana$'`）
+
+このルールは `eslint-plugin-smarthr` の `smarthr/require-safe-browser-translation` と判定ロジックを揃えています。変更する場合は両方に反映してください。
+
+**このルールが検知できない既知の限界**:
+
+- `useState` 等の変数に一度代入してから条件付きでレンダーするパターン（例: `setLiveRegionText(<Localizer ... />)` と `setLiveRegionText('')` の組み合わせ）。構文解析だけでは変数の値の出入りを追跡できないため検知できません
+- 型不明の変数（`number` 等）が実行時に `null`/`undefined`/`false` になりうる場合（例: `{cond ? 'text' : value}` で `value` が `null` を返しうる場合）。型情報のない構文解析では変数が実行時にどんな値になりうるか判定できません
+- 出入りする要素の直後にある、常に表示されるテキスト（例: `<button>{icon && <Icon />}保存</button>`）。Reactは要素を挿入する際、直後のノードを挿入位置の基準にします。基準となるテキストノードがブラウザ翻訳によって置き換えられていると `insertBefore` でクラッシュします。この場合は、常に表示されるテキスト側を囲みます（`<button>{icon && <Icon />}<SafeBrowserTranslation>保存</SafeBrowserTranslation></button>`）
+
+該当しそうな箇所は AGENTS.md の判断基準に沿ってレビューで見つける必要があります。

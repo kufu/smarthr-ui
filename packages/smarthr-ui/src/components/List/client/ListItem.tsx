@@ -154,6 +154,12 @@ const classNameGenerator = tv({
       },
       false: {},
     },
+    dividerLast: {
+      true: {},
+      false: {
+        li: 'last:after:shr-hidden',
+      },
+    },
     paddingBlockStart: {
       0: {
         content: 'shr-pt-0',
@@ -313,7 +319,7 @@ export const ListItem: ListItem = <
   slot,
   ...rest
 }: ListItemProps<Slot>) => {
-  const divider = useContext(ListDividerContext)
+  const { width: divider, last: dividerLast } = useContext(ListDividerContext)
   const { paddingBlockStart, paddingBlockEnd, paddingInlineStart, paddingInlineEnd } =
     mapPaddingModifierToPadding(padding)
   const slotClassName = slot?.props?.className
@@ -323,6 +329,7 @@ export const ListItem: ListItem = <
       li: classNames.li({
         className,
         divider,
+        dividerLast,
         paddingBlockStart,
         paddingBlockEnd,
         paddingInlineStart,
@@ -340,6 +347,7 @@ export const ListItem: ListItem = <
     className,
     slotClassName,
     divider,
+    dividerLast,
     paddingBlockStart,
     paddingBlockEnd,
     paddingInlineStart,

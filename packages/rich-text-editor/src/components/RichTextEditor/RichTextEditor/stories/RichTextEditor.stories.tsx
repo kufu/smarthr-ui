@@ -2,33 +2,11 @@ import { useState } from 'react'
 import { Button, Cluster, FormControl, Stack } from 'smarthr-ui'
 
 import { RichTextViewer } from '../../RichTextViewer/RichTextViewer'
+import { ALL_FEATURES } from '../../extensions/configureExtensions'
 import { RichTextEditor } from '../RichTextEditor'
 
-import type { RichTextJSON } from '../../types'
+import type { RichTextJSON, RichTextVideo } from '../../types'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-
-const ALL_FEATURES = [
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'code',
-  'heading',
-  'bulletList',
-  'orderedList',
-  'blockquote',
-  'codeBlock',
-  'horizontalRule',
-  'link',
-  'color',
-  'backgroundColor',
-  'image',
-  'youtube',
-  'fontSize',
-  'lineHeight',
-  'textAlign',
-  'table',
-] as const
 
 // blob: の URL は保存しても次の表示で読めず受け付けられないため、選んだファイルに関わらず
 // Storybook が配信する画像を返す
@@ -40,6 +18,36 @@ const mockImageUpload = async (file: File) => {
 const mockImageUploadError = (error: unknown, file: File) => {
   console.error('image upload failed:', file.name, error)
 }
+
+const SAMPLE_VIDEOS: RichTextVideo[] = [
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    title: 'サンプル動画A',
+    poster: '/fixtures/sample-jpeg.jpg',
+    duration: 5,
+  },
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4',
+    title: 'サンプル動画B',
+    duration: 6,
+  },
+  {
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    title: 'Sample Video C',
+    duration: 125,
+  },
+  { src: '//example.com/a.mp4', title: '不正な src の動画' },
+]
+
+const loadSampleVideos = ({ signal }: { signal: AbortSignal }) =>
+  new Promise<readonly RichTextVideo[]>((resolve, reject) => {
+    const timer = setTimeout(() => resolve(SAMPLE_VIDEOS), 600)
+
+    signal.addEventListener('abort', () => {
+      clearTimeout(timer)
+      reject(signal.reason)
+    })
+  })
 
 const meta = {
   title: 'Editor/RichTextEditor',
@@ -83,6 +91,7 @@ export const Playground: Story = {
             {...rest}
             placeholder="ここに本文を入力してください"
             showCharacterCount
+            loadVideos={loadSampleVideos}
             onChange={(json) => setValue(json)}
             onImageUpload={mockImageUpload}
             onImageUploadError={mockImageUploadError}
@@ -100,6 +109,7 @@ export const Playground: Story = {
 export const AllFeatures: Story = {
   args: {
     placeholder: '全機能が有効です',
+    loadVideos: loadSampleVideos,
   },
 }
 
@@ -441,6 +451,173 @@ export const TableEditing: Story = {
           helpMessage="行・列・セルのボタンから操作できます。セル内でAlt+EnterまたはShift+F10を押してもメニューが開きます。"
         >
           <RichTextEditor {...rest} value={value} onChange={setValue} />
+        </FormControl>
+        <div>
+          <p>保存内容の表示</p>
+          <RichTextViewer content={value} />
+        </div>
+      </Stack>
+    )
+  },
+}
+
+export const VideoEmbedding: Story = {
+  name: '動画の埋め込み',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [value, setValue] = useState<RichTextJSON>({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'ツールバーの動画のボタンから、アップロード済みの動画を選んで挿入できます。',
+            },
+          ],
+        },
+        {
+          type: 'video',
+          attrs: {
+            src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+            title: 'サンプル動画A',
+          },
+        },
+        { type: 'paragraph' },
+      ],
+    })
+
+    return (
+      <Stack>
+        <FormControl
+          label="動画の埋め込み"
+          helpMessage="動画をクリックして選ぶと、操作バーが出ます。選んだ状態で Alt+Enter を押すと操作バーへ移ります。"
+        >
+          <RichTextEditor
+            {...rest}
+            value={value}
+            loadVideos={loadSampleVideos}
+            onChange={setValue}
+          />
+        </FormControl>
+        <div>
+          <p>保存内容の表示</p>
+          <RichTextViewer content={value} />
+        </div>
+      </Stack>
+    )
+  },
+}
+
+export const SlashCommand: Story = {
+  name: 'スラッシュコマンド',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [value, setValue] = useState<RichTextJSON>({
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: '空の行で / か ／ を打つと、その行をブロックに置き換えるメニューが開きます。',
+            },
+          ],
+        },
+        { type: 'paragraph' },
+      ],
+    })
+
+    return (
+      <Stack>
+        <FormControl
+          label="スラッシュコマンド"
+          helpMessage="↑↓ で選び、Enter で挿入、Esc で閉じます。打った文字で絞り込めます（例: みだし、list、h2）。"
+        >
+          <RichTextEditor
+            {...rest}
+            value={value}
+            loadVideos={loadSampleVideos}
+            onChange={setValue}
+            onImageUpload={mockImageUpload}
+            onImageUploadError={mockImageUploadError}
+          />
+        </FormControl>
+        <div>
+          <p>保存内容の表示</p>
+          <RichTextViewer content={value} />
+        </div>
+      </Stack>
+    )
+  },
+}
+
+const blockActionsCell = (text: string) => ({
+  type: 'tableCell',
+  content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+})
+
+export const BlockActions: Story = {
+  name: 'ブロック操作',
+  render: ({ outputFormat: _, onChange: __, ...rest }) => {
+    const [value, setValue] = useState<RichTextJSON>({
+      type: 'doc',
+      content: [
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'はじめに' }] },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'ブロックの左の ⋮⋮ をドラッグすると並べ替えられ、クリックするとメニューが開きます。',
+            },
+          ],
+        },
+        {
+          type: 'bulletList',
+          content: ['項目1', '項目2'].map((text) => ({
+            type: 'listItem',
+            content: [{ type: 'paragraph', content: [{ type: 'text', text }] }],
+          })),
+        },
+        {
+          type: 'table',
+          content: [
+            { type: 'tableRow', content: [blockActionsCell('名前'), blockActionsCell('説明')] },
+            {
+              type: 'tableRow',
+              content: [blockActionsCell('移動'), blockActionsCell('上下に動かす')],
+            },
+          ],
+        },
+        {
+          type: 'video',
+          attrs: {
+            src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+            title: 'サンプル動画A',
+          },
+        },
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: '最後の段落です。' }],
+        },
+      ],
+    })
+
+    return (
+      <Stack>
+        <FormControl
+          label="ブロック操作"
+          helpMessage="macOS は Control+Shift+↑↓、それ以外は Alt+Shift+↑↓ でキャレットのあるブロックを動かします。Cmd+/（Ctrl+/）でブロックメニューが開きます。ブロックの先頭で ← を押すと ⋮⋮ へ移ります。"
+        >
+          <RichTextEditor
+            {...rest}
+            value={value}
+            loadVideos={loadSampleVideos}
+            onChange={setValue}
+            onImageUpload={mockImageUpload}
+            onImageUploadError={mockImageUploadError}
+          />
         </FormControl>
         <div>
           <p>保存内容の表示</p>

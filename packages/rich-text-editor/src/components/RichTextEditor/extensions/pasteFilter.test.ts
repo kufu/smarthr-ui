@@ -311,6 +311,47 @@ describe('createPasteFilter', () => {
       expect(JSON.stringify(result.content)).toContain('本文')
     })
 
+    it('features 外の動画は削除する', () => {
+      const result = filterSlice(['bold'], {
+        content: [
+          { type: 'video', attrs: { src: 'https://example.com/a.mp4' } },
+          paragraph([text('本文')]),
+        ],
+      })
+
+      expect(JSON.stringify(result.content)).not.toContain('video')
+      expect(JSON.stringify(result.content)).toContain('本文')
+    })
+
+    it('features 内の動画は、検証した属性で残す', () => {
+      const result = filterSlice(['video'], {
+        content: [
+          {
+            type: 'video',
+            attrs: {
+              src: 'https://example.com/a.mp4',
+              poster: '//evil.example/a.jpg',
+              align: 'center',
+            },
+          },
+        ],
+      })
+
+      expect(result.content).toEqual([
+        {
+          type: 'video',
+          attrs: {
+            src: 'https://example.com/a.mp4',
+            poster: null,
+            title: null,
+            width: null,
+            height: null,
+            align: 'center',
+          },
+        },
+      ])
+    })
+
     it('改行は features に関係なく残す', () => {
       const result = filterSlice(['bold'], {
         content: [paragraph([text('1行目'), { type: 'hardBreak' }, text('2行目')])],
@@ -560,6 +601,39 @@ describe('createPasteFilter', () => {
       expect(json).not.toContain('opener"')
       expect(json).not.toContain('evil')
     })
+
+    it.each([
+      ['無い', ['bold'] as RichTextFeature[], false],
+      ['ある', ['video'] as RichTextFeature[], true],
+    ])(
+      'features に video が%sとき、貼り付けた動画は features に従い、読み込んだ動画は残る',
+      async (_, features, pasted) => {
+        const { result } = renderHook(() =>
+          useRichTextEditor({
+            features,
+            defaultValue: {
+              type: 'doc',
+              content: [{ type: 'video', attrs: { src: '/loaded.mp4' } }, { type: 'paragraph' }],
+            },
+          }),
+        )
+        await waitFor(() => {
+          expect(result.current.editor).not.toBeNull()
+        })
+        const editor = result.current.editor!
+
+        editor.commands.setTextSelection(editor.state.doc.content.size - 1)
+        // jsdom には ClipboardEvent が無い
+        editor.view.pasteHTML(
+          '<video src="/pasted.mp4"></video>',
+          new Event('paste') as ClipboardEvent,
+        )
+
+        const json = JSON.stringify(editor.getJSON())
+        expect(json).toContain('/loaded.mp4')
+        expect(json.includes('/pasted.mp4')).toBe(pasted)
+      },
+    )
 
     it('HTML を貼り付けると、許可していない文字色は文書に入らない', async () => {
       const { result } = renderHook(() =>
