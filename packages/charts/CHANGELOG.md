@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.4.0...smarthr-ui-charts-v0.5.0) (2026-11-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* Reactの最低要求バージョンを19.2.0に引き上げる ([#7590](https://github.com/kufu/smarthr-ui/issues/7590))
+
+### Miscellaneous Chores
+
+* Reactの最低要求バージョンを19.2.0に引き上げる ([#7590](https://github.com/kufu/smarthr-ui/issues/7590)) ([0be6e21](https://github.com/kufu/smarthr-ui/commit/0be6e217ab2b6530abbfed786fa81db476037121))
+
 ## [0.4.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.3.1...smarthr-ui-charts-v0.4.0) (2026-11-19)
 
 
