@@ -291,6 +291,9 @@ export default [
       'smarthr/best-practice-for-tailwind-variants': 'off',
       'smarthr/require-i18n-text': 'off',
       'local-rules/require-client': 'off',
+      // HINT: javascript: URLのサニタイズ処理を検証するテストでは、無害化されることを
+      // 確認するために意図的にjavascript: URLの文字列リテラルを書く必要があるため無効化する
+      'no-script-url': 'off',
     },
   },
   {
