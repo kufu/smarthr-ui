@@ -75,6 +75,9 @@ export const ItemButton = memo<Props>(({ id, label, disabled, selected, isNew, a
         />
       </Text>
     ) : (
+      // labelは利用者が渡すReactNodeの場合があり、要素で囲むとレイアウトに影響しうる。
+      // また各アイテムのisNewは途中で切り替わらず、buttonの唯一の子でもあるため、要素の出入りによるクラッシュは起きない
+      // eslint-disable-next-line local-rules/require-safe-browser-translation
       label
     )}
   </button>

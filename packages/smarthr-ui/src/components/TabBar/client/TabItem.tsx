@@ -16,7 +16,7 @@ const classNameGenerator = tv({
     wrapper: [
       'smarthr-ui-TabItem',
       'shr-group/tabitem',
-      'shr-relative shr-inline-flex shr-items-center shr-gap-0.5 shr-px-1 shr-py-0.75',
+      'shr-relative shr-inline-flex shr-grow shr-items-center shr-justify-center shr-gap-0.5 shr-px-1 shr-py-0.75',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator focus-visible:shr-z-1',
       'aria-disabled:shr-cursor-not-allowed aria-disabled:shr-bg-transparent',
@@ -24,7 +24,9 @@ const classNameGenerator = tv({
       'forced-colors:aria-selected:before:shr-bg-[Highlight]',
     ],
     label: [
-      'shr-font-bold shr-leading-none shr-text-grey',
+      'shr-text-center shr-font-bold shr-leading-tight shr-text-grey',
+      // HINT: leading-tight で増えた上下のハーフレディングを打ち消し、単一行のタブの高さを leading-none 相当に保つ
+      'shr-my-[calc((theme(lineHeight.none)-theme(lineHeight.tight))*0.5em)]',
       'group-hover/tabitem:shr-text-black',
       'group-aria-disabled/tabitem:shr-text-grey/50 group-aria-disabled/tabitem:forced-colors:shr-text-[GrayText]',
       'group-aria-selected/tabitem:shr-text-black',
@@ -104,7 +106,8 @@ export const TabItem: FC<Props> = ({
     return (
       <Tooltip
         {...tabAttrs}
-        className="focus-visible:shr-focus-indicator"
+        // HINT: TabBar の grow 指定時にボタンが Tooltip の幅・高さいっぱいに広がるよう flex にする
+        className="shr-inline-flex focus-visible:shr-focus-indicator"
         aria-disabled={disabled}
         message={disabledReason.text}
       >

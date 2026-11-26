@@ -62,6 +62,9 @@ export default {
     typescript({
       tsconfig: './tsconfig.esm.build.json',
       noEmit: true,
+      // HINT: 型チェックは build:types(tsc)で行うため、ここでは省いてメモリ使用量とビルド時間を抑える。
+      // isolatedModules: true なので、型情報なしでも出力されるJSは変わらない
+      noCheck: true,
     }),
     preserveDirectives({
       exclude: '**/*.json',
