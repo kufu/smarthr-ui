@@ -27,8 +27,8 @@ type Props = AbsoluteProps | RelativeProps
  * @param props.date - フォーマット対象の日付
  * @param props.notation - 'absolute'（デフォルト）または 'relative'（例: 「3日前」）
  * @param props.now - relative の基準日時。デフォルトはレンダリング時の現在日時のため、SSR とのずれを避けたい場合や表示を更新したい場合は指定する
- * @param props.parts - 表示する日付のパーツ。指定しない場合は全て表示
- * @param props.options - フォーマットオプション
+ * @param props.parts - （absolute のみ）表示する日付のパーツ。指定しない場合は全て表示
+ * @param props.options - （absolute のみ）フォーマットオプション
  * @param props.options.disableSlashInJa - 日本語ロケールでスラッシュを無効化し、月を長形式で表示する
  * @param props.options.capitalizeFirstLetter - 最初の文字を大文字化する
  * @returns フォーマットされた日付を含むtime要素

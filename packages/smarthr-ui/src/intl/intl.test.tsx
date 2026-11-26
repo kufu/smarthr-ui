@@ -562,8 +562,6 @@ describe('intl', () => {
       const DAY = 24 * HOUR
 
       describe('unit selection (ja)', () => {
-        const formatRelativeTime = renderFormatter('ja')
-
         it.each([
           ['0秒', before(0), '今'],
           ['44秒前', before(44 * SECOND), '今'],
@@ -591,17 +589,24 @@ describe('intl', () => {
           ['2時間後', after(2 * HOUR), '2時間後'],
           ['3日後', after(3 * DAY), '3日後'],
         ])('%s', (_, date, expected) => {
-          expect(formatRelativeTime({ date, now })).toBe(expected)
+          expect(renderFormatter('ja')({ date, now })).toBe(expected)
         })
 
         it('暦月の差分が1.5か月以上でも45日以下なら1か月前', () => {
           expect(
-            formatRelativeTime({
+            renderFormatter('ja')({
               date: new Date(2025, 1 - 1, 15),
               now: new Date(2025, 3 - 1, 1),
             }),
           ).toBe('1か月前')
         })
+      })
+
+      it.each([
+        ['date', { date: dayjs('invalid').toDate(), now }],
+        ['now', { date: now, now: dayjs('invalid').toDate() }],
+      ])('%s が不正な日付なら formatDate と同じく Invalid Date を返す', (_, props) => {
+        expect(renderFormatter('ja')(props)).toBe('Invalid Date')
       })
 
       describe('locale variations (3日前)', () => {

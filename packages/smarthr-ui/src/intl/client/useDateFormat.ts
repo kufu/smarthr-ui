@@ -447,6 +447,10 @@ export const useDateFormat = (): UseDateFormatReturn => {
       },
       formatRelativeTime: ({ date, now = new Date() }: FormatRelativeTimeProps): string => {
         const target = dayjs(date)
+        if (!target.isValid() || !dayjs(now).isValid()) {
+          return 'Invalid Date'
+        }
+
         const replacer = RELATIVE_TIME_REPLACERS[locale]
         const format = (
           value: number,
