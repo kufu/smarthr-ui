@@ -8,7 +8,7 @@ const subscribe = () => () => {}
 let cachedIsApple: boolean | undefined
 
 // isiOS は navigator の有無を確かめずに参照するため、navigator の無い環境では例外になる。先に止める
-const getSnapshot = () => {
+export const isApplePlatform = () => {
   cachedIsApple ??= typeof navigator !== 'undefined' && (isiOS() || isMacOS())
 
   return cachedIsApple
@@ -29,4 +29,4 @@ const getServerSnapshot = () => false
  * SSR からのハイドレーションでは、サーバーの値との差を埋めるため1回は描画し直す
  */
 export const useIsApplePlatform = (): boolean =>
-  useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  useSyncExternalStore(subscribe, isApplePlatform, getServerSnapshot)

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { getRichTextSchema } from '../serializers/richTextSchema'
 
-import { BLOCK_CATALOG, matchesBlockQuery } from './blockCatalog'
+import { BLOCK_CATALOG, describeBlock, matchesBlockQuery } from './blockCatalog'
 import { SUPPORTED_HEADING_LEVELS } from './configureHeading'
 
 import type { Node as PMNode } from '@tiptap/pm/model'
@@ -27,9 +27,12 @@ const search = (query: string) =>
 
 describe('BLOCK_CATALOG', () => {
   it.each(createTopLevelSamples().map((node) => [JSON.stringify(node.toJSON()), node] as const))(
-    '最上位に置けるノード %s は、ちょうど1つのエントリに当たる',
+    '最上位に置けるノード %s は、ちょうど1つのエントリに当たり、読み上げでその名前を使う',
     (_, node) => {
-      expect(BLOCK_CATALOG.filter((entry) => entry.matches(node))).toHaveLength(1)
+      const matched = BLOCK_CATALOG.filter((entry) => entry.matches(node))
+
+      expect(matched).toHaveLength(1)
+      expect(describeBlock(node).blockId).toBe(matched[0].id)
     },
   )
 
