@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useCallback, useRef, useState, useSyncExternalStore } from 'react'
+import { type FC, type ReactNode, useCallback, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { tv } from 'tailwind-variants'
 
@@ -78,7 +78,6 @@ export const TooltipPortal: FC<Props> = ({
   const [actualHorizontal, setActualHorizontal] = useState<HorizontalType>('center')
   const [actualVertical, setActualVertical] = useState<VerticalType>('bottom')
   const [messageMaxHeight, setMessageMaxHeight] = useState<string | undefined>(undefined)
-  const messageRef = useRef<HTMLDivElement>(null)
 
   // HINT: smarthr-ui外部からrefを受け取る様になった場合、useLayoutEffectRef + useMergeRefsに変更する
   const callbackRef = useCallback(
@@ -89,7 +88,7 @@ export const TooltipPortal: FC<Props> = ({
 
       const action = () => {
         const safeAreaInsets = getSafeAreaInsets()
-        const messageElement = messageRef.current
+        const messageElement = document.getElementById(messageId)
         // HINT: maxHeightで高さが制限され中身がスクロールしている場合でも、中身全体の高さを元に計算し直せるよう、
         // スクロールで隠れている分を足す
         const portalHeight =
@@ -132,7 +131,7 @@ export const TooltipPortal: FC<Props> = ({
         resizeObserver.disconnect()
       }
     },
-    [parentRect, theme, getSafeAreaInsets],
+    [parentRect, theme, getSafeAreaInsets, messageId],
   )
 
   if (!portalRoot) {
@@ -155,7 +154,6 @@ export const TooltipPortal: FC<Props> = ({
         className={CLASS_NAMES.balloon}
       >
         <div
-          ref={messageRef}
           id={messageId}
           className={CLASS_NAMES.balloonText}
           style={isVisible && messageMaxHeight ? { maxHeight: messageMaxHeight } : undefined}
