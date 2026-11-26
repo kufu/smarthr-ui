@@ -66,6 +66,7 @@ export const Tooltip: FC<Props> = ({
   ariaDescribedbyTarget = 'wrapper',
   className,
   onPointerEnter,
+  onPointerOver,
   onPointerLeave,
   onTouchStart,
   onTouchEnd,
@@ -89,7 +90,9 @@ export const Tooltip: FC<Props> = ({
   )
 
   const latest = useLatest({
+    messageId,
     onPointerEnter,
+    onPointerOver,
     onPointerLeave,
     onTouchStart,
     onTouchEnd,
@@ -100,6 +103,25 @@ export const Tooltip: FC<Props> = ({
 
   const functions = useMemo(() => {
     let node: HTMLElement | null = null
+    // HINT: ポインタがトリガかツールチップの上にあるか
+    // (ツールチップはportalで描画しているが、Reactのツリー上はトリガの子のため、ツールチップの上にいる間はpointerleaveが発生しない)
+    let isPointerInside = false
+
+    // HINT: children が別の portal(Dropdownのメニューなど)を描画している場合、そこへ移動しても
+    // Reactのツリー上はトリガの子のためpointerleaveが発生しない。DOM上でトリガかこのツールチップの中にあるかで判定する
+    const isInTriggerOrTooltip = (target: EventTarget) => {
+      if (!(target instanceof Node)) {
+        return false
+      }
+
+      if (node?.contains(target)) {
+        return true
+      }
+
+      const tooltip = document.getElementById(latest.messageId)?.closest('[role="tooltip"]')
+
+      return Boolean(tooltip?.contains(target))
+    }
 
     const toShowAction = (e: BaseSyntheticEvent) => {
       // Tooltipのtriggerの他の要素(Dropwdown menu buttonで開いたmenu contentとか)に移動されたらtooltipを表示しない
@@ -132,7 +154,12 @@ export const Tooltip: FC<Props> = ({
       },
       handleDelegatePointerEnter: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerEnter?.(e)
+        isPointerInside = isInTriggerOrTooltip(e.target)
         toShowAction(e)
+      },
+      handleDelegatePointerOver: (e: ReactPointerEvent<HTMLElement>) => {
+        latest.onPointerOver?.(e)
+        isPointerInside = isInTriggerOrTooltip(e.target)
       },
       handleDelegateTouchStart: (e: ReactTouchEvent<HTMLElement>) => {
         latest.onTouchStart?.(e)
@@ -144,6 +171,7 @@ export const Tooltip: FC<Props> = ({
       },
       handleDelegatePointerLeave: (e: ReactPointerEvent<HTMLElement>) => {
         latest.onPointerLeave?.(e)
+        isPointerInside = false
         toCloseAction()
       },
       handleDelegateTouchEnd: (e: ReactTouchEvent<HTMLElement>) => {
@@ -152,7 +180,13 @@ export const Tooltip: FC<Props> = ({
       },
       handleDelegateBlur: (e: ReactFocusEvent<HTMLElement>) => {
         latest.onBlur?.(e)
-        toCloseAction()
+
+        // HINT: トリガをクリックしてフォーカスした後、ツールチップの中の文字を選択しようとすると、
+        // ツールチップ内のクリックでトリガがblurする。ポインタがトリガかツールチップの上にある間は閉じず、
+        // pointerleaveで閉じる
+        if (!isPointerInside) {
+          toCloseAction()
+        }
       },
     }
   }, [latest])
@@ -200,6 +234,7 @@ export const Tooltip: FC<Props> = ({
       className={actualClassName}
       aria-describedby={ariaDescribedby}
       onPointerEnter={functions.handleDelegatePointerEnter}
+      onPointerOver={functions.handleDelegatePointerOver}
       onTouchStart={functions.handleDelegateTouchStart}
       onFocus={functions.handleDelegateFocus}
       onPointerLeave={functions.handleDelegatePointerLeave}
