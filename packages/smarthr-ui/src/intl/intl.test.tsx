@@ -628,18 +628,16 @@ describe('intl', () => {
     const renderInJa = (ui: ReactElement) =>
       render(<IntlProvider locale="ja">{ui}</IntlProvider>).container.querySelector('time')
 
-    it('notation 未指定なら絶対日時で表示し、title を付けない', () => {
+    it('notation 未指定なら絶対日時で表示する', () => {
       const time = renderInJa(<DateFormatter date={date} />)
       expect(time).toHaveTextContent('2025/01/12')
       expect(time).toHaveAttribute('datetime', date.toISOString())
-      expect(time).not.toHaveAttribute('title')
     })
 
-    it('notation="relative" なら相対時間で表示し、title に絶対日時を付ける', () => {
+    it('notation="relative" なら相対時間で表示する', () => {
       const time = renderInJa(<DateFormatter date={date} notation="relative" now={now} />)
       expect(time).toHaveTextContent('3日前')
       expect(time).toHaveAttribute('datetime', date.toISOString())
-      expect(time).toHaveAttribute('title', '2025/01/12 12:00')
     })
 
     it('date と now に文字列を渡せる', () => {

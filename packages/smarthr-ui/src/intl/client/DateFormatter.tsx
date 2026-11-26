@@ -66,20 +66,16 @@ type Props = AbsoluteProps | RelativeProps
  *
  * // 相対時間で表示
  * <DateFormatter date={threeDaysAgo} notation="relative" />
- * // <time datetime="2024-01-12T10:30:00.000Z" title="2024/01/12 19:30">3日前</time>
+ * // <time datetime="2024-01-12T10:30:00.000Z">3日前</time>
  */
 export const DateFormatter = (props: Props) => {
-  const { formatDate, formatRelativeTime, formatTimestamp } = useDateFormat()
+  const { formatDate, formatRelativeTime } = useDateFormat()
 
   if (props.notation === 'relative') {
     const { date: orgDate, now: orgNow } = props
     const date = dayjs(orgDate).toDate()
     const now = orgNow === undefined ? undefined : dayjs(orgNow).toDate()
-    return (
-      <time dateTime={date.toISOString()} title={formatTimestamp({ date })}>
-        {formatRelativeTime({ date, now })}
-      </time>
-    )
+    return <time dateTime={date.toISOString()}>{formatRelativeTime({ date, now })}</time>
   }
 
   const { date: orgDate, notation: _notation, ...rest } = props
