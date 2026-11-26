@@ -127,16 +127,17 @@ export const TooltipPortal: FC<Props> = ({
 
       window.addEventListener('resize', debouncedAction)
 
-      // HINT: 表示したまま message が変わるなどして大きさが変わった場合も、位置を計算し直す。
-      // containerはmaxHeightで高さが制限されて変化を検知できない場合があるため、中身の吹き出しを監視する
-      const resizeObserver = new ResizeObserver(action)
+      // HINT: 表示したまま message が変わった場合も、位置を計算し直す。
+      // ResizeObserverで大きさの変化を監視すると、計算結果のmaxWidthで変わった幅を再び検知して計算が往復し続けることがあるため、
+      // 計算で書き換えるstyle属性は対象外にし、中身の要素や文字の変化だけを監視する
+      const mutationObserver = new MutationObserver(action)
 
-      resizeObserver.observe(element.firstElementChild ?? element)
+      mutationObserver.observe(element, { childList: true, subtree: true, characterData: true })
 
       return () => {
         window.removeEventListener('resize', debouncedAction)
         debouncedAction.cancel()
-        resizeObserver.disconnect()
+        mutationObserver.disconnect()
       }
     },
     [parentRect, theme, getSafeAreaInsets, messageId],
