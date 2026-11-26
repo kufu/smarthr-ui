@@ -1,11 +1,12 @@
-import { renderHook } from '@testing-library/react'
+import { render, renderHook } from '@testing-library/react'
+import dayjs from 'dayjs'
 import { IntlProvider as ReactIntlProvider, useIntl as useReactIntl } from 'react-intl'
 
-import { IntlProvider, useAvailableLocales, useDateFormat, useIntl } from './client'
+import { DateFormatter, IntlProvider, useAvailableLocales, useDateFormat, useIntl } from './client'
 import { convertLang } from './localeMap'
 import { locales } from './locales'
 
-import type { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren, ReactElement } from 'react'
 
 describe('intl', () => {
   describe('useIntl', () => {
@@ -543,6 +544,112 @@ describe('intl', () => {
           expect(getWeekStartDay()).toBe(1)
         })
       })
+    })
+
+    describe('formatRelativeTime', () => {
+      const now = new Date(2025, 1 - 1, 15, 12, 0, 0) // 2025年1月15日 12:00
+      const renderFormatter = (locale: string) => {
+        const wrapper: FC<PropsWithChildren> = ({ children }) => (
+          <IntlProvider locale={locale}>{children}</IntlProvider>
+        )
+        return renderHook(() => useDateFormat(), { wrapper }).result.current.formatRelativeTime
+      }
+      const before = (ms: number) => dayjs(now).subtract(ms, 'ms').toDate()
+      const after = (ms: number) => dayjs(now).add(ms, 'ms').toDate()
+      const SECOND = 1000
+      const MINUTE = 60 * SECOND
+      const HOUR = 60 * MINUTE
+      const DAY = 24 * HOUR
+
+      describe('unit selection (ja)', () => {
+        it.each([
+          ['0秒', before(0), '今'],
+          ['44秒前', before(44 * SECOND), '今'],
+          ['45秒前', before(45 * SECOND), '1分前'],
+          ['89秒前', before(89 * SECOND), '1分前'],
+          ['90秒前', before(90 * SECOND), '2分前'],
+          ['44分前', before(44 * MINUTE), '44分前'],
+          ['45分前', before(45 * MINUTE), '1時間前'],
+          ['89分前', before(89 * MINUTE), '1時間前'],
+          ['90分前', before(90 * MINUTE), '2時間前'],
+          ['21時間前', before(21 * HOUR), '21時間前'],
+          ['22時間前', before(22 * HOUR), '1日前'],
+          ['35時間前', before(35 * HOUR), '1日前'],
+          ['36時間前', before(36 * HOUR), '2日前'],
+          ['3日前', before(3 * DAY), '3日前'],
+          ['25日前', before(25 * DAY), '25日前'],
+          ['26日前', new Date(2024, 12 - 1, 20, 12, 0, 0), '1か月前'],
+          ['45日前', before(45 * DAY), '1か月前'],
+          ['46日前', before(46 * DAY), '2か月前'],
+          ['3か月前', new Date(2024, 10 - 1, 15, 12, 0, 0), '3か月前'],
+          ['11か月前', new Date(2024, 2 - 1, 15, 12, 0, 0), '1年前'],
+          ['17か月前', new Date(2023, 8 - 1, 15, 12, 0, 0), '1年前'],
+          ['18か月前', new Date(2023, 7 - 1, 15, 12, 0, 0), '2年前'],
+          ['2年前', new Date(2023, 1 - 1, 15, 12, 0, 0), '2年前'],
+          ['2時間後', after(2 * HOUR), '2時間後'],
+          ['3日後', after(3 * DAY), '3日後'],
+        ])('%s', (_, date, expected) => {
+          expect(renderFormatter('ja')({ date, now })).toBe(expected)
+        })
+
+        it('暦月の差分が1.5か月以上でも45日以下なら1か月前', () => {
+          expect(
+            renderFormatter('ja')({
+              date: new Date(2025, 1 - 1, 15),
+              now: new Date(2025, 3 - 1, 1),
+            }),
+          ).toBe('1か月前')
+        })
+      })
+
+      it.each([
+        ['date', { date: dayjs('invalid').toDate(), now }],
+        ['now', { date: now, now: dayjs('invalid').toDate() }],
+      ])('%s が不正な日付なら formatDate と同じく Invalid Date を返す', (_, props) => {
+        expect(renderFormatter('ja')(props)).toBe('Invalid Date')
+      })
+
+      describe('locale variations (3日前)', () => {
+        it.each([
+          ['ja', '3日前'],
+          ['ja-easy', '3日前'],
+          ['en-us', '3 days ago'],
+          ['id-id', '3 hari yang lalu'],
+          ['ko', '3일 전'],
+          ['pt', 'há 3 dias'],
+          ['vi', '3 ngày trước'],
+          ['zh-cn', '3天前'],
+          ['zh-tw', '3天前'],
+        ])('%s', (locale, expected) => {
+          expect(renderFormatter(locale)({ date: before(3 * DAY), now })).toBe(expected)
+        })
+      })
+    })
+  })
+
+  describe('DateFormatter', () => {
+    const date = new Date(2025, 1 - 1, 12, 12, 0, 0)
+    const now = new Date(2025, 1 - 1, 15, 12, 0, 0)
+    const renderInJa = (ui: ReactElement) =>
+      render(<IntlProvider locale="ja">{ui}</IntlProvider>).container.querySelector('time')
+
+    it('notation 未指定なら絶対日時で表示する', () => {
+      const time = renderInJa(<DateFormatter date={date} />)
+      expect(time).toHaveTextContent('2025/01/12')
+      expect(time).toHaveAttribute('datetime', date.toISOString())
+    })
+
+    it('notation="relative" なら相対時間で表示する', () => {
+      const time = renderInJa(<DateFormatter date={date} notation="relative" now={now} />)
+      expect(time).toHaveTextContent('3日前')
+      expect(time).toHaveAttribute('datetime', date.toISOString())
+    })
+
+    it('date と now に文字列を渡せる', () => {
+      const time = renderInJa(
+        <DateFormatter date={date.toISOString()} notation="relative" now={now.toISOString()} />,
+      )
+      expect(time).toHaveTextContent('3日前')
     })
   })
 

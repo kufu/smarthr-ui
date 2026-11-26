@@ -2,6 +2,7 @@
 
 // HINT: react-intlはRSC非対応（モジュールスコープでcreateContextを呼びガードが無い）。
 // react-server条件でimportするとTypeErrorになるため、利用側へ境界を移せない。
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useIntl as useReactIntl } from 'react-intl'
 
@@ -73,6 +74,12 @@ export type FormatTimestampProps = {
   timeParts?: readonly [TimePart, ...TimePart[]]
 }
 
+type FormatRelativeTimeProps = {
+  date: Date
+  /** 基準日時。デフォルトは現在日時 */
+  now?: Date
+}
+
 /**
  * useDateFormatフックの戻り値の型定義
  */
@@ -142,6 +149,9 @@ export type UseDateFormatReturn = {
    * formatTimestamp({ date: new Date(), timeParts: ['hour', 'minute', 'second'] }) // "2024/01/15 10:30:45" (ja)
    */
   formatTimestamp(props: FormatTimestampProps): string
+
+  /** 相対時間（例: "3日前"）でフォーマットする */
+  formatRelativeTime(props: FormatRelativeTimeProps): string
 
   /**
    * 現在のロケールに基づいて週の開始日を決定する関数
@@ -275,6 +285,37 @@ const TIME_FORMATS: Record<keyof typeof locales, Intl.DateTimeFormatOptions> = {
   'zh-tw': COMMON_TIME_FORMAT,
 } as const
 
+// dayjs の fromNow() と同じ閾値。diffUnit で丸めた差分が max 以下なら unit で表示する（singular は常に 1）
+const RELATIVE_TIME_THRESHOLDS: ReadonlyArray<{
+  diffUnit: 'second' | 'minute' | 'hour' | 'day' | 'month' | 'year'
+  max: number
+  unit: 'minute' | 'hour' | 'day' | 'month' | 'year'
+  singular?: true
+}> = [
+  { diffUnit: 'second', max: 89, unit: 'minute', singular: true },
+  { diffUnit: 'minute', max: 44, unit: 'minute' },
+  { diffUnit: 'minute', max: 89, unit: 'hour', singular: true },
+  { diffUnit: 'hour', max: 21, unit: 'hour' },
+  { diffUnit: 'hour', max: 35, unit: 'day', singular: true },
+  { diffUnit: 'day', max: 25, unit: 'day' },
+  { diffUnit: 'day', max: 45, unit: 'month', singular: true },
+  { diffUnit: 'month', max: 10, unit: 'month' },
+  { diffUnit: 'month', max: 17, unit: 'year', singular: true },
+  { diffUnit: 'year', max: Infinity, unit: 'year' },
+]
+
+// 丸めた差分がこの秒数以下なら「今」と表示する
+const RELATIVE_TIME_NOW_THRESHOLD_SECONDS = 44
+
+const removeSpaceAfterNumber = (base: string) => base.replace(/(\d)\s+/g, '$1')
+
+// 例: "3 日前" → "3日前"
+const RELATIVE_TIME_REPLACERS: Partial<Record<keyof typeof locales, (base: string) => string>> = {
+  ja: removeSpaceAfterNumber,
+  'ja-easy': removeSpaceAfterNumber,
+  'zh-tw': removeSpaceAfterNumber,
+}
+
 const isValidLocale = (locale: string): locale is keyof typeof locales => locale in locales
 
 const applyCapitalization = (text: string, shouldCapitalize: boolean) =>
@@ -403,6 +444,42 @@ export const useDateFormat = (): UseDateFormatReturn => {
         const formattedDate = formatDate({ date, parts: ['year', 'month', 'day'] })
         const formattedTime = formatTime({ date, parts: timeParts })
         return `${formattedDate} ${formattedTime}`
+      },
+      formatRelativeTime: ({ date, now = new Date() }: FormatRelativeTimeProps): string => {
+        const target = dayjs(date)
+        if (!target.isValid() || !dayjs(now).isValid()) {
+          return 'Invalid Date'
+        }
+
+        const replacer = RELATIVE_TIME_REPLACERS[locale]
+        const format = (
+          value: number,
+          unit: Intl.RelativeTimeFormatUnit,
+          numeric: 'auto' | 'always',
+        ) => {
+          const formatted = intl.formatRelativeTime(value, unit, { numeric })
+          return replacer ? replacer(formatted) : formatted
+        }
+
+        if (
+          Math.round(Math.abs(target.diff(now, 'second', true))) <=
+          RELATIVE_TIME_NOW_THRESHOLD_SECONDS
+        ) {
+          return format(0, 'second', 'auto')
+        }
+
+        for (const { diffUnit, max, unit, singular } of RELATIVE_TIME_THRESHOLDS) {
+          const diff = target.diff(now, diffUnit, true)
+          const rounded = Math.round(Math.abs(diff))
+
+          if (rounded <= max) {
+            const value = singular ? 1 : rounded
+            return format(diff < 0 ? -value : value, unit, 'always')
+          }
+        }
+
+        // 最後の max が Infinity のため到達しない
+        return ''
       },
       getWeekStartDay: (): number => DATE_FORMATS[locale].weekStartDay,
     }
