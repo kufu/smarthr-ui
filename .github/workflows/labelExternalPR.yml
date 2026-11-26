@@ -1,0 +1,24 @@
+# fork から作成された Pull Request に外部コントリビューションであることを示すラベルを付ける。
+# fork からの PR では pull_request イベントのトークンが読み取り専用になるため pull_request_target を使う。
+# pull_request_target は書き込み権限付きで base 側のコンテキストで動くので、PR のコードは checkout しないこと。
+name: Label external PR
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Add label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr edit "$PR_NUMBER" --add-label "external contribution"
