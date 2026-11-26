@@ -5,13 +5,19 @@ import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useS
 
 import { useLatest } from '../../../hooks/useLatest'
 import { useIntl } from '../../../intl'
+import { isActiveElement } from '../../../libs/activeElement'
 import { tv } from '../../../libs/tv'
 import { RichTextEditorToolbar } from '../Toolbar/RichTextEditorToolbar'
 import { isLinkUrl } from '../Toolbar/urlValidation'
 import { RichTextEditorProvider } from '../context/RichTextEditorContext'
+import { BlockAnnouncer } from '../extensions/Block/BlockAnnouncer'
+import { BlockHandle } from '../extensions/Block/BlockHandle'
+import { BlockMenu } from '../extensions/Block/BlockMenu'
 import { ImageFloatingUI } from '../extensions/Image/ImageFloatingUI'
 import { resetImagePlaceholders } from '../extensions/Image/imageUploadPlaceholder'
+import { SlashMenu } from '../extensions/Slash/SlashMenu'
 import { TableFloatingUI } from '../extensions/Table/TableFloatingUI'
+import { VideoFloatingUI } from '../extensions/Video/VideoFloatingUI'
 import { YoutubeFloatingUI } from '../extensions/Youtube/YoutubeFloatingUI'
 import { useRichTextEditor } from '../hooks/useRichTextEditor'
 import { getCharacterCount } from '../serializers/getCharacterCount'
@@ -30,7 +36,11 @@ import type {
 } from '../types'
 import type { ChainedCommands } from '@tiptap/core'
 import type { Editor } from '@tiptap/react'
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react'
+import type {
+  CSSProperties,
+  FocusEvent as ReactFocusEvent,
+  PointerEvent as ReactPointerEvent,
+} from 'react'
 
 const classNameGenerator = tv({
   slots: {
@@ -41,6 +51,8 @@ const classNameGenerator = tv({
       'shr-rte-border-shorthand shr-rte-relative shr-rte-box-border shr-rte-rounded-m',
       'contrast-more:shr-rte-border-high-contrast',
       'focus-within:shr-rte-focus-indicator--outer',
+      // ブロックの ⋮⋮ のドラッグ中は、落とし先を BlockHandle が線で示す。標準のカーソルは別の位置を指しうる
+      '[&[data-block-dragging]_.prosemirror-dropcursor-block]:shr-rte-hidden [&[data-block-dragging]_.prosemirror-dropcursor-inline]:shr-rte-hidden',
     ],
     // z は表の操作ハンドル（TableContextMenu が 1〜3 を使う）より上に置く。
     // sticky + z で積み重ねコンテキストを作るため、内側のツールチップの z-overlap は
@@ -97,6 +109,13 @@ const classNameGenerator = tv({
         characterCountArea: '[&&&]:shr-rte-pr-2',
       },
     },
+    // ブロックのつまみ（⋮⋮）を本文の左に置き、表の行ハンドルとも重ねないための余白。幅は BlockHandle の枠と揃える。
+    // [&_.ProseMirror]:shr-rte-px-0.75 を確実に上書きするため、詳細度を引き上げる
+    blockGutter: {
+      true: {
+        content: '[&&&_.ProseMirror]:shr-rte-pl-2.5',
+      },
+    },
     hasEditorHeight: {
       true: {
         // 指定した高さに padding を含めるため。
@@ -139,6 +158,7 @@ export const RichTextEditor = memo(
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
+        loadVideos,
       }: RichTextEditorProps,
       ref,
     ) => {
@@ -154,11 +174,75 @@ export const RichTextEditor = memo(
         null,
       )
       const isResizable = Boolean(resizable) && !readOnly && !disabled
+      // 本文の focus・blur で onFocus・onBlur を呼ばないのは、本文から ⋮⋮ やツールバーへ移るたびに呼ばれ、
+      // 利用側の blur での検査などが走るため。エディタの中で最後にフォーカスのあった要素を持ち、外へ出たかはそれで見る
+      const focusedRef = useRef<HTMLElement | null>(null)
+      // ボタンを押してもフォーカスを移さないブラウザ（Safari・macOS の Firefox）では、ツールバーを押すとフォーカスが body に落ちる。
+      // 最後の mousedown がエディタの中（ポータルを含む）なら、body に落ちているだけでは外へ出たと見なさない
+      const pointerInsideRef = useRef(false)
+      const hasFocusCallbacks = Boolean(onFocus || onBlur)
 
-      const latest = useLatest({ onChange, outputFormat, draggedHeight, features })
+      const latest = useLatest({ onChange, onFocus, onBlur, outputFormat, draggedHeight, features })
 
-      const functions = useMemo(
-        () => ({
+      const functions = useMemo(() => {
+        // 移った先を relatedTarget で見ないのは、メニューやダイアログが body 直下のポータルにあり、DOM の包含では
+        // エディタの中か外かを見分けられないため。blur の数でも数えないのは、フォーカスのある要素が消えても
+        // Firefox と Safari は blur を送らないため。続く focus が届いてから、最後の要素がまだフォーカスを持つかを見る
+        let checkTimer: ReturnType<typeof setTimeout> | null = null
+
+        const runCheck = () => {
+          const focused = focusedRef.current
+
+          if (checkTimer !== null) clearTimeout(checkTimer)
+
+          checkTimer = null
+
+          const isParked =
+            pointerInsideRef.current &&
+            (document.activeElement === null || document.activeElement === document.body)
+
+          if (
+            focused &&
+            wrapperRef.current &&
+            (!document.hasFocus() ||
+              !((focused.isConnected && isActiveElement(focused)) || isParked))
+          ) {
+            focusedRef.current = null
+            latest.onBlur?.()
+          }
+        }
+
+        const checkFocus = () => {
+          checkTimer ??= setTimeout(runCheck)
+        }
+
+        return {
+          handleDelegateFocus: (e: ReactFocusEvent) => {
+            const isEntering = focusedRef.current === null
+
+            focusedRef.current = e.target as HTMLElement
+
+            if (isEntering) latest.onFocus?.()
+          },
+          handleDelegateBlur: checkFocus,
+          handleDocumentFocusIn: () => {
+            if (focusedRef.current) checkFocus()
+          },
+          // 中かどうかを e.target で見ないのは、メニューがポータルにあって DOM では外に見え、Shadow DOM では対象がホストに
+          // 置き換わるため。続いて届く handleDelegateMouseDownCapture が中だと付け直す
+          handleDocumentMouseDown: () => {
+            pointerInsideRef.current = false
+
+            if (focusedRef.current) checkFocus()
+          },
+          handleDelegateMouseDownCapture: () => {
+            pointerInsideRef.current = true
+          },
+          // 次のタスクまで待たないのは、タップでは mousedown から click までが同じタスクで送られ、外のボタンの click が
+          // onBlur（利用側の blur での検査など）より先に走るため
+          handleDocumentClick: () => {
+            if (checkTimer !== null) runCheck()
+          },
           handleChange: (nextJson: RichTextJSON, meta: RichTextChangeMeta) => {
             if (!latest.onChange) return
             if (latest.outputFormat === 'html') {
@@ -191,9 +275,23 @@ export const RichTextEditor = memo(
               minHeight: parseFloat(getComputedStyle(proseMirror).minHeight) || 0,
             }
           },
-        }),
-        [latest],
-      )
+        }
+      }, [latest])
+
+      // blur だけで確かめないのは、フォーカスのある要素が消えても Firefox と Safari は blur を送らないため
+      useEffect(() => {
+        if (!hasFocusCallbacks) return undefined
+
+        document.addEventListener('focusin', functions.handleDocumentFocusIn, true)
+        document.addEventListener('mousedown', functions.handleDocumentMouseDown, true)
+        document.addEventListener('click', functions.handleDocumentClick, true)
+
+        return () => {
+          document.removeEventListener('focusin', functions.handleDocumentFocusIn, true)
+          document.removeEventListener('mousedown', functions.handleDocumentMouseDown, true)
+          document.removeEventListener('click', functions.handleDocumentClick, true)
+        }
+      }, [hasFocusCallbacks, functions])
 
       // setPointerCapture ではなく window で受ける。ハンドルの外にポインタが出ても
       // 追従させる必要があり、かつ jsdom が setPointerCapture を実装していないため。
@@ -236,8 +334,6 @@ export const RichTextEditor = memo(
         onImageUpload,
         onImageUploadError,
         acceptedMimeTypes,
-        onFocus,
-        onBlur,
         features,
         headingLevels,
         disabled,
@@ -522,6 +618,10 @@ export const RichTextEditor = memo(
 
       const invalid = error || formControlInvalid
       const hasEditorHeight = contentStyle !== undefined
+      const showEditingChrome = editor !== null && !readOnly && !disabled && !hideToolbar
+      const showBlockHandle = showEditingChrome && features.includes('blockActions')
+      // readOnly・disabled には連動させない。切り替えのたびに本文が横にずれ、折り返しも変わる
+      const blockGutter = !hideToolbar && features.includes('blockActions')
       const classNames = useMemo(() => {
         const { wrapper, toolbarWrapper, content, characterCountArea, resizeHandle } =
           classNameGenerator()
@@ -529,11 +629,25 @@ export const RichTextEditor = memo(
         return {
           wrapper: wrapper({ disabled, readOnly, error: invalid, className }),
           toolbarWrapper: toolbarWrapper({ disabled }),
-          content: content({ disabled, hasEditorHeight, className: editorClassName }),
+          content: content({
+            disabled,
+            hasEditorHeight,
+            blockGutter,
+            className: editorClassName,
+          }),
           characterCountArea: characterCountArea({ resizable: isResizable }),
           resizeHandle: resizeHandle(),
         }
-      }, [disabled, readOnly, invalid, isResizable, hasEditorHeight, className, editorClassName])
+      }, [
+        disabled,
+        readOnly,
+        invalid,
+        isResizable,
+        hasEditorHeight,
+        blockGutter,
+        className,
+        editorClassName,
+      ])
 
       // editorが未初期化でもwrapperは常に描画する
       // FormControlがdata-smarthr-ui-inputを初回mountで発見できるようにするため
@@ -544,6 +658,7 @@ export const RichTextEditor = memo(
           features={features}
           headingLevels={headingLevels}
           acceptedMimeTypes={acceptedMimeTypes}
+          loadVideos={loadVideos}
           onImageUpload={onImageUpload}
           onImageUploadError={onImageUploadError}
         >
@@ -554,7 +669,15 @@ export const RichTextEditor = memo(
       )
 
       return (
-        <div ref={wrapperRef} className={classNames.wrapper} style={wrapperStyle}>
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+        <div
+          ref={wrapperRef}
+          className={classNames.wrapper}
+          style={wrapperStyle}
+          onFocus={functions.handleDelegateFocus}
+          onBlur={functions.handleDelegateBlur}
+          onMouseDownCapture={functions.handleDelegateMouseDownCapture}
+        >
           {toolbar}
           <div
             ref={contentRef}
@@ -566,14 +689,30 @@ export const RichTextEditor = memo(
           >
             {editor && <EditorContent editor={editor} />}
           </div>
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('table') && (
+          {showEditingChrome && features.includes('table') && (
             <TableFloatingUI containerRef={wrapperRef} features={features} editor={editor} />
           )}
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('image') && (
+          {showEditingChrome && features.includes('image') && (
             <ImageFloatingUI containerRef={wrapperRef} editor={editor} />
           )}
-          {editor && !readOnly && !disabled && !hideToolbar && features.includes('youtube') && (
+          {showEditingChrome && features.includes('youtube') && (
             <YoutubeFloatingUI containerRef={wrapperRef} editor={editor} />
+          )}
+          {showEditingChrome && features.includes('video') && (
+            <VideoFloatingUI containerRef={wrapperRef} editor={editor} />
+          )}
+          {showEditingChrome && features.includes('slashCommand') && (
+            <SlashMenu editor={editor} features={features} headingLevels={headingLevels} />
+          )}
+          {showBlockHandle && (
+            <>
+              <BlockHandle containerRef={wrapperRef} editor={editor} />
+              <BlockMenu editor={editor} />
+            </>
+          )}
+          {/* hideToolbar では隠さない。移動のキーはツールバーが無くても効く */}
+          {editor && !readOnly && !disabled && features.includes('blockActions') && (
+            <BlockAnnouncer editor={editor} />
           )}
           {editor && showCharacterCount && !readOnly && (
             <CharacterCount editor={editor} className={classNames.characterCountArea} />

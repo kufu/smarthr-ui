@@ -516,3 +516,45 @@ export const YoutubeSize: Story = {
     chromatic: { ignoreSelectors: ['iframe'] },
   },
 }
+
+const VIDEO_SRC = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'
+
+export const Video: Story = {
+  name: '動画（配置・表示幅より広い動画・不正な src）',
+  args: {
+    content: {
+      type: 'doc' as const,
+      content: [
+        ...[null, 'center', 'right'].map((align) => ({
+          type: 'video',
+          attrs: {
+            src: VIDEO_SRC,
+            poster: '/fixtures/sample-jpeg.jpg',
+            title: `配置 ${align ?? 'left'} の動画`,
+            width: 240,
+            height: 135,
+            align,
+          },
+        })),
+        {
+          type: 'video',
+          attrs: { src: VIDEO_SRC, poster: '/fixtures/sample-jpeg.jpg', width: 960, height: 540 },
+        },
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text: 'この下の動画は src が不正なため描画されない' }],
+        },
+        { type: 'video', attrs: { src: '//example.com/a.mp4' } },
+      ],
+    },
+  },
+  render: ({ content }) => (
+    <div style={{ width: 400 }}>
+      <RichTextViewer content={content} />
+    </div>
+  ),
+  parameters: {
+    // 再生前の描画はブラウザの都合で変わるため、中身は比較せず枠の大きさだけを見る
+    chromatic: { ignoreSelectors: ['video'] },
+  },
+}

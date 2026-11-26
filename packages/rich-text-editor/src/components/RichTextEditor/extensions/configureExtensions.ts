@@ -7,6 +7,7 @@ import { TextAlign } from '@tiptap/extension-text-align'
 import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-style'
 import { StarterKit } from '@tiptap/starter-kit'
 
+import { BlockActions } from './Block/BlockActions'
 import { CustomYoutube } from './CustomYoutube'
 import { CustomImage } from './Image/CustomImage'
 import { createImagePasteExtension } from './Image/imagePaste'
@@ -16,15 +17,19 @@ import { uploadAndInsertImage } from './Image/uploadAndInsertImage'
 import { LineHeight } from './LineHeight'
 import { LinkShortcut } from './LinkShortcut'
 import { MediaToolbarShortcut } from './MediaToolbarShortcut'
+import { SlashCommand } from './Slash/SlashCommand'
 import { CellAppearance } from './Table/CellAppearance'
 import { CustomTable } from './Table/CustomTable'
 import { SafeTableCell, SafeTableHeader } from './Table/SafeTableCell'
+import { CustomVideo } from './Video/CustomVideo'
 import {
   type HeadingLevel,
   SUPPORTED_HEADING_LEVELS,
   createHeadingOperationLimiter,
 } from './configureHeading'
+import { InsertDialogs } from './insertDialogs'
 import { patchListItemShiftTab } from './listItemShiftTab'
+import { PlayerIsolation } from './playerIsolation'
 import { createOperationRestrictor } from './restrictOperations'
 import { NO_RUNTIME_OPTIONS } from './runtimeOptions'
 import {
@@ -114,7 +119,11 @@ export const configureExtensions = ({
     ),
     // features に無い間も登録しておく。後から足せないため、操作の可否は実行時に判定する。
     restrict(LinkShortcut),
+    restrict(SlashCommand),
+    restrict(BlockActions.configure({ getFeatures, getAllowedHeadingLevels })),
+    InsertDialogs,
     MediaToolbarShortcut,
+    PlayerIsolation,
     // アップロード中プレースホルダ（ドキュメント非汚染の Decoration）
     Extension.create({
       name: 'imageUploadPlaceholder',
@@ -152,6 +161,12 @@ export const configureExtensions = ({
       }),
     ),
     restrict(
+      CustomVideo.configure({
+        // ドラッグリサイズは NodeView 側の機能なので、操作を剥がすだけでは止まらない
+        isResizable: () => getFeatures().includes('video'),
+      }),
+    ),
+    restrict(
       CustomTable.configure({
         ...TABLE_OPTIONS,
         resizable: true,
@@ -182,26 +197,31 @@ export const configureExtensions = ({
   return extensions
 }
 
+const FEATURE_SET = {
+  bold: true,
+  italic: true,
+  strike: true,
+  underline: true,
+  code: true,
+  codeBlock: true,
+  bulletList: true,
+  orderedList: true,
+  blockquote: true,
+  horizontalRule: true,
+  link: true,
+  heading: true,
+  color: true,
+  backgroundColor: true,
+  fontSize: true,
+  lineHeight: true,
+  textAlign: true,
+  image: true,
+  youtube: true,
+  video: true,
+  table: true,
+  slashCommand: true,
+  blockActions: true,
+} as const satisfies Record<RichTextFeature, true>
+
 /** すべての feature */
-export const ALL_FEATURES: readonly RichTextFeature[] = [
-  'bold',
-  'italic',
-  'strike',
-  'underline',
-  'code',
-  'codeBlock',
-  'bulletList',
-  'orderedList',
-  'blockquote',
-  'horizontalRule',
-  'link',
-  'heading',
-  'color',
-  'backgroundColor',
-  'fontSize',
-  'lineHeight',
-  'textAlign',
-  'image',
-  'youtube',
-  'table',
-] as const
+export const ALL_FEATURES = Object.keys(FEATURE_SET) as readonly RichTextFeature[]

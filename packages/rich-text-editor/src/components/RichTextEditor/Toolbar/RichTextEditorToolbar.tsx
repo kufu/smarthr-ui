@@ -34,6 +34,7 @@ import { TableInsertDropdown } from './TableInsertDropdown'
 import { TextAlignDropdown } from './TextAlignDropdown'
 import { ToolbarButton } from './ToolbarButton'
 import { ToolbarWrapToggle } from './ToolbarWrapToggle'
+import { VideoInsertButton } from './VideoInsertButton'
 import { YoutubeInsertButton } from './YoutubeInsertButton'
 
 import type { RichTextFeature } from '../types'
@@ -63,6 +64,7 @@ type CustomItem = {
     | 'backgroundColor'
     | 'image'
     | 'youtube'
+    | 'video'
     | 'link'
     | 'textAlign'
     | 'table'
@@ -152,7 +154,7 @@ const CLASS_NAMES = (() => {
 })()
 
 export const RichTextEditorToolbar: FC = memo(() => {
-  const { editor, features, disabled } = useRichTextEditorContext()
+  const { editor, features, disabled, hasVideoSource } = useRichTextEditorContext()
   const [isWrapped, setIsWrapped] = useState(false)
   const [isOverflowing, setIsOverflowing] = useState(false)
   const toolbarRef = useRef<HTMLDivElement>(null)
@@ -380,6 +382,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
         getDisabled: (s) => s.isNodeSelected,
       })
     }
+    if (has('video') && hasVideoSource) {
+      insertion.push({ type: 'video', key: 'video-insert', getDisabled: (s) => s.isNodeSelected })
+    }
 
     // features で全項目が外れたグループは区切り線も含めて描画しない
     // satisfies で ToolbarGroup[] の形を検証しつつ、id のリテラル型を維持する
@@ -394,7 +399,7 @@ export const RichTextEditorToolbar: FC = memo(() => {
     ).filter((group) => group.items.length > 0)
 
     return filled
-  }, [features, editor, localize])
+  }, [features, hasVideoSource, editor, localize])
 
   const groups = useMemo<ToolbarGroup[]>(
     () =>
@@ -537,6 +542,9 @@ export const RichTextEditorToolbar: FC = memo(() => {
     }
     if (item.type === 'youtube') {
       return <YoutubeInsertButton {...rovingProps} key={item.key} disabled={item.disabled} />
+    }
+    if (item.type === 'video') {
+      return <VideoInsertButton {...rovingProps} key={item.key} disabled={item.disabled} />
     }
     if (item.type === 'link') {
       return <LinkButton {...rovingProps} key={item.key} disabled={item.disabled} />

@@ -30,7 +30,10 @@ export type RichTextFeature =
   | 'textAlign'
   | 'image'
   | 'youtube'
+  | 'video'
   | 'table'
+  | 'slashCommand'
+  | 'blockActions'
 
 export type RichTextChangeMeta = {
   readonly json: RichTextJSON
@@ -47,6 +50,25 @@ export type ImageUploadResult = {
    */
   src: string
   alt?: string
+}
+
+/** 本文に埋め込める、アップロード済みの動画 */
+export type RichTextVideo = {
+  /**
+   * 再生に使う URL。http(s) の絶対 URL か、`/` から始まるルート相対パス。それ以外の動画は一覧に出さない。
+   * 本文にそのまま保存されるため、期限付きの署名 URL は渡さないこと。
+   */
+  src: string
+  /** 一覧と本文に出す名前 */
+  title: string
+  /**
+   * サムネイル画像の URL。条件は src と同じで、満たさない動画は一覧に出さない。
+   * 動画と同じ解像度の画像にすること。サイズを変えていない動画は再生までサムネイルの大きさで表示され、
+   * 解像度が違うと再生した瞬間に枠の大きさが変わる。
+   */
+  poster?: string | null
+  /** 再生時間（秒）。一覧に出すだけで、本文には保存しない */
+  duration?: number
 }
 
 type RichTextEditorBaseProps = {
@@ -66,14 +88,29 @@ type RichTextEditorBaseProps = {
    * 別のレコードの本文へ切り替えるときは `key` を変えてエディタを作り直すこと。
    */
   defaultValue?: RichTextValue
+  /** エディタの外からフォーカスが入ったときに呼ぶ。本文・ツールバー・⋮⋮・メニューの間を移るときは呼ばない */
   onFocus?: () => void
+  /** エディタの外へフォーカスが出たときに呼ぶ。本文・ツールバー・⋮⋮・メニューの間を移るときは呼ばない */
   onBlur?: () => void
+  /**
+   * 使える書式と、挿入できるブロック。既定は太字・斜体・箇条書きリスト・番号付きリスト・リンク。
+   *
+   * `slashCommand` を含めると、本文の最上位の空の段落で `/` か `／` を打ったときにメニューが開き、
+   * その段落をブロックに置き換えるか、続けて打つ文字の文字色・背景色を選べる。並ぶのは features で
+   * 許可したブロックと色、headingLevels の見出しで、画像・YouTube・動画はツールバーに挿入ボタンが
+   * 出ているときだけ並ぶ（動画は loadVideos も要る）。
+   *
+   * `blockActions` を含めると、最上位のブロック（段落・見出し・リスト・表・画像・動画など）を移動・複製・削除できる。
+   * 移動は macOS で Control+Shift+↑/↓、それ以外で Alt+Shift+↑/↓。Cmd+/（Windows・Linux は Ctrl+/）か、
+   * ブロックの左に出る ⋮⋮ のクリックでメニューを開き、⋮⋮ のドラッグでも並べ替えられる。
+   */
   features?: readonly RichTextFeature[]
   /**
-   * ツールバーを表示しない。画像・動画・表の上に出るメニューも表示しないため、ツールバーからの挿入と
-   * 表の行・列の操作はできなくなる。features で許可したものは、貼り付けやドロップでは入る。
+   * ツールバーを表示しない。画像・動画・表の上に出るメニューとスラッシュコマンドのメニューも表示しないため、
+   * ツールバーからの挿入と表の行・列の操作はできなくなる。features で許可したものは、貼り付けやドロップでは入る。
    * ドラッグでのサイズ変更と、features で許可した書式のショートカット・入力ルールは使える。
-   * ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter など）と、リンクを編集する Cmd+K は効かない。
+   * ツールバーやメニューへ移るキー操作（Alt+F10・Alt+Enter・ブロックメニューの Cmd+/ など）と、リンクを編集する Cmd+K は効かない。
+   * ブロックを移動するキーは効くが、ブロックの左の ⋮⋮ は出ず、複製はできない。
    */
   hideToolbar?: boolean
   disabled?: boolean
@@ -130,6 +167,14 @@ type RichTextEditorBaseProps = {
    * 一致しないファイルのドロップ・貼り付けは無視される。
    */
   acceptedMimeTypes?: string[]
+  /**
+   * 挿入できる動画の一覧を返す。features に video があり、これを渡したときだけ、ツールバーに動画の挿入ボタンを出す。
+   * エディタは動画をアップロードしない。
+   *
+   * 一覧を開くたびに呼び、閉じたら signal を中断する。一覧はキャッシュしないため、
+   * 別の画面でアップロードした動画も次に開いたときに出る。絞り込みは返した一覧の中でエディタが行う。
+   */
+  loadVideos?: (context: { signal: AbortSignal }) => Promise<readonly RichTextVideo[]>
 }
 
 export type RichTextEditorProps = RichTextEditorBaseProps &
