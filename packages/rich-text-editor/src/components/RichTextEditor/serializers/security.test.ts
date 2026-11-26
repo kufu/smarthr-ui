@@ -552,6 +552,51 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
     expect(react).toContain('background-color:#fde2ea')
   })
 
+  const bandDoc = (color: string): RichTextJSON => ({
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        attrs: { blockBackgroundColor: color },
+        content: [{ type: 'text', text: 'a' }],
+      },
+      {
+        type: 'heading',
+        attrs: { level: 2, blockBackgroundColor: color },
+        content: [{ type: 'text', text: 'b' }],
+      },
+      ...(['bulletList', 'orderedList'] as const).map((type) => ({
+        type,
+        attrs: { blockBackgroundColor: color },
+        content: [
+          {
+            type: 'listItem',
+            content: [{ type: 'paragraph', content: [{ type: 'text', text: 'c' }] }],
+          },
+        ],
+      })),
+    ],
+  })
+
+  it('幅全体の背景色に追記されたCSS宣言が両経路で出力されない', () => {
+    assertNoInjectedCss(bothOutputs(bandDoc(`red;${INJECTED_CSS}`)))
+  })
+
+  it('幅全体の背景色の url(javascript:) が両経路で出力されず、エディタの読み込みでも null になる', () => {
+    const json = bandDoc('url(javascript:alert(1))')
+
+    for (const output of Object.values(bothOutputs(json))) {
+      expect(output).not.toContain('alert(1)')
+      expect(output).not.toContain('data-block-background')
+    }
+    expect(toEditorContent(json).content!.map((node) => node.attrs?.blockBackgroundColor)).toEqual([
+      null,
+      null,
+      null,
+      null,
+    ])
+  })
+
   it('引用の中の入れ子の表でも検証される', () => {
     assertNoInjectedCss(
       bothOutputs({
@@ -1143,7 +1188,7 @@ describe('直接JSON入力のサニタイズ（HTML/React共通）', () => {
 
 describe('sanitize の対象', () => {
   // 値が属性としてそのまま出るだけで、style・URL・class・クエリに組み込まれないことを確かめた型
-  const UNCHECKED_TYPES = ['orderedList']
+  const UNCHECKED_TYPES: string[] = []
 
   it('属性を持つノードとマークは、検査不要と確かめたもの以外、不正な値を直す', () => {
     const schema = getRichTextSchema()

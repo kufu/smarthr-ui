@@ -47,6 +47,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorEditButton": "다른 배경색",
   "smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel": "사용자 지정: {color}",
   "smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel": "기록: {color}",
+  "smarthr-ui/RichTextEditor/backgroundColorWholeWidth": "",
   "smarthr-ui/RichTextEditor/backgroundColorGrey": "회색",
   "smarthr-ui/RichTextEditor/backgroundColorRed": "빨강",
   "smarthr-ui/RichTextEditor/backgroundColorOrange": "주황",

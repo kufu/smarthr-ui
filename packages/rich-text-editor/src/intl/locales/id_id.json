@@ -47,6 +47,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorEditButton": "Warna latar belakang lainnya",
   "smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel": "Kustom: {color}",
   "smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel": "Riwayat: {color}",
+  "smarthr-ui/RichTextEditor/backgroundColorWholeWidth": "",
   "smarthr-ui/RichTextEditor/backgroundColorGrey": "Abu-abu",
   "smarthr-ui/RichTextEditor/backgroundColorRed": "Merah",
   "smarthr-ui/RichTextEditor/backgroundColorOrange": "Oranye",

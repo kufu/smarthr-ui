@@ -323,6 +323,52 @@ export const SameAsEditor: Story = {
   },
 }
 
+const blockBackgroundContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'heading',
+      attrs: { level: 2, blockBackgroundColor: '#67b27f' },
+      content: [
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#ffffff' } }],
+          text: '第1章 研修の目的',
+        },
+      ],
+    },
+    { ...paragraph('帯の段落1'), attrs: { blockBackgroundColor: '#d5efdf' } },
+    { ...paragraph('帯の段落2（前の帯とつながる）'), attrs: { blockBackgroundColor: '#d5efdf' } },
+    paragraph('帯の無い段落'),
+    {
+      type: 'bulletList',
+      attrs: { blockBackgroundColor: '#f1e8ce' },
+      content: [listItem([paragraph('項目1')]), listItem([paragraph('項目2')])],
+    },
+    { type: 'paragraph', attrs: { blockBackgroundColor: '#f1e8ce' } },
+    {
+      type: 'orderedList',
+      attrs: { blockBackgroundColor: '#cef0f1' },
+      content: [listItem([paragraph('番号1')]), listItem([paragraph('番号2')])],
+    },
+    paragraph('帯の無い段落'),
+  ],
+}
+
+export const BlockBackground: Story = {
+  name: '幅全体の背景色（上: 左がエディタ、右が表示、下: gap を指定した表示）',
+  args: { content: blockBackgroundContent },
+  render: ({ content }) => (
+    <Stack gap={2}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+        <RichTextEditor defaultValue={content} hideToolbar />
+        <RichTextViewer content={content} />
+      </div>
+      <RichTextViewer content={content} gap={1} />
+    </Stack>
+  ),
+}
+
 export const Table: Story = {
   name: '表（結合セル・列幅・セル内寄せ）',
   args: {

@@ -1,3 +1,8 @@
+import {
+  BLOCK_BACKGROUND_ATTRIBUTE,
+  BLOCK_BACKGROUND_TYPES,
+  placeBlockBackground,
+} from '../extensions/BlockBackground/blockBackgroundAttribute'
 import { isPositiveNumber } from '../extensions/aspectRatio'
 import { normalizeFontSize } from '../extensions/normalizeFontSize'
 import {
@@ -83,7 +88,7 @@ const TABLE_CELL_GUARDS: Record<string, AttrNormalizer> = {
  * href・youtube の src・lineHeight は拡張側の renderHTML でも落ちるが、
  * 拡張の実装変更に依存しないよう明示的に検証する。
  */
-const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
+const BASE_ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
   // ノード
   image: {
     src: nullIfUnsafe(isSafeImageSrc),
@@ -127,6 +132,17 @@ const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
     backgroundColor: nullIfUnsafe(isSafeColor),
     fontSize: normalizeFontSize,
   },
+}
+
+// 型ごとに BASE_ATTR_GUARDS へ書き足さないのは、帯を持てる型を足したときに検査の足し忘れで style へ素通りするため
+const ATTR_GUARDS: Record<string, Record<string, AttrNormalizer>> = {
+  ...BASE_ATTR_GUARDS,
+  ...Object.fromEntries(
+    BLOCK_BACKGROUND_TYPES.map((type) => [
+      type,
+      { ...BASE_ATTR_GUARDS[type], [BLOCK_BACKGROUND_ATTRIBUTE]: nullIfUnsafe(isSafeColor) },
+    ]),
+  ),
 }
 
 type AttrsNormalizer = (attrs: Record<string, unknown>) => Record<string, unknown>
@@ -219,8 +235,11 @@ const sanitizeMark = (mark: unknown): JSONMark | null => {
 /**
  * 保存済みの JSON は別バージョンの schema で書かれたものや壊れたものもありうる。
  * 形の崩れた部分だけを取り除き、ProseMirror の Node.fromJSON が例外を投げないようにする。
+ *
+ * 入れ子の位置の帯をエディタの正規化に任せず、ここで深さを数えて落とすのは、初期値がトランザクションなしで
+ * 読み込まれ、Viewer と serializeToHTML はプラグインを通らないため
  */
-const sanitizeNode = (node: unknown): JSONContent | null => {
+const sanitizeNode = (node: unknown, depth = 0): JSONContent | null => {
   if (!isRecord(node) || typeof node.type !== 'string') return null
   // ProseMirror は文字列を持たない text ノードも空文字の text ノードも受け付けない
   if (node.type === 'text' && (typeof node.text !== 'string' || node.text === '')) return null
@@ -229,9 +248,13 @@ const sanitizeNode = (node: unknown): JSONContent | null => {
 
   return {
     ...rest,
-    ...(isRecord(attrs) ? { attrs: sanitizeAttrs(node.type, attrs) } : {}),
+    ...(isRecord(attrs)
+      ? { attrs: placeBlockBackground(sanitizeAttrs(node.type, attrs), depth) }
+      : {}),
     ...(Array.isArray(marks) ? { marks: marks.map(sanitizeMark).filter(isPresent) } : {}),
-    ...(Array.isArray(content) ? { content: content.map(sanitizeNode).filter(isPresent) } : {}),
+    ...(Array.isArray(content)
+      ? { content: content.map((child) => sanitizeNode(child, depth + 1)).filter(isPresent) }
+      : {}),
     type: node.type,
   }
 }

@@ -2,6 +2,10 @@ import { getEmbedUrlFromYoutubeUrl } from '@tiptap/extension-youtube'
 import { renderToReactElement as tiptapRenderToReactElement } from '@tiptap/static-renderer'
 import { type ReactNode, createElement } from 'react'
 
+import {
+  BLOCK_BACKGROUND_DATA_ATTRIBUTE,
+  blockBackgroundOf,
+} from '../extensions/BlockBackground/blockBackgroundAttribute'
 import { isAllowedLineHeight } from '../extensions/LineHeight'
 import { toVideoAspectRatio } from '../extensions/Video/Video'
 import { isPositiveNumber } from '../extensions/aspectRatio'
@@ -99,9 +103,14 @@ const nodeMapping: Record<string, ReactNodeMapping> = {
     const style: Record<string, string> = {}
     if (isSafeTextAlign(textAlign) && textAlign !== 'left') style.textAlign = textAlign
     if (isAllowedLineHeight(node.attrs.lineHeight)) style.lineHeight = node.attrs.lineHeight
+    const blockBackground = blockBackgroundOf(node)
+    if (blockBackground) style.backgroundColor = blockBackground
     return createElement(
       `h${level}`,
-      { style: Object.keys(style).length > 0 ? style : undefined },
+      {
+        style: Object.keys(style).length > 0 ? style : undefined,
+        [BLOCK_BACKGROUND_DATA_ATTRIBUTE]: blockBackground ? '' : undefined,
+      },
       children,
     )
   },

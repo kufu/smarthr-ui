@@ -47,6 +47,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorEditButton": "其他颜色",
   "smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel": "自定义：{color}",
   "smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel": "最近使用：{color}",
+  "smarthr-ui/RichTextEditor/backgroundColorWholeWidth": "",
   "smarthr-ui/RichTextEditor/backgroundColorGrey": "灰色",
   "smarthr-ui/RichTextEditor/backgroundColorRed": "红色",
   "smarthr-ui/RichTextEditor/backgroundColorOrange": "橙色",

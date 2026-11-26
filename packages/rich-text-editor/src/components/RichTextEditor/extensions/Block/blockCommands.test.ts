@@ -861,6 +861,120 @@ describe('convertBlocks', () => {
   })
 })
 
+describe('ブロックの操作と帯', () => {
+  const GREEN = '#67b27f'
+  const BAND_FEATURES: RichTextFeature[] = [
+    'blockActions',
+    'heading',
+    'bulletList',
+    'orderedList',
+    'blockquote',
+    'codeBlock',
+    'blockBackgroundColor',
+  ]
+  const banded = (node: JSONContent): JSONContent => ({
+    ...node,
+    attrs: { ...node.attrs, blockBackgroundColor: GREEN },
+  })
+  const bands = (editor: Editor) => {
+    const top: Array<string | null> = []
+    let nested = 0
+
+    editor.state.doc.forEach((node) => {
+      top.push(node.attrs.blockBackgroundColor ?? null)
+      node.descendants((child) => {
+        if (child.attrs.blockBackgroundColor) nested++
+      })
+    })
+
+    return { top, nested }
+  }
+
+  it('帯のある段落を見出しにすると、帯を保つ', () => {
+    const editor = createEditor([banded(paragraph('aa'))], BAND_FEATURES)
+    editor.commands.setTextSelection(textPos(editor, 'aa', 1))
+
+    editor.commands.convertBlocks({ to: 'heading2' })
+
+    expect(editor.state.doc.firstChild?.type.name).toBe('heading')
+    expect(bands(editor)).toEqual({ top: [GREEN, null], nested: 0 })
+  })
+
+  it('帯のある段落を箇条書きにすると、帯はリストに移り、項目の段落は持たない', () => {
+    const editor = createEditor([banded(paragraph('aa'))], BAND_FEATURES)
+    editor.commands.setTextSelection(textPos(editor, 'aa', 1))
+
+    editor.commands.convertBlocks({ to: 'bulletList' })
+
+    expect(editor.state.doc.firstChild?.type.name).toBe('bulletList')
+    expect(bands(editor)).toEqual({ top: [GREEN, null], nested: 0 })
+  })
+
+  it('帯のあるリストを段落にすると、それぞれの段落に同じ帯が移る', () => {
+    const editor = createEditor([banded(list(['aa', 'bb'])), paragraph('zz')], BAND_FEATURES)
+
+    editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 0), to: 'paragraph' })
+
+    expect(outline(editor)).toEqual(['aa', 'bb', 'zz'])
+    expect(bands(editor)).toEqual({ top: [GREEN, GREEN, null], nested: 0 })
+  })
+
+  it('帯のある箇条書きを番号付きにすると、帯を保つ', () => {
+    const editor = createEditor([banded(list(['aa', 'bb']))], BAND_FEATURES)
+
+    editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 0), to: 'orderedList' })
+
+    expect(editor.state.doc.firstChild?.type.name).toBe('orderedList')
+    expect(bands(editor)).toEqual({ top: [GREEN, null], nested: 0 })
+  })
+
+  it.each(['blockquote', 'codeBlock'] as const)(
+    '帯のある段落を %s にすると、帯は中にも残らない',
+    (to) => {
+      const editor = createEditor([banded(paragraph('aa')), paragraph('zz')], BAND_FEATURES)
+
+      editor.commands.convertBlocks({ range: blockRangeAt(editor.state.doc, 0), to })
+
+      expect(editor.state.doc.firstChild?.type.name).toBe(to)
+      expect(bands(editor)).toEqual({ top: [null, null], nested: 0 })
+    },
+  )
+
+  it.each([
+    ['帯の無いリストの直後の帯のある段落', [list(['aa']), banded(paragraph('bb'))], 'bb', null],
+    ['帯の無いリストの直前の帯のある段落', [banded(paragraph('aa')), list(['bb'])], 'aa', null],
+    ['帯のあるリストの直前の帯の無い段落', [paragraph('aa'), banded(list(['bb']))], 'aa', GREEN],
+  ])('%s を箇条書きにすると、つながった先のリストの帯になる', (_, content, text, expected) => {
+    const editor = createEditor([...content, paragraph('zz')], BAND_FEATURES)
+    editor.commands.setTextSelection(textPos(editor, text, 1))
+
+    editor.commands.convertBlocks({ to: 'bulletList' })
+
+    expect(outline(editor)).toEqual(['aabb', 'zz'])
+    expect(bands(editor)).toEqual({ top: [expected, null], nested: 0 })
+  })
+
+  it('移動・複製しても帯を保つ', () => {
+    const editor = createEditor([banded(paragraph('aa')), paragraph('bb')], BAND_FEATURES)
+    editor.commands.setTextSelection(textPos(editor, 'aa', 1))
+
+    editor.commands.moveBlocks({ to: 'down' })
+    expect(bands(editor).top).toEqual([null, GREEN])
+
+    editor.commands.duplicateBlocks()
+    expect(bands(editor).top).toEqual([null, GREEN, GREEN])
+  })
+
+  it('帯のある空の段落だけの本文では消せて、帯の無い空の段落が残る', () => {
+    const editor = createEditor([banded(paragraph())], BAND_FEATURES)
+
+    expect(editor.commands.deleteBlocks()).toBe(true)
+    expect(outline(editor)).toEqual(['paragraph'])
+    expect(editor.isEmpty).toBe(true)
+    expect(bands(editor)).toEqual({ top: [null], nested: 0 })
+  })
+})
+
 describe('convertBlocks を使えないとき', () => {
   const ALL: RichTextFeature[] = ['blockActions', 'heading', 'bulletList', 'codeBlock', 'image']
 

@@ -3,6 +3,7 @@ import { closeHistory } from '@tiptap/pm/history'
 import { NodeSelection, Plugin, PluginKey, Selection, TextSelection } from '@tiptap/pm/state'
 
 import { isApplePlatform } from '../../hooks/useIsApplePlatform'
+import { applyCarriedBlockBackground } from '../BlockBackground/carryBlockBackground'
 import { BLOCK_CATALOG, type BlockCatalogId, describeBlock, isBlockAllowed } from '../blockCatalog'
 
 import { planConversion } from './blockConversion'
@@ -285,10 +286,17 @@ export const BlockActions = Extension.create<BlockActionsOptions, BlockActionsSt
           if (plan.type !== 'convert') return plan.type === 'current'
 
           if (dispatch) {
+            const beforeDoc = tr.doc
             const content = tr.doc.slice(target.from, target.to).content
             const before = tr.selection
 
             closeHistory(tr).replaceWith(plan.from, plan.to, plan.content)
+            // tr.mapping で写さないのは、1 回の replaceWith が範囲全体を端へ潰して写し、中身の行き先が分からないため
+            applyCarriedBlockBackground(tr, {
+              before: beforeDoc,
+              range: target,
+              mapping: plan.positionMap,
+            })
 
             const mapped = before.map(tr.doc, plan.positionMap)
 

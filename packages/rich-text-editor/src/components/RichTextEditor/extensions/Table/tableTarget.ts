@@ -2,7 +2,7 @@ import { closeHistory } from '@tiptap/pm/history'
 import { TextSelection } from '@tiptap/pm/state'
 import { CellSelection, TableMap, addColumn, addRow, selectedRect } from '@tiptap/pm/tables'
 
-import { normalizeHex } from '../../../../libs/normalizeHex'
+import { comparableColor } from '../../../../libs/normalizeHex'
 import { isPositiveNumber } from '../aspectRatio'
 
 import type { Editor } from '@tiptap/react'
@@ -195,18 +195,10 @@ export const insertTableAxis = (
   editor.view.dispatch(closeHistory(editor.state.tr))
 }
 
-// 比較用の正規化では不透明度を落とさない。パレットのhex変換で透明度が失われ、別の色が同じと判定されるため。
-const normalizeCellColor = (color: string | null): string | null => {
-  if (!color) return null
-  const alpha = color.match(/^rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\s*\)$/i)?.[1]
-  const hex = normalizeHex(color, color)
-  return alpha !== undefined && Number(alpha) !== 1 ? `${hex}/${Number(alpha)}` : hex
-}
-
 /** 選択範囲に複数の色が混ざる場合は、選択中の色を1つに決められないため null を返す。 */
 export const getSelectedCellColor = (editor: Editor, attribute: 'color' | 'backgroundColor') => {
   const colors = new Map<string | null, string | null>()
-  const addColor = (color: string | null) => colors.set(normalizeCellColor(color), color)
+  const addColor = (color: string | null) => colors.set(comparableColor(color), color)
   const readCell = (cell: NonNullable<ReturnType<typeof editor.state.doc.nodeAt>>) => {
     let hasText = false
     cell.descendants((node) => {

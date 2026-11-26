@@ -4,6 +4,7 @@ import {
   type ChangeEvent,
   type FC,
   type KeyboardEvent,
+  type ReactNode,
   type RefObject,
   memo,
   useEffect,
@@ -96,6 +97,7 @@ type Props = {
   resetButtonLabel: string
   customSwatchLabel: (color: string) => string
   recentSwatchLabel: (color: string) => string
+  header?: ReactNode
 }
 
 export const ColorPickerPalette: FC<Props> = memo(
@@ -121,6 +123,7 @@ export const ColorPickerPalette: FC<Props> = memo(
     resetButtonLabel,
     customSwatchLabel,
     recentSwatchLabel,
+    header,
   }) => {
     const { localize } = useIntl()
     const colorInputRef = useRef<HTMLInputElement>(null)
@@ -234,6 +237,7 @@ export const ColorPickerPalette: FC<Props> = memo(
         aria-label={dialogLabel}
         onKeyDown={functions.handleDelegateKeyDown}
       >
+        {header}
         {/* 標準パレットセクション */}
         <div role="group" className={CLASS_NAMES.section} aria-label={standardSectionLabel}>
           <div className={CLASS_NAMES.swatchRow}>

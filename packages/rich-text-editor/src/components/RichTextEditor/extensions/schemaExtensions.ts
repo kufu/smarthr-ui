@@ -5,6 +5,7 @@ import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-sty
 import { StarterKit } from '@tiptap/starter-kit'
 
 import { AlignedYoutube } from './AlignedYoutube'
+import { BlockBackgroundAttribute } from './BlockBackground/blockBackgroundAttribute'
 import { SafeImage } from './Image/SafeImage'
 import { LineHeight } from './LineHeight'
 import { CellAppearance } from './Table/CellAppearance'
@@ -93,4 +94,5 @@ export const createSchemaExtensions = (): AnyExtension[] => [
   BackgroundColor,
   FontSize,
   LineHeight.configure({ types: BLOCK_STYLE_TYPES }),
+  BlockBackgroundAttribute,
 ]

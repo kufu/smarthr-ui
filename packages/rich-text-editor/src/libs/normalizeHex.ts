@@ -24,3 +24,11 @@ export const normalizeHex = (color: string | null | undefined, fallback: string)
   }
   return fallback
 }
+
+// normalizeHex のまま比べないのは、hex への変換で透明度が失われ、別の色が同じと判定されるため
+export const comparableColor = (color: string | null): string | null => {
+  if (!color) return null
+  const alpha = color.match(/^rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\s*\)$/i)?.[1]
+  const hex = normalizeHex(color, color)
+  return alpha !== undefined && Number(alpha) !== 1 ? `${hex}/${Number(alpha)}` : hex
+}

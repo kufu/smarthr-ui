@@ -47,6 +47,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorEditButton": "その他の背景色",
   "smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel": "カスタム：{color}",
   "smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel": "履歴：{color}",
+  "smarthr-ui/RichTextEditor/backgroundColorWholeWidth": "幅全体に適用",
   "smarthr-ui/RichTextEditor/backgroundColorGrey": "グレー",
   "smarthr-ui/RichTextEditor/backgroundColorRed": "赤",
   "smarthr-ui/RichTextEditor/backgroundColorOrange": "オレンジ",
