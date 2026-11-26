@@ -372,21 +372,23 @@ module.exports = {
     const getMeaningfulChildren = (node) =>
       node.children.filter((child) => !(child.type === 'JSXText' && child.value.trim() === ''))
 
-    // SafeBrowserTranslationの中身が「要素でラップされていない生のテキスト」かどうか
-    // 子要素が1つに定まらない場合は、安全側に倒して「生のテキストである(=必要)」とみなす
-    const isSafeBrowserTranslationContentBareText = (node) => {
+    // SafeBrowserTranslationの中身が「確実に要素であるコンポーネント」のみかどうか
+    // HINT: LogicalExpression・変数等、classifyBareTextで分類できない式は「生のテキストでは
+    // ない」ことまでは確定していないため、安全側に倒して「不要ではない(=必要)」とみなす。
+    // 「不要」と判定するのは、子要素がJSXElementで、かつテキストコンポーネントでもない
+    // (=Icon等、確実に要素である)と明確にわかる場合のみに限定する
+    const isSafeBrowserTranslationContentDefinitelyElement = (node) => {
       const children = getMeaningfulChildren(node)
 
-      if (children.length !== 1) return true
+      if (children.length !== 1) return false
 
       const [child] = children
 
-      // 直接書かれた文字列(`<SafeBrowserTranslation>保存</SafeBrowserTranslation>`)は常に生のテキスト
-      if (child.type === 'JSXText') return true
+      if (child.type !== 'JSXElement') return false
 
-      const expression = child.type === 'JSXExpressionContainer' ? child.expression : child
+      const componentName = getJSXElementName(child)
 
-      return !!classifyBareText(expression)
+      return !(componentName && textComponentRegex.test(componentName))
     }
 
     return {
@@ -408,7 +410,7 @@ module.exports = {
             node: openingElement,
             messageId: 'invalidSafeBrowserTranslationPosition',
           })
-        } else if (!isSafeBrowserTranslationContentBareText(node)) {
+        } else if (isSafeBrowserTranslationContentDefinitelyElement(node)) {
           context.report({
             node: openingElement,
             messageId: 'unnecessarySafeBrowserTranslation',

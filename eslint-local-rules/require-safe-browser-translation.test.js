@@ -331,6 +331,11 @@ test('require-safe-browser-translation', () => {
       // SafeBrowserTranslationの中身: 子要素が複数、または0件の場合は安全側に倒して対象外
       `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><Icon />text</SafeBrowserTranslation>}</div>`,
       `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation></SafeBrowserTranslation>}</div>`,
+      // SafeBrowserTranslationの中身: Fragment・LogicalExpression・判定不能な変数等、
+      // classifyBareTextで分類できない式は「確実に要素」と判定できないため安全側に倒して対象外
+      `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><><Icon /></></SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ loading, label }) => <div><Icon />{loading && (<SafeBrowserTranslation>{label || '処理中'}</SafeBrowserTranslation>)}</div>`,
+      `const Foo = ({ loading, value }) => <div>{loading && <SafeBrowserTranslation>{value}</SafeBrowserTranslation>}</div>`,
     ],
 
     invalid: [
@@ -417,11 +422,6 @@ test('require-safe-browser-translation', () => {
       },
       {
         code: `const Foo = ({ scope }) => <div>{scope === 'table' ? <SafeBrowserTranslation><Icon /></SafeBrowserTranslation> : <SafeBrowserTranslation>text</SafeBrowserTranslation>}</div>`,
-        errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
-      },
-      // 中身が直接のJSX要素(Fragment経由ではない)の場合も同様に検知される
-      {
-        code: `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><><Icon /></></SafeBrowserTranslation>}</div>`,
         errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
       },
       // {cond && <Localizer />}
