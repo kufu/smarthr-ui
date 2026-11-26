@@ -366,9 +366,7 @@ export const TableContextMenu = ({
                 </span>
               </span>
             ) : scope === 'table' ? (
-              <SafeBrowserTranslation>
-                <FaEllipsisIcon />
-              </SafeBrowserTranslation>
+              <FaEllipsisIcon />
             ) : scope === 'column' ? (
               <SafeBrowserTranslation>{'⋯'}</SafeBrowserTranslation>
             ) : (

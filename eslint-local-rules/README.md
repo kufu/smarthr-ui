@@ -100,6 +100,10 @@ Fragmentは要素を生成しないため、Fragment自体の位置で判定し�
 
 `SafeBrowserTranslation` に `key` 以外の属性（スプレッドを含む）が指定されている場合は検知します。`SafeBrowserTranslation` は「意味づけ・スタイルのための要素ではなく、ブラウザ翻訳対策のための要素である」ことを明確にするためのコンポーネントのため、`className` や `aria-*` 等の属性が必要な場合は `span` などの適切な要素に置き換えます。`key` は要素を再生成させる目的で指定する場合があるため対象外です。
 
+`SafeBrowserTranslation` の中身（`unnecessarySafeBrowserTranslation`）:
+
+位置が正しい場合でも、中身がちょうど1つの子要素で、かつその子要素が「生のテキスト」として分類される種類（前述の4種類）のいずれにも該当しない場合（`Icon` 等、確実に要素であるコンポーネントのみを包んでいる場合）は検知します。`Icon` 等のコンポーネントが `alt` でテキストを持つ場合も、そのテキストは常に要素（`VisuallyHiddenText` 等）でラップされて提供されるため、裸のテキストノードとして出入りすることはなく、`SafeBrowserTranslation` で包む必要はありません。検知された場合は `SafeBrowserTranslation` を削除します。子要素が複数、または0件の場合は判定できないため、安全側に倒して対象外とします。
+
 オプション（いずれも正規表現文字列の配列。デフォルトの対象に追加されます）:
 
 - `additionalTextComponentRegex`: `Localizer`/`FormattedMessage` 以外に、実体としてテキストノードしか生成しないコンポーネントの名称

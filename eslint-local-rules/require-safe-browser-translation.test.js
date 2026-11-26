@@ -328,6 +328,9 @@ test('require-safe-browser-translation', () => {
       `const Foo = ({ icon }) => <>{icon && <Icon />}<SafeBrowserTranslation>保存</SafeBrowserTranslation></>`,
       // SafeBrowserTranslation以外の要素は位置・属性のチェック対象外
       `const Foo = () => <p><span className="x">text</span></p>`,
+      // SafeBrowserTranslationの中身: 子要素が複数、または0件の場合は安全側に倒して対象外
+      `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><Icon />text</SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation></SafeBrowserTranslation>}</div>`,
     ],
 
     invalid: [
@@ -406,6 +409,20 @@ test('require-safe-browser-translation', () => {
           { messageId: 'invalidSafeBrowserTranslationAttribute' },
           { messageId: 'invalidSafeBrowserTranslationPosition' },
         ],
+      },
+      // SafeBrowserTranslationの中身: 確実に要素であるコンポーネント(Icon等)のみの場合は不要
+      {
+        code: `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><Icon /></SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
+      },
+      {
+        code: `const Foo = ({ scope }) => <div>{scope === 'table' ? <SafeBrowserTranslation><Icon /></SafeBrowserTranslation> : <SafeBrowserTranslation>text</SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
+      },
+      // 中身が直接のJSX要素(Fragment経由ではない)の場合も同様に検知される
+      {
+        code: `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><><Icon /></></SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
       },
       // {cond && <Localizer />}
       {

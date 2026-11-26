@@ -277,6 +277,11 @@ module.exports = {
         '\n - SafeBrowserTranslationは「意味づけ・スタイルのための要素ではない」ことを明確にするためのコンポーネントです' +
         '\n - 属性が必要な場合、意味づけ・スタイルのための要素のため、spanなどの適切な要素に置き換えてください' +
         '\n詳細: AGENTS.md「ブラウザの自動翻訳機能によるクラッシュ対策」',
+      unnecessarySafeBrowserTranslation:
+        'SafeBrowserTranslationの中身は、要素でラップされていない生のテキストではないため不要です。' +
+        '\n - 対象はLocalizer/FormattedMessage要素、文字列・テンプレートリテラル、localize()等の呼び出し結果、name/label等の変数です' +
+        '\n - Icon等、中身が確実に要素であるコンポーネントを包んでいる場合はSafeBrowserTranslationを削除してください' +
+        '\n詳細: AGENTS.md「ブラウザの自動翻訳機能によるクラッシュ対策」',
     },
   },
   create(context) {
@@ -363,6 +368,27 @@ module.exports = {
       })
     }
 
+    // HINT: 前後の空白のみのJSXTextは実質的な子要素ではないため除外する
+    const getMeaningfulChildren = (node) =>
+      node.children.filter((child) => !(child.type === 'JSXText' && child.value.trim() === ''))
+
+    // SafeBrowserTranslationの中身が「要素でラップされていない生のテキスト」かどうか
+    // 子要素が1つに定まらない場合は、安全側に倒して「生のテキストである(=必要)」とみなす
+    const isSafeBrowserTranslationContentBareText = (node) => {
+      const children = getMeaningfulChildren(node)
+
+      if (children.length !== 1) return true
+
+      const [child] = children
+
+      // 直接書かれた文字列(`<SafeBrowserTranslation>保存</SafeBrowserTranslation>`)は常に生のテキスト
+      if (child.type === 'JSXText') return true
+
+      const expression = child.type === 'JSXExpressionContainer' ? child.expression : child
+
+      return !!classifyBareText(expression)
+    }
+
     return {
       [`JSXElement[openingElement.name.name="${SAFE_BROWSER_TRANSLATION_NAME}"]`]: (node) => {
         const { openingElement } = node
@@ -381,6 +407,11 @@ module.exports = {
           context.report({
             node: openingElement,
             messageId: 'invalidSafeBrowserTranslationPosition',
+          })
+        } else if (!isSafeBrowserTranslationContentBareText(node)) {
+          context.report({
+            node: openingElement,
+            messageId: 'unnecessarySafeBrowserTranslation',
           })
         }
       },

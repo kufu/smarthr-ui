@@ -480,6 +480,8 @@ grep -c 'styledComponentId' out.js   # 0 なら落ちている
 
 **`SafeBrowserTranslation` に `key` 以外の属性を指定しない。** 「意味づけ・スタイルのための要素ではない」ことを明確にするためのコンポーネントのため、`className` や `aria-*` 等が必要な場合は `span` などの適切な要素を使う。
 
+**`Icon` 等、確実に要素であるコンポーネントのみを `SafeBrowserTranslation` で包まない。** `Icon` が `alt` でテキストを持つ場合も、そのテキストは常に要素（`VisuallyHiddenText` 等）でラップされて提供されるため、裸のテキストノードとして出入りすることはない。`Icon` 自体が条件分岐で出入りする場合も、要素ごとマウント/アンマウントされるだけで安全なため、`SafeBrowserTranslation` は不要。ESLint ルールが検知する。
+
 **出入りする要素の直後にある、常に表示されるテキストもクラッシュの原因になる。** `<button>{icon && <Icon />}保存</button>` のような場合、React は `<Icon />` を「保存」のテキストノードの手前に挿入しようとするが、そのテキストノードがブラウザ翻訳で置き換えられていると `insertBefore` で例外を起こす。この場合は常に表示されるテキスト側を `SafeBrowserTranslation` で囲む。このパターンは ESLint ルールでは検知できないため、レビューで確認する必要がある。
 
 ### コンポーネントのブラックボックス原則
