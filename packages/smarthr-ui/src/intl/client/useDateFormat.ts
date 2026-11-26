@@ -469,7 +469,7 @@ export const useDateFormat = (): UseDateFormatReturn => {
           const rounded = Math.round(Math.abs(diff))
 
           if (rounded <= max) {
-            const value = singular ? 1 : Math.max(1, rounded)
+            const value = singular ? 1 : rounded
             return format(diff < 0 ? -value : value, unit, 'always')
           }
         }
