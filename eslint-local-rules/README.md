@@ -78,6 +78,28 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
    - 1・2のいずれの場合も、要素は条件分岐の内側に置きます。`<span>{loading && <Localizer ... />}</span>` のように条件分岐の外側を囲んでも、テキストノード自体が出入りすることは変わらないため解決しません（このルールでも引き続き検知されます）
 3. 三項演算子の全分岐を文字列に揃えられる場合（`Localizer` を `useLocalize` の戻り値に置き換える等）は、要素の出入り自体が発生しなくなるため、要素で囲む必要がなくなります
 
+`SafeBrowserTranslation` の位置（`invalidSafeBrowserTranslationPosition`）:
+
+`SafeBrowserTranslation` は、出入りするテキストを直接囲む位置で利用します。次のいずれにも該当しない位置にある場合は検知します。
+
+- 論理演算子（`&&` / `||` / `??`）の右辺
+- 三項演算子の分岐
+- `map` / `flatMap` メソッドのコールバック関数の戻り値
+- `if` / `switch` による条件付きの `return`
+- 同じ親の中に、条件分岐・`map` メソッドによって出入りする子要素がある場合（後述の既知の限界にある、出入りする要素の直後にあるテキストを保護する目的での利用です）
+
+Fragmentは要素を生成しないため、Fragment自体の位置で判定します（`{cond && <><SafeBrowserTranslation>text</SafeBrowserTranslation><Icon /></>}` は問題ありません）。
+
+検知された場合は、次のいずれかで対応します。
+
+- テキストが出入りしない場合、もしくは親の要素と一緒に出入りする場合は、`SafeBrowserTranslation` が不要なため削除します（例: `<p><SafeBrowserTranslation>text</SafeBrowserTranslation></p>` は、テキストが `p` と一緒に出入りするため `<p>text</p>` で問題ありません）
+- 別の場所にある条件分岐・`map` メソッドによって出入りする場合は、その条件分岐・`map` メソッドの内側に移動します（例: コンポーネントが `SafeBrowserTranslation` を無条件で直接返している場合、そのコンポーネントを条件付きでレンダーしている呼び出し側で囲みます）
+- `useState` 等に保持してから条件付きでレンダーする等、意図的にその位置で利用している場合は、理由を書いた上で `eslint-disable-next-line` します
+
+`SafeBrowserTranslation` の属性（`invalidSafeBrowserTranslationAttribute`）:
+
+`SafeBrowserTranslation` に `key` 以外の属性（スプレッドを含む）が指定されている場合は検知します。`SafeBrowserTranslation` は「意味づけ・スタイルのための要素ではなく、ブラウザ翻訳対策のための要素である」ことを明確にするためのコンポーネントのため、`className` や `aria-*` 等の属性が必要な場合は `span` などの適切な要素に置き換えます。`key` は要素を再生成させる目的で指定する場合があるため対象外です。
+
 オプション（いずれも正規表現文字列の配列。デフォルトの対象に追加されます）:
 
 - `additionalTextComponentRegex`: `Localizer`/`FormattedMessage` 以外に、実体としてテキストノードしか生成しないコンポーネントの名称
@@ -90,5 +112,6 @@ AGENTS.md 側で各ルールがカバーしない設計判断（ルールでは�
 
 - `useState` 等の変数に一度代入してから条件付きでレンダーするパターン（例: `setLiveRegionText(<Localizer ... />)` と `setLiveRegionText('')` の組み合わせ）。構文解析だけでは変数の値の出入りを追跡できないため検知できません
 - 型不明の変数（`number` 等）が実行時に `null`/`undefined`/`false` になりうる場合（例: `{cond ? 'text' : value}` で `value` が `null` を返しうる場合）。型情報のない構文解析では変数が実行時にどんな値になりうるか判定できません
+- 出入りする要素の直後にある、常に表示されるテキスト（例: `<button>{icon && <Icon />}保存</button>`）。Reactは要素を挿入する際、直後のノードを挿入位置の基準にします。基準となるテキストノードがブラウザ翻訳によって置き換えられていると `insertBefore` でクラッシュします。この場合は、常に表示されるテキスト側を囲みます（`<button>{icon && <Icon />}<SafeBrowserTranslation>保存</SafeBrowserTranslation></button>`）
 
 該当しそうな箇所は AGENTS.md の判断基準に沿ってレビューで見つける必要があります。
