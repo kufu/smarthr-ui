@@ -14,7 +14,7 @@ type AbsoluteProps = Omit<FormatDateProps, 'date'> & {
 type RelativeProps = {
   notation: 'relative'
   date: string | Date
-  now?: Date
+  now?: string | Date
 }
 
 type Props = AbsoluteProps | RelativeProps
@@ -72,8 +72,9 @@ export const DateFormatter = (props: Props) => {
   const { formatDate, formatRelativeTime, formatTimestamp } = useDateFormat()
 
   if (props.notation === 'relative') {
-    const { date: orgDate, now } = props
+    const { date: orgDate, now: orgNow } = props
     const date = dayjs(orgDate).toDate()
+    const now = orgNow === undefined ? undefined : dayjs(orgNow).toDate()
     return (
       <time dateTime={date.toISOString()} title={formatTimestamp({ date })}>
         {formatRelativeTime({ date, now })}
