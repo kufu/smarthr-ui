@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [105.0.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v105.0.0...smarthr-ui-v105.0.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* **Calendar:** 年切り替え時に選べる月を表示する ([#7652](https://github.com/kufu/smarthr-ui/issues/7652)) ([fb0adb1](https://github.com/kufu/smarthr-ui/commit/fb0adb162edc6bf6e5f434bea2a9a8fc90b5d4db))
+* **Tooltip:** トリガからツールチップへポインタを移すと閉じてしまう問題を修正する ([#7649](https://github.com/kufu/smarthr-ui/issues/7649)) ([34441a6](https://github.com/kufu/smarthr-ui/commit/34441a6996a43b408f5107adca35f2943032d152))
+* **Tooltip:** 中身の変更で位置を再計算・中身をスクロール可能にする ([#7648](https://github.com/kufu/smarthr-ui/issues/7648)) ([031a07a](https://github.com/kufu/smarthr-ui/commit/031a07a37995f1b75a857a980ebeecbcd6e6d083))
+
+
+### Performance Improvements
+
+* ビルドの並列度を下げてCIのOOM killを防ぐ ([#7659](https://github.com/kufu/smarthr-ui/issues/7659)) ([b28636a](https://github.com/kufu/smarthr-ui/commit/b28636a7134af2eece5878613803f323400a507e))
+
 ## [105.0.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-v104.0.0...smarthr-ui-v105.0.0) (2026-11-26)
 
 

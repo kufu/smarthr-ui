@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.1](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.5.0...smarthr-ui-charts-v0.5.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* **charts:** ESM で use client ディレクティブが消えていた ([#7643](https://github.com/kufu/smarthr-ui/issues/7643)) ([42c0fdc](https://github.com/kufu/smarthr-ui/commit/42c0fdc4a1940ce18a5ce973be96c2215b9369b4))
+
 ## [0.5.0](https://github.com/kufu/smarthr-ui/compare/smarthr-ui-charts-v0.4.0...smarthr-ui-charts-v0.5.0) (2026-11-26)
 
 
