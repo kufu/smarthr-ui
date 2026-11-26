@@ -46,6 +46,26 @@ describe('Calendar', () => {
     expect(screen.queryByText('2024年11月')).toBeTruthy()
   })
 
+  it.each([
+    { value: new Date(2020, 11, 15), year: '2021', expectedMonth: '2021年2月' },
+    { value: new Date(2021, 0, 15), year: '2020', expectedMonth: '2020年11月' },
+  ])('$year年を選択したとき、選択可能な月を表示する', ({ value, year, expectedMonth }) => {
+    renderWithIntl(
+      <Calendar
+        value={value}
+        from={new Date(2020, 10, 20)}
+        to={new Date(2021, 1, 10)}
+        onSelectDate={vi.fn()}
+      />,
+    )
+
+    act(() => screen.getByRole('button', { name: '年を選択する' }).click())
+    act(() => screen.getByRole('button', { name: year }).click())
+
+    expect(screen.getByText(expectedMonth)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { pressed: true })).not.toBeInTheDocument()
+  })
+
   it('日にちを選択すると、onSelectDate が発火すること', () => {
     const onSelectDate = vi.fn()
     renderWithIntl(<Calendar value={new Date(2021, 8, 20)} onSelectDate={onSelectDate} />)

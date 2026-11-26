@@ -108,9 +108,11 @@ export const Calendar: FC<Props> = ({
   const [prevIsValidValue, setPrevIsValidValue] = useState(isValidValue)
   const [prevValue, setPrevValue] = useState(value)
 
+  const dayInstance = useMemo(() => dayjs(value), [value])
+
   const [currentMonth, setCurrentMonth] = useState(() => {
     if (isValidValue) {
-      return dayjs(value)
+      return dayInstance
     }
 
     const today = dayjs()
@@ -127,7 +129,7 @@ export const Calendar: FC<Props> = ({
     setPrevValue(value)
 
     if (isValidValue) {
-      setCurrentMonth(dayjs(value))
+      setCurrentMonth(dayInstance)
     }
   }
 
@@ -147,11 +149,12 @@ export const Calendar: FC<Props> = ({
           capitalizeFirstLetter: true,
         },
       }),
-      selectedText: currentMonth.toString(),
     }
   }, [currentMonth, formatDate, getWeekStartDay])
 
   const [isSelectingYear, setIsSelectingYear] = useState(false)
+
+  const latest = useLatest({ formattedFrom, formattedTo })
 
   const functions = useMemo(
     () => ({
@@ -160,7 +163,19 @@ export const Calendar: FC<Props> = ({
 
         const year = parseInt(e.currentTarget.value, 10)
 
-        setCurrentMonth((prev) => prev.year(year))
+        setCurrentMonth((prev) => {
+          const next = prev.year(year)
+
+          if (next.isBefore(latest.formattedFrom.day, 'month')) {
+            return latest.formattedFrom.day
+          }
+
+          if (next.isAfter(latest.formattedTo.day, 'month')) {
+            return latest.formattedTo.day
+          }
+
+          return next
+        })
         setIsSelectingYear(false)
       },
       handleClickSelectYear: (e: MouseEvent<HTMLButtonElement>) => {
@@ -168,7 +183,7 @@ export const Calendar: FC<Props> = ({
         setIsSelectingYear((current) => !current)
       },
     }),
-    [],
+    [latest],
   )
 
   return (
@@ -202,7 +217,7 @@ export const Calendar: FC<Props> = ({
           handleSelectYear={functions.handleSelectYear}
         />
         <CalendarTable
-          selectedDayText={isValidValue ? calculatedCurrentMonth.selectedText : ''}
+          selectedDayText={isValidValue && value ? dayInstance.toString() : ''}
           current={calculatedCurrentMonth}
           from={formattedFrom.date}
           to={formattedTo.date}
