@@ -6,6 +6,7 @@ import bestPracticeForFunctionsDeps from './eslint-local-rules/best-practice-for
 import bestPracticeForUseLatest from './eslint-local-rules/best-practice-for-use-latest.js'
 import bestPracticeForUseLayoutEffectRef from './eslint-local-rules/best-practice-for-use-layout-effect-ref.js'
 import requireClient from './eslint-local-rules/require-client.js'
+import requireSafeBrowserTranslation from './eslint-local-rules/require-safe-browser-translation.js'
 
 /**
  * @type {import('eslint').Linter.Config[]}
@@ -21,6 +22,7 @@ export default [
           'best-practice-for-use-latest': bestPracticeForUseLatest,
           'best-practice-for-use-layout-effect-ref': bestPracticeForUseLayoutEffectRef,
           'require-client': requireClient,
+          'require-safe-browser-translation': requireSafeBrowserTranslation,
         },
       },
       perfectionist,
@@ -30,6 +32,7 @@ export default [
       'local-rules/best-practice-for-use-latest': 'error',
       'local-rules/best-practice-for-use-layout-effect-ref': 'error',
       'local-rules/require-client': 'error',
+      'local-rules/require-safe-browser-translation': 'error',
       'perfectionist/sort-jsx-props': [
         'error',
         {

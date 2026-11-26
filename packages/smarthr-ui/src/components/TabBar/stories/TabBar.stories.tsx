@@ -27,5 +27,6 @@ export default {
 export const Playground: StoryObj<typeof TabBar> = {
   args: {
     bordered: true,
+    grow: false,
   },
 }
