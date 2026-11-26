@@ -6,7 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
 import { globSync } from 'glob'
-
+import preserveDirectives from 'rollup-plugin-preserve-directives'
 
 import packageJson from './package.json' with { type: 'json' }
 
@@ -55,6 +55,7 @@ export default {
       tsconfig: './tsconfig.esm.build.json',
       noEmit: true,
     }),
+    preserveDirectives(),
     commonjs(),
     nodeResolve(),
     // reactの影響でprocess is not definedになってしまうので、"production"に置き換えている
