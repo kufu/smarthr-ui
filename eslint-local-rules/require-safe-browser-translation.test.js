@@ -290,9 +290,140 @@ test('require-safe-browser-translation', () => {
       {
         code: `const Foo = ({ loading }) => <div>{loading ? <Text><Localizer id="x" defaultText="処理中" /></Text> : null}</div>`,
       },
+      // SafeBrowserTranslationの位置: 論理演算子の右辺・三項演算子の分岐
+      `const Foo = ({ label }) => <div><Icon />{label || <SafeBrowserTranslation>未設定</SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ label }) => <div><Icon />{label ?? <SafeBrowserTranslation>未設定</SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ a, b }) => <div>{a ? <Icon /> : b ? <SafeBrowserTranslation>b</SafeBrowserTranslation> : <SafeBrowserTranslation>c</SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ loading }) => { const status = loading ? <SafeBrowserTranslation>処理中</SafeBrowserTranslation> : null; return <div><Icon />{status}</div> }`,
+      `const Foo = ({ loading }) => <Bar suffix={loading && <SafeBrowserTranslation>処理中</SafeBrowserTranslation>} />`,
+      // SafeBrowserTranslationの位置: Fragmentは要素を生成しないため、Fragment自体の位置で判定する
+      `const Foo = ({ loading }) => <div>{loading && <><SafeBrowserTranslation>処理中</SafeBrowserTranslation><Icon /></>}</div>`,
+      // SafeBrowserTranslationの位置: mapメソッドのコールバック関数の戻り値
+      `const Foo = ({ names }) => <p>{names.map((name) => <SafeBrowserTranslation key={name}>{name}</SafeBrowserTranslation>)}</p>`,
+      `const Foo = ({ names }) => <p>{names?.map((name) => { return <SafeBrowserTranslation key={name}>{name}</SafeBrowserTranslation> })}</p>`,
+      `const Foo = ({ groups }) => <p>{groups.flatMap(function (group) { return <SafeBrowserTranslation key={group.id}>{group.name}</SafeBrowserTranslation> })}</p>`,
+      // SafeBrowserTranslationの位置: if・switchによる条件付きのreturn
+      `
+        const Foo = ({ error }) => {
+          if (error) return <SafeBrowserTranslation>エラー</SafeBrowserTranslation>
+
+          return <div>content</div>
+        }
+      `,
+      `
+        const Foo = ({ status }) => {
+          switch (status) {
+            case 'error':
+              return <SafeBrowserTranslation>エラー</SafeBrowserTranslation>
+            default:
+              return <div>content</div>
+          }
+        }
+      `,
+      // SafeBrowserTranslationの位置: 同じ親の中に出入りする子要素がある場合
+      // (出入りする要素の挿入位置の基準となるテキストノードを保護する目的のため正当な利用)
+      `const Foo = ({ icon }) => <button>{icon && <Icon />}<SafeBrowserTranslation>保存</SafeBrowserTranslation></button>`,
+      `const Foo = ({ icon }) => <button>{icon ? <Icon /> : null}<SafeBrowserTranslation>保存</SafeBrowserTranslation></button>`,
+      `const Foo = ({ items }) => <div>{items.map((item) => <Icon key={item} />)}<SafeBrowserTranslation>保存</SafeBrowserTranslation></div>`,
+      `const Foo = ({ icon }) => <>{icon && <Icon />}<SafeBrowserTranslation>保存</SafeBrowserTranslation></>`,
+      // SafeBrowserTranslation以外の要素は位置・属性のチェック対象外
+      `const Foo = () => <p><span className="x">text</span></p>`,
+      // SafeBrowserTranslationの中身: 子要素が複数、または0件の場合は安全側に倒して対象外
+      `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><Icon />text</SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation></SafeBrowserTranslation>}</div>`,
+      // SafeBrowserTranslationの中身: Fragment・LogicalExpression・判定不能な変数等、
+      // classifyBareTextで分類できない式は「確実に要素」と判定できないため安全側に倒して対象外
+      `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><><Icon /></></SafeBrowserTranslation>}</div>`,
+      `const Foo = ({ loading, label }) => <div><Icon />{loading && (<SafeBrowserTranslation>{label || '処理中'}</SafeBrowserTranslation>)}</div>`,
+      `const Foo = ({ loading, value }) => <div>{loading && <SafeBrowserTranslation>{value}</SafeBrowserTranslation>}</div>`,
     ],
 
     invalid: [
+      // SafeBrowserTranslationの位置: 要素の直下(テキストは親の要素と一緒に出入りするため不要)
+      {
+        code: `const Foo = () => <p><SafeBrowserTranslation>処理中</SafeBrowserTranslation></p>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      {
+        code: `const Foo = ({ loading }) => <div>{loading && <p><SafeBrowserTranslation>処理中</SafeBrowserTranslation></p>}</div>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      // 出入りしない兄弟のみの場合は検知される
+      {
+        code: `const Foo = ({ count }) => <div><Icon />{count}<SafeBrowserTranslation>件</SafeBrowserTranslation></div>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      // SafeBrowserTranslationの位置: コンポーネントが無条件で直接返している
+      {
+        code: `const LoadingText = () => <SafeBrowserTranslation><Localizer id="x" defaultText="処理中" /></SafeBrowserTranslation>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      {
+        code: `
+          const Foo = ({ error }) => {
+            if (error) return <div>error</div>
+
+            return <SafeBrowserTranslation>content</SafeBrowserTranslation>
+          }
+        `,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      {
+        code: `const Foo = () => <><SafeBrowserTranslation>content</SafeBrowserTranslation><Icon /></>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      // SafeBrowserTranslationの位置: 関数の引数・変数・属性に直接渡している
+      {
+        code: `const Foo = () => { setText(<SafeBrowserTranslation key={position}>text</SafeBrowserTranslation>) }`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      {
+        code: `const status = <SafeBrowserTranslation>処理中</SafeBrowserTranslation>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      {
+        code: `const Foo = () => <Bar suffix={<SafeBrowserTranslation>処理中</SafeBrowserTranslation>} />`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      // SafeBrowserTranslationの位置: map以外のメソッドのコールバック関数、mapのコールバック関数内の別の関数
+      {
+        code: `const Foo = ({ names }) => <p>{names.forEach((name) => <SafeBrowserTranslation key={name}>{name}</SafeBrowserTranslation>)}</p>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      {
+        code: `const Foo = ({ names }) => <p>{names.map((name) => { const render = () => { return <SafeBrowserTranslation>{name}</SafeBrowserTranslation> }; return render() })}</p>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationPosition' }],
+      },
+      // SafeBrowserTranslationの属性: key以外の属性は指定できない
+      {
+        code: `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation className="x" aria-hidden="true">処理中</SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationAttribute' }],
+      },
+      {
+        code: `const Foo = ({ loading, ...rest }) => <div>{loading && <SafeBrowserTranslation {...rest}>処理中</SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationAttribute' }],
+      },
+      {
+        code: `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation key="a" id="x">処理中</SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'invalidSafeBrowserTranslationAttribute' }],
+      },
+      // 属性・位置の両方に問題がある場合、それぞれ検知される
+      {
+        code: `const Foo = () => <p><SafeBrowserTranslation className="x">処理中</SafeBrowserTranslation></p>`,
+        errors: [
+          { messageId: 'invalidSafeBrowserTranslationAttribute' },
+          { messageId: 'invalidSafeBrowserTranslationPosition' },
+        ],
+      },
+      // SafeBrowserTranslationの中身: 確実に要素であるコンポーネント(Icon等)のみの場合は不要
+      {
+        code: `const Foo = ({ loading }) => <div>{loading && <SafeBrowserTranslation><Icon /></SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
+      },
+      {
+        code: `const Foo = ({ scope }) => <div>{scope === 'table' ? <SafeBrowserTranslation><Icon /></SafeBrowserTranslation> : <SafeBrowserTranslation>text</SafeBrowserTranslation>}</div>`,
+        errors: [{ messageId: 'unnecessarySafeBrowserTranslation' }],
+      },
       // {cond && <Localizer />}
       {
         code: `
@@ -791,7 +922,10 @@ test('require-safe-browser-translation', () => {
       // 条件分岐の外側を要素で囲んでも、テキストノード自体が出入りするため検知される
       {
         code: `const Foo = ({ loading }) => <div><Icon /><SafeBrowserTranslation>{loading && <Localizer id="x" defaultText="処理中" />}</SafeBrowserTranslation></div>`,
-        errors: [{ messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } }],
+        errors: [
+          { messageId: 'invalidSafeBrowserTranslationPosition' },
+          { messageId: 'requireSafeBrowserTranslation', data: { label: 'Localizer要素' } },
+        ],
       },
       {
         code: `const Foo = ({ loading }) => <div><Icon /><span>{loading ? '処理中' : null}</span></div>`,

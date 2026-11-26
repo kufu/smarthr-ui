@@ -357,18 +357,16 @@ export const TableContextMenu = ({
             }
           >
             {scope === 'cell' ? (
-              <SafeBrowserTranslation
+              <span
                 className="shr-rte-pointer-events-none shr-rte-absolute shr-rte-left-1/2 shr-rte-top-1/2 shr-rte-flex shr-rte-h-[14px] shr-rte-w-[5px] shr-rte--translate-x-1/2 shr-rte--translate-y-1/2 shr-rte-items-center shr-rte-justify-center shr-rte-rounded-s shr-rte-bg-main shr-rte-text-white group-hover/cell:shr-rte-h-[28px] group-hover/cell:shr-rte-w-[16px] group-focus-visible/cell:shr-rte-h-[28px] group-focus-visible/cell:shr-rte-w-[16px] group-aria-expanded/cell:shr-rte-h-[28px] group-aria-expanded/cell:shr-rte-w-[16px]"
                 aria-hidden="true"
               >
                 <span className="shr-rte-text-sm shr-rte-opacity-0 group-hover/cell:shr-rte-opacity-100 group-focus-visible/cell:shr-rte-opacity-100 group-aria-expanded/cell:shr-rte-opacity-100">
                   {'⋮'}
                 </span>
-              </SafeBrowserTranslation>
+              </span>
             ) : scope === 'table' ? (
-              <SafeBrowserTranslation>
-                <FaEllipsisIcon />
-              </SafeBrowserTranslation>
+              <FaEllipsisIcon />
             ) : scope === 'column' ? (
               <SafeBrowserTranslation>{'⋯'}</SafeBrowserTranslation>
             ) : (

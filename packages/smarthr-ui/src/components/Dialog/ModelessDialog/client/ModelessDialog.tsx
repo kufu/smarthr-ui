@@ -243,6 +243,8 @@ export const ModelessDialog: FC<Props> = ({
           wrapperPosition.left !== oldPosition.left
         ) {
           setLiveRegionText(
+            // HINT: stateに保持してから条件付きでレンダーするため、条件分岐の内側には置けない
+            // eslint-disable-next-line local-rules/require-safe-browser-translation
             <SafeBrowserTranslation
               key={`${Math.trunc(wrapperPosition.top)}:${Math.trunc(wrapperPosition.left)}`}
             >
