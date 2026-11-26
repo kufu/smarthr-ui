@@ -43,7 +43,6 @@ const classNameGenerator = tv({
 
 export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a'>({
   children,
-  href,
   icon: Icon,
   current,
   elementAs,
@@ -62,12 +61,7 @@ export const AppNaviAnchor: AppNaviAnchorComponent = <T extends ElementType = 'a
   const Component = elementAs || 'a'
 
   return (
-    <Component
-      {...rest}
-      href={href}
-      className={classNames.wrapper}
-      aria-current={current ? 'page' : undefined}
-    >
+    <Component {...rest} className={classNames.wrapper} aria-current={current ? 'page' : undefined}>
       {Icon && <Icon className={classNames.icon} />}
       {children}
     </Component>

@@ -15,8 +15,6 @@ type Props = ExtendElementPropsWithRef<'button', BaseProps>
 export const Button: FC<Props> = ({
   type = 'button',
   size = 'M',
-  prefix,
-  suffix,
   wide = false,
   variant = 'secondary',
   disabled,
@@ -45,8 +43,6 @@ export const Button: FC<Props> = ({
         loading ? <Loader role="presentation" size="S" className={classNames.loader} /> : null
       }
       classNames={classNames}
-      prefix={prefix}
-      suffix={suffix}
     >
       <LoadingStatus loading={loading} />
       {children}

@@ -1,5 +1,6 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
+import { StrictMode } from 'react'
 
 import { IntlProvider } from '../../../intl'
 import { Button } from '../../Button'
@@ -194,6 +195,43 @@ describe('Disclosure', () => {
         userEvent.click(screen.getByRole('button', { name: '開く', expanded: true }))
         expect(screen.getByText('これは詳細です')).toBeInTheDocument()
       })
+    })
+  })
+
+  describe('StrictMode の場合', () => {
+    test.each([
+      ['DisclosureContentよりもさきにDisclosureTriggerがある', 'trigger-first'],
+      ['DisclosureContentよりもあとにDisclosureTriggerがある', 'content-first'],
+    ])('%s場合、初回の isOpen が反映される', async (_, order) => {
+      const trigger = (
+        <DisclosureTrigger targetId="dc">
+          <Button>開く</Button>
+        </DisclosureTrigger>
+      )
+      const content = (
+        <DisclosureContent id="dc" isOpen>
+          <p>これは詳細です</p>
+        </DisclosureContent>
+      )
+
+      render(
+        <StrictMode>
+          <div className="App">
+            {order === 'trigger-first' ? trigger : content}
+            {order === 'trigger-first' ? content : trigger}
+          </div>
+        </StrictMode>,
+      )
+
+      // useDisclosure は requestAnimationFrame 経由で状態更新するため、取り消されていないかを確かめるために1フレーム待つ
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve())
+        })
+      })
+
+      expect(screen.getByText('これは詳細です')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: '開く', expanded: true })).toBeInTheDocument()
     })
   })
 })

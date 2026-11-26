@@ -175,6 +175,10 @@ export { AppHeader } from './components/AppHeader'
 export { Timeline, TimelineItem } from './components/Timeline'
 /** @public */
 export { Scroller } from './components/Scroller'
+/** @public */
+export { SafeBrowserTranslation } from './components/SafeBrowserTranslation'
+/** @public */
+export { List, ListItem, ListItemAnchor } from './components/List'
 
 // layout components
 /** @public */

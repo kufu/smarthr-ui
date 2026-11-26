@@ -192,7 +192,6 @@ export const Tuck: FC<Props> = ({
   tucked: { renderer, scope = 'overflowed' },
   maxLines = 1,
   className,
-  ref,
   ...rest
 }) => {
   const actualMaxLines = Math.max(1, Math.floor(maxLines))
@@ -350,7 +349,7 @@ export const Tuck: FC<Props> = ({
   }, [className])
 
   return (
-    <div {...rest} ref={ref} className={classNames.wrapper}>
+    <div {...rest} className={classNames.wrapper}>
       <div ref={sizerRef} className={classNames.sizer} aria-hidden>
         {items.map((item) => (
           <div key={item.id} />

@@ -64,7 +64,6 @@ export const ControlledActionDialog: FC<Props> = ({
   responseStatus: orgResponseStatus,
   closeButton: orgCloseButton,
   subActionArea,
-  className,
   portalParent,
   id,
   isOpen,
@@ -108,7 +107,6 @@ export const ControlledActionDialog: FC<Props> = ({
       <DialogContent
         {...rest}
         isOpen={isOpen}
-        className={className}
         ariaLabelledby={heading.id}
         onPressEscape={
           closeButton.disabled || responseStatus.isProcessing ? undefined : onPressEscape

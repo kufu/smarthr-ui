@@ -12,7 +12,6 @@ export default {
   component: Timeline,
   render: (args) => {
     const dateSuffixArea = (
-      // eslint-disable-next-line smarthr/best-practice-for-layouts -- inline指定のため、growは不要(ルール側のinline対応待ち)
       <Cluster inline align="center">
         <Button variant="text" size="S">
           ボタン

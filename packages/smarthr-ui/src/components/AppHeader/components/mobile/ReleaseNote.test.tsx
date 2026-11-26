@@ -105,6 +105,34 @@ describe('ReleaseNote', () => {
       expect(seeAllLink).toBeInTheDocument()
       expect(screen.queryByRole('link', { name: /リリースノート1/ })).not.toBeInTheDocument()
     })
+
+    it('ブラウザ翻訳でエラーメッセージが置換されても、エラー解除後クラッシュしないこと', () => {
+      const { rerender } = renderWithContext({
+        ...defaultReleaseNoteData,
+        error: true,
+      })
+
+      const errorText = screen.getByText(/リリースノートの読み込みに失敗しました/)
+      const translated = document.createElement('font')
+      translated.textContent = 'Failed to load'
+      errorText.replaceChild(translated, errorText.childNodes[0])
+
+      rerender(
+        <IntlProvider locale="ja">
+          <ReleaseNoteContext.Provider
+            value={{
+              releaseNote: { ...defaultReleaseNoteData, error: false },
+              isReleaseNoteSelected: false,
+              setIsReleaseNoteSelected: vi.fn(),
+            }}
+          >
+            <ReleaseNote />
+          </ReleaseNoteContext.Provider>
+        </IntlProvider>,
+      )
+
+      expect(screen.getByRole('link', { name: /リリースノート1/ })).toBeInTheDocument()
+    })
   })
 
   describe('releaseNoteがnullの場合', () => {

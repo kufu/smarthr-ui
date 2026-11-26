@@ -4,6 +4,18 @@ Thank you for reading this!
 
 `smarthr-ui` is intended to be used for SmartHR internally, but we are welcoming your contributions!
 
+## Before opening a pull request or issue
+
+Using AI tools to help you write code or file an issue is fine, but you must
+be able to explain what you're proposing, why it's needed, and how it fits
+with this component's existing design and conventions. Pull requests and
+issues that appear to be AI-generated without that understanding, or that
+don't account for the project's existing context and conventions, may be
+rejected without detailed review.
+
+If you're unsure whether your change fits with the project's direction,
+consider opening an issue to discuss it first.
+
 ## Setup
 
 We use `pnpm` for the package manager.
@@ -22,7 +34,7 @@ $ pnpm ui test
 
 ## Commit
 
-We use [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0-beta.4/) for `standard-version`.
+We use [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0-beta.4/) for [`release-please`](https://github.com/googleapis/release-please).
 
 ## CI
 
@@ -34,60 +46,10 @@ The SmartHR UI uses [CircleCI](https://circleci.com/).
 - Unit test
   - Unit and component testing with [Vitest](https://vitest.dev/)
 - visual regression test
-  - [Chromatic](https://www.chromatic.com/)
-- Host on Netlify
-  - Launch the environment on Netlify for each PR so that you can check the operation without launching locally
+  - [Chromatic](https://www.chromatic.com/) publishes Storybook and runs visual regression testing for every PR. A preview link is posted as a status check on the PR.
 
 If any of the above is missing, please correct the code.
 
-Merging the PR will automatically build the master branch at the following URL:
-https://smarthr-ui.netlify.com/
-
-The component displayed at this URL is up to date with the SmartHR UI.
-
-### [reg-suit](https://github.com/reg-viz/reg-suit)
-
-#### Fail reg-suit
-
-reg-suit hosts the results of the image regression test in S3. To do this, we are passing `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as environment variables to CircleCI.
-
-For PR from fork repositories, security concerns have specified that CircleCI environment variables should not be passed. Therefore, in the case of PR from the fork repository, the CircleCI environment variable does not exist when the reg-suit is executed, AWS cannot be accessed, and CI fail.
-
-For the above reasons, it doesn't matter if the reg-suit fails for a repository from a fork.
-
-Review the PR and if there are no security issues we will run reg-suit.
-
-### Template
-
-````markdown
-# Component name
-
-```tsx
-import { ComponentName } from 'smarthr-ui'
-
-<ComponentName />
-```
-
-## props
-
-| Name      | Required | Type      | DefaultValue       | Description  |
-| --------- | -------- | --------- | ------------------ | ------------ |
-|           | ✔ or -   |           | DefaultValue or -  |              |
-
-````
-
-### Rule
-
-- Required
-  - Required: ✔
-  - Not Required: -
-- DefaultValue
-  - No Default Value: -
-
 ## Release
 
-```sh
-$ pnpm release
-```
-
-We use `standard-version` to release npm packages.
+We use [`release-please`](https://github.com/googleapis/release-please) to release npm packages. It opens a release PR based on conventional commit messages on `master`, and merging that PR triggers the publish to npm automatically. There is no manual release command to run.
