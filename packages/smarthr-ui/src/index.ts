@@ -49,6 +49,25 @@ export {
   StepFormDialogItem,
 } from './components/Dialog'
 /** @public */
+export {
+  ControlledDrawer,
+  Drawer,
+  DrawerBody,
+  DrawerCloser,
+  DrawerFooter,
+  DrawerForm,
+  DrawerHeader,
+  RemoteDrawerTrigger,
+} from './components/Drawer'
+/** @public */
+export type {
+  ControlledDrawerProps,
+  DrawerProps,
+  DrawerPosition,
+  DrawerSize,
+  DrawerModality,
+} from './components/Drawer'
+/** @public */
 export { Pagination } from './components/Pagination'
 /** @public */
 export { RadioButton } from './components/RadioButton'

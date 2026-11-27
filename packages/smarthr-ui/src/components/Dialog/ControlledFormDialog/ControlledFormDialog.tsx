@@ -10,7 +10,8 @@ import {
 import { useLatest } from '../../../hooks/useLatest'
 import { useObjectAttributes } from '../../../hooks/useObjectAttributes'
 import { type ResponseStatus, useResponseStatus } from '../../../hooks/useResponseStatus'
-import { DialogContent, DialogPortal } from '../client'
+import { DialogPortal } from '../../DialogPortal'
+import { DialogContent } from '../client'
 import { useObjectHeading } from '../useObjectHeading'
 
 import { FormDialogContent } from './FormDialogContent'
