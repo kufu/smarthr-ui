@@ -88,6 +88,28 @@ export const Size: StoryObj<typeof SideNav> = {
   ),
 }
 
+export const BgColor: StoryObj<typeof SideNav> = {
+  name: 'bgColor',
+  render: (args) => (
+    <Stack>
+      {([undefined, 'COLUMN', 'WHITE'] as const).map((bgColor, i) => (
+        <SideNav {...args} key={i} bgColor={bgColor}>
+          {_sideNavItems.map((item) => (
+            <SideNavItemButton
+              key={item.id + i}
+              id={item.id + i}
+              current={item.current}
+              prefix={item.prefix}
+            >
+              {item.children}
+            </SideNavItemButton>
+          ))}
+        </SideNav>
+      ))}
+    </Stack>
+  ),
+}
+
 export const Rounded: StoryObj<typeof SideNav> = {
   name: 'rounded',
   render: (args) => (

@@ -40,11 +40,18 @@ export default {
           <SideNavItemButton {...item} key={item.id} />
         ))}
       </SideNav>
+      {[undefined, 'hover-white'].map((id, index) => (
+        <SideNav {...args} key={index} id={id} bgColor="WHITE">
+          {_sideNavItems.map((item) => (
+            <SideNavItemButton {...item} key={item.id} />
+          ))}
+        </SideNav>
+      ))}
     </Stack>
   ),
   parameters: {
     pseudo: {
-      hover: ['#hover li'],
+      hover: ['#hover li', '#hover-white li'],
       focusVisible: ['#focus-visible button'],
     },
     chromatic: { disableSnapshot: false },
