@@ -169,7 +169,13 @@ describe('RichTextViewer', () => {
           attrs: { level: 2, textAlign: 'center', lineHeight: '1.5' },
           content: [text('見出し')],
         },
+        {
+          type: 'heading',
+          attrs: { level: 3, blockBackgroundColor: '#67b27f' },
+          content: [text('帯の見出し')],
+        },
         paragraph('行間と配置', { textAlign: 'center', lineHeight: '2' }),
+        paragraph('帯の段落', { blockBackgroundColor: '#d5efdf' }),
         {
           type: 'paragraph',
           content: [
@@ -184,6 +190,11 @@ describe('RichTextViewer', () => {
           ],
         },
         { type: 'bulletList', content: [{ type: 'listItem', content: [paragraph('点')] }] },
+        {
+          type: 'bulletList',
+          attrs: { blockBackgroundColor: '#d5efdf' },
+          content: [{ type: 'listItem', content: [paragraph('帯の点')] }],
+        },
         {
           type: 'orderedList',
           attrs: { start: 3 },
@@ -364,6 +375,46 @@ describe('RichTextViewer', () => {
     rerender(<RichTextViewer content={{ format: 'html', content: '<p>同じ</p>' }} />)
 
     expect(serializeToReactElement).toHaveBeenCalledTimes(1)
+  })
+
+  it('幅全体の背景色は最上位の段落・見出し・リストにだけ描き、見出しは h タグのまま', () => {
+    const band = { blockBackgroundColor: '#67b27f' }
+    const { container } = render(
+      <RichTextViewer
+        content={{
+          type: 'doc',
+          content: [
+            {
+              type: 'heading',
+              attrs: { ...band, level: 2 },
+              content: [{ type: 'text', text: '見出し' }],
+            },
+            { type: 'paragraph', attrs: band, content: [{ type: 'text', text: '段落' }] },
+            {
+              type: 'orderedList',
+              attrs: band,
+              content: [
+                {
+                  type: 'listItem',
+                  content: [
+                    { type: 'paragraph', attrs: band, content: [{ type: 'text', text: '項目' }] },
+                  ],
+                },
+              ],
+            },
+          ],
+        }}
+      />,
+    )
+    const banded = Array.from(container.querySelectorAll<HTMLElement>('[data-block-background]'))
+
+    expect(banded.map((el) => el.tagName)).toEqual(['H2', 'P', 'OL'])
+    expect(banded.map((el) => el.style.backgroundColor)).toEqual([
+      'rgb(103, 178, 127)',
+      'rgb(103, 178, 127)',
+      'rgb(103, 178, 127)',
+    ])
+    expect(container.querySelector('li p')).not.toHaveAttribute('style')
   })
 
   it('見出しを h タグで描画する', () => {

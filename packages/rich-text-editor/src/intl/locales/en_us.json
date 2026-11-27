@@ -47,6 +47,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorEditButton": "More colors",
   "smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel": "Custom: {color}",
   "smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel": "Recent: {color}",
+  "smarthr-ui/RichTextEditor/backgroundColorWholeWidth": "",
   "smarthr-ui/RichTextEditor/backgroundColorGrey": "Gray",
   "smarthr-ui/RichTextEditor/backgroundColorRed": "Red",
   "smarthr-ui/RichTextEditor/backgroundColorOrange": "Orange",

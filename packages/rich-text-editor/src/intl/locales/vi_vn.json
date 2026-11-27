@@ -47,6 +47,7 @@
   "smarthr-ui/RichTextEditor/backgroundColorEditButton": "Màu nền khác",
   "smarthr-ui/RichTextEditor/backgroundColorCustomSwatchLabel": "Tùy chỉnh: {color}",
   "smarthr-ui/RichTextEditor/backgroundColorRecentSwatchLabel": "Lịch sử: {color}",
+  "smarthr-ui/RichTextEditor/backgroundColorWholeWidth": "",
   "smarthr-ui/RichTextEditor/backgroundColorGrey": "Xám",
   "smarthr-ui/RichTextEditor/backgroundColorRed": "Đỏ",
   "smarthr-ui/RichTextEditor/backgroundColorOrange": "Cam",

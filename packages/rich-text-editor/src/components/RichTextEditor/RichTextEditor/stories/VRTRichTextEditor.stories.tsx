@@ -559,6 +559,31 @@ export const VRTColorPickerOpen: Story = {
   play: openToolbarPopup(/^文字色/),
 }
 
+const blockBackgroundContent = {
+  type: 'doc' as const,
+  content: [
+    {
+      type: 'heading',
+      attrs: { level: 2, blockBackgroundColor: '#d5efdf' },
+      content: [{ type: 'text', text: '帯の見出し' }],
+    },
+    { type: 'paragraph', content: [{ type: 'text', text: '帯の無い段落' }] },
+  ],
+}
+
+export const VRTBlockBackgroundPaletteOpen: Story = {
+  name: '背景色のパレット（幅全体に適用）',
+  render: () => (
+    <FormControl label="背景色">
+      <RichTextEditor
+        defaultValue={blockBackgroundContent}
+        features={['heading', 'backgroundColor', 'blockBackgroundColor']}
+      />
+    </FormControl>
+  ),
+  play: openToolbarPopup(/^背景色/),
+}
+
 const createTable = (rows: string[][]) => ({
   type: 'table',
   content: rows.map((cells, row) => ({

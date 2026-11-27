@@ -160,6 +160,78 @@ describe('createPasteFilter', () => {
     })
   })
 
+  describe('幅全体の背景色', () => {
+    const GREEN = '#67b27f'
+    const band = { blockBackgroundColor: GREEN }
+    const cell = (attrs: Record<string, unknown>) => ({
+      type: 'table',
+      content: [
+        {
+          type: 'tableRow',
+          content: [{ type: 'tableCell', attrs, content: [paragraph([text('セル')])] }],
+        },
+      ],
+    })
+    const bands = (features: readonly RichTextFeature[], content: unknown[]) =>
+      (
+        filterSlice(features, { content }).content as Array<{ attrs?: Record<string, unknown> }>
+      ).map(({ attrs }) => attrs?.blockBackgroundColor)
+
+    it('features に無いと、貼り付けた段落・見出し・リストの帯を落とす', () => {
+      expect(
+        bands(
+          ['heading', 'bulletList', 'orderedList'],
+          [
+            { type: 'paragraph', attrs: band, content: [text('段落')] },
+            { type: 'heading', attrs: { ...band, level: 2 }, content: [text('見出し')] },
+            {
+              type: 'bulletList',
+              attrs: band,
+              content: [{ type: 'listItem', content: [paragraph([text('項目')])] }],
+            },
+            {
+              type: 'orderedList',
+              attrs: band,
+              content: [{ type: 'listItem', content: [paragraph([text('番号')])] }],
+            },
+          ],
+        ),
+      ).toEqual([null, null, null, null])
+    })
+
+    it('blockBackgroundColor だけを許可すると、帯は残し、セルの背景色と文字の背景色は落とす', () => {
+      const result = filterSlice(['blockBackgroundColor', 'table'], {
+        content: [
+          {
+            type: 'paragraph',
+            attrs: band,
+            content: [text('段落', [{ type: 'textStyle', attrs: { backgroundColor: '#fde2ea' } }])],
+          },
+          cell({ backgroundColor: '#fde2ea' }),
+        ],
+      })
+      const json = JSON.stringify(result.content)
+
+      expect((result.content as Array<{ attrs: Record<string, unknown> }>)[0].attrs).toMatchObject(
+        band,
+      )
+      expect(json).not.toContain('#fde2ea')
+    })
+
+    it('backgroundColor だけを許可すると、セルの背景色は残し、帯は落とす', () => {
+      const result = filterSlice(['backgroundColor', 'table'], {
+        content: [
+          { type: 'paragraph', attrs: band, content: [text('段落')] },
+          cell({ backgroundColor: '#fde2ea' }),
+        ],
+      })
+      const json = JSON.stringify(result.content)
+
+      expect(json).not.toContain(GREEN)
+      expect(json).toContain('#fde2ea')
+    })
+  })
+
   describe('node', () => {
     it('features 外の見出しは段落へ降格してテキストを残す', () => {
       const result = filterSlice(['bold'], {
@@ -289,6 +361,7 @@ describe('createPasteFilter', () => {
       expect(result.content).toEqual([
         {
           type: 'bulletList',
+          attrs: expect.anything(),
           content: [
             {
               type: 'listItem',

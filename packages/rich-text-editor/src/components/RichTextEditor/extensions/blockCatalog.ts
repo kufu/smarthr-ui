@@ -47,6 +47,9 @@ export type BlockCatalogId =
 
 export const LIST_NODE_NAMES = ['bulletList', 'orderedList'] as const
 
+export const isList = (node: PMNode) =>
+  (LIST_NODE_NAMES as readonly string[]).includes(node.type.name)
+
 export type ConversionShape =
   | { type: 'textblock'; nodeName: 'paragraph' }
   | { type: 'textblock'; nodeName: 'heading'; level: HeadingLevel }

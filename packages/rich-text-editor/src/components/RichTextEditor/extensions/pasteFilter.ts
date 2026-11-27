@@ -2,6 +2,7 @@ import { Fragment, Slice } from '@tiptap/pm/model'
 
 import { sanitizeAttrs, shouldDropMark } from '../serializers/sanitizeRichTextJSON'
 
+import { BLOCK_BACKGROUND_ATTRIBUTE } from './BlockBackground/blockBackgroundAttribute'
 import { type HeadingLevel, SUPPORTED_HEADING_LEVELS } from './configureHeading'
 import { createTypeAllowChecker } from './restrictOperations'
 
@@ -17,12 +18,13 @@ const FEATURE_BY_TEXT_STYLE_ATTRIBUTE: Readonly<Record<string, RichTextFeature>>
   fontSize: 'fontSize',
 }
 
-/** paragraph / heading / table cell に付く属性 */
+/** paragraph / heading / list / table cell に付く属性 */
 const FEATURE_BY_NODE_ATTRIBUTE: Readonly<Record<string, RichTextFeature>> = {
   color: 'color',
   backgroundColor: 'backgroundColor',
   textAlign: 'textAlign',
   lineHeight: 'lineHeight',
+  [BLOCK_BACKGROUND_ATTRIBUTE]: 'blockBackgroundColor',
 }
 
 /** featureが許可されていない属性をnullに落とす。深さは変わらないのでslice構造には影響しない */

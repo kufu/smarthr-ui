@@ -25,6 +25,7 @@ export type RichTextFeature =
   | 'heading'
   | 'color'
   | 'backgroundColor'
+  | 'blockBackgroundColor'
   | 'fontSize'
   | 'lineHeight'
   | 'textAlign'
@@ -103,6 +104,12 @@ type RichTextEditorBaseProps = {
    * `blockActions` を含めると、最上位のブロック（段落・見出し・リスト・表・画像・動画など）を移動・複製・削除できる。
    * 移動は macOS で Control+Shift+↑/↓、それ以外で Alt+Shift+↑/↓。Cmd+/（Windows・Linux は Ctrl+/）か、
    * ブロックの左に出る ⋮⋮ のクリックでメニューを開き、⋮⋮ のドラッグでも並べ替えられる。
+   *
+   * `blockBackgroundColor` を `backgroundColor` と一緒に含めると、背景色のメニューの一番上に「幅全体に適用」が出て、
+   * 本文の最上位の段落・見出し・リストに、本文の幅いっぱいの背景色を付けられる。リストの中では項目ごとではなく
+   * リスト全体に付く。引用・表・コードブロックの中には付けられない。
+   * HTML では `data-block-background` 属性と `background-color` で出力し、余白は出力しない。RichTextViewer は余白を付けて
+   * 表示する。HTML を自前で表示するときは `[data-block-background]` に余白を当てること。
    */
   features?: readonly RichTextFeature[]
   /**

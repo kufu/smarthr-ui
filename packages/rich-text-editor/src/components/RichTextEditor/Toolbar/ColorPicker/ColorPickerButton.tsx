@@ -1,7 +1,15 @@
 'use client'
 
-import { type FC, type KeyboardEvent, memo, useEffect, useMemo, useRef, useState } from 'react'
-import { FaCaretDownIcon } from 'smarthr-ui'
+import {
+  type ChangeEvent,
+  type FC,
+  type KeyboardEvent,
+  memo,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { Checkbox, FaCaretDownIcon } from 'smarthr-ui'
 
 import { useMergeRefs } from '../../../../hooks/client/useMergeRefs'
 import { useLatest } from '../../../../hooks/useLatest'
@@ -9,6 +17,7 @@ import { useIntl } from '../../../../intl'
 import { normalizeHex } from '../../../../libs/normalizeHex'
 import { tv } from '../../../../libs/tv'
 import { useRichTextEditorContext } from '../../context/RichTextEditorContext'
+import { readBlockBackgroundTarget } from '../../extensions/BlockBackground/BlockBackground'
 import { getEditorColor, setEditorColor } from '../../extensions/Table/tableColor'
 import { useToolbarDropdown } from '../../hooks/useToolbarDropdown'
 import { useToolbarValue } from '../../hooks/useToolbarState'
@@ -18,6 +27,7 @@ import { TOOLBAR_ITEM_CLASS_NAME } from '../toolbarItemStyle'
 import { ColorPickerPalette } from './ColorPickerPalette'
 import { ColorSwatchFace } from './ColorSwatch'
 import { DEFAULT_BACKGROUND_COLOR, EDITOR_BACKGROUND_COLORS } from './backgroundColors'
+import { isPlainArrowKey } from './swatchFocusTarget'
 import { DEFAULT_COLOR, EDITOR_COLORS } from './textColors'
 
 import type { RovingButtonProps } from '../../hooks/useRovingToolbar'
@@ -120,6 +130,14 @@ type Props = RovingButtonProps & {
   disabled?: boolean
 }
 
+/**
+ * 塗り先（文字か、本文の幅全体か）を毎トランザクション購読せず開いたときに読むのは、
+ * 開いている間は本文も選択も変わらない（本文を押すと閉じる）ため
+ */
+type BlockScope = { available: boolean; checked: boolean; color: string | null }
+
+const STANDARD_SWATCH_SELECTOR = '[data-color-swatch="standard"]'
+
 export const ColorPickerButton: FC<Props> = memo(
   ({
     attribute,
@@ -130,7 +148,7 @@ export const ColorPickerButton: FC<Props> = memo(
     ref: refProp,
   }) => {
     const { colors, defaultColor, readCurrentColor, messages } = CONFIGS[attribute]
-    const { editor } = useRichTextEditorContext()
+    const { editor, features } = useRichTextEditorContext()
     const { localize } = useIntl()
     const currentColor = useToolbarValue(editor, readCurrentColor)
     const { isOpen, setIsOpen, triggerRef, renderDropdown } = useToolbarDropdown({
@@ -138,21 +156,63 @@ export const ColorPickerButton: FC<Props> = memo(
     })
     const mergedTriggerRef = useMergeRefs(triggerRef, refProp)
     const paletteRef = useRef<HTMLDivElement>(null)
+    const blockScopeRef = useRef<HTMLInputElement>(null)
     const [recentColors, setRecentColors] = useState<string[]>([])
     const [customColor, setCustomColor] = useState<string>(defaultColor)
+    const [blockScope, setBlockScope] = useState<BlockScope | null>(null)
+    // features の backgroundColor を見ないのは、背景色のボタンはそれがあるときにしか並ばないため
+    const hasBlockScope =
+      attribute === 'backgroundColor' && features.includes('blockBackgroundColor')
+    const activeBlockScope = hasBlockScope ? blockScope : null
 
     const latest = useLatest({
       editor,
       attribute,
       defaultColor,
+      currentColor,
+      isOpen,
+      activeBlockScope,
+      hasBlockScope,
       onKeyDown: onKeyDownProp,
       setIsOpen,
       localize,
       messages,
     })
 
-    const functions = useMemo(
-      () => ({
+    const functions = useMemo(() => {
+      const syncCustomColor = (color: string | null) => {
+        if (color) setCustomColor(normalizeHex(color, latest.defaultColor))
+      }
+
+      const open = () => {
+        let scope: BlockScope | null = null
+
+        if (latest.hasBlockScope) {
+          const { available, color } = readBlockBackgroundTarget(latest.editor.state)
+
+          // 範囲を選んで開いたときに帯へ倒さないのは、範囲を選ぶのは文字を塗りたいときが多く、
+          // 見出しの一部の文字を塗ったつもりで見出し全体の帯を塗り替えてしまうため
+          scope = {
+            available,
+            color,
+            checked: available && latest.editor.state.selection.empty && color !== null,
+          }
+        }
+
+        setBlockScope(scope)
+        syncCustomColor(scope?.checked ? scope.color : latest.currentColor)
+        latest.setIsOpen(true)
+      }
+
+      const apply = (hex: string | null) => {
+        if (latest.activeBlockScope?.checked) {
+          latest.editor.chain().focus().setBlockBackgroundColor(hex).run()
+        } else {
+          setEditorColor(latest.editor, latest.attribute, hex)
+        }
+      }
+
+      return {
         pushRecent: (hex: string) => {
           const normalized = normalizeHex(hex, latest.defaultColor)
           setRecentColors((prev) => {
@@ -160,11 +220,11 @@ export const ColorPickerButton: FC<Props> = memo(
             return [normalized, ...without].slice(0, RECENT_LIMIT)
           })
         },
-        handleApplyColor: (hex: string) => {
-          setEditorColor(latest.editor, latest.attribute, hex)
-        },
-        handleUnsetColor: () => {
-          setEditorColor(latest.editor, latest.attribute, null)
+        handleApplyColor: (hex: string) => apply(hex),
+        handleUnsetColor: () => apply(null),
+        handleTriggerClick: () => {
+          if (latest.isOpen) latest.setIsOpen(false)
+          else open()
         },
         handleTriggerKeyDown: (e: KeyboardEvent) => {
           switch (e.key) {
@@ -173,30 +233,48 @@ export const ColorPickerButton: FC<Props> = memo(
             case 'ArrowDown':
               e.preventDefault()
               e.stopPropagation()
-              latest.setIsOpen(true)
+
+              if (!latest.isOpen) open()
+
+              // チェックボックスが使えるときに最初の色見本へ移さないのは、文字と幅全体のどちらに塗るかを先に読み上げるため
               requestAnimationFrame(() => {
-                paletteRef.current
-                  ?.querySelector<HTMLButtonElement>('[data-color-swatch="standard"]')
-                  ?.focus()
+                ;(latest.activeBlockScope?.available
+                  ? blockScopeRef.current
+                  : paletteRef.current?.querySelector<HTMLElement>(STANDARD_SWATCH_SELECTOR)
+                )?.focus()
               })
               break
             default:
               latest.onKeyDown?.(e)
           }
         },
+        handleBlockScopeKeyDown: (e: KeyboardEvent) => {
+          if (!isPlainArrowKey(e)) return
+
+          // 素通りさせないのは、ドロップダウンの外枠やページがスクロールするため
+          e.preventDefault()
+
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+            e.stopPropagation()
+            paletteRef.current?.querySelector<HTMLElement>(STANDARD_SWATCH_SELECTOR)?.focus()
+          }
+        },
+        handleBlockScopeChange: (e: ChangeEvent<HTMLInputElement>) => {
+          const scope = latest.activeBlockScope
+
+          if (!scope) return
+
+          const { checked } = e.currentTarget
+
+          setBlockScope({ ...scope, checked })
+          syncCustomColor(checked ? scope.color : latest.currentColor)
+        },
         customSwatchLabel: (color: string) =>
           latest.localize(latest.messages.customSwatch, { color }),
         recentSwatchLabel: (color: string) =>
           latest.localize(latest.messages.recentSwatch, { color }),
-      }),
-      [latest],
-    )
-
-    useEffect(() => {
-      if (isOpen && currentColor) {
-        setCustomColor(normalizeHex(currentColor, defaultColor))
       }
-    }, [isOpen, currentColor, defaultColor])
+    }, [latest])
 
     const label = localize(messages.label)
     const resetLabel = localize(messages.reset)
@@ -205,6 +283,10 @@ export const ColorPickerButton: FC<Props> = memo(
     const recentSectionLabel = localize(messages.recentSection)
     const editButtonLabel = localize(messages.editButton)
     const unsetLabel = localize(messages.unset)
+    const blockScopeLabel = localize({
+      id: 'smarthr-ui/RichTextEditor/backgroundColorWholeWidth',
+      defaultText: '幅全体に適用',
+    })
     const normalizedCurrentColor =
       currentColor === null ? null : normalizeHex(currentColor, defaultColor)
     const matchedColor = colors.find(
@@ -216,6 +298,23 @@ export const ColorPickerButton: FC<Props> = memo(
         : matchedColor
           ? localize({ id: matchedColor.labelId, defaultText: matchedColor.defaultText })
           : normalizedCurrentColor
+
+    const paletteHeader = useMemo(
+      () =>
+        activeBlockScope ? (
+          <Checkbox
+            ref={blockScopeRef}
+            name="blockBackgroundScope"
+            disabled={!activeBlockScope.available}
+            checked={activeBlockScope.checked}
+            onChange={functions.handleBlockScopeChange}
+            onKeyDown={functions.handleBlockScopeKeyDown}
+          >
+            {blockScopeLabel}
+          </Checkbox>
+        ) : null,
+      [activeBlockScope, blockScopeLabel, functions],
+    )
 
     return (
       <>
@@ -230,7 +329,7 @@ export const ColorPickerButton: FC<Props> = memo(
             aria-expanded={isOpen}
             aria-haspopup="dialog"
             onKeyDown={functions.handleTriggerKeyDown}
-            onClick={() => setIsOpen((prev) => !prev)}
+            onClick={functions.handleTriggerClick}
             onFocus={onFocusProp}
           >
             <ColorSwatchFace
@@ -249,7 +348,7 @@ export const ColorPickerButton: FC<Props> = memo(
             appearance={attribute}
             colors={colors}
             defaultColor={defaultColor}
-            currentColor={currentColor}
+            currentColor={activeBlockScope?.checked ? activeBlockScope.color : currentColor}
             recentColors={recentColors}
             pushRecent={functions.pushRecent}
             customColor={customColor}
@@ -265,6 +364,7 @@ export const ColorPickerButton: FC<Props> = memo(
             setCustomColor={setCustomColor}
             handleApplyColor={functions.handleApplyColor}
             handleUnsetColor={functions.handleUnsetColor}
+            header={paletteHeader}
           />,
         )}
       </>

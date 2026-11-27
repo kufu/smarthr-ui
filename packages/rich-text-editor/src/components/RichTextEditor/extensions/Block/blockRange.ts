@@ -1,5 +1,7 @@
 import { Selection } from '@tiptap/pm/state'
 
+import { blockBackgroundOf } from '../BlockBackground/blockBackgroundAttribute'
+
 import type { Node as PMNode, ResolvedPos } from '@tiptap/pm/model'
 
 /** doc の最上位の子の連続した並び。startIndex は含み、endIndex は含まない */
@@ -82,8 +84,9 @@ export const isCurrentRange = (doc: PMNode, range: BlockRange) => {
   return current.from === range.from && current.to === range.to
 }
 
+// 中身の有無だけで見ないのは、帯だけの段落が全選択の範囲から外れ、帯を外せなくなるため
 export const isEmptyParagraph = (node: PMNode | null) =>
-  node?.type.name === 'paragraph' && node.content.size === 0
+  node?.type.name === 'paragraph' && node.content.size === 0 && blockBackgroundOf(node) === null
 
 /**
  * 末尾の空の段落より下へは動かさない。表などを末尾へ動かすと、エディタが末尾に空の段落を足し直すため、

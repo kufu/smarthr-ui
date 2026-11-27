@@ -317,6 +317,23 @@ export const Overview: Story = {
               </tr>
               <tr>
                 <td style={tdStyle}>
+                  <code>blockBackgroundColor</code>
+                </td>
+                <td style={tdStyle}>
+                  幅全体の背景色
+                  <br />
+                  <Text size="S" color="TEXT_GREY">
+                    <code>backgroundColor</code>{' '}
+                    と一緒に指定したときだけ、背景色のメニューに「幅全体に適用」が出る。最上位の段落・見出し・リストに付き、リストは全体に
+                    1 つ。引用・表・コードブロックの中には付かない
+                  </Text>
+                </td>
+                <td style={tdStyle}>背景色ピッカーの「幅全体に適用」</td>
+                <td style={tdStyle}>なし</td>
+                <td style={tdStyle}>なし</td>
+              </tr>
+              <tr>
+                <td style={tdStyle}>
                   <code>fontSize</code>
                 </td>
                 <td style={tdStyle}>フォントサイズ（12px〜72px）</td>
@@ -847,6 +864,99 @@ export const HTMLIntegration: Story = {
       </Stack>
     )
   },
+}
+
+const BLOCK_BACKGROUND_SAMPLE: RichTextJSON = {
+  type: 'doc',
+  content: [
+    {
+      type: 'heading',
+      attrs: { level: 2, blockBackgroundColor: '#67b27f' },
+      content: [
+        {
+          type: 'text',
+          marks: [{ type: 'textStyle', attrs: { color: '#ffffff' } }],
+          text: '第1章 研修の目的',
+        },
+      ],
+    },
+    {
+      type: 'paragraph',
+      attrs: { blockBackgroundColor: '#d5efdf' },
+      content: [
+        { type: 'text', text: 'この章では、研修全体の流れと、各章で学ぶことを紹介します。' },
+      ],
+    },
+    {
+      type: 'paragraph',
+      attrs: { blockBackgroundColor: '#d5efdf' },
+      content: [{ type: 'text', text: '帯が続くと、間を空けずに 1 本の帯としてつながります。' }],
+    },
+    {
+      type: 'paragraph',
+      content: [
+        { type: 'text', text: '帯の無い段落は、今までどおり本文の文字と同じ位置から始まります。' },
+      ],
+    },
+    {
+      type: 'bulletList',
+      attrs: { blockBackgroundColor: '#f1e8ce' },
+      content: [
+        {
+          type: 'listItem',
+          content: [{ type: 'paragraph', content: [{ type: 'text', text: '受講前に資料を読む' }] }],
+        },
+        {
+          type: 'listItem',
+          content: [
+            { type: 'paragraph', content: [{ type: 'text', text: '分からなかった点をメモする' }] },
+          ],
+        },
+      ],
+    },
+  ],
+}
+
+export const BlockBackground: Story = {
+  name: '幅全体の背景色（blockBackgroundColor）',
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `<RichTextEditor features={[..., 'backgroundColor', 'blockBackgroundColor']} />
+
+/* serializeToHTML などの HTML を RichTextViewer を使わずに表示するときに、RichTextViewer と同じ見た目にする CSS */
+[data-block-background] { padding: 0.5em 1rem; }
+ul[data-block-background], ol[data-block-background] { padding-left: 2.5rem; }
+[data-block-background]:has(+ [data-block-background]) { margin-bottom: 0; }
+[data-block-background] + [data-block-background] { margin-top: 0; }
+[data-block-background]:empty::after { content: '\\200B'; }`,
+      },
+    },
+  },
+  render: () => (
+    <Stack gap={1.5}>
+      <Text color="TEXT_GREY">
+        <code>features</code> に <code>backgroundColor</code> と <code>blockBackgroundColor</code>{' '}
+        を入れると、背景色のメニューの一番上に「幅全体に適用」が出ます。チェックを入れて色を選ぶと、キャレットのある段落・見出し・リストに、本文の幅いっぱいの背景色が付きます。リストの中ではリスト全体に付きます。引用・表・コードブロックの中では押せません。
+        <br />
+        範囲を選ばずに背景色の付いたブロックでメニューを開くと、チェックが入った状態で開きます。チェックを入れ外しするだけでは本文は変わりません。色を選ぶ・リセットするときに、チェックに従って文字か幅全体かへ効きます。
+        <br />
+        HTML では <code>data-block-background</code> 属性と <code>background-color</code>{' '}
+        で出力し、余白は出力しません。RichTextViewer は余白を付けて表示します。HTML
+        を自前で表示するときは、コード例の CSS を当てると RichTextViewer と同じ見た目になります。
+        <br />
+        背景色の付いた本文は、この機能に対応した版のエディタと RichTextViewer
+        で扱ってください。古い版は背景色を表示せず、古い版のエディタで開いて保存すると背景色は消えます。
+      </Text>
+      <FormControl label="本文">
+        <RichTextEditor defaultValue={BLOCK_BACKGROUND_SAMPLE} features={ALL_FEATURES} />
+      </FormControl>
+      <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 16 }}>
+        <RichTextViewer content={BLOCK_BACKGROUND_SAMPLE} />
+      </div>
+    </Stack>
+  ),
 }
 
 export const VideoEmbedding: Story = {

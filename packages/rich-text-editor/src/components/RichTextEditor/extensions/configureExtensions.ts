@@ -8,6 +8,8 @@ import { BackgroundColor, FontSize, TextStyle } from '@tiptap/extension-text-sty
 import { StarterKit } from '@tiptap/starter-kit'
 
 import { BlockActions } from './Block/BlockActions'
+import { BlockBackground } from './BlockBackground/BlockBackground'
+import { patchBlockBackgroundCarry } from './BlockBackground/carryBlockBackground'
 import { CustomYoutube } from './CustomYoutube'
 import { CustomImage } from './Image/CustomImage'
 import { createImagePasteExtension } from './Image/imagePaste'
@@ -29,6 +31,7 @@ import {
 } from './configureHeading'
 import { InsertDialogs } from './insertDialogs'
 import { patchListItemShiftTab } from './listItemShiftTab'
+import { PasteIntoEmptyTextblock } from './pasteIntoEmptyTextblock'
 import { PlayerIsolation } from './playerIsolation'
 import { createOperationRestrictor } from './restrictOperations'
 import { NO_RUNTIME_OPTIONS } from './runtimeOptions'
@@ -84,12 +87,16 @@ export const configureExtensions = ({
       addExtensions() {
         // patch を restrict より先に通す。features にリストが無いとき restrict が
         // addKeyboardShortcuts を空にするので、差し替えた Shift-Tab もそこで消える。
-        return (this.parent?.() ?? [])
-          .map(patchLinkTitle)
-          .map(patchListItemShiftTab)
-          .map(patchTrailingNode)
-          .map(limitHeading)
-          .map((extension) => restrict(extension))
+        return (
+          (this.parent?.() ?? [])
+            .map(patchLinkTitle)
+            .map(patchListItemShiftTab)
+            .map(patchTrailingNode)
+            .map(limitHeading)
+            // limitHeading より前に通さないのは、limitHeading が入力ルールを this.parent() を呼ばずに作り直し、包んだものが消えるため
+            .map(patchBlockBackgroundCarry)
+            .map((extension) => restrict(extension))
+        )
       },
     }),
     restrict(
@@ -150,6 +157,7 @@ export const configureExtensions = ({
       },
     }),
     createImagePasteExtension({ getRuntimeOptions: getOptions }),
+    PasteIntoEmptyTextblock,
   ]
 
   extensions.push(
@@ -185,6 +193,7 @@ export const configureExtensions = ({
     restrict(BackgroundColor.configure()),
     restrict(FontSize.configure()),
     restrict(LineHeight.configure({ types: BLOCK_STYLE_TYPES })),
+    BlockBackground.configure({ getFeatures }),
   )
 
   extensions.push(
@@ -212,6 +221,7 @@ const FEATURE_SET = {
   heading: true,
   color: true,
   backgroundColor: true,
+  blockBackgroundColor: true,
   fontSize: true,
   lineHeight: true,
   textAlign: true,

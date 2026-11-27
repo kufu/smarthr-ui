@@ -5,8 +5,18 @@
  * クラス名を動的に組み立ててはならない。両方のバリエーションを静的に保持する。
  */
 
+/** [&_…] で書かないのは、エディタのリストの字下げ（.c .ProseMirror ul）に負けるため */
+const blockBackgroundClasses = [
+  '[&&_[data-block-background]]:shr-rte-px-1 [&&_[data-block-background]]:shr-rte-py-[0.5em]',
+  // リストの左の余白を他の帯と同じ px-1 のままにしないのは、記号が li の箱の外に描かれ、帯の左端からはみ出すため
+  '[&&_:is(ul,ol)[data-block-background]]:shr-rte-pl-[calc(theme(spacing[1])+theme(spacing[1.5]))]',
+  '[&&_[data-block-background]:has(+[data-block-background])]:shr-rte-mb-0',
+] as const
+
 /** RichTextEditor 用: ProseMirror 内の要素向けスタイル */
 export const editorContentClasses = [
+  ...blockBackgroundClasses,
+  '[&&_[data-block-background]+[data-block-background]]:shr-rte-mt-0',
   // lists
   '[&_.ProseMirror_ul]:shr-rte-my-0.5 [&_.ProseMirror_ul]:shr-rte-list-disc [&_.ProseMirror_ul]:shr-rte-pl-1.5',
   '[&_.ProseMirror_ol]:shr-rte-my-0.5 [&_.ProseMirror_ol]:shr-rte-list-decimal [&_.ProseMirror_ol]:shr-rte-pl-1.5',
@@ -124,6 +134,12 @@ export const staticBlockSpacingClasses = [
 
 /** RichTextViewer 用: 直下の要素向けスタイル */
 export const staticContentClasses = [
+  ...blockBackgroundClasses,
+  // エディタと同じ [&&_…] にしないのは、gap（space-y）に勝ち、gap を指定した利用者の「直下のブロックをこの間隔で並べる」を
+  // 帯の間で破るため。後ろを :where で包んでも、gap を指定しないときの :where の余白には勝つので帯はつながる
+  '[&_[data-block-background]+:where([data-block-background])]:shr-rte-mt-0',
+  // min-height で高さを足さないのは、1 行の高さが文字の大きさと行送りの指定で変わるため
+  String.raw`[&_[data-block-background]:empty::after]:shr-rte-content-['\200B']`,
   // lists
   '[&_ul]:shr-rte-list-disc [&_ul]:shr-rte-pl-1.5',
   '[&_ol]:shr-rte-list-decimal [&_ol]:shr-rte-pl-1.5',
