@@ -118,18 +118,7 @@ const MaxLettersTextarea: FC<
   })
 
   const functions = useMemo(() => {
-    // countの初期値はuseStateの遅延初期化でdefaultValue || valueから計算済みのため、
-    // マウント時にuseEffect経由で呼ばれるupdateCountは初回のみskipする。
-    // skipしないと、非制御コンポーネントとして扱う場合（valueを渡さずdefaultValueのみ渡す場合）
-    // valueがundefinedになりcountが誤った値に上書きされ、表示のちらつきや
-    // LiveRegionへの不要な通知が発生してしまう
-    let firstCallUpdateCount = true
     const updateCount = (newValue: TextareaValue) => {
-      if (firstCallUpdateCount) {
-        firstCallUpdateCount = false
-        return
-      }
-
       startTransition(() => {
         setCount(getStringLength(newValue))
       })
@@ -151,6 +140,12 @@ const MaxLettersTextarea: FC<
           }
         }
 
+        // HINT: Activityで非表示の間はrefが外れてresetリスナーも外れるため、その間のform.reset()は拾えない。
+        // 非制御時はrefが付き直した時点でtextareaの実際の値から数え直す
+        if (node && !latest.isControlled) {
+          setCount(getStringLength(node.value))
+        }
+
         associatedForm?.addEventListener('reset', handleReset)
 
         return () => {
@@ -161,7 +156,13 @@ const MaxLettersTextarea: FC<
   }, [latest])
 
   useEffect(() => {
-    functions.updateCount(value ?? '')
+    // HINT: valueの変化に文字数カウンタを追従させるのは制御時のみ。
+    // 非制御時(defaultValueのみ渡す場合)はvalueがundefinedのままなので、countはhandleChangeとform.reset()、refの付け直しで更新する。
+    // 非制御時にもここでcountを更新すると、StrictModeやActivityの再表示でeffectが再実行された際に
+    // 入力済みの文字数が0で上書きされてしまう
+    if (value !== undefined) {
+      functions.updateCount(value)
+    }
   }, [value, functions])
 
   const mergedRef = useMergeRefs(functions.resetCallbackRef, ref)
